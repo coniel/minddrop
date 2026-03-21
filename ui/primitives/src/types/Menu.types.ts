@@ -1,3 +1,4 @@
+import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 import React from 'react';
 import { TranslationKey } from '@minddrop/i18n';
 import { ContentColor } from '@minddrop/ui-theme';
@@ -64,7 +65,7 @@ export interface MenuColorSelectionItemConfig {
    *
    * @param event The event.
    */
-  onSelect?: ActionMenuItemProps['onClick'];
+  onSelect?: MenuPrimitive.Item.Props['onClick'];
 }
 
 export type MenuColorSelectionItemProps = Omit<

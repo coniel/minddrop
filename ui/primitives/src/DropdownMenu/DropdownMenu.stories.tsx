@@ -45,13 +45,16 @@ export const DropdownMenuStories = () => {
             <DropdownMenu
               trigger={<Button variant="outline">Open menu</Button>}
             >
-              <DropdownMenuItem label="New file" onClick={action('New file')} />
-              <DropdownMenuItem label="Open..." onClick={action('Open')} />
+              <DropdownMenuItem
+                label="New file"
+                onSelect={action('New file')}
+              />
+              <DropdownMenuItem label="Open..." onSelect={action('Open')} />
               <DropdownMenuSeparator />
-              <DropdownMenuItem label="Save" onClick={action('Save')} />
+              <DropdownMenuItem label="Save" onSelect={action('Save')} />
               <DropdownMenuItem
                 label="Save as..."
-                onClick={action('Save as')}
+                onSelect={action('Save as')}
               />
             </DropdownMenu>
             {lastAction && (
@@ -76,13 +79,13 @@ export const DropdownMenuStories = () => {
               }
               align="end"
             >
-              <DropdownMenuItem label="Edit" onClick={action('Edit')} />
+              <DropdownMenuItem label="Edit" onSelect={action('Edit')} />
               <DropdownMenuItem
                 label="Duplicate"
-                onClick={action('Duplicate')}
+                onSelect={action('Duplicate')}
               />
               <DropdownMenuSeparator />
-              <DropdownMenuItem label="Delete" onClick={action('Delete')} />
+              <DropdownMenuItem label="Delete" onSelect={action('Delete')} />
             </DropdownMenu>
           </StoryItem>
         </StoryRow>
@@ -105,32 +108,32 @@ export const DropdownMenuStories = () => {
                 label="Undo"
                 icon="rotate-ccw"
                 keyboardShortcut={['Mod', 'Z']}
-                onClick={action('Undo')}
+                onSelect={action('Undo')}
               />
               <DropdownMenuItem
                 label="Redo"
                 icon="rotate-cw"
                 keyboardShortcut={['Mod', 'Shift', 'Z']}
-                onClick={action('Redo')}
+                onSelect={action('Redo')}
               />
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 label="Cut"
                 icon="scissors"
                 keyboardShortcut={['Mod', 'X']}
-                onClick={action('Cut')}
+                onSelect={action('Cut')}
               />
               <DropdownMenuItem
                 label="Copy"
                 icon="copy"
                 keyboardShortcut={['Mod', 'C']}
-                onClick={action('Copy')}
+                onSelect={action('Copy')}
               />
               <DropdownMenuItem
                 label="Paste"
                 icon="clipboard"
                 keyboardShortcut={['Mod', 'V']}
-                onClick={action('Paste')}
+                onSelect={action('Paste')}
               />
             </DropdownMenu>
           </StoryItem>
@@ -185,17 +188,17 @@ export const DropdownMenuStories = () => {
                   <DropdownMenuContent>
                     <DropdownMenuItem
                       label="New file"
-                      onClick={action('New file')}
+                      onSelect={action('New file')}
                     />
                     <DropdownMenuItem
                       label="Open..."
-                      onClick={action('Open')}
+                      onSelect={action('Open')}
                     />
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem label="Save" onClick={action('Save')} />
+                    <DropdownMenuItem label="Save" onSelect={action('Save')} />
                     <DropdownMenuItem
                       label="Save as..."
-                      onClick={action('Save as')}
+                      onSelect={action('Save as')}
                     />
                   </DropdownMenuContent>
                 </DropdownMenuPositioner>
@@ -226,16 +229,22 @@ export const DropdownMenuStories = () => {
                 >
                   <DropdownMenuContent minWidth={180}>
                     <DropdownMenuGroup label="File">
-                      <DropdownMenuItem label="New" onClick={action('New')} />
-                      <DropdownMenuItem label="Open" onClick={action('Open')} />
+                      <DropdownMenuItem label="New" onSelect={action('New')} />
+                      <DropdownMenuItem
+                        label="Open"
+                        onSelect={action('Open')}
+                      />
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator />
                     <DropdownMenuGroup label="Edit">
-                      <DropdownMenuItem label="Cut" onClick={action('Cut')} />
-                      <DropdownMenuItem label="Copy" onClick={action('Copy')} />
+                      <DropdownMenuItem label="Cut" onSelect={action('Cut')} />
+                      <DropdownMenuItem
+                        label="Copy"
+                        onSelect={action('Copy')}
+                      />
                       <DropdownMenuItem
                         label="Paste"
-                        onClick={action('Paste')}
+                        onSelect={action('Paste')}
                       />
                     </DropdownMenuGroup>
                   </DropdownMenuContent>
@@ -271,13 +280,13 @@ export const DropdownMenuStories = () => {
                       icon="archive"
                       secondaryLabel="Delete item"
                       secondaryIcon="trash"
-                      onClick={action('Archive')}
-                      secondaryOnClick={action('Delete')}
+                      onSelect={action('Archive')}
+                      secondaryOnSelect={action('Delete')}
                     />
                     <DropdownMenuItem
                       label="Move to..."
                       icon="folder"
-                      onClick={action('Move')}
+                      onSelect={action('Move')}
                     />
                   </DropdownMenuContent>
                 </DropdownMenuPositioner>
@@ -309,7 +318,7 @@ export const DropdownMenuStories = () => {
                   <DropdownMenuContent minWidth={180}>
                     <DropdownMenuItem
                       label="New file"
-                      onClick={action('New file')}
+                      onSelect={action('New file')}
                     />
                     <DropdownSubmenu>
                       <DropdownSubmenuTriggerItem
@@ -325,22 +334,22 @@ export const DropdownMenuStories = () => {
                           <DropdownSubmenuContent minWidth={180}>
                             <DropdownMenuItem
                               label="project-alpha.md"
-                              onClick={action('Open alpha')}
+                              onSelect={action('Open alpha')}
                             />
                             <DropdownMenuItem
                               label="notes.md"
-                              onClick={action('Open notes')}
+                              onSelect={action('Open notes')}
                             />
                             <DropdownMenuItem
                               label="readme.md"
-                              onClick={action('Open readme')}
+                              onSelect={action('Open readme')}
                             />
                           </DropdownSubmenuContent>
                         </DropdownMenuPositioner>
                       </DropdownMenuPortal>
                     </DropdownSubmenu>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem label="Save" onClick={action('Save')} />
+                    <DropdownMenuItem label="Save" onSelect={action('Save')} />
                   </DropdownMenuContent>
                 </DropdownMenuPositioner>
               </DropdownMenuPortal>
@@ -396,21 +405,21 @@ export const DropdownMenuStories = () => {
                   sideOffset={4}
                 >
                   <DropdownMenuContent minWidth={160}>
-                    <DropdownMenuItem label="Cut" onClick={action('Cut')} />
+                    <DropdownMenuItem label="Cut" onSelect={action('Cut')} />
                     <DropdownMenuItem
                       label="Copy"
                       disabled
-                      onClick={action('Copy')}
+                      onSelect={action('Copy')}
                     />
                     <DropdownMenuItem
                       label="Paste"
                       disabled
-                      onClick={action('Paste')}
+                      onSelect={action('Paste')}
                     />
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                       label="Select all"
-                      onClick={action('Select all')}
+                      onSelect={action('Select all')}
                     />
                   </DropdownMenuContent>
                 </DropdownMenuPositioner>

@@ -54,14 +54,14 @@ export const DatabaseEntryOptionsMenu: React.FC<
       <ActionMenuItem
         icon="database"
         label="databases.entries.actions.goToDatabase"
-        onClick={handleGoToDatabase}
+        onSelect={handleGoToDatabase}
       />
 
       {/* Duplicate the entry */}
       <ActionMenuItem
         icon="copy"
         label="actions.duplicate"
-        onClick={handleDuplicate}
+        onSelect={handleDuplicate}
       />
 
       {/* Delete the entry */}
@@ -69,7 +69,7 @@ export const DatabaseEntryOptionsMenu: React.FC<
         danger
         icon="trash"
         label="actions.delete"
-        onClick={handleDelete}
+        onSelect={handleDelete}
       />
     </>
   );

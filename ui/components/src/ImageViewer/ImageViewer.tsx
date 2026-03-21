@@ -218,7 +218,7 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({
                     <DropdownMenuItem
                       key={level}
                       label={`${Math.round(level * 100)}%`}
-                      onClick={() => setZoom(level)}
+                      onSelect={() => setZoom(level)}
                     />
                   ))}
                 </DropdownMenuContent>

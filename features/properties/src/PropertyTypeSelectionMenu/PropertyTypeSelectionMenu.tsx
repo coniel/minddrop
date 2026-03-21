@@ -49,6 +49,7 @@ export const PropertyTypeSelectionMenu: React.FC<
       trigger={children!}
       minWidth={300}
       contentClassName="property-type-selection-menu"
+      searchable
       {...other}
     >
       <MenuGroup>
@@ -58,7 +59,7 @@ export const PropertyTypeSelectionMenu: React.FC<
             label={schema.name}
             contentIcon={schema.icon}
             tooltip={{ description: schema.description }}
-            onClick={() => onSelect(schema)}
+            onSelect={() => onSelect(schema)}
           />
         ))}
       </MenuGroup>
@@ -70,7 +71,7 @@ export const PropertyTypeSelectionMenu: React.FC<
             label={schema.name}
             contentIcon={schema.icon}
             tooltip={{ title: schema.description }}
-            onClick={() => onSelect(schema)}
+            onSelect={() => onSelect(schema)}
           />
         ))}
       </MenuGroup>

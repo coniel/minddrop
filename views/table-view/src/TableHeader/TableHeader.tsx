@@ -280,7 +280,7 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
                       <DropdownMenuItem
                         label={t('hideColumn')}
                         icon="eye-off"
-                        onClick={() => onHideColumn(column.id)}
+                        onSelect={() => onHideColumn(column.id)}
                       />
                     </DropdownMenuContent>
                   </DropdownMenuPositioner>

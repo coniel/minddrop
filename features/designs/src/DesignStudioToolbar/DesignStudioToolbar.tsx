@@ -82,7 +82,7 @@ export const DesignStudioToolbar: React.FC = () => {
                 <DropdownMenuItem
                   key={level}
                   label={`${Math.round(level * 100)}%`}
-                  onClick={() => handleSetZoom(level)}
+                  onSelect={() => handleSetZoom(level)}
                 />
               ))}
             </DropdownMenuContent>

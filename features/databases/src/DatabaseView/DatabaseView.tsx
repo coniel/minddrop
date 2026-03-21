@@ -429,7 +429,7 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
                       icon={viewType.icon}
                       label={viewType.name}
                       tooltip={{ title: viewType.description }}
-                      onClick={() => handleAddView(viewType.type)}
+                      onSelect={() => handleAddView(viewType.type)}
                     />
                   ))}
               </MenuGroup>

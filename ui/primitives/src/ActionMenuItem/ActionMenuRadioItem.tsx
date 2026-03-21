@@ -22,9 +22,10 @@ export interface ActionMenuRadioItemProps
   itemIndicator?: React.ReactNode;
 
   /**
-   * Click handler.
+   * Handler called when the item is selected
+   * (via click or keyboard).
    */
-  onClick?: MenuPrimitive.RadioItem.Props['onClick'];
+  onSelect?: () => void;
 
   /**
    * Tooltip configuration. When provided, wraps the item
@@ -54,7 +55,7 @@ export const ActionMenuRadioItem: FC<ActionMenuRadioItemProps> = ({
   label,
   stringLabel,
   icon,
-  onClick,
+  onSelect,
   keyboardShortcut,
   tooltip,
   disabled,
@@ -67,7 +68,7 @@ export const ActionMenuRadioItem: FC<ActionMenuRadioItemProps> = ({
     <MenuPrimitive.RadioItem
       value={value}
       disabled={disabled}
-      onClick={onClick}
+      onClick={onSelect}
       render={
         <MenuRadioItem
           value={value}

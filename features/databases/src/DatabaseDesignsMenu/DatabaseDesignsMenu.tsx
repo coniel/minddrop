@@ -192,13 +192,13 @@ function DesignItemActions({
                 icon="star"
                 label="databases.designs.actions.setAsDefault"
                 disabled={isDefault}
-                onClick={() => onSetAsDefault(design)}
+                onSelect={() => onSetAsDefault(design)}
               />
               <DropdownMenuItem
                 icon="x"
                 label="databases.designs.actions.remove"
                 danger
-                onClick={() => onRemove(design.id)}
+                onSelect={() => onRemove(design.id)}
               />
             </MenuGroup>
           </DropdownMenuContent>

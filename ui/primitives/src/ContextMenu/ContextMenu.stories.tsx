@@ -68,9 +68,9 @@ export const ContextMenuStories = () => {
         <StoryRow>
           <StoryItem label="basic">
             <ContextMenu trigger={<TriggerArea />} minWidth={180}>
-              <ContextMenuItem label="Cut" onClick={action('Cut')} />
-              <ContextMenuItem label="Copy" onClick={action('Copy')} />
-              <ContextMenuItem label="Paste" onClick={action('Paste')} />
+              <ContextMenuItem label="Cut" onSelect={action('Cut')} />
+              <ContextMenuItem label="Copy" onSelect={action('Copy')} />
+              <ContextMenuItem label="Paste" onSelect={action('Paste')} />
             </ContextMenu>
             {lastAction && (
               <Text size="sm" color="muted">
@@ -95,17 +95,17 @@ export const ContextMenuStories = () => {
                 <ContextMenuItem
                   label="Cut"
                   icon="scissors"
-                  onClick={action('Cut')}
+                  onSelect={action('Cut')}
                 />
                 <ContextMenuItem
                   label="Copy"
                   icon="copy"
-                  onClick={action('Copy')}
+                  onSelect={action('Copy')}
                 />
                 <ContextMenuItem
                   label="Paste"
                   icon="clipboard"
-                  onClick={action('Paste')}
+                  onSelect={action('Paste')}
                 />
               </ContextMenuGroup>
               <ContextMenuSeparator />
@@ -113,12 +113,12 @@ export const ContextMenuStories = () => {
                 <ContextMenuItem
                   label="Zoom in"
                   icon="zoom-in"
-                  onClick={action('Zoom in')}
+                  onSelect={action('Zoom in')}
                 />
                 <ContextMenuItem
                   label="Zoom out"
                   icon="zoom-out"
-                  onClick={action('Zoom out')}
+                  onSelect={action('Zoom out')}
                 />
               </ContextMenuGroup>
             </ContextMenu>
@@ -169,13 +169,13 @@ export const ContextMenuStories = () => {
                       icon="archive"
                       secondaryLabel="Delete"
                       secondaryIcon="trash"
-                      onClick={action('Archive')}
-                      secondaryOnClick={action('Delete')}
+                      onSelect={action('Archive')}
+                      secondaryOnSelect={action('Delete')}
                     />
                     <ContextMenuItem
                       label="Move to..."
                       icon="folder"
-                      onClick={action('Move')}
+                      onSelect={action('Move')}
                     />
                   </ContextMenuContent>
                 </ContextMenuPositioner>
@@ -201,7 +201,7 @@ export const ContextMenuStories = () => {
               <ContextMenuPortal>
                 <ContextMenuPositioner>
                   <ContextMenuContent minWidth={200}>
-                    <ContextMenuItem label="Open" onClick={action('Open')} />
+                    <ContextMenuItem label="Open" onSelect={action('Open')} />
                     <ContextSubmenu>
                       <ContextSubmenuTriggerItem
                         label="Open with"
@@ -212,15 +212,15 @@ export const ContextMenuStories = () => {
                           <ContextSubmenuContent minWidth={160}>
                             <ContextMenuItem
                               label="Preview"
-                              onClick={action('Preview')}
+                              onSelect={action('Preview')}
                             />
                             <ContextMenuItem
                               label="Editor"
-                              onClick={action('Editor')}
+                              onSelect={action('Editor')}
                             />
                             <ContextMenuItem
                               label="Browser"
-                              onClick={action('Browser')}
+                              onSelect={action('Browser')}
                             />
                           </ContextSubmenuContent>
                         </ContextMenuPositioner>
@@ -230,7 +230,7 @@ export const ContextMenuStories = () => {
                     <ContextMenuItem
                       label="Move to trash"
                       icon="trash"
-                      onClick={action('Trash')}
+                      onSelect={action('Trash')}
                     />
                   </ContextMenuContent>
                 </ContextMenuPositioner>
@@ -283,21 +283,21 @@ export const ContextMenuStories = () => {
               <ContextMenuPortal>
                 <ContextMenuPositioner>
                   <ContextMenuContent minWidth={160}>
-                    <ContextMenuItem label="Cut" onClick={action('Cut')} />
+                    <ContextMenuItem label="Cut" onSelect={action('Cut')} />
                     <ContextMenuItem
                       label="Copy"
                       disabled
-                      onClick={action('Copy')}
+                      onSelect={action('Copy')}
                     />
                     <ContextMenuItem
                       label="Paste"
                       disabled
-                      onClick={action('Paste')}
+                      onSelect={action('Paste')}
                     />
                     <ContextMenuSeparator />
                     <ContextMenuItem
                       label="Select all"
-                      onClick={action('Select all')}
+                      onSelect={action('Select all')}
                     />
                   </ContextMenuContent>
                 </ContextMenuPositioner>

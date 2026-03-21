@@ -21,6 +21,7 @@ export function useShiftState(enabled: boolean) {
         setShiftKeyDown(true);
       }
     };
+
     const onKeyUp = (event: KeyboardEvent) => {
       if (event.key === 'Shift') {
         setShiftKeyDown(false);
@@ -64,12 +65,13 @@ export interface ActionMenuItemProps extends Omit<MenuItemProps, 'onClick'> {
    * Handler called when the item is selected in its secondary state.
    * Registering this prop enables shift-key detection.
    */
-  secondaryOnClick?: MenuPrimitive.Item.Props['onClick'];
+  secondaryOnSelect?: () => void;
 
   /**
-   * Click handler for the primary state.
+   * Handler called when the item is selected
+   * (via click or keyboard).
    */
-  onClick?: MenuPrimitive.Item.Props['onClick'];
+  onSelect?: () => void;
 
   /**
    * Keyboard shortcut displayed on the primary item.
@@ -113,8 +115,8 @@ export const ActionMenuItem: FC<ActionMenuItemProps> = ({
   icon,
   secondaryIcon,
   contentIcon,
-  onClick,
-  secondaryOnClick,
+  onSelect,
+  secondaryOnSelect,
   keyboardShortcut,
   secondaryKeyboardShortcut,
   tooltip,
@@ -122,7 +124,11 @@ export const ActionMenuItem: FC<ActionMenuItemProps> = ({
   textValue,
   ...other
 }) => {
-  const shiftKeyDown = useShiftState(!!secondaryOnClick);
+  const shiftKeyDown = useShiftState(!!secondaryOnSelect);
+
+  // Resolve the click handler based on shift state
+  const handleClick =
+    shiftKeyDown && secondaryOnSelect ? secondaryOnSelect : onSelect;
 
   // Pass labels through to MenuItem which handles translation
   const itemProps = shiftKeyDown
@@ -138,7 +144,7 @@ export const ActionMenuItem: FC<ActionMenuItemProps> = ({
   const item = (
     <Component
       disabled={disabled}
-      onClick={shiftKeyDown && secondaryOnClick ? secondaryOnClick : onClick}
+      onClick={handleClick}
       render={<MenuItem disabled={disabled} {...itemProps} />}
       {...other}
     />

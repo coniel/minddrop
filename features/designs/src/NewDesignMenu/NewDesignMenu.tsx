@@ -79,7 +79,7 @@ export const NewDesignMenu: React.FC<NewDesignMenuProps> = ({
             muted
             icon="search"
             label="databases.actions.browseDesigns"
-            onClick={handleBrowse}
+            onSelect={handleBrowse}
           />
         </MenuGroup>
       )}
@@ -90,21 +90,21 @@ export const NewDesignMenu: React.FC<NewDesignMenuProps> = ({
           icon="layout-grid"
           label="designs.card.new"
           tooltip={{ description: 'designs.card.description' }}
-          onClick={() => handleSelectType('card')}
+          onSelect={() => handleSelectType('card')}
         />
         <DropdownMenuItem
           muted
           icon="layout-list"
           label="designs.list.new"
           tooltip={{ description: 'designs.list.description' }}
-          onClick={() => handleSelectType('list')}
+          onSelect={() => handleSelectType('list')}
         />
         <DropdownMenuItem
           muted
           icon="layout"
           label="designs.page.new"
           tooltip={{ description: 'designs.page.description' }}
-          onClick={() => handleSelectType('page')}
+          onSelect={() => handleSelectType('page')}
         />
       </MenuGroup>
     </DropdownMenu>

@@ -1,5 +1,10 @@
 import { FC, useCallback, useMemo } from 'react';
-import { DatabaseEntries, DatabaseEntry, Databases } from '@minddrop/databases';
+import {
+  Database,
+  DatabaseEntries,
+  DatabaseEntry,
+  Databases,
+} from '@minddrop/databases';
 import {
   DropdownMenu,
   DropdownMenuItem,
@@ -8,12 +13,13 @@ import {
 } from '@minddrop/ui-primitives';
 
 export interface CreateDatabaseEntryButtonProps
-  extends Omit<IconButtonProps, 'icon' | 'label'> {
+  extends Omit<IconButtonProps, 'icon' | 'label' | 'stringLabel'> {
   /**
-   * Database ID or array of database IDs in which
-   * new entries can be created.
+   * Database ID, array of database IDs, or `false`.
+   * When `false`, a searchable dropdown of all databases
+   * is rendered.
    */
-  database: string | string[];
+  database: string | string[] | false;
 
   /**
    * Called with the newly created entry after it
@@ -24,19 +30,28 @@ export interface CreateDatabaseEntryButtonProps
 
 /**
  * Renders an icon button that creates a new database entry.
- * When multiple databases are provided, opens a dropdown
- * menu to pick which database to create the entry in.
+ * When multiple databases are provided or `database` is `false`,
+ * opens a searchable dropdown menu to pick which database to
+ * create the entry in.
  */
 export const CreateDatabaseEntryButton: FC<CreateDatabaseEntryButtonProps> = ({
   database,
   onCreateEntry,
   ...rest
 }) => {
-  // Normalise the database prop to an array
-  const databaseIds = useMemo(
-    () => (Array.isArray(database) ? database : [database]),
-    [database],
-  );
+  // When false, use all databases
+  const allDatabases = Databases.useAll();
+
+  // Resolve the list of databases to show
+  const databases = useMemo(() => {
+    if (database === false) {
+      return allDatabases;
+    }
+
+    const ids = Array.isArray(database) ? database : [database];
+
+    return ids.map((id) => Databases.get(id)).filter(Boolean) as Database[];
+  }, [database, allDatabases]);
 
   // Creates an entry in the given database and
   // forwards it to the callback
@@ -50,20 +65,23 @@ export const CreateDatabaseEntryButton: FC<CreateDatabaseEntryButtonProps> = ({
   );
 
   // Single database: render a plain button
-  if (databaseIds.length <= 1) {
+  if (database !== false && databases.length <= 1) {
     return (
       <IconButton
         icon="plus"
         label="databases.entries.actions.create"
-        onClick={() => handleCreate(databaseIds[0])}
+        onClick={() => handleCreate(databases[0].id)}
         {...rest}
       />
     );
   }
 
-  // Multiple databases: render a dropdown menu
+  // Multiple databases or all databases: render a searchable
+  // dropdown menu
   return (
     <DropdownMenu
+      searchable
+      searchPlaceholder="databases.labels.databases"
       trigger={
         <IconButton
           icon="plus"
@@ -72,18 +90,15 @@ export const CreateDatabaseEntryButton: FC<CreateDatabaseEntryButtonProps> = ({
         />
       }
     >
-      {databaseIds.map((id) => {
-        const db = Databases.get(id);
-
-        return (
-          <DropdownMenuItem
-            key={id}
-            label={<>{db.name}</>}
-            contentIcon={db.icon}
-            onClick={() => handleCreate(id)}
-          />
-        );
-      })}
+      {databases.map((db) => (
+        <DropdownMenuItem
+          key={db.id}
+          label={<>{db.name}</>}
+          textValue={db.name}
+          contentIcon={db.icon}
+          onSelect={() => handleCreate(db.id)}
+        />
+      ))}
     </DropdownMenu>
   );
 };
