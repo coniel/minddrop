@@ -7,7 +7,7 @@ import {
 } from '@minddrop/databases';
 import {
   DropdownMenu,
-  DropdownMenuItem,
+  DropdownSearchableMenuItem,
   IconButton,
   IconButtonProps,
 } from '@minddrop/ui-primitives';
@@ -39,18 +39,20 @@ export const CreateDatabaseEntryButton: FC<CreateDatabaseEntryButtonProps> = ({
   onCreateEntry,
   ...rest
 }) => {
-  // When false, use all databases
   const allDatabases = Databases.useAll();
 
   // Resolve the list of databases to show
   const databases = useMemo(() => {
+    // When false, use all databases
     if (database === false) {
       return allDatabases;
     }
 
+    // Normalize to an array of IDs
     const ids = Array.isArray(database) ? database : [database];
 
-    return ids.map((id) => Databases.get(id)).filter(Boolean) as Database[];
+    // Resolve the databases from the IDs
+    return ids.map((id) => Databases.get(id)).filter(Boolean);
   }, [database, allDatabases]);
 
   // Creates an entry in the given database and
@@ -76,8 +78,7 @@ export const CreateDatabaseEntryButton: FC<CreateDatabaseEntryButtonProps> = ({
     );
   }
 
-  // Multiple databases or all databases: render a searchable
-  // dropdown menu
+  // Multiple databases: render a searchable dropdown menu
   return (
     <DropdownMenu
       searchable
@@ -91,10 +92,9 @@ export const CreateDatabaseEntryButton: FC<CreateDatabaseEntryButtonProps> = ({
       }
     >
       {databases.map((db) => (
-        <DropdownMenuItem
+        <DropdownSearchableMenuItem
           key={db.id}
-          label={<>{db.name}</>}
-          textValue={db.name}
+          stringLabel={db.name}
           contentIcon={db.icon}
           onSelect={() => handleCreate(db.id)}
         />
