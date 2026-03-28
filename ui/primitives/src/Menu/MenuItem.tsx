@@ -133,6 +133,11 @@ export interface MenuItemProps {
   onMouseMove?: React.MouseEventHandler<HTMLDivElement>;
 
   /*
+   * Mouse leave handler.
+   */
+  onMouseLeave?: React.MouseEventHandler<HTMLDivElement>;
+
+  /*
    * Click handler.
    */
   onClick?: React.MouseEventHandler<HTMLDivElement>;
