@@ -99,9 +99,12 @@ export const SearchDialog: React.FC = () => {
           databaseId: result.databaseId,
         });
       } else if (result.type === 'entry') {
-        Events.dispatch<OpenDatabaseEntryViewEventData>(OpenDatabaseEntryViewEvent, {
-          entryId: result.id,
-        });
+        Events.dispatch<OpenDatabaseEntryViewEventData>(
+          OpenDatabaseEntryViewEvent,
+          {
+            entryId: result.id,
+          },
+        );
       }
 
       setOpen(false);

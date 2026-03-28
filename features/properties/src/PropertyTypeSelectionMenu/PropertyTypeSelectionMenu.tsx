@@ -6,9 +6,9 @@ import {
 } from '@minddrop/properties';
 import {
   DropdownMenu,
-  DropdownMenuItem,
   DropdownMenuProps,
   DropdownMenuSeparator,
+  DropdownSearchableMenuItem,
   MenuGroup,
 } from '@minddrop/ui-primitives';
 
@@ -54,7 +54,7 @@ export const PropertyTypeSelectionMenu: React.FC<
     >
       <MenuGroup>
         {basicProperties.map((schema) => (
-          <DropdownMenuItem
+          <DropdownSearchableMenuItem
             key={schema.type}
             label={schema.name}
             contentIcon={schema.icon}
@@ -66,7 +66,7 @@ export const PropertyTypeSelectionMenu: React.FC<
       {metaProperties.length > 0 && <DropdownMenuSeparator />}
       <MenuGroup>
         {metaProperties.map((schema) => (
-          <DropdownMenuItem
+          <DropdownSearchableMenuItem
             key={schema.type}
             label={schema.name}
             contentIcon={schema.icon}
