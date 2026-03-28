@@ -23,12 +23,15 @@ export default {
     },
     mac: {
       bundleCEF: false,
+      icons: 'assets/icon/macos/icon.iconset',
     },
     linux: {
       bundleCEF: false,
+      icon: 'assets/icon/linux/256x256.png',
     },
     win: {
       bundleCEF: false,
+      icon: 'assets/icon/windows/icon.ico',
     },
   },
 } satisfies ElectrobunConfig;
