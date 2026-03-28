@@ -1,6 +1,7 @@
 import React from 'react';
 import { Collections } from '@minddrop/collections';
 import { ViewElement, createViewCssStyle } from '@minddrop/designs';
+import { ViewRenderer } from '@minddrop/feature-views';
 import { Icon, Text } from '@minddrop/ui-primitives';
 import { ViewTypes, Views } from '@minddrop/views';
 import { useElementProperty } from '../../DesignPropertiesProvider';
@@ -77,15 +78,16 @@ export const ViewDesignElement: React.FC<ViewDesignElementProps> = ({
     );
   }
 
-  // Render the view type component
+  // Render the view using ViewRenderer with header
   return (
     <div {...rootProps} className="design-view-element" style={mergedStyle}>
-      {viewType &&
-        view &&
-        React.createElement(viewType.component, {
-          view,
-          entries: collection?.entries ?? [],
-        })}
+      {view && (
+        <ViewRenderer
+          showHeader
+          view={view}
+          entries={collection?.entries ?? []}
+        />
+      )}
     </div>
   );
 };

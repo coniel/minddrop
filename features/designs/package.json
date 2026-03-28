@@ -22,6 +22,7 @@
     "@minddrop/events": "workspace:*",
     "@minddrop/ui-drag-and-drop": "workspace:*",
     "@minddrop/feature-markdown-editor": "workspace:*",
+    "@minddrop/feature-views": "workspace:*",
     "@minddrop/file-system": "workspace:*",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/ui-icons": "workspace:*",
