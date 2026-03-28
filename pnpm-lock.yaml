@@ -343,6 +343,9 @@ importers:
       '@minddrop/feature-markdown-editor':
         specifier: workspace:*
         version: link:../markdown-editor
+      '@minddrop/feature-views':
+        specifier: workspace:*
+        version: link:../views
       '@minddrop/file-system':
         specifier: workspace:*
         version: link:../../packages/file-system
@@ -609,12 +612,18 @@ importers:
 
   features/views:
     dependencies:
+      '@minddrop/collections':
+        specifier: workspace:*
+        version: link:../../packages/collections
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../../packages/test-utils
+      '@minddrop/ui-components':
+        specifier: workspace:*
+        version: link:../../ui/components
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives

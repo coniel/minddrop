@@ -1190,6 +1190,9 @@
     "close": "Close"
   },
   "views": {
+    "actions": {
+      "settings": "View settings"
+    },
     "labels": {
       "view": "View",
       "new": "New View"

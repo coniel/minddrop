@@ -1202,6 +1202,9 @@ declare module 'i18next' {
           close: string;
         };
         views: {
+          actions: {
+            settings: string;
+          };
           labels: {
             view: string;
             new: string;
