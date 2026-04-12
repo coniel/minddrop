@@ -185,7 +185,7 @@ export const DesignBrowser: React.FC<DesignBrowserProps> = ({
       return;
     }
 
-    const designs = Designs.Store.getAll();
+    const designs = Designs.Store.getAllArray();
     const firstDesign = designs.find(
       (design) => !defaultDesignIds.includes(design.id),
     );
