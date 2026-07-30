@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { SwitchField, Tooltip } from '@minddrop/ui-primitives';
 import {
+  getActiveElements,
   updateDesignElement,
   useDesignStudioStore,
 } from '../DesignStudioStore';
@@ -22,7 +23,8 @@ export const StaticElementField: React.FC<StaticElementFieldProps> = ({
   // Whether the element is static
   const isStatic = useDesignStudioStore(
     (state) =>
-      (state.elements[elementId] as FlatDesignElement)?.static || false,
+      (getActiveElements(state)[elementId] as FlatDesignElement)?.static ||
+      false,
   );
 
   // Toggle the element's static mode

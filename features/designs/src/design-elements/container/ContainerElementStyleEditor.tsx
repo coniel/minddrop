@@ -10,7 +10,7 @@ import {
   Text,
 } from '@minddrop/ui-primitives';
 import {
-  useDesignStudioStore,
+  useActiveLayoutType,
   useElement,
   useElementStyle,
 } from '../../DesignStudioStore';
@@ -93,7 +93,7 @@ export const ContainerElementStyleEditor: React.FC<
   ContainerElementStyleEditorProps
 > = ({ elementId }) => {
   const element = useElement(elementId);
-  const layoutType = useDesignStudioStore((state) => state.design?.type);
+  const layoutType = useActiveLayoutType();
 
   // Root elements hide stretch and conditionally hide min-height
   const isRoot = element.type === 'root';

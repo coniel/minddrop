@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Layouts } from '@minddrop/designs';
 import {
   CloseAppSidebarEvent,
   DefaultMainContentViewName,
@@ -13,7 +12,9 @@ import { DesignStudioLeftPanel } from '../DesignStudioLeftPanel';
 import { DesignStudioRootElement } from '../DesignStudioRootElement';
 import {
   DesignStudioStore,
+  renameDesign,
   saveDesign,
+  useActiveLayoutType,
   useDesignStudioStore,
   useElement,
 } from '../DesignStudioStore';
@@ -34,6 +35,7 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
     (state) => state.selectedElementId,
   );
   const design = useDesignStudioStore((state) => state.design);
+  const activeLayoutType = useActiveLayoutType();
   const rootElement = useElement<FlatRootDesignElement>('root');
   const [designName, setDesignName] = useState(design?.name || '');
   const nameInputRef = useRef<HTMLInputElement>(null);
@@ -50,7 +52,7 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
     const trimmedName = designName.trim();
 
     if (trimmedName && trimmedName !== design.name) {
-      Layouts.update(design.id, { name: trimmedName });
+      renameDesign(trimmedName);
     } else {
       setDesignName(design.name);
     }
@@ -131,10 +133,10 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
         />
       </Panel>
       <div className="design-studio-workspace">
-        {design && (
+        {design && activeLayoutType && (
           <>
             <DesignStudioViewport>
-              <DesignCanvas layoutType={design.type}>
+              <DesignCanvas layoutType={activeLayoutType}>
                 {rootElement && (
                   <DesignStudioRootElement element={rootElement} />
                 )}

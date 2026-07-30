@@ -8,8 +8,8 @@ import {
   Stack,
 } from '@minddrop/ui-primitives';
 import {
+  getDesignElement,
   updateDesignElement,
-  useDesignStudioStore,
   useElementData,
 } from '../../DesignStudioStore';
 import { FlatNumberElement } from '../../types';
@@ -83,7 +83,7 @@ export const NumberPlaceholderField = ({
         return;
       }
 
-      const current = useDesignStudioStore.getState().elements[elementId] as
+      const current = getDesignElement(elementId) as
         | FlatNumberElement
         | undefined;
       const currentValue = current?.placeholder || '';

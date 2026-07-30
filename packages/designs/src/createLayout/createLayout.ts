@@ -27,6 +27,7 @@ const defaultFrames: Record<LayoutType, LayoutFrame> = {
  * @param designId - The ID of the parent design.
  * @param type - The layout type.
  * @param name - The layout name, defaults to the localized type label.
+ * @param position - The frame position on the design canvas, defaults to the origin.
  * @returns The new layout.
  *
  * @dispatches 'designs:layout:created'
@@ -37,6 +38,7 @@ export async function createLayout(
   designId: string,
   type: LayoutType,
   name?: string,
+  position?: Pick<LayoutFrame, 'x' | 'y'>,
 ): Promise<Layout> {
   // Get the parent design
   const design = getDesign(designId);
@@ -59,7 +61,7 @@ export async function createLayout(
       },
       children: [],
     },
-    frame: { ...defaultFrames[type] },
+    frame: { ...defaultFrames[type], ...position },
     created: new Date(),
     lastModified: new Date(),
   };

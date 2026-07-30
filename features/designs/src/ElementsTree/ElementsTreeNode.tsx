@@ -10,7 +10,11 @@ import {
   Icon,
   Tooltip,
 } from '@minddrop/ui-primitives';
-import { DesignStudioStore, useElement } from '../DesignStudioStore';
+import {
+  DesignStudioStore,
+  useActiveLayoutType,
+  useElement,
+} from '../DesignStudioStore';
 import { MappableIndicator } from '../MappableIndicator';
 import {
   elementCompatiblePropertyTypesMap,
@@ -39,7 +43,7 @@ export const ElementsTreeNode: React.FC<ElementsTreeNodeProps> = ({
 }) => {
   const { t } = useTranslation();
   const element = useElement(elementId);
-  const layoutType = DesignStudioStore((state) => state.design?.type);
+  const layoutType = useActiveLayoutType();
   const selectedElementId = DesignStudioStore(
     (state) => state.selectedElementId,
   );

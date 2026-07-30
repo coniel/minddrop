@@ -1,6 +1,10 @@
 import { createI18nKeyBuilder } from '@minddrop/i18n';
 import { Group, Icon, ScrollArea, Stack, Text } from '@minddrop/ui-primitives';
-import { useDesignStudioStore, useElement } from '../DesignStudioStore';
+import {
+  useActiveLayoutType,
+  useDesignStudioStore,
+  useElement,
+} from '../DesignStudioStore';
 import { elementIconMap, elementLabelMap } from '../constants';
 import { elementUIMap } from '../design-elements';
 import './ElementStyleEditor.css';
@@ -11,7 +15,7 @@ export const ElementStyleEditor: React.FC = () => {
   const selectedElementId = useDesignStudioStore(
     (state) => state.selectedElementId,
   );
-  const layoutType = useDesignStudioStore((state) => state.design?.type);
+  const layoutType = useActiveLayoutType();
   const element = useElement(selectedElementId || '');
 
   if (!selectedElementId || !element) {

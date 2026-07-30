@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DesignElementTemplate, TextElementConfig } from '@minddrop/designs';
 import { DropEventData } from '@minddrop/selection';
-import { useDesignStudioStore } from '../DesignStudioStore';
+import { getDesignElement } from '../DesignStudioStore';
 import {
   DesignElementTemplatesDataKey,
   DesignElementsDataKey,
@@ -14,15 +14,13 @@ import {
   element_2,
   flat_root_1,
   setup,
-  testDesign,
+  testLayout,
 } from '../test-utils';
 import { DesignStudioDropEventData, FlatRootDesignElement } from '../types';
 import { handleDropOnDesignElement } from './handleDropOnDesignElement';
 
 function getChildren() {
-  return (
-    useDesignStudioStore.getState().elements.root as FlatRootDesignElement
-  ).children;
+  return getDesignElement<FlatRootDesignElement>('root').children;
 }
 
 const children = flat_root_1.children;
@@ -37,7 +35,7 @@ const baseEvent = {
   },
   index: 0,
   position: 'after',
-  targetId: testDesign.tree.children[0].id,
+  targetId: testLayout.tree.children[0].id,
   targetType: 'design-element',
   event: new Event('drop'),
 } as unknown as DropEventData<DesignStudioDropEventData>;
@@ -79,7 +77,7 @@ describe('handleDropOnDesignElement', () => {
         ...baseEvent,
         position: 'before',
         index: 1,
-        targetId: testDesign.tree.children[1].id,
+        targetId: testLayout.tree.children[1].id,
         data: {
           [DesignElementTemplatesDataKey]: [
             TextElementConfig.template as DesignElementTemplate,

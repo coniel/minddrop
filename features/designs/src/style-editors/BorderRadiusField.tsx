@@ -1,7 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ContainerElementStyle } from '@minddrop/designs';
 import { Group, IconButton, NumberField } from '@minddrop/ui-primitives';
-import { updateElementStyle, useDesignStudioStore } from '../DesignStudioStore';
+import {
+  getActiveElements,
+  updateElementStyle,
+  useDesignStudioStore,
+} from '../DesignStudioStore';
 
 export interface BorderRadiusFieldProps {
   /**
@@ -32,7 +36,8 @@ const cornerLabels: Record<CornerKey, string> = {
  */
 export const BorderRadiusField = ({ elementId }: BorderRadiusFieldProps) => {
   const values = useDesignStudioStore((state) => {
-    const style = state.elements[elementId].style as ContainerElementStyle;
+    const style = getActiveElements(state)[elementId]
+      .style as ContainerElementStyle;
 
     return {
       borderRadiusTopLeft: style.borderRadiusTopLeft,

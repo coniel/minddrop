@@ -1,5 +1,5 @@
 import { DatabaseFixtures } from '@minddrop/databases';
-import { DesignFixtures } from '@minddrop/designs';
+import { Design, DesignFixtures } from '@minddrop/designs';
 import {
   FlatContainerDesignElement,
   FlatLeafDesignElement,
@@ -7,6 +7,7 @@ import {
 } from '../types';
 
 export const {
+  design_books,
   layout_card_1,
   element_text_1,
   element_text_2,
@@ -25,12 +26,21 @@ const containerWithUniqueChild = {
   children: [element_text_3],
 };
 
-export const testDesign = {
+export const testLayout = {
   ...layout_card_1,
   tree: {
     ...layout_card_1.tree,
     children: [element_text_1, containerWithUniqueChild, element_text_2],
   },
+};
+
+// The parent design of testLayout, with the layout's modified
+// tree swapped in so the design matches the layout fixture
+export const testDesign: Design = {
+  ...design_books,
+  layouts: design_books.layouts.map((layout) =>
+    layout.id === testLayout.id ? testLayout : layout,
+  ),
 };
 
 export const flat_root_1: FlatRootDesignElement = {
@@ -69,7 +79,7 @@ export const flatTree = {
   root: {
     ...layout_card_1.tree,
     id: 'root',
-    children: testDesign.tree.children.map((child) => child.id),
+    children: testLayout.tree.children.map((child) => child.id),
   },
   [element_text_1.id]: {
     ...element_text_1,

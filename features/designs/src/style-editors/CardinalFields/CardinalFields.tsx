@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { DesignElementStyle } from '@minddrop/designs';
 import { IconButton, NumberField } from '@minddrop/ui-primitives';
 import {
+  getActiveElements,
   updateElementStyle,
   useDesignStudioStore,
 } from '../../DesignStudioStore';
@@ -61,10 +62,8 @@ export const CardinalFields = ({
 
   // Read all 4 values from the store
   const values = useDesignStudioStore((state) => {
-    const style = state.elements[elementId].style as unknown as Record<
-      string,
-      number
-    >;
+    const style = getActiveElements(state)[elementId]
+      .style as unknown as Record<string, number>;
 
     if (remValues) {
       return {

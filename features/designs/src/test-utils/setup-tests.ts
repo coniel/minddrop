@@ -7,7 +7,7 @@ import { initializeI18n } from '@minddrop/i18n';
 import { cleanup as cleanupRender } from '@minddrop/test-utils';
 import { Paths } from '@minddrop/utils';
 import { useDesignStudioStore } from '../DesignStudioStore';
-import { testDatabase, testDesign } from './fixtures';
+import { testDatabase, testDesign, testLayout } from './fixtures';
 
 interface SetupOptions {
   initializeStore?: boolean;
@@ -22,10 +22,12 @@ export function setup(setupOptions: SetupOptions = { initializeStore: true }) {
   setupDesignFixtures(MockFs);
 
   // Initialize the design studio store with the test design
+  // and activate the test layout
   if (setupOptions.initializeStore !== false) {
     useDesignStudioStore
       .getState()
       .initialize(testDesign, testDatabase.properties);
+    useDesignStudioStore.getState().setActiveLayout(testLayout.id);
   }
 }
 

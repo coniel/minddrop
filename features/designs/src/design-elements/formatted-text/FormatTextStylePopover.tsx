@@ -27,9 +27,9 @@ import {
 } from '@minddrop/ui-primitives';
 import { ContentColor } from '@minddrop/ui-theme';
 import {
-  saveDesign,
+  getDesignElement,
+  setDesignElement,
   updateDesignElement,
-  useDesignStudioStore,
   useElementData,
 } from '../../DesignStudioStore';
 import { FlatNumberElement } from '../../types';
@@ -101,17 +101,12 @@ export const FormatTextStylePopover = ({
 
   // Reset the override style back to element defaults
   const resetStyle = useCallback(() => {
-    useDesignStudioStore.setState((state) => {
-      const element = {
-        ...state.elements[elementId],
-      } as FlatNumberElement;
-      const { [styleKey]: _, ...rest } = element.format || {};
+    const element = { ...getDesignElement(elementId) } as FlatNumberElement;
+    const { [styleKey]: _, ...rest } = element.format || {};
 
-      element.format = rest as FlatNumberElement['format'];
+    element.format = rest as FlatNumberElement['format'];
 
-      return { elements: { ...state.elements, [elementId]: element } };
-    });
-    saveDesign();
+    setDesignElement(elementId, element);
   }, [elementId, styleKey]);
 
   // Update a style property on the override

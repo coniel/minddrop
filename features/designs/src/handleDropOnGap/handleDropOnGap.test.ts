@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DesignElementTemplate, TextElementConfig } from '@minddrop/designs';
 import { DropEventData } from '@minddrop/selection';
-import { useDesignStudioStore } from '../DesignStudioStore';
+import { getDesignElement } from '../DesignStudioStore';
 import {
   DesignElementTemplatesDataKey,
   DesignElementsDataKey,
@@ -19,9 +19,7 @@ import { DesignStudioDropEventData, FlatRootDesignElement } from '../types';
 import { handleDropOnGap } from './handleDropOnGap';
 
 function getChildren() {
-  return (
-    useDesignStudioStore.getState().elements.root as FlatRootDesignElement
-  ).children;
+  return getDesignElement<FlatRootDesignElement>('root').children;
 }
 
 const children = flat_root_1.children;

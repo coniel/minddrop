@@ -85,6 +85,15 @@ describe('createLayout', () => {
     expect(page.frame).toEqual({ x: 0, y: 0, width: 800, height: 600 });
   });
 
+  it('positions the frame at the given position', async () => {
+    const result = await createLayout(design_empty.id, 'card', 'My card', {
+      x: 120,
+      y: 240,
+    });
+
+    expect(result.frame).toEqual({ x: 120, y: 240, width: 380 });
+  });
+
   it('dispatches a layout created event', async () =>
     new Promise<void>((done) => {
       Events.addListener<LayoutCreatedEventData>(

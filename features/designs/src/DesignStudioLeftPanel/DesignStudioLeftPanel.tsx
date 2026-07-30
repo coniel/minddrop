@@ -1,12 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import {
-  Designs,
-  Layout,
-  LayoutType,
-  Layouts,
-  defaultLayoutIds,
-} from '@minddrop/designs';
-import { i18n } from '@minddrop/i18n';
+import { Design, Designs, Layout, LayoutType } from '@minddrop/designs';
+import { createI18nKeyBuilder, i18n } from '@minddrop/i18n';
 import { UiIconName } from '@minddrop/ui-icons';
 import {
   IconButton,
@@ -20,7 +14,7 @@ import {
   TabsPanel,
   TabsTab,
 } from '@minddrop/ui-primitives';
-import { DesignStudioStore } from '../DesignStudioStore';
+import { DesignStudioStore, addLayout } from '../DesignStudioStore';
 import { ElementsPalette } from '../ElementsPalette/ElementsPalette';
 import { ElementsTree } from '../ElementsTree';
 import { NewLayoutMenu } from '../NewLayoutMenu';
@@ -28,9 +22,11 @@ import './DesignStudioLeftPanel.css';
 
 type ActivePanel = 'designs' | 'elements' | 'layers';
 
-const DESIGN_TYPES = ['card', 'list', 'page'] as const;
+const LAYOUT_TYPES = ['card', 'list', 'page'] as const;
 
-const designTypeIconMap: Record<string, UiIconName> = {
+const layoutTypeI18nKey = createI18nKeyBuilder('designs.layouts.');
+
+const layoutTypeIconMap: Record<string, UiIconName> = {
   page: 'layout',
   card: 'layout-grid',
   list: 'layout-list',
@@ -56,12 +52,30 @@ export const DesignStudioLeftPanel: React.FC<DesignStudioLeftPanelProps> = ({
   const [activePanel, setActivePanel] = useState<ActivePanel>(
     newLayoutType ? 'elements' : 'designs',
   );
-  const designs = Layouts.useAll();
-  const activeDesignId = DesignStudioStore((state) => state.design?.id);
+  const designs = Designs.useAll();
+  const activeLayoutId = DesignStudioStore((state) => state.activeLayoutId);
   const hasCreatedNewDesign = useRef(false);
 
-  const handleSelectDesign = useCallback((design: Layout) => {
+  // Open the layout's parent design in the studio (if not already
+  // open) and make the layout active
+  const handleSelectLayout = useCallback((design: Design, layout: Layout) => {
+    const store = DesignStudioStore.getState();
+
+    if (store.design?.id !== design.id) {
+      store.initialize(design);
+    }
+
+    store.setActiveLayout(layout.id);
+  }, []);
+
+  // Create a new design with a starter layout of the chosen type
+  // and open it in the studio
+  const handleCreateDesign = useCallback(async (type: LayoutType) => {
+    const design = await Designs.create();
+
     DesignStudioStore.getState().initialize(design);
+    await addLayout(design.id, type);
+    setActivePanel('elements');
   }, []);
 
   // Create and open a new design on mount when newLayoutType is set
@@ -72,25 +86,8 @@ export const DesignStudioLeftPanel: React.FC<DesignStudioLeftPanelProps> = ({
 
     hasCreatedNewDesign.current = true;
 
-    async function createNewDesign() {
-      const design = await Designs.create();
-      const layout = await Layouts.create(design.id, newLayoutType!);
-
-      handleSelectDesign(layout);
-      setActivePanel('elements');
-    }
-
-    createNewDesign();
-  }, [newLayoutType, handleSelectDesign]);
-
-  // Create a new design with a starter layout of the chosen type
-  async function handleCreateDesign(type: LayoutType) {
-    const design = await Designs.create();
-    const layout = await Layouts.create(design.id, type);
-
-    handleSelectDesign(layout);
-    setActivePanel('elements');
-  }
+    handleCreateDesign(newLayoutType);
+  }, [newLayoutType, handleCreateDesign]);
 
   return (
     <Tabs
@@ -113,10 +110,10 @@ export const DesignStudioLeftPanel: React.FC<DesignStudioLeftPanelProps> = ({
           <TabsTab value="designs" size="sm">
             {i18n.t('design-studio.labels.designs')}
           </TabsTab>
-          <TabsTab value="elements" size="sm" disabled={!activeDesignId}>
+          <TabsTab value="elements" size="sm" disabled={!activeLayoutId}>
             {i18n.t('design-studio.labels.elements')}
           </TabsTab>
-          <TabsTab value="layers" size="sm" disabled={!activeDesignId}>
+          <TabsTab value="layers" size="sm" disabled={!activeLayoutId}>
             {i18n.t('design-studio.labels.layers')}
           </TabsTab>
         </TabsList>
@@ -127,28 +124,31 @@ export const DesignStudioLeftPanel: React.FC<DesignStudioLeftPanelProps> = ({
       <TabsPanel value="designs">
         <ScrollArea>
           <div className="designs-list">
-            {DESIGN_TYPES.map((type) => {
-              const typeDesigns = designs.filter(
-                (design) =>
-                  design.type === type && !defaultLayoutIds.includes(design.id),
+            {LAYOUT_TYPES.map((type) => {
+              // Collect layouts of this type across all designs,
+              // paired with their parent design
+              const typeLayouts = designs.flatMap((design) =>
+                design.layouts
+                  .filter((layout) => layout.type === type)
+                  .map((layout) => ({ design, layout })),
               );
 
-              if (!typeDesigns.length) {
+              if (!typeLayouts.length) {
                 return null;
               }
 
               return (
                 <MenuGroup key={type}>
-                  <MenuLabel label={`layouts.${type}.name`} />
-                  {typeDesigns.map((design) => (
+                  <MenuLabel label={layoutTypeI18nKey(type, 'name')} />
+                  {typeLayouts.map(({ design, layout }) => (
                     <MenuItem
-                      key={design.id}
-                      icon={designTypeIconMap[design.type]}
-                      active={design.id === activeDesignId}
+                      key={layout.id}
+                      icon={layoutTypeIconMap[layout.type]}
+                      active={layout.id === activeLayoutId}
                       muted
-                      onClick={() => handleSelectDesign(design)}
+                      onClick={() => handleSelectLayout(design, layout)}
                     >
-                      {design.name}
+                      {layout.name}
                     </MenuItem>
                   ))}
                 </MenuGroup>
