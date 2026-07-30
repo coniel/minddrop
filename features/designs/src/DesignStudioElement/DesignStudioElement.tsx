@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo } from 'react';
 import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import { DesignStudioStore, useElement } from '../DesignStudioStore';
+import { useLayoutId } from '../LayoutIdContext';
 import { elementUIMap } from '../design-elements';
 import { FlatDesignElement } from '../types';
 import { useDesignElementDragDrop } from '../useDesignElementDragDrop';
@@ -50,6 +51,7 @@ const DesignStudioElementInner: React.FC<{
   isLastChild: boolean;
 }> = ({ element, index, isLastChild }) => {
   const { t } = useTranslation();
+  const layoutId = useLayoutId();
 
   const { dragDropProps, isDragging } = useDesignElementDragDrop({
     index,
@@ -57,13 +59,17 @@ const DesignStudioElementInner: React.FC<{
     isLastChild,
   });
 
-  // Select the element to open its style editor
+  // Select the element to open its style editor, activating the
+  // containing layout
   const handleClick = useCallback(
     (event: React.MouseEvent) => {
       event.stopPropagation();
-      DesignStudioStore.getState().selectElement(element.id);
+      DesignStudioStore.getState().selectElement(
+        element.id,
+        layoutId ?? undefined,
+      );
     },
-    [element.id],
+    [element.id, layoutId],
   );
 
   // Build the props that the component must spread

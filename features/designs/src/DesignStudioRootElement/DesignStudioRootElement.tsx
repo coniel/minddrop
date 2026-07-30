@@ -10,6 +10,7 @@ import { Fs } from '@minddrop/file-system';
 import { FlexDropContainer } from '@minddrop/ui-drag-and-drop';
 import { DesignStudioElement } from '../DesignStudioElement/DesignStudioElement';
 import { DesignStudioStore } from '../DesignStudioStore';
+import { useLayoutId } from '../LayoutIdContext';
 import { handleDropOnGap } from '../handleDropOnGap';
 import { FlatRootDesignElement } from '../types';
 import './DesignStudioRootElement.css';
@@ -22,6 +23,7 @@ export const DesignStudioRootElement: React.FC<
   DesignStudioRootElementProps
 > = ({ element }) => {
   const { style } = element;
+  const layoutId = useLayoutId();
 
   // Resolve background image path if set
   const imagePath = useMemo(
@@ -37,18 +39,22 @@ export const DesignStudioRootElement: React.FC<
   const { hasBackdropWithImage, gradientOverlayStyle } =
     resolveContainerBackdrop(style, imageSrc);
 
-  // Select the root element when clicking the root background.
-  // Only fires when the click target is inside this element,
-  // ignoring clicks from dialog overlays closing.
-  const handleClick = useCallback((event: React.MouseEvent) => {
-    const rootElement = event.currentTarget as HTMLElement;
+  // Select the root element when clicking the root background,
+  // activating the containing layout. Only fires when the click
+  // target is inside this element, ignoring clicks from dialog
+  // overlays closing.
+  const handleClick = useCallback(
+    (event: React.MouseEvent) => {
+      const rootElement = event.currentTarget as HTMLElement;
 
-    if (!rootElement.contains(event.target as Node)) {
-      return;
-    }
+      if (!rootElement.contains(event.target as Node)) {
+        return;
+      }
 
-    DesignStudioStore.getState().selectElement('root');
-  }, []);
+      DesignStudioStore.getState().selectElement('root', layoutId ?? undefined);
+    },
+    [layoutId],
+  );
 
   const baseContainerStyle = createElementCssStyle(element);
 

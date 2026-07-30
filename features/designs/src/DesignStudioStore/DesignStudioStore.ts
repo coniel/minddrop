@@ -198,8 +198,9 @@ export interface DesignStudioStore {
    * Selects an element by ID, or deselects if null.
    * Also highlights the element on the canvas.
    * @param id - The ID of the element to select, or null to deselect.
+   * @param layoutId - When provided, the layout containing the element becomes active.
    */
-  selectElement: (id: string | null) => void;
+  selectElement: (id: string | null, layoutId?: string) => void;
 
   /**
    * Clears the canvas highlight with a fade-out animation.
@@ -473,12 +474,13 @@ export const DesignStudioStore = createStore<DesignStudioStore>((set) => ({
     });
   },
 
-  selectElement: (id) =>
-    set({
+  selectElement: (id, layoutId) =>
+    set((state) => ({
+      activeLayoutId: layoutId ?? state.activeLayoutId,
       selectedElementId: id ?? 'root',
       highlightedElementId: id,
       fadingHighlightElementId: null,
-    }),
+    })),
 
   clearHighlight: () =>
     set((state) => ({
@@ -673,6 +675,23 @@ export const updateLayoutFrame = async (
   frame: LayoutFrame,
 ) => {
   await Layouts.update(layoutId, { frame });
+
+  const state = DesignStudioStore.getState();
+
+  if (state.design?.layouts.some((layout) => layout.id === layoutId)) {
+    DesignStudioStore.getState().setDesign(Designs.get(state.design.id));
+  }
+};
+
+/**
+ * Renames a layout and refreshes the design snapshot if the
+ * layout belongs to the design open in the studio.
+ *
+ * @param layoutId - The ID of the layout to rename.
+ * @param name - The new layout name.
+ */
+export const renameLayout = async (layoutId: string, name: string) => {
+  await Layouts.update(layoutId, { name });
 
   const state = DesignStudioStore.getState();
 

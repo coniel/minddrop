@@ -88,19 +88,29 @@ export const DesignStudioViewport: React.FC<React.PropsWithChildren> = ({
           panX: store.pan.x,
           panY: store.pan.y,
         };
+
+        return;
       }
 
-      // Clear the canvas highlight when clicking the viewport
-      // background or the frame hover zones (resize/drag areas).
-      // Selection stays on the current element (defaults to root).
       const target = event.target as HTMLElement;
+      const store = DesignStudioStore.getState();
 
+      // Clicking the empty viewport deactivates the layout and
+      // clears the selection
       if (
         target === event.currentTarget ||
-        target === viewportRef.current?.firstElementChild ||
-        target.classList.contains('layout-frame-hover-zone')
+        target === viewportRef.current?.firstElementChild
       ) {
-        DesignStudioStore.getState().clearHighlight();
+        store.setActiveLayout(null);
+
+        return;
+      }
+
+      // Clicking the frame hover zones (resize/drag areas) only
+      // clears the canvas highlight, selection stays on the
+      // current element
+      if (target.classList.contains('layout-frame-hover-zone')) {
+        store.clearHighlight();
       }
     },
     [],

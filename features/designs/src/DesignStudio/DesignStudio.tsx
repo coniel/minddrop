@@ -11,6 +11,7 @@ import { DesignStudioLeftPanel } from '../DesignStudioLeftPanel';
 import { DesignStudioRootElement } from '../DesignStudioRootElement';
 import {
   DesignStudioStore,
+  removeLayout,
   renameDesign,
   saveDesign,
   useDesignStudioStore,
@@ -79,14 +80,23 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
       }
 
       const store = DesignStudioStore.getState();
-      const { highlightedElementId } = store;
+      const { highlightedElementId, activeLayoutId } = store;
 
-      // Can't delete root or nothing
-      if (!highlightedElementId || highlightedElementId === 'root') {
+      if (!highlightedElementId) {
         return;
       }
 
       event.preventDefault();
+
+      // Deleting a frame's root deletes the entire layout
+      if (highlightedElementId === 'root') {
+        if (activeLayoutId) {
+          removeLayout(activeLayoutId);
+        }
+
+        return;
+      }
+
       store.removeElement(highlightedElementId);
       store.selectElement(null);
       saveDesign();

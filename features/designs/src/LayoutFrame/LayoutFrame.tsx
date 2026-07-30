@@ -6,9 +6,11 @@ import {
   useState,
 } from 'react';
 import { Layout, LayoutType } from '@minddrop/designs';
+import { TextInput } from '@minddrop/ui-primitives';
 import { DesignPreviewProvider } from '../DesignElements';
 import {
   DesignStudioStore,
+  renameLayout,
   updateLayoutFrame,
   useDesignStudioStore,
 } from '../DesignStudioStore';
@@ -282,19 +284,13 @@ export const LayoutFrame: React.FC<LayoutFrameProps> = ({
 
   // Select the root element when clicking the drag handle
   // without actually dragging the frame, activating this
-  // frame's layout first in studio mode
+  // frame's layout in studio mode
   const handleDragHandleClick = useCallback(() => {
     if (didDrag.current) {
       return;
     }
 
-    const store = DesignStudioStore.getState();
-
-    if (layoutId && store.activeLayoutId !== layoutId) {
-      store.setActiveLayout(layoutId);
-    }
-
-    store.selectElement('root');
+    DesignStudioStore.getState().selectElement('root', layoutId);
   }, [layoutId]);
 
   // Start a resize operation on mousedown
@@ -662,6 +658,9 @@ export const LayoutFrame: React.FC<LayoutFrameProps> = ({
         </>
       )}
 
+      {/* Layout name input (studio mode only) */}
+      {layout && <LayoutNameInput layout={layout} />}
+
       {/* Drag handle hover zone + handle bar */}
       <div className="layout-frame-hover-zone layout-frame-hover-zone-top" />
       <div
@@ -702,6 +701,60 @@ export const LayoutFrame: React.FC<LayoutFrameProps> = ({
           />
         </>
       )}
+    </div>
+  );
+};
+
+interface LayoutNameInputProps {
+  /**
+   * The layout being named.
+   */
+  layout: Layout;
+}
+
+/**
+ * Renders the layout name input above the frame. Commits the
+ * name on blur or Enter, reverting empty values.
+ */
+const LayoutNameInput: React.FC<LayoutNameInputProps> = ({ layout }) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [name, setName] = useState(layout.name);
+
+  // Sync the input when the layout is renamed externally
+  useEffect(() => {
+    setName(layout.name);
+  }, [layout.id, layout.name]);
+
+  const handleBlur = useCallback(() => {
+    const trimmedName = name.trim();
+
+    if (trimmedName && trimmedName !== layout.name) {
+      renameLayout(layout.id, trimmedName);
+    } else {
+      setName(layout.name);
+    }
+  }, [name, layout.id, layout.name]);
+
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (event.key === 'Enter') {
+        inputRef.current?.blur();
+      }
+    },
+    [],
+  );
+
+  return (
+    <div className="layout-frame-name">
+      <TextInput
+        ref={inputRef}
+        variant="subtle"
+        size="sm"
+        value={name}
+        onValueChange={setName}
+        onBlur={handleBlur}
+        onKeyDown={handleKeyDown}
+      />
     </div>
   );
 };
