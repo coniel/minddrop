@@ -9,6 +9,7 @@ import {
 export const {
   design_books,
   layout_card_1,
+  layout_page_1,
   element_text_1,
   element_text_2,
   element_text_3,

@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { Layout, LayoutType } from '@minddrop/designs';
+import { LayoutType } from '@minddrop/designs';
 import {
   DropdownMenu,
   DropdownMenuItem,
@@ -9,10 +9,8 @@ import {
 } from '@minddrop/ui-primitives';
 import { DesignStudioStore, addLayout } from './DesignStudioStore';
 import { layoutTypeIconMap } from './constants';
+import { getNewLayoutPosition } from './utils';
 import { centerViewOnLayout } from './viewportActions';
-
-// Horizontal gap between an added layout and existing frames
-const NEW_LAYOUT_GAP = 100;
 
 /**
  * Renders a + icon button that opens a dropdown menu for adding a
@@ -70,23 +68,3 @@ export const AddLayoutMenu: React.FC = () => {
     </DropdownMenu>
   );
 };
-
-/**
- * Computes the frame position for a layout added to a design:
- * to the right of the rightmost existing frame, aligned with the
- * topmost one. Returns undefined when the design has no layouts.
- */
-function getNewLayoutPosition(
-  layouts: Layout[],
-): { x: number; y: number } | undefined {
-  if (!layouts.length) {
-    return undefined;
-  }
-
-  const rightmostEdge = Math.max(
-    ...layouts.map((layout) => layout.frame.x + layout.frame.width),
-  );
-  const topmostEdge = Math.min(...layouts.map((layout) => layout.frame.y));
-
-  return { x: rightmostEdge + NEW_LAYOUT_GAP, y: topmostEdge };
-}

@@ -212,8 +212,6 @@ declare module 'i18next' {
           actions: {
             new: string;
             addProperty: string;
-            addLayout: string;
-            browseLayouts: string;
             addView: string;
             viewSettings: string;
             newEntry: string;
@@ -221,11 +219,6 @@ declare module 'i18next' {
           };
           layouts: {
             databaseDefault: string;
-            actions: {
-              manage: string;
-              setAsDefault: string;
-              remove: string;
-            };
           };
           entries: {
             actions: {
@@ -805,7 +798,6 @@ declare module 'i18next' {
           new: string;
           layouts: {
             labels: {
-              new: string;
               add: string;
             };
             actions: {
@@ -818,39 +810,17 @@ declare module 'i18next' {
             page: {
               name: string;
               label: string;
-              new: string;
               description: string;
             };
             card: {
               name: string;
               label: string;
-              new: string;
               description: string;
             };
             list: {
               name: string;
               label: string;
-              new: string;
               description: string;
-            };
-          };
-          'layout-property-mapping': {
-            browser: {
-              title: string;
-              search: string;
-              newLayout: string;
-              emptyPreview: string;
-              useLayout: string;
-              propertiesTitle: string;
-              backToLayouts: string;
-              searchProperties: string;
-              addProperty: string;
-              dateGroup: string;
-              collectionGroup: string;
-              zoom: string;
-              highlightMapped: string;
-              highlightUnmapped: string;
-              mappingCounter: string;
             };
           };
           typography: {

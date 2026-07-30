@@ -1,9 +1,6 @@
-import { LayoutType } from '@minddrop/designs';
-
 // -- View names --
 
 export const DesignStudioViewName = 'designs:view:studio';
-export const LayoutBrowserViewName = 'designs:view:browser';
 
 // -- Design Studio events --
 
@@ -27,41 +24,8 @@ export interface OpenDesignStudioEventData {
   backEventData?: any;
 
   /**
-   * When set, a new layout of this type is created and
-   * opened automatically with the left panel set to
-   * the elements tab.
+   * The ID of the design to open in the editor. When omitted,
+   * the studio opens at the dashboard.
    */
-  newLayoutType?: LayoutType;
-}
-
-// -- Layout Property Mapping events --
-
-export const LayoutPropertyMappingEventListenerId =
-  'feature-layout-property-mapping';
-
-// Opens the layout browser overlay for a database
-export const BrowseLayoutsEvent =
-  'feature-layout-property-mapping:layouts:browse';
-
-// Opens the property mapper overlay for a database + layout
-export const OpenPropertyMapperEvent =
-  'feature-layout-property-mapping:mapper:open';
-
-export interface BrowseLayoutsEventData {
-  /**
-   * The ID of the database to browse layouts for.
-   */
-  databaseId: string;
-}
-
-export interface OpenPropertyMapperEventData {
-  /**
-   * The ID of the database to map properties from.
-   */
-  databaseId: string;
-
-  /**
-   * The ID of the layout to map properties to.
-   */
-  layoutId: string;
+  designId?: string;
 }

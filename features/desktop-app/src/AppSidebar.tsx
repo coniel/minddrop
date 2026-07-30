@@ -15,7 +15,7 @@ export const AppSidebar: React.FC<SidebarProps> = ({ ...other }) => {
   }
 
   function handleOpenDesignStudio() {
-    Events.dispatch(OpenDesignStudioEvent, {});
+    Events.dispatch(OpenDesignStudioEvent);
   }
 
   function handleResized(width: number) {

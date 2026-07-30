@@ -200,20 +200,13 @@
     "actions": {
       "new": "New",
       "addProperty": "Add property",
-      "addLayout": "Add layout",
-      "browseLayouts": "Browse layouts",
       "addView": "Add view",
       "viewSettings": "View settings",
       "newEntry": "New entry",
       "configuration": "Configuration"
     },
     "layouts": {
-      "databaseDefault": "Database default",
-      "actions": {
-        "manage": "Manage layout",
-        "setAsDefault": "Set as default",
-        "remove": "Remove"
-      }
+      "databaseDefault": "Database default"
     },
     "entries": {
       "actions": {
@@ -793,7 +786,6 @@
     "new": "New design",
     "layouts": {
       "labels": {
-        "new": "New layout",
         "add": "Add layout"
       },
       "actions": {
@@ -806,39 +798,17 @@
       "page": {
         "name": "Page",
         "label": "Page layout",
-        "new": "New page layout",
         "description": "The layout of an entry when displayed as a page."
       },
       "card": {
         "name": "Card",
         "label": "Card layout",
-        "new": "New card layout",
         "description": "The layout of an entry when displayed as a card."
       },
       "list": {
         "name": "List",
         "label": "List layout",
-        "new": "New list layout",
         "description": "The layout of an entry when displayed in a list."
-      }
-    },
-    "layout-property-mapping": {
-      "browser": {
-        "title": "Choose a layout",
-        "search": "Search layouts...",
-        "newLayout": "New layout",
-        "emptyPreview": "Select a layout to preview",
-        "useLayout": "Use this layout",
-        "propertiesTitle": "Properties",
-        "backToLayouts": "Back to layouts",
-        "searchProperties": "Search properties...",
-        "addProperty": "Add property",
-        "dateGroup": "Date",
-        "collectionGroup": "Collection",
-        "zoom": "Zoom",
-        "highlightMapped": "Show mapped",
-        "highlightUnmapped": "Show unmapped",
-        "mappingCounter": "{{mapped}}/{{total}} properties mapped"
       }
     },
     "typography": {

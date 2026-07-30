@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { LayoutType } from '@minddrop/designs';
 import { i18n } from '@minddrop/i18n';
 import {
   IconButton,
@@ -21,21 +20,12 @@ export interface DesignStudioLeftPanelProps {
    * Callback fired when the back button is clicked.
    */
   onClickBack?: () => void;
-
-  /**
-   * When set, the panel opens on the elements tab (used by the
-   * new-design flow).
-   */
-  newLayoutType?: LayoutType;
 }
 
 export const DesignStudioLeftPanel: React.FC<DesignStudioLeftPanelProps> = ({
   onClickBack,
-  newLayoutType,
 }) => {
-  const [activePanel, setActivePanel] = useState<ActivePanel>(
-    newLayoutType ? 'elements' : 'layouts',
-  );
+  const [activePanel, setActivePanel] = useState<ActivePanel>('layouts');
 
   return (
     <Tabs

@@ -1,6 +1,5 @@
 import { useCallback, useState } from 'react';
 import { Databases } from '@minddrop/databases';
-import { NewLayoutMenu } from '@minddrop/feature-designs';
 import { PropertyTypeSelectionMenu } from '@minddrop/feature-properties';
 import { i18n } from '@minddrop/i18n';
 import { PropertySchema, PropertySchemaTemplate } from '@minddrop/properties';
@@ -15,14 +14,12 @@ import {
   TabsPanel,
   TabsTab,
 } from '@minddrop/ui-primitives';
-import { DatabaseLayoutsMenu } from '../DatabaseLayoutsMenu';
 import { DatabasePropertiesEditor } from '../DatabasePropertiesEditor';
 import {
   ConfigPanelTab,
   setDatabaseViewState,
   useDatabaseViewState,
 } from '../DatabaseViewStateStore';
-import { OpenDatabaseViewEvent } from '../events';
 import './DatabaseConfigurationPanel.css';
 
 export interface DatabaseConfigurationPanelProps {
@@ -129,15 +126,7 @@ export const DatabaseConfigurationPanel: React.FC<
               />
             </PropertyTypeSelectionMenu>
           )}
-          {!showSettings && activeTab === 'designs' && (
-            <NewLayoutMenu
-              databaseId={databaseId}
-              backEvent={OpenDatabaseViewEvent}
-              backEventData={{ databaseId, configurationPanelOpen: true }}
-            />
-          )}
-          {(showSettings ||
-            (activeTab !== 'properties' && activeTab !== 'designs')) && (
+          {(showSettings || activeTab !== 'properties') && (
             <IconButtonSpacer size="sm" />
           )}
         </div>
@@ -175,9 +164,7 @@ export const DatabaseConfigurationPanel: React.FC<
 
             <TabsPanel value="designs">
               <ScrollArea>
-                <div className="database-configuration-panel-designs-content">
-                  <DatabaseLayoutsMenu databaseId={databaseId} />
-                </div>
+                <div className="database-configuration-panel-designs-content" />
               </ScrollArea>
             </TabsPanel>
           </>
