@@ -66,7 +66,7 @@ resolution cascade is: explicit `layoutId` → database default
 (`Databases.getDefaultLayout`: pinned `defaultLayouts[type]` → first
 layout of the type in the database's design → null).
 
-## Known issues / cleanup (as of the design-layout-model WG)
+## Known issues / cleanup (as of the figma-design-studio WG)
 
 - Two additional override mechanisms exist as write-only plumbing that
   nothing renders from: `Database.viewLayouts[viewId]` and
@@ -74,10 +74,10 @@ layout of the type in the database's design → null).
   `set/clearDatabaseViewLayout`) is **redundant**: it duplicates per-view
   layout choice on the database side, against the ownership rule — view
   options are the consumed mechanism and already persist inside
-  `Database.views`. It predates the design-layout-model WG (carried over
+  `Database.views`. It predates the figma-design-studio WG (carried over
   from `viewDesigns` by the rename) and is deliberately left in place for
   now. The entry-level override needs a decision: real feature (then
-  something must consume it) or delete. See the design-layout-model plan,
+  something must consume it) or delete. See the figma-design-studio plan,
   open question 8.
 - A **full views audit** is planned later — covering the redundant
   override mechanisms above, the broken load/write path, and the
@@ -93,7 +93,7 @@ layout of the type in the database's design → null).
   entry `metadata.viewLayoutOverrides`).
 - The database view load/write path is currently broken by the views
   object-store conversion (`Views.Store.add` removal) — pre-existing,
-  unrelated to the design-layout-model WG.
+  unrelated to the figma-design-studio WG.
 - "Virtual" does double duty for database browse views and entry
   collection views, which have quite different lifecycles; a clearer term
   for "owner-persisted" may be worth adopting.

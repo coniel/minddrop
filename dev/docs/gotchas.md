@@ -15,7 +15,7 @@ is the single source of truth and a separate layouts store would need
 write-through sync on every design mutation (including whole-design
 saves from the studio) — a standing desync risk for an unmeasurable win.
 
-Perf context (as of the design-layout-model WG): the entry-rendering hot
+Perf context (as of the figma-design-studio WG): the entry-rendering hot
 path (`DatabaseEntryRenderer`) resolves layouts non-reactively inside a
 `useMemo`, so the scan runs once per entry mount. Even hundreds of
 entries amount to microseconds; the real cost of large views is
