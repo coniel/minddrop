@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { Designs, LayoutType } from '@minddrop/designs';
 import {
   CloseAppSidebarEvent,
   DefaultMainContentViewName,
@@ -7,10 +8,12 @@ import {
   OpenMainContentViewEvent,
 } from '@minddrop/events';
 import { Panel, TextInput } from '@minddrop/ui-primitives';
+import { DesignDashboard } from '../DesignDashboard';
 import { DesignStudioLeftPanel } from '../DesignStudioLeftPanel';
 import { DesignStudioRootElement } from '../DesignStudioRootElement';
 import {
   DesignStudioStore,
+  addLayout,
   removeLayout,
   renameDesign,
   saveDesign,
@@ -23,6 +26,7 @@ import { ElementStyleEditor } from '../ElementStyleEditor';
 import { LayoutFrame } from '../LayoutFrame/LayoutFrame';
 import { OpenDesignStudioEventData } from '../events';
 import { FlatRootDesignElement } from '../types';
+import { centerViewOnLayout } from '../viewportActions';
 import './DesignStudio.css';
 
 export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
@@ -37,6 +41,7 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
   const design = useDesignStudioStore((state) => state.design);
   const [designName, setDesignName] = useState(design?.name || '');
   const nameInputRef = useRef<HTMLInputElement>(null);
+  const hasCreatedNewDesign = useRef(false);
 
   useEffect(() => {
     setDesignName(design?.name || '');
@@ -64,6 +69,18 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
     },
     [],
   );
+
+  // Create and open a new design with a starter layout on mount
+  // when newLayoutType is set
+  useEffect(() => {
+    if (!newLayoutType || hasCreatedNewDesign.current) {
+      return;
+    }
+
+    hasCreatedNewDesign.current = true;
+
+    createDesignWithLayout(newLayoutType);
+  }, [newLayoutType]);
 
   // Delete the highlighted element on Delete/Backspace
   useEffect(() => {
@@ -118,6 +135,14 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
     };
   }, []);
 
+  // Close any open design when the studio unmounts so the next
+  // open starts at the dashboard
+  useEffect(() => {
+    return () => {
+      DesignStudioStore.getState().clear();
+    };
+  }, []);
+
   const handleClickBack = useCallback(() => {
     if (backEvent) {
       Events.dispatch(backEvent, backEventData);
@@ -131,40 +156,46 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
     }
   }, [backEvent, backEventData]);
 
+  // Return to the dashboard by closing the open design
+  const handleCloseDesign = useCallback(() => {
+    DesignStudioStore.getState().clear();
+  }, []);
+
+  // No design open: show the dashboard
+  if (!design) {
+    return <DesignDashboard onClickBack={handleClickBack} />;
+  }
+
   return (
     <div className="design-studio">
       <Panel className="design-studio-left-panel">
         <DesignStudioLeftPanel
-          onClickBack={handleClickBack}
+          onClickBack={handleCloseDesign}
           newLayoutType={newLayoutType}
         />
       </Panel>
       <div className="design-studio-workspace">
-        {design && (
-          <>
-            <DesignStudioViewport>
-              {design.layouts.map((layout) => (
-                <LayoutFrame key={layout.id} layoutId={layout.id}>
-                  <LayoutRootElement />
-                </LayoutFrame>
-              ))}
-            </DesignStudioViewport>
-            <div className="design-studio-workspace-header">
-              <div className="design-studio-workspace-design-name">
-                <TextInput
-                  ref={nameInputRef}
-                  variant="subtle"
-                  size="sm"
-                  value={designName}
-                  onValueChange={setDesignName}
-                  onBlur={handleNameBlur}
-                  onKeyDown={handleNameKeyDown}
-                />
-              </div>
-              <DesignStudioToolbar />
-            </div>
-          </>
-        )}
+        <DesignStudioViewport>
+          {design.layouts.map((layout) => (
+            <LayoutFrame key={layout.id} layoutId={layout.id}>
+              <LayoutRootElement />
+            </LayoutFrame>
+          ))}
+        </DesignStudioViewport>
+        <div className="design-studio-workspace-header">
+          <div className="design-studio-workspace-design-name">
+            <TextInput
+              ref={nameInputRef}
+              variant="subtle"
+              size="sm"
+              value={designName}
+              onValueChange={setDesignName}
+              onBlur={handleNameBlur}
+              onKeyDown={handleNameKeyDown}
+            />
+          </div>
+          <DesignStudioToolbar />
+        </div>
       </div>
       <Panel className="design-studio-right-panel">
         {selectedElementId && <ElementStyleEditor />}
@@ -186,3 +217,17 @@ const LayoutRootElement: React.FC = () => {
 
   return <DesignStudioRootElement element={rootElement} />;
 };
+
+/**
+ * Creates a new design with a starter layout of the given type,
+ * opens it in the editor and centers the view on the layout.
+ */
+async function createDesignWithLayout(type: LayoutType) {
+  const design = await Designs.create();
+
+  DesignStudioStore.getState().initialize(design);
+
+  const layout = await addLayout(design.id, type);
+
+  centerViewOnLayout(layout.id);
+}

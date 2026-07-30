@@ -6,6 +6,7 @@
   "designStudio": {
     "open": "Open design studio",
     "exit": "Exit design studio",
+    "backToDesigns": "Back to designs",
     "resetView": "Reset view",
     "zoomIn": "Zoom in",
     "zoomOut": "Zoom out",
@@ -1181,6 +1182,12 @@
       "designs": "Designs",
       "elements": "Elements",
       "layouts": "Layouts"
+    },
+    "dashboard": {
+      "empty": "No designs yet",
+      "noLayouts": "No layouts",
+      "layoutCount_one": "{{count}} layout",
+      "layoutCount_other": "{{count}} layouts"
     },
     "elements": {
       "root": "Root",

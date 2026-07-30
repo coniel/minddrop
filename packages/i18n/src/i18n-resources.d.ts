@@ -18,6 +18,7 @@ declare module 'i18next' {
         designStudio: {
           open: string;
           exit: string;
+          backToDesigns: string;
           resetView: string;
           zoomIn: string;
           zoomOut: string;
@@ -1193,6 +1194,12 @@ declare module 'i18next' {
             designs: string;
             elements: string;
             layouts: string;
+          };
+          dashboard: {
+            empty: string;
+            noLayouts: string;
+            layoutCount_one: string;
+            layoutCount_other: string;
           };
           elements: {
             root: string;
