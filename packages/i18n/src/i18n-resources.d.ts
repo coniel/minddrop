@@ -805,6 +805,7 @@ declare module 'i18next' {
           layouts: {
             labels: {
               new: string;
+              add: string;
             };
             actions: {
               deleteConfirmation: {
@@ -1191,7 +1192,7 @@ declare module 'i18next' {
           labels: {
             designs: string;
             elements: string;
-            layers: string;
+            layouts: string;
           };
           elements: {
             root: string;

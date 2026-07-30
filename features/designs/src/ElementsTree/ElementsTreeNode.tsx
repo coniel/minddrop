@@ -1,8 +1,5 @@
-import {
-  TranslationKey,
-  createI18nKeyBuilder,
-  useTranslation,
-} from '@minddrop/i18n';
+import { TranslationKey, useTranslation } from '@minddrop/i18n';
+import { UiIconName } from '@minddrop/ui-icons';
 import {
   Collapsible,
   CollapsibleContent,
@@ -10,11 +7,8 @@ import {
   Icon,
   Tooltip,
 } from '@minddrop/ui-primitives';
-import {
-  DesignStudioStore,
-  useActiveLayoutType,
-  useElement,
-} from '../DesignStudioStore';
+import { DesignStudioStore, useElement } from '../DesignStudioStore';
+import { useLayoutId } from '../LayoutIdContext';
 import { MappableIndicator } from '../MappableIndicator';
 import {
   elementCompatiblePropertyTypesMap,
@@ -23,12 +17,30 @@ import {
   propertyTypeLabelMap,
 } from '../constants';
 import { FlatDesignElement } from '../types';
-
-const layoutTypeI18nKey = createI18nKeyBuilder('designs.layouts.');
+import { centerViewOnLayout } from '../viewportActions';
 
 export interface ElementsTreeNodeProps {
+  /**
+   * The ID of the element the node represents.
+   */
   elementId: string;
+
+  /**
+   * The nesting depth of the node, used for indentation.
+   */
   depth: number;
+
+  /**
+   * Overrides the node label (used for layout root nodes, which
+   * display the layout name).
+   */
+  label?: string;
+
+  /**
+   * Overrides the node icon (used for layout root nodes, which
+   * display the layout type icon).
+   */
+  icon?: UiIconName;
 }
 
 function hasChildren(
@@ -40,25 +52,28 @@ function hasChildren(
 export const ElementsTreeNode: React.FC<ElementsTreeNodeProps> = ({
   elementId,
   depth,
+  label,
+  icon,
 }) => {
   const { t } = useTranslation();
+  const layoutId = useLayoutId();
   const element = useElement(elementId);
-  const layoutType = useActiveLayoutType();
-  const selectedElementId = DesignStudioStore(
-    (state) => state.selectedElementId,
+  // The layout root's ID is shared between layouts, so root nodes
+  // are only selected when their layout is the active one
+  const isSelected = DesignStudioStore(
+    (state) =>
+      state.selectedElementId === elementId &&
+      (!layoutId || state.activeLayoutId === layoutId),
   );
 
   if (!element) {
     return null;
   }
 
-  const icon = elementIconMap[element.type] || 'box';
-  const labelKey =
-    element.type === 'root' && layoutType
-      ? layoutTypeI18nKey(layoutType, 'name')
-      : elementLabelMap[element.type];
+  const resolvedIcon = icon || elementIconMap[element.type] || 'box';
+  const labelKey = elementLabelMap[element.type];
+  const resolvedLabel = label || (labelKey ? t(labelKey) : element.type);
   const isContainer = hasChildren(element) && element.children.length > 0;
-  const isSelected = selectedElementId === elementId;
 
   // Show mappable indicator for non-static elements with compatible types.
   // Containers/root are only mappable when they have a background image.
@@ -78,7 +93,18 @@ export const ElementsTreeNode: React.FC<ElementsTreeNodeProps> = ({
   const indent = `calc(var(--space-2) + var(--space-1) * ${depth})`;
 
   const handleClick = () => {
-    DesignStudioStore.getState().selectElement(elementId);
+    DesignStudioStore.getState().selectElement(
+      elementId,
+      layoutId ?? undefined,
+    );
+  };
+
+  // Double-clicking a layout root node centers the viewport on
+  // the layout's frame
+  const handleDoubleClick = () => {
+    if (elementId === 'root' && layoutId) {
+      centerViewOnLayout(layoutId);
+    }
   };
 
   // Build the tooltip description listing compatible property types
@@ -101,6 +127,7 @@ export const ElementsTreeNode: React.FC<ElementsTreeNodeProps> = ({
             data-selected={isSelected}
             style={{ paddingLeft: indent }}
             onClick={handleClick}
+            onDoubleClick={handleDoubleClick}
           >
             <CollapsibleTrigger
               className="elements-tree-node-chevron-trigger"
@@ -111,10 +138,8 @@ export const ElementsTreeNode: React.FC<ElementsTreeNodeProps> = ({
                 className="elements-tree-node-chevron"
               />
             </CollapsibleTrigger>
-            <Icon name={icon} className="elements-tree-node-icon" />
-            <span className="elements-tree-node-label">
-              {labelKey ? t(labelKey) : element.type}
-            </span>
+            <Icon name={resolvedIcon} className="elements-tree-node-icon" />
+            <span className="elements-tree-node-label">{resolvedLabel}</span>
             {showMappable && <MappableIndicator />}
           </div>
         </MappableTooltipWrapper>
@@ -149,12 +174,11 @@ export const ElementsTreeNode: React.FC<ElementsTreeNodeProps> = ({
         data-selected={isSelected}
         style={{ paddingLeft: indent }}
         onClick={handleClick}
+        onDoubleClick={handleDoubleClick}
       >
         <span className="elements-tree-node-chevron-placeholder" />
-        <Icon name={icon} className="elements-tree-node-icon" />
-        <span className="elements-tree-node-label">
-          {labelKey ? t(labelKey) : element.type}
-        </span>
+        <Icon name={resolvedIcon} className="elements-tree-node-icon" />
+        <span className="elements-tree-node-label">{resolvedLabel}</span>
         {showMappable && <MappableIndicator />}
       </div>
     </MappableTooltipWrapper>

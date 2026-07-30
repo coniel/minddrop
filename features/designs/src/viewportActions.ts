@@ -58,11 +58,34 @@ export function zoomOut(): void {
 const FIT_PADDING = 64;
 
 /**
+ * Number of animation frames to wait for layout frames to render
+ * before falling back to the default view.
+ */
+const FIT_VIEW_MAX_ATTEMPTS = 10;
+
+/**
  * Fits all layout frames into the viewport: scales and pans so
  * their union bounding box is centered with padding, never
- * zooming in beyond 100%.
+ * zooming in beyond 100%. A freshly opened design's frames may
+ * not have rendered yet, so the frame lookup retries across a
+ * few animation frames.
  */
 export function resetView(): void {
+  fitLayoutsInView(0);
+}
+
+/**
+ * Implements resetView with a bounded render-wait retry.
+ */
+function fitLayoutsInView(attempt: number): void {
+  const design = DesignStudioStore.getState().design;
+
+  if (!design) {
+    DesignStudioStore.getState().resetView();
+
+    return;
+  }
+
   const viewport = document.querySelector(
     '.design-studio-viewport',
   ) as HTMLElement | null;
@@ -70,7 +93,29 @@ export function resetView(): void {
     ? Array.from(viewport.querySelectorAll<HTMLElement>('.layout-frame'))
     : [];
 
-  if (!viewport || !frames.length) {
+  // Wait until the viewport is mounted and its rendered frames
+  // match the open design's layouts: the viewport mounts alongside
+  // the first opened design, a freshly opened design's frames
+  // render a moment later, and a previous design's frames may
+  // still linger
+  const layoutIds = design.layouts.map((layout) => layout.id);
+  const renderedIds = frames.map((frame) => frame.dataset.layoutId);
+  const framesUpToDate =
+    renderedIds.length === layoutIds.length &&
+    layoutIds.every((layoutId) => renderedIds.includes(layoutId));
+
+  if (!viewport || !framesUpToDate) {
+    if (attempt < FIT_VIEW_MAX_ATTEMPTS) {
+      requestAnimationFrame(() => fitLayoutsInView(attempt + 1));
+    } else {
+      DesignStudioStore.getState().resetView();
+    }
+
+    return;
+  }
+
+  // The design has no layouts, reset to the default view
+  if (!frames.length) {
     DesignStudioStore.getState().resetView();
 
     return;
@@ -115,6 +160,53 @@ export function resetView(): void {
 
   store.setZoom(zoom);
   store.setPan(panX, panY);
+}
+
+/**
+ * Number of animation frames to wait for a newly added layout to
+ * render before giving up on centering the view on it.
+ */
+const CENTER_VIEW_MAX_ATTEMPTS = 10;
+
+/**
+ * Centers the viewport on a layout's frame at 100% zoom.
+ * Newly added layouts may not have rendered yet, so the frame
+ * lookup retries across a few animation frames.
+ */
+export function centerViewOnLayout(layoutId: string, attempt = 0): void {
+  requestAnimationFrame(() => {
+    const viewport = document.querySelector(
+      '.design-studio-viewport',
+    ) as HTMLElement | null;
+
+    if (!viewport) {
+      return;
+    }
+
+    const frame = viewport.querySelector(
+      `.layout-frame[data-layout-id="${layoutId}"]`,
+    ) as HTMLElement | null;
+
+    // The layout has not rendered yet, retry on the next frame
+    if (!frame) {
+      if (attempt < CENTER_VIEW_MAX_ATTEMPTS) {
+        centerViewOnLayout(layoutId, attempt + 1);
+      }
+
+      return;
+    }
+
+    const { x, y } = getFramePosition(frame);
+    const store = DesignStudioStore.getState();
+
+    // Pan so the frame's center lands on the viewport's center
+    // at 100% zoom
+    const panX = viewport.offsetWidth / 2 - (x + frame.offsetWidth / 2);
+    const panY = viewport.offsetHeight / 2 - (y + frame.offsetHeight / 2);
+
+    store.setZoom(1);
+    store.setPan(panX, panY);
+  });
 }
 
 /**

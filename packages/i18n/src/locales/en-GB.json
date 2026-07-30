@@ -792,7 +792,8 @@
     "new": "New design",
     "layouts": {
       "labels": {
-        "new": "New layout"
+        "new": "New layout",
+        "add": "Add layout"
       },
       "actions": {
         "deleteConfirmation": {
@@ -1179,7 +1180,7 @@
     "labels": {
       "designs": "Designs",
       "elements": "Elements",
-      "layers": "Layers"
+      "layouts": "Layouts"
     },
     "elements": {
       "root": "Root",

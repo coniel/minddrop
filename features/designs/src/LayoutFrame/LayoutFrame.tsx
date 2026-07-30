@@ -15,6 +15,7 @@ import {
   useDesignStudioStore,
 } from '../DesignStudioStore';
 import { LayoutIdProvider } from '../LayoutIdContext';
+import { centerViewOnLayout } from '../viewportActions';
 import './LayoutFrame.css';
 
 type ResizeEdge =
@@ -291,6 +292,13 @@ export const LayoutFrame: React.FC<LayoutFrameProps> = ({
     }
 
     DesignStudioStore.getState().selectElement('root', layoutId);
+  }, [layoutId]);
+
+  // Center the viewport on the frame on double-click (studio mode)
+  const handleDoubleClick = useCallback(() => {
+    if (layoutId) {
+      centerViewOnLayout(layoutId);
+    }
   }, [layoutId]);
 
   // Start a resize operation on mousedown
@@ -621,6 +629,7 @@ export const LayoutFrame: React.FC<LayoutFrameProps> = ({
         transform: `translate(${position.x}px, ${position.y}px)`,
         width: size.width,
       }}
+      onDoubleClick={handleDoubleClick}
     >
       {/* Corner handles (only for page type) */}
       {!autoHeight && (

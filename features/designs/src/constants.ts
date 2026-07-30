@@ -1,5 +1,6 @@
 import {
   ELEMENT_GROUPS,
+  LayoutType,
   PropertyTypeElementMap,
   elementConfigs,
   elementIconMap,
@@ -7,6 +8,7 @@ import {
 } from '@minddrop/designs';
 import { TranslationKey } from '@minddrop/i18n';
 import { PropertyType } from '@minddrop/properties';
+import { UiIconName } from '@minddrop/ui-icons';
 import { ViewDataSourceType } from '@minddrop/views';
 
 // -- Design Studio constants --
@@ -20,6 +22,15 @@ export {
   PropertyTypeElementMap,
   elementIconMap,
   elementLabelMap,
+};
+
+/**
+ * Maps layout types to their icons.
+ */
+export const layoutTypeIconMap: Record<LayoutType, UiIconName> = {
+  page: 'layout',
+  card: 'layout-grid',
+  list: 'layout-list',
 };
 
 /**
