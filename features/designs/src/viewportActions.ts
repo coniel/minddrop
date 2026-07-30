@@ -54,39 +54,80 @@ export function zoomOut(): void {
   store.setZoom(newZoom, getViewportCenter());
 }
 
+/** Padding around the fitted frames, in viewport pixels. */
+const FIT_PADDING = 64;
+
 /**
- * Resets zoom to 100% and centers the layout frame in the viewport.
+ * Fits all layout frames into the viewport: scales and pans so
+ * their union bounding box is centered with padding, never
+ * zooming in beyond 100%.
  */
 export function resetView(): void {
   const viewport = document.querySelector(
     '.design-studio-viewport',
-  ) as HTMLElement;
-  const frame = viewport?.querySelector('.layout-frame') as HTMLElement;
+  ) as HTMLElement | null;
+  const frames = viewport
+    ? Array.from(viewport.querySelectorAll<HTMLElement>('.layout-frame'))
+    : [];
 
-  if (!viewport || !frame) {
+  if (!viewport || !frames.length) {
     DesignStudioStore.getState().resetView();
 
     return;
   }
 
-  // Get the frame position and size in the un-zoomed coordinate space
-  const frameWidth = frame.offsetWidth;
-  const frameHeight = frame.offsetHeight;
+  // Union bounding box of all frames in canvas (un-zoomed) coordinates
+  let minX = Infinity;
+  let minY = Infinity;
+  let maxX = -Infinity;
+  let maxY = -Infinity;
 
-  // Parse the frame translate transform to get its position
-  const transform = frame.style.transform;
-  const match = transform.match(/translate\(([^,]+)px,\s*([^)]+)px\)/);
-  const frameX = match ? parseFloat(match[1]) : 0;
-  const frameY = match ? parseFloat(match[2]) : 0;
+  frames.forEach((frame) => {
+    const { x, y } = getFramePosition(frame);
 
-  // Center the frame in the viewport at zoom 1
+    minX = Math.min(minX, x);
+    minY = Math.min(minY, y);
+    maxX = Math.max(maxX, x + frame.offsetWidth);
+    maxY = Math.max(maxY, y + frame.offsetHeight);
+  });
+
+  const boundsWidth = maxX - minX;
+  const boundsHeight = maxY - minY;
   const viewportWidth = viewport.offsetWidth;
   const viewportHeight = viewport.offsetHeight;
-  const panX = viewportWidth / 2 - (frameX + frameWidth / 2);
-  const panY = viewportHeight / 2 - (frameY + frameHeight / 2);
+
+  // Largest zoom that fits the bounds plus padding, capped at
+  // 100% and clamped to the store's minimum zoom
+  const zoom = Math.max(
+    0.1,
+    Math.min(
+      1,
+      (viewportWidth - FIT_PADDING * 2) / boundsWidth,
+      (viewportHeight - FIT_PADDING * 2) / boundsHeight,
+    ),
+  );
+
+  // Pan to center the bounds in the viewport
+  const panX = (viewportWidth - boundsWidth * zoom) / 2 - minX * zoom;
+  const panY = (viewportHeight - boundsHeight * zoom) / 2 - minY * zoom;
 
   const store = DesignStudioStore.getState();
 
+  store.setZoom(zoom);
   store.setPan(panX, panY);
-  store.setZoom(1);
+}
+
+/**
+ * Reads a frame's position in canvas coordinates from its inline
+ * translate transform.
+ */
+function getFramePosition(frame: HTMLElement): { x: number; y: number } {
+  const match = frame.style.transform.match(
+    /translate\(([^,]+)px,\s*([^)]+)px\)/,
+  );
+
+  return {
+    x: match ? parseFloat(match[1]) : 0,
+    y: match ? parseFloat(match[2]) : 0,
+  };
 }

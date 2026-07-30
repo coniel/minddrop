@@ -29,6 +29,7 @@ export const SelectionOverlay: React.FC<SelectionOverlayProps> = ({
   const highlightedElementId = useDesignStudioStore(
     (state) => state.highlightedElementId,
   );
+  const activeLayoutId = useDesignStudioStore((state) => state.activeLayoutId);
   const [rect, setRect] = useState<OverlayRect | null>(null);
   // Stores the rAF handle so the tracking loop can be cancelled on unmount
   const animationFrameRef = useRef(0);
@@ -44,9 +45,13 @@ export const SelectionOverlay: React.FC<SelectionOverlayProps> = ({
       return;
     }
 
-    const target = layer.querySelector(
-      `[data-element-id="${highlightedElementId}"]`,
-    ) as HTMLElement | null;
+    // Scope the query to the active layout's frame so shared
+    // element IDs (e.g. 'root') don't match other layouts
+    const elementSelector = activeLayoutId
+      ? `[data-layout-id="${activeLayoutId}"] [data-element-id="${highlightedElementId}"]`
+      : `[data-element-id="${highlightedElementId}"]`;
+
+    const target = layer.querySelector(elementSelector) as HTMLElement | null;
 
     if (!target) {
       setRect(null);
@@ -64,7 +69,7 @@ export const SelectionOverlay: React.FC<SelectionOverlayProps> = ({
       width: targetBounds.width / zoom,
       height: targetBounds.height / zoom,
     });
-  }, [highlightedElementId, transformLayerRef]);
+  }, [highlightedElementId, activeLayoutId, transformLayerRef]);
 
   // Continuously track position via requestAnimationFrame
   // while a highlight is active

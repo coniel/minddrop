@@ -5,9 +5,14 @@ import {
   useRef,
   useState,
 } from 'react';
-import { LayoutType } from '@minddrop/designs';
+import { Layout, LayoutType } from '@minddrop/designs';
 import { DesignPreviewProvider } from '../DesignElements';
-import { DesignStudioStore } from '../DesignStudioStore';
+import {
+  DesignStudioStore,
+  updateLayoutFrame,
+  useDesignStudioStore,
+} from '../DesignStudioStore';
+import { LayoutIdProvider } from '../LayoutIdContext';
 import './LayoutFrame.css';
 
 type ResizeEdge =
@@ -45,23 +50,11 @@ const MIN_HEIGHT = 100;
  * design type within the available workspace dimensions.
  */
 function getFrameLayout(
-  layoutType: LayoutType,
+  layoutType: LayoutType | undefined,
   workspaceWidth: number,
   workspaceHeight: number,
 ): { width: number; height: number; x: number; y: number } {
   switch (layoutType) {
-    case 'page': {
-      const width = Math.round(workspaceWidth * 0.9);
-      const height = Math.round(workspaceHeight * 0.92);
-
-      return {
-        width,
-        height,
-        x: Math.round((workspaceWidth - width) / 2),
-        y: Math.round((workspaceHeight - height) / 2 - workspaceHeight * 0.02),
-      };
-    }
-
     case 'card': {
       const width = 380;
 
@@ -81,6 +74,18 @@ function getFrameLayout(
         height: 0,
         x: Math.round((workspaceWidth - width) / 2),
         y: Math.round(workspaceHeight * 0.15),
+      };
+    }
+
+    default: {
+      const width = Math.round(workspaceWidth * 0.9);
+      const height = Math.round(workspaceHeight * 0.92);
+
+      return {
+        width,
+        height,
+        x: Math.round((workspaceWidth - width) / 2),
+        y: Math.round((workspaceHeight - height) / 2 - workspaceHeight * 0.02),
       };
     }
   }
@@ -118,10 +123,21 @@ const CornerHandle: React.FC<CornerHandleProps> = ({
 
 export interface LayoutFrameProps {
   /**
-   * Determines initial width and which resize handles are shown.
-   * Card/list: horizontal only. Page: all directions.
+   * Studio mode: the ID of the layout to frame. Position and size
+   * come from the layout's persisted frame in the design open in
+   * the studio, and drag/resize changes are persisted when the
+   * interaction ends. Frames live in canvas (un-zoomed) coordinates
+   * and are not clamped to the workspace bounds.
    */
-  layoutType: LayoutType;
+  layoutId?: string;
+
+  /**
+   * Standalone mode: determines initial size and which resize
+   * handles are shown when no layout ID is provided. The frame
+   * manages its own position + size state and stays clamped to
+   * its parent workspace.
+   */
+  layoutType?: LayoutType;
 
   /**
    * The design tree content to render inside the frame.
@@ -137,12 +153,13 @@ export interface LayoutFrameProps {
 /**
  * Resizable, draggable frame wrapper for layout previews. Renders
  * resize handles (corner SVG arcs + edge bars + hover zones) and a
- * drag handle bar. Manages its own position + size state.
+ * drag handle bar.
  *
  * Card/list types auto-size height and only show horizontal handles.
  * Page type shows all handles including corners and bottom edge.
  */
 export const LayoutFrame: React.FC<LayoutFrameProps> = ({
+  layoutId,
   layoutType,
   children,
   className,
@@ -153,49 +170,100 @@ export const LayoutFrame: React.FC<LayoutFrameProps> = ({
   const dragState = useRef<DragState | null>(null);
   const resizeState = useRef<ResizeState | null>(null);
   const didDrag = useRef(false);
+  // Latest position/size for reading inside the mouseup handler
+  const positionRef = useRef(position);
+  const sizeRef = useRef(size);
+
+  // Studio mode: the layout being framed, from the design open
+  // in the studio
+  const layout = useDesignStudioStore((state) =>
+    layoutId
+      ? state.design?.layouts.find(
+          (designLayout) => designLayout.id === layoutId,
+        ) || null
+      : null,
+  );
+
+  const resolvedLayoutType = layout?.type || layoutType;
 
   // Card/list auto-size height — hide corner + bottom handles
-  const autoHeight = layoutType === 'card' || layoutType === 'list';
+  const autoHeight =
+    resolvedLayoutType === 'card' || resolvedLayoutType === 'list';
+
+  // Mirror position/size into refs for the mouseup handler
+  useEffect(() => {
+    positionRef.current = position;
+  }, [position]);
+
+  useEffect(() => {
+    sizeRef.current = size;
+  }, [size]);
 
   /**
-   * Clamps a position so the frame stays within its parent workspace.
+   * Clamps a position so the frame stays within its parent
+   * workspace. Studio frames live in unbounded canvas coordinates
+   * and are never clamped.
    */
   const clampPosition = useCallback(
-    (x: number, y: number, frameWidth?: number, frameHeight?: number) => {
+    (x: number, y: number) => {
+      if (layoutId) {
+        return { x, y };
+      }
+
       const workspace = frameRef.current?.parentElement;
 
       if (!workspace || !frameRef.current) {
         return { x, y };
       }
 
-      const width = frameWidth ?? frameRef.current.offsetWidth;
-      const height = frameHeight ?? frameRef.current.offsetHeight;
+      const width = frameRef.current.offsetWidth;
+      const height = frameRef.current.offsetHeight;
 
       return {
         x: Math.max(0, Math.min(workspace.offsetWidth - width, x)),
         y: Math.max(0, Math.min(workspace.offsetHeight - height, y)),
       };
     },
-    [],
+    [layoutId],
   );
 
-  // Set initial layout (size + position) based on design type
+  // Studio mode: sync position + size from the layout's persisted frame
+  const persistedFrame = layout?.frame ?? null;
+
   useLayoutEffect(() => {
+    if (!persistedFrame) {
+      return;
+    }
+
+    setPosition({ x: persistedFrame.x, y: persistedFrame.y });
+    setSize({
+      width: persistedFrame.width,
+      height: persistedFrame.height ?? 0,
+    });
+  }, [persistedFrame]);
+
+  // Standalone mode: set initial layout (size + position) based
+  // on the layout type
+  useLayoutEffect(() => {
+    if (layoutId) {
+      return;
+    }
+
     const workspace = frameRef.current?.parentElement;
 
     if (!workspace) {
       return;
     }
 
-    const layout = getFrameLayout(
-      layoutType,
+    const frameLayout = getFrameLayout(
+      resolvedLayoutType,
       workspace.offsetWidth,
       workspace.offsetHeight,
     );
 
-    setSize({ width: layout.width, height: layout.height });
-    setPosition({ x: layout.x, y: Math.max(0, layout.y) });
-  }, [layoutType, autoHeight]);
+    setSize({ width: frameLayout.width, height: frameLayout.height });
+    setPosition({ x: frameLayout.x, y: Math.max(0, frameLayout.y) });
+  }, [layoutId, resolvedLayoutType, autoHeight]);
 
   // Start dragging when the drag handle is pressed
   const handleDragHandleMouseDown = useCallback(
@@ -213,12 +281,21 @@ export const LayoutFrame: React.FC<LayoutFrameProps> = ({
   );
 
   // Select the root element when clicking the drag handle
-  // without actually dragging the frame
+  // without actually dragging the frame, activating this
+  // frame's layout first in studio mode
   const handleDragHandleClick = useCallback(() => {
-    if (!didDrag.current) {
-      DesignStudioStore.getState().selectElement('root');
+    if (didDrag.current) {
+      return;
     }
-  }, []);
+
+    const store = DesignStudioStore.getState();
+
+    if (layoutId && store.activeLayoutId !== layoutId) {
+      store.setActiveLayout(layoutId);
+    }
+
+    store.selectElement('root');
+  }, [layoutId]);
 
   // Start a resize operation on mousedown
   const handleResizeMouseDown = useCallback(
@@ -241,15 +318,19 @@ export const LayoutFrame: React.FC<LayoutFrameProps> = ({
   // Track mouse movement during drag or resize
   const handleMouseMove = useCallback(
     (event: MouseEvent) => {
+      // Studio frames live in the zoomed canvas coordinate space,
+      // so screen-pixel mouse deltas are scaled down by the zoom
+      const scale = layoutId ? DesignStudioStore.getState().zoom : 1;
+
       // Handle frame dragging
       if (dragState.current) {
         didDrag.current = true;
         const rawX =
           dragState.current.originX +
-          (event.clientX - dragState.current.startX);
+          (event.clientX - dragState.current.startX) / scale;
         const rawY =
           dragState.current.originY +
-          (event.clientY - dragState.current.startY);
+          (event.clientY - dragState.current.startY) / scale;
 
         setPosition(clampPosition(rawX, rawY));
       }
@@ -265,12 +346,18 @@ export const LayoutFrame: React.FC<LayoutFrameProps> = ({
           originX,
           originY,
         } = resizeState.current;
-        const deltaX = event.clientX - startX;
-        const deltaY = event.clientY - startY;
-        const workspaceWidth =
-          frameRef.current?.parentElement?.offsetWidth ?? Infinity;
-        const workspaceHeight =
-          frameRef.current?.parentElement?.offsetHeight ?? Infinity;
+        const deltaX = (event.clientX - startX) / scale;
+        const deltaY = (event.clientY - startY) / scale;
+
+        // Workspace-bounds clamps only apply to standalone frames;
+        // studio frames resize freely in canvas coordinates
+        const workspaceWidth = layoutId
+          ? Infinity
+          : (frameRef.current?.parentElement?.offsetWidth ?? Infinity);
+        const workspaceHeight = layoutId
+          ? Infinity
+          : (frameRef.current?.parentElement?.offsetHeight ?? Infinity);
+        const minPosition = layoutId ? -Infinity : 0;
 
         // Anchored edges: the opposite edge from the one being
         // dragged stays fixed.
@@ -282,11 +369,16 @@ export const LayoutFrame: React.FC<LayoutFrameProps> = ({
         const centerX = originX + originWidth / 2;
         const centerY = originY + originHeight / 2;
 
+        // Mirror-resize width/height caps that keep the frame's
+        // leading edge inside the workspace in standalone mode
+        const maxMirrorWidth = layoutId ? Infinity : centerX * 2;
+        const maxMirrorHeight = layoutId ? Infinity : centerY * 2;
+
         switch (edge) {
           case 'right': {
             const newWidth = Math.min(
               Math.max(MIN_WIDTH, originWidth + deltaX * (mirror ? 2 : 1)),
-              mirror ? centerX * 2 : workspaceWidth - originX,
+              mirror ? maxMirrorWidth : workspaceWidth - originX,
             );
 
             if (mirror) {
@@ -313,7 +405,7 @@ export const LayoutFrame: React.FC<LayoutFrameProps> = ({
               setPosition((current) => ({ ...current, x: newX }));
             } else {
               const newX = Math.max(
-                0,
+                minPosition,
                 Math.min(rightEdge - MIN_WIDTH, originX + deltaX),
               );
 
@@ -330,7 +422,7 @@ export const LayoutFrame: React.FC<LayoutFrameProps> = ({
           case 'bottom': {
             const newHeight = Math.min(
               Math.max(MIN_HEIGHT, originHeight + deltaY * (mirror ? 2 : 1)),
-              mirror ? centerY * 2 : workspaceHeight - originY,
+              mirror ? maxMirrorHeight : workspaceHeight - originY,
             );
 
             if (mirror) {
@@ -363,11 +455,11 @@ export const LayoutFrame: React.FC<LayoutFrameProps> = ({
               });
             } else {
               const newX = Math.max(
-                0,
+                minPosition,
                 Math.min(rightEdge - MIN_WIDTH, originX + deltaX),
               );
               const newY = Math.max(
-                0,
+                minPosition,
                 Math.min(bottomEdge - MIN_HEIGHT, originY + deltaY),
               );
 
@@ -385,7 +477,7 @@ export const LayoutFrame: React.FC<LayoutFrameProps> = ({
             if (mirror) {
               const newWidth = Math.min(
                 Math.max(MIN_WIDTH, originWidth + deltaX * 2),
-                centerX * 2,
+                maxMirrorWidth,
               );
               const newHeight = Math.min(
                 Math.max(MIN_HEIGHT, originHeight - deltaY * 2),
@@ -403,7 +495,7 @@ export const LayoutFrame: React.FC<LayoutFrameProps> = ({
                 workspaceWidth - originX,
               );
               const newY = Math.max(
-                0,
+                minPosition,
                 Math.min(bottomEdge - MIN_HEIGHT, originY + deltaY),
               );
 
@@ -422,7 +514,7 @@ export const LayoutFrame: React.FC<LayoutFrameProps> = ({
               );
               const newHeight = Math.min(
                 Math.max(MIN_HEIGHT, originHeight + deltaY * 2),
-                centerY * 2,
+                maxMirrorHeight,
               );
 
               setSize({ width: newWidth, height: newHeight });
@@ -432,7 +524,7 @@ export const LayoutFrame: React.FC<LayoutFrameProps> = ({
               });
             } else {
               const newX = Math.max(
-                0,
+                minPosition,
                 Math.min(rightEdge - MIN_WIDTH, originX + deltaX),
               );
               const newHeight = Math.min(
@@ -451,11 +543,11 @@ export const LayoutFrame: React.FC<LayoutFrameProps> = ({
             if (mirror) {
               const newWidth = Math.min(
                 Math.max(MIN_WIDTH, originWidth + deltaX * 2),
-                centerX * 2,
+                maxMirrorWidth,
               );
               const newHeight = Math.min(
                 Math.max(MIN_HEIGHT, originHeight + deltaY * 2),
-                centerY * 2,
+                maxMirrorHeight,
               );
 
               setSize({ width: newWidth, height: newHeight });
@@ -481,14 +573,32 @@ export const LayoutFrame: React.FC<LayoutFrameProps> = ({
         }
       }
     },
-    [clampPosition],
+    [clampPosition, layoutId],
   );
 
-  // End drag or resize on mouseup
+  // End drag or resize on mouseup, persisting the frame in
+  // studio mode when it changed
   const handleMouseUp = useCallback(() => {
+    const wasInteracting = dragState.current || resizeState.current;
+
     dragState.current = null;
     resizeState.current = null;
-  }, []);
+
+    if (!layout || !wasInteracting) {
+      return;
+    }
+
+    const frame = {
+      x: Math.round(positionRef.current.x),
+      y: Math.round(positionRef.current.y),
+      width: Math.round(sizeRef.current.width),
+      ...(autoHeight ? {} : { height: Math.round(sizeRef.current.height) }),
+    };
+
+    if (!isSameFrame(frame, layout.frame)) {
+      updateLayoutFrame(layout.id, frame);
+    }
+  }, [layout, autoHeight]);
 
   // Attach global mouse listeners for drag and resize
   useEffect(() => {
@@ -501,10 +611,16 @@ export const LayoutFrame: React.FC<LayoutFrameProps> = ({
     };
   }, [handleMouseMove, handleMouseUp]);
 
+  // Studio mode: the framed layout no longer exists
+  if (layoutId && !layout) {
+    return null;
+  }
+
   return (
     <div
       ref={frameRef}
       className={`layout-frame${className ? ` ${className}` : ''}`}
+      data-layout-id={layoutId}
       style={{
         transform: `translate(${position.x}px, ${position.y}px)`,
         width: size.width,
@@ -559,7 +675,9 @@ export const LayoutFrame: React.FC<LayoutFrameProps> = ({
         className="layout-frame-content"
         style={autoHeight ? undefined : { height: size.height }}
       >
-        <DesignPreviewProvider value>{children}</DesignPreviewProvider>
+        <LayoutIdProvider value={layoutId ?? null}>
+          <DesignPreviewProvider value>{children}</DesignPreviewProvider>
+        </LayoutIdProvider>
       </div>
 
       {/* Left/right edge handles (always visible for all types) */}
@@ -587,3 +705,12 @@ export const LayoutFrame: React.FC<LayoutFrameProps> = ({
     </div>
   );
 };
+
+/**
+ * Compares two layout frames by value.
+ */
+function isSameFrame(a: Layout['frame'], b: Layout['frame']): boolean {
+  return (
+    a.x === b.x && a.y === b.y && a.width === b.width && a.height === b.height
+  );
+}

@@ -17,6 +17,7 @@ import {
 } from '@minddrop/properties';
 import { createStore, useShallow } from '@minddrop/stores';
 import { deepMerge, reorderArray, uuid } from '@minddrop/utils';
+import { useLayoutId } from '../LayoutIdContext';
 import {
   FlatChildDesignElement,
   FlatDesignElement,
@@ -522,6 +523,21 @@ export const getActiveElements = (
 };
 
 /**
+ * Returns the element map of the given layout when an ID is
+ * provided, falling back to the active layout's elements.
+ */
+const getScopedElements = (
+  state: DesignStudioStore,
+  layoutId: string | null,
+): Record<string, FlatDesignElement> => {
+  if (!layoutId) {
+    return getActiveElements(state);
+  }
+
+  return state.elementsByLayout[layoutId] || EMPTY_ELEMENTS;
+};
+
+/**
  * Returns the layout currently being edited, or null when no
  * layout is active.
  */
@@ -752,7 +768,10 @@ export const useElement = <
 >(
   id: string,
 ): TType => {
-  const element = useDesignStudioStore((state) => getActiveElements(state)[id]);
+  const layoutId = useLayoutId();
+  const element = useDesignStudioStore(
+    (state) => getScopedElements(state, layoutId)[id],
+  );
 
   return element as TType;
 };
@@ -771,8 +790,12 @@ export const useElementData = <
   id: string,
   selector: (element: TElement) => TResult,
 ): TResult => {
+  const layoutId = useLayoutId();
+
   return useDesignStudioStore(
-    useShallow((state) => selector(getActiveElements(state)[id] as TElement)),
+    useShallow((state) =>
+      selector(getScopedElements(state, layoutId)[id] as TElement),
+    ),
   );
 };
 

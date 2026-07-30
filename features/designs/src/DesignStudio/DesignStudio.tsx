@@ -13,7 +13,6 @@ import {
   DesignStudioStore,
   renameDesign,
   saveDesign,
-  useActiveLayoutType,
   useDesignStudioStore,
   useElement,
 } from '../DesignStudioStore';
@@ -35,8 +34,6 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
     (state) => state.selectedElementId,
   );
   const design = useDesignStudioStore((state) => state.design);
-  const activeLayoutType = useActiveLayoutType();
-  const rootElement = useElement<FlatRootDesignElement>('root');
   const [designName, setDesignName] = useState(design?.name || '');
   const nameInputRef = useRef<HTMLInputElement>(null);
 
@@ -133,14 +130,14 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
         />
       </Panel>
       <div className="design-studio-workspace">
-        {design && activeLayoutType && (
+        {design && (
           <>
             <DesignStudioViewport>
-              <LayoutFrame layoutType={activeLayoutType}>
-                {rootElement && (
-                  <DesignStudioRootElement element={rootElement} />
-                )}
-              </LayoutFrame>
+              {design.layouts.map((layout) => (
+                <LayoutFrame key={layout.id} layoutId={layout.id}>
+                  <LayoutRootElement />
+                </LayoutFrame>
+              ))}
             </DesignStudioViewport>
             <div className="design-studio-workspace-header">
               <div className="design-studio-workspace-design-name">
@@ -164,4 +161,18 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
       </Panel>
     </div>
   );
+};
+
+/**
+ * Renders the root element of the layout provided by the
+ * surrounding layout frame's context.
+ */
+const LayoutRootElement: React.FC = () => {
+  const rootElement = useElement<FlatRootDesignElement>('root');
+
+  if (!rootElement) {
+    return null;
+  }
+
+  return <DesignStudioRootElement element={rootElement} />;
 };
