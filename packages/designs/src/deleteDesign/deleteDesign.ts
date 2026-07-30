@@ -1,8 +1,6 @@
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
-import { InvalidParameterError } from '@minddrop/utils';
 import { DesignsStore } from '../DesignsStore';
-import { defaultDesignIds } from '../default-designs';
 import { DesignDeletedEvent, DesignDeletedEventData } from '../events';
 import { getDesign } from '../getDesign';
 import { getDesignFilePath } from '../utils';
@@ -15,13 +13,6 @@ import { getDesignFilePath } from '../utils';
 export async function deleteDesign(id: string): Promise<void> {
   // Get the design
   const design = getDesign(id);
-
-  // It prevents deleting default designs
-  if (defaultDesignIds.includes(design.id)) {
-    throw new InvalidParameterError(
-      `Cannot delete default design ${design.id}`,
-    );
-  }
 
   // Delete the design file
   await Fs.removeFile(getDesignFilePath(id));

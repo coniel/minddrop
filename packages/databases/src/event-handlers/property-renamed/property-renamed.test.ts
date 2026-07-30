@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Collections } from '@minddrop/collections';
+import { getDatabase } from '../../getDatabase';
 import {
   cleanup,
   collectionDatabase,
@@ -40,6 +41,63 @@ describe('onRenameProperty', () => {
   });
 
   afterEach(cleanup);
+
+  it('remaps design property map values pointing at the renamed property', async () => {
+    // Rename 'Content' to 'Body' with a design property map that
+    // maps a design property onto it
+    await onRenameProperty({
+      database: {
+        ...objectDatabase,
+        designPropertyMap: { Heading: 'Content', Cover: 'Icon' },
+      },
+      oldName: 'Content',
+      newName: 'Body',
+    });
+
+    // The map value pointing at 'Content' should now point at 'Body',
+    // other entries left untouched
+    expect(getDatabase(objectDatabase.id).designPropertyMap).toEqual({
+      Heading: 'Body',
+      Cover: 'Icon',
+    });
+  });
+
+  it('remaps layout property map values pointing at the renamed property', async () => {
+    // Rename 'Content' to 'Body' with layout property maps that
+    // bind layout elements onto it
+    await onRenameProperty({
+      database: {
+        ...objectDatabase,
+        layoutPropertyMaps: {
+          'layout-1': { 'element-1': 'Content', 'element-2': 'Icon' },
+          'layout-2': { 'element-3': 'Content' },
+        },
+      },
+      oldName: 'Content',
+      newName: 'Body',
+    });
+
+    // The map values pointing at 'Content' should now point at 'Body',
+    // other entries left untouched
+    expect(getDatabase(objectDatabase.id).layoutPropertyMaps).toEqual({
+      'layout-1': { 'element-1': 'Body', 'element-2': 'Icon' },
+      'layout-2': { 'element-3': 'Body' },
+    });
+  });
+
+  it('does not update the database when no map value matches', async () => {
+    await onRenameProperty({
+      database: {
+        ...objectDatabase,
+        designPropertyMap: { Heading: 'Content' },
+      },
+      oldName: 'Icon',
+      newName: 'Symbol',
+    });
+
+    // The design property map should be unchanged
+    expect(getDatabase(objectDatabase.id).designPropertyMap).toEqual({});
+  });
 
   it('does nothing if the renamed property is not a collection type', async () => {
     // Rename a non-collection property

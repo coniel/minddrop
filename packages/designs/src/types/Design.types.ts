@@ -1,6 +1,5 @@
-import { RootElement } from './DesignElement.types';
-
-export type DesignType = 'card' | 'list' | 'page';
+import { PropertiesSchema } from '@minddrop/properties';
+import { Layout } from './Layout.types';
 
 export interface Design {
   /**
@@ -14,14 +13,17 @@ export interface Design {
   name: string;
 
   /**
-   * The type of design.
+   * The design's properties. Layout elements bind to these by name;
+   * databases that use this design provide a name-to-name map from
+   * their own properties to these.
    */
-  type: DesignType;
+  properties: PropertiesSchema;
 
   /**
-   * The design tree. Always a root element with children.
+   * The layouts inside this design, in z-order (later entries render
+   * on top of earlier ones).
    */
-  tree: RootElement;
+  layouts: Layout[];
 
   /**
    * The date the design was created.

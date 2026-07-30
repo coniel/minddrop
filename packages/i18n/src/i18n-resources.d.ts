@@ -40,6 +40,7 @@ declare module 'i18next' {
           search: string;
           pickDate: string;
           swapSplitPosition: string;
+          expand: string;
         };
         error: {
           unknown: string;
@@ -210,14 +211,14 @@ declare module 'i18next' {
           actions: {
             new: string;
             addProperty: string;
-            addDesign: string;
-            browseDesigns: string;
+            addLayout: string;
+            browseLayouts: string;
             addView: string;
             viewSettings: string;
             newEntry: string;
             configuration: string;
           };
-          designs: {
+          layouts: {
             databaseDefault: string;
             actions: {
               manage: string;
@@ -799,33 +800,56 @@ declare module 'i18next' {
           };
         };
         designs: {
-          labels: {
-            new: string;
-          };
-          actions: {
-            deleteConfirmation: {
-              title: string;
-              message: string;
-              confirm: string;
+          name: string;
+          new: string;
+          layouts: {
+            labels: {
+              new: string;
+            };
+            actions: {
+              deleteConfirmation: {
+                title: string;
+                message: string;
+                confirm: string;
+              };
+            };
+            page: {
+              name: string;
+              label: string;
+              new: string;
+              description: string;
+            };
+            card: {
+              name: string;
+              label: string;
+              new: string;
+              description: string;
+            };
+            list: {
+              name: string;
+              label: string;
+              new: string;
+              description: string;
             };
           };
-          page: {
-            name: string;
-            design: string;
-            new: string;
-            description: string;
-          };
-          card: {
-            name: string;
-            design: string;
-            new: string;
-            description: string;
-          };
-          list: {
-            name: string;
-            design: string;
-            new: string;
-            description: string;
+          'layout-property-mapping': {
+            browser: {
+              title: string;
+              search: string;
+              newLayout: string;
+              emptyPreview: string;
+              useLayout: string;
+              propertiesTitle: string;
+              backToLayouts: string;
+              searchProperties: string;
+              addProperty: string;
+              dateGroup: string;
+              collectionGroup: string;
+              zoom: string;
+              highlightMapped: string;
+              highlightUnmapped: string;
+              mappingCounter: string;
+            };
           };
           typography: {
             label: string;
@@ -1258,25 +1282,6 @@ declare module 'i18next' {
             columnMenu: string;
             showChips: string;
             hideColumn: string;
-          };
-        };
-        'design-property-mapping': {
-          browser: {
-            title: string;
-            search: string;
-            newDesign: string;
-            emptyPreview: string;
-            useDesign: string;
-            propertiesTitle: string;
-            backToDesigns: string;
-            searchProperties: string;
-            addProperty: string;
-            dateGroup: string;
-            collectionGroup: string;
-            zoom: string;
-            highlightMapped: string;
-            highlightUnmapped: string;
-            mappingCounter: string;
           };
         };
         search: {

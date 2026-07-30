@@ -2,6 +2,10 @@ import {
   CollectionUpdatedEvent,
   CollectionUpdatedEventData,
 } from '@minddrop/collections';
+import {
+  DesignPropertyRenamedEvent,
+  DesignPropertyRenamedEventData,
+} from '@minddrop/designs';
 import { Events } from '@minddrop/events';
 import {
   ViewCreatedEvent,
@@ -22,6 +26,7 @@ import {
   onDeleteEntry,
   onRemoveProperty,
   onRenameDatabase,
+  onRenameDesignProperty,
   onRenameEntry,
   onRenameProperty,
   onUpdateCollection,
@@ -115,6 +120,14 @@ export function initializeDatabaseEventHandlers() {
     'databases',
     ({ data }) => {
       onRenameProperty(data);
+    },
+  );
+
+  Events.on<DesignPropertyRenamedEventData>(
+    DesignPropertyRenamedEvent,
+    'databases',
+    ({ data }) => {
+      onRenameDesignProperty(data);
     },
   );
 

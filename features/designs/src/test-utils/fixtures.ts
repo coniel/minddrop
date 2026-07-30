@@ -7,7 +7,7 @@ import {
 } from '../types';
 
 export const {
-  design_card_1,
+  layout_card_1,
   element_text_1,
   element_text_2,
   element_text_3,
@@ -26,15 +26,15 @@ const containerWithUniqueChild = {
 };
 
 export const testDesign = {
-  ...design_card_1,
+  ...layout_card_1,
   tree: {
-    ...design_card_1.tree,
+    ...layout_card_1.tree,
     children: [element_text_1, containerWithUniqueChild, element_text_2],
   },
 };
 
 export const flat_root_1: FlatRootDesignElement = {
-  ...design_card_1.tree,
+  ...layout_card_1.tree,
   id: 'root',
   children: [element_text_1.id, element_container_1.id, element_text_2.id],
 };
@@ -67,7 +67,7 @@ export const element_2 = flat_element_text_2;
 
 export const flatTree = {
   root: {
-    ...design_card_1.tree,
+    ...layout_card_1.tree,
     id: 'root',
     children: testDesign.tree.children.map((child) => child.id),
   },

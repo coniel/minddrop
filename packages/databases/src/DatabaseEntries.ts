@@ -36,5 +36,5 @@ export { readDatabaseEntries as readFiles } from './readDatabaseEntries';
 export { createEntryVirtualViews as createVirtualViews } from './utils';
 export { entryDisplayPropertyValues as displayPropertyValues } from './utils';
 export { getAllDatabaseEntries as getAll } from './getAllDatabaseEntries';
-export { setEntryViewDesignOverride as setViewDesignOverride } from './setEntryViewDesignOverride';
-export { clearEntryViewDesignOverride as clearViewDesignOverride } from './clearEntryViewDesignOverride';
+export { setEntryViewLayoutOverride as setViewLayoutOverride } from './setEntryViewLayoutOverride';
+export { clearEntryViewLayoutOverride as clearViewLayoutOverride } from './clearEntryViewLayoutOverride';

@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
-  Design,
-  DesignType,
   Designs,
-  defaultDesignIds,
+  Layout,
+  LayoutType,
+  Layouts,
+  defaultLayoutIds,
 } from '@minddrop/designs';
 import { i18n } from '@minddrop/i18n';
 import { UiIconName } from '@minddrop/ui-icons';
@@ -22,7 +23,7 @@ import {
 import { DesignStudioStore } from '../DesignStudioStore';
 import { ElementsPalette } from '../ElementsPalette/ElementsPalette';
 import { ElementsTree } from '../ElementsTree';
-import { NewDesignMenu } from '../NewDesignMenu';
+import { NewLayoutMenu } from '../NewLayoutMenu';
 import './DesignStudioLeftPanel.css';
 
 type ActivePanel = 'designs' | 'elements' | 'layers';
@@ -45,47 +46,49 @@ export interface DesignStudioLeftPanelProps {
    * When set, a new design of this type is created and
    * opened on mount.
    */
-  newDesignType?: DesignType;
+  newLayoutType?: LayoutType;
 }
 
 export const DesignStudioLeftPanel: React.FC<DesignStudioLeftPanelProps> = ({
   onClickBack,
-  newDesignType,
+  newLayoutType,
 }) => {
   const [activePanel, setActivePanel] = useState<ActivePanel>(
-    newDesignType ? 'elements' : 'designs',
+    newLayoutType ? 'elements' : 'designs',
   );
-  const designs = Designs.useAll();
+  const designs = Layouts.useAll();
   const activeDesignId = DesignStudioStore((state) => state.design?.id);
   const hasCreatedNewDesign = useRef(false);
 
-  const handleSelectDesign = useCallback((design: Design) => {
+  const handleSelectDesign = useCallback((design: Layout) => {
     DesignStudioStore.getState().initialize(design);
   }, []);
 
-  // Create and open a new design on mount when newDesignType is set
+  // Create and open a new design on mount when newLayoutType is set
   useEffect(() => {
-    if (!newDesignType || hasCreatedNewDesign.current) {
+    if (!newLayoutType || hasCreatedNewDesign.current) {
       return;
     }
 
     hasCreatedNewDesign.current = true;
 
     async function createNewDesign() {
-      const design = await Designs.create(newDesignType!);
+      const design = await Designs.create();
+      const layout = await Layouts.create(design.id, newLayoutType!);
 
-      handleSelectDesign(design);
+      handleSelectDesign(layout);
       setActivePanel('elements');
     }
 
     createNewDesign();
-  }, [newDesignType, handleSelectDesign]);
+  }, [newLayoutType, handleSelectDesign]);
 
-  // Create a new design from the NewDesignMenu
-  async function handleCreateDesign(type: DesignType) {
-    const design = await Designs.create(type);
+  // Create a new design with a starter layout of the chosen type
+  async function handleCreateDesign(type: LayoutType) {
+    const design = await Designs.create();
+    const layout = await Layouts.create(design.id, type);
 
-    handleSelectDesign(design);
+    handleSelectDesign(layout);
     setActivePanel('elements');
   }
 
@@ -118,7 +121,7 @@ export const DesignStudioLeftPanel: React.FC<DesignStudioLeftPanelProps> = ({
           </TabsTab>
         </TabsList>
         <Spacer />
-        <NewDesignMenu onSelectType={handleCreateDesign} />
+        <NewLayoutMenu onSelectType={handleCreateDesign} />
       </div>
 
       <TabsPanel value="designs">
@@ -127,7 +130,7 @@ export const DesignStudioLeftPanel: React.FC<DesignStudioLeftPanelProps> = ({
             {DESIGN_TYPES.map((type) => {
               const typeDesigns = designs.filter(
                 (design) =>
-                  design.type === type && !defaultDesignIds.includes(design.id),
+                  design.type === type && !defaultLayoutIds.includes(design.id),
               );
 
               if (!typeDesigns.length) {
@@ -136,7 +139,7 @@ export const DesignStudioLeftPanel: React.FC<DesignStudioLeftPanelProps> = ({
 
               return (
                 <MenuGroup key={type}>
-                  <MenuLabel label={`designs.${type}.name`} />
+                  <MenuLabel label={`layouts.${type}.name`} />
                   {typeDesigns.map((design) => (
                     <MenuItem
                       key={design.id}

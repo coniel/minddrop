@@ -4,7 +4,7 @@ import './PropertyConnectionLine.css';
 
 export interface PropertyConnectionLineProps {
   /**
-   * Ref to the `.design-browser` container used to compute
+   * Ref to the `.layout-browser` container used to compute
    * container-relative coordinates.
    */
   containerRef: RefObject<HTMLDivElement | null>;

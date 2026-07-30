@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import {
-  Designs,
   ImageViewerElement,
+  Layouts,
   getPlaceholderMediaDirPath,
 } from '@minddrop/designs';
 import { Fs } from '@minddrop/file-system';
@@ -54,7 +54,7 @@ export const ImageViewerStudioDesignElement: React.FC<
       return;
     }
 
-    const fileName = await Designs.addPlaceholderMedia(filePath as string);
+    const fileName = await Layouts.addPlaceholderMedia(filePath as string);
     updateDesignElement<ImageViewerElement>(element.id, {
       placeholderImage: fileName,
     });

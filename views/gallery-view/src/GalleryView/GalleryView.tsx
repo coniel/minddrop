@@ -133,8 +133,8 @@ export const GalleryViewComponent: React.FC<
               <DatabaseEntryRenderer
                 key={entryId}
                 entryId={entryId}
-                designType="card"
-                designId={view.options?.cardDesignId}
+                layoutType="card"
+                layoutId={view.options?.cardLayoutId}
               />
             ))}
           </div>

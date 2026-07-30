@@ -5,18 +5,18 @@ export interface NotebookView extends View {
   options: Partial<NotebookViewOptions>;
 }
 
-export interface NotebookViewDesignOverride {
+export interface NotebookViewLayoutOverride {
   /**
-   * The design to use for list items. When set to 'default'
-   * or omitted, the database default list design is used.
+   * The layout to use for list items. When set to 'default'
+   * or omitted, the database default list layout is used.
    */
-  listDesignId?: string;
+  listLayoutId?: string;
 
   /**
-   * The design to use for the page view. When set to 'default'
-   * or omitted, the database default page design is used.
+   * The layout to use for the page view. When set to 'default'
+   * or omitted, the database default page layout is used.
    */
-  pageDesignId?: string;
+  pageLayoutId?: string;
 }
 
 export interface NotebookViewOptions {
@@ -26,9 +26,9 @@ export interface NotebookViewOptions {
   listColumnWidth: number;
 
   /**
-   * Per-database design overrides, keyed by database ID.
-   * Each entry specifies which list and page designs to use
+   * Per-database layout overrides, keyed by database ID.
+   * Each entry specifies which list and page layouts to use
    * for entries from that database.
    */
-  designOverrides?: Record<string, NotebookViewDesignOverride>;
+  layoutOverrides?: Record<string, NotebookViewLayoutOverride>;
 }

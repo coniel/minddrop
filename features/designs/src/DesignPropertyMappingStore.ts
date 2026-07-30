@@ -1,4 +1,4 @@
-import { Databases, DesignPropertyMap } from '@minddrop/databases';
+import { Databases, LayoutPropertyMap } from '@minddrop/databases';
 import { PropertyType } from '@minddrop/properties';
 import { createStore } from '@minddrop/stores';
 
@@ -11,7 +11,7 @@ export interface DesignPropertyMappingStore {
   /**
    * The ID of the currently selected design.
    */
-  designId: string | null;
+  layoutId: string | null;
 
   /**
    * The current view in the design browser.
@@ -21,7 +21,7 @@ export interface DesignPropertyMappingStore {
   /**
    * The in-progress property map: [elementId] -> propertyName.
    */
-  propertyMap: DesignPropertyMap;
+  propertyMap: LayoutPropertyMap;
 
   /**
    * The property type currently being dragged, or null if
@@ -38,7 +38,7 @@ export interface DesignPropertyMappingStore {
    * Selects a design and loads any existing property map
    * from the database configuration.
    */
-  selectDesign: (designId: string) => void;
+  selectDesign: (layoutId: string) => void;
 
   /**
    * Sets the current view.
@@ -85,7 +85,7 @@ export interface DesignPropertyMappingStore {
 export const DesignPropertyMappingStore =
   createStore<DesignPropertyMappingStore>((set, get) => ({
     databaseId: null,
-    designId: null,
+    layoutId: null,
     view: 'browse',
     propertyMap: {},
     draggingPropertyType: null,
@@ -94,28 +94,28 @@ export const DesignPropertyMappingStore =
     initialize: (databaseId) => {
       set({
         databaseId,
-        designId: null,
+        layoutId: null,
         view: 'browse',
         propertyMap: {},
         hoveredPropertyName: null,
       });
     },
 
-    selectDesign: (designId) => {
+    selectDesign: (layoutId) => {
       const { databaseId } = get();
 
       // Load existing property map from the database if one exists
-      let propertyMap: DesignPropertyMap = {};
+      let propertyMap: LayoutPropertyMap = {};
 
       if (databaseId) {
         const database = Databases.get(databaseId);
 
-        if (database?.designPropertyMaps?.[designId]) {
-          propertyMap = { ...database.designPropertyMaps[designId] };
+        if (database?.layoutPropertyMaps?.[layoutId]) {
+          propertyMap = { ...database.layoutPropertyMaps[layoutId] };
         }
       }
 
-      set({ designId, propertyMap });
+      set({ layoutId, propertyMap });
     },
 
     setView: (view) => {
@@ -145,11 +145,19 @@ export const DesignPropertyMappingStore =
     },
 
     savePropertyMap: () => {
-      const { databaseId, designId, propertyMap } = get();
+      const { databaseId, layoutId, propertyMap } = get();
 
-      // Persist the property map to the database
-      if (databaseId && designId) {
-        Databases.setDesignPropertyMap(databaseId, designId, propertyMap);
+      // Persist the property map to the database. Writes the legacy
+      // field directly; the phase 8 cutover will drop this store altogether.
+      if (databaseId && layoutId) {
+        const database = Databases.get(databaseId);
+
+        Databases.update(databaseId, {
+          layoutPropertyMaps: {
+            ...database.layoutPropertyMaps,
+            [layoutId]: propertyMap,
+          },
+        });
       }
     },
 
@@ -164,7 +172,7 @@ export const DesignPropertyMappingStore =
     clear: () => {
       set({
         databaseId: null,
-        designId: null,
+        layoutId: null,
         view: 'browse',
         propertyMap: {},
         draggingPropertyType: null,

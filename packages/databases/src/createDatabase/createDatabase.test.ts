@@ -27,8 +27,10 @@ const newDatabase: Database = {
   propertyFileStorage: 'property',
   entryOpenMode: 'dialog',
   properties: [],
-  defaultDesigns: {},
-  designPropertyMaps: {},
+  designId: null,
+  designPropertyMap: {},
+  defaultLayouts: {},
+  layoutPropertyMaps: {},
 };
 
 describe('createDatabase', () => {

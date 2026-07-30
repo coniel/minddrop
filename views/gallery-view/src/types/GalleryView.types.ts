@@ -21,8 +21,8 @@ export interface GalleryViewOptions {
   gap: GalleryGap;
 
   /**
-   * The ID of the card design used to render entries.
-   * When not set, the database's default card design is used.
+   * The ID of the card layout used to render entries.
+   * When not set, the database's default card layout is used.
    */
-  cardDesignId?: string;
+  cardLayoutId?: string;
 }

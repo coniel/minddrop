@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import { Designs, getPlaceholderMediaDirPath } from '@minddrop/designs';
+import { Layouts, getPlaceholderMediaDirPath } from '@minddrop/designs';
 import { Fs } from '@minddrop/file-system';
 import { FilePropertySupportedFileExtensions } from '@minddrop/properties';
 import { Button, Group, Stack } from '@minddrop/ui-primitives';
@@ -71,7 +71,7 @@ export const PlaceholderImageField: React.FC<PlaceholderImageFieldProps> = ({
       return;
     }
 
-    const fileName = await Designs.addPlaceholderMedia(filePath as string);
+    const fileName = await Layouts.addPlaceholderMedia(filePath as string);
     onSelect(fileName);
   }, [onSelect]);
 

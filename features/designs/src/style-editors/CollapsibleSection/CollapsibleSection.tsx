@@ -120,7 +120,9 @@ export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
         />
         <IconButton
           icon={isOpen ? 'minus' : 'plus'}
-          label={hasNonDefault ? 'designs.clear-custom-styling' : 'expand'}
+          label={
+            hasNonDefault ? 'designs.clear-custom-styling' : 'actions.expand'
+          }
           variant="ghost"
           color="inherit"
           size="sm"

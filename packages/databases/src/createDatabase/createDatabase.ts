@@ -47,8 +47,10 @@ export async function createDatabase(
     propertyFileStorage: 'property',
     entryOpenMode: 'dialog',
     properties: [],
-    defaultDesigns: {},
-    designPropertyMaps: {},
+    designId: null,
+    designPropertyMap: {},
+    defaultLayouts: {},
+    layoutPropertyMaps: {},
     ...options,
     // Database ID is derived from the directory name
     id: options.name,

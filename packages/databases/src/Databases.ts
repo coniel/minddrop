@@ -94,12 +94,13 @@ export {
   filterValidDatabaseFiles as filterFiles,
 } from './utils';
 export { readWorkspaceDatabases } from './readWorkspaceDatabases';
-export { getDefaultDatabaseDesign as getDefaultDesign } from './getDefaultDatabaseDesign';
+export { getDefaultDatabaseLayout as getDefaultLayout } from './getDefaultDatabaseLayout';
 export { getDatabaseDesignPropertyMap as getDesignPropertyMap } from './getDatabaseDesignPropertyMap';
-export { removeDatabaseDesignPropertyMap as removeDesignPropertyMap } from './removeDatabaseDesignPropertyMap';
 export { setDatabaseDesignPropertyMap as setDesignPropertyMap } from './setDatabaseDesignPropertyMap';
-export { setDatabaseViewDesign as setViewDesign } from './setDatabaseViewDesign';
-export { clearDatabaseViewDesign as clearViewDesign } from './clearDatabaseViewDesign';
+export { clearDatabaseDesignPropertyMap as clearDesignPropertyMap } from './clearDatabaseDesignPropertyMap';
+export { setDatabaseDesign as setDesign } from './setDatabaseDesign';
+export { setDatabaseViewLayout as setViewLayout } from './setDatabaseViewLayout';
+export { clearDatabaseViewLayout as clearViewLayout } from './clearDatabaseViewLayout';
 
 /**
  * Handles a drop event on a database.

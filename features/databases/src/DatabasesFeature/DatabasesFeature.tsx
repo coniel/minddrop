@@ -89,7 +89,7 @@ export const DatabasesFeature: React.FC = () => {
           >(OpenMainContentViewEvent, {
             view: MainDatabaseEntryViewName,
             component: DatabaseEntryPage,
-            props: { entryId: data.entryId, designType: 'page' },
+            props: { entryId: data.entryId, layoutType: 'page' },
             split: openMode === 'split',
           });
         } else {

@@ -69,13 +69,13 @@ export async function onRenameEntry(data: DatabaseEntryRenamedEventData) {
         });
       }
 
-      // Re-ID virtual views for each design that has a property map
-      const designIds = Object.keys(database.designPropertyMaps || {});
+      // Re-ID virtual views for each layout that has a property map
+      const layoutIds = Object.keys(database.layoutPropertyMaps || {});
 
       await Promise.all(
-        designIds.map(async (designId) => {
-          const oldViewId = virtualViewId(original.id, property.name, designId);
-          const newViewId = virtualViewId(updated.id, property.name, designId);
+        layoutIds.map(async (layoutId) => {
+          const oldViewId = virtualViewId(original.id, property.name, layoutId);
+          const newViewId = virtualViewId(updated.id, property.name, layoutId);
 
           // Only update if the view exists
           const view = Views.Store.get(oldViewId);

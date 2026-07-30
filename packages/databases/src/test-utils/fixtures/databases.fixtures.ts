@@ -11,16 +11,22 @@ import { databaseConfigFilePath } from '../../utils';
 import { fetchWebpageMetadataAutomation } from './database-automations.fixtures';
 
 const { workspace_1 } = WorkspaceFixtures;
-const { design_card_1, design_card_2, design_card_3, design_list_1 } =
-  DesignFixtures;
+const {
+  layout_card_1,
+  layout_card_2,
+  layout_card_3,
+  layout_list_1,
+  design_cards,
+} = DesignFixtures;
 
 export const parentDir = workspace_1.path;
 export const genericFilePropertyName = 'File';
 export const imagePropertyName = 'Image';
 export const validImagePropertyFile = new File([], 'valid-image.png');
 export const invalidImagePropertyFile = new File([], 'note.txt');
-export const defaultCardDesign = design_card_2;
-export const firstCardDesign = design_card_1;
+// objectDatabase uses design_cards (layouts: [layout_card_2, layout_card_3])
+export const defaultCardLayout = layout_card_3;
+export const firstCardLayout = layout_card_2;
 
 function generateDatabase(
   data: Pick<Database, 'id' | 'name' | 'entryName'> & Partial<Database>,
@@ -33,21 +39,23 @@ function generateDatabase(
     propertyFileStorage: 'property',
     created: new Date('2024-01-01T00:00:00.000Z'),
     lastModified: new Date('2024-01-01T00:00:00.000Z'),
-    designPropertyMaps: {
-      [design_card_1.id]: {
+    designId: design_cards.id,
+    designPropertyMap: {},
+    layoutPropertyMaps: {
+      [layout_card_1.id]: {
         title: 'Title',
       },
-      [design_list_1.id]: {
+      [layout_list_1.id]: {
         title: 'Title',
       },
-      [design_card_2.id]: {
+      [layout_card_2.id]: {
         title: 'Title',
       },
-      [design_card_3.id]: {
+      [layout_card_3.id]: {
         title: 'Title',
       },
     },
-    defaultDesigns: { card: design_card_2.id },
+    defaultLayouts: { card: layout_card_3.id },
     path: `${parentDir}/${data.name}`,
     ...data,
   };

@@ -1,20 +1,20 @@
 import { getDatabase } from '../getDatabase';
-import { DesignPropertyMap } from '../types';
 
 /**
- * Retrieves a design property map for the specified design from a database.
+ * Retrieves the design property map for a database. The map links
+ * design property names to this database's own property names.
  *
  * @param databaseId - The ID of the database.
- * @param designId - The ID of the design.
- * @returns The design property map or null if it doesn't exist.
+ * @returns The design property map.
+ *
+ * @throws {DatabaseNotFoundError} If the database does not exist.
  */
 export function getDatabaseDesignPropertyMap(
   databaseId: string,
-  designId: string,
-): DesignPropertyMap | null {
+): Record<string, string> {
   // Get the database
   const database = getDatabase(databaseId);
 
-  // Return the design property map if it exists
-  return database.designPropertyMaps[designId] || null;
+  // Return the design property map
+  return database.designPropertyMap;
 }

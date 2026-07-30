@@ -4,52 +4,29 @@ import { i18n } from '@minddrop/i18n';
 import { uuid } from '@minddrop/utils';
 import { DesignsStore } from '../DesignsStore';
 import { DesignCreatedEvent, DesignCreatedEventData } from '../events';
-import { DefaultContainerElementStyle } from '../styles';
-import { Design, DesignType } from '../types';
+import { Design } from '../types';
 import { getDesignsDirPath } from '../utils';
 import { writeDesign } from '../writeDesign';
 
 /**
  * Creates a new, empty design.
  *
- * @param type - The design type.
- * @param name - The design name, defaults to the design type name.
+ * @param name - The design name, defaults to a generic localized label.
  * @returns The new design.
  *
  * @dispatches 'designs:design:created'
  */
-export async function createDesign(
-  type: DesignType,
-  name?: string,
-): Promise<Design> {
+export async function createDesign(name?: string): Promise<Design> {
   // Ensure the designs directory exists
   await Fs.ensureDir(getDesignsDirPath());
 
-  const defaultMinHeights: Record<string, number | undefined> = {
-    card: 200,
-    list: 48,
-  };
-
-  // Generate a new design
   const design: Design = {
-    type,
     id: uuid(),
-    name: name || i18n.t(`designs.${type}.name`),
+    name: name || i18n.t('designs.new'),
+    properties: [],
+    layouts: [],
     created: new Date(),
     lastModified: new Date(),
-    tree: {
-      id: 'root',
-      type: 'root',
-      style: {
-        ...DefaultContainerElementStyle,
-        borderRadiusTopLeft: 8,
-        borderRadiusTopRight: 8,
-        borderRadiusBottomRight: 8,
-        borderRadiusBottomLeft: 8,
-        minHeight: defaultMinHeights[type],
-      },
-      children: [],
-    },
   };
 
   // Add the design to the store

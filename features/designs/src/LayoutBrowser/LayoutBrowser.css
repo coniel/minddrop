@@ -1,0 +1,182 @@
+.layout-browser {
+  position: relative;
+  display: flex;
+  height: 100%;
+  gap: 0.5rem;
+}
+
+.layout-browser-list-panel {
+  width: 300px;
+  flex-shrink: 0;
+  height: 100%;
+}
+
+.layout-browser-preview-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--surface-app);
+  background-image: radial-gradient(
+    circle,
+    var(--border-subtle) 1px,
+    transparent 1px
+  );
+  background-size: 24px 24px;
+}
+
+.layout-browser-action-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4);
+  z-index: 1;
+}
+
+.layout-browser-canvas-area {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  transition: transform var(--duration-slow) var(--ease-out);
+}
+
+/* Hide canvas resize/drag handles during property mapping */
+.design-canvas.hide-handles .design-canvas-resize-handle,
+.design-canvas.hide-handles .design-canvas-drag-handle,
+.design-canvas.hide-handles .design-canvas-hover-zone {
+  display: none;
+}
+
+/* Make the canvas content area a positioning context for the overlay */
+.layout-browser .design-canvas-content {
+  position: relative;
+}
+
+.layout-browser-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.layout-browser-header .text-input {
+  flex: 1;
+}
+
+.layout-browser-designs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-2) var(--space-7);
+}
+
+/* Mapping progress counter in the workspace toolbar */
+
+.property-mapping-counter {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: var(--font-size-xs);
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+}
+
+/* Property list */
+
+.property-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-2) var(--space-7);
+}
+
+.property-group-items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.draggable-property-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  background-color: var(--surface-overlay);
+  cursor: grab;
+  user-select: none;
+  transition: var(--transition-colors);
+}
+
+.draggable-property-item:hover {
+  background-color: var(--surface-subtle);
+  border-color: var(--border-default);
+}
+
+.draggable-property-item:active {
+  cursor: grabbing;
+  background-color: var(--surface-raised);
+}
+
+.property-item-handle {
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+}
+
+.property-item-icon {
+  flex-shrink: 0;
+}
+
+.property-item-name {
+  flex: 1;
+  font-size: var(--text-sm);
+  color: var(--text-default);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Mapped property items get muted styling */
+.draggable-property-item.mapped {
+  opacity: 0.5;
+}
+
+/* Dashed outline on unmapped elements when the toggle is active */
+.unmapped-highlight {
+  outline: 2px dashed var(--danger-900);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+  transition: outline-color var(--duration-slow) var(--ease-out);
+}
+
+/* Outline on mapped elements when hovering the counter */
+.mapped-highlight {
+  outline: 2px solid var(--border-primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* Fade out the highlight when a property drag starts */
+.unmapped-highlight.unmapped-highlight-hidden {
+  outline-color: transparent;
+}
+
+/* Highlighted element when hovering a mapped property */
+[data-element-id] > .property-mapping-highlighted,
+.property-mapping-highlighted {
+  outline: 2px solid var(--border-primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* Green check icon for mapped properties */
+.property-item-check {
+  flex-shrink: 0;
+  color: var(--text-primary);
+}

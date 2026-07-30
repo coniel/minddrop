@@ -1,10 +1,10 @@
 import { RefObject, useEffect, useState } from 'react';
-import { DesignPropertyMap } from '@minddrop/databases';
+import { LayoutPropertyMap } from '@minddrop/databases';
 import './PropertyConnectionLine.css';
 
 export interface AllPropertyConnectionLinesProps {
   /**
-   * Ref to the `.design-browser` container used to compute
+   * Ref to the `.layout-browser` container used to compute
    * container-relative coordinates.
    */
   containerRef: RefObject<HTMLDivElement | null>;
@@ -12,7 +12,7 @@ export interface AllPropertyConnectionLinesProps {
   /**
    * The current property map of element IDs to property names.
    */
-  propertyMap: DesignPropertyMap;
+  propertyMap: LayoutPropertyMap;
 }
 
 interface LineCoords {

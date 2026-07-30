@@ -3,7 +3,7 @@ import {
   DefaultContainerElementStyle,
   DefaultTextElementStyle,
   DefaultViewElementStyle,
-  Design,
+  Layout,
 } from '@minddrop/designs';
 import { ViewFixtures } from '@minddrop/views';
 import {
@@ -19,11 +19,11 @@ import { entryDisplayPropertyValues } from './entryDisplayPropertyValues';
 
 const { viewType_table } = ViewFixtures;
 
-// Design with a view element for collection property tests
-const designWithView: Design = {
-  id: 'test-design',
+// Layout with a view element for collection property tests
+const designWithView: Layout = {
+  id: 'test-layout',
   type: 'card',
-  name: 'Test Design',
+  name: 'Test Layout',
   created: new Date(),
   lastModified: new Date(),
   tree: {
@@ -41,11 +41,11 @@ const designWithView: Design = {
   },
 };
 
-// Simple design with no view elements
-const simpleDesign: Design = {
-  id: 'simple-design',
+// Simple layout with no view elements
+const simpleDesign: Layout = {
+  id: 'simple-layout',
   type: 'card',
-  name: 'Simple Design',
+  name: 'Simple Layout',
   created: new Date(),
   lastModified: new Date(),
   tree: {

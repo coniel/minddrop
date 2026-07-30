@@ -4,16 +4,16 @@ import {
   OpenMainContentViewEvent,
   OpenMainContentViewEventData,
 } from '@minddrop/events';
-import { DesignBrowser, DesignBrowserProps } from './DesignBrowser';
 import { DesignPropertyMappingStore } from './DesignPropertyMappingStore';
 import { DesignStudio } from './DesignStudio';
+import { LayoutBrowser, LayoutBrowserProps } from './LayoutBrowser';
 import {
-  BrowseDesignsEvent,
-  BrowseDesignsEventData,
-  DesignBrowserViewName,
-  DesignPropertyMappingEventListenerId,
+  BrowseLayoutsEvent,
+  BrowseLayoutsEventData,
   DesignStudioEventListenerId,
   DesignStudioViewName,
+  LayoutBrowserViewName,
+  LayoutPropertyMappingEventListenerId,
   OpenDesignStudioEvent,
   OpenDesignStudioEventData,
   OpenPropertyMapperEvent,
@@ -39,7 +39,7 @@ export const DesignsFeature: React.FC = () => {
         // as the "current view"
         if (
           data.view !== DesignStudioViewName &&
-          data.view !== DesignBrowserViewName
+          data.view !== LayoutBrowserViewName
         ) {
           currentView = data;
         }
@@ -77,18 +77,18 @@ export const DesignsFeature: React.FC = () => {
 
     // Listen for browse designs events and open the design browser
     // as the main content view
-    Events.addListener<BrowseDesignsEventData>(
-      BrowseDesignsEvent,
-      `${DesignPropertyMappingEventListenerId}:browse`,
+    Events.addListener<BrowseLayoutsEventData>(
+      BrowseLayoutsEvent,
+      `${LayoutPropertyMappingEventListenerId}:browse`,
       (event) => {
         // Initialize the store with the database ID
         DesignPropertyMappingStore.getState().initialize(event.data.databaseId);
 
-        Events.dispatch<OpenMainContentViewEventData<DesignBrowserProps>>(
+        Events.dispatch<OpenMainContentViewEventData<LayoutBrowserProps>>(
           OpenMainContentViewEvent,
           {
-            view: DesignBrowserViewName,
-            component: DesignBrowser,
+            view: LayoutBrowserViewName,
+            component: LayoutBrowser,
             props: {
               ...event.data,
               backEvent: currentView ? OpenMainContentViewEvent : undefined,
@@ -103,21 +103,21 @@ export const DesignsFeature: React.FC = () => {
     // directly in property mapping mode with the design selected
     Events.addListener<OpenPropertyMapperEventData>(
       OpenPropertyMapperEvent,
-      `${DesignPropertyMappingEventListenerId}:mapper`,
+      `${LayoutPropertyMappingEventListenerId}:mapper`,
       (event) => {
         // Initialize the store with the database ID
         const store = DesignPropertyMappingStore.getState();
         store.initialize(event.data.databaseId);
 
         // Select the design and switch to mapping view
-        store.selectDesign(event.data.designId);
+        store.selectDesign(event.data.layoutId);
         store.setView('map-properties');
 
-        Events.dispatch<OpenMainContentViewEventData<DesignBrowserProps>>(
+        Events.dispatch<OpenMainContentViewEventData<LayoutBrowserProps>>(
           OpenMainContentViewEvent,
           {
-            view: DesignBrowserViewName,
-            component: DesignBrowser,
+            view: LayoutBrowserViewName,
+            component: LayoutBrowser,
             props: {
               databaseId: event.data.databaseId,
               backEvent: currentView ? OpenMainContentViewEvent : undefined,
@@ -139,12 +139,12 @@ export const DesignsFeature: React.FC = () => {
       // Design property mapping cleanup
       DesignPropertyMappingStore.getState().clear();
       Events.removeListener(
-        BrowseDesignsEvent,
-        `${DesignPropertyMappingEventListenerId}:browse`,
+        BrowseLayoutsEvent,
+        `${LayoutPropertyMappingEventListenerId}:browse`,
       );
       Events.removeListener(
         OpenPropertyMapperEvent,
-        `${DesignPropertyMappingEventListenerId}:mapper`,
+        `${LayoutPropertyMappingEventListenerId}:mapper`,
       );
     };
   }, []);

@@ -1,97 +1,39 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DesignFixtures } from '@minddrop/designs';
 import { DatabasesStore } from '../DatabasesStore';
+import { DatabaseNotFoundError } from '../errors';
 import { cleanup, objectDatabase, setup } from '../test-utils';
+import { updateDatabase } from '../updateDatabase';
 import { setDatabaseDesignPropertyMap } from './setDatabaseDesignPropertyMap';
 
-const { design_card_1, design_card_2, design_list_1 } = DesignFixtures;
-const propertyMap = { title: 'Title' };
+const map = { Title: 'Heading', Subtitle: 'Tagline' };
 
 describe('setDatabaseDesignPropertyMap', () => {
-  beforeEach(() => {
-    setup();
-
-    // Clear the database's current design property map
-    DatabasesStore.update(objectDatabase.id, {
-      designPropertyMaps: {},
-    });
-  });
+  beforeEach(setup);
 
   afterEach(cleanup);
 
-  it('sets the design property map on the database, preserving existing ones', async () => {
-    // Set a design property map
-    await setDatabaseDesignPropertyMap(
-      objectDatabase.id,
-      design_card_1.id,
-      propertyMap,
-    );
+  it('throws if the database does not exist', async () => {
+    await expect(() =>
+      setDatabaseDesignPropertyMap('non-existent-db', map),
+    ).rejects.toThrow(DatabaseNotFoundError);
+  });
 
-    // Set a second design property map
-    await setDatabaseDesignPropertyMap(
-      objectDatabase.id,
-      design_list_1.id,
-      propertyMap,
-    );
-
-    const database = DatabasesStore.get(objectDatabase.id)!;
-
-    expect(database.designPropertyMaps).toEqual({
-      [design_card_1.id]: propertyMap,
-      [design_list_1.id]: propertyMap,
+  it('replaces the existing design property map', async () => {
+    // Seed an initial map
+    await updateDatabase(objectDatabase.id, {
+      designPropertyMap: { Existing: 'Old' },
     });
+
+    await setDatabaseDesignPropertyMap(objectDatabase.id, map);
+
+    expect(DatabasesStore.get(objectDatabase.id)?.designPropertyMap).toEqual(
+      map,
+    );
   });
 
   it('returns the updated database', async () => {
-    const result = await setDatabaseDesignPropertyMap(
-      objectDatabase.id,
-      design_card_1.id,
-      propertyMap,
-    );
+    const result = await setDatabaseDesignPropertyMap(objectDatabase.id, map);
 
-    expect(result.designPropertyMaps).toEqual({
-      [design_card_1.id]: propertyMap,
-    });
-  });
-
-  it('sets the design as default when it is the only one of its type', async () => {
-    // Clear default designs
-    DatabasesStore.update(objectDatabase.id, { defaultDesigns: {} });
-
-    // Add the only card design
-    await setDatabaseDesignPropertyMap(
-      objectDatabase.id,
-      design_card_1.id,
-      propertyMap,
-    );
-
-    const database = DatabasesStore.get(objectDatabase.id)!;
-
-    // Should be set as the default card design
-    expect(database.defaultDesigns.card).toBe(design_card_1.id);
-  });
-
-  it('does not override the default when another design of the same type exists', async () => {
-    // Clear default designs
-    DatabasesStore.update(objectDatabase.id, { defaultDesigns: {} });
-
-    // Add first card design (becomes default)
-    await setDatabaseDesignPropertyMap(
-      objectDatabase.id,
-      design_card_1.id,
-      propertyMap,
-    );
-
-    // Add second card design (should not override)
-    await setDatabaseDesignPropertyMap(
-      objectDatabase.id,
-      design_card_2.id,
-      propertyMap,
-    );
-
-    const database = DatabasesStore.get(objectDatabase.id)!;
-
-    // Default should still be the first card design
-    expect(database.defaultDesigns.card).toBe(design_card_1.id);
+    expect(result.designPropertyMap).toEqual(map);
   });
 });

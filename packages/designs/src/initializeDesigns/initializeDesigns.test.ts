@@ -1,7 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DesignsStore } from '../DesignsStore';
-import { DefaultCardDesign } from '../default-designs';
-import { MockFs, cleanup, design_card_1, setup } from '../test-utils';
+import {
+  MockFs,
+  cleanup,
+  design_books,
+  design_empty,
+  setup,
+} from '../test-utils';
 import { getDesignFilePath } from '../utils';
 import { initializeDesigns } from './initializeDesigns';
 
@@ -10,26 +15,31 @@ describe('initializeDesigns', () => {
 
   afterEach(cleanup);
 
-  it('loads default designs into the store', async () => {
+  it('loads designs from the file system into the store', async () => {
     await initializeDesigns();
 
-    expect(DesignsStore.get('card')).toEqual(DefaultCardDesign);
+    expect(DesignsStore.get(design_books.id)).toEqual(design_books);
+    expect(DesignsStore.get(design_empty.id)).toEqual(design_empty);
   });
 
-  it('loads designs from the file system and loads them into the store', async () => {
+  it('ignores non-design files in the designs directory', async () => {
+    MockFs.writeTextFile(
+      `${getDesignFilePath('stranger').replace(/\.design$/, '.other')}`,
+      JSON.stringify({ id: 'stranger', name: 'stranger' }),
+    );
+
     await initializeDesigns();
 
-    expect(DesignsStore.get(design_card_1.id)).toEqual(design_card_1);
+    expect(DesignsStore.get('stranger')).toBeNull();
   });
 
   it('handles failed design reads', async () => {
-    // Add an invalid design file
     MockFs.writeTextFile(getDesignFilePath('invalid-design'), 'invalid json');
 
     await initializeDesigns();
 
     expect(
-      DesignsStore.getAllArray().find((design) => !Boolean(design)),
+      DesignsStore.getAllArray().find((design) => !design),
     ).toBeUndefined();
   });
 });

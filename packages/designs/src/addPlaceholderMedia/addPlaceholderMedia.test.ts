@@ -4,6 +4,8 @@ import { getPlaceholderMediaDirPath } from '../utils';
 import { addDesignPlaceholderMedia } from './addPlaceholderMedia';
 
 const MOCK_UUID = 'test-uuid-1234';
+const mockTime = new Date('2024-01-01T00:00:00.000Z');
+const MOCK_BASE_NAME = `${mockTime.getTime()}-${MOCK_UUID}`;
 
 vi.mock('@minddrop/utils', async () => {
   const actual = await vi.importActual('@minddrop/utils');
@@ -17,6 +19,7 @@ vi.mock('@minddrop/utils', async () => {
 describe('addDesignPlaceholderMedia', () => {
   beforeEach(() => {
     setup({ loadDesigns: false, loadDesignFiles: false });
+    vi.setSystemTime(mockTime);
   });
 
   afterEach(cleanup);
@@ -33,13 +36,13 @@ describe('addDesignPlaceholderMedia', () => {
     expect(MockFs.exists(mediaDir)).toBe(true);
   });
 
-  it('copies the file with a UUID name preserving the extension', async () => {
+  it('copies the file with a timestamp-UUID name preserving the extension', async () => {
     const sourcePath = 'workspace/photo.jpg';
     MockFs.addFiles([sourcePath]);
 
     const fileName = await addDesignPlaceholderMedia(sourcePath);
 
-    expect(fileName).toBe(`${MOCK_UUID}.jpg`);
+    expect(fileName).toBe(`${MOCK_BASE_NAME}.jpg`);
 
     const mediaDir = getPlaceholderMediaDirPath();
     expect(MockFs.exists(`${mediaDir}/${fileName}`)).toBe(true);
@@ -51,7 +54,7 @@ describe('addDesignPlaceholderMedia', () => {
 
     const fileName = await addDesignPlaceholderMedia(sourcePath);
 
-    expect(fileName).toBe(MOCK_UUID);
+    expect(fileName).toBe(MOCK_BASE_NAME);
 
     const mediaDir = getPlaceholderMediaDirPath();
     expect(MockFs.exists(`${mediaDir}/${fileName}`)).toBe(true);
@@ -63,6 +66,6 @@ describe('addDesignPlaceholderMedia', () => {
 
     const result = await addDesignPlaceholderMedia(sourcePath);
 
-    expect(result).toBe(`${MOCK_UUID}.webp`);
+    expect(result).toBe(`${MOCK_BASE_NAME}.webp`);
   });
 });

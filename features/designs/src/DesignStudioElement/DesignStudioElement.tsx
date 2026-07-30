@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { useTranslation } from '@minddrop/i18n';
+import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import { DesignStudioStore, useElement } from '../DesignStudioStore';
 import { elementUIMap } from '../design-elements';
 import { FlatDesignElement } from '../types';
@@ -103,7 +103,7 @@ const DesignStudioElementInner: React.FC<{
  * Default placeholders keyed by element type. Uses i18n keys
  * for translatable text, hardcoded strings for non-translatable.
  */
-const i18nPlaceholders: Record<string, string> = {
+const i18nPlaceholders: Record<string, TranslationKey> = {
   text: 'design-studio.elements.text-placeholder',
   'formatted-text': 'design-studio.elements.text-placeholder',
 };
@@ -118,7 +118,7 @@ const hardcodedPlaceholders: Record<string, string> = {
  */
 function enrichElementForStudio(
   element: FlatDesignElement,
-  t: (key: string) => string,
+  t: (key: TranslationKey) => string,
 ): FlatDesignElement {
   // Only enrich elements that have a placeholder field
   if ('placeholder' in element && !element.placeholder) {

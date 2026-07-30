@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Designs, getPlaceholderMediaDirPath } from '@minddrop/designs';
+import { Layouts, getPlaceholderMediaDirPath } from '@minddrop/designs';
 import { Fs, FsEntry } from '@minddrop/file-system';
 import { useTranslation } from '@minddrop/i18n';
 import { FilePropertySupportedFileExtensions } from '@minddrop/properties';
@@ -80,7 +80,7 @@ export const PlaceholderImageDialog: React.FC<PlaceholderImageDialogProps> = ({
 
     // Add all selected files to the placeholder media directory
     const fileNames = await Promise.all(
-      filePaths.map((path) => Designs.addPlaceholderMedia(path)),
+      filePaths.map((path) => Layouts.addPlaceholderMedia(path)),
     );
 
     if (fileNames.length === 1) {

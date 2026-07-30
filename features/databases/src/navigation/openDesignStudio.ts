@@ -1,4 +1,3 @@
-import { Databases } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
 import {
   OpenDesignStudioEvent,
@@ -6,22 +5,15 @@ import {
 } from '@minddrop/feature-designs';
 import { OpenDatabaseViewEvent } from '../events';
 
-export function openDesignStudio(databaseId: string, designId: string) {
-  const database = Databases.get(databaseId);
-  const design = Databases.getDesign(databaseId, designId);
-
-  if (!design) {
-    return;
-  }
-
+/**
+ * Opens the design studio with back navigation returning to the
+ * database's configuration panel.
+ *
+ * @param databaseId - The ID of the database to return to.
+ */
+export function openDesignStudio(databaseId: string) {
   Events.dispatch<OpenDesignStudioEventData>(OpenDesignStudioEvent, {
-    design: design,
     backEvent: OpenDatabaseViewEvent,
     backEventData: { databaseId, configurationPanelOpen: true },
-    properties: database.properties,
-    onSave: (design) => {
-      // Update the design in the database
-      Databases.updateDesign(databaseId, design);
-    },
   });
 }

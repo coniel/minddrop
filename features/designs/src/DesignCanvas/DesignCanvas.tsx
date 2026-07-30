@@ -5,7 +5,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import { DesignType } from '@minddrop/designs';
+import { LayoutType } from '@minddrop/designs';
 import { DesignPreviewProvider } from '../DesignElements';
 import { DesignStudioStore } from '../DesignStudioStore';
 import './DesignCanvas.css';
@@ -45,11 +45,11 @@ const MIN_HEIGHT = 100;
  * design type within the available workspace dimensions.
  */
 function getCanvasLayout(
-  designType: DesignType,
+  layoutType: LayoutType,
   workspaceWidth: number,
   workspaceHeight: number,
 ): { width: number; height: number; x: number; y: number } {
-  switch (designType) {
+  switch (layoutType) {
     case 'page': {
       const width = Math.round(workspaceWidth * 0.9);
       const height = Math.round(workspaceHeight * 0.92);
@@ -121,7 +121,7 @@ export interface DesignCanvasProps {
    * Determines initial width and which resize handles are shown.
    * Card/list: horizontal only. Page: all directions.
    */
-  designType: DesignType;
+  layoutType: LayoutType;
 
   /**
    * The design tree content to render inside the canvas.
@@ -143,7 +143,7 @@ export interface DesignCanvasProps {
  * Page type shows all handles including corners and bottom edge.
  */
 export const DesignCanvas: React.FC<DesignCanvasProps> = ({
-  designType,
+  layoutType,
   children,
   className,
 }) => {
@@ -155,7 +155,7 @@ export const DesignCanvas: React.FC<DesignCanvasProps> = ({
   const didDrag = useRef(false);
 
   // Card/list auto-size height — hide corner + bottom handles
-  const autoHeight = designType === 'card' || designType === 'list';
+  const autoHeight = layoutType === 'card' || layoutType === 'list';
 
   /**
    * Clamps a position so the canvas stays within its parent workspace.
@@ -188,14 +188,14 @@ export const DesignCanvas: React.FC<DesignCanvasProps> = ({
     }
 
     const layout = getCanvasLayout(
-      designType,
+      layoutType,
       workspace.offsetWidth,
       workspace.offsetHeight,
     );
 
     setSize({ width: layout.width, height: layout.height });
     setPosition({ x: layout.x, y: Math.max(0, layout.y) });
-  }, [designType, autoHeight]);
+  }, [layoutType, autoHeight]);
 
   // Start dragging when the drag handle is pressed
   const handleDragHandleMouseDown = useCallback(

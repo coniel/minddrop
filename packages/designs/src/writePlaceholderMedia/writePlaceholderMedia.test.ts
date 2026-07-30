@@ -4,6 +4,8 @@ import { getPlaceholderMediaDirPath } from '../utils';
 import { writeDesignPlaceholderMedia } from './writePlaceholderMedia';
 
 const MOCK_UUID = 'test-uuid-5678';
+const mockTime = new Date('2024-01-01T00:00:00.000Z');
+const MOCK_BASE_NAME = `${mockTime.getTime()}-${MOCK_UUID}`;
 
 vi.mock('@minddrop/utils', async () => {
   const actual = await vi.importActual('@minddrop/utils');
@@ -21,6 +23,7 @@ function createFile(name: string, content = 'data'): File {
 describe('writeDesignPlaceholderMedia', () => {
   beforeEach(() => {
     setup({ loadDesigns: false, loadDesignFiles: false });
+    vi.setSystemTime(mockTime);
   });
 
   afterEach(cleanup);
@@ -35,14 +38,12 @@ describe('writeDesignPlaceholderMedia', () => {
     expect(MockFs.exists(mediaDir)).toBe(true);
   });
 
-  it('writes the file with a UUID name preserving the extension', async () => {
+  it('writes the file with a timestamp-UUID name preserving the extension', async () => {
     const mediaDir = getPlaceholderMediaDirPath();
 
-    const fileName = await writeDesignPlaceholderMedia(
-      createFile('photo.jpg'),
-    );
+    const fileName = await writeDesignPlaceholderMedia(createFile('photo.jpg'));
 
-    expect(fileName).toBe(`${MOCK_UUID}.jpg`);
+    expect(fileName).toBe(`${MOCK_BASE_NAME}.jpg`);
     expect(MockFs.exists(`${mediaDir}/${fileName}`)).toBe(true);
   });
 
@@ -51,15 +52,13 @@ describe('writeDesignPlaceholderMedia', () => {
 
     const fileName = await writeDesignPlaceholderMedia(createFile('README'));
 
-    expect(fileName).toBe(MOCK_UUID);
+    expect(fileName).toBe(MOCK_BASE_NAME);
     expect(MockFs.exists(`${mediaDir}/${fileName}`)).toBe(true);
   });
 
   it('returns the generated file name', async () => {
-    const result = await writeDesignPlaceholderMedia(
-      createFile('image.webp'),
-    );
+    const result = await writeDesignPlaceholderMedia(createFile('image.webp'));
 
-    expect(result).toBe(`${MOCK_UUID}.webp`);
+    expect(result).toBe(`${MOCK_BASE_NAME}.webp`);
   });
 });

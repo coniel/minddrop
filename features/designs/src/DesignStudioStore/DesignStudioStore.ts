@@ -1,9 +1,9 @@
 import {
-  Design,
   DesignElement,
   DesignElementStyle,
   DesignElementTemplate,
-  Designs,
+  Layout,
+  Layouts,
   elementConfigs,
 } from '@minddrop/designs';
 import {
@@ -44,7 +44,7 @@ export interface DesignStudioStore {
   /**
    * The design being edited.
    */
-  design: Design | null;
+  design: Layout | null;
 
   /**
    * An [id]: FlatDesignElement map of the elements which are part of the current design.
@@ -112,7 +112,7 @@ export interface DesignStudioStore {
    * @param propertyValues - The parent's property values.
    */
   initialize: (
-    design: Design,
+    design: Layout,
     properties?: PropertiesSchema,
     propertyValues?: PropertyMap,
   ) => void;
@@ -389,7 +389,7 @@ export const saveDesign = () => {
     return;
   }
 
-  Designs.update(design.id, { tree });
+  Layouts.update(design.id, { tree });
 };
 
 export const getDesignElement = <

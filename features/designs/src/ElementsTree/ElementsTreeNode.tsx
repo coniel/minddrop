@@ -1,4 +1,8 @@
-import { useTranslation } from '@minddrop/i18n';
+import {
+  TranslationKey,
+  createI18nKeyBuilder,
+  useTranslation,
+} from '@minddrop/i18n';
 import {
   Collapsible,
   CollapsibleContent,
@@ -15,6 +19,8 @@ import {
   propertyTypeLabelMap,
 } from '../constants';
 import { FlatDesignElement } from '../types';
+
+const layoutTypeI18nKey = createI18nKeyBuilder('designs.layouts.');
 
 export interface ElementsTreeNodeProps {
   elementId: string;
@@ -33,7 +39,7 @@ export const ElementsTreeNode: React.FC<ElementsTreeNodeProps> = ({
 }) => {
   const { t } = useTranslation();
   const element = useElement(elementId);
-  const designType = DesignStudioStore((state) => state.design?.type);
+  const layoutType = DesignStudioStore((state) => state.design?.type);
   const selectedElementId = DesignStudioStore(
     (state) => state.selectedElementId,
   );
@@ -44,8 +50,8 @@ export const ElementsTreeNode: React.FC<ElementsTreeNodeProps> = ({
 
   const icon = elementIconMap[element.type] || 'box';
   const labelKey =
-    element.type === 'root' && designType
-      ? (`designs.${designType}.name` as const)
+    element.type === 'root' && layoutType
+      ? layoutTypeI18nKey(layoutType, 'name')
       : elementLabelMap[element.type];
   const isContainer = hasChildren(element) && element.children.length > 0;
   const isSelected = selectedElementId === elementId;
@@ -83,7 +89,7 @@ export const ElementsTreeNode: React.FC<ElementsTreeNodeProps> = ({
       <Collapsible defaultOpen>
         <MappableTooltipWrapper
           showMappable={showMappable}
-          title={t('design-studio.mappable.tooltip')}
+          title="design-studio.mappable.tooltip"
           description={typeLabels}
         >
           <div
@@ -131,7 +137,7 @@ export const ElementsTreeNode: React.FC<ElementsTreeNodeProps> = ({
   return (
     <MappableTooltipWrapper
       showMappable={showMappable}
-      title={t('design-studio.mappable.tooltip')}
+      title="design-studio.mappable.tooltip"
       description={typeLabels}
     >
       <div
@@ -157,7 +163,7 @@ export const ElementsTreeNode: React.FC<ElementsTreeNodeProps> = ({
  */
 const MappableTooltipWrapper: React.FC<{
   showMappable: boolean;
-  title: string;
+  title: TranslationKey;
   description: string;
   children: React.ReactElement;
 }> = ({ showMappable, title, description, children }) => {
@@ -166,7 +172,7 @@ const MappableTooltipWrapper: React.FC<{
   }
 
   return (
-    <Tooltip title={title} description={description} side="right">
+    <Tooltip title={title} description={<>{description}</>} side="right">
       {children}
     </Tooltip>
   );

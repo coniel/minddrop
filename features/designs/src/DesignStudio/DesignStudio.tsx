@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Designs } from '@minddrop/designs';
+import { Layouts } from '@minddrop/designs';
 import {
   CloseAppSidebarEvent,
   DefaultMainContentViewName,
@@ -28,7 +28,7 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
   backEvent,
   backEventData,
   backButtonLabel,
-  newDesignType,
+  newLayoutType,
 }) => {
   const selectedElementId = useDesignStudioStore(
     (state) => state.selectedElementId,
@@ -50,7 +50,7 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
     const trimmedName = designName.trim();
 
     if (trimmedName && trimmedName !== design.name) {
-      Designs.update(design.id, { name: trimmedName });
+      Layouts.update(design.id, { name: trimmedName });
     } else {
       setDesignName(design.name);
     }
@@ -127,14 +127,14 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
       <Panel className="design-studio-left-panel">
         <DesignStudioLeftPanel
           onClickBack={handleClickBack}
-          newDesignType={newDesignType}
+          newLayoutType={newLayoutType}
         />
       </Panel>
       <div className="design-studio-workspace">
         {design && (
           <>
             <DesignStudioViewport>
-              <DesignCanvas designType={design.type}>
+              <DesignCanvas layoutType={design.type}>
                 {rootElement && (
                   <DesignStudioRootElement element={rootElement} />
                 )}

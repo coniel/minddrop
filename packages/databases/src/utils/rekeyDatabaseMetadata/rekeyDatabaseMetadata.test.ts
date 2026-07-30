@@ -13,7 +13,7 @@ import { rekeyDatabaseMetadata } from './rekeyDatabaseMetadata';
 const metadataFilePath = databaseMetadataFilePath(objectDatabase.path);
 
 const entryMetadata: DatabaseEntryMetadata = {
-  views: {
+  embeddedViewConfigs: {
     'card:Tasks': {
       options: { columns: [['a', 'b'], ['c']] },
       data: {},
@@ -54,7 +54,7 @@ describe('rekeyDatabaseMetadata', () => {
   it('preserves other entries when re-keying', async () => {
     const otherEntryId = 'Objects/Other Entry.md';
     const otherMetadata: DatabaseEntryMetadata = {
-      views: { 'list:Tags': { options: {}, data: {} } },
+      embeddedViewConfigs: { 'list:Tags': { options: {}, data: {} } },
     };
     const newEntryId = `${objectDatabase.name}/Renamed Entry.md`;
 

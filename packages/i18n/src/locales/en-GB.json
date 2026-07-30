@@ -27,7 +27,8 @@
     "close": "Close",
     "search": "Search...",
     "pickDate": "Pick a date...",
-    "swapSplitPosition": "Swap split position"
+    "swapSplitPosition": "Swap split position",
+    "expand": "Expand"
   },
   "error": {
     "unknown": "An unknown error occurred.",
@@ -198,17 +199,17 @@
     "actions": {
       "new": "New",
       "addProperty": "Add property",
-      "addDesign": "Add design",
-      "browseDesigns": "Browse designs",
+      "addLayout": "Add layout",
+      "browseLayouts": "Browse layouts",
       "addView": "Add view",
       "viewSettings": "View settings",
       "newEntry": "New entry",
       "configuration": "Configuration"
     },
-    "designs": {
+    "layouts": {
       "databaseDefault": "Database default",
       "actions": {
-        "manage": "Manage design",
+        "manage": "Manage layout",
         "setAsDefault": "Set as default",
         "remove": "Remove"
       }
@@ -787,33 +788,56 @@
     }
   },
   "designs": {
-    "labels": {
-      "new": "New design"
-    },
-    "actions": {
-      "deleteConfirmation": {
-        "title": "Delete design?",
-        "message": "This will remove the design from the database and can't be undone. Any views using this design will switch to the default design.",
-        "confirm": "Delete design"
+    "name": "Design",
+    "new": "New design",
+    "layouts": {
+      "labels": {
+        "new": "New layout"
+      },
+      "actions": {
+        "deleteConfirmation": {
+          "title": "Delete layout?",
+          "message": "This will remove the layout from the database and can't be undone. Any views using this layout will switch to the default layout.",
+          "confirm": "Delete layout"
+        }
+      },
+      "page": {
+        "name": "Page",
+        "label": "Page layout",
+        "new": "New page layout",
+        "description": "The layout of an entry when displayed as a page."
+      },
+      "card": {
+        "name": "Card",
+        "label": "Card layout",
+        "new": "New card layout",
+        "description": "The layout of an entry when displayed as a card."
+      },
+      "list": {
+        "name": "List",
+        "label": "List layout",
+        "new": "New list layout",
+        "description": "The layout of an entry when displayed in a list."
       }
     },
-    "page": {
-      "name": "Page",
-      "design": "Page design",
-      "new": "New page design",
-      "description": "The design of an entry when displayed as a page."
-    },
-    "card": {
-      "name": "Card",
-      "design": "Card design",
-      "new": "New card design",
-      "description": "The design of an entry when displayed as a card."
-    },
-    "list": {
-      "name": "List",
-      "design": "List design",
-      "new": "New list design",
-      "description": "The design of an entry when displayed in a list."
+    "layout-property-mapping": {
+      "browser": {
+        "title": "Choose a layout",
+        "search": "Search layouts...",
+        "newLayout": "New layout",
+        "emptyPreview": "Select a layout to preview",
+        "useLayout": "Use this layout",
+        "propertiesTitle": "Properties",
+        "backToLayouts": "Back to layouts",
+        "searchProperties": "Search properties...",
+        "addProperty": "Add property",
+        "dateGroup": "Date",
+        "collectionGroup": "Collection",
+        "zoom": "Zoom",
+        "highlightMapped": "Show mapped",
+        "highlightUnmapped": "Show unmapped",
+        "mappingCounter": "{{mapped}}/{{total}} properties mapped"
+      }
     },
     "typography": {
       "label": "Typography",
@@ -1246,25 +1270,6 @@
       "columnMenu": "Column options",
       "showChips": "Show chips",
       "hideColumn": "Hide column"
-    }
-  },
-  "design-property-mapping": {
-    "browser": {
-      "title": "Choose a design",
-      "search": "Search designs...",
-      "newDesign": "New design",
-      "emptyPreview": "Select a design to preview",
-      "useDesign": "Use this design",
-      "propertiesTitle": "Properties",
-      "backToDesigns": "Back to designs",
-      "searchProperties": "Search properties...",
-      "addProperty": "Add property",
-      "dateGroup": "Date",
-      "collectionGroup": "Collection",
-      "zoom": "Zoom",
-      "highlightMapped": "Show mapped",
-      "highlightUnmapped": "Show unmapped",
-      "mappingCounter": "{{mapped}}/{{total}} properties mapped"
     }
   }
 }

@@ -13,7 +13,9 @@
   color: var(--text-regular);
 }
 
-.collapsible-section[data-open='false'] .collapsible-section-trigger:hover .element-style-editor-section-label {
+.collapsible-section[data-open='false']
+  .collapsible-section-trigger:hover
+  .element-style-editor-section-label {
   color: var(--text-regular);
 }
 
@@ -27,5 +29,3 @@
 .collapsible-section[data-open='true'] .collapsible-section-trigger {
   padding-bottom: calc(var(--space-3) - 5px);
 }
-
-

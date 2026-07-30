@@ -1,6 +1,5 @@
 import { MockFileSystem } from '@minddrop/file-system';
 import { DesignsStore } from '../DesignsStore';
-import { defaultDesigns } from '../default-designs';
 import { getDesignsDirPath } from '../utils';
 import { designFiles, designs } from './fixtures';
 
@@ -16,23 +15,22 @@ export function setupDesignFixtures(
     loadDesignFiles: true,
   },
 ) {
-  // Create the deisgns directory
+  // Create the designs directory
   MockFs.createDir(getDesignsDirPath(), { recursive: true });
 
   if (options.loadDesigns !== false) {
-    // Load default designs into the store
-    DesignsStore.load(defaultDesigns);
-    // Load designs into the store
+    // Load designs into the store (this also makes their inner layouts
+    // queryable via LayoutsStore)
     DesignsStore.load(designs);
   }
 
   if (options.loadDesignFiles !== false) {
-    // Add design file to the file system
+    // Add design files to the file system
     MockFs.addFiles(designFiles);
   }
 }
 
 export function cleanupDesignFixtures() {
-  // Clear stores
+  // Clear the designs store (LayoutsStore is derived, no explicit clear)
   DesignsStore.clear();
 }

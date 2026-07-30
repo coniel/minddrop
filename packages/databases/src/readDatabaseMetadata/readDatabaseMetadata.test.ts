@@ -14,7 +14,7 @@ const metadataFilePath = databaseMetadataFilePath(objectDatabase.path);
 
 const metadataMap: Record<string, DatabaseEntryMetadata> = {
   [objectEntry1.id]: {
-    views: {
+    embeddedViewConfigs: {
       'card:Tasks': {
         options: { columns: [['a', 'b'], ['c']] },
         data: {},

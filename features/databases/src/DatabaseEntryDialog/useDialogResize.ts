@@ -42,7 +42,7 @@ export function useDialogResize(
   open: boolean,
   size: DialogSize,
   setSize: React.Dispatch<React.SetStateAction<DialogSize>>,
-  designId: string | null,
+  layoutId: string | null,
   sizeRef: React.RefObject<DialogSize>,
   baseSizeRef: React.RefObject<{
     width: number;
@@ -157,8 +157,8 @@ export function useDialogResize(
     }
 
     // Persist the final size if we have a design ID
-    if (designId) {
-      const key = dialogSizeKey(designId, getWindowSizeSlot());
+    if (layoutId) {
+      const key = dialogSizeKey(layoutId, getWindowSizeSlot());
 
       EntryDialogSizesStore.set(key, sizeRef.current);
 
@@ -171,7 +171,7 @@ export function useDialogResize(
     }
 
     resizeState.current = null;
-  }, [designId, sizeRef, baseSizeRef]);
+  }, [layoutId, sizeRef, baseSizeRef]);
 
   // Attach global mouse listeners for resize
   useEffect(() => {

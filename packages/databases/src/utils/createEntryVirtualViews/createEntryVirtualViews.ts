@@ -1,8 +1,8 @@
 import { Collections } from '@minddrop/collections';
 import {
   ContainerElement,
-  Design,
   DesignElement,
+  Layout,
   RootElement,
   ViewElement,
 } from '@minddrop/designs';
@@ -17,7 +17,7 @@ import { virtualViewId } from '../virtualViewId';
 /**
  * Creates virtual collections and views for a database entry's
  * collection properties. For each collection property mapped to
- * a view element in the design, creates a virtual collection
+ * a view element in the layout, creates a virtual collection
  * containing the entry IDs and a virtual view with the element's
  * view type.
  *
@@ -26,13 +26,13 @@ import { virtualViewId } from '../virtualViewId';
  * persist in memory for the lifetime of the application.
  *
  * @param entryId - The database entry ID.
- * @param design - The design being used to render the entry.
+ * @param layout - The layout being used to render the entry.
  * @param propertyMap - Map of element IDs to property names.
  * @returns A map of property names to virtual view IDs.
  */
 export function createEntryVirtualViews(
   entryId: string,
-  design: Design,
+  layout: Layout,
   propertyMap: Record<string, string>,
 ): Record<string, string> {
   const entry = DatabaseEntriesStore.get(entryId);
@@ -67,8 +67,8 @@ export function createEntryVirtualViews(
       continue;
     }
 
-    // Find the element in the design tree to get its viewType
-    const element = findElementById(design.tree, elementId);
+    // Find the element in the layout tree to get its viewType
+    const element = findElementById(layout.tree, elementId);
 
     if (!element || element.type !== 'view') {
       continue;
@@ -81,7 +81,7 @@ export function createEntryVirtualViews(
       entry.title,
       property.name,
     );
-    const viewId = virtualViewId(entryId, property.name, design.id);
+    const viewId = virtualViewId(entryId, property.name, layout.id);
     const entries = (entry.properties[property.name] as string[]) ?? [];
 
     // Create the virtual collection if it doesn't exist
@@ -92,8 +92,8 @@ export function createEntryVirtualViews(
     // Create the virtual view if it doesn't exist, applying any
     // saved view config from entry metadata
     if (!Views.get(viewId, false)) {
-      const metadataKey = viewMetadataKey(property.name, design.id);
-      const savedConfig = entry.metadata.views?.[metadataKey];
+      const metadataKey = viewMetadataKey(property.name, layout.id);
+      const savedConfig = entry.metadata.embeddedViewConfigs?.[metadataKey];
 
       Views.createVirtual({
         id: viewId,
@@ -112,7 +112,7 @@ export function createEntryVirtualViews(
 }
 
 /**
- * Recursively searches a design element tree for an element
+ * Recursively searches a layout element tree for an element
  * with the given ID.
  */
 function findElementById(

@@ -1,4 +1,4 @@
-import { Design } from '@minddrop/designs';
+import { Layout } from '@minddrop/designs';
 import { PropertyValue } from '@minddrop/properties';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabasesStore } from '../../DatabasesStore';
@@ -15,13 +15,13 @@ import { getPropertyFilePath } from '../getPropertyFilePath';
  *   as needed)
  *
  * @param entryId - The database entry ID.
- * @param design - The design being used to render the entry.
+ * @param layout - The layout being used to render the entry.
  * @param propertyMap - Map of element IDs to property names.
  * @returns A map of property names to display-ready values.
  */
 export function entryDisplayPropertyValues(
   entryId: string,
-  design: Design,
+  layout: Layout,
   propertyMap: Record<string, string>,
 ): Record<string, PropertyValue> {
   const entry = DatabaseEntriesStore.get(entryId);
@@ -43,7 +43,7 @@ export function entryDisplayPropertyValues(
   };
 
   // Create virtual views for collection properties
-  const virtualViewIds = createEntryVirtualViews(entryId, design, propertyMap);
+  const virtualViewIds = createEntryVirtualViews(entryId, layout, propertyMap);
 
   // Transform property values to their display versions
   for (const property of database.properties) {

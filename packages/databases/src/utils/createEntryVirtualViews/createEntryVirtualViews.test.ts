@@ -4,7 +4,7 @@ import {
   DefaultContainerElementStyle,
   DefaultTextElementStyle,
   DefaultViewElementStyle,
-  Design,
+  Layout,
 } from '@minddrop/designs';
 import { ViewFixtures, Views } from '@minddrop/views';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
@@ -21,11 +21,11 @@ import { createEntryVirtualViews } from './createEntryVirtualViews';
 
 const { viewType_table } = ViewFixtures;
 
-// Design with a view element mapped to the 'Related' property
-const designWithView: Design = {
-  id: 'test-design',
+// Layout with a view element mapped to the 'Related' property
+const designWithView: Layout = {
+  id: 'test-layout',
   type: 'card',
-  name: 'Test Design',
+  name: 'Test Layout',
   created: new Date(),
   lastModified: new Date(),
   tree: {
@@ -173,8 +173,8 @@ describe('createEntryVirtualViews', () => {
   });
 
   it('handles multiple collection properties', () => {
-    // Design with two view elements
-    const multiViewDesign: Design = {
+    // Layout with two view elements
+    const multiViewDesign: Layout = {
       ...designWithView,
       tree: {
         ...designWithView.tree,
@@ -230,7 +230,7 @@ describe('createEntryVirtualViews', () => {
     DatabaseEntriesStore.set({
       ...collectionEntry1,
       metadata: {
-        views: {
+        embeddedViewConfigs: {
           [viewMetadataKey('Related', designWithView.id)]: savedConfig,
         },
       },

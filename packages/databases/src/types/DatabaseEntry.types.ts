@@ -54,13 +54,14 @@ export interface DatabaseEntryViewConfig {
 
 export interface DatabaseEntryMetadata {
   /**
-   * Saved view state for virtual views, keyed by `designId:propertyName`.
+   * Saved options/data for the virtual views backing view elements
+   * embedded in layouts, keyed by `propertyName:layoutId`.
    */
-  views?: Record<string, DatabaseEntryViewConfig>;
+  embeddedViewConfigs?: Record<string, DatabaseEntryViewConfig>;
 
   /**
-   * Per-view design overrides for this entry, keyed by
+   * Per-view layout overrides for this entry, keyed by
    * view ID. If set, used instead of the database default.
    */
-  designOverrides?: Record<string, string>;
+  viewLayoutOverrides?: Record<string, string>;
 }

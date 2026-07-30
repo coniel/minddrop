@@ -1,5 +1,5 @@
 import React from 'react';
-import { DesignPropertyMap } from '@minddrop/databases';
+import { LayoutPropertyMap } from '@minddrop/databases';
 import {
   PropertiesSchema,
   PropertyMap,
@@ -21,7 +21,7 @@ interface DesignPropertiesProviderData {
   /**
    * Design element ID → property name map.
    */
-  propertyMap: DesignPropertyMap;
+  propertyMap: LayoutPropertyMap;
 
   /**
    * Callback to update a property value.

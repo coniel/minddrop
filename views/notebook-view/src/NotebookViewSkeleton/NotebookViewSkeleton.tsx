@@ -115,7 +115,9 @@ export const NotebookViewSkeleton: React.FC = () => {
         {/* Page content */}
         {PAGE_BLOCKS.map((block, index) => {
           if (block.type === 'gap') {
-            return <div key={index} className="notebook-view-skeleton-page-gap" />;
+            return (
+              <div key={index} className="notebook-view-skeleton-page-gap" />
+            );
           }
 
           return (

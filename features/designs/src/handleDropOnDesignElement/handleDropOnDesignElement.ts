@@ -1,4 +1,4 @@
-import { Designs, ImageElement } from '@minddrop/designs';
+import { ImageElement, Layouts } from '@minddrop/designs';
 import { DropEventData } from '@minddrop/selection';
 import {
   addDeisgnElementFromTemplate,
@@ -39,7 +39,7 @@ async function handleImageFileDrop(
   }
 
   // Write the image file to the placeholder-media directory
-  const fileName = await Designs.writePlaceholderMedia(imageFile);
+  const fileName = await Layouts.writePlaceholderMedia(imageFile);
 
   // Set the placeholder image on the element
   updateDesignElement<ImageElement>(elementId, { placeholderImage: fileName });

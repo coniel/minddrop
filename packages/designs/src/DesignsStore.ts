@@ -21,15 +21,3 @@ export const useDesign = (id: string): Design | null => {
 export const useDesigns = (): Design[] => {
   return DesignsStore.useAllItemsArray();
 };
-
-/**
- * Retrieves all designs of a specific type.
- *
- * @param type - The type of designs to retrieve.
- * @returns An array of designs of the specified type.
- */
-export const useDesignsOfType = (type: string): Design[] => {
-  return DesignsStore.useAllItemsArray().filter(
-    (design) => design.type === type,
-  );
-};

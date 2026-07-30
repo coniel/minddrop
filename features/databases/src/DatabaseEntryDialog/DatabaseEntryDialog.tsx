@@ -44,32 +44,32 @@ export const DatabaseEntryDialog: React.FC<DatabaseEntryDialogProps> = ({
   const canvasRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
 
-  // Get the entry so we can resolve the page design ID
+  // Get the entry so we can resolve the page layout ID
   const entry = DatabaseEntries.use(entryId);
 
-  // Resolve the page design ID for the entry's database
+  // Resolve the page layout ID for the entry's database
   const databaseId = entry?.database ?? null;
-  const designId = useMemo(() => {
+  const layoutId = useMemo(() => {
     if (!databaseId) {
       return null;
     }
 
     try {
-      return Databases.getDefaultDesign(databaseId, 'page').id;
+      return Databases.getDefaultLayout(databaseId, 'page')?.id ?? null;
     } catch {
       return null;
     }
   }, [databaseId]);
 
   // Dialog size management (init, persistence, window resize adaptation)
-  const { size, setSize, sizeRef, baseSizeRef } = useDialogSize(open, designId);
+  const { size, setSize, sizeRef, baseSizeRef } = useDialogSize(open, layoutId);
 
   // Corner-drag resize handling
   const { handleResizeMouseDown } = useDialogResize(
     open,
     size,
     setSize,
-    designId,
+    layoutId,
     sizeRef,
     baseSizeRef,
   );
@@ -188,7 +188,7 @@ export const DatabaseEntryDialog: React.FC<DatabaseEntryDialogProps> = ({
 
         {/* Content wrapper */}
         <div className="entry-dialog-content">
-          <DatabaseEntryRenderer entryId={entryId} designType="page" />
+          <DatabaseEntryRenderer entryId={entryId} layoutType="page" />
         </div>
 
         {/* Previous entry navigation button */}

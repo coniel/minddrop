@@ -1,9 +1,10 @@
-import { DesignType } from '@minddrop/designs';
+import { LayoutType } from '@minddrop/designs';
 
 // -- View names --
 
 export const DesignStudioViewName = 'designs:view:studio';
-export const DesignBrowserViewName = 'designs:view:browser';
+export const LayoutBrowserViewName = 'designs:view:browser';
+
 // -- Design Studio events --
 
 export const DesignStudioEventListenerId = 'feature-design-studio';
@@ -26,29 +27,29 @@ export interface OpenDesignStudioEventData {
   backEventData?: any;
 
   /**
-   * When set, a new design of this type is created and
+   * When set, a new layout of this type is created and
    * opened automatically with the left panel set to
    * the elements tab.
    */
-  newDesignType?: DesignType;
+  newLayoutType?: LayoutType;
 }
 
-// -- Design Property Mapping events --
+// -- Layout Property Mapping events --
 
-export const DesignPropertyMappingEventListenerId =
-  'feature-design-property-mapping';
+export const LayoutPropertyMappingEventListenerId =
+  'feature-layout-property-mapping';
 
-// Opens the design browser overlay for a database
-export const BrowseDesignsEvent =
-  'feature-design-property-mapping:designs:browse';
+// Opens the layout browser overlay for a database
+export const BrowseLayoutsEvent =
+  'feature-layout-property-mapping:layouts:browse';
 
-// Opens the property mapper overlay for a database + design
+// Opens the property mapper overlay for a database + layout
 export const OpenPropertyMapperEvent =
-  'feature-design-property-mapping:mapper:open';
+  'feature-layout-property-mapping:mapper:open';
 
-export interface BrowseDesignsEventData {
+export interface BrowseLayoutsEventData {
   /**
-   * The ID of the database to browse designs for.
+   * The ID of the database to browse layouts for.
    */
   databaseId: string;
 }
@@ -60,7 +61,7 @@ export interface OpenPropertyMapperEventData {
   databaseId: string;
 
   /**
-   * The ID of the design to map properties to.
+   * The ID of the layout to map properties to.
    */
-  designId: string;
+  layoutId: string;
 }

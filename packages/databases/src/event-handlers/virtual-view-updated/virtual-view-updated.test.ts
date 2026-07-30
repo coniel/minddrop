@@ -5,9 +5,9 @@ import { cleanup, objectEntry1, setup } from '../../test-utils';
 import { viewMetadataKey } from '../../utils';
 import { onUpdateVirtualView } from './virtual-view-updated';
 
-const designId = 'design-card-1';
+const layoutId = 'layout-card-1';
 const propertyName = 'Related';
-const viewId = `${objectEntry1.id}:${propertyName}:${designId}`;
+const viewId = `${objectEntry1.id}:${propertyName}:${layoutId}`;
 
 const baseView: View = {
   id: viewId,
@@ -56,7 +56,7 @@ describe('onUpdateVirtualView', () => {
   it('does nothing if the entry does not exist', () => {
     const unknownEntryView: View = {
       ...baseView,
-      id: `Unknown/Entry.md:${propertyName}:${designId}`,
+      id: `Unknown/Entry.md:${propertyName}:${layoutId}`,
     };
 
     // Should not throw
@@ -79,9 +79,9 @@ describe('onUpdateVirtualView', () => {
     });
 
     const entry = DatabaseEntriesStore.get(objectEntry1.id)!;
-    const metadataKey = viewMetadataKey(propertyName, designId);
+    const metadataKey = viewMetadataKey(propertyName, layoutId);
 
-    expect(entry.metadata.views?.[metadataKey]).toEqual({
+    expect(entry.metadata.embeddedViewConfigs?.[metadataKey]).toEqual({
       options: { sortOrder: 'asc' },
       data: { columns: [['a', 'b'], ['c']] },
     });
@@ -90,8 +90,8 @@ describe('onUpdateVirtualView', () => {
   it('preserves existing view configs for other keys', () => {
     // Set up existing metadata on the entry
     const existingMetadata = {
-      views: {
-        'Tasks:other-design': {
+      embeddedViewConfigs: {
+        'Tasks:other-layout': {
           options: { layout: 'grid' },
         },
       },
@@ -115,13 +115,15 @@ describe('onUpdateVirtualView', () => {
     const entry = DatabaseEntriesStore.get(objectEntry1.id)!;
 
     // Existing config should be preserved
-    expect(entry.metadata.views?.['Tasks:other-design']).toEqual({
+    expect(entry.metadata.embeddedViewConfigs?.['Tasks:other-layout']).toEqual({
       options: { layout: 'grid' },
     });
 
     // New config should be added
     expect(
-      entry.metadata.views?.[viewMetadataKey(propertyName, designId)],
+      entry.metadata.embeddedViewConfigs?.[
+        viewMetadataKey(propertyName, layoutId)
+      ],
     ).toEqual({
       data: { columns: [] },
     });

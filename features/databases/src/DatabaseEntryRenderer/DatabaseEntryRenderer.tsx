@@ -1,13 +1,8 @@
 import React, { useCallback, useMemo } from 'react';
-import {
-  DatabaseDesignType,
-  DatabaseEntries,
-  DatabaseEntry,
-  Databases,
-} from '@minddrop/databases';
-import { Designs } from '@minddrop/designs';
+import { DatabaseEntries, DatabaseEntry, Databases } from '@minddrop/databases';
+import { LayoutType, Layouts } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
-import { DesignRenderer } from '@minddrop/feature-designs';
+import { LayoutRenderer } from '@minddrop/feature-designs';
 import { PropertyValue } from '@minddrop/properties';
 import {
   OpenDatabaseEntryViewEvent,
@@ -22,15 +17,15 @@ export interface DatabaseEntryRendererProps {
   entryId: string;
 
   /**
-   * The type of design to use to render the element.
+   * The type of layout to use to render the element.
    */
-  designType: DatabaseDesignType;
+  layoutType: LayoutType;
 
   /**
-   * The ID of the deisgn to use to render the element.
-   * If not provided, the default design will be used.
+   * The ID of the layout to use to render the element.
+   * If not provided, the default layout will be used.
    */
-  designId?: string;
+  layoutId?: string;
 
   /**
    * Optional click handler. When provided, this is called instead
@@ -40,7 +35,7 @@ export interface DatabaseEntryRendererProps {
 }
 
 /**
- * Renders a database entry using the appropriate design.
+ * Renders a database entry using the appropriate layout.
  */
 export const DatabaseEntryRenderer: React.FC<DatabaseEntryRendererProps> =
   React.memo(({ entryId, ...other }) => {
@@ -61,38 +56,44 @@ interface EntryProps extends Omit<DatabaseEntryRendererProps, 'entryId'> {
 
 const Entry: React.FC<EntryProps> = ({
   entry,
-  designId,
-  designType,
+  layoutId,
+  layoutType,
   onClick,
 }) => {
   const database = Databases.use(entry.database);
 
-  // Resolve the design to render with, falling back to the
+  // Resolve the layout to render with, falling back to the
   // database default when no override is specified
-  const design = useMemo(() => {
-    // Look up the explicit design if a real ID was provided
-    if (designId && designId !== 'default') {
-      const explicit = Designs.get(designId, false);
+  const layout = useMemo(() => {
+    // Look up the explicit layout if a real ID was provided
+    if (layoutId && layoutId !== 'default') {
+      const explicit = Layouts.get(layoutId, false);
 
       if (explicit) {
         return explicit;
       }
     }
 
-    // Fall back to the database's default design for this type
-    return Databases.getDefaultDesign(entry.database, designType);
-  }, [designId, entry.database, designType]);
+    // Fall back to the database's default layout for this type
+    return Databases.getDefaultLayout(entry.database, layoutType);
+  }, [layoutId, entry.database, layoutType]);
 
-  // Get the property map for this design (element ID -> property name)
+  // Get the property map for this layout (element ID -> property name).
+  // Reads the legacy field directly; the phase 8 cutover will replace
+  // this with design-property resolution.
   const propertyMap = useMemo(
-    () => Databases.getDesignPropertyMap(entry.database, design.id) || {},
-    [entry.database, design.id],
+    () =>
+      layout && database ? database.layoutPropertyMaps[layout.id] || {} : {},
+    [database, layout],
   );
 
   // Get display-ready property values (image paths, virtual view IDs, etc.)
   const propertyValues = useMemo(
-    () => DatabaseEntries.displayPropertyValues(entry.id, design, propertyMap),
-    [entry.id, design, propertyMap],
+    () =>
+      layout
+        ? DatabaseEntries.displayPropertyValues(entry.id, layout, propertyMap)
+        : {},
+    [entry.id, layout, propertyMap],
   );
 
   const onUpdatePropertyValue = useCallback(
@@ -130,24 +131,26 @@ const Entry: React.FC<EntryProps> = ({
     [onOpenEntry],
   );
 
-  if (!database) {
+  if (!database || !layout) {
+    // Render-time fallback for missing layout will be added in the
+    // phase 8 cutover
     return null;
   }
 
   // Page entries are not clickable items, so they should not
   // have button role or keyboard activation.
-  const isClickable = designType !== 'page';
+  const isClickable = layoutType !== 'page';
 
   return (
     <div
-      className={`database-entry database-entry-${designType}`}
+      className={`database-entry database-entry-${layoutType}`}
       role={isClickable ? 'button' : undefined}
       tabIndex={isClickable ? 0 : undefined}
       onClick={isClickable ? onOpenEntry : undefined}
       onKeyDown={isClickable ? onKeyDown : undefined}
     >
-      <DesignRenderer
-        design={design}
+      <LayoutRenderer
+        layout={layout}
         propertyMap={propertyMap}
         propertyValues={propertyValues}
         properties={database.properties}

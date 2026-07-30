@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DesignNotFoundError } from '../errors';
-import { cleanup, design_card_1, setup } from '../test-utils';
+import { cleanup, design_books, setup } from '../test-utils';
 import { getDesign } from './getDesign';
 
 describe('getDesign', () => {
@@ -17,6 +17,6 @@ describe('getDesign', () => {
   });
 
   it('returns the design if it exists', () => {
-    expect(getDesign(design_card_1.id)).toEqual(design_card_1);
+    expect(getDesign(design_books.id)).toEqual(design_books);
   });
 });

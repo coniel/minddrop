@@ -1,8 +1,8 @@
 import React, { CSSProperties, useCallback, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import {
-  Designs,
   ImageElement,
+  Layouts,
   getPlaceholderMediaDirPath,
 } from '@minddrop/designs';
 import { Fs } from '@minddrop/file-system';
@@ -68,7 +68,7 @@ export const ImageStudioDesignElement: React.FC<
       return;
     }
 
-    const fileName = await Designs.addPlaceholderMedia(filePath as string);
+    const fileName = await Layouts.addPlaceholderMedia(filePath as string);
     updateDesignElement<ImageElement>(element.id, {
       placeholderImage: fileName,
     });

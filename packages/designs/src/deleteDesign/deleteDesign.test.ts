@@ -1,10 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
-import { InvalidParameterError } from '@minddrop/utils';
 import { DesignsStore } from '../DesignsStore';
-import { DefaultCardDesign } from '../default-designs';
 import { DesignDeletedEvent, DesignDeletedEventData } from '../events';
-import { MockFs, cleanup, design_card_1, setup } from '../test-utils';
+import { MockFs, cleanup, design_books, setup } from '../test-utils';
 import { getDesignFilePath } from '../utils';
 import { deleteDesign } from './deleteDesign';
 
@@ -13,22 +11,16 @@ describe('deleteDesign', () => {
 
   afterEach(cleanup);
 
-  it('prevents deleting default designs', async () => {
-    await expect(() => deleteDesign(DefaultCardDesign.id)).rejects.toThrow(
-      InvalidParameterError,
-    );
-  });
-
   it('deletes the design file', async () => {
-    await deleteDesign(design_card_1.id);
+    await deleteDesign(design_books.id);
 
-    expect(MockFs.exists(getDesignFilePath(design_card_1.id))).toBe(false);
+    expect(MockFs.exists(getDesignFilePath(design_books.id))).toBe(false);
   });
 
   it('removes the design from the store', async () => {
-    await deleteDesign(design_card_1.id);
+    await deleteDesign(design_books.id);
 
-    expect(DesignsStore.get(design_card_1.id)).toBeNull();
+    expect(DesignsStore.get(design_books.id)).toBeNull();
   });
 
   it('dispatches a design deleted event', async () =>
@@ -37,11 +29,11 @@ describe('deleteDesign', () => {
         DesignDeletedEvent,
         'test',
         (payload) => {
-          expect(payload.data).toEqual(design_card_1);
+          expect(payload.data).toEqual(design_books);
           done();
         },
       );
 
-      deleteDesign(design_card_1.id);
+      deleteDesign(design_books.id);
     }));
 });

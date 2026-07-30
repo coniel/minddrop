@@ -1,58 +1,78 @@
 import { MockFileDescriptor } from '@minddrop/file-system';
-import { DefaultContainerElementStyle } from '../../styles';
-import { Design, DesignType } from '../../types';
+import { PropertiesSchema } from '@minddrop/properties';
+import { Design } from '../../types';
 import { getDesignFilePath } from '../../utils';
 import {
-  element_container_1,
-  element_text_2,
-} from './design-elements.fixtures';
+  layout_card_1,
+  layout_card_2,
+  layout_card_3,
+  layout_list_1,
+  layout_list_2,
+  layout_list_3,
+  layout_page_1,
+  layout_page_2,
+  layout_page_3,
+} from './layouts.fixtures';
 
 export const designsRootPath = 'path/to/Designs';
 
-function generateDesignFixture(type: DesignType, version: number): Design {
-  return {
-    type,
-    id: `${type}-${version}`,
-    name: `${type} ${version}`,
-    created: new Date(),
-    lastModified: new Date(),
-    tree: {
-      id: 'root',
-      type: 'root',
-      style: { ...DefaultContainerElementStyle },
-      children: [
-        element_container_1,
-        // Set the ID of the design as the placeholder
-        // so it can be targeted by UI tests.
-        {
-          ...element_text_2,
-          placeholder: `${type}-${version}`,
-        },
-      ],
-    },
-  };
-}
+// A small properties schema for fixtures that need design properties
+export const designProperties: PropertiesSchema = [
+  { type: 'text', name: 'Title' },
+  { type: 'text', name: 'Subtitle' },
+];
 
-export const design_card_1 = generateDesignFixture('card', 1);
-export const design_card_2 = generateDesignFixture('card', 2);
-export const design_card_3 = generateDesignFixture('card', 3);
-export const design_list_1 = generateDesignFixture('list', 1);
-export const design_list_2 = generateDesignFixture('list', 2);
-export const design_list_3 = generateDesignFixture('list', 3);
-export const design_page_1 = generateDesignFixture('page', 1);
-export const design_page_2 = generateDesignFixture('page', 2);
-export const design_page_3 = generateDesignFixture('page', 3);
+export const design_books: Design = {
+  id: 'design-books',
+  name: 'Books',
+  properties: designProperties,
+  created: new Date(),
+  lastModified: new Date(),
+  layouts: [layout_card_1, layout_list_1, layout_page_1],
+};
+
+export const design_cards: Design = {
+  id: 'design-cards',
+  name: 'Cards',
+  properties: [],
+  created: new Date(),
+  lastModified: new Date(),
+  layouts: [layout_card_2, layout_card_3],
+};
+
+export const design_lists: Design = {
+  id: 'design-lists',
+  name: 'Lists',
+  properties: [],
+  created: new Date(),
+  lastModified: new Date(),
+  layouts: [layout_list_2, layout_list_3],
+};
+
+export const design_pages: Design = {
+  id: 'design-pages',
+  name: 'Pages',
+  properties: [],
+  created: new Date(),
+  lastModified: new Date(),
+  layouts: [layout_page_2, layout_page_3],
+};
+
+export const design_empty: Design = {
+  id: 'design-empty',
+  name: 'Empty',
+  properties: [],
+  created: new Date(),
+  lastModified: new Date(),
+  layouts: [],
+};
 
 export const designs = [
-  design_card_1,
-  design_card_2,
-  design_card_3,
-  design_list_1,
-  design_list_2,
-  design_list_3,
-  design_page_1,
-  design_page_2,
-  design_page_3,
+  design_books,
+  design_cards,
+  design_lists,
+  design_pages,
+  design_empty,
 ];
 
 export const designFiles: MockFileDescriptor[] = designs.map((design) => ({

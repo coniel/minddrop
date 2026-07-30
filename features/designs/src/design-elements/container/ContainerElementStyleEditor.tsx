@@ -93,11 +93,11 @@ export const ContainerElementStyleEditor: React.FC<
   ContainerElementStyleEditorProps
 > = ({ elementId }) => {
   const element = useElement(elementId);
-  const designType = useDesignStudioStore((state) => state.design?.type);
+  const layoutType = useDesignStudioStore((state) => state.design?.type);
 
   // Root elements hide stretch and conditionally hide min-height
   const isRoot = element.type === 'root';
-  const showMinHeight = !(isRoot && designType === 'page');
+  const showMinHeight = !(isRoot && layoutType === 'page');
 
   const backgroundImage = useElementStyle(elementId, 'backgroundImage');
   const backdropBlur = useElementStyle(elementId, 'backdropBlur');

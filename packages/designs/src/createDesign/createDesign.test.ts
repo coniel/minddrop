@@ -2,26 +2,19 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { i18n } from '@minddrop/i18n';
 import { DesignsStore } from '../DesignsStore';
-import { i18nRoot } from '../constants';
 import { DesignCreatedEvent, DesignCreatedEventData } from '../events';
-import { DefaultContainerElementStyle } from '../styles';
 import { MockFs, cleanup, setup } from '../test-utils';
 import { Design } from '../types';
 import { getDesignFilePath, getDesignsDirPath } from '../utils';
 import { createDesign } from './createDesign';
 
 const newDesign: Design = {
-  name: 'New card',
-  type: 'card',
-  created: expect.any(Date),
-  lastModified: expect.any(Date),
-  tree: {
-    id: 'root',
-    type: 'root',
-    style: { ...DefaultContainerElementStyle },
-    children: [],
-  },
-  id: expect.any(String),
+  id: expect.any(String) as unknown as string,
+  name: 'Books',
+  properties: [],
+  layouts: [],
+  created: expect.any(Date) as unknown as Date,
+  lastModified: expect.any(Date) as unknown as Date,
 };
 
 describe('createDesign', () => {
@@ -30,30 +23,29 @@ describe('createDesign', () => {
   afterEach(cleanup);
 
   it('ensures that the designs root directory exists', async () => {
-    // Clear the file system to delete the designs root directory
     MockFs.clear();
 
-    await createDesign(newDesign.type, newDesign.name);
+    await createDesign('Books');
 
     expect(MockFs.exists(getDesignsDirPath())).toBe(true);
   });
 
   it('adds the design to the store', async () => {
-    const result = await createDesign(newDesign.type, newDesign.name);
+    const result = await createDesign('Books');
 
     expect(DesignsStore.get(result.id)).toMatchObject(newDesign);
   });
 
   it('writes the design to the file system', async () => {
-    const result = await createDesign(newDesign.type, newDesign.name);
+    const result = await createDesign('Books');
 
     expect(MockFs.exists(getDesignFilePath(result.id))).toBe(true);
   });
 
-  it('defaults the design name to the design type name', async () => {
-    const result = await createDesign(newDesign.type);
+  it('defaults the design name to the localized new design label', async () => {
+    const result = await createDesign();
 
-    expect(result.name).toBe(i18n.t(`${i18nRoot}.${newDesign.type}.name`));
+    expect(result.name).toBe(i18n.t('designs.new'));
   });
 
   it('dispatches a design created event', async () =>
@@ -67,6 +59,6 @@ describe('createDesign', () => {
         },
       );
 
-      createDesign(newDesign.type, newDesign.name);
+      createDesign('Books');
     }));
 });

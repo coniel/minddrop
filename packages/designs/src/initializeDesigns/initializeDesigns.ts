@@ -1,6 +1,6 @@
 import { Fs } from '@minddrop/file-system';
 import { DesignsStore } from '../DesignsStore';
-import { defaultDesigns } from '../default-designs';
+import { DesignFileExtension } from '../constants';
 import { readDesign } from '../readDesign';
 import { getDesignsDirPath } from '../utils';
 
@@ -9,18 +9,17 @@ import { getDesignsDirPath } from '../utils';
  * and loading them into the store.
  */
 export async function initializeDesigns(): Promise<void> {
-  // Load default designs into the store
-  DesignsStore.load(defaultDesigns);
-
   // Ensure the designs directory exists before attempting to read it
   if (!(await Fs.exists(getDesignsDirPath()))) {
     return;
   }
 
-  // Read designs from the file system
-  const designPaths = await Fs.readDir(getDesignsDirPath());
+  // Read design files from the designs directory
+  const entries = await Fs.readDir(getDesignsDirPath());
   const designs = await Promise.all(
-    designPaths.map(async (entry) => readDesign(entry.path)),
+    entries
+      .filter((entry) => Fs.getExtension(entry.path) === DesignFileExtension)
+      .map((entry) => readDesign(entry.path)),
   );
 
   // Load designs into the store

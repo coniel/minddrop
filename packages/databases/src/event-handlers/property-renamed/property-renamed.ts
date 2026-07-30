@@ -2,11 +2,14 @@ import { Collections } from '@minddrop/collections';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabasePropertyRenamedEventData } from '../../events';
 import { sqlRenameProperty } from '../../sql';
+import { Database, LayoutPropertyMap } from '../../types';
+import { updateDatabase } from '../../updateDatabase';
 import { virtualCollectionId, virtualCollectionName } from '../../utils';
 
 /**
- * Called when a database property is renamed. Renames in SQL
- * and updates virtual collection IDs and names.
+ * Called when a database property is renamed. Renames in SQL,
+ * remaps the design and layout property maps, and updates virtual
+ * collection IDs and names.
  */
 export async function onRenameProperty(
   data: DatabasePropertyRenamedEventData,
@@ -15,6 +18,36 @@ export async function onRenameProperty(
 
   // Rename in SQL
   sqlRenameProperty(database.id, oldName, newName);
+
+  const update: Partial<Database> = {};
+
+  // Remap the design property map so any values pointing at the
+  // renamed property use the new name
+  const remappedDesignPropertyMap = remapPropertyMapValues(
+    database.designPropertyMap,
+    oldName,
+    newName,
+  );
+
+  if (remappedDesignPropertyMap) {
+    update.designPropertyMap = remappedDesignPropertyMap;
+  }
+
+  // Remap layout property maps so element bindings pointing at the
+  // renamed property use the new name
+  const remappedLayoutPropertyMaps = remapLayoutPropertyMapValues(
+    database.layoutPropertyMaps,
+    oldName,
+    newName,
+  );
+
+  if (remappedLayoutPropertyMaps) {
+    update.layoutPropertyMaps = remappedLayoutPropertyMaps;
+  }
+
+  if (Object.keys(update).length) {
+    await updateDatabase(database.id, update);
+  }
 
   // Check if the renamed property is a collection property
   const property = database.properties.find((p) => p.name === newName);
@@ -44,4 +77,64 @@ export async function onRenameProperty(
       await Collections.update(oldCollectionId, { id: newCollectionId, name });
     }),
   );
+}
+
+/**
+ * Returns a copy of the property map with any values equal to
+ * `oldName` replaced by `newName`, or null if nothing matched.
+ */
+function remapPropertyMapValues(
+  propertyMap: Record<string, string>,
+  oldName: string,
+  newName: string,
+): Record<string, string> | null {
+  let changed = false;
+
+  const remapped = Object.fromEntries(
+    Object.entries(propertyMap).map(([key, value]): [string, string] => {
+      if (value === oldName) {
+        changed = true;
+
+        return [key, newName];
+      }
+
+      return [key, value];
+    }),
+  );
+
+  return changed ? remapped : null;
+}
+
+/**
+ * Returns a copy of the layout property maps with any values equal
+ * to `oldName` replaced by `newName`, or null if nothing matched.
+ */
+function remapLayoutPropertyMapValues(
+  layoutPropertyMaps: Record<string, LayoutPropertyMap>,
+  oldName: string,
+  newName: string,
+): Record<string, LayoutPropertyMap> | null {
+  let changed = false;
+
+  const remapped = Object.fromEntries(
+    Object.entries(layoutPropertyMaps).map(
+      ([layoutId, propertyMap]): [string, LayoutPropertyMap] => {
+        const remappedMap = remapPropertyMapValues(
+          propertyMap,
+          oldName,
+          newName,
+        );
+
+        if (remappedMap) {
+          changed = true;
+
+          return [layoutId, remappedMap];
+        }
+
+        return [layoutId, propertyMap];
+      },
+    ),
+  );
+
+  return changed ? remapped : null;
 }

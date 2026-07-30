@@ -2,14 +2,12 @@ import { PropertiesSchema, PropertyType } from '@minddrop/properties';
 import { View } from '@minddrop/views';
 import { DatabaseAutomation } from './DatabaseAutomation.types';
 
-export type DatabaseDesignType = 'page' | 'card' | 'list';
-
 export type DatabaseEntryOpenMode = 'dialog' | 'full' | 'split';
 
 /**
- * A [design element ID]: [database property name] map.
+ * A [layout element ID]: [database property name] map.
  */
-export type DesignPropertyMap = Record<string, string>;
+export type LayoutPropertyMap = Record<string, string>;
 
 export interface Database {
   /**
@@ -94,22 +92,34 @@ export interface Database {
   defaultProperties?: Partial<Record<PropertyType, string>>;
 
   /**
-   * A [design ID]: [design property map] mapping database properties to design
+   * A [layout ID]: [property map] mapping database properties to layout
    * elements.
    */
-  designPropertyMaps: Record<string, DesignPropertyMap>;
+  layoutPropertyMaps: Record<string, LayoutPropertyMap>;
 
   /**
-   * A [design type]: [design ID] map of the default design to use when
+   * The ID of the design this database uses. When null, no design is
+   * resolved and the renderer uses an inline fallback.
+   */
+  designId: string | null;
+
+  /**
+   * A [design property name]: [database property name] map. Resolves
+   * design-level property bindings to this database's own properties.
+   */
+  designPropertyMap: Record<string, string>;
+
+  /**
+   * A [layout type]: [layout ID] map of the default layout to use when
    * rendering entries.
    */
-  defaultDesigns: Record<string, string>;
+  defaultLayouts: Record<string, string>;
 
   /**
-   * A [view ID]: [design ID] map overriding the default
-   * design for specific views.
+   * A [view ID]: [layout ID] map overriding the default
+   * layout for specific views.
    */
-  viewDesigns?: Record<string, string>;
+  viewLayouts?: Record<string, string>;
 
   /**
    * How entries are opened when clicked.

@@ -19,7 +19,7 @@ import {
 const metadataFilePath = databaseMetadataFilePath(objectDatabase.path);
 
 const entryMetadata: DatabaseEntryMetadata = {
-  views: {
+  embeddedViewConfigs: {
     'card:Tasks': {
       options: { columns: [['a', 'b'], ['c']] },
       data: {},
@@ -46,7 +46,7 @@ describe('updateEntryMetadata', () => {
   it('preserves other entries when updating', async () => {
     const existingMetadata: Record<string, DatabaseEntryMetadata> = {
       'Objects/Other Entry.md': {
-        views: { 'list:Tags': { options: {}, data: {} } },
+        embeddedViewConfigs: { 'list:Tags': { options: {}, data: {} } },
       },
     };
 
@@ -71,10 +71,10 @@ describe('updateEntryMetadata', () => {
 
   it('merges successive updates for the same database into one write', async () => {
     const metadata1: DatabaseEntryMetadata = {
-      views: { 'card:Tags': { options: {}, data: {} } },
+      embeddedViewConfigs: { 'card:Tags': { options: {}, data: {} } },
     };
     const metadata2: DatabaseEntryMetadata = {
-      views: { 'list:Status': { options: {}, data: {} } },
+      embeddedViewConfigs: { 'list:Status': { options: {}, data: {} } },
     };
 
     // Queue two updates for different entries in the same database

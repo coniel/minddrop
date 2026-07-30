@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { cleanup, design_card_1, setup } from '../test-utils';
+import { cleanup, design_books, setup } from '../test-utils';
 import { getDesignFilePath } from '../utils';
 import { readDesign } from './readDesign';
 
@@ -9,9 +9,9 @@ describe('readDesign', () => {
   afterEach(cleanup);
 
   it('reads the design from the file system', async () => {
-    const design = await readDesign(getDesignFilePath(design_card_1.id));
+    const design = await readDesign(getDesignFilePath(design_books.id));
 
-    expect(design).toEqual(design_card_1);
+    expect(design).toEqual(design_books);
   });
 
   it('returns null if the design does not exist', async () => {

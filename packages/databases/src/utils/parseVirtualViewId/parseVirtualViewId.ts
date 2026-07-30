@@ -13,33 +13,33 @@ export interface ParsedVirtualViewId {
   propertyName: string;
 
   /**
-   * The design ID.
+   * The layout ID.
    */
-  designId: string;
+  layoutId: string;
 }
 
 /**
  * Parses a virtual view ID into its components.
  *
- * Virtual view IDs have the format `entryId:propertyName:designId`,
+ * Virtual view IDs have the format `entryId:propertyName:layoutId`,
  * where entryId may itself contain colons (e.g. path separators
  * are not colons, but entry IDs like `Books/Some Book.md` are safe).
  *
- * Since the property name and design ID are the last two colon-separated
+ * Since the property name and layout ID are the last two colon-separated
  * segments, we split from the right.
  *
  * @param viewId - The virtual view ID.
  * @returns The parsed components, or null if the ID is invalid.
  */
 export function parseVirtualViewId(viewId: string): ParsedVirtualViewId | null {
-  // Split from the right to extract designId and propertyName
+  // Split from the right to extract layoutId and propertyName
   const lastColon = viewId.lastIndexOf(':');
 
   if (lastColon === -1) {
     return null;
   }
 
-  const designId = viewId.slice(lastColon + 1);
+  const layoutId = viewId.slice(lastColon + 1);
   const rest = viewId.slice(0, lastColon);
   const secondLastColon = rest.lastIndexOf(':');
 
@@ -50,9 +50,9 @@ export function parseVirtualViewId(viewId: string): ParsedVirtualViewId | null {
   const propertyName = rest.slice(secondLastColon + 1);
   const entryId = rest.slice(0, secondLastColon);
 
-  if (!entryId || !propertyName || !designId) {
+  if (!entryId || !propertyName || !layoutId) {
     return null;
   }
 
-  return { entryId, propertyName, designId };
+  return { entryId, propertyName, layoutId };
 }

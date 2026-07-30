@@ -28,7 +28,7 @@ vi.mock('../../sql', () => ({
   sqlUpsertEntries: vi.fn(),
 }));
 
-const { design_card_2 } = DesignFixtures;
+const { layout_card_2 } = DesignFixtures;
 
 describe('onRenameEntry', () => {
   beforeEach(() => {
@@ -80,7 +80,7 @@ describe('onRenameEntry', () => {
   it('re-keys metadata file from old to new entry ID', async () => {
     const metadataFilePath = databaseMetadataFilePath(collectionDatabase.path);
     const entryMetadata: DatabaseEntryMetadata = {
-      views: { 'card:Related': { options: {}, data: {} } },
+      embeddedViewConfigs: { 'card:Related': { options: {}, data: {} } },
     };
 
     // Write metadata keyed by the original entry ID
@@ -118,7 +118,9 @@ describe('onRenameEntry', () => {
   it('re-keys pending metadata from old to new entry ID', async () => {
     const metadataFilePath = databaseMetadataFilePath(collectionDatabase.path);
     const entryMetadata: DatabaseEntryMetadata = {
-      views: { 'card:Related': { options: { foo: true }, data: {} } },
+      embeddedViewConfigs: {
+        'card:Related': { options: { foo: true }, data: {} },
+      },
     };
 
     // Queue pending metadata under the original entry ID
@@ -232,11 +234,11 @@ describe('onRenameEntry', () => {
   });
 
   it('re-IDs virtual views with updated dataSource', async () => {
-    const designId = design_card_2.id;
+    const layoutId = layout_card_2.id;
 
     // Create virtual views for each collection property
     Views.createVirtual({
-      id: virtualViewId(collectionEntry1.id, 'Related', designId),
+      id: virtualViewId(collectionEntry1.id, 'Related', layoutId),
       type: 'board',
       dataSource: {
         type: 'collection',
@@ -245,7 +247,7 @@ describe('onRenameEntry', () => {
       name: 'Related',
     });
     Views.createVirtual({
-      id: virtualViewId(collectionEntry1.id, 'References', designId),
+      id: virtualViewId(collectionEntry1.id, 'References', layoutId),
       type: 'board',
       dataSource: {
         type: 'collection',
@@ -271,12 +273,12 @@ describe('onRenameEntry', () => {
 
     // Old view IDs should be gone
     expect(
-      Views.Store.get(virtualViewId(collectionEntry1.id, 'Related', designId)),
+      Views.Store.get(virtualViewId(collectionEntry1.id, 'Related', layoutId)),
     ).toBeNull();
 
     // New view IDs should exist with updated dataSource
     const relatedView = Views.get(
-      virtualViewId(renamedEntry.id, 'Related', designId),
+      virtualViewId(renamedEntry.id, 'Related', layoutId),
     );
 
     expect(relatedView.dataSource).toEqual({

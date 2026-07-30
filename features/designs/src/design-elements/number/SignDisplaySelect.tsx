@@ -27,7 +27,10 @@ const options: StyleOptions<SignDisplay> = [
  * Renders a select for choosing the sign display mode
  * on a number design element.
  */
-export const SignDisplaySelect = ({ elementId, label }: SignDisplaySelectProps) => {
+export const SignDisplaySelect = ({
+  elementId,
+  label,
+}: SignDisplaySelectProps) => {
   const { t } = useTranslation();
 
   const { signDisplay: value } = useElementData(

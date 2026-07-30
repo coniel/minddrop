@@ -1,5 +1,5 @@
 import { createI18nKeyBuilder, i18n } from '@minddrop/i18n';
-import { DatabaseDesignSelectionMenu } from '@minddrop/ui-components';
+import { DatabaseLayoutSelectionMenu } from '@minddrop/ui-components';
 import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
@@ -45,13 +45,13 @@ export const GalleryViewOptionsMenu: React.FC<
 
       <DropdownMenuSeparator />
 
-      {/* Card design selection */}
-      <DatabaseDesignSelectionMenu
+      {/* Card layout selection */}
+      <DatabaseLayoutSelectionMenu
         databaseId={view.dataSource.id}
-        designType="card"
-        value={options.cardDesignId}
-        onValueChange={(designId) =>
-          onUpdateOptions({ cardDesignId: designId })
+        layoutType="card"
+        value={options.cardLayoutId}
+        onValueChange={(layoutId) =>
+          onUpdateOptions({ cardLayoutId: layoutId })
         }
       />
 

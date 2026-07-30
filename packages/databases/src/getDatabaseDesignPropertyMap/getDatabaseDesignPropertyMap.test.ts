@@ -1,10 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import {
-  cleanup,
-  defaultCardDesign,
-  objectDatabase,
-  setup,
-} from '../test-utils';
+import { DatabaseNotFoundError } from '../errors';
+import { cleanup, objectDatabase, setup } from '../test-utils';
+import { updateDatabase } from '../updateDatabase';
 import { getDatabaseDesignPropertyMap } from './getDatabaseDesignPropertyMap';
 
 describe('getDatabaseDesignPropertyMap', () => {
@@ -12,23 +9,21 @@ describe('getDatabaseDesignPropertyMap', () => {
 
   afterEach(cleanup);
 
-  it('returns the design property map if it exists', () => {
-    const propertyMap = getDatabaseDesignPropertyMap(
-      objectDatabase.id,
-      defaultCardDesign.id,
-    );
-
-    expect(propertyMap).toEqual(
-      objectDatabase.designPropertyMaps[defaultCardDesign.id],
+  it('throws if the database does not exist', () => {
+    expect(() => getDatabaseDesignPropertyMap('non-existent-db')).toThrow(
+      DatabaseNotFoundError,
     );
   });
 
-  it('returns null if the design property map does not exist', () => {
-    const propertyMap = getDatabaseDesignPropertyMap(
-      objectDatabase.id,
-      'non-existent',
-    );
+  it('returns the empty map for a freshly created database', () => {
+    expect(getDatabaseDesignPropertyMap(objectDatabase.id)).toEqual({});
+  });
 
-    expect(propertyMap).toBeNull();
+  it('returns the current map after it has been set', async () => {
+    const map = { Title: 'Heading', Subtitle: 'Tagline' };
+
+    await updateDatabase(objectDatabase.id, { designPropertyMap: map });
+
+    expect(getDatabaseDesignPropertyMap(objectDatabase.id)).toEqual(map);
   });
 });

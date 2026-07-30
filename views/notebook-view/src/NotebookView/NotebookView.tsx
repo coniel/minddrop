@@ -8,7 +8,7 @@ import {
 import { ScrollArea } from '@minddrop/ui-primitives';
 import { ViewTypeComponentProps, Views } from '@minddrop/views';
 import { defaultNotebookViewOptions } from '../constants';
-import { NotebookViewDesignOverride, NotebookViewOptions } from '../types';
+import { NotebookViewLayoutOverride, NotebookViewOptions } from '../types';
 import { useListPanelResize } from '../useListPanelResize';
 import './NotebookView.css';
 
@@ -44,17 +44,17 @@ export const NotebookViewComponent: React.FC<
     return Databases.getFromEntries(entries).map((database) => database.id);
   }, [view.dataSource, entries]);
 
-  // Build a per-entry design override map from view options.
+  // Build a per-entry layout override map from view options.
   // For database sources all entries share the same override,
   // for collections each entry's database is looked up.
-  const entryDesignOverrides = useMemo(
+  const entryLayoutOverrides = useMemo(
     () =>
-      resolveEntryDesignOverrides(
+      resolveEntryLayoutOverrides(
         entries,
         view.dataSource,
-        view.options?.designOverrides,
+        view.options?.layoutOverrides,
       ),
-    [entries, view.dataSource, view.options?.designOverrides],
+    [entries, view.dataSource, view.options?.layoutOverrides],
   );
 
   // Persist the new width to the view options when resizing ends
@@ -118,8 +118,8 @@ export const NotebookViewComponent: React.FC<
             >
               <DatabaseEntryRenderer
                 entryId={entryId}
-                designType="list"
-                designId={entryDesignOverrides[entryId]?.listDesignId}
+                layoutType="list"
+                layoutId={entryLayoutOverrides[entryId]?.listLayoutId}
                 onClick={handleEntryClick}
               />
             </div>
@@ -138,8 +138,8 @@ export const NotebookViewComponent: React.FC<
           <DatabaseEntryRenderer
             key={selectedEntryId}
             entryId={selectedEntryId}
-            designType="page"
-            designId={entryDesignOverrides[selectedEntryId]?.pageDesignId}
+            layoutType="page"
+            layoutId={entryLayoutOverrides[selectedEntryId]?.pageLayoutId}
           />
         )}
       </div>
@@ -148,25 +148,25 @@ export const NotebookViewComponent: React.FC<
 };
 
 /**
- * Resolves per-entry design overrides from the view's design
+ * Resolves per-entry layout overrides from the view's layout
  * override options. For database sources all entries share the
  * same database so a single lookup suffices. For collection or
  * query sources, each entry's database is resolved individually.
  */
-function resolveEntryDesignOverrides(
+function resolveEntryLayoutOverrides(
   entries: string[],
   dataSource: { type: string; id: string },
-  designOverrides?: Record<string, NotebookViewDesignOverride>,
-): Record<string, NotebookViewDesignOverride> {
-  if (!designOverrides) {
+  layoutOverrides?: Record<string, NotebookViewLayoutOverride>,
+): Record<string, NotebookViewLayoutOverride> {
+  if (!layoutOverrides) {
     return {};
   }
 
-  const result: Record<string, NotebookViewDesignOverride> = {};
+  const result: Record<string, NotebookViewLayoutOverride> = {};
 
   // For database data sources all entries belong to the same database
   if (dataSource.type === 'database') {
-    const override = designOverrides[dataSource.id];
+    const override = layoutOverrides[dataSource.id];
 
     if (!override) {
       return result;
@@ -183,7 +183,7 @@ function resolveEntryDesignOverrides(
   for (const entryId of entries) {
     try {
       const entry = DatabaseEntries.get(entryId);
-      const override = designOverrides[entry.database];
+      const override = layoutOverrides[entry.database];
 
       if (override) {
         result[entryId] = override;

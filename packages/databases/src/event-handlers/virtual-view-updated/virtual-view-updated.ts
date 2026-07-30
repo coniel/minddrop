@@ -30,8 +30,8 @@ export function onUpdateVirtualView(data: ViewUpdatedEventData): void {
     return;
   }
 
-  // Build the metadata key as propertyName:designId
-  const metadataKey = viewMetadataKey(parsed.propertyName, parsed.designId);
+  // Build the metadata key as propertyName:layoutId
+  const metadataKey = viewMetadataKey(parsed.propertyName, parsed.layoutId);
 
   // Extract the view config to persist
   const viewConfig: Pick<View, 'options' | 'data'> = {};
@@ -47,8 +47,8 @@ export function onUpdateVirtualView(data: ViewUpdatedEventData): void {
   // Update the entry's metadata with the new view config
   const metadata: DatabaseEntryMetadata = {
     ...entry.metadata,
-    views: {
-      ...entry.metadata.views,
+    embeddedViewConfigs: {
+      ...entry.metadata.embeddedViewConfigs,
       [metadataKey]: viewConfig,
     },
   };

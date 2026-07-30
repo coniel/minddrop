@@ -56,7 +56,7 @@ interface UseDialogSizeReturn {
  */
 export function useDialogSize(
   open: boolean,
-  designId: string | null,
+  layoutId: string | null,
 ): UseDialogSizeReturn {
   const [size, setSize] = useState<DialogSize>({ width: 0, height: 0 });
 
@@ -83,8 +83,8 @@ export function useDialogSize(
     slotRef.current = slot;
 
     // Attempt to restore a persisted size, fall back to defaults
-    const saved = designId
-      ? (EntryDialogSizesStore.get(dialogSizeKey(designId, slot)) as
+    const saved = layoutId
+      ? (EntryDialogSizesStore.get(dialogSizeKey(layoutId, slot)) as
           | DialogSize
           | undefined)
       : undefined;
@@ -107,7 +107,7 @@ export function useDialogSize(
     };
 
     setSize({ width, height });
-  }, [open, designId]);
+  }, [open, layoutId]);
 
   // Adapt dialog size when the window is resized
   useEffect(() => {
@@ -125,8 +125,8 @@ export function useDialogSize(
         slotRef.current = newSlot;
 
         // Try to load a saved size for the new slot, fall back to defaults
-        const saved = designId
-          ? (EntryDialogSizesStore.get(dialogSizeKey(designId, newSlot)) as
+        const saved = layoutId
+          ? (EntryDialogSizesStore.get(dialogSizeKey(layoutId, newSlot)) as
               | DialogSize
               | undefined)
           : undefined;
@@ -210,7 +210,7 @@ export function useDialogSize(
     return () => {
       window.removeEventListener('resize', handleWindowResize);
     };
-  }, [open, designId]);
+  }, [open, layoutId]);
 
   return { size, setSize, sizeRef, baseSizeRef };
 }

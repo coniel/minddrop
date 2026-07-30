@@ -751,6 +751,9 @@ importers:
 
   packages/designs:
     dependencies:
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../events
       '@minddrop/stores':
         specifier: workspace:*
         version: link:../stores

@@ -7,8 +7,8 @@ import {
   objectEntry1,
   objectEntry1SqlRecord,
   rootStorageDatabase,
-  rootStorageEntry_empty_value,
   rootStorageEntrySqlRecord_empty_value,
+  rootStorageEntry_empty_value,
   timestampDatabase,
   timestampEntry1,
   timestampEntry1SqlRecord,
@@ -32,9 +32,9 @@ describe('convertEntryToSqlRecord', () => {
   });
 
   it('converts date properties to epoch ms', () => {
-    expect(
-      convertEntryToSqlRecord(timestampEntry1, timestampDatabase),
-    ).toEqual(timestampEntry1SqlRecord);
+    expect(convertEntryToSqlRecord(timestampEntry1, timestampDatabase)).toEqual(
+      timestampEntry1SqlRecord,
+    );
   });
 
   it('converts collection properties to string arrays', () => {
@@ -45,7 +45,10 @@ describe('convertEntryToSqlRecord', () => {
 
   it('handles entries with no properties', () => {
     expect(
-      convertEntryToSqlRecord(rootStorageEntry_empty_value, rootStorageDatabase),
+      convertEntryToSqlRecord(
+        rootStorageEntry_empty_value,
+        rootStorageDatabase,
+      ),
     ).toEqual(rootStorageEntrySqlRecord_empty_value);
   });
 });

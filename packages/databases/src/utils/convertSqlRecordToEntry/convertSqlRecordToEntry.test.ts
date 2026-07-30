@@ -4,8 +4,8 @@ import {
   collectionEntry1SqlRecord,
   objectEntry1,
   objectEntry1SqlRecord,
-  rootStorageEntry_empty_value,
   rootStorageEntrySqlRecord_empty_value,
+  rootStorageEntry_empty_value,
   timestampEntry1,
   timestampEntry1SqlRecord,
 } from '../../test-utils/fixtures';
@@ -67,22 +67,22 @@ describe('convertSqlRecordToEntry', () => {
     const record: SqlEntryRecord = {
       ...objectEntry1SqlRecord,
       metadata: JSON.stringify({
-        views: {
-          'design-1:Content': {
+        embeddedViewConfigs: {
+          'layout-1:Content': {
             options: { sortBy: 'title' },
           },
         },
-        designOverrides: { 'view-1': 'design-2' },
+        viewLayoutOverrides: { 'view-1': 'layout-2' },
       }),
     };
 
     const entry = convertSqlRecordToEntry(record);
 
     expect(entry.metadata).toEqual({
-      views: {
-        'design-1:Content': { options: { sortBy: 'title' } },
+      embeddedViewConfigs: {
+        'layout-1:Content': { options: { sortBy: 'title' } },
       },
-      designOverrides: { 'view-1': 'design-2' },
+      viewLayoutOverrides: { 'view-1': 'layout-2' },
     });
   });
 });
