@@ -44,14 +44,14 @@
 }
 
 /* Hide canvas resize/drag handles during property mapping */
-.design-canvas.hide-handles .design-canvas-resize-handle,
-.design-canvas.hide-handles .design-canvas-drag-handle,
-.design-canvas.hide-handles .design-canvas-hover-zone {
+.layout-frame.hide-handles .layout-frame-resize-handle,
+.layout-frame.hide-handles .layout-frame-drag-handle,
+.layout-frame.hide-handles .layout-frame-hover-zone {
   display: none;
 }
 
 /* Make the canvas content area a positioning context for the overlay */
-.layout-browser .design-canvas-content {
+.layout-browser .layout-frame-content {
   position: relative;
 }
 

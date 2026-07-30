@@ -7,7 +7,6 @@ import {
   OpenMainContentViewEvent,
 } from '@minddrop/events';
 import { Panel, TextInput } from '@minddrop/ui-primitives';
-import { DesignCanvas } from '../DesignCanvas/DesignCanvas';
 import { DesignStudioLeftPanel } from '../DesignStudioLeftPanel';
 import { DesignStudioRootElement } from '../DesignStudioRootElement';
 import {
@@ -21,6 +20,7 @@ import {
 import { DesignStudioToolbar } from '../DesignStudioToolbar';
 import { DesignStudioViewport } from '../DesignStudioViewport';
 import { ElementStyleEditor } from '../ElementStyleEditor';
+import { LayoutFrame } from '../LayoutFrame/LayoutFrame';
 import { OpenDesignStudioEventData } from '../events';
 import { FlatRootDesignElement } from '../types';
 import './DesignStudio.css';
@@ -136,11 +136,11 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
         {design && activeLayoutType && (
           <>
             <DesignStudioViewport>
-              <DesignCanvas layoutType={activeLayoutType}>
+              <LayoutFrame layoutType={activeLayoutType}>
                 {rootElement && (
                   <DesignStudioRootElement element={rootElement} />
                 )}
-              </DesignCanvas>
+              </LayoutFrame>
             </DesignStudioViewport>
             <div className="design-studio-workspace-header">
               <div className="design-studio-workspace-design-name">

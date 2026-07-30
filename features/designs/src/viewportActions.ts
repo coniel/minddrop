@@ -55,35 +55,35 @@ export function zoomOut(): void {
 }
 
 /**
- * Resets zoom to 100% and centers the canvas in the viewport.
+ * Resets zoom to 100% and centers the layout frame in the viewport.
  */
 export function resetView(): void {
   const viewport = document.querySelector(
     '.design-studio-viewport',
   ) as HTMLElement;
-  const canvas = viewport?.querySelector('.design-canvas') as HTMLElement;
+  const frame = viewport?.querySelector('.layout-frame') as HTMLElement;
 
-  if (!viewport || !canvas) {
+  if (!viewport || !frame) {
     DesignStudioStore.getState().resetView();
 
     return;
   }
 
-  // Get the canvas position and size in the un-zoomed coordinate space
-  const canvasWidth = canvas.offsetWidth;
-  const canvasHeight = canvas.offsetHeight;
+  // Get the frame position and size in the un-zoomed coordinate space
+  const frameWidth = frame.offsetWidth;
+  const frameHeight = frame.offsetHeight;
 
-  // Parse the canvas translate transform to get its position
-  const transform = canvas.style.transform;
+  // Parse the frame translate transform to get its position
+  const transform = frame.style.transform;
   const match = transform.match(/translate\(([^,]+)px,\s*([^)]+)px\)/);
-  const canvasX = match ? parseFloat(match[1]) : 0;
-  const canvasY = match ? parseFloat(match[2]) : 0;
+  const frameX = match ? parseFloat(match[1]) : 0;
+  const frameY = match ? parseFloat(match[2]) : 0;
 
-  // Center the canvas in the viewport at zoom 1
+  // Center the frame in the viewport at zoom 1
   const viewportWidth = viewport.offsetWidth;
   const viewportHeight = viewport.offsetHeight;
-  const panX = viewportWidth / 2 - (canvasX + canvasWidth / 2);
-  const panY = viewportHeight / 2 - (canvasY + canvasHeight / 2);
+  const panX = viewportWidth / 2 - (frameX + frameWidth / 2);
+  const panY = viewportHeight / 2 - (frameY + frameHeight / 2);
 
   const store = DesignStudioStore.getState();
 

@@ -91,14 +91,14 @@ export const DesignStudioViewport: React.FC<React.PropsWithChildren> = ({
       }
 
       // Clear the canvas highlight when clicking the viewport
-      // background or the canvas hover zones (resize/drag areas).
+      // background or the frame hover zones (resize/drag areas).
       // Selection stays on the current element (defaults to root).
       const target = event.target as HTMLElement;
 
       if (
         target === event.currentTarget ||
         target === viewportRef.current?.firstElementChild ||
-        target.classList.contains('design-canvas-hover-zone')
+        target.classList.contains('layout-frame-hover-zone')
       ) {
         DesignStudioStore.getState().clearHighlight();
       }

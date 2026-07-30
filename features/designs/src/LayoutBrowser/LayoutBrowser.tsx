@@ -21,9 +21,9 @@ import {
   SelectionDragStartedEventData,
 } from '@minddrop/selection';
 import { Button, Group, Panel, SwitchField } from '@minddrop/ui-primitives';
-import { DesignCanvas } from '../DesignCanvas';
 import { DesignRootElement } from '../DesignElements';
 import { useDesignPropertyMappingStore } from '../DesignPropertyMappingStore';
+import { LayoutFrame } from '../LayoutFrame';
 import { AllPropertyConnectionLines } from '../PropertyConnectionLine/AllPropertyConnectionLines';
 import { PropertyConnectionLine } from '../PropertyConnectionLine/PropertyConnectionLine';
 import { PropertyMappingOverlay } from '../PropertyMappingOverlay';
@@ -286,7 +286,7 @@ export const LayoutBrowser: React.FC<LayoutBrowserProps> = ({
         return;
       }
 
-      const canvas = area.querySelector('.design-canvas') as HTMLElement;
+      const canvas = area.querySelector('.layout-frame') as HTMLElement;
 
       if (!canvas) {
         return;
@@ -589,7 +589,7 @@ export const LayoutBrowser: React.FC<LayoutBrowserProps> = ({
                 transformOrigin: `${canvasScale.originX}px ${canvasScale.originY}px`,
               }}
             >
-              <DesignCanvas
+              <LayoutFrame
                 layoutType={selectedDesign.type}
                 className={
                   view === 'map-properties' ? 'hide-handles' : undefined
@@ -602,7 +602,7 @@ export const LayoutBrowser: React.FC<LayoutBrowserProps> = ({
                     onDrop={handlePropertyDrop}
                   />
                 )}
-              </DesignCanvas>
+              </LayoutFrame>
             </div>
           </>
         )}

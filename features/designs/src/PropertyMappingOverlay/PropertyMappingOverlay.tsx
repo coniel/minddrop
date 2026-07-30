@@ -117,7 +117,7 @@ export const PropertyMappingOverlay: React.FC<PropertyMappingOverlayProps> = ({
     }
 
     // Find the design canvas content container
-    const canvasContent = anchor.closest('.design-canvas-content');
+    const canvasContent = anchor.closest('.layout-frame-content');
 
     if (!canvasContent) {
       setTargets([]);

@@ -8,7 +8,7 @@ import {
 import { LayoutType } from '@minddrop/designs';
 import { DesignPreviewProvider } from '../DesignElements';
 import { DesignStudioStore } from '../DesignStudioStore';
-import './DesignCanvas.css';
+import './LayoutFrame.css';
 
 type ResizeEdge =
   | 'left'
@@ -36,15 +36,15 @@ interface DragState {
   originY: number;
 }
 
-// Minimum canvas dimensions
+// Minimum frame dimensions
 const MIN_WIDTH = 200;
 const MIN_HEIGHT = 100;
 
 /**
- * Computes the initial canvas layout (size + position) for a given
+ * Computes the initial frame layout (size + position) for a given
  * design type within the available workspace dimensions.
  */
-function getCanvasLayout(
+function getFrameLayout(
   layoutType: LayoutType,
   workspaceWidth: number,
   workspaceHeight: number,
@@ -93,7 +93,7 @@ interface CornerHandleProps {
 }
 
 /**
- * SVG arc corner handle for resizing the canvas diagonally.
+ * SVG arc corner handle for resizing the frame diagonally.
  */
 const CornerHandle: React.FC<CornerHandleProps> = ({
   path,
@@ -101,7 +101,7 @@ const CornerHandle: React.FC<CornerHandleProps> = ({
   className,
 }) => (
   <div
-    className={`design-canvas-resize-handle ${className}`}
+    className={`layout-frame-resize-handle ${className}`}
     onMouseDown={onMouseDown}
   >
     <svg width="25" height="25" overflow="visible">
@@ -116,7 +116,7 @@ const CornerHandle: React.FC<CornerHandleProps> = ({
   </div>
 );
 
-export interface DesignCanvasProps {
+export interface LayoutFrameProps {
   /**
    * Determines initial width and which resize handles are shown.
    * Card/list: horizontal only. Page: all directions.
@@ -124,32 +124,32 @@ export interface DesignCanvasProps {
   layoutType: LayoutType;
 
   /**
-   * The design tree content to render inside the canvas.
+   * The design tree content to render inside the frame.
    */
   children: React.ReactNode;
 
   /**
-   * Optional additional class name for the canvas wrapper.
+   * Optional additional class name for the frame wrapper.
    */
   className?: string;
 }
 
 /**
- * Resizable, draggable canvas wrapper for design previews. Renders
+ * Resizable, draggable frame wrapper for layout previews. Renders
  * resize handles (corner SVG arcs + edge bars + hover zones) and a
  * drag handle bar. Manages its own position + size state.
  *
  * Card/list types auto-size height and only show horizontal handles.
  * Page type shows all handles including corners and bottom edge.
  */
-export const DesignCanvas: React.FC<DesignCanvasProps> = ({
+export const LayoutFrame: React.FC<LayoutFrameProps> = ({
   layoutType,
   children,
   className,
 }) => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [size, setSize] = useState({ width: 0, height: 0 });
-  const canvasRef = useRef<HTMLDivElement>(null);
+  const frameRef = useRef<HTMLDivElement>(null);
   const dragState = useRef<DragState | null>(null);
   const resizeState = useRef<ResizeState | null>(null);
   const didDrag = useRef(false);
@@ -158,18 +158,18 @@ export const DesignCanvas: React.FC<DesignCanvasProps> = ({
   const autoHeight = layoutType === 'card' || layoutType === 'list';
 
   /**
-   * Clamps a position so the canvas stays within its parent workspace.
+   * Clamps a position so the frame stays within its parent workspace.
    */
   const clampPosition = useCallback(
-    (x: number, y: number, canvasWidth?: number, canvasHeight?: number) => {
-      const workspace = canvasRef.current?.parentElement;
+    (x: number, y: number, frameWidth?: number, frameHeight?: number) => {
+      const workspace = frameRef.current?.parentElement;
 
-      if (!workspace || !canvasRef.current) {
+      if (!workspace || !frameRef.current) {
         return { x, y };
       }
 
-      const width = canvasWidth ?? canvasRef.current.offsetWidth;
-      const height = canvasHeight ?? canvasRef.current.offsetHeight;
+      const width = frameWidth ?? frameRef.current.offsetWidth;
+      const height = frameHeight ?? frameRef.current.offsetHeight;
 
       return {
         x: Math.max(0, Math.min(workspace.offsetWidth - width, x)),
@@ -181,13 +181,13 @@ export const DesignCanvas: React.FC<DesignCanvasProps> = ({
 
   // Set initial layout (size + position) based on design type
   useLayoutEffect(() => {
-    const workspace = canvasRef.current?.parentElement;
+    const workspace = frameRef.current?.parentElement;
 
     if (!workspace) {
       return;
     }
 
-    const layout = getCanvasLayout(
+    const layout = getFrameLayout(
       layoutType,
       workspace.offsetWidth,
       workspace.offsetHeight,
@@ -213,7 +213,7 @@ export const DesignCanvas: React.FC<DesignCanvasProps> = ({
   );
 
   // Select the root element when clicking the drag handle
-  // without actually dragging the canvas
+  // without actually dragging the frame
   const handleDragHandleClick = useCallback(() => {
     if (!didDrag.current) {
       DesignStudioStore.getState().selectElement('root');
@@ -241,7 +241,7 @@ export const DesignCanvas: React.FC<DesignCanvasProps> = ({
   // Track mouse movement during drag or resize
   const handleMouseMove = useCallback(
     (event: MouseEvent) => {
-      // Handle canvas dragging
+      // Handle frame dragging
       if (dragState.current) {
         didDrag.current = true;
         const rawX =
@@ -254,7 +254,7 @@ export const DesignCanvas: React.FC<DesignCanvasProps> = ({
         setPosition(clampPosition(rawX, rawY));
       }
 
-      // Handle canvas resizing
+      // Handle frame resizing
       if (resizeState.current) {
         const {
           edge,
@@ -268,9 +268,9 @@ export const DesignCanvas: React.FC<DesignCanvasProps> = ({
         const deltaX = event.clientX - startX;
         const deltaY = event.clientY - startY;
         const workspaceWidth =
-          canvasRef.current?.parentElement?.offsetWidth ?? Infinity;
+          frameRef.current?.parentElement?.offsetWidth ?? Infinity;
         const workspaceHeight =
-          canvasRef.current?.parentElement?.offsetHeight ?? Infinity;
+          frameRef.current?.parentElement?.offsetHeight ?? Infinity;
 
         // Anchored edges: the opposite edge from the one being
         // dragged stays fixed.
@@ -503,8 +503,8 @@ export const DesignCanvas: React.FC<DesignCanvasProps> = ({
 
   return (
     <div
-      ref={canvasRef}
-      className={`design-canvas${className ? ` ${className}` : ''}`}
+      ref={frameRef}
+      className={`layout-frame${className ? ` ${className}` : ''}`}
       style={{
         transform: `translate(${position.x}px, ${position.y}px)`,
         width: size.width,
@@ -513,31 +513,31 @@ export const DesignCanvas: React.FC<DesignCanvasProps> = ({
       {/* Corner handles (only for page type) */}
       {!autoHeight && (
         <>
-          <div className="design-canvas-hover-zone design-canvas-hover-zone-top-left" />
-          <div className="design-canvas-hover-zone design-canvas-hover-zone-top-left-vertical" />
+          <div className="layout-frame-hover-zone layout-frame-hover-zone-top-left" />
+          <div className="layout-frame-hover-zone layout-frame-hover-zone-top-left-vertical" />
           <CornerHandle
-            className="design-canvas-resize-handle-top-left"
+            className="layout-frame-resize-handle-top-left"
             path="M 25 0 A 25 25 0 0 0 0 25"
             onMouseDown={(event) => handleResizeMouseDown(event, 'top-left')}
           />
-          <div className="design-canvas-hover-zone design-canvas-hover-zone-top-right" />
-          <div className="design-canvas-hover-zone design-canvas-hover-zone-top-right-vertical" />
+          <div className="layout-frame-hover-zone layout-frame-hover-zone-top-right" />
+          <div className="layout-frame-hover-zone layout-frame-hover-zone-top-right-vertical" />
           <CornerHandle
-            className="design-canvas-resize-handle-top-right"
+            className="layout-frame-resize-handle-top-right"
             path="M 0 0 A 25 25 0 0 1 25 25"
             onMouseDown={(event) => handleResizeMouseDown(event, 'top-right')}
           />
-          <div className="design-canvas-hover-zone design-canvas-hover-zone-bottom-left" />
-          <div className="design-canvas-hover-zone design-canvas-hover-zone-bottom-left-vertical" />
+          <div className="layout-frame-hover-zone layout-frame-hover-zone-bottom-left" />
+          <div className="layout-frame-hover-zone layout-frame-hover-zone-bottom-left-vertical" />
           <CornerHandle
-            className="design-canvas-resize-handle-bottom-left"
+            className="layout-frame-resize-handle-bottom-left"
             path="M 25 25 A 25 25 0 0 1 0 0"
             onMouseDown={(event) => handleResizeMouseDown(event, 'bottom-left')}
           />
-          <div className="design-canvas-hover-zone design-canvas-hover-zone-bottom-right" />
-          <div className="design-canvas-hover-zone design-canvas-hover-zone-bottom-right-vertical" />
+          <div className="layout-frame-hover-zone layout-frame-hover-zone-bottom-right" />
+          <div className="layout-frame-hover-zone layout-frame-hover-zone-bottom-right-vertical" />
           <CornerHandle
-            className="design-canvas-resize-handle-bottom-right"
+            className="layout-frame-resize-handle-bottom-right"
             path="M 0 25 A 25 25 0 0 0 25 0"
             onMouseDown={(event) =>
               handleResizeMouseDown(event, 'bottom-right')
@@ -547,39 +547,39 @@ export const DesignCanvas: React.FC<DesignCanvasProps> = ({
       )}
 
       {/* Drag handle hover zone + handle bar */}
-      <div className="design-canvas-hover-zone design-canvas-hover-zone-top" />
+      <div className="layout-frame-hover-zone layout-frame-hover-zone-top" />
       <div
-        className="design-canvas-drag-handle"
+        className="layout-frame-drag-handle"
         onMouseDown={handleDragHandleMouseDown}
         onClick={handleDragHandleClick}
       />
 
       {/* Content wrapper */}
       <div
-        className="design-canvas-content"
+        className="layout-frame-content"
         style={autoHeight ? undefined : { height: size.height }}
       >
         <DesignPreviewProvider value>{children}</DesignPreviewProvider>
       </div>
 
       {/* Left/right edge handles (always visible for all types) */}
-      <div className="design-canvas-hover-zone design-canvas-hover-zone-left" />
+      <div className="layout-frame-hover-zone layout-frame-hover-zone-left" />
       <div
-        className="design-canvas-resize-handle design-canvas-resize-handle-left"
+        className="layout-frame-resize-handle layout-frame-resize-handle-left"
         onMouseDown={(event) => handleResizeMouseDown(event, 'left')}
       />
-      <div className="design-canvas-hover-zone design-canvas-hover-zone-right" />
+      <div className="layout-frame-hover-zone layout-frame-hover-zone-right" />
       <div
-        className="design-canvas-resize-handle design-canvas-resize-handle-right"
+        className="layout-frame-resize-handle layout-frame-resize-handle-right"
         onMouseDown={(event) => handleResizeMouseDown(event, 'right')}
       />
 
       {/* Bottom edge handle (only for page type) */}
       {!autoHeight && (
         <>
-          <div className="design-canvas-hover-zone design-canvas-hover-zone-bottom" />
+          <div className="layout-frame-hover-zone layout-frame-hover-zone-bottom" />
           <div
-            className="design-canvas-resize-handle design-canvas-resize-handle-bottom"
+            className="layout-frame-resize-handle layout-frame-resize-handle-bottom"
             onMouseDown={(event) => handleResizeMouseDown(event, 'bottom')}
           />
         </>

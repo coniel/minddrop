@@ -1,4 +1,4 @@
-.design-canvas {
+.layout-frame {
   position: absolute;
   padding: 12px;
   border-radius: var(--radius-2);
@@ -6,7 +6,7 @@
 
   /* --- Drag handle bar --- */
 
-  .design-canvas-drag-handle {
+  .layout-frame-drag-handle {
     width: 144px;
     height: 8px;
     background-color: var(--border-default);
@@ -25,14 +25,14 @@
     }
   }
 
-  .design-canvas-hover-zone-top:hover ~ .design-canvas-drag-handle,
-  .design-canvas-drag-handle:hover {
+  .layout-frame-hover-zone-top:hover ~ .layout-frame-drag-handle,
+  .layout-frame-drag-handle:hover {
     opacity: 1;
   }
 
   /* --- Top hover zone (triggers drag handle visibility) --- */
 
-  .design-canvas-hover-zone-top {
+  .layout-frame-hover-zone-top {
     position: absolute;
     top: 0;
     left: 50%;
@@ -43,15 +43,15 @@
 
   /* --- Content wrapper --- */
 
-  .design-canvas-content {
-    .design-canvas-svg {
+  .layout-frame-content {
+    .layout-frame-svg {
       display: block;
     }
   }
 
   /* --- Corner resize handles (SVG arcs) --- */
 
-  .design-canvas-resize-handle {
+  .layout-frame-resize-handle {
     position: absolute;
     display: flex;
     align-items: center;
@@ -64,10 +64,10 @@
     }
   }
 
-  .design-canvas-resize-handle-top-left,
-  .design-canvas-resize-handle-top-right,
-  .design-canvas-resize-handle-bottom-left,
-  .design-canvas-resize-handle-bottom-right {
+  .layout-frame-resize-handle-top-left,
+  .layout-frame-resize-handle-top-right,
+  .layout-frame-resize-handle-bottom-left,
+  .layout-frame-resize-handle-bottom-right {
     width: 25px;
     height: 25px;
     z-index: 1;
@@ -79,28 +79,28 @@
     }
   }
 
-  .design-canvas-resize-handle-top-left {
+  .layout-frame-resize-handle-top-left {
     top: 0;
     left: 0;
     cursor: nwse-resize;
     transform: translate(-3px, -3px);
   }
 
-  .design-canvas-resize-handle-top-right {
+  .layout-frame-resize-handle-top-right {
     top: 0;
     right: 0;
     cursor: nesw-resize;
     transform: translate(3px, -3px);
   }
 
-  .design-canvas-resize-handle-bottom-left {
+  .layout-frame-resize-handle-bottom-left {
     bottom: 0;
     left: 0;
     cursor: nesw-resize;
     transform: translate(-3px, 3px);
   }
 
-  .design-canvas-resize-handle-bottom-right {
+  .layout-frame-resize-handle-bottom-right {
     bottom: 0;
     right: 0;
     cursor: nwse-resize;
@@ -109,8 +109,8 @@
 
   /* --- Edge resize handles (bars) --- */
 
-  .design-canvas-resize-handle-left,
-  .design-canvas-resize-handle-right {
+  .layout-frame-resize-handle-left,
+  .layout-frame-resize-handle-right {
     top: 50%;
     width: var(--space-4);
     height: 60%;
@@ -124,21 +124,21 @@
     }
   }
 
-  .design-canvas-resize-handle-left {
+  .layout-frame-resize-handle-left {
     left: 0;
     transform: translate(-50%, -50%);
     opacity: 0;
     transition: opacity 0.5s ease 0.15s;
   }
 
-  .design-canvas-resize-handle-right {
+  .layout-frame-resize-handle-right {
     right: 0;
     transform: translate(50%, -50%);
     opacity: 0;
     transition: opacity 0.5s ease 0.15s;
   }
 
-  .design-canvas-resize-handle-bottom {
+  .layout-frame-resize-handle-bottom {
     bottom: 0;
     left: 50%;
     width: 60%;
@@ -158,7 +158,7 @@
 
   /* --- Hover zones (invisible areas that trigger handle visibility) --- */
 
-  .design-canvas-hover-zone-top-left {
+  .layout-frame-hover-zone-top-left {
     position: absolute;
     top: 10px;
     left: 0;
@@ -167,7 +167,7 @@
     transform: translate(-40px, -100%);
   }
 
-  .design-canvas-hover-zone-top-left-vertical {
+  .layout-frame-hover-zone-top-left-vertical {
     position: absolute;
     top: 0;
     left: 0;
@@ -176,7 +176,7 @@
     transform: translate(-40px, -40px);
   }
 
-  .design-canvas-hover-zone-top-right {
+  .layout-frame-hover-zone-top-right {
     position: absolute;
     top: 10px;
     right: 0;
@@ -185,7 +185,7 @@
     transform: translate(40px, -100%);
   }
 
-  .design-canvas-hover-zone-top-right-vertical {
+  .layout-frame-hover-zone-top-right-vertical {
     position: absolute;
     top: 0;
     right: 0;
@@ -194,7 +194,7 @@
     transform: translate(40px, -40px);
   }
 
-  .design-canvas-hover-zone-bottom-left {
+  .layout-frame-hover-zone-bottom-left {
     position: absolute;
     bottom: 10px;
     left: 0;
@@ -203,7 +203,7 @@
     transform: translate(-40px, 100%);
   }
 
-  .design-canvas-hover-zone-bottom-left-vertical {
+  .layout-frame-hover-zone-bottom-left-vertical {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -212,7 +212,7 @@
     transform: translate(-40px, 40px);
   }
 
-  .design-canvas-hover-zone-bottom-right {
+  .layout-frame-hover-zone-bottom-right {
     position: absolute;
     bottom: 10px;
     right: 0;
@@ -221,7 +221,7 @@
     transform: translate(40px, 100%);
   }
 
-  .design-canvas-hover-zone-bottom-right-vertical {
+  .layout-frame-hover-zone-bottom-right-vertical {
     position: absolute;
     bottom: 0;
     right: 0;
@@ -230,25 +230,25 @@
     transform: translate(40px, 40px);
   }
 
-  .design-canvas-hover-zone-left,
-  .design-canvas-hover-zone-right {
+  .layout-frame-hover-zone-left,
+  .layout-frame-hover-zone-right {
     position: absolute;
     top: 50%;
     width: 50px;
     height: 60%;
   }
 
-  .design-canvas-hover-zone-left {
+  .layout-frame-hover-zone-left {
     left: 0;
     transform: translate(calc(-100% + 10px), -50%);
   }
 
-  .design-canvas-hover-zone-right {
+  .layout-frame-hover-zone-right {
     right: 0;
     transform: translate(calc(100% - 10px), -50%);
   }
 
-  .design-canvas-hover-zone-bottom {
+  .layout-frame-hover-zone-bottom {
     position: absolute;
     bottom: 0;
     left: 50%;
@@ -259,35 +259,35 @@
 
   /* --- Hover zone → handle visibility selectors --- */
 
-  .design-canvas-hover-zone-top-left:hover
-    ~ .design-canvas-resize-handle-top-left,
-  .design-canvas-hover-zone-top-left-vertical:hover
-    ~ .design-canvas-resize-handle-top-left,
-  .design-canvas-resize-handle-top-left:hover,
-  .design-canvas-hover-zone-top-right:hover
-    ~ .design-canvas-resize-handle-top-right,
-  .design-canvas-hover-zone-top-right-vertical:hover
-    ~ .design-canvas-resize-handle-top-right,
-  .design-canvas-resize-handle-top-right:hover,
-  .design-canvas-hover-zone-bottom-left:hover
-    ~ .design-canvas-resize-handle-bottom-left,
-  .design-canvas-hover-zone-bottom-left-vertical:hover
-    ~ .design-canvas-resize-handle-bottom-left,
-  .design-canvas-resize-handle-bottom-left:hover,
-  .design-canvas-hover-zone-bottom-right:hover
-    ~ .design-canvas-resize-handle-bottom-right,
-  .design-canvas-hover-zone-bottom-right-vertical:hover
-    ~ .design-canvas-resize-handle-bottom-right,
-  .design-canvas-resize-handle-bottom-right:hover {
+  .layout-frame-hover-zone-top-left:hover
+    ~ .layout-frame-resize-handle-top-left,
+  .layout-frame-hover-zone-top-left-vertical:hover
+    ~ .layout-frame-resize-handle-top-left,
+  .layout-frame-resize-handle-top-left:hover,
+  .layout-frame-hover-zone-top-right:hover
+    ~ .layout-frame-resize-handle-top-right,
+  .layout-frame-hover-zone-top-right-vertical:hover
+    ~ .layout-frame-resize-handle-top-right,
+  .layout-frame-resize-handle-top-right:hover,
+  .layout-frame-hover-zone-bottom-left:hover
+    ~ .layout-frame-resize-handle-bottom-left,
+  .layout-frame-hover-zone-bottom-left-vertical:hover
+    ~ .layout-frame-resize-handle-bottom-left,
+  .layout-frame-resize-handle-bottom-left:hover,
+  .layout-frame-hover-zone-bottom-right:hover
+    ~ .layout-frame-resize-handle-bottom-right,
+  .layout-frame-hover-zone-bottom-right-vertical:hover
+    ~ .layout-frame-resize-handle-bottom-right,
+  .layout-frame-resize-handle-bottom-right:hover {
     opacity: 1;
   }
 
-  .design-canvas-hover-zone-left:hover + .design-canvas-resize-handle-left,
-  .design-canvas-resize-handle-left:hover,
-  .design-canvas-hover-zone-right:hover + .design-canvas-resize-handle-right,
-  .design-canvas-resize-handle-right:hover,
-  .design-canvas-hover-zone-bottom:hover + .design-canvas-resize-handle-bottom,
-  .design-canvas-resize-handle-bottom:hover {
+  .layout-frame-hover-zone-left:hover + .layout-frame-resize-handle-left,
+  .layout-frame-resize-handle-left:hover,
+  .layout-frame-hover-zone-right:hover + .layout-frame-resize-handle-right,
+  .layout-frame-resize-handle-right:hover,
+  .layout-frame-hover-zone-bottom:hover + .layout-frame-resize-handle-bottom,
+  .layout-frame-resize-handle-bottom:hover {
     opacity: 1;
   }
 }
