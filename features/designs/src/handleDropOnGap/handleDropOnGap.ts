@@ -19,11 +19,13 @@ import { isValidDesignStudioDrop } from '../utils';
  * @param drop - The drop event to handle.
  * @param containerId - The ID of the container element.
  * @param gapIndex - The index of the gap.
+ * @param layoutId - The ID of the layout containing the container. Resolved from the container when omitted.
  */
 export function handleDropOnGap(
   drop: DropEventData,
   containerId: string,
   gapIndex: number,
+  layoutId?: string,
 ): void {
   // Ensure the drop event is valid
   if (!isValidDesignStudioDrop(drop)) {
@@ -35,7 +37,7 @@ export function handleDropOnGap(
 
   // If a template was dropped, add a new element to the container
   if (templates && templates.length) {
-    addDeisgnElementFromTemplate(templates[0], containerId, gapIndex);
+    addDeisgnElementFromTemplate(templates[0], containerId, gapIndex, layoutId);
 
     return;
   }
@@ -60,8 +62,10 @@ export function handleDropOnGap(
     }
 
     // Get the container element
-    const parentElement =
-      getDesignElement<FlatParentDesignElement>(containerId);
+    const parentElement = getDesignElement<FlatParentDesignElement>(
+      containerId,
+      layoutId,
+    );
     // Get the IDs of the elements around the gap. The gap index
     // corresponds to the index of the element after the gap.
     const nextElementId = parentElement.children[gapIndex];

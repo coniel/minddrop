@@ -7,6 +7,7 @@ import {
   resolveContainerBackdrop,
 } from '@minddrop/designs';
 import { Fs } from '@minddrop/file-system';
+import { DropEventData } from '@minddrop/selection';
 import { FlexDropContainer } from '@minddrop/ui-drag-and-drop';
 import { DesignStudioElement } from '../DesignStudioElement/DesignStudioElement';
 import { DesignStudioStore } from '../DesignStudioStore';
@@ -56,6 +57,15 @@ export const DesignStudioRootElement: React.FC<
     [layoutId],
   );
 
+  // Route drops on the root's gaps into this frame's layout,
+  // regardless of which layout is active
+  const handleDrop = useCallback(
+    (drop: DropEventData, containerId: string, gapIndex: number) => {
+      handleDropOnGap(drop, containerId, gapIndex, layoutId ?? undefined);
+    },
+    [layoutId],
+  );
+
   const baseContainerStyle = createElementCssStyle(element);
 
   // Pre-merge background image into the container style. When backdrop
@@ -85,7 +95,7 @@ export const DesignStudioRootElement: React.FC<
       justify={style.justifyContent}
       className="design-studio-root-element"
       style={containerCssStyle}
-      onDrop={handleDropOnGap}
+      onDrop={handleDrop}
     >
       {children}
     </FlexDropContainer>

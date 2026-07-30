@@ -1,4 +1,4 @@
-import { CSSProperties, useMemo } from 'react';
+import { CSSProperties, useCallback, useMemo } from 'react';
 import {
   createBackdropImageWrapperStyle,
   createContainerCssStyle,
@@ -8,9 +8,11 @@ import {
 } from '@minddrop/designs';
 import { Fs } from '@minddrop/file-system';
 import { useTranslation } from '@minddrop/i18n';
+import { DropEventData } from '@minddrop/selection';
 import { FlexDropContainer } from '@minddrop/ui-drag-and-drop';
 import { Icon } from '@minddrop/ui-primitives';
 import { DesignStudioElement } from '../../DesignStudioElement/DesignStudioElement';
+import { useLayoutId } from '../../LayoutIdContext';
 import { handleDropOnGap } from '../../handleDropOnGap';
 import { FlatContainerDesignElement } from '../../types';
 
@@ -37,6 +39,7 @@ export const ContainerStudioDesignElement: React.FC<
   ContainerStudioDesignElementProps
 > = ({ element, rootProps }) => {
   const { t } = useTranslation();
+  const layoutId = useLayoutId();
   const { style } = element;
   const isEmpty = element.children.length === 0;
 
@@ -116,6 +119,15 @@ export const ContainerStudioDesignElement: React.FC<
     ))
   );
 
+  // Route drops on the container's gaps into this frame's layout,
+  // regardless of which layout is active
+  const handleDrop = useCallback(
+    (drop: DropEventData, containerId: string, gapIndex: number) => {
+      handleDropOnGap(drop, containerId, gapIndex, layoutId ?? undefined);
+    },
+    [layoutId],
+  );
+
   // Shared FlexDropContainer props used in all three render paths
   const flexDropProps = {
     key: style.direction,
@@ -124,7 +136,7 @@ export const ContainerStudioDesignElement: React.FC<
     direction: style.direction,
     align: style.alignItems,
     justify: style.justifyContent,
-    onDrop: handleDropOnGap,
+    onDrop: handleDrop,
   } as const;
 
   // When backdrop effects + bg image are both active, wrap in an outer

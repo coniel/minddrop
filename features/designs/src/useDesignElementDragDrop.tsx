@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef } from 'react';
-import { useDraggable, useDroppable } from '@minddrop/selection';
+import { DropEventData, useDraggable, useDroppable } from '@minddrop/selection';
 import { useFlexDropContainer } from '@minddrop/ui-drag-and-drop';
+import { useLayoutId } from './LayoutIdContext';
 import { DesignElementsDataKey } from './constants';
 import { handleDropOnDesignElement } from './handleDropOnDesignElement';
 import { FlatContainerDesignElement, FlatDesignElement } from './types';
@@ -30,12 +31,22 @@ export function useDesignElementDragDrop({
 
   // Get the parent FlexDropContainer context for gap expansion
   const flexDropContainer = useFlexDropContainer();
+  const layoutId = useLayoutId();
 
   const { draggableProps, isDragging } = useDraggable({
     id: element.id,
     type: DesignElementsDataKey,
     data: element,
   });
+
+  // Route drops on this element into its frame's layout,
+  // regardless of which layout is active
+  const handleDrop = useCallback(
+    (drop: DropEventData) => {
+      handleDropOnDesignElement(drop, layoutId ?? undefined);
+    },
+    [layoutId],
+  );
 
   const { droppableProps, dropIndicatorPosition, isDraggingOver } =
     useDroppable({
@@ -46,7 +57,7 @@ export function useDesignElementDragDrop({
       enableInside: element.type === 'container',
       edgeThreshold: isEmptyContainer ? 0 : 0.25,
       isLastChild,
-      onDrop: handleDropOnDesignElement,
+      onDrop: handleDrop,
     });
 
   // Track the previous position to avoid redundant context calls

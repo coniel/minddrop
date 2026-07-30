@@ -148,11 +148,13 @@ export interface DesignStudioStore {
    * @param element - The element to add.
    * @param parentId - The ID of the parent element.
    * @param index - The index to add the element at.
+   * @param layoutId - The ID of the layout to add the element to. Resolved from the parent element when omitted.
    */
   addElement: (
     element: FlatDesignElement,
     parentId: string,
     index: number,
+    layoutId?: string,
   ) => void;
 
   /**
@@ -287,10 +289,11 @@ export const DesignStudioStore = createStore<DesignStudioStore>((set) => ({
       fadingHighlightElementId: null,
     }),
 
-  addElement: (element, parentId, index) => {
+  addElement: (element, parentId, index, targetLayoutId) => {
     set((state) => {
-      // The new element goes into the layout containing the parent
-      const layoutId = findElementLayoutId(state, parentId);
+      // The new element goes into the specified layout, or the
+      // layout containing the parent element
+      const layoutId = targetLayoutId ?? findElementLayoutId(state, parentId);
 
       if (!layoutId) {
         throw new Error(`Parent element with ID ${parentId} does not exist.`);
@@ -707,11 +710,16 @@ export const getDesignElement = <
     | FlatParentDesignElement = FlatDesignElement,
 >(
   id: string,
+  layoutId?: string,
 ): TType => {
   const state = DesignStudioStore.getState();
-  const layoutId = findElementLayoutId(state, id);
+  const resolvedLayoutId = layoutId ?? findElementLayoutId(state, id);
 
-  return (layoutId ? state.elementsByLayout[layoutId][id] : undefined) as TType;
+  return (
+    resolvedLayoutId
+      ? state.elementsByLayout[resolvedLayoutId]?.[id]
+      : undefined
+  ) as TType;
 };
 
 export const updateDesignElement = <T extends DesignElement>(
@@ -738,12 +746,18 @@ export const moveDesignElement = (
   newParentId: string,
   index: number,
 ) => {
-  DesignStudioStore.getState().moveElement(id, newParentId, index);
+  const store = DesignStudioStore.getState();
+
+  store.moveElement(id, newParentId, index);
+  selectDroppedElement(id);
   saveDesign();
 };
 
 export const sortDesignElement = (elementId: string, targetIndex: number) => {
-  DesignStudioStore.getState().sortElement(elementId, targetIndex);
+  const store = DesignStudioStore.getState();
+
+  store.sortElement(elementId, targetIndex);
+  selectDroppedElement(elementId);
   saveDesign();
 };
 
@@ -751,6 +765,7 @@ export const addDeisgnElementFromTemplate = (
   template: DesignElementTemplate,
   parentId: string,
   index: number,
+  layoutId?: string,
 ) => {
   // Look up the config for this element type to generate a placeholder
   const config = elementConfigs.find((config) => config.type === template.type);
@@ -763,8 +778,22 @@ export const addDeisgnElementFromTemplate = (
     ...(placeholder != null ? { placeholder } : {}),
   } as FlatDesignElement;
 
-  DesignStudioStore.getState().addElement(element, parentId, index);
+  DesignStudioStore.getState().addElement(element, parentId, index, layoutId);
+  selectDroppedElement(element.id, layoutId);
   saveDesign();
+};
+
+/**
+ * Selects a dropped element and activates its layout.
+ * @param elementId - The ID of the dropped element.
+ * @param layoutId - The ID of the layout containing the element. Resolved from the element when omitted.
+ */
+const selectDroppedElement = (elementId: string, layoutId?: string) => {
+  const state = DesignStudioStore.getState();
+  const resolvedLayoutId =
+    layoutId ?? findElementLayoutId(state, elementId) ?? undefined;
+
+  state.selectElement(elementId, resolvedLayoutId);
 };
 
 export const updateElementStyle = <K extends keyof DesignElementStyle>(

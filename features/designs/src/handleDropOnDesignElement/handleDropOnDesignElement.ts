@@ -49,10 +49,17 @@ async function handleImageFileDrop(
  * Handles a drop event on a design element.
  *
  * @param drop - The drop event to handle.
+ * @param layoutId - The ID of the layout containing the target element. Resolved from the element when omitted.
  */
-export function handleDropOnDesignElement(drop: DropEventData): void {
+export function handleDropOnDesignElement(
+  drop: DropEventData,
+  layoutId?: string,
+): void {
   // Get the target element
-  const targetElement = getDesignElement<FlatChildDesignElement>(drop.targetId);
+  const targetElement = getDesignElement<FlatChildDesignElement>(
+    drop.targetId,
+    layoutId,
+  );
 
   if (!targetElement) {
     return;
@@ -83,7 +90,12 @@ export function handleDropOnDesignElement(drop: DropEventData): void {
   // Handle drops inside an empty container
   if (drop.position === 'inside' && targetElement.type === 'container') {
     if (templates && templates.length) {
-      return addDeisgnElementFromTemplate(templates[0], targetElement.id, 0);
+      return addDeisgnElementFromTemplate(
+        templates[0],
+        targetElement.id,
+        0,
+        layoutId,
+      );
     }
 
     if (designElements && designElements.length) {
@@ -103,6 +115,7 @@ export function handleDropOnDesignElement(drop: DropEventData): void {
   // Get the target element's parent
   const parentElement = getDesignElement<FlatParentDesignElement>(
     targetElement.parent,
+    layoutId,
   );
 
   // Get the index of the target element within its parent
@@ -117,6 +130,7 @@ export function handleDropOnDesignElement(drop: DropEventData): void {
       templates[0],
       parentElement.id,
       targetIndex,
+      layoutId,
     );
   }
 
