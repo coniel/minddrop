@@ -1139,6 +1139,11 @@
         "none": "None",
         "property": "Property",
         "static": "Static"
+      },
+      "emptyBehavior": {
+        "label": "When empty",
+        "hide": "Hide element",
+        "placeholder": "Show placeholder"
       }
     },
     "select": {

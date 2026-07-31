@@ -8,6 +8,12 @@ import type { UiIconName } from '@minddrop/ui-icons';
 export type ElementGroup = 'content' | 'media' | 'layout';
 
 /**
+ * How an element behaves in a rendered entry when its bound
+ * property has no value.
+ */
+export type ElementEmptyBehavior = 'hide' | 'placeholder';
+
+/**
  * Determines which CSS style function to use for an element.
  */
 export type StyleCategory =
@@ -44,6 +50,14 @@ export interface DesignElementBase {
    * The name of the design property this element is bound to.
    */
   property?: string;
+
+  /**
+   * How the element behaves in a rendered entry when its bound
+   * property has no value. 'hide' removes the element; 'placeholder'
+   * shows the property's placeholder, falling back to hiding when
+   * the property has no placeholder. Defaults to 'hide'.
+   */
+  emptyBehavior?: ElementEmptyBehavior;
 }
 
 /**

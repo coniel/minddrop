@@ -1,6 +1,7 @@
 export * from './createElementCssStyle';
 export * from './types';
 export * from './utils/getPlaceholderMediaDirPath';
+export * from './utils/isEmptyPropertyValue';
 export * from './design-element-configs';
 export * from './styles';
 export { defaultLayoutIds } from './default-layouts';

@@ -1,5 +1,6 @@
 import { DesignElement as DesignElementType } from '@minddrop/designs';
 import { elementUIMap } from '../design-elements';
+import { useElementHidden } from '../useElementHidden';
 import { useDesignElementWrapper } from './DesignElementWrapperContext';
 
 export interface DesignElementProps {
@@ -17,11 +18,17 @@ export interface DesignElementProps {
  */
 export const DesignElement: React.FC<DesignElementProps> = ({ element }) => {
   const wrapperConfig = useDesignElementWrapper();
+  const hidden = useElementHidden(element);
 
   // Look up the UI config for this element type
   const ui = elementUIMap[element.type];
 
   if (!ui) {
+    return null;
+  }
+
+  // Hide property-bound elements with no value per their empty behavior
+  if (hidden) {
     return null;
   }
 

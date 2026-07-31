@@ -8,6 +8,7 @@ import {
 } from '../DesignStudioStore';
 import { isPropertyCompatibleWithElement } from '../utils';
 import { DateContentField } from './DateContentField';
+import { ElementEmptyBehaviorField } from './ElementEmptyBehaviorField';
 import { ElementPropertyField } from './ElementPropertyField';
 import { IconContentField } from './IconContentField';
 import { ImageContentField } from './ImageContentField';
@@ -142,6 +143,9 @@ export const ElementContentSection: React.FC<ElementContentSectionProps> = ({
       )}
       {mode === 'property' && hasCompatibleProperties && (
         <ElementPropertyField elementId={elementId} />
+      )}
+      {mode === 'property' && hasCompatibleProperties && element.property && (
+        <ElementEmptyBehaviorField elementId={elementId} />
       )}
       {mode === 'property' && !hasCompatibleProperties && (
         <Text

@@ -1152,6 +1152,11 @@ declare module 'i18next' {
               property: string;
               static: string;
             };
+            emptyBehavior: {
+              label: string;
+              hide: string;
+              placeholder: string;
+            };
           };
           select: {
             placeholder: {
