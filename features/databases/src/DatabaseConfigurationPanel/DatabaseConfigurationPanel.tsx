@@ -14,6 +14,7 @@ import {
   TabsPanel,
   TabsTab,
 } from '@minddrop/ui-primitives';
+import { DatabaseDesignPanel } from '../DatabaseDesignPanel';
 import { DatabasePropertiesEditor } from '../DatabasePropertiesEditor';
 import {
   ConfigPanelTab,
@@ -101,7 +102,7 @@ export const DatabaseConfigurationPanel: React.FC<
               {i18n.t('labels.properties')}
             </TabsTab>
             <TabsTab value="designs" size="sm">
-              {i18n.t('labels.designs')}
+              {i18n.t('labels.design')}
             </TabsTab>
             <TabsTab value="collections" size="sm">
               {i18n.t('labels.collections')}
@@ -164,7 +165,9 @@ export const DatabaseConfigurationPanel: React.FC<
 
             <TabsPanel value="designs">
               <ScrollArea>
-                <div className="database-configuration-panel-designs-content" />
+                <div className="database-configuration-panel-designs-content">
+                  <DatabaseDesignPanel databaseId={databaseId} />
+                </div>
               </ScrollArea>
             </TabsPanel>
           </>

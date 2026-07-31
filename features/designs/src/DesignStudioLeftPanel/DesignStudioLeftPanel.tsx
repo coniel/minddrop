@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { generatePropertyPlaceholder } from '@minddrop/designs';
 import { PropertyTypeSelectionMenu } from '@minddrop/feature-properties';
-import { i18n } from '@minddrop/i18n';
+import { TranslationKey, i18n } from '@minddrop/i18n';
 import { PropertySchemaTemplate } from '@minddrop/properties';
 import {
   IconButton,
@@ -26,12 +26,19 @@ type ActivePanel = 'elements' | 'layouts' | 'properties';
 
 export interface DesignStudioLeftPanelProps {
   /**
+   * The label to display on the back button.
+   * @default 'designStudio.backToDesigns'
+   */
+  backButtonLabel?: TranslationKey;
+
+  /**
    * Callback fired when the back button is clicked.
    */
   onClickBack?: () => void;
 }
 
 export const DesignStudioLeftPanel: React.FC<DesignStudioLeftPanelProps> = ({
+  backButtonLabel = 'designStudio.backToDesigns',
   onClickBack,
 }) => {
   const [activePanel, setActivePanel] = useState<ActivePanel>('layouts');
@@ -72,8 +79,8 @@ export const DesignStudioLeftPanel: React.FC<DesignStudioLeftPanelProps> = ({
         {onClickBack && (
           <IconButton
             icon="arrow-left"
-            label="designStudio.backToDesigns"
-            tooltip={{ title: 'designStudio.backToDesigns' }}
+            label={backButtonLabel}
+            tooltip={{ title: backButtonLabel }}
             color="neutral"
             onClick={onClickBack}
           />

@@ -99,6 +99,7 @@ export { getDatabaseDesignPropertyMap as getDesignPropertyMap } from './getDatab
 export { setDatabaseDesignPropertyMap as setDesignPropertyMap } from './setDatabaseDesignPropertyMap';
 export { clearDatabaseDesignPropertyMap as clearDesignPropertyMap } from './clearDatabaseDesignPropertyMap';
 export { setDatabaseDesign as setDesign } from './setDatabaseDesign';
+export { setDatabaseDefaultLayout as setDefaultLayout } from './setDatabaseDefaultLayout';
 export { setDatabaseViewLayout as setViewLayout } from './setDatabaseViewLayout';
 export { clearDatabaseViewLayout as clearViewLayout } from './clearDatabaseViewLayout';
 

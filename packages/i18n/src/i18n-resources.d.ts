@@ -90,10 +90,10 @@ declare module 'i18next' {
           copy: string;
           optional: string;
           properties: string;
+          design: string;
           settings: string;
           queries: string;
           collections: string;
-          designs: string;
         };
         properties: {
           actions: {
@@ -785,6 +785,25 @@ declare module 'i18next' {
                   folk: string;
                 };
               };
+            };
+          };
+          design: {
+            noDesigns: string;
+            selectDesign: string;
+            actions: {
+              edit: string;
+              back: string;
+            };
+            mapping: {
+              title: string;
+              none: string;
+              noProperties: string;
+              noCompatible: string;
+              description: string;
+            };
+            defaultLayouts: {
+              title: string;
+              description: string;
             };
           };
         };

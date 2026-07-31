@@ -1,2 +1,1 @@
 export * from './getCompatibleDatabaseProperties';
-export * from './resolveOpenMode';

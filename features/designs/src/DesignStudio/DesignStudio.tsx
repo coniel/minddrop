@@ -40,7 +40,6 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
   const design = useDesignStudioStore((state) => state.design);
   const [designName, setDesignName] = useState(design?.name || '');
   const nameInputRef = useRef<HTMLInputElement>(null);
-  const hasOpenedDesign = useRef(false);
 
   useEffect(() => {
     setDesignName(design?.name || '');
@@ -69,13 +68,11 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
     [],
   );
 
-  // Open the design specified by the open event on mount
+  // Open the design specified by the open event
   useEffect(() => {
-    if (!designId || hasOpenedDesign.current) {
+    if (!designId) {
       return;
     }
-
-    hasOpenedDesign.current = true;
 
     openDesign(designId);
   }, [designId]);
@@ -154,10 +151,17 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
     }
   }, [backEvent, backEventData]);
 
-  // Return to the dashboard by closing the open design
+  // Return to the origin view when the design was opened
+  // directly, otherwise close the design to show the dashboard
   const handleCloseDesign = useCallback(() => {
+    if (designId) {
+      handleClickBack();
+
+      return;
+    }
+
     DesignStudioStore.getState().clear();
-  }, []);
+  }, [designId, handleClickBack]);
 
   // No design open: show the dashboard
   if (!design) {
@@ -167,7 +171,10 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
   return (
     <div className="design-studio">
       <Panel className="design-studio-left-panel">
-        <DesignStudioLeftPanel onClickBack={handleCloseDesign} />
+        <DesignStudioLeftPanel
+          backButtonLabel={designId ? backButtonLabel : undefined}
+          onClickBack={handleCloseDesign}
+        />
       </Panel>
       <div className="design-studio-workspace">
         <DesignStudioViewport>

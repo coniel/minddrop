@@ -1,3 +1,5 @@
+import { TranslationKey } from '@minddrop/i18n';
+
 // -- View names --
 
 export const DesignStudioViewName = 'designs:view:studio';
@@ -11,7 +13,7 @@ export interface OpenDesignStudioEventData {
   /**
    * The label to display on the back button.
    */
-  backButtonLabel?: string;
+  backButtonLabel?: TranslationKey;
 
   /**
    * The event to dispatch when the back button is pressed.

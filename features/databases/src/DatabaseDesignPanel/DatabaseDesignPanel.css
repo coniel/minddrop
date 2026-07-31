@@ -1,0 +1,19 @@
+.database-design-panel {
+  padding: var(--space-2) 0;
+}
+
+.database-design-panel-header {
+  padding: 0 var(--space-2);
+}
+
+.database-design-panel-section {
+  padding: 0 var(--space-4);
+}
+
+.database-design-panel-row {
+  min-height: 28px;
+}
+
+.database-design-panel-row .select {
+  max-width: 160px;
+}

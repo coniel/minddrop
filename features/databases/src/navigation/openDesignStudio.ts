@@ -10,9 +10,12 @@ import { OpenDatabaseViewEvent } from '../events';
  * database's configuration panel.
  *
  * @param databaseId - The ID of the database to return to.
+ * @param designId - The ID of the design to open in the editor.
  */
-export function openDesignStudio(databaseId: string) {
+export function openDesignStudio(databaseId: string, designId?: string) {
   Events.dispatch<OpenDesignStudioEventData>(OpenDesignStudioEvent, {
+    designId,
+    backButtonLabel: 'databases.design.actions.back',
     backEvent: OpenDatabaseViewEvent,
     backEventData: { databaseId, configurationPanelOpen: true },
   });

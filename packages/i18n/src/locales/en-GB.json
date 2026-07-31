@@ -78,10 +78,10 @@
     "copy": "copy",
     "optional": "Optional",
     "properties": "Properties",
+    "design": "Design",
     "settings": "Settings",
     "queries": "Queries",
-    "collections": "Collections",
-    "designs": "Designs"
+    "collections": "Collections"
   },
   "properties": {
     "actions": {
@@ -773,6 +773,25 @@
             "folk": "Folk"
           }
         }
+      }
+    },
+    "design": {
+      "noDesigns": "No designs yet. Create one in the design studio.",
+      "selectDesign": "Select a design",
+      "actions": {
+        "edit": "Edit in design studio",
+        "back": "Back to database"
+      },
+      "mapping": {
+        "title": "Property mapping",
+        "none": "None",
+        "noProperties": "The design has no properties.",
+        "noCompatible": "No compatible properties",
+        "description": "Map design properties to database properties to control which values they display."
+      },
+      "defaultLayouts": {
+        "title": "Default layouts",
+        "description": "The design layouts used to display the database's entries in each format. Individual views can override these defaults with a specific layout."
       }
     }
   },
