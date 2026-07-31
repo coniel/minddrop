@@ -78,7 +78,16 @@ const Entry: React.FC<EntryProps> = ({
 
     // Fall back to the database's default layout for this type
     return Databases.getDefaultLayout(entry.database, layoutType);
-  }, [layoutId, entry.database, layoutType]);
+    // Depends on the database's pinned default and the design so the layout
+    // recomputes when the default is changed or the design's layouts change
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- recompute on default/design changes
+  }, [
+    layoutId,
+    entry.database,
+    layoutType,
+    database?.defaultLayouts?.[layoutType],
+    design,
+  ]);
 
   // Resolve each bound element to the database property mapped to
   // its design property (element ID -> design property -> database
