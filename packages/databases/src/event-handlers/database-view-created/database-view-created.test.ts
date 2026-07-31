@@ -24,7 +24,7 @@ describe('onDatabaseViewCreated', () => {
 
     // Add the view to the store (simulates what happens before
     // the event fires)
-    Views.Store.add(view);
+    Views.Store.set(view);
 
     // Call the handler
     onDatabaseViewCreated(view);

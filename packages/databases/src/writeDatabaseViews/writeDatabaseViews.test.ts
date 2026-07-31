@@ -23,7 +23,7 @@ describe('writeDatabaseViews', () => {
       options: { sortBy: 'name' },
     };
 
-    Views.Store.add(view);
+    Views.Store.set(view);
 
     // Write the views
     await writeDatabaseViews(objectDatabase.id);
@@ -46,7 +46,7 @@ describe('writeDatabaseViews', () => {
       dataSource: { type: 'database', id: objectDatabase.id },
     };
 
-    Views.Store.add(thisDbView);
+    Views.Store.set(thisDbView);
 
     // Add a view belonging to a different database
     const otherDbView: View = {
@@ -55,7 +55,7 @@ describe('writeDatabaseViews', () => {
       dataSource: { type: 'database', id: 'other-db' },
     };
 
-    Views.Store.add(otherDbView);
+    Views.Store.set(otherDbView);
 
     // Write views for the object database
     await writeDatabaseViews(objectDatabase.id);

@@ -30,8 +30,8 @@ describe('onDatabaseViewDeleted', () => {
     };
 
     // Add both views to the store
-    Views.Store.add(view1);
-    Views.Store.add(view2);
+    Views.Store.set(view1);
+    Views.Store.set(view2);
 
     // Remove view1 from the store (simulates what happens
     // before the event fires)

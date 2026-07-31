@@ -23,7 +23,7 @@ describe('onDatabaseViewUpdated', () => {
     };
 
     // Add the view to the store
-    Views.Store.add(view);
+    Views.Store.set(view);
 
     // Create the updated view
     const updated: View = {

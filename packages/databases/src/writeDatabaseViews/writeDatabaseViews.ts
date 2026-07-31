@@ -17,7 +17,7 @@ export async function writeDatabaseViews(databaseId: string): Promise<void> {
   }
 
   // Get all views for this database from the ViewsStore
-  const allViews = Views.Store.getAll();
+  const allViews = Views.Store.getAllArray();
   const databaseViews = allViews.filter(
     (view) =>
       view.dataSource.type === 'database' && view.dataSource.id === databaseId,
