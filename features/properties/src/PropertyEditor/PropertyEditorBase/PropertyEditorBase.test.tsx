@@ -305,9 +305,7 @@ describe('<PropertyEditorBase />', () => {
 
     await user.click(screen.getByRole('textbox'));
 
-    expect(
-      screen.getByText('properties.form.name.hint'),
-    ).toBeVisible();
+    expect(screen.getByText('properties.form.name.hint')).toBeVisible();
   });
 
   it('hides name hint when name field loses focus', async () => {
@@ -325,9 +323,7 @@ describe('<PropertyEditorBase />', () => {
 
     await user.click(screen.getByRole('textbox'));
 
-    expect(
-      screen.getByText('properties.form.name.hint'),
-    ).toBeVisible();
+    expect(screen.getByText('properties.form.name.hint')).toBeVisible();
 
     fireEvent.blur(screen.getByRole('textbox'));
 

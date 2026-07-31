@@ -1,5 +1,4 @@
 import React, { useCallback, useMemo } from 'react';
-import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import { DesignStudioStore, useElement } from '../DesignStudioStore';
 import { useLayoutId } from '../LayoutIdContext';
 import { elementUIMap } from '../design-elements';
@@ -50,7 +49,6 @@ const DesignStudioElementInner: React.FC<{
   index: number;
   isLastChild: boolean;
 }> = ({ element, index, isLastChild }) => {
-  const { t } = useTranslation();
   const layoutId = useLayoutId();
 
   const { dragDropProps, isDragging } = useDesignElementDragDrop({
@@ -97,49 +95,5 @@ const DesignStudioElementInner: React.FC<{
     return <ui.StudioComponent element={element} rootProps={rootProps} />;
   }
 
-  // Enrich the element with default placeholders for the studio
-  const enrichedElement = enrichElementForStudio(element, t);
-
-  return (
-    <ui.DisplayComponent element={enrichedElement} rootProps={rootProps} />
-  );
+  return <ui.DisplayComponent element={element} rootProps={rootProps} />;
 };
-
-/**
- * Default placeholders keyed by element type. Uses i18n keys
- * for translatable text, hardcoded strings for non-translatable.
- */
-const i18nPlaceholders: Record<string, TranslationKey> = {
-  text: 'design-studio.elements.text-placeholder',
-  'formatted-text': 'design-studio.elements.text-placeholder',
-};
-
-const hardcodedPlaceholders: Record<string, string> = {
-  url: 'https://www.example.com/page',
-};
-
-/**
- * Enriches a flat design element with studio-specific default
- * placeholder values when the element doesn't already have one.
- */
-function enrichElementForStudio(
-  element: FlatDesignElement,
-  t: (key: TranslationKey) => string,
-): FlatDesignElement {
-  // Only enrich elements that have a placeholder field
-  if ('placeholder' in element && !element.placeholder) {
-    const i18nKey = i18nPlaceholders[element.type];
-
-    if (i18nKey) {
-      return { ...element, placeholder: t(i18nKey) };
-    }
-
-    const hardcoded = hardcodedPlaceholders[element.type];
-
-    if (hardcoded) {
-      return { ...element, placeholder: hardcoded };
-    }
-  }
-
-  return element;
-}

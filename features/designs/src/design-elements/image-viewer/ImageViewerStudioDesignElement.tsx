@@ -1,14 +1,10 @@
 import { useCallback, useMemo, useState } from 'react';
-import {
-  ImageViewerElement,
-  Layouts,
-  getPlaceholderMediaDirPath,
-} from '@minddrop/designs';
+import { Layouts, getPlaceholderMediaDirPath } from '@minddrop/designs';
 import { Fs } from '@minddrop/file-system';
 import { FilePropertySupportedFileExtensions } from '@minddrop/properties';
-import { updateDesignElement } from '../../DesignStudioStore';
 import { PlaceholderImageDialog } from '../../style-editors/PlaceholderImageField/PlaceholderImageDialog';
 import { FlatImageViewerElement } from '../../types';
+import { setElementImage } from '../../utils';
 import { ImageViewerDesignElement } from './ImageViewerDesignElement';
 
 export interface ImageViewerStudioDesignElementProps {
@@ -37,9 +33,7 @@ export const ImageViewerStudioDesignElement: React.FC<
   // Handles selecting an image from the dialog
   const handleImageSelect = useCallback(
     (fileName: string) => {
-      updateDesignElement<ImageViewerElement>(element.id, {
-        placeholderImage: fileName,
-      });
+      setElementImage(element.id, fileName);
     },
     [element.id],
   );
@@ -55,9 +49,8 @@ export const ImageViewerStudioDesignElement: React.FC<
     }
 
     const fileName = await Layouts.addPlaceholderMedia(filePath as string);
-    updateDesignElement<ImageViewerElement>(element.id, {
-      placeholderImage: fileName,
-    });
+
+    await setElementImage(element.id, fileName);
   }, [element.id]);
 
   // Opens the dialog if existing images exist, otherwise opens the file picker

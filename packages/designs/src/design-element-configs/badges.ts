@@ -1,20 +1,19 @@
 import { BadgesElementStyle, DefaultBadgesElementStyle } from '../styles';
 import { DesignElementBase, DesignElementConfig } from '../types';
-import { generateBadgePlaceholder } from './placeholder-generators';
 
 export interface BadgesElement extends DesignElementBase {
   type: 'badges';
 
   /**
+   * Comma-separated badge labels displayed when the element
+   * is static.
+   */
+  content?: string;
+
+  /**
    * The element style.
    */
   style: BadgesElementStyle;
-
-  /**
-   * Comma-separated placeholder badge labels displayed
-   * when the element has no mapped property.
-   */
-  placeholder?: string;
 }
 
 export const BadgesElementConfig: DesignElementConfig = {
@@ -27,7 +26,5 @@ export const BadgesElementConfig: DesignElementConfig = {
   template: {
     type: 'badges',
     style: { ...DefaultBadgesElementStyle },
-    placeholder: '',
   },
-  generatePlaceholder: () => generateBadgePlaceholder(2),
 };

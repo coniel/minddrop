@@ -78,10 +78,10 @@
     "copy": "copy",
     "optional": "Optional",
     "properties": "Properties",
-    "designs": "Designs",
     "settings": "Settings",
     "queries": "Queries",
-    "collections": "Collections"
+    "collections": "Collections",
+    "designs": "Designs"
   },
   "properties": {
     "actions": {
@@ -903,10 +903,6 @@
       "reroll": "Regenerate text"
     },
     "clear-custom-styling": "Clear custom styling",
-    "static": {
-      "label": "Static",
-      "description": "Static elements display fixed content and cannot be mapped to a database property"
-    },
     "max-width": {
       "label": "Max width",
       "placeholder": "None"
@@ -985,11 +981,6 @@
         "never": "Never"
       }
     },
-    "badges": {
-      "placeholder": {
-        "label": "Placeholder"
-      }
-    },
     "date-format": {
       "label": "Date format",
       "mode": {
@@ -1001,7 +992,6 @@
     "image": {
       "label": "Image",
       "placeholder": {
-        "label": "Placeholder image",
         "select": "Select image",
         "change": "Change",
         "remove": "Remove",
@@ -1104,6 +1094,39 @@
       "color": {
         "label": "Colour"
       }
+    },
+    "property": {
+      "label": "Property",
+      "none": "None",
+      "noCompatible": "No compatible properties"
+    },
+    "properties": {
+      "empty": "No properties yet",
+      "actions": {
+        "add": "Add property",
+        "delete": {
+          "confirmation": {
+            "title": "Delete property?",
+            "message": "Elements bound to this property will be unbound and databases mapping it will lose the mapping. This can’t be undone.",
+            "confirm": "Delete"
+          }
+        }
+      }
+    },
+    "content": {
+      "label": "Content",
+      "placeholder": "Static content...",
+      "mode": {
+        "none": "None",
+        "property": "Property",
+        "static": "Static"
+      }
+    },
+    "select": {
+      "placeholder": {
+        "label": "Placeholder",
+        "description": "A comma-separated list representing the select options"
+      }
     }
   },
   "queries": {
@@ -1151,7 +1174,8 @@
     "labels": {
       "designs": "Designs",
       "elements": "Elements",
-      "layouts": "Layouts"
+      "layouts": "Layouts",
+      "properties": "Properties"
     },
     "dashboard": {
       "empty": "No designs yet",
@@ -1175,7 +1199,6 @@
       "badges": "Badges",
       "webview": "Web view",
       "view": "View",
-      "text-placeholder": "Text",
       "container-empty-hint": "Drop elements here",
       "group": {
         "content": "Content",

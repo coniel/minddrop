@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { Database, Databases } from '@minddrop/databases';
-import { Layout, LayoutType, Layouts } from '@minddrop/designs';
+import { Designs, Layout, LayoutType } from '@minddrop/designs';
 import { TranslationKey, createI18nKeyBuilder } from '@minddrop/i18n';
 import {
   DropdownRadioSubmenu,
@@ -21,7 +21,7 @@ export const DATABASE_DEFAULT_LAYOUT = 'default';
 
 export interface DatabaseLayoutSelectionMenuProps {
   /**
-   * One or more database IDs whose mapped layouts to list.
+   * One or more database IDs whose design layouts to list.
    * When multiple IDs are provided, each database is rendered
    * as its own radio submenu (ignoring the `submenu` prop).
    */
@@ -59,41 +59,42 @@ export interface DatabaseLayoutSelectionMenuProps {
 }
 
 /**
- * Renders a radio menu group of layouts of a given type that are
- * mapped to one or more databases, allowing the user to select one.
+ * Renders a radio menu group of layouts of a given type from the
+ * databases' designs, allowing the user to select one. Databases
+ * without a design are omitted.
  */
 export const DatabaseLayoutSelectionMenu: React.FC<
   DatabaseLayoutSelectionMenuProps
 > = ({ databaseId, layoutType, value, onValueChange, submenu }) => {
   const allDatabases = Databases.useAll();
-  const allLayouts = Layouts.useAll();
+  const allDesigns = Designs.useAll();
 
   const databaseIds = Array.isArray(databaseId) ? databaseId : [databaseId];
   const isMulti = Array.isArray(databaseId);
 
-  // Collect databases and their mapped layouts of the requested type
+  // Collect databases and their design's layouts of the requested type
   const databaseLayouts = useMemo(() => {
     const result: { database: Database; layouts: Layout[] }[] = [];
 
     for (const id of databaseIds) {
       const database = allDatabases.find((database) => database.id === id);
+      const design = allDesigns.find(
+        (design) => design.id === database?.designId,
+      );
 
-      if (!database) {
+      if (!database || !design) {
         continue;
       }
 
-      const mappedLayoutIds = Object.keys(database.layoutPropertyMaps);
-
-      const layouts = allLayouts.filter(
-        (layout) =>
-          layout.type === layoutType && mappedLayoutIds.includes(layout.id),
+      const layouts = design.layouts.filter(
+        (layout) => layout.type === layoutType,
       );
 
       result.push({ database, layouts });
     }
 
     return result;
-  }, [allDatabases, allLayouts, databaseIds, layoutType]);
+  }, [allDatabases, allDesigns, databaseIds, layoutType]);
 
   if (!databaseLayouts.length) {
     return null;

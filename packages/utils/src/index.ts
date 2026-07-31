@@ -7,6 +7,7 @@ export * from './createContext';
 export * from './deepMerge';
 export * from './errors';
 export * from './formatDate';
+export * from './formatIsoDate';
 export * from './fuzzySearch';
 export * from './getFileExtensionFromUrl';
 export * from './getWindowSizeSlot';

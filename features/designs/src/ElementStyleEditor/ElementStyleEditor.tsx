@@ -7,6 +7,7 @@ import {
 } from '../DesignStudioStore';
 import { elementIconMap, elementLabelMap } from '../constants';
 import { elementUIMap } from '../design-elements';
+import { ElementContentSection } from '../style-editors/ElementContentSection';
 import './ElementStyleEditor.css';
 
 const layoutTypeI18nKey = createI18nKeyBuilder('designs.layouts.');
@@ -35,7 +36,7 @@ export const ElementStyleEditor: React.FC = () => {
   return (
     <div className="element-style-editor">
       <ScrollArea>
-        <Stack className="element-style-editor-content">
+        <Stack gap={0} className="element-style-editor-content">
           <Group gap={2} className="element-style-editor-header">
             <Icon name={icon} className="element-style-editor-icon" />
             <Text
@@ -44,6 +45,11 @@ export const ElementStyleEditor: React.FC = () => {
               text={label || <>{element.type}</>}
             />
           </Group>
+
+          <ElementContentSection
+            key={`content-${selectedElementId}`}
+            elementId={selectedElementId}
+          />
 
           {StyleEditorComponent && (
             <StyleEditorComponent

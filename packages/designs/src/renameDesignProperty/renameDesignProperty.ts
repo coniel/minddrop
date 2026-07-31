@@ -7,9 +7,11 @@ import {
 import { getDesign } from '../getDesign';
 import { Design } from '../types';
 import { updateDesign } from '../updateDesign';
+import { remapLayoutPropertyBindings } from '../utils';
 
 /**
- * Renames a property on a design.
+ * Renames a property on a design and rebinds layout elements
+ * bound to it.
  *
  * @param id - The ID of the design.
  * @param oldName - The current name of the property.
@@ -50,11 +52,13 @@ export async function renameDesignProperty(
     );
   }
 
-  // Rename the property and persist
+  // Rename the property and rebind layout elements bound to it,
+  // then persist
   const updated = await updateDesign(id, {
     properties: design.properties.map((existing) =>
       existing.name === oldName ? { ...existing, name: newName } : existing,
     ),
+    layouts: remapLayoutPropertyBindings(design.layouts, oldName, newName),
   });
 
   // Dispatch a property renamed event

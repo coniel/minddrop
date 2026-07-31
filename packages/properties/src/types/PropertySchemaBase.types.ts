@@ -26,6 +26,11 @@ export interface PropertySchemaBase {
   description?: string;
 
   /**
+   * Placeholder text displayed in place of a missing value.
+   */
+  placeholder?: string;
+
+  /**
    * Indicates that this property is a meta data property, such as a created
    * or last-modified timestamp.
    *

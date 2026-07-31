@@ -9,6 +9,7 @@ import {
 } from '@minddrop/designs';
 import { Fs } from '@minddrop/file-system';
 import { useElementProperty } from '../DesignPropertiesProvider';
+import { useElementPlaceholderImage } from '../useElementPlaceholder';
 import { DesignElement } from './DesignElement';
 
 export interface DesignRootElementProps {
@@ -35,6 +36,10 @@ export const DesignRootElement: React.FC<DesignRootElementProps> = ({
 }) => {
   const { style } = element;
   const property = useElementProperty(element.id);
+  const placeholderImage = useElementPlaceholderImage(
+    element,
+    style.backgroundImage,
+  );
 
   // Use the mapped property value (file path) as background image
   // if available, otherwise resolve the placeholder from the design media dir
@@ -43,12 +48,12 @@ export const DesignRootElement: React.FC<DesignRootElementProps> = ({
       return property.value;
     }
 
-    if (style.backgroundImage) {
-      return Fs.concatPath(getPlaceholderMediaDirPath(), style.backgroundImage);
+    if (placeholderImage) {
+      return Fs.concatPath(getPlaceholderMediaDirPath(), placeholderImage);
     }
 
     return null;
-  }, [property?.value, style.backgroundImage]);
+  }, [property?.value, placeholderImage]);
 
   const imageSrc = Fs.useImageSrc(imagePath);
 

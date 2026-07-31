@@ -36,9 +36,14 @@ export interface DesignElementBase {
 
   /**
    * Whether the element displays static content rather than
-   * being mappable to a database property.
+   * being mappable to a design property.
    */
   static?: boolean;
+
+  /**
+   * The name of the design property this element is bound to.
+   */
+  property?: string;
 }
 
 /**
@@ -82,11 +87,4 @@ export interface DesignElementConfig {
    * Default element data used when adding from the palette.
    */
   template: Record<string, unknown>;
-
-  /**
-   * Generates a random placeholder value each time an element
-   * of this type is created from the palette. When provided,
-   * the returned string is set as the element's `placeholder`.
-   */
-  generatePlaceholder?: () => string;
 }

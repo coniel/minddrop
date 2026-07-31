@@ -1,5 +1,4 @@
 import {
-  ContainerElement,
   DesignElement,
   PropertyTypeElementMap,
   RootElement,
@@ -8,17 +7,16 @@ import {
 import { PropertyType } from '@minddrop/properties';
 import { ViewTypes } from '@minddrop/views';
 import { propertyTypeDataSourceMap } from '../../constants';
+import { FlatDesignElement } from '../../types';
 
 /**
  * Checks whether a property type is compatible with a given
- * design element. For image/file properties, containers and
- * root elements are only compatible when they have a background
- * image set. For view elements, checks that the property type
- * maps to a data source supported by the view type.
+ * design element. For view elements, checks that the property
+ * type maps to a data source supported by the view type.
  */
 export function isPropertyCompatibleWithElement(
   propertyType: PropertyType,
-  element: DesignElement | RootElement,
+  element: DesignElement | RootElement | FlatDesignElement,
 ): boolean {
   // Static elements cannot be mapped to properties
   if (element.static) {
@@ -51,16 +49,6 @@ export function isPropertyCompatibleWithElement(
     }
 
     return viewType.supportedDataSources.includes(dataSource);
-  }
-
-  // Image properties require containers/root to have a background image
-  const isContainerOrRoot =
-    element.type === 'container' || element.type === 'root';
-
-  if (propertyType === 'image' && isContainerOrRoot) {
-    const style = (element as ContainerElement | RootElement).style;
-
-    return !!style.backgroundImage;
   }
 
   return true;

@@ -30,7 +30,6 @@ const newDatabase: Database = {
   designId: null,
   designPropertyMap: {},
   defaultLayouts: {},
-  layoutPropertyMaps: {},
 };
 
 describe('createDatabase', () => {

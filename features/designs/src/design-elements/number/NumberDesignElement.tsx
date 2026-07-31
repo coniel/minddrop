@@ -1,5 +1,6 @@
 import { NumberElement, createTextCssStyle } from '@minddrop/designs';
 import { useElementProperty } from '../../DesignPropertiesProvider';
+import { useElementPlaceholder } from '../../useElementPlaceholder';
 import { formatNumber, formatNumberParts } from './formatNumber';
 
 const DEFAULT_AFFIX_MARGIN = 2 / 16;
@@ -27,15 +28,20 @@ export const NumberDesignElement: React.FC<NumberDesignElementProps> = ({
   rootProps,
 }) => {
   const property = useElementProperty(element.id);
+  const placeholder = useElementPlaceholder(element);
 
-  // Use the mapped property value if available, otherwise the placeholder
-  const rawValue =
-    property?.value != null ? property.value : element.placeholder || '0';
+  // Use the bound property value if available, otherwise the placeholder
+  const rawValue = property?.value != null ? property.value : placeholder;
 
   const numericValue = Number(rawValue);
   const baseStyle = createTextCssStyle(element.style);
   const rootStyle = rootProps?.style as React.CSSProperties | undefined;
   const mergedStyle = { ...baseStyle, ...rootStyle };
+
+  // No value at all - render an empty span
+  if (rawValue === '') {
+    return <span {...rootProps} style={mergedStyle} />;
+  }
 
   // Non-numeric value - render as plain text
   if (isNaN(numericValue)) {

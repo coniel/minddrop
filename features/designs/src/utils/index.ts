@@ -5,5 +5,6 @@ export * from './getContentColorCss';
 export * from './getNewLayoutPosition';
 export * from './isLeafElement';
 export * from './isPropertyCompatibleWithElement';
+export * from './setElementImage';
 export * from './isValidDesignStudioDrop';
 export * from './reconstructTree';

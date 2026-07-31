@@ -5,7 +5,6 @@ import { MarginFields } from '../../style-editors/MarginFields';
 import { SectionLabel } from '../../style-editors/SectionLabel';
 import { Typography } from '../../style-editors/Typography';
 import { DecimalPlacesField } from './DecimalPlacesField';
-import { NumberPlaceholderField } from './NumberPlaceholderField';
 import { PrefixField } from './PrefixField';
 import { SignDisplaySelect } from './SignDisplaySelect';
 import { SuffixField } from './SuffixField';
@@ -44,11 +43,6 @@ export const NumberElementStyleEditor: React.FC<
 > = ({ elementId }) => {
   return (
     <>
-      <Stack gap={3}>
-        <SectionLabel label="designs.placeholder.label" />
-        <NumberPlaceholderField elementId={elementId} />
-      </Stack>
-
       <Stack gap={3}>
         <SectionLabel label="designs.number-format.label" />
         <Stack gap={1}>

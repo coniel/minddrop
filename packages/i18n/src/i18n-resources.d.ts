@@ -90,10 +90,10 @@ declare module 'i18next' {
           copy: string;
           optional: string;
           properties: string;
-          designs: string;
           settings: string;
           queries: string;
           collections: string;
+          designs: string;
         };
         properties: {
           actions: {
@@ -915,10 +915,6 @@ declare module 'i18next' {
             reroll: string;
           };
           'clear-custom-styling': string;
-          static: {
-            label: string;
-            description: string;
-          };
           'max-width': {
             label: string;
             placeholder: string;
@@ -997,11 +993,6 @@ declare module 'i18next' {
               never: string;
             };
           };
-          badges: {
-            placeholder: {
-              label: string;
-            };
-          };
           'date-format': {
             label: string;
             mode: {
@@ -1013,7 +1004,6 @@ declare module 'i18next' {
           image: {
             label: string;
             placeholder: {
-              label: string;
               select: string;
               change: string;
               remove: string;
@@ -1117,6 +1107,39 @@ declare module 'i18next' {
               label: string;
             };
           };
+          property: {
+            label: string;
+            none: string;
+            noCompatible: string;
+          };
+          properties: {
+            empty: string;
+            actions: {
+              add: string;
+              delete: {
+                confirmation: {
+                  title: string;
+                  message: string;
+                  confirm: string;
+                };
+              };
+            };
+          };
+          content: {
+            label: string;
+            placeholder: string;
+            mode: {
+              none: string;
+              property: string;
+              static: string;
+            };
+          };
+          select: {
+            placeholder: {
+              label: string;
+              description: string;
+            };
+          };
         };
         queries: {
           labels: {
@@ -1164,6 +1187,7 @@ declare module 'i18next' {
             designs: string;
             elements: string;
             layouts: string;
+            properties: string;
           };
           dashboard: {
             empty: string;
@@ -1187,7 +1211,6 @@ declare module 'i18next' {
             badges: string;
             webview: string;
             view: string;
-            'text-placeholder': string;
             'container-empty-hint': string;
             group: {
               content: string;

@@ -9,11 +9,7 @@ import {
   ViewElement,
 } from '@minddrop/designs';
 import { initializeMockFileSystem } from '@minddrop/file-system';
-import {
-  ViewFixtures,
-  cleanupViewFixtures,
-  setupViewFixtures,
-} from '@minddrop/views';
+import { cleanupViewFixtures, setupViewFixtures } from '@minddrop/views';
 import { isPropertyCompatibleWithElement } from './isPropertyCompatibleWithElement';
 
 const MockFs = initializeMockFileSystem();
@@ -33,30 +29,10 @@ const containerElement: ContainerElement = {
   children: [],
 };
 
-const containerWithBackground: ContainerElement = {
-  id: 'container-bg-1',
-  type: 'container',
-  style: {
-    ...DefaultContainerElementStyle,
-    backgroundImage: 'some-image.png',
-  },
-  children: [],
-};
-
 const rootElement: RootElement = {
   id: 'root-1',
   type: 'root',
   style: { ...DefaultContainerElementStyle },
-  children: [],
-};
-
-const rootWithBackground: RootElement = {
-  id: 'root-bg-1',
-  type: 'root',
-  style: {
-    ...DefaultContainerElementStyle,
-    backgroundImage: 'some-image.png',
-  },
   children: [],
 };
 
@@ -139,25 +115,13 @@ describe('isPropertyCompatibleWithElement', () => {
 
   // -- Image properties on containers and root --
 
-  it('returns false for image property on container without background image', () => {
+  it('returns true for image property on containers', () => {
     expect(isPropertyCompatibleWithElement('image', containerElement)).toBe(
-      false,
-    );
-  });
-
-  it('returns true for image property on container with background image', () => {
-    expect(
-      isPropertyCompatibleWithElement('image', containerWithBackground),
-    ).toBe(true);
-  });
-
-  it('returns false for image property on root without background image', () => {
-    expect(isPropertyCompatibleWithElement('image', rootElement)).toBe(false);
-  });
-
-  it('returns true for image property on root with background image', () => {
-    expect(isPropertyCompatibleWithElement('image', rootWithBackground)).toBe(
       true,
     );
+  });
+
+  it('returns true for image property on root elements', () => {
+    expect(isPropertyCompatibleWithElement('image', rootElement)).toBe(true);
   });
 });

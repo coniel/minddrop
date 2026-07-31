@@ -2,10 +2,24 @@
   --design-studio-panel-content-width: 300px;
 }
 
+/* Tint the app shell behind the studio so the canvas color
+   spans the whole window in light mode */
+.light-theme .app:has(.design-studio) {
+  background-color: var(--surface-subtle);
+}
+
 .design-studio {
   display: flex;
   height: 100%;
   gap: 0.5rem;
+
+  /* Match the viewport canvas color so the canvas appears to
+     span the whole window; dark mode uses the app background */
+  background-color: var(--surface-subtle);
+
+  .dark-theme & {
+    background-color: var(--surface-app);
+  }
 
   .design-studio-left-panel {
     width: 300px;

@@ -1,18 +1,12 @@
-import {
-  DefaultImageViewerElementStyle,
-  ImageViewerElement,
-} from '@minddrop/designs';
+import { DefaultImageViewerElementStyle } from '@minddrop/designs';
 import { Stack } from '@minddrop/ui-primitives';
-import { updateDesignElement, useElementData } from '../../DesignStudioStore';
 import { Border } from '../../style-editors/Border';
 import { BorderRadiusField } from '../../style-editors/BorderRadiusField';
 import { CollapsibleSection } from '../../style-editors/CollapsibleSection';
 import { MarginFields } from '../../style-editors/MarginFields';
 import { OpacityField } from '../../style-editors/OpacityField';
-import { PlaceholderImageField } from '../../style-editors/PlaceholderImageField';
 import { SectionLabel } from '../../style-editors/SectionLabel';
 import { SizingFields } from '../../style-editors/SizingFields';
-import { FlatImageViewerElement } from '../../types';
 
 export interface ImageViewerElementStyleEditorProps {
   /**
@@ -55,38 +49,13 @@ const marginDefaults = {
 
 /**
  * Renders the style editor for an image viewer element.
- * Provides controls for placeholder image, sizing, border,
- * opacity, and margin.
+ * Provides controls for sizing, border, opacity, and margin.
  */
 export const ImageViewerElementStyleEditor: React.FC<
   ImageViewerElementStyleEditorProps
 > = ({ elementId }) => {
-  const { placeholderImage } = useElementData(
-    elementId,
-    (element: FlatImageViewerElement) => ({
-      placeholderImage: element.placeholderImage,
-    }),
-  );
-
   return (
     <>
-      <Stack gap={3}>
-        <SectionLabel label="designs.image.placeholder.label" />
-        <PlaceholderImageField
-          image={placeholderImage || ''}
-          onSelect={(fileName) =>
-            updateDesignElement<ImageViewerElement>(elementId, {
-              placeholderImage: fileName,
-            })
-          }
-          onRemove={() =>
-            updateDesignElement<ImageViewerElement>(elementId, {
-              placeholderImage: '',
-            })
-          }
-        />
-      </Stack>
-
       <Stack gap={3}>
         <SectionLabel label="designs.image.sizing.label" />
         <SizingFields elementId={elementId} />

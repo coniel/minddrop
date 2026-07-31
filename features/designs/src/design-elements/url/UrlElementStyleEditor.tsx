@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { DefaultTextElementStyle, UrlElement } from '@minddrop/designs';
-import { Stack, SwitchField, TextField } from '@minddrop/ui-primitives';
+import { Stack, SwitchField } from '@minddrop/ui-primitives';
 import { updateDesignElement, useElementData } from '../../DesignStudioStore';
 import { CollapsibleSection } from '../../style-editors/CollapsibleSection';
 import { MarginFields } from '../../style-editors/MarginFields';
@@ -40,29 +40,14 @@ export const UrlElementStyleEditor: React.FC<UrlElementStyleEditorProps> = ({
   elementId,
 }) => {
   // Read URL element data from the store
-  const {
-    placeholder,
-    showProtocol,
-    showSubdomain,
-    showDomain,
-    showTld,
-    showPath,
-  } = useElementData(elementId, (element: FlatUrlElement) => ({
-    placeholder: element.placeholder || '',
-    showProtocol: element.showProtocol ?? false,
-    showSubdomain: element.showSubdomain ?? true,
-    showDomain: element.showDomain ?? true,
-    showTld: element.showTld ?? true,
-    showPath: element.showPath ?? false,
-  }));
-
-  // Update the placeholder text on the element
-  const handlePlaceholderChange = useCallback(
-    (value: string) => {
-      updateDesignElement<UrlElement>(elementId, { placeholder: value });
-    },
-    [elementId],
-  );
+  const { showProtocol, showSubdomain, showDomain, showTld, showPath } =
+    useElementData(elementId, (element: FlatUrlElement) => ({
+      showProtocol: element.showProtocol ?? false,
+      showSubdomain: element.showSubdomain ?? true,
+      showDomain: element.showDomain ?? true,
+      showTld: element.showTld ?? true,
+      showPath: element.showPath ?? false,
+    }));
 
   // Toggle a URL part visibility flag
   const handleToggle = useCallback(
@@ -74,17 +59,6 @@ export const UrlElementStyleEditor: React.FC<UrlElementStyleEditorProps> = ({
 
   return (
     <>
-      <Stack gap={3}>
-        <SectionLabel label="designs.placeholder.label" />
-        <TextField
-          variant="subtle"
-          size="md"
-          value={placeholder}
-          onValueChange={handlePlaceholderChange}
-          placeholder="www.example.com"
-        />
-      </Stack>
-
       <Stack gap={3}>
         <SectionLabel label="designs.url-display.label" />
         <SwitchField

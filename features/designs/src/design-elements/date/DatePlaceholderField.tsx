@@ -1,64 +1,60 @@
 import { useCallback, useMemo } from 'react';
-import { DateElement } from '@minddrop/designs';
 import { DateInput } from '@minddrop/ui-primitives';
-import { updateDesignElement, useElementData } from '../../DesignStudioStore';
-import { FlatDateElement } from '../../types';
+import { formatIsoDate } from '@minddrop/utils';
 
 export interface DatePlaceholderFieldProps {
   /**
-   * The ID of the element to edit.
+   * The placeholder value as an ISO date string (YYYY-MM-DD).
    */
-  elementId: string;
+  value: string;
+
+  /**
+   * Callback fired when the placeholder value changes.
+   */
+  onValueChange: (value: string) => void;
 }
 
 /**
- * Renders a DateInput for setting the placeholder date value
- * on a date design element.
+ * Renders a DateInput for setting a date placeholder value.
  */
 export const DatePlaceholderField: React.FC<DatePlaceholderFieldProps> = ({
-  elementId,
+  value,
+  onValueChange,
 }) => {
-  // Read the current placeholder value from the store
-  const { placeholder } = useElementData(
-    elementId,
-    (element: FlatDateElement) => ({
-      placeholder: element.placeholder || '',
-    }),
-  );
-
-  // Parse the stored ISO string into a Date object
-  const value = useMemo(() => {
-    if (!placeholder) {
+  // Parse the stored ISO string into a local Date object (parsing
+  // the full string would interpret it as UTC midnight, shifting
+  // the calendar day in some timezones)
+  const date = useMemo(() => {
+    if (!value) {
       return null;
     }
 
-    const date = new Date(placeholder);
+    const [year, month, day] = value.split('-').map(Number);
+    const parsed = new Date(year, month - 1, day);
 
-    return isNaN(date.getTime()) ? null : date;
-  }, [placeholder]);
+    return isNaN(parsed.getTime()) ? null : parsed;
+  }, [value]);
 
   // Update the placeholder when the user picks a date
   const handleChange = useCallback(
-    (date: Date | null) => {
-      if (!date) {
-        updateDesignElement<DateElement>(elementId, { placeholder: '' });
+    (pickedDate: Date | null) => {
+      if (!pickedDate) {
+        onValueChange('');
 
         return;
       }
 
-      // Store as ISO date string (YYYY-MM-DD)
-      const iso = date.toISOString().split('T')[0];
-
-      updateDesignElement<DateElement>(elementId, { placeholder: iso });
+      // Store as a local ISO date string (YYYY-MM-DD)
+      onValueChange(formatIsoDate(pickedDate));
     },
-    [elementId],
+    [onValueChange],
   );
 
   return (
     <DateInput
       variant="subtle"
       size="md"
-      value={value}
+      value={date}
       onValueChange={handleChange}
       placeholder="actions.pickDate"
     />

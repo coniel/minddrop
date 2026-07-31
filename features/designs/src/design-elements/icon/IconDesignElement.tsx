@@ -1,6 +1,7 @@
 import { IconElement, createIconCssStyle } from '@minddrop/designs';
 import { ContentIcon, Icon } from '@minddrop/ui-primitives';
 import { useElementProperty } from '../../DesignPropertiesProvider';
+import { useElementPlaceholderIcon } from '../../useElementPlaceholder';
 
 export interface IconDesignElementProps {
   /**
@@ -17,22 +18,23 @@ export interface IconDesignElementProps {
 /**
  * Display renderer for an icon design element.
  * Shows the mapped property icon when available,
- * otherwise falls back to the element's icon or
- * a placeholder with a smile icon.
+ * otherwise falls back to the resolved placeholder
+ * icon or a placeholder box with a smile icon.
  */
 export const IconDesignElement: React.FC<IconDesignElementProps> = ({
   element,
   rootProps,
 }) => {
   const property = useElementProperty(element.id);
+  const placeholderIcon = useElementPlaceholderIcon(element, element.icon);
   const cssStyle = createIconCssStyle(element.style);
   const rootStyle = rootProps?.style as React.CSSProperties | undefined;
 
-  // Use the mapped property value if available, otherwise the element's icon
+  // Use the mapped property value if available, otherwise the placeholder
   const iconValue =
     property?.value && typeof property.value === 'string'
       ? property.value
-      : element.icon;
+      : placeholderIcon;
 
   // Render the icon
   if (iconValue) {

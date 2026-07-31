@@ -343,6 +343,9 @@ importers:
       '@minddrop/feature-markdown-editor':
         specifier: workspace:*
         version: link:../markdown-editor
+      '@minddrop/feature-properties':
+        specifier: workspace:*
+        version: link:../properties
       '@minddrop/feature-views':
         specifier: workspace:*
         version: link:../views

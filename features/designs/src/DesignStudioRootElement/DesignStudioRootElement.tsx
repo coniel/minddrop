@@ -14,6 +14,7 @@ import { DesignStudioStore } from '../DesignStudioStore';
 import { useLayoutId } from '../LayoutIdContext';
 import { handleDropOnGap } from '../handleDropOnGap';
 import { FlatRootDesignElement } from '../types';
+import { useElementPlaceholderImage } from '../useElementPlaceholder';
 import './DesignStudioRootElement.css';
 
 export interface DesignStudioRootElementProps {
@@ -26,13 +27,20 @@ export const DesignStudioRootElement: React.FC<
   const { style } = element;
   const layoutId = useLayoutId();
 
+  // Resolve the background image from the bound image property's
+  // placeholder, falling back to the static background image
+  const backgroundImage = useElementPlaceholderImage(
+    element,
+    style.backgroundImage,
+  );
+
   // Resolve background image path if set
   const imagePath = useMemo(
     () =>
-      style.backgroundImage
-        ? Fs.concatPath(getPlaceholderMediaDirPath(), style.backgroundImage)
+      backgroundImage
+        ? Fs.concatPath(getPlaceholderMediaDirPath(), backgroundImage)
         : null,
-    [style.backgroundImage],
+    [backgroundImage],
   );
 
   const imageSrc = Fs.useImageSrc(imagePath);

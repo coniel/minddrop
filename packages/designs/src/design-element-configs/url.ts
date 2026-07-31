@@ -10,9 +10,9 @@ export interface UrlElement extends DesignElementBase {
   style: TextElementStyle;
 
   /**
-   * Placeholder text displayed when the element has no content.
+   * URL content displayed when the element is static.
    */
-  placeholder?: string;
+  content?: string;
 
   /**
    * Whether to show the protocol part of the URL (e.g. "https://").
@@ -50,7 +50,6 @@ export const UrlElementConfig: DesignElementConfig = {
   template: {
     type: 'url',
     style: { ...DefaultTextElementStyle },
-    placeholder: 'https://www.example.com/page',
     showProtocol: false,
     showPath: false,
   },

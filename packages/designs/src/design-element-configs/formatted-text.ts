@@ -1,6 +1,5 @@
 import { DefaultTextElementStyle, TextElementStyle } from '../styles';
 import { DesignElementBase, DesignElementConfig } from '../types';
-import { generateLoremIpsum } from './placeholder-generators';
 
 export interface FormattedTextElement extends DesignElementBase {
   type: 'formatted-text';
@@ -11,9 +10,9 @@ export interface FormattedTextElement extends DesignElementBase {
   style: TextElementStyle;
 
   /**
-   * Placeholder text displayed when the element has no content.
+   * Text content displayed when the element is static.
    */
-  placeholder?: string;
+  content?: string;
 }
 
 export const FormattedTextElementConfig: DesignElementConfig = {
@@ -26,7 +25,5 @@ export const FormattedTextElementConfig: DesignElementConfig = {
   template: {
     type: 'formatted-text',
     style: { ...DefaultTextElementStyle },
-    placeholder: '',
   },
-  generatePlaceholder: () => generateLoremIpsum(20),
 };

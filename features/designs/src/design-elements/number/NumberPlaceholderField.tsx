@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from 'react';
-import { NumberElement, generateNumberPlaceholder } from '@minddrop/designs';
+import { generateNumberPlaceholder } from '@minddrop/designs';
 import {
   Group,
   IconButton,
@@ -7,18 +7,17 @@ import {
   Slider,
   Stack,
 } from '@minddrop/ui-primitives';
-import {
-  getDesignElement,
-  updateDesignElement,
-  useElementData,
-} from '../../DesignStudioStore';
-import { FlatNumberElement } from '../../types';
 
 export interface NumberPlaceholderFieldProps {
   /**
-   * The ID of the element to edit.
+   * The placeholder value.
    */
-  elementId: string;
+  value: string;
+
+  /**
+   * Callback fired when the placeholder value changes.
+   */
+  onValueChange: (value: string) => void;
 }
 
 function digitCount(value: string): number {
@@ -28,23 +27,17 @@ function digitCount(value: string): number {
 }
 
 /**
- * Renders an editable placeholder field for number design elements.
- * Provides a number input, re-roll button, and slider to control
- * the number of placeholder digits.
+ * Renders an editable number placeholder field with a number
+ * input, re-roll button, and slider to control the number of
+ * placeholder digits.
  */
 export const NumberPlaceholderField = ({
-  elementId,
+  value,
+  onValueChange,
 }: NumberPlaceholderFieldProps) => {
-  const { placeholder } = useElementData(
-    elementId,
-    (element: FlatNumberElement) => ({
-      placeholder: element.placeholder || '',
-    }),
-  );
+  const numericValue = value ? Number(value) : null;
 
-  const numericValue = placeholder ? Number(placeholder) : null;
-
-  const [sliderStep, setSliderStep] = useState(() => digitCount(placeholder));
+  const [sliderStep, setSliderStep] = useState(() => digitCount(value));
   const previousStepRef = useRef(sliderStep);
 
   const handleReroll = useCallback(() => {
@@ -52,58 +45,48 @@ export const NumberPlaceholderField = ({
       return;
     }
 
-    const value = generateNumberPlaceholder(sliderStep);
-
-    updateDesignElement<NumberElement>(elementId, { placeholder: value });
-  }, [elementId, sliderStep]);
+    onValueChange(generateNumberPlaceholder(sliderStep));
+  }, [onValueChange, sliderStep]);
 
   const handleChange = useCallback(
-    (value: number | null) => {
-      updateDesignElement<NumberElement>(elementId, {
-        placeholder: value !== null ? String(value) : '',
-      });
+    (newValue: number | null) => {
+      onValueChange(newValue !== null ? String(newValue) : '');
     },
-    [elementId],
+    [onValueChange],
   );
 
   const handleSliderChange = useCallback(
     (step: number | number[]) => {
-      const value = Array.isArray(step) ? step[0] : step;
+      const newStep = Array.isArray(step) ? step[0] : step;
 
-      if (value === previousStepRef.current) {
+      if (newStep === previousStepRef.current) {
         return;
       }
 
-      previousStepRef.current = value;
-      setSliderStep(value);
+      previousStepRef.current = newStep;
+      setSliderStep(newStep);
 
-      if (value === 0) {
-        updateDesignElement<NumberElement>(elementId, { placeholder: '' });
+      if (newStep === 0) {
+        onValueChange('');
 
         return;
       }
 
-      const current = getDesignElement(elementId) as
-        | FlatNumberElement
-        | undefined;
-      const currentValue = current?.placeholder || '';
-      const currentDigits = digitCount(currentValue);
+      const currentDigits = digitCount(value);
 
-      if (value > currentDigits) {
+      if (newStep > currentDigits) {
         // Add 0s to the end
-        const padded = currentValue
-          ? currentValue + '0'.repeat(value - currentDigits)
-          : generateNumberPlaceholder(value);
+        const padded = value
+          ? value + '0'.repeat(newStep - currentDigits)
+          : generateNumberPlaceholder(newStep);
 
-        updateDesignElement<NumberElement>(elementId, { placeholder: padded });
-      } else if (value < currentDigits) {
+        onValueChange(padded);
+      } else if (newStep < currentDigits) {
         // Cut off digits from the end
-        const trimmed = currentValue.slice(0, value);
-
-        updateDesignElement<NumberElement>(elementId, { placeholder: trimmed });
+        onValueChange(value.slice(0, newStep));
       }
     },
-    [elementId],
+    [onValueChange, value],
   );
 
   return (

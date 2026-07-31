@@ -7,6 +7,7 @@ import {
 import { Fs } from '@minddrop/file-system';
 import { Icon } from '@minddrop/ui-primitives';
 import { useElementProperty } from '../../DesignPropertiesProvider';
+import { useElementPlaceholderImage } from '../../useElementPlaceholder';
 
 export interface ImageDesignElementProps {
   /**
@@ -31,25 +32,23 @@ export const ImageDesignElement: React.FC<ImageDesignElementProps> = ({
   rootProps,
 }) => {
   const property = useElementProperty(element.id);
+  const placeholderImage = useElementPlaceholderImage(element, element.content);
   const cssStyle = createImageCssStyle(element.style);
   const rootStyle = rootProps?.style as React.CSSProperties | undefined;
 
-  // Use the mapped property value (file path) if available,
-  // otherwise resolve the placeholder image from the design media dir
+  // Use the bound property value (file path) if available,
+  // otherwise resolve the placeholder image from the media dir
   const imagePath = useMemo(() => {
     if (property?.value && typeof property.value === 'string') {
       return property.value;
     }
 
-    if (element.placeholderImage) {
-      return Fs.concatPath(
-        getPlaceholderMediaDirPath(),
-        element.placeholderImage,
-      );
+    if (placeholderImage) {
+      return Fs.concatPath(getPlaceholderMediaDirPath(), placeholderImage);
     }
 
     return null;
-  }, [property?.value, element.placeholderImage]);
+  }, [property?.value, placeholderImage]);
 
   const imageSrc = Fs.useImageSrc(imagePath);
 

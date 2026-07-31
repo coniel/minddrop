@@ -7,7 +7,13 @@ import {
   DesignPropertyRenamedEvent,
   DesignPropertyRenamedEventData,
 } from '../events';
-import { cleanup, design_books, setup } from '../test-utils';
+import {
+  cleanup,
+  design_books,
+  element_text_1,
+  layout_card_1,
+  setup,
+} from '../test-utils';
 import { renameDesignProperty } from './renameDesignProperty';
 
 const lastModified = new Date('2000-01-01T00:00:00.000Z');
@@ -48,6 +54,27 @@ describe('renameDesignProperty', () => {
     expect(DesignsStore.get(design_books.id)?.properties).toEqual(
       design_books.properties,
     );
+  });
+
+  it('rebinds layout elements bound to the property', async () => {
+    // Bind a layout element to the Title property
+    DesignsStore.update(design_books.id, {
+      layouts: [
+        {
+          ...layout_card_1,
+          tree: {
+            ...layout_card_1.tree,
+            children: [{ ...element_text_1, property: 'Title' }],
+          },
+        },
+      ],
+    });
+
+    await renameDesignProperty(design_books.id, 'Title', 'Heading');
+
+    const stored = DesignsStore.get(design_books.id);
+
+    expect(stored?.layouts[0].tree.children[0].property).toBe('Heading');
   });
 
   it('renames the property in place', async () => {

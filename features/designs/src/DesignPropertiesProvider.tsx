@@ -1,5 +1,4 @@
 import React from 'react';
-import { LayoutPropertyMap } from '@minddrop/databases';
 import {
   PropertiesSchema,
   PropertyMap,
@@ -21,7 +20,7 @@ interface DesignPropertiesProviderData {
   /**
    * Design element ID → property name map.
    */
-  propertyMap: LayoutPropertyMap;
+  propertyMap: Record<string, string>;
 
   /**
    * Callback to update a property value.
@@ -63,41 +62,29 @@ export const DesignPropertiesProvider = ({
   );
 };
 
+// Use nullable context so renderers work without a provider
+const DesignPropertySchemasContext =
+  React.createContext<PropertiesSchema | null>(null);
+
 /**
- * Returns the property schema, value, and update function
- * for a given property name. Returns null if the property
- * is not found in the schema or no provider is present.
+ * Provides the property schemas of the design being rendered so
+ * design elements can resolve their bound property's placeholder.
  */
-export const useProperty = (
-  name: string,
-): {
-  schema: PropertySchema;
-  value?: PropertyValue;
-  updateValue: (value: PropertyValue) => void;
-} | null => {
-  const context = useDesignProperties();
+export const DesignPropertySchemasProvider: React.FC<{
+  properties: PropertiesSchema;
+  children: React.ReactNode;
+}> = ({ properties, children }) => (
+  <DesignPropertySchemasContext.Provider value={properties}>
+    {children}
+  </DesignPropertySchemasContext.Provider>
+);
 
-  if (!context) {
-    return null;
-  }
-
-  const { onUpdatePropertyValue, propertyValues, properties } = context;
-
-  const value = propertyValues[name];
-  const schema = properties.find((property) => property.name === name);
-
-  const updateValue = (newValue: PropertyValue) =>
-    onUpdatePropertyValue?.(name, newValue);
-
-  if (!schema) {
-    return null;
-  }
-
-  return {
-    schema,
-    value,
-    updateValue,
-  };
+/**
+ * Returns the property schemas of the design being rendered.
+ * Returns null when no DesignPropertySchemasProvider is present.
+ */
+export const useDesignPropertySchemas = (): PropertiesSchema | null => {
+  return React.useContext(DesignPropertySchemasContext);
 };
 
 /**

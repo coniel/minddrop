@@ -10,6 +10,8 @@ import {
   Text,
 } from '@minddrop/ui-primitives';
 import {
+  getDesignElement,
+  setDesignElement,
   useActiveLayoutType,
   useElement,
   useElementStyle,
@@ -27,8 +29,8 @@ import { BackdropBlurGradientSwitch } from './BackdropBlurGradientSwitch';
 import { BackdropBlurField } from './BackdropBlurSlider';
 import { BackdropBrightnessField } from './BackdropBrightnessSlider';
 import { BackgroundColorSelect } from './BackgroundColorSelect';
-import { BackgroundImageField } from './BackgroundImageField';
 import { BackgroundImageFitSelect } from './BackgroundImageFitSelect';
+import { BackgroundImageSource } from './BackgroundImageSource';
 import { DirectionToggle } from './DirectionToggle';
 import { GapField } from './GapField';
 import { MinHeightField } from './MinHeightField';
@@ -106,6 +108,30 @@ export const ContainerElementStyleEditor: React.FC<
     'backdropBlurGradient',
   );
 
+  // Whether the background image comes from a bound property
+  const boundToProperty = !element.static && !!element.property;
+
+  // The fit select applies to the active background image source:
+  // the static image in static mode, the bound property otherwise
+  const hasBackgroundImageSource = element.static
+    ? !!backgroundImage
+    : boundToProperty;
+
+  // Unbind the background image property when the section's
+  // custom styling is cleared (via element replacement, since
+  // the update merge cannot unset a field)
+  function handleClearBackground() {
+    const currentElement = getDesignElement(elementId);
+
+    if (!currentElement?.property) {
+      return;
+    }
+
+    const { property: _removed, ...unboundElement } = currentElement;
+
+    setDesignElement(elementId, unboundElement);
+  }
+
   return (
     <>
       <Stack gap={3}>
@@ -157,12 +183,11 @@ export const ContainerElementStyleEditor: React.FC<
         elementId={elementId}
         label="designs.background-color.label"
         defaultStyles={backgroundDefaults}
+        hasCustomValues={boundToProperty}
+        onClear={handleClearBackground}
       >
-        <Stack gap={1}>
-          <InputLabel size="xs" label="designs.image.label" />
-          <BackgroundImageField elementId={elementId} />
-        </Stack>
-        {backgroundImage && (
+        <BackgroundImageSource elementId={elementId} />
+        {hasBackgroundImageSource && (
           <BackgroundImageFitSelect
             elementId={elementId}
             label="designs.background-image-fit.label"

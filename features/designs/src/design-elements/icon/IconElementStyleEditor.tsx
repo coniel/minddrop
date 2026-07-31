@@ -1,13 +1,10 @@
 import { useCallback } from 'react';
 import { DefaultIconElementStyle, IconElement } from '@minddrop/designs';
 import {
-  Button,
   ColorSelect,
   ContentColor,
-  ContentIcon,
   FlexItem,
   Group,
-  IconPicker,
   InputLabel,
   NumberField,
   Stack,
@@ -23,7 +20,6 @@ import { CollapsibleSection } from '../../style-editors/CollapsibleSection';
 import { MarginFields } from '../../style-editors/MarginFields';
 import { OpacityField } from '../../style-editors/OpacityField';
 import { SectionLabel } from '../../style-editors/SectionLabel';
-import { StaticElementField } from '../../style-editors/StaticElementField';
 import { FlatIconElement } from '../../types';
 
 export interface IconElementStyleEditorProps {
@@ -82,27 +78,6 @@ export const IconElementStyleEditor: React.FC<IconElementStyleEditorProps> = ({
       icon: element.icon,
     }),
   );
-
-  // Handles selecting an icon from the picker, syncing the
-  // color from the icon string into the style color field
-  const handleIconSelect = useCallback(
-    (newIconString: string) => {
-      updateDesignElement<IconElement>(elementId, { icon: newIconString });
-
-      // Extract color from content-icon string (e.g. "content-icon:cat:cyan")
-      const parts = newIconString.split(':');
-
-      if (parts[0] === 'content-icon' && parts[2]) {
-        updateElementStyle(elementId, 'color', parts[2]);
-      }
-    },
-    [elementId],
-  );
-
-  // Handles clearing the icon
-  const handleIconClear = useCallback(() => {
-    updateDesignElement<IconElement>(elementId, { icon: '' });
-  }, [elementId]);
 
   // Handles changing the icon size, clamping container size
   // up if the icon outgrows it
@@ -179,37 +154,6 @@ export const IconElementStyleEditor: React.FC<IconElementStyleEditorProps> = ({
 
   return (
     <>
-      {/* Icon selection */}
-      <Stack gap={3}>
-        <SectionLabel label="designs.icon.label" />
-        <Stack gap={2} style={{ alignItems: 'center' }}>
-          <div
-            style={{
-              ['--icon-size-default' as any]: '40px',
-              fontSize: '40px',
-              lineHeight: 1,
-              display: 'inline-flex',
-            }}
-          >
-            <ContentIcon
-              icon={iconString?.replace(
-                /content-icon:([^:]+):.*/,
-                'content-icon:$1:default',
-              )}
-            />
-          </div>
-          <IconPicker
-            currentIcon={iconString}
-            onSelect={handleIconSelect}
-            onClear={handleIconClear}
-            closeOnSelect
-          >
-            <Button variant="subtle" size="sm" label="designs.icon.change" />
-          </IconPicker>
-        </Stack>
-        <StaticElementField elementId={elementId} />
-      </Stack>
-
       {/* Icon size and color */}
       <Stack gap={3}>
         <SectionLabel label="designs.icon.appearance.label" />

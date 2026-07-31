@@ -7,6 +7,7 @@ export { initializeDesigns as initialize } from './initializeDesigns';
 export { readDesign as read } from './readDesign';
 export { removeDesignProperty as removeProperty } from './removeDesignProperty';
 export { renameDesignProperty as renameProperty } from './renameDesignProperty';
+export { updateDesignProperty as updateProperty } from './updateDesignProperty';
 export { updateDesign as update } from './updateDesign';
 export { writeDesign as write } from './writeDesign';
 export { useDesign as use, useDesigns as useAll } from './DesignsStore';

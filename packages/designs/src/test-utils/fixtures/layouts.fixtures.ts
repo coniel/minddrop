@@ -18,11 +18,12 @@ function generateLayoutFixture(type: LayoutType, version: number): Layout {
       style: { ...DefaultContainerElementStyle },
       children: [
         element_container_1,
-        // Set the ID of the layout as the placeholder
+        // Set the ID of the layout as the static content
         // so it can be targeted by UI tests.
         {
           ...element_text_2,
-          placeholder: `${type}-${version}`,
+          static: true,
+          content: `${type}-${version}`,
         },
       ],
     },

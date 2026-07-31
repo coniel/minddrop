@@ -4,11 +4,6 @@ import { DatabaseAutomation } from './DatabaseAutomation.types';
 
 export type DatabaseEntryOpenMode = 'dialog' | 'full' | 'split';
 
-/**
- * A [layout element ID]: [database property name] map.
- */
-export type LayoutPropertyMap = Record<string, string>;
-
 export interface Database {
   /**
    * A unique identifier for the database.
@@ -90,12 +85,6 @@ export interface Database {
    * will be used.
    */
   defaultProperties?: Partial<Record<PropertyType, string>>;
-
-  /**
-   * A [layout ID]: [property map] mapping database properties to layout
-   * elements.
-   */
-  layoutPropertyMaps: Record<string, LayoutPropertyMap>;
 
   /**
    * The ID of the design this database uses. When null, no design is

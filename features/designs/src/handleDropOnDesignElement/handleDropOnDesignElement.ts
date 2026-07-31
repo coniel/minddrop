@@ -1,15 +1,14 @@
-import { ImageElement, Layouts } from '@minddrop/designs';
+import { Layouts } from '@minddrop/designs';
 import { DropEventData } from '@minddrop/selection';
 import {
   addDeisgnElementFromTemplate,
   getDesignElement,
   moveDesignElement,
   sortDesignElement,
-  updateDesignElement,
 } from '../DesignStudioStore';
 import { DesignElementTemplatesDataKey } from '../constants';
 import { FlatChildDesignElement, FlatParentDesignElement } from '../types';
-import { isValidDesignStudioDrop } from '../utils';
+import { isValidDesignStudioDrop, setElementImage } from '../utils';
 
 const IMAGE_MIME_TYPES = new Set([
   'image/png',
@@ -20,9 +19,9 @@ const IMAGE_MIME_TYPES = new Set([
 ]);
 
 /**
- * Handles a native file drop on an image element by writing
- * the first image file as a placeholder media and setting it
- * on the element.
+ * Handles a native file drop on an image element by writing the
+ * first image file as a placeholder media and setting it as the
+ * element's image value.
  *
  * @param elementId - The ID of the image element.
  * @param files - The dropped files.
@@ -41,8 +40,7 @@ async function handleImageFileDrop(
   // Write the image file to the placeholder-media directory
   const fileName = await Layouts.writePlaceholderMedia(imageFile);
 
-  // Set the placeholder image on the element
-  updateDesignElement<ImageElement>(elementId, { placeholderImage: fileName });
+  await setElementImage(elementId, fileName);
 }
 
 /**

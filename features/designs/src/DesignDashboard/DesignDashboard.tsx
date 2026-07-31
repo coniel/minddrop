@@ -11,6 +11,7 @@ import {
   Text,
 } from '@minddrop/ui-primitives';
 import { DesignPreviewProvider, DesignRootElement } from '../DesignElements';
+import { DesignPropertySchemasProvider } from '../DesignPropertiesProvider';
 import { DesignStudioStore } from '../DesignStudioStore';
 import { resetView } from '../viewportActions';
 import './DesignDashboard.css';
@@ -194,29 +195,31 @@ const DesignCardPreview: React.FC<DesignCardPreviewProps> = ({ design }) => {
     <div ref={containerRef} className="design-dashboard-card-preview">
       {bounds && scale > 0 ? (
         <DesignPreviewProvider value>
-          <div
-            className="design-dashboard-card-preview-canvas"
-            style={{
-              width: bounds.width,
-              height: bounds.height,
-              transform: `translate(-50%, -50%) scale(${scale})`,
-            }}
-          >
-            {design.layouts.map((layout) => (
-              <div
-                key={layout.id}
-                className="design-dashboard-card-preview-layout"
-                style={{
-                  left: layout.frame.x - bounds.x,
-                  top: layout.frame.y - bounds.y,
-                  width: layout.frame.width,
-                  height: getLayoutPreviewHeight(layout),
-                }}
-              >
-                <DesignRootElement element={layout.tree} />
-              </div>
-            ))}
-          </div>
+          <DesignPropertySchemasProvider properties={design.properties}>
+            <div
+              className="design-dashboard-card-preview-canvas"
+              style={{
+                width: bounds.width,
+                height: bounds.height,
+                transform: `translate(-50%, -50%) scale(${scale})`,
+              }}
+            >
+              {design.layouts.map((layout) => (
+                <div
+                  key={layout.id}
+                  className="design-dashboard-card-preview-layout"
+                  style={{
+                    left: layout.frame.x - bounds.x,
+                    top: layout.frame.y - bounds.y,
+                    width: layout.frame.width,
+                    height: getLayoutPreviewHeight(layout),
+                  }}
+                >
+                  <DesignRootElement element={layout.tree} />
+                </div>
+              ))}
+            </div>
+          </DesignPropertySchemasProvider>
         </DesignPreviewProvider>
       ) : (
         <Text

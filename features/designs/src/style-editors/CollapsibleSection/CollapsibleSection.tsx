@@ -29,6 +29,19 @@ export interface CollapsibleSectionProps {
   defaultStyles: Partial<Record<keyof DesignElementStyle, unknown>>;
 
   /**
+   * Additional custom-value condition tracked alongside the style
+   * keys. When true, the section auto-expands and the clear
+   * button is enabled.
+   */
+  hasCustomValues?: boolean;
+
+  /**
+   * Called when the user presses the clear button, alongside
+   * resetting the tracked styles to their defaults.
+   */
+  onClear?: () => void;
+
+  /**
    * Called when the section is manually opened by the user.
    */
   onOpen?: () => void;
@@ -49,6 +62,8 @@ export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
   elementId,
   label,
   defaultStyles,
+  hasCustomValues = false,
+  onClear,
   onOpen,
   children,
 }) => {
@@ -56,7 +71,7 @@ export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
   const [manuallyOpen, setManuallyOpen] = useState(false);
 
   // Check whether any tracked style key differs from its default
-  const hasNonDefault = useMemo(() => {
+  const hasNonDefaultStyles = useMemo(() => {
     const style = element.style as unknown as Record<string, unknown>;
 
     return Object.entries(defaultStyles).some(
@@ -64,7 +79,10 @@ export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
     );
   }, [element.style, defaultStyles]);
 
-  // Reset all tracked styles to their defaults
+  const hasNonDefault = hasNonDefaultStyles || hasCustomValues;
+
+  // Reset all tracked styles to their defaults and clear any
+  // additional custom values
   const clearCustomStyles = useCallback(() => {
     Object.entries(defaultStyles).forEach(([key, value]) => {
       updateElementStyle(
@@ -74,8 +92,12 @@ export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
       );
     });
 
+    if (onClear) {
+      onClear();
+    }
+
     setManuallyOpen(false);
-  }, [elementId, defaultStyles]);
+  }, [elementId, defaultStyles, onClear]);
 
   const isOpen = hasNonDefault || manuallyOpen;
 
@@ -96,6 +118,13 @@ export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
     },
     [handleToggle],
   );
+
+  // Keep the section open while the user interacts with its
+  // controls, even when the interaction resets every tracked
+  // value back to its default
+  const handleContentPointerDown = useCallback(() => {
+    setManuallyOpen(true);
+  }, []);
 
   return (
     <Collapsible
@@ -142,7 +171,9 @@ export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
 
       {/* Collapsible controls */}
       <CollapsibleContent>
-        <Stack gap={3}>{children}</Stack>
+        <Stack gap={3} onPointerDownCapture={handleContentPointerDown}>
+          {children}
+        </Stack>
       </CollapsibleContent>
     </Collapsible>
   );

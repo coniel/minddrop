@@ -1,5 +1,6 @@
 import { FormattedTextElement, createTextCssStyle } from '@minddrop/designs';
 import { useElementProperty } from '../../DesignPropertiesProvider';
+import { useElementPlaceholder } from '../../useElementPlaceholder';
 
 export interface FormattedTextDesignElementProps {
   /**
@@ -21,10 +22,11 @@ export const FormattedTextDesignElement: React.FC<
   FormattedTextDesignElementProps
 > = ({ element, rootProps }) => {
   const property = useElementProperty(element.id);
+  const placeholder = useElementPlaceholder(element);
 
-  // Use the mapped property value if available, otherwise the placeholder
+  // Use the bound property value if available, otherwise the placeholder
   const displayText =
-    property?.value != null ? String(property.value) : element.placeholder;
+    property?.value != null ? String(property.value) : placeholder;
 
   const rootStyle = rootProps?.style as React.CSSProperties | undefined;
 

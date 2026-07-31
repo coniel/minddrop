@@ -1,5 +1,6 @@
 import { TextElement, createTextCssStyle } from '@minddrop/designs';
 import { useElementProperty } from '../../DesignPropertiesProvider';
+import { useElementPlaceholder } from '../../useElementPlaceholder';
 
 export interface TextDesignElementProps {
   /**
@@ -15,18 +16,19 @@ export interface TextDesignElementProps {
 
 /**
  * Display renderer for a text design element.
- * Shows the mapped property value when available,
- * otherwise falls back to the element's placeholder text.
+ * Shows the bound property value when available,
+ * otherwise falls back to the resolved placeholder text.
  */
 export const TextDesignElement: React.FC<TextDesignElementProps> = ({
   element,
   rootProps,
 }) => {
   const property = useElementProperty(element.id);
+  const placeholder = useElementPlaceholder(element);
 
-  // Use the mapped property value if available, otherwise the placeholder
+  // Use the bound property value if available, otherwise the placeholder
   const displayText =
-    property?.value != null ? String(property.value) : element.placeholder;
+    property?.value != null ? String(property.value) : placeholder;
 
   // Merge rootProps style with the element style
   const rootStyle = rootProps?.style as React.CSSProperties | undefined;
@@ -35,7 +37,7 @@ export const TextDesignElement: React.FC<TextDesignElementProps> = ({
     <span
       {...rootProps}
       style={{ ...createTextCssStyle(element.style), ...rootStyle }}
-      data-placeholder={element.placeholder}
+      data-placeholder={placeholder}
     >
       {displayText}
     </span>

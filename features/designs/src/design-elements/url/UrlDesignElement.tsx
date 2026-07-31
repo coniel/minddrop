@@ -1,5 +1,6 @@
 import { UrlElement, createTextCssStyle } from '@minddrop/designs';
 import { useElementProperty } from '../../DesignPropertiesProvider';
+import { useElementPlaceholder } from '../../useElementPlaceholder';
 import { formatUrl } from './formatUrl';
 
 export interface UrlDesignElementProps {
@@ -25,10 +26,11 @@ export const UrlDesignElement: React.FC<UrlDesignElementProps> = ({
   rootProps,
 }) => {
   const property = useElementProperty(element.id);
+  const placeholder = useElementPlaceholder(element);
 
-  // Use the mapped property value if available, otherwise the placeholder
+  // Use the bound property value if available, otherwise the placeholder
   const rawText =
-    property?.value != null ? String(property.value) : element.placeholder;
+    property?.value != null ? String(property.value) : placeholder;
 
   // Format the URL based on visible parts
   const displayText = rawText
@@ -47,7 +49,7 @@ export const UrlDesignElement: React.FC<UrlDesignElementProps> = ({
     <span
       {...rootProps}
       style={{ ...createTextCssStyle(element.style), ...rootStyle }}
-      data-placeholder={element.placeholder}
+      data-placeholder={placeholder}
     >
       {displayText}
     </span>

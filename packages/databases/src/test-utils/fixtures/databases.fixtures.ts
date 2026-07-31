@@ -11,13 +11,7 @@ import { databaseConfigFilePath } from '../../utils';
 import { fetchWebpageMetadataAutomation } from './database-automations.fixtures';
 
 const { workspace_1 } = WorkspaceFixtures;
-const {
-  layout_card_1,
-  layout_card_2,
-  layout_card_3,
-  layout_list_1,
-  design_cards,
-} = DesignFixtures;
+const { layout_card_2, layout_card_3, design_cards } = DesignFixtures;
 
 export const parentDir = workspace_1.path;
 export const genericFilePropertyName = 'File';
@@ -41,20 +35,6 @@ function generateDatabase(
     lastModified: new Date('2024-01-01T00:00:00.000Z'),
     designId: design_cards.id,
     designPropertyMap: {},
-    layoutPropertyMaps: {
-      [layout_card_1.id]: {
-        title: 'Title',
-      },
-      [layout_list_1.id]: {
-        title: 'Title',
-      },
-      [layout_card_2.id]: {
-        title: 'Title',
-      },
-      [layout_card_3.id]: {
-        title: 'Title',
-      },
-    },
     defaultLayouts: { card: layout_card_3.id },
     path: `${parentDir}/${data.name}`,
     ...data,

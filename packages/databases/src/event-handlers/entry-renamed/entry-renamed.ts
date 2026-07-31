@@ -1,4 +1,5 @@
 import { Collections } from '@minddrop/collections';
+import { Designs } from '@minddrop/designs';
 import { Views } from '@minddrop/views';
 import { DatabaseEntryRenamedEventData } from '../../events';
 import { getDatabase } from '../../getDatabase';
@@ -69,8 +70,11 @@ export async function onRenameEntry(data: DatabaseEntryRenamedEventData) {
         });
       }
 
-      // Re-ID virtual views for each layout that has a property map
-      const layoutIds = Object.keys(database.layoutPropertyMaps || {});
+      // Re-ID virtual views for each layout in the database's design
+      const design = database.designId
+        ? Designs.get(database.designId, false)
+        : null;
+      const layoutIds = design ? design.layouts.map((layout) => layout.id) : [];
 
       await Promise.all(
         layoutIds.map(async (layoutId) => {

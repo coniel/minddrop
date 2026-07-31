@@ -15,7 +15,6 @@ import { MarginFields } from '../../style-editors/MarginFields';
 import { SectionLabel } from '../../style-editors/SectionLabel';
 import { Typography } from '../../style-editors/Typography';
 import { FlatDateElement } from '../../types';
-import { DatePlaceholderField } from './DatePlaceholderField';
 
 export interface DateElementStyleEditorProps {
   /**
@@ -128,11 +127,6 @@ export const DateElementStyleEditor: React.FC<DateElementStyleEditorProps> = ({
 
   return (
     <>
-      <Stack gap={3}>
-        <SectionLabel label="designs.placeholder.label" />
-        <DatePlaceholderField elementId={elementId} />
-      </Stack>
-
       <Stack gap={3}>
         <SectionLabel label="designs.date-format.label" />
 

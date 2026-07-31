@@ -10,6 +10,7 @@ import {
 import { Fs } from '@minddrop/file-system';
 import { DesignElement } from '../../DesignElements/DesignElement';
 import { useElementProperty } from '../../DesignPropertiesProvider';
+import { useElementPlaceholderImage } from '../../useElementPlaceholder';
 
 export interface ContainerDesignElementProps {
   /**
@@ -29,6 +30,10 @@ export const ContainerDesignElement: React.FC<ContainerDesignElementProps> = ({
 }) => {
   const { style } = element;
   const property = useElementProperty(element.id);
+  const placeholderImage = useElementPlaceholderImage(
+    element,
+    style.backgroundImage,
+  );
 
   // Use the mapped property value (file path) as background image
   // if available, otherwise resolve the placeholder from the design media dir
@@ -37,12 +42,12 @@ export const ContainerDesignElement: React.FC<ContainerDesignElementProps> = ({
       return property.value;
     }
 
-    if (style.backgroundImage) {
-      return Fs.concatPath(getPlaceholderMediaDirPath(), style.backgroundImage);
+    if (placeholderImage) {
+      return Fs.concatPath(getPlaceholderMediaDirPath(), placeholderImage);
     }
 
     return null;
-  }, [property?.value, style.backgroundImage]);
+  }, [property?.value, placeholderImage]);
 
   const imageSrc = Fs.useImageSrc(imagePath);
 

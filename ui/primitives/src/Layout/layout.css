@@ -197,6 +197,9 @@
 
 /* --- Gap --- */
 
+.stack-gap-0 {
+  gap: 0;
+}
 .stack-gap-1 {
   gap: var(--space-1);
 }

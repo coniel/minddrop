@@ -7,9 +7,11 @@ import {
 import { getDesign } from '../getDesign';
 import { Design } from '../types';
 import { updateDesign } from '../updateDesign';
+import { remapLayoutPropertyBindings } from '../utils';
 
 /**
- * Removes a property from a design.
+ * Removes a property from a design and unbinds layout elements
+ * bound to it.
  *
  * @param id - The ID of the design to remove the property from.
  * @param propertyName - The name of the property to remove.
@@ -38,11 +40,13 @@ export async function removeDesignProperty(
     );
   }
 
-  // Filter the property out and persist
+  // Filter the property out, unbind layout elements bound to it,
+  // then persist
   const updated = await updateDesign(id, {
     properties: design.properties.filter(
       (existing) => existing.name !== propertyName,
     ),
+    layouts: remapLayoutPropertyBindings(design.layouts, propertyName, null),
   });
 
   // Dispatch a property removed event

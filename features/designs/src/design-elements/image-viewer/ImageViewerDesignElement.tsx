@@ -9,6 +9,7 @@ import { ImageViewer } from '@minddrop/ui-components';
 import { Icon } from '@minddrop/ui-primitives';
 import { useDesignPreview } from '../../DesignElements/DesignPreviewContext';
 import { useElementProperty } from '../../DesignPropertiesProvider';
+import { useElementPlaceholderImage } from '../../useElementPlaceholder';
 
 export interface ImageViewerDesignElementProps {
   /**
@@ -33,6 +34,7 @@ export const ImageViewerDesignElement: React.FC<
 > = ({ element, rootProps }) => {
   const preview = useDesignPreview();
   const property = useElementProperty(element.id);
+  const placeholderImage = useElementPlaceholderImage(element, element.content);
   const containerStyle = createImageViewerCssStyle(element.style);
   const rootStyle = rootProps?.style as React.CSSProperties | undefined;
 
@@ -42,21 +44,18 @@ export const ImageViewerDesignElement: React.FC<
     containerStyle.flex = 1;
   }
 
-  // Resolve the image path from mapped property or placeholder
+  // Resolve the image path from the bound property or placeholder
   const imagePath = useMemo(() => {
     if (property?.value && typeof property.value === 'string') {
       return property.value;
     }
 
-    if (element.placeholderImage) {
-      return Fs.concatPath(
-        getPlaceholderMediaDirPath(),
-        element.placeholderImage,
-      );
+    if (placeholderImage) {
+      return Fs.concatPath(getPlaceholderMediaDirPath(), placeholderImage);
     }
 
     return null;
-  }, [property?.value, element.placeholderImage]);
+  }, [property?.value, placeholderImage]);
 
   const imageSrc = Fs.useImageSrc(imagePath);
 

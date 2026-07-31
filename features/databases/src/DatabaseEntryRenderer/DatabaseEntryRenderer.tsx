@@ -1,9 +1,10 @@
 import React, { useCallback, useMemo } from 'react';
 import { DatabaseEntries, DatabaseEntry, Databases } from '@minddrop/databases';
-import { LayoutType, Layouts } from '@minddrop/designs';
+import { Designs, LayoutType, Layouts } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
 import { LayoutRenderer } from '@minddrop/feature-designs';
 import { PropertyValue } from '@minddrop/properties';
+import { Text } from '@minddrop/ui-primitives';
 import {
   OpenDatabaseEntryViewEvent,
   OpenDatabaseEntryViewEventData,
@@ -61,6 +62,7 @@ const Entry: React.FC<EntryProps> = ({
   onClick,
 }) => {
   const database = Databases.use(entry.database);
+  const design = Designs.use(database?.designId || '');
 
   // Resolve the layout to render with, falling back to the
   // database default when no override is specified
@@ -78,14 +80,27 @@ const Entry: React.FC<EntryProps> = ({
     return Databases.getDefaultLayout(entry.database, layoutType);
   }, [layoutId, entry.database, layoutType]);
 
-  // Get the property map for this layout (element ID -> property name).
-  // Reads the legacy field directly; the phase 8 cutover will replace
-  // this with design-property resolution.
-  const propertyMap = useMemo(
-    () =>
-      layout && database ? database.layoutPropertyMaps[layout.id] || {} : {},
-    [database, layout],
-  );
+  // Resolve each bound element to the database property mapped to
+  // its design property (element ID -> design property -> database
+  // property)
+  const propertyMap = useMemo(() => {
+    if (!layout || !database) {
+      return {};
+    }
+
+    const bindings = Layouts.getPropertyBindings(layout);
+    const resolved: Record<string, string> = {};
+
+    Object.entries(bindings).forEach(([elementId, designPropertyName]) => {
+      const databaseProperty = database.designPropertyMap[designPropertyName];
+
+      if (databaseProperty) {
+        resolved[elementId] = databaseProperty;
+      }
+    });
+
+    return resolved;
+  }, [database, layout]);
 
   // Get display-ready property values (image paths, virtual view IDs, etc.)
   const propertyValues = useMemo(
@@ -131,15 +146,29 @@ const Entry: React.FC<EntryProps> = ({
     [onOpenEntry],
   );
 
-  if (!database || !layout) {
-    // Render-time fallback for missing layout will be added in the
-    // phase 8 cutover
+  if (!database) {
     return null;
   }
 
   // Page entries are not clickable items, so they should not
   // have button role or keyboard activation.
   const isClickable = layoutType !== 'page';
+
+  // Minimal title-only fallback when the database has no design
+  // or its design has no layout of the requested type
+  if (!layout) {
+    return (
+      <div
+        className={`database-entry database-entry-${layoutType} database-entry-fallback`}
+        role={isClickable ? 'button' : undefined}
+        tabIndex={isClickable ? 0 : undefined}
+        onClick={isClickable ? onOpenEntry : undefined}
+        onKeyDown={isClickable ? onKeyDown : undefined}
+      >
+        <Text truncate>{entry.title}</Text>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -151,6 +180,7 @@ const Entry: React.FC<EntryProps> = ({
     >
       <LayoutRenderer
         layout={layout}
+        designProperties={design?.properties}
         propertyMap={propertyMap}
         propertyValues={propertyValues}
         properties={database.properties}

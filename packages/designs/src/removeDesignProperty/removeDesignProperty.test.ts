@@ -7,7 +7,13 @@ import {
   DesignPropertyRemovedEvent,
   DesignPropertyRemovedEventData,
 } from '../events';
-import { cleanup, design_books, setup } from '../test-utils';
+import {
+  cleanup,
+  design_books,
+  element_text_1,
+  layout_card_1,
+  setup,
+} from '../test-utils';
 import { removeDesignProperty } from './removeDesignProperty';
 
 const lastModified = new Date('2000-01-01T00:00:00.000Z');
@@ -42,6 +48,27 @@ describe('removeDesignProperty', () => {
         (p) => p.name === target.name,
       ),
     ).toBe(false);
+  });
+
+  it('unbinds layout elements bound to the property', async () => {
+    // Bind a layout element to the Title property
+    DesignsStore.update(design_books.id, {
+      layouts: [
+        {
+          ...layout_card_1,
+          tree: {
+            ...layout_card_1.tree,
+            children: [{ ...element_text_1, property: 'Title' }],
+          },
+        },
+      ],
+    });
+
+    await removeDesignProperty(design_books.id, 'Title');
+
+    const stored = DesignsStore.get(design_books.id);
+
+    expect(stored?.layouts[0].tree.children[0].property).toBeUndefined();
   });
 
   it('preserves the other properties in their original order', async () => {

@@ -3,6 +3,7 @@ import { BadgesElement, BadgesElementStyle } from '@minddrop/designs';
 import { SelectPropertySchema } from '@minddrop/properties';
 import { ContentColor, ContentColors } from '@minddrop/ui-theme';
 import { useElementProperty } from '../../DesignPropertiesProvider';
+import { useElementPlaceholder } from '../../useElementPlaceholder';
 import './BadgesDesignElement.css';
 
 export interface BadgesDesignElementProps {
@@ -27,6 +28,7 @@ export const BadgesDesignElement: React.FC<BadgesDesignElementProps> = ({
   rootProps,
 }) => {
   const property = useElementProperty(element.id);
+  const placeholder = useElementPlaceholder(element);
 
   // Build the wrapper style (margins, text-align)
   const wrapperStyle = createWrapperStyle(element.style);
@@ -73,7 +75,7 @@ export const BadgesDesignElement: React.FC<BadgesDesignElementProps> = ({
   }
 
   // Placeholder fallback - split comma-separated string into badges
-  const placeholderLabels = parsePlaceholder(element.placeholder);
+  const placeholderLabels = parsePlaceholder(placeholder);
 
   if (placeholderLabels.length === 0) {
     return (

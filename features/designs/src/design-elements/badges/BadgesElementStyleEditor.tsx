@@ -1,15 +1,13 @@
 import { useCallback } from 'react';
 import { DefaultBadgesElementStyle } from '@minddrop/designs';
-import { Stack, SwitchField } from '@minddrop/ui-primitives';
+import { SwitchField } from '@minddrop/ui-primitives';
 import { updateElementStyle, useElementStyle } from '../../DesignStudioStore';
 import { Border } from '../../style-editors/Border';
 import { BorderRadiusField } from '../../style-editors/BorderRadiusField';
 import { CollapsibleSection } from '../../style-editors/CollapsibleSection';
 import { MarginFields } from '../../style-editors/MarginFields';
 import { PaddingFields } from '../../style-editors/PaddingFields';
-import { SectionLabel } from '../../style-editors/SectionLabel';
 import { Typography } from '../../style-editors/Typography';
-import { BadgesPlaceholderField } from './BadgesPlaceholderField';
 
 export interface BadgesElementStyleEditorProps {
   /**
@@ -78,11 +76,6 @@ export const BadgesElementStyleEditor: React.FC<
 
   return (
     <>
-      <Stack gap={3}>
-        <SectionLabel label="designs.badges.placeholder.label" />
-        <BadgesPlaceholderField elementId={elementId} />
-      </Stack>
-
       <CollapsibleSection
         elementId={elementId}
         label="designs.typography.label"

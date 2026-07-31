@@ -13,10 +13,11 @@ export interface ImageViewerElement extends DesignElementBase {
   style: ImageViewerElementStyle;
 
   /**
-   * The file name of a placeholder image stored in the
-   * placeholder-media directory.
+   * The file name of the element's own image stored in the
+   * placeholder-media directory. Displayed when the element is
+   * static.
    */
-  placeholderImage?: string;
+  content?: string;
 }
 
 export const ImageViewerElementConfig: DesignElementConfig = {

@@ -1,22 +1,14 @@
 import { useCallback } from 'react';
-import { DefaultImageElementStyle, ImageElement } from '@minddrop/designs';
+import { DefaultImageElementStyle } from '@minddrop/designs';
 import { Stack, SwitchField } from '@minddrop/ui-primitives';
-import {
-  updateDesignElement,
-  updateElementStyle,
-  useElementData,
-  useElementStyle,
-} from '../../DesignStudioStore';
+import { updateElementStyle, useElementStyle } from '../../DesignStudioStore';
 import { Border } from '../../style-editors/Border';
 import { BorderRadiusField } from '../../style-editors/BorderRadiusField';
 import { CollapsibleSection } from '../../style-editors/CollapsibleSection';
 import { MarginFields } from '../../style-editors/MarginFields';
 import { OpacityField } from '../../style-editors/OpacityField';
-import { PlaceholderImageField } from '../../style-editors/PlaceholderImageField';
 import { SectionLabel } from '../../style-editors/SectionLabel';
 import { SizingFields } from '../../style-editors/SizingFields';
-import { StaticElementField } from '../../style-editors/StaticElementField';
-import { FlatImageElement } from '../../types';
 import { ObjectFitSelect } from './ObjectFitSelect';
 
 export interface ImageElementStyleEditorProps {
@@ -60,8 +52,8 @@ const marginDefaults = {
 
 /**
  * Renders the style editor panel for image design elements.
- * Provides placeholder image, sizing, object fit, round, border,
- * opacity, and margin controls.
+ * Provides sizing, object fit, round, border, opacity, and
+ * margin controls.
  */
 export const ImageElementStyleEditor: React.FC<
   ImageElementStyleEditorProps
@@ -69,13 +61,6 @@ export const ImageElementStyleEditor: React.FC<
   const width = useElementStyle(elementId, 'width');
   const height = useElementStyle(elementId, 'height');
   const round = useElementStyle(elementId, 'round');
-
-  const { placeholderImage } = useElementData(
-    elementId,
-    (element: FlatImageElement) => ({
-      placeholderImage: element.placeholderImage,
-    }),
-  );
 
   const handleRoundChange = useCallback(
     (checked: boolean) => {
@@ -122,25 +107,6 @@ export const ImageElementStyleEditor: React.FC<
 
   return (
     <>
-      <Stack gap={3}>
-        <SectionLabel label="designs.image.placeholder.label" />
-        <PlaceholderImageField
-          image={placeholderImage || ''}
-          primary
-          onSelect={(fileName) =>
-            updateDesignElement<ImageElement>(elementId, {
-              placeholderImage: fileName,
-            })
-          }
-          onRemove={() =>
-            updateDesignElement<ImageElement>(elementId, {
-              placeholderImage: '',
-            })
-          }
-        />
-        <StaticElementField elementId={elementId} />
-      </Stack>
-
       <Stack gap={3}>
         <SectionLabel label="designs.image.sizing.label" />
         <SizingFields elementId={elementId} />

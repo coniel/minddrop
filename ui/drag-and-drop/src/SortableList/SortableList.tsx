@@ -19,7 +19,7 @@ export interface SortableListProps {
   /**
    * Gap between items using the space token scale (1-7).
    */
-  gap?: 1 | 2 | 3 | 4 | 5 | 6 | 7;
+  gap?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
   /**
    * Called on drop with the reordered item IDs.

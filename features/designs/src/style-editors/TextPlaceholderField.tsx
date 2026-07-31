@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from 'react';
-import { TextElement, generateLoremIpsum } from '@minddrop/designs';
+import { generateLoremIpsum } from '@minddrop/designs';
 import {
   Group,
   IconButton,
@@ -7,14 +7,17 @@ import {
   Stack,
   TextField,
 } from '@minddrop/ui-primitives';
-import { updateDesignElement, useElementData } from '../DesignStudioStore';
-import { FlatTextElement } from '../types';
 
 export interface TextPlaceholderFieldProps {
   /**
-   * The ID of the element to edit.
+   * The placeholder value.
    */
-  elementId: string;
+  value: string;
+
+  /**
+   * Callback fired when the placeholder value changes.
+   */
+  onValueChange: (value: string) => void;
 
   /**
    * Custom word count steps for the lorem ipsum slider.
@@ -46,24 +49,19 @@ function closestWordCountStep(text: string, counts: number[]): number {
 
 /**
  * Renders a text field with a lorem ipsum generator slider for
- * editing an element's placeholder text.
+ * editing a text placeholder value.
  */
 export const TextPlaceholderField = ({
-  elementId,
+  value,
+  onValueChange,
   wordCounts: wordCountsProp,
 }: TextPlaceholderFieldProps) => {
   const wordCounts = wordCountsProp || defaultWordCounts;
-  const { placeholder } = useElementData(
-    elementId,
-    (element: FlatTextElement) => ({
-      placeholder: element.placeholder || '',
-    }),
-  );
 
   const [sliderStep, setSliderStep] = useState(() =>
-    closestWordCountStep(placeholder, wordCounts),
+    closestWordCountStep(value, wordCounts),
   );
-  const generatedTextRef = useRef(placeholder);
+  const generatedTextRef = useRef(value);
 
   const handleReroll = useCallback(() => {
     if (sliderStep === 0) {
@@ -73,40 +71,33 @@ export const TextPlaceholderField = ({
     const text = generateLoremIpsum(wordCounts[sliderStep - 1]);
 
     generatedTextRef.current = text;
-    updateDesignElement<TextElement>(elementId, { placeholder: text });
-  }, [elementId, sliderStep, wordCounts]);
-
-  const handleChange = useCallback(
-    (value: string) => {
-      updateDesignElement<TextElement>(elementId, { placeholder: value });
-    },
-    [elementId],
-  );
+    onValueChange(text);
+  }, [onValueChange, sliderStep, wordCounts]);
 
   const previousStepRef = useRef(sliderStep);
 
   const handleSliderChange = useCallback(
     (step: number | number[]) => {
-      const value = Array.isArray(step) ? step[0] : step;
+      const newStep = Array.isArray(step) ? step[0] : step;
 
-      if (value === previousStepRef.current) {
+      if (newStep === previousStepRef.current) {
         return;
       }
 
-      previousStepRef.current = value;
-      setSliderStep(value);
+      previousStepRef.current = newStep;
+      setSliderStep(newStep);
 
-      if (value === 0) {
+      if (newStep === 0) {
         generatedTextRef.current = '';
-        updateDesignElement<TextElement>(elementId, { placeholder: '' });
+        onValueChange('');
       } else {
-        const text = generateLoremIpsum(wordCounts[value - 1]);
+        const text = generateLoremIpsum(wordCounts[newStep - 1]);
 
         generatedTextRef.current = text;
-        updateDesignElement<TextElement>(elementId, { placeholder: text });
+        onValueChange(text);
       }
     },
-    [elementId, wordCounts],
+    [onValueChange, wordCounts],
   );
 
   return (
@@ -123,8 +114,8 @@ export const TextPlaceholderField = ({
         <TextField
           variant="subtle"
           size="md"
-          value={placeholder}
-          onValueChange={handleChange}
+          value={value}
+          onValueChange={onValueChange}
           placeholder="designs.placeholder.placeholder"
         />
       </Group>

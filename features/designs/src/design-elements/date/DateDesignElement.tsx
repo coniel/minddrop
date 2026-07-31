@@ -1,5 +1,6 @@
 import { DateElement, createTextCssStyle } from '@minddrop/designs';
 import { useElementProperty } from '../../DesignPropertiesProvider';
+import { useElementPlaceholder } from '../../useElementPlaceholder';
 import { formatDesignDate } from './formatDesignDate';
 
 export interface DateDesignElementProps {
@@ -25,10 +26,10 @@ export const DateDesignElement: React.FC<DateDesignElementProps> = ({
   rootProps,
 }) => {
   const property = useElementProperty(element.id);
+  const placeholder = useElementPlaceholder(element);
 
-  // Use the mapped property value if available, otherwise the placeholder
-  const rawValue =
-    property?.value != null ? property.value : element.placeholder;
+  // Use the bound property value if available, otherwise the placeholder
+  const rawValue = property?.value != null ? property.value : placeholder;
 
   const baseStyle = createTextCssStyle(element.style);
   const rootStyle = rootProps?.style as React.CSSProperties | undefined;

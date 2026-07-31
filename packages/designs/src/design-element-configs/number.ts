@@ -1,6 +1,5 @@
 import { DefaultTextElementStyle, TextElementStyle } from '../styles';
 import { DesignElementBase, DesignElementConfig } from '../types';
-import { generateNumberPlaceholder } from './placeholder-generators';
 
 /**
  * Thousands separator style for number formatting.
@@ -58,9 +57,9 @@ export interface NumberElement extends DesignElementBase {
   style: TextElementStyle;
 
   /**
-   * Placeholder number displayed when the element has no content.
+   * Number content displayed when the element is static.
    */
-  placeholder?: string;
+  content?: string;
 
   /**
    * Number formatting options.
@@ -79,5 +78,4 @@ export const NumberElementConfig: DesignElementConfig = {
     type: 'number',
     style: { ...DefaultTextElementStyle },
   },
-  generatePlaceholder: () => generateNumberPlaceholder(3),
 };

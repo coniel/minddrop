@@ -15,6 +15,7 @@ import { DesignStudioElement } from '../../DesignStudioElement/DesignStudioEleme
 import { useLayoutId } from '../../LayoutIdContext';
 import { handleDropOnGap } from '../../handleDropOnGap';
 import { FlatContainerDesignElement } from '../../types';
+import { useElementPlaceholderImage } from '../../useElementPlaceholder';
 
 export interface ContainerStudioDesignElementProps {
   /**
@@ -50,13 +51,20 @@ export const ContainerStudioDesignElement: React.FC<
     [key: string]: unknown;
   };
 
+  // Resolve the background image from the bound image property's
+  // placeholder, falling back to the static background image
+  const backgroundImage = useElementPlaceholderImage(
+    element,
+    style.backgroundImage,
+  );
+
   // Resolve background image path if set
   const imagePath = useMemo(
     () =>
-      style.backgroundImage
-        ? Fs.concatPath(getPlaceholderMediaDirPath(), style.backgroundImage)
+      backgroundImage
+        ? Fs.concatPath(getPlaceholderMediaDirPath(), backgroundImage)
         : null,
-    [style.backgroundImage],
+    [backgroundImage],
   );
 
   const imageSrc = Fs.useImageSrc(imagePath);

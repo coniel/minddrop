@@ -8,7 +8,6 @@ import {
   LayoutFrame,
   LayoutType,
   Layouts,
-  elementConfigs,
 } from '@minddrop/designs';
 import {
   PropertiesSchema,
@@ -604,6 +603,146 @@ export const renameDesign = async (name: string) => {
 };
 
 /**
+ * Adds a property to the design open in the studio.
+ *
+ * @param property - The property schema to add.
+ */
+export const addDesignProperty = async (property: PropertySchema) => {
+  const design = DesignStudioStore.getState().design;
+
+  if (!design) {
+    return;
+  }
+
+  const updated = await Designs.addProperty(design.id, property);
+
+  DesignStudioStore.getState().setDesign(updated);
+};
+
+/**
+ * Renames a property on the design open in the studio and
+ * rebinds store elements bound to it.
+ *
+ * @param oldName - The current property name.
+ * @param newName - The new property name.
+ */
+export const renameDesignProperty = async (
+  oldName: string,
+  newName: string,
+) => {
+  const state = DesignStudioStore.getState();
+
+  if (!state.design) {
+    return;
+  }
+
+  const updated = await Designs.renameProperty(
+    state.design.id,
+    oldName,
+    newName,
+  );
+
+  DesignStudioStore.setState({
+    design: updated,
+    elementsByLayout: remapElementBindings(
+      state.elementsByLayout,
+      oldName,
+      newName,
+    ),
+  });
+};
+
+/**
+ * Updates a property on the design open in the studio. The
+ * property is matched by name.
+ *
+ * @param property - The updated property schema.
+ */
+export const updateDesignProperty = async (property: PropertySchema) => {
+  const design = DesignStudioStore.getState().design;
+
+  if (!design) {
+    return;
+  }
+
+  const updated = await Designs.updateProperty(design.id, property);
+
+  DesignStudioStore.getState().setDesign(updated);
+};
+
+/**
+ * Replaces the properties of the design open in the studio,
+ * used to reorder them.
+ *
+ * @param properties - The reordered properties schema.
+ */
+export const updateDesignProperties = async (properties: PropertiesSchema) => {
+  const design = DesignStudioStore.getState().design;
+
+  if (!design) {
+    return;
+  }
+
+  // Apply the new order to the studio snapshot immediately so
+  // the sorted list doesn't flash back to the old order while
+  // the update persists
+  DesignStudioStore.getState().setDesign({ ...design, properties });
+
+  const updated = await Designs.update(design.id, { properties });
+
+  DesignStudioStore.getState().setDesign(updated);
+};
+
+/**
+ * Removes a property from the design open in the studio and
+ * unbinds store elements bound to it.
+ *
+ * @param propertyName - The name of the property to remove.
+ */
+export const removeDesignProperty = async (propertyName: string) => {
+  const state = DesignStudioStore.getState();
+
+  if (!state.design) {
+    return;
+  }
+
+  const updated = await Designs.removeProperty(state.design.id, propertyName);
+
+  DesignStudioStore.setState({
+    design: updated,
+    elementsByLayout: remapElementBindings(
+      state.elementsByLayout,
+      propertyName,
+      null,
+    ),
+  });
+};
+
+/**
+ * Returns the element buckets with bindings of the given property
+ * rebound to the new name, or unbound when the new name is null.
+ */
+function remapElementBindings(
+  elementsByLayout: Record<string, Record<string, FlatDesignElement>>,
+  propertyName: string,
+  newPropertyName: string | null,
+): Record<string, Record<string, FlatDesignElement>> {
+  return Object.fromEntries(
+    Object.entries(elementsByLayout).map(([layoutId, elements]) => [
+      layoutId,
+      Object.fromEntries(
+        Object.entries(elements).map(([elementId, element]) => [
+          elementId,
+          element.property === propertyName
+            ? { ...element, property: newPropertyName || undefined }
+            : element,
+        ]),
+      ),
+    ]),
+  );
+}
+
+/**
  * Adds a new layout to a design. If the design is open in the
  * studio, the layout's elements are added to the store and it
  * becomes the active layout.
@@ -767,15 +906,10 @@ export const addDeisgnElementFromTemplate = (
   index: number,
   layoutId?: string,
 ) => {
-  // Look up the config for this element type to generate a placeholder
-  const config = elementConfigs.find((config) => config.type === template.type);
-  const placeholder = config?.generatePlaceholder?.();
-
   const element = {
     ...template,
     id: uuid(),
     parent: parentId,
-    ...(placeholder != null ? { placeholder } : {}),
   } as FlatDesignElement;
 
   DesignStudioStore.getState().addElement(element, parentId, index, layoutId);

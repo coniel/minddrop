@@ -1,4 +1,4 @@
-import { TranslationKey } from '@minddrop/i18n';
+import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import { TextColor } from '../Text';
 import { SelectIcon } from './SelectIcon';
 import { SelectItem } from './SelectItem';
@@ -14,8 +14,15 @@ export type SelectSize = 'sm' | 'md' | 'lg';
 export interface SelectOption<TValue extends string | number> {
   /*
    * The display label for the option. Can be an i18n key.
+   * Ignored when `stringLabel` is provided.
    */
-  label: TranslationKey;
+  label?: TranslationKey;
+
+  /*
+   * Plain string display label for dynamic values (e.g. user
+   * defined names) that are not translatable.
+   */
+  stringLabel?: string;
 
   /*
    * The value of the option.
@@ -104,29 +111,40 @@ export const Select = <TValue extends string | number = string>({
   trigger,
   alignOffset,
   disabled,
-}: SelectProps<TValue>) => (
-  <SelectRoot
-    items={options}
-    value={value}
-    onValueChange={onValueChange}
-    disabled={disabled}
-  >
-    <SelectTrigger className={className} variant={variant} size={size}>
-      {trigger ? (
-        trigger
-      ) : (
-        <>
-          <SelectValue color={valueColor} placeholder={placeholder} />
-          <SelectIcon />
-        </>
-      )}
-    </SelectTrigger>
-    <SelectPopup alignOffset={alignOffset}>
-      {children
-        ? children
-        : options.map(({ label, value }) => (
-            <SelectItem key={String(value)} label={label} value={value} />
-          ))}
-    </SelectPopup>
-  </SelectRoot>
-);
+}: SelectProps<TValue>) => {
+  const { t } = useTranslation();
+
+  return (
+    <SelectRoot
+      items={options.map(({ value, label, stringLabel }) => ({
+        value,
+        // Translate label keys so the selected value renders the
+        // translated text
+        label: stringLabel ?? (label ? t(label) : ''),
+      }))}
+      value={value}
+      onValueChange={onValueChange}
+      disabled={disabled}
+    >
+      <SelectTrigger className={className} variant={variant} size={size}>
+        {trigger ? (
+          trigger
+        ) : (
+          <>
+            <SelectValue color={valueColor} placeholder={placeholder} />
+            <SelectIcon />
+          </>
+        )}
+      </SelectTrigger>
+      <SelectPopup alignOffset={alignOffset}>
+        {children
+          ? children
+          : options.map(({ label, stringLabel, value }) => (
+              <SelectItem key={String(value)} label={label} value={value}>
+                {stringLabel}
+              </SelectItem>
+            ))}
+      </SelectPopup>
+    </SelectRoot>
+  );
+};

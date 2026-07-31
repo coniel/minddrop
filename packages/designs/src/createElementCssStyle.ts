@@ -203,12 +203,10 @@ export function createContainerCssStyle(
     overflow: 'hidden',
   };
 
-  // Background image sizing (image URL applied in renderers via useImageSrc)
-  if (style.backgroundImage) {
-    cssStyle.backgroundSize = style.backgroundImageFit;
-    cssStyle.backgroundPosition = 'center';
-    cssStyle.backgroundRepeat = 'no-repeat';
-  }
+  // Background image sizing (image URL applied in renderers)
+  cssStyle.backgroundSize = style.backgroundImageFit;
+  cssStyle.backgroundPosition = 'center';
+  cssStyle.backgroundRepeat = 'no-repeat';
 
   // When gradient is enabled, backdrop effects go on a separate overlay
   // div (see createBackdropGradientOverlayStyle). Otherwise apply directly.

@@ -13,6 +13,7 @@ export type DesignUpdatedEventData = {
 };
 
 export const DesignPropertyAddedEvent = 'designs:property:added';
+export const DesignPropertyUpdatedEvent = 'designs:property:updated';
 export const DesignPropertyRemovedEvent = 'designs:property:removed';
 export const DesignPropertyRenamedEvent = 'designs:property:renamed';
 
@@ -24,6 +25,18 @@ export interface DesignPropertyAddedEventData {
 
   /**
    * The property that was added.
+   */
+  property: PropertySchema;
+}
+
+export interface DesignPropertyUpdatedEventData {
+  /**
+   * The design the property belongs to.
+   */
+  design: Design;
+
+  /**
+   * The updated property.
    */
   property: PropertySchema;
 }

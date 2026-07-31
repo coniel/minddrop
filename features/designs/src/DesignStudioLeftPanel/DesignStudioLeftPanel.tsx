@@ -1,7 +1,11 @@
 import { useState } from 'react';
+import { generatePropertyPlaceholder } from '@minddrop/designs';
+import { PropertyTypeSelectionMenu } from '@minddrop/feature-properties';
 import { i18n } from '@minddrop/i18n';
+import { PropertySchemaTemplate } from '@minddrop/properties';
 import {
   IconButton,
+  IconButtonSpacer,
   Spacer,
   Tabs,
   TabsList,
@@ -9,11 +13,16 @@ import {
   TabsTab,
 } from '@minddrop/ui-primitives';
 import { AddLayoutMenu } from '../AddLayoutMenu';
+import {
+  DesignPropertiesPanel,
+  DraftDesignProperty,
+} from '../DesignPropertiesPanel';
+import { useDesignStudioStore } from '../DesignStudioStore';
 import { ElementsPalette } from '../ElementsPalette/ElementsPalette';
 import { ElementsTree } from '../ElementsTree';
 import './DesignStudioLeftPanel.css';
 
-type ActivePanel = 'elements' | 'layouts';
+type ActivePanel = 'elements' | 'layouts' | 'properties';
 
 export interface DesignStudioLeftPanelProps {
   /**
@@ -26,6 +35,32 @@ export const DesignStudioLeftPanel: React.FC<DesignStudioLeftPanelProps> = ({
   onClickBack,
 }) => {
   const [activePanel, setActivePanel] = useState<ActivePanel>('layouts');
+  const [draftProperties, setDraftProperties] = useState<DraftDesignProperty[]>(
+    [],
+  );
+  const designProperties = useDesignStudioStore(
+    (state) => state.design?.properties || [],
+  );
+
+  // Add a draft property from the selected template with a
+  // generated placeholder
+  function handleAddProperty(template: PropertySchemaTemplate) {
+    const draftProperty = {
+      ...template,
+      name: i18n.t(template.name),
+      placeholder: generatePropertyPlaceholder(template.type),
+      id: Date.now(),
+    } as DraftDesignProperty;
+
+    setDraftProperties((previousDrafts) => [...previousDrafts, draftProperty]);
+  }
+
+  // Remove a draft property by its ID
+  function removeDraftProperty(id: number) {
+    setDraftProperties((previousDrafts) =>
+      previousDrafts.filter((draft) => draft.id !== id),
+    );
+  }
 
   return (
     <Tabs
@@ -45,23 +80,47 @@ export const DesignStudioLeftPanel: React.FC<DesignStudioLeftPanelProps> = ({
         )}
         <Spacer />
         <TabsList>
-          <TabsTab value="elements" size="sm">
-            {i18n.t('design-studio.labels.elements')}
+          <TabsTab value="properties" size="sm">
+            {i18n.t('design-studio.labels.properties')}
           </TabsTab>
           <TabsTab value="layouts" size="sm">
             {i18n.t('design-studio.labels.layouts')}
           </TabsTab>
+          <TabsTab value="elements" size="sm">
+            {i18n.t('design-studio.labels.elements')}
+          </TabsTab>
         </TabsList>
         <Spacer />
-        <AddLayoutMenu />
+        {activePanel === 'layouts' && <AddLayoutMenu />}
+        {activePanel === 'properties' && (
+          <PropertyTypeSelectionMenu
+            existingProperties={[...designProperties, ...draftProperties]}
+            onSelect={handleAddProperty}
+          >
+            <IconButton
+              size="sm"
+              label="designs.properties.actions.add"
+              icon="plus"
+            />
+          </PropertyTypeSelectionMenu>
+        )}
+        {activePanel === 'elements' && <IconButtonSpacer size="sm" />}
       </div>
 
-      <TabsPanel value="elements">
-        <ElementsPalette />
+      <TabsPanel value="properties">
+        <DesignPropertiesPanel
+          draftProperties={draftProperties}
+          onSaveDraft={removeDraftProperty}
+          onCancelDraft={removeDraftProperty}
+        />
       </TabsPanel>
 
       <TabsPanel value="layouts">
         <ElementsTree />
+      </TabsPanel>
+
+      <TabsPanel value="elements">
+        <ElementsPalette />
       </TabsPanel>
     </Tabs>
   );

@@ -41,10 +41,10 @@ export interface DateElement extends DesignElementBase {
   style: TextElementStyle;
 
   /**
-   * Placeholder date displayed when the element has no content.
+   * Date content displayed when the element is static.
    * Stored as an ISO date string (YYYY-MM-DD).
    */
-  placeholder?: string;
+  content?: string;
 
   /**
    * Date formatting options.
@@ -62,7 +62,5 @@ export const DateElementConfig: DesignElementConfig = {
   template: {
     type: 'date',
     style: { ...DefaultTextElementStyle },
-    placeholder: '',
   },
-  generatePlaceholder: () => new Date().toISOString().slice(0, 10),
 };

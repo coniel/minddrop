@@ -7,6 +7,12 @@
   outline-color: var(--border-subtle);
 }
 
+.database-entry-fallback {
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+}
+
 .database-entry-page {
   height: 100%;
 }
