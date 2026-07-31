@@ -102,13 +102,16 @@ const Entry: React.FC<EntryProps> = ({
     return resolved;
   }, [database, layout]);
 
-  // Get display-ready property values (image paths, virtual view IDs, etc.)
+  // Get display-ready property values (image paths, virtual view IDs, etc.).
+  // Depends on entry.properties so the values recompute when a property is
+  // written after the entry is created (e.g. an image dropped into the view).
   const propertyValues = useMemo(
     () =>
       layout
         ? DatabaseEntries.displayPropertyValues(entry.id, layout, propertyMap)
         : {},
-    [entry.id, layout, propertyMap],
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- recompute on property changes
+    [entry.id, entry.properties, layout, propertyMap],
   );
 
   const onUpdatePropertyValue = useCallback(
