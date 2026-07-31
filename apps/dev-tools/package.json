@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",
-    "electrobun": "1.16.0",
+    "electrobun": "1.18.1",
     "monaco-editor": "^0.52.2",
     "monaco-vim": "^0.4.4",
     "react": "^19.2.4",
@@ -24,6 +24,7 @@
     "@types/bun": "latest",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
+    "@types/three": "^0.165.0",
     "@vitejs/plugin-react": "^5.1.4",
     "concurrently": "^9.1.0",
     "typescript": "^5.9.3",
