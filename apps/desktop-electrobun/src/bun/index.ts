@@ -27,7 +27,7 @@ const DEFAULT_STATE: WindowState = {
   displayId: '',
   isFullScreen: false,
 };
-const DEV_SERVER_PORT = 5173;
+const DEV_SERVER_PORT = 5183;
 const DEV_SERVER_URL = `http://localhost:${DEV_SERVER_PORT}`;
 const WINDOW_STATE_FILE = `${Utils.paths.config}/MindDrop/window-state.json`;
 

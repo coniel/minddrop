@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "bun run build && electrobun dev",
     "dev:hmr": "concurrently \"bun run hmr\" \"bun run dev\"",
-    "hmr": "vite --port 5173",
+    "hmr": "vite --port 5183",
     "build": "vite build && electrobun build",
     "build:dev": "electrobun build",
     "build:prod": "electrobun build --env=stable",
