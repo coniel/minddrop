@@ -4,10 +4,8 @@ import { Designs } from '@minddrop/designs';
 import { EditorElements, EditorMarks } from '@minddrop/editor';
 import { Events } from '@minddrop/events';
 import { initializeExtensions } from '@minddrop/extensions';
-import {
-  DatabaseViewStateStore,
-  EntryDialogSizesStore,
-} from '@minddrop/feature-databases';
+import { DatabaseViewStateStore } from '@minddrop/feature-databases';
+import { LayoutRegionSizesStore } from '@minddrop/feature-designs';
 import { initializeSearch } from '@minddrop/feature-search';
 import { initializeI18n } from '@minddrop/i18n';
 import { Search } from '@minddrop/search';
@@ -72,8 +70,8 @@ export async function initializeDesktopApp(): Promise<void> {
   // stores to JSON files in the workspace config directory
   registerWorkspaceStoreListeners();
 
-  // Hydrate entry dialog sizes from workspace config
-  await EntryDialogSizesStore.hydrate();
+  // Hydrate layout region sizes (dialogs, panels) from workspace config
+  await LayoutRegionSizesStore.hydrate();
 
   await Designs.initialize();
   await Views.initialize();

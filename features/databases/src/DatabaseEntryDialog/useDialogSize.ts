@@ -1,15 +1,30 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { WindowSizeSlot, getWindowSizeSlot } from '@minddrop/utils';
 import {
-  DialogSize,
-  EntryDialogSizesStore,
-  dialogSizeKey,
-} from './EntryDialogSizesStore';
+  LayoutRegionSizesStore,
+  layoutRegionSizeKey,
+} from '@minddrop/feature-designs';
+import { WindowSizeSlot, getWindowSizeSlot } from '@minddrop/utils';
 
 // Manages the entry dialog's size state. Restores a persisted size
 // (or falls back to a default) when the dialog opens, and adapts the
 // dimensions when the browser window is resized or crosses a size-slot
 // boundary.
+
+// Context and region under which entry dialog frame sizes are stored
+export const DIALOG_CONTEXT = 'dialog';
+export const DIALOG_FRAME_REGION = 'frame';
+
+export interface DialogSize {
+  /**
+   * The dialog width in pixels.
+   */
+  width: number;
+
+  /**
+   * The dialog height in pixels.
+   */
+  height: number;
+}
 
 // Minimum canvas dimensions
 const MIN_WIDTH = 200;
@@ -84,9 +99,14 @@ export function useDialogSize(
 
     // Attempt to restore a persisted size, fall back to defaults
     const saved = layoutId
-      ? (EntryDialogSizesStore.get(dialogSizeKey(layoutId, slot)) as
-          | DialogSize
-          | undefined)
+      ? LayoutRegionSizesStore.get(
+          layoutRegionSizeKey(
+            layoutId,
+            DIALOG_CONTEXT,
+            DIALOG_FRAME_REGION,
+            slot,
+          ),
+        )
       : undefined;
 
     const width = Math.min(
@@ -126,9 +146,14 @@ export function useDialogSize(
 
         // Try to load a saved size for the new slot, fall back to defaults
         const saved = layoutId
-          ? (EntryDialogSizesStore.get(dialogSizeKey(layoutId, newSlot)) as
-              | DialogSize
-              | undefined)
+          ? LayoutRegionSizesStore.get(
+              layoutRegionSizeKey(
+                layoutId,
+                DIALOG_CONTEXT,
+                DIALOG_FRAME_REGION,
+                newSlot,
+              ),
+            )
           : undefined;
 
         const width = Math.min(

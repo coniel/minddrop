@@ -3,6 +3,7 @@ export * from './constants';
 export * from './LayoutFrame';
 export * from './DesignElements';
 export * from './LayoutRenderer';
+export * from './LayoutRegionSizesStore';
 export * from './DesignsFeature';
 export * from './DesignStudioStore';
 export * from './events';
