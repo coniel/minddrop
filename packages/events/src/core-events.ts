@@ -5,6 +5,8 @@ export const CloseRightPanelEvent = 'app:right-panel:close';
 export const OpenConfirmationDialogEvent = 'app:confirmation-dialog:open';
 export const OpenAppSidebarEvent = 'app:sidebar:open';
 export const CloseAppSidebarEvent = 'app:sidebar:close';
+export const SetNavToolbarWidthEvent = 'app:nav-toolbar:set-width';
+export const ToggleWindowFillEvent = 'app:window:toggle-fill';
 
 export type OpenMainContentViewEventData<TProps = any> = {
   /**
@@ -28,6 +30,14 @@ export type OpenMainContentViewEventData<TProps = any> = {
    * of replacing the main content.
    */
   split?: boolean;
+};
+
+export type SetNavToolbarWidthEventData = {
+  /**
+   * Width in px the nav toolbar should adopt. A value of 0
+   * collapses it to auto width.
+   */
+  width: number;
 };
 
 export type OpenConfirmationDialogEventData = {
