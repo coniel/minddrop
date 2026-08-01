@@ -164,8 +164,9 @@
     height: 1.75rem;
   }
 
-  /* --- Highlighted / force-visible --- */
+  /* --- Hover / highlighted / force-visible --- */
 
+  &:hover,
   &[data-highlighted],
   &.menu-item-force-actions-visible {
     background-color: var(--surface-neutral);
@@ -180,6 +181,7 @@
   &.menu-item-active {
     background-color: var(--surface-neutral);
 
+    &:hover,
     &[data-highlighted],
     &.menu-item-force-actions-visible {
       background-color: var(--surface-neutral-hover);
@@ -197,6 +199,7 @@
     font-weight: var(--weight-medium);
 
     &.menu-item-active,
+    &:hover,
     &[data-highlighted] {
       color: var(--text-regular);
     }
@@ -205,6 +208,7 @@
   /* --- Danger --- */
 
   &.menu-item-danger {
+    &:hover,
     &[data-highlighted],
     &.menu-item-force-actions-visible {
       color: var(--text-danger);
@@ -277,6 +281,31 @@
     opacity: 1;
     width: auto;
     position: relative;
+  }
+}
+
+/* ------------------------------------------------------------
+   FLOATING MENU HOVER SUPPRESSION
+   Inside floating menus (dropdown, context, combobox/searchable),
+   keyboard navigation owns the highlight via [data-highlighted] or
+   the active state. A pointer :hover that lands on a different item
+   than the navigated one (e.g. a stationary cursor while a searchable
+   list filters beneath it) must not add a competing highlight, so the
+   :hover styling is reverted for those stray items.
+   ------------------------------------------------------------ */
+
+:is(.dropdown-menu-positioner, .context-menu-positioner, .combobox-positioner) {
+  .menu-item:hover:not([data-highlighted]):not(.menu-item-active) {
+    background-color: transparent;
+  }
+
+  .menu-item-muted:hover:not([data-highlighted]):not(.menu-item-active) {
+    color: var(--text-muted);
+  }
+
+  .menu-item-danger:hover:not([data-highlighted]):not(.menu-item-active) {
+    color: var(--text-regular);
+    background-color: transparent;
   }
 }
 
