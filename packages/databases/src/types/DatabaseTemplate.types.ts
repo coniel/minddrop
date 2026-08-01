@@ -10,12 +10,6 @@ export type DatabaseTemplate = Pick<Database, 'icon'> &
     name: TranslationKey;
     entryName: TranslationKey;
     description?: TranslationKey;
-    properties?: {
-      [key: string]: {
-        name: TranslationKey;
-        icon?: string;
-      };
-    };
     automations?: DatabaseAutomationTemplate[];
   };
 

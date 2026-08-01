@@ -14,6 +14,7 @@ import { VideosDatabaseTemplate } from './VideosDatabaseTemplate';
 import { VocabularyDatabaseTemplate } from './VocabularyDatabaseTemplate';
 import { WeblinksDatabaseTemplate } from './WeblinksDatabaseTemplate';
 
+export * from './BlankDatabaseTemplate';
 export * from './BooksDatabaseTemplate';
 export * from './ContactsDatabaseTemplate';
 export * from './DocumentsDatabaseTemplate';

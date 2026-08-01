@@ -237,10 +237,6 @@
         "title": "Properties",
         "description": "You can customise properties after creating the database."
       },
-      "getStarted": {
-        "title": "Choose a template or start from scratch",
-        "template": "Templates are just regular databases with pre-configured properties, designs, and sometimes automations. You can fully edit them to suit your workflow."
-      },
       "actions": {
         "create": "Create database"
       },
@@ -280,6 +276,11 @@
       }
     },
     "templates": {
+      "blank": {
+        "name": "Blank database",
+        "entryName": "Entry",
+        "description": "Start from scratch with just a title, created date, and last modified date. You can add more properties after creating the database."
+      },
       "notes": {
         "name": "Notes",
         "entryName": "Note",

@@ -70,7 +70,7 @@ describe('<NewDatabaseDialog />', () => {
     Events.dispatch(OpenNewDatabaseDialogEvent);
 
     await waitFor(() => {
-      screen.getByText('databases.form.getStarted.title');
+      screen.getByText('databases.templates.blank.description');
     });
   });
 
@@ -82,7 +82,9 @@ describe('<NewDatabaseDialog />', () => {
     await user.click(screen.getByText('actions.cancel'));
 
     await waitFor(() => {
-      expect(screen.queryByText('databases.form.getStarted.title')).toBeNull();
+      expect(
+        screen.queryByText('databases.templates.blank.description'),
+      ).toBeNull();
     });
   });
 

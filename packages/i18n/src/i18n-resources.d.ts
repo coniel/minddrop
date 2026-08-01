@@ -249,10 +249,6 @@ declare module 'i18next' {
               title: string;
               description: string;
             };
-            getStarted: {
-              title: string;
-              template: string;
-            };
             actions: {
               create: string;
             };
@@ -292,6 +288,11 @@ declare module 'i18next' {
             };
           };
           templates: {
+            blank: {
+              name: string;
+              entryName: string;
+              description: string;
+            };
             notes: {
               name: string;
               entryName: string;

@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
+  BlankDatabaseTemplate,
   DatabaseTemplate,
   DatabaseTemplates,
   Databases,
@@ -46,8 +47,16 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
   const [dialogOpen, setDialogOpen] = useState(defaultOpen);
   const [icon, setIcon] = useState(defaultIcon);
   const [customIcon, setCustomIcon] = useState(false);
+  // The blank template, used to create a database from scratch with only the
+  // title, created, and last modified date properties.
+  const blankTemplate = useMemo(
+    () => BlankDatabaseTemplate((key) => i18n.t(key, { defaultValue: key })),
+    [],
+  );
+  // The blank template is selected by default so the dialog opens ready to
+  // create a database from scratch.
   const [selectedTemplate, setSelectedTemplate] =
-    useState<DatabaseTemplate | null>(null);
+    useState<DatabaseTemplate>(blankTemplate);
   const { fieldProps, validateAllAsync, values, reset, setFieldValue } =
     useForm([
       {
@@ -68,11 +77,11 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
     // the dialog close animation to complete.
     setTimeout(() => {
       reset();
-      setSelectedTemplate(null);
+      setSelectedTemplate(blankTemplate);
       setIcon(defaultIcon);
       setCustomIcon(false);
     }, 300);
-  }, [reset]);
+  }, [reset, blankTemplate]);
 
   const toggleDialog = useCallback(() => {
     if (dialogOpen) {
@@ -139,15 +148,21 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
     [setFieldValue],
   );
 
-  let databaseTypeName: TranslationKey | null = null;
-  let databaseDescription: TranslationKey | null = null;
-  let properties: PropertiesSchema = [];
+  const handleSelectBlank = useCallback(() => {
+    setSelectedTemplate(blankTemplate);
+    setIcon(blankTemplate.icon);
+    setCustomIcon(false);
 
-  if (selectedTemplate) {
-    databaseTypeName = selectedTemplate.name;
-    databaseDescription = selectedTemplate.description || null;
-    properties = selectedTemplate.properties || [];
-  }
+    // Clear the fields so the user names their database from scratch
+    setFieldValue('name', '');
+    setFieldValue('entryName', '');
+  }, [blankTemplate, setFieldValue]);
+
+  const isBlankTemplate = selectedTemplate === blankTemplate;
+  const databaseTypeName: TranslationKey = selectedTemplate.name;
+  const databaseDescription: TranslationKey | null =
+    selectedTemplate.description || null;
+  const properties: PropertiesSchema = selectedTemplate.properties || [];
 
   return (
     <DialogRoot open={dialogOpen} onOpenChange={toggleDialog}>
@@ -155,13 +170,17 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
         <div className="left-column">
           <MenuGroup>
             <MenuLabel label="databases.form.labels.templates" />
+            <MenuItem
+              onClick={handleSelectBlank}
+              active={isBlankTemplate}
+              contentIcon={blankTemplate.icon}
+              label={blankTemplate.name}
+            />
             {databaseTemplates.map((template) => (
               <MenuItem
                 key={template.name}
                 onClick={() => handleSelectTemplate(template)}
-                active={
-                  !!selectedTemplate && selectedTemplate.name === template.name
-                }
+                active={selectedTemplate.name === template.name}
                 contentIcon={template.icon}
                 label={template.name}
               />
@@ -176,76 +195,63 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
               }
             />
           </div>
-          {!selectedTemplate && (
-            <div className="get-started">
-              <Heading text="databases.form.getStarted.title" />
-              <Text
-                size="base"
-                paragraph
-                color="muted"
-                text="databases.form.getStarted.template"
-              />
-            </div>
-          )}
-          {selectedTemplate && (
-            <div className="content">
-              <div className="description">
-                {databaseTypeName && <Heading text={databaseTypeName} />}
-                {databaseDescription && (
-                  <Text paragraph color="muted" text={databaseDescription} />
-                )}
-              </div>
-              <div className="fields">
-                <Group gap={2} align="end">
-                  <IconPicker
-                    closeOnSelect
-                    onSelect={handleSelectIcon}
-                    onClear={handleClearIcon}
-                    currentIcon={icon}
-                  >
-                    <IconButton
-                      label="databases.form.icon.label"
-                      size="lg"
-                      variant="filled"
-                      color="neutral"
-                    >
-                      <ContentIcon icon={icon} />
-                    </IconButton>
-                  </IconPicker>
-                  <TextField
-                    variant="filled"
-                    label="databases.form.name.label"
-                    placeholder="databases.form.name.placeholder"
-                    {...fieldProps.name}
-                  />
-                </Group>
-                <TextField
-                  variant="filled"
-                  label="databases.form.entryName.label"
-                  placeholder="databases.form.entryName.placeholder"
-                  {...fieldProps.entryName}
-                />
-              </div>
-              {properties.length > 0 && (
-                <MenuGroup className="properties">
-                  <Subheading text="databases.form.properties.title" />
-                  <Text
-                    paragraph
-                    size="sm"
-                    color="muted"
-                    text="databases.form.properties.description"
-                  />
-                  {properties.map((property) => (
-                    <MenuItem
-                      key={property.name}
-                      contentIcon={property.icon}
-                      label={property.name}
-                    />
-                  ))}
-                </MenuGroup>
+          <div className="content">
+            <div className="description">
+              <Heading text={databaseTypeName} />
+              {databaseDescription && (
+                <Text paragraph color="muted" text={databaseDescription} />
               )}
             </div>
-          )}
+            <div className="fields">
+              <Group gap={2} align="end">
+                <IconPicker
+                  closeOnSelect
+                  onSelect={handleSelectIcon}
+                  onClear={handleClearIcon}
+                  currentIcon={icon}
+                >
+                  <IconButton
+                    label="databases.form.icon.label"
+                    size="lg"
+                    variant="filled"
+                    color="neutral"
+                  >
+                    <ContentIcon icon={icon} />
+                  </IconButton>
+                </IconPicker>
+                <TextField
+                  variant="filled"
+                  label="databases.form.name.label"
+                  placeholder="databases.form.name.placeholder"
+                  {...fieldProps.name}
+                />
+              </Group>
+              <TextField
+                variant="filled"
+                label="databases.form.entryName.label"
+                placeholder="databases.form.entryName.placeholder"
+                {...fieldProps.entryName}
+              />
+            </div>
+            {properties.length > 0 && (
+              <MenuGroup className="properties">
+                <Subheading text="databases.form.properties.title" />
+                <Text
+                  paragraph
+                  size="sm"
+                  color="muted"
+                  text="databases.form.properties.description"
+                />
+                {properties.map((property) => (
+                  <MenuItem
+                    key={property.name}
+                    contentIcon={property.icon}
+                    label={property.name}
+                  />
+                ))}
+              </MenuGroup>
+            )}
+          </div>
           <div className="footer">
             <Button
               label="actions.cancel"
