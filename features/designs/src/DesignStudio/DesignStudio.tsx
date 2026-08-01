@@ -6,6 +6,7 @@ import {
   Events,
   OpenAppSidebarEvent,
   OpenMainContentViewEvent,
+  SetNavToolbarWidthEvent,
 } from '@minddrop/events';
 import { Panel, TextInput } from '@minddrop/ui-primitives';
 import { DesignDashboard } from '../DesignDashboard';
@@ -28,6 +29,9 @@ import { FlatRootDesignElement } from '../types';
 import { resetView } from '../viewportActions';
 import './DesignStudio.css';
 
+// Width of the left panel, matched by the nav toolbar (see DesignStudio.css)
+const LEFT_PANEL_WIDTH = 300;
+
 export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
   backEvent,
   backEventData,
@@ -40,6 +44,7 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
   const design = useDesignStudioStore((state) => state.design);
   const [designName, setDesignName] = useState(design?.name || '');
   const nameInputRef = useRef<HTMLInputElement>(null);
+  const isDesignOpen = Boolean(design);
 
   useEffect(() => {
     setDesignName(design?.name || '');
@@ -129,6 +134,14 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
       Events.dispatch(OpenAppSidebarEvent);
     };
   }, []);
+
+  // Match the nav toolbar to the left panel, which is only shown
+  // while a design is open
+  useEffect(() => {
+    Events.dispatch(SetNavToolbarWidthEvent, {
+      width: isDesignOpen ? LEFT_PANEL_WIDTH : 0,
+    });
+  }, [isDesignOpen]);
 
   // Close any open design when the studio unmounts so the next
   // open starts at the dashboard
