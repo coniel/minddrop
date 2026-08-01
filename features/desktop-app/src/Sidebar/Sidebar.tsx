@@ -12,6 +12,11 @@ export interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   width?: number;
 
   /**
+   * Callback fired continuously while the user drags to resize.
+   */
+  onResize?: (width: number) => void;
+
+  /**
    * Callback fired when user finishes resizing the sidebar.
    */
   onResized?: (width: number) => void;
@@ -22,6 +27,7 @@ export const Sidebar: FC<SidebarProps> = ({
   className,
   style = {},
   width: widthProp = 300,
+  onResize,
   onResized,
   ...other
 }) => {
@@ -33,22 +39,27 @@ export const Sidebar: FC<SidebarProps> = ({
   // Use local drag width during drag, prop value otherwise
   const width = isDragging ? dragWidth.current : widthProp;
 
-  const handleMouseMove = useCallback((event: MouseEvent) => {
-    if (!sidebar.current) {
-      return;
-    }
+  const handleMouseMove = useCallback(
+    (event: MouseEvent) => {
+      if (!sidebar.current) {
+        return;
+      }
 
-    const newWidth = Math.min(
-      Math.max(event.clientX - dragOffset.current, minWidth),
-      maxWidth,
-    );
+      const newWidth = Math.min(
+        Math.max(event.clientX - dragOffset.current, minWidth),
+        maxWidth,
+      );
 
-    dragWidth.current = newWidth;
+      dragWidth.current = newWidth;
 
-    // Update the DOM directly during drag for smooth resizing
-    sidebar.current.style.width = `${newWidth}px`;
-    sidebar.current.setAttribute('data-width', String(newWidth));
-  }, []);
+      // Update the DOM directly during drag for smooth resizing
+      sidebar.current.style.width = `${newWidth}px`;
+      sidebar.current.setAttribute('data-width', String(newWidth));
+
+      onResize?.(newWidth);
+    },
+    [onResize],
+  );
 
   const handleMouseUp = useCallback(() => {
     document.removeEventListener('mousemove', handleMouseMove);

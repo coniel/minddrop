@@ -3,6 +3,10 @@
   "app": {
     "version": "Version"
   },
+  "navigation": {
+    "back": "Back",
+    "forward": "Forward"
+  },
   "designStudio": {
     "open": "Open design studio",
     "exit": "Exit design studio",

@@ -1,0 +1,9 @@
+.app-nav-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  /* Reserve space on the left for the macOS window controls so the
+     buttons never collide with them, even at auto width */
+  padding-left: var(--app-window-controls-inset);
+  flex-shrink: 0;
+}

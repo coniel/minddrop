@@ -15,6 +15,10 @@ declare module 'i18next' {
         app: {
           version: string;
         };
+        navigation: {
+          back: string;
+          forward: string;
+        };
         designStudio: {
           open: string;
           exit: string;

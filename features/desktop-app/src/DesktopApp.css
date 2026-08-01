@@ -1,10 +1,25 @@
 .app {
+  /* Height of the top toolbar row content (nav + tabs) */
+  --app-topbar-height: 1.5rem;
+
+  /* Space reserved at the left of the nav toolbar for the macOS
+     window controls (traffic lights) */
+  --app-window-controls-inset: 70px;
+
   height: 100vh;
   display: flex;
   flex-direction: column;
   padding: 0.5rem;
   gap: 0.5rem;
   background-color: var(--app-background-color);
+}
+
+.app-topbar {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  height: var(--app-topbar-height);
+  flex-shrink: 0;
 }
 
 .content-panels {

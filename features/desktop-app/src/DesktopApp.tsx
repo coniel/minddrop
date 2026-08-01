@@ -10,6 +10,7 @@ import {
   OpenMainContentViewEvent,
   OpenMainContentViewEventData,
   OpenRightPanelEvent,
+  ToggleWindowFillEvent,
 } from '@minddrop/events';
 import { MindDropApiProvider } from '@minddrop/extensions';
 import { DatabasesFeature } from '@minddrop/feature-databases';
@@ -23,6 +24,8 @@ import {
 } from '@minddrop/ui-primitives';
 import { AppSidebar } from './AppSidebar';
 import { AppUiState } from './AppUiState';
+import { NavToolbar } from './NavToolbar';
+import { TabsToolbar } from './TabsToolbar';
 import './DesktopApp.css';
 
 export const DesktopApp: React.FC = () => {
@@ -51,6 +54,20 @@ export const DesktopApp: React.FC = () => {
     [],
   );
 
+  const handleTopbarDoubleClick = useCallback((event: React.MouseEvent) => {
+    // Ignore double-clicks on the toolbar controls, only the drag area
+    // toggles the window fill
+    if (
+      (event.target as HTMLElement).closest(
+        '.electrobun-webkit-app-region-no-drag',
+      )
+    ) {
+      return;
+    }
+
+    Events.dispatch(ToggleWindowFillEvent);
+  }, []);
+
   return (
     <TooltipProvider delay={1000} timeout={500}>
       <IconsProvider
@@ -59,6 +76,13 @@ export const DesktopApp: React.FC = () => {
       >
         <MindDropApiProvider>
           <div className="app">
+            <div
+              className="app-topbar electrobun-webkit-app-region-drag"
+              onDoubleClick={handleTopbarDoubleClick}
+            >
+              <NavToolbar />
+              <TabsToolbar />
+            </div>
             <div className="content-panels">
               {showSidebar && <AppSidebar />}
               <MainContent />

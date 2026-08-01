@@ -1,6 +1,7 @@
 .app-sidebar {
   position: relative;
-  padding: var(--space-2);
+  /* No top padding so the sidebar content lines up with the content area */
+  padding: 0 var(--space-2) var(--space-2);
   height: 100%;
   display: flex;
   flex-direction: column;
