@@ -22,6 +22,7 @@ import {
   IconButton,
   TooltipProvider,
 } from '@minddrop/ui-primitives';
+import { MainContentViews } from '@minddrop/views';
 import { AppSidebar } from './AppSidebar';
 import { AppUiState } from './AppUiState';
 import { NavToolbar } from './NavToolbar';
@@ -191,12 +192,8 @@ const MainContent: React.FC = () => {
     return <div className="main-content" />;
   }
 
-  const { component: MainViewComponent, props: mainProps } = mainView;
-
   // Render split layout when a split view is active
   if (splitView) {
-    const { component: SplitViewComponent, props: splitProps } = splitView;
-
     return (
       <div ref={containerRef} className="main-content main-content-split">
         <SplitViewPane
@@ -205,7 +202,7 @@ const MainContent: React.FC = () => {
           onSwap={handleSwap}
           style={{ flex: splitRatio }}
         >
-          <MainViewComponent {...mainProps} />
+          <MainContentViewRenderer view={mainView} />
         </SplitViewPane>
         <div
           className="split-view-resize-handle"
@@ -219,7 +216,7 @@ const MainContent: React.FC = () => {
           onSwap={handleSwap}
           style={{ flex: 100 - splitRatio }}
         >
-          <SplitViewComponent {...splitProps} />
+          <MainContentViewRenderer view={splitView} />
         </SplitViewPane>
       </div>
     );
@@ -227,9 +224,32 @@ const MainContent: React.FC = () => {
 
   return (
     <div className="main-content">
-      <MainViewComponent {...mainProps} />
+      <MainContentViewRenderer view={mainView} />
     </div>
   );
+};
+
+interface MainContentViewRendererProps {
+  /**
+   * The view to render, resolved to a component from the registered
+   * main content views by its `view` id.
+   */
+  view: OpenMainContentViewEventData;
+}
+
+/** Resolves a main content view by id and renders it with its props. */
+const MainContentViewRenderer: React.FC<MainContentViewRendererProps> = ({
+  view,
+}) => {
+  const registered = MainContentViews.use(view.view);
+
+  if (!registered) {
+    return null;
+  }
+
+  const ViewComponent = registered.component;
+
+  return <ViewComponent {...view.props} />;
 };
 
 interface SplitViewPaneProps {
@@ -308,13 +328,13 @@ const RightPanel: React.FC = () => {
     };
   }, []);
 
-  if (!view) return null;
-
-  const { component: ViewComponent, props } = view;
+  if (!view) {
+    return null;
+  }
 
   return (
     <div className="right-panel">
-      <ViewComponent {...props} />
+      <MainContentViewRenderer view={view} />
     </div>
   );
 };

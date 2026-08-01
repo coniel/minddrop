@@ -16,6 +16,7 @@ import { Workspaces } from '@minddrop/workspaces';
 import { AppUiState } from '../AppUiState';
 import { registerAppDataStoreListeners } from '../registerAppDataStoreListeners';
 import { registerWorkspaceStoreListeners } from '../registerWorkspaceStoreListeners';
+import { initializeMainContentViews } from './initializeMainContentViews';
 import { initializeSelection } from './initializeSelection';
 import { initializeViewTypes } from './initializeViewTypes';
 
@@ -61,6 +62,7 @@ export async function initializeDesktopApp(): Promise<void> {
   EditorMarks.registerDefaults();
   Ast.registerDefaultConfigs();
   initializeViewTypes();
+  initializeMainContentViews();
 
   // Initialize workspaces (sets Paths.workspace and
   // Paths.workspaceConfigs from the first loaded workspace)

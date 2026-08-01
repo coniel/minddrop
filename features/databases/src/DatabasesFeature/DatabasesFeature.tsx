@@ -5,9 +5,8 @@ import {
   OpenMainContentViewEventData,
 } from '@minddrop/events';
 import { DatabaseEntryDialog } from '../DatabaseEntryDialog';
-import { DatabaseEntryPage } from '../DatabaseEntryPage';
 import { DatabaseEntryRendererProps } from '../DatabaseEntryRenderer';
-import { DatabaseView, DatabaseViewProps } from '../DatabaseView';
+import { DatabaseViewProps } from '../DatabaseView';
 import { DatabasesFeatureState } from '../DatabasesFeatureState';
 import { NewDatabaseDialog } from '../NewDatabaseDialog';
 import {
@@ -66,7 +65,6 @@ export const DatabasesFeature: React.FC = () => {
           OpenMainContentViewEvent,
           {
             view: MainDatabaseViewName,
-            component: DatabaseView,
             props: data,
           },
         );
@@ -88,7 +86,6 @@ export const DatabasesFeature: React.FC = () => {
             OpenMainContentViewEventData<DatabaseEntryRendererProps>
           >(OpenMainContentViewEvent, {
             view: MainDatabaseEntryViewName,
-            component: DatabaseEntryPage,
             props: { entryId: data.entryId, layoutContext: 'page' },
             split: openMode === 'split',
           });

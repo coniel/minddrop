@@ -11,17 +11,13 @@ export const ToggleWindowFillEvent = 'app:window:toggle-fill';
 export type OpenMainContentViewEventData<TProps = any> = {
   /**
    * Identifier for the view being opened, following the
-   * convention `[package]:view:[name]`.
+   * convention `[package]:view:[name]`. The component to render
+   * is resolved from the registered main content views.
    */
   view: string;
 
   /**
-   * The component to render in the main content area.
-   */
-  component: React.ComponentType<TProps>;
-
-  /**
-   * Props passed to the component.
+   * Props passed to the view component.
    */
   props?: TProps;
 
@@ -30,6 +26,12 @@ export type OpenMainContentViewEventData<TProps = any> = {
    * of replacing the main content.
    */
   split?: boolean;
+
+  /**
+   * When opening a split view, the width of the left pane as a
+   * percentage (0-100). Used to restore a persisted split ratio.
+   */
+  splitRatio?: number;
 };
 
 export type SetNavToolbarWidthEventData = {

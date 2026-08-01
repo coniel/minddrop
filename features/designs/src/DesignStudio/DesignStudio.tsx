@@ -175,7 +175,6 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
       // to unmount the design studio and reopen the sidebar.
       Events.dispatch(OpenMainContentViewEvent, {
         view: DefaultMainContentViewName,
-        component: () => null,
       });
     }
   }, [backEvent, backEventData]);

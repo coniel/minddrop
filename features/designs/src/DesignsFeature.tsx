@@ -4,7 +4,6 @@ import {
   OpenMainContentViewEvent,
   OpenMainContentViewEventData,
 } from '@minddrop/events';
-import { DesignStudio } from './DesignStudio';
 import {
   DesignStudioEventListenerId,
   DesignStudioViewName,
@@ -55,7 +54,6 @@ export const DesignsFeature: React.FC = () => {
           OpenMainContentViewEventData<OpenDesignStudioEventData>
         >(OpenMainContentViewEvent, {
           view: DesignStudioViewName,
-          component: DesignStudio,
           props: eventData,
         });
       },

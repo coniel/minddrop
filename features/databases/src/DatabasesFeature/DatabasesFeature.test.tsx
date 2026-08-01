@@ -74,7 +74,6 @@ describe('DatabasesFeature', () => {
       // Dispatch a non-database view
       Events.dispatch<OpenMainContentViewEventData>(OpenMainContentViewEvent, {
         view: 'some-other:view:name',
-        component: () => null,
       });
     }));
 });

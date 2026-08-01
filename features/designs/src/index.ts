@@ -6,5 +6,6 @@ export * from './LayoutRenderer';
 export * from './LayoutRegionSizesStore';
 export * from './DesignsFeature';
 export * from './DesignStudioStore';
+export * from './registerDesignMainContentViews';
 export * from './events';
 export * from './types';
