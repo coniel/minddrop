@@ -105,6 +105,10 @@ export type WebviewRPC = {
         params: Record<string, never>;
         response: number;
       };
+      windowToggleFill: {
+        params: Record<string, never>;
+        response: void;
+      };
       openUrl: {
         params: { url: string };
         response: void;

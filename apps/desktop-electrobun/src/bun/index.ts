@@ -8,6 +8,7 @@ import {
 import { myWebviewRPC } from './bun-rpc';
 import { initializeSearch } from './search';
 import { initializeSql } from './sql';
+import { setWindowRpcTarget } from './windowRpc';
 import './server';
 
 type WindowState = {
@@ -157,6 +158,10 @@ const mainWindow = new BrowserWindow({
     width: state.width,
     height: state.height,
   },
+  trafficLightOffset: {
+    x: 15,
+    y: 11,
+  },
   titleBarStyle: 'hiddenInset',
   styleMask: {
     Borderless: true,
@@ -164,7 +169,14 @@ const mainWindow = new BrowserWindow({
   },
 });
 
+// trafficLightOffset.y is ignored when using titleBarStyle: 'hiddenInset'
+// so we need to set the position manually to fix the offset.
+mainWindow.setWindowButtonPosition(15, 11);
+
 mainWindow.setFullScreen(state.isFullScreen);
+
+// Allow window RPC handlers to control the main window
+setWindowRpcTarget(mainWindow);
 
 // Quit the app when the main window is closed
 mainWindow.on('close', () => {

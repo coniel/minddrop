@@ -24,6 +24,7 @@ import {
   handleSqlRun,
   handleSqlTransaction,
 } from './sql';
+import { windowRpcHandlers } from './windowRpc';
 
 export type RpcHandler = typeof fileSystemRpcHandlers;
 
@@ -36,6 +37,8 @@ export const myWebviewRPC = BrowserView.defineRPC<WebviewRPC>({
       ...backEndUtilsRpcHandlers,
       // HTTP server port
       getHttpServerPort: () => httpServer.port,
+      // Window RPC handlers
+      ...windowRpcHandlers,
       // SQL RPC handlers
       sqlOpen: handleSqlOpen,
       sqlExec: handleSqlExec,

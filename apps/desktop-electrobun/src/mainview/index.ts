@@ -1,5 +1,6 @@
 import Electrobun, { Electroview } from 'electrobun/view';
 import { Databases } from '@minddrop/databases';
+import { Events, ToggleWindowFillEvent } from '@minddrop/events';
 import { Paths } from '@minddrop/utils';
 import { WebviewRPC } from '../types';
 import { registerBackEndUtilsAdapter } from './registerBackEndUtilsAdapter';
@@ -39,6 +40,11 @@ registerBackEndUtilsAdapter(electrobun.rpc);
 registerSqlAdapterRpc(electrobun.rpc);
 registerDatabasesBackendAdapterRpc(electrobun.rpc);
 registerSearchAdapterRpc(electrobun.rpc);
+
+// Toggle the window fill when the top bar is double-clicked
+Events.addListener(ToggleWindowFillEvent, 'desktop-electrobun', () => {
+  electrobun.rpc?.request.windowToggleFill({});
+});
 
 // Fetch the HTTP server port and store it for use by
 // file system operations (image loading, binary uploads)
