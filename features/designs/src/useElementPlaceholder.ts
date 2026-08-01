@@ -1,5 +1,6 @@
 import { useTranslation } from '@minddrop/i18n';
 import { PropertySchema } from '@minddrop/properties';
+import { useDesignPreview } from './DesignElements';
 import {
   useDesignProperties,
   useDesignPropertySchemas,
@@ -108,10 +109,11 @@ export function useElementPlaceholderIcon(
 
 /**
  * Resolves the design property an element is bound to against
- * the rendered design's schemas: the studio design's properties
- * in the studio, the schemas provider otherwise. Entry rendering
- * always resolves against the schemas provider so entries inside
- * the studio (e.g. view elements) use their own design.
+ * the rendered design's schemas: the schemas provider when present
+ * (entry rendering, dashboard previews), falling back to the studio
+ * design's properties in the studio. Preferring the schemas provider
+ * lets each preview resolve its own design rather than whichever
+ * design happens to be open in the studio.
  */
 function useBoundDesignProperty(
   element: Pick<PlaceholderElement, 'property'>,
@@ -119,16 +121,21 @@ function useBoundDesignProperty(
   property: PropertySchema | null;
   isEntryContext: boolean;
 } {
-  // Present only when rendering real entries
-  const entryContext = useDesignProperties();
+  // Previews render the design template, not a real entry, even
+  // when nested in an ambient entry context
+  const isPreview = useDesignPreview();
+  const designProperties = useDesignProperties();
   const studioProperties = useDesignStudioStore(
     (state) => state.design?.properties,
   );
   const schemaProperties = useDesignPropertySchemas();
 
+  // Present only when rendering real entries, never in previews
+  const entryContext = isPreview ? null : designProperties;
+
   const properties = entryContext
     ? schemaProperties || []
-    : studioProperties || schemaProperties || [];
+    : schemaProperties || studioProperties || [];
 
   const property = element.property
     ? properties.find((candidate) => candidate.name === element.property) ||

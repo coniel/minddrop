@@ -12,6 +12,7 @@ import {
 } from '../DesignPropertiesProvider';
 import { cleanup, element_text_1, setup } from '../test-utils';
 import { DesignElement } from './DesignElement';
+import { DesignPreviewProvider } from './DesignPreviewContext';
 
 const { designProperties } = DesignFixtures;
 
@@ -115,5 +116,29 @@ describe('<DesignElement />', () => {
     });
 
     expect(elementRendered(container)).toBe(false);
+  });
+
+  it('shows the placeholder in preview mode even when empty and behavior is hide', () => {
+    const element = { ...boundElement, emptyBehavior: 'hide' as const };
+    const designSchemas: PropertiesSchema = [
+      { ...designProperties[0], name: 'Title', placeholder: 'Ph' },
+    ];
+
+    const { container } = render(
+      <DesignPreviewProvider value>
+        <DesignPropertySchemasProvider properties={designSchemas}>
+          <DesignPropertiesProvider
+            properties={properties}
+            propertyValues={{}}
+            propertyMap={propertyMap}
+          >
+            <DesignElement element={element} />
+          </DesignPropertiesProvider>
+        </DesignPropertySchemasProvider>
+      </DesignPreviewProvider>,
+    );
+
+    expect(elementRendered(container)).toBe(true);
+    expect(screen.getByText('Ph')).toBeInTheDocument();
   });
 });

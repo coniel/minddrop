@@ -1,4 +1,5 @@
 import { DesignElement, isEmptyPropertyValue } from '@minddrop/designs';
+import { useDesignPreview } from './DesignElements';
 import {
   useDesignProperties,
   useElementProperty,
@@ -15,13 +16,15 @@ import { useElementPlaceholder } from './useElementPlaceholder';
  * while editing.
  */
 export function useElementHidden(element: DesignElement): boolean {
+  const isPreview = useDesignPreview();
   const entryContext = useDesignProperties();
   const property = useElementProperty(element.id);
   const placeholder = useElementPlaceholder(element);
 
   // Outside real entry rendering (studio/preview) elements are
-  // never hidden so they remain visible and selectable
-  if (!entryContext) {
+  // never hidden so they remain visible and selectable. Previews
+  // always show placeholders even when nested in an entry context.
+  if (isPreview || !entryContext) {
     return false;
   }
 
