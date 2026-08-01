@@ -14,7 +14,7 @@
 
   .design-dashboard-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
     gap: var(--space-4);
   }
 
@@ -40,11 +40,15 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 120px;
+      height: 180px;
       background-color: var(--surface-subtle);
       color: var(--text-muted);
       overflow: hidden;
       pointer-events: none;
+
+      .dark-theme & {
+        background-color: var(--surface-app);
+      }
     }
 
     .design-dashboard-card-preview-canvas {
