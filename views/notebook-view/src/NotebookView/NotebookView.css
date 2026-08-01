@@ -55,7 +55,7 @@
 }
 
 .notebook-view-resize-handle:hover .notebook-view-resize-indicator {
-  background-color: var(--primary4);
+  background-color: var(--primary-400);
   transition-delay: 0.3s;
   transition-duration: 0.2s;
 }
@@ -64,7 +64,7 @@
 .notebook-view[data-dragging]
   .notebook-view-resize-handle:hover
   .notebook-view-resize-indicator {
-  background-color: var(--primary4);
+  background-color: var(--primary-400);
   transition-delay: 0s;
   transition-duration: 0s;
 }
