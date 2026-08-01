@@ -7,6 +7,19 @@ import { disablePagePanel } from './disablePagePanel';
 
 const base = layout_page_1.tree;
 
+// A page root with a background and padding
+const styledBase = {
+  ...base,
+  style: {
+    ...base.style,
+    backgroundColor: 'red',
+    paddingTop: 16,
+    paddingRight: 16,
+    paddingBottom: 16,
+    paddingLeft: 16,
+  },
+};
+
 describe('disablePagePanel', () => {
   it('removes the panel while keeping the other panel and content', () => {
     const root = enablePagePanel(enablePagePanel(base, 'left'), 'right');
@@ -28,12 +41,17 @@ describe('disablePagePanel', () => {
     expect(result.children).toEqual(base.children);
   });
 
-  it('restores the root style from the content region on unwrap', () => {
-    const root = enablePagePanel(base, 'left');
+  it('restores the moved padding and column direction on unwrap', () => {
+    const root = enablePagePanel(styledBase, 'left');
 
     const result = disablePagePanel(root, 'left');
 
-    expect(result.style).toEqual(base.style);
+    // Padding moved to the content region is restored to the root
+    expect(result.style.paddingTop).toBe(16);
+    // The root returns to a column layout
+    expect(result.style.direction).toBe('column');
+    // The page styling that stayed on the root is untouched
+    expect(result.style.backgroundColor).toBe('red');
   });
 
   it('returns the root unchanged when the side has no panel', () => {

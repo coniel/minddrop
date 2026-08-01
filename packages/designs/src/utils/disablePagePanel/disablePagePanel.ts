@@ -26,12 +26,23 @@ export function disablePagePanel(
   const otherPanel = side === 'left' ? regions.right : regions.left;
 
   // Removing the last panel: unwrap the content region back into the
-  // root, restoring its style and children.
+  // root. The root kept its styling while panelled, so only restore
+  // the column direction and the padding that was moved to the content
+  // region.
   if (!otherPanel) {
+    const content = regions.content;
+
     return {
       ...root,
-      style: regions.content ? regions.content.style : root.style,
-      children: regions.content ? regions.content.children : [],
+      style: {
+        ...root.style,
+        direction: 'column',
+        paddingTop: content?.style.paddingTop ?? 0,
+        paddingRight: content?.style.paddingRight ?? 0,
+        paddingBottom: content?.style.paddingBottom ?? 0,
+        paddingLeft: content?.style.paddingLeft ?? 0,
+      },
+      children: content ? content.children : [],
     };
   }
 

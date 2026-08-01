@@ -6,6 +6,19 @@ import { enablePagePanel } from './enablePagePanel';
 
 const base = layout_page_1.tree;
 
+// A page root with a background and padding
+const styledBase = {
+  ...base,
+  style: {
+    ...base.style,
+    backgroundColor: 'red',
+    paddingTop: 16,
+    paddingRight: 16,
+    paddingBottom: 16,
+    paddingLeft: 16,
+  },
+};
+
 describe('enablePagePanel', () => {
   it('wraps free-form children into a content region', () => {
     const root = enablePagePanel(base, 'left');
@@ -50,6 +63,21 @@ describe('enablePagePanel', () => {
     );
 
     expect(contentRegions).toHaveLength(1);
+  });
+
+  it('keeps the page styling on the root', () => {
+    const root = enablePagePanel(styledBase, 'left');
+
+    expect(root.style.backgroundColor).toBe('red');
+  });
+
+  it('moves the padding from the root to the content region', () => {
+    const root = enablePagePanel(styledBase, 'left');
+
+    const { content } = getPanelRegions(root);
+
+    expect(root.style.paddingTop).toBe(0);
+    expect(content?.style.paddingTop).toBe(16);
   });
 
   it('returns the root unchanged when the side already has a panel', () => {

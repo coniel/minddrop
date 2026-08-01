@@ -6,10 +6,7 @@ import {
   PagePanelSide,
   RootElement,
 } from '../../design-element-configs';
-import {
-  ContainerElementStyle,
-  DefaultContainerElementStyle,
-} from '../../styles';
+import { DefaultContainerElementStyle } from '../../styles';
 import { getPanelRegions, orderPanelRegions } from '../getPanelRegions';
 import { isPanelledRoot } from '../isPanelledRoot';
 
@@ -40,7 +37,10 @@ export function enablePagePanel(
   const panelled = isPanelledRoot(root);
 
   // When enabling the first panel, move the root's free-form children
-  // into a content region and clean up the root's own style.
+  // into a content region. The root keeps all of its styling (so the
+  // page background, border, etc. still frame the whole page) and only
+  // switches to a row; the padding moves to the content region so the
+  // panels sit flush to the frame edges.
   let content = regions.content;
   let style = root.style;
 
@@ -49,10 +49,24 @@ export function enablePagePanel(
       id: uuid(),
       type: 'container',
       role: 'content',
-      style: root.style,
+      style: {
+        ...DefaultContainerElementStyle,
+        backgroundColor: 'transparent',
+        paddingTop: root.style.paddingTop,
+        paddingRight: root.style.paddingRight,
+        paddingBottom: root.style.paddingBottom,
+        paddingLeft: root.style.paddingLeft,
+      },
       children: root.children,
     };
-    style = createPanelledRootStyle(root.style);
+    style = {
+      ...root.style,
+      direction: 'row',
+      paddingTop: 0,
+      paddingRight: 0,
+      paddingBottom: 0,
+      paddingLeft: 0,
+    };
   }
 
   const panel = createPagePanel(side);
@@ -97,34 +111,7 @@ function createContentRegion(): ContainerElement {
     id: uuid(),
     type: 'container',
     role: 'content',
-    style: { ...DefaultContainerElementStyle },
+    style: { ...DefaultContainerElementStyle, backgroundColor: 'transparent' },
     children: [],
-  };
-}
-
-/**
- * Derives the panel-row style for a root from its previous style:
- * a horizontal, transparent, gutter-free row that lets its regions
- * fill the frame.
- */
-function createPanelledRootStyle(
-  style: ContainerElementStyle,
-): ContainerElementStyle {
-  return {
-    ...style,
-    direction: 'row',
-    gap: 0,
-    stretch: true,
-    backgroundColor: 'transparent',
-    backgroundImage: '',
-    paddingTop: 0,
-    paddingRight: 0,
-    paddingBottom: 0,
-    paddingLeft: 0,
-    borderStyle: 'none',
-    borderRadiusTopLeft: 0,
-    borderRadiusTopRight: 0,
-    borderRadiusBottomRight: 0,
-    borderRadiusBottomLeft: 0,
   };
 }
