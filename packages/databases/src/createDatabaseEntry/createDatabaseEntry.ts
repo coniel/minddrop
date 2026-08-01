@@ -11,6 +11,7 @@ import {
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntrySerializer } from '../getDatabaseEntrySerializer';
 import { DatabaseEntry } from '../types';
+import { setTimestampProperties } from '../utils';
 import { writeDatabaseEntry } from '../writeDatabaseEntry';
 
 /**
@@ -64,15 +65,25 @@ export async function createDatabaseEntry<
     path = Fs.concatPath(path, `${incrementalPath.name}.${fileExtension}`);
   }
 
+  // The entry's creation and last modified timestamp
+  const now = new Date();
+
   // Create the new entry with workspace-relative path as ID
   const entry: DatabaseEntry<TProperties> = {
     id: path.replace(`${Paths.workspace}/`, ''),
     database: databaseId,
     title: titleFromPath(path),
     path,
-    created: new Date(),
-    lastModified: new Date(),
-    properties: Properties.defaults(database.properties, properties),
+    created: now,
+    lastModified: now,
+    // Populate the created/last-modified timestamp property values so they
+    // persist to the entry file
+    properties: setTimestampProperties(
+      database.properties,
+      Properties.defaults(database.properties, properties),
+      ['created', 'last-modified'],
+      now,
+    ),
     metadata: {},
   };
 

@@ -5,8 +5,10 @@ import {
   DatabaseEntryUpdatedEvent,
   DatabaseEntryUpdatedEventData,
 } from '../events';
+import { getDatabase } from '../getDatabase';
 import { getDatabaseEntry } from '../getDatabaseEntry';
 import { DatabaseEntry } from '../types';
+import { setTimestampProperties } from '../utils';
 import { writeDatabaseEntry } from '../writeDatabaseEntry';
 
 export interface DatabaseEntryUpdateData {
@@ -51,7 +53,17 @@ export async function updateDatabaseEntry(
   }
 
   // Update the last modified date
-  updatedEntry.lastModified = new Date();
+  const now = new Date();
+  updatedEntry.lastModified = now;
+
+  // Populate the last-modified timestamp property value so it persists to
+  // the entry file
+  updatedEntry.properties = setTimestampProperties(
+    getDatabase(originalEntry.database).properties,
+    updatedEntry.properties,
+    ['last-modified'],
+    now,
+  );
 
   // Update the entry in the store
   DatabaseEntriesStore.update(id, updatedEntry);

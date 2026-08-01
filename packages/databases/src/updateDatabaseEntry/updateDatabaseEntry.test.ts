@@ -3,7 +3,13 @@ import { Events } from '@minddrop/events';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabaseEntryNotFoundError } from '../errors';
 import { DatabaseEntryUpdatedEvent } from '../events';
-import { MockFs, cleanup, objectEntry1, setup } from '../test-utils';
+import {
+  MockFs,
+  cleanup,
+  objectEntry1,
+  setup,
+  timestampEntry1,
+} from '../test-utils';
 import { updateDatabaseEntry } from './updateDatabaseEntry';
 
 const update = {
@@ -34,6 +40,17 @@ describe('updateDatabaseEntry', () => {
 
     expect(entry.lastModified.getTime()).toBeGreaterThan(
       objectEntry1.lastModified.getTime(),
+    );
+  });
+
+  it('updates the last-modified timestamp property value', async () => {
+    const entry = await updateDatabaseEntry(timestampEntry1.id, update);
+
+    // Last Modified property value should match the new lastModified date
+    expect(entry.properties['Last Modified']).toEqual(entry.lastModified);
+    // Created property value should be left untouched
+    expect(entry.properties.Created).toEqual(
+      timestampEntry1.properties.Created,
     );
   });
 

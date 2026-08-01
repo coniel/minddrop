@@ -10,6 +10,7 @@ import {
   objectDatabase,
   objectEntry1,
   setup,
+  timestampDatabase,
 } from '../test-utils';
 import { DatabaseEntry } from '../types';
 import { createDatabaseEntry } from './createDatabaseEntry';
@@ -110,6 +111,13 @@ describe('createDatabaseEntry', () => {
       ...newEntry.properties,
       ...customProperties,
     });
+  });
+
+  it('sets the created and last-modified timestamp property values', async () => {
+    const entry = await createDatabaseEntry(timestampDatabase.id);
+
+    expect(entry.properties.Created).toEqual(objectEntry1.created);
+    expect(entry.properties['Last Modified']).toEqual(objectEntry1.created);
   });
 
   it('dispatches an entry created event', async () =>

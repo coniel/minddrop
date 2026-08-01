@@ -18,3 +18,4 @@ export * from './entryDisplayPropertyValues';
 export * from './convertEntryToSqlRecord';
 export * from './convertSqlRecordToEntry';
 export * from './rekeyDatabaseMetadata';
+export * from './setTimestampProperties';
