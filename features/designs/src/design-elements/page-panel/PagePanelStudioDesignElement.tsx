@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { DesignStudioStore, updateElementStyle } from '../../DesignStudioStore';
 import { FlatPagePanelDesignElement } from '../../types';
 import { ContainerStudioDesignElement } from '../container';
-import './PagePanelStudioDesignElement.css';
+import './page-panel-resize.css';
 
 // Width bounds applied while dragging a panel edge
 const MIN_PANEL_WIDTH = 120;

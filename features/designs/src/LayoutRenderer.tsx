@@ -6,6 +6,8 @@ import {
   DesignPropertiesProviderProps,
   DesignPropertySchemasProvider,
 } from './DesignPropertiesProvider';
+import { LayoutIdProvider } from './LayoutIdContext';
+import { LayoutRenderContextProvider } from './LayoutRenderContext';
 
 export interface LayoutRendererProps
   extends Pick<
@@ -16,6 +18,13 @@ export interface LayoutRendererProps
    * The layout to render.
    */
   layout: Layout;
+
+  /**
+   * The context in which the layout is rendered (e.g. `page`,
+   * `dialog`). Scopes runtime UI state such as panel widths so the
+   * same layout can be sized differently per context.
+   */
+  context?: string;
 
   /**
    * The property schemas of the layout's parent design, used to
@@ -31,6 +40,7 @@ export interface LayoutRendererProps
  */
 export const LayoutRenderer: React.FC<LayoutRendererProps> = ({
   layout,
+  context,
   designProperties = [],
   properties = [],
   propertyValues = {},
@@ -45,7 +55,11 @@ export const LayoutRenderer: React.FC<LayoutRendererProps> = ({
         propertyMap={propertyMap}
         onUpdatePropertyValue={onUpdatePropertyValue}
       >
-        <DesignRootElement element={layout.tree} />
+        <LayoutIdProvider value={layout.id}>
+          <LayoutRenderContextProvider value={context ?? null}>
+            <DesignRootElement element={layout.tree} />
+          </LayoutRenderContextProvider>
+        </LayoutIdProvider>
       </DesignPropertiesProvider>
     </DesignPropertySchemasProvider>
   );

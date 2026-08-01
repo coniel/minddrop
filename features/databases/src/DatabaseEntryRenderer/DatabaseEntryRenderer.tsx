@@ -203,6 +203,7 @@ const Entry: React.FC<EntryProps> = ({
     >
       <LayoutRenderer
         layout={layout}
+        context={layoutContext}
         designProperties={design?.properties}
         propertyMap={propertyMap}
         propertyValues={propertyValues}

@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import {
   ContainerElement,
+  PagePanelElement,
   createBackdropImageWrapperStyle,
   createContainerCssStyle,
   getBackgroundImageStyle,
@@ -15,9 +16,10 @@ import { getRegionFlexStyle } from '../../utils';
 
 export interface ContainerDesignElementProps {
   /**
-   * The container element to render.
+   * The container element to render. Page panels reuse this
+   * renderer since they are structurally containers.
    */
-  element: ContainerElement;
+  element: ContainerElement | PagePanelElement;
 }
 
 /**
