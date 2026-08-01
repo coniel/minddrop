@@ -8,6 +8,10 @@ import {
   LayoutFrame,
   LayoutType,
   Layouts,
+  PagePanelSide,
+  RootElement,
+  disablePagePanel as disablePagePanelTree,
+  enablePagePanel as enablePagePanelTree,
 } from '@minddrop/designs';
 import {
   PropertiesSchema,
@@ -194,6 +198,17 @@ export interface DesignStudioStore {
    * @param id - The ID of the element to remove.
    */
   removeElement: (id: string) => void;
+
+  /**
+   * Replaces a layout's entire flat element map, e.g. after
+   * applying a tree transform such as enabling a page panel.
+   * @param layoutId - The ID of the layout to replace the elements of.
+   * @param elements - The new flat element map.
+   */
+  replaceLayoutElements: (
+    layoutId: string,
+    elements: Record<string, FlatDesignElement>,
+  ) => void;
 
   /**
    * Selects an element by ID, or deselects if null.
@@ -474,6 +489,15 @@ export const DesignStudioStore = createStore<DesignStudioStore>((set) => ({
         },
       };
     });
+  },
+
+  replaceLayoutElements: (layoutId, elements) => {
+    set((state) => ({
+      elementsByLayout: {
+        ...state.elementsByLayout,
+        [layoutId]: elements,
+      },
+    }));
   },
 
   selectElement: (id, layoutId) =>
@@ -885,6 +909,11 @@ export const moveDesignElement = (
   newParentId: string,
   index: number,
 ) => {
+  // Free-form content can't be dropped into the panel row itself
+  if (newParentId === 'root' && isActiveRootPanelled()) {
+    return;
+  }
+
   const store = DesignStudioStore.getState();
 
   store.moveElement(id, newParentId, index);
@@ -906,6 +935,11 @@ export const addDeisgnElementFromTemplate = (
   index: number,
   layoutId?: string,
 ) => {
+  // New elements can't be dropped into the panel row itself
+  if (parentId === 'root' && isActiveRootPanelled()) {
+    return;
+  }
+
   const element = {
     ...template,
     id: uuid(),
@@ -915,6 +949,86 @@ export const addDeisgnElementFromTemplate = (
   DesignStudioStore.getState().addElement(element, parentId, index, layoutId);
   selectDroppedElement(element.id, layoutId);
   saveDesign();
+};
+
+/**
+ * Enables a panel on the given side of the active layout's page
+ * root, wrapping its content into a content region as needed.
+ * @param side - The side to add the panel to.
+ */
+export const addPagePanel = (side: PagePanelSide) => {
+  applyPagePanelTransform((root) => enablePagePanelTree(root, side));
+};
+
+/**
+ * Disables the panel on the given side of the active layout's page
+ * root, discarding its contents.
+ * @param side - The side whose panel to remove.
+ */
+export const removePagePanel = (side: PagePanelSide) => {
+  applyPagePanelTransform((root) => disablePagePanelTree(root, side));
+};
+
+/**
+ * Applies a page-root tree transform to the active layout by
+ * reconstructing its tree, transforming it, and re-flattening the
+ * result back into the store.
+ */
+const applyPagePanelTransform = (
+  transform: (root: RootElement) => RootElement,
+) => {
+  const state = DesignStudioStore.getState();
+  const layoutId = state.activeLayoutId;
+
+  if (!layoutId) {
+    return;
+  }
+
+  const elements = state.elementsByLayout[layoutId];
+
+  if (!elements) {
+    return;
+  }
+
+  const root = reconstructTree(elements);
+
+  state.replaceLayoutElements(layoutId, flattenTree(transform(root)));
+  state.selectElement('root', layoutId);
+  saveDesign();
+};
+
+/**
+ * Whether the active layout's root is panelled. Used to reject
+ * dropping free-form content directly into the panel row.
+ */
+const isActiveRootPanelled = (): boolean => {
+  const state = DesignStudioStore.getState();
+  const layoutId = state.activeLayoutId;
+
+  if (!layoutId) {
+    return false;
+  }
+
+  const elements = state.elementsByLayout[layoutId];
+  const root = elements?.['root'];
+
+  if (!root || !('children' in root)) {
+    return false;
+  }
+
+  return root.children.some((childId) => {
+    const child = elements[childId];
+
+    if (!child) {
+      return false;
+    }
+
+    if (child.type === 'page-panel') {
+      return true;
+    }
+
+    return child.type === 'container' && child.role === 'content';
+  });
 };
 
 /**

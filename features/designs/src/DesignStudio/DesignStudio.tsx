@@ -14,7 +14,9 @@ import { DesignStudioLeftPanel } from '../DesignStudioLeftPanel';
 import { DesignStudioRootElement } from '../DesignStudioRootElement';
 import {
   DesignStudioStore,
+  getDesignElement,
   removeLayout,
+  removePagePanel,
   renameDesign,
   saveDesign,
   useDesignStudioStore,
@@ -110,6 +112,20 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
         if (activeLayoutId) {
           removeLayout(activeLayoutId);
         }
+
+        return;
+      }
+
+      const element = getDesignElement(highlightedElementId);
+
+      // The content region of a panelled root cannot be deleted
+      if (element?.type === 'container' && element.role === 'content') {
+        return;
+      }
+
+      // Deleting a panel disables it, discarding its contents
+      if (element?.type === 'page-panel') {
+        removePagePanel(element.side);
 
         return;
       }

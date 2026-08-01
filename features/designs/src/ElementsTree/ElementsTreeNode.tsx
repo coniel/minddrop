@@ -49,6 +49,24 @@ function hasChildren(
   return 'children' in element && Array.isArray(element.children);
 }
 
+// Region children of a panelled page root get a role/side specific
+// label instead of their generic element type label
+function getRegionLabelKey(element: FlatDesignElement): TranslationKey | null {
+  if (element.type === 'page-panel') {
+    if (element.side === 'left') {
+      return 'designs.page-panels.left.label';
+    }
+
+    return 'designs.page-panels.right.label';
+  }
+
+  if (element.type === 'container' && element.role === 'content') {
+    return 'designs.page-panels.content.label';
+  }
+
+  return null;
+}
+
 export const ElementsTreeNode: React.FC<ElementsTreeNodeProps> = ({
   elementId,
   depth,
@@ -71,7 +89,7 @@ export const ElementsTreeNode: React.FC<ElementsTreeNodeProps> = ({
   }
 
   const resolvedIcon = icon || elementIconMap[element.type] || 'box';
-  const labelKey = elementLabelMap[element.type];
+  const labelKey = getRegionLabelKey(element) || elementLabelMap[element.type];
   const resolvedLabel = label || (labelKey ? t(labelKey) : element.type);
   const isContainer = hasChildren(element) && element.children.length > 0;
 

@@ -945,6 +945,18 @@ declare module 'i18next' {
           layout: {
             label: string;
           };
+          'page-panels': {
+            label: string;
+            content: {
+              label: string;
+            };
+            left: {
+              label: string;
+            };
+            right: {
+              label: string;
+            };
+          };
           direction: {
             label: string;
             column: string;

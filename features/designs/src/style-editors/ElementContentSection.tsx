@@ -34,7 +34,7 @@ const IMAGE_CONTENT_TYPES = ['image', 'image-viewer'];
 
 // Element types whose image property binding is configured in the
 // Background section of their style editor instead
-const BACKGROUND_IMAGE_ELEMENT_TYPES = ['container', 'root'];
+const BACKGROUND_IMAGE_ELEMENT_TYPES = ['container', 'root', 'page-panel'];
 
 // Fallback icon applied when switching an icon element to static
 // mode with no icon set

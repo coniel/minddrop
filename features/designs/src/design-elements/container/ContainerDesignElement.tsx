@@ -11,6 +11,7 @@ import { Fs } from '@minddrop/file-system';
 import { DesignElement } from '../../DesignElements/DesignElement';
 import { useElementProperty } from '../../DesignPropertiesProvider';
 import { useElementPlaceholderImage } from '../../useElementPlaceholder';
+import { getRegionFlexStyle } from '../../utils';
 
 export interface ContainerDesignElementProps {
   /**
@@ -62,6 +63,8 @@ export const ContainerDesignElement: React.FC<ContainerDesignElementProps> = ({
     ...baseContainerStyle,
     ...(!hasBackdropWithImage &&
       getBackgroundImageStyle(imageSrc, baseContainerStyle.backgroundColor)),
+    // Panelled page root regions: panels stay fixed-width, content grows
+    ...getRegionFlexStyle(element),
   };
 
   const children = element.children.map((child) => (

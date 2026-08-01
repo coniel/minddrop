@@ -34,6 +34,7 @@ import { BackgroundImageSource } from './BackgroundImageSource';
 import { DirectionToggle } from './DirectionToggle';
 import { GapField } from './GapField';
 import { MinHeightField } from './MinHeightField';
+import { PagePanelsSection } from './PagePanelsSection';
 import { PositionGrid } from './PositionGrid';
 import { StretchSwitch } from './StretchSwitch';
 import { WrapSwitch } from './WrapSwitch';
@@ -101,6 +102,9 @@ export const ContainerElementStyleEditor: React.FC<
   const isRoot = element.type === 'root';
   const showMinHeight = !(isRoot && layoutType === 'page');
 
+  // Panels can only be added to page layouts, on the page root
+  const showPagePanels = isRoot && layoutType === 'page';
+
   const backgroundImage = useElementStyle(elementId, 'backgroundImage');
   const backdropBlur = useElementStyle(elementId, 'backdropBlur');
   const backdropBlurGradient = useElementStyle(
@@ -163,6 +167,8 @@ export const ContainerElementStyleEditor: React.FC<
         {!isRoot && <StretchSwitch elementId={elementId} />}
         <WrapSwitch elementId={elementId} />
       </Stack>
+
+      {showPagePanels && <PagePanelsSection />}
 
       {!isRoot && (
         <Stack gap={3}>

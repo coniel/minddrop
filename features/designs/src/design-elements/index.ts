@@ -169,6 +169,14 @@ const elementUIs: ElementUIConfig[] = [
     StyleEditorComponent: ContainerElementStyleEditor,
   },
   {
+    // Panels are structurally containers, so they reuse the
+    // container renderers and style editor
+    type: 'page-panel',
+    DisplayComponent: asDisplay(ContainerDesignElement),
+    StudioComponent: asStudio(ContainerStudioDesignElement),
+    StyleEditorComponent: ContainerElementStyleEditor,
+  },
+  {
     type: 'root',
     // Root uses container's display and studio renderers are
     // handled separately by DesignRootElement/DesignStudioRootElement

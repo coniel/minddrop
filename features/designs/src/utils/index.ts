@@ -3,6 +3,7 @@ export * from './getBackgroundColorStyle';
 export * from './getBorderColorStyle';
 export * from './getContentColorCss';
 export * from './getNewLayoutPosition';
+export * from './getRegionFlexStyle';
 export * from './isLeafElement';
 export * from './isPropertyCompatibleWithElement';
 export * from './setElementImage';

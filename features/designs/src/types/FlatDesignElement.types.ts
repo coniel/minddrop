@@ -9,6 +9,7 @@ import {
   ImageViewerElement,
   LeafDesignElement,
   NumberElement,
+  PagePanelElement,
   RootElement,
   TextElement,
   UrlElement,
@@ -22,6 +23,10 @@ type Children = { children: string[] };
 export type FlatRootDesignElement = Omit<RootElement, 'children'> & Children;
 
 export type FlatContainerDesignElement = Omit<ContainerElement, 'children'> &
+  Parent &
+  Children;
+
+export type FlatPagePanelDesignElement = Omit<PagePanelElement, 'children'> &
   Parent &
   Children;
 
@@ -43,10 +48,14 @@ export type FlatWebviewElement = WebviewElement & Parent;
 export type FlatDesignElement =
   | FlatRootDesignElement
   | FlatContainerDesignElement
+  | FlatPagePanelDesignElement
   | FlatLeafDesignElement;
 
 export type FlatChildDesignElement =
   | FlatContainerDesignElement
+  | FlatPagePanelDesignElement
   | FlatLeafDesignElement;
 
-export type FlatParentDesignElement = FlatContainerDesignElement;
+export type FlatParentDesignElement =
+  | FlatContainerDesignElement
+  | FlatPagePanelDesignElement;

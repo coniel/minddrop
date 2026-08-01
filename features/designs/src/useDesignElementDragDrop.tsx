@@ -10,6 +10,7 @@ export interface UseDesignElementDragDropOptions {
   index: number;
   element: FlatDesignElement;
   disabled?: boolean;
+  draggable?: boolean;
   isLastChild?: boolean;
 }
 
@@ -22,6 +23,7 @@ export function useDesignElementDragDrop({
   index,
   element,
   disabled = false,
+  draggable = true,
   isLastChild = false,
 }: UseDesignElementDragDropOptions): UseDesignElementDragDropResult {
   // Check if this is an empty container that should accept inside drops
@@ -135,6 +137,15 @@ export function useDesignElementDragDrop({
   if (disabled) {
     return {
       dragDropProps: {},
+      isDragging: false,
+    };
+  }
+
+  // Non-draggable elements (e.g. page panel regions) keep their
+  // drop target so content can still be dropped inside them
+  if (!draggable) {
+    return {
+      dragDropProps: { ...droppableProps },
       isDragging: false,
     };
   }

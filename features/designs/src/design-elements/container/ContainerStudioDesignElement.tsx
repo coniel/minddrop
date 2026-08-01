@@ -16,6 +16,7 @@ import { useLayoutId } from '../../LayoutIdContext';
 import { handleDropOnGap } from '../../handleDropOnGap';
 import { FlatContainerDesignElement } from '../../types';
 import { useElementPlaceholderImage } from '../../useElementPlaceholder';
+import { getRegionFlexStyle } from '../../utils';
 
 export interface ContainerStudioDesignElementProps {
   /**
@@ -86,6 +87,8 @@ export const ContainerStudioDesignElement: React.FC<
       minWidth: 80,
       backgroundColor: 'var(--neutral-400)',
     }),
+    // Panelled page root regions: panels stay fixed-width, content grows
+    ...getRegionFlexStyle(element),
   };
 
   const children = isEmpty ? (

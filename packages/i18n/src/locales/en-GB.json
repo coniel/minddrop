@@ -933,6 +933,18 @@
     "layout": {
       "label": "Layout"
     },
+    "page-panels": {
+      "label": "Page panels",
+      "content": {
+        "label": "Content"
+      },
+      "left": {
+        "label": "Left panel"
+      },
+      "right": {
+        "label": "Right panel"
+      }
+    },
     "direction": {
       "label": "Direction",
       "column": "Column",

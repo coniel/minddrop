@@ -10,7 +10,7 @@ import { Fs } from '@minddrop/file-system';
 import { DropEventData } from '@minddrop/selection';
 import { FlexDropContainer } from '@minddrop/ui-drag-and-drop';
 import { DesignStudioElement } from '../DesignStudioElement/DesignStudioElement';
-import { DesignStudioStore } from '../DesignStudioStore';
+import { DesignStudioStore, useDesignStudioStore } from '../DesignStudioStore';
 import { useLayoutId } from '../LayoutIdContext';
 import { handleDropOnGap } from '../handleDropOnGap';
 import { FlatRootDesignElement } from '../types';
@@ -26,6 +26,31 @@ export const DesignStudioRootElement: React.FC<
 > = ({ element }) => {
   const { style } = element;
   const layoutId = useLayoutId();
+
+  // Whether the root is panelled. A panelled root is not itself a
+  // drop target: only its panels and content region accept drops,
+  // so content can't be dropped between the regions.
+  const panelled = useDesignStudioStore((state) => {
+    const elements = layoutId ? state.elementsByLayout[layoutId] : undefined;
+
+    if (!elements) {
+      return false;
+    }
+
+    return element.children.some((childId) => {
+      const child = elements[childId];
+
+      if (!child) {
+        return false;
+      }
+
+      if (child.type === 'page-panel') {
+        return true;
+      }
+
+      return child.type === 'container' && child.role === 'content';
+    });
+  });
 
   // Resolve the background image from the bound image property's
   // placeholder, falling back to the static background image
@@ -93,7 +118,13 @@ export const DesignStudioRootElement: React.FC<
     />
   ));
 
-  const flexDropContainer = (
+  // A panelled root renders a plain flex row with no drop target;
+  // an unpanelled root is a drop container for free-form content.
+  const rootContainer = panelled ? (
+    <div className="design-studio-root-element" style={containerCssStyle}>
+      {children}
+    </div>
+  ) : (
     <FlexDropContainer
       key={style.direction}
       id="root"
@@ -125,7 +156,7 @@ export const DesignStudioRootElement: React.FC<
           }}
         >
           {gradientOverlayStyle && <div style={gradientOverlayStyle} />}
-          {flexDropContainer}
+          {rootContainer}
         </div>
       ) : gradientOverlayStyle ? (
         <div
@@ -136,10 +167,10 @@ export const DesignStudioRootElement: React.FC<
           }}
         >
           <div style={gradientOverlayStyle} />
-          {flexDropContainer}
+          {rootContainer}
         </div>
       ) : (
-        flexDropContainer
+        rootContainer
       )}
     </div>
   );

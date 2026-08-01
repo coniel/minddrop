@@ -51,10 +51,18 @@ const DesignStudioElementInner: React.FC<{
 }> = ({ element, index, isLastChild }) => {
   const layoutId = useLayoutId();
 
+  // Panel regions and the content region are fixed in place: they
+  // can't be dragged, but still accept drops so content can be
+  // dropped inside them
+  const isRegion =
+    element.type === 'page-panel' ||
+    (element.type === 'container' && element.role === 'content');
+
   const { dragDropProps, isDragging } = useDesignElementDragDrop({
     index,
     element,
     isLastChild,
+    draggable: !isRegion,
   });
 
   // Select the element to open its style editor, activating the
