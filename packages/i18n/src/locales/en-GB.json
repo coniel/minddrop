@@ -1242,6 +1242,7 @@
     "elements": {
       "root": "Root",
       "container": "Container",
+      "page-panel": "Panel",
       "text": "Text",
       "title": "Title",
       "formatted-text": "Formatted text",

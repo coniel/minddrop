@@ -1254,6 +1254,7 @@ declare module 'i18next' {
           elements: {
             root: string;
             container: string;
+            'page-panel': string;
             text: string;
             title: string;
             'formatted-text': string;

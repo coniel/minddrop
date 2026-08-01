@@ -20,6 +20,8 @@ import { ImageViewerElementConfig } from './image-viewer';
 import type { ImageViewerElement } from './image-viewer';
 import { NumberElementConfig } from './number';
 import type { NumberElement } from './number';
+import { PagePanelElementConfig } from './page-panel';
+import type { PagePanelElement } from './page-panel';
 import { RootElementConfig } from './root';
 import type { RootElement } from './root';
 import { TextElementConfig } from './text';
@@ -49,6 +51,7 @@ export * from './icon';
 export * from './editor';
 export * from './webview';
 export * from './container';
+export * from './page-panel';
 export * from './root';
 
 /******************************************************************************
@@ -75,7 +78,11 @@ export type LeafDesignElement =
 /**
  * Union of all design element types.
  */
-export type DesignElement = LeafDesignElement | ContainerElement | RootElement;
+export type DesignElement =
+  | LeafDesignElement
+  | ContainerElement
+  | PagePanelElement
+  | RootElement;
 
 /**
  * Union of all design element type identifiers.
@@ -83,6 +90,7 @@ export type DesignElement = LeafDesignElement | ContainerElement | RootElement;
 export type DesignElementType =
   | 'root'
   | 'container'
+  | 'page-panel'
   | 'badges'
   | 'text'
   | 'formatted-text'
@@ -118,7 +126,8 @@ export type DesignElementTemplate =
   | Template<EditorElement>
   | Template<WebviewElement>
   | Template<ViewElement>
-  | Template<ContainerElement>;
+  | Template<ContainerElement>
+  | Template<PagePanelElement>;
 
 /******************************************************************************
  * Config registry
@@ -141,6 +150,7 @@ export const elementConfigs: DesignElementConfig[] = [
   WebviewElementConfig,
   ViewElementConfig,
   ContainerElementConfig,
+  PagePanelElementConfig,
   RootElementConfig,
 ];
 

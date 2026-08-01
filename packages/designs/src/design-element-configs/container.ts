@@ -6,6 +6,13 @@ export interface ContainerElement extends DesignElementBase {
   type: 'container';
 
   /**
+   * Marks the container as the content region of a panelled page
+   * root. The content region cannot be moved or deleted and fills
+   * the space left by the panels.
+   */
+  role?: 'content';
+
+  /**
    * The element style.
    */
   style: ContainerElementStyle;
