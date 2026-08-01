@@ -28,6 +28,7 @@ import {
   ImageViewerStudioDesignElement,
 } from './image-viewer';
 import { NumberDesignElement, NumberElementStyleEditor } from './number';
+import { PagePanelStudioDesignElement } from './page-panel';
 import { TextDesignElement, TextElementStyleEditor } from './text';
 import { UrlDesignElement, UrlElementStyleEditor } from './url';
 import { ViewDesignElement, ViewElementStyleEditor } from './view';
@@ -170,10 +171,11 @@ const elementUIs: ElementUIConfig[] = [
   },
   {
     // Panels are structurally containers, so they reuse the
-    // container renderers and style editor
+    // container display renderer and style editor. The studio
+    // renderer adds a draggable edge for resizing.
     type: 'page-panel',
     DisplayComponent: asDisplay(ContainerDesignElement),
-    StudioComponent: asStudio(ContainerStudioDesignElement),
+    StudioComponent: asStudio(PagePanelStudioDesignElement),
     StyleEditorComponent: ContainerElementStyleEditor,
   },
   {

@@ -14,15 +14,19 @@ import { Icon } from '@minddrop/ui-primitives';
 import { DesignStudioElement } from '../../DesignStudioElement/DesignStudioElement';
 import { useLayoutId } from '../../LayoutIdContext';
 import { handleDropOnGap } from '../../handleDropOnGap';
-import { FlatContainerDesignElement } from '../../types';
+import {
+  FlatContainerDesignElement,
+  FlatPagePanelDesignElement,
+} from '../../types';
 import { useElementPlaceholderImage } from '../../useElementPlaceholder';
 import { getRegionFlexStyle } from '../../utils';
 
 export interface ContainerStudioDesignElementProps {
   /**
-   * The container element to render in the studio.
+   * The container element to render in the studio. Page panels
+   * reuse this renderer since they are structurally containers.
    */
-  element: FlatContainerDesignElement;
+  element: FlatContainerDesignElement | FlatPagePanelDesignElement;
 
   /**
    * Props to spread on the outermost DOM element for
