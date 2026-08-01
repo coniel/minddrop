@@ -157,9 +157,18 @@ interface DesignCardPreviewProps {
  */
 const DesignCardPreview: React.FC<DesignCardPreviewProps> = ({ design }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLDivElement>(null);
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
+  const [layoutHeights, setLayoutHeights] = useState<Record<string, number>>(
+    {},
+  );
 
-  const bounds = getDesignBounds(design.layouts);
+  // Design bounds using the layouts' measured heights, falling
+  // back to estimates until they have been measured
+  const bounds = getDesignBounds(design.layouts, layoutHeights);
+
+  // Scale that fits the whole design into the preview area
+  const scale = getPreviewScale(bounds, containerSize);
 
   // Track the preview area size so the design can be fitted to it
   useEffect(() => {
@@ -182,21 +191,49 @@ const DesignCardPreview: React.FC<DesignCardPreviewProps> = ({ design }) => {
     };
   }, []);
 
-  // Scale that fits the design bounds into the preview area
-  const scale =
-    bounds && containerSize.width
-      ? Math.min(
-          (containerSize.width * PREVIEW_FILL) / bounds.width,
-          (containerSize.height * PREVIEW_FILL) / bounds.height,
-        )
-      : 0;
+  // Measure each layout's rendered height so the fitted scale
+  // reflects the real content rather than an estimate
+  useEffect(() => {
+    const canvas = canvasRef.current;
+
+    if (!canvas) {
+      return;
+    }
+
+    const measure = () => {
+      const heights: Record<string, number> = {};
+
+      canvas
+        .querySelectorAll<HTMLElement>('[data-layout-id]')
+        .forEach((element) => {
+          heights[element.dataset.layoutId as string] = element.offsetHeight;
+        });
+
+      setLayoutHeights((previous) =>
+        areLayoutHeightsEqual(previous, heights) ? previous : heights,
+      );
+    };
+
+    const observer = new ResizeObserver(measure);
+
+    canvas
+      .querySelectorAll<HTMLElement>('[data-layout-id]')
+      .forEach((element) => observer.observe(element));
+
+    measure();
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [design]);
 
   return (
     <div ref={containerRef} className="design-dashboard-card-preview">
-      {bounds && scale > 0 ? (
+      {bounds ? (
         <DesignPreviewProvider value>
           <DesignPropertySchemasProvider properties={design.properties}>
             <div
+              ref={canvasRef}
               className="design-dashboard-card-preview-canvas"
               style={{
                 width: bounds.width,
@@ -207,12 +244,12 @@ const DesignCardPreview: React.FC<DesignCardPreviewProps> = ({ design }) => {
               {design.layouts.map((layout) => (
                 <div
                   key={layout.id}
+                  data-layout-id={layout.id}
                   className="design-dashboard-card-preview-layout"
                   style={{
                     left: layout.frame.x - bounds.x,
                     top: layout.frame.y - bounds.y,
                     width: layout.frame.width,
-                    height: getLayoutPreviewHeight(layout),
                   }}
                 >
                   <DesignRootElement element={layout.tree} />
@@ -233,24 +270,37 @@ const DesignCardPreview: React.FC<DesignCardPreviewProps> = ({ design }) => {
 };
 
 /**
- * Returns the height a layout occupies in the preview: its fixed
- * frame height, or the root element's min-height for content-sized
- * layouts.
+ * Computes the scale that fits the design bounds within the
+ * preview area, leaving a margin defined by PREVIEW_FILL. Returns
+ * 0 until both the bounds and the preview area have a size.
  */
-function getLayoutPreviewHeight(layout: Layout): number {
-  return (
-    layout.frame.height ??
-    layout.tree.style.minHeight ??
-    PREVIEW_FALLBACK_HEIGHT
+function getPreviewScale(
+  bounds: { width: number; height: number } | null,
+  containerSize: { width: number; height: number },
+): number {
+  if (
+    !bounds ||
+    bounds.width <= 0 ||
+    bounds.height <= 0 ||
+    !containerSize.width ||
+    !containerSize.height
+  ) {
+    return 0;
+  }
+
+  return Math.min(
+    (containerSize.width * PREVIEW_FILL) / bounds.width,
+    (containerSize.height * PREVIEW_FILL) / bounds.height,
   );
 }
 
 /**
- * Computes the union bounding box of the layouts' frames in canvas
+ * Computes the union bounding box of the layouts in canvas
  * coordinates. Returns null when the design has no layouts.
  */
 function getDesignBounds(
   layouts: Layout[],
+  layoutHeights: Record<string, number>,
 ): { x: number; y: number; width: number; height: number } | null {
   if (!layouts.length) {
     return null;
@@ -262,8 +312,43 @@ function getDesignBounds(
     ...layouts.map((layout) => layout.frame.x + layout.frame.width),
   );
   const maxY = Math.max(
-    ...layouts.map((layout) => layout.frame.y + getLayoutPreviewHeight(layout)),
+    ...layouts.map(
+      (layout) => layout.frame.y + getLayoutHeight(layout, layoutHeights),
+    ),
   );
 
   return { x: minX, y: minY, width: maxX - minX, height: maxY - minY };
+}
+
+/**
+ * Returns a layout's measured height, falling back to an estimate
+ * from its frame height or root min-height before it has been
+ * measured.
+ */
+function getLayoutHeight(
+  layout: Layout,
+  layoutHeights: Record<string, number>,
+): number {
+  return (
+    layoutHeights[layout.id] ??
+    layout.frame.height ??
+    layout.tree.style.minHeight ??
+    PREVIEW_FALLBACK_HEIGHT
+  );
+}
+
+/**
+ * Shallow-compares two maps of layout heights.
+ */
+function areLayoutHeightsEqual(
+  a: Record<string, number>,
+  b: Record<string, number>,
+): boolean {
+  const keys = Object.keys(a);
+
+  if (keys.length !== Object.keys(b).length) {
+    return false;
+  }
+
+  return keys.every((key) => a[key] === b[key]);
 }
