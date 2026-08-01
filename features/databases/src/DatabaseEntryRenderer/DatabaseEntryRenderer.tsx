@@ -1,6 +1,12 @@
 import React, { useCallback, useMemo } from 'react';
-import { DatabaseEntries, DatabaseEntry, Databases } from '@minddrop/databases';
-import { Designs, LayoutType, Layouts } from '@minddrop/designs';
+import {
+  DatabaseEntries,
+  DatabaseEntry,
+  Databases,
+  LayoutContext,
+  layoutContextBaseType,
+} from '@minddrop/databases';
+import { Designs, Layouts } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
 import { LayoutRenderer } from '@minddrop/feature-designs';
 import { PropertyValue } from '@minddrop/properties';
@@ -18,9 +24,10 @@ export interface DatabaseEntryRendererProps {
   entryId: string;
 
   /**
-   * The type of layout to use to render the element.
+   * The context in which the element is displayed, determining which
+   * default layout to use.
    */
-  layoutType: LayoutType;
+  layoutContext: LayoutContext;
 
   /**
    * The ID of the layout to use to render the element.
@@ -58,11 +65,15 @@ interface EntryProps extends Omit<DatabaseEntryRendererProps, 'entryId'> {
 const Entry: React.FC<EntryProps> = ({
   entry,
   layoutId,
-  layoutType,
+  layoutContext,
   onClick,
 }) => {
   const database = Databases.use(entry.database);
   const design = Designs.use(database?.designId || '');
+
+  // The base layout type the context resolves to, used for styling
+  // and click behaviour
+  const baseType = layoutContextBaseType[layoutContext];
 
   // Resolve the layout to render with, falling back to the
   // database default when no override is specified
@@ -76,16 +87,16 @@ const Entry: React.FC<EntryProps> = ({
       }
     }
 
-    // Fall back to the database's default layout for this type
-    return Databases.getDefaultLayout(entry.database, layoutType);
+    // Fall back to the database's default layout for this context
+    return Databases.getDefaultLayout(entry.database, layoutContext);
     // Depends on the database's pinned default and the design so the layout
     // recomputes when the default is changed or the design's layouts change
     // eslint-disable-next-line react-hooks/exhaustive-deps -- recompute on default/design changes
   }, [
     layoutId,
     entry.database,
-    layoutType,
-    database?.defaultLayouts?.[layoutType],
+    layoutContext,
+    database?.defaultLayouts?.[layoutContext],
     design,
   ]);
 
@@ -164,14 +175,14 @@ const Entry: React.FC<EntryProps> = ({
 
   // Page entries are not clickable items, so they should not
   // have button role or keyboard activation.
-  const isClickable = layoutType !== 'page';
+  const isClickable = baseType !== 'page';
 
   // Minimal title-only fallback when the database has no design
   // or its design has no layout of the requested type
   if (!layout) {
     return (
       <div
-        className={`database-entry database-entry-${layoutType} database-entry-fallback`}
+        className={`database-entry database-entry-${baseType} database-entry-fallback`}
         role={isClickable ? 'button' : undefined}
         tabIndex={isClickable ? 0 : undefined}
         onClick={isClickable ? onOpenEntry : undefined}
@@ -184,7 +195,7 @@ const Entry: React.FC<EntryProps> = ({
 
   return (
     <div
-      className={`database-entry database-entry-${layoutType}`}
+      className={`database-entry database-entry-${baseType}`}
       role={isClickable ? 'button' : undefined}
       tabIndex={isClickable ? 0 : undefined}
       onClick={isClickable ? onOpenEntry : undefined}

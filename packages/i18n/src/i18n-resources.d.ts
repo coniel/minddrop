@@ -224,6 +224,32 @@ declare module 'i18next' {
           layouts: {
             databaseDefault: string;
           };
+          layoutContexts: {
+            card: {
+              name: string;
+            };
+            'preview-card': {
+              name: string;
+            };
+            list: {
+              name: string;
+            };
+            'navigation-list': {
+              name: string;
+            };
+            page: {
+              name: string;
+            };
+            dialog: {
+              name: string;
+            };
+            panel: {
+              name: string;
+            };
+            'new-entry': {
+              name: string;
+            };
+          };
           entries: {
             actions: {
               previousEntry: string;
@@ -809,6 +835,7 @@ declare module 'i18next' {
             defaultLayouts: {
               title: string;
               description: string;
+              noCompatible: string;
             };
           };
         };

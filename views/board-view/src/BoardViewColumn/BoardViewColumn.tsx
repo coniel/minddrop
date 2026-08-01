@@ -85,7 +85,7 @@ export const BoardViewColumn: React.FC<BoardViewColumnProps> = ({
           <DatabaseEntryRenderer
             key={entryId}
             entryId={entryId}
-            layoutType="card"
+            layoutContext="card"
           />
         ))}
       </FlexDropContainer>

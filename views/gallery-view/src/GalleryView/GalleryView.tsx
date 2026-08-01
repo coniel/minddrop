@@ -133,7 +133,7 @@ export const GalleryViewComponent: React.FC<
               <DatabaseEntryRenderer
                 key={entryId}
                 entryId={entryId}
-                layoutType="card"
+                layoutContext="card"
                 layoutId={view.options?.cardLayoutId}
               />
             ))}

@@ -1,7 +1,13 @@
-import { Database, Databases } from '@minddrop/databases';
-import { Design, Designs, LayoutType } from '@minddrop/designs';
-import { layoutTypeIconMap } from '@minddrop/feature-designs';
+import {
+  Database,
+  Databases,
+  LAYOUT_CONTEXTS,
+  LayoutContext,
+  layoutContextBaseType,
+} from '@minddrop/databases';
+import { Design, Designs } from '@minddrop/designs';
 import { createI18nKeyBuilder } from '@minddrop/i18n';
+import { UiIconName } from '@minddrop/ui-icons';
 import {
   ContentIcon,
   Group,
@@ -17,12 +23,46 @@ import { openDesignStudio } from '../navigation';
 import { getCompatibleDatabaseProperties } from '../utils';
 import './DatabaseDesignPanel.css';
 
-const layoutTypeI18nKey = createI18nKeyBuilder('designs.layouts.');
+const layoutContextI18nKey = createI18nKeyBuilder('databases.layoutContexts.');
 
 // Select value representing no mapping
 const NONE_VALUE = 'none';
 
-const LAYOUT_TYPES: LayoutType[] = ['card', 'list', 'page'];
+/**
+ * Maps layout contexts to their icons.
+ */
+const layoutContextIconMap: Record<LayoutContext, UiIconName> = {
+  card: 'layout-grid',
+  'preview-card': 'square-mouse-pointer',
+  list: 'layout-list',
+  'navigation-list': 'panel-left',
+  page: 'layout',
+  dialog: 'app-window',
+  panel: 'panel-right',
+  'new-entry': 'file-plus',
+};
+
+/**
+ * Layout contexts grouped by base layout type, preserving order.
+ * Each group renders together, separated by a gap.
+ */
+const LAYOUT_CONTEXT_GROUPS = LAYOUT_CONTEXTS.reduce<LayoutContext[][]>(
+  (groups, context) => {
+    const currentGroup = groups[groups.length - 1];
+
+    if (
+      currentGroup &&
+      layoutContextBaseType[currentGroup[0]] === layoutContextBaseType[context]
+    ) {
+      currentGroup.push(context);
+    } else {
+      groups.push([context]);
+    }
+
+    return groups;
+  },
+  [],
+);
 
 export interface DatabaseDesignPanelProps {
   /**
@@ -207,25 +247,17 @@ const PropertyMappingSection: React.FC<DesignSectionProps> = ({
 };
 
 /**
- * Renders a select per layout type for pinning one of the
- * design's layouts as the database default.
+ * Renders a select per layout context for pinning one of the
+ * design's layouts as the database default. Contexts whose base
+ * type has no layouts show a "no compatible layouts" message.
  */
 const DefaultLayoutsSection: React.FC<DesignSectionProps> = ({
   database,
   design,
 }) => {
-  // Layout types the design has at least one layout of
-  const typesWithLayouts = LAYOUT_TYPES.filter((type) =>
-    design.layouts.some((layout) => layout.type === type),
-  );
-
-  // Pin the selected layout as the type's default
-  function handleValueChange(type: LayoutType, value: string) {
-    Databases.setDefaultLayout(database.id, type, value);
-  }
-
-  if (!typesWithLayouts.length) {
-    return null;
+  // Pin the selected layout as the context's default
+  function handleValueChange(context: LayoutContext, value: string) {
+    Databases.setDefaultLayout(database.id, context, value);
   }
 
   return (
@@ -243,36 +275,62 @@ const DefaultLayoutsSection: React.FC<DesignSectionProps> = ({
           text="databases.design.defaultLayouts.description"
         />
       </Stack>
-      {typesWithLayouts.map((type) => {
-        const layouts = design.layouts.filter((layout) => layout.type === type);
-        const pinnedId = database.defaultLayouts[type];
+      <Stack gap={4}>
+        {LAYOUT_CONTEXT_GROUPS.map((group) => (
+          <Stack key={layoutContextBaseType[group[0]]} gap={2}>
+            {group.map((context) => {
+              // Layouts of the context's base type
+              const layouts = design.layouts.filter(
+                (layout) => layout.type === layoutContextBaseType[context],
+              );
+              const pinnedId = database.defaultLayouts[context];
 
-        // Fall back to the first layout of the type when there is
-        // no valid pin
-        const value = layouts.some((layout) => layout.id === pinnedId)
-          ? pinnedId
-          : layouts[0].id;
+              // Fall back to the first layout of the base type when
+              // there is no valid pin
+              const value =
+                layouts.find((layout) => layout.id === pinnedId)?.id ??
+                layouts[0]?.id;
 
-        return (
-          <Group key={type} gap={2} className="database-design-panel-row">
-            <Icon name={layoutTypeIconMap[type]} color="muted" />
-            <Text size="sm" text={layoutTypeI18nKey(type, 'name')} />
-            <Spacer />
-            <Select
-              size="sm"
-              variant="subtle"
-              value={value}
-              onValueChange={(layoutId) => handleValueChange(type, layoutId)}
-              options={layouts.map(
-                (layout): SelectOption<string> => ({
-                  value: layout.id,
-                  stringLabel: layout.name,
-                }),
-              )}
-            />
-          </Group>
-        );
-      })}
+              return (
+                <Group
+                  key={context}
+                  gap={2}
+                  className="database-design-panel-row"
+                >
+                  <Icon name={layoutContextIconMap[context]} color="muted" />
+                  <Text
+                    size="sm"
+                    text={layoutContextI18nKey(context, 'name')}
+                  />
+                  <Spacer />
+                  {layouts.length ? (
+                    <Select
+                      size="sm"
+                      variant="subtle"
+                      value={value}
+                      onValueChange={(layoutId) =>
+                        handleValueChange(context, layoutId)
+                      }
+                      options={layouts.map(
+                        (layout): SelectOption<string> => ({
+                          value: layout.id,
+                          stringLabel: layout.name,
+                        }),
+                      )}
+                    />
+                  ) : (
+                    <Text
+                      size="sm"
+                      color="muted"
+                      text="databases.design.defaultLayouts.noCompatible"
+                    />
+                  )}
+                </Group>
+              );
+            })}
+          </Stack>
+        ))}
+      </Stack>
     </Stack>
   );
 };

@@ -10,25 +10,63 @@ import {
 } from '../test-utils';
 import { getDefaultDatabaseLayout } from './getDefaultDatabaseLayout';
 
-const { layout_list_1, layout_card_1 } = DesignFixtures;
+const { layout_list_1, layout_card_1, layout_page_1, design_books } =
+  DesignFixtures;
 
 describe('getDefaultDatabaseLayout', () => {
   beforeEach(setup);
 
   afterEach(cleanup);
 
-  it('returns the layout pinned as the default for the type', () => {
+  it('returns the layout pinned as the default for the context', () => {
     const layout = getDefaultDatabaseLayout(objectDatabase.id, 'card');
 
     expect(layout).toEqual(defaultCardLayout);
   });
 
-  it('returns the first layout of the type in the design when no default is pinned', () => {
+  it('returns the first layout of the base type in the design when no default is pinned', () => {
     DatabasesStore.update(objectDatabase.id, { defaultLayouts: {} });
 
     const layout = getDefaultDatabaseLayout(objectDatabase.id, 'card');
 
     expect(layout).toEqual(firstCardLayout);
+  });
+
+  it('resolves a page-based context to the first page layout when no default is pinned', () => {
+    // design_books has one layout of each type
+    DatabasesStore.update(objectDatabase.id, {
+      designId: design_books.id,
+      defaultLayouts: {},
+    });
+
+    const layout = getDefaultDatabaseLayout(objectDatabase.id, 'dialog');
+
+    expect(layout).toEqual(layout_page_1);
+  });
+
+  it('returns the pinned page layout for a page-based context', () => {
+    DatabasesStore.update(objectDatabase.id, {
+      designId: design_books.id,
+      defaultLayouts: { dialog: layout_page_1.id },
+    });
+
+    const layout = getDefaultDatabaseLayout(objectDatabase.id, 'dialog');
+
+    expect(layout).toEqual(layout_page_1);
+  });
+
+  it('resolves the navigation-list context to a list layout', () => {
+    DatabasesStore.update(objectDatabase.id, {
+      designId: design_books.id,
+      defaultLayouts: {},
+    });
+
+    const layout = getDefaultDatabaseLayout(
+      objectDatabase.id,
+      'navigation-list',
+    );
+
+    expect(layout).toEqual(layout_list_1);
   });
 
   it('returns null when the database has no designId', () => {
@@ -39,7 +77,7 @@ describe('getDefaultDatabaseLayout', () => {
     expect(layout).toBeNull();
   });
 
-  it('returns null when the database has no layout of the requested type in its design', () => {
+  it('returns null when the database has no layout of the context base type in its design', () => {
     const layout = getDefaultDatabaseLayout(objectDatabase.id, 'page');
 
     expect(layout).toBeNull();
@@ -64,7 +102,7 @@ describe('getDefaultDatabaseLayout', () => {
     expect(layout).toEqual(firstCardLayout);
   });
 
-  it('falls through when the pinned layout is of the wrong type', () => {
+  it('falls through when the pinned layout is of the wrong base type', () => {
     DatabasesStore.update(objectDatabase.id, {
       defaultLayouts: { card: layout_list_1.id },
     });

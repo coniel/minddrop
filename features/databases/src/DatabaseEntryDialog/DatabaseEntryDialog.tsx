@@ -44,10 +44,10 @@ export const DatabaseEntryDialog: React.FC<DatabaseEntryDialogProps> = ({
   const canvasRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
 
-  // Get the entry so we can resolve the page layout ID
+  // Get the entry so we can resolve the dialog layout ID
   const entry = DatabaseEntries.use(entryId);
 
-  // Resolve the page layout ID for the entry's database
+  // Resolve the dialog layout ID for the entry's database
   const databaseId = entry?.database ?? null;
   const layoutId = useMemo(() => {
     if (!databaseId) {
@@ -55,7 +55,7 @@ export const DatabaseEntryDialog: React.FC<DatabaseEntryDialogProps> = ({
     }
 
     try {
-      return Databases.getDefaultLayout(databaseId, 'page')?.id ?? null;
+      return Databases.getDefaultLayout(databaseId, 'dialog')?.id ?? null;
     } catch {
       return null;
     }
@@ -188,7 +188,7 @@ export const DatabaseEntryDialog: React.FC<DatabaseEntryDialogProps> = ({
 
         {/* Content wrapper */}
         <div className="entry-dialog-content">
-          <DatabaseEntryRenderer entryId={entryId} layoutType="page" />
+          <DatabaseEntryRenderer entryId={entryId} layoutContext="dialog" />
         </div>
 
         {/* Previous entry navigation button */}

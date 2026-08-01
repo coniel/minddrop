@@ -99,8 +99,8 @@ export interface Database {
   designPropertyMap: Record<string, string>;
 
   /**
-   * A [layout type]: [layout ID] map of the default layout to use when
-   * rendering entries.
+   * A [layout context]: [layout ID] map of the default layout to use when
+   * rendering entries in each display context.
    */
   defaultLayouts: Record<string, string>;
 

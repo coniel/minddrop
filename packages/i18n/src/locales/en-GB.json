@@ -212,6 +212,32 @@
     "layouts": {
       "databaseDefault": "Database default"
     },
+    "layoutContexts": {
+      "card": {
+        "name": "Card"
+      },
+      "preview-card": {
+        "name": "Preview card"
+      },
+      "list": {
+        "name": "List"
+      },
+      "navigation-list": {
+        "name": "Navigation list"
+      },
+      "page": {
+        "name": "Page"
+      },
+      "dialog": {
+        "name": "Dialog"
+      },
+      "panel": {
+        "name": "Panel"
+      },
+      "new-entry": {
+        "name": "New entry"
+      }
+    },
     "entries": {
       "actions": {
         "previousEntry": "Previous entry",
@@ -796,7 +822,8 @@
       },
       "defaultLayouts": {
         "title": "Default layouts",
-        "description": "The design layouts used to display the database's entries in each format. Individual views can override these defaults with a specific layout."
+        "description": "The design layouts used to display the database's entries in each context. Individual views can override these defaults with a specific layout.",
+        "noCompatible": "No compatible layouts"
       }
     }
   },

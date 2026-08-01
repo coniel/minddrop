@@ -118,7 +118,7 @@ export const NotebookViewComponent: React.FC<
             >
               <DatabaseEntryRenderer
                 entryId={entryId}
-                layoutType="list"
+                layoutContext="navigation-list"
                 layoutId={entryLayoutOverrides[entryId]?.listLayoutId}
                 onClick={handleEntryClick}
               />
@@ -138,7 +138,7 @@ export const NotebookViewComponent: React.FC<
           <DatabaseEntryRenderer
             key={selectedEntryId}
             entryId={selectedEntryId}
-            layoutType="page"
+            layoutContext="page"
             layoutId={entryLayoutOverrides[selectedEntryId]?.pageLayoutId}
           />
         )}

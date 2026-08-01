@@ -23,7 +23,7 @@ describe('<DatabaseEntryRenderer />', () => {
 
   it('renders an entry using the default layout', () => {
     render(
-      <DatabaseEntryRenderer entryId={objectEntry1.id} layoutType="card" />,
+      <DatabaseEntryRenderer entryId={objectEntry1.id} layoutContext="card" />,
     );
 
     // Layout fixture renders its ID as content
@@ -34,7 +34,7 @@ describe('<DatabaseEntryRenderer />', () => {
     render(
       <DatabaseEntryRenderer
         entryId={objectEntry1.id}
-        layoutType="list"
+        layoutContext="list"
         layoutId={layout_list_1.id}
       />,
     );
@@ -45,7 +45,10 @@ describe('<DatabaseEntryRenderer />', () => {
 
   it('returns null if the entry does not exist', () => {
     const { container } = render(
-      <DatabaseEntryRenderer entryId="non-existent-entry" layoutType="card" />,
+      <DatabaseEntryRenderer
+        entryId="non-existent-entry"
+        layoutContext="card"
+      />,
     );
 
     expect(container).toBeEmptyDOMElement();

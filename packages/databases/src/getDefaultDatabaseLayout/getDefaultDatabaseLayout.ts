@@ -1,21 +1,23 @@
-import { Designs, Layout, LayoutType } from '@minddrop/designs';
+import { Designs, Layout } from '@minddrop/designs';
 import { getDatabase } from '../getDatabase';
+import { LayoutContext, layoutContextBaseType } from '../layoutContexts';
 
 /**
- * Returns the default layout of the specified type for a database.
- * Resolves in order: explicit pin in `defaultLayouts` (if still present in
- * the database's design) → first layout of the type in the database's
- * design → null. Returns null when the database has no `designId` set;
- * the renderer handles the missing case with an inline fallback.
+ * Returns the default layout for a database in the given display context.
+ * Resolves in order: explicit pin in `defaultLayouts` for the context (if
+ * still present in the database's design and of the context's base type) →
+ * first layout of the context's base type in the database's design → null.
+ * Returns null when the database has no `designId` set; the renderer handles
+ * the missing case with an inline fallback.
  *
  * @param databaseId - The ID of the database.
- * @param type - The layout type.
+ * @param context - The layout context.
  * @returns The resolved layout, or null if the database has no design or
  *   no matching layout exists in it.
  */
 export function getDefaultDatabaseLayout(
   databaseId: string,
-  type: LayoutType,
+  context: LayoutContext,
 ): Layout | null {
   // Get the database
   const database = getDatabase(databaseId);
@@ -32,17 +34,20 @@ export function getDefaultDatabaseLayout(
     return null;
   }
 
-  // If a default is pinned, return it when present in the design and the type matches
-  const pinnedId = database.defaultLayouts[type];
+  // The base layout type the context's layouts are drawn from
+  const baseType = layoutContextBaseType[context];
+
+  // If a default is pinned, return it when present in the design and of the base type
+  const pinnedId = database.defaultLayouts[context];
 
   if (pinnedId) {
     const pinned = design.layouts.find((layout) => layout.id === pinnedId);
 
-    if (pinned && pinned.type === type) {
+    if (pinned && pinned.type === baseType) {
       return pinned;
     }
   }
 
-  // Fall back to the first layout of the requested type in the design
-  return design.layouts.find((layout) => layout.type === type) || null;
+  // Fall back to the first layout of the base type in the design
+  return design.layouts.find((layout) => layout.type === baseType) || null;
 }
