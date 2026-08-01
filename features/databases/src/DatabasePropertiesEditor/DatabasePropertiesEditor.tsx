@@ -42,12 +42,9 @@ export const DatabasePropertiesEditor: React.FC<
 > = ({ databaseId, draftProperties, onSaveDraft, onCancelDraft }) => {
   const databaseConfig = Databases.use(databaseId);
 
-  // Reversed property names used as sortable item IDs
+  // Property names used as sortable item IDs
   const propertyIds = useMemo(
-    () =>
-      databaseConfig?.properties
-        .toReversed()
-        .map((property) => property.name) ?? [],
+    () => databaseConfig?.properties.map((property) => property.name) ?? [],
     [databaseConfig?.properties],
   );
 
@@ -64,7 +61,7 @@ export const DatabasePropertiesEditor: React.FC<
     return map;
   }, [databaseConfig]);
 
-  // Handle sort by reversing the new order back to storage order
+  // Handle sort by mapping the new order to storage order
   // and updating the database
   const handleSort = useCallback(
     (newOrder: string[]) => {
@@ -72,9 +69,7 @@ export const DatabasePropertiesEditor: React.FC<
         return;
       }
 
-      // Reverse back to storage order
       const reorderedProperties = newOrder
-        .toReversed()
         .map((name) => propertyMap.get(name))
         .filter((property): property is PropertySchema => !!property);
 
@@ -115,7 +110,16 @@ export const DatabasePropertiesEditor: React.FC<
 
   return (
     <div>
-      {/* Draft properties appear at the top */}
+      {/* Persisted properties in natural order, sortable */}
+      <SortableList
+        items={propertyIds}
+        direction="vertical"
+        gap={1}
+        onSort={handleSort}
+        renderItem={renderItem}
+        className="database-properties-editor-sortable"
+      />
+      {/* Draft properties appear at the bottom */}
       {draftProperties.map((property) => (
         <DatabasePropertyEditor
           isDraft
@@ -126,15 +130,6 @@ export const DatabasePropertiesEditor: React.FC<
           onCancelDraft={() => onCancelDraft(property.id)}
         />
       ))}
-      {/* Persisted properties in reverse order, sortable */}
-      <SortableList
-        items={propertyIds}
-        direction="vertical"
-        gap={1}
-        onSort={handleSort}
-        renderItem={renderItem}
-        className="database-properties-editor-sortable"
-      />
     </div>
   );
 };
