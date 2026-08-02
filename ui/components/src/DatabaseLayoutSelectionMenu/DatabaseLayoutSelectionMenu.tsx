@@ -3,12 +3,12 @@ import { Database, Databases } from '@minddrop/databases';
 import { Designs, Layout, LayoutType } from '@minddrop/designs';
 import { TranslationKey, createI18nKeyBuilder } from '@minddrop/i18n';
 import {
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownRadioSubmenu,
   DropdownRadioSubmenuItem,
   MenuGroup,
   MenuLabel,
-  MenuRadioGroup,
-  MenuRadioItem,
 } from '@minddrop/ui-primitives';
 
 const layoutTypeI18nKey = createI18nKeyBuilder('designs.layouts.');
@@ -148,19 +148,22 @@ export const DatabaseLayoutSelectionMenu: React.FC<
   return (
     <MenuGroup>
       <MenuLabel label={layoutTypeI18nKey(layoutType, 'label')} />
-      <MenuRadioGroup value={resolvedValue} onValueChange={onValueChange}>
-        <MenuRadioItem
+      <DropdownMenuRadioGroup
+        value={resolvedValue}
+        onValueChange={(layoutId) => onValueChange?.(layoutId)}
+      >
+        <DropdownMenuRadioItem
           value={DATABASE_DEFAULT_LAYOUT}
           label="databases.layouts.databaseDefault"
         />
         {databaseLayouts[0].layouts.map((layout) => (
-          <MenuRadioItem
+          <DropdownMenuRadioItem
             key={layout.id}
             value={layout.id}
             stringLabel={layout.name}
           />
         ))}
-      </MenuRadioGroup>
+      </DropdownMenuRadioGroup>
     </MenuGroup>
   );
 };
