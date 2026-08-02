@@ -22,6 +22,7 @@ import { MindDropApiProvider } from '@minddrop/extensions';
 import { DatabasesFeature } from '@minddrop/feature-databases';
 import { DesignsFeature } from '@minddrop/feature-designs';
 import { SearchFeature } from '@minddrop/feature-search';
+import { TabsToolbar } from '@minddrop/feature-views';
 import { EmojiSkinTone, IconsProvider } from '@minddrop/ui-icons';
 import {
   ConfirmationDialog,
@@ -32,8 +33,7 @@ import { MainContentViews } from '@minddrop/views';
 import { AppSidebar } from './AppSidebar';
 import { AppUiState } from './AppUiState';
 import { NavToolbar } from './NavToolbar';
-import { TabsFeature } from './TabsFeature';
-import { TabsToolbar } from './TabsToolbar';
+import { APP_TABS_SET_ID } from './constants';
 import './DesktopApp.css';
 
 export const DesktopApp: React.FC = () => {
@@ -89,7 +89,7 @@ export const DesktopApp: React.FC = () => {
               onDoubleClick={handleTopbarDoubleClick}
             >
               <NavToolbar />
-              <TabsToolbar />
+              <TabsToolbar setId={APP_TABS_SET_ID} shortcuts />
             </div>
             <div className="content-panels">
               {showSidebar && <AppSidebar />}
@@ -101,7 +101,6 @@ export const DesktopApp: React.FC = () => {
           <ConfirmationDialogFeature />
           <DesignsFeature />
           <SearchFeature />
-          <TabsFeature />
           <DevTools />
         </MindDropApiProvider>
       </IconsProvider>

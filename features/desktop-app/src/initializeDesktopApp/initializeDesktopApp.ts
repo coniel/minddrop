@@ -7,6 +7,7 @@ import { initializeExtensions } from '@minddrop/extensions';
 import { DatabaseViewStateStore } from '@minddrop/feature-databases';
 import { LayoutRegionSizesStore } from '@minddrop/feature-designs';
 import { initializeSearch } from '@minddrop/feature-search';
+import { TabSetsStore, initializeViewsFeature } from '@minddrop/feature-views';
 import { initializeI18n } from '@minddrop/i18n';
 import { Search } from '@minddrop/search';
 import { Sql } from '@minddrop/sql';
@@ -14,13 +15,10 @@ import { Theme, VariantChangedEventData } from '@minddrop/ui-theme';
 import { Views } from '@minddrop/views';
 import { Workspaces } from '@minddrop/workspaces';
 import { AppUiState } from '../AppUiState';
-import { Tabs } from '../Tabs';
-import { TabsStore } from '../TabsStore';
 import { registerAppDataStoreListeners } from '../registerAppDataStoreListeners';
 import { registerWorkspaceStoreListeners } from '../registerWorkspaceStoreListeners';
 import { initializeMainContentViews } from './initializeMainContentViews';
 import { initializeSelection } from './initializeSelection';
-import { initializeTabs } from './initializeTabs';
 import { initializeViewTypes } from './initializeViewTypes';
 
 // In development mode, React runs effects twice on first load, so
@@ -73,7 +71,7 @@ async function runInitialization(): Promise<void> {
   Ast.registerDefaultConfigs();
   initializeViewTypes();
   initializeMainContentViews();
-  initializeTabs();
+  initializeViewsFeature();
 
   // Initialize workspaces (sets Paths.workspace and
   // Paths.workspaceConfigs from the first loaded workspace)
@@ -86,9 +84,8 @@ async function runInitialization(): Promise<void> {
   // Hydrate layout region sizes (dialogs, panels) from workspace config
   await LayoutRegionSizesStore.hydrate();
 
-  // Hydrate open tabs from workspace config, ensuring at least one tab
-  await TabsStore.hydrate();
-  Tabs.ensureTab();
+  // Hydrate open tabs from workspace config
+  await TabSetsStore.hydrate();
 
   await Designs.initialize();
   await Views.initialize();

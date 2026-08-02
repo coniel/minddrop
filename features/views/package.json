@@ -17,10 +17,14 @@
   },
   "dependencies": {
     "@minddrop/collections": "workspace:*",
+    "@minddrop/events": "workspace:*",
     "@minddrop/i18n": "workspace:*",
+    "@minddrop/stores": "workspace:*",
     "@minddrop/test-utils": "workspace:*",
     "@minddrop/ui-components": "workspace:*",
+    "@minddrop/ui-drag-and-drop": "workspace:*",
     "@minddrop/ui-primitives": "workspace:*",
+    "@minddrop/utils": "workspace:*",
     "@minddrop/views": "workspace:*"
   }
 }

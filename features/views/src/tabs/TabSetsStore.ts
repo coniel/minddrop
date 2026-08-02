@@ -1,4 +1,4 @@
-import { createKeyValueStore } from '@minddrop/stores';
+import { createObjectStore } from '@minddrop/stores';
 
 export interface TabView {
   /**
@@ -56,7 +56,12 @@ export interface Tab {
   splitRatio: number;
 }
 
-export interface TabsState {
+export interface TabSet {
+  /**
+   * The tab set's unique identifier.
+   */
+  id: string;
+
   /**
    * The ordered list of open tabs.
    */
@@ -69,16 +74,29 @@ export interface TabsState {
   activeTabId: string | null;
 }
 
-const defaultState: TabsState = {
-  tabs: [],
-  activeTabId: null,
-};
+/**
+ * Persistent store of tab sets, keyed by set id. Each set is an
+ * independent group of tabs (e.g. the main app tabs).
+ */
+export const TabSetsStore = createObjectStore<TabSet>('Views:Tabs', 'id', {
+  persistTo: 'workspace-config',
+  namespace: 'tabs',
+});
 
-export const TabsStore = createKeyValueStore<TabsState>(
-  'App:Tabs',
-  defaultState,
-  {
-    persistTo: 'workspace-config',
-    namespace: 'tabs',
-  },
-);
+/**
+ * Returns all open tabs in the given set.
+ *
+ * @param setId - The id of the tab set.
+ */
+export function useTabs(setId: string): Tab[] {
+  return TabSetsStore.useItem(setId)?.tabs ?? [];
+}
+
+/**
+ * Returns the id of the active tab in the given set.
+ *
+ * @param setId - The id of the tab set.
+ */
+export function useActiveTabId(setId: string): string | null {
+  return TabSetsStore.useItem(setId)?.activeTabId ?? null;
+}

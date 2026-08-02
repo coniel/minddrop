@@ -440,6 +440,9 @@ importers:
       '@minddrop/feature-search':
         specifier: workspace:*
         version: link:../search
+      '@minddrop/feature-views':
+        specifier: workspace:*
+        version: link:../views
       '@minddrop/file-system':
         specifier: workspace:*
         version: link:../../packages/file-system
@@ -627,18 +630,30 @@ importers:
       '@minddrop/collections':
         specifier: workspace:*
         version: link:../../packages/collections
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../../packages/events
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
+      '@minddrop/stores':
+        specifier: workspace:*
+        version: link:../../packages/stores
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../../packages/test-utils
       '@minddrop/ui-components':
         specifier: workspace:*
         version: link:../../ui/components
+      '@minddrop/ui-drag-and-drop':
+        specifier: workspace:*
+        version: link:../../ui/drag-and-drop
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives
+      '@minddrop/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
       '@minddrop/views':
         specifier: workspace:*
         version: link:../../packages/views

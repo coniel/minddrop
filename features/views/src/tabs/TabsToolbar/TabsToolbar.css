@@ -1,4 +1,4 @@
-.app-tabs-toolbar {
+.view-tabs-toolbar {
   flex: 1;
   min-width: 0;
   display: flex;
@@ -7,17 +7,17 @@
   gap: var(--space-1);
 }
 
-.app-tabs {
+.view-tabs {
   flex: 1;
   min-width: 0;
   overflow: hidden;
 }
 
-.app-tabs .sortable-list {
+.view-tabs .sortable-list {
   align-items: center;
 }
 
-.app-tab {
+.view-tab {
   /* Fixed 180px, shrinking to fit when the bar is full */
   flex: 0 1 180px;
   min-width: 0;
@@ -29,11 +29,11 @@
   background-color: var(--neutral-200);
 }
 
-.app-tab[data-active] {
+.view-tab[data-active] {
   min-width: 130px;
 }
 
-.app-tab-label {
+.view-tab-label {
   flex: 1;
   min-width: 0;
   text-align: left;
@@ -48,7 +48,7 @@
   );
 }
 
-.app-tab-close {
+.view-tab-close {
   flex-shrink: 0;
   /* Hidden (and out of flow) until the tab is hovered, so the label
      keeps the full width when not hovering */
@@ -61,16 +61,16 @@
   color: var(--text-subtle);
 }
 
-.app-tab-close .icon {
+.view-tab-close .icon {
   width: 14px;
   height: 14px;
 }
 
-.app-tab:hover .app-tab-close {
+.view-tab:hover .view-tab-close {
   display: inline-flex;
 }
 
-.app-tab-close:hover {
+.view-tab-close:hover {
   background-color: var(--neutral-300);
   color: var(--text-regular);
 }
