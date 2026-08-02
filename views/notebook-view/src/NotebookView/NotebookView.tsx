@@ -6,7 +6,7 @@ import {
   DatabaseEntriesSearchField,
 } from '@minddrop/ui-components';
 import { ScrollArea } from '@minddrop/ui-primitives';
-import { ViewTypeComponentProps, Views } from '@minddrop/views';
+import { DataViewTypeComponentProps, DataViews } from '@minddrop/views';
 import { defaultNotebookViewOptions } from '../constants';
 import { NotebookViewLayoutOverride, NotebookViewOptions } from '../types';
 import { useListPanelResize } from '../useListPanelResize';
@@ -17,7 +17,7 @@ import './NotebookView.css';
  * on the left and the selected entry's page design on the right.
  */
 export const NotebookViewComponent: React.FC<
-  ViewTypeComponentProps<NotebookViewOptions>
+  DataViewTypeComponentProps<NotebookViewOptions>
 > = ({ view, entries }) => {
   // Track the filtered entries from the search field
   const [filteredEntries, setFilteredEntries] = useState<string[]>(entries);
@@ -60,7 +60,7 @@ export const NotebookViewComponent: React.FC<
   // Persist the new width to the view options when resizing ends
   const handleResizeEnd = useCallback(
     (width: number) => {
-      Views.update(view.id, { options: { listColumnWidth: width } });
+      DataViews.update(view.id, { options: { listColumnWidth: width } });
     },
     [view.id],
   );

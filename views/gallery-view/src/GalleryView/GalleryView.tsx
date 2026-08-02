@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import React from 'react';
 import { DatabaseEntryRenderer } from '@minddrop/feature-databases';
 import { ScrollArea } from '@minddrop/ui-primitives';
-import { ViewTypeComponentProps } from '@minddrop/views';
+import { DataViewTypeComponentProps } from '@minddrop/views';
 import { GAP_SIZE, defaultGalleryViewOptions } from '../constants';
 import { GalleryGap, GalleryViewOptions } from '../types';
 import './GalleryView.css';
@@ -19,7 +19,7 @@ const GAP_PX: Record<GalleryGap, number> = {
 };
 
 export const GalleryViewComponent: React.FC<
-  ViewTypeComponentProps<GalleryViewOptions>
+  DataViewTypeComponentProps<GalleryViewOptions>
 > = ({ view, entries }) => {
   const minColumnWidth = useMemo(
     () =>

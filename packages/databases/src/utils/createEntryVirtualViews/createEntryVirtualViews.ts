@@ -6,7 +6,7 @@ import {
   RootElement,
   ViewElement,
 } from '@minddrop/designs';
-import { Views } from '@minddrop/views';
+import { DataViews } from '@minddrop/views';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabasesStore } from '../../DatabasesStore';
 import { viewMetadataKey } from '../viewMetadataKey';
@@ -91,11 +91,11 @@ export function createEntryVirtualViews(
 
     // Create the virtual view if it doesn't exist, applying any
     // saved view config from entry metadata
-    if (!Views.get(viewId, false)) {
+    if (!DataViews.get(viewId, false)) {
       const metadataKey = viewMetadataKey(property.name, layout.id);
       const savedConfig = entry.metadata.embeddedViewConfigs?.[metadataKey];
 
-      Views.createVirtual({
+      DataViews.createVirtual({
         id: viewId,
         type: viewType,
         dataSource: { type: 'collection', id: collId },

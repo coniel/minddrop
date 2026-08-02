@@ -1,4 +1,4 @@
-import { Views, VirtualViewData } from '@minddrop/views';
+import { DataViews, VirtualDataViewData } from '@minddrop/views';
 import type { Database } from '../types';
 
 /**
@@ -7,8 +7,8 @@ import type { Database } from '../types';
  * @param databases - The databases whose views to load.
  */
 export function loadDatabaseViews(databases: Database[]): void {
-  // Build VirtualViewData from each database's stored views
-  const viewData: VirtualViewData[] = databases.flatMap((database) => {
+  // Build VirtualDataViewData from each database's stored views
+  const viewData: VirtualDataViewData[] = databases.flatMap((database) => {
     if (!database.views) {
       return [];
     }
@@ -23,6 +23,6 @@ export function loadDatabaseViews(databases: Database[]): void {
     return;
   }
 
-  // Load views via the Views API
-  Views.loadVirtual(viewData);
+  // Load views via the DataViews API
+  DataViews.loadVirtual(viewData);
 }

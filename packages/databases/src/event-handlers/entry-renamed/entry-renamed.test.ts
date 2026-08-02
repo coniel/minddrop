@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Collections } from '@minddrop/collections';
 import { DesignFixtures } from '@minddrop/designs';
-import { Views } from '@minddrop/views';
+import { DataViews } from '@minddrop/views';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { sqlDeleteEntries, sqlUpsertEntries } from '../../sql';
 import {
@@ -237,7 +237,7 @@ describe('onRenameEntry', () => {
     const layoutId = layout_card_2.id;
 
     // Create virtual views for each collection property
-    Views.createVirtual({
+    DataViews.createVirtual({
       id: virtualViewId(collectionEntry1.id, 'Related', layoutId),
       type: 'board',
       dataSource: {
@@ -246,7 +246,7 @@ describe('onRenameEntry', () => {
       },
       name: 'Related',
     });
-    Views.createVirtual({
+    DataViews.createVirtual({
       id: virtualViewId(collectionEntry1.id, 'References', layoutId),
       type: 'board',
       dataSource: {
@@ -273,11 +273,13 @@ describe('onRenameEntry', () => {
 
     // Old view IDs should be gone
     expect(
-      Views.Store.get(virtualViewId(collectionEntry1.id, 'Related', layoutId)),
+      DataViews.Store.get(
+        virtualViewId(collectionEntry1.id, 'Related', layoutId),
+      ),
     ).toBeNull();
 
     // New view IDs should exist with updated dataSource
-    const relatedView = Views.get(
+    const relatedView = DataViews.get(
       virtualViewId(renamedEntry.id, 'Related', layoutId),
     );
 

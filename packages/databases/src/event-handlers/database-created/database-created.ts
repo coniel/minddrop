@@ -1,5 +1,5 @@
 import { uuid } from '@minddrop/utils';
-import { Views } from '@minddrop/views';
+import { DataViews } from '@minddrop/views';
 import { DatabaseCreatedEventData } from '../../events';
 import { sqlUpsertDatabase } from '../../sql';
 
@@ -9,7 +9,7 @@ import { sqlUpsertDatabase } from '../../sql';
  */
 export function onCreateDatabase(data: DatabaseCreatedEventData) {
   // Create a virtual view for the database
-  Views.createVirtual({
+  DataViews.createVirtual({
     id: uuid(),
     type: 'table',
     dataSource: { type: 'database', id: data.id },

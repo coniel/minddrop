@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { View, ViewFixtures, Views } from '@minddrop/views';
+import { DataView, DataViews, ViewFixtures } from '@minddrop/views';
 import { DatabasesStore } from '../DatabasesStore';
 import { cleanup, setup } from '../test-utils';
 import { objectDatabase } from '../test-utils/fixtures';
@@ -17,13 +17,13 @@ describe('writeDatabaseViews', () => {
 
   it('adds database views to the database without dataSource and virtual', async () => {
     // Add a virtual view for the database to the ViewsStore
-    const view: View = {
+    const view: DataView = {
       ...view_virtual_1,
       dataSource: { type: 'database', id: objectDatabase.id },
       options: { sortBy: 'name' },
     };
 
-    Views.Store.set(view);
+    DataViews.Store.set(view);
 
     // Write the views
     await writeDatabaseViews(objectDatabase.id);
@@ -35,27 +35,27 @@ describe('writeDatabaseViews', () => {
     expect(database!.views).toHaveLength(1);
     expect(database!.views![0].id).toBe(view_virtual_1.id);
     expect(database!.views![0].options).toEqual({ sortBy: 'name' });
-    expect((database!.views![0] as View).dataSource).toBeUndefined();
-    expect((database!.views![0] as View).virtual).toBeUndefined();
+    expect((database!.views![0] as DataView).dataSource).toBeUndefined();
+    expect((database!.views![0] as DataView).virtual).toBeUndefined();
   });
 
   it('only includes views belonging to the specified database', async () => {
     // Add a view belonging to this database
-    const thisDbView: View = {
+    const thisDbView: DataView = {
       ...view_virtual_1,
       dataSource: { type: 'database', id: objectDatabase.id },
     };
 
-    Views.Store.set(thisDbView);
+    DataViews.Store.set(thisDbView);
 
     // Add a view belonging to a different database
-    const otherDbView: View = {
+    const otherDbView: DataView = {
       ...view_virtual_1,
       id: 'view-other-db',
       dataSource: { type: 'database', id: 'other-db' },
     };
 
-    Views.Store.set(otherDbView);
+    DataViews.Store.set(otherDbView);
 
     // Write views for the object database
     await writeDatabaseViews(objectDatabase.id);
@@ -74,7 +74,7 @@ describe('writeDatabaseViews', () => {
 
   it('writes an empty views array when no views exist', async () => {
     // Clear all views
-    Views.Store.clear();
+    DataViews.Store.clear();
 
     // Write the views
     await writeDatabaseViews(objectDatabase.id);

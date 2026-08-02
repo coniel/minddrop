@@ -1,6 +1,6 @@
 import { Collections } from '@minddrop/collections';
 import { Designs } from '@minddrop/designs';
-import { Views } from '@minddrop/views';
+import { DataViews } from '@minddrop/views';
 import { DatabaseEntryRenamedEventData } from '../../events';
 import { getDatabase } from '../../getDatabase';
 import { sqlDeleteEntries, sqlUpsertEntries } from '../../sql';
@@ -82,14 +82,14 @@ export async function onRenameEntry(data: DatabaseEntryRenamedEventData) {
           const newViewId = virtualViewId(updated.id, property.name, layoutId);
 
           // Only update if the view exists
-          const view = Views.Store.get(oldViewId);
+          const view = DataViews.Store.get(oldViewId);
 
           if (!view) {
             return;
           }
 
           // Update the view ID and point dataSource to the new collection
-          await Views.update(oldViewId, {
+          await DataViews.update(oldViewId, {
             id: newViewId,
             dataSource: { type: 'collection', id: newCollectionId },
           });

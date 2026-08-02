@@ -1,9 +1,9 @@
 import React from 'react';
 import { Collections } from '@minddrop/collections';
 import { ViewElement, createViewCssStyle } from '@minddrop/designs';
-import { ViewRenderer } from '@minddrop/feature-views';
+import { DataViewRenderer } from '@minddrop/feature-views';
 import { Icon, Text } from '@minddrop/ui-primitives';
-import { ViewTypes, Views } from '@minddrop/views';
+import { DataViewTypes, DataViews } from '@minddrop/views';
 import { useElementProperty } from '../../DesignPropertiesProvider';
 import './ViewDesignElement.css';
 
@@ -37,7 +37,7 @@ export const ViewDesignElement: React.FC<ViewDesignElementProps> = ({
       : undefined;
 
   // Look up the view from the store
-  const view = Views.use(viewId ?? '');
+  const view = DataViews.use(viewId ?? '');
 
   // Get entries from the view's collection data source
   const collectionId =
@@ -45,7 +45,7 @@ export const ViewDesignElement: React.FC<ViewDesignElementProps> = ({
   const collection = Collections.use(collectionId ?? '');
 
   // Look up the registered view type
-  const viewType = ViewTypes.use(element.viewType);
+  const viewType = DataViewTypes.use(element.viewType);
 
   // Dynamic styles from the element's style config.
   // Fill the container vertically when no explicit height is set.
@@ -78,11 +78,11 @@ export const ViewDesignElement: React.FC<ViewDesignElementProps> = ({
     );
   }
 
-  // Render the view using ViewRenderer with header
+  // Render the view using DataViewRenderer with header
   return (
     <div {...rootProps} className="design-view-element" style={mergedStyle}>
       {view && (
-        <ViewRenderer
+        <DataViewRenderer
           showHeader
           view={view}
           entries={collection?.entries ?? []}

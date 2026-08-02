@@ -1,4 +1,4 @@
-import { View, ViewUpdatedEventData } from '@minddrop/views';
+import { DataView, ViewUpdatedEventData } from '@minddrop/views';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabaseEntryMetadata } from '../../types';
 import { updateEntryMetadata } from '../../updateEntryMetadata';
@@ -34,7 +34,7 @@ export function onUpdateVirtualView(data: ViewUpdatedEventData): void {
   const metadataKey = viewMetadataKey(parsed.propertyName, parsed.layoutId);
 
   // Extract the view config to persist
-  const viewConfig: Pick<View, 'options' | 'data'> = {};
+  const viewConfig: Pick<DataView, 'options' | 'data'> = {};
 
   if (updated.options !== undefined) {
     viewConfig.options = updated.options;

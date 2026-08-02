@@ -1,6 +1,6 @@
-import { View } from '@minddrop/views';
+import { DataView } from '@minddrop/views';
 
-export interface NotebookView extends View {
+export interface NotebookView extends DataView {
   type: 'notebook';
   options: Partial<NotebookViewOptions>;
 }

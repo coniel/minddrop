@@ -1,7 +1,7 @@
 import { TranslationKey } from '@minddrop/i18n';
-import { ViewType } from '../../types';
+import { DataViewType } from '../../types';
 
-function generateViewTypeFixture(type: string): ViewType {
+function generateViewTypeFixture(type: string): DataViewType {
   return {
     type,
     name: type as TranslationKey,
@@ -20,7 +20,7 @@ export const viewType_table = generateViewTypeFixture('table');
 export const viewType_gallery = generateViewTypeFixture('gallery');
 
 // Board only supports collection data source
-export const viewType_board: ViewType = {
+export const viewType_board: DataViewType = {
   ...generateViewTypeFixture('board'),
   supportedDataSources: ['collection'],
 };

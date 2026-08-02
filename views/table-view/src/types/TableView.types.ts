@@ -1,7 +1,7 @@
 import { ContentColor } from '@minddrop/ui-primitives';
-import { View } from '@minddrop/views';
+import { DataView } from '@minddrop/views';
 
-export interface TableView extends View {
+export interface TableView extends DataView {
   type: 'table';
   options: Partial<TableViewOptions>;
 }

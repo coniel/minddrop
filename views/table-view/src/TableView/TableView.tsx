@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 import { DatabaseEntries, DatabaseEntry, Databases } from '@minddrop/databases';
 import { ContentColor, ScrollArea } from '@minddrop/ui-primitives';
-import { ViewTypeComponentProps, Views } from '@minddrop/views';
+import { DataViewTypeComponentProps, DataViews } from '@minddrop/views';
 import { TableEditContext } from '../TableEditContext';
 import { TableHeader } from '../TableHeader';
 import { TableRow } from '../TableRow';
@@ -31,7 +31,7 @@ const INPUT_TYPES = new Set(['text', 'title']);
  * Renders a virtualised table view of database entries.
  */
 export const TableViewComponent: React.FC<
-  ViewTypeComponentProps<TableViewOptions>
+  DataViewTypeComponentProps<TableViewOptions>
 > = ({ view, entries }) => {
   const databaseId =
     view.dataSource.type === 'database' ? view.dataSource.id : '';
@@ -157,7 +157,7 @@ export const TableViewComponent: React.FC<
   // Persist the new column order to view options
   const handleReorderColumns = useCallback(
     (columnOrder: string[]) => {
-      Views.update(view.id, { options: { columnOrder } });
+      DataViews.update(view.id, { options: { columnOrder } });
     },
     [view.id],
   );
@@ -165,7 +165,7 @@ export const TableViewComponent: React.FC<
   // Toggle a column's showChips setting
   const handleToggleShowChips = useCallback(
     (columnId: string, showChips: boolean) => {
-      Views.update(view.id, {
+      DataViews.update(view.id, {
         options: { columns: { [columnId]: { showChips } } },
       });
     },
@@ -175,7 +175,7 @@ export const TableViewComponent: React.FC<
   // Hide a column by setting its hidden flag
   const handleHideColumn = useCallback(
     (columnId: string) => {
-      Views.update(view.id, {
+      DataViews.update(view.id, {
         options: { columns: { [columnId]: { hidden: true } } },
       });
     },
@@ -193,7 +193,7 @@ export const TableViewComponent: React.FC<
         updatedColumns[id] = { ...updatedColumns[id], [widthKey]: value };
       }
 
-      Views.update(view.id, { options: { columns: updatedColumns } });
+      DataViews.update(view.id, { options: { columns: updatedColumns } });
     },
     [view.id, options.overflow, options.columns],
   );

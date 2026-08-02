@@ -1,4 +1,4 @@
 export * from './MainContentView.types';
-export * from './View.types';
+export * from './DataView.types';
 export * from './ViewDataSource.types';
-export * from './ViewType.types';
+export * from './DataViewType.types';

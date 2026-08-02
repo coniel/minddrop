@@ -90,7 +90,7 @@ export const DatabaseConfigurationPanel: React.FC<
       >
         <div className="database-configuration-panel-tabs">
           <IconButton
-            size="sm"
+            size="md"
             label="labels.settings"
             icon="settings"
             active={showSettings}
@@ -121,14 +121,14 @@ export const DatabaseConfigurationPanel: React.FC<
               onSelect={handleAddProperty}
             >
               <IconButton
-                size="sm"
+                size="md"
                 label="databases.actions.addProperty"
                 icon="plus"
               />
             </PropertyTypeSelectionMenu>
           )}
           {(showSettings || activeTab !== 'properties') && (
-            <IconButtonSpacer size="sm" />
+            <IconButtonSpacer size="md" />
           )}
         </div>
 

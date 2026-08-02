@@ -15,7 +15,7 @@ import {
   Icon,
   MenuLabel,
 } from '@minddrop/ui-primitives';
-import { ViewTypeSettingsMenuProps } from '@minddrop/views';
+import { DataViewTypeSettingsMenuProps } from '@minddrop/views';
 import { TablePadding, TableViewOptions } from '../types';
 import './TableViewOptionsMenu.css';
 
@@ -27,7 +27,7 @@ const SUPPORTED_TYPES = new Set(['text', 'title', 'number', 'select', 'date']);
  * Renders the settings menu for configuring table view options.
  */
 export const TableViewOptionsMenu: React.FC<
-  ViewTypeSettingsMenuProps<TableViewOptions>
+  DataViewTypeSettingsMenuProps<TableViewOptions>
 > = ({ view, options, onUpdateOptions }) => {
   // Get the database to list available columns
   const databaseId =

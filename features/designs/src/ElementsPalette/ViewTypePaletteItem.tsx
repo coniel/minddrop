@@ -5,7 +5,7 @@ import { PropertyType } from '@minddrop/properties';
 import { useDraggable } from '@minddrop/selection';
 import { UiIconName } from '@minddrop/ui-icons';
 import { Icon, Text, Tooltip } from '@minddrop/ui-primitives';
-import { ViewType } from '@minddrop/views';
+import { DataViewType } from '@minddrop/views';
 import { MappableIndicator } from '../MappableIndicator';
 import {
   DesignElementTemplatesDataKey,
@@ -17,7 +17,7 @@ export interface ViewTypePaletteItemProps {
   /**
    * The registered view type to render a palette item for.
    */
-  viewType: ViewType;
+  viewType: DataViewType;
 }
 
 /**

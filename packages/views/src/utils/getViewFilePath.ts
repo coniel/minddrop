@@ -3,10 +3,10 @@ import { ViewFileExtension } from '../constants';
 import { getViewsDirPath } from './getViewsDirPath';
 
 /**
- * Returns the path to a view file.
+ * Returns the path to a data view file.
  *
- * @param id - The ID of the view.
- * @returns The path to the view file.
+ * @param id - The ID of the data view.
+ * @returns The path to the data view file.
  */
 export function getViewFilePath(id: string): string {
   return Fs.concatPath(

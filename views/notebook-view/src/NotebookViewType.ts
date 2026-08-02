@@ -1,11 +1,11 @@
-import { ViewType } from '@minddrop/views';
+import { DataViewType } from '@minddrop/views';
 import { NotebookViewComponent } from './NotebookView';
 import { NotebookViewOptionsMenu } from './NotebookViewOptionsMenu';
 import { NotebookViewSkeleton } from './NotebookViewSkeleton';
 import { defaultNotebookViewOptions } from './constants';
 import { NotebookViewOptions } from './types';
 
-export const NotebookViewType: ViewType<NotebookViewOptions> = {
+export const NotebookViewType: DataViewType<NotebookViewOptions> = {
   type: 'notebook',
   name: 'views.notebook.name',
   description: 'views.notebook.description',

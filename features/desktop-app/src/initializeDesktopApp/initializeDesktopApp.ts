@@ -17,9 +17,9 @@ import { Workspaces } from '@minddrop/workspaces';
 import { AppUiState } from '../AppUiState';
 import { registerAppDataStoreListeners } from '../registerAppDataStoreListeners';
 import { registerWorkspaceStoreListeners } from '../registerWorkspaceStoreListeners';
+import { initializeDataViewTypes } from './initializeDataViewTypes';
 import { initializeMainContentViews } from './initializeMainContentViews';
 import { initializeSelection } from './initializeSelection';
-import { initializeViewTypes } from './initializeViewTypes';
 
 // In development mode, React runs effects twice on first load, so
 // initializeDesktopApp may be called more than once. Memoizing the
@@ -69,7 +69,7 @@ async function runInitialization(): Promise<void> {
   EditorElements.registerDefaults();
   EditorMarks.registerDefaults();
   Ast.registerDefaultConfigs();
-  initializeViewTypes();
+  initializeDataViewTypes();
   initializeMainContentViews();
   initializeViewsFeature();
 

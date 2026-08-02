@@ -8,14 +8,14 @@ import {
   Slider,
   Text,
 } from '@minddrop/ui-primitives';
-import { ViewTypeSettingsMenuProps } from '@minddrop/views';
+import { DataViewTypeSettingsMenuProps } from '@minddrop/views';
 import { GalleryGap, GalleryViewOptions } from '../types';
 import './GalleryViewOptionsMenu.css';
 
 const t = createI18nKeyBuilder('views.gallery.options.');
 
 export const GalleryViewOptionsMenu: React.FC<
-  ViewTypeSettingsMenuProps<GalleryViewOptions>
+  DataViewTypeSettingsMenuProps<GalleryViewOptions>
 > = ({ view, options, onUpdateOptions }) => {
   return (
     <div className="gallery-view-options-menu">

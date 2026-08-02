@@ -2,7 +2,7 @@ import { Fs, MockFileDescriptor } from '@minddrop/file-system';
 import { Paths } from '@minddrop/utils';
 import { WorkspaceFixtures } from '@minddrop/workspaces';
 import { ViewFileExtension, ViewsDirName } from '../../constants';
-import { View, ViewDataSource } from '../../types';
+import { DataView, ViewDataSource } from '../../types';
 
 const { workspace_1 } = WorkspaceFixtures;
 
@@ -16,7 +16,7 @@ function generateViewFixture(
   type: string,
   dataSource: ViewDataSource,
   number: number,
-): View {
+): DataView {
   return {
     id: `view-${type}-${number}`,
     name: `${type} ${number}`,
@@ -82,7 +82,7 @@ function generateVirtualViewFixture(
   type: string,
   dataSource: ViewDataSource,
   number: number,
-): View {
+): DataView {
   return {
     ...generateViewFixture(type, dataSource, number),
     id: `view-virtual-${type}-${number}`,
@@ -109,7 +109,7 @@ export const views = [
   view_board_3,
 ];
 
-// All views including virtual ones
+// All data views including virtual ones
 export const allViews = [...views, view_virtual_1];
 
 export const viewFiles: MockFileDescriptor[] = views.map((view) => ({

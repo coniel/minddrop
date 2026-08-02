@@ -1,8 +1,8 @@
-import { View } from '@minddrop/views';
+import { DataView } from '@minddrop/views';
 
 export type GalleryGap = 'none' | 'compact' | 'comfortable' | 'spacious';
 
-export interface GalleryView extends View {
+export interface GalleryView extends DataView {
   type: 'wall-view';
   options: Partial<GalleryViewOptions>;
 }

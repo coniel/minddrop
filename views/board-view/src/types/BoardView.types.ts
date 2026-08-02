@@ -1,4 +1,4 @@
-import { View } from '@minddrop/views';
+import { DataView } from '@minddrop/views';
 
 /**
  * Represents the placement of entries across columns.
@@ -7,7 +7,7 @@ import { View } from '@minddrop/views';
  */
 export type BoardColumns = string[][];
 
-export interface BoardView extends View {
+export interface BoardView extends DataView {
   type: 'board';
   options: Partial<BoardViewOptions>;
 }

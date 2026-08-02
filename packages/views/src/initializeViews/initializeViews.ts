@@ -1,14 +1,14 @@
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { Workspaces } from '@minddrop/workspaces';
-import { ViewsStore } from '../ViewsStore';
+import { DataViewsStore } from '../DataViewsStore';
 import { ViewFileExtension } from '../constants';
 import { ViewsLoadedEvent, ViewsLoadedEventData } from '../events';
-import { readView } from '../readView';
+import { readDataView } from '../readDataView';
 import { getViewsDirPath } from '../utils/getViewsDirPath';
 
 /**
- * Initializes views by reading the views directory and loading views from the file system.
+ * Initializes data views by reading the data views directory and loading data views from the file system.
  *
  * @dispatches views:loaded
  */
@@ -16,7 +16,7 @@ export async function initializeViews(): Promise<void> {
   // Get all workspaces
   const workspaces = Workspaces.getAll();
 
-  // Get views paths from workspaces
+  // Get data views paths from workspaces
   const viewFileEntries = (
     await Promise.all(
       workspaces.map(async (workspace) => {
@@ -29,21 +29,21 @@ export async function initializeViews(): Promise<void> {
     )
   ).flat();
 
-  // Get the view file paths, filtering out any non-view files
+  // Get the data view file paths, filtering out any non-data view files
   const viewPaths = viewFileEntries
     .filter((entry) => !!entry)
     .filter((entry) => entry.path.endsWith(ViewFileExtension))
     .map((entry) => entry.path);
 
-  // Read the views
-  const viewPromises = await Promise.all(viewPaths.map(readView));
+  // Read the data views
+  const viewPromises = await Promise.all(viewPaths.map(readDataView));
 
-  // Filter out null views
+  // Filter out null data views
   const views = viewPromises.filter((view) => view !== null);
 
-  // Load the views into the store
-  ViewsStore.load(views);
+  // Load the data views into the store
+  DataViewsStore.load(views);
 
-  // Dispatch a views loaded event
+  // Dispatch a data views loaded event
   Events.dispatch<ViewsLoadedEventData>(ViewsLoadedEvent, views);
 }

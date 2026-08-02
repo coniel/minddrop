@@ -1,5 +1,5 @@
 import { PropertiesSchema, PropertyType } from '@minddrop/properties';
-import { View } from '@minddrop/views';
+import { DataView } from '@minddrop/views';
 import { DatabaseAutomation } from './DatabaseAutomation.types';
 
 export type DatabaseEntryOpenMode = 'dialog' | 'full' | 'split';
@@ -134,5 +134,5 @@ export interface Database {
    * The database's views, stored without `dataSource` and `virtual`
    * which are derived at load time.
    */
-  views?: Omit<View, 'dataSource' | 'virtual'>[];
+  views?: Omit<DataView, 'dataSource' | 'virtual'>[];
 }

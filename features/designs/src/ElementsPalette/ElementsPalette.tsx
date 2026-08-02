@@ -1,12 +1,12 @@
 import { ELEMENT_GROUPS } from '@minddrop/designs';
 import { MenuGroup, MenuLabel } from '@minddrop/ui-primitives';
-import { ViewTypes } from '@minddrop/views';
+import { DataViewTypes } from '@minddrop/views';
 import { ElementsPaletteItem } from './ElementsPaletteItem';
 import { ViewTypePaletteItem } from './ViewTypePaletteItem';
 import './ElementsPalette.css';
 
 export const ElementsPalette: React.FC = () => {
-  const viewTypes = ViewTypes.useAll();
+  const viewTypes = DataViewTypes.useAll();
 
   return (
     <div className="elements-palette">

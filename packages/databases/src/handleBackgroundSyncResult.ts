@@ -1,6 +1,6 @@
 import { Events } from '@minddrop/events';
 import { restoreDates } from '@minddrop/utils';
-import { Views } from '@minddrop/views';
+import { DataViews } from '@minddrop/views';
 import { DatabaseEntriesStore } from './DatabaseEntriesStore';
 import { DatabasesStore } from './DatabasesStore';
 import { DatabasesBackgroundSyncedEvent } from './events';
@@ -36,10 +36,10 @@ export function handleBackgroundSyncResult(
 
   // Delete views belonging to deleted databases
   for (const id of changeset.deletedDatabaseIds) {
-    const databaseViews = Views.getByDataSource('database', id);
+    const databaseViews = DataViews.getByDataSource('database', id);
 
     for (const view of databaseViews) {
-      Views.delete(view.id);
+      DataViews.delete(view.id);
     }
   }
 

@@ -2,7 +2,7 @@ import React, { useCallback, useMemo } from 'react';
 import { DropEventData } from '@minddrop/selection';
 import { FlexDropContainer } from '@minddrop/ui-drag-and-drop';
 import { ScrollArea } from '@minddrop/ui-primitives';
-import { ViewTypeComponentProps, Views } from '@minddrop/views';
+import { DataViewTypeComponentProps, DataViews } from '@minddrop/views';
 import { BoardViewColumn } from '../BoardViewColumn';
 import { defaultBoardViewOptions } from '../constants';
 import { BoardColumns, BoardViewOptions } from '../types';
@@ -13,7 +13,7 @@ import './BoardView.css';
  * Renders a board view with draggable columns of entry cards.
  */
 export const BoardViewComponent: React.FC<
-  ViewTypeComponentProps<BoardViewOptions>
+  DataViewTypeComponentProps<BoardViewOptions>
 > = ({ view, entries }) => {
   // Resolve columns from view options, falling back to defaults
   const columns = useMemo(
@@ -33,7 +33,7 @@ export const BoardViewComponent: React.FC<
   // Persist the updated column layout to the view options
   const updateColumns = useCallback(
     (updatedColumns: BoardColumns) => {
-      Views.update(view.id, { options: { columns: updatedColumns } });
+      DataViews.update(view.id, { options: { columns: updatedColumns } });
     },
     [view.id],
   );

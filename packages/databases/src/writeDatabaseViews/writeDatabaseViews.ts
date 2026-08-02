@@ -1,4 +1,4 @@
-import { Views } from '@minddrop/views';
+import { DataViews } from '@minddrop/views';
 import { DatabasesStore } from '../DatabasesStore';
 import { writeDatabaseConfig } from '../writeDatabaseConfig';
 
@@ -17,7 +17,7 @@ export async function writeDatabaseViews(databaseId: string): Promise<void> {
   }
 
   // Get all views for this database from the ViewsStore
-  const allViews = Views.Store.getAllArray();
+  const allViews = DataViews.Store.getAllArray();
   const databaseViews = allViews.filter(
     (view) =>
       view.dataSource.type === 'database' && view.dataSource.id === databaseId,

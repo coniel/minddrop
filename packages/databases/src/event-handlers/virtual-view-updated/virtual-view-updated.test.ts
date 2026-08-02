@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { View } from '@minddrop/views';
+import { DataView } from '@minddrop/views';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { cleanup, objectEntry1, setup } from '../../test-utils';
 import { viewMetadataKey } from '../../utils';
@@ -9,7 +9,7 @@ const layoutId = 'layout-card-1';
 const propertyName = 'Related';
 const viewId = `${objectEntry1.id}:${propertyName}:${layoutId}`;
 
-const baseView: View = {
+const baseView: DataView = {
   id: viewId,
   virtual: true,
   name: 'Related',
@@ -26,7 +26,7 @@ describe('onUpdateVirtualView', () => {
   afterEach(cleanup);
 
   it('does nothing for non-virtual views', () => {
-    const nonVirtualView: View = { ...baseView, virtual: false };
+    const nonVirtualView: DataView = { ...baseView, virtual: false };
 
     onUpdateVirtualView({
       original: nonVirtualView,
@@ -40,7 +40,7 @@ describe('onUpdateVirtualView', () => {
   });
 
   it('does nothing if the virtual view ID cannot be parsed', () => {
-    const invalidIdView: View = { ...baseView, id: 'invalid-id' };
+    const invalidIdView: DataView = { ...baseView, id: 'invalid-id' };
 
     onUpdateVirtualView({
       original: invalidIdView,
@@ -54,7 +54,7 @@ describe('onUpdateVirtualView', () => {
   });
 
   it('does nothing if the entry does not exist', () => {
-    const unknownEntryView: View = {
+    const unknownEntryView: DataView = {
       ...baseView,
       id: `Unknown/Entry.md:${propertyName}:${layoutId}`,
     };
@@ -67,7 +67,7 @@ describe('onUpdateVirtualView', () => {
   });
 
   it('updates the entry metadata with the view config', () => {
-    const updatedView: View = {
+    const updatedView: DataView = {
       ...baseView,
       options: { sortOrder: 'asc' },
       data: { columns: [['a', 'b'], ['c']] },
@@ -102,7 +102,7 @@ describe('onUpdateVirtualView', () => {
       metadata: existingMetadata,
     });
 
-    const updatedView: View = {
+    const updatedView: DataView = {
       ...baseView,
       data: { columns: [] },
     };

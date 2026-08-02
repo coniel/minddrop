@@ -5,7 +5,7 @@ import {
   ViewElement,
 } from '@minddrop/designs';
 import { PropertyType } from '@minddrop/properties';
-import { ViewTypes } from '@minddrop/views';
+import { DataViewTypes } from '@minddrop/views';
 import { propertyTypeDataSourceMap } from '../../constants';
 import { FlatDesignElement } from '../../types';
 
@@ -39,7 +39,7 @@ export function isPropertyCompatibleWithElement(
     }
 
     const throwOnNotFound = false;
-    const viewType = ViewTypes.get(
+    const viewType = DataViewTypes.get(
       (element as ViewElement).viewType,
       throwOnNotFound,
     );

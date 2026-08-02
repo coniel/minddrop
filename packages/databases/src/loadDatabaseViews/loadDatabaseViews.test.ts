@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { ViewFixtures, Views } from '@minddrop/views';
+import { DataViews, ViewFixtures } from '@minddrop/views';
 import { cleanup, setup } from '../test-utils';
 import { objectDatabase } from '../test-utils/fixtures';
 import type { Database } from '../types';
@@ -10,7 +10,7 @@ const { view_virtual_1, view_board_1 } = ViewFixtures;
 describe('loadDatabaseViews', () => {
   beforeEach(() => {
     setup();
-    Views.Store.clear();
+    DataViews.Store.clear();
   });
   afterEach(cleanup);
 
@@ -27,7 +27,7 @@ describe('loadDatabaseViews', () => {
     loadDatabaseViews([database]);
 
     // Should have loaded the view with dataSource and virtual
-    const views = Views.Store.getAll();
+    const views = DataViews.Store.getAll();
     const view = views.find((view) => view.id === view_virtual_1.id);
 
     expect(view).toBeDefined();
@@ -43,7 +43,7 @@ describe('loadDatabaseViews', () => {
     loadDatabaseViews([objectDatabase]);
 
     // Store should remain empty
-    expect(Views.Store.getAll()).toHaveLength(0);
+    expect(DataViews.Store.getAll()).toHaveLength(0);
   });
 
   it('loads views from multiple databases', () => {
@@ -66,7 +66,7 @@ describe('loadDatabaseViews', () => {
     // Load views from multiple databases
     loadDatabaseViews([database1, database2]);
 
-    const views = Views.Store.getAll();
+    const views = DataViews.Store.getAll();
 
     expect(views).toHaveLength(2);
 

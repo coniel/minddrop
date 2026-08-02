@@ -6,7 +6,7 @@ import {
   DefaultViewElementStyle,
   Layout,
 } from '@minddrop/designs';
-import { ViewFixtures, Views } from '@minddrop/views';
+import { DataViews, ViewFixtures } from '@minddrop/views';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import {
   cleanup,
@@ -131,7 +131,7 @@ describe('createEntryVirtualViews', () => {
       'Related',
       designWithView.id,
     );
-    const view = Views.get(vViewId, false);
+    const view = DataViews.get(vViewId, false);
     const collId = virtualCollectionId(collectionEntry1.id, 'Related');
 
     expect(view).not.toBeNull();
@@ -169,7 +169,7 @@ describe('createEntryVirtualViews', () => {
     );
 
     expect(Collections.get(collId, false)).not.toBeNull();
-    expect(Views.get(vViewId, false)).not.toBeNull();
+    expect(DataViews.get(vViewId, false)).not.toBeNull();
   });
 
   it('handles multiple collection properties', () => {
@@ -244,7 +244,7 @@ describe('createEntryVirtualViews', () => {
       'Related',
       designWithView.id,
     );
-    const view = Views.get(vViewId, false);
+    const view = DataViews.get(vViewId, false);
 
     // Saved options are merged over the view type's default options
     expect(view!.options).toEqual({
@@ -263,7 +263,7 @@ describe('createEntryVirtualViews', () => {
       'Related',
       designWithView.id,
     );
-    const view = Views.get(vViewId, false);
+    const view = DataViews.get(vViewId, false);
 
     // Should not have custom data
     expect(view!.data).toBeUndefined();

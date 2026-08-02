@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { View, ViewFixtures, Views } from '@minddrop/views';
+import { DataView, DataViews, ViewFixtures } from '@minddrop/views';
 import { DatabasesStore } from '../../DatabasesStore';
 import { cleanup, setup } from '../../test-utils';
 import { objectDatabase } from '../../test-utils/fixtures';
@@ -17,14 +17,14 @@ describe('onDatabaseViewCreated', () => {
 
   it('persists the view to the database config', () => {
     // Create a virtual view for this database
-    const view: View = {
+    const view: DataView = {
       ...view_virtual_1,
       dataSource: { type: 'database', id: objectDatabase.id },
     };
 
     // Add the view to the store (simulates what happens before
     // the event fires)
-    Views.Store.set(view);
+    DataViews.Store.set(view);
 
     // Call the handler
     onDatabaseViewCreated(view);
@@ -38,7 +38,7 @@ describe('onDatabaseViewCreated', () => {
 
   it('ignores views that do not belong to a database', () => {
     // Create a view with a non-database data source
-    const view: View = {
+    const view: DataView = {
       ...view_gallery_1,
       dataSource: { type: 'collection', id: 'some-collection' },
     };

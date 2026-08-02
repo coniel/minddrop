@@ -1,2 +1,2 @@
-export * from './ViewTypeNotRegisteredError';
-export * from './ViewNotFoundError';
+export * from './DataViewTypeNotRegisteredError';
+export * from './DataViewNotFoundError';

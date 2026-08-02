@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { DatabaseEntries, Databases } from '@minddrop/databases';
-import { ViewRenderer } from '@minddrop/feature-views';
+import { DataViewRenderer } from '@minddrop/feature-views';
 import { useTranslation } from '@minddrop/i18n';
 import { SortableList } from '@minddrop/ui-drag-and-drop';
 import {
@@ -31,7 +31,7 @@ import {
   Toolbar,
 } from '@minddrop/ui-primitives';
 import { uuid } from '@minddrop/utils';
-import { ViewTypes, Views } from '@minddrop/views';
+import { DataViewTypes, DataViews } from '@minddrop/views';
 import { DatabaseConfigurationPanel } from '../DatabaseConfigurationPanel';
 import {
   setDatabaseViewState,
@@ -60,8 +60,11 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
 }) => {
   const database = Databases.use(databaseId);
   const entryIds = DatabaseEntries.useIds(databaseId);
-  const unsortedViews = Views.useDataSourceViews('database', databaseId);
-  const viewTypes = ViewTypes.useAll();
+  const unsortedViews = DataViews.useDataSourceDataViews(
+    'database',
+    databaseId,
+  );
+  const viewTypes = DataViewTypes.useAll();
   const viewState = useDatabaseViewState(databaseId);
 
   // Sort views according to the persisted view order
@@ -156,7 +159,7 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
     null;
 
   // Get the active view's type to check for a settings menu
-  const activeViewType = ViewTypes.use(view?.type ?? '');
+  const activeViewType = DataViewTypes.use(view?.type ?? '');
 
   // Merge view options with the view type's defaults
   const viewOptions = useMemo(
@@ -173,7 +176,7 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
   const handleUpdateViewOptions = useCallback(
     (options: Record<string, unknown>) => {
       if (view) {
-        Views.update(view.id, { options });
+        DataViews.update(view.id, { options });
       }
     },
     [view],
@@ -183,7 +186,7 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
   const handleRenameActiveView = useCallback(
     (name: string) => {
       if (view) {
-        Views.update(view.id, { name });
+        DataViews.update(view.id, { name });
       }
     },
     [view],
@@ -193,7 +196,7 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
   const handleSelectActiveViewIcon = useCallback(
     (icon: string) => {
       if (view) {
-        Views.update(view.id, { icon });
+        DataViews.update(view.id, { icon });
       }
     },
     [view],
@@ -201,12 +204,12 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
 
   // Rename a view by ID
   const handleRenameView = useCallback((viewId: string, name: string) => {
-    Views.update(viewId, { name });
+    DataViews.update(viewId, { name });
   }, []);
 
   // Change a view's icon by ID
   const handleSelectViewIcon = useCallback((viewId: string, icon: string) => {
-    Views.update(viewId, { icon });
+    DataViews.update(viewId, { icon });
   }, []);
 
   // Track which view's dropdown menu is open and anchor element
@@ -227,7 +230,7 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
    * Creates a new virtual view of the specified type and sets it as active.
    */
   function handleAddView(type: string) {
-    const newView = Views.createVirtual({
+    const newView = DataViews.createVirtual({
       id: uuid(),
       type,
       dataSource: { type: 'database', id: databaseId },
@@ -270,7 +273,7 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
               view: targetView,
               options: targetViewOptions,
               onUpdateOptions: (options: Record<string, unknown>) =>
-                Views.update(targetViewId, { options }),
+                DataViews.update(targetViewId, { options }),
             })}
           </>
         )}
@@ -301,7 +304,7 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
         <div className="header">
           <div className="title">
             <ContentIcon icon={database.icon} />
-            <Heading noMargin>{database.name}</Heading>
+            <Text>{database.name}</Text>
           </div>
           <Toolbar>
             <IconButton
@@ -570,7 +573,7 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
 
         {/* View content */}
         {!isEmpty && view && (
-          <ViewRenderer key={view.id} view={view} entries={entryIds} />
+          <DataViewRenderer key={view.id} view={view} entries={entryIds} />
         )}
       </Panel>
       {configurationPanelOpen && (

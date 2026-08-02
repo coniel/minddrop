@@ -1,6 +1,6 @@
 import { MockFileSystem } from '@minddrop/file-system';
-import { ViewTypesStore } from '../ViewTypesStore';
-import { ViewsStore } from '../ViewsStore';
+import { DataViewTypesStore } from '../DataViewTypesStore';
+import { DataViewsStore } from '../DataViewsStore';
 import { viewFiles, viewTypes, views, viewsRootPath } from './fixtures';
 
 export interface SetupViewFixturesOptions {
@@ -17,27 +17,27 @@ export function setupViewFixtures(
     loadViewFiles: true,
   },
 ) {
-  // Add the views directory to the mock file system
+  // Add the data views directory to the mock file system
   MockFs.createDir(viewsRootPath, { recursive: true });
 
   if (options.loadViewTypes !== false) {
-    // Load view types into the store
-    ViewTypesStore.load(viewTypes);
+    // Load data view types into the store
+    DataViewTypesStore.load(viewTypes);
   }
 
   if (options.loadViews !== false) {
-    // Load views into the store
-    ViewsStore.load(views);
+    // Load data views into the store
+    DataViewsStore.load(views);
   }
 
   if (options.loadViewFiles !== false) {
-    // Add view file to the file system
+    // Add data view file to the file system
     MockFs.addFiles(viewFiles);
   }
 }
 
 export function cleanupViewFixtures() {
   // Clear stores
-  ViewsStore.clear();
-  ViewTypesStore.clear();
+  DataViewsStore.clear();
+  DataViewTypesStore.clear();
 }

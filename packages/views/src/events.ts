@@ -1,7 +1,7 @@
-import { View, ViewType } from './types';
+import { DataView, DataViewType } from './types';
 
 /*****************************
- * View Events
+ * DataView Events
  *****************************/
 
 export const ViewCreatedEvent = 'views:view:created';
@@ -9,20 +9,20 @@ export const ViewUpdatedEvent = 'views:view:updated';
 export const ViewDeletedEvent = 'views:view:deleted';
 export const ViewsLoadedEvent = 'views:loaded';
 
-export type ViewCreatedEventData = View;
+export type ViewCreatedEventData = DataView;
 export type ViewUpdatedEventData = {
-  original: View;
-  updated: View;
+  original: DataView;
+  updated: DataView;
 };
-export type ViewDeletedEventData = View;
-export type ViewsLoadedEventData = View[];
+export type ViewDeletedEventData = DataView;
+export type ViewsLoadedEventData = DataView[];
 
 /*****************************
- * View Type Events
+ * DataView Type Events
  *****************************/
 
 export const ViewTypeRegisteredEvent = 'views:view-type:registered';
 export const ViewTypeUnregisteredEvent = 'views:view-type:unregistered';
 
-export type ViewTypeRegisteredEventData = ViewType;
-export type ViewTypeUnregisteredEventData = ViewType;
+export type ViewTypeRegisteredEventData = DataViewType;
+export type ViewTypeUnregisteredEventData = DataViewType;

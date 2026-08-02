@@ -1,5 +1,5 @@
 import { Collections } from '@minddrop/collections';
-import { Views } from '@minddrop/views';
+import { DataViews } from '@minddrop/views';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabaseDeletedEventData } from '../../events';
 import { sqlDeleteDatabase } from '../../sql';
@@ -16,9 +16,9 @@ export async function onDeleteDatabase(
   sqlDeleteDatabase(data.id);
 
   // Delete all views belonging to this database
-  const databaseViews = Views.getByDataSource('database', data.id);
+  const databaseViews = DataViews.getByDataSource('database', data.id);
 
-  await Promise.all(databaseViews.map((view) => Views.delete(view.id)));
+  await Promise.all(databaseViews.map((view) => DataViews.delete(view.id)));
 
   // Find collection properties in the database schema
   const collectionProperties = data.properties.filter(

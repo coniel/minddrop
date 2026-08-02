@@ -1,10 +1,10 @@
-import { ViewType } from '@minddrop/views';
+import { DataViewType } from '@minddrop/views';
 import { BoardViewComponent } from './BoardView';
 import { BoardViewSkeleton } from './BoardViewSkeleton';
 import { defaultBoardViewOptions } from './constants';
 import { BoardViewOptions } from './types';
 
-export const BoardViewType: ViewType<BoardViewOptions> = {
+export const BoardViewType: DataViewType<BoardViewOptions> = {
   type: 'board',
   name: 'views.board.name',
   description: 'views.board.description',

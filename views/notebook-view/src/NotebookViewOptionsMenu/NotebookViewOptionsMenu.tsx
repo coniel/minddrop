@@ -3,7 +3,7 @@ import { Collections } from '@minddrop/collections';
 import { Databases } from '@minddrop/databases';
 import { DatabaseLayoutSelectionMenu } from '@minddrop/ui-components';
 import { DropdownMenuSeparator } from '@minddrop/ui-primitives';
-import { ViewTypeSettingsMenuProps } from '@minddrop/views';
+import { DataViewTypeSettingsMenuProps } from '@minddrop/views';
 import { NotebookViewOptions } from '../types';
 
 /**
@@ -11,7 +11,7 @@ import { NotebookViewOptions } from '../types';
  * list and page design pickers.
  */
 export const NotebookViewOptionsMenu: React.FC<
-  ViewTypeSettingsMenuProps<NotebookViewOptions>
+  DataViewTypeSettingsMenuProps<NotebookViewOptions>
 > = ({ view, options, onUpdateOptions }) => {
   // Resolve the database ID(s) based on the data source type
   const databaseIds = useDatabaseIds(view);
@@ -80,7 +80,7 @@ export const NotebookViewOptionsMenu: React.FC<
  * array for collections.
  */
 function useDatabaseIds(
-  view: ViewTypeSettingsMenuProps<NotebookViewOptions>['view'],
+  view: DataViewTypeSettingsMenuProps<NotebookViewOptions>['view'],
 ): string | string[] {
   // Load the collection when the data source is a collection
   const collection = Collections.use(

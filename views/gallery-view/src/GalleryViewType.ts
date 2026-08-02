@@ -1,11 +1,11 @@
-import { ViewType } from '@minddrop/views';
+import { DataViewType } from '@minddrop/views';
 import { GalleryViewComponent } from './GalleryView';
 import { GalleryViewOptionsMenu } from './GalleryViewOptionsMenu/GalleryViewOptionsMenu';
 import { GalleryViewSkeleton } from './GalleryViewSkeleton';
 import { defaultGalleryViewOptions } from './constants';
 import { GalleryViewOptions } from './types';
 
-export const GalleryViewType: ViewType<GalleryViewOptions> = {
+export const GalleryViewType: DataViewType<GalleryViewOptions> = {
   type: 'gallery',
   name: 'views.gallery.name',
   description: 'views.gallery.description',
