@@ -8,6 +8,7 @@
     "forward": "Forward"
   },
   "designStudio": {
+    "title": "Design Studio",
     "open": "Open design studio",
     "exit": "Exit design studio",
     "backToDesigns": "Back to designs",

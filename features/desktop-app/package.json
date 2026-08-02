@@ -35,6 +35,7 @@
     "@minddrop/feature-search": "workspace:*",
     "@minddrop/file-system": "workspace:*",
     "@minddrop/i18n": "workspace:*",
+    "@minddrop/ui-drag-and-drop": "workspace:*",
     "@minddrop/ui-icons": "workspace:*",
     "@minddrop/search": "workspace:*",
     "@minddrop/sql": "workspace:*",

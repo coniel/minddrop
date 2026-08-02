@@ -4,12 +4,18 @@ import {
   CloseAppSidebarEvent,
   CloseRightPanelEvent,
   Events,
+  MainContentChangedEvent,
+  MainContentChangedEventData,
+  MainContentReadyEvent,
+  MainContentViewDescriptor,
   OpenAppSidebarEvent,
   OpenConfirmationDialogEvent,
   OpenConfirmationDialogEventData,
   OpenMainContentViewEvent,
   OpenMainContentViewEventData,
   OpenRightPanelEvent,
+  SetMainContentEvent,
+  SetMainContentEventData,
   ToggleWindowFillEvent,
 } from '@minddrop/events';
 import { MindDropApiProvider } from '@minddrop/extensions';
@@ -26,6 +32,7 @@ import { MainContentViews } from '@minddrop/views';
 import { AppSidebar } from './AppSidebar';
 import { AppUiState } from './AppUiState';
 import { NavToolbar } from './NavToolbar';
+import { TabsFeature } from './TabsFeature';
 import { TabsToolbar } from './TabsToolbar';
 import './DesktopApp.css';
 
@@ -94,6 +101,7 @@ export const DesktopApp: React.FC = () => {
           <ConfirmationDialogFeature />
           <DesignsFeature />
           <SearchFeature />
+          <TabsFeature />
           <DevTools />
         </MindDropApiProvider>
       </IconsProvider>
@@ -101,55 +109,118 @@ export const DesktopApp: React.FC = () => {
   );
 };
 
+const INITIAL_MAIN_CONTENT_STATE: SetMainContentEventData = {
+  main: null,
+  split: null,
+  splitRatio: 50,
+};
+
+/**
+ * Renders the main content area. Driven entirely by events
+ * (`OpenMainContentViewEvent` / `SetMainContentEvent`) and announces its
+ * state via `MainContentChangedEvent`. Knows nothing about tabs.
+ */
 const MainContent: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [mainView, setMainView] = useState<OpenMainContentViewEventData | null>(
-    null,
+  const stateRef = useRef<SetMainContentEventData>(INITIAL_MAIN_CONTENT_STATE);
+  const [state, setState] = useState<SetMainContentEventData>(
+    INITIAL_MAIN_CONTENT_STATE,
   );
-  const [splitView, setSplitView] =
-    useState<OpenMainContentViewEventData | null>(null);
 
-  // Split ratio as a percentage for the left pane (0-100)
-  const [splitRatio, setSplitRatio] = useState(50);
+  // Applies a new state, optionally announcing the change so listeners
+  // (e.g. tabs) can mirror it. Not announced for transient updates
+  // such as ongoing resize drags.
+  const applyState = useCallback(
+    (next: SetMainContentEventData, announce: boolean) => {
+      stateRef.current = next;
+      setState(next);
+
+      if (announce) {
+        Events.dispatch<MainContentChangedEventData>(
+          MainContentChangedEvent,
+          next,
+        );
+      }
+    },
+    [],
+  );
 
   useEffect(() => {
+    // Open a view in the main pane (replacing any split) or the split pane
     Events.addListener<OpenMainContentViewEventData>(
       OpenMainContentViewEvent,
       'desktop-app',
       ({ data }) => {
-        // Route to split view or main content based on the split flag
+        const current = stateRef.current;
+        const descriptor: MainContentViewDescriptor = {
+          view: data.view,
+          id: data.id,
+          props: data.props,
+          title: data.title,
+          icon: data.icon,
+        };
+
         if (data.split) {
-          setSplitView(data);
+          applyState(
+            {
+              ...current,
+              split: descriptor,
+              splitRatio: data.splitRatio ?? current.splitRatio,
+            },
+            true,
+          );
         } else {
-          setMainView(data);
+          applyState({ main: descriptor, split: null, splitRatio: 50 }, true);
         }
       },
     );
 
+    // Replace the entire state (e.g. when a tab is activated)
+    Events.addListener<SetMainContentEventData>(
+      SetMainContentEvent,
+      'desktop-app',
+      ({ data }) => {
+        applyState(data, true);
+      },
+    );
+
+    // Announce that the listeners are ready so the initial content
+    // can be restored (e.g. by the tabs feature)
+    Events.dispatch(MainContentReadyEvent);
+
     return () => {
       Events.removeListener(OpenMainContentViewEvent, 'desktop-app');
+      Events.removeListener(SetMainContentEvent, 'desktop-app');
     };
-  }, []);
+  }, [applyState]);
 
-  // Close the main (left) pane, promote split view to main
+  // Close the main (left) pane, promoting the split view to main
   const handleCloseMain = useCallback(() => {
-    setMainView(splitView);
-    setSplitView(null);
-    setSplitRatio(50);
-  }, [splitView]);
+    const current = stateRef.current;
+
+    applyState({ main: current.split, split: null, splitRatio: 50 }, true);
+  }, [applyState]);
 
   // Close the split (right) pane
   const handleCloseSplit = useCallback(() => {
-    setSplitView(null);
-    setSplitRatio(50);
-  }, []);
+    const current = stateRef.current;
+
+    applyState({ ...current, split: null, splitRatio: 50 }, true);
+  }, [applyState]);
 
   // Swap the two split panes
   const handleSwap = useCallback(() => {
-    setMainView(splitView);
-    setSplitView(mainView);
-    setSplitRatio(100 - splitRatio);
-  }, [mainView, splitView, splitRatio]);
+    const current = stateRef.current;
+
+    applyState(
+      {
+        main: current.split,
+        split: current.main,
+        splitRatio: 100 - current.splitRatio,
+      },
+      true,
+    );
+  }, [applyState]);
 
   // Handle resize handle drag
   const handleResizeStart = useCallback(
@@ -163,7 +234,7 @@ const MainContent: React.FC = () => {
       }
 
       const startX = event.clientX;
-      const startRatio = splitRatio;
+      const startRatio = stateRef.current.splitRatio;
       const containerWidth = container.getBoundingClientRect().width;
 
       const handleMouseMove = (moveEvent: MouseEvent) => {
@@ -171,13 +242,20 @@ const MainContent: React.FC = () => {
         const deltaPercent = (delta / containerWidth) * 100;
         const newRatio = Math.min(80, Math.max(20, startRatio + deltaPercent));
 
-        setSplitRatio(newRatio);
+        // Update the visual ratio only; announce on release
+        applyState({ ...stateRef.current, splitRatio: newRatio }, false);
       };
 
       const handleMouseUp = () => {
         document.removeEventListener('mousemove', handleMouseMove);
         document.removeEventListener('mouseup', handleMouseUp);
         document.body.style.userSelect = '';
+
+        // Announce the final ratio so it is recorded on the active tab
+        Events.dispatch<MainContentChangedEventData>(
+          MainContentChangedEvent,
+          stateRef.current,
+        );
       };
 
       // Prevent text selection while dragging
@@ -185,15 +263,17 @@ const MainContent: React.FC = () => {
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
     },
-    [splitRatio],
+    [applyState],
   );
 
-  if (!mainView) {
+  const { main, split, splitRatio } = state;
+
+  if (!main) {
     return <div className="main-content" />;
   }
 
   // Render split layout when a split view is active
-  if (splitView) {
+  if (split) {
     return (
       <div ref={containerRef} className="main-content main-content-split">
         <SplitViewPane
@@ -202,7 +282,7 @@ const MainContent: React.FC = () => {
           onSwap={handleSwap}
           style={{ flex: splitRatio }}
         >
-          <MainContentViewRenderer view={mainView} />
+          <MainContentViewRenderer view={main} />
         </SplitViewPane>
         <div
           className="split-view-resize-handle"
@@ -216,7 +296,7 @@ const MainContent: React.FC = () => {
           onSwap={handleSwap}
           style={{ flex: 100 - splitRatio }}
         >
-          <MainContentViewRenderer view={splitView} />
+          <MainContentViewRenderer view={split} />
         </SplitViewPane>
       </div>
     );
@@ -224,7 +304,7 @@ const MainContent: React.FC = () => {
 
   return (
     <div className="main-content">
-      <MainContentViewRenderer view={mainView} />
+      <MainContentViewRenderer view={main} />
     </div>
   );
 };
@@ -234,7 +314,7 @@ interface MainContentViewRendererProps {
    * The view to render, resolved to a component from the registered
    * main content views by its `view` id.
    */
-  view: OpenMainContentViewEventData;
+  view: MainContentViewDescriptor;
 }
 
 /** Resolves a main content view by id and renders it with its props. */

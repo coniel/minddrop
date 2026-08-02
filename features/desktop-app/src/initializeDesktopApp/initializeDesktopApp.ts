@@ -14,16 +14,21 @@ import { Theme, VariantChangedEventData } from '@minddrop/ui-theme';
 import { Views } from '@minddrop/views';
 import { Workspaces } from '@minddrop/workspaces';
 import { AppUiState } from '../AppUiState';
+import { Tabs } from '../Tabs';
+import { TabsStore } from '../TabsStore';
 import { registerAppDataStoreListeners } from '../registerAppDataStoreListeners';
 import { registerWorkspaceStoreListeners } from '../registerWorkspaceStoreListeners';
 import { initializeMainContentViews } from './initializeMainContentViews';
 import { initializeSelection } from './initializeSelection';
+import { initializeTabs } from './initializeTabs';
 import { initializeViewTypes } from './initializeViewTypes';
 
-// In development mode, React will run useEffect hooks twice
-// when the app is first loaded. This guard prevents the app
-// from being initialized twice.
-let initialized = false;
+// In development mode, React runs effects twice on first load, so
+// initializeDesktopApp may be called more than once. Memoizing the
+// in-flight promise ensures initialization runs once and every caller
+// awaits the same completion, so the app only renders once the stores
+// have finished hydrating.
+let initPromise: Promise<void> | null = null;
 
 // Initialize internationalization
 initializeI18n();
@@ -31,13 +36,18 @@ initializeI18n();
 /**
  * Initializes the desktop app.
  */
-export async function initializeDesktopApp(): Promise<void> {
-  if (initialized) {
-    return;
+export function initializeDesktopApp(): Promise<void> {
+  if (!initPromise) {
+    initPromise = runInitialization();
   }
 
-  initialized = true;
+  return initPromise;
+}
 
+/**
+ * Runs the one-time desktop app initialization.
+ */
+async function runInitialization(): Promise<void> {
   // Register search translations
   initializeSearch();
 
@@ -63,6 +73,7 @@ export async function initializeDesktopApp(): Promise<void> {
   Ast.registerDefaultConfigs();
   initializeViewTypes();
   initializeMainContentViews();
+  initializeTabs();
 
   // Initialize workspaces (sets Paths.workspace and
   // Paths.workspaceConfigs from the first loaded workspace)
@@ -74,6 +85,10 @@ export async function initializeDesktopApp(): Promise<void> {
 
   // Hydrate layout region sizes (dialogs, panels) from workspace config
   await LayoutRegionSizesStore.hydrate();
+
+  // Hydrate open tabs from workspace config, ensuring at least one tab
+  await TabsStore.hydrate();
+  Tabs.ensureTab();
 
   await Designs.initialize();
   await Views.initialize();

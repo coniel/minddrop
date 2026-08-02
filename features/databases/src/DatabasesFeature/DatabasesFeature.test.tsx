@@ -1,6 +1,8 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import {
   Events,
+  MainContentChangedEvent,
+  MainContentChangedEventData,
   OpenMainContentViewEvent,
   OpenMainContentViewEventData,
 } from '@minddrop/events';
@@ -39,41 +41,44 @@ describe('DatabasesFeature', () => {
       });
     }));
 
-  it('sets activeDatabaseId when a database view is opened', () =>
+  it('sets activeDatabaseId when a database view is shown', () =>
     new Promise<void>((resolve) => {
       render(<DatabasesFeature />);
 
-      // Listen for the main content event to know when the
-      // dispatch chain has completed
-      Events.addListener(OpenMainContentViewEvent, 'test-active-db', () => {
+      Events.addListener(MainContentChangedEvent, 'test-active-db', () => {
         expect(DatabasesFeatureState.get('activeDatabaseId')).toBe(
           'test-database',
         );
         resolve();
       });
 
-      Events.dispatch<OpenDatabaseViewEventData>(OpenDatabaseViewEvent, {
-        databaseId: 'test-database',
+      Events.dispatch<MainContentChangedEventData>(MainContentChangedEvent, {
+        main: {
+          view: MainDatabaseViewName,
+          props: { databaseId: 'test-database' },
+        },
+        split: null,
+        splitRatio: 50,
       });
     }));
 
-  it('clears activeDatabaseId when a non-database view is opened', () =>
+  it('clears activeDatabaseId when a non-database view is shown', () =>
     new Promise<void>((resolve) => {
       render(<DatabasesFeature />);
 
       // Set an active database first
       DatabasesFeatureState.set('activeDatabaseId', 'test-database');
 
-      // Listen for the main content event to know when the
-      // dispatch chain has completed
-      Events.addListener(OpenMainContentViewEvent, 'test-clear-db', () => {
+      Events.addListener(MainContentChangedEvent, 'test-clear-db', () => {
         expect(DatabasesFeatureState.get('activeDatabaseId')).toBeNull();
         resolve();
       });
 
-      // Dispatch a non-database view
-      Events.dispatch<OpenMainContentViewEventData>(OpenMainContentViewEvent, {
-        view: 'some-other:view:name',
+      // Show a non-database view
+      Events.dispatch<MainContentChangedEventData>(MainContentChangedEvent, {
+        main: { view: 'some-other:view:name' },
+        split: null,
+        splitRatio: 50,
       });
     }));
 });

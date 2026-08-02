@@ -20,6 +20,7 @@ declare module 'i18next' {
           forward: string;
         };
         designStudio: {
+          title: string;
           open: string;
           exit: string;
           backToDesigns: string;
@@ -1353,6 +1354,10 @@ declare module 'i18next' {
             showChips: string;
             hideColumn: string;
           };
+        };
+        tabs: {
+          new: string;
+          close: string;
         };
         search: {
           open: string;

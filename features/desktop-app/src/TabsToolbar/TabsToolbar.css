@@ -1,4 +1,76 @@
 .app-tabs-toolbar {
   flex: 1;
   min-width: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.app-tabs {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.app-tabs .sortable-list {
+  align-items: center;
+}
+
+.app-tab {
+  /* Fixed 180px, shrinking to fit when the bar is full */
+  flex: 0 1 180px;
+  min-width: 0;
+  /* Tighter spacing around the close button */
+  gap: var(--space-1);
+  padding-right: var(--space-1);
+  /* Lighter background for inactive tabs; the primitive's more
+     specific hover/active rules take over for those states */
+  background-color: var(--neutral-200);
+}
+
+.app-tab[data-active] {
+  min-width: 130px;
+}
+
+.app-tab-label {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  overflow: hidden;
+  white-space: nowrap;
+  /* Fade the end of long titles */
+  mask-image: linear-gradient(to right, #000 calc(100% - 24px), transparent);
+  -webkit-mask-image: linear-gradient(
+    to right,
+    #000 calc(100% - 24px),
+    transparent
+  );
+}
+
+.app-tab-close {
+  flex-shrink: 0;
+  /* Hidden (and out of flow) until the tab is hovered, so the label
+     keeps the full width when not hovering */
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: var(--radius-sm);
+  color: var(--text-subtle);
+}
+
+.app-tab-close .icon {
+  width: 14px;
+  height: 14px;
+}
+
+.app-tab:hover .app-tab-close {
+  display: inline-flex;
+}
+
+.app-tab-close:hover {
+  background-color: var(--neutral-300);
+  color: var(--text-regular);
 }

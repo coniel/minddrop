@@ -41,6 +41,12 @@ export interface SortableListProps {
    * Additional class name for the container.
    */
   className?: string;
+
+  /**
+   * Non-sortable content rendered after the sortable items (e.g. a
+   * trailing action button).
+   */
+  children?: React.ReactNode;
 }
 
 /**
@@ -56,6 +62,7 @@ export const SortableList: React.FC<SortableListProps> = ({
   renderItem,
   as,
   className,
+  children,
 }) => {
   // Get per-item drag render props from the hook
   const renderPropsMap = useSortableDrag({ items, direction, gap, onSort });
@@ -81,6 +88,7 @@ export const SortableList: React.FC<SortableListProps> = ({
           <React.Fragment key={id}>{renderItem(id, itemProps)}</React.Fragment>
         );
       })}
+      {children}
     </Component>
   );
 };
