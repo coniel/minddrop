@@ -2,6 +2,7 @@ import { Fs } from '@minddrop/file-system';
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntry } from '../getDatabaseEntry';
 import { getDatabaseEntrySerializer } from '../getDatabaseEntrySerializer';
+import { serializeCollectionProperties } from '../utils';
 
 /**
  * Writes an entry to the file system.
@@ -26,12 +27,12 @@ export async function writeDatabaseEntry(id: string): Promise<void> {
     }
   }
 
+  // Convert collection property members to durable addresses
+  const properties = serializeCollectionProperties(entry.properties, database);
+
   // Serialize the entry's properties
   const serializer = getDatabaseEntrySerializer(database.entrySerializer);
-  const serializedEntry = serializer.serialize(
-    database.properties,
-    entry.properties,
-  );
+  const serializedEntry = serializer.serialize(database.properties, properties);
 
   // Write the entry file
   await Fs.writeTextFile(entry.path, serializedEntry);

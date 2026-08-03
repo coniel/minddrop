@@ -9,12 +9,16 @@ import {
 import {
   MockFs,
   cleanup,
+  collectionEntry1,
   entryStorageEntry1,
   objectDatabase,
   objectEntry1,
+  relatedEntry1,
+  relatedEntry2,
   setup,
   yamlObjectEntry1,
 } from '../test-utils';
+import { databaseEntryAddress } from '../utils';
 import { writeDatabaseEntry } from './writeDatabaseEntry';
 
 describe('writeDatabaseEntry', () => {
@@ -81,5 +85,33 @@ describe('writeDatabaseEntry', () => {
     const properties = await MockFs.readYamlFile(yamlObjectEntry1.path);
 
     expect(properties).toEqual(yamlObjectEntry1.properties);
+  });
+
+  it('writes collection property members as addresses', async () => {
+    await writeDatabaseEntry(collectionEntry1.id);
+
+    const contents = MockFs.readTextFile(collectionEntry1.path);
+
+    // Member references should be written as workspace-relative
+    // addresses rather than entry IDs
+    expect(contents).toContain(databaseEntryAddress(relatedEntry1.path));
+    expect(contents).toContain(databaseEntryAddress(relatedEntry2.path));
+    expect(contents).not.toContain(relatedEntry1.id);
+  });
+
+  it('omits collection members that do not resolve', async () => {
+    // Reference a non-existent entry
+    DatabaseEntriesStore.update(collectionEntry1.id, {
+      properties: {
+        ...collectionEntry1.properties,
+        Related: ['missing-entry'],
+      },
+    });
+
+    await writeDatabaseEntry(collectionEntry1.id);
+
+    const contents = MockFs.readTextFile(collectionEntry1.path);
+
+    expect(contents).not.toContain('missing-entry');
   });
 });
