@@ -3,11 +3,14 @@
   inset: 0;
   overflow: hidden;
   /* Light gray in light mode so white layouts stand out from
-     the canvas; the app background works as-is in dark mode */
-  background-color: var(--surface-subtle);
+     the canvas; the app background works as-is in dark mode.
+     Exposed as a variable so layouts with a transparent background
+     can paint themselves in the canvas colour. */
+  --design-studio-canvas-background: var(--surface-subtle);
+  background-color: var(--design-studio-canvas-background);
 
   .dark-theme & {
-    background-color: var(--surface-app);
+    --design-studio-canvas-background: var(--surface-app);
   }
 
   &::before {

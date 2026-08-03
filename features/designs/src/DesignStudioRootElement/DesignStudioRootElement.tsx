@@ -109,6 +109,14 @@ export const DesignStudioRootElement: React.FC<
       getBackgroundImageStyle(imageSrc, baseContainerStyle.backgroundColor)),
   };
 
+  // Paint transparent layout backgrounds in the canvas colour so the
+  // layout area occludes the canvas dot pattern, keeping its bounds
+  // visible in the studio
+  if (style.backgroundColor === 'transparent') {
+    containerCssStyle.backgroundColor =
+      'var(--design-studio-canvas-background)';
+  }
+
   const children = element.children.map((childId, index) => (
     <DesignStudioElement
       key={childId}
