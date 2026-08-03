@@ -306,6 +306,7 @@ declare module 'i18next' {
             sections: {
               general: string;
               interface: string;
+              data: string;
               danger: string;
             };
             name: {
@@ -318,6 +319,32 @@ declare module 'i18next' {
               description: string;
             };
             hideViewsToolbar: {
+              label: string;
+              description: string;
+            };
+            propertyFileStorage: {
+              label: string;
+              description: string;
+              options: {
+                root: {
+                  label: string;
+                  description: string;
+                };
+                common: {
+                  label: string;
+                  description: string;
+                };
+                property: {
+                  label: string;
+                  description: string;
+                };
+                entry: {
+                  label: string;
+                  description: string;
+                };
+              };
+            };
+            propertyFilesDir: {
               label: string;
               description: string;
             };
