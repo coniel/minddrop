@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { Database, Databases } from '@minddrop/databases';
+import { Databases, PropertyFileStorage } from '@minddrop/databases';
 import {
   Events,
   OpenConfirmationDialogEvent,
   OpenConfirmationDialogEventData,
 } from '@minddrop/events';
-import { useTranslation } from '@minddrop/i18n';
+import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import {
   ButtonSetting,
   IconSetting,
@@ -15,15 +15,14 @@ import {
   TextSetting,
 } from '@minddrop/ui-components';
 import { SelectOption, Stack } from '@minddrop/ui-primitives';
+import { validateDirName } from '@minddrop/utils';
 import './DatabaseSettingsPanel.css';
 
 // Icon the picker falls back to when the current icon is cleared
 const defaultIcon = 'content-icon:box:default';
 
 // The ways property files can be stored on disk, offered in the Data section
-const propertyFileStorageOptions: SelectOption<
-  Database['propertyFileStorage']
->[] = [
+const propertyFileStorageOptions: SelectOption<PropertyFileStorage>[] = [
   {
     label: 'databases.settings.propertyFileStorage.options.root.label',
     description:
@@ -75,6 +74,9 @@ export const DatabaseSettingsPanel: React.FC<DatabaseSettingsPanelProps> = ({
   const [propertyFilesDir, setPropertyFilesDir] = useState(
     database?.propertyFilesDir || defaultPropertyFilesDir,
   );
+  const [propertyFilesDirError, setPropertyFilesDirError] = useState<
+    TranslationKey | undefined
+  >(undefined);
 
   // Persist the selected icon immediately
   function handleSelectIcon(icon: string) {
@@ -122,15 +124,34 @@ export const DatabaseSettingsPanel: React.FC<DatabaseSettingsPanelProps> = ({
     Databases.update(databaseId, { hideViewsToolbar: checked });
   }
 
-  // Change how the database's property files are stored on disk
+  // Change how the database's property files are stored on disk, relocating
+  // existing files to match the new layout
   function handleChangePropertyFileStorage(
-    propertyFileStorage: Database['propertyFileStorage'],
+    propertyFileStorage: PropertyFileStorage,
   ) {
-    Databases.update(databaseId, { propertyFileStorage });
+    Databases.setPropertyFileStorage(
+      databaseId,
+      propertyFileStorage,
+      database?.propertyFilesDir,
+    );
+  }
+
+  // Validate the common property files directory name as the user types
+  function handlePropertyFilesDirChange(value: string) {
+    // Update the field value
+    setPropertyFilesDir(value);
+
+    // Surface any validation error, allowing hidden folder names
+    setPropertyFilesDirError(validateDirName(value, true));
   }
 
   // Commit a change to the common property files directory name
   function handlePropertyFilesDirBlur() {
+    // Keep the invalid value in place so the user can correct it
+    if (validateDirName(propertyFilesDir, true)) {
+      return;
+    }
+
     // Fall back to the default folder name when the field is cleared
     const nextValue = propertyFilesDir.trim() || defaultPropertyFilesDir;
 
@@ -145,8 +166,8 @@ export const DatabaseSettingsPanel: React.FC<DatabaseSettingsPanelProps> = ({
       return;
     }
 
-    // Persist the directory name
-    Databases.update(databaseId, { propertyFilesDir: nextValue });
+    // Persist the directory name, relocating the common folder's contents
+    Databases.setPropertyFileStorage(databaseId, 'common', nextValue);
   }
 
   // Prompt for confirmation before deleting the database
@@ -245,9 +266,13 @@ export const DatabaseSettingsPanel: React.FC<DatabaseSettingsPanelProps> = ({
         {database.propertyFileStorage === 'common' && (
           <TextSetting
             title="databases.settings.propertyFilesDir.label"
-            description="databases.settings.propertyFilesDir.description"
+            description={
+              propertyFilesDirError ??
+              'databases.settings.propertyFilesDir.description'
+            }
             value={propertyFilesDir}
-            onValueChange={setPropertyFilesDir}
+            invalid={Boolean(propertyFilesDirError)}
+            onValueChange={handlePropertyFilesDirChange}
             onBlur={handlePropertyFilesDirBlur}
           />
         )}

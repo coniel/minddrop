@@ -1,7 +1,7 @@
-import { i18n } from '@minddrop/i18n';
-import { PropertyFilesDirNameKey } from '../../constants';
 import { getDatabase } from '../../getDatabase';
 import { getDatabaseEntry } from '../../getDatabaseEntry';
+import { resolvePropertyFilePath } from '../resolvePropertyFilePath';
+import { resolvePropertyFilesDirName } from '../resolvePropertyFilesDirName';
 
 /**
  * Returns the path to an entry property's file.
@@ -22,17 +22,15 @@ export function getPropertyFilePath(
   // Get the entry's database
   const database = getDatabase(entry.database);
 
-  switch (database.propertyFileStorage) {
-    case 'common':
-      const commonDirName =
-        database.propertyFilesDir || i18n.t(PropertyFilesDirNameKey);
-      return `${database.path}/${commonDirName}/${fileName}`;
-    case 'property':
-      return `${database.path}/${propertyName}/${fileName}`;
-    case 'entry':
-      return `${database.path}/${entry.title}/${fileName}`;
-    case 'root':
-    default:
-      return `${database.path}/${fileName}`;
-  }
+  // Resolve the path against the database's current storage mode
+  return resolvePropertyFilePath({
+    databasePath: database.path,
+    mode: database.propertyFileStorage,
+    propertyFilesDirName: resolvePropertyFilesDirName(
+      database.propertyFilesDir,
+    ),
+    entryTitle: entry.title,
+    propertyName,
+    fileName,
+  });
 }

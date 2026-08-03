@@ -38,7 +38,8 @@
   },
   "error": {
     "unknown": "An unknown error occurred.",
-    "dirPathConflict": "A directory with the same name already exists at this location."
+    "dirPathConflict": "A directory with the same name already exists at this location.",
+    "invalidDirName": "Name cannot contain / \\ : * ? \" < > or |."
   },
   "formErrors": {
     "required": "Required"

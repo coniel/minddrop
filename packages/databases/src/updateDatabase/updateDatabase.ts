@@ -1,11 +1,14 @@
 import { Events } from '@minddrop/events';
+import { InvalidParameterError } from '@minddrop/utils';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabaseUpdatedEvent, DatabaseUpdatedEventData } from '../events';
 import { getDatabase } from '../getDatabase';
 import { Database } from '../types';
 import { writeDatabaseConfig } from '../writeDatabaseConfig';
 
-export type UpdateDatabaseData = Partial<Omit<Database, 'type'>>;
+export type UpdateDatabaseData = Partial<
+  Omit<Database, 'type' | 'name' | 'propertyFileStorage' | 'propertyFilesDir'>
+>;
 
 /**
  * Updates a database.
@@ -15,11 +18,29 @@ export type UpdateDatabaseData = Partial<Omit<Database, 'type'>>;
  * @returns The updated database config.
  *
  * @dispatches databases:database:update
+ *
+ * @throws {InvalidParameterError} If the data includes the name or property file storage fields.
  */
 export async function updateDatabase(
   id: string,
   data: UpdateDatabaseData,
 ): Promise<Database> {
+  // The name is derived from the database directory and must go through
+  // its dedicated rename flow
+  if ('name' in data) {
+    throw new InvalidParameterError(
+      'Cannot change name via updateDatabase; use Databases.rename.',
+    );
+  }
+
+  // Property file storage has on-disk side effects and must go through
+  // its dedicated setter
+  if ('propertyFileStorage' in data || 'propertyFilesDir' in data) {
+    throw new InvalidParameterError(
+      'Cannot change propertyFileStorage or propertyFilesDir via updateDatabase; use Databases.setPropertyFileStorage.',
+    );
+  }
+
   // Get the database config
   const config = getDatabase(id);
 

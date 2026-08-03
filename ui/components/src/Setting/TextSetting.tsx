@@ -41,6 +41,11 @@ export interface TextSettingProps extends Omit<SettingProps, 'control'> {
   size?: TextInputSize;
 
   /**
+   * Applies error styling to the input.
+   */
+  invalid?: boolean;
+
+  /**
    * Disables the input.
    */
   disabled?: boolean;
@@ -56,6 +61,7 @@ export const TextSetting: React.FC<TextSettingProps> = ({
   placeholder,
   variant = 'filled',
   size = 'md',
+  invalid,
   disabled,
   ...settingProps
 }) => {
@@ -71,6 +77,7 @@ export const TextSetting: React.FC<TextSettingProps> = ({
           placeholder={placeholder}
           variant={variant}
           size={size}
+          invalid={invalid}
           disabled={disabled}
         />
       }

@@ -4,6 +4,8 @@ import { DatabaseAutomation } from './DatabaseAutomation.types';
 
 export type DatabaseEntryOpenMode = 'dialog' | 'full' | 'split';
 
+export type PropertyFileStorage = 'root' | 'common' | 'property' | 'entry';
+
 export interface Database {
   /**
    * A unique identifier for the database.
@@ -69,7 +71,7 @@ export interface Database {
    * - `property`: Stored in a subdirectory named after the property.
    * - `entry`: Stored in a subdirectory named after the entry.
    */
-  propertyFileStorage: 'root' | 'common' | 'property' | 'entry';
+  propertyFileStorage: PropertyFileStorage;
 
   /**
    * The directory to store property files in if `propertyFileStorage` is

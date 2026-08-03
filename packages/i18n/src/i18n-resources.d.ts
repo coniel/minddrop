@@ -51,6 +51,7 @@ declare module 'i18next' {
         error: {
           unknown: string;
           dirPathConflict: string;
+          invalidDirName: string;
         };
         formErrors: {
           required: string;

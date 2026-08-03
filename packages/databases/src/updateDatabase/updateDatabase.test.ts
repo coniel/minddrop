@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
+import { InvalidParameterError } from '@minddrop/utils';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabaseUpdatedEvent } from '../events';
 import {
@@ -63,4 +64,31 @@ describe('updateDatabase', () => {
 
       updateDatabase(objectDatabase.id, update);
     }));
+
+  it('rejects name changes', async () => {
+    // The name must go through the dedicated rename flow
+    await expect(
+      updateDatabase(objectDatabase.id, {
+        name: 'New Name',
+      } as UpdateDatabaseData),
+    ).rejects.toThrow(InvalidParameterError);
+  });
+
+  it('rejects property file storage changes', async () => {
+    // Property file storage must go through its dedicated setter
+    await expect(
+      updateDatabase(objectDatabase.id, {
+        propertyFileStorage: 'root',
+      } as UpdateDatabaseData),
+    ).rejects.toThrow(InvalidParameterError);
+  });
+
+  it('rejects property files directory changes', async () => {
+    // The common directory name must go through its dedicated setter
+    await expect(
+      updateDatabase(objectDatabase.id, {
+        propertyFilesDir: 'Assets',
+      } as UpdateDatabaseData),
+    ).rejects.toThrow(InvalidParameterError);
+  });
 });
