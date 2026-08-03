@@ -11,6 +11,11 @@ export interface SelectItemProps {
   label?: TranslationKey;
 
   /*
+   * An optional description shown beneath the label. Can be an i18n key.
+   */
+  description?: TranslationKey;
+
+  /*
    * The value of the item.
    */
   value: string | number;
@@ -37,6 +42,7 @@ export interface SelectItemProps {
 
 export const SelectItem = ({
   label,
+  description,
   value,
   className,
   hideIndicator = false,
@@ -53,6 +59,7 @@ export const SelectItem = ({
       className={propsToClass('select-item', {
         className,
         'hide-indicator': hideIndicator || undefined,
+        'has-description': description ? true : undefined,
       })}
     >
       {!hideIndicator && (
@@ -60,9 +67,19 @@ export const SelectItem = ({
           <Icon name="check" />
         </SelectPrimitive.ItemIndicator>
       )}
-      <SelectPrimitive.ItemText className="select-item-text">
-        {resolvedChildren}
-      </SelectPrimitive.ItemText>
+      {/* Stack the label and description when a description is provided */}
+      {description ? (
+        <div className="select-item-body">
+          <SelectPrimitive.ItemText className="select-item-text">
+            {resolvedChildren}
+          </SelectPrimitive.ItemText>
+          <span className="select-item-description">{t(description)}</span>
+        </div>
+      ) : (
+        <SelectPrimitive.ItemText className="select-item-text">
+          {resolvedChildren}
+        </SelectPrimitive.ItemText>
+      )}
     </SelectPrimitive.Item>
   );
 };

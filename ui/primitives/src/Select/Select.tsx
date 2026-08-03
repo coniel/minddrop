@@ -25,6 +25,11 @@ export interface SelectOption<TValue extends string | number> {
   stringLabel?: string;
 
   /*
+   * An optional description shown beneath the label. Can be an i18n key.
+   */
+  description?: TranslationKey;
+
+  /*
    * The value of the option.
    */
   value: TValue;
@@ -139,8 +144,13 @@ export const Select = <TValue extends string | number = string>({
       <SelectPopup alignOffset={alignOffset}>
         {children
           ? children
-          : options.map(({ label, stringLabel, value }) => (
-              <SelectItem key={String(value)} label={label} value={value}>
+          : options.map(({ label, stringLabel, description, value }) => (
+              <SelectItem
+                key={String(value)}
+                label={label}
+                description={description}
+                value={value}
+              >
                 {stringLabel}
               </SelectItem>
             ))}
