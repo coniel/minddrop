@@ -26,6 +26,7 @@ const designWithView: Layout = {
   id: 'test-layout',
   type: 'card',
   name: 'Test Layout',
+  frame: { x: 0, y: 0, width: 380 },
   created: new Date(),
   lastModified: new Date(),
   tree: {
