@@ -1,8 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { InvalidParameterError } from '@minddrop/utils';
+import { registerCollectionEntryReferenceAdapter } from '../CollectionEntryReferenceAdapter';
 import { CollectionsStore } from '../CollectionsStore';
 import { CollectionNotFoundError } from '../errors';
 import { MockFs, cleanup, collection_1, setup } from '../test-utils';
+import { Collection } from '../types';
 import { getCollectionFilePath, getCollectionsDirPath } from '../utils';
 import { writeCollection } from './writeCollection';
 
@@ -12,9 +14,9 @@ describe('writeCollection', () => {
   afterEach(cleanup);
 
   it('throws an error if the collection does not exist', async () => {
-    await expect(() =>
-      writeCollection('missing'),
-    ).rejects.toThrow(CollectionNotFoundError);
+    await expect(() => writeCollection('missing')).rejects.toThrow(
+      CollectionNotFoundError,
+    );
   });
 
   it('throws an error if the collection is virtual', async () => {
@@ -44,5 +46,28 @@ describe('writeCollection', () => {
     );
 
     expect(collection).toEqual(collection_1);
+  });
+
+  it('serializes entry references through the registered adapter', async () => {
+    // Register an adapter that converts IDs to reference strings
+    registerCollectionEntryReferenceAdapter({
+      serializeEntries: (entryIds) => entryIds.map((id) => `ref:${id}`),
+      resolveEntries: (references) => references,
+    });
+
+    await writeCollection(collection_1.id);
+
+    const collection = MockFs.readJsonFile<Collection>(
+      getCollectionFilePath(collection_1.id),
+    );
+
+    // The written entries should be serialized references
+    expect(collection.entries).toEqual(
+      collection_1.entries.map((id) => `ref:${id}`),
+    );
+    // The store should keep the raw entry IDs
+    expect(CollectionsStore.get(collection_1.id)?.entries).toEqual(
+      collection_1.entries,
+    );
   });
 });

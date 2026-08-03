@@ -1,11 +1,14 @@
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { I18n } from '@minddrop/i18n';
+import { restoreDates } from '@minddrop/utils';
+import { getCollectionEntryReferenceAdapter } from '../CollectionEntryReferenceAdapter';
 import { CollectionsStore } from '../CollectionsStore';
 import { CollectionFileExtension } from '../constants';
 import { CollectionsLoadedEvent, CollectionsLoadedEventData } from '../events';
 import { locales } from '../locales';
 import { readCollection } from '../readCollection';
+import { Collection } from '../types';
 import { getCollectionsDirPath } from '../utils';
 
 /**
@@ -37,9 +40,20 @@ export async function initializeCollections(): Promise<void> {
   );
 
   // Filter out null collections
-  const collections = collectionPromises.filter(
+  const rawCollections = collectionPromises.filter(
     (collection) => collection !== null,
   );
+
+  const adapter = getCollectionEntryReferenceAdapter();
+
+  // Restore serialized dates and resolve durable entry
+  // references back into entry IDs
+  const collections = rawCollections.map((collection) => ({
+    ...restoreDates<Collection>(collection),
+    entries: adapter
+      ? adapter.resolveEntries(collection.entries)
+      : collection.entries,
+  }));
 
   // Load the collections into the store
   CollectionsStore.load(collections);

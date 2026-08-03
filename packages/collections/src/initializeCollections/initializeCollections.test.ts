@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
+import { registerCollectionEntryReferenceAdapter } from '../CollectionEntryReferenceAdapter';
 import { CollectionsStore } from '../CollectionsStore';
 import { CollectionsLoadedEvent } from '../events';
 import { MockFs, cleanup, collections, setup } from '../test-utils';
@@ -49,4 +50,22 @@ describe('initializeCollections', () => {
 
       initializeCollections();
     }));
+
+  it('resolves entry references through the registered adapter', async () => {
+    // Register an adapter that prefixes resolved IDs
+    registerCollectionEntryReferenceAdapter({
+      serializeEntries: (entryIds) => entryIds,
+      resolveEntries: (references) => references.map((ref) => `id:${ref}`),
+    });
+
+    await initializeCollections();
+
+    const [firstCollection] = collections;
+    const loaded = CollectionsStore.get(firstCollection.id);
+
+    // The loaded entries should be resolved entry IDs
+    expect(loaded?.entries).toEqual(
+      firstCollection.entries.map((id) => `id:${id}`),
+    );
+  });
 });
