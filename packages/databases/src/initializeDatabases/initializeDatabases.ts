@@ -1,3 +1,4 @@
+import { Collections } from '@minddrop/collections';
 import { restoreDates } from '@minddrop/utils';
 import { Workspaces } from '@minddrop/workspaces';
 import { getDatabaseBackendAdapter } from '../DatabaseBackendAdapter';
@@ -9,7 +10,11 @@ import { initializeDatabaseEventHandlers } from '../initializeDatabaseEventHandl
 import { initializeDatabaseTemplates } from '../initializeDatabaseTemplates';
 import { loadDatabaseViews } from '../loadDatabaseViews';
 import type { Database } from '../types';
-import { convertSqlRecordToEntry } from '../utils';
+import {
+  addressesToEntryIds,
+  convertSqlRecordToEntry,
+  entryIdsToAddresses,
+} from '../utils';
 
 /**
  * Frontend orchestrator for SQL-first initialization.
@@ -50,6 +55,13 @@ export async function initializeDatabases(): Promise<{
 
   // Load entries and hydrate virtual collections
   initializeDatabaseEntries(databases, entries);
+
+  // Register the adapter used to convert collection entry
+  // references at the disk boundary
+  Collections.registerEntryReferenceAdapter({
+    serializeEntries: entryIdsToAddresses,
+    resolveEntries: addressesToEntryIds,
+  });
 
   // Load database views into the ViewsStore (before event
   // handlers so the initial load does not trigger write-back)
