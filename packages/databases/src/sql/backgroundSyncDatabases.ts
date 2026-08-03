@@ -4,11 +4,17 @@ import { loadCoreSerializers } from '../DatabaseEntrySerializers';
 import { readDatabaseEntries } from '../readDatabaseEntries';
 import { readDatabaseMetadata } from '../readDatabaseMetadata';
 import { readWorkspaceDatabases } from '../readWorkspaceDatabases';
-import type { BackgroundSyncChangeset, Database } from '../types';
+import type {
+  BackgroundSyncChangeset,
+  Database,
+  DatabaseEntry,
+  EntrySyncRecord,
+} from '../types';
 import {
   convertEntryToSqlRecord,
   entryMetadataKey,
   matchEntriesToSqlRecords,
+  resolveCollectionProperties,
 } from '../utils';
 import { sqlDeleteDatabase } from './sqlDeleteDatabase';
 import { sqlDeleteEntries } from './sqlDeleteEntries';
@@ -97,7 +103,19 @@ export async function backgroundSyncDatabases(
     sqlDeleteDatabase(id, { silent: true });
   }
 
-  // Sync entries for each filesystem database
+  // Workspace-wide path index used to resolve entry references
+  const entryIdByPath = new Map<string, string>();
+
+  // Staged per-database sync data for the resolution pass
+  const staged: {
+    database: Database;
+    entries: DatabaseEntry[];
+    existingRecords: EntrySyncRecord[];
+    deletedIds: string[];
+  }[] = [];
+
+  // Pass 1: read and match all entries so references can resolve
+  // across databases
   for (const database of fileSystemDatabases) {
     // Read entries and metadata from disk in parallel
     const [rawEntries, metadataMap] = await Promise.all([
@@ -116,21 +134,53 @@ export async function backgroundSyncDatabases(
       return entry;
     });
 
+    // Get existing sync records from SQL
+    const existingRecords = sqlGetEntrySyncRecords(database.id);
+
+    // Match fresh entries to existing entries by path so they
+    // take over the existing IDs (disk reads mint fresh ones)
+    const { records: entries, deletedIds } = matchEntriesToSqlRecords(
+      entriesWithMetadata,
+      existingRecords,
+    );
+
+    const deletedIdSet = new Set(deletedIds);
+
+    // Index the existing entries by path, skipping deleted ones
+    existingRecords.forEach((record) => {
+      if (!deletedIdSet.has(record.id)) {
+        entryIdByPath.set(record.path, record.id);
+      }
+    });
+
+    // Index the fresh entries by path
+    entries.forEach((entry) => {
+      entryIdByPath.set(entry.path, entry.id);
+    });
+
+    // Stage the matched entries for the resolution pass
+    staged.push({ database, entries, existingRecords, deletedIds });
+  }
+
+  // Pass 2: resolve entry references, diff, and update SQL
+  for (const { database, entries, existingRecords, deletedIds } of staged) {
+    // Resolve collection property addresses to entry IDs
+    const resolvedEntries = entries.map((entry) => ({
+      ...entry,
+      properties: resolveCollectionProperties(
+        entry.properties,
+        database,
+        entryIdByPath,
+      ),
+    }));
+
     // Convert to SQL records
-    const freshRecords = entriesWithMetadata.map((entry) =>
+    const records = resolvedEntries.map((entry) =>
       convertEntryToSqlRecord(entry, database),
     );
 
-    // Get existing sync records and metadata from SQL
-    const existingRecords = sqlGetEntrySyncRecords(database.id);
+    // Get existing metadata from SQL
     const existingMetadata = sqlGetEntryMetadataMap(database.id);
-
-    // Match fresh records to existing entries by path so that
-    // renamed entries keep their existing IDs
-    const { records, deletedIds } = matchEntriesToSqlRecords(
-      freshRecords,
-      existingRecords,
-    );
 
     // Index the existing timestamps by entry ID
     const existingTimestamps = new Map(

@@ -1,11 +1,13 @@
-import { EntrySyncRecord, SqlEntryRecord } from '../../types';
+import { EntrySyncRecord } from '../../types';
 
-export interface MatchEntriesToSqlRecordsResult {
+export interface MatchEntriesToSqlRecordsResult<
+  T extends { id: string; path: string },
+> {
   /**
    * The fresh records with their IDs resolved to existing entry IDs
    * where a path match exists.
    */
-  records: SqlEntryRecord[];
+  records: T[];
 
   /**
    * The IDs of existing records whose path has no fresh counterpart.
@@ -24,10 +26,12 @@ export interface MatchEntriesToSqlRecordsResult {
  * @param existingRecords - The existing SQL entry sync records.
  * @returns The ID-resolved records and deleted entry IDs.
  */
-export function matchEntriesToSqlRecords(
-  freshRecords: SqlEntryRecord[],
+export function matchEntriesToSqlRecords<
+  T extends { id: string; path: string },
+>(
+  freshRecords: T[],
   existingRecords: EntrySyncRecord[],
-): MatchEntriesToSqlRecordsResult {
+): MatchEntriesToSqlRecordsResult<T> {
   // Index the existing records by path
   const existingByPath = new Map(
     existingRecords.map((record) => [record.path, record]),
