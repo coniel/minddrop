@@ -277,6 +277,39 @@ describe('onRenameDatabase', () => {
     });
   });
 
+  it('reloads the database browse views under the new database ID', async () => {
+    // A database with a browse view stored on its config
+    const original = {
+      ...noPropertiesDatabase,
+      views: [
+        {
+          id: 'table-view',
+          type: 'table',
+          name: 'Table',
+          icon: 'content-icon:table:default',
+          created: new Date(),
+          lastModified: new Date(),
+        },
+      ],
+    };
+    const updated = {
+      ...original,
+      id: 'Renamed',
+      name: 'Renamed',
+      path: `${parentDir}/Renamed`,
+    };
+
+    await onRenameDatabase({ original, updated });
+
+    // The browse view is loaded pointing at the new database ID
+    const views = DataViews.getByDataSource('database', updated.id);
+    expect(views).toHaveLength(1);
+    expect(views[0]).toMatchObject({
+      id: 'table-view',
+      dataSource: { type: 'database', id: updated.id },
+    });
+  });
+
   it('does not upsert entries when the database has no entries', async () => {
     // noPropertiesDatabase has no entries loaded in the store
     await onRenameDatabase({

@@ -50,22 +50,19 @@ export async function renameDatabase(
     lastModified: new Date(),
   };
 
-  // Add the renamed database to the store, keeping the old key around
-  // so lookups still resolve until the rename event is handled
+  // Swap the store keys in a single synchronous step so the UI never
+  // renders both the old and new database.
   DatabasesStore.set(renamedDatabase);
+  DatabasesStore.remove(id);
 
-  // Persist the updated config to the renamed directory
-  await writeDatabaseConfig(newName);
-
-  // Dispatch the rename event so handlers cascade the ID change through
-  // entries, SQL, search, and virtual collections/views
+  // Dispatch the rename event
   await Events.dispatch<DatabaseRenamedEventData>(DatabaseRenamedEvent, {
     original: database,
     updated: renamedDatabase,
   });
 
-  // Now safe to remove the old key from the store
-  DatabasesStore.remove(id);
+  // Persist the updated config to the renamed directory
+  await writeDatabaseConfig(newName);
 
   // Return the renamed database
   return renamedDatabase;

@@ -11,6 +11,7 @@ import {
   DatabaseSqlSyncedEventData,
 } from '../../events';
 import { getAllDatabaseEntries } from '../../getAllDatabaseEntries';
+import { loadDatabaseViews } from '../../loadDatabaseViews';
 import {
   sqlDeleteDatabase,
   sqlUpsertDatabase,
@@ -110,6 +111,11 @@ export async function onRenameDatabase(
       },
     );
   }
+
+  // Reload the database's browse views so they re-derive their data
+  // source from the new database ID. Their stored IDs are stable, so
+  // this re-points the existing store entries in place.
+  loadDatabaseViews([updated]);
 
   // Find collection properties in the database schema
   const collectionProperties = updated.properties.filter(
