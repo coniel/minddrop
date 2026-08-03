@@ -89,7 +89,7 @@ describe('onRenameEntry', () => {
       {
         path: metadataFilePath,
         textContent: JSON.stringify({
-          [entryMetadataKey(collectionEntry1.id, collectionDatabase.id)]:
+          [entryMetadataKey(collectionEntry1.path, collectionDatabase.path)]:
             entryMetadata,
         }),
       },
@@ -114,10 +114,10 @@ describe('onRenameEntry', () => {
     const written = JSON.parse(MockFs.readTextFile(metadataFilePath));
 
     expect(
-      written[entryMetadataKey(renamedEntry.id, collectionDatabase.id)],
+      written[entryMetadataKey(renamedEntry.path, collectionDatabase.path)],
     ).toEqual(entryMetadata);
     expect(
-      written[entryMetadataKey(collectionEntry1.id, collectionDatabase.id)],
+      written[entryMetadataKey(collectionEntry1.path, collectionDatabase.path)],
     ).toBeUndefined();
   });
 
@@ -152,10 +152,10 @@ describe('onRenameEntry', () => {
     const written = JSON.parse(MockFs.readTextFile(metadataFilePath));
 
     expect(
-      written[entryMetadataKey(renamedEntry.id, collectionDatabase.id)],
+      written[entryMetadataKey(renamedEntry.path, collectionDatabase.path)],
     ).toEqual(entryMetadata);
     expect(
-      written[entryMetadataKey(collectionEntry1.id, collectionDatabase.id)],
+      written[entryMetadataKey(collectionEntry1.path, collectionDatabase.path)],
     ).toBeUndefined();
   });
 

@@ -17,7 +17,7 @@ const { layout_card_1, layout_list_1 } = DesignFixtures;
 const metadataFilePath = databaseMetadataFilePath(objectDatabase.path);
 
 // The database-relative key the entry's metadata is stored under
-const metadataKey = entryMetadataKey(objectEntry1.id, objectDatabase.id);
+const metadataKey = entryMetadataKey(objectEntry1.path, objectDatabase.path);
 
 describe('clearEntryViewLayoutOverride', () => {
   beforeEach(() => {

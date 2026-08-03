@@ -103,7 +103,7 @@ export async function backgroundSyncDatabases(
 
     // Merge metadata into entries before conversion
     const entriesWithMetadata = rawEntries.map((entry) => {
-      const metadata = metadataMap[entryMetadataKey(entry.id, database.id)];
+      const metadata = metadataMap[entryMetadataKey(entry.path, database.path)];
 
       if (metadata) {
         return { ...entry, metadata };

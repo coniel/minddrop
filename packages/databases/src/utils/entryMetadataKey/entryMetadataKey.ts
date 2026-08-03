@@ -2,24 +2,27 @@
  * Derives the key under which an entry's metadata is stored in its
  * database metadata file. Metadata files live inside their database
  * directory and only hold that database's own entries, so the key is
- * the entry ID relative to the database: the workspace-relative entry
- * ID with the leading `${databaseId}/` segment removed.
+ * the entry path relative to the database: the entry path with the
+ * leading `${databasePath}/` segment removed.
  *
- * Falls back to the full entry ID if it is not prefixed with the
- * database ID.
+ * Falls back to the full entry path if it is not prefixed with the
+ * database path.
  *
- * @param entryId - The workspace-relative entry ID.
- * @param databaseId - The ID of the database the entry belongs to.
+ * @param entryPath - The absolute path of the entry file.
+ * @param databasePath - The absolute path of the database directory.
  * @returns The database-relative metadata key.
  */
-export function entryMetadataKey(entryId: string, databaseId: string): string {
-  const prefix = `${databaseId}/`;
+export function entryMetadataKey(
+  entryPath: string,
+  databasePath: string,
+): string {
+  const prefix = `${databasePath}/`;
 
-  // Fall back to the full ID if the expected prefix is absent
-  if (!entryId.startsWith(prefix)) {
-    return entryId;
+  // Fall back to the full path if the expected prefix is absent
+  if (!entryPath.startsWith(prefix)) {
+    return entryPath;
   }
 
-  // Strip the database ID prefix to get the database-relative key
-  return entryId.slice(prefix.length);
+  // Strip the database path prefix to get the database-relative key
+  return entryPath.slice(prefix.length);
 }

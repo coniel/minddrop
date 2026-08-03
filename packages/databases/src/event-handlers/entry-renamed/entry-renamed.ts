@@ -29,8 +29,8 @@ export async function onRenameEntry(data: DatabaseEntryRenamedEventData) {
   await flushDatabaseMetadata(database.path);
 
   // Metadata is keyed by the database-relative entry path
-  const oldMetadataKey = entryMetadataKey(original.id, database.id);
-  const newMetadataKey = entryMetadataKey(updated.id, database.id);
+  const oldMetadataKey = entryMetadataKey(original.path, database.path);
+  const newMetadataKey = entryMetadataKey(updated.path, database.path);
 
   // Step 2: Re-key the on-disk metadata file from old to new entry ID
   await rekeyDatabaseMetadata(database.path, oldMetadataKey, newMetadataKey);

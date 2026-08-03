@@ -42,7 +42,7 @@ export function updateEntryMetadata(
 
   // Metadata is keyed by the entry's database-relative path since the
   // file only holds this database's entries
-  const key = entryMetadataKey(entryId, database.id);
+  const key = entryMetadataKey(entry.path, database.path);
 
   // Merge the update into the pending map for this database
   const pending = pendingUpdates.get(database.path) ?? {};

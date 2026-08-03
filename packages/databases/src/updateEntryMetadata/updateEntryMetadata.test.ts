@@ -19,8 +19,11 @@ import {
 const metadataFilePath = databaseMetadataFilePath(objectDatabase.path);
 
 // The database-relative keys the entries' metadata is stored under
-const objectMetadataKey = entryMetadataKey(objectEntry1.id, objectDatabase.id);
-const urlMetadataKey = entryMetadataKey(urlEntry1.id, urlDatabase.id);
+const objectMetadataKey = entryMetadataKey(
+  objectEntry1.path,
+  objectDatabase.path,
+);
+const urlMetadataKey = entryMetadataKey(urlEntry1.path, urlDatabase.path);
 
 const entryMetadata: DatabaseEntryMetadata = {
   embeddedViewConfigs: {
