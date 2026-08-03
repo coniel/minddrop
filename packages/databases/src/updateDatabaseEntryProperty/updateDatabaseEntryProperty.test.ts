@@ -1,8 +1,28 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import {
+  CollectionUpdatedEvent,
+  CollectionUpdatedEventData,
+  Collections,
+} from '@minddrop/collections';
+import { Events } from '@minddrop/events';
 import { InvalidParameterError, isUntitledTitle } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
-import { cleanup, objectEntry1, setup } from '../test-utils';
+import { onUpdateCollection } from '../event-handlers/collection-updated';
+import {
+  cleanup,
+  collectionEntry1,
+  objectEntry1,
+  relatedEntry1,
+  relatedEntry2,
+  setup,
+} from '../test-utils';
+import { virtualCollectionId } from '../utils';
 import { updateDatabaseEntryProperty } from './updateDatabaseEntryProperty';
+
+// Mock SQL operations since no database connection is available in tests
+vi.mock('../sql', () => ({
+  sqlUpsertEntries: vi.fn(),
+}));
 
 describe('updateDatabaseEntryProperty', () => {
   beforeEach(setup);
@@ -26,6 +46,51 @@ describe('updateDatabaseEntryProperty', () => {
     await expect(
       updateDatabaseEntryProperty(objectEntry1.id, 'Missing', 'Value'),
     ).rejects.toThrow(InvalidParameterError);
+  });
+
+  describe('collection properties', () => {
+    beforeEach(() => {
+      // Create the virtual collection for the Related property
+      Collections.createVirtual(
+        virtualCollectionId(collectionEntry1.id, 'Related'),
+        'Related',
+        collectionEntry1.properties.Related as string[],
+      );
+
+      // Register the collection write-back handler
+      Events.addListener<CollectionUpdatedEventData>(
+        CollectionUpdatedEvent,
+        'test',
+        ({ data }) => onUpdateCollection(data),
+      );
+    });
+
+    it('updates the value through the virtual collection', async () => {
+      const updated = await updateDatabaseEntryProperty(
+        collectionEntry1.id,
+        'Related',
+        [relatedEntry1.id],
+      );
+
+      // Both the virtual collection and the entry property
+      // should reflect the change
+      const collection = Collections.get(
+        virtualCollectionId(collectionEntry1.id, 'Related'),
+      );
+      expect(collection.entries).toEqual([relatedEntry1.id]);
+      expect(updated.properties.Related).toEqual([relatedEntry1.id]);
+    });
+
+    it('updates the property directly when no virtual collection exists', async () => {
+      // The References property has no virtual collection
+      const updated = await updateDatabaseEntryProperty(
+        collectionEntry1.id,
+        'References',
+        [relatedEntry2.id],
+      );
+
+      expect(updated.properties.References).toEqual([relatedEntry2.id]);
+    });
   });
 
   it('renames the entry for title properties', async () => {

@@ -1,3 +1,4 @@
+import { Collections } from '@minddrop/collections';
 import { Events } from '@minddrop/events';
 import { InvalidParameterError } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
@@ -8,6 +9,7 @@ import {
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntry } from '../getDatabaseEntry';
 import { DatabaseEntry } from '../types';
+import { virtualCollectionId } from '../utils';
 import { writeDatabaseEntry } from '../writeDatabaseEntry';
 
 /**
@@ -29,11 +31,28 @@ export async function clearDatabaseEntryProperty(
   // Get the database
   const database = getDatabase(originalEntry.database);
 
+  // Look up the property schema
+  const propertySchema = database.properties.find(
+    (property) => property.name === propertyName,
+  );
+
   // Ensure the property exists on the database
-  if (!database.properties.find((property) => property.name === propertyName)) {
+  if (!propertySchema) {
     throw new InvalidParameterError(
       `Database ${database.id} does not have a property named ${propertyName}.`,
     );
+  }
+
+  // Collection properties are cleared through their virtual
+  // collection so both stores stay in sync
+  if (propertySchema.type === 'collection') {
+    const collectionId = virtualCollectionId(entryId, propertyName);
+
+    if (Collections.Store.get(collectionId)) {
+      await Collections.update(collectionId, { entries: [] });
+
+      return getDatabaseEntry(entryId);
+    }
   }
 
   // Build updated entry with the property removed

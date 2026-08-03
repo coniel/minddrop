@@ -1,3 +1,4 @@
+import { Collections } from '@minddrop/collections';
 import { PathConflictError } from '@minddrop/file-system';
 import { i18n } from '@minddrop/i18n';
 import { PropertyValue } from '@minddrop/properties';
@@ -7,7 +8,7 @@ import { getDatabaseEntry } from '../getDatabaseEntry';
 import { renameDatabaseEntry } from '../renameDatabaseEntry';
 import { DatabaseEntry } from '../types';
 import { updateDatabaseEntry } from '../updateDatabaseEntry';
-import { withImplicitTitleProperty } from '../utils';
+import { virtualCollectionId, withImplicitTitleProperty } from '../utils';
 
 /**
  * Updates a property on a database entry. Title property updates
@@ -49,6 +50,18 @@ export async function updateDatabaseEntryProperty(
   // Title properties are updated by renaming the entry
   if (propertySchema.type === 'title') {
     return renameEntryToTitle(entry.id, String(value ?? ''));
+  }
+
+  // Collection properties are updated through their virtual
+  // collection so both stores stay in sync
+  if (propertySchema.type === 'collection' && Array.isArray(value)) {
+    const collectionId = virtualCollectionId(entry.id, propertyName);
+
+    if (Collections.Store.get(collectionId)) {
+      await Collections.update(collectionId, { entries: value });
+
+      return getDatabaseEntry(entry.id);
+    }
   }
 
   // Update the entry
