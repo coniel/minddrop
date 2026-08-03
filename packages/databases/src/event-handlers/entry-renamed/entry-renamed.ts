@@ -1,6 +1,7 @@
 import { Collections } from '@minddrop/collections';
 import { DatabaseEntryRenamedEventData } from '../../events';
 import { getDatabase } from '../../getDatabase';
+import { rewriteEntryReferences } from '../../rewriteEntryReferences';
 import { sqlUpsertEntries } from '../../sql';
 import { flushDatabaseMetadata } from '../../updateEntryMetadata';
 import { rekeyPendingMetadata } from '../../updateEntryMetadata/updateEntryMetadata';
@@ -45,11 +46,6 @@ export async function onRenameEntry(data: DatabaseEntryRenamedEventData) {
     (property) => property.type === 'collection',
   );
 
-  // Nothing left to do if there are no collection properties
-  if (collectionProperties.length === 0) {
-    return;
-  }
-
   // Update virtual collection names, which embed the entry title
   await Promise.all(
     collectionProperties.map(async (property) => {
@@ -71,4 +67,7 @@ export async function onRenameEntry(data: DatabaseEntryRenamedEventData) {
       await Collections.update(collectionId, { name });
     }),
   );
+
+  // Rewrite referencing files with the entry's new address
+  await rewriteEntryReferences([updated.id]);
 }

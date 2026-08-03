@@ -16,12 +16,14 @@ import {
   sqlUpsertEntries,
 } from '../../sql';
 import {
+  MockFs,
   cleanup,
   collectionDatabase,
   collectionEntry1,
   noPropertiesDatabase,
   objectDatabase,
   parentDir,
+  rootStorageDatabase,
   setup,
 } from '../../test-utils';
 import {
@@ -289,6 +291,25 @@ describe('onRenameDatabase', () => {
       id: 'table-view',
       dataSource: { type: 'database', id: updated.id },
     });
+  });
+
+  it("rewrites referencing entries' files with the new addresses", async () => {
+    // Rename the database containing referenceEntry1, which is
+    // referenced by collectionEntry1's References property
+    await onRenameDatabase({
+      original: rootStorageDatabase,
+      updated: {
+        ...rootStorageDatabase,
+        id: 'Renamed Root',
+        name: 'Renamed Root',
+        path: `${parentDir}/Renamed Root`,
+      },
+    });
+
+    const contents = MockFs.readTextFile(collectionEntry1.path);
+
+    // The referencing file should contain the new address
+    expect(contents).toContain('Renamed Root/Reference Entry 1.md');
   });
 
   it('does not upsert entries when the database has no entries', async () => {

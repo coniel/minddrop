@@ -8,6 +8,7 @@ import {
 } from '../../events';
 import { getAllDatabaseEntries } from '../../getAllDatabaseEntries';
 import { loadDatabaseViews } from '../../loadDatabaseViews';
+import { rewriteEntryReferences } from '../../rewriteEntryReferences';
 import {
   sqlDeleteDatabase,
   sqlUpsertDatabase,
@@ -89,11 +90,6 @@ export async function onRenameDatabase(
     (property) => property.type === 'collection',
   );
 
-  // Nothing left to do if there are no collection properties
-  if (collectionProperties.length === 0) {
-    return;
-  }
-
   // Update virtual collection names, which embed the database name
   await Promise.all(
     renamedEntries.map((entry) =>
@@ -119,4 +115,7 @@ export async function onRenameDatabase(
       ),
     ),
   );
+
+  // Rewrite referencing files with the entries' new addresses
+  await rewriteEntryReferences(renamedEntries.map((entry) => entry.id));
 }

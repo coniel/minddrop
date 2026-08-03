@@ -10,6 +10,7 @@ import {
   collectionDatabase,
   collectionEntry1,
   objectEntry1,
+  relatedEntry1,
   setup,
 } from '../../test-utils';
 import { DatabaseEntryMetadata } from '../../types';
@@ -232,6 +233,31 @@ describe('onRenameEntry', () => {
     const view = DataViews.get(viewId);
 
     expect(view.dataSource).toEqual(dataSource);
+  });
+
+  it("rewrites referencing entries' files with the new address", async () => {
+    // Rename a referenced entry
+    const renamedRelated = {
+      ...relatedEntry1,
+      title: 'Renamed Related',
+      path: `${collectionDatabase.path}/Renamed Related.md`,
+    };
+
+    // Update the store to reflect the rename
+    DatabaseEntriesStore.update(relatedEntry1.id, {
+      title: renamedRelated.title,
+      path: renamedRelated.path,
+    });
+
+    await onRenameEntry({
+      original: relatedEntry1,
+      updated: renamedRelated,
+    });
+
+    const contents = MockFs.readTextFile(collectionEntry1.path);
+
+    // The referencing file should contain the new address
+    expect(contents).toContain('Collection Database/Renamed Related.md');
   });
 
   it('handles entries without collection properties', async () => {
