@@ -7,6 +7,8 @@ import {
   DatabaseEntryDeletedEventData,
   DatabaseEntryRenamedEvent,
   DatabaseEntryRenamedEventData,
+  DatabaseRenamedEvent,
+  DatabaseRenamedEventData,
   DatabaseUpdatedEvent,
   DatabaseUpdatedEventData,
   Databases,
@@ -143,7 +145,7 @@ export const DatabasesFeature: React.FC = () => {
     );
 
     // Update the database's open view when the database changes
-    // (e.g. renamed or re-iconed)
+    // (e.g. re-iconed)
     Events.addListener<DatabaseUpdatedEventData>(
       DatabaseUpdatedEvent,
       EventListenerId,
@@ -154,6 +156,56 @@ export const DatabasesFeature: React.FC = () => {
           props: { databaseId: data.updated.id },
           title: data.updated.name,
           icon: data.updated.icon || DATABASE_FALLBACK_ICON,
+        });
+      },
+    );
+
+    // Remap the database's open view when the database is renamed.
+    // Rename changes the database ID, so the tab instance and props
+    // must be re-pointed to the new ID.
+    Events.addListener<DatabaseRenamedEventData>(
+      DatabaseRenamedEvent,
+      EventListenerId,
+      ({ data }) => {
+        Events.dispatch<UpdateViewEventData>(UpdateViewEvent, {
+          id: databaseViewId(data.original.id),
+          newId: databaseViewId(data.updated.id),
+          props: { databaseId: data.updated.id },
+          title: data.updated.name,
+          icon: data.updated.icon || DATABASE_FALLBACK_ICON,
+        });
+      },
+    );
+
+    // Remap open entry tabs when the database is renamed. Entry IDs are
+    // database-prefixed, so a rename changes every entry ID. Entries may
+    // already be re-keyed to the new database ID by the time this runs,
+    // so gather them under both the old and new database ID.
+    Events.addListener<DatabaseRenamedEventData>(
+      DatabaseRenamedEvent,
+      DatabaseEntriesEventListenerId,
+      ({ data }) => {
+        const { original, updated } = data;
+
+        // Collect the database's entries regardless of re-key state
+        const entries = [
+          ...DatabaseEntries.getAll(original.id),
+          ...DatabaseEntries.getAll(updated.id),
+        ];
+
+        entries.forEach((entry) => {
+          // Swap the database prefix to derive the pre/post-rename IDs
+          const relativePath = entry.id.slice(entry.database.length);
+          const oldEntryId = `${original.id}${relativePath}`;
+          const newEntryId = `${updated.id}${relativePath}`;
+
+          // Re-point the entry's open tab to the new entry ID
+          Events.dispatch<UpdateViewEventData>(UpdateViewEvent, {
+            id: databaseEntryViewId(oldEntryId),
+            newId: databaseEntryViewId(newEntryId),
+            props: { entryId: newEntryId, layoutContext: 'page' },
+            title: entry.title,
+          });
         });
       },
     );
@@ -212,6 +264,11 @@ export const DatabasesFeature: React.FC = () => {
         DatabaseEntriesEventListenerId,
       );
       Events.removeListener(DatabaseUpdatedEvent, EventListenerId);
+      Events.removeListener(DatabaseRenamedEvent, EventListenerId);
+      Events.removeListener(
+        DatabaseRenamedEvent,
+        DatabaseEntriesEventListenerId,
+      );
       Events.removeListener(DatabaseDeletedEvent, EventListenerId);
       Events.removeListener(
         DatabaseEntryRenamedEvent,
