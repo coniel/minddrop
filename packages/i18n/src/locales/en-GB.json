@@ -294,6 +294,7 @@
       "sections": {
         "general": "General",
         "interface": "Interface",
+        "data": "Data",
         "danger": "Danger zone"
       },
       "name": {
@@ -308,6 +309,32 @@
       "hideViewsToolbar": {
         "label": "Hide views toolbar",
         "description": "Hide the bar for switching and adding views. Useful when the database only has a single view."
+      },
+      "propertyFileStorage": {
+        "label": "Property file storage",
+        "description": "Choose how files added to properties are stored on disk.",
+        "options": {
+          "root": {
+            "label": "Database root",
+            "description": "Files are kept in the database's root folder."
+          },
+          "common": {
+            "label": "Common folder",
+            "description": "Files are kept together in a single shared folder."
+          },
+          "property": {
+            "label": "Folder per property",
+            "description": "Files are grouped into a folder for each property."
+          },
+          "entry": {
+            "label": "Folder per entry",
+            "description": "Files are grouped into a folder for each entry."
+          }
+        }
+      },
+      "propertyFilesDir": {
+        "label": "Property files folder",
+        "description": "The name of the common folder property files are stored in."
       },
       "delete": {
         "description": "Deleting this database will move all of its content to the system trash.",

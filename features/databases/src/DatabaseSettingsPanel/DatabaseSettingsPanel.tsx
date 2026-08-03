@@ -1,22 +1,54 @@
 import { useState } from 'react';
-import { Databases } from '@minddrop/databases';
+import { Database, Databases } from '@minddrop/databases';
 import {
   Events,
   OpenConfirmationDialogEvent,
   OpenConfirmationDialogEventData,
 } from '@minddrop/events';
+import { useTranslation } from '@minddrop/i18n';
 import {
   ButtonSetting,
   IconSetting,
+  SelectSetting,
   SettingsSection,
   SwitchSetting,
   TextSetting,
 } from '@minddrop/ui-components';
-import { Stack } from '@minddrop/ui-primitives';
+import { SelectOption, Stack } from '@minddrop/ui-primitives';
 import './DatabaseSettingsPanel.css';
 
 // Icon the picker falls back to when the current icon is cleared
 const defaultIcon = 'content-icon:box:default';
+
+// The ways property files can be stored on disk, offered in the Data section
+const propertyFileStorageOptions: SelectOption<
+  Database['propertyFileStorage']
+>[] = [
+  {
+    label: 'databases.settings.propertyFileStorage.options.root.label',
+    description:
+      'databases.settings.propertyFileStorage.options.root.description',
+    value: 'root',
+  },
+  {
+    label: 'databases.settings.propertyFileStorage.options.common.label',
+    description:
+      'databases.settings.propertyFileStorage.options.common.description',
+    value: 'common',
+  },
+  {
+    label: 'databases.settings.propertyFileStorage.options.property.label',
+    description:
+      'databases.settings.propertyFileStorage.options.property.description',
+    value: 'property',
+  },
+  {
+    label: 'databases.settings.propertyFileStorage.options.entry.label',
+    description:
+      'databases.settings.propertyFileStorage.options.entry.description',
+    value: 'entry',
+  },
+];
 
 export interface DatabaseSettingsPanelProps {
   /**
@@ -34,9 +66,15 @@ export const DatabaseSettingsPanel: React.FC<DatabaseSettingsPanelProps> = ({
   databaseId,
 }) => {
   const database = Databases.use(databaseId);
+  const { t } = useTranslation();
+  // Folder name used when no custom property files directory is set
+  const defaultPropertyFilesDir = t('databases.propertyFilesDirName');
   // Local field values, committed to the database on blur
   const [name, setName] = useState(database?.name ?? '');
   const [entryName, setEntryName] = useState(database?.entryName ?? '');
+  const [propertyFilesDir, setPropertyFilesDir] = useState(
+    database?.propertyFilesDir || defaultPropertyFilesDir,
+  );
 
   // Persist the selected icon immediately
   function handleSelectIcon(icon: string) {
@@ -82,6 +120,33 @@ export const DatabaseSettingsPanel: React.FC<DatabaseSettingsPanelProps> = ({
   // Toggle whether the views toolbar is hidden in the database view
   function handleToggleHideViewsToolbar(checked: boolean) {
     Databases.update(databaseId, { hideViewsToolbar: checked });
+  }
+
+  // Change how the database's property files are stored on disk
+  function handleChangePropertyFileStorage(
+    propertyFileStorage: Database['propertyFileStorage'],
+  ) {
+    Databases.update(databaseId, { propertyFileStorage });
+  }
+
+  // Commit a change to the common property files directory name
+  function handlePropertyFilesDirBlur() {
+    // Fall back to the default folder name when the field is cleared
+    const nextValue = propertyFilesDir.trim() || defaultPropertyFilesDir;
+
+    // Reflect the resolved value in the input
+    setPropertyFilesDir(nextValue);
+
+    // Skip when the database is missing or the value is unchanged
+    if (
+      !database ||
+      nextValue === (database.propertyFilesDir || defaultPropertyFilesDir)
+    ) {
+      return;
+    }
+
+    // Persist the directory name
+    Databases.update(databaseId, { propertyFilesDir: nextValue });
   }
 
   // Prompt for confirmation before deleting the database
@@ -165,6 +230,27 @@ export const DatabaseSettingsPanel: React.FC<DatabaseSettingsPanelProps> = ({
           checked={database.hideViewsToolbar ?? false}
           onCheckedChange={handleToggleHideViewsToolbar}
         />
+      </SettingsSection>
+
+      {/* Data storage settings */}
+      <SettingsSection title="databases.settings.sections.data">
+        <SelectSetting
+          title="databases.settings.propertyFileStorage.label"
+          description="databases.settings.propertyFileStorage.description"
+          options={propertyFileStorageOptions}
+          value={database.propertyFileStorage}
+          onValueChange={handleChangePropertyFileStorage}
+        />
+        {/* Folder name input, only relevant to the common storage option */}
+        {database.propertyFileStorage === 'common' && (
+          <TextSetting
+            title="databases.settings.propertyFilesDir.label"
+            description="databases.settings.propertyFilesDir.description"
+            value={propertyFilesDir}
+            onValueChange={setPropertyFilesDir}
+            onBlur={handlePropertyFilesDirBlur}
+          />
+        )}
       </SettingsSection>
 
       {/* Destructive actions */}
