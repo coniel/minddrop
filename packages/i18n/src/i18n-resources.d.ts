@@ -299,17 +299,37 @@ declare module 'i18next' {
             actions: {
               delete: string;
             };
+            sections: {
+              general: string;
+              interface: string;
+              danger: string;
+            };
+            name: {
+              description: string;
+            };
+            entryName: {
+              description: string;
+            };
+            icon: {
+              description: string;
+            };
             hideViewsToolbar: {
               label: string;
               description: string;
             };
             delete: {
               description: string;
+              button: string;
               confirmation: {
                 title: string;
                 message: string;
                 confirm: string;
               };
+            };
+            clear: {
+              title: string;
+              description: string;
+              button: string;
             };
           };
           empty: {

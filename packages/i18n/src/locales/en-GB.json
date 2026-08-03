@@ -287,17 +287,37 @@
       "actions": {
         "delete": "Delete database"
       },
+      "sections": {
+        "general": "General",
+        "interface": "Interface",
+        "danger": "Danger zone"
+      },
+      "name": {
+        "description": "The name used to identify this database."
+      },
+      "entryName": {
+        "description": "The label used when referring to a single entry."
+      },
+      "icon": {
+        "description": "The icon shown next to this database."
+      },
       "hideViewsToolbar": {
         "label": "Hide views toolbar",
         "description": "Hide the bar for switching and adding views. Useful when the database only has a single view."
       },
       "delete": {
         "description": "Deleting this database will move all of its content to the system trash.",
+        "button": "Delete",
         "confirmation": {
           "title": "Delete database",
           "message": "Are you sure you want to delete this database? This action cannot be undone.",
           "confirm": "Delete"
         }
+      },
+      "clear": {
+        "title": "Clear database",
+        "description": "Delete all entries in this database. The database and its configuration are kept.",
+        "button": "Clear"
       }
     },
     "empty": {

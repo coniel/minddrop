@@ -6,16 +6,13 @@ import {
   OpenConfirmationDialogEventData,
 } from '@minddrop/events';
 import {
-  Button,
-  ContentIcon,
-  Group,
-  IconButton,
-  IconPicker,
-  Stack,
-  SwitchField,
-  Text,
-  TextField,
-} from '@minddrop/ui-primitives';
+  ButtonSetting,
+  IconSetting,
+  SettingsSection,
+  SwitchSetting,
+  TextSetting,
+} from '@minddrop/ui-components';
+import { Stack } from '@minddrop/ui-primitives';
 import './DatabaseSettingsPanel.css';
 
 // Icon the picker falls back to when the current icon is cleared
@@ -29,9 +26,9 @@ export interface DatabaseSettingsPanelProps {
 }
 
 /**
- * Renders the database's general settings: an icon picker and name
- * field on one row, an entry name field below, and a delete database
- * action.
+ * Renders the database's settings grouped into General, Interface,
+ * and Danger zone sections, each row laid out as a title and
+ * description with a control on the right.
  */
 export const DatabaseSettingsPanel: React.FC<DatabaseSettingsPanelProps> = ({
   databaseId,
@@ -107,76 +104,73 @@ export const DatabaseSettingsPanel: React.FC<DatabaseSettingsPanelProps> = ({
     );
   }
 
+  // Clear all entries in the database
+  function handleClear() {
+    // TODO wire up once a clear-all-entries API exists in @minddrop/databases
+  }
+
   if (!database) {
     return null;
   }
 
   return (
-    <Stack gap={4} className="database-settings-panel">
-      {/* Icon picker, name field, and entry name field */}
-      <Group gap={2} align="end">
-        <IconPicker
-          closeOnSelect
+    <Stack className="database-settings-panel" gap={4}>
+      {/* General settings: icon, name, and entry name */}
+      <SettingsSection title="databases.settings.sections.general">
+        <IconSetting
+          title="databases.form.icon.label"
+          description="databases.settings.icon.description"
+          icon={database.icon}
           onSelect={handleSelectIcon}
           onClear={handleClearIcon}
-          currentIcon={database.icon}
-        >
-          <IconButton
-            label="databases.form.icon.label"
-            size="md"
-            variant="filled"
-            color="neutral"
-          >
-            <ContentIcon icon={database.icon} />
-          </IconButton>
-        </IconPicker>
-        <TextField
-          size="md"
-          className="database-settings-panel-field"
-          variant="filled"
-          label="databases.form.name.label"
+        />
+        <TextSetting
+          title="databases.form.name.label"
+          description="databases.settings.name.description"
           placeholder="databases.form.name.placeholder"
           value={name}
           onValueChange={setName}
           onBlur={handleNameBlur}
         />
-        <TextField
-          size="md"
-          className="database-settings-panel-field"
-          variant="filled"
-          label="databases.form.entryName.label"
+        <TextSetting
+          title="databases.form.entryName.label"
+          description="databases.settings.entryName.description"
           placeholder="databases.form.entryName.placeholder"
           value={entryName}
           onValueChange={setEntryName}
           onBlur={handleEntryNameBlur}
         />
-      </Group>
+      </SettingsSection>
 
-      {/* Toggle for hiding the views toolbar in the database view */}
-      <SwitchField
-        label="databases.settings.hideViewsToolbar.label"
-        description="databases.settings.hideViewsToolbar.description"
-        checked={database.hideViewsToolbar ?? false}
-        onCheckedChange={handleToggleHideViewsToolbar}
-      />
-
-      {/* Delete database action with an explanatory note */}
-      <Stack gap={2} className="database-settings-panel-delete">
-        <Text
-          block
-          size="sm"
-          color="muted"
-          text="databases.settings.delete.description"
+      {/* Interface settings */}
+      <SettingsSection title="databases.settings.sections.interface">
+        <SwitchSetting
+          title="databases.settings.hideViewsToolbar.label"
+          description="databases.settings.hideViewsToolbar.description"
+          checked={database.hideViewsToolbar ?? false}
+          onCheckedChange={handleToggleHideViewsToolbar}
         />
-        <Button
-          size="md"
-          label="databases.settings.actions.delete"
-          variant="filled"
+      </SettingsSection>
+
+      {/* Destructive actions */}
+      <SettingsSection title="databases.settings.sections.danger">
+        <ButtonSetting
+          title="databases.settings.actions.delete"
+          description="databases.settings.delete.description"
+          buttonLabel="databases.settings.delete.button"
           danger="on-hover"
           startIcon="trash-2"
           onClick={handleDelete}
         />
-      </Stack>
+        <ButtonSetting
+          title="databases.settings.clear.title"
+          description="databases.settings.clear.description"
+          buttonLabel="databases.settings.clear.button"
+          danger="on-hover"
+          startIcon="eraser"
+          onClick={handleClear}
+        />
+      </SettingsSection>
     </Stack>
   );
 };

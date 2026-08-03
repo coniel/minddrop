@@ -1,12 +1,3 @@
 .database-settings-panel {
-  padding: var(--space-2) var(--space-4);
-}
-
-.database-settings-panel-field {
-  flex: 1;
-  min-width: 0;
-}
-
-.database-settings-panel-delete {
-  margin-top: var(--space-4);
+  padding: 0 var(--space-4);
 }
