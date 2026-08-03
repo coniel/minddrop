@@ -295,6 +295,19 @@ declare module 'i18next' {
               pathConflict: string;
             };
           };
+          settings: {
+            actions: {
+              delete: string;
+            };
+            delete: {
+              description: string;
+              confirmation: {
+                title: string;
+                message: string;
+                confirm: string;
+              };
+            };
+          };
           empty: {
             title: string;
             addViaButton: string;

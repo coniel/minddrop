@@ -283,6 +283,19 @@
         "pathConflict": "A folder with this name already exists in the at the specified location."
       }
     },
+    "settings": {
+      "actions": {
+        "delete": "Delete database"
+      },
+      "delete": {
+        "description": "Deleting this database will move all of its content to the system trash.",
+        "confirmation": {
+          "title": "Delete database",
+          "message": "Are you sure you want to delete this database? This action cannot be undone.",
+          "confirm": "Delete"
+        }
+      }
+    },
     "empty": {
       "title": "No entries yet",
       "addViaButton": "Click the + button at the top right to add a new entry.",

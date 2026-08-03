@@ -4,7 +4,8 @@ export type ConfigPanelTab =
   | 'queries'
   | 'collections'
   | 'properties'
-  | 'designs';
+  | 'designs'
+  | 'settings';
 
 export interface DatabaseViewState {
   /**

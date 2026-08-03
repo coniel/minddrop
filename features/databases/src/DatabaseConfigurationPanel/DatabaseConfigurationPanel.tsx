@@ -16,6 +16,7 @@ import {
 } from '@minddrop/ui-primitives';
 import { DatabaseDesignPanel } from '../DatabaseDesignPanel';
 import { DatabasePropertiesEditor } from '../DatabasePropertiesEditor';
+import { DatabaseSettingsPanel } from '../DatabaseSettingsPanel';
 import {
   ConfigPanelTab,
   setDatabaseViewState,
@@ -43,12 +44,14 @@ export const DatabaseConfigurationPanel: React.FC<
   DatabaseConfigurationPanelProps
 > = ({ databaseId }) => {
   const viewState = useDatabaseViewState(databaseId);
-  const [showSettings, setShowSettings] = useState(false);
   const [draftProperties, setDraftProperties] = useState<DraftProperty[]>([]);
   const databaseConfig = Databases.use(databaseId);
 
   // Read the active tab from persisted state
   const activeTab = viewState.configPanelTab;
+
+  // Settings is a persisted tab value so it survives remounts (e.g. rename)
+  const showSettings = activeTab === 'settings';
 
   // Persist the active tab when it changes
   const setActiveTab = useCallback(
@@ -83,18 +86,16 @@ export const DatabaseConfigurationPanel: React.FC<
       <Tabs
         className="database-configuration-panel-tabs-container"
         value={showSettings ? '' : activeTab}
-        onValueChange={(value) => {
-          setActiveTab(value as ConfigPanelTab);
-          setShowSettings(false);
-        }}
+        onValueChange={(value) => setActiveTab(value as ConfigPanelTab)}
       >
         <div className="database-configuration-panel-tabs">
           <IconButton
             size="md"
             label="labels.settings"
             icon="settings"
+            color="muted"
             active={showSettings}
-            onClick={() => setShowSettings(true)}
+            onClick={() => setActiveTab('settings')}
           />
           <Spacer />
           <TabsList>
@@ -134,7 +135,9 @@ export const DatabaseConfigurationPanel: React.FC<
 
         {showSettings ? (
           <ScrollArea>
-            <div className="database-configuration-panel-settings-content" />
+            <div className="database-configuration-panel-settings-content">
+              <DatabaseSettingsPanel key={databaseId} databaseId={databaseId} />
+            </div>
           </ScrollArea>
         ) : (
           <>
