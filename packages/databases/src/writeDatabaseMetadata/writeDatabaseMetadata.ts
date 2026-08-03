@@ -6,7 +6,7 @@ import { databaseMetadataFilePath } from '../utils';
  * Writes the full metadata map for a database to disk.
  *
  * @param databasePath - The absolute path to the database directory.
- * @param metadata - The metadata map keyed by entry ID.
+ * @param metadata - The metadata map keyed by database-relative entry path.
  */
 export async function writeDatabaseMetadata(
   databasePath: string,
