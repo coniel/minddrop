@@ -1,4 +1,5 @@
 export * from './disablePagePanel';
+export * from './elementTitleBindingId';
 export * from './enablePagePanel';
 export * from './getDesignFilePath';
 export * from './getDesignsDirPath';

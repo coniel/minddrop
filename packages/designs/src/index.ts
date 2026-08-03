@@ -1,5 +1,6 @@
 export * from './createElementCssStyle';
 export * from './types';
+export * from './utils/elementTitleBindingId';
 export * from './utils/getPlaceholderMediaDirPath';
 export * from './utils/isEmptyPropertyValue';
 export * from './utils/isPanelledRoot';

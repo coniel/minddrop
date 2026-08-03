@@ -5,10 +5,12 @@ import {
   Databases,
   LayoutContext,
   layoutContextBaseType,
+  withImplicitTitleProperty,
 } from '@minddrop/databases';
 import { Designs, Layouts } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
 import { LayoutRenderer } from '@minddrop/feature-designs';
+import { useTranslation } from '@minddrop/i18n';
 import { PropertyValue } from '@minddrop/properties';
 import { Text } from '@minddrop/ui-primitives';
 import {
@@ -68,6 +70,7 @@ const Entry: React.FC<EntryProps> = ({
   layoutContext,
   onClick,
 }) => {
+  const { t } = useTranslation();
   const database = Databases.use(entry.database);
   const design = Designs.use(database?.designId || '');
 
@@ -122,6 +125,13 @@ const Entry: React.FC<EntryProps> = ({
     return resolved;
   }, [database, layout]);
 
+  // Database properties including the implicit entry Title
+  // property, so title-mapped elements resolve a schema
+  const rendererProperties = useMemo(
+    () => withImplicitTitleProperty(database?.properties || []),
+    [database],
+  );
+
   // Get display-ready property values (image paths, virtual view IDs, etc.).
   // Depends on entry.properties so the values recompute when a property is
   // written after the entry is created (e.g. an image dropped into the view).
@@ -139,6 +149,26 @@ const Entry: React.FC<EntryProps> = ({
       DatabaseEntries.updateProperty(entry.id, name, value);
     },
     [entry.id],
+  );
+
+  const onValidatePropertyValue = useCallback(
+    (name: string, value: PropertyValue) => {
+      // Look up the schema to determine the property type
+      const schema = rendererProperties.find(
+        (property) => property.name === name,
+      );
+
+      // Only title values are validated
+      if (schema?.type !== 'title') {
+        return undefined;
+      }
+
+      // Translate the validation error key into a message
+      const errorKey = DatabaseEntries.validateTitle(entry, String(value));
+
+      return errorKey ? t(errorKey) : undefined;
+    },
+    [entry, rendererProperties, t],
   );
 
   // Call the custom onClick handler if provided, otherwise
@@ -207,8 +237,9 @@ const Entry: React.FC<EntryProps> = ({
         designProperties={design?.properties}
         propertyMap={propertyMap}
         propertyValues={propertyValues}
-        properties={database.properties}
+        properties={rendererProperties}
         onUpdatePropertyValue={onUpdatePropertyValue}
+        onValidatePropertyValue={onValidatePropertyValue}
       />
     </div>
   );

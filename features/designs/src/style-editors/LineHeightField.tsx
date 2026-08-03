@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { NumberField } from '@minddrop/ui-primitives';
 import { updateElementStyle, useElementStyle } from '../DesignStudioStore';
+import { useScopedStyleKey } from './StyleKeyScope';
 
 export interface LineHeightFieldProps {
   /**
@@ -13,15 +14,17 @@ export interface LineHeightFieldProps {
  * Renders a number field for editing an element's line height.
  */
 export const LineHeightField = ({ elementId }: LineHeightFieldProps) => {
-  const lineHeight = useElementStyle(elementId, 'line-height');
+  // Resolve the style key against the current style key scope
+  const styleKey = useScopedStyleKey('line-height');
+  const lineHeight = useElementStyle(elementId, styleKey);
 
   const handleChange = useCallback(
     (value: number | null) => {
       if (value !== null) {
-        updateElementStyle(elementId, 'line-height', value / 100);
+        updateElementStyle(elementId, styleKey, value / 100);
       }
     },
-    [elementId],
+    [elementId, styleKey],
   );
 
   return (

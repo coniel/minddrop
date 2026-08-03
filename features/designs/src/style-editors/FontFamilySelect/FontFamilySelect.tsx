@@ -3,6 +3,7 @@ import { FontFamily, fonts } from '@minddrop/designs';
 import { useTranslation } from '@minddrop/i18n';
 import { Select, SelectItem } from '@minddrop/ui-primitives';
 import { updateElementStyle, useElementStyle } from '../../DesignStudioStore';
+import { useScopedStyleKey } from '../StyleKeyScope';
 
 export interface FontFamilySelectProps {
   /**
@@ -16,13 +17,15 @@ export interface FontFamilySelectProps {
  */
 export const FontFamilySelect = ({ elementId }: FontFamilySelectProps) => {
   const { t } = useTranslation();
-  const fontFamily = useElementStyle(elementId, 'font-family');
+  // Resolve the style key against the current style key scope
+  const styleKey = useScopedStyleKey('font-family');
+  const fontFamily = useElementStyle(elementId, styleKey);
 
   const handleChange = useCallback(
     (value: FontFamily) => {
-      updateElementStyle(elementId, 'font-family', value);
+      updateElementStyle(elementId, styleKey, value);
     },
-    [elementId],
+    [elementId, styleKey],
   );
 
   return (

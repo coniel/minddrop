@@ -1,10 +1,16 @@
 import { ContainerStyles, DefaultContainerStyles } from './ContainerStyles';
-import { DefaultTypographyStyles, TypographyStyles } from './TypographyStyles';
+import {
+  DefaultTitleTypographyStyles,
+  DefaultTypographyStyles,
+  TitleTypographyStyles,
+  TypographyStyles,
+} from './TypographyStyles';
 
 export * from './TypographyStyles';
 export * from './ContainerStyles';
 
 export type DesignElementStyle = TypographyStyles &
+  TitleTypographyStyles &
   ContainerStyles & {
     width: number;
     height: number;
@@ -24,6 +30,7 @@ export type DesignElementStyleOption = keyof DesignElementStyle;
 
 export const DefaultDesignElementStyle: DesignElementStyle = {
   ...DefaultTypographyStyles,
+  ...DefaultTitleTypographyStyles,
   ...DefaultContainerStyles,
   width: 100,
   height: 0,
@@ -322,10 +329,8 @@ export interface EditorElementStyle
       | 'borderRadiusBottomRight'
       | 'borderRadiusBottomLeft'
     >,
-    Pick<
-      TypographyStyles,
-      'font-family' | 'font-weight' | 'color' | 'opacity'
-    > {
+    Pick<TypographyStyles, 'font-family' | 'font-weight' | 'color' | 'opacity'>,
+    TitleTypographyStyles {
   width: number;
   height: number;
   maxWidth: number;
@@ -339,6 +344,7 @@ export interface EditorElementStyle
 }
 
 export const DefaultEditorElementStyle: EditorElementStyle = {
+  ...DefaultTitleTypographyStyles,
   paddingTop: 1,
   paddingRight: 1,
   paddingBottom: 1,

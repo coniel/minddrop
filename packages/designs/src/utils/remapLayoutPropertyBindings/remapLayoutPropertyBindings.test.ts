@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   element_container_1,
+  element_editor_1,
   element_text_1,
   element_text_2,
   layout_card_1,
@@ -21,6 +22,18 @@ const boundLayout: Layout = {
         ...element_container_1,
         children: [{ ...element_text_2, property: 'Subtitle' }],
       },
+    ],
+  },
+};
+
+// A layout with an editor element bound to a content and a
+// title property
+const titleBoundLayout: Layout = {
+  ...layout_card_1,
+  tree: {
+    ...layout_card_1.tree,
+    children: [
+      { ...element_editor_1, property: 'Content', titleProperty: 'Name' },
     ],
   },
 };
@@ -72,5 +85,40 @@ describe('remapLayoutPropertyBindings', () => {
     );
 
     expect(layout.tree.property).toBe('Cover');
+  });
+
+  it('rebinds editor element title bindings', () => {
+    const [layout] = remapLayoutPropertyBindings(
+      [titleBoundLayout],
+      'Name',
+      'Label',
+    );
+
+    expect(layout.tree.children[0]).toMatchObject({ titleProperty: 'Label' });
+  });
+
+  it('unbinds editor element title bindings on removal', () => {
+    const [layout] = remapLayoutPropertyBindings(
+      [titleBoundLayout],
+      'Name',
+      null,
+    );
+
+    expect(layout.tree.children[0]).toMatchObject({
+      titleProperty: undefined,
+    });
+  });
+
+  it('leaves editor title bindings to other properties untouched', () => {
+    const [layout] = remapLayoutPropertyBindings(
+      [titleBoundLayout],
+      'Content',
+      'Body',
+    );
+
+    expect(layout.tree.children[0]).toMatchObject({
+      property: 'Body',
+      titleProperty: 'Name',
+    });
   });
 });

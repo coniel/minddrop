@@ -1,17 +1,23 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
   DatabaseEntries,
+  DatabaseEntrySerializers,
   DatabaseFixtures,
   Databases,
 } from '@minddrop/databases';
 import { DesignFixtures, Designs } from '@minddrop/designs';
-import { render, screen } from '@minddrop/test-utils';
-import { cleanup, setup } from '../test-utils';
+import { act, render, screen, waitFor } from '@minddrop/test-utils';
+import { MockFs, cleanup, setup } from '../test-utils';
 import { DatabaseEntryRenderer } from './DatabaseEntryRenderer';
 
 const { objectEntry1, objectDatabase, defaultCardLayout } = DatabaseFixtures;
-const { layout_list_1, layout_card_1, element_text_1, design_books } =
-  DesignFixtures;
+const {
+  layout_list_1,
+  layout_card_1,
+  element_text_1,
+  element_editor_1,
+  design_books,
+} = DesignFixtures;
 
 // A text element bound to the 'Heading' design property, showing
 // its placeholder rather than hiding when the value is unset
@@ -69,6 +75,52 @@ const mappedEntry = {
   properties: { Body: 'Mapped Value' },
 };
 
+// An editor element with its title bound to the 'Heading' design
+// property
+const titleBoundEditorElement = {
+  ...element_editor_1,
+  titleProperty: 'Heading',
+};
+
+// A card layout whose only element is the title-bound editor
+const titleBoundLayout = {
+  ...layout_card_1,
+  id: 'title-bound-card',
+  tree: { ...layout_card_1.tree, children: [titleBoundEditorElement] },
+};
+
+// A design declaring the 'Heading' property and the title-bound
+// layout
+const titleBoundDesign = {
+  ...design_books,
+  id: 'title-bound-design',
+  properties: [headingProperty],
+  layouts: [titleBoundLayout],
+};
+
+// A database using the title-bound design, mapping the 'Heading'
+// design property to the implicit Title database property
+const titleDatabase = {
+  ...objectDatabase,
+  id: 'TitleDb',
+  name: 'TitleDb',
+  path: `${objectDatabase.path}-title`,
+  designId: titleBoundDesign.id,
+  designPropertyMap: { Heading: 'Title' },
+  defaultLayouts: {},
+  properties: [],
+};
+
+// An entry in the title database
+const titleEntry = {
+  ...objectEntry1,
+  id: 'TitleDb/Title Entry.md',
+  database: 'TitleDb',
+  path: `${objectDatabase.path}-title/Title Entry.md`,
+  title: 'Title Entry',
+  properties: {},
+};
+
 describe('<DatabaseEntryRenderer />', () => {
   beforeEach(() => {
     setup();
@@ -80,6 +132,7 @@ describe('<DatabaseEntryRenderer />', () => {
   afterEach(() => {
     cleanup();
     DatabaseEntries.Store.clear();
+    DatabaseEntrySerializers.Store.clear();
   });
 
   it('renders an entry using the default layout', () => {
@@ -149,6 +202,55 @@ describe('<DatabaseEntryRenderer />', () => {
 
     // With no mapping, the element falls back to the design property placeholder
     screen.getByText('Heading placeholder');
+  });
+
+  it('renders the entry title in a title-bound editor element', () => {
+    // Register the title-bound design and its database and entry
+    Designs.Store.load([titleBoundDesign]);
+    Databases.Store.load([titleDatabase]);
+    DatabaseEntries.Store.load([titleEntry]);
+
+    render(
+      <DatabaseEntryRenderer
+        entryId={titleEntry.id}
+        layoutContext="card"
+        layoutId={titleBoundLayout.id}
+      />,
+    );
+
+    // The editor's title block resolves Heading -> Title -> the
+    // entry title
+    screen.getByText('Title Entry');
+  });
+
+  it('keeps rendering the entry across a rename', async () => {
+    // Register the title-bound design and its database and entry
+    Designs.Store.load([titleBoundDesign]);
+    Databases.Store.load([titleDatabase]);
+    DatabaseEntries.Store.load([titleEntry]);
+
+    // Add the entry file so it can be renamed on the mock file
+    // system, and register the serializers used to rewrite it
+    MockFs.addFiles([{ path: titleEntry.path, textContent: '' }]);
+    DatabaseEntrySerializers.loadCoreSerializers();
+
+    render(
+      <DatabaseEntryRenderer
+        entryId={titleEntry.id}
+        layoutContext="card"
+        layoutId={titleBoundLayout.id}
+      />,
+    );
+
+    // Rename the entry while it is rendered
+    await act(async () => {
+      await DatabaseEntries.rename(titleEntry.id, 'Renamed Title Entry');
+    });
+
+    // The renderer should follow the rename and show the new title
+    await waitFor(() => {
+      screen.getByText('Renamed Title Entry');
+    });
   });
 
   it('renders a title-only fallback when the database has no design', () => {

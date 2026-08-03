@@ -12,7 +12,11 @@ import { LayoutRenderContextProvider } from './LayoutRenderContext';
 export interface LayoutRendererProps
   extends Pick<
     DesignPropertiesProviderProps,
-    'onUpdatePropertyValue' | 'properties' | 'propertyValues' | 'propertyMap'
+    | 'onUpdatePropertyValue'
+    | 'onValidatePropertyValue'
+    | 'properties'
+    | 'propertyValues'
+    | 'propertyMap'
   > {
   /**
    * The layout to render.
@@ -46,6 +50,7 @@ export const LayoutRenderer: React.FC<LayoutRendererProps> = ({
   propertyValues = {},
   propertyMap = {},
   onUpdatePropertyValue,
+  onValidatePropertyValue,
 }) => {
   return (
     <DesignPropertySchemasProvider properties={designProperties}>
@@ -54,6 +59,7 @@ export const LayoutRenderer: React.FC<LayoutRendererProps> = ({
         propertyValues={propertyValues}
         propertyMap={propertyMap}
         onUpdatePropertyValue={onUpdatePropertyValue}
+        onValidatePropertyValue={onValidatePropertyValue}
       >
         <LayoutIdProvider value={layout.id}>
           <LayoutRenderContextProvider value={context ?? null}>

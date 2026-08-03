@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { NumberField } from '@minddrop/ui-primitives';
 import { updateElementStyle, useElementStyle } from '../DesignStudioStore';
+import { useScopedStyleKey } from './StyleKeyScope';
 
 export interface OpacityFieldProps {
   /**
@@ -13,15 +14,17 @@ export interface OpacityFieldProps {
  * Renders a number field for editing an element's opacity.
  */
 export const OpacityField = ({ elementId }: OpacityFieldProps) => {
-  const opacity = useElementStyle(elementId, 'opacity');
+  // Resolve the style key against the current style key scope
+  const styleKey = useScopedStyleKey('opacity');
+  const opacity = useElementStyle(elementId, styleKey);
 
   const handleChange = useCallback(
     (value: number | null) => {
       if (value !== null) {
-        updateElementStyle(elementId, 'opacity', value / 100);
+        updateElementStyle(elementId, styleKey, value / 100);
       }
     },
-    [elementId],
+    [elementId, styleKey],
   );
 
   return (

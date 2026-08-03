@@ -964,6 +964,9 @@
         "left": "Left",
         "sync": "Sync margin"
       },
+      "margin-bottom": {
+        "label": "Bottom margin"
+      },
       "text-align": {
         "label": "Alignment",
         "left": "Left",
@@ -1204,6 +1207,9 @@
       "label": "Property",
       "none": "None",
       "noCompatible": "No compatible properties"
+    },
+    "title": {
+      "label": "Title"
     },
     "properties": {
       "empty": "No properties yet",

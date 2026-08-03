@@ -1,8 +1,14 @@
 import {
   DefaultContainerElementStyle,
+  DefaultEditorElementStyle,
   DefaultTextElementStyle,
 } from '../../styles';
-import { ContainerElement, DesignElement, TextElement } from '../../types';
+import {
+  ContainerElement,
+  DesignElement,
+  EditorElement,
+  TextElement,
+} from '../../types';
 
 function generateTextElementFixture(version: number): TextElement {
   return {
@@ -26,6 +32,14 @@ function generateContainerElementFixture(
   };
 }
 
+function generateEditorElementFixture(version: number): EditorElement {
+  return {
+    id: `editor-element-${version}`,
+    type: 'editor',
+    style: { ...DefaultEditorElementStyle },
+  };
+}
+
 export const element_text_1 = generateTextElementFixture(1);
 export const element_text_2 = generateTextElementFixture(2);
 export const element_text_3 = generateTextElementFixture(3);
@@ -33,3 +47,5 @@ export const element_text_3 = generateTextElementFixture(3);
 export const element_container_1 = generateContainerElementFixture(1);
 export const element_container_2 = generateContainerElementFixture(2);
 export const element_container_3 = generateContainerElementFixture(3);
+
+export const element_editor_1 = generateEditorElementFixture(1);

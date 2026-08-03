@@ -5,6 +5,7 @@ import { FontWeightSelect } from './FontWeightSelect';
 import { ItalicToggle } from './ItalicToggle';
 import { LetterSpacingField } from './LetterSpacingField';
 import { LineHeightField } from './LineHeightField';
+import { MarginBottomField } from './MarginBottomField';
 import { MaxWidthField } from './MaxWidthField';
 import { OpacityField } from './OpacityField';
 import { TextAlignToggle } from './TextAlignToggle';
@@ -54,6 +55,12 @@ export interface TypographyProps {
    * @default false
    */
   hideMaxWidth?: boolean;
+
+  /**
+   * Whether to show the bottom margin field.
+   * @default false
+   */
+  showMarginBottom?: boolean;
 }
 
 /**
@@ -68,6 +75,7 @@ export const Typography: React.FC<TypographyProps> = ({
   hideTextTransform = false,
   hideTextAlign = false,
   hideMaxWidth = false,
+  showMarginBottom = false,
 }) => {
   return (
     <Stack gap={3}>
@@ -134,6 +142,17 @@ export const Typography: React.FC<TypographyProps> = ({
           </Stack>
         </FlexItem>
       </Group>
+
+      {/* Bottom margin */}
+      {showMarginBottom && (
+        <Stack gap={1}>
+          <InputLabel
+            size="xs"
+            label="designs.typography.margin-bottom.label"
+          />
+          <MarginBottomField elementId={elementId} />
+        </Stack>
+      )}
 
       {/* Text transform and alignment */}
       {!hideTextTransform && (

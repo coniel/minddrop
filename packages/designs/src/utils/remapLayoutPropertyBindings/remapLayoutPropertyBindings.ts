@@ -40,23 +40,29 @@ function remapElement(
   propertyName: string,
   newPropertyName: string | null,
 ): DesignElement {
-  const property = remapBinding(
-    element.property,
-    propertyName,
-    newPropertyName,
-  );
+  // Remap the element's content binding
+  const remapped: DesignElement = {
+    ...element,
+    property: remapBinding(element.property, propertyName, newPropertyName),
+  };
 
-  if ('children' in element) {
-    return {
-      ...element,
-      property,
-      children: element.children.map((child) =>
-        remapElement(child, propertyName, newPropertyName),
-      ),
-    };
+  // Remap the editor element's title binding
+  if (remapped.type === 'editor') {
+    remapped.titleProperty = remapBinding(
+      remapped.titleProperty,
+      propertyName,
+      newPropertyName,
+    );
   }
 
-  return { ...element, property };
+  // Remap descendant element bindings
+  if ('children' in remapped) {
+    remapped.children = remapped.children.map((child) =>
+      remapElement(child, propertyName, newPropertyName),
+    );
+  }
+
+  return remapped;
 }
 
 /**

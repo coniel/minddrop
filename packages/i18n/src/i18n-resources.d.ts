@@ -976,6 +976,9 @@ declare module 'i18next' {
               left: string;
               sync: string;
             };
+            'margin-bottom': {
+              label: string;
+            };
             'text-align': {
               label: string;
               left: string;
@@ -1216,6 +1219,9 @@ declare module 'i18next' {
             label: string;
             none: string;
             noCompatible: string;
+          };
+          title: {
+            label: string;
           };
           properties: {
             empty: string;

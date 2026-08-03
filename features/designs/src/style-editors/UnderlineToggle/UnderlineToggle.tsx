@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { Toggle } from '@minddrop/ui-primitives';
 import { updateElementStyle, useElementStyle } from '../../DesignStudioStore';
+import { useScopedStyleKey } from '../StyleKeyScope';
 
 export interface UnderlineToggleProps {
   /**
@@ -13,11 +14,13 @@ export interface UnderlineToggleProps {
  * Renders a toggle button for an element's underline style.
  */
 export const UnderlineToggle = ({ elementId }: UnderlineToggleProps) => {
-  const underline = useElementStyle(elementId, 'underline');
+  // Resolve the style key against the current style key scope
+  const styleKey = useScopedStyleKey('underline');
+  const underline = useElementStyle(elementId, styleKey);
 
   const handleToggle = useCallback(
-    (checked: boolean) => updateElementStyle(elementId, 'underline', checked),
-    [elementId],
+    (checked: boolean) => updateElementStyle(elementId, styleKey, checked),
+    [elementId, styleKey],
   );
 
   return (

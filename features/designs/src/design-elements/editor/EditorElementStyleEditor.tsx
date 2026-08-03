@@ -8,6 +8,7 @@ import { MarginFields } from '../../style-editors/MarginFields';
 import { PaddingFields } from '../../style-editors/PaddingFields';
 import { SectionLabel } from '../../style-editors/SectionLabel';
 import { SizingFields } from '../../style-editors/SizingFields';
+import { EditorTitleSection } from './EditorTitleSection';
 
 export interface EditorElementStyleEditorProps {
   /**
@@ -52,7 +53,8 @@ const marginDefaults = {
 
 /**
  * Renders the style editor panel for editor design elements.
- * Provides typography, padding, border, sizing, and margin controls.
+ * Provides typography, padding, title, border, sizing, and margin
+ * controls.
  */
 export const EditorElementStyleEditor: React.FC<
   EditorElementStyleEditorProps
@@ -68,6 +70,8 @@ export const EditorElementStyleEditor: React.FC<
         <SectionLabel label="designs.padding.label" />
         <PaddingFields elementId={elementId} />
       </Stack>
+
+      <EditorTitleSection elementId={elementId} />
 
       <Border elementId={elementId} defaultStyles={borderDefaults} />
 

@@ -3,6 +3,7 @@ import { TextAlign, textAligns } from '@minddrop/designs';
 import { useTranslation } from '@minddrop/i18n';
 import { RadioToggleGroup, Toggle } from '@minddrop/ui-primitives';
 import { updateElementStyle, useElementStyle } from '../../DesignStudioStore';
+import { useScopedStyleKey } from '../StyleKeyScope';
 
 export interface TextAlignToggleProps {
   /**
@@ -16,11 +17,13 @@ export interface TextAlignToggleProps {
  */
 export const TextAlignToggle = ({ elementId }: TextAlignToggleProps) => {
   const { t } = useTranslation();
-  const textAlign = useElementStyle(elementId, 'text-align');
+  // Resolve the style key against the current style key scope
+  const styleKey = useScopedStyleKey('text-align');
+  const textAlign = useElementStyle(elementId, styleKey);
 
   const handleSelect = useCallback(
-    (value: TextAlign) => updateElementStyle(elementId, 'text-align', value),
-    [elementId],
+    (value: TextAlign) => updateElementStyle(elementId, styleKey, value),
+    [elementId, styleKey],
   );
 
   return (

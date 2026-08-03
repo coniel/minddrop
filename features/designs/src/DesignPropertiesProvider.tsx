@@ -26,6 +26,15 @@ interface DesignPropertiesProviderData {
    * Callback to update a property value.
    */
   onUpdatePropertyValue?: (name: string, value: PropertyValue) => void;
+
+  /**
+   * Callback to validate a property value before it is committed.
+   * Returns a translated error message when the value is invalid.
+   */
+  onValidatePropertyValue?: (
+    name: string,
+    value: PropertyValue,
+  ) => string | undefined;
 }
 
 export interface DesignPropertiesProviderProps
@@ -51,11 +60,18 @@ export const DesignPropertiesProvider = ({
   propertyValues,
   propertyMap,
   onUpdatePropertyValue,
+  onValidatePropertyValue,
   children,
 }: DesignPropertiesProviderProps) => {
   return (
     <DesignPropertiesContext.Provider
-      value={{ properties, propertyValues, propertyMap, onUpdatePropertyValue }}
+      value={{
+        properties,
+        propertyValues,
+        propertyMap,
+        onUpdatePropertyValue,
+        onValidatePropertyValue,
+      }}
     >
       {children}
     </DesignPropertiesContext.Provider>
@@ -99,6 +115,7 @@ export const useElementProperty = (
   schema: PropertySchema;
   value?: PropertyValue;
   updateValue: (value: PropertyValue) => void;
+  validateValue: (value: PropertyValue) => string | undefined;
 } | null => {
   const context = useDesignProperties();
 
@@ -106,8 +123,13 @@ export const useElementProperty = (
     return null;
   }
 
-  const { propertyMap, properties, propertyValues, onUpdatePropertyValue } =
-    context;
+  const {
+    propertyMap,
+    properties,
+    propertyValues,
+    onUpdatePropertyValue,
+    onValidatePropertyValue,
+  } = context;
 
   // Look up the property name mapped to this element
   const propertyName = propertyMap[elementId];
@@ -130,9 +152,14 @@ export const useElementProperty = (
   const updateValue = (newValue: PropertyValue) =>
     onUpdatePropertyValue?.(propertyName, newValue);
 
+  // Create validation callback
+  const validateValue = (newValue: PropertyValue) =>
+    onValidatePropertyValue?.(propertyName, newValue);
+
   return {
     schema,
     value,
     updateValue,
+    validateValue,
   };
 };

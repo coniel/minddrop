@@ -8,6 +8,12 @@ export interface EditorElement extends DesignElementBase {
    * The element style.
    */
   style: EditorElementStyle;
+
+  /**
+   * The design property rendered as the editor's title block.
+   * Only 'title' and 'text' type properties are valid targets.
+   */
+  titleProperty?: string;
 }
 
 export const EditorElementConfig: DesignElementConfig = {

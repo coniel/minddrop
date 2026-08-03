@@ -42,6 +42,20 @@ export interface TypographyStyles {
   'margin-left': number;
 }
 
+export interface TitleTypographyStyles {
+  'title-font-family': FontFamily;
+  'title-font-weight': FontWeight;
+  'title-font-size': number;
+  'title-line-height': number;
+  'title-letter-spacing': number;
+  'title-underline': boolean;
+  'title-italic': boolean;
+  'title-color': ContentColor | string;
+  'title-opacity': number;
+  'title-text-align': TextAlign;
+  'title-margin-bottom': number;
+}
+
 const fontValues: FontFamily[] = ['inherit', 'sans', 'serif', 'mono'];
 const weightValues: FontWeight[] = [
   'inherit',
@@ -139,4 +153,18 @@ export const DefaultTypographyStyles: TypographyStyles = {
   'margin-right': 0,
   'margin-bottom': 0,
   'margin-left': 0,
+};
+
+export const DefaultTitleTypographyStyles: TitleTypographyStyles = {
+  'title-font-family': DefaultTypographyStyles['font-family'],
+  'title-font-weight': 600,
+  'title-font-size': 1.625,
+  'title-line-height': DefaultTypographyStyles['line-height'],
+  'title-letter-spacing': DefaultTypographyStyles['letter-spacing'],
+  'title-underline': false,
+  'title-italic': false,
+  'title-color': DefaultTypographyStyles.color,
+  'title-opacity': DefaultTypographyStyles.opacity,
+  'title-text-align': DefaultTypographyStyles['text-align'],
+  'title-margin-bottom': 0,
 };

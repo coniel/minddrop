@@ -1,9 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { DatabaseFixtures } from '@minddrop/databases';
+import { initializeI18n } from '@minddrop/i18n';
 import { PropertySchema } from '@minddrop/properties';
 import { getCompatibleDatabaseProperties } from './getCompatibleDatabaseProperties';
 
 const { objectDatabase } = DatabaseFixtures;
+
+// Initialize translations used for the implicit property name
+initializeI18n();
 
 const textDesignProperty: PropertySchema = { type: 'text', name: 'Heading' };
 const formattedTextDesignProperty: PropertySchema = {

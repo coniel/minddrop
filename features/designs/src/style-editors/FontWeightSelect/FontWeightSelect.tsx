@@ -3,6 +3,7 @@ import { FontWeight, fontWeights } from '@minddrop/designs';
 import { useTranslation } from '@minddrop/i18n';
 import { Select, SelectItem } from '@minddrop/ui-primitives';
 import { updateElementStyle, useElementStyle } from '../../DesignStudioStore';
+import { useScopedStyleKey } from '../StyleKeyScope';
 
 export interface FontWeightSelectProps {
   /**
@@ -16,14 +17,17 @@ export interface FontWeightSelectProps {
  */
 export const FontWeightSelect = ({ elementId }: FontWeightSelectProps) => {
   const { t } = useTranslation();
-  const fontWeight = useElementStyle(elementId, 'font-weight');
-  const fontFamily = useElementStyle(elementId, 'font-family');
+  // Resolve the style keys against the current style key scope
+  const styleKey = useScopedStyleKey('font-weight');
+  const fontFamilyStyleKey = useScopedStyleKey('font-family');
+  const fontWeight = useElementStyle(elementId, styleKey);
+  const fontFamily = useElementStyle(elementId, fontFamilyStyleKey);
 
   const handleChange = useCallback(
     (value: FontWeight) => {
-      updateElementStyle(elementId, 'font-weight', value);
+      updateElementStyle(elementId, styleKey, value);
     },
-    [elementId],
+    [elementId, styleKey],
   );
 
   return (

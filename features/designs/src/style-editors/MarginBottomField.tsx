@@ -3,7 +3,7 @@ import { NumberField } from '@minddrop/ui-primitives';
 import { updateElementStyle, useElementStyle } from '../DesignStudioStore';
 import { useScopedStyleKey } from './StyleKeyScope';
 
-export interface FontSizeFieldProps {
+export interface MarginBottomFieldProps {
   /**
    * The ID of the element to edit.
    */
@@ -11,12 +11,12 @@ export interface FontSizeFieldProps {
 }
 
 /**
- * Renders a number field for editing an element's font size.
+ * Renders a number field for editing an element's bottom margin.
  */
-export const FontSizeField = ({ elementId }: FontSizeFieldProps) => {
+export const MarginBottomField = ({ elementId }: MarginBottomFieldProps) => {
   // Resolve the style key against the current style key scope
-  const styleKey = useScopedStyleKey('font-size');
-  const fontSize = useElementStyle(elementId, styleKey);
+  const styleKey = useScopedStyleKey('margin-bottom');
+  const marginBottom = useElementStyle(elementId, styleKey);
 
   const handleChange = useCallback(
     (value: number | null) => {
@@ -31,9 +31,9 @@ export const FontSizeField = ({ elementId }: FontSizeFieldProps) => {
     <NumberField
       variant="subtle"
       size="md"
-      value={Math.round(fontSize * 16)}
+      value={Math.round(marginBottom * 16)}
       onValueChange={handleChange}
-      min={4}
+      min={0}
       max={160}
       step={1}
       trailing="px"

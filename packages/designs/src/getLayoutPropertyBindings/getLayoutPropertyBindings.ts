@@ -1,4 +1,5 @@
 import { DesignElement, Layout } from '../types';
+import { elementTitleBindingId } from '../utils';
 
 /**
  * Collects the design property bindings of a layout's elements.
@@ -26,6 +27,11 @@ function collectBindings(
 ): void {
   if (element.property) {
     bindings[element.id] = element.property;
+  }
+
+  // Editor elements can have a second, title-suffixed binding
+  if (element.type === 'editor' && element.titleProperty) {
+    bindings[elementTitleBindingId(element.id)] = element.titleProperty;
   }
 
   if ('children' in element) {

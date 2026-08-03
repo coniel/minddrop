@@ -374,6 +374,31 @@ export function createEditorCssStyle(style: EditorElementStyle): CSSProperties {
 }
 
 /**
+ * Creates the CSS style for an editor element's title block from
+ * the element's title typography styles. Consumed via the editor's
+ * `titleStyle` prop rather than the element's root style.
+ */
+export function createEditorTitleCssStyle(
+  style: EditorElementStyle,
+): CSSProperties {
+  return {
+    fontFamily: resolveFontFamily(style['title-font-family']),
+    fontSize: `${style['title-font-size']}rem`,
+    fontWeight: style['title-font-weight'],
+    lineHeight: style['title-line-height'],
+    letterSpacing: `${style['title-letter-spacing']}em`,
+    textAlign: style['title-text-align'],
+    color: getContentColorCss(style['title-color'], 900, 'inherit'),
+    fontStyle: style['title-italic'] ? 'italic' : 'normal',
+    textDecoration: style['title-underline'] ? 'underline' : 'none',
+    opacity: style['title-opacity'],
+    marginBottom: style['title-margin-bottom']
+      ? `${style['title-margin-bottom']}rem`
+      : undefined,
+  };
+}
+
+/**
  * Computes the backdrop effect state for a container element.
  * Returns whether the backdrop needs an image wrapper and the
  * gradient overlay style (null when no gradient is active).

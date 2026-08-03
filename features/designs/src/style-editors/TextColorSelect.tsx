@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { ColorSelect } from '@minddrop/ui-primitives';
 import { updateElementStyle, useElementStyle } from '../DesignStudioStore';
+import { useScopedStyleKey } from './StyleKeyScope';
 
 export interface TextColorSelectProps {
   /**
@@ -33,13 +34,15 @@ export const TextColorSelect = ({
   showInherit = true,
   label,
 }: TextColorSelectProps) => {
-  const color = useElementStyle(elementId, 'color');
+  // Resolve the style key against the current style key scope
+  const styleKey = useScopedStyleKey('color');
+  const color = useElementStyle(elementId, styleKey);
 
   const handleChange = useCallback(
     (value: string) => {
-      updateElementStyle(elementId, 'color', value);
+      updateElementStyle(elementId, styleKey, value);
     },
-    [elementId],
+    [elementId, styleKey],
   );
 
   return (

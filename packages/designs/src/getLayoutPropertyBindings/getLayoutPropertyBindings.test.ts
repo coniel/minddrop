@@ -1,11 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import {
   element_container_1,
+  element_editor_1,
   element_text_1,
   element_text_2,
   layout_card_1,
 } from '../test-utils';
 import { Layout } from '../types';
+import { elementTitleBindingId } from '../utils';
 import { getLayoutPropertyBindings } from './getLayoutPropertyBindings';
 
 describe('getLayoutPropertyBindings', () => {
@@ -33,6 +35,37 @@ describe('getLayoutPropertyBindings', () => {
       [layout.tree.id]: 'Cover',
       [element_text_1.id]: 'Title',
       [element_text_2.id]: 'Subtitle',
+    });
+  });
+
+  it('collects editor element title bindings', () => {
+    const layout: Layout = {
+      ...layout_card_1,
+      tree: {
+        ...layout_card_1.tree,
+        children: [
+          { ...element_editor_1, property: 'Content', titleProperty: 'Title' },
+        ],
+      },
+    };
+
+    expect(getLayoutPropertyBindings(layout)).toEqual({
+      [element_editor_1.id]: 'Content',
+      [elementTitleBindingId(element_editor_1.id)]: 'Title',
+    });
+  });
+
+  it('omits the title binding for editor elements without one', () => {
+    const layout: Layout = {
+      ...layout_card_1,
+      tree: {
+        ...layout_card_1.tree,
+        children: [{ ...element_editor_1, property: 'Content' }],
+      },
+    };
+
+    expect(getLayoutPropertyBindings(layout)).toEqual({
+      [element_editor_1.id]: 'Content',
     });
   });
 });
