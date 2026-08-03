@@ -59,7 +59,7 @@ export async function updateCollection(
   }
 
   // Dispatch the collection updated event
-  Events.dispatch(CollectionUpdatedEvent, {
+  await Events.dispatch(CollectionUpdatedEvent, {
     original: collection,
     updated: updatedCollection,
   });
