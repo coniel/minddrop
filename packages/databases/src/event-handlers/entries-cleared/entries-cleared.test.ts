@@ -6,6 +6,8 @@ import {
   collectionEntry1,
   objectDatabase,
   objectEntry1,
+  relatedEntry1,
+  relatedEntry2,
   setup,
 } from '../../test-utils';
 import { virtualCollectionId, virtualCollectionName } from '../../utils';
@@ -87,5 +89,19 @@ describe('onClearEntries', () => {
         virtualCollectionId(collectionEntry1.id, 'References'),
       ),
     ).toBeNull();
+  });
+
+  it('removes the cleared entries from collections referencing them', async () => {
+    // Clear entries referenced by collectionEntry1's Related collection
+    await onClearEntries({
+      databaseId: collectionDatabase.id,
+      entries: [relatedEntry1, relatedEntry2],
+    });
+
+    const collection = Collections.get(
+      virtualCollectionId(collectionEntry1.id, 'Related'),
+    );
+
+    expect(collection.entries).toEqual([]);
   });
 });

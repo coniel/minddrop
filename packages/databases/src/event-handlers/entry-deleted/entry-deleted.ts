@@ -2,11 +2,12 @@ import { Collections } from '@minddrop/collections';
 import { DatabaseEntryDeletedEventData } from '../../events';
 import { getDatabase } from '../../getDatabase';
 import { sqlDeleteEntries } from '../../sql';
-import { virtualCollectionId } from '../../utils';
+import { removeEntriesFromCollections, virtualCollectionId } from '../../utils';
 
 /**
- * Called when a database entry is deleted. Removes from SQL
- * and deletes virtual collections for collection properties.
+ * Called when a database entry is deleted. Removes from SQL,
+ * deletes virtual collections for collection properties, and
+ * removes the entry from collections referencing it.
  */
 export async function onDeleteEntry(data: DatabaseEntryDeletedEventData) {
   // Delete from SQL
@@ -20,12 +21,8 @@ export async function onDeleteEntry(data: DatabaseEntryDeletedEventData) {
     (property) => property.type === 'collection',
   );
 
-  // Nothing to do if there are no collection properties
-  if (collectionProperties.length === 0) {
-    return;
-  }
-
-  // Delete the virtual collection for each collection property
+  // Delete the entry's own virtual collections before membership
+  // cleanup so no update is attempted for the deleted entry
   await Promise.all(
     collectionProperties.map((property) => {
       const collectionId = virtualCollectionId(data.id, property.name);
@@ -38,4 +35,7 @@ export async function onDeleteEntry(data: DatabaseEntryDeletedEventData) {
       return Promise.resolve();
     }),
   );
+
+  // Remove the entry from collections referencing it as a member
+  await removeEntriesFromCollections([data.id]);
 }

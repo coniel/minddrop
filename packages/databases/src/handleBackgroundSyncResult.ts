@@ -6,7 +6,7 @@ import { DatabasesStore } from './DatabasesStore';
 import { DatabasesBackgroundSyncedEvent } from './events';
 import { loadDatabaseViews } from './loadDatabaseViews';
 import type { BackgroundSyncChangeset, Database } from './types';
-import { convertSqlRecordToEntry } from './utils';
+import { convertSqlRecordToEntry, removeEntriesFromCollections } from './utils';
 
 /**
  * Applies a background sync changeset to frontend stores
@@ -16,9 +16,9 @@ import { convertSqlRecordToEntry } from './utils';
  * Called when the backend sends a changeset message after
  * scanning the filesystem for changes.
  */
-export function handleBackgroundSyncResult(
+export async function handleBackgroundSyncResult(
   changeset: BackgroundSyncChangeset,
-): void {
+): Promise<void> {
   // Upsert new or updated databases
   const upsertedDatabases: Database[] = [];
 
@@ -58,6 +58,11 @@ export function handleBackgroundSyncResult(
   // Remove deleted entries
   for (const id of changeset.deletedEntryIds) {
     DatabaseEntriesStore.remove(id);
+  }
+
+  // Remove deleted entries from collections referencing them
+  if (changeset.deletedEntryIds.length > 0) {
+    await removeEntriesFromCollections(changeset.deletedEntryIds);
   }
 
   // Dispatch a single event with the full changeset

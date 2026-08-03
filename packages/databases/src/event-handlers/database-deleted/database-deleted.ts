@@ -3,11 +3,12 @@ import { DataViews } from '@minddrop/views';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabaseDeletedEventData } from '../../events';
 import { sqlDeleteDatabase } from '../../sql';
-import { virtualCollectionId } from '../../utils';
+import { removeEntriesFromCollections, virtualCollectionId } from '../../utils';
 
 /**
  * Called when a database is deleted. Removes from SQL, deletes
- * all database views, and cleans up virtual collections.
+ * all database views, cleans up virtual collections, and removes
+ * the database's entries from collections referencing them.
  */
 export async function onDeleteDatabase(
   data: DatabaseDeletedEventData,
@@ -25,17 +26,13 @@ export async function onDeleteDatabase(
     (property) => property.type === 'collection',
   );
 
-  // Nothing to do if there are no collection properties
-  if (collectionProperties.length === 0) {
-    return;
-  }
-
   // Get entries belonging to this database
   const entries = DatabaseEntriesStore.getAllArray().filter(
     (entry) => entry.database === data.id,
   );
 
-  // Delete all virtual collections for each entry's collection properties
+  // Delete the entries' own virtual collections before membership
+  // cleanup so no update is attempted for the deleted entries
   await Promise.all(
     collectionProperties.flatMap((property) =>
       entries.map((entry) => {
@@ -50,4 +47,7 @@ export async function onDeleteDatabase(
       }),
     ),
   );
+
+  // Remove the entries from collections referencing them as members
+  await removeEntriesFromCollections(entries.map((entry) => entry.id));
 }

@@ -7,6 +7,7 @@ export * from './databaseEntryPathFromAddress';
 export * from './entryIdsToAddresses';
 export * from './entryMetadataKey';
 export * from './getReferencingEntries';
+export * from './removeEntriesFromCollections';
 export * from './resolveCollectionProperties';
 export * from './serializeCollectionProperties';
 export * from './filterValidDatabaseFiles';

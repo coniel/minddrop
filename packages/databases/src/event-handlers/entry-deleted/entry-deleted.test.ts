@@ -5,6 +5,8 @@ import {
   collectionDatabase,
   collectionEntry1,
   objectEntry1,
+  relatedEntry1,
+  relatedEntry2,
   setup,
 } from '../../test-utils';
 import { virtualCollectionId, virtualCollectionName } from '../../utils';
@@ -40,6 +42,17 @@ describe('onDeleteEntry', () => {
   });
 
   afterEach(cleanup);
+
+  it('removes the entry from collections referencing it', async () => {
+    // Delete an entry referenced by collectionEntry1's Related collection
+    await onDeleteEntry(relatedEntry1);
+
+    const collection = Collections.get(
+      virtualCollectionId(collectionEntry1.id, 'Related'),
+    );
+
+    expect(collection.entries).toEqual([relatedEntry2.id]);
+  });
 
   it('does nothing if the database has no collection properties', async () => {
     // Call the handler with an entry from a database without collection properties

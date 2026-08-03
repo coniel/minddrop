@@ -2,12 +2,13 @@ import { Collections } from '@minddrop/collections';
 import { DatabaseEntriesClearedEventData } from '../../events';
 import { getDatabase } from '../../getDatabase';
 import { sqlDeleteEntries } from '../../sql';
-import { virtualCollectionId } from '../../utils';
+import { removeEntriesFromCollections, virtualCollectionId } from '../../utils';
 
 /**
  * Called when a database's entries are cleared. Removes the entries
- * from SQL in a single batch and deletes their virtual collections
- * for collection properties.
+ * from SQL in a single batch, deletes their virtual collections for
+ * collection properties, and removes them from collections
+ * referencing them.
  */
 export async function onClearEntries(data: DatabaseEntriesClearedEventData) {
   const { databaseId, entries } = data;
@@ -31,12 +32,8 @@ export async function onClearEntries(data: DatabaseEntriesClearedEventData) {
     (property) => property.type === 'collection',
   );
 
-  // Nothing more to do if there are no collection properties
-  if (collectionProperties.length === 0) {
-    return;
-  }
-
-  // Delete the virtual collection for each cleared entry's collection properties
+  // Delete the entries' own virtual collections before membership
+  // cleanup so no update is attempted for the cleared entries
   await Promise.all(
     entries.flatMap((entry) =>
       collectionProperties.map((property) => {
@@ -51,4 +48,7 @@ export async function onClearEntries(data: DatabaseEntriesClearedEventData) {
       }),
     ),
   );
+
+  // Remove the entries from collections referencing them as members
+  await removeEntriesFromCollections(entries.map((entry) => entry.id));
 }

@@ -5,6 +5,7 @@ import {
   collectionDatabase,
   collectionEntry1,
   objectDatabase,
+  rootStorageDatabase,
   setup,
 } from '../../test-utils';
 import { virtualCollectionId, virtualCollectionName } from '../../utils';
@@ -66,5 +67,17 @@ describe('onDeleteDatabase', () => {
 
     expect(related).toBeNull();
     expect(references).toBeNull();
+  });
+
+  it("removes the database's entries from collections referencing them", async () => {
+    // Delete the database containing referenceEntry1, which is
+    // referenced by collectionEntry1's References collection
+    await onDeleteDatabase(rootStorageDatabase);
+
+    const references = Collections.get(
+      virtualCollectionId(collectionEntry1.id, 'References'),
+    );
+
+    expect(references.entries).toEqual([]);
   });
 });
