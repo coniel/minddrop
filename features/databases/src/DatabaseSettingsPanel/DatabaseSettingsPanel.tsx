@@ -215,7 +215,7 @@ export const DatabaseSettingsPanel: React.FC<DatabaseSettingsPanelProps> = ({
   }
 
   return (
-    <Stack className="database-settings-panel" gap={4}>
+    <Stack className="database-settings-panel" gap={6}>
       {/* General settings: icon, name, and entry name */}
       <SettingsSection title="databases.settings.sections.general">
         <IconSetting
