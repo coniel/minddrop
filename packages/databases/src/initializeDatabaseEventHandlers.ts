@@ -185,9 +185,7 @@ export function initializeDatabaseEventHandlers() {
   Events.on<CollectionUpdatedEventData>(
     CollectionUpdatedEvent,
     'databases',
-    ({ data }) => {
-      onUpdateCollection(data);
-    },
+    ({ data }) => onUpdateCollection(data),
   );
 
   Events.on<ViewUpdatedEventData>(ViewUpdatedEvent, 'databases', ({ data }) => {

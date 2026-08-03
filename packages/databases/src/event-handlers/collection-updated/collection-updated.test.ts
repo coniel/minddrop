@@ -1,6 +1,7 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { CollectionFixtures, Collections } from '@minddrop/collections';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
+import { sqlUpsertEntries } from '../../sql';
 import {
   cleanup,
   collectionDatabase,
@@ -10,6 +11,11 @@ import {
 } from '../../test-utils';
 import { virtualCollectionId, virtualCollectionName } from '../../utils';
 import { onUpdateCollection } from './collection-updated';
+
+// Mock SQL operations since no database connection is available in tests
+vi.mock('../../sql', () => ({
+  sqlUpsertEntries: vi.fn(),
+}));
 
 const { collection_virtual_1 } = CollectionFixtures;
 
@@ -68,6 +74,32 @@ describe('onUpdateCollection', () => {
     // Entry property should be updated with the new entries
     const entry = DatabaseEntriesStore.get(collectionEntry1.id);
     expect(entry?.properties.Related).toEqual(updatedEntries);
+  });
+
+  it('upserts the SQL record with the new membership', async () => {
+    const updatedEntries = ['new-entry-1'];
+
+    // Call the handler
+    await onUpdateCollection({
+      original: relatedCollection,
+      updated: { ...relatedCollection, entries: updatedEntries },
+    });
+
+    // The record should carry the new membership
+    expect(sqlUpsertEntries).toHaveBeenCalledWith(
+      collectionDatabase.id,
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: collectionEntry1.id,
+          properties: expect.arrayContaining([
+            expect.objectContaining({
+              name: 'Related',
+              value: updatedEntries,
+            }),
+          ]),
+        }),
+      ]),
+    );
   });
 
   it('does nothing if the entry does not exist', async () => {
