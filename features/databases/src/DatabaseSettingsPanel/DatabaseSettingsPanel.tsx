@@ -94,7 +94,8 @@ export const DatabaseSettingsPanel: React.FC<DatabaseSettingsPanelProps> = ({
         confirmLabel: `${i18nRoot}.confirm`,
         danger: true,
         onConfirm: () => {
-          // TODO: Call Databases.delete once it exists
+          // Move the database to the system trash
+          Databases.delete(databaseId);
         },
       },
     );

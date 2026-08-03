@@ -80,6 +80,7 @@ export { DatabasesStore as Store } from './DatabasesStore';
 export { getAllDatabases as getAll } from './getAllDatabases';
 export { addDatabaseProperty as addProperty } from './addDatabaseProperty';
 export { createDatabase as create } from './createDatabase';
+export { deleteDatabase as delete } from './deleteDatabase';
 export { getDatabase as get } from './getDatabase';
 export { getDatabasesFromEntries as getFromEntries } from './getDatabasesFromEntries';
 export { initializeDatabases as initialize } from './initializeDatabases';

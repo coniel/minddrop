@@ -177,7 +177,7 @@ export const DatabasesFeature: React.FC = () => {
       },
     );
 
-    // Remap open entry tabs when the database is renamed. Entry IDs are
+    // Remap open entry views when the database is renamed. Entry IDs are
     // database-prefixed, so a rename changes every entry ID. Entries may
     // already be re-keyed to the new database ID by the time this runs,
     // so gather them under both the old and new database ID.
@@ -199,7 +199,7 @@ export const DatabasesFeature: React.FC = () => {
           const oldEntryId = `${original.id}${relativePath}`;
           const newEntryId = `${updated.id}${relativePath}`;
 
-          // Re-point the entry's open tab to the new entry ID
+          // Re-point the entry's open view to the new entry ID
           Events.dispatch<UpdateViewEventData>(UpdateViewEvent, {
             id: databaseEntryViewId(oldEntryId),
             newId: databaseEntryViewId(newEntryId),
@@ -217,6 +217,24 @@ export const DatabasesFeature: React.FC = () => {
       ({ data }) => {
         Events.dispatch<CloseViewEventData>(CloseViewEvent, {
           id: databaseViewId(data.id),
+        });
+      },
+    );
+
+    // Close open entry views when the database is deleted. Gather the
+    // database's entries and close each entry's open view.
+    Events.addListener<DatabaseDeletedEventData>(
+      DatabaseDeletedEvent,
+      DatabaseEntriesEventListenerId,
+      ({ data }) => {
+        // Collect the database's entries
+        const entries = DatabaseEntries.getAll(data.id);
+
+        entries.forEach((entry) => {
+          // Close the entry's open view
+          Events.dispatch<CloseViewEventData>(CloseViewEvent, {
+            id: databaseEntryViewId(entry.id),
+          });
         });
       },
     );
@@ -270,6 +288,10 @@ export const DatabasesFeature: React.FC = () => {
         DatabaseEntriesEventListenerId,
       );
       Events.removeListener(DatabaseDeletedEvent, EventListenerId);
+      Events.removeListener(
+        DatabaseDeletedEvent,
+        DatabaseEntriesEventListenerId,
+      );
       Events.removeListener(
         DatabaseEntryRenamedEvent,
         DatabaseEntriesEventListenerId,
