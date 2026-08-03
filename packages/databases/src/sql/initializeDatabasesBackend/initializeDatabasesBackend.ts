@@ -4,8 +4,12 @@ import { loadCoreSerializers } from '../../DatabaseEntrySerializers';
 import { readDatabaseEntries } from '../../readDatabaseEntries';
 import { readDatabaseMetadata } from '../../readDatabaseMetadata';
 import { readWorkspaceDatabases } from '../../readWorkspaceDatabases';
-import type { Database, SqlEntryRecord } from '../../types';
-import { convertEntryToSqlRecord, entryMetadataKey } from '../../utils';
+import type { Database, DatabaseEntry, SqlEntryRecord } from '../../types';
+import {
+  convertEntryToSqlRecord,
+  entryMetadataKey,
+  resolveCollectionProperties,
+} from '../../utils';
 import { SCHEMA_SQL, SCHEMA_VERSION } from '../schema';
 import { sqlGetAllEntriesFull } from '../sqlGetAllEntriesFull';
 import { sqlUpsertDatabase } from '../sqlUpsertDatabase';
@@ -90,6 +94,13 @@ export async function initializeDatabasesBackend(
  * after a schema version change.
  */
 async function rebuildSqlFromFilesystem(databases: Database[]): Promise<void> {
+  // Workspace-wide path index used to resolve entry references
+  const entryIdByPath = new Map<string, string>();
+
+  // Staged read results per database
+  const staged: { database: Database; entries: DatabaseEntry[] }[] = [];
+
+  // Pass 1: read all entries so references can resolve across databases
   for (const database of databases) {
     // Insert database record
     sqlUpsertDatabase(
@@ -119,8 +130,29 @@ async function rebuildSqlFromFilesystem(databases: Database[]): Promise<void> {
       return entry;
     });
 
+    // Index the entries by path
+    entriesWithMetadata.forEach((entry) => {
+      entryIdByPath.set(entry.path, entry.id);
+    });
+
+    // Stage the read results for the resolution pass
+    staged.push({ database, entries: entriesWithMetadata });
+  }
+
+  // Pass 2: resolve entry references and upsert
+  for (const { database, entries } of staged) {
+    // Resolve collection property addresses to entry IDs
+    const resolvedEntries = entries.map((entry) => ({
+      ...entry,
+      properties: resolveCollectionProperties(
+        entry.properties,
+        database,
+        entryIdByPath,
+      ),
+    }));
+
     // Convert to SQL records and upsert
-    const sqlRecords = entriesWithMetadata.map((entry) =>
+    const sqlRecords = resolvedEntries.map((entry) =>
       convertEntryToSqlRecord(entry, database),
     );
 

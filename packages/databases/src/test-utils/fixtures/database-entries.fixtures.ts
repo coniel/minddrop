@@ -439,10 +439,10 @@ export const collectionEntry1: DatabaseEntry = {
 export const collectionEntry1FileContents = `---
 Title: Collection Entry 1
 Related:
-  - related-entry-1
-  - related-entry-2
+  - Collection Database/Related Entry 1.md
+  - Collection Database/Related Entry 2.md
 References:
-  - reference-entry-1
+  - Root Storage Database/Reference Entry 1.md
 ---`;
 
 export const collectionEntry1SqlRecord: SqlEntryRecord = {
