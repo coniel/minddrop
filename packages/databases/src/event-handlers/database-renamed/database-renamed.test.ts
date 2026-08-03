@@ -48,8 +48,7 @@ const renamedDatabase = {
   path: `${parentDir}/Renamed Database`,
 };
 
-// The expected new ID and path for collectionEntry1 after the rename
-const renamedEntryId = 'Renamed Database/Collection Entry 1.md';
+// The expected new path for collectionEntry1 after the rename
 const renamedEntryPath = `${parentDir}/Renamed Database/Collection Entry 1.md`;
 
 describe('onRenameDatabase', () => {
@@ -116,19 +115,16 @@ describe('onRenameDatabase', () => {
     );
   });
 
-  it('swaps entries in the frontend store from old to new IDs', async () => {
+  it('updates entries in place with the new path and database', async () => {
     await onRenameDatabase({
       original: collectionDatabase,
       updated: renamedDatabase,
     });
 
-    // The old entry key should be gone
-    expect(DatabaseEntriesStore.get(collectionEntry1.id)).toBeNull();
-
-    // The new entry should carry the swapped ID, path, and database
-    const renamed = DatabaseEntriesStore.get(renamedEntryId);
+    // The entry should carry the swapped path and database
+    const renamed = DatabaseEntriesStore.get(collectionEntry1.id);
     expect(renamed).toMatchObject({
-      id: renamedEntryId,
+      id: collectionEntry1.id,
       path: renamedEntryPath,
       database: renamedDatabase.id,
     });
@@ -153,18 +149,22 @@ describe('onRenameDatabase', () => {
       icon: renamedDatabase.icon,
     });
 
-    // Entries re-upserted under the new database ID with the new entry ID
+    // Entries re-upserted under the new database ID
     expect(sqlUpsertEntries).toHaveBeenCalledWith(
       renamedDatabase.id,
-      expect.arrayContaining([expect.objectContaining({ id: renamedEntryId })]),
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: collectionEntry1.id,
+          path: renamedEntryPath,
+        }),
+      ]),
     );
   });
 
   it('dispatches a delete sync event for the old database ID', async () => {
     const deleteEvents: DatabaseSqlSyncedEventData[] = [];
 
-    // Capture database delete sync events so we can assert search is told
-    // to drop the old database record
+    // Capture database delete sync events
     Events.addListener<DatabaseSqlSyncedEventData>(
       DatabaseSqlSyncedEvent,
       'test',
@@ -186,10 +186,10 @@ describe('onRenameDatabase', () => {
     ]);
   });
 
-  it('dispatches a delete sync event for the old entry IDs', async () => {
+  it('does not dispatch a delete sync event for the entries', async () => {
     const deleteEvents: DatabaseEntriesSqlSyncedEventData[] = [];
 
-    // Capture delete sync events so we can assert on the orphan cleanup
+    // Capture entry delete sync events
     Events.addListener<DatabaseEntriesSqlSyncedEventData>(
       DatabaseEntriesSqlSyncedEvent,
       'test',
@@ -205,19 +205,14 @@ describe('onRenameDatabase', () => {
       updated: renamedDatabase,
     });
 
-    // A delete event should carry the old entry IDs under the old database ID
-    expect(deleteEvents).toEqual([
-      {
-        action: 'delete',
-        entryIds: [collectionEntry1.id],
-        databaseId: collectionDatabase.id,
-      },
-    ]);
+    // Entry IDs are unchanged, so a delete event would remove the
+    // re-upserted records
+    expect(deleteEvents).toEqual([]);
   });
 
-  it('re-IDs virtual collections, remapping members and the name', async () => {
+  it('updates virtual collection names to the new database name', async () => {
     // Point the Related collection at an in-database member plus an
-    // external reference to exercise member remapping
+    // external reference
     await Collections.update(
       virtualCollectionId(collectionEntry1.id, 'Related'),
       { entries: [collectionEntry1.id, 'external-entry'] },
@@ -228,16 +223,9 @@ describe('onRenameDatabase', () => {
       updated: renamedDatabase,
     });
 
-    // Old collection IDs should be gone
-    expect(
-      Collections.Store.get(
-        virtualCollectionId(collectionEntry1.id, 'Related'),
-      ),
-    ).toBeNull();
-
-    // New collection exists with the remapped name and members
+    // The collection exists under its unchanged ID with the new name
     const related = Collections.get(
-      virtualCollectionId(renamedEntryId, 'Related'),
+      virtualCollectionId(collectionEntry1.id, 'Related'),
     );
 
     expect(related.name).toBe(
@@ -247,11 +235,11 @@ describe('onRenameDatabase', () => {
         'Related',
       ),
     );
-    // The in-database member is remapped, the external reference is kept
-    expect(related.entries).toEqual([renamedEntryId, 'external-entry']);
+    // Member entries are untouched
+    expect(related.entries).toEqual([collectionEntry1.id, 'external-entry']);
   });
 
-  it('re-IDs virtual views with an updated dataSource', async () => {
+  it('leaves virtual views untouched', async () => {
     const layoutId = layout_card_2.id;
 
     await onRenameDatabase({
@@ -259,21 +247,14 @@ describe('onRenameDatabase', () => {
       updated: renamedDatabase,
     });
 
-    // Old view ID should be gone
-    expect(
-      DataViews.Store.get(
-        virtualViewId(collectionEntry1.id, 'Related', layoutId),
-      ),
-    ).toBeNull();
-
-    // New view exists pointing at the new collection
+    // The view should still exist unchanged
     const view = DataViews.get(
-      virtualViewId(renamedEntryId, 'Related', layoutId),
+      virtualViewId(collectionEntry1.id, 'Related', layoutId),
     );
 
     expect(view.dataSource).toEqual({
       type: 'collection',
-      id: virtualCollectionId(renamedEntryId, 'Related'),
+      id: virtualCollectionId(collectionEntry1.id, 'Related'),
     });
   });
 
