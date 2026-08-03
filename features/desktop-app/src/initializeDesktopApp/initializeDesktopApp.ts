@@ -1,4 +1,5 @@
 import { Ast } from '@minddrop/ast';
+import { Collections } from '@minddrop/collections';
 import { Databases } from '@minddrop/databases';
 import { Designs } from '@minddrop/designs';
 import { EditorElements, EditorMarks } from '@minddrop/editor';
@@ -91,6 +92,10 @@ async function runInitialization(): Promise<void> {
   await Views.initialize();
   Sql.initialize();
   const { schemaChanged } = await Databases.initialize();
+
+  // Load persisted collections. Requires entries and the entry
+  // reference adapter, both initialized by Databases.initialize.
+  await Collections.initialize();
 
   // Initialize the MiniSearch index and register event
   // listeners for incremental sync

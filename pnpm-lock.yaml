@@ -416,6 +416,9 @@ importers:
       '@minddrop/ast':
         specifier: workspace:*
         version: link:../../packages/ast
+      '@minddrop/collections':
+        specifier: workspace:*
+        version: link:../../packages/collections
       '@minddrop/databases':
         specifier: workspace:*
         version: link:../../packages/databases
