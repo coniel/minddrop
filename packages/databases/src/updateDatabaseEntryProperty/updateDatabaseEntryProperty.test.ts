@@ -35,17 +35,12 @@ describe('updateDatabaseEntryProperty', () => {
       'Renamed Entry',
     );
 
-    // The renamed entry should be in the store under its new ID
-    const renamed = DatabaseEntriesStore.getAllArray().find(
-      (entry) => entry.title === 'Renamed Entry',
-    );
+    // The renamed entry should be in the store under its unchanged ID
+    const renamed = DatabaseEntriesStore.get(objectEntry1.id);
 
-    expect(renamed).toBeDefined();
-    expect(renamed?.id).not.toBe(objectEntry1.id);
+    expect(renamed?.title).toBe('Renamed Entry');
     // The entry properties should be untouched
     expect(renamed?.properties).toEqual(objectEntry1.properties);
-    // The old ID should be removed from the store
-    expect(DatabaseEntriesStore.get(objectEntry1.id)).toBeNull();
   });
 
   it('renames the entry to an untitled title on empty title updates', async () => {

@@ -2,8 +2,10 @@ import { PropertyMap } from '@minddrop/properties';
 
 export interface DatabaseEntry<TProperties extends PropertyMap = PropertyMap> {
   /**
-   * The entry's workspace-relative path, used as its unique identifier
-   * (e.g. 'Books/Some Book.md').
+   * The entry's opaque unique identifier. Minted when the entry is
+   * created or first indexed, persisted in the SQL index, and
+   * regenerated if the index is rebuilt. Durable disk data must
+   * reference entries by path, not ID.
    */
   id: string;
 

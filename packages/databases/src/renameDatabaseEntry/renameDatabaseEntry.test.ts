@@ -3,13 +3,7 @@ import { Events } from '@minddrop/events';
 import { Fs, PathConflictError } from '@minddrop/file-system';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabaseEntryRenamedEvent } from '../events';
-import {
-  MockFs,
-  cleanup,
-  objectDatabase,
-  objectEntry1,
-  setup,
-} from '../test-utils';
+import { MockFs, cleanup, objectEntry1, setup } from '../test-utils';
 import { entryAssetsDirPath } from '../utils';
 import { renameDatabaseEntry } from './renameDatabaseEntry';
 
@@ -68,15 +62,13 @@ describe('renameDatabaseEntry', () => {
     expect(MockFs.exists(assetsDirPath)).toBe(false);
   });
 
-  it('updates the entry id, title, path, and last modified date', async () => {
+  it('updates the entry title, path, and last modified date, keeping its ID', async () => {
     const renamedDatabaseEntry = await renameDatabaseEntry(
       objectEntry1.id,
       'Renamed DatabaseEntry',
     );
 
-    expect(renamedDatabaseEntry.id).toBe(
-      `${objectDatabase.name}/Renamed DatabaseEntry.md`,
-    );
+    expect(renamedDatabaseEntry.id).toBe(objectEntry1.id);
     expect(renamedDatabaseEntry.title).toBe('Renamed DatabaseEntry');
     expect(renamedDatabaseEntry.path).toBe(
       `${Fs.parentDirPath(objectEntry1.path)}/Renamed DatabaseEntry.md`,
@@ -86,19 +78,33 @@ describe('renameDatabaseEntry', () => {
     );
   });
 
-  it('updates the entry in the store under the new ID', async () => {
+  it('updates the entry in the store in place', async () => {
     const renamedDatabaseEntry = await renameDatabaseEntry(
       objectEntry1.id,
       'Renamed DatabaseEntry',
     );
 
-    // New ID should exist in the store
-    expect(DatabaseEntriesStore.get(renamedDatabaseEntry.id)).toEqual(
+    // The entry should be updated under its existing key
+    expect(DatabaseEntriesStore.get(objectEntry1.id)).toEqual(
       renamedDatabaseEntry,
     );
+  });
 
-    // Old ID should no longer exist
-    expect(DatabaseEntriesStore.get(objectEntry1.id)).toBeNull();
+  it('never adds a second entry to the store during the rename', async () => {
+    const initialCount = DatabaseEntriesStore.getAllArray().length;
+    let maxCount = initialCount;
+
+    // Track the store's item count across every state change
+    const unsubscribe = DatabaseEntriesStore.useStore.subscribe((state) => {
+      maxCount = Math.max(maxCount, Object.keys(state.items).length);
+    });
+
+    await renameDatabaseEntry(objectEntry1.id, 'Renamed DatabaseEntry');
+
+    unsubscribe();
+
+    // The rename must not create a transient duplicate entry
+    expect(maxCount).toBe(initialCount);
   });
 
   it('writes the updated entry file', async () => {
@@ -117,7 +123,6 @@ describe('renameDatabaseEntry', () => {
           original: objectEntry1,
           updated: {
             ...objectEntry1,
-            id: `${objectDatabase.name}/Renamed DatabaseEntry.md`,
             title: 'Renamed DatabaseEntry',
             path: `${Fs.parentDirPath(objectEntry1.path)}/Renamed DatabaseEntry.md`,
             lastModified: expect.any(Date),

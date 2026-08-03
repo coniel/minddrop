@@ -1,7 +1,6 @@
 import { shallow } from 'zustand/shallow';
 import { createObjectStore } from '@minddrop/stores';
 import { DatabaseEntry } from './types';
-import { useRenameAwareEntryId } from './useRenameAwareEntryId';
 
 export const DatabaseEntriesStore = createObjectStore<DatabaseEntry>(
   'Databases:Entries',
@@ -10,19 +9,12 @@ export const DatabaseEntriesStore = createObjectStore<DatabaseEntry>(
 
 /**
  * Retrieves an entry by ID or null if it doesn't exist.
- * Automatically tracks renames so the returned entry stays
- * up to date when the entry ID changes.
  *
  * @param entryId - The ID of the entry to retrieve.
  * @returns The entry or null if it doesn't exist.
  */
-export const useDatabaseEntry = (entryId: string): DatabaseEntry | null => {
-  // Track the entry ID across renames so the hook does not
-  // return null when the entry is renamed
-  const currentId = useRenameAwareEntryId(entryId);
-
-  return DatabaseEntriesStore.useItem(currentId);
-};
+export const useDatabaseEntry = (entryId: string): DatabaseEntry | null =>
+  DatabaseEntriesStore.useItem(entryId);
 
 /**
  * Retrieves all entries for a given database.

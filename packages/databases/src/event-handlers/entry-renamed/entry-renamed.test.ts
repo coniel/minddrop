@@ -3,7 +3,7 @@ import { Collections } from '@minddrop/collections';
 import { DesignFixtures } from '@minddrop/designs';
 import { DataViews } from '@minddrop/views';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
-import { sqlDeleteEntries, sqlUpsertEntries } from '../../sql';
+import { sqlUpsertEntries } from '../../sql';
 import {
   MockFs,
   cleanup,
@@ -25,11 +25,17 @@ import { onRenameEntry } from './entry-renamed';
 
 // Mock SQL operations since no database connection is available in tests
 vi.mock('../../sql', () => ({
-  sqlDeleteEntries: vi.fn(),
   sqlUpsertEntries: vi.fn(),
 }));
 
 const { layout_card_2 } = DesignFixtures;
+
+// The renamed version of collectionEntry1: same ID, new title and path
+const renamedEntry = {
+  ...collectionEntry1,
+  title: 'Renamed Entry',
+  path: `${collectionDatabase.path}/Renamed Entry.md`,
+};
 
 describe('onRenameEntry', () => {
   beforeEach(() => {
@@ -78,7 +84,7 @@ describe('onRenameEntry', () => {
     );
   });
 
-  it('re-keys metadata file from old to new entry ID', async () => {
+  it('re-keys metadata file from the old to the new entry path', async () => {
     const metadataFilePath = databaseMetadataFilePath(collectionDatabase.path);
     const entryMetadata: DatabaseEntryMetadata = {
       embeddedViewConfigs: { 'card:Related': { options: {}, data: {} } },
@@ -95,14 +101,7 @@ describe('onRenameEntry', () => {
       },
     ]);
 
-    const renamedEntry = {
-      ...collectionEntry1,
-      id: `${collectionDatabase.name}/Renamed Entry.md`,
-      title: 'Renamed Entry',
-      path: `${collectionDatabase.path}/Renamed Entry.md`,
-    };
-
-    // Update the store so getDatabase can find the entry
+    // Update the store to reflect the rename
     DatabaseEntriesStore.set(renamedEntry);
 
     await onRenameEntry({
@@ -121,7 +120,7 @@ describe('onRenameEntry', () => {
     ).toBeUndefined();
   });
 
-  it('re-keys pending metadata from old to new entry ID', async () => {
+  it('re-keys pending metadata from the old to the new entry path', async () => {
     const metadataFilePath = databaseMetadataFilePath(collectionDatabase.path);
     const entryMetadata: DatabaseEntryMetadata = {
       embeddedViewConfigs: {
@@ -129,17 +128,10 @@ describe('onRenameEntry', () => {
       },
     };
 
-    // Queue pending metadata under the original entry ID
+    // Queue pending metadata under the original entry path
     updateEntryMetadata(collectionEntry1.id, entryMetadata);
 
-    const renamedEntry = {
-      ...collectionEntry1,
-      id: `${collectionDatabase.name}/Renamed Entry.md`,
-      title: 'Renamed Entry',
-      path: `${collectionDatabase.path}/Renamed Entry.md`,
-    };
-
-    // Update the store
+    // Update the store to reflect the rename
     DatabaseEntriesStore.set(renamedEntry);
 
     // onRenameEntry flushes first, then re-keys pending
@@ -159,47 +151,27 @@ describe('onRenameEntry', () => {
     ).toBeUndefined();
   });
 
-  it('deletes old SQL entry record via sqlDeleteEntries', async () => {
-    await onRenameEntry({
-      original: objectEntry1,
-      updated: { ...objectEntry1, title: 'Renamed' },
-    });
-
-    expect(sqlDeleteEntries).toHaveBeenCalledWith(expect.any(String), [
-      objectEntry1.id,
-    ]);
-  });
-
-  it('upserts new SQL entry record via sqlUpsertEntries', async () => {
-    const renamedEntry = { ...objectEntry1, title: 'Renamed' };
+  it('upserts the SQL entry record under the same ID', async () => {
+    const renamedObjectEntry = { ...objectEntry1, title: 'Renamed' };
 
     await onRenameEntry({
       original: objectEntry1,
-      updated: renamedEntry,
+      updated: renamedObjectEntry,
     });
 
-    // Should have been called with databaseId and a record matching
-    // the renamed entry
     expect(sqlUpsertEntries).toHaveBeenCalledWith(
       expect.any(String),
       expect.arrayContaining([
         expect.objectContaining({
-          id: renamedEntry.id,
+          id: objectEntry1.id,
           title: 'Renamed',
         }),
       ]),
     );
   });
 
-  it('re-IDs virtual collections to use the new entry ID', async () => {
-    const renamedEntry = {
-      ...collectionEntry1,
-      id: `${collectionDatabase.name}/Renamed Entry.md`,
-      title: 'Renamed Entry',
-      path: `${collectionDatabase.path}/Renamed Entry.md`,
-    };
-
-    // Update the store
+  it('updates virtual collection names to the new entry title', async () => {
+    // Update the store to reflect the rename
     DatabaseEntriesStore.set(renamedEntry);
 
     await onRenameEntry({
@@ -207,26 +179,15 @@ describe('onRenameEntry', () => {
       updated: renamedEntry,
     });
 
-    // Old collection IDs should be gone
-    expect(
-      Collections.Store.get(
-        virtualCollectionId(collectionEntry1.id, 'Related'),
-      ),
-    ).toBeNull();
-    expect(
-      Collections.Store.get(
-        virtualCollectionId(collectionEntry1.id, 'References'),
-      ),
-    ).toBeNull();
-
-    // New collection IDs should exist with correct names
+    // Look up the virtual collections
     const relatedCollection = Collections.get(
-      virtualCollectionId(renamedEntry.id, 'Related'),
+      virtualCollectionId(collectionEntry1.id, 'Related'),
     );
     const referencesCollection = Collections.get(
-      virtualCollectionId(renamedEntry.id, 'References'),
+      virtualCollectionId(collectionEntry1.id, 'References'),
     );
 
+    // Collection names should reflect the new entry title
     expect(relatedCollection.name).toBe(
       virtualCollectionName(
         collectionDatabase.name,
@@ -243,37 +204,23 @@ describe('onRenameEntry', () => {
     );
   });
 
-  it('re-IDs virtual views with updated dataSource', async () => {
+  it('leaves virtual views untouched', async () => {
     const layoutId = layout_card_2.id;
-
-    // Create virtual views for each collection property
-    DataViews.createVirtual({
-      id: virtualViewId(collectionEntry1.id, 'Related', layoutId),
-      type: 'board',
-      dataSource: {
-        type: 'collection',
-        id: virtualCollectionId(collectionEntry1.id, 'Related'),
-      },
-      name: 'Related',
-    });
-    DataViews.createVirtual({
-      id: virtualViewId(collectionEntry1.id, 'References', layoutId),
-      type: 'board',
-      dataSource: {
-        type: 'collection',
-        id: virtualCollectionId(collectionEntry1.id, 'References'),
-      },
-      name: 'References',
-    });
-
-    const renamedEntry = {
-      ...collectionEntry1,
-      id: `${collectionDatabase.name}/Renamed Entry.md`,
-      title: 'Renamed Entry',
-      path: `${collectionDatabase.path}/Renamed Entry.md`,
+    const viewId = virtualViewId(collectionEntry1.id, 'Related', layoutId);
+    const dataSource = {
+      type: 'collection' as const,
+      id: virtualCollectionId(collectionEntry1.id, 'Related'),
     };
 
-    // Update the store
+    // Create a virtual view for a collection property
+    DataViews.createVirtual({
+      id: viewId,
+      type: 'board',
+      dataSource,
+      name: 'Related',
+    });
+
+    // Update the store to reflect the rename
     DatabaseEntriesStore.set(renamedEntry);
 
     await onRenameEntry({
@@ -281,22 +228,10 @@ describe('onRenameEntry', () => {
       updated: renamedEntry,
     });
 
-    // Old view IDs should be gone
-    expect(
-      DataViews.Store.get(
-        virtualViewId(collectionEntry1.id, 'Related', layoutId),
-      ),
-    ).toBeNull();
+    // The view should still exist unchanged
+    const view = DataViews.get(viewId);
 
-    // New view IDs should exist with updated dataSource
-    const relatedView = DataViews.get(
-      virtualViewId(renamedEntry.id, 'Related', layoutId),
-    );
-
-    expect(relatedView.dataSource).toEqual({
-      type: 'collection',
-      id: virtualCollectionId(renamedEntry.id, 'Related'),
-    });
+    expect(view.dataSource).toEqual(dataSource);
   });
 
   it('handles entries without collection properties', async () => {

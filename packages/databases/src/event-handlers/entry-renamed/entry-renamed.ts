@@ -1,9 +1,7 @@
 import { Collections } from '@minddrop/collections';
-import { Designs } from '@minddrop/designs';
-import { DataViews } from '@minddrop/views';
 import { DatabaseEntryRenamedEventData } from '../../events';
 import { getDatabase } from '../../getDatabase';
-import { sqlDeleteEntries, sqlUpsertEntries } from '../../sql';
+import { sqlUpsertEntries } from '../../sql';
 import { flushDatabaseMetadata } from '../../updateEntryMetadata';
 import { rekeyPendingMetadata } from '../../updateEntryMetadata/updateEntryMetadata';
 import {
@@ -12,12 +10,12 @@ import {
   rekeyDatabaseMetadata,
   virtualCollectionId,
   virtualCollectionName,
-  virtualViewId,
 } from '../../utils';
 
 /**
- * Called when a database entry is renamed. Cascades the ID
- * change through SQL, metadata, and virtual collections/views.
+ * Called when a database entry is renamed. Updates path-derived
+ * state: metadata keys, the SQL record, and virtual collection
+ * names.
  */
 export async function onRenameEntry(data: DatabaseEntryRenamedEventData) {
   const { original, updated } = data;
@@ -32,16 +30,13 @@ export async function onRenameEntry(data: DatabaseEntryRenamedEventData) {
   const oldMetadataKey = entryMetadataKey(original.path, database.path);
   const newMetadataKey = entryMetadataKey(updated.path, database.path);
 
-  // Step 2: Re-key the on-disk metadata file from old to new entry ID
+  // Step 2: Re-key the on-disk metadata file from the old to the new path
   await rekeyDatabaseMetadata(database.path, oldMetadataKey, newMetadataKey);
 
   // Step 3: Re-key any in-flight pending metadata entries
   rekeyPendingMetadata(database.path, oldMetadataKey, newMetadataKey);
 
-  // Step 4: Remove the orphaned SQL record under the old ID
-  sqlDeleteEntries(database.id, [original.id]);
-
-  // Step 5: Insert the new SQL record under the new ID
+  // Step 4: Update the SQL record with the new path and title
   const record = convertEntryToSqlRecord(updated, database);
   sqlUpsertEntries(database.id, [record]);
 
@@ -55,51 +50,25 @@ export async function onRenameEntry(data: DatabaseEntryRenamedEventData) {
     return;
   }
 
-  // Re-ID virtual collections and views
+  // Update virtual collection names, which embed the entry title
   await Promise.all(
     collectionProperties.map(async (property) => {
-      const oldCollectionId = virtualCollectionId(original.id, property.name);
-      const newCollectionId = virtualCollectionId(updated.id, property.name);
+      const collectionId = virtualCollectionId(updated.id, property.name);
 
-      // Re-ID the virtual collection if it exists
-      if (Collections.Store.get(oldCollectionId)) {
-        const name = virtualCollectionName(
-          database.name,
-          updated.title,
-          property.name,
-        );
-
-        await Collections.update(oldCollectionId, {
-          id: newCollectionId,
-          name,
-        });
+      // Skip if the virtual collection does not exist
+      if (!Collections.Store.get(collectionId)) {
+        return;
       }
 
-      // Re-ID virtual views for each layout in the database's design
-      const design = database.designId
-        ? Designs.get(database.designId, false)
-        : null;
-      const layoutIds = design ? design.layouts.map((layout) => layout.id) : [];
-
-      await Promise.all(
-        layoutIds.map(async (layoutId) => {
-          const oldViewId = virtualViewId(original.id, property.name, layoutId);
-          const newViewId = virtualViewId(updated.id, property.name, layoutId);
-
-          // Only update if the view exists
-          const view = DataViews.Store.get(oldViewId);
-
-          if (!view) {
-            return;
-          }
-
-          // Update the view ID and point dataSource to the new collection
-          await DataViews.update(oldViewId, {
-            id: newViewId,
-            dataSource: { type: 'collection', id: newCollectionId },
-          });
-        }),
+      // Derive the collection name from the new entry title
+      const name = virtualCollectionName(
+        database.name,
+        updated.title,
+        property.name,
       );
+
+      // Update the collection's name
+      await Collections.update(collectionId, { name });
     }),
   );
 }

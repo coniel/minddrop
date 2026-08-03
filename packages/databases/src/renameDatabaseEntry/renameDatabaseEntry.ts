@@ -1,6 +1,6 @@
 import { Events } from '@minddrop/events';
 import { Fs, PathConflictError } from '@minddrop/file-system';
-import { Paths, titleFromPath } from '@minddrop/utils';
+import { titleFromPath } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import {
   DatabaseEntryRenamedEvent,
@@ -90,28 +90,25 @@ export async function renameDatabaseEntry<
     }
   }
 
-  // Derive the new workspace-relative ID from the new path
-  const newId = newPath.replace(`${Paths.workspace}/`, '');
-
-  // Update the entry's ID, title, path, and last modified date
+  // Update the entry's path, title, and last modified date
   const renamedDatabaseEntry: TDatabaseEntry = {
     ...entry,
-    id: newId,
     path: newPath,
     title: finalNewTitle,
     lastModified: new Date(),
   };
 
-  // Add the renamed entry to the store, keeping the old key
-  // around so that hooks still resolve a valid entry until
-  // the rename event switches them to the new ID
-  DatabaseEntriesStore.set(renamedDatabaseEntry);
+  // Update the entry in place under its existing store key
+  DatabaseEntriesStore.update(id, {
+    path: newPath,
+    title: finalNewTitle,
+    lastModified: renamedDatabaseEntry.lastModified,
+  });
 
   // Write the updated entry file
-  await writeDatabaseEntry(newId);
+  await writeDatabaseEntry(id);
 
-  // Dispatch the rename event so listeners (e.g.
-  // useRenameAwareEntryId) switch to the new ID
+  // Dispatch the rename event
   await Events.dispatch<DatabaseEntryRenamedEventData>(
     DatabaseEntryRenamedEvent,
     {
@@ -119,9 +116,6 @@ export async function renameDatabaseEntry<
       updated: renamedDatabaseEntry,
     },
   );
-
-  // Now safe to remove the old key from the store
-  DatabaseEntriesStore.remove(id);
 
   // Return the renamed entry
   return renamedDatabaseEntry;
