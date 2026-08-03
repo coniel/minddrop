@@ -7,6 +7,7 @@ export * from './database-view-created';
 export * from './database-view-deleted';
 export * from './database-view-updated';
 export * from './design-property-renamed';
+export * from './entries-cleared';
 export * from './entry-created';
 export * from './entry-deleted';
 export * from './entry-metadata-updated';

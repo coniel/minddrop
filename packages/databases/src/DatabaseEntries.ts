@@ -1,4 +1,5 @@
 import {
+  DatabaseEntriesClearedEvent,
   DatabaseEntryCreatedEvent,
   DatabaseEntryDeletedEvent,
   DatabaseEntryRenamedEvent,
@@ -10,6 +11,7 @@ export const events = {
   updated: DatabaseEntryUpdatedEvent,
   deleted: DatabaseEntryDeletedEvent,
   renamed: DatabaseEntryRenamedEvent,
+  cleared: DatabaseEntriesClearedEvent,
 } as const;
 
 export { createDatabaseEntry as create } from './createDatabaseEntry';

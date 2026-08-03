@@ -117,6 +117,21 @@ export interface DatabaseEntryRenamedEventData {
   updated: DatabaseEntry;
 }
 
+// Entries cleared event - fired when all of a database's entries are deleted
+export const DatabaseEntriesClearedEvent = 'databases:entries:cleared';
+
+export interface DatabaseEntriesClearedEventData {
+  /**
+   * The ID of the database whose entries were cleared.
+   */
+  databaseId: string;
+
+  /**
+   * The entries that were deleted.
+   */
+  entries: DatabaseEntry[];
+}
+
 // Entry metadata event - fired when entry metadata is updated
 export const DatabaseEntryMetadataUpdatedEvent =
   'database-entries:entry:metadata-updated';

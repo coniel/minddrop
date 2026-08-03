@@ -17,6 +17,7 @@ import {
 } from '@minddrop/views';
 import {
   onAddProperty,
+  onClearEntries,
   onCreateDatabase,
   onCreateEntry,
   onDatabaseViewCreated,
@@ -40,6 +41,8 @@ import {
   DatabaseCreatedEventData,
   DatabaseDeletedEvent,
   DatabaseDeletedEventData,
+  DatabaseEntriesClearedEvent,
+  DatabaseEntriesClearedEventData,
   DatabaseEntryCreatedEvent,
   DatabaseEntryCreatedEventData,
   DatabaseEntryDeletedEvent,
@@ -152,6 +155,14 @@ export function initializeDatabaseEventHandlers() {
     'databases',
     ({ data }) => {
       onDeleteEntry(data);
+    },
+  );
+
+  Events.on<DatabaseEntriesClearedEventData>(
+    DatabaseEntriesClearedEvent,
+    'databases',
+    ({ data }) => {
+      onClearEntries(data);
     },
   );
 
