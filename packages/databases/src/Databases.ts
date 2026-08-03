@@ -84,6 +84,7 @@ export { getDatabase as get } from './getDatabase';
 export { getDatabasesFromEntries as getFromEntries } from './getDatabasesFromEntries';
 export { initializeDatabases as initialize } from './initializeDatabases';
 export { removeDatabaseProperty as removeProperty } from './removeDatabaseProperty';
+export { renameDatabase as rename } from './renameDatabase';
 export { updateDatabase as update } from './updateDatabase';
 export { updateDatabaseProperty as updateProperty } from './updateDatabaseProperty';
 export { useDatabase as use, useDatabases as useAll } from './DatabasesStore';
