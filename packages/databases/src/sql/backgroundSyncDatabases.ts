@@ -5,12 +5,16 @@ import { readDatabaseEntries } from '../readDatabaseEntries';
 import { readDatabaseMetadata } from '../readDatabaseMetadata';
 import { readWorkspaceDatabases } from '../readWorkspaceDatabases';
 import type { BackgroundSyncChangeset, Database } from '../types';
-import { convertEntryToSqlRecord, entryMetadataKey } from '../utils';
+import {
+  convertEntryToSqlRecord,
+  entryMetadataKey,
+  matchEntriesToSqlRecords,
+} from '../utils';
 import { sqlDeleteDatabase } from './sqlDeleteDatabase';
 import { sqlDeleteEntries } from './sqlDeleteEntries';
 import { sqlGetAllDatabases } from './sqlGetAllDatabases';
 import { sqlGetAllEntriesFull } from './sqlGetAllEntriesFull';
-import { sqlGetEntryTimestamps } from './sqlGetEntryTimestamps';
+import { sqlGetEntrySyncRecords } from './sqlGetEntrySyncRecords';
 import { sqlUpdateEntryMetadata } from './sqlUpdateEntryMetadata';
 import { sqlUpsertDatabase } from './sqlUpsertDatabase';
 import { sqlUpsertEntries } from './sqlUpsertEntries';
@@ -87,7 +91,7 @@ export async function backgroundSyncDatabases(
   // Collect entry IDs before CASCADE delete removes them,
   // then delete the databases from SQL
   for (const id of deletedDatabaseIds) {
-    const entryIds = [...sqlGetEntryTimestamps(id).keys()];
+    const entryIds = sqlGetEntrySyncRecords(id).map((record) => record.id);
 
     allDeletedEntryIds.push(...entryIds);
     sqlDeleteDatabase(id, { silent: true });
@@ -117,12 +121,24 @@ export async function backgroundSyncDatabases(
       convertEntryToSqlRecord(entry, database),
     );
 
-    // Get existing timestamps and metadata from SQL
-    const existingTimestamps = sqlGetEntryTimestamps(database.id);
+    // Get existing sync records and metadata from SQL
+    const existingRecords = sqlGetEntrySyncRecords(database.id);
     const existingMetadata = sqlGetEntryMetadataMap(database.id);
 
+    // Match fresh records to existing entries by path so that
+    // renamed entries keep their existing IDs
+    const { records, deletedIds } = matchEntriesToSqlRecords(
+      freshRecords,
+      existingRecords,
+    );
+
+    // Index the existing timestamps by entry ID
+    const existingTimestamps = new Map(
+      existingRecords.map((record) => [record.id, record.lastModified]),
+    );
+
     // Find new or modified entries
-    const changedRecords = freshRecords.filter((record) => {
+    const changedRecords = records.filter((record) => {
       const existingTimestamp = existingTimestamps.get(record.id);
 
       return (
@@ -132,7 +148,7 @@ export async function backgroundSyncDatabases(
     });
 
     // Find entries whose metadata changed but content did not
-    const metadataOnlyChanged = freshRecords.filter((record) => {
+    const metadataOnlyChanged = records.filter((record) => {
       const existingTimestamp = existingTimestamps.get(record.id);
       const existingMeta = existingMetadata.get(record.id);
 
@@ -146,12 +162,6 @@ export async function backgroundSyncDatabases(
 
       return existingMeta !== record.metadata;
     });
-
-    // Find deleted entries
-    const freshIds = new Set(freshRecords.map((record) => record.id));
-    const deletedIds = [...existingTimestamps.keys()].filter(
-      (id) => !freshIds.has(id),
-    );
 
     // Upsert changed entries to SQL
     if (changedRecords.length > 0) {

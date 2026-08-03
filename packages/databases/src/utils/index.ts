@@ -21,6 +21,7 @@ export * from './virtualViewId';
 export * from './createEntryVirtualViews';
 export * from './entryDisplayPropertyValues';
 export * from './convertEntryToSqlRecord';
+export * from './matchEntriesToSqlRecords';
 export * from './convertSqlRecordToEntry';
 export * from './rekeyDatabaseMetadata';
 export * from './setTimestampProperties';

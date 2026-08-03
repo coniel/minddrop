@@ -8,4 +8,5 @@ export * from './DatabaseTemplate.types';
 export * from './DatabasesConfig.types';
 export * from './SerializedDatabaseConfig.types';
 export * from './SqlEntryRecord.types';
+export * from './EntrySyncRecord.types';
 export * from './BackgroundSyncChangeset.types';

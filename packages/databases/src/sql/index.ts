@@ -14,7 +14,7 @@ export { sqlGetVersion } from './sqlGetVersion';
 export { sqlGetAllEntries } from './sqlGetAllEntries';
 export { sqlGetEntryTextContent } from './sqlGetEntryTextContent';
 export { sqlGetAllDatabases } from './sqlGetAllDatabases';
-export { sqlGetEntryTimestamps } from './sqlGetEntryTimestamps';
+export { sqlGetEntrySyncRecords } from './sqlGetEntrySyncRecords';
 export { sqlGetEntryPropertyValues } from './sqlGetEntryPropertyValues';
 export { sqlGetAllEntriesFull } from './sqlGetAllEntriesFull';
 

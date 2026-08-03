@@ -48,7 +48,9 @@ export function handleBackgroundSyncResult(
     DatabasesStore.remove(id);
   }
 
-  // Upsert new or updated entries
+  // Upsert new or updated entries. Record IDs are path-matched to
+  // existing SQL rows during the sync, so records for entries already
+  // in the store replace them under their existing key.
   for (const record of changeset.upsertedEntries) {
     DatabaseEntriesStore.set(convertSqlRecordToEntry(record));
   }
