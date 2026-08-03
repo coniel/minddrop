@@ -4,3 +4,4 @@ export * from './getElementAbove';
 export * from './registerDefaulElements';
 export * from './registerDefaultMarks';
 export * from './element-level';
+export * from './normalizePlainTextContent';

@@ -9,6 +9,7 @@ import {
 } from '@minddrop/ast';
 import { defaultMarkConfigs } from '../default-mark-configs';
 import { EditorBlockElementConfig, EditorInlineElementConfig } from '../types';
+import { TITLE_ELEMENT_TYPE, TitleElement } from '../withTitle';
 
 export {
   boldMarkConfig,
@@ -168,6 +169,17 @@ export const paragraphElement4 = Ast.generateElement<ParagraphElement>(
 );
 export const emptyParagraphElement =
   Ast.generateElement<ParagraphElement>('paragraph');
+
+// Title
+export const titleElement1PlainText = 'Newtonian mechanics';
+export const titleElement1 = Ast.generateElement<TitleElement>(
+  TITLE_ELEMENT_TYPE,
+  {
+    children: [{ text: titleElement1PlainText }],
+  },
+);
+export const emptyTitleElement =
+  Ast.generateElement<TitleElement>(TITLE_ELEMENT_TYPE);
 
 // Math block
 export const blockMathElement1 = Ast.generateElement<MathBlockElement>(

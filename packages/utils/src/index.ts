@@ -15,6 +15,7 @@ export * from './getTransferData';
 export * from './isDomainMatch';
 export * from './isImageUrl';
 export * from './isSerializedDate';
+export * from './isUntitledTitle';
 export * from './isUrl';
 export * from './isValidUrl';
 export * from './parseDateOrNow';

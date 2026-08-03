@@ -2,6 +2,11 @@ import { useCallback, useMemo } from 'react';
 import { Ast, Element } from '@minddrop/ast';
 import { EditorProps, RichTextEditor } from '@minddrop/editor';
 
+/**
+ * Title related props (`title`, `titlePlaceholder`, `titleStyle`,
+ * `onTitleChange`, `validateTitle`) are passed through to the
+ * underlying editor. The title is not part of the Markdown value.
+ */
 export interface MarkdownEditorProps
   extends Omit<EditorProps, 'initialValue' | 'onChange'> {
   /**

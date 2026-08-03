@@ -1,19 +1,29 @@
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { Descendant } from 'slate';
 import { HistoryEditor } from 'slate-history';
-import { Editable, ReactEditor, Slate } from 'slate-react';
+import { Editable, ReactEditor, RenderElementProps, Slate } from 'slate-react';
 import { useDebouncedCallback } from 'use-debounce';
-import { Element } from '@minddrop/ast';
+import { Ast, Element } from '@minddrop/ast';
+import { isUntitledTitle } from '@minddrop/utils';
 import { EditorBlockElementConfigsStore } from '../BlockElementTypeConfigsStore';
 import { EditorInlineElementConfigsStore } from '../InlineElementTypeConfigsStore';
 import { MarkConfigsStore } from '../MarkConfigsStore';
 import { defaultMarkConfigs } from '../default-mark-configs';
+import { BlockElementProps } from '../types';
 import { createEditor, createRenderElement } from '../utils';
 import { withBlockReset } from '../withBlockReset';
 import { withBlockShortcuts } from '../withBlockShortcuts';
 import { withMarkHotkeys } from '../withMarkHotkeys';
 import { withMarks } from '../withMarks';
 import { withReturnBehaviour } from '../withReturnBehaviour';
+import {
+  TITLE_ELEMENT_TYPE,
+  TitleContext,
+  TitleElement,
+  TitleElementComponent,
+  useEditorTitle,
+  withTitle,
+} from '../withTitle';
 import './RichTextEditor.css';
 
 /**
@@ -67,6 +77,46 @@ export interface EditorProps {
    * When true, the editor is read-only and cannot be edited.
    */
   readOnly?: boolean;
+
+  /**
+   * When present (an empty string counts), the editor renders an
+   * enforced title element as its first block node, seeded with
+   * this value. The title node is stripped from the values passed
+   * to `onChange` and `onChangeDebounced`.
+   *
+   * Default untitled titles (the localised untitled label, alone
+   * or with an increment number) render as an empty title with
+   * the untitled title as the placeholder.
+   */
+  title?: string;
+
+  /**
+   * Placeholder shown when the title is empty. Defaults to the
+   * localised untitled label. Ignored while the title is a
+   * default untitled title, which is itself shown as the
+   * placeholder.
+   */
+  titlePlaceholder?: string;
+
+  /**
+   * Optional inline styles applied to the title element.
+   */
+  titleStyle?: React.CSSProperties;
+
+  /**
+   * Callback fired when a title edit is committed, i.e. when the
+   * cursor leaves the title with a valid changed value.
+   */
+  onTitleChange?: (title: string) => void;
+
+  /**
+   * Callback used to validate the title on every change. Returns
+   * a translated error message when the title is invalid. While
+   * invalid, the error is shown in a tooltip anchored to the
+   * title; leaving the title while invalid reverts it to the
+   * last committed value.
+   */
+  validateTitle?: (title: string) => string | undefined;
 }
 
 export const RichTextEditor: React.FC<EditorProps> = ({
@@ -78,39 +128,43 @@ export const RichTextEditor: React.FC<EditorProps> = ({
   autoFocus,
   style,
   readOnly = false,
+  title,
+  titlePlaceholder,
+  titleStyle,
+  onTitleChange,
+  validateTitle,
 }) => {
   const editor = useMemo(() => createEditor(), []);
   const editorRef = useRef(editor);
-  const handleDebouncedChange = useDebouncedCallback(
-    (value: Element[]) => (onChangeDebounced ? onChangeDebounced(value) : null),
-    1000,
-    { leading: false, maxWait: 5000 },
-  );
-  const handleChange = useCallback(
-    (value: Descendant[]) => {
-      if (onChange) {
-        onChange(value as Element[]);
-      }
 
-      if (onChangeDebounced) {
-        handleDebouncedChange(value as Element[]);
-      }
-    },
-    [onChange, onChangeDebounced, handleDebouncedChange],
-  );
+  // Whether the title feature is enabled, captured on mount since
+  // the Slate document is uncontrolled and cannot gain or lose the
+  // title node across renders.
+  const hasTitle = useRef(title !== undefined).current;
 
-  // Create a renderElement function using the registered
-  // element type configuration objects.
-  const renderElement = useMemo(
-    () =>
-      createRenderElement([
-        ...EditorBlockElementConfigsStore.getAll(),
-        ...EditorInlineElementConfigsStore.getAll(),
-      ]),
-    [],
-  );
+  // Whether the provided title is a default untitled title
+  const titleIsUntitled = title !== undefined && isUntitledTitle(title);
 
-  const [editorWithPlugins, renderLeaf] = useMemo(
+  // The title text rendered in the title node. Untitled titles
+  // render empty so a name can be typed straight away.
+  const displayTitle = titleIsUntitled ? '' : title;
+
+  // Seed the document with the title element as its first node
+  const seededInitialValue = useMemo(() => {
+    if (!hasTitle) {
+      return initialValue;
+    }
+
+    return [
+      Ast.generateElement<TitleElement>(TITLE_ELEMENT_TYPE, {
+        children: [{ text: displayTitle ?? '' }],
+      }),
+      ...initialValue,
+    ];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const [editorWithMarks, renderLeaf] = useMemo(
     () =>
       withMarks(
         withBlockReset(
@@ -124,6 +178,91 @@ export const RichTextEditor: React.FC<EditorProps> = ({
       ),
     [editor],
   );
+
+  // Apply the title plugin outermost so its overrides run before
+  // the other plugins' ones.
+  const editorWithPlugins = useMemo(
+    () => (hasTitle ? withTitle(editorWithMarks) : editorWithMarks),
+    [editorWithMarks, hasTitle],
+  );
+
+  const { titleError, handleEditorChange, handleEditorBlur } = useEditorTitle(
+    editorWithPlugins,
+    hasTitle,
+    { title, onTitleChange, validateTitle },
+  );
+
+  // Untitled titles are shown as the placeholder instead of as content
+  const resolvedTitlePlaceholder = titleIsUntitled ? title : titlePlaceholder;
+
+  // Title validation, placeholder, and styling state provided to
+  // the title element component
+  const titleContextValue = useMemo(
+    () => ({
+      titleError,
+      titlePlaceholder: resolvedTitlePlaceholder,
+      titleStyle,
+    }),
+    [titleError, resolvedTitlePlaceholder, titleStyle],
+  );
+
+  const handleDebouncedChange = useDebouncedCallback(
+    (value: Element[]) => (onChangeDebounced ? onChangeDebounced(value) : null),
+    1000,
+    { leading: false, maxWait: 5000 },
+  );
+  const handleChange = useCallback(
+    (value: Descendant[]) => {
+      // Run title validation and commit detection
+      handleEditorChange();
+
+      // Strip the title node so consumers only receive the content
+      const content = hasTitle
+        ? (value as Element[]).slice(1)
+        : (value as Element[]);
+
+      if (onChange) {
+        onChange(content);
+      }
+
+      if (onChangeDebounced) {
+        handleDebouncedChange(content);
+      }
+    },
+    [
+      onChange,
+      onChangeDebounced,
+      handleDebouncedChange,
+      handleEditorChange,
+      hasTitle,
+    ],
+  );
+
+  // Create a renderElement function using the registered
+  // element type configuration objects.
+  const renderElement = useMemo(() => {
+    const renderRegisteredElement = createRenderElement([
+      ...EditorBlockElementConfigsStore.getAll(),
+      ...EditorInlineElementConfigsStore.getAll(),
+    ]);
+
+    if (!hasTitle) {
+      return renderRegisteredElement;
+    }
+
+    // Render the internal title element component for title elements
+    return function renderElementWithTitle(props: RenderElementProps) {
+      if (props.element.type === TITLE_ELEMENT_TYPE) {
+        return (
+          <TitleElementComponent
+            {...(props as BlockElementProps<TitleElement>)}
+          />
+        );
+      }
+
+      return renderRegisteredElement(props);
+    };
+  }, [hasTitle]);
 
   const markHotkeys = useMemo(
     () => withMarkHotkeys(editor, defaultMarkConfigs),
@@ -180,24 +319,39 @@ export const RichTextEditor: React.FC<EditorProps> = ({
     };
   }, []);
 
+  // Compose the title blur handling with the consumer's onBlur
+  const handleBlur = useCallback(
+    (event: React.FocusEvent<HTMLDivElement>) => {
+      // Commit or revert an in-progress title edit
+      handleEditorBlur();
+
+      if (onBlur) {
+        onBlur(event);
+      }
+    },
+    [handleEditorBlur, onBlur],
+  );
+
   return (
     <Slate
       editor={editorWithPlugins}
-      initialValue={initialValue}
+      initialValue={seededInitialValue}
       onChange={handleChange}
     >
-      <Editable
-        autoFocus={false}
-        readOnly={readOnly}
-        className="editor"
-        style={style}
-        renderElement={renderElement}
-        renderLeaf={renderLeaf}
-        onKeyDown={onKeyDown}
-        onClick={stopEditorPropagation}
-        onFocus={onFocus}
-        onBlur={onBlur}
-      />
+      <TitleContext.Provider value={titleContextValue}>
+        <Editable
+          autoFocus={false}
+          readOnly={readOnly}
+          className="editor"
+          style={style}
+          renderElement={renderElement}
+          renderLeaf={renderLeaf}
+          onKeyDown={onKeyDown}
+          onClick={stopEditorPropagation}
+          onFocus={onFocus}
+          onBlur={handleBlur}
+        />
+      </TitleContext.Provider>
     </Slate>
   );
 };

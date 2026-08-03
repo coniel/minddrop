@@ -1,0 +1,11 @@
+.title-element {
+  position: relative;
+  font-size: 26px;
+  font-weight: var(--fwSemibold);
+}
+
+/* The element directly below the title is visually the first
+   content block, so section spacing above it is removed */
+.title-element + * {
+  padding-top: 0;
+}

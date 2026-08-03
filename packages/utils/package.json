@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@leeoniya/ufuzzy": "1.0.14",
+    "@minddrop/i18n": "workspace:*",
     "open-graph-scraper-lite": "^2.1.0",
     "react": "^19.2.4",
     "tldts": "^6.0.4",
