@@ -4,13 +4,13 @@ import { getSet } from './getSet';
 /**
  * Closes the active tab in the given set, if there is one.
  *
- * @param setId - The id of the tab set.
+ * @param viewAreaId - The id of the view area.
  */
-export function closeActiveTab(setId: string): void {
-  const { activeTabId } = getSet(setId);
+export function closeActiveTab(viewAreaId: string): void {
+  const { activeTabId } = getSet(viewAreaId);
 
   // Close the active tab when there is one
   if (activeTabId) {
-    closeTab(setId, activeTabId);
+    closeTab(viewAreaId, activeTabId);
   }
 }

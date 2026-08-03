@@ -7,8 +7,8 @@ export {
 
 export const EventListenerId = 'databases-feature';
 export const OpenNewDatabaseDialogEvent = 'databases:new-database-dialog:open';
-export const MainDatabaseViewName = 'databases:view:database';
-export const MainDatabaseEntryViewName = 'databases:view:entry';
+export const DatabaseViewName = 'databases:view:database';
+export const DatabaseEntryViewName = 'databases:view:entry';
 
 // -- Database Entries events --
 

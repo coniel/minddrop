@@ -1,20 +1,18 @@
-import { MainContentViewDescriptor } from '@minddrop/events';
+import { ViewDescriptor } from '@minddrop/events';
 import { TabView } from './TabSetsStore';
 
 /**
- * Converts a tab view into a main content view descriptor.
+ * Converts a tab view into a view descriptor.
  *
  * @param tabView - The tab view to convert, or null.
  */
-export function toDescriptor(
-  tabView: TabView | null,
-): MainContentViewDescriptor | null {
+export function toDescriptor(tabView: TabView | null): ViewDescriptor | null {
   // Nothing to convert when there is no tab view
   if (!tabView) {
     return null;
   }
 
-  // Map the tab view onto a main content view descriptor
+  // Map the tab view onto a view descriptor
   return {
     view: tabView.view,
     id: tabView.id,

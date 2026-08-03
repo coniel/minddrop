@@ -1,9 +1,5 @@
 import { useEffect } from 'react';
-import {
-  Events,
-  OpenMainContentViewEvent,
-  OpenMainContentViewEventData,
-} from '@minddrop/events';
+import { Events, OpenViewEvent, OpenViewEventData } from '@minddrop/events';
 import { useTranslation } from '@minddrop/i18n';
 import {
   DesignStudioEventListenerId,
@@ -25,10 +21,10 @@ export const DesignsFeature: React.FC = () => {
     // Track the current main content view so we can provide
     // back navigation when the design studio is opened without
     // an explicit back event.
-    let currentView: OpenMainContentViewEventData | null = null;
+    let currentView: OpenViewEventData | null = null;
 
-    Events.addListener<OpenMainContentViewEventData>(
-      OpenMainContentViewEvent,
+    Events.addListener<OpenViewEventData>(
+      OpenViewEvent,
       `${DesignStudioEventListenerId}:view-tracker`,
       ({ data }) => {
         // Don't track the design studio view as the "current view"
@@ -51,25 +47,26 @@ export const DesignsFeature: React.FC = () => {
         const eventData = { ...data };
 
         if (!eventData.backEvent && currentView) {
-          eventData.backEvent = OpenMainContentViewEvent;
+          eventData.backEvent = OpenViewEvent;
           eventData.backEventData = currentView;
         }
 
-        Events.dispatch<
-          OpenMainContentViewEventData<OpenDesignStudioEventData>
-        >(OpenMainContentViewEvent, {
-          view: DesignStudioViewName,
-          props: eventData,
-          title: t('designStudio.title'),
-          icon: DESIGN_STUDIO_ICON,
-        });
+        Events.dispatch<OpenViewEventData<OpenDesignStudioEventData>>(
+          OpenViewEvent,
+          {
+            view: DesignStudioViewName,
+            props: eventData,
+            title: t('designStudio.title'),
+            icon: DESIGN_STUDIO_ICON,
+          },
+        );
       },
     );
 
     return () => {
       Events.removeListener(OpenDesignStudioEvent, DesignStudioEventListenerId);
       Events.removeListener(
-        OpenMainContentViewEvent,
+        OpenViewEvent,
         `${DesignStudioEventListenerId}:view-tracker`,
       );
     };

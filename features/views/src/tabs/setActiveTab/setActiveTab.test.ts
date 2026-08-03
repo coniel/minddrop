@@ -4,7 +4,7 @@ import { getSet } from '../getSet';
 import { newTab } from '../newTab';
 import { setActiveTab } from './setActiveTab';
 
-const SET_ID = 'test-set';
+const VIEW_AREA_ID = 'test-set';
 
 describe('setActiveTab', () => {
   beforeEach(() => {
@@ -16,12 +16,12 @@ describe('setActiveTab', () => {
   });
 
   it('activates the given tab', () => {
-    newTab(SET_ID);
-    const first = getSet(SET_ID).activeTabId!;
-    newTab(SET_ID);
+    newTab(VIEW_AREA_ID);
+    const first = getSet(VIEW_AREA_ID).activeTabId!;
+    newTab(VIEW_AREA_ID);
 
-    setActiveTab(SET_ID, first);
+    setActiveTab(VIEW_AREA_ID, first);
 
-    expect(getSet(SET_ID).activeTabId).toBe(first);
+    expect(getSet(VIEW_AREA_ID).activeTabId).toBe(first);
   });
 });

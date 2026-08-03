@@ -1,19 +1,19 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { SetMainContentEventData } from '@minddrop/events';
+import { SetViewAreaEventData } from '@minddrop/events';
 import { TabSetsStore } from '../TabSetsStore';
 import { getSet } from '../getSet';
 import { newTab } from '../newTab';
-import { recordMainContent } from '../recordMainContent';
+import { recordViewArea } from '../recordViewArea';
 import { updateTabsForView } from './updateTabsForView';
 
-const SET_ID = 'test-set';
+const VIEW_AREA_ID = 'test-set';
 
 function state(
-  main: SetMainContentEventData['main'],
-  split: SetMainContentEventData['split'] = null,
+  main: SetViewAreaEventData['main'],
+  split: SetViewAreaEventData['split'] = null,
   splitRatio = 50,
-): SetMainContentEventData {
-  return { main, split, splitRatio };
+): SetViewAreaEventData {
+  return { viewAreaId: VIEW_AREA_ID, main, split, splitRatio };
 }
 
 describe('updateTabsForView', () => {
@@ -26,9 +26,9 @@ describe('updateTabsForView', () => {
   });
 
   it('updates the id, props, title and icon of the matching view', () => {
-    newTab(SET_ID);
-    recordMainContent(
-      SET_ID,
+    newTab(VIEW_AREA_ID);
+    recordViewArea(
+      VIEW_AREA_ID,
       state({
         view: 'db:view',
         id: 'db:a',
@@ -38,14 +38,14 @@ describe('updateTabsForView', () => {
       }),
     );
 
-    updateTabsForView(SET_ID, 'db:a', {
+    updateTabsForView(VIEW_AREA_ID, 'db:a', {
       id: 'db:b',
       props: { databaseId: 'b' },
       title: 'B',
       icon: 'icon-b',
     });
 
-    const main = getSet(SET_ID).tabs[0].main;
+    const main = getSet(VIEW_AREA_ID).tabs[0].main;
 
     expect(main?.id).toBe('db:b');
     expect(main?.props).toEqual({ databaseId: 'b' });
@@ -54,14 +54,14 @@ describe('updateTabsForView', () => {
   });
 
   it('leaves non-matching views unchanged', () => {
-    newTab(SET_ID);
-    recordMainContent(
-      SET_ID,
+    newTab(VIEW_AREA_ID);
+    recordViewArea(
+      VIEW_AREA_ID,
       state({ view: 'db:view', id: 'db:a', title: 'A' }),
     );
 
-    updateTabsForView(SET_ID, 'db:other', { title: 'X' });
+    updateTabsForView(VIEW_AREA_ID, 'db:other', { title: 'X' });
 
-    expect(getSet(SET_ID).tabs[0].main?.title).toBe('A');
+    expect(getSet(VIEW_AREA_ID).tabs[0].main?.title).toBe('A');
   });
 });

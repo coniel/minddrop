@@ -86,17 +86,17 @@ export const TabSetsStore = createObjectStore<TabSet>('Views:Tabs', 'id', {
 /**
  * Returns all open tabs in the given set.
  *
- * @param setId - The id of the tab set.
+ * @param viewAreaId - The id of the view area.
  */
-export function useTabs(setId: string): Tab[] {
-  return TabSetsStore.useItem(setId)?.tabs ?? [];
+export function useTabs(viewAreaId: string): Tab[] {
+  return TabSetsStore.useItem(viewAreaId)?.tabs ?? [];
 }
 
 /**
  * Returns the id of the active tab in the given set.
  *
- * @param setId - The id of the tab set.
+ * @param viewAreaId - The id of the view area.
  */
-export function useActiveTabId(setId: string): string | null {
-  return TabSetsStore.useItem(setId)?.activeTabId ?? null;
+export function useActiveTabId(viewAreaId: string): string | null {
+  return TabSetsStore.useItem(viewAreaId)?.activeTabId ?? null;
 }

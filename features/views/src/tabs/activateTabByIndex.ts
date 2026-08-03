@@ -4,15 +4,15 @@ import { setActiveTab } from './setActiveTab';
 /**
  * Activates the tab at the given index in the set, if one exists.
  *
- * @param setId - The id of the tab set.
+ * @param viewAreaId - The id of the view area.
  * @param index - The zero-based index of the tab to activate.
  */
-export function activateTabByIndex(setId: string, index: number): void {
+export function activateTabByIndex(viewAreaId: string, index: number): void {
   // Get the tab at the given index
-  const tab = getTabs(setId)[index];
+  const tab = getTabs(viewAreaId)[index];
 
   // Activate it when one exists at that index
   if (tab) {
-    setActiveTab(setId, tab.id);
+    setActiveTab(viewAreaId, tab.id);
   }
 }

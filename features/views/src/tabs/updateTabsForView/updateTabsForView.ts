@@ -1,19 +1,19 @@
 import { applyViewUpdate } from '../applyViewUpdate';
-import { dispatchMainContent } from '../dispatchMainContent';
+import { dispatchViewArea } from '../dispatchViewArea';
 import { getActiveTab } from '../getActiveTab';
 import { getSet } from '../getSet';
 import { writeSet } from '../writeSet';
 
 /**
- * Updates the view with the given instance id in the set (e.g. after a
- * rename), setting its new id, props, title and icon.
+ * Updates the view with the given instance id in the view area (e.g.
+ * after a rename), setting its new id, props, title and icon.
  *
- * @param setId - The id of the tab set.
+ * @param viewAreaId - The id of the view area.
  * @param viewId - The instance id of the view to update.
  * @param changes - The new id, props (merged), title and icon.
  */
 export function updateTabsForView(
-  setId: string,
+  viewAreaId: string,
   viewId: string,
   changes: {
     id?: string;
@@ -22,7 +22,7 @@ export function updateTabsForView(
     icon?: string;
   },
 ): void {
-  const { tabs, activeTabId } = getSet(setId);
+  const { tabs, activeTabId } = getSet(viewAreaId);
 
   // Whether any tab changed, and whether the active tab was among them
   let changed = false;
@@ -55,10 +55,10 @@ export function updateTabsForView(
   }
 
   // Write the updated tabs
-  writeSet(setId, { tabs: nextTabs });
+  writeSet(viewAreaId, { tabs: nextTabs });
 
   // Re-render the active view when its props changed (e.g. a new id)
   if (activeChanged) {
-    dispatchMainContent(getActiveTab(setId));
+    dispatchViewArea(viewAreaId, getActiveTab(viewAreaId));
   }
 }

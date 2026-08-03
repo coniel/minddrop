@@ -17,54 +17,55 @@ import './TabsToolbar.css';
 
 interface TabsToolbarProps {
   /**
-   * The id of the tab set to render.
+   * The id of the view area to render.
    */
-  setId: string;
+  viewAreaId: string;
 
   /**
    * Whether to bind global tab keyboard shortcuts. Only the top-level
-   * app tab set should enable these.
+   * app view area should enable these.
    */
   shortcuts?: boolean;
 }
 
 /**
- * Toolbar for a tab set. Renders its open tabs and a button to open a
- * new tab.
+ * Toolbar for a view area. Renders its open tabs and a button to open
+ * a new tab.
  */
 export const TabsToolbar: FC<TabsToolbarProps> = ({
-  setId,
+  viewAreaId,
   shortcuts = false,
 }) => {
-  const tabs = useTabs(setId);
-  const activeTabId = useActiveTabId(setId);
+  const tabs = useTabs(viewAreaId);
+  const activeTabId = useActiveTabId(viewAreaId);
 
   // Bind keyboard shortcuts when enabled for this set
-  useTabShortcuts(setId, shortcuts);
+  useTabShortcuts(viewAreaId, shortcuts);
 
   // Ensure the set always has at least one tab to render
   useEffect(() => {
-    ensureTab(setId);
-  }, [setId]);
+    ensureTab(viewAreaId);
+  }, [viewAreaId]);
 
-  // Keep this tab set in sync with the main content area while rendered
+  // Keep this view area's tabs in sync with its rendered views while
+  // mounted
   useEffect(() => {
-    return initializeTabsSyncListeners(setId);
-  }, [setId]);
+    return initializeTabsSyncListeners(viewAreaId);
+  }, [viewAreaId]);
 
   // Open a new tab
   function handleNewTab() {
-    newTab(setId);
+    newTab(viewAreaId);
   }
 
   // Activate the selected tab
   function handleValueChange(value: string) {
-    setActiveTab(setId, value);
+    setActiveTab(viewAreaId, value);
   }
 
   // Persist the new tab order after a drag
   function handleSort(newOrder: string[]) {
-    setTabOrder(setId, newOrder);
+    setTabOrder(viewAreaId, newOrder);
   }
 
   return (
@@ -90,7 +91,12 @@ export const TabsToolbar: FC<TabsToolbarProps> = ({
             }
 
             return (
-              <Tab key={tab.id} setId={setId} tab={tab} sortable={sortable} />
+              <Tab
+                key={tab.id}
+                viewAreaId={viewAreaId}
+                tab={tab}
+                sortable={sortable}
+              />
             );
           }}
         >

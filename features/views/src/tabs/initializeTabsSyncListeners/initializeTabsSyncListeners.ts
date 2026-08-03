@@ -1,43 +1,55 @@
 import {
-  CloseMainContentViewEvent,
-  CloseMainContentViewEventData,
+  CloseViewEvent,
+  CloseViewEventData,
   Events,
-  MainContentChangedEvent,
-  MainContentChangedEventData,
-  MainContentReadyEvent,
-  UpdateMainContentViewEvent,
-  UpdateMainContentViewEventData,
+  UpdateViewEvent,
+  UpdateViewEventData,
+  ViewAreaChangedEvent,
+  ViewAreaChangedEventData,
+  ViewAreaReadyEvent,
+  ViewAreaReadyEventData,
 } from '@minddrop/events';
+import { matchesViewArea } from '../../matchesViewArea';
 import { closeTabsForView } from '../closeTabsForView';
-import { recordMainContent } from '../recordMainContent';
+import { recordViewArea } from '../recordViewArea';
 import { restoreActiveTab } from '../restoreActiveTab';
 import { updateTabsForView } from '../updateTabsForView';
 
 /**
- * Keeps the set's active tab in sync with the main content area and
- * restores its content once the main content area is ready. Returns a
- * cleanup which removes the listeners.
+ * Keeps the view area's active tab in sync with its rendered views and
+ * restores its content once the view area is ready. Returns a cleanup
+ * which removes the listeners.
  *
- * @param setId - The id of the tab set to sync.
+ * @param viewAreaId - The id of the view area to sync.
  */
-export function initializeTabsSyncListeners(setId: string): VoidFunction {
-  const listenerId = `feature-views:tabs:${setId}`;
+export function initializeTabsSyncListeners(viewAreaId: string): VoidFunction {
+  const listenerId = `feature-views:tabs:${viewAreaId}`;
 
-  // Record main content changes onto the active tab
-  Events.addListener<MainContentChangedEventData>(
-    MainContentChangedEvent,
+  // Record view area changes onto the active tab
+  Events.addListener<ViewAreaChangedEventData>(
+    ViewAreaChangedEvent,
     listenerId,
     ({ data }) => {
-      recordMainContent(setId, data);
+      // Ignore changes from other view areas
+      if (data.viewAreaId !== viewAreaId) {
+        return;
+      }
+
+      recordViewArea(viewAreaId, data);
     },
   );
 
   // Update tabs when a view's metadata changes (e.g. a rename)
-  Events.addListener<UpdateMainContentViewEventData>(
-    UpdateMainContentViewEvent,
+  Events.addListener<UpdateViewEventData>(
+    UpdateViewEvent,
     listenerId,
     ({ data }) => {
-      updateTabsForView(setId, data.id, {
+      // Ignore updates targeting other view areas
+      if (!matchesViewArea(data.viewAreaId, viewAreaId)) {
+        return;
+      }
+
+      updateTabsForView(viewAreaId, data.id, {
         id: data.newId,
         props: data.props,
         title: data.title,
@@ -47,31 +59,44 @@ export function initializeTabsSyncListeners(setId: string): VoidFunction {
   );
 
   // Close tabs when their view is closed (e.g. a delete)
-  Events.addListener<CloseMainContentViewEventData>(
-    CloseMainContentViewEvent,
+  Events.addListener<CloseViewEventData>(
+    CloseViewEvent,
     listenerId,
     ({ data }) => {
-      closeTabsForView(setId, data.id);
+      // Ignore closes targeting other view areas
+      if (!matchesViewArea(data.viewAreaId, viewAreaId)) {
+        return;
+      }
+
+      closeTabsForView(viewAreaId, data.id);
     },
   );
 
-  // Restore the active tab's content once the main content area is
-  // ready to receive it (covers the main content area mounting after
-  // this)
-  Events.addListener(MainContentReadyEvent, listenerId, () => {
-    restoreActiveTab(setId);
-  });
+  // Restore the active tab's content once the view area is ready to
+  // receive it (covers the view area mounting after this)
+  Events.addListener<ViewAreaReadyEventData>(
+    ViewAreaReadyEvent,
+    listenerId,
+    ({ data }) => {
+      // Ignore ready events from other view areas
+      if (data.viewAreaId !== viewAreaId) {
+        return;
+      }
 
-  // Fallback for the reverse order, where the main content area is
-  // already mounted and listening before this runs
+      restoreActiveTab(viewAreaId);
+    },
+  );
+
+  // Fallback for the reverse order, where the view area is already
+  // mounted and listening before this runs
   queueMicrotask(() => {
-    restoreActiveTab(setId);
+    restoreActiveTab(viewAreaId);
   });
 
   return () => {
-    Events.removeListener(MainContentChangedEvent, listenerId);
-    Events.removeListener(UpdateMainContentViewEvent, listenerId);
-    Events.removeListener(CloseMainContentViewEvent, listenerId);
-    Events.removeListener(MainContentReadyEvent, listenerId);
+    Events.removeListener(ViewAreaChangedEvent, listenerId);
+    Events.removeListener(UpdateViewEvent, listenerId);
+    Events.removeListener(CloseViewEvent, listenerId);
+    Events.removeListener(ViewAreaReadyEvent, listenerId);
   };
 }

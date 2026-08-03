@@ -10,9 +10,9 @@ const tabsI18nKey = createI18nKeyBuilder('tabs.');
 
 interface TabProps {
   /**
-   * The id of the tab set the tab belongs to.
+   * The id of the view area the tab belongs to.
    */
-  setId: string;
+  viewAreaId: string;
 
   /**
    * The tab to render.
@@ -28,7 +28,7 @@ interface TabProps {
 /**
  * A single tab in the tab strip.
  */
-export const Tab: FC<TabProps> = ({ setId, tab, sortable }) => {
+export const Tab: FC<TabProps> = ({ viewAreaId, tab, sortable }) => {
   const { t } = useTranslation();
 
   const { ref, handleProps, style, className } = sortable;
@@ -44,14 +44,14 @@ export const Tab: FC<TabProps> = ({ setId, tab, sortable }) => {
   // Close the tab, keeping the click from also activating it
   function handleClose(event: React.MouseEvent) {
     event.stopPropagation();
-    closeTab(setId, tab.id);
+    closeTab(viewAreaId, tab.id);
   }
 
   function handleAuxClick(event: React.MouseEvent) {
     // Middle click closes the tab
     if (event.button === 1) {
       event.preventDefault();
-      closeTab(setId, tab.id);
+      closeTab(viewAreaId, tab.id);
     }
   }
 

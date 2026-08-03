@@ -4,7 +4,7 @@ import { getSet } from '../getSet';
 import { newTab } from '../newTab';
 import { setTabOrder } from './setTabOrder';
 
-const SET_ID = 'test-set';
+const VIEW_AREA_ID = 'test-set';
 
 describe('setTabOrder', () => {
   beforeEach(() => {
@@ -16,14 +16,14 @@ describe('setTabOrder', () => {
   });
 
   it('reorders the tabs to match the given ids', () => {
-    newTab(SET_ID);
-    const first = getSet(SET_ID).tabs[0].id;
-    newTab(SET_ID);
-    const second = getSet(SET_ID).tabs[1].id;
+    newTab(VIEW_AREA_ID);
+    const first = getSet(VIEW_AREA_ID).tabs[0].id;
+    newTab(VIEW_AREA_ID);
+    const second = getSet(VIEW_AREA_ID).tabs[1].id;
 
-    setTabOrder(SET_ID, [second, first]);
+    setTabOrder(VIEW_AREA_ID, [second, first]);
 
-    const { tabs } = getSet(SET_ID);
+    const { tabs } = getSet(VIEW_AREA_ID);
 
     expect(tabs[0].id).toBe(second);
     expect(tabs[1].id).toBe(first);

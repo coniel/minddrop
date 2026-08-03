@@ -1,16 +1,16 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import {
   Events,
-  MainContentChangedEvent,
-  MainContentChangedEventData,
-  OpenMainContentViewEvent,
-  OpenMainContentViewEventData,
+  OpenViewEvent,
+  OpenViewEventData,
+  ViewAreaChangedEvent,
+  ViewAreaChangedEventData,
 } from '@minddrop/events';
 import { render } from '@minddrop/test-utils';
 import { DatabasesFeatureState } from '../DatabasesFeatureState';
 import {
+  DatabaseViewName,
   EventListenerId,
-  MainDatabaseViewName,
   OpenDatabaseViewEvent,
   OpenDatabaseViewEventData,
 } from '../events';
@@ -27,14 +27,16 @@ describe('DatabasesFeature', () => {
     new Promise<void>((resolve) => {
       render(<DatabasesFeature />);
 
-      Events.addListener<
-        OpenMainContentViewEventData<OpenDatabaseViewEventData>
-      >(OpenMainContentViewEvent, EventListenerId, ({ data }) => {
-        // Should include the database view name
-        expect(data.view).toBe(MainDatabaseViewName);
-        expect(data.props!.databaseId).toBe('test-database');
-        resolve();
-      });
+      Events.addListener<OpenViewEventData<OpenDatabaseViewEventData>>(
+        OpenViewEvent,
+        EventListenerId,
+        ({ data }) => {
+          // Should include the database view name
+          expect(data.view).toBe(DatabaseViewName);
+          expect(data.props!.databaseId).toBe('test-database');
+          resolve();
+        },
+      );
 
       Events.dispatch<OpenDatabaseViewEventData>(OpenDatabaseViewEvent, {
         databaseId: 'test-database',
@@ -45,16 +47,17 @@ describe('DatabasesFeature', () => {
     new Promise<void>((resolve) => {
       render(<DatabasesFeature />);
 
-      Events.addListener(MainContentChangedEvent, 'test-active-db', () => {
+      Events.addListener(ViewAreaChangedEvent, 'test-active-db', () => {
         expect(DatabasesFeatureState.get('activeDatabaseId')).toBe(
           'test-database',
         );
         resolve();
       });
 
-      Events.dispatch<MainContentChangedEventData>(MainContentChangedEvent, {
+      Events.dispatch<ViewAreaChangedEventData>(ViewAreaChangedEvent, {
+        viewAreaId: 'main',
         main: {
-          view: MainDatabaseViewName,
+          view: DatabaseViewName,
           props: { databaseId: 'test-database' },
         },
         split: null,
@@ -69,13 +72,14 @@ describe('DatabasesFeature', () => {
       // Set an active database first
       DatabasesFeatureState.set('activeDatabaseId', 'test-database');
 
-      Events.addListener(MainContentChangedEvent, 'test-clear-db', () => {
+      Events.addListener(ViewAreaChangedEvent, 'test-clear-db', () => {
         expect(DatabasesFeatureState.get('activeDatabaseId')).toBeNull();
         resolve();
       });
 
       // Show a non-database view
-      Events.dispatch<MainContentChangedEventData>(MainContentChangedEvent, {
+      Events.dispatch<ViewAreaChangedEventData>(ViewAreaChangedEvent, {
+        viewAreaId: 'main',
         main: { view: 'some-other:view:name' },
         split: null,
         splitRatio: 50,

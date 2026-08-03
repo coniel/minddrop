@@ -4,8 +4,8 @@ import { getSet } from './getSet';
 /**
  * Returns all open tabs in the given set.
  *
- * @param setId - The id of the tab set.
+ * @param viewAreaId - The id of the view area.
  */
-export function getTabs(setId: string): Tab[] {
-  return getSet(setId).tabs;
+export function getTabs(viewAreaId: string): Tab[] {
+  return getSet(viewAreaId).tabs;
 }

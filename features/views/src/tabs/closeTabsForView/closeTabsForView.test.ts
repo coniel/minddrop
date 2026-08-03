@@ -1,19 +1,19 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { SetMainContentEventData } from '@minddrop/events';
+import { SetViewAreaEventData } from '@minddrop/events';
 import { TabSetsStore } from '../TabSetsStore';
 import { getSet } from '../getSet';
 import { newTab } from '../newTab';
-import { recordMainContent } from '../recordMainContent';
+import { recordViewArea } from '../recordViewArea';
 import { closeTabsForView } from './closeTabsForView';
 
-const SET_ID = 'test-set';
+const VIEW_AREA_ID = 'test-set';
 
 function state(
-  main: SetMainContentEventData['main'],
-  split: SetMainContentEventData['split'] = null,
+  main: SetViewAreaEventData['main'],
+  split: SetViewAreaEventData['split'] = null,
   splitRatio = 50,
-): SetMainContentEventData {
-  return { main, split, splitRatio };
+): SetViewAreaEventData {
+  return { viewAreaId: VIEW_AREA_ID, main, split, splitRatio };
 }
 
 describe('closeTabsForView', () => {
@@ -26,24 +26,24 @@ describe('closeTabsForView', () => {
   });
 
   it('closes the tab whose main view id matches', () => {
-    newTab(SET_ID);
-    recordMainContent(SET_ID, state({ view: 'db:view', id: 'db:a' }));
-    const closedId = getSet(SET_ID).activeTabId;
-    newTab(SET_ID);
-    recordMainContent(SET_ID, state({ view: 'db:view', id: 'db:b' }));
+    newTab(VIEW_AREA_ID);
+    recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:a' }));
+    const closedId = getSet(VIEW_AREA_ID).activeTabId;
+    newTab(VIEW_AREA_ID);
+    recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:b' }));
 
-    closeTabsForView(SET_ID, 'db:a');
+    closeTabsForView(VIEW_AREA_ID, 'db:a');
 
-    const { tabs } = getSet(SET_ID);
+    const { tabs } = getSet(VIEW_AREA_ID);
 
     expect(tabs).toHaveLength(1);
     expect(tabs.some((tab) => tab.id === closedId)).toBe(false);
   });
 
   it('clears the split when only the split view id matches', () => {
-    newTab(SET_ID);
-    recordMainContent(
-      SET_ID,
+    newTab(VIEW_AREA_ID);
+    recordViewArea(
+      VIEW_AREA_ID,
       state(
         { view: 'db:view', id: 'db:main' },
         { view: 'db:view', id: 'db:split' },
@@ -51,9 +51,9 @@ describe('closeTabsForView', () => {
       ),
     );
 
-    closeTabsForView(SET_ID, 'db:split');
+    closeTabsForView(VIEW_AREA_ID, 'db:split');
 
-    const tab = getSet(SET_ID).tabs[0];
+    const tab = getSet(VIEW_AREA_ID).tabs[0];
 
     expect(tab.split).toBeNull();
     expect(tab.main?.id).toBe('db:main');

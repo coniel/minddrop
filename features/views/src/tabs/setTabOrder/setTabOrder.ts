@@ -5,12 +5,12 @@ import { writeSet } from '../writeSet';
 /**
  * Reorders the set's tabs to match the given ordered list of tab ids.
  *
- * @param setId - The id of the tab set.
+ * @param viewAreaId - The id of the view area.
  * @param orderedIds - The tab ids in their new order.
  */
-export function setTabOrder(setId: string, orderedIds: string[]): void {
+export function setTabOrder(viewAreaId: string, orderedIds: string[]): void {
   // Index the current tabs by id for lookup
-  const tabsById = new Map(getTabs(setId).map((tab) => [tab.id, tab]));
+  const tabsById = new Map(getTabs(viewAreaId).map((tab) => [tab.id, tab]));
 
   // Rebuild the tabs list in the given order, dropping any unknown ids
   const nextTabs = orderedIds
@@ -18,5 +18,5 @@ export function setTabOrder(setId: string, orderedIds: string[]): void {
     .filter((tab): tab is Tab => tab !== undefined);
 
   // Write the reordered tabs
-  writeSet(setId, { tabs: nextTabs });
+  writeSet(viewAreaId, { tabs: nextTabs });
 }

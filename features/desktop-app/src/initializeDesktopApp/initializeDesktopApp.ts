@@ -18,8 +18,8 @@ import { AppUiState } from '../AppUiState';
 import { registerAppDataStoreListeners } from '../registerAppDataStoreListeners';
 import { registerWorkspaceStoreListeners } from '../registerWorkspaceStoreListeners';
 import { initializeDataViewTypes } from './initializeDataViewTypes';
-import { initializeMainContentViews } from './initializeMainContentViews';
 import { initializeSelection } from './initializeSelection';
+import { registerViews } from './registerViews';
 
 // In development mode, React runs effects twice on first load, so
 // initializeDesktopApp may be called more than once. Memoizing the
@@ -70,7 +70,7 @@ async function runInitialization(): Promise<void> {
   EditorMarks.registerDefaults();
   Ast.registerDefaultConfigs();
   initializeDataViewTypes();
-  initializeMainContentViews();
+  registerViews();
   initializeViewsFeature();
 
   // Initialize workspaces (sets Paths.workspace and

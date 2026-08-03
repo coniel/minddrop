@@ -2,10 +2,10 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Designs } from '@minddrop/designs';
 import {
   CloseAppSidebarEvent,
-  DefaultMainContentViewName,
+  DefaultViewName,
   Events,
   OpenAppSidebarEvent,
-  OpenMainContentViewEvent,
+  OpenViewEvent,
   SetNavToolbarWidthEvent,
 } from '@minddrop/events';
 import { Panel, TextInput } from '@minddrop/ui-primitives';
@@ -173,8 +173,8 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
     } else {
       // No back event provided, navigate to an empty view
       // to unmount the design studio and reopen the sidebar.
-      Events.dispatch(OpenMainContentViewEvent, {
-        view: DefaultMainContentViewName,
+      Events.dispatch(OpenViewEvent, {
+        view: DefaultViewName,
       });
     }
   }, [backEvent, backEventData]);

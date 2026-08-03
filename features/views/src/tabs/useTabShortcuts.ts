@@ -8,10 +8,10 @@ import { newTab } from './newTab';
  * new tab (mod+t), close tab (mod+w) and activate the Nth tab
  * (mod+1-9). Unbinds them on unmount or when disabled.
  *
- * @param setId - The id of the tab set the shortcuts act on.
+ * @param viewAreaId - The id of the view area the shortcuts act on.
  * @param enabled - Whether the shortcuts are bound.
  */
-export function useTabShortcuts(setId: string, enabled: boolean): void {
+export function useTabShortcuts(viewAreaId: string, enabled: boolean): void {
   useEffect(() => {
     // Do not bind anything while disabled
     if (!enabled) {
@@ -27,7 +27,7 @@ export function useTabShortcuts(setId: string, enabled: boolean): void {
       // Mod+T opens a new tab
       if (event.key === 't') {
         event.preventDefault();
-        newTab(setId);
+        newTab(viewAreaId);
 
         return;
       }
@@ -35,7 +35,7 @@ export function useTabShortcuts(setId: string, enabled: boolean): void {
       // Mod+W closes the active tab
       if (event.key === 'w') {
         event.preventDefault();
-        closeActiveTab(setId);
+        closeActiveTab(viewAreaId);
 
         return;
       }
@@ -45,7 +45,7 @@ export function useTabShortcuts(setId: string, enabled: boolean): void {
 
       if (Number.isInteger(digit) && digit >= 1 && digit <= 9) {
         event.preventDefault();
-        activateTabByIndex(setId, digit - 1);
+        activateTabByIndex(viewAreaId, digit - 1);
       }
     }
 
@@ -56,5 +56,5 @@ export function useTabShortcuts(setId: string, enabled: boolean): void {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [setId, enabled]);
+  }, [viewAreaId, enabled]);
 }

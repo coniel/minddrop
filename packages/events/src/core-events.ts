@@ -1,10 +1,10 @@
-export const OpenMainContentViewEvent = 'app:main-content:open';
-export const UpdateMainContentViewEvent = 'app:main-content:update';
-export const CloseMainContentViewEvent = 'app:main-content:close';
-export const SetMainContentEvent = 'app:main-content:set';
-export const MainContentChangedEvent = 'app:main-content:changed';
-export const MainContentReadyEvent = 'app:main-content:ready';
-export const DefaultMainContentViewName = 'app:view:default';
+export const OpenViewEvent = 'app:view:open';
+export const UpdateViewEvent = 'app:view:update';
+export const CloseViewEvent = 'app:view:close';
+export const SetViewAreaEvent = 'app:view-area:set';
+export const ViewAreaChangedEvent = 'app:view-area:changed';
+export const ViewAreaReadyEvent = 'app:view-area:ready';
+export const DefaultViewName = 'app:view:default';
 export const OpenRightPanelEvent = 'app:right-panel:open';
 export const CloseRightPanelEvent = 'app:right-panel:close';
 export const OpenConfirmationDialogEvent = 'app:confirmation-dialog:open';
@@ -13,11 +13,17 @@ export const CloseAppSidebarEvent = 'app:sidebar:close';
 export const SetNavToolbarWidthEvent = 'app:nav-toolbar:set-width';
 export const ToggleWindowFillEvent = 'app:window:toggle-fill';
 
-export type OpenMainContentViewEventData<TProps = any> = {
+export type OpenViewEventData<TProps = any> = {
+  /**
+   * The id of the target view area. Defaults to the app's primary
+   * view area when omitted.
+   */
+  viewAreaId?: string;
+
   /**
    * Identifier for the view type being opened, following the
    * convention `[package]:view:[name]`. The component to render
-   * is resolved from the registered main content views.
+   * is resolved from the registered views.
    */
   view: string;
 
@@ -56,7 +62,13 @@ export type OpenMainContentViewEventData<TProps = any> = {
   icon?: string;
 };
 
-export type UpdateMainContentViewEventData<TProps = any> = {
+export type UpdateViewEventData<TProps = any> = {
+  /**
+   * The id of the target view area. Defaults to the app's primary
+   * view area when omitted.
+   */
+  viewAreaId?: string;
+
   /**
    * The instance id of the view to update.
    */
@@ -84,18 +96,24 @@ export type UpdateMainContentViewEventData<TProps = any> = {
   icon?: string;
 };
 
-export type CloseMainContentViewEventData = {
+export type CloseViewEventData = {
+  /**
+   * The id of the target view area. Defaults to the app's primary
+   * view area when omitted.
+   */
+  viewAreaId?: string;
+
   /**
    * The instance id of the view to close.
    */
   id: string;
 };
 
-export type MainContentViewDescriptor<TProps = any> = {
+export type ViewDescriptor<TProps = any> = {
   /**
    * Identifier for the view type, following the convention
    * `[package]:view:[name]`. The component is resolved from the
-   * registered main content views.
+   * registered views.
    */
   view: string;
 
@@ -122,17 +140,22 @@ export type MainContentViewDescriptor<TProps = any> = {
   icon?: string;
 };
 
-export type SetMainContentEventData = {
+export type SetViewAreaEventData = {
+  /**
+   * The id of the target view area.
+   */
+  viewAreaId: string;
+
   /**
    * The view rendered in the main (left) pane, or null when empty.
    */
-  main: MainContentViewDescriptor | null;
+  main: ViewDescriptor | null;
 
   /**
    * The view rendered in the split (right) pane, or null when
    * there is no split.
    */
-  split: MainContentViewDescriptor | null;
+  split: ViewDescriptor | null;
 
   /**
    * The width of the main (left) pane as a percentage (0-100).
@@ -141,10 +164,21 @@ export type SetMainContentEventData = {
 };
 
 /**
- * Payload of the main content changed event. Describes the full state
- * of the main content area (same shape as `SetMainContentEventData`).
+ * Payload of the view area changed event. Describes the full state of
+ * a view area (same shape as `SetViewAreaEventData`).
  */
-export type MainContentChangedEventData = SetMainContentEventData;
+export type ViewAreaChangedEventData = SetViewAreaEventData;
+
+/**
+ * Payload of the view area ready event, announced by a view area once
+ * its listeners are attached.
+ */
+export type ViewAreaReadyEventData = {
+  /**
+   * The id of the view area that is ready.
+   */
+  viewAreaId: string;
+};
 
 export type SetNavToolbarWidthEventData = {
   /**

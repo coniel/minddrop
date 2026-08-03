@@ -1,4 +1,4 @@
-import { dispatchMainContent } from '../dispatchMainContent';
+import { dispatchViewArea } from '../dispatchViewArea';
 import { getSet } from '../getSet';
 import { writeSet } from '../writeSet';
 
@@ -6,11 +6,11 @@ import { writeSet } from '../writeSet';
  * Closes the tab with the given id in the set, activating a
  * neighbouring tab when the closed tab was active.
  *
- * @param setId - The id of the tab set.
+ * @param viewAreaId - The id of the view area.
  * @param id - The id of the tab to close.
  */
-export function closeTab(setId: string, id: string): void {
-  const { tabs, activeTabId } = getSet(setId);
+export function closeTab(viewAreaId: string, id: string): void {
+  const { tabs, activeTabId } = getSet(viewAreaId);
 
   // Find the tab to close
   const index = tabs.findIndex((tab) => tab.id === id);
@@ -26,7 +26,7 @@ export function closeTab(setId: string, id: string): void {
   // A background tab was closed, so the active tab is unaffected; just
   // write the remaining tabs
   if (activeTabId !== id) {
-    writeSet(setId, { tabs: nextTabs });
+    writeSet(viewAreaId, { tabs: nextTabs });
 
     return;
   }
@@ -36,8 +36,8 @@ export function closeTab(setId: string, id: string): void {
   const neighbour = nextTabs[index] ?? nextTabs[index - 1] ?? null;
 
   // Write the remaining tabs and the new active tab
-  writeSet(setId, { tabs: nextTabs, activeTabId: neighbour?.id ?? null });
+  writeSet(viewAreaId, { tabs: nextTabs, activeTabId: neighbour?.id ?? null });
 
   // Show the newly active tab's content
-  dispatchMainContent(neighbour);
+  dispatchViewArea(viewAreaId, neighbour);
 }

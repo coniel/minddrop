@@ -1,39 +1,27 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { DevTools } from '@minddrop/dev-tools';
 import {
   CloseAppSidebarEvent,
   CloseRightPanelEvent,
   Events,
-  MainContentChangedEvent,
-  MainContentChangedEventData,
-  MainContentReadyEvent,
-  MainContentViewDescriptor,
   OpenAppSidebarEvent,
   OpenConfirmationDialogEvent,
   OpenConfirmationDialogEventData,
-  OpenMainContentViewEvent,
-  OpenMainContentViewEventData,
   OpenRightPanelEvent,
-  SetMainContentEvent,
-  SetMainContentEventData,
+  OpenViewEventData,
   ToggleWindowFillEvent,
 } from '@minddrop/events';
 import { MindDropApiProvider } from '@minddrop/extensions';
 import { DatabasesFeature } from '@minddrop/feature-databases';
 import { DesignsFeature } from '@minddrop/feature-designs';
 import { SearchFeature } from '@minddrop/feature-search';
-import { TabsToolbar } from '@minddrop/feature-views';
+import { TabsToolbar, ViewRenderer } from '@minddrop/feature-views';
 import { EmojiSkinTone, IconsProvider } from '@minddrop/ui-icons';
-import {
-  ConfirmationDialog,
-  IconButton,
-  TooltipProvider,
-} from '@minddrop/ui-primitives';
-import { MainContentViews } from '@minddrop/views';
+import { ConfirmationDialog, TooltipProvider } from '@minddrop/ui-primitives';
+import { DefaultViewAreaId, Views } from '@minddrop/views';
 import { AppSidebar } from './AppSidebar';
 import { AppUiState } from './AppUiState';
 import { NavToolbar } from './NavToolbar';
-import { APP_TABS_SET_ID } from './constants';
 import './DesktopApp.css';
 
 export const DesktopApp: React.FC = () => {
@@ -89,11 +77,11 @@ export const DesktopApp: React.FC = () => {
               onDoubleClick={handleTopbarDoubleClick}
             >
               <NavToolbar />
-              <TabsToolbar setId={APP_TABS_SET_ID} shortcuts />
+              <TabsToolbar viewAreaId={DefaultViewAreaId} shortcuts />
             </div>
             <div className="content-panels">
               {showSidebar && <AppSidebar />}
-              <MainContent />
+              <ViewRenderer viewAreaId={DefaultViewAreaId} />
               <RightPanel />
             </div>
           </div>
@@ -108,219 +96,18 @@ export const DesktopApp: React.FC = () => {
   );
 };
 
-const INITIAL_MAIN_CONTENT_STATE: SetMainContentEventData = {
-  main: null,
-  split: null,
-  splitRatio: 50,
-};
-
-/**
- * Renders the main content area. Driven entirely by events
- * (`OpenMainContentViewEvent` / `SetMainContentEvent`) and announces its
- * state via `MainContentChangedEvent`. Knows nothing about tabs.
- */
-const MainContent: React.FC = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const stateRef = useRef<SetMainContentEventData>(INITIAL_MAIN_CONTENT_STATE);
-  const [state, setState] = useState<SetMainContentEventData>(
-    INITIAL_MAIN_CONTENT_STATE,
-  );
-
-  // Applies a new state, optionally announcing the change so listeners
-  // (e.g. tabs) can mirror it. Not announced for transient updates
-  // such as ongoing resize drags.
-  const applyState = useCallback(
-    (next: SetMainContentEventData, announce: boolean) => {
-      stateRef.current = next;
-      setState(next);
-
-      if (announce) {
-        Events.dispatch<MainContentChangedEventData>(
-          MainContentChangedEvent,
-          next,
-        );
-      }
-    },
-    [],
-  );
-
-  useEffect(() => {
-    // Open a view in the main pane (replacing any split) or the split pane
-    Events.addListener<OpenMainContentViewEventData>(
-      OpenMainContentViewEvent,
-      'desktop-app',
-      ({ data }) => {
-        const current = stateRef.current;
-        const descriptor: MainContentViewDescriptor = {
-          view: data.view,
-          id: data.id,
-          props: data.props,
-          title: data.title,
-          icon: data.icon,
-        };
-
-        if (data.split) {
-          applyState(
-            {
-              ...current,
-              split: descriptor,
-              splitRatio: data.splitRatio ?? current.splitRatio,
-            },
-            true,
-          );
-        } else {
-          applyState({ main: descriptor, split: null, splitRatio: 50 }, true);
-        }
-      },
-    );
-
-    // Replace the entire state (e.g. when a tab is activated)
-    Events.addListener<SetMainContentEventData>(
-      SetMainContentEvent,
-      'desktop-app',
-      ({ data }) => {
-        applyState(data, true);
-      },
-    );
-
-    // Announce that the listeners are ready so the initial content
-    // can be restored (e.g. by the tabs feature)
-    Events.dispatch(MainContentReadyEvent);
-
-    return () => {
-      Events.removeListener(OpenMainContentViewEvent, 'desktop-app');
-      Events.removeListener(SetMainContentEvent, 'desktop-app');
-    };
-  }, [applyState]);
-
-  // Close the main (left) pane, promoting the split view to main
-  const handleCloseMain = useCallback(() => {
-    const current = stateRef.current;
-
-    applyState({ main: current.split, split: null, splitRatio: 50 }, true);
-  }, [applyState]);
-
-  // Close the split (right) pane
-  const handleCloseSplit = useCallback(() => {
-    const current = stateRef.current;
-
-    applyState({ ...current, split: null, splitRatio: 50 }, true);
-  }, [applyState]);
-
-  // Swap the two split panes
-  const handleSwap = useCallback(() => {
-    const current = stateRef.current;
-
-    applyState(
-      {
-        main: current.split,
-        split: current.main,
-        splitRatio: 100 - current.splitRatio,
-      },
-      true,
-    );
-  }, [applyState]);
-
-  // Handle resize handle drag
-  const handleResizeStart = useCallback(
-    (event: React.MouseEvent) => {
-      event.preventDefault();
-
-      const container = containerRef.current;
-
-      if (!container) {
-        return;
-      }
-
-      const startX = event.clientX;
-      const startRatio = stateRef.current.splitRatio;
-      const containerWidth = container.getBoundingClientRect().width;
-
-      const handleMouseMove = (moveEvent: MouseEvent) => {
-        const delta = moveEvent.clientX - startX;
-        const deltaPercent = (delta / containerWidth) * 100;
-        const newRatio = Math.min(80, Math.max(20, startRatio + deltaPercent));
-
-        // Update the visual ratio only; announce on release
-        applyState({ ...stateRef.current, splitRatio: newRatio }, false);
-      };
-
-      const handleMouseUp = () => {
-        document.removeEventListener('mousemove', handleMouseMove);
-        document.removeEventListener('mouseup', handleMouseUp);
-        document.body.style.userSelect = '';
-
-        // Announce the final ratio so it is recorded on the active tab
-        Events.dispatch<MainContentChangedEventData>(
-          MainContentChangedEvent,
-          stateRef.current,
-        );
-      };
-
-      // Prevent text selection while dragging
-      document.body.style.userSelect = 'none';
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
-    },
-    [applyState],
-  );
-
-  const { main, split, splitRatio } = state;
-
-  if (!main) {
-    return <div className="main-content" />;
-  }
-
-  // Render split layout when a split view is active
-  if (split) {
-    return (
-      <div ref={containerRef} className="main-content main-content-split">
-        <SplitViewPane
-          position="left"
-          onClose={handleCloseMain}
-          onSwap={handleSwap}
-          style={{ flex: splitRatio }}
-        >
-          <MainContentViewRenderer view={main} />
-        </SplitViewPane>
-        <div
-          className="split-view-resize-handle"
-          onMouseDown={handleResizeStart}
-          role="separator"
-          aria-orientation="vertical"
-        />
-        <SplitViewPane
-          position="right"
-          onClose={handleCloseSplit}
-          onSwap={handleSwap}
-          style={{ flex: 100 - splitRatio }}
-        >
-          <MainContentViewRenderer view={split} />
-        </SplitViewPane>
-      </div>
-    );
-  }
-
-  return (
-    <div className="main-content">
-      <MainContentViewRenderer view={main} />
-    </div>
-  );
-};
-
-interface MainContentViewRendererProps {
+interface RegisteredViewProps {
   /**
-   * The view to render, resolved to a component from the registered
-   * main content views by its `view` id.
+   * The view to resolve and render, along with its props.
    */
-  view: MainContentViewDescriptor;
+  view: OpenViewEventData;
 }
 
-/** Resolves a main content view by id and renders it with its props. */
-const MainContentViewRenderer: React.FC<MainContentViewRendererProps> = ({
-  view,
-}) => {
-  const registered = MainContentViews.use(view.view);
+/**
+ * Resolves a registered view by id and renders it with its props.
+ */
+const RegisteredView: React.FC<RegisteredViewProps> = ({ view }) => {
+  const registered = Views.use(view.view);
 
   if (!registered) {
     return null;
@@ -331,61 +118,12 @@ const MainContentViewRenderer: React.FC<MainContentViewRendererProps> = ({
   return <ViewComponent {...view.props} />;
 };
 
-interface SplitViewPaneProps {
-  /**
-   * The content to render inside the pane.
-   */
-  children: React.ReactNode;
-
-  /**
-   * Which side of the split this pane is on.
-   */
-  position: 'left' | 'right';
-
-  /**
-   * Called when the pane's close button is clicked.
-   */
-  onClose: () => void;
-
-  /**
-   * Called when the swap button is clicked.
-   */
-  onSwap: () => void;
-
-  /**
-   * Inline styles applied to the pane container,
-   * used for dynamic flex sizing.
-   */
-  style?: React.CSSProperties;
-}
-
-/** Wraps split view content with swap and close buttons. */
-const SplitViewPane: React.FC<SplitViewPaneProps> = ({
-  children,
-  position,
-  onClose,
-  onSwap,
-  style,
-}) => (
-  <div className="main-content-pane" style={style}>
-    <div className="main-content-pane-header">
-      <IconButton
-        icon={position === 'left' ? 'arrow-right' : 'arrow-left'}
-        label="actions.swapSplitPosition"
-        onClick={onSwap}
-        size="sm"
-      />
-      <IconButton icon="x" label="actions.close" onClick={onClose} size="sm" />
-    </div>
-    {children}
-  </div>
-);
-
 const RightPanel: React.FC = () => {
-  const [view, setView] = useState<OpenMainContentViewEventData | null>(null);
+  const [view, setView] = useState<OpenViewEventData | null>(null);
 
   useEffect(() => {
-    Events.addListener<OpenMainContentViewEventData>(
+    // Show the view sent to the right panel
+    Events.addListener<OpenViewEventData>(
       OpenRightPanelEvent,
       'desktop-app',
       ({ data }) => {
@@ -393,7 +131,8 @@ const RightPanel: React.FC = () => {
       },
     );
 
-    Events.addListener<OpenMainContentViewEventData>(
+    // Clear the right panel
+    Events.addListener<OpenViewEventData>(
       CloseRightPanelEvent,
       'desktop-app',
       () => {
@@ -407,13 +146,14 @@ const RightPanel: React.FC = () => {
     };
   }, []);
 
+  // Render nothing when the right panel is empty
   if (!view) {
     return null;
   }
 
   return (
     <div className="right-panel">
-      <MainContentViewRenderer view={view} />
+      <RegisteredView view={view} />
     </div>
   );
 };

@@ -1,12 +1,12 @@
-import { dispatchMainContent } from './dispatchMainContent';
+import { dispatchViewArea } from './dispatchViewArea';
 import { getActiveTab } from './getActiveTab';
 
 /**
- * Restores the active tab's content into the main content area.
+ * Restores the active tab's content into the view area.
  *
- * @param setId - The id of the tab set.
+ * @param viewAreaId - The id of the view area.
  */
-export function restoreActiveTab(setId: string): void {
-  // Dispatch the active tab's content into the main content area
-  dispatchMainContent(getActiveTab(setId));
+export function restoreActiveTab(viewAreaId: string): void {
+  // Dispatch the active tab's content into the view area
+  dispatchViewArea(viewAreaId, getActiveTab(viewAreaId));
 }

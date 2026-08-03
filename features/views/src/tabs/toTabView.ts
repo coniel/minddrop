@@ -1,15 +1,13 @@
-import { MainContentViewDescriptor } from '@minddrop/events';
+import { ViewDescriptor } from '@minddrop/events';
 import { TabView } from './TabSetsStore';
 import { DEFAULT_ICON } from './tabsConstants';
 
 /**
- * Converts a main content view descriptor into a tab view.
+ * Converts a view descriptor into a tab view.
  *
  * @param descriptor - The descriptor to convert, or null.
  */
-export function toTabView(
-  descriptor: MainContentViewDescriptor | null,
-): TabView | null {
+export function toTabView(descriptor: ViewDescriptor | null): TabView | null {
   // Nothing to convert when there is no descriptor
   if (!descriptor) {
     return null;

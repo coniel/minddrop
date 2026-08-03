@@ -1,32 +1,34 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
-  CloseMainContentViewEvent,
+  CloseViewEvent,
   Events,
-  MainContentChangedEvent,
-  MainContentChangedEventData,
-  UpdateMainContentViewEvent,
+  UpdateViewEvent,
+  ViewAreaChangedEvent,
+  ViewAreaChangedEventData,
 } from '@minddrop/events';
 import { TabSetsStore } from '../TabSetsStore';
 import { getSet } from '../getSet';
 import { newTab } from '../newTab';
 import { initializeTabsSyncListeners } from './initializeTabsSyncListeners';
 
-const SET_ID = 'test-set';
+const VIEW_AREA_ID = 'test-set';
+const OTHER_VIEW_AREA_ID = 'other-set';
 
 let cleanup: VoidFunction;
 
 function changed(
-  main: MainContentChangedEventData['main'],
-  split: MainContentChangedEventData['split'] = null,
+  viewAreaId: string,
+  main: ViewAreaChangedEventData['main'],
+  split: ViewAreaChangedEventData['split'] = null,
   splitRatio = 50,
-): MainContentChangedEventData {
-  return { main, split, splitRatio };
+): ViewAreaChangedEventData {
+  return { viewAreaId, main, split, splitRatio };
 }
 
 describe('initializeTabsSyncListeners', () => {
   beforeEach(() => {
     TabSetsStore.clear();
-    cleanup = initializeTabsSyncListeners(SET_ID);
+    cleanup = initializeTabsSyncListeners(VIEW_AREA_ID);
   });
 
   afterEach(() => {
@@ -34,55 +36,99 @@ describe('initializeTabsSyncListeners', () => {
     TabSetsStore.clear();
   });
 
-  it('records main content changes onto the active tab', () => {
-    newTab(SET_ID);
+  it('records view area changes onto the active tab', () => {
+    newTab(VIEW_AREA_ID);
 
-    Events.dispatch<MainContentChangedEventData>(
-      MainContentChangedEvent,
-      changed({ view: 'db:view', id: 'db:a' }),
+    Events.dispatch<ViewAreaChangedEventData>(
+      ViewAreaChangedEvent,
+      changed(VIEW_AREA_ID, { view: 'db:view', id: 'db:a' }),
     );
 
-    expect(getSet(SET_ID).tabs[0].main?.id).toBe('db:a');
+    expect(getSet(VIEW_AREA_ID).tabs[0].main?.id).toBe('db:a');
+  });
+
+  it('ignores view area changes from another view area', () => {
+    newTab(VIEW_AREA_ID);
+
+    Events.dispatch<ViewAreaChangedEventData>(
+      ViewAreaChangedEvent,
+      changed(OTHER_VIEW_AREA_ID, { view: 'db:view', id: 'db:a' }),
+    );
+
+    expect(getSet(VIEW_AREA_ID).tabs[0].main).toBeNull();
   });
 
   it('updates tabs when a view changes', () => {
-    newTab(SET_ID);
-    Events.dispatch<MainContentChangedEventData>(
-      MainContentChangedEvent,
-      changed({ view: 'db:view', id: 'db:a', title: 'A' }),
+    newTab(VIEW_AREA_ID);
+    Events.dispatch<ViewAreaChangedEventData>(
+      ViewAreaChangedEvent,
+      changed(VIEW_AREA_ID, { view: 'db:view', id: 'db:a', title: 'A' }),
     );
 
-    Events.dispatch(UpdateMainContentViewEvent, {
+    Events.dispatch(UpdateViewEvent, {
+      viewAreaId: VIEW_AREA_ID,
       id: 'db:a',
       newId: 'db:b',
       title: 'B',
     });
 
-    expect(getSet(SET_ID).tabs[0].main?.id).toBe('db:b');
-    expect(getSet(SET_ID).tabs[0].main?.title).toBe('B');
+    expect(getSet(VIEW_AREA_ID).tabs[0].main?.id).toBe('db:b');
+    expect(getSet(VIEW_AREA_ID).tabs[0].main?.title).toBe('B');
+  });
+
+  it('ignores view updates targeting another view area', () => {
+    newTab(VIEW_AREA_ID);
+    Events.dispatch<ViewAreaChangedEventData>(
+      ViewAreaChangedEvent,
+      changed(VIEW_AREA_ID, { view: 'db:view', id: 'db:a', title: 'A' }),
+    );
+
+    Events.dispatch(UpdateViewEvent, {
+      viewAreaId: OTHER_VIEW_AREA_ID,
+      id: 'db:a',
+      newId: 'db:b',
+      title: 'B',
+    });
+
+    expect(getSet(VIEW_AREA_ID).tabs[0].main?.id).toBe('db:a');
   });
 
   it('closes tabs when a view closes', () => {
-    newTab(SET_ID);
-    Events.dispatch<MainContentChangedEventData>(
-      MainContentChangedEvent,
-      changed({ view: 'db:view', id: 'db:a' }),
+    newTab(VIEW_AREA_ID);
+    Events.dispatch<ViewAreaChangedEventData>(
+      ViewAreaChangedEvent,
+      changed(VIEW_AREA_ID, { view: 'db:view', id: 'db:a' }),
     );
 
-    Events.dispatch(CloseMainContentViewEvent, { id: 'db:a' });
+    Events.dispatch(CloseViewEvent, { viewAreaId: VIEW_AREA_ID, id: 'db:a' });
 
-    expect(getSet(SET_ID).tabs).toHaveLength(0);
+    expect(getSet(VIEW_AREA_ID).tabs).toHaveLength(0);
+  });
+
+  it('ignores view closes targeting another view area', () => {
+    newTab(VIEW_AREA_ID);
+    Events.dispatch<ViewAreaChangedEventData>(
+      ViewAreaChangedEvent,
+      changed(VIEW_AREA_ID, { view: 'db:view', id: 'db:a' }),
+    );
+
+    Events.dispatch(CloseViewEvent, {
+      viewAreaId: OTHER_VIEW_AREA_ID,
+      id: 'db:a',
+    });
+
+    expect(getSet(VIEW_AREA_ID).tabs).toHaveLength(1);
   });
 
   it('stops recording after cleanup', () => {
-    newTab(SET_ID);
+    newTab(VIEW_AREA_ID);
     cleanup();
 
-    Events.dispatch<MainContentChangedEventData>(
-      MainContentChangedEvent,
-      changed({ view: 'db:view', id: 'db:a' }),
+    Events.dispatch<ViewAreaChangedEventData>(
+      ViewAreaChangedEvent,
+      changed(VIEW_AREA_ID, { view: 'db:view', id: 'db:a' }),
     );
 
-    expect(getSet(SET_ID).tabs[0].main).toBeNull();
+    expect(getSet(VIEW_AREA_ID).tabs[0].main).toBeNull();
   });
 });

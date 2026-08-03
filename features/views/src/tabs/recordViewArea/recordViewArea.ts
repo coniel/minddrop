@@ -1,21 +1,21 @@
-import { SetMainContentEventData } from '@minddrop/events';
+import { SetViewAreaEventData } from '@minddrop/events';
 import { createBlankTab } from '../createBlankTab';
 import { getSet } from '../getSet';
 import { toTabView } from '../toTabView';
 import { writeSet } from '../writeSet';
 
 /**
- * Records the current main content state onto the set's active tab.
- * Creates an active tab first when none exists.
+ * Records the current view area state onto the active tab. Creates an
+ * active tab first when none exists.
  *
- * @param setId - The id of the tab set.
- * @param state - The current main content state.
+ * @param viewAreaId - The id of the view area.
+ * @param state - The current view area state.
  */
-export function recordMainContent(
-  setId: string,
-  state: SetMainContentEventData,
+export function recordViewArea(
+  viewAreaId: string,
+  state: SetViewAreaEventData,
 ): void {
-  const set = getSet(setId);
+  const set = getSet(viewAreaId);
   let tabs = set.tabs;
   let activeTabId = set.activeTabId;
 
@@ -45,5 +45,5 @@ export function recordMainContent(
   });
 
   // Write the updated tabs and active tab
-  writeSet(setId, { tabs: nextTabs, activeTabId });
+  writeSet(viewAreaId, { tabs: nextTabs, activeTabId });
 }

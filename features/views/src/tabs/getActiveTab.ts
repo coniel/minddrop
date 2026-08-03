@@ -4,10 +4,10 @@ import { getSet } from './getSet';
 /**
  * Returns the active tab in the given set, or null when there is none.
  *
- * @param setId - The id of the tab set.
+ * @param viewAreaId - The id of the view area.
  */
-export function getActiveTab(setId: string): Tab | null {
-  const set = getSet(setId);
+export function getActiveTab(viewAreaId: string): Tab | null {
+  const set = getSet(viewAreaId);
 
   // Find the tab matching the set's active id
   return set.tabs.find((tab) => tab.id === set.activeTabId) ?? null;

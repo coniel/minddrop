@@ -1,5 +1,5 @@
 import { Tab } from '../TabSetsStore';
-import { dispatchMainContent } from '../dispatchMainContent';
+import { dispatchViewArea } from '../dispatchViewArea';
 import { getActiveTab } from '../getActiveTab';
 import { getSet } from '../getSet';
 import { DEFAULT_SPLIT_RATIO } from '../tabsConstants';
@@ -7,14 +7,14 @@ import { viewMatches } from '../viewMatches';
 import { writeSet } from '../writeSet';
 
 /**
- * Closes the view with the given instance id in the set. When it
+ * Closes the view with the given instance id in the view area. When it
  * matches a split view, only the split is cleared.
  *
- * @param setId - The id of the tab set.
+ * @param viewAreaId - The id of the view area.
  * @param viewId - The instance id of the view to close.
  */
-export function closeTabsForView(setId: string, viewId: string): void {
-  const { tabs, activeTabId } = getSet(setId);
+export function closeTabsForView(viewAreaId: string, viewId: string): void {
+  const { tabs, activeTabId } = getSet(viewAreaId);
 
   // Remember the active tab's position to pick a neighbour later
   const activeIndex = tabs.findIndex((tab) => tab.id === activeTabId);
@@ -55,16 +55,19 @@ export function closeTabsForView(setId: string, viewId: string): void {
       nextTabs[Math.min(activeIndex, nextTabs.length - 1)] ?? null;
 
     // Write the remaining tabs and the new active tab
-    writeSet(setId, { tabs: nextTabs, activeTabId: neighbour?.id ?? null });
+    writeSet(viewAreaId, {
+      tabs: nextTabs,
+      activeTabId: neighbour?.id ?? null,
+    });
 
     // Show the newly active tab's content
-    dispatchMainContent(neighbour);
+    dispatchViewArea(viewAreaId, neighbour);
 
     return;
   }
 
   // The active tab survived, so write the tabs and re-sync its content
   // in case its split was cleared
-  writeSet(setId, { tabs: nextTabs });
-  dispatchMainContent(getActiveTab(setId));
+  writeSet(viewAreaId, { tabs: nextTabs });
+  dispatchViewArea(viewAreaId, getActiveTab(viewAreaId));
 }

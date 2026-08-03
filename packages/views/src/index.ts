@@ -7,5 +7,4 @@ export * from './test-utils/setup-fixtures';
 export * as Views from './Views';
 export * as DataViews from './DataViews';
 export * as DataViewTypes from './DataViewTypes';
-export * as MainContentViews from './MainContentViews';
 export * as ViewFixtures from './test-utils/fixtures';
