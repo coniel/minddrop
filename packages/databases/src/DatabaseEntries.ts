@@ -32,6 +32,8 @@ export {
   useDatabaseEntryIds as useIds,
 } from './DatabaseEntriesStore';
 export { getPropertyFilePath as propertyFilePath } from './utils';
+export { isEntryTitleTaken as isTitleTaken } from './utils';
+export { validateDatabaseEntryTitle as validateTitle } from './validateDatabaseEntryTitle';
 export { readDatabaseEntries as readFiles } from './readDatabaseEntries';
 export { createEntryVirtualViews as createVirtualViews } from './utils';
 export { entryDisplayPropertyValues as displayPropertyValues } from './utils';

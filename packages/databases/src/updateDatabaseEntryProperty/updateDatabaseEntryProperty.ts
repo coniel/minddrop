@@ -1,12 +1,19 @@
+import { PathConflictError } from '@minddrop/file-system';
+import { i18n } from '@minddrop/i18n';
 import { PropertyValue } from '@minddrop/properties';
 import { InvalidParameterError } from '@minddrop/utils';
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntry } from '../getDatabaseEntry';
+import { renameDatabaseEntry } from '../renameDatabaseEntry';
 import { DatabaseEntry } from '../types';
 import { updateDatabaseEntry } from '../updateDatabaseEntry';
+import { withImplicitTitleProperty } from '../utils';
 
 /**
- * Updates a property on a database entry.
+ * Updates a property on a database entry. Title property updates
+ * rename the entry instead, as the entry title is its file name;
+ * an empty title renames the entry to the localised untitled
+ * title, incrementing on conflict.
  *
  * @param entryId - The ID of the entry to update.
  * @param propertyName - The name of the property to update.
@@ -26,11 +33,22 @@ export async function updateDatabaseEntryProperty(
   // Get the database
   const database = getDatabase(entry.database);
 
+  // Look up the property schema, including the implicit entry
+  // Title property
+  const propertySchema = withImplicitTitleProperty(database.properties).find(
+    (property) => property.name === propertyName,
+  );
+
   // Ensure the property exists on the database
-  if (!database.properties.find((property) => property.name === propertyName)) {
+  if (!propertySchema) {
     throw new InvalidParameterError(
       `Database ${database.id} does not have a property named ${propertyName}.`,
     );
+  }
+
+  // Title properties are updated by renaming the entry
+  if (propertySchema.type === 'title') {
+    return renameEntryToTitle(entry.id, String(value ?? ''));
   }
 
   // Update the entry
@@ -39,4 +57,39 @@ export async function updateDatabaseEntryProperty(
       [propertyName]: value,
     },
   });
+}
+
+/**
+ * Renames the entry to the given title, falling back to the
+ * localised untitled title for empty titles. Returns the entry
+ * unchanged when the new path conflicts on disk.
+ */
+async function renameEntryToTitle(
+  entryId: string,
+  title: string,
+): Promise<DatabaseEntry> {
+  // Ignore surrounding whitespace
+  const trimmedTitle = title.trim();
+
+  try {
+    // Empty titles rename the entry to the localised untitled
+    // title, incrementing on conflict
+    if (!trimmedTitle) {
+      return await renameDatabaseEntry(
+        entryId,
+        i18n.t('labels.untitled'),
+        true,
+      );
+    }
+
+    return await renameDatabaseEntry(entryId, trimmedTitle);
+  } catch (error) {
+    // Validation guards against store conflicts, but a non-entry
+    // file on disk can still conflict with the new path
+    if (error instanceof PathConflictError) {
+      return getDatabaseEntry(entryId);
+    }
+
+    throw error;
+  }
 }

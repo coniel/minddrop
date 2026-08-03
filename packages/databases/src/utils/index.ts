@@ -7,6 +7,8 @@ export * from './filterValidDatabaseUrls';
 export * from './getDefaultFileProperty';
 export * from './getIncrementalPropertyFilePath';
 export * from './getPropertyFilePath';
+export * from './isEntryTitleTaken';
+export * from './withImplicitTitleProperty';
 export * from './parseViewMetadataKey';
 export * from './parseVirtualCollectionId';
 export * from './parseVirtualViewId';

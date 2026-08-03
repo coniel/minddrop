@@ -11,6 +11,7 @@ export type { BackgroundSyncChangeset } from './types';
 export * from './errors';
 export * from './events';
 export * from './database-templates';
+export * from './utils/withImplicitTitleProperty';
 export * as Databases from './Databases';
 export * as DatabaseAutomations from './DatabaseAutomations';
 export * as DatabaseEntrySerializers from './DatabaseEntrySerializers';

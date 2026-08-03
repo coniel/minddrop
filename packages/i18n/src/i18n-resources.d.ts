@@ -261,6 +261,10 @@ declare module 'i18next' {
               goToDatabase: string;
               create: string;
             };
+            errors: {
+              titleInvalidCharacters: string;
+              titleConflict: string;
+            };
           };
           labels: {
             databases: string;

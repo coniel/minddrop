@@ -7,6 +7,22 @@ obsolete.
 
 ## packages/databases
 
+### The implicit Title property's name is a translated identifier
+
+`withImplicitTitleProperty` names the implicit entry title property with
+`i18n.t('properties.title.name')`, but that name doubles as an
+**identifier** in two places that don't translate:
+`entryDisplayPropertyValues` hardcodes `Title: entry.title` as its
+values-map key, and `database.designPropertyMap` persists the name
+inside saved mappings.
+
+In en-GB everything lines up because the translation is "Title". If
+another locale is ever added, a translated implicit name would stop
+matching the hardcoded values key and any previously persisted mappings.
+The fix at that point is to treat `Title` as a stable identifier and add
+a separate translated display `label` to the property schema (updating
+the property mapping UI to render labels over names).
+
 ### Pending entry metadata is keyed by database path, not entry
 
 `updateEntryMetadata` debounces writes into a pending map keyed by the

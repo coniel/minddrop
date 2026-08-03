@@ -248,6 +248,10 @@
         "entryOptions": "Entry options",
         "goToDatabase": "Go to database",
         "create": "Create entry"
+      },
+      "errors": {
+        "titleInvalidCharacters": "Title cannot contain / or \\.",
+        "titleConflict": "An entry with this title already exists."
       }
     },
     "labels": {
