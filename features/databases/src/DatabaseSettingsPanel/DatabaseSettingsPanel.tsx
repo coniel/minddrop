@@ -12,6 +12,7 @@ import {
   IconButton,
   IconPicker,
   Stack,
+  SwitchField,
   Text,
   TextField,
 } from '@minddrop/ui-primitives';
@@ -81,6 +82,11 @@ export const DatabaseSettingsPanel: React.FC<DatabaseSettingsPanelProps> = ({
     Databases.update(databaseId, { entryName });
   }
 
+  // Toggle whether the views toolbar is hidden in the database view
+  function handleToggleHideViewsToolbar(checked: boolean) {
+    Databases.update(databaseId, { hideViewsToolbar: checked });
+  }
+
   // Prompt for confirmation before deleting the database
   function handleDelete() {
     const i18nRoot = 'databases.settings.delete.confirmation';
@@ -145,6 +151,14 @@ export const DatabaseSettingsPanel: React.FC<DatabaseSettingsPanelProps> = ({
           onBlur={handleEntryNameBlur}
         />
       </Group>
+
+      {/* Toggle for hiding the views toolbar in the database view */}
+      <SwitchField
+        label="databases.settings.hideViewsToolbar.label"
+        description="databases.settings.hideViewsToolbar.description"
+        checked={database.hideViewsToolbar ?? false}
+        onCheckedChange={handleToggleHideViewsToolbar}
+      />
 
       {/* Delete database action with an explanatory note */}
       <Stack gap={2} className="database-settings-panel-delete">

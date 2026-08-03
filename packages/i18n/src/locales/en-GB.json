@@ -287,6 +287,10 @@
       "actions": {
         "delete": "Delete database"
       },
+      "hideViewsToolbar": {
+        "label": "Hide views toolbar",
+        "description": "Hide the bar for switching and adding views. Useful when the database only has a single view."
+      },
       "delete": {
         "description": "Deleting this database will move all of its content to the system trash.",
         "confirmation": {

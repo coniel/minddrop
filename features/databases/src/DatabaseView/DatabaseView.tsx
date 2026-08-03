@@ -326,8 +326,9 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
           </Toolbar>
         </div>
 
-        {/* View switcher bar — hidden when the database has no entries */}
-        {!isEmpty && (
+        {/* View switcher bar - hidden when the database has no entries or
+            the views toolbar is disabled in settings */}
+        {!isEmpty && !database.hideViewsToolbar && (
           <div className="view-switcher">
             {view && (
               <>

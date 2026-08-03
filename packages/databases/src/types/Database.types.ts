@@ -126,6 +126,13 @@ export interface Database {
   viewOrder?: string[];
 
   /**
+   * Whether to hide the views toolbar in the database view. Intended
+   * for databases with a single view, giving them a cleaner UI.
+   * @default false
+   */
+  hideViewsToolbar?: boolean;
+
+  /**
    * The database's automations if it has any.
    */
   automations?: DatabaseAutomation[];

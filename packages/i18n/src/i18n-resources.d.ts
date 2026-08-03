@@ -299,6 +299,10 @@ declare module 'i18next' {
             actions: {
               delete: string;
             };
+            hideViewsToolbar: {
+              label: string;
+              description: string;
+            };
             delete: {
               description: string;
               confirmation: {
