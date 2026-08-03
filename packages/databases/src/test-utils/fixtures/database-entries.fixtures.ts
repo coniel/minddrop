@@ -159,6 +159,34 @@ export const rootStorageEntry1SqlRecord: SqlEntryRecord = {
   properties: [{ name: 'Image', type: 'image', value: 'image.png' }],
 };
 
+export const referenceEntry1: DatabaseEntry = {
+  id: 'reference-entry-1',
+  title: 'Reference Entry 1',
+  database: rootStorageDatabase.id,
+  path: `${rootStorageDatabase.path}/Reference Entry 1.md`,
+  created: new Date('2024-01-01T00:00:00.000Z'),
+  lastModified: new Date('2024-01-01T00:00:00.000Z'),
+  properties: {
+    Image: 'reference.png',
+  },
+  metadata: {},
+};
+
+export const referenceEntry1FileContents = `---
+Image: reference.png
+---`;
+
+export const referenceEntry1SqlRecord: SqlEntryRecord = {
+  id: referenceEntry1.id,
+  databaseId: rootStorageDatabase.id,
+  path: referenceEntry1.path,
+  title: 'Reference Entry 1',
+  created: 1704067200000,
+  lastModified: 1704067200000,
+  metadata: '{}',
+  properties: [{ name: 'Image', type: 'image', value: 'reference.png' }],
+};
+
 export const rootStorageEntry_empty_value: DatabaseEntry = {
   id: 'root-storage-entry-empty-value',
   title: 'Root Storage Entry Empty Value',
@@ -321,6 +349,78 @@ export const timestampEntry1SqlRecord: SqlEntryRecord = {
  * Collection database entries
  *****************************************************************************/
 
+export const relatedEntry1: DatabaseEntry = {
+  id: 'related-entry-1',
+  title: 'Related Entry 1',
+  database: collectionDatabase.id,
+  path: `${collectionDatabase.path}/Related Entry 1.md`,
+  created: new Date('2024-01-01T00:00:00.000Z'),
+  lastModified: new Date('2024-01-01T00:00:00.000Z'),
+  properties: {
+    Title: 'Related Entry 1',
+    Related: [],
+    References: [],
+  },
+  metadata: {},
+};
+
+export const relatedEntry1FileContents = `---
+Title: Related Entry 1
+Related: []
+References: []
+---`;
+
+export const relatedEntry1SqlRecord: SqlEntryRecord = {
+  id: relatedEntry1.id,
+  databaseId: collectionDatabase.id,
+  path: relatedEntry1.path,
+  title: 'Related Entry 1',
+  created: 1704067200000,
+  lastModified: 1704067200000,
+  metadata: '{}',
+  properties: [
+    { name: 'Title', type: 'text', value: 'Related Entry 1' },
+    { name: 'Related', type: 'collection', value: [] },
+    { name: 'References', type: 'collection', value: [] },
+  ],
+};
+
+export const relatedEntry2: DatabaseEntry = {
+  id: 'related-entry-2',
+  title: 'Related Entry 2',
+  database: collectionDatabase.id,
+  path: `${collectionDatabase.path}/Related Entry 2.md`,
+  created: new Date('2024-01-01T00:00:00.000Z'),
+  lastModified: new Date('2024-01-01T00:00:00.000Z'),
+  properties: {
+    Title: 'Related Entry 2',
+    Related: [],
+    References: [],
+  },
+  metadata: {},
+};
+
+export const relatedEntry2FileContents = `---
+Title: Related Entry 2
+Related: []
+References: []
+---`;
+
+export const relatedEntry2SqlRecord: SqlEntryRecord = {
+  id: relatedEntry2.id,
+  databaseId: collectionDatabase.id,
+  path: relatedEntry2.path,
+  title: 'Related Entry 2',
+  created: 1704067200000,
+  lastModified: 1704067200000,
+  metadata: '{}',
+  properties: [
+    { name: 'Title', type: 'text', value: 'Related Entry 2' },
+    { name: 'Related', type: 'collection', value: [] },
+    { name: 'References', type: 'collection', value: [] },
+  ],
+};
+
 export const collectionEntry1: DatabaseEntry = {
   id: 'collection-entry-1',
   title: 'Collection Entry 1',
@@ -373,10 +473,13 @@ export const databaseEntries = [
   urlEntry1,
   yamlObjectEntry1,
   rootStorageEntry1,
+  referenceEntry1,
   rootStorageEntry_empty_value,
   commonStorageEntry1,
   propertyStorageEntry1,
   entryStorageEntry1,
+  relatedEntry1,
+  relatedEntry2,
   collectionEntry1,
   timestampEntry1,
 ];
@@ -386,10 +489,13 @@ export const databaseEntrySqlRecords: SqlEntryRecord[] = [
   urlEntry1SqlRecord,
   yamlObjectEntry1SqlRecord,
   rootStorageEntry1SqlRecord,
+  referenceEntry1SqlRecord,
   rootStorageEntrySqlRecord_empty_value,
   commonStorageEntry1SqlRecord,
   propertyStorageEntry1SqlRecord,
   entryStorageEntry1SqlRecord,
+  relatedEntry1SqlRecord,
+  relatedEntry2SqlRecord,
   collectionEntry1SqlRecord,
   timestampEntry1SqlRecord,
 ];
@@ -412,6 +518,10 @@ export const databaseEntryFiles: (MockFileDescriptor | string)[] = [
     textContent: rootStorageEntry1FileContents,
   },
   {
+    path: referenceEntry1.path,
+    textContent: referenceEntry1FileContents,
+  },
+  {
     path: rootStorageEntry_empty_value.path,
     textContent: rootStorageEntry_empty_valueFileContents,
   },
@@ -426,6 +536,14 @@ export const databaseEntryFiles: (MockFileDescriptor | string)[] = [
   {
     path: entryStorageEntry1.path,
     textContent: entryStorageEntry1FileContents,
+  },
+  {
+    path: relatedEntry1.path,
+    textContent: relatedEntry1FileContents,
+  },
+  {
+    path: relatedEntry2.path,
+    textContent: relatedEntry2FileContents,
   },
   {
     path: collectionEntry1.path,

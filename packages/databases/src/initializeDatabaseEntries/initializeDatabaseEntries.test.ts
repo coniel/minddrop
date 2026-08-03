@@ -77,7 +77,8 @@ describe('initializeDatabaseEntries', () => {
       (collection) => collection.virtual,
     );
 
-    // Only the collectionEntry1's two collection properties should produce virtual collections
-    expect(virtualCollections).toHaveLength(2);
+    // Only the collection database's entries should produce virtual
+    // collections (3 entries x 2 collection properties)
+    expect(virtualCollections).toHaveLength(6);
   });
 });
