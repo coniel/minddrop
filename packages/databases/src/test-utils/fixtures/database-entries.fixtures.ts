@@ -17,7 +17,7 @@ import {
  *****************************************************************************/
 
 export const objectEntry1: DatabaseEntry = {
-  id: `${objectDatabase.name}/Test Entry.md`,
+  id: 'object-entry-1',
   title: 'Test Entry',
   database: objectDatabase.id,
   path: `${objectDatabase.path}/Test Entry.md`,
@@ -55,7 +55,7 @@ export const objectEntry1SqlRecord: SqlEntryRecord = {
  *****************************************************************************/
 
 export const yamlObjectEntry1: DatabaseEntry = {
-  id: `${yamlObjectDatabase.name}/Test Entry.yaml`,
+  id: 'yaml-object-entry-1',
   title: 'Test Entry',
   database: yamlObjectDatabase.id,
   path: `${yamlObjectDatabase.path}/Test Entry.yaml`,
@@ -90,7 +90,7 @@ export const yamlObjectEntry1SqlRecord: SqlEntryRecord = {
  *****************************************************************************/
 
 export const urlEntry1: DatabaseEntry = {
-  id: `${urlDatabase.name}/Test Entry.md`,
+  id: 'url-entry-1',
   title: 'Test Entry',
   database: urlDatabase.id,
   path: `${urlDatabase.path}/Test Entry.md`,
@@ -132,7 +132,7 @@ export const urlEntry1SqlRecord: SqlEntryRecord = {
  *****************************************************************************/
 
 export const rootStorageEntry1: DatabaseEntry = {
-  id: `${rootStorageDatabase.name}/Root Storage Entry 1.md`,
+  id: 'root-storage-entry-1',
   title: 'Root Storage Entry 1',
   database: rootStorageDatabase.id,
   path: `${rootStorageDatabase.path}/Root Storage Entry 1.md`,
@@ -160,7 +160,7 @@ export const rootStorageEntry1SqlRecord: SqlEntryRecord = {
 };
 
 export const rootStorageEntry_empty_value: DatabaseEntry = {
-  id: `${rootStorageDatabase.name}/Root Storage Entry Empty Value.md`,
+  id: 'root-storage-entry-empty-value',
   title: 'Root Storage Entry Empty Value',
   database: rootStorageDatabase.id,
   path: `${rootStorageDatabase.path}/Root Storage Entry Empty Value.md`,
@@ -189,7 +189,7 @@ export const rootStorageEntrySqlRecord_empty_value: SqlEntryRecord = {
  *****************************************************************************/
 
 export const commonStorageEntry1: DatabaseEntry = {
-  id: `${commonStorageDatabase.name}/Common Storage Entry 1.md`,
+  id: 'common-storage-entry-1',
   title: 'Common Storage Entry 1',
   database: commonStorageDatabase.id,
   path: `${commonStorageDatabase.path}/Common Storage Entry 1.md`,
@@ -221,7 +221,7 @@ export const commonStorageEntry1SqlRecord: SqlEntryRecord = {
  *****************************************************************************/
 
 export const propertyStorageEntry1: DatabaseEntry = {
-  id: `${propertyStorageDatabase.name}/Property Storage Entry 1.md`,
+  id: 'property-storage-entry-1',
   title: 'Property Storage Entry 1',
   database: propertyStorageDatabase.id,
   path: `${propertyStorageDatabase.path}/Property Storage Entry 1.md`,
@@ -253,7 +253,7 @@ export const propertyStorageEntry1SqlRecord: SqlEntryRecord = {
  *****************************************************************************/
 
 export const entryStorageEntry1: DatabaseEntry = {
-  id: `${entryStorageDatabase.name}/Entry Storage Entry 1/Entry Storage Entry 1.md`,
+  id: 'entry-storage-entry-1',
   title: 'Entry Storage Entry 1',
   database: entryStorageDatabase.id,
   path: `${entryStorageDatabase.path}/Entry Storage Entry 1/Entry Storage Entry 1.md`,
@@ -285,7 +285,7 @@ export const entryStorageEntry1SqlRecord: SqlEntryRecord = {
  *****************************************************************************/
 
 export const timestampEntry1: DatabaseEntry = {
-  id: `${timestampDatabase.name}/Timestamp Entry.md`,
+  id: 'timestamp-entry-1',
   title: 'Timestamp Entry',
   database: timestampDatabase.id,
   path: `${timestampDatabase.path}/Timestamp Entry.md`,
@@ -322,7 +322,7 @@ export const timestampEntry1SqlRecord: SqlEntryRecord = {
  *****************************************************************************/
 
 export const collectionEntry1: DatabaseEntry = {
-  id: `${collectionDatabase.name}/Collection Entry 1.md`,
+  id: 'collection-entry-1',
   title: 'Collection Entry 1',
   database: collectionDatabase.id,
   path: `${collectionDatabase.path}/Collection Entry 1.md`,

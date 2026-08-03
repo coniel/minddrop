@@ -21,8 +21,8 @@ describe('readDatabaseEntries', () => {
     const entries = await readDatabaseEntries(objectDatabase);
 
     // Should contain the expected entry with correct data
-    const entry = entries.find((entry) => entry.id === objectEntry1.id);
-    expect(entry).toEqual(objectEntry1);
+    const entry = entries.find((entry) => entry.path === objectEntry1.path);
+    expect(entry).toEqual({ ...objectEntry1, id: expect.any(String) });
   });
 
   it('reads entries from an entry-based storage database', async () => {
@@ -30,8 +30,10 @@ describe('readDatabaseEntries', () => {
     const entries = await readDatabaseEntries(entryStorageDatabase);
 
     // Should contain the expected entry
-    const entry = entries.find((entry) => entry.id === entryStorageEntry1.id);
-    expect(entry).toEqual(entryStorageEntry1);
+    const entry = entries.find(
+      (entry) => entry.path === entryStorageEntry1.path,
+    );
+    expect(entry).toEqual({ ...entryStorageEntry1, id: expect.any(String) });
   });
 
   it('filters out non-matching file extensions', async () => {

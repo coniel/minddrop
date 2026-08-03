@@ -28,7 +28,7 @@ describe('readDatabaseEntry', () => {
       markdownEntrySerializer,
     );
 
-    expect(entry).toEqual(objectEntry1);
+    expect(entry).toEqual({ ...objectEntry1, id: expect.any(String) });
   });
 
   it('uses timestamp properties when available instead of file stat', async () => {

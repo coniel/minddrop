@@ -1,7 +1,7 @@
 // Increment this when the schema or indexing logic changes.
 // On startup, if the stored schema version does not match,
 // the SQL database is dropped and rebuilt from scratch.
-export const SCHEMA_VERSION = 5;
+export const SCHEMA_VERSION = 6;
 
 // SQL schema for creating tables
 export const SCHEMA_SQL = `

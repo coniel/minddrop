@@ -1,6 +1,6 @@
 import { Fs } from '@minddrop/file-system';
 import { PropertySchema } from '@minddrop/properties';
-import { Paths, titleFromPath } from '@minddrop/utils';
+import { titleFromPath, uuid } from '@minddrop/utils';
 import { Database, DatabaseEntry, DatabaseEntrySerializer } from '../types';
 
 /**
@@ -48,9 +48,11 @@ export async function readDatabaseEntry(
       lastModified = lastModified ?? stats.lastModified;
     }
 
-    // Construct the entry object with workspace-relative path as ID
+    // Construct the entry object with a freshly minted ID. Background
+    // sync re-resolves the ID to the existing one when the path matches
+    // an already indexed entry.
     const entry: DatabaseEntry = {
-      id: path.replace(`${Paths.workspace}/`, ''),
+      id: uuid(),
       database: database.id,
       path,
       title: titleFromPath(path),

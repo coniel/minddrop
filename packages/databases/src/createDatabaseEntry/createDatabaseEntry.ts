@@ -2,7 +2,7 @@ import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { i18n } from '@minddrop/i18n';
 import { Properties, PropertyMap } from '@minddrop/properties';
-import { Paths, titleFromPath } from '@minddrop/utils';
+import { titleFromPath, uuid } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import {
   DatabaseEntryCreatedEvent,
@@ -68,9 +68,9 @@ export async function createDatabaseEntry<
   // The entry's creation and last modified timestamp
   const now = new Date();
 
-  // Create the new entry with workspace-relative path as ID
+  // Create the new entry
   const entry: DatabaseEntry<TProperties> = {
-    id: path.replace(`${Paths.workspace}/`, ''),
+    id: uuid(),
     database: databaseId,
     title: titleFromPath(path),
     path,
