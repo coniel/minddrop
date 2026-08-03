@@ -3,7 +3,7 @@
  */
 export interface ParsedVirtualViewId {
   /**
-   * The database entry ID (workspace-relative path).
+   * The database entry ID.
    */
   entryId: string;
 
@@ -21,10 +21,7 @@ export interface ParsedVirtualViewId {
 /**
  * Parses a virtual view ID into its components.
  *
- * Virtual view IDs have the format `entryId:propertyName:layoutId`,
- * where entryId may itself contain colons (e.g. path separators
- * are not colons, but entry IDs like `Books/Some Book.md` are safe).
- *
+ * Virtual view IDs have the format `entryId:propertyName:layoutId`.
  * Since the property name and layout ID are the last two colon-separated
  * segments, we split from the right.
  *

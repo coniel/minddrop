@@ -54,7 +54,7 @@ export async function initializeDatabasesBackend(
   // Load core entry serializers for reading entry files
   loadCoreSerializers();
 
-  // Set the workspace path so entry ID derivation works
+  // Set the workspace path for path resolution
   Paths.workspace = workspacePath;
 
   // Read database configs from the workspace
