@@ -5,7 +5,8 @@
   "types": "src/index",
   "exports": {
     ".": "./src/index.ts",
-    "./stories": "./src/stories.ts"
+    "./stories": "./src/stories.ts",
+    "./dev": "./src/dev/Story.tsx"
   },
   "scripts": {
     "lint": "eslint .  --max-warnings 0",

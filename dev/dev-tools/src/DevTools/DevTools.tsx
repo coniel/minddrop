@@ -41,6 +41,7 @@ import {
   useStoreGroups,
   useStoreItemCount,
 } from '../StateInspector';
+import { localStories } from '../stories';
 import {
   ActiveSection,
   ActiveStory,
@@ -68,6 +69,10 @@ import {
   setLogListener,
 } from '../utils';
 import './DevTools.css';
+
+// Combined story registry: shared ui-primitives stories followed
+// by local dev tools stories
+const allStories = [...stories, ...localStories];
 
 function useTime() {
   return useSyncExternalStore(
@@ -1557,7 +1562,7 @@ export const DevTools: React.FC = () => {
     ) : null;
   }
 
-  const group = stories[activeStory.groupIndex];
+  const group = allStories[activeStory.groupIndex];
   const ActiveStoryComponent = group?.items[activeStory.itemIndex]?.component;
 
   const savedFiles = [...new Set(savedLogs.map((l) => l.file))];
@@ -2226,7 +2231,7 @@ export const DevTools: React.FC = () => {
 
               {activeSection === 'stories' && (
                 <>
-                  {stories.map((group, groupIndex) => (
+                  {allStories.map((group, groupIndex) => (
                     <MenuGroup key={group.group}>
                       <MenuLabel label={group.group} />
                       {group.items.map((item, itemIndex) => (
