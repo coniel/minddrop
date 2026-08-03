@@ -7,6 +7,7 @@ import { getDatabase } from '../getDatabase';
 import { getDatabaseEntry } from '../getDatabaseEntry';
 import { readDatabaseMetadata } from '../readDatabaseMetadata';
 import { DatabaseEntryMetadata } from '../types';
+import { entryMetadataKey } from '../utils/entryMetadataKey';
 import { writeDatabaseMetadata } from '../writeDatabaseMetadata';
 
 const DEBOUNCE_MS = 500;
@@ -39,9 +40,13 @@ export function updateEntryMetadata(
   const entry = getDatabaseEntry(entryId);
   const database = getDatabase(entry.database);
 
+  // Metadata is keyed by the entry's database-relative path since the
+  // file only holds this database's entries
+  const key = entryMetadataKey(entryId, database.id);
+
   // Merge the update into the pending map for this database
   const pending = pendingUpdates.get(database.path) ?? {};
-  pending[entryId] = metadata;
+  pending[key] = metadata;
   pendingUpdates.set(database.path, pending);
 
   // Clear any existing timer for this database
@@ -67,31 +72,32 @@ export function updateEntryMetadata(
 }
 
 /**
- * Re-keys a pending metadata entry from one entry ID to another.
- * Used during rename to ensure queued-but-unflushed metadata
- * follows the entry to its new ID.
+ * Re-keys a pending metadata entry from one metadata key to another.
+ * Used during rename to ensure queued-but-unflushed metadata follows
+ * the entry to its new key. Keys are database-relative (see
+ * `entryMetadataKey`).
  *
  * No-op if the database has no pending updates or the old key
  * does not exist in the pending map.
  *
  * @param databasePath - The absolute path to the database directory.
- * @param oldEntryId - The entry ID to re-key from.
- * @param newEntryId - The entry ID to re-key to.
+ * @param oldKey - The metadata key to re-key from.
+ * @param newKey - The metadata key to re-key to.
  */
 export function rekeyPendingMetadata(
   databasePath: string,
-  oldEntryId: string,
-  newEntryId: string,
+  oldKey: string,
+  newKey: string,
 ): void {
   const pending = pendingUpdates.get(databasePath);
 
-  if (!pending || !(oldEntryId in pending)) {
+  if (!pending || !(oldKey in pending)) {
     return;
   }
 
   // Move the value from the old key to the new key
-  pending[newEntryId] = pending[oldEntryId];
-  delete pending[oldEntryId];
+  pending[newKey] = pending[oldKey];
+  delete pending[oldKey];
 }
 
 /**

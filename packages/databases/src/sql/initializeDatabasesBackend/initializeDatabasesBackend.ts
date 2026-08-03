@@ -5,7 +5,7 @@ import { readDatabaseEntries } from '../../readDatabaseEntries';
 import { readDatabaseMetadata } from '../../readDatabaseMetadata';
 import { readWorkspaceDatabases } from '../../readWorkspaceDatabases';
 import type { Database, SqlEntryRecord } from '../../types';
-import { convertEntryToSqlRecord } from '../../utils';
+import { convertEntryToSqlRecord, entryMetadataKey } from '../../utils';
 import { SCHEMA_SQL, SCHEMA_VERSION } from '../schema';
 import { sqlGetAllEntriesFull } from '../sqlGetAllEntriesFull';
 import { sqlUpsertDatabase } from '../sqlUpsertDatabase';
@@ -110,7 +110,7 @@ async function rebuildSqlFromFilesystem(databases: Database[]): Promise<void> {
 
     // Merge metadata into entries before conversion
     const entriesWithMetadata = rawEntries.map((entry) => {
-      const metadata = metadataMap[entry.id];
+      const metadata = metadataMap[entryMetadataKey(entry.id, database.id)];
 
       if (metadata) {
         return { ...entry, metadata };

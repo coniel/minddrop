@@ -5,7 +5,7 @@ import { readDatabaseEntries } from '../readDatabaseEntries';
 import { readDatabaseMetadata } from '../readDatabaseMetadata';
 import { readWorkspaceDatabases } from '../readWorkspaceDatabases';
 import type { BackgroundSyncChangeset, Database } from '../types';
-import { convertEntryToSqlRecord } from '../utils';
+import { convertEntryToSqlRecord, entryMetadataKey } from '../utils';
 import { sqlDeleteDatabase } from './sqlDeleteDatabase';
 import { sqlDeleteEntries } from './sqlDeleteEntries';
 import { sqlGetAllDatabases } from './sqlGetAllDatabases';
@@ -103,7 +103,7 @@ export async function backgroundSyncDatabases(
 
     // Merge metadata into entries before conversion
     const entriesWithMetadata = rawEntries.map((entry) => {
-      const metadata = metadataMap[entry.id];
+      const metadata = metadataMap[entryMetadataKey(entry.id, database.id)];
 
       if (metadata) {
         return { ...entry, metadata };

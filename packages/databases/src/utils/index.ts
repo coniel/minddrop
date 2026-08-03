@@ -1,6 +1,7 @@
 export * from './databaseConfigFilePath';
 export * from './databaseMetadataFilePath';
 export * from './entryAssetsDirPath';
+export * from './entryMetadataKey';
 export * from './filterValidDatabaseFiles';
 export * from './filterValidDatabaseUrls';
 export * from './getDefaultFileProperty';

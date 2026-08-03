@@ -5,6 +5,23 @@ touching the related code. Organised by package/feature. Add entries as
 they come up; delete entries when the underlying code changes make them
 obsolete.
 
+## packages/databases
+
+### Pending entry metadata is keyed by database path, not entry
+
+`updateEntryMetadata` debounces writes into a pending map keyed by the
+database's **path** (`pendingUpdates: Map<databasePath, …>`). A metadata
+write queued in that window and then a **database rename** (which changes
+the database path) leaves the pending entry stranded under the old path:
+when its debounce timer fires it flushes to the pre-rename location.
+
+Rare in practice — renames are deliberate user actions, not concurrent
+with metadata edits — so it is not handled. Entry metadata is explicitly
+"safe to lose" supplementary state (`embeddedViewConfigs`,
+`viewLayoutOverrides`), so a dropped pending write is not data loss. If it
+ever needs solving, move the pending map entry from the old path key to
+the new one during the rename (no primitive for this exists yet).
+
 ## packages/designs
 
 ### Layout lookups are linear scans by design — do not denormalise

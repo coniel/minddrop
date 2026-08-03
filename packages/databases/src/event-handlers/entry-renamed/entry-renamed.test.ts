@@ -16,6 +16,7 @@ import { DatabaseEntryMetadata } from '../../types';
 import { updateEntryMetadata } from '../../updateEntryMetadata';
 import {
   databaseMetadataFilePath,
+  entryMetadataKey,
   virtualCollectionId,
   virtualCollectionName,
   virtualViewId,
@@ -83,12 +84,13 @@ describe('onRenameEntry', () => {
       embeddedViewConfigs: { 'card:Related': { options: {}, data: {} } },
     };
 
-    // Write metadata keyed by the original entry ID
+    // Write metadata keyed by the original entry's database-relative key
     MockFs.addFiles([
       {
         path: metadataFilePath,
         textContent: JSON.stringify({
-          [collectionEntry1.id]: entryMetadata,
+          [entryMetadataKey(collectionEntry1.id, collectionDatabase.id)]:
+            entryMetadata,
         }),
       },
     ]);
@@ -108,11 +110,15 @@ describe('onRenameEntry', () => {
       updated: renamedEntry,
     });
 
-    // Metadata should be re-keyed to the new entry ID
+    // Metadata should be re-keyed to the new entry's relative key
     const written = JSON.parse(MockFs.readTextFile(metadataFilePath));
 
-    expect(written[renamedEntry.id]).toEqual(entryMetadata);
-    expect(written[collectionEntry1.id]).toBeUndefined();
+    expect(
+      written[entryMetadataKey(renamedEntry.id, collectionDatabase.id)],
+    ).toEqual(entryMetadata);
+    expect(
+      written[entryMetadataKey(collectionEntry1.id, collectionDatabase.id)],
+    ).toBeUndefined();
   });
 
   it('re-keys pending metadata from old to new entry ID', async () => {
@@ -142,11 +148,15 @@ describe('onRenameEntry', () => {
       updated: renamedEntry,
     });
 
-    // The flushed metadata should be written under the new key
+    // The flushed metadata should be written under the new relative key
     const written = JSON.parse(MockFs.readTextFile(metadataFilePath));
 
-    expect(written[renamedEntry.id]).toEqual(entryMetadata);
-    expect(written[collectionEntry1.id]).toBeUndefined();
+    expect(
+      written[entryMetadataKey(renamedEntry.id, collectionDatabase.id)],
+    ).toEqual(entryMetadata);
+    expect(
+      written[entryMetadataKey(collectionEntry1.id, collectionDatabase.id)],
+    ).toBeUndefined();
   });
 
   it('deletes old SQL entry record via sqlDeleteEntries', async () => {

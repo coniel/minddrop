@@ -9,12 +9,15 @@ import {
   setup,
 } from '../test-utils';
 import { flushDatabaseMetadata } from '../updateEntryMetadata';
-import { databaseMetadataFilePath } from '../utils';
+import { databaseMetadataFilePath, entryMetadataKey } from '../utils';
 import { clearEntryViewLayoutOverride } from './clearEntryViewLayoutOverride';
 
 const { layout_card_1, layout_list_1 } = DesignFixtures;
 
 const metadataFilePath = databaseMetadataFilePath(objectDatabase.path);
+
+// The database-relative key the entry's metadata is stored under
+const metadataKey = entryMetadataKey(objectEntry1.id, objectDatabase.id);
 
 describe('clearEntryViewLayoutOverride', () => {
   beforeEach(() => {
@@ -43,7 +46,7 @@ describe('clearEntryViewLayoutOverride', () => {
 
     const written = JSON.parse(MockFs.readTextFile(metadataFilePath));
 
-    expect(written[objectEntry1.id].viewLayoutOverrides).toEqual({
+    expect(written[metadataKey].viewLayoutOverrides).toEqual({
       'view-2': layout_list_1.id,
     });
   });
@@ -68,11 +71,11 @@ describe('clearEntryViewLayoutOverride', () => {
     const written = JSON.parse(MockFs.readTextFile(metadataFilePath));
 
     // Views metadata should still be present
-    expect(written[objectEntry1.id].embeddedViewConfigs).toEqual({
+    expect(written[metadataKey].embeddedViewConfigs).toEqual({
       'card:Tags': { options: {}, data: {} },
     });
 
     // Layout overrides should be empty
-    expect(written[objectEntry1.id].viewLayoutOverrides).toEqual({});
+    expect(written[metadataKey].viewLayoutOverrides).toEqual({});
   });
 });

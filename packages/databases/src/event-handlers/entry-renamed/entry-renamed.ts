@@ -8,6 +8,7 @@ import { flushDatabaseMetadata } from '../../updateEntryMetadata';
 import { rekeyPendingMetadata } from '../../updateEntryMetadata/updateEntryMetadata';
 import {
   convertEntryToSqlRecord,
+  entryMetadataKey,
   rekeyDatabaseMetadata,
   virtualCollectionId,
   virtualCollectionName,
@@ -27,11 +28,15 @@ export async function onRenameEntry(data: DatabaseEntryRenamedEventData) {
   // Step 1: Flush any pending metadata writes so nothing is lost
   await flushDatabaseMetadata(database.path);
 
+  // Metadata is keyed by the database-relative entry path
+  const oldMetadataKey = entryMetadataKey(original.id, database.id);
+  const newMetadataKey = entryMetadataKey(updated.id, database.id);
+
   // Step 2: Re-key the on-disk metadata file from old to new entry ID
-  await rekeyDatabaseMetadata(database.path, original.id, updated.id);
+  await rekeyDatabaseMetadata(database.path, oldMetadataKey, newMetadataKey);
 
   // Step 3: Re-key any in-flight pending metadata entries
-  rekeyPendingMetadata(database.path, original.id, updated.id);
+  rekeyPendingMetadata(database.path, oldMetadataKey, newMetadataKey);
 
   // Step 4: Remove the orphaned SQL record under the old ID
   sqlDeleteEntries(database.id, [original.id]);

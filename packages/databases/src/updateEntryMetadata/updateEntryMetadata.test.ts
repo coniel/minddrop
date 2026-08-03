@@ -9,7 +9,7 @@ import {
   urlEntry1,
 } from '../test-utils';
 import { DatabaseEntryMetadata } from '../types';
-import { databaseMetadataFilePath } from '../utils';
+import { databaseMetadataFilePath, entryMetadataKey } from '../utils';
 import {
   flushDatabaseMetadata,
   rekeyPendingMetadata,
@@ -17,6 +17,10 @@ import {
 } from './updateEntryMetadata';
 
 const metadataFilePath = databaseMetadataFilePath(objectDatabase.path);
+
+// The database-relative keys the entries' metadata is stored under
+const objectMetadataKey = entryMetadataKey(objectEntry1.id, objectDatabase.id);
+const urlMetadataKey = entryMetadataKey(urlEntry1.id, urlDatabase.id);
 
 const entryMetadata: DatabaseEntryMetadata = {
   embeddedViewConfigs: {
@@ -39,13 +43,13 @@ describe('updateEntryMetadata', () => {
     const written = JSON.parse(MockFs.readTextFile(metadataFilePath));
 
     expect(written).toEqual({
-      [objectEntry1.id]: entryMetadata,
+      [objectMetadataKey]: entryMetadata,
     });
   });
 
   it('preserves other entries when updating', async () => {
     const existingMetadata: Record<string, DatabaseEntryMetadata> = {
-      'Objects/Other Entry.md': {
+      'Other Entry.md': {
         embeddedViewConfigs: { 'list:Tags': { options: {}, data: {} } },
       },
     };
@@ -65,7 +69,7 @@ describe('updateEntryMetadata', () => {
 
     expect(written).toEqual({
       ...existingMetadata,
-      [objectEntry1.id]: entryMetadata,
+      [objectMetadataKey]: entryMetadata,
     });
   });
 
@@ -86,11 +90,9 @@ describe('updateEntryMetadata', () => {
 
     const written = JSON.parse(MockFs.readTextFile(metadataFilePath));
 
-    expect(written[objectEntry1.id]).toEqual(metadata1);
-
-    // urlEntry1 belongs to a different database, so it should not be in
-    // this metadata file
-    expect(written[urlEntry1.id]).toBeUndefined();
+    // Only objectEntry1's metadata is in the object database's file
+    expect(written[objectMetadataKey]).toEqual(metadata1);
+    expect(Object.keys(written)).toEqual([objectMetadataKey]);
 
     // Flush the url database separately
     await flushDatabaseMetadata(urlDatabase.path);
@@ -98,7 +100,7 @@ describe('updateEntryMetadata', () => {
     const urlMetadataFilePath = databaseMetadataFilePath(urlDatabase.path);
     const urlWritten = JSON.parse(MockFs.readTextFile(urlMetadataFilePath));
 
-    expect(urlWritten[urlEntry1.id]).toEqual(metadata2);
+    expect(urlWritten[urlMetadataKey]).toEqual(metadata2);
   });
 
   it('is a no-op when flushing a database with no pending updates', async () => {
@@ -110,33 +112,33 @@ describe('updateEntryMetadata', () => {
 
   describe('rekeyPendingMetadata', () => {
     it('moves a pending entry from the old key to the new key', async () => {
-      const newEntryId = `${objectDatabase.name}/Renamed Entry.md`;
+      const newKey = 'Renamed Entry.md';
 
-      // Queue metadata under the original entry ID
+      // Queue metadata under the original entry's key
       updateEntryMetadata(objectEntry1.id, entryMetadata);
 
       // Re-key from old to new
-      rekeyPendingMetadata(objectDatabase.path, objectEntry1.id, newEntryId);
+      rekeyPendingMetadata(objectDatabase.path, objectMetadataKey, newKey);
 
       // Flush and verify the metadata was written under the new key
       await flushDatabaseMetadata(objectDatabase.path);
 
       const written = JSON.parse(MockFs.readTextFile(metadataFilePath));
 
-      expect(written[newEntryId]).toEqual(entryMetadata);
-      expect(written[objectEntry1.id]).toBeUndefined();
+      expect(written[newKey]).toEqual(entryMetadata);
+      expect(written[objectMetadataKey]).toBeUndefined();
     });
 
     it('is a no-op when there are no pending updates for the database', () => {
       // Should not throw
-      rekeyPendingMetadata(objectDatabase.path, objectEntry1.id, 'new-id');
+      rekeyPendingMetadata(objectDatabase.path, objectMetadataKey, 'new-id');
     });
 
     it('is a no-op when the old key does not exist in pending updates', async () => {
-      // Queue metadata under a different entry ID
+      // Queue metadata under the entry's key
       updateEntryMetadata(objectEntry1.id, entryMetadata);
 
-      // Try to re-key a non-existent entry
+      // Try to re-key a non-existent key
       rekeyPendingMetadata(objectDatabase.path, 'non-existent', 'new-id');
 
       // Flush and verify the original entry is unchanged
@@ -144,7 +146,7 @@ describe('updateEntryMetadata', () => {
 
       const written = JSON.parse(MockFs.readTextFile(metadataFilePath));
 
-      expect(written[objectEntry1.id]).toEqual(entryMetadata);
+      expect(written[objectMetadataKey]).toEqual(entryMetadata);
     });
   });
 });

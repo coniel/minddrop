@@ -10,12 +10,15 @@ import {
   setup,
 } from '../test-utils';
 import { flushDatabaseMetadata } from '../updateEntryMetadata';
-import { databaseMetadataFilePath } from '../utils';
+import { databaseMetadataFilePath, entryMetadataKey } from '../utils';
 import { setEntryViewLayoutOverride } from './setEntryViewLayoutOverride';
 
 const { layout_card_1, layout_card_2, layout_card_3 } = DesignFixtures;
 
 const metadataFilePath = databaseMetadataFilePath(objectDatabase.path);
+
+// The database-relative key the entry's metadata is stored under
+const metadataKey = entryMetadataKey(objectEntry1.id, objectDatabase.id);
 
 describe('setEntryViewLayoutOverride', () => {
   beforeEach(setup);
@@ -47,7 +50,7 @@ describe('setEntryViewLayoutOverride', () => {
 
     const written = JSON.parse(MockFs.readTextFile(metadataFilePath));
 
-    expect(written[objectEntry1.id].viewLayoutOverrides).toEqual({
+    expect(written[metadataKey].viewLayoutOverrides).toEqual({
       'view-1': layout_card_2.id,
     });
   });
@@ -71,7 +74,7 @@ describe('setEntryViewLayoutOverride', () => {
 
     const written = JSON.parse(MockFs.readTextFile(metadataFilePath));
 
-    expect(written[objectEntry1.id].viewLayoutOverrides).toEqual({
+    expect(written[metadataKey].viewLayoutOverrides).toEqual({
       'view-1': layout_card_2.id,
       'view-2': layout_card_3.id,
     });
