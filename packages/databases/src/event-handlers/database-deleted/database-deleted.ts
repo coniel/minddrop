@@ -2,8 +2,9 @@ import { Collections } from '@minddrop/collections';
 import { DataViews } from '@minddrop/views';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabaseDeletedEventData } from '../../events';
+import { removeEntriesFromCollections } from '../../removeEntriesFromCollections';
 import { sqlDeleteDatabase } from '../../sql';
-import { removeEntriesFromCollections, virtualCollectionId } from '../../utils';
+import { virtualCollectionId } from '../../utils';
 
 /**
  * Called when a database is deleted. Removes from SQL, deletes

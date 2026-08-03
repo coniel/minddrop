@@ -5,8 +5,9 @@ import { DatabaseEntriesStore } from './DatabaseEntriesStore';
 import { DatabasesStore } from './DatabasesStore';
 import { DatabasesBackgroundSyncedEvent } from './events';
 import { loadDatabaseViews } from './loadDatabaseViews';
+import { removeEntriesFromCollections } from './removeEntriesFromCollections';
 import type { BackgroundSyncChangeset, Database } from './types';
-import { convertSqlRecordToEntry, removeEntriesFromCollections } from './utils';
+import { convertSqlRecordToEntry } from './utils';
 
 /**
  * Applies a background sync changeset to frontend stores

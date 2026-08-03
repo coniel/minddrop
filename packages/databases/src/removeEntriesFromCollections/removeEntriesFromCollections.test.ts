@@ -7,9 +7,8 @@ import {
   relatedEntry1,
   relatedEntry2,
   setup,
-} from '../../test-utils';
-import { virtualCollectionId } from '../virtualCollectionId';
-import { virtualCollectionName } from '../virtualCollectionName';
+} from '../test-utils';
+import { virtualCollectionId, virtualCollectionName } from '../utils';
 import { removeEntriesFromCollections } from './removeEntriesFromCollections';
 
 // The virtual collection owned by collectionEntry1's Related property
