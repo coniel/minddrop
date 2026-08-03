@@ -54,6 +54,14 @@ describe('restoreDates', () => {
     expect(result.updatedAt).toBe('not-a-date');
   });
 
+  it('should pass through existing Date instances', () => {
+    const date = new Date('2024-01-01T00:00:00.000Z');
+    const input = { createdAt: date };
+    const result: typeof input = restoreDates(input);
+
+    expect(result.createdAt).toBe(date);
+  });
+
   it('should handle empty objects and arrays', () => {
     const input = {
       emptyObj: {},

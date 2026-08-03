@@ -7,6 +7,11 @@ export function restoreDates<T extends object = object>(object: object): T {
 
 // Helper function to recursively check and deserialize date strings
 const deserialize = (value: any): any => {
+  // Pass through existing Date instances
+  if (value instanceof Date) {
+    return value;
+  }
+
   // If the value is an object, recursively process its keys
   if (value && typeof value === 'object') {
     // If it's an array, process each element
