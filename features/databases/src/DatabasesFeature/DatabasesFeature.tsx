@@ -24,6 +24,7 @@ import {
   ViewAreaChangedEvent,
   ViewAreaChangedEventData,
 } from '@minddrop/events';
+import { Tabs } from '@minddrop/feature-views';
 import { DatabaseEntryDialog } from '../DatabaseEntryDialog';
 import { DatabaseEntryRendererProps } from '../DatabaseEntryRenderer';
 import { DatabaseViewProps } from '../DatabaseView';
@@ -62,6 +63,27 @@ export const DatabasesFeature: React.FC = () => {
   const [dialogEntryId, setDialogEntryId] = useState<string | null>(null);
 
   useEffect(() => {
+    // Close restored entry views whose entry no longer exists
+    // (e.g. deleted externally or re-indexed while the app was closed)
+    Tabs.getOpenTabs(DatabaseEntryViewName).forEach((tabView) => {
+      const props = tabView.props as DatabaseEntryRendererProps | undefined;
+
+      // Skip views without an entry ID
+      if (!props?.entryId) {
+        return;
+      }
+
+      // Skip views whose entry resolves
+      if (DatabaseEntries.Store.get(props.entryId)) {
+        return;
+      }
+
+      // Close the view
+      Events.dispatch<CloseViewEventData>(CloseViewEvent, {
+        id: tabView.id ?? databaseEntryViewId(props.entryId),
+      });
+    });
+
     // Track the active database in the main content area.
     // Set the active database ID when a database view is shown,
     // clear it when any other view is shown.
@@ -177,39 +199,6 @@ export const DatabasesFeature: React.FC = () => {
       },
     );
 
-    // Remap open entry views when the database is renamed. Entry IDs are
-    // database-prefixed, so a rename changes every entry ID. Entries may
-    // already be re-keyed to the new database ID by the time this runs,
-    // so gather them under both the old and new database ID.
-    Events.addListener<DatabaseRenamedEventData>(
-      DatabaseRenamedEvent,
-      DatabaseEntriesEventListenerId,
-      ({ data }) => {
-        const { original, updated } = data;
-
-        // Collect the database's entries regardless of re-key state
-        const entries = [
-          ...DatabaseEntries.getAll(original.id),
-          ...DatabaseEntries.getAll(updated.id),
-        ];
-
-        entries.forEach((entry) => {
-          // Swap the database prefix to derive the pre/post-rename IDs
-          const relativePath = entry.id.slice(entry.database.length);
-          const oldEntryId = `${original.id}${relativePath}`;
-          const newEntryId = `${updated.id}${relativePath}`;
-
-          // Re-point the entry's open view to the new entry ID
-          Events.dispatch<UpdateViewEventData>(UpdateViewEvent, {
-            id: databaseEntryViewId(oldEntryId),
-            newId: databaseEntryViewId(newEntryId),
-            props: { entryId: newEntryId, layoutContext: 'page' },
-            title: entry.title,
-          });
-        });
-      },
-    );
-
     // Close the database's open view when the database is deleted
     Events.addListener<DatabaseDeletedEventData>(
       DatabaseDeletedEvent,
@@ -239,15 +228,13 @@ export const DatabasesFeature: React.FC = () => {
       },
     );
 
-    // Update an entry's open view when the entry is renamed
+    // Update an entry's open view title when the entry is renamed
     Events.addListener<DatabaseEntryRenamedEventData>(
       DatabaseEntryRenamedEvent,
       DatabaseEntriesEventListenerId,
       ({ data }) => {
         Events.dispatch<UpdateViewEventData>(UpdateViewEvent, {
-          id: databaseEntryViewId(data.original.id),
-          newId: databaseEntryViewId(data.updated.id),
-          props: { entryId: data.updated.id },
+          id: databaseEntryViewId(data.updated.id),
           title: data.updated.title,
         });
       },
@@ -283,10 +270,6 @@ export const DatabasesFeature: React.FC = () => {
       );
       Events.removeListener(DatabaseUpdatedEvent, EventListenerId);
       Events.removeListener(DatabaseRenamedEvent, EventListenerId);
-      Events.removeListener(
-        DatabaseRenamedEvent,
-        DatabaseEntriesEventListenerId,
-      );
       Events.removeListener(DatabaseDeletedEvent, EventListenerId);
       Events.removeListener(
         DatabaseDeletedEvent,

@@ -3,7 +3,7 @@ import { DatabaseEntryNotFoundError } from '../errors';
 import { DatabaseEntry } from '../types';
 
 /**
- * Retrieves a database entry by its path.
+ * Retrieves a database entry by its ID.
  *
  * @param id - The ID of the entry to retrieve.
  * @returns The retrieved entry.
