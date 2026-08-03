@@ -104,9 +104,24 @@ export const DatabaseSettingsPanel: React.FC<DatabaseSettingsPanelProps> = ({
     );
   }
 
-  // Clear all entries in the database
+  // Prompt for confirmation before clearing all entries
   function handleClear() {
-    // TODO wire up once a clear-all-entries API exists in @minddrop/databases
+    const i18nRoot = 'databases.settings.clear.confirmation';
+
+    // Open a confirmation dialog for the destructive clear action
+    Events.dispatch<OpenConfirmationDialogEventData>(
+      OpenConfirmationDialogEvent,
+      {
+        title: `${i18nRoot}.title`,
+        message: `${i18nRoot}.message`,
+        confirmLabel: `${i18nRoot}.confirm`,
+        danger: true,
+        onConfirm: () => {
+          // Move all of the database's entries to the system trash
+          Databases.clearEntries(databaseId);
+        },
+      },
+    );
   }
 
   if (!database) {

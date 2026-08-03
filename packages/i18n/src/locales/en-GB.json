@@ -321,7 +321,12 @@
       "clear": {
         "title": "Clear database",
         "description": "Delete all entries in this database. The database and its configuration are kept.",
-        "button": "Clear"
+        "button": "Clear",
+        "confirmation": {
+          "title": "Clear database",
+          "message": "Are you sure you want to delete all entries in this database? This action cannot be undone.",
+          "confirm": "Clear database"
+        }
       }
     },
     "empty": {

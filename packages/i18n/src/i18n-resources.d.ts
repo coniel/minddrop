@@ -334,6 +334,11 @@ declare module 'i18next' {
               title: string;
               description: string;
               button: string;
+              confirmation: {
+                title: string;
+                message: string;
+                confirm: string;
+              };
             };
           };
           empty: {
