@@ -1,8 +1,13 @@
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
+import {
+  ItemAddressesChangedEvent,
+  ItemAddressesChangedEventData,
+} from '@minddrop/item-references';
 import { Workspaces } from '@minddrop/workspaces';
 import { DataViewsStore } from '../DataViewsStore';
 import { ViewFileExtension } from '../constants';
+import { onItemAddressesChanged } from '../event-handlers';
 import { ViewsLoadedEvent, ViewsLoadedEventData } from '../events';
 import { extractDataViewReferences } from '../extractDataViewReferences';
 import { readDataView } from '../readDataView';
@@ -60,6 +65,13 @@ export async function initializeViews(): Promise<void> {
 
   // Load the data views into the store
   DataViewsStore.load(views);
+
+  // Rewrite view files when referenced item addresses change
+  Events.on<ItemAddressesChangedEventData>(
+    ItemAddressesChangedEvent,
+    'views',
+    ({ data }) => onItemAddressesChanged(data),
+  );
 
   // Dispatch a data views loaded event
   Events.dispatch<ViewsLoadedEventData>(ViewsLoadedEvent, views);
