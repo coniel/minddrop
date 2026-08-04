@@ -7,7 +7,11 @@
       "new": "New"
     },
     "view": {
-      "notFound": "This page no longer exists."
+      "notFound": "This page no longer exists.",
+      "actions": {
+        "edit": "Edit page",
+        "exitEditMode": "Exit edit mode"
+      }
     },
     "templates": {
       "blank": {

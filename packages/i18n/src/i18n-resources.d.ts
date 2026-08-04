@@ -1479,6 +1479,10 @@ declare module 'i18next' {
           };
           view: {
             notFound: string;
+            actions: {
+              edit: string;
+              exitEditMode: string;
+            };
           };
           templates: {
             blank: {

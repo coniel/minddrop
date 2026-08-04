@@ -7,7 +7,10 @@ import { Events } from '@minddrop/events';
 import { initializeExtensions } from '@minddrop/extensions';
 import { DatabaseViewStateStore } from '@minddrop/feature-databases';
 import { LayoutRegionSizesStore } from '@minddrop/feature-designs';
-import { initializePagesFeature } from '@minddrop/feature-pages';
+import {
+  PageViewStateStore,
+  initializePagesFeature,
+} from '@minddrop/feature-pages';
 import { initializeSearch } from '@minddrop/feature-search';
 import { TabSetsStore, initializeViewsFeature } from '@minddrop/feature-views';
 import { initializeI18n } from '@minddrop/i18n';
@@ -64,6 +67,9 @@ async function runInitialization(): Promise<void> {
 
   // Hydrate per-database view state
   await DatabaseViewStateStore.hydrate();
+
+  // Hydrate per-page view state
+  await PageViewStateStore.hydrate();
 
   // Watch for theme variant changes
   Events.addListener(

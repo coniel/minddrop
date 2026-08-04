@@ -1,8 +1,7 @@
 .page-view {
   display: flex;
   flex-direction: column;
-  flex: 1;
-  min-height: 0;
+  height: 100%;
 
   .page-view-header {
     padding: var(--space-4) var(--space-5);

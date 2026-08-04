@@ -18,6 +18,7 @@ import {
 } from '@minddrop/pages';
 import { NewPageDialog } from '../NewPageDialog';
 import { PageViewProps } from '../PageView';
+import { PageViewStateStore } from '../PageViewStateStore';
 import {
   EventListenerId,
   OpenPageViewEvent,
@@ -87,11 +88,14 @@ export const PagesFeature: React.FC = () => {
       },
     );
 
-    // Close the page's open view when the page is deleted
+    // Close the page's open view and drop its view state when
+    // the page is deleted
     Events.addListener<PageDeletedEventData>(
       PageDeletedEvent,
       EventListenerId,
       ({ data }) => {
+        PageViewStateStore.remove(data.id);
+
         Events.dispatch<CloseViewEventData>(CloseViewEvent, {
           id: pageViewId(data.id),
         });

@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import { i18n } from '@minddrop/i18n';
+import { TranslationKey, i18n } from '@minddrop/i18n';
 import {
+  IconButton,
+  IconButtonSpacer,
   Spacer,
   Tabs,
   TabsList,
@@ -14,6 +16,18 @@ import './LayoutEditorLeftPanel.css';
 type ActivePanel = 'layout' | 'elements';
 
 export interface LayoutEditorLeftPanelProps {
+  /**
+   * The label of the back button.
+   * @default 'actions.back'
+   */
+  backButtonLabel?: TranslationKey;
+
+  /**
+   * Callback fired when the back button is clicked. The button
+   * is only rendered when provided.
+   */
+  onClickBack?: () => void;
+
   /**
    * When provided, only these element types are shown in the
    * elements palette.
@@ -32,6 +46,8 @@ export interface LayoutEditorLeftPanelProps {
  * tab and an elements palette tab.
  */
 export const LayoutEditorLeftPanel: React.FC<LayoutEditorLeftPanelProps> = ({
+  backButtonLabel = 'actions.back',
+  onClickBack,
   elementTypes,
   showViews,
 }) => {
@@ -44,6 +60,15 @@ export const LayoutEditorLeftPanel: React.FC<LayoutEditorLeftPanelProps> = ({
       onValueChange={(value) => setActivePanel(value as ActivePanel)}
     >
       <div className="panel-tabs">
+        {onClickBack && (
+          <IconButton
+            icon="arrow-left"
+            label={backButtonLabel}
+            tooltip={{ title: backButtonLabel }}
+            color="neutral"
+            onClick={onClickBack}
+          />
+        )}
         <Spacer />
         <TabsList>
           <TabsTab value="layout" size="sm">
@@ -54,6 +79,8 @@ export const LayoutEditorLeftPanel: React.FC<LayoutEditorLeftPanelProps> = ({
           </TabsTab>
         </TabsList>
         <Spacer />
+        {/* Balance the back button so the tabs stay centred */}
+        {onClickBack && <IconButtonSpacer />}
       </div>
 
       <TabsPanel value="layout">

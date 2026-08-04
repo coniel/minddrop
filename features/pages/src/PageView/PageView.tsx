@@ -7,9 +7,13 @@ import {
   ContentIcon,
   Group,
   Heading,
+  IconButton,
   ScrollArea,
+  Spacer,
   Text,
 } from '@minddrop/ui-primitives';
+import { setPageViewState, usePageViewState } from '../PageViewStateStore';
+import { PageEditMode } from './PageEditMode';
 import './PageView.css';
 
 export interface PageViewProps {
@@ -25,6 +29,7 @@ export interface PageViewProps {
  */
 export const PageView: React.FC<PageViewProps> = ({ pageId }) => {
   const page = Pages.use(pageId);
+  const { editing } = usePageViewState(pageId);
 
   // Element ID to property name bindings of the page layout
   const propertyMap = useMemo(
@@ -46,6 +51,10 @@ export const PageView: React.FC<PageViewProps> = ({ pageId }) => {
     [pageId, page],
   );
 
+  function handleEdit() {
+    setPageViewState(pageId, { editing: true });
+  }
+
   // The page no longer exists
   if (!page) {
     return (
@@ -55,12 +64,25 @@ export const PageView: React.FC<PageViewProps> = ({ pageId }) => {
     );
   }
 
+  // Render the in-place editor while in edit mode
+  if (editing) {
+    return <PageEditMode page={page} />;
+  }
+
   return (
     <div className="page-view">
       {/* Page icon and name */}
       <Group className="page-view-header" gap={2} align="center">
         <ContentIcon icon={page.icon} />
         <Heading noMargin>{page.name}</Heading>
+        <Spacer />
+        <IconButton
+          icon="pencil"
+          label="pages.view.actions.edit"
+          tooltip={{ title: 'pages.view.actions.edit' }}
+          color="muted"
+          onClick={handleEdit}
+        />
       </Group>
       {/* The page's layout filled with its property values */}
       <ScrollArea className="page-view-content">
