@@ -1,23 +1,21 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DesignFixtures, Layout } from '@minddrop/designs';
+import { DesignFixtures } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
 import { PagesStore } from '../PagesStore';
 import { PageUpdatedEvent, PageUpdatedEventData } from '../events';
-import { MockFs, cleanup, mockDate, page_1, setup } from '../test-utils';
+import {
+  MockFs,
+  boundPageLayout,
+  cleanup,
+  mockDate,
+  page_1,
+  setup,
+} from '../test-utils';
 import { Page } from '../types';
 import { getPageFilePath } from '../utils';
 import { updatePage } from './updatePage';
 
-const { layout_page_1, element_text_1 } = DesignFixtures;
-
-// A page layout containing a single element bound to the 'title' property
-const boundLayout: Layout = {
-  ...layout_page_1,
-  tree: {
-    ...layout_page_1.tree,
-    children: [{ ...element_text_1, property: 'title' }],
-  },
-};
+const { layout_page_1 } = DesignFixtures;
 
 const update = {
   name: 'Updated Page 1',
@@ -57,7 +55,7 @@ describe('updatePage', () => {
     // Set a value for a property bound in the layout and one
     // for a property that does not appear in it
     const page = await updatePage(page_1.id, {
-      layout: boundLayout,
+      layout: boundPageLayout.id,
       properties: { title: 'Media', rating: 5 },
     });
 
@@ -67,12 +65,12 @@ describe('updatePage', () => {
   it('prunes existing property values when the layout changes', async () => {
     // Set a value for a property bound in the layout
     await updatePage(page_1.id, {
-      layout: boundLayout,
+      layout: boundPageLayout.id,
       properties: { title: 'Media' },
     });
 
     // Update the layout to one with no bound properties
-    await updatePage(page_1.id, { layout: layout_page_1 });
+    await updatePage(page_1.id, { layout: layout_page_1.id });
 
     expect(PagesStore.get(page_1.id)?.properties).toEqual({});
   });

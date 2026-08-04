@@ -7,9 +7,11 @@ import { Events } from '@minddrop/events';
 import { initializeExtensions } from '@minddrop/extensions';
 import { DatabaseViewStateStore } from '@minddrop/feature-databases';
 import { LayoutRegionSizesStore } from '@minddrop/feature-designs';
+import { initializePagesFeature } from '@minddrop/feature-pages';
 import { initializeSearch } from '@minddrop/feature-search';
 import { TabSetsStore, initializeViewsFeature } from '@minddrop/feature-views';
 import { initializeI18n } from '@minddrop/i18n';
+import { Pages } from '@minddrop/pages';
 import { Search } from '@minddrop/search';
 import { Sql } from '@minddrop/sql';
 import { Theme, VariantChangedEventData } from '@minddrop/ui-theme';
@@ -49,6 +51,9 @@ export function initializeDesktopApp(): Promise<void> {
 async function runInitialization(): Promise<void> {
   // Register search translations
   initializeSearch();
+
+  // Register pages translations
+  initializePagesFeature();
 
   // Register listeners that persist and hydrate app-config
   // stores to JSON files in the AppData directory
@@ -96,6 +101,9 @@ async function runInitialization(): Promise<void> {
   // Load persisted collections. Requires entries and the entry
   // reference adapter, both initialized by Databases.initialize.
   await Collections.initialize();
+
+  // Load persisted pages
+  await Pages.initialize();
 
   // Initialize the MiniSearch index and register event
   // listeners for incremental sync

@@ -1,17 +1,25 @@
-import { Layout, Layouts } from '@minddrop/designs';
+import { Layouts } from '@minddrop/designs';
 import { PropertyMap } from '@minddrop/properties';
 
 /**
  * Removes property values not bound to any element in the layout.
  *
- * @param layout - The layout whose bound properties to keep.
+ * @param layoutId - The ID of the layout whose bound properties to keep.
  * @param properties - The property values to prune.
  * @returns The pruned property values.
  */
 export function prunePageProperties(
-  layout: Layout,
+  layoutId: string,
   properties: PropertyMap,
 ): PropertyMap {
+  // Get the layout
+  const layout = Layouts.get(layoutId, false);
+
+  // The layout cannot be resolved, leave the properties untouched
+  if (!layout) {
+    return { ...properties };
+  }
+
   // Collect the property names bound in the layout
   const boundProperties = new Set(
     Object.values(Layouts.getPropertyBindings(layout)),

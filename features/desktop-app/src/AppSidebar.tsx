@@ -2,6 +2,7 @@ import { useLayoutEffect } from 'react';
 import { Events, SetNavToolbarWidthEvent } from '@minddrop/events';
 import { DatabasesSidebarMenu } from '@minddrop/feature-databases';
 import { OpenDesignStudioEvent } from '@minddrop/feature-designs';
+import { PagesSidebarMenu } from '@minddrop/feature-pages';
 import { OpenSearchDialogEvent } from '@minddrop/feature-search';
 import { Toolbar, ToolbarIconButton } from '@minddrop/ui-primitives';
 import { ThemeVariantPicker } from '@minddrop/ui-theme';
@@ -53,6 +54,7 @@ export const AppSidebar: React.FC<SidebarProps> = ({ ...other }) => {
           onClick={handleOpenDesignStudio}
         />
       </Toolbar>
+      <PagesSidebarMenu />
       <DatabasesSidebarMenu />
       <Toolbar className="app-sidebar-bottom-toolbar">
         <ThemeVariantPicker />

@@ -3,7 +3,13 @@ import { DefaultPageLayout } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
 import { PagesStore } from '../PagesStore';
 import { PageCreatedEvent } from '../events';
-import { MockFs, cleanup, mockDate, setup } from '../test-utils';
+import {
+  MockFs,
+  boundPageLayout,
+  cleanup,
+  mockDate,
+  setup,
+} from '../test-utils';
 import { getPageFilePath } from '../utils';
 import { createPage } from './createPage';
 
@@ -12,13 +18,7 @@ const newPage = {
   created: mockDate,
   lastModified: mockDate,
   name: 'Untitled',
-  layout: {
-    ...DefaultPageLayout,
-    id: expect.any(String),
-    name: 'Page',
-    created: mockDate,
-    lastModified: mockDate,
-  },
+  layout: DefaultPageLayout.id,
   properties: {},
 };
 
@@ -31,6 +31,27 @@ describe('createPage', () => {
     const page = await createPage();
 
     expect(page).toEqual(newPage);
+  });
+
+  it('uses the provided name', async () => {
+    const page = await createPage({ name: 'My Page' });
+
+    expect(page.name).toBe('My Page');
+  });
+
+  it('uses the provided layout', async () => {
+    const page = await createPage({ layout: boundPageLayout.id });
+
+    expect(page.layout).toBe(boundPageLayout.id);
+  });
+
+  it('drops initial property values not bound in the layout', async () => {
+    const page = await createPage({
+      layout: boundPageLayout.id,
+      properties: { title: 'Media', rating: 5 },
+    });
+
+    expect(page.properties).toEqual({ title: 'Media' });
   });
 
   it('adds the page to the store', async () => {

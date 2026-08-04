@@ -16,6 +16,7 @@ import {
 import { MindDropApiProvider } from '@minddrop/extensions';
 import { DatabasesFeature } from '@minddrop/feature-databases';
 import { DesignsFeature } from '@minddrop/feature-designs';
+import { PagesFeature } from '@minddrop/feature-pages';
 import { SearchFeature } from '@minddrop/feature-search';
 import { TabsToolbar, ViewRenderer } from '@minddrop/feature-views';
 import { EmojiSkinTone, IconsProvider } from '@minddrop/ui-icons';
@@ -103,6 +104,7 @@ export const DesktopApp: React.FC = () => {
             <ConfirmationDialogFeature />
             <ErrorToastFeature />
             <DesignsFeature />
+            <PagesFeature />
             <SearchFeature />
             <DevTools />
           </MindDropApiProvider>

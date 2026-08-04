@@ -1,4 +1,3 @@
-import { Layout } from '@minddrop/designs';
 import { PropertyMap } from '@minddrop/properties';
 import { EntityId } from '@minddrop/utils';
 
@@ -16,9 +15,9 @@ export interface Page {
   name: string;
 
   /**
-   * The page's layout. Always a page type layout.
+   * The ID of the page layout used to render the page.
    */
-  layout: Layout;
+  layout: string;
 
   /**
    * Values for the design properties bound in the layout, keyed by
