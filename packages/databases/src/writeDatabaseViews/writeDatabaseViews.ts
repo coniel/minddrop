@@ -1,4 +1,4 @@
-import { DataViews } from '@minddrop/views';
+import { DataViews, serializeDataViewConfig } from '@minddrop/views';
 import { DatabasesStore } from '../DatabasesStore';
 import { writeDatabaseConfig } from '../writeDatabaseConfig';
 
@@ -23,9 +23,16 @@ export async function writeDatabaseViews(databaseId: string): Promise<void> {
       view.dataSource.type === 'database' && view.dataSource.id === databaseId,
   );
 
-  // Strip dataSource and virtual from each view for storage
+  // Strip runtime-only fields and convert each view's config
+  // references into durable form for storage
   const storedViews = databaseViews.map(
-    ({ dataSource, virtual, ...rest }) => rest,
+    ({ dataSource, virtual, references, ...rest }) => ({
+      ...rest,
+      ...serializeDataViewConfig(rest.type, {
+        options: rest.options,
+        data: rest.data,
+      }),
+    }),
   );
 
   // Update the database config in the store

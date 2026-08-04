@@ -1,4 +1,8 @@
-import { DataViews, VirtualDataViewData } from '@minddrop/views';
+import {
+  DataViews,
+  VirtualDataViewData,
+  resolveDataViewConfig,
+} from '@minddrop/views';
 import type { Database } from '../types';
 
 /**
@@ -15,6 +19,11 @@ export function loadDatabaseViews(databases: Database[]): void {
 
     return database.views.map((storedView) => ({
       ...storedView,
+      // Resolve the stored config's durable references into item IDs
+      ...resolveDataViewConfig(storedView.type, {
+        options: storedView.options,
+        data: storedView.data,
+      }),
       dataSource: { type: 'database' as const, id: database.id },
     }));
   });
