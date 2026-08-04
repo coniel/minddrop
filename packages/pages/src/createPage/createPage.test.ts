@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DefaultContainerElementStyle } from '@minddrop/designs';
+import { DefaultPageLayout } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
 import { PagesStore } from '../PagesStore';
 import { PageCreatedEvent } from '../events';
@@ -12,12 +12,14 @@ const newPage = {
   created: mockDate,
   lastModified: mockDate,
   name: 'Untitled',
-  tree: {
-    id: 'root',
-    type: 'root',
-    style: DefaultContainerElementStyle,
-    children: [],
+  layout: {
+    ...DefaultPageLayout,
+    id: expect.any(String),
+    name: 'Page',
+    created: mockDate,
+    lastModified: mockDate,
   },
+  properties: {},
 };
 
 describe('createPage', () => {

@@ -9,7 +9,7 @@ export * from './utils/enablePagePanel';
 export * from './utils/disablePagePanel';
 export * from './design-element-configs';
 export * from './styles';
-export { defaultLayoutIds } from './default-layouts';
+export { DefaultPageLayout, defaultLayoutIds } from './default-layouts';
 export * from './errors';
 export * from './events';
 export * from './constants';

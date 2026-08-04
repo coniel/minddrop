@@ -1,4 +1,4 @@
-import { DefaultContainerElementStyle } from '@minddrop/designs';
+import { DefaultPageLayout, Layout } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
 import { i18n } from '@minddrop/i18n';
 import { entityId } from '@minddrop/utils';
@@ -17,18 +17,23 @@ import { writePage } from '../writePage';
  * @dispatches pages:page:created
  */
 export async function createPage(name?: string): Promise<Page> {
+  // Build the page's layout from the default page layout
+  const layout: Layout = {
+    ...DefaultPageLayout,
+    id: entityId('layout'),
+    name: i18n.t('designs.layouts.page.name'),
+    created: new Date(),
+    lastModified: new Date(),
+  };
+
   // Generate the page object
   const page: Page = {
     id: entityId('page'),
     created: new Date(),
     lastModified: new Date(),
     name: name || i18n.t('labels.untitled'),
-    tree: {
-      id: 'root',
-      type: 'root',
-      style: DefaultContainerElementStyle,
-      children: [],
-    },
+    layout,
+    properties: {},
   };
 
   // Add the page to the store

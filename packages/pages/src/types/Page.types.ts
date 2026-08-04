@@ -1,4 +1,5 @@
-import { RootElement } from '@minddrop/designs';
+import { Layout } from '@minddrop/designs';
+import { PropertyMap } from '@minddrop/properties';
 import { EntityId } from '@minddrop/utils';
 
 export type PageId = EntityId<'page'>;
@@ -15,9 +16,15 @@ export interface Page {
   name: string;
 
   /**
-   * The page's design tree.
+   * The page's layout. Always a page type layout.
    */
-  tree: RootElement;
+  layout: Layout;
+
+  /**
+   * Values for the design properties bound in the layout, keyed by
+   * property name. Contains only properties that appear in the layout.
+   */
+  properties: PropertyMap;
 
   /**
    * The date the page was created.
@@ -30,4 +37,6 @@ export interface Page {
   lastModified: Date;
 }
 
-export type UpdatePageData = Partial<Pick<Page, 'name' | 'tree'>>;
+export type UpdatePageData = Partial<
+  Pick<Page, 'name' | 'layout' | 'properties'>
+>;

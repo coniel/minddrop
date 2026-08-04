@@ -3,6 +3,7 @@ import { PagesStore } from '../PagesStore';
 import { PageUpdatedEvent } from '../events';
 import { getPage } from '../getPage';
 import { Page, UpdatePageData } from '../types';
+import { prunePageProperties } from '../utils';
 import { writePage } from '../writePage';
 
 /**
@@ -29,8 +30,14 @@ export async function updatePage(
     lastModified: new Date(),
   };
 
+  // Drop property values no longer bound in the layout
+  updatedPage.properties = prunePageProperties(
+    updatedPage.layout,
+    updatedPage.properties,
+  );
+
   // Update the page in the store
-  PagesStore.update(pageId, { ...data, lastModified: new Date() });
+  PagesStore.update(pageId, updatedPage);
 
   // Write the page config to the file system
   await writePage(pageId);
