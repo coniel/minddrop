@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { DevTools } from '@minddrop/dev-tools';
 import {
+  AppErrorEvent,
+  AppErrorEventData,
   CloseAppSidebarEvent,
   CloseRightPanelEvent,
   Events,
@@ -17,7 +19,18 @@ import { DesignsFeature } from '@minddrop/feature-designs';
 import { SearchFeature } from '@minddrop/feature-search';
 import { TabsToolbar, ViewRenderer } from '@minddrop/feature-views';
 import { EmojiSkinTone, IconsProvider } from '@minddrop/ui-icons';
-import { ConfirmationDialog, TooltipProvider } from '@minddrop/ui-primitives';
+import {
+  ConfirmationDialog,
+  Toast,
+  ToastClose,
+  ToastDescription,
+  ToastProvider,
+  ToastTitle,
+  ToastType,
+  ToastViewport,
+  TooltipProvider,
+  useToastManager,
+} from '@minddrop/ui-primitives';
 import { DefaultViewAreaId, Views } from '@minddrop/views';
 import { AppSidebar } from './AppSidebar';
 import { AppUiState } from './AppUiState';
@@ -66,32 +79,35 @@ export const DesktopApp: React.FC = () => {
 
   return (
     <TooltipProvider delay={1000} timeout={500}>
-      <IconsProvider
-        defaultEmojiSkinTone={defaultEmojiSkinTone}
-        onDefaultEmojiSkinToneChange={handleChangeDefaultEmojiSkinTone}
-      >
-        <MindDropApiProvider>
-          <div className="app">
-            <div
-              className="app-topbar electrobun-webkit-app-region-drag"
-              onDoubleClick={handleTopbarDoubleClick}
-            >
-              <NavToolbar />
-              <TabsToolbar viewAreaId={DefaultViewAreaId} shortcuts />
+      <ToastProvider>
+        <IconsProvider
+          defaultEmojiSkinTone={defaultEmojiSkinTone}
+          onDefaultEmojiSkinToneChange={handleChangeDefaultEmojiSkinTone}
+        >
+          <MindDropApiProvider>
+            <div className="app">
+              <div
+                className="app-topbar electrobun-webkit-app-region-drag"
+                onDoubleClick={handleTopbarDoubleClick}
+              >
+                <NavToolbar />
+                <TabsToolbar viewAreaId={DefaultViewAreaId} shortcuts />
+              </div>
+              <div className="content-panels">
+                {showSidebar && <AppSidebar />}
+                <ViewRenderer viewAreaId={DefaultViewAreaId} />
+                <RightPanel />
+              </div>
             </div>
-            <div className="content-panels">
-              {showSidebar && <AppSidebar />}
-              <ViewRenderer viewAreaId={DefaultViewAreaId} />
-              <RightPanel />
-            </div>
-          </div>
-          <DatabasesFeature />
-          <ConfirmationDialogFeature />
-          <DesignsFeature />
-          <SearchFeature />
-          <DevTools />
-        </MindDropApiProvider>
-      </IconsProvider>
+            <DatabasesFeature />
+            <ConfirmationDialogFeature />
+            <ErrorToastFeature />
+            <DesignsFeature />
+            <SearchFeature />
+            <DevTools />
+          </MindDropApiProvider>
+        </IconsProvider>
+      </ToastProvider>
     </TooltipProvider>
   );
 };
@@ -187,3 +203,52 @@ const ConfirmationDialogFeature: React.FC = () => {
     <ConfirmationDialog {...dialogProps} open={open} onOpenChange={setOpen} />
   );
 };
+
+/**
+ * Displays an error toast for each dispatched app error event.
+ */
+const ErrorToastFeature: React.FC = () => {
+  const manager = useToastManager<AppErrorEventData>();
+
+  useEffect(() => {
+    // Show an error toast for each dispatched app error
+    Events.addListener<AppErrorEventData>(
+      AppErrorEvent,
+      'desktop-app',
+      ({ data }) => {
+        // Keep error toasts visible until dismissed manually
+        manager.add({ type: 'error', timeout: 0, data });
+      },
+    );
+
+    return () => {
+      Events.removeListener(AppErrorEvent, 'desktop-app');
+    };
+  }, [manager]);
+
+  return (
+    <ToastViewport>
+      {manager.toasts.map((toast) => (
+        <Toast key={toast.id} toast={toast} type={resolveToastType(toast.type)}>
+          <div>
+            {/* Only render a title when the error has one */}
+            {toast.data?.title && <ToastTitle>{toast.data.title}</ToastTitle>}
+            {toast.data?.message && (
+              <ToastDescription>{toast.data.message}</ToastDescription>
+            )}
+          </div>
+          <ToastClose />
+        </Toast>
+      ))}
+    </ToastViewport>
+  );
+};
+
+// Coerces a toast's free-form type string to a known toast type
+function resolveToastType(type?: string): ToastType {
+  if (type === 'success' || type === 'error' || type === 'warning') {
+    return type;
+  }
+
+  return 'default';
+}

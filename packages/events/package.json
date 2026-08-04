@@ -11,9 +11,12 @@
     "test:watch": "vitest"
   },
   "devDependencies": {
-    "eslint": "^9.39.3",
     "@minddrop/eslint-config": "workspace:*",
+    "eslint": "^9.39.3",
     "tsconfig": "workspace:*",
     "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@minddrop/i18n": "workspace:*"
   }
 }

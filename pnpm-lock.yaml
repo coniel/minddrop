@@ -932,6 +932,10 @@ importers:
         version: 8.56.1(eslint@9.39.3)(typescript@5.9.3)
 
   packages/events:
+    dependencies:
+      '@minddrop/i18n':
+        specifier: workspace:*
+        version: link:../i18n
     devDependencies:
       '@minddrop/eslint-config':
         specifier: workspace:*

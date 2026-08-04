@@ -1,3 +1,5 @@
+import type { TranslationKey } from '@minddrop/i18n';
+
 export const OpenViewEvent = 'app:view:open';
 export const UpdateViewEvent = 'app:view:update';
 export const CloseViewEvent = 'app:view:close';
@@ -12,6 +14,7 @@ export const OpenAppSidebarEvent = 'app:sidebar:open';
 export const CloseAppSidebarEvent = 'app:sidebar:close';
 export const SetNavToolbarWidthEvent = 'app:nav-toolbar:set-width';
 export const ToggleWindowFillEvent = 'app:window:toggle-fill';
+export const AppErrorEvent = 'app:error';
 
 export type OpenViewEventData<TProps = any> = {
   /**
@@ -186,6 +189,23 @@ export type SetNavToolbarWidthEventData = {
    * collapses it to auto width.
    */
   width: number;
+};
+
+export type AppErrorEventData = {
+  /**
+   * The error title shown to the user.
+   */
+  title?: TranslationKey;
+
+  /**
+   * The user-facing error message.
+   */
+  message: TranslationKey;
+
+  /**
+   * The underlying error, when available.
+   */
+  error?: unknown;
 };
 
 export type OpenConfirmationDialogEventData = {
