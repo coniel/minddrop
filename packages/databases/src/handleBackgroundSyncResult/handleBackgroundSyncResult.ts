@@ -1,13 +1,18 @@
 import { Events } from '@minddrop/events';
+import {
+  ItemAddressChange,
+  ItemAddressesChangedEvent,
+  ItemAddressesChangedEventData,
+} from '@minddrop/item-references';
 import { restoreDates } from '@minddrop/utils';
 import { DataViews } from '@minddrop/views';
-import { DatabaseEntriesStore } from './DatabaseEntriesStore';
-import { DatabasesStore } from './DatabasesStore';
-import { DatabasesBackgroundSyncedEvent } from './events';
-import { loadDatabaseViews } from './loadDatabaseViews';
-import { removeEntriesFromCollections } from './removeEntriesFromCollections';
-import type { BackgroundSyncChangeset, Database } from './types';
-import { convertSqlRecordToEntry } from './utils';
+import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
+import { DatabasesStore } from '../DatabasesStore';
+import { DatabasesBackgroundSyncedEvent } from '../events';
+import { loadDatabaseViews } from '../loadDatabaseViews';
+import { removeEntriesFromCollections } from '../removeEntriesFromCollections';
+import type { BackgroundSyncChangeset, Database } from '../types';
+import { convertSqlRecordToEntry, databaseEntryAddress } from '../utils';
 
 /**
  * Applies a background sync changeset to frontend stores
@@ -49,11 +54,27 @@ export async function handleBackgroundSyncResult(
     DatabasesStore.remove(id);
   }
 
+  // Address changes of entries that moved while the app was not
+  // running
+  const addressChanges: ItemAddressChange[] = [];
+
   // Upsert new or updated entries. Record IDs are path-matched to
   // existing SQL rows during the sync, so records for entries already
   // in the store replace them under their existing key.
   for (const record of changeset.upsertedEntries) {
-    DatabaseEntriesStore.set(convertSqlRecordToEntry(record));
+    const entry = convertSqlRecordToEntry(record);
+    const existing = DatabaseEntriesStore.get(entry.id);
+
+    // Record the address change when an existing entry moved
+    if (existing && existing.path !== entry.path) {
+      addressChanges.push({
+        id: entry.id,
+        oldReference: databaseEntryAddress(existing.path),
+        newReference: databaseEntryAddress(entry.path),
+      });
+    }
+
+    DatabaseEntriesStore.set(entry);
   }
 
   // Remove deleted entries
@@ -61,9 +82,19 @@ export async function handleBackgroundSyncResult(
     DatabaseEntriesStore.remove(id);
   }
 
-  // Remove deleted entries from collections referencing them
+  // Remove deleted entries from collections and view configs
+  // referencing them
   if (changeset.deletedEntryIds.length > 0) {
     await removeEntriesFromCollections(changeset.deletedEntryIds);
+    await DataViews.removeReferences(changeset.deletedEntryIds);
+  }
+
+  // Dispatch the moved entries' address changes
+  if (addressChanges.length > 0) {
+    await Events.dispatch<ItemAddressesChangedEventData>(
+      ItemAddressesChangedEvent,
+      addressChanges,
+    );
   }
 
   // Dispatch a single event with the full changeset
