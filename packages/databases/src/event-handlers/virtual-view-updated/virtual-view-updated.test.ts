@@ -1,9 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DataView } from '@minddrop/views';
+import { DataView, ViewFixtures } from '@minddrop/views';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { cleanup, objectEntry1, setup } from '../../test-utils';
-import { viewMetadataKey } from '../../utils';
+import { databaseEntryAddress, viewMetadataKey } from '../../utils';
 import { onUpdateVirtualView } from './virtual-view-updated';
+
+const { viewType_referencing } = ViewFixtures;
 
 const layoutId = 'layout-card-1';
 const propertyName = 'Related';
@@ -85,6 +87,30 @@ describe('onUpdateVirtualView', () => {
       options: { sortOrder: 'asc' },
       data: { columns: [['a', 'b'], ['c']] },
     });
+  });
+
+  it('serializes item references into durable form', () => {
+    // A virtual view referencing an entry via the referencing view
+    // type's data
+    const referencingView: DataView = {
+      ...baseView,
+      type: viewType_referencing.type,
+      data: { items: [objectEntry1.id] },
+    };
+
+    onUpdateVirtualView({
+      original: baseView,
+      updated: referencingView,
+    });
+
+    const entry = DatabaseEntriesStore.get(objectEntry1.id)!;
+
+    // The persisted config holds the entry's durable address
+    expect(
+      entry.metadata.embeddedViewConfigs?.[
+        viewMetadataKey(propertyName, layoutId)
+      ],
+    ).toEqual({ data: { items: [databaseEntryAddress(objectEntry1.path)] } });
   });
 
   it('preserves existing view configs for other keys', () => {

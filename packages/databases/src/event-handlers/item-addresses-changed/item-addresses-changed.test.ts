@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { DataViews, ViewFixtures } from '@minddrop/views';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import {
   MockFs,
@@ -8,8 +9,14 @@ import {
   relatedEntry1,
   setup,
 } from '../../test-utils';
-import { databaseEntryAddress } from '../../utils';
+import {
+  databaseEntryAddress,
+  viewMetadataKey,
+  virtualViewId,
+} from '../../utils';
 import { onItemAddressesChanged } from './item-addresses-changed';
+
+const { viewType_referencing } = ViewFixtures;
 
 describe('onItemAddressesChanged', () => {
   beforeEach(setup);
@@ -38,6 +45,45 @@ describe('onItemAddressesChanged', () => {
     // The referencing file should contain the new address
     expect(contents).toContain('Collection Database/Renamed Related.md');
     expect(contents).not.toContain('Collection Database/Related Entry 1.md');
+  });
+
+  it('re-persists embedded view configs referencing changed items', async () => {
+    const renamedPath = `${collectionDatabase.path}/Renamed Related.md`;
+
+    // An embedded virtual view referencing the renamed entry
+    DataViews.createVirtual({
+      id: virtualViewId(collectionEntry1.id, 'Related', 'layout-1'),
+      type: viewType_referencing.type,
+      dataSource: { type: 'collection', id: 'collection-1' },
+      name: 'Related',
+      data: { items: [relatedEntry1.id] },
+    });
+
+    // Simulate a rename of the referenced entry
+    DatabaseEntriesStore.update(relatedEntry1.id, {
+      title: 'Renamed Related',
+      path: renamedPath,
+    });
+
+    await onItemAddressesChanged([
+      {
+        id: relatedEntry1.id,
+        oldReference: databaseEntryAddress(relatedEntry1.path),
+        newReference: databaseEntryAddress(renamedPath),
+      },
+    ]);
+
+    const entry = DatabaseEntriesStore.get(collectionEntry1.id)!;
+
+    // The embedded config holds the entry's new durable address
+    expect(
+      entry.metadata.embeddedViewConfigs?.[
+        viewMetadataKey('Related', 'layout-1')
+      ],
+    ).toEqual({
+      options: viewType_referencing.defaultOptions,
+      data: { items: [databaseEntryAddress(renamedPath)] },
+    });
   });
 
   it('does nothing for unreferenced items', async () => {

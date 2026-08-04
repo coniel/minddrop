@@ -1,8 +1,5 @@
-import { DataView, ViewUpdatedEventData } from '@minddrop/views';
-import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
-import { DatabaseEntryMetadata } from '../../types';
-import { updateEntryMetadata } from '../../updateEntryMetadata';
-import { parseVirtualViewId, viewMetadataKey } from '../../utils';
+import { ViewUpdatedEventData } from '@minddrop/views';
+import { persistVirtualViewConfig } from '../../persistVirtualViewConfig';
 
 /**
  * Called when a view is updated. If the view is a virtual entry view,
@@ -16,46 +13,6 @@ export function onUpdateVirtualView(data: ViewUpdatedEventData): void {
     return;
   }
 
-  // Parse the virtual view ID to get the entry and config key
-  const parsed = parseVirtualViewId(updated.id);
-
-  if (!parsed) {
-    return;
-  }
-
-  // Verify the entry exists in the store
-  const entry = DatabaseEntriesStore.get(parsed.entryId);
-
-  if (!entry) {
-    return;
-  }
-
-  // Build the metadata key as propertyName:layoutId
-  const metadataKey = viewMetadataKey(parsed.propertyName, parsed.layoutId);
-
-  // Extract the view config to persist
-  const viewConfig: Pick<DataView, 'options' | 'data'> = {};
-
-  if (updated.options !== undefined) {
-    viewConfig.options = updated.options;
-  }
-
-  if (updated.data !== undefined) {
-    viewConfig.data = updated.data;
-  }
-
-  // Update the entry's metadata with the new view config
-  const metadata: DatabaseEntryMetadata = {
-    ...entry.metadata,
-    embeddedViewConfigs: {
-      ...entry.metadata.embeddedViewConfigs,
-      [metadataKey]: viewConfig,
-    },
-  };
-
-  // Update the in-memory entry with the new metadata
-  DatabaseEntriesStore.set({ ...entry, metadata });
-
-  // Queue the metadata for persistence
-  updateEntryMetadata(parsed.entryId, metadata);
+  // Persist the updated view's config into its entry's metadata
+  persistVirtualViewConfig(updated);
 }

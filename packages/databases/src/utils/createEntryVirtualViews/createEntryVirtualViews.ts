@@ -6,7 +6,7 @@ import {
   RootElement,
   ViewElement,
 } from '@minddrop/designs';
-import { DataViews } from '@minddrop/views';
+import { DataViews, resolveDataViewConfig } from '@minddrop/views';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabasesStore } from '../../DatabasesStore';
 import { viewMetadataKey } from '../viewMetadataKey';
@@ -95,13 +95,18 @@ export function createEntryVirtualViews(
       const metadataKey = viewMetadataKey(property.name, layout.id);
       const savedConfig = entry.metadata.embeddedViewConfigs?.[metadataKey];
 
+      // Resolve the saved config's durable references into item IDs
+      const resolvedConfig = savedConfig
+        ? resolveDataViewConfig(viewType, savedConfig)
+        : undefined;
+
       DataViews.createVirtual({
         id: viewId,
         type: viewType,
         dataSource: { type: 'collection', id: collId },
         name: property.name,
-        options: savedConfig?.options,
-        data: savedConfig?.data,
+        options: resolvedConfig?.options,
+        data: resolvedConfig?.data,
       });
     }
 

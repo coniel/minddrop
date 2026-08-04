@@ -12,17 +12,17 @@ import {
   cleanup,
   collectionEntry1,
   objectEntry1,
-  referenceEntry1,
   relatedEntry1,
   relatedEntry2,
   setup,
 } from '../../test-utils';
+import { databaseEntryAddress } from '../databaseEntryAddress';
 import { viewMetadataKey } from '../viewMetadataKey';
 import { virtualCollectionId } from '../virtualCollectionId';
 import { virtualViewId } from '../virtualViewId';
 import { createEntryVirtualViews } from './createEntryVirtualViews';
 
-const { viewType_table } = ViewFixtures;
+const { viewType_table, viewType_referencing } = ViewFixtures;
 
 // Layout with a view element mapped to the 'Related' property
 const designWithView: Layout = {
@@ -256,6 +256,50 @@ describe('createEntryVirtualViews', () => {
       ...savedConfig.options,
     });
     expect(view!.data).toEqual(savedConfig.data);
+  });
+
+  it('resolves durable references in the saved view config', () => {
+    // A layout whose view element uses the referencing view type
+    const referencingLayout: Layout = {
+      ...designWithView,
+      tree: {
+        ...designWithView.tree,
+        children: [
+          {
+            id: 'view-element-1',
+            type: 'view',
+            viewType: viewType_referencing.type,
+            style: { ...DefaultViewElementStyle },
+          },
+        ],
+      },
+    };
+
+    // Saved config holding a durable entry address
+    DatabaseEntriesStore.set({
+      ...collectionEntry1,
+      metadata: {
+        embeddedViewConfigs: {
+          [viewMetadataKey('Related', referencingLayout.id)]: {
+            data: { items: [databaseEntryAddress(relatedEntry1.path)] },
+          },
+        },
+      },
+    });
+
+    createEntryVirtualViews(
+      collectionEntry1.id,
+      referencingLayout,
+      propertyMap,
+    );
+
+    const view = DataViews.get(
+      virtualViewId(collectionEntry1.id, 'Related', referencingLayout.id),
+      false,
+    );
+
+    // The virtual view's data holds the resolved runtime entry ID
+    expect(view!.data).toEqual({ items: [relatedEntry1.id] });
   });
 
   it('does not modify view when no saved config exists in metadata', () => {
