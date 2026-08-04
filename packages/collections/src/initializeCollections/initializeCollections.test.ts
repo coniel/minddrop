@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
-import { registerCollectionEntryReferenceAdapter } from '../CollectionEntryReferenceAdapter';
+import { registerItemReferenceAdapter } from '@minddrop/item-references';
 import { CollectionsStore } from '../CollectionsStore';
 import { CollectionsLoadedEvent } from '../events';
 import { MockFs, cleanup, collections, setup } from '../test-utils';
@@ -53,9 +53,10 @@ describe('initializeCollections', () => {
 
   it('resolves entry references through the registered adapter', async () => {
     // Register an adapter that prefixes resolved IDs
-    registerCollectionEntryReferenceAdapter({
-      serializeEntries: (entryIds) => entryIds,
-      resolveEntries: (references) => references.map((ref) => `id:${ref}`),
+    registerItemReferenceAdapter({
+      type: 'database-entry',
+      serialize: (id) => id,
+      match: (reference) => ({ type: 'database-entry', id: `id:${reference}` }),
     });
 
     await initializeCollections();

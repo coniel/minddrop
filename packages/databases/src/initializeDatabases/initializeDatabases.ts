@@ -1,4 +1,3 @@
-import { Collections } from '@minddrop/collections';
 import { registerItemReferenceAdapter } from '@minddrop/item-references';
 import { restoreDates } from '@minddrop/utils';
 import { Workspaces } from '@minddrop/workspaces';
@@ -12,9 +11,7 @@ import { initializeDatabaseTemplates } from '../initializeDatabaseTemplates';
 import { loadDatabaseViews } from '../loadDatabaseViews';
 import type { Database } from '../types';
 import {
-  addressesToEntryIds,
   convertSqlRecordToEntry,
-  entryIdsToAddresses,
   matchDatabaseEntryReference,
   matchDatabaseReference,
   serializeDatabaseEntryReference,
@@ -60,13 +57,6 @@ export async function initializeDatabases(): Promise<{
 
   // Load entries and hydrate virtual collections
   initializeDatabaseEntries(databases, entries);
-
-  // Register the adapter used to convert collection entry
-  // references at the disk boundary
-  Collections.registerEntryReferenceAdapter({
-    serializeEntries: entryIdsToAddresses,
-    resolveEntries: addressesToEntryIds,
-  });
 
   // Register the item reference adapter for entry addresses
   registerItemReferenceAdapter({

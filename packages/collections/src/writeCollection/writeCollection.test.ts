@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { registerItemReferenceAdapter } from '@minddrop/item-references';
 import { InvalidParameterError } from '@minddrop/utils';
-import { registerCollectionEntryReferenceAdapter } from '../CollectionEntryReferenceAdapter';
 import { CollectionsStore } from '../CollectionsStore';
 import { CollectionNotFoundError } from '../errors';
 import { MockFs, cleanup, collection_1, setup } from '../test-utils';
@@ -50,9 +50,10 @@ describe('writeCollection', () => {
 
   it('serializes entry references through the registered adapter', async () => {
     // Register an adapter that converts IDs to reference strings
-    registerCollectionEntryReferenceAdapter({
-      serializeEntries: (entryIds) => entryIds.map((id) => `ref:${id}`),
-      resolveEntries: (references) => references,
+    registerItemReferenceAdapter({
+      type: 'database-entry',
+      serialize: (id) => `ref:${id}`,
+      match: () => null,
     });
 
     await writeCollection(collection_1.id);

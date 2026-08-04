@@ -1,6 +1,6 @@
 import { Fs } from '@minddrop/file-system';
+import { serializeItemReferences } from '@minddrop/item-references';
 import { InvalidParameterError } from '@minddrop/utils';
-import { getCollectionEntryReferenceAdapter } from '../CollectionEntryReferenceAdapter';
 import { getCollection } from '../getCollection';
 import { getCollectionFilePath, getCollectionsDirPath } from '../utils';
 
@@ -25,11 +25,8 @@ export async function writeCollection(id: string): Promise<void> {
   // Ensure the collections directory exists
   await Fs.ensureDir(getCollectionsDirPath());
 
-  // Convert the member entry IDs into durable references
-  const adapter = getCollectionEntryReferenceAdapter();
-  const entries = adapter
-    ? adapter.serializeEntries(collection.entries)
-    : collection.entries;
+  // Convert the member item IDs into durable references
+  const entries = serializeItemReferences(collection.entries);
 
   // Write the collection config
   Fs.writeJsonFile(getCollectionFilePath(id), { ...collection, entries });

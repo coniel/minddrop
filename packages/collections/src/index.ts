@@ -1,6 +1,5 @@
 export * from './Collections';
 export * as Collections from './Collections';
-export type { CollectionEntryReferenceAdapter } from './CollectionEntryReferenceAdapter';
 export * from './errors';
 export * from './events';
 export * from './constants';

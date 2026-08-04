@@ -14,4 +14,3 @@ export { updateCollection as update } from './updateCollection';
 export { addCollectionEntries as addEntries } from './addCollectionEntries';
 export { removeCollectionEntries as removeEntries } from './removeCollectionEntries';
 export { initializeCollections as initialize } from './initializeCollections';
-export { registerCollectionEntryReferenceAdapter as registerEntryReferenceAdapter } from './CollectionEntryReferenceAdapter';

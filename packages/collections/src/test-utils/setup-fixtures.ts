@@ -1,5 +1,5 @@
 import { MockFileSystem } from '@minddrop/file-system';
-import { registerCollectionEntryReferenceAdapter } from '../CollectionEntryReferenceAdapter';
+import { unregisterItemReferenceAdapter } from '@minddrop/item-references';
 import { CollectionsStore } from '../CollectionsStore';
 import { getCollectionsDirPath } from '../utils';
 import {
@@ -43,5 +43,5 @@ export function setupCollectionFixtures(
 
 export function cleanupCollectionFixtures() {
   CollectionsStore.clear();
-  registerCollectionEntryReferenceAdapter(null);
+  unregisterItemReferenceAdapter('database-entry');
 }
