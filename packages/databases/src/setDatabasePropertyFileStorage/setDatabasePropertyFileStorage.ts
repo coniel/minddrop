@@ -1,5 +1,9 @@
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
+import {
+  ItemAddressesChangedEvent,
+  ItemAddressesChangedEventData,
+} from '@minddrop/item-references';
 import { Properties } from '@minddrop/properties';
 import { InvalidParameterError, validateDirName } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
@@ -7,9 +11,11 @@ import { DatabasesStore } from '../DatabasesStore';
 import { DatabaseUpdatedEvent, DatabaseUpdatedEventData } from '../events';
 import { getAllDatabaseEntries } from '../getAllDatabaseEntries';
 import { getDatabase } from '../getDatabase';
+import { getDatabaseEntry } from '../getDatabaseEntry';
 import { Database, PropertyFileStorage } from '../types';
 import { updateDatabaseEntryProperty } from '../updateDatabaseEntryProperty';
 import {
+  databaseEntryAddress,
   entryAssetsDirPath,
   getDatabasePropertyDirs,
   getPropertyFilePath,
@@ -31,6 +37,7 @@ import { writeDatabaseConfig } from '../writeDatabaseConfig';
  * @param propertyFilesDir - The common directory name, used only in `common` mode.
  * @returns The updated database config.
  *
+ * @dispatches item-references:addresses:changed
  * @dispatches databases:database:update
  */
 export async function setDatabasePropertyFileStorage(
@@ -219,6 +226,19 @@ export async function setDatabasePropertyFileStorage(
   await writeDatabaseConfig(id);
 
   const updated = getDatabase(id);
+
+  // Dispatch the moved entries' address changes when crossing the
+  // entry boundary changed entry paths
+  if (wasEntry !== willEntry && entryMoves.length > 0) {
+    await Events.dispatch<ItemAddressesChangedEventData>(
+      ItemAddressesChangedEvent,
+      entryMoves.map(({ entry }) => ({
+        id: entry.id,
+        oldReference: databaseEntryAddress(entry.path),
+        newReference: databaseEntryAddress(getDatabaseEntry(entry.id).path),
+      })),
+    );
+  }
 
   // Dispatch a database updated event
   Events.dispatch<DatabaseUpdatedEventData>(DatabaseUpdatedEvent, {

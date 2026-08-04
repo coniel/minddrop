@@ -1,6 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
+import {
+  ItemAddressesChangedEvent,
+  ItemAddressesChangedEventData,
+} from '@minddrop/item-references';
 import { InvalidParameterError } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabaseUpdatedEvent, DatabaseUpdatedEventData } from '../events';
@@ -20,7 +24,7 @@ import {
   setup,
 } from '../test-utils';
 import { Database } from '../types';
-import { databaseConfigFilePath } from '../utils';
+import { databaseConfigFilePath, databaseEntryAddress } from '../utils';
 import { setDatabasePropertyFileStorage } from './setDatabasePropertyFileStorage';
 
 describe('setDatabasePropertyFileStorage', () => {
@@ -138,6 +142,29 @@ describe('setDatabasePropertyFileStorage', () => {
     expect(await Fs.exists(`${path}/${emptyTitle}/${emptyTitle}.md`)).toBe(
       true,
     );
+  });
+
+  it('dispatches address changes when crossing the entry boundary', async () => {
+    let dispatched: ItemAddressesChangedEventData | undefined;
+
+    Events.addListener<ItemAddressesChangedEventData>(
+      ItemAddressesChangedEvent,
+      'test',
+      (payload) => {
+        dispatched = payload.data;
+      },
+    );
+
+    await setDatabasePropertyFileStorage(rootStorageDatabase.id, 'entry');
+
+    // The dispatch carries the moved entry's old and new addresses
+    expect(dispatched).toContainEqual({
+      id: rootStorageEntry1.id,
+      oldReference: databaseEntryAddress(rootStorageEntry1.path),
+      newReference: databaseEntryAddress(
+        getDatabaseEntry(rootStorageEntry1.id).path,
+      ),
+    });
   });
 
   it('unwraps entries when switching away from entry storage', async () => {
