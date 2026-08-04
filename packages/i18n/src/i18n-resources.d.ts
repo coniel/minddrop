@@ -1476,6 +1476,9 @@ declare module 'i18next' {
           actions: {
             new: string;
           };
+          view: {
+            notFound: string;
+          };
           templates: {
             blank: {
               name: string;

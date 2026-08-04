@@ -1,0 +1,20 @@
+.page-view {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+
+  .page-view-header {
+    padding: var(--space-4) var(--space-5);
+  }
+
+  .page-view-content {
+    flex: 1;
+    min-height: 0;
+  }
+}
+
+.page-view-not-found {
+  align-items: center;
+  justify-content: center;
+}

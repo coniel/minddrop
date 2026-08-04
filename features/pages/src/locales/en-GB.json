@@ -6,6 +6,9 @@
     "actions": {
       "new": "New"
     },
+    "view": {
+      "notFound": "This page no longer exists."
+    },
     "templates": {
       "blank": {
         "name": "Blank page",

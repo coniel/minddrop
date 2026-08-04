@@ -1,6 +1,7 @@
 import { DefaultViewName } from '@minddrop/events';
 import { registerDatabaseViews } from '@minddrop/feature-databases';
 import { registerDesignViews } from '@minddrop/feature-designs';
+import { registerPageViews } from '@minddrop/feature-pages';
 import { Views } from '@minddrop/views';
 import { EmptyView } from '../EmptyView';
 
@@ -17,4 +18,5 @@ export function registerViews(): void {
   // Register feature-provided views
   registerDatabaseViews();
   registerDesignViews();
+  registerPageViews();
 }

@@ -568,9 +568,18 @@ importers:
 
   features/pages:
     dependencies:
+      '@minddrop/designs':
+        specifier: workspace:*
+        version: link:../../packages/designs
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
+      '@minddrop/feature-designs':
+        specifier: workspace:*
+        version: link:../designs
+      '@minddrop/feature-views':
+        specifier: workspace:*
+        version: link:../views
       '@minddrop/file-system':
         specifier: workspace:*
         version: link:../../packages/file-system
@@ -580,6 +589,9 @@ importers:
       '@minddrop/pages':
         specifier: workspace:*
         version: link:../../packages/pages
+      '@minddrop/properties':
+        specifier: workspace:*
+        version: link:../../packages/properties
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../../packages/test-utils
@@ -589,6 +601,9 @@ importers:
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../../packages/utils
+      '@minddrop/views':
+        specifier: workspace:*
+        version: link:../../packages/views
       react:
         specifier: ^19.1.0
         version: 19.2.4
