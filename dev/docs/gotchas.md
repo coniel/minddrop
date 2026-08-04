@@ -38,6 +38,38 @@ with metadata edits — so it is not handled. Entry metadata is explicitly
 ever needs solving, move the pending map entry from the old path key to
 the new one during the rename (no primitive for this exists yet).
 
+### viewLayoutOverrides must not be keyed by virtual view IDs
+
+`setEntryViewLayoutOverride` persists `viewLayoutOverrides[viewId]` into
+the durable database metadata file. The API currently has **no callers**,
+but the planned per-view layout override feature must not call it with
+virtual view IDs: those embed the entry's UUID
+(`entryId:propertyName:layoutId`), which is regenerated on every SQL
+index rebuild, so the persisted key would go permanently stale. When
+wiring the feature up for embedded views, key overrides by a stable
+composite (like `embeddedViewConfigs` does with
+`propertyName:layoutId`) instead of the raw view ID.
+
+### Future visible root directories must become reserved database names
+
+Durable item references are natural workspace-relative addresses
+(`Books/Book.md`, `Books`), disambiguated by matchers that check the
+first path segment against existing database directories. Databases
+are currently the only visible directories at the workspace root, so
+there is no overlap. If another feature ever claims a visible root
+directory as its address space (e.g. `Widgets/`, `Pages/`), that
+directory name must be rejected as a database name (create and
+rename validation) or the address spaces become ambiguous.
+
+### Offline entry renames lose their references
+
+Entry identity is path-based on disk: a file renamed while the app
+is closed cannot be recognised as the same entry (entry files carry
+no ID), so background sync treats the rename as a delete plus a
+create. The old entry's collection memberships and view references
+are cleaned up as a deletion, and the freshly minted entry starts
+unreferenced. This is inherent to the ID-free entry file design.
+
 ## packages/designs
 
 ### Layout lookups are linear scans by design — do not denormalise
@@ -86,7 +118,40 @@ To locate the offending file, request per-file semantic diagnostics via
 the TS API in a try/catch loop over the program's source files (a tsc
 run dies on the first crash without naming the file).
 
+## features/desktop-app
+
+### Don't gate window keydown shortcuts on `defaultPrevented`
+
+`initializeSelection` registers a window keydown handler that calls
+`event.preventDefault()` for Delete/Backspace whenever focus is
+outside an input (even with an empty selection), and Escape can
+arrive pre-prevented too. Feature-level shortcut handlers registered
+later must therefore NOT skip on `event.defaultPrevented`. Open
+popovers are not a concern: base-ui dismissal `stopPropagation()`s
+Escape, so it never reaches window handlers while a popup consumes
+it.
+
+## features/views
+
+### View components must size themselves with `height: 100%`
+
+The view area container rendered by `ViewRenderer` is not a flex
+container, so a view's root element cannot rely on `flex: 1` to fill
+the content area — it sizes to content instead (only noticeable once
+inner percentage/flex chains silently collapse). Give view roots
+`height: 100%` (see `.design-studio`, `.page-view`,
+`.page-edit-mode`).
+
 ## ui/primitives
+
+### `ScrollArea` needs a `getAnimations` polyfill in happy-dom tests
+
+The base-ui scroll area polls `Element.getAnimations` on a timer,
+which happy-dom does not implement — tests rendering `ScrollArea`
+throw unhandled `viewport.getAnimations is not a function` errors
+after teardown. Polyfill it in the package's test setup
+(`Element.prototype.getAnimations = () => []`, see
+`features/pages/src/test-utils/setup-tests.ts`).
 
 ### `TranslatableNode` treats strings as i18n keys
 
