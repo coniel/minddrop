@@ -10,7 +10,9 @@ import { writeSet } from '../writeSet';
  */
 export function setTabOrder(viewAreaId: string, orderedIds: string[]): void {
   // Index the current tabs by id for lookup
-  const tabsById = new Map(getTabs(viewAreaId).map((tab) => [tab.id, tab]));
+  const tabsById = new Map<string, Tab>(
+    getTabs(viewAreaId).map((tab) => [tab.id, tab]),
+  );
 
   // Rebuild the tabs list in the given order, dropping any unknown ids
   const nextTabs = orderedIds

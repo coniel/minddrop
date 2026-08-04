@@ -1,4 +1,5 @@
 import { createObjectStore } from '@minddrop/stores';
+import { EntityId } from '@minddrop/utils';
 
 export interface TabView {
   /**
@@ -32,11 +33,13 @@ export interface TabView {
   icon: string;
 }
 
+export type TabId = EntityId<'tab'>;
+
 export interface Tab {
   /**
    * Unique identifier for the tab.
    */
-  id: string;
+  id: TabId;
 
   /**
    * The view shown in the main (left) pane, or null when the tab
