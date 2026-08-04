@@ -51,8 +51,7 @@ export async function createDatabase(
     designPropertyMap: {},
     defaultLayouts: {},
     ...options,
-    // Database ID is derived from the directory name
-    id: options.name,
+    id: entityId('database'),
     path: dbPath,
     created: new Date(),
     lastModified: new Date(),

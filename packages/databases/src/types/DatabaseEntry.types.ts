@@ -1,5 +1,6 @@
 import { PropertyMap } from '@minddrop/properties';
 import { EntityId } from '@minddrop/utils';
+import { DatabaseId } from './Database.types';
 
 export type DatabaseEntryId = EntityId<'database-entry'>;
 
@@ -16,7 +17,7 @@ export interface DatabaseEntry<TProperties extends PropertyMap = PropertyMap> {
    * The name of the database the entry belongs to (same as the database's
    * directory name / ID).
    */
-  database: string;
+  database: DatabaseId;
 
   /**
    * Absolute path to the entry's primary file.

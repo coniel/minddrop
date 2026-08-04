@@ -63,7 +63,7 @@ const updateAutomation: DatabaseAutomation = {
 
 const database: Database = {
   ...objectDatabase,
-  id: 'automation-database-id',
+  id: 'database_automation-test',
   automations: [createAutomation, updateAutomation],
 };
 

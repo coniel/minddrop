@@ -4,6 +4,7 @@ import type {
   DatabaseEntry,
   DatabaseEntryId,
   DatabaseEntryMetadata,
+  DatabaseId,
 } from '../../types';
 import type { SqlEntryRecord } from '../../types';
 
@@ -29,7 +30,7 @@ export function convertSqlRecordToEntry(record: SqlEntryRecord): DatabaseEntry {
 
   return {
     id: record.id as DatabaseEntryId,
-    database: record.databaseId,
+    database: record.databaseId as DatabaseId,
     path: record.path,
     title: record.title,
     created: new Date(record.created),

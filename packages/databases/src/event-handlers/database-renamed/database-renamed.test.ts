@@ -45,7 +45,6 @@ const { layout_card_2, layout_card_3 } = DesignFixtures;
 // The collection database renamed to a new name/ID
 const renamedDatabase = {
   ...collectionDatabase,
-  id: 'Renamed Database',
   name: 'Renamed Database',
   path: `${parentDir}/Renamed Database`,
 };
@@ -56,6 +55,10 @@ const renamedEntryPath = `${parentDir}/Renamed Database/Collection Entry 1.md`;
 describe('onRenameDatabase', () => {
   beforeEach(() => {
     setup();
+
+    // Create the renamed database directory so reference
+    // rewrites can write moved entry files
+    MockFs.addFiles([renamedDatabase.path]);
 
     // Create virtual collections for the collection entry
     Collections.createVirtual(
@@ -99,7 +102,6 @@ describe('onRenameDatabase', () => {
       original: objectDatabase,
       updated: {
         ...objectDatabase,
-        id: 'Renamed Objects',
         name: 'Renamed Objects',
       },
     });
@@ -277,7 +279,6 @@ describe('onRenameDatabase', () => {
     };
     const updated = {
       ...original,
-      id: 'Renamed',
       name: 'Renamed',
       path: `${parentDir}/Renamed`,
     };
@@ -300,7 +301,6 @@ describe('onRenameDatabase', () => {
       original: rootStorageDatabase,
       updated: {
         ...rootStorageDatabase,
-        id: 'Renamed Root',
         name: 'Renamed Root',
         path: `${parentDir}/Renamed Root`,
       },
@@ -316,7 +316,7 @@ describe('onRenameDatabase', () => {
     // noPropertiesDatabase has no entries loaded in the store
     await onRenameDatabase({
       original: noPropertiesDatabase,
-      updated: { ...noPropertiesDatabase, id: 'Renamed', name: 'Renamed' },
+      updated: { ...noPropertiesDatabase, name: 'Renamed' },
     });
 
     // The database is still re-synced, but no entry upsert occurs

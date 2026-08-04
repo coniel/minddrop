@@ -36,7 +36,7 @@ const automation: DatabaseAutomation = {
 
 const entry: DatabaseEntry = {
   ...objectEntry1,
-  database: 'automation-database-id',
+  database: 'database_automation-test',
 };
 
 describe('runCreateEntryDatabaseAutomations', () => {
@@ -59,7 +59,7 @@ describe('runCreateEntryDatabaseAutomations', () => {
   it('runs the automation action', () => {
     DatabasesStore.set({
       ...objectDatabase,
-      id: 'automation-database-id',
+      id: 'database_automation-test',
       automations: [automation],
     });
 
@@ -71,7 +71,7 @@ describe('runCreateEntryDatabaseAutomations', () => {
   it('does nothing if the automation action is missing a config', () => {
     DatabasesStore.set({
       ...objectDatabase,
-      id: 'automation-database-id',
+      id: 'database_automation-test',
       automations: [{ ...automation, actions: [actionMissingConfig] }],
     });
 
@@ -81,7 +81,7 @@ describe('runCreateEntryDatabaseAutomations', () => {
   it('only runs create-entry automations', () => {
     DatabasesStore.set({
       ...objectDatabase,
-      id: 'automation-database-id',
+      id: 'database_automation-test',
       automations: [
         { ...automation, type: 'update-property' },
         { ...automation, type: 'delete-entry' },

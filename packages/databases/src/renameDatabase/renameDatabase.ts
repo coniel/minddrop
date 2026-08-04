@@ -8,10 +8,8 @@ import { Database } from '../types';
 import { writeDatabaseConfig } from '../writeDatabaseConfig';
 
 /**
- * Renames a database by renaming its directory on the file system.
- * A database's ID, name, and path are all derived from its directory
- * name, so a rename changes all three, along with the IDs of every
- * entry it contains.
+ * Renames a database by renaming its directory on the file system,
+ * updating its name and path.
  *
  * @param id - The ID of the database to rename.
  * @param newName - The new name for the database.
@@ -40,20 +38,20 @@ export async function renameDatabase(
   // Rename the database directory on the file system
   await Fs.rename(database.path, newPath);
 
-  // Build the renamed database. Its ID and name both derive from the
-  // directory name.
+  // Build the renamed database with the new name and path
   const renamedDatabase: Database = {
     ...database,
-    id: newName,
     name: newName,
     path: newPath,
     lastModified: new Date(),
   };
 
-  // Swap the store keys in a single synchronous step so the UI never
-  // renders both the old and new database.
-  DatabasesStore.set(renamedDatabase);
-  DatabasesStore.remove(id);
+  // Update the database in place under its existing store key
+  DatabasesStore.update(id, {
+    name: newName,
+    path: newPath,
+    lastModified: renamedDatabase.lastModified,
+  });
 
   // Dispatch the rename event
   await Events.dispatch<DatabaseRenamedEventData>(DatabaseRenamedEvent, {
@@ -62,7 +60,7 @@ export async function renameDatabase(
   });
 
   // Persist the updated config to the renamed directory
-  await writeDatabaseConfig(newName);
+  await writeDatabaseConfig(id);
 
   // Return the renamed database
   return renamedDatabase;

@@ -37,7 +37,7 @@ describe('writeDatabaseEntry', () => {
     // Add an entry with a non-existent database
     DatabaseEntriesStore.set({
       ...objectEntry1,
-      database: 'non-existent-db',
+      database: 'database_non-existent',
     });
 
     await expect(writeDatabaseEntry(objectEntry1.id)).rejects.toThrow(
@@ -50,13 +50,13 @@ describe('writeDatabaseEntry', () => {
     // Add a database with a non-existent entry serializer
     DatabasesStore.set({
       ...objectDatabase,
-      id: 'missing-entry-serializer',
+      id: 'database_missing-serializer',
       entrySerializer: 'non-existent-entry-serializer',
     });
     // Add an entry with a non-existent entry serializer
     DatabaseEntriesStore.set({
       ...objectEntry1,
-      database: 'missing-entry-serializer',
+      database: 'database_missing-serializer',
     });
 
     await expect(writeDatabaseEntry(objectEntry1.id)).rejects.toThrow(

@@ -1,7 +1,8 @@
 import { Fs, FsEntry } from '@minddrop/file-system';
-import { Paths } from '@minddrop/utils';
+import { Paths, entityId, isEntityId } from '@minddrop/utils';
 import { DatabaseConfigFileName } from '../constants';
 import { Database } from '../types';
+import { databaseConfigFilePath } from '../utils';
 
 /**
  * Reads all database configs from a workspace directory by
@@ -22,7 +23,36 @@ export async function readWorkspaceDatabases(
   // Read and parse each database config
   const configs = await Promise.all(databasePaths.map(readDatabaseConfig));
 
-  return configs.filter((config): config is Database => config !== null);
+  const databases = configs.filter(
+    (config): config is Database => config !== null,
+  );
+
+  // Track seen IDs to detect configs duplicated by directory copies
+  const seenIds = new Set<string>();
+
+  return Promise.all(
+    databases.map(async (database) => {
+      // Keep valid, unique config IDs as-is
+      if (
+        database.id &&
+        isEntityId(database.id, 'database') &&
+        !seenIds.has(database.id)
+      ) {
+        seenIds.add(database.id);
+
+        return database;
+      }
+
+      // Mint a fresh ID for missing, untyped, or duplicated IDs
+      const minted = { ...database, id: entityId('database') };
+      seenIds.add(minted.id);
+
+      // Persist the minted ID back to the config file
+      await writeDatabaseConfigFile(minted);
+
+      return minted;
+    }),
+  );
 }
 
 /**
@@ -60,16 +90,29 @@ async function readDatabaseConfig(
     // The database directory path (strip .minddrop/database.json)
     const databasePath = configPath.split('/').slice(0, -2).join('/');
 
-    // Derive ID and name from the directory name
+    // Derive the name from the directory name
     const dirName = Fs.fileNameFromPath(databasePath);
 
     return {
       ...config,
-      id: dirName,
       name: dirName,
       path: databasePath,
     };
   } catch {
     return null;
+  }
+}
+
+/**
+ * Writes a database config file directly from a database object,
+ * excluding derived fields.
+ */
+async function writeDatabaseConfigFile(database: Database): Promise<void> {
+  const { path, name: _name, ...config } = database;
+
+  try {
+    await Fs.writeJsonFile(databaseConfigFilePath(path), config);
+  } catch {
+    // A failed write-back simply re-mints on the next launch
   }
 }

@@ -6,7 +6,7 @@ import { DatabasesStore } from '../DatabasesStore';
 import { DatabaseCreatedEvent } from '../events';
 import { MockFs, cleanup, parentDir, setup } from '../test-utils';
 import { fetchWebpageMetadataAutomation } from '../test-utils/fixtures/database-automations.fixtures';
-import { Database } from '../types';
+import { Database, DatabaseId } from '../types';
 import { databaseConfigFilePath } from '../utils';
 import { CreateDatabaseOptions, createDatabase } from './createDatabase';
 
@@ -19,7 +19,7 @@ const options: Omit<CreateDatabaseOptions, 'automations'> = {
 
 const newDatabase: Database = {
   ...options,
-  id: options.name,
+  id: expect.any(String) as unknown as DatabaseId,
   created: expect.any(Date),
   lastModified: expect.any(Date),
   path: `${parentDir}/${options.name}`,
@@ -105,9 +105,9 @@ describe('createDatabase', () => {
   it('writes the database config to the file system', async () => {
     const configFilePath = databaseConfigFilePath(newDatabase.path);
 
-    const { id, path, name, ...expectedConfig } = await createDatabase(options);
+    const { path, name, ...expectedConfig } = await createDatabase(options);
 
-    // Config file should not contain id, name, or path (they are derived)
+    // Config file should not contain name or path (they are derived)
     expect(MockFs.readJsonFile(configFilePath)).toEqual(expectedConfig);
   });
 

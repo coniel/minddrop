@@ -83,7 +83,7 @@ export async function backgroundSyncDatabases(
   }
 
   // Detect deleted databases
-  const fileSystemDatabaseIds = new Set(
+  const fileSystemDatabaseIds = new Set<string>(
     fileSystemDatabases.map((database) => database.id),
   );
   const deletedDatabaseIds = [...sqlDatabaseIds].filter(

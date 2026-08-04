@@ -39,16 +39,13 @@ describe('renameDatabase', () => {
     );
   });
 
-  it('replaces the database in the store under its new ID', async () => {
+  it('updates the database in the store in place', async () => {
     await renameDatabase(objectDatabase.id, newName);
 
-    // The old key is gone
-    expect(DatabasesStore.get(objectDatabase.id)).toBeNull();
-
-    // The new key carries the renamed ID, name, and path
-    const renamed = DatabasesStore.get(newName);
+    // The database keeps its key with the new name and path
+    const renamed = DatabasesStore.get(objectDatabase.id);
     expect(renamed).toMatchObject({
-      id: newName,
+      id: objectDatabase.id,
       name: newName,
       path: newPath,
     });
@@ -63,7 +60,7 @@ describe('renameDatabase', () => {
           // Payload should contain the original and renamed database
           expect(data.original).toEqual(objectDatabase);
           expect(data.updated).toMatchObject({
-            id: newName,
+            id: objectDatabase.id,
             name: newName,
             path: newPath,
           });
@@ -78,7 +75,7 @@ describe('renameDatabase', () => {
     const renamed = await renameDatabase(objectDatabase.id, newName);
 
     expect(renamed).toMatchObject({
-      id: newName,
+      id: objectDatabase.id,
       name: newName,
       path: newPath,
       lastModified: expect.any(Date),

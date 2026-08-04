@@ -5,7 +5,7 @@ import { databaseConfigFilePath } from '../utils';
 import { writeDatabaseConfig } from './writeDatabaseConfig';
 
 // Strip id, name, and path from a database config (they are derived at load time)
-const { id: _id, path: _path, name: _name, ...expectedConfig } = objectDatabase;
+const { path: _path, name: _name, ...expectedConfig } = objectDatabase;
 
 describe('writeConfig', () => {
   beforeEach(setup);

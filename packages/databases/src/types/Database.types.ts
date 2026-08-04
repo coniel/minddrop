@@ -1,4 +1,5 @@
 import { PropertiesSchema, PropertyType } from '@minddrop/properties';
+import { EntityId } from '@minddrop/utils';
 import { DataView } from '@minddrop/views';
 import { DatabaseAutomation } from './DatabaseAutomation.types';
 
@@ -11,11 +12,13 @@ export type DatabaseEntryOpenMode =
 
 export type PropertyFileStorage = 'root' | 'common' | 'property' | 'entry';
 
+export type DatabaseId = EntityId<'database'>;
+
 export interface Database {
   /**
    * A unique identifier for the database.
    */
-  id: string;
+  id: DatabaseId;
 
   /**
    * Path to the database directory on the file system.

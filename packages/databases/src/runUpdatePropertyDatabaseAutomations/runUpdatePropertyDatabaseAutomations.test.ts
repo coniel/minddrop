@@ -38,7 +38,7 @@ const automation: DatabaseAutomation = {
 
 const database: Database = {
   ...objectDatabase,
-  id: 'automation-database-id',
+  id: 'database_automation-test',
   automations: [automation],
 };
 
@@ -107,7 +107,7 @@ describe('runUpdatePropertyDatabaseAutomations', () => {
     DatabasesStore.remove(database.id);
     DatabasesStore.set({
       ...objectDatabase,
-      id: 'automation-database-id',
+      id: 'database_automation-test',
       automations: [
         { ...automation, type: 'create-entry' },
         { ...automation, type: 'delete-entry' },

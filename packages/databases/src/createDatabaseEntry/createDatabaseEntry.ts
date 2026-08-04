@@ -71,7 +71,7 @@ export async function createDatabaseEntry<
   // Create the new entry
   const entry: DatabaseEntry<TProperties> = {
     id: entityId('database-entry'),
-    database: databaseId,
+    database: database.id,
     title: titleFromPath(path),
     path,
     created: now,
