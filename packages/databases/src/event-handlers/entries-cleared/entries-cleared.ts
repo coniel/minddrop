@@ -1,4 +1,5 @@
 import { Collections } from '@minddrop/collections';
+import { DataViews } from '@minddrop/views';
 import { DatabaseEntriesClearedEventData } from '../../events';
 import { getDatabase } from '../../getDatabase';
 import { removeEntriesFromCollections } from '../../removeEntriesFromCollections';
@@ -52,4 +53,7 @@ export async function onClearEntries(data: DatabaseEntriesClearedEventData) {
 
   // Remove the entries from collections referencing them as members
   await removeEntriesFromCollections(entries.map((entry) => entry.id));
+
+  // Remove the entries from view configs referencing them
+  await DataViews.removeReferences(entries.map((entry) => entry.id));
 }

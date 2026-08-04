@@ -51,4 +51,7 @@ export async function onDeleteDatabase(
 
   // Remove the entries from collections referencing them as members
   await removeEntriesFromCollections(entries.map((entry) => entry.id));
+
+  // Remove the entries from view configs referencing them
+  await DataViews.removeReferences(entries.map((entry) => entry.id));
 }
