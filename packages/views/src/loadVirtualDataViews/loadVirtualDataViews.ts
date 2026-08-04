@@ -34,6 +34,11 @@ export interface VirtualDataViewData {
    * DataView type specific options.
    */
   options?: object;
+
+  /**
+   * DataView type specific data.
+   */
+  data?: object;
 }
 
 /**
@@ -53,6 +58,7 @@ export function loadVirtualDataViews(data: VirtualDataViewData[]): void {
     // Index the item references within the view's config
     references: extractDataViewReferences(item.type, {
       options: item.options,
+      data: item.data,
     }),
   }));
 

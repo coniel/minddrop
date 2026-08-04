@@ -5,6 +5,7 @@ export { deleteDataView as delete } from './deleteDataView';
 export { getDataView as get } from './getDataView';
 export { getDataSourceDataViews as getByDataSource } from './getDataSourceDataViews';
 export { getReferencingDataViews as getReferencing } from './getReferencingDataViews';
+export { removeDataViewReferences as removeReferences } from './removeDataViewReferences';
 export { readDataView as read } from './readDataView';
 export { updateDataView as update } from './updateDataView';
 export { updateDataViewOptions as updateOptions } from './updateDataViewOptions';
