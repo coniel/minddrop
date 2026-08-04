@@ -16,6 +16,23 @@ import { ViewDataSourceType } from '@minddrop/views';
 export const DesignElementTemplatesDataKey = 'design-element-templates';
 export const DesignElementsDataKey = 'design-elements';
 
+// Element types with static content support
+export const CONTENT_ELEMENT_TYPES = [
+  'text',
+  'formatted-text',
+  'number',
+  'date',
+  'badges',
+  'url',
+  'image',
+  'image-viewer',
+  'icon',
+];
+
+// Fallback icon applied when an icon element enters static mode
+// with no icon set
+export const DEFAULT_STATIC_ICON = 'content-icon:cat:default';
+
 // Re-export config-derived maps for feature-internal consumers
 export {
   ELEMENT_GROUPS,

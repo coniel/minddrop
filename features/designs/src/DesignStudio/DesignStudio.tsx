@@ -14,11 +14,8 @@ import { DesignStudioLeftPanel } from '../DesignStudioLeftPanel';
 import { DesignStudioRootElement } from '../DesignStudioRootElement';
 import {
   DesignStudioStore,
-  getDesignElement,
-  removeLayout,
-  removePagePanel,
+  deleteHighlightedElement,
   renameDesign,
-  saveDesign,
   useDesignStudioStore,
   useElement,
 } from '../DesignStudioStore';
@@ -98,41 +95,14 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
         return;
       }
 
-      const store = DesignStudioStore.getState();
-      const { highlightedElementId, activeLayoutId } = store;
-
-      if (!highlightedElementId) {
+      if (!DesignStudioStore.getState().highlightedElementId) {
         return;
       }
 
       event.preventDefault();
 
       // Deleting a frame's root deletes the entire layout
-      if (highlightedElementId === 'root') {
-        if (activeLayoutId) {
-          removeLayout(activeLayoutId);
-        }
-
-        return;
-      }
-
-      const element = getDesignElement(highlightedElementId);
-
-      // The content region of a panelled root cannot be deleted
-      if (element?.type === 'container' && element.role === 'content') {
-        return;
-      }
-
-      // Deleting a panel disables it, discarding its contents
-      if (element?.type === 'page-panel') {
-        removePagePanel(element.side);
-
-        return;
-      }
-
-      store.removeElement(highlightedElementId);
-      store.selectElement(null);
-      saveDesign();
+      deleteHighlightedElement({ allowRootDelete: true });
     };
 
     window.addEventListener('keydown', handleKeyDown);

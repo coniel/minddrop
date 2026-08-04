@@ -1,5 +1,11 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { DesignFixtures, Designs } from '@minddrop/designs';
+import {
+  DesignFixtures,
+  Designs,
+  ElementTemplates,
+  Layout,
+} from '@minddrop/designs';
+import { DEFAULT_STATIC_ICON } from '../constants';
 import {
   cleanup,
   element_0,
@@ -11,8 +17,17 @@ import {
   testDesign,
   testLayout,
 } from '../test-utils';
+import { FlatParentDesignElement } from '../types';
 import { flattenTree } from '../utils';
-import { DesignStudioStore, saveDesign } from './DesignStudioStore';
+import {
+  DesignStudioStore,
+  addDeisgnElementFromTemplate,
+  clearLayoutEditor,
+  deleteHighlightedElement,
+  getDesignElement,
+  initializeLayoutEditor,
+  saveDesign,
+} from './DesignStudioStore';
 
 const { layout_list_1, layout_page_1 } = DesignFixtures;
 
@@ -191,6 +206,136 @@ describe('DesignStudioStore', () => {
     // The list layout mutation did not leak into the card layout
     expect(cardElements[element_text_2.id]).not.toMatchObject({
       style: { 'font-weight': 900 },
+    });
+  });
+
+  describe('layout editor session', () => {
+    it('initializes the editor with a single active layout', () => {
+      setup({ initializeStore: false });
+
+      initializeLayoutEditor(layout_page_1, { onSave: () => {} });
+
+      const state = DesignStudioStore.getState();
+
+      // The layout is flattened and active with its root selected
+      expect(state.elementsByLayout[layout_page_1.id]).toEqual(
+        flattenTree(layout_page_1.tree),
+      );
+      expect(state.activeLayoutId).toBe(layout_page_1.id);
+      expect(state.selectedElementId).toBe('root');
+
+      // Property binding defaults to disabled
+      expect(state.propertyBindingEnabled).toBe(false);
+    });
+
+    it('persists edits through the save handler', async () => {
+      setup({ initializeStore: false });
+
+      // Capture the layout saved through the handler
+      let savedLayout: Layout | undefined;
+
+      initializeLayoutEditor(testLayout, {
+        onSave: (layout) => {
+          savedLayout = layout;
+        },
+      });
+
+      // Mutate an element and save
+      DesignStudioStore.getState().updateElement(element_text_1.id, {
+        style: { 'font-family': 'mono' },
+      });
+
+      await saveDesign();
+
+      // The handler received the reconstructed layout
+      expect(flattenTree(savedLayout!.tree)[element_text_1.id]).toMatchObject({
+        style: { 'font-family': 'mono' },
+      });
+
+      // The synthetic design was not persisted to the designs store
+      const syntheticId = DesignStudioStore.getState().design!.id;
+
+      expect(Designs.get(syntheticId, false)).toBeNull();
+    });
+
+    it('forces added content elements into static mode', () => {
+      setup({ initializeStore: false });
+
+      initializeLayoutEditor(layout_page_1, { onSave: () => {} });
+
+      // Add a text and an icon element from their templates
+      addDeisgnElementFromTemplate(ElementTemplates.text, 'root', 0);
+      addDeisgnElementFromTemplate(ElementTemplates.icon, 'root', 1);
+
+      // Resolve the added elements through the root's children
+      const root = getDesignElement<FlatParentDesignElement>('root');
+      const elements =
+        DesignStudioStore.getState().elementsByLayout[layout_page_1.id];
+
+      // Content elements start in static mode
+      expect(elements[root.children[0]]).toMatchObject({
+        type: 'text',
+        static: true,
+      });
+
+      // Icon elements receive the default static icon
+      expect(elements[root.children[1]]).toMatchObject({
+        type: 'icon',
+        static: true,
+        icon: DEFAULT_STATIC_ICON,
+      });
+    });
+
+    it('clears the editor session', () => {
+      setup({ initializeStore: false });
+
+      initializeLayoutEditor(layout_page_1, { onSave: () => {} });
+
+      clearLayoutEditor();
+
+      const state = DesignStudioStore.getState();
+
+      // The session state is reset
+      expect(state.initialized).toBe(false);
+      expect(state.saveHandler).toBeNull();
+      expect(state.propertyBindingEnabled).toBe(true);
+    });
+  });
+
+  describe('deleteHighlightedElement', () => {
+    it('deletes the highlighted element', () => {
+      setup();
+
+      // Highlight an element
+      DesignStudioStore.getState().selectElement(element_text_1.id);
+
+      deleteHighlightedElement();
+
+      // The element is removed from the layout
+      expect(
+        DesignStudioStore.getState().elementsByLayout[testLayout.id][
+          element_text_1.id
+        ],
+      ).toBeUndefined();
+    });
+
+    it('does not delete the layout root unless allowed', () => {
+      setup();
+
+      // Highlight the root element
+      DesignStudioStore.getState().selectElement('root');
+
+      deleteHighlightedElement();
+
+      // The layout remains intact
+      expect(
+        DesignStudioStore.getState().elementsByLayout[testLayout.id],
+      ).toBeDefined();
+      expect(
+        Designs.get(testDesign.id).layouts.some(
+          (layout) => layout.id === testLayout.id,
+        ),
+      ).toBe(true);
     });
   });
 });

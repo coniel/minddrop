@@ -6,6 +6,7 @@ import {
   useDesignStudioStore,
   useElement,
 } from '../DesignStudioStore';
+import { CONTENT_ELEMENT_TYPES, DEFAULT_STATIC_ICON } from '../constants';
 import { isPropertyCompatibleWithElement } from '../utils';
 import { DateContentField } from './DateContentField';
 import { ElementEmptyBehaviorField } from './ElementEmptyBehaviorField';
@@ -16,29 +17,12 @@ import { NumberContentField } from './NumberContentField';
 import { SectionLabel } from './SectionLabel';
 import { StaticContentField } from './StaticContentField';
 
-// Element types with static content support
-const CONTENT_ELEMENT_TYPES = [
-  'text',
-  'formatted-text',
-  'number',
-  'date',
-  'badges',
-  'url',
-  'image',
-  'image-viewer',
-  'icon',
-];
-
 // Element types whose static content is an image file
 const IMAGE_CONTENT_TYPES = ['image', 'image-viewer'];
 
 // Element types whose image property binding is configured in the
 // Background section of their style editor instead
 const BACKGROUND_IMAGE_ELEMENT_TYPES = ['container', 'root', 'page-panel'];
-
-// Fallback icon applied when switching an icon element to static
-// mode with no icon set
-const DEFAULT_STATIC_ICON = 'content-icon:cat:default';
 
 export interface ElementContentSectionProps {
   /**
@@ -61,6 +45,9 @@ export const ElementContentSection: React.FC<ElementContentSectionProps> = ({
   const element = useElement(elementId);
   const designProperties = useDesignStudioStore(
     (state) => state.design?.properties || [],
+  );
+  const propertyBindingEnabled = useDesignStudioStore(
+    (state) => state.propertyBindingEnabled,
   );
 
   // Toggle the element between property and static content mode,
@@ -109,6 +96,23 @@ export const ElementContentSection: React.FC<ElementContentSectionProps> = ({
     return null;
   }
 
+  const supportsContent = CONTENT_ELEMENT_TYPES.includes(element.type);
+
+  // Only static content can be configured when property binding
+  // is disabled
+  if (!propertyBindingEnabled) {
+    if (!supportsContent) {
+      return null;
+    }
+
+    return (
+      <Stack gap={3}>
+        <SectionLabel label="designs.content.label" />
+        <ContentField elementId={elementId} type={element.type} />
+      </Stack>
+    );
+  }
+
   // Design properties the element could be bound to, ignoring
   // the current static state
   const compatibleProperties = designProperties.filter((property) =>
@@ -119,7 +123,6 @@ export const ElementContentSection: React.FC<ElementContentSectionProps> = ({
   );
 
   const hasCompatibleProperties = compatibleProperties.length > 0;
-  const supportsContent = CONTENT_ELEMENT_TYPES.includes(element.type);
 
   // Nothing to configure: no section at all
   if (!hasCompatibleProperties && !supportsContent) {

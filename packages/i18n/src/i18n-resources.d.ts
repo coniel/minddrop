@@ -1369,6 +1369,7 @@ declare module 'i18next' {
           labels: {
             designs: string;
             elements: string;
+            layout: string;
             layouts: string;
             properties: string;
           };

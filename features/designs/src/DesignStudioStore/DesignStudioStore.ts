@@ -19,8 +19,9 @@ import {
   PropertySchema,
 } from '@minddrop/properties';
 import { createStore, useShallow } from '@minddrop/stores';
-import { deepMerge, reorderArray, uuid } from '@minddrop/utils';
+import { deepMerge, entityId, reorderArray, uuid } from '@minddrop/utils';
 import { useLayoutId } from '../LayoutIdContext';
+import { CONTENT_ELEMENT_TYPES, DEFAULT_STATIC_ICON } from '../constants';
 import {
   FlatChildDesignElement,
   FlatDesignElement,
@@ -89,6 +90,19 @@ export interface DesignStudioStore {
    * The values of the properties.
    */
   propertyValues: PropertyMap;
+
+  /**
+   * Handler invoked by saveDesign in place of persisting to the
+   * designs store. Set when editing a standalone layout owned by
+   * another entity.
+   */
+  saveHandler: ((layouts: Layout[]) => Promise<void> | void) | null;
+
+  /**
+   * Whether elements can be bound to design properties. Disabled
+   * when editing a standalone layout with no property schema.
+   */
+  propertyBindingEnabled: boolean;
 
   /**
    * The current zoom level (1 = 100%).
@@ -244,6 +258,8 @@ export const DesignStudioStore = createStore<DesignStudioStore>((set) => ({
   fadingHighlightElementId: null,
   properties: [],
   propertyValues: {},
+  saveHandler: null,
+  propertyBindingEnabled: true,
   zoom: 1,
   pan: { x: 0, y: 0 },
 
@@ -287,6 +303,8 @@ export const DesignStudioStore = createStore<DesignStudioStore>((set) => ({
       fadingHighlightElementId: null,
       properties,
       propertyValues,
+      saveHandler: null,
+      propertyBindingEnabled: true,
       initialized: true,
       zoom: 1,
       pan: { x: 0, y: 0 },
@@ -526,6 +544,8 @@ export const DesignStudioStore = createStore<DesignStudioStore>((set) => ({
       fadingHighlightElementId: null,
       properties: [],
       propertyValues: {},
+      saveHandler: null,
+      propertyBindingEnabled: true,
       initialized: false,
     }),
 }));
@@ -586,9 +606,12 @@ export const useActiveLayoutType = (): LayoutType | null =>
 /**
  * Persists the design by reconstructing each layout's element
  * tree from its flat element map and writing the whole design.
+ * When a save handler is set, persistence is delegated to it
+ * instead of the designs store.
  */
 export const saveDesign = async () => {
-  const { design, elementsByLayout } = DesignStudioStore.getState();
+  const { design, elementsByLayout, saveHandler } =
+    DesignStudioStore.getState();
 
   if (!design) {
     return;
@@ -605,9 +628,82 @@ export const saveDesign = async () => {
     return { ...layout, tree: reconstructTree(elements) };
   });
 
+  // Delegate persistence to the save handler when editing a
+  // standalone layout
+  if (saveHandler) {
+    await saveHandler(layouts);
+
+    // Keep the design snapshot in sync with the saved layouts
+    DesignStudioStore.getState().setDesign({
+      ...design,
+      layouts,
+      lastModified: new Date(),
+    });
+
+    return;
+  }
+
   const updated = await Designs.update(design.id, { layouts });
 
   DesignStudioStore.getState().setDesign(updated);
+};
+
+export interface InitializeLayoutEditorOptions {
+  /**
+   * Called with the updated layout whenever an edit is saved.
+   */
+  onSave: (layout: Layout) => Promise<void> | void;
+
+  /**
+   * Whether elements can be bound to design properties.
+   * @default false
+   */
+  propertyBinding?: boolean;
+}
+
+/**
+ * Initializes the studio store for editing a single standalone
+ * layout owned by another entity. Edits are persisted through the
+ * onSave handler rather than the designs store.
+ *
+ * @param layout - The layout to edit.
+ * @param options - The layout editor options.
+ */
+export const initializeLayoutEditor = (
+  layout: Layout,
+  options: InitializeLayoutEditorOptions,
+) => {
+  const store = DesignStudioStore.getState();
+
+  // Wrap the layout in a synthetic design so the studio's design
+  // based read paths work unchanged
+  const design: Design = {
+    id: entityId('design'),
+    name: layout.name,
+    properties: [],
+    layouts: [layout],
+    created: layout.created,
+    lastModified: layout.lastModified,
+  };
+
+  // Initialize the store with the synthetic design
+  store.initialize(design);
+
+  // Activate the layout
+  store.setActiveLayout(layout.id);
+
+  // Persist edits through the save handler
+  DesignStudioStore.setState({
+    saveHandler: (layouts) => options.onSave(layouts[0]),
+    propertyBindingEnabled: options.propertyBinding ?? false,
+  });
+};
+
+/**
+ * Clears the layout editor session.
+ */
+export const clearLayoutEditor = () => {
+  DesignStudioStore.getState().clear();
 };
 
 /**
@@ -940,14 +1036,86 @@ export const addDeisgnElementFromTemplate = (
     return;
   }
 
+  const state = DesignStudioStore.getState();
+
   const element = {
     ...template,
     id: uuid(),
     parent: parentId,
   } as FlatDesignElement;
 
-  DesignStudioStore.getState().addElement(element, parentId, index, layoutId);
+  // Without property binding, content elements start in static
+  // mode so they are immediately editable
+  if (
+    !state.propertyBindingEnabled &&
+    CONTENT_ELEMENT_TYPES.includes(element.type)
+  ) {
+    element.static = true;
+
+    // Default the icon so static mode has a visible value
+    if (element.type === 'icon' && !element.icon) {
+      element.icon = DEFAULT_STATIC_ICON;
+    }
+  }
+
+  state.addElement(element, parentId, index, layoutId);
   selectDroppedElement(element.id, layoutId);
+  saveDesign();
+};
+
+export interface DeleteHighlightedElementOptions {
+  /**
+   * Whether highlighting the root element deletes the entire
+   * layout.
+   * @default false
+   */
+  allowRootDelete?: boolean;
+}
+
+/**
+ * Deletes the highlighted element. Panelled regions are protected:
+ * deleting a page panel disables it, and the content region of a
+ * panelled root cannot be deleted.
+ *
+ * @param options - The deletion options.
+ */
+export const deleteHighlightedElement = (
+  options: DeleteHighlightedElementOptions = {},
+) => {
+  const store = DesignStudioStore.getState();
+  const { highlightedElementId, activeLayoutId } = store;
+
+  // Nothing highlighted to delete
+  if (!highlightedElementId) {
+    return;
+  }
+
+  // Deleting the root deletes the entire layout, when allowed
+  if (highlightedElementId === 'root') {
+    if (options.allowRootDelete && activeLayoutId) {
+      removeLayout(activeLayoutId);
+    }
+
+    return;
+  }
+
+  const element = getDesignElement(highlightedElementId);
+
+  // The content region of a panelled root cannot be deleted
+  if (element?.type === 'container' && element.role === 'content') {
+    return;
+  }
+
+  // Deleting a panel disables it, discarding its contents
+  if (element?.type === 'page-panel') {
+    removePagePanel(element.side);
+
+    return;
+  }
+
+  // Remove the element and persist
+  store.removeElement(highlightedElementId);
+  store.selectElement(null);
   saveDesign();
 };
 
