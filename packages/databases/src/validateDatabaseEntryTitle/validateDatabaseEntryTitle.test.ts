@@ -7,7 +7,7 @@ import { validateDatabaseEntryTitle } from './validateDatabaseEntryTitle';
 // A sibling entry in the same database as objectEntry1
 const siblingEntry: DatabaseEntry = {
   ...objectEntry1,
-  id: 'Objects/Sibling Entry.md',
+  id: 'database-entry_sibling-entry',
   path: `${objectEntry1.path.replace('Test Entry.md', 'Sibling Entry.md')}`,
   title: 'Sibling Entry',
 };

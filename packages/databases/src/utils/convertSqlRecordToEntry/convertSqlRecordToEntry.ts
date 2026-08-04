@@ -1,6 +1,10 @@
 import type { PropertyMap, PropertyValue } from '@minddrop/properties';
 import { restoreDates } from '@minddrop/utils';
-import type { DatabaseEntry, DatabaseEntryMetadata } from '../../types';
+import type {
+  DatabaseEntry,
+  DatabaseEntryId,
+  DatabaseEntryMetadata,
+} from '../../types';
 import type { SqlEntryRecord } from '../../types';
 
 /**
@@ -24,7 +28,7 @@ export function convertSqlRecordToEntry(record: SqlEntryRecord): DatabaseEntry {
   );
 
   return {
-    id: record.id,
+    id: record.id as DatabaseEntryId,
     database: record.databaseId,
     path: record.path,
     title: record.title,

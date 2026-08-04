@@ -1,4 +1,7 @@
 import { PropertyMap } from '@minddrop/properties';
+import { EntityId } from '@minddrop/utils';
+
+export type DatabaseEntryId = EntityId<'database-entry'>;
 
 export interface DatabaseEntry<TProperties extends PropertyMap = PropertyMap> {
   /**
@@ -7,7 +10,7 @@ export interface DatabaseEntry<TProperties extends PropertyMap = PropertyMap> {
    * regenerated if the index is rebuilt. Durable disk data must
    * reference entries by path, not ID.
    */
-  id: string;
+  id: DatabaseEntryId;
 
   /**
    * The name of the database the entry belongs to (same as the database's

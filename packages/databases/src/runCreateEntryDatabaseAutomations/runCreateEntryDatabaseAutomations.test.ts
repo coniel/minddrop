@@ -28,7 +28,7 @@ const actionMissingConfig: DatabaseAutomationAction = {
 };
 
 const automation: DatabaseAutomation = {
-  id: 'automation-id',
+  id: 'automation_test',
   name: 'Automation',
   type: 'create-entry',
   actions: [action],

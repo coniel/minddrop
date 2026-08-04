@@ -29,7 +29,7 @@ const actionMissingConfig: DatabaseAutomationAction = {
 };
 
 const automation: DatabaseAutomation = {
-  id: 'automation-id',
+  id: 'automation_test',
   name: 'Automation',
   type: 'update-property',
   property: 'title',

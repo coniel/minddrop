@@ -161,7 +161,7 @@ describe('setDatabasePropertyFileStorage', () => {
     // A second entry whose image file shares the first entry's file name
     const secondEntry = {
       ...entryStorageEntry1,
-      id: 'entry-storage-entry-2',
+      id: 'database-entry_entry-storage-entry-2' as const,
       title: 'Entry Storage Entry 2',
       path: `${entryStorageDatabase.path}/Entry Storage Entry 2/Entry Storage Entry 2.md`,
     };

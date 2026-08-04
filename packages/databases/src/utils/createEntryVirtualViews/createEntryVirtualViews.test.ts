@@ -12,6 +12,9 @@ import {
   cleanup,
   collectionEntry1,
   objectEntry1,
+  referenceEntry1,
+  relatedEntry1,
+  relatedEntry2,
   setup,
 } from '../../test-utils';
 import { viewMetadataKey } from '../viewMetadataKey';
@@ -120,7 +123,7 @@ describe('createEntryVirtualViews', () => {
     const collection = Collections.get(collId, false);
 
     expect(collection).not.toBeNull();
-    expect(collection!.entries).toEqual(['related-entry-1', 'related-entry-2']);
+    expect(collection!.entries).toEqual([relatedEntry1.id, relatedEntry2.id]);
   });
 
   it('creates a virtual view with the correct view type and data source', () => {
@@ -287,7 +290,7 @@ describe('createEntryVirtualViews', () => {
       'view-element-1': 'Related',
     };
 
-    // collectionEntry1 has Related: ['related-entry-1', 'related-entry-2']
+    // collectionEntry1 has Related referencing the two related entries
     // so this will work. The empty array fallback is tested implicitly
     // when the property doesn't exist on the entry.
     const result = createEntryVirtualViews(

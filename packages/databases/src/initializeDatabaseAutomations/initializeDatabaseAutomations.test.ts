@@ -47,14 +47,14 @@ const updateAction: DatabaseAutomationAction = {
 };
 
 const createAutomation: DatabaseAutomation = {
-  id: 'create-automation-id',
+  id: 'automation_create',
   name: 'Automation',
   type: 'create-entry',
   actions: [createAction],
 };
 
 const updateAutomation: DatabaseAutomation = {
-  id: 'update-automation-id',
+  id: 'automation_update',
   name: 'Automation',
   type: 'update-property',
   property: 'title',

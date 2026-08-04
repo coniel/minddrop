@@ -1,6 +1,6 @@
 import { Events } from '@minddrop/events';
 import { Fs, PathConflictError } from '@minddrop/file-system';
-import { Paths, uuid } from '@minddrop/utils';
+import { Paths, entityId } from '@minddrop/utils';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabaseCreatedEvent } from '../events';
 import { Database, DatabaseAutomationTemplate } from '../types';
@@ -38,7 +38,7 @@ export async function createDatabase(
   // Create automation instances from the provided automation templates
   const automations = [...(options.automations || [])].map((automation) => ({
     ...automation,
-    id: uuid(),
+    id: entityId('automation'),
   }));
 
   // Generate the database config

@@ -11,6 +11,9 @@ import {
   collectionEntry1,
   objectEntry1,
   propertyStorageEntry1,
+  referenceEntry1,
+  relatedEntry1,
+  relatedEntry2,
   setup,
 } from '../../test-utils';
 import { getPropertyFilePath } from '../getPropertyFilePath';
@@ -154,6 +157,6 @@ describe('entryDisplayPropertyValues', () => {
     );
 
     // The raw collection value should remain
-    expect(result.Related).toEqual(['related-entry-1', 'related-entry-2']);
+    expect(result.Related).toEqual([relatedEntry1.id, relatedEntry2.id]);
   });
 });

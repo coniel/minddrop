@@ -1,5 +1,8 @@
 import { PropertyType } from '@minddrop/properties';
+import { EntityId } from '@minddrop/utils';
 import { DatabaseAutomationAction } from './DatabaseAutomationAction.types';
+
+export type DatabaseAutomationId = EntityId<'automation'>;
 
 export type DatabaseAutomationTrigger =
   | 'create-entry'
@@ -16,7 +19,7 @@ export interface DatabaseAutomation {
   /**
    * A unique identifier for the automation.
    */
-  id: string;
+  id: DatabaseAutomationId;
 
   /**
    * The name of the automation.

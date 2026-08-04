@@ -39,7 +39,7 @@ describe('onRenameDesignProperty', () => {
 
     // Rename a property on a design the database does not use
     await onRenameDesignProperty({
-      design: { ...design_cards, id: 'other-design' },
+      design: { ...design_cards, id: 'design_other' },
       oldName: 'Title',
       newName: 'Heading',
     });

@@ -17,7 +17,7 @@ import {
  *****************************************************************************/
 
 export const objectEntry1: DatabaseEntry = {
-  id: 'object-entry-1',
+  id: 'database-entry_object-entry-1',
   title: 'Test Entry',
   database: objectDatabase.id,
   path: `${objectDatabase.path}/Test Entry.md`,
@@ -55,7 +55,7 @@ export const objectEntry1SqlRecord: SqlEntryRecord = {
  *****************************************************************************/
 
 export const yamlObjectEntry1: DatabaseEntry = {
-  id: 'yaml-object-entry-1',
+  id: 'database-entry_yaml-object-entry-1',
   title: 'Test Entry',
   database: yamlObjectDatabase.id,
   path: `${yamlObjectDatabase.path}/Test Entry.yaml`,
@@ -90,7 +90,7 @@ export const yamlObjectEntry1SqlRecord: SqlEntryRecord = {
  *****************************************************************************/
 
 export const urlEntry1: DatabaseEntry = {
-  id: 'url-entry-1',
+  id: 'database-entry_url-entry-1',
   title: 'Test Entry',
   database: urlDatabase.id,
   path: `${urlDatabase.path}/Test Entry.md`,
@@ -132,7 +132,7 @@ export const urlEntry1SqlRecord: SqlEntryRecord = {
  *****************************************************************************/
 
 export const rootStorageEntry1: DatabaseEntry = {
-  id: 'root-storage-entry-1',
+  id: 'database-entry_root-storage-entry-1',
   title: 'Root Storage Entry 1',
   database: rootStorageDatabase.id,
   path: `${rootStorageDatabase.path}/Root Storage Entry 1.md`,
@@ -160,7 +160,7 @@ export const rootStorageEntry1SqlRecord: SqlEntryRecord = {
 };
 
 export const referenceEntry1: DatabaseEntry = {
-  id: 'reference-entry-1',
+  id: 'database-entry_reference-entry-1',
   title: 'Reference Entry 1',
   database: rootStorageDatabase.id,
   path: `${rootStorageDatabase.path}/Reference Entry 1.md`,
@@ -188,7 +188,7 @@ export const referenceEntry1SqlRecord: SqlEntryRecord = {
 };
 
 export const rootStorageEntry_empty_value: DatabaseEntry = {
-  id: 'root-storage-entry-empty-value',
+  id: 'database-entry_root-storage-entry-empty-value',
   title: 'Root Storage Entry Empty Value',
   database: rootStorageDatabase.id,
   path: `${rootStorageDatabase.path}/Root Storage Entry Empty Value.md`,
@@ -217,7 +217,7 @@ export const rootStorageEntrySqlRecord_empty_value: SqlEntryRecord = {
  *****************************************************************************/
 
 export const commonStorageEntry1: DatabaseEntry = {
-  id: 'common-storage-entry-1',
+  id: 'database-entry_common-storage-entry-1',
   title: 'Common Storage Entry 1',
   database: commonStorageDatabase.id,
   path: `${commonStorageDatabase.path}/Common Storage Entry 1.md`,
@@ -249,7 +249,7 @@ export const commonStorageEntry1SqlRecord: SqlEntryRecord = {
  *****************************************************************************/
 
 export const propertyStorageEntry1: DatabaseEntry = {
-  id: 'property-storage-entry-1',
+  id: 'database-entry_property-storage-entry-1',
   title: 'Property Storage Entry 1',
   database: propertyStorageDatabase.id,
   path: `${propertyStorageDatabase.path}/Property Storage Entry 1.md`,
@@ -281,7 +281,7 @@ export const propertyStorageEntry1SqlRecord: SqlEntryRecord = {
  *****************************************************************************/
 
 export const entryStorageEntry1: DatabaseEntry = {
-  id: 'entry-storage-entry-1',
+  id: 'database-entry_entry-storage-entry-1',
   title: 'Entry Storage Entry 1',
   database: entryStorageDatabase.id,
   path: `${entryStorageDatabase.path}/Entry Storage Entry 1/Entry Storage Entry 1.md`,
@@ -313,7 +313,7 @@ export const entryStorageEntry1SqlRecord: SqlEntryRecord = {
  *****************************************************************************/
 
 export const timestampEntry1: DatabaseEntry = {
-  id: 'timestamp-entry-1',
+  id: 'database-entry_timestamp-entry-1',
   title: 'Timestamp Entry',
   database: timestampDatabase.id,
   path: `${timestampDatabase.path}/Timestamp Entry.md`,
@@ -350,7 +350,7 @@ export const timestampEntry1SqlRecord: SqlEntryRecord = {
  *****************************************************************************/
 
 export const relatedEntry1: DatabaseEntry = {
-  id: 'related-entry-1',
+  id: 'database-entry_related-entry-1',
   title: 'Related Entry 1',
   database: collectionDatabase.id,
   path: `${collectionDatabase.path}/Related Entry 1.md`,
@@ -386,7 +386,7 @@ export const relatedEntry1SqlRecord: SqlEntryRecord = {
 };
 
 export const relatedEntry2: DatabaseEntry = {
-  id: 'related-entry-2',
+  id: 'database-entry_related-entry-2',
   title: 'Related Entry 2',
   database: collectionDatabase.id,
   path: `${collectionDatabase.path}/Related Entry 2.md`,
@@ -422,7 +422,7 @@ export const relatedEntry2SqlRecord: SqlEntryRecord = {
 };
 
 export const collectionEntry1: DatabaseEntry = {
-  id: 'collection-entry-1',
+  id: 'database-entry_collection-entry-1',
   title: 'Collection Entry 1',
   database: collectionDatabase.id,
   path: `${collectionDatabase.path}/Collection Entry 1.md`,
@@ -430,8 +430,8 @@ export const collectionEntry1: DatabaseEntry = {
   lastModified: new Date('2024-01-01T00:00:00.000Z'),
   properties: {
     Title: 'Collection Entry 1',
-    Related: ['related-entry-1', 'related-entry-2'],
-    References: ['reference-entry-1'],
+    Related: [relatedEntry1.id, relatedEntry2.id],
+    References: [referenceEntry1.id],
   },
   metadata: {},
 };
@@ -458,9 +458,9 @@ export const collectionEntry1SqlRecord: SqlEntryRecord = {
     {
       name: 'Related',
       type: 'collection',
-      value: ['related-entry-1', 'related-entry-2'],
+      value: [relatedEntry1.id, relatedEntry2.id],
     },
-    { name: 'References', type: 'collection', value: ['reference-entry-1'] },
+    { name: 'References', type: 'collection', value: [referenceEntry1.id] },
   ],
 };
 
