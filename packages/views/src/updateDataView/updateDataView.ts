@@ -5,6 +5,7 @@ import {
 } from '@minddrop/utils';
 import { DataViewsStore } from '../DataViewsStore';
 import { ViewUpdatedEvent, ViewUpdatedEventData } from '../events';
+import { extractDataViewReferences } from '../extractDataViewReferences';
 import { getDataView } from '../getDataView';
 import {
   DataView,
@@ -40,6 +41,12 @@ export async function updateDataView(
     ? deepMergeFn(view, update)
     : { ...view, ...update };
 
+  // Re-index the item references within the updated config
+  updatedView.references = extractDataViewReferences(updatedView.type, {
+    options: updatedView.options,
+    data: updatedView.data,
+  });
+
   // If the ID is changing (virtual data views only), remove the old
   // entry and set the new one
   if ('id' in data && data.id && data.id !== id) {
@@ -53,7 +60,7 @@ export async function updateDataView(
     DataViewsStore.set(updatedView);
   } else {
     // Update the data view in the store
-    DataViewsStore.update(id, deepMerge ? deepMergeFn(view, update) : update);
+    DataViewsStore.update(id, updatedView);
   }
 
   // Write the data view to the file system if not virtual

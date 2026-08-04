@@ -1,6 +1,7 @@
 import { Events } from '@minddrop/events';
 import { DataViewsStore } from '../DataViewsStore';
 import { ViewsLoadedEvent, ViewsLoadedEventData } from '../events';
+import { extractDataViewReferences } from '../extractDataViewReferences';
 import { DataView, ViewDataSource } from '../types';
 
 export interface VirtualDataViewData {
@@ -49,6 +50,10 @@ export function loadVirtualDataViews(data: VirtualDataViewData[]): void {
     virtual: true,
     created: new Date(),
     lastModified: new Date(),
+    // Index the item references within the view's config
+    references: extractDataViewReferences(item.type, {
+      options: item.options,
+    }),
   }));
 
   // Load data views into the store

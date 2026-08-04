@@ -3,6 +3,7 @@ import { i18n } from '@minddrop/i18n';
 import { entityId } from '@minddrop/utils';
 import { DataViewsStore } from '../DataViewsStore';
 import { ViewCreatedEvent, ViewCreatedEventData } from '../events';
+import { extractDataViewReferences } from '../extractDataViewReferences';
 import { getDataViewType } from '../getDataViewType';
 import { DataView, ViewDataSource } from '../types';
 import { writeDataView } from '../writeDataView';
@@ -47,6 +48,12 @@ export async function createDataView(
   if (viewType?.defaultData) {
     view.data = { ...viewType.defaultData };
   }
+
+  // Index the item references within the view's config
+  view.references = extractDataViewReferences(view.type, {
+    options: view.options,
+    data: view.data,
+  });
 
   // Add the data view to the store
   DataViewsStore.set(view);

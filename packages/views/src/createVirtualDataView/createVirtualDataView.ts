@@ -2,6 +2,7 @@ import { Events } from '@minddrop/events';
 import { i18n } from '@minddrop/i18n';
 import { DataViewsStore } from '../DataViewsStore';
 import { ViewCreatedEvent, ViewCreatedEventData } from '../events';
+import { extractDataViewReferences } from '../extractDataViewReferences';
 import { getDataViewType } from '../getDataViewType';
 import { CreateVirtualDataViewData, DataView } from '../types';
 
@@ -43,6 +44,12 @@ export function createVirtualDataView(
   if (viewData.data) {
     view.data = viewData.data;
   }
+
+  // Index the item references within the view's config
+  view.references = extractDataViewReferences(view.type, {
+    options: view.options,
+    data: view.data,
+  });
 
   // Add the data view to the store
   DataViewsStore.set(view);

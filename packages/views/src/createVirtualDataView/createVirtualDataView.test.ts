@@ -18,6 +18,7 @@ const expectedView = {
   created: mockDate,
   lastModified: mockDate,
   options: { ...viewType_gallery.defaultOptions },
+  references: [],
 };
 
 describe('createVirtualDataView', () => {

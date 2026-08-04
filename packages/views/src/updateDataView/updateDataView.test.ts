@@ -22,7 +22,11 @@ const updatedView: DataView = {
   ...view_gallery_1,
   options: update.options,
   lastModified: mockDate,
+  references: [],
 };
+
+// The updated view as written to disk, without the references index
+const { references: _references, ...writtenView } = updatedView;
 
 describe('updateDataView', () => {
   beforeEach(setup);
@@ -39,7 +43,7 @@ describe('updateDataView', () => {
     await updateDataView(view_gallery_1.id, update);
 
     expect(MockFs.readJsonFile(getViewFilePath(view_gallery_1.id))).toEqual(
-      updatedView,
+      writtenView,
     );
   });
 

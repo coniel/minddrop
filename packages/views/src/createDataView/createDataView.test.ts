@@ -27,7 +27,11 @@ const newView: DataView = {
   options: {
     ...viewType_gallery.defaultOptions,
   },
+  references: [],
 };
+
+// The view as written to disk, without the references index
+const { references: _references, ...writtenView } = newView;
 
 describe('createDataView', () => {
   beforeEach(() => setup({ loadViews: false, loadViewFiles: false }));
@@ -62,7 +66,7 @@ describe('createDataView', () => {
     );
 
     expect(MockFs.readJsonFile(getViewFilePath(view.id))).toMatchObject(
-      newView,
+      writtenView,
     );
   });
 

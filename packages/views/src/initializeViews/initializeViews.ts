@@ -4,7 +4,9 @@ import { Workspaces } from '@minddrop/workspaces';
 import { DataViewsStore } from '../DataViewsStore';
 import { ViewFileExtension } from '../constants';
 import { ViewsLoadedEvent, ViewsLoadedEventData } from '../events';
+import { extractDataViewReferences } from '../extractDataViewReferences';
 import { readDataView } from '../readDataView';
+import { resolveDataViewConfig } from '../resolveDataViewConfig';
 import { getViewsDirPath } from '../utils/getViewsDirPath';
 
 /**
@@ -38,8 +40,23 @@ export async function initializeViews(): Promise<void> {
   // Read the data views
   const viewPromises = await Promise.all(viewPaths.map(readDataView));
 
-  // Filter out null data views
-  const views = viewPromises.filter((view) => view !== null);
+  // Filter out null data views, resolve durable references into
+  // item IDs, and index each view's references
+  const views = viewPromises
+    .filter((view) => view !== null)
+    .map((view) => {
+      // Resolve the config's durable references
+      const config = resolveDataViewConfig(view.type, {
+        options: view.options,
+        data: view.data,
+      });
+
+      return {
+        ...view,
+        ...config,
+        references: extractDataViewReferences(view.type, config),
+      };
+    });
 
   // Load the data views into the store
   DataViewsStore.load(views);

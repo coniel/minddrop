@@ -10,6 +10,7 @@ const updatedView: DataView = {
   ...view_gallery_1,
   options,
   lastModified: mockDate,
+  references: [],
 };
 
 describe('updateDataViewOptions', () => {
