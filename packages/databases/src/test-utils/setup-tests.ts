@@ -4,6 +4,10 @@ import { cleanupDesignFixtures, setupDesignFixtures } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
 import { initializeMockFileSystem } from '@minddrop/file-system';
 import { initializeI18n } from '@minddrop/i18n';
+import {
+  registerItemReferenceAdapter,
+  unregisterItemReferenceAdapter,
+} from '@minddrop/item-references';
 import { cleanupViewFixtures, setupViewFixtures } from '@minddrop/views';
 import {
   cleanupWorkspaceFixtures,
@@ -12,6 +16,12 @@ import {
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabaseEntrySerializersStore } from '../DatabaseEntrySerializersStore';
 import { DatabasesStore } from '../DatabasesStore';
+import {
+  matchDatabaseEntryReference,
+  matchDatabaseReference,
+  serializeDatabaseEntryReference,
+  serializeDatabaseReference,
+} from '../utils';
 import {
   SetupDatabaseFixturesOptions,
   cleanupDatabaseFixtures,
@@ -32,6 +42,19 @@ export function setup(options?: SetupDatabaseFixturesOptions) {
   setupDesignFixtures(MockFs);
   setupWorkspaceFixtures(MockFs);
 
+  // Register the item reference adapters registered at runtime
+  // by initializeDatabases
+  registerItemReferenceAdapter({
+    type: 'database-entry',
+    serialize: serializeDatabaseEntryReference,
+    match: matchDatabaseEntryReference,
+  });
+  registerItemReferenceAdapter({
+    type: 'database',
+    serialize: serializeDatabaseReference,
+    match: matchDatabaseReference,
+  });
+
   // Mock the current date
   vi.useFakeTimers();
   vi.setSystemTime(mockDate);
@@ -50,6 +73,10 @@ export function cleanup() {
   DatabaseEntriesStore.clear();
   DatabaseEntrySerializersStore.clear();
   Collections.Store.clear();
+
+  // Unregister the item reference adapters
+  unregisterItemReferenceAdapter('database-entry');
+  unregisterItemReferenceAdapter('database');
 
   // Reset mock file system
   MockFs.reset();

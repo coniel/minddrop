@@ -1,12 +1,11 @@
+import { serializeItemReferences } from '@minddrop/item-references';
 import { PropertyMap } from '@minddrop/properties';
 import { Database } from '../../types';
-import { entryIdsToAddresses } from '../entryIdsToAddresses';
 
 /**
- * Converts collection property values from entry IDs to durable
- * workspace-relative addresses for disk serialization. IDs that
- * do not resolve are dropped. Non-collection properties pass
- * through untouched.
+ * Converts collection property values from item IDs to durable
+ * references for disk serialization. IDs that do not resolve are
+ * dropped. Non-collection properties pass through untouched.
  *
  * @param properties - The entry properties to convert.
  * @param database - The entry's database.
@@ -31,7 +30,7 @@ export function serializeCollectionProperties(
       return;
     }
 
-    converted[property.name] = entryIdsToAddresses(value);
+    converted[property.name] = serializeItemReferences(value);
   });
 
   return converted;

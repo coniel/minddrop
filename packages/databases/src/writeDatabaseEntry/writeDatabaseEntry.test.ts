@@ -104,7 +104,7 @@ describe('writeDatabaseEntry', () => {
     DatabaseEntriesStore.update(collectionEntry1.id, {
       properties: {
         ...collectionEntry1.properties,
-        Related: ['missing-entry'],
+        Related: ['database-entry_missing'],
       },
     });
 
@@ -112,6 +112,6 @@ describe('writeDatabaseEntry', () => {
 
     const contents = MockFs.readTextFile(collectionEntry1.path);
 
-    expect(contents).not.toContain('missing-entry');
+    expect(contents).not.toContain('database-entry_missing');
   });
 });

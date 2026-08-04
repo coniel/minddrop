@@ -42,7 +42,7 @@ describe('serializeCollectionProperties', () => {
 
   it('drops IDs that do not resolve', () => {
     const serialized = serializeCollectionProperties(
-      { ...collectionEntry1.properties, Related: ['missing-entry'] },
+      { ...collectionEntry1.properties, Related: ['database-entry_missing'] },
       collectionDatabase,
     );
 
