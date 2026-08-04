@@ -109,13 +109,13 @@ export const DatabaseEntryDialog: React.FC<DatabaseEntryDialogProps> = ({
     onOpenChange(false);
   }, [onOpenChange]);
 
-  const handleOpenFull = useCallback(() => {
+  const handleOpenNewTab = useCallback(() => {
     onOpenChange(false);
     Events.dispatch<OpenDatabaseEntryViewEventData>(
       OpenDatabaseEntryViewEvent,
       {
         entryId,
-        openMode: 'full',
+        openMode: 'new-tab',
       },
     );
   }, [entryId, onOpenChange]);
@@ -219,9 +219,9 @@ export const DatabaseEntryDialog: React.FC<DatabaseEntryDialogProps> = ({
           />
           <FloatingActionButton
             icon="maximize-2"
-            label="databases.entries.actions.openAsPage"
-            tooltip={{ title: 'databases.entries.actions.openAsPage' }}
-            onClick={handleOpenFull}
+            label="databases.entries.actions.openInNewTab"
+            tooltip={{ title: 'databases.entries.actions.openInNewTab' }}
+            onClick={handleOpenNewTab}
           />
           <FloatingActionButton
             tooltip={{ title: 'databases.entries.actions.openInSplitView' }}

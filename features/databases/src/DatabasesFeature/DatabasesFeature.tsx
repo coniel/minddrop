@@ -25,6 +25,7 @@ import {
   ViewAreaChangedEventData,
 } from '@minddrop/events';
 import { Tabs } from '@minddrop/feature-views';
+import { DefaultViewAreaId } from '@minddrop/views';
 import { DatabaseEntryDialog } from '../DatabaseEntryDialog';
 import { DatabaseEntryRendererProps } from '../DatabaseEntryRenderer';
 import { DatabaseViewProps } from '../DatabaseView';
@@ -133,27 +134,39 @@ export const DatabasesFeature: React.FC = () => {
         // Resolve the open mode, falling back to the database default
         const openMode = resolveOpenMode(data.entryId, data.openMode);
 
-        if (openMode === 'full' || openMode === 'split') {
-          const entry = DatabaseEntries.get(data.entryId);
-          const database = Databases.get(entry.database, false);
+        // Slide out panel is not yet implemented
+        if (openMode === 'panel') {
+          return;
+        }
 
-          // Open the entry in the main content area (or split view)
-          Events.dispatch<OpenViewEventData<DatabaseEntryRendererProps>>(
-            OpenViewEvent,
-            {
-              view: DatabaseEntryViewName,
-              id: databaseEntryViewId(data.entryId),
-              props: { entryId: data.entryId, layoutContext: 'page' },
-              split: openMode === 'split',
-              title: entry.title,
-              icon: database?.icon || DATABASE_FALLBACK_ICON,
-            },
-          );
-        } else {
-          // Open the entry as a dialog overlay
+        // Open the entry as a dialog overlay
+        if (openMode === 'dialog') {
           setDialogEntryId(data.entryId);
           setDialogOpen(true);
+
+          return;
         }
+
+        const entry = DatabaseEntries.get(data.entryId);
+        const database = Databases.get(entry.database, false);
+
+        // Open a blank tab to receive the entry view
+        if (openMode === 'new-tab') {
+          Tabs.newTab(DefaultViewAreaId);
+        }
+
+        // Open the entry view in place of the current view (or in split view)
+        Events.dispatch<OpenViewEventData<DatabaseEntryRendererProps>>(
+          OpenViewEvent,
+          {
+            view: DatabaseEntryViewName,
+            id: databaseEntryViewId(data.entryId),
+            props: { entryId: data.entryId, layoutContext: 'page' },
+            split: openMode === 'split',
+            title: entry.title,
+            icon: database?.icon || DATABASE_FALLBACK_ICON,
+          },
+        );
       },
     );
 

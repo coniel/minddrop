@@ -256,7 +256,7 @@ declare module 'i18next' {
             actions: {
               previousEntry: string;
               nextEntry: string;
-              openAsPage: string;
+              openInNewTab: string;
               openInSplitView: string;
               entryOptions: string;
               goToDatabase: string;
@@ -318,6 +318,32 @@ declare module 'i18next' {
             };
             icon: {
               description: string;
+            };
+            entryOpenMode: {
+              label: string;
+              description: string;
+              options: {
+                dialog: {
+                  label: string;
+                  description: string;
+                };
+                panel: {
+                  label: string;
+                  description: string;
+                };
+                inPlace: {
+                  label: string;
+                  description: string;
+                };
+                newTab: {
+                  label: string;
+                  description: string;
+                };
+                split: {
+                  label: string;
+                  description: string;
+                };
+              };
             };
             hideViewsToolbar: {
               label: string;

@@ -2,7 +2,12 @@ import { PropertiesSchema, PropertyType } from '@minddrop/properties';
 import { DataView } from '@minddrop/views';
 import { DatabaseAutomation } from './DatabaseAutomation.types';
 
-export type DatabaseEntryOpenMode = 'dialog' | 'full' | 'split';
+export type DatabaseEntryOpenMode =
+  | 'dialog'
+  | 'panel'
+  | 'in-place'
+  | 'new-tab'
+  | 'split';
 
 export type PropertyFileStorage = 'root' | 'common' | 'property' | 'entry';
 
@@ -115,7 +120,9 @@ export interface Database {
   /**
    * How entries are opened when clicked.
    * - `dialog`: Opens the entry as a dialog overlay.
-   * - `full`: Opens the entry as the main content.
+   * - `panel`: Opens the entry in a slide out panel.
+   * - `in-place`: Opens the entry in place, replacing the current view.
+   * - `new-tab`: Opens the entry in a new tab.
    * - `split`: Opens the entry in split view next to the current main content.
    * @default 'dialog'
    */

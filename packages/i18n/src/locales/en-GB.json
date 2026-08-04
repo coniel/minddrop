@@ -244,7 +244,7 @@
       "actions": {
         "previousEntry": "Previous entry",
         "nextEntry": "Next entry",
-        "openAsPage": "Open as full page",
+        "openInNewTab": "Open in new tab",
         "openInSplitView": "Open in split view",
         "entryOptions": "Entry options",
         "goToDatabase": "Go to database",
@@ -306,6 +306,32 @@
       },
       "icon": {
         "description": "The icon shown next to this database."
+      },
+      "entryOpenMode": {
+        "label": "Open entries as",
+        "description": "Choose the default action for opening entries.",
+        "options": {
+          "dialog": {
+            "label": "Dialog",
+            "description": "Open the entry as a dialog overlay."
+          },
+          "panel": {
+            "label": "Panel",
+            "description": "Open the entry in a slide out panel."
+          },
+          "inPlace": {
+            "label": "In place",
+            "description": "Replace the current view with the entry."
+          },
+          "newTab": {
+            "label": "New tab",
+            "description": "Open the entry in a new tab."
+          },
+          "split": {
+            "label": "Split view",
+            "description": "Open the entry next to the current main content."
+          }
+        }
       },
       "hideViewsToolbar": {
         "label": "Hide views toolbar",

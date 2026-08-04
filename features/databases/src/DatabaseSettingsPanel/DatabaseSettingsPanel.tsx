@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import {
+  DatabaseEntryOpenMode,
   DatabaseEntrySerializers,
   Databases,
   PropertyFileStorage,
@@ -24,6 +25,35 @@ import './DatabaseSettingsPanel.css';
 
 // Icon the picker falls back to when the current icon is cleared
 const defaultIcon = 'content-icon:box:default';
+
+// The ways entries can be opened when clicked, offered in the Interface section
+const entryOpenModeOptions: SelectOption<DatabaseEntryOpenMode>[] = [
+  {
+    label: 'databases.settings.entryOpenMode.options.dialog.label',
+    description: 'databases.settings.entryOpenMode.options.dialog.description',
+    value: 'dialog',
+  },
+  {
+    label: 'databases.settings.entryOpenMode.options.panel.label',
+    description: 'databases.settings.entryOpenMode.options.panel.description',
+    value: 'panel',
+  },
+  {
+    label: 'databases.settings.entryOpenMode.options.inPlace.label',
+    description: 'databases.settings.entryOpenMode.options.inPlace.description',
+    value: 'in-place',
+  },
+  {
+    label: 'databases.settings.entryOpenMode.options.newTab.label',
+    description: 'databases.settings.entryOpenMode.options.newTab.description',
+    value: 'new-tab',
+  },
+  {
+    label: 'databases.settings.entryOpenMode.options.split.label',
+    description: 'databases.settings.entryOpenMode.options.split.description',
+    value: 'split',
+  },
+];
 
 // The ways property files can be stored on disk, offered in the Data section
 const propertyFileStorageOptions: SelectOption<PropertyFileStorage>[] = [
@@ -132,6 +162,11 @@ export const DatabaseSettingsPanel: React.FC<DatabaseSettingsPanelProps> = ({
 
     // Persist the new entry name
     Databases.update(databaseId, { entryName });
+  }
+
+  // Change how entries are opened when clicked
+  function handleChangeEntryOpenMode(entryOpenMode: DatabaseEntryOpenMode) {
+    Databases.update(databaseId, { entryOpenMode });
   }
 
   // Toggle whether the views toolbar is hidden in the database view
@@ -265,6 +300,13 @@ export const DatabaseSettingsPanel: React.FC<DatabaseSettingsPanelProps> = ({
 
       {/* Interface settings */}
       <SettingsSection title="databases.settings.sections.interface">
+        <SelectSetting
+          title="databases.settings.entryOpenMode.label"
+          description="databases.settings.entryOpenMode.description"
+          options={entryOpenModeOptions}
+          value={database.entryOpenMode}
+          onValueChange={handleChangeEntryOpenMode}
+        />
         <SwitchSetting
           title="databases.settings.hideViewsToolbar.label"
           description="databases.settings.hideViewsToolbar.description"

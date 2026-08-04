@@ -39,6 +39,28 @@ Cause: the tests treat `DataViews.Store.getAll()` as an array
 returns a `Record<string, TItem>` map. The tests should use
 `getAllArray()` (or adapt the assertions to the map shape).
 
+## features/databases
+
+### Pre-existing test failures in DatabasePropertyEditor and DatabaseEntryRenderer
+
+Eight tests fail on `main` (confirmed at d6ef9001, unrelated to working
+changes): 7 in `src/DatabasePropertyEditor/DatabasePropertyEditor.test.tsx`
+and 1 in `src/DatabaseEntryRenderer/DatabaseEntryRenderer.test.tsx`
+("keeps rendering the entry across a rename").
+
+Two distinct symptoms:
+
+- `TypeError: viewport.getAnimations is not a function` (4 occurrences):
+  jsdom does not implement `Element.getAnimations`, hit during component
+  rendering. Most of the affected tests then time out at 5s.
+- Unhandled rejection at `DatabasePropertyEditor.test.tsx:272`: a
+  `DatabaseUpdatedEvent` listener reads `data.properties.find(...)`, but the
+  event data shape is `{ original, updated }`, so `data.properties` is
+  undefined. The assertion should read `data.updated.properties`.
+
+Fix direction: polyfill/stub `getAnimations` in the test setup, and correct
+the event data access in the property editor test.
+
 ## packages/file-system
 
 ### `Fs.removeDir` throws `EFAULT` in the Electrobun runtime
