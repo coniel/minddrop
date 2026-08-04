@@ -7,7 +7,14 @@ import { Database } from '../types';
 import { writeDatabaseConfig } from '../writeDatabaseConfig';
 
 export type UpdateDatabaseData = Partial<
-  Omit<Database, 'type' | 'name' | 'propertyFileStorage' | 'propertyFilesDir'>
+  Omit<
+    Database,
+    | 'type'
+    | 'name'
+    | 'propertyFileStorage'
+    | 'propertyFilesDir'
+    | 'entrySerializer'
+  >
 >;
 
 /**
@@ -19,7 +26,7 @@ export type UpdateDatabaseData = Partial<
  *
  * @dispatches databases:database:update
  *
- * @throws {InvalidParameterError} If the data includes the name or property file storage fields.
+ * @throws {InvalidParameterError} If the data includes the name, property file storage, or entry serializer fields.
  */
 export async function updateDatabase(
   id: string,
@@ -38,6 +45,14 @@ export async function updateDatabase(
   if ('propertyFileStorage' in data || 'propertyFilesDir' in data) {
     throw new InvalidParameterError(
       'Cannot change propertyFileStorage or propertyFilesDir via updateDatabase; use Databases.setPropertyFileStorage.',
+    );
+  }
+
+  // The entry serializer has on-disk side effects and must go through
+  // its dedicated setter
+  if ('entrySerializer' in data) {
+    throw new InvalidParameterError(
+      'Cannot change entrySerializer via updateDatabase; use Databases.setEntrySerializer.',
     );
   }
 

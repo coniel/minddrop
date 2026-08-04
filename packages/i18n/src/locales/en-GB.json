@@ -311,6 +311,14 @@
         "label": "Hide views toolbar",
         "description": "Hide the bar for switching and adding views. Useful when the database only has a single view."
       },
+      "entrySerializer": {
+        "label": "Entry file format",
+        "description": "Choose the file format entries are saved in on disk.",
+        "error": {
+          "title": "Entry format change failed",
+          "message": "Something went wrong while converting entries to the new format. They have been restored to their previous format."
+        }
+      },
       "propertyFileStorage": {
         "label": "Property file storage",
         "description": "Choose how files added to properties are stored on disk.",

@@ -1,3 +1,4 @@
+import { TranslationKey } from '@minddrop/i18n';
 import { PropertiesSchema, PropertyMap } from '@minddrop/properties';
 
 export interface DatabaseEntrySerializer<TOptions extends object = {}> {
@@ -9,12 +10,12 @@ export interface DatabaseEntrySerializer<TOptions extends object = {}> {
   /**
    * The name of the serializer.
    */
-  name: string;
+  name: TranslationKey;
 
   /**
    * The description of the serializer.
    */
-  description: string;
+  description: TranslationKey;
 
   /**
    * The file extension to use for the serialized entry.

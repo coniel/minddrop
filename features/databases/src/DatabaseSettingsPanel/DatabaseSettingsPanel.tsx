@@ -1,5 +1,9 @@
 import { useState } from 'react';
-import { Databases, PropertyFileStorage } from '@minddrop/databases';
+import {
+  DatabaseEntrySerializers,
+  Databases,
+  PropertyFileStorage,
+} from '@minddrop/databases';
 import {
   Events,
   OpenConfirmationDialogEvent,
@@ -77,6 +81,17 @@ export const DatabaseSettingsPanel: React.FC<DatabaseSettingsPanelProps> = ({
   const [propertyFilesDirError, setPropertyFilesDirError] = useState<
     TranslationKey | undefined
   >(undefined);
+  // The registered entry serializers, offered as file format options
+  const entrySerializers = DatabaseEntrySerializers.useAll();
+
+  // Select options for the registered entry serializers
+  const entrySerializerOptions: SelectOption<string>[] = entrySerializers.map(
+    (serializer) => ({
+      label: serializer.name,
+      description: serializer.description,
+      value: serializer.id,
+    }),
+  );
 
   // Persist the selected icon immediately
   function handleSelectIcon(icon: string) {
@@ -122,6 +137,11 @@ export const DatabaseSettingsPanel: React.FC<DatabaseSettingsPanelProps> = ({
   // Toggle whether the views toolbar is hidden in the database view
   function handleToggleHideViewsToolbar(checked: boolean) {
     Databases.update(databaseId, { hideViewsToolbar: checked });
+  }
+
+  // Change the entry file format, converting existing entry files
+  function handleChangeEntrySerializer(serializerId: string) {
+    Databases.setEntrySerializer(databaseId, serializerId);
   }
 
   // Change how the database's property files are stored on disk, relocating
@@ -255,6 +275,13 @@ export const DatabaseSettingsPanel: React.FC<DatabaseSettingsPanelProps> = ({
 
       {/* Data storage settings */}
       <SettingsSection title="databases.settings.sections.data">
+        <SelectSetting
+          title="databases.settings.entrySerializer.label"
+          description="databases.settings.entrySerializer.description"
+          options={entrySerializerOptions}
+          value={database.entrySerializer}
+          onValueChange={handleChangeEntrySerializer}
+        />
         <SelectSetting
           title="databases.settings.propertyFileStorage.label"
           description="databases.settings.propertyFileStorage.description"

@@ -323,6 +323,14 @@ declare module 'i18next' {
               label: string;
               description: string;
             };
+            entrySerializer: {
+              label: string;
+              description: string;
+              error: {
+                title: string;
+                message: string;
+              };
+            };
             propertyFileStorage: {
               label: string;
               description: string;

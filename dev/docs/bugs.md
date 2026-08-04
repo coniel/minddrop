@@ -27,6 +27,18 @@ create the storage directory once before the parallel writes, make
 `createDir` ignore an already-existing directory, or catch and swallow
 `EEXIST`. No data is lost, but the losing writes fail outright.
 
+### Stale `DataViews.Store.getAll()` usage in views tests
+
+Four tests fail on `main` (present since at least b2245174):
+`src/loadDatabaseViews/loadDatabaseViews.test.ts` (3) and
+`src/event-handlers/database-created/database-created.test.ts` (1), with
+`views.find is not a function` / `expected {} to have property 'length'`.
+
+Cause: the tests treat `DataViews.Store.getAll()` as an array
+(`.find(...)`, `toHaveLength(...)`), but `createObjectStore.getAll()`
+returns a `Record<string, TItem>` map. The tests should use
+`getAllArray()` (or adapt the assertions to the map shape).
+
 ## packages/file-system
 
 ### `Fs.removeDir` throws `EFAULT` in the Electrobun runtime

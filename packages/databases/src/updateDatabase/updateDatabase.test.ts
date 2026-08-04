@@ -91,4 +91,13 @@ describe('updateDatabase', () => {
       } as UpdateDatabaseData),
     ).rejects.toThrow(InvalidParameterError);
   });
+
+  it('rejects entry serializer changes', async () => {
+    // The entry serializer must go through its dedicated setter
+    await expect(
+      updateDatabase(objectDatabase.id, {
+        entrySerializer: 'json',
+      } as UpdateDatabaseData),
+    ).rejects.toThrow(InvalidParameterError);
+  });
 });
