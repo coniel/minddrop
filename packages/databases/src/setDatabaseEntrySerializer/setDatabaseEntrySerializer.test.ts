@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { AppErrorEvent, AppErrorEventData, Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import {
@@ -30,6 +30,11 @@ import {
 import { Database } from '../types';
 import { databaseConfigFilePath } from '../utils';
 import { setDatabaseEntrySerializer } from './setDatabaseEntrySerializer';
+
+// Mock SQL operations since no database connection is available in tests
+vi.mock('../sql', () => ({
+  sqlUpsertEntries: vi.fn(),
+}));
 
 describe('setDatabaseEntrySerializer', () => {
   beforeEach(() => {

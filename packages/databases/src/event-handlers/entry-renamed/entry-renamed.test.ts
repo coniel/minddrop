@@ -169,6 +169,11 @@ describe('onRenameEntry', () => {
   it('upserts the SQL entry record under the same ID', async () => {
     const renamedObjectEntry = { ...objectEntry1, title: 'Renamed' };
 
+    // Update the store to reflect the rename
+    DatabaseEntriesStore.update(objectEntry1.id, {
+      title: renamedObjectEntry.title,
+    });
+
     await onRenameEntry({
       original: objectEntry1,
       updated: renamedObjectEntry,

@@ -6,11 +6,9 @@ import {
 } from '@minddrop/item-references';
 import { DatabaseEntryRenamedEventData } from '../../events';
 import { getDatabase } from '../../getDatabase';
-import { sqlUpsertEntries } from '../../sql';
 import { flushDatabaseMetadata } from '../../updateEntryMetadata';
 import { rekeyPendingMetadata } from '../../updateEntryMetadata/updateEntryMetadata';
 import {
-  convertEntryToSqlRecord,
   databaseEntryAddress,
   entryMetadataKey,
   rekeyDatabaseMetadata,
@@ -41,10 +39,6 @@ export async function onRenameEntry(data: DatabaseEntryRenamedEventData) {
 
   // Step 3: Re-key any in-flight pending metadata entries
   rekeyPendingMetadata(database.path, oldMetadataKey, newMetadataKey);
-
-  // Step 4: Update the SQL record with the new path and title
-  const record = convertEntryToSqlRecord(updated, database);
-  sqlUpsertEntries(database.id, [record]);
 
   // Find all collection properties in the schema
   const collectionProperties = database.properties.filter(

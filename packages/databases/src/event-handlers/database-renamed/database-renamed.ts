@@ -7,9 +7,8 @@ import {
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabaseRenamedEventData } from '../../events';
 import { getAllDatabaseEntries } from '../../getAllDatabaseEntries';
-import { sqlUpsertDatabase, sqlUpsertEntries } from '../../sql';
+import { sqlUpsertDatabase } from '../../sql';
 import {
-  convertEntryToSqlRecord,
   databaseEntryAddress,
   virtualCollectionId,
   virtualCollectionName,
@@ -49,15 +48,6 @@ export async function onRenameDatabase(
     path: updated.path,
     icon: updated.icon,
   });
-
-  // Update the entries' SQL records with the new paths
-  if (renamedEntries.length > 0) {
-    const records = renamedEntries.map((entry) =>
-      convertEntryToSqlRecord(entry, updated),
-    );
-
-    sqlUpsertEntries(updated.id, records);
-  }
 
   // Find collection properties in the database schema
   const collectionProperties = updated.properties.filter(

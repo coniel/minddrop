@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DataViews, ViewFixtures } from '@minddrop/views';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import {
@@ -15,6 +15,11 @@ import {
   virtualViewId,
 } from '../../utils';
 import { onItemAddressesChanged } from './item-addresses-changed';
+
+// Mock SQL operations since no database connection is available in tests
+vi.mock('../../sql', () => ({
+  sqlUpsertEntries: vi.fn(),
+}));
 
 const { viewType_referencing } = ViewFixtures;
 
