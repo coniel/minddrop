@@ -45,7 +45,7 @@ const headingProperty = {
 // A design declaring the 'Heading' property and the bound layout
 const boundDesign = {
   ...design_books,
-  id: 'bound-design',
+  id: 'design_bound' as const,
   properties: [headingProperty],
   layouts: [boundLayout],
 };
@@ -55,7 +55,7 @@ const boundDesign = {
 function mappedDatabase(designPropertyMap: Record<string, string>) {
   return {
     ...objectDatabase,
-    id: 'MappedDb',
+    id: 'database_mapped' as const,
     name: 'MappedDb',
     path: `${objectDatabase.path}-mapped`,
     designId: boundDesign.id,
@@ -68,8 +68,8 @@ function mappedDatabase(designPropertyMap: Record<string, string>) {
 // An entry in the mapped database with a value for the 'Body' property
 const mappedEntry = {
   ...objectEntry1,
-  id: 'MappedDb/Entry.md',
-  database: 'MappedDb',
+  id: 'database-entry_mapped-entry' as const,
+  database: 'database_mapped' as const,
   path: `${objectDatabase.path}-mapped/Entry.md`,
   title: 'Mapped Entry',
   properties: { Body: 'Mapped Value' },
@@ -93,7 +93,7 @@ const titleBoundLayout = {
 // layout
 const titleBoundDesign = {
   ...design_books,
-  id: 'title-bound-design',
+  id: 'design_title-bound' as const,
   properties: [headingProperty],
   layouts: [titleBoundLayout],
 };
@@ -102,7 +102,7 @@ const titleBoundDesign = {
 // design property to the implicit Title database property
 const titleDatabase = {
   ...objectDatabase,
-  id: 'TitleDb',
+  id: 'database_title' as const,
   name: 'TitleDb',
   path: `${objectDatabase.path}-title`,
   designId: titleBoundDesign.id,
@@ -114,8 +114,8 @@ const titleDatabase = {
 // An entry in the title database
 const titleEntry = {
   ...objectEntry1,
-  id: 'TitleDb/Title Entry.md',
-  database: 'TitleDb',
+  id: 'database-entry_title-entry' as const,
+  database: 'database_title' as const,
   path: `${objectDatabase.path}-title/Title Entry.md`,
   title: 'Title Entry',
   properties: {},
@@ -257,15 +257,15 @@ describe('<DatabaseEntryRenderer />', () => {
     // A database with no design and an entry belonging to it
     const noDesignDatabase = {
       ...objectDatabase,
-      id: 'NoDesignDb',
+      id: 'database_no-design' as const,
       name: 'NoDesignDb',
       path: `${objectDatabase.path}-no-design`,
       designId: null,
     };
     const noDesignEntry = {
       ...objectEntry1,
-      id: 'NoDesignDb/Entry.md',
-      database: 'NoDesignDb',
+      id: 'database-entry_no-design-entry' as const,
+      database: 'database_no-design' as const,
       path: `${objectDatabase.path}-no-design/Entry.md`,
       title: 'No Design Entry',
     };

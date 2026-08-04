@@ -1,11 +1,9 @@
 import {
   DatabaseDeletedEvent,
   type DatabaseDeletedEventData,
-  DatabaseRenamedEvent,
-  type DatabaseRenamedEventData,
 } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
-import { onDeleteDatabase, onRenameDatabase } from './event-handlers';
+import { onDeleteDatabase } from './event-handlers';
 import { EventListenerId } from './events';
 
 /**
@@ -21,15 +19,6 @@ export function initializeDatabasesFeatureEventHandlers(): void {
       onDeleteDatabase(data);
     },
   );
-
-  // Handle database renamed events
-  Events.addListener<DatabaseRenamedEventData>(
-    DatabaseRenamedEvent,
-    `${EventListenerId}:view-state`,
-    ({ data }) => {
-      onRenameDatabase(data);
-    },
-  );
 }
 
 /**
@@ -37,5 +26,4 @@ export function initializeDatabasesFeatureEventHandlers(): void {
  */
 export function cleanupDatabasesFeatureEventHandlers(): void {
   Events.removeListener(DatabaseDeletedEvent, `${EventListenerId}:view-state`);
-  Events.removeListener(DatabaseRenamedEvent, `${EventListenerId}:view-state`);
 }

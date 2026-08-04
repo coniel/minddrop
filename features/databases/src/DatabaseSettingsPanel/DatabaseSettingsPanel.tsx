@@ -141,7 +141,7 @@ export const DatabaseSettingsPanel: React.FC<DatabaseSettingsPanelProps> = ({
     }
 
     try {
-      // Rename the database, which changes its id, name, and path
+      // Rename the database, which changes its name and path
       await Databases.rename(databaseId, name);
     } catch {
       // Revert to the current name on failure (e.g. a name conflict)

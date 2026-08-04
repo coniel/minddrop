@@ -85,6 +85,26 @@ export const DatabasesFeature: React.FC = () => {
       });
     });
 
+    // Close restored database views whose database no longer exists
+    Tabs.getOpenTabs(DatabaseViewName).forEach((tabView) => {
+      const props = tabView.props as OpenDatabaseViewEventData | undefined;
+
+      // Skip views without a database ID
+      if (!props?.databaseId) {
+        return;
+      }
+
+      // Skip views whose database resolves
+      if (Databases.get(props.databaseId, false)) {
+        return;
+      }
+
+      // Close the view
+      Events.dispatch<CloseViewEventData>(CloseViewEvent, {
+        id: tabView.id ?? databaseViewId(props.databaseId),
+      });
+    });
+
     // Track the active database in the main content area.
     // Set the active database ID when a database view is shown,
     // clear it when any other view is shown.
@@ -195,17 +215,14 @@ export const DatabasesFeature: React.FC = () => {
       },
     );
 
-    // Remap the database's open view when the database is renamed.
-    // Rename changes the database ID, so the tab instance and props
-    // must be re-pointed to the new ID.
+    // Update the database's open view title when the database
+    // is renamed
     Events.addListener<DatabaseRenamedEventData>(
       DatabaseRenamedEvent,
       EventListenerId,
       ({ data }) => {
         Events.dispatch<UpdateViewEventData>(UpdateViewEvent, {
-          id: databaseViewId(data.original.id),
-          newId: databaseViewId(data.updated.id),
-          props: { databaseId: data.updated.id },
+          id: databaseViewId(data.updated.id),
           title: data.updated.name,
           icon: data.updated.icon || DATABASE_FALLBACK_ICON,
         });
