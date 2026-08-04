@@ -4,12 +4,12 @@ import { i18n } from '@minddrop/i18n';
 import { DesignsStore } from '../DesignsStore';
 import { DesignCreatedEvent, DesignCreatedEventData } from '../events';
 import { MockFs, cleanup, setup } from '../test-utils';
-import { Design } from '../types';
+import { Design, DesignId } from '../types';
 import { getDesignFilePath, getDesignsDirPath } from '../utils';
 import { createDesign } from './createDesign';
 
 const newDesign: Design = {
-  id: expect.any(String) as unknown as Design['id'],
+  id: expect.any(String) as unknown as DesignId,
   name: 'Books',
   properties: [],
   layouts: [],

@@ -6,9 +6,11 @@ import {
 } from './design-elements.fixtures';
 
 function generateLayoutFixture(type: LayoutType, version: number): Layout {
+  const id = `layout_${type}-${version}`;
+
   return {
     type,
-    id: `layout_${type}-${version}`,
+    id,
     name: `${type} ${version}`,
     created: new Date(),
     lastModified: new Date(),
@@ -23,7 +25,7 @@ function generateLayoutFixture(type: LayoutType, version: number): Layout {
         {
           ...element_text_2,
           static: true,
-          content: `${type}-${version}`,
+          content: id,
         },
       ],
     },
