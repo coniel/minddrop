@@ -1,12 +1,12 @@
-import { DefaultPageLayout } from '@minddrop/designs';
+import { DefaultPageLayout, Layout } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
 import { i18n } from '@minddrop/i18n';
 import { PropertyMap } from '@minddrop/properties';
 import { entityId } from '@minddrop/utils';
 import { PagesStore } from '../PagesStore';
+import { DefaultPageIcon } from '../constants';
 import { PageCreatedEvent, PageCreatedEventData } from '../events';
 import { Page } from '../types';
-import { prunePageProperties } from '../utils';
 import { writePage } from '../writePage';
 
 export interface CreatePageOptions {
@@ -16,10 +16,15 @@ export interface CreatePageOptions {
   name?: string;
 
   /**
-   * The ID of the page layout used to render the page. Defaults to
-   * the default page layout.
+   * The page icon. Defaults to the default page icon.
    */
-  layout?: string;
+  icon?: string;
+
+  /**
+   * The layout to base the page's layout on. Defaults to the
+   * default page layout.
+   */
+  layout?: Layout;
 
   /**
    * Initial values for the design properties bound in the layout,
@@ -40,8 +45,22 @@ export interface CreatePageOptions {
 export async function createPage(
   options: CreatePageOptions = {},
 ): Promise<Page> {
-  // Use the provided layout, or the default page layout
-  const layout = options.layout || DefaultPageLayout.id;
+  // Use the provided layout as the base, or the default page layout
+  const baseLayout = options.layout || DefaultPageLayout;
+
+  // Build the page's layout as an independent copy of the base
+  // layout with its own ID
+  const layout: Layout = {
+    ...structuredClone(baseLayout),
+    id: entityId('layout'),
+    created: new Date(),
+    lastModified: new Date(),
+  };
+
+  // The default page layout's name is an i18n key, translate it
+  if (!options.layout) {
+    layout.name = i18n.t('designs.layouts.page.name');
+  }
 
   // Generate the page object
   const page: Page = {
@@ -49,9 +68,9 @@ export async function createPage(
     created: new Date(),
     lastModified: new Date(),
     name: options.name || i18n.t('labels.untitled'),
+    icon: options.icon || DefaultPageIcon,
     layout,
-    // Drop initial values for properties not bound in the layout
-    properties: prunePageProperties(layout, options.properties || {}),
+    properties: options.properties || {},
   };
 
   // Add the page to the store

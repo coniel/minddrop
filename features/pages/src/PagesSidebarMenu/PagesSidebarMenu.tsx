@@ -59,7 +59,7 @@ export const PagesSidebarMenu: React.FC = () => {
               {pages.map((page) => (
                 <MenuItem
                   muted
-                  icon="file"
+                  contentIcon={page.icon}
                   key={page.id}
                   onClick={() => handleOpenPageView(page.id)}
                 >

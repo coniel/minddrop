@@ -1469,6 +1469,35 @@ declare module 'i18next' {
             hideColumn: string;
           };
         };
+        pages: {
+          labels: {
+            pages: string;
+          };
+          actions: {
+            new: string;
+          };
+          templates: {
+            blank: {
+              name: string;
+              description: string;
+            };
+          };
+          form: {
+            labels: {
+              templates: string;
+            };
+            name: {
+              label: string;
+              placeholder: string;
+            };
+            icon: {
+              label: string;
+            };
+            actions: {
+              create: string;
+            };
+          };
+        };
         tabs: {
           new: string;
           close: string;

@@ -6,20 +6,24 @@
     "actions": {
       "new": "New"
     },
+    "templates": {
+      "blank": {
+        "name": "Blank page",
+        "description": "Start from an empty page and design it as you go."
+      }
+    },
     "form": {
-      "layout": {
-        "search": {
-          "placeholder": "Search layouts..."
-        },
-        "empty": "No page layouts yet. Create one in the design studio.",
-        "noMatches": "No layouts match your search.",
-        "preview": {
-          "empty": "Select a layout to preview it."
-        }
+      "labels": {
+        "templates": "Templates"
+      },
+      "name": {
+        "label": "Name",
+        "placeholder": "Page name"
+      },
+      "icon": {
+        "label": "Page icon"
       },
       "actions": {
-        "next": "Next",
-        "back": "Back",
         "create": "Create"
       }
     }

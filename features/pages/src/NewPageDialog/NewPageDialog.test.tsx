@@ -1,12 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DesignFixtures } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
+import { DefaultPageIcon, Pages } from '@minddrop/pages';
 import { render, screen, userEvent, waitFor } from '@minddrop/test-utils';
 import { OpenNewPageDialogEvent } from '../events';
 import { cleanup, setup } from '../test-utils';
 import { NewPageDialog } from './NewPageDialog';
-
-const { layout_page_1, layout_page_2 } = DesignFixtures;
 
 describe('<NewPageDialog />', () => {
   beforeEach(setup);
@@ -19,7 +17,7 @@ describe('<NewPageDialog />', () => {
     Events.dispatch(OpenNewPageDialogEvent);
 
     await waitFor(() => {
-      screen.getByText('pages.form.layout.preview.empty');
+      screen.getByText('pages.templates.blank.description');
     });
   });
 
@@ -31,46 +29,39 @@ describe('<NewPageDialog />', () => {
     await user.click(screen.getByText('actions.cancel'));
 
     await waitFor(() => {
-      expect(screen.queryByText('pages.form.layout.preview.empty')).toBeNull();
+      expect(
+        screen.queryByText('pages.templates.blank.description'),
+      ).toBeNull();
     });
   });
 
-  it('lists page layouts from all designs', async () => {
-    render(<NewPageDialog defaultOpen />);
-
-    // Page layouts from both designs are listed
-    screen.getByText(layout_page_1.name);
-    screen.getByText(layout_page_2.name);
-  });
-
-  it('filters layouts by search query', async () => {
+  it('requires a name', async () => {
     render(<NewPageDialog defaultOpen />);
     const user = userEvent.setup();
 
-    // Search for the second page layout by name
-    await user.type(
-      screen.getByPlaceholderText('pages.form.layout.search.placeholder'),
-      layout_page_2.name,
-    );
+    // Submit without filling in the name
+    await user.click(screen.getByText('pages.form.actions.create'));
 
-    await waitFor(() => {
-      expect(screen.queryByText(layout_page_1.name)).toBeNull();
-      screen.getByText(layout_page_2.name);
-    });
+    // No page was created
+    expect(Pages.Store.getAllArray()).toEqual([]);
   });
 
-  it('advances to the properties step when a layout is selected', async () => {
+  it('creates the page on submit', async () => {
     render(<NewPageDialog defaultOpen />);
     const user = userEvent.setup();
 
-    // Select a layout
-    await user.click(screen.getByText(layout_page_1.name));
+    // Fill in the page name
+    await user.type(screen.getByLabelText('pages.form.name.label'), 'Media');
 
-    // Advance to the properties step
-    await user.click(screen.getByText('pages.form.actions.next'));
+    // Submit the form
+    await user.click(screen.getByText('pages.form.actions.create'));
 
     await waitFor(() => {
-      screen.getByText('pages.form.actions.back');
+      // The page was created with the name and default icon
+      const page = Pages.Store.getAllArray()[0];
+
+      expect(page.name).toBe('Media');
+      expect(page.icon).toBe(DefaultPageIcon);
     });
   });
 });

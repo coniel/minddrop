@@ -568,18 +568,9 @@ importers:
 
   features/pages:
     dependencies:
-      '@minddrop/collections':
-        specifier: workspace:*
-        version: link:../../packages/collections
-      '@minddrop/designs':
-        specifier: workspace:*
-        version: link:../../packages/designs
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
-      '@minddrop/feature-designs':
-        specifier: workspace:*
-        version: link:../designs
       '@minddrop/file-system':
         specifier: workspace:*
         version: link:../../packages/file-system
@@ -589,9 +580,6 @@ importers:
       '@minddrop/pages':
         specifier: workspace:*
         version: link:../../packages/pages
-      '@minddrop/properties':
-        specifier: workspace:*
-        version: link:../../packages/properties
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../../packages/test-utils

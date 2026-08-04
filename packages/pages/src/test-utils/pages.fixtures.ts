@@ -1,47 +1,31 @@
-import { Design, DesignFixtures, Layout } from '@minddrop/designs';
+import { Layout } from '@minddrop/designs';
 import { MockFileDescriptor } from '@minddrop/file-system';
+import { DefaultPageIcon } from '../constants';
 import { Page } from '../types';
 import { getPageFilePath, getPagesDirPath } from '../utils';
+import {
+  pageLayout_1,
+  pageLayout_2,
+  pageLayout_3,
+} from './page-layouts.fixtures';
 
-const {
-  design_books,
-  element_text_1,
-  layout_page_1,
-  layout_page_2,
-  layout_page_3,
-} = DesignFixtures;
-
-// A page layout containing a single element bound to the 'title' property
-export const boundPageLayout: Layout = {
-  ...layout_page_1,
-  id: 'layout_page-bound',
-  tree: {
-    ...layout_page_1.tree,
-    children: [{ ...element_text_1, property: 'title' }],
-  },
-};
-
-// A design containing the bound page layout
-export const pagesDesign: Design = {
-  ...design_books,
-  id: 'design_pages-fixtures',
-  layouts: [boundPageLayout],
-};
+export * from './page-layouts.fixtures';
 
 function generatePageFixture(number: number, layout: Layout): Page {
   return {
     id: `page_${number}`,
     name: `Page ${number}`,
+    icon: DefaultPageIcon,
     created: new Date('2024-01-01T00:00:00.000Z'),
     lastModified: new Date('2024-01-01T00:00:00.000Z'),
-    layout: layout.id,
+    layout,
     properties: {},
   };
 }
 
-export const page_1 = generatePageFixture(1, layout_page_1);
-export const page_2 = generatePageFixture(2, layout_page_2);
-export const page_3 = generatePageFixture(3, layout_page_3);
+export const page_1 = generatePageFixture(1, pageLayout_1);
+export const page_2 = generatePageFixture(2, pageLayout_2);
+export const page_3 = generatePageFixture(3, pageLayout_3);
 
 export const pages = [page_1, page_2, page_3];
 

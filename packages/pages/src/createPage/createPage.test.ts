@@ -2,14 +2,9 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DefaultPageLayout } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
 import { PagesStore } from '../PagesStore';
+import { DefaultPageIcon } from '../constants';
 import { PageCreatedEvent } from '../events';
-import {
-  MockFs,
-  boundPageLayout,
-  cleanup,
-  mockDate,
-  setup,
-} from '../test-utils';
+import { MockFs, cleanup, mockDate, pageLayout_1, setup } from '../test-utils';
 import { getPageFilePath } from '../utils';
 import { createPage } from './createPage';
 
@@ -18,7 +13,14 @@ const newPage = {
   created: mockDate,
   lastModified: mockDate,
   name: 'Untitled',
-  layout: DefaultPageLayout.id,
+  icon: DefaultPageIcon,
+  layout: {
+    ...DefaultPageLayout,
+    id: expect.any(String),
+    name: 'Page',
+    created: mockDate,
+    lastModified: mockDate,
+  },
   properties: {},
 };
 
@@ -39,19 +41,31 @@ describe('createPage', () => {
     expect(page.name).toBe('My Page');
   });
 
-  it('uses the provided layout', async () => {
-    const page = await createPage({ layout: boundPageLayout.id });
+  it('uses the provided icon', async () => {
+    const page = await createPage({ icon: 'emoji:🎬:default' });
 
-    expect(page.layout).toBe(boundPageLayout.id);
+    expect(page.icon).toBe('emoji:🎬:default');
   });
 
-  it('drops initial property values not bound in the layout', async () => {
+  it('copies the provided layout with a fresh ID', async () => {
+    const page = await createPage({ layout: pageLayout_1 });
+
+    expect(page.layout).toEqual({
+      ...pageLayout_1,
+      id: expect.any(String),
+      created: mockDate,
+      lastModified: mockDate,
+    });
+    expect(page.layout.id).not.toBe(pageLayout_1.id);
+  });
+
+  it('uses the provided initial properties', async () => {
     const page = await createPage({
-      layout: boundPageLayout.id,
-      properties: { title: 'Media', rating: 5 },
+      layout: pageLayout_1,
+      properties: { collection: 'collection_1' },
     });
 
-    expect(page.properties).toEqual({ title: 'Media' });
+    expect(page.properties).toEqual({ collection: 'collection_1' });
   });
 
   it('adds the page to the store', async () => {

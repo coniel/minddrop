@@ -61,6 +61,19 @@ Two distinct symptoms:
 Fix direction: polyfill/stub `getAnimations` in the test setup, and correct
 the event data access in the property editor test.
 
+### `useForm` fieldProps spread fails TextField typecheck
+
+Spreading `fieldProps.<name>` from `useForm` (`@minddrop/utils`) onto a
+`TextField` fails the typecheck in both `NewDatabaseDialog`
+(`features/databases`) and `NewPageDialog` (`features/pages`):
+`FieldProps.error` is a plain `string` while `TextField`'s `error` prop is
+typed `TranslationKey` (the `onChange` event type is also wider than the
+input's). Runtime behaviour is fine — unknown keys render as-is.
+
+Fix direction: reconcile the error typing between `useForm` and the field
+primitives (e.g. make `useForm` validation produce translation keys and
+type `FieldProps.error` accordingly), then remove this entry.
+
 ## packages/file-system
 
 ### `Fs.removeDir` throws `EFAULT` in the Electrobun runtime
