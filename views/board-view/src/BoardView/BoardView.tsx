@@ -4,8 +4,8 @@ import { FlexDropContainer } from '@minddrop/ui-drag-and-drop';
 import { ScrollArea } from '@minddrop/ui-primitives';
 import { DataViewTypeComponentProps, DataViews } from '@minddrop/views';
 import { BoardViewColumn } from '../BoardViewColumn';
-import { defaultBoardViewOptions } from '../constants';
-import { BoardColumns, BoardViewOptions } from '../types';
+import { defaultBoardViewData } from '../constants';
+import { BoardColumns, BoardViewData } from '../types';
 import { reconcileColumns } from '../utils';
 import './BoardView.css';
 
@@ -13,12 +13,12 @@ import './BoardView.css';
  * Renders a board view with draggable columns of entry cards.
  */
 export const BoardViewComponent: React.FC<
-  DataViewTypeComponentProps<BoardViewOptions>
+  DataViewTypeComponentProps<object, BoardViewData>
 > = ({ view, entries }) => {
-  // Resolve columns from view options, falling back to defaults
+  // Resolve columns from view data, falling back to defaults
   const columns = useMemo(
-    () => view.options?.columns || defaultBoardViewOptions.columns,
-    [view.options],
+    () => view.data?.columns || defaultBoardViewData.columns,
+    [view.data],
   );
 
   // Reconcile the saved column layout with the current entries
@@ -30,10 +30,10 @@ export const BoardViewComponent: React.FC<
     [columns, entries],
   );
 
-  // Persist the updated column layout to the view options
+  // Persist the updated column layout to the view data
   const updateColumns = useCallback(
     (updatedColumns: BoardColumns) => {
-      DataViews.update(view.id, { options: { columns: updatedColumns } });
+      DataViews.update(view.id, { data: { columns: updatedColumns } });
     },
     [view.id],
   );

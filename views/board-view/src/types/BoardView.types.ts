@@ -9,10 +9,10 @@ export type BoardColumns = string[][];
 
 export interface BoardView extends DataView {
   type: 'board';
-  options: Partial<BoardViewOptions>;
+  data: Partial<BoardViewData>;
 }
 
-export interface BoardViewOptions {
+export interface BoardViewData {
   /**
    * The arrangement of entries into columns.
    * Each element is an array of entry IDs belonging

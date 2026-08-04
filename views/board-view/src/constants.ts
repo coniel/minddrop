@@ -1,5 +1,5 @@
-import { BoardViewOptions } from './types';
+import { BoardViewData } from './types';
 
-export const defaultBoardViewOptions: BoardViewOptions = {
+export const defaultBoardViewData: BoardViewData = {
   columns: [[], [], []],
 };

@@ -1,16 +1,16 @@
 import { DataViewType } from '@minddrop/views';
 import { BoardViewComponent } from './BoardView';
 import { BoardViewSkeleton } from './BoardViewSkeleton';
-import { defaultBoardViewOptions } from './constants';
-import { BoardViewOptions } from './types';
+import { defaultBoardViewData } from './constants';
+import { BoardViewData } from './types';
 
-export const BoardViewType: DataViewType<BoardViewOptions> = {
+export const BoardViewType: DataViewType<object, BoardViewData> = {
   type: 'board',
   name: 'views.board.name',
   description: 'views.board.description',
   icon: 'columns-3',
   supportedDataSources: ['collection'],
-  defaultOptions: defaultBoardViewOptions,
+  defaultData: defaultBoardViewData,
   component: BoardViewComponent,
   skeletonComponent: BoardViewSkeleton,
 };

@@ -6,7 +6,8 @@ import { DataViewTypes } from '@minddrop/views';
 
 export function initializeDataViewTypes() {
   // Register default view types
-  [BoardViewType, GalleryViewType, NotebookViewType, TableViewType].forEach(
-    DataViewTypes.register,
-  );
+  DataViewTypes.register(BoardViewType);
+  DataViewTypes.register(GalleryViewType);
+  DataViewTypes.register(NotebookViewType);
+  DataViewTypes.register(TableViewType);
 }

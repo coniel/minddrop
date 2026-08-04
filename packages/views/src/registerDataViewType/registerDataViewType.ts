@@ -10,9 +10,12 @@ import { DataViewType } from '../types';
  *
  * @dispatches 'views:view-type:registered' event
  */
-export function registerDataViewType(viewType: DataViewType<any>) {
-  // Add the data view type to the store
-  DataViewTypesStore.set(viewType);
+export function registerDataViewType<
+  TViewOptions extends object,
+  TViewData extends object,
+>(viewType: DataViewType<TViewOptions, TViewData>) {
+  // Add the data view type to the store, erasing its generics
+  DataViewTypesStore.set(viewType as unknown as DataViewType);
 
   // Dispatch the data view type registered event
   Events.dispatch(ViewTypeRegisteredEvent, viewType);
