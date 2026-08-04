@@ -23,7 +23,7 @@ export const designProperties: PropertiesSchema = [
 ];
 
 export const design_books: Design = {
-  id: 'design-books',
+  id: 'design_books',
   name: 'Books',
   properties: designProperties,
   created: new Date(),
@@ -32,7 +32,7 @@ export const design_books: Design = {
 };
 
 export const design_cards: Design = {
-  id: 'design-cards',
+  id: 'design_cards',
   name: 'Cards',
   properties: [],
   created: new Date(),
@@ -41,7 +41,7 @@ export const design_cards: Design = {
 };
 
 export const design_lists: Design = {
-  id: 'design-lists',
+  id: 'design_lists',
   name: 'Lists',
   properties: [],
   created: new Date(),
@@ -50,7 +50,7 @@ export const design_lists: Design = {
 };
 
 export const design_pages: Design = {
-  id: 'design-pages',
+  id: 'design_pages',
   name: 'Pages',
   properties: [],
   created: new Date(),
@@ -59,7 +59,7 @@ export const design_pages: Design = {
 };
 
 export const design_empty: Design = {
-  id: 'design-empty',
+  id: 'design_empty',
   name: 'Empty',
   properties: [],
   created: new Date(),

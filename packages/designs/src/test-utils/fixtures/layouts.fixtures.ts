@@ -8,7 +8,7 @@ import {
 function generateLayoutFixture(type: LayoutType, version: number): Layout {
   return {
     type,
-    id: `${type}-${version}`,
+    id: `layout_${type}-${version}`,
     name: `${type} ${version}`,
     created: new Date(),
     lastModified: new Date(),

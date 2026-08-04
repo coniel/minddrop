@@ -1,7 +1,7 @@
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { i18n } from '@minddrop/i18n';
-import { uuid } from '@minddrop/utils';
+import { entityId } from '@minddrop/utils';
 import { DesignsStore } from '../DesignsStore';
 import { DesignCreatedEvent, DesignCreatedEventData } from '../events';
 import { Design } from '../types';
@@ -21,7 +21,7 @@ export async function createDesign(name?: string): Promise<Design> {
   await Fs.ensureDir(getDesignsDirPath());
 
   const design: Design = {
-    id: uuid(),
+    id: entityId('design'),
     name: name || i18n.t('designs.new'),
     properties: [],
     layouts: [],

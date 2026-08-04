@@ -1,4 +1,7 @@
+import { EntityId } from '@minddrop/utils';
 import { RootElement } from './DesignElement.types';
+
+export type LayoutId = EntityId<'layout'>;
 
 export type LayoutType = 'card' | 'list' | 'page';
 
@@ -31,7 +34,8 @@ export interface LayoutFrame {
 
 export interface Layout {
   /**
-   * A unique identifier for this layout.
+   * A unique identifier for this layout. Default layouts use
+   * static well-known IDs instead of typed IDs.
    */
   id: string;
 

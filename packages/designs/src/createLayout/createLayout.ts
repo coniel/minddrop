@@ -1,6 +1,6 @@
 import { Events } from '@minddrop/events';
 import { createI18nKeyBuilder, i18n } from '@minddrop/i18n';
-import { uuid } from '@minddrop/utils';
+import { entityId } from '@minddrop/utils';
 import { LayoutCreatedEvent, LayoutCreatedEventData } from '../events';
 import { getDesign } from '../getDesign';
 import { DefaultContainerElementStyle } from '../styles';
@@ -45,7 +45,7 @@ export async function createLayout(
 
   // Build the new layout
   const layout: Layout = {
-    id: uuid(),
+    id: entityId('layout'),
     type,
     name: name || i18n.t(layoutTypeI18nKey(type, 'label')),
     tree: {

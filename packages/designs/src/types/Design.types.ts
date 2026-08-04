@@ -1,11 +1,14 @@
 import { PropertiesSchema } from '@minddrop/properties';
+import { EntityId } from '@minddrop/utils';
 import { Layout } from './Layout.types';
+
+export type DesignId = EntityId<'design'>;
 
 export interface Design {
   /**
    * A unique identifier for this design.
    */
-  id: string;
+  id: DesignId;
 
   /**
    * User specified name for this design.

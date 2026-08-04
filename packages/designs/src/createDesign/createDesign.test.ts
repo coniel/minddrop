@@ -9,7 +9,7 @@ import { getDesignFilePath, getDesignsDirPath } from '../utils';
 import { createDesign } from './createDesign';
 
 const newDesign: Design = {
-  id: expect.any(String) as unknown as string,
+  id: expect.any(String) as unknown as Design['id'],
   name: 'Books',
   properties: [],
   layouts: [],
