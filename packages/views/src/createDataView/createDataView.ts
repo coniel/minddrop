@@ -1,6 +1,6 @@
 import { Events } from '@minddrop/events';
 import { i18n } from '@minddrop/i18n';
-import { uuid } from '@minddrop/utils';
+import { entityId } from '@minddrop/utils';
 import { DataViewsStore } from '../DataViewsStore';
 import { ViewCreatedEvent, ViewCreatedEventData } from '../events';
 import { getDataViewType } from '../getDataViewType';
@@ -29,7 +29,7 @@ export async function createDataView(
 
   // Create the data view with the data view type's default icon
   const view: DataView = {
-    id: uuid(),
+    id: entityId('view'),
     dataSource,
     type: type,
     name: name || i18n.t(viewType.name),

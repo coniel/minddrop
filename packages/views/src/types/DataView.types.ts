@@ -1,11 +1,15 @@
+import { EntityId } from '@minddrop/utils';
 import { ViewDataSource } from './ViewDataSource.types';
+
+export type DataViewId = EntityId<'view'>;
 
 export interface DataView<
   TViewOptions extends object = object,
   TViewData extends object = object,
 > {
   /**
-   * A unique identifier for the data view.
+   * A unique identifier for the data view. Virtual data views
+   * use caller-supplied composite IDs instead of typed IDs.
    */
   id: string;
 

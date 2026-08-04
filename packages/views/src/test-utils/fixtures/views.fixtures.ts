@@ -18,7 +18,7 @@ function generateViewFixture(
   number: number,
 ): DataView {
   return {
-    id: `view-${type}-${number}`,
+    id: `view_${type}-${number}`,
     name: `${type} ${number}`,
     type,
     icon: 'layout',
@@ -85,7 +85,7 @@ function generateVirtualViewFixture(
 ): DataView {
   return {
     ...generateViewFixture(type, dataSource, number),
-    id: `view-virtual-${type}-${number}`,
+    id: `view_virtual-${type}-${number}`,
     name: `virtual ${type} ${number}`,
     virtual: true,
   };
