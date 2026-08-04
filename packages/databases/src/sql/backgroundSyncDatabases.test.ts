@@ -86,6 +86,49 @@ describe('backgroundSyncDatabases', () => {
     ]);
   });
 
+  it('keeps entry identities across offline database renames', async () => {
+    // The SQL rows carry the database's pre-rename path
+    const oldDatabasePath = `${parentDir}/Old Collection`;
+
+    vi.mocked(sqlGetAllDatabases).mockReturnValue(
+      databases.map((database) => ({
+        id: database.id,
+        name: database.name,
+        path:
+          database.id === collectionDatabase.id
+            ? oldDatabasePath
+            : database.path,
+        icon: database.icon,
+      })),
+    );
+
+    // Entry sync records carry the pre-rename entry paths
+    vi.mocked(sqlGetEntrySyncRecords).mockImplementation((databaseId) =>
+      databaseEntrySqlRecords
+        .filter((record) => record.databaseId === databaseId)
+        .map((record) => ({
+          id: record.id,
+          path:
+            record.databaseId === collectionDatabase.id
+              ? record.path.replace(collectionDatabase.path, oldDatabasePath)
+              : record.path,
+          lastModified: 0,
+        })),
+    );
+
+    await backgroundSyncDatabases(parentDir);
+
+    // Entries at the renamed paths should keep their existing IDs
+    const collectionRecord = recordByPath(
+      upsertedRecords(collectionDatabase.id),
+      collectionEntry1.path,
+    );
+
+    expect(collectionRecord.id).toBe(collectionEntry1.id);
+    // No entries should be treated as deleted
+    expect(sqlDeleteEntries).not.toHaveBeenCalled();
+  });
+
   it('drops references to entries deleted offline', async () => {
     // Remove a referenced entry's file as if deleted offline
     MockFs.removeFile(relatedEntry2.path);

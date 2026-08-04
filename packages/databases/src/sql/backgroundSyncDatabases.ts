@@ -134,8 +134,26 @@ export async function backgroundSyncDatabases(
       return entry;
     });
 
-    // Get existing sync records from SQL
-    const existingRecords = sqlGetEntrySyncRecords(database.id);
+    // The database's SQL record holds its path as of the last sync
+    const sqlDatabase = sqlDatabases.find(
+      (record) => record.id === database.id,
+    );
+
+    // Get existing sync records from SQL, rebasing their paths onto
+    // the database's current path so entries keep their identities
+    // when the database directory was renamed while the app was closed
+    const existingRecords = sqlGetEntrySyncRecords(database.id).map(
+      (record) => {
+        if (!sqlDatabase || !record.path.startsWith(`${sqlDatabase.path}/`)) {
+          return record;
+        }
+
+        return {
+          ...record,
+          path: database.path + record.path.slice(sqlDatabase.path.length),
+        };
+      },
+    );
 
     // Match fresh entries to existing entries by path so they
     // take over the existing IDs (disk reads mint fresh ones)
