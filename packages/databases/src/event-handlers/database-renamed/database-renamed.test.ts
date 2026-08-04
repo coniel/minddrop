@@ -10,11 +10,7 @@ import {
   DatabaseSqlSyncedEvent,
   DatabaseSqlSyncedEventData,
 } from '../../events';
-import {
-  sqlDeleteDatabase,
-  sqlUpsertDatabase,
-  sqlUpsertEntries,
-} from '../../sql';
+import { sqlUpsertDatabase, sqlUpsertEntries } from '../../sql';
 import {
   MockFs,
   cleanup,
@@ -35,7 +31,6 @@ import { onRenameDatabase } from './database-renamed';
 
 // Mock SQL operations since no database connection is available in tests
 vi.mock('../../sql', () => ({
-  sqlDeleteDatabase: vi.fn(),
   sqlUpsertDatabase: vi.fn(),
   sqlUpsertEntries: vi.fn(),
 }));
@@ -134,18 +129,13 @@ describe('onRenameDatabase', () => {
     });
   });
 
-  it('deletes the old database, upserts the new one, and re-upserts entries in SQL', async () => {
+  it('upserts the database and entries in SQL', async () => {
     await onRenameDatabase({
       original: collectionDatabase,
       updated: renamedDatabase,
     });
 
-    // Old database record deleted silently so CASCADE does not emit events
-    expect(sqlDeleteDatabase).toHaveBeenCalledWith(collectionDatabase.id, {
-      silent: true,
-    });
-
-    // Renamed database upserted under the new ID
+    // Database upserted with the new name and path
     expect(sqlUpsertDatabase).toHaveBeenCalledWith({
       id: renamedDatabase.id,
       name: renamedDatabase.name,
@@ -165,7 +155,7 @@ describe('onRenameDatabase', () => {
     );
   });
 
-  it('dispatches a delete sync event for the old database ID', async () => {
+  it('does not dispatch a database delete sync event', async () => {
     const deleteEvents: DatabaseSqlSyncedEventData[] = [];
 
     // Capture database delete sync events
@@ -184,10 +174,8 @@ describe('onRenameDatabase', () => {
       updated: renamedDatabase,
     });
 
-    // A delete event should carry the old database ID
-    expect(deleteEvents).toEqual([
-      { action: 'delete', databaseId: collectionDatabase.id },
-    ]);
+    // The database ID is unchanged, so no delete is needed
+    expect(deleteEvents).toEqual([]);
   });
 
   it('does not dispatch a delete sync event for the entries', async () => {
@@ -259,38 +247,6 @@ describe('onRenameDatabase', () => {
     expect(view.dataSource).toEqual({
       type: 'collection',
       id: virtualCollectionId(collectionEntry1.id, 'Related'),
-    });
-  });
-
-  it('reloads the database browse views under the new database ID', async () => {
-    // A database with a browse view stored on its config
-    const original = {
-      ...noPropertiesDatabase,
-      views: [
-        {
-          id: 'table-view',
-          type: 'table',
-          name: 'Table',
-          icon: 'content-icon:table:default',
-          created: new Date(),
-          lastModified: new Date(),
-        },
-      ],
-    };
-    const updated = {
-      ...original,
-      name: 'Renamed',
-      path: `${parentDir}/Renamed`,
-    };
-
-    await onRenameDatabase({ original, updated });
-
-    // The browse view is loaded pointing at the new database ID
-    const views = DataViews.getByDataSource('database', updated.id);
-    expect(views).toHaveLength(1);
-    expect(views[0]).toMatchObject({
-      id: 'table-view',
-      dataSource: { type: 'database', id: updated.id },
     });
   });
 
