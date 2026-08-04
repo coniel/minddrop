@@ -1,5 +1,5 @@
 import { TranslationKey } from '@minddrop/i18n';
-import { DataView } from './DataView.types';
+import { DataView, DataViewConfig } from './DataView.types';
 import { ViewDataSourceType } from './ViewDataSource.types';
 
 export interface DataViewType<
@@ -48,6 +48,29 @@ export interface DataViewType<
    * The default data for the data view type.
    */
   defaultData?: TViewData;
+
+  /**
+   * Converts the item IDs within a view config into durable
+   * references using the supplied conversion function, returning a
+   * new config. Values the function cannot convert (null) are
+   * dropped. View types whose options or data reference items must
+   * implement this alongside `resolveReferences`.
+   */
+  serializeReferences?(
+    config: DataViewConfig<TViewOptions, TViewData>,
+    convert: (id: string) => string | null,
+  ): DataViewConfig<TViewOptions, TViewData>;
+
+  /**
+   * Converts the durable references within a view config back into
+   * item IDs using the supplied conversion function, returning a
+   * new config. Values the function cannot convert (null) are
+   * dropped.
+   */
+  resolveReferences?(
+    config: DataViewConfig<TViewOptions, TViewData>,
+    convert: (reference: string) => string | null,
+  ): DataViewConfig<TViewOptions, TViewData>;
 
   /**
    * An optional component that renders a settings menu specific to this

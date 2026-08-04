@@ -58,7 +58,18 @@ export interface DataView<
    * DataView type specific data.
    */
   data?: TViewData;
+
+  /**
+   * Runtime index of the item IDs referenced within the view's
+   * options and data. Stripped before the view is written to disk.
+   */
+  references?: string[];
 }
+
+export type DataViewConfig<
+  TViewOptions extends object = object,
+  TViewData extends object = object,
+> = Pick<DataView<TViewOptions, TViewData>, 'options' | 'data'>;
 
 export type CreateVirtualDataViewData = Pick<
   DataView,
