@@ -7,7 +7,7 @@ export const workspacesRootPath = 'path/to/workspaces';
 
 function generateWorkspaceFixture(name: string, number: number): Workspace {
   return {
-    id: `workspace-${number}`,
+    id: `workspace_${number}`,
     name,
     path: `${workspacesRootPath}/${name}`,
     icon: 'content-icon:shapes:blue',

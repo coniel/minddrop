@@ -1,12 +1,13 @@
 import { Events } from '@minddrop/events';
 import { BaseDirectory, Fs } from '@minddrop/file-system';
-import { Paths } from '@minddrop/utils';
+import { Paths, entityId, isEntityId } from '@minddrop/utils';
 import { WorkspacesStore } from '../WorkspacesStore';
 import { WorkspacesConfigFileName } from '../constants';
 import { WorkspacesLoadedEvent, WorkspacesLoadedEventData } from '../events';
 import { readWorkspaceConfig } from '../readWorkspaceConfig';
-import { WorkspacesConfig } from '../types';
+import { WorkspaceId, WorkspacesConfig } from '../types';
 import { getWorkspacesConfigFilePath } from '../utils';
+import { writeWorkspaceConfig } from '../writeWorkspaceConfig';
 
 /**
  * Initializes workspaces by reading the workspaces config file
@@ -37,12 +38,30 @@ export async function initializeWorkspaces(): Promise<void> {
   );
 
   // Filter out null workspaces
-  const workspaces = workspacePromises.filter(
+  const rawWorkspaces = workspacePromises.filter(
     (workspace) => workspace !== null,
   );
 
+  // Track workspaces whose IDs get normalized
+  const normalizedIds: WorkspaceId[] = [];
+
+  // Re-mint IDs that are not typed workspace IDs
+  const workspaces = rawWorkspaces.map((workspace) => {
+    if (isEntityId(workspace.id, 'workspace')) {
+      return workspace;
+    }
+
+    const normalized = { ...workspace, id: entityId('workspace') };
+    normalizedIds.push(normalized.id);
+
+    return normalized;
+  });
+
   // Load workspaces into the store
   WorkspacesStore.load(workspaces);
+
+  // Persist normalized IDs back to the workspace configs
+  await Promise.all(normalizedIds.map((id) => writeWorkspaceConfig(id)));
 
   // Set global workspace paths from the first workspace
   if (workspaces.length > 0) {

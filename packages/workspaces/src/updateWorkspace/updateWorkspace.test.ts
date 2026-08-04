@@ -23,12 +23,12 @@ describe('updateWorkspace', () => {
   it('prevents updating the workspace name', async () => {
     await expect(() =>
       // @ts-expect-error - Testing invalid parameter
-      updateWorkspace('workspace-1', { name: 'New name' }),
+      updateWorkspace(workspace_1.id, { name: 'New name' }),
     ).rejects.toThrow(InvalidParameterError);
   });
 
   it('updates the workspace in the store', async () => {
-    await updateWorkspace('workspace-1', update);
+    await updateWorkspace(workspace_1.id, update);
 
     const workspace = WorkspacesStore.get(workspace_1.id);
 

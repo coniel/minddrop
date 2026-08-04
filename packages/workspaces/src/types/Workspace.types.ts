@@ -1,8 +1,12 @@
+import { EntityId } from '@minddrop/utils';
+
+export type WorkspaceId = EntityId<'workspace'>;
+
 export interface Workspace {
   /**
    * A unique identifier for the workspace.
    */
-  id: string;
+  id: WorkspaceId;
 
   /**
    * Path to the workspace directory on the file system.
