@@ -1,4 +1,5 @@
 import { Collections } from '@minddrop/collections';
+import { registerItemReferenceAdapter } from '@minddrop/item-references';
 import { restoreDates } from '@minddrop/utils';
 import { Workspaces } from '@minddrop/workspaces';
 import { getDatabaseBackendAdapter } from '../DatabaseBackendAdapter';
@@ -14,6 +15,10 @@ import {
   addressesToEntryIds,
   convertSqlRecordToEntry,
   entryIdsToAddresses,
+  matchDatabaseEntryReference,
+  matchDatabaseReference,
+  serializeDatabaseEntryReference,
+  serializeDatabaseReference,
 } from '../utils';
 
 /**
@@ -61,6 +66,20 @@ export async function initializeDatabases(): Promise<{
   Collections.registerEntryReferenceAdapter({
     serializeEntries: entryIdsToAddresses,
     resolveEntries: addressesToEntryIds,
+  });
+
+  // Register the item reference adapter for entry addresses
+  registerItemReferenceAdapter({
+    type: 'database-entry',
+    serialize: serializeDatabaseEntryReference,
+    match: matchDatabaseEntryReference,
+  });
+
+  // Register the item reference adapter for database addresses
+  registerItemReferenceAdapter({
+    type: 'database',
+    serialize: serializeDatabaseReference,
+    match: matchDatabaseReference,
   });
 
   // Load database views into the ViewsStore (before event

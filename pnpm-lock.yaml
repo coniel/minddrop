@@ -793,6 +793,9 @@ importers:
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../i18n
+      '@minddrop/item-references':
+        specifier: workspace:*
+        version: link:../item-references
       '@minddrop/markdown':
         specifier: workspace:*
         version: link:../markdown
