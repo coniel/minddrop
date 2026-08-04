@@ -1,6 +1,6 @@
 import { Events } from '@minddrop/events';
 import { i18n } from '@minddrop/i18n';
-import { uuid } from '@minddrop/utils';
+import { entityId } from '@minddrop/utils';
 import { CollectionsStore } from '../CollectionsStore';
 import { CollectionCreatedEvent, CollectionCreatedEventData } from '../events';
 import { Collection } from '../types';
@@ -19,7 +19,7 @@ import { writeCollection } from '../writeCollection';
 export async function createCollection(name?: string): Promise<Collection> {
   // Generate the collection object
   const collection: Collection = {
-    id: uuid(),
+    id: entityId('collection'),
     created: new Date(),
     lastModified: new Date(),
     name: name || i18n.t('collections.labels.collection'),

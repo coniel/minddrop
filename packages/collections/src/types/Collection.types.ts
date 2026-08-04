@@ -1,6 +1,11 @@
+import { EntityId } from '@minddrop/utils';
+
+export type CollectionId = EntityId<'collection'>;
+
 export interface Collection {
   /**
-   * A unique identifier for the collection.
+   * A unique identifier for the collection. Virtual collections
+   * use caller-supplied composite IDs instead of typed IDs.
    */
   id: string;
 

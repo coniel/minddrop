@@ -4,7 +4,7 @@ import { getCollectionFilePath, getCollectionsDirPath } from '../utils';
 
 function generateCollectionFixture(number: number): Collection {
   return {
-    id: `collection-${number}`,
+    id: `collection_${number}`,
     name: `Collection ${number}`,
     created: new Date('2024-01-01T00:00:00.000Z'),
     lastModified: new Date('2024-01-01T00:00:00.000Z'),
