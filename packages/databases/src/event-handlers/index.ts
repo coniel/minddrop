@@ -12,6 +12,7 @@ export * from './entry-created';
 export * from './entry-deleted';
 export * from './entry-metadata-updated';
 export * from './entry-renamed';
+export * from './item-addresses-changed';
 export * from './entry-updated';
 export * from './property-added';
 export * from './property-removed';

@@ -8,6 +8,10 @@ import {
 } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
 import {
+  ItemAddressesChangedEvent,
+  ItemAddressesChangedEventData,
+} from '@minddrop/item-references';
+import {
   ViewCreatedEvent,
   ViewCreatedEventData,
   ViewDeletedEvent,
@@ -25,6 +29,7 @@ import {
   onDatabaseViewUpdated,
   onDeleteDatabase,
   onDeleteEntry,
+  onItemAddressesChanged,
   onRemoveProperty,
   onRenameDatabase,
   onRenameDesignProperty,
@@ -186,6 +191,12 @@ export function initializeDatabaseEventHandlers() {
     CollectionUpdatedEvent,
     'databases',
     ({ data }) => onUpdateCollection(data),
+  );
+
+  Events.on<ItemAddressesChangedEventData>(
+    ItemAddressesChangedEvent,
+    'databases',
+    ({ data }) => onItemAddressesChanged(data),
   );
 
   Events.on<ViewUpdatedEventData>(ViewUpdatedEvent, 'databases', ({ data }) => {

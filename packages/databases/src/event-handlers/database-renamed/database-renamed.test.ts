@@ -2,6 +2,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Collections } from '@minddrop/collections';
 import { DesignFixtures } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
+import {
+  ItemAddressesChangedEvent,
+  ItemAddressesChangedEventData,
+} from '@minddrop/item-references';
 import { DataViews } from '@minddrop/views';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import {
@@ -27,6 +31,7 @@ import {
   virtualCollectionName,
   virtualViewId,
 } from '../../utils';
+import { onItemAddressesChanged } from '../item-addresses-changed';
 import { onRenameDatabase } from './database-renamed';
 
 // Mock SQL operations since no database connection is available in tests
@@ -50,6 +55,14 @@ const renamedEntryPath = `${parentDir}/Renamed Database/Collection Entry 1.md`;
 describe('onRenameDatabase', () => {
   beforeEach(() => {
     setup();
+
+    // Register the reference rewrite listener normally wired by
+    // initializeDatabaseEventHandlers
+    Events.on<ItemAddressesChangedEventData>(
+      ItemAddressesChangedEvent,
+      'test',
+      ({ data }) => onItemAddressesChanged(data),
+    );
 
     // Create the renamed database directory so reference
     // rewrites can write moved entry files

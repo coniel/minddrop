@@ -1,11 +1,16 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { AppErrorEvent, AppErrorEventData, Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
+import {
+  ItemAddressesChangedEvent,
+  ItemAddressesChangedEventData,
+} from '@minddrop/item-references';
 import { Paths } from '@minddrop/utils';
 import { DatabaseEntrySerializersStore } from '../DatabaseEntrySerializersStore';
 import { EntryConversionBackupDirName } from '../constants';
 import { jsonEntrySerializer } from '../entry-serializers';
 import { DatabaseEntrySerializerNotRegisteredError } from '../errors';
+import { onItemAddressesChanged } from '../event-handlers';
 import { DatabaseUpdatedEvent, DatabaseUpdatedEventData } from '../events';
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntry } from '../getDatabaseEntry';
@@ -27,7 +32,17 @@ import { databaseConfigFilePath } from '../utils';
 import { setDatabaseEntrySerializer } from './setDatabaseEntrySerializer';
 
 describe('setDatabaseEntrySerializer', () => {
-  beforeEach(setup);
+  beforeEach(() => {
+    setup();
+
+    // Register the reference rewrite listener normally wired by
+    // initializeDatabaseEventHandlers
+    Events.on<ItemAddressesChangedEventData>(
+      ItemAddressesChangedEvent,
+      'test',
+      ({ data }) => onItemAddressesChanged(data),
+    );
+  });
 
   afterEach(cleanup);
 

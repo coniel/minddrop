@@ -1,6 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Collections } from '@minddrop/collections';
 import { DesignFixtures } from '@minddrop/designs';
+import { Events } from '@minddrop/events';
+import {
+  ItemAddressesChangedEvent,
+  ItemAddressesChangedEventData,
+} from '@minddrop/item-references';
 import { DataViews } from '@minddrop/views';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { sqlUpsertEntries } from '../../sql';
@@ -22,6 +27,7 @@ import {
   virtualCollectionName,
   virtualViewId,
 } from '../../utils';
+import { onItemAddressesChanged } from '../item-addresses-changed';
 import { onRenameEntry } from './entry-renamed';
 
 // Mock SQL operations since no database connection is available in tests
@@ -41,6 +47,14 @@ const renamedEntry = {
 describe('onRenameEntry', () => {
   beforeEach(() => {
     setup();
+
+    // Register the reference rewrite listener normally wired by
+    // initializeDatabaseEventHandlers
+    Events.on<ItemAddressesChangedEventData>(
+      ItemAddressesChangedEvent,
+      'test',
+      ({ data }) => onItemAddressesChanged(data),
+    );
 
     // Create virtual collections for the collection entry
     Collections.createVirtual(

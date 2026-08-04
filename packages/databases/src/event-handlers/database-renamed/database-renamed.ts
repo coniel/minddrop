@@ -1,11 +1,16 @@
 import { Collections } from '@minddrop/collections';
+import { Events } from '@minddrop/events';
+import {
+  ItemAddressesChangedEvent,
+  ItemAddressesChangedEventData,
+} from '@minddrop/item-references';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabaseRenamedEventData } from '../../events';
 import { getAllDatabaseEntries } from '../../getAllDatabaseEntries';
-import { rewriteEntryReferences } from '../../rewriteEntryReferences';
 import { sqlUpsertDatabase, sqlUpsertEntries } from '../../sql';
 import {
   convertEntryToSqlRecord,
+  databaseEntryAddress,
   virtualCollectionId,
   virtualCollectionName,
 } from '../../utils';
@@ -85,6 +90,15 @@ export async function onRenameDatabase(
     ),
   );
 
-  // Rewrite referencing files with the entries' new addresses
-  await rewriteEntryReferences(renamedEntries.map((entry) => entry.id));
+  // Dispatch the renamed entries' address changes
+  if (renamedEntries.length > 0) {
+    await Events.dispatch<ItemAddressesChangedEventData>(
+      ItemAddressesChangedEvent,
+      renamedEntries.map((entry, index) => ({
+        id: entry.id,
+        oldReference: databaseEntryAddress(entries[index].path),
+        newReference: databaseEntryAddress(entry.path),
+      })),
+    );
+  }
 }

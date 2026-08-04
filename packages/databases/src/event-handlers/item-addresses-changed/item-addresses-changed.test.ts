@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
+import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import {
   MockFs,
   cleanup,
@@ -7,10 +7,11 @@ import {
   collectionEntry1,
   relatedEntry1,
   setup,
-} from '../test-utils';
-import { rewriteEntryReferences } from './rewriteEntryReferences';
+} from '../../test-utils';
+import { databaseEntryAddress } from '../../utils';
+import { onItemAddressesChanged } from './item-addresses-changed';
 
-describe('rewriteEntryReferences', () => {
+describe('onItemAddressesChanged', () => {
   beforeEach(setup);
 
   afterEach(cleanup);
@@ -22,7 +23,15 @@ describe('rewriteEntryReferences', () => {
       path: `${collectionDatabase.path}/Renamed Related.md`,
     });
 
-    await rewriteEntryReferences([relatedEntry1.id]);
+    await onItemAddressesChanged([
+      {
+        id: relatedEntry1.id,
+        oldReference: databaseEntryAddress(relatedEntry1.path),
+        newReference: databaseEntryAddress(
+          `${collectionDatabase.path}/Renamed Related.md`,
+        ),
+      },
+    ]);
 
     const contents = MockFs.readTextFile(collectionEntry1.path);
 
@@ -31,10 +40,16 @@ describe('rewriteEntryReferences', () => {
     expect(contents).not.toContain('Collection Database/Related Entry 1.md');
   });
 
-  it('does nothing for unreferenced entries', async () => {
+  it('does nothing for unreferenced items', async () => {
     const before = MockFs.readTextFile(collectionEntry1.path);
 
-    await rewriteEntryReferences(['unreferenced-entry']);
+    await onItemAddressesChanged([
+      {
+        id: 'database-entry_unreferenced',
+        oldReference: 'old',
+        newReference: 'new',
+      },
+    ]);
 
     expect(MockFs.readTextFile(collectionEntry1.path)).toBe(before);
   });

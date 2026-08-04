@@ -1,5 +1,9 @@
 import { AppErrorEvent, AppErrorEventData, Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
+import {
+  ItemAddressesChangedEvent,
+  ItemAddressesChangedEventData,
+} from '@minddrop/item-references';
 import { Paths } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabasesStore } from '../DatabasesStore';
@@ -9,15 +13,13 @@ import { getAllDatabaseEntries } from '../getAllDatabaseEntries';
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntry } from '../getDatabaseEntry';
 import { getDatabaseEntrySerializer } from '../getDatabaseEntrySerializer';
-import { rewriteEntryReferences } from '../rewriteEntryReferences';
 import { Database, DatabaseEntry } from '../types';
-import { serializeCollectionProperties } from '../utils';
+import { databaseEntryAddress, serializeCollectionProperties } from '../utils';
 import { writeDatabaseConfig } from '../writeDatabaseConfig';
 
 /**
  * Changes a database's entry serializer, converting the existing entry
- * files to the new format and file extension. Files referencing the
- * converted entries are rewritten to use the new addresses.
+ * files to the new format and file extension.
  *
  * The original entry files are kept in a backup directory during the
  * conversion and moved to the system trash once it succeeds. If the
@@ -32,6 +34,7 @@ import { writeDatabaseConfig } from '../writeDatabaseConfig';
  * @throws {DatabaseEntrySerializerNotRegisteredError} If the serializer is not registered.
  *
  * @dispatches databases:database:update
+ * @dispatches item-references:addresses:changed
  * @dispatches app:error
  */
 export async function setDatabaseEntrySerializer(
@@ -126,9 +129,6 @@ export async function setDatabaseEntrySerializer(
 
     // Persist the updated config to disk
     await writeDatabaseConfig(id);
-
-    // Rewrite files referencing the converted entries with the new addresses
-    await rewriteEntryReferences(entries.map((entry) => entry.id));
   } catch (error) {
     // Restore the pre-conversion state
     await rollbackConversion({
@@ -157,6 +157,16 @@ export async function setDatabaseEntrySerializer(
   } catch {
     // Leave the backup directory in place, the conversion itself succeeded
   }
+
+  // Dispatch the converted entries' address changes
+  await Events.dispatch<ItemAddressesChangedEventData>(
+    ItemAddressesChangedEvent,
+    entries.map((entry) => ({
+      id: entry.id,
+      oldReference: databaseEntryAddress(entry.path),
+      newReference: databaseEntryAddress(getDatabaseEntry(entry.id).path),
+    })),
+  );
 
   const updated = getDatabase(id);
 
@@ -262,9 +272,6 @@ async function rollbackConversion(options: RollbackOptions): Promise<void> {
 
       // Persist the reverted config to disk
       await writeDatabaseConfig(database.id);
-
-      // Restore the original addresses in files referencing the entries
-      await rewriteEntryReferences(entries.map((entry) => entry.id));
     }
   } catch {
     // Leave the rollback partial, the dispatched error surfaces the failure
