@@ -3,6 +3,7 @@ import { BoardViewComponent } from './BoardView';
 import { BoardViewSkeleton } from './BoardViewSkeleton';
 import { defaultBoardViewData } from './constants';
 import { BoardViewData } from './types';
+import { mapColumnReferences } from './utils';
 
 export const BoardViewType: DataViewType<object, BoardViewData> = {
   type: 'board',
@@ -13,4 +14,6 @@ export const BoardViewType: DataViewType<object, BoardViewData> = {
   defaultData: defaultBoardViewData,
   component: BoardViewComponent,
   skeletonComponent: BoardViewSkeleton,
+  serializeReferences: mapColumnReferences,
+  resolveReferences: mapColumnReferences,
 };
