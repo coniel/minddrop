@@ -1,10 +1,13 @@
 import { RootElement } from '@minddrop/designs';
+import { EntityId } from '@minddrop/utils';
+
+export type PageId = EntityId<'page'>;
 
 export interface Page {
   /**
    * A unique identifier for the page.
    */
-  id: string;
+  id: PageId;
 
   /**
    * The user defined name of the page.

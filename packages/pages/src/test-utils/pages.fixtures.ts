@@ -12,7 +12,7 @@ const emptyTree: RootElement = {
 
 function generatePageFixture(number: number): Page {
   return {
-    id: `page-${number}`,
+    id: `page_${number}`,
     name: `Page ${number}`,
     created: new Date('2024-01-01T00:00:00.000Z'),
     lastModified: new Date('2024-01-01T00:00:00.000Z'),

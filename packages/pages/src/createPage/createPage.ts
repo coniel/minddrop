@@ -1,7 +1,7 @@
 import { DefaultContainerElementStyle } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
 import { i18n } from '@minddrop/i18n';
-import { uuid } from '@minddrop/utils';
+import { entityId } from '@minddrop/utils';
 import { PagesStore } from '../PagesStore';
 import { PageCreatedEvent, PageCreatedEventData } from '../events';
 import { Page } from '../types';
@@ -19,7 +19,7 @@ import { writePage } from '../writePage';
 export async function createPage(name?: string): Promise<Page> {
   // Generate the page object
   const page: Page = {
-    id: uuid(),
+    id: entityId('page'),
     created: new Date(),
     lastModified: new Date(),
     name: name || i18n.t('labels.untitled'),
