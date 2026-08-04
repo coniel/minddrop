@@ -1,0 +1,22 @@
+{
+  "name": "@minddrop/item-references",
+  "version": "0.0.0",
+  "main": "src/index",
+  "type": "module",
+  "types": "src/index",
+  "scripts": {
+    "lint": "eslint .  --max-warnings 0",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "@minddrop/eslint-config": "workspace:*",
+    "eslint": "^9.39.3",
+    "tsconfig": "workspace:*",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@minddrop/utils": "workspace:*"
+  }
+}
