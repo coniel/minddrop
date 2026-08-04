@@ -5,6 +5,23 @@
     },
     "actions": {
       "new": "New"
+    },
+    "form": {
+      "layout": {
+        "search": {
+          "placeholder": "Search layouts..."
+        },
+        "empty": "No page layouts yet. Create one in the design studio.",
+        "noMatches": "No layouts match your search.",
+        "preview": {
+          "empty": "Select a layout to preview it."
+        }
+      },
+      "actions": {
+        "next": "Next",
+        "back": "Back",
+        "create": "Create"
+      }
     }
   }
 }

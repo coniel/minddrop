@@ -1,0 +1,12 @@
+.page-layout-preview {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+}
+
+.page-layout-preview-canvas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  pointer-events: none;
+}
