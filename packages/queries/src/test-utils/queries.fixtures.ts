@@ -4,7 +4,7 @@ import { getQueriesDirPath, getQueryFilePath } from '../utils';
 
 function generateQueryFixture(number: number): Query {
   return {
-    id: `query-${number}`,
+    id: `query_${number}`,
     name: `Query ${number}`,
     created: new Date('2024-01-01T00:00:00.000Z'),
     lastModified: new Date('2024-01-01T00:00:00.000Z'),

@@ -1,8 +1,12 @@
+import { EntityId } from '@minddrop/utils';
+
+export type QueryId = EntityId<'query'>;
+
 export interface Query {
   /**
    * A unique identifier for the query.
    */
-  id: string;
+  id: QueryId;
 
   /**
    * The user defined name of the query.

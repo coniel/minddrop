@@ -1,6 +1,6 @@
 import { Events } from '@minddrop/events';
 import { i18n } from '@minddrop/i18n';
-import { uuid } from '@minddrop/utils';
+import { entityId } from '@minddrop/utils';
 import { QueriesStore } from '../QueriesStore';
 import { QueryCreatedEvent, QueryCreatedEventData } from '../events';
 import { Query } from '../types';
@@ -18,7 +18,7 @@ import { writeQuery } from '../writeQuery';
 export async function createQuery(name?: string): Promise<Query> {
   // Generate the query object
   const query: Query = {
-    id: uuid(),
+    id: entityId('query'),
     created: new Date(),
     lastModified: new Date(),
     name: name || i18n.t('queries.labels.query'),
