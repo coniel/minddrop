@@ -94,12 +94,15 @@ async function runInitialization(): Promise<void> {
   await TabSetsStore.hydrate();
 
   await Designs.initialize();
-  await Views.initialize();
   Sql.initialize();
   const { schemaChanged } = await Databases.initialize();
 
-  // Load persisted collections. Requires entries and the entry
-  // reference adapter, both initialized by Databases.initialize.
+  // Load persisted views. Requires entries and the item reference
+  // adapters, both initialized by Databases.initialize.
+  await Views.initialize();
+
+  // Load persisted collections. Requires entries and the item
+  // reference adapters, both initialized by Databases.initialize.
   await Collections.initialize();
 
   // Load persisted pages
