@@ -2,13 +2,15 @@ import { Tab } from '../TabSetsStore';
 import { dispatchViewArea } from '../dispatchViewArea';
 import { getActiveTab } from '../getActiveTab';
 import { getSet } from '../getSet';
+import { pruneHistoryEntries } from '../pruneHistoryEntries';
 import { DEFAULT_SPLIT_RATIO } from '../tabsConstants';
 import { viewMatches } from '../viewMatches';
 import { writeSet } from '../writeSet';
 
 /**
  * Closes the view with the given instance id in the view area. When it
- * matches a split view, only the split is cleared.
+ * matches a split view, only the split is cleared. The view is also
+ * pruned out of the surviving tabs' history stacks.
  *
  * @param viewAreaId - The id of the view area.
  * @param viewId - The instance id of the view to close.
@@ -31,15 +33,40 @@ export function closeTabsForView(viewAreaId: string, viewId: string): void {
       return;
     }
 
+    // Prune the closed view out of the tab's history stacks
+    const currentBackHistory = tab.backHistory ?? [];
+    const currentForwardHistory = tab.forwardHistory ?? [];
+    const backHistory = pruneHistoryEntries(currentBackHistory, viewId);
+    const forwardHistory = pruneHistoryEntries(currentForwardHistory, viewId);
+
+    // Whether either stack was actually pruned
+    const historyChanged =
+      backHistory !== currentBackHistory ||
+      forwardHistory !== currentForwardHistory;
+
     // Only the split matches, clear it and reset the split ratio
     if (viewMatches(tab.split, viewId)) {
       changed = true;
-      nextTabs.push({ ...tab, split: null, splitRatio: DEFAULT_SPLIT_RATIO });
+      nextTabs.push({
+        ...tab,
+        split: null,
+        splitRatio: DEFAULT_SPLIT_RATIO,
+        backHistory,
+        forwardHistory,
+      });
 
       return;
     }
 
-    // Neither view matched, keep the tab as-is
+    // Neither pane matched, but the view was pruned from the history
+    if (historyChanged) {
+      changed = true;
+      nextTabs.push({ ...tab, backHistory, forwardHistory });
+
+      return;
+    }
+
+    // Nothing matched at all, keep the tab as-is
     nextTabs.push(tab);
   });
 

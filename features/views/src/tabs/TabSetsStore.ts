@@ -42,6 +42,25 @@ export interface TabView {
 
 export type TabId = EntityId<'tab'>;
 
+export interface TabHistoryEntry {
+  /**
+   * The main pane view at the time of the snapshot, or null when
+   * the tab was blank.
+   */
+  main: TabView | null;
+
+  /**
+   * The split pane view at the time of the snapshot, or null when
+   * the tab had no split.
+   */
+  split: TabView | null;
+
+  /**
+   * The main pane width as a percentage at the time of the snapshot.
+   */
+  splitRatio: number;
+}
+
 export interface Tab {
   /**
    * Unique identifier for the tab.
@@ -64,6 +83,18 @@ export interface Tab {
    * The width of the main (left) pane as a percentage (0-100).
    */
   splitRatio: number;
+
+  /**
+   * Previously shown view area states, nearest last, restored by
+   * navigating back.
+   */
+  backHistory?: TabHistoryEntry[];
+
+  /**
+   * View area states navigated back from, nearest last, restored by
+   * navigating forward.
+   */
+  forwardHistory?: TabHistoryEntry[];
 }
 
 export interface TabSet {
@@ -109,4 +140,34 @@ export function useTabs(viewAreaId: string): Tab[] {
  */
 export function useActiveTabId(viewAreaId: string): string | null {
   return TabSetsStore.useItem(viewAreaId)?.activeTabId ?? null;
+}
+
+/**
+ * Returns whether the active tab in the given set has back history
+ * to navigate to.
+ *
+ * @param viewAreaId - The id of the view area.
+ */
+export function useCanGoBack(viewAreaId: string): boolean {
+  const set = TabSetsStore.useItem(viewAreaId);
+
+  // Find the active tab in the set
+  const activeTab = set?.tabs.find((tab) => tab.id === set.activeTabId);
+
+  return Boolean(activeTab?.backHistory?.length);
+}
+
+/**
+ * Returns whether the active tab in the given set has forward history
+ * to navigate to.
+ *
+ * @param viewAreaId - The id of the view area.
+ */
+export function useCanGoForward(viewAreaId: string): boolean {
+  const set = TabSetsStore.useItem(viewAreaId);
+
+  // Find the active tab in the set
+  const activeTab = set?.tabs.find((tab) => tab.id === set.activeTabId);
+
+  return Boolean(activeTab?.forwardHistory?.length);
 }

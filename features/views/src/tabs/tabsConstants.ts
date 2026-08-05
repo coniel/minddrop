@@ -7,3 +7,9 @@ export const DEFAULT_SPLIT_RATIO = 50;
  * The default tab icon used when a view provides none.
  */
 export const DEFAULT_ICON = 'content-icon:file:default';
+
+/**
+ * The maximum number of entries kept in each of a tab's history
+ * stacks, bounding the persisted tab data size.
+ */
+export const MAX_HISTORY_LENGTH = 25;

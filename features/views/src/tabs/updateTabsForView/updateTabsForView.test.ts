@@ -64,4 +64,31 @@ describe('updateTabsForView', () => {
 
     expect(getSet(VIEW_AREA_ID).tabs[0].main?.title).toBe('A');
   });
+
+  it('patches matching history entries', () => {
+    newTab(VIEW_AREA_ID);
+    recordViewArea(
+      VIEW_AREA_ID,
+      state({ view: 'db:view', id: 'db:a', title: 'A' }),
+    );
+    recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:b' }));
+
+    updateTabsForView(VIEW_AREA_ID, 'db:a', { id: 'db:a2', title: 'A2' });
+
+    const historyEntry = getSet(VIEW_AREA_ID).tabs[0].backHistory?.[0];
+
+    expect(historyEntry?.main?.id).toBe('db:a2');
+    expect(historyEntry?.main?.title).toBe('A2');
+  });
+
+  it('leaves the tab untouched when nothing matches', () => {
+    newTab(VIEW_AREA_ID);
+    recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:a' }));
+    recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:b' }));
+    const tab = getSet(VIEW_AREA_ID).tabs[0];
+
+    updateTabsForView(VIEW_AREA_ID, 'db:other', { title: 'X' });
+
+    expect(getSet(VIEW_AREA_ID).tabs[0]).toBe(tab);
+  });
 });

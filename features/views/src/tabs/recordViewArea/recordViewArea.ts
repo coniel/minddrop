@@ -1,12 +1,16 @@
 import { SetViewAreaEventData } from '@minddrop/events';
 import { createBlankTab } from '../createBlankTab';
 import { getSet } from '../getSet';
+import { sameView } from '../sameView';
+import { MAX_HISTORY_LENGTH } from '../tabsConstants';
+import { toHistoryEntry } from '../toHistoryEntry';
 import { toTabView } from '../toTabView';
 import { writeSet } from '../writeSet';
 
 /**
- * Records the current view area state onto the active tab. Creates an
- * active tab first when none exists.
+ * Records the current view area state onto the active tab, pushing
+ * the tab's previous state onto its back history when the state is a
+ * new navigation. Creates an active tab first when none exists.
  *
  * @param viewAreaId - The id of the view area.
  * @param state - The current view area state.
@@ -35,12 +39,32 @@ export function recordViewArea(
       return tab;
     }
 
+    // Whether the state shows different views than the tab, as opposed
+    // to a replay of its current state (e.g. a tab restore) or a
+    // metadata/split ratio refresh
+    const navigated =
+      !sameView(tab.main, state.main) || !sameView(tab.split, state.split);
+
+    // Push the previous state onto the back history on navigation,
+    // except when navigating away from a blank tab
+    const backHistory =
+      navigated && tab.main
+        ? [...(tab.backHistory ?? []), toHistoryEntry(tab)].slice(
+            -MAX_HISTORY_LENGTH,
+          )
+        : (tab.backHistory ?? []);
+
+    // Navigating clears the forward history, replays preserve it
+    const forwardHistory = navigated ? [] : (tab.forwardHistory ?? []);
+
     // Overwrite the active tab's views and split ratio with the state
     return {
       ...tab,
       main: toTabView(state.main),
       split: toTabView(state.split),
       splitRatio: state.splitRatio,
+      backHistory,
+      forwardHistory,
     };
   });
 

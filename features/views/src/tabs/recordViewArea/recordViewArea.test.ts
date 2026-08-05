@@ -2,7 +2,9 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { SetViewAreaEventData } from '@minddrop/events';
 import { TabSetsStore } from '../TabSetsStore';
 import { getSet } from '../getSet';
+import { goBack } from '../goBack';
 import { newTab } from '../newTab';
+import { MAX_HISTORY_LENGTH } from '../tabsConstants';
 import { recordViewArea } from './recordViewArea';
 
 const VIEW_AREA_ID = 'test-set';
@@ -47,5 +49,118 @@ describe('recordViewArea', () => {
 
     expect(tabs).toHaveLength(1);
     expect(activeTabId).not.toBeNull();
+  });
+
+  it('pushes the previous state onto the back history on navigation', () => {
+    newTab(VIEW_AREA_ID);
+    recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:a' }));
+
+    recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:b' }));
+
+    const tab = getSet(VIEW_AREA_ID).tabs[0];
+
+    expect(tab.backHistory).toHaveLength(1);
+    expect(tab.backHistory?.[0].main?.id).toBe('db:a');
+  });
+
+  it('pushes the previous state when only the split changes', () => {
+    newTab(VIEW_AREA_ID);
+    recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:a' }));
+
+    recordViewArea(
+      VIEW_AREA_ID,
+      state({ view: 'db:view', id: 'db:a' }, { view: 'db:view', id: 'db:b' }),
+    );
+
+    const tab = getSet(VIEW_AREA_ID).tabs[0];
+
+    expect(tab.backHistory).toHaveLength(1);
+    expect(tab.backHistory?.[0].split).toBeNull();
+  });
+
+  it('does not push when navigating away from a blank tab', () => {
+    newTab(VIEW_AREA_ID);
+
+    recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:a' }));
+
+    expect(getSet(VIEW_AREA_ID).tabs[0].backHistory).toHaveLength(0);
+  });
+
+  it('does not push when the state replays the current views', () => {
+    newTab(VIEW_AREA_ID);
+    recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:a' }));
+    recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:b' }));
+
+    recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:b' }));
+
+    expect(getSet(VIEW_AREA_ID).tabs[0].backHistory).toHaveLength(1);
+  });
+
+  it('does not push when only the split ratio changes', () => {
+    newTab(VIEW_AREA_ID);
+    recordViewArea(VIEW_AREA_ID, state({ view: 'a' }, { view: 'b' }, 50));
+
+    recordViewArea(VIEW_AREA_ID, state({ view: 'a' }, { view: 'b' }, 70));
+
+    const tab = getSet(VIEW_AREA_ID).tabs[0];
+
+    expect(tab.backHistory).toHaveLength(0);
+    expect(tab.splitRatio).toBe(70);
+  });
+
+  it('does not push when only display metadata changes', () => {
+    newTab(VIEW_AREA_ID);
+    recordViewArea(
+      VIEW_AREA_ID,
+      state({ view: 'db:view', id: 'db:a', title: 'Old' }),
+    );
+
+    recordViewArea(
+      VIEW_AREA_ID,
+      state({ view: 'db:view', id: 'db:a', title: 'New' }),
+    );
+
+    const tab = getSet(VIEW_AREA_ID).tabs[0];
+
+    expect(tab.backHistory).toHaveLength(0);
+    expect(tab.main?.title).toBe('New');
+  });
+
+  it('clears the forward history on navigation', () => {
+    newTab(VIEW_AREA_ID);
+    recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:a' }));
+    recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:b' }));
+    goBack(VIEW_AREA_ID);
+
+    recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:c' }));
+
+    expect(getSet(VIEW_AREA_ID).tabs[0].forwardHistory).toHaveLength(0);
+  });
+
+  it('preserves the forward history when replaying the current state', () => {
+    newTab(VIEW_AREA_ID);
+    recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:a' }));
+    recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:b' }));
+    goBack(VIEW_AREA_ID);
+
+    recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:a' }));
+
+    expect(getSet(VIEW_AREA_ID).tabs[0].forwardHistory).toHaveLength(1);
+  });
+
+  it('caps the back history length', () => {
+    newTab(VIEW_AREA_ID);
+
+    // Navigate more times than the history holds
+    for (let index = 0; index < MAX_HISTORY_LENGTH + 5; index += 1) {
+      recordViewArea(
+        VIEW_AREA_ID,
+        state({ view: 'db:view', id: `db:${index}` }),
+      );
+    }
+
+    expect(getSet(VIEW_AREA_ID).tabs[0].backHistory).toHaveLength(
+      MAX_HISTORY_LENGTH,
+    );
   });
 });

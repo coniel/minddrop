@@ -58,4 +58,21 @@ describe('closeTabsForView', () => {
     expect(tab.split).toBeNull();
     expect(tab.main?.id).toBe('db:main');
   });
+
+  it('prunes the closed view from surviving tabs history', () => {
+    newTab(VIEW_AREA_ID);
+    recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:a' }));
+    recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:b' }));
+    recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:c' }));
+
+    closeTabsForView(VIEW_AREA_ID, 'db:b');
+
+    const { tabs } = getSet(VIEW_AREA_ID);
+
+    // The tab survives because no visible pane shows the closed view
+    expect(tabs).toHaveLength(1);
+    expect(tabs[0].main?.id).toBe('db:c');
+    expect(tabs[0].backHistory).toHaveLength(1);
+    expect(tabs[0].backHistory?.[0].main?.id).toBe('db:a');
+  });
 });

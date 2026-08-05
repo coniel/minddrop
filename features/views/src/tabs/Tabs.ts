@@ -10,4 +10,11 @@ export { restoreActiveTab } from './restoreActiveTab';
 export { ensureTab } from './ensureTab';
 export { closeActiveTab } from './closeActiveTab';
 export { activateTabByIndex } from './activateTabByIndex';
-export { useTabs, useActiveTabId } from './TabSetsStore';
+export { goBack } from './goBack';
+export { goForward } from './goForward';
+export {
+  useTabs,
+  useActiveTabId,
+  useCanGoBack,
+  useCanGoForward,
+} from './TabSetsStore';

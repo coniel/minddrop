@@ -2,7 +2,7 @@ import { ViewDescriptor } from '@minddrop/events';
 import { TabView } from '../TabSetsStore';
 import { viewMatches } from '../viewMatches';
 
-interface ViewUpdateChanges {
+export interface ViewUpdateChanges {
   /**
    * The view's new instance id.
    */

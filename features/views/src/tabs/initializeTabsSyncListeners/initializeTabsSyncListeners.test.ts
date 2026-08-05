@@ -120,6 +120,64 @@ describe('initializeTabsSyncListeners', () => {
     expect(getSet(VIEW_AREA_ID).tabs).toHaveLength(1);
   });
 
+  it('builds up navigation history from view area changes', () => {
+    newTab(VIEW_AREA_ID);
+
+    Events.dispatch<ViewAreaChangedEventData>(
+      ViewAreaChangedEvent,
+      changed(VIEW_AREA_ID, { view: 'db:view', id: 'db:a' }),
+    );
+    Events.dispatch<ViewAreaChangedEventData>(
+      ViewAreaChangedEvent,
+      changed(VIEW_AREA_ID, { view: 'db:view', id: 'db:b' }),
+    );
+
+    const tab = getSet(VIEW_AREA_ID).tabs[0];
+
+    expect(tab.backHistory).toHaveLength(1);
+    expect(tab.backHistory?.[0].main?.id).toBe('db:a');
+  });
+
+  it('patches history entries when a view changes', () => {
+    newTab(VIEW_AREA_ID);
+    Events.dispatch<ViewAreaChangedEventData>(
+      ViewAreaChangedEvent,
+      changed(VIEW_AREA_ID, { view: 'db:view', id: 'db:a', title: 'A' }),
+    );
+    Events.dispatch<ViewAreaChangedEventData>(
+      ViewAreaChangedEvent,
+      changed(VIEW_AREA_ID, { view: 'db:view', id: 'db:b' }),
+    );
+
+    Events.dispatch(UpdateViewEvent, {
+      viewAreaId: VIEW_AREA_ID,
+      id: 'db:a',
+      newId: 'db:a2',
+      title: 'A2',
+    });
+
+    const historyEntry = getSet(VIEW_AREA_ID).tabs[0].backHistory?.[0];
+
+    expect(historyEntry?.main?.id).toBe('db:a2');
+    expect(historyEntry?.main?.title).toBe('A2');
+  });
+
+  it('prunes history entries when a view closes', () => {
+    newTab(VIEW_AREA_ID);
+    Events.dispatch<ViewAreaChangedEventData>(
+      ViewAreaChangedEvent,
+      changed(VIEW_AREA_ID, { view: 'db:view', id: 'db:a' }),
+    );
+    Events.dispatch<ViewAreaChangedEventData>(
+      ViewAreaChangedEvent,
+      changed(VIEW_AREA_ID, { view: 'db:view', id: 'db:b' }),
+    );
+
+    Events.dispatch(CloseViewEvent, { viewAreaId: VIEW_AREA_ID, id: 'db:a' });
+
+    expect(getSet(VIEW_AREA_ID).tabs[0].backHistory).toHaveLength(0);
+  });
+
   it('stops recording after cleanup', () => {
     newTab(VIEW_AREA_ID);
     cleanup();
