@@ -42,6 +42,26 @@ function readAllManifests(): ManifestWithSlug[] {
 }
 
 /**
+ * Resolves the working tree root for a worktree name. Falls back to
+ * the main checkout when unset or when the worktree no longer exists.
+ */
+function getWorktreeRoot(worktree: string | null | undefined): string {
+  // No worktree recorded, use the main checkout
+  if (!worktree) {
+    return REPO_ROOT;
+  }
+
+  const worktreePath = `${REPO_ROOT}/.claude/worktrees/${worktree}`;
+
+  // Worktree may have been removed since the manifest was written
+  if (!existsSync(worktreePath)) {
+    return REPO_ROOT;
+  }
+
+  return worktreePath;
+}
+
+/**
  * Gets file content at a specific git ref using git show.
  */
 function getFileAtRef(ref: string, path: string): string {
@@ -58,10 +78,10 @@ function getFileAtRef(ref: string, path: string): string {
 }
 
 /**
- * Gets the current file content from disk.
+ * Gets the current file content from the given worktree's disk.
  */
-function getCurrentFile(path: string): string {
-  const fullPath = `${REPO_ROOT}/${path}`;
+function getCurrentFile(path: string, worktree: string | null): string {
+  const fullPath = `${getWorktreeRoot(worktree)}/${path}`;
 
   if (!existsSync(fullPath)) {
     return '';
@@ -73,8 +93,12 @@ function getCurrentFile(path: string): string {
 /**
  * Runs a git command and adds each output line to the target set.
  */
-function collectGitOutput(command: string[], target: Set<string>): void {
-  const result = Bun.spawnSync(command, { cwd: REPO_ROOT });
+function collectGitOutput(
+  command: string[],
+  target: Set<string>,
+  cwd: string,
+): void {
+  const result = Bun.spawnSync(command, { cwd });
 
   if (result.exitCode === 0) {
     const lines = result.stdout.toString().trim().split('\n').filter(Boolean);
@@ -101,16 +125,40 @@ function getUntrackedChanges(): string[] {
     }
   }
 
+  // Scan the main checkout against HEAD, and each manifest's
+  // worktree against its baseRef so WIP-committed changes show too
+  const scans = new Map<string, { root: string; ref: string }>();
+
+  scans.set(`${REPO_ROOT}:HEAD`, { root: REPO_ROOT, ref: 'HEAD' });
+
+  for (const manifest of manifests) {
+    const root = getWorktreeRoot(manifest.worktree);
+
+    if (root !== REPO_ROOT) {
+      scans.set(`${root}:${manifest.baseRef}`, {
+        root,
+        ref: manifest.baseRef,
+      });
+    }
+  }
+
   const allChangedFiles = new Set<string>();
 
-  // Get uncommitted changes vs HEAD (modified + staged)
-  collectGitOutput(['git', 'diff', '--name-only', 'HEAD'], allChangedFiles);
+  for (const scan of scans.values()) {
+    // Get changes vs the scan ref (modified + staged + committed)
+    collectGitOutput(
+      ['git', 'diff', '--name-only', scan.ref],
+      allChangedFiles,
+      scan.root,
+    );
 
-  // Get new files not yet tracked by git
-  collectGitOutput(
-    ['git', 'ls-files', '--others', '--exclude-standard'],
-    allChangedFiles,
-  );
+    // Get new files not yet tracked by git
+    collectGitOutput(
+      ['git', 'ls-files', '--others', '--exclude-standard'],
+      allChangedFiles,
+      scan.root,
+    );
+  }
 
   // Filter out files that are already in manifests
   return [...allChangedFiles].filter((file) => !manifestedFiles.has(file));
@@ -202,16 +250,19 @@ function getPlanContent(filename: string): string {
 }
 
 /**
- * Returns the git status for all changed files relative to a base ref.
+ * Returns the git status for all changed files relative to a base
+ * ref, diffed in the given worktree or the main checkout.
  */
 function getFileStatuses(
   baseRef: string,
+  worktree: string | null,
 ): Record<string, 'added' | 'modified' | 'deleted'> {
   const statuses: Record<string, 'added' | 'modified' | 'deleted'> = {};
+  const root = getWorktreeRoot(worktree);
 
   // Get statuses relative to the base ref
   const result = Bun.spawnSync(['git', 'diff', '--name-status', baseRef], {
-    cwd: REPO_ROOT,
+    cwd: root,
   });
 
   if (result.exitCode === 0) {
@@ -234,7 +285,7 @@ function getFileStatuses(
   // Also mark untracked files as added
   const untrackedResult = Bun.spawnSync(
     ['git', 'ls-files', '--others', '--exclude-standard'],
-    { cwd: REPO_ROOT },
+    { cwd: root },
   );
 
   if (untrackedResult.exitCode === 0) {
@@ -264,8 +315,14 @@ export const rpcHandlers = {
     return getFileAtRef(ref, path);
   },
 
-  getCurrentFileContent: async ({ path }: { path: string }) => {
-    return getCurrentFile(path);
+  getCurrentFileContent: async ({
+    path,
+    worktree,
+  }: {
+    path: string;
+    worktree: string | null;
+  }) => {
+    return getCurrentFile(path, worktree);
   },
 
   getUntrackedChanges: async () => {
@@ -280,8 +337,14 @@ export const rpcHandlers = {
     deleteManifest(slug);
   },
 
-  getFileStatuses: async ({ baseRef }: { baseRef: string }) => {
-    return getFileStatuses(baseRef);
+  getFileStatuses: async ({
+    baseRef,
+    worktree,
+  }: {
+    baseRef: string;
+    worktree: string | null;
+  }) => {
+    return getFileStatuses(baseRef, worktree);
   },
 
   getPlans: async () => {

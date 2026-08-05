@@ -164,8 +164,12 @@ try {
       return;
     }
 
-    // Regenerate i18n types when locale files change
-    if (filename.endsWith('locales/en-GB.json')) {
+    // Regenerate i18n types when locale files change, ignoring
+    // copies inside agent worktrees
+    if (
+      !filename.startsWith('.claude/') &&
+      filename.endsWith('locales/en-GB.json')
+    ) {
       if (i18nDebounceTimer) {
         clearTimeout(i18nDebounceTimer);
       }

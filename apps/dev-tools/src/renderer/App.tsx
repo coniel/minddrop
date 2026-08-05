@@ -35,19 +35,27 @@ export const App: React.FC = () => {
     setManifests(manifestData);
     setUntrackedFiles(untracked);
 
-    // Fetch file statuses for each unique baseRef
+    // Fetch file statuses for each unique baseRef + worktree pair
     try {
-      const baseRefs = new Set(
-        manifestData.map((manifest) => manifest.baseRef),
-      );
+      const scans = new Map<
+        string,
+        { baseRef: string; worktree: string | null }
+      >();
 
-      // Also use HEAD for untracked files
-      baseRefs.add('HEAD');
+      for (const manifest of manifestData) {
+        const worktree = manifest.worktree ?? null;
+
+        scans.set(`${manifest.baseRef}:${worktree}`, {
+          baseRef: manifest.baseRef,
+          worktree,
+        });
+      }
+
+      // Also scan the main checkout against HEAD for untracked files
+      scans.set('HEAD:null', { baseRef: 'HEAD', worktree: null });
 
       const statusResults = await Promise.all(
-        [...baseRefs].map((baseRef) =>
-          rpc.request.getFileStatuses({ baseRef }),
-        ),
+        [...scans.values()].map((scan) => rpc.request.getFileStatuses(scan)),
       );
 
       // Merge all status maps (later results override earlier)
@@ -135,7 +143,10 @@ export const App: React.FC = () => {
           ref: selectedFile.baseRef,
           path: selectedFile.path,
         }),
-        rpc.request.getCurrentFileContent({ path: selectedFile.path }),
+        rpc.request.getCurrentFileContent({
+          path: selectedFile.path,
+          worktree: selectedFile.worktree,
+        }),
       ]);
 
       setOriginalContent(original);
@@ -191,10 +202,12 @@ export const App: React.FC = () => {
       files: string[];
       manifestSlug: string | null;
       baseRef: string;
+      worktree: string | null;
     }[] = manifests.map((manifest) => ({
       files: manifest.files,
       manifestSlug: manifest.slug,
       baseRef: manifest.baseRef,
+      worktree: manifest.worktree ?? null,
     }));
 
     if (untrackedFiles.length > 0) {
@@ -202,6 +215,7 @@ export const App: React.FC = () => {
         files: untrackedFiles,
         manifestSlug: null,
         baseRef: manifests.length > 0 ? manifests[0].baseRef : 'HEAD',
+        worktree: null,
       });
     }
 
@@ -256,6 +270,7 @@ export const App: React.FC = () => {
           path: group.files[nextIndex],
           manifestSlug: group.manifestSlug,
           baseRef: group.baseRef,
+          worktree: group.worktree,
         });
         setSelectedPlan(null);
       } else {
@@ -273,6 +288,7 @@ export const App: React.FC = () => {
           path: nextGroup.files[0],
           manifestSlug: nextGroup.manifestSlug,
           baseRef: nextGroup.baseRef,
+          worktree: nextGroup.worktree,
         });
         setSelectedPlan(null);
       }
