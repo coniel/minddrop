@@ -8,7 +8,7 @@ import { watch } from 'node:fs';
 import { DevReviewRPC } from '../types';
 import { rpcHandlers } from './rpc';
 
-const DEV_SERVER_PORT = 5174;
+const DEV_SERVER_PORT = 5914;
 const DEV_SERVER_URL = `http://localhost:${DEV_SERVER_PORT}`;
 // Resolve repo root dynamically via git (import.meta.dir points to
 // the build output at runtime, not the source tree)
