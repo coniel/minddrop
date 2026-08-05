@@ -1,0 +1,34 @@
+{
+  "name": "@minddrop/feature-spaces",
+  "version": "0.0.0",
+  "main": "src/index",
+  "types": "src/index",
+  "scripts": {
+    "lint": "eslint .  --max-warnings 0",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit --jsx react-jsx"
+  },
+  "dependencies": {
+    "@minddrop/designs": "workspace:*",
+    "@minddrop/events": "workspace:*",
+    "@minddrop/feature-designs": "workspace:*",
+    "@minddrop/feature-views": "workspace:*",
+    "@minddrop/file-system": "workspace:*",
+    "@minddrop/i18n": "workspace:*",
+    "@minddrop/spaces": "workspace:*",
+    "@minddrop/properties": "workspace:*",
+    "@minddrop/stores": "workspace:*",
+    "@minddrop/test-utils": "workspace:*",
+    "@minddrop/ui-primitives": "workspace:*",
+    "@minddrop/utils": "workspace:*",
+    "@minddrop/views": "workspace:*",
+    "react": "^19.1.0"
+  },
+  "devDependencies": {
+    "eslint": "^9.39.3",
+    "@minddrop/eslint-config": "workspace:*",
+    "tsconfig": "workspace:*",
+    "typescript": "^5.9.3"
+  }
+}

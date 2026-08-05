@@ -7,15 +7,15 @@ import { Events } from '@minddrop/events';
 import { initializeExtensions } from '@minddrop/extensions';
 import { DatabaseViewStateStore } from '@minddrop/feature-databases';
 import { LayoutRegionSizesStore } from '@minddrop/feature-designs';
-import {
-  PageViewStateStore,
-  initializePagesFeature,
-} from '@minddrop/feature-pages';
 import { initializeSearch } from '@minddrop/feature-search';
+import {
+  SpaceViewStateStore,
+  initializeSpacesFeature,
+} from '@minddrop/feature-spaces';
 import { TabSetsStore, initializeViewsFeature } from '@minddrop/feature-views';
 import { initializeI18n } from '@minddrop/i18n';
-import { Pages } from '@minddrop/pages';
 import { Search } from '@minddrop/search';
+import { Spaces } from '@minddrop/spaces';
 import { Sql } from '@minddrop/sql';
 import { Theme, VariantChangedEventData } from '@minddrop/ui-theme';
 import { Views } from '@minddrop/views';
@@ -55,8 +55,8 @@ async function runInitialization(): Promise<void> {
   // Register search translations
   initializeSearch();
 
-  // Register pages translations
-  initializePagesFeature();
+  // Register spaces translations
+  initializeSpacesFeature();
 
   // Register listeners that persist and hydrate app-config
   // stores to JSON files in the AppData directory
@@ -68,8 +68,8 @@ async function runInitialization(): Promise<void> {
   // Hydrate per-database view state
   await DatabaseViewStateStore.hydrate();
 
-  // Hydrate per-page view state
-  await PageViewStateStore.hydrate();
+  // Hydrate per-space view state
+  await SpaceViewStateStore.hydrate();
 
   // Watch for theme variant changes
   Events.addListener(
@@ -111,8 +111,8 @@ async function runInitialization(): Promise<void> {
   // reference adapters, both initialized by Databases.initialize.
   await Collections.initialize();
 
-  // Load persisted pages
-  await Pages.initialize();
+  // Load persisted spaces
+  await Spaces.initialize();
 
   // Initialize the MiniSearch index and register event
   // listeners for incremental sync

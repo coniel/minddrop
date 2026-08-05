@@ -1496,9 +1496,17 @@ declare module 'i18next' {
             };
           };
         };
-        pages: {
+        tabs: {
+          new: string;
+          close: string;
+        };
+        search: {
+          open: string;
+          placeholder: string;
+        };
+        spaces: {
           labels: {
-            pages: string;
+            spaces: string;
           };
           actions: {
             new: string;
@@ -1531,14 +1539,6 @@ declare module 'i18next' {
               create: string;
             };
           };
-        };
-        tabs: {
-          new: string;
-          close: string;
-        };
-        search: {
-          open: string;
-          placeholder: string;
         };
         theme: {
           appearance: {

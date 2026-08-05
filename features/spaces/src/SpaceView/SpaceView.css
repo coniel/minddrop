@@ -1,0 +1,27 @@
+.space-view {
+  height: 100%;
+
+  .space-view-panel {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .space-view-edit-button {
+    position: absolute;
+    top: var(--space-2);
+    right: var(--space-2);
+    z-index: 1;
+  }
+
+  .space-view-content {
+    flex: 1;
+    min-height: 0;
+  }
+}
+
+.space-view-not-found {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

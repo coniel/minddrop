@@ -1,0 +1,38 @@
+{
+  "spaces": {
+    "labels": {
+      "spaces": "Spaces"
+    },
+    "actions": {
+      "new": "New"
+    },
+    "view": {
+      "notFound": "This space no longer exists.",
+      "actions": {
+        "edit": "Edit space",
+        "exitEditMode": "Exit edit mode"
+      }
+    },
+    "templates": {
+      "blank": {
+        "name": "Blank space",
+        "description": "Start from an empty space and design it as you go."
+      }
+    },
+    "form": {
+      "labels": {
+        "templates": "Templates"
+      },
+      "name": {
+        "label": "Name",
+        "placeholder": "Space name"
+      },
+      "icon": {
+        "label": "Space icon"
+      },
+      "actions": {
+        "create": "Create"
+      }
+    }
+  }
+}

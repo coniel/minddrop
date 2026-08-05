@@ -57,7 +57,7 @@ Durable item references are natural workspace-relative addresses
 first path segment against existing database directories. Databases
 are currently the only visible directories at the workspace root, so
 there is no overlap. If another feature ever claims a visible root
-directory as its address space (e.g. `Widgets/`, `Pages/`), that
+directory as its address space (e.g. `Widgets/`, `Spaces/`), that
 directory name must be rejected as a database name (create and
 rename validation) or the address spaces become ambiguous.
 
@@ -139,8 +139,8 @@ The view area container rendered by `ViewRenderer` is not a flex
 container, so a view's root element cannot rely on `flex: 1` to fill
 the content area — it sizes to content instead (only noticeable once
 inner percentage/flex chains silently collapse). Give view roots
-`height: 100%` (see `.design-studio`, `.page-view`,
-`.page-edit-mode`).
+`height: 100%` (see `.design-studio`, `.space-view`,
+`.space-edit-mode`).
 
 ## ui/primitives
 
@@ -151,7 +151,7 @@ which happy-dom does not implement — tests rendering `ScrollArea`
 throw unhandled `viewport.getAnimations is not a function` errors
 after teardown. Polyfill it in the package's test setup
 (`Element.prototype.getAnimations = () => []`, see
-`features/pages/src/test-utils/setup-tests.ts`).
+`features/spaces/src/test-utils/setup-tests.ts`).
 
 ### `TranslatableNode` treats strings as i18n keys
 

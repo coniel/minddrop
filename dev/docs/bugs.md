@@ -65,7 +65,7 @@ the event data access in the property editor test.
 
 Spreading `fieldProps.<name>` from `useForm` (`@minddrop/utils`) onto a
 `TextField` fails the typecheck in `NewDatabaseDialog`
-(`features/databases`), `NewPageDialog` (`features/pages`), and
+(`features/databases`), `NewSpaceDialog` (`features/spaces`), and
 `CreateDataViewForm` (`features/views`):
 `FieldProps.error` is a plain `string` while `TextField`'s `error` prop is
 typed `TranslationKey` (the `onChange` event type is also wider than the
