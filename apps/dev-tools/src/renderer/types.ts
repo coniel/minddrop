@@ -41,4 +41,10 @@ export interface SelectedFile {
    * The base ref to diff against.
    */
   baseRef: string;
+
+  /**
+   * Name of the agent worktree holding the file's changes, or null
+   * for the main checkout.
+   */
+  worktree: string | null;
 }

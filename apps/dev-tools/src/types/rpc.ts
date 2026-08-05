@@ -15,6 +15,12 @@ export interface Manifest {
   baseRef: string;
 
   /**
+   * Name of the agent worktree the changes live in. Absent when
+   * the work happened in the main checkout.
+   */
+  worktree?: string;
+
+  /**
    * Repo-relative paths of changed files.
    */
   files: string[];
@@ -54,10 +60,11 @@ export type DevReviewRPC = {
       };
 
       /**
-       * Returns the current file content from disk.
+       * Returns the current file content from disk, read from the
+       * given worktree or the main checkout.
        */
       getCurrentFileContent: {
-        params: { path: string };
+        params: { path: string; worktree: string | null };
         response: string;
       };
 
@@ -71,10 +78,11 @@ export type DevReviewRPC = {
 
       /**
        * Returns the git status (added, modified, deleted) for each
-       * changed file relative to a base ref.
+       * changed file relative to a base ref, diffed in the given
+       * worktree or the main checkout.
        */
       getFileStatuses: {
-        params: { baseRef: string };
+        params: { baseRef: string; worktree: string | null };
         response: Record<string, 'added' | 'modified' | 'deleted'>;
       };
 

@@ -117,6 +117,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       path,
       manifestSlug: manifest.slug,
       baseRef: manifest.baseRef,
+      worktree: manifest.worktree ?? null,
     });
   };
 
@@ -129,6 +130,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       path,
       manifestSlug: null,
       baseRef,
+      worktree: null,
     });
   };
 
