@@ -1,0 +1,9 @@
+.data-view-view {
+  height: 100%;
+
+  .data-view-view-panel {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+}

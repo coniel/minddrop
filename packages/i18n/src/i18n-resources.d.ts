@@ -1429,6 +1429,7 @@ declare module 'i18next' {
           labels: {
             view: string;
             new: string;
+            views: string;
           };
           board: {
             name: string;

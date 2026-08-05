@@ -1,5 +1,8 @@
 {
   "dataViews": {
+    "labels": {
+      "views": "Views"
+    },
     "missing": {
       "message": "This view no longer exists."
     },

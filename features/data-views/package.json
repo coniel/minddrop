@@ -18,10 +18,15 @@
   "dependencies": {
     "@minddrop/collections": "workspace:*",
     "@minddrop/data-views": "workspace:*",
+    "@minddrop/databases": "workspace:*",
+    "@minddrop/events": "workspace:*",
+    "@minddrop/file-system": "workspace:*",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/ui-components": "workspace:*",
     "@minddrop/ui-icons": "workspace:*",
     "@minddrop/ui-primitives": "workspace:*",
-    "@minddrop/utils": "workspace:*"
+    "@minddrop/utils": "workspace:*",
+    "@minddrop/views": "workspace:*",
+    "@minddrop/workspaces": "workspace:*"
   }
 }
