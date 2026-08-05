@@ -1,5 +1,6 @@
 export * from './AddDataViewMenu';
 export * from './CreateDatabaseEntryButton';
+export * from './DataSourceCombobox';
 export * from './DatabaseEntriesSearchField';
 export * from './DatabaseLayoutSelectionMenu';
 export * from './ImageViewer';

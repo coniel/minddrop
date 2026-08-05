@@ -1417,6 +1417,19 @@
       "view": "View",
       "new": "New View"
     },
+    "dataSource": {
+      "placeholder": "Select data source...",
+      "searchPlaceholder": "Search data sources...",
+      "empty": "No data sources found.",
+      "groups": {
+        "new": "New",
+        "collections": "Collections",
+        "queries": "Queries",
+        "databases": "Databases"
+      },
+      "newCollection": "New collection",
+      "newQuery": "New query"
+    },
     "board": {
       "name": "Board",
       "description": "A board view with draggable columns of cards.",

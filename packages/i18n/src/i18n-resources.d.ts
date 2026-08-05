@@ -1432,6 +1432,19 @@ declare module 'i18next' {
             new: string;
             views: string;
           };
+          dataSource: {
+            placeholder: string;
+            searchPlaceholder: string;
+            empty: string;
+            groups: {
+              new: string;
+              collections: string;
+              queries: string;
+              databases: string;
+            };
+            newCollection: string;
+            newQuery: string;
+          };
           board: {
             name: string;
             description: string;
@@ -1492,7 +1505,12 @@ declare module 'i18next' {
             };
             source: {
               label: string;
-              placeholder: string;
+              collectionName: {
+                label: string;
+              };
+              queryName: {
+                label: string;
+              };
             };
             actions: {
               create: string;

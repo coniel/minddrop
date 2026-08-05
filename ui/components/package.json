@@ -20,8 +20,10 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "@minddrop/collections": "workspace:*",
     "@minddrop/data-views": "workspace:*",
     "@minddrop/databases": "workspace:*",
+    "@minddrop/queries": "workspace:*",
     "@minddrop/designs": "workspace:*",
     "@minddrop/events": "workspace:*",
     "@minddrop/i18n": "workspace:*",
