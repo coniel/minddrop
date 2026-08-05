@@ -3,6 +3,7 @@ import { DataViewTypeComponentProps, DataViews } from '@minddrop/data-views';
 import { DatabaseEntries, Databases } from '@minddrop/databases';
 import { DatabaseEntryRenderer } from '@minddrop/feature-databases';
 import {
+  AddCollectionEntryButton,
   CreateDatabaseEntryButton,
   DatabaseEntriesSearchField,
 } from '@minddrop/ui-components';
@@ -85,8 +86,8 @@ export const NotebookViewComponent: React.FC<
     setSelectedEntryId(entryId);
   }, []);
 
-  // Select the newly created entry
-  const handleCreateEntry = useCallback((entry: { id: string }) => {
+  // Select the newly created or added entry
+  const handleEntryAdded = useCallback((entry: { id: string }) => {
     setSelectedEntryId(entry.id);
   }, []);
 
@@ -101,12 +102,24 @@ export const NotebookViewComponent: React.FC<
             onFilteredEntriesChange={setFilteredEntries}
             size="md"
           />
-          <CreateDatabaseEntryButton
-            database={createDatabaseIds}
-            onCreateEntry={handleCreateEntry}
-            size="md"
-            variant="subtle"
-          />
+          {/* Collection sources also support adding existing entries */}
+          {view.dataSource.type === 'collection' ? (
+            <AddCollectionEntryButton
+              collectionId={view.dataSource.id}
+              database={false}
+              onCreateEntry={handleEntryAdded}
+              onAddEntry={handleEntryAdded}
+              size="md"
+              variant="subtle"
+            />
+          ) : (
+            <CreateDatabaseEntryButton
+              database={createDatabaseIds}
+              onCreateEntry={handleEntryAdded}
+              size="md"
+              variant="subtle"
+            />
+          )}
         </div>
 
         <ScrollArea className="notebook-view-list-scroll">
