@@ -14,5 +14,9 @@
   .page-edit-mode-surface {
     flex: 1;
     min-width: 0;
+
+    .scroll-area {
+      height: 100%;
+    }
   }
 }

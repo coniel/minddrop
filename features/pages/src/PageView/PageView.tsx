@@ -1,15 +1,7 @@
 import { useCallback } from 'react';
 import { LayoutRenderer } from '@minddrop/feature-designs';
 import { Pages, setLayoutElementContent } from '@minddrop/pages';
-import {
-  ContentIcon,
-  Group,
-  Heading,
-  IconButton,
-  ScrollArea,
-  Spacer,
-  Text,
-} from '@minddrop/ui-primitives';
+import { IconButton, Panel, ScrollArea, Text } from '@minddrop/ui-primitives';
 import { setPageViewState, usePageViewState } from '../PageViewStateStore';
 import { PageEditMode } from './PageEditMode';
 import './PageView.css';
@@ -22,8 +14,8 @@ export interface PageViewProps {
 }
 
 /**
- * Renders a page: its icon and name header above the page's
- * layout.
+ * Renders a page's layout in a panel with an edit mode toggle
+ * button.
  */
 export const PageView: React.FC<PageViewProps> = ({ pageId }) => {
   const page = Pages.use(pageId);
@@ -65,30 +57,28 @@ export const PageView: React.FC<PageViewProps> = ({ pageId }) => {
 
   return (
     <div className="page-view">
-      {/* Page icon and name */}
-      <Group className="page-view-header" gap={2} align="center">
-        <ContentIcon icon={page.icon} />
-        <Heading noMargin>{page.name}</Heading>
-        <Spacer />
+      <Panel className="page-view-panel">
+        {/* Edit mode toggle */}
         <IconButton
-          icon="pencil"
+          icon="palette"
           label="pages.view.actions.edit"
           tooltip={{ title: 'pages.view.actions.edit' }}
           color="muted"
+          className="page-view-edit-button"
           onClick={handleEdit}
         />
-      </Group>
-      {/* The page's layout */}
-      <ScrollArea className="page-view-content">
-        <LayoutRenderer
-          layout={page.layout}
-          context="page"
-          propertyMap={{}}
-          propertyValues={{}}
-          properties={[]}
-          onUpdateElementContent={handleUpdateElementContent}
-        />
-      </ScrollArea>
+        {/* The page's layout */}
+        <ScrollArea className="page-view-content">
+          <LayoutRenderer
+            layout={page.layout}
+            context="page"
+            propertyMap={{}}
+            propertyValues={{}}
+            properties={[]}
+            onUpdateElementContent={handleUpdateElementContent}
+          />
+        </ScrollArea>
+      </Panel>
     </div>
   );
 };

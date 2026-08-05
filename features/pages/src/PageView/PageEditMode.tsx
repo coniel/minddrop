@@ -128,9 +128,11 @@ export const PageEditMode: React.FC<PageEditModeProps> = ({ page }) => {
         />
       </Panel>
       {/* The page's editable layout */}
-      <ScrollArea className="page-edit-mode-surface">
-        <LayoutEditSurface layoutId={page.layout.id} />
-      </ScrollArea>
+      <Panel className="page-edit-mode-surface">
+        <ScrollArea>
+          <LayoutEditSurface layoutId={page.layout.id} />
+        </ScrollArea>
+      </Panel>
       <Panel className="page-edit-mode-right-panel">
         {selectedElementId && <ElementStyleEditor />}
       </Panel>

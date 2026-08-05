@@ -16,11 +16,11 @@ describe('<PageView />', () => {
 
   afterEach(cleanup);
 
-  it('renders the page header', () => {
+  it('renders the edit mode toggle', () => {
     render(<PageView pageId={page_1.id} />);
 
-    // The page name is displayed
-    screen.getByText(page_1.name);
+    // The edit mode toggle button is displayed
+    screen.getByLabelText('pages.view.actions.edit');
   });
 
   it('renders the not found state for missing pages', () => {
