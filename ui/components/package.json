@@ -23,6 +23,7 @@
     "@minddrop/databases": "workspace:*",
     "@minddrop/designs": "workspace:*",
     "@minddrop/i18n": "workspace:*",
+    "@minddrop/ui-icons": "workspace:*",
     "@minddrop/ui-primitives": "workspace:*",
     "@minddrop/utils": "workspace:*"
   }
