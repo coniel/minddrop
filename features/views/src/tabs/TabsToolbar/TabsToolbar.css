@@ -27,6 +27,7 @@
   /* Lighter background for inactive tabs; the primitive's more
      specific hover/active rules take over for those states */
   background-color: var(--neutral-200);
+  border-radius: var(--radius-lg);
 }
 
 .view-tab[data-active] {
