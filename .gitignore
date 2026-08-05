@@ -18,6 +18,9 @@ artifacts
 *.pem
 CLAUDE.md
 
+# agent session worktrees
+.claude/worktrees/
+
 # debug
 npm-debug.log*
 yarn-debug.log*
