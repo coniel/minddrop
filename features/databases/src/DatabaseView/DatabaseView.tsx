@@ -3,6 +3,7 @@ import { DataViewTypes, DataViews } from '@minddrop/data-views';
 import { DatabaseEntries, Databases } from '@minddrop/databases';
 import { DataViewRenderer } from '@minddrop/feature-data-views';
 import { useTranslation } from '@minddrop/i18n';
+import { PanelView } from '@minddrop/ui-components';
 import { SortableList } from '@minddrop/ui-drag-and-drop';
 import {
   ContentIcon,
@@ -17,19 +18,16 @@ import {
   DropdownMenuPositioner,
   DropdownMenuRoot,
   DropdownMenuTrigger,
-  Heading,
   Icon,
   IconButton,
   MenuGroup,
   MenuRenameItem,
   MenuSeparator,
-  Panel,
   Stack,
   Tabs,
   TabsList,
   TabsTab,
   Text,
-  Toolbar,
 } from '@minddrop/ui-primitives';
 import { uuid } from '@minddrop/utils';
 import { DatabaseConfigurationPanel } from '../DatabaseConfigurationPanel';
@@ -281,51 +279,31 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
     );
   }
 
-  function handleDrop(event: React.DragEvent<HTMLDivElement>) {
-    Databases.handleDrop(databaseId, event);
-  }
-
-  const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    event.stopPropagation();
-  };
-
   if (!database) {
     return <div className="database-view">Database not found.</div>;
   }
 
   return (
     <div className="database-view">
-      <Panel
+      <PanelView
         className="database"
-        onDrop={handleDrop}
-        onDragOver={handleDragOver}
+        stringTitle={database.name}
+        contentIcon={database.icon}
+        actions={[
+          {
+            icon: 'plus',
+            label: 'databases.actions.newEntry',
+            onClick: handleClickNewEntry,
+          },
+          {
+            icon: configurationPanelOpen
+              ? 'panel-right-close'
+              : 'panel-right-open',
+            label: 'databases.actions.configuration',
+            onClick: toggleConfigurationPanel,
+          },
+        ]}
       >
-        <div className="header">
-          <div className="title">
-            <ContentIcon icon={database.icon} />
-            <Text>{database.name}</Text>
-          </div>
-          <Toolbar>
-            <IconButton
-              icon="plus"
-              label="databases.actions.newEntry"
-              color="neutral"
-              onClick={handleClickNewEntry}
-            />
-            <IconButton
-              icon={
-                configurationPanelOpen
-                  ? 'panel-right-close'
-                  : 'panel-right-open'
-              }
-              label="databases.actions.configuration"
-              color="neutral"
-              onClick={toggleConfigurationPanel}
-            />
-          </Toolbar>
-        </div>
-
         {/* View switcher bar - hidden when the database has no entries or
             the views toolbar is disabled in settings */}
         {!isEmpty && !database.hideViewsToolbar && (
@@ -576,7 +554,7 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
         {!isEmpty && view && (
           <DataViewRenderer key={view.id} view={view} entries={entryIds} />
         )}
-      </Panel>
+      </PanelView>
       {configurationPanelOpen && (
         <DatabaseConfigurationPanel databaseId={databaseId} />
       )}
