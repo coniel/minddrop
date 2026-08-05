@@ -28,10 +28,16 @@
     .breadcrumb-button {
       color: var(--text-muted);
 
-      /* Match the title's text style and icon gap */
+      /* Match the title's text style and icon gap so the content
+         does not shift when the title becomes a breadcrumb */
       font-size: var(--text-base);
       font-weight: var(--weight-normal);
+      line-height: var(--leading-snug);
       gap: var(--space-2);
+
+      /* Offset the button's 1px border so the icon lines up with
+         the plain title's icon */
+      padding: 0 calc(var(--space-2) - 1px);
 
       .breadcrumb-icon {
         width: 1rem;
