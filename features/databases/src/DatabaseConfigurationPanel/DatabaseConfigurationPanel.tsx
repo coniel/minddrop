@@ -38,7 +38,7 @@ type DraftProperty = Omit<PropertySchema, 'name'> & {
 
 /**
  * Renders the database configuration panel with tabbed
- * Properties, Designs, and Settings sections.
+ * Properties, Designs, Templates, and Settings sections.
  */
 export const DatabaseConfigurationPanel: React.FC<
   DatabaseConfigurationPanelProps
@@ -105,11 +105,8 @@ export const DatabaseConfigurationPanel: React.FC<
             <TabsTab value="designs" size="sm">
               {i18n.t('labels.design')}
             </TabsTab>
-            <TabsTab value="collections" size="sm">
-              {i18n.t('labels.collections')}
-            </TabsTab>
-            <TabsTab value="queries" size="sm">
-              {i18n.t('labels.queries')}
+            <TabsTab value="templates" size="sm">
+              {i18n.t('labels.templates')}
             </TabsTab>
           </TabsList>
           <Spacer />
@@ -141,15 +138,9 @@ export const DatabaseConfigurationPanel: React.FC<
           </ScrollArea>
         ) : (
           <>
-            <TabsPanel value="queries">
+            <TabsPanel value="templates">
               <ScrollArea>
-                <div className="database-configuration-panel-queries-content" />
-              </ScrollArea>
-            </TabsPanel>
-
-            <TabsPanel value="collections">
-              <ScrollArea>
-                <div className="database-configuration-panel-collections-content" />
+                <div className="database-configuration-panel-templates-content" />
               </ScrollArea>
             </TabsPanel>
 

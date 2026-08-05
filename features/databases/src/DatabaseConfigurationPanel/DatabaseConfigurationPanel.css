@@ -30,11 +30,7 @@
     padding: var(--space-2) 0;
   }
 
-  .database-configuration-panel-queries-content {
-    padding: var(--space-2) 0;
-  }
-
-  .database-configuration-panel-collections-content {
+  .database-configuration-panel-templates-content {
     padding: var(--space-2) 0;
   }
 

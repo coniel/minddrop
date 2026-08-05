@@ -1,10 +1,9 @@
 import { createObjectStore } from '@minddrop/stores';
 
 export type ConfigPanelTab =
-  | 'queries'
-  | 'collections'
   | 'properties'
   | 'designs'
+  | 'templates'
   | 'settings';
 
 export interface DatabaseViewState {
