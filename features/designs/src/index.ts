@@ -5,6 +5,7 @@ export * from './DesignElements';
 export * from './LayoutRenderer';
 export * from './LayoutEditSurface';
 export * from './LayoutEditorLeftPanel';
+export * from './ViewsPanel';
 export * from './ElementStyleEditor';
 export * from './LayoutRegionSizesStore';
 export * from './DesignsFeature';

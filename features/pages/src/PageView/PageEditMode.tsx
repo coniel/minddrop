@@ -79,8 +79,10 @@ export const PageEditMode: React.FC<PageEditModeProps> = ({ page }) => {
       // The global selection shortcut prevents the default for
       // delete keys, so deletion must not respect defaultPrevented
       if (event.key === 'Delete' || event.key === 'Backspace') {
+        const { highlightedElementId } = DesignStudioStore.getState();
+
         // Nothing highlighted to delete
-        if (!DesignStudioStore.getState().highlightedElementId) {
+        if (!highlightedElementId) {
           return;
         }
 

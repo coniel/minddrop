@@ -3,8 +3,12 @@ import { Collections } from '@minddrop/collections';
 import { ViewElement, createViewCssStyle } from '@minddrop/designs';
 import { DataViewRenderer } from '@minddrop/feature-views';
 import { Icon, Text } from '@minddrop/ui-primitives';
-import { DataViewTypes, DataViews } from '@minddrop/views';
-import { useElementProperty } from '../../DesignPropertiesProvider';
+import { DataView, DataViewTypes, DataViews } from '@minddrop/views';
+import {
+  useDesignProperties,
+  useElementProperty,
+} from '../../DesignPropertiesProvider';
+import { getDesignElement, updateDesignElement } from '../../DesignStudioStore';
 import './ViewDesignElement.css';
 
 export interface ViewDesignElementProps {
@@ -20,21 +24,25 @@ export interface ViewDesignElementProps {
 }
 
 /**
- * Renders a view design element. When a property is mapped,
- * the property value is a view ID. The view is looked up
- * from the store and rendered using its view type component.
+ * Renders a view design element. The referenced view ID comes
+ * from the element's static content, or from its mapped property
+ * value. Static elements without a view render a view creation
+ * form; a dangling reference renders a missing view notice.
  */
 export const ViewDesignElement: React.FC<ViewDesignElementProps> = ({
   element,
   rootProps,
 }) => {
   const property = useElementProperty(element.id);
+  const context = useDesignProperties();
 
-  // The property value is the ID of the view to render
-  const viewId =
+  // The referenced view ID: static content, or the mapped
+  // property's value
+  const propertyViewId =
     property?.value && typeof property.value === 'string'
       ? property.value
       : undefined;
+  const viewId = element.static ? element.content : propertyViewId;
 
   // Look up the view from the store
   const view = DataViews.use(viewId ?? '');
@@ -57,9 +65,19 @@ export const ViewDesignElement: React.FC<ViewDesignElementProps> = ({
     ...rootStyle,
   };
 
-  // Show skeleton when no property is mapped (e.g. in the
-  // design studio or property mapping preview)
-  if (!property) {
+  // Write the created view onto the element's static content,
+  // through the layout editor session when it owns the element
+  function handleCreateView(createdView: DataView) {
+    if (getDesignElement(element.id)) {
+      updateDesignElement(element.id, { content: createdView.id });
+    } else {
+      context?.onUpdateElementContent?.(element.id, createdView.id);
+    }
+  }
+
+  // Show skeleton for unmapped property bound elements (e.g. in
+  // the design studio or property mapping preview)
+  if (!element.static && !property) {
     return (
       <div {...rootProps} className="design-view-element" style={mergedStyle}>
         {viewType ? (
@@ -78,16 +96,18 @@ export const ViewDesignElement: React.FC<ViewDesignElementProps> = ({
     );
   }
 
-  // Render the view using DataViewRenderer with header
+  // Render the view, the creation form, or the missing view
+  // notice as appropriate
   return (
     <div {...rootProps} className="design-view-element" style={mergedStyle}>
-      {view && (
-        <DataViewRenderer
-          showHeader
-          view={view}
-          entries={collection?.entries ?? []}
-        />
-      )}
+      <DataViewRenderer
+        showHeader
+        view={view ?? undefined}
+        viewDeleted={Boolean(viewId && !view)}
+        createViewType={element.viewType}
+        onCreateView={handleCreateView}
+        entries={collection?.entries ?? []}
+      />
     </div>
   );
 };

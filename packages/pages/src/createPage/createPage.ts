@@ -1,7 +1,6 @@
 import { DefaultPageLayout, Layout } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
 import { i18n } from '@minddrop/i18n';
-import { PropertyMap } from '@minddrop/properties';
 import { entityId } from '@minddrop/utils';
 import { PagesStore } from '../PagesStore';
 import { DefaultPageIcon } from '../constants';
@@ -25,12 +24,6 @@ export interface CreatePageOptions {
    * default page layout.
    */
   layout?: Layout;
-
-  /**
-   * Initial values for the design properties bound in the layout,
-   * keyed by property name.
-   */
-  properties?: PropertyMap;
 }
 
 /**
@@ -70,7 +63,6 @@ export async function createPage(
     name: options.name || i18n.t('labels.untitled'),
     icon: options.icon || DefaultPageIcon,
     layout,
-    properties: options.properties || {},
   };
 
   // Add the page to the store

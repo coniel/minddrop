@@ -4,6 +4,7 @@ import { initializeMockFileSystem } from '@minddrop/file-system';
 import { initializeI18n } from '@minddrop/i18n';
 import { Pages } from '@minddrop/pages';
 import { cleanup as cleanupRender } from '@minddrop/test-utils';
+import { DataViews } from '@minddrop/views';
 
 initializeI18n();
 
@@ -23,4 +24,5 @@ export function cleanup() {
   MockFs.reset();
   Events._clearAll();
   Pages.Store.clear();
+  DataViews.Store.clear();
 }

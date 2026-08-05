@@ -12,6 +12,11 @@ export interface ViewElement extends DesignElementBase {
   viewType: string;
 
   /**
+   * The ID of the referenced data view when the element is static.
+   */
+  content?: string;
+
+  /**
    * The element style.
    */
   style: ViewElementStyle;

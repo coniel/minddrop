@@ -1,0 +1,12 @@
+.views-panel {
+  height: 100%;
+  padding: var(--space-2);
+
+  .menu-group {
+    row-gap: var(--space-1);
+  }
+
+  .menu-group + .menu-group {
+    margin-top: var(--space-4);
+  }
+}

@@ -1,4 +1,9 @@
-import { DefaultContainerElementStyle, Layout } from '@minddrop/designs';
+import {
+  DefaultContainerElementStyle,
+  DefaultViewElementStyle,
+  Layout,
+  ViewElement,
+} from '@minddrop/designs';
 
 function generatePageLayoutFixture(number: number): Layout {
   return {
@@ -22,3 +27,24 @@ export const pageLayout_2 = generatePageLayoutFixture(2);
 export const pageLayout_3 = generatePageLayoutFixture(3);
 
 export const pageLayouts = [pageLayout_1, pageLayout_2, pageLayout_3];
+
+// A static view element without a configured view
+export const pageViewElement: ViewElement = {
+  id: 'view-element-1',
+  type: 'view',
+  viewType: 'table',
+  static: true,
+  style: { ...DefaultViewElementStyle },
+};
+
+// A page layout containing the static view element
+export const viewPageLayout: Layout = {
+  ...generatePageLayoutFixture(4),
+  id: 'layout_page-view',
+  tree: {
+    id: 'root',
+    type: 'root',
+    style: { ...DefaultContainerElementStyle },
+    children: [pageViewElement],
+  },
+};

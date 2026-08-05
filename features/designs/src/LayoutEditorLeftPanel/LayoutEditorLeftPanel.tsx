@@ -11,9 +11,10 @@ import {
 } from '@minddrop/ui-primitives';
 import { ElementsPalette } from '../ElementsPalette/ElementsPalette';
 import { ElementsTree } from '../ElementsTree';
+import { ViewsPanel } from '../ViewsPanel';
 import './LayoutEditorLeftPanel.css';
 
-type ActivePanel = 'layout' | 'elements';
+type ActivePanel = 'layout' | 'elements' | 'views';
 
 export interface LayoutEditorLeftPanelProps {
   /**
@@ -43,7 +44,7 @@ export interface LayoutEditorLeftPanelProps {
 
 /**
  * Renders the layout editor's side panel: a layout element tree
- * tab and an elements palette tab.
+ * tab, an elements palette tab, and a views tab.
  */
 export const LayoutEditorLeftPanel: React.FC<LayoutEditorLeftPanelProps> = ({
   backButtonLabel = 'actions.back',
@@ -77,6 +78,9 @@ export const LayoutEditorLeftPanel: React.FC<LayoutEditorLeftPanelProps> = ({
           <TabsTab value="elements" size="sm">
             {i18n.t('design-studio.labels.elements')}
           </TabsTab>
+          <TabsTab value="views" size="sm">
+            {i18n.t('design-studio.labels.views')}
+          </TabsTab>
         </TabsList>
         <Spacer />
         {/* Balance the back button so the tabs stay centred */}
@@ -89,6 +93,10 @@ export const LayoutEditorLeftPanel: React.FC<LayoutEditorLeftPanelProps> = ({
 
       <TabsPanel value="elements">
         <ElementsPalette elementTypes={elementTypes} showViews={showViews} />
+      </TabsPanel>
+
+      <TabsPanel value="views">
+        <ViewsPanel />
       </TabsPanel>
     </Tabs>
   );

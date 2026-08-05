@@ -19,7 +19,6 @@ function generatePageFixture(number: number, layout: Layout): Page {
     created: new Date('2024-01-01T00:00:00.000Z'),
     lastModified: new Date('2024-01-01T00:00:00.000Z'),
     layout,
-    properties: {},
   };
 }
 

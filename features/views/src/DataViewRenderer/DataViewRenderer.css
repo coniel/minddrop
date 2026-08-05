@@ -3,6 +3,25 @@
   flex-direction: column;
   height: 100%;
 
+  &.data-view-renderer-empty {
+    flex: 1;
+    align-items: center;
+    padding: var(--space-5);
+
+    /* Bias the vertical centering upward with flexible spacers
+       that collapse to zero when space runs out, so the content
+       never overflows small containers */
+    &::before {
+      content: '';
+      flex: 2;
+    }
+
+    &::after {
+      content: '';
+      flex: 3;
+    }
+  }
+
   .data-view-renderer-header {
     display: flex;
     align-items: center;

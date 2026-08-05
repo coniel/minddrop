@@ -35,6 +35,11 @@ interface DesignPropertiesProviderData {
     name: string,
     value: PropertyValue,
   ) => string | undefined;
+
+  /**
+   * Callback to update an element's static content.
+   */
+  onUpdateElementContent?: (elementId: string, content: string) => void;
 }
 
 export interface DesignPropertiesProviderProps
@@ -61,6 +66,7 @@ export const DesignPropertiesProvider = ({
   propertyMap,
   onUpdatePropertyValue,
   onValidatePropertyValue,
+  onUpdateElementContent,
   children,
 }: DesignPropertiesProviderProps) => {
   return (
@@ -71,6 +77,7 @@ export const DesignPropertiesProvider = ({
         propertyMap,
         onUpdatePropertyValue,
         onValidatePropertyValue,
+        onUpdateElementContent,
       }}
     >
       {children}

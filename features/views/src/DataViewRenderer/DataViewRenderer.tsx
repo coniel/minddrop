@@ -10,16 +10,43 @@ import {
   DropdownMenuTrigger,
   Heading,
   IconButton,
+  Text,
   Toolbar,
 } from '@minddrop/ui-primitives';
-import {
-  DataViewTypeComponentProps,
-  DataViewTypes,
-  DataViews,
-} from '@minddrop/views';
+import { DataView, DataViewTypes, DataViews } from '@minddrop/views';
+import { CreateDataViewForm } from './CreateDataViewForm';
 import './DataViewRenderer.css';
 
-export interface DataViewRendererProps extends DataViewTypeComponentProps {
+export interface DataViewRendererProps {
+  /**
+   * The data view to render. When omitted, a view creation form
+   * is rendered instead.
+   */
+  view?: DataView;
+
+  /**
+   * Whether the referenced view no longer exists. Renders a
+   * missing view notice instead of the creation form.
+   */
+  viewDeleted?: boolean;
+
+  /**
+   * The type of view created by the creation form. Required to
+   * render the form when no view is provided.
+   */
+  createViewType?: string;
+
+  /**
+   * Called with the newly created view after the creation form
+   * is submitted.
+   */
+  onCreateView?: (view: DataView) => void;
+
+  /**
+   * IDs of the elements to render within the data view.
+   */
+  entries?: string[];
+
   /**
    * Whether to show the header above the view content.
    * Displays the view's name and icon, along with settings
@@ -29,9 +56,69 @@ export interface DataViewRendererProps extends DataViewTypeComponentProps {
 }
 
 /**
- * Renders a view type component with an optional header.
+ * Renders a data view with an optional header. Without a view it
+ * renders a view creation form, or a missing view notice when the
+ * referenced view no longer exists.
  */
 export const DataViewRenderer: React.FC<DataViewRendererProps> = ({
+  view,
+  viewDeleted,
+  createViewType,
+  onCreateView,
+  entries,
+  showHeader,
+}) => {
+  // The referenced view no longer exists
+  if (viewDeleted) {
+    return (
+      <div className="data-view-renderer data-view-renderer-empty">
+        <Text size="sm" color="muted" text="views.missing.message" />
+      </div>
+    );
+  }
+
+  // No view yet: render the creation form
+  if (!view) {
+    if (!createViewType) {
+      return null;
+    }
+
+    return (
+      <div className="data-view-renderer data-view-renderer-empty">
+        <CreateDataViewForm
+          viewType={createViewType}
+          onCreateView={onCreateView}
+        />
+      </div>
+    );
+  }
+
+  return (
+    <ConfiguredView view={view} entries={entries} showHeader={showHeader} />
+  );
+};
+
+interface ConfiguredViewProps {
+  /**
+   * The data view to render.
+   */
+  view: DataView;
+
+  /**
+   * IDs of the elements to render within the data view.
+   */
+  entries?: string[];
+
+  /**
+   * Whether to show the header above the view content.
+   */
+  showHeader?: boolean;
+}
+
+/**
+ * Renders the data view's type component with an optional header.
+ */
+const ConfiguredView: React.FC<ConfiguredViewProps> = ({
   view,
   entries,
   showHeader,

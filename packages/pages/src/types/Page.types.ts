@@ -1,5 +1,4 @@
 import { Layout } from '@minddrop/designs';
-import { PropertyMap } from '@minddrop/properties';
 import { EntityId } from '@minddrop/utils';
 
 export type PageId = EntityId<'page'>;
@@ -30,17 +29,6 @@ export interface Page {
   layout: Layout;
 
   /**
-   * Values for the design properties bound in the layout, keyed by
-   * property name.
-   *
-   * Most elements hold static values instead of binding to properties;
-   * properties exist for elements whose values cannot be static, such
-   * as collection based elements (a collection can be deleted, so it
-   * is a reference rather than a static value).
-   */
-  properties: PropertyMap;
-
-  /**
    * The date the page was created.
    */
   created: Date;
@@ -51,6 +39,4 @@ export interface Page {
   lastModified: Date;
 }
 
-export type UpdatePageData = Partial<
-  Pick<Page, 'name' | 'icon' | 'layout' | 'properties'>
->;
+export type UpdatePageData = Partial<Pick<Page, 'name' | 'icon' | 'layout'>>;

@@ -1359,7 +1359,8 @@
       "elements": "Elements",
       "layout": "Layout",
       "layouts": "Layouts",
-      "properties": "Properties"
+      "properties": "Properties",
+      "views": "Views"
     },
     "dashboard": {
       "empty": "No designs yet",
@@ -1394,6 +1395,15 @@
     },
     "mappable": {
       "tooltip": "Can be mapped to"
+    },
+    "views": {
+      "new": "New view",
+      "existing": "Existing views",
+      "search": {
+        "placeholder": "Search views..."
+      },
+      "empty": "No views yet. Drop a view type onto the page to create one.",
+      "noMatches": "No views match your search."
     }
   },
   "toast": {

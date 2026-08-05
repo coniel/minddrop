@@ -1372,6 +1372,7 @@ declare module 'i18next' {
             layout: string;
             layouts: string;
             properties: string;
+            views: string;
           };
           dashboard: {
             empty: string;
@@ -1406,6 +1407,15 @@ declare module 'i18next' {
           };
           mappable: {
             tooltip: string;
+          };
+          views: {
+            new: string;
+            existing: string;
+            search: {
+              placeholder: string;
+            };
+            empty: string;
+            noMatches: string;
           };
         };
         toast: {
@@ -1468,6 +1478,22 @@ declare module 'i18next' {
             columnMenu: string;
             showChips: string;
             hideColumn: string;
+          };
+          missing: {
+            message: string;
+          };
+          form: {
+            name: {
+              label: string;
+              placeholder: string;
+            };
+            source: {
+              label: string;
+              placeholder: string;
+            };
+            actions: {
+              create: string;
+            };
           };
         };
         pages: {

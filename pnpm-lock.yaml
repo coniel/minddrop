@@ -718,6 +718,9 @@ importers:
       '@minddrop/ui-drag-and-drop':
         specifier: workspace:*
         version: link:../../ui/drag-and-drop
+      '@minddrop/ui-icons':
+        specifier: workspace:*
+        version: link:../../ui/icons
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives

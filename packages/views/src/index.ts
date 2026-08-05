@@ -7,6 +7,7 @@ export * from './serializeDataViewConfig';
 export * from './resolveDataViewConfig';
 export * from './extractDataViewReferences';
 export * from './removeDataViewReferences';
+export * from './utils';
 export * from './test-utils/setup-fixtures';
 export * as Views from './Views';
 export * as DataViews from './DataViews';

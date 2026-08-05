@@ -21,7 +21,6 @@ const newPage = {
     created: mockDate,
     lastModified: mockDate,
   },
-  properties: {},
 };
 
 describe('createPage', () => {
@@ -57,15 +56,6 @@ describe('createPage', () => {
       lastModified: mockDate,
     });
     expect(page.layout.id).not.toBe(pageLayout_1.id);
-  });
-
-  it('uses the provided initial properties', async () => {
-    const page = await createPage({
-      layout: pageLayout_1,
-      properties: { collection: 'collection_1' },
-    });
-
-    expect(page.properties).toEqual({ collection: 'collection_1' });
   });
 
   it('adds the page to the store', async () => {

@@ -14,6 +14,7 @@ export interface LayoutRendererProps
     DesignPropertiesProviderProps,
     | 'onUpdatePropertyValue'
     | 'onValidatePropertyValue'
+    | 'onUpdateElementContent'
     | 'properties'
     | 'propertyValues'
     | 'propertyMap'
@@ -51,6 +52,7 @@ export const LayoutRenderer: React.FC<LayoutRendererProps> = ({
   propertyMap = {},
   onUpdatePropertyValue,
   onValidatePropertyValue,
+  onUpdateElementContent,
 }) => {
   return (
     <DesignPropertySchemasProvider properties={designProperties}>
@@ -60,6 +62,7 @@ export const LayoutRenderer: React.FC<LayoutRendererProps> = ({
         propertyMap={propertyMap}
         onUpdatePropertyValue={onUpdatePropertyValue}
         onValidatePropertyValue={onValidatePropertyValue}
+        onUpdateElementContent={onUpdateElementContent}
       >
         <LayoutIdProvider value={layout.id}>
           <LayoutRenderContextProvider value={context ?? null}>
