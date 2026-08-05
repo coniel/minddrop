@@ -1973,6 +1973,9 @@ importers:
 
   ui/components:
     dependencies:
+      '@minddrop/data-views':
+        specifier: workspace:*
+        version: link:../../packages/data-views
       '@minddrop/databases':
         specifier: workspace:*
         version: link:../../packages/databases

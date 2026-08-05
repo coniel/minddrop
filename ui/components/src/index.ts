@@ -1,3 +1,4 @@
+export * from './AddDataViewMenu';
 export * from './CreateDatabaseEntryButton';
 export * from './DatabaseEntriesSearchField';
 export * from './DatabaseLayoutSelectionMenu';

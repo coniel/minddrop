@@ -99,8 +99,7 @@ declare module 'i18next' {
           properties: string;
           design: string;
           settings: string;
-          queries: string;
-          collections: string;
+          templates: string;
           views: string;
         };
         properties: {
@@ -220,7 +219,6 @@ declare module 'i18next' {
           actions: {
             new: string;
             addProperty: string;
-            addView: string;
             viewSettings: string;
             newEntry: string;
             configuration: string;
@@ -1426,6 +1424,7 @@ declare module 'i18next' {
         };
         dataViews: {
           actions: {
+            add: string;
             settings: string;
           };
           labels: {

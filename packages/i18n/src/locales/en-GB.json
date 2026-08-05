@@ -206,7 +206,6 @@
     "actions": {
       "new": "New",
       "addProperty": "Add property",
-      "addView": "Add view",
       "viewSettings": "View settings",
       "newEntry": "New entry",
       "configuration": "Configuration"
@@ -1411,6 +1410,7 @@
   },
   "dataViews": {
     "actions": {
+      "add": "Add view",
       "settings": "View settings"
     },
     "labels": {
