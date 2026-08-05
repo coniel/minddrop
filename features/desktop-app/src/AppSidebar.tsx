@@ -1,5 +1,6 @@
 import { useLayoutEffect } from 'react';
 import { Events, SetNavToolbarWidthEvent } from '@minddrop/events';
+import { CollectionsMenuItem } from '@minddrop/feature-collections';
 import { DataViewsMenuItem } from '@minddrop/feature-data-views';
 import { DatabasesSidebarMenu } from '@minddrop/feature-databases';
 import { OpenDesignStudioEvent } from '@minddrop/feature-designs';
@@ -63,7 +64,7 @@ export const AppSidebar: React.FC<SidebarProps> = ({ ...other }) => {
       <MenuGroup>
         <SpacesMenuItem />
         <DataViewsMenuItem />
-        <MenuItem muted icon="library" label="labels.collections" />
+        <CollectionsMenuItem />
         <MenuItem muted icon="list-filter" label="labels.queries" />
       </MenuGroup>
       <DatabasesSidebarMenu />

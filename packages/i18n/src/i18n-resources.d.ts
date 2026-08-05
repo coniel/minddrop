@@ -9,6 +9,7 @@ declare module 'i18next' {
         collections: {
           labels: {
             collection: string;
+            collections: string;
           };
         };
         test: string;

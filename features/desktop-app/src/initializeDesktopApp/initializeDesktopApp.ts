@@ -6,6 +6,7 @@ import { Designs } from '@minddrop/designs';
 import { EditorElements, EditorMarks } from '@minddrop/editor';
 import { Events } from '@minddrop/events';
 import { initializeExtensions } from '@minddrop/extensions';
+import { initializeCollectionsFeature } from '@minddrop/feature-collections';
 import { initializeDataViewsFeature } from '@minddrop/feature-data-views';
 import { DatabaseViewStateStore } from '@minddrop/feature-databases';
 import { LayoutRegionSizesStore } from '@minddrop/feature-designs';
@@ -85,6 +86,7 @@ async function runInitialization(): Promise<void> {
   initializeDataViewTypes();
   registerViews();
   initializeViewsFeature();
+  initializeCollectionsFeature();
   initializeDataViewsFeature();
 
   // Initialize workspaces (sets Paths.workspace and

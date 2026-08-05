@@ -413,6 +413,43 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
+  features/collections:
+    dependencies:
+      '@minddrop/collections':
+        specifier: workspace:*
+        version: link:../../packages/collections
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../../packages/events
+      '@minddrop/file-system':
+        specifier: workspace:*
+        version: link:../../packages/file-system
+      '@minddrop/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
+      '@minddrop/ui-components':
+        specifier: workspace:*
+        version: link:../../ui/components
+      '@minddrop/ui-primitives':
+        specifier: workspace:*
+        version: link:../../ui/primitives
+      '@minddrop/views':
+        specifier: workspace:*
+        version: link:../../packages/views
+    devDependencies:
+      '@minddrop/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      eslint:
+        specifier: ^9.39.3
+        version: 9.39.3
+      tsconfig:
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
   features/data-views:
     dependencies:
       '@minddrop/collections':
@@ -652,6 +689,9 @@ importers:
       '@minddrop/extensions':
         specifier: workspace:*
         version: link:../../packages/extensions
+      '@minddrop/feature-collections':
+        specifier: workspace:*
+        version: link:../collections
       '@minddrop/feature-data-views':
         specifier: workspace:*
         version: link:../data-views

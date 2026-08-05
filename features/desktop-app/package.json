@@ -32,6 +32,7 @@
     "@minddrop/events": "workspace:*",
     "@minddrop/extensions": "workspace:*",
     "@minddrop/designs": "workspace:*",
+    "@minddrop/feature-collections": "workspace:*",
     "@minddrop/feature-data-views": "workspace:*",
     "@minddrop/feature-databases": "workspace:*",
     "@minddrop/feature-designs": "workspace:*",
