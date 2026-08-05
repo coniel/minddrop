@@ -6,7 +6,10 @@ import { IconProp, IconRenderer } from '../IconRenderer';
 import { ComboboxChip } from './ComboboxChip';
 import { ComboboxChipRemove } from './ComboboxChipRemove';
 import { ComboboxChips } from './ComboboxChips';
+import { ComboboxCollection } from './ComboboxCollection';
 import { ComboboxEmpty } from './ComboboxEmpty';
+import { ComboboxGroup } from './ComboboxGroup';
+import { ComboboxGroupLabel } from './ComboboxGroupLabel';
 import { ComboboxInput } from './ComboboxInput';
 import { ComboboxItem } from './ComboboxItem';
 import { ComboboxList } from './ComboboxList';
@@ -33,9 +36,11 @@ import './Combobox.css';
    Convenience wrapper that composes Root + Trigger + Portal +
    Positioner + Popup + Input + List into a single component.
    Accepts items as data and renders chips for selected values.
+   Items can optionally be grouped under labelled headings via
+   the `groups` prop.
 
-   Automatically uses virtualized rendering when the item count
-   exceeds VIRTUALIZE_THRESHOLD. */
+   Automatically uses virtualized rendering when a flat item
+   count exceeds VIRTUALIZE_THRESHOLD. */
 
 /** Item count above which the list is automatically virtualized */
 const VIRTUALIZE_THRESHOLD = 50;
@@ -63,12 +68,42 @@ export interface ComboboxOption {
   contentIcon?: string;
 }
 
+export interface ComboboxOptionGroup {
+  /**
+   * Unique value for the group.
+   */
+  value: string;
+
+  /**
+   * i18n key for the group heading. No heading is rendered when
+   * neither `label` nor `stringLabel` is provided.
+   */
+  label?: TranslationKey;
+
+  /**
+   * Plain string heading rendered without i18n translation.
+   * Takes priority over `label`.
+   */
+  stringLabel?: string;
+
+  /**
+   * The group's selectable items.
+   */
+  items: ComboboxOption[];
+}
+
 export interface ComboboxProps
   extends Omit<ComboboxRootProps, 'items' | 'children' | 'multiple'> {
   /**
-   * List of selectable items.
+   * List of selectable items. Ignored when `groups` is provided.
    */
-  items: ComboboxOption[];
+  items?: ComboboxOption[];
+
+  /**
+   * List of item groups rendered with group headings. Takes
+   * priority over `items`. Grouped lists are never virtualized.
+   */
+  groups?: ComboboxOptionGroup[];
 
   /**
    * Whether multiple items can be selected.
@@ -77,10 +112,24 @@ export interface ComboboxProps
   multiple?: boolean;
 
   /**
+   * The initially selected item. Only applies to single-select
+   * mode.
+   */
+  defaultValue?: ComboboxOption;
+
+  /**
    * Visual style of the trigger.
    * @default 'outline'
    */
   variant?: ComboboxTriggerVariant;
+
+  /**
+   * How the selected value is displayed in the trigger. `text`
+   * renders it as plain select-like text without a clear button.
+   * Only applies to single-select mode.
+   * @default 'chip'
+   */
+  valueVariant?: 'chip' | 'text';
 
   /**
    * Min-height of the trigger.
@@ -133,9 +182,12 @@ export interface ComboboxProps
 
 /** Pre-composed multi-select combobox with chips trigger and search popup. */
 export const Combobox: React.FC<ComboboxProps> = ({
-  items,
+  items = [],
+  groups,
   multiple = false,
+  defaultValue,
   variant = 'outline',
+  valueVariant = 'chip',
   size = 'lg',
   invalid,
   placeholder,
@@ -148,12 +200,15 @@ export const Combobox: React.FC<ComboboxProps> = ({
   onValueChange: onValueChangeProp,
   ...rootProps
 }) => {
-  const virtualized = items.length > VIRTUALIZE_THRESHOLD;
+  // Only flat item lists are virtualized
+  const virtualized = !groups && items.length > VIRTUALIZE_THRESHOLD;
   const virtualizerRef = useRef<VirtualizerInstance | null>(null);
   const [open, setOpen] = useState(false);
 
   /* Track single-select value so we can clear it via the X button */
-  const [singleValue, setSingleValue] = useState<ComboboxOption | null>(null);
+  const [singleValue, setSingleValue] = useState<ComboboxOption | null>(
+    defaultValue ?? null,
+  );
 
   /* Wrapper around consumer's onValueChange that also tracks internal state */
   const handleValueChange = useCallback(
@@ -230,10 +285,93 @@ export const Combobox: React.FC<ComboboxProps> = ({
     </ComboboxChips>
   );
 
-  /* Render selected value as a single chip for single mode */
+  /* Render the popup list in grouped, virtualized, or flat form */
+  const renderList = () => {
+    // Grouped items render as labelled groups
+    if (groups) {
+      return (
+        <ComboboxList>
+          {(group: ComboboxOptionGroup) => (
+            <ComboboxGroup key={group.value} items={group.items}>
+              {/* Only render a heading when the group has a label */}
+              {(group.label || group.stringLabel) && (
+                <ComboboxGroupLabel
+                  label={group.label}
+                  stringLabel={group.stringLabel}
+                />
+              )}
+              <ComboboxCollection>
+                {(item: ComboboxOption) => (
+                  <ComboboxItem
+                    key={item.value}
+                    value={item}
+                    label={item.label}
+                    icon={item.icon}
+                    contentIcon={item.contentIcon}
+                  />
+                )}
+              </ComboboxCollection>
+            </ComboboxGroup>
+          )}
+        </ComboboxList>
+      );
+    }
+
+    // Use virtualized rendering for large item lists
+    if (virtualized) {
+      return (
+        <ComboboxPrimitive.List className="combobox-list">
+          <ComboboxVirtualizedList
+            open={open}
+            virtualizerRef={virtualizerRef}
+          />
+        </ComboboxPrimitive.List>
+      );
+    }
+
+    return (
+      <ComboboxList>
+        {(item: ComboboxOption) => (
+          <ComboboxItem
+            key={item.value}
+            value={item}
+            label={item.label}
+            icon={item.icon}
+            contentIcon={item.contentIcon}
+          />
+        )}
+      </ComboboxList>
+    );
+  };
+
+  /* Render selected value as a chip or plain text for single mode */
   const renderSingleValue = (selectedValue: ComboboxOption | null) => {
     if (!selectedValue) {
       return null;
+    }
+
+    // Render the value as plain select-like text
+    if (valueVariant === 'text') {
+      return (
+        <span className="combobox-text-value">
+          {selectedValue.icon && (
+            <IconRenderer
+              icon={selectedValue.icon}
+              size={14}
+              className="combobox-text-value-icon"
+            />
+          )}
+          {selectedValue.contentIcon && (
+            <ContentIcon
+              icon={selectedValue.contentIcon}
+              className="combobox-text-value-icon"
+            />
+          )}
+          <span className="combobox-text-value-label">
+            {selectedValue.label}
+          </span>
+        </span>
+      );
     }
 
     return (
@@ -246,7 +384,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
 
   return (
     <ComboboxRoot
-      items={items}
+      items={groups ?? items}
       multiple={multiple}
       autoHighlight
       {...(!multiple && {
@@ -261,7 +399,14 @@ export const Combobox: React.FC<ComboboxProps> = ({
       })}
       {...rootProps}
     >
-      <ComboboxTrigger variant={variant} size={size} invalid={invalid}>
+      <ComboboxTrigger
+        variant={variant}
+        size={size}
+        invalid={invalid}
+        className={
+          valueVariant === 'text' ? 'combobox-trigger-value-text' : undefined
+        }
+      >
         <ComboboxValue
           placeholder={
             placeholder ? (
@@ -280,27 +425,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
           <ComboboxPopup style={popupWidth ? { width: popupWidth } : undefined}>
             <ComboboxInput placeholder={searchPlaceholder} />
 
-            {/* Use virtualized rendering for large item lists */}
-            {virtualized ? (
-              <ComboboxPrimitive.List className="combobox-list">
-                <ComboboxVirtualizedList
-                  open={open}
-                  virtualizerRef={virtualizerRef}
-                />
-              </ComboboxPrimitive.List>
-            ) : (
-              <ComboboxList>
-                {(item: ComboboxOption) => (
-                  <ComboboxItem
-                    key={item.value}
-                    value={item}
-                    label={item.label}
-                    icon={item.icon}
-                    contentIcon={item.contentIcon}
-                  />
-                )}
-              </ComboboxList>
-            )}
+            {renderList()}
 
             {emptyText && <ComboboxEmpty>{emptyText}</ComboboxEmpty>}
           </ComboboxPopup>

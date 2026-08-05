@@ -1,6 +1,6 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { Story, StoryItem, StoryRow, StorySection } from '../dev/Story';
-import { Combobox, ComboboxOption } from './Combobox';
+import { Combobox, ComboboxOption, ComboboxOptionGroup } from './Combobox';
 
 /* ============================================================
    SHARED DATA
@@ -44,6 +44,30 @@ const LONG_NAMES: ComboboxOption[] = [
     label: 'Home renovation project expenses',
     value: 'renovation',
     icon: 'receipt',
+  },
+];
+
+const GROUPED_ITEMS: ComboboxOptionGroup[] = [
+  {
+    value: 'new',
+    stringLabel: 'New',
+    items: [
+      { label: 'New collection', value: 'new-collection', icon: 'library' },
+      { label: 'New query', value: 'new-query', icon: 'list-filter' },
+    ],
+  },
+  {
+    value: 'collections',
+    stringLabel: 'Collections',
+    items: [
+      { label: 'Favourites', value: 'favourites', icon: 'library' },
+      { label: 'Inbox', value: 'inbox', icon: 'library' },
+    ],
+  },
+  {
+    value: 'databases',
+    stringLabel: 'Databases',
+    items: DATABASES.slice(0, 5),
   },
 ];
 
@@ -115,6 +139,38 @@ export const ComboboxStories = () => (
               items={DATABASES}
               multiple
               placeholder="Select databases..."
+              searchPlaceholder="Search databases..."
+              emptyText="No databases found."
+            />
+          </div>
+        </StoryItem>
+      </StoryRow>
+    </StorySection>
+
+    {/* --------------------------------------------------------
+        VALUE VARIANTS
+    -------------------------------------------------------- */}
+    <StorySection
+      title="Value variants"
+      description="How the selected value is displayed in single-select mode. text renders plain select-like text without a clear button."
+    >
+      <StoryRow>
+        <StoryItem label="chip (default)">
+          <div style={{ width: 300 }}>
+            <Combobox
+              items={DATABASES}
+              placeholder="Select database..."
+              searchPlaceholder="Search databases..."
+              emptyText="No databases found."
+            />
+          </div>
+        </StoryItem>
+        <StoryItem label="text">
+          <div style={{ width: 300 }}>
+            <Combobox
+              items={DATABASES}
+              valueVariant="text"
+              placeholder="Select database..."
               searchPlaceholder="Search databases..."
               emptyText="No databases found."
             />
@@ -263,6 +319,38 @@ export const ComboboxStories = () => (
               emptyText="No databases found."
             />
           </ResizableContainer>
+        </StoryItem>
+      </StoryRow>
+    </StorySection>
+
+    {/* --------------------------------------------------------
+        GROUPED
+    -------------------------------------------------------- */}
+    <StorySection
+      title="Grouped"
+      description="Items grouped under labelled headings."
+    >
+      <StoryRow>
+        <StoryItem label="single select">
+          <div style={{ width: 300 }}>
+            <Combobox
+              groups={GROUPED_ITEMS}
+              placeholder="Select data source..."
+              searchPlaceholder="Search data sources..."
+              emptyText="No data sources found."
+            />
+          </div>
+        </StoryItem>
+        <StoryItem label="multi-select">
+          <div style={{ width: 300 }}>
+            <Combobox
+              groups={GROUPED_ITEMS}
+              multiple
+              placeholder="Select data sources..."
+              searchPlaceholder="Search data sources..."
+              emptyText="No data sources found."
+            />
+          </div>
         </StoryItem>
       </StoryRow>
     </StorySection>

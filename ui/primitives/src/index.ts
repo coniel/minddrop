@@ -4,6 +4,7 @@ export * from './Chip';
 export * from './ColorSelect';
 export * from './RadioToggleGroup';
 export * from './Collapsible';
+export * from './Combox';
 export * from './ConfirmationDialog';
 export * from './ContentIcon';
 export * from './ContextMenu';
