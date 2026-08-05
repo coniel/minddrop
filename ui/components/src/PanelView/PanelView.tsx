@@ -78,9 +78,10 @@ export interface PanelViewProps {
   breadcrumbs?: ViewDescriptor[];
 
   /**
-   * Action buttons rendered in the header toolbar.
+   * Action buttons rendered in the header toolbar. Items may be
+   * action descriptors or custom React elements rendered as-is.
    */
-  actions?: PanelViewAction[];
+  actions?: (PanelViewAction | React.ReactElement)[];
 
   /**
    * The view content.
@@ -154,16 +155,23 @@ export const PanelView: React.FC<PanelViewProps> = ({
         {/* Header action buttons */}
         {actions && actions.length > 0 && (
           <Toolbar>
-            {actions.map((action) => (
-              <IconButton
-                key={action.label}
-                icon={action.icon}
-                label={action.label}
-                color="neutral"
-                disabled={action.disabled}
-                onClick={action.onClick}
-              />
-            ))}
+            {actions.map((action, index) => {
+              // Render custom action elements as provided
+              if (React.isValidElement(action)) {
+                return <React.Fragment key={index}>{action}</React.Fragment>;
+              }
+
+              return (
+                <IconButton
+                  key={action.label}
+                  icon={action.icon}
+                  label={action.label}
+                  color="neutral"
+                  disabled={action.disabled}
+                  onClick={action.onClick}
+                />
+              );
+            })}
           </Toolbar>
         )}
       </Group>
