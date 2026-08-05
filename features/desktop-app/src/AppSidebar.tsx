@@ -3,8 +3,13 @@ import { Events, SetNavToolbarWidthEvent } from '@minddrop/events';
 import { DatabasesSidebarMenu } from '@minddrop/feature-databases';
 import { OpenDesignStudioEvent } from '@minddrop/feature-designs';
 import { OpenSearchDialogEvent } from '@minddrop/feature-search';
-import { SpacesSidebarMenu } from '@minddrop/feature-spaces';
-import { Toolbar, ToolbarIconButton } from '@minddrop/ui-primitives';
+import { SpacesMenuItem } from '@minddrop/feature-spaces';
+import {
+  MenuGroup,
+  MenuItem,
+  Toolbar,
+  ToolbarIconButton,
+} from '@minddrop/ui-primitives';
 import { ThemeVariantPicker } from '@minddrop/ui-theme';
 import { AppUiState } from './AppUiState';
 import { Sidebar, SidebarProps } from './Sidebar';
@@ -54,7 +59,12 @@ export const AppSidebar: React.FC<SidebarProps> = ({ ...other }) => {
           onClick={handleOpenDesignStudio}
         />
       </Toolbar>
-      <SpacesSidebarMenu />
+      <MenuGroup>
+        <SpacesMenuItem />
+        <MenuItem muted icon="layers" label="labels.views" />
+        <MenuItem muted icon="library" label="labels.collections" />
+        <MenuItem muted icon="list-filter" label="labels.queries" />
+      </MenuGroup>
       <DatabasesSidebarMenu />
       <Toolbar className="app-sidebar-bottom-toolbar">
         <ThemeVariantPicker />

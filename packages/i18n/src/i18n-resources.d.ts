@@ -100,6 +100,7 @@ declare module 'i18next' {
           settings: string;
           queries: string;
           collections: string;
+          views: string;
         };
         properties: {
           actions: {

@@ -9,6 +9,7 @@ import {
   UpdateViewEventData,
 } from '@minddrop/events';
 import { Tabs } from '@minddrop/feature-views';
+import { i18n } from '@minddrop/i18n';
 import {
   SpaceDeletedEvent,
   SpaceDeletedEventData,
@@ -23,11 +24,19 @@ import {
   EventListenerId,
   OpenSpaceViewEvent,
   OpenSpaceViewEventData,
+  OpenSpacesViewEvent,
   SpaceViewName,
+  SpacesViewName,
 } from '../events';
 
 // Unique view instance id used to match space views in tabs
 const spaceViewId = (spaceId: string) => `spaces:space:${spaceId}`;
+
+// View instance id of the singleton spaces list view
+const spacesViewId = 'spaces:spaces';
+
+// Icon shown in the spaces list view's tab
+const SPACES_VIEW_ICON = 'content-icon:shapes:inherit';
 
 /**
  * Renders the spaces feature dialogs and registers event listeners
@@ -74,6 +83,17 @@ export const SpacesFeature: React.FC = () => {
       },
     );
 
+    // Listen for open spaces view events, and open the spaces
+    // list view when one is received
+    Events.addListener(OpenSpacesViewEvent, EventListenerId, () => {
+      Events.dispatch<OpenViewEventData>(OpenViewEvent, {
+        view: SpacesViewName,
+        id: spacesViewId,
+        title: i18n.t('spaces.labels.spaces'),
+        icon: SPACES_VIEW_ICON,
+      });
+    });
+
     // Update the space's open view when the space changes
     // (e.g. renamed or re-iconed)
     Events.addListener<SpaceUpdatedEventData>(
@@ -104,6 +124,7 @@ export const SpacesFeature: React.FC = () => {
 
     return () => {
       Events.removeListener(OpenSpaceViewEvent, EventListenerId);
+      Events.removeListener(OpenSpacesViewEvent, EventListenerId);
       Events.removeListener(SpaceUpdatedEvent, EventListenerId);
       Events.removeListener(SpaceDeletedEvent, EventListenerId);
     };

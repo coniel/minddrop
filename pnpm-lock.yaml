@@ -669,6 +669,9 @@ importers:
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../../packages/test-utils
+      '@minddrop/ui-components':
+        specifier: workspace:*
+        version: link:../../ui/components
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives
@@ -1659,6 +1662,9 @@ importers:
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
+      '@minddrop/ui-icons':
+        specifier: workspace:*
+        version: link:../icons
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../primitives

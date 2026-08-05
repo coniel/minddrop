@@ -87,7 +87,8 @@
     "design": "Design",
     "settings": "Settings",
     "queries": "Queries",
-    "collections": "Collections"
+    "collections": "Collections",
+    "views": "Views"
   },
   "properties": {
     "actions": {
