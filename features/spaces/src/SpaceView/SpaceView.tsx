@@ -1,7 +1,8 @@
 import { useCallback } from 'react';
 import { LayoutRenderer } from '@minddrop/feature-designs';
 import { Spaces, setLayoutElementContent } from '@minddrop/spaces';
-import { IconButton, Panel, ScrollArea, Text } from '@minddrop/ui-primitives';
+import { PanelView } from '@minddrop/ui-components';
+import { ScrollArea, Text } from '@minddrop/ui-primitives';
 import { setSpaceViewState, useSpaceViewState } from '../SpaceViewStateStore';
 import { SpaceEditMode } from './SpaceEditMode';
 import './SpaceView.css';
@@ -14,8 +15,8 @@ export interface SpaceViewProps {
 }
 
 /**
- * Renders a space's layout in a panel with an edit mode toggle
- * button.
+ * Renders a space's layout in a panel view with an edit mode
+ * toggle action in the header toolbar.
  */
 export const SpaceView: React.FC<SpaceViewProps> = ({ spaceId }) => {
   const space = Spaces.use(spaceId);
@@ -57,16 +58,18 @@ export const SpaceView: React.FC<SpaceViewProps> = ({ spaceId }) => {
 
   return (
     <div className="space-view">
-      <Panel className="space-view-panel">
-        {/* Edit mode toggle */}
-        <IconButton
-          icon="palette"
-          label="spaces.view.actions.edit"
-          tooltip={{ title: 'spaces.view.actions.edit' }}
-          color="muted"
-          className="space-view-edit-button"
-          onClick={handleEdit}
-        />
+      <PanelView
+        className="space-view-panel"
+        stringTitle={space.name}
+        contentIcon={space.icon}
+        actions={[
+          {
+            icon: 'palette',
+            label: 'spaces.view.actions.edit',
+            onClick: handleEdit,
+          },
+        ]}
+      >
         {/* The space's layout */}
         <ScrollArea className="space-view-content">
           <LayoutRenderer
@@ -78,7 +81,7 @@ export const SpaceView: React.FC<SpaceViewProps> = ({ spaceId }) => {
             onUpdateElementContent={handleUpdateElementContent}
           />
         </ScrollArea>
-      </Panel>
+      </PanelView>
     </div>
   );
 };
