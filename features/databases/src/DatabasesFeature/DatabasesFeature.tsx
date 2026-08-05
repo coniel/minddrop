@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import {
+  Database,
   DatabaseDeletedEvent,
   DatabaseDeletedEventData,
   DatabaseEntries,
@@ -23,6 +24,7 @@ import {
   UpdateViewEventData,
   ViewAreaChangedEvent,
   ViewAreaChangedEventData,
+  ViewDescriptor,
 } from '@minddrop/events';
 import { Tabs } from '@minddrop/feature-views';
 import { DefaultViewAreaId } from '@minddrop/views';
@@ -54,6 +56,16 @@ const DATABASE_FALLBACK_ICON = 'content-icon:shapes:inherit';
 const databaseViewId = (databaseId: string) =>
   `databases:database:${databaseId}`;
 const databaseEntryViewId = (entryId: string) => `databases:entry:${entryId}`;
+
+// Descriptor of a database's view, used as the breadcrumb parent
+// of its entry views
+const databaseViewDescriptor = (database: Database): ViewDescriptor => ({
+  view: DatabaseViewName,
+  id: databaseViewId(database.id),
+  props: { databaseId: database.id },
+  title: database.name,
+  icon: database.icon || DATABASE_FALLBACK_ICON,
+});
 
 /**
  * Renders top-level database feature UI and registers event
@@ -185,6 +197,10 @@ export const DatabasesFeature: React.FC = () => {
             split: openMode === 'split',
             title: entry.title,
             icon: database?.icon || DATABASE_FALLBACK_ICON,
+            // The trail leads back to the entry's database view
+            breadcrumbs: database
+              ? [databaseViewDescriptor(database)]
+              : undefined,
           },
         );
       },
