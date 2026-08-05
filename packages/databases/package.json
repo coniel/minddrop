@@ -27,7 +27,7 @@
     "@minddrop/sql": "workspace:*",
     "@minddrop/stores": "workspace:*",
     "@minddrop/utils": "workspace:*",
-    "@minddrop/views": "workspace:*",
+    "@minddrop/data-views": "workspace:*",
     "@minddrop/workspaces": "workspace:*"
   }
 }

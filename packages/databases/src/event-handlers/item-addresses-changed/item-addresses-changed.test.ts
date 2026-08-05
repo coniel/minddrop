@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { DataViews, ViewFixtures } from '@minddrop/views';
+import { DataViewFixtures, DataViews } from '@minddrop/data-views';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import {
   MockFs,
@@ -21,7 +21,7 @@ vi.mock('../../sql', () => ({
   sqlUpsertEntries: vi.fn(),
 }));
 
-const { viewType_referencing } = ViewFixtures;
+const { dataViewType_referencing } = DataViewFixtures;
 
 describe('onItemAddressesChanged', () => {
   beforeEach(setup);
@@ -58,7 +58,7 @@ describe('onItemAddressesChanged', () => {
     // An embedded virtual view referencing the renamed entry
     DataViews.createVirtual({
       id: virtualViewId(collectionEntry1.id, 'Related', 'layout-1'),
-      type: viewType_referencing.type,
+      type: dataViewType_referencing.type,
       dataSource: { type: 'collection', id: 'collection-1' },
       name: 'Related',
       data: { items: [relatedEntry1.id] },
@@ -86,7 +86,7 @@ describe('onItemAddressesChanged', () => {
         viewMetadataKey('Related', 'layout-1')
       ],
     ).toEqual({
-      options: viewType_referencing.defaultOptions,
+      options: dataViewType_referencing.defaultOptions,
       data: { items: [databaseEntryAddress(renamedPath)] },
     });
   });

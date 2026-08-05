@@ -1,4 +1,5 @@
 import { vi } from 'vitest';
+import { DataViewFixtures, DataViewTypes } from '@minddrop/data-views';
 import {
   DatabaseFixtures,
   DatabaseTemplates,
@@ -10,9 +11,8 @@ import { initializeMockFileSystem } from '@minddrop/file-system';
 import { initializeI18n } from '@minddrop/i18n';
 import { cleanup as cleanupRender } from '@minddrop/test-utils';
 import { Paths } from '@minddrop/utils';
-import { DataViewTypes, ViewFixtures } from '@minddrop/views';
 
-const { viewType_table } = ViewFixtures;
+const { dataViewType_table } = DataViewFixtures;
 
 interface SetupOptions {
   loadDatabases?: boolean;
@@ -50,7 +50,7 @@ export function setup(
   }
 
   // Load view types into the store
-  DataViewTypes.register(viewType_table);
+  DataViewTypes.register(dataViewType_table);
 }
 
 export function cleanup() {

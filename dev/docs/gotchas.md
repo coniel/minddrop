@@ -5,6 +5,19 @@ touching the related code. Organised by package/feature. Add entries as
 they come up; delete entries when the underlying code changes make them
 obsolete.
 
+## packages/data-views
+
+### Some view-era names are deliberately retained after the data-views split
+
+The views / data-views split (2026-08-05) renamed events
+(`data-views:data-view:*`), the ID prefix (`data-view_<uuid>`), fixtures,
+and i18n keys (`dataViews.*`), but deliberately kept: the on-disk `.view`
+file extension and `views/` workspace data directory
+(`ViewFileExtension` / `ViewsDirName` in `packages/data-views`), and the
+`ViewDataSource` / `ViewDataSourceType` type names ("DataViewDataSource"
+would be awkward). Don't "fix" these to data-view naming without a
+deliberate decision.
+
 ## packages/databases
 
 ### The implicit Title property's name is a translated identifier

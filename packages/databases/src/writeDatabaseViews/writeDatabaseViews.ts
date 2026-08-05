@@ -1,4 +1,4 @@
-import { DataViews, serializeDataViewConfig } from '@minddrop/views';
+import { DataViews, serializeDataViewConfig } from '@minddrop/data-views';
 import { DatabasesStore } from '../DatabasesStore';
 import { writeDatabaseConfig } from '../writeDatabaseConfig';
 

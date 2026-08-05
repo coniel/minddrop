@@ -1,5 +1,9 @@
 import { vi } from 'vitest';
 import { Collections } from '@minddrop/collections';
+import {
+  cleanupDataViewFixtures,
+  setupDataViewFixtures,
+} from '@minddrop/data-views';
 import { cleanupDesignFixtures, setupDesignFixtures } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
 import { initializeMockFileSystem } from '@minddrop/file-system';
@@ -8,7 +12,6 @@ import {
   registerItemReferenceAdapter,
   unregisterItemReferenceAdapter,
 } from '@minddrop/item-references';
-import { cleanupViewFixtures, setupViewFixtures } from '@minddrop/views';
 import {
   cleanupWorkspaceFixtures,
   setupWorkspaceFixtures,
@@ -38,7 +41,7 @@ export function setup(options?: SetupDatabaseFixturesOptions) {
   // Setup database fixtures
   setupDatabaseFixtures(MockFs, options);
   // Setup external fixtures
-  setupViewFixtures(MockFs);
+  setupDataViewFixtures(MockFs);
   setupDesignFixtures(MockFs);
   setupWorkspaceFixtures(MockFs);
 
@@ -65,7 +68,7 @@ export function cleanup() {
   cleanupDatabaseFixtures();
   // Clear external fixtures
   cleanupDesignFixtures();
-  cleanupViewFixtures();
+  cleanupDataViewFixtures();
   cleanupWorkspaceFixtures();
 
   // Clear stores

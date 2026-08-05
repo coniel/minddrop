@@ -1,10 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { DataViewFixtures, DataViews } from '@minddrop/data-views';
 import { Events } from '@minddrop/events';
 import {
   ItemAddressesChangedEvent,
   ItemAddressesChangedEventData,
 } from '@minddrop/item-references';
-import { DataViews, ViewFixtures } from '@minddrop/views';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import {
   cleanup,
@@ -16,7 +16,7 @@ import { BackgroundSyncChangeset } from '../types';
 import { convertEntryToSqlRecord, databaseEntryAddress } from '../utils';
 import { handleBackgroundSyncResult } from './handleBackgroundSyncResult';
 
-const { viewType_referencing } = ViewFixtures;
+const { dataViewType_referencing } = DataViewFixtures;
 
 // A changeset without any changes, spread into per-test variants
 const emptyChangeset: BackgroundSyncChangeset = {
@@ -90,8 +90,8 @@ describe('handleBackgroundSyncResult', () => {
   it('removes deleted entries from referencing view configs', async () => {
     // A view referencing the deleted entry
     DataViews.createVirtual({
-      id: 'view_referencing-1',
-      type: viewType_referencing.type,
+      id: 'data-view_referencing-1',
+      type: dataViewType_referencing.type,
       dataSource: { type: 'collection', id: 'collection-1' },
       name: 'Referencing',
       data: { items: [relatedEntry1.id] },
@@ -103,7 +103,7 @@ describe('handleBackgroundSyncResult', () => {
     });
 
     // The view's config drops the deleted entry
-    expect(DataViews.get('view_referencing-1', false)?.data).toEqual({
+    expect(DataViews.get('data-view_referencing-1', false)?.data).toEqual({
       items: [],
     });
   });

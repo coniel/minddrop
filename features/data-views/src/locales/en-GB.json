@@ -1,0 +1,20 @@
+{
+  "dataViews": {
+    "missing": {
+      "message": "This view no longer exists."
+    },
+    "form": {
+      "name": {
+        "label": "Name",
+        "placeholder": "View name"
+      },
+      "source": {
+        "label": "Data source",
+        "placeholder": "Choose a collection"
+      },
+      "actions": {
+        "create": "Create view"
+      }
+    }
+  }
+}

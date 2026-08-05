@@ -1,3 +1,4 @@
+import { ViewDataSourceType } from '@minddrop/data-views';
 import {
   ELEMENT_GROUPS,
   LayoutType,
@@ -9,7 +10,6 @@ import {
 import { TranslationKey } from '@minddrop/i18n';
 import { PropertyType } from '@minddrop/properties';
 import { UiIconName } from '@minddrop/ui-icons';
-import { ViewDataSourceType } from '@minddrop/views';
 
 // -- Design Studio constants --
 

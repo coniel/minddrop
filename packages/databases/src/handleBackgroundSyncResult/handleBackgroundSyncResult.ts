@@ -1,3 +1,4 @@
+import { DataViews } from '@minddrop/data-views';
 import { Events } from '@minddrop/events';
 import {
   ItemAddressChange,
@@ -5,7 +6,6 @@ import {
   ItemAddressesChangedEventData,
 } from '@minddrop/item-references';
 import { restoreDates } from '@minddrop/utils';
-import { DataViews } from '@minddrop/views';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabasesBackgroundSyncedEvent } from '../events';

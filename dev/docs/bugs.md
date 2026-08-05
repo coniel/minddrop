@@ -5,6 +5,25 @@ locate them. Organised by package/feature. Record a bug here when you find
 one but decide not to fix it in the current work; delete the entry once the
 underlying issue is resolved.
 
+## packages/data-views
+
+### `createVirtualDataView` tests fail: name falls back through uninitialized i18n
+
+Three tests fail on `main` (pre-existing, surfaced by the views /
+data-views split): `createVirtualDataView.test.ts` "returns the new
+virtual view", "adds the view to the store", and "dispatches a view
+created event", with the created view's `name` being `undefined` instead
+of the view type name.
+
+Cause: `createVirtualDataView` defaults the name via
+`i18n.t(viewType.name)`, but the package's test setup never calls
+`initializeI18n()`, so `t()` returns `undefined` instead of falling back
+to the key. In the app i18n is always initialized before any data view is
+created, so runtime behaviour is unaffected.
+
+Fix direction: initialize i18n in the package's test setup (or stub the
+default-name resolution), then remove this entry.
+
 ## packages/databases
 
 ### Concurrent file entry creation races on the storage directory
@@ -66,7 +85,7 @@ the event data access in the property editor test.
 Spreading `fieldProps.<name>` from `useForm` (`@minddrop/utils`) onto a
 `TextField` fails the typecheck in `NewDatabaseDialog`
 (`features/databases`), `NewSpaceDialog` (`features/spaces`), and
-`CreateDataViewForm` (`features/views`):
+`CreateDataViewForm` (`features/data-views`):
 `FieldProps.error` is a plain `string` while `TextField`'s `error` prop is
 typed `TranslationKey` (the `onChange` event type is also wider than the
 input's). Runtime behaviour is fine — unknown keys render as-is.

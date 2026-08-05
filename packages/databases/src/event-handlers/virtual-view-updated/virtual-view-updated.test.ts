@@ -1,11 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DataView, ViewFixtures } from '@minddrop/views';
+import { DataView, DataViewFixtures } from '@minddrop/data-views';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { cleanup, objectEntry1, setup } from '../../test-utils';
 import { databaseEntryAddress, viewMetadataKey } from '../../utils';
 import { onUpdateVirtualView } from './virtual-view-updated';
 
-const { viewType_referencing } = ViewFixtures;
+const { dataViewType_referencing } = DataViewFixtures;
 
 const layoutId = 'layout-card-1';
 const propertyName = 'Related';
@@ -94,7 +94,7 @@ describe('onUpdateVirtualView', () => {
     // type's data
     const referencingView: DataView = {
       ...baseView,
-      type: viewType_referencing.type,
+      type: dataViewType_referencing.type,
       data: { items: [objectEntry1.id] },
     };
 

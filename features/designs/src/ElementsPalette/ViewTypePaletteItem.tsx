@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
+import { DataViewType } from '@minddrop/data-views';
 import { DefaultViewElementStyle } from '@minddrop/designs';
 import { useTranslation } from '@minddrop/i18n';
 import { PropertyType } from '@minddrop/properties';
 import { useDraggable } from '@minddrop/selection';
 import { UiIconName } from '@minddrop/ui-icons';
 import { Icon, Text, Tooltip } from '@minddrop/ui-primitives';
-import { DataViewType } from '@minddrop/views';
 import { MappableIndicator } from '../MappableIndicator';
 import {
   DesignElementTemplatesDataKey,

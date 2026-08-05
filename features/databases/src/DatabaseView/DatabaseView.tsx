@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { DataViewTypes, DataViews } from '@minddrop/data-views';
 import { DatabaseEntries, Databases } from '@minddrop/databases';
-import { DataViewRenderer } from '@minddrop/feature-views';
+import { DataViewRenderer } from '@minddrop/feature-data-views';
 import { useTranslation } from '@minddrop/i18n';
 import { SortableList } from '@minddrop/ui-drag-and-drop';
 import {
@@ -31,7 +32,6 @@ import {
   Toolbar,
 } from '@minddrop/ui-primitives';
 import { uuid } from '@minddrop/utils';
-import { DataViewTypes, DataViews } from '@minddrop/views';
 import { DatabaseConfigurationPanel } from '../DatabaseConfigurationPanel';
 import {
   setDatabaseViewState,

@@ -1,11 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { DataView, DataViews, ViewFixtures } from '@minddrop/views';
+import { DataView, DataViewFixtures, DataViews } from '@minddrop/data-views';
 import { DatabasesStore } from '../../DatabasesStore';
 import { cleanup, setup } from '../../test-utils';
 import { objectDatabase } from '../../test-utils/fixtures';
 import { onDatabaseViewDeleted } from './database-view-deleted';
 
-const { view_virtual_1, view_board_1 } = ViewFixtures;
+const { dataView_virtual_1, dataView_board_1 } = DataViewFixtures;
 
 vi.mock('../../writeDatabaseConfig', () => ({
   writeDatabaseConfig: vi.fn(),
@@ -18,12 +18,12 @@ describe('onDatabaseViewDeleted', () => {
   it('persists the remaining views to the database config', () => {
     // Create two virtual views for this database
     const view1: DataView = {
-      ...view_virtual_1,
+      ...dataView_virtual_1,
       dataSource: { type: 'database', id: objectDatabase.id },
     };
 
     const view2: DataView = {
-      ...view_board_1,
+      ...dataView_board_1,
       id: 'view-virtual-board-1',
       virtual: true,
       dataSource: { type: 'database', id: objectDatabase.id },
@@ -35,7 +35,7 @@ describe('onDatabaseViewDeleted', () => {
 
     // Remove view1 from the store (simulates what happens
     // before the event fires)
-    DataViews.Store.remove(view_virtual_1.id);
+    DataViews.Store.remove(dataView_virtual_1.id);
 
     // Call the handler
     onDatabaseViewDeleted(view1);
@@ -50,7 +50,7 @@ describe('onDatabaseViewDeleted', () => {
   it('ignores views that do not belong to a database', () => {
     // Create a virtual view with a non-database data source
     const view: DataView = {
-      ...view_virtual_1,
+      ...dataView_virtual_1,
       dataSource: { type: 'collection', id: 'some-collection' },
     };
 

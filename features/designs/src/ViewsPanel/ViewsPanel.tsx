@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { DataViewTypes, DataViews } from '@minddrop/data-views';
 import {
   MenuGroup,
   MenuLabel,
@@ -6,7 +7,6 @@ import {
   Text,
   TextInput,
 } from '@minddrop/ui-primitives';
-import { DataViewTypes, DataViews } from '@minddrop/views';
 import { StaticViewTypePaletteItem } from './StaticViewTypePaletteItem';
 import { ViewPaletteItem } from './ViewPaletteItem';
 import './ViewsPanel.css';

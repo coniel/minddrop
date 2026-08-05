@@ -1,12 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Collections } from '@minddrop/collections';
+import { DataViewFixtures, DataViews } from '@minddrop/data-views';
 import {
   DefaultContainerElementStyle,
   DefaultTextElementStyle,
   DefaultViewElementStyle,
   Layout,
 } from '@minddrop/designs';
-import { DataViews, ViewFixtures } from '@minddrop/views';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import {
   cleanup,
@@ -22,7 +22,7 @@ import { virtualCollectionId } from '../virtualCollectionId';
 import { virtualViewId } from '../virtualViewId';
 import { createEntryVirtualViews } from './createEntryVirtualViews';
 
-const { viewType_table, viewType_referencing } = ViewFixtures;
+const { dataViewType_table, dataViewType_referencing } = DataViewFixtures;
 
 // Layout with a view element mapped to the 'Related' property
 const designWithView: Layout = {
@@ -40,7 +40,7 @@ const designWithView: Layout = {
       {
         id: 'view-element-1',
         type: 'view',
-        viewType: viewType_table.type,
+        viewType: dataViewType_table.type,
         style: { ...DefaultViewElementStyle },
       },
       {
@@ -139,7 +139,7 @@ describe('createEntryVirtualViews', () => {
     const collId = virtualCollectionId(collectionEntry1.id, 'Related');
 
     expect(view).not.toBeNull();
-    expect(view!.type).toBe(viewType_table.type);
+    expect(view!.type).toBe(dataViewType_table.type);
     expect(view!.dataSource).toEqual({ type: 'collection', id: collId });
   });
 
@@ -186,13 +186,13 @@ describe('createEntryVirtualViews', () => {
           {
             id: 'view-element-1',
             type: 'view',
-            viewType: viewType_table.type,
+            viewType: dataViewType_table.type,
             style: { ...DefaultViewElementStyle },
           },
           {
             id: 'view-element-2',
             type: 'view',
-            viewType: viewType_table.type,
+            viewType: dataViewType_table.type,
             style: { ...DefaultViewElementStyle },
           },
         ],
@@ -252,7 +252,7 @@ describe('createEntryVirtualViews', () => {
 
     // Saved options are merged over the view type's default options
     expect(view!.options).toEqual({
-      ...viewType_table.defaultOptions,
+      ...dataViewType_table.defaultOptions,
       ...savedConfig.options,
     });
     expect(view!.data).toEqual(savedConfig.data);
@@ -268,7 +268,7 @@ describe('createEntryVirtualViews', () => {
           {
             id: 'view-element-1',
             type: 'view',
-            viewType: viewType_referencing.type,
+            viewType: dataViewType_referencing.type,
             style: { ...DefaultViewElementStyle },
           },
         ],

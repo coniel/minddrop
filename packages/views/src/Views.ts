@@ -1,4 +1,3 @@
-export { initializeViews as initialize } from './initializeViews';
 export {
   ViewsStore as Store,
   useView as use,

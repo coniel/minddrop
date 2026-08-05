@@ -3,6 +3,14 @@ import {
   CollectionUpdatedEventData,
 } from '@minddrop/collections';
 import {
+  DataViewCreatedEvent,
+  DataViewCreatedEventData,
+  DataViewDeletedEvent,
+  DataViewDeletedEventData,
+  DataViewUpdatedEvent,
+  DataViewUpdatedEventData,
+} from '@minddrop/data-views';
+import {
   DesignPropertyRenamedEvent,
   DesignPropertyRenamedEventData,
 } from '@minddrop/designs';
@@ -11,14 +19,6 @@ import {
   ItemAddressesChangedEvent,
   ItemAddressesChangedEventData,
 } from '@minddrop/item-references';
-import {
-  ViewCreatedEvent,
-  ViewCreatedEventData,
-  ViewDeletedEvent,
-  ViewDeletedEventData,
-  ViewUpdatedEvent,
-  ViewUpdatedEventData,
-} from '@minddrop/views';
 import {
   onAddProperty,
   onClearEntries,
@@ -199,28 +199,32 @@ export function initializeDatabaseEventHandlers() {
     ({ data }) => onItemAddressesChanged(data),
   );
 
-  Events.on<ViewUpdatedEventData>(ViewUpdatedEvent, 'databases', ({ data }) => {
-    onUpdateVirtualView(data);
-  });
+  Events.on<DataViewUpdatedEventData>(
+    DataViewUpdatedEvent,
+    'databases',
+    ({ data }) => {
+      onUpdateVirtualView(data);
+    },
+  );
 
-  Events.on<ViewCreatedEventData>(
-    ViewCreatedEvent,
+  Events.on<DataViewCreatedEventData>(
+    DataViewCreatedEvent,
     'databases:database-views',
     ({ data }) => {
       onDatabaseViewCreated(data);
     },
   );
 
-  Events.on<ViewUpdatedEventData>(
-    ViewUpdatedEvent,
+  Events.on<DataViewUpdatedEventData>(
+    DataViewUpdatedEvent,
     'databases:database-views',
     ({ data }) => {
       onDatabaseViewUpdated(data);
     },
   );
 
-  Events.on<ViewDeletedEventData>(
-    ViewDeletedEvent,
+  Events.on<DataViewDeletedEventData>(
+    DataViewDeletedEvent,
     'databases:database-views',
     ({ data }) => {
       onDatabaseViewDeleted(data);

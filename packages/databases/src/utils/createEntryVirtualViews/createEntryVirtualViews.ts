@@ -1,4 +1,5 @@
 import { Collections } from '@minddrop/collections';
+import { DataViews, resolveDataViewConfig } from '@minddrop/data-views';
 import {
   ContainerElement,
   DesignElement,
@@ -6,7 +7,6 @@ import {
   RootElement,
   ViewElement,
 } from '@minddrop/designs';
-import { DataViews, resolveDataViewConfig } from '@minddrop/views';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabasesStore } from '../../DatabasesStore';
 import { viewMetadataKey } from '../viewMetadataKey';

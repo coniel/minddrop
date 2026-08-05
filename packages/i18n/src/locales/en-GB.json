@@ -1410,7 +1410,7 @@
   "toast": {
     "close": "Close"
   },
-  "views": {
+  "dataViews": {
     "actions": {
       "settings": "View settings"
     },

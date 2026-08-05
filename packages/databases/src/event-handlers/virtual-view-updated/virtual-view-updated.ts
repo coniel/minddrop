@@ -1,11 +1,11 @@
-import { ViewUpdatedEventData } from '@minddrop/views';
+import { DataViewUpdatedEventData } from '@minddrop/data-views';
 import { persistVirtualViewConfig } from '../../persistVirtualViewConfig';
 
 /**
  * Called when a view is updated. If the view is a virtual entry view,
  * persists the updated options and data to the entry's metadata file.
  */
-export function onUpdateVirtualView(data: ViewUpdatedEventData): void {
+export function onUpdateVirtualView(data: DataViewUpdatedEventData): void {
   const { updated } = data;
 
   // Only handle virtual views

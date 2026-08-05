@@ -1,3 +1,4 @@
+import { DataViewTypes } from '@minddrop/data-views';
 import {
   DesignElement,
   PropertyTypeElementMap,
@@ -5,7 +6,6 @@ import {
   ViewElement,
 } from '@minddrop/designs';
 import { PropertyType } from '@minddrop/properties';
-import { DataViewTypes } from '@minddrop/views';
 import { propertyTypeDataSourceMap } from '../../constants';
 import { FlatDesignElement } from '../../types';
 

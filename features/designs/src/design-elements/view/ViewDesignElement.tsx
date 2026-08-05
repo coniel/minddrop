@@ -1,9 +1,9 @@
 import React from 'react';
 import { Collections } from '@minddrop/collections';
+import { DataView, DataViewTypes, DataViews } from '@minddrop/data-views';
 import { ViewElement, createViewCssStyle } from '@minddrop/designs';
-import { DataViewRenderer } from '@minddrop/feature-views';
+import { DataViewRenderer } from '@minddrop/feature-data-views';
 import { Icon, Text } from '@minddrop/ui-primitives';
-import { DataView, DataViewTypes, DataViews } from '@minddrop/views';
 import {
   useDesignProperties,
   useElementProperty,

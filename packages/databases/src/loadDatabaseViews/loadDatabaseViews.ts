@@ -2,7 +2,7 @@ import {
   DataViews,
   VirtualDataViewData,
   resolveDataViewConfig,
-} from '@minddrop/views';
+} from '@minddrop/data-views';
 import type { Database } from '../types';
 
 /**

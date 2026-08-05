@@ -1,11 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { DataView, DataViews, ViewFixtures } from '@minddrop/views';
+import { DataView, DataViewFixtures, DataViews } from '@minddrop/data-views';
 import { DatabasesStore } from '../DatabasesStore';
 import { cleanup, setup } from '../test-utils';
 import { objectDatabase } from '../test-utils/fixtures';
 import { writeDatabaseViews } from './writeDatabaseViews';
 
-const { view_virtual_1 } = ViewFixtures;
+const { dataView_virtual_1 } = DataViewFixtures;
 
 vi.mock('../writeDatabaseConfig', () => ({
   writeDatabaseConfig: vi.fn(),
@@ -18,7 +18,7 @@ describe('writeDatabaseViews', () => {
   it('adds database views to the database without dataSource and virtual', async () => {
     // Add a virtual view for the database to the ViewsStore
     const view: DataView = {
-      ...view_virtual_1,
+      ...dataView_virtual_1,
       dataSource: { type: 'database', id: objectDatabase.id },
       options: { sortBy: 'name' },
     };
@@ -33,7 +33,7 @@ describe('writeDatabaseViews', () => {
     const database = DatabasesStore.get(objectDatabase.id);
 
     expect(database!.views).toHaveLength(1);
-    expect(database!.views![0].id).toBe(view_virtual_1.id);
+    expect(database!.views![0].id).toBe(dataView_virtual_1.id);
     expect(database!.views![0].options).toEqual({ sortBy: 'name' });
     expect((database!.views![0] as DataView).dataSource).toBeUndefined();
     expect((database!.views![0] as DataView).virtual).toBeUndefined();
@@ -42,7 +42,7 @@ describe('writeDatabaseViews', () => {
   it('only includes views belonging to the specified database', async () => {
     // Add a view belonging to this database
     const thisDbView: DataView = {
-      ...view_virtual_1,
+      ...dataView_virtual_1,
       dataSource: { type: 'database', id: objectDatabase.id },
     };
 
@@ -50,7 +50,7 @@ describe('writeDatabaseViews', () => {
 
     // Add a view belonging to a different database
     const otherDbView: DataView = {
-      ...view_virtual_1,
+      ...dataView_virtual_1,
       id: 'view-other-db',
       dataSource: { type: 'database', id: 'other-db' },
     };
@@ -64,7 +64,7 @@ describe('writeDatabaseViews', () => {
     const database = DatabasesStore.get(objectDatabase.id);
 
     expect(database!.views).toHaveLength(1);
-    expect(database!.views![0].id).toBe(view_virtual_1.id);
+    expect(database!.views![0].id).toBe(dataView_virtual_1.id);
   });
 
   it('returns early if the database does not exist', async () => {

@@ -1,10 +1,10 @@
 import { vi } from 'vitest';
+import { DataViews } from '@minddrop/data-views';
 import { Events } from '@minddrop/events';
 import { initializeMockFileSystem } from '@minddrop/file-system';
 import { initializeI18n } from '@minddrop/i18n';
 import { Spaces } from '@minddrop/spaces';
 import { cleanup as cleanupRender } from '@minddrop/test-utils';
-import { DataViews } from '@minddrop/views';
 
 initializeI18n();
 

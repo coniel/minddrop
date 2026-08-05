@@ -5,4 +5,4 @@ packages:
   - 'features/*'
   - 'packages/*'
   - 'ui/*'
-  - 'views/*'
+  - 'data-views/*'

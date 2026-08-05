@@ -1,5 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
+  cleanupDataViewFixtures,
+  setupDataViewFixtures,
+} from '@minddrop/data-views';
+import {
   ContainerElement,
   DefaultContainerElementStyle,
   DefaultTextElementStyle,
@@ -9,7 +13,6 @@ import {
   ViewElement,
 } from '@minddrop/designs';
 import { initializeMockFileSystem } from '@minddrop/file-system';
-import { cleanupViewFixtures, setupViewFixtures } from '@minddrop/views';
 import { isPropertyCompatibleWithElement } from './isPropertyCompatibleWithElement';
 
 const MockFs = initializeMockFileSystem();
@@ -62,11 +65,11 @@ const viewElementUnregistered: ViewElement = {
 
 describe('isPropertyCompatibleWithElement', () => {
   beforeEach(() => {
-    setupViewFixtures(MockFs);
+    setupDataViewFixtures(MockFs);
   });
 
   afterEach(() => {
-    cleanupViewFixtures();
+    cleanupDataViewFixtures();
     MockFs.reset();
   });
 

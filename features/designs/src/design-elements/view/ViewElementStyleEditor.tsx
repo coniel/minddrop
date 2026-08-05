@@ -1,8 +1,8 @@
 import { useCallback } from 'react';
+import { DataViewTypes } from '@minddrop/data-views';
 import { DefaultViewElementStyle, ViewElement } from '@minddrop/designs';
 import { useTranslation } from '@minddrop/i18n';
 import { Select, SelectItem, Stack } from '@minddrop/ui-primitives';
-import { DataViewTypes } from '@minddrop/views';
 import { updateDesignElement, useElementData } from '../../DesignStudioStore';
 import { Border } from '../../style-editors/Border';
 import { BorderRadiusField } from '../../style-editors/BorderRadiusField';

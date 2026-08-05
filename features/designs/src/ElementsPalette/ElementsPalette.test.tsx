@@ -1,17 +1,17 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { DataViewFixtures, DataViewTypes } from '@minddrop/data-views';
 import { render, screen } from '@minddrop/test-utils';
-import { DataViewTypes, ViewFixtures } from '@minddrop/views';
 import { cleanup, setup } from '../test-utils';
 import { ElementsPalette } from './ElementsPalette';
 
-const { viewType_table } = ViewFixtures;
+const { dataViewType_table } = DataViewFixtures;
 
 describe('<ElementsPalette />', () => {
   beforeEach(() => {
     setup();
 
     // Register a view type for the views group
-    DataViewTypes.register(viewType_table);
+    DataViewTypes.register(dataViewType_table);
   });
 
   afterEach(() => {

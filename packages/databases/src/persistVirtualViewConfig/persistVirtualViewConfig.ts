@@ -2,7 +2,7 @@ import {
   DataView,
   DataViewConfig,
   serializeDataViewConfig,
-} from '@minddrop/views';
+} from '@minddrop/data-views';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabaseEntryMetadata } from '../types';
 import { updateEntryMetadata } from '../updateEntryMetadata';

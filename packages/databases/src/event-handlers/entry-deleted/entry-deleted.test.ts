@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Collections } from '@minddrop/collections';
-import { DataViews, ViewFixtures } from '@minddrop/views';
+import { DataViewFixtures, DataViews } from '@minddrop/data-views';
 import {
   cleanup,
   collectionDatabase,
@@ -56,12 +56,12 @@ describe('onDeleteEntry', () => {
   });
 
   it('removes the entry from view configs referencing it', async () => {
-    const { viewType_referencing } = ViewFixtures;
+    const { dataViewType_referencing } = DataViewFixtures;
 
     // A view referencing the deleted entry
     DataViews.createVirtual({
-      id: 'view_referencing-1',
-      type: viewType_referencing.type,
+      id: 'data-view_referencing-1',
+      type: dataViewType_referencing.type,
       dataSource: { type: 'collection', id: 'collection-1' },
       name: 'Referencing',
       data: { items: [relatedEntry1.id, relatedEntry2.id] },
@@ -70,7 +70,7 @@ describe('onDeleteEntry', () => {
     await onDeleteEntry(relatedEntry1);
 
     // The view's config drops the deleted entry
-    expect(DataViews.get('view_referencing-1', false)?.data).toEqual({
+    expect(DataViews.get('data-view_referencing-1', false)?.data).toEqual({
       items: [relatedEntry2.id],
     });
   });

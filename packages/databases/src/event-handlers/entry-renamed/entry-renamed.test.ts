@@ -1,12 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Collections } from '@minddrop/collections';
+import { DataViews } from '@minddrop/data-views';
 import { DesignFixtures } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
 import {
   ItemAddressesChangedEvent,
   ItemAddressesChangedEventData,
 } from '@minddrop/item-references';
-import { DataViews } from '@minddrop/views';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { sqlUpsertEntries } from '../../sql';
 import {

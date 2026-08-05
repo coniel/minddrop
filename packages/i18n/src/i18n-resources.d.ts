@@ -1422,7 +1422,7 @@ declare module 'i18next' {
         toast: {
           close: string;
         };
-        views: {
+        dataViews: {
           actions: {
             settings: string;
           };

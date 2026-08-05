@@ -1,5 +1,5 @@
 import { Collections } from '@minddrop/collections';
-import { DataViews } from '@minddrop/views';
+import { DataViews } from '@minddrop/data-views';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabaseDeletedEventData } from '../../events';
 import { removeEntriesFromCollections } from '../../removeEntriesFromCollections';

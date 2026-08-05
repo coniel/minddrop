@@ -1,11 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { DataView, DataViews, ViewFixtures } from '@minddrop/views';
+import { DataView, DataViewFixtures, DataViews } from '@minddrop/data-views';
 import { DatabasesStore } from '../../DatabasesStore';
 import { cleanup, setup } from '../../test-utils';
 import { objectDatabase } from '../../test-utils/fixtures';
 import { onDatabaseViewUpdated } from './database-view-updated';
 
-const { view_virtual_1, view_gallery_1 } = ViewFixtures;
+const { dataView_virtual_1, dataView_gallery_1 } = DataViewFixtures;
 
 vi.mock('../../writeDatabaseConfig', () => ({
   writeDatabaseConfig: vi.fn(),
@@ -18,7 +18,7 @@ describe('onDatabaseViewUpdated', () => {
   it('persists the updated view to the database config', () => {
     // Create a virtual view for this database
     const view: DataView = {
-      ...view_virtual_1,
+      ...dataView_virtual_1,
       dataSource: { type: 'database', id: objectDatabase.id },
     };
 
@@ -33,7 +33,7 @@ describe('onDatabaseViewUpdated', () => {
     };
 
     // Update the view in the store
-    DataViews.Store.update(view_virtual_1.id, {
+    DataViews.Store.update(dataView_virtual_1.id, {
       name: 'Updated Table',
       options: { sortBy: 'date' },
     });
@@ -51,7 +51,7 @@ describe('onDatabaseViewUpdated', () => {
   it('ignores non-virtual views', () => {
     // Create a non-virtual view
     const view: DataView = {
-      ...view_gallery_1,
+      ...dataView_gallery_1,
       dataSource: { type: 'database', id: objectDatabase.id },
     };
 
@@ -67,7 +67,7 @@ describe('onDatabaseViewUpdated', () => {
   it('ignores views that do not belong to a database', () => {
     // Create a virtual view with a non-database data source
     const view: DataView = {
-      ...view_virtual_1,
+      ...dataView_virtual_1,
       dataSource: { type: 'collection', id: 'some-collection' },
     };
 

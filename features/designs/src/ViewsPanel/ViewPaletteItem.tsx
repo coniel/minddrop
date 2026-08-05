@@ -1,8 +1,8 @@
+import { DataView, DataViewTypes } from '@minddrop/data-views';
 import { DefaultViewElementStyle } from '@minddrop/designs';
 import { useDraggable } from '@minddrop/selection';
 import { UiIconName } from '@minddrop/ui-icons';
 import { Icon, Text } from '@minddrop/ui-primitives';
-import { DataView, DataViewTypes } from '@minddrop/views';
 import { DesignElementTemplatesDataKey } from '../constants';
 
 export interface ViewPaletteItemProps {

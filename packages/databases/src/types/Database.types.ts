@@ -1,6 +1,6 @@
+import { DataView } from '@minddrop/data-views';
 import { PropertiesSchema, PropertyType } from '@minddrop/properties';
 import { EntityId } from '@minddrop/utils';
-import { DataView } from '@minddrop/views';
 import { DatabaseAutomation } from './DatabaseAutomation.types';
 
 export type DatabaseEntryOpenMode =

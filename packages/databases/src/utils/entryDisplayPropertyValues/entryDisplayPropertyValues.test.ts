@@ -1,11 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { DataViewFixtures } from '@minddrop/data-views';
 import {
   DefaultContainerElementStyle,
   DefaultTextElementStyle,
   DefaultViewElementStyle,
   Layout,
 } from '@minddrop/designs';
-import { ViewFixtures } from '@minddrop/views';
 import {
   cleanup,
   collectionEntry1,
@@ -20,7 +20,7 @@ import { getPropertyFilePath } from '../getPropertyFilePath';
 import { virtualViewId } from '../virtualViewId';
 import { entryDisplayPropertyValues } from './entryDisplayPropertyValues';
 
-const { viewType_table } = ViewFixtures;
+const { dataViewType_table } = DataViewFixtures;
 
 // Layout with a view element for collection property tests
 const designWithView: Layout = {
@@ -38,7 +38,7 @@ const designWithView: Layout = {
       {
         id: 'view-element-1',
         type: 'view',
-        viewType: viewType_table.type,
+        viewType: dataViewType_table.type,
         style: { ...DefaultViewElementStyle },
       },
     ],

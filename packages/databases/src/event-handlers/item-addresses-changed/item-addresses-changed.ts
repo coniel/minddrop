@@ -1,5 +1,5 @@
+import { DataViews } from '@minddrop/data-views';
 import { ItemAddressesChangedEventData } from '@minddrop/item-references';
-import { DataViews } from '@minddrop/views';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabasesStore } from '../../DatabasesStore';
 import { persistVirtualViewConfig } from '../../persistVirtualViewConfig';

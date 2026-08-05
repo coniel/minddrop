@@ -1,10 +1,12 @@
 import { Ast } from '@minddrop/ast';
 import { Collections } from '@minddrop/collections';
+import { DataViews } from '@minddrop/data-views';
 import { Databases } from '@minddrop/databases';
 import { Designs } from '@minddrop/designs';
 import { EditorElements, EditorMarks } from '@minddrop/editor';
 import { Events } from '@minddrop/events';
 import { initializeExtensions } from '@minddrop/extensions';
+import { initializeDataViewsFeature } from '@minddrop/feature-data-views';
 import { DatabaseViewStateStore } from '@minddrop/feature-databases';
 import { LayoutRegionSizesStore } from '@minddrop/feature-designs';
 import { initializeSearch } from '@minddrop/feature-search';
@@ -18,7 +20,6 @@ import { Search } from '@minddrop/search';
 import { Spaces } from '@minddrop/spaces';
 import { Sql } from '@minddrop/sql';
 import { Theme, VariantChangedEventData } from '@minddrop/ui-theme';
-import { Views } from '@minddrop/views';
 import { Workspaces } from '@minddrop/workspaces';
 import { AppUiState } from '../AppUiState';
 import { registerAppDataStoreListeners } from '../registerAppDataStoreListeners';
@@ -84,6 +85,7 @@ async function runInitialization(): Promise<void> {
   initializeDataViewTypes();
   registerViews();
   initializeViewsFeature();
+  initializeDataViewsFeature();
 
   // Initialize workspaces (sets Paths.workspace and
   // Paths.workspaceConfigs from the first loaded workspace)
@@ -103,9 +105,9 @@ async function runInitialization(): Promise<void> {
   Sql.initialize();
   const { schemaChanged } = await Databases.initialize();
 
-  // Load persisted views. Requires entries and the item reference
-  // adapters, both initialized by Databases.initialize.
-  await Views.initialize();
+  // Load persisted data views. Requires entries and the item
+  // reference adapters, both initialized by Databases.initialize.
+  await DataViews.initialize();
 
   // Load persisted collections. Requires entries and the item
   // reference adapters, both initialized by Databases.initialize.

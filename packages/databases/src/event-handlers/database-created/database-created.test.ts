@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { DataViews } from '@minddrop/views';
+import { DataViews } from '@minddrop/data-views';
 import { cleanup, objectDatabase, setup } from '../../test-utils';
 import { onCreateDatabase } from './database-created';
 

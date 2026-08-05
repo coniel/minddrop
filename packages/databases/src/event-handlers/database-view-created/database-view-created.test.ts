@@ -1,11 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { DataView, DataViews, ViewFixtures } from '@minddrop/views';
+import { DataView, DataViewFixtures, DataViews } from '@minddrop/data-views';
 import { DatabasesStore } from '../../DatabasesStore';
 import { cleanup, setup } from '../../test-utils';
 import { objectDatabase } from '../../test-utils/fixtures';
 import { onDatabaseViewCreated } from './database-view-created';
 
-const { view_virtual_1, view_gallery_1 } = ViewFixtures;
+const { dataView_virtual_1, dataView_gallery_1 } = DataViewFixtures;
 
 vi.mock('../../writeDatabaseConfig', () => ({
   writeDatabaseConfig: vi.fn(),
@@ -18,7 +18,7 @@ describe('onDatabaseViewCreated', () => {
   it('persists the view to the database config', () => {
     // Create a virtual view for this database
     const view: DataView = {
-      ...view_virtual_1,
+      ...dataView_virtual_1,
       dataSource: { type: 'database', id: objectDatabase.id },
     };
 
@@ -33,13 +33,13 @@ describe('onDatabaseViewCreated', () => {
     const database = DatabasesStore.get(objectDatabase.id);
 
     expect(database!.views).toHaveLength(1);
-    expect(database!.views![0].id).toBe(view_virtual_1.id);
+    expect(database!.views![0].id).toBe(dataView_virtual_1.id);
   });
 
   it('ignores views that do not belong to a database', () => {
     // Create a view with a non-database data source
     const view: DataView = {
-      ...view_gallery_1,
+      ...dataView_gallery_1,
       dataSource: { type: 'collection', id: 'some-collection' },
     };
 

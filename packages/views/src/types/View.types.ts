@@ -8,5 +8,6 @@ export interface View {
   /**
    * The component rendered for this view.
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- must accept components with arbitrary props
   component: React.ComponentType<any>;
 }
