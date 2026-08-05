@@ -17,13 +17,18 @@ import {
 } from '@minddrop/events';
 import { I18n, i18n } from '@minddrop/i18n';
 import { DataViewViewProps } from '../DataViewView';
+import { NewDataViewViewProps } from '../NewDataViewView';
 import {
   DataViewViewName,
   DataViewsViewName,
   EventListenerId,
+  NewDataViewViewId,
+  NewDataViewViewName,
   OpenDataViewViewEvent,
   OpenDataViewViewEventData,
   OpenDataViewsViewEvent,
+  OpenNewDataViewViewEvent,
+  OpenNewDataViewViewEventData,
 } from '../events';
 import { locales } from '../locales';
 
@@ -36,6 +41,9 @@ const dataViewsViewId = 'data-views:data-views';
 
 // Icon shown in the data views list view's tab
 const DATA_VIEWS_VIEW_ICON = 'content-icon:layers:inherit';
+
+// Icon shown in the new data view view's tab
+const NEW_DATA_VIEW_VIEW_ICON = 'content-icon:plus:inherit';
 
 // Descriptor of the data views list view, used both to open it and
 // as the breadcrumb parent of data view views
@@ -85,6 +93,23 @@ export function initializeDataViewsFeature(): VoidFunction {
     );
   });
 
+  // Listen for open new data view view events, and open the view
+  // creation view when one is received
+  Events.addListener<OpenNewDataViewViewEventData>(
+    OpenNewDataViewViewEvent,
+    EventListenerId,
+    ({ data }) => {
+      Events.dispatch<OpenViewEventData<NewDataViewViewProps>>(OpenViewEvent, {
+        view: NewDataViewViewName,
+        id: NewDataViewViewId,
+        props: { viewType: data.viewType },
+        title: i18n.t('dataViews.labels.new'),
+        icon: NEW_DATA_VIEW_VIEW_ICON,
+        breadcrumbs: [dataViewsViewDescriptor()],
+      });
+    },
+  );
+
   // Update the data view's open view when the data view changes
   // (e.g. renamed or re-iconed)
   Events.addListener<DataViewUpdatedEventData>(
@@ -113,6 +138,7 @@ export function initializeDataViewsFeature(): VoidFunction {
   return () => {
     Events.removeListener(OpenDataViewViewEvent, EventListenerId);
     Events.removeListener(OpenDataViewsViewEvent, EventListenerId);
+    Events.removeListener(OpenNewDataViewViewEvent, EventListenerId);
     Events.removeListener(DataViewUpdatedEvent, EventListenerId);
     Events.removeListener(DataViewDeletedEvent, EventListenerId);
   };

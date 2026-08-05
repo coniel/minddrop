@@ -10,10 +10,15 @@ import {
   UpdateViewEventData,
 } from '@minddrop/events';
 import { DataViewViewProps } from '../DataViewView';
+import { NewDataViewViewProps } from '../NewDataViewView';
 import {
   DataViewViewName,
+  NewDataViewViewId,
+  NewDataViewViewName,
   OpenDataViewViewEvent,
   OpenDataViewViewEventData,
+  OpenNewDataViewViewEvent,
+  OpenNewDataViewViewEventData,
 } from '../events';
 import { cleanup, setup } from '../test-utils';
 import { initializeDataViewsFeature } from './initializeDataViewsFeature';
@@ -53,6 +58,25 @@ describe('initializeDataViewsFeature', () => {
 
       Events.dispatch<OpenDataViewViewEventData>(OpenDataViewViewEvent, {
         dataViewId: dataView_gallery_1.id,
+      });
+    }));
+
+  it('opens the new data view view on open new data view view event', () =>
+    new Promise<void>((resolve) => {
+      Events.addListener<OpenViewEventData<NewDataViewViewProps>>(
+        OpenViewEvent,
+        'test-open-new-data-view',
+        ({ data }) => {
+          // The new data view view opens with the selected view type
+          expect(data.view).toBe(NewDataViewViewName);
+          expect(data.id).toBe(NewDataViewViewId);
+          expect(data.props!.viewType).toBe(dataView_gallery_1.type);
+          resolve();
+        },
+      );
+
+      Events.dispatch<OpenNewDataViewViewEventData>(OpenNewDataViewViewEvent, {
+        viewType: dataView_gallery_1.type,
       });
     }));
 
