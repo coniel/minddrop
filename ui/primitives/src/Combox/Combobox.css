@@ -257,6 +257,17 @@
   box-shadow: var(--shadow-overlay);
   padding: var(--space-1) 0 var(--space-1) var(--space-1);
   outline: none;
+
+  transform-origin: var(--transform-origin);
+  transition:
+    transform var(--duration-fast) var(--ease-out),
+    opacity var(--duration-fast) var(--ease-out);
+
+  &[data-starting-style],
+  &[data-ending-style] {
+    opacity: 0;
+    transform: scale(0.95);
+  }
 }
 
 /* ============================================================

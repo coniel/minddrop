@@ -1,4 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react';
+import { IconButton } from '../IconButton';
 import { Story, StoryItem, StoryRow, StorySection } from '../dev/Story';
 import { Combobox, ComboboxOption, ComboboxOptionGroup } from './Combobox';
 
@@ -351,6 +352,25 @@ export const ComboboxStories = () => (
               emptyText="No data sources found."
             />
           </div>
+        </StoryItem>
+      </StoryRow>
+    </StorySection>
+
+    {/* --------------------------------------------------------
+        CUSTOM TRIGGER
+    -------------------------------------------------------- */}
+    <StorySection
+      title="Custom trigger"
+      description="A custom element rendered as the popup trigger in place of the styled trigger."
+    >
+      <StoryRow>
+        <StoryItem label="icon button">
+          <Combobox
+            items={DATABASES}
+            trigger={<IconButton icon="plus" stringLabel="Add entry" />}
+            searchPlaceholder="Search databases..."
+            emptyText="No databases found."
+          />
         </StoryItem>
       </StoryRow>
     </StorySection>
