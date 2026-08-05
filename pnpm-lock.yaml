@@ -470,6 +470,9 @@ importers:
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
+      '@minddrop/queries':
+        specifier: workspace:*
+        version: link:../../packages/queries
       '@minddrop/ui-components':
         specifier: workspace:*
         version: link:../../ui/components
@@ -1973,6 +1976,9 @@ importers:
 
   ui/components:
     dependencies:
+      '@minddrop/collections':
+        specifier: workspace:*
+        version: link:../../packages/collections
       '@minddrop/data-views':
         specifier: workspace:*
         version: link:../../packages/data-views
@@ -1988,6 +1994,9 @@ importers:
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
+      '@minddrop/queries':
+        specifier: workspace:*
+        version: link:../../packages/queries
       '@minddrop/ui-icons':
         specifier: workspace:*
         version: link:../icons

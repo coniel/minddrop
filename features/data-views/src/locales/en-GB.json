@@ -13,7 +13,12 @@
       },
       "source": {
         "label": "Data source",
-        "placeholder": "Choose a collection"
+        "collectionName": {
+          "label": "Collection name"
+        },
+        "queryName": {
+          "label": "Query name"
+        }
       },
       "actions": {
         "create": "Create view"

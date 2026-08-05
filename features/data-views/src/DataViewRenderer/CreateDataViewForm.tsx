@@ -1,19 +1,34 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { Collections } from '@minddrop/collections';
-import { DataView, DataViewTypes, DataViews } from '@minddrop/data-views';
+import {
+  DataView,
+  DataViewTypes,
+  DataViews,
+  ViewDataSource,
+} from '@minddrop/data-views';
+import { TranslationKey } from '@minddrop/i18n';
+import { Queries } from '@minddrop/queries';
+import {
+  DataSourceCombobox,
+  DataSourceSelection,
+} from '@minddrop/ui-components';
 import { UiIconName } from '@minddrop/ui-icons';
 import {
   Button,
   Group,
   Icon,
   InputLabel,
-  Select,
   Stack,
   Subheading,
   TextField,
 } from '@minddrop/ui-primitives';
 import { useForm } from '@minddrop/utils';
 import './CreateDataViewForm.css';
+
+// Default data source selection when collections are supported
+const NEW_COLLECTION_SELECTION: DataSourceSelection = {
+  type: 'new-collection',
+};
 
 export interface CreateDataViewFormProps {
   /**
@@ -29,30 +44,41 @@ export interface CreateDataViewFormProps {
 }
 
 /**
- * Renders a data view creation form: a name field and a
- * collection data source select. The view is only created once
- * the form is submitted.
+ * Renders a data view creation form: a name field and a data
+ * source combobox. New data sources staged in the combobox are
+ * only created once the form is submitted.
  */
 export const CreateDataViewForm: React.FC<CreateDataViewFormProps> = ({
   viewType,
   onCreateView,
 }) => {
-  const [collectionId, setCollectionId] = useState<string | undefined>();
   const viewTypeConfig = DataViewTypes.use(viewType);
-  const collections = Collections.useAll();
+
+  // Data source types supported by the view type
+  const supportedDataSources = viewTypeConfig?.supportedDataSources ?? [];
+  const supportsCollections = supportedDataSources.includes('collection');
+  const supportsQueries = supportedDataSources.includes('query');
+
+  // Default to creating a new collection when supported
+  const defaultSelection = supportsCollections
+    ? NEW_COLLECTION_SELECTION
+    : null;
+
+  const [dataSource, setDataSource] = useState<DataSourceSelection | null>(
+    defaultSelection,
+  );
   const { fieldProps, validateAllAsync, values } = useForm([
     { name: 'name', required: true },
+    { name: 'sourceName' },
   ]);
 
-  // Only real collections can be view sources
-  const realCollections = useMemo(
-    () => collections.filter((collection) => !collection.virtual),
-    [collections],
-  );
+  // Whether the selected data source is a staged new source
+  const isNewSource =
+    dataSource?.type === 'new-collection' || dataSource?.type === 'new-query';
 
   async function handleCreate() {
     // The data source is required
-    if (!collectionId) {
+    if (!dataSource) {
       return;
     }
 
@@ -61,12 +87,16 @@ export const CreateDataViewForm: React.FC<CreateDataViewFormProps> = ({
       return;
     }
 
-    // Create the view
-    const view = await DataViews.create(
-      viewType,
-      { type: 'collection', id: collectionId },
-      values.name,
+    // Resolve the selection to a data source, creating staged
+    // new sources only after validation has passed. New sources
+    // fall back to the view name when no name is given.
+    const source = await resolveDataSource(
+      dataSource,
+      values.sourceName || values.name,
     );
+
+    // Create the view
+    const view = await DataViews.create(viewType, source, values.name);
 
     onCreateView?.(view);
   }
@@ -88,24 +118,70 @@ export const CreateDataViewForm: React.FC<CreateDataViewFormProps> = ({
       />
       <Stack gap={1}>
         <InputLabel label="dataViews.form.source.label" />
-        <Select
+        <DataSourceCombobox
           size="lg"
-          placeholder="dataViews.form.source.placeholder"
-          options={realCollections.map((collection) => ({
-            value: collection.id,
-            stringLabel: collection.name,
-          }))}
-          value={collectionId}
-          onValueChange={setCollectionId}
+          valueVariant="text"
+          supportedDataSources={supportedDataSources}
+          showNewCollectionOption={supportsCollections}
+          showNewQueryOption={supportsQueries}
+          defaultSelection={defaultSelection ?? undefined}
+          onSelectionChange={setDataSource}
         />
       </Stack>
+      {/* Name field for the staged new data source */}
+      {isNewSource && (
+        <TextField
+          variant="filled"
+          label={sourceNameLabel(dataSource.type)}
+          {...fieldProps.sourceName}
+        />
+      )}
       <Button
         label="dataViews.form.actions.create"
         variant="solid"
         color="primary"
-        disabled={!collectionId}
+        disabled={!dataSource}
         onClick={handleCreate}
       />
     </Stack>
   );
 };
+
+/**
+ * Returns the source name field label for a staged new data
+ * source type.
+ */
+function sourceNameLabel(type: 'new-collection' | 'new-query'): TranslationKey {
+  // New collections use the collection name label
+  if (type === 'new-collection') {
+    return 'dataViews.form.source.collectionName.label';
+  }
+
+  return 'dataViews.form.source.queryName.label';
+}
+
+/**
+ * Resolves a data source selection to a view data source,
+ * creating staged new collections and queries named after the
+ * view.
+ */
+async function resolveDataSource(
+  selection: DataSourceSelection,
+  viewName: string,
+): Promise<ViewDataSource> {
+  // Create the staged new collection
+  if (selection.type === 'new-collection') {
+    const collection = await Collections.create(viewName);
+
+    return { type: 'collection', id: collection.id };
+  }
+
+  // Create the staged new query
+  if (selection.type === 'new-query') {
+    const query = await Queries.create(viewName);
+
+    return { type: 'query', id: query.id };
+  }
+
+  return selection;
+}
