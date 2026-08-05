@@ -5,6 +5,10 @@
   flex-direction: column;
 
   .header {
+    /* Match the height of the md icon button actions (plus the bottom
+       border included in the border-box min-height) so the header
+       height stays the same when there are no actions. */
+    min-height: calc(1.75rem + var(--space-2) * 2 + 1px);
     padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4);
     border-bottom: 1px solid var(--border-subtle);
     flex-shrink: 0;
