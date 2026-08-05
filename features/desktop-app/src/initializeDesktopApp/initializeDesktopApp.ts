@@ -10,6 +10,7 @@ import { initializeCollectionsFeature } from '@minddrop/feature-collections';
 import { initializeDataViewsFeature } from '@minddrop/feature-data-views';
 import { DatabaseViewStateStore } from '@minddrop/feature-databases';
 import { LayoutRegionSizesStore } from '@minddrop/feature-designs';
+import { initializeQueriesFeature } from '@minddrop/feature-queries';
 import { initializeSearch } from '@minddrop/feature-search';
 import {
   SpaceViewStateStore,
@@ -88,6 +89,7 @@ async function runInitialization(): Promise<void> {
   initializeViewsFeature();
   initializeCollectionsFeature();
   initializeDataViewsFeature();
+  initializeQueriesFeature();
 
   // Initialize workspaces (sets Paths.workspace and
   // Paths.workspaceConfigs from the first loaded workspace)

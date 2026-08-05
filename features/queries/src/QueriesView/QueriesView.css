@@ -1,0 +1,5 @@
+.queries-view {
+  .queries-view-content {
+    padding: var(--space-2);
+  }
+}

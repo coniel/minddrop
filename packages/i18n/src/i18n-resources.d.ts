@@ -1329,6 +1329,7 @@ declare module 'i18next' {
         queries: {
           labels: {
             query: string;
+            queries: string;
           };
         };
         calendar: {

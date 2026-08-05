@@ -4,14 +4,10 @@ import { CollectionsMenuItem } from '@minddrop/feature-collections';
 import { DataViewsMenuItem } from '@minddrop/feature-data-views';
 import { DatabasesSidebarMenu } from '@minddrop/feature-databases';
 import { OpenDesignStudioEvent } from '@minddrop/feature-designs';
+import { QueriesMenuItem } from '@minddrop/feature-queries';
 import { OpenSearchDialogEvent } from '@minddrop/feature-search';
 import { SpacesMenuItem } from '@minddrop/feature-spaces';
-import {
-  MenuGroup,
-  MenuItem,
-  Toolbar,
-  ToolbarIconButton,
-} from '@minddrop/ui-primitives';
+import { MenuGroup, Toolbar, ToolbarIconButton } from '@minddrop/ui-primitives';
 import { ThemeVariantPicker } from '@minddrop/ui-theme';
 import { AppUiState } from './AppUiState';
 import { Sidebar, SidebarProps } from './Sidebar';
@@ -65,7 +61,7 @@ export const AppSidebar: React.FC<SidebarProps> = ({ ...other }) => {
         <SpacesMenuItem />
         <DataViewsMenuItem />
         <CollectionsMenuItem />
-        <MenuItem muted icon="list-filter" label="labels.queries" />
+        <QueriesMenuItem />
       </MenuGroup>
       <DatabasesSidebarMenu />
       <Toolbar className="app-sidebar-bottom-toolbar">

@@ -701,6 +701,9 @@ importers:
       '@minddrop/feature-designs':
         specifier: workspace:*
         version: link:../designs
+      '@minddrop/feature-queries':
+        specifier: workspace:*
+        version: link:../queries
       '@minddrop/feature-search':
         specifier: workspace:*
         version: link:../search
@@ -844,6 +847,43 @@ importers:
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../../packages/utils
+    devDependencies:
+      '@minddrop/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      eslint:
+        specifier: ^9.39.3
+        version: 9.39.3
+      tsconfig:
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  features/queries:
+    dependencies:
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../../packages/events
+      '@minddrop/file-system':
+        specifier: workspace:*
+        version: link:../../packages/file-system
+      '@minddrop/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
+      '@minddrop/queries':
+        specifier: workspace:*
+        version: link:../../packages/queries
+      '@minddrop/ui-components':
+        specifier: workspace:*
+        version: link:../../ui/components
+      '@minddrop/ui-primitives':
+        specifier: workspace:*
+        version: link:../../ui/primitives
+      '@minddrop/views':
+        specifier: workspace:*
+        version: link:../../packages/views
     devDependencies:
       '@minddrop/eslint-config':
         specifier: workspace:*
@@ -1927,6 +1967,9 @@ importers:
       '@minddrop/designs':
         specifier: workspace:*
         version: link:../../packages/designs
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../../packages/events
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
