@@ -20,5 +20,6 @@ export function toTabView(descriptor: ViewDescriptor | null): TabView | null {
     props: descriptor.props,
     title: descriptor.title,
     icon: descriptor.icon ?? DEFAULT_ICON,
+    breadcrumbs: descriptor.breadcrumbs,
   };
 }

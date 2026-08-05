@@ -63,6 +63,13 @@ export type OpenViewEventData<TProps = any> = {
    * in its tab.
    */
   icon?: string;
+
+  /**
+   * Descriptors of the view's ancestor views, ordered root first.
+   * Rendered as a breadcrumb trail by the opened view. Breadcrumb
+   * descriptors never carry their own trails.
+   */
+  breadcrumbs?: ViewDescriptor[];
 };
 
 export type UpdateViewEventData<TProps = any> = {
@@ -141,6 +148,13 @@ export type ViewDescriptor<TProps = any> = {
    * in its tab.
    */
   icon?: string;
+
+  /**
+   * Descriptors of the view's ancestor views, ordered root first.
+   * Rendered as a breadcrumb trail by the opened view. Breadcrumb
+   * descriptors never carry their own trails.
+   */
+  breadcrumbs?: ViewDescriptor[];
 };
 
 export type SetViewAreaEventData = {

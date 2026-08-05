@@ -7,6 +7,7 @@ import {
   OpenViewEventData,
   UpdateViewEvent,
   UpdateViewEventData,
+  ViewDescriptor,
 } from '@minddrop/events';
 import { Tabs } from '@minddrop/feature-views';
 import { i18n } from '@minddrop/i18n';
@@ -37,6 +38,15 @@ const spacesViewId = 'spaces:spaces';
 
 // Icon shown in the spaces list view's tab
 const SPACES_VIEW_ICON = 'content-icon:shapes:inherit';
+
+// Descriptor of the spaces list view, used both to open it and as
+// the breadcrumb parent of space views
+const spacesViewDescriptor = (): ViewDescriptor => ({
+  view: SpacesViewName,
+  id: spacesViewId,
+  title: i18n.t('spaces.labels.spaces'),
+  icon: SPACES_VIEW_ICON,
+});
 
 /**
  * Renders the spaces feature dialogs and registers event listeners
@@ -79,6 +89,7 @@ export const SpacesFeature: React.FC = () => {
           props: { spaceId: data.spaceId },
           title: space?.name,
           icon: space?.icon,
+          breadcrumbs: [spacesViewDescriptor()],
         });
       },
     );
@@ -86,12 +97,7 @@ export const SpacesFeature: React.FC = () => {
     // Listen for open spaces view events, and open the spaces
     // list view when one is received
     Events.addListener(OpenSpacesViewEvent, EventListenerId, () => {
-      Events.dispatch<OpenViewEventData>(OpenViewEvent, {
-        view: SpacesViewName,
-        id: spacesViewId,
-        title: i18n.t('spaces.labels.spaces'),
-        icon: SPACES_VIEW_ICON,
-      });
+      Events.dispatch<OpenViewEventData>(OpenViewEvent, spacesViewDescriptor());
     });
 
     // Update the space's open view when the space changes

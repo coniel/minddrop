@@ -1,5 +1,10 @@
 import React from 'react';
-import { Events, OpenViewEvent, OpenViewEventData } from '@minddrop/events';
+import {
+  Events,
+  OpenViewEvent,
+  OpenViewEventData,
+  ViewDescriptor,
+} from '@minddrop/events';
 import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import { UiIconName } from '@minddrop/ui-icons';
 import {
@@ -16,6 +21,7 @@ import {
   TranslatableNode,
   propsToClass,
 } from '@minddrop/ui-primitives';
+import { Views } from '@minddrop/views';
 import './PanelView.css';
 
 export interface PanelViewAction {
@@ -39,47 +45,6 @@ export interface PanelViewAction {
    * Click handler.
    */
   onClick: React.MouseEventHandler<HTMLButtonElement>;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- props shape is defined by the target view
-export interface PanelViewBreadcrumb<TProps = any> {
-  /**
-   * Title text. Strings are treated as i18n keys and translated.
-   */
-  title?: TranslatableNode;
-
-  /**
-   * Plain string title rendered as-is without i18n translation.
-   * Takes priority over `title`.
-   */
-  stringTitle?: string;
-
-  /**
-   * Icon rendered before the title.
-   */
-  icon?: IconProp;
-
-  /**
-   * Stringified content icon rendered before the title.
-   * Takes priority over `icon`.
-   */
-  contentIcon?: string;
-
-  /**
-   * Identifier for the view type opened when the breadcrumb is
-   * clicked.
-   */
-  view: string;
-
-  /**
-   * Instance id of the opened view.
-   */
-  viewId?: string;
-
-  /**
-   * Props passed to the opened view component.
-   */
-  props?: TProps;
 }
 
 export interface PanelViewProps {
@@ -107,9 +72,10 @@ export interface PanelViewProps {
 
   /**
    * Breadcrumbs rendered before the title, linking to ancestor
-   * views.
+   * views. Defaults to the trail of the view instance the panel
+   * is rendered in.
    */
-  breadcrumbs?: PanelViewBreadcrumb[];
+  breadcrumbs?: ViewDescriptor[];
 
   /**
    * Action buttons rendered in the header toolbar.
@@ -142,9 +108,13 @@ export const PanelView: React.FC<PanelViewProps> = ({
   title,
 }) => {
   const { t } = useTranslation();
+  const contextBreadcrumbs = Views.useBreadcrumbs();
+
+  // Explicitly passed breadcrumbs override the view instance's trail
+  const trail = breadcrumbs ?? contextBreadcrumbs;
 
   // Whether the header renders a breadcrumb trail
-  const hasBreadcrumbs = Boolean(breadcrumbs && breadcrumbs.length > 0);
+  const hasBreadcrumbs = trail.length > 0;
 
   // Resolve the display title, treating string titles as i18n keys
   let resolvedTitle: React.ReactNode = title;
@@ -163,17 +133,16 @@ export const PanelView: React.FC<PanelViewProps> = ({
       >
         <Group gap={2} className="title">
           {/* Breadcrumb trail leading to the current view */}
-          {breadcrumbs &&
-            breadcrumbs.map((breadcrumb, index) => (
-              <React.Fragment key={breadcrumb.viewId || index}>
-                <PanelViewBreadcrumbButton breadcrumb={breadcrumb} />
-                <Icon
-                  name="chevron-right"
-                  color="muted"
-                  className="breadcrumb-separator"
-                />
-              </React.Fragment>
-            ))}
+          {trail.map((breadcrumb, index) => (
+            <React.Fragment key={breadcrumb.id || index}>
+              <PanelViewBreadcrumbButton breadcrumb={breadcrumb} />
+              <Icon
+                name="chevron-right"
+                color="muted"
+                className="breadcrumb-separator"
+              />
+            </React.Fragment>
+          ))}
           {/* Content icon takes priority over the plain icon */}
           {contentIcon ? (
             <ContentIcon className="title-icon" icon={contentIcon} />
@@ -205,9 +174,9 @@ export const PanelView: React.FC<PanelViewProps> = ({
 
 interface PanelViewBreadcrumbButtonProps {
   /**
-   * The breadcrumb to render.
+   * The descriptor of the ancestor view the breadcrumb links to.
    */
-  breadcrumb: PanelViewBreadcrumb;
+  breadcrumb: ViewDescriptor;
 }
 
 /**
@@ -217,27 +186,9 @@ interface PanelViewBreadcrumbButtonProps {
 const PanelViewBreadcrumbButton: React.FC<PanelViewBreadcrumbButtonProps> = ({
   breadcrumb,
 }) => {
-  const { t } = useTranslation();
-
-  // Resolve the display title, treating string titles as i18n keys
-  let resolvedTitle: React.ReactNode = breadcrumb.title;
-
-  if (breadcrumb.stringTitle) {
-    resolvedTitle = breadcrumb.stringTitle;
-  } else if (typeof breadcrumb.title === 'string') {
-    resolvedTitle = t(breadcrumb.title);
-  }
-
   // Open the breadcrumb's view
   function handleClick() {
-    Events.dispatch<OpenViewEventData>(OpenViewEvent, {
-      view: breadcrumb.view,
-      id: breadcrumb.viewId,
-      props: breadcrumb.props,
-      // The opened view's tab title must be a plain string
-      title: typeof resolvedTitle === 'string' ? resolvedTitle : undefined,
-      icon: breadcrumb.contentIcon,
-    });
+    Events.dispatch<OpenViewEventData>(OpenViewEvent, { ...breadcrumb });
   }
 
   return (
@@ -247,16 +198,10 @@ const PanelViewBreadcrumbButton: React.FC<PanelViewBreadcrumbButtonProps> = ({
       className="breadcrumb-button"
       onClick={handleClick}
     >
-      {/* Content icon takes priority over the plain icon */}
-      {breadcrumb.contentIcon ? (
-        <ContentIcon
-          className="breadcrumb-icon"
-          icon={breadcrumb.contentIcon}
-        />
-      ) : (
-        <IconRenderer className="breadcrumb-icon" icon={breadcrumb.icon} />
+      {breadcrumb.icon && (
+        <ContentIcon className="breadcrumb-icon" icon={breadcrumb.icon} />
       )}
-      {resolvedTitle}
+      {breadcrumb.title}
     </Button>
   );
 };

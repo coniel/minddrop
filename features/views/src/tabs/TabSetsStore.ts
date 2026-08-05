@@ -1,3 +1,4 @@
+import { ViewDescriptor } from '@minddrop/events';
 import { createObjectStore } from '@minddrop/stores';
 import { EntityId } from '@minddrop/utils';
 
@@ -31,6 +32,12 @@ export interface TabView {
    * The tab's icon as a serializable icon string.
    */
   icon: string;
+
+  /**
+   * Descriptors of the view's ancestor views, ordered root first,
+   * rendered as the view's breadcrumb trail.
+   */
+  breadcrumbs?: ViewDescriptor[];
 }
 
 export type TabId = EntityId<'tab'>;

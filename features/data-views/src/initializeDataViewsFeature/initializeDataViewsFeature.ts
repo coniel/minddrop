@@ -13,6 +13,7 @@ import {
   OpenViewEventData,
   UpdateViewEvent,
   UpdateViewEventData,
+  ViewDescriptor,
 } from '@minddrop/events';
 import { I18n, i18n } from '@minddrop/i18n';
 import { DataViewViewProps } from '../DataViewView';
@@ -35,6 +36,15 @@ const dataViewsViewId = 'data-views:data-views';
 
 // Icon shown in the data views list view's tab
 const DATA_VIEWS_VIEW_ICON = 'content-icon:layers:inherit';
+
+// Descriptor of the data views list view, used both to open it and
+// as the breadcrumb parent of data view views
+const dataViewsViewDescriptor = (): ViewDescriptor => ({
+  view: DataViewsViewName,
+  id: dataViewsViewId,
+  title: i18n.t('dataViews.labels.views'),
+  icon: DATA_VIEWS_VIEW_ICON,
+});
 
 /**
  * Initializes the data views feature by registering translations
@@ -61,6 +71,7 @@ export function initializeDataViewsFeature(): VoidFunction {
         props: { dataViewId: data.dataViewId },
         title: dataView?.name,
         icon: dataView?.icon,
+        breadcrumbs: [dataViewsViewDescriptor()],
       });
     },
   );
@@ -68,12 +79,10 @@ export function initializeDataViewsFeature(): VoidFunction {
   // Listen for open data views view events, and open the data
   // views list view when one is received
   Events.addListener(OpenDataViewsViewEvent, EventListenerId, () => {
-    Events.dispatch<OpenViewEventData>(OpenViewEvent, {
-      view: DataViewsViewName,
-      id: dataViewsViewId,
-      title: i18n.t('dataViews.labels.views'),
-      icon: DATA_VIEWS_VIEW_ICON,
-    });
+    Events.dispatch<OpenViewEventData>(
+      OpenViewEvent,
+      dataViewsViewDescriptor(),
+    );
   });
 
   // Update the data view's open view when the data view changes

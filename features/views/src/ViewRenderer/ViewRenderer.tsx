@@ -48,6 +48,9 @@ const INITIAL_STATE: ViewAreaState = {
   splitRatio: 50,
 };
 
+// Stable empty trail for views opened without breadcrumbs
+const NO_BREADCRUMBS: ViewDescriptor[] = [];
+
 /**
  * Renders the views for a view area. Driven entirely by view events
  * (`OpenViewEvent` / `SetViewAreaEvent`) scoped to its `viewAreaId`,
@@ -99,6 +102,7 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
           props: data.props,
           title: data.title,
           icon: data.icon,
+          breadcrumbs: data.breadcrumbs,
         };
 
         // Open in the split pane, keeping the current main view
@@ -270,7 +274,8 @@ interface RegisteredViewProps {
 }
 
 /**
- * Resolves a registered view by its type and renders it with its props.
+ * Resolves a registered view by its type and renders it with its
+ * props, providing the view's breadcrumb trail to its content.
  */
 const RegisteredView: FC<RegisteredViewProps> = ({ descriptor }) => {
   const registered = Views.use(descriptor.view);
@@ -282,7 +287,13 @@ const RegisteredView: FC<RegisteredViewProps> = ({ descriptor }) => {
 
   const ViewComponent = registered.component;
 
-  return <ViewComponent {...descriptor.props} />;
+  return (
+    <Views.BreadcrumbsProvider
+      breadcrumbs={descriptor.breadcrumbs ?? NO_BREADCRUMBS}
+    >
+      <ViewComponent {...descriptor.props} />
+    </Views.BreadcrumbsProvider>
+  );
 };
 
 interface ViewAreaPaneProps {

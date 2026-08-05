@@ -146,6 +146,15 @@ it.
 
 ## features/views
 
+### Breadcrumb trails are snapshots taken at open time
+
+A view's `breadcrumbs` (`ViewDescriptor[]` on `OpenViewEventData`) are
+composed by the dispatcher when the view is opened, so an ancestor's
+title/icon in a trail can go stale after e.g. a rename. Only
+tab-persisted trails are patched on `UpdateViewEvent` (via
+`applyViewUpdate`); an open view area keeps rendering its descriptor
+snapshot until the view is reopened or its tab state is re-applied.
+
 ### View components must size themselves with `height: 100%`
 
 The view area container rendered by `ViewRenderer` is not a flex

@@ -5,3 +5,7 @@ export {
 } from './ViewsStore';
 export { registerView as register } from './registerView';
 export { getView as get } from './getView';
+export {
+  ViewBreadcrumbsProvider as BreadcrumbsProvider,
+  useViewBreadcrumbs as useBreadcrumbs,
+} from './ViewBreadcrumbsContext';

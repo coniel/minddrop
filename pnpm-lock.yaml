@@ -1914,13 +1914,25 @@ importers:
 
   packages/views:
     dependencies:
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../events
       '@minddrop/stores':
         specifier: workspace:*
         version: link:../stores
+      react:
+        specifier: ^19.2.4
+        version: 19.2.4
     devDependencies:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@minddrop/test-utils':
+        specifier: workspace:*
+        version: link:../test-utils
+      '@types/react':
+        specifier: ^19.2.14
+        version: 19.2.14
       eslint:
         specifier: ^9.39.3
         version: 9.39.3
@@ -1982,6 +1994,9 @@ importers:
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../../packages/utils
+      '@minddrop/views':
+        specifier: workspace:*
+        version: link:../../packages/views
     devDependencies:
       '@minddrop/eslint-config':
         specifier: workspace:*
