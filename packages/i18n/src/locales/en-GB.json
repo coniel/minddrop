@@ -1408,6 +1408,18 @@
   "toast": {
     "close": "Close"
   },
+  "collections": {
+    "entries": {
+      "actions": {
+        "add": "Add entry"
+      },
+      "groups": {
+        "new": "New",
+        "existing": "Existing"
+      },
+      "empty": "No results"
+    }
+  },
   "dataViews": {
     "actions": {
       "add": "Add view",

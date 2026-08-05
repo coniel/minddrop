@@ -23,6 +23,7 @@
     "@minddrop/collections": "workspace:*",
     "@minddrop/data-views": "workspace:*",
     "@minddrop/databases": "workspace:*",
+    "@minddrop/file-system": "workspace:*",
     "@minddrop/queries": "workspace:*",
     "@minddrop/designs": "workspace:*",
     "@minddrop/events": "workspace:*",

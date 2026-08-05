@@ -30,6 +30,8 @@ class ResizeObserver {
 // @ts-expect-error Mock doesn't need to be complete
 window.DOMRect = { fromRect: () => ({}) };
 window.ResizeObserver = ResizeObserver;
+// Needed for scroll areas
+Element.prototype.getAnimations = () => [];
 // Needed for theme
 Object.defineProperty(window, 'matchMedia', {
   writable: true,

@@ -11,6 +11,16 @@ declare module 'i18next' {
             collection: string;
             collections: string;
           };
+          entries: {
+            actions: {
+              add: string;
+            };
+            groups: {
+              new: string;
+              existing: string;
+            };
+            empty: string;
+          };
         };
         test: string;
         app: {

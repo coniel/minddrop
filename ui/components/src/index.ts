@@ -1,3 +1,4 @@
+export * from './AddCollectionEntryButton';
 export * from './AddDataViewMenu';
 export * from './CreateDatabaseEntryButton';
 export * from './DataSourceCombobox';
