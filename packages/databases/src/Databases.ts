@@ -87,6 +87,7 @@ export { getDatabasesFromEntries as getFromEntries } from './getDatabasesFromEnt
 export { initializeDatabases as initialize } from './initializeDatabases';
 export { removeDatabaseProperty as removeProperty } from './removeDatabaseProperty';
 export { renameDatabase as rename } from './renameDatabase';
+export { searchDatabases as search } from './utils';
 export { updateDatabase as update } from './updateDatabase';
 export { setDatabaseEntrySerializer as setEntrySerializer } from './setDatabaseEntrySerializer';
 export { setDatabasePropertyFileStorage as setPropertyFileStorage } from './setDatabasePropertyFileStorage';

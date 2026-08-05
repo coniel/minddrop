@@ -40,5 +40,7 @@ export { readDatabaseEntries as readFiles } from './readDatabaseEntries';
 export { createEntryVirtualViews as createVirtualViews } from './utils';
 export { entryDisplayPropertyValues as displayPropertyValues } from './utils';
 export { getAllDatabaseEntries as getAll } from './getAllDatabaseEntries';
+export { getNewestDatabaseEntries as getNewest } from './utils';
+export { searchDatabaseEntriesByTitle as searchByTitle } from './utils';
 export { setEntryViewLayoutOverride as setViewLayoutOverride } from './setEntryViewLayoutOverride';
 export { clearEntryViewLayoutOverride as clearViewLayoutOverride } from './clearEntryViewLayoutOverride';

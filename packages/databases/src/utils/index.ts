@@ -37,3 +37,6 @@ export * from './matchEntriesToSqlRecords';
 export * from './convertSqlRecordToEntry';
 export * from './rekeyDatabaseMetadata';
 export * from './setTimestampProperties';
+export * from './getNewestDatabaseEntries';
+export * from './searchDatabaseEntriesByTitle';
+export * from './searchDatabases';
