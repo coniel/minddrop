@@ -16,6 +16,7 @@ import {
   useDesignStudioStore,
 } from '@minddrop/feature-designs';
 import { Space, Spaces } from '@minddrop/spaces';
+import { PanelView } from '@minddrop/ui-components';
 import { Panel, ScrollArea } from '@minddrop/ui-primitives';
 import { setSpaceViewState } from '../SpaceViewStateStore';
 import { EDIT_PANEL_WIDTH, PAGE_ELEMENT_TYPES } from '../constants';
@@ -128,11 +129,15 @@ export const SpaceEditMode: React.FC<SpaceEditModeProps> = ({ space }) => {
         />
       </Panel>
       {/* The space's editable layout */}
-      <Panel className="space-edit-mode-surface">
-        <ScrollArea>
+      <PanelView
+        className="space-edit-mode-surface"
+        stringTitle={space.name}
+        contentIcon={space.icon}
+      >
+        <ScrollArea className="space-edit-mode-content">
           <LayoutEditSurface layoutId={space.layout.id} />
         </ScrollArea>
-      </Panel>
+      </PanelView>
       <Panel className="space-edit-mode-right-panel">
         {selectedElementId && <ElementStyleEditor />}
       </Panel>

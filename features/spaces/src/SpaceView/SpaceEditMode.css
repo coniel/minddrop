@@ -15,8 +15,9 @@
     flex: 1;
     min-width: 0;
 
-    .scroll-area {
-      height: 100%;
+    .space-edit-mode-content {
+      flex: 1;
+      min-height: 0;
     }
   }
 }
