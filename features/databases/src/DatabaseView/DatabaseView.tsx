@@ -3,7 +3,7 @@ import { DataViewTypes, DataViews } from '@minddrop/data-views';
 import { DatabaseEntries, Databases } from '@minddrop/databases';
 import { DataViewRenderer } from '@minddrop/feature-data-views';
 import { useTranslation } from '@minddrop/i18n';
-import { PanelView } from '@minddrop/ui-components';
+import { AddDataViewMenu, PanelView } from '@minddrop/ui-components';
 import { SortableList } from '@minddrop/ui-drag-and-drop';
 import {
   ContentIcon,
@@ -11,16 +11,13 @@ import {
   ContextMenuPortal,
   ContextMenuPositioner,
   ContextMenuRoot,
-  DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuPortal,
   DropdownMenuPositioner,
   DropdownMenuRoot,
   DropdownMenuTrigger,
   Icon,
   IconButton,
-  MenuGroup,
   MenuRenameItem,
   MenuSeparator,
   Stack,
@@ -396,33 +393,12 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
             )}
 
             {/* Add view dropdown */}
-            <DropdownMenu
-              trigger={
-                <IconButton
-                  size="sm"
-                  label="databases.actions.addView"
-                  icon="plus"
-                  color="muted"
-                />
-              }
-              minWidth={200}
-            >
-              <MenuGroup>
-                {viewTypes
-                  .filter((viewType) =>
-                    viewType.supportedDataSources.includes('database'),
-                  )
-                  .map((viewType) => (
-                    <DropdownMenuItem
-                      key={viewType.type}
-                      icon={viewType.icon}
-                      label={viewType.name}
-                      tooltip={{ title: viewType.description }}
-                      onSelect={() => handleAddView(viewType.type)}
-                    />
-                  ))}
-              </MenuGroup>
-            </DropdownMenu>
+            <AddDataViewMenu
+              size="sm"
+              color="muted"
+              dataSources={['database']}
+              onSelectViewType={handleAddView}
+            />
 
             {/* View settings dropdown */}
             {view && (
