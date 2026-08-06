@@ -12,15 +12,15 @@ describe('useForm', () => {
         name: 'username',
         defaultValue: 'john',
         required: true,
-        validate: (v) => (v.length < 3 ? 'Too short' : undefined),
+        validate: (v) => (v.length < 3 ? 'error.invalidDirName' : undefined),
       },
       {
         name: 'email',
-        validate: (v) => (v.includes('@') ? undefined : 'Must contain @'),
+        validate: (v) => (v.includes('@') ? undefined : 'error.unknown'),
         validateAsync: async (v) => {
           await new Promise((r) => setTimeout(r, 10));
 
-          return v === 'taken@example.com' ? 'Email taken' : undefined;
+          return v === 'taken@example.com' ? 'error.dirPathConflict' : undefined;
         },
       },
     ];
@@ -87,7 +87,7 @@ describe('useForm', () => {
     });
 
     expect(valid!).toBe(false);
-    expect(result.current.errors.username).toBe('Too short');
+    expect(result.current.errors.username).toBe('error.invalidDirName');
   });
 
   it('passes synchronous validation', () => {
@@ -115,7 +115,7 @@ describe('useForm', () => {
     );
 
     expect(valid).toBe(false);
-    expect(result.current.errors.email).toBe('Email taken');
+    expect(result.current.errors.email).toBe('error.dirPathConflict');
   });
 
   it('runs async validation and passes for valid value', async () => {
@@ -146,8 +146,8 @@ describe('useForm', () => {
     });
 
     expect(valid!).toBe(false);
-    expect(result.current.errors.username).toBe('Too short');
-    expect(result.current.errors.email).toBe('Must contain @');
+    expect(result.current.errors.username).toBe('error.invalidDirName');
+    expect(result.current.errors.email).toBe('error.unknown');
   });
 
   it('validateAllAsync returns true if all fields valid', async () => {
@@ -175,7 +175,7 @@ describe('useForm', () => {
     );
 
     expect(valid).toBe(false);
-    expect(result.current.errors.email).toBe('Email taken');
+    expect(result.current.errors.email).toBe('error.dirPathConflict');
   });
 
   it('reset restores default values and clears errors', () => {

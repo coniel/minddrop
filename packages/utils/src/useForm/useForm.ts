@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
+import { TranslationKey } from '@minddrop/i18n';
 
 /**
  * Definition for a form field.
@@ -36,7 +37,7 @@ export interface FieldDefinition {
    * @returns An error message string if validation fails, or undefined
    * if validation passes.
    */
-  validate?: (value: string) => string | undefined;
+  validate?: (value: string) => TranslationKey | undefined;
 
   /**
    * An asynchronous validation function. Receives the field value and
@@ -48,7 +49,7 @@ export interface FieldDefinition {
    * @returns A Promise that resolves to an error message string if
    * validation fails, or undefined if validation passes.
    */
-  validateAsync?: (value: string) => Promise<string | undefined>;
+  validateAsync?: (value: string) => Promise<TranslationKey | undefined>;
 }
 
 /**
@@ -83,7 +84,7 @@ export interface FieldProps {
   /**
    * The field error message, if any.
    */
-  error?: string;
+  error?: TranslationKey;
 }
 
 export interface UseFormReturn {
@@ -95,7 +96,7 @@ export interface UseFormReturn {
   /**
    * A [field name]: error message mapping of the current form errors.
    */
-  errors: Record<string, string | undefined>;
+  errors: Record<string, TranslationKey | undefined>;
 
   /**
    * A [field name]: FieldProps mapping for spreading onto form fields.
@@ -178,7 +179,9 @@ export function useForm(fieldDefinitions: FieldDefinition[]): UseFormReturn {
   );
 
   const [values, setValues] = useState<Record<string, string>>(initialValues);
-  const [errors, setErrors] = useState<Record<string, string | undefined>>({});
+  const [errors, setErrors] = useState<
+    Record<string, TranslationKey | undefined>
+  >({});
 
   // Create a map for quick field lookup
   const fieldMap = fieldDefinitions.reduce(
@@ -192,8 +195,8 @@ export function useForm(fieldDefinitions: FieldDefinition[]): UseFormReturn {
 
   // Run basic validation (required and sync validate)
   const runBasicValidation = useCallback(
-    (field: FieldDefinition, value: string): string | undefined => {
-      let error: string | undefined;
+    (field: FieldDefinition, value: string): TranslationKey | undefined => {
+      let error: TranslationKey | undefined;
 
       // Run custom validation if provided
       if (field.validate) {
@@ -202,8 +205,7 @@ export function useForm(fieldDefinitions: FieldDefinition[]): UseFormReturn {
 
       // Check required
       if (!error && field.required && !value.trim()) {
-        // TODO: Use i18n for error message
-        error = 'Required';
+        error = 'formErrors.required';
       }
 
       return error;
@@ -256,7 +258,7 @@ export function useForm(fieldDefinitions: FieldDefinition[]): UseFormReturn {
 
   // Validate all fields
   const validateAll = useCallback((): boolean => {
-    const newErrors: Record<string, string | undefined> = {};
+    const newErrors: Record<string, TranslationKey | undefined> = {};
     let isValid = true;
 
     fieldDefinitions.forEach((field) => {
@@ -277,7 +279,7 @@ export function useForm(fieldDefinitions: FieldDefinition[]): UseFormReturn {
 
   // Validate all fields with async validation
   const validateAllAsync = useCallback(async (): Promise<boolean> => {
-    const newErrors: Record<string, string | undefined> = {};
+    const newErrors: Record<string, TranslationKey | undefined> = {};
     let isValid = true;
 
     for (const field of fieldDefinitions) {
