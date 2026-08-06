@@ -29,6 +29,12 @@ export interface TextProps extends React.HTMLAttributes<HTMLElement> {
   text?: TranslationKey;
 
   /*
+   * Plain string text rendered as-is without i18n translation.
+   * Takes priority over `text` and children.
+   */
+  stringText?: string;
+
+  /*
    * The rendered element. Defaults to 'span', or 'p' when paragraph is true.
    */
   as?: React.ElementType;
@@ -84,6 +90,7 @@ export const Text: FC<TextProps> = ({
   block = false,
   truncate = false,
   text,
+  stringText,
   ...other
 }) => {
   const Component = as || (paragraph ? 'p' : 'span');
@@ -101,7 +108,7 @@ export const Text: FC<TextProps> = ({
 
   return (
     <Component className={classes} {...other}>
-      {text ? i18n.t(text) : children}
+      {stringText ?? (text ? i18n.t(text) : children)}
     </Component>
   );
 };
