@@ -1,46 +1,50 @@
+import { createI18nKeyBuilder } from '@minddrop/i18n';
 import { DatabaseTemplateFn } from '../types';
-import { TranslateFn, createI18n } from './database-template-utils';
 
 /**
  * Creates the Contacts database template with translated strings.
  */
-export const ContactsDatabaseTemplate: DatabaseTemplateFn = (
-  t: TranslateFn,
-) => {
-  const { naming, propertyName } = createI18n(t, 'contacts');
+export const ContactsDatabaseTemplate: DatabaseTemplateFn = (t) => {
+  // Key builders for the template's i18n keys
+  const key = createI18nKeyBuilder('databases.templates.contacts.');
+  const propertyKey = createI18nKeyBuilder(
+    'databases.templates.contacts.properties.',
+  );
 
   return {
-    ...naming,
+    name: t(key('name')),
+    entryName: t(key('entryName')),
+    description: t(key('description')),
     icon: 'content-icon:users:default',
     properties: [
       {
         type: 'text',
-        name: propertyName('email'),
+        name: t(propertyKey('email', 'name')),
         icon: 'content-icon:mail:default',
       },
       {
         type: 'text',
-        name: propertyName('phone'),
+        name: t(propertyKey('phone', 'name')),
         icon: 'content-icon:phone:default',
       },
       {
         type: 'text',
-        name: propertyName('company'),
+        name: t(propertyKey('company', 'name')),
         icon: 'content-icon:building-2:default',
       },
       {
         type: 'text',
-        name: propertyName('role'),
+        name: t(propertyKey('role', 'name')),
         icon: 'content-icon:briefcase:default',
       },
       {
         type: 'image',
-        name: propertyName('photo'),
+        name: t(propertyKey('photo', 'name')),
         icon: 'content-icon:image:default',
       },
       {
         type: 'formatted-text',
-        name: propertyName('notes'),
+        name: t(propertyKey('notes', 'name')),
         icon: 'content-icon:text-quote:default',
       },
     ],

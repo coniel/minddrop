@@ -1,15 +1,19 @@
 import { TranslationKey } from '@minddrop/i18n';
-import { TranslateFn } from '../database-templates/database-template-utils';
 import { Database } from './Database.types';
 import { DatabaseAutomationTemplate } from './DatabaseAutomation.types';
+
+/**
+ * Translates an i18n key into the active language.
+ */
+export type TranslateFn = (key: TranslationKey) => string;
 
 export type DatabaseTemplate = Pick<Database, 'icon'> &
   Partial<
     Omit<Database, 'id' | 'path' | 'created' | 'lastModified' | 'automations'>
   > & {
-    name: TranslationKey;
-    entryName: TranslationKey;
-    description?: TranslationKey;
+    name: string;
+    entryName: string;
+    description?: string;
     automations?: DatabaseAutomationTemplate[];
   };
 

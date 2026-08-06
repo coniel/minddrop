@@ -1,39 +1,45 @@
+import { createI18nKeyBuilder } from '@minddrop/i18n';
 import { DatabaseTemplateFn } from '../types';
-import { TranslateFn, createI18n } from './database-template-utils';
 
 /**
  * Creates the Videos database template with translated strings.
  */
-export const VideosDatabaseTemplate: DatabaseTemplateFn = (t: TranslateFn) => {
-  const { naming, propertyName } = createI18n(t, 'videos');
+export const VideosDatabaseTemplate: DatabaseTemplateFn = (t) => {
+  // Key builders for the template's i18n keys
+  const key = createI18nKeyBuilder('databases.templates.videos.');
+  const propertyKey = createI18nKeyBuilder(
+    'databases.templates.videos.properties.',
+  );
 
   return {
-    ...naming,
+    name: t(key('name')),
+    entryName: t(key('entryName')),
+    description: t(key('description')),
     icon: 'content-icon:film:default',
     properties: [
       {
         type: 'file',
-        name: propertyName('file'),
+        name: t(propertyKey('file', 'name')),
         icon: 'content-icon:file-video:default',
       },
       {
         type: 'image',
-        name: propertyName('thumbnail'),
+        name: t(propertyKey('thumbnail', 'name')),
         icon: 'content-icon:image:default',
       },
       {
         type: 'text',
-        name: propertyName('description'),
+        name: t(propertyKey('description', 'name')),
         icon: 'content-icon:text:default',
       },
       {
         type: 'number',
-        name: propertyName('duration'),
+        name: t(propertyKey('duration', 'name')),
         icon: 'content-icon:timer:default',
       },
       {
         type: 'created',
-        name: propertyName('created'),
+        name: t(propertyKey('created', 'name')),
         icon: 'content-icon:clock:default',
       },
     ],

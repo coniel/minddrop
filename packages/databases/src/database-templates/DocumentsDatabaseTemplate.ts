@@ -1,53 +1,58 @@
+import { createI18nKeyBuilder } from '@minddrop/i18n';
 import { DatabaseTemplateFn } from '../types';
-import { TranslateFn, createI18n } from './database-template-utils';
 
 /**
  * Creates the Documents database template with translated strings.
  */
-export const DocumentsDatabaseTemplate: DatabaseTemplateFn = (
-  t: TranslateFn,
-) => {
-  const { naming, propertyName } = createI18n(t, 'documents');
+export const DocumentsDatabaseTemplate: DatabaseTemplateFn = (t) => {
+  // Key builders for the template's i18n keys
+  const key = createI18nKeyBuilder('databases.templates.documents.');
+  const propertyKey = createI18nKeyBuilder(
+    'databases.templates.documents.properties.',
+  );
 
-  // Helper to translate a category option key
-  const category = (key: string) =>
-    t(`databases.templates.documents.options.category.${key}`);
+  // Key builder for the category option keys
+  const categoryKey = createI18nKeyBuilder(
+    'databases.templates.documents.options.category.',
+  );
 
   return {
-    ...naming,
+    name: t(key('name')),
+    entryName: t(key('entryName')),
+    description: t(key('description')),
     icon: 'content-icon:file-text:default',
     properties: [
       {
         type: 'file',
-        name: propertyName('file'),
+        name: t(propertyKey('file', 'name')),
         icon: 'content-icon:file:default',
       },
       {
         type: 'text',
-        name: propertyName('description'),
+        name: t(propertyKey('description', 'name')),
         icon: 'content-icon:text:default',
       },
       {
         type: 'select',
-        name: propertyName('category'),
+        name: t(propertyKey('category', 'name')),
         icon: 'content-icon:tag:default',
         options: [
-          { value: category('work'), color: 'blue' },
-          { value: category('personal'), color: 'green' },
-          { value: category('financial'), color: 'orange' },
-          { value: category('legal'), color: 'red' },
-          { value: category('medical'), color: 'pink' },
-          { value: category('education'), color: 'purple' },
+          { value: t(categoryKey('work')), color: 'blue' },
+          { value: t(categoryKey('personal')), color: 'green' },
+          { value: t(categoryKey('financial')), color: 'orange' },
+          { value: t(categoryKey('legal')), color: 'red' },
+          { value: t(categoryKey('medical')), color: 'pink' },
+          { value: t(categoryKey('education')), color: 'purple' },
         ],
       },
       {
         type: 'created',
-        name: propertyName('created'),
+        name: t(propertyKey('created', 'name')),
         icon: 'content-icon:clock:default',
       },
       {
         type: 'last-modified',
-        name: propertyName('lastModified'),
+        name: t(propertyKey('lastModified', 'name')),
         icon: 'content-icon:clock:default',
       },
     ],

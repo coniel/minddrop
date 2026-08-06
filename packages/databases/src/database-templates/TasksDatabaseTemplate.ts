@@ -1,58 +1,66 @@
+import { createI18nKeyBuilder } from '@minddrop/i18n';
 import { DatabaseTemplateFn } from '../types';
-import { TranslateFn, createI18n } from './database-template-utils';
 
 /**
  * Creates the Tasks database template with translated strings.
  */
-export const TasksDatabaseTemplate: DatabaseTemplateFn = (t: TranslateFn) => {
-  const { naming, propertyName } = createI18n(t, 'tasks');
+export const TasksDatabaseTemplate: DatabaseTemplateFn = (t) => {
+  // Key builders for the template's i18n keys
+  const key = createI18nKeyBuilder('databases.templates.tasks.');
+  const propertyKey = createI18nKeyBuilder(
+    'databases.templates.tasks.properties.',
+  );
 
-  // Helper to translate a status option key
-  const status = (key: string) =>
-    t(`databases.templates.tasks.options.status.${key}`);
+  // Key builder for the status option keys
+  const statusKey = createI18nKeyBuilder(
+    'databases.templates.tasks.options.status.',
+  );
 
-  // Helper to translate a priority option key
-  const priority = (key: string) =>
-    t(`databases.templates.tasks.options.priority.${key}`);
+  // Key builder for the priority option keys
+  const priorityKey = createI18nKeyBuilder(
+    'databases.templates.tasks.options.priority.',
+  );
 
   return {
-    ...naming,
+    name: t(key('name')),
+    entryName: t(key('entryName')),
+    description: t(key('description')),
     icon: 'content-icon:list-checks:default',
     properties: [
       {
         type: 'select',
-        name: propertyName('status'),
+        name: t(propertyKey('status', 'name')),
         icon: 'content-icon:circle-dot:default',
         options: [
-          { value: status('toDo'), color: 'default' },
-          { value: status('inProgress'), color: 'blue' },
-          { value: status('done'), color: 'green' },
+          { value: t(statusKey('toDo')), color: 'default' },
+          { value: t(statusKey('inProgress')), color: 'blue' },
+          { value: t(statusKey('done')), color: 'green' },
         ],
       },
       {
         type: 'select',
-        name: propertyName('priority'),
+        name: t(propertyKey('priority', 'name')),
         icon: 'content-icon:signal:default',
         options: [
-          { value: priority('low'), color: 'gray' },
-          { value: priority('medium'), color: 'yellow' },
-          { value: priority('high'), color: 'orange' },
-          { value: priority('urgent'), color: 'red' },
+          { value: t(priorityKey('low')), color: 'gray' },
+          { value: t(priorityKey('medium')), color: 'yellow' },
+          { value: t(priorityKey('high')), color: 'orange' },
+          { value: t(priorityKey('urgent')), color: 'red' },
         ],
       },
       {
         type: 'date',
-        name: propertyName('dueDate'),
+        name: t(propertyKey('dueDate', 'name')),
         icon: 'content-icon:calendar:default',
       },
       {
         type: 'created',
-        name: propertyName('created'),
+        name: t(propertyKey('created', 'name')),
         icon: 'content-icon:clock:default',
       },
       {
         type: 'last-modified',
-        name: propertyName('lastModified'),
+        name: t(propertyKey('lastModified', 'name')),
         icon: 'content-icon:clock:default',
       },
     ],

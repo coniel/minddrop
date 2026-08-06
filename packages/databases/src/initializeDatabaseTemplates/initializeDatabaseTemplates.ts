@@ -7,10 +7,8 @@ import { coreDatabaseTemplates } from '../database-templates';
  * Each template function handles its own translation.
  */
 export function initializeDatabaseTemplates() {
-  // Call each template function with the i18n translate function
-  const translate = (key: string) => i18n.t(key);
-
   DatabaseTemplatesStore.load(
-    coreDatabaseTemplates.map((templateFn) => templateFn(translate)),
+    // Call each template function with the i18n translate function
+    coreDatabaseTemplates.map((templateFn) => templateFn(i18n.t)),
   );
 }

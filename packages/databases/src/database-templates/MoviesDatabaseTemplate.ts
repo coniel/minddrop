@@ -1,69 +1,77 @@
+import { createI18nKeyBuilder } from '@minddrop/i18n';
 import { DatabaseTemplateFn } from '../types';
-import { TranslateFn, createI18n } from './database-template-utils';
 
 /**
  * Creates the Movies database template with translated strings.
  */
-export const MoviesDatabaseTemplate: DatabaseTemplateFn = (t: TranslateFn) => {
-  const { naming, propertyName } = createI18n(t, 'movies');
+export const MoviesDatabaseTemplate: DatabaseTemplateFn = (t) => {
+  // Key builders for the template's i18n keys
+  const key = createI18nKeyBuilder('databases.templates.movies.');
+  const propertyKey = createI18nKeyBuilder(
+    'databases.templates.movies.properties.',
+  );
 
-  // Helper to translate a genre option key
-  const genre = (key: string) =>
-    t(`databases.templates.movies.options.genre.${key}`);
+  // Key builder for the genre option keys
+  const genreKey = createI18nKeyBuilder(
+    'databases.templates.movies.options.genre.',
+  );
 
-  // Helper to translate a status option key
-  const status = (key: string) =>
-    t(`databases.templates.movies.options.status.${key}`);
+  // Key builder for the status option keys
+  const statusKey = createI18nKeyBuilder(
+    'databases.templates.movies.options.status.',
+  );
 
   return {
-    ...naming,
+    name: t(key('name')),
+    entryName: t(key('entryName')),
+    description: t(key('description')),
     icon: 'content-icon:clapperboard:default',
     properties: [
       {
         type: 'text',
-        name: propertyName('director'),
+        name: t(propertyKey('director', 'name')),
         icon: 'content-icon:megaphone:default',
       },
       {
         type: 'select',
-        name: propertyName('genre'),
+        name: t(propertyKey('genre', 'name')),
         icon: 'content-icon:tag:default',
         options: [
-          { value: genre('action'), color: 'red' },
-          { value: genre('comedy'), color: 'yellow' },
-          { value: genre('drama'), color: 'blue' },
-          { value: genre('horror'), color: 'brown' },
-          { value: genre('scienceFiction'), color: 'purple' },
-          { value: genre('romance'), color: 'pink' },
-          { value: genre('thriller'), color: 'orange' },
-          { value: genre('documentary'), color: 'green' },
-          { value: genre('animation'), color: 'cyan' },
-          { value: genre('fantasy'), color: 'default' },
+          { value: t(genreKey('action')), color: 'red' },
+          { value: t(genreKey('comedy')), color: 'yellow' },
+          { value: t(genreKey('drama')), color: 'blue' },
+          { value: t(genreKey('horror')), color: 'brown' },
+          { value: t(genreKey('scienceFiction')), color: 'purple' },
+          { value: t(genreKey('romance')), color: 'pink' },
+          { value: t(genreKey('thriller')), color: 'orange' },
+          { value: t(genreKey('documentary')), color: 'green' },
+          { value: t(genreKey('animation')), color: 'cyan' },
+          { value: t(genreKey('fantasy')), color: 'default' },
         ],
       },
       {
         type: 'select',
-        name: propertyName('status'),
+        name: t(propertyKey('status', 'name')),
         icon: 'content-icon:circle-dot:default',
         options: [
-          { value: status('toWatch'), color: 'default' },
-          { value: status('watching'), color: 'blue' },
-          { value: status('watched'), color: 'green' },
+          { value: t(statusKey('toWatch')), color: 'default' },
+          { value: t(statusKey('watching')), color: 'blue' },
+          { value: t(statusKey('watched')), color: 'green' },
         ],
       },
       {
         type: 'number',
-        name: propertyName('rating'),
+        name: t(propertyKey('rating', 'name')),
         icon: 'content-icon:star:default',
       },
       {
         type: 'date',
-        name: propertyName('releaseDate'),
+        name: t(propertyKey('releaseDate', 'name')),
         icon: 'content-icon:calendar:default',
       },
       {
         type: 'image',
-        name: propertyName('poster'),
+        name: t(propertyKey('poster', 'name')),
         icon: 'content-icon:image:default',
       },
     ],

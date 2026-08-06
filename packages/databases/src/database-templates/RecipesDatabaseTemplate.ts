@@ -1,79 +1,87 @@
+import { createI18nKeyBuilder } from '@minddrop/i18n';
 import { DatabaseTemplateFn } from '../types';
-import { TranslateFn, createI18n } from './database-template-utils';
 
 /**
  * Creates the Recipes database template with translated strings.
  */
-export const RecipesDatabaseTemplate: DatabaseTemplateFn = (t: TranslateFn) => {
-  const { naming, propertyName } = createI18n(t, 'recipes');
+export const RecipesDatabaseTemplate: DatabaseTemplateFn = (t) => {
+  // Key builders for the template's i18n keys
+  const key = createI18nKeyBuilder('databases.templates.recipes.');
+  const propertyKey = createI18nKeyBuilder(
+    'databases.templates.recipes.properties.',
+  );
 
-  // Helper to translate a cuisine option key
-  const cuisine = (key: string) =>
-    t(`databases.templates.recipes.options.cuisine.${key}`);
+  // Key builder for the cuisine option keys
+  const cuisineKey = createI18nKeyBuilder(
+    'databases.templates.recipes.options.cuisine.',
+  );
 
-  // Helper to translate a diet option key
-  const diet = (key: string) =>
-    t(`databases.templates.recipes.options.diet.${key}`);
+  // Key builder for the diet option keys
+  const dietKey = createI18nKeyBuilder(
+    'databases.templates.recipes.options.diet.',
+  );
 
   return {
-    ...naming,
+    name: t(key('name')),
+    entryName: t(key('entryName')),
+    description: t(key('description')),
     icon: 'content-icon:chef-hat:default',
     properties: [
       {
         type: 'image',
-        name: propertyName('image'),
+        name: t(propertyKey('image', 'name')),
         icon: 'content-icon:image:default',
       },
       {
         type: 'number',
-        name: propertyName('prepTime'),
+        name: t(propertyKey('prepTime', 'name')),
         icon: 'content-icon:timer:default',
       },
       {
         type: 'number',
-        name: propertyName('cookTime'),
+        name: t(propertyKey('cookTime', 'name')),
         icon: 'content-icon:timer:default',
       },
       {
         type: 'number',
-        name: propertyName('servings'),
+        name: t(propertyKey('servings', 'name')),
         icon: 'content-icon:utensils:default',
       },
       {
         type: 'select',
-        name: propertyName('cuisine'),
+        name: t(propertyKey('cuisine', 'name')),
         icon: 'content-icon:globe:default',
         options: [
-          { value: cuisine('italian'), color: 'green' },
-          { value: cuisine('mexican'), color: 'red' },
-          { value: cuisine('chinese'), color: 'orange' },
-          { value: cuisine('indian'), color: 'yellow' },
-          { value: cuisine('japanese'), color: 'pink' },
-          { value: cuisine('french'), color: 'blue' },
-          { value: cuisine('thai'), color: 'purple' },
-          { value: cuisine('mediterranean'), color: 'cyan' },
-          { value: cuisine('american'), color: 'brown' },
+          { value: t(cuisineKey('italian')), color: 'green' },
+          { value: t(cuisineKey('mexican')), color: 'red' },
+          { value: t(cuisineKey('chinese')), color: 'orange' },
+          { value: t(cuisineKey('indian')), color: 'yellow' },
+          { value: t(cuisineKey('japanese')), color: 'pink' },
+          { value: t(cuisineKey('french')), color: 'blue' },
+          { value: t(cuisineKey('thai')), color: 'purple' },
+          { value: t(cuisineKey('mediterranean')), color: 'cyan' },
+          { value: t(cuisineKey('american')), color: 'brown' },
         ],
       },
       {
         type: 'select',
-        name: propertyName('diet'),
+        name: t(propertyKey('diet', 'name')),
         icon: 'content-icon:leaf:default',
         options: [
-          { value: diet('vegetarian'), color: 'green' },
-          { value: diet('vegan'), color: 'purple' },
-          { value: diet('glutenFree'), color: 'yellow' },
-          { value: diet('dairyFree'), color: 'blue' },
+          { value: t(dietKey('vegetarian')), color: 'green' },
+          { value: t(dietKey('vegan')), color: 'purple' },
+          { value: t(dietKey('glutenFree')), color: 'yellow' },
+          { value: t(dietKey('dairyFree')), color: 'blue' },
         ],
       },
       {
         type: 'formatted-text',
-        name: propertyName('ingredients'),
+        name: t(propertyKey('ingredients', 'name')),
         icon: 'content-icon:list:default',
       },
       {
         type: 'formatted-text',
-        name: propertyName('instructions'),
+        name: t(propertyKey('instructions', 'name')),
         icon: 'content-icon:list-ordered:default',
       },
     ],

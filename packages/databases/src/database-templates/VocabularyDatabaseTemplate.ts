@@ -1,50 +1,55 @@
+import { createI18nKeyBuilder } from '@minddrop/i18n';
 import { DatabaseTemplateFn } from '../types';
-import { TranslateFn, createI18n } from './database-template-utils';
 
 /**
  * Creates the Vocabulary database template with translated strings.
  */
-export const VocabularyDatabaseTemplate: DatabaseTemplateFn = (
-  t: TranslateFn,
-) => {
-  const { naming, propertyName } = createI18n(t, 'vocabulary');
+export const VocabularyDatabaseTemplate: DatabaseTemplateFn = (t) => {
+  // Key builders for the template's i18n keys
+  const key = createI18nKeyBuilder('databases.templates.vocabulary.');
+  const propertyKey = createI18nKeyBuilder(
+    'databases.templates.vocabulary.properties.',
+  );
 
-  // Helper to translate a part of speech option key
-  const partOfSpeech = (key: string) =>
-    t(`databases.templates.vocabulary.options.partOfSpeech.${key}`);
+  // Key builder for the part of speech option keys
+  const partOfSpeechKey = createI18nKeyBuilder(
+    'databases.templates.vocabulary.options.partOfSpeech.',
+  );
 
   return {
-    ...naming,
+    name: t(key('name')),
+    entryName: t(key('entryName')),
+    description: t(key('description')),
     icon: 'content-icon:book-a:default',
     properties: [
       {
         type: 'text',
-        name: propertyName('definition'),
+        name: t(propertyKey('definition', 'name')),
         icon: 'content-icon:text:default',
       },
       {
         type: 'text',
-        name: propertyName('exampleSentence'),
+        name: t(propertyKey('exampleSentence', 'name')),
         icon: 'content-icon:quote:default',
       },
       {
         type: 'text',
-        name: propertyName('language'),
+        name: t(propertyKey('language', 'name')),
         icon: 'content-icon:languages:default',
       },
       {
         type: 'select',
-        name: propertyName('partOfSpeech'),
+        name: t(propertyKey('partOfSpeech', 'name')),
         icon: 'content-icon:tag:default',
         options: [
-          { value: partOfSpeech('noun'), color: 'blue' },
-          { value: partOfSpeech('verb'), color: 'green' },
-          { value: partOfSpeech('adjective'), color: 'orange' },
-          { value: partOfSpeech('adverb'), color: 'purple' },
-          { value: partOfSpeech('pronoun'), color: 'pink' },
-          { value: partOfSpeech('preposition'), color: 'cyan' },
-          { value: partOfSpeech('conjunction'), color: 'yellow' },
-          { value: partOfSpeech('interjection'), color: 'red' },
+          { value: t(partOfSpeechKey('noun')), color: 'blue' },
+          { value: t(partOfSpeechKey('verb')), color: 'green' },
+          { value: t(partOfSpeechKey('adjective')), color: 'orange' },
+          { value: t(partOfSpeechKey('adverb')), color: 'purple' },
+          { value: t(partOfSpeechKey('pronoun')), color: 'pink' },
+          { value: t(partOfSpeechKey('preposition')), color: 'cyan' },
+          { value: t(partOfSpeechKey('conjunction')), color: 'yellow' },
+          { value: t(partOfSpeechKey('interjection')), color: 'red' },
         ],
       },
     ],

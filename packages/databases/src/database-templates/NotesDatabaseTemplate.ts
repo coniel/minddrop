@@ -1,29 +1,35 @@
+import { createI18nKeyBuilder } from '@minddrop/i18n';
 import { DatabaseTemplateFn } from '../types';
-import { TranslateFn, createI18n } from './database-template-utils';
 
 /**
  * Creates the Notes database template with translated strings.
  */
-export const NotesDatabaseTemplate: DatabaseTemplateFn = (t: TranslateFn) => {
-  const { naming, propertyName } = createI18n(t, 'notes');
+export const NotesDatabaseTemplate: DatabaseTemplateFn = (t) => {
+  // Key builders for the template's i18n keys
+  const key = createI18nKeyBuilder('databases.templates.notes.');
+  const propertyKey = createI18nKeyBuilder(
+    'databases.templates.notes.properties.',
+  );
 
   return {
-    ...naming,
+    name: t(key('name')),
+    entryName: t(key('entryName')),
+    description: t(key('description')),
     icon: 'content-icon:pencil:default',
     properties: [
       {
         type: 'formatted-text',
-        name: propertyName('content'),
+        name: t(propertyKey('content', 'name')),
         icon: 'content-icon:text-quote:default',
       },
       {
         type: 'created',
-        name: propertyName('created'),
+        name: t(propertyKey('created', 'name')),
         icon: 'content-icon:clock:default',
       },
       {
         type: 'last-modified',
-        name: propertyName('lastModified'),
+        name: t(propertyKey('lastModified', 'name')),
         icon: 'content-icon:clock:default',
       },
     ],
