@@ -7,13 +7,13 @@ import { createVirtualCollection } from './createVirtualCollection';
 
 const id = 'virtual-collection-1';
 const name = 'Virtual Collection';
-const entries = ['entry-1', 'entry-2'];
+const items = ['item-1', 'item-2'];
 
 const expectedCollection = {
   id,
   virtual: true,
   name,
-  entries,
+  items,
   created: mockDate,
   lastModified: mockDate,
 };
@@ -23,21 +23,21 @@ describe('createVirtualCollection', () => {
   afterEach(cleanup);
 
   it('creates a virtual collection', () => {
-    const collection = createVirtualCollection(id, name, entries);
+    const collection = createVirtualCollection(id, name, items);
 
     expect(collection).toEqual(expectedCollection);
   });
 
   it('adds the collection to the store', () => {
-    createVirtualCollection(id, name, entries);
+    createVirtualCollection(id, name, items);
 
     expect(CollectionsStore.get(id)).toEqual(expectedCollection);
   });
 
-  it('defaults entries to an empty array', () => {
+  it('defaults items to an empty array', () => {
     const collection = createVirtualCollection(id, name);
 
-    expect(collection.entries).toEqual([]);
+    expect(collection.items).toEqual([]);
   });
 
   it('dispatches the collection created event', () =>
@@ -51,6 +51,6 @@ describe('createVirtualCollection', () => {
         },
       );
 
-      createVirtualCollection(id, name, entries);
+      createVirtualCollection(id, name, items);
     }));
 });

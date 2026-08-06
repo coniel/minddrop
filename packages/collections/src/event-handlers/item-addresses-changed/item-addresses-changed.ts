@@ -17,8 +17,7 @@ export async function onItemAddressesChanged(
   // Find persisted collections containing changed items
   const affectedCollections = CollectionsStore.getAllArray().filter(
     (collection) =>
-      !collection.virtual &&
-      collection.entries.some((id) => changedIds.has(id)),
+      !collection.virtual && collection.items.some((id) => changedIds.has(id)),
   );
 
   // Rewrite each affected collection file

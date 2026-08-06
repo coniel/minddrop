@@ -69,7 +69,7 @@ describe('clearDatabaseEntryProperty', () => {
     const collection = Collections.get(
       virtualCollectionId(collectionEntry1.id, 'Related'),
     );
-    expect(collection.entries).toEqual([]);
+    expect(collection.items).toEqual([]);
     expect(result.properties.Related).toEqual([]);
   });
 

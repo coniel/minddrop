@@ -9,7 +9,7 @@ import { Collection } from '../types';
  *
  * @param id - The unique identifier for the collection.
  * @param name - The name of the collection.
- * @param entries - The initial entry IDs in the collection.
+ * @param items - The initial item IDs in the collection.
  *
  * @returns The created virtual collection.
  *
@@ -18,7 +18,7 @@ import { Collection } from '../types';
 export function createVirtualCollection(
   id: string,
   name: string,
-  entries: string[] = [],
+  items: string[] = [],
 ): Collection {
   // Generate the virtual collection object
   const collection: Collection = {
@@ -27,7 +27,7 @@ export function createVirtualCollection(
     created: new Date(),
     lastModified: new Date(),
     name,
-    entries,
+    items,
   };
 
   // Add the collection to the store

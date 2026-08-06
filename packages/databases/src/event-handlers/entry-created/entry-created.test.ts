@@ -87,10 +87,10 @@ describe('onCreateEntry', () => {
     );
 
     // Collection entries should match the property values
-    expect(relatedCollection?.entries).toEqual(
+    expect(relatedCollection?.items).toEqual(
       collectionEntry1.properties.Related,
     );
-    expect(referencesCollection?.entries).toEqual(
+    expect(referencesCollection?.items).toEqual(
       collectionEntry1.properties.References,
     );
   });

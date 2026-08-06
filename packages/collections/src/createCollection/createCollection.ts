@@ -23,7 +23,7 @@ export async function createCollection(name?: string): Promise<Collection> {
     created: new Date(),
     lastModified: new Date(),
     name: name || i18n.t('collections.labels.collection'),
-    entries: [],
+    items: [],
   };
 
   // Add the collection to the store

@@ -13,13 +13,13 @@ export async function removeEntriesFromCollections(
 
   // Find collections containing any of the entries
   const affectedCollections = Collections.Store.getAllArray().filter(
-    (collection) => collection.entries.some((id) => removedIds.has(id)),
+    (collection) => collection.items.some((id) => removedIds.has(id)),
   );
 
   // Remove the entries from each affected collection
   await Promise.all(
     affectedCollections.map((collection) =>
-      Collections.removeEntries(collection.id, entryIds),
+      Collections.removeItems(collection.id, entryIds),
     ),
   );
 }

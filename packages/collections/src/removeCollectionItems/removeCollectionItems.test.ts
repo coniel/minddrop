@@ -4,49 +4,49 @@ import { CollectionsStore } from '../CollectionsStore';
 import { CollectionUpdatedEvent, CollectionUpdatedEventData } from '../events';
 import { MockFs, cleanup, collection_1, mockDate, setup } from '../test-utils';
 import { getCollectionFilePath } from '../utils';
-import { removeCollectionEntries } from './removeCollectionEntries';
+import { removeCollectionItems } from './removeCollectionItems';
 
-describe('removeCollectionEntries', () => {
+describe('removeCollectionItems', () => {
   beforeEach(setup);
 
   afterEach(cleanup);
 
-  it('removes entries from the collection', async () => {
-    // Remove the first entry
-    const result = await removeCollectionEntries(collection_1.id, [
-      collection_1.entries[0],
+  it('removes items from the collection', async () => {
+    // Remove the first item
+    const result = await removeCollectionItems(collection_1.id, [
+      collection_1.items[0],
     ]);
 
-    expect(result.entries).toEqual([collection_1.entries[1]]);
+    expect(result.items).toEqual([collection_1.items[1]]);
   });
 
-  it('ignores entry IDs that are not in the collection', async () => {
-    const result = await removeCollectionEntries(collection_1.id, [
-      'nonexistent-entry',
+  it('ignores item IDs that are not in the collection', async () => {
+    const result = await removeCollectionItems(collection_1.id, [
+      'nonexistent-item',
     ]);
 
-    expect(result.entries).toEqual(collection_1.entries);
+    expect(result.items).toEqual(collection_1.items);
   });
 
   it('updates the collection in the store', async () => {
-    const result = await removeCollectionEntries(collection_1.id, [
-      collection_1.entries[0],
+    const result = await removeCollectionItems(collection_1.id, [
+      collection_1.items[0],
     ]);
 
     expect(CollectionsStore.get(collection_1.id)).toEqual(result);
   });
 
   it('updates lastModified', async () => {
-    const result = await removeCollectionEntries(collection_1.id, [
-      collection_1.entries[0],
+    const result = await removeCollectionItems(collection_1.id, [
+      collection_1.items[0],
     ]);
 
     expect(result.lastModified).toEqual(mockDate);
   });
 
   it('writes the collection config to the file system', async () => {
-    const result = await removeCollectionEntries(collection_1.id, [
-      collection_1.entries[0],
+    const result = await removeCollectionItems(collection_1.id, [
+      collection_1.items[0],
     ]);
 
     expect(MockFs.readJsonFile(getCollectionFilePath(collection_1.id))).toEqual(
@@ -61,13 +61,11 @@ describe('removeCollectionEntries', () => {
         'test-collection-updated',
         (payload) => {
           expect(payload.data.original).toEqual(collection_1);
-          expect(payload.data.updated.entries).toEqual([
-            collection_1.entries[1],
-          ]);
+          expect(payload.data.updated.items).toEqual([collection_1.items[1]]);
           done();
         },
       );
 
-      removeCollectionEntries(collection_1.id, [collection_1.entries[0]]);
+      removeCollectionItems(collection_1.id, [collection_1.items[0]]);
     }));
 });

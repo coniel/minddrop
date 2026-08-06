@@ -14,9 +14,9 @@ export interface VirtualCollectionData {
   name: string;
 
   /**
-   * The entry IDs in the collection.
+   * The item IDs in the collection.
    */
-  entries: string[];
+  items: string[];
 }
 
 /**

@@ -45,6 +45,6 @@ describe('onAddProperty', () => {
     expect(collection!.name).toBe(
       virtualCollectionName(updated.name, objectEntry1.title, 'Tags'),
     );
-    expect(collection!.entries).toEqual([]);
+    expect(collection!.items).toEqual([]);
   });
 });

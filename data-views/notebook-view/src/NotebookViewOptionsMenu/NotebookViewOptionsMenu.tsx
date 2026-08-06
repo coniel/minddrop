@@ -94,7 +94,7 @@ function useDatabaseIds(
 
     // For collection data sources, derive databases from entries
     if (collection) {
-      return Databases.getFromEntries(collection.entries).map(
+      return Databases.getFromEntries(collection.items).map(
         (database) => database.id,
       );
     }

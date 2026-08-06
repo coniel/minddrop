@@ -8,7 +8,7 @@ function generateCollectionFixture(number: number): Collection {
     name: `Collection ${number}`,
     created: new Date('2024-01-01T00:00:00.000Z'),
     lastModified: new Date('2024-01-01T00:00:00.000Z'),
-    entries: [
+    items: [
       `database-entry_entry-${number}-1`,
       `database-entry_entry-${number}-2`,
     ],

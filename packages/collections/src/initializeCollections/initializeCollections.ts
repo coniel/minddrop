@@ -53,7 +53,7 @@ export async function initializeCollections(): Promise<void> {
   // references back into item IDs
   const collections = rawCollections.map((collection) => ({
     ...restoreDates<Collection>(collection),
-    entries: resolveItemReferences(collection.entries),
+    items: resolveItemReferences(collection.items),
   }));
 
   // Load the collections into the store

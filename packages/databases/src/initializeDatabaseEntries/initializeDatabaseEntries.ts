@@ -41,7 +41,7 @@ export function initializeDatabaseEntries(
             entry.title,
             property.name,
           ),
-          entries: (entry.properties[property.name] as string[]) || [],
+          items: (entry.properties[property.name] as string[]) || [],
         });
       });
     });

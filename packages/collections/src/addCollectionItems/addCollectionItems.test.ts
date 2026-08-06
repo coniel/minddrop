@@ -4,45 +4,45 @@ import { CollectionsStore } from '../CollectionsStore';
 import { CollectionUpdatedEvent, CollectionUpdatedEventData } from '../events';
 import { MockFs, cleanup, collection_1, mockDate, setup } from '../test-utils';
 import { getCollectionFilePath } from '../utils';
-import { addCollectionEntries } from './addCollectionEntries';
+import { addCollectionItems } from './addCollectionItems';
 
-const newEntryIds = ['entry-new-1', 'entry-new-2'];
+const newItemIds = ['item-new-1', 'item-new-2'];
 
-describe('addCollectionEntries', () => {
+describe('addCollectionItems', () => {
   beforeEach(setup);
 
   afterEach(cleanup);
 
-  it('adds entries to the collection', async () => {
-    const result = await addCollectionEntries(collection_1.id, newEntryIds);
+  it('adds items to the collection', async () => {
+    const result = await addCollectionItems(collection_1.id, newItemIds);
 
-    expect(result.entries).toEqual([...collection_1.entries, ...newEntryIds]);
+    expect(result.items).toEqual([...collection_1.items, ...newItemIds]);
   });
 
-  it('ignores duplicate entry IDs', async () => {
-    // Include an entry ID that already exists in the collection
-    const result = await addCollectionEntries(collection_1.id, [
-      collection_1.entries[0],
-      'entry-new-1',
+  it('ignores duplicate item IDs', async () => {
+    // Include an item ID that already exists in the collection
+    const result = await addCollectionItems(collection_1.id, [
+      collection_1.items[0],
+      'item-new-1',
     ]);
 
-    expect(result.entries).toEqual([...collection_1.entries, 'entry-new-1']);
+    expect(result.items).toEqual([...collection_1.items, 'item-new-1']);
   });
 
   it('updates the collection in the store', async () => {
-    const result = await addCollectionEntries(collection_1.id, newEntryIds);
+    const result = await addCollectionItems(collection_1.id, newItemIds);
 
     expect(CollectionsStore.get(collection_1.id)).toEqual(result);
   });
 
   it('updates lastModified', async () => {
-    const result = await addCollectionEntries(collection_1.id, newEntryIds);
+    const result = await addCollectionItems(collection_1.id, newItemIds);
 
     expect(result.lastModified).toEqual(mockDate);
   });
 
   it('writes the collection config to the file system', async () => {
-    const result = await addCollectionEntries(collection_1.id, newEntryIds);
+    const result = await addCollectionItems(collection_1.id, newItemIds);
 
     expect(MockFs.readJsonFile(getCollectionFilePath(collection_1.id))).toEqual(
       result,
@@ -56,14 +56,14 @@ describe('addCollectionEntries', () => {
         'test-collection-updated',
         (payload) => {
           expect(payload.data.original).toEqual(collection_1);
-          expect(payload.data.updated.entries).toEqual([
-            ...collection_1.entries,
-            ...newEntryIds,
+          expect(payload.data.updated.items).toEqual([
+            ...collection_1.items,
+            ...newItemIds,
           ]);
           done();
         },
       );
 
-      addCollectionEntries(collection_1.id, newEntryIds);
+      addCollectionItems(collection_1.id, newItemIds);
     }));
 });

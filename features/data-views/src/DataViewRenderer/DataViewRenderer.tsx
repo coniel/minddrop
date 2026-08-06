@@ -136,7 +136,7 @@ const ConfiguredView: React.FC<ConfiguredViewProps> = ({
   const handleCreateEntry = useCallback(
     (entry: { id: string }) => {
       if (view.dataSource.type === 'collection') {
-        Collections.addEntries(view.dataSource.id, [entry.id]);
+        Collections.addItems(view.dataSource.id, [entry.id]);
       }
     },
     [view.dataSource],

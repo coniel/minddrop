@@ -78,6 +78,6 @@ describe('onDeleteDatabase', () => {
       virtualCollectionId(collectionEntry1.id, 'References'),
     );
 
-    expect(references.entries).toEqual([]);
+    expect(references.items).toEqual([]);
   });
 });

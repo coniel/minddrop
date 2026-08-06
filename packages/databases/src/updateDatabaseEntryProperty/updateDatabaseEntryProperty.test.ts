@@ -77,7 +77,7 @@ describe('updateDatabaseEntryProperty', () => {
       const collection = Collections.get(
         virtualCollectionId(collectionEntry1.id, 'Related'),
       );
-      expect(collection.entries).toEqual([relatedEntry1.id]);
+      expect(collection.items).toEqual([relatedEntry1.id]);
       expect(updated.properties.Related).toEqual([relatedEntry1.id]);
     });
 

@@ -60,10 +60,10 @@ describe('initializeDatabaseEntries', () => {
     );
 
     // Virtual collections should have the correct entries
-    expect(relatedCollection!.entries).toEqual(
+    expect(relatedCollection!.items).toEqual(
       collectionEntry1.properties.Related,
     );
-    expect(referencesCollection!.entries).toEqual(
+    expect(referencesCollection!.items).toEqual(
       collectionEntry1.properties.References,
     );
   });

@@ -28,7 +28,7 @@ const relatedCollection = {
     collectionEntry1.title,
     'Related',
   ),
-  entries: collectionEntry1.properties.Related as string[],
+  items: collectionEntry1.properties.Related as string[],
 };
 
 describe('onUpdateCollection', () => {
@@ -47,7 +47,7 @@ describe('onUpdateCollection', () => {
     // Call the handler with a non-virtual collection update
     await onUpdateCollection({
       original: collection_1,
-      updated: { ...collection_1, entries: ['new-entry'] },
+      updated: { ...collection_1, items: ['new-entry'] },
     });
 
     // Entry should be unchanged
@@ -57,11 +57,11 @@ describe('onUpdateCollection', () => {
     );
   });
 
-  it('updates the entry property with the collection entries', async () => {
+  it('updates the entry property with the collection items', async () => {
     const updatedEntries = ['new-entry-1', 'new-entry-2'];
     const updatedCollection = {
       ...relatedCollection,
-      entries: updatedEntries,
+      items: updatedEntries,
     };
 
     // Call the handler
@@ -81,7 +81,7 @@ describe('onUpdateCollection', () => {
     // Call the handler
     await onUpdateCollection({
       original: relatedCollection,
-      updated: { ...relatedCollection, entries: updatedEntries },
+      updated: { ...relatedCollection, items: updatedEntries },
     });
 
     // The record should carry the new membership
@@ -105,7 +105,7 @@ describe('onUpdateCollection', () => {
     const updatedCollection = {
       ...relatedCollection,
       id: 'nonexistent-entry:Related',
-      entries: ['new-entry'],
+      items: ['new-entry'],
     };
 
     // Should not throw

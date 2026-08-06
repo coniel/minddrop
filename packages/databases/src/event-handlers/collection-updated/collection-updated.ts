@@ -8,7 +8,7 @@ import { writeDatabaseEntry } from '../../writeDatabaseEntry';
 /**
  * Called when a collection is updated. If the collection is virtual,
  * updates the corresponding entry's property with the collection's
- * current entries array and persists it to disk and SQL.
+ * current items array and persists it to disk and SQL.
  */
 export async function onUpdateCollection(
   data: CollectionUpdatedEventData,
@@ -30,12 +30,12 @@ export async function onUpdateCollection(
     return;
   }
 
-  // Build the updated entry with the collection's entries
+  // Build the updated entry with the collection's items
   const updatedEntry = {
     ...entry,
     properties: {
       ...entry.properties,
-      [propertyName]: updated.entries,
+      [propertyName]: updated.items,
     },
   };
 

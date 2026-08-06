@@ -127,7 +127,7 @@ describe('onRenameProperty', () => {
     );
 
     // The new collection should have the same entries as the old one
-    expect(newCollection!.entries).toEqual(collectionEntry1.properties.Related);
+    expect(newCollection!.items).toEqual(collectionEntry1.properties.Related);
   });
 
   it('does not affect other collection properties', async () => {

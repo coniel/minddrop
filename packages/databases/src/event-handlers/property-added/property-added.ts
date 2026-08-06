@@ -33,9 +33,8 @@ export function onAddProperty(data: DatabasePropertyAddedEventData): void {
       entry.title,
       property.name,
     );
-    const collectionEntries =
-      (entry.properties[property.name] as string[]) || [];
+    const collectionItems = (entry.properties[property.name] as string[]) || [];
 
-    Collections.createVirtual(collectionId, name, collectionEntries);
+    Collections.createVirtual(collectionId, name, collectionItems);
   });
 }

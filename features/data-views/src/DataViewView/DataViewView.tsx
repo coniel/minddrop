@@ -30,7 +30,7 @@ export const DataViewView: React.FC<DataViewViewProps> = ({ dataViewId }) => {
   const databaseEntryIds = DatabaseEntries.useIds(databaseId);
 
   // Entries from whichever data source the view uses
-  const entries = collection ? collection.entries : databaseEntryIds;
+  const entries = collection ? collection.items : databaseEntryIds;
 
   return (
     <div className="data-view-view">

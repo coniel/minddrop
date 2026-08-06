@@ -51,7 +51,7 @@ describe('initializeCollections', () => {
       initializeCollections();
     }));
 
-  it('resolves entry references through the registered adapter', async () => {
+  it('resolves item references through the registered adapter', async () => {
     // Register an adapter that prefixes resolved IDs
     registerItemReferenceAdapter({
       type: 'database-entry',
@@ -64,9 +64,9 @@ describe('initializeCollections', () => {
     const [firstCollection] = collections;
     const loaded = CollectionsStore.get(firstCollection.id);
 
-    // The loaded entries should be resolved entry IDs
-    expect(loaded?.entries).toEqual(
-      firstCollection.entries.map((id) => `id:${id}`),
+    // The loaded items should be resolved item IDs
+    expect(loaded?.items).toEqual(
+      firstCollection.items.map((id) => `id:${id}`),
     );
   });
 });

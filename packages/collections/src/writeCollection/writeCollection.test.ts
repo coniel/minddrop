@@ -48,7 +48,7 @@ describe('writeCollection', () => {
     expect(collection).toEqual(collection_1);
   });
 
-  it('serializes entry references through the registered adapter', async () => {
+  it('serializes item references through the registered adapter', async () => {
     // Register an adapter that converts IDs to reference strings
     registerItemReferenceAdapter({
       type: 'database-entry',
@@ -62,13 +62,13 @@ describe('writeCollection', () => {
       getCollectionFilePath(collection_1.id),
     );
 
-    // The written entries should be serialized references
-    expect(collection.entries).toEqual(
-      collection_1.entries.map((id) => `ref:${id}`),
+    // The written items should be serialized references
+    expect(collection.items).toEqual(
+      collection_1.items.map((id) => `ref:${id}`),
     );
-    // The store should keep the raw entry IDs
-    expect(CollectionsStore.get(collection_1.id)?.entries).toEqual(
-      collection_1.entries,
+    // The store should keep the raw item IDs
+    expect(CollectionsStore.get(collection_1.id)?.items).toEqual(
+      collection_1.items,
     );
   });
 });

@@ -26,8 +26,8 @@ export async function writeCollection(id: string): Promise<void> {
   await Fs.ensureDir(getCollectionsDirPath());
 
   // Convert the member item IDs into durable references
-  const entries = serializeItemReferences(collection.entries);
+  const items = serializeItemReferences(collection.items);
 
   // Write the collection config
-  Fs.writeJsonFile(getCollectionFilePath(id), { ...collection, entries });
+  Fs.writeJsonFile(getCollectionFilePath(id), { ...collection, items });
 }

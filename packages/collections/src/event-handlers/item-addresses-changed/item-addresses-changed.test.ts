@@ -13,7 +13,7 @@ import { onItemAddressesChanged } from './item-addresses-changed';
 
 // The changed member's ID, present in collection_1 (and its virtual
 // twin) but not collection_2
-const changedId = collection_1.entries[0];
+const changedId = collection_1.items[0];
 
 describe('onItemAddressesChanged', () => {
   beforeEach(() => {
@@ -43,8 +43,8 @@ describe('onItemAddressesChanged', () => {
     );
 
     // The rewritten file holds freshly serialized member references
-    expect(written.entries).toEqual(
-      collection_1.entries.map((id) => `address:${id}`),
+    expect(written.items).toEqual(
+      collection_1.items.map((id) => `address:${id}`),
     );
   });
 
@@ -62,6 +62,6 @@ describe('onItemAddressesChanged', () => {
     );
 
     // The unaffected file keeps its original raw member IDs
-    expect(written.entries).toEqual(collection_2.entries);
+    expect(written.items).toEqual(collection_2.items);
   });
 });

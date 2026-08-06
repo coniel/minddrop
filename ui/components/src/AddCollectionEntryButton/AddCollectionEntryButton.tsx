@@ -94,7 +94,7 @@ export const AddCollectionEntryButton: FC<AddCollectionEntryButtonProps> = ({
     : allDatabases;
 
   // IDs of entries already in the collection
-  const excludedIds = new Set(collection?.entries ?? []);
+  const excludedIds = new Set(collection?.items ?? []);
 
   // Databases offered as create options: all supported when not
   // searching, fuzzy matched otherwise
@@ -180,7 +180,7 @@ export const AddCollectionEntryButton: FC<AddCollectionEntryButtonProps> = ({
     if (action.type === 'create') {
       const entry = await DatabaseEntries.create(action.databaseId);
 
-      await Collections.addEntries(collectionId, [entry.id]);
+      await Collections.addItems(collectionId, [entry.id]);
 
       onCreateEntry?.(entry);
 
@@ -188,7 +188,7 @@ export const AddCollectionEntryButton: FC<AddCollectionEntryButtonProps> = ({
     }
 
     // Add the selected existing entry to the collection
-    await Collections.addEntries(collectionId, [action.entry.id]);
+    await Collections.addItems(collectionId, [action.entry.id]);
 
     onAddEntry?.(action.entry);
   }

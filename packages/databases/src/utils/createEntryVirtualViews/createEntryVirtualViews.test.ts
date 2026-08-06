@@ -123,7 +123,7 @@ describe('createEntryVirtualViews', () => {
     const collection = Collections.get(collId, false);
 
     expect(collection).not.toBeNull();
-    expect(collection!.entries).toEqual([relatedEntry1.id, relatedEntry2.id]);
+    expect(collection!.items).toEqual([relatedEntry1.id, relatedEntry2.id]);
   });
 
   it('creates a virtual view with the correct view type and data source', () => {

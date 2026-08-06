@@ -10,7 +10,7 @@ const newCollection = {
   id: expect.any(String),
   created: mockDate,
   lastModified: mockDate,
-  entries: [],
+  items: [],
   name: 'Collection',
 };
 

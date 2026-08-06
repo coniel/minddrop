@@ -37,7 +37,7 @@ describe('removeEntriesFromCollections', () => {
 
     const collection = Collections.get(relatedCollectionId);
 
-    expect(collection.entries).toEqual([relatedEntry2.id]);
+    expect(collection.items).toEqual([relatedEntry2.id]);
   });
 
   it('removes multiple entries in a single update', async () => {
@@ -45,7 +45,7 @@ describe('removeEntriesFromCollections', () => {
 
     const collection = Collections.get(relatedCollectionId);
 
-    expect(collection.entries).toEqual([]);
+    expect(collection.items).toEqual([]);
   });
 
   it('leaves unrelated collections untouched', async () => {

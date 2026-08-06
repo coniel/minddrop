@@ -52,7 +52,7 @@ describe('onDeleteEntry', () => {
       virtualCollectionId(collectionEntry1.id, 'Related'),
     );
 
-    expect(collection.entries).toEqual([relatedEntry2.id]);
+    expect(collection.items).toEqual([relatedEntry2.id]);
   });
 
   it('removes the entry from view configs referencing it', async () => {

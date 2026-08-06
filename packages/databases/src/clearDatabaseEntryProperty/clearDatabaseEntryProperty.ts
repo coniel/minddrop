@@ -49,7 +49,7 @@ export async function clearDatabaseEntryProperty(
     const collectionId = virtualCollectionId(entryId, propertyName);
 
     if (Collections.Store.get(collectionId)) {
-      await Collections.update(collectionId, { entries: [] });
+      await Collections.update(collectionId, { items: [] });
 
       return getDatabaseEntry(entryId);
     }

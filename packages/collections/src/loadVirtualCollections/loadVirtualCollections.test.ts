@@ -6,8 +6,8 @@ import { cleanup, mockDate, setup } from '../test-utils';
 import { loadVirtualCollections } from './loadVirtualCollections';
 
 const data = [
-  { id: 'virtual-1', name: 'Collection 1', entries: ['entry-1'] },
-  { id: 'virtual-2', name: 'Collection 2', entries: ['entry-2', 'entry-3'] },
+  { id: 'virtual-1', name: 'Collection 1', items: ['item-1'] },
+  { id: 'virtual-2', name: 'Collection 2', items: ['item-2', 'item-3'] },
 ];
 
 describe('loadVirtualCollections', () => {
@@ -32,13 +32,13 @@ describe('loadVirtualCollections', () => {
     expect(collection?.virtual).toBe(true);
   });
 
-  it('sets names and entries from the provided data', () => {
+  it('sets names and items from the provided data', () => {
     loadVirtualCollections(data);
 
     const collection = CollectionsStore.get('virtual-1');
 
     expect(collection?.name).toBe('Collection 1');
-    expect(collection?.entries).toEqual(['entry-1']);
+    expect(collection?.items).toEqual(['item-1']);
   });
 
   it('sets created and lastModified dates', () => {

@@ -102,6 +102,6 @@ describe('onClearEntries', () => {
       virtualCollectionId(collectionEntry1.id, 'Related'),
     );
 
-    expect(collection.entries).toEqual([]);
+    expect(collection.items).toEqual([]);
   });
 });

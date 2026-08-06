@@ -11,6 +11,6 @@ export {
   useCollections as useAll,
 } from './CollectionsStore';
 export { updateCollection as update } from './updateCollection';
-export { addCollectionEntries as addEntries } from './addCollectionEntries';
-export { removeCollectionEntries as removeEntries } from './removeCollectionEntries';
+export { addCollectionItems as addItems } from './addCollectionItems';
+export { removeCollectionItems as removeItems } from './removeCollectionItems';
 export { initializeCollections as initialize } from './initializeCollections';

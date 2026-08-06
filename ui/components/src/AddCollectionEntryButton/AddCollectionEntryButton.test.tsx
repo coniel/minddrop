@@ -58,7 +58,7 @@ describe('<AddCollectionEntryButton />', () => {
     const collection = {
       ...collection_1,
       id: 'collection_test',
-      entries: [objectEntry1.id],
+      items: [objectEntry1.id],
     };
 
     Collections.Store.load([collection]);
@@ -92,9 +92,7 @@ describe('<AddCollectionEntryButton />', () => {
 
     // The entry is added to the collection
     await waitFor(() => {
-      expect(Collections.get(collection_1.id).entries).toContain(
-        objectEntry1.id,
-      );
+      expect(Collections.get(collection_1.id).items).toContain(objectEntry1.id);
     });
   });
 
@@ -117,7 +115,7 @@ describe('<AddCollectionEntryButton />', () => {
 
       expect(newEntry).toBeDefined();
       // The new entry is added to the collection
-      expect(Collections.get(collection_1.id).entries).toContain(newEntry?.id);
+      expect(Collections.get(collection_1.id).items).toContain(newEntry?.id);
     });
   });
 
@@ -198,7 +196,7 @@ describe('<AddCollectionEntryButton />', () => {
     const collection = {
       ...collection_1,
       id: 'collection_test',
-      entries: [relatedEntry1.id],
+      items: [relatedEntry1.id],
     };
 
     Collections.Store.load([collection]);

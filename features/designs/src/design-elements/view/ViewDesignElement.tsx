@@ -106,7 +106,7 @@ export const ViewDesignElement: React.FC<ViewDesignElementProps> = ({
         viewDeleted={Boolean(viewId && !view)}
         createViewType={element.viewType}
         onCreateView={handleCreateView}
-        entries={collection?.entries ?? []}
+        entries={collection?.items ?? []}
       />
     </div>
   );

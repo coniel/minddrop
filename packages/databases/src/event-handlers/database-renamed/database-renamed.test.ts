@@ -220,7 +220,7 @@ describe('onRenameDatabase', () => {
     // external reference
     await Collections.update(
       virtualCollectionId(collectionEntry1.id, 'Related'),
-      { entries: [collectionEntry1.id, 'external-entry'] },
+      { items: [collectionEntry1.id, 'external-entry'] },
     );
 
     await onRenameDatabase({
@@ -241,7 +241,7 @@ describe('onRenameDatabase', () => {
       ),
     );
     // Member entries are untouched
-    expect(related.entries).toEqual([collectionEntry1.id, 'external-entry']);
+    expect(related.items).toEqual([collectionEntry1.id, 'external-entry']);
   });
 
   it('leaves virtual views untouched', async () => {

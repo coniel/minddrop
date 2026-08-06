@@ -31,15 +31,13 @@ export interface Collection {
   lastModified: Date;
 
   /**
-   * The identifiers of the database entries in the collection.
+   * The identifiers of the items in the collection.
    */
-  entries: string[];
+  items: string[];
 }
 
-export type UpdateCollectionData = Partial<
-  Pick<Collection, 'name' | 'entries'>
->;
+export type UpdateCollectionData = Partial<Pick<Collection, 'name' | 'items'>>;
 
 export type UpdateVirtualCollectionData = Partial<
-  Pick<Collection, 'id' | 'name' | 'entries'>
+  Pick<Collection, 'id' | 'name' | 'items'>
 >;
