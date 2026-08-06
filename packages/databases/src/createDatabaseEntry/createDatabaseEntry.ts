@@ -40,7 +40,7 @@ export async function createDatabaseEntry<
   // Get the database
   const database = getDatabase(databaseId);
   // Path to which to write the entry
-  let parentDirPath = database.path;
+  const parentDirPath = database.path;
 
   // Get the file extension for the entry file
   const serializer = getDatabaseEntrySerializer(database.entrySerializer);

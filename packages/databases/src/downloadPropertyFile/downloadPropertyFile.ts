@@ -19,8 +19,8 @@ export async function downloadPropertyFile(
   propertyName: string,
   url: string,
 ): Promise<string | false> {
-  // Get the entry
-  const entry = getDatabaseEntry(entryId);
+  // Ensure the entry exists, throwing if it does not
+  getDatabaseEntry(entryId);
 
   const fileTitle = titleFromUrl(url);
   const fileExtension = getFileExtensionFromUrl(url);
@@ -36,6 +36,7 @@ export async function downloadPropertyFile(
     await Fs.downloadFile(url, path);
   } catch (error) {
     console.error(error);
+
     return false;
   }
 

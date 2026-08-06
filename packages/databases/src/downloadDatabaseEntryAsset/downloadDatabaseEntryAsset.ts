@@ -48,7 +48,7 @@ export async function downloadDatabaseEntryAsset(
   try {
     // Download the asset to the entry's assets directory
     await Fs.downloadFile(url, assetPath);
-  } catch (error) {
+  } catch {
     return false;
   }
 

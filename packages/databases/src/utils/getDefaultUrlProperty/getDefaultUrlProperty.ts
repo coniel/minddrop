@@ -12,17 +12,17 @@ import { getDatabase } from '../../getDatabase';
  * - First available specific property which supports the URL type
  *
  * @param databaseId - The ID of the database.
- * @param url - The URL.
+ * @param _url - The URL. Unused until the filtering logic below is implemented.
  * @returns The default property for the specified database and URL or null if no matching property exists.
  */
 export function getDefaultUrlProperty(
   databaseId: string,
-  url: string,
+  _url: string,
 ): UrlPropertySchema | null {
   // Get the database
   const database = getDatabase(databaseId);
   // Check if a default url property is provided
-  let propertyName = database.defaultProperties?.[UrlPropertySchema.type];
+  const propertyName = database.defaultProperties?.[UrlPropertySchema.type];
 
   // Get the default url property if there is one
   let property = propertyName

@@ -11,7 +11,6 @@ import {
   collectionEntry1,
   objectEntry1,
   propertyStorageEntry1,
-  referenceEntry1,
   relatedEntry1,
   relatedEntry2,
   setup,

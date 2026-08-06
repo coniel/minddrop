@@ -1,7 +1,9 @@
 import { TranslationKey } from '@minddrop/i18n';
 import { PropertiesSchema, PropertyMap } from '@minddrop/properties';
 
-export interface DatabaseEntrySerializer<TOptions extends object = {}> {
+export interface DatabaseEntrySerializer<
+  TOptions extends object = Record<string, never>,
+> {
   /**
    * The ID of the serializer.
    */

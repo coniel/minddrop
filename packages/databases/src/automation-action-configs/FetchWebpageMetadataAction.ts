@@ -72,7 +72,7 @@ async function updateDatabaseEntryWithMetadata(
     return;
   }
 
-  let updatedDatabaseEntry = entry;
+  const updatedDatabaseEntry = entry;
   // Fetch webpage metadata
   const metadata = await getWebpageMetadata(updatedPropertyValue);
 
