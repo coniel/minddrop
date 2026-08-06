@@ -6,8 +6,8 @@ import {
   UrlPropertySchema,
 } from '@minddrop/properties';
 import { WorkspaceFixtures } from '@minddrop/workspaces';
-import { Database } from '../../types';
-import { databaseConfigFilePath } from '../../utils';
+import { Database, DatabaseEntryTemplate } from '../../types';
+import { databaseConfigFilePath, entryTemplateFilePath } from '../../utils';
 import { fetchWebpageMetadataAutomation } from './database-automations.fixtures';
 
 const { workspace_1 } = WorkspaceFixtures;
@@ -224,6 +224,59 @@ export const collectionDatabase = generateDatabase({
   ],
 });
 
+export const entryTemplate1: DatabaseEntryTemplate = {
+  id: 'database-entry-template_1',
+  name: 'Template One',
+  defaultTitle: 'Templated entry',
+  properties: {
+    Notes: 'Prefilled notes',
+    [imagePropertyName]: 'template-image.png',
+  },
+};
+
+export const entryTemplate2: DatabaseEntryTemplate = {
+  id: 'database-entry-template_2',
+  name: 'Template Two',
+  properties: {},
+};
+
+export const entryTemplatesDatabase = generateDatabase({
+  id: 'database_entry-templates',
+  name: 'Entry Templates Database',
+  entryName: 'Entry Templates Entry',
+  properties: [
+    {
+      type: 'text',
+      name: 'Notes',
+    },
+    {
+      type: 'number',
+      name: 'Count',
+    },
+    {
+      type: 'select',
+      name: 'Status',
+      options: [
+        { value: 'Todo', color: 'blue' },
+        { value: 'Done', color: 'green' },
+      ],
+    },
+    {
+      type: 'toggle',
+      name: 'Urgent',
+    },
+    {
+      type: 'date',
+      name: 'Due',
+    },
+    {
+      type: 'image',
+      name: imagePropertyName,
+    },
+  ],
+  entryTemplates: [entryTemplate1, entryTemplate2],
+});
+
 export const databases = [
   objectDatabase,
   urlDatabase,
@@ -235,6 +288,16 @@ export const databases = [
   entryStorageDatabase,
   collectionDatabase,
   timestampDatabase,
+  entryTemplatesDatabase,
+];
+
+export const databaseEntryTemplateFiles: (MockFileDescriptor | string)[] = [
+  // The image file stored in entryTemplate1's template directory
+  entryTemplateFilePath(
+    entryTemplatesDatabase.path,
+    entryTemplate1.id,
+    'template-image.png',
+  ),
 ];
 
 export const databaseFiles: (MockFileDescriptor | string)[] = [

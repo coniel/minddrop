@@ -2,6 +2,7 @@ import { DataView } from '@minddrop/data-views';
 import { PropertiesSchema, PropertyType } from '@minddrop/properties';
 import { EntityId } from '@minddrop/utils';
 import { DatabaseAutomation } from './DatabaseAutomation.types';
+import { DatabaseEntryTemplate } from './DatabaseEntryTemplate.types';
 
 export type DatabaseEntryOpenMode =
   | 'dialog'
@@ -143,6 +144,12 @@ export interface Database {
    * @default false
    */
   hideViewsToolbar?: boolean;
+
+  /**
+   * The database's entry templates. Array order defines the order in
+   * which templates appear in entry creation menus.
+   */
+  entryTemplates?: DatabaseEntryTemplate[];
 
   /**
    * The database's automations if it has any.

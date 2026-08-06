@@ -4,6 +4,7 @@ import {
   DatabaseEntry,
   DatabaseEntryMetadata,
   DatabaseEntryOpenMode,
+  DatabaseEntryTemplate,
   SqlEntryRecord,
 } from './types';
 
@@ -68,6 +69,49 @@ export interface DatabasePropertyRenamedEventData {
    * The new property name.
    */
   newName: string;
+}
+
+// Entry template events
+export const DatabaseEntryTemplateAddedEvent = 'databases:entry-template:added';
+export const DatabaseEntryTemplateUpdatedEvent =
+  'databases:entry-template:updated';
+export const DatabaseEntryTemplateRemovedEvent =
+  'databases:entry-template:removed';
+
+export interface DatabaseEntryTemplateAddedEventData {
+  /**
+   * The database the entry template was added to.
+   */
+  database: Database;
+
+  /**
+   * The entry template that was added.
+   */
+  template: DatabaseEntryTemplate;
+}
+
+export interface DatabaseEntryTemplateUpdatedEventData {
+  /**
+   * The database the entry template belongs to.
+   */
+  database: Database;
+
+  /**
+   * The updated entry template.
+   */
+  template: DatabaseEntryTemplate;
+}
+
+export interface DatabaseEntryTemplateRemovedEventData {
+  /**
+   * The database the entry template was removed from.
+   */
+  database: Database;
+
+  /**
+   * The entry template that was removed.
+   */
+  template: DatabaseEntryTemplate;
 }
 
 // Navigation events

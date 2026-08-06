@@ -7,6 +7,7 @@ import {
   databaseEntries,
   databaseEntryFiles,
   databaseEntryPropertyFiles,
+  databaseEntryTemplateFiles,
   databaseFiles,
   databases,
 } from './fixtures';
@@ -17,6 +18,7 @@ export interface SetupDatabaseFixturesOptions {
   loadDatabaseEntries?: boolean;
   loadDatabaseEntryFiles?: boolean;
   loadDatabaseEntryPropertyFiles?: boolean;
+  loadDatabaseEntryTemplateFiles?: boolean;
   loadDatabaseEntrySerializers?: boolean;
 }
 
@@ -54,6 +56,11 @@ export function setupDatabaseFixtures(
   if (options.loadDatabaseEntryPropertyFiles !== false) {
     // Add database entry property files to the file system
     MockFs.addFiles(databaseEntryPropertyFiles);
+  }
+
+  if (options.loadDatabaseEntryTemplateFiles !== false) {
+    // Add database entry template files to the file system
+    MockFs.addFiles(databaseEntryTemplateFiles);
   }
 
   if (options.loadDatabaseFiles !== false) {

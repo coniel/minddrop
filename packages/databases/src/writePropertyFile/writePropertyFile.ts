@@ -1,8 +1,5 @@
 import { Fs } from '@minddrop/file-system';
-import { i18n } from '@minddrop/i18n';
-import { InvalidParameterError } from '@minddrop/utils';
-import { PropertyFilesDirNameKey } from '../constants';
-import { getDatabase } from '../getDatabase';
+import { ensurePropertyFileDirExists } from '../ensurePropertyFileDirExists';
 import { getDatabaseEntry } from '../getDatabaseEntry';
 import { updateDatabaseEntryProperty } from '../updateDatabaseEntryProperty';
 import { getIncrmentalPropertyFilePath } from '../utils';
@@ -29,40 +26,9 @@ export async function writePropertyFile(
 ): Promise<string> {
   // Get the entry
   const entry = getDatabaseEntry(entryId);
-  // Get the database
-  const database = getDatabase(entry.database);
 
-  // If the database uses property based storage, ensure the property
-  // subdirectory exists.
-  if (database.propertyFileStorage === 'property') {
-    const propertyDirPath = Fs.concatPath(database.path, propertyName);
-
-    if (!(await Fs.exists(propertyDirPath))) {
-      await Fs.createDir(propertyDirPath);
-    }
-  }
-
-  // If the databases uses common storage, ensure the common subdirectory
-  // exists.
-  if (database.propertyFileStorage === 'common') {
-    const commonDirName =
-      database.propertyFilesDir || i18n.t(PropertyFilesDirNameKey);
-    const commonDirPath = Fs.concatPath(database.path, commonDirName);
-
-    if (!(await Fs.exists(commonDirPath))) {
-      await Fs.createDir(commonDirPath);
-    }
-  }
-
-  // If the databases uses entry based storage, ensure the entry
-  // entry subdirectory exists.
-  if (database.propertyFileStorage === 'entry') {
-    if (!(await Fs.exists(Fs.parentDirPath(entry.path)))) {
-      throw new InvalidParameterError(
-        `Entry directory does not exist: ${entry.path}`,
-      );
-    }
-  }
+  // Ensure the file's destination directory exists
+  await ensurePropertyFileDirExists(entry.id, propertyName);
 
   // Get the path to which to write the file
   const { path, name } = await getIncrmentalPropertyFilePath(

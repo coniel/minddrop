@@ -3,6 +3,7 @@ export * from './DatabaseAutomation.types';
 export * from './DatabaseAutomationAction.types';
 export * from './DatabaseAutomationActionConfig.types';
 export * from './DatabaseEntry.types';
+export * from './DatabaseEntryTemplate.types';
 export * from './DatabaseEntrySerializer.types';
 export * from './DatabaseTemplate.types';
 export * from './DatabasesConfig.types';

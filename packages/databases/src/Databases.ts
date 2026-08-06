@@ -3,6 +3,9 @@ import {
   DatabaseDeletedEvent,
   DatabaseEntriesSqlSyncedEvent,
   DatabaseEntryMetadataUpdatedEvent,
+  DatabaseEntryTemplateAddedEvent,
+  DatabaseEntryTemplateRemovedEvent,
+  DatabaseEntryTemplateUpdatedEvent,
   DatabasePropertyAddedEvent,
   DatabasePropertyRemovedEvent,
   DatabasePropertyRenamedEvent,
@@ -43,6 +46,9 @@ export const events = {
   propertyAdded: DatabasePropertyAddedEvent,
   propertyRemoved: DatabasePropertyRemovedEvent,
   propertyRenamed: DatabasePropertyRenamedEvent,
+  entryTemplateAdded: DatabaseEntryTemplateAddedEvent,
+  entryTemplateUpdated: DatabaseEntryTemplateUpdatedEvent,
+  entryTemplateRemoved: DatabaseEntryTemplateRemovedEvent,
   entryMetadataUpdated: DatabaseEntryMetadataUpdatedEvent,
   entriesSqlSynced: DatabaseEntriesSqlSyncedEvent,
   databaseSqlSynced: DatabaseSqlSyncedEvent,
@@ -79,6 +85,10 @@ export { handleBackgroundSyncResult } from './handleBackgroundSyncResult';
 export { DatabasesStore as Store } from './DatabasesStore';
 export { getAllDatabases as getAll } from './getAllDatabases';
 export { addDatabaseProperty as addProperty } from './addDatabaseProperty';
+export { addDatabaseEntryTemplate as addEntryTemplate } from './addDatabaseEntryTemplate';
+export { getDatabaseEntryTemplate as getEntryTemplate } from './getDatabaseEntryTemplate';
+export { removeDatabaseEntryTemplate as removeEntryTemplate } from './removeDatabaseEntryTemplate';
+export { updateDatabaseEntryTemplate as updateEntryTemplate } from './updateDatabaseEntryTemplate';
 export { createDatabase as create } from './createDatabase';
 export { deleteDatabase as delete } from './deleteDatabase';
 export { clearDatabaseEntries as clearEntries } from './clearDatabaseEntries';
@@ -88,6 +98,7 @@ export { initializeDatabases as initialize } from './initializeDatabases';
 export { removeDatabaseProperty as removeProperty } from './removeDatabaseProperty';
 export { renameDatabase as rename } from './renameDatabase';
 export { searchDatabases as search } from './utils';
+export { searchDatabaseEntryTemplates as searchEntryTemplates } from './utils';
 export { updateDatabase as update } from './updateDatabase';
 export { setDatabaseEntrySerializer as setEntrySerializer } from './setDatabaseEntrySerializer';
 export { setDatabasePropertyFileStorage as setPropertyFileStorage } from './setDatabasePropertyFileStorage';

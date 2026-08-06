@@ -1,6 +1,9 @@
 export * from './databaseConfigFilePath';
 export * from './databaseMetadataFilePath';
 export * from './entryAssetsDirPath';
+export * from './entryTemplateDirPath';
+export * from './entryTemplateFilePath';
+export * from './pruneEmptyPropertyValues';
 export * from './databaseEntryAddress';
 export * from './databaseEntryPathFromAddress';
 export * from './serializeDatabaseEntryReference';
@@ -40,3 +43,4 @@ export * from './setTimestampProperties';
 export * from './getNewestDatabaseEntries';
 export * from './searchDatabaseEntriesByTitle';
 export * from './searchDatabases';
+export * from './searchDatabaseEntryTemplates';

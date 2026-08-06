@@ -18,6 +18,7 @@ export { createDatabaseEntry as create } from './createDatabaseEntry';
 export { createDatabaseEntryFromFilePath as createFromFilePath } from './createDatabaseEntryFromFilePath';
 export { createDatabaseEntryFromFile as createFromFile } from './createDatabaseEntryFromFile';
 export { createDatabaseEntryFromUrl as createFromUrl } from './createDatabaseEntryFromUrl';
+export { createDatabaseEntryFromTemplate as createFromTemplate } from './createDatabaseEntryFromTemplate';
 export { downloadDatabaseEntryAsset as downloadAsset } from './downloadDatabaseEntryAsset';
 export { ensureDatabaseEntryAssetsDirExists as ensure } from './ensureDatabaseEntryAssetsDirExists';
 export { getDatabaseEntry as get } from './getDatabaseEntry';
