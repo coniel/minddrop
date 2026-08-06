@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, it } from 'vitest';
 import { DatabaseFixtures } from '@minddrop/databases';
 import { render } from '@minddrop/test-utils';
 import { cleanup, setup } from '../test-utils';

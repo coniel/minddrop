@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 import { Databases } from '@minddrop/databases';
 import { PropertyTypeSelectionMenu } from '@minddrop/feature-properties';
 import { i18n } from '@minddrop/i18n';
-import { PropertySchema, PropertySchemaTemplate } from '@minddrop/properties';
+import { PropertySchemaTemplate } from '@minddrop/properties';
 import {
   IconButton,
   IconButtonSpacer,
@@ -19,7 +19,10 @@ import {
   DatabaseEntryTemplatesEditor,
   DraftEntryTemplate,
 } from '../DatabaseEntryTemplatesEditor';
-import { DatabasePropertiesEditor } from '../DatabasePropertiesEditor';
+import {
+  DatabasePropertiesEditor,
+  DraftProperty,
+} from '../DatabasePropertiesEditor';
 import { DatabaseSettingsPanel } from '../DatabaseSettingsPanel';
 import {
   ConfigPanelTab,
@@ -34,11 +37,6 @@ export interface DatabaseConfigurationPanelProps {
    */
   databaseId: string;
 }
-
-type DraftProperty = Omit<PropertySchema, 'name'> & {
-  name: string;
-  id: number;
-};
 
 /**
  * Renders the database configuration panel with tabbed
@@ -70,11 +68,14 @@ export const DatabaseConfigurationPanel: React.FC<
 
   // Add a new draft property from the type selection menu
   function handleAddProperty(propertySchema: PropertySchemaTemplate) {
-    const draftProperty: DraftProperty = {
+    // PropertyTypeSelectionMenu types its selection as the base schema
+    // template, so which concrete property schema it is has already been
+    // widened away by the time it reaches here.
+    const draftProperty = {
       ...propertySchema,
       name: i18n.t(propertySchema.name),
       id: Date.now(),
-    };
+    } as DraftProperty;
 
     setDraftProperties((prevDrafts) => [...prevDrafts, draftProperty]);
   }

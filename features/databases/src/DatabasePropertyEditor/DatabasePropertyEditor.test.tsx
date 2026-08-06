@@ -3,6 +3,7 @@ import {
   Database,
   DatabaseFixtures,
   DatabaseUpdatedEvent,
+  DatabaseUpdatedEventData,
 } from '@minddrop/databases';
 import { Events, OpenConfirmationDialogEvent } from '@minddrop/events';
 import { TextPropertySchema } from '@minddrop/properties';
@@ -112,15 +113,11 @@ describe('<DatabasePropertyEditor />', () => {
             },
           );
 
-          // TODO: Replace with actual rename verification once implemented
-          // Listen for database updates and verify the property was updated
-          Events.addListener<Database>(
+          // TODO: Assert the property was renamed once renaming is implemented
+          Events.addListener<DatabaseUpdatedEventData>(
             DatabaseUpdatedEvent,
             'test',
-            ({ data }) => {
-              // expect(
-              //   data.properties.find((p) => p.name === 'New Property Name'),
-              // ).toBeDefined();
+            () => {
               done();
             },
           );
@@ -264,12 +261,14 @@ describe('<DatabasePropertyEditor />', () => {
     it('adds the property on save', () =>
       new Promise<void>((done) => {
         // Listen for database updates and verify the property was added
-        Events.addListener<Database>(
+        Events.addListener<DatabaseUpdatedEventData>(
           DatabaseUpdatedEvent,
           'test',
           ({ data }) => {
             expect(
-              data.properties.find((p) => p.name === 'New property'),
+              data.updated.properties.find(
+                (property) => property.name === 'New property',
+              ),
             ).toBeDefined();
             done();
           },

@@ -1,63 +1,31 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import {
-  BooksDatabaseTemplate,
-  Database,
-  DatabaseCreatedEvent,
-  Databases,
-} from '@minddrop/databases';
+import { DatabaseTemplates, Databases } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
-import { i18n } from '@minddrop/i18n';
 import {
-  emojiIconString,
   fillForm,
-  pickEmojiIcon,
   render,
   screen,
   userEvent,
   waitFor,
 } from '@minddrop/test-utils';
-import { Paths } from '@minddrop/utils';
 import { OpenNewDatabaseDialogEvent } from '../events';
-import { MockFs, cleanup, setup } from '../test-utils';
+import { cleanup, setup } from '../test-utils';
 import { NewDatabaseDialog } from './NewDatabaseDialog';
 
-const entryName = 'Test Entry';
 const name = 'Test Database';
+const entryName = 'Test Entry';
 
-interface FormOptions {
-  entryName: string;
-  name: string;
+// Fills in the dialog's name fields and submits it
+async function submitForm(values: { name?: string; entryName?: string } = {}) {
+  const user = userEvent.setup();
+
+  await fillForm({
+    name: values.name ?? name,
+    entryName: values.entryName ?? entryName,
+  });
+
+  await user.click(screen.getByText('databases.form.actions.create'));
 }
-
-const defultFormOptions: FormOptions = {
-  name: name,
-  entryName: entryName,
-};
-
-// TODO: Refactor to remove DataType
-
-// async function submitNewDatabaseForm(options: FormOptions = defultFormOptions) {
-//   const rendered = render(<NewDatabaseDialog defaultOpen />);
-//   const user = userEvent.setup();
-//   const { getByText } = rendered;
-//
-//   // Pick URL data type
-//   await user.click(screen.getByText(options.dataType));
-//
-//   // Pick icon
-//   await pickEmojiIcon('databases.form.icon.label');
-//
-//   // Fill out names
-//   await fillForm({
-//     name: options.name,
-//     entryName: options.entryName,
-//   });
-//
-//   // Submit the form
-//   await user.click(getByText('databases.form.actions.create'));
-//
-//   return rendered;
-// }
 
 describe('<NewDatabaseDialog />', () => {
   beforeEach(setup);
@@ -78,7 +46,6 @@ describe('<NewDatabaseDialog />', () => {
     render(<NewDatabaseDialog defaultOpen />);
     const user = userEvent.setup();
 
-    // Click the cancel button
     await user.click(screen.getByText('actions.cancel'));
 
     await waitFor(() => {
@@ -88,243 +55,69 @@ describe('<NewDatabaseDialog />', () => {
     });
   });
 
-  // it('selects a data type on click', async () => {
-  //   render(<NewDatabaseDialog defaultOpen />);
-  //   const user = userEvent.setup();
-  //
-  //   // Click the URL data type
-  //   await user.click(screen.getByText(UrlDataType.name));
-  //
-  //   // Should render the data type description
-  //   await waitFor(() => {
-  //     screen.getByText(UrlDataType.description);
-  //   });
-  //   // Should hide get started message
-  //   expect(screen.queryByText('databases.form.getStarted.title')).toBeNull();
-  // });
-  //
-  // it('creates a new database with all provided properties', () =>
-  //   new Promise<void>((resolve) => {
-  //     // Listen for the database creation event
-  //     Events.addListener<Database>(
-  //       DatabaseCreatedEvent,
-  //       'test',
-  //       ({ data: database }) => {
-  //         expect(database.entryName).toBe(entryName);
-  //         expect(database.name).toBe(name);
-  //         expect(database.dataType).toBe(UrlDataType.type);
-  //         expect(database.icon).toBe(emojiIconString);
-  //         resolve();
-  //       },
-  //     );
-  //
-  //     // Fill and submit the new database form
-  //     submitNewDatabaseForm();
-  //   }));
-  //
-  // describe('name validation', () => {
-  //   it('requires a name', async () => {
-  //     await submitNewDatabaseForm({
-  //       ...defultFormOptions,
-  //       name: '',
-  //     });
-  //
-  //     await waitFor(() => {
-  //       screen.getByText('formErrors.required');
-  //     });
-  //   });
-  //
-  //   it('requires a unique name', async () => {
-  //     // Add an existing database to test against
-  //     await Databases.create(Paths.workspace, {
-  //       dataType: UrlDataType.type,
-  //       entryName: 'Some Entry',
-  //       name,
-  //       icon: emojiIconString,
-  //     });
-  //
-  //     await submitNewDatabaseForm();
-  //
-  //     await waitFor(() => {
-  //       screen.getByText(i18n.t('databases.form.errors.nameConflict'));
-  //     });
-  //   });
-  //
-  //   it('ensures there is no directory path conflict', async () => {
-  //     // Create a directory that conflicts with the database path
-  //     MockFs.createDir(`${Paths.workspace}/${defultFormOptions.name}`);
-  //
-  //     await submitNewDatabaseForm({
-  //       ...defultFormOptions,
-  //       name,
-  //     });
-  //
-  //     await waitFor(() => {
-  //       screen.getByText(i18n.t('databases.form.errors.pathConflict'));
-  //     });
-  //   });
-  // });
-  //
-  // describe('entryName validation', () => {
-  //   it('requires a entryName', async () => {
-  //     await submitNewDatabaseForm({
-  //       ...defultFormOptions,
-  //       entryName: '',
-  //     });
-  //
-  //     await waitFor(() => {
-  //       screen.getByText('formErrors.required');
-  //     });
-  //   });
-  // });
-  //
-  // describe('default icon', () => {
-  //   it('sets the data type icon as the default', () =>
-  //     new Promise<void>((resolve) => {
-  //       // Listen for the database creation event
-  //       Events.addListener<Database>(
-  //         DatabaseCreatedEvent,
-  //         'test',
-  //         ({ data: database }) => {
-  //           expect(database.icon).toBe(UrlDataType.icon);
-  //           resolve();
-  //         },
-  //       );
-  //
-  //       async function fillAndSubmitForm() {
-  //         render(<NewDatabaseDialog defaultOpen />);
-  //         const user = userEvent.setup();
-  //
-  //         // Pick URL data type
-  //         await user.click(screen.getByText(UrlDataType.name));
-  //
-  //         // Fill out names
-  //         await fillForm({
-  //           entryName,
-  //           name,
-  //         });
-  //
-  //         // Submit the form
-  //         await user.click(screen.getByText('databases.form.actions.create'));
-  //       }
-  //
-  //       fillAndSubmitForm();
-  //     }));
-  //
-  //   it('preserves user selected icon when data type changes', () =>
-  //     new Promise<void>((resolve) => {
-  //       // Listen for the database creation event
-  //       Events.addListener<Database>(
-  //         DatabaseCreatedEvent,
-  //         'test',
-  //         ({ data: database }) => {
-  //           expect(database.icon).toBe(emojiIconString);
-  //           resolve();
-  //         },
-  //       );
-  //
-  //       async function fillAndSubmitForm() {
-  //         render(<NewDatabaseDialog defaultOpen />);
-  //         const user = userEvent.setup();
-  //
-  //         // Pick URL data type
-  //         await user.click(screen.getByText(UrlDataType.name));
-  //
-  //         // Pick icon
-  //         await pickEmojiIcon('databases.form.icon.label');
-  //
-  //         // Change data type to PDF
-  //         await user.click(screen.getByText(PdfDataType.name));
-  //
-  //         // Fill out names
-  //         await fillForm({
-  //           entryName,
-  //           name,
-  //         });
-  //
-  //         // Submit the form
-  //         await user.click(screen.getByText('databases.form.actions.create'));
-  //       }
-  //
-  //       fillAndSubmitForm();
-  //     }));
-  // });
-  //
-  // describe('templates', () => {
-  //   it('creates a database from a template', () =>
-  //     new Promise<void>((resolve) => {
-  //       // Listen for the database creation event
-  //       Events.addListener<Database>(
-  //         DatabaseCreatedEvent,
-  //         'test',
-  //         ({ data: database }) => {
-  //           expect(database.name).toBe(i18n.t(BooksDatabaseTemplate.name));
-  //           expect(database.entryName).toBe(
-  //             i18n.t(BooksDatabaseTemplate.entryName),
-  //           );
-  //           expect(database.icon).toBe(BooksDatabaseTemplate.icon);
-  //           expect(database.dataType).toBe(BooksDatabaseTemplate.dataType);
-  //           expect(database.properties).toEqual(
-  //             BooksDatabaseTemplate.properties.map((property) => ({
-  //               ...property,
-  //               name: i18n.t(property.name),
-  //             })),
-  //           );
-  //           resolve();
-  //         },
-  //       );
-  //
-  //       async function fillAndSubmitForm() {
-  //         render(<NewDatabaseDialog defaultOpen />);
-  //         const user = userEvent.setup();
-  //
-  //         // Pick Books template
-  //         await user.click(screen.getByText(BooksDatabaseTemplate.name));
-  //
-  //         // Submit the form
-  //         await user.click(screen.getByText('databases.form.actions.create'));
-  //       }
-  //
-  //       fillAndSubmitForm();
-  //     }));
-  // });
-  //
-  // describe('on close', () => {
-  //   it('resets the form', async () => {
-  //     render(<NewDatabaseDialog defaultOpen />);
-  //     const user = userEvent.setup();
-  //
-  //     // Select a template to fill out the form
-  //     await user.click(screen.getByText(BooksDatabaseTemplate.name));
-  //
-  //     // Close the dialog
-  //     await user.click(screen.getByText('actions.cancel'));
-  //
-  //     // Wait for the dialog to close
-  //     await waitFor(() => {
-  //       expect(
-  //         screen.queryByText('databases.form.getStarted.title'),
-  //       ).toBeNull();
-  //     });
-  //
-  //     // Reopen the dialog
-  //     Events.dispatch(OpenNewDatabaseDialogEvent);
-  //
-  //     // Should show get started message
-  //     await waitFor(() => {
-  //       screen.getByText('databases.form.getStarted.title');
-  //     });
-  //
-  //     // Select a data type
-  //     await user.click(screen.getByText(UrlDataType.name));
-  //
-  //     // Form should be reset
-  //     await waitFor(() => {
-  //       expect(
-  //         screen.getByLabelText<HTMLInputElement>('databases.form.name.label')
-  //           .value,
-  //       ).toBe('');
-  //     });
-  //   });
-  // });
+  it('selects a template on click', async () => {
+    render(<NewDatabaseDialog defaultOpen />);
+    const user = userEvent.setup();
+
+    // Pick the first non-blank template
+    const template = DatabaseTemplates.Store.getAllArray().find(
+      (candidate) => candidate.name !== 'Blank',
+    )!;
+
+    await user.click(screen.getByText(template.name));
+
+    // The template's entry name is applied to the form
+    await waitFor(() => {
+      const input = screen
+        .getAllByRole('textbox')
+        .find((element) => (element as HTMLInputElement).name === 'entryName');
+
+      expect((input as HTMLInputElement).value).toBe(template.entryName);
+    });
+  });
+
+  it('creates a database from the form values', async () => {
+    render(<NewDatabaseDialog defaultOpen />);
+
+    await submitForm();
+
+    await waitFor(() => {
+      const database = Databases.Store.getAllArray().find(
+        (candidate) => candidate.name === name,
+      );
+
+      expect(database).toBeDefined();
+      expect(database?.entryName).toBe(entryName);
+    });
+  });
+
+  it('does not create a database without a name', async () => {
+    render(<NewDatabaseDialog defaultOpen />);
+
+    const before = Databases.Store.getAllArray().length;
+
+    await submitForm({ name: '' });
+
+    // The required field error is shown and no database is created
+    await waitFor(() => {
+      screen.getByText('formErrors.required');
+    });
+
+    expect(Databases.Store.getAllArray()).toHaveLength(before);
+  });
+
+  it('does not create a database with a conflicting name', async () => {
+    render(<NewDatabaseDialog defaultOpen />);
+
+    const existing = Databases.Store.getAllArray()[0];
+    const before = Databases.Store.getAllArray().length;
+
+    await submitForm({ name: existing.name });
+
+    await waitFor(() => {
+      screen.getByText('databases.form.errors.nameConflict');
+    });
+
+    expect(Databases.Store.getAllArray()).toHaveLength(before);
+  });
 });

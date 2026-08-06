@@ -46,7 +46,6 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
   const databaseTemplates = DatabaseTemplates.useAll();
   const [dialogOpen, setDialogOpen] = useState(defaultOpen);
   const [icon, setIcon] = useState(defaultIcon);
-  const [customIcon, setCustomIcon] = useState(false);
   // The blank template, used to create a database from scratch with only the
   // title, created, and last modified date properties.
   const blankTemplate = useMemo(
@@ -79,7 +78,6 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
       reset();
       setSelectedTemplate(blankTemplate);
       setIcon(defaultIcon);
-      setCustomIcon(false);
     }, 300);
   }, [reset, blankTemplate]);
 
@@ -130,11 +128,9 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
 
   function handleClearIcon() {
     setIcon(defaultIcon);
-    setCustomIcon(false);
   }
 
   function handleSelectIcon(selectedIcon: string) {
-    setCustomIcon(true);
     setIcon(selectedIcon);
   }
 
@@ -142,8 +138,8 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
     (template: DatabaseTemplate) => {
       setSelectedTemplate(template);
       setIcon(template.icon);
-      setFieldValue('name', i18n.t(template.name));
-      setFieldValue('entryName', i18n.t(template.entryName));
+      setFieldValue('name', template.name);
+      setFieldValue('entryName', template.entryName);
     },
     [setFieldValue],
   );
@@ -151,7 +147,6 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
   const handleSelectBlank = useCallback(() => {
     setSelectedTemplate(blankTemplate);
     setIcon(blankTemplate.icon);
-    setCustomIcon(false);
 
     // Clear the fields so the user names their database from scratch
     setFieldValue('name', '');
@@ -159,9 +154,8 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
   }, [blankTemplate, setFieldValue]);
 
   const isBlankTemplate = selectedTemplate === blankTemplate;
-  const databaseTypeName: TranslationKey = selectedTemplate.name;
-  const databaseDescription: TranslationKey | null =
-    selectedTemplate.description || null;
+  const databaseTypeName = selectedTemplate.name;
+  const databaseDescription = selectedTemplate.description || null;
   const properties: PropertiesSchema = selectedTemplate.properties || [];
 
   return (
@@ -174,7 +168,7 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
               onClick={handleSelectBlank}
               active={isBlankTemplate}
               contentIcon={blankTemplate.icon}
-              label={blankTemplate.name}
+              stringLabel={blankTemplate.name}
             />
             {databaseTemplates.map((template) => (
               <MenuItem
@@ -182,7 +176,7 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
                 onClick={() => handleSelectTemplate(template)}
                 active={selectedTemplate.name === template.name}
                 contentIcon={template.icon}
-                label={template.name}
+                stringLabel={template.name}
               />
             ))}
           </MenuGroup>
@@ -197,9 +191,13 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
           </div>
           <div className="content">
             <div className="description">
-              <Heading text={databaseTypeName} />
+              <Heading stringText={databaseTypeName} />
               {databaseDescription && (
-                <Text paragraph color="muted" text={databaseDescription} />
+                <Text
+                  paragraph
+                  color="muted"
+                  stringText={databaseDescription}
+                />
               )}
             </div>
             <div className="fields">
@@ -246,7 +244,7 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
                   <MenuItem
                     key={property.name}
                     contentIcon={property.icon}
-                    label={property.name}
+                    stringLabel={property.name}
                   />
                 ))}
               </MenuGroup>
@@ -271,19 +269,21 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
   );
 };
 
-async function validateDatabaseName(value: string) {
+async function validateDatabaseName(
+  value: string,
+): Promise<TranslationKey | undefined> {
   const databases = Databases.Store.getAllArray();
   const nameConfict = databases.find((db) => db.name === value);
 
   // Ensure no database with the same name exists
   if (nameConfict) {
-    return i18n.t('databases.form.errors.nameConflict');
+    return 'databases.form.errors.nameConflict';
   }
 
   const newDirPath = Fs.concatPath(Paths.workspace, value);
 
   // Ensure no directory with the same name exists in the workspace
   if (await Fs.exists(newDirPath)) {
-    return i18n.t('databases.form.errors.pathConflict');
+    return 'databases.form.errors.pathConflict';
   }
 }

@@ -8,7 +8,6 @@ import {
   MenuGroup,
   MenuItem,
   MenuLabel,
-  Stack,
 } from '@minddrop/ui-primitives';
 import { useActiveDatabaseId } from '../DatabasesFeatureState';
 import {

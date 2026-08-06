@@ -180,7 +180,7 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
 
   // Callback to update the active view's options
   const handleUpdateViewOptions = useCallback(
-    (options: Record<string, unknown>) => {
+    (options: object) => {
       if (view) {
         DataViews.update(view.id, { options });
       }
@@ -331,7 +331,7 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
             {React.createElement(targetViewType.settingsMenu, {
               view: targetView,
               options: targetViewOptions,
-              onUpdateOptions: (options: Record<string, unknown>) =>
+              onUpdateOptions: (options: object) =>
                 DataViews.update(targetViewId, { options }),
             })}
           </>

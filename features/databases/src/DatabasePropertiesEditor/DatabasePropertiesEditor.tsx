@@ -7,7 +7,10 @@ import {
 } from '@minddrop/ui-drag-and-drop';
 import { DatabasePropertyEditor } from '../DatabasePropertyEditor';
 
-type DraftProperty = PropertySchema & {
+/**
+ * A property which has been added but not yet saved to the database.
+ */
+export type DraftProperty = PropertySchema & {
   id: number;
 };
 

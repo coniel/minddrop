@@ -5,6 +5,7 @@ import {
   OpenConfirmationDialogEventData,
 } from '@minddrop/events';
 import { PropertyEditor } from '@minddrop/feature-properties';
+import { TranslationKey, createI18nKeyBuilder } from '@minddrop/i18n';
 import { PropertySchema } from '@minddrop/properties';
 
 export interface DatabasePropertyEditorProps {
@@ -49,8 +50,8 @@ export const DatabasePropertyEditor: React.FC<DatabasePropertyEditorProps> = ({
   onCancelDraft,
   dragHandleProps,
 }) => {
-  function validateName(name: string): string | undefined {
-    const i18nRoot = 'properties.form.name.validation';
+  function validateName(name: string): TranslationKey | undefined {
+    const i18nKey = createI18nKeyBuilder('properties.form.name.validation.');
 
     // Name has not changed and is therefore valid
     if (!isDraft && name === property.name) {
@@ -59,7 +60,7 @@ export const DatabasePropertyEditor: React.FC<DatabasePropertyEditorProps> = ({
 
     // Name is required
     if (name.trim() === '') {
-      return `${i18nRoot}.required`;
+      return i18nKey('required');
     }
 
     // Check for name conflicts
@@ -69,12 +70,12 @@ export const DatabasePropertyEditor: React.FC<DatabasePropertyEditorProps> = ({
     );
 
     if (existingProperty) {
-      return `${i18nRoot}.nameConflict`;
+      return i18nKey('nameConflict');
     }
 
     // Check for invalid characters
     if (!/^[a-zA-Z_][a-zA-Z0-9_ -]*$/.test(name)) {
-      return `${i18nRoot}.invalidCharacters`;
+      return i18nKey('invalidCharacters');
     }
   }
 

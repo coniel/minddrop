@@ -41,12 +41,12 @@ export const DatabaseEntryOptionsMenu: React.FC<
   // Duplicate the entry
   const handleDuplicate = useCallback(() => {
     // TODO: implement when DatabaseEntries.duplicate is available
-  }, [entryId]);
+  }, []);
 
   // Delete the entry
   const handleDelete = useCallback(() => {
     // TODO: implement when DatabaseEntries.delete is available
-  }, [entryId]);
+  }, []);
 
   return (
     <>
