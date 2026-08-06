@@ -8,7 +8,7 @@ export interface LeafElementRendererProps {
 }
 
 export const LeafElementRenderer: React.FC<LeafElementRendererProps> = ({
-  element,
+  element: _element,
 }) => {
   // TODO: implement leaf element rendering
   return null;

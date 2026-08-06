@@ -2,6 +2,7 @@ import { useCallback } from 'react';
 import { DefaultIconElementStyle, IconElement } from '@minddrop/designs';
 import {
   ColorSelect,
+  ColorSelectOption,
   ContentColor,
   FlexItem,
   Group,
@@ -29,7 +30,7 @@ export interface IconElementStyleEditorProps {
   elementId: string;
 }
 
-const transparentOption = {
+const transparentOption: ColorSelectOption = {
   value: 'transparent',
   label: 'color.transparent',
   swatchClass: 'color-select-swatch-transparent',

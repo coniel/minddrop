@@ -177,7 +177,7 @@ export const SizingFields: React.FC<SizingFieldsProps> = ({ elementId }) => {
     requestAnimationFrame(() => {
       widthRef.current?.querySelector('input')?.focus();
     });
-  }, [elementId, width, widthUnit, maxWidth, maxWidthUnit]);
+  }, [elementId, width, widthUnit]);
 
   const toggleMaxWidthUnit = useCallback(() => {
     const newUnit = maxWidthUnit === 'px' ? '%' : 'px';
@@ -202,7 +202,7 @@ export const SizingFields: React.FC<SizingFieldsProps> = ({ elementId }) => {
     requestAnimationFrame(() => {
       maxWidthRef.current?.querySelector('input')?.focus();
     });
-  }, [elementId, maxWidth, maxWidthUnit, width, widthUnit]);
+  }, [elementId, maxWidth, maxWidthUnit]);
 
   return (
     <>
@@ -258,7 +258,7 @@ export const SizingFields: React.FC<SizingFieldsProps> = ({ elementId }) => {
           label="designs.image.sizing.sync"
           variant="subtle"
           size="md"
-          color={sizeSynced ? 'regular' : 'muted'}
+          color={sizeSynced ? 'neutral' : 'muted'}
           onClick={handleToggleSizeSync}
           style={{ alignSelf: 'flex-end' }}
         />
@@ -316,7 +316,7 @@ export const SizingFields: React.FC<SizingFieldsProps> = ({ elementId }) => {
           label="designs.image.sizing.sync"
           variant="subtle"
           size="md"
-          color={maxSizeSynced ? 'regular' : 'muted'}
+          color={maxSizeSynced ? 'neutral' : 'muted'}
           onClick={handleToggleMaxSizeSync}
           style={{ alignSelf: 'flex-end' }}
         />

@@ -20,7 +20,7 @@ const editorLayout = {
 // A design with a title property and the editor layout
 const editorDesign: Design = {
   ...design_books,
-  id: 'editor-title-design',
+  id: 'design_editor-title-design',
   properties: [{ type: 'title', name: 'Name' }, ...design_books.properties],
   layouts: [editorLayout],
 };

@@ -85,6 +85,7 @@ export interface ElementUIConfig {
 
 // Cast components to the registry's generic prop types since each
 // component internally narrows to its specific element type
+/* eslint-disable @typescript-eslint/no-explicit-any -- see note above */
 const asDisplay = (
   component: React.ComponentType<any>,
 ): React.ComponentType<{

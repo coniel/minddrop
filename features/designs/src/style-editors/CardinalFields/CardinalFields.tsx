@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { DesignElementStyle } from '@minddrop/designs';
+import { TranslationKey } from '@minddrop/i18n';
 import { IconButton, NumberField } from '@minddrop/ui-primitives';
 import {
   getActiveElements,
@@ -23,7 +24,7 @@ export interface CardinalFieldsProps {
   /**
    * i18n key for the sync toggle tooltip.
    */
-  syncLabel: string;
+  syncLabel: TranslationKey;
 
   /**
    * Whether values are stored as rem and displayed as px.
@@ -185,7 +186,7 @@ export const CardinalFields = ({
           label={syncLabel}
           variant="subtle"
           size="md"
-          color={synced ? 'regular' : 'muted'}
+          color={synced ? 'neutral' : 'muted'}
           onClick={handleToggleSync}
         />
         <div style={fieldStyle}>

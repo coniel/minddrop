@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { ObjectFit } from '@minddrop/designs';
-import { useTranslation } from '@minddrop/i18n';
+import { TranslationKey } from '@minddrop/i18n';
 import { SelectField, SelectItem } from '@minddrop/ui-primitives';
 import { updateElementStyle, useElementStyle } from '../../DesignStudioStore';
 import { StyleOptions } from '../../types';
@@ -14,7 +14,7 @@ export interface BackgroundImageFitSelectProps {
   /**
    * Optional i18n label key displayed above the select.
    */
-  label?: string;
+  label?: TranslationKey;
 }
 
 const options: StyleOptions<ObjectFit> = [
@@ -31,11 +31,10 @@ export const BackgroundImageFitSelect = ({
   elementId,
   label,
 }: BackgroundImageFitSelectProps) => {
-  const { t } = useTranslation();
   const value = useElementStyle(elementId, 'backgroundImageFit');
 
   const handleChange = useCallback(
-    (newValue: string) => {
+    (newValue: string | number) => {
       updateElementStyle(
         elementId,
         'backgroundImageFit',
@@ -52,10 +51,7 @@ export const BackgroundImageFitSelect = ({
       label={label}
       value={value}
       onValueChange={handleChange}
-      options={options.map((option) => ({
-        label: t(option.label),
-        value: option.value,
-      }))}
+      options={options}
     >
       {options.map((option) => (
         <SelectItem

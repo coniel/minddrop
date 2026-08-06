@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { NumberElement, SignDisplay } from '@minddrop/designs';
-import { useTranslation } from '@minddrop/i18n';
+import { TranslationKey } from '@minddrop/i18n';
 import { SelectField, SelectItem } from '@minddrop/ui-primitives';
 import { updateDesignElement, useElementData } from '../../DesignStudioStore';
 import { FlatNumberElement, StyleOptions } from '../../types';
@@ -14,7 +14,7 @@ export interface SignDisplaySelectProps {
   /**
    * Optional i18n label key displayed above the select.
    */
-  label?: string;
+  label?: TranslationKey;
 }
 
 const options: StyleOptions<SignDisplay> = [
@@ -31,8 +31,6 @@ export const SignDisplaySelect = ({
   elementId,
   label,
 }: SignDisplaySelectProps) => {
-  const { t } = useTranslation();
-
   const { signDisplay: value } = useElementData(
     elementId,
     (element: FlatNumberElement) => ({
@@ -41,7 +39,7 @@ export const SignDisplaySelect = ({
   );
 
   const handleChange = useCallback(
-    (newValue: string) => {
+    (newValue: string | number) => {
       updateDesignElement<NumberElement>(elementId, {
         format: {
           signDisplay: newValue as SignDisplay,
@@ -58,10 +56,7 @@ export const SignDisplaySelect = ({
       label={label}
       value={value}
       onValueChange={handleChange}
-      options={options.map((option) => ({
-        label: t(option.label),
-        value: option.value,
-      }))}
+      options={options}
     >
       {options.map((option) => (
         <SelectItem

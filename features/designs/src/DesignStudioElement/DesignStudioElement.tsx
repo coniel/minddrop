@@ -103,5 +103,12 @@ const DesignStudioElementInner: React.FC<{
     return <ui.StudioComponent element={element} rootProps={rootProps} />;
   }
 
+  // Every element type which has children provides a StudioComponent, so
+  // only leaf elements reach the display fallback. Their flat shape adds a
+  // `parent` field but is otherwise a DesignElement.
+  if ('children' in element) {
+    return null;
+  }
+
   return <ui.DisplayComponent element={element} rootProps={rootProps} />;
 };

@@ -21,8 +21,10 @@ export interface OpenDesignStudioEventData {
   backEvent?: string;
 
   /**
-   * The data to pass to the back event.
+   * The data to pass to the back event. Typed loosely because the
+   * payload shape depends on the event being dispatched.
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   backEventData?: any;
 
   /**

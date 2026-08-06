@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { TranslationKey } from '@minddrop/i18n';
 import { ColorSelect } from '@minddrop/ui-primitives';
 import { ContentColor } from '@minddrop/ui-theme';
 import { updateElementStyle, useElementStyle } from '../DesignStudioStore';
@@ -12,7 +13,7 @@ export interface BorderColorSelectProps {
   /**
    * Optional i18n label key displayed above the select.
    */
-  label?: string;
+  label?: TranslationKey;
 }
 
 /**

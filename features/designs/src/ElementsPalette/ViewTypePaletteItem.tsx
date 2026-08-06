@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { DataViewType } from '@minddrop/data-views';
 import { DefaultViewElementStyle } from '@minddrop/designs';
-import { useTranslation } from '@minddrop/i18n';
 import { PropertyType } from '@minddrop/properties';
 import { useDraggable } from '@minddrop/selection';
 import { UiIconName } from '@minddrop/ui-icons';
@@ -27,8 +26,6 @@ export interface ViewTypePaletteItemProps {
 export const ViewTypePaletteItem: React.FC<ViewTypePaletteItemProps> = ({
   viewType,
 }) => {
-  const { t } = useTranslation();
-
   // Build a view element template with this specific view type
   const template = {
     type: 'view' as const,

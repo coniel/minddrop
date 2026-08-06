@@ -23,13 +23,6 @@ const corners = [
 
 type CornerKey = (typeof corners)[number];
 
-const cornerLabels: Record<CornerKey, string> = {
-  borderRadiusTopLeft: 'designs.border.radius.top-left',
-  borderRadiusTopRight: 'designs.border.radius.top-right',
-  borderRadiusBottomRight: 'designs.border.radius.bottom-right',
-  borderRadiusBottomLeft: 'designs.border.radius.bottom-left',
-};
-
 /**
  * Renders four corner radius fields with a sync toggle for an element's
  * border radius.
@@ -121,7 +114,7 @@ export const BorderRadiusField = ({ elementId }: BorderRadiusFieldProps) => {
         label="designs.border.radius.sync"
         variant="subtle"
         size="md"
-        color={synced ? 'regular' : 'muted'}
+        color={synced ? 'neutral' : 'muted'}
         onClick={handleToggleSync}
       />
     </Group>

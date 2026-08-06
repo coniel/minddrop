@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
 import { FontFamily, fonts } from '@minddrop/designs';
-import { useTranslation } from '@minddrop/i18n';
 import { Select, SelectItem } from '@minddrop/ui-primitives';
 import { updateElementStyle, useElementStyle } from '../../DesignStudioStore';
 import { useScopedStyleKey } from '../StyleKeyScope';
@@ -16,7 +15,6 @@ export interface FontFamilySelectProps {
  * Renders a select dropdown for choosing an element's font family.
  */
 export const FontFamilySelect = ({ elementId }: FontFamilySelectProps) => {
-  const { t } = useTranslation();
   // Resolve the style key against the current style key scope
   const styleKey = useScopedStyleKey('font-family');
   const fontFamily = useElementStyle(elementId, styleKey);
@@ -35,10 +33,7 @@ export const FontFamilySelect = ({ elementId }: FontFamilySelectProps) => {
       value={fontFamily}
       valueColor={fontFamily === 'inherit' ? 'muted' : 'regular'}
       onValueChange={handleChange}
-      options={fonts.map((font) => ({
-        label: t(font.label),
-        value: font.value,
-      }))}
+      options={fonts}
     >
       {fonts.map((font) => (
         <SelectItem

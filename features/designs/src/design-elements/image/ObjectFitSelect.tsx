@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { ObjectFit } from '@minddrop/designs';
-import { useTranslation } from '@minddrop/i18n';
+import { TranslationKey } from '@minddrop/i18n';
 import { SelectField, SelectItem } from '@minddrop/ui-primitives';
 import { updateElementStyle, useElementStyle } from '../../DesignStudioStore';
 import { StyleOptions } from '../../types';
@@ -14,7 +14,7 @@ export interface ObjectFitSelectProps {
   /**
    * Optional i18n label key displayed above the select.
    */
-  label?: string;
+  label?: TranslationKey;
 }
 
 const options: StyleOptions<ObjectFit> = [
@@ -28,11 +28,10 @@ const options: StyleOptions<ObjectFit> = [
  * on an image design element.
  */
 export const ObjectFitSelect = ({ elementId, label }: ObjectFitSelectProps) => {
-  const { t } = useTranslation();
   const value = useElementStyle(elementId, 'objectFit');
 
   const handleChange = useCallback(
-    (newValue: string) => {
+    (newValue: string | number) => {
       updateElementStyle(elementId, 'objectFit', newValue as ObjectFit);
     },
     [elementId],
@@ -45,10 +44,7 @@ export const ObjectFitSelect = ({ elementId, label }: ObjectFitSelectProps) => {
       label={label}
       value={value}
       onValueChange={handleChange}
-      options={options.map((option) => ({
-        label: t(option.label),
-        value: option.value,
-      }))}
+      options={options}
     >
       {options.map((option) => (
         <SelectItem

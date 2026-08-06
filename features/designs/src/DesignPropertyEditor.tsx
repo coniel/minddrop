@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Events, OpenConfirmationDialogEvent } from '@minddrop/events';
 import { PropertyEditorBase } from '@minddrop/feature-properties';
+import { TranslationKey, createI18nKeyBuilder } from '@minddrop/i18n';
 import { PropertySchema, PropertyType } from '@minddrop/properties';
 import { InputLabel, Stack, Text, TextField } from '@minddrop/ui-primitives';
 import {
@@ -79,8 +80,8 @@ export const DesignPropertyEditor: React.FC<DesignPropertyEditorProps> = ({
   const [placeholder, setPlaceholder] = useState(property.placeholder || '');
   const [resetCount, setResetCount] = useState(0);
 
-  function validateName(name: string): string | undefined {
-    const i18nRoot = 'properties.form.name.validation';
+  function validateName(name: string): TranslationKey | undefined {
+    const i18nKey = createI18nKeyBuilder('properties.form.name.validation.');
 
     // Name has not changed and is therefore valid
     if (!isDraft && name === property.name) {
@@ -89,7 +90,7 @@ export const DesignPropertyEditor: React.FC<DesignPropertyEditorProps> = ({
 
     // Name is required
     if (name.trim() === '') {
-      return `${i18nRoot}.required`;
+      return i18nKey('required');
     }
 
     // Check for name conflicts within the design
@@ -99,12 +100,12 @@ export const DesignPropertyEditor: React.FC<DesignPropertyEditorProps> = ({
     );
 
     if (conflicting) {
-      return `${i18nRoot}.nameConflict`;
+      return i18nKey('nameConflict');
     }
 
     // Check for invalid characters
     if (!/^[a-zA-Z_][a-zA-Z0-9_ -]*$/.test(name)) {
-      return `${i18nRoot}.invalidCharacters`;
+      return i18nKey('invalidCharacters');
     }
   }
 

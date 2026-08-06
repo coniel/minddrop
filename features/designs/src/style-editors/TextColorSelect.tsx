@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
-import { ColorSelect } from '@minddrop/ui-primitives';
+import { TranslationKey } from '@minddrop/i18n';
+import { ColorSelect, ColorSelectOption } from '@minddrop/ui-primitives';
 import { updateElementStyle, useElementStyle } from '../DesignStudioStore';
 import { useScopedStyleKey } from './StyleKeyScope';
 
@@ -17,10 +18,10 @@ export interface TextColorSelectProps {
   /**
    * Optional i18n label key displayed above the select.
    */
-  label?: string;
+  label?: TranslationKey;
 }
 
-const inheritOption = {
+const inheritOption: ColorSelectOption = {
   value: 'inherit',
   label: 'color.inherit',
   swatchClass: 'color-select-swatch-default',

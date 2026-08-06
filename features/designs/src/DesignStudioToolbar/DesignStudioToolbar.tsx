@@ -1,5 +1,4 @@
 import { useCallback } from 'react';
-import { useTranslation } from '@minddrop/i18n';
 import {
   DropdownMenuContent,
   DropdownMenuItem,
@@ -28,7 +27,6 @@ const ZOOM_PRESETS = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 3];
  * Renders the design studio toolbar with zoom controls.
  */
 export const DesignStudioToolbar: React.FC = () => {
-  const { t } = useTranslation();
   const zoom = useDesignStudioStore((state) => state.zoom);
 
   // Zoom in by one step, centered on the viewport
@@ -57,7 +55,7 @@ export const DesignStudioToolbar: React.FC = () => {
       <ToolbarIconButton
         icon="minus"
         label="designStudio.zoomOut"
-        tooltip={{ title: t('designStudio.zoomOut'), keyboardShortcut: ['−'] }}
+        tooltip={{ title: 'designStudio.zoomOut', keyboardShortcut: ['−'] }}
         variant="subtle"
         size="sm"
         onClick={handleZoomOut}
@@ -81,7 +79,7 @@ export const DesignStudioToolbar: React.FC = () => {
               {ZOOM_PRESETS.map((level) => (
                 <DropdownMenuItem
                   key={level}
-                  label={`${Math.round(level * 100)}%`}
+                  stringLabel={`${Math.round(level * 100)}%`}
                   onSelect={() => handleSetZoom(level)}
                 />
               ))}
@@ -94,7 +92,7 @@ export const DesignStudioToolbar: React.FC = () => {
       <ToolbarIconButton
         icon="plus"
         label="designStudio.zoomIn"
-        tooltip={{ title: t('designStudio.zoomIn'), keyboardShortcut: ['+'] }}
+        tooltip={{ title: 'designStudio.zoomIn', keyboardShortcut: ['+'] }}
         variant="subtle"
         size="sm"
         onClick={handleZoomIn}
@@ -108,7 +106,7 @@ export const DesignStudioToolbar: React.FC = () => {
         icon="scan"
         label="designStudio.resetView"
         tooltip={{
-          title: t('designStudio.resetView'),
+          title: 'designStudio.resetView',
           keyboardShortcut: ['H'],
         }}
         variant="subtle"

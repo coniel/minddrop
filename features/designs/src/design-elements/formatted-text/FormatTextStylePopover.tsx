@@ -7,7 +7,7 @@ import {
   fontWeights,
   fonts,
 } from '@minddrop/designs';
-import { useTranslation } from '@minddrop/i18n';
+import { TranslationKey } from '@minddrop/i18n';
 import {
   Button,
   ColorSelect,
@@ -48,7 +48,7 @@ export interface FormatTextStylePopoverProps {
   /**
    * The i18n label for the popover trigger button.
    */
-  label: string;
+  label: TranslationKey;
 }
 
 /**
@@ -60,7 +60,6 @@ export const FormatTextStylePopover = ({
   styleKey,
   label,
 }: FormatTextStylePopoverProps) => {
-  const { t } = useTranslation();
   const marginKey = styleKey === 'prefixStyle' ? 'margin-right' : 'margin-left';
 
   // Read all derived style values from the element
@@ -132,7 +131,7 @@ export const FormatTextStylePopover = ({
           label={label}
           size="md"
           variant="subtle"
-          color={hasCustomStyles ? 'regular' : 'muted'}
+          color={hasCustomStyles ? 'neutral' : 'muted'}
         />
       </PopoverTrigger>
       <PopoverPortal>
@@ -149,10 +148,7 @@ export const FormatTextStylePopover = ({
                   onValueChange={(value: FontFamily) =>
                     updateStyle({ 'font-family': value })
                   }
-                  options={fonts.map((font) => ({
-                    label: t(font.label),
-                    value: font.value,
-                  }))}
+                  options={fonts}
                 >
                   {fonts.map((font) => (
                     <SelectItem
@@ -174,10 +170,7 @@ export const FormatTextStylePopover = ({
                       onValueChange={(value: FontWeight) =>
                         updateStyle({ 'font-weight': value })
                       }
-                      options={fontWeights.map((weight) => ({
-                        label: t(weight.label),
-                        value: weight.value,
-                      }))}
+                      options={fontWeights}
                     >
                       {fontWeights.map((weight) => (
                         <SelectItem

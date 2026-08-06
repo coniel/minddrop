@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import {
   ColorSelect,
+  ColorSelectOption,
   FlexItem,
   Group,
   InputLabel,
@@ -16,7 +17,7 @@ export interface BackgroundColorSelectProps {
   elementId: string;
 }
 
-const transparentOption = {
+const transparentOption: ColorSelectOption = {
   value: 'transparent',
   label: 'color.transparent',
   swatchClass: 'color-select-swatch-transparent',
