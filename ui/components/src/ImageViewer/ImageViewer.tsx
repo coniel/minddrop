@@ -193,7 +193,7 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({
           <ToolbarIconButton
             icon="minus"
             label="designStudio.zoomOut"
-            tooltip={{ title: t('designStudio.zoomOut') }}
+            tooltip={{ title: 'designStudio.zoomOut' }}
             variant="subtle"
             size="sm"
             onClick={zoomOut}
@@ -217,7 +217,7 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({
                   {ZOOM_PRESETS.map((level) => (
                     <DropdownMenuItem
                       key={level}
-                      label={`${Math.round(level * 100)}%`}
+                      stringLabel={`${Math.round(level * 100)}%`}
                       onSelect={() => setZoom(level)}
                     />
                   ))}
@@ -230,7 +230,7 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({
           <ToolbarIconButton
             icon="plus"
             label="designStudio.zoomIn"
-            tooltip={{ title: t('designStudio.zoomIn') }}
+            tooltip={{ title: 'designStudio.zoomIn' }}
             variant="subtle"
             size="sm"
             onClick={zoomIn}
@@ -243,7 +243,7 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({
           <ToolbarIconButton
             icon="scan"
             label="designStudio.resetView"
-            tooltip={{ title: t('designStudio.resetView') }}
+            tooltip={{ title: 'designStudio.resetView' }}
             variant="subtle"
             size="sm"
             onClick={reset}
