@@ -8,20 +8,20 @@ export function titleFromUrl(url: string): string {
   // Decode URL encoded characters (like %20 for spaces)
   try {
     title = decodeURIComponent(title);
-  } catch (e) {
+  } catch {
     // If decoding fails, continue with the original string
   }
 
   // Remove file extensions but preserve TLDs
   // Only remove extension if there's a path separator before it
-  title = title.replace(/\/[^\/]*\.[a-zA-Z0-9]+$/, (match) => {
+  title = title.replace(/\/[^/]*\.[a-zA-Z0-9]+$/, (match) => {
     // Remove the extension from the last segment
     return match.replace(/\.[a-zA-Z0-9]+$/, '');
   });
 
   // Replace characters that are invalid on Windows, macOS, or Linux
   // Windows: < > : " / \ | ? *
-  title = title.replace(/[<>:"|?*\\\/]/g, '_');
+  title = title.replace(/[<>:"|?*\\/]/g, '_');
 
   // Replace other problematic characters
   title = title.replace(/[^\w\s\-_.]/g, '_');
