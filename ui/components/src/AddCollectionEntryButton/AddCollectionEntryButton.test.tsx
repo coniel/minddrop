@@ -4,6 +4,7 @@ import {
   DatabaseEntries,
   DatabaseEntry,
   DatabaseFixtures,
+  Databases,
 } from '@minddrop/databases';
 import { render, screen, userEvent, waitFor } from '@minddrop/test-utils';
 import { cleanup, setup } from '../test-utils';
@@ -13,6 +14,9 @@ const { collection_1 } = CollectionFixtures;
 const {
   objectDatabase,
   collectionDatabase,
+  entryTemplatesDatabase,
+  entryTemplate1,
+  entryTemplate2,
   objectEntry1,
   relatedEntry1,
   relatedEntry2,
@@ -27,7 +31,19 @@ async function openMenu() {
 
 // Types a query into the menu's search input
 async function search(query: string) {
-  await userEvent.type(screen.getByPlaceholderText('actions.search'), query);
+  await userEvent.type(
+    screen.getByPlaceholderText('collections.entries.searchPlaceholder'),
+    query,
+  );
+}
+
+// Returns the listed options matching the text. While searching,
+// the menu keeps a hidden copy of every item for registration and
+// renders the results separately, so hidden copies are dropped.
+function listedOptions(text: string | RegExp): HTMLElement[] {
+  return screen
+    .queryAllByText(text)
+    .filter((element) => !element.closest('[hidden]'));
 }
 
 describe('<AddCollectionEntryButton />', () => {
@@ -51,6 +67,24 @@ describe('<AddCollectionEntryButton />', () => {
     expect(screen.getByText(objectEntry1.title)).toBeInTheDocument();
     // Entries from other databases are not listed
     expect(screen.queryByText(relatedEntry1.title)).toBeNull();
+  });
+
+  it("icons existing entries with their database's icon", async () => {
+    render(
+      <AddCollectionEntryButton
+        collectionId={collection_1.id}
+        database={objectDatabase.id}
+      />,
+    );
+
+    await openMenu();
+
+    // The entry's option carries an icon alongside its title
+    const entryOption = screen
+      .getByText(objectEntry1.title)
+      .closest('.menu-item');
+
+    expect(entryOption?.querySelector('.item-icon')).not.toBeNull();
   });
 
   it('excludes entries already in the collection', async () => {
@@ -119,6 +153,111 @@ describe('<AddCollectionEntryButton />', () => {
     });
   });
 
+  it("nests a templated database's create options in a submenu", async () => {
+    render(
+      <AddCollectionEntryButton
+        collectionId={collection_1.id}
+        database={entryTemplatesDatabase.id}
+      />,
+    );
+
+    await openMenu();
+
+    // The templates are not listed at the root
+    expect(screen.queryByText(entryTemplate1.name)).toBeNull();
+    // The database has a single root option
+    expect(screen.getAllByText(entryTemplatesDatabase.entryName).length).toBe(
+      1,
+    );
+
+    // Open the database's submenu
+    await userEvent.click(screen.getByText(entryTemplatesDatabase.entryName));
+
+    // The submenu adds the blank entry option alongside the trigger
+    await waitFor(() => {
+      expect(screen.getAllByText(entryTemplatesDatabase.entryName).length).toBe(
+        2,
+      );
+    });
+
+    // The database's templates are listed in the submenu
+    expect(screen.getByText(entryTemplate1.name)).toBeInTheDocument();
+    expect(screen.getByText(entryTemplate2.name)).toBeInTheDocument();
+  });
+
+  it('creates an entry from the selected template and adds it to the collection', async () => {
+    render(
+      <AddCollectionEntryButton
+        collectionId={collection_1.id}
+        database={entryTemplatesDatabase.id}
+      />,
+    );
+
+    await openMenu();
+
+    // Open the database's submenu and pick the template
+    await userEvent.click(screen.getByText(entryTemplatesDatabase.entryName));
+    await userEvent.click(await screen.findByText(entryTemplate1.name));
+
+    await waitFor(() => {
+      // The templated entry exists in the database
+      const entries = DatabaseEntries.getAll(entryTemplatesDatabase.id);
+      const newEntry = entries.find(
+        (entry) => entry.title === entryTemplate1.defaultTitle,
+      );
+
+      expect(newEntry).toBeDefined();
+      // The template's property values are applied to the entry
+      expect(newEntry?.properties.Notes).toBe(entryTemplate1.properties.Notes);
+      // The new entry is added to the collection
+      expect(Collections.get(collection_1.id).items).toContain(newEntry?.id);
+    });
+  });
+
+  it('lists template create options flat while searching', async () => {
+    render(
+      <AddCollectionEntryButton
+        collectionId={collection_1.id}
+        database={entryTemplatesDatabase.id}
+      />,
+    );
+
+    await openMenu();
+    await search(entryTemplatesDatabase.entryName);
+
+    // Template options are listed at the root, qualified by entry name
+    expect(
+      listedOptions(
+        `${entryTemplatesDatabase.entryName} · ${entryTemplate1.name}`,
+      ),
+    ).toHaveLength(1);
+  });
+
+  it('matches templates by name while searching', async () => {
+    // Give a database a template whose name shares nothing with its
+    // database or entry name, so only a template match can list it
+    Databases.Store.update(objectDatabase.id, {
+      entryTemplates: [{ ...entryTemplate1, name: 'Zephyr' }],
+    });
+
+    render(
+      <AddCollectionEntryButton
+        collectionId={collection_1.id}
+        database={false}
+      />,
+    );
+
+    await openMenu();
+    await search('Zephyr');
+
+    // The matched template is listed
+    expect(listedOptions(`${objectDatabase.entryName} · Zephyr`)).toHaveLength(
+      1,
+    );
+    // Templates which do not match are not listed
+    expect(listedOptions(new RegExp(entryTemplate2.name))).toHaveLength(0);
+  });
+
   it('groups options when multiple databases are supported', async () => {
     render(
       <AddCollectionEntryButton
@@ -134,7 +273,7 @@ describe('<AddCollectionEntryButton />', () => {
       screen.getByText('collections.entries.groups.new'),
     ).toBeInTheDocument();
     expect(
-      screen.getByText('collections.entries.groups.existing'),
+      screen.getByText('collections.entries.groups.recent'),
     ).toBeInTheDocument();
     // Both databases have a create option
     expect(screen.getByText(objectDatabase.entryName)).toBeInTheDocument();
@@ -212,9 +351,9 @@ describe('<AddCollectionEntryButton />', () => {
     await search('Related');
 
     // The matching entry is listed
-    expect(screen.getByText(relatedEntry2.title)).toBeInTheDocument();
+    expect(listedOptions(relatedEntry2.title)).toHaveLength(1);
     // The collection member entry is not listed
-    expect(screen.queryByText(relatedEntry1.title)).toBeNull();
+    expect(listedOptions(relatedEntry1.title)).toHaveLength(0);
   });
 
   it('shows create options for databases matching the search query', async () => {
@@ -231,13 +370,13 @@ describe('<AddCollectionEntryButton />', () => {
     // All databases with a matching name or entry name have a
     // create option
     expect(
-      screen.getByText(DatabaseFixtures.rootStorageDatabase.entryName),
-    ).toBeInTheDocument();
+      listedOptions(DatabaseFixtures.rootStorageDatabase.entryName),
+    ).toHaveLength(1);
     expect(
-      screen.getByText(DatabaseFixtures.commonStorageDatabase.entryName),
-    ).toBeInTheDocument();
+      listedOptions(DatabaseFixtures.commonStorageDatabase.entryName),
+    ).toHaveLength(1);
     // Databases which do not match have no create option
-    expect(screen.queryByText(objectDatabase.entryName)).toBeNull();
+    expect(listedOptions(objectDatabase.entryName)).toHaveLength(0);
   });
 
   it('limits search results to the top 15 matched entries', async () => {
@@ -265,6 +404,6 @@ describe('<AddCollectionEntryButton />', () => {
     await search('Bulk');
 
     // Only the top 15 matched entries are listed
-    expect(screen.getAllByText(/Bulk Entry/).length).toBe(15);
+    expect(listedOptions(/Bulk Entry/)).toHaveLength(15);
   });
 });

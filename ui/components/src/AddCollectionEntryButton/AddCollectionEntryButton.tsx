@@ -1,12 +1,22 @@
 import { FC, useCallback, useState } from 'react';
 import { Collections } from '@minddrop/collections';
-import { DatabaseEntries, DatabaseEntry, Databases } from '@minddrop/databases';
+import {
+  Database,
+  DatabaseEntries,
+  DatabaseEntry,
+  DatabaseEntryTemplate,
+  Databases,
+} from '@minddrop/databases';
 import { useTranslation } from '@minddrop/i18n';
 import {
-  Combobox,
-  ComboboxOption,
-  ComboboxOptionGroup,
-  ComboboxProps,
+  DropdownMenu,
+  DropdownMenuGroup,
+  DropdownMenuPortal,
+  DropdownMenuPositioner,
+  DropdownSearchableMenuItem,
+  DropdownSubmenu,
+  DropdownSubmenuContent,
+  DropdownSubmenuTriggerItem,
   IconButton,
   IconButtonProps,
 } from '@minddrop/ui-primitives';
@@ -19,14 +29,6 @@ const SEARCH_ENTRIES_LIMIT = 15;
 
 // Fallback icon for databases without a custom icon
 const DATABASE_FALLBACK_ICON = 'content-icon:shapes:inherit';
-
-// Value prefix distinguishing create options from entry options
-const CREATE_VALUE_PREFIX = 'create:';
-
-// Action performed when an option is selected
-type EntryAction =
-  | { type: 'create'; databaseId: string }
-  | { type: 'add'; entry: DatabaseEntry };
 
 export interface AddCollectionEntryButtonProps
   extends Omit<IconButtonProps, 'icon' | 'label' | 'stringLabel'> {
@@ -55,10 +57,10 @@ export interface AddCollectionEntryButtonProps
   onAddEntry?: (entry: DatabaseEntry) => void;
 
   /**
-   * Width of the menu popup.
+   * Minimum width of the menu popup.
    * @default 300
    */
-  popupWidth?: ComboboxProps['popupWidth'];
+  popupWidth?: number;
 }
 
 /**
@@ -82,7 +84,7 @@ export const AddCollectionEntryButton: FC<AddCollectionEntryButtonProps> = ({
   // Subscribe to entry changes so the listed options stay fresh
   DatabaseEntries.Store.useAllItemsArray();
 
-  // Single database mode renders a flat list without groups
+  // Single database mode renders a flat list without group headings
   const singleDatabase = typeof database === 'string';
 
   // Database IDs to include, undefined when all are supported
@@ -102,6 +104,18 @@ export const AddCollectionEntryButton: FC<AddCollectionEntryButtonProps> = ({
     ? Databases.search(query, databaseIds)
     : supportedDatabases;
 
+  // Templates matched by name while searching. Templates of a
+  // matched database are already listed under it, so only templates
+  // from other databases are added.
+  const matchedTemplates = query
+    ? Databases.searchEntryTemplates(query, databaseIds).filter(
+        (result) =>
+          !createDatabases.some(
+            (createDatabase) => createDatabase.id === result.database.id,
+          ),
+      )
+    : [];
+
   // Entries offered as add options: top fuzzy matches when
   // searching, newest first otherwise. Fetches extra newest
   // entries to account for excluded collection members.
@@ -117,42 +131,6 @@ export const AddCollectionEntryButton: FC<AddCollectionEntryButtonProps> = ({
     .filter((entry) => !excludedIds.has(entry.id))
     .slice(0, query ? SEARCH_ENTRIES_LIMIT : DEFAULT_ENTRIES_LIMIT);
 
-  // Map of option values to their selection actions
-  const actions = new Map<string, EntryAction>();
-
-  // Create option for each database, labelled by entry name
-  const createOptions: ComboboxOption[] = createDatabases.map(
-    (createDatabase) => {
-      const value = `${CREATE_VALUE_PREFIX}${createDatabase.id}`;
-
-      actions.set(value, { type: 'create', databaseId: createDatabase.id });
-
-      return {
-        value,
-        label: createDatabase.entryName,
-        contentIcon: createDatabase.icon || DATABASE_FALLBACK_ICON,
-      };
-    },
-  );
-
-  // Add option for each existing entry
-  const entryOptions: ComboboxOption[] = entries.map((entry) => {
-    actions.set(entry.id, { type: 'add', entry });
-
-    return {
-      value: entry.id,
-      label: entry.title,
-    };
-  });
-
-  // Flat list in single database mode, grouped otherwise
-  const items = singleDatabase
-    ? [...createOptions, ...entryOptions]
-    : undefined;
-  const groups = singleDatabase
-    ? undefined
-    : buildOptionGroups(createOptions, entryOptions);
-
   // Reset the search query when the popup opens
   const handleOpenChange = useCallback((open: boolean) => {
     if (open) {
@@ -160,41 +138,129 @@ export const AddCollectionEntryButton: FC<AddCollectionEntryButtonProps> = ({
     }
   }, []);
 
-  // Performs the selected option's action
-  async function handleValueChange(
-    value: ComboboxOption | ComboboxOption[] | null,
+  // Create a new entry, optionally from a template, and add it to
+  // the collection
+  async function handleCreate(databaseId: string, templateId?: string) {
+    const entry = templateId
+      ? await DatabaseEntries.createFromTemplate(databaseId, templateId)
+      : await DatabaseEntries.create(databaseId);
+
+    await Collections.addItems(collectionId, [entry.id]);
+
+    onCreateEntry?.(entry);
+  }
+
+  // Add an existing entry to the collection
+  async function handleAdd(entry: DatabaseEntry) {
+    await Collections.addItems(collectionId, [entry.id]);
+
+    onAddEntry?.(entry);
+  }
+
+  // Render a database's create options. Databases with entry
+  // templates nest their options in a submenu, with the blank entry
+  // option first.
+  function renderCreateItem(createDatabase: Database) {
+    const contentIcon = createDatabase.icon || DATABASE_FALLBACK_ICON;
+    const templates = createDatabase.entryTemplates ?? [];
+
+    // Databases without templates create an entry directly
+    if (!templates.length) {
+      return (
+        <DropdownSearchableMenuItem
+          key={createDatabase.id}
+          stringLabel={createDatabase.entryName}
+          contentIcon={contentIcon}
+          onSelect={() => handleCreate(createDatabase.id)}
+        />
+      );
+    }
+
+    return (
+      <DropdownSubmenu key={createDatabase.id}>
+        <DropdownSubmenuTriggerItem
+          stringLabel={createDatabase.entryName}
+          contentIcon={contentIcon}
+        />
+        <DropdownMenuPortal>
+          <DropdownMenuPositioner side="right" align="start" sideOffset={4}>
+            <DropdownSubmenuContent minWidth={popupWidth}>
+              <DropdownSearchableMenuItem
+                stringLabel={createDatabase.entryName}
+                contentIcon={contentIcon}
+                onSelect={() => handleCreate(createDatabase.id)}
+              />
+              {templates.map((template) => (
+                <DropdownSearchableMenuItem
+                  key={template.id}
+                  stringLabel={template.name}
+                  contentIcon={contentIcon}
+                  onSelect={() => handleCreate(createDatabase.id, template.id)}
+                />
+              ))}
+            </DropdownSubmenuContent>
+          </DropdownMenuPositioner>
+        </DropdownMenuPortal>
+      </DropdownSubmenu>
+    );
+  }
+
+  // Render an existing entry's add option, icon'd by the database
+  // it belongs to
+  function renderEntryItem(entry: DatabaseEntry) {
+    const entryDatabase = Databases.get(entry.database, false);
+
+    return (
+      <DropdownSearchableMenuItem
+        key={entry.id}
+        stringLabel={entry.title}
+        contentIcon={entryDatabase?.icon || DATABASE_FALLBACK_ICON}
+        onSelect={() => handleAdd(entry)}
+      />
+    );
+  }
+
+  // Render a database's create options as flat items. Used while
+  // searching, where submenus are collapsed into the results list.
+  function renderFlatCreateItems(createDatabase: Database) {
+    return [
+      <DropdownSearchableMenuItem
+        key={createDatabase.id}
+        stringLabel={createDatabase.entryName}
+        contentIcon={createDatabase.icon || DATABASE_FALLBACK_ICON}
+        onSelect={() => handleCreate(createDatabase.id)}
+      />,
+      ...(createDatabase.entryTemplates ?? []).map((template) =>
+        renderFlatTemplateItem(createDatabase, template),
+      ),
+    ];
+  }
+
+  // Render a template's create option as a flat item, qualified by
+  // entry name to stay distinguishable in a flat list
+  function renderFlatTemplateItem(
+    createDatabase: Database,
+    template: DatabaseEntryTemplate,
   ) {
-    // The combobox is single-select, multi values never occur
-    if (Array.isArray(value) || !value) {
-      return;
-    }
-
-    const action = actions.get(value.value);
-
-    // Guard against unknown option values
-    if (!action) {
-      return;
-    }
-
-    // Create a new entry and add it to the collection
-    if (action.type === 'create') {
-      const entry = await DatabaseEntries.create(action.databaseId);
-
-      await Collections.addItems(collectionId, [entry.id]);
-
-      onCreateEntry?.(entry);
-
-      return;
-    }
-
-    // Add the selected existing entry to the collection
-    await Collections.addItems(collectionId, [action.entry.id]);
-
-    onAddEntry?.(action.entry);
+    return (
+      <DropdownSearchableMenuItem
+        key={`${createDatabase.id}:${template.id}`}
+        stringLabel={`${createDatabase.entryName} · ${template.name}`}
+        contentIcon={createDatabase.icon || DATABASE_FALLBACK_ICON}
+        onSelect={() => handleCreate(createDatabase.id, template.id)}
+      />
+    );
   }
 
   return (
-    <Combobox
+    <DropdownMenu
+      searchable
+      minWidth={popupWidth}
+      searchTerm={query}
+      onSearchTermChange={setQuery}
+      searchPlaceholder="collections.entries.searchPlaceholder"
+      emptyText={t('empty')}
+      onOpenChange={handleOpenChange}
       trigger={
         <IconButton
           icon="plus"
@@ -202,18 +268,36 @@ export const AddCollectionEntryButton: FC<AddCollectionEntryButtonProps> = ({
           {...rest}
         />
       }
-      items={items}
-      groups={groups}
-      filteredItems={groups ?? items}
-      inputValue={query}
-      onInputValueChange={setQuery}
-      value={null}
-      onValueChange={handleValueChange}
-      onOpenChange={handleOpenChange}
-      searchPlaceholder="actions.search"
-      emptyText={t('empty')}
-      popupWidth={popupWidth}
-    />
+    >
+      {/* While searching, every option is listed flat so the menu
+          can match it. Group headings and submenus are dropped. */}
+      {query ? (
+        <>
+          {createDatabases.map(renderFlatCreateItems)}
+          {matchedTemplates.map((result) =>
+            renderFlatTemplateItem(result.database, result.template),
+          )}
+          {entries.map(renderEntryItem)}
+        </>
+      ) : (
+        <>
+          <DropdownMenuGroup
+            label={
+              singleDatabase ? undefined : 'collections.entries.groups.new'
+            }
+          >
+            {createDatabases.map(renderCreateItem)}
+          </DropdownMenuGroup>
+          <DropdownMenuGroup
+            label={
+              singleDatabase ? undefined : 'collections.entries.groups.recent'
+            }
+          >
+            {entries.map(renderEntryItem)}
+          </DropdownMenuGroup>
+        </>
+      )}
+    </DropdownMenu>
   );
 };
 
@@ -230,34 +314,4 @@ function resolveDatabaseIds(
   }
 
   return Array.isArray(database) ? database : [database];
-}
-
-/**
- * Builds the New/Existing option groups, omitting empty groups.
- */
-function buildOptionGroups(
-  createOptions: ComboboxOption[],
-  entryOptions: ComboboxOption[],
-): ComboboxOptionGroup[] {
-  const groups: ComboboxOptionGroup[] = [];
-
-  // Group of create options, skipped when empty
-  if (createOptions.length) {
-    groups.push({
-      value: 'new',
-      label: 'collections.entries.groups.new',
-      items: createOptions,
-    });
-  }
-
-  // Group of existing entry options, skipped when empty
-  if (entryOptions.length) {
-    groups.push({
-      value: 'existing',
-      label: 'collections.entries.groups.existing',
-      items: entryOptions,
-    });
-  }
-
-  return groups;
 }
