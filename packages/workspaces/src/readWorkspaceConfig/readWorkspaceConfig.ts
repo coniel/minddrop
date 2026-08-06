@@ -27,7 +27,6 @@ export async function readWorkspaceConfig(
   if (!(await Fs.exists(configPath))) {
     if (throwOnNotFound) {
       throw new WorkspaceNotFoundError(path);
-    } else {
     }
 
     return null;
