@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { Ast, ToDoElement } from '@minddrop/ast';
-import { act, fireEvent, render } from '@minddrop/test-utils';
+import { Ast, Element, ToDoElement } from '@minddrop/ast';
+import { fireEvent, render, waitFor } from '@minddrop/test-utils';
 import { EditorBlockElementConfigsStore } from '../../BlockElementTypeConfigsStore';
 import { RichTextEditor } from '../../RichTextEditor';
 import { cleanup } from '../../test-utils';
@@ -31,41 +31,49 @@ describe('ToDoElementComponent', () => {
     getByText('children');
   });
 
-  it('toggles the `checked` state to true when the checkbox is clicked', () =>
-    new Promise<void>((checked) => {
-      // Render an editor containing a 'to-do' element
-      const { getByRole } = render(
-        <RichTextEditor
-          initialValue={[toDoElement]}
-          onChange={(value) => {
-            expect(value[0]).toMatchObject({ checked: true });
-            checked();
-          }}
-        />,
-      );
+  it('toggles the `checked` state to true when the checkbox is clicked', async () => {
+    let value: Element[] = [];
 
-      act(() => {
-        // Click the to-do element's (unchecked) checkbox
-        fireEvent.click(getByRole('button'));
-      });
-    }));
+    // Render an editor containing a 'to-do' element
+    const { findByRole } = render(
+      <RichTextEditor
+        initialValue={[toDoElement]}
+        onChange={(updated) => {
+          value = updated;
+        }}
+      />,
+    );
 
-  it('toggles the `checked` state to false when the checkbox is clicked', () =>
-    new Promise<void>((checked) => {
-      // Render an editor containing a checked 'to-do' element
-      const { getByRole } = render(
-        <RichTextEditor
-          initialValue={[toDoElementchecked]}
-          onChange={(value) => {
-            expect(value[0]).toMatchObject({ checked: false });
-            checked();
-          }}
-        />,
-      );
+    // The checkbox icon is loaded asynchronously
+    const checkbox = await findByRole('button');
 
-      act(() => {
-        // Click the to-do element's (unchecked) checkbox
-        fireEvent.click(getByRole('button'));
-      });
-    }));
+    // Click the to-do element's (unchecked) checkbox
+    fireEvent.click(checkbox);
+
+    // The editor reports the change asynchronously
+    await waitFor(() => expect(value[0]).toMatchObject({ checked: true }));
+  });
+
+  it('toggles the `checked` state to false when the checkbox is clicked', async () => {
+    let value: Element[] = [];
+
+    // Render an editor containing a checked 'to-do' element
+    const { findByRole } = render(
+      <RichTextEditor
+        initialValue={[toDoElementchecked]}
+        onChange={(updated) => {
+          value = updated;
+        }}
+      />,
+    );
+
+    // The checkbox icon is loaded asynchronously
+    const checkbox = await findByRole('button');
+
+    // Click the to-do element's (checked) checkbox
+    fireEvent.click(checkbox);
+
+    // The editor reports the change asynchronously
+    await waitFor(() => expect(value[0]).toMatchObject({ checked: false }));
+  });
 });
