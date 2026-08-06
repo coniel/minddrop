@@ -24,6 +24,7 @@
     "@minddrop/events": "workspace:*",
     "@minddrop/feature-data-views": "workspace:*",
     "@minddrop/feature-designs": "workspace:*",
+    "@minddrop/feature-markdown-editor": "workspace:*",
     "@minddrop/feature-properties": "workspace:*",
     "@minddrop/feature-views": "workspace:*",
     "@minddrop/file-system": "workspace:*",

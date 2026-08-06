@@ -99,7 +99,10 @@ export const DatabasePropertyEditor: React.FC<DatabasePropertyEditorProps> = ({
             message: `${i18nRoot}.message`,
             confirmLabel: `${i18nRoot}.confirm`,
             onConfirm: () => {
-              // TODO: Implement renameProperty method
+              // TODO: Implement renameProperty method. It must also
+              // re-key the property's value in the database's entry
+              // templates, which are keyed by property name and
+              // would otherwise silently stop applying.
               // Databases.renameProperty(
               //   database,
               //   property.name,

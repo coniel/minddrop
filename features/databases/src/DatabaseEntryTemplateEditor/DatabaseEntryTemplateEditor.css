@@ -1,0 +1,74 @@
+.database-entry-template-editor {
+  background-color: var(--surface-overlay);
+  border-bottom: 1px solid var(--border-default);
+  box-shadow: 0 -1px 0 var(--border-default);
+
+  .database-entry-template-editor-display {
+    user-select: none;
+    padding: 0.75rem 1rem;
+    outline: none;
+    color: var(--text-muted);
+
+    .database-entry-template-editor-drag-handle {
+      cursor: grab;
+      margin-left: -0.25rem;
+
+      &:active {
+        cursor: grabbing;
+      }
+    }
+
+    &:hover {
+      color: var(--text-color-regular);
+    }
+  }
+
+  .database-entry-template-editor-label {
+    flex-grow: 1;
+  }
+
+  .database-entry-template-editor-form {
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-5) var(--space-4);
+
+    .database-entry-template-editor-footer {
+      margin: 0 -0.5rem;
+    }
+  }
+
+  .database-entry-template-editor-fields {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .database-entry-template-property-field {
+    color: var(--text-muted);
+
+    .database-entry-template-property-field-header {
+      min-height: 1.5rem;
+    }
+
+    .database-entry-template-property-field-label {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Keep non-input fields from stretching to the full width */
+    > .switch,
+    > .icon-button,
+    > .button {
+      align-self: flex-start;
+    }
+
+    /* Give the rich text editor the same framing as an input */
+    .database-entry-template-property-field-editor {
+      background-color: var(--surface-subtle);
+      border-radius: var(--radius-md);
+      padding: var(--space-2);
+      min-height: 4rem;
+    }
+  }
+}

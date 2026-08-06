@@ -18,8 +18,21 @@
   }
 
   .tabs-panel {
+    display: flex;
     flex: 1;
+    flex-direction: column;
+    /* Allow the panel to shrink below its content's height so the
+       scroll area inside it scrolls rather than overflowing */
+    min-height: 0;
     overflow: hidden;
+  }
+
+  /* Scroll areas have no height of their own, so give them the
+     space remaining under the tab bar */
+  .database-configuration-panel-tabs-container > .scroll-area,
+  .tabs-panel > .scroll-area {
+    flex: 1;
+    min-height: 0;
   }
 
   .database-configuration-panel-properties-content {
@@ -31,14 +44,15 @@
   }
 
   .database-configuration-panel-templates-content {
-    padding: var(--space-2) 0;
+    padding-bottom: var(--space-2);
   }
 
   .database-configuration-panel-settings-content {
     padding: var(--space-2) 0;
   }
 
-  .database-properties-editor-sortable {
+  .database-properties-editor-sortable,
+  .database-entry-templates-editor-sortable {
     gap: 0;
   }
 

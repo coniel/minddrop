@@ -1,0 +1,6 @@
+/* The tab content has no top padding so the first template's
+   border sits flush against the tab bar, so the empty state
+   provides its own */
+.database-entry-templates-editor-empty {
+  padding: var(--space-4);
+}

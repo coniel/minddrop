@@ -17,8 +17,9 @@ declare module 'i18next' {
             };
             groups: {
               new: string;
-              existing: string;
+              recent: string;
             };
+            searchPlaceholder: string;
             empty: string;
           };
         };
@@ -260,6 +261,38 @@ declare module 'i18next' {
             };
             'new-entry': {
               name: string;
+            };
+          };
+          entryTemplates: {
+            empty: string;
+            actions: {
+              add: string;
+              delete: {
+                confirmation: {
+                  title: string;
+                  message: string;
+                  messageWithFiles: string;
+                  confirm: string;
+                };
+              };
+            };
+            form: {
+              name: {
+                label: string;
+                validation: {
+                  required: string;
+                };
+              };
+              defaultTitle: {
+                label: string;
+                placeholder: string;
+              };
+              chooseFile: string;
+              chooseIcon: string;
+              emptyValue: string;
+            };
+            menus: {
+              blankEntry: string;
             };
           };
           entries: {

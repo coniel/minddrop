@@ -11,7 +11,9 @@ import {
   ContextMenuPortal,
   ContextMenuPositioner,
   ContextMenuRoot,
+  DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuPortal,
   DropdownMenuPositioner,
   DropdownMenuRoot,
@@ -230,6 +232,59 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
     DatabaseEntries.create(database.id);
   }
 
+  // Create a new entry from one of the database's entry templates
+  function handleCreateEntryFromTemplate(templateId: string) {
+    if (!database) {
+      return;
+    }
+
+    DatabaseEntries.createFromTemplate(database.id, templateId);
+  }
+
+  // Render the new entry action, wrapping it in a template
+  // selection menu when the database has entry templates
+  function renderNewEntryAction() {
+    const templates = database?.entryTemplates ?? [];
+
+    // Without templates, a plain action creates a blank entry
+    if (!database || !templates.length) {
+      return {
+        icon: 'plus' as const,
+        label: 'databases.actions.newEntry' as const,
+        onClick: handleClickNewEntry,
+      };
+    }
+
+    // With templates, the action opens a menu with a blank entry
+    // option followed by the templates
+    return (
+      <DropdownMenu
+        key="new-entry"
+        trigger={
+          <IconButton
+            icon="plus"
+            label="databases.actions.newEntry"
+            color="neutral"
+          />
+        }
+      >
+        <DropdownMenuItem
+          label="databases.entryTemplates.menus.blankEntry"
+          contentIcon={database.icon}
+          onSelect={handleClickNewEntry}
+        />
+        {templates.map((template) => (
+          <DropdownMenuItem
+            key={template.id}
+            stringLabel={template.name}
+            contentIcon={database.icon}
+            onSelect={() => handleCreateEntryFromTemplate(template.id)}
+          />
+        ))}
+      </DropdownMenu>
+    );
+  }
+
   /**
    * Creates a new virtual view of the specified type and sets it as active.
    */
@@ -296,11 +351,7 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
         stringTitle={database.name}
         contentIcon={database.icon}
         actions={[
-          {
-            icon: 'plus',
-            label: 'databases.actions.newEntry',
-            onClick: handleClickNewEntry,
-          },
+          renderNewEntryAction(),
           {
             icon: configurationPanelOpen
               ? 'panel-right-close'

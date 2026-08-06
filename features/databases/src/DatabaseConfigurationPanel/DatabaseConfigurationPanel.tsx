@@ -7,14 +7,18 @@ import {
   IconButton,
   IconButtonSpacer,
   Panel,
-  ScrollArea,
   Spacer,
   Tabs,
   TabsList,
   TabsPanel,
   TabsTab,
+  VerticalScrollArea,
 } from '@minddrop/ui-primitives';
 import { DatabaseDesignPanel } from '../DatabaseDesignPanel';
+import {
+  DatabaseEntryTemplatesEditor,
+  DraftEntryTemplate,
+} from '../DatabaseEntryTemplatesEditor';
 import { DatabasePropertiesEditor } from '../DatabasePropertiesEditor';
 import { DatabaseSettingsPanel } from '../DatabaseSettingsPanel';
 import {
@@ -45,6 +49,9 @@ export const DatabaseConfigurationPanel: React.FC<
 > = ({ databaseId }) => {
   const viewState = useDatabaseViewState(databaseId);
   const [draftProperties, setDraftProperties] = useState<DraftProperty[]>([]);
+  const [draftTemplates, setDraftTemplates] = useState<DraftEntryTemplate[]>(
+    [],
+  );
   const databaseConfig = Databases.use(databaseId);
 
   // Read the active tab from persisted state
@@ -77,6 +84,20 @@ export const DatabaseConfigurationPanel: React.FC<
     setDraftProperties((prevDrafts) => prevDrafts.filter((p) => p.id !== id));
   }
 
+  // Add a new draft entry template
+  function handleAddEntryTemplate() {
+    const draftTemplate: DraftEntryTemplate = { draftId: Date.now() };
+
+    setDraftTemplates((prevDrafts) => [...prevDrafts, draftTemplate]);
+  }
+
+  // Remove a draft entry template by its draft ID
+  function removeDraftTemplate(draftId: number) {
+    setDraftTemplates((prevDrafts) =>
+      prevDrafts.filter((draft) => draft.draftId !== draftId),
+    );
+  }
+
   if (!databaseConfig) {
     return null;
   }
@@ -102,11 +123,11 @@ export const DatabaseConfigurationPanel: React.FC<
             <TabsTab value="properties" size="sm">
               {i18n.t('labels.properties')}
             </TabsTab>
-            <TabsTab value="designs" size="sm">
-              {i18n.t('labels.design')}
-            </TabsTab>
             <TabsTab value="templates" size="sm">
               {i18n.t('labels.templates')}
+            </TabsTab>
+            <TabsTab value="designs" size="sm">
+              {i18n.t('labels.design')}
             </TabsTab>
           </TabsList>
           <Spacer />
@@ -125,27 +146,30 @@ export const DatabaseConfigurationPanel: React.FC<
               />
             </PropertyTypeSelectionMenu>
           )}
-          {(showSettings || activeTab !== 'properties') && (
+          {!showSettings && activeTab === 'templates' && (
+            <IconButton
+              size="md"
+              label="databases.entryTemplates.actions.add"
+              icon="plus"
+              onClick={handleAddEntryTemplate}
+            />
+          )}
+          {(showSettings ||
+            (activeTab !== 'properties' && activeTab !== 'templates')) && (
             <IconButtonSpacer size="md" />
           )}
         </div>
 
         {showSettings ? (
-          <ScrollArea stateKey="settings">
+          <VerticalScrollArea stateKey="settings">
             <div className="database-configuration-panel-settings-content">
               <DatabaseSettingsPanel key={databaseId} databaseId={databaseId} />
             </div>
-          </ScrollArea>
+          </VerticalScrollArea>
         ) : (
           <>
-            <TabsPanel value="templates">
-              <ScrollArea stateKey="templates">
-                <div className="database-configuration-panel-templates-content" />
-              </ScrollArea>
-            </TabsPanel>
-
             <TabsPanel value="properties">
-              <ScrollArea stateKey="properties">
+              <VerticalScrollArea stateKey="properties">
                 <div className="database-configuration-panel-properties-content">
                   <DatabasePropertiesEditor
                     databaseId={databaseId}
@@ -154,15 +178,28 @@ export const DatabaseConfigurationPanel: React.FC<
                     onCancelDraft={removeDraftProperty}
                   />
                 </div>
-              </ScrollArea>
+              </VerticalScrollArea>
+            </TabsPanel>
+
+            <TabsPanel value="templates">
+              <VerticalScrollArea stateKey="templates">
+                <div className="database-configuration-panel-templates-content">
+                  <DatabaseEntryTemplatesEditor
+                    databaseId={databaseId}
+                    draftTemplates={draftTemplates}
+                    onSaveDraft={removeDraftTemplate}
+                    onCancelDraft={removeDraftTemplate}
+                  />
+                </div>
+              </VerticalScrollArea>
             </TabsPanel>
 
             <TabsPanel value="designs">
-              <ScrollArea stateKey="designs">
+              <VerticalScrollArea stateKey="designs">
                 <div className="database-configuration-panel-designs-content">
                   <DatabaseDesignPanel databaseId={databaseId} />
                 </div>
-              </ScrollArea>
+              </VerticalScrollArea>
             </TabsPanel>
           </>
         )}

@@ -528,6 +528,9 @@ importers:
       '@minddrop/feature-designs':
         specifier: workspace:*
         version: link:../designs
+      '@minddrop/feature-markdown-editor':
+        specifier: workspace:*
+        version: link:../markdown-editor
       '@minddrop/feature-properties':
         specifier: workspace:*
         version: link:../properties
@@ -3796,7 +3799,7 @@ packages:
       '@vitest/spy': 4.0.1
       estree-walker: 3.0.3
       magic-string: 0.30.19
-      vite: 7.3.1
+      vite: 7.3.1(@types/node@20.17.19)
     dev: true
 
   /@vitest/pretty-format@4.0.1:
@@ -8305,56 +8308,6 @@ packages:
       vfile-message: 4.0.3
     dev: false
 
-  /vite@7.3.1:
-    resolution: {integrity: sha512-w+N7Hifpc3gRjZ63vYBXA56dvvRlNWRczTdmCBBa+CotUzAPf5b7YMdMR/8CQoeYE5LX3W4wj6RYTgonm1b9DA==}
-    engines: {node: ^20.19.0 || >=22.12.0}
-    hasBin: true
-    peerDependencies:
-      '@types/node': ^20.19.0 || >=22.12.0
-      jiti: '>=1.21.0'
-      less: ^4.0.0
-      lightningcss: ^1.21.0
-      sass: ^1.70.0
-      sass-embedded: ^1.70.0
-      stylus: '>=0.54.8'
-      sugarss: ^5.0.0
-      terser: ^5.16.0
-      tsx: ^4.8.1
-      yaml: ^2.4.2
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-      jiti:
-        optional: true
-      less:
-        optional: true
-      lightningcss:
-        optional: true
-      sass:
-        optional: true
-      sass-embedded:
-        optional: true
-      stylus:
-        optional: true
-      sugarss:
-        optional: true
-      terser:
-        optional: true
-      tsx:
-        optional: true
-      yaml:
-        optional: true
-    dependencies:
-      esbuild: 0.27.3
-      fdir: 6.5.0(picomatch@4.0.3)
-      picomatch: 4.0.3
-      postcss: 8.5.6
-      rollup: 4.52.5
-      tinyglobby: 0.2.15
-    optionalDependencies:
-      fsevents: 2.3.3
-    dev: true
-
   /vite@7.3.1(@types/node@20.17.19):
     resolution: {integrity: sha512-w+N7Hifpc3gRjZ63vYBXA56dvvRlNWRczTdmCBBa+CotUzAPf5b7YMdMR/8CQoeYE5LX3W4wj6RYTgonm1b9DA==}
     engines: {node: ^20.19.0 || >=22.12.0}
@@ -8458,7 +8411,7 @@ packages:
       tinyexec: 0.3.2
       tinyglobby: 0.2.15
       tinyrainbow: 3.0.3
-      vite: 7.3.1
+      vite: 7.3.1(@types/node@20.17.19)
       why-is-node-running: 2.3.0
     transitivePeerDependencies:
       - jiti

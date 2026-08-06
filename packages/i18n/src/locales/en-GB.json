@@ -239,6 +239,38 @@
         "name": "New entry"
       }
     },
+    "entryTemplates": {
+      "empty": "No templates yet. Templates pre-fill a new entry's properties, making entries you create often quicker to add.",
+      "actions": {
+        "add": "Add template",
+        "delete": {
+          "confirmation": {
+            "title": "Delete template",
+            "message": "The template will be permanently deleted. Entries created from it are not affected.",
+            "messageWithFiles": "The template and its stored files will be permanently deleted. Entries created from it are not affected.",
+            "confirm": "Delete"
+          }
+        }
+      },
+      "form": {
+        "name": {
+          "label": "Template name",
+          "validation": {
+            "required": "Name is required"
+          }
+        },
+        "defaultTitle": {
+          "label": "Default entry title",
+          "placeholder": "Untitled"
+        },
+        "chooseFile": "Choose a file",
+        "chooseIcon": "Choose an icon",
+        "emptyValue": "Empty"
+      },
+      "menus": {
+        "blankEntry": "New entry"
+      }
+    },
     "entries": {
       "actions": {
         "previousEntry": "Previous entry",
@@ -1415,8 +1447,9 @@
       },
       "groups": {
         "new": "New",
-        "existing": "Existing"
+        "recent": "Recent"
       },
+      "searchPlaceholder": "Search entries, templates...",
       "empty": "No results"
     }
   },
