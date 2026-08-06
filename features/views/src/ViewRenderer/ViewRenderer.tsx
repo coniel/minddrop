@@ -13,7 +13,9 @@ import {
 } from '@minddrop/events';
 import { IconButton } from '@minddrop/ui-primitives';
 import { Views } from '@minddrop/views';
+import { TabViewStateProvider } from '../TabViewStateProvider';
 import { matchesViewArea } from '../matchesViewArea';
+import { useActiveTabId } from '../tabs/TabSetsStore';
 import './ViewRenderer.css';
 
 interface ViewRendererProps {
@@ -61,6 +63,10 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const stateRef = useRef<ViewAreaState>(INITIAL_STATE);
   const [state, setState] = useState<ViewAreaState>(INITIAL_STATE);
+
+  // The active tab, used to remount views and scope their transient
+  // state when switching tabs
+  const activeTabId = useActiveTabId(viewAreaId);
 
   // Apply a new state, optionally announcing the change so listeners
   // (e.g. tabs) can mirror it. Not announced for transient updates
@@ -239,7 +245,12 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
           onSwap={handleSwap}
           style={{ flex: splitRatio }}
         >
-          <RegisteredView descriptor={main} />
+          <TabViewStateProvider viewAreaId={viewAreaId} pane="main">
+            <RegisteredView
+              key={viewInstanceKey(activeTabId, main)}
+              descriptor={main}
+            />
+          </TabViewStateProvider>
         </ViewAreaPane>
         <div
           className="view-area-resize-handle"
@@ -253,7 +264,12 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
           onSwap={handleSwap}
           style={{ flex: 100 - splitRatio }}
         >
-          <RegisteredView descriptor={split} />
+          <TabViewStateProvider viewAreaId={viewAreaId} pane="split">
+            <RegisteredView
+              key={viewInstanceKey(activeTabId, split)}
+              descriptor={split}
+            />
+          </TabViewStateProvider>
         </ViewAreaPane>
       </div>
     );
@@ -261,10 +277,28 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
 
   return (
     <div className="view-area">
-      <RegisteredView descriptor={main} />
+      <TabViewStateProvider viewAreaId={viewAreaId} pane="main">
+        <RegisteredView
+          key={viewInstanceKey(activeTabId, main)}
+          descriptor={main}
+        />
+      </TabViewStateProvider>
     </div>
   );
 };
+
+/*
+ * Identity of a pane's rendered view instance. Includes the tab id so
+ * switching tabs remounts the view even when both tabs show the same
+ * view type, and the descriptor id so in-tab navigation between
+ * entities of the same view type remounts as well.
+ */
+function viewInstanceKey(
+  tabId: string | null,
+  descriptor: ViewDescriptor,
+): string {
+  return `${tabId ?? 'no-tab'}:${descriptor.view}:${descriptor.id ?? ''}`;
+}
 
 interface RegisteredViewProps {
   /**

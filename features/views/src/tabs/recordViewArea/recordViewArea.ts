@@ -39,11 +39,12 @@ export function recordViewArea(
       return tab;
     }
 
-    // Whether the state shows different views than the tab, as opposed
+    // Whether each pane shows a different view than before, as opposed
     // to a replay of its current state (e.g. a tab restore) or a
     // metadata/split ratio refresh
-    const navigated =
-      !sameView(tab.main, state.main) || !sameView(tab.split, state.split);
+    const mainNavigated = !sameView(tab.main, state.main);
+    const splitNavigated = !sameView(tab.split, state.split);
+    const navigated = mainNavigated || splitNavigated;
 
     // Push the previous state onto the back history on navigation,
     // except when navigating away from a blank tab
@@ -57,6 +58,16 @@ export function recordViewArea(
     // Navigating clears the forward history, replays preserve it
     const forwardHistory = navigated ? [] : (tab.forwardHistory ?? []);
 
+    // Reset the transient state of panes that navigated (their history
+    // snapshot was captured above), keeping the state of panes that
+    // merely replayed
+    const viewState = navigated
+      ? {
+          main: mainNavigated ? {} : tab.viewState?.main,
+          split: splitNavigated ? {} : tab.viewState?.split,
+        }
+      : tab.viewState;
+
     // Overwrite the active tab's views and split ratio with the state
     return {
       ...tab,
@@ -65,6 +76,7 @@ export function recordViewArea(
       splitRatio: state.splitRatio,
       backHistory,
       forwardHistory,
+      viewState,
     };
   });
 

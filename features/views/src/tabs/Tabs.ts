@@ -12,6 +12,9 @@ export { closeActiveTab } from './closeActiveTab';
 export { activateTabByIndex } from './activateTabByIndex';
 export { goBack } from './goBack';
 export { goForward } from './goForward';
+export { updateTab } from './updateTab';
+export { setTransientViewState } from './setTransientViewState';
+export { getTransientViewState } from './getTransientViewState';
 export {
   useTabs,
   useActiveTabId,

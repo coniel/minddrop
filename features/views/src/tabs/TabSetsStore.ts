@@ -42,6 +42,29 @@ export interface TabView {
 
 export type TabId = EntityId<'tab'>;
 
+/**
+ * The pane of a view area a transient state bag belongs to.
+ */
+export type ViewAreaPane = 'main' | 'split';
+
+/**
+ * A pane's transient UI state (scroll positions, selections),
+ * keyed by scoped state key. Values must be JSON-serializable.
+ */
+export type TransientViewState = Record<string, unknown>;
+
+export interface TabViewState {
+  /**
+   * The main pane's transient state.
+   */
+  main?: TransientViewState;
+
+  /**
+   * The split pane's transient state.
+   */
+  split?: TransientViewState;
+}
+
 export interface TabHistoryEntry {
   /**
    * The main pane view at the time of the snapshot, or null when
@@ -59,6 +82,11 @@ export interface TabHistoryEntry {
    * The main pane width as a percentage at the time of the snapshot.
    */
   splitRatio: number;
+
+  /**
+   * The panes' transient UI state at the time of the snapshot.
+   */
+  viewState?: TabViewState;
 }
 
 export interface Tab {
@@ -95,6 +123,13 @@ export interface Tab {
    * navigating forward.
    */
   forwardHistory?: TabHistoryEntry[];
+
+  /**
+   * The panes' transient UI state for the currently shown views. When
+   * a pane navigates to a different view, its state is snapshotted
+   * into the pushed history entry and starts fresh for the new view.
+   */
+  viewState?: TabViewState;
 }
 
 export interface TabSet {

@@ -4,6 +4,7 @@ import { TabSetsStore } from '../TabSetsStore';
 import { getSet } from '../getSet';
 import { newTab } from '../newTab';
 import { recordViewArea } from '../recordViewArea';
+import { setTransientViewState } from '../setTransientViewState';
 import { updateTabsForView } from './updateTabsForView';
 
 const VIEW_AREA_ID = 'test-set';
@@ -90,5 +91,18 @@ describe('updateTabsForView', () => {
     updateTabsForView(VIEW_AREA_ID, 'db:other', { title: 'X' });
 
     expect(getSet(VIEW_AREA_ID).tabs[0]).toBe(tab);
+  });
+
+  it('preserves the transient state of patched tabs', () => {
+    newTab(VIEW_AREA_ID);
+    recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:a' }));
+
+    const tab = getSet(VIEW_AREA_ID).tabs[0];
+
+    setTransientViewState(VIEW_AREA_ID, tab.id, 'main', 'scroll', 120);
+
+    updateTabsForView(VIEW_AREA_ID, 'db:a', { title: 'B' });
+
+    expect(getSet(VIEW_AREA_ID).tabs[0].viewState?.main?.scroll).toBe(120);
   });
 });

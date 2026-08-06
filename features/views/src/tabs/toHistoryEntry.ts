@@ -6,10 +6,12 @@ import { Tab, TabHistoryEntry } from './TabSetsStore';
  * @param tab - The tab to snapshot.
  */
 export function toHistoryEntry(tab: Tab): TabHistoryEntry {
-  // Capture the panes and split ratio, leaving out the tab's identity
+  // Capture the panes, split ratio and transient state, leaving out
+  // the tab's identity
   return {
     main: tab.main,
     split: tab.split,
     splitRatio: tab.splitRatio,
+    viewState: tab.viewState,
   };
 }
