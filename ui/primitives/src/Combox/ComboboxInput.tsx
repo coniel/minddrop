@@ -12,6 +12,12 @@ export interface ComboboxInputProps extends ComboboxPrimitive.Input.Props {
    */
   placeholder?: TranslationKey;
 
+  /*
+   * Plain string placeholder used as-is without i18n translation.
+   * Takes priority over `placeholder`.
+   */
+  stringPlaceholder?: string;
+
   /**
    * Class name applied to the input element.
    */
@@ -21,6 +27,7 @@ export interface ComboboxInputProps extends ComboboxPrimitive.Input.Props {
 /** Search input for inside the combobox popup. */
 export const ComboboxInput: FC<ComboboxInputProps> = ({
   placeholder,
+  stringPlaceholder,
   className,
   ...other
 }) => {
@@ -31,7 +38,7 @@ export const ComboboxInput: FC<ComboboxInputProps> = ({
       <Icon name="search" size={14} className="combobox-input-icon" />
       <ComboboxPrimitive.Input
         className={`combobox-input${className ? ` ${className}` : ''}`}
-        placeholder={placeholder ? t(placeholder) : undefined}
+        placeholder={stringPlaceholder ?? (placeholder && t(placeholder))}
         {...other}
       />
     </div>

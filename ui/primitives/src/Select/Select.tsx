@@ -59,6 +59,12 @@ export interface SelectProps<TValue extends string | number> {
   placeholder?: TranslationKey;
 
   /*
+   * Plain string placeholder used as-is without i18n translation.
+   * Takes priority over `placeholder`.
+   */
+  stringPlaceholder?: string;
+
+  /*
    * The options to render as select items.
    * Ignored when `children` is provided.
    */
@@ -109,6 +115,7 @@ export const Select = <TValue extends string | number = string>({
   size = 'md',
   options = [],
   placeholder,
+  stringPlaceholder,
   onValueChange,
   value,
   valueColor,
@@ -136,7 +143,11 @@ export const Select = <TValue extends string | number = string>({
           trigger
         ) : (
           <>
-            <SelectValue color={valueColor} placeholder={placeholder} />
+            <SelectValue
+              color={valueColor}
+              placeholder={placeholder}
+              stringPlaceholder={stringPlaceholder}
+            />
             <SelectIcon />
           </>
         )}

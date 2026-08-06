@@ -18,22 +18,22 @@ export const DateFieldStories = () => (
       <StoryRow>
         <StoryItem label="ghost">
           <div style={{ width: 200 }}>
-            <DateInput variant="ghost" placeholder="Pick a date..." />
+            <DateInput variant="ghost" stringPlaceholder="Pick a date..." />
           </div>
         </StoryItem>
         <StoryItem label="subtle">
           <div style={{ width: 200 }}>
-            <DateInput variant="subtle" placeholder="Pick a date..." />
+            <DateInput variant="subtle" stringPlaceholder="Pick a date..." />
           </div>
         </StoryItem>
         <StoryItem label="outline (default)">
           <div style={{ width: 200 }}>
-            <DateInput variant="outline" placeholder="Pick a date..." />
+            <DateInput variant="outline" stringPlaceholder="Pick a date..." />
           </div>
         </StoryItem>
         <StoryItem label="filled">
           <div style={{ width: 200 }}>
-            <DateInput variant="filled" placeholder="Pick a date..." />
+            <DateInput variant="filled" stringPlaceholder="Pick a date..." />
           </div>
         </StoryItem>
       </StoryRow>
@@ -49,17 +49,17 @@ export const DateFieldStories = () => (
       <StoryRow>
         <StoryItem label="sm">
           <div style={{ width: 200 }}>
-            <DateInput size="sm" placeholder="Pick a date..." />
+            <DateInput size="sm" stringPlaceholder="Pick a date..." />
           </div>
         </StoryItem>
         <StoryItem label="md">
           <div style={{ width: 200 }}>
-            <DateInput size="md" placeholder="Pick a date..." />
+            <DateInput size="md" stringPlaceholder="Pick a date..." />
           </div>
         </StoryItem>
         <StoryItem label="lg (default)">
           <div style={{ width: 200 }}>
-            <DateInput size="lg" placeholder="Pick a date..." />
+            <DateInput size="lg" stringPlaceholder="Pick a date..." />
           </div>
         </StoryItem>
       </StoryRow>
@@ -75,14 +75,17 @@ export const DateFieldStories = () => (
       <StoryRow>
         <StoryItem label="default value">
           <div style={{ width: 200 }}>
-            <DateInput defaultValue={new Date()} placeholder="Pick a date..." />
+            <DateInput
+              defaultValue={new Date()}
+              stringPlaceholder="Pick a date..."
+            />
           </div>
         </StoryItem>
         <StoryItem label="clearable">
           <div style={{ width: 200 }}>
             <DateInput
               defaultValue={new Date()}
-              placeholder="Pick a date..."
+              stringPlaceholder="Pick a date..."
               clearable
             />
           </div>
@@ -153,9 +156,9 @@ export const DateFieldStories = () => (
         <StoryItem label="default">
           <div style={{ width: 240 }}>
             <DateField
-              label="Date"
-              description="Select a date"
-              placeholder="Pick a date..."
+              stringLabel="Date"
+              stringDescription="Select a date"
+              stringPlaceholder="Pick a date..."
               clearable
             />
           </div>
@@ -163,17 +166,17 @@ export const DateFieldStories = () => (
         <StoryItem label="with error">
           <div style={{ width: 240 }}>
             <DateField
-              label="Date"
-              error="Required"
-              placeholder="Pick a date..."
+              stringLabel="Date"
+              stringError="Required"
+              stringPlaceholder="Pick a date..."
             />
           </div>
         </StoryItem>
         <StoryItem label="disabled">
           <div style={{ width: 240 }}>
             <DateField
-              label="Date"
-              description="This field is disabled"
+              stringLabel="Date"
+              stringDescription="This field is disabled"
               defaultValue={new Date()}
               disabled
             />

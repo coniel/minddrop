@@ -1,12 +1,16 @@
-import React from 'react';
 import { Field } from '@base-ui/react/field';
+import React from 'react';
 import { TranslationKey } from '@minddrop/i18n';
-import { FieldRoot } from '../FieldRoot';
-import { FieldLabel } from '../FieldLabel';
 import { FieldDescription } from '../FieldDescription';
 import { FieldError } from '../FieldError';
+import { FieldLabel } from '../FieldLabel';
+import { FieldRoot } from '../FieldRoot';
 import { TextInput } from '../TextInput';
-import type { TextInputVariant, TextInputSize, TextInputProps } from '../TextInput';
+import type {
+  TextInputProps,
+  TextInputSize,
+  TextInputVariant,
+} from '../TextInput';
 
 export type TextFieldVariant = TextInputVariant;
 export type TextFieldSize = TextInputSize;
@@ -41,6 +45,12 @@ export interface TextFieldProps
   label?: TranslationKey;
 
   /*
+   * Plain string label rendered as-is without i18n translation.
+   * Takes priority over `label`.
+   */
+  stringLabel?: string;
+
+  /*
    * Helper text displayed below the input.
    * Hidden when error is present.
    * Can be an i18n key.
@@ -48,10 +58,28 @@ export interface TextFieldProps
   description?: TranslationKey;
 
   /*
+   * Plain string description rendered as-is without i18n translation.
+   * Takes priority over `description`.
+   */
+  stringDescription?: string;
+
+  /*
    * Error message. Also sets the field to invalid state.
    * Can be an i18n key.
    */
   error?: TranslationKey;
+
+  /*
+   * Plain string error rendered as-is without i18n translation.
+   * Takes priority over `error`.
+   */
+  stringError?: string;
+
+  /*
+   * Plain string placeholder used as-is without i18n translation.
+   * Takes priority over `placeholder`.
+   */
+  stringPlaceholder?: string;
 }
 
 export const TextField = React.forwardRef<HTMLDivElement, TextFieldProps>(
@@ -62,13 +90,17 @@ export const TextField = React.forwardRef<HTMLDivElement, TextFieldProps>(
       color,
       defaultValue,
       description,
+      stringDescription,
       disabled,
       error,
+      stringError,
       label,
+      stringLabel,
       leading,
       onChange,
       onValueChange,
       placeholder,
+      stringPlaceholder,
       size = 'lg',
       textSize,
       trailing,
@@ -85,10 +117,12 @@ export const TextField = React.forwardRef<HTMLDivElement, TextFieldProps>(
         ref={ref}
         className={className}
         disabled={disabled}
-        invalid={!!error}
+        invalid={!!error || !!stringError}
         {...other}
       >
-        {label && <FieldLabel label={label} />}
+        {(label || stringLabel) && (
+          <FieldLabel label={label} stringLabel={stringLabel} />
+        )}
 
         <TextInput
           variant={variant}
@@ -102,17 +136,23 @@ export const TextField = React.forwardRef<HTMLDivElement, TextFieldProps>(
           value={value}
           defaultValue={defaultValue}
           placeholder={placeholder}
+          stringPlaceholder={stringPlaceholder}
           autoComplete={autoComplete}
           onChange={onChange}
           onValueChange={onValueChange}
-          invalid={!!error}
+          invalid={!!error || !!stringError}
           disabled={disabled}
         />
 
-        {description && !error && (
-          <FieldDescription description={description} />
+        {(description || stringDescription) && !error && !stringError && (
+          <FieldDescription
+            description={description}
+            stringDescription={stringDescription}
+          />
         )}
-        {error && <FieldError error={error} />}
+        {(error || stringError) && (
+          <FieldError error={error} stringError={stringError} />
+        )}
       </FieldRoot>
     );
   },

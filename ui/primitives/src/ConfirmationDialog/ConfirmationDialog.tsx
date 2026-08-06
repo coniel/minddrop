@@ -1,14 +1,20 @@
 import { AlertDialog } from '@base-ui/react/alert-dialog';
 import { TranslationKey, useTranslation } from '@minddrop/i18n';
-import { TranslatableNode } from '../types';
 import { Button } from '../Button';
+import { TranslatableNode } from '../types';
 import './ConfirmationDialog.css';
 
 export interface ConfirmationDialogProps extends AlertDialog.Root.Props {
   /*
    * Label for the confirm button. Can be an i18n key.
    */
-  confirmLabel: TranslationKey;
+  confirmLabel?: TranslationKey;
+
+  /*
+   * Plain string confirm label rendered as-is without i18n
+   * translation. Takes priority over `confirmLabel`.
+   */
+  stringConfirmLabel?: string;
 
   /*
    * Label for the cancel button. Can be an i18n key.
@@ -17,14 +23,32 @@ export interface ConfirmationDialogProps extends AlertDialog.Root.Props {
   cancelLabel?: TranslationKey;
 
   /*
+   * Plain string cancel label rendered as-is without i18n
+   * translation. Takes priority over `cancelLabel`.
+   */
+  stringCancelLabel?: string;
+
+  /*
    * Dialog title. Accepts a string (i18n key) or a React node.
    */
-  title: TranslatableNode;
+  title?: TranslatableNode;
+
+  /*
+   * Plain string title rendered as-is without i18n translation.
+   * Takes priority over `title`.
+   */
+  stringTitle?: string;
 
   /*
    * Dialog message body. Accepts a string (i18n key) or a React node.
    */
-  message: TranslatableNode;
+  message?: TranslatableNode;
+
+  /*
+   * Plain string message rendered as-is without i18n translation.
+   * Takes priority over `message`.
+   */
+  stringMessage?: string;
 
   /*
    * When true, styles the confirm button as a destructive action.
@@ -45,9 +69,13 @@ export interface ConfirmationDialogProps extends AlertDialog.Root.Props {
 
 export const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
   confirmLabel,
+  stringConfirmLabel,
   cancelLabel = 'actions.cancel',
+  stringCancelLabel,
   title,
+  stringTitle,
   message,
+  stringMessage,
   danger = false,
   onConfirm,
   onCancel,
@@ -61,19 +89,17 @@ export const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
         <AlertDialog.Backdrop className="confirmation-dialog-backdrop" />
         <AlertDialog.Popup className="confirmation-dialog">
           <AlertDialog.Title className="confirmation-dialog-title">
-            {typeof title === 'string' ? t(title) : title}
+            {stringTitle ?? (typeof title === 'string' ? t(title) : title)}
           </AlertDialog.Title>
           <AlertDialog.Description className="confirmation-dialog-message">
-            {typeof message === 'string' ? t(message) : message}
+            {stringMessage ??
+              (typeof message === 'string' ? t(message) : message)}
           </AlertDialog.Description>
           <div className="confirmation-dialog-actions">
             <AlertDialog.Close
               render={
-                <Button
-                  variant="filled"
-                  onClick={onCancel}
-                >
-                  {t(cancelLabel)}
+                <Button variant="filled" onClick={onCancel}>
+                  {stringCancelLabel ?? t(cancelLabel)}
                 </Button>
               }
             />
@@ -85,7 +111,7 @@ export const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
                   danger={danger ? 'always' : undefined}
                   onClick={onConfirm}
                 >
-                  {t(confirmLabel)}
+                  {stringConfirmLabel ?? (confirmLabel && t(confirmLabel))}
                 </Button>
               }
             />

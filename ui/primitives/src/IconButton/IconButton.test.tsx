@@ -7,7 +7,7 @@ describe('<IconButton />', () => {
 
   it('renders the className', () => {
     render(
-      <IconButton label="icon" className="my-class">
+      <IconButton stringLabel="icon" className="my-class">
         I
       </IconButton>,
     );
@@ -15,13 +15,11 @@ describe('<IconButton />', () => {
     expect(screen.getByRole('button').className).toContain('my-class');
   });
 
-
   it('renders children', () => {
-    render(<IconButton label="icon">I</IconButton>);
+    render(<IconButton stringLabel="icon">I</IconButton>);
 
     expect(screen.getByRole('button').textContent).toBe('I');
   });
-
 
   it('translates the label text', () => {
     const { getByTranslatedLabelText } = render(
@@ -33,7 +31,7 @@ describe('<IconButton />', () => {
 
   it('supports colors', () => {
     render(
-      <IconButton label="contrast icon" color="contrast">
+      <IconButton stringLabel="contrast icon" color="contrast">
         I
       </IconButton>,
     );
@@ -43,7 +41,7 @@ describe('<IconButton />', () => {
 
   it('supports sizes', () => {
     render(
-      <IconButton label="small icon" size="sm">
+      <IconButton stringLabel="small icon" size="sm">
         I
       </IconButton>,
     );
@@ -53,7 +51,7 @@ describe('<IconButton />', () => {
 
   it('can be disabled', () => {
     render(
-      <IconButton disabled label="disabled">
+      <IconButton disabled stringLabel="disabled">
         I
       </IconButton>,
     );
@@ -65,7 +63,7 @@ describe('<IconButton />', () => {
 
   it('supports custom components', () => {
     render(
-      <IconButton as="span" label="span">
+      <IconButton as="span" stringLabel="span">
         I
       </IconButton>,
     );

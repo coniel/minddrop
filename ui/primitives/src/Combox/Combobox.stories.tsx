@@ -106,7 +106,7 @@ export const ComboboxStories = () => (
             <Combobox
               items={DATABASES}
               placeholder="Select database..."
-              searchPlaceholder="Search databases..."
+              stringSearchPlaceholder="Search databases..."
               emptyText="No databases found."
             />
           </div>
@@ -117,7 +117,7 @@ export const ComboboxStories = () => (
               items={DATABASES}
               size="md"
               placeholder="Select database..."
-              searchPlaceholder="Search databases..."
+              stringSearchPlaceholder="Search databases..."
               emptyText="No databases found."
             />
           </div>
@@ -139,7 +139,7 @@ export const ComboboxStories = () => (
               items={DATABASES}
               multiple
               placeholder="Select databases..."
-              searchPlaceholder="Search databases..."
+              stringSearchPlaceholder="Search databases..."
               emptyText="No databases found."
             />
           </div>
@@ -160,7 +160,7 @@ export const ComboboxStories = () => (
             <Combobox
               items={DATABASES}
               placeholder="Select database..."
-              searchPlaceholder="Search databases..."
+              stringSearchPlaceholder="Search databases..."
               emptyText="No databases found."
             />
           </div>
@@ -171,7 +171,7 @@ export const ComboboxStories = () => (
               items={DATABASES}
               valueVariant="text"
               placeholder="Select database..."
-              searchPlaceholder="Search databases..."
+              stringSearchPlaceholder="Search databases..."
               emptyText="No databases found."
             />
           </div>
@@ -192,7 +192,7 @@ export const ComboboxStories = () => (
               variant="subtle"
               size="md"
               placeholder="Select databases..."
-              searchPlaceholder="Search..."
+              stringSearchPlaceholder="Search..."
               emptyText="No databases found."
             />
           </div>
@@ -205,7 +205,7 @@ export const ComboboxStories = () => (
               variant="outline"
               size="md"
               placeholder="Select databases..."
-              searchPlaceholder="Search..."
+              stringSearchPlaceholder="Search..."
               emptyText="No databases found."
             />
           </div>
@@ -218,7 +218,7 @@ export const ComboboxStories = () => (
               variant="filled"
               size="md"
               placeholder="Select databases..."
-              searchPlaceholder="Search..."
+              stringSearchPlaceholder="Search..."
               emptyText="No databases found."
             />
           </div>
@@ -238,7 +238,7 @@ export const ComboboxStories = () => (
               multiple
               size="md"
               placeholder="Select databases..."
-              searchPlaceholder="Search..."
+              stringSearchPlaceholder="Search..."
             />
           </div>
         </StoryItem>
@@ -249,7 +249,7 @@ export const ComboboxStories = () => (
               multiple
               size="lg"
               placeholder="Select databases..."
-              searchPlaceholder="Search..."
+              stringSearchPlaceholder="Search..."
             />
           </div>
         </StoryItem>
@@ -269,7 +269,7 @@ export const ComboboxStories = () => (
               size="md"
               invalid
               placeholder="Select databases..."
-              searchPlaceholder="Search..."
+              stringSearchPlaceholder="Search..."
             />
           </div>
         </StoryItem>
@@ -282,7 +282,7 @@ export const ComboboxStories = () => (
               size="md"
               invalid
               placeholder="Select databases..."
-              searchPlaceholder="Search..."
+              stringSearchPlaceholder="Search..."
             />
           </div>
         </StoryItem>
@@ -303,7 +303,7 @@ export const ComboboxStories = () => (
               items={LONG_NAMES}
               multiple
               placeholder="Select databases..."
-              searchPlaceholder="Search..."
+              stringSearchPlaceholder="Search..."
               emptyText="No databases found."
             />
           </ResizableContainer>
@@ -315,7 +315,7 @@ export const ComboboxStories = () => (
               multiple
               size="md"
               placeholder="Select databases..."
-              searchPlaceholder="Search..."
+              stringSearchPlaceholder="Search..."
               emptyText="No databases found."
             />
           </ResizableContainer>
@@ -336,7 +336,7 @@ export const ComboboxStories = () => (
             <Combobox
               groups={GROUPED_ITEMS}
               placeholder="Select data source..."
-              searchPlaceholder="Search data sources..."
+              stringSearchPlaceholder="Search data sources..."
               emptyText="No data sources found."
             />
           </div>
@@ -347,7 +347,7 @@ export const ComboboxStories = () => (
               groups={GROUPED_ITEMS}
               multiple
               placeholder="Select data sources..."
-              searchPlaceholder="Search data sources..."
+              stringSearchPlaceholder="Search data sources..."
               emptyText="No data sources found."
             />
           </div>
@@ -369,7 +369,7 @@ export const ComboboxStories = () => (
               items={SCROLLABLE_ITEMS}
               multiple
               placeholder="Select items..."
-              searchPlaceholder="Search items..."
+              stringSearchPlaceholder="Search items..."
               emptyText="No items found."
             />
           </div>
@@ -391,7 +391,7 @@ export const ComboboxStories = () => (
               items={MANY_ITEMS}
               multiple
               placeholder="Select items..."
-              searchPlaceholder="Search items..."
+              stringSearchPlaceholder="Search items..."
               emptyText="No items found."
             />
           </div>

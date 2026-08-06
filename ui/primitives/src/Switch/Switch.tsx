@@ -81,10 +81,22 @@ export interface SwitchFieldProps extends SwitchProps {
   label?: TranslationKey;
 
   /*
+   * Plain string label rendered as-is without i18n translation.
+   * Takes priority over `label`.
+   */
+  stringLabel?: string;
+
+  /*
    * Helper text displayed below the label.
    * Can be an i18n key.
    */
   description?: TranslationKey;
+
+  /*
+   * Plain string description rendered as-is without i18n translation.
+   * Takes priority over `description`.
+   */
+  stringDescription?: string;
 
   /*
    * Color of the description text.
@@ -95,7 +107,15 @@ export interface SwitchFieldProps extends SwitchProps {
 
 export const SwitchField = React.forwardRef<HTMLDivElement, SwitchFieldProps>(
   (
-    { label, description, descriptionColor, size = 'md', ...switchProps },
+    {
+      label,
+      stringLabel,
+      description,
+      stringDescription,
+      descriptionColor,
+      size = 'md',
+      ...switchProps
+    },
     ref,
   ) => {
     return (
@@ -103,11 +123,14 @@ export const SwitchField = React.forwardRef<HTMLDivElement, SwitchFieldProps>(
         <div className="switch-field">
           <div className="switch-field-header">
             <Switch size={size} {...switchProps} />
-            {label && <FieldLabel label={label} />}
+            {(label || stringLabel) && (
+              <FieldLabel label={label} stringLabel={stringLabel} />
+            )}
           </div>
-          {description && (
+          {(description || stringDescription) && (
             <FieldDescription
               description={description}
+              stringDescription={stringDescription}
               color={descriptionColor}
             />
           )}

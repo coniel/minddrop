@@ -45,6 +45,12 @@ export interface SearchableMenuProps
    */
   searchPlaceholder?: TranslationKey;
 
+  /*
+   * Plain string search placeholder used as-is without i18n
+   * translation. Takes priority over `searchPlaceholder`.
+   */
+  stringSearchPlaceholder?: string;
+
   /**
    * Controlled search term. When provided, the consumer owns
    * filtering and registered items are listed as given rather than
@@ -75,6 +81,7 @@ export const SearchableMenu = React.forwardRef<
       children,
       className,
       searchPlaceholder,
+      stringSearchPlaceholder,
       searchTerm: searchTermProp,
       onSearchTermChange,
       emptyText,
@@ -280,6 +287,7 @@ export const SearchableMenu = React.forwardRef<
             onValueChange={setSearchTerm}
             onKeyDown={handleInputKeyDown}
             placeholder={searchPlaceholder}
+            stringPlaceholder={stringSearchPlaceholder}
             autoComplete="off"
             autoCorrect="off"
             autoCapitalize="off"

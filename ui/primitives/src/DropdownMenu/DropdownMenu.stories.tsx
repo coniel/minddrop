@@ -47,14 +47,17 @@ export const DropdownMenuStories = () => {
               trigger={<Button variant="outline">Open menu</Button>}
             >
               <DropdownMenuItem
-                label="New file"
+                stringLabel="New file"
                 onSelect={action('New file')}
               />
-              <DropdownMenuItem label="Open..." onSelect={action('Open')} />
-              <DropdownMenuSeparator />
-              <DropdownMenuItem label="Save" onSelect={action('Save')} />
               <DropdownMenuItem
-                label="Save as..."
+                stringLabel="Open..."
+                onSelect={action('Open')}
+              />
+              <DropdownMenuSeparator />
+              <DropdownMenuItem stringLabel="Save" onSelect={action('Save')} />
+              <DropdownMenuItem
+                stringLabel="Save as..."
                 onSelect={action('Save as')}
               />
             </DropdownMenu>
@@ -75,18 +78,21 @@ export const DropdownMenuStories = () => {
                 <IconButton
                   variant="ghost"
                   icon="more-horizontal"
-                  label="More options"
+                  stringLabel="More options"
                 />
               }
               align="end"
             >
-              <DropdownMenuItem label="Edit" onSelect={action('Edit')} />
+              <DropdownMenuItem stringLabel="Edit" onSelect={action('Edit')} />
               <DropdownMenuItem
-                label="Duplicate"
+                stringLabel="Duplicate"
                 onSelect={action('Duplicate')}
               />
               <DropdownMenuSeparator />
-              <DropdownMenuItem label="Delete" onSelect={action('Delete')} />
+              <DropdownMenuItem
+                stringLabel="Delete"
+                onSelect={action('Delete')}
+              />
             </DropdownMenu>
           </StoryItem>
         </StoryRow>
@@ -106,32 +112,32 @@ export const DropdownMenuStories = () => {
               minWidth={200}
             >
               <DropdownMenuItem
-                label="Undo"
+                stringLabel="Undo"
                 icon="rotate-ccw"
                 keyboardShortcut={['Mod', 'Z']}
                 onSelect={action('Undo')}
               />
               <DropdownMenuItem
-                label="Redo"
+                stringLabel="Redo"
                 icon="rotate-cw"
                 keyboardShortcut={['Mod', 'Shift', 'Z']}
                 onSelect={action('Redo')}
               />
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                label="Cut"
+                stringLabel="Cut"
                 icon="scissors"
                 keyboardShortcut={['Mod', 'X']}
                 onSelect={action('Cut')}
               />
               <DropdownMenuItem
-                label="Copy"
+                stringLabel="Copy"
                 icon="copy"
                 keyboardShortcut={['Mod', 'C']}
                 onSelect={action('Copy')}
               />
               <DropdownMenuItem
-                label="Paste"
+                stringLabel="Paste"
                 icon="clipboard"
                 keyboardShortcut={['Mod', 'V']}
                 onSelect={action('Paste')}
@@ -154,11 +160,14 @@ export const DropdownMenuStories = () => {
               trigger={<Button variant="outline">View</Button>}
               minWidth={160}
             >
-              <DropdownMenuGroup label="View as">
+              <DropdownMenuGroup stringLabel="View as">
                 <DropdownMenuRadioGroup value={view} onValueChange={setView}>
-                  <DropdownMenuRadioItem value="list" label="List" />
-                  <DropdownMenuRadioItem value="grid" label="Grid" />
-                  <DropdownMenuRadioItem value="columns" label="Columns" />
+                  <DropdownMenuRadioItem value="list" stringLabel="List" />
+                  <DropdownMenuRadioItem value="grid" stringLabel="Grid" />
+                  <DropdownMenuRadioItem
+                    value="columns"
+                    stringLabel="Columns"
+                  />
                 </DropdownMenuRadioGroup>
               </DropdownMenuGroup>
             </DropdownMenu>
@@ -179,46 +188,46 @@ export const DropdownMenuStories = () => {
             <DropdownMenu
               trigger={<Button variant="outline">Select database</Button>}
               searchable
-              searchPlaceholder="Search databases..."
+              stringSearchPlaceholder="Search databases..."
               minWidth={220}
             >
               <DropdownSearchableMenuItem
-                label="Tasks"
+                stringLabel="Tasks"
                 icon="check-square"
                 onSelect={action('Tasks')}
               />
               <DropdownSearchableMenuItem
-                label="Projects"
+                stringLabel="Projects"
                 icon="folder"
                 onSelect={action('Projects')}
               />
               <DropdownSearchableMenuItem
-                label="Notes"
+                stringLabel="Notes"
                 icon="file-text"
                 onSelect={action('Notes')}
               />
               <DropdownSearchableMenuItem
-                label="Bookmarks"
+                stringLabel="Bookmarks"
                 icon="bookmark"
                 onSelect={action('Bookmarks')}
               />
               <DropdownSearchableMenuItem
-                label="Contacts"
+                stringLabel="Contacts"
                 icon="users"
                 onSelect={action('Contacts')}
               />
               <DropdownSearchableMenuItem
-                label="Meetings"
+                stringLabel="Meetings"
                 icon="calendar"
                 onSelect={action('Meetings')}
               />
               <DropdownSearchableMenuItem
-                label="Recipes"
+                stringLabel="Recipes"
                 icon="chef-hat"
                 onSelect={action('Recipes')}
               />
               <DropdownSearchableMenuItem
-                label="Reading list"
+                stringLabel="Reading list"
                 icon="book-open"
                 onSelect={action('Reading list')}
               />
@@ -228,53 +237,53 @@ export const DropdownMenuStories = () => {
             <DropdownMenu
               trigger={<Button variant="outline">Settings</Button>}
               searchable
-              searchPlaceholder="Search settings..."
+              stringSearchPlaceholder="Search settings..."
               minWidth={220}
             >
-              <DropdownMenuGroup label="Appearance">
+              <DropdownMenuGroup stringLabel="Appearance">
                 <DropdownSearchableMenuItem
-                  label="Theme"
+                  stringLabel="Theme"
                   icon="palette"
                   onSelect={action('Theme')}
                 />
                 <DropdownSearchableMenuItem
-                  label="Font size"
+                  stringLabel="Font size"
                   icon="type"
                   onSelect={action('Font size')}
                 />
                 <DropdownSearchableMenuItem
-                  label="Layout"
+                  stringLabel="Layout"
                   icon="layout"
                   onSelect={action('Layout')}
                 />
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
-              <DropdownMenuGroup label="Privacy">
+              <DropdownMenuGroup stringLabel="Privacy">
                 <DropdownSearchableMenuItem
-                  label="Cookies"
+                  stringLabel="Cookies"
                   icon="cookie"
                   onSelect={action('Cookies')}
                 />
                 <DropdownSearchableMenuItem
-                  label="Tracking"
+                  stringLabel="Tracking"
                   icon="eye-off"
                   onSelect={action('Tracking')}
                 />
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
-              <DropdownMenuGroup label="Advanced">
+              <DropdownMenuGroup stringLabel="Advanced">
                 <DropdownSearchableMenuItem
-                  label="Developer tools"
+                  stringLabel="Developer tools"
                   icon="terminal"
                   onSelect={action('Developer tools')}
                 />
                 <DropdownSearchableMenuItem
-                  label="Keyboard shortcuts"
+                  stringLabel="Keyboard shortcuts"
                   icon="keyboard"
                   onSelect={action('Keyboard shortcuts')}
                 />
                 <DropdownSearchableMenuItem
-                  label="Notifications"
+                  stringLabel="Notifications"
                   icon="bell"
                   onSelect={action('Notifications')}
                 />
@@ -285,13 +294,13 @@ export const DropdownMenuStories = () => {
             <DropdownMenu
               trigger={<Button variant="outline">Select entry</Button>}
               searchable
-              searchPlaceholder="Search entries..."
+              stringSearchPlaceholder="Search entries..."
               minWidth={240}
             >
               {Array.from({ length: 100 }, (_, index) => (
                 <DropdownSearchableMenuItem
                   key={index}
-                  label={`Entry ${index + 1}`}
+                  stringLabel={`Entry ${index + 1}`}
                   icon="file"
                   onSelect={action(`Entry ${index + 1}`)}
                 />
@@ -323,17 +332,20 @@ export const DropdownMenuStories = () => {
                 >
                   <DropdownMenuContent>
                     <DropdownMenuItem
-                      label="New file"
+                      stringLabel="New file"
                       onSelect={action('New file')}
                     />
                     <DropdownMenuItem
-                      label="Open..."
+                      stringLabel="Open..."
                       onSelect={action('Open')}
                     />
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem label="Save" onSelect={action('Save')} />
                     <DropdownMenuItem
-                      label="Save as..."
+                      stringLabel="Save"
+                      onSelect={action('Save')}
+                    />
+                    <DropdownMenuItem
+                      stringLabel="Save as..."
                       onSelect={action('Save as')}
                     />
                   </DropdownMenuContent>
@@ -364,22 +376,28 @@ export const DropdownMenuStories = () => {
                   sideOffset={4}
                 >
                   <DropdownMenuContent minWidth={180}>
-                    <DropdownMenuGroup label="File">
-                      <DropdownMenuItem label="New" onSelect={action('New')} />
+                    <DropdownMenuGroup stringLabel="File">
                       <DropdownMenuItem
-                        label="Open"
+                        stringLabel="New"
+                        onSelect={action('New')}
+                      />
+                      <DropdownMenuItem
+                        stringLabel="Open"
                         onSelect={action('Open')}
                       />
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator />
-                    <DropdownMenuGroup label="Edit">
-                      <DropdownMenuItem label="Cut" onSelect={action('Cut')} />
+                    <DropdownMenuGroup stringLabel="Edit">
                       <DropdownMenuItem
-                        label="Copy"
+                        stringLabel="Cut"
+                        onSelect={action('Cut')}
+                      />
+                      <DropdownMenuItem
+                        stringLabel="Copy"
                         onSelect={action('Copy')}
                       />
                       <DropdownMenuItem
-                        label="Paste"
+                        stringLabel="Paste"
                         onSelect={action('Paste')}
                       />
                     </DropdownMenuGroup>
@@ -412,15 +430,15 @@ export const DropdownMenuStories = () => {
                 >
                   <DropdownMenuContent minWidth={200}>
                     <DropdownMenuItem
-                      label="Archive item"
+                      stringLabel="Archive item"
                       icon="archive"
-                      secondaryLabel="Delete item"
+                      stringSecondaryLabel="Delete item"
                       secondaryIcon="trash"
                       onSelect={action('Archive')}
                       secondaryOnSelect={action('Delete')}
                     />
                     <DropdownMenuItem
-                      label="Move to..."
+                      stringLabel="Move to..."
                       icon="folder"
                       onSelect={action('Move')}
                     />
@@ -453,12 +471,12 @@ export const DropdownMenuStories = () => {
                 >
                   <DropdownMenuContent minWidth={180}>
                     <DropdownMenuItem
-                      label="New file"
+                      stringLabel="New file"
                       onSelect={action('New file')}
                     />
                     <DropdownSubmenu>
                       <DropdownSubmenuTriggerItem
-                        label="Open recent"
+                        stringLabel="Open recent"
                         icon="clock"
                       />
                       <DropdownMenuPortal>
@@ -469,15 +487,15 @@ export const DropdownMenuStories = () => {
                         >
                           <DropdownSubmenuContent minWidth={180}>
                             <DropdownMenuItem
-                              label="project-alpha.md"
+                              stringLabel="project-alpha.md"
                               onSelect={action('Open alpha')}
                             />
                             <DropdownMenuItem
-                              label="notes.md"
+                              stringLabel="notes.md"
                               onSelect={action('Open notes')}
                             />
                             <DropdownMenuItem
-                              label="readme.md"
+                              stringLabel="readme.md"
                               onSelect={action('Open readme')}
                             />
                           </DropdownSubmenuContent>
@@ -485,7 +503,10 @@ export const DropdownMenuStories = () => {
                       </DropdownMenuPortal>
                     </DropdownSubmenu>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem label="Save" onSelect={action('Save')} />
+                    <DropdownMenuItem
+                      stringLabel="Save"
+                      onSelect={action('Save')}
+                    />
                   </DropdownMenuContent>
                 </DropdownMenuPositioner>
               </DropdownMenuPortal>
@@ -494,26 +515,30 @@ export const DropdownMenuStories = () => {
           <StoryItem label="radio submenu">
             <DropdownMenu trigger={<Button variant="outline">Options</Button>}>
               <DropdownRadioSubmenu
-                label="Layout"
+                stringLabel="Layout"
                 defaultValue="grid"
                 items={[
-                  { value: 'list', label: 'List' },
-                  { value: 'grid', label: 'Grid' },
-                  { value: 'columns', label: 'Columns' },
+                  { value: 'list', stringLabel: 'List' },
+                  { value: 'grid', stringLabel: 'Grid' },
+                  { value: 'columns', stringLabel: 'Columns' },
                 ]}
               />
               <DropdownRadioSubmenu
-                label="Padding"
+                stringLabel="Padding"
                 icon="rows-3"
                 defaultValue="comfortable"
                 items={[
-                  { value: 'compact', label: 'Compact', icon: 'rows-4' },
+                  { value: 'compact', stringLabel: 'Compact', icon: 'rows-4' },
                   {
                     value: 'comfortable',
-                    label: 'Comfortable',
+                    stringLabel: 'Comfortable',
                     icon: 'rows-3',
                   },
-                  { value: 'spacious', label: 'Spacious', icon: 'rows-2' },
+                  {
+                    value: 'spacious',
+                    stringLabel: 'Spacious',
+                    icon: 'rows-2',
+                  },
                 ]}
               />
             </DropdownMenu>
@@ -541,20 +566,23 @@ export const DropdownMenuStories = () => {
                   sideOffset={4}
                 >
                   <DropdownMenuContent minWidth={160}>
-                    <DropdownMenuItem label="Cut" onSelect={action('Cut')} />
                     <DropdownMenuItem
-                      label="Copy"
+                      stringLabel="Cut"
+                      onSelect={action('Cut')}
+                    />
+                    <DropdownMenuItem
+                      stringLabel="Copy"
                       disabled
                       onSelect={action('Copy')}
                     />
                     <DropdownMenuItem
-                      label="Paste"
+                      stringLabel="Paste"
                       disabled
                       onSelect={action('Paste')}
                     />
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
-                      label="Select all"
+                      stringLabel="Select all"
                       onSelect={action('Select all')}
                     />
                   </DropdownMenuContent>

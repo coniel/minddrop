@@ -2,19 +2,18 @@
  * Toast.stories.tsx
  * Dev reference for the Toast component.
  */
-
+import { Button } from '../Button';
+import { Story, StoryItem, StoryRow, StorySection } from '../dev/Story';
 import {
-  ToastProvider,
-  ToastViewport,
   Toast,
-  ToastTitle,
-  ToastDescription,
-  ToastClose,
   ToastAction,
+  ToastClose,
+  ToastDescription,
+  ToastProvider,
+  ToastTitle,
+  ToastViewport,
   useToastManager,
 } from './Toast';
-import { Button } from '../Button';
-import { Story, StorySection, StoryRow, StoryItem } from '../dev/Story';
 
 interface DemoToastData {
   action?: string;
@@ -163,13 +162,19 @@ const DemoToasts = () => {
         {manager.toasts.map((toast) => (
           <Toast key={toast.id} toast={toast} type={toast.type as any}>
             <div>
-              <ToastTitle>{toast.title}</ToastTitle>
+              {/* Toast content is already-resolved text, so it is
+                  wrapped as a node rather than treated as an i18n key */}
+              <ToastTitle>
+                <>{toast.title}</>
+              </ToastTitle>
               {toast.description && (
-                <ToastDescription>{toast.description}</ToastDescription>
+                <ToastDescription>
+                  <>{toast.description}</>
+                </ToastDescription>
               )}
               {toast.data?.action && (
-                <ToastAction altText={toast.data.action}>
-                  {toast.data.action}
+                <ToastAction>
+                  <>{toast.data.action}</>
                 </ToastAction>
               )}
             </div>

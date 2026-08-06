@@ -21,14 +21,14 @@ export const TooltipStories = () => (
     >
       <StoryRow>
         <StoryItem label="title only">
-          <Tooltip title="Copy to clipboard">
+          <Tooltip stringTitle="Copy to clipboard">
             <Button variant="filled">Hover me</Button>
           </Tooltip>
         </StoryItem>
         <StoryItem label="title + description">
           <Tooltip
-            title="Publish"
-            description="Make this document visible to all members"
+            stringTitle="Publish"
+            stringDescription="Make this document visible to all members"
           >
             <Button variant="filled">Hover me</Button>
           </Tooltip>
@@ -47,14 +47,14 @@ export const TooltipStories = () => (
     >
       <StoryRow>
         <StoryItem label="title + shortcut">
-          <Tooltip title="Save" keyboardShortcut={['Mod', 'S']}>
+          <Tooltip stringTitle="Save" keyboardShortcut={['Mod', 'S']}>
             <Button variant="filled">Hover me</Button>
           </Tooltip>
         </StoryItem>
         <StoryItem label="title + description + shortcut">
           <Tooltip
-            title="Export"
-            description="Download as PDF or image"
+            stringTitle="Export"
+            stringDescription="Download as PDF or image"
             keyboardShortcut={['Mod', 'Shift', 'E']}
           >
             <Button variant="filled">Hover me</Button>
@@ -74,22 +74,22 @@ export const TooltipStories = () => (
     >
       <StoryRow>
         <StoryItem label="bottom (default)">
-          <Tooltip title="Bottom tooltip" side="bottom">
+          <Tooltip stringTitle="Bottom tooltip" side="bottom">
             <Button variant="filled">Bottom</Button>
           </Tooltip>
         </StoryItem>
         <StoryItem label="top">
-          <Tooltip title="Top tooltip" side="top">
+          <Tooltip stringTitle="Top tooltip" side="top">
             <Button variant="filled">Top</Button>
           </Tooltip>
         </StoryItem>
         <StoryItem label="right">
-          <Tooltip title="Right tooltip" side="right">
+          <Tooltip stringTitle="Right tooltip" side="right">
             <Button variant="filled">Right</Button>
           </Tooltip>
         </StoryItem>
         <StoryItem label="left">
-          <Tooltip title="Left tooltip" side="left">
+          <Tooltip stringTitle="Left tooltip" side="left">
             <Button variant="filled">Left</Button>
           </Tooltip>
         </StoryItem>
@@ -108,15 +108,19 @@ export const TooltipStories = () => (
     >
       <StoryRow>
         <StoryItem label="via label prop (auto)">
-          <IconButton variant="filled" icon="settings" label="Settings" />
+          <IconButton variant="filled" icon="settings" stringLabel="Settings" />
         </StoryItem>
         <StoryItem label="via Tooltip (manual)">
           <Tooltip
-            title="Settings"
-            description="Manage workspace preferences"
+            stringTitle="Settings"
+            stringDescription="Manage workspace preferences"
             keyboardShortcut={['Mod', ',']}
           >
-            <IconButton variant="filled" icon="settings" label="Settings" />
+            <IconButton
+              variant="filled"
+              icon="settings"
+              stringLabel="Settings"
+            />
           </Tooltip>
         </StoryItem>
       </StoryRow>

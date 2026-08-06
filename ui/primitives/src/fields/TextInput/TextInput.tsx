@@ -103,6 +103,12 @@ export interface TextInputProps {
   placeholder?: TranslationKey;
 
   /*
+   * Plain string placeholder used as-is without i18n translation.
+   * Takes priority over `placeholder`.
+   */
+  stringPlaceholder?: string;
+
+  /*
    * autoComplete attribute.
    */
   autoComplete?: Input.Props['autoComplete'];
@@ -174,6 +180,7 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
       onKeyDown,
       onValueChange,
       placeholder,
+      stringPlaceholder,
       size = 'lg',
       spellCheck,
       textSize,
@@ -238,7 +245,7 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
           type={type}
           value={value}
           defaultValue={defaultValue}
-          placeholder={placeholder ? t(placeholder) : undefined}
+          placeholder={stringPlaceholder ?? (placeholder && t(placeholder))}
           autoCapitalize={autoCapitalize}
           autoComplete={autoComplete}
           autoCorrect={autoCorrect}

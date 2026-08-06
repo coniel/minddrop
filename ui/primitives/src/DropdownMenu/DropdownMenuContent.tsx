@@ -46,6 +46,11 @@ export interface DropdownMenuContentProps
    */
   searchPlaceholder?: TranslationKey;
 
+  /*
+   * Plain string search placeholder used as-is without i18n
+   * translation. Takes priority over `searchPlaceholder`.
+   */
+  stringSearchPlaceholder?: string;
   /**
    * Controlled search term. When provided, the consumer owns
    * filtering and menu items are listed as given.
@@ -75,6 +80,7 @@ export const DropdownMenuContent = React.forwardRef<
       className,
       searchable,
       searchPlaceholder,
+      stringSearchPlaceholder,
       searchTerm,
       onSearchTermChange,
       emptyText,
@@ -117,6 +123,7 @@ export const DropdownMenuContent = React.forwardRef<
               style={{ minWidth }}
               className={className}
               searchPlaceholder={searchPlaceholder}
+              stringSearchPlaceholder={stringSearchPlaceholder}
               searchTerm={searchTerm}
               onSearchTermChange={onSearchTermChange}
               emptyText={emptyText}

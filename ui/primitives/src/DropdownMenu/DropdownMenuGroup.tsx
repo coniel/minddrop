@@ -11,15 +11,24 @@ export interface DropdownMenuGroupProps extends MenuPrimitive.Group.Props {
    * Group label. Can be an i18n key. Translated internally.
    */
   label?: TranslationKey;
+
+  /*
+   * Plain string group label rendered as-is without i18n translation.
+   * Takes priority over `label`.
+   */
+  stringLabel?: string;
 }
 
 export const DropdownMenuGroup: FC<DropdownMenuGroupProps> = ({
   label,
+  stringLabel,
   children,
   ...other
 }) => (
   <MenuPrimitive.Group {...other}>
-    {label && <DropdownMenuLabel label={label} />}
+    {(label || stringLabel) && (
+      <DropdownMenuLabel label={label} stringLabel={stringLabel} />
+    )}
     {children}
   </MenuPrimitive.Group>
 );

@@ -63,6 +63,12 @@ export interface DropdownMenuProps extends DropdownMenuRootProps {
    */
   searchPlaceholder?: TranslationKey;
 
+  /*
+   * Plain string search placeholder used as-is without i18n
+   * translation. Takes priority over `searchPlaceholder`.
+   */
+  stringSearchPlaceholder?: string;
+
   /**
    * Controlled search term. When provided, the consumer owns
    * filtering and menu items are listed as given.
@@ -95,6 +101,7 @@ export const DropdownMenu: FC<DropdownMenuProps> = ({
   content,
   searchable,
   searchPlaceholder,
+  stringSearchPlaceholder,
   searchTerm,
   onSearchTermChange,
   emptyText,
@@ -111,6 +118,7 @@ export const DropdownMenu: FC<DropdownMenuProps> = ({
           content={content}
           searchable={searchable}
           searchPlaceholder={searchPlaceholder}
+          stringSearchPlaceholder={stringSearchPlaceholder}
           searchTerm={searchTerm}
           onSearchTermChange={onSearchTermChange}
           emptyText={emptyText}

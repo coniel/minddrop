@@ -1,6 +1,6 @@
 import { Toast as ToastPrimitive } from '@base-ui/react/toast';
-import React from 'react';
 import { X } from 'lucide-react';
+import React from 'react';
 import { useTranslation } from '@minddrop/i18n';
 import { TranslatableNode } from '../types';
 import { propsToClass } from '../utils';
@@ -23,19 +23,21 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({
 
 export interface ToastViewportProps extends ToastPrimitive.Viewport.Props {}
 
-export const ToastViewport = React.forwardRef<HTMLDivElement, ToastViewportProps>(
-  ({ className, ...other }, ref) => (
-    <ToastPrimitive.Viewport
-      ref={ref}
-      className={['toast-viewport', className].filter(Boolean).join(' ')}
-      {...other}
-    />
-  ),
-);
+export const ToastViewport = React.forwardRef<
+  HTMLDivElement,
+  ToastViewportProps
+>(({ className, ...other }, ref) => (
+  <ToastPrimitive.Viewport
+    ref={ref}
+    className={['toast-viewport', className].filter(Boolean).join(' ')}
+    {...other}
+  />
+));
 
 ToastViewport.displayName = 'ToastViewport';
 
-export interface ToastProps extends Omit<ToastPrimitive.Root.Props, 'className'> {
+export interface ToastProps
+  extends Omit<ToastPrimitive.Root.Props, 'className'> {
   /**
    * Visual variant of the toast.
    * @default 'default'
@@ -139,29 +141,30 @@ export interface ToastActionProps
   children?: TranslatableNode;
 }
 
-export const ToastAction = React.forwardRef<HTMLButtonElement, ToastActionProps>(
-  ({ children, className, ...other }, ref) => {
-    const { t } = useTranslation();
-    const translatedChildren =
-      typeof children === 'string' ? t(children) : children;
+export const ToastAction = React.forwardRef<
+  HTMLButtonElement,
+  ToastActionProps
+>(({ children, className, ...other }, ref) => {
+  const { t } = useTranslation();
+  const translatedChildren =
+    typeof children === 'string' ? t(children) : children;
 
-    return (
-      <ToastPrimitive.Action
-        ref={ref}
-        className={['toast-action', className].filter(Boolean).join(' ')}
-        {...other}
-      >
-        {translatedChildren}
-      </ToastPrimitive.Action>
-    );
-  },
-);
+  return (
+    <ToastPrimitive.Action
+      ref={ref}
+      className={['toast-action', className].filter(Boolean).join(' ')}
+      {...other}
+    >
+      {translatedChildren}
+    </ToastPrimitive.Action>
+  );
+});
 
 ToastAction.displayName = 'ToastAction';
 
 /* Re-exported primitives */
 export const ToastRoot = ToastPrimitive.Root;
-export const ToastPortal = ToastPrimitive.Portal;
+export const ToastPortal: typeof ToastPrimitive.Portal = ToastPrimitive.Portal;
 export const ToastContent = ToastPrimitive.Content;
 export const ToastPositioner = ToastPrimitive.Positioner;
 

@@ -72,7 +72,7 @@ export const CollapsibleStories = () => {
                         variant="ghost"
                         size="sm"
                         icon={open ? 'chevron-up' : 'chevron-down'}
-                        label={open ? 'Collapse' : 'Expand'}
+                        stringLabel={open ? 'Collapse' : 'Expand'}
                       />
                     }
                   />
@@ -180,13 +180,13 @@ export const CollapsibleStories = () => {
                 />
                 <CollapsibleContent>
                   <Stack gap={1} style={{ paddingTop: 'var(--space-1)' }}>
-                    <Button variant="ghost"size="md">
+                    <Button variant="ghost" size="md">
                       Alpha
                     </Button>
-                    <Button variant="subtle"size="md">
+                    <Button variant="subtle" size="md">
                       Beta
                     </Button>
-                    <Button variant="ghost"size="md">
+                    <Button variant="ghost" size="md">
                       Gamma
                     </Button>
                   </Stack>

@@ -26,22 +26,22 @@ export const RadioStories = () => {
         <StoryRow>
           <StoryItem label="basic group">
             <RadioGroup value={plan} onValueChange={setPlan}>
-              <RadioField value="monthly" label="Monthly billing" />
-              <RadioField value="annual" label="Annual billing" />
-              <RadioField value="lifetime" label="Lifetime" />
+              <RadioField value="monthly" stringLabel="Monthly billing" />
+              <RadioField value="annual" stringLabel="Annual billing" />
+              <RadioField value="lifetime" stringLabel="Lifetime" />
             </RadioGroup>
           </StoryItem>
           <StoryItem label="with descriptions">
             <RadioGroup value={plan} onValueChange={setPlan}>
               <RadioField
                 value="monthly"
-                label="Monthly billing"
-                description="Billed every month, cancel anytime."
+                stringLabel="Monthly billing"
+                stringDescription="Billed every month, cancel anytime."
               />
               <RadioField
                 value="annual"
-                label="Annual billing"
-                description="Billed once per year, save 20%."
+                stringLabel="Annual billing"
+                stringDescription="Billed once per year, save 20%."
               />
             </RadioGroup>
           </StoryItem>
@@ -59,13 +59,13 @@ export const RadioStories = () => {
         <StoryRow>
           <StoryItem label="group label">
             <RadioGroup
-              label="Billing period"
+              stringLabel="Billing period"
               value={plan}
               onValueChange={setPlan}
             >
-              <RadioField value="monthly" label="Monthly" />
-              <RadioField value="annual" label="Annual" />
-              <RadioField value="lifetime" label="Lifetime" />
+              <RadioField value="monthly" stringLabel="Monthly" />
+              <RadioField value="annual" stringLabel="Annual" />
+              <RadioField value="lifetime" stringLabel="Lifetime" />
             </RadioGroup>
           </StoryItem>
         </StoryRow>
@@ -81,18 +81,18 @@ export const RadioStories = () => {
         <StoryRow>
           <StoryItem label="group disabled">
             <RadioGroup value="monthly" onValueChange={() => {}} disabled>
-              <RadioField value="monthly" label="Monthly" />
-              <RadioField value="annual" label="Annual" />
-              <RadioField value="lifetime" label="Lifetime" />
+              <RadioField value="monthly" stringLabel="Monthly" />
+              <RadioField value="annual" stringLabel="Annual" />
+              <RadioField value="lifetime" stringLabel="Lifetime" />
             </RadioGroup>
           </StoryItem>
           <StoryItem label="individual disabled">
             <RadioGroup value={plan} onValueChange={setPlan}>
-              <RadioField value="monthly" label="Monthly" />
-              <RadioField value="annual" label="Annual" />
+              <RadioField value="monthly" stringLabel="Monthly" />
+              <RadioField value="annual" stringLabel="Annual" />
               <RadioField
                 value="lifetime"
-                label="Lifetime (sold out)"
+                stringLabel="Lifetime (sold out)"
                 disabled
               />
             </RadioGroup>
@@ -119,20 +119,20 @@ export const RadioStories = () => {
                 <RadioCard
                   value="starter"
                   variant="outline"
-                  title="Starter"
-                  description="For individuals and small projects."
+                  stringTitle="Starter"
+                  stringDescription="For individuals and small projects."
                 />
                 <RadioCard
                   value="pro"
                   variant="outline"
-                  title="Pro"
-                  description="For growing teams with advanced needs."
+                  stringTitle="Pro"
+                  stringDescription="For growing teams with advanced needs."
                 />
                 <RadioCard
                   value="enterprise"
                   variant="outline"
-                  title="Enterprise"
-                  description="Custom pricing for large organisations."
+                  stringTitle="Enterprise"
+                  stringDescription="Custom pricing for large organisations."
                 />
               </RadioCardGroup>
             </div>
@@ -147,20 +147,20 @@ export const RadioStories = () => {
                 <RadioCard
                   value="starter"
                   variant="outline"
-                  title="Starter"
-                  description="For individuals."
+                  stringTitle="Starter"
+                  stringDescription="For individuals."
                 />
                 <RadioCard
                   value="pro"
                   variant="outline"
-                  title="Pro"
-                  description="For teams."
+                  stringTitle="Pro"
+                  stringDescription="For teams."
                 />
                 <RadioCard
                   value="enterprise"
                   variant="outline"
-                  title="Enterprise"
-                  description="Custom."
+                  stringTitle="Enterprise"
+                  stringDescription="Custom."
                 />
               </RadioCardGroup>
             </div>
@@ -184,20 +184,20 @@ export const RadioStories = () => {
                 <RadioCard
                   value="system"
                   variant="subtle"
-                  title="System"
-                  description="Follows your device appearance setting."
+                  stringTitle="System"
+                  stringDescription="Follows your device appearance setting."
                 />
                 <RadioCard
                   value="light"
                   variant="subtle"
-                  title="Light"
-                  description="Always use the light theme."
+                  stringTitle="Light"
+                  stringDescription="Always use the light theme."
                 />
                 <RadioCard
                   value="dark"
                   variant="subtle"
-                  title="Dark"
-                  description="Always use the dark theme."
+                  stringTitle="Dark"
+                  stringDescription="Always use the dark theme."
                 />
               </RadioCardGroup>
             </div>
@@ -224,8 +224,8 @@ export const RadioStories = () => {
                 <RadioCard
                   value="system"
                   variant="outline"
-                  title="System"
-                  description="Follow device setting"
+                  stringTitle="System"
+                  stringDescription="Follow device setting"
                   icon={
                     <svg
                       width="20"
@@ -243,8 +243,8 @@ export const RadioStories = () => {
                 <RadioCard
                   value="light"
                   variant="outline"
-                  title="Light"
-                  description="Always light"
+                  stringTitle="Light"
+                  stringDescription="Always light"
                   icon={
                     <svg
                       width="20"
@@ -262,8 +262,8 @@ export const RadioStories = () => {
                 <RadioCard
                   value="dark"
                   variant="outline"
-                  title="Dark"
-                  description="Always dark"
+                  stringTitle="Dark"
+                  stringDescription="Always dark"
                   icon={
                     <svg
                       width="20"
@@ -297,14 +297,14 @@ export const RadioStories = () => {
                 <RadioCard
                   value="starter"
                   variant="outline"
-                  title="Starter"
-                  description="For individuals."
+                  stringTitle="Starter"
+                  stringDescription="For individuals."
                 />
                 <RadioCard
                   value="pro"
                   variant="outline"
-                  title="Pro"
-                  description="For teams."
+                  stringTitle="Pro"
+                  stringDescription="For teams."
                 />
               </RadioCardGroup>
             </div>

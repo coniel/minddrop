@@ -71,7 +71,7 @@ export const PopoverStories = () => (
                             variant="ghost"
                             size="sm"
                             icon="x"
-                            label="Close"
+                            stringLabel="Close"
                           />
                         }
                       />
@@ -172,8 +172,8 @@ export const PopoverStories = () => (
                 >
                   <Stack gap={3}>
                     <TextField
-                      label="Display name"
-                      placeholder="Enter name..."
+                      stringLabel="Display name"
+                      stringPlaceholder="Enter name..."
                       size="md"
                       variant="outline"
                     />
@@ -206,7 +206,7 @@ export const PopoverStories = () => (
                 <IconButton
                   variant="ghost"
                   icon="more-horizontal"
-                  label="More options"
+                  stringLabel="More options"
                 />
               }
             />

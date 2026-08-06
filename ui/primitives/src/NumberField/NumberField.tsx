@@ -34,7 +34,19 @@ export interface NumberFieldProps
   > {
   className?: string;
   label?: TranslationKey;
+
+  /*
+   * Plain string label rendered as-is without i18n translation.
+   * Takes priority over `label`.
+   */
+  stringLabel?: string;
   error?: TranslationKey;
+
+  /*
+   * Plain string error rendered as-is without i18n translation.
+   * Takes priority over `error`.
+   */
+  stringError?: string;
 }
 
 export const NumberField = React.forwardRef<HTMLDivElement, NumberFieldProps>(
@@ -44,6 +56,7 @@ export const NumberField = React.forwardRef<HTMLDivElement, NumberFieldProps>(
       variant,
       size,
       label,
+      stringLabel,
       value,
       defaultValue,
       onValueChange,
@@ -54,6 +67,7 @@ export const NumberField = React.forwardRef<HTMLDivElement, NumberFieldProps>(
       placeholder,
       disabled,
       error,
+      stringError,
       leading,
       trailing,
       clearable,
@@ -66,9 +80,11 @@ export const NumberField = React.forwardRef<HTMLDivElement, NumberFieldProps>(
         ref={ref}
         className={className}
         disabled={disabled}
-        invalid={!!error}
+        invalid={!!error || !!stringError}
       >
-        {label && <FieldLabel label={label} />}
+        {(label || stringLabel) && (
+          <FieldLabel label={label} stringLabel={stringLabel} />
+        )}
 
         <NumberInput
           variant={variant}
@@ -82,14 +98,16 @@ export const NumberField = React.forwardRef<HTMLDivElement, NumberFieldProps>(
           decimals={decimals}
           placeholder={placeholder}
           disabled={disabled}
-          invalid={!!error}
+          invalid={!!error || !!stringError}
           leading={leading}
           trailing={trailing}
           clearable={clearable}
           onBlur={onBlur}
         />
 
-        {error && <FieldError error={error} />}
+        {(error || stringError) && (
+          <FieldError error={error} stringError={stringError} />
+        )}
       </FieldRoot>
     );
   },

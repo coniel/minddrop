@@ -134,22 +134,35 @@ export const LayoutStories = () => (
       <StoryRow>
         <StoryItem label="toolbar">
           <Group gap={1}>
-            <IconButton variant="ghost" icon="bold" label="Bold" />
-            <IconButton variant="ghost" icon="italic" label="Italic" />
-            <IconButton variant="ghost" icon="underline" label="Underline" />
+            <IconButton variant="ghost" icon="bold" stringLabel="Bold" />
+            <IconButton variant="ghost" icon="italic" stringLabel="Italic" />
+            <IconButton
+              variant="ghost"
+              icon="underline"
+              stringLabel="Underline"
+            />
             <Separator orientation="vertical" margin="small" />
-            <IconButton variant="ghost" icon="align-left" label="Align left" />
+            <IconButton
+              variant="ghost"
+              icon="align-left"
+              stringLabel="Align left"
+            />
             <IconButton
               variant="ghost"
               icon="align-center"
-              label="Align center"
+              stringLabel="Align center"
             />
           </Group>
         </StoryItem>
         <StoryItem label="label + action">
           <Group justify="between">
             <Text weight="medium">Section title</Text>
-            <IconButton variant="ghost" size="sm" icon="plus" label="Add" />
+            <IconButton
+              variant="ghost"
+              size="sm"
+              icon="plus"
+              stringLabel="Add"
+            />
           </Group>
         </StoryItem>
       </StoryRow>
@@ -280,7 +293,12 @@ export const LayoutStories = () => (
                 <Text size="xs" weight="semibold" color="subtle">
                   PROJECTS
                 </Text>
-                <IconButton variant="ghost" size="sm" icon="plus" label="New" />
+                <IconButton
+                  variant="ghost"
+                  size="sm"
+                  icon="plus"
+                  stringLabel="New"
+                />
               </Group>
               <Stack gap={1}>
                 <Button variant="ghost">Alpha</Button>
@@ -370,7 +388,7 @@ export const LayoutStories = () => (
                   variant="ghost"
                   size="sm"
                   icon="more-horizontal"
-                  label="More"
+                  stringLabel="More"
                 />
               </FlexItem>
             </Group>
@@ -416,7 +434,7 @@ export const LayoutStories = () => (
                 variant="ghost"
                 size="sm"
                 icon="search"
-                label="Search"
+                stringLabel="Search"
               />
               <FlexItem grow={1}>
                 <div

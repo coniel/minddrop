@@ -80,16 +80,16 @@ export const NumberFieldStories = () => {
         <StoryRow>
           <StoryItem label="with label">
             <div style={{ width: 180 }}>
-              <NumberField label="Width" defaultValue={320} />
+              <NumberField stringLabel="Width" defaultValue={320} />
             </div>
           </StoryItem>
           <StoryItem label="with error">
             <div style={{ width: 180 }}>
               <NumberField
-                label="Width"
+                stringLabel="Width"
                 defaultValue={-5}
                 min={0}
-                error="Value must be 0 or greater."
+                stringError="Value must be 0 or greater."
               />
             </div>
           </StoryItem>

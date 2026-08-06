@@ -12,15 +12,24 @@ export interface ContextMenuGroupProps
    * Group label. Can be an i18n key. Translated internally.
    */
   label?: TranslationKey;
+
+  /*
+   * Plain string group label rendered as-is without i18n translation.
+   * Takes priority over `label`.
+   */
+  stringLabel?: string;
 }
 
 export const ContextMenuGroup: FC<ContextMenuGroupProps> = ({
   label,
+  stringLabel,
   children,
   ...other
 }) => (
   <ContextMenuPrimitive.Group {...other}>
-    {label && <ContextMenuLabel label={label} />}
+    {(label || stringLabel) && (
+      <ContextMenuLabel label={label} stringLabel={stringLabel} />
+    )}
     {children}
   </ContextMenuPrimitive.Group>
 );

@@ -2,22 +2,23 @@
  * Switch.stories.tsx
  * Dev reference for the Switch and SwitchField components.
  */
-
 import { useState } from 'react';
+import { Story, StoryItem, StoryRow, StorySection } from '../dev/Story';
 import { Switch } from './Switch';
 import { SwitchField } from './Switch';
-import { Story, StorySection, StoryRow, StoryItem } from '../dev/Story';
 
 export const SwitchStories = () => {
   const [checked, setChecked] = useState(false);
 
   return (
     <Story title="Switch">
-
       {/* --------------------------------------------------------
           SIZES
       -------------------------------------------------------- */}
-      <StorySection title="Sizes" description="sm / md (default) / lg. Track height: 0.875rem / 1.125rem / 1.375rem.">
+      <StorySection
+        title="Sizes"
+        description="sm / md (default) / lg. Track height: 0.875rem / 1.125rem / 1.375rem."
+      >
         <StoryRow>
           <StoryItem label="sm">
             <Switch size="sm" />
@@ -40,21 +41,19 @@ export const SwitchStories = () => {
         </StoryRow>
       </StorySection>
 
-
       {/* --------------------------------------------------------
           CONTROLLED
       -------------------------------------------------------- */}
-      <StorySection title="Controlled" description="Manage checked state externally via checked and onCheckedChange.">
+      <StorySection
+        title="Controlled"
+        description="Manage checked state externally via checked and onCheckedChange."
+      >
         <StoryRow>
           <StoryItem label={`checked: ${checked}`}>
-            <Switch
-              checked={checked}
-              onCheckedChange={setChecked}
-            />
+            <Switch checked={checked} onCheckedChange={setChecked} />
           </StoryItem>
         </StoryRow>
       </StorySection>
-
 
       {/* --------------------------------------------------------
           DISABLED
@@ -70,21 +69,23 @@ export const SwitchStories = () => {
         </StoryRow>
       </StorySection>
 
-
       {/* --------------------------------------------------------
           SWITCH FIELD
           Switch paired with label and optional description.
           Clicking the label toggles the switch via Field.Root.
       -------------------------------------------------------- */}
-      <StorySection title="SwitchField" description="Pairs Switch with a label and optional description. Clicking the label toggles the switch.">
+      <StorySection
+        title="SwitchField"
+        description="Pairs Switch with a label and optional description. Clicking the label toggles the switch."
+      >
         <StoryRow>
           <StoryItem label="label only">
-            <SwitchField label="Enable notifications" />
+            <SwitchField stringLabel="Enable notifications" />
           </StoryItem>
           <StoryItem label="label + description">
             <SwitchField
-              label="Enable notifications"
-              description="Receive updates about activity on your account."
+              stringLabel="Enable notifications"
+              stringDescription="Receive updates about activity on your account."
               defaultChecked
             />
           </StoryItem>
@@ -93,15 +94,15 @@ export const SwitchStories = () => {
           <StoryItem label="sm">
             <SwitchField
               size="sm"
-              label="Compact switch"
-              description="A smaller switch for dense layouts."
+              stringLabel="Compact switch"
+              stringDescription="A smaller switch for dense layouts."
             />
           </StoryItem>
           <StoryItem label="lg">
             <SwitchField
               size="lg"
-              label="Large switch"
-              description="A larger switch for prominent settings."
+              stringLabel="Large switch"
+              stringDescription="A larger switch for prominent settings."
               defaultChecked
             />
           </StoryItem>
@@ -109,15 +110,14 @@ export const SwitchStories = () => {
         <StoryRow>
           <StoryItem label="disabled">
             <SwitchField
-              label="Auto-save"
-              description="Automatically save changes as you work."
+              stringLabel="Auto-save"
+              stringDescription="Automatically save changes as you work."
               disabled
               defaultChecked
             />
           </StoryItem>
         </StoryRow>
       </StorySection>
-
     </Story>
   );
 };

@@ -11,6 +11,12 @@ export interface SelectItemProps {
   label?: TranslationKey;
 
   /*
+   * Plain string label rendered as-is without i18n translation.
+   * Takes priority over `label`.
+   */
+  stringLabel?: string;
+
+  /*
    * An optional description shown beneath the label. Can be an i18n key.
    */
   description?: TranslationKey;
@@ -42,6 +48,7 @@ export interface SelectItemProps {
 
 export const SelectItem = ({
   label,
+  stringLabel,
   description,
   value,
   className,
@@ -51,7 +58,7 @@ export const SelectItem = ({
   const { t } = useTranslation();
 
   // Resolve the displayed content from children or label
-  const resolvedChildren = children ?? (label ? t(label) : null);
+  const resolvedChildren = children ?? stringLabel ?? (label ? t(label) : null);
 
   return (
     <SelectPrimitive.Item

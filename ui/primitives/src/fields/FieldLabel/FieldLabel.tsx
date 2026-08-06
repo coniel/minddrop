@@ -12,6 +12,12 @@ export interface FieldLabelProps extends Field.Label.Props {
   label?: TranslationKey;
 
   /*
+   * Plain string label rendered as-is without i18n translation.
+   * Takes priority over `label`.
+   */
+  stringLabel?: string;
+
+  /*
    * Label content. Used when no i18n key is provided.
    */
   children?: React.ReactNode;
@@ -36,6 +42,7 @@ export interface FieldLabelProps extends Field.Label.Props {
 
 export const FieldLabel: React.FC<FieldLabelProps> = ({
   label,
+  stringLabel,
   children,
   className,
   size = 'sm',
@@ -43,8 +50,16 @@ export const FieldLabel: React.FC<FieldLabelProps> = ({
   ...other
 }) => {
   return (
-    <Field.Label className={propsToClass('field-label', { className })} {...other}>
-      <InputLabel size={size} color={color} label={label}>
+    <Field.Label
+      className={propsToClass('field-label', { className })}
+      {...other}
+    >
+      <InputLabel
+        size={size}
+        color={color}
+        label={label}
+        stringLabel={stringLabel}
+      >
         {children}
       </InputLabel>
     </Field.Label>

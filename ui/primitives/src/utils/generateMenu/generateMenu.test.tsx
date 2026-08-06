@@ -12,12 +12,15 @@ import {
 } from '../../types';
 import { generateMenu } from './generateMenu';
 
-const Item: React.FC<ActionMenuItemProps> = ({ label }) => (
-  <div data-testid="item">{label}</div>
+const Item: React.FC<ActionMenuItemProps> = ({ label, stringLabel }) => (
+  <div data-testid="item">{stringLabel ?? label}</div>
 );
 
-const Label: React.FC<{ children?: React.ReactNode }> = ({ children }) => (
-  <div data-testid="label">{children}</div>
+const Label: React.FC<{
+  children?: React.ReactNode;
+  stringLabel?: string;
+}> = ({ children, stringLabel }) => (
+  <div data-testid="label">{stringLabel ?? children}</div>
 );
 
 const Separator: React.FC = () => <div data-testid="separator" />;
@@ -40,9 +43,10 @@ const Submenu: React.FC<{ children?: React.ReactNode }> = ({ children }) => (
   <div data-testid="submenu">{children}</div>
 );
 
-const SubmenuTriggerItem: React.FC<SubmenuTriggerItemProps> = ({ label }) => (
-  <div data-testid="submenu-trigger-item">{label}</div>
-);
+const SubmenuTriggerItem: React.FC<SubmenuTriggerItemProps> = ({
+  label,
+  stringLabel,
+}) => <div data-testid="submenu-trigger-item">{stringLabel ?? label}</div>;
 
 const SubmenuContent: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   children,
@@ -60,7 +64,7 @@ const ColorSelectionItem: React.FC<MenuColorSelectionItemProps> = ({
 
 const item: MenuItemConfig = {
   type: 'menu-item',
-  label: 'label',
+  stringLabel: 'label',
   icon: 'settings',
   onSelect: vi.fn(),
   keyboardShortcut: ['A', 'B'],
@@ -68,7 +72,7 @@ const item: MenuItemConfig = {
 
 const label: MenuLabelConfig = {
   type: 'menu-label',
-  label: 'Actions',
+  stringLabel: 'Actions',
 };
 
 const separator: MenuSeparatorConfig = {
@@ -120,7 +124,7 @@ describe('generateMenu', () => {
     const menu = generateMenu(components, [
       {
         ...item,
-        label: 'trigger label',
+        stringLabel: 'trigger label',
         submenu: [item],
         submenuContentClass: 'submenu-content-class',
       },
@@ -139,7 +143,7 @@ describe('generateMenu', () => {
 
   it('generates component based submenus', () => {
     const menu = generateMenu(components, [
-      { ...item, label: 'trigger label', submenu: <div>submenu</div> },
+      { ...item, stringLabel: 'trigger label', submenu: <div>submenu</div> },
     ]);
     render(<div>{menu}</div>);
 

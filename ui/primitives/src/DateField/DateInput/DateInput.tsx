@@ -51,6 +51,12 @@ export interface DateInputProps {
    */
   placeholder?: TranslationKey;
 
+  /*
+   * Plain string placeholder used as-is without i18n translation.
+   * Takes priority over `placeholder`.
+   */
+  stringPlaceholder?: string;
+
   /**
    * Marks the input as invalid (applies error styling).
    */
@@ -95,6 +101,7 @@ export const DateInput = React.forwardRef<HTMLDivElement, DateInputProps>(
       defaultValue,
       onValueChange,
       placeholder,
+      stringPlaceholder,
       invalid,
       disabled,
       clearable,
@@ -185,7 +192,7 @@ export const DateInput = React.forwardRef<HTMLDivElement, DateInputProps>(
         {/* Display text or placeholder */}
         <span className="text-input-input date-input-text" ref={triggerRef}>
           {displayText ||
-            (placeholder ? t(placeholder) : '')}
+            (stringPlaceholder ?? (placeholder ? t(placeholder) : ''))}
         </span>
 
         {/* Clear button */}

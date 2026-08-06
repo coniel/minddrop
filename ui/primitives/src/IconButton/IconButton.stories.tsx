@@ -16,16 +16,20 @@ export const IconButtonStories = () => (
     >
       <StoryRow>
         <StoryItem label="ghost (default)">
-          <IconButton variant="ghost" icon="settings" label="Settings" />
+          <IconButton variant="ghost" icon="settings" stringLabel="Settings" />
         </StoryItem>
         <StoryItem label="subtle">
-          <IconButton variant="subtle" icon="settings" label="Settings" />
+          <IconButton variant="subtle" icon="settings" stringLabel="Settings" />
         </StoryItem>
         <StoryItem label="outline">
-          <IconButton variant="outline" icon="settings" label="Settings" />
+          <IconButton
+            variant="outline"
+            icon="settings"
+            stringLabel="Settings"
+          />
         </StoryItem>
         <StoryItem label="filled">
-          <IconButton variant="filled" icon="settings" label="Settings" />
+          <IconButton variant="filled" icon="settings" stringLabel="Settings" />
         </StoryItem>
       </StoryRow>
     </StorySection>
@@ -40,7 +44,7 @@ export const IconButtonStories = () => (
             variant="filled"
             size="sm"
             icon="settings"
-            label="Settings"
+            stringLabel="Settings"
           />
         </StoryItem>
         <StoryItem label="md (default)">
@@ -48,7 +52,7 @@ export const IconButtonStories = () => (
             variant="filled"
             size="md"
             icon="settings"
-            label="Settings"
+            stringLabel="Settings"
           />
         </StoryItem>
         <StoryItem label="lg">
@@ -56,7 +60,7 @@ export const IconButtonStories = () => (
             variant="filled"
             size="lg"
             icon="settings"
-            label="Settings"
+            stringLabel="Settings"
           />
         </StoryItem>
       </StoryRow>
@@ -72,7 +76,7 @@ export const IconButtonStories = () => (
             variant="ghost"
             color="neutral"
             icon="settings"
-            label="Settings"
+            stringLabel="Settings"
           />
         </StoryItem>
         <StoryItem label="muted">
@@ -80,7 +84,7 @@ export const IconButtonStories = () => (
             variant="ghost"
             color="muted"
             icon="settings"
-            label="Settings"
+            stringLabel="Settings"
           />
         </StoryItem>
         <StoryItem label="contrast">
@@ -95,7 +99,7 @@ export const IconButtonStories = () => (
               variant="ghost"
               color="contrast"
               icon="settings"
-              label="Settings"
+              stringLabel="Settings"
             />
           </div>
         </StoryItem>
@@ -108,19 +112,19 @@ export const IconButtonStories = () => (
     >
       <StoryRow>
         <StoryItem label="active (ghost)">
-          <IconButton variant="ghost" icon="bold" label="Bold" active />
+          <IconButton variant="ghost" icon="bold" stringLabel="Bold" active />
         </StoryItem>
         <StoryItem label="active (subtle)">
-          <IconButton variant="subtle" icon="bold" label="Bold" active />
+          <IconButton variant="subtle" icon="bold" stringLabel="Bold" active />
         </StoryItem>
         <StoryItem label="active (filled)">
-          <IconButton variant="filled" icon="bold" label="Bold" active />
+          <IconButton variant="filled" icon="bold" stringLabel="Bold" active />
         </StoryItem>
         <StoryItem label="disabled">
           <IconButton
             variant="filled"
             icon="settings"
-            label="Settings"
+            stringLabel="Settings"
             disabled
           />
         </StoryItem>
@@ -133,16 +137,16 @@ export const IconButtonStories = () => (
     >
       <StoryRow>
         <StoryItem label="from label (hover me)">
-          <IconButton variant="filled" icon="settings" label="Settings" />
+          <IconButton variant="filled" icon="settings" stringLabel="Settings" />
         </StoryItem>
         <StoryItem label="custom title + description (hover me)">
           <IconButton
             variant="filled"
             icon="settings"
-            label="Settings"
+            stringLabel="Settings"
             tooltip={{
-              title: 'Settings',
-              description: 'Manage your workspace preferences',
+              stringTitle: 'Settings',
+              stringDescription: 'Manage your workspace preferences',
             }}
           />
         </StoryItem>
@@ -161,20 +165,20 @@ export const IconButtonStories = () => (
               variant="subtle"
               size="sm"
               icon="align-left"
-              label="Align left"
+              stringLabel="Align left"
               active
             />
             <IconButton
               variant="subtle"
               size="sm"
               icon="align-center"
-              label="Align center"
+              stringLabel="Align center"
             />
             <IconButton
               variant="subtle"
               size="sm"
               icon="align-right"
-              label="Align right"
+              stringLabel="Align right"
             />
           </div>
         </StoryItem>
@@ -329,9 +333,13 @@ export const IconButtonStories = () => (
               alignItems: 'center',
             }}
           >
-            <IconButton variant="ghost" icon="bold" label="Bold" />
-            <IconButton variant="ghost" icon="italic" label="Italic" />
-            <IconButton variant="ghost" icon="underline" label="Underline" />
+            <IconButton variant="ghost" icon="bold" stringLabel="Bold" />
+            <IconButton variant="ghost" icon="italic" stringLabel="Italic" />
+            <IconButton
+              variant="ghost"
+              icon="underline"
+              stringLabel="Underline"
+            />
             <div
               style={{
                 width: 1,
@@ -344,8 +352,8 @@ export const IconButtonStories = () => (
               variant="ghost"
               size="md"
               options={[
-                { label: 'Paragraph', value: 'p' },
-                { label: 'Heading 1', value: 'h1' },
+                { stringLabel: 'Paragraph', value: 'p' },
+                { stringLabel: 'Heading 1', value: 'h1' },
               ]}
               value="p"
             />
@@ -368,13 +376,13 @@ export const IconButtonStories = () => (
               variant="filled"
               size="md"
               icon="filter"
-              label="Filter"
+              stringLabel="Filter"
             />
             <IconButton
               variant="filled"
               size="md"
               icon="sort-desc"
-              label="Sort"
+              stringLabel="Sort"
             />
           </div>
         </StoryItem>

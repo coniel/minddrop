@@ -68,9 +68,9 @@ export const ContextMenuStories = () => {
         <StoryRow>
           <StoryItem label="basic">
             <ContextMenu trigger={<TriggerArea />} minWidth={180}>
-              <ContextMenuItem label="Cut" onSelect={action('Cut')} />
-              <ContextMenuItem label="Copy" onSelect={action('Copy')} />
-              <ContextMenuItem label="Paste" onSelect={action('Paste')} />
+              <ContextMenuItem stringLabel="Cut" onSelect={action('Cut')} />
+              <ContextMenuItem stringLabel="Copy" onSelect={action('Copy')} />
+              <ContextMenuItem stringLabel="Paste" onSelect={action('Paste')} />
             </ContextMenu>
             {lastAction && (
               <Text size="sm" color="muted">
@@ -91,32 +91,32 @@ export const ContextMenuStories = () => {
         <StoryRow>
           <StoryItem label="with icons">
             <ContextMenu trigger={<TriggerArea />} minWidth={200}>
-              <ContextMenuGroup label="Edit">
+              <ContextMenuGroup stringLabel="Edit">
                 <ContextMenuItem
-                  label="Cut"
+                  stringLabel="Cut"
                   icon="scissors"
                   onSelect={action('Cut')}
                 />
                 <ContextMenuItem
-                  label="Copy"
+                  stringLabel="Copy"
                   icon="copy"
                   onSelect={action('Copy')}
                 />
                 <ContextMenuItem
-                  label="Paste"
+                  stringLabel="Paste"
                   icon="clipboard"
                   onSelect={action('Paste')}
                 />
               </ContextMenuGroup>
               <ContextMenuSeparator />
-              <ContextMenuGroup label="View">
+              <ContextMenuGroup stringLabel="View">
                 <ContextMenuItem
-                  label="Zoom in"
+                  stringLabel="Zoom in"
                   icon="zoom-in"
                   onSelect={action('Zoom in')}
                 />
                 <ContextMenuItem
-                  label="Zoom out"
+                  stringLabel="Zoom out"
                   icon="zoom-out"
                   onSelect={action('Zoom out')}
                 />
@@ -136,11 +136,11 @@ export const ContextMenuStories = () => {
         <StoryRow>
           <StoryItem label={`view: ${view}`}>
             <ContextMenu trigger={<TriggerArea />} minWidth={160}>
-              <ContextMenuGroup label="View as">
+              <ContextMenuGroup stringLabel="View as">
                 <ContextMenuRadioGroup value={view} onValueChange={setView}>
-                  <ContextMenuRadioItem value="list" label="List" />
-                  <ContextMenuRadioItem value="grid" label="Grid" />
-                  <ContextMenuRadioItem value="columns" label="Columns" />
+                  <ContextMenuRadioItem value="list" stringLabel="List" />
+                  <ContextMenuRadioItem value="grid" stringLabel="Grid" />
+                  <ContextMenuRadioItem value="columns" stringLabel="Columns" />
                 </ContextMenuRadioGroup>
               </ContextMenuGroup>
             </ContextMenu>
@@ -165,15 +165,15 @@ export const ContextMenuStories = () => {
                 <ContextMenuPositioner>
                   <ContextMenuContent minWidth={200}>
                     <ContextMenuItem
-                      label="Archive"
+                      stringLabel="Archive"
                       icon="archive"
-                      secondaryLabel="Delete"
+                      stringSecondaryLabel="Delete"
                       secondaryIcon="trash"
                       onSelect={action('Archive')}
                       secondaryOnSelect={action('Delete')}
                     />
                     <ContextMenuItem
-                      label="Move to..."
+                      stringLabel="Move to..."
                       icon="folder"
                       onSelect={action('Move')}
                     />
@@ -201,25 +201,28 @@ export const ContextMenuStories = () => {
               <ContextMenuPortal>
                 <ContextMenuPositioner>
                   <ContextMenuContent minWidth={200}>
-                    <ContextMenuItem label="Open" onSelect={action('Open')} />
+                    <ContextMenuItem
+                      stringLabel="Open"
+                      onSelect={action('Open')}
+                    />
                     <ContextSubmenu>
                       <ContextSubmenuTriggerItem
-                        label="Open with"
+                        stringLabel="Open with"
                         icon="external-link"
                       />
                       <ContextMenuPortal>
                         <ContextMenuPositioner>
                           <ContextSubmenuContent minWidth={160}>
                             <ContextMenuItem
-                              label="Preview"
+                              stringLabel="Preview"
                               onSelect={action('Preview')}
                             />
                             <ContextMenuItem
-                              label="Editor"
+                              stringLabel="Editor"
                               onSelect={action('Editor')}
                             />
                             <ContextMenuItem
-                              label="Browser"
+                              stringLabel="Browser"
                               onSelect={action('Browser')}
                             />
                           </ContextSubmenuContent>
@@ -228,7 +231,7 @@ export const ContextMenuStories = () => {
                     </ContextSubmenu>
                     <ContextMenuSeparator />
                     <ContextMenuItem
-                      label="Move to trash"
+                      stringLabel="Move to trash"
                       icon="trash"
                       onSelect={action('Trash')}
                     />
@@ -240,26 +243,30 @@ export const ContextMenuStories = () => {
           <StoryItem label="radio submenu">
             <ContextMenu trigger={<TriggerArea />} minWidth={200}>
               <ContextRadioSubmenu
-                label="Layout"
+                stringLabel="Layout"
                 defaultValue="grid"
                 items={[
-                  { value: 'list', label: 'List' },
-                  { value: 'grid', label: 'Grid' },
-                  { value: 'columns', label: 'Columns' },
+                  { value: 'list', stringLabel: 'List' },
+                  { value: 'grid', stringLabel: 'Grid' },
+                  { value: 'columns', stringLabel: 'Columns' },
                 ]}
               />
               <ContextRadioSubmenu
-                label="Padding"
+                stringLabel="Padding"
                 icon="rows-3"
                 defaultValue="comfortable"
                 items={[
-                  { value: 'compact', label: 'Compact', icon: 'rows-4' },
+                  { value: 'compact', stringLabel: 'Compact', icon: 'rows-4' },
                   {
                     value: 'comfortable',
-                    label: 'Comfortable',
+                    stringLabel: 'Comfortable',
                     icon: 'rows-3',
                   },
-                  { value: 'spacious', label: 'Spacious', icon: 'rows-2' },
+                  {
+                    value: 'spacious',
+                    stringLabel: 'Spacious',
+                    icon: 'rows-2',
+                  },
                 ]}
               />
             </ContextMenu>
@@ -283,20 +290,23 @@ export const ContextMenuStories = () => {
               <ContextMenuPortal>
                 <ContextMenuPositioner>
                   <ContextMenuContent minWidth={160}>
-                    <ContextMenuItem label="Cut" onSelect={action('Cut')} />
                     <ContextMenuItem
-                      label="Copy"
+                      stringLabel="Cut"
+                      onSelect={action('Cut')}
+                    />
+                    <ContextMenuItem
+                      stringLabel="Copy"
                       disabled
                       onSelect={action('Copy')}
                     />
                     <ContextMenuItem
-                      label="Paste"
+                      stringLabel="Paste"
                       disabled
                       onSelect={action('Paste')}
                     />
                     <ContextMenuSeparator />
                     <ContextMenuItem
-                      label="Select all"
+                      stringLabel="Select all"
                       onSelect={action('Select all')}
                     />
                   </ContextMenuContent>

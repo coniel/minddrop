@@ -23,6 +23,12 @@ export interface SelectValueProps {
   placeholder?: TranslationKey;
 
   /*
+   * Plain string placeholder used as-is without i18n translation.
+   * Takes priority over `placeholder`.
+   */
+  stringPlaceholder?: string;
+
+  /*
    * Custom rendered value content. When provided, overrides
    * the default rendered value from Base UI.
    */
@@ -33,6 +39,7 @@ export const SelectValue = ({
   className,
   color,
   placeholder,
+  stringPlaceholder,
   children,
 }: SelectValueProps) => {
   const { t } = useTranslation();
@@ -40,7 +47,7 @@ export const SelectValue = ({
   return (
     <SelectPrimitive.Value
       className={propsToClass('select-value', { color, className })}
-      placeholder={placeholder ? t(placeholder) : undefined}
+      placeholder={stringPlaceholder ?? (placeholder && t(placeholder))}
     >
       {children}
     </SelectPrimitive.Value>

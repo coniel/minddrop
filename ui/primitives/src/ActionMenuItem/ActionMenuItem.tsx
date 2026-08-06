@@ -57,6 +57,12 @@ export interface ActionMenuItemProps extends Omit<MenuItemProps, 'onClick'> {
   secondaryLabel?: MenuItemProps['label'];
 
   /**
+   * Plain string secondary label rendered as-is without i18n
+   * translation. Takes priority over `secondaryLabel`.
+   */
+  stringSecondaryLabel?: string;
+
+  /**
    * Icon in its secondary (shift) state.
    */
   secondaryIcon?: MenuItemProps['icon'];
@@ -112,6 +118,7 @@ export const ActionMenuItem: FC<ActionMenuItemProps> = ({
   label,
   stringLabel,
   secondaryLabel,
+  stringSecondaryLabel,
   icon,
   secondaryIcon,
   contentIcon,
@@ -131,13 +138,14 @@ export const ActionMenuItem: FC<ActionMenuItemProps> = ({
     shiftKeyDown && secondaryOnSelect ? secondaryOnSelect : onSelect;
 
   // Pass labels through to MenuItem which handles translation
+  const hasSecondaryLabel = !!secondaryLabel || !!stringSecondaryLabel;
   const itemProps = shiftKeyDown
     ? {
         label: secondaryLabel ?? label,
         icon: secondaryIcon ?? icon,
         keyboardShortcut: secondaryKeyboardShortcut,
         contentIcon,
-        stringLabel: secondaryLabel ? undefined : stringLabel,
+        stringLabel: hasSecondaryLabel ? stringSecondaryLabel : stringLabel,
       }
     : { label, stringLabel, icon, keyboardShortcut, contentIcon };
 

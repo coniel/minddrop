@@ -2,11 +2,10 @@
  * ConfirmationDialog.stories.tsx
  * Dev reference for the ConfirmationDialog component.
  */
-
 import { useState } from 'react';
-import { ConfirmationDialog } from './ConfirmationDialog';
 import { Button } from '../Button';
-import { Story, StorySection, StoryRow, StoryItem } from '../dev/Story';
+import { Story, StoryItem, StoryRow, StorySection } from '../dev/Story';
+import { ConfirmationDialog } from './ConfirmationDialog';
 
 export const ConfirmationDialogStories = () => {
   const [basicOpen, setBasicOpen] = useState(false);
@@ -16,12 +15,14 @@ export const ConfirmationDialogStories = () => {
 
   return (
     <Story title="ConfirmationDialog">
-
       {/* --------------------------------------------------------
           BASIC
           Standard confirmation — neutral confirm button.
       -------------------------------------------------------- */}
-      <StorySection title="Basic" description="Built on Base UI AlertDialog. Blocks interaction with the rest of the page until dismissed.">
+      <StorySection
+        title="Basic"
+        description="Built on Base UI AlertDialog. Blocks interaction with the rest of the page until dismissed."
+      >
         <StoryRow>
           <StoryItem label="open dialog">
             <Button variant="outline" onClick={() => setBasicOpen(true)}>
@@ -30,9 +31,9 @@ export const ConfirmationDialogStories = () => {
             <ConfirmationDialog
               open={basicOpen}
               onOpenChange={setBasicOpen}
-              title="Save changes?"
-              message="Your unsaved changes will be lost if you leave without saving."
-              confirmLabel="Save"
+              stringTitle="Save changes?"
+              stringMessage="Your unsaved changes will be lost if you leave without saving."
+              stringConfirmLabel="Save"
               onConfirm={() => {
                 setLastAction('confirmed');
                 setBasicOpen(false);
@@ -43,7 +44,12 @@ export const ConfirmationDialogStories = () => {
               }}
             />
             {lastAction && (
-              <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text-muted)' }}>
+              <span
+                style={{
+                  fontSize: 'var(--text-sm)',
+                  color: 'var(--text-muted)',
+                }}
+              >
                 → {lastAction}
               </span>
             )}
@@ -51,12 +57,14 @@ export const ConfirmationDialogStories = () => {
         </StoryRow>
       </StorySection>
 
-
       {/* --------------------------------------------------------
           DANGER
           Destructive action — confirm button uses danger styling.
       -------------------------------------------------------- */}
-      <StorySection title="Danger" description="Pass danger to style the confirm button as a destructive action.">
+      <StorySection
+        title="Danger"
+        description="Pass danger to style the confirm button as a destructive action."
+      >
         <StoryRow>
           <StoryItem label="destructive">
             <Button variant="outline" onClick={() => setDangerOpen(true)}>
@@ -65,9 +73,9 @@ export const ConfirmationDialogStories = () => {
             <ConfirmationDialog
               open={dangerOpen}
               onOpenChange={setDangerOpen}
-              title="Delete this item?"
-              message="This action cannot be undone. The item will be permanently removed."
-              confirmLabel="Delete"
+              stringTitle="Delete this item?"
+              stringMessage="This action cannot be undone. The item will be permanently removed."
+              stringConfirmLabel="Delete"
               danger
               onConfirm={() => setDangerOpen(false)}
               onCancel={() => setDangerOpen(false)}
@@ -76,12 +84,14 @@ export const ConfirmationDialogStories = () => {
         </StoryRow>
       </StorySection>
 
-
       {/* --------------------------------------------------------
           CUSTOM CONTENT
           title and message accept React nodes for richer content.
       -------------------------------------------------------- */}
-      <StorySection title="Custom content" description="title and message accept React nodes when a plain string isn't enough.">
+      <StorySection
+        title="Custom content"
+        description="title and message accept React nodes when a plain string isn't enough."
+      >
         <StoryRow>
           <StoryItem label="rich content">
             <Button variant="outline" onClick={() => setCustomOpen(true)}>
@@ -101,8 +111,8 @@ export const ConfirmationDialogStories = () => {
                   <strong>24 associated files</strong>. This cannot be undone.
                 </span>
               }
-              confirmLabel="Remove project"
-              cancelLabel="Keep it"
+              stringConfirmLabel="Remove project"
+              stringCancelLabel="Keep it"
               danger
               onConfirm={() => setCustomOpen(false)}
               onCancel={() => setCustomOpen(false)}
@@ -110,7 +120,6 @@ export const ConfirmationDialogStories = () => {
           </StoryItem>
         </StoryRow>
       </StorySection>
-
     </Story>
   );
 };

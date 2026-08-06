@@ -86,6 +86,12 @@ export interface CheckboxFieldProps {
   label?: TranslationKey;
 
   /*
+   * Plain string label rendered as-is without i18n translation.
+   * Takes priority over `label`.
+   */
+  stringLabel?: string;
+
+  /*
    * Label content. Used when no i18n key is provided.
    */
   children?: React.ReactNode;
@@ -94,6 +100,12 @@ export interface CheckboxFieldProps {
    * Helper text below the label.
    */
   description?: TranslationKey;
+
+  /*
+   * Plain string description rendered as-is without i18n translation.
+   * Takes priority over `description`.
+   */
+  stringDescription?: string;
 
   /*
    * Controlled checked state.
@@ -129,8 +141,10 @@ export interface CheckboxFieldProps {
 export const CheckboxField: React.FC<CheckboxFieldProps> = ({
   value,
   label,
+  stringLabel,
   children,
   description,
+  stringDescription,
   checked: checkedProp,
   defaultChecked,
   onCheckedChange,
@@ -158,8 +172,9 @@ export const CheckboxField: React.FC<CheckboxFieldProps> = ({
     }
   }
 
-  const labelText = label ? t(label) : children;
-  const descriptionText = description ? t(description) : undefined;
+  const labelText = stringLabel ?? (label ? t(label) : children);
+  const descriptionText =
+    stringDescription ?? (description && t(description)) ?? undefined;
 
   return (
     <Field.Root
@@ -219,6 +234,12 @@ export interface CheckboxGroupProps {
   label?: TranslationKey;
 
   /*
+   * Plain string group label rendered as-is without i18n translation.
+   * Takes priority over `label`.
+   */
+  stringLabel?: string;
+
+  /*
    * When true, renders a "select all" checkbox above the group.
    * Requires the `options` prop.
    * @default false
@@ -252,6 +273,7 @@ export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
   onChange,
   options,
   label,
+  stringLabel,
   selectAll,
   selectAllLabel = 'actions.selectAll',
   disabled,
@@ -259,6 +281,9 @@ export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
   children,
 }) => {
   const { t } = useTranslation();
+
+  // Resolve the group label, used both as the aria-label and as text
+  const resolvedLabel = stringLabel ?? (label && t(label));
 
   const allChecked =
     options !== undefined &&
@@ -279,9 +304,11 @@ export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
       <div
         className={propsToClass('checkbox-group', { className })}
         role="group"
-        aria-label={label ? t(label) : undefined}
+        aria-label={resolvedLabel}
       >
-        {label && <div className="checkbox-group-label">{t(label)}</div>}
+        {resolvedLabel && (
+          <div className="checkbox-group-label">{resolvedLabel}</div>
+        )}
         {selectAll && options && (
           <>
             <CheckboxField

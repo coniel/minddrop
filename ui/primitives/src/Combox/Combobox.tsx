@@ -152,6 +152,12 @@ export interface ComboboxProps
    */
   searchPlaceholder?: TranslationKey;
 
+  /*
+   * Plain string search placeholder used as-is without i18n
+   * translation. Takes priority over `searchPlaceholder`.
+   */
+  stringSearchPlaceholder?: string;
+
   /**
    * Text shown when no items match the search.
    */
@@ -187,6 +193,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
   invalid,
   placeholder,
   searchPlaceholder,
+  stringSearchPlaceholder,
   emptyText,
   side = 'bottom',
   align = 'start',
@@ -417,7 +424,10 @@ export const Combobox: React.FC<ComboboxProps> = ({
       <ComboboxPortal>
         <ComboboxPositioner side={side} align={align} sideOffset={sideOffset}>
           <ComboboxPopup>
-            <ComboboxInput placeholder={searchPlaceholder} />
+            <ComboboxInput
+              placeholder={searchPlaceholder}
+              stringPlaceholder={stringSearchPlaceholder}
+            />
 
             {renderList()}
 

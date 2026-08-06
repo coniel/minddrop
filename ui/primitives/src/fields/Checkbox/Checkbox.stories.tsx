@@ -25,19 +25,23 @@ export const CheckboxStories = () => {
       >
         <StoryRow>
           <StoryItem label="unchecked">
-            <CheckboxField label="Enable notifications" />
+            <CheckboxField stringLabel="Enable notifications" />
           </StoryItem>
           <StoryItem label="checked">
-            <CheckboxField label="Enable notifications" checked />
+            <CheckboxField stringLabel="Enable notifications" checked />
           </StoryItem>
           <StoryItem label="indeterminate">
-            <CheckboxField label="Enable notifications" indeterminate />
+            <CheckboxField stringLabel="Enable notifications" indeterminate />
           </StoryItem>
           <StoryItem label="disabled">
-            <CheckboxField label="Enable notifications" disabled />
+            <CheckboxField stringLabel="Enable notifications" disabled />
           </StoryItem>
           <StoryItem label="disabled + checked">
-            <CheckboxField label="Enable notifications" checked disabled />
+            <CheckboxField
+              stringLabel="Enable notifications"
+              checked
+              disabled
+            />
           </StoryItem>
         </StoryRow>
       </StorySection>
@@ -54,8 +58,8 @@ export const CheckboxStories = () => {
           <StoryItem label="label + description">
             <div style={{ width: 320 }}>
               <CheckboxField
-                label="Marketing emails"
-                description="Receive emails about new features, product updates, and announcements."
+                stringLabel="Marketing emails"
+                stringDescription="Receive emails about new features, product updates, and announcements."
               />
             </div>
           </StoryItem>
@@ -73,7 +77,7 @@ export const CheckboxStories = () => {
         <StoryRow>
           <StoryItem label={`checked: ${single}`}>
             <CheckboxField
-              label="Toggle me"
+              stringLabel="Toggle me"
               checked={single}
               onCheckedChange={setSingle}
             />
@@ -94,18 +98,18 @@ export const CheckboxStories = () => {
           <StoryItem label="basic group">
             <CheckboxGroup value={grouped} onChange={setGrouped}>
               {OPTIONS.map((o) => (
-                <CheckboxField key={o} value={o} label={o} />
+                <CheckboxField key={o} value={o} stringLabel={o} />
               ))}
             </CheckboxGroup>
           </StoryItem>
           <StoryItem label="with label">
             <CheckboxGroup
-              label="Notifications"
+              stringLabel="Notifications"
               value={grouped}
               onChange={setGrouped}
             >
               {OPTIONS.map((o) => (
-                <CheckboxField key={o} value={o} label={o} />
+                <CheckboxField key={o} value={o} stringLabel={o} />
               ))}
             </CheckboxGroup>
           </StoryItem>
@@ -124,14 +128,14 @@ export const CheckboxStories = () => {
         <StoryRow>
           <StoryItem label="select all">
             <CheckboxGroup
-              label="Permissions"
+              stringLabel="Permissions"
               value={grouped}
               onChange={setGrouped}
               options={OPTIONS}
               selectAll
             >
               {OPTIONS.map((o) => (
-                <CheckboxField key={o} value={o} label={o} />
+                <CheckboxField key={o} value={o} stringLabel={o} />
               ))}
             </CheckboxGroup>
           </StoryItem>
@@ -154,7 +158,7 @@ export const CheckboxStories = () => {
               disabled
             >
               {OPTIONS.map((o) => (
-                <CheckboxField key={o} value={o} label={o} />
+                <CheckboxField key={o} value={o} stringLabel={o} />
               ))}
             </CheckboxGroup>
           </StoryItem>

@@ -32,10 +32,10 @@ export const MenuStories = () => (
       <StoryRow>
         <StoryItem label="basic menu">
           <Menu>
-            <MenuItem label="Open" />
-            <MenuItem label="Duplicate" />
-            <MenuItem label="Rename" />
-            <MenuItem label="Delete" danger />
+            <MenuItem stringLabel="Open" />
+            <MenuItem stringLabel="Duplicate" />
+            <MenuItem stringLabel="Rename" />
+            <MenuItem stringLabel="Delete" danger />
           </Menu>
         </StoryItem>
       </StoryRow>
@@ -54,20 +54,20 @@ export const MenuStories = () => (
         <StoryItem label="padded">
           <Menu>
             <MenuGroup padded>
-              <MenuItem label="Open" />
-              <MenuItem label="Duplicate" />
-              <MenuItem label="Rename" />
+              <MenuItem stringLabel="Open" />
+              <MenuItem stringLabel="Duplicate" />
+              <MenuItem stringLabel="Rename" />
             </MenuGroup>
           </Menu>
         </StoryItem>
         <StoryItem label="marginTop">
           <Menu>
             <MenuGroup>
-              <MenuItem label="Open" />
-              <MenuItem label="Duplicate" />
+              <MenuItem stringLabel="Open" />
+              <MenuItem stringLabel="Duplicate" />
             </MenuGroup>
             <MenuGroup marginTop="small">
-              <MenuItem label="Delete" danger />
+              <MenuItem stringLabel="Delete" danger />
             </MenuGroup>
           </Menu>
         </StoryItem>
@@ -95,13 +95,13 @@ export const MenuStories = () => (
                     variant="ghost"
                     size="sm"
                     icon="plus"
-                    label="Add item"
+                    stringLabel="Add item"
                   />
                 </div>
               }
             >
-              <MenuItem label="Item one" />
-              <MenuItem label="Item two" />
+              <MenuItem stringLabel="Item one" />
+              <MenuItem stringLabel="Item two" />
             </MenuGroup>
           </Menu>
         </StoryItem>
@@ -120,51 +120,51 @@ export const MenuStories = () => (
       <StoryRow>
         <StoryItem label="basic">
           <Menu>
-            <MenuLabel label="Workspaces" />
-            <MenuItem label="Personal" />
-            <MenuItem label="Team" />
+            <MenuLabel stringLabel="Workspaces" />
+            <MenuItem stringLabel="Personal" />
+            <MenuItem stringLabel="Team" />
           </Menu>
         </StoryItem>
         <StoryItem label="button">
           <Menu>
-            <MenuLabel label="Workspaces" button onClick={() => {}} />
-            <MenuItem label="Personal" />
-            <MenuItem label="Team" />
+            <MenuLabel stringLabel="Workspaces" button onClick={() => {}} />
+            <MenuItem stringLabel="Personal" />
+            <MenuItem stringLabel="Team" />
           </Menu>
         </StoryItem>
         <StoryItem label="with actions (hover label)">
           <Menu>
             <MenuLabel
-              label="Projects"
+              stringLabel="Projects"
               actions={
                 <IconButton
                   variant="ghost"
                   size="sm"
                   icon="plus"
-                  label="New project"
+                  stringLabel="New project"
                 />
               }
             />
-            <MenuItem label="Alpha" />
-            <MenuItem label="Beta" />
+            <MenuItem stringLabel="Alpha" />
+            <MenuItem stringLabel="Beta" />
           </Menu>
         </StoryItem>
         <StoryItem label="actionsAlwaysVisible">
           <Menu>
             <MenuLabel
-              label="Projects"
+              stringLabel="Projects"
               actionsAlwaysVisible
               actions={
                 <IconButton
                   variant="ghost"
                   size="sm"
                   icon="plus"
-                  label="New project"
+                  stringLabel="New project"
                 />
               }
             />
-            <MenuItem label="Alpha" />
-            <MenuItem label="Beta" />
+            <MenuItem stringLabel="Alpha" />
+            <MenuItem stringLabel="Beta" />
           </Menu>
         </StoryItem>
       </StoryRow>
@@ -185,18 +185,18 @@ export const MenuStories = () => (
           <Menu>
             <MenuGroup showLabelActionsOnHover>
               <MenuLabel
-                label="Projects"
+                stringLabel="Projects"
                 actions={
                   <IconButton
                     variant="ghost"
                     size="sm"
                     icon="plus"
-                    label="New project"
+                    stringLabel="New project"
                   />
                 }
               />
-              <MenuItem label="Alpha" />
-              <MenuItem label="Beta" />
+              <MenuItem stringLabel="Alpha" />
+              <MenuItem stringLabel="Beta" />
             </MenuGroup>
           </Menu>
         </StoryItem>
@@ -215,10 +215,10 @@ export const MenuStories = () => (
       <StoryRow>
         <StoryItem label="separator">
           <Menu>
-            <MenuItem label="Open" />
-            <MenuItem label="Duplicate" />
+            <MenuItem stringLabel="Open" />
+            <MenuItem stringLabel="Duplicate" />
             <MenuSeparator />
-            <MenuItem label="Move to trash" danger />
+            <MenuItem stringLabel="Move to trash" danger />
           </Menu>
         </StoryItem>
       </StoryRow>
@@ -266,35 +266,39 @@ export const MenuStories = () => (
         <StoryItem label="uncontrolled">
           <Menu>
             <MenuRadioGroup defaultValue="grid">
-              <MenuRadioItem value="list" label="List" />
-              <MenuRadioItem value="grid" label="Grid" />
-              <MenuRadioItem value="columns" label="Columns" />
+              <MenuRadioItem value="list" stringLabel="List" />
+              <MenuRadioItem value="grid" stringLabel="Grid" />
+              <MenuRadioItem value="columns" stringLabel="Columns" />
             </MenuRadioGroup>
           </Menu>
         </StoryItem>
         <StoryItem label="with icons">
           <Menu>
             <MenuRadioGroup defaultValue="grid">
-              <MenuRadioItem value="list" label="List" icon="list" />
-              <MenuRadioItem value="grid" label="Grid" icon="grid-2x2" />
-              <MenuRadioItem value="columns" label="Columns" icon="columns-2" />
+              <MenuRadioItem value="list" stringLabel="List" icon="list" />
+              <MenuRadioItem value="grid" stringLabel="Grid" icon="grid-2x2" />
+              <MenuRadioItem
+                value="columns"
+                stringLabel="Columns"
+                icon="columns-2"
+              />
             </MenuRadioGroup>
           </Menu>
         </StoryItem>
         <StoryItem label="compact">
           <Menu>
             <MenuRadioGroup defaultValue="sm">
-              <MenuRadioItem value="sm" label="Small" size="compact" />
-              <MenuRadioItem value="md" label="Medium" size="compact" />
-              <MenuRadioItem value="lg" label="Large" size="compact" />
+              <MenuRadioItem value="sm" stringLabel="Small" size="compact" />
+              <MenuRadioItem value="md" stringLabel="Medium" size="compact" />
+              <MenuRadioItem value="lg" stringLabel="Large" size="compact" />
             </MenuRadioGroup>
           </Menu>
         </StoryItem>
         <StoryItem label="disabled items">
           <Menu>
             <MenuRadioGroup defaultValue="enabled">
-              <MenuRadioItem value="enabled" label="Enabled" />
-              <MenuRadioItem value="disabled" label="Disabled" disabled />
+              <MenuRadioItem value="enabled" stringLabel="Enabled" />
+              <MenuRadioItem value="disabled" stringLabel="Disabled" disabled />
             </MenuRadioGroup>
           </Menu>
         </StoryItem>
@@ -314,23 +318,23 @@ export const MenuStories = () => (
       <StoryRow>
         <StoryItem label="uncontrolled">
           <Menu>
-            <SwitchMenuItem label="Show grid" />
-            <SwitchMenuItem label="Snap to grid" defaultChecked />
-            <SwitchMenuItem label="Dark mode" icon="moon" />
+            <SwitchMenuItem stringLabel="Show grid" />
+            <SwitchMenuItem stringLabel="Snap to grid" defaultChecked />
+            <SwitchMenuItem stringLabel="Dark mode" icon="moon" />
           </Menu>
         </StoryItem>
         <StoryItem label="disabled">
           <Menu>
-            <SwitchMenuItem label="Enabled" defaultChecked />
-            <SwitchMenuItem label="Disabled off" disabled />
-            <SwitchMenuItem label="Disabled on" disabled checked />
+            <SwitchMenuItem stringLabel="Enabled" defaultChecked />
+            <SwitchMenuItem stringLabel="Disabled off" disabled />
+            <SwitchMenuItem stringLabel="Disabled on" disabled checked />
           </Menu>
         </StoryItem>
         <StoryItem label="compact">
           <Menu>
-            <SwitchMenuItem label="Compact item" size="compact" />
+            <SwitchMenuItem stringLabel="Compact item" size="compact" />
             <SwitchMenuItem
-              label="Compact checked"
+              stringLabel="Compact checked"
               size="compact"
               defaultChecked
             />
@@ -358,8 +362,8 @@ export const MenuStories = () => (
               onRename={() => {}}
             />
             <MenuSeparator />
-            <MenuItem label="Duplicate" icon="copy" />
-            <MenuItem label="Delete" icon="trash" danger />
+            <MenuItem stringLabel="Duplicate" icon="copy" />
+            <MenuItem stringLabel="Delete" icon="trash" danger />
           </Menu>
         </StoryItem>
         <StoryItem label="with icon picker">
@@ -372,8 +376,8 @@ export const MenuStories = () => (
               onSelectIcon={() => {}}
             />
             <MenuSeparator />
-            <MenuItem label="Duplicate" icon="copy" />
-            <MenuItem label="Delete" icon="trash" danger />
+            <MenuItem stringLabel="Duplicate" icon="copy" />
+            <MenuItem stringLabel="Delete" icon="trash" danger />
           </Menu>
         </StoryItem>
       </StoryRow>
@@ -394,58 +398,58 @@ export const MenuStories = () => (
           <Menu>
             <MenuGroup showLabelActionsOnHover>
               <MenuLabel
-                label="Projects"
+                stringLabel="Projects"
                 actions={
                   <IconButton
                     variant="ghost"
                     size="sm"
                     icon="plus"
-                    label="New project"
+                    stringLabel="New project"
                   />
                 }
               />
               <MenuItem
                 icon="folder"
-                label="Project Alpha"
+                stringLabel="Project Alpha"
                 actions={
                   <IconButton
                     variant="ghost"
                     size="sm"
                     icon="more-horizontal"
-                    label="More"
+                    stringLabel="More"
                   />
                 }
               />
               <MenuItem
                 icon="folder"
-                label="Project Beta"
+                stringLabel="Project Beta"
                 active
                 actions={
                   <IconButton
                     variant="ghost"
                     size="sm"
                     icon="more-horizontal"
-                    label="More"
+                    stringLabel="More"
                   />
                 }
               />
               <MenuItem
                 icon="folder"
-                label="Project Gamma"
+                stringLabel="Project Gamma"
                 actions={
                   <IconButton
                     variant="ghost"
                     size="sm"
                     icon="more-horizontal"
-                    label="More"
+                    stringLabel="More"
                   />
                 }
               />
             </MenuGroup>
             <MenuSeparator />
             <MenuGroup>
-              <MenuItem icon="settings" label="Settings" />
-              <MenuItem icon="trash" label="Trash" muted />
+              <MenuItem icon="settings" stringLabel="Settings" />
+              <MenuItem icon="trash" stringLabel="Trash" muted />
             </MenuGroup>
           </Menu>
         </StoryItem>

@@ -82,7 +82,7 @@ describe('<Tooltip />', () => {
 
     render(
       <TooltipProvider>
-        <Tooltip title="Tooltip title">
+        <Tooltip stringTitle="Tooltip title">
           <button type="button">tooltip</button>
         </Tooltip>
       </TooltipProvider>,
@@ -96,7 +96,7 @@ describe('<Tooltip />', () => {
   it('renders the keyboard shortcut', async () => {
     render(
       <TooltipProvider>
-        <Tooltip open title="Tooltip title" keyboardShortcut={['Shift']}>
+        <Tooltip open stringTitle="Tooltip title" keyboardShortcut={['Shift']}>
           <button type="button">tooltip</button>
         </Tooltip>
       </TooltipProvider>,

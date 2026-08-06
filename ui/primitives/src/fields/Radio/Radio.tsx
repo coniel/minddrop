@@ -44,6 +44,12 @@ export interface RadioFieldProps {
   label?: TranslationKey;
 
   /*
+   * Plain string label rendered as-is without i18n translation.
+   * Takes priority over `label`.
+   */
+  stringLabel?: string;
+
+  /*
    * Label content. Used when no i18n key is provided.
    */
   children?: React.ReactNode;
@@ -52,6 +58,12 @@ export interface RadioFieldProps {
    * Helper text below the label.
    */
   description?: TranslationKey;
+
+  /*
+   * Plain string description rendered as-is without i18n translation.
+   * Takes priority over `description`.
+   */
+  stringDescription?: string;
 
   /*
    * Prevents interaction.
@@ -67,8 +79,10 @@ export interface RadioFieldProps {
 export const RadioField: React.FC<RadioFieldProps> = ({
   value,
   label,
+  stringLabel,
   children,
   description,
+  stringDescription,
   disabled,
   className,
 }) => {
@@ -82,14 +96,14 @@ export const RadioField: React.FC<RadioFieldProps> = ({
     >
       <Radio value={value} id={id} disabled={disabled} />
       <div className="radio-field-content">
-        {(label || children) && (
+        {(label || stringLabel || children) && (
           <Field.Label className="radio-field-label" htmlFor={id}>
-            {label ? t(label) : children}
+            {stringLabel ?? (label ? t(label) : children)}
           </Field.Label>
         )}
-        {description && (
+        {(description || stringDescription) && (
           <Field.Description className="radio-field-description">
-            {t(description)}
+            {stringDescription ?? (description && t(description))}
           </Field.Description>
         )}
       </div>
@@ -124,6 +138,12 @@ export interface RadioGroupProps {
   label?: TranslationKey;
 
   /*
+   * Plain string group label rendered as-is without i18n translation.
+   * Takes priority over `label`.
+   */
+  stringLabel?: string;
+
+  /*
    * Disables all radio fields in the group.
    */
   disabled?: boolean;
@@ -144,11 +164,15 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
   defaultValue,
   onValueChange,
   label,
+  stringLabel,
   disabled,
   className,
   children,
 }) => {
   const { t } = useTranslation();
+
+  // Resolve the group label, used both as the aria-label and as text
+  const resolvedLabel = stringLabel ?? (label && t(label));
 
   return (
     <RadioGroupPrimitive
@@ -157,9 +181,11 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
       defaultValue={defaultValue}
       onValueChange={onValueChange}
       disabled={disabled}
-      aria-label={label ? t(label) : undefined}
+      aria-label={resolvedLabel}
     >
-      {label && <div className="radio-group-label">{t(label)}</div>}
+      {resolvedLabel && (
+        <div className="radio-group-label">{resolvedLabel}</div>
+      )}
       {children}
     </RadioGroupPrimitive>
   );
@@ -172,21 +198,22 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
 
 export type RadioCardVariant = 'outline' | 'subtle';
 
-export interface RadioCardProps {
+interface RadioCardBaseProps {
   /*
    * The value this card represents.
    */
   value: string;
 
   /*
-   * Card title.
-   */
-  title: TranslationKey;
-
-  /*
    * Card description below the title.
    */
   description?: TranslationKey;
+
+  /*
+   * Plain string description rendered as-is without i18n translation.
+   * Takes priority over `description`.
+   */
+  stringDescription?: string;
 
   /*
    * Optional icon or any node rendered above the title.
@@ -212,10 +239,34 @@ export interface RadioCardProps {
   className?: string;
 }
 
+interface TranslatedTitleRadioCardProps extends RadioCardBaseProps {
+  /*
+   * Card title. Translated via i18n before being rendered.
+   */
+  title: TranslationKey;
+
+  stringTitle?: never;
+}
+
+interface StringTitleRadioCardProps extends RadioCardBaseProps {
+  /*
+   * Card title used as-is without translation.
+   */
+  stringTitle: string;
+
+  title?: never;
+}
+
+export type RadioCardProps =
+  | TranslatedTitleRadioCardProps
+  | StringTitleRadioCardProps;
+
 export const RadioCard: React.FC<RadioCardProps> = ({
   value,
   title,
+  stringTitle,
   description,
+  stringDescription,
   icon,
   variant = 'outline',
   disabled,
@@ -237,9 +288,13 @@ export const RadioCard: React.FC<RadioCardProps> = ({
 
       <div className="radio-card-content">
         {icon && <div className="radio-card-icon">{icon}</div>}
-        <div className="radio-card-title">{t(title)}</div>
-        {description && (
-          <div className="radio-card-description">{t(description)}</div>
+        <div className="radio-card-title">
+          {stringTitle ?? (title && t(title))}
+        </div>
+        {(description || stringDescription) && (
+          <div className="radio-card-description">
+            {stringDescription ?? (description && t(description))}
+          </div>
         )}
       </div>
     </RadioPrimitive.Root>
@@ -275,6 +330,12 @@ export interface RadioCardGroupProps {
   label?: TranslationKey;
 
   /*
+   * Plain string group label rendered as-is without i18n translation.
+   * Takes priority over `label`.
+   */
+  stringLabel?: string;
+
+  /*
    * Layout direction of the cards.
    * @default 'vertical'
    */
@@ -301,12 +362,16 @@ export const RadioCardGroup: React.FC<RadioCardGroupProps> = ({
   defaultValue,
   onValueChange,
   label,
+  stringLabel,
   direction = 'vertical',
   disabled,
   className,
   children,
 }) => {
   const { t } = useTranslation();
+
+  // Resolve the group label, used both as the aria-label and as text
+  const resolvedLabel = stringLabel ?? (label && t(label));
 
   return (
     <RadioGroupPrimitive
@@ -315,9 +380,11 @@ export const RadioCardGroup: React.FC<RadioCardGroupProps> = ({
       defaultValue={defaultValue}
       onValueChange={onValueChange}
       disabled={disabled}
-      aria-label={label ? t(label) : undefined}
+      aria-label={resolvedLabel}
     >
-      {label && <div className="radio-card-group-label">{t(label)}</div>}
+      {resolvedLabel && (
+        <div className="radio-card-group-label">{resolvedLabel}</div>
+      )}
       {children}
     </RadioGroupPrimitive>
   );
