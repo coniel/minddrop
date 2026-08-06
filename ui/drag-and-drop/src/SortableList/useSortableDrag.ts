@@ -112,7 +112,6 @@ interface UseSortableDragOptions {
 export function useSortableDrag({
   items,
   direction,
-  gap,
   onSort,
 }: UseSortableDragOptions): Map<string, SortableItemRenderProps> {
   // Refs for each item's DOM element, keyed by index
