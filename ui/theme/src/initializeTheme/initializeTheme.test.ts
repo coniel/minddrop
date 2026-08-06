@@ -73,7 +73,7 @@ describe('initializeTheme', () => {
     matchMediaEventListeners = [];
   });
 
-  it('loads the variant value from the local persistent store', () => {
+  it('loads the variant value from the local persistent store', async () => {
     // Set the initial variant value in the local persistent store
     ThemeStore.set('variant', ThemeDark);
 
@@ -109,8 +109,10 @@ describe('initializeTheme', () => {
       await waitForEvents();
 
       // Should dispatch with system variant and resolved dark
-      expect(eventData?.variant).toBe(ThemeSystem);
-      expect(eventData?.resolvedAppearance).toBe(ThemeDark);
+      expect(eventData).toMatchObject({
+        variant: ThemeSystem,
+        resolvedAppearance: ThemeDark,
+      });
     });
 
     it('dispatches resolved value when the variant is `light` or `dark`', async () => {
@@ -137,8 +139,10 @@ describe('initializeTheme', () => {
       await waitForEvents();
 
       // Should dispatch with dark variant and resolved dark
-      expect(eventData?.variant).toBe(ThemeDark);
-      expect(eventData?.resolvedAppearance).toBe(ThemeDark);
+      expect(eventData).toMatchObject({
+        variant: ThemeDark,
+        resolvedAppearance: ThemeDark,
+      });
     });
 
     it('listens for OS dark mode changes when variant is `system`', async () => {
@@ -171,7 +175,7 @@ describe('initializeTheme', () => {
       await waitForEvents();
 
       // Should dispatch with resolved dark appearance
-      expect(eventData?.resolvedAppearance).toBe(ThemeDark);
+      expect(eventData).toMatchObject({ resolvedAppearance: ThemeDark });
     });
   });
 

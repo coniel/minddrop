@@ -160,3 +160,33 @@ hit this; it now uses `trashDir` like the rest of the package.
 Workaround / convention: use `Fs.trashDir` to remove a directory. If
 `removeDir` is ever genuinely needed, the adapter would need a working
 native call (or a Bun version bump that fixes `fsp.rm`).
+
+## ui/theme
+
+### `initializeTheme` tests cannot observe the initial variant event
+
+Four tests in `initializeTheme.test.ts` fail: the three under `initial
+theme variant`, plus `listens for OS dark mode changes if variant is
+`system``. They assert on the `theme:variant:changed` event that
+`initializeTheme` dispatches, but the event never arrives.
+
+Root cause: `initializeTheme` awaits `ThemeStore.hydrate()` before
+registering its listener and dispatching. `hydrate()` dispatches
+`stores:hydrate-request` and waits for the platform layer to answer with
+`stores:hydrate`. Nothing answers it in tests, so the promise never
+resolves and everything after line 15 of `initializeTheme.ts` never runs.
+The tests paper over this by not awaiting `initializeTheme()` and sleeping
+50ms instead, so the failure surfaces as a missing event rather than a
+hang.
+
+Adding a hydrate responder to the test setup is not sufficient on its own:
+`cleanup()` calls `Events._clearAll()`, which also removes the hydrate
+listener that `createKeyValueStore` registers once at module load. After
+the first test, that store can never be hydrated again, so `hydrate()`
+hangs for the rest of the file regardless of any responder.
+
+Fix direction: give the test harness a platform stand-in for hydrate
+requests *and* stop `cleanup()` from clearing listeners the stores
+registered at module load (e.g. remove only test-registered listeners, or
+give `Events` a way to reset to a post-registration baseline). Then
+`await initializeTheme()` in the tests and drop the 50ms sleeps.
