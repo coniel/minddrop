@@ -94,6 +94,48 @@ Fix direction: reconcile the error typing between `useForm` and the field
 primitives (e.g. make `useForm` validation produce translation keys and
 type `FieldProps.error` accordingly), then remove this entry.
 
+## features/desktop-app
+
+### One structurally invalid persisted file blanks the whole app at startup
+
+A single persisted config file whose JSON parses but whose shape is wrong
+takes down app startup entirely: the window renders blank with only an
+unhandled promise rejection in the console, no error UI, and no
+indication of which file is at fault.
+
+Observed while renaming `Collection.entries` to `Collection.items`
+(2026-08-06). Collection files already on disk still carried the old
+`entries` key, producing:
+`TypeError: undefined is not an object (evaluating 'references.flatMap')`
+at `App.tsx:9`.
+
+Failure chain, and three separate places that let it through:
+
+1. `readCollection` catches only read/parse failures. A file that parses
+   as JSON is returned as-is through `Fs.readJsonFile<Collection>(path)`
+   — the type parameter asserts a shape nothing verified, so a config
+   missing required fields passes as a valid `Collection`.
+2. `initializeCollections` maps over the loaded configs and calls
+   `resolveItemReferences(collection.items)`. With `items` undefined,
+   `references.flatMap` throws, and the throw escapes the whole `.map`,
+   so *no* collections load even though only one file was bad.
+3. `initializeDesktopApp` awaits each loader in sequence with no
+   isolation, and `App.tsx`'s `init()` never catches, so the rejection
+   leaves `initializingApp` stuck at `true` and `App` returns `null`
+   forever. Every step after `Collections.initialize()` (spaces, search,
+   selection, theme, extensions) is also skipped.
+
+The same shape applies to every persisted-entity loader — data views,
+spaces, databases, designs — since they share the read-cast-then-use
+pattern and the same unguarded init sequence.
+
+Fix direction: validate on read rather than type-casting, and mark
+entities that fail validation as corrupted rather than throwing, so a bad
+file degrades to one flagged entity the user can be told about. Isolate
+per-item loading (one bad file drops one entity), and wrap the init
+sequence so a failed step surfaces an error screen naming the file
+instead of a blank window.
+
 ## packages/file-system
 
 ### `Fs.removeDir` throws `EFAULT` in the Electrobun runtime
