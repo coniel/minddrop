@@ -50,14 +50,19 @@ export const SearchableMenuItem: FC<SearchableMenuItemProps> = (props) => {
   // Keep the ref up to date on every render
   propsRef.current = props;
 
-  // Register with the search context
+  const { register, unregister } = searchContext;
+
+  // Register with the search context. Depends only on the stable
+  // registration functions, as depending on the context value would
+  // re-register the item every time the highlight or registry
+  // changes, which never settles.
   useEffect(() => {
-    searchContext.register(id, { propsRef });
+    register(id, { propsRef });
 
     return () => {
-      searchContext.unregister(id);
+      unregister(id);
     };
-  }, [id, searchContext]);
+  }, [id, register, unregister]);
 
   // Get navigation props from the searchable menu
   const navProps = searchContext.getItemNavProps(id);

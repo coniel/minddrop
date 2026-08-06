@@ -64,6 +64,22 @@ export interface DropdownMenuProps extends DropdownMenuRootProps {
   searchPlaceholder?: TranslationKey;
 
   /**
+   * Controlled search term. When provided, the consumer owns
+   * filtering and menu items are listed as given.
+   */
+  searchTerm?: string;
+
+  /**
+   * Callback fired when the search term changes.
+   */
+  onSearchTermChange?: (searchTerm: string) => void;
+
+  /**
+   * Text shown when the menu lists no items.
+   */
+  emptyText?: string;
+
+  /**
    * Menu items rendered inside the content panel.
    */
   children?: React.ReactNode;
@@ -79,6 +95,9 @@ export const DropdownMenu: FC<DropdownMenuProps> = ({
   content,
   searchable,
   searchPlaceholder,
+  searchTerm,
+  onSearchTermChange,
+  emptyText,
   children,
   ...rootProps
 }) => (
@@ -92,6 +111,9 @@ export const DropdownMenu: FC<DropdownMenuProps> = ({
           content={content}
           searchable={searchable}
           searchPlaceholder={searchPlaceholder}
+          searchTerm={searchTerm}
+          onSearchTermChange={onSearchTermChange}
+          emptyText={emptyText}
         >
           {children}
         </DropdownMenuContent>

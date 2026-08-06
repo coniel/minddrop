@@ -44,6 +44,23 @@ export interface SearchableMenuProps
    * Placeholder text for the search input. Can be an i18n key.
    */
   searchPlaceholder?: TranslationKey;
+
+  /**
+   * Controlled search term. When provided, the consumer owns
+   * filtering and registered items are listed as given rather than
+   * being matched against the term.
+   */
+  searchTerm?: string;
+
+  /**
+   * Callback fired when the search term changes.
+   */
+  onSearchTermChange?: (searchTerm: string) => void;
+
+  /**
+   * Text shown when no items are listed.
+   */
+  emptyText?: string;
 }
 
 /**
@@ -52,243 +69,283 @@ export interface SearchableMenuProps
 export const SearchableMenu = React.forwardRef<
   HTMLDivElement,
   SearchableMenuProps
->(({ children, className, searchPlaceholder, ...other }, ref) => {
-  const registryRef = useRef(new Map<string, MenuSearchRegistration>());
-  const inputRef = useRef<HTMLInputElement>(null);
-  const menuRef = useRef<HTMLDivElement>(null);
-  const [searchTerm, setSearchTerm] = useState('');
+>(
+  (
+    {
+      children,
+      className,
+      searchPlaceholder,
+      searchTerm: searchTermProp,
+      onSearchTermChange,
+      emptyText,
+      ...other
+    },
+    ref,
+  ) => {
+    const registryRef = useRef(new Map<string, MenuSearchRegistration>());
+    const inputRef = useRef<HTMLInputElement>(null);
+    const menuRef = useRef<HTMLDivElement>(null);
+    const [internalSearchTerm, setInternalSearchTerm] = useState('');
 
-  // Ordered list of registered item IDs, maintained by
-  // register/unregister. Stored as state so useMemo consumers
-  // re-derive when items change.
-  const [orderedIds, setOrderedIds] = useState<string[]>([]);
+    // The consumer owns both the term and the filtering when a
+    // search term is provided
+    const controlled = searchTermProp !== undefined;
+    const searchTerm = controlled ? searchTermProp : internalSearchTerm;
 
-  // Build filtered item IDs from the registry using fuzzy search
-  const isSearchActive = searchTerm.length > 0;
-  const virtualized = orderedIds.length > VIRTUALIZE_THRESHOLD;
+    // Update the search term, reporting it to the consumer
+    const setSearchTerm = useCallback(
+      (term: string) => {
+        if (!controlled) {
+          setInternalSearchTerm(term);
+        }
 
-  const activeIds = useMemo(() => {
-    if (!isSearchActive) {
-      return orderedIds;
-    }
+        onSearchTermChange?.(term);
+      },
+      [controlled, onSearchTermChange],
+    );
 
-    // Build parallel arrays of IDs and text values
-    const ids: string[] = [];
-    const textValues: string[] = [];
+    // Ordered list of registered item IDs, maintained by
+    // register/unregister. Stored as state so useMemo consumers
+    // re-derive when items change.
+    const [orderedIds, setOrderedIds] = useState<string[]>([]);
 
-    registryRef.current.forEach((registration, id) => {
-      ids.push(id);
-      textValues.push(resolveTextValue(registration.propsRef.current));
-    });
+    // Build filtered item IDs from the registry using fuzzy search
+    const isSearchActive = searchTerm.length > 0;
+    const virtualized = orderedIds.length > VIRTUALIZE_THRESHOLD;
 
-    // Fuzzy match returns the matched text values in ranked order
-    const matches = fuzzySearch(textValues, searchTerm);
-
-    // Map matched text values back to their IDs,
-    // preserving the fuzzy search ranking
-    return matches.reduce<string[]>((result, matchedText) => {
-      const index = textValues.indexOf(matchedText);
-
-      if (index !== -1) {
-        result.push(ids[index]);
+    const activeIds = useMemo(() => {
+      // Registered items are already filtered by the consumer when
+      // the search term is controlled
+      if (!isSearchActive || controlled) {
+        return orderedIds;
       }
 
-      return result;
-    }, []);
-  }, [searchTerm, isSearchActive, orderedIds]);
+      // Build parallel arrays of IDs and text values
+      const ids: string[] = [];
+      const textValues: string[] = [];
 
-  // Navigable list for all items. No initial highlight when
-  // not searching so the menu opens without a selection.
-  const { highlightedIndex, getInputProps, getContainerProps, getItemProps } =
-    useNavigableList({
-      itemCount: activeIds.length,
-      initialIndex: isSearchActive ? 0 : -1,
-      onSelect: handleSelectItem,
-      onEscape: (event) => {
-        if (searchTerm) {
-          setSearchTerm('');
-          event.stopPropagation();
+      registryRef.current.forEach((registration, id) => {
+        ids.push(id);
+        textValues.push(resolveTextValue(registration.propsRef.current));
+      });
+
+      // Fuzzy match returns the matched text values in ranked order
+      const matches = fuzzySearch(textValues, searchTerm);
+
+      // Map matched text values back to their IDs,
+      // preserving the fuzzy search ranking
+      return matches.reduce<string[]>((result, matchedText) => {
+        const index = textValues.indexOf(matchedText);
+
+        if (index !== -1) {
+          result.push(ids[index]);
+        }
+
+        return result;
+      }, []);
+    }, [searchTerm, isSearchActive, controlled, orderedIds]);
+
+    // Navigable list for all items. No initial highlight when
+    // not searching so the menu opens without a selection.
+    const { highlightedIndex, getInputProps, getContainerProps, getItemProps } =
+      useNavigableList({
+        itemCount: activeIds.length,
+        initialIndex: isSearchActive ? 0 : -1,
+        onSelect: handleSelectItem,
+        onEscape: (event) => {
+          if (searchTerm) {
+            setSearchTerm('');
+            event.stopPropagation();
+          }
+        },
+      });
+
+    // Whether to render items from the registry instead of
+    // rendering children directly. Active during search or when
+    // the list is virtualized (children are hidden in both cases).
+    const renderFromRegistry = isSearchActive || virtualized;
+
+    // Auto-focus the search input after the popup is mounted
+    useEffect(() => {
+      requestAnimationFrame(() => {
+        inputRef.current?.focus();
+      });
+    }, []);
+
+    // Merge forwarded ref with internal ref
+    const setRefs = useCallback(
+      (node: HTMLDivElement | null) => {
+        menuRef.current = node;
+
+        if (typeof ref === 'function') {
+          ref(node);
+        } else if (ref) {
+          ref.current = node;
         }
       },
-    });
-
-  // Whether to render items from the registry instead of
-  // rendering children directly. Active during search or when
-  // the list is virtualized (children are hidden in both cases).
-  const renderFromRegistry = isSearchActive || virtualized;
-
-  // Auto-focus the search input after the popup is mounted
-  useEffect(() => {
-    requestAnimationFrame(() => {
-      inputRef.current?.focus();
-    });
-  }, []);
-
-  // Merge forwarded ref with internal ref
-  const setRefs = useCallback(
-    (node: HTMLDivElement | null) => {
-      menuRef.current = node;
-
-      if (typeof ref === 'function') {
-        ref(node);
-      } else if (ref) {
-        ref.current = node;
-      }
-    },
-    [ref],
-  );
-
-  // Register a menu item with the search context
-  const register = useCallback(
-    (id: string, registration: MenuSearchRegistration) => {
-      registryRef.current.set(id, registration);
-      setOrderedIds((previous) => [...previous, id]);
-    },
-    [],
-  );
-
-  // Unregister a menu item by ID
-  const unregister = useCallback((id: string) => {
-    registryRef.current.delete(id);
-    setOrderedIds((previous) => previous.filter((item) => item !== id));
-  }, []);
-
-  // Close the menu by dispatching an Escape key event
-  const closeMenu = useCallback(() => {
-    menuRef.current?.dispatchEvent(
-      new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }),
+      [ref],
     );
-  }, []);
 
-  // Handle item activation
-  function handleSelectItem(index: number) {
-    const id = activeIds[index];
+    // Register a menu item with the search context
+    const register = useCallback(
+      (id: string, registration: MenuSearchRegistration) => {
+        registryRef.current.set(id, registration);
+        setOrderedIds((previous) => [...previous, id]);
+      },
+      [],
+    );
 
-    if (!id) {
-      return;
-    }
+    // Unregister a menu item by ID
+    const unregister = useCallback((id: string) => {
+      registryRef.current.delete(id);
+      setOrderedIds((previous) => previous.filter((item) => item !== id));
+    }, []);
 
-    const registration = registryRef.current.get(id);
+    // Close the menu by dispatching an Escape key event
+    const closeMenu = useCallback(() => {
+      menuRef.current?.dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }),
+      );
+    }, []);
 
-    if (!registration) {
-      return;
-    }
+    // Handle item activation
+    function handleSelectItem(index: number) {
+      const id = activeIds[index];
 
-    // Call the item's onSelect handler
-    registration.propsRef.current.onSelect?.();
-
-    // Close the menu
-    closeMenu();
-  }
-
-  // Look up navigation props for an item by its registered ID
-  const getItemNavProps = useCallback(
-    (id: string) => {
-      const index = activeIds.indexOf(id);
-
-      if (index === -1) {
-        return null;
+      if (!id) {
+        return;
       }
 
-      return getItemProps(index);
-    },
-    [activeIds, getItemProps],
-  );
+      const registration = registryRef.current.get(id);
 
-  const contextValue = useMemo<MenuSearchContextValue>(
-    () => ({ register, unregister, getItemNavProps }),
-    [register, unregister, getItemNavProps],
-  );
+      if (!registration) {
+        return;
+      }
 
-  // Compose input keyboard handling
-  function handleInputKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
-    // Let the navigable list hook handle its keys first
-    getInputProps().onKeyDown(event);
+      // Call the item's onSelect handler
+      registration.propsRef.current.onSelect?.();
 
-    // Let Escape propagate so it can close the menu
-    if (event.key === 'Escape') {
-      return;
+      // Close the menu
+      closeMenu();
     }
 
-    // Stop all other keys from propagating to prevent Base UI
-    // from handling them (e.g. typeahead)
-    event.stopPropagation();
-  }
+    // Look up navigation props for an item by its registered ID
+    const getItemNavProps = useCallback(
+      (id: string) => {
+        const index = activeIds.indexOf(id);
 
-  return (
-    <div
-      ref={setRefs}
-      role="menu"
-      className={propsToClass('menu searchable-menu', { className })}
-      {...other}
-    >
-      {/* Search input */}
-      <div role="none" className="searchable-menu-search-input">
-        <TextInput
-          ref={inputRef}
-          variant="subtle"
-          size="md"
-          value={searchTerm}
-          onValueChange={setSearchTerm}
-          onKeyDown={handleInputKeyDown}
-          placeholder={searchPlaceholder}
-          autoComplete="off"
-          autoCorrect="off"
-          autoCapitalize="off"
-          spellCheck={false}
-          leading={<Icon name="search" size={14} />}
-        />
-      </div>
+        if (index === -1) {
+          return null;
+        }
 
-      {/* Children - hidden when rendering from registry */}
-      <MenuSearchContextProvider value={contextValue}>
-        <div hidden={renderFromRegistry || undefined} {...getContainerProps()}>
-          {children}
-        </div>
-      </MenuSearchContextProvider>
+        return getItemProps(index);
+      },
+      [activeIds, getItemProps],
+    );
 
-      {/* Registry-rendered items (search results or virtualized) */}
-      {renderFromRegistry &&
-        (virtualized ? (
-          <SearchableMenuVirtualizedList
-            activeIds={activeIds}
-            registry={registryRef.current}
-            highlightedIndex={highlightedIndex}
-            getItemProps={getItemProps}
-            onMouseMove={getContainerProps().onMouseMove}
+    const contextValue = useMemo<MenuSearchContextValue>(
+      () => ({ register, unregister, getItemNavProps }),
+      [register, unregister, getItemNavProps],
+    );
+
+    // Compose input keyboard handling
+    function handleInputKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+      // Let the navigable list hook handle its keys first
+      getInputProps().onKeyDown(event);
+
+      // Let Escape propagate so it can close the menu
+      if (event.key === 'Escape') {
+        return;
+      }
+
+      // Stop all other keys from propagating to prevent Base UI
+      // from handling them (e.g. typeahead)
+      event.stopPropagation();
+    }
+
+    return (
+      <div
+        ref={setRefs}
+        role="menu"
+        className={propsToClass('menu searchable-menu', { className })}
+        {...other}
+      >
+        {/* Search input */}
+        <div role="none" className="searchable-menu-search-input">
+          <TextInput
+            ref={inputRef}
+            variant="subtle"
+            size="md"
+            value={searchTerm}
+            onValueChange={setSearchTerm}
+            onKeyDown={handleInputKeyDown}
+            placeholder={searchPlaceholder}
+            autoComplete="off"
+            autoCorrect="off"
+            autoCapitalize="off"
+            spellCheck={false}
+            leading={<Icon name="search" size={14} />}
           />
-        ) : (
-          <div className="searchable-menu-results" {...getContainerProps()}>
-            {activeIds.map((id, index) => {
-              const registration = registryRef.current.get(id);
+        </div>
 
-              if (!registration) {
-                return null;
-              }
-
-              const itemNavProps = getItemProps(index);
-              const props = registration.propsRef.current;
-
-              return (
-                <MenuItem
-                  key={id}
-                  ref={itemNavProps.ref}
-                  onMouseMove={itemNavProps.onMouseMove}
-                  onMouseLeave={itemNavProps.onMouseLeave}
-                  onClick={itemNavProps.onClick}
-                  label={props.label}
-                  stringLabel={props.stringLabel}
-                  icon={props.icon}
-                  contentIcon={props.contentIcon}
-                  active={itemNavProps.highlighted}
-                />
-              );
-            })}
+        {/* Children - hidden when rendering from registry */}
+        <MenuSearchContextProvider value={contextValue}>
+          <div
+            hidden={renderFromRegistry || undefined}
+            {...getContainerProps()}
+          >
+            {children}
           </div>
-        ))}
-    </div>
-  );
-});
+        </MenuSearchContextProvider>
+
+        {/* Registry-rendered items (search results or virtualized) */}
+        {renderFromRegistry &&
+          (virtualized ? (
+            <SearchableMenuVirtualizedList
+              activeIds={activeIds}
+              registry={registryRef.current}
+              highlightedIndex={highlightedIndex}
+              getItemProps={getItemProps}
+              onMouseMove={getContainerProps().onMouseMove}
+            />
+          ) : (
+            <div className="searchable-menu-results" {...getContainerProps()}>
+              {activeIds.map((id, index) => {
+                const registration = registryRef.current.get(id);
+
+                if (!registration) {
+                  return null;
+                }
+
+                const itemNavProps = getItemProps(index);
+                const props = registration.propsRef.current;
+
+                return (
+                  <MenuItem
+                    key={id}
+                    ref={itemNavProps.ref}
+                    onMouseMove={itemNavProps.onMouseMove}
+                    onMouseLeave={itemNavProps.onMouseLeave}
+                    onClick={itemNavProps.onClick}
+                    label={props.label}
+                    stringLabel={props.stringLabel}
+                    icon={props.icon}
+                    contentIcon={props.contentIcon}
+                    active={itemNavProps.highlighted}
+                  />
+                );
+              })}
+            </div>
+          ))}
+
+        {/* Empty state shown when no items are listed */}
+        {emptyText && activeIds.length === 0 && (
+          <div className="searchable-menu-empty">{emptyText}</div>
+        )}
+      </div>
+    );
+  },
+);
 
 SearchableMenu.displayName = 'SearchableMenu';
 

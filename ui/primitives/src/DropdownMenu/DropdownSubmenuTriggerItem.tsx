@@ -26,6 +26,12 @@ export interface DropdownSubmenuTriggerItemProps
   icon?: IconProp;
 
   /**
+   * Content icon string displayed before the label.
+   * Supports emoji, asset, and other content icon formats.
+   */
+  contentIcon?: string;
+
+  /**
    * Prevents interaction with the item.
    */
   disabled?: boolean;
@@ -39,7 +45,15 @@ export interface DropdownSubmenuTriggerItemProps
 
 export const DropdownSubmenuTriggerItem: FC<
   DropdownSubmenuTriggerItemProps
-> = ({ label, stringLabel, icon, disabled, trailingIcon, ...other }) => (
+> = ({
+  label,
+  stringLabel,
+  icon,
+  contentIcon,
+  disabled,
+  trailingIcon,
+  ...other
+}) => (
   <MenuPrimitive.SubmenuTrigger
     render={
       <MenuItem
@@ -47,6 +61,7 @@ export const DropdownSubmenuTriggerItem: FC<
         label={label}
         stringLabel={stringLabel}
         icon={icon}
+        contentIcon={contentIcon}
         disabled={disabled}
         trailingIcon={trailingIcon}
       />
