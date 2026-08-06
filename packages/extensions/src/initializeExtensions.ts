@@ -1,4 +1,9 @@
-import { LanguageKey, i18n, useTranslation } from '@minddrop/i18n';
+import {
+  LanguageKey,
+  i18n,
+  translateDynamic,
+  useDynamicTranslation,
+} from '@minddrop/i18n';
 import { MindDropApi } from './MindDropApi';
 import { MindDropExtension } from './types';
 
@@ -11,13 +16,13 @@ export async function initializeExtensions(
 
       if (extension.locales) {
         extensionI18n.translate = (key, options) =>
-          i18n.t(key, {
+          translateDynamic(key, {
             namespace: options.namespace || extension.id,
             keyPrefix: options.keyPrefix,
           });
 
         extensionI18n.useTranslation = (options) =>
-          useTranslation({
+          useDynamicTranslation({
             namespace: options.namespace || extension.id,
             keyPrefix: options.keyPrefix,
           });

@@ -3,7 +3,7 @@ import { Ast } from '@minddrop/ast';
 import { EditorElements, EditorMarks } from '@minddrop/editor';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
-import { i18n, useTranslation } from '@minddrop/i18n';
+import { translateDynamic, useDynamicTranslation } from '@minddrop/i18n';
 import { Markdown } from '@minddrop/markdown';
 import { Icons } from '@minddrop/ui-icons';
 import * as Utils from '@minddrop/utils';
@@ -18,12 +18,12 @@ export const MindDropApi: Api = {
   Fs,
   I18n: {
     translate: (key, options) =>
-      i18n.t(key, {
+      translateDynamic(key, {
         namespace: options.namespace || 'core',
         keyPrefix: options.keyPrefix,
       }),
     useTranslation: (options) =>
-      useTranslation({
+      useDynamicTranslation({
         namespace: options.namespace || 'core',
         keyPrefix: options.keyPrefix,
       }),

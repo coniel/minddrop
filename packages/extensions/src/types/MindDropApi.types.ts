@@ -2,7 +2,7 @@ import { Ast } from '@minddrop/ast';
 import { EditorElements, EditorMarks } from '@minddrop/editor';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
-import { useTranslation } from '@minddrop/i18n';
+import { useDynamicTranslation } from '@minddrop/i18n';
 import { Markdown } from '@minddrop/markdown';
 import { Selection } from '@minddrop/selection';
 import { Icons } from '@minddrop/ui-icons';
@@ -22,7 +22,9 @@ export interface MindDropApi {
   Utils: typeof Utils;
   I18n: {
     translate: (key: string, options: I18nOptions) => string;
-    useTranslation: (options: I18nOptions) => ReturnType<typeof useTranslation>;
+    useTranslation: (
+      options: I18nOptions,
+    ) => ReturnType<typeof useDynamicTranslation>;
   };
 }
 
