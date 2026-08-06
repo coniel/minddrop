@@ -1,5 +1,4 @@
 import { CSSProperties, useEffect, useMemo, useRef } from 'react';
-import { useTranslation } from '@minddrop/i18n';
 import {
   DropdownMenuContent,
   DropdownMenuItem,
@@ -54,7 +53,6 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({
   className,
   preview = false,
 }) => {
-  const { t } = useTranslation();
   const toolbarRef = useRef<HTMLDivElement>(null);
 
   // Contained image fitting (base scale, centering, resize tracking)
