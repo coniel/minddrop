@@ -15,7 +15,7 @@
   },
   "devDependencies": {
     "@minddrop/eslint-config": "workspace:*",
-    "@minddrop/test-utils": "workspace:*",
+    "@testing-library/react": "^16.1.0",
     "eslint": "^9.39.3",
     "rimraf": "~5.0.0",
     "tsconfig": "workspace:*",
@@ -26,8 +26,6 @@
     "@minddrop/i18n": "workspace:*",
     "@minddrop/stores": "workspace:*",
     "@minddrop/file-system": "workspace:*",
-    "@minddrop/ui-icons": "workspace:*",
-    "@minddrop/ui-primitives": "workspace:*",
     "@minddrop/utils": "workspace:*",
     "zustand": "^4.3.8"
   },

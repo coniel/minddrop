@@ -8,4 +8,3 @@ export * from './ContentColors';
 export * from './types';
 export type * from './events';
 export * as Theme from './Theme';
-export { ThemeVariantPicker } from './ThemeVariantPicker';

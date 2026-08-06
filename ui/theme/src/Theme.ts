@@ -16,4 +16,3 @@ export { initializeTheme as initialize } from './initializeTheme';
 export { resolveThemeVariant as resolveVariant } from './resolveThemeVariant';
 export { setThemeVariant as setVariant } from './setThemeVariant';
 export { useThemeVariant as useVariant } from './useThemeVariant';
-export { ThemeVariantPicker as VariantPicker } from './ThemeVariantPicker';

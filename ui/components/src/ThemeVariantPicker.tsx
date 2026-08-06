@@ -6,8 +6,7 @@ import {
   DropdownMenuRadioItem,
   IconButton,
 } from '@minddrop/ui-primitives';
-import * as Theme from '../Theme';
-import { ThemeVariant } from '../types';
+import { Theme, ThemeVariant } from '@minddrop/ui-theme';
 
 /**
  * Map of theme variant values to their corresponding icons.

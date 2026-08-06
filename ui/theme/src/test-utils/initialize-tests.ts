@@ -1,10 +1,10 @@
+import { act } from '@testing-library/react';
 import { Events } from '@minddrop/events';
 import {
   FILE_SYSTEM_TEST_DATA,
   MockFileSystem,
   initializeMockFileSystem,
 } from '@minddrop/file-system';
-import { act } from '@minddrop/test-utils';
 import { ThemeStore } from '../ThemeStore';
 
 const { configsFileDescriptor } = FILE_SYSTEM_TEST_DATA;

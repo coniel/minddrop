@@ -1,5 +1,5 @@
+import { renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { renderHook } from '@minddrop/test-utils';
 import { ThemeStore } from '../ThemeStore';
 import { ThemeDark } from '../constants';
 import { cleanup, setup } from '../test-utils';

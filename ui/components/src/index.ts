@@ -7,3 +7,4 @@ export * from './DatabaseLayoutSelectionMenu';
 export * from './ImageViewer';
 export * from './PanelView';
 export * from './Setting';
+export * from './ThemeVariantPicker';
