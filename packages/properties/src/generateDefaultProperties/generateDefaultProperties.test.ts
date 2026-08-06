@@ -27,7 +27,7 @@ const schema: PropertySchema[] = [
 ];
 
 describe('generateDefaultProperties', () => {
-  it('does something useful', () => {
+  it('generates default values from the schema', () => {
     vi.useFakeTimers();
     const now = new Date('2025-06-01T12:00:00Z');
     vi.setSystemTime(now);

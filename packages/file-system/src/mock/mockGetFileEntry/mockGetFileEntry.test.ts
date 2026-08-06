@@ -9,7 +9,7 @@ describe('mockGetFileEntry', () => {
     ).rejects.toThrow();
   });
 
-  it('does something useful', () => {
+  it('returns the matching file entry', () => {
     expect(mockGetFileEntry(root, documentA1.path)).toEqual(documentA1);
   });
 });
