@@ -106,12 +106,6 @@ export interface ComboboxProps
   groups?: ComboboxOptionGroup[];
 
   /**
-   * Custom element rendered as the popup trigger in place of the
-   * default input-field styled trigger and selected value.
-   */
-  trigger?: React.ReactElement;
-
-  /**
    * Whether multiple items can be selected.
    * @default false
    */
@@ -179,18 +173,12 @@ export interface ComboboxProps
    * Distance between the trigger and the popup edge (px).
    */
   sideOffset?: ComboboxPositionerProps['sideOffset'];
-
-  /**
-   * Width of the popup.
-   */
-  popupWidth?: number | string;
 }
 
 /** Pre-composed multi-select combobox with chips trigger and search popup. */
 export const Combobox: React.FC<ComboboxProps> = ({
   items = [],
   groups,
-  trigger,
   multiple = false,
   defaultValue,
   variant = 'outline',
@@ -203,7 +191,6 @@ export const Combobox: React.FC<ComboboxProps> = ({
   side = 'bottom',
   align = 'start',
   sideOffset = 4,
-  popupWidth,
   onValueChange: onValueChangeProp,
   ...rootProps
 }) => {
@@ -406,35 +393,30 @@ export const Combobox: React.FC<ComboboxProps> = ({
       })}
       {...rootProps}
     >
-      {/* Custom trigger element replaces the styled trigger and value */}
-      {trigger ? (
-        <ComboboxPrimitive.Trigger render={trigger} />
-      ) : (
-        <ComboboxTrigger
-          variant={variant}
-          size={size}
-          invalid={invalid}
-          className={
-            valueVariant === 'text' ? 'combobox-trigger-value-text' : undefined
+      <ComboboxTrigger
+        variant={variant}
+        size={size}
+        invalid={invalid}
+        className={
+          valueVariant === 'text' ? 'combobox-trigger-value-text' : undefined
+        }
+      >
+        <ComboboxValue
+          placeholder={
+            placeholder ? (
+              <span className="combobox-trigger-placeholder">
+                {placeholder}
+              </span>
+            ) : undefined
           }
         >
-          <ComboboxValue
-            placeholder={
-              placeholder ? (
-                <span className="combobox-trigger-placeholder">
-                  {placeholder}
-                </span>
-              ) : undefined
-            }
-          >
-            {multiple ? renderMultipleValue : renderSingleValue}
-          </ComboboxValue>
-        </ComboboxTrigger>
-      )}
+          {multiple ? renderMultipleValue : renderSingleValue}
+        </ComboboxValue>
+      </ComboboxTrigger>
 
       <ComboboxPortal>
         <ComboboxPositioner side={side} align={align} sideOffset={sideOffset}>
-          <ComboboxPopup style={popupWidth ? { width: popupWidth } : undefined}>
+          <ComboboxPopup>
             <ComboboxInput placeholder={searchPlaceholder} />
 
             {renderList()}

@@ -24,10 +24,7 @@ export type DataSourceSelection =
   | { type: 'new-query' };
 
 export interface DataSourceComboboxProps
-  extends Pick<
-    ComboboxProps,
-    'variant' | 'valueVariant' | 'size' | 'invalid' | 'popupWidth'
-  > {
+  extends Pick<ComboboxProps, 'variant' | 'valueVariant' | 'size' | 'invalid'> {
   /**
    * The data source types available for selection. Data sources
    * of other types are not listed.
