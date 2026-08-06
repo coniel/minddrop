@@ -1,10 +1,11 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { DatabaseEntries } from '@minddrop/databases';
 import {
   Icon,
   TextInput,
   TextInputSize,
   TextInputVariant,
+  useTransientState,
 } from '@minddrop/ui-primitives';
 import { fuzzySearch } from '@minddrop/utils';
 
@@ -18,6 +19,13 @@ export interface DatabaseEntriesSearchFieldProps {
    * Called with the filtered entry IDs whenever the query changes.
    */
   onFilteredEntriesChange: (filteredEntryIds: string[]) => void;
+
+  /**
+   * Records and restores the search query via the surrounding
+   * transient view state context, under this key within the
+   * current scope. Omit to opt out.
+   */
+  stateKey?: string;
 
   /**
    * Visual style of the input.
@@ -43,12 +51,13 @@ export const DatabaseEntriesSearchField: React.FC<
 > = ({
   entryIds,
   onFilteredEntriesChange,
+  stateKey,
   variant = 'subtle',
   size,
   className,
 }) => {
-  // Track the search query
-  const [searchQuery, setSearchQuery] = useState('');
+  // Track the search query, persisted per tab when opted in
+  const [searchQuery, setSearchQuery] = useTransientState(stateKey, '');
 
   // Build a map of entry ID to title for fuzzy searching
   const entryTitles = useMemo(() => {
@@ -106,6 +115,10 @@ export const DatabaseEntriesSearchField: React.FC<
       onValueChange={setSearchQuery}
       clearable
       onClear={handleClear}
+      autoComplete="off"
+      autoCorrect="off"
+      autoCapitalize="off"
+      spellCheck={false}
     />
   );
 };

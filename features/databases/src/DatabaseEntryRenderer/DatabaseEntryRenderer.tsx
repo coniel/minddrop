@@ -12,7 +12,7 @@ import { Events } from '@minddrop/events';
 import { LayoutRenderer } from '@minddrop/feature-designs';
 import { useTranslation } from '@minddrop/i18n';
 import { PropertyValue } from '@minddrop/properties';
-import { Text } from '@minddrop/ui-primitives';
+import { Text, TransientViewStateScope } from '@minddrop/ui-primitives';
 import {
   OpenDatabaseEntryViewEvent,
   OpenDatabaseEntryViewEventData,
@@ -231,16 +231,18 @@ const Entry: React.FC<EntryProps> = ({
       onClick={isClickable ? onOpenEntry : undefined}
       onKeyDown={isClickable ? onKeyDown : undefined}
     >
-      <LayoutRenderer
-        layout={layout}
-        context={layoutContext}
-        designProperties={design?.properties}
-        propertyMap={propertyMap}
-        propertyValues={propertyValues}
-        properties={rendererProperties}
-        onUpdatePropertyValue={onUpdatePropertyValue}
-        onValidatePropertyValue={onValidatePropertyValue}
-      />
+      <TransientViewStateScope segment={entry.id}>
+        <LayoutRenderer
+          layout={layout}
+          context={layoutContext}
+          designProperties={design?.properties}
+          propertyMap={propertyMap}
+          propertyValues={propertyValues}
+          properties={rendererProperties}
+          onUpdatePropertyValue={onUpdatePropertyValue}
+          onValidatePropertyValue={onValidatePropertyValue}
+        />
+      </TransientViewStateScope>
     </div>
   );
 };

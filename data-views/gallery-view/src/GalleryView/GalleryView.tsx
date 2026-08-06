@@ -127,7 +127,11 @@ export const GalleryViewComponent: React.FC<
       }
     >
       {ready && (
-        <ScrollArea className="gallery-view-scroll" ref={scrollAreaRef}>
+        <ScrollArea
+          className="gallery-view-scroll"
+          stateKey="content"
+          ref={scrollAreaRef}
+        >
           <div className="gallery-view-content">
             {visibleEntries.map((entryId) => (
               <DatabaseEntryRenderer

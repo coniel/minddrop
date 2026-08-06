@@ -1,4 +1,5 @@
 import { DesignElement as DesignElementType } from '@minddrop/designs';
+import { TransientViewStateScope } from '@minddrop/ui-primitives';
 import { elementUIMap } from '../design-elements';
 import { useElementHidden } from '../useElementHidden';
 import { useDesignElementWrapper } from './DesignElementWrapperContext';
@@ -41,10 +42,14 @@ export const DesignElement: React.FC<DesignElementProps> = ({ element }) => {
   }
 
   // Wrap in a data-element-id div for DOM querying (e.g. connection lines).
-  // Uses display:contents so it doesn't affect layout.
+  // Uses display:contents so it doesn't affect layout. The transient
+  // state scope keys stateful content by its ancestor element chain so
+  // identical components in sibling elements cannot collide.
   return (
-    <div data-element-id={element.id} style={{ display: 'contents' }}>
-      {rendered}
-    </div>
+    <TransientViewStateScope segment={element.id}>
+      <div data-element-id={element.id} style={{ display: 'contents' }}>
+        {rendered}
+      </div>
+    </TransientViewStateScope>
   );
 };

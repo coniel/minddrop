@@ -2,7 +2,11 @@ import { useCallback } from 'react';
 import { LayoutRenderer } from '@minddrop/feature-designs';
 import { Spaces, setLayoutElementContent } from '@minddrop/spaces';
 import { PanelView } from '@minddrop/ui-components';
-import { ScrollArea, Text } from '@minddrop/ui-primitives';
+import {
+  ScrollArea,
+  Text,
+  TransientViewStateScope,
+} from '@minddrop/ui-primitives';
 import { setSpaceViewState, useSpaceViewState } from '../SpaceViewStateStore';
 import { SpaceEditMode } from './SpaceEditMode';
 import './SpaceView.css';
@@ -71,16 +75,18 @@ export const SpaceView: React.FC<SpaceViewProps> = ({ spaceId }) => {
         ]}
       >
         {/* The space's layout */}
-        <ScrollArea className="space-view-content">
-          <LayoutRenderer
-            layout={space.layout}
-            context="page"
-            propertyMap={{}}
-            propertyValues={{}}
-            properties={[]}
-            onUpdateElementContent={handleUpdateElementContent}
-          />
-        </ScrollArea>
+        <TransientViewStateScope segment={spaceId}>
+          <ScrollArea className="space-view-content" stateKey="content">
+            <LayoutRenderer
+              layout={space.layout}
+              context="page"
+              propertyMap={{}}
+              propertyValues={{}}
+              properties={[]}
+              onUpdateElementContent={handleUpdateElementContent}
+            />
+          </ScrollArea>
+        </TransientViewStateScope>
       </PanelView>
     </div>
   );

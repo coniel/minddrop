@@ -13,6 +13,7 @@ import {
   IconButton,
   Text,
   Toolbar,
+  TransientViewStateScope,
 } from '@minddrop/ui-primitives';
 import { CreateDataViewForm } from './CreateDataViewForm';
 import './DataViewRenderer.css';
@@ -198,7 +199,9 @@ const ConfiguredView: React.FC<ConfiguredViewProps> = ({
       )}
 
       {/* View content */}
-      <viewType.component view={view} entries={entries || []} />
+      <TransientViewStateScope segment={view.id}>
+        <viewType.component view={view} entries={entries || []} />
+      </TransientViewStateScope>
     </div>
   );
 };

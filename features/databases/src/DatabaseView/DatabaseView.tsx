@@ -25,6 +25,7 @@ import {
   TabsList,
   TabsTab,
   Text,
+  useTransientState,
 } from '@minddrop/ui-primitives';
 import { uuid } from '@minddrop/utils';
 import { DatabaseConfigurationPanel } from '../DatabaseConfigurationPanel';
@@ -95,9 +96,13 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
     });
   }, [unsortedViews, database?.viewOrder]);
 
-  // Resolve the active view ID from persisted state,
-  // falling back to the first view
-  const activeViewId = viewState.activeViewId ?? databaseViews[0]?.id;
+  // Per-tab active view selection, seeded from the last-used view
+  const [tabActiveViewId, setTabActiveViewId] = useTransientState<
+    string | null
+  >('activeViewId', viewState.activeViewId);
+
+  // Resolve the active view ID, falling back to the first view
+  const activeViewId = tabActiveViewId ?? databaseViews[0]?.id;
 
   // Config panel open state: prop override takes precedence,
   // otherwise use persisted state
@@ -117,9 +122,13 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
   // Update the active view ID
   const setActiveViewId = useCallback(
     (viewId: string | undefined) => {
+      // Update this tab's selection
+      setTabActiveViewId(viewId ?? null);
+
+      // Track the last-used view as the seed for future tabs
       setDatabaseViewState(databaseId, { activeViewId: viewId ?? null });
     },
-    [databaseId],
+    [databaseId, setTabActiveViewId],
   );
 
   // Toggle the configuration panel

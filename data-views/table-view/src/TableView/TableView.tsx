@@ -409,6 +409,7 @@ export const TableViewComponent: React.FC<
         <ScrollArea
           key={columnsKey}
           className="table-view-scroll"
+          stateKey="content"
           ref={scrollAreaRef}
         >
           <div

@@ -1,5 +1,6 @@
 import { Layout } from '@minddrop/designs';
 import { PropertiesSchema } from '@minddrop/properties';
+import { TransientViewStateScope } from '@minddrop/ui-primitives';
 import { DesignRootElement } from './DesignElements';
 import {
   DesignPropertiesProvider,
@@ -66,7 +67,9 @@ export const LayoutRenderer: React.FC<LayoutRendererProps> = ({
       >
         <LayoutIdProvider value={layout.id}>
           <LayoutRenderContextProvider value={context ?? null}>
-            <DesignRootElement element={layout.tree} />
+            <TransientViewStateScope segment={layout.id}>
+              <DesignRootElement element={layout.tree} />
+            </TransientViewStateScope>
           </LayoutRenderContextProvider>
         </LayoutIdProvider>
       </DesignPropertiesProvider>
