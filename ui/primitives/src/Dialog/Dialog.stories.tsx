@@ -2,7 +2,6 @@
  * Dialog.stories.tsx
  * Dev reference for the Dialog component.
  */
-import { useState } from 'react';
 // Note: DialogTitle and DialogDescription are direct re-exports of Base UI primitives.
 // Base UI automatically applies the dialog-title and dialog-description CSS classes.
 import { Button } from '../Button';
@@ -124,8 +123,8 @@ export const DialogStories = () => (
             <Dialog width="sm">
               <DialogTitle>Delete permanently?</DialogTitle>
               <DialogDescription>
-                This will permanently delete "Project Alpha" and all its
-                contents. This action cannot be undone.
+                This will permanently delete &quot;Project Alpha&quot; and all
+                its contents. This action cannot be undone.
               </DialogDescription>
               <div
                 style={{

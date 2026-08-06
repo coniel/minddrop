@@ -8,7 +8,7 @@ import './Toast.css';
 
 export type ToastType = 'default' | 'success' | 'error' | 'warning';
 
-export interface ToastProviderProps extends ToastPrimitive.Provider.Props {}
+export type ToastProviderProps = ToastPrimitive.Provider.Props;
 
 export const ToastProvider: React.FC<ToastProviderProps> = ({
   timeout = 5000,
@@ -21,7 +21,7 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({
   </ToastPrimitive.Provider>
 );
 
-export interface ToastViewportProps extends ToastPrimitive.Viewport.Props {}
+export type ToastViewportProps = ToastPrimitive.Viewport.Props;
 
 export const ToastViewport = React.forwardRef<
   HTMLDivElement,
@@ -115,7 +115,7 @@ export const ToastDescription = React.forwardRef<
 
 ToastDescription.displayName = 'ToastDescription';
 
-export interface ToastCloseProps extends ToastPrimitive.Close.Props {}
+export type ToastCloseProps = ToastPrimitive.Close.Props;
 
 export const ToastClose = React.forwardRef<HTMLButtonElement, ToastCloseProps>(
   ({ className, children, ...other }, ref) => {

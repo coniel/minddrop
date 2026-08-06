@@ -293,5 +293,6 @@ function getEmojiSkinToneFromIconString(
   if (parts[0] === 'emoji' && parts[2]) {
     return parseInt(parts[2]) as EmojiSkinTone;
   }
+
   return undefined;
 }

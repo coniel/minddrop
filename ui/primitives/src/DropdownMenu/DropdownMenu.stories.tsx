@@ -12,7 +12,6 @@ import { Story, StoryItem, StoryRow, StorySection } from '../dev/Story';
 import { DropdownMenu } from './DropdownMenu';
 import { DropdownMenuContent } from './DropdownMenuContent';
 import { DropdownMenuGroup } from './DropdownMenuGroup';
-import { DropdownMenuLabel } from './DropdownMenuLabel';
 import { DropdownMenuPortal } from './DropdownMenuPortal';
 import { DropdownMenuPositioner } from './DropdownMenuPositioner';
 import { DropdownMenuRadioGroup } from './DropdownMenuRadioGroup';

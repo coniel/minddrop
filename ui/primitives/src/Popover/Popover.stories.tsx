@@ -2,7 +2,7 @@
  * Popover.stories.tsx
  * Dev reference for the Popover component.
  */
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import { Button } from '../Button';
 import { IconButton } from '../IconButton';
 import { Group } from '../Layout/Group';
@@ -244,41 +244,37 @@ export const PopoverStories = () => (
     >
       <StoryRow>
         <StoryItem label="controlled">
-          {(() => {
-            const [open, setOpen] = useState(false);
-            return (
-              <Group gap={2}>
-                <Button variant="outline" onClick={() => setOpen(true)}>
-                  Open
-                </Button>
-                <Button
-                  variant="ghost"
-                  onClick={() => setOpen(false)}
-                  disabled={!open}
-                >
-                  Close
-                </Button>
-                <Popover open={open} onOpenChange={setOpen}>
-                  <PopoverTrigger render={<span />} />
-                  <PopoverPortal>
-                    <PopoverPositioner
-                      side="bottom"
-                      align="start"
-                      sideOffset={4}
-                    >
-                      <PopoverContent
-                        style={{ padding: 'var(--space-3)', width: 200 }}
-                      >
-                        <Text size="sm">Opened programmatically.</Text>
-                      </PopoverContent>
-                    </PopoverPositioner>
-                  </PopoverPortal>
-                </Popover>
-              </Group>
-            );
-          })()}
+          <ControlledPopover />
         </StoryItem>
       </StoryRow>
     </StorySection>
   </Story>
 );
+
+/**
+ * A popover whose open state is managed by the parent.
+ */
+const ControlledPopover: FC = () => {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <Group gap={2}>
+      <Button variant="outline" onClick={() => setOpen(true)}>
+        Open
+      </Button>
+      <Button variant="ghost" onClick={() => setOpen(false)} disabled={!open}>
+        Close
+      </Button>
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger render={<span />} />
+        <PopoverPortal>
+          <PopoverPositioner side="bottom" align="start" sideOffset={4}>
+            <PopoverContent style={{ padding: 'var(--space-3)', width: 200 }}>
+              <Text size="sm">Opened programmatically.</Text>
+            </PopoverContent>
+          </PopoverPositioner>
+        </PopoverPortal>
+      </Popover>
+    </Group>
+  );
+};

@@ -8,7 +8,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import { createI18nKeyBuilder, useTranslation } from '@minddrop/i18n';
+import { createI18nKeyBuilder } from '@minddrop/i18n';
 import { ContentIconMetadata, ContentIconName } from '@minddrop/ui-icons';
 import { ContentColor } from '@minddrop/ui-theme';
 import { ContentIcon } from '../ContentIcon';
@@ -105,7 +105,6 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
   className,
   ...other
 }) => {
-  const { t } = useTranslation({ keyPrefix: 'iconPicker' });
   const [query, setQuery] = useState('');
   // useDeferredValue keeps the search input responsive — React shows the
   // previous results immediately while computing new ones at low priority.

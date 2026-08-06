@@ -22,3 +22,5 @@ export const Panel = React.forwardRef<HTMLDivElement, PanelProps>(
     );
   },
 );
+
+Panel.displayName = 'Panel';

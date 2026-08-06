@@ -141,8 +141,8 @@ export const TextStories = () => (
               spacing below it.
             </Text>
             <Text paragraph>
-              This is the second paragraph. It's the last child so it has no
-              bottom margin — safe in cards and panels.
+              This is the second paragraph. It&apos;s the last child so it has
+              no bottom margin — safe in cards and panels.
             </Text>
           </div>
         </StoryItem>

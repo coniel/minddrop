@@ -19,6 +19,7 @@ export function useScrollVisibility(
   const setRef = useCallback(
     (el: HTMLDivElement | null) => {
       (rootRef as React.MutableRefObject<HTMLDivElement | null>).current = el;
+
       if (typeof externalRef === 'function') externalRef(el);
       else if (externalRef)
         (externalRef as React.MutableRefObject<HTMLDivElement | null>).current =
@@ -30,6 +31,7 @@ export function useScrollVisibility(
   const handleScroll = useCallback(() => {
     if (visibility !== 'scroll') return;
     const el = rootRef.current;
+
     if (!el) return;
 
     el.classList.add('is-scrolling');

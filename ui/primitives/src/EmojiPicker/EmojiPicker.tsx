@@ -8,12 +8,9 @@ import {
   useRef,
   useState,
 } from 'react';
-import { useTranslation } from '@minddrop/i18n';
 import { Emoji, EmojiItem, EmojiSkinTone } from '@minddrop/ui-icons';
-import { useToggle } from '@minddrop/utils';
 import { IconButton } from '../IconButton';
 import { MenuLabel } from '../Menu';
-import { Popover, PopoverContent, PopoverTrigger } from '../Popover';
 import { ScrollArea } from '../ScrollArea';
 import { Toolbar } from '../Toolbar';
 import { Tooltip } from '../Tooltip';
@@ -86,7 +83,6 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
   className,
   ...other
 }) => {
-  const { t } = useTranslation({ keyPrefix: 'emojiPicker' });
   const [query, setQuery] = useState('');
   const deferredQuery = useDeferredValue(query);
   const [skinTone, setSkinTone] = useState(defaultSkinTone);
@@ -288,57 +284,12 @@ const EmojiButton = memo<{
   );
 });
 
+EmojiButton.displayName = 'EmojiButton';
+
 const SkinToneSelectEmoji: EmojiItem = {
   char: '🖖',
   name: '',
   group: '',
   labels: [],
   skinToneVariants: ['🖖🏻', '🖖🏼', '🖖🏽', '🖖🏾', '🖖🏿'],
-};
-
-const SkinToneSelect: React.FC<{
-  selectedSkinTone: EmojiSkinTone;
-  onSelect: (value: EmojiSkinTone) => void;
-}> = ({ onSelect, selectedSkinTone }) => {
-  const { t } = useTranslation({ keyPrefix: 'emojiPicker.skinTone' });
-  const [popoverOpen, togglePopover, setPopoverOpen] = useToggle(false);
-
-  const createSelectHandler = useCallback(
-    (value: EmojiSkinTone) => {
-      return () => {
-        togglePopover();
-        onSelect(value);
-      };
-    },
-    [onSelect, togglePopover],
-  );
-
-  return (
-    <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
-      <PopoverTrigger>
-        <div>
-          <Tooltip title="emojiPicker.skinTone.action">
-            <IconButton
-              label="emojiPicker.skinTone.action"
-              className="open-skin-tone-popover-button"
-              onClick={togglePopover}
-            >
-              {Emoji.getSkinToneVariant(SkinToneSelectEmoji, selectedSkinTone)}
-            </IconButton>
-          </Tooltip>
-        </div>
-      </PopoverTrigger>
-      <PopoverContent className="skin-tone-select-popover">
-        {Emoji.skinTones.map((skinTone) => (
-          <IconButton
-            key={skinTone.value}
-            label={`emojiPicker.skinTone.${skinTone.label}`}
-            onClick={createSelectHandler(skinTone.value)}
-          >
-            {Emoji.getSkinToneVariant(SkinToneSelectEmoji, skinTone.value)}
-          </IconButton>
-        ))}
-      </PopoverContent>
-    </Popover>
-  );
 };

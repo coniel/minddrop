@@ -11,6 +11,7 @@ import {
   ToastDescription,
   ToastProvider,
   ToastTitle,
+  ToastType,
   ToastViewport,
   useToastManager,
 } from './Toast';
@@ -160,7 +161,7 @@ const DemoToasts = () => {
       {/* Render area for toasts */}
       <ToastViewport>
         {manager.toasts.map((toast) => (
-          <Toast key={toast.id} toast={toast} type={toast.type as any}>
+          <Toast key={toast.id} toast={toast} type={toast.type as ToastType}>
             <div>
               {/* Toast content is already-resolved text, so it is
                   wrapped as a node rather than treated as an i18n key */}
