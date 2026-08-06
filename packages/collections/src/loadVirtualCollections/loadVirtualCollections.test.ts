@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { CollectionsStore } from '../CollectionsStore';
-import { CollectionsLoadedEvent } from '../events';
+import { CollectionsLoadedEvent, CollectionsLoadedEventData } from '../events';
 import { cleanup, mockDate, setup } from '../test-utils';
 import { loadVirtualCollections } from './loadVirtualCollections';
 
@@ -52,11 +52,15 @@ describe('loadVirtualCollections', () => {
 
   it('dispatches a collections loaded event', () =>
     new Promise<void>((done) => {
-      Events.addListener(CollectionsLoadedEvent, 'test', (payload) => {
-        expect(payload.data).toHaveLength(2);
-        expect(payload.data[0].virtual).toBe(true);
-        done();
-      });
+      Events.addListener<CollectionsLoadedEventData>(
+        CollectionsLoadedEvent,
+        'test',
+        (payload) => {
+          expect(payload.data).toHaveLength(2);
+          expect(payload.data[0].virtual).toBe(true);
+          done();
+        },
+      );
 
       loadVirtualCollections(data);
     }));
