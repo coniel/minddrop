@@ -16,10 +16,11 @@ import { cleanup, setup } from '../test-utils';
 import { ResolvedThemeVariant } from '../types';
 import { initializeTheme } from './initializeTheme';
 
-// Short delay to wait for async event dispatch
-const waitForEvents = () =>
+// Events.dispatch awaits each listener, so listeners run on the
+// microtask queue. Yielding to a macrotask drains them.
+const flushEvents = () =>
   new Promise((resolve) => {
-    setTimeout(resolve, 50);
+    setTimeout(resolve, 0);
   });
 
 describe('initializeTheme', () => {
@@ -53,12 +54,12 @@ describe('initializeTheme', () => {
     matchMediaEventListeners.forEach((callback) => callback());
   }
 
-  beforeAll(() => {
+  beforeAll(async () => {
     mockMatchMedia();
     setup();
     // Run once before all tests in order to initialize
     // the local persistent store.
-    initializeTheme();
+    await initializeTheme();
   });
 
   beforeEach(setup);
@@ -78,7 +79,7 @@ describe('initializeTheme', () => {
     ThemeStore.set('variant', ThemeDark);
 
     // Initialize theme
-    initializeTheme();
+    await initializeTheme();
 
     // Should keep the variant from the local persistent store
     expect(ThemeStore.get('variant')).toBe(ThemeDark);
@@ -103,10 +104,10 @@ describe('initializeTheme', () => {
       );
 
       // Initialize theme
-      initializeTheme();
+      await initializeTheme();
 
       // Wait for async event dispatch
-      await waitForEvents();
+      await flushEvents();
 
       // Should dispatch with system variant and resolved dark
       expect(eventData).toMatchObject({
@@ -133,10 +134,10 @@ describe('initializeTheme', () => {
       );
 
       // Initialize theme
-      initializeTheme();
+      await initializeTheme();
 
       // Wait for async event dispatch
-      await waitForEvents();
+      await flushEvents();
 
       // Should dispatch with dark variant and resolved dark
       expect(eventData).toMatchObject({
@@ -152,10 +153,10 @@ describe('initializeTheme', () => {
       ThemeStore.set('variant', ThemeSystem);
 
       // Initialize theme
-      initializeTheme();
+      await initializeTheme();
 
       // Wait for async event dispatch from initialization
-      await waitForEvents();
+      await flushEvents();
 
       // Track dispatched event data
       let eventData: VariantChangedEventData | null = null;
@@ -172,7 +173,7 @@ describe('initializeTheme', () => {
       simulateOsAppearanceChange(ThemeDark);
 
       // Wait for async event dispatch
-      await waitForEvents();
+      await flushEvents();
 
       // Should dispatch with resolved dark appearance
       expect(eventData).toMatchObject({ resolvedAppearance: ThemeDark });
@@ -182,13 +183,13 @@ describe('initializeTheme', () => {
   describe('theme variant change', () => {
     it('updates the local persistent store variant value', async () => {
       // Initialize theme
-      initializeTheme();
+      await initializeTheme();
 
       // Change the variant value
       setThemeVariant(ThemeDark);
 
       // Wait for the event to be dispatched
-      await waitForEvents();
+      await flushEvents();
 
       // Should set the new variant in the local persistent store
       expect(ThemeStore.get('variant')).toBe(ThemeDark);
@@ -201,13 +202,13 @@ describe('initializeTheme', () => {
       ThemeStore.set('variant', ThemeLight);
 
       // Initialize theme
-      initializeTheme();
+      await initializeTheme();
 
       // Set the theme variant to 'system'
       setThemeVariant(ThemeSystem);
 
       // Wait for the event listener to run
-      await waitForEvents();
+      await flushEvents();
 
       // Track the resolved appearance from the event
       let lastResolvedAppearance: string | null = null;
@@ -224,7 +225,7 @@ describe('initializeTheme', () => {
       simulateOsAppearanceChange(ThemeDark);
 
       // Wait for async event dispatch
-      await waitForEvents();
+      await flushEvents();
 
       // Should have dispatched with dark resolved appearance
       expect(lastResolvedAppearance).toBe(ThemeDark);
@@ -237,13 +238,13 @@ describe('initializeTheme', () => {
       ThemeStore.set('variant', ThemeSystem);
 
       // Initialize theme
-      initializeTheme();
+      await initializeTheme();
 
       // Set the theme variant to 'dark'
       setThemeVariant(ThemeDark);
 
       // Wait for the event listener to run
-      await waitForEvents();
+      await flushEvents();
 
       // Track whether a new event is dispatched
       let eventDispatched = false;
@@ -260,7 +261,7 @@ describe('initializeTheme', () => {
       simulateOsAppearanceChange(ThemeLight);
 
       // Wait to ensure no event fires
-      await waitForEvents();
+      await flushEvents();
 
       // No event should have been dispatched since
       // OS listener was removed.

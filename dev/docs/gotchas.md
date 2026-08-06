@@ -115,6 +115,28 @@ hundreds of mounted entries would re-render on every studio edit
 ever wanted, use a per-ID selector subscription (only re-render when
 the specific layout's reference changes), not the all-designs hooks.
 
+## packages/stores
+
+### `Events._clearAll()` breaks store hydration for the rest of a test run
+
+`createKeyValueStore`/`createObjectStore`/`createArrayStore` register a
+`stores:hydrate` listener once, when the store module is first loaded.
+`Events._clearAll()` removes it, and nothing ever registers it again, so
+every later `hydrate()` call hangs: it dispatches its request and waits
+forever for a response it can no longer receive.
+
+This bites any test suite that both calls `Events._clearAll()` in cleanup
+and awaits something which hydrates a store. It presents as a timeout in
+whichever hook or test awaits the hydration, or — if the hydrating call
+is not awaited — as the code after it silently never running.
+
+In such a suite, remove only the listeners the tests registered rather
+than calling `_clearAll()`, and register a stand-in for the platform
+layer that answers `stores:hydrate-request` with a `stores:hydrate`
+event (see `ui/theme/src/test-utils/initialize-tests.ts`). Note that
+listener IDs are unique per event, so stale test listeners must still be
+removed or they will shadow the next test's registration.
+
 ## packages/i18n
 
 ### Invalid `t()` keys can crash tsc, not just error
