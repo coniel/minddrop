@@ -32,6 +32,7 @@ export function goBack(viewAreaId: string): void {
     main: entry.main,
     split: entry.split,
     splitRatio: entry.splitRatio,
+    viewState: entry.viewState ?? {},
     backHistory: backHistory.slice(0, -1),
     forwardHistory: [...(tab.forwardHistory ?? []), toHistoryEntry(tab)].slice(
       -MAX_HISTORY_LENGTH,

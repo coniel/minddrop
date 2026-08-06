@@ -5,6 +5,7 @@ import { getSet } from '../getSet';
 import { goBack } from '../goBack';
 import { newTab } from '../newTab';
 import { recordViewArea } from '../recordViewArea';
+import { setTransientViewState } from '../setTransientViewState';
 import { goForward } from './goForward';
 
 const VIEW_AREA_ID = 'test-set';
@@ -70,5 +71,22 @@ describe('goForward', () => {
     goForward(VIEW_AREA_ID);
 
     expect(getSet(VIEW_AREA_ID).tabs[0].main?.id).toBe('db:c');
+  });
+
+  it('restores the transient state from the history entry', () => {
+    newTab(VIEW_AREA_ID);
+    recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:a' }));
+    recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:b' }));
+
+    const tab = getSet(VIEW_AREA_ID).tabs[0];
+
+    // Record state onto the current view, then navigate back so the
+    // forward entry carries it
+    setTransientViewState(VIEW_AREA_ID, tab.id, 'main', 'scroll', 40);
+    goBack(VIEW_AREA_ID);
+
+    goForward(VIEW_AREA_ID);
+
+    expect(getSet(VIEW_AREA_ID).tabs[0].viewState?.main?.scroll).toBe(40);
   });
 });

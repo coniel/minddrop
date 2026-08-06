@@ -2,6 +2,11 @@
  * ScrollArea.stories.tsx
  * Dev reference for ScrollArea, VerticalScrollArea, HorizontalScrollArea.
  */
+import { useMemo, useRef, useState } from 'react';
+import {
+  TransientViewStateContextValue,
+  TransientViewStateProvider,
+} from '../TransientViewState';
 import { Story, StoryItem, StoryRow, StorySection } from '../dev/Story';
 import { HorizontalScrollArea } from './HorizontalScrollArea';
 import { ScrollArea } from './ScrollArea';
@@ -64,6 +69,52 @@ const containerStyle = {
   border: '1px solid var(--border-subtle)',
   borderRadius: 'var(--radius-lg)',
   background: 'var(--surface-subtle)',
+};
+
+/* Demonstrates scroll position persistence: the bag stands in for a
+   tab's persisted state, the button remounts the scroll area. */
+const StatePersistenceDemo = () => {
+  // In-memory state bag surviving remounts
+  const bagRef = useRef<Record<string, unknown>>({});
+
+  // Remount key for the scroll area
+  const [mountCount, setMountCount] = useState(0);
+
+  // Context value reading/writing the bag
+  const value = useMemo<TransientViewStateContextValue>(
+    () => ({
+      get: (key) => bagRef.current[key],
+      set: (key, storedValue) => {
+        bagRef.current[key] = storedValue;
+      },
+    }),
+    [],
+  );
+
+  return (
+    <div>
+      <button
+        type="button"
+        onClick={() => setMountCount((count) => count + 1)}
+        style={{ marginBottom: 'var(--space-3)' }}
+      >
+        Remount scroll area
+      </button>
+
+      <TransientViewStateProvider value={value}>
+        <VerticalScrollArea
+          key={mountCount}
+          stateKey="demo"
+          visibility="scroll"
+          style={{ height: 240, ...containerStyle }}
+        >
+          <div style={{ padding: 'var(--space-3)' }}>
+            <LoremParagraphs count={20} />
+          </div>
+        </VerticalScrollArea>
+      </TransientViewStateProvider>
+    </div>
+  );
 };
 
 export const ScrollAreaStories = () => (
@@ -185,6 +236,20 @@ export const ScrollAreaStories = () => (
               <LoremParagraphs count={8} />
             </div>
           </VerticalScrollArea>
+        </StoryItem>
+      </StoryRow>
+    </StorySection>
+
+    {/* --------------------------------------------------------
+        SCROLL POSITION PERSISTENCE
+    -------------------------------------------------------- */}
+    <StorySection
+      title="Scroll position persistence"
+      description="With a stateKey and a surrounding transient view state provider, the scroll position is recorded and restored across remounts. Scroll down, remount, and the position is restored silently (no scrollbar flash)."
+    >
+      <StoryRow>
+        <StoryItem label="scroll, then remount">
+          <StatePersistenceDemo />
         </StoryItem>
       </StoryRow>
     </StorySection>

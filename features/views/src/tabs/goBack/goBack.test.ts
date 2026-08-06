@@ -4,6 +4,7 @@ import { TabSetsStore } from '../TabSetsStore';
 import { getSet } from '../getSet';
 import { newTab } from '../newTab';
 import { recordViewArea } from '../recordViewArea';
+import { setTransientViewState } from '../setTransientViewState';
 import { goBack } from './goBack';
 
 const VIEW_AREA_ID = 'test-set';
@@ -91,5 +92,43 @@ describe('goBack', () => {
 
     expect(tab.backHistory).toHaveLength(0);
     expect(tab.forwardHistory).toHaveLength(1);
+  });
+
+  it('restores the transient state from the history entry', () => {
+    newTab(VIEW_AREA_ID);
+    recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:a' }));
+
+    const tab = getSet(VIEW_AREA_ID).tabs[0];
+
+    setTransientViewState(VIEW_AREA_ID, tab.id, 'main', 'scroll', 120);
+    recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:b' }));
+    setTransientViewState(VIEW_AREA_ID, tab.id, 'main', 'scroll', 40);
+
+    goBack(VIEW_AREA_ID);
+
+    const updatedTab = getSet(VIEW_AREA_ID).tabs[0];
+
+    expect(updatedTab.viewState?.main?.scroll).toBe(120);
+    expect(updatedTab.forwardHistory?.[0].viewState?.main?.scroll).toBe(40);
+  });
+
+  it('defaults to an empty transient state for entries without one', () => {
+    newTab(VIEW_AREA_ID);
+    recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:a' }));
+    recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:b' }));
+
+    // Strip the entries' state to mimic history hydrated from older
+    // disk data
+    const set = getSet(VIEW_AREA_ID);
+    const strippedTabs = set.tabs.map((setTab) => ({
+      ...setTab,
+      backHistory: setTab.backHistory?.map(({ viewState, ...entry }) => entry),
+    }));
+
+    TabSetsStore.set({ ...set, tabs: strippedTabs });
+
+    goBack(VIEW_AREA_ID);
+
+    expect(getSet(VIEW_AREA_ID).tabs[0].viewState).toEqual({});
   });
 });

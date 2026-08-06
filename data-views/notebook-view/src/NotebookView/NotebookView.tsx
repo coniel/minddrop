@@ -7,7 +7,7 @@ import {
   CreateDatabaseEntryButton,
   DatabaseEntriesSearchField,
 } from '@minddrop/ui-components';
-import { ScrollArea } from '@minddrop/ui-primitives';
+import { ScrollArea, useTransientState } from '@minddrop/ui-primitives';
 import { defaultNotebookViewOptions } from '../constants';
 import { NotebookViewLayoutOverride, NotebookViewOptions } from '../types';
 import { useListPanelResize } from '../useListPanelResize';
@@ -23,8 +23,10 @@ export const NotebookViewComponent: React.FC<
   // Track the filtered entries from the search field
   const [filteredEntries, setFilteredEntries] = useState<string[]>(entries);
 
-  // Track which entry is currently selected
-  const [selectedEntryId, setSelectedEntryId] = useState<string | null>(null);
+  // Track which entry is currently selected, persisted per tab
+  const [selectedEntryId, setSelectedEntryId] = useTransientState<
+    string | null
+  >('selectedEntry', null);
 
   // Resolve the list column width from the view options
   const initialWidth = useMemo(
@@ -79,17 +81,23 @@ export const NotebookViewComponent: React.FC<
     }
 
     setSelectedEntryId(filteredEntries[0] ?? null);
-  }, [filteredEntries, selectedEntryId]);
+  }, [filteredEntries, selectedEntryId, setSelectedEntryId]);
 
   // Handle clicking a list item to select it
-  const handleEntryClick = useCallback((entryId: string) => {
-    setSelectedEntryId(entryId);
-  }, []);
+  const handleEntryClick = useCallback(
+    (entryId: string) => {
+      setSelectedEntryId(entryId);
+    },
+    [setSelectedEntryId],
+  );
 
   // Select the newly created or added entry
-  const handleEntryAdded = useCallback((entry: { id: string }) => {
-    setSelectedEntryId(entry.id);
-  }, []);
+  const handleEntryAdded = useCallback(
+    (entry: { id: string }) => {
+      setSelectedEntryId(entry.id);
+    },
+    [setSelectedEntryId],
+  );
 
   return (
     <div className="notebook-view" data-dragging={isDragging || undefined}>
@@ -100,6 +108,7 @@ export const NotebookViewComponent: React.FC<
           <DatabaseEntriesSearchField
             entryIds={entries}
             onFilteredEntriesChange={setFilteredEntries}
+            stateKey="search"
             size="md"
           />
           {/* Collection sources also support adding existing entries */}
@@ -122,7 +131,7 @@ export const NotebookViewComponent: React.FC<
           )}
         </div>
 
-        <ScrollArea className="notebook-view-list-scroll">
+        <ScrollArea className="notebook-view-list-scroll" stateKey="list">
           {filteredEntries.map((entryId) => (
             <div
               key={entryId}

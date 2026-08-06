@@ -111,7 +111,7 @@ export const BoardViewComponent: React.FC<
   );
 
   return (
-    <ScrollArea className="board-view-scroll">
+    <ScrollArea className="board-view-scroll" stateKey="content">
       <FlexDropContainer
         id={`board-${view.id}`}
         direction="row"

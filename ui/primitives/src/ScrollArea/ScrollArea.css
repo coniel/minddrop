@@ -12,7 +12,6 @@
   overflow: hidden;
 }
 
-
 /* --- Viewport --- */
 
 .scroll-area-viewport {
@@ -25,7 +24,6 @@
     display: none; /* Chrome/Safari */
   }
 }
-
 
 /* --- Scrollbar (track container) --- */
 
@@ -60,7 +58,6 @@
   }
 }
 
-
 /* --- Scrollbar visibility modes --- */
 
 /* hover — only visible when root is hovered */
@@ -92,7 +89,6 @@
 .scroll-area-visibility-always .scroll-area-scrollbar {
   opacity: 1;
 }
-
 
 /* --- Thumb --- */
 
@@ -147,7 +143,6 @@
     }
   }
 }
-
 
 /* --- Corner (shown when both scrollbars are visible) --- */
 

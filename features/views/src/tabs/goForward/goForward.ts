@@ -33,6 +33,7 @@ export function goForward(viewAreaId: string): void {
     main: entry.main,
     split: entry.split,
     splitRatio: entry.splitRatio,
+    viewState: entry.viewState ?? {},
     backHistory: [...(tab.backHistory ?? []), toHistoryEntry(tab)].slice(
       -MAX_HISTORY_LENGTH,
     ),

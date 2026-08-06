@@ -23,4 +23,10 @@ describe('newTab', () => {
     expect(tabs[0].main).toBeNull();
     expect(activeTabId).toBe(tabs[0].id);
   });
+
+  it('creates the tab with an empty transient state', () => {
+    newTab(VIEW_AREA_ID);
+
+    expect(getSet(VIEW_AREA_ID).tabs[0].viewState).toEqual({});
+  });
 });

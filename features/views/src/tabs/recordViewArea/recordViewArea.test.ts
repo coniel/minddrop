@@ -4,6 +4,7 @@ import { TabSetsStore } from '../TabSetsStore';
 import { getSet } from '../getSet';
 import { goBack } from '../goBack';
 import { newTab } from '../newTab';
+import { setTransientViewState } from '../setTransientViewState';
 import { MAX_HISTORY_LENGTH } from '../tabsConstants';
 import { recordViewArea } from './recordViewArea';
 
@@ -162,5 +163,67 @@ describe('recordViewArea', () => {
     expect(getSet(VIEW_AREA_ID).tabs[0].backHistory).toHaveLength(
       MAX_HISTORY_LENGTH,
     );
+  });
+
+  it('preserves the transient state when replaying the current state', () => {
+    newTab(VIEW_AREA_ID);
+    recordViewArea(VIEW_AREA_ID, state({ view: 'a' }, { view: 'b' }, 50));
+
+    const tab = getSet(VIEW_AREA_ID).tabs[0];
+
+    setTransientViewState(VIEW_AREA_ID, tab.id, 'main', 'scroll', 120);
+
+    const viewStateBefore = getSet(VIEW_AREA_ID).tabs[0].viewState;
+
+    recordViewArea(VIEW_AREA_ID, state({ view: 'a' }, { view: 'b' }, 70));
+
+    expect(getSet(VIEW_AREA_ID).tabs[0].viewState).toBe(viewStateBefore);
+  });
+
+  it('resets only the transient state of the pane that navigated', () => {
+    newTab(VIEW_AREA_ID);
+    recordViewArea(VIEW_AREA_ID, state({ view: 'a' }, { view: 'b' }));
+
+    const tab = getSet(VIEW_AREA_ID).tabs[0];
+
+    setTransientViewState(VIEW_AREA_ID, tab.id, 'main', 'scroll', 120);
+    setTransientViewState(VIEW_AREA_ID, tab.id, 'split', 'scroll', 40);
+
+    // Navigate only the split pane
+    recordViewArea(VIEW_AREA_ID, state({ view: 'a' }, { view: 'c' }));
+
+    const { viewState } = getSet(VIEW_AREA_ID).tabs[0];
+
+    expect(viewState?.main?.scroll).toBe(120);
+    expect(viewState?.split).toEqual({});
+  });
+
+  it('preserves the main transient state when opening a split', () => {
+    newTab(VIEW_AREA_ID);
+    recordViewArea(VIEW_AREA_ID, state({ view: 'a' }));
+
+    const tab = getSet(VIEW_AREA_ID).tabs[0];
+
+    setTransientViewState(VIEW_AREA_ID, tab.id, 'main', 'scroll', 120);
+
+    recordViewArea(VIEW_AREA_ID, state({ view: 'a' }, { view: 'b' }));
+
+    expect(getSet(VIEW_AREA_ID).tabs[0].viewState?.main?.scroll).toBe(120);
+  });
+
+  it('snapshots the transient state onto the pushed history entry', () => {
+    newTab(VIEW_AREA_ID);
+    recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:a' }));
+
+    const tab = getSet(VIEW_AREA_ID).tabs[0];
+
+    setTransientViewState(VIEW_AREA_ID, tab.id, 'main', 'scroll', 120);
+
+    recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:b' }));
+
+    const updatedTab = getSet(VIEW_AREA_ID).tabs[0];
+
+    expect(updatedTab.backHistory?.[0].viewState?.main?.scroll).toBe(120);
+    expect(updatedTab.viewState?.main).toEqual({});
   });
 });
