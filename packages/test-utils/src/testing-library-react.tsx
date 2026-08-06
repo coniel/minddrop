@@ -14,7 +14,7 @@ import {
 import userEvent from '@testing-library/user-event';
 import React, { FC, ReactElement } from 'react';
 import { vi } from 'vitest';
-import { i18n, initializeI18n } from '@minddrop/i18n';
+import { TranslationKey, i18n, initializeI18n } from '@minddrop/i18n';
 import { IconsProvider } from '@minddrop/ui-icons';
 import '@testing-library/jest-dom/vitest';
 
@@ -53,6 +53,27 @@ const WithProviders: FC<{ children: React.ReactNode }> = ({ children }) => (
   </IconsProvider>
 );
 
+/**
+ * Narrows a string to a translation key if it names a loaded translation.
+ * Test matchers accept arbitrary strings, so keys are validated at runtime
+ * rather than against the compile-time key union.
+ */
+const isTranslationKey = (value: string): value is TranslationKey =>
+  i18n.exists(value);
+
+/**
+ * Translates a key, returning it unchanged if no translation exists.
+ */
+const translateKey = (key: string): string =>
+  isTranslationKey(key) ? i18n.t(key) : key;
+
+/**
+ * Translates a matcher when it is a string naming an existing translation,
+ * leaving regex and function matchers untouched.
+ */
+const translateMatcher = (text: Matcher): Matcher =>
+  typeof text === 'string' ? translateKey(text) : text;
+
 interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
   translationKeyPrefix?: string;
 }
@@ -87,13 +108,18 @@ const customRender = (
     ...options,
   });
 
-  const translate = (key: string) =>
-    options?.translationKeyPrefix
-      ? i18n.t(`${options.translationKeyPrefix}.${key}`)
-      : i18n.t(key);
+  // Translates a key, applying the render's key prefix when one is set
+  const translate = (key: string) => {
+    const prefixed = options?.translationKeyPrefix
+      ? `${options.translationKeyPrefix}.${key}`
+      : key;
 
-  const isI18nKey = (key: Matcher): key is string =>
-    typeof key === 'string' && i18n.exists(key);
+    return translateKey(prefixed);
+  };
+
+  // Same as translateMatcher, but applies the render's key prefix
+  const translatePrefixedMatcher = (text: Matcher) =>
+    typeof text === 'string' ? translate(text) : text;
 
   const getByTranslatedText = (key: string) => getByText(translate(key));
   const getByTranslatedAltText = (key: string) => getByAltText(translate(key));
@@ -111,24 +137,21 @@ const customRender = (
 
   return {
     getByText: (text: Matcher, options?: SelectorMatcherOptions) =>
-      getByText(isI18nKey(text) ? translate(text) : text, options),
+      getByText(translatePrefixedMatcher(text), options),
     getByAltText: (text: Matcher, options?: MatcherOptions) =>
-      getByAltText(isI18nKey(text) ? translate(text) : text, options),
+      getByAltText(translatePrefixedMatcher(text), options),
     getByLabelText: (text: Matcher, options?: SelectorMatcherOptions) =>
-      getByLabelText(isI18nKey(text) ? translate(text) : text, options),
+      getByLabelText(translatePrefixedMatcher(text), options),
     getByPlaceholderText: (text: Matcher, options?: MatcherOptions) =>
-      getByPlaceholderText(isI18nKey(text) ? translate(text) : text, options),
+      getByPlaceholderText(translatePrefixedMatcher(text), options),
     getAllByText: (text: Matcher, options?: SelectorMatcherOptions) =>
-      getAllByText(isI18nKey(text) ? translate(text) : text, options),
+      getAllByText(translatePrefixedMatcher(text), options),
     getAllByAltText: (text: Matcher, options?: MatcherOptions) =>
-      getAllByAltText(isI18nKey(text) ? translate(text) : text, options),
+      getAllByAltText(translatePrefixedMatcher(text), options),
     getAllByLabelText: (text: Matcher, options?: SelectorMatcherOptions) =>
-      getAllByLabelText(isI18nKey(text) ? translate(text) : text, options),
+      getAllByLabelText(translatePrefixedMatcher(text), options),
     getAllByPlaceholderText: (text: Matcher, options?: MatcherOptions) =>
-      getAllByPlaceholderText(
-        isI18nKey(text) ? translate(text) : text,
-        options,
-      ),
+      getAllByPlaceholderText(translatePrefixedMatcher(text), options),
     getByTranslatedText,
     getByTranslatedAltText,
     getByTranslatedLabelText,
@@ -146,131 +169,67 @@ const customScreen = {
   getByText: <T extends HTMLElement = HTMLElement>(
     text: Matcher,
     options?: SelectorMatcherOptions,
-  ) =>
-    screen.getByText<T>(
-      typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
-      options,
-    ),
+  ) => screen.getByText<T>(translateMatcher(text), options),
   getByAltText: <T extends HTMLElement = HTMLElement>(
     text: Matcher,
     options?: MatcherOptions,
-  ) =>
-    screen.getByAltText<T>(
-      typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
-      options,
-    ),
+  ) => screen.getByAltText<T>(translateMatcher(text), options),
   getByLabelText: <T extends HTMLElement = HTMLElement>(
     text: Matcher,
     options?: SelectorMatcherOptions,
-  ) =>
-    screen.getByLabelText<T>(
-      typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
-      options,
-    ),
+  ) => screen.getByLabelText<T>(translateMatcher(text), options),
   getByPlaceholderText: <T extends HTMLElement = HTMLElement>(
     text: Matcher,
     options?: MatcherOptions,
-  ) =>
-    screen.getByPlaceholderText<T>(
-      typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
-      options,
-    ),
+  ) => screen.getByPlaceholderText<T>(translateMatcher(text), options),
   getAllByText: <T extends HTMLElement = HTMLElement>(
     text: Matcher,
     options?: SelectorMatcherOptions,
-  ) =>
-    screen.getAllByText<T>(
-      typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
-      options,
-    ),
+  ) => screen.getAllByText<T>(translateMatcher(text), options),
   getAllByAltText: <T extends HTMLElement = HTMLElement>(
     text: Matcher,
     options?: MatcherOptions,
-  ) =>
-    screen.getAllByAltText<T>(
-      typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
-      options,
-    ),
+  ) => screen.getAllByAltText<T>(translateMatcher(text), options),
   getAllByLabelText: <T extends HTMLElement = HTMLElement>(
     text: Matcher,
     options?: SelectorMatcherOptions,
-  ) =>
-    screen.getAllByLabelText<T>(
-      typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
-      options,
-    ),
+  ) => screen.getAllByLabelText<T>(translateMatcher(text), options),
   getAllByPlaceholderText: <T extends HTMLElement = HTMLElement>(
     text: Matcher,
     options?: MatcherOptions,
-  ) =>
-    screen.getAllByPlaceholderText<T>(
-      typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
-      options,
-    ),
+  ) => screen.getAllByPlaceholderText<T>(translateMatcher(text), options),
   queryByText: <T extends HTMLElement = HTMLElement>(
     text: Matcher,
     options?: SelectorMatcherOptions,
-  ) =>
-    screen.queryByText<T>(
-      typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
-      options,
-    ),
+  ) => screen.queryByText<T>(translateMatcher(text), options),
   queryByAltText: <T extends HTMLElement = HTMLElement>(
     text: Matcher,
     options?: MatcherOptions,
-  ) =>
-    screen.queryByAltText<T>(
-      typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
-      options,
-    ),
+  ) => screen.queryByAltText<T>(translateMatcher(text), options),
   queryByLabelText: <T extends HTMLElement = HTMLElement>(
     text: Matcher,
     options?: SelectorMatcherOptions,
-  ) =>
-    screen.queryByLabelText<T>(
-      typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
-      options,
-    ),
+  ) => screen.queryByLabelText<T>(translateMatcher(text), options),
   queryByPlaceholderText: <T extends HTMLElement = HTMLElement>(
     text: Matcher,
     options?: MatcherOptions,
-  ) =>
-    screen.queryByPlaceholderText<T>(
-      typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
-      options,
-    ),
+  ) => screen.queryByPlaceholderText<T>(translateMatcher(text), options),
   queryAllByText: <T extends HTMLElement = HTMLElement>(
     text: Matcher,
     options?: SelectorMatcherOptions,
-  ) =>
-    screen.queryAllByText<T>(
-      typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
-      options,
-    ),
+  ) => screen.queryAllByText<T>(translateMatcher(text), options),
   queryAllByAltText: <T extends HTMLElement = HTMLElement>(
     text: Matcher,
     options?: MatcherOptions,
-  ) =>
-    screen.queryAllByAltText<T>(
-      typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
-      options,
-    ),
+  ) => screen.queryAllByAltText<T>(translateMatcher(text), options),
   queryAllByLabelText: <T extends HTMLElement = HTMLElement>(
     text: Matcher,
     options?: SelectorMatcherOptions,
-  ) =>
-    screen.queryAllByLabelText<T>(
-      typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
-      options,
-    ),
+  ) => screen.queryAllByLabelText<T>(translateMatcher(text), options),
   queryAllByPlaceholderText: <T extends HTMLElement = HTMLElement>(
     text: Matcher,
     options?: MatcherOptions,
-  ) =>
-    screen.queryAllByPlaceholderText<T>(
-      typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
-      options,
-    ),
+  ) => screen.queryAllByPlaceholderText<T>(translateMatcher(text), options),
 };
 
 const customRenderHook = <TProps, TResult>(
