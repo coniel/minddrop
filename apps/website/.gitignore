@@ -1,0 +1,7 @@
+# Astro build output and generated types
+dist
+.astro
+
+# Local environment, holds the absolute path to the blog database
+.env
+.env.local

@@ -1,0 +1,32 @@
+{
+  "name": "@minddrop/website",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Marketing site: landing page, changelog, and blog",
+  "type": "module",
+  "scripts": {
+    "build": "astro build",
+    "dev": "astro dev",
+    "format": "prettier --write .",
+    "lint": "eslint .",
+    "preview": "astro preview",
+    "typecheck": "astro check"
+  },
+  "dependencies": {
+    "@astrojs/markdown-satteri": "^0.3.5",
+    "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.7.3",
+    "astro": "^7.2.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@minddrop/eslint-config": "workspace:*",
+    "eslint": "^9.39.3",
+    "eslint-plugin-astro": "^3.1.0",
+    "globals": "^15.12.0",
+    "prettier": "^3.4.2",
+    "prettier-plugin-astro": "^0.14.1",
+    "satteri": "^0.9.5",
+    "typescript": "^5.9.3"
+  }
+}

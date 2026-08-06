@@ -5,7 +5,7 @@
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**"],
-      "env": ["TAURI_PLATFORM", "TAURI_DEBUG"]
+      "env": ["TAURI_PLATFORM", "TAURI_DEBUG", "MINDDROP_BLOG_DIR"]
     },
     "lint": {
       "outputs": []

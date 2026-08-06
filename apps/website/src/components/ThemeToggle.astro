@@ -1,0 +1,137 @@
+---
+/**
+ * Switches the page between the light and dark themes.
+ *
+ * Until it is used the page follows the system preference. Pressing it stores
+ * an explicit choice, which then wins over the system for good.
+ */
+---
+
+<button
+  class="theme-toggle"
+  id="theme-toggle"
+  type="button"
+  aria-label="Switch theme"
+>
+  <svg
+    class="theme-toggle-icon theme-toggle-sun"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.6"
+    stroke-linecap="round"
+    aria-hidden="true"
+  >
+    <circle cx="12" cy="12" r="4"></circle>
+    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2"
+    ></path>
+    <path d="M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+  </svg>
+
+  <svg
+    class="theme-toggle-icon theme-toggle-moon"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.6"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+  </svg>
+</button>
+
+<script is:inline>
+  (() => {
+    const root = document.documentElement;
+    const toggle = document.getElementById('theme-toggle');
+    const systemDark = window.matchMedia('(prefers-color-scheme: dark)');
+
+    // The theme actually on screen, whether chosen or inherited from the system
+    function activeTheme() {
+      if (root.dataset.theme) {
+        return root.dataset.theme;
+      }
+
+      return systemDark.matches ? 'dark' : 'light';
+    }
+
+    // Describe what pressing the button will do, not what is on screen now
+    function updateLabel() {
+      const next = activeTheme() === 'dark' ? 'light' : 'dark';
+
+      toggle.setAttribute('aria-label', `Switch to ${next} theme`);
+    }
+
+    toggle.addEventListener('click', () => {
+      const next = activeTheme() === 'dark' ? 'light' : 'dark';
+
+      root.dataset.theme = next;
+
+      try {
+        localStorage.setItem('theme', next);
+      } catch {
+        // Storage is unavailable, the choice lasts for this page only
+      }
+
+      updateLabel();
+    });
+
+    // Keep the label honest while the page is still following the system
+    systemDark.addEventListener('change', updateLabel);
+
+    updateLabel();
+  })();
+</script>
+
+<style>
+  .theme-toggle {
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+    background: none;
+    color: var(--ink-muted);
+    transition:
+      color var(--duration-normal) var(--ease-out),
+      border-color var(--duration-normal) var(--ease-out);
+  }
+
+  .theme-toggle:hover {
+    border-color: var(--rule);
+    color: var(--ink);
+  }
+
+  .theme-toggle-icon {
+    grid-area: 1 / 1;
+    width: 1.05rem;
+    height: 1.05rem;
+  }
+
+  /* Show the theme being switched to, matching the button's label */
+  .theme-toggle-sun {
+    display: none;
+  }
+
+  :global(:root[data-theme='dark']) .theme-toggle-sun {
+    display: block;
+  }
+
+  :global(:root[data-theme='dark']) .theme-toggle-moon {
+    display: none;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :global(:root:not([data-theme='light'])) .theme-toggle-sun {
+      display: block;
+    }
+
+    :global(:root:not([data-theme='light'])) .theme-toggle-moon {
+      display: none;
+    }
+  }
+</style>

@@ -1,0 +1,126 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { formatDate } from '../utils/formatDate';
+import { getChangelogEntries } from '../utils/getChangelogEntries';
+
+const entries = await getChangelogEntries();
+
+// Render every entry up front, the whole changelog lives on this one page
+const renderedEntries = await Promise.all(
+  entries.map(async (entry) => ({
+    ...entry,
+    Content: (await render(entry)).Content,
+  })),
+);
+---
+
+<BaseLayout title="Changelog — MindDrop">
+  <div class="page changelog">
+    <header class="changelog-header">
+      <h1 class="changelog-title">Changelog</h1>
+    </header>
+
+    {
+      renderedEntries.map(({ data, Content }) => (
+        <article class="release" id={`v${data.version}`}>
+          <div class="release-meta">
+            <a class="release-version" href={`#v${data.version}`}>
+              {data.version}
+            </a>
+            <p class="label release-date">
+              <time datetime={data.date.toISOString()}>
+                {formatDate(data.date)}
+              </time>
+            </p>
+            <p class="label release-build">Build {data.build}</p>
+          </div>
+
+          <div class="release-body prose">
+            <Content />
+          </div>
+        </article>
+      ))
+    }
+
+    {
+      entries.length === 0 && (
+        <p class="changelog-empty">No builds have been published yet.</p>
+      )
+    }
+  </div>
+</BaseLayout>
+
+<style>
+  .changelog {
+    padding-block-start: var(--space-8);
+  }
+
+  .changelog-header {
+    padding-block-end: var(--space-6);
+  }
+
+  .changelog-title {
+    font-size: var(--step-3);
+  }
+
+  .release {
+    display: grid;
+    grid-template-columns: 10rem minmax(0, 1fr);
+    gap: var(--space-6);
+    padding-block: var(--space-7);
+    border-block-start: 1px solid var(--rule);
+  }
+
+  .release-meta {
+    position: sticky;
+    top: var(--space-8);
+    align-self: start;
+  }
+
+  .release-version {
+    font-family: var(--font-ui);
+    font-size: var(--step-1);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    text-decoration: none;
+  }
+
+  .release-version:hover {
+    color: var(--accent);
+  }
+
+  .release-date {
+    margin-block-start: var(--space-2);
+  }
+
+  .release-build {
+    margin-block-start: var(--space-1);
+    color: var(--ink-muted);
+  }
+
+  .changelog-empty {
+    padding-block: var(--space-7);
+    border-block-start: 1px solid var(--rule);
+    color: var(--ink-muted);
+  }
+
+  @media (max-width: 48rem) {
+    .release {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-4);
+    }
+
+    .release-meta {
+      position: static;
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-4);
+    }
+
+    .release-date,
+    .release-build {
+      margin-block-start: 0;
+    }
+  }
+</style>

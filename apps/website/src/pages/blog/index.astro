@@ -1,0 +1,104 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { formatDate } from '../../utils/formatDate';
+import { getBlogPosts } from '../../utils/getBlogPosts';
+
+const posts = await getBlogPosts();
+---
+
+<BaseLayout title="Blog — MindDrop">
+  <div class="page blog-index">
+    <header class="blog-index-header">
+      <h1 class="blog-index-title">Blog</h1>
+    </header>
+
+    {
+      posts.length === 0 ? (
+        <p class="blog-index-empty">No posts yet.</p>
+      ) : (
+        <ul class="post-list">
+          {posts.map((post) => (
+            <li class="post-item">
+              <a class="post-link" href={`/blog/${post.id}`}>
+                <p class="label post-date">
+                  <time datetime={post.data.date.toISOString()}>
+                    {formatDate(post.data.date)}
+                  </time>
+                </p>
+                <h2 class="post-title">{post.data.title}</h2>
+                {post.data.summary && (
+                  <p class="post-summary">{post.data.summary}</p>
+                )}
+              </a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </div>
+</BaseLayout>
+
+<style>
+  .blog-index {
+    padding-block-start: var(--space-8);
+  }
+
+  .blog-index-header {
+    padding-block-end: var(--space-6);
+  }
+
+  .blog-index-title {
+    font-size: var(--step-3);
+  }
+
+  .post-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .post-item {
+    border-block-start: 1px solid var(--rule);
+  }
+
+  .post-link {
+    display: grid;
+    grid-template-columns: 10rem minmax(0, 1fr);
+    gap: var(--space-6);
+    padding-block: var(--space-6);
+    text-decoration: none;
+  }
+
+  .post-link:hover .post-title {
+    color: var(--accent);
+  }
+
+  .post-title {
+    font-size: var(--step-2);
+    transition: color var(--duration-normal) var(--ease-out);
+  }
+
+  .post-summary {
+    grid-column: 2;
+    margin-block-start: var(--space-3);
+    max-width: var(--measure);
+    color: var(--ink-muted);
+  }
+
+  .blog-index-empty {
+    padding-block: var(--space-7);
+    border-block-start: 1px solid var(--rule);
+    color: var(--ink-muted);
+  }
+
+  @media (max-width: 48rem) {
+    .post-link {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-2);
+    }
+
+    .post-summary {
+      grid-column: 1;
+    }
+  }
+</style>

@@ -1,0 +1,103 @@
+---
+import ThemeToggle from './ThemeToggle.astro';
+
+const { pathname } = Astro.url;
+
+const links = [
+  { href: '/blog', label: 'Blog' },
+  { href: '/changelog', label: 'Changelog' },
+];
+
+/**
+ * Marks a nav link as current when the page sits under it, so a post page
+ * still highlights Blog.
+ */
+function isCurrent(href: string): boolean {
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+---
+
+<header class="site-header">
+  <div class="page site-header-inner">
+    <a class="site-header-wordmark" href="/">
+      <img
+        class="site-header-logo"
+        src="/logo.svg"
+        alt=""
+        width="118"
+        height="118"
+      />
+      minddrop
+    </a>
+
+    <nav class="site-header-nav" aria-label="Main">
+      {
+        links.map((link) => (
+          <a
+            class="site-header-link"
+            href={link.href}
+            aria-current={isCurrent(link.href) ? 'page' : undefined}
+          >
+            {link.label}
+          </a>
+        ))
+      }
+
+      <ThemeToggle />
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    border-block-end: 1px solid var(--rule);
+    background: color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter: blur(8px);
+  }
+
+  .site-header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-5);
+    padding-block: var(--space-4);
+  }
+
+  .site-header-wordmark {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55em;
+    font-family: var(--font-ui);
+    font-size: var(--step--1);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .site-header-logo {
+    width: 1.5em;
+    height: 1.5em;
+  }
+
+  .site-header-nav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+  }
+
+  .site-header-link {
+    font-family: var(--font-ui);
+    font-size: var(--step--1);
+    font-weight: 400;
+    text-decoration: none;
+    color: var(--ink-muted);
+    transition: color var(--duration-normal) var(--ease-out);
+  }
+
+  .site-header-link:hover,
+  .site-header-link[aria-current='page'] {
+    color: var(--ink);
+  }
+</style>

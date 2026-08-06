@@ -1,0 +1,80 @@
+---
+import type { InferGetStaticPropsType } from 'astro';
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { formatDate } from '../../utils/formatDate';
+import { getBlogPosts } from '../../utils/getBlogPosts';
+
+export async function getStaticPaths() {
+  const posts = await getBlogPosts();
+
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<BaseLayout
+  title={`${post.data.title} — MindDrop`}
+  description={post.data.summary ?? post.data.title}
+>
+  <article class="page post">
+    <header class="post-header">
+      <p class="label">
+        <time datetime={post.data.date.toISOString()}>
+          {formatDate(post.data.date)}
+        </time>
+      </p>
+
+      <h1 class="post-title">{post.data.title}</h1>
+
+      {post.data.summary && <p class="post-lede">{post.data.summary}</p>}
+    </header>
+
+    <div class="prose">
+      <Content />
+    </div>
+
+    <footer class="post-footer">
+      <a href="/blog">All posts</a>
+    </footer>
+  </article>
+</BaseLayout>
+
+<style>
+  .post {
+    padding-block-start: var(--space-8);
+  }
+
+  .post-header {
+    max-width: var(--measure);
+    padding-block-end: var(--space-6);
+    margin-block-end: var(--space-6);
+    border-block-end: 1px solid var(--rule);
+  }
+
+  .post-title {
+    margin-block-start: var(--space-4);
+    font-size: var(--step-3);
+  }
+
+  .post-lede {
+    margin-block-start: var(--space-4);
+    font-size: var(--step-1);
+    color: var(--ink-muted);
+  }
+
+  .post-footer {
+    margin-block-start: var(--space-7);
+    padding-block-start: var(--space-5);
+    border-block-start: 1px solid var(--rule);
+    font-family: var(--font-ui);
+    font-size: var(--step--1);
+  }
+</style>
