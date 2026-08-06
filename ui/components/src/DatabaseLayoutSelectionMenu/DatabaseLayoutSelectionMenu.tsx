@@ -69,7 +69,12 @@ export const DatabaseLayoutSelectionMenu: React.FC<
   const allDatabases = Databases.useAll();
   const allDesigns = Designs.useAll();
 
-  const databaseIds = Array.isArray(databaseId) ? databaseId : [databaseId];
+  // Memoised so the array identity is stable between renders, keeping it
+  // usable as a dependency below
+  const databaseIds = useMemo(
+    () => (Array.isArray(databaseId) ? databaseId : [databaseId]),
+    [databaseId],
+  );
   const isMulti = Array.isArray(databaseId);
 
   // Collect databases and their design's layouts of the requested type
