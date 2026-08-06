@@ -19,7 +19,7 @@ describe('onCreateDatabase', () => {
     onCreateDatabase(objectDatabase);
 
     // Should have added a table view for the database to the store
-    const views = DataViews.Store.getAll();
+    const views = DataViews.Store.getAllArray();
     const view = views.find(
       (view) =>
         view.type === 'table' && view.dataSource.id === objectDatabase.id,

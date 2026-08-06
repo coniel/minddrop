@@ -27,7 +27,7 @@ describe('loadDatabaseViews', () => {
     loadDatabaseViews([database]);
 
     // Should have loaded the view with dataSource and virtual
-    const views = DataViews.Store.getAll();
+    const views = DataViews.Store.getAllArray();
     const view = views.find((view) => view.id === dataView_virtual_1.id);
 
     expect(view).toBeDefined();
@@ -43,7 +43,7 @@ describe('loadDatabaseViews', () => {
     loadDatabaseViews([objectDatabase]);
 
     // Store should remain empty
-    expect(DataViews.Store.getAll()).toHaveLength(0);
+    expect(DataViews.Store.getAllArray()).toHaveLength(0);
   });
 
   it('loads views from multiple databases', () => {
@@ -53,20 +53,20 @@ describe('loadDatabaseViews', () => {
 
     const database1: Database = {
       ...objectDatabase,
-      id: 'db-1',
+      id: 'database_db-1',
       views: [storedView1],
     };
 
     const database2: Database = {
       ...objectDatabase,
-      id: 'db-2',
+      id: 'database_db-2',
       views: [storedView2],
     };
 
     // Load views from multiple databases
     loadDatabaseViews([database1, database2]);
 
-    const views = DataViews.Store.getAll();
+    const views = DataViews.Store.getAllArray();
 
     expect(views).toHaveLength(2);
 
@@ -74,7 +74,7 @@ describe('loadDatabaseViews', () => {
     const viewA = views.find((view) => view.id === dataView_virtual_1.id);
     const viewB = views.find((view) => view.id === dataView_board_1.id);
 
-    expect(viewA!.dataSource.id).toBe('db-1');
-    expect(viewB!.dataSource.id).toBe('db-2');
+    expect(viewA!.dataSource.id).toBe('database_db-1');
+    expect(viewB!.dataSource.id).toBe('database_db-2');
   });
 });
