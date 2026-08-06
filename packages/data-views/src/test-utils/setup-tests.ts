@@ -1,6 +1,7 @@
 import { vi } from 'vitest';
 import { Events } from '@minddrop/events';
 import { initializeMockFileSystem } from '@minddrop/file-system';
+import { initializeI18n } from '@minddrop/i18n';
 import {
   cleanupWorkspaceFixtures,
   setupWorkspaceFixtures,
@@ -10,6 +11,8 @@ import {
   cleanupDataViewFixtures,
   setupDataViewFixtures,
 } from './setup-fixtures';
+
+initializeI18n();
 
 export const MockFs = initializeMockFileSystem();
 export const mockDate = new Date('2000-01-01T00:00:00.000Z');
