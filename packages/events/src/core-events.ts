@@ -1,5 +1,15 @@
 import type { TranslationKey } from '@minddrop/i18n';
 
+/**
+ * The default props type for view payloads.
+ *
+ * `any` rather than `unknown` so that consumers can read props off a view
+ * without narrowing first. Views that care about their props supply their
+ * own type argument.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type DefaultViewProps = any;
+
 export const OpenViewEvent = 'app:view:open';
 export const UpdateViewEvent = 'app:view:update';
 export const CloseViewEvent = 'app:view:close';
@@ -16,7 +26,7 @@ export const SetNavToolbarWidthEvent = 'app:nav-toolbar:set-width';
 export const ToggleWindowFillEvent = 'app:window:toggle-fill';
 export const AppErrorEvent = 'app:error';
 
-export type OpenViewEventData<TProps = any> = {
+export type OpenViewEventData<TProps = DefaultViewProps> = {
   /**
    * The id of the target view area. Defaults to the app's primary
    * view area when omitted.
@@ -72,7 +82,7 @@ export type OpenViewEventData<TProps = any> = {
   breadcrumbs?: ViewDescriptor[];
 };
 
-export type UpdateViewEventData<TProps = any> = {
+export type UpdateViewEventData<TProps = DefaultViewProps> = {
   /**
    * The id of the target view area. Defaults to the app's primary
    * view area when omitted.
@@ -119,7 +129,7 @@ export type CloseViewEventData = {
   id: string;
 };
 
-export type ViewDescriptor<TProps = any> = {
+export type ViewDescriptor<TProps = DefaultViewProps> = {
   /**
    * Identifier for the view type, following the convention
    * `[package]:view:[name]`. The component is resolved from the
