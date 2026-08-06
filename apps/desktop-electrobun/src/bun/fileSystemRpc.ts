@@ -391,16 +391,19 @@ export const fileSystemRpcHandlers = {
       allowsMultipleSelection: multiple ?? false,
     });
 
+    // Cancelled dialogs can report an empty string path
+    const selectedPaths = (chosenPaths ?? []).filter(Boolean);
+
     // Return null if no files were selected
-    if (!chosenPaths || chosenPaths.length === 0) {
+    if (selectedPaths.length === 0) {
       return null;
     }
 
     // Return a single path or array based on the multiple option
     if (multiple) {
-      return chosenPaths;
+      return selectedPaths;
     }
 
-    return chosenPaths[0];
+    return selectedPaths[0];
   },
 };
