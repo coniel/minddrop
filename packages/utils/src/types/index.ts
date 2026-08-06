@@ -1,5 +1,5 @@
-export * from './BackEndUtilsApi.types';
+export * from './BackendUtilsApi.types';
 export * from './EntityId.types';
-export * from './BackEndUtilsAdapter.types';
+export * from './BackendUtilsAdapter.types';
 export * from './Validation.types';
 export * from './WebpageMetadata.types';
