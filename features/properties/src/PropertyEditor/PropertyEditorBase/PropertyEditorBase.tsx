@@ -12,6 +12,7 @@ import {
   IconButton,
   IconPicker,
   KeyboardShortcut,
+  Spacer,
   Text,
   TextInput,
   propsToClass,
@@ -302,7 +303,7 @@ export const PropertyEditorBase: React.FC<PropertyEditorBaseProps> = ({
           )}
         </FieldRoot>
         {children}
-        <Group justify="between" className="property-editor-footer">
+        <Group className="property-editor-footer">
           {deletable && (
             <Button
               size="sm"
@@ -312,6 +313,9 @@ export const PropertyEditorBase: React.FC<PropertyEditorBaseProps> = ({
               onClick={handleClickDelete}
             />
           )}
+          {/* Keeps the cancel and save buttons right aligned when
+              there is no delete button */}
+          <Spacer />
           <div>
             <Button
               label="actions.cancel"
