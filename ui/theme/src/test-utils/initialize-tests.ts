@@ -5,7 +5,10 @@ import {
   MockFileSystem,
   initializeMockFileSystem,
 } from '@minddrop/file-system';
+import { initializeI18n } from '@minddrop/i18n';
 import { ThemeStore } from '../ThemeStore';
+
+initializeI18n();
 
 const { configsFileDescriptor } = FILE_SYSTEM_TEST_DATA;
 
