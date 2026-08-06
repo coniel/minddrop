@@ -223,15 +223,27 @@
    Double rAF in the component ensures rapid clicks restart cleanly. */
 
 @keyframes number-input-bump-up {
-  0%   { transform: translateY(0); }
-  30%  { transform: translateY(-4px); }
-  100% { transform: translateY(0); }
+  0% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-4px);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
 
 @keyframes number-input-bump-down {
-  0%   { transform: translateY(0); }
-  30%  { transform: translateY(4px); }
-  100% { transform: translateY(0); }
+  0% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(4px);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
 
 .number-input-increment.is-bumping .number-input-increment-icon {

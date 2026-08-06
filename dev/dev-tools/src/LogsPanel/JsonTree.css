@@ -27,25 +27,62 @@
   color: var(--text-subtle);
   user-select: none;
 
-  &:hover { color: var(--text-regular); }
+  &:hover {
+    color: var(--text-regular);
+  }
 }
 
 /* --- Value type colors --- */
 
-.json-key            { color: var(--text-regular); }
-.json-key-toggle     { cursor: pointer; &:hover { text-decoration: underline; } }
-.json-preview-toggle { cursor: pointer; &:hover { color: var(--text-muted); } }
-.json-string    { color: var(--text-info); }
-.json-number    { color: var(--text-warning); }
-.json-bool-true { color: var(--text-success); }
-.json-bool-false { color: var(--text-danger); }
-.json-null      { color: var(--text-subtle); font-style: italic; }
-.json-undefined { color: var(--text-subtle); font-style: italic; }
+.json-key {
+  color: var(--text-regular);
+}
+.json-key-toggle {
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+.json-preview-toggle {
+  cursor: pointer;
+  &:hover {
+    color: var(--text-muted);
+  }
+}
+.json-string {
+  color: var(--text-info);
+}
+.json-number {
+  color: var(--text-warning);
+}
+.json-bool-true {
+  color: var(--text-success);
+}
+.json-bool-false {
+  color: var(--text-danger);
+}
+.json-null {
+  color: var(--text-subtle);
+  font-style: italic;
+}
+.json-undefined {
+  color: var(--text-subtle);
+  font-style: italic;
+}
 
 /* --- Structure --- */
 
-.json-date    { color: var(--text-warning); }
+.json-date {
+  color: var(--text-warning);
+}
 
-.json-bracket { color: var(--text-muted); }
-.json-comma   { color: var(--text-subtle); }
-.json-preview { color: var(--text-subtle); font-style: italic; }
+.json-bracket {
+  color: var(--text-muted);
+}
+.json-comma {
+  color: var(--text-subtle);
+}
+.json-preview {
+  color: var(--text-subtle);
+  font-style: italic;
+}

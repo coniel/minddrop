@@ -52,9 +52,17 @@ export const DispatchEventForm = React.forwardRef<DispatchEventFormHandle>(
             data as Record<string, unknown>,
           )) {
             if (typeof value === 'string') {
-              newEntries.push({ ...makeEntry('string'), key, stringValue: value });
+              newEntries.push({
+                ...makeEntry('string'),
+                key,
+                stringValue: value,
+              });
             } else if (typeof value === 'number') {
-              newEntries.push({ ...makeEntry('number'), key, numberValue: value });
+              newEntries.push({
+                ...makeEntry('number'),
+                key,
+                numberValue: value,
+              });
             } else if (typeof value === 'boolean') {
               newEntries.push({
                 ...makeEntry('boolean'),
@@ -74,8 +82,13 @@ export const DispatchEventForm = React.forwardRef<DispatchEventFormHandle>(
       setEntries((prev) => [...prev, makeEntry(type)]);
     };
 
-    const updateEntry = (id: number, patch: Partial<Omit<DataEntry, 'id' | 'type'>>) => {
-      setEntries((prev) => prev.map((e) => (e.id === id ? { ...e, ...patch } : e)));
+    const updateEntry = (
+      id: number,
+      patch: Partial<Omit<DataEntry, 'id' | 'type'>>,
+    ) => {
+      setEntries((prev) =>
+        prev.map((e) => (e.id === id ? { ...e, ...patch } : e)),
+      );
     };
 
     const removeEntry = (id: number) => {
@@ -88,12 +101,16 @@ export const DispatchEventForm = React.forwardRef<DispatchEventFormHandle>(
       const data = entries.reduce<Record<string, unknown>>((acc, entry) => {
         if (!entry.key) return acc;
         if (entry.type === 'string') acc[entry.key] = entry.stringValue;
-        else if (entry.type === 'number') acc[entry.key] = entry.numberValue ?? 0;
+        else if (entry.type === 'number')
+          acc[entry.key] = entry.numberValue ?? 0;
         else acc[entry.key] = entry.boolValue === 'true';
         return acc;
       }, {});
 
-      Events.dispatch(eventName.trim(), Object.keys(data).length ? data : undefined);
+      Events.dispatch(
+        eventName.trim(),
+        Object.keys(data).length ? data : undefined,
+      );
       if (clearOnSend) {
         setEventName('');
         setEntries([]);
@@ -145,7 +162,9 @@ export const DispatchEventForm = React.forwardRef<DispatchEventFormHandle>(
                       variant="outline"
                       placeholder="value"
                       value={entry.stringValue}
-                      onValueChange={(v) => updateEntry(entry.id, { stringValue: v })}
+                      onValueChange={(v) =>
+                        updateEntry(entry.id, { stringValue: v })
+                      }
                       autoComplete="off"
                       autoCorrect="off"
                       autoCapitalize="off"
@@ -158,7 +177,9 @@ export const DispatchEventForm = React.forwardRef<DispatchEventFormHandle>(
                       variant="outline"
                       placeholder="0"
                       value={entry.numberValue ?? undefined}
-                      onValueChange={(v) => updateEntry(entry.id, { numberValue: v })}
+                      onValueChange={(v) =>
+                        updateEntry(entry.id, { numberValue: v })
+                      }
                     />
                   )}
                   {entry.type === 'boolean' && (
@@ -166,7 +187,9 @@ export const DispatchEventForm = React.forwardRef<DispatchEventFormHandle>(
                       size="sm"
                       value={entry.boolValue}
                       onValueChange={(v) =>
-                        updateEntry(entry.id, { boolValue: v as 'true' | 'false' })
+                        updateEntry(entry.id, {
+                          boolValue: v as 'true' | 'false',
+                        })
                       }
                     >
                       <Toggle value="true" icon="check" label="true" />
@@ -186,15 +209,33 @@ export const DispatchEventForm = React.forwardRef<DispatchEventFormHandle>(
         )}
 
         <div className="dispatch-event-add-row">
-          <IconButton icon="type" label="Add string field" size="sm" onClick={() => addEntry('string')} />
-          <IconButton icon="hash" label="Add number field" size="sm" onClick={() => addEntry('number')} />
-          <IconButton icon="square-check" label="Add boolean field" size="sm" onClick={() => addEntry('boolean')} />
+          <IconButton
+            icon="type"
+            label="Add string field"
+            size="sm"
+            onClick={() => addEntry('string')}
+          />
+          <IconButton
+            icon="hash"
+            label="Add number field"
+            size="sm"
+            onClick={() => addEntry('number')}
+          />
+          <IconButton
+            icon="square-check"
+            label="Add boolean field"
+            size="sm"
+            onClick={() => addEntry('boolean')}
+          />
           <div style={{ marginLeft: 'auto', display: 'flex', gap: '2px' }}>
             <IconButton
               icon="x"
               label="Clear form"
               size="sm"
-              onClick={() => { setEventName(''); setEntries([]); }}
+              onClick={() => {
+                setEventName('');
+                setEntries([]);
+              }}
             />
             <Toggle
               icon="eraser"

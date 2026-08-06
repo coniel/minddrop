@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { FsEntry } from './FsEntry.types';
 import { FileSystemAdapter, FsWatchEvent } from './FileSystemAdapter.types';
+import { FsEntry } from './FsEntry.types';
 import { FsFileStats } from './FsFileStats.types';
 import {
   FsCreateDirOptions,

@@ -18,7 +18,9 @@ export function StoreInspector<T extends object>({
 }: StoreInspectorProps<T>) {
   const [search, setSearch] = useState('');
   const [expandedKeys, setExpandedKeys] = useState<Set<string>>(new Set());
-  const [itemForces, setItemForces] = useState<Map<string, ForceSignal>>(new Map());
+  const [itemForces, setItemForces] = useState<Map<string, ForceSignal>>(
+    new Map(),
+  );
 
   const filteredItems = useMemo(() => {
     const q = search.toLowerCase();
@@ -55,7 +57,9 @@ export function StoreInspector<T extends object>({
     const newOpen = !(current?.open ?? false);
     if (newOpen) {
       // Expanding: ensure item row is open.
-      setExpandedKeys((prev) => (prev.has(key) ? prev : new Set(prev).add(key)));
+      setExpandedKeys((prev) =>
+        prev.has(key) ? prev : new Set(prev).add(key),
+      );
     } else {
       // Collapsing: close the item row entirely rather than leaving a shrunk tree.
       setExpandedKeys((prev) => {
@@ -85,7 +89,12 @@ export function StoreInspector<T extends object>({
           placeholder="Search…"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          onKeyDown={(e) => { if (e.key === 'Escape') { if (e.shiftKey) setSearch(''); e.currentTarget.blur(); } }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') {
+              if (e.shiftKey) setSearch('');
+              e.currentTarget.blur();
+            }
+          }}
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="off"
@@ -96,9 +105,7 @@ export function StoreInspector<T extends object>({
       <div className="store-inspector-list">
         {filteredItems.length === 0 && (
           <Text size="sm" color="subtle" style={{ padding: 'var(--space-4)' }}>
-            {items.length === 0
-              ? 'No items.'
-              : 'No items match the filter.'}
+            {items.length === 0 ? 'No items.' : 'No items match the filter.'}
           </Text>
         )}
 

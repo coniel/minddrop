@@ -79,7 +79,10 @@ export function parseIssueFrontmatter(raw: string): {
     frontmatter[key] = value;
   }
 
-  const content = lines.slice(closingIndex + 1).join('\n').replace(/^\n/, '');
+  const content = lines
+    .slice(closingIndex + 1)
+    .join('\n')
+    .replace(/^\n/, '');
 
   return {
     frontmatter: {

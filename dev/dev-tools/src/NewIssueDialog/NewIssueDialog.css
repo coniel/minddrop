@@ -7,7 +7,8 @@
   align-items: center;
   justify-content: center;
 
-  animation: new-issue-dialog-fade-in var(--duration-normal) var(--ease-out) forwards;
+  animation: new-issue-dialog-fade-in var(--duration-normal) var(--ease-out)
+    forwards;
 }
 
 @keyframes new-issue-dialog-fade-in {
@@ -30,7 +31,8 @@
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35);
   overflow: hidden;
 
-  animation: new-issue-dialog-slide-in var(--duration-normal) var(--ease-out) forwards;
+  animation: new-issue-dialog-slide-in var(--duration-normal) var(--ease-out)
+    forwards;
 }
 
 @keyframes new-issue-dialog-slide-in {

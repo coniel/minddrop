@@ -2,11 +2,10 @@
  * ToggleGroup.stories.tsx
  * Dev reference for the ToggleGroup component.
  */
-
 import { useState } from 'react';
 import { Toggle } from '../Toggle';
+import { Story, StoryItem, StoryRow, StorySection } from '../dev/Story';
 import { ToggleGroup } from './ToggleGroup';
-import { Story, StorySection, StoryRow, StoryItem } from '../dev/Story';
 
 export const ToggleGroupStories = () => {
   const [formatting, setFormatting] = useState<string[]>(['bold']);
@@ -14,7 +13,6 @@ export const ToggleGroupStories = () => {
 
   return (
     <Story title="ToggleGroup">
-
       {/* --------------------------------------------------------
           BASIC
           Multi-select. Any number of items can be active at once.
@@ -22,7 +20,10 @@ export const ToggleGroupStories = () => {
           sizes — child Toggles are slightly smaller than their
           standalone equivalents to leave breathing room.
       -------------------------------------------------------- */}
-      <StorySection title="Basic" description="Multi-select — any number of items can be active simultaneously. Use RadioToggleGroup for single-select/radio behaviour.">
+      <StorySection
+        title="Basic"
+        description="Multi-select — any number of items can be active simultaneously. Use RadioToggleGroup for single-select/radio behaviour."
+      >
         <StoryRow>
           <StoryItem label="default">
             <ToggleGroup value={formatting} onValueChange={setFormatting}>
@@ -39,7 +40,10 @@ export const ToggleGroupStories = () => {
             </ToggleGroup>
           </StoryItem>
           <StoryItem label="all selected">
-            <ToggleGroup value={['bold', 'italic', 'underline']} onValueChange={() => {}}>
+            <ToggleGroup
+              value={['bold', 'italic', 'underline']}
+              onValueChange={() => {}}
+            >
               <Toggle value="bold" icon="bold" label="Bold" />
               <Toggle value="italic" icon="italic" label="Italic" />
               <Toggle value="underline" icon="underline" label="Underline" />
@@ -48,13 +52,15 @@ export const ToggleGroupStories = () => {
         </StoryRow>
       </StorySection>
 
-
       {/* --------------------------------------------------------
           SIZES
           Size is set on the group container, not on each Toggle.
           Child Toggles are automatically sized down to fit.
       -------------------------------------------------------- */}
-      <StorySection title="Sizes" description="Size is set on the container. Child Toggles are automatically sized down to leave breathing room inside the group.">
+      <StorySection
+        title="Sizes"
+        description="Size is set on the container. Child Toggles are automatically sized down to leave breathing room inside the group."
+      >
         <StoryRow>
           <StoryItem label="sm">
             <ToggleGroup size="sm" defaultValue={['bold']}>
@@ -80,11 +86,13 @@ export const ToggleGroupStories = () => {
         </StoryRow>
       </StorySection>
 
-
       {/* --------------------------------------------------------
           UNCONTROLLED
       -------------------------------------------------------- */}
-      <StorySection title="Uncontrolled" description="Use defaultValue when you don't need to track state externally.">
+      <StorySection
+        title="Uncontrolled"
+        description="Use defaultValue when you don't need to track state externally."
+      >
         <StoryRow>
           <StoryItem label="defaultValue">
             <ToggleGroup defaultValue={['italic']}>
@@ -96,11 +104,13 @@ export const ToggleGroupStories = () => {
         </StoryRow>
       </StorySection>
 
-
       {/* --------------------------------------------------------
           CHILDREN
       -------------------------------------------------------- */}
-      <StorySection title="Label text" description="Toggles with no icon or children render their label as visible text.">
+      <StorySection
+        title="Label text"
+        description="Toggles with no icon or children render their label as visible text."
+      >
         <StoryRow>
           <StoryItem label="label text">
             <ToggleGroup defaultValue={['bold']}>
@@ -112,22 +122,29 @@ export const ToggleGroupStories = () => {
         </StoryRow>
       </StorySection>
 
-
       {/* --------------------------------------------------------
           CHILDREN
       -------------------------------------------------------- */}
-      <StorySection title="Children" description="Toggles with custom children instead of icons.">
+      <StorySection
+        title="Children"
+        description="Toggles with custom children instead of icons."
+      >
         <StoryRow>
           <StoryItem label="text children">
             <ToggleGroup defaultValue={['bold']}>
-              <Toggle value="bold" label="Bold">Bold</Toggle>
-              <Toggle value="italic" label="Italic">Italic</Toggle>
-              <Toggle value="underline" label="Underline">Underline</Toggle>
+              <Toggle value="bold" label="Bold">
+                Bold
+              </Toggle>
+              <Toggle value="italic" label="Italic">
+                Italic
+              </Toggle>
+              <Toggle value="underline" label="Underline">
+                Underline
+              </Toggle>
             </ToggleGroup>
           </StoryItem>
         </StoryRow>
       </StorySection>
-
 
       {/* --------------------------------------------------------
           DISABLED
@@ -143,7 +160,6 @@ export const ToggleGroupStories = () => {
           </StoryItem>
         </StoryRow>
       </StorySection>
-
     </Story>
   );
 };

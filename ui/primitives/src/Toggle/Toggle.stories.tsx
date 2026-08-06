@@ -2,24 +2,25 @@
  * Toggle.stories.tsx
  * Dev reference for the Toggle component.
  */
-
 import { useState } from 'react';
+import { Story, StoryItem, StoryRow, StorySection } from '../dev/Story';
 import { Toggle } from './Toggle';
-import { Story, StorySection, StoryRow, StoryItem } from '../dev/Story';
 
 export const ToggleStories = () => {
   const [pressed, setPressed] = useState(false);
 
   return (
     <Story title="Toggle">
-
       {/* --------------------------------------------------------
           VARIANTS
           Mirror IconButton variants exactly. Pressed state uses
           the same surface tokens as the persistent active state
           on buttons elsewhere in the system.
       -------------------------------------------------------- */}
-      <StorySection title="Variants" description="Mirrors IconButton variants. Pressed state matches the persistent active/latched state used by buttons throughout the system.">
+      <StorySection
+        title="Variants"
+        description="Mirrors IconButton variants. Pressed state matches the persistent active/latched state used by buttons throughout the system."
+      >
         <StoryRow>
           <StoryItem label="ghost">
             <Toggle icon="bold" label="Bold" variant="ghost" />
@@ -48,11 +49,13 @@ export const ToggleStories = () => {
         </StoryRow>
       </StorySection>
 
-
       {/* --------------------------------------------------------
           SIZES
       -------------------------------------------------------- */}
-      <StorySection title="Sizes" description="sm=1.5rem, md=1.75rem, lg=2.25rem — match IconButton sizes exactly.">
+      <StorySection
+        title="Sizes"
+        description="sm=1.5rem, md=1.75rem, lg=2.25rem — match IconButton sizes exactly."
+      >
         <StoryRow>
           <StoryItem label="sm">
             <Toggle icon="bold" label="Bold" size="sm" />
@@ -66,11 +69,13 @@ export const ToggleStories = () => {
         </StoryRow>
       </StorySection>
 
-
       {/* --------------------------------------------------------
           COLOR
       -------------------------------------------------------- */}
-      <StorySection title="Color" description="Primary color variant for contextual toggles like active formatting tools.">
+      <StorySection
+        title="Color"
+        description="Primary color variant for contextual toggles like active formatting tools."
+      >
         <StoryRow>
           <StoryItem label="neutral (default)">
             <Toggle icon="bold" label="Bold" />
@@ -88,16 +93,24 @@ export const ToggleStories = () => {
             <Toggle icon="bold" label="Bold" color="primary" variant="subtle" />
           </StoryItem>
           <StoryItem label="primary subtle pressed">
-            <Toggle icon="bold" label="Bold" color="primary" variant="subtle" pressed />
+            <Toggle
+              icon="bold"
+              label="Bold"
+              color="primary"
+              variant="subtle"
+              pressed
+            />
           </StoryItem>
         </StoryRow>
       </StorySection>
 
-
       {/* --------------------------------------------------------
           CONTROLLED
       -------------------------------------------------------- */}
-      <StorySection title="Controlled" description="Manage pressed state externally via pressed and onPressedChange.">
+      <StorySection
+        title="Controlled"
+        description="Manage pressed state externally via pressed and onPressedChange."
+      >
         <StoryRow>
           <StoryItem label={`pressed: ${pressed}`}>
             <Toggle
@@ -110,13 +123,15 @@ export const ToggleStories = () => {
         </StoryRow>
       </StorySection>
 
-
       {/* --------------------------------------------------------
           LABEL TEXT
           When no icon or children are provided, the label is
           rendered as visible text. The button auto-sizes to fit.
       -------------------------------------------------------- */}
-      <StorySection title="Label text" description="When no icon or children are provided, the label is rendered as visible text. The button auto-sizes to fit.">
+      <StorySection
+        title="Label text"
+        description="When no icon or children are provided, the label is rendered as visible text. The button auto-sizes to fit."
+      >
         <StoryRow>
           <StoryItem label="ghost">
             <Toggle label="Bold" variant="ghost" />
@@ -147,12 +162,14 @@ export const ToggleStories = () => {
         </StoryRow>
       </StorySection>
 
-
       {/* --------------------------------------------------------
           CHILDREN
           Custom content passed as children overrides the label.
       -------------------------------------------------------- */}
-      <StorySection title="Children" description="Use children instead of the icon prop to render custom content.">
+      <StorySection
+        title="Children"
+        description="Use children instead of the icon prop to render custom content."
+      >
         <StoryRow>
           <StoryItem label="text child">
             <Toggle label="Bold" variant="outline">
@@ -172,7 +189,6 @@ export const ToggleStories = () => {
         </StoryRow>
       </StorySection>
 
-
       {/* --------------------------------------------------------
           DISABLED
       -------------------------------------------------------- */}
@@ -186,7 +202,6 @@ export const ToggleStories = () => {
           </StoryItem>
         </StoryRow>
       </StorySection>
-
     </Story>
   );
 };

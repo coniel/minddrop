@@ -1,10 +1,13 @@
 import React, { useMemo, useRef, useState } from 'react';
-import { IconButton, Text } from '@minddrop/ui-primitives';
 import { Events } from '@minddrop/events';
+import { IconButton, Text } from '@minddrop/ui-primitives';
+import { ForceSignal, JsonTree } from '../LogsPanel/JsonTree';
 import { EventEntry } from '../types';
 import { formatArg } from '../utils';
-import { ForceSignal, JsonTree } from '../LogsPanel/JsonTree';
-import { DispatchEventForm, DispatchEventFormHandle } from './DispatchEventForm';
+import {
+  DispatchEventForm,
+  DispatchEventFormHandle,
+} from './DispatchEventForm';
 import './EventsPanel.css';
 
 export interface EventsPanelProps {
@@ -71,9 +74,7 @@ export const EventsPanel: React.FC<EventsPanelProps> = ({
     const current = itemForces.get(id);
     const newOpen = !(current?.open ?? false);
     if (newOpen) {
-      setExpandedIds((prev) =>
-        prev.has(id) ? prev : new Set(prev).add(id),
-      );
+      setExpandedIds((prev) => (prev.has(id) ? prev : new Set(prev).add(id)));
     } else {
       setExpandedIds((prev) => {
         const next = new Set(prev);
@@ -109,7 +110,12 @@ export const EventsPanel: React.FC<EventsPanelProps> = ({
           placeholder="Search…"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          onKeyDown={(e) => { if (e.key === 'Escape') { if (e.shiftKey) setSearch(''); e.currentTarget.blur(); } }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') {
+              if (e.shiftKey) setSearch('');
+              e.currentTarget.blur();
+            }
+          }}
         />
       </div>
 
@@ -130,75 +136,79 @@ export const EventsPanel: React.FC<EventsPanelProps> = ({
           const prev = displayed[i - 1];
           const newBatch =
             prev &&
-            Math.floor(prev.timestamp / 1000) !== Math.floor(entry.timestamp / 1000);
+            Math.floor(prev.timestamp / 1000) !==
+              Math.floor(entry.timestamp / 1000);
 
           return (
             <React.Fragment key={entry.id}>
-            {newBatch && <div className="events-panel-batch-gap" />}
-            <div
-              className="events-panel-entry"
-              onContextMenu={(e) =>
-                complex && handleContextMenu(e, entry.id)
-              }
-            >
+              {newBatch && <div className="events-panel-batch-gap" />}
               <div
-                className={`events-panel-row${complex ? ' is-clickable' : ''}${expanded ? ' is-expanded' : ''}`}
-                onClick={() => complex && toggleExpand(entry.id)}
+                className="events-panel-entry"
+                onContextMenu={(e) => complex && handleContextMenu(e, entry.id)}
               >
-                <Text
-                  mono
-                  size="xs"
-                  color="subtle"
-                  className="events-panel-time"
+                <div
+                  className={`events-panel-row${complex ? ' is-clickable' : ''}${expanded ? ' is-expanded' : ''}`}
+                  onClick={() => complex && toggleExpand(entry.id)}
                 >
-                  {new Date(entry.timestamp).toLocaleTimeString()}
-                </Text>
-
-                <span className="events-panel-name">{entry.name}</span>
-
-                {hasData && !complex && (
-                  <Text mono size="xs" color="subtle" className="events-panel-inline-data">
-                    {formatArg(entry.data)}
+                  <Text
+                    mono
+                    size="xs"
+                    color="subtle"
+                    className="events-panel-time"
+                  >
+                    {new Date(entry.timestamp).toLocaleTimeString()}
                   </Text>
-                )}
 
-                {complex && (
-                  <span className="events-panel-toggle">
-                    {expanded ? '▾' : '▸'}
-                  </span>
-                )}
+                  <span className="events-panel-name">{entry.name}</span>
 
-                <div className="events-panel-actions">
-                  <IconButton
-                    icon="pen"
-                    label="Pre-fill dispatch form"
-                    size="sm"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      formRef.current?.fill(entry.name, entry.data);
-                    }}
-                  />
-                  <IconButton
-                    icon="rotate-ccw"
-                    label="Re-dispatch event"
-                    size="sm"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      Events.dispatch(entry.name, entry.data);
-                    }}
-                  />
+                  {hasData && !complex && (
+                    <Text
+                      mono
+                      size="xs"
+                      color="subtle"
+                      className="events-panel-inline-data"
+                    >
+                      {formatArg(entry.data)}
+                    </Text>
+                  )}
+
+                  {complex && (
+                    <span className="events-panel-toggle">
+                      {expanded ? '▾' : '▸'}
+                    </span>
+                  )}
+
+                  <div className="events-panel-actions">
+                    <IconButton
+                      icon="pen"
+                      label="Pre-fill dispatch form"
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        formRef.current?.fill(entry.name, entry.data);
+                      }}
+                    />
+                    <IconButton
+                      icon="rotate-ccw"
+                      label="Re-dispatch event"
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        Events.dispatch(entry.name, entry.data);
+                      }}
+                    />
+                  </div>
                 </div>
+
+                {expanded && complex && (
+                  <div className="events-panel-body">
+                    <JsonTree
+                      value={entry.data as object}
+                      externalForce={force}
+                    />
+                  </div>
+                )}
               </div>
-
-              {expanded && complex && (
-                <div className="events-panel-body">
-                  <JsonTree
-                    value={entry.data as object}
-                    externalForce={force}
-                  />
-                </div>
-              )}
-            </div>
             </React.Fragment>
           );
         })}

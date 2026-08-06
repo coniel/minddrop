@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
+import { SelectionStore } from '../SelectionStore';
 import { SelectionItemsAddedEvent } from '../events';
 import {
   cleanup,
@@ -7,7 +8,6 @@ import {
   selectionItem_A_2,
   setup,
 } from '../test-utils';
-import { SelectionStore } from '../SelectionStore';
 import { addToSelection } from './addToSelection';
 
 describe('addToSelection', () => {

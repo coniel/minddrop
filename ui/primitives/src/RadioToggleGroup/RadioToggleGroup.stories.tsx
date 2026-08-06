@@ -2,11 +2,10 @@
  * RadioToggleGroup.stories.tsx
  * Dev reference for the RadioToggleGroup component.
  */
-
 import { useState } from 'react';
 import { Toggle } from '../Toggle';
+import { Story, StoryItem, StoryRow, StorySection } from '../dev/Story';
 import { RadioToggleGroup } from './RadioToggleGroup';
-import { Story, StorySection, StoryRow, StoryItem } from '../dev/Story';
 
 export const RadioToggleGroupStories = () => {
   const [align, setAlign] = useState('left');
@@ -14,14 +13,16 @@ export const RadioToggleGroupStories = () => {
 
   return (
     <Story title="RadioToggleGroup">
-
       {/* --------------------------------------------------------
           BASIC
           Single-select. Exactly one item is always active.
           Clicking the active item has no effect — it cannot
           be deselected. Use ToggleGroup for multi-select.
       -------------------------------------------------------- */}
-      <StorySection title="Basic" description="Single-select — exactly one item is always active. Clicking the active toggle has no effect. Use ToggleGroup for multi-select.">
+      <StorySection
+        title="Basic"
+        description="Single-select — exactly one item is always active. Clicking the active toggle has no effect. Use ToggleGroup for multi-select."
+      >
         <StoryRow>
           <StoryItem label="default">
             <RadioToggleGroup value={align} onValueChange={setAlign}>
@@ -41,11 +42,13 @@ export const RadioToggleGroupStories = () => {
         </StoryRow>
       </StorySection>
 
-
       {/* --------------------------------------------------------
           SIZES
       -------------------------------------------------------- */}
-      <StorySection title="Sizes" description="Size is set on the container. Child Toggles are automatically sized down.">
+      <StorySection
+        title="Sizes"
+        description="Size is set on the container. Child Toggles are automatically sized down."
+      >
         <StoryRow>
           <StoryItem label="sm">
             <RadioToggleGroup size="sm" defaultValue="left">
@@ -71,11 +74,13 @@ export const RadioToggleGroupStories = () => {
         </StoryRow>
       </StorySection>
 
-
       {/* --------------------------------------------------------
           UNCONTROLLED
       -------------------------------------------------------- */}
-      <StorySection title="Uncontrolled" description="Use defaultValue when you don't need to track state externally.">
+      <StorySection
+        title="Uncontrolled"
+        description="Use defaultValue when you don't need to track state externally."
+      >
         <StoryRow>
           <StoryItem label="defaultValue='center'">
             <RadioToggleGroup defaultValue="center">
@@ -87,11 +92,13 @@ export const RadioToggleGroupStories = () => {
         </StoryRow>
       </StorySection>
 
-
       {/* --------------------------------------------------------
           CHILDREN
       -------------------------------------------------------- */}
-      <StorySection title="Label text" description="Toggles with no icon or children render their label as visible text.">
+      <StorySection
+        title="Label text"
+        description="Toggles with no icon or children render their label as visible text."
+      >
         <StoryRow>
           <StoryItem label="label text">
             <RadioToggleGroup defaultValue="grid">
@@ -103,22 +110,29 @@ export const RadioToggleGroupStories = () => {
         </StoryRow>
       </StorySection>
 
-
       {/* --------------------------------------------------------
           CHILDREN
       -------------------------------------------------------- */}
-      <StorySection title="Children" description="Toggles with custom children instead of icons.">
+      <StorySection
+        title="Children"
+        description="Toggles with custom children instead of icons."
+      >
         <StoryRow>
           <StoryItem label="text children">
             <RadioToggleGroup defaultValue="grid">
-              <Toggle value="list" label="List view">List</Toggle>
-              <Toggle value="grid" label="Grid view">Grid</Toggle>
-              <Toggle value="columns" label="Column view">Columns</Toggle>
+              <Toggle value="list" label="List view">
+                List
+              </Toggle>
+              <Toggle value="grid" label="Grid view">
+                Grid
+              </Toggle>
+              <Toggle value="columns" label="Column view">
+                Columns
+              </Toggle>
             </RadioToggleGroup>
           </StoryItem>
         </StoryRow>
       </StorySection>
-
 
       {/* --------------------------------------------------------
           DISABLED
@@ -135,15 +149,24 @@ export const RadioToggleGroupStories = () => {
         </StoryRow>
       </StorySection>
 
-
       {/* --------------------------------------------------------
           IN USE
       -------------------------------------------------------- */}
       <StorySection title="In use" description="Common real-world patterns.">
         <StoryRow>
           <StoryItem label="toolbar alignment">
-            <div style={{ display: 'flex', gap: 'var(--space-2)', alignItems: 'center' }}>
-              <RadioToggleGroup value={align} onValueChange={setAlign} size="sm">
+            <div
+              style={{
+                display: 'flex',
+                gap: 'var(--space-2)',
+                alignItems: 'center',
+              }}
+            >
+              <RadioToggleGroup
+                value={align}
+                onValueChange={setAlign}
+                size="sm"
+              >
                 <Toggle value="left" icon="align-left" label="Left" />
                 <Toggle value="center" icon="align-center" label="Center" />
                 <Toggle value="right" icon="align-right" label="Right" />
@@ -152,7 +175,6 @@ export const RadioToggleGroupStories = () => {
           </StoryItem>
         </StoryRow>
       </StorySection>
-
     </Story>
   );
 };

@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Events } from '@minddrop/events';
 import { registerSelectionItemSerializer } from '../SelectionItemSerializersStore';
+import { SelectionStore } from '../SelectionStore';
 import { SelectionDeletedEvent } from '../events';
 import {
   cleanup,
@@ -10,7 +11,6 @@ import {
   selectionItem_B_1,
   setup,
 } from '../test-utils';
-import { SelectionStore } from '../SelectionStore';
 import { deleteSelection } from './deleteSelection';
 
 const onDelete = vi.fn();

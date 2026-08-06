@@ -72,7 +72,11 @@
   }
 
   &.is-expanded {
-    background-color: color-mix(in lch, var(--surface-app) 70%, var(--surface-neutral));
+    background-color: color-mix(
+      in lch,
+      var(--surface-app) 70%,
+      var(--surface-neutral)
+    );
   }
 }
 
@@ -107,6 +111,10 @@
 .store-inspector-body {
   padding: var(--space-2) var(--space-4) var(--space-3)
     calc(var(--space-4) + 0.8rem + var(--space-2));
-  background-color: color-mix(in lch, var(--surface-app) 60%, var(--surface-neutral));
+  background-color: color-mix(
+    in lch,
+    var(--surface-app) 60%,
+    var(--surface-neutral)
+  );
   border-top: 1px solid var(--border-subtle);
 }

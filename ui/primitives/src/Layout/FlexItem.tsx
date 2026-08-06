@@ -3,8 +3,19 @@ import { propsToClass } from '../utils';
 
 export type FlexItemGrow = 1 | 2 | 3;
 export type FlexItemShrink = 0 | 1 | 2 | 3;
-export type FlexItemAlignSelf = 'start' | 'center' | 'end' | 'stretch' | 'baseline';
-export type FlexItemMarginAuto = 'left' | 'right' | 'top' | 'bottom' | 'x' | 'y';
+export type FlexItemAlignSelf =
+  | 'start'
+  | 'center'
+  | 'end'
+  | 'stretch'
+  | 'baseline';
+export type FlexItemMarginAuto =
+  | 'left'
+  | 'right'
+  | 'top'
+  | 'bottom'
+  | 'x'
+  | 'y';
 
 export interface FlexItemProps extends React.HTMLAttributes<HTMLElement> {
   /*
@@ -44,16 +55,7 @@ export interface FlexItemProps extends React.HTMLAttributes<HTMLElement> {
 
 export const FlexItem = React.forwardRef<HTMLElement, FlexItemProps>(
   (
-    {
-      as,
-      grow,
-      shrink,
-      alignSelf,
-      marginAuto,
-      className,
-      children,
-      ...other
-    },
+    { as, grow, shrink, alignSelf, marginAuto, className, children, ...other },
     ref,
   ) => {
     const Component = as ?? 'div';

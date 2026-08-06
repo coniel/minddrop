@@ -90,32 +90,38 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
     },
     ref,
   ) => {
-    const normalizedValue = value !== undefined
-      ? (Array.isArray(value) ? value : [value])
-      : undefined;
+    const normalizedValue =
+      value !== undefined
+        ? Array.isArray(value)
+          ? value
+          : [value]
+        : undefined;
 
-    const normalizedDefault = defaultValue !== undefined
-      ? (Array.isArray(defaultValue) ? defaultValue : [defaultValue])
-      : undefined;
+    const normalizedDefault =
+      defaultValue !== undefined
+        ? Array.isArray(defaultValue)
+          ? defaultValue
+          : [defaultValue]
+        : undefined;
 
     const handleValueChange = onValueChange
       ? (nextValue: number | number[]) => {
-        if (Array.isArray(nextValue) && nextValue.length === 1) {
-          onValueChange(nextValue[0]);
-        } else {
-          onValueChange(nextValue);
+          if (Array.isArray(nextValue) && nextValue.length === 1) {
+            onValueChange(nextValue[0]);
+          } else {
+            onValueChange(nextValue);
+          }
         }
-      }
       : undefined;
 
     const handleValueCommitted = onValueCommitted
       ? (nextValue: number | number[]) => {
-        if (Array.isArray(nextValue) && nextValue.length === 1) {
-          onValueCommitted(nextValue[0]);
-        } else {
-          onValueCommitted(nextValue);
+          if (Array.isArray(nextValue) && nextValue.length === 1) {
+            onValueCommitted(nextValue[0]);
+          } else {
+            onValueCommitted(nextValue);
+          }
         }
-      }
       : undefined;
 
     return (

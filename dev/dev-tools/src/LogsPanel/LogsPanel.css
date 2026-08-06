@@ -41,17 +41,39 @@
   user-select: none;
   transition: opacity 0.1s;
 
-  &:hover { filter: brightness(1.1); }
+  &:hover {
+    filter: brightness(1.1);
+  }
 }
 
 /* Dim non-active buttons when a specific level filter is active */
-.dev-tools-logs-filter-bar.has-filter .dev-tools-level-button:not(.is-active) { opacity: 0.3; }
+.dev-tools-logs-filter-bar.has-filter .dev-tools-level-button:not(.is-active) {
+  opacity: 0.3;
+}
 
-.dev-tools-level-button-all   { color: var(--text-muted);    background: var(--surface-neutral-hover); }
-.dev-tools-level-button-log   { color: var(--text-muted);    background: var(--surface-neutral-hover); }
-.dev-tools-level-button-info  { color: var(--text-info);     background: var(--surface-info, color-mix(in lch, var(--text-info) 12%, transparent)); }
-.dev-tools-level-button-warn  { color: var(--text-warning);  background: var(--surface-warning); }
-.dev-tools-level-button-error { color: var(--text-danger);   background: var(--surface-danger); }
+.dev-tools-level-button-all {
+  color: var(--text-muted);
+  background: var(--surface-neutral-hover);
+}
+.dev-tools-level-button-log {
+  color: var(--text-muted);
+  background: var(--surface-neutral-hover);
+}
+.dev-tools-level-button-info {
+  color: var(--text-info);
+  background: var(
+    --surface-info,
+    color-mix(in lch, var(--text-info) 12%, transparent)
+  );
+}
+.dev-tools-level-button-warn {
+  color: var(--text-warning);
+  background: var(--surface-warning);
+}
+.dev-tools-level-button-error {
+  color: var(--text-danger);
+  background: var(--surface-danger);
+}
 
 .dev-tools-active-filter-chip {
   all: unset;
@@ -69,7 +91,9 @@
   text-overflow: ellipsis;
   max-width: 12rem;
 
-  &:hover { filter: brightness(1.1); }
+  &:hover {
+    filter: brightness(1.1);
+  }
 }
 
 .dev-tools-log-label {
@@ -79,15 +103,24 @@
   cursor: pointer;
   user-select: none;
 
-  &:hover { color: var(--text-muted); }
-  &.is-active { color: lch(75 80 75); }
+  &:hover {
+    color: var(--text-muted);
+  }
+  &.is-active {
+    color: lch(75 80 75);
+  }
 }
 
 .dev-tools-log-source-file {
   cursor: pointer;
 
-  &:hover { text-decoration: underline; }
-  &.is-active { color: lch(75 80 75); opacity: 1; }
+  &:hover {
+    text-decoration: underline;
+  }
+  &.is-active {
+    color: lch(75 80 75);
+    opacity: 1;
+  }
 }
 
 .dev-tools-search {

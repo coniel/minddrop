@@ -4,7 +4,13 @@ import './layout.css';
 
 export type FlexGap = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 export type FlexAlign = 'start' | 'center' | 'end' | 'stretch' | 'baseline';
-export type FlexJustify = 'start' | 'center' | 'end' | 'between' | 'around' | 'evenly';
+export type FlexJustify =
+  | 'start'
+  | 'center'
+  | 'end'
+  | 'between'
+  | 'around'
+  | 'evenly';
 export type FlexDirection = 'row' | 'column';
 export type FlexWrap = 'wrap' | 'nowrap' | 'wrap-reverse';
 

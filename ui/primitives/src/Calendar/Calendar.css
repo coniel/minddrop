@@ -189,7 +189,11 @@
 /* ---- RANGE SELECTION ---- */
 
 .calendar-day-range-start:not(.calendar-day-range-end) {
-  background: linear-gradient(to right, transparent 50%, var(--primary-200) 50%);
+  background: linear-gradient(
+    to right,
+    transparent 50%,
+    var(--primary-200) 50%
+  );
 }
 
 .calendar-day-range-end:not(.calendar-day-range-start) {

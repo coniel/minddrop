@@ -1,1 +1,6 @@
-export { ChangelogPanel, formatDate, getEffectiveDate, groupChangelogsByDate } from './ChangelogPanel';
+export {
+  ChangelogPanel,
+  formatDate,
+  getEffectiveDate,
+  groupChangelogsByDate,
+} from './ChangelogPanel';

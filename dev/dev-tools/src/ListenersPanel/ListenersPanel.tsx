@@ -28,11 +28,15 @@ export const ListenersPanel: React.FC<ListenersPanelProps> = ({
             l.eventName === listenersView ||
             l.eventName.startsWith(listenersView + ':'),
         )
-  ).filter((l) => l.eventName !== '*').filter((l) => {
-    if (!search) return true;
-    const q = search.toLowerCase();
-    return l.eventName.toLowerCase().includes(q) || l.id.toLowerCase().includes(q);
-  });
+  )
+    .filter((l) => l.eventName !== '*')
+    .filter((l) => {
+      if (!search) return true;
+      const q = search.toLowerCase();
+      return (
+        l.eventName.toLowerCase().includes(q) || l.id.toLowerCase().includes(q)
+      );
+    });
 
   // Group by event name, preserving insertion order
   const groups = filtered.reduce<Map<string, string[]>>((acc, l) => {
@@ -65,7 +69,12 @@ export const ListenersPanel: React.FC<ListenersPanelProps> = ({
           placeholder="Search…"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          onKeyDown={(e) => { if (e.key === 'Escape') { if (e.shiftKey) setSearch(''); e.currentTarget.blur(); } }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') {
+              if (e.shiftKey) setSearch('');
+              e.currentTarget.blur();
+            }
+          }}
         />
       </div>
 
@@ -78,12 +87,16 @@ export const ListenersPanel: React.FC<ListenersPanelProps> = ({
         {[...groups.entries()].map(([eventName, ids]) => (
           <div key={eventName} className="listeners-panel-group">
             <div className="listeners-panel-group-header">
-              <Text mono size="xs">{eventName}</Text>
+              <Text mono size="xs">
+                {eventName}
+              </Text>
             </div>
             <div className="listeners-panel-entries">
               {ids.map((id) => (
                 <div key={id} className="listeners-panel-entry">
-                  <Text mono size="xs" color="subtle">{id}</Text>
+                  <Text mono size="xs" color="subtle">
+                    {id}
+                  </Text>
                 </div>
               ))}
             </div>

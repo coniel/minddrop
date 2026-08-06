@@ -1,6 +1,6 @@
 import { Events } from '@minddrop/events';
-import { SelectionItem } from '../types';
 import { SelectionStore } from '../SelectionStore';
+import { SelectionItem } from '../types';
 import { dedupeSelectionItemsArray } from '../utils';
 
 /**

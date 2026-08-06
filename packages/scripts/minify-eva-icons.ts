@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { parse, ElementNode } from 'svg-parser';
+import { ElementNode, parse } from 'svg-parser';
 import { filter, unwrap } from './utils';
 
 const files = fs.readdirSync('eva-icons');

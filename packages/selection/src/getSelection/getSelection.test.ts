@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { SelectionStore } from '../SelectionStore';
 import {
   cleanup,
   selectionItem_A_1,
@@ -6,7 +7,6 @@ import {
   selectionItem_B_1,
   setup,
 } from '../test-utils';
-import { SelectionStore } from '../SelectionStore';
 import { getSelection } from './getSelection';
 
 describe('getSelection', () => {

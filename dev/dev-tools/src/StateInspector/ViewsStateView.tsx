@@ -1,5 +1,5 @@
 import React from 'react';
-import { Views, ViewTypes } from '@minddrop/views';
+import { ViewTypes, Views } from '@minddrop/views';
 import { StoreInspector } from './StoreInspector';
 
 export type ViewsStateViewId = 'views' | 'view-types';
@@ -18,7 +18,9 @@ export function useViewsStoreCounts() {
   };
 }
 
-export const ViewsStateView: React.FC<ViewsStateViewProps> = ({ stateView }) => {
+export const ViewsStateView: React.FC<ViewsStateViewProps> = ({
+  stateView,
+}) => {
   const views = Views.useAll();
   const viewTypes = ViewTypes.useAll();
 

@@ -127,7 +127,11 @@
   --surface-overlay: var(--neutral-100);
 
   --surface-skeleton: var(--neutral-500);
-  --surface-skeleton-muted: color-mix(in srgb, var(--neutral-500) 60%, transparent);
+  --surface-skeleton-muted: color-mix(
+    in srgb,
+    var(--neutral-500) 60%,
+    transparent
+  );
 
   --surface-neutral: var(--neutral-300);
   --surface-neutral-hover: var(--neutral-400);

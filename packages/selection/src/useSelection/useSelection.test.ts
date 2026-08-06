@@ -1,12 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { act, renderHook } from '@minddrop/test-utils';
+import { SelectionStore } from '../SelectionStore';
 import {
   cleanup,
   selectionItem_A_1,
   selectionItem_A_2,
   setup,
 } from '../test-utils';
-import { SelectionStore } from '../SelectionStore';
 import { useSelection } from './useSelection';
 
 describe('useSelection', () => {

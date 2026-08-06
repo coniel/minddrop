@@ -61,7 +61,10 @@ const JsonNode: React.FC<JsonNodeProps> = ({
             <span className="json-bracket">[</span>
           ) : (
             <>
-              <span className="json-preview json-preview-toggle" onClick={toggle}>
+              <span
+                className="json-preview json-preview-toggle"
+                onClick={toggle}
+              >
                 Array({value.length})
               </span>
               {comma}
@@ -129,7 +132,10 @@ const JsonNode: React.FC<JsonNodeProps> = ({
             <span className="json-bracket">{'{'}</span>
           ) : (
             <>
-              <span className="json-preview json-preview-toggle" onClick={toggle}>
+              <span
+                className="json-preview json-preview-toggle"
+                onClick={toggle}
+              >
                 {'{'}
                 {entries.length} {entries.length === 1 ? 'key' : 'keys'}
                 {'}'}

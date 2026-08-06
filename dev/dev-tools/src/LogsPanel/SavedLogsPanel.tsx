@@ -14,7 +14,9 @@ function isComplex(arg: unknown): arg is object {
 }
 
 export const SavedLogsPanel: React.FC<SavedLogsPanelProps> = ({ logs }) => {
-  const [globalCollapse, setGlobalCollapse] = useState<ForceSignal | null>(null);
+  const [globalCollapse, setGlobalCollapse] = useState<ForceSignal | null>(
+    null,
+  );
   const [entryForces, setEntryForces] = useState<Map<number, ForceSignal>>(
     new Map(),
   );
@@ -61,11 +63,7 @@ export const SavedLogsPanel: React.FC<SavedLogsPanelProps> = ({ logs }) => {
     <div className="dev-tools-saved-logs">
       <div className="dev-tools-logs-list">
         {logs.length === 0 && (
-          <Text
-            size="sm"
-            color="subtle"
-            style={{ padding: 'var(--space-4)' }}
-          >
+          <Text size="sm" color="subtle" style={{ padding: 'var(--space-4)' }}>
             No saved logs.
           </Text>
         )}
@@ -94,7 +92,12 @@ export const SavedLogsPanel: React.FC<SavedLogsPanelProps> = ({ logs }) => {
                     isComplex(arg) ? (
                       <JsonTree key={i} value={arg} externalForce={force} />
                     ) : (
-                      <Text key={i} mono size="xs" className="dev-tools-log-text">
+                      <Text
+                        key={i}
+                        mono
+                        size="xs"
+                        className="dev-tools-log-text"
+                      >
                         {formatArg(arg)}
                       </Text>
                     ),

@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Events } from '@minddrop/events';
 import { act, renderHook } from '@minddrop/test-utils';
+import { SelectionStore } from '../SelectionStore';
 import {
   SelectionDragEndedEvent,
   SelectionDragEndedEventData,
@@ -14,7 +15,6 @@ import {
   serializedSelectionItem_A_1,
   setup,
 } from '../test-utils';
-import { SelectionStore } from '../SelectionStore';
 import { useDraggable } from './useDraggable';
 
 vi.mock('../dragStart', () => ({ dragStart: vi.fn() }));

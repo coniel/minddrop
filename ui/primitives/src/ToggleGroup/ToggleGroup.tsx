@@ -1,7 +1,7 @@
-import React from 'react';
 import { ToggleGroup as ToggleGroupPrimitive } from '@base-ui/react/toggle-group';
-import { propsToClass } from '../utils';
+import React from 'react';
 import { ToggleSize } from '../Toggle';
+import { propsToClass } from '../utils';
 import './ToggleGroup.css';
 
 export interface ToggleGroupProps<Value extends string = string> {

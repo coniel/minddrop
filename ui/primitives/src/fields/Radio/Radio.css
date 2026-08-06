@@ -3,7 +3,6 @@
    Built on Base UI RadioGroup primitive.
    ============================================================ */
 
-
 /* ------------------------------------------------------------
    RADIO FIELD
    Radio indicator + label + optional description.
@@ -37,8 +36,9 @@
   align-items: center;
   justify-content: center;
 
-  transition: background-color var(--duration-fast) var(--ease-out),
-              border-color var(--duration-fast) var(--ease-out);
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
 
   .radio-field:hover & {
     border-color: var(--border-primary);
@@ -63,8 +63,9 @@
   background-color: var(--contrast-color);
   opacity: 0;
   transform: scale(0.5);
-  transition: opacity var(--duration-fast) var(--ease-out),
-              transform var(--duration-fast) var(--ease-out);
+  transition:
+    opacity var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out);
 
   [data-checked] & {
     opacity: 1;
@@ -97,7 +98,6 @@
   line-height: var(--leading-normal);
 }
 
-
 /* ------------------------------------------------------------
    RADIO GROUP
    ------------------------------------------------------------ */
@@ -116,7 +116,6 @@
   margin-bottom: var(--space-1);
 }
 
-
 /* ------------------------------------------------------------
    RADIO CARD
    Large card-style radio option with title, description, icon.
@@ -131,8 +130,9 @@
   border-radius: var(--radius-lg);
   cursor: default;
 
-  transition: background-color var(--duration-fast) var(--ease-out),
-              border-color var(--duration-fast) var(--ease-out);
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
 
   /* Radio indicator — top left */
   .radio-indicator {
@@ -174,7 +174,6 @@
   margin-top: var(--space-1);
 }
 
-
 /* --- Variant: outline --- */
 
 .radio-card-variant-outline {
@@ -194,10 +193,11 @@
       background-color: var(--surface-primary-hover);
     }
 
-    .radio-card-title { color: var(--text-primary); }
+    .radio-card-title {
+      color: var(--text-primary);
+    }
   }
 }
-
 
 /* --- Variant: subtle --- */
 
@@ -217,10 +217,11 @@
       background-color: var(--surface-primary-hover);
     }
 
-    .radio-card-title { color: var(--text-primary); }
+    .radio-card-title {
+      color: var(--text-primary);
+    }
   }
 }
-
 
 /* ------------------------------------------------------------
    RADIO CARD GROUP
@@ -243,5 +244,7 @@
   flex-direction: row;
   align-items: stretch;
 
-  .radio-card { flex: 1; }
+  .radio-card {
+    flex: 1;
+  }
 }

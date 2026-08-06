@@ -2,21 +2,22 @@
  * Slider.stories.tsx
  * Dev reference for the Slider component.
  */
-
 import { useState } from 'react';
+import { Story, StoryItem, StoryRow, StorySection } from '../dev/Story';
 import { Slider } from './Slider';
-import { Story, StorySection, StoryRow, StoryItem } from '../dev/Story';
 
 export const SliderStories = () => {
   const [value, setValue] = useState(40);
 
   return (
     <Story title="Slider">
-
       {/* --------------------------------------------------------
           SIZES
       -------------------------------------------------------- */}
-      <StorySection title="Sizes" description="sm / md (default). Track height: 2px / 4px.">
+      <StorySection
+        title="Sizes"
+        description="sm / md (default). Track height: 2px / 4px."
+      >
         <StoryRow>
           <StoryItem label="sm">
             <div style={{ width: 200 }}>
@@ -31,11 +32,13 @@ export const SliderStories = () => {
         </StoryRow>
       </StorySection>
 
-
       {/* --------------------------------------------------------
           CONTROLLED
       -------------------------------------------------------- */}
-      <StorySection title="Controlled" description="Manage value state externally via value and onValueChange.">
+      <StorySection
+        title="Controlled"
+        description="Manage value state externally via value and onValueChange."
+      >
         <StoryRow>
           <StoryItem label={`value: ${value}`}>
             <div style={{ width: 200 }}>
@@ -48,11 +51,13 @@ export const SliderStories = () => {
         </StoryRow>
       </StorySection>
 
-
       {/* --------------------------------------------------------
           MIN / MAX / STEP
       -------------------------------------------------------- */}
-      <StorySection title="Min / Max / Step" description="Custom range and step increment.">
+      <StorySection
+        title="Min / Max / Step"
+        description="Custom range and step increment."
+      >
         <StoryRow>
           <StoryItem label="0–10, step 1">
             <div style={{ width: 200 }}>
@@ -67,7 +72,6 @@ export const SliderStories = () => {
         </StoryRow>
       </StorySection>
 
-
       {/* --------------------------------------------------------
           DISABLED
       -------------------------------------------------------- */}
@@ -80,7 +84,6 @@ export const SliderStories = () => {
           </StoryItem>
         </StoryRow>
       </StorySection>
-
     </Story>
   );
 };

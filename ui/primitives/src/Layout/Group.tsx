@@ -4,7 +4,13 @@ import './layout.css';
 
 export type GroupGap = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 export type GroupAlign = 'start' | 'center' | 'end' | 'stretch' | 'baseline';
-export type GroupJustify = 'start' | 'center' | 'end' | 'between' | 'around' | 'evenly';
+export type GroupJustify =
+  | 'start'
+  | 'center'
+  | 'end'
+  | 'between'
+  | 'around'
+  | 'evenly';
 
 export interface GroupProps extends React.HTMLAttributes<HTMLElement> {
   /*

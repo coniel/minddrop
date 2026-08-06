@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { Events } from '@minddrop/events';
+import { SelectionStore } from '../SelectionStore';
 import { addToSelection } from '../addToSelection';
 import {
   SelectionDragEndedEvent,
@@ -11,7 +12,6 @@ import { getSelection } from '../getSelection';
 import { isSelected } from '../isSelected';
 import { select } from '../select';
 import { SelectionItem } from '../types';
-import { SelectionStore } from '../SelectionStore';
 import { serializeSelectionToDataTransfer } from '../utils';
 
 export interface DragUtils {

@@ -3,7 +3,6 @@
  * Layout primitives for component story files.
  * Place in packages/ui/src/dev/Story.tsx
  */
-
 import React from 'react';
 import './Story.css';
 
@@ -29,11 +28,22 @@ export interface StorySectionProps {
   children: React.ReactNode;
 }
 
-export const StorySection = ({ title, description, tinted, children }: StorySectionProps) => (
-  <section className={['story-section', tinted ? 'story-section-tinted' : ''].filter(Boolean).join(' ')}>
+export const StorySection = ({
+  title,
+  description,
+  tinted,
+  children,
+}: StorySectionProps) => (
+  <section
+    className={['story-section', tinted ? 'story-section-tinted' : '']
+      .filter(Boolean)
+      .join(' ')}
+  >
     <div className="story-section-header">
       <h2 className="story-section-title">{title}</h2>
-      {description && <p className="story-section-description">{description}</p>}
+      {description && (
+        <p className="story-section-description">{description}</p>
+      )}
     </div>
     <div className="story-section-content">{children}</div>
   </section>

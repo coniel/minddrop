@@ -3,7 +3,6 @@
    Built on Base UI Checkbox primitive.
    ============================================================ */
 
-
 /* ------------------------------------------------------------
    CHECKBOX FIELD
    Checkbox indicator + label wired together.
@@ -38,8 +37,9 @@
   align-items: center;
   justify-content: center;
 
-  transition: background-color var(--duration-fast) var(--ease-out),
-              border-color var(--duration-fast) var(--ease-out);
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
 
   /* Checked */
   &[data-checked] {
@@ -71,7 +71,9 @@
   height: 0.625rem;
   display: none;
 
-  [data-checked] & { display: block; }
+  [data-checked] & {
+    display: block;
+  }
 }
 
 /* Indeterminate dash */
@@ -80,7 +82,9 @@
   height: 0.5rem;
   display: none;
 
-  [data-indeterminate] & { display: block; }
+  [data-indeterminate] & {
+    display: block;
+  }
 }
 
 /* --- Label area --- */
@@ -107,7 +111,6 @@
   color: var(--text-muted);
   line-height: var(--leading-normal);
 }
-
 
 /* ------------------------------------------------------------
    CHECKBOX GROUP

@@ -59,5 +59,4 @@ describe('Button', () => {
 
     expect(screen.getByRole('link').textContent).toBe('MindDrop');
   });
-
 });
