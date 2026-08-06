@@ -13,7 +13,7 @@ export interface ColorValue {
   value: ContentColor;
 }
 
-export const ContentColors: ColorValue[] = [
+export const ContentColorValues: ColorValue[] = [
   {
     labelKey: 'color.default',
     value: 'default',

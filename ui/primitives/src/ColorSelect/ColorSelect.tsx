@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import { ContentColor } from '@minddrop/ui-theme';
-import { InputLabel } from '../fields/InputLabel';
+import { Stack } from '../Layout/Stack';
 import {
   SelectIcon,
   SelectItem,
@@ -12,9 +12,9 @@ import {
   SelectValue,
   SelectVariant,
 } from '../Select';
-import { Stack } from '../Layout/Stack';
 import { TextColor } from '../Text';
-import { ContentColors } from '../constants';
+import { ContentColorValues } from '../constants';
+import { InputLabel } from '../fields/InputLabel';
 import './ColorSelect.css';
 
 export interface ColorSelectOption {
@@ -98,7 +98,7 @@ export const ColorSelect = ({
       swatchClass: option.swatchClass,
     }));
 
-    const colors = ContentColors.map((color) => ({
+    const colors = ContentColorValues.map((color) => ({
       value: color.value,
       labelKey: color.labelKey,
       swatchClass: `color-select-swatch-${color.value}`,

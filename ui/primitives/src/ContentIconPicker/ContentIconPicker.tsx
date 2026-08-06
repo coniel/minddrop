@@ -17,7 +17,7 @@ import { MenuLabel } from '../Menu';
 import { ScrollArea } from '../ScrollArea';
 import { Toolbar } from '../Toolbar';
 import { Tooltip } from '../Tooltip';
-import { ContentColors } from '../constants';
+import { ContentColorValues } from '../constants';
 import { propsToClass } from '../utils';
 import {
   MinifiedContentIcon,
@@ -190,7 +190,7 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
       {...other}
     >
       <Toolbar className="color-toolbar">
-        {ContentColors.map((color) => (
+        {ContentColorValues.map((color) => (
           <ColorSelectButton
             key={color.value}
             color={color.value}

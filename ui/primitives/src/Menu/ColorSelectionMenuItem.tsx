@@ -1,7 +1,7 @@
 import { Menu } from '@base-ui/react/menu';
 import React from 'react';
 import { ContentColor } from '@minddrop/ui-theme';
-import { ContentColors } from '../constants';
+import { ContentColorValues } from '../constants';
 import { propsToClass } from '../utils';
 import { MenuItem } from './MenuItem';
 
@@ -27,7 +27,7 @@ export const ColorSelectionMenuItem = React.forwardRef<
   ColorSelectionMenuItemProps
 >(({ className, color, label: _label, ...other }, ref) => {
   // Find the label key for this color
-  const labelKey = ContentColors.find((c) => c.value === color)?.labelKey;
+  const labelKey = ContentColorValues.find((c) => c.value === color)?.labelKey;
 
   return (
     <MenuItem
