@@ -1,0 +1,9 @@
+# Generated icon and emoji sets, written by packages/scripts
+**/*.min.tsx
+**/*.min.json
+
+# Generated Tauri schemas
+apps/desktop/src-tauri/gen
+
+# Build output
+**/dist
