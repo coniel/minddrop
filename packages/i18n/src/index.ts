@@ -1,3 +1,7 @@
+// The generated resources file augments i18next's module declaration, which
+// is what gives TranslationKey its value. It exports nothing, so an import
+// would be elided and the augmentation lost.
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference path="./i18n-resources.d.ts" />
 import type { KeyPrefix } from 'i18next';
 import { useTranslation as baseUseTranslation } from 'react-i18next';
