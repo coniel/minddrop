@@ -1,14 +1,12 @@
 {
+  "extends": "tsconfig/base.json",
   "compilerOptions": {
-    "module": "commonjs",
-    "esModuleInterop": true,
-    "lib": ["es2021"],
-    "allowSyntheticDefaultImports": true,
-    "target": "es6",
-    "noImplicitAny": true,
-    "moduleResolution": "node",
-    "sourceMap": true,
+    "module": "esnext",
+    "target": "es2022",
+    "lib": ["es2022"],
     "outDir": "dist",
     "baseUrl": "."
-  }
+  },
+  "include": ["."],
+  "exclude": ["node_modules", "dist"]
 }

@@ -1668,6 +1668,9 @@ importers:
       svg-parser:
         specifier: ^2.0.4
         version: 2.0.4
+      tsconfig:
+        specifier: workspace:*
+        version: link:../tsconfig
 
   packages/search:
     dependencies:

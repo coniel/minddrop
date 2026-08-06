@@ -1,4 +1,4 @@
-import { ElementNode, RootNode, Node } from 'svg-parser';
+import { ElementNode, Node, RootNode } from 'svg-parser';
 
 export interface MinifiedNode {
   t: string;
@@ -9,7 +9,7 @@ export function filter(nodes: Node[] | ElementNode[]) {
   return nodes.filter(
     (node) =>
       node.type === 'element' &&
-      !['defs', 'title'].includes(node.tagName) &&
+      !(node.tagName && ['defs', 'title'].includes(node.tagName)) &&
       !(node.tagName === 'rect' && node.properties?.height === 24) &&
       !(
         node.tagName === 'polyline' &&
