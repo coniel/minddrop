@@ -1,6 +1,8 @@
 /// <reference path="./i18n-resources.d.ts" />
 import type { KeyPrefix } from 'i18next';
 import { useTranslation as baseUseTranslation } from 'react-i18next';
+import { TranslationKey } from './i18n.types';
+import { i18n } from './initializeI18n';
 import { registerTranslations } from './registerTranslations';
 
 export { Trans } from 'react-i18next';
@@ -16,6 +18,47 @@ export const useTranslation = <KPrefix extends KeyPrefix<'core'> = undefined>({
   namespace?: string;
   keyPrefix?: KPrefix;
 } = {}) => baseUseTranslation((namespace || 'core') as 'core', { keyPrefix });
+
+export interface DynamicTranslationOptions {
+  /**
+   * The namespace to translate from. Defaults to the core namespace.
+   */
+  namespace?: string;
+
+  /**
+   * A prefix prepended to translation keys.
+   */
+  keyPrefix?: string;
+}
+
+/**
+ * Translates a key from a namespace registered at runtime.
+ *
+ * Namespaces registered by extensions are not part of the compile-time
+ * key union, so their keys and prefixes are accepted as plain strings.
+ */
+export const translateDynamic = (
+  key: string,
+  { namespace, keyPrefix }: DynamicTranslationOptions = {},
+): string =>
+  i18n.t(key as TranslationKey, {
+    ns: (namespace || 'core') as 'core',
+    keyPrefix: keyPrefix as KeyPrefix<'core'>,
+  });
+
+/**
+ * Returns a translation function for a namespace registered at runtime.
+ *
+ * Namespaces registered by extensions are not part of the compile-time
+ * key union, so their keys and prefixes are accepted as plain strings.
+ */
+export const useDynamicTranslation = ({
+  namespace,
+  keyPrefix,
+}: DynamicTranslationOptions = {}) =>
+  baseUseTranslation((namespace || 'core') as 'core', {
+    keyPrefix: keyPrefix as KeyPrefix<'core'>,
+  });
 
 /**
  * I18n API for packages to register their translations.
