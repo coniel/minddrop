@@ -2,6 +2,7 @@ import { Collections } from '@minddrop/collections';
 import { DataViews } from '@minddrop/data-views';
 import { DatabaseEntries } from '@minddrop/databases';
 import { PanelView } from '@minddrop/ui-components';
+import { DataViewOptionsMenu } from '../DataViewOptionsMenu';
 import { DataViewRenderer } from '../DataViewRenderer';
 import './DataViewView.css';
 
@@ -38,6 +39,11 @@ export const DataViewView: React.FC<DataViewViewProps> = ({ dataViewId }) => {
         stringTitle={dataView?.name || ''}
         contentIcon={dataView?.icon}
         className="data-view-view-panel"
+        actions={
+          dataView
+            ? [<DataViewOptionsMenu key="options" view={dataView} />]
+            : []
+        }
       >
         <DataViewRenderer
           view={dataView ?? undefined}

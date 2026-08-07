@@ -1,20 +1,15 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback } from 'react';
 import { Collections } from '@minddrop/collections';
-import { DataView, DataViewTypes, DataViews } from '@minddrop/data-views';
+import { DataView, DataViewTypes } from '@minddrop/data-views';
 import { CreateDatabaseEntryButton } from '@minddrop/ui-components';
 import {
   ContentIcon,
-  DropdownMenuContent,
-  DropdownMenuPortal,
-  DropdownMenuPositioner,
-  DropdownMenuRoot,
-  DropdownMenuTrigger,
   Heading,
-  IconButton,
   Text,
   Toolbar,
   TransientViewStateScope,
 } from '@minddrop/ui-primitives';
+import { DataViewOptionsMenu } from '../DataViewOptionsMenu';
 import { CreateDataViewForm } from './CreateDataViewForm';
 import './DataViewRenderer.css';
 
@@ -126,12 +121,6 @@ const ConfiguredView: React.FC<ConfiguredViewProps> = ({
 }) => {
   const viewType = DataViewTypes.use(view.type);
 
-  // Merge view type default options with the view's options
-  const viewOptions = useMemo(
-    () => ({ ...viewType?.defaultOptions, ...(view.options ?? {}) }),
-    [viewType, view.options],
-  );
-
   // Add newly created entry to the collection when
   // the view's data source is a collection
   const handleCreateEntry = useCallback(
@@ -141,14 +130,6 @@ const ConfiguredView: React.FC<ConfiguredViewProps> = ({
       }
     },
     [view.dataSource],
-  );
-
-  // Update the view's options
-  const handleUpdateViewOptions = useCallback(
-    (options: object) => {
-      DataViews.update(view.id, { options });
-    },
-    [view.id],
   );
 
   if (!viewType) {
@@ -172,28 +153,7 @@ const ConfiguredView: React.FC<ConfiguredViewProps> = ({
               onCreateEntry={handleCreateEntry}
               color="neutral"
             />
-            {viewType.settingsMenu && (
-              <DropdownMenuRoot>
-                <DropdownMenuTrigger>
-                  <IconButton
-                    icon="settings-2"
-                    label="dataViews.actions.settings"
-                    color="neutral"
-                  />
-                </DropdownMenuTrigger>
-                <DropdownMenuPortal>
-                  <DropdownMenuPositioner side="bottom" align="end">
-                    <DropdownMenuContent>
-                      {React.createElement(viewType.settingsMenu, {
-                        view,
-                        options: viewOptions,
-                        onUpdateOptions: handleUpdateViewOptions,
-                      })}
-                    </DropdownMenuContent>
-                  </DropdownMenuPositioner>
-                </DropdownMenuPortal>
-              </DropdownMenuRoot>
-            )}
+            <DataViewOptionsMenu view={view} />
           </Toolbar>
         </div>
       )}
