@@ -1,0 +1,135 @@
+---
+import Icon, { type IconName } from './Icon.astro';
+
+/**
+ * A two-column grid of cards, for a set of points that each need a paragraph
+ * rather than a screenshot. A card can also list the features it groups.
+ */
+
+export interface FeatureCardPoint {
+  /**
+   * The feature's name, which leads the line.
+   */
+  name: string;
+
+  /**
+   * One line explaining what it does.
+   */
+  description: string;
+}
+
+export interface FeatureCard {
+  /**
+   * The card's heading.
+   */
+  title: string;
+
+  /**
+   * A short paragraph explaining the point. Cards whose list speaks for itself
+   * leave this out.
+   */
+  description?: string;
+
+  /**
+   * Icon shown beside the heading.
+   */
+  icon: IconName;
+
+  /**
+   * The features the card covers, listed under the description. Cards making a
+   * single point leave this out.
+   */
+  points?: FeatureCardPoint[];
+}
+
+interface Props {
+  /**
+   * The cards to show, in reading order down the columns.
+   */
+  cards: FeatureCard[];
+}
+
+const { cards } = Astro.props;
+---
+
+<div class="feature-cards">
+  {
+    cards.map((card) => (
+      <article class="feature-card">
+        <h3 class="feature-card-title">
+          <Icon name={card.icon} />
+          {card.title}
+        </h3>
+
+        {card.description && (
+          <p class="feature-card-description">{card.description}</p>
+        )}
+
+        {card.points && (
+          <ul class="feature-card-points">
+            {card.points.map((point) => (
+              <li>
+                <b class="feature-card-point-name">{point.name}.</b>{' '}
+                {point.description}
+              </li>
+            ))}
+          </ul>
+        )}
+      </article>
+    ))
+  }
+</div>
+
+<style>
+  .feature-cards {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-5);
+  }
+
+  .feature-card {
+    padding: var(--space-6);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-xl);
+    background: var(--paper-raised);
+  }
+
+  .feature-card-title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--step-1);
+  }
+
+  .feature-card-title :global(.icon) {
+    color: var(--ink-muted);
+  }
+
+  .feature-card-description {
+    margin-block-start: var(--space-3);
+    color: var(--ink-muted);
+  }
+
+  /* Unmarked, since the card is the boundary the list needs */
+  .feature-card-points {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin-block: var(--space-4) 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.875rem;
+    color: var(--ink-muted);
+  }
+
+  .feature-card-point-name {
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  @media (max-width: 700px) {
+    .feature-cards {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

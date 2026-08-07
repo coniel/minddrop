@@ -1,0 +1,542 @@
+---
+import AppWindow from '../components/AppWindow.astro';
+import FeatureCards, {
+  type FeatureCard,
+} from '../components/FeatureCards.astro';
+import Icon from '../components/Icon.astro';
+import PageSection from '../components/PageSection.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const syncCards: FeatureCard[] = [
+  {
+    title: 'Zero-knowledge encryption',
+    description:
+      'Everything is encrypted on your device before it leaves it, with a key only you hold. Nobody else can read your entries, us included.',
+    icon: 'lock',
+  },
+  {
+    title: 'Version history',
+    description:
+      'Every change is kept, so you can look back at how an entry developed and put back an earlier version of it.',
+    icon: 'history',
+  },
+  {
+    title: 'Selective sync',
+    description:
+      'Choose which databases sync. Keep one on the machine it belongs to and carry the rest with you.',
+    icon: 'sliders',
+  },
+  {
+    title: 'Generous storage',
+    description:
+      'Room for the images, PDFs, and anything else your entries collect: 50 GB in total, with files of up to 200 MB each.',
+    icon: 'cloud',
+  },
+];
+
+const included = [
+  'Sync across your devices',
+  'Zero-knowledge encryption',
+  'Version history',
+  '50 GB of storage',
+  'Publishing to the web',
+  'Every AI feature',
+];
+
+const publishCards: FeatureCard[] = [
+  {
+    title: 'Real web pages',
+    description:
+      'Not an export or a screenshot. Published pages load fast, work on any device, and are indexed by search engines like any other site.',
+    icon: 'globe',
+  },
+  {
+    title: 'Always up to date',
+    description:
+      'Edit an entry and the page follows. Nothing to export, upload, or remember to do again.',
+    icon: 'refresh',
+  },
+  {
+    title: 'Your design is carried over',
+    description:
+      'Pages are laid out using the designs you built, so what you publish looks the same as it does in the app.',
+    icon: 'palette',
+  },
+  {
+    title: 'Views stay interactive',
+    description:
+      'Readers can sort and filter a published view for themselves, the same way you can in the app.',
+    icon: 'filter',
+  },
+  {
+    title: 'Accessible by default',
+    description:
+      'Every page works with a keyboard and a screen reader, at a readable contrast, without you having to think about it.',
+    icon: 'accessibility',
+  },
+  {
+    title: 'Your domain and analytics',
+    description:
+      'Serve pages from a domain you own, and plug in the analytics you already use, or leave them out entirely.',
+    icon: 'bar-chart',
+  },
+];
+
+const aiCards: FeatureCard[] = [
+  {
+    title: 'Getting things in',
+    icon: 'inbox',
+    points: [
+      {
+        name: 'Autosort',
+        description:
+          'Drop or paste text, documents, images, or URLs, and each one automatically lands in the database it belongs in.',
+      },
+      {
+        name: 'Autofill',
+        description:
+          'Instantly fill properties based on entry content, files and images included, and keep ones like summaries up to date automatically.',
+      },
+      {
+        name: 'Folder watching',
+        description:
+          'Watch any folder, such as your screenshots, and each file that lands there is analysed and filed away.',
+      },
+    ],
+  },
+  {
+    title: 'Setting things up',
+    icon: 'blocks',
+    points: [
+      {
+        name: 'Designs',
+        description:
+          'Describe a design, or hand over an image to work from, and refine it until it looks right. You do not have to be a designer to end up with beautiful databases.',
+      },
+      {
+        name: 'Databases',
+        description:
+          'Describe what you need and get a database with its properties and templates already defined.',
+      },
+      {
+        name: 'Automations',
+        description:
+          "Describe what should happen, such as 'mark a project as complete once every linked task is done', and get an automation that does it.",
+      },
+    ],
+  },
+  {
+    title: 'Finding things',
+    icon: 'search',
+    points: [
+      {
+        name: 'Ask your databases',
+        description:
+          'Put a question in plain language and get an answer, along with the entries it came from.',
+      },
+      {
+        name: 'Collection building',
+        description:
+          'Ask for a collection around a project or a theme, such as a trip to Tokyo, and it gathers the relevant entries from your databases.',
+      },
+      {
+        name: 'Query building',
+        description:
+          'Build complex, multi-database queries simply by describing the entries and relationships you are after.',
+      },
+    ],
+  },
+  {
+    title: 'On your terms',
+    icon: 'shield',
+    points: [
+      {
+        name: 'Optional',
+        description: 'AI features can be disabled and hidden entirely.',
+      },
+      {
+        name: 'Never used for training',
+        description: "None of your content trains anybody's model.",
+      },
+      {
+        name: 'Your choice of model',
+        description:
+          'MindDrop uses several providers behind the scenes, each for what it is best at. If you would rather use your own, or a model running on your own machine, point MindDrop at it instead.',
+      },
+    ],
+  },
+];
+---
+
+<BaseLayout
+  title="MindDrop Pro"
+  description="Securely sync across devices, publish to the web, design and organise your databases with AI done right."
+>
+  <section class="page hero">
+    <h1 class="hero-title">MindDrop Pro</h1>
+
+    <p class="hero-lede">
+      Securely sync across devices, publish to the web, design and organise your
+      databases with AI done right.
+    </p>
+
+    <div class="hero-action">
+      <a class="button button-primary" href="#get-pro">Get Pro</a>
+    </div>
+
+    <p class="hero-price">$10 a month or $99 a year.</p>
+  </section>
+
+  <PageSection
+    id="sync"
+    title="Sync"
+    description="Fast, secure sync built right into the app. Changes reach your other devices in seconds, so you can work on one computer and pick up where you left off on the next."
+  >
+    <FeatureCards cards={syncCards} />
+  </PageSection>
+
+  <PageSection
+    id="publish"
+    title="Publish"
+    description="Turn a view or a whole space into a web page and share it with a link. Make it public, or put it behind a password."
+  >
+    <AppWindow />
+
+    <div class="publish-cards">
+      <FeatureCards cards={publishCards} />
+    </div>
+  </PageSection>
+
+  <PageSection
+    id="ai"
+    title="AI done right"
+    description="Hand over the parts of the work that are filling in blanks rather than thinking. Everything it produces is an ordinary entry, design, or property you can edit afterwards."
+  >
+    <FeatureCards cards={aiCards} />
+
+    <div class="audit">
+      <h3 class="audit-title">AI audit view</h3>
+
+      <p class="audit-description">
+        Everything the AI creates or edits is listed in one place, showing what
+        changed and when. Undo anything you did not want, or put it right
+        yourself.
+      </p>
+
+      <AppWindow />
+    </div>
+  </PageSection>
+
+  <section class="page get-pro" id="get-pro">
+    {/* The billing period is a radio group, so the switch needs no script */}
+    <div class="get-pro-panel">
+      <div class="get-pro-terms">
+        <h2 class="get-pro-title">Pricing</h2>
+
+        <p class="get-pro-description">
+          One price for everything in Pro. Cancel whenever you like: everything
+          you have made stays yours, including whatever the AI created.
+        </p>
+
+        <h3 class="get-pro-included-title">What's included</h3>
+
+        <ul class="get-pro-included">
+          {
+            included.map((item) => (
+              <li class="get-pro-item">
+                <Icon name="check" />
+                {item}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div class="get-pro-plan">
+        <div class="get-pro-switch">
+          <input
+            class="get-pro-radio"
+            type="radio"
+            name="billing"
+            id="billing-monthly"
+            checked
+          />
+          <label class="get-pro-option" for="billing-monthly">Monthly</label>
+
+          <input
+            class="get-pro-radio"
+            type="radio"
+            name="billing"
+            id="billing-yearly"
+          />
+          <label class="get-pro-option" for="billing-yearly">Yearly</label>
+        </div>
+
+        <div class="get-pro-price get-pro-price-monthly">
+          <p class="get-pro-amount">
+            $10 <span class="get-pro-currency">USD</span>
+          </p>
+
+          <p class="get-pro-note">Per month</p>
+        </div>
+
+        <div class="get-pro-price get-pro-price-yearly">
+          <p class="get-pro-amount">
+            $99 <span class="get-pro-currency">USD</span>
+          </p>
+
+          <p class="get-pro-note">Per year, saving $21</p>
+        </div>
+
+        {/* Points at the app until there is a checkout to send people to */}
+        <a class="button button-primary get-pro-action" href="/#download">
+          Get Pro
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    padding-block-start: var(--space-8);
+    text-align: center;
+  }
+
+  .hero-title {
+    font-size: var(--step-4);
+  }
+
+  /* Wider than the prose measure, since the larger type shortens the line */
+  .hero-lede {
+    max-width: 46rem;
+    margin-block-start: var(--space-5);
+    margin-inline: auto;
+    font-size: var(--step-2);
+    line-height: 1.35;
+    color: var(--ink-muted);
+    text-wrap: balance;
+  }
+
+  .hero-action {
+    margin-block-start: var(--space-6);
+  }
+
+  .hero-price {
+    margin-block-start: var(--space-5);
+    font-size: 0.875rem;
+    color: var(--ink-muted);
+  }
+
+  /* Part of the same section as the screenshot above it */
+  .publish-cards {
+    margin-block-start: var(--space-6);
+  }
+
+  /* A sub-section of AI, so it sits closer than the sections do to each other */
+  .audit {
+    margin-block-start: var(--space-8);
+  }
+
+  .audit-title {
+    font-size: var(--step-2);
+  }
+
+  .audit-description {
+    max-width: var(--measure);
+    margin-block: var(--space-4) var(--space-6);
+    color: var(--ink-muted);
+  }
+
+  /*
+   * The panel carries its own heading rather than sitting under a section
+   * title, so a rule stands in for the break the other sections get.
+   */
+  .get-pro {
+    margin-block-start: var(--space-9);
+  }
+
+  .get-pro::before {
+    content: '';
+    display: block;
+    height: 1px;
+    margin-block-end: var(--space-9);
+    background: var(--rule);
+  }
+
+  /*
+   * What is in Pro on one side, what it costs on the other. The glow sits
+   * behind the price, so the panel is lit from the side the button is on.
+   */
+  .get-pro-panel {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 17rem;
+    gap: var(--space-8);
+    padding: var(--space-8);
+    border: 1px solid color-mix(in srgb, var(--accent) 20%, var(--rule));
+    border-radius: var(--radius-xl);
+    background:
+      radial-gradient(
+        90% 120% at 100% 0%,
+        color-mix(in srgb, var(--accent) 12%, transparent),
+        transparent 65%
+      ),
+      var(--paper-sunk);
+  }
+
+  .get-pro-title {
+    font-size: var(--step-3);
+  }
+
+  .get-pro-description {
+    max-width: var(--measure);
+    margin-block-start: var(--space-4);
+    color: var(--ink-muted);
+  }
+
+  /* The rule runs from the label to the end of the column */
+  .get-pro-included-title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    margin-block-start: var(--space-7);
+    font-size: 0.875rem;
+    color: var(--accent);
+  }
+
+  .get-pro-included-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--rule);
+  }
+
+  .get-pro-included {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-4);
+    margin-block: var(--space-5) 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .get-pro-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: 0.875rem;
+  }
+
+  .get-pro-item :global(.icon) {
+    color: var(--accent);
+  }
+
+  .get-pro-plan {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  /* A segmented control, driven by the radios it holds */
+  .get-pro-switch {
+    display: flex;
+    gap: var(--space-1);
+    padding: var(--space-1);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-lg);
+    background: var(--paper);
+  }
+
+  .get-pro-radio {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .get-pro-option {
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--ink-muted);
+    cursor: pointer;
+    transition: var(--transition-colors);
+  }
+
+  .get-pro-option:hover {
+    color: var(--ink);
+  }
+
+  .get-pro-radio:checked + .get-pro-option {
+    background: var(--paper-raised);
+    color: var(--ink);
+  }
+
+  .get-pro-radio:focus-visible + .get-pro-option {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /*
+   * Monthly is what shows until a browser without :has() is told otherwise,
+   * where the switch does nothing rather than showing both prices.
+   */
+  .get-pro-price {
+    margin-block: var(--space-6);
+  }
+
+  .get-pro-price-yearly {
+    display: none;
+  }
+
+  .get-pro-panel:has(#billing-yearly:checked) .get-pro-price-monthly {
+    display: none;
+  }
+
+  .get-pro-panel:has(#billing-yearly:checked) .get-pro-price-yearly {
+    display: block;
+  }
+
+  .get-pro-amount {
+    font-size: var(--step-4);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .get-pro-currency {
+    font-size: var(--step-1);
+    color: var(--ink-muted);
+  }
+
+  .get-pro-note {
+    margin-block-start: var(--space-3);
+    font-size: 0.875rem;
+    color: var(--ink-muted);
+  }
+
+  /* Taller than the buttons in the furniture, being the page's last word */
+  .get-pro-action {
+    align-self: stretch;
+    height: 2.75rem;
+    font-size: var(--step-0);
+  }
+
+  /* The price column has nowhere to sit beside the list, so it goes below */
+  @media (max-width: 860px) {
+    .get-pro-panel {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-7);
+      padding: var(--space-6);
+    }
+  }
+
+  @media (max-width: 560px) {
+    .get-pro-included {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-3);
+    }
+  }
+</style>
