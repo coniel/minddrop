@@ -8,7 +8,7 @@ import {
 } from '@minddrop/properties';
 import {
   Button,
-  ContentColors,
+  ContentColorValues,
   DropdownMenu,
   DropdownMenuColorSelectionItem,
   IconButton,
@@ -91,8 +91,10 @@ export const SelectPropertyEditor: React.FC<SelectPropertyEditorProps> = ({
 
   function handleAddOption() {
     const usedColors = new Set(options.map((opt) => opt.color));
-    const unusedColors = ContentColors.filter((c) => !usedColors.has(c.value));
-    const pool = unusedColors.length > 0 ? unusedColors : ContentColors;
+    const unusedColors = ContentColorValues.filter(
+      (c) => !usedColors.has(c.value),
+    );
+    const pool = unusedColors.length > 0 ? unusedColors : ContentColorValues;
     const color = pool[Math.floor(Math.random() * pool.length)].value;
 
     setOptions([...options, { value: '', color }]);
@@ -189,7 +191,7 @@ export const SelectPropertyEditor: React.FC<SelectPropertyEditorProps> = ({
                     </button>
                   }
                 >
-                  {ContentColors.map((c) => (
+                  {ContentColorValues.map((c) => (
                     <DropdownMenuColorSelectionItem
                       key={c.value}
                       color={c.value}

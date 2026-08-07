@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { i18n } from '@minddrop/i18n';
-import { TextPropertySchema } from '@minddrop/properties';
+import { PropertySchema, TextPropertySchema } from '@minddrop/properties';
 import {
   cleanup,
   emojiIconString,
@@ -16,6 +16,13 @@ import { PropertyEditorBase } from './PropertyEditorBase';
 
 const onSave = vi.fn();
 const onDelete = vi.fn();
+
+// The editor renders concrete properties, whose names are user-facing text
+// rather than i18n keys. The schema is a template, so translate its name.
+const textProperty: PropertySchema = {
+  ...TextPropertySchema,
+  name: i18n.t(TextPropertySchema.name),
+};
 
 describe('<PropertyEditorBase />', () => {
   afterEach(() => {
@@ -75,16 +82,16 @@ describe('<PropertyEditorBase />', () => {
   it('opens property form on click', async () => {
     render(
       <PropertyEditorBase
-        property={TextPropertySchema}
+        property={textProperty}
         onSave={onSave}
         onDelete={onDelete}
       />,
     );
     const user = userEvent.setup();
 
-    await user.click(screen.getByText(TextPropertySchema.name));
+    await user.click(screen.getByText(textProperty.name));
 
-    expect(screen.getByText(TextPropertySchema.name)).not.toBeVisible();
+    expect(screen.getByText(textProperty.name)).not.toBeVisible();
     expect(screen.getByRole('textbox')).toBeVisible();
   });
 
@@ -92,13 +99,13 @@ describe('<PropertyEditorBase />', () => {
     render(
       <PropertyEditorBase
         defaultOpen
-        property={TextPropertySchema}
+        property={textProperty}
         onSave={onSave}
         onDelete={onDelete}
       />,
     );
 
-    expect(screen.getByText(TextPropertySchema.name)).not.toBeVisible();
+    expect(screen.getByText(textProperty.name)).not.toBeVisible();
     expect(screen.getByRole('textbox')).toBeVisible();
   });
 
@@ -106,20 +113,20 @@ describe('<PropertyEditorBase />', () => {
     render(
       <PropertyEditorBase
         defaultOpen
-        property={TextPropertySchema}
+        property={textProperty}
         onSave={onSave}
         onDelete={onDelete}
       />,
     );
 
-    expect(screen.getByRole('textbox')).toHaveValue(TextPropertySchema.name);
+    expect(screen.getByRole('textbox')).toHaveValue(textProperty.name);
   });
 
   it('renders delete button when deletable is true', () => {
     render(
       <PropertyEditorBase
         defaultOpen
-        property={TextPropertySchema}
+        property={textProperty}
         onSave={onSave}
         onDelete={onDelete}
         deletable
@@ -133,7 +140,7 @@ describe('<PropertyEditorBase />', () => {
     render(
       <PropertyEditorBase
         defaultOpen
-        property={TextPropertySchema}
+        property={textProperty}
         onSave={onSave}
         onDelete={onDelete}
         deletable={false}
@@ -147,7 +154,7 @@ describe('<PropertyEditorBase />', () => {
     render(
       <PropertyEditorBase
         defaultOpen
-        property={TextPropertySchema}
+        property={textProperty}
         onSave={onSave}
         onDelete={onDelete}
       />,
@@ -159,7 +166,7 @@ describe('<PropertyEditorBase />', () => {
     await user.click(screen.getByText('actions.save'));
 
     expect(onSave).toHaveBeenCalledWith({
-      ...TextPropertySchema,
+      ...textProperty,
       name: 'New name',
       icon: emojiIconString,
     });
@@ -171,7 +178,7 @@ describe('<PropertyEditorBase />', () => {
     render(
       <PropertyEditorBase
         defaultOpen
-        property={TextPropertySchema}
+        property={textProperty}
         onSave={onSave}
         onDelete={onDelete}
         onCancel={onCancel}
@@ -191,7 +198,7 @@ describe('<PropertyEditorBase />', () => {
     render(
       <PropertyEditorBase
         defaultOpen
-        property={TextPropertySchema}
+        property={textProperty}
         onSave={onSaveAsync}
         onDelete={onDelete}
       />,
@@ -201,7 +208,7 @@ describe('<PropertyEditorBase />', () => {
     await user.click(screen.getByText('actions.save'));
 
     await waitFor(() => {
-      expect(screen.getByText(TextPropertySchema.name)).toBeVisible();
+      expect(screen.getByText(textProperty.name)).toBeVisible();
       expect(screen.queryByRole('textbox', { hidden: true })).not.toBeVisible();
     });
   });
@@ -213,7 +220,7 @@ describe('<PropertyEditorBase />', () => {
     render(
       <PropertyEditorBase
         defaultOpen
-        property={TextPropertySchema}
+        property={textProperty}
         onSave={onSaveAsync}
         onDelete={onDelete}
       />,
@@ -223,7 +230,7 @@ describe('<PropertyEditorBase />', () => {
     await user.click(screen.getByText('actions.save'));
 
     await waitFor(() => {
-      expect(screen.queryByText(TextPropertySchema.name)).not.toBeVisible();
+      expect(screen.queryByText(textProperty.name)).not.toBeVisible();
       expect(screen.getByRole('textbox')).toBeVisible();
     });
   });
@@ -232,7 +239,7 @@ describe('<PropertyEditorBase />', () => {
     render(
       <PropertyEditorBase
         defaultOpen
-        property={TextPropertySchema}
+        property={textProperty}
         onSave={onSave}
         onDelete={onDelete}
       />,
@@ -241,14 +248,14 @@ describe('<PropertyEditorBase />', () => {
 
     await user.click(screen.getByText('actions.delete'));
 
-    expect(onDelete).toHaveBeenCalledWith(TextPropertySchema);
+    expect(onDelete).toHaveBeenCalledWith(textProperty);
   });
 
   it('resets form values on cancel', async () => {
     render(
       <PropertyEditorBase
         defaultOpen
-        property={TextPropertySchema}
+        property={textProperty}
         onSave={onSave}
         onDelete={onDelete}
       />,
@@ -260,12 +267,12 @@ describe('<PropertyEditorBase />', () => {
     await user.click(screen.getByText('actions.cancel'));
 
     // Re-open editor
-    await user.click(screen.getByText(TextPropertySchema.name));
+    await user.click(screen.getByText(textProperty.name));
 
     // Save without making changes
     await user.click(screen.getByText('actions.save'));
 
-    expect(onSave).toHaveBeenCalledWith(TextPropertySchema);
+    expect(onSave).toHaveBeenCalledWith(textProperty);
   });
 
   it('calls onNameEnter when Enter is pressed in the name field', async () => {
@@ -274,7 +281,7 @@ describe('<PropertyEditorBase />', () => {
     render(
       <PropertyEditorBase
         defaultOpen
-        property={TextPropertySchema}
+        property={textProperty}
         onSave={onSave}
         onDelete={onDelete}
         onNameEnter={onNameEnter}
@@ -290,63 +297,68 @@ describe('<PropertyEditorBase />', () => {
     render(
       <PropertyEditorBase
         defaultOpen
-        property={TextPropertySchema}
+        // A custom name so the editor does not auto-focus the name field
+        property={{ ...textProperty, name: 'My Property' }}
         onSave={onSave}
         onDelete={onDelete}
         onNameEnter={vi.fn()}
-        nameEnterHint="properties.form.name.hint"
+        nameEnterHint="properties.select.options.nameEnterHint"
       />,
     );
     const user = userEvent.setup();
 
     expect(
-      screen.queryByText('properties.form.name.hint'),
+      screen.queryByText('properties.select.options.nameEnterHint'),
     ).not.toBeInTheDocument();
 
     await user.click(screen.getByRole('textbox'));
 
-    expect(screen.getByText('properties.form.name.hint')).toBeVisible();
+    expect(
+      screen.getByText('properties.select.options.nameEnterHint'),
+    ).toBeVisible();
   });
 
   it('hides name hint when name field loses focus', async () => {
     render(
       <PropertyEditorBase
         defaultOpen
-        property={TextPropertySchema}
+        property={textProperty}
         onSave={onSave}
         onDelete={onDelete}
         onNameEnter={vi.fn()}
-        nameEnterHint="properties.form.name.hint"
+        nameEnterHint="properties.select.options.nameEnterHint"
       />,
     );
     const user = userEvent.setup();
 
     await user.click(screen.getByRole('textbox'));
 
-    expect(screen.getByText('properties.form.name.hint')).toBeVisible();
+    expect(
+      screen.getByText('properties.select.options.nameEnterHint'),
+    ).toBeVisible();
 
     fireEvent.blur(screen.getByRole('textbox'));
 
     expect(
-      screen.queryByText('properties.form.name.hint'),
+      screen.queryByText('properties.select.options.nameEnterHint'),
     ).not.toBeInTheDocument();
   });
 
   it('hides name hint when field has an error', async () => {
     const nameValidator = vi.fn((value: string) => {
       if (value.length < 5) {
-        return 'Name error';
+        return 'properties.form.name.validation.required';
       }
     });
 
     render(
       <PropertyEditorBase
         defaultOpen
-        property={TextPropertySchema}
+        property={textProperty}
         onSave={onSave}
         onDelete={onDelete}
         onNameEnter={vi.fn()}
-        nameEnterHint="properties.form.name.hint"
+        nameEnterHint="properties.select.options.nameEnterHint"
         validators={{ name: nameValidator }}
       />,
     );
@@ -359,7 +371,7 @@ describe('<PropertyEditorBase />', () => {
     await user.click(screen.getByRole('textbox'));
 
     expect(
-      screen.queryByText('properties.form.name.hint'),
+      screen.queryByText('properties.select.options.nameEnterHint'),
     ).not.toBeInTheDocument();
   });
 
@@ -367,7 +379,7 @@ describe('<PropertyEditorBase />', () => {
     render(
       <PropertyEditorBase
         defaultOpen
-        property={TextPropertySchema}
+        property={textProperty}
         onSave={onSave}
         onDelete={onDelete}
       />,
@@ -377,21 +389,21 @@ describe('<PropertyEditorBase />', () => {
     await user.click(screen.getByRole('textbox'));
 
     expect(
-      screen.queryByText('properties.form.name.hint'),
+      screen.queryByText('properties.select.options.nameEnterHint'),
     ).not.toBeInTheDocument();
   });
 
   it('validates name field', async () => {
     const nameValidator = vi.fn((value: string) => {
       if (value.length < 5) {
-        return 'Name error';
+        return 'properties.form.name.validation.required';
       }
     });
 
     render(
       <PropertyEditorBase
         defaultOpen
-        property={TextPropertySchema}
+        property={textProperty}
         onSave={onSave}
         onDelete={onDelete}
         validators={{ name: nameValidator }}
@@ -402,13 +414,15 @@ describe('<PropertyEditorBase />', () => {
     await fillForm({ name: 'abc' });
     await user.click(screen.getByText('actions.save'));
 
-    expect(await screen.findByText('Name error')).toBeVisible();
+    expect(
+      await screen.findByText('properties.form.name.validation.required'),
+    ).toBeVisible();
 
     await fillForm({ name: 'Valid Name' });
     await user.click(screen.getByText('actions.save'));
 
     expect(onSave).toHaveBeenCalledWith({
-      ...TextPropertySchema,
+      ...textProperty,
       name: 'Valid Name',
     });
   });

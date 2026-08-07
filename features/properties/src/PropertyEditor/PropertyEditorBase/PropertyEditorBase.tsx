@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { i18n } from '@minddrop/i18n';
+import { TranslationKey, i18n } from '@minddrop/i18n';
 import { PropertySchema, PropertySchemas } from '@minddrop/properties';
 import {
   Button,
@@ -54,7 +54,7 @@ export interface PropertyEditorBaseProps
    * i18n key for the hint shown below the name field when focused.
    * Only rendered when provided alongside `onNameEnter`.
    */
-  nameEnterHint?: string;
+  nameEnterHint?: TranslationKey;
 
   /**
    * Called when the user cancels editing.
@@ -247,7 +247,7 @@ export const PropertyEditorBase: React.FC<PropertyEditorBaseProps> = ({
           size="sm"
           color="inherit"
           className="property-editor-label"
-          text={property.name}
+          stringText={property.name}
         />
         <Icon
           size={14}
