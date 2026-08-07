@@ -31,6 +31,8 @@ export interface RegisteredStore {
  */
 export const storeRegistry: Record<string, RegisteredStore> = {};
 
+const registryListeners = new Set<VoidFunction>();
+
 /**
  * Registers a store in the global registry.
  *
@@ -44,4 +46,24 @@ export function registerStore(
   useStore: UseBoundStore<StoreApi<unknown>>,
 ): void {
   storeRegistry[name] = { name, type, useStore };
+
+  // Notify listeners of the new store
+  registryListeners.forEach((listener) => listener());
+}
+
+/**
+ * Calls the callback whenever a store is registered.
+ *
+ * Stores are registered as the packages holding them load, which
+ * can happen long after the registry is first read.
+ *
+ * @param callback - Called after a store is registered.
+ * @returns A callback which stops listening.
+ */
+export function subscribeToStoreRegistry(callback: VoidFunction): VoidFunction {
+  registryListeners.add(callback);
+
+  return () => {
+    registryListeners.delete(callback);
+  };
 }
