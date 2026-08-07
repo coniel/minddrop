@@ -5,6 +5,7 @@ import {
   OpenConfirmationDialogEvent,
   OpenConfirmationDialogEventData,
 } from '@minddrop/events';
+import { TranslationKey } from '@minddrop/i18n';
 import { Properties, PropertyMap, PropertyValue } from '@minddrop/properties';
 import {
   Button,
@@ -404,7 +405,7 @@ export const DatabaseEntryTemplateEditor: React.FC<
  * Validates the template name, returning the i18n key of the
  * validation error if invalid.
  */
-function validateName(name: string): string | undefined {
+function validateName(name: string): TranslationKey | undefined {
   // Name is required
   if (name.trim() === '') {
     return 'databases.entryTemplates.form.name.validation.required';
