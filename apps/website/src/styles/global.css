@@ -135,6 +135,12 @@
    BASE
    ============================================================ */
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -201,6 +207,16 @@ img {
 
 .measure {
   max-width: var(--measure);
+}
+
+/* Names a control for a screen reader without showing the text */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 /*

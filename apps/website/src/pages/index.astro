@@ -7,7 +7,35 @@ import FeatureTabs, {
 } from '../components/FeatureTabs.astro';
 import Icon from '../components/Icon.astro';
 import PageSection from '../components/PageSection.astro';
+import ViewGallery, { type GalleryView } from '../components/ViewGallery.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+const views: GalleryView[] = [
+  {
+    title: 'Table',
+    description: 'Rows and columns, with every property in view at once.',
+  },
+  {
+    title: 'Gallery',
+    description: 'A grid of cards, sized and spaced however you like.',
+  },
+  {
+    title: 'Notebook',
+    description: "A list of entries beside the selected one's full page.",
+  },
+  {
+    title: 'Board',
+    description: 'Columns you arrange by hand, dragging entries between them.',
+  },
+  {
+    title: 'Canvas',
+    description: 'A freeform space where entries sit wherever you put them.',
+  },
+  {
+    title: 'Kanban',
+    description: 'Columns driven by a property, so entries move as it changes.',
+  },
+];
 
 const databaseFeatures: TabbedFeature[] = [
   {
@@ -129,6 +157,14 @@ const databaseFeatures: TabbedFeature[] = [
     description="A drag-and-drop canvas for designing how entries look when displayed as cards, rows, or a full page."
   >
     <AppWindow />
+  </PageSection>
+
+  <PageSection
+    id="views"
+    title="Views"
+    description="Each view shows the entries in a collection, query, or entire database, arranged in whichever way suits them."
+  >
+    <ViewGallery views={views} />
   </PageSection>
 </BaseLayout>
 

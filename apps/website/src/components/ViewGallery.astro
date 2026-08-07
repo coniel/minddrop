@@ -1,0 +1,306 @@
+---
+import AppWindow from './AppWindow.astro';
+import Icon from './Icon.astro';
+
+/**
+ * A grid of view types, each a screenshot with a name and a sentence. Picking
+ * one opens it in a dialog that can be stepped through.
+ *
+ * The behaviour lives in the base layout so it runs once for the page rather
+ * than shipping a copy per instance.
+ */
+
+export interface GalleryView {
+  /**
+   * The view type's name.
+   */
+  title: string;
+
+  /**
+   * One sentence describing how the view arranges entries.
+   */
+  description: string;
+
+  /**
+   * Screenshot of the view. A placeholder is shown while it is missing.
+   */
+  image?: string;
+
+  /**
+   * Describes the screenshot for anyone who cannot see it.
+   */
+  imageAlt?: string;
+}
+
+interface Props {
+  /**
+   * The view types to show, in order.
+   */
+  views: GalleryView[];
+}
+
+const { views } = Astro.props;
+---
+
+<div class="view-gallery" data-view-gallery>
+  <ul class="view-gallery-grid">
+    {
+      views.map((view, index) => (
+        <li class="view-card">
+          {/*
+            The button covers the card so the whole thing is clickable, while
+            keeping the screenshot and text out of the button's content.
+          */}
+          <button
+            class="view-card-button"
+            type="button"
+            aria-haspopup="dialog"
+            data-view-index={index}
+          >
+            <span class="visually-hidden">
+              Expand the {view.title} screenshot
+            </span>
+          </button>
+
+          <div class="view-card-media">
+            {view.image ? (
+              <AppWindow>
+                <img src={view.image} alt={view.imageAlt ?? ''} />
+              </AppWindow>
+            ) : (
+              <AppWindow />
+            )}
+          </div>
+
+          <h3 class="view-card-title">{view.title}</h3>
+          <p class="view-card-description">{view.description}</p>
+        </li>
+      ))
+    }
+  </ul>
+
+  <dialog class="view-dialog" aria-label="View types" data-view-dialog>
+    {/* Fills the viewport so the chevrons can sit outside the panel */}
+    <div class="view-dialog-layout" data-view-backdrop>
+      <button
+        class="view-dialog-step"
+        type="button"
+        aria-label="Previous view"
+        data-view-previous
+      >
+        <Icon name="chevron-left" />
+      </button>
+
+      <div class="view-dialog-panels">
+        <button
+          class="view-dialog-step view-dialog-close"
+          type="button"
+          aria-label="Close"
+          data-view-close
+        >
+          <Icon name="x" />
+        </button>
+
+        {
+          views.map((view, index) => (
+            <div class="view-dialog-panel" hidden={index !== 0} data-view-panel>
+              {view.image ? (
+                <AppWindow>
+                  <img src={view.image} alt={view.imageAlt ?? ''} />
+                </AppWindow>
+              ) : (
+                <AppWindow />
+              )}
+
+              <h3 class="view-dialog-title">{view.title}</h3>
+              <p class="view-dialog-description">{view.description}</p>
+            </div>
+          ))
+        }
+      </div>
+
+      <button
+        class="view-dialog-step"
+        type="button"
+        aria-label="Next view"
+        data-view-next
+      >
+        <Icon name="chevron-right" />
+      </button>
+    </div>
+  </dialog>
+</div>
+
+<style>
+  .view-gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-6) var(--space-5);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .view-card {
+    position: relative;
+  }
+
+  /* Sits over the whole card, so the screenshot and text stay outside it */
+  .view-card-button {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-lg);
+    background: none;
+  }
+
+  .view-card-media {
+    transition: transform var(--duration-normal) var(--ease-out);
+  }
+
+  /* Growing slightly signals that the card opens */
+  .view-card:hover .view-card-media,
+  .view-card:focus-within .view-card-media {
+    transform: scale(1.02);
+  }
+
+  .view-card-title {
+    margin-block-start: var(--space-4);
+    font-size: var(--step-0);
+  }
+
+  .view-card-description {
+    margin-block-start: var(--space-2);
+    font-size: 0.875rem;
+    color: var(--ink-muted);
+  }
+
+  /*
+   * The dialog is the whole viewport, the visible panel sits inside it. Sized
+   * by inset rather than viewport units, which would count the scrollbar and
+   * overflow.
+   */
+  .view-dialog {
+    position: fixed;
+    inset: 0;
+    width: auto;
+    max-width: none;
+    height: auto;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--ink);
+  }
+
+  .view-dialog::backdrop {
+    background: rgb(0 0 0 / 0.6);
+  }
+
+  .view-dialog-layout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-4);
+    width: 100%;
+    min-height: 100%;
+    padding: var(--space-5);
+    /* A panel taller than the viewport scrolls rather than being cut off */
+    overflow: auto;
+  }
+
+  /*
+   * As wide as the viewport allows, up to a cap. The last term keeps the panel
+   * short enough to fit vertically: it converts the height left over after the
+   * padding and caption back into a width using the screenshot's 16:10 ratio.
+   */
+  .view-dialog-panels {
+    position: relative;
+    width: min(80rem, 100%, calc((100dvh - 210px) * 1.6));
+    padding: var(--space-5);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-xl);
+    background: var(--paper);
+  }
+
+  /* Drawn against the backdrop rather than the page, so it is light */
+  .view-dialog-step {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 0;
+    border-radius: var(--radius-full);
+    background: rgb(255 255 255 / 0.12);
+    color: #ffffff;
+    transition: var(--transition-colors);
+  }
+
+  .view-dialog-step:hover {
+    background: rgb(255 255 255 / 0.22);
+  }
+
+  .view-dialog-step :global(.icon) {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  /*
+   * Sits in the same column as the next chevron, one gap to the right of the
+   * panel, with its top on the panel's top edge.
+   */
+  .view-dialog-close {
+    position: absolute;
+    top: 0;
+    left: calc(100% + var(--space-4));
+  }
+
+  .view-dialog-title {
+    margin-block-start: var(--space-5);
+    font-size: var(--step-2);
+  }
+
+  .view-dialog-description {
+    margin-block-start: var(--space-2);
+    color: var(--ink-muted);
+  }
+
+  /* The chevrons have to give up room before the panel does */
+  @media (max-width: 700px) {
+    .view-dialog-layout {
+      gap: var(--space-2);
+      padding: var(--space-3);
+    }
+
+    .view-dialog-step {
+      width: 2.25rem;
+      height: 2.25rem;
+    }
+
+    .view-dialog-step :global(.icon) {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+
+    .view-dialog-close {
+      left: calc(100% + var(--space-2));
+    }
+  }
+
+  @media (max-width: 900px) {
+    .view-gallery-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 560px) {
+    .view-gallery-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

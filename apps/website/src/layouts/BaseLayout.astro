@@ -63,6 +63,80 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <SiteFooter />
 
     <script is:inline>
+      // Let a view gallery open any of its screenshots in a dialog and step
+      // between them. Without this the cards are inert.
+      document.querySelectorAll('[data-view-gallery]').forEach((gallery) => {
+        const dialog = gallery.querySelector('[data-view-dialog]');
+        const panels = Array.from(
+          gallery.querySelectorAll('[data-view-panel]'),
+        );
+        const cards = Array.from(gallery.querySelectorAll('[data-view-index]'));
+
+        // Nothing to open
+        if (!dialog || panels.length === 0) {
+          return;
+        }
+
+        let current = 0;
+
+        function show(index) {
+          current = (index + panels.length) % panels.length;
+
+          panels.forEach((panel, position) => {
+            panel.hidden = position !== current;
+          });
+        }
+
+        cards.forEach((card) => {
+          card.addEventListener('click', () => {
+            show(Number(card.dataset.viewIndex));
+            dialog.showModal();
+
+            // Stop the page behind the dialog scrolling with the wheel
+            document.documentElement.style.overflow = 'hidden';
+          });
+        });
+
+        dialog.addEventListener('close', () => {
+          document.documentElement.style.overflow = '';
+        });
+
+        dialog
+          .querySelector('[data-view-previous]')
+          .addEventListener('click', () => show(current - 1));
+
+        dialog
+          .querySelector('[data-view-next]')
+          .addEventListener('click', () => show(current + 1));
+
+        dialog
+          .querySelector('[data-view-close]')
+          .addEventListener('click', () => dialog.close());
+
+        // Arrow keys step through, matching the previous and next buttons
+        dialog.addEventListener('keydown', (event) => {
+          if (event.key === 'ArrowRight') {
+            show(current + 1);
+          }
+
+          if (event.key === 'ArrowLeft') {
+            show(current - 1);
+          }
+        });
+
+        // The layout fills the dialog, so empty space around the panel is it
+        dialog.addEventListener('click', (event) => {
+          if (
+            event.target === dialog ||
+            event.target.hasAttribute('data-view-backdrop')
+          ) {
+            dialog.close();
+          }
+        });
+      });
+    </script>
+
+    <script is:inline>
       // Let each set of feature cards swap the screenshot beside it. Without
       // this the first feature's screenshot is the one on show.
       document.querySelectorAll('[data-feature-tabs]').forEach((set) => {

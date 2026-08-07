@@ -8,13 +8,16 @@
 
 export type IconName =
   | 'bookmark'
+  | 'chevron-left'
+  | 'chevron-right'
   | 'copy'
   | 'database'
   | 'file-text'
   | 'filter'
   | 'layout-template'
   | 'list'
-  | 'palette';
+  | 'palette'
+  | 'x';
 
 interface Props {
   /**
@@ -100,6 +103,19 @@ const { name } = Astro.props;
   {
     name === 'filter' && (
       <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+    )
+  }
+
+  {name === 'chevron-left' && <path d="m15 18-6-6 6-6" />}
+
+  {name === 'chevron-right' && <path d="m9 18 6-6-6-6" />}
+
+  {
+    name === 'x' && (
+      <Fragment>
+        <path d="M18 6 6 18" />
+        <path d="m6 6 12 12" />
+      </Fragment>
     )
   }
 
