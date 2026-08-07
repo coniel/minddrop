@@ -1,8 +1,8 @@
 import React from 'react';
+import { parseEventData } from '@minddrop/dev-tools';
 import { Events } from '@minddrop/events';
 import { useTranslation } from '@minddrop/i18n';
 import { Group, IconButton, Text, TextInput } from '@minddrop/ui-primitives';
-import { parseEventData } from '../utils';
 import './DispatchEventForm.css';
 
 export interface DispatchEventFormProps {

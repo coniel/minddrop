@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { DevToolsEventsStore } from '../DevToolsEventsStore';
+import { DevToolsNamespace } from '../constants';
 import { cleanup, setup } from '../test-utils';
 import { startEventCapture } from './startEventCapture';
 
@@ -25,6 +26,26 @@ describe('startEventCapture', () => {
 
     expect(entry.name).toBe('databases:create');
     expect(entry.data).toEqual({ id: 'db_1' });
+  });
+
+  it('does not capture the events the dev tools dispatch themselves', async () => {
+    await Events.dispatch('stores:persist', {
+      namespace: DevToolsNamespace,
+      persistTo: 'app-config',
+      data: {},
+    });
+
+    expect(DevToolsEventsStore.getAll()).toEqual([]);
+  });
+
+  it('captures the events of other stores', async () => {
+    await Events.dispatch('stores:persist', {
+      namespace: 'app-ui',
+      persistTo: 'app-config',
+      data: {},
+    });
+
+    expect(DevToolsEventsStore.getAll().length).toBe(1);
   });
 
   it('does not capture the catch all listener itself', async () => {

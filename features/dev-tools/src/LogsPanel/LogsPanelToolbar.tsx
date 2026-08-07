@@ -1,4 +1,5 @@
 import React from 'react';
+import { DevToolsLogLevel, DevToolsLogQuickFilter } from '@minddrop/dev-tools';
 import { createI18nKeyBuilder, useTranslation } from '@minddrop/i18n';
 import {
   Chip,
@@ -8,7 +9,6 @@ import {
   TextInput,
   Toggle,
 } from '@minddrop/ui-primitives';
-import { DevToolsLogLevel, DevToolsLogQuickFilter } from '../types';
 
 const LogLevels: DevToolsLogLevel[] = ['log', 'info', 'warn', 'error'];
 
@@ -141,6 +141,10 @@ export const LogsPanelToolbar: React.FC<LogsPanelToolbarProps> = ({
         placeholder="devTools.logs.searchPlaceholder"
         value={search}
         clearable
+        autoComplete="off"
+        autoCorrect="off"
+        autoCapitalize="off"
+        spellCheck={false}
         onChange={handleSearchChange}
         onClear={handleClearSearch}
       />

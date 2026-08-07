@@ -1,8 +1,12 @@
 import React from 'react';
+import { DevToolsLogEntry, DevToolsLogQuickFilter } from '@minddrop/dev-tools';
+import {
+  formatLogArgument,
+  getLogLabel,
+  isExpandableLogValue,
+} from '@minddrop/dev-tools';
 import { IconButton, Text } from '@minddrop/ui-primitives';
 import { JsonTree } from '../JsonTree';
-import { DevToolsLogEntry, DevToolsLogQuickFilter } from '../types';
-import { formatLogArgument, getLogLabel, isExpandableLogValue } from '../utils';
 
 export interface LogEntryRowProps {
   /**

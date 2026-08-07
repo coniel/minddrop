@@ -1,3 +1,6 @@
+import { registerDevToolsPanel } from '@minddrop/dev-tools';
+import { startConsoleLogCapture } from '@minddrop/dev-tools';
+import { startEventCapture } from '@minddrop/dev-tools';
 import { I18n } from '@minddrop/i18n';
 import { DevToolsUiState } from '../DevToolsUiState';
 import { EventsPanel } from '../EventsPanel';
@@ -5,9 +8,6 @@ import { LogsPanel } from '../LogsPanel';
 import { StatePanel } from '../StatePanel';
 import { StoriesPanel } from '../StoriesPanel';
 import { locales } from '../locales';
-import { registerDevToolsPanel } from '../registerDevToolsPanel';
-import { startConsoleLogCapture } from '../startConsoleLogCapture';
-import { startEventCapture } from '../startEventCapture';
 
 /**
  * Initializes the dev tools feature by registering translations
@@ -49,7 +49,7 @@ export async function initializeDevToolsFeature(): Promise<void> {
   registerDevToolsPanel({
     id: 'stories',
     label: 'devTools.panels.stories',
-    icon: 'book-open',
+    icon: 'shapes',
     shortcut: 's',
     component: StoriesPanel,
   });

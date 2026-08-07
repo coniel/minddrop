@@ -407,55 +407,6 @@ importers:
         specifier: ^5.7.2
         version: 5.9.3
 
-  dev/dev-tools:
-    dependencies:
-      '@minddrop/databases':
-        specifier: workspace:*
-        version: link:../../packages/databases
-      '@minddrop/designs':
-        specifier: workspace:*
-        version: link:../../packages/designs
-      '@minddrop/events':
-        specifier: workspace:*
-        version: link:../../packages/events
-      '@minddrop/feature-designs':
-        specifier: workspace:*
-        version: link:../../features/designs
-      '@minddrop/feature-markdown-editor':
-        specifier: workspace:*
-        version: link:../../features/markdown-editor
-      '@minddrop/file-system':
-        specifier: workspace:*
-        version: link:../../packages/file-system
-      '@minddrop/queries':
-        specifier: workspace:*
-        version: link:../../packages/queries
-      '@minddrop/stores':
-        specifier: workspace:*
-        version: link:../../packages/stores
-      '@minddrop/views':
-        specifier: workspace:*
-        version: link:../../packages/views
-      '@minddrop/workspaces':
-        specifier: workspace:*
-        version: link:../../packages/workspaces
-    devDependencies:
-      '@minddrop/eslint-config':
-        specifier: workspace:*
-        version: link:../../packages/eslint-config
-      '@minddrop/ui-primitives':
-        specifier: workspace:*
-        version: link:../../ui/primitives
-      eslint:
-        specifier: ^9.39.3
-        version: 9.39.3
-      tsconfig:
-        specifier: workspace:*
-        version: link:../../packages/tsconfig
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-
   features/collections:
     dependencies:
       '@minddrop/collections':
@@ -750,6 +701,9 @@ importers:
       '@minddrop/feature-dev-tools':
         specifier: workspace:*
         version: link:../dev-tools
+      '@minddrop/feature-markdown-editor':
+        specifier: workspace:*
+        version: link:../markdown-editor
       '@minddrop/feature-queries':
         specifier: workspace:*
         version: link:../queries
@@ -850,18 +804,15 @@ importers:
 
   features/dev-tools:
     dependencies:
-      '@minddrop/events':
+      '@minddrop/dev-tools':
         specifier: workspace:*
-        version: link:../../packages/events
+        version: link:../../packages/dev-tools
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
       '@minddrop/stores':
         specifier: workspace:*
         version: link:../../packages/stores
-      '@minddrop/ui-icons':
-        specifier: workspace:*
-        version: link:../../ui/icons
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives
@@ -887,6 +838,9 @@ importers:
       '@minddrop/ast':
         specifier: workspace:*
         version: link:../../packages/ast
+      '@minddrop/dev-tools':
+        specifier: workspace:*
+        version: link:../../packages/dev-tools
       '@minddrop/editor':
         specifier: workspace:*
         version: link:../../packages/editor
@@ -1300,6 +1254,37 @@ importers:
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../utils
+      eslint:
+        specifier: ^9.39.3
+        version: 9.39.3
+      tsconfig:
+        specifier: workspace:*
+        version: link:../tsconfig
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  packages/dev-tools:
+    dependencies:
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../events
+      '@minddrop/i18n':
+        specifier: workspace:*
+        version: link:../i18n
+      '@minddrop/stores':
+        specifier: workspace:*
+        version: link:../stores
+      '@minddrop/ui-icons':
+        specifier: workspace:*
+        version: link:../../ui/icons
+      react:
+        specifier: ^19.1.0
+        version: 19.2.4
+    devDependencies:
+      '@minddrop/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.3
@@ -2185,6 +2170,9 @@ importers:
       '@base-ui/react':
         specifier: 1.2.0
         version: 1.2.0(react-dom@19.2.4)(react@19.2.4)
+      '@minddrop/dev-tools':
+        specifier: workspace:*
+        version: link:../../packages/dev-tools
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n

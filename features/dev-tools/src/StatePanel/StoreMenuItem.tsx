@@ -1,7 +1,7 @@
 import React from 'react';
+import { getStoreContentsCount, readStoreContents } from '@minddrop/dev-tools';
 import { RegisteredStore } from '@minddrop/stores';
 import { MenuItem } from '@minddrop/ui-primitives';
-import { getStoreContentsCount, readStoreContents } from '../utils';
 
 export interface StoreMenuItemProps {
   /**

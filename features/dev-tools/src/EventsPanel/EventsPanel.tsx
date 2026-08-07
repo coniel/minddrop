@@ -1,17 +1,18 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { useTranslation } from '@minddrop/i18n';
-import { IconButton, Spacer, Text, TextInput } from '@minddrop/ui-primitives';
-import { useDevToolsEvents } from '../DevToolsEventsStore';
-import { DevToolsPanelLayout } from '../DevToolsPanelLayout';
-import { EventNameTree } from '../EventNameTree';
-import { clearDevToolsEvents } from '../clearDevToolsEvents';
-import { DevToolsEventEntry } from '../types';
-import { useDevToolsShortcut } from '../useDevToolsShortcut';
+import { useDevToolsEvents } from '@minddrop/dev-tools';
+import { clearDevToolsEvents } from '@minddrop/dev-tools';
+import { DevToolsEventEntry } from '@minddrop/dev-tools';
 import {
   buildEventNameTree,
   filterEventEntries,
   formatLogArgument,
-} from '../utils';
+  groupEventsIntoBatches,
+} from '@minddrop/dev-tools';
+import { useTranslation } from '@minddrop/i18n';
+import { IconButton, Spacer, Text, TextInput } from '@minddrop/ui-primitives';
+import { DevToolsPanelLayout } from '../DevToolsPanelLayout';
+import { EventNameTree } from '../EventNameTree';
+import { useDevToolsShortcut } from '../useDevToolsShortcut';
 import { DispatchEventForm } from './DispatchEventForm';
 import { EventEntryRow } from './EventEntryRow';
 import './EventsPanel.css';
@@ -33,10 +34,15 @@ export const EventsPanel: React.FC = () => {
     [events],
   );
 
-  const entries = useMemo(
-    () => filterEventEntries(events, { path: selectedPath, search }).reverse(),
-    [events, selectedPath, search],
-  );
+  // Batched while in dispatch order, then reversed so that the
+  // most recent batch is listed first
+  const batches = useMemo(() => {
+    const filtered = filterEventEntries(events, { path: selectedPath, search });
+
+    return groupEventsIntoBatches(filtered)
+      .map((batch) => [...batch].reverse())
+      .reverse();
+  }, [events, selectedPath, search]);
 
   const handleSearchChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -85,6 +91,10 @@ export const EventsPanel: React.FC = () => {
         placeholder="devTools.events.searchPlaceholder"
         value={search}
         clearable
+        autoComplete="off"
+        autoCorrect="off"
+        autoCapitalize="off"
+        spellCheck={false}
         onChange={handleSearchChange}
         onClear={handleClearSearch}
       />
@@ -112,7 +122,7 @@ export const EventsPanel: React.FC = () => {
   return (
     <DevToolsPanelLayout sidebar={sidebar} toolbar={toolbar} footer={footer}>
       <div className="dev-tools-events">
-        {entries.length === 0 && (
+        {batches.length === 0 && (
           <Text size="sm" color="subtle" className="dev-tools-events-empty">
             {events.length === 0
               ? t('devTools.events.empty')
@@ -120,8 +130,12 @@ export const EventsPanel: React.FC = () => {
           </Text>
         )}
 
-        {entries.map((entry) => (
-          <EventEntryRow key={entry.id} entry={entry} onEdit={handleEdit} />
+        {batches.map((batch) => (
+          <div key={batch[0].id} className="dev-tools-event-batch">
+            {batch.map((entry) => (
+              <EventEntryRow key={entry.id} entry={entry} onEdit={handleEdit} />
+            ))}
+          </div>
         ))}
       </div>
     </DevToolsPanelLayout>

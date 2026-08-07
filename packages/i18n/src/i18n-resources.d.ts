@@ -1614,8 +1614,12 @@ declare module 'i18next' {
               invalidData: string;
             };
           };
+          stories: {
+            searchPlaceholder: string;
+          };
           state: {
             searchPlaceholder: string;
+            storeSearchPlaceholder: string;
             noStores: string;
             emptyStore: string;
             noMatches: string;

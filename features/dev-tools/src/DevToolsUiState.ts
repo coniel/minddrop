@@ -1,3 +1,4 @@
+import { DevToolsNamespace } from '@minddrop/dev-tools';
 import { createKeyValueStore } from '@minddrop/stores';
 
 export interface DevToolsUiState {
@@ -60,6 +61,8 @@ export const DevToolsUiState = createKeyValueStore<DevToolsUiState>(
   defaultState,
   {
     persistTo: 'app-config',
-    namespace: 'dev-tools',
+    // Shared with the event capture, which leaves out the events
+    // persisting this state dispatches
+    namespace: DevToolsNamespace,
   },
 );

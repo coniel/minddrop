@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { useTranslation } from '@minddrop/i18n';
-import { RegisteredStore } from '@minddrop/stores';
-import { Icon, Text } from '@minddrop/ui-primitives';
-import { JsonTree } from '../JsonTree';
 import {
   filterStoreItems,
   getStoreItemId,
   getStoreItemLabel,
   readStoreContents,
-} from '../utils';
+} from '@minddrop/dev-tools';
+import { useTranslation } from '@minddrop/i18n';
+import { RegisteredStore } from '@minddrop/stores';
+import { Icon, Text } from '@minddrop/ui-primitives';
+import { JsonTree } from '../JsonTree';
 
 export interface StoreContentsViewProps {
   /**

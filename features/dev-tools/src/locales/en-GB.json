@@ -49,8 +49,12 @@
         "invalidData": "Event data must be valid JSON."
       }
     },
+    "stories": {
+      "searchPlaceholder": "Search stories"
+    },
     "state": {
       "searchPlaceholder": "Search items",
+      "storeSearchPlaceholder": "Search stores",
       "noStores": "No stores registered.",
       "emptyStore": "This store is empty.",
       "noMatches": "No items match the search."

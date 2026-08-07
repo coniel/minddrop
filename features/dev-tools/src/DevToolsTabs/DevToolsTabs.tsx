@@ -1,8 +1,8 @@
 import React from 'react';
+import { useDevToolsPanels } from '@minddrop/dev-tools';
+import { DevToolsPanelConfig } from '@minddrop/dev-tools';
 import { IconButton } from '@minddrop/ui-primitives';
-import { useDevToolsPanels } from '../DevToolsPanelsStore';
 import { openDevTools } from '../openDevTools';
-import { DevToolsPanelConfig } from '../types';
 import { useActiveDevToolsPanel } from '../useActiveDevToolsPanel';
 import './DevToolsTabs.css';
 

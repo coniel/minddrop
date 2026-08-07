@@ -11,6 +11,15 @@
   max-width: 240px;
 }
 
+/* --- Batches --- */
+
+/* One action dispatches a cascade of events, which are listed
+   together with a gap between batches */
+.dev-tools-event-batch + .dev-tools-event-batch {
+  margin-top: var(--space-5);
+  border-top: 1px solid var(--border-subtle);
+}
+
 /* --- Entries --- */
 
 .dev-tools-event-entry {

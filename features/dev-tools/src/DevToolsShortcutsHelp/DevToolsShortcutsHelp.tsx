@@ -1,7 +1,7 @@
 import React from 'react';
+import { useDevToolsPanels } from '@minddrop/dev-tools';
 import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import { Group, KeyboardShortcut, Stack, Text } from '@minddrop/ui-primitives';
-import { useDevToolsPanels } from '../DevToolsPanelsStore';
 import { ToggleDevToolsShortcutKey } from '../constants';
 import './DevToolsShortcutsHelp.css';
 

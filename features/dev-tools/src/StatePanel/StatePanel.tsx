@@ -1,4 +1,9 @@
 import React, { useCallback, useMemo, useState } from 'react';
+import {
+  filterRegisteredStores,
+  groupRegisteredStores,
+  useRegisteredStores,
+} from '@minddrop/dev-tools';
 import { useTranslation } from '@minddrop/i18n';
 import { RegisteredStore } from '@minddrop/stores';
 import {
@@ -9,8 +14,6 @@ import {
   TextInput,
 } from '@minddrop/ui-primitives';
 import { DevToolsPanelLayout } from '../DevToolsPanelLayout';
-import { useRegisteredStores } from '../useRegisteredStores';
-import { groupRegisteredStores } from '../utils';
 import { StoreContentsView } from './StoreContentsView';
 import { StoreMenuItem } from './StoreMenuItem';
 import './StatePanel.css';
@@ -24,10 +27,14 @@ export const StatePanel: React.FC = () => {
     null,
   );
   const [search, setSearch] = useState('');
+  const [storeSearch, setStoreSearch] = useState('');
   const { t } = useTranslation();
   const stores = useRegisteredStores();
 
-  const groups = useMemo(() => groupRegisteredStores(stores), [stores]);
+  const groups = useMemo(
+    () => filterRegisteredStores(groupRegisteredStores(stores), storeSearch),
+    [stores, storeSearch],
+  );
 
   // Fall back to the first store, so the panel always shows
   // something when any store is registered
@@ -47,30 +54,60 @@ export const StatePanel: React.FC = () => {
     setSearch('');
   }, []);
 
+  const handleStoreSearchChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setStoreSearch(event.target.value);
+    },
+    [],
+  );
+
+  const handleClearStoreSearch = useCallback(() => {
+    setStoreSearch('');
+  }, []);
+
   // Items of one store rarely match a search made in another
   const handleSelectStore = useCallback((store: RegisteredStore) => {
     setSelectedStoreName(store.name);
     setSearch('');
   }, []);
 
-  const sidebar = groups.map((group, index) => (
-    <React.Fragment key={group.namespace}>
-      {index > 0 && <Separator margin="small" />}
+  const sidebar = (
+    <>
+      <div className="dev-tools-state-store-search">
+        <TextInput
+          size="sm"
+          placeholder="devTools.state.storeSearchPlaceholder"
+          value={storeSearch}
+          clearable
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
+          spellCheck={false}
+          onChange={handleStoreSearchChange}
+          onClear={handleClearStoreSearch}
+        />
+      </div>
 
-      <MenuGroup>
-        <MenuLabel stringLabel={group.namespace} />
+      {groups.map((group, index) => (
+        <React.Fragment key={group.namespace}>
+          {index > 0 && <Separator margin="small" />}
 
-        {group.stores.map((store) => (
-          <StoreMenuItem
-            key={store.name}
-            store={store}
-            active={selectedStore?.name === store.name}
-            onClick={handleSelectStore}
-          />
-        ))}
-      </MenuGroup>
-    </React.Fragment>
-  ));
+          <MenuGroup>
+            <MenuLabel stringLabel={group.namespace} />
+
+            {group.stores.map((store) => (
+              <StoreMenuItem
+                key={store.name}
+                store={store}
+                active={selectedStore?.name === store.name}
+                onClick={handleSelectStore}
+              />
+            ))}
+          </MenuGroup>
+        </React.Fragment>
+      ))}
+    </>
+  );
 
   const toolbar = (
     <TextInput
@@ -79,6 +116,10 @@ export const StatePanel: React.FC = () => {
       placeholder="devTools.state.searchPlaceholder"
       value={search}
       clearable
+      autoComplete="off"
+      autoCorrect="off"
+      autoCapitalize="off"
+      spellCheck={false}
       onChange={handleSearchChange}
       onClear={handleClearSearch}
     />

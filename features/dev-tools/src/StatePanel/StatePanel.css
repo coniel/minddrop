@@ -2,6 +2,10 @@
   max-width: 240px;
 }
 
+.dev-tools-state-store-search {
+  padding-bottom: var(--space-2);
+}
+
 .dev-tools-state-empty {
   display: block;
   padding: var(--space-4);

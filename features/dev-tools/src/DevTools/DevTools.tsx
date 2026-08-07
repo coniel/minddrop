@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { useTranslation } from '@minddrop/i18n';
-import { IconButton, Text } from '@minddrop/ui-primitives';
+import { IconButton, Spacer, Text } from '@minddrop/ui-primitives';
 import { DevToolsPanelLayout } from '../DevToolsPanelLayout';
 import { DevToolsShortcutsHelp } from '../DevToolsShortcutsHelp';
 import { DevToolsTabs } from '../DevToolsTabs';
@@ -56,8 +56,10 @@ export const DevTools: React.FC = () => {
 
       <DevToolsTabs />
 
+      <Spacer />
+
       <IconButton
-        icon={windowed ? 'maximize' : 'minimize'}
+        icon={windowed ? 'maximize-2' : 'minimize-2'}
         label="devTools.actions.toggleWindowed"
         size="sm"
         onClick={toggleDevToolsWindowed}

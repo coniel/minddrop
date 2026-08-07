@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useDevToolsPanels } from '../DevToolsPanelsStore';
+import { useDevToolsPanels } from '@minddrop/dev-tools';
 import { DevToolsUiState } from '../DevToolsUiState';
 import { closeDevTools } from '../closeDevTools';
 import { ReservedShortcutKeys, ToggleDevToolsShortcutKey } from '../constants';

@@ -1,12 +1,12 @@
 import React, { useCallback, useMemo, useState } from 'react';
+import { useDevToolsLogs } from '@minddrop/dev-tools';
+import { clearDevToolsLogs } from '@minddrop/dev-tools';
+import { DevToolsLogLevel, DevToolsLogQuickFilter } from '@minddrop/dev-tools';
+import { filterLogEntries } from '@minddrop/dev-tools';
 import { useTranslation } from '@minddrop/i18n';
 import { Text } from '@minddrop/ui-primitives';
-import { useDevToolsLogs } from '../DevToolsLogsStore';
 import { DevToolsPanelLayout } from '../DevToolsPanelLayout';
-import { clearDevToolsLogs } from '../clearDevToolsLogs';
-import { DevToolsLogLevel, DevToolsLogQuickFilter } from '../types';
 import { useDevToolsShortcut } from '../useDevToolsShortcut';
-import { filterLogEntries } from '../utils';
 import { LogEntryRow } from './LogEntryRow';
 import { LogsPanelToolbar } from './LogsPanelToolbar';
 import './LogsPanel.css';

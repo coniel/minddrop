@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
+import { DevToolsEventEntry } from '@minddrop/dev-tools';
+import { formatLogArgument, isExpandableLogValue } from '@minddrop/dev-tools';
 import { Events } from '@minddrop/events';
 import { Icon, IconButton, Text } from '@minddrop/ui-primitives';
 import { JsonTree } from '../JsonTree';
-import { DevToolsEventEntry } from '../types';
-import { formatLogArgument, isExpandableLogValue } from '../utils';
 
 export interface EventEntryRowProps {
   /**

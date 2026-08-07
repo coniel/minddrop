@@ -1,6 +1,6 @@
-import { useDevToolsPanels } from '../DevToolsPanelsStore';
+import { useDevToolsPanels } from '@minddrop/dev-tools';
+import { DevToolsPanelConfig } from '@minddrop/dev-tools';
 import { DevToolsUiState } from '../DevToolsUiState';
-import { DevToolsPanelConfig } from '../types';
 
 /**
  * Retrieves the active dev tools panel, falling back to the first

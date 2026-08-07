@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
+import { EventNameTreeNode } from '@minddrop/dev-tools';
 import { Icon, MenuGroup, MenuItem } from '@minddrop/ui-primitives';
-import { EventNameTreeNode } from '../types';
 import './EventNameTree.css';
 
 export interface EventNameTreeProps {
