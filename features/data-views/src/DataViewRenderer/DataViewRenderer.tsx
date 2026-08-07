@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Collections } from '@minddrop/collections';
 import { DataView, DataViewTypes } from '@minddrop/data-views';
 import { CreateDatabaseEntryButton } from '@minddrop/ui-components';
@@ -9,6 +9,7 @@ import {
   Toolbar,
   TransientViewStateScope,
 } from '@minddrop/ui-primitives';
+import { DataViewContext, DataViewContextValue } from '../DataViewContext';
 import { DataViewOptionsMenu } from '../DataViewOptionsMenu';
 import { CreateDataViewForm } from './CreateDataViewForm';
 import './DataViewRenderer.css';
@@ -121,6 +122,12 @@ const ConfiguredView: React.FC<ConfiguredViewProps> = ({
 }) => {
   const viewType = DataViewTypes.use(view.type);
 
+  // Describe the view to the content rendered within it
+  const dataViewContext = useMemo<DataViewContextValue>(
+    () => ({ draggableEntries: viewType?.draggableEntries || false }),
+    [viewType?.draggableEntries],
+  );
+
   // Add newly created entry to the collection when
   // the view's data source is a collection
   const handleCreateEntry = useCallback(
@@ -160,7 +167,9 @@ const ConfiguredView: React.FC<ConfiguredViewProps> = ({
 
       {/* View content */}
       <TransientViewStateScope segment={view.id}>
-        <viewType.component view={view} entries={entries || []} />
+        <DataViewContext.Provider value={dataViewContext}>
+          <viewType.component view={view} entries={entries || []} />
+        </DataViewContext.Provider>
       </TransientViewStateScope>
     </div>
   );

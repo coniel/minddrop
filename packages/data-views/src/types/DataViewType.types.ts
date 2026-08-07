@@ -40,6 +40,12 @@ export interface DataViewType<
   >;
 
   /**
+   * Whether entries rendered within the data view can be dragged.
+   * Defaults to false.
+   */
+  draggableEntries?: boolean;
+
+  /**
    * The default options for the data view type.
    */
   defaultOptions?: TViewOptions;
