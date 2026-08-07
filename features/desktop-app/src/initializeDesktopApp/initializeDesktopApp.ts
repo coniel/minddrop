@@ -11,6 +11,9 @@ import { initializeDataViewsFeature } from '@minddrop/feature-data-views';
 import { DatabaseViewStateStore } from '@minddrop/feature-databases';
 import { LayoutRegionSizesStore } from '@minddrop/feature-designs';
 import { initializeDevToolsFeature } from '@minddrop/feature-dev-tools';
+// Register the component stories with the story registry
+import '@minddrop/feature-markdown-editor/stories';
+import '@minddrop/ui-primitives/stories';
 import { initializeQueriesFeature } from '@minddrop/feature-queries';
 import { initializeSearch } from '@minddrop/feature-search';
 import {

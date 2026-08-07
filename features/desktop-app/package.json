@@ -37,6 +37,7 @@
     "@minddrop/feature-databases": "workspace:*",
     "@minddrop/feature-designs": "workspace:*",
     "@minddrop/feature-dev-tools": "workspace:*",
+    "@minddrop/feature-markdown-editor": "workspace:*",
     "@minddrop/feature-spaces": "workspace:*",
     "@minddrop/feature-search": "workspace:*",
     "@minddrop/feature-views": "workspace:*",
