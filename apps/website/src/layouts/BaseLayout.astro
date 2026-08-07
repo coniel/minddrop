@@ -77,6 +77,10 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
           return;
         }
 
+        // Present when the gallery also shows the set on the page behind it
+        const tabs = Array.from(gallery.querySelectorAll('[role="tab"]'));
+        const hasMatchingTabs = tabs.length === panels.length;
+
         let current = 0;
 
         function show(index) {
@@ -85,6 +89,11 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
           panels.forEach((panel, position) => {
             panel.hidden = position !== current;
           });
+
+          // Move the page behind the dialog along, so closing it agrees
+          if (hasMatchingTabs) {
+            tabs[current].click();
+          }
         }
 
         cards.forEach((card) => {

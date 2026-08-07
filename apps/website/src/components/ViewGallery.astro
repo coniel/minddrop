@@ -1,6 +1,6 @@
 ---
 import AppWindow from './AppWindow.astro';
-import Icon from './Icon.astro';
+import MediaDialog from './MediaDialog.astro';
 
 /**
  * A grid of view types, each a screenshot with a name and a sentence. Picking
@@ -79,56 +79,7 @@ const { views } = Astro.props;
     }
   </ul>
 
-  <dialog class="view-dialog" aria-label="View types" data-view-dialog>
-    {/* Fills the viewport so the chevrons can sit outside the panel */}
-    <div class="view-dialog-layout" data-view-backdrop>
-      <button
-        class="view-dialog-step"
-        type="button"
-        aria-label="Previous view"
-        data-view-previous
-      >
-        <Icon name="chevron-left" />
-      </button>
-
-      <div class="view-dialog-panels">
-        <button
-          class="view-dialog-step view-dialog-close"
-          type="button"
-          aria-label="Close"
-          data-view-close
-        >
-          <Icon name="x" />
-        </button>
-
-        {
-          views.map((view, index) => (
-            <div class="view-dialog-panel" hidden={index !== 0} data-view-panel>
-              {view.image ? (
-                <AppWindow>
-                  <img src={view.image} alt={view.imageAlt ?? ''} />
-                </AppWindow>
-              ) : (
-                <AppWindow />
-              )}
-
-              <h3 class="view-dialog-title">{view.title}</h3>
-              <p class="view-dialog-description">{view.description}</p>
-            </div>
-          ))
-        }
-      </div>
-
-      <button
-        class="view-dialog-step"
-        type="button"
-        aria-label="Next view"
-        data-view-next
-      >
-        <Icon name="chevron-right" />
-      </button>
-    </div>
-  </dialog>
+  <MediaDialog label="View types" items={views} />
 </div>
 
 <style>
@@ -176,120 +127,6 @@ const { views } = Astro.props;
     margin-block-start: var(--space-2);
     font-size: 0.875rem;
     color: var(--ink-muted);
-  }
-
-  /*
-   * The dialog is the whole viewport, the visible panel sits inside it. Sized
-   * by inset rather than viewport units, which would count the scrollbar and
-   * overflow.
-   */
-  .view-dialog {
-    position: fixed;
-    inset: 0;
-    width: auto;
-    max-width: none;
-    height: auto;
-    max-height: none;
-    margin: 0;
-    padding: 0;
-    border: 0;
-    background: none;
-    color: var(--ink);
-  }
-
-  .view-dialog::backdrop {
-    background: rgb(0 0 0 / 0.6);
-  }
-
-  .view-dialog-layout {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--space-4);
-    width: 100%;
-    min-height: 100%;
-    padding: var(--space-5);
-    /* A panel taller than the viewport scrolls rather than being cut off */
-    overflow: auto;
-  }
-
-  /*
-   * As wide as the viewport allows, up to a cap. The last term keeps the panel
-   * short enough to fit vertically: it converts the height left over after the
-   * padding and caption back into a width using the screenshot's 16:10 ratio.
-   */
-  .view-dialog-panels {
-    position: relative;
-    width: min(80rem, 100%, calc((100dvh - 210px) * 1.6));
-    padding: var(--space-5);
-    border: 1px solid var(--rule);
-    border-radius: var(--radius-xl);
-    background: var(--paper);
-  }
-
-  /* Drawn against the backdrop rather than the page, so it is light */
-  .view-dialog-step {
-    display: grid;
-    place-items: center;
-    flex-shrink: 0;
-    width: 2.75rem;
-    height: 2.75rem;
-    border: 0;
-    border-radius: var(--radius-full);
-    background: rgb(255 255 255 / 0.12);
-    color: #ffffff;
-    transition: var(--transition-colors);
-  }
-
-  .view-dialog-step:hover {
-    background: rgb(255 255 255 / 0.22);
-  }
-
-  .view-dialog-step :global(.icon) {
-    width: 1.5rem;
-    height: 1.5rem;
-  }
-
-  /*
-   * Sits in the same column as the next chevron, one gap to the right of the
-   * panel, with its top on the panel's top edge.
-   */
-  .view-dialog-close {
-    position: absolute;
-    top: 0;
-    left: calc(100% + var(--space-4));
-  }
-
-  .view-dialog-title {
-    margin-block-start: var(--space-5);
-    font-size: var(--step-2);
-  }
-
-  .view-dialog-description {
-    margin-block-start: var(--space-2);
-    color: var(--ink-muted);
-  }
-
-  /* The chevrons have to give up room before the panel does */
-  @media (max-width: 700px) {
-    .view-dialog-layout {
-      gap: var(--space-2);
-      padding: var(--space-3);
-    }
-
-    .view-dialog-step {
-      width: 2.25rem;
-      height: 2.25rem;
-    }
-
-    .view-dialog-step :global(.icon) {
-      width: 1.25rem;
-      height: 1.25rem;
-    }
-
-    .view-dialog-close {
-      left: calc(100% + var(--space-2));
-    }
   }
 
   @media (max-width: 900px) {

@@ -1,6 +1,7 @@
 ---
 import AppWindow from './AppWindow.astro';
 import Icon from './Icon.astro';
+import MediaDialog from './MediaDialog.astro';
 
 /**
  * One large screenshot with a row of thumbnail cards beneath it. Picking a
@@ -48,7 +49,7 @@ const { name, items } = Astro.props;
 ---
 
 {/* The cards come first in the source, and are placed below by the styles */}
-<div class="showcase" data-feature-tabs>
+<div class="showcase" data-feature-tabs data-view-gallery>
   <div class="showcase-tabs" role="tablist">
     {
       items.map((item, index) => (
@@ -92,6 +93,21 @@ const { name, items } = Astro.props;
             aria-labelledby={`${name}-tab-${index}`}
             hidden={index !== 0}
           >
+            {/*
+              Only the shown panel's button is reachable, so it always opens
+              the dialog on the space currently on screen.
+            */}
+            <button
+              class="showcase-panel-button"
+              type="button"
+              aria-haspopup="dialog"
+              data-view-index={index}
+            >
+              <span class="visually-hidden">
+                Expand the {item.title} screenshot
+              </span>
+            </button>
+
             {item.image ? (
               <AppWindow>
                 <img src={item.image} alt={item.imageAlt ?? ''} />
@@ -113,6 +129,8 @@ const { name, items } = Astro.props;
       <Icon name="chevron-right" />
     </button>
   </div>
+
+  <MediaDialog label="Spaces" items={items} />
 </div>
 
 <style>
@@ -164,6 +182,21 @@ const { name, items } = Astro.props;
 
   .showcase-step-next {
     left: calc(100% + var(--space-3));
+  }
+
+  .showcase-panel {
+    position: relative;
+  }
+
+  /* Covers the screenshot, staying under the chevrons that overlap it */
+  .showcase-panel-button {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-xl);
+    background: none;
   }
 
   .showcase-tabs {
