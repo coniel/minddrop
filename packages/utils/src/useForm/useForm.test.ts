@@ -20,7 +20,9 @@ describe('useForm', () => {
         validateAsync: async (v) => {
           await new Promise((r) => setTimeout(r, 10));
 
-          return v === 'taken@example.com' ? 'error.dirPathConflict' : undefined;
+          return v === 'taken@example.com'
+            ? 'error.dirPathConflict'
+            : undefined;
         },
       },
     ];

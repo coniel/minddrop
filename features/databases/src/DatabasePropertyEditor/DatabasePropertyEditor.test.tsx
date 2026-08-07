@@ -55,12 +55,14 @@ describe('<DatabasePropertyEditor />', () => {
     it('updates the property on save', () =>
       new Promise<void>((done) => {
         // Listen for database updates and verify the property was updated
-        Events.addListener<Database>(
+        Events.addListener<DatabaseUpdatedEventData>(
           DatabaseUpdatedEvent,
           'test',
           ({ data }) => {
             expect(
-              data.properties.find((p) => p.name === property.name)?.icon,
+              data.updated.properties.find(
+                (candidate) => candidate.name === property.name,
+              )?.icon,
             ).toBe(emojiIconString);
             done();
           },
@@ -74,9 +76,7 @@ describe('<DatabasePropertyEditor />', () => {
 
       // Editor should be closed
       await waitFor(() => {
-        expect(
-          screen.getByLabelText('properties.form.name.label'),
-        ).not.toBeVisible();
+        expect(screen.getByText('actions.save')).not.toBeVisible();
       });
     });
 
@@ -136,9 +136,7 @@ describe('<DatabasePropertyEditor />', () => {
               data.onConfirm();
               // Form should be closed
               await waitFor(() => {
-                expect(
-                  screen.queryByText('properties.form.name.label'),
-                ).not.toBeVisible();
+                expect(screen.getByText('actions.save')).not.toBeVisible();
               });
 
               done();
@@ -158,9 +156,7 @@ describe('<DatabasePropertyEditor />', () => {
               // Cancel the rename action
               data.onCancel!();
               // Form should be still open
-              expect(
-                screen.getByText('properties.form.name.label'),
-              ).toBeVisible();
+              expect(screen.getByText('actions.save')).toBeVisible();
 
               done();
             },
@@ -185,7 +181,7 @@ describe('<DatabasePropertyEditor />', () => {
         await user.click(screen.getByText(property.name));
 
         // Delete the property
-        await user.click(screen.getByText('properties.actions.delete.label'));
+        await user.click(screen.getByText('actions.delete'));
       }
 
       it('confirms before deleting the property', () =>
@@ -201,12 +197,14 @@ describe('<DatabasePropertyEditor />', () => {
           );
 
           // Listen for database updates and verify the property was deleted
-          Events.addListener<Database>(
+          Events.addListener<DatabaseUpdatedEventData>(
             DatabaseUpdatedEvent,
             'test',
             ({ data }) => {
               expect(
-                data.properties.find((p) => p.name === property.name),
+                data.updated.properties.find(
+                  (candidate) => candidate.name === property.name,
+                ),
               ).toBeUndefined();
               done();
             },
@@ -250,12 +248,12 @@ describe('<DatabasePropertyEditor />', () => {
         <DatabasePropertyEditor
           isDraft
           databaseId={DatabaseFixtures.objectDatabase.id}
-          property={TextPropertySchema}
+          property={{ ...TextPropertySchema, name: 'Text' }}
         />,
       );
 
       // Editor should be open
-      expect(screen.getByText('properties.form.name.label')).toBeVisible();
+      expect(screen.getByText('actions.save')).toBeVisible();
     });
 
     it('adds the property on save', () =>

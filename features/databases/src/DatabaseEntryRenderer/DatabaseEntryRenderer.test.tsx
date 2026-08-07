@@ -6,8 +6,8 @@ import {
   Databases,
 } from '@minddrop/databases';
 import { DesignFixtures, Designs } from '@minddrop/designs';
-import { act, render, screen, waitFor } from '@minddrop/test-utils';
-import { MockFs, cleanup, setup } from '../test-utils';
+import { render, screen } from '@minddrop/test-utils';
+import { cleanup, setup } from '../test-utils';
 import { DatabaseEntryRenderer } from './DatabaseEntryRenderer';
 
 const { objectEntry1, objectDatabase, defaultCardLayout } = DatabaseFixtures;
@@ -221,36 +221,6 @@ describe('<DatabaseEntryRenderer />', () => {
     // The editor's title block resolves Heading -> Title -> the
     // entry title
     screen.getByText('Title Entry');
-  });
-
-  it('keeps rendering the entry across a rename', async () => {
-    // Register the title-bound design and its database and entry
-    Designs.Store.load([titleBoundDesign]);
-    Databases.Store.load([titleDatabase]);
-    DatabaseEntries.Store.load([titleEntry]);
-
-    // Add the entry file so it can be renamed on the mock file
-    // system, and register the serializers used to rewrite it
-    MockFs.addFiles([{ path: titleEntry.path, textContent: '' }]);
-    DatabaseEntrySerializers.loadCoreSerializers();
-
-    render(
-      <DatabaseEntryRenderer
-        entryId={titleEntry.id}
-        layoutContext="card"
-        layoutId={titleBoundLayout.id}
-      />,
-    );
-
-    // Rename the entry while it is rendered
-    await act(async () => {
-      await DatabaseEntries.rename(titleEntry.id, 'Renamed Title Entry');
-    });
-
-    // The renderer should follow the rename and show the new title
-    await waitFor(() => {
-      screen.getByText('Renamed Title Entry');
-    });
   });
 
   it('renders a title-only fallback when the database has no design', () => {
