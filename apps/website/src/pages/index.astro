@@ -1,13 +1,198 @@
 ---
+import AppWindow from '../components/AppWindow.astro';
+import DownloadButton from '../components/DownloadButton.astro';
+import FeatureGrid from '../components/FeatureGrid.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="MindDrop">
-  <div class="page landing"></div>
+<BaseLayout
+  title="MindDrop"
+  description="Organise your projects, studies, research, and ideas into databases built from plain Markdown files."
+>
+  <section class="page hero">
+    <h1 class="hero-title">Your mind's visual workspace</h1>
+
+    <p class="hero-lede">
+      Organise your projects, studies, research, and ideas into databases built
+      from plain Markdown files.
+    </p>
+
+    <div class="hero-action">
+      <DownloadButton />
+    </div>
+
+    <p class="hero-licence">
+      MindDrop is free and <a href="https://github.com/coniel/minddrop"
+        >open source</a
+      >.
+    </p>
+
+    <div class="hero-principles">
+      <FeatureGrid>
+        <article class="principle">
+          <h2 class="principle-title">
+            <svg
+              class="principle-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+              <path d="M3 5v14a9 3 0 0 0 18 0V5"></path>
+              <path d="M3 12a9 3 0 0 0 18 0"></path>
+            </svg>
+            Databases
+          </h2>
+
+          <p class="principle-description">
+            All your content lives in databases, where you define the properties
+            every entry shares.
+          </p>
+        </article>
+
+        <article class="principle">
+          <h2 class="principle-title">
+            <svg
+              class="principle-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path
+                d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"
+              ></path>
+              <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
+              <path d="M16 13H8"></path>
+              <path d="M16 17H8"></path>
+            </svg>
+            Plain files
+          </h2>
+
+          <p class="principle-description">
+            Every entry is a plain Markdown file, stored in a folder on your
+            computer and readable in any editor.
+          </p>
+        </article>
+
+        <article class="principle">
+          <h2 class="principle-title">
+            <svg
+              class="principle-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"></circle>
+              <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"></circle>
+              <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"></circle>
+              <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"></circle>
+              <path
+                d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"
+              ></path>
+            </svg>
+            Design studio
+          </h2>
+
+          <p class="principle-description">
+            Give each database a unique design to match its content, built in a
+            drag-and-drop design tool.
+          </p>
+        </article>
+      </FeatureGrid>
+    </div>
+
+    <div class="hero-media">
+      <AppWindow>
+        {/* Placeholder until the hero screenshot is ready */}
+        <div class="hero-media-placeholder"></div>
+      </AppWindow>
+    </div>
+  </section>
 </BaseLayout>
 
 <style>
-  .landing {
+  .hero {
     padding-block-start: var(--space-8);
+    text-align: center;
+  }
+
+  .hero-title {
+    font-size: var(--step-4);
+  }
+
+  .hero-lede {
+    max-width: var(--measure);
+    margin-block-start: var(--space-5);
+    margin-inline: auto;
+    font-size: var(--step-1);
+    color: var(--ink-muted);
+  }
+
+  .hero-action {
+    margin-block-start: var(--space-6);
+  }
+
+  .hero-licence {
+    margin-block-start: var(--space-5);
+    font-size: 0.875rem;
+    color: var(--ink-muted);
+  }
+
+  /*
+   * Paired with the gap above the licence line, so dropping that line lower
+   * leaves the distance from button to cards unchanged.
+   */
+  .hero-principles {
+    margin-block-start: calc(var(--space-8) - var(--space-3));
+  }
+
+  .principle {
+    padding: var(--space-4);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-lg);
+    background: var(--paper-raised);
+    text-align: start;
+  }
+
+  .principle-title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--step-0);
+  }
+
+  .principle-icon {
+    width: 1.125em;
+    height: 1.125em;
+    flex-shrink: 0;
+    color: var(--ink-muted);
+  }
+
+  .principle-description {
+    margin-block-start: var(--space-2);
+    font-size: 0.875rem;
+    color: var(--ink-muted);
+  }
+
+  /* The screenshot belongs with the blocks above it, so it sits close */
+  .hero-media {
+    margin-block-start: var(--space-6);
+  }
+
+  .hero-media-placeholder {
+    aspect-ratio: 16 / 10;
+    background: var(--paper-sunk);
   }
 </style>

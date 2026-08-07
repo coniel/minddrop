@@ -1,0 +1,55 @@
+---
+/**
+ * A feature explained as a column of copy beside a screenshot. Rows alternate
+ * down the page via `reverse`, and stack to a single column on narrow screens
+ * with the copy always landing above its media.
+ *
+ * Copy goes in the default slot, the screenshot in the `media` slot.
+ */
+
+interface Props {
+  /**
+   * Puts the media on the left instead of the right.
+   */
+  reverse?: boolean;
+}
+
+const { reverse = false } = Astro.props;
+---
+
+<div class:list={['feature-row', { 'feature-row-reverse': reverse }]}>
+  <div class="feature-row-copy">
+    <slot />
+  </div>
+
+  <div class="feature-row-media">
+    <slot name="media" />
+  </div>
+</div>
+
+<style>
+  .feature-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+  }
+
+  .feature-row-reverse {
+    flex-direction: row-reverse;
+  }
+
+  .feature-row-copy,
+  .feature-row-media {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  @media (max-width: 900px) {
+    .feature-row,
+    .feature-row-reverse {
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--space-5);
+    }
+  }
+</style>

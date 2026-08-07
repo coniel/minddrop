@@ -61,5 +61,56 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
       <slot />
     </main>
     <SiteFooter />
+
+    <script is:inline>
+      // Name download buttons for the reader's platform. They ship generic,
+      // because a static page cannot know it until it runs.
+      (() => {
+        const labels = document.querySelectorAll('[data-os-label]');
+
+        if (labels.length === 0) {
+          return;
+        }
+
+        const platform = getPlatformName();
+
+        // An unrecognised or mobile platform keeps the generic label, since
+        // there is no build to send it to
+        if (!platform) {
+          return;
+        }
+
+        labels.forEach((label) => {
+          label.textContent = `Download for ${platform}`;
+        });
+
+        function getPlatformName() {
+          const agent = navigator.userAgent;
+
+          // iPadOS reports itself as a Mac, so check the touch points too
+          const isIpad =
+            /iPad/.test(agent) ||
+            (/Macintosh/.test(agent) && navigator.maxTouchPoints > 1);
+
+          if (isIpad || /Android|iPhone|iPod/.test(agent)) {
+            return null;
+          }
+
+          if (/Mac/.test(agent)) {
+            return 'Mac';
+          }
+
+          if (/Win/.test(agent)) {
+            return 'Windows';
+          }
+
+          if (/Linux|X11/.test(agent)) {
+            return 'Linux';
+          }
+
+          return null;
+        }
+      })();
+    </script>
   </body>
 </html>

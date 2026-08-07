@@ -1,0 +1,24 @@
+---
+/**
+ * A row of short feature blurbs, for points that need a sentence rather than a
+ * screenshot. Collapses to one column on narrow screens.
+ */
+---
+
+<div class="feature-grid">
+  <slot />
+</div>
+
+<style>
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-5);
+  }
+
+  @media (max-width: 900px) {
+    .feature-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

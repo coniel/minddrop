@@ -1,0 +1,38 @@
+---
+/**
+ * Frames a screenshot or screen recording so it reads as a window onto the
+ * app. The frame is deliberately faint: the screenshot is the only thing on
+ * the page carrying colour, and a strong border would compete with it.
+ */
+
+interface Props {
+  /**
+   * Constrains the framed media, e.g. '470px' for a demo recording sitting
+   * beside a column of copy.
+   */
+  maxWidth?: string;
+}
+
+const { maxWidth } = Astro.props;
+---
+
+<div class="app-window" style={maxWidth && `max-width: ${maxWidth}`}>
+  <slot />
+</div>
+
+<style>
+  .app-window {
+    overflow: hidden;
+    border: 1px solid var(--screenshot-border);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--screenshot-shadow);
+  }
+
+  /* The media fills the frame, so the rounded corners clip it */
+  .app-window :global(img),
+  .app-window :global(video) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+</style>

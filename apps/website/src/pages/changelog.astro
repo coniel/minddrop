@@ -83,11 +83,13 @@ const renderedEntries = await Promise.all(
     font-size: var(--step-1);
     font-weight: 600;
     letter-spacing: -0.02em;
+    color: var(--ink);
     text-decoration: none;
   }
 
   .release-version:hover {
     color: var(--accent);
+    text-decoration: none;
   }
 
   .release-date {
@@ -105,7 +107,7 @@ const renderedEntries = await Promise.all(
     color: var(--ink-muted);
   }
 
-  @media (max-width: 48rem) {
+  @media (max-width: 900px) {
     .release {
       grid-template-columns: minmax(0, 1fr);
       gap: var(--space-4);

@@ -19,13 +19,35 @@
   --ink-muted: light-dark(#5b6072, #969cad);
   --rule: light-dark(#d9dae4, #282c39);
 
-  /* The logo's blue, lifted on dark until it can still carry text */
+  /*
+   * The logo's blue, lifted on dark until it can still carry text. Reserved
+   * for interactive states, so screenshots are the only colour on a page.
+   */
   --accent: light-dark(#4158f6, #7b8fff);
 
-  /* The logo's cyan. Too pale against paper for text, so it stays decorative */
-  --accent-secondary: #58c4ec;
+  /*
+   * The accent behind white text. Held at the logo's blue in both themes,
+   * since the lifted dark-theme accent is too pale to carry white.
+   */
+  --accent-solid: #4158f6;
+  --accent-solid-hover: light-dark(#3446d9, #4a5df7);
 
-  --wash: light-dark(#e0e5fe, #1e2440);
+  /* Neutral tints for hovered and pressed controls */
+  --surface-hover: light-dark(
+    rgba(16, 19, 34, 0.06),
+    rgba(255, 255, 255, 0.07)
+  );
+  --surface-active: light-dark(
+    rgba(16, 19, 34, 0.1),
+    rgba(255, 255, 255, 0.11)
+  );
+
+  /* Barely-there frame around screenshots, so it reads as an edge not a border */
+  --screenshot-border: light-dark(
+    rgba(16, 19, 34, 0.2),
+    rgba(255, 255, 255, 0.06)
+  );
+  --screenshot-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
 
   /* --- Type --- */
 
@@ -39,12 +61,13 @@
     ui-monospace, 'SF Mono', 'Cascadia Code', 'Consolas', 'Monaco',
     'Liberation Mono', 'Courier New', monospace;
 
+  /* Fixed sizes rather than fluid ones, with a single step down on narrow screens */
   --step--1: 0.8125rem;
-  --step-0: 1.0625rem;
-  --step-1: 1.25rem;
-  --step-2: 1.625rem;
-  --step-3: clamp(1.9rem, 1.4rem + 1.8vw, 2.5rem);
-  --step-4: clamp(2.4rem, 1.4rem + 4.4vw, 4.5rem);
+  --step-0: 1rem;
+  --step-1: 1.125rem;
+  --step-2: 1.5rem;
+  --step-3: 2.25rem;
+  --step-4: 3.5rem;
 
   /* --- Space --- */
 
@@ -60,8 +83,8 @@
 
   /* --- Layout --- */
 
-  --page-max: 1140px;
-  --measure: 34rem;
+  --page-max: 950px;
+  --measure: 38rem;
   --gutter: clamp(1.25rem, 5vw, 3rem);
 
   /* --- Radius, matching the app --- */
@@ -83,6 +106,11 @@
   --ease-in: cubic-bezier(0.4, 0, 1, 1);
   --ease-out: cubic-bezier(0, 0, 0.2, 1);
 
+  --transition-colors:
+    background-color var(--duration-normal) var(--ease-out),
+    color var(--duration-normal) var(--ease-out),
+    border-color var(--duration-normal) var(--ease-out);
+
   /* No stored choice, so follow the system */
   color-scheme: light dark;
 }
@@ -94,6 +122,13 @@
 
 :root[data-theme='dark'] {
   color-scheme: dark;
+}
+
+/* The hero is the only size large enough to need a step down */
+@media (max-width: 900px) {
+  :root {
+    --step-4: 2.5rem;
+  }
 }
 
 /* ============================================================
@@ -132,24 +167,19 @@ p {
 }
 
 a {
-  color: inherit;
-  text-decoration-color: var(--wash);
+  color: var(--accent);
+  text-decoration: none;
   text-underline-offset: 0.18em;
-  text-decoration-thickness: 2px;
-  transition: text-decoration-color var(--duration-normal) var(--ease-out);
 }
 
+/* The underline is the hover affordance, since colour alone carries the resting state */
 a:hover {
-  text-decoration-color: var(--accent);
+  text-decoration: underline;
 }
 
 img {
   max-width: 100%;
   height: auto;
-}
-
-::selection {
-  background: color-mix(in srgb, var(--accent-secondary) 32%, transparent);
 }
 
 :focus-visible {
@@ -186,41 +216,48 @@ img {
 }
 
 /*
- * Primary call to action.
+ * Buttons, following the app's anatomy: a shared base plus a variant. Ghost is
+ * the default, matching the app's own default-quiet controls.
  */
 .button {
-  display: inline-block;
-  padding: var(--space-3) var(--space-5);
-  border: 1px solid var(--ink);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  height: 2.25rem;
+  padding-inline: var(--space-4);
+  border: 1px solid transparent;
   border-radius: var(--radius-md);
-  background: var(--ink);
-  color: var(--paper);
+  background: none;
+  color: var(--ink-muted);
   font-family: var(--font-ui);
-  font-size: var(--step--1);
+  font-size: 0.875rem;
   font-weight: 500;
-  letter-spacing: -0.02em;
+  line-height: 1;
+  white-space: nowrap;
   text-decoration: none;
-  transition:
-    transform var(--duration-normal) var(--ease-out),
-    background-color var(--duration-normal) var(--ease-out);
+  transition: var(--transition-colors);
 }
 
-.button:hover {
-  background: var(--accent);
-  border-color: var(--accent);
-  transform: translateY(-1px);
-}
-
-.button-secondary {
-  background: transparent;
+.button-ghost:hover {
+  background: var(--surface-hover);
   color: var(--ink);
-  border-color: var(--rule);
 }
 
-.button-secondary:hover {
-  background: transparent;
-  color: var(--accent);
-  border-color: var(--accent);
+.button-ghost:active {
+  background: var(--surface-active);
+}
+
+/* The page's primary action, and the only filled colour in the furniture */
+.button-primary {
+  background: var(--accent-solid);
+  border-color: var(--accent-solid);
+  color: #ffffff;
+}
+
+.button-primary:hover {
+  background: var(--accent-solid-hover);
+  border-color: var(--accent-solid-hover);
 }
 
 /* ============================================================
@@ -261,7 +298,7 @@ img {
 .prose blockquote {
   margin: 0;
   padding-inline-start: var(--space-5);
-  border-inline-start: 2px solid var(--accent-secondary);
+  border-inline-start: 2px solid var(--rule);
   color: var(--ink-muted);
   font-style: italic;
 }
