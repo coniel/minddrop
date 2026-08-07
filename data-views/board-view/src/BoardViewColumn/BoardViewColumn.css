@@ -10,17 +10,16 @@
 .board-view-column-content {
   flex: 1;
   border-radius: var(--radius-md);
-  background-color: var(--surface-subtle);
 }
 
 .board-view-column-empty .board-view-column-content {
-  background-color: transparent;
+  border: 1px solid transparent;
   border-radius: var(--radius-lg);
-  transition: background-color 150ms ease;
+  transition: border-color var(--duration-normal) var(--ease-out);
 }
 
 .board-view-column-empty:hover .board-view-column-content {
-  background-color: var(--surface-raised);
+  border-color: var(--border-subtle);
 }
 
 .board-view-column-delete {
