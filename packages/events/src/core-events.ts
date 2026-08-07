@@ -236,23 +236,23 @@ export type OpenConfirmationDialogEventData = {
   /**
    * The label for the confirmation button.
    */
-  confirmLabel: string;
+  confirmLabel: TranslationKey;
 
   /**
    * The label for the cancel button.
    * @default 'actions.cancel'
    */
-  cancelLabel?: string;
+  cancelLabel?: TranslationKey;
 
   /**
-   * The dialog title.
+   * The dialog title. Strings are treated as i18n keys.
    */
-  title: React.ReactNode | string;
+  title: TranslationKey | React.ReactElement;
 
   /**
-   * The dialog message.
+   * The dialog message. Strings are treated as i18n keys.
    */
-  message: React.ReactNode | string;
+  message: TranslationKey | React.ReactElement;
 
   /**
    * When `true`, styles the confirmation button to indicate a dangerous action.
