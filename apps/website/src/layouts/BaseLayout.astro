@@ -275,28 +275,33 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     </script>
 
     <script is:inline>
-      // Name download buttons for the reader's platform. They ship generic,
-      // because a static page cannot know it until it runs.
+      // Point the page at the reader's platform. It ships generic, because a
+      // static page cannot know the platform until it runs.
       (() => {
-        const labels = document.querySelectorAll('[data-os-label]');
+        const platform = getPlatform();
 
-        if (labels.length === 0) {
-          return;
-        }
-
-        const platform = getPlatformName();
-
-        // An unrecognised or mobile platform keeps the generic label, since
-        // there is no build to send it to
+        // An unrecognised or mobile platform keeps the generic label and the
+        // full list of builds, since there is none to single out
         if (!platform) {
           return;
         }
 
-        labels.forEach((label) => {
-          label.textContent = `Download for ${platform}`;
+        const names = { mac: 'Mac', windows: 'Windows', linux: 'Linux' };
+
+        // Name every download button for the platform
+        document.querySelectorAll('[data-os-label]').forEach((label) => {
+          label.textContent = `Download for ${names[platform]}`;
         });
 
-        function getPlatformName() {
+        // Mark this platform's build as the one to take
+        document
+          .querySelectorAll(`[data-download-platform="${platform}"]`)
+          .forEach((option) => {
+            option.dataset.osCurrent = '';
+          });
+
+        // Which platform the reader is on, or null if there is no build for it
+        function getPlatform() {
           const agent = navigator.userAgent;
 
           // iPadOS reports itself as a Mac, so check the touch points too
@@ -309,15 +314,15 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
           }
 
           if (/Mac/.test(agent)) {
-            return 'Mac';
+            return 'mac';
           }
 
           if (/Win/.test(agent)) {
-            return 'Windows';
+            return 'windows';
           }
 
           if (/Linux|X11/.test(agent)) {
-            return 'Linux';
+            return 'linux';
           }
 
           return null;

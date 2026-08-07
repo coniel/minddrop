@@ -1,6 +1,7 @@
 ---
 import AppWindow from '../components/AppWindow.astro';
 import DownloadButton from '../components/DownloadButton.astro';
+import DownloadSection from '../components/DownloadSection.astro';
 import FeatureGrid from '../components/FeatureGrid.astro';
 import FeatureTabs, {
   type TabbedFeature,
@@ -220,6 +221,8 @@ const databaseFeatures: TabbedFeature[] = [
   >
     <ShowcaseGallery name="spaces" items={spaces} />
   </PageSection>
+
+  <DownloadSection />
 </BaseLayout>
 
 <style>

@@ -1,0 +1,96 @@
+---
+import { downloads } from '../downloads';
+
+/**
+ * The page's closing call to action: one button per platform.
+ *
+ * The reader's own platform is filled in by the script in the base layout,
+ * since a static page cannot know it up front.
+ */
+---
+
+<section class="page download" id="download">
+  <div class="download-panel">
+    <h2 class="download-title">Get MindDrop</h2>
+
+    <p class="download-description">
+      Free and open source. No account or internet connection needed.
+    </p>
+
+    <div class="download-options">
+      {
+        downloads.map((download) => (
+          <a
+            class="button download-option"
+            href={download.href}
+            data-download-platform={download.platform}
+          >
+            {download.name}
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .download {
+    margin-block-start: var(--space-9);
+  }
+
+  .download-panel {
+    padding: var(--space-8) var(--gutter);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-xl);
+    background: var(--paper-raised);
+    text-align: center;
+  }
+
+  .download-title {
+    font-size: var(--step-3);
+  }
+
+  .download-description {
+    max-width: var(--measure);
+    margin-block-start: var(--space-4);
+    margin-inline: auto;
+    font-size: var(--step-1);
+    color: var(--ink-muted);
+  }
+
+  .download-options {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
+    margin-block-start: var(--space-6);
+  }
+
+  /* Bordered rather than ghost, so each platform reads as an option */
+  .download-option {
+    border-color: var(--rule);
+    color: var(--ink);
+  }
+
+  .download-option:hover {
+    background: var(--surface-hover);
+    text-decoration: none;
+  }
+
+  .download-option:active {
+    background: var(--surface-active);
+  }
+
+  /* The reader's own platform, marked as the one to take */
+  .download-option[data-os-current] {
+    background: var(--accent-solid);
+    border-color: var(--accent-solid);
+    color: #ffffff;
+  }
+
+  .download-option[data-os-current]:hover {
+    background: var(--accent-solid-hover);
+    border-color: var(--accent-solid-hover);
+  }
+</style>
