@@ -141,10 +141,16 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
       // this the first feature's screenshot is the one on show.
       document.querySelectorAll('[data-feature-tabs]').forEach((set) => {
         const tabs = Array.from(set.querySelectorAll('[role="tab"]'));
+        const previous = set.querySelector('[data-tabs-previous]');
+        const next = set.querySelector('[data-tabs-next]');
+
+        let current = 0;
 
         function select(index) {
+          current = (index + tabs.length) % tabs.length;
+
           tabs.forEach((tab, position) => {
-            const isSelected = position === index;
+            const isSelected = position === current;
 
             tab.setAttribute('aria-selected', String(isSelected));
             tab.tabIndex = isSelected ? 0 : -1;
@@ -157,6 +163,71 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
               panel.hidden = !isSelected;
             }
           });
+
+          reveal(tabs[current]);
+        }
+
+        /*
+         * Where a card sits along the scroller's own scrolling axis. Measured
+         * from the rendered boxes, because offsetLeft is relative to whichever
+         * ancestor happens to be positioned, not to the scroller.
+         */
+        function offsetOf(scroller, element) {
+          return (
+            scroller.scrollLeft +
+            element.getBoundingClientRect().left -
+            scroller.getBoundingClientRect().left -
+            scroller.clientLeft
+          );
+        }
+
+        /*
+         * Scroll the least distance that brings the selected card fully into
+         * view, always resting on a card's leading edge. Stopping mid-card
+         * would leave the scroll snapping to correct the position afterwards.
+         */
+        function reveal(tab) {
+          const scroller = tab.parentElement;
+
+          // The row fits, so there is nothing to scroll
+          if (scroller.scrollWidth <= scroller.clientWidth) {
+            return;
+          }
+
+          const starts = tabs.map((item) => offsetOf(scroller, item));
+          const start = starts[tabs.indexOf(tab)];
+          const end = start + tab.offsetWidth;
+          const viewportEnd = scroller.scrollLeft + scroller.clientWidth;
+
+          // Already on screen, so leave the row where the reader put it
+          if (start >= scroller.scrollLeft - 1 && end <= viewportEnd + 1) {
+            return;
+          }
+
+          const scrollingBack = start < scroller.scrollLeft;
+
+          // Going forward, stop at the first card that still reveals this one
+          const target = scrollingBack
+            ? start
+            : (starts.find(
+                (candidate) => end <= candidate + scroller.clientWidth,
+              ) ?? start);
+
+          scroller.scrollTo({
+            left: Math.min(target, scroller.scrollWidth - scroller.clientWidth),
+            behavior: window.matchMedia('(prefers-reduced-motion: reduce)')
+              .matches
+              ? 'auto'
+              : 'smooth',
+          });
+        }
+
+        if (previous) {
+          previous.addEventListener('click', () => select(current - 1));
+        }
+
+        if (next) {
+          next.addEventListener('click', () => select(current + 1));
         }
 
         tabs.forEach((tab, index) => {
@@ -172,10 +243,10 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 
             event.preventDefault();
 
-            const next = (index + step + tabs.length) % tabs.length;
+            const target = (index + step + tabs.length) % tabs.length;
 
-            select(next);
-            tabs[next].focus();
+            select(target);
+            tabs[target].focus();
           });
         });
       });

@@ -1,0 +1,273 @@
+---
+import AppWindow from './AppWindow.astro';
+import Icon from './Icon.astro';
+
+/**
+ * One large screenshot with a row of thumbnail cards beneath it. Picking a
+ * card swaps the screenshot above.
+ *
+ * Wired as a tablist, so it reuses the feature-card behaviour in the base
+ * layout rather than shipping its own.
+ */
+
+export interface ShowcaseItem {
+  /**
+   * The card's heading.
+   */
+  title: string;
+
+  /**
+   * One sentence describing what the screenshot shows.
+   */
+  description: string;
+
+  /**
+   * The screenshot. A placeholder is shown while it is missing.
+   */
+  image?: string;
+
+  /**
+   * Describes the screenshot for anyone who cannot see it.
+   */
+  imageAlt?: string;
+}
+
+interface Props {
+  /**
+   * Prefix for the generated element ids, unique per gallery on the page.
+   */
+  name: string;
+
+  /**
+   * The screenshots to show, in order. The first is selected initially.
+   */
+  items: ShowcaseItem[];
+}
+
+const { name, items } = Astro.props;
+---
+
+{/* The cards come first in the source, and are placed below by the styles */}
+<div class="showcase" data-feature-tabs>
+  <div class="showcase-tabs" role="tablist">
+    {
+      items.map((item, index) => (
+        <button
+          class="showcase-tab"
+          type="button"
+          role="tab"
+          id={`${name}-tab-${index}`}
+          aria-controls={`${name}-panel-${index}`}
+          aria-selected={index === 0 ? 'true' : 'false'}
+          tabindex={index === 0 ? 0 : -1}
+        >
+          <span class="showcase-tab-thumb">
+            {item.image && <img src={item.image} alt="" />}
+          </span>
+
+          <span class="showcase-tab-title">{item.title}</span>
+          <span class="showcase-tab-description">{item.description}</span>
+        </button>
+      ))
+    }
+  </div>
+
+  <div class="showcase-stage">
+    <button
+      class="showcase-step showcase-step-previous"
+      type="button"
+      aria-label="Previous space"
+      data-tabs-previous
+    >
+      <Icon name="chevron-left" />
+    </button>
+
+    <div class="showcase-panels">
+      {
+        items.map((item, index) => (
+          <div
+            class="showcase-panel"
+            role="tabpanel"
+            id={`${name}-panel-${index}`}
+            aria-labelledby={`${name}-tab-${index}`}
+            hidden={index !== 0}
+          >
+            {item.image ? (
+              <AppWindow>
+                <img src={item.image} alt={item.imageAlt ?? ''} />
+              </AppWindow>
+            ) : (
+              <AppWindow />
+            )}
+          </div>
+        ))
+      }
+    </div>
+
+    <button
+      class="showcase-step showcase-step-next"
+      type="button"
+      aria-label="Next space"
+      data-tabs-next
+    >
+      <Icon name="chevron-right" />
+    </button>
+  </div>
+</div>
+
+<style>
+  .showcase {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  /* The screenshot leads, the cards that change it follow */
+  .showcase-stage {
+    position: relative;
+    order: 1;
+  }
+
+  /*
+   * Sits in the page gutter beside the screenshot. There is no room for that
+   * once the window narrows, so it moves over the image below.
+   */
+  .showcase-step {
+    position: absolute;
+    top: 50%;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-full);
+    background: var(--paper-raised);
+    color: var(--ink-muted);
+    transform: translateY(-50%);
+    transition: var(--transition-colors);
+  }
+
+  .showcase-step:hover {
+    background: var(--surface-hover);
+    color: var(--ink);
+  }
+
+  .showcase-step :global(.icon) {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .showcase-step-previous {
+    right: calc(100% + var(--space-3));
+  }
+
+  .showcase-step-next {
+    left: calc(100% + var(--space-3));
+  }
+
+  .showcase-tabs {
+    order: 2;
+    display: flex;
+    gap: var(--space-4);
+    /* More spaces than fit, so the row scrolls rather than wrapping */
+    overflow-x: auto;
+    /*
+     * No scroll snapping: the buttons already land on a card edge, and a snap
+     * container can finish a smooth scroll instantly instead of animating it.
+     */
+    scroll-behavior: smooth;
+    padding-block-end: var(--space-2);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .showcase-tabs {
+      scroll-behavior: auto;
+    }
+  }
+
+  /*
+   * Laid out as a column, because a button centres its content vertically
+   * once it is stretched taller than the content by its neighbours.
+   */
+  .showcase-tab {
+    flex: 0 0 clamp(13rem, 30%, 17rem);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding: var(--space-4);
+    border: 1px solid transparent;
+    border-radius: var(--radius-lg);
+    background: none;
+    font: inherit;
+    text-align: start;
+    transition: var(--transition-colors);
+  }
+
+  .showcase-tab:hover {
+    background: var(--surface-hover);
+  }
+
+  .showcase-tab[aria-selected='true'] {
+    border-color: var(--rule);
+    background: var(--paper-raised);
+  }
+
+  .showcase-tab-thumb {
+    display: block;
+    overflow: hidden;
+    aspect-ratio: 16 / 10;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-md);
+    background: var(--paper-sunk);
+  }
+
+  .showcase-tab-thumb img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .showcase-tab-title {
+    display: block;
+    margin-block-start: var(--space-3);
+    font-size: var(--step-0);
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .showcase-tab-description {
+    display: block;
+    margin-block-start: var(--space-2);
+    font-size: 0.875rem;
+    color: var(--ink-muted);
+  }
+
+  /* Below this the gutter cannot hold a chevron, so they move over the image */
+  @media (max-width: 1100px) {
+    .showcase-step {
+      box-shadow: var(--screenshot-shadow);
+    }
+
+    .showcase-step-previous {
+      right: auto;
+      left: var(--space-3);
+    }
+
+    .showcase-step-next {
+      left: auto;
+      right: var(--space-3);
+    }
+  }
+
+  @media (max-width: 700px) {
+    .showcase-tabs {
+      gap: var(--space-3);
+    }
+
+    .showcase-tab {
+      flex-basis: 13rem;
+    }
+  }
+</style>

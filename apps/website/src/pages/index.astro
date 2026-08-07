@@ -7,8 +7,54 @@ import FeatureTabs, {
 } from '../components/FeatureTabs.astro';
 import Icon from '../components/Icon.astro';
 import PageSection from '../components/PageSection.astro';
+import ShowcaseGallery, {
+  type ShowcaseItem,
+} from '../components/ShowcaseGallery.astro';
 import ViewGallery, { type GalleryView } from '../components/ViewGallery.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+const spaces: ShowcaseItem[] = [
+  {
+    title: 'Project hub',
+    description:
+      'Tasks, notes, and deadlines for one project, with the board embedded on the page.',
+  },
+  {
+    title: 'Reading log',
+    description:
+      "A gallery of what you're reading, beside your notes on the current book.",
+  },
+  {
+    title: 'Research desk',
+    description:
+      'Sources and quotes next to a live web page, so you can read and write in one place.',
+  },
+  {
+    title: 'Recipe book',
+    description:
+      "Recipes as a gallery, with the one you're cooking open beside it.",
+  },
+  {
+    title: 'Film log',
+    description:
+      "A wall of posters for what you've watched, with your ratings and notes.",
+  },
+  {
+    title: 'Travel planner',
+    description:
+      'Bookings, places, and a live map for one trip on a single page.',
+  },
+  {
+    title: 'Home dashboard',
+    description:
+      "Today's tasks and your recent notes, so you land somewhere useful.",
+  },
+  {
+    title: 'Job search',
+    description:
+      'Applications on a board, with each posting embedded beside your notes.',
+  },
+];
 
 const views: GalleryView[] = [
   {
@@ -165,6 +211,14 @@ const databaseFeatures: TabbedFeature[] = [
     description="Each view shows the entries in a collection, query, or entire database, arranged in whichever way suits them."
   >
     <ViewGallery views={views} />
+  </PageSection>
+
+  <PageSection
+    id="spaces"
+    title="Spaces"
+    description="A space is a page you build yourself. Drop in views, text, images, and live web pages, arrange them however the work needs, and you end up with something closer to a small app than a note."
+  >
+    <ShowcaseGallery name="spaces" items={spaces} />
   </PageSection>
 </BaseLayout>
 

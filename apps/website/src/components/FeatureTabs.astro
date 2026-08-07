@@ -136,9 +136,15 @@ const { name, features, reverse = false } = Astro.props;
     gap: var(--space-1);
   }
 
-  /* Reads as a plain list until a card is picked, so only one card is framed */
+  /*
+   * Reads as a plain list until a card is picked, so only one card is framed.
+   * Laid out as a column, because a button centres its content vertically once
+   * it is stretched taller than the content by its neighbours.
+   */
   .feature-tab {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
     width: 100%;
     padding: var(--space-4);
     border: 1px solid transparent;
