@@ -1,3 +1,4 @@
+import { registerStory } from '@minddrop/dev-tools';
 /**
  * DateField.stories.tsx
  * Dev reference for the DateInput and DateField components.
@@ -186,3 +187,9 @@ export const DateFieldStories = () => (
     </StorySection>
   </Story>
 );
+
+registerStory({
+  group: 'Fields',
+  label: 'DateField',
+  component: DateFieldStories,
+});

@@ -3,6 +3,7 @@
  * Dev reference for ScrollArea, VerticalScrollArea, HorizontalScrollArea.
  */
 import { useMemo, useRef, useState } from 'react';
+import { registerStory } from '@minddrop/dev-tools';
 import {
   TransientViewStateContextValue,
   TransientViewStateProvider,
@@ -255,3 +256,9 @@ export const ScrollAreaStories = () => (
     </StorySection>
   </Story>
 );
+
+registerStory({
+  group: 'Layout',
+  label: 'ScrollArea',
+  component: ScrollAreaStories,
+});

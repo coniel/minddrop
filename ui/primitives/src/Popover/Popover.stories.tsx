@@ -3,6 +3,7 @@
  * Dev reference for the Popover component.
  */
 import { FC, useState } from 'react';
+import { registerStory } from '@minddrop/dev-tools';
 import { Button } from '../Button';
 import { IconButton } from '../IconButton';
 import { Group } from '../Layout/Group';
@@ -278,3 +279,9 @@ const ControlledPopover: FC = () => {
     </Group>
   );
 };
+
+registerStory({
+  group: 'Overlay',
+  label: 'Popover',
+  component: PopoverStories,
+});

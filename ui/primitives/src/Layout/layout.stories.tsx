@@ -1,3 +1,4 @@
+import { registerStory } from '@minddrop/dev-tools';
 /**
  * layout.stories.tsx
  * Dev reference for Flex, Group, and Stack layout primitives.
@@ -479,3 +480,9 @@ export const LayoutStories = () => (
     </StorySection>
   </Story>
 );
+
+registerStory({
+  group: 'Layout',
+  label: 'Flex / Group / Stack',
+  component: LayoutStories,
+});

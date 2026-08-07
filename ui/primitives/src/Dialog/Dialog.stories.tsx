@@ -1,3 +1,4 @@
+import { registerStory } from '@minddrop/dev-tools';
 /**
  * Dialog.stories.tsx
  * Dev reference for the Dialog component.
@@ -217,3 +218,9 @@ export const DialogStories = () => (
     </StorySection>
   </Story>
 );
+
+registerStory({
+  group: 'Overlay',
+  label: 'Dialog',
+  component: DialogStories,
+});

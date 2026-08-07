@@ -4,6 +4,7 @@
  */
 import { useState } from 'react';
 import type { DateRange } from 'react-day-picker';
+import { registerStory } from '@minddrop/dev-tools';
 import { Button } from '../Button';
 import { Story, StoryItem, StoryRow, StorySection } from '../dev/Story';
 import { Calendar } from './Calendar';
@@ -142,3 +143,9 @@ export const CalendarStories = () => {
     </Story>
   );
 };
+
+registerStory({
+  group: 'Fields',
+  label: 'Calendar',
+  component: CalendarStories,
+});

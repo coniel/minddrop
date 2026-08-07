@@ -3,6 +3,7 @@
  * Dev reference for the Slider component.
  */
 import { useState } from 'react';
+import { registerStory } from '@minddrop/dev-tools';
 import { Story, StoryItem, StoryRow, StorySection } from '../dev/Story';
 import { Slider } from './Slider';
 
@@ -87,3 +88,9 @@ export const SliderStories = () => {
     </Story>
   );
 };
+
+registerStory({
+  group: 'Fields',
+  label: 'Slider',
+  component: SliderStories,
+});

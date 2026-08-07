@@ -1,3 +1,4 @@
+import { registerStory } from '@minddrop/dev-tools';
 /**
  * Chip.stories.tsx
  * Dev reference for the Chip component.
@@ -166,3 +167,9 @@ export const ChipStories = () => (
     </StorySection>
   </Story>
 );
+
+registerStory({
+  group: 'Primitives',
+  label: 'Chip',
+  component: ChipStories,
+});

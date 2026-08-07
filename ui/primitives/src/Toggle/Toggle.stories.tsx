@@ -3,6 +3,7 @@
  * Dev reference for the Toggle component.
  */
 import { useState } from 'react';
+import { registerStory } from '@minddrop/dev-tools';
 import { Story, StoryItem, StoryRow, StorySection } from '../dev/Story';
 import { Toggle } from './Toggle';
 
@@ -205,3 +206,9 @@ export const ToggleStories = () => {
     </Story>
   );
 };
+
+registerStory({
+  group: 'Fields',
+  label: 'Toggle',
+  component: ToggleStories,
+});

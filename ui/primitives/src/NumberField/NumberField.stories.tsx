@@ -3,6 +3,7 @@
  * Dev reference for the NumberField component.
  */
 import { useState } from 'react';
+import { registerStory } from '@minddrop/dev-tools';
 import { Story, StoryItem, StoryRow, StorySection } from '../dev/Story';
 import { NumberField } from './NumberField';
 
@@ -296,3 +297,9 @@ export const NumberFieldStories = () => {
     </Story>
   );
 };
+
+registerStory({
+  group: 'Fields',
+  label: 'NumberField',
+  component: NumberFieldStories,
+});

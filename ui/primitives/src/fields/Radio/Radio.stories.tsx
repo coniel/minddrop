@@ -3,6 +3,7 @@
  * Dev reference for RadioField, RadioGroup, RadioCard, and RadioCardGroup.
  */
 import { useState } from 'react';
+import { registerStory } from '@minddrop/dev-tools';
 import { Story, StoryItem, StoryRow, StorySection } from '../../dev/Story';
 import { RadioCard, RadioCardGroup, RadioField, RadioGroup } from '../Radio';
 
@@ -314,3 +315,9 @@ export const RadioStories = () => {
     </Story>
   );
 };
+
+registerStory({
+  group: 'Fields',
+  label: 'Radio',
+  component: RadioStories,
+});

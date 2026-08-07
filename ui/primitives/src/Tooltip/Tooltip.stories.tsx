@@ -1,3 +1,4 @@
+import { registerStory } from '@minddrop/dev-tools';
 /**
  * Tooltip.stories.tsx
  * Dev reference for the Tooltip component.
@@ -127,3 +128,9 @@ export const TooltipStories = () => (
     </StorySection>
   </Story>
 );
+
+registerStory({
+  group: 'Overlay',
+  label: 'Tooltip',
+  component: TooltipStories,
+});

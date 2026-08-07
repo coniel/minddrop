@@ -1,3 +1,4 @@
+import { registerStory } from '@minddrop/dev-tools';
 /**
  * Toast.stories.tsx
  * Dev reference for the Toast component.
@@ -194,3 +195,9 @@ export const ToastStories = () => (
     </ToastProvider>
   </Story>
 );
+
+registerStory({
+  group: 'Overlay',
+  label: 'Toast',
+  component: ToastStories,
+});

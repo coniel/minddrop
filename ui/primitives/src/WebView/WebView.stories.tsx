@@ -1,3 +1,4 @@
+import { registerStory } from '@minddrop/dev-tools';
 /**
  * WebView.stories.tsx
  * Dev reference for the WebView component.
@@ -14,3 +15,9 @@ export const WebViewStories = () => (
     </StorySection>
   </Story>
 );
+
+registerStory({
+  group: 'Primitives',
+  label: 'WebView',
+  component: WebViewStories,
+});

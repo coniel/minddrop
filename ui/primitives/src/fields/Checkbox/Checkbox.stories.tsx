@@ -3,6 +3,7 @@
  * Dev reference for Checkbox, CheckboxField, and CheckboxGroup.
  */
 import { useState } from 'react';
+import { registerStory } from '@minddrop/dev-tools';
 import { Story, StoryItem, StoryRow, StorySection } from '../../dev/Story';
 import { CheckboxField, CheckboxGroup } from './Checkbox';
 
@@ -167,3 +168,9 @@ export const CheckboxStories = () => {
     </Story>
   );
 };
+
+registerStory({
+  group: 'Fields',
+  label: 'Checkbox',
+  component: CheckboxStories,
+});

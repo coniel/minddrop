@@ -3,6 +3,7 @@
  * Dev reference for the ConfirmationDialog component.
  */
 import { useState } from 'react';
+import { registerStory } from '@minddrop/dev-tools';
 import { Button } from '../Button';
 import { Story, StoryItem, StoryRow, StorySection } from '../dev/Story';
 import { ConfirmationDialog } from './ConfirmationDialog';
@@ -123,3 +124,9 @@ export const ConfirmationDialogStories = () => {
     </Story>
   );
 };
+
+registerStory({
+  group: 'Overlay',
+  label: 'ConfirmationDialog',
+  component: ConfirmationDialogStories,
+});

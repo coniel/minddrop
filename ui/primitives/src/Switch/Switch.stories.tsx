@@ -3,6 +3,7 @@
  * Dev reference for the Switch and SwitchField components.
  */
 import { useState } from 'react';
+import { registerStory } from '@minddrop/dev-tools';
 import { Story, StoryItem, StoryRow, StorySection } from '../dev/Story';
 import { Switch } from './Switch';
 import { SwitchField } from './Switch';
@@ -121,3 +122,9 @@ export const SwitchStories = () => {
     </Story>
   );
 };
+
+registerStory({
+  group: 'Fields',
+  label: 'Switch',
+  component: SwitchStories,
+});

@@ -1,3 +1,4 @@
+import { registerStory } from '@minddrop/dev-tools';
 /**
  * Button.stories.tsx
  * Dev reference for the Button component.
@@ -284,3 +285,9 @@ export const ButtonStories = () => (
     </StorySection>
   </Story>
 );
+
+registerStory({
+  group: 'Primitives',
+  label: 'Button',
+  component: ButtonStories,
+});

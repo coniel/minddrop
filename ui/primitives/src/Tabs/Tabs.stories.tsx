@@ -3,6 +3,7 @@
  * Dev reference for the Tabs component.
  */
 import { useState } from 'react';
+import { registerStory } from '@minddrop/dev-tools';
 import { Story, StoryItem, StoryRow, StorySection } from '../dev/Story';
 import { Tabs, TabsList, TabsPanel, TabsTab } from './Tabs';
 
@@ -175,3 +176,9 @@ export const TabsStories = () => {
     </Story>
   );
 };
+
+registerStory({
+  group: 'Layout',
+  label: 'Tabs',
+  component: TabsStories,
+});

@@ -3,6 +3,7 @@
  * Dev reference for the DropdownMenu component system.
  */
 import { useState } from 'react';
+import { registerStory } from '@minddrop/dev-tools';
 import { ActionMenuItem as DropdownMenuItem } from '../ActionMenuItem';
 import { ActionMenuRadioItem as DropdownMenuRadioItem } from '../ActionMenuItem';
 import { Button } from '../Button';
@@ -594,3 +595,9 @@ export const DropdownMenuStories = () => {
     </Story>
   );
 };
+
+registerStory({
+  group: 'Menu',
+  label: 'DropdownMenu',
+  component: DropdownMenuStories,
+});

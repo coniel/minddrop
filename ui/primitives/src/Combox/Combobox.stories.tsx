@@ -1,4 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react';
+import { registerStory } from '@minddrop/dev-tools';
 import { Story, StoryItem, StoryRow, StorySection } from '../dev/Story';
 import { Combobox, ComboboxOption, ComboboxOptionGroup } from './Combobox';
 
@@ -456,3 +457,9 @@ const ResizableContainer: React.FC<{ children: React.ReactNode }> = ({
     </div>
   );
 };
+
+registerStory({
+  group: 'Fields',
+  label: 'Combobox',
+  component: ComboboxStories,
+});

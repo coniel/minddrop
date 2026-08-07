@@ -1,3 +1,4 @@
+import { registerStory } from '@minddrop/dev-tools';
 /**
  * KeyboardShortcut.stories.tsx
  * Dev reference for the KeyboardShortcut component.
@@ -62,3 +63,9 @@ export const KeyboardShortcutStories = () => (
     </StorySection>
   </Story>
 );
+
+registerStory({
+  group: 'Primitives',
+  label: 'KeyboardShortcut',
+  component: KeyboardShortcutStories,
+});

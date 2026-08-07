@@ -1,3 +1,4 @@
+import { registerStory } from '@minddrop/dev-tools';
 /**
  * Text.stories.tsx
  * Dev reference for the Text component.
@@ -212,3 +213,9 @@ export const TextStories = () => (
     </StorySection>
   </Story>
 );
+
+registerStory({
+  group: 'Primitives',
+  label: 'Text',
+  component: TextStories,
+});

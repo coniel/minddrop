@@ -1,3 +1,4 @@
+import { registerStory } from '@minddrop/dev-tools';
 /**
  * IconButton.stories.tsx
  * Dev reference for the IconButton component.
@@ -390,3 +391,9 @@ export const IconButtonStories = () => (
     </StorySection>
   </Story>
 );
+
+registerStory({
+  group: 'Primitives',
+  label: 'IconButton',
+  component: IconButtonStories,
+});

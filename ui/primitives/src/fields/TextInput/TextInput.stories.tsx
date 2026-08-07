@@ -1,3 +1,4 @@
+import { registerStory } from '@minddrop/dev-tools';
 /**
  * TextInput.stories.tsx
  * Dev reference for the TextInput primitive.
@@ -360,3 +361,9 @@ export const TextInputStories = () => (
     </StorySection>
   </Story>
 );
+
+registerStory({
+  group: 'Fields',
+  label: 'TextInput',
+  component: TextInputStories,
+});

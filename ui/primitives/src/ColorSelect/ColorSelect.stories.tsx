@@ -3,6 +3,7 @@
  * Dev reference for the ColorSelect component.
  */
 import { useState } from 'react';
+import { registerStory } from '@minddrop/dev-tools';
 import { ContentColor } from '@minddrop/ui-theme';
 import { Story, StoryItem, StoryRow, StorySection } from '../dev/Story';
 import { ColorSelect } from './ColorSelect';
@@ -83,3 +84,9 @@ export const ColorSelectStories = () => (
     </StorySection>
   </Story>
 );
+
+registerStory({
+  group: 'Fields',
+  label: 'ColorSelect',
+  component: ColorSelectStories,
+});

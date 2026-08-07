@@ -3,6 +3,7 @@
  * Dev reference for the ContextMenu component system.
  */
 import { useState } from 'react';
+import { registerStory } from '@minddrop/dev-tools';
 import { ActionMenuItem as ContextMenuItem } from '../ActionMenuItem';
 import { ActionMenuRadioItem as ContextMenuRadioItem } from '../ActionMenuItem';
 import { Text } from '../Text';
@@ -319,3 +320,9 @@ export const ContextMenuStories = () => {
     </Story>
   );
 };
+
+registerStory({
+  group: 'Menu',
+  label: 'ContextMenu',
+  component: ContextMenuStories,
+});

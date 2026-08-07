@@ -1,3 +1,4 @@
+import { registerStory } from '@minddrop/dev-tools';
 /**
  * Select.stories.tsx
  * Dev reference for the Select component.
@@ -202,3 +203,9 @@ export const SelectStories = () => (
     </StorySection>
   </Story>
 );
+
+registerStory({
+  group: 'Fields',
+  label: 'Select',
+  component: SelectStories,
+});

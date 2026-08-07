@@ -1,3 +1,4 @@
+import { registerStory } from '@minddrop/dev-tools';
 /**
  * Toolbar.stories.tsx
  * Dev reference for the Toolbar component.
@@ -250,3 +251,9 @@ export const ToolbarStories = () => (
     </StorySection>
   </Story>
 );
+
+registerStory({
+  group: 'Layout',
+  label: 'Toolbar',
+  component: ToolbarStories,
+});

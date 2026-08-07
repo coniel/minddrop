@@ -3,6 +3,7 @@
  * Dev reference for the Collapsible component.
  */
 import { useState } from 'react';
+import { registerStory } from '@minddrop/dev-tools';
 import { Button } from '../Button';
 import { IconButton } from '../IconButton';
 import { Group } from '../Layout/Group';
@@ -199,3 +200,9 @@ export const CollapsibleStories = () => {
     </Story>
   );
 };
+
+registerStory({
+  group: 'Layout',
+  label: 'Collapsible',
+  component: CollapsibleStories,
+});

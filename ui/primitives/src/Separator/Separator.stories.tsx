@@ -1,3 +1,4 @@
+import { registerStory } from '@minddrop/dev-tools';
 /**
  * Separator.stories.tsx
  * Dev reference for the Separator component.
@@ -96,3 +97,9 @@ export const SeparatorStories = () => (
     </StorySection>
   </Story>
 );
+
+registerStory({
+  group: 'Primitives',
+  label: 'Separator',
+  component: SeparatorStories,
+});

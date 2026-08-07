@@ -3,6 +3,7 @@
  * Dev reference for the RadioToggleGroup component.
  */
 import { useState } from 'react';
+import { registerStory } from '@minddrop/dev-tools';
 import { Toggle } from '../Toggle';
 import { Story, StoryItem, StoryRow, StorySection } from '../dev/Story';
 import { RadioToggleGroup } from './RadioToggleGroup';
@@ -178,3 +179,9 @@ export const RadioToggleGroupStories = () => {
     </Story>
   );
 };
+
+registerStory({
+  group: 'Fields',
+  label: 'RadioToggleGroup',
+  component: RadioToggleGroupStories,
+});

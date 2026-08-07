@@ -1,3 +1,4 @@
+import { registerStory } from '@minddrop/dev-tools';
 /**
  * Menu.stories.tsx
  * Dev reference for Menu, MenuGroup, MenuLabel, MenuSeparator,
@@ -457,3 +458,9 @@ export const MenuStories = () => (
     </StorySection>
   </Story>
 );
+
+registerStory({
+  group: 'Menu',
+  label: 'Menu',
+  component: MenuStories,
+});

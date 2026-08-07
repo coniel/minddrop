@@ -1,3 +1,4 @@
+import { registerStory } from '@minddrop/dev-tools';
 /**
  * TextField.stories.tsx
  * Dev reference for TextField and FieldLabel.
@@ -477,3 +478,9 @@ export const TextFieldStories = () => (
     </StorySection>
   </Story>
 );
+
+registerStory({
+  group: 'Fields',
+  label: 'TextField',
+  component: TextFieldStories,
+});
