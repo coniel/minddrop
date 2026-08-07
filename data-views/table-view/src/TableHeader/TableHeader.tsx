@@ -1,5 +1,4 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { useTranslation } from '@minddrop/i18n';
 import { useSortableDrag } from '@minddrop/ui-drag-and-drop';
 import { UiIconName } from '@minddrop/ui-icons';
 import {
@@ -92,7 +91,6 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
   onToggleShowChips,
   onHideColumn,
 }) => {
-  const { t } = useTranslation({ keyPrefix: 'dataViews.table' });
   const allSelected = totalCount > 0 && selectedCount === totalCount;
   const someSelected = selectedCount > 0 && selectedCount < totalCount;
 
@@ -204,9 +202,8 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
                   didDrag.current = false;
                   dragProps?.handleProps?.onPointerDown?.(event);
                 }}
-                onPointerMove={(event) => {
+                onPointerMove={() => {
                   didDrag.current = true;
-                  dragProps?.handleProps?.onPointerMove?.(event);
                 }}
                 onClick={() => {
                   if (didDrag.current) {
@@ -266,7 +263,7 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
                       {column.type === 'select' && (
                         <>
                           <DropdownMenuSwitchItem
-                            label={t('showChips')}
+                            label="dataViews.table.showChips"
                             checked={column.showChips !== false}
                             onCheckedChange={(checked) =>
                               onToggleShowChips(column.id, checked)
@@ -278,7 +275,7 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
 
                       {/* Hide column action */}
                       <DropdownMenuItem
-                        label={t('hideColumn')}
+                        label="dataViews.table.hideColumn"
                         icon="eye-off"
                         onSelect={() => onHideColumn(column.id)}
                       />

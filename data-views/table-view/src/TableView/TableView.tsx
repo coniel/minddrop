@@ -120,7 +120,7 @@ export const TableViewComponent: React.FC<
     }
 
     return sorted;
-  }, [database, hiddenColumns, options.columnOrder]);
+  }, [database, hiddenColumns, options.columnOrder, options.columns]);
 
   // Stable key derived from column order, used to force
   // the virtualizer to remount when columns reorder

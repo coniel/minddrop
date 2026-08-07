@@ -37,9 +37,9 @@ export const ROW_HEIGHT_PX: Record<TablePadding, number> = {
 };
 
 export const PAGE_SIZE_OPTIONS: SelectOption<number>[] = [
-  { label: '25', value: 25 },
-  { label: '50', value: 50 },
-  { label: '100', value: 100 },
-  { label: '200', value: 200 },
-  { label: '500', value: 500 },
+  { stringLabel: '25', value: 25 },
+  { stringLabel: '50', value: 50 },
+  { stringLabel: '100', value: 100 },
+  { stringLabel: '200', value: 200 },
+  { stringLabel: '500', value: 500 },
 ];
