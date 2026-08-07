@@ -2,6 +2,7 @@ import type {
   Matcher,
   MatcherOptions,
   SelectorMatcherOptions,
+  waitForOptions,
 } from '@testing-library/dom';
 import {
   RenderHookOptions,
@@ -102,6 +103,8 @@ const customRender = (
     getAllByAltText,
     getAllByLabelText,
     getAllByPlaceholderText,
+    findByText,
+    findAllByText,
     ...other
   } = render(ui, {
     wrapper: WithProviders,
@@ -152,6 +155,10 @@ const customRender = (
       getAllByLabelText(translatePrefixedMatcher(text), options),
     getAllByPlaceholderText: (text: Matcher, options?: MatcherOptions) =>
       getAllByPlaceholderText(translatePrefixedMatcher(text), options),
+    findByText: (text: Matcher, options?: SelectorMatcherOptions) =>
+      findByText(translatePrefixedMatcher(text), options),
+    findAllByText: (text: Matcher, options?: SelectorMatcherOptions) =>
+      findAllByText(translatePrefixedMatcher(text), options),
     getByTranslatedText,
     getByTranslatedAltText,
     getByTranslatedLabelText,
@@ -230,6 +237,63 @@ const customScreen = {
     text: Matcher,
     options?: MatcherOptions,
   ) => screen.queryAllByPlaceholderText<T>(translateMatcher(text), options),
+  findByText: <T extends HTMLElement = HTMLElement>(
+    text: Matcher,
+    options?: SelectorMatcherOptions,
+    waitForOptions?: waitForOptions,
+  ) => screen.findByText<T>(translateMatcher(text), options, waitForOptions),
+  findByAltText: <T extends HTMLElement = HTMLElement>(
+    text: Matcher,
+    options?: MatcherOptions,
+    waitForOptions?: waitForOptions,
+  ) => screen.findByAltText<T>(translateMatcher(text), options, waitForOptions),
+  findByLabelText: <T extends HTMLElement = HTMLElement>(
+    text: Matcher,
+    options?: SelectorMatcherOptions,
+    waitForOptions?: waitForOptions,
+  ) =>
+    screen.findByLabelText<T>(translateMatcher(text), options, waitForOptions),
+  findByPlaceholderText: <T extends HTMLElement = HTMLElement>(
+    text: Matcher,
+    options?: MatcherOptions,
+    waitForOptions?: waitForOptions,
+  ) =>
+    screen.findByPlaceholderText<T>(
+      translateMatcher(text),
+      options,
+      waitForOptions,
+    ),
+  findAllByText: <T extends HTMLElement = HTMLElement>(
+    text: Matcher,
+    options?: SelectorMatcherOptions,
+    waitForOptions?: waitForOptions,
+  ) => screen.findAllByText<T>(translateMatcher(text), options, waitForOptions),
+  findAllByAltText: <T extends HTMLElement = HTMLElement>(
+    text: Matcher,
+    options?: MatcherOptions,
+    waitForOptions?: waitForOptions,
+  ) =>
+    screen.findAllByAltText<T>(translateMatcher(text), options, waitForOptions),
+  findAllByLabelText: <T extends HTMLElement = HTMLElement>(
+    text: Matcher,
+    options?: SelectorMatcherOptions,
+    waitForOptions?: waitForOptions,
+  ) =>
+    screen.findAllByLabelText<T>(
+      translateMatcher(text),
+      options,
+      waitForOptions,
+    ),
+  findAllByPlaceholderText: <T extends HTMLElement = HTMLElement>(
+    text: Matcher,
+    options?: MatcherOptions,
+    waitForOptions?: waitForOptions,
+  ) =>
+    screen.findAllByPlaceholderText<T>(
+      translateMatcher(text),
+      options,
+      waitForOptions,
+    ),
 };
 
 const customRenderHook = <TProps, TResult>(
