@@ -22,8 +22,16 @@ export async function pickEmojiIcon(label: string) {
   // Select an emoji
   await user.click(screen.getByText('emojiPicker.label'));
 
+  // Narrow the results by searching. The picker virtualises its full grid,
+  // which measures zero height in jsdom and renders no rows; a narrow result
+  // set renders as a plain list instead.
+  await user.type(
+    screen.getByPlaceholderText('emojiPicker.filter'),
+    'grinning',
+  );
+
   await waitFor(() => {
-    screen.getByText('Smileys & Emotion');
+    screen.getByText(emojiIcon);
   });
 
   await user.click(screen.getByText(emojiIcon));
