@@ -7,3 +7,6 @@ apps/desktop/src-tauri/gen
 
 # Build output
 **/dist
+
+# Package manager lockfile
+pnpm-lock.yaml

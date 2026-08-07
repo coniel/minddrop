@@ -178,13 +178,9 @@ const RightPanel: React.FC = () => {
 
 const ConfirmationDialogFeature: React.FC = () => {
   const [open, setOpen] = useState(false);
+  // Null until a dialog is requested, so there is no placeholder content
   const [dialogProps, setDialogProps] =
-    useState<OpenConfirmationDialogEventData>({
-      title: '',
-      message: '',
-      onConfirm: () => {},
-      confirmLabel: '',
-    });
+    useState<OpenConfirmationDialogEventData | null>(null);
 
   useEffect(() => {
     Events.addListener<OpenConfirmationDialogEventData>(
@@ -200,6 +196,10 @@ const ConfirmationDialogFeature: React.FC = () => {
       Events.removeListener(OpenConfirmationDialogEvent, 'desktop-app');
     };
   }, []);
+
+  if (!dialogProps) {
+    return null;
+  }
 
   return (
     <ConfirmationDialog {...dialogProps} open={open} onOpenChange={setOpen} />
