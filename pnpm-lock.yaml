@@ -726,9 +726,6 @@ importers:
       '@minddrop/designs':
         specifier: workspace:*
         version: link:../../packages/designs
-      '@minddrop/dev-tools':
-        specifier: workspace:*
-        version: link:../../dev/dev-tools
       '@minddrop/editor':
         specifier: workspace:*
         version: link:../../packages/editor
@@ -750,6 +747,9 @@ importers:
       '@minddrop/feature-designs':
         specifier: workspace:*
         version: link:../designs
+      '@minddrop/feature-dev-tools':
+        specifier: workspace:*
+        version: link:../dev-tools
       '@minddrop/feature-queries':
         specifier: workspace:*
         version: link:../queries

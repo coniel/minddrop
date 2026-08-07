@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { DevTools } from '@minddrop/dev-tools';
 import {
   AppErrorEvent,
   AppErrorEventData,
@@ -16,6 +15,7 @@ import {
 import { MindDropApiProvider } from '@minddrop/extensions';
 import { DatabasesFeature } from '@minddrop/feature-databases';
 import { DesignsFeature } from '@minddrop/feature-designs';
+import { DevTools } from '@minddrop/feature-dev-tools';
 import { SearchFeature } from '@minddrop/feature-search';
 import { SpacesFeature } from '@minddrop/feature-spaces';
 import { TabsToolbar, ViewRenderer } from '@minddrop/feature-views';

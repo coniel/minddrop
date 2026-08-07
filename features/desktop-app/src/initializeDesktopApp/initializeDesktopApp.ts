@@ -10,6 +10,7 @@ import { initializeCollectionsFeature } from '@minddrop/feature-collections';
 import { initializeDataViewsFeature } from '@minddrop/feature-data-views';
 import { DatabaseViewStateStore } from '@minddrop/feature-databases';
 import { LayoutRegionSizesStore } from '@minddrop/feature-designs';
+import { initializeDevToolsFeature } from '@minddrop/feature-dev-tools';
 import { initializeQueriesFeature } from '@minddrop/feature-queries';
 import { initializeSearch } from '@minddrop/feature-search';
 import {
@@ -73,6 +74,10 @@ async function runInitialization(): Promise<void> {
 
   // Hydrate per-space view state
   await SpaceViewStateStore.hydrate();
+
+  // Register dev tools translations and panels, and hydrate
+  // their UI state
+  await initializeDevToolsFeature();
 
   // Watch for theme variant changes
   Events.addListener(
