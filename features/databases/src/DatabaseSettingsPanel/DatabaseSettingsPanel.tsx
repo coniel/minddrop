@@ -10,7 +10,11 @@ import {
   OpenConfirmationDialogEvent,
   OpenConfirmationDialogEventData,
 } from '@minddrop/events';
-import { TranslationKey, useTranslation } from '@minddrop/i18n';
+import {
+  TranslationKey,
+  createI18nKeyBuilder,
+  useTranslation,
+} from '@minddrop/i18n';
 import {
   ButtonSetting,
   IconSetting,
@@ -227,15 +231,17 @@ export const DatabaseSettingsPanel: React.FC<DatabaseSettingsPanelProps> = ({
 
   // Prompt for confirmation before deleting the database
   function handleDelete() {
-    const i18nRoot = 'databases.settings.delete.confirmation';
+    const i18nKey = createI18nKeyBuilder(
+      'databases.settings.delete.confirmation.',
+    );
 
     // Open a confirmation dialog for the destructive delete action
     Events.dispatch<OpenConfirmationDialogEventData>(
       OpenConfirmationDialogEvent,
       {
-        title: `${i18nRoot}.title`,
-        message: `${i18nRoot}.message`,
-        confirmLabel: `${i18nRoot}.confirm`,
+        title: i18nKey('title'),
+        message: i18nKey('message'),
+        confirmLabel: i18nKey('confirm'),
         danger: true,
         onConfirm: () => {
           // Move the database to the system trash
@@ -247,15 +253,17 @@ export const DatabaseSettingsPanel: React.FC<DatabaseSettingsPanelProps> = ({
 
   // Prompt for confirmation before clearing all entries
   function handleClear() {
-    const i18nRoot = 'databases.settings.clear.confirmation';
+    const i18nKey = createI18nKeyBuilder(
+      'databases.settings.clear.confirmation.',
+    );
 
     // Open a confirmation dialog for the destructive clear action
     Events.dispatch<OpenConfirmationDialogEventData>(
       OpenConfirmationDialogEvent,
       {
-        title: `${i18nRoot}.title`,
-        message: `${i18nRoot}.message`,
-        confirmLabel: `${i18nRoot}.confirm`,
+        title: i18nKey('title'),
+        message: i18nKey('message'),
+        confirmLabel: i18nKey('confirm'),
         danger: true,
         onConfirm: () => {
           // Move all of the database's entries to the system trash
