@@ -1,0 +1,62 @@
+.dev-tools-json-tree {
+  font-family: var(--font-mono, monospace);
+  font-size: var(--text-xs);
+  line-height: 1.5;
+  color: var(--text-regular);
+}
+
+.dev-tools-json-row {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.dev-tools-json-children {
+  padding-left: var(--space-4);
+  border-left: 1px solid var(--border-subtle);
+  margin-left: var(--space-1);
+}
+
+.dev-tools-json-toggle {
+  padding: 0;
+  width: var(--space-3);
+  background: none;
+  border: none;
+  color: var(--text-subtle);
+  font-size: 0.6rem;
+  text-align: left;
+}
+
+.dev-tools-json-key {
+  color: var(--text-muted);
+}
+
+.dev-tools-json-preview,
+.dev-tools-json-bracket {
+  color: var(--text-subtle);
+}
+
+/* --- Value types --- */
+
+.dev-tools-json-string {
+  color: var(--green-1100);
+}
+
+.dev-tools-json-number {
+  color: var(--blue-1100);
+}
+
+.dev-tools-json-boolean {
+  color: var(--purple-1100);
+}
+
+.dev-tools-json-nullish {
+  color: var(--text-subtle);
+  font-style: italic;
+}
+
+.dev-tools-json-date {
+  color: var(--cyan-1100);
+}

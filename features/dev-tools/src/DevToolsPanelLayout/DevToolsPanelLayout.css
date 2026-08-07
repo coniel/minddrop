@@ -15,11 +15,29 @@
   border-right: 1px solid var(--border-subtle);
 }
 
-.dev-tools-panel-content {
+.dev-tools-panel-main {
   display: flex;
   flex-direction: column;
   flex: 1;
   min-width: 0;
+  min-height: 0;
+}
+
+.dev-tools-panel-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+  padding: var(--space-1) var(--space-2);
+  background-color: var(--surface-overlay);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.dev-tools-panel-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
   background-color: var(--surface-app);
 }
 

@@ -1573,7 +1573,27 @@ declare module 'i18next' {
             toggleWindowed: string;
           };
           panels: {
+            logs: string;
             stories: string;
+          };
+          logs: {
+            searchPlaceholder: string;
+            empty: string;
+            noMatches: string;
+            levels: {
+              all: string;
+              log: string;
+              info: string;
+              warn: string;
+              error: string;
+            };
+            actions: {
+              clear: string;
+              collapseAll: string;
+              copy: string;
+              sortNewestFirst: string;
+              sortOldestFirst: string;
+            };
           };
           shortcuts: {
             general: string;

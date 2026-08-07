@@ -8,7 +8,27 @@
       "toggleWindowed": "Toggle window mode"
     },
     "panels": {
+      "logs": "Logs",
       "stories": "Stories"
+    },
+    "logs": {
+      "searchPlaceholder": "Search logs",
+      "empty": "No console output yet.",
+      "noMatches": "No logs match the current filters.",
+      "levels": {
+        "all": "all",
+        "log": "log",
+        "info": "info",
+        "warn": "warn",
+        "error": "error"
+      },
+      "actions": {
+        "clear": "Clear logs",
+        "collapseAll": "Collapse all values",
+        "copy": "Copy log",
+        "sortNewestFirst": "Show newest first",
+        "sortOldestFirst": "Show oldest first"
+      }
     },
     "shortcuts": {
       "general": "General",

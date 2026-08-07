@@ -11,6 +11,12 @@ export interface DevToolsPanelLayoutProps {
   sidebar?: React.ReactNode;
 
   /**
+   * Content rendered above the panel's main content, where it
+   * stays in place as the content scrolls.
+   */
+  toolbar?: React.ReactNode;
+
+  /**
    * The panel's main content.
    */
   children: React.ReactNode;
@@ -18,10 +24,11 @@ export interface DevToolsPanelLayoutProps {
 
 /**
  * Renders a dev tools panel's content, optionally alongside
- * a panel sidebar.
+ * a panel sidebar and beneath a panel toolbar.
  */
 export const DevToolsPanelLayout: React.FC<DevToolsPanelLayoutProps> = ({
   sidebar,
+  toolbar,
   children,
 }) => {
   const sidebarOpen = DevToolsUiState.useValue('sidebarOpen');
@@ -34,8 +41,12 @@ export const DevToolsPanelLayout: React.FC<DevToolsPanelLayoutProps> = ({
         </aside>
       )}
 
-      <div className="dev-tools-panel-content">
-        <ScrollArea>{children}</ScrollArea>
+      <div className="dev-tools-panel-main">
+        {toolbar && <div className="dev-tools-panel-toolbar">{toolbar}</div>}
+
+        <div className="dev-tools-panel-content">
+          <ScrollArea>{children}</ScrollArea>
+        </div>
       </div>
     </div>
   );
