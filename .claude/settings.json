@@ -1,5 +1,18 @@
 {
   "worktree": {
     "baseRef": "head"
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "count=$(git rev-list --count HEAD..main 2>/dev/null || echo 0); [ \"$count\" -gt 0 ] && jq -nc --arg c \"$count\" '{hookSpecificOutput:{hookEventName:\"SessionStart\",additionalContext:(\"This branch is \" + $c + \" commit(s) behind main. Before making changes, run `git merge main` in the worktree; before proposing a merge into main, merge main in, re-run the affected packages tests and typechecks, then rebase onto main so the merge fast-forwards.\")}}'; true",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
   }
 }
