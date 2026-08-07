@@ -9,10 +9,13 @@ import {
 } from '@minddrop/databases';
 import { Designs, Layouts } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
+import { useDataViewContext } from '@minddrop/feature-data-views';
 import { LayoutRenderer } from '@minddrop/feature-designs';
 import { useTranslation } from '@minddrop/i18n';
 import { PropertyValue } from '@minddrop/properties';
+import { useDraggable } from '@minddrop/selection';
 import { Text, TransientViewStateScope } from '@minddrop/ui-primitives';
+import { DatabaseEntriesDataKey } from '../constants';
 import {
   OpenDatabaseEntryViewEvent,
   OpenDatabaseEntryViewEventData,
@@ -73,6 +76,12 @@ const Entry: React.FC<EntryProps> = ({
   const { t } = useTranslation();
   const database = Databases.use(entry.database);
   const design = Designs.use(database?.designId || '');
+  const { draggableEntries } = useDataViewContext();
+  const { draggableProps, isDragging } = useDraggable({
+    id: entry.id,
+    type: DatabaseEntriesDataKey,
+    data: entry,
+  });
 
   // The base layout type the context resolves to, used for styling
   // and click behaviour
@@ -207,17 +216,34 @@ const Entry: React.FC<EntryProps> = ({
   // have button role or keyboard activation.
   const isClickable = baseType !== 'page';
 
+  // Cards are dragged from a bar along their top edge, and only
+  // within data views which support dragging
+  const showDragHandle = baseType === 'card' && draggableEntries;
+
+  const className = [
+    'database-entry',
+    `database-entry-${baseType}`,
+    showDragHandle && isDragging ? 'database-entry-dragging' : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
+
   // Minimal title-only fallback when the database has no design
   // or its design has no layout of the requested type
   if (!layout) {
     return (
       <div
-        className={`database-entry database-entry-${baseType} database-entry-fallback`}
+        className={`${className} database-entry-fallback`}
         role={isClickable ? 'button' : undefined}
         tabIndex={isClickable ? 0 : undefined}
         onClick={isClickable ? onOpenEntry : undefined}
         onKeyDown={isClickable ? onKeyDown : undefined}
       >
+        {/* Invisible drag bar along the top edge of the card */}
+        {showDragHandle && (
+          <div className="database-entry-drag-handle" {...draggableProps} />
+        )}
+
         <Text truncate>{entry.title}</Text>
       </div>
     );
@@ -225,12 +251,17 @@ const Entry: React.FC<EntryProps> = ({
 
   return (
     <div
-      className={`database-entry database-entry-${baseType}`}
+      className={className}
       role={isClickable ? 'button' : undefined}
       tabIndex={isClickable ? 0 : undefined}
       onClick={isClickable ? onOpenEntry : undefined}
       onKeyDown={isClickable ? onKeyDown : undefined}
     >
+      {/* Invisible drag bar along the top edge of the card */}
+      {showDragHandle && (
+        <div className="database-entry-drag-handle" {...draggableProps} />
+      )}
+
       <TransientViewStateScope segment={entry.id}>
         <LayoutRenderer
           layout={layout}

@@ -1,10 +1,32 @@
-.database-entry-card > * {
+.database-entry-card {
+  position: relative;
+}
+
+.database-entry-card > *:not(.database-entry-drag-handle) {
   outline: 1px solid transparent;
   transition: outline-color var(--duration-normal) var(--ease-out);
 }
 
-.database-entry-card:hover > * {
+.database-entry-card:hover > *:not(.database-entry-drag-handle) {
   outline-color: var(--border-subtle);
+}
+
+.database-entry-dragging {
+  opacity: 0.5;
+}
+
+.database-entry-drag-handle {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: var(--space-4);
+  cursor: grab;
+}
+
+.database-entry-drag-handle:active {
+  cursor: grabbing;
 }
 
 .database-entry-fallback {
