@@ -1,0 +1,30 @@
+.dev-tools-panel-layout {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.dev-tools-panel-sidebar {
+  display: flex;
+  flex-direction: column;
+  width: 240px;
+  flex-shrink: 0;
+  padding: var(--space-1) 0;
+  background-color: var(--surface-overlay);
+  border-right: 1px solid var(--border-subtle);
+}
+
+.dev-tools-panel-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  background-color: var(--surface-app);
+}
+
+.dev-tools-panel-sidebar .scroll-area,
+.dev-tools-panel-content .scroll-area {
+  flex: 1;
+  min-height: 0;
+}

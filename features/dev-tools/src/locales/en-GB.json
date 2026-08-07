@@ -1,0 +1,27 @@
+{
+  "devTools": {
+    "labels": {
+      "devTools": "Dev tools"
+    },
+    "actions": {
+      "toggleSidebar": "Toggle sidebar",
+      "toggleWindowed": "Toggle window mode"
+    },
+    "panels": {
+      "stories": "Stories"
+    },
+    "shortcuts": {
+      "general": "General",
+      "window": "Window",
+      "panels": "Panels",
+      "toggle": "Toggle dev tools",
+      "help": "Shortcuts",
+      "close": "Close",
+      "windowed": "Toggle window mode",
+      "sidebar": "Toggle sidebar",
+      "snapLeft": "Snap left",
+      "snapRight": "Snap right"
+    },
+    "noPanels": "No dev tools panels registered."
+  }
+}

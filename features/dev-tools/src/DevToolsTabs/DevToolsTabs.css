@@ -1,0 +1,12 @@
+.dev-tools-tabs {
+  display: flex;
+  gap: var(--space-1);
+
+  .icon-button-active {
+    background-color: var(--surface-neutral-hover);
+
+    .icon {
+      color: var(--text-regular);
+    }
+  }
+}

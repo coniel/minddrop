@@ -1564,6 +1564,31 @@ declare module 'i18next' {
           new: string;
           close: string;
         };
+        devTools: {
+          labels: {
+            devTools: string;
+          };
+          actions: {
+            toggleSidebar: string;
+            toggleWindowed: string;
+          };
+          panels: {
+            stories: string;
+          };
+          shortcuts: {
+            general: string;
+            window: string;
+            panels: string;
+            toggle: string;
+            help: string;
+            close: string;
+            windowed: string;
+            sidebar: string;
+            snapLeft: string;
+            snapRight: string;
+          };
+          noPanels: string;
+        };
         search: {
           open: string;
           placeholder: string;
