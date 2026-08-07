@@ -1,8 +1,7 @@
 import React from 'react';
 import { ReactEditor, useSlate } from 'slate-react';
 import { ToDoElement } from '@minddrop/ast';
-import { Icon } from '@minddrop/ui-primitives';
-import { propsToClass } from '@minddrop/ui-primitives';
+import { Icon, propsToClass } from '@minddrop/ui-primitives';
 import { ElementPlaceholderText } from '../../ElementPlaceholderText';
 import { Transforms } from '../../Transforms';
 import { ToDoElementProps } from './ToDoElement.types';
@@ -16,7 +15,7 @@ export const ToDoElementComponent: React.FC<ToDoElementProps> = ({
   const editor = useSlate();
 
   // Toggles the to-do's `checked` state
-  const togglechecked = () => {
+  const toggleChecked = () => {
     // Get the element's path
     const path = ReactEditor.findPath(editor, element);
 
@@ -34,11 +33,11 @@ export const ToDoElementComponent: React.FC<ToDoElementProps> = ({
       className={propsToClass('to-do-element', { checked: element.checked })}
       {...attributes}
     >
-      <div contentEditable={false}>
+      <div className="checkbox" contentEditable={false}>
         <Icon
-          onClick={togglechecked}
+          onClick={toggleChecked}
           role="button"
-          name={element.checked ? 'check-square' : 'square'}
+          name={element.checked ? 'square-check-big' : 'square'}
         />
       </div>
       <div className="content">

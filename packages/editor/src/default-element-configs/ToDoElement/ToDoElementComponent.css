@@ -3,70 +3,28 @@
 }
 
 .to-do-element .content {
-  padding-left: 6px;
-  font-size: var(--fsContentRegular);
-  line-height: var(--lhContentRegular);
-  font-weight: var(--fwRegular);
+  padding-left: var(--space-2);
+  font-size: var(--text-md);
+  line-height: var(--leading-normal);
+  font-weight: var(--weight-normal);
   /* Fix for caret dissapearing due to 'display: flex' on
    * parent causing div to collapse to 0 width. */
   min-width: 10px;
 }
 
-.to-do-element .icon {
-  cursor: pointer;
-  vertical-align: middle;
+.to-do-element .checkbox {
+  display: flex;
+  align-items: center;
+  /* Align the checkbox with the first line of the content */
+  height: calc(var(--text-md) * var(--leading-normal));
   outline: none;
 }
 
 .to-do-element-checked .content {
   text-decoration: line-through;
-  opacity: 0.5;
+  color: var(--text-subtle);
 }
 
-.to-do-element-checked .icon {
-  stroke: var(--primary10);
-}
-
-.color-blue .to-do-element-checked .icon {
-  stroke: var(--blue10);
-}
-
-.color-cyan .to-do-element-checked .icon {
-  stroke: var(--cyan10);
-}
-
-.color-red .to-do-element-checked .icon {
-  stroke: var(--red10);
-}
-
-.color-red .to-do-element-checked .icon {
-  stroke: var(--red10);
-}
-
-.color-pink .to-do-element-checked .icon {
-  stroke: var(--pink10);
-}
-
-.color-purple .to-do-element-checked .icon {
-  stroke: var(--purple10);
-}
-
-.color-green .to-do-element-checked .icon {
-  stroke: var(--green10);
-}
-
-.color-orange .to-do-element-checked .icon {
-  stroke: var(--orange10);
-}
-
-.color-yellow .to-do-element-checked .icon {
-  stroke: var(--yellow10);
-}
-
-.color-brown .to-do-element-checked .icon {
-  stroke: var(--brown10);
-}
-
-.color-gray .to-do-element-checked .icon {
-  stroke: var(--gray10);
+.to-do-element-checked .checkbox .icon {
+  stroke: var(--text-primary);
 }
