@@ -850,6 +850,9 @@ importers:
 
   features/dev-tools:
     dependencies:
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../../packages/events
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n

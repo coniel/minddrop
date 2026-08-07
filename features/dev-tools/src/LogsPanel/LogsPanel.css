@@ -99,4 +99,7 @@
 .dev-tools-log-actions {
   display: flex;
   flex-shrink: 0;
+  /* The entry's values can span several lines, so the row stays
+     baseline aligned and the icon button centres itself */
+  align-self: center;
 }

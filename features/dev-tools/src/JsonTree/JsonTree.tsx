@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Icon } from '@minddrop/ui-primitives';
 import './JsonTree.css';
 
 export interface JsonTreeProps {
@@ -152,7 +153,7 @@ const JsonTreeBranch: React.FC<JsonTreeBranchProps> = ({
     <div className="dev-tools-json-node">
       <div className="dev-tools-json-row">
         <button className="dev-tools-json-toggle" onClick={handleToggle}>
-          {open ? '▾' : '▸'}
+          <Icon name={open ? 'chevron-down' : 'chevron-right'} color="subtle" />
         </button>
 
         {keyName !== undefined && (

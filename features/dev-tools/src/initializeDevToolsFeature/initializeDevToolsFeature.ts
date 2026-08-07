@@ -1,15 +1,17 @@
 import { I18n } from '@minddrop/i18n';
 import { DevToolsUiState } from '../DevToolsUiState';
+import { EventsPanel } from '../EventsPanel';
 import { LogsPanel } from '../LogsPanel';
 import { StoriesPanel } from '../StoriesPanel';
 import { locales } from '../locales';
 import { registerDevToolsPanel } from '../registerDevToolsPanel';
 import { startConsoleLogCapture } from '../startConsoleLogCapture';
+import { startEventCapture } from '../startEventCapture';
 
 /**
  * Initializes the dev tools feature by registering translations
- * and the built in panels, capturing console output, then
- * hydrating the dev tools UI state.
+ * and the built in panels, capturing console output and events,
+ * then hydrating the dev tools UI state.
  */
 export async function initializeDevToolsFeature(): Promise<void> {
   // Register dev tools translations
@@ -24,6 +26,15 @@ export async function initializeDevToolsFeature(): Promise<void> {
     component: LogsPanel,
   });
 
+  // Register the dispatched events panel
+  registerDevToolsPanel({
+    id: 'events',
+    label: 'devTools.panels.events',
+    icon: 'zap',
+    shortcut: 'e',
+    component: EventsPanel,
+  });
+
   // Register the UI component stories panel
   registerDevToolsPanel({
     id: 'stories',
@@ -33,9 +44,10 @@ export async function initializeDevToolsFeature(): Promise<void> {
     component: StoriesPanel,
   });
 
-  // Capture console output from here on, so that it can be
-  // inspected in the logs panel
+  // Capture console output and dispatched events from here on,
+  // so that they can be inspected in their panels
   startConsoleLogCapture();
+  startEventCapture();
 
   // Restore the panel and window state from the previous session
   await DevToolsUiState.hydrate();

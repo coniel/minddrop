@@ -1,0 +1,17 @@
+.dev-tools-dispatch-event-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  flex-shrink: 0;
+  padding: var(--space-2);
+  background-color: var(--surface-overlay);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.dev-tools-dispatch-event-name {
+  width: 220px;
+}
+
+.dev-tools-dispatch-event-data {
+  flex: 1;
+}

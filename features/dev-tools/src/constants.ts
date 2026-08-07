@@ -29,3 +29,13 @@ export const MinWindowSize = { width: 320, height: 200 };
  * Number of console calls kept before the oldest are dropped.
  */
 export const MaxLogEntries = 200;
+
+/**
+ * Number of dispatched events kept before the oldest are dropped.
+ */
+export const MaxEventEntries = 200;
+
+/**
+ * ID the dev tools register their own event listeners under.
+ */
+export const DevToolsListenerId = 'dev-tools';

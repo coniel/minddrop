@@ -1574,6 +1574,7 @@ declare module 'i18next' {
           };
           panels: {
             logs: string;
+            events: string;
             stories: string;
           };
           logs: {
@@ -1593,6 +1594,23 @@ declare module 'i18next' {
               copy: string;
               sortNewestFirst: string;
               sortOldestFirst: string;
+            };
+          };
+          events: {
+            allEvents: string;
+            searchPlaceholder: string;
+            empty: string;
+            noMatches: string;
+            actions: {
+              clear: string;
+              edit: string;
+              redispatch: string;
+            };
+            dispatch: {
+              namePlaceholder: string;
+              dataPlaceholder: string;
+              dispatch: string;
+              invalidData: string;
             };
           };
           shortcuts: {

@@ -1,4 +1,6 @@
+export * from './buildEventNameTree';
 export * from './clampWindowRect';
+export * from './filterEventEntries';
 export * from './filterLogEntries';
 export * from './formatLogArgument';
 export * from './getLogLabel';
@@ -8,3 +10,5 @@ export * from './getSnappedWindowRect';
 export * from './hasModifierKey';
 export * from './isExpandableLogValue';
 export * from './isTypingTarget';
+export * from './matchesEventNamePath';
+export * from './parseEventData';

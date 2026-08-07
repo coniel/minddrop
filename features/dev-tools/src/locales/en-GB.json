@@ -9,6 +9,7 @@
     },
     "panels": {
       "logs": "Logs",
+      "events": "Events",
       "stories": "Stories"
     },
     "logs": {
@@ -28,6 +29,23 @@
         "copy": "Copy log",
         "sortNewestFirst": "Show newest first",
         "sortOldestFirst": "Show oldest first"
+      }
+    },
+    "events": {
+      "allEvents": "All events",
+      "searchPlaceholder": "Search events",
+      "empty": "No events dispatched yet.",
+      "noMatches": "No events match the current filters.",
+      "actions": {
+        "clear": "Clear events",
+        "edit": "Load into dispatch form",
+        "redispatch": "Dispatch again"
+      },
+      "dispatch": {
+        "namePlaceholder": "event:name",
+        "dataPlaceholder": "Event data as JSON",
+        "dispatch": "Dispatch event",
+        "invalidData": "Event data must be valid JSON."
       }
     },
     "shortcuts": {

@@ -7,7 +7,9 @@
 
 .dev-tools-json-row {
   display: flex;
-  align-items: baseline;
+  /* Centred rather than baseline aligned: an icon has no text
+     baseline, so it would hang above the row's text */
+  align-items: center;
   gap: 2px;
   white-space: pre-wrap;
   word-break: break-word;
@@ -20,13 +22,19 @@
 }
 
 .dev-tools-json-toggle {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
   padding: 0;
-  width: var(--space-3);
   background: none;
   border: none;
-  color: var(--text-subtle);
-  font-size: 0.6rem;
-  text-align: left;
+
+  /* Sized down from the dev tools default to sit within the
+     tree's smaller rows */
+  .icon {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
 }
 
 .dev-tools-json-key {

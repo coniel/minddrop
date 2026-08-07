@@ -1,0 +1,70 @@
+.dev-tools-events {
+  display: flex;
+  flex-direction: column;
+}
+
+.dev-tools-events-empty {
+  padding: var(--space-4);
+}
+
+.dev-tools-events-search {
+  max-width: 240px;
+}
+
+/* --- Entries --- */
+
+.dev-tools-event-entry {
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.dev-tools-event-entry-row {
+  display: flex;
+  /* Centred rather than baseline aligned: an icon has no text
+     baseline, so it would hang above the row's text */
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-2);
+
+  .dev-tools-event-actions {
+    opacity: 0;
+  }
+
+  &:hover .dev-tools-event-actions {
+    opacity: 1;
+  }
+
+  &[data-expandable='true']:hover {
+    background-color: var(--surface-neutral-hover);
+  }
+}
+
+.dev-tools-event-time {
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.dev-tools-event-name {
+  flex-shrink: 0;
+}
+
+.dev-tools-event-data {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dev-tools-event-toggle {
+  flex-shrink: 0;
+}
+
+.dev-tools-event-actions {
+  display: flex;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.dev-tools-event-entry-body {
+  padding: var(--space-1) var(--space-2) var(--space-2) var(--space-6);
+}
