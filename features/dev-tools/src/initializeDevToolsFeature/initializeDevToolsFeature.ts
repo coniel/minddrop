@@ -2,6 +2,7 @@ import { I18n } from '@minddrop/i18n';
 import { DevToolsUiState } from '../DevToolsUiState';
 import { EventsPanel } from '../EventsPanel';
 import { LogsPanel } from '../LogsPanel';
+import { StatePanel } from '../StatePanel';
 import { StoriesPanel } from '../StoriesPanel';
 import { locales } from '../locales';
 import { registerDevToolsPanel } from '../registerDevToolsPanel';
@@ -33,6 +34,15 @@ export async function initializeDevToolsFeature(): Promise<void> {
     icon: 'zap',
     shortcut: 'e',
     component: EventsPanel,
+  });
+
+  // Register the store contents panel
+  registerDevToolsPanel({
+    id: 'state',
+    label: 'devTools.panels.state',
+    icon: 'database',
+    shortcut: 'i',
+    component: StatePanel,
   });
 
   // Register the UI component stories panel

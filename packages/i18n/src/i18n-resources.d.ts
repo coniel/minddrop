@@ -1575,6 +1575,7 @@ declare module 'i18next' {
           panels: {
             logs: string;
             events: string;
+            state: string;
             stories: string;
           };
           logs: {
@@ -1612,6 +1613,12 @@ declare module 'i18next' {
               dispatch: string;
               invalidData: string;
             };
+          };
+          state: {
+            searchPlaceholder: string;
+            noStores: string;
+            emptyStore: string;
+            noMatches: string;
           };
           shortcuts: {
             general: string;

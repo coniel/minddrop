@@ -10,6 +10,7 @@
     "panels": {
       "logs": "Logs",
       "events": "Events",
+      "state": "State",
       "stories": "Stories"
     },
     "logs": {
@@ -47,6 +48,12 @@
         "dispatch": "Dispatch event",
         "invalidData": "Event data must be valid JSON."
       }
+    },
+    "state": {
+      "searchPlaceholder": "Search items",
+      "noStores": "No stores registered.",
+      "emptyStore": "This store is empty.",
+      "noMatches": "No items match the search."
     },
     "shortcuts": {
       "general": "General",
