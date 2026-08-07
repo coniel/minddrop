@@ -188,6 +188,11 @@ img {
   height: auto;
 }
 
+/* Every control on the site is a button or a link, and reads as clickable */
+button {
+  cursor: pointer;
+}
+
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
