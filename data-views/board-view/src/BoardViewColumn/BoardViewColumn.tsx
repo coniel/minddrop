@@ -1,5 +1,8 @@
 import React, { useCallback } from 'react';
-import { DatabaseEntryRenderer } from '@minddrop/feature-databases';
+import {
+  DatabaseEntryRenderer,
+  getDroppedEntryIds,
+} from '@minddrop/feature-databases';
 import { DropEventData } from '@minddrop/selection';
 import { FlexDropContainer } from '@minddrop/ui-drag-and-drop';
 import { Button } from '@minddrop/ui-primitives';
@@ -54,7 +57,7 @@ export const BoardViewColumn: React.FC<BoardViewColumnProps> = ({
   // specific gap index
   const handleDrop = useCallback(
     (data: DropEventData, _containerId: string, gapIndex: number) => {
-      const entryId = data.data as string;
+      const [entryId] = getDroppedEntryIds(data);
 
       if (!entryId) {
         return;

@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 import { DataViewTypeComponentProps, DataViews } from '@minddrop/data-views';
+import { getDroppedEntryIds } from '@minddrop/feature-databases';
 import { DropEventData } from '@minddrop/selection';
 import { FlexDropContainer } from '@minddrop/ui-drag-and-drop';
 import { ScrollArea } from '@minddrop/ui-primitives';
@@ -70,7 +71,7 @@ export const BoardViewComponent: React.FC<
   // Handle dropping an entry between columns to create a new column
   const handleColumnLayoutDrop = useCallback(
     (data: DropEventData, _containerId: string, gapIndex: number) => {
-      const entryId = data.data as string;
+      const [entryId] = getDroppedEntryIds(data);
 
       if (!entryId) {
         return;

@@ -13,6 +13,7 @@ export const BoardViewType: DataViewType<object, BoardViewData> = {
   supportedDataSources: ['collection'],
   defaultData: defaultBoardViewData,
   component: BoardViewComponent,
+  draggableEntries: true,
   skeletonComponent: BoardViewSkeleton,
   serializeReferences: mapColumnReferences,
   resolveReferences: mapColumnReferences,
