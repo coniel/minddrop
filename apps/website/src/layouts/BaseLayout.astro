@@ -63,6 +63,64 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <SiteFooter />
 
     <script is:inline>
+      // Let each set of feature cards swap the screenshot beside it. Without
+      // this the first feature's screenshot is the one on show.
+      document.querySelectorAll('[data-feature-tabs]').forEach((set) => {
+        const tabs = Array.from(set.querySelectorAll('[role="tab"]'));
+
+        function select(index) {
+          tabs.forEach((tab, position) => {
+            const isSelected = position === index;
+
+            tab.setAttribute('aria-selected', String(isSelected));
+            tab.tabIndex = isSelected ? 0 : -1;
+
+            const panel = document.getElementById(
+              tab.getAttribute('aria-controls'),
+            );
+
+            if (panel) {
+              panel.hidden = !isSelected;
+            }
+          });
+        }
+
+        tabs.forEach((tab, index) => {
+          tab.addEventListener('click', () => select(index));
+
+          tab.addEventListener('keydown', (event) => {
+            const step = getStep(event.key);
+
+            // Not a key that moves between cards
+            if (step === null) {
+              return;
+            }
+
+            event.preventDefault();
+
+            const next = (index + step + tabs.length) % tabs.length;
+
+            select(next);
+            tabs[next].focus();
+          });
+        });
+      });
+
+      // How far the pressed key moves the selection, or null if it does not
+      function getStep(key) {
+        if (key === 'ArrowDown' || key === 'ArrowRight') {
+          return 1;
+        }
+
+        if (key === 'ArrowUp' || key === 'ArrowLeft') {
+          return -1;
+        }
+
+        return null;
+      }
+    </script>
+
+    <script is:inline>
       // Name download buttons for the reader's platform. They ship generic,
       // because a static page cannot know it until it runs.
       (() => {

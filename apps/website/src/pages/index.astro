@@ -2,7 +2,50 @@
 import AppWindow from '../components/AppWindow.astro';
 import DownloadButton from '../components/DownloadButton.astro';
 import FeatureGrid from '../components/FeatureGrid.astro';
+import FeatureTabs, {
+  type TabbedFeature,
+} from '../components/FeatureTabs.astro';
+import Icon from '../components/Icon.astro';
+import PageSection from '../components/PageSection.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+const databaseFeatures: TabbedFeature[] = [
+  {
+    id: 'properties',
+    title: 'Properties',
+    description:
+      'Give every entry the same typed fields: text, dates, numbers, select options, files, and images.',
+    icon: 'list',
+  },
+  {
+    id: 'files',
+    title: 'Choose your format',
+    description:
+      "Store a database's entries as Markdown, JSON, or YAML — Markdown by default, with properties in frontmatter.",
+    icon: 'file-text',
+  },
+  {
+    id: 'templates',
+    title: 'Templates',
+    description:
+      'Start from a ready-made database, and add entry templates that pre-fill properties for new entries.',
+    icon: 'copy',
+  },
+  {
+    id: 'collections',
+    title: 'Collections',
+    description:
+      'Curate a list by hand, gathering entries from any database into one place.',
+    icon: 'bookmark',
+  },
+  {
+    id: 'queries',
+    title: 'Queries',
+    description:
+      'Filter and sort entries by rules, then save the result to come back to.',
+    icon: 'filter',
+  },
+];
 ---
 
 <BaseLayout
@@ -31,20 +74,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <FeatureGrid>
         <article class="principle">
           <h2 class="principle-title">
-            <svg
-              class="principle-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.75"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              aria-hidden="true"
-            >
-              <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
-              <path d="M3 5v14a9 3 0 0 0 18 0V5"></path>
-              <path d="M3 12a9 3 0 0 0 18 0"></path>
-            </svg>
+            <Icon name="database" />
             Databases
           </h2>
 
@@ -56,23 +86,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
         <article class="principle">
           <h2 class="principle-title">
-            <svg
-              class="principle-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.75"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              aria-hidden="true"
-            >
-              <path
-                d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"
-              ></path>
-              <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
-              <path d="M16 13H8"></path>
-              <path d="M16 17H8"></path>
-            </svg>
+            <Icon name="file-text" />
             Plain files
           </h2>
 
@@ -84,24 +98,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
         <article class="principle">
           <h2 class="principle-title">
-            <svg
-              class="principle-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.75"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              aria-hidden="true"
-            >
-              <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"></circle>
-              <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"></circle>
-              <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"></circle>
-              <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"></circle>
-              <path
-                d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"
-              ></path>
-            </svg>
+            <Icon name="palette" />
             Design studio
           </h2>
 
@@ -120,6 +117,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       </AppWindow>
     </div>
   </section>
+
+  <PageSection
+    id="databases"
+    title="Databases"
+    description="Everything you write lives in a database: a folder of entries that share the properties you define. The folder is a real folder on your disk, and each entry is a real file inside it."
+  >
+    <FeatureTabs name="databases" features={databaseFeatures} />
+  </PageSection>
 </BaseLayout>
 
 <style>
@@ -173,10 +178,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     font-size: var(--step-0);
   }
 
-  .principle-icon {
-    width: 1.125em;
-    height: 1.125em;
-    flex-shrink: 0;
+  .principle-title :global(.icon) {
     color: var(--ink-muted);
   }
 

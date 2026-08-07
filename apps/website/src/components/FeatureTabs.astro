@@ -1,0 +1,193 @@
+---
+import AppWindow from './AppWindow.astro';
+import Icon, { type IconName } from './Icon.astro';
+
+/**
+ * A stack of feature cards beside a screenshot, where picking a card shows
+ * that feature's screenshot.
+ *
+ * The behaviour lives in the base layout so it runs once for every set on the
+ * page rather than shipping a copy per instance.
+ */
+
+export interface TabbedFeature {
+  /**
+   * Distinguishes this feature's card and panel from the others.
+   */
+  id: string;
+
+  /**
+   * The card's heading.
+   */
+  title: string;
+
+  /**
+   * One sentence explaining the feature.
+   */
+  description: string;
+
+  /**
+   * Icon shown beside the heading.
+   */
+  icon: IconName;
+
+  /**
+   * Screenshot for this feature. A placeholder is shown while it is missing.
+   */
+  image?: string;
+
+  /**
+   * Describes the screenshot for anyone who cannot see it.
+   */
+  imageAlt?: string;
+}
+
+interface Props {
+  /**
+   * Prefix for the generated element ids, unique per set on the page.
+   */
+  name: string;
+
+  /**
+   * The features to show, in order. The first is selected initially.
+   */
+  features: TabbedFeature[];
+
+  /**
+   * Puts the screenshot on the left and the cards on the right.
+   */
+  reverse?: boolean;
+}
+
+const { name, features, reverse = false } = Astro.props;
+---
+
+<div
+  class:list={['feature-tabs', { 'feature-tabs-reverse': reverse }]}
+  data-feature-tabs
+>
+  <div class="feature-tabs-cards" role="tablist" aria-orientation="vertical">
+    {
+      features.map((feature, index) => (
+        <button
+          class="feature-tab"
+          type="button"
+          role="tab"
+          id={`${name}-tab-${feature.id}`}
+          aria-controls={`${name}-panel-${feature.id}`}
+          aria-selected={index === 0 ? 'true' : 'false'}
+          tabindex={index === 0 ? 0 : -1}
+        >
+          <span class="feature-tab-title">
+            <Icon name={feature.icon} />
+            {feature.title}
+          </span>
+
+          <span class="feature-tab-description">{feature.description}</span>
+        </button>
+      ))
+    }
+  </div>
+
+  <div class="feature-tabs-media">
+    {
+      features.map((feature, index) => (
+        <div
+          class="feature-tabs-panel"
+          role="tabpanel"
+          id={`${name}-panel-${feature.id}`}
+          aria-labelledby={`${name}-tab-${feature.id}`}
+          hidden={index !== 0}
+        >
+          <AppWindow>
+            {feature.image ? (
+              <img src={feature.image} alt={feature.imageAlt ?? ''} />
+            ) : (
+              <div class="feature-tabs-placeholder" />
+            )}
+          </AppWindow>
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .feature-tabs {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+  }
+
+  .feature-tabs-reverse {
+    flex-direction: row-reverse;
+  }
+
+  .feature-tabs-cards,
+  .feature-tabs-media {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .feature-tabs-cards {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  /* Reads as a plain list until a card is picked, so only one card is framed */
+  .feature-tab {
+    display: block;
+    width: 100%;
+    padding: var(--space-4);
+    border: 1px solid transparent;
+    border-radius: var(--radius-lg);
+    background: none;
+    font: inherit;
+    text-align: start;
+    transition: var(--transition-colors);
+  }
+
+  .feature-tab:hover {
+    background: var(--surface-hover);
+  }
+
+  .feature-tab[aria-selected='true'] {
+    border-color: var(--rule);
+    background: var(--paper-raised);
+  }
+
+  .feature-tab-title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--step-0);
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .feature-tab-title :global(.icon) {
+    color: var(--ink-muted);
+  }
+
+  .feature-tab-description {
+    display: block;
+    margin-block-start: var(--space-2);
+    font-size: 0.875rem;
+    color: var(--ink-muted);
+  }
+
+  .feature-tabs-placeholder {
+    aspect-ratio: 4 / 3;
+    background: var(--paper-sunk);
+  }
+
+  @media (max-width: 900px) {
+    .feature-tabs,
+    .feature-tabs-reverse {
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--space-5);
+    }
+  }
+</style>
