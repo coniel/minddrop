@@ -3,6 +3,9 @@
  * Frames a screenshot or screen recording so it reads as a window onto the
  * app. The frame is deliberately faint: the screenshot is the only thing on
  * the page carrying colour, and a strong border would compete with it.
+ *
+ * With nothing in the slot it draws an empty frame of the right shape, so a
+ * section can be laid out before its screenshot exists.
  */
 
 interface Props {
@@ -11,13 +14,25 @@ interface Props {
    * beside a column of copy.
    */
   maxWidth?: string;
+
+  /**
+   * Shape of the placeholder drawn when the slot is empty.
+   */
+  aspect?: string;
 }
 
-const { maxWidth } = Astro.props;
+const { maxWidth, aspect = '16 / 10' } = Astro.props;
+const hasMedia = Astro.slots.has('default');
 ---
 
 <div class="app-window" style={maxWidth && `max-width: ${maxWidth}`}>
-  <slot />
+  {
+    hasMedia ? (
+      <slot />
+    ) : (
+      <div class="app-window-placeholder" style={`aspect-ratio: ${aspect}`} />
+    )
+  }
 </div>
 
 <style>
@@ -34,5 +49,9 @@ const { maxWidth } = Astro.props;
     display: block;
     width: 100%;
     height: auto;
+  }
+
+  .app-window-placeholder {
+    background: var(--paper-sunk);
   }
 </style>

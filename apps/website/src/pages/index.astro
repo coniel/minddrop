@@ -111,10 +111,7 @@ const databaseFeatures: TabbedFeature[] = [
     </div>
 
     <div class="hero-media">
-      <AppWindow>
-        {/* Placeholder until the hero screenshot is ready */}
-        <div class="hero-media-placeholder"></div>
-      </AppWindow>
+      <AppWindow />
     </div>
   </section>
 
@@ -124,6 +121,14 @@ const databaseFeatures: TabbedFeature[] = [
     description="Everything you write lives in a database: a folder of entries that share the properties you define. The folder is a real folder on your disk, and each entry is a real file inside it."
   >
     <FeatureTabs name="databases" features={databaseFeatures} />
+  </PageSection>
+
+  <PageSection
+    id="design-studio"
+    title="Design studio"
+    description="A drag-and-drop canvas for designing how entries look when displayed as cards, rows, or a full page."
+  >
+    <AppWindow />
   </PageSection>
 </BaseLayout>
 
@@ -191,10 +196,5 @@ const databaseFeatures: TabbedFeature[] = [
   /* The screenshot belongs with the blocks above it, so it sits close */
   .hero-media {
     margin-block-start: var(--space-6);
-  }
-
-  .hero-media-placeholder {
-    aspect-ratio: 16 / 10;
-    background: var(--paper-sunk);
   }
 </style>

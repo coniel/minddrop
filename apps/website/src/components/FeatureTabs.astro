@@ -99,13 +99,14 @@ const { name, features, reverse = false } = Astro.props;
           aria-labelledby={`${name}-tab-${feature.id}`}
           hidden={index !== 0}
         >
-          <AppWindow>
-            {feature.image ? (
+          {/* The frame draws its own placeholder only when given no slot at all */}
+          {feature.image ? (
+            <AppWindow aspect="4 / 3">
               <img src={feature.image} alt={feature.imageAlt ?? ''} />
-            ) : (
-              <div class="feature-tabs-placeholder" />
-            )}
-          </AppWindow>
+            </AppWindow>
+          ) : (
+            <AppWindow aspect="4 / 3" />
+          )}
         </div>
       ))
     }
@@ -175,11 +176,6 @@ const { name, features, reverse = false } = Astro.props;
     margin-block-start: var(--space-2);
     font-size: 0.875rem;
     color: var(--ink-muted);
-  }
-
-  .feature-tabs-placeholder {
-    aspect-ratio: 4 / 3;
-    background: var(--paper-sunk);
   }
 
   @media (max-width: 900px) {
