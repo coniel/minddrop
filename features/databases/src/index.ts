@@ -7,4 +7,6 @@ export * from './DatabasesSidebarMenu';
 export * from './DatabaseViewStateStore';
 export * from './events';
 export * from './registerDatabaseViews';
+export * from './useNewEntryDraggable';
 export * from './utils/getDroppedEntryIds';
+export * from './utils/getDroppedNewEntryDatabaseIds';
