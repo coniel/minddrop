@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://minddrop.app/sitemap-index.xml
