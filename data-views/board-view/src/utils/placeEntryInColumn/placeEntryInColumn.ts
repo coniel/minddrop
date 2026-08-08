@@ -17,6 +17,19 @@ export function placeEntryInColumn(
   columnIndex: number,
   entryIndex: number,
 ): BoardColumns {
+  // The entry's current position in the target column, -1 if
+  // it is not in it
+  const currentIndex = columns[columnIndex]
+    ? columns[columnIndex].indexOf(entryId)
+    : -1;
+
+  // Removing the entry from above the target position shifts the
+  // positions below it up by one
+  const targetIndex =
+    currentIndex !== -1 && currentIndex < entryIndex
+      ? entryIndex - 1
+      : entryIndex;
+
   const updated = removeEntryFromColumns(columns, entryId);
 
   // Ignore placements into a column which does not exist
@@ -24,7 +37,7 @@ export function placeEntryInColumn(
     return columns;
   }
 
-  updated[columnIndex].splice(entryIndex, 0, entryId);
+  updated[columnIndex].splice(targetIndex, 0, entryId);
 
   return updated;
 }
