@@ -58,6 +58,14 @@ const SubmenuContent: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   </div>
 );
 
+const SubmenuPortal: React.FC<{ children?: React.ReactNode }> = ({
+  children,
+}) => <div data-testid="submenu-portal">{children}</div>;
+
+const SubmenuPositioner: React.FC<{ children?: React.ReactNode }> = ({
+  children,
+}) => <div data-testid="submenu-positioner">{children}</div>;
+
 const ColorSelectionItem: React.FC<MenuColorSelectionItemProps> = ({
   color,
 }) => <div>{color}</div>;
@@ -94,6 +102,8 @@ const components = {
   Submenu,
   SubmenuTriggerItem,
   SubmenuContent,
+  SubmenuPortal,
+  SubmenuPositioner,
   ColorSelectionItem,
 };
 

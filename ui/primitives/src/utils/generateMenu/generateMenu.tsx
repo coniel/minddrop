@@ -14,6 +14,8 @@ export interface MenuComponents {
   Submenu: React.ElementType;
   SubmenuTriggerItem: React.ElementType<SubmenuTriggerItemProps>;
   SubmenuContent: React.ElementType;
+  SubmenuPortal: React.ElementType;
+  SubmenuPositioner: React.ElementType;
   ColorSelectionItem: React.ComponentType<MenuColorSelectionItemProps>;
 }
 
@@ -32,6 +34,8 @@ export function generateMenu(
     Submenu,
     SubmenuTriggerItem,
     SubmenuContent,
+    SubmenuPortal,
+    SubmenuPositioner,
     ColorSelectionItem,
   } = components;
 
@@ -68,11 +72,18 @@ export function generateMenu(
           ...items,
           <Submenu key={index}>
             <SubmenuTriggerItem {...otherProps} />
-            <SubmenuContent className={`menu ${submenuContentClass}`}>
-              {React.isValidElement(submenu)
-                ? submenu
-                : generateMenu(components, submenu)}
-            </SubmenuContent>
+            {/* The submenu is positioned beside its trigger, which
+                without a positioner would render inline within the
+                menu it belongs to */}
+            <SubmenuPortal>
+              <SubmenuPositioner side="right" align="start" sideOffset={4}>
+                <SubmenuContent className={`menu ${submenuContentClass}`}>
+                  {React.isValidElement(submenu)
+                    ? submenu
+                    : generateMenu(components, submenu)}
+                </SubmenuContent>
+              </SubmenuPositioner>
+            </SubmenuPortal>
           </Submenu>,
         ];
       }

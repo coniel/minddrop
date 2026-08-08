@@ -8,6 +8,8 @@ import { MenuContents } from '../types';
 import { generateMenu } from '../utils';
 import { DropdownMenuColorSelectionItem } from './DropdownMenuColorSelectionItem';
 import { DropdownMenuLabel } from './DropdownMenuLabel';
+import { DropdownMenuPortal } from './DropdownMenuPortal';
+import { DropdownMenuPositioner } from './DropdownMenuPositioner';
 import { DropdownMenuSeparator } from './DropdownMenuSeparator';
 import { DropdownSubmenu } from './DropdownSubmenu';
 import { DropdownSubmenuContent } from './DropdownSubmenuContent';
@@ -99,6 +101,8 @@ export const DropdownMenuContent = React.forwardRef<
             Submenu: DropdownSubmenu,
             SubmenuTriggerItem: DropdownSubmenuTriggerItem,
             SubmenuContent: DropdownSubmenuContent,
+            SubmenuPortal: DropdownMenuPortal,
+            SubmenuPositioner: DropdownMenuPositioner,
             ColorSelectionItem: DropdownMenuColorSelectionItem,
           },
           content,

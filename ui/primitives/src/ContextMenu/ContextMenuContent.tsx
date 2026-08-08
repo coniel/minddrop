@@ -8,6 +8,8 @@ import { MenuContents } from '../types';
 import { generateMenu } from '../utils';
 import { ContextMenuColorSelectionItem } from './ContextMenuColorSelectionItem';
 import { ContextMenuLabel } from './ContextMenuLabel';
+import { ContextMenuPortal } from './ContextMenuPortal';
+import { ContextMenuPositioner } from './ContextMenuPositioner';
 import { ContextMenuSeparator } from './ContextMenuSeparator';
 import { ContextSubmenu } from './ContextSubmenu';
 import { ContextSubmenuContent } from './ContextSubmenuContent';
@@ -74,6 +76,8 @@ export const ContextMenuContent = React.forwardRef<
             Submenu: ContextSubmenu,
             SubmenuTriggerItem: ContextSubmenuTriggerItem,
             SubmenuContent: ContextSubmenuContent,
+            SubmenuPortal: ContextMenuPortal,
+            SubmenuPositioner: ContextMenuPositioner,
             ColorSelectionItem: ContextMenuColorSelectionItem,
           },
           content,
