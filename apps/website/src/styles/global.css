@@ -260,6 +260,11 @@ button {
   transition: var(--transition-colors);
 }
 
+/* A button reads as a button on hover, not as the link it may be built from */
+.button:hover {
+  text-decoration: none;
+}
+
 .button-ghost:hover {
   background: var(--surface-hover);
   color: var(--ink);

@@ -1,0 +1,284 @@
+---
+import Icon from '../components/Icon.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const freeIncluded = [
+  'Unlimited databases and entries',
+  'Every view and layout',
+  'The design studio',
+  'Plain files on your own computer',
+  'Sync with Dropbox, iCloud, Drive, and more',
+];
+
+const proIncluded = [
+  'Sync across your devices',
+  'Zero-knowledge encryption',
+  'Version history',
+  '50 GB of storage',
+  'Publishing to the web',
+  'Every AI feature',
+];
+---
+
+<BaseLayout
+  title="Pricing"
+  description="MindDrop is free and open source. Pro adds sync, publishing to the web, and AI, on one plan."
+>
+  <section class="page hero">
+    <h1 class="hero-title">Pricing</h1>
+
+    <p class="hero-lede">
+      MindDrop is free and open source. Pro adds sync, publishing to the web,
+      and AI, on one plan.
+    </p>
+  </section>
+
+  <section class="page plans">
+    <div class="plan">
+      <h2 class="plan-name">Free</h2>
+
+      <p class="plan-summary">
+        The whole app on your own computer, for as long as you like.
+      </p>
+
+      <div class="plan-prices">
+        <div class="plan-price">
+          <p class="plan-amount">$0</p>
+          <p class="plan-note">Free forever</p>
+        </div>
+      </div>
+
+      <h3 class="plan-included-title">What's included</h3>
+
+      <ul class="plan-included">
+        {
+          freeIncluded.map((item) => (
+            <li class="plan-item">
+              <Icon name="check" />
+              {item}
+            </li>
+          ))
+        }
+      </ul>
+
+      <a class="button plan-action" href="/#download">Download</a>
+    </div>
+
+    <div class="plan plan-pro">
+      <h2 class="plan-name">Pro</h2>
+
+      <p class="plan-summary">
+        Everything in the free version, plus sync, publishing, and AI.
+      </p>
+
+      <div class="plan-prices">
+        <div class="plan-price">
+          <p class="plan-amount">$10</p>
+          <p class="plan-note">Per month</p>
+        </div>
+
+        <div class="plan-price">
+          <p class="plan-amount">$99</p>
+          <p class="plan-note">Per year</p>
+        </div>
+      </div>
+
+      <h3 class="plan-included-title">What's included</h3>
+
+      <ul class="plan-included">
+        {
+          proIncluded.map((item) => (
+            <li class="plan-item">
+              <Icon name="check" />
+              {item}
+            </li>
+          ))
+        }
+      </ul>
+
+      {/* Points at the app until there is a checkout to send people to */}
+      <a class="button button-primary plan-action" href="/#download">Get Pro</a>
+    </div>
+  </section>
+
+  <p class="page plans-note">
+    Cancel whenever you like. Everything you have made stays yours, including
+    whatever the AI created. <a href="/pro">See everything in Pro</a>.
+  </p>
+</BaseLayout>
+
+<style>
+  .hero {
+    padding-block-start: var(--space-8);
+    text-align: center;
+  }
+
+  .hero-title {
+    font-size: var(--step-4);
+  }
+
+  /* Wider than the prose measure, since the larger type shortens the line */
+  .hero-lede {
+    max-width: 42rem;
+    margin-block-start: var(--space-5);
+    margin-inline: auto;
+    font-size: var(--step-2);
+    line-height: 1.35;
+    color: var(--ink-muted);
+    text-wrap: balance;
+  }
+
+  .plans {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-5);
+    margin-block-start: var(--space-8);
+  }
+
+  /* A column, so the action can be pinned level across both panels */
+  .plan {
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-8);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-xl);
+    background: var(--paper-raised);
+  }
+
+  /* The paid panel is lit from the corner, marking it as the one on offer */
+  .plan-pro {
+    border-color: color-mix(in srgb, var(--accent) 20%, var(--rule));
+    background:
+      radial-gradient(
+        90% 120% at 100% 0%,
+        color-mix(in srgb, var(--accent) 12%, transparent),
+        transparent 65%
+      ),
+      var(--paper-sunk);
+  }
+
+  .plan-name {
+    font-size: var(--step-2);
+  }
+
+  /* Held to two lines, so the prices below start at the same height */
+  .plan-summary {
+    min-height: 2lh;
+    margin-block-start: var(--space-3);
+    color: var(--ink-muted);
+  }
+
+  /* Both billing periods side by side, rather than a switch between them */
+  .plan-prices {
+    display: flex;
+    gap: var(--space-6);
+    margin-block-start: var(--space-6);
+  }
+
+  /* The rule stands in for the divider between the two periods */
+  .plan-price + .plan-price {
+    padding-inline-start: var(--space-6);
+    border-inline-start: 1px solid var(--rule);
+  }
+
+  .plan-amount {
+    font-size: var(--step-4);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .plan-note {
+    margin-block-start: var(--space-3);
+    font-size: 0.875rem;
+    color: var(--ink-muted);
+  }
+
+  /* The rule runs from the label to the end of the panel */
+  .plan-included-title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    margin-block-start: var(--space-7);
+    font-size: 0.875rem;
+    color: var(--accent);
+  }
+
+  .plan-included-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--rule);
+  }
+
+  .plan-included {
+    margin-block: var(--space-5) var(--space-7);
+    padding: 0;
+    list-style: none;
+  }
+
+  .plan-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    font-size: 0.875rem;
+  }
+
+  .plan-item + .plan-item {
+    margin-block-start: var(--space-4);
+  }
+
+  /* Centred on the first line, so a wrapped item keeps the tick beside it */
+  .plan-item :global(.icon) {
+    margin-block-start: calc((1lh - 1.125em) / 2);
+    color: var(--accent);
+  }
+
+  /* Pinned to the foot of the panel, since the lists differ in length */
+  .plan-action {
+    height: 2.75rem;
+    margin-block-start: auto;
+    border-color: var(--rule);
+    color: var(--ink);
+    font-size: var(--step-0);
+  }
+
+  .plan-action:hover {
+    background: var(--surface-hover);
+  }
+
+  /* The filled action keeps its own colours rather than the bordered ones */
+  .button-primary.plan-action {
+    border-color: var(--accent-solid);
+    color: #ffffff;
+  }
+
+  .button-primary.plan-action:hover {
+    background: var(--accent-solid-hover);
+  }
+
+  .plans-note {
+    max-width: var(--measure);
+    margin-block-start: var(--space-6);
+    margin-inline: auto;
+    font-size: 0.875rem;
+    color: var(--ink-muted);
+    text-align: center;
+  }
+
+  /* The panels have nowhere to sit beside each other, so they stack */
+  @media (max-width: 860px) {
+    .plans {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .plan {
+      padding: var(--space-6);
+    }
+
+    /* Nothing left to line up against once the panels stack */
+    .plan-summary {
+      min-height: 0;
+    }
+  }
+</style>

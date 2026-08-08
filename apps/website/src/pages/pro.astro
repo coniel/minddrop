@@ -422,12 +422,14 @@ const aiCards: FeatureCard[] = [
 
   .get-pro-item {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: var(--space-3);
     font-size: 0.875rem;
   }
 
+  /* Centred on the first line, so a wrapped item keeps the tick beside it */
   .get-pro-item :global(.icon) {
+    margin-block-start: calc((1lh - 1.125em) / 2);
     color: var(--accent);
   }
 
