@@ -82,7 +82,9 @@ export interface DataViewType<
    * An optional component that renders a settings menu specific to this
    * data view type. Receives the current data view options and a callback to update them.
    */
-  settingsMenu?: React.ElementType<DataViewTypeSettingsMenuProps<TViewOptions>>;
+  settingsMenu?: React.ElementType<
+    DataViewTypeSettingsMenuProps<TViewOptions, TViewData>
+  >;
 
   /**
    * A component that renders a skeleton/placeholder version of the
