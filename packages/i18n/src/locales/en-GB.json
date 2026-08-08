@@ -974,6 +974,12 @@
     }
   },
   "editor": {
+    "blockActions": {
+      "turnInto": "Turn into",
+      "copy": "Copy",
+      "duplicate": "Duplicate",
+      "delete": "Delete"
+    },
     "blockGutter": {
       "insert": "Insert block",
       "select": "Select block"

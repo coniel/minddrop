@@ -317,6 +317,37 @@ describe('RichTextEditor block selection', () => {
     expect(isSelected(getByText(headingElement1PlainText))).toBe(false);
   });
 
+  it('opens the actions menu from the handle', async () => {
+    const { getByText, getByLabelText, queryByText } = renderEditor();
+
+    fireEvent.pointerMove(getByText(paragraphElement1PlainText));
+
+    expect(queryByText('Duplicate')).toBeNull();
+
+    await actFlush(() => {
+      fireEvent.click(getByLabelText(SELECT_LABEL));
+    });
+
+    expect(queryByText('Duplicate')).not.toBeNull();
+  });
+
+  it('keeps the controls while the actions menu is open', async () => {
+    const { getByText, getByLabelText, queryByLabelText, baseElement } =
+      renderEditor();
+
+    fireEvent.pointerMove(getByText(paragraphElement1PlainText));
+
+    await actFlush(() => {
+      fireEvent.click(getByLabelText(SELECT_LABEL));
+    });
+
+    // The controls hold the menu's anchor, so they have to outlive
+    // the pointer leaving them
+    fireEvent.pointerMove(baseElement);
+
+    expect(queryByLabelText(SELECT_LABEL)).not.toBeNull();
+  });
+
   it('deselects its blocks when another editor selects some', async () => {
     const { getAllByText, getAllByLabelText } = render(
       <>
@@ -336,6 +367,12 @@ describe('RichTextEditor block selection', () => {
     });
 
     expect(isSelected(firstEditorBlock)).toBe(true);
+
+    // Clicking the handle opens the actions menu, which holds the
+    // first editor's controls open until it is dismissed
+    await actFlush(() => {
+      fireEvent.keyDown(document.body, { key: 'Escape' });
+    });
 
     fireEvent.pointerMove(secondEditorBlock);
 

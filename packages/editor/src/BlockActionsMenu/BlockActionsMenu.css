@@ -1,0 +1,10 @@
+.editor-block-actions-trigger {
+  /* Present only so that the menu is a node of the menu tree,
+     which nested submenus position themselves within. The menu is
+     positioned against the handle instead, and opened by it. */
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+}

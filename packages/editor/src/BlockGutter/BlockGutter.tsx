@@ -20,6 +20,12 @@ export interface BlockGutterProps {
   controlsRef: RefObject<HTMLDivElement | null>;
 
   /**
+   * Ref attached to the handle, used to position the block actions
+   * menu against it.
+   */
+  handleRef: RefObject<HTMLButtonElement | null>;
+
+  /**
    * Callback fired when the insert button is clicked, with the
    * position of the new block relative to the hovered one.
    */
@@ -60,6 +66,7 @@ export interface BlockGutterProps {
 export const BlockGutter: React.FC<BlockGutterProps> = ({
   block,
   controlsRef,
+  handleRef,
   onInsert,
   onSelect,
   onDragStart,
@@ -127,6 +134,7 @@ export const BlockGutter: React.FC<BlockGutterProps> = ({
 
       <IconButton
         draggable
+        ref={handleRef}
         className="editor-block-gutter-handle"
         icon="grip-vertical"
         size="sm"

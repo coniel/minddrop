@@ -1003,6 +1003,12 @@ declare module 'i18next' {
           };
         };
         editor: {
+          blockActions: {
+            turnInto: string;
+            copy: string;
+            duplicate: string;
+            delete: string;
+          };
           blockGutter: {
             insert: string;
             select: string;

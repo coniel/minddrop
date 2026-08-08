@@ -1,10 +1,18 @@
-import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { Descendant, Path, Editor as SlateEditor } from 'slate';
 import { HistoryEditor } from 'slate-history';
 import { Editable, ReactEditor, RenderElementProps, Slate } from 'slate-react';
 import { useDebouncedCallback } from 'use-debounce';
 import { Ast, Element } from '@minddrop/ast';
+import { Selection } from '@minddrop/selection';
 import { isUntitledTitle } from '@minddrop/utils';
+import { BlockActionsMenu, BlockActionsMenuProps } from '../BlockActionsMenu';
 import { BlockDropIndicator } from '../BlockDropIndicator';
 import { EditorBlockElementConfigsStore } from '../BlockElementTypeConfigsStore';
 import { BlockGutter, BlockInsertPosition } from '../BlockGutter';
@@ -14,14 +22,17 @@ import { EditorInlineElementConfigsStore } from '../InlineElementTypeConfigsStor
 import { MarkConfigsStore } from '../MarkConfigsStore';
 import { Transforms } from '../Transforms';
 import { defaultMarkConfigs } from '../default-mark-configs';
+import { deleteBlocks } from '../deleteBlocks';
+import { duplicateBlocks } from '../duplicateBlocks';
 import { insertTrailingParagraph } from '../insertTrailingParagraph';
+import { turnBlocksInto } from '../turnBlocksInto';
 import { BlockElementProps } from '../types';
 import { useBlockDrag } from '../useBlockDrag';
 import { useBlockMenu } from '../useBlockMenu';
 import { useBlockSelection } from '../useBlockSelection';
-import { useHoveredBlock } from '../useHoveredBlock';
+import { HoveredBlock, useHoveredBlock } from '../useHoveredBlock';
 import { useSelectedBlockIds } from '../useSelectedBlockIds';
-import { createEditor, createRenderElement } from '../utils';
+import { createEditor, createRenderElement, getSelectedBlocks } from '../utils';
 import { assignBlockIds, withBlockIds } from '../withBlockIds';
 import { withBlockReset } from '../withBlockReset';
 import { withBlockSelection } from '../withBlockSelection';
@@ -142,6 +153,13 @@ export const RichTextEditor: React.FC<EditorProps> = ({
   const editorRef = useRef(editor);
   const containerRef = useRef<HTMLDivElement>(null);
   const blockGutterRef = useRef<HTMLDivElement>(null);
+  const blockHandleRef = useRef<HTMLButtonElement>(null);
+
+  // The block the actions menu is open for. The controls are held
+  // against it while the menu is open, which they have to outlive:
+  // they hold the menu's anchor, and are otherwise dropped as soon
+  // as the pointer moves onto the menu.
+  const [menuBlock, setMenuBlock] = useState<HoveredBlock | null>(null);
 
   // Whether the title feature is enabled, captured on mount since
   // the Slate document is uncontrolled and cannot gain or lose the
@@ -423,8 +441,84 @@ export const RichTextEditor: React.FC<EditorProps> = ({
       ReactEditor.focus(editorWithPlugins);
 
       selectBlock(hoveredBlock.path, extend);
+
+      // Extending a selection is not a moment to be covering the
+      // blocks being extended over with a menu
+      if (!extend) {
+        setMenuBlock(hoveredBlock);
+      }
     },
     [editorWithPlugins, hoveredBlock, selectBlock],
+  );
+
+  // Acts on the blocks the menu was opened for, which are those
+  // selected when it opened.
+  const menuBlockPaths = useCallback(
+    () => getSelectedBlocks(editorWithPlugins).map(([, path]) => path),
+    [editorWithPlugins],
+  );
+
+  const handleTurnInto = useCallback(
+    (type: string, data?: Partial<Element>) => {
+      // The menu holds the DOM focus, which the editor needs back
+      // for its selection to paint attached to the blocks. Focus is
+      // taken before the conversion because Slate defers it while
+      // the editor has operations pending.
+      ReactEditor.focus(editorWithPlugins);
+
+      turnBlocksInto(editorWithPlugins, menuBlockPaths(), type, data);
+    },
+    [editorWithPlugins, menuBlockPaths],
+  );
+
+  const handleCopyBlocks = useCallback(() => {
+    // Return the DOM focus to the editor, whose selection the copy
+    // acts on
+    ReactEditor.focus(editorWithPlugins);
+
+    // Copied through the app's selection, which the blocks are part
+    // of, so that they arrive as markdown
+    Selection.copy();
+  }, [editorWithPlugins]);
+
+  const handleDuplicateBlocks = useCallback(() => {
+    // Return the DOM focus to the editor before the operations, as
+    // in handleTurnInto
+    ReactEditor.focus(editorWithPlugins);
+
+    duplicateBlocks(editorWithPlugins, menuBlockPaths());
+  }, [editorWithPlugins, menuBlockPaths]);
+
+  const handleDeleteBlocks = useCallback(() => {
+    // Return the DOM focus to the editor before the operations, as
+    // in handleTurnInto
+    ReactEditor.focus(editorWithPlugins);
+
+    deleteBlocks(editorWithPlugins, menuBlockPaths());
+  }, [editorWithPlugins, menuBlockPaths]);
+
+  // Dropping the block the menu was opened for lets the controls
+  // follow the pointer again
+  const handleMenuOpenChange = useCallback<
+    BlockActionsMenuProps['onOpenChange']
+  >(
+    (open, eventDetails) => {
+      // Only closing needs handling
+      if (open) {
+        return;
+      }
+
+      setMenuBlock(null);
+
+      // Dismissing the menu returns the DOM focus to the editor,
+      // except when it was dismissed by clicking elsewhere, where
+      // the focus belongs to whatever was clicked. The action
+      // handlers take focus themselves.
+      if (eventDetails.reason === 'escape-key') {
+        ReactEditor.focus(editorWithPlugins);
+      }
+    },
+    [editorWithPlugins],
   );
 
   // Ends a drag started from the controls, dropping the hovered
@@ -521,8 +615,9 @@ export const RichTextEditor: React.FC<EditorProps> = ({
 
             {/* Controls acting on the hovered block */}
             <BlockGutter
-              block={hoveredBlock}
+              block={menuBlock ?? hoveredBlock}
               controlsRef={blockGutterRef}
+              handleRef={blockHandleRef}
               onInsert={handleInsertBlock}
               onSelect={handleSelectBlock}
               onDragStart={handleBlockDragStart}
@@ -530,6 +625,17 @@ export const RichTextEditor: React.FC<EditorProps> = ({
               hidden={isDragging}
             />
           </div>
+
+          {/* Actions acting on the selected blocks */}
+          <BlockActionsMenu
+            open={menuBlock !== null}
+            onOpenChange={handleMenuOpenChange}
+            anchorRef={blockHandleRef}
+            onTurnInto={handleTurnInto}
+            onCopy={handleCopyBlocks}
+            onDuplicate={handleDuplicateBlocks}
+            onDelete={handleDeleteBlocks}
+          />
 
           {/* Block insertion menu */}
           <BlockMenu {...blockMenuProps} />

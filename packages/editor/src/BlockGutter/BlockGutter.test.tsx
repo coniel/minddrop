@@ -30,6 +30,7 @@ function renderGutter(props: Partial<BlockGutterProps> = {}) {
     <BlockGutter
       block={hoveredBlock}
       controlsRef={createRef()}
+      handleRef={createRef()}
       onInsert={() => undefined}
       onSelect={() => undefined}
       onDragStart={() => undefined}
@@ -160,6 +161,7 @@ describe('BlockGutter', () => {
         <BlockGutter
           block={hoveredBlock}
           controlsRef={createRef()}
+          handleRef={createRef()}
           onInsert={() => undefined}
           onSelect={() => undefined}
           onDragStart={() => undefined}
