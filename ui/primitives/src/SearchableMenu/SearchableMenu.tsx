@@ -175,7 +175,9 @@ export const SearchableMenu = React.forwardRef<
     // Auto-focus the search input after the popup is mounted
     useEffect(() => {
       requestAnimationFrame(() => {
-        inputRef.current?.focus();
+        // Prevent the browser's scroll-to-reveal, which fights
+        // consumer-driven scrolling of partially visible menus
+        inputRef.current?.focus({ preventScroll: true });
       });
     }, []);
 
