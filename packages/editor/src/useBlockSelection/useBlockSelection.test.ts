@@ -1,5 +1,5 @@
 import React from 'react';
-import { Range, Editor as SlateEditor } from 'slate';
+import { Range, Editor as SlateEditor, Node as SlateNode } from 'slate';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { renderHook } from '@minddrop/test-utils';
 import { Transforms } from '../Transforms';
@@ -7,12 +7,16 @@ import {
   cleanup,
   createTestEditor,
   paragraphElement1,
+  paragraphElement1PlainText,
   paragraphElement2,
+  paragraphElement2PlainText,
   paragraphElement3,
+  paragraphElement3PlainText,
   setup,
 } from '../test-utils';
 import { Editor } from '../types';
-import { getBlockSelectionRange } from '../utils';
+import { getBlockSelectionRange, getSelectedBlocks } from '../utils';
+import { assignBlockIds } from '../withBlockIds';
 import { useBlockSelection } from './useBlockSelection';
 
 /**
@@ -21,11 +25,21 @@ import { useBlockSelection } from './useBlockSelection';
  * @returns The editor.
  */
 function createEditor(): Editor {
-  return createTestEditor([
-    paragraphElement1,
-    paragraphElement2,
-    paragraphElement3,
-  ]);
+  // Blocks carry the IDs the app's selection identifies them by
+  return createTestEditor(
+    assignBlockIds([paragraphElement1, paragraphElement2, paragraphElement3]),
+  );
+}
+
+/**
+ * Gets the text of each of the editor's blocks, the blocks
+ * themselves carrying generated block IDs.
+ *
+ * @param editor An editor instance.
+ * @returns The blocks' text.
+ */
+function getBlockTexts(editor: Editor): string[] {
+  return editor.children.map((block) => SlateNode.string(block));
 }
 
 /**
@@ -78,7 +92,7 @@ describe('useBlockSelection', () => {
     result.current.handleKeyDown(keyDownEvent('Escape'));
 
     expect(editor.selection && Range.isCollapsed(editor.selection)).toBe(true);
-    expect(editor.blockSelectionMode).toBe(false);
+    expect(getSelectedBlocks(editor)).toEqual([]);
   });
 
   it('deletes the selected blocks on Backspace', () => {
@@ -88,7 +102,10 @@ describe('useBlockSelection', () => {
     result.current.selectBlock([0], false);
     result.current.handleKeyDown(keyDownEvent('Backspace'));
 
-    expect(editor.children).toEqual([paragraphElement2, paragraphElement3]);
+    expect(getBlockTexts(editor)).toEqual([
+      paragraphElement2PlainText,
+      paragraphElement3PlainText,
+    ]);
   });
 
   it('moves the selection to the next block on ArrowDown', () => {
@@ -153,10 +170,10 @@ describe('useBlockSelection', () => {
       keyDownEvent('ArrowDown', { ctrlKey: true, shiftKey: true }),
     );
 
-    expect(editor.children).toEqual([
-      paragraphElement2,
-      paragraphElement1,
-      paragraphElement3,
+    expect(getBlockTexts(editor)).toEqual([
+      paragraphElement2PlainText,
+      paragraphElement1PlainText,
+      paragraphElement3PlainText,
     ]);
   });
 
@@ -169,10 +186,10 @@ describe('useBlockSelection', () => {
       keyDownEvent('ArrowUp', { ctrlKey: true, shiftKey: true }),
     );
 
-    expect(editor.children).toEqual([
-      paragraphElement2,
-      paragraphElement1,
-      paragraphElement3,
+    expect(getBlockTexts(editor)).toEqual([
+      paragraphElement2PlainText,
+      paragraphElement1PlainText,
+      paragraphElement3PlainText,
     ]);
   });
 
@@ -183,11 +200,11 @@ describe('useBlockSelection', () => {
     result.current.selectBlock([0], false);
     result.current.handleKeyDown(keyDownEvent('d', { ctrlKey: true }));
 
-    expect(editor.children).toEqual([
-      paragraphElement1,
-      paragraphElement1,
-      paragraphElement2,
-      paragraphElement3,
+    expect(getBlockTexts(editor)).toEqual([
+      paragraphElement1PlainText,
+      paragraphElement1PlainText,
+      paragraphElement2PlainText,
+      paragraphElement3PlainText,
     ]);
   });
 

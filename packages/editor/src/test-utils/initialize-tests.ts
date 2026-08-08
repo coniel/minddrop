@@ -1,4 +1,5 @@
 import { vi } from 'vitest';
+import { Selection } from '@minddrop/selection';
 import { act, cleanup as cleanupRender } from '@minddrop/test-utils';
 import { EditorBlockElementConfigsStore } from '../BlockElementTypeConfigsStore';
 import { EditorInlineElementConfigsStore } from '../InlineElementTypeConfigsStore';
@@ -30,6 +31,9 @@ export function cleanup() {
   act(() => {
     // Clear all mock functions
     vi.clearAllMocks();
+
+    // Clear the app's selection, which block selections take part in
+    Selection.clear();
 
     // Clear registered elements
     EditorBlockElementConfigsStore.clear();

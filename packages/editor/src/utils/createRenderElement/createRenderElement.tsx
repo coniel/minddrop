@@ -1,11 +1,12 @@
+import React, { useContext } from 'react';
 import { RenderElementProps } from 'slate-react';
+import { BlockSelectionContext } from '../../BlockSelectionContext';
 import {
   BlockElementProps,
-  Editor,
   EditorBlockElementConfig,
   EditorInlineElementConfig,
 } from '../../types';
-import { isBlockSelected } from '../isBlockSelected';
+import { hasBlockId } from '../block-id';
 
 /**
  * Creates a `renderElement` function used by Slate's `Editable` component
@@ -15,41 +16,66 @@ import { isBlockSelected } from '../isBlockSelected';
  * element's children.
  *
  * @param configs - An array of element type configurations.
- * @param editor - An editor instance.
  * @returns A renderElement function.
  */
 export function createRenderElement(
   configs: (EditorInlineElementConfig | EditorBlockElementConfig)[],
-  editor: Editor,
 ): (props: RenderElementProps) => React.ReactElement {
   // eslint-disable-next-line react/display-name
   return (props: RenderElementProps) => {
     // Get the config for the element type
     const config = configs.find(({ type }) => type === props.element.type);
 
-    // Marks the element as selected when it is a block covered by
-    // a block selection. Slate re-renders an element whenever its
-    // own part of the selection changes, so this is up to date
-    // without watching the selection.
-    const attributes = {
-      ...props.attributes,
-      'data-block-selected':
-        isBlockSelected(editor, props.element) || undefined,
-    };
-
     if (config) {
       // Typecast as block element to prevent TS complaining
       // about block/inline element component/props mismatch.
       const Component = (config as EditorBlockElementConfig).component;
 
-      // Render the config's component
       return (
-        <Component {...(props as BlockElementProps)} attributes={attributes} />
+        <RenderedElement
+          {...(props as BlockElementProps)}
+          component={Component}
+        />
       );
     }
 
     // Render a plain div if no matching element config was found
     // (should not occure but added to prevent errors just in case).
-    return <div {...attributes}>{props.children}</div>;
+    return <RenderedElement {...(props as BlockElementProps)} />;
   };
 }
+
+interface RenderedElementProps extends BlockElementProps {
+  /**
+   * The component rendering the element. Elements of a type with
+   * no config render as a plain div.
+   */
+  component?: EditorBlockElementConfig['component'];
+}
+
+/**
+ * Renders an element using its type's component, marking it as
+ * selected while it is one of the editor's selected blocks.
+ */
+const RenderedElement: React.FC<RenderedElementProps> = ({
+  component: Component,
+  ...props
+}) => {
+  const selectedBlockIds = useContext(BlockSelectionContext);
+
+  // Only top level blocks carry a block ID, so inline elements
+  // are never marked
+  const selected =
+    hasBlockId(props.element) && selectedBlockIds.has(props.element.id);
+
+  const attributes = {
+    ...props.attributes,
+    'data-block-selected': selected || undefined,
+  };
+
+  if (!Component) {
+    return <div {...attributes}>{props.children}</div>;
+  }
+
+  return <Component {...props} attributes={attributes} />;
+};

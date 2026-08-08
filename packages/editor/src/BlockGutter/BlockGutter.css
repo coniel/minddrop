@@ -10,3 +10,21 @@
   padding-right: var(--space-1);
   user-select: none;
 }
+
+.editor-block-gutter-hidden {
+  /* Faded out rather than removed, the controls being the source of
+     the drag which hides them. Their hit testing is deliberately
+     left alone, WebKit cancelling a drag whose source stops being
+     hit testable part way through. */
+  opacity: 0;
+}
+
+.editor-block-gutter-handle {
+  /* WebKit refuses to start a drag on an element which cannot be
+     selected, which the gutter's controls otherwise are */
+  user-select: auto;
+  /* WebKit starts a drag on an element which is neither a link nor
+     an image only once it is marked draggable in CSS as well as in
+     HTML */
+  -webkit-user-drag: element;
+}

@@ -176,6 +176,21 @@ describe('useHoveredBlock', () => {
     expect(getByTestId('readout').textContent).toBe('none');
   });
 
+  it('keeps the block while it is dragged by its controls', () => {
+    const { getByText, getByTestId } = render(<Harness />);
+
+    fireEvent.pointerMove(getByText(paragraphElement1PlainText));
+
+    // Pressing the controls starts a drag of the block they belong
+    // to, which unmounting them would abort
+    fireEvent.pointerDown(getByTestId('controls'));
+    fireEvent.pointerMove(getByText(paragraphElement1PlainText), {
+      buttons: 1,
+    });
+
+    expect(getByTestId('readout').textContent).toBe('paragraph');
+  });
+
   it('does not track the title', () => {
     const { getByText, getByTestId } = render(
       <Harness title={titleElement1PlainText} />,

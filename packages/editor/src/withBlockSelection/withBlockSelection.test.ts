@@ -1,7 +1,8 @@
-import { Range, Editor as SlateEditor } from 'slate';
+import { Range } from 'slate';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Element } from '@minddrop/ast';
 import { Transforms } from '../Transforms';
+import { selectBlocks } from '../selectBlocks';
 import {
   cleanup,
   createTestEditor,
@@ -12,7 +13,8 @@ import {
   titleElement1,
 } from '../test-utils';
 import { Editor } from '../types';
-import { getBlockAlignedRange } from '../utils';
+import { getBlockAlignedRange, getSelectedBlocks } from '../utils';
+import { assignBlockIds } from '../withBlockIds';
 import { withBlockSelection } from './withBlockSelection';
 
 /**
@@ -24,7 +26,8 @@ import { withBlockSelection } from './withBlockSelection';
 function createEditor(
   content: Element[] = [paragraphElement1, paragraphElement2],
 ): Editor {
-  return withBlockSelection(createTestEditor(content));
+  // Blocks carry the IDs the app's selection identifies them by
+  return withBlockSelection(createTestEditor(assignBlockIds(content)));
 }
 
 /**
@@ -105,42 +108,48 @@ describe('withBlockSelection', () => {
     expect(editor.selection?.anchor.offset).toBe(4);
   });
 
-  it('leaves block mode when the selection no longer covers whole blocks', async () => {
+  it('selects the blocks it covers in the app’s selection', async () => {
+    const editor = createEditor();
+
+    Transforms.select(editor, {
+      anchor: { path: [0, 0], offset: 4 },
+      focus: { path: [1, 0], offset: 4 },
+    });
+
+    await flushOperations();
+
+    expect(getSelectedBlocks(editor).map(([, path]) => path)).toEqual([
+      [0],
+      [1],
+    ]);
+  });
+
+  it('deselects the blocks when the selection no longer covers whole blocks', async () => {
     const editor = createEditor([
       paragraphElement1,
       paragraphElement2,
       paragraphElement3,
     ]);
 
-    editor.blockSelectionMode = true;
-
-    Transforms.select(editor, {
-      anchor: SlateEditor.start(editor, [0]),
-      focus: SlateEditor.end(editor, [0]),
-    });
+    selectBlocks(editor, [0], [1]);
 
     await flushOperations();
 
-    // Place a cursor inside the block
+    // Place a cursor inside a block
     Transforms.select(editor, { path: [0, 0], offset: 4 });
 
     await flushOperations();
 
-    expect(editor.blockSelectionMode).toBe(false);
+    expect(getSelectedBlocks(editor)).toEqual([]);
   });
 
-  it('stays in block mode while whole blocks are covered', async () => {
+  it('keeps the blocks selected while whole blocks are covered', async () => {
     const editor = createEditor();
 
-    editor.blockSelectionMode = true;
-
-    Transforms.select(editor, {
-      anchor: SlateEditor.start(editor, [0]),
-      focus: SlateEditor.end(editor, [0]),
-    });
+    selectBlocks(editor, [0], [0]);
 
     await flushOperations();
 
-    expect(editor.blockSelectionMode).toBe(true);
+    expect(getSelectedBlocks(editor)).not.toEqual([]);
   });
 });

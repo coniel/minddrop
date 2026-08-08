@@ -2,6 +2,7 @@ import isHotkey from 'is-hotkey';
 import React, { useCallback } from 'react';
 import { Path, Range, Editor as SlateEditor } from 'slate';
 import { Transforms } from '../Transforms';
+import { clearBlockSelection } from '../clearBlockSelection';
 import { deleteBlocks } from '../deleteBlocks';
 import { duplicateBlocks } from '../duplicateBlocks';
 import { moveBlocks } from '../moveBlocks';
@@ -55,10 +56,6 @@ export function useBlockSelection(
 ): UseBlockSelection {
   const selectBlock = useCallback(
     (path: Path, extend: boolean) => {
-      // Set before selecting, so that the blocks read as selected
-      // when the selection change re-renders them
-      editor.blockSelectionMode = true;
-
       selectBlocks(editor, extend ? getAnchorPath(editor, path) : path, path);
     },
     [editor],
@@ -76,7 +73,7 @@ export function useBlockSelection(
       if (isEscape(event.nativeEvent)) {
         // A block selection steps back down to a cursor
         if (range) {
-          editor.blockSelectionMode = false;
+          clearBlockSelection(editor);
 
           Transforms.select(editor, SlateEditor.end(editor, [range.lastIndex]));
           event.preventDefault();
@@ -91,10 +88,6 @@ export function useBlockSelection(
           return false;
         }
 
-        // Slate only re-renders a block when its own slice of the
-        // selection changes, so collapsing first makes a selection
-        // which already covered the block whole repaint.
-        Transforms.collapse(editor, { edge: 'start' });
         selectBlock(path, false);
         event.preventDefault();
 
@@ -122,10 +115,6 @@ export function useBlockSelection(
         if (!paths.length) {
           return false;
         }
-
-        // The copies are selected, which for a single block only
-        // counts as a block selection in block mode
-        editor.blockSelectionMode = true;
 
         duplicateBlocks(editor, paths);
         event.preventDefault();
@@ -169,8 +158,6 @@ export function useBlockSelection(
           : false;
         const focusIndex = backward ? range.firstIndex : range.lastIndex;
         const anchorIndex = backward ? range.lastIndex : range.firstIndex;
-
-        editor.blockSelectionMode = true;
 
         selectBlocks(
           editor,

@@ -1,0 +1,11 @@
+.editor-block-drop-indicator {
+  position: absolute;
+  height: 2px;
+  border-radius: var(--radius-full);
+  background-color: var(--surface-solid-primary);
+  /* Sits on the boundary between two blocks rather than below it */
+  transform: translateY(-1px);
+  /* The drag is over the content, which the indicator must not
+     take events away from */
+  pointer-events: none;
+}

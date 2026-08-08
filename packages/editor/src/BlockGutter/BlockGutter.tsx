@@ -1,6 +1,6 @@
 import React, { RefObject, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { IconButton } from '@minddrop/ui-primitives';
+import { IconButton, propsToClass } from '@minddrop/ui-primitives';
 import { HoveredBlock } from '../useHoveredBlock';
 import './BlockGutter.css';
 
@@ -30,6 +30,23 @@ export interface BlockGutterProps {
    * current block selection should be extended to the block.
    */
   onSelect: (extend: boolean) => void;
+
+  /**
+   * Callback fired when the handle starts being dragged.
+   */
+  onDragStart: (event: React.DragEvent) => void;
+
+  /**
+   * Callback fired when the handle stops being dragged, whether or
+   * not the blocks were dropped anywhere.
+   */
+  onDragEnd: (event: React.DragEvent) => void;
+
+  /**
+   * When true, the controls are faded out without being removed,
+   * which dragging them relies on.
+   */
+  hidden?: boolean;
 }
 
 /**
@@ -45,15 +62,21 @@ export const BlockGutter: React.FC<BlockGutterProps> = ({
   controlsRef,
   onInsert,
   onSelect,
+  onDragStart,
+  onDragEnd,
+  hidden = false,
 }) => {
   // The controls sit outside the editable area, so their events
   // are not stopped by it and would otherwise reach the handlers
   // of whatever the editor is rendered in.
   const handleMouseDown = useCallback((event: React.MouseEvent) => {
     event.stopPropagation();
+  }, []);
 
-    // Keep the cursor in the editor, which the insert action needs
-    // in order to insert relative to the hovered block
+  // Keeps the cursor in the editor rather than moving it to the
+  // button. Not done for the handle, where preventing the default
+  // mouse down action would stop it ever starting a drag.
+  const handleInsertMouseDown = useCallback((event: React.MouseEvent) => {
     event.preventDefault();
   }, []);
 
@@ -86,7 +109,7 @@ export const BlockGutter: React.FC<BlockGutterProps> = ({
   return createPortal(
     <div
       ref={controlsRef}
-      className="editor-block-gutter"
+      className={propsToClass('editor-block-gutter', { hidden })}
       style={{ top: block.top, left: block.left, height: block.lineHeight }}
       onMouseDown={handleMouseDown}
       onClick={handleClick}
@@ -98,15 +121,20 @@ export const BlockGutter: React.FC<BlockGutterProps> = ({
         size="sm"
         variant="filled"
         label="editor.blockGutter.insert"
+        onMouseDown={handleInsertMouseDown}
         onClick={handleInsertClick}
       />
 
       <IconButton
+        draggable
+        className="editor-block-gutter-handle"
         icon="grip-vertical"
         size="sm"
         variant="filled"
         label="editor.blockGutter.select"
         onClick={handleSelectClick}
+        onDragStart={onDragStart}
+        onDragEnd={onDragEnd}
       />
     </div>,
     document.body,

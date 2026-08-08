@@ -1260,6 +1260,9 @@ importers:
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../i18n
+      '@minddrop/selection':
+        specifier: workspace:*
+        version: link:../selection
       '@minddrop/stores':
         specifier: workspace:*
         version: link:../stores

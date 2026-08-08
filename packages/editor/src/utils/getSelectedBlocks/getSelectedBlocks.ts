@@ -1,30 +1,21 @@
-import { NodeEntry } from 'slate';
+import { NodeEntry, Path } from 'slate';
 import { Element } from '@minddrop/ast';
 import { Editor } from '../../types';
-import { getBlockSelectionRange } from '../getBlockSelectionRange';
+import { getBlockPathById } from '../getBlockPathById';
+import { getBlockSelectionItems } from '../getBlockSelectionItems';
 
 /**
- * Gets the top level blocks covered by the editor's block
- * selection.
+ * Gets the editor's selected blocks, in document order.
  *
  * @param editor An editor instance.
- * @returns The selected blocks, or an empty array if there is no block selection.
+ * @returns The selected blocks, or an empty array if none are selected.
  */
 export function getSelectedBlocks(editor: Editor): NodeEntry<Element>[] {
-  const range = getBlockSelectionRange(editor);
+  const paths = getBlockSelectionItems(editor)
+    .map((item) => getBlockPathById(editor, item.data.blockId))
+    // Selected blocks may since have been removed from the document
+    .filter((path) => path !== null)
+    .sort(Path.compare);
 
-  // Nothing to collect without a block selection
-  if (!range) {
-    return [];
-  }
-
-  const entries: NodeEntry<Element>[] = [];
-
-  // Blocks are selected as a contiguous run, so the range's ends
-  // describe every block between them.
-  for (let index = range.firstIndex; index <= range.lastIndex; index += 1) {
-    entries.push([editor.children[index] as Element, [index]]);
-  }
-
-  return entries;
+  return paths.map((path) => [editor.children[path[0]] as Element, path]);
 }

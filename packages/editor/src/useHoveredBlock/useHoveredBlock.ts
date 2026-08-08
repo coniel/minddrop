@@ -83,10 +83,27 @@ export function useHoveredBlock(
   // actually changes rather than on every pointer move.
   const measuredNodeRef = useRef<HTMLElement | null>(null);
 
+  // Whether the pointer was pressed on the controls, which means a
+  // drag is being started from them
+  const pressedControlsRef = useRef(false);
+
   const clearHoveredBlock = useCallback(() => {
     measuredNodeRef.current = null;
 
     setHoveredBlock(null);
+  }, []);
+
+  const handlePointerDown = useCallback(
+    (event: PointerEvent) => {
+      pressedControlsRef.current = !!controlsRef.current?.contains(
+        event.target as Node,
+      );
+    },
+    [controlsRef],
+  );
+
+  const releaseControls = useCallback(() => {
+    pressedControlsRef.current = false;
   }, []);
 
   const handlePointerMove = useCallback(
@@ -101,6 +118,14 @@ export function useHoveredBlock(
       // The controls sit outside the editor, so keep the block
       // they belong to while the pointer is over them.
       if (controlsRef.current?.contains(target)) {
+        return;
+      }
+
+      // A press which began on the controls is dragging the block
+      // they belong to. Dropping the block would unmount the
+      // controls, and removing a drag's source element part way
+      // through aborts the drag.
+      if (pressedControlsRef.current) {
         return;
       }
 
@@ -170,6 +195,13 @@ export function useHoveredBlock(
     // editor entirely, is seen.
     document.addEventListener('pointermove', handlePointerMove);
 
+    // A drag started from the controls has to outlive the pointer
+    // press which began it, and ends with the drag rather than with
+    // the press, which a drag swallows.
+    document.addEventListener('pointerdown', handlePointerDown);
+    document.addEventListener('pointerup', releaseControls);
+    document.addEventListener('dragend', releaseControls);
+
     // Typing and scrolling both move the content out from under the
     // measured position, and neither is a moment to be offering
     // controls for a block the pointer happens to rest on.
@@ -182,10 +214,20 @@ export function useHoveredBlock(
 
     return () => {
       document.removeEventListener('pointermove', handlePointerMove);
+      document.removeEventListener('pointerdown', handlePointerDown);
+      document.removeEventListener('pointerup', releaseControls);
+      document.removeEventListener('dragend', releaseControls);
       container.removeEventListener('keydown', clearHoveredBlock);
       window.removeEventListener('scroll', clearHoveredBlock, true);
     };
-  }, [containerRef, enabled, handlePointerMove, clearHoveredBlock]);
+  }, [
+    containerRef,
+    enabled,
+    handlePointerMove,
+    handlePointerDown,
+    releaseControls,
+    clearHoveredBlock,
+  ]);
 
   return {
     hoveredBlock: enabled ? hoveredBlock : null,

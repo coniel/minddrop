@@ -1,4 +1,5 @@
 import { Range } from 'slate';
+import { clearBlockSelection } from '../clearBlockSelection';
 import { selectBlocks } from '../selectBlocks';
 import { Editor } from '../types';
 import { getBlockAlignedRange, getContentStartIndex } from '../utils';
@@ -18,13 +19,11 @@ import { getBlockAlignedRange, getContentStartIndex } from '../utils';
 export function withBlockSelection(editor: Editor): Editor {
   const { onChange } = editor;
 
-  editor.blockSelectionMode = false;
-
   editor.onChange = (options) => {
     // Any selection which no longer covers whole blocks has left
     // block mode, such as a cursor placed inside a block.
-    if (editor.blockSelectionMode && !getBlockAlignedRange(editor)) {
-      editor.blockSelectionMode = false;
+    if (!getBlockAlignedRange(editor)) {
+      clearBlockSelection(editor);
     }
 
     snapSelectionToBlocks(editor);

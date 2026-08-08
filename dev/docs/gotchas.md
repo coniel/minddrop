@@ -161,28 +161,98 @@ The consequences worth knowing:
 
 - Non-contiguous selection is impossible, which markdown could not
   express anyway.
-- A selection covering exactly one block is ambiguous: Escape and a
-  triple click produce the same range. Only the first is a block
-  selection, which is what the editor's `blockSelectionMode` flag
-  records. It is set alongside the selection change which enters block
-  mode, and cleared by `onChange` on any selection which is no longer
-  block aligned.
 - The snap runs in `onChange`, not in `apply`. Slate's own transforms set
   exact expanded selections which have to be left alone, and `onChange`
   only runs once the selection has settled.
 
-### Blocks read the selection during render without subscribing to it
+### Which blocks are selected is held in the app's selection, not the editor
 
-`createRenderElement` sets `data-block-selected` by reading the editor's
-selection while rendering, with no selection hook involved. This works
-because slate-react memoises each element against its *own* intersection
-with the selection, so a block re-renders exactly when its selected state
-can have changed, and cursor movement elsewhere re-renders nothing.
+The Slate selection above says which blocks a selection *covers*; whether
+those blocks are selected at all is held in `@minddrop/selection` as items
+of type `editor-block`, keyed by the block's session ID and carrying a
+reference to the editor they came from.
 
-The corner it cuts: a change which does not alter any block's
-intersection will not repaint, which is why entering block mode on a
-selection that already covered the block whole collapses the selection
-first.
+This is what makes selections exclusive across the app: selecting blocks
+in one editor, or a card anywhere else, deselects the first editor's
+blocks with no cross editor wiring. It is also what lets blocks be dragged
+out of an editor, through the serializer registered for the type.
+
+It also settles an ambiguity which would otherwise need a flag: a
+selection covering exactly one block is what both Escape and a triple
+click produce. Escape registers items, a triple click does not, so the
+two are told apart without inspecting the range.
+
+The pairing is kept by `selectBlocks`, which sets both, and by
+`withBlockSelection`'s `onChange`, which drops the items as soon as the
+Slate selection stops covering whole blocks.
+
+### Blocks learn they are selected through context, not the Slate selection
+
+`createRenderElement` marks a block with `data-block-selected` from the
+`BlockSelectionContext`, which carries the IDs of the editor's selected
+blocks.
+
+It cannot read the app's selection directly in each block: slate-react
+memoises an element against its *own* intersection with the editor's
+selection, which does not change when a block is selected or deselected in
+the app, so the block would never repaint. Context updates cross memo
+boundaries, which is exactly what is needed here.
+
+### Block dragging hangs off `Editable`'s own drag props
+
+`Editable` handles `dragover` and `drop` itself, inserting the dropped data as
+content at the drop point. slate-react checks the handler it was passed first and
+skips its own handling when that handler returns true or prevents default
+(`isEventHandled`), so block dragging is wired through `Editable`'s `onDragOver`
+and `onDrop` props rather than a listener on an ancestor — an ancestor's handler
+runs *after* Slate's, by which point the content has already been inserted.
+
+The handlers return `false` for any drag which did not start from a block handle,
+which is what leaves dragging selected text alone.
+
+A trap in the gutter: preventing the default mousedown action stops a native
+drag ever starting, so the `preventDefault` which keeps the cursor in the editor
+is on the insert button rather than on the gutter as a whole.
+
+### WebKit will not drag an unselectable element
+
+The app runs in WKWebView, where `draggable` on its own is not enough. A drag
+handle also needs, in CSS:
+
+- `user-select: auto` — WebKit refuses to start a drag on an element which
+  cannot be selected, and drag handles commonly sit inside chrome which sets
+  `user-select: none`. This alone made the block drag handle completely inert.
+- `-webkit-user-drag: element` — WebKit starts drags on elements which are
+  neither links nor images only once they are marked draggable in CSS too.
+
+Both are no-ops in Chromium, so a handle which works in a browser can still be
+dead in the app. Neither is testable in jsdom, which has no drag machinery at
+all, so the tests around a drag source prove the handlers are wired up and
+nothing more.
+
+Also worth knowing: an exception thrown inside a `dragstart` handler cancels the
+drag silently, which looks identical to the CSS problem above.
+
+The drag itself goes through `useDraggable`, which serializes the app's
+selection onto the dataTransfer, so blocks can be dropped on anything in the app
+which accepts them rather than only back into their own editor.
+
+### Hiding a drag's source without cancelling the drag
+
+Hiding the gutter while its handle is being dragged takes more care than it
+looks:
+
+- It must not be unmounted. Removing a drag's source element part way through
+  aborts the drag.
+- It must keep its hit testing. `pointer-events: none` on the source cancels the
+  drag in WebKit, so `opacity` alone does the hiding.
+- Nothing may disturb the source before the `dragstart` handler returns, which
+  is when the browser snapshots the drag image, so the state driving the hiding
+  is set at the very end of the handler.
+- `drop` fires *before* `dragend`. Ending the drag state on the drop shows the
+  controls again while the drag is still running, flashing them up against where
+  the dragged block used to be, so only `dragend` ends it — and it also drops
+  the hovered block, the block having moved out from under the controls.
 
 ## packages/stores
 

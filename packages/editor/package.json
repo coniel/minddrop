@@ -11,11 +11,11 @@
     "test:watch": "vitest"
   },
   "devDependencies": {
+    "@minddrop/eslint-config": "workspace:*",
     "@minddrop/test-utils": "workspace:*",
     "@types/is-hotkey": "^0.1.10",
     "@types/react": "^19.2.14",
     "eslint": "^9.39.3",
-    "@minddrop/eslint-config": "workspace:*",
     "tsconfig": "workspace:*",
     "typescript": "^5.9.3"
   },
@@ -26,6 +26,7 @@
     "@minddrop/ast": "workspace:*",
     "@minddrop/events": "workspace:*",
     "@minddrop/i18n": "workspace:*",
+    "@minddrop/selection": "workspace:*",
     "@minddrop/stores": "workspace:*",
     "@minddrop/ui-primitives": "workspace:*",
     "@minddrop/utils": "workspace:*",

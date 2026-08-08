@@ -5,18 +5,22 @@ import { Editable, ReactEditor, RenderElementProps, Slate } from 'slate-react';
 import { useDebouncedCallback } from 'use-debounce';
 import { Ast, Element } from '@minddrop/ast';
 import { isUntitledTitle } from '@minddrop/utils';
+import { BlockDropIndicator } from '../BlockDropIndicator';
 import { EditorBlockElementConfigsStore } from '../BlockElementTypeConfigsStore';
 import { BlockGutter, BlockInsertPosition } from '../BlockGutter';
 import { BlockMenu } from '../BlockMenu';
+import { BlockSelectionContext } from '../BlockSelectionContext';
 import { EditorInlineElementConfigsStore } from '../InlineElementTypeConfigsStore';
 import { MarkConfigsStore } from '../MarkConfigsStore';
 import { Transforms } from '../Transforms';
 import { defaultMarkConfigs } from '../default-mark-configs';
 import { insertTrailingParagraph } from '../insertTrailingParagraph';
 import { BlockElementProps } from '../types';
+import { useBlockDrag } from '../useBlockDrag';
 import { useBlockMenu } from '../useBlockMenu';
 import { useBlockSelection } from '../useBlockSelection';
 import { useHoveredBlock } from '../useHoveredBlock';
+import { useSelectedBlockIds } from '../useSelectedBlockIds';
 import { createEditor, createRenderElement } from '../utils';
 import { assignBlockIds, withBlockIds } from '../withBlockIds';
 import { withBlockReset } from '../withBlockReset';
@@ -212,6 +216,19 @@ export const RichTextEditor: React.FC<EditorProps> = ({
     !readOnly,
   );
 
+  // The editor's blocks which are in the app's selection, provided
+  // to the blocks so that they render as selected
+  const selectedBlockIds = useSelectedBlockIds(editorWithPlugins);
+
+  const {
+    dropIndicator,
+    isDragging,
+    handleDragStart: handleBlockDragStart,
+    handleDragOver,
+    handleDrop,
+    handleDragEnd,
+  } = useBlockDrag(editorWithPlugins, containerRef, hoveredBlock, !readOnly);
+
   // Untitled titles are shown as the placeholder instead of as content
   const resolvedTitlePlaceholder = titleIsUntitled ? title : titlePlaceholder;
 
@@ -265,13 +282,10 @@ export const RichTextEditor: React.FC<EditorProps> = ({
   // Create a renderElement function using the registered
   // element type configuration objects.
   const renderElement = useMemo(() => {
-    const renderRegisteredElement = createRenderElement(
-      [
-        ...EditorBlockElementConfigsStore.getAll(),
-        ...EditorInlineElementConfigsStore.getAll(),
-      ],
-      editorWithPlugins,
-    );
+    const renderRegisteredElement = createRenderElement([
+      ...EditorBlockElementConfigsStore.getAll(),
+      ...EditorInlineElementConfigsStore.getAll(),
+    ]);
 
     if (!hasTitle) {
       return renderRegisteredElement;
@@ -289,7 +303,7 @@ export const RichTextEditor: React.FC<EditorProps> = ({
 
       return renderRegisteredElement(props);
     };
-  }, [hasTitle, editorWithPlugins]);
+  }, [hasTitle]);
 
   const markHotkeys = useMemo(
     () => withMarkHotkeys(editor, defaultMarkConfigs),
@@ -413,6 +427,18 @@ export const RichTextEditor: React.FC<EditorProps> = ({
     [editorWithPlugins, hoveredBlock, selectBlock],
   );
 
+  // Ends a drag started from the controls, dropping the hovered
+  // block along with it. The block has moved, so the controls would
+  // otherwise come back against where it used to be, until the
+  // pointer next moves.
+  const handleBlockDragEnd = useCallback(
+    (event: React.DragEvent) => {
+      handleDragEnd(event);
+      clearHoveredBlock();
+    },
+    [handleDragEnd, clearHoveredBlock],
+  );
+
   useEffect(() => {
     if (autoFocus) {
       ReactEditor.focus(editorRef.current);
@@ -473,31 +499,41 @@ export const RichTextEditor: React.FC<EditorProps> = ({
       onChange={handleChange}
     >
       <TitleContext.Provider value={titleContextValue}>
-        <div ref={containerRef} className="editor-container">
-          <Editable
-            autoFocus={false}
-            readOnly={readOnly}
-            className="editor"
-            style={style}
-            renderElement={renderElement}
-            renderLeaf={renderLeaf}
-            onKeyDown={onKeyDown}
-            onClick={handleClick}
-            onFocus={onFocus}
-            onBlur={handleBlur}
-          />
+        <BlockSelectionContext.Provider value={selectedBlockIds}>
+          <div ref={containerRef} className="editor-container">
+            <Editable
+              autoFocus={false}
+              readOnly={readOnly}
+              className="editor"
+              style={style}
+              renderElement={renderElement}
+              renderLeaf={renderLeaf}
+              onKeyDown={onKeyDown}
+              onClick={handleClick}
+              onFocus={onFocus}
+              onBlur={handleBlur}
+              onDragOver={handleDragOver}
+              onDrop={handleDrop}
+            />
 
-          {/* Controls acting on the hovered block */}
-          <BlockGutter
-            block={hoveredBlock}
-            controlsRef={blockGutterRef}
-            onInsert={handleInsertBlock}
-            onSelect={handleSelectBlock}
-          />
-        </div>
+            {/* Marks where dragged blocks would drop */}
+            <BlockDropIndicator position={dropIndicator} />
 
-        {/* Block insertion menu */}
-        <BlockMenu {...blockMenuProps} />
+            {/* Controls acting on the hovered block */}
+            <BlockGutter
+              block={hoveredBlock}
+              controlsRef={blockGutterRef}
+              onInsert={handleInsertBlock}
+              onSelect={handleSelectBlock}
+              onDragStart={handleBlockDragStart}
+              onDragEnd={handleBlockDragEnd}
+              hidden={isDragging}
+            />
+          </div>
+
+          {/* Block insertion menu */}
+          <BlockMenu {...blockMenuProps} />
+        </BlockSelectionContext.Provider>
       </TitleContext.Provider>
     </Slate>
   );

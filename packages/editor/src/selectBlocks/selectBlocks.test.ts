@@ -1,5 +1,6 @@
 import { Range } from 'slate';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { Selection } from '@minddrop/selection';
 import {
   cleanup,
   createTestEditor,
@@ -8,8 +9,22 @@ import {
   paragraphElement3,
   setup,
 } from '../test-utils';
-import { getBlockAlignedRange } from '../utils';
+import { BLOCK_SELECTION_ITEM_TYPE, Editor } from '../types';
+import { getBlockAlignedRange, getSelectedBlocks } from '../utils';
+import { assignBlockIds } from '../withBlockIds';
 import { selectBlocks } from './selectBlocks';
+
+/**
+ * Creates an editor whose blocks carry block IDs, which the app's
+ * selection identifies them by.
+ *
+ * @returns The editor.
+ */
+function createEditor(): Editor {
+  return createTestEditor(
+    assignBlockIds([paragraphElement1, paragraphElement2, paragraphElement3]),
+  );
+}
 
 describe('selectBlocks', () => {
   beforeEach(setup);
@@ -17,11 +32,7 @@ describe('selectBlocks', () => {
   afterEach(cleanup);
 
   it('covers the blocks between the given ones whole', () => {
-    const editor = createTestEditor([
-      paragraphElement1,
-      paragraphElement2,
-      paragraphElement3,
-    ]);
+    const editor = createEditor();
 
     selectBlocks(editor, [0], [2]);
 
@@ -32,11 +43,7 @@ describe('selectBlocks', () => {
   });
 
   it('runs backwards when the focus is above the anchor', () => {
-    const editor = createTestEditor([
-      paragraphElement1,
-      paragraphElement2,
-      paragraphElement3,
-    ]);
+    const editor = createEditor();
 
     selectBlocks(editor, [2], [0]);
 
@@ -47,16 +54,26 @@ describe('selectBlocks', () => {
     });
   });
 
-  it('covers a single block', () => {
-    const editor = createTestEditor([paragraphElement1, paragraphElement2]);
+  it('selects the blocks in the app’s selection', () => {
+    const editor = createEditor();
 
-    editor.blockSelectionMode = true;
+    selectBlocks(editor, [0], [1]);
 
-    selectBlocks(editor, [1], [1]);
+    expect(getSelectedBlocks(editor).map(([, path]) => path)).toEqual([
+      [0],
+      [1],
+    ]);
+  });
 
-    expect(getBlockAlignedRange(editor)).toEqual({
-      firstIndex: 1,
-      lastIndex: 1,
-    });
+  it('clears a selection made elsewhere', () => {
+    const editor = createEditor();
+
+    Selection.select([{ id: 'entry-id', type: 'database-entry', data: {} }]);
+
+    selectBlocks(editor, [0], [0]);
+
+    expect(
+      Selection.get().every((item) => item.type === BLOCK_SELECTION_ITEM_TYPE),
+    ).toBe(true);
   });
 });

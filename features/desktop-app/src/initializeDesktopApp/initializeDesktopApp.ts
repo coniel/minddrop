@@ -3,7 +3,11 @@ import { Collections } from '@minddrop/collections';
 import { DataViews } from '@minddrop/data-views';
 import { Databases } from '@minddrop/databases';
 import { Designs } from '@minddrop/designs';
-import { EditorElements, EditorMarks } from '@minddrop/editor';
+import {
+  EditorElements,
+  EditorMarks,
+  registerBlockSelectionSerializer,
+} from '@minddrop/editor';
 import { Events } from '@minddrop/events';
 import { initializeExtensions } from '@minddrop/extensions';
 import { initializeCollectionsFeature } from '@minddrop/feature-collections';
@@ -91,6 +95,7 @@ async function runInitialization(): Promise<void> {
 
   EditorElements.registerDefaults();
   EditorMarks.registerDefaults();
+  registerBlockSelectionSerializer();
   Ast.registerDefaultConfigs();
   initializeDataViewTypes();
   registerViews();

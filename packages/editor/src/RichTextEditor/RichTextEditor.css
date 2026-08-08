@@ -19,12 +19,22 @@
   font-family: var(--font-sans);
 }
 
+/* Declared on every block rather than only the selected ones, so
+   that the highlight fades out as well as in */
+.editor > * {
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+}
+
 .editor [data-block-selected] {
-  background-color: var(--surface-primary);
+  background-color: var(--primary-400);
   border-radius: var(--radius-sm);
   /* Spreads the highlight past the block's own box without giving
-     it a size of its own, which would shift the content */
-  box-shadow: 0 0 0 var(--space-1) var(--surface-primary);
+     it a size of its own, which would shift the content. Kept
+     under half the row gap between blocks, so that the highlights
+     of adjacent blocks stay apart. */
+  box-shadow: 0 0 0 3px var(--primary-400);
 }
 
 /* Selected blocks are highlighted whole, so the text highlight
