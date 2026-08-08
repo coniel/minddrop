@@ -76,8 +76,8 @@ export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
   style = {},
   ...rest
 }) => {
-  // Track which gap index is expanded (triggered by child elements)
-  const [expandedGapIndex, setExpandedGapIndex] = useState<number | null>(null);
+  // Track which gap index is active (triggered by child elements)
+  const [activeGapIndex, setActiveGapIndex] = useState<number | null>(null);
 
   // Ref for determining drop index from mouse position
   const containerRef = useRef<HTMLDivElement>(null);
@@ -95,23 +95,23 @@ export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
     [id, onDrop],
   );
 
-  // Context value for child elements to request gap expansion
-  const expandGap = useCallback((index: number) => {
-    setExpandedGapIndex(index);
+  // Context value for child elements to request gap activation
+  const activateGap = useCallback((index: number) => {
+    setActiveGapIndex(index);
   }, []);
 
-  const collapseGap = useCallback(() => {
-    setExpandedGapIndex(null);
+  const deactivateGap = useCallback(() => {
+    setActiveGapIndex(null);
   }, []);
 
   const contextValue = useMemo<FlexDropContainerContextValue>(
-    () => ({ expandGap, collapseGap }),
-    [expandGap, collapseGap],
+    () => ({ activateGap, deactivateGap }),
+    [activateGap, deactivateGap],
   );
 
   const elements: ReactElement[] = [];
 
-  // Always add a leading gap for visual expansion during drag
+  // Always add a leading gap so drops can target the start position
   if (childArray.length > 0) {
     elements.push(
       <FlexDropContainerGap
@@ -120,7 +120,7 @@ export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
         direction={direction}
         size={0}
         index={0}
-        isExpanded={expandedGapIndex === 0}
+        isActive={activeGapIndex === 0}
         onDrop={(data) => handleDropInGap(data, 0)}
       />,
     );
@@ -141,14 +141,14 @@ export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
           direction={direction}
           size={gap}
           index={gapIndex}
-          isExpanded={expandedGapIndex === gapIndex}
+          isActive={activeGapIndex === gapIndex}
           onDrop={(data) => handleDropInGap(data, gapIndex)}
         />,
       );
     }
   });
 
-  // Always add a trailing gap for visual expansion during drag
+  // Always add a trailing gap so drops can target the end position
   const trailingIndex = childArray.length;
 
   elements.push(
@@ -158,7 +158,7 @@ export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
       direction={direction}
       size={0}
       index={trailingIndex}
-      isExpanded={expandedGapIndex === trailingIndex}
+      isActive={activeGapIndex === trailingIndex}
       onDrop={(data) => handleDropInGap(data, trailingIndex)}
     />,
   );
@@ -202,7 +202,7 @@ export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
   );
 
   // Handle drag over on the container itself.
-  // Expands the nearest edge gap to show where the drop would land.
+  // Activates the nearest edge gap to show where the drop would land.
   const handleContainerDragOver = useCallback(
     (event: React.DragEvent) => {
       event.preventDefault();
@@ -215,22 +215,22 @@ export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
 
       const index = getDropIndexFromPosition(event);
 
-      setExpandedGapIndex(index);
+      setActiveGapIndex(index);
     },
     [getDropIndexFromPosition],
   );
 
-  // Collapse the expanded gap when the drag leaves the container
+  // Deactivate the active gap when the drag leaves the container
   const handleContainerDragLeave = useCallback((event: React.DragEvent) => {
     if (event.target === containerRef.current) {
-      setExpandedGapIndex(null);
+      setActiveGapIndex(null);
     }
   }, []);
 
   // Handle drop on the container's empty space
   const handleContainerDrop = useCallback(
     (event: React.DragEvent) => {
-      setExpandedGapIndex(null);
+      setActiveGapIndex(null);
 
       // Only handle drops directly on the container, not
       // drops that bubbled up from gap zones

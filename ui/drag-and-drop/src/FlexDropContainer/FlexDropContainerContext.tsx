@@ -2,17 +2,17 @@ import { createContext, useContext } from 'react';
 
 export interface FlexDropContainerContextValue {
   /**
-   * Expand the gap at the given index.
+   * Activate the gap at the given index, showing its drop line.
    * Called by child elements when they detect a before/after
    * drag position.
    */
-  expandGap: (index: number) => void;
+  activateGap: (index: number) => void;
 
   /**
-   * Collapse any currently expanded gap.
+   * Deactivate any currently active gap.
    * Called when dragging leaves an element.
    */
-  collapseGap: () => void;
+  deactivateGap: () => void;
 }
 
 export const FlexDropContainerContext =
@@ -20,7 +20,7 @@ export const FlexDropContainerContext =
 
 /**
  * Returns the FlexDropContainer context for communicating
- * gap expansion from child elements.
+ * gap activation from child elements.
  */
 export function useFlexDropContainer(): FlexDropContainerContextValue | null {
   return useContext(FlexDropContainerContext);

@@ -25,10 +25,10 @@ interface FlexDropContainerGapProps {
   size: number;
 
   /**
-   * Whether this gap is expanded (triggered by a child element
+   * Whether this gap is active (triggered by a child element
    * detecting a before/after drag position).
    */
-  isExpanded?: boolean;
+  isActive?: boolean;
 
   /**
    * Callback fired when the gap zone is dropped.
@@ -36,22 +36,20 @@ interface FlexDropContainerGapProps {
   onDrop?: (data: DropEventData) => void;
 }
 
-// Expanded size (in px) when dragging over a gap
-const EXPANDED_SIZE = 32;
-
 export const FlexDropContainerGap: React.FC<FlexDropContainerGapProps> = ({
   containerId,
   direction,
   size,
   index,
-  isExpanded = false,
+  isActive = false,
   onDrop,
 }) => {
   // Track direct drags over this gap zone
   const [isDraggingOver, setIsDraggingOver] = useState(false);
 
-  // Gap is active when directly dragged over OR expanded by a sibling element
-  const isActive = isDraggingOver || isExpanded;
+  // Gap shows the drop line when directly dragged over OR
+  // activated by a sibling element
+  const showLine = isDraggingOver || isActive;
 
   const handleDragOver = (event: React.DragEvent) => {
     event.preventDefault();
@@ -96,22 +94,17 @@ export const FlexDropContainerGap: React.FC<FlexDropContainerGapProps> = ({
   // Determine the active dimension based on layout direction
   const isRow = direction === 'row';
 
-  // Use expanded size when active, otherwise use the prop size
-  const activeSize = isActive ? EXPANDED_SIZE : size;
-
-  // Calculate the gap style using a fixed size
+  // Size the gap along the main axis only, keeping the layout
+  // stable regardless of drag state
   const gapStyle: React.CSSProperties = {
     alignSelf: 'stretch',
     flexGrow: 0,
-    ...(isRow ? { width: activeSize } : { height: activeSize }),
+    ...(isRow ? { width: size } : { height: size }),
   };
-
-  // Build the class name
-  const className = `flex-drop-gap${isActive ? ' flex-drop-gap-active' : ''}`;
 
   return (
     <div
-      className={className}
+      className="flex-drop-gap"
       style={gapStyle}
       onDragOver={handleDragOver}
       onDragEnter={handleDragEnter}
@@ -119,6 +112,13 @@ export const FlexDropContainerGap: React.FC<FlexDropContainerGapProps> = ({
       onDrop={handleDrop}
       data-gap-zone
       data-position={index}
-    />
+    >
+      {/* Line indicating the drop location */}
+      {showLine && (
+        <div
+          className={`flex-drop-gap-line flex-drop-gap-line-${isRow ? 'vertical' : 'horizontal'}`}
+        />
+      )}
+    </div>
   );
 };

@@ -31,7 +31,7 @@ export function useDesignElementDragDrop({
     element.type === 'container' &&
     (element as FlatContainerDesignElement).children.length === 0;
 
-  // Get the parent FlexDropContainer context for gap expansion
+  // Get the parent FlexDropContainer context for gap activation
   const flexDropContainer = useFlexDropContainer();
   const layoutId = useLayoutId();
 
@@ -66,7 +66,7 @@ export function useDesignElementDragDrop({
   const previousPositionRef = useRef(dropIndicatorPosition);
 
   // Communicate before/after positions to the parent FlexDropContainer
-  // so it can expand the appropriate gap
+  // so it can activate the appropriate gap
   useEffect(() => {
     if (!flexDropContainer) {
       return;
@@ -80,7 +80,7 @@ export function useDesignElementDragDrop({
     previousPositionRef.current = dropIndicatorPosition;
 
     if (!isDraggingOver || !dropIndicatorPosition) {
-      flexDropContainer.collapseGap();
+      flexDropContainer.deactivateGap();
 
       return;
     }
@@ -90,17 +90,17 @@ export function useDesignElementDragDrop({
       dropIndicatorPosition === 'before' ||
       dropIndicatorPosition === 'start'
     ) {
-      // Expand the gap before this element
-      flexDropContainer.expandGap(index);
+      // Activate the gap before this element
+      flexDropContainer.activateGap(index);
     } else if (
       dropIndicatorPosition === 'after' ||
       dropIndicatorPosition === 'end'
     ) {
-      // Expand the gap after this element
-      flexDropContainer.expandGap(index + 1);
+      // Activate the gap after this element
+      flexDropContainer.activateGap(index + 1);
     } else {
-      // "inside" position - collapse any expanded gap
-      flexDropContainer.collapseGap();
+      // "inside" position - deactivate any active gap
+      flexDropContainer.deactivateGap();
     }
   }, [flexDropContainer, isDraggingOver, dropIndicatorPosition, index]);
 
