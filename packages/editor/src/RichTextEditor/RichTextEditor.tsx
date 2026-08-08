@@ -15,10 +15,12 @@ import { defaultMarkConfigs } from '../default-mark-configs';
 import { insertTrailingParagraph } from '../insertTrailingParagraph';
 import { BlockElementProps } from '../types';
 import { useBlockMenu } from '../useBlockMenu';
+import { useBlockSelection } from '../useBlockSelection';
 import { useHoveredBlock } from '../useHoveredBlock';
 import { createEditor, createRenderElement } from '../utils';
 import { assignBlockIds, withBlockIds } from '../withBlockIds';
 import { withBlockReset } from '../withBlockReset';
+import { withBlockSelection } from '../withBlockSelection';
 import { withBlockShortcuts } from '../withBlockShortcuts';
 import { withMarkHotkeys } from '../withMarkHotkeys';
 import { withMarks } from '../withMarks';
@@ -168,13 +170,15 @@ export const RichTextEditor: React.FC<EditorProps> = ({
   const [editorWithMarks, renderLeaf] = useMemo(
     () =>
       withMarks(
-        withBlockIds(
-          withBlockReset(
-            withBlockShortcuts(
-              withReturnBehaviour(editor),
-              EditorBlockElementConfigsStore.getAll(),
+        withBlockSelection(
+          withBlockIds(
+            withBlockReset(
+              withBlockShortcuts(
+                withReturnBehaviour(editor),
+                EditorBlockElementConfigsStore.getAll(),
+              ),
+              'paragraph',
             ),
-            'paragraph',
           ),
         ),
         MarkConfigsStore.getAllArray(),
@@ -199,6 +203,8 @@ export const RichTextEditor: React.FC<EditorProps> = ({
     handleKeyDown: handleBlockMenuKeyDown,
     handleChange: handleBlockMenuChange,
   } = useBlockMenu(editorWithPlugins);
+  const { handleKeyDown: handleBlockSelectionKeyDown, selectBlock } =
+    useBlockSelection(editorWithPlugins, !readOnly);
   const { hoveredBlock, clearHoveredBlock } = useHoveredBlock(
     editorWithPlugins,
     containerRef,
@@ -259,10 +265,13 @@ export const RichTextEditor: React.FC<EditorProps> = ({
   // Create a renderElement function using the registered
   // element type configuration objects.
   const renderElement = useMemo(() => {
-    const renderRegisteredElement = createRenderElement([
-      ...EditorBlockElementConfigsStore.getAll(),
-      ...EditorInlineElementConfigsStore.getAll(),
-    ]);
+    const renderRegisteredElement = createRenderElement(
+      [
+        ...EditorBlockElementConfigsStore.getAll(),
+        ...EditorInlineElementConfigsStore.getAll(),
+      ],
+      editorWithPlugins,
+    );
 
     if (!hasTitle) {
       return renderRegisteredElement;
@@ -280,7 +289,7 @@ export const RichTextEditor: React.FC<EditorProps> = ({
 
       return renderRegisteredElement(props);
     };
-  }, [hasTitle]);
+  }, [hasTitle, editorWithPlugins]);
 
   const markHotkeys = useMemo(
     () => withMarkHotkeys(editor, defaultMarkConfigs),
@@ -299,9 +308,20 @@ export const RichTextEditor: React.FC<EditorProps> = ({
         return;
       }
 
+      // Runs after the block menu, which takes Escape for itself
+      // while it is open
+      if (handleBlockSelectionKeyDown(event)) {
+        return;
+      }
+
       markHotkeys(event);
     },
-    [markHotkeys, handleBlockMenuKeyDown, readOnly],
+    [
+      markHotkeys,
+      handleBlockMenuKeyDown,
+      handleBlockSelectionKeyDown,
+      readOnly,
+    ],
   );
 
   // Clicking the empty space below the content places the cursor
@@ -373,6 +393,24 @@ export const RichTextEditor: React.FC<EditorProps> = ({
       clearHoveredBlock();
     },
     [editorWithPlugins, hoveredBlock, clearHoveredBlock],
+  );
+
+  // Selects the hovered block, or extends the current block
+  // selection to it.
+  const handleSelectBlock = useCallback(
+    (extend: boolean) => {
+      // The handle is only rendered while a block is hovered
+      if (!hoveredBlock) {
+        return;
+      }
+
+      // The selection is only rendered while the editor holds the
+      // DOM focus, which the button does not take
+      ReactEditor.focus(editorWithPlugins);
+
+      selectBlock(hoveredBlock.path, extend);
+    },
+    [editorWithPlugins, hoveredBlock, selectBlock],
   );
 
   useEffect(() => {
@@ -454,6 +492,7 @@ export const RichTextEditor: React.FC<EditorProps> = ({
             block={hoveredBlock}
             controlsRef={blockGutterRef}
             onInsert={handleInsertBlock}
+            onSelect={handleSelectBlock}
           />
         </div>
 

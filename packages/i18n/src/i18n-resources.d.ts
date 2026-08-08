@@ -1005,6 +1005,7 @@ declare module 'i18next' {
         editor: {
           blockGutter: {
             insert: string;
+            select: string;
           };
           blockMenu: {
             hint: string;

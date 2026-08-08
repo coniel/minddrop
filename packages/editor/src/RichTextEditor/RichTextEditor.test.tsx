@@ -11,8 +11,9 @@ import {
 } from '../test-utils';
 import { RichTextEditor } from './RichTextEditor';
 
-// The accessible label of the block gutter's insert button
+// The accessible labels of the block gutter's buttons
 const INSERT_LABEL = 'Insert block';
+const SELECT_LABEL = 'Select block';
 
 // Slate batches operations and fires onChange in a microtask, so
 // editor interactions are wrapped in async act calls.
@@ -143,5 +144,53 @@ describe('RichTextEditor block gutter', () => {
 
     expect(ids.filter(Boolean)).toHaveLength(3);
     expect(new Set(ids).size).toBe(3);
+  });
+});
+
+describe('RichTextEditor block selection', () => {
+  beforeEach(setup);
+
+  afterEach(cleanup);
+
+  // Renders an editor holding a paragraph and a heading
+  const renderEditor = () =>
+    render(
+      <RichTextEditor initialValue={[paragraphElement1, headingElement1]} />,
+    );
+
+  // Whether the block containing the given text is marked as selected
+  const isSelected = (element: HTMLElement) =>
+    element.closest('[data-block-selected="true"]') !== null;
+
+  it('selects the block when its handle is clicked', async () => {
+    const { getByText, getByLabelText } = renderEditor();
+
+    fireEvent.pointerMove(getByText(paragraphElement1PlainText));
+
+    await actFlush(() => {
+      fireEvent.click(getByLabelText(SELECT_LABEL));
+    });
+
+    expect(isSelected(getByText(paragraphElement1PlainText))).toBe(true);
+    expect(isSelected(getByText(headingElement1PlainText))).toBe(false);
+  });
+
+  it('extends the selection when a handle is shift clicked', async () => {
+    const { getByText, getByLabelText } = renderEditor();
+
+    fireEvent.pointerMove(getByText(paragraphElement1PlainText));
+
+    await actFlush(() => {
+      fireEvent.click(getByLabelText(SELECT_LABEL));
+    });
+
+    fireEvent.pointerMove(getByText(headingElement1PlainText));
+
+    await actFlush(() => {
+      fireEvent.click(getByLabelText(SELECT_LABEL), { shiftKey: true });
+    });
+
+    expect(isSelected(getByText(paragraphElement1PlainText))).toBe(true);
+    expect(isSelected(getByText(headingElement1PlainText))).toBe(true);
   });
 });

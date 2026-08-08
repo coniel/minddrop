@@ -1,9 +1,11 @@
 import { RenderElementProps } from 'slate-react';
 import {
   BlockElementProps,
+  Editor,
   EditorBlockElementConfig,
   EditorInlineElementConfig,
 } from '../../types';
+import { isBlockSelected } from '../isBlockSelected';
 
 /**
  * Creates a `renderElement` function used by Slate's `Editable` component
@@ -13,15 +15,27 @@ import {
  * element's children.
  *
  * @param configs - An array of element type configurations.
+ * @param editor - An editor instance.
  * @returns A renderElement function.
  */
 export function createRenderElement(
   configs: (EditorInlineElementConfig | EditorBlockElementConfig)[],
+  editor: Editor,
 ): (props: RenderElementProps) => React.ReactElement {
   // eslint-disable-next-line react/display-name
   return (props: RenderElementProps) => {
     // Get the config for the element type
     const config = configs.find(({ type }) => type === props.element.type);
+
+    // Marks the element as selected when it is a block covered by
+    // a block selection. Slate re-renders an element whenever its
+    // own part of the selection changes, so this is up to date
+    // without watching the selection.
+    const attributes = {
+      ...props.attributes,
+      'data-block-selected':
+        isBlockSelected(editor, props.element) || undefined,
+    };
 
     if (config) {
       // Typecast as block element to prevent TS complaining
@@ -29,11 +43,13 @@ export function createRenderElement(
       const Component = (config as EditorBlockElementConfig).component;
 
       // Render the config's component
-      return <Component {...(props as BlockElementProps)} />;
+      return (
+        <Component {...(props as BlockElementProps)} attributes={attributes} />
+      );
     }
 
     // Render a plain div if no matching element config was found
     // (should not occure but added to prevent errors just in case).
-    return <div {...props.attributes}>{props.children}</div>;
+    return <div {...attributes}>{props.children}</div>;
   };
 }

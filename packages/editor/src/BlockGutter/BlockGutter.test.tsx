@@ -23,6 +23,7 @@ describe('BlockGutter', () => {
         block={null}
         controlsRef={createRef()}
         onInsert={() => undefined}
+        onSelect={() => undefined}
       />,
     );
 
@@ -35,6 +36,7 @@ describe('BlockGutter', () => {
         block={hoveredBlock}
         controlsRef={createRef()}
         onInsert={() => undefined}
+        onSelect={() => undefined}
       />,
     );
 
@@ -52,6 +54,7 @@ describe('BlockGutter', () => {
         block={hoveredBlock}
         controlsRef={controlsRef}
         onInsert={() => undefined}
+        onSelect={() => undefined}
       />,
     );
 
@@ -64,15 +67,16 @@ describe('BlockGutter', () => {
     // Positions collected from the callback
     const positions: BlockInsertPosition[] = [];
 
-    const { getByRole } = render(
+    const { getByLabelText } = render(
       <BlockGutter
         block={hoveredBlock}
         controlsRef={createRef()}
         onInsert={(position) => positions.push(position)}
+        onSelect={() => undefined}
       />,
     );
 
-    fireEvent.click(getByRole('button'));
+    fireEvent.click(getByLabelText('Insert block'));
 
     expect(positions).toEqual(['below']);
   });
@@ -81,17 +85,54 @@ describe('BlockGutter', () => {
     // Positions collected from the callback
     const positions: BlockInsertPosition[] = [];
 
-    const { getByRole } = render(
+    const { getByLabelText } = render(
       <BlockGutter
         block={hoveredBlock}
         controlsRef={createRef()}
         onInsert={(position) => positions.push(position)}
+        onSelect={() => undefined}
       />,
     );
 
-    fireEvent.click(getByRole('button'), { shiftKey: true });
+    fireEvent.click(getByLabelText('Insert block'), { shiftKey: true });
 
     expect(positions).toEqual(['above']);
+  });
+
+  it('selects the block when the handle is clicked', () => {
+    // Whether the selection was extended, collected from the callback
+    const extended: boolean[] = [];
+
+    const { getByLabelText } = render(
+      <BlockGutter
+        block={hoveredBlock}
+        controlsRef={createRef()}
+        onInsert={() => undefined}
+        onSelect={(extend) => extended.push(extend)}
+      />,
+    );
+
+    fireEvent.click(getByLabelText('Select block'));
+
+    expect(extended).toEqual([false]);
+  });
+
+  it('extends the selection when the handle is shift clicked', () => {
+    // Whether the selection was extended, collected from the callback
+    const extended: boolean[] = [];
+
+    const { getByLabelText } = render(
+      <BlockGutter
+        block={hoveredBlock}
+        controlsRef={createRef()}
+        onInsert={() => undefined}
+        onSelect={(extend) => extended.push(extend)}
+      />,
+    );
+
+    fireEvent.click(getByLabelText('Select block'), { shiftKey: true });
+
+    expect(extended).toEqual([true]);
   });
 
   it('does not let its events reach handlers around the editor', () => {
@@ -100,7 +141,7 @@ describe('BlockGutter', () => {
 
     // Portalled events still travel up the React tree, so the
     // surrounding handlers are reached despite the portal.
-    const { getByRole } = render(
+    const { getByLabelText } = render(
       <div
         onClick={() => surroundingEvents.push('click')}
         onMouseDown={() => surroundingEvents.push('mousedown')}
@@ -109,12 +150,13 @@ describe('BlockGutter', () => {
           block={hoveredBlock}
           controlsRef={createRef()}
           onInsert={() => undefined}
+          onSelect={() => undefined}
         />
       </div>,
     );
 
-    fireEvent.mouseDown(getByRole('button'));
-    fireEvent.click(getByRole('button'));
+    fireEvent.mouseDown(getByLabelText('Insert block'));
+    fireEvent.click(getByLabelText('Insert block'));
 
     expect(surroundingEvents).toEqual([]);
   });

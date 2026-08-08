@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it } from 'vitest';
 import { render } from '@minddrop/test-utils';
+import { createTestEditor } from '../../test-utils';
 import {
   headingElementConfig,
   paragraphElement1,
@@ -28,7 +29,10 @@ describe('createRenderElement', () => {
   it('renders the appropriate element component', () => {
     // Create a renderElement function using a heading element
     // config and a paragraph element config.
-    const renderElement = createRenderElement([headingConfig, paragraphConfig]);
+    const renderElement = createRenderElement(
+      [headingConfig, paragraphConfig],
+      createTestEditor(),
+    );
 
     // Render a paragraph element
     const { getByText } = render(
@@ -45,7 +49,10 @@ describe('createRenderElement', () => {
 
   it('renders children if the element type config is missing', () => {
     // Create a renderElement function using a heading element config
-    const renderElement = createRenderElement([headingConfig]);
+    const renderElement = createRenderElement(
+      [headingConfig],
+      createTestEditor(),
+    );
 
     // Render a paragraph element
     const { getByText } = render(

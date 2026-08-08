@@ -24,6 +24,12 @@ export interface BlockGutterProps {
    * position of the new block relative to the hovered one.
    */
   onInsert: (position: BlockInsertPosition) => void;
+
+  /**
+   * Callback fired when the handle is clicked, with whether the
+   * current block selection should be extended to the block.
+   */
+  onSelect: (extend: boolean) => void;
 }
 
 /**
@@ -38,6 +44,7 @@ export const BlockGutter: React.FC<BlockGutterProps> = ({
   block,
   controlsRef,
   onInsert,
+  onSelect,
 }) => {
   // The controls sit outside the editable area, so their events
   // are not stopped by it and would otherwise reach the handlers
@@ -62,6 +69,15 @@ export const BlockGutter: React.FC<BlockGutterProps> = ({
     [onInsert],
   );
 
+  // Holding shift extends the block selection to the block rather
+  // than selecting it on its own
+  const handleSelectClick = useCallback(
+    (event: React.MouseEvent) => {
+      onSelect(event.shiftKey);
+    },
+    [onSelect],
+  );
+
   // Nothing to align the controls with
   if (!block) {
     return null;
@@ -83,6 +99,14 @@ export const BlockGutter: React.FC<BlockGutterProps> = ({
         variant="filled"
         label="editor.blockGutter.insert"
         onClick={handleInsertClick}
+      />
+
+      <IconButton
+        icon="grip-vertical"
+        size="sm"
+        variant="filled"
+        label="editor.blockGutter.select"
+        onClick={handleSelectClick}
       />
     </div>,
     document.body,

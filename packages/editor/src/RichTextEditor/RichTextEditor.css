@@ -18,3 +18,18 @@
   outline: none;
   font-family: var(--font-sans);
 }
+
+.editor [data-block-selected] {
+  background-color: var(--surface-primary);
+  border-radius: var(--radius-sm);
+  /* Spreads the highlight past the block's own box without giving
+     it a size of its own, which would shift the content */
+  box-shadow: 0 0 0 var(--space-1) var(--surface-primary);
+}
+
+/* Selected blocks are highlighted whole, so the text highlight
+   within them would only double up on it */
+.editor [data-block-selected]::selection,
+.editor [data-block-selected] ::selection {
+  background-color: transparent;
+}

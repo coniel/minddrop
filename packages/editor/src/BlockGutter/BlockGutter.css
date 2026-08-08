@@ -6,6 +6,7 @@
   z-index: var(--level-popover);
   display: flex;
   align-items: center;
+  column-gap: var(--space-1);
   padding-right: var(--space-1);
   user-select: none;
 }

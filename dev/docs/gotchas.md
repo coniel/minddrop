@@ -149,6 +149,41 @@ Note that React portals still propagate events up the React tree, not
 the DOM tree, so the gutter's clicks reach the editor's ancestors
 despite living in the body. It stops propagation itself for that reason.
 
+### A block selection is Slate's own selection, snapped to whole blocks
+
+There is no separate list of selected blocks. A block selection is a
+Slate selection which covers whole top level blocks, and `withBlockSelection`
+expands any selection crossing a block boundary out to the blocks' edges.
+Delete, cut, copy and paste therefore keep working through Slate's own
+handling, and the editor never gives up DOM focus.
+
+The consequences worth knowing:
+
+- Non-contiguous selection is impossible, which markdown could not
+  express anyway.
+- A selection covering exactly one block is ambiguous: Escape and a
+  triple click produce the same range. Only the first is a block
+  selection, which is what the editor's `blockSelectionMode` flag
+  records. It is set alongside the selection change which enters block
+  mode, and cleared by `onChange` on any selection which is no longer
+  block aligned.
+- The snap runs in `onChange`, not in `apply`. Slate's own transforms set
+  exact expanded selections which have to be left alone, and `onChange`
+  only runs once the selection has settled.
+
+### Blocks read the selection during render without subscribing to it
+
+`createRenderElement` sets `data-block-selected` by reading the editor's
+selection while rendering, with no selection hook involved. This works
+because slate-react memoises each element against its *own* intersection
+with the selection, so a block re-renders exactly when its selected state
+can have changed, and cursor movement elsewhere re-renders nothing.
+
+The corner it cuts: a change which does not alter any block's
+intersection will not repaint, which is why entering block mode on a
+selection that already covered the block whole collapses the selection
+first.
+
 ## packages/stores
 
 ### `Events._clearAll()` breaks store hydration for the rest of a test run

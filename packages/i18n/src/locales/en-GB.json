@@ -975,7 +975,8 @@
   },
   "editor": {
     "blockGutter": {
-      "insert": "Insert block"
+      "insert": "Insert block",
+      "select": "Select block"
     },
     "blockMenu": {
       "hint": "Type to filter"
