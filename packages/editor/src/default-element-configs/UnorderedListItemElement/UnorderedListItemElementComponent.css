@@ -5,12 +5,12 @@
 }
 
 .unordered-list-item-element .content {
-  font-size: var(--fsContentRegular);
-  line-height: var(--lhContentRegular);
-  font-weight: var(--fwRegular);
-  /* Fix for caret dissapearing due to 'display: flex' on
-   * parent causing div to collapse to 0 width. */
-  min-width: 10px;
+  /* Fill the remaining width so that the caret has room to render
+   * after the last character rather than on top of it. */
+  flex: 1;
+  font-size: var(--text-md);
+  line-height: var(--leading-normal);
+  font-weight: var(--weight-normal);
 }
 
 .unordered-list-item-element .bullet {

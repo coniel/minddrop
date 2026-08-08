@@ -3,13 +3,13 @@
 }
 
 .to-do-element .content {
+  /* Fill the remaining width so that the caret has room to render
+   * after the last character rather than on top of it. */
+  flex: 1;
   padding-left: var(--space-2);
   font-size: var(--text-md);
   line-height: var(--leading-normal);
   font-weight: var(--weight-normal);
-  /* Fix for caret dissapearing due to 'display: flex' on
-   * parent causing div to collapse to 0 width. */
-  min-width: 10px;
 }
 
 .to-do-element .checkbox {
