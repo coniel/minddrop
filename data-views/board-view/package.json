@@ -18,6 +18,7 @@
   "dependencies": {
     "@minddrop/collections": "workspace:*",
     "@minddrop/databases": "workspace:*",
+    "@minddrop/feature-data-views": "workspace:*",
     "@minddrop/feature-databases": "workspace:*",
     "@minddrop/ui-components": "workspace:*",
     "@minddrop/i18n": "workspace:*",

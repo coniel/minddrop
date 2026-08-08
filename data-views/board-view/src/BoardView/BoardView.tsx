@@ -358,7 +358,7 @@ export const BoardViewComponent: React.FC<
       </FlexDropContainer>
 
       {/* Floating toolbar */}
-      <BoardViewToolbar entryIds={entries} />
+      <BoardViewToolbar view={view} entryIds={entries} />
     </ScrollArea>
   );
 };

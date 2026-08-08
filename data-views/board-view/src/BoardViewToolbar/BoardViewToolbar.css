@@ -36,6 +36,13 @@
   pointer-events: auto;
 }
 
+/* Keep the toolbar visible while one of its menus is open, since
+   the pointer leaves the board when moving into the menu popup */
+.board-view-toolbar-content:has([aria-expanded='true']) {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 .board-view-toolbar-card {
   display: flex;
   align-items: center;

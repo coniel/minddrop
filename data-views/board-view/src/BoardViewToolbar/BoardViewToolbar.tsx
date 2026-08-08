@@ -1,14 +1,27 @@
 import React, { useMemo } from 'react';
+import { DataView } from '@minddrop/data-views';
 import { DatabaseId, Databases } from '@minddrop/databases';
+import { DataViewOptionsMenu } from '@minddrop/feature-data-views';
 import {
   useAddExistingEntryDraggable,
   useNewEntryDraggable,
 } from '@minddrop/feature-databases';
-import { ContentIcon, Icon, Toolbar, Tooltip } from '@minddrop/ui-primitives';
+import {
+  ContentIcon,
+  Icon,
+  Toolbar,
+  ToolbarSeparator,
+  Tooltip,
+} from '@minddrop/ui-primitives';
 import { DATABASE_FALLBACK_ICON } from '../constants';
 import './BoardViewToolbar.css';
 
 export interface BoardViewToolbarProps {
+  /**
+   * The data view rendering the board.
+   */
+  view: DataView;
+
   /**
    * The IDs of the entries currently in the board.
    */
@@ -20,6 +33,7 @@ export interface BoardViewToolbarProps {
  * for each database the board's entries belong to.
  */
 export const BoardViewToolbar: React.FC<BoardViewToolbarProps> = ({
+  view,
   entryIds,
 }) => {
   // Derive the databases the board's entries belong to
@@ -39,6 +53,11 @@ export const BoardViewToolbar: React.FC<BoardViewToolbarProps> = ({
         ))}
 
         <BoardViewToolbarAddExistingCard />
+
+        <ToolbarSeparator />
+
+        {/* View settings menu */}
+        <DataViewOptionsMenu view={view} />
       </Toolbar>
     </div>
   );

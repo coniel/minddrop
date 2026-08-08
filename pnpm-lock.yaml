@@ -206,6 +206,9 @@ importers:
       '@minddrop/databases':
         specifier: workspace:*
         version: link:../../packages/databases
+      '@minddrop/feature-data-views':
+        specifier: workspace:*
+        version: link:../../features/data-views
       '@minddrop/feature-databases':
         specifier: workspace:*
         version: link:../../features/databases
