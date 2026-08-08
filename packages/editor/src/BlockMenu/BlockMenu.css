@@ -1,0 +1,37 @@
+/* ============================================================
+   BLOCK MENU
+   The list of insertable block element types, opened by typing
+   the trigger character in the editor.
+   ============================================================ */
+
+.block-menu {
+  width: 15rem;
+  padding: var(--space-1);
+}
+
+.block-menu-scroll-area {
+  max-height: 18rem;
+}
+
+/* Keyboard navigation owns the highlight, so a pointer resting
+   where the menu opens must not add a competing one */
+.block-menu .menu-item:hover:not(.menu-item-active) {
+  background-color: transparent;
+}
+
+/* ------------------------------------------------------------
+   BLOCK MENU HINT
+   Rendered after the trigger character until a query is typed.
+   Positioned against the trigger character's own box rather than
+   within the editor, which owns its own DOM. The line height is
+   set from that box so the text sits on the same baseline.
+   ------------------------------------------------------------ */
+
+.block-menu-hint {
+  position: fixed;
+  z-index: var(--level-popover);
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.25;
+}

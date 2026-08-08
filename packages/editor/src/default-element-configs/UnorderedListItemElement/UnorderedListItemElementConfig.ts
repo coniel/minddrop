@@ -8,4 +8,10 @@ export const UnorderedListItemElementConfig: EditorBlockElementConfig<UnorderedL
     component: UnorderedListItemElementComponent,
     shortcuts: ['* ', '- '],
     returnBehaviour: 'same-type',
+    menuItems: [
+      {
+        label: 'editor.elements.unordered-list-item.name',
+        icon: 'list',
+      },
+    ],
   };

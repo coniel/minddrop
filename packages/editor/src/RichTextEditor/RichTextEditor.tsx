@@ -6,11 +6,13 @@ import { useDebouncedCallback } from 'use-debounce';
 import { Ast, Element } from '@minddrop/ast';
 import { isUntitledTitle } from '@minddrop/utils';
 import { EditorBlockElementConfigsStore } from '../BlockElementTypeConfigsStore';
+import { BlockMenu } from '../BlockMenu';
 import { EditorInlineElementConfigsStore } from '../InlineElementTypeConfigsStore';
 import { MarkConfigsStore } from '../MarkConfigsStore';
 import { defaultMarkConfigs } from '../default-mark-configs';
 import { insertTrailingParagraph } from '../insertTrailingParagraph';
 import { BlockElementProps } from '../types';
+import { useBlockMenu } from '../useBlockMenu';
 import { createEditor, createRenderElement } from '../utils';
 import { withBlockReset } from '../withBlockReset';
 import { withBlockShortcuts } from '../withBlockShortcuts';
@@ -183,6 +185,11 @@ export const RichTextEditor: React.FC<EditorProps> = ({
     hasTitle,
     { title, onTitleChange, validateTitle },
   );
+  const {
+    blockMenuProps,
+    handleKeyDown: handleBlockMenuKeyDown,
+    handleChange: handleBlockMenuChange,
+  } = useBlockMenu(editorWithPlugins);
 
   // Untitled titles are shown as the placeholder instead of as content
   const resolvedTitlePlaceholder = titleIsUntitled ? title : titlePlaceholder;
@@ -208,6 +215,9 @@ export const RichTextEditor: React.FC<EditorProps> = ({
       // Run title validation and commit detection
       handleEditorChange();
 
+      // Keep the block menu query in sync with the editor
+      handleBlockMenuChange();
+
       // Strip the title node so consumers only receive the content
       const content = hasTitle
         ? (value as Element[]).slice(1)
@@ -226,6 +236,7 @@ export const RichTextEditor: React.FC<EditorProps> = ({
       onChangeDebounced,
       handleDebouncedChange,
       handleEditorChange,
+      handleBlockMenuChange,
       hasTitle,
     ],
   );
@@ -266,9 +277,16 @@ export const RichTextEditor: React.FC<EditorProps> = ({
   const onKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLDivElement>) => {
       event.stopPropagation();
+
+      // The block menu consumes its trigger character. Read-only
+      // editors cannot have blocks inserted into them.
+      if (!readOnly && handleBlockMenuKeyDown(event)) {
+        return;
+      }
+
       markHotkeys(event);
     },
-    [markHotkeys],
+    [markHotkeys, handleBlockMenuKeyDown, readOnly],
   );
 
   // Clicking the empty space below the content places the cursor
@@ -375,6 +393,9 @@ export const RichTextEditor: React.FC<EditorProps> = ({
           onFocus={onFocus}
           onBlur={handleBlur}
         />
+
+        {/* Block insertion menu */}
+        <BlockMenu {...blockMenuProps} />
       </TitleContext.Provider>
     </Slate>
   );

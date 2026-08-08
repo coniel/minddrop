@@ -972,6 +972,31 @@
       "items": "Items"
     }
   },
+  "editor": {
+    "blockMenu": {
+      "hint": "Type to filter"
+    },
+    "elements": {
+      "paragraph": {
+        "name": "Text"
+      },
+      "heading-1": {
+        "name": "Heading 1"
+      },
+      "heading-2": {
+        "name": "Heading 2"
+      },
+      "heading-3": {
+        "name": "Heading 3"
+      },
+      "to-do": {
+        "name": "To-do"
+      },
+      "unordered-list-item": {
+        "name": "Bulleted list"
+      }
+    }
+  },
   "designs": {
     "name": "Design",
     "new": "New design",

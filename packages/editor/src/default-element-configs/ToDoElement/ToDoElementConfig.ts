@@ -11,4 +11,10 @@ export const ToDoElementConfig: EditorBlockElementConfig<ToDoElement> = {
   component: ToDoElementComponent,
   shortcuts: ['[] ', '- [ ]'],
   returnBehaviour: () => ({ checked: false }),
+  menuItems: [
+    {
+      label: 'editor.elements.to-do.name',
+      icon: 'square-check-big',
+    },
+  ],
 };

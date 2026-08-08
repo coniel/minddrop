@@ -996,6 +996,31 @@ declare module 'i18next' {
             items: string;
           };
         };
+        editor: {
+          blockMenu: {
+            hint: string;
+          };
+          elements: {
+            paragraph: {
+              name: string;
+            };
+            'heading-1': {
+              name: string;
+            };
+            'heading-2': {
+              name: string;
+            };
+            'heading-3': {
+              name: string;
+            };
+            'to-do': {
+              name: string;
+            };
+            'unordered-list-item': {
+              name: string;
+            };
+          };
+        };
         designs: {
           name: string;
           new: string;

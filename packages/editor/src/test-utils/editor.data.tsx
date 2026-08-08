@@ -32,6 +32,18 @@ export const headingElementConfig: EditorBlockElementConfig<HeadingElement> = {
   component: ({ children, attributes }) => (
     <div {...attributes}>{children}</div>
   ),
+  menuItems: [
+    {
+      label: 'editor.elements.heading-1.name',
+      icon: 'heading-1',
+      data: { level: 1 },
+    },
+    {
+      label: 'editor.elements.heading-2.name',
+      icon: 'heading-2',
+      data: { level: 2 },
+    },
+  ],
 };
 
 // Paragraph element
@@ -41,6 +53,12 @@ export const paragraphElementConfig: EditorBlockElementConfig<ParagraphElement> 
     component: ({ children, attributes }) => (
       <div {...attributes}>{children}</div>
     ),
+    menuItems: [
+      {
+        label: 'editor.elements.paragraph.name',
+        icon: 'pilcrow',
+      },
+    ],
   };
 
 export const toDoElementConfig: EditorBlockElementConfig<ToDoElement> = {

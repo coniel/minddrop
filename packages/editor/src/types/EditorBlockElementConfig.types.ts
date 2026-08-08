@@ -1,5 +1,7 @@
 import { Editor } from 'slate';
 import { Element } from '@minddrop/ast';
+import { TranslationKey } from '@minddrop/i18n';
+import { IconProp } from '@minddrop/ui-primitives';
 import { BlockElementProps } from './EditorBlockElementProps.types';
 
 export interface EditorBlockElementConfig<TElement extends Element = Element> {
@@ -91,6 +93,33 @@ export interface EditorBlockElementConfig<TElement extends Element = Element> {
    * The hotkeys related to this element type.
    */
   hotkeys?: BlockHotkeyConfig<TElement>[];
+
+  /**
+   * The entries listed in the block menu for this element type.
+   * A type can list multiple entries when it supports variations
+   * (e.g. heading levels).
+   *
+   * Omit to keep the element type out of the block menu.
+   */
+  menuItems?: BlockMenuItemConfig<TElement>[];
+}
+
+export interface BlockMenuItemConfig<TElement extends Element = Element> {
+  /**
+   * The translation key of the label displayed in the menu.
+   */
+  label: TranslationKey;
+
+  /**
+   * The icon displayed next to the label.
+   */
+  icon: IconProp;
+
+  /**
+   * Element data applied on top of the element type's initial
+   * data when the entry is selected.
+   */
+  data?: Partial<TElement>;
 }
 
 export interface BlockHotkeyConfig<TElement extends Element = Element> {
