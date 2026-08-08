@@ -1,4 +1,4 @@
-import { RefObject, useCallback, useEffect, useState } from 'react';
+import { RefObject, useCallback, useEffect, useRef, useState } from 'react';
 import { Path } from 'slate';
 import { Element } from '@minddrop/ast';
 import { Editor } from '../types';
@@ -77,6 +77,18 @@ export function useHoveredBlock(
 ): UseHoveredBlock {
   const [hoveredBlock, setHoveredBlock] = useState<HoveredBlock | null>(null);
 
+  // The DOM node the current position was measured from, used to
+  // recognise the pointer still being over the same block. Measuring
+  // forces a layout, so it has to happen only when the block
+  // actually changes rather than on every pointer move.
+  const measuredNodeRef = useRef<HTMLElement | null>(null);
+
+  const clearHoveredBlock = useCallback(() => {
+    measuredNodeRef.current = null;
+
+    setHoveredBlock(null);
+  }, []);
+
   const handlePointerMove = useCallback(
     (event: PointerEvent) => {
       const container = containerRef.current;
@@ -92,9 +104,23 @@ export function useHoveredBlock(
         return;
       }
 
+      // A held button means a selection is being dragged, which the
+      // controls play no part in.
+      if (event.buttons !== 0) {
+        clearHoveredBlock();
+
+        return;
+      }
+
+      // Still over the block the controls already point at, which
+      // the rest of the work would only arrive back at.
+      if (measuredNodeRef.current?.contains(target)) {
+        return;
+      }
+
       // Stop tracking once the pointer is elsewhere on the page
       if (!container.contains(target)) {
-        setHoveredBlock(null);
+        clearHoveredBlock();
 
         return;
       }
@@ -109,12 +135,14 @@ export function useHoveredBlock(
 
       // The title is not a content block
       if (block.element.type === TITLE_ELEMENT_TYPE) {
-        setHoveredBlock(null);
+        clearHoveredBlock();
 
         return;
       }
 
       const blockRect = block.domNode.getBoundingClientRect();
+
+      measuredNodeRef.current = block.domNode;
 
       setHoveredBlock({
         element: block.element,
@@ -124,12 +152,8 @@ export function useHoveredBlock(
         lineHeight: getLineHeight(block.domNode),
       });
     },
-    [editor, containerRef, controlsRef],
+    [editor, containerRef, controlsRef, clearHoveredBlock],
   );
-
-  const clearHoveredBlock = useCallback(() => {
-    setHoveredBlock(null);
-  }, []);
 
   // Stop tracking when disabled, e.g. in a read-only editor
   useEffect(() => {

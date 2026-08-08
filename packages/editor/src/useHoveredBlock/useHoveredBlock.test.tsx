@@ -163,6 +163,19 @@ describe('useHoveredBlock', () => {
     expect(getByTestId('readout').textContent).toBe('none');
   });
 
+  it('clears the block while a selection is being dragged', () => {
+    const { getByText, getByTestId } = render(<Harness />);
+
+    fireEvent.pointerMove(getByText(paragraphElement1PlainText));
+
+    // A held button means the pointer is dragging a selection
+    fireEvent.pointerMove(getByText(paragraphElement1PlainText), {
+      buttons: 1,
+    });
+
+    expect(getByTestId('readout').textContent).toBe('none');
+  });
+
   it('does not track the title', () => {
     const { getByText, getByTestId } = render(
       <Harness title={titleElement1PlainText} />,
