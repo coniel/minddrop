@@ -2,6 +2,9 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  /* Allow shrinking below content height when rendered as a flex
+     item, so view content scrolls instead of overflowing */
+  min-height: 0;
 
   &.data-view-renderer-empty {
     flex: 1;
