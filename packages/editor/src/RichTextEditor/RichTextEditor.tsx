@@ -9,6 +9,7 @@ import { EditorBlockElementConfigsStore } from '../BlockElementTypeConfigsStore'
 import { EditorInlineElementConfigsStore } from '../InlineElementTypeConfigsStore';
 import { MarkConfigsStore } from '../MarkConfigsStore';
 import { defaultMarkConfigs } from '../default-mark-configs';
+import { insertTrailingParagraph } from '../insertTrailingParagraph';
 import { BlockElementProps } from '../types';
 import { createEditor, createRenderElement } from '../utils';
 import { withBlockReset } from '../withBlockReset';
@@ -25,15 +26,6 @@ import {
   withTitle,
 } from '../withTitle';
 import './RichTextEditor.css';
-
-/**
- * Prevents click and keyboard events from bubbling out of
- * the editor so that ancestor handlers don't interfere with
- * editing interactions.
- */
-function stopEditorPropagation(event: React.SyntheticEvent): void {
-  event.stopPropagation();
-}
 
 export interface EditorProps {
   /**
@@ -279,6 +271,38 @@ export const RichTextEditor: React.FC<EditorProps> = ({
     [markHotkeys],
   );
 
+  // Clicking the empty space below the content places the cursor
+  // in a trailing empty element, creating a paragraph if needed.
+  // Runs on click rather than mouse down so that the browser has
+  // already moved focus into this editor, which it does natively
+  // and without disturbing the previously focused editor.
+  const handleClick = useCallback(
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      // Don't interfere with handlers outside of the editor
+      event.stopPropagation();
+
+      // Read-only editors are not editable
+      if (readOnly) {
+        return;
+      }
+
+      const lastBlock = event.currentTarget.lastElementChild;
+
+      // Nothing to click below when the editor has no content
+      if (!lastBlock) {
+        return;
+      }
+
+      // Ignore clicks which land on the content itself
+      if (event.clientY <= lastBlock.getBoundingClientRect().bottom) {
+        return;
+      }
+
+      insertTrailingParagraph(editorWithPlugins);
+    },
+    [editorWithPlugins, readOnly],
+  );
+
   useEffect(() => {
     if (autoFocus) {
       ReactEditor.focus(editorRef.current);
@@ -347,7 +371,7 @@ export const RichTextEditor: React.FC<EditorProps> = ({
           renderElement={renderElement}
           renderLeaf={renderLeaf}
           onKeyDown={onKeyDown}
-          onClick={stopEditorPropagation}
+          onClick={handleClick}
           onFocus={onFocus}
           onBlur={handleBlur}
         />
