@@ -76,8 +76,12 @@ export const DatabaseEntryOptionsMenu: React.FC<
 
   // Delete the entry
   const handleDelete = useCallback(() => {
-    // TODO: implement when DatabaseEntries.delete is available
-  }, []);
+    // Close the entry dialog if open
+    Events.dispatch(CloseDatabaseEntryDialogEvent, {});
+
+    // Delete the entry, moving its files to the system trash
+    DatabaseEntries.delete(entryId);
+  }, [entryId]);
 
   // Add the entry to the selected collection
   const handleAddToCollection = useCallback(
