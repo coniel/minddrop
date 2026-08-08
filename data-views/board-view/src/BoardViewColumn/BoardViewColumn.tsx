@@ -1,8 +1,9 @@
 import React, { useCallback } from 'react';
-import { DatabaseEntryRenderer } from '@minddrop/feature-databases';
 import { DropEventData } from '@minddrop/selection';
 import { FlexDropContainer } from '@minddrop/ui-drag-and-drop';
 import { Button } from '@minddrop/ui-primitives';
+import { BoardViewCard } from '../BoardViewCard';
+import { BOARD_ACCEPTED_DATA_TYPES } from '../constants';
 import './BoardViewColumn.css';
 
 export interface BoardViewColumnProps {
@@ -77,18 +78,27 @@ export const BoardViewColumn: React.FC<BoardViewColumnProps> = ({
     [columnIndex, onDrop],
   );
 
+  // Handle a drop onto a card, routed to the adjacent gap index
+  const handleCardDrop = useCallback(
+    (data: DropEventData, gapIndex: number) => {
+      onDrop(data, columnIndex, gapIndex);
+    },
+    [columnIndex, onDrop],
+  );
+
   // Handle clicking the delete button
   const handleDelete = useCallback(() => {
     onDelete(columnIndex);
   }, [columnIndex, onDelete]);
 
   // Entry cards with the picker spliced in at its position
-  const cards = entryIds.map((entryId) => (
-    <DatabaseEntryRenderer
+  const cards = entryIds.map((entryId, entryIndex) => (
+    <BoardViewCard
       key={entryId}
       entryId={entryId}
-      layoutContext="card"
       layoutId={entryCardLayouts[entryId]}
+      isLastChild={entryIndex === entryIds.length - 1}
+      onDrop={handleCardDrop}
     />
   ));
 
@@ -109,6 +119,8 @@ export const BoardViewColumn: React.FC<BoardViewColumnProps> = ({
         direction="column"
         gap={16}
         className="board-view-column-content"
+        accepts={BOARD_ACCEPTED_DATA_TYPES}
+        expandActiveGap
         onDrop={handleDrop}
       >
         {cards}

@@ -13,7 +13,7 @@ import { ScrollArea } from '@minddrop/ui-primitives';
 import { BoardViewColumn } from '../BoardViewColumn';
 import { BoardViewEntryPicker } from '../BoardViewEntryPicker';
 import { BoardViewToolbar } from '../BoardViewToolbar';
-import { defaultBoardViewData } from '../constants';
+import { BOARD_ACCEPTED_DATA_TYPES, defaultBoardViewData } from '../constants';
 import { BoardColumns, BoardViewData, BoardViewOptions } from '../types';
 import {
   placeEntryInColumn,
@@ -324,6 +324,7 @@ export const BoardViewComponent: React.FC<
         direction="row"
         gap={16}
         className="board-view"
+        accepts={BOARD_ACCEPTED_DATA_TYPES}
         onDrop={handleColumnLayoutDrop}
       >
         {reconciledColumns.map((columnEntries, columnIndex) => (
