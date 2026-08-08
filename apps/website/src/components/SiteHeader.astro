@@ -20,6 +20,9 @@ function isCurrent(href: string): boolean {
 ---
 
 <header class="site-header">
+  {/* Balances the toggle opposite it, so the bar's content stays centred */}
+  <div class="site-header-side" aria-hidden="true"></div>
+
   <div class="page site-header-inner">
     <a class="site-header-wordmark" href="/">
       <img
@@ -45,12 +48,14 @@ function isCurrent(href: string): boolean {
         ))
       }
 
-      <ThemeToggle />
-
       <a class="button button-primary site-header-download" href="/#download">
         Download
       </a>
     </nav>
+  </div>
+
+  <div class="site-header-side">
+    <ThemeToggle />
   </div>
 </header>
 
@@ -59,9 +64,24 @@ function isCurrent(href: string): boolean {
     position: sticky;
     top: 0;
     z-index: 10;
+    display: flex;
+    align-items: center;
     border-block-end: 1px solid var(--rule);
     background: color-mix(in srgb, var(--paper) 88%, transparent);
     backdrop-filter: blur(8px);
+  }
+
+  /*
+   * The toggle sits at the edge of the bar rather than with the content. The
+   * width matches the toggle's, so the empty side balances the one holding it.
+   */
+  .site-header-side {
+    display: flex;
+    flex: none;
+    align-items: center;
+    width: 2rem;
+    box-sizing: content-box;
+    padding-inline: var(--space-4);
   }
 
   .site-header-inner {
@@ -119,6 +139,11 @@ function isCurrent(href: string): boolean {
 
     .site-header-download {
       margin-inline-start: 0;
+    }
+
+    /* The edges give back what they can, the bar being short of room */
+    .site-header-side {
+      padding-inline: var(--space-2);
     }
   }
 </style>

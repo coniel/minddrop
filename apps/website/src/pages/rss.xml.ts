@@ -6,8 +6,9 @@ export const GET: APIRoute = async (context) => {
   const posts = await getBlogPosts();
 
   return rss({
-    title: 'MindDrop',
-    description: '',
+    title: 'MindDrop Blog',
+    description:
+      'Writing from the people building MindDrop: new features, the thinking behind them, and what is coming next.',
     site: context.site ?? 'https://minddrop.app',
     items: posts.map((post) => ({
       title: post.data.title,
