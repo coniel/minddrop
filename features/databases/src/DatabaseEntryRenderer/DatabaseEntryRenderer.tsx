@@ -234,6 +234,7 @@ const Entry: React.FC<EntryProps> = ({
     return (
       <div
         className={`${className} database-entry-fallback`}
+        data-entry-id={entry.id}
         role={isClickable ? 'button' : undefined}
         tabIndex={isClickable ? 0 : undefined}
         onClick={isClickable ? onOpenEntry : undefined}
@@ -252,6 +253,7 @@ const Entry: React.FC<EntryProps> = ({
   return (
     <div
       className={className}
+      data-entry-id={entry.id}
       role={isClickable ? 'button' : undefined}
       tabIndex={isClickable ? 0 : undefined}
       onClick={isClickable ? onOpenEntry : undefined}
