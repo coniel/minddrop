@@ -7,7 +7,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { DropEventData } from '@minddrop/selection';
+import { DropEventData, dragContainsType } from '@minddrop/selection';
 import { getTransferData } from '@minddrop/utils';
 import {
   FlexDropContainerContext,
@@ -54,6 +54,15 @@ interface FlexDropContainerProps extends Record<string, unknown> {
   onDrop?: (data: DropEventData, containerId: string, gapIndex: number) => void;
 
   /**
+   * The data types the container's gap zones and empty space accept
+   * drops of. Drags not containing any accepted type are ignored,
+   * falling through to ancestor drop targets.
+   *
+   * When omitted, all drags are accepted.
+   */
+  accepts?: string[];
+
+  /**
    * Class name applied to the root container element.
    */
   className?: string;
@@ -72,6 +81,7 @@ export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
   align = 'stretch',
   justify = 'start',
   onDrop,
+  accepts,
   className = '',
   style = {},
   ...rest
@@ -121,6 +131,7 @@ export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
         size={0}
         index={0}
         isActive={activeGapIndex === 0}
+        accepts={accepts}
         onDrop={(data) => handleDropInGap(data, 0)}
       />,
     );
@@ -142,6 +153,7 @@ export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
           size={gap}
           index={gapIndex}
           isActive={activeGapIndex === gapIndex}
+          accepts={accepts}
           onDrop={(data) => handleDropInGap(data, gapIndex)}
         />,
       );
@@ -159,6 +171,7 @@ export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
       size={0}
       index={trailingIndex}
       isActive={activeGapIndex === trailingIndex}
+      accepts={accepts}
       onDrop={(data) => handleDropInGap(data, trailingIndex)}
     />,
   );
@@ -205,6 +218,12 @@ export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
   // Activates the nearest edge gap to show where the drop would land.
   const handleContainerDragOver = useCallback(
     (event: React.DragEvent) => {
+      // Ignore drags without an accepted data type, letting them
+      // fall through to ancestor drop targets
+      if (accepts && !dragContainsType(event, accepts)) {
+        return;
+      }
+
       event.preventDefault();
       event.dataTransfer.dropEffect = 'move';
 
@@ -217,7 +236,7 @@ export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
 
       setActiveGapIndex(index);
     },
-    [getDropIndexFromPosition],
+    [getDropIndexFromPosition, accepts],
   );
 
   // Deactivate the active gap when the drag leaves the container
@@ -231,6 +250,11 @@ export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
   const handleContainerDrop = useCallback(
     (event: React.DragEvent) => {
       setActiveGapIndex(null);
+
+      // Let unaccepted drops bubble to ancestor drop targets
+      if (accepts && !dragContainsType(event, accepts)) {
+        return;
+      }
 
       // Only handle drops directly on the container, not
       // drops that bubbled up from gap zones
@@ -258,7 +282,7 @@ export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
         );
       }
     },
-    [id, onDrop, getDropIndexFromPosition],
+    [id, onDrop, getDropIndexFromPosition, accepts],
   );
 
   // Calculate the container style

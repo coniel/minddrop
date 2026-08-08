@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback } from 'react';
 import { DropEventData, useDraggable, useDroppable } from '@minddrop/selection';
-import { useFlexDropContainer } from '@minddrop/ui-drag-and-drop';
+import { useFlexDropGapActivation } from '@minddrop/ui-drag-and-drop';
 import { useLayoutId } from './LayoutIdContext';
 import { DesignElementsDataKey } from './constants';
 import { handleDropOnDesignElement } from './handleDropOnDesignElement';
@@ -31,8 +31,6 @@ export function useDesignElementDragDrop({
     element.type === 'container' &&
     (element as FlatContainerDesignElement).children.length === 0;
 
-  // Get the parent FlexDropContainer context for gap activation
-  const flexDropContainer = useFlexDropContainer();
   const layoutId = useLayoutId();
 
   const { draggableProps, isDragging } = useDraggable({
@@ -62,47 +60,9 @@ export function useDesignElementDragDrop({
       onDrop: handleDrop,
     });
 
-  // Track the previous position to avoid redundant context calls
-  const previousPositionRef = useRef(dropIndicatorPosition);
-
-  // Communicate before/after positions to the parent FlexDropContainer
-  // so it can activate the appropriate gap
-  useEffect(() => {
-    if (!flexDropContainer) {
-      return;
-    }
-
-    // Skip if position hasn't changed
-    if (previousPositionRef.current === dropIndicatorPosition) {
-      return;
-    }
-
-    previousPositionRef.current = dropIndicatorPosition;
-
-    if (!isDraggingOver || !dropIndicatorPosition) {
-      flexDropContainer.deactivateGap();
-
-      return;
-    }
-
-    // Map element drop position to the adjacent gap index
-    if (
-      dropIndicatorPosition === 'before' ||
-      dropIndicatorPosition === 'start'
-    ) {
-      // Activate the gap before this element
-      flexDropContainer.activateGap(index);
-    } else if (
-      dropIndicatorPosition === 'after' ||
-      dropIndicatorPosition === 'end'
-    ) {
-      // Activate the gap after this element
-      flexDropContainer.activateGap(index + 1);
-    } else {
-      // "inside" position - deactivate any active gap
-      flexDropContainer.deactivateGap();
-    }
-  }, [flexDropContainer, isDraggingOver, dropIndicatorPosition, index]);
+  // Activate the parent FlexDropContainer gap adjacent to the
+  // element's before/after drag position
+  useFlexDropGapActivation({ index, isDraggingOver, dropIndicatorPosition });
 
   // Wrap onDragStart to manually set the drag image.
   // Elements inside the design canvas (which uses CSS transform)

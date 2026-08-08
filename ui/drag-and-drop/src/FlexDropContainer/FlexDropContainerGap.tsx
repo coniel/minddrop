@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { DropEventData } from '@minddrop/selection';
+import { DropEventData, dragContainsType } from '@minddrop/selection';
 import { getTransferData } from '@minddrop/utils';
 import './FlexDropContainerGap.css';
 
@@ -31,6 +31,15 @@ interface FlexDropContainerGapProps {
   isActive?: boolean;
 
   /**
+   * The data types the gap accepts drops of. Drags not containing
+   * any accepted type are ignored, falling through to ancestor
+   * drop targets.
+   *
+   * When omitted, all drags are accepted.
+   */
+  accepts?: string[];
+
+  /**
    * Callback fired when the gap zone is dropped.
    */
   onDrop?: (data: DropEventData) => void;
@@ -42,6 +51,7 @@ export const FlexDropContainerGap: React.FC<FlexDropContainerGapProps> = ({
   size,
   index,
   isActive = false,
+  accepts,
   onDrop,
 }) => {
   // Track direct drags over this gap zone
@@ -52,12 +62,23 @@ export const FlexDropContainerGap: React.FC<FlexDropContainerGapProps> = ({
   const showLine = isDraggingOver || isActive;
 
   const handleDragOver = (event: React.DragEvent) => {
+    // Ignore drags without an accepted data type, letting them
+    // fall through to ancestor drop targets
+    if (accepts && !dragContainsType(event, accepts)) {
+      return;
+    }
+
     event.preventDefault();
     event.dataTransfer.dropEffect = 'move';
     setIsDraggingOver(true);
   };
 
   const handleDragEnter = (event: React.DragEvent) => {
+    // Ignore drags without an accepted data type
+    if (accepts && !dragContainsType(event, accepts)) {
+      return;
+    }
+
     event.preventDefault();
     setIsDraggingOver(true);
   };
@@ -74,6 +95,11 @@ export const FlexDropContainerGap: React.FC<FlexDropContainerGapProps> = ({
   };
 
   const handleDrop = (event: React.DragEvent) => {
+    // Let unaccepted drops bubble to ancestor drop targets
+    if (accepts && !dragContainsType(event, accepts)) {
+      return;
+    }
+
     event.preventDefault();
     event.stopPropagation();
 

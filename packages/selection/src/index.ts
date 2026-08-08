@@ -5,6 +5,7 @@ export * from './useDroppable';
 export * from './useSelectable';
 export * from './useSelection';
 export * from './useSelectionItem';
+export * from './utils/dragContainsType';
 export * from './utils/toMimeType';
 export * as SelectionFixtures from './test-utils/fixtures';
 export * as Selection from './Selection';

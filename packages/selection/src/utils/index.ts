@@ -1,4 +1,5 @@
 export * from './containsSelectionItem';
+export * from './dragContainsType';
 export * from './dedupeSelectionItemsArray';
 export * from './groupSelectionItemsByType';
 export * from './serializeSelectionToDataTransfer';

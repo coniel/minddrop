@@ -1,6 +1,7 @@
 import { useCallback, useRef, useState } from 'react';
 import { getTransferData } from '@minddrop/utils';
 import { DropEventData, DropIndicatorPosition, DropPosition } from '../types';
+import { dragContainsType } from '../utils';
 
 type Axis = 'horizontal' | 'vertical' | 'container';
 
@@ -68,6 +69,16 @@ interface UseDroppableOptions {
    * @default false
    */
   isLastChild?: boolean;
+
+  /**
+   * The data types the element accepts drops of. Drags not
+   * containing any accepted type are ignored entirely, falling
+   * through to ancestor drop targets. Accepted drags are claimed,
+   * preventing ancestor drop targets from reacting to them.
+   *
+   * When omitted, all drags are accepted without being claimed.
+   */
+  accepts?: string[];
 }
 
 interface UseDroppableReturn {
@@ -133,6 +144,7 @@ export function useDroppable(options: UseDroppableOptions): UseDroppableReturn {
     enableInside = false,
     edgeThreshold = 0.25,
     isLastChild = false,
+    accepts,
   } = options;
 
   const ref = useRef<HTMLDivElement>(null);
@@ -184,7 +196,18 @@ export function useDroppable(options: UseDroppableOptions): UseDroppableReturn {
 
   const handleDragOver = useCallback(
     (e: React.DragEvent) => {
+      // Ignore drags without an accepted data type, letting them
+      // fall through to ancestor drop targets
+      if (accepts && !dragContainsType(e, accepts)) {
+        return;
+      }
+
       e.preventDefault();
+
+      // Claim the drag so ancestor drop targets do not react to it
+      if (accepts) {
+        e.stopPropagation();
+      }
 
       const dropPosition = getDropPosition(e);
 
@@ -215,11 +238,16 @@ export function useDroppable(options: UseDroppableOptions): UseDroppableReturn {
         });
       }
     },
-    [getDropPosition, index, isLastChild],
+    [getDropPosition, index, isLastChild, accepts],
   );
 
   const handleDrop = useCallback(
     (e: React.DragEvent) => {
+      // Let unaccepted drops bubble to ancestor drop targets
+      if (accepts && !dragContainsType(e, accepts)) {
+        return;
+      }
+
       e.preventDefault();
       e.stopPropagation();
 
@@ -241,13 +269,21 @@ export function useDroppable(options: UseDroppableOptions): UseDroppableReturn {
         });
       }
     },
-    [getDropPosition, onDrop],
+    [getDropPosition, onDrop, accepts],
   );
 
-  const handleDragEnter = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    // Don't set state here - let dragOver handle it to avoid extra renders
-  }, []);
+  const handleDragEnter = useCallback(
+    (e: React.DragEvent) => {
+      // Ignore drags without an accepted data type
+      if (accepts && !dragContainsType(e, accepts)) {
+        return;
+      }
+
+      e.preventDefault();
+      // Don't set state here - let dragOver handle it to avoid extra renders
+    },
+    [accepts],
+  );
 
   const handleDragLeave = useCallback((e: React.DragEvent) => {
     e.preventDefault();
