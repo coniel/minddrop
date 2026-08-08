@@ -1,0 +1,74 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Page not found"
+  description="The page you were looking for is not here."
+>
+  <section class="page missing">
+    <p class="missing-code">404</p>
+
+    <h1 class="missing-title">This page is not here</h1>
+
+    <p class="missing-lede">
+      The link may be out of date, or the address may have a typo in it.
+    </p>
+
+    <div class="missing-actions">
+      <a class="button button-primary" href="/">Back to the home page</a>
+      <a class="button missing-action" href="/blog">Read the blog</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* Centred in the window rather than sitting under the header alone */
+  .missing {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    padding-block: var(--space-9);
+    text-align: center;
+  }
+
+  .missing-code {
+    font-family: var(--font-ui);
+    font-size: var(--step-1);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+  }
+
+  .missing-title {
+    margin-block-start: var(--space-4);
+    font-size: var(--step-4);
+  }
+
+  .missing-lede {
+    max-width: var(--measure);
+    margin-block-start: var(--space-4);
+    font-size: var(--step-1);
+    color: var(--ink-muted);
+  }
+
+  .missing-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-3);
+    margin-block-start: var(--space-7);
+  }
+
+  /* Bordered rather than ghost, the two reading as a pair of options */
+  .missing-action {
+    border-color: var(--rule);
+    color: var(--ink);
+  }
+
+  .missing-action:hover {
+    background: var(--surface-hover);
+  }
+</style>
