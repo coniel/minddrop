@@ -236,3 +236,13 @@ pre-translated or dynamic text as a string either fails the type check
 or double-translates. Pass the raw `TranslationKey` when there is one;
 wrap already-built strings in a fragment (`<>{value}</>`) to render
 them as-is.
+
+### `printKeyboardShortcut` has no key separator on non-Mac platforms
+
+`printKeyboardShortcut` (used by `KeyboardShortcut` and Tooltip
+shortcuts) substitutes symbols and joins without a separator on Mac
+(`⇧⏎`), but on other platforms it joins the raw key names as-is, so
+`['Shift', 'Enter']` renders as "ShiftEnter". Multi-key shortcuts
+therefore look broken outside Mac. A real fix means joining with `+`
+(or similar) in the non-Mac branch; until then, avoid multi-key
+shortcuts in always-visible UI text where the mangling is prominent.
