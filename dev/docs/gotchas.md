@@ -115,6 +115,40 @@ hundreds of mounted entries would re-render on every studio edit
 ever wanted, use a per-ID selector subscription (only re-render when
 the specific layout's reference changes), not the all-designs hooks.
 
+## packages/editor
+
+### Block IDs are session scoped and never reach the markdown
+
+`withBlockIds` gives every top level block an `id`, but the content is
+stored as markdown, which has nowhere to put it. The IDs are minted when
+the markdown is parsed and are regenerated from scratch on every load, so
+they are only good for in-session concerns (hover tracking, selection
+sets, drag payloads, React keys). Anything that has to survive a reload —
+block links, anchors, per-block comments — cannot be built on them.
+
+IDs stay out of the markdown because each element type's `toMarkdown`
+reads only the properties it needs, so nothing enforces it: a
+serializer which stringifies whole elements would leak them.
+
+### The block gutter is portalled and positioned against the viewport
+
+`BlockGutter` renders into `document.body` and positions itself with
+`position: fixed` from the hovered block's viewport rect, because the
+editor is routinely rendered inside a container which clips its overflow
+(cards, panels, views). Positioning it within the editor meant those
+ancestors clipped it away entirely.
+
+Two consequences. Viewport coordinates go stale on scroll, so
+`useHoveredBlock` drops the hovered block on any scroll and re-measures
+on the next pointer move — the controls briefly disappear when scrolling
+with the pointer held still. And where the editor has no margin of its
+own, the controls are drawn over whatever sits beside it, which is why
+they carry their own surface and shadow.
+
+Note that React portals still propagate events up the React tree, not
+the DOM tree, so the gutter's clicks reach the editor's ancestors
+despite living in the body. It stops propagation itself for that reason.
+
 ## packages/stores
 
 ### `Events._clearAll()` breaks store hydration for the rest of a test run

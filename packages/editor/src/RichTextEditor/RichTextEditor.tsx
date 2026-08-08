@@ -1,19 +1,23 @@
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
-import { Descendant } from 'slate';
+import { Descendant, Path, Editor as SlateEditor } from 'slate';
 import { HistoryEditor } from 'slate-history';
 import { Editable, ReactEditor, RenderElementProps, Slate } from 'slate-react';
 import { useDebouncedCallback } from 'use-debounce';
 import { Ast, Element } from '@minddrop/ast';
 import { isUntitledTitle } from '@minddrop/utils';
 import { EditorBlockElementConfigsStore } from '../BlockElementTypeConfigsStore';
+import { BlockGutter, BlockInsertPosition } from '../BlockGutter';
 import { BlockMenu } from '../BlockMenu';
 import { EditorInlineElementConfigsStore } from '../InlineElementTypeConfigsStore';
 import { MarkConfigsStore } from '../MarkConfigsStore';
+import { Transforms } from '../Transforms';
 import { defaultMarkConfigs } from '../default-mark-configs';
 import { insertTrailingParagraph } from '../insertTrailingParagraph';
 import { BlockElementProps } from '../types';
 import { useBlockMenu } from '../useBlockMenu';
+import { useHoveredBlock } from '../useHoveredBlock';
 import { createEditor, createRenderElement } from '../utils';
+import { assignBlockIds, withBlockIds } from '../withBlockIds';
 import { withBlockReset } from '../withBlockReset';
 import { withBlockShortcuts } from '../withBlockShortcuts';
 import { withMarkHotkeys } from '../withMarkHotkeys';
@@ -130,6 +134,8 @@ export const RichTextEditor: React.FC<EditorProps> = ({
 }) => {
   const editor = useMemo(() => createEditor(), []);
   const editorRef = useRef(editor);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const blockGutterRef = useRef<HTMLDivElement>(null);
 
   // Whether the title feature is enabled, captured on mount since
   // the Slate document is uncontrolled and cannot gain or lose the
@@ -143,30 +149,33 @@ export const RichTextEditor: React.FC<EditorProps> = ({
   // render empty so a name can be typed straight away.
   const displayTitle = titleIsUntitled ? '' : title;
 
-  // Seed the document with the title element as its first node
+  // Seed the document with the title element as its first node,
+  // giving every block an ID before the first render.
   const seededInitialValue = useMemo(() => {
     if (!hasTitle) {
-      return initialValue;
+      return assignBlockIds(initialValue);
     }
 
-    return [
+    return assignBlockIds([
       Ast.generateElement<TitleElement>(TITLE_ELEMENT_TYPE, {
         children: [{ text: displayTitle ?? '' }],
       }),
       ...initialValue,
-    ];
+    ]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const [editorWithMarks, renderLeaf] = useMemo(
     () =>
       withMarks(
-        withBlockReset(
-          withBlockShortcuts(
-            withReturnBehaviour(editor),
-            EditorBlockElementConfigsStore.getAll(),
+        withBlockIds(
+          withBlockReset(
+            withBlockShortcuts(
+              withReturnBehaviour(editor),
+              EditorBlockElementConfigsStore.getAll(),
+            ),
+            'paragraph',
           ),
-          'paragraph',
         ),
         MarkConfigsStore.getAllArray(),
       ),
@@ -190,6 +199,12 @@ export const RichTextEditor: React.FC<EditorProps> = ({
     handleKeyDown: handleBlockMenuKeyDown,
     handleChange: handleBlockMenuChange,
   } = useBlockMenu(editorWithPlugins);
+  const { hoveredBlock, clearHoveredBlock } = useHoveredBlock(
+    editorWithPlugins,
+    containerRef,
+    blockGutterRef,
+    !readOnly,
+  );
 
   // Untitled titles are shown as the placeholder instead of as content
   const resolvedTitlePlaceholder = titleIsUntitled ? title : titlePlaceholder;
@@ -321,6 +336,45 @@ export const RichTextEditor: React.FC<EditorProps> = ({
     [editorWithPlugins, readOnly],
   );
 
+  // Inserts an empty paragraph next to the hovered block, ready to
+  // be typed into.
+  const handleInsertBlock = useCallback(
+    (position: BlockInsertPosition) => {
+      // The button is only rendered while a block is hovered
+      if (!hoveredBlock) {
+        return;
+      }
+
+      // The button keeps the cursor but not the DOM focus, which
+      // typing into the inserted block needs. Focus is taken before
+      // the insertion because Slate defers it while the editor has
+      // operations pending.
+      ReactEditor.focus(editorWithPlugins);
+
+      // Inserting at the hovered block's own path pushes it down,
+      // leaving the new block above it.
+      const path =
+        position === 'above' ? hoveredBlock.path : Path.next(hoveredBlock.path);
+
+      Transforms.insertNodes(
+        editorWithPlugins,
+        Ast.generateElement('paragraph'),
+        { at: path },
+      );
+
+      // Place the cursor in the inserted block
+      Transforms.select(
+        editorWithPlugins,
+        SlateEditor.start(editorWithPlugins, path),
+      );
+
+      // The controls point at the block which was hovered, which
+      // has now moved, and the attention is on the new block.
+      clearHoveredBlock();
+    },
+    [editorWithPlugins, hoveredBlock, clearHoveredBlock],
+  );
+
   useEffect(() => {
     if (autoFocus) {
       ReactEditor.focus(editorRef.current);
@@ -381,18 +435,27 @@ export const RichTextEditor: React.FC<EditorProps> = ({
       onChange={handleChange}
     >
       <TitleContext.Provider value={titleContextValue}>
-        <Editable
-          autoFocus={false}
-          readOnly={readOnly}
-          className="editor"
-          style={style}
-          renderElement={renderElement}
-          renderLeaf={renderLeaf}
-          onKeyDown={onKeyDown}
-          onClick={handleClick}
-          onFocus={onFocus}
-          onBlur={handleBlur}
-        />
+        <div ref={containerRef} className="editor-container">
+          <Editable
+            autoFocus={false}
+            readOnly={readOnly}
+            className="editor"
+            style={style}
+            renderElement={renderElement}
+            renderLeaf={renderLeaf}
+            onKeyDown={onKeyDown}
+            onClick={handleClick}
+            onFocus={onFocus}
+            onBlur={handleBlur}
+          />
+
+          {/* Controls acting on the hovered block */}
+          <BlockGutter
+            block={hoveredBlock}
+            controlsRef={blockGutterRef}
+            onInsert={handleInsertBlock}
+          />
+        </div>
 
         {/* Block insertion menu */}
         <BlockMenu {...blockMenuProps} />

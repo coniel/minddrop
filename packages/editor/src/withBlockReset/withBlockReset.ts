@@ -42,10 +42,10 @@ export function withBlockReset(
       // Convert the element to the default type
       const converted = convertElement(element, defaultType);
 
-      // Unset the current element data other than type
+      // Unset the current element data other than type and ID
       Transforms.unsetNodes(
         editor,
-        Object.keys(element).filter((key) => key !== 'type'),
+        Object.keys(element).filter((key) => key !== 'id' && key !== 'type'),
       );
 
       // Set the converted element data

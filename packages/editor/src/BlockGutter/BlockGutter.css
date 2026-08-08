@@ -1,0 +1,11 @@
+.editor-block-gutter {
+  position: fixed;
+  /* Sits to the left of the block, which the left offset marks
+     the start of */
+  transform: translateX(-100%);
+  z-index: var(--level-popover);
+  display: flex;
+  align-items: center;
+  padding-right: var(--space-1);
+  user-select: none;
+}

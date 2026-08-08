@@ -973,6 +973,9 @@
     }
   },
   "editor": {
+    "blockGutter": {
+      "insert": "Insert block"
+    },
     "blockMenu": {
       "hint": "Type to filter"
     },

@@ -1,3 +1,15 @@
+.editor-container {
+  /* Positions the block controls against the content */
+  position: relative;
+  /* Passes the height given to the container on to the editable
+     area, so that consumers sizing the editor still get an
+     editable which fills it. */
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
 .editor {
   display: flex;
   flex-direction: column;

@@ -997,6 +997,9 @@ declare module 'i18next' {
           };
         };
         editor: {
+          blockGutter: {
+            insert: string;
+          };
           blockMenu: {
             hint: string;
           };
