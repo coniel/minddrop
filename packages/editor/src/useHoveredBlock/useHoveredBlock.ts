@@ -8,6 +8,11 @@ import { TITLE_ELEMENT_TYPE } from '../withTitle';
 // Used when a block's line height cannot be measured
 const FALLBACK_LINE_HEIGHT = 24;
 
+// How long the pointer must stay inside the editor before blocks
+// are exposed, keeping the controls from flashing up while the
+// pointer merely passes over the editor
+export const ACTIVATION_DELAY = 700;
+
 export interface HoveredBlock {
   /**
    * The hovered top level block element.
@@ -38,7 +43,8 @@ export interface HoveredBlock {
 
 export interface UseHoveredBlock {
   /**
-   * The block under the pointer, or null if no block is hovered.
+   * The block under the pointer, or null if no block is hovered or
+   * the activation delay has not yet passed.
    */
   hoveredBlock: HoveredBlock | null;
 
@@ -63,6 +69,11 @@ export interface UseHoveredBlock {
  * well as on typing and scrolling, both of which move the content
  * out from under the measured position.
  *
+ * Blocks are only exposed once the pointer has rested inside the
+ * editor for a moment, so that the controls do not flash up on
+ * every editor the pointer passes over. Once past the delay,
+ * tracking is instant until the pointer leaves the editor.
+ *
  * @param editor An editor instance.
  * @param containerRef A ref to the element containing the editor.
  * @param controlsRef A ref to the element containing the block controls.
@@ -76,6 +87,14 @@ export function useHoveredBlock(
   enabled: boolean,
 ): UseHoveredBlock {
   const [hoveredBlock, setHoveredBlock] = useState<HoveredBlock | null>(null);
+
+  // Whether the activation delay has passed. Blocks are tracked
+  // regardless, but only exposed once active, so that a block the
+  // pointer is resting on appears the moment the delay runs out.
+  const [active, setActive] = useState(false);
+
+  // The pending activation timer, if the delay is counting down
+  const activationTimerRef = useRef<number | null>(null);
 
   // The DOM node the current position was measured from, used to
   // recognise the pointer still being over the same block. Measuring
@@ -91,6 +110,34 @@ export function useHoveredBlock(
     measuredNodeRef.current = null;
 
     setHoveredBlock(null);
+  }, []);
+
+  // Begins counting down to activation, unless already active or
+  // already counting
+  const startActivation = useCallback(() => {
+    // Nothing to do once active or while a countdown is pending
+    if (active || activationTimerRef.current !== null) {
+      return;
+    }
+
+    // Activate once the delay has passed
+    activationTimerRef.current = window.setTimeout(() => {
+      activationTimerRef.current = null;
+
+      setActive(true);
+    }, ACTIVATION_DELAY);
+  }, [active]);
+
+  // Deactivates and stops any pending countdown, so that the next
+  // visit to the editor waits out the delay again
+  const cancelActivation = useCallback(() => {
+    // Stop a pending countdown
+    if (activationTimerRef.current !== null) {
+      window.clearTimeout(activationTimerRef.current);
+      activationTimerRef.current = null;
+    }
+
+    setActive(false);
   }, []);
 
   const handlePointerDown = useCallback(
@@ -137,16 +184,23 @@ export function useHoveredBlock(
         return;
       }
 
-      // Still over the block the controls already point at, which
-      // the rest of the work would only arrive back at.
-      if (measuredNodeRef.current?.contains(target)) {
+      // Stop tracking once the pointer is elsewhere on the page.
+      // Leaving also deactivates, so the next visit to the editor
+      // waits out the activation delay again.
+      if (!container.contains(target)) {
+        cancelActivation();
+        clearHoveredBlock();
+
         return;
       }
 
-      // Stop tracking once the pointer is elsewhere on the page
-      if (!container.contains(target)) {
-        clearHoveredBlock();
+      // The pointer is inside the editor, so begin counting down to
+      // activation
+      startActivation();
 
+      // Still over the block the controls already point at, which
+      // the rest of the work would only arrive back at.
+      if (measuredNodeRef.current?.contains(target)) {
         return;
       }
 
@@ -177,7 +231,14 @@ export function useHoveredBlock(
         lineHeight: getLineHeight(block.domNode),
       });
     },
-    [editor, containerRef, controlsRef, clearHoveredBlock],
+    [
+      editor,
+      containerRef,
+      controlsRef,
+      clearHoveredBlock,
+      startActivation,
+      cancelActivation,
+    ],
   );
 
   // Stop tracking when disabled, e.g. in a read-only editor
@@ -185,6 +246,7 @@ export function useHoveredBlock(
     const container = containerRef.current;
 
     if (!container || !enabled) {
+      cancelActivation();
       setHoveredBlock(null);
 
       return;
@@ -227,10 +289,20 @@ export function useHoveredBlock(
     handlePointerDown,
     releaseControls,
     clearHoveredBlock,
+    cancelActivation,
   ]);
 
+  // Drop any pending activation countdown on unmount
+  useEffect(() => {
+    return () => {
+      if (activationTimerRef.current !== null) {
+        window.clearTimeout(activationTimerRef.current);
+      }
+    };
+  }, []);
+
   return {
-    hoveredBlock: enabled ? hoveredBlock : null,
+    hoveredBlock: enabled && active ? hoveredBlock : null,
     clearHoveredBlock,
   };
 }

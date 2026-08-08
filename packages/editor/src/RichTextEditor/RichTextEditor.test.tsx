@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Ast, Element } from '@minddrop/ast';
 import { act, fireEvent, render } from '@minddrop/test-utils';
 import {
@@ -11,6 +11,7 @@ import {
   paragraphElement2PlainText,
   setup,
 } from '../test-utils';
+import { ACTIVATION_DELAY } from '../useHoveredBlock';
 import { RichTextEditor } from './RichTextEditor';
 
 // The accessible labels of the block gutter's buttons
@@ -24,10 +25,29 @@ const actFlush = (interaction: () => void) =>
     interaction();
   });
 
-describe('RichTextEditor block gutter', () => {
-  beforeEach(setup);
+// Moves the pointer over an element and waits out the gutter's
+// activation delay, after which its controls are shown
+const hoverBlock = (element: HTMLElement) => {
+  fireEvent.pointerMove(element);
 
-  afterEach(cleanup);
+  act(() => {
+    vi.advanceTimersByTime(ACTIVATION_DELAY);
+  });
+};
+
+describe('RichTextEditor block gutter', () => {
+  beforeEach(() => {
+    setup();
+
+    // The gutter's activation delay is driven by a timer
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+
+    cleanup();
+  });
 
   // Renders an editor and collects the values it emits
   const renderEditor = (readOnly = false) => {
@@ -50,7 +70,7 @@ describe('RichTextEditor block gutter', () => {
     // No block is hovered yet
     expect(queryByLabelText(INSERT_LABEL)).toBeNull();
 
-    fireEvent.pointerMove(getByText(paragraphElement1PlainText));
+    hoverBlock(getByText(paragraphElement1PlainText));
 
     expect(queryByLabelText(INSERT_LABEL)).not.toBeNull();
   });
@@ -58,7 +78,7 @@ describe('RichTextEditor block gutter', () => {
   it('does not show the insert button in a read-only editor', () => {
     const { getByText, queryByLabelText } = renderEditor(true);
 
-    fireEvent.pointerMove(getByText(paragraphElement1PlainText));
+    hoverBlock(getByText(paragraphElement1PlainText));
 
     expect(queryByLabelText(INSERT_LABEL)).toBeNull();
   });
@@ -66,7 +86,7 @@ describe('RichTextEditor block gutter', () => {
   it('inserts a block below the hovered block', async () => {
     const { getByText, getByLabelText, changeValues } = renderEditor();
 
-    fireEvent.pointerMove(getByText(paragraphElement1PlainText));
+    hoverBlock(getByText(paragraphElement1PlainText));
 
     await actFlush(() => {
       fireEvent.click(getByLabelText(INSERT_LABEL));
@@ -83,7 +103,7 @@ describe('RichTextEditor block gutter', () => {
   it('inserts above the hovered block when shift clicked', async () => {
     const { getByText, getByLabelText, changeValues } = renderEditor();
 
-    fireEvent.pointerMove(getByText(headingElement1PlainText));
+    hoverBlock(getByText(headingElement1PlainText));
 
     await actFlush(() => {
       fireEvent.click(getByLabelText(INSERT_LABEL), { shiftKey: true });
@@ -100,7 +120,7 @@ describe('RichTextEditor block gutter', () => {
   it('hides the insert button once a block has been inserted', async () => {
     const { getByText, getByLabelText, queryByLabelText } = renderEditor();
 
-    fireEvent.pointerMove(getByText(paragraphElement1PlainText));
+    hoverBlock(getByText(paragraphElement1PlainText));
 
     await actFlush(() => {
       fireEvent.click(getByLabelText(INSERT_LABEL));
@@ -112,7 +132,7 @@ describe('RichTextEditor block gutter', () => {
   it('hides the insert button while typing', () => {
     const { getByText, queryByLabelText } = renderEditor();
 
-    fireEvent.pointerMove(getByText(paragraphElement1PlainText));
+    hoverBlock(getByText(paragraphElement1PlainText));
     fireEvent.keyDown(getByText(paragraphElement1PlainText), { key: 'a' });
 
     expect(queryByLabelText(INSERT_LABEL)).toBeNull();
@@ -121,7 +141,7 @@ describe('RichTextEditor block gutter', () => {
   it('inserts an empty block', async () => {
     const { getByText, getByLabelText, changeValues } = renderEditor();
 
-    fireEvent.pointerMove(getByText(paragraphElement1PlainText));
+    hoverBlock(getByText(paragraphElement1PlainText));
 
     await actFlush(() => {
       fireEvent.click(getByLabelText(INSERT_LABEL));
@@ -135,7 +155,7 @@ describe('RichTextEditor block gutter', () => {
   it('gives the inserted block its own ID', async () => {
     const { getByText, getByLabelText, changeValues } = renderEditor();
 
-    fireEvent.pointerMove(getByText(paragraphElement1PlainText));
+    hoverBlock(getByText(paragraphElement1PlainText));
 
     await actFlush(() => {
       fireEvent.click(getByLabelText(INSERT_LABEL));
@@ -150,9 +170,18 @@ describe('RichTextEditor block gutter', () => {
 });
 
 describe('RichTextEditor block drag and drop', () => {
-  beforeEach(setup);
+  beforeEach(() => {
+    setup();
 
-  afterEach(cleanup);
+    // The gutter's activation delay is driven by a timer
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+
+    cleanup();
+  });
 
   // Renders an editor and collects the values it emits. Blocks have
   // no size in jsdom, so every drop point resolves to the top of the
@@ -191,7 +220,7 @@ describe('RichTextEditor block drag and drop', () => {
     const { getByText, getByLabelText, baseElement } = renderEditor();
     const dataTransfer = createDataTransfer();
 
-    fireEvent.pointerMove(getByText(paragraphElement1PlainText));
+    hoverBlock(getByText(paragraphElement1PlainText));
     fireEvent.dragStart(getByLabelText(SELECT_LABEL), { dataTransfer });
 
     expect(
@@ -214,7 +243,7 @@ describe('RichTextEditor block drag and drop', () => {
 
     // Drag the first paragraph over the heading, which drops it
     // between the second paragraph and the heading
-    fireEvent.pointerMove(getByText(paragraphElement1PlainText));
+    hoverBlock(getByText(paragraphElement1PlainText));
     fireEvent.dragStart(getByLabelText(SELECT_LABEL), { dataTransfer });
     fireEvent.dragOver(getByText(headingElement1PlainText), { dataTransfer });
 
@@ -237,7 +266,7 @@ describe('RichTextEditor block drag and drop', () => {
     const dataTransfer = createDataTransfer();
 
     // Dropping above the block below it leaves it where it is
-    fireEvent.pointerMove(getByText(paragraphElement1PlainText));
+    hoverBlock(getByText(paragraphElement1PlainText));
     fireEvent.dragStart(getByLabelText(SELECT_LABEL), { dataTransfer });
     fireEvent.dragOver(getByText(paragraphElement2PlainText), { dataTransfer });
 
@@ -257,7 +286,7 @@ describe('RichTextEditor block drag and drop', () => {
     const { getByText, getByLabelText, baseElement } = renderEditor();
     const dataTransfer = createDataTransfer();
 
-    fireEvent.pointerMove(getByText(paragraphElement1PlainText));
+    hoverBlock(getByText(paragraphElement1PlainText));
     fireEvent.dragStart(getByLabelText(SELECT_LABEL), { dataTransfer });
     fireEvent.dragOver(getByText(headingElement1PlainText), {
       dataTransfer,
@@ -290,9 +319,18 @@ describe('RichTextEditor block drag and drop', () => {
 });
 
 describe('RichTextEditor block selection', () => {
-  beforeEach(setup);
+  beforeEach(() => {
+    setup();
 
-  afterEach(cleanup);
+    // The gutter's activation delay is driven by a timer
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+
+    cleanup();
+  });
 
   // Renders an editor holding a paragraph and a heading
   const renderEditor = () =>
@@ -307,7 +345,7 @@ describe('RichTextEditor block selection', () => {
   it('selects the block when its handle is clicked', async () => {
     const { getByText, getByLabelText } = renderEditor();
 
-    fireEvent.pointerMove(getByText(paragraphElement1PlainText));
+    hoverBlock(getByText(paragraphElement1PlainText));
 
     await actFlush(() => {
       fireEvent.click(getByLabelText(SELECT_LABEL));
@@ -320,7 +358,7 @@ describe('RichTextEditor block selection', () => {
   it('opens the actions menu from the handle', async () => {
     const { getByText, getByLabelText, queryByText } = renderEditor();
 
-    fireEvent.pointerMove(getByText(paragraphElement1PlainText));
+    hoverBlock(getByText(paragraphElement1PlainText));
 
     expect(queryByText('Duplicate')).toBeNull();
 
@@ -335,7 +373,7 @@ describe('RichTextEditor block selection', () => {
     const { getByText, getByLabelText, queryByLabelText, baseElement } =
       renderEditor();
 
-    fireEvent.pointerMove(getByText(paragraphElement1PlainText));
+    hoverBlock(getByText(paragraphElement1PlainText));
 
     await actFlush(() => {
       fireEvent.click(getByLabelText(SELECT_LABEL));
@@ -360,7 +398,7 @@ describe('RichTextEditor block selection', () => {
       paragraphElement1PlainText,
     );
 
-    fireEvent.pointerMove(firstEditorBlock);
+    hoverBlock(firstEditorBlock);
 
     await actFlush(() => {
       fireEvent.click(getAllByLabelText(SELECT_LABEL)[0]);
@@ -374,7 +412,7 @@ describe('RichTextEditor block selection', () => {
       fireEvent.keyDown(document.body, { key: 'Escape' });
     });
 
-    fireEvent.pointerMove(secondEditorBlock);
+    hoverBlock(secondEditorBlock);
 
     await actFlush(() => {
       fireEvent.click(getAllByLabelText(SELECT_LABEL)[0]);
@@ -389,7 +427,7 @@ describe('RichTextEditor block selection', () => {
   it('extends the selection when a handle is shift clicked', async () => {
     const { getByText, getByLabelText } = renderEditor();
 
-    fireEvent.pointerMove(getByText(paragraphElement1PlainText));
+    hoverBlock(getByText(paragraphElement1PlainText));
 
     await actFlush(() => {
       fireEvent.click(getByLabelText(SELECT_LABEL));

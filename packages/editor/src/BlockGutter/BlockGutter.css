@@ -20,6 +20,7 @@
 }
 
 .editor-block-gutter-handle {
+  cursor: grab;
   /* WebKit refuses to start a drag on an element which cannot be
      selected, which the gutter's controls otherwise are */
   user-select: auto;
