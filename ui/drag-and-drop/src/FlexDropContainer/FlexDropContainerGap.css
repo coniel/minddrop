@@ -4,6 +4,14 @@
   position: relative;
 }
 
+/* Animates the gap making room for the dragged element when
+   expansion is enabled */
+.flex-drop-gap-expandable {
+  transition:
+    width var(--duration-normal) var(--ease-default),
+    height var(--duration-normal) var(--ease-default);
+}
+
 /* Line indicating the drop location within the active gap */
 .flex-drop-gap-line {
   position: absolute;
