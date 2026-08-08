@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import { DropEventData, useDraggable, useDroppable } from '@minddrop/selection';
 import { useFlexDropGapActivation } from '@minddrop/ui-drag-and-drop';
+import { setDragPreview } from '@minddrop/utils';
 import { useLayoutId } from './LayoutIdContext';
 import { DesignElementsDataKey } from './constants';
 import { handleDropOnDesignElement } from './handleDropOnDesignElement';
@@ -64,32 +65,14 @@ export function useDesignElementDragDrop({
   // element's before/after drag position
   useFlexDropGapActivation({ index, isDraggingOver, dropIndicatorPosition });
 
-  // Wrap onDragStart to manually set the drag image.
+  // Wrap onDragStart to manually set the drag preview.
   // Elements inside the design canvas (which uses CSS transform)
   // don't get a browser-generated drag ghost.
   const onDragStart = useCallback(
     (event: React.DragEvent) => {
       draggableProps.onDragStart(event);
 
-      const target = event.currentTarget as HTMLElement;
-      const rect = target.getBoundingClientRect();
-
-      const clone = target.cloneNode(true) as HTMLElement;
-
-      clone.style.width = `${rect.width}px`;
-      clone.style.position = 'fixed';
-      clone.style.top = '-9999px';
-      clone.style.left = '-9999px';
-      document.body.appendChild(clone);
-
-      const offsetX = event.clientX - rect.left;
-      const offsetY = event.clientY - rect.top;
-
-      event.dataTransfer.setDragImage(clone, offsetX, offsetY);
-
-      requestAnimationFrame(() => {
-        document.body.removeChild(clone);
-      });
+      setDragPreview(event, event.currentTarget);
     },
     [draggableProps],
   );

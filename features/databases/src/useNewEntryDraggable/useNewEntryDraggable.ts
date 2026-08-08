@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { DatabaseId } from '@minddrop/databases';
 import { toMimeType } from '@minddrop/selection';
+import { setDragPreview } from '@minddrop/utils';
 import { NewDatabaseEntriesDataKey } from '../constants';
 
 export interface NewEntryDragUtils {
@@ -47,6 +48,10 @@ export function useNewEntryDraggable(
         toMimeType(NewDatabaseEntriesDataKey),
         JSON.stringify([databaseId]),
       );
+
+      // Set the drag preview explicitly, since the browser
+      // generated preview fails inside transformed ancestors
+      setDragPreview(event, event.currentTarget);
 
       setIsDragging(true);
     },

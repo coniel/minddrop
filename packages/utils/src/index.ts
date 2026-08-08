@@ -23,6 +23,7 @@ export * from './isUrl';
 export * from './isValidUrl';
 export * from './parseDateOrNow';
 export * from './reorderArray';
+export * from './setDragPreview';
 export * from './validateDirName';
 export * from './restoreDates';
 export * from './throttle';

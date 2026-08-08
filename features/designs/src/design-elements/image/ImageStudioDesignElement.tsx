@@ -4,6 +4,7 @@ import { Layouts, getPlaceholderMediaDirPath } from '@minddrop/designs';
 import { Fs } from '@minddrop/file-system';
 import { FilePropertySupportedFileExtensions } from '@minddrop/properties';
 import { Selection } from '@minddrop/selection';
+import { setDragPreview } from '@minddrop/utils';
 import { PlaceholderImageDialog } from '../../style-editors/PlaceholderImageField/PlaceholderImageDialog';
 import { FlatImageElement } from '../../types';
 import { setElementImage } from '../../utils';
@@ -159,26 +160,10 @@ export const ImageStudioDesignElement: React.FC<
       // Find the actual img element and use it as the drag image
       const imgElement = document.querySelector(
         `img[data-element-id="${elementId}"]`,
-      ) as HTMLElement | null;
+      );
 
       if (imgElement) {
-        const rect = imgElement.getBoundingClientRect();
-        const clone = imgElement.cloneNode(true) as HTMLElement;
-
-        clone.setAttribute(
-          'style',
-          `width: ${rect.width}px !important; height: ${rect.height}px !important; position: fixed; top: -9999px; left: -9999px;`,
-        );
-        document.body.appendChild(clone);
-
-        const offsetX = event.clientX - rect.left;
-        const offsetY = event.clientY - rect.top;
-
-        event.dataTransfer.setDragImage(clone, offsetX, offsetY);
-
-        requestAnimationFrame(() => {
-          document.body.removeChild(clone);
-        });
+        setDragPreview(event, imgElement);
       }
     },
     [originalOnDragStart, elementId],

@@ -15,6 +15,7 @@ import { useTranslation } from '@minddrop/i18n';
 import { PropertyValue } from '@minddrop/properties';
 import { useDraggable } from '@minddrop/selection';
 import { Text, TransientViewStateScope } from '@minddrop/ui-primitives';
+import { setDragPreview } from '@minddrop/utils';
 import { DatabaseEntriesDataKey } from '../constants';
 import {
   OpenDatabaseEntryViewEvent,
@@ -197,6 +198,20 @@ const Entry: React.FC<EntryProps> = ({
     );
   }, [entry.id, onClick]);
 
+  // Set the card itself as the drag preview, since the drag starts
+  // from the invisible drag handle
+  const onDragHandleDragStart = useCallback(
+    (event: React.DragEvent<HTMLDivElement>) => {
+      draggableProps.onDragStart(event);
+
+      // The handle's parent is the card root element
+      if (event.currentTarget.parentElement) {
+        setDragPreview(event, event.currentTarget.parentElement);
+      }
+    },
+    [draggableProps],
+  );
+
   // Handle keyboard activation (Enter/Space) for accessibility
   const onKeyDown = useCallback(
     (event: React.KeyboardEvent) => {
@@ -242,7 +257,11 @@ const Entry: React.FC<EntryProps> = ({
       >
         {/* Invisible drag bar along the top edge of the card */}
         {showDragHandle && (
-          <div className="database-entry-drag-handle" {...draggableProps} />
+          <div
+            className="database-entry-drag-handle"
+            {...draggableProps}
+            onDragStart={onDragHandleDragStart}
+          />
         )}
 
         <Text truncate>{entry.title}</Text>
@@ -261,7 +280,11 @@ const Entry: React.FC<EntryProps> = ({
     >
       {/* Invisible drag bar along the top edge of the card */}
       {showDragHandle && (
-        <div className="database-entry-drag-handle" {...draggableProps} />
+        <div
+          className="database-entry-drag-handle"
+          {...draggableProps}
+          onDragStart={onDragHandleDragStart}
+        />
       )}
 
       <TransientViewStateScope segment={entry.id}>
