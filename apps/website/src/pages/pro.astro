@@ -1,5 +1,6 @@
 ---
 import AppWindow from '../components/AppWindow.astro';
+import Faq from '../components/Faq.astro';
 import FeatureCards, {
   type FeatureCard,
 } from '../components/FeatureCards.astro';
@@ -161,7 +162,7 @@ const aiCards: FeatureCard[] = [
       {
         name: 'Your choice of model',
         description:
-          'MindDrop uses several providers behind the scenes, each for what it is best at. If you would rather use your own, or a model running on your own machine, point MindDrop at it instead.',
+          'MindDrop uses several providers behind the scenes, each for what it is best at. Bring your own API key, or point it at a model running on your own machine, and it uses that instead.',
       },
     ],
   },
@@ -295,6 +296,8 @@ const aiCards: FeatureCard[] = [
       </div>
     </div>
   </section>
+
+  <Faq />
 </BaseLayout>
 
 <style>

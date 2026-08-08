@@ -1,0 +1,87 @@
+---
+/**
+ * The questions people ask before paying, shown below the price on both the
+ * pricing and Pro pages.
+ */
+
+const questions = [
+  {
+    question: 'Is the free version limited in any way?',
+    answer:
+      'No. It is the whole app, free and open source, with no time limit and nothing held back. Pro adds sync, publishing, and AI on top of it.',
+  },
+  {
+    question: 'Do I need an account?',
+    answer:
+      'Only for Pro, which needs one to sync and publish. The free version asks for nothing and works without an internet connection.',
+  },
+  {
+    question: 'What happens if I stop paying?',
+    answer:
+      'Your entries stay where they are, as plain files on your computer, and the app keeps working. Sync and any published pages carry on for 14 days after a subscription ends, then stop.',
+  },
+  {
+    question: 'How many devices can I sync?',
+    answer: 'As many as you use. There is no device limit on a subscription.',
+  },
+  {
+    question: 'Are the AI features capped?',
+    answer:
+      'They come with fair-use limits, set high enough that ordinary use will not reach them. You can also connect your own API key and use it instead.',
+  },
+  {
+    question: 'Can I get a refund?',
+    answer:
+      'Yes. Ask within 14 days of paying and you get the whole amount back.',
+  },
+];
+---
+
+<section class="page faq">
+  <h2 class="faq-title">FAQ</h2>
+
+  <div class="faq-list">
+    {
+      questions.map((question) => (
+        <article class="faq-question">
+          <h3 class="faq-question-title">{question.question}</h3>
+          <p class="faq-answer">{question.answer}</p>
+        </article>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .faq {
+    margin-block-start: var(--space-9);
+  }
+
+  .faq-title {
+    font-size: var(--step-2);
+    text-align: center;
+  }
+
+  .faq-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-6) var(--space-7);
+    margin-block-start: var(--space-7);
+  }
+
+  .faq-question-title {
+    font-size: var(--step-0);
+  }
+
+  .faq-answer {
+    margin-block-start: var(--space-3);
+    font-size: 0.875rem;
+    color: var(--ink-muted);
+  }
+
+  @media (max-width: 700px) {
+    .faq-list {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>
