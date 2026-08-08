@@ -181,7 +181,7 @@ const aiCards: FeatureCard[] = [
     </p>
 
     <div class="hero-action">
-      <a class="button button-primary" href="#get-pro">Get Pro</a>
+      <a class="button button-primary hero-button" href="#get-pro">Get Pro</a>
     </div>
 
     <p class="hero-price">$10 a month or $99 a year.</p>
@@ -320,6 +320,13 @@ const aiCards: FeatureCard[] = [
 
   .hero-action {
     margin-block-start: var(--space-6);
+  }
+
+  /* Matched to the action in the pricing panel, the two being the same offer */
+  .hero-button {
+    height: 2.75rem;
+    padding-inline: var(--space-6);
+    font-size: var(--step-0);
   }
 
   .hero-price {

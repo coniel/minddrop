@@ -18,12 +18,17 @@ const spaces: ShowcaseItem[] = [
   {
     title: 'Project hub',
     description:
-      'Tasks, notes, and deadlines for one project, with the board embedded on the page.',
+      'A board of tasks beside the project brief, with notes and deadlines a tab away.',
   },
   {
-    title: 'Reading log',
+    title: 'Media library',
     description:
-      "A gallery of what you're reading, beside your notes on the current book.",
+      'Tabs for films, shows, and books, each a wall of covers with your ratings on them.',
+  },
+  {
+    title: 'Studies',
+    description:
+      "A term's courses down one side, with lectures, readings, and assignments beside them.",
   },
   {
     title: 'Research desk',
@@ -31,29 +36,24 @@ const spaces: ShowcaseItem[] = [
       'Sources and quotes next to a live web page, so you can read and write in one place.',
   },
   {
-    title: 'Recipe book',
+    title: 'Kitchen',
     description:
-      "Recipes as a gallery, with the one you're cooking open beside it.",
-  },
-  {
-    title: 'Film log',
-    description:
-      "A wall of posters for what you've watched, with your ratings and notes.",
+      "Recipes as a gallery, the week's meals on a board, and the shopping list beside them.",
   },
   {
     title: 'Travel planner',
     description:
-      'Bookings, places, and a live map for one trip on a single page.',
+      'Bookings and places to see on a live map, with a tab for each day of the trip.',
   },
   {
-    title: 'Home dashboard',
+    title: 'Personal dashboard',
     description:
-      "Today's tasks and your recent notes, so you land somewhere useful.",
+      "Today's tasks, this week's meals, and your recent notes, so you land somewhere useful.",
   },
   {
     title: 'Job search',
     description:
-      'Applications on a board, with each posting embedded beside your notes.',
+      'Applications on a board, with interviews, contacts, and each posting alongside.',
   },
 ];
 
@@ -89,36 +89,29 @@ const databaseFeatures: TabbedFeature[] = [
     id: 'properties',
     title: 'Properties',
     description:
-      'Give every entry the same typed fields: text, dates, numbers, select options, files, and images.',
+      'Give every entry the same typed fields, from text, dates, and numbers to select options, files, links between databases, and plenty more.',
     icon: 'list',
+  },
+  {
+    id: 'templates',
+    title: 'Entry templates',
+    description:
+      'Set up templates to quickly create repetitive entries with their properties and content pre-filled.',
+    icon: 'copy',
+  },
+  {
+    id: 'automations',
+    title: 'Automations',
+    description:
+      'Set rules that keep entries in step with each other, such as marking a project complete once every task linked to it is done.',
+    icon: 'workflow',
   },
   {
     id: 'files',
     title: 'Choose your format',
     description:
-      "Store a database's entries as Markdown, JSON, or YAML — Markdown by default, with properties in frontmatter.",
+      'Entries are plain Markdown files by default, and any database can store them as JSON or YAML instead.',
     icon: 'file-text',
-  },
-  {
-    id: 'templates',
-    title: 'Templates',
-    description:
-      'Start from a ready-made database, and add entry templates that pre-fill properties for new entries.',
-    icon: 'copy',
-  },
-  {
-    id: 'collections',
-    title: 'Collections',
-    description:
-      'Curate a list by hand, gathering entries from any database into one place.',
-    icon: 'bookmark',
-  },
-  {
-    id: 'queries',
-    title: 'Queries',
-    description:
-      'Filter and sort entries by rules, then save the result to come back to.',
-    icon: 'filter',
   },
 ];
 ---
@@ -193,9 +186,54 @@ const databaseFeatures: TabbedFeature[] = [
   <PageSection
     id="databases"
     title="Databases"
-    description="Everything you write lives in a database: a folder of entries that share the properties you define. The folder is a real folder on your disk, and each entry is a real file inside it."
+    description="All your content lives in a database: a folder of entries that share the properties you define. The folder is a real folder on your disk, and each entry is a real file inside it."
   >
     <FeatureTabs name="databases" features={databaseFeatures} />
+
+    <div class="gathering">
+      <h3 class="gathering-title">Collections and queries</h3>
+
+      <p class="gathering-description">
+        Two ways of gathering entries into a view: pick them yourself, or
+        describe what you are after and let the rules find them.
+      </p>
+
+      <div class="groupings">
+        <article class="grouping">
+          <h4 class="grouping-title">
+            <Icon name="bookmark" />
+            Collections
+          </h4>
+
+          <p class="grouping-description">
+            Gather entries from any database into a list you curate by hand,
+            bringing everything about one project or theme together wherever it
+            happens to live.
+          </p>
+
+          <div class="grouping-media">
+            <AppWindow />
+          </div>
+        </article>
+
+        <article class="grouping">
+          <h4 class="grouping-title">
+            <Icon name="filter" />
+            Queries
+          </h4>
+
+          <p class="grouping-description">
+            Describe the entries you are after with rules that span as many
+            databases as you need. The result keeps itself up to date as entries
+            come and go.
+          </p>
+
+          <div class="grouping-media">
+            <AppWindow />
+          </div>
+        </article>
+      </div>
+    </div>
   </PageSection>
 
   <PageSection
@@ -217,7 +255,7 @@ const databaseFeatures: TabbedFeature[] = [
   <PageSection
     id="spaces"
     title="Spaces"
-    description="A space is a page you build yourself. Drop in views, text, images, and live web pages, arrange them however the work needs, and you end up with something closer to a small app than a note."
+    description="Build spaces combining multiple views with a custom design, around a project, a topic, or an idea."
   >
     <ShowcaseGallery name="spaces" items={spaces} />
   </PageSection>
@@ -289,5 +327,64 @@ const databaseFeatures: TabbedFeature[] = [
   /* The screenshot belongs with the blocks above it, so it sits close */
   .hero-media {
     margin-block-start: var(--space-6);
+  }
+
+  /* A sub-section of databases, so it sits closer than the sections do */
+  .gathering {
+    margin-block-start: var(--space-8);
+  }
+
+  .gathering-title {
+    font-size: var(--step-2);
+  }
+
+  .gathering-description {
+    max-width: var(--measure);
+    margin-block: var(--space-4) var(--space-6);
+    color: var(--ink-muted);
+  }
+
+  /* The two ways of gathering entries, given a card each */
+  .groupings {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-5);
+  }
+
+  .grouping {
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-6);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-xl);
+    background: var(--paper-raised);
+  }
+
+  .grouping-title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--step-1);
+  }
+
+  .grouping-title :global(.icon) {
+    color: var(--ink-muted);
+  }
+
+  .grouping-description {
+    margin-block-start: var(--space-3);
+    color: var(--ink-muted);
+  }
+
+  /* Pinned to the foot, so the two screenshots line up under uneven copy */
+  .grouping-media {
+    margin-block-start: auto;
+    padding-block-start: var(--space-6);
+  }
+
+  @media (max-width: 700px) {
+    .groupings {
+      grid-template-columns: minmax(0, 1fr);
+    }
   }
 </style>

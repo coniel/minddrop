@@ -34,15 +34,34 @@ import { downloads } from '../downloads';
 </section>
 
 <style>
+  /*
+   * The panel carries its own heading rather than sitting under a section
+   * title, so a rule stands in for the break the other sections get.
+   */
   .download {
     margin-block-start: var(--space-9);
   }
 
+  .download::before {
+    content: '';
+    display: block;
+    height: 1px;
+    margin-block-end: var(--space-9);
+    background: var(--rule);
+  }
+
+  /* Lit from above, the content below it being centred */
   .download-panel {
     padding: var(--space-8) var(--gutter);
-    border: 1px solid var(--rule);
+    border: 1px solid color-mix(in srgb, var(--accent) 20%, var(--rule));
     border-radius: var(--radius-xl);
-    background: var(--paper-raised);
+    background:
+      radial-gradient(
+        90% 120% at 50% 0%,
+        color-mix(in srgb, var(--accent) 12%, transparent),
+        transparent 65%
+      ),
+      var(--paper-sunk);
     text-align: center;
   }
 

@@ -114,9 +114,10 @@ const { name, features, reverse = false } = Astro.props;
 </div>
 
 <style>
+  /* Stretched, so the screenshot stands as tall as the stack of cards */
   .feature-tabs {
     display: flex;
-    align-items: center;
+    align-items: stretch;
     gap: var(--space-6);
   }
 
@@ -134,6 +135,39 @@ const { name, features, reverse = false } = Astro.props;
     display: flex;
     flex-direction: column;
     gap: var(--space-1);
+  }
+
+  /*
+   * The panel fills the column and the frame fills the panel, so the shown
+   * screenshot takes its height from the cards rather than its own aspect.
+   */
+  .feature-tabs-media,
+  .feature-tabs-panel {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .feature-tabs-panel {
+    flex: 1;
+  }
+
+  /* Laying the panels out as flex would otherwise undo their hidden state */
+  .feature-tabs-panel[hidden] {
+    display: none;
+  }
+
+  .feature-tabs-panel :global(.app-window) {
+    flex: 1;
+  }
+
+  .feature-tabs-panel :global(.app-window-placeholder) {
+    height: 100%;
+  }
+
+  /* Cropped rather than letterboxed, the frame no longer following its shape */
+  .feature-tabs-panel :global(img) {
+    height: 100%;
+    object-fit: cover;
   }
 
   /*
