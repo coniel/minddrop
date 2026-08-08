@@ -56,8 +56,11 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     </script>
   </head>
   <body>
+    <a class="skip-link" href="#content">Skip to content</a>
+
     <SiteHeader />
-    <main id="content">
+    {/* Focusable, so following the skip link moves the keyboard here */}
+    <main id="content" tabindex="-1">
       <slot />
     </main>
     <SiteFooter />

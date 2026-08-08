@@ -199,6 +199,37 @@ button {
   border-radius: var(--radius-sm);
 }
 
+/* Taken only to receive the skip link, so it draws no ring of its own */
+main:focus {
+  outline: none;
+}
+
+/*
+ * Lets a keyboard reach the page without tabbing through the header first.
+ * Kept out of the flow until focused, where it drops in over the bar.
+ */
+.skip-link {
+  position: fixed;
+  top: var(--space-3);
+  left: var(--space-3);
+  z-index: 20;
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-md);
+  background: var(--paper-raised);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transform: translateY(calc(-100% - var(--space-4)));
+  transition: transform var(--duration-normal) var(--ease-out);
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+  text-decoration: none;
+}
+
 /* ============================================================
    LAYOUT HELPERS
    ============================================================ */
