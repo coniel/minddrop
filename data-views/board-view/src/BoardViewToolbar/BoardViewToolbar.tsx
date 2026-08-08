@@ -1,10 +1,12 @@
 import React, { useMemo } from 'react';
 import { DatabaseId, Databases } from '@minddrop/databases';
-import { useNewEntryDraggable } from '@minddrop/feature-databases';
-import { ContentIcon, Toolbar, Tooltip } from '@minddrop/ui-primitives';
+import {
+  useAddExistingEntryDraggable,
+  useNewEntryDraggable,
+} from '@minddrop/feature-databases';
+import { ContentIcon, Icon, Toolbar, Tooltip } from '@minddrop/ui-primitives';
+import { DATABASE_FALLBACK_ICON } from '../constants';
 import './BoardViewToolbar.css';
-
-const DATABASE_FALLBACK_ICON = 'content-icon:shapes:inherit';
 
 export interface BoardViewToolbarProps {
   /**
@@ -35,6 +37,8 @@ export const BoardViewToolbar: React.FC<BoardViewToolbarProps> = ({
             databaseId={databaseId}
           />
         ))}
+
+        <BoardViewToolbarAddExistingCard />
       </Toolbar>
     </div>
   );
@@ -71,6 +75,26 @@ const BoardViewToolbarDatabaseCard: React.FC<
         {...draggableProps}
       >
         <ContentIcon icon={database.icon || DATABASE_FALLBACK_ICON} />
+      </div>
+    </Tooltip>
+  );
+};
+
+/**
+ * Renders a card which spawns an existing entry picker at the
+ * drop location when dragged onto the board.
+ */
+const BoardViewToolbarAddExistingCard: React.FC = () => {
+  const { isDragging, draggableProps } = useAddExistingEntryDraggable();
+
+  return (
+    <Tooltip title="dataViews.board.addExistingEntry" side="top">
+      <div
+        className="board-view-toolbar-card"
+        data-dragging={isDragging || undefined}
+        {...draggableProps}
+      >
+        <Icon name="search" color="regular" />
       </div>
     </Tooltip>
   );

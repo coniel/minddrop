@@ -9,6 +9,13 @@
   min-height: 100%;
 }
 
+/* Keep entry cards clear of the scrollport edges (and the
+   floating toolbar at the bottom) when scrolled into view */
+.board-view .database-entry {
+  scroll-margin-top: var(--space-4);
+  scroll-margin-bottom: calc(var(--space-7) + var(--space-5));
+}
+
 .board-view {
   padding: var(--space-4);
   /* Leave room for the floating toolbar */

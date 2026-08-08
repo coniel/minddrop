@@ -29,6 +29,17 @@ export interface BoardViewColumnProps {
   canDelete: boolean;
 
   /**
+   * An entry picker rendered among the column's cards at
+   * `pickerIndex`.
+   */
+  picker?: React.ReactNode;
+
+  /**
+   * The position within the column at which to render the picker.
+   */
+  pickerIndex?: number;
+
+  /**
    * Callback fired when something is dropped into this column.
    */
   onDrop: (
@@ -53,6 +64,8 @@ export const BoardViewColumn: React.FC<BoardViewColumnProps> = ({
   entryIds,
   entryCardLayouts,
   canDelete,
+  picker,
+  pickerIndex,
   onDrop,
   onDelete,
 }) => {
@@ -69,6 +82,24 @@ export const BoardViewColumn: React.FC<BoardViewColumnProps> = ({
     onDelete(columnIndex);
   }, [columnIndex, onDelete]);
 
+  // Entry cards with the picker spliced in at its position
+  const cards = entryIds.map((entryId) => (
+    <DatabaseEntryRenderer
+      key={entryId}
+      entryId={entryId}
+      layoutContext="card"
+      layoutId={entryCardLayouts[entryId]}
+    />
+  ));
+
+  if (picker && pickerIndex !== undefined) {
+    cards.splice(
+      pickerIndex,
+      0,
+      <React.Fragment key="picker">{picker}</React.Fragment>,
+    );
+  }
+
   return (
     <div
       className={`board-view-column${entryIds.length === 0 ? ' board-view-column-empty' : ''}`}
@@ -80,14 +111,7 @@ export const BoardViewColumn: React.FC<BoardViewColumnProps> = ({
         className="board-view-column-content"
         onDrop={handleDrop}
       >
-        {entryIds.map((entryId) => (
-          <DatabaseEntryRenderer
-            key={entryId}
-            entryId={entryId}
-            layoutContext="card"
-            layoutId={entryCardLayouts[entryId]}
-          />
-        ))}
+        {cards}
       </FlexDropContainer>
 
       {canDelete && (

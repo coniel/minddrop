@@ -1505,7 +1505,12 @@
       "description": "A board view with draggable columns of cards.",
       "label": "Board",
       "addColumn": "Add column",
-      "removeColumn": "Remove column"
+      "removeColumn": "Remove column",
+      "addExistingEntry": "Add existing entry",
+      "searchEntriesPlaceholder": "Search entries...",
+      "entrySearchEmpty": "No entries found",
+      "entryPickerAddHint": "to add",
+      "entryPickerAddMoreHint": "to add more"
     },
     "gallery": {
       "name": "Gallery",

@@ -1519,6 +1519,11 @@ declare module 'i18next' {
             label: string;
             addColumn: string;
             removeColumn: string;
+            addExistingEntry: string;
+            searchEntriesPlaceholder: string;
+            entrySearchEmpty: string;
+            entryPickerAddHint: string;
+            entryPickerAddMoreHint: string;
           };
           gallery: {
             name: string;
