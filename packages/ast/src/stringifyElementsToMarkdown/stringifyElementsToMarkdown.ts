@@ -32,6 +32,7 @@ export function stringifyElementsToMarkdown(
     // so we skip it.
     if (!config) {
       index += 1;
+      setCurrentElement();
       continue;
     }
 

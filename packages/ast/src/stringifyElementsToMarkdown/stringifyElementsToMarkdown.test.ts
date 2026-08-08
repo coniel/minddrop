@@ -38,6 +38,17 @@ describe('stringifyElements', () => {
     ).toBe(`${heading1String}\n\n${heading2String}`);
   });
 
+  it('skips elements which have no config', () => {
+    const unconfiguredElement = generateElement('unconfigured');
+
+    expect(
+      stringifyElementsToMarkdown(
+        [heading1Element, unconfiguredElement, heading2Element],
+        blockElementConfigs,
+      ),
+    ).toBe(`${heading1String}\n\n${heading2String}`);
+  });
+
   it('groups children of the same type into a single block if the config has a `parseBatch` function', () => {
     expect(
       stringifyElementsToMarkdown(
