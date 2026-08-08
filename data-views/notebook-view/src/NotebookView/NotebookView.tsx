@@ -9,7 +9,7 @@ import {
 } from '@minddrop/ui-components';
 import { ScrollArea, useTransientState } from '@minddrop/ui-primitives';
 import { defaultNotebookViewOptions } from '../constants';
-import { NotebookViewLayoutOverride, NotebookViewOptions } from '../types';
+import { NotebookViewOptions } from '../types';
 import { useListPanelResize } from '../useListPanelResize';
 import './NotebookView.css';
 
@@ -47,17 +47,14 @@ export const NotebookViewComponent: React.FC<
     return Databases.getFromEntries(entries).map((database) => database.id);
   }, [view.dataSource, entries]);
 
-  // Build a per-entry layout override map from view options.
-  // For database sources all entries share the same override,
-  // for collections each entry's database is looked up.
+  // Build a per-entry layout override map from view options
   const entryLayoutOverrides = useMemo(
     () =>
-      resolveEntryLayoutOverrides(
+      DatabaseEntries.resolveLayoutOverrides(
         entries,
-        view.dataSource,
         view.options?.layoutOverrides,
       ),
-    [entries, view.dataSource, view.options?.layoutOverrides],
+    [entries, view.options?.layoutOverrides],
   );
 
   // Persist the new width to the view options when resizing ends
@@ -168,52 +165,3 @@ export const NotebookViewComponent: React.FC<
     </div>
   );
 };
-
-/**
- * Resolves per-entry layout overrides from the view's layout
- * override options. For database sources all entries share the
- * same database so a single lookup suffices. For collection or
- * query sources, each entry's database is resolved individually.
- */
-function resolveEntryLayoutOverrides(
-  entries: string[],
-  dataSource: { type: string; id: string },
-  layoutOverrides?: Record<string, NotebookViewLayoutOverride>,
-): Record<string, NotebookViewLayoutOverride> {
-  if (!layoutOverrides) {
-    return {};
-  }
-
-  const result: Record<string, NotebookViewLayoutOverride> = {};
-
-  // For database data sources all entries belong to the same database
-  if (dataSource.type === 'database') {
-    const override = layoutOverrides[dataSource.id];
-
-    if (!override) {
-      return result;
-    }
-
-    for (const entryId of entries) {
-      result[entryId] = override;
-    }
-
-    return result;
-  }
-
-  // For collection/query sources, look up each entry's database
-  for (const entryId of entries) {
-    try {
-      const entry = DatabaseEntries.get(entryId);
-      const override = layoutOverrides[entry.database];
-
-      if (override) {
-        result[entryId] = override;
-      }
-    } catch {
-      // Entry not found, skip
-    }
-  }
-
-  return result;
-}
