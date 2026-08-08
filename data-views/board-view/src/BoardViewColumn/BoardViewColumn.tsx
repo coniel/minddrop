@@ -1,8 +1,5 @@
 import React, { useCallback } from 'react';
-import {
-  DatabaseEntryRenderer,
-  getDroppedEntryIds,
-} from '@minddrop/feature-databases';
+import { DatabaseEntryRenderer } from '@minddrop/feature-databases';
 import { DropEventData } from '@minddrop/selection';
 import { FlexDropContainer } from '@minddrop/ui-drag-and-drop';
 import { Button } from '@minddrop/ui-primitives';
@@ -32,11 +29,10 @@ export interface BoardViewColumnProps {
   canDelete: boolean;
 
   /**
-   * Callback fired when an entry is dropped into this column.
+   * Callback fired when something is dropped into this column.
    */
   onDrop: (
     data: DropEventData,
-    entryId: string,
     targetColumnIndex: number,
     targetEntryIndex: number,
   ) => void;
@@ -60,17 +56,10 @@ export const BoardViewColumn: React.FC<BoardViewColumnProps> = ({
   onDrop,
   onDelete,
 }) => {
-  // Handle an entry being dropped into this column at a
-  // specific gap index
+  // Handle a drop into this column at a specific gap index
   const handleDrop = useCallback(
     (data: DropEventData, _containerId: string, gapIndex: number) => {
-      const [entryId] = getDroppedEntryIds(data);
-
-      if (!entryId) {
-        return;
-      }
-
-      onDrop(data, entryId, columnIndex, gapIndex);
+      onDrop(data, columnIndex, gapIndex);
     },
     [columnIndex, onDrop],
   );

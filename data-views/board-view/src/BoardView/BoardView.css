@@ -5,12 +5,14 @@
   min-height: 0;
 }
 
-.board-view-scroll .scroll-area-viewport > div {
+.board-view-scroll .scroll-area-viewport > .board-view {
   min-height: 100%;
 }
 
 .board-view {
   padding: var(--space-4);
+  /* Leave room for the floating toolbar */
+  padding-bottom: calc(var(--space-7) + var(--space-5));
   min-height: 100%;
   align-items: stretch;
 }
