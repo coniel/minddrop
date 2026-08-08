@@ -1,7 +1,8 @@
 .title-element {
   position: relative;
-  font-size: 26px;
-  font-weight: var(--fwSemibold);
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-tight);
 }
 
 /* The element directly below the title is visually the first

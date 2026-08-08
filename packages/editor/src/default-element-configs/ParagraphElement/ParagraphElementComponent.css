@@ -1,5 +1,5 @@
 .paragraph-element {
-  font-size: var(--fsContentRegular);
-  line-height: var(--lhContentRegular);
-  font-weight: var(--fwRegular);
+  font-size: var(--text-md);
+  line-height: var(--leading-normal);
+  font-weight: var(--weight-normal);
 }

@@ -1,18 +1,22 @@
 .heading-1-element {
-  font-size: 26px;
-  font-weight: var(--fwSemibold);
-  padding-top: 20px;
+  font-size: var(--text-xl);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-tight);
+  padding-top: var(--space-5);
 }
 
 .heading-2-element {
-  font-size: var(--fsContentTitle);
-  font-weight: var(--fwSemibold);
-  padding-top: 16px;
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-tight);
+  padding-top: var(--space-4);
 }
 
 .heading-3-element {
-  font-weight: var(--fwBold);
-  padding-top: 16px;
+  font-size: var(--text-md);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+  padding-top: var(--space-4);
 }
 
 .heading-1-element:first-child,
