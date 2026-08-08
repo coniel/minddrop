@@ -14,7 +14,6 @@ export const BoardViewType: DataViewType<BoardViewOptions, BoardViewData> = {
   supportedDataSources: ['collection'],
   defaultData: defaultBoardViewData,
   component: BoardViewComponent,
-  draggableEntries: true,
   settingsMenu: BoardViewOptionsMenu,
   skeletonComponent: BoardViewSkeleton,
   serializeReferences: mapColumnReferences,

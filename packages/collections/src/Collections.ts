@@ -12,5 +12,6 @@ export {
 } from './CollectionsStore';
 export { updateCollection as update } from './updateCollection';
 export { addCollectionItems as addItems } from './addCollectionItems';
+export { searchCollections as search } from './utils';
 export { removeCollectionItems as removeItems } from './removeCollectionItems';
 export { initializeCollections as initialize } from './initializeCollections';

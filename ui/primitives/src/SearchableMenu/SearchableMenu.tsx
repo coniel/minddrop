@@ -172,13 +172,70 @@ export const SearchableMenu = React.forwardRef<
     // the list is virtualized (children are hidden in both cases).
     const renderFromRegistry = isSearchActive || virtualized;
 
-    // Auto-focus the search input after the popup is mounted
+    // Auto-focus the search input after the popup is mounted,
+    // retrying shortly after as the menu's focus management may
+    // move focus during opening
     useEffect(() => {
-      requestAnimationFrame(() => {
+      const frame = requestAnimationFrame(() => {
         // Prevent the browser's scroll-to-reveal, which fights
         // consumer-driven scrolling of partially visible menus
         inputRef.current?.focus({ preventScroll: true });
       });
+
+      const timeout = window.setTimeout(() => {
+        inputRef.current?.focus({ preventScroll: true });
+      }, 100);
+
+      return () => {
+        cancelAnimationFrame(frame);
+        window.clearTimeout(timeout);
+      };
+    }, []);
+
+    // Reclaim focus from other menu elements while mounted, so
+    // typing goes to the search input even when the menu is a
+    // hover-opened submenu whose trigger item keeps focus
+    useEffect(() => {
+      const reclaimFocus = (event: FocusEvent) => {
+        const target = event.target as HTMLElement | null;
+
+        // Focus within the menu is handled by the capture handler
+        if (!target || menuRef.current?.contains(target)) {
+          return;
+        }
+
+        // Never steal focus from another text field
+        if (target.closest('input, textarea')) {
+          return;
+        }
+
+        // Only reclaim from menu elements (e.g. the submenu's
+        // trigger item), leaving app-level focus moves untouched
+        if (target.closest('[role="menu"], [role="menuitem"]')) {
+          inputRef.current?.focus({ preventScroll: true });
+        }
+      };
+
+      document.addEventListener('focusin', reclaimFocus);
+
+      return () => {
+        document.removeEventListener('focusin', reclaimFocus);
+      };
+    }, []);
+
+    // Reclaim focus whenever it lands on another element within
+    // the menu, so typing always goes to the search input (e.g.
+    // submenu popups focused by the menu's focus management)
+    const handleFocusCapture = useCallback((event: React.FocusEvent) => {
+      if (event.target !== inputRef.current) {
+        inputRef.current?.focus({ preventScroll: true });
+      }
+    }, []);
+
+    // Focus the search input when the pointer enters the menu, as
+    // hover-opened submenus keep focus on their trigger item
+    const handleMouseEnter = useCallback(() => {
+      inputRef.current?.focus({ preventScroll: true });
     }, []);
 
     // Merge forwarded ref with internal ref
@@ -285,6 +342,8 @@ export const SearchableMenu = React.forwardRef<
         ref={setRefs}
         role="menu"
         className={propsToClass('menu searchable-menu', { className })}
+        onFocusCapture={handleFocusCapture}
+        onMouseEnter={handleMouseEnter}
         {...other}
       >
         {/* Search input */}

@@ -1,4 +1,5 @@
 export * from './constants';
+export * from './DatabaseEntryContext';
 export * from './DatabaseEntryDialog';
 export * from './DatabaseEntryOptionsMenu';
 export * from './DatabaseEntryRenderer';

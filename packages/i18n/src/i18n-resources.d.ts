@@ -22,6 +22,11 @@ declare module 'i18next' {
             searchPlaceholder: string;
             empty: string;
           };
+          selection: {
+            addTo: string;
+            searchPlaceholder: string;
+            empty: string;
+          };
         };
         test: string;
         app: {
@@ -303,6 +308,7 @@ declare module 'i18next' {
               openInSplitView: string;
               entryOptions: string;
               goToDatabase: string;
+              removeFromCollection: string;
               create: string;
             };
             errors: {

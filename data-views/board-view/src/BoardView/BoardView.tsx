@@ -3,6 +3,7 @@ import { Collections } from '@minddrop/collections';
 import { DataViewTypeComponentProps, DataViews } from '@minddrop/data-views';
 import { DatabaseEntries, DatabaseId } from '@minddrop/databases';
 import {
+  DatabaseEntryContextProvider,
   dropContainsAddExistingEntryCard,
   getDroppedEntryIds,
   getDroppedNewEntryDatabaseIds,
@@ -319,43 +320,49 @@ export const BoardViewComponent: React.FC<
       className="board-view-scroll"
       stateKey="content"
     >
-      <FlexDropContainer
-        id={`board-${view.id}`}
-        direction="row"
-        gap={16}
-        className="board-view"
-        accepts={BOARD_ACCEPTED_DATA_TYPES}
-        onDrop={handleColumnLayoutDrop}
+      <DatabaseEntryContextProvider
+        draggable
+        optionsMenu
+        source={view.dataSource}
       >
-        {reconciledColumns.map((columnEntries, columnIndex) => (
-          <BoardViewColumn
-            key={columnIndex}
-            columnIndex={columnIndex}
-            entryIds={columnEntries}
-            entryCardLayouts={entryCardLayouts}
-            canDelete={
-              columnEntries.length === 0 && reconciledColumns.length > 1
-            }
-            picker={
-              entryPicker?.columnIndex === columnIndex ? (
-                <BoardViewEntryPicker
-                  excludeIds={entries}
-                  onSelect={handleEntryPickerSelect}
-                  onSecondarySelect={handleEntryPickerSecondarySelect}
-                  onDismiss={handleEntryPickerDismiss}
-                />
-              ) : undefined
-            }
-            pickerIndex={
-              entryPicker?.columnIndex === columnIndex
-                ? entryPicker.entryIndex
-                : undefined
-            }
-            onDrop={handleColumnDrop}
-            onDelete={handleDeleteColumn}
-          />
-        ))}
-      </FlexDropContainer>
+        <FlexDropContainer
+          id={`board-${view.id}`}
+          direction="row"
+          gap={16}
+          className="board-view"
+          accepts={BOARD_ACCEPTED_DATA_TYPES}
+          onDrop={handleColumnLayoutDrop}
+        >
+          {reconciledColumns.map((columnEntries, columnIndex) => (
+            <BoardViewColumn
+              key={columnIndex}
+              columnIndex={columnIndex}
+              entryIds={columnEntries}
+              entryCardLayouts={entryCardLayouts}
+              canDelete={
+                columnEntries.length === 0 && reconciledColumns.length > 1
+              }
+              picker={
+                entryPicker?.columnIndex === columnIndex ? (
+                  <BoardViewEntryPicker
+                    excludeIds={entries}
+                    onSelect={handleEntryPickerSelect}
+                    onSecondarySelect={handleEntryPickerSecondarySelect}
+                    onDismiss={handleEntryPickerDismiss}
+                  />
+                ) : undefined
+              }
+              pickerIndex={
+                entryPicker?.columnIndex === columnIndex
+                  ? entryPicker.entryIndex
+                  : undefined
+              }
+              onDrop={handleColumnDrop}
+              onDelete={handleDeleteColumn}
+            />
+          ))}
+        </FlexDropContainer>
+      </DatabaseEntryContextProvider>
 
       {/* Floating toolbar */}
       <BoardViewToolbar view={view} entryIds={entries} />

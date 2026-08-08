@@ -2,12 +2,14 @@
   position: relative;
 }
 
-.database-entry-card > *:not(.database-entry-drag-handle) {
+.database-entry-card
+  > *:not(.database-entry-drag-handle):not(.database-entry-options) {
   outline: 1px solid transparent;
   transition: outline-color var(--duration-normal) var(--ease-out);
 }
 
-.database-entry-card:hover > *:not(.database-entry-drag-handle) {
+.database-entry-card:hover
+  > *:not(.database-entry-drag-handle):not(.database-entry-options) {
   outline-color: var(--border-subtle);
 }
 
@@ -23,6 +25,24 @@
   left: 0;
   height: var(--space-4);
   cursor: grab;
+}
+
+/* Sits above the drag handle so the handle does not cover it */
+.database-entry-options {
+  position: absolute;
+  z-index: 2;
+  top: var(--space-1);
+  right: var(--space-1);
+  opacity: 0;
+  transition: opacity var(--duration-normal) var(--ease-out);
+}
+
+/* Reveal the button on card hover, keyboard focus, or while its
+   menu is open */
+.database-entry-card:hover .database-entry-options,
+.database-entry-options:has(:focus-visible),
+.database-entry-options:has([data-popup-open]) {
+  opacity: 1;
 }
 
 .database-entry-drag-handle:active {

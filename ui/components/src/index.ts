@@ -1,5 +1,6 @@
 export * from './AddCollectionEntryButton';
 export * from './AddDataViewMenu';
+export * from './CollectionSelectionSubmenu';
 export * from './CreateDatabaseEntryButton';
 export * from './DataSourceCombobox';
 export * from './DatabaseEntriesSearchField';

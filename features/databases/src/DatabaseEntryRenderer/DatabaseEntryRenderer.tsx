@@ -9,13 +9,22 @@ import {
 } from '@minddrop/databases';
 import { Designs, Layouts } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
-import { useDataViewContext } from '@minddrop/feature-data-views';
 import { LayoutRenderer } from '@minddrop/feature-designs';
 import { useTranslation } from '@minddrop/i18n';
 import { PropertyValue } from '@minddrop/properties';
 import { useDraggable } from '@minddrop/selection';
-import { Text, TransientViewStateScope } from '@minddrop/ui-primitives';
+import {
+  DropdownMenu,
+  IconButton,
+  Text,
+  TransientViewStateScope,
+} from '@minddrop/ui-primitives';
 import { setDragPreview } from '@minddrop/utils';
+import {
+  DatabaseEntryRenderSource,
+  useDatabaseEntryContext,
+} from '../DatabaseEntryContext';
+import { DatabaseEntryOptionsMenu } from '../DatabaseEntryOptionsMenu';
 import { DatabaseEntriesDataKey } from '../constants';
 import {
   OpenDatabaseEntryViewEvent,
@@ -77,7 +86,7 @@ const Entry: React.FC<EntryProps> = ({
   const { t } = useTranslation();
   const database = Databases.use(entry.database);
   const design = Designs.use(database?.designId || '');
-  const { draggableEntries } = useDataViewContext();
+  const { draggable, optionsMenu, source } = useDatabaseEntryContext();
   const { draggableProps, isDragging } = useDraggable({
     id: entry.id,
     type: DatabaseEntriesDataKey,
@@ -232,8 +241,12 @@ const Entry: React.FC<EntryProps> = ({
   const isClickable = baseType !== 'page';
 
   // Cards are dragged from a bar along their top edge, and only
-  // within data views which support dragging
-  const showDragHandle = baseType === 'card' && draggableEntries;
+  // within contexts which enable dragging
+  const showDragHandle = baseType === 'card' && draggable;
+
+  // Cards show a hover revealed options menu button, and only
+  // within contexts which enable it
+  const showOptionsMenu = baseType === 'card' && optionsMenu;
 
   const className = [
     'database-entry',
@@ -264,6 +277,11 @@ const Entry: React.FC<EntryProps> = ({
           />
         )}
 
+        {/* Hover revealed options menu button */}
+        {showOptionsMenu && (
+          <EntryOptionsMenuButton entryId={entry.id} source={source} />
+        )}
+
         <Text truncate>{entry.title}</Text>
       </div>
     );
@@ -287,6 +305,11 @@ const Entry: React.FC<EntryProps> = ({
         />
       )}
 
+      {/* Hover revealed options menu button */}
+      {showOptionsMenu && (
+        <EntryOptionsMenuButton entryId={entry.id} source={source} />
+      )}
+
       <TransientViewStateScope segment={entry.id}>
         <LayoutRenderer
           layout={layout}
@@ -299,6 +322,58 @@ const Entry: React.FC<EntryProps> = ({
           onValidatePropertyValue={onValidatePropertyValue}
         />
       </TransientViewStateScope>
+    </div>
+  );
+};
+
+interface EntryOptionsMenuButtonProps {
+  /**
+   * The ID of the entry the menu acts on.
+   */
+  entryId: string;
+
+  /**
+   * The source the entry is rendered from.
+   */
+  source?: DatabaseEntryRenderSource;
+}
+
+/**
+ * Renders the entry options menu button in the top right corner
+ * of the card, revealed on card hover.
+ */
+const EntryOptionsMenuButton: React.FC<EntryOptionsMenuButtonProps> = ({
+  entryId,
+  source,
+}) => {
+  // Keep menu interactions from activating the card itself. The
+  // menu popup is portaled but its events bubble through the React
+  // tree, so item clicks would otherwise open the entry.
+  const stopPropagation = useCallback((event: React.SyntheticEvent) => {
+    event.stopPropagation();
+  }, []);
+
+  return (
+    <div
+      className="database-entry-options"
+      role="presentation"
+      onClick={stopPropagation}
+      onKeyDown={stopPropagation}
+    >
+      <DropdownMenu
+        side="bottom"
+        align="end"
+        trigger={
+          <IconButton
+            variant="filled"
+            size="sm"
+            icon="ellipsis"
+            label="databases.entries.actions.entryOptions"
+          />
+        }
+      >
+        <DatabaseEntryOptionsMenu entryId={entryId} source={source} />
+      </DropdownMenu>
     </div>
   );
 };
