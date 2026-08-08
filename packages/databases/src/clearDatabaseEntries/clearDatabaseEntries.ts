@@ -7,11 +7,7 @@ import {
 } from '../events';
 import { getAllDatabaseEntries } from '../getAllDatabaseEntries';
 import { getDatabase } from '../getDatabase';
-import {
-  entryAssetsDirPath,
-  getDatabasePropertyDirs,
-  getEntryPropertyFilePaths,
-} from '../utils';
+import { getDatabasePropertyDirs, getEntryPropertyFilePaths } from '../utils';
 
 /**
  * Deletes all of a database's entries, moving their files to the system
@@ -45,13 +41,6 @@ export async function clearDatabaseEntries(databaseId: string): Promise<void> {
     } else {
       // Trash the entry file
       await Fs.trashFile(entry.path);
-
-      // Trash the entry's assets directory if it has one
-      const assetsDirPath = entryAssetsDirPath(entry.path);
-
-      if (await Fs.exists(assetsDirPath)) {
-        await Fs.trashDir(assetsDirPath);
-      }
 
       // Root storage keeps property files loose in the database root, so
       // trash each of the entry's file-property files individually

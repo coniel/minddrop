@@ -81,7 +81,7 @@ async function updateDatabaseEntryWithMetadata(
   const properties: Record<string, string> = {};
   const downloads: Promise<string | false>[] = [];
   let iconPromise: Promise<string | false> | undefined;
-  let imageAsset: Promise<string | false> | undefined;
+  let imagePromise: Promise<string | false> | undefined;
 
   // Set the description property if available
   if (metadata.description && propertyMapping.description) {
@@ -99,13 +99,13 @@ async function updateDatabaseEntryWithMetadata(
   }
 
   if (metadata.image && propertyMapping.image) {
-    imageAsset = downloadPropertyFile(
+    imagePromise = downloadPropertyFile(
       updatedDatabaseEntry.id,
       propertyMapping.image,
       metadata.image,
     );
 
-    downloads.push(imageAsset);
+    downloads.push(imagePromise);
   }
 
   await Promise.all(downloads);
@@ -118,8 +118,8 @@ async function updateDatabaseEntryWithMetadata(
     }
   }
 
-  if (imageAsset && propertyMapping.image) {
-    const imageFileName = await imageAsset;
+  if (imagePromise && propertyMapping.image) {
+    const imageFileName = await imagePromise;
 
     if (imageFileName) {
       properties[propertyMapping.image] = imageFileName;

@@ -1,6 +1,5 @@
 export * from './databaseConfigFilePath';
 export * from './databaseMetadataFilePath';
-export * from './entryAssetsDirPath';
 export * from './entryTemplateDirPath';
 export * from './entryTemplateFilePath';
 export * from './pruneEmptyPropertyValues';

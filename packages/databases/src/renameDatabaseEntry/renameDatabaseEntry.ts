@@ -9,7 +9,6 @@ import {
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntry } from '../getDatabaseEntry';
 import { DatabaseEntry } from '../types';
-import { entryAssetsDirPath } from '../utils';
 import { writeDatabaseEntry } from '../writeDatabaseEntry';
 
 /**
@@ -79,15 +78,6 @@ export async function renameDatabaseEntry<
   } else {
     // Rename the primary entry file
     await Fs.rename(entry.path, newPath);
-
-    // Rename the entry's assets directory if it exists
-    const assetsDirPath = entryAssetsDirPath(entry.path);
-
-    if (await Fs.exists(assetsDirPath)) {
-      const newAssetsDirPath = entryAssetsDirPath(newPath);
-
-      await Fs.rename(assetsDirPath, newAssetsDirPath);
-    }
   }
 
   // Update the entry's path, title, and last modified date

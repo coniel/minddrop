@@ -2,7 +2,6 @@ import type { PropertyType } from '@minddrop/properties';
 
 export const DatabaseConfigFileName = 'database.json';
 export const MetadataFileName = 'metadata.json';
-export const AssetsDirName = 'assets';
 export const EntryTemplatesDirName = 'templates';
 export const EntryConversionBackupDirName = 'entry-conversion-backup';
 export const PropertyFilesDirNameKey = 'databases.propertyFilesDirName';

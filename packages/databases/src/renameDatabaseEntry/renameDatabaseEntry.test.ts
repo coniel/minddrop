@@ -4,7 +4,6 @@ import { Fs, PathConflictError } from '@minddrop/file-system';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabaseEntryRenamedEvent } from '../events';
 import { MockFs, cleanup, objectEntry1, setup } from '../test-utils';
-import { entryAssetsDirPath } from '../utils';
 import { renameDatabaseEntry } from './renameDatabaseEntry';
 
 describe('renameDatabaseEntry', () => {
@@ -44,22 +43,6 @@ describe('renameDatabaseEntry', () => {
     expect(renamedDatabaseEntry.path).toBe(newPath);
     expect(MockFs.exists(newPath)).toBe(true);
     expect(MockFs.exists(objectEntry1.path)).toBe(false);
-  });
-
-  it("renames the entry's assets directory", async () => {
-    const assetsDirPath = entryAssetsDirPath(objectEntry1.path);
-
-    // Add the entry's assets directory
-    MockFs.addFiles([assetsDirPath]);
-
-    await renameDatabaseEntry(objectEntry1.id, 'Renamed DatabaseEntry');
-
-    const newAssetsDirPath = entryAssetsDirPath(
-      `${Fs.parentDirPath(objectEntry1.path)}/Renamed DatabaseEntry.md`,
-    );
-
-    expect(MockFs.exists(newAssetsDirPath)).toBe(true);
-    expect(MockFs.exists(assetsDirPath)).toBe(false);
   });
 
   it('updates the entry title, path, and last modified date, keeping its ID', async () => {

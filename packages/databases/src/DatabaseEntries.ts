@@ -20,8 +20,6 @@ export { createDatabaseEntryFromFilePath as createFromFilePath } from './createD
 export { createDatabaseEntryFromFile as createFromFile } from './createDatabaseEntryFromFile';
 export { createDatabaseEntryFromUrl as createFromUrl } from './createDatabaseEntryFromUrl';
 export { createDatabaseEntryFromTemplate as createFromTemplate } from './createDatabaseEntryFromTemplate';
-export { downloadDatabaseEntryAsset as downloadAsset } from './downloadDatabaseEntryAsset';
-export { ensureDatabaseEntryAssetsDirExists as ensure } from './ensureDatabaseEntryAssetsDirExists';
 export { getDatabaseEntry as get } from './getDatabaseEntry';
 export { renameDatabaseEntry as rename } from './renameDatabaseEntry';
 export { updateDatabaseEntry as update } from './updateDatabaseEntry';

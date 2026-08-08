@@ -22,7 +22,6 @@ import {
   urlDatabase,
   urlEntry1,
 } from '../test-utils';
-import { entryAssetsDirPath } from '../utils';
 import { clearDatabaseEntries } from './clearDatabaseEntries';
 
 describe('clearDatabaseEntries', () => {
@@ -43,17 +42,6 @@ describe('clearDatabaseEntries', () => {
     // The entry file should now be in the trash
     expect(MockFs.existsInTrash(objectEntry1.path)).toBe(true);
     expect(MockFs.exists(objectEntry1.path)).toBe(false);
-  });
-
-  it("trashes an entry's assets directory if it has one", async () => {
-    // Add an assets directory for the entry
-    const assetsDirPath = entryAssetsDirPath(objectEntry1.path);
-    MockFs.addFiles([`${assetsDirPath}/asset.png`]);
-
-    await clearDatabaseEntries(objectDatabase.id);
-
-    // The assets directory should now be in the trash
-    expect(MockFs.existsInTrash(assetsDirPath)).toBe(true);
   });
 
   it('trashes the shared property directory for common storage', async () => {

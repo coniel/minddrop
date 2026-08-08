@@ -16,7 +16,6 @@ import { Database, PropertyFileStorage } from '../types';
 import { updateDatabaseEntryProperty } from '../updateDatabaseEntryProperty';
 import {
   databaseEntryAddress,
-  entryAssetsDirPath,
   getDatabasePropertyDirs,
   getPropertyFilePath,
   resolveEntryFilePath,
@@ -75,11 +74,10 @@ export async function setDatabasePropertyFileStorage(
   const fileProperties = database.properties.filter(Properties.isFileBased);
 
   // Phase 1: capture the current on-disk state before mutating anything.
-  // Each entry's file extension and assets directory.
+  // Each entry's file extension.
   const entryMoves = entries.map((entry) => ({
     entry,
     fileExtension: Fs.getFileExtension(entry.path),
-    oldAssetsDir: entryAssetsDirPath(entry.path),
   }));
 
   // Each property file's current path, plus the data needed to resolve its
@@ -115,7 +113,7 @@ export async function setDatabasePropertyFileStorage(
 
   // Phase 2: wrap or unwrap entry files when crossing the entry boundary.
   if (wasEntry !== willEntry) {
-    for (const { entry, fileExtension, oldAssetsDir } of entryMoves) {
+    for (const { entry, fileExtension } of entryMoves) {
       const newEntryPath = resolveEntryFilePath(
         database.path,
         storage,
@@ -132,15 +130,6 @@ export async function setDatabasePropertyFileStorage(
       // Move the entry file to its new location
       if (await Fs.exists(entry.path)) {
         await Fs.rename(entry.path, newEntryPath);
-      }
-
-      // Relocate the entry's assets directory if it has one
-      if (await Fs.exists(oldAssetsDir)) {
-        const newAssetsDir = entryAssetsDirPath(newEntryPath);
-
-        // Ensure the assets directory's parent exists before moving it
-        await Fs.createDir(Fs.parentDirPath(newAssetsDir), { recursive: true });
-        await Fs.rename(oldAssetsDir, newAssetsDir);
       }
 
       // Update the entry's stored path before any later re-serialization
@@ -188,7 +177,6 @@ export async function setDatabasePropertyFileStorage(
   }
 
   // Phase 4: remove directories the old layout no longer needs.
-  // Unwrapped entry directories only hold emptied assets scaffolding.
   if (wasEntry && !willEntry) {
     for (const { entry } of entryMoves) {
       const wrapperDir = Fs.concatPath(database.path, entry.title);

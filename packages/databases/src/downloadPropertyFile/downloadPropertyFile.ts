@@ -4,14 +4,14 @@ import { getDatabaseEntry } from '../getDatabaseEntry';
 import { getIncrmentalPropertyFilePath } from '../utils';
 
 /**
- * Downloads an asset from a URL and saves it to the specified entry's assets
- * directory. Replaces any existing asset with the same name.
+ * Downloads a file from a URL and saves it as the specified entry property's
+ * file, stored according to the database's property file storage mode.
  *
- * @param entryId - The ID of the entry to download the asset for.
- * @param propertyName - The name of the property to download the asset for.
- * @param url - The URL of the asset to download.
+ * @param entryId - The ID of the entry to download the file for.
+ * @param propertyName - The name of the property to download the file for.
+ * @param url - The URL of the file to download.
  *
- * @returns A promise that resolves to the downloaded asset's file name or false
+ * @returns A promise that resolves to the downloaded file's name or false
  *          if the download failed.
  */
 export async function downloadPropertyFile(

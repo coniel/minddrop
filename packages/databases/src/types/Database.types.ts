@@ -62,7 +62,6 @@ export interface Database {
    * The database icon. Value depends on the icon type:
    * - `content-icon`: '[set-name]:[icon-name]:[color]'
    * - `emoji`: 'emoji:[emoji-character]:[skin-tone]'
-   * - `asset`: 'asset:[asset-file-name]'
    *
    * If not provided, the base type icon is used.
    */

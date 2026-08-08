@@ -47,7 +47,6 @@ export interface MenuItemProps {
    * Stringified content icon.
    * - `content-icon`: '[set-name]:[icon-name]:[color]'
    * - `emoji`: 'emoji:[emoji-character]:[skin-tone]'
-   * - `asset`: 'asset:[asset-file-name]'
    */
   contentIcon?: string;
 
