@@ -1516,6 +1516,8 @@ declare module 'i18next' {
           board: {
             name: string;
             description: string;
+            label: string;
+            addColumn: string;
             removeColumn: string;
           };
           gallery: {

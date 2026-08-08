@@ -1,12 +1,13 @@
 import React, { useCallback, useMemo } from 'react';
 import { DataViewTypeComponentProps, DataViews } from '@minddrop/data-views';
+import { DatabaseEntries } from '@minddrop/databases';
 import { getDroppedEntryIds } from '@minddrop/feature-databases';
 import { DropEventData } from '@minddrop/selection';
 import { FlexDropContainer } from '@minddrop/ui-drag-and-drop';
 import { ScrollArea } from '@minddrop/ui-primitives';
 import { BoardViewColumn } from '../BoardViewColumn';
 import { defaultBoardViewData } from '../constants';
-import { BoardColumns, BoardViewData } from '../types';
+import { BoardColumns, BoardViewData, BoardViewOptions } from '../types';
 import { reconcileColumns } from '../utils';
 import './BoardView.css';
 
@@ -14,7 +15,7 @@ import './BoardView.css';
  * Renders a board view with draggable columns of entry cards.
  */
 export const BoardViewComponent: React.FC<
-  DataViewTypeComponentProps<object, BoardViewData>
+  DataViewTypeComponentProps<BoardViewOptions, BoardViewData>
 > = ({ view, entries }) => {
   // Resolve columns from view data, falling back to defaults
   const columns = useMemo(
@@ -29,6 +30,17 @@ export const BoardViewComponent: React.FC<
   const reconciledColumns = useMemo(
     () => reconcileColumns(columns, entries),
     [columns, entries],
+  );
+
+  // Map each entry to the card layout its database is
+  // overridden to use
+  const entryCardLayouts = useMemo(
+    () =>
+      DatabaseEntries.resolveLayoutOverrides(
+        entries,
+        view.options?.cardLayoutOverrides,
+      ),
+    [entries, view.options?.cardLayoutOverrides],
   );
 
   // Persist the updated column layout to the view data
@@ -125,6 +137,7 @@ export const BoardViewComponent: React.FC<
             key={columnIndex}
             columnIndex={columnIndex}
             entryIds={columnEntries}
+            entryCardLayouts={entryCardLayouts}
             canDelete={
               columnEntries.length === 0 && reconciledColumns.length > 1
             }

@@ -20,6 +20,12 @@ export interface BoardViewColumnProps {
   entryIds: string[];
 
   /**
+   * The card layout to render each entry with, keyed by entry ID.
+   * Entries without an override use their database default layout.
+   */
+  entryCardLayouts: Record<string, string>;
+
+  /**
    * Whether the column can be deleted. When true, a delete
    * button appears on hover.
    */
@@ -49,6 +55,7 @@ export interface BoardViewColumnProps {
 export const BoardViewColumn: React.FC<BoardViewColumnProps> = ({
   columnIndex,
   entryIds,
+  entryCardLayouts,
   canDelete,
   onDrop,
   onDelete,
@@ -89,6 +96,7 @@ export const BoardViewColumn: React.FC<BoardViewColumnProps> = ({
             key={entryId}
             entryId={entryId}
             layoutContext="card"
+            layoutId={entryCardLayouts[entryId]}
           />
         ))}
       </FlexDropContainer>
