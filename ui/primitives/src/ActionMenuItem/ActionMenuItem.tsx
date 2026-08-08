@@ -69,7 +69,8 @@ export interface ActionMenuItemProps extends Omit<MenuItemProps, 'onClick'> {
 
   /**
    * Handler called when the item is selected in its secondary state.
-   * Registering this prop enables shift-key detection.
+   * Registering this prop enables shift-key detection. Searchable
+   * menus stay open after a secondary selection.
    */
   secondaryOnSelect?: () => void;
 

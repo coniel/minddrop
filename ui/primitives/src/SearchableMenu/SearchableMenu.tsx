@@ -216,7 +216,7 @@ export const SearchableMenu = React.forwardRef<
     }, []);
 
     // Handle item activation
-    function handleSelectItem(index: number) {
+    function handleSelectItem(index: number, shiftKey?: boolean) {
       const id = activeIds[index];
 
       if (!id) {
@@ -226,6 +226,14 @@ export const SearchableMenu = React.forwardRef<
       const registration = registryRef.current.get(id);
 
       if (!registration) {
+        return;
+      }
+
+      // Shift-activation triggers the item's secondary action and
+      // keeps the menu open
+      if (shiftKey && registration.propsRef.current.secondaryOnSelect) {
+        registration.propsRef.current.secondaryOnSelect();
+
         return;
       }
 

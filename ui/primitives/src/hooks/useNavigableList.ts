@@ -8,9 +8,10 @@ export interface UseNavigableListOptions {
 
   /**
    * Called when the user activates the highlighted item
-   * (Enter key or click).
+   * (Enter key or click). Receives whether the Shift key was
+   * held during activation.
    */
-  onSelect: (index: number) => void;
+  onSelect: (index: number, shiftKey?: boolean) => void;
 
   /**
    * Called when the user presses Escape. Receives the
@@ -69,7 +70,7 @@ export interface NavigableListItemProps {
   /**
    * Click handler that activates the item.
    */
-  onClick: () => void;
+  onClick: (event: React.MouseEvent) => void;
 
   /**
    * Whether this item is currently highlighted.
@@ -174,7 +175,7 @@ export function useNavigableList({
         }
 
         event.preventDefault();
-        onSelect(highlightedIndex);
+        onSelect(highlightedIndex, event.shiftKey);
       }
     },
     [enabled, itemCount, highlightedIndex, onSelect, onEscape],
@@ -223,7 +224,7 @@ export function useNavigableList({
           setHighlightedIndex(-1);
         }
       },
-      onClick: () => onSelect(index),
+      onClick: (event: React.MouseEvent) => onSelect(index, event.shiftKey),
       highlighted: index === highlightedIndex,
     }),
     [highlightedIndex, onSelect, scrollIntoViewRef],
