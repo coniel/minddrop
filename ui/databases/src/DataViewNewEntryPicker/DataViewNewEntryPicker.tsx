@@ -6,7 +6,6 @@ import {
   Databases,
 } from '@minddrop/databases';
 import { useTranslation } from '@minddrop/i18n';
-import { DATABASE_FALLBACK_ICON } from '@minddrop/ui-databases';
 import {
   Group,
   KeyboardShortcut,
@@ -14,9 +13,10 @@ import {
   SearchableMenuItem,
   Text,
 } from '@minddrop/ui-primitives';
-import './BoardViewNewEntryPicker.css';
+import { DATABASE_FALLBACK_ICON } from '../constants';
+import './DataViewNewEntryPicker.css';
 
-export interface BoardViewNewEntryPickerProps {
+export interface DataViewNewEntryPickerProps {
   /**
    * Called with the picked database, and the picked entry template
    * when the entry is created from one.
@@ -34,18 +34,35 @@ export interface BoardViewNewEntryPickerProps {
    * Called when the picker is dismissed without a selection.
    */
   onDismiss: () => void;
+
+  /**
+   * Keeps the picker scrolled into view within a scrollable
+   * host: on mount, and after secondary selections push it down.
+   * Leave off in hosts which must not be scrolled (e.g. transform
+   * based canvases).
+   */
+  scrollIntoView?: boolean;
+
+  /**
+   * Optional additional class name for the picker element.
+   */
+  className?: string;
 }
 
 /**
  * Renders a placeholder card with a search box for picking the
  * database, or database entry template, to create a new entry from.
  */
-export const BoardViewNewEntryPicker: React.FC<
-  BoardViewNewEntryPickerProps
-> = ({ onSelect, onSecondarySelect, onDismiss }) => {
+export const DataViewNewEntryPicker: React.FC<DataViewNewEntryPickerProps> = ({
+  onSelect,
+  onSecondarySelect,
+  onDismiss,
+  scrollIntoView = false,
+  className,
+}) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [query, setQuery] = useState('');
-  const { t } = useTranslation({ keyPrefix: 'dataViews.board' });
+  const { t } = useTranslation({ keyPrefix: 'databases.entries.pickers' });
 
   // All databases, offered as options when not searching
   const allDatabases = Databases.useAll();
@@ -63,14 +80,18 @@ export const BoardViewNewEntryPicker: React.FC<
       )
     : [];
 
-  // Bring the picker into view if the drop position only
-  // partially fit on screen. Runs a frame after the search
-  // input's scroll-free auto-focus.
+  // Bring the picker into view if it only partially fit on
+  // screen. Runs a frame after the search input's scroll-free
+  // auto-focus.
   useEffect(() => {
+    if (!scrollIntoView) {
+      return;
+    }
+
     requestAnimationFrame(() => {
-      requestAnimationFrame(scrollIntoView);
+      requestAnimationFrame(scrollPickerIntoView);
     });
-  }, []);
+  }, [scrollIntoView]);
 
   // Dismiss the picker on Escape. The search field clears a
   // non-empty query itself and stops propagation, so only an
@@ -111,11 +132,13 @@ export const BoardViewNewEntryPicker: React.FC<
 
     // Keep the picker in view once the created entry has pushed
     // it down. Deferred to the frame after the layout update.
-    requestAnimationFrame(scrollIntoView);
+    if (scrollIntoView) {
+      requestAnimationFrame(scrollPickerIntoView);
+    }
   }
 
-  // Scroll the picker fully into view within the board
-  function scrollIntoView() {
+  // Scroll the picker fully into view within the host
+  function scrollPickerIntoView() {
     containerRef.current?.scrollIntoView({
       block: 'nearest',
       behavior: 'smooth',
@@ -170,7 +193,9 @@ export const BoardViewNewEntryPicker: React.FC<
   return (
     <div
       ref={containerRef}
-      className="board-view-new-entry-picker"
+      className={`data-view-new-entry-picker${
+        className ? ` ${className}` : ''
+      }`}
       onKeyDown={handleKeyDown}
       onMouseDown={handleMouseDown}
       onBlur={handleBlur}
@@ -179,7 +204,7 @@ export const BoardViewNewEntryPicker: React.FC<
         scrollable
         searchTerm={query}
         onSearchTermChange={setQuery}
-        searchPlaceholder="dataViews.board.searchDatabasesPlaceholder"
+        searchPlaceholder="databases.entries.pickers.searchDatabasesPlaceholder"
         emptyText={t('databaseSearchEmpty')}
       >
         {databases.flatMap(renderDatabaseItems)}
@@ -189,17 +214,17 @@ export const BoardViewNewEntryPicker: React.FC<
       </SearchableMenu>
 
       {/* Keyboard hint */}
-      <Group gap={1} className="board-view-new-entry-picker-hint">
+      <Group gap={1} className="data-view-new-entry-picker-hint">
         <KeyboardShortcut keys={['Enter']} size="xs" color="subtle" />
         <Text size="xs" color="subtle">
-          {t('newEntryPickerCreateHint')}
+          {t('newEntryCreateHint')}
         </Text>
         <Text size="xs" color="subtle">
           ·
         </Text>
         <KeyboardShortcut keys={['Shift', 'Enter']} size="xs" color="subtle" />
         <Text size="xs" color="subtle">
-          {t('newEntryPickerCreateMoreHint')}
+          {t('newEntryCreateMoreHint')}
         </Text>
       </Group>
     </div>

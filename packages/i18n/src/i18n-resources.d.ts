@@ -321,6 +321,16 @@ declare module 'i18next' {
               newEntry: string;
               addExistingEntry: string;
             };
+            pickers: {
+              searchEntriesPlaceholder: string;
+              searchDatabasesPlaceholder: string;
+              entrySearchEmpty: string;
+              databaseSearchEmpty: string;
+              entryAddHint: string;
+              entryAddMoreHint: string;
+              newEntryCreateHint: string;
+              newEntryCreateMoreHint: string;
+            };
           };
           labels: {
             databases: string;
@@ -1544,14 +1554,6 @@ declare module 'i18next' {
             toolbarCards: string;
             showToolbarCard: string;
             toolbarCardTemplate: string;
-            searchEntriesPlaceholder: string;
-            searchDatabasesPlaceholder: string;
-            entrySearchEmpty: string;
-            databaseSearchEmpty: string;
-            entryPickerAddHint: string;
-            entryPickerAddMoreHint: string;
-            newEntryPickerCreateHint: string;
-            newEntryPickerCreateMoreHint: string;
           };
           gallery: {
             name: string;

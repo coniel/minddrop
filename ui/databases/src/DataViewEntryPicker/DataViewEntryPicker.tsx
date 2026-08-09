@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { DatabaseEntries, DatabaseEntry, Databases } from '@minddrop/databases';
 import { useTranslation } from '@minddrop/i18n';
-import { DATABASE_FALLBACK_ICON } from '@minddrop/ui-databases';
 import {
   Group,
   KeyboardShortcut,
@@ -9,15 +8,16 @@ import {
   SearchableMenuItem,
   Text,
 } from '@minddrop/ui-primitives';
-import './BoardViewEntryPicker.css';
+import { DATABASE_FALLBACK_ICON } from '../constants';
+import './DataViewEntryPicker.css';
 
 // Maximum number of entries listed at once
 const ENTRIES_LIMIT = 8;
 
-export interface BoardViewEntryPickerProps {
+export interface DataViewEntryPickerProps {
   /**
    * The IDs of the entries excluded from the results, typically
-   * the entries already on the board.
+   * the entries already in the view.
    */
   excludeIds: string[];
 
@@ -37,45 +37,64 @@ export interface BoardViewEntryPickerProps {
    * Called when the picker is dismissed without a selection.
    */
   onDismiss: () => void;
+
+  /**
+   * Keeps the picker scrolled into view within a scrollable
+   * host: on mount, and after secondary selections push it down.
+   * Leave off in hosts which must not be scrolled (e.g. transform
+   * based canvases).
+   */
+  scrollIntoView?: boolean;
+
+  /**
+   * Optional additional class name for the picker element.
+   */
+  className?: string;
 }
 
 /**
  * Renders a placeholder card with a search box for picking an
  * existing database entry.
  */
-export const BoardViewEntryPicker: React.FC<BoardViewEntryPickerProps> = ({
+export const DataViewEntryPicker: React.FC<DataViewEntryPickerProps> = ({
   excludeIds,
   onSelect,
   onSecondarySelect,
   onDismiss,
+  scrollIntoView = false,
+  className,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [query, setQuery] = useState('');
-  const { t } = useTranslation({ keyPrefix: 'dataViews.board' });
+  const { t } = useTranslation({ keyPrefix: 'databases.entries.pickers' });
 
   // Subscribe to entry changes so the listed options stay fresh
   DatabaseEntries.Store.useAllItemsArray();
 
   // Entries offered as options: top fuzzy matches when searching,
   // newest first otherwise. Fetches extra newest entries to
-  // account for excluded board members.
+  // account for excluded view members.
   const matchedEntries = query
     ? DatabaseEntries.searchByTitle(query)
     : DatabaseEntries.getNewest(ENTRIES_LIMIT + excludeIds.length);
 
-  // Exclude board members and cap the option count
+  // Exclude view members and cap the option count
   const entries = matchedEntries
     .filter((entry) => !excludeIds.includes(entry.id))
     .slice(0, ENTRIES_LIMIT);
 
-  // Bring the picker into view if the drop position only
-  // partially fit on screen. Runs a frame after the search
-  // input's scroll-free auto-focus.
+  // Bring the picker into view if it only partially fit on
+  // screen. Runs a frame after the search input's scroll-free
+  // auto-focus.
   useEffect(() => {
+    if (!scrollIntoView) {
+      return;
+    }
+
     requestAnimationFrame(() => {
-      requestAnimationFrame(scrollIntoView);
+      requestAnimationFrame(scrollPickerIntoView);
     });
-  }, []);
+  }, [scrollIntoView]);
 
   // Dismiss the picker on Escape. The search field clears a
   // non-empty query itself and stops propagation, so only an
@@ -117,11 +136,13 @@ export const BoardViewEntryPicker: React.FC<BoardViewEntryPickerProps> = ({
 
     // Keep the picker in view once the added entry has pushed
     // it down. Deferred to the frame after the layout update.
-    requestAnimationFrame(scrollIntoView);
+    if (scrollIntoView) {
+      requestAnimationFrame(scrollPickerIntoView);
+    }
   }
 
-  // Scroll the picker fully into view within the board
-  function scrollIntoView() {
+  // Scroll the picker fully into view within the host
+  function scrollPickerIntoView() {
     containerRef.current?.scrollIntoView({
       block: 'nearest',
       behavior: 'smooth',
@@ -146,7 +167,7 @@ export const BoardViewEntryPicker: React.FC<BoardViewEntryPickerProps> = ({
   return (
     <div
       ref={containerRef}
-      className="board-view-entry-picker"
+      className={`data-view-entry-picker${className ? ` ${className}` : ''}`}
       onKeyDown={handleKeyDown}
       onMouseDown={handleMouseDown}
       onBlur={handleBlur}
@@ -154,24 +175,24 @@ export const BoardViewEntryPicker: React.FC<BoardViewEntryPickerProps> = ({
       <SearchableMenu
         searchTerm={query}
         onSearchTermChange={setQuery}
-        searchPlaceholder="dataViews.board.searchEntriesPlaceholder"
+        searchPlaceholder="databases.entries.pickers.searchEntriesPlaceholder"
         emptyText={t('entrySearchEmpty')}
       >
         {entries.map(renderEntryItem)}
       </SearchableMenu>
 
       {/* Keyboard hint */}
-      <Group gap={1} className="board-view-entry-picker-hint">
+      <Group gap={1} className="data-view-entry-picker-hint">
         <KeyboardShortcut keys={['Enter']} size="xs" color="subtle" />
         <Text size="xs" color="subtle">
-          {t('entryPickerAddHint')}
+          {t('entryAddHint')}
         </Text>
         <Text size="xs" color="subtle">
           ·
         </Text>
         <KeyboardShortcut keys={['Shift', 'Enter']} size="xs" color="subtle" />
         <Text size="xs" color="subtle">
-          {t('entryPickerAddMoreHint')}
+          {t('entryAddMoreHint')}
         </Text>
       </Group>
     </div>

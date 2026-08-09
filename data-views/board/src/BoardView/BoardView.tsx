@@ -24,12 +24,14 @@ import {
   getDroppedNewEntryDatabaseIds,
 } from '@minddrop/feature-databases';
 import { DropEventData } from '@minddrop/selection';
-import { DataViewFloatingToolbar } from '@minddrop/ui-databases';
+import {
+  DataViewEntryPicker,
+  DataViewFloatingToolbar,
+  DataViewNewEntryPicker,
+} from '@minddrop/ui-databases';
 import { FlexDropContainer } from '@minddrop/ui-drag-and-drop';
 import { ScrollArea } from '@minddrop/ui-primitives';
 import { BoardViewColumn } from '../BoardViewColumn';
-import { BoardViewEntryPicker } from '../BoardViewEntryPicker';
-import { BoardViewNewEntryPicker } from '../BoardViewNewEntryPicker';
 import { BOARD_ACCEPTED_DATA_TYPES, defaultBoardViewData } from '../constants';
 import { BoardColumns, BoardViewData, BoardViewOptions } from '../types';
 import {
@@ -481,7 +483,9 @@ export const BoardViewComponent: React.FC<
     // New entry picker for creating an entry at the picker position
     if (entryPicker.type === 'new') {
       return (
-        <BoardViewNewEntryPicker
+        <DataViewNewEntryPicker
+          scrollIntoView
+          className="board-view-picker"
           onSelect={handleNewEntryPickerSelect}
           onSecondarySelect={handleNewEntryPickerSecondarySelect}
           onDismiss={handleEntryPickerDismiss}
@@ -491,7 +495,9 @@ export const BoardViewComponent: React.FC<
 
     // Existing entry picker for adding an entry to the board
     return (
-      <BoardViewEntryPicker
+      <DataViewEntryPicker
+        scrollIntoView
+        className="board-view-picker"
         excludeIds={entries}
         onSelect={handleEntryPickerSelect}
         onSecondarySelect={handleEntryPickerSecondarySelect}

@@ -291,6 +291,16 @@
       "toolbar": {
         "newEntry": "New entry",
         "addExistingEntry": "Add existing entry"
+      },
+      "pickers": {
+        "searchEntriesPlaceholder": "Search entries...",
+        "searchDatabasesPlaceholder": "Search databases and templates...",
+        "entrySearchEmpty": "No entries found",
+        "databaseSearchEmpty": "No databases found",
+        "entryAddHint": "to add",
+        "entryAddMoreHint": "to add more",
+        "newEntryCreateHint": "to create",
+        "newEntryCreateMoreHint": "to create more"
       }
     },
     "labels": {
@@ -1530,15 +1540,7 @@
       "removeColumn": "Remove column",
       "toolbarCards": "Toolbar cards",
       "showToolbarCard": "Show card",
-      "toolbarCardTemplate": "Entry template",
-      "searchEntriesPlaceholder": "Search entries...",
-      "searchDatabasesPlaceholder": "Search databases and templates...",
-      "entrySearchEmpty": "No entries found",
-      "databaseSearchEmpty": "No databases found",
-      "entryPickerAddHint": "to add",
-      "entryPickerAddMoreHint": "to add more",
-      "newEntryPickerCreateHint": "to create",
-      "newEntryPickerCreateMoreHint": "to create more"
+      "toolbarCardTemplate": "Entry template"
     },
     "gallery": {
       "name": "Gallery",

@@ -23,3 +23,10 @@
   min-height: 100%;
   align-items: stretch;
 }
+
+/* Keep pickers clear of the scrollport edges (and the floating
+   toolbar at the bottom) when scrolled into view */
+.board-view-picker {
+  scroll-margin-top: var(--space-4);
+  scroll-margin-bottom: calc(var(--space-7) + var(--space-5));
+}

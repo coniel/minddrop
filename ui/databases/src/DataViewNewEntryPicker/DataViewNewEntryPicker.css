@@ -1,8 +1,4 @@
-/* Keep clear of the scrollport edges (and the floating toolbar
-   at the bottom) when scrolled into view. */
-.board-view-new-entry-picker {
-  scroll-margin-top: var(--space-4);
-  scroll-margin-bottom: calc(var(--space-7) + var(--space-5));
+.data-view-new-entry-picker {
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   background-color: var(--surface-overlay);
@@ -10,14 +6,14 @@
 
 /* The picker provides the card chrome so the keyboard hint sits
    inside it. Strip the menu's own chrome and let it shrink to
-   fit narrow columns. */
-.board-view-new-entry-picker .menu {
+   fit narrow hosts. */
+.data-view-new-entry-picker .menu {
   min-width: 0;
   border: none;
   background: none;
   box-shadow: none;
 }
 
-.board-view-new-entry-picker-hint {
+.data-view-new-entry-picker-hint {
   padding: 0 var(--space-2) var(--space-2);
 }
