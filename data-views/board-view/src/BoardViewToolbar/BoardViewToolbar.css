@@ -24,10 +24,14 @@
   border-radius: var(--radius-lg);
   background-color: var(--surface-overlay);
   box-shadow: var(--shadow-overlay);
-  /* Hidden until the board is hovered */
+  /* Hidden until the board is hovered. The right transition
+     animates the toolbar back to center when unpinning after
+     the options menu closes. */
   opacity: 0;
   pointer-events: none;
-  transition: opacity var(--duration-normal) var(--ease-out);
+  transition:
+    opacity var(--duration-normal) var(--ease-out),
+    right var(--duration-normal) var(--ease-out);
 }
 
 /* Reveal the toolbar while hovering the board */

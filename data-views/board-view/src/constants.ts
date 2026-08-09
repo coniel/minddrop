@@ -2,6 +2,7 @@ import {
   AddExistingEntryDataKey,
   DatabaseEntriesDataKey,
   NewDatabaseEntriesDataKey,
+  NewEntryPickerDataKey,
 } from '@minddrop/feature-databases';
 import { BoardViewData } from './types';
 
@@ -17,4 +18,5 @@ export const BOARD_ACCEPTED_DATA_TYPES = [
   DatabaseEntriesDataKey,
   NewDatabaseEntriesDataKey,
   AddExistingEntryDataKey,
+  NewEntryPickerDataKey,
 ];

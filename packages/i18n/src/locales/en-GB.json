@@ -1523,10 +1523,18 @@
       "addColumn": "Add column",
       "removeColumn": "Remove column",
       "addExistingEntry": "Add existing entry",
+      "newEntry": "New entry",
+      "toolbarCards": "Toolbar cards",
+      "showToolbarCard": "Show card",
+      "toolbarCardTemplate": "Entry template",
       "searchEntriesPlaceholder": "Search entries...",
+      "searchDatabasesPlaceholder": "Search databases and templates...",
       "entrySearchEmpty": "No entries found",
+      "databaseSearchEmpty": "No databases found",
       "entryPickerAddHint": "to add",
-      "entryPickerAddMoreHint": "to add more"
+      "entryPickerAddMoreHint": "to add more",
+      "newEntryPickerCreateHint": "to create",
+      "newEntryPickerCreateMoreHint": "to create more"
     },
     "gallery": {
       "name": "Gallery",

@@ -13,6 +13,19 @@ export interface BoardView extends DataView {
   data: Partial<BoardViewData>;
 }
 
+export interface BoardViewToolbarCardOptions {
+  /**
+   * Whether the card is hidden from the toolbar.
+   */
+  hidden?: boolean;
+
+  /**
+   * The ID of the entry template used when creating entries via
+   * the card. Blank entries are created when omitted.
+   */
+  templateId?: string;
+}
+
 export interface BoardViewOptions {
   /**
    * The card layout used to render each database's entries,
@@ -20,6 +33,13 @@ export interface BoardViewOptions {
    * their default card layout.
    */
   cardLayoutOverrides?: Record<string, string>;
+
+  /**
+   * The toolbar's database card configuration, keyed by database
+   * ID. Databases without an entry use the default behaviour: a
+   * visible card creating blank entries.
+   */
+  toolbarCards?: Record<string, BoardViewToolbarCardOptions>;
 }
 
 export interface BoardViewData {

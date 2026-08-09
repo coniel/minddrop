@@ -1536,10 +1536,18 @@ declare module 'i18next' {
             addColumn: string;
             removeColumn: string;
             addExistingEntry: string;
+            newEntry: string;
+            toolbarCards: string;
+            showToolbarCard: string;
+            toolbarCardTemplate: string;
             searchEntriesPlaceholder: string;
+            searchDatabasesPlaceholder: string;
             entrySearchEmpty: string;
+            databaseSearchEmpty: string;
             entryPickerAddHint: string;
             entryPickerAddMoreHint: string;
+            newEntryPickerCreateHint: string;
+            newEntryPickerCreateMoreHint: string;
           };
           gallery: {
             name: string;
