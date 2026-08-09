@@ -10,6 +10,8 @@ export * from './events';
 export * from './registerDatabaseViews';
 export * from './useAddExistingEntryDraggable';
 export * from './useNewEntryDraggable';
+export * from './useNewEntryPickerDraggable';
 export * from './utils/dropContainsAddExistingEntryCard';
+export * from './utils/dropContainsNewEntryPickerCard';
 export * from './utils/getDroppedEntryIds';
 export * from './utils/getDroppedNewEntryDatabaseIds';
