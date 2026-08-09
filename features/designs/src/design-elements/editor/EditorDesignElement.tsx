@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useRef } from 'react';
 import {
   EditorElement,
   createEditorCssStyle,
@@ -8,6 +8,7 @@ import {
 import { MarkdownEditor } from '@minddrop/feature-markdown-editor';
 import { useDesignPreview } from '../../DesignElements/DesignPreviewContext';
 import { useElementProperty } from '../../DesignPropertiesProvider';
+import { useLayoutAutoFocus } from '../../LayoutAutoFocusContext';
 import { useElementPlaceholder } from '../../useElementPlaceholder';
 import './EditorDesignElement.css';
 
@@ -38,8 +39,19 @@ export const EditorDesignElement: React.FC<EditorDesignElementProps> = ({
   element,
   rootProps,
 }) => {
+  // Result of the one-time layout autofocus claim, null until
+  // claimed on first render
+  const autoFocusClaimRef = useRef<boolean | null>(null);
+
   const preview = useDesignPreview();
   const property = useElementProperty(element.id);
+  const { claimAutoFocus } = useLayoutAutoFocus();
+
+  // Claim the layout's editor autofocus on first render, so only
+  // the first editor in the layout tree focuses
+  if (autoFocusClaimRef.current === null) {
+    autoFocusClaimRef.current = claimAutoFocus();
+  }
   const titleProperty = useElementProperty(elementTitleBindingId(element.id));
   // Sample title text shown in studio previews
   const titlePlaceholder = useElementPlaceholder({
@@ -132,6 +144,7 @@ export const EditorDesignElement: React.FC<EditorDesignElementProps> = ({
         onTitleChange={preview ? undefined : handleTitleChange}
         validateTitle={preview ? undefined : validateTitle}
         onDebouncedChange={preview ? undefined : handleChange}
+        autoFocus={autoFocusClaimRef.current}
         readOnly={preview}
         style={{
           ...editorStyle,

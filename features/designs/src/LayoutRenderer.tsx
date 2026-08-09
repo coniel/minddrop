@@ -7,6 +7,7 @@ import {
   DesignPropertiesProviderProps,
   DesignPropertySchemasProvider,
 } from './DesignPropertiesProvider';
+import { LayoutAutoFocusProvider } from './LayoutAutoFocusContext';
 import { LayoutIdProvider } from './LayoutIdContext';
 import { LayoutRenderContextProvider } from './LayoutRenderContext';
 
@@ -37,6 +38,12 @@ export interface LayoutRendererProps
    * resolve element placeholder values.
    */
   designProperties?: PropertiesSchema;
+
+  /**
+   * When true, the first editor element in the layout autofocuses
+   * on mount.
+   */
+  autoFocusEditor?: boolean;
 }
 
 /**
@@ -47,6 +54,7 @@ export interface LayoutRendererProps
 export const LayoutRenderer: React.FC<LayoutRendererProps> = ({
   layout,
   context,
+  autoFocusEditor = false,
   designProperties = [],
   properties = [],
   propertyValues = {},
@@ -67,9 +75,11 @@ export const LayoutRenderer: React.FC<LayoutRendererProps> = ({
       >
         <LayoutIdProvider value={layout.id}>
           <LayoutRenderContextProvider value={context ?? null}>
-            <TransientViewStateScope segment={layout.id}>
-              <DesignRootElement element={layout.tree} />
-            </TransientViewStateScope>
+            <LayoutAutoFocusProvider autoFocus={autoFocusEditor}>
+              <TransientViewStateScope segment={layout.id}>
+                <DesignRootElement element={layout.tree} />
+              </TransientViewStateScope>
+            </LayoutAutoFocusProvider>
           </LayoutRenderContextProvider>
         </LayoutIdProvider>
       </DesignPropertiesProvider>

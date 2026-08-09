@@ -292,6 +292,20 @@ To locate the offending file, request per-file semantic diagnostics via
 the TS API in a try/catch loop over the program's source files (a tsc
 run dies on the first crash without naming the file).
 
+## features/designs
+
+### `LayoutAutoFocusContext` is deliberately single-purpose
+
+The layout render path uses many small single-purpose contexts
+(`LayoutIdContext`, `LayoutRenderContext`, `DesignPreviewContext`,
+`LayoutAutoFocusContext`) rather than one render-options bag. The
+autofocus context was kept specific on purpose (decided in the
+entry-editor-autofocus WG): with a single consumer it is unclear
+whether a generic renderer-to-element signal mechanism should use
+claim-once, broadcast, or element-targeted semantics. When a second
+one-shot layout signal appears, generalise then (e.g. a named claim
+token context) instead of adding another bespoke context.
+
 ## features/desktop-app
 
 ### Don't gate window keydown shortcuts on `defaultPrevented`
