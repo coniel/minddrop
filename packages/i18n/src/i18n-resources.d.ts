@@ -47,10 +47,6 @@ declare module 'i18next' {
           open: string;
           exit: string;
           backToDesigns: string;
-          resetView: string;
-          zoomIn: string;
-          zoomOut: string;
-          zoomLevel: string;
         };
         actions: {
           back: string;

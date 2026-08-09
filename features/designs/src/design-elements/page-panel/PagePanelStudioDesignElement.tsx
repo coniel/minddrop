@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { DesignStudioStore, updateElementStyle } from '../../DesignStudioStore';
+import { updateElementStyle } from '../../DesignStudioStore';
+import { designStudioCanvasStore } from '../../designStudioCanvas';
 import { FlatPagePanelDesignElement } from '../../types';
 import { ContainerStudioDesignElement } from '../container';
 import './page-panel-resize.css';
@@ -69,7 +70,7 @@ export const PagePanelStudioDesignElement: React.FC<
         return;
       }
 
-      const scale = DesignStudioStore.getState().zoom || 1;
+      const scale = designStudioCanvasStore.getZoom() || 1;
       const delta = (event.clientX - resizeState.current.startX) / scale;
       const signedDelta = element.side === 'left' ? delta : -delta;
       const nextWidth = Math.min(

@@ -105,35 +105,6 @@ export interface DesignStudioStore {
   propertyBindingEnabled: boolean;
 
   /**
-   * The current zoom level (1 = 100%).
-   */
-  zoom: number;
-
-  /**
-   * The current pan offset in pixels.
-   */
-  pan: { x: number; y: number };
-
-  /**
-   * Sets the zoom level, optionally zooming toward a focal point.
-   * @param zoom - The new zoom level (clamped to 0.1–3).
-   * @param focalPoint - The point in viewport coordinates to zoom toward.
-   */
-  setZoom: (zoom: number, focalPoint?: { x: number; y: number }) => void;
-
-  /**
-   * Sets the pan offset.
-   * @param x - The horizontal offset.
-   * @param y - The vertical offset.
-   */
-  setPan: (x: number, y: number) => void;
-
-  /**
-   * Resets zoom to 1 and pan to { x: 0, y: 0 }.
-   */
-  resetView: () => void;
-
-  /**
    * Initializes the store with a design, flattening each of its
    * layouts' element trees. No layout is active until one is
    * selected via setActiveLayout.
@@ -260,33 +231,6 @@ export const DesignStudioStore = createStore<DesignStudioStore>((set) => ({
   propertyValues: {},
   saveHandler: null,
   propertyBindingEnabled: true,
-  zoom: 1,
-  pan: { x: 0, y: 0 },
-
-  setZoom: (zoom, focalPoint) => {
-    // Clamp zoom to 0.1–3
-    const clampedZoom = Math.min(3, Math.max(0.1, zoom));
-
-    set((state) => {
-      if (focalPoint) {
-        // Adjust pan so the point under the cursor stays stationary
-        const newPanX =
-          focalPoint.x -
-          (focalPoint.x - state.pan.x) * (clampedZoom / state.zoom);
-        const newPanY =
-          focalPoint.y -
-          (focalPoint.y - state.pan.y) * (clampedZoom / state.zoom);
-
-        return { zoom: clampedZoom, pan: { x: newPanX, y: newPanY } };
-      }
-
-      return { zoom: clampedZoom };
-    });
-  },
-
-  setPan: (x, y) => set({ pan: { x, y } }),
-
-  resetView: () => set({ zoom: 1, pan: { x: 0, y: 0 } }),
 
   initialize: (design, properties = [], propertyValues = {}) => {
     // Flatten each layout's element tree into its own bucket
@@ -306,8 +250,6 @@ export const DesignStudioStore = createStore<DesignStudioStore>((set) => ({
       saveHandler: null,
       propertyBindingEnabled: true,
       initialized: true,
-      zoom: 1,
-      pan: { x: 0, y: 0 },
     });
   },
 

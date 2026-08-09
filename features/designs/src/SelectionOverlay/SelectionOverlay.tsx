@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { DesignStudioStore, useDesignStudioStore } from '../DesignStudioStore';
+import { useDesignStudioStore } from '../DesignStudioStore';
 import './SelectionOverlay.css';
 
 interface OverlayRect {
@@ -59,9 +59,13 @@ export const SelectionOverlay: React.FC<SelectionOverlayProps> = ({
       return;
     }
 
-    const zoom = DesignStudioStore.getState().zoom;
     const layerBounds = layer.getBoundingClientRect();
     const targetBounds = target.getBoundingClientRect();
+
+    // The layer's rendered scale: its on-screen width divided by
+    // its layout width. Works both inside the zoomed canvas and
+    // in un-transformed containers.
+    const zoom = layerBounds.width / layer.offsetWidth || 1;
 
     setRect({
       left: (targetBounds.left - layerBounds.left) / zoom,

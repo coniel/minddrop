@@ -16,8 +16,8 @@ import {
   elementLabelMap,
   propertyTypeLabelMap,
 } from '../constants';
+import { designStudioCanvasStore } from '../designStudioCanvas';
 import { FlatDesignElement } from '../types';
-import { centerViewOnLayout } from '../viewportActions';
 
 export interface ElementsTreeNodeProps {
   /**
@@ -121,7 +121,7 @@ export const ElementsTreeNode: React.FC<ElementsTreeNodeProps> = ({
   // the layout's frame
   const handleDoubleClick = () => {
     if (elementId === 'root' && layoutId) {
-      centerViewOnLayout(layoutId);
+      designStudioCanvasStore.centerOnNode(layoutId);
     }
   };
 

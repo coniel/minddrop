@@ -6,6 +6,7 @@ import {
   useState,
 } from 'react';
 import { Layout, LayoutType } from '@minddrop/designs';
+import { CanvasNodeFrame, useCanvasNode } from '@minddrop/ui-canvas';
 import { TextInput } from '@minddrop/ui-primitives';
 import { DesignPreviewProvider } from '../DesignElements';
 import {
@@ -15,38 +16,8 @@ import {
   useDesignStudioStore,
 } from '../DesignStudioStore';
 import { LayoutIdProvider } from '../LayoutIdContext';
-import { centerViewOnLayout } from '../viewportActions';
+import { designStudioCanvasStore } from '../designStudioCanvas';
 import './LayoutFrame.css';
-
-type ResizeEdge =
-  | 'left'
-  | 'right'
-  | 'bottom'
-  | 'top-left'
-  | 'top-right'
-  | 'bottom-left'
-  | 'bottom-right';
-
-interface ResizeState {
-  edge: ResizeEdge;
-  startX: number;
-  startY: number;
-  originWidth: number;
-  originHeight: number;
-  originX: number;
-  originY: number;
-}
-
-interface DragState {
-  startX: number;
-  startY: number;
-  originX: number;
-  originY: number;
-}
-
-// Minimum frame dimensions
-const MIN_WIDTH = 200;
-const MIN_HEIGHT = 100;
 
 /**
  * Computes the initial frame layout (size + position) for a given
@@ -167,15 +138,13 @@ export const LayoutFrame: React.FC<LayoutFrameProps> = ({
   children,
   className,
 }) => {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [size, setSize] = useState({ width: 0, height: 0 });
-  const frameRef = useRef<HTMLDivElement>(null);
-  const dragState = useRef<DragState | null>(null);
-  const resizeState = useRef<ResizeState | null>(null);
-  const didDrag = useRef(false);
-  // Latest position/size for reading inside the mouseup handler
-  const positionRef = useRef(position);
-  const sizeRef = useRef(size);
+  // Standalone mode: the frame's self-managed position + size
+  const [standaloneFrame, setStandaloneFrame] = useState<CanvasNodeFrame>({
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0,
+  });
 
   // Studio mode: the layout being framed, from the design open
   // in the studio
@@ -193,57 +162,53 @@ export const LayoutFrame: React.FC<LayoutFrameProps> = ({
   const autoHeight =
     resolvedLayoutType === 'card' || resolvedLayoutType === 'list';
 
-  // Mirror position/size into refs for the mouseup handler
-  useEffect(() => {
-    positionRef.current = position;
-  }, [position]);
+  // The controlled frame fed to the node hook: the layout's
+  // persisted frame in studio mode, the local frame otherwise
+  const controlledFrame: CanvasNodeFrame = layout?.frame
+    ? {
+        x: layout.frame.x,
+        y: layout.frame.y,
+        width: layout.frame.width,
+        height: layout.frame.height ?? 0,
+      }
+    : standaloneFrame;
 
-  useEffect(() => {
-    sizeRef.current = size;
-  }, [size]);
+  // Store the frame when a drag or resize interaction ends
+  const handleFrameChange = useCallback(
+    (newFrame: CanvasNodeFrame) => {
+      // Standalone mode: keep the frame locally
+      if (!layout) {
+        setStandaloneFrame(newFrame);
 
-  /**
-   * Clamps a position so the frame stays within its parent
-   * workspace. Studio frames live in unbounded canvas coordinates
-   * and are never clamped.
-   */
-  const clampPosition = useCallback(
-    (x: number, y: number) => {
-      if (layoutId) {
-        return { x, y };
+        return;
       }
 
-      const workspace = frameRef.current?.parentElement;
-
-      if (!workspace || !frameRef.current) {
-        return { x, y };
-      }
-
-      const width = frameRef.current.offsetWidth;
-      const height = frameRef.current.offsetHeight;
-
-      return {
-        x: Math.max(0, Math.min(workspace.offsetWidth - width, x)),
-        y: Math.max(0, Math.min(workspace.offsetHeight - height, y)),
-      };
+      // Persist the frame, omitting height for auto-height types
+      updateLayoutFrame(layout.id, {
+        x: newFrame.x,
+        y: newFrame.y,
+        width: newFrame.width,
+        ...(autoHeight ? {} : { height: newFrame.height }),
+      });
     },
-    [layoutId],
+    [layout, autoHeight],
   );
 
-  // Studio mode: sync position + size from the layout's persisted frame
-  const persistedFrame = layout?.frame ?? null;
-
-  useLayoutEffect(() => {
-    if (!persistedFrame) {
-      return;
-    }
-
-    setPosition({ x: persistedFrame.x, y: persistedFrame.y });
-    setSize({
-      width: persistedFrame.width,
-      height: persistedFrame.height ?? 0,
-    });
-  }, [persistedFrame]);
+  const {
+    frame,
+    nodeRef,
+    getDragHandleProps,
+    getResizeHandleProps,
+    wasDragged,
+  } = useCanvasNode({
+    id: layoutId || 'standalone',
+    x: controlledFrame.x,
+    y: controlledFrame.y,
+    width: controlledFrame.width,
+    height: autoHeight ? undefined : controlledFrame.height,
+    bounded: !layoutId,
+    onFrameChange: handleFrameChange,
+  });
 
   // Standalone mode: set initial layout (size + position) based
   // on the layout type
@@ -252,7 +217,7 @@ export const LayoutFrame: React.FC<LayoutFrameProps> = ({
       return;
     }
 
-    const workspace = frameRef.current?.parentElement;
+    const workspace = nodeRef.current?.parentElement;
 
     if (!workspace) {
       return;
@@ -264,356 +229,37 @@ export const LayoutFrame: React.FC<LayoutFrameProps> = ({
       workspace.offsetHeight,
     );
 
-    setSize({ width: frameLayout.width, height: frameLayout.height });
-    setPosition({ x: frameLayout.x, y: Math.max(0, frameLayout.y) });
-  }, [layoutId, resolvedLayoutType, autoHeight]);
-
-  // Start dragging when the drag handle is pressed
-  const handleDragHandleMouseDown = useCallback(
-    (event: React.MouseEvent) => {
-      didDrag.current = false;
-
-      dragState.current = {
-        startX: event.clientX,
-        startY: event.clientY,
-        originX: position.x,
-        originY: position.y,
-      };
-    },
-    [position],
-  );
+    setStandaloneFrame({
+      width: frameLayout.width,
+      height: frameLayout.height,
+      x: frameLayout.x,
+      y: Math.max(0, frameLayout.y),
+    });
+  }, [layoutId, resolvedLayoutType, autoHeight, nodeRef]);
 
   // Select the root element when clicking the drag handle
   // without actually dragging the frame, activating this
   // frame's layout in studio mode
   const handleDragHandleClick = useCallback(() => {
-    if (didDrag.current) {
+    if (wasDragged()) {
       return;
     }
 
     DesignStudioStore.getState().selectElement('root', layoutId);
-  }, [layoutId]);
+  }, [wasDragged, layoutId]);
 
   // Center the viewport on the frame on double-click (studio mode)
   const handleDoubleClick = useCallback(() => {
     if (layoutId) {
-      centerViewOnLayout(layoutId);
+      designStudioCanvasStore.centerOnNode(layoutId);
     }
   }, [layoutId]);
 
-  // Start a resize operation on mousedown
-  const handleResizeMouseDown = useCallback(
-    (event: React.MouseEvent, edge: ResizeEdge) => {
-      event.stopPropagation();
-
-      resizeState.current = {
-        edge,
-        startX: event.clientX,
-        startY: event.clientY,
-        originWidth: size.width,
-        originHeight: size.height,
-        originX: position.x,
-        originY: position.y,
-      };
-    },
-    [size, position],
-  );
-
-  // Track mouse movement during drag or resize
-  const handleMouseMove = useCallback(
-    (event: MouseEvent) => {
-      // Studio frames live in the zoomed canvas coordinate space,
-      // so screen-pixel mouse deltas are scaled down by the zoom
-      const scale = layoutId ? DesignStudioStore.getState().zoom : 1;
-
-      // Handle frame dragging
-      if (dragState.current) {
-        didDrag.current = true;
-        const rawX =
-          dragState.current.originX +
-          (event.clientX - dragState.current.startX) / scale;
-        const rawY =
-          dragState.current.originY +
-          (event.clientY - dragState.current.startY) / scale;
-
-        setPosition(clampPosition(rawX, rawY));
-      }
-
-      // Handle frame resizing
-      if (resizeState.current) {
-        const {
-          edge,
-          startX,
-          startY,
-          originWidth,
-          originHeight,
-          originX,
-          originY,
-        } = resizeState.current;
-        const deltaX = (event.clientX - startX) / scale;
-        const deltaY = (event.clientY - startY) / scale;
-
-        // Workspace-bounds clamps only apply to standalone frames;
-        // studio frames resize freely in canvas coordinates
-        const workspaceWidth = layoutId
-          ? Infinity
-          : (frameRef.current?.parentElement?.offsetWidth ?? Infinity);
-        const workspaceHeight = layoutId
-          ? Infinity
-          : (frameRef.current?.parentElement?.offsetHeight ?? Infinity);
-        const minPosition = layoutId ? -Infinity : 0;
-
-        // Anchored edges: the opposite edge from the one being
-        // dragged stays fixed.
-        const rightEdge = originX + originWidth;
-        const bottomEdge = originY + originHeight;
-
-        // Shift key enables mirror resizing from center
-        const mirror = event.shiftKey;
-        const centerX = originX + originWidth / 2;
-        const centerY = originY + originHeight / 2;
-
-        // Mirror-resize width/height caps that keep the frame's
-        // leading edge inside the workspace in standalone mode
-        const maxMirrorWidth = layoutId ? Infinity : centerX * 2;
-        const maxMirrorHeight = layoutId ? Infinity : centerY * 2;
-
-        switch (edge) {
-          case 'right': {
-            const newWidth = Math.min(
-              Math.max(MIN_WIDTH, originWidth + deltaX * (mirror ? 2 : 1)),
-              mirror ? maxMirrorWidth : workspaceWidth - originX,
-            );
-
-            if (mirror) {
-              const newX = centerX - newWidth / 2;
-
-              setSize((current) => ({ ...current, width: newWidth }));
-              setPosition((current) => ({ ...current, x: newX }));
-            } else {
-              setSize((current) => ({ ...current, width: newWidth }));
-            }
-
-            break;
-          }
-
-          case 'left': {
-            if (mirror) {
-              const newWidth = Math.min(
-                Math.max(MIN_WIDTH, originWidth - deltaX * 2),
-                (workspaceWidth - centerX) * 2,
-              );
-              const newX = centerX - newWidth / 2;
-
-              setSize((current) => ({ ...current, width: newWidth }));
-              setPosition((current) => ({ ...current, x: newX }));
-            } else {
-              const newX = Math.max(
-                minPosition,
-                Math.min(rightEdge - MIN_WIDTH, originX + deltaX),
-              );
-
-              setSize((current) => ({
-                ...current,
-                width: rightEdge - newX,
-              }));
-              setPosition((current) => ({ ...current, x: newX }));
-            }
-
-            break;
-          }
-
-          case 'bottom': {
-            const newHeight = Math.min(
-              Math.max(MIN_HEIGHT, originHeight + deltaY * (mirror ? 2 : 1)),
-              mirror ? maxMirrorHeight : workspaceHeight - originY,
-            );
-
-            if (mirror) {
-              const newY = centerY - newHeight / 2;
-
-              setSize((current) => ({ ...current, height: newHeight }));
-              setPosition((current) => ({ ...current, y: newY }));
-            } else {
-              setSize((current) => ({ ...current, height: newHeight }));
-            }
-
-            break;
-          }
-
-          case 'top-left': {
-            if (mirror) {
-              const newWidth = Math.min(
-                Math.max(MIN_WIDTH, originWidth - deltaX * 2),
-                (workspaceWidth - centerX) * 2,
-              );
-              const newHeight = Math.min(
-                Math.max(MIN_HEIGHT, originHeight - deltaY * 2),
-                (workspaceHeight - centerY) * 2,
-              );
-
-              setSize({ width: newWidth, height: newHeight });
-              setPosition({
-                x: centerX - newWidth / 2,
-                y: centerY - newHeight / 2,
-              });
-            } else {
-              const newX = Math.max(
-                minPosition,
-                Math.min(rightEdge - MIN_WIDTH, originX + deltaX),
-              );
-              const newY = Math.max(
-                minPosition,
-                Math.min(bottomEdge - MIN_HEIGHT, originY + deltaY),
-              );
-
-              setSize({
-                width: rightEdge - newX,
-                height: bottomEdge - newY,
-              });
-              setPosition({ x: newX, y: newY });
-            }
-
-            break;
-          }
-
-          case 'top-right': {
-            if (mirror) {
-              const newWidth = Math.min(
-                Math.max(MIN_WIDTH, originWidth + deltaX * 2),
-                maxMirrorWidth,
-              );
-              const newHeight = Math.min(
-                Math.max(MIN_HEIGHT, originHeight - deltaY * 2),
-                (workspaceHeight - centerY) * 2,
-              );
-
-              setSize({ width: newWidth, height: newHeight });
-              setPosition({
-                x: centerX - newWidth / 2,
-                y: centerY - newHeight / 2,
-              });
-            } else {
-              const newWidth = Math.min(
-                Math.max(MIN_WIDTH, originWidth + deltaX),
-                workspaceWidth - originX,
-              );
-              const newY = Math.max(
-                minPosition,
-                Math.min(bottomEdge - MIN_HEIGHT, originY + deltaY),
-              );
-
-              setSize({ width: newWidth, height: bottomEdge - newY });
-              setPosition((current) => ({ ...current, y: newY }));
-            }
-
-            break;
-          }
-
-          case 'bottom-left': {
-            if (mirror) {
-              const newWidth = Math.min(
-                Math.max(MIN_WIDTH, originWidth - deltaX * 2),
-                (workspaceWidth - centerX) * 2,
-              );
-              const newHeight = Math.min(
-                Math.max(MIN_HEIGHT, originHeight + deltaY * 2),
-                maxMirrorHeight,
-              );
-
-              setSize({ width: newWidth, height: newHeight });
-              setPosition({
-                x: centerX - newWidth / 2,
-                y: centerY - newHeight / 2,
-              });
-            } else {
-              const newX = Math.max(
-                minPosition,
-                Math.min(rightEdge - MIN_WIDTH, originX + deltaX),
-              );
-              const newHeight = Math.min(
-                Math.max(MIN_HEIGHT, originHeight + deltaY),
-                workspaceHeight - originY,
-              );
-
-              setSize({ width: rightEdge - newX, height: newHeight });
-              setPosition((current) => ({ ...current, x: newX }));
-            }
-
-            break;
-          }
-
-          case 'bottom-right': {
-            if (mirror) {
-              const newWidth = Math.min(
-                Math.max(MIN_WIDTH, originWidth + deltaX * 2),
-                maxMirrorWidth,
-              );
-              const newHeight = Math.min(
-                Math.max(MIN_HEIGHT, originHeight + deltaY * 2),
-                maxMirrorHeight,
-              );
-
-              setSize({ width: newWidth, height: newHeight });
-              setPosition({
-                x: centerX - newWidth / 2,
-                y: centerY - newHeight / 2,
-              });
-            } else {
-              const newWidth = Math.min(
-                Math.max(MIN_WIDTH, originWidth + deltaX),
-                workspaceWidth - originX,
-              );
-              const newHeight = Math.min(
-                Math.max(MIN_HEIGHT, originHeight + deltaY),
-                workspaceHeight - originY,
-              );
-
-              setSize({ width: newWidth, height: newHeight });
-            }
-
-            break;
-          }
-        }
-      }
-    },
-    [clampPosition, layoutId],
-  );
-
-  // End drag or resize on mouseup, persisting the frame in
-  // studio mode when it changed
-  const handleMouseUp = useCallback(() => {
-    const wasInteracting = dragState.current || resizeState.current;
-
-    dragState.current = null;
-    resizeState.current = null;
-
-    if (!layout || !wasInteracting) {
-      return;
-    }
-
-    const frame = {
-      x: Math.round(positionRef.current.x),
-      y: Math.round(positionRef.current.y),
-      width: Math.round(sizeRef.current.width),
-      ...(autoHeight ? {} : { height: Math.round(sizeRef.current.height) }),
-    };
-
-    if (!isSameFrame(frame, layout.frame)) {
-      updateLayoutFrame(layout.id, frame);
-    }
-  }, [layout, autoHeight]);
-
-  // Attach global mouse listeners for drag and resize
-  useEffect(() => {
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseup', handleMouseUp);
-
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
-    };
-  }, [handleMouseMove, handleMouseUp]);
+  // Pressing a hover zone (resize/drag areas) only clears the
+  // canvas highlight, selection stays on the current element
+  const handleHoverZoneMouseDown = useCallback(() => {
+    DesignStudioStore.getState().clearHighlight();
+  }, []);
 
   // Studio mode: the framed layout no longer exists
   if (layoutId && !layout) {
@@ -622,47 +268,69 @@ export const LayoutFrame: React.FC<LayoutFrameProps> = ({
 
   return (
     <div
-      ref={frameRef}
+      ref={nodeRef}
       className={`layout-frame${className ? ` ${className}` : ''}`}
       data-layout-id={layoutId}
       style={{
-        transform: `translate(${position.x}px, ${position.y}px)`,
-        width: size.width,
+        transform: `translate(${frame.x}px, ${frame.y}px)`,
+        width: frame.width,
       }}
       onDoubleClick={handleDoubleClick}
     >
       {/* Corner handles (only for page type) */}
       {!autoHeight && (
         <>
-          <div className="layout-frame-hover-zone layout-frame-hover-zone-top-left" />
-          <div className="layout-frame-hover-zone layout-frame-hover-zone-top-left-vertical" />
+          <div
+            className="layout-frame-hover-zone layout-frame-hover-zone-top-left"
+            onMouseDown={handleHoverZoneMouseDown}
+          />
+          <div
+            className="layout-frame-hover-zone layout-frame-hover-zone-top-left-vertical"
+            onMouseDown={handleHoverZoneMouseDown}
+          />
           <CornerHandle
             className="layout-frame-resize-handle-top-left"
             path="M 25 0 A 25 25 0 0 0 0 25"
-            onMouseDown={(event) => handleResizeMouseDown(event, 'top-left')}
+            onMouseDown={getResizeHandleProps('top-left').onMouseDown}
           />
-          <div className="layout-frame-hover-zone layout-frame-hover-zone-top-right" />
-          <div className="layout-frame-hover-zone layout-frame-hover-zone-top-right-vertical" />
+          <div
+            className="layout-frame-hover-zone layout-frame-hover-zone-top-right"
+            onMouseDown={handleHoverZoneMouseDown}
+          />
+          <div
+            className="layout-frame-hover-zone layout-frame-hover-zone-top-right-vertical"
+            onMouseDown={handleHoverZoneMouseDown}
+          />
           <CornerHandle
             className="layout-frame-resize-handle-top-right"
             path="M 0 0 A 25 25 0 0 1 25 25"
-            onMouseDown={(event) => handleResizeMouseDown(event, 'top-right')}
+            onMouseDown={getResizeHandleProps('top-right').onMouseDown}
           />
-          <div className="layout-frame-hover-zone layout-frame-hover-zone-bottom-left" />
-          <div className="layout-frame-hover-zone layout-frame-hover-zone-bottom-left-vertical" />
+          <div
+            className="layout-frame-hover-zone layout-frame-hover-zone-bottom-left"
+            onMouseDown={handleHoverZoneMouseDown}
+          />
+          <div
+            className="layout-frame-hover-zone layout-frame-hover-zone-bottom-left-vertical"
+            onMouseDown={handleHoverZoneMouseDown}
+          />
           <CornerHandle
             className="layout-frame-resize-handle-bottom-left"
             path="M 25 25 A 25 25 0 0 1 0 0"
-            onMouseDown={(event) => handleResizeMouseDown(event, 'bottom-left')}
+            onMouseDown={getResizeHandleProps('bottom-left').onMouseDown}
           />
-          <div className="layout-frame-hover-zone layout-frame-hover-zone-bottom-right" />
-          <div className="layout-frame-hover-zone layout-frame-hover-zone-bottom-right-vertical" />
+          <div
+            className="layout-frame-hover-zone layout-frame-hover-zone-bottom-right"
+            onMouseDown={handleHoverZoneMouseDown}
+          />
+          <div
+            className="layout-frame-hover-zone layout-frame-hover-zone-bottom-right-vertical"
+            onMouseDown={handleHoverZoneMouseDown}
+          />
           <CornerHandle
             className="layout-frame-resize-handle-bottom-right"
             path="M 0 25 A 25 25 0 0 0 25 0"
-            onMouseDown={(event) =>
-              handleResizeMouseDown(event, 'bottom-right')
-            }
+            onMouseDown={getResizeHandleProps('bottom-right').onMouseDown}
           />
         </>
       )}
@@ -671,17 +339,20 @@ export const LayoutFrame: React.FC<LayoutFrameProps> = ({
       {layout && <LayoutNameInput layout={layout} />}
 
       {/* Drag handle hover zone + handle bar */}
-      <div className="layout-frame-hover-zone layout-frame-hover-zone-top" />
+      <div
+        className="layout-frame-hover-zone layout-frame-hover-zone-top"
+        onMouseDown={handleHoverZoneMouseDown}
+      />
       <div
         className="layout-frame-drag-handle"
-        onMouseDown={handleDragHandleMouseDown}
+        {...getDragHandleProps()}
         onClick={handleDragHandleClick}
       />
 
       {/* Content wrapper */}
       <div
         className="layout-frame-content"
-        style={autoHeight ? undefined : { height: size.height }}
+        style={autoHeight ? undefined : { height: frame.height }}
       >
         <LayoutIdProvider value={layoutId ?? null}>
           <DesignPreviewProvider value>{children}</DesignPreviewProvider>
@@ -689,24 +360,33 @@ export const LayoutFrame: React.FC<LayoutFrameProps> = ({
       </div>
 
       {/* Left/right edge handles (always visible for all types) */}
-      <div className="layout-frame-hover-zone layout-frame-hover-zone-left" />
+      <div
+        className="layout-frame-hover-zone layout-frame-hover-zone-left"
+        onMouseDown={handleHoverZoneMouseDown}
+      />
       <div
         className="layout-frame-resize-handle layout-frame-resize-handle-left"
-        onMouseDown={(event) => handleResizeMouseDown(event, 'left')}
+        onMouseDown={getResizeHandleProps('left').onMouseDown}
       />
-      <div className="layout-frame-hover-zone layout-frame-hover-zone-right" />
+      <div
+        className="layout-frame-hover-zone layout-frame-hover-zone-right"
+        onMouseDown={handleHoverZoneMouseDown}
+      />
       <div
         className="layout-frame-resize-handle layout-frame-resize-handle-right"
-        onMouseDown={(event) => handleResizeMouseDown(event, 'right')}
+        onMouseDown={getResizeHandleProps('right').onMouseDown}
       />
 
       {/* Bottom edge handle (only for page type) */}
       {!autoHeight && (
         <>
-          <div className="layout-frame-hover-zone layout-frame-hover-zone-bottom" />
+          <div
+            className="layout-frame-hover-zone layout-frame-hover-zone-bottom"
+            onMouseDown={handleHoverZoneMouseDown}
+          />
           <div
             className="layout-frame-resize-handle layout-frame-resize-handle-bottom"
-            onMouseDown={(event) => handleResizeMouseDown(event, 'bottom')}
+            onMouseDown={getResizeHandleProps('bottom').onMouseDown}
           />
         </>
       )}
@@ -767,12 +447,3 @@ const LayoutNameInput: React.FC<LayoutNameInputProps> = ({ layout }) => {
     </div>
   );
 };
-
-/**
- * Compares two layout frames by value.
- */
-function isSameFrame(a: Layout['frame'], b: Layout['frame']): boolean {
-  return (
-    a.x === b.x && a.y === b.y && a.width === b.width && a.height === b.height
-  );
-}

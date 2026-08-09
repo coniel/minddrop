@@ -17,11 +17,7 @@
     "title": "Design Studio",
     "open": "Open design studio",
     "exit": "Exit design studio",
-    "backToDesigns": "Back to designs",
-    "resetView": "Reset view",
-    "zoomIn": "Zoom in",
-    "zoomOut": "Zoom out",
-    "zoomLevel": "Zoom level"
+    "backToDesigns": "Back to designs"
   },
   "actions": {
     "back": "Back",

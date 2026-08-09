@@ -13,7 +13,6 @@ import {
 import { DesignPreviewProvider, DesignRootElement } from '../DesignElements';
 import { DesignPropertySchemasProvider } from '../DesignPropertiesProvider';
 import { DesignStudioStore } from '../DesignStudioStore';
-import { resetView } from '../viewportActions';
 import './DesignDashboard.css';
 
 // Fallback preview height for layouts without a fixed frame
@@ -47,11 +46,10 @@ export const DesignDashboard: React.FC<DesignDashboardProps> = ({
     DesignStudioStore.getState().initialize(design);
   }, []);
 
-  // Open the design in the editor with all of its layouts
-  // fitted into view
+  // Open the design in the editor. The studio workspace fits the
+  // design's layouts into view when it mounts.
   const handleOpenDesign = useCallback((design: Design) => {
     DesignStudioStore.getState().initialize(design);
-    resetView();
   }, []);
 
   return (

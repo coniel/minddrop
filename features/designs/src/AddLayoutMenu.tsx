@@ -9,8 +9,8 @@ import {
 } from '@minddrop/ui-primitives';
 import { DesignStudioStore, addLayout } from './DesignStudioStore';
 import { layoutTypeIconMap } from './constants';
+import { designStudioCanvasStore } from './designStudioCanvas';
 import { getNewLayoutPosition } from './utils';
-import { centerViewOnLayout } from './viewportActions';
 
 /**
  * Renders a + icon button that opens a dropdown menu for adding a
@@ -32,7 +32,14 @@ export const AddLayoutMenu: React.FC = () => {
       getNewLayoutPosition(design.layouts),
     );
 
-    centerViewOnLayout(layout.id);
+    // Center the view on the new layout's frame, which is known
+    // from data before the frame has rendered
+    designStudioCanvasStore.centerOnFrame({
+      x: layout.frame.x,
+      y: layout.frame.y,
+      width: layout.frame.width,
+      height: layout.frame.height ?? 0,
+    });
   }, []);
 
   return (

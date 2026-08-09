@@ -190,8 +190,8 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({
           {/* Zoom out */}
           <ToolbarIconButton
             icon="minus"
-            label="designStudio.zoomOut"
-            tooltip={{ title: 'designStudio.zoomOut' }}
+            label="canvas.zoomOut"
+            tooltip={{ title: 'canvas.zoomOut' }}
             variant="subtle"
             size="sm"
             onClick={zoomOut}
@@ -227,8 +227,8 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({
           {/* Zoom in */}
           <ToolbarIconButton
             icon="plus"
-            label="designStudio.zoomIn"
-            tooltip={{ title: 'designStudio.zoomIn' }}
+            label="canvas.zoomIn"
+            tooltip={{ title: 'canvas.zoomIn' }}
             variant="subtle"
             size="sm"
             onClick={zoomIn}
@@ -240,8 +240,8 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({
           {/* Reset view */}
           <ToolbarIconButton
             icon="scan"
-            label="designStudio.resetView"
-            tooltip={{ title: 'designStudio.resetView' }}
+            label="canvas.resetView"
+            tooltip={{ title: 'canvas.resetView' }}
             variant="subtle"
             size="sm"
             onClick={reset}

@@ -1,40 +1,5 @@
 .design-studio-viewport {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  /* Light gray in light mode so white layouts stand out from
-     the canvas; the app background works as-is in dark mode.
-     Exposed as a variable so layouts with a transparent background
-     can paint themselves in the canvas colour. */
-  --design-studio-canvas-background: var(--surface-subtle);
-  background-color: var(--design-studio-canvas-background);
-
-  .dark-theme & {
-    --design-studio-canvas-background: var(--surface-app);
-  }
-
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image: radial-gradient(
-      circle,
-      var(--border-default) 1px,
-      transparent 1px
-    );
-    background-size: var(--grid-size) var(--grid-size);
-    background-position: var(--grid-offset-x) var(--grid-offset-y);
-    opacity: var(--grid-opacity);
-    pointer-events: none;
-    transition: opacity 0.2s ease;
-  }
-
-  .design-studio-viewport-transform-layer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    transform-origin: 0 0;
-  }
+  /* Design elements with a transparent background paint
+     themselves in the canvas colour via this variable */
+  --design-studio-canvas-background: var(--ui-canvas-background);
 }

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Designs } from '@minddrop/designs';
+import { Design, Designs } from '@minddrop/designs';
 import {
   CloseAppSidebarEvent,
   DefaultViewName,
@@ -8,6 +8,11 @@ import {
   OpenViewEvent,
   SetNavToolbarWidthEvent,
 } from '@minddrop/events';
+import {
+  CanvasProvider,
+  CanvasZoomToolbar,
+  useFitOnNodesReady,
+} from '@minddrop/ui-canvas';
 import { Panel, TextInput } from '@minddrop/ui-primitives';
 import { DesignDashboard } from '../DesignDashboard';
 import { DesignStudioLeftPanel } from '../DesignStudioLeftPanel';
@@ -19,13 +24,12 @@ import {
   useDesignStudioStore,
   useElement,
 } from '../DesignStudioStore';
-import { DesignStudioToolbar } from '../DesignStudioToolbar';
 import { DesignStudioViewport } from '../DesignStudioViewport';
 import { ElementStyleEditor } from '../ElementStyleEditor';
 import { LayoutFrame } from '../LayoutFrame/LayoutFrame';
+import { designStudioCanvasStore } from '../designStudioCanvas';
 import { OpenDesignStudioEventData } from '../events';
 import { FlatRootDesignElement } from '../types';
-import { resetView } from '../viewportActions';
 import './DesignStudio.css';
 
 // Width of the left panel, matched by the nav toolbar (see DesignStudio.css)
@@ -41,36 +45,7 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
     (state) => state.selectedElementId,
   );
   const design = useDesignStudioStore((state) => state.design);
-  const [designName, setDesignName] = useState(design?.name || '');
-  const nameInputRef = useRef<HTMLInputElement>(null);
   const isDesignOpen = Boolean(design);
-
-  useEffect(() => {
-    setDesignName(design?.name || '');
-  }, [design?.id, design?.name]);
-
-  const handleNameBlur = useCallback(() => {
-    if (!design) {
-      return;
-    }
-
-    const trimmedName = designName.trim();
-
-    if (trimmedName && trimmedName !== design.name) {
-      renameDesign(trimmedName);
-    } else {
-      setDesignName(design.name);
-    }
-  }, [design, designName]);
-
-  const handleNameKeyDown = useCallback(
-    (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === 'Enter') {
-        nameInputRef.current?.blur();
-      }
-    },
-    [],
-  );
 
   // Open the design specified by the open event
   useEffect(() => {
@@ -81,17 +56,25 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
     openDesign(designId);
   }, [designId]);
 
-  // Delete the highlighted element on Delete/Backspace
+  // Delete the highlighted element on Delete/Backspace, clear
+  // the highlight on Escape
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== 'Delete' && event.key !== 'Backspace') {
-        return;
-      }
-
-      // Don't delete when typing in an input
+      // Don't handle shortcuts when typing in an input
       const tag = (event.target as HTMLElement).tagName;
 
       if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') {
+        return;
+      }
+
+      // Escape clears the selection overlay
+      if (event.key === 'Escape') {
+        DesignStudioStore.getState().clearHighlight();
+
+        return;
+      }
+
+      if (event.key !== 'Delete' && event.key !== 'Backspace') {
         return;
       }
 
@@ -174,32 +157,84 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
           onClickBack={handleCloseDesign}
         />
       </Panel>
-      <div className="design-studio-workspace">
-        <DesignStudioViewport>
-          {design.layouts.map((layout) => (
-            <LayoutFrame key={layout.id} layoutId={layout.id}>
-              <LayoutRootElement />
-            </LayoutFrame>
-          ))}
-        </DesignStudioViewport>
-        <div className="design-studio-workspace-header">
-          <div className="design-studio-workspace-design-name">
-            <TextInput
-              ref={nameInputRef}
-              variant="subtle"
-              size="sm"
-              value={designName}
-              onValueChange={setDesignName}
-              onBlur={handleNameBlur}
-              onKeyDown={handleNameKeyDown}
-            />
-          </div>
-          <DesignStudioToolbar />
-        </div>
-      </div>
+      <CanvasProvider store={designStudioCanvasStore}>
+        <DesignStudioWorkspace design={design} />
+      </CanvasProvider>
       <Panel className="design-studio-right-panel">
         {selectedElementId && <ElementStyleEditor />}
       </Panel>
+    </div>
+  );
+};
+
+interface DesignStudioWorkspaceProps {
+  /**
+   * The design open in the studio.
+   */
+  design: Design;
+}
+
+/**
+ * Renders the studio workspace: the canvas viewport with the
+ * design's layout frames, and the header with the design name
+ * input and zoom toolbar.
+ */
+const DesignStudioWorkspace: React.FC<DesignStudioWorkspaceProps> = ({
+  design,
+}) => {
+  const nameInputRef = useRef<HTMLInputElement>(null);
+  const [designName, setDesignName] = useState(design.name);
+
+  // Fit the design's layouts into view when the workspace opens
+  useFitOnNodesReady(design.layouts.map((layout) => layout.id));
+
+  // Sync the name input when the design is renamed externally
+  useEffect(() => {
+    setDesignName(design.name);
+  }, [design.id, design.name]);
+
+  const handleNameBlur = useCallback(() => {
+    const trimmedName = designName.trim();
+
+    if (trimmedName && trimmedName !== design.name) {
+      renameDesign(trimmedName);
+    } else {
+      setDesignName(design.name);
+    }
+  }, [design, designName]);
+
+  const handleNameKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (event.key === 'Enter') {
+        nameInputRef.current?.blur();
+      }
+    },
+    [],
+  );
+
+  return (
+    <div className="design-studio-workspace">
+      <DesignStudioViewport>
+        {design.layouts.map((layout) => (
+          <LayoutFrame key={layout.id} layoutId={layout.id}>
+            <LayoutRootElement />
+          </LayoutFrame>
+        ))}
+      </DesignStudioViewport>
+      <div className="design-studio-workspace-header">
+        <div className="design-studio-workspace-design-name">
+          <TextInput
+            ref={nameInputRef}
+            variant="subtle"
+            size="sm"
+            value={designName}
+            onValueChange={setDesignName}
+            onBlur={handleNameBlur}
+            onKeyDown={handleNameKeyDown}
+          />
+        </div>
+        <CanvasZoomToolbar />
+      </div>
     </div>
   );
 };
@@ -219,8 +254,8 @@ const LayoutRootElement: React.FC = () => {
 };
 
 /**
- * Opens the design in the editor with all of its layouts fitted
- * into view. Does nothing when the design does not exist.
+ * Opens the design in the editor. Does nothing when the design
+ * does not exist.
  */
 function openDesign(designId: string) {
   const design = Designs.get(designId, false);
@@ -230,5 +265,4 @@ function openDesign(designId: string) {
   }
 
   DesignStudioStore.getState().initialize(design);
-  resetView();
 }
