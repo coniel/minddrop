@@ -582,4 +582,95 @@ describe('RichTextEditor block selection', () => {
     expect(isSelected(getByText(paragraphElement1PlainText))).toBe(true);
     expect(isSelected(getByText(headingElement1PlainText))).toBe(true);
   });
+
+  // Selects the first block through its handle and dismisses the
+  // actions menu which opens along with it
+  const selectFirstBlock = async (
+    getByText: (text: string) => HTMLElement,
+    getByLabelText: (label: string) => HTMLElement,
+  ) => {
+    hoverBlock(getByText(paragraphElement1PlainText));
+
+    await actFlush(() => {
+      fireEvent.click(getByLabelText(SELECT_LABEL));
+    });
+
+    await actFlush(() => {
+      fireEvent.keyDown(document.body, { key: 'Escape' });
+    });
+  };
+
+  it('deselects the blocks when pressing outside the editor', async () => {
+    const { getByText, getByLabelText, baseElement } = renderEditor();
+
+    await selectFirstBlock(getByText, getByLabelText);
+
+    expect(isSelected(getByText(paragraphElement1PlainText))).toBe(true);
+
+    await actFlush(() => {
+      fireEvent.pointerDown(baseElement);
+    });
+
+    expect(isSelected(getByText(paragraphElement1PlainText))).toBe(false);
+  });
+
+  it('deselects the blocks when pressing in another editor', async () => {
+    const { getAllByText, getAllByLabelText } = render(
+      <>
+        <RichTextEditor initialValue={[paragraphElement1]} />
+        <RichTextEditor initialValue={[paragraphElement1]} />
+      </>,
+    );
+
+    const [firstEditorBlock, secondEditorBlock] = getAllByText(
+      paragraphElement1PlainText,
+    );
+
+    hoverBlock(firstEditorBlock);
+
+    await actFlush(() => {
+      fireEvent.click(getAllByLabelText(SELECT_LABEL)[0]);
+    });
+
+    await actFlush(() => {
+      fireEvent.keyDown(document.body, { key: 'Escape' });
+    });
+
+    await actFlush(() => {
+      fireEvent.pointerDown(secondEditorBlock);
+    });
+
+    expect(isSelected(firstEditorBlock)).toBe(false);
+  });
+
+  it('keeps the selection while pressing the controls', async () => {
+    const { getByText, getByLabelText } = renderEditor();
+
+    await selectFirstBlock(getByText, getByLabelText);
+
+    // The controls are still against the block the pointer rests on
+    await actFlush(() => {
+      fireEvent.pointerDown(getByLabelText(SELECT_LABEL));
+    });
+
+    expect(isSelected(getByText(paragraphElement1PlainText))).toBe(true);
+  });
+
+  it('keeps the selection while the actions menu is open', async () => {
+    const { getByText, getByLabelText, baseElement } = renderEditor();
+
+    hoverBlock(getByText(paragraphElement1PlainText));
+
+    // Selecting through the handle opens the actions menu
+    await actFlush(() => {
+      fireEvent.click(getByLabelText(SELECT_LABEL));
+    });
+
+    // An outside press while the menu is open only closes the menu
+    await actFlush(() => {
+      fireEvent.pointerDown(baseElement);
+    });
+
+    expect(isSelected(getByText(paragraphElement1PlainText))).toBe(true);
+  });
 });

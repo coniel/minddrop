@@ -21,6 +21,7 @@ import { BlockSelectionContext } from '../BlockSelectionContext';
 import { EditorInlineElementConfigsStore } from '../InlineElementTypeConfigsStore';
 import { MarkConfigsStore } from '../MarkConfigsStore';
 import { Transforms } from '../Transforms';
+import { clearBlockSelection } from '../clearBlockSelection';
 import { defaultMarkConfigs } from '../default-mark-configs';
 import { deleteBlocks } from '../deleteBlocks';
 import { duplicateBlocks } from '../duplicateBlocks';
@@ -572,6 +573,50 @@ export const RichTextEditor: React.FC<EditorProps> = ({
       editorElement.removeEventListener('beforeinput', handleBeforeInput, true);
     };
   }, []);
+
+  // Pressing outside the editor deselects its blocks, as it does a
+  // text selection. Listened for on the document because the press
+  // can land anywhere on the page.
+  useEffect(() => {
+    // Nothing is selected, so there is nothing to dismiss
+    if (!selectedBlockIds.size) {
+      return;
+    }
+
+    // While the actions menu is open, an outside press is the
+    // menu's to handle: it closes the menu and leaves the selection
+    // in place, stepping down like repeated Escape presses do.
+    if (menuBlock) {
+      return;
+    }
+
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target as Node | null;
+
+      if (!target) {
+        return;
+      }
+
+      // Presses in the editor place the cursor, which steps the
+      // selection down itself
+      if (containerRef.current?.contains(target)) {
+        return;
+      }
+
+      // The controls act on the selection, so pressing them keeps it
+      if (blockGutterRef.current?.contains(target)) {
+        return;
+      }
+
+      clearBlockSelection(editorWithPlugins);
+    };
+
+    document.addEventListener('pointerdown', handlePointerDown);
+
+    return () => {
+      document.removeEventListener('pointerdown', handlePointerDown);
+    };
+  }, [selectedBlockIds, menuBlock, editorWithPlugins]);
 
   // Compose the title blur handling with the consumer's onBlur
   const handleBlur = useCallback(
