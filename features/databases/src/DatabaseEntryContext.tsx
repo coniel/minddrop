@@ -1,20 +1,7 @@
 import React, { createContext, useContext, useMemo } from 'react';
+import { DatabaseEntryRenderSource } from '@minddrop/databases';
 
-/**
- * The source the entries are rendered from, determining which
- * source-specific behaviours apply (e.g. menu options).
- */
-export interface DatabaseEntryRenderSource {
-  /**
-   * The type of source.
-   */
-  type: 'collection' | 'query' | 'database';
-
-  /**
-   * The ID of the source.
-   */
-  id: string;
-}
+export type { DatabaseEntryRenderSource } from '@minddrop/databases';
 
 /**
  * Context describing how database entries rendered within it

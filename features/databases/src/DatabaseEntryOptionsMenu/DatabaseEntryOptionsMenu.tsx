@@ -71,8 +71,8 @@ export const DatabaseEntryOptionsMenu: React.FC<
 
   // Duplicate the entry
   const handleDuplicate = useCallback(() => {
-    // TODO: implement when DatabaseEntries.duplicate is available
-  }, []);
+    DatabaseEntries.duplicate(entryId, source);
+  }, [entryId, source]);
 
   // Delete the entry
   const handleDelete = useCallback(() => {
