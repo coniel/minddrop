@@ -1545,6 +1545,13 @@ declare module 'i18next' {
             newCollection: string;
             newQuery: string;
           };
+          canvas: {
+            name: string;
+            description: string;
+            toolbarCards: string;
+            showToolbarCard: string;
+            toolbarCardTemplate: string;
+          };
           board: {
             name: string;
             description: string;

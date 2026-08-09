@@ -1,0 +1,47 @@
+.canvas-view {
+  position: relative;
+  height: 100%;
+}
+
+/* The canvas does not scroll, so the floating toolbar's anchor is
+   pinned absolutely instead of relying on scrollport stickiness */
+.canvas-view .data-view-floating-toolbar {
+  position: absolute;
+  bottom: var(--space-4);
+  left: 50%;
+}
+
+/* Zoom controls at the bottom right of the canvas */
+.canvas-view-zoom-toolbar {
+  position: absolute;
+  right: var(--space-4);
+  bottom: var(--space-4);
+  z-index: 1;
+  padding: var(--space-1);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  background-color: var(--surface-overlay);
+  box-shadow: var(--shadow-overlay);
+  /* Hidden until the canvas is hovered */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--duration-normal) var(--ease-out);
+}
+
+/* Reveal the zoom controls while hovering the canvas */
+.canvas-view:hover .canvas-view-zoom-toolbar {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.canvas-view-node {
+  border-radius: var(--radius-md);
+}
+
+/* The active entry picker, positioned in canvas coordinates
+   inside the transform layer */
+.canvas-view-picker {
+  position: absolute;
+  top: 0;
+  left: 0;
+}

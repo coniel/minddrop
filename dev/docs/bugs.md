@@ -24,6 +24,22 @@ created, so runtime behaviour is unaffected.
 Fix direction: initialize i18n in the package's test setup (or stub the
 default-name resolution), then remove this entry.
 
+## features/search
+
+### `SearchDialog` fails the typecheck: `onClick` arity mismatch
+
+`npx tsc --noEmit` in `features/search` (and any package depending on it,
+e.g. `features/desktop-app`) fails on `main` (pre-existing, found
+2026-08-09 while typechecking desktop-app for unrelated work):
+`src/SearchDialog/SearchDialog.tsx(171,23): error TS2322` — the
+`itemProps.onClick` handler (`(event: MouseEvent) => void`) is passed to a
+result item prop typed `() => void`, whose target signature "provides too
+few arguments".
+
+Fix direction: widen the result item component's `onClick` prop to accept
+the mouse event (or drop the event parameter from the handler), then
+remove this entry.
+
 ## packages/databases
 
 ### Concurrent file entry creation races on the storage directory

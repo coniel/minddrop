@@ -1,0 +1,20 @@
+.canvas-view-skeleton {
+  position: relative;
+  height: 100%;
+  min-height: 280px;
+  overflow: hidden;
+  pointer-events: none;
+  /* Static dot grid matching the canvas background */
+  background-image: radial-gradient(
+    circle,
+    var(--border-default) 1px,
+    transparent 1px
+  );
+  background-size: 24px 24px;
+}
+
+.canvas-view-skeleton-card {
+  position: absolute;
+  border-radius: var(--radius-md);
+  background-color: var(--surface-skeleton);
+}

@@ -1532,6 +1532,13 @@
       "newCollection": "New collection",
       "newQuery": "New query"
     },
+    "canvas": {
+      "name": "Canvas",
+      "description": "An infinite canvas of freely arranged cards.",
+      "toolbarCards": "Toolbar cards",
+      "showToolbarCard": "Show card",
+      "toolbarCardTemplate": "Entry template"
+    },
     "board": {
       "name": "Board",
       "description": "A board view with draggable columns of cards.",

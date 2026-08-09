@@ -57,6 +57,7 @@
     "@minddrop/utils": "workspace:*",
     "@minddrop/views": "workspace:*",
     "@minddrop/data-view-board": "workspace:*",
+    "@minddrop/data-view-canvas": "workspace:*",
     "@minddrop/data-view-gallery": "workspace:*",
     "@minddrop/data-view-notebook": "workspace:*",
     "@minddrop/data-view-table": "workspace:*",
