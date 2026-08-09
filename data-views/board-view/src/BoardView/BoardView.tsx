@@ -75,6 +75,10 @@ export const BoardViewComponent: React.FC<
   // entry or new entry card
   const [entryPicker, setEntryPicker] = useState<EntryPickerState | null>(null);
 
+  // The ID of the just created entry whose card should autofocus
+  // its editor, cleared once the card has mounted
+  const [autoFocusEntryId, setAutoFocusEntryId] = useState<string>();
+
   // Resolve columns from view data, falling back to defaults
   const columns = useMemo(
     () => view.data?.columns || defaultBoardViewData.columns,
@@ -171,6 +175,9 @@ export const BoardViewComponent: React.FC<
       // it is briefly reconciled into the first column
       updateColumns(placeEntry(entry.id));
 
+      // Autofocus the new entry's editor once its card mounts
+      setAutoFocusEntryId(entry.id);
+
       // Bring the new entry's card into view if the drop position
       // only partially fit on screen
       scrollEntryIntoView(entry.id);
@@ -179,6 +186,11 @@ export const BoardViewComponent: React.FC<
     },
     [view.dataSource.id, updateColumns, scrollEntryIntoView],
   );
+
+  // Clear the autofocus once the new entry's card has mounted
+  const handleEntryAutoFocused = useCallback(() => {
+    setAutoFocusEntryId(undefined);
+  }, []);
 
   // Handle dropping an entry, new entry card, or add existing
   // entry card into a column
@@ -481,6 +493,8 @@ export const BoardViewComponent: React.FC<
         draggable
         optionsMenu
         source={view.dataSource}
+        autoFocusEntryId={autoFocusEntryId}
+        onEntryAutoFocused={handleEntryAutoFocused}
       >
         <FlexDropContainer
           id={`board-${view.id}`}
