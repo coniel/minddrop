@@ -36,11 +36,6 @@ export interface SearchableMenuVirtualizedListProps {
    * Returns navigable list props for the item at the given index.
    */
   getItemProps: (index: number) => NavigableListItemProps;
-
-  /**
-   * Mouse move handler for the container.
-   */
-  onMouseMove: React.MouseEventHandler;
 }
 
 /**
@@ -49,7 +44,7 @@ export interface SearchableMenuVirtualizedListProps {
  */
 export const SearchableMenuVirtualizedList: React.FC<
   SearchableMenuVirtualizedListProps
-> = ({ activeIds, registry, highlightedIndex, getItemProps, onMouseMove }) => {
+> = ({ activeIds, registry, highlightedIndex, getItemProps }) => {
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   const virtualizer = useVirtualizer({
@@ -85,7 +80,6 @@ export const SearchableMenuVirtualizedList: React.FC<
         role="presentation"
         className="searchable-menu-virtualized-placeholder"
         style={{ height: totalSize }}
-        onMouseMove={onMouseMove}
       >
         {virtualizer.getVirtualItems().map((virtualItem) => {
           const id = activeIds[virtualItem.index];

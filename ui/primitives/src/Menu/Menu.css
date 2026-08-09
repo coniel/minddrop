@@ -164,11 +164,19 @@
     height: 1.75rem;
   }
 
-  /* --- Hover / highlighted / force-visible --- */
+  /* --- Highlighted / force-visible --- */
 
-  &:hover,
   &[data-highlighted],
   &.menu-item-force-actions-visible {
+    background-color: var(--surface-neutral);
+  }
+
+  /* --- Hover ---
+     Gated on the input mode so that a stationary cursor resting on
+     an item does not compete with the keyboard-driven highlight.
+     Applies by default, while the input mode is still unknown. */
+
+  :root:not([data-input-mode='keyboard']) &:hover {
     background-color: var(--surface-neutral);
   }
 
@@ -181,7 +189,6 @@
   &.menu-item-active {
     background-color: var(--surface-neutral);
 
-    &:hover,
     &[data-highlighted],
     &.menu-item-force-actions-visible {
       background-color: var(--surface-neutral-hover);
@@ -192,6 +199,10 @@
     }
   }
 
+  :root:not([data-input-mode='keyboard']) &.menu-item-active:hover {
+    background-color: var(--surface-neutral-hover);
+  }
+
   /* --- Muted --- */
 
   &.menu-item-muted {
@@ -199,21 +210,28 @@
     font-weight: var(--weight-medium);
 
     &.menu-item-active,
-    &:hover,
     &[data-highlighted] {
       color: var(--text-regular);
     }
   }
 
+  :root:not([data-input-mode='keyboard']) &.menu-item-muted:hover {
+    color: var(--text-regular);
+  }
+
   /* --- Danger --- */
 
   &.menu-item-danger {
-    &:hover,
     &[data-highlighted],
     &.menu-item-force-actions-visible {
       color: var(--text-danger);
       background-color: var(--surface-danger-hover);
     }
+  }
+
+  :root:not([data-input-mode='keyboard']) &.menu-item-danger:hover {
+    color: var(--text-danger);
+    background-color: var(--surface-danger-hover);
   }
 
   /* --- Disabled --- */
@@ -281,31 +299,6 @@
     opacity: 1;
     width: auto;
     position: relative;
-  }
-}
-
-/* ------------------------------------------------------------
-   FLOATING MENU HOVER SUPPRESSION
-   Inside floating menus (dropdown, context, combobox/searchable),
-   keyboard navigation owns the highlight via [data-highlighted] or
-   the active state. A pointer :hover that lands on a different item
-   than the navigated one (e.g. a stationary cursor while a searchable
-   list filters beneath it) must not add a competing highlight, so the
-   :hover styling is reverted for those stray items.
-   ------------------------------------------------------------ */
-
-:is(.dropdown-menu-positioner, .context-menu-positioner, .combobox-positioner) {
-  .menu-item:hover:not([data-highlighted]):not(.menu-item-active) {
-    background-color: transparent;
-  }
-
-  .menu-item-muted:hover:not([data-highlighted]):not(.menu-item-active) {
-    color: var(--text-muted);
-  }
-
-  .menu-item-danger:hover:not([data-highlighted]):not(.menu-item-active) {
-    color: var(--text-regular);
-    background-color: transparent;
   }
 }
 

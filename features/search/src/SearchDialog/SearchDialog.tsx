@@ -33,7 +33,7 @@ export const SearchDialog: React.FC = () => {
   const { query, results, search, clear } = useSearch();
 
   // Navigable list for keyboard/mouse highlight management
-  const { getInputProps, getContainerProps, getItemProps } = useNavigableList({
+  const { getInputProps, getItemProps } = useNavigableList({
     itemCount: results.length,
     onSelect: (index) => selectResult(results[index]),
     onEscape: (event) => {
@@ -146,7 +146,7 @@ export const SearchDialog: React.FC = () => {
 
         {/* Results area, hidden when there is no query */}
         {query.trim() && (
-          <div className="search-dialog-results" {...getContainerProps()}>
+          <div className="search-dialog-results">
             <ScrollArea>
               <Stack className="search-dialog-results-content">
                 {results.map((result, index) => {

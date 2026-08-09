@@ -161,18 +161,17 @@ export const SearchableMenu = React.forwardRef<
 
     // Navigable list for all items. No initial highlight when
     // not searching so the menu opens without a selection.
-    const { highlightedIndex, getInputProps, getContainerProps, getItemProps } =
-      useNavigableList({
-        itemCount: activeIds.length,
-        initialIndex: isSearchActive ? 0 : -1,
-        onSelect: handleSelectItem,
-        onEscape: (event) => {
-          if (searchTerm) {
-            setSearchTerm('');
-            event.stopPropagation();
-          }
-        },
-      });
+    const { highlightedIndex, getInputProps, getItemProps } = useNavigableList({
+      itemCount: activeIds.length,
+      initialIndex: isSearchActive ? 0 : -1,
+      onSelect: handleSelectItem,
+      onEscape: (event) => {
+        if (searchTerm) {
+          setSearchTerm('');
+          event.stopPropagation();
+        }
+      },
+    });
 
     // Whether to render items from the registry instead of
     // rendering children directly. Active during search or when
@@ -390,12 +389,7 @@ export const SearchableMenu = React.forwardRef<
         {/* Children - hidden when rendering from registry */}
         <MenuSearchContextProvider value={contextValue}>
           {renderList(
-            <div
-              hidden={renderFromRegistry || undefined}
-              {...getContainerProps()}
-            >
-              {children}
-            </div>,
+            <div hidden={renderFromRegistry || undefined}>{children}</div>,
           )}
         </MenuSearchContextProvider>
 
@@ -407,11 +401,10 @@ export const SearchableMenu = React.forwardRef<
               registry={registryRef.current}
               highlightedIndex={highlightedIndex}
               getItemProps={getItemProps}
-              onMouseMove={getContainerProps().onMouseMove}
             />
           ) : (
             renderList(
-              <div className="searchable-menu-results" {...getContainerProps()}>
+              <div className="searchable-menu-results">
                 {activeIds.map((id, index) => {
                   const registration = registryRef.current.get(id);
 

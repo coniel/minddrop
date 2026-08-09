@@ -16,6 +16,7 @@ export * from './DateField';
 export * from './NumberField';
 export * from './Heading';
 export * from './Icon';
+export * from './initializeInputModalityTracking';
 export * from './IconButton';
 export * from './IconPicker';
 export * from './IconRenderer';

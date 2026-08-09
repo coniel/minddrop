@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { isKeyboardInputMode } from '../utils/isKeyboardInputMode';
 
 export interface UseNavigableListOptions {
   /**
@@ -39,14 +40,6 @@ export interface NavigableListInputProps {
    * Keydown handler to attach to the input element.
    */
   onKeyDown: React.KeyboardEventHandler;
-}
-
-export interface NavigableListContainerProps {
-  /**
-   * Mouse move handler to attach to the scrollable
-   * list container.
-   */
-  onMouseMove: React.MouseEventHandler;
 }
 
 export interface NavigableListItemProps {
@@ -95,11 +88,6 @@ export interface UseNavigableListReturn {
   getInputProps: () => NavigableListInputProps;
 
   /**
-   * Returns props to spread onto the scrollable list container.
-   */
-  getContainerProps: () => NavigableListContainerProps;
-
-  /**
    * Returns props for a single list item at the given index.
    */
   getItemProps: (index: number) => NavigableListItemProps;
@@ -119,11 +107,6 @@ export function useNavigableList({
   initialIndex = 0,
 }: UseNavigableListOptions): UseNavigableListReturn {
   const [highlightedIndex, setHighlightedIndex] = useState(initialIndex);
-
-  // Flag to ignore mouse events triggered by keyboard
-  // scroll-into-view shifting items under the cursor
-  const isKeyboardNavRef = useRef(false);
-  const lastMousePositionRef = useRef({ x: 0, y: 0 });
 
   // Reset highlighted index when item count changes
   useEffect(() => {
@@ -160,14 +143,12 @@ export function useNavigableList({
         (event.key === 'Tab' && !event.shiftKey)
       ) {
         event.preventDefault();
-        isKeyboardNavRef.current = true;
         setHighlightedIndex((index) => (index < itemCount - 1 ? index + 1 : 0));
       } else if (
         event.key === 'ArrowUp' ||
         (event.key === 'Tab' && event.shiftKey)
       ) {
         event.preventDefault();
-        isKeyboardNavRef.current = true;
         setHighlightedIndex((index) => (index > 0 ? index - 1 : itemCount - 1));
       } else if (event.key === 'Enter') {
         if (highlightedIndex === -1) {
@@ -181,18 +162,6 @@ export function useNavigableList({
     [enabled, itemCount, highlightedIndex, onSelect, onEscape],
   );
 
-  // Container mouse move handler that detects real vs
-  // scroll-induced mouse movement
-  const handleContainerMouseMove = useCallback((event: React.MouseEvent) => {
-    const { clientX, clientY } = event;
-    const last = lastMousePositionRef.current;
-
-    if (clientX !== last.x || clientY !== last.y) {
-      lastMousePositionRef.current = { x: clientX, y: clientY };
-      isKeyboardNavRef.current = false;
-    }
-  }, []);
-
   const getInputProps = useCallback(
     (): NavigableListInputProps => ({
       onKeyDown: handleKeyDown,
@@ -200,18 +169,14 @@ export function useNavigableList({
     [handleKeyDown],
   );
 
-  const getContainerProps = useCallback(
-    (): NavigableListContainerProps => ({
-      onMouseMove: handleContainerMouseMove,
-    }),
-    [handleContainerMouseMove],
-  );
-
   const getItemProps = useCallback(
     (index: number): NavigableListItemProps => ({
       ref: index === highlightedIndex ? scrollIntoViewRef : () => {},
       onMouseMove: () => {
-        if (isKeyboardNavRef.current) {
+        // Mouse events fired while the keyboard owns the
+        // navigation come from items shifting under a stationary
+        // cursor, not from the user pointing at them
+        if (isKeyboardInputMode()) {
           return;
         }
 
@@ -220,7 +185,7 @@ export function useNavigableList({
         }
       },
       onMouseLeave: () => {
-        if (!isKeyboardNavRef.current) {
+        if (!isKeyboardInputMode()) {
           setHighlightedIndex(-1);
         }
       },
@@ -234,7 +199,6 @@ export function useNavigableList({
     highlightedIndex,
     setHighlightedIndex,
     getInputProps,
-    getContainerProps,
     getItemProps,
   };
 }

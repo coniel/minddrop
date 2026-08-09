@@ -13,12 +13,6 @@
   max-height: 18rem;
 }
 
-/* Keyboard navigation owns the highlight, so a pointer resting
-   where the menu opens must not add a competing one */
-.block-menu .menu-item:hover:not(.menu-item-active) {
-  background-color: transparent;
-}
-
 /* ------------------------------------------------------------
    BLOCK MENU HINT
    Rendered after the trigger character until a query is typed.

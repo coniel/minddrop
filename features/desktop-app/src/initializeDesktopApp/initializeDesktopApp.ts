@@ -29,6 +29,7 @@ import { initializeI18n } from '@minddrop/i18n';
 import { Search } from '@minddrop/search';
 import { Spaces } from '@minddrop/spaces';
 import { Sql } from '@minddrop/sql';
+import { initializeInputModalityTracking } from '@minddrop/ui-primitives';
 import { Theme, VariantChangedEventData } from '@minddrop/ui-theme';
 import { Workspaces } from '@minddrop/workspaces';
 import { AppUiState } from '../AppUiState';
@@ -63,6 +64,9 @@ export function initializeDesktopApp(): Promise<void> {
  * Runs the one-time desktop app initialization.
  */
 async function runInitialization(): Promise<void> {
+  // Track whether the user is navigating by keyboard or pointer
+  initializeInputModalityTracking();
+
   // Register search translations
   initializeSearch();
 

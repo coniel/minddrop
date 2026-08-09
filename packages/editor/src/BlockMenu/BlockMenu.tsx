@@ -8,6 +8,7 @@ import {
   PopoverPortal,
   PopoverPositioner,
   ScrollArea,
+  isKeyboardInputMode,
 } from '@minddrop/ui-primitives';
 import { BlockMenuItem, RangeAnchor } from '../utils';
 import './BlockMenu.css';
@@ -74,7 +75,6 @@ export const BlockMenu: React.FC<BlockMenuProps> = ({
 }) => {
   const popupRef = useRef<HTMLDivElement>(null);
   const activeItemRef = useRef<HTMLDivElement>(null);
-  const pointerPosition = useRef({ x: 0, y: 0 });
   const selfScrolling = useRef(false);
   const { t } = useTranslation();
 
@@ -152,21 +152,14 @@ export const BlockMenu: React.FC<BlockMenuProps> = ({
   }, [open, anchor, onOpenChange]);
 
   // Moves the highlight to the entry under the pointer
-  function handleItemMouseMove(
-    event: React.MouseEvent<HTMLDivElement>,
-    index: number,
-  ): void {
-    const { clientX, clientY } = event;
-    const previous = pointerPosition.current;
-
-    // Scrolling the list under a stationary pointer fires a move
-    // event, which must not take the highlight off the entry the
+  function handleItemMouseMove(index: number): void {
+    // Mouse events fired while the keyboard owns the navigation
+    // come from the list scrolling or filtering under a stationary
+    // pointer, and must not take the highlight off the entry the
     // keyboard navigated to.
-    if (clientX === previous.x && clientY === previous.y) {
+    if (isKeyboardInputMode()) {
       return;
     }
-
-    pointerPosition.current = { x: clientX, y: clientY };
 
     onHighlight(index);
   }
@@ -217,7 +210,7 @@ export const BlockMenu: React.FC<BlockMenuProps> = ({
                       label={menuItem.label}
                       icon={menuItem.icon}
                       active={index === activeIndex}
-                      onMouseMove={(event) => handleItemMouseMove(event, index)}
+                      onMouseMove={() => handleItemMouseMove(index)}
                       onClick={() => onSelect(index)}
                     />
                   ))}
