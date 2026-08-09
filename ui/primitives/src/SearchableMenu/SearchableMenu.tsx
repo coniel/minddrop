@@ -15,6 +15,7 @@ import {
   MenuSearchContextValue,
   MenuSearchRegistration,
 } from '../Menu/MenuSearchContext';
+import { VerticalScrollArea } from '../ScrollArea';
 import { TextInput } from '../fields/TextInput';
 import { useNavigableList } from '../hooks';
 import { propsToClass } from '../utils';
@@ -67,6 +68,11 @@ export interface SearchableMenuProps
    * Text shown when no items are listed.
    */
   emptyText?: string;
+
+  /**
+   * When `true`, the item list is capped in height and scrolls.
+   */
+  scrollable?: boolean;
 }
 
 /**
@@ -85,6 +91,7 @@ export const SearchableMenu = React.forwardRef<
       searchTerm: searchTermProp,
       onSearchTermChange,
       emptyText,
+      scrollable,
       ...other
     },
     ref,
@@ -322,6 +329,21 @@ export const SearchableMenu = React.forwardRef<
       [register, unregister, getItemNavProps],
     );
 
+    // Wrap an item list in a capped height scroll area when
+    // the menu is scrollable
+    function renderList(list: React.ReactElement) {
+      // Non-scrollable menus render the list as is
+      if (!scrollable) {
+        return list;
+      }
+
+      return (
+        <VerticalScrollArea className="searchable-menu-scrollable-list">
+          {list}
+        </VerticalScrollArea>
+      );
+    }
+
     // Compose input keyboard handling
     function handleInputKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
       // Let the navigable list hook handle its keys first
@@ -367,12 +389,14 @@ export const SearchableMenu = React.forwardRef<
 
         {/* Children - hidden when rendering from registry */}
         <MenuSearchContextProvider value={contextValue}>
-          <div
-            hidden={renderFromRegistry || undefined}
-            {...getContainerProps()}
-          >
-            {children}
-          </div>
+          {renderList(
+            <div
+              hidden={renderFromRegistry || undefined}
+              {...getContainerProps()}
+            >
+              {children}
+            </div>,
+          )}
         </MenuSearchContextProvider>
 
         {/* Registry-rendered items (search results or virtualized) */}
@@ -386,33 +410,35 @@ export const SearchableMenu = React.forwardRef<
               onMouseMove={getContainerProps().onMouseMove}
             />
           ) : (
-            <div className="searchable-menu-results" {...getContainerProps()}>
-              {activeIds.map((id, index) => {
-                const registration = registryRef.current.get(id);
+            renderList(
+              <div className="searchable-menu-results" {...getContainerProps()}>
+                {activeIds.map((id, index) => {
+                  const registration = registryRef.current.get(id);
 
-                if (!registration) {
-                  return null;
-                }
+                  if (!registration) {
+                    return null;
+                  }
 
-                const itemNavProps = getItemProps(index);
-                const props = registration.propsRef.current;
+                  const itemNavProps = getItemProps(index);
+                  const props = registration.propsRef.current;
 
-                return (
-                  <MenuItem
-                    key={id}
-                    ref={itemNavProps.ref}
-                    onMouseMove={itemNavProps.onMouseMove}
-                    onMouseLeave={itemNavProps.onMouseLeave}
-                    onClick={itemNavProps.onClick}
-                    label={props.label}
-                    stringLabel={props.stringLabel}
-                    icon={props.icon}
-                    contentIcon={props.contentIcon}
-                    active={itemNavProps.highlighted}
-                  />
-                );
-              })}
-            </div>
+                  return (
+                    <MenuItem
+                      key={id}
+                      ref={itemNavProps.ref}
+                      onMouseMove={itemNavProps.onMouseMove}
+                      onMouseLeave={itemNavProps.onMouseLeave}
+                      onClick={itemNavProps.onClick}
+                      label={props.label}
+                      stringLabel={props.stringLabel}
+                      icon={props.icon}
+                      contentIcon={props.contentIcon}
+                      active={itemNavProps.highlighted}
+                    />
+                  );
+                })}
+              </div>,
+            )
           ))}
 
         {/* Empty state shown when no items are listed */}
