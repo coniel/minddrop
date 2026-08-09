@@ -1,0 +1,175 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Privacy policy"
+  description="What MindDrop collects, what it does not, and who else is involved."
+>
+  <section class="page policy">
+    <h1 class="policy-title">Privacy policy</h1>
+
+    <p class="policy-updated">Last updated 9 August 2026</p>
+
+    <div class="prose">
+      <p>
+        MindDrop keeps your content on your own computer. This policy covers the
+        few places where that is not the whole story: this website, and the Pro
+        features that need a server to work.
+      </p>
+
+      <h2>Who we are</h2>
+
+      <p>
+        MindDrop is made by [COMPANY NAME], registered at [REGISTERED ADDRESS],
+        business ID [BUSINESS ID]. We are the data controller for everything
+        described here. For anything to do with your data, write to <a
+          href="mailto:[CONTACT EMAIL]">[CONTACT EMAIL]</a
+        >.
+      </p>
+
+      <h2>The app</h2>
+
+      <p>
+        The free version of MindDrop does not talk to us. Your entries are plain
+        files in folders you choose, on your own disk. There is no account, no
+        telemetry, and no crash reporting, and the app works with no internet
+        connection at all.
+      </p>
+
+      <h2>This website</h2>
+
+      <p>
+        We use Plausible for analytics. It sets no cookies, stores no personal
+        data, and cannot follow you between sites. All we see are aggregate page
+        views, referrers, and rough country-level locations.
+      </p>
+
+      <p>
+        Your theme choice is kept in your browser's local storage. It never
+        leaves your device.
+      </p>
+
+      <h2>Pro accounts</h2>
+
+      <p>
+        Subscribing to Pro means creating an account, for which we store your
+        email address and the state of your subscription. We use your email
+        address to sign you in and to write to you about your account. We do not
+        send marketing email unless you ask for it.
+      </p>
+
+      <h2>Payments</h2>
+
+      <p>
+        Payments are handled by Paddle, which acts as the merchant of record.
+        Your card details go to Paddle and never reach us. We receive only what
+        we need to run your subscription: that it was paid, and when it renews.
+        <a href="https://www.paddle.com/legal/privacy" rel="external"
+          >Paddle's own privacy policy</a
+        > covers what they do with it.
+      </p>
+
+      <h2>Sync</h2>
+
+      <p>
+        Synced content, including any files attached to your entries, is
+        encrypted on your device before it is sent, with a key only you hold.
+        What we store is ciphertext we cannot read, and neither can anybody who
+        obtains it from us. We can see how much space an account uses and when
+        it last synced, because the service cannot run without that.
+      </p>
+
+      <p>
+        Losing your key means losing access to the encrypted copy. We cannot
+        recover it for you, which is the other side of not being able to read
+        it.
+      </p>
+
+      <h2>Publishing</h2>
+
+      <p>
+        A published page is a page on the public internet. Anything you put on
+        one is readable by anyone with the link, or by anyone with the password
+        where you set one, and search engines may index public pages. Unpublish
+        it and we take it down, though copies already made by others are beyond
+        our reach.
+      </p>
+
+      <p>
+        Publishing works differently from sync. The entries behind a published
+        page, along with any files attached to their properties, are stored in a
+        database unencrypted, because a page cannot be served from content we
+        cannot read. This applies only to what you publish; everything else you
+        sync stays encrypted.
+      </p>
+
+      <p>
+        We keep ordinary server logs for published pages, including IP addresses
+        and requested URLs, for a short period, in order to keep the service
+        running and to deal with abuse. If you connect your own analytics to a
+        published page, that provider's policy applies to whatever it collects.
+      </p>
+
+      <h2>AI features</h2>
+
+      <p>
+        When you use an AI feature, the content it needs is sent to a model
+        provider to be processed. We use Anthropic and OpenAI, each for the work
+        it does best. Both are contractually bound not to train on what we send
+        them, and neither retains it beyond what processing the request
+        requires. We do not use your content to train anything either.
+      </p>
+
+      <p>
+        Nothing is sent unless you use a feature that needs it. AI can be turned
+        off entirely, and you can supply your own API key or point MindDrop at a
+        model running on your own machine, in which case your content goes to
+        that provider or nowhere at all.
+      </p>
+
+      <h2>Keeping and deleting your data</h2>
+
+      <p>
+        We keep your account data for as long as your account exists. Delete
+        your account and we delete it, along with any synced content and
+        published pages, within 30 days. Backups age out on their own within 90
+        days. We keep records of payments for as long as tax law requires us to.
+      </p>
+
+      <h2>Your rights</h2>
+
+      <p>
+        Under the GDPR you can ask us for a copy of your data, ask us to correct
+        or delete it, ask us to restrict what we do with it, and object to that
+        processing. Write to <a href="mailto:[CONTACT EMAIL]">[CONTACT EMAIL]</a
+        > and we will answer within a month. If you think we have handled your data
+        badly, you can complain to your local data protection authority.
+      </p>
+
+      <h2>Changes</h2>
+
+      <p>
+        If this policy changes in a way that matters, we will say so on this
+        page and, for anything significant, email account holders. The date at
+        the top is always the date of the current version.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .policy {
+    padding-block-start: var(--space-8);
+  }
+
+  .policy-title {
+    font-size: var(--step-4);
+  }
+
+  .policy-updated {
+    margin-block: var(--space-4) var(--space-7);
+    font-size: 0.875rem;
+    color: var(--ink-muted);
+  }
+</style>
