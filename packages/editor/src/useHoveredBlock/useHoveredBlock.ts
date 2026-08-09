@@ -25,7 +25,9 @@ export interface HoveredBlock {
   path: Path;
 
   /**
-   * The block's distance from the top of the viewport, in pixels.
+   * The distance from the top of the viewport to the top of the
+   * block's first line of text, in pixels. Sits below the block's
+   * own edge when the block is spaced with top padding.
    */
   top: number;
 
@@ -220,15 +222,18 @@ export function useHoveredBlock(
       }
 
       const blockRect = block.domNode.getBoundingClientRect();
+      const blockStyle = window.getComputedStyle(block.domNode);
 
       measuredNodeRef.current = block.domNode;
 
       setHoveredBlock({
         element: block.element,
         path: block.path,
-        top: blockRect.top,
+        // Offset past any top padding and border, which sit within
+        // the block's bounds above its first line of text
+        top: blockRect.top + getContentOffsetTop(blockStyle),
         left: blockRect.left,
-        lineHeight: getLineHeight(block.domNode),
+        lineHeight: getLineHeight(blockStyle),
       });
     },
     [
@@ -310,11 +315,11 @@ export function useHoveredBlock(
 /**
  * Gets the height of a block's line of text.
  *
- * @param domNode The DOM node rendering the block.
+ * @param style The computed style of the block's DOM node.
  * @returns The line height in pixels.
  */
-function getLineHeight(domNode: HTMLElement): number {
-  const lineHeight = parseFloat(window.getComputedStyle(domNode).lineHeight);
+function getLineHeight(style: CSSStyleDeclaration): number {
+  const lineHeight = parseFloat(style.lineHeight);
 
   // A line height of 'normal' does not parse into a number
   if (Number.isNaN(lineHeight)) {
@@ -322,4 +327,22 @@ function getLineHeight(domNode: HTMLElement): number {
   }
 
   return lineHeight;
+}
+
+/**
+ * Gets the distance from a block's top edge down to its content,
+ * being the space taken up by its top border and padding.
+ *
+ * @param style The computed style of the block's DOM node.
+ * @returns The offset in pixels.
+ */
+function getContentOffsetTop(style: CSSStyleDeclaration): number {
+  const border = parseFloat(style.borderTopWidth);
+  const padding = parseFloat(style.paddingTop);
+
+  // Computed values may not resolve to pixel lengths outside a
+  // real layout
+  return (
+    (Number.isNaN(border) ? 0 : border) + (Number.isNaN(padding) ? 0 : padding)
+  );
 }
