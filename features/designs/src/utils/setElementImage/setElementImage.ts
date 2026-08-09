@@ -28,7 +28,7 @@ export async function setElementImage(
   // Bound elements receive the image as their design property's
   // placeholder
   if (!element.static && element.property) {
-    const property = DesignStudioStore.getState().design?.properties.find(
+    const property = DesignStudioStore.getDesign()?.properties.find(
       (candidate) => candidate.name === element.property,
     );
 

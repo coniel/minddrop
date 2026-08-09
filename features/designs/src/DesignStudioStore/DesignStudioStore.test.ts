@@ -21,7 +21,7 @@ import { FlatParentDesignElement } from '../types';
 import { flattenTree } from '../utils';
 import {
   DesignStudioStore,
-  addDeisgnElementFromTemplate,
+  addDesignElementFromTemplate,
   clearLayoutEditor,
   deleteHighlightedElement,
   getDesignElement,
@@ -35,62 +35,52 @@ describe('DesignStudioStore', () => {
   afterEach(cleanup);
 
   it('initializes the store', () => {
-    DesignStudioStore.getState().initialize(
-      testDesign,
-      testDatabase.properties,
-    );
+    DesignStudioStore.initialize(testDesign, testDatabase.properties);
 
     // Sets initialized to true
-    expect(DesignStudioStore.getState().initialized).toBe(true);
+    expect(DesignStudioStore.isInitialized()).toBe(true);
     // Sets the design
-    expect(DesignStudioStore.getState().design).toEqual(testDesign);
+    expect(DesignStudioStore.getDesign()).toEqual(testDesign);
     // Flattens each layout's tree into its own bucket
-    expect(DesignStudioStore.getState().elementsByLayout).toEqual({
+    expect(DesignStudioStore.getElementsByLayout()).toEqual({
       [testLayout.id]: flatTree,
       [layout_list_1.id]: flattenTree(layout_list_1.tree),
       [layout_page_1.id]: flattenTree(layout_page_1.tree),
     });
     // No layout is active until one is selected
-    expect(DesignStudioStore.getState().activeLayoutId).toBeNull();
+    expect(DesignStudioStore.getActiveLayoutId()).toBeNull();
     // Sets the properties
-    expect(DesignStudioStore.getState().properties).toEqual(
-      testDatabase.properties,
-    );
+    expect(DesignStudioStore.getProperties()).toEqual(testDatabase.properties);
   });
 
   it('activates a layout and selects its root element', () => {
-    DesignStudioStore.getState().initialize(testDesign);
+    DesignStudioStore.initialize(testDesign);
 
-    DesignStudioStore.getState().setActiveLayout(testLayout.id);
+    DesignStudioStore.setActiveLayout(testLayout.id);
 
-    expect(DesignStudioStore.getState().activeLayoutId).toBe(testLayout.id);
-    expect(DesignStudioStore.getState().selectedElementId).toBe('root');
+    expect(DesignStudioStore.getActiveLayoutId()).toBe(testLayout.id);
+    expect(DesignStudioStore.getSelectedElementId()).toBe('root');
 
     // Clearing the active layout clears the selection
-    DesignStudioStore.getState().setActiveLayout(null);
+    DesignStudioStore.setActiveLayout(null);
 
-    expect(DesignStudioStore.getState().activeLayoutId).toBeNull();
-    expect(DesignStudioStore.getState().selectedElementId).toBeNull();
+    expect(DesignStudioStore.getActiveLayoutId()).toBeNull();
+    expect(DesignStudioStore.getSelectedElementId()).toBeNull();
   });
 
   it('updates the elements by deeply merging the updates with the existing element', () => {
-    DesignStudioStore.getState().initialize(
-      testDesign,
-      testDatabase.properties,
-    );
-    DesignStudioStore.getState().setActiveLayout(testLayout.id);
+    DesignStudioStore.initialize(testDesign, testDatabase.properties);
+    DesignStudioStore.setActiveLayout(testLayout.id);
 
     // Update an element
-    DesignStudioStore.getState().updateElement(element_text_1.id, {
+    DesignStudioStore.updateElement(element_text_1.id, {
       style: {
         'font-family': 'mono',
       },
     });
 
     expect(
-      DesignStudioStore.getState().elementsByLayout[testLayout.id][
-        element_text_1.id
-      ],
+      DesignStudioStore.getElements(testLayout.id)[element_text_1.id],
     ).toEqual({
       ...flatTree[element_text_1.id],
       style: {
@@ -100,16 +90,14 @@ describe('DesignStudioStore', () => {
     });
 
     // Update the element again
-    DesignStudioStore.getState().updateElement(element_text_1.id, {
+    DesignStudioStore.updateElement(element_text_1.id, {
       style: {
         'font-weight': 900,
       },
     });
 
     expect(
-      DesignStudioStore.getState().elementsByLayout[testLayout.id][
-        element_text_1.id
-      ],
+      DesignStudioStore.getElements(testLayout.id)[element_text_1.id],
     ).toEqual({
       ...flatTree[element_text_1.id],
       style: {
@@ -121,47 +109,43 @@ describe('DesignStudioStore', () => {
   });
 
   it('does not affect other layouts when mutating elements in the active layout', () => {
-    DesignStudioStore.getState().initialize(testDesign);
-    DesignStudioStore.getState().setActiveLayout(testLayout.id);
+    DesignStudioStore.initialize(testDesign);
+    DesignStudioStore.setActiveLayout(testLayout.id);
 
     // The list layout contains an element with the same ID
-    const listElementsBefore =
-      DesignStudioStore.getState().elementsByLayout[layout_list_1.id];
+    const listElementsBefore = DesignStudioStore.getElements(layout_list_1.id);
 
-    DesignStudioStore.getState().updateElement(element_text_1.id, {
+    DesignStudioStore.updateElement(element_text_1.id, {
       style: {
         'font-family': 'mono',
       },
     });
 
     // The list layout's bucket is untouched
-    expect(
-      DesignStudioStore.getState().elementsByLayout[layout_list_1.id],
-    ).toEqual(listElementsBefore);
+    expect(DesignStudioStore.getElements(layout_list_1.id)).toEqual(
+      listElementsBefore,
+    );
   });
 
   it('does not affect other layouts when adding an element to the active layout', () => {
-    DesignStudioStore.getState().initialize(testDesign);
-    DesignStudioStore.getState().setActiveLayout(testLayout.id);
+    DesignStudioStore.initialize(testDesign);
+    DesignStudioStore.setActiveLayout(testLayout.id);
 
     // Snapshot the list layout's bucket before the add
-    const listElementsBefore =
-      DesignStudioStore.getState().elementsByLayout[layout_list_1.id];
+    const listElementsBefore = DesignStudioStore.getElements(layout_list_1.id);
 
     // Add a new element to the active card layout's root
     const newElement = { ...element_0, id: 'added-element' };
-    DesignStudioStore.getState().addElement(newElement, 'root', 0);
+    DesignStudioStore.addElement(newElement, 'root', 0);
 
     // The new element lands in the card layout's bucket
     expect(
-      DesignStudioStore.getState().elementsByLayout[testLayout.id][
-        'added-element'
-      ],
+      DesignStudioStore.getElements(testLayout.id)['added-element'],
     ).toEqual(newElement);
     // The list layout's bucket is untouched
-    expect(
-      DesignStudioStore.getState().elementsByLayout[layout_list_1.id],
-    ).toEqual(listElementsBefore);
+    expect(DesignStudioStore.getElements(layout_list_1.id)).toEqual(
+      listElementsBefore,
+    );
   });
 
   it('saves the design by reconstructing every layout tree', async () => {
@@ -170,15 +154,15 @@ describe('DesignStudioStore', () => {
     setup();
 
     // Mutate an element in the active card layout
-    DesignStudioStore.getState().updateElement(element_text_1.id, {
+    DesignStudioStore.updateElement(element_text_1.id, {
       style: {
         'font-family': 'mono',
       },
     });
 
     // Switch to the list layout and mutate an element there
-    DesignStudioStore.getState().setActiveLayout(layout_list_1.id);
-    DesignStudioStore.getState().updateElement(element_text_2.id, {
+    DesignStudioStore.setActiveLayout(layout_list_1.id);
+    DesignStudioStore.updateElement(element_text_2.id, {
       style: {
         'font-weight': 900,
       },
@@ -215,17 +199,15 @@ describe('DesignStudioStore', () => {
 
       initializeLayoutEditor(layout_page_1, { onSave: () => {} });
 
-      const state = DesignStudioStore.getState();
-
       // The layout is flattened and active with its root selected
-      expect(state.elementsByLayout[layout_page_1.id]).toEqual(
+      expect(DesignStudioStore.getElements(layout_page_1.id)).toEqual(
         flattenTree(layout_page_1.tree),
       );
-      expect(state.activeLayoutId).toBe(layout_page_1.id);
-      expect(state.selectedElementId).toBe('root');
+      expect(DesignStudioStore.getActiveLayoutId()).toBe(layout_page_1.id);
+      expect(DesignStudioStore.getSelectedElementId()).toBe('root');
 
       // Property binding defaults to disabled
-      expect(state.propertyBindingEnabled).toBe(false);
+      expect(DesignStudioStore.isPropertyBindingEnabled()).toBe(false);
     });
 
     it('persists edits through the save handler', async () => {
@@ -241,7 +223,7 @@ describe('DesignStudioStore', () => {
       });
 
       // Mutate an element and save
-      DesignStudioStore.getState().updateElement(element_text_1.id, {
+      DesignStudioStore.updateElement(element_text_1.id, {
         style: { 'font-family': 'mono' },
       });
 
@@ -253,7 +235,7 @@ describe('DesignStudioStore', () => {
       });
 
       // The synthetic design was not persisted to the designs store
-      const syntheticId = DesignStudioStore.getState().design!.id;
+      const syntheticId = DesignStudioStore.getDesign()!.id;
 
       expect(Designs.get(syntheticId, false)).toBeNull();
     });
@@ -264,13 +246,12 @@ describe('DesignStudioStore', () => {
       initializeLayoutEditor(layout_page_1, { onSave: () => {} });
 
       // Add a text and an icon element from their templates
-      addDeisgnElementFromTemplate(ElementTemplates.text, 'root', 0);
-      addDeisgnElementFromTemplate(ElementTemplates.icon, 'root', 1);
+      addDesignElementFromTemplate(ElementTemplates.text, 'root', 0);
+      addDesignElementFromTemplate(ElementTemplates.icon, 'root', 1);
 
       // Resolve the added elements through the root's children
       const root = getDesignElement<FlatParentDesignElement>('root');
-      const elements =
-        DesignStudioStore.getState().elementsByLayout[layout_page_1.id];
+      const elements = DesignStudioStore.getElements(layout_page_1.id);
 
       // Content elements start in static mode
       expect(elements[root.children[0]]).toMatchObject({
@@ -293,12 +274,10 @@ describe('DesignStudioStore', () => {
 
       clearLayoutEditor();
 
-      const state = DesignStudioStore.getState();
-
       // The session state is reset
-      expect(state.initialized).toBe(false);
-      expect(state.saveHandler).toBeNull();
-      expect(state.propertyBindingEnabled).toBe(true);
+      expect(DesignStudioStore.isInitialized()).toBe(false);
+      expect(DesignStudioStore.getSaveHandler()).toBeNull();
+      expect(DesignStudioStore.isPropertyBindingEnabled()).toBe(true);
     });
   });
 
@@ -307,15 +286,13 @@ describe('DesignStudioStore', () => {
       setup();
 
       // Highlight an element
-      DesignStudioStore.getState().selectElement(element_text_1.id);
+      DesignStudioStore.selectElement(element_text_1.id);
 
       deleteHighlightedElement();
 
       // The element is removed from the layout
       expect(
-        DesignStudioStore.getState().elementsByLayout[testLayout.id][
-          element_text_1.id
-        ],
+        DesignStudioStore.getElements(testLayout.id)[element_text_1.id],
       ).toBeUndefined();
     });
 
@@ -323,14 +300,14 @@ describe('DesignStudioStore', () => {
       setup();
 
       // Highlight the root element
-      DesignStudioStore.getState().selectElement('root');
+      DesignStudioStore.selectElement('root');
 
       deleteHighlightedElement();
 
       // The layout remains intact
-      expect(
-        DesignStudioStore.getState().elementsByLayout[testLayout.id],
-      ).toBeDefined();
+      expect(DesignStudioStore.getElementsByLayout()).toHaveProperty(
+        testLayout.id,
+      );
       expect(
         Designs.get(testDesign.id).layouts.some(
           (layout) => layout.id === testLayout.id,

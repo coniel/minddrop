@@ -17,7 +17,7 @@ export const DesignStudioViewport: React.FC<React.PropsWithChildren> = ({
   // Clicking the empty canvas deactivates the layout and clears
   // the selection
   const handleBackgroundMouseDown = useCallback(() => {
-    DesignStudioStore.getState().setActiveLayout(null);
+    DesignStudioStore.setActiveLayout(null);
   }, []);
 
   return (

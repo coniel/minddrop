@@ -1,7 +1,7 @@
 import { Layouts } from '@minddrop/designs';
 import { DropEventData } from '@minddrop/selection';
 import {
-  addDeisgnElementFromTemplate,
+  addDesignElementFromTemplate,
   getDesignElement,
   moveDesignElement,
   sortDesignElement,
@@ -88,7 +88,7 @@ export function handleDropOnDesignElement(
   // Handle drops inside an empty container
   if (drop.position === 'inside' && targetElement.type === 'container') {
     if (templates && templates.length) {
-      return addDeisgnElementFromTemplate(
+      return addDesignElementFromTemplate(
         templates[0],
         targetElement.id,
         0,
@@ -124,7 +124,7 @@ export function handleDropOnDesignElement(
 
   // An element template was dropped, add it as a new element
   if (templates && templates.length) {
-    return addDeisgnElementFromTemplate(
+    return addDesignElementFromTemplate(
       templates[0],
       parentElement.id,
       targetIndex,

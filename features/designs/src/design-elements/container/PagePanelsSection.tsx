@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { PagePanelSide } from '@minddrop/designs';
 import { Stack, SwitchField } from '@minddrop/ui-primitives';
 import {
-  DesignStudioStore,
+  DesignStudioState,
   addPagePanel,
   removePagePanel,
   useDesignStudioStore,
@@ -57,7 +57,7 @@ export const PagePanelsSection: React.FC = () => {
 /**
  * Whether the active layout's root has a panel on the given side.
  */
-function hasPanel(state: DesignStudioStore, side: PagePanelSide): boolean {
+function hasPanel(state: DesignStudioState, side: PagePanelSide): boolean {
   const layoutId = state.activeLayoutId;
   const elements = layoutId ? state.elementsByLayout[layoutId] : undefined;
   const root = elements?.['root'];

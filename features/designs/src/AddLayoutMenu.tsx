@@ -20,7 +20,7 @@ export const AddLayoutMenu: React.FC = () => {
   // Add a layout of the given type to the open design, placed to
   // the right of its existing frames, and center the view on it
   const handleAddLayout = useCallback(async (type: LayoutType) => {
-    const design = DesignStudioStore.getState().design;
+    const design = DesignStudioStore.getDesign();
 
     if (!design) {
       return;

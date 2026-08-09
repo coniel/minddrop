@@ -2,9 +2,9 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Design, DesignFixtures, Designs } from '@minddrop/designs';
 import { render, screen, userEvent } from '@minddrop/test-utils';
 import {
+  DesignStudioStore,
   getDesignElement,
   updateElementStyle,
-  useDesignStudioStore,
 } from '../../DesignStudioStore';
 import { cleanup, setup, testDatabase } from '../../test-utils';
 import { EditorTitleSection } from './EditorTitleSection';
@@ -35,10 +35,8 @@ describe('<EditorTitleSection />', () => {
 
     // Initialize the studio with the editor design and activate
     // the editor layout
-    useDesignStudioStore
-      .getState()
-      .initialize(editorDesign, testDatabase.properties);
-    useDesignStudioStore.getState().setActiveLayout(editorLayout.id);
+    DesignStudioStore.initialize(editorDesign, testDatabase.properties);
+    DesignStudioStore.setActiveLayout(editorLayout.id);
   });
 
   afterEach(cleanup);

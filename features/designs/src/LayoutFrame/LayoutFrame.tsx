@@ -245,7 +245,7 @@ export const LayoutFrame: React.FC<LayoutFrameProps> = ({
       return;
     }
 
-    DesignStudioStore.getState().selectElement('root', layoutId);
+    DesignStudioStore.selectElement('root', layoutId);
   }, [wasDragged, layoutId]);
 
   // Center the viewport on the frame on double-click (studio mode)
@@ -258,7 +258,7 @@ export const LayoutFrame: React.FC<LayoutFrameProps> = ({
   // Pressing a hover zone (resize/drag areas) only clears the
   // canvas highlight, selection stays on the current element
   const handleHoverZoneMouseDown = useCallback(() => {
-    DesignStudioStore.getState().clearHighlight();
+    DesignStudioStore.clearHighlight();
   }, []);
 
   // Studio mode: the framed layout no longer exists

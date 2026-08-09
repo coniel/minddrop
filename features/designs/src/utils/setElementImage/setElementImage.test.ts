@@ -12,13 +12,13 @@ describe('setElementImage', () => {
 
   it('sets the bound design property placeholder on bound elements', async () => {
     // Bind the element to the 'Title' design property
-    DesignStudioStore.getState().updateElement(element_0.id, {
+    DesignStudioStore.updateElement(element_0.id, {
       property: 'Title',
     });
 
     await setElementImage(element_0.id, IMAGE_FILE);
 
-    const property = DesignStudioStore.getState().design?.properties.find(
+    const property = DesignStudioStore.getDesign()?.properties.find(
       (candidate) => candidate.name === 'Title',
     );
 
@@ -28,7 +28,7 @@ describe('setElementImage', () => {
   });
 
   it('sets the content image on static elements', async () => {
-    DesignStudioStore.getState().updateElement(element_0.id, { static: true });
+    DesignStudioStore.updateElement(element_0.id, { static: true });
 
     await setElementImage(element_0.id, IMAGE_FILE);
 

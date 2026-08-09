@@ -69,7 +69,7 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
 
       // Escape clears the selection overlay
       if (event.key === 'Escape') {
-        DesignStudioStore.getState().clearHighlight();
+        DesignStudioStore.clearHighlight();
 
         return;
       }
@@ -78,7 +78,7 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
         return;
       }
 
-      if (!DesignStudioStore.getState().highlightedElementId) {
+      if (!DesignStudioStore.getHighlightedElementId()) {
         return;
       }
 
@@ -116,7 +116,7 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
   // open starts at the dashboard
   useEffect(() => {
     return () => {
-      DesignStudioStore.getState().clear();
+      DesignStudioStore.clear();
     };
   }, []);
 
@@ -141,7 +141,7 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
       return;
     }
 
-    DesignStudioStore.getState().clear();
+    DesignStudioStore.clear();
   }, [designId, handleClickBack]);
 
   // No design open: show the dashboard
@@ -264,5 +264,5 @@ function openDesign(designId: string) {
     return;
   }
 
-  DesignStudioStore.getState().initialize(design);
+  DesignStudioStore.initialize(design);
 }

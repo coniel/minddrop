@@ -6,7 +6,7 @@ import { initializeMockFileSystem } from '@minddrop/file-system';
 import { initializeI18n } from '@minddrop/i18n';
 import { cleanup as cleanupRender } from '@minddrop/test-utils';
 import { Paths } from '@minddrop/utils';
-import { useDesignStudioStore } from '../DesignStudioStore';
+import { DesignStudioStore } from '../DesignStudioStore';
 import { testDatabase, testDesign, testLayout } from './fixtures';
 
 interface SetupOptions {
@@ -24,10 +24,8 @@ export function setup(setupOptions: SetupOptions = { initializeStore: true }) {
   // Initialize the design studio store with the test design
   // and activate the test layout
   if (setupOptions.initializeStore !== false) {
-    useDesignStudioStore
-      .getState()
-      .initialize(testDesign, testDatabase.properties);
-    useDesignStudioStore.getState().setActiveLayout(testLayout.id);
+    DesignStudioStore.initialize(testDesign, testDatabase.properties);
+    DesignStudioStore.setActiveLayout(testLayout.id);
   }
 }
 
@@ -39,7 +37,7 @@ export function cleanup() {
   // Clear stores
   DatabaseFixtures.cleanup();
   cleanupDesignFixtures();
-  useDesignStudioStore.getState().clear();
+  DesignStudioStore.clear();
   // Reset mock file system
   MockFs.reset();
 }

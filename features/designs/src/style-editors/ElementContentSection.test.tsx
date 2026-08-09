@@ -22,7 +22,7 @@ describe('<ElementContentSection />', () => {
 
   it('renders only the static content field when property binding is disabled', () => {
     // Disable property binding for the session
-    DesignStudioStore.setState({ propertyBindingEnabled: false });
+    DesignStudioStore.useStore.setState({ propertyBindingEnabled: false });
 
     render(<ElementContentSection elementId={element_text_1.id} />);
 

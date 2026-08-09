@@ -1,6 +1,6 @@
 import { DropEventData } from '@minddrop/selection';
 import {
-  addDeisgnElementFromTemplate,
+  addDesignElementFromTemplate,
   getDesignElement,
   moveDesignElement,
   sortDesignElement,
@@ -37,7 +37,7 @@ export function handleDropOnGap(
 
   // If a template was dropped, add a new element to the container
   if (templates && templates.length) {
-    addDeisgnElementFromTemplate(templates[0], containerId, gapIndex, layoutId);
+    addDesignElementFromTemplate(templates[0], containerId, gapIndex, layoutId);
 
     return;
   }

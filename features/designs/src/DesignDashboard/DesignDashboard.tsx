@@ -43,13 +43,13 @@ export const DesignDashboard: React.FC<DesignDashboardProps> = ({
   const handleCreateDesign = useCallback(async () => {
     const design = await Designs.create();
 
-    DesignStudioStore.getState().initialize(design);
+    DesignStudioStore.initialize(design);
   }, []);
 
   // Open the design in the editor. The studio workspace fits the
   // design's layouts into view when it mounts.
   const handleOpenDesign = useCallback((design: Design) => {
-    DesignStudioStore.getState().initialize(design);
+    DesignStudioStore.initialize(design);
   }, []);
 
   return (

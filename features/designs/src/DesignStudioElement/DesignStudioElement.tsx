@@ -70,10 +70,7 @@ const DesignStudioElementInner: React.FC<{
   const handleClick = useCallback(
     (event: React.MouseEvent) => {
       event.stopPropagation();
-      DesignStudioStore.getState().selectElement(
-        element.id,
-        layoutId ?? undefined,
-      );
+      DesignStudioStore.selectElement(element.id, layoutId ?? undefined);
     },
     [element.id, layoutId],
   );

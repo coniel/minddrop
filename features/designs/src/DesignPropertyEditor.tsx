@@ -94,7 +94,7 @@ export const DesignPropertyEditor: React.FC<DesignPropertyEditorProps> = ({
     }
 
     // Check for name conflicts within the design
-    const design = DesignStudioStore.getState().design;
+    const design = DesignStudioStore.getDesign();
     const conflicting = design?.properties.find(
       (existing) => existing.name === name,
     );

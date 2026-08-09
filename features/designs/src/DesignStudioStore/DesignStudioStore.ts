@@ -44,7 +44,11 @@ type DesignElementUpdates<T> = T extends unknown
   ? DeepPartialOne<Omit<T, 'id' | 'type'>>
   : never;
 
-export interface DesignStudioStore {
+// Stable empty map returned when no layout is active so
+// selectors don't create a new reference on every call
+const EMPTY_ELEMENTS: Record<string, FlatDesignElement> = {};
+
+export interface DesignStudioState {
   /**
    * Whether the store has been initialized.
    */
@@ -219,291 +223,545 @@ export interface DesignStudioStore {
   clear: () => void;
 }
 
-export const DesignStudioStore = createStore<DesignStudioStore>((set) => ({
-  initialized: false,
-  design: null,
-  activeLayoutId: null,
-  elementsByLayout: {},
-  selectedElementId: null,
-  highlightedElementId: null,
-  fadingHighlightElementId: null,
-  properties: [],
-  propertyValues: {},
-  saveHandler: null,
-  propertyBindingEnabled: true,
+/**
+ * The internal Zustand store backing the design studio.
+ */
+export type DesignStudioUseStore = ReturnType<typeof createInternalStore>;
 
-  initialize: (design, properties = [], propertyValues = {}) => {
-    // Flatten each layout's element tree into its own bucket
-    const elementsByLayout = Object.fromEntries(
-      design.layouts.map((layout) => [layout.id, flattenTree(layout.tree)]),
-    );
+export interface DesignStudioStore {
+  /**
+   * The internal Zustand store, for selector subscriptions.
+   */
+  useStore: DesignStudioUseStore;
 
-    set({
-      design,
-      elementsByLayout,
-      activeLayoutId: null,
-      selectedElementId: null,
-      highlightedElementId: null,
-      fadingHighlightElementId: null,
-      properties,
-      propertyValues,
-      saveHandler: null,
-      propertyBindingEnabled: true,
-      initialized: true,
-    });
-  },
+  /**
+   * Returns whether the store has been initialized.
+   */
+  isInitialized(): boolean;
 
-  setDesign: (design) => set({ design }),
+  /**
+   * Returns the design being edited, or null if none.
+   */
+  getDesign(): Design | null;
 
-  setActiveLayout: (layoutId) =>
-    set({
-      activeLayoutId: layoutId,
-      selectedElementId: layoutId ? 'root' : null,
-      highlightedElementId: null,
-      fadingHighlightElementId: null,
-    }),
+  /**
+   * Returns the ID of the layout currently being edited, or null
+   * if none.
+   */
+  getActiveLayoutId(): string | null;
 
-  addElement: (element, parentId, index, targetLayoutId) => {
-    set((state) => {
-      // The new element goes into the specified layout, or the
-      // layout containing the parent element
-      const layoutId = targetLayoutId ?? findElementLayoutId(state, parentId);
+  /**
+   * Returns the elements of each of the design's layouts as a
+   * [layoutId]: { [elementId]: FlatDesignElement } map.
+   */
+  getElementsByLayout(): Record<string, Record<string, FlatDesignElement>>;
 
-      if (!layoutId) {
-        throw new Error(`Parent element with ID ${parentId} does not exist.`);
-      }
+  /**
+   * Returns a layout's flat element map, or an empty map if the
+   * layout has no elements in the store.
+   *
+   * @param layoutId - The ID of the layout to get the elements of.
+   */
+  getElements(layoutId: string): Record<string, FlatDesignElement>;
 
-      const elements = state.elementsByLayout[layoutId];
-      const parent = { ...elements[parentId] };
+  /**
+   * Returns the ID of the currently selected element, or null if
+   * none.
+   */
+  getSelectedElementId(): string | null;
 
-      if (!('children' in parent)) {
-        throw new Error(
-          `Parent element with ID ${parentId} is not a container.`,
-        );
-      }
+  /**
+   * Returns the ID of the element highlighted on the canvas, or
+   * null if none.
+   */
+  getHighlightedElementId(): string | null;
 
-      parent.children = [...parent.children];
-      parent.children.splice(index, 0, element.id);
+  /**
+   * Returns the ID of the element whose highlight is fading out,
+   * or null if none.
+   */
+  getFadingHighlightElementId(): string | null;
 
-      return {
-        elementsByLayout: {
-          ...state.elementsByLayout,
-          [layoutId]: {
-            ...elements,
-            [parentId]: parent,
-            [element.id]: element,
-          },
-        },
-      };
-    });
-  },
+  /**
+   * Returns the properties of the design's parent.
+   */
+  getProperties(): PropertiesSchema;
 
-  updateElement: (id, updates) => {
-    set((state) => {
-      const layoutId = findElementLayoutId(state, id);
+  /**
+   * Returns the values of the parent's properties.
+   */
+  getPropertyValues(): PropertyMap;
 
-      if (!layoutId) {
-        return {};
-      }
+  /**
+   * Returns the handler invoked by saveDesign in place of
+   * persisting to the designs store, or null if none is set.
+   */
+  getSaveHandler(): ((layouts: Layout[]) => Promise<void> | void) | null;
 
-      const elements = state.elementsByLayout[layoutId];
-      const element = { ...elements[id] };
+  /**
+   * Returns whether elements can be bound to design properties.
+   */
+  isPropertyBindingEnabled(): boolean;
 
-      Object.assign(
-        element,
-        deepMerge(element, updates as Partial<FlatDesignElement>),
+  /**
+   * Initializes the store with a design, flattening each of its
+   * layouts' element trees. No layout is active until one is
+   * selected via setActiveLayout.
+   *
+   * @param design - The design to edit.
+   * @param properties - The parent's properties.
+   * @param propertyValues - The parent's property values.
+   */
+  initialize(
+    design: Design,
+    properties?: PropertiesSchema,
+    propertyValues?: PropertyMap,
+  ): void;
+
+  /**
+   * Replaces the design snapshot without re-flattening elements.
+   *
+   * @param design - The updated design.
+   */
+  setDesign(design: Design): void;
+
+  /**
+   * Sets the active layout, or clears it when null. Selects the
+   * layout's root element and clears any highlight.
+   *
+   * @param layoutId - The ID of the layout to activate, or null.
+   */
+  setActiveLayout(layoutId: string | null): void;
+
+  /**
+   * Adds an element to the layout containing the parent element.
+   *
+   * @param element - The element to add.
+   * @param parentId - The ID of the parent element.
+   * @param index - The index to add the element at.
+   * @param layoutId - The ID of the layout to add the element to. Resolved from the parent element when omitted.
+   */
+  addElement(
+    element: FlatDesignElement,
+    parentId: string,
+    index: number,
+    layoutId?: string,
+  ): void;
+
+  /**
+   * Updates the properties of an element.
+   *
+   * @param id - The ID of the element to update.
+   * @param updates - The updates to apply to the element.
+   */
+  updateElement(id: string, updates: DesignElementUpdates<DesignElement>): void;
+
+  /**
+   * Replaces an element outright, e.g. to remove a property
+   * that a deep merge cannot unset.
+   *
+   * @param id - The ID of the element to replace.
+   * @param element - The new element.
+   */
+  replaceElement(id: string, element: FlatDesignElement): void;
+
+  /**
+   * Moves an element to a new parent.
+   *
+   * @param id - The ID of the element to move.
+   * @param newParentId - The ID of the new parent element.
+   * @param index - The index to move the element to.
+   */
+  moveElement(id: string, newParentId: string, index: number): void;
+
+  /**
+   * Sorts an element to a new index within its parent.
+   *
+   * @param elementId - The ID of the element to sort.
+   * @param targetIndex - The index to sort the element to.
+   */
+  sortElement(elementId: string, targetIndex: number): void;
+
+  /**
+   * Removes an element from the store.
+   *
+   * @param id - The ID of the element to remove.
+   */
+  removeElement(id: string): void;
+
+  /**
+   * Replaces a layout's entire flat element map, e.g. after
+   * applying a tree transform such as enabling a page panel.
+   *
+   * @param layoutId - The ID of the layout to replace the elements of.
+   * @param elements - The new flat element map.
+   */
+  replaceLayoutElements(
+    layoutId: string,
+    elements: Record<string, FlatDesignElement>,
+  ): void;
+
+  /**
+   * Selects an element by ID, or deselects if null.
+   * Also highlights the element on the canvas.
+   *
+   * @param id - The ID of the element to select, or null to deselect.
+   * @param layoutId - When provided, the layout containing the element becomes active.
+   */
+  selectElement(id: string | null, layoutId?: string): void;
+
+  /**
+   * Clears the canvas highlight with a fade-out animation.
+   */
+  clearHighlight(): void;
+
+  /**
+   * Clears the fading highlight after the animation completes.
+   */
+  clearFadingHighlight(): void;
+
+  /**
+   * Resets the store to its initial state.
+   */
+  clear(): void;
+}
+
+const store = createInternalStore();
+
+export const DesignStudioStore: DesignStudioStore = {
+  useStore: store,
+  isInitialized: () => store.getState().initialized,
+  getDesign: () => store.getState().design,
+  getActiveLayoutId: () => store.getState().activeLayoutId,
+  getElementsByLayout: () => store.getState().elementsByLayout,
+  getElements: (layoutId) =>
+    store.getState().elementsByLayout[layoutId] || EMPTY_ELEMENTS,
+  getSelectedElementId: () => store.getState().selectedElementId,
+  getHighlightedElementId: () => store.getState().highlightedElementId,
+  getFadingHighlightElementId: () => store.getState().fadingHighlightElementId,
+  getProperties: () => store.getState().properties,
+  getPropertyValues: () => store.getState().propertyValues,
+  getSaveHandler: () => store.getState().saveHandler,
+  isPropertyBindingEnabled: () => store.getState().propertyBindingEnabled,
+  initialize: (design, properties, propertyValues) =>
+    store.getState().initialize(design, properties, propertyValues),
+  setDesign: (design) => store.getState().setDesign(design),
+  setActiveLayout: (layoutId) => store.getState().setActiveLayout(layoutId),
+  addElement: (element, parentId, index, layoutId) =>
+    store.getState().addElement(element, parentId, index, layoutId),
+  updateElement: (id, updates) => store.getState().updateElement(id, updates),
+  replaceElement: (id, element) => store.getState().replaceElement(id, element),
+  moveElement: (id, newParentId, index) =>
+    store.getState().moveElement(id, newParentId, index),
+  sortElement: (elementId, targetIndex) =>
+    store.getState().sortElement(elementId, targetIndex),
+  removeElement: (id) => store.getState().removeElement(id),
+  replaceLayoutElements: (layoutId, elements) =>
+    store.getState().replaceLayoutElements(layoutId, elements),
+  selectElement: (id, layoutId) => store.getState().selectElement(id, layoutId),
+  clearHighlight: () => store.getState().clearHighlight(),
+  clearFadingHighlight: () => store.getState().clearFadingHighlight(),
+  clear: () => store.getState().clear(),
+};
+
+/**
+ * Subscribes to the design studio store.
+ *
+ * @param selector - Selects the value to subscribe to.
+ * @returns The selected value.
+ */
+export function useDesignStudioStore<T>(
+  selector: (state: DesignStudioState) => T,
+): T {
+  return store(selector);
+}
+
+/**
+ * Creates the Zustand store backing the design studio.
+ */
+function createInternalStore() {
+  return createStore<DesignStudioState>((set) => ({
+    initialized: false,
+    design: null,
+    activeLayoutId: null,
+    elementsByLayout: {},
+    selectedElementId: null,
+    highlightedElementId: null,
+    fadingHighlightElementId: null,
+    properties: [],
+    propertyValues: {},
+    saveHandler: null,
+    propertyBindingEnabled: true,
+
+    initialize: (design, properties = [], propertyValues = {}) => {
+      // Flatten each layout's element tree into its own bucket
+      const elementsByLayout = Object.fromEntries(
+        design.layouts.map((layout) => [layout.id, flattenTree(layout.tree)]),
       );
 
-      return {
-        elementsByLayout: {
-          ...state.elementsByLayout,
-          [layoutId]: { ...elements, [id]: element },
-        },
-      };
-    });
-  },
+      set({
+        design,
+        elementsByLayout,
+        activeLayoutId: null,
+        selectedElementId: null,
+        highlightedElementId: null,
+        fadingHighlightElementId: null,
+        properties,
+        propertyValues,
+        saveHandler: null,
+        propertyBindingEnabled: true,
+        initialized: true,
+      });
+    },
 
-  replaceElement: (id, element) => {
-    set((state) => {
-      const layoutId = findElementLayoutId(state, id);
+    setDesign: (design) => set({ design }),
 
-      if (!layoutId) {
-        return {};
-      }
+    setActiveLayout: (layoutId) =>
+      set({
+        activeLayoutId: layoutId,
+        selectedElementId: layoutId ? 'root' : null,
+        highlightedElementId: null,
+        fadingHighlightElementId: null,
+      }),
 
-      return {
-        elementsByLayout: {
-          ...state.elementsByLayout,
-          [layoutId]: { ...state.elementsByLayout[layoutId], [id]: element },
-        },
-      };
-    });
-  },
+    addElement: (element, parentId, index, targetLayoutId) => {
+      set((state) => {
+        // The new element goes into the specified layout, or the
+        // layout containing the parent element
+        const layoutId = targetLayoutId ?? findElementLayoutId(state, parentId);
 
-  moveElement: (id, newParentId, index) => {
-    set((state) => {
-      const layoutId = findElementLayoutId(state, id);
+        if (!layoutId) {
+          throw new Error(`Parent element with ID ${parentId} does not exist.`);
+        }
 
-      if (!layoutId) {
-        throw new Error(`Element with ID ${id} does not exist.`);
-      }
+        const elements = state.elementsByLayout[layoutId];
+        const parent = { ...elements[parentId] };
 
-      const elements = state.elementsByLayout[layoutId];
-      const element = { ...elements[id] };
+        if (!('children' in parent)) {
+          throw new Error(
+            `Parent element with ID ${parentId} is not a container.`,
+          );
+        }
 
-      if (!('parent' in element)) {
-        throw new Error(`Cannot move root element.`);
-      }
+        parent.children = [...parent.children];
+        parent.children.splice(index, 0, element.id);
 
-      const oldParent = { ...elements[element.parent] };
-      const newParent = { ...elements[newParentId] };
-
-      if (!('children' in oldParent)) {
-        throw new Error(
-          `Old parent element with ID ${element.parent} is not a container.`,
-        );
-      }
-
-      if (!('children' in newParent)) {
-        throw new Error(
-          `New parent element with ID ${newParentId} is not a container.`,
-        );
-      }
-
-      oldParent.children = [...oldParent.children];
-      oldParent.children.splice(oldParent.children.indexOf(id), 1);
-      newParent.children = [...newParent.children];
-      newParent.children.splice(index, 0, id);
-
-      return {
-        elementsByLayout: {
-          ...state.elementsByLayout,
-          [layoutId]: {
-            ...elements,
-            [element.parent]: oldParent,
-            [newParentId]: newParent,
-            [id]: element,
-          },
-        },
-      };
-    });
-  },
-
-  sortElement: (elementId, targetIndex) => {
-    set((state) => {
-      const layoutId = findElementLayoutId(state, elementId);
-
-      if (!layoutId) {
-        throw new Error(`Element with ID ${elementId} does not exist.`);
-      }
-
-      const elements = state.elementsByLayout[layoutId];
-      const element = elements[elementId] as FlatChildDesignElement;
-      const parentElement = elements[element.parent] as FlatParentDesignElement;
-
-      const reorderedChildren = reorderArray(
-        parentElement.children,
-        parentElement.children.indexOf(elementId),
-        targetIndex,
-      );
-
-      return {
-        elementsByLayout: {
-          ...state.elementsByLayout,
-          [layoutId]: {
-            ...elements,
-            [parentElement.id]: {
-              ...parentElement,
-              children: reorderedChildren,
+        return {
+          elementsByLayout: {
+            ...state.elementsByLayout,
+            [layoutId]: {
+              ...elements,
+              [parentId]: parent,
+              [element.id]: element,
             },
           },
-        },
-      };
-    });
-  },
+        };
+      });
+    },
 
-  removeElement: (id) => {
-    set((state) => {
-      const layoutId = findElementLayoutId(state, id);
+    updateElement: (id, updates) => {
+      set((state) => {
+        const layoutId = findElementLayoutId(state, id);
 
-      if (!layoutId) {
-        throw new Error(`Element with ID ${id} does not exist.`);
-      }
+        if (!layoutId) {
+          return {};
+        }
 
-      const { [id]: element, ...rest } = state.elementsByLayout[layoutId];
+        const elements = state.elementsByLayout[layoutId];
+        const element = { ...elements[id] };
 
-      if (!('parent' in element)) {
-        throw new Error(`Cannot remove root element.`);
-      }
+        Object.assign(
+          element,
+          deepMerge(element, updates as Partial<FlatDesignElement>),
+        );
 
-      const parent = { ...rest[element.parent] };
+        return {
+          elementsByLayout: {
+            ...state.elementsByLayout,
+            [layoutId]: { ...elements, [id]: element },
+          },
+        };
+      });
+    },
 
-      if ('children' in parent) {
-        parent.children = parent.children.filter((childId) => childId !== id);
-      }
+    replaceElement: (id, element) => {
+      set((state) => {
+        const layoutId = findElementLayoutId(state, id);
 
-      return {
+        if (!layoutId) {
+          return {};
+        }
+
+        return {
+          elementsByLayout: {
+            ...state.elementsByLayout,
+            [layoutId]: { ...state.elementsByLayout[layoutId], [id]: element },
+          },
+        };
+      });
+    },
+
+    moveElement: (id, newParentId, index) => {
+      set((state) => {
+        const layoutId = findElementLayoutId(state, id);
+
+        if (!layoutId) {
+          throw new Error(`Element with ID ${id} does not exist.`);
+        }
+
+        const elements = state.elementsByLayout[layoutId];
+        const element = { ...elements[id] };
+
+        if (!('parent' in element)) {
+          throw new Error(`Cannot move root element.`);
+        }
+
+        const oldParent = { ...elements[element.parent] };
+        const newParent = { ...elements[newParentId] };
+
+        if (!('children' in oldParent)) {
+          throw new Error(
+            `Old parent element with ID ${element.parent} is not a container.`,
+          );
+        }
+
+        if (!('children' in newParent)) {
+          throw new Error(
+            `New parent element with ID ${newParentId} is not a container.`,
+          );
+        }
+
+        oldParent.children = [...oldParent.children];
+        oldParent.children.splice(oldParent.children.indexOf(id), 1);
+        newParent.children = [...newParent.children];
+        newParent.children.splice(index, 0, id);
+
+        return {
+          elementsByLayout: {
+            ...state.elementsByLayout,
+            [layoutId]: {
+              ...elements,
+              [element.parent]: oldParent,
+              [newParentId]: newParent,
+              [id]: element,
+            },
+          },
+        };
+      });
+    },
+
+    sortElement: (elementId, targetIndex) => {
+      set((state) => {
+        const layoutId = findElementLayoutId(state, elementId);
+
+        if (!layoutId) {
+          throw new Error(`Element with ID ${elementId} does not exist.`);
+        }
+
+        const elements = state.elementsByLayout[layoutId];
+        const element = elements[elementId] as FlatChildDesignElement;
+        const parentElement = elements[
+          element.parent
+        ] as FlatParentDesignElement;
+
+        const reorderedChildren = reorderArray(
+          parentElement.children,
+          parentElement.children.indexOf(elementId),
+          targetIndex,
+        );
+
+        return {
+          elementsByLayout: {
+            ...state.elementsByLayout,
+            [layoutId]: {
+              ...elements,
+              [parentElement.id]: {
+                ...parentElement,
+                children: reorderedChildren,
+              },
+            },
+          },
+        };
+      });
+    },
+
+    removeElement: (id) => {
+      set((state) => {
+        const layoutId = findElementLayoutId(state, id);
+
+        if (!layoutId) {
+          throw new Error(`Element with ID ${id} does not exist.`);
+        }
+
+        const { [id]: element, ...rest } = state.elementsByLayout[layoutId];
+
+        if (!('parent' in element)) {
+          throw new Error(`Cannot remove root element.`);
+        }
+
+        const parent = { ...rest[element.parent] };
+
+        if ('children' in parent) {
+          parent.children = parent.children.filter((childId) => childId !== id);
+        }
+
+        return {
+          elementsByLayout: {
+            ...state.elementsByLayout,
+            [layoutId]: { ...rest, [element.parent]: parent },
+          },
+        };
+      });
+    },
+
+    replaceLayoutElements: (layoutId, elements) => {
+      set((state) => ({
         elementsByLayout: {
           ...state.elementsByLayout,
-          [layoutId]: { ...rest, [element.parent]: parent },
+          [layoutId]: elements,
         },
-      };
-    });
-  },
+      }));
+    },
 
-  replaceLayoutElements: (layoutId, elements) => {
-    set((state) => ({
-      elementsByLayout: {
-        ...state.elementsByLayout,
-        [layoutId]: elements,
-      },
-    }));
-  },
+    selectElement: (id, layoutId) =>
+      set((state) => ({
+        activeLayoutId: layoutId ?? state.activeLayoutId,
+        selectedElementId: id ?? 'root',
+        highlightedElementId: id,
+        fadingHighlightElementId: null,
+      })),
 
-  selectElement: (id, layoutId) =>
-    set((state) => ({
-      activeLayoutId: layoutId ?? state.activeLayoutId,
-      selectedElementId: id ?? 'root',
-      highlightedElementId: id,
-      fadingHighlightElementId: null,
-    })),
+    clearHighlight: () =>
+      set((state) => ({
+        highlightedElementId: null,
+        fadingHighlightElementId: state.highlightedElementId,
+      })),
 
-  clearHighlight: () =>
-    set((state) => ({
-      highlightedElementId: null,
-      fadingHighlightElementId: state.highlightedElementId,
-    })),
+    clearFadingHighlight: () => set({ fadingHighlightElementId: null }),
 
-  clearFadingHighlight: () => set({ fadingHighlightElementId: null }),
-
-  clear: () =>
-    set({
-      design: null,
-      activeLayoutId: null,
-      elementsByLayout: {},
-      selectedElementId: null,
-      highlightedElementId: null,
-      fadingHighlightElementId: null,
-      properties: [],
-      propertyValues: {},
-      saveHandler: null,
-      propertyBindingEnabled: true,
-      initialized: false,
-    }),
-}));
-
-export const useDesignStudioStore = DesignStudioStore;
-
-// Stable empty map returned when no layout is active so
-// selectors don't create a new reference on every call
-const EMPTY_ELEMENTS: Record<string, FlatDesignElement> = {};
+    clear: () =>
+      set({
+        design: null,
+        activeLayoutId: null,
+        elementsByLayout: {},
+        selectedElementId: null,
+        highlightedElementId: null,
+        fadingHighlightElementId: null,
+        properties: [],
+        propertyValues: {},
+        saveHandler: null,
+        propertyBindingEnabled: true,
+        initialized: false,
+      }),
+  }));
+}
 
 /**
  * Returns the element map of the active layout, or an empty map
  * when no layout is active.
  */
 export const getActiveElements = (
-  state: DesignStudioStore,
+  state: DesignStudioState,
 ): Record<string, FlatDesignElement> => {
   if (!state.activeLayoutId) {
     return EMPTY_ELEMENTS;
@@ -517,7 +775,7 @@ export const getActiveElements = (
  * provided, falling back to the active layout's elements.
  */
 const getScopedElements = (
-  state: DesignStudioStore,
+  state: DesignStudioState,
   layoutId: string | null,
 ): Record<string, FlatDesignElement> => {
   if (!layoutId) {
@@ -531,7 +789,7 @@ const getScopedElements = (
  * Returns the layout currently being edited, or null when no
  * layout is active.
  */
-export const getActiveLayout = (state: DesignStudioStore): Layout | null => {
+export const getActiveLayout = (state: DesignStudioState): Layout | null => {
   if (!state.design || !state.activeLayoutId) {
     return null;
   }
@@ -552,8 +810,7 @@ export const useActiveLayoutType = (): LayoutType | null =>
  * instead of the designs store.
  */
 export const saveDesign = async () => {
-  const { design, elementsByLayout, saveHandler } =
-    DesignStudioStore.getState();
+  const { design, elementsByLayout, saveHandler } = store.getState();
 
   if (!design) {
     return;
@@ -576,7 +833,7 @@ export const saveDesign = async () => {
     await saveHandler(layouts);
 
     // Keep the design snapshot in sync with the saved layouts
-    DesignStudioStore.getState().setDesign({
+    DesignStudioStore.setDesign({
       ...design,
       layouts,
       lastModified: new Date(),
@@ -587,7 +844,7 @@ export const saveDesign = async () => {
 
   const updated = await Designs.update(design.id, { layouts });
 
-  DesignStudioStore.getState().setDesign(updated);
+  DesignStudioStore.setDesign(updated);
 };
 
 export interface InitializeLayoutEditorOptions {
@@ -615,8 +872,6 @@ export const initializeLayoutEditor = (
   layout: Layout,
   options: InitializeLayoutEditorOptions,
 ) => {
-  const store = DesignStudioStore.getState();
-
   // Wrap the layout in a synthetic design so the studio's design
   // based read paths work unchanged
   const design: Design = {
@@ -629,13 +884,13 @@ export const initializeLayoutEditor = (
   };
 
   // Initialize the store with the synthetic design
-  store.initialize(design);
+  DesignStudioStore.initialize(design);
 
   // Activate the layout
-  store.setActiveLayout(layout.id);
+  DesignStudioStore.setActiveLayout(layout.id);
 
   // Persist edits through the save handler
-  DesignStudioStore.setState({
+  store.setState({
     saveHandler: (layouts) => options.onSave(layouts[0]),
     propertyBindingEnabled: options.propertyBinding ?? false,
   });
@@ -645,7 +900,7 @@ export const initializeLayoutEditor = (
  * Clears the layout editor session.
  */
 export const clearLayoutEditor = () => {
-  DesignStudioStore.getState().clear();
+  DesignStudioStore.clear();
 };
 
 /**
@@ -653,7 +908,7 @@ export const clearLayoutEditor = () => {
  * @param name - The new design name.
  */
 export const renameDesign = async (name: string) => {
-  const design = DesignStudioStore.getState().design;
+  const design = DesignStudioStore.getDesign();
 
   if (!design) {
     return;
@@ -661,7 +916,7 @@ export const renameDesign = async (name: string) => {
 
   const updated = await Designs.update(design.id, { name });
 
-  DesignStudioStore.getState().setDesign(updated);
+  DesignStudioStore.setDesign(updated);
 };
 
 /**
@@ -670,7 +925,7 @@ export const renameDesign = async (name: string) => {
  * @param property - The property schema to add.
  */
 export const addDesignProperty = async (property: PropertySchema) => {
-  const design = DesignStudioStore.getState().design;
+  const design = DesignStudioStore.getDesign();
 
   if (!design) {
     return;
@@ -678,7 +933,7 @@ export const addDesignProperty = async (property: PropertySchema) => {
 
   const updated = await Designs.addProperty(design.id, property);
 
-  DesignStudioStore.getState().setDesign(updated);
+  DesignStudioStore.setDesign(updated);
 };
 
 /**
@@ -692,22 +947,18 @@ export const renameDesignProperty = async (
   oldName: string,
   newName: string,
 ) => {
-  const state = DesignStudioStore.getState();
+  const design = DesignStudioStore.getDesign();
 
-  if (!state.design) {
+  if (!design) {
     return;
   }
 
-  const updated = await Designs.renameProperty(
-    state.design.id,
-    oldName,
-    newName,
-  );
+  const updated = await Designs.renameProperty(design.id, oldName, newName);
 
-  DesignStudioStore.setState({
+  store.setState({
     design: updated,
     elementsByLayout: remapElementBindings(
-      state.elementsByLayout,
+      DesignStudioStore.getElementsByLayout(),
       oldName,
       newName,
     ),
@@ -721,7 +972,7 @@ export const renameDesignProperty = async (
  * @param property - The updated property schema.
  */
 export const updateDesignProperty = async (property: PropertySchema) => {
-  const design = DesignStudioStore.getState().design;
+  const design = DesignStudioStore.getDesign();
 
   if (!design) {
     return;
@@ -729,7 +980,7 @@ export const updateDesignProperty = async (property: PropertySchema) => {
 
   const updated = await Designs.updateProperty(design.id, property);
 
-  DesignStudioStore.getState().setDesign(updated);
+  DesignStudioStore.setDesign(updated);
 };
 
 /**
@@ -739,7 +990,7 @@ export const updateDesignProperty = async (property: PropertySchema) => {
  * @param properties - The reordered properties schema.
  */
 export const updateDesignProperties = async (properties: PropertiesSchema) => {
-  const design = DesignStudioStore.getState().design;
+  const design = DesignStudioStore.getDesign();
 
   if (!design) {
     return;
@@ -748,11 +999,11 @@ export const updateDesignProperties = async (properties: PropertiesSchema) => {
   // Apply the new order to the studio snapshot immediately so
   // the sorted list doesn't flash back to the old order while
   // the update persists
-  DesignStudioStore.getState().setDesign({ ...design, properties });
+  DesignStudioStore.setDesign({ ...design, properties });
 
   const updated = await Designs.update(design.id, { properties });
 
-  DesignStudioStore.getState().setDesign(updated);
+  DesignStudioStore.setDesign(updated);
 };
 
 /**
@@ -762,18 +1013,18 @@ export const updateDesignProperties = async (properties: PropertiesSchema) => {
  * @param propertyName - The name of the property to remove.
  */
 export const removeDesignProperty = async (propertyName: string) => {
-  const state = DesignStudioStore.getState();
+  const design = DesignStudioStore.getDesign();
 
-  if (!state.design) {
+  if (!design) {
     return;
   }
 
-  const updated = await Designs.removeProperty(state.design.id, propertyName);
+  const updated = await Designs.removeProperty(design.id, propertyName);
 
-  DesignStudioStore.setState({
+  store.setState({
     design: updated,
     elementsByLayout: remapElementBindings(
-      state.elementsByLayout,
+      DesignStudioStore.getElementsByLayout(),
       propertyName,
       null,
     ),
@@ -820,13 +1071,12 @@ export const addLayout = async (
   position?: { x: number; y: number },
 ): Promise<Layout> => {
   const layout = await Layouts.create(designId, type, undefined, position);
-  const state = DesignStudioStore.getState();
 
-  if (state.design?.id === designId) {
-    DesignStudioStore.setState({
+  if (DesignStudioStore.getDesign()?.id === designId) {
+    store.setState({
       design: Designs.get(designId),
       elementsByLayout: {
-        ...state.elementsByLayout,
+        ...DesignStudioStore.getElementsByLayout(),
         [layout.id]: flattenTree(layout.tree),
       },
       activeLayoutId: layout.id,
@@ -849,20 +1099,24 @@ export const addLayout = async (
 export const removeLayout = async (layoutId: string) => {
   await Layouts.remove(layoutId);
 
-  const state = DesignStudioStore.getState();
+  const design = DesignStudioStore.getDesign();
+  const allElements = DesignStudioStore.getElementsByLayout();
 
-  if (!state.design || !(layoutId in state.elementsByLayout)) {
+  if (!design || !(layoutId in allElements)) {
     return;
   }
 
-  const { [layoutId]: removed, ...elementsByLayout } = state.elementsByLayout;
-  const wasActive = state.activeLayoutId === layoutId;
+  const { [layoutId]: removed, ...elementsByLayout } = allElements;
+  const activeLayoutId = DesignStudioStore.getActiveLayoutId();
+  const wasActive = activeLayoutId === layoutId;
 
-  DesignStudioStore.setState({
-    design: Designs.get(state.design.id),
+  store.setState({
+    design: Designs.get(design.id),
     elementsByLayout,
-    activeLayoutId: wasActive ? null : state.activeLayoutId,
-    selectedElementId: wasActive ? null : state.selectedElementId,
+    activeLayoutId: wasActive ? null : activeLayoutId,
+    selectedElementId: wasActive
+      ? null
+      : DesignStudioStore.getSelectedElementId(),
   });
 };
 
@@ -880,10 +1134,10 @@ export const updateLayoutFrame = async (
 ) => {
   await Layouts.update(layoutId, { frame });
 
-  const state = DesignStudioStore.getState();
+  const design = DesignStudioStore.getDesign();
 
-  if (state.design?.layouts.some((layout) => layout.id === layoutId)) {
-    DesignStudioStore.getState().setDesign(Designs.get(state.design.id));
+  if (design?.layouts.some((layout) => layout.id === layoutId)) {
+    DesignStudioStore.setDesign(Designs.get(design.id));
   }
 };
 
@@ -897,10 +1151,10 @@ export const updateLayoutFrame = async (
 export const renameLayout = async (layoutId: string, name: string) => {
   await Layouts.update(layoutId, { name });
 
-  const state = DesignStudioStore.getState();
+  const design = DesignStudioStore.getDesign();
 
-  if (state.design?.layouts.some((layout) => layout.id === layoutId)) {
-    DesignStudioStore.getState().setDesign(Designs.get(state.design.id));
+  if (design?.layouts.some((layout) => layout.id === layoutId)) {
+    DesignStudioStore.setDesign(Designs.get(design.id));
   }
 };
 
@@ -913,7 +1167,7 @@ export const getDesignElement = <
   id: string,
   layoutId?: string,
 ): TType => {
-  const state = DesignStudioStore.getState();
+  const state = store.getState();
   const resolvedLayoutId = layoutId ?? findElementLayoutId(state, id);
 
   return (
@@ -927,18 +1181,14 @@ export const updateDesignElement = <T extends DesignElement>(
   id: string,
   updates: DesignElementUpdates<T>,
 ) => {
-  const store = DesignStudioStore.getState();
-
-  store.updateElement(id, updates);
-  store.clearHighlight();
+  DesignStudioStore.updateElement(id, updates);
+  DesignStudioStore.clearHighlight();
   saveDesign();
 };
 
 export const setDesignElement = (id: string, element: FlatDesignElement) => {
-  const store = DesignStudioStore.getState();
-
-  store.replaceElement(id, element);
-  store.clearHighlight();
+  DesignStudioStore.replaceElement(id, element);
+  DesignStudioStore.clearHighlight();
   saveDesign();
 };
 
@@ -952,22 +1202,18 @@ export const moveDesignElement = (
     return;
   }
 
-  const store = DesignStudioStore.getState();
-
-  store.moveElement(id, newParentId, index);
+  DesignStudioStore.moveElement(id, newParentId, index);
   selectDroppedElement(id);
   saveDesign();
 };
 
 export const sortDesignElement = (elementId: string, targetIndex: number) => {
-  const store = DesignStudioStore.getState();
-
-  store.sortElement(elementId, targetIndex);
+  DesignStudioStore.sortElement(elementId, targetIndex);
   selectDroppedElement(elementId);
   saveDesign();
 };
 
-export const addDeisgnElementFromTemplate = (
+export const addDesignElementFromTemplate = (
   template: DesignElementTemplate,
   parentId: string,
   index: number,
@@ -978,8 +1224,6 @@ export const addDeisgnElementFromTemplate = (
     return;
   }
 
-  const state = DesignStudioStore.getState();
-
   const element = {
     ...template,
     id: uuid(),
@@ -989,7 +1233,7 @@ export const addDeisgnElementFromTemplate = (
   // Without property binding, content elements start in static
   // mode so they are immediately editable
   if (
-    !state.propertyBindingEnabled &&
+    !DesignStudioStore.isPropertyBindingEnabled() &&
     CONTENT_ELEMENT_TYPES.includes(element.type)
   ) {
     element.static = true;
@@ -1000,7 +1244,7 @@ export const addDeisgnElementFromTemplate = (
     }
   }
 
-  state.addElement(element, parentId, index, layoutId);
+  DesignStudioStore.addElement(element, parentId, index, layoutId);
   selectDroppedElement(element.id, layoutId);
   saveDesign();
 };
@@ -1024,8 +1268,7 @@ export interface DeleteHighlightedElementOptions {
 export const deleteHighlightedElement = (
   options: DeleteHighlightedElementOptions = {},
 ) => {
-  const store = DesignStudioStore.getState();
-  const { highlightedElementId, activeLayoutId } = store;
+  const highlightedElementId = DesignStudioStore.getHighlightedElementId();
 
   // Nothing highlighted to delete
   if (!highlightedElementId) {
@@ -1034,6 +1277,8 @@ export const deleteHighlightedElement = (
 
   // Deleting the root deletes the entire layout, when allowed
   if (highlightedElementId === 'root') {
+    const activeLayoutId = DesignStudioStore.getActiveLayoutId();
+
     if (options.allowRootDelete && activeLayoutId) {
       removeLayout(activeLayoutId);
     }
@@ -1056,8 +1301,8 @@ export const deleteHighlightedElement = (
   }
 
   // Remove the element and persist
-  store.removeElement(highlightedElementId);
-  store.selectElement(null);
+  DesignStudioStore.removeElement(highlightedElementId);
+  DesignStudioStore.selectElement(null);
   saveDesign();
 };
 
@@ -1087,14 +1332,13 @@ export const removePagePanel = (side: PagePanelSide) => {
 const applyPagePanelTransform = (
   transform: (root: RootElement) => RootElement,
 ) => {
-  const state = DesignStudioStore.getState();
-  const layoutId = state.activeLayoutId;
+  const layoutId = DesignStudioStore.getActiveLayoutId();
 
   if (!layoutId) {
     return;
   }
 
-  const elements = state.elementsByLayout[layoutId];
+  const elements = DesignStudioStore.getElementsByLayout()[layoutId];
 
   if (!elements) {
     return;
@@ -1102,8 +1346,11 @@ const applyPagePanelTransform = (
 
   const root = reconstructTree(elements);
 
-  state.replaceLayoutElements(layoutId, flattenTree(transform(root)));
-  state.selectElement('root', layoutId);
+  DesignStudioStore.replaceLayoutElements(
+    layoutId,
+    flattenTree(transform(root)),
+  );
+  DesignStudioStore.selectElement('root', layoutId);
   saveDesign();
 };
 
@@ -1112,15 +1359,14 @@ const applyPagePanelTransform = (
  * dropping free-form content directly into the panel row.
  */
 const isActiveRootPanelled = (): boolean => {
-  const state = DesignStudioStore.getState();
-  const layoutId = state.activeLayoutId;
+  const layoutId = DesignStudioStore.getActiveLayoutId();
 
   if (!layoutId) {
     return false;
   }
 
-  const elements = state.elementsByLayout[layoutId];
-  const root = elements?.['root'];
+  const elements = DesignStudioStore.getElements(layoutId);
+  const root = elements['root'];
 
   if (!root || !('children' in root)) {
     return false;
@@ -1147,11 +1393,10 @@ const isActiveRootPanelled = (): boolean => {
  * @param layoutId - The ID of the layout containing the element. Resolved from the element when omitted.
  */
 const selectDroppedElement = (elementId: string, layoutId?: string) => {
-  const state = DesignStudioStore.getState();
   const resolvedLayoutId =
-    layoutId ?? findElementLayoutId(state, elementId) ?? undefined;
+    layoutId ?? findElementLayoutId(store.getState(), elementId) ?? undefined;
 
-  state.selectElement(elementId, resolvedLayoutId);
+  DesignStudioStore.selectElement(elementId, resolvedLayoutId);
 };
 
 export const updateElementStyle = <K extends keyof DesignElementStyle>(
@@ -1159,10 +1404,8 @@ export const updateElementStyle = <K extends keyof DesignElementStyle>(
   key: K,
   value: DesignElementStyle[K],
 ) => {
-  const store = DesignStudioStore.getState();
-
-  store.updateElement(id, { style: { [key]: value } });
-  store.clearHighlight();
+  DesignStudioStore.updateElement(id, { style: { [key]: value } });
+  DesignStudioStore.clearHighlight();
   saveDesign();
 };
 
@@ -1230,7 +1473,7 @@ export const useProperty = (name: string): PropertySchema | null => {
  * IDs are shared between layouts.
  */
 function findElementLayoutId(
-  state: DesignStudioStore,
+  state: DesignStudioState,
   elementId: string,
 ): string | null {
   const { activeLayoutId, elementsByLayout } = state;

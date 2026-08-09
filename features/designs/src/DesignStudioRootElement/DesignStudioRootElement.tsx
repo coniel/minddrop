@@ -85,7 +85,7 @@ export const DesignStudioRootElement: React.FC<
         return;
       }
 
-      DesignStudioStore.getState().selectElement('root', layoutId ?? undefined);
+      DesignStudioStore.selectElement('root', layoutId ?? undefined);
     },
     [layoutId],
   );

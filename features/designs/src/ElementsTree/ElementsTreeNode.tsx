@@ -7,7 +7,11 @@ import {
   Icon,
   Tooltip,
 } from '@minddrop/ui-primitives';
-import { DesignStudioStore, useElement } from '../DesignStudioStore';
+import {
+  DesignStudioStore,
+  useDesignStudioStore,
+  useElement,
+} from '../DesignStudioStore';
 import { useLayoutId } from '../LayoutIdContext';
 import { MappableIndicator } from '../MappableIndicator';
 import {
@@ -78,7 +82,7 @@ export const ElementsTreeNode: React.FC<ElementsTreeNodeProps> = ({
   const element = useElement(elementId);
   // The layout root's ID is shared between layouts, so root nodes
   // are only selected when their layout is the active one
-  const isSelected = DesignStudioStore(
+  const isSelected = useDesignStudioStore(
     (state) =>
       state.selectedElementId === elementId &&
       (!layoutId || state.activeLayoutId === layoutId),
@@ -111,10 +115,7 @@ export const ElementsTreeNode: React.FC<ElementsTreeNodeProps> = ({
   const indent = `calc(var(--space-2) + var(--space-1) * ${depth})`;
 
   const handleClick = () => {
-    DesignStudioStore.getState().selectElement(
-      elementId,
-      layoutId ?? undefined,
-    );
+    DesignStudioStore.selectElement(elementId, layoutId ?? undefined);
   };
 
   // Double-clicking a layout root node centers the viewport on

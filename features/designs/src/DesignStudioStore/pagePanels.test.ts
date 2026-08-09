@@ -11,15 +11,13 @@ const { layout_page_1 } = DesignFixtures;
 
 // Returns the active layout's flat elements as an array
 function activeElements() {
-  return Object.values(
-    DesignStudioStore.getState().elementsByLayout[layout_page_1.id],
-  );
+  return Object.values(DesignStudioStore.getElements(layout_page_1.id));
 }
 
 describe('page panel actions', () => {
   beforeEach(() => {
     setup();
-    DesignStudioStore.getState().setActiveLayout(layout_page_1.id);
+    DesignStudioStore.setActiveLayout(layout_page_1.id);
   });
 
   afterEach(() => {
