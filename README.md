@@ -1,73 +1,77 @@
-# Turborepo starter
+# MindDrop
 
-This is an official pnpm starter turborepo.
+MindDrop is a desktop app for organising your projects, studies, research, and ideas into databases built from plain Markdown files.
 
-## What's inside?
+All your content lives in a database: a folder of entries that share the properties you define. The folder is a real folder on your disk and each entry is a real file inside it, so everything stays readable, editable, and portable with or without MindDrop.
 
-This turborepo uses [pnpm](https://pnpm.io) as a package manager. It includes the following packages/apps:
+- **Databases** give every entry the same typed properties, with entry templates and automations to keep them in step
+- **Collections and queries** gather entries into groups, either picked by hand or matched by rules
+- **Views** display a collection, query, or entire database as a board, table, gallery, or whatever else suits it
+- **Spaces** combine several views into a custom-designed space built around a project, a topic, or an idea
+- **The design studio** is a drag-and-drop canvas for designing how entries look as cards, rows, or a full page
 
-### Apps and Packages
+MindDrop is free to use and licensed under the [AGPL-3.0](LICENSE). A Pro subscription adds encrypted sync across your devices, version history, publishing to the web, and AI features.
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `ui`: a stub React component library shared by both `web` and `docs` applications
-- `eslint-config-custom`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `tsconfig`: `tsconfig.json`s used throughout the monorepo
+See [minddrop.app](https://minddrop.app) for more.
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+## Tech stack
 
-### Utilities
+The desktop app is built with [Electrobun](https://electrobun.dev) and [Bun](https://bun.com), with a [React](https://react.dev) 19 interface bundled by [Vite](https://vite.dev). Entries are read from and written to the file system as Markdown, JSON, or YAML. Alongside them, an SQLite database mirrors every entry and its properties, which lets the app start from SQL rather than from a full disk scan: it loads immediately, then reconciles against the file system in the background and patches its stores with whatever changed while it was closed. That same table is what queries run against. Full text search is [MiniSearch](https://lucaong.github.io/minisearch), held in memory, persisted to disk between runs, and rebuilt from SQL whenever it goes stale.
 
-This turborepo has some additional tools already setup for you:
+State lives in [Zustand](https://zustand.docs.pmnd.rs) stores, styling is plain CSS with a shared token layer, and packages talk to each other through a typed event bus rather than direct calls. The marketing site is a static [Astro](https://astro.build) build.
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+Everything is written in TypeScript, tested with [Vitest](https://vitest.dev), and managed as a [pnpm](https://pnpm.io) workspace orchestrated by [Turborepo](https://turborepo.com).
 
-### Build
+## Repository structure
 
-To build all apps and packages, run the following command:
+The monorepo is split by role rather than by feature, so that the logic behind a feature can be used, and tested, without its interface.
 
-```
-cd my-turborepo
-pnpm run build
-```
+| Directory     | Contents                                                                                         |
+| ------------- | ------------------------------------------------------------------------------------------------ |
+| `packages/`   | Core logic, with no UI: databases, properties, collections, queries, spaces, views, and the like |
+| `features/`   | The React interface for each core package, one `@minddrop/feature-*` package per core package    |
+| `ui/`         | Shared interface building blocks: primitives, composed components, icons, theme, drag and drop   |
+| `data-views/` | The view types entries are displayed in: board, table, gallery, and notebook                     |
+| `apps/`       | The desktop app, the marketing site, and the internal dev review tool                            |
+| `dev/`        | Documentation and internal tooling that ships with the repo but not with the app                 |
 
-### Develop
+Every package is consumed straight from source (`"main": "src/index"`), so there is no build step between packages and no compiled output to keep in sync.
 
-To develop all apps and packages, run the following command:
+### Core and feature packages
 
-```
-cd my-turborepo
-pnpm run dev
-```
+A core package owns a domain: its types, its stores, its file system and SQL side effects, and the API functions that make up its public surface. It exports one namespace per concept, such as `Databases` or `DatabaseEntries`, and it knows nothing about React.
 
-### Remote Caching
+Its matching feature package holds everything that renders: components, hooks, and the wiring between the two. So `packages/databases` defines what a database is and what you can do to one, while `features/databases` provides the interface for doing it.
 
-Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+## Getting started
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup), then enter the following commands:
-
-```
-cd my-turborepo
-pnpm dlx turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your turborepo:
+MindDrop needs [Bun](https://bun.com) and [pnpm](https://pnpm.io). Install the workspace once from the repository root:
 
 ```
-pnpm dlx turbo link
+pnpm install
 ```
 
-## Useful Links
+Then run the desktop app:
 
-Learn more about the power of Turborepo:
+```
+pnpm --filter @minddrop/desktop-2 dev
+```
 
-- [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/repo/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+Or the marketing site:
+
+```
+pnpm --filter @minddrop/website dev
+```
+
+## Checks
+
+Each of these runs across every package through Turborepo:
+
+```
+pnpm test
+pnpm lint
+pnpm typecheck
+pnpm build
+```
+
+Add `--filter <package>` to any of them to narrow the run to a single package.
