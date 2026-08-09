@@ -2,6 +2,8 @@
   "name": "minddrop-md",
   "version": "0.0.0",
   "private": true,
+  "license": "AGPL-3.0-only",
+  "author": "Oscar Coniel",
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
