@@ -167,7 +167,7 @@ The consequences worth knowing:
 
 ### Which blocks are selected is held in the app's selection, not the editor
 
-The Slate selection above says which blocks a selection *covers*; whether
+The Slate selection above says which blocks a selection _covers_; whether
 those blocks are selected at all is held in `@minddrop/selection` as items
 of type `editor-block`, keyed by the block's session ID and carrying a
 reference to the editor they came from.
@@ -193,7 +193,7 @@ Slate selection stops covering whole blocks.
 blocks.
 
 It cannot read the app's selection directly in each block: slate-react
-memoises an element against its *own* intersection with the editor's
+memoises an element against its _own_ intersection with the editor's
 selection, which does not change when a block is selected or deselected in
 the app, so the block would never repaint. Context updates cross memo
 boundaries, which is exactly what is needed here.
@@ -205,7 +205,7 @@ content at the drop point. slate-react checks the handler it was passed first an
 skips its own handling when that handler returns true or prevents default
 (`isEventHandled`), so block dragging is wired through `Editable`'s `onDragOver`
 and `onDrop` props rather than a listener on an ancestor — an ancestor's handler
-runs *after* Slate's, by which point the content has already been inserted.
+runs _after_ Slate's, by which point the content has already been inserted.
 
 The handlers return `false` for any drag which did not start from a block handle,
 which is what leaves dragging selected text alone.
@@ -249,10 +249,24 @@ looks:
 - Nothing may disturb the source before the `dragstart` handler returns, which
   is when the browser snapshots the drag image, so the state driving the hiding
   is set at the very end of the handler.
-- `drop` fires *before* `dragend`. Ending the drag state on the drop shows the
+- `drop` fires _before_ `dragend`. Ending the drag state on the drop shows the
   controls again while the drag is still running, flashing them up against where
   the dragged block used to be, so only `dragend` ends it — and it also drops
   the hovered block, the block having moved out from under the controls.
+
+## packages/sql
+
+### Renderer SQL reads resolve asynchronously despite synchronous typings
+
+`Sql.get`/`Sql.all` are typed synchronous, and the Bun process adapter
+(`bun:sqlite`) really is. But the renderer adapter forwards reads over
+Electrobun RPC, whose `rpc.request.*` calls return Promises — so in the
+renderer `Sql.all` returns a Promise typed as `T[]`, and `.map`-ing the
+"rows" throws. Existing readers never hit this because they all execute
+in the Bun process behind dedicated RPC adapters (search indexing,
+databases background sync). Renderer-side SQL reads must `await` the
+result (see `sqlQueryEntries`); awaiting is a no-op under the
+synchronous adapters, so one code path serves both.
 
 ## packages/stores
 

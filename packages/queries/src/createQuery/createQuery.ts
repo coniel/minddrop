@@ -4,6 +4,7 @@ import { entityId } from '@minddrop/utils';
 import { QueriesStore } from '../QueriesStore';
 import { QueryCreatedEvent, QueryCreatedEventData } from '../events';
 import { Query } from '../types';
+import { createQueryRuleGroup } from '../utils';
 import { writeQuery } from '../writeQuery';
 
 /**
@@ -22,7 +23,8 @@ export async function createQuery(name?: string): Promise<Query> {
     created: new Date(),
     lastModified: new Date(),
     name: name || i18n.t('queries.labels.query'),
-    filters: [],
+    database: '',
+    rules: createQueryRuleGroup(),
     sort: [],
   };
 

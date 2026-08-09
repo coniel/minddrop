@@ -5,7 +5,9 @@ import { getQuery } from '../getQuery';
 import { Query } from '../types';
 import { writeQuery } from '../writeQuery';
 
-export type UpdateQueryData = Partial<Pick<Query, 'name' | 'filters' | 'sort'>>;
+export type UpdateQueryData = Partial<
+  Pick<Query, 'name' | 'database' | 'rules' | 'sort'>
+>;
 /**
  * Updates a query, updating it in the store and writing it to the file system.
  *

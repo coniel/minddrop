@@ -17,6 +17,8 @@ export { sqlGetAllDatabases } from './sqlGetAllDatabases';
 export { sqlGetEntrySyncRecords } from './sqlGetEntrySyncRecords';
 export { sqlGetEntryPropertyValues } from './sqlGetEntryPropertyValues';
 export { sqlGetAllEntriesFull } from './sqlGetAllEntriesFull';
+export { sqlQueryEntries } from './sqlQueryEntries';
+export type { SqlQueryEntriesOptions } from './sqlQueryEntries';
 
 // Init
 export { initializeDatabasesBackend } from './initializeDatabasesBackend';

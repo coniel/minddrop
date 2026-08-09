@@ -10,7 +10,13 @@ const newQuery = {
   id: expect.any(String),
   created: mockDate,
   lastModified: mockDate,
-  filters: [],
+  database: '',
+  rules: {
+    id: expect.any(String),
+    type: 'group',
+    combinator: 'and',
+    rules: [],
+  },
   sort: [],
   name: 'Query',
 };

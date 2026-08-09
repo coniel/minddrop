@@ -1,4 +1,5 @@
 import { EntityId } from '@minddrop/utils';
+import { QueryOperator } from './QueryOperator.types';
 
 export type QueryId = EntityId<'query'>;
 
@@ -14,6 +15,12 @@ export interface Query {
   name: string;
 
   /**
+   * The ID of the source database the query runs against.
+   * An empty string until the user selects a database.
+   */
+  database: string;
+
+  /**
    * The date the query was created.
    */
   created: Date;
@@ -24,17 +31,88 @@ export interface Query {
   lastModified: Date;
 
   /**
-   * The filters to apply to the query.
+   * The root rule group. Always present, may contain no rules.
    */
-  filters: QueryPropertyFilter[];
+  rules: QueryRuleGroup;
 
   /**
-   * The sort order to apply to the query.
+   * The sort order applied to results.
    */
-  sort: QueryPropertySort[];
+  sort: QuerySort[];
 }
 
-export interface QueryPropertySort {
+export type QueryCombinator = 'and' | 'or';
+
+export interface QueryRuleGroup {
+  /**
+   * A unique identifier for the group, used as the edit target
+   * when modifying the rule tree.
+   */
+  id: string;
+
+  /**
+   * Discriminates groups from rules in the rule tree.
+   */
+  type: 'group';
+
+  /**
+   * How the group's rules are combined.
+   */
+  combinator: QueryCombinator;
+
+  /**
+   * The rules and nested groups making up the group.
+   */
+  rules: (QueryRule | QueryRuleGroup)[];
+}
+
+export interface QueryRule {
+  /**
+   * A unique identifier for the rule, used as the edit target
+   * when modifying the rule tree.
+   */
+  id: string;
+
+  /**
+   * Discriminates rules from groups in the rule tree.
+   */
+  type: 'rule';
+
+  /**
+   * The property name the rule filters by. An empty string
+   * until the user picks a property.
+   */
+  property: string;
+
+  /**
+   * The comparison operator. An empty string until the user
+   * picks an operator.
+   */
+  operator: QueryOperator | '';
+
+  /**
+   * The comparison value. Undefined until set, and unused by
+   * value-less operators.
+   */
+  value?: QueryRuleValue;
+}
+
+export type QueryRuleValue = string | number | QueryDateValue;
+
+export type QueryDateValue =
+  | { type: 'absolute'; date: Date }
+  | { type: 'relative'; preset: QueryRelativeDatePreset };
+
+export type QueryRelativeDatePreset =
+  | 'today'
+  | 'yesterday'
+  | 'tomorrow'
+  | 'one-week-ago'
+  | 'one-week-from-now'
+  | 'one-month-ago'
+  | 'one-month-from-now';
+
+export interface QuerySort {
   /**
    * The property to sort by.
    */
@@ -45,90 +123,3 @@ export interface QueryPropertySort {
    */
   direction: 'ascending' | 'descending';
 }
-
-export interface QueryBasicPropertyFilter {
-  /**
-   * The property to filter by.
-   */
-  property: string;
-
-  /**
-   * The operator to use when filtering.
-   */
-  operator: 'is-empty' | 'is-not-empty';
-}
-
-export interface QueryStringPropertyFilter {
-  /**
-   * The property to filter by.
-   */
-  property: string;
-
-  /**
-   * The value to filter by.
-   */
-  value: string;
-
-  /**
-   * The operator to use when filtering.
-   */
-  operator: 'equals' | 'not-equals' | 'contains' | 'not-contains';
-}
-
-export interface QueryNumberPropertyFilter {
-  /**
-   * The property to filter by.
-   */
-  property: string;
-
-  /**
-   * The value to filter by.
-   */
-  value: number;
-
-  /**
-   * The operator to use when filtering.
-   */
-  operator: 'equals' | 'not-equals' | 'greater-than' | 'less-than';
-}
-
-export interface QueryDatePropertyFilter {
-  /**
-   * The property to filter by.
-   */
-  property: string;
-
-  /**
-   * The value to filter by.
-   */
-  value: Date;
-
-  /**
-   * The operator to use when filtering.
-   */
-  operator: 'equals' | 'not-equals' | 'before' | 'after';
-}
-
-export interface QueryBooleanPropertyFilter {
-  /**
-   * The property to filter by.
-   */
-  property: string;
-
-  /**
-   * The value to filter by.
-   */
-  value: boolean;
-
-  /**
-   * The operator to use when filtering.
-   */
-  operator: 'true' | 'false';
-}
-
-export type QueryPropertyFilter =
-  | QueryBasicPropertyFilter
-  | QueryStringPropertyFilter
-  | QueryNumberPropertyFilter
-  | QueryDatePropertyFilter
-  | QueryBooleanPropertyFilter;

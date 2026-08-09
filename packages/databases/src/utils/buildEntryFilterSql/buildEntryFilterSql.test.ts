@@ -1,0 +1,266 @@
+import { describe, expect, it } from 'vitest';
+import { EntryFilterGroup } from '../../types';
+import { buildEntryFilterSql } from './buildEntryFilterSql';
+
+const group = (
+  combinator: 'and' | 'or',
+  filters: EntryFilterGroup['filters'],
+): EntryFilterGroup => ({ combinator, filters });
+
+describe('buildEntryFilterSql', () => {
+  it('returns null for an empty group', () => {
+    expect(buildEntryFilterSql(group('and', []))).toBeNull();
+  });
+
+  it('returns null when nested groups contain no filters', () => {
+    expect(buildEntryFilterSql(group('and', [group('or', [])]))).toBeNull();
+  });
+
+  it('builds a text equals comparison', () => {
+    const result = buildEntryFilterSql(
+      group('and', [
+        {
+          property: 'Name',
+          propertyType: 'text',
+          operator: 'text-equals',
+          value: 'foo',
+        },
+      ]),
+    );
+
+    expect(result?.sql).toBe(
+      '(EXISTS (SELECT 1 FROM entry_properties WHERE entry_id = e.id AND property_name = ? AND value_text = ? COLLATE NOCASE))',
+    );
+    expect(result?.params).toEqual(['Name', 'foo']);
+  });
+
+  it('compiles negative text operators to NOT EXISTS', () => {
+    const result = buildEntryFilterSql(
+      group('and', [
+        {
+          property: 'Name',
+          propertyType: 'text',
+          operator: 'text-not-equals',
+          value: 'foo',
+        },
+      ]),
+    );
+
+    expect(result?.sql).toContain('NOT EXISTS');
+    expect(result?.params).toEqual(['Name', 'foo']);
+  });
+
+  it('escapes LIKE wildcards in contains patterns', () => {
+    const result = buildEntryFilterSql(
+      group('and', [
+        {
+          property: 'Name',
+          propertyType: 'text',
+          operator: 'text-contains',
+          value: '50%_done',
+        },
+      ]),
+    );
+
+    expect(result?.sql).toContain("LIKE ? ESCAPE '\\'");
+    expect(result?.params).toEqual(['Name', '%50\\%\\_done%']);
+  });
+
+  it('builds starts-with and ends-with patterns', () => {
+    const startsWith = buildEntryFilterSql(
+      group('and', [
+        {
+          property: 'Name',
+          propertyType: 'text',
+          operator: 'text-starts-with',
+          value: 'foo',
+        },
+      ]),
+    );
+    const endsWith = buildEntryFilterSql(
+      group('and', [
+        {
+          property: 'Name',
+          propertyType: 'text',
+          operator: 'text-ends-with',
+          value: 'foo',
+        },
+      ]),
+    );
+
+    expect(startsWith?.params).toEqual(['Name', 'foo%']);
+    expect(endsWith?.params).toEqual(['Name', '%foo']);
+  });
+
+  it('routes number comparisons to value_number', () => {
+    const result = buildEntryFilterSql(
+      group('and', [
+        {
+          property: 'Amount',
+          propertyType: 'number',
+          operator: 'number-greater-than',
+          value: 100,
+        },
+      ]),
+    );
+
+    expect(result?.sql).toContain('value_number > ?');
+    expect(result?.params).toEqual(['Amount', 100]);
+  });
+
+  it('routes integer-backed types to value_integer', () => {
+    const result = buildEntryFilterSql(
+      group('and', [
+        {
+          property: 'Due',
+          propertyType: 'date',
+          operator: 'number-less-than',
+          value: 1000,
+        },
+      ]),
+    );
+
+    expect(result?.sql).toContain('value_integer < ?');
+  });
+
+  it('compiles number-not-equals to NOT EXISTS', () => {
+    const result = buildEntryFilterSql(
+      group('and', [
+        {
+          property: 'Amount',
+          propertyType: 'number',
+          operator: 'number-not-equals',
+          value: 5,
+        },
+      ]),
+    );
+
+    expect(result?.sql).toContain('NOT EXISTS');
+    expect(result?.sql).toContain('value_number = ?');
+  });
+
+  it('routes membership tests to entry_property_values', () => {
+    const result = buildEntryFilterSql(
+      group('and', [
+        {
+          property: 'Status',
+          propertyType: 'select',
+          operator: 'has-value',
+          value: 'Done',
+        },
+      ]),
+    );
+
+    expect(result?.sql).toBe(
+      '(EXISTS (SELECT 1 FROM entry_property_values WHERE entry_id = e.id AND property_name = ? AND value_text = ?))',
+    );
+    expect(result?.params).toEqual(['Status', 'Done']);
+  });
+
+  it('routes existence tests on scalar properties to entry_properties', () => {
+    const result = buildEntryFilterSql(
+      group('and', [
+        {
+          property: 'Notes',
+          propertyType: 'text',
+          operator: 'is-empty',
+        },
+      ]),
+    );
+
+    expect(result?.sql).toBe(
+      '(NOT EXISTS (SELECT 1 FROM entry_properties WHERE entry_id = e.id AND property_name = ?))',
+    );
+    expect(result?.params).toEqual(['Notes']);
+  });
+
+  it('routes existence tests on multi-value properties to entry_property_values', () => {
+    const result = buildEntryFilterSql(
+      group('and', [
+        {
+          property: 'Tags',
+          propertyType: 'select',
+          operator: 'is-not-empty',
+        },
+      ]),
+    );
+
+    expect(result?.sql).toBe(
+      '(EXISTS (SELECT 1 FROM entry_property_values WHERE entry_id = e.id AND property_name = ?))',
+    );
+  });
+
+  it('compares the title pseudo-property against the entries column', () => {
+    const result = buildEntryFilterSql(
+      group('and', [
+        {
+          property: 'Title',
+          propertyType: 'title',
+          operator: 'text-contains',
+          value: 'foo',
+        },
+      ]),
+    );
+
+    expect(result?.sql).toBe("(e.title LIKE ? ESCAPE '\\')");
+    expect(result?.params).toEqual(['%foo%']);
+  });
+
+  it('compares created/last-modified pseudo-properties against the entries columns', () => {
+    const created = buildEntryFilterSql(
+      group('and', [
+        {
+          property: 'Created',
+          propertyType: 'created',
+          operator: 'number-greater-than-or-equal',
+          value: 1000,
+        },
+      ]),
+    );
+    const lastModified = buildEntryFilterSql(
+      group('and', [
+        {
+          property: 'Last modified',
+          propertyType: 'last-modified',
+          operator: 'number-less-than',
+          value: 2000,
+        },
+      ]),
+    );
+
+    expect(created?.sql).toBe('(e.created >= ?)');
+    expect(lastModified?.sql).toBe('(e.last_modified < ?)');
+  });
+
+  it('joins group filters with the combinator and parenthesizes nested groups', () => {
+    const result = buildEntryFilterSql(
+      group('and', [
+        {
+          property: 'Title',
+          propertyType: 'title',
+          operator: 'text-equals',
+          value: 'a',
+        },
+        group('or', [
+          {
+            property: 'Amount',
+            propertyType: 'number',
+            operator: 'number-equals',
+            value: 1,
+          },
+          {
+            property: 'Created',
+            propertyType: 'created',
+            operator: 'number-less-than',
+            value: 2,
+          },
+        ]),
+      ]),
+    );
+
+    expect(result?.sql).toBe(
+      '(e.title = ? COLLATE NOCASE AND (EXISTS (SELECT 1 FROM entry_properties WHERE entry_id = e.id AND property_name = ? AND value_number = ?) OR e.created < ?))',
+    );
+    expect(result?.params).toEqual(['a', 'Amount', 1, 2]);
+  });
+});

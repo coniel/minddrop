@@ -31,6 +31,7 @@ import {
   sqlGetEntrySyncRecords,
   sqlGetEntryTextContent,
   sqlGetVersion,
+  sqlQueryEntries,
   sqlReindexDatabaseEntries,
   sqlRenameProperty,
   sqlUpdateEntryMetadata,
@@ -74,6 +75,7 @@ export const sql = {
   getAllDatabases: sqlGetAllDatabases,
   getEntrySyncRecords: sqlGetEntrySyncRecords,
   getEntryPropertyValues: sqlGetEntryPropertyValues,
+  queryEntries: sqlQueryEntries,
   SCHEMA_SQL,
   SCHEMA_VERSION,
 } as const;

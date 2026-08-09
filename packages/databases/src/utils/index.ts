@@ -41,5 +41,8 @@ export * from './rekeyDatabaseMetadata';
 export * from './setTimestampProperties';
 export * from './getNewestDatabaseEntries';
 export * from './searchDatabaseEntriesByTitle';
+export * from './escapeLikePattern';
+export * from './buildEntryFilterSql';
+export * from './buildEntrySortSql';
 export * from './searchDatabases';
 export * from './searchDatabaseEntryTemplates';

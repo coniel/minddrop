@@ -6,18 +6,26 @@ function generateQueryFixture(number: number): Query {
   return {
     id: `query_${number}`,
     name: `Query ${number}`,
+    database: 'database_objects',
     created: new Date('2024-01-01T00:00:00.000Z'),
     lastModified: new Date('2024-01-01T00:00:00.000Z'),
-    filters: [
-      {
-        property: 'title',
-        operator: 'contains',
-        value: 'foo',
-      },
-    ],
+    rules: {
+      id: `query-rule-group_${number}`,
+      type: 'group',
+      combinator: 'and',
+      rules: [
+        {
+          id: `query-rule_${number}`,
+          type: 'rule',
+          property: 'Title',
+          operator: 'contains',
+          value: 'foo',
+        },
+      ],
+    },
     sort: [
       {
-        property: 'title',
+        property: 'Title',
         direction: 'ascending',
       },
     ],

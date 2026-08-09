@@ -1723,6 +1723,9 @@ importers:
 
   packages/queries:
     dependencies:
+      '@minddrop/databases':
+        specifier: workspace:*
+        version: link:../databases
       '@minddrop/events':
         specifier: workspace:*
         version: link:../events
@@ -1732,12 +1735,18 @@ importers:
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../i18n
+      '@minddrop/properties':
+        specifier: workspace:*
+        version: link:../properties
       '@minddrop/stores':
         specifier: workspace:*
         version: link:../stores
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../utils
+      react:
+        specifier: ^19.2.4
+        version: 19.2.4
     devDependencies:
       '@minddrop/eslint-config':
         specifier: workspace:*

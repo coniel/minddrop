@@ -10,3 +10,5 @@ export {
 } from './QueriesStore';
 export { updateQuery as update } from './updateQuery';
 export { initializeQueries as initialize } from './initializeQueries';
+export { runQuery as run } from './runQuery';
+export { useQueryResults as useResults } from './useQueryResults';
