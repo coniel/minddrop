@@ -1,7 +1,19 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { Collections } from '@minddrop/collections';
 import { DataViewTypeComponentProps, DataViews } from '@minddrop/data-views';
-import { DatabaseEntries, DatabaseId } from '@minddrop/databases';
+import {
+  DatabaseEntries,
+  DatabaseEntryDuplicatedEvent,
+  DatabaseEntryDuplicatedEventData,
+  DatabaseId,
+} from '@minddrop/databases';
+import { Events } from '@minddrop/events';
 import {
   DatabaseEntryContextProvider,
   dropContainsAddExistingEntryCard,
@@ -17,6 +29,7 @@ import { BoardViewToolbar } from '../BoardViewToolbar';
 import { BOARD_ACCEPTED_DATA_TYPES, defaultBoardViewData } from '../constants';
 import { BoardColumns, BoardViewData, BoardViewOptions } from '../types';
 import {
+  placeEntryBelow,
   placeEntryInColumn,
   placeEntryInNewColumn,
   reconcileColumns,
@@ -86,6 +99,40 @@ export const BoardViewComponent: React.FC<
     },
     [view.id],
   );
+
+  // Place duplicated entries directly below their original. Fired
+  // before the duplicate is added to the collection, so placing it
+  // now keeps it from being reconciled into the first column.
+  useEffect(() => {
+    Events.addListener<DatabaseEntryDuplicatedEventData>(
+      DatabaseEntryDuplicatedEvent,
+      `board-view-${view.id}`,
+      ({ data }) => {
+        // Ignore duplications from other sources
+        if (data.source?.id !== view.dataSource.id) {
+          return;
+        }
+
+        const updated = placeEntryBelow(
+          reconciledColumns,
+          data.original.id,
+          data.duplicate.id,
+        );
+
+        // Skip the update if the original is not on the board
+        if (updated !== reconciledColumns) {
+          updateColumns(updated);
+        }
+      },
+    );
+
+    return () => {
+      Events.removeListener(
+        DatabaseEntryDuplicatedEvent,
+        `board-view-${view.id}`,
+      );
+    };
+  }, [view.id, view.dataSource.id, reconciledColumns, updateColumns]);
 
   // Scroll an entry's card into view once it has been rendered
   const scrollEntryIntoView = useCallback((entryId: string) => {
