@@ -55,9 +55,6 @@ export function persistVirtualViewConfig(view: DataView): void {
     },
   };
 
-  // Mirror the metadata on the store entry
-  DatabaseEntriesStore.set({ ...entry, metadata });
-
   // Persist the metadata to the database metadata file
   updateEntryMetadata(parsed.entryId, metadata);
 }

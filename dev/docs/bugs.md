@@ -46,35 +46,6 @@ create the storage directory once before the parallel writes, make
 `createDir` ignore an already-existing directory, or catch and swallow
 `EEXIST`. No data is lost, but the losing writes fail outright.
 
-### `updateEntryMetadata` does not update the entries store, losing successive metadata updates
-
-`updateEntryMetadata`
-(`packages/databases/src/updateEntryMetadata/updateEntryMetadata.ts`)
-queues the metadata file write, syncs SQL via the metadata updated event,
-but never updates the entry in `DatabaseEntriesStore`. Callers that
-compose the new metadata from the store therefore read stale state.
-
-Confirmed repro: two successive `setEntryViewLayoutOverride` calls for
-different views on the same entry. The second call spreads
-`entry.metadata.viewLayoutOverrides` from the store, which still lacks
-the first override, so the flushed metadata file (and SQL) contain only
-the second override — the first is silently lost. The existing
-"preserves existing layout overrides" test masks this by seeding the
-store manually instead of calling set twice.
-
-`persistVirtualViewConfig` works around the gap by mirroring the
-composed metadata onto the store itself before calling
-`updateEntryMetadata`, but `setEntryViewLayoutOverride` and
-`clearEntryViewLayoutOverride` do not, so interleaving them with
-`persistVirtualViewConfig` can also drop overrides from the persisted
-file. Store readers (e.g. `DatabaseEntries.use`) also never see metadata
-changes made through the non-mirroring callers.
-
-Fix direction: update the store inside `updateEntryMetadata` itself so
-every caller gets the mirror for free, then remove the caller-side
-mirrors in `persistVirtualViewConfig` and `duplicateDatabaseEntry`, and
-add a second-set test to `setEntryViewLayoutOverride`.
-
 ### Stale `DataViews.Store.getAll()` usage in views tests
 
 Four tests fail on `main` (present since at least b2245174):

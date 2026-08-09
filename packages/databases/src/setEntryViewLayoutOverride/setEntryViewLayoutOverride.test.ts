@@ -55,6 +55,23 @@ describe('setEntryViewLayoutOverride', () => {
     });
   });
 
+  it('preserves earlier overrides across successive calls', async () => {
+    // Set overrides for two different views in succession
+    setEntryViewLayoutOverride(objectEntry1.id, 'view-1', layout_card_2.id);
+    setEntryViewLayoutOverride(objectEntry1.id, 'view-2', layout_card_3.id);
+
+    // Flush to write to disk
+    await flushDatabaseMetadata(objectDatabase.path);
+
+    const written = JSON.parse(MockFs.readTextFile(metadataFilePath));
+
+    // Both overrides should be persisted
+    expect(written[metadataKey].viewLayoutOverrides).toEqual({
+      'view-1': layout_card_2.id,
+      'view-2': layout_card_3.id,
+    });
+  });
+
   it('preserves existing layout overrides', async () => {
     // Set up an existing layout override on the entry in the store
     DatabaseEntriesStore.update(objectEntry1.id, {

@@ -1,4 +1,5 @@
 import { Events } from '@minddrop/events';
+import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import {
   DatabaseEntryMetadataUpdatedEvent,
   DatabaseEntryMetadataUpdatedEventData,
@@ -22,9 +23,9 @@ const pendingUpdates: Map<
 const flushTimers: Map<string, ReturnType<typeof setTimeout>> = new Map();
 
 /**
- * Queues a metadata update for an entry and schedules a debounced write.
- * Successive calls for entries in the same database are merged into a
- * single read-modify-write cycle.
+ * Sets an entry's metadata, updating the store and queuing a debounced
+ * write to the database metadata file. Successive calls for entries in
+ * the same database are merged into a single read-modify-write cycle.
  *
  * Use `flushDatabaseMetadata` to force an immediate write (e.g. in tests
  * or before shutdown).
@@ -39,6 +40,10 @@ export function updateEntryMetadata(
   // Look up the entry and its database to find the database path
   const entry = getDatabaseEntry(entryId);
   const database = getDatabase(entry.database);
+
+  // Set the metadata on the stored entry so successive updates
+  // compose from current state
+  DatabaseEntriesStore.update(entryId, { metadata });
 
   // Metadata is keyed by the entry's database-relative path since the
   // file only holds this database's entries

@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import {
   MockFs,
   cleanup,
@@ -38,6 +39,15 @@ describe('updateEntryMetadata', () => {
   beforeEach(setup);
 
   afterEach(cleanup);
+
+  it('sets the metadata on the stored entry', () => {
+    updateEntryMetadata(objectEntry1.id, entryMetadata);
+
+    // The store entry should reflect the updated metadata
+    expect(DatabaseEntriesStore.get(objectEntry1.id)?.metadata).toEqual(
+      entryMetadata,
+    );
+  });
 
   it('creates the metadata file if it does not exist', async () => {
     updateEntryMetadata(objectEntry1.id, entryMetadata);
