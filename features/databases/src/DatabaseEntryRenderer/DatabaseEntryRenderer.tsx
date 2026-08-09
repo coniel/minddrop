@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import {
   DatabaseEntries,
   DatabaseEntry,
@@ -86,7 +86,13 @@ const Entry: React.FC<EntryProps> = ({
   const { t } = useTranslation();
   const database = Databases.use(entry.database);
   const design = Designs.use(database?.designId || '');
-  const { draggable, optionsMenu, source } = useDatabaseEntryContext();
+  const {
+    draggable,
+    optionsMenu,
+    source,
+    autoFocusEntryId,
+    onEntryAutoFocused,
+  } = useDatabaseEntryContext();
   const { draggableProps, isDragging } = useDraggable({
     id: entry.id,
     type: DatabaseEntriesDataKey,
@@ -96,6 +102,10 @@ const Entry: React.FC<EntryProps> = ({
   // The base layout type the context resolves to, used for styling
   // and click behaviour
   const baseType = layoutContextBaseType[layoutContext];
+
+  // Whether this entry's layout should autofocus its editor,
+  // set when the entry was just created from the containing view
+  const autoFocusEditor = autoFocusEntryId === entry.id;
 
   // Resolve the layout to render with, falling back to the
   // database default when no override is specified
@@ -162,6 +172,15 @@ const Entry: React.FC<EntryProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps -- recompute on property changes
     [entry.id, entry.properties, layout, propertyMap],
   );
+
+  // Consume the autofocus once the entry has mounted, so cards
+  // remounting later (e.g. on column drags or layout switches)
+  // do not steal focus
+  useEffect(() => {
+    if (autoFocusEditor) {
+      onEntryAutoFocused?.();
+    }
+  }, [autoFocusEditor, onEntryAutoFocused]);
 
   const onUpdatePropertyValue = useCallback(
     (name: string, value: PropertyValue) => {
@@ -314,6 +333,7 @@ const Entry: React.FC<EntryProps> = ({
         <LayoutRenderer
           layout={layout}
           context={layoutContext}
+          autoFocusEditor={autoFocusEditor}
           designProperties={design?.properties}
           propertyMap={propertyMap}
           propertyValues={propertyValues}
