@@ -16,6 +16,7 @@ export const events = {
 
 export { createDatabaseEntry as create } from './createDatabaseEntry';
 export { deleteDatabaseEntry as delete } from './deleteDatabaseEntry';
+export { duplicateDatabaseEntry as duplicate } from './duplicateDatabaseEntry';
 export { createDatabaseEntryFromFilePath as createFromFilePath } from './createDatabaseEntryFromFilePath';
 export { createDatabaseEntryFromFile as createFromFile } from './createDatabaseEntryFromFile';
 export { createDatabaseEntryFromUrl as createFromUrl } from './createDatabaseEntryFromUrl';

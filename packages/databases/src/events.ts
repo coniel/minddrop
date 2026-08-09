@@ -4,6 +4,7 @@ import {
   DatabaseEntry,
   DatabaseEntryMetadata,
   DatabaseEntryOpenMode,
+  DatabaseEntryRenderSource,
   DatabaseEntryTemplate,
   SqlEntryRecord,
 } from './types';
@@ -159,6 +160,27 @@ export type DatabaseEntryDeletedEventData = DatabaseEntry;
 export interface DatabaseEntryRenamedEventData {
   original: DatabaseEntry;
   updated: DatabaseEntry;
+}
+
+// Entry duplicated event - fired after an entry is duplicated, before
+// the duplicate is added to the source collection
+export const DatabaseEntryDuplicatedEvent = 'databases:entry:duplicated';
+
+export interface DatabaseEntryDuplicatedEventData {
+  /**
+   * The entry that was duplicated.
+   */
+  original: DatabaseEntry;
+
+  /**
+   * The newly created duplicate.
+   */
+  duplicate: DatabaseEntry;
+
+  /**
+   * The source the original entry was rendered from when duplicated.
+   */
+  source?: DatabaseEntryRenderSource;
 }
 
 // Entries cleared event - fired when all of a database's entries are deleted
