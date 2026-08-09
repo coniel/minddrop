@@ -1,6 +1,6 @@
 import { DataViewTypeSettingsMenuProps } from '@minddrop/data-views';
 import { createI18nKeyBuilder, i18n } from '@minddrop/i18n';
-import { DatabaseLayoutSelectionMenu } from '@minddrop/ui-components';
+import { DatabaseLayoutSelectionMenu } from '@minddrop/ui-databases';
 import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,

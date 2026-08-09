@@ -1,5 +1,5 @@
 import { DropEventData } from '@minddrop/selection';
-import { NewEntryPickerDataKey } from '@minddrop/ui-components';
+import { NewEntryPickerDataKey } from '@minddrop/ui-databases';
 
 /**
  * Checks whether a drop event contains a new entry card.

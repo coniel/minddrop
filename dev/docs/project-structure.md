@@ -84,14 +84,22 @@ aren't about any one core domain (`PanelView`, `Setting`,
 ### Placing components that span domains
 
 Many components touch several core packages. Place them by **the entity
-the component is about, not everything it touches**:
+the component acts on, not everything it touches and not the nouns in
+its name**:
 
 - `DataSourceCombobox` reads collections, queries and databases, but it
   produces a data source → `ui/data-views`.
-- `AddCollectionEntryButton` creates database entries into a
-  collection, but it is an entry-creation affordance → `ui/databases`.
 - `DataViewFloatingToolbar` is hosted by a data view, but every card is
   a database-entry action → `ui/databases`.
+- `AddCollectionEntryButton` creates _database entries_, but it
+  requires a `collectionId`, persists through `Collections.addItems`,
+  and is unusable without a collection — the databases only filter what
+  can be added → `ui/collections`.
+
+The last one is the trap: "Entry" in the name suggests databases, and
+it does create entries. The deciding question is what it acts on. A
+useful check is the required props — a component that cannot render
+without a `collectionId` is a collections component.
 
 Placing by dependencies produces endless argument; placing by subject
 is almost always unambiguous.
@@ -199,20 +207,28 @@ dependencies:
 
 ## Current state
 
-The layering above is the target. Known gaps:
+`ui/databases` is the first `ui/[domain]` package. The layering above
+is otherwise still the target. Known gaps:
 
-- `ui/[domain]` packages do not exist yet. `DataViewFloatingToolbar`,
-  the entry drag hooks and the drag data keys currently live in
-  `ui/components`; they belong in `ui/databases`.
-- `data-views/*` still depend on `@minddrop/feature-databases` for
-  `DatabaseEntryRenderer`. Moving it to `ui/databases` removes the last
-  feature dependency from every built-in view type, which is the main
-  signal that the boundary is in the right place.
+- `DatabaseEntryRenderer` is still in `features/databases`, so every
+  built-in view type keeps a `@minddrop/feature-databases` dependency.
+  It is blocked on `LayoutRenderer`: its element subtree reaches
+  `@minddrop/feature-data-views` (`ViewDesignElement`) and
+  `@minddrop/feature-markdown-editor` (`EditorDesignElement`,
+  `FormattedTextElement`), so `ui/designs` cannot exist before
+  `ui/data-views` and `ui/markdown-editor` do.
 - `features/databases`, `features/designs` and `features/spaces` import
   renderers and editor fields from each other
   (`LayoutRenderer`, `DataViewRenderer`, `DataViewOptionsMenu`, the
   property editor fields). Each is prop-driven and should end up in
   `ui/designs`, `ui/data-views` and `ui/properties` respectively.
+- `DataSourceCombobox` is still in `ui/components` and belongs in
+  `ui/data-views`; it currently reaches into `ui/databases` for the
+  database fallback icon.
+- `AddCollectionEntryButton` is parked in `ui/components` and belongs
+  in `ui/collections`, which has not been earned yet (one consumer).
+  `ui/components` is the holding bucket for single-domain components
+  whose package does not exist yet.
 
 Migrate lazily: move a component down when it gains a second consumer
 or when its feature is being worked on anyway, rather than as one

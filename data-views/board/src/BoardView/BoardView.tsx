@@ -24,7 +24,7 @@ import {
   getDroppedNewEntryDatabaseIds,
 } from '@minddrop/feature-databases';
 import { DropEventData } from '@minddrop/selection';
-import { DataViewFloatingToolbar } from '@minddrop/ui-components';
+import { DataViewFloatingToolbar } from '@minddrop/ui-databases';
 import { FlexDropContainer } from '@minddrop/ui-drag-and-drop';
 import { ScrollArea } from '@minddrop/ui-primitives';
 import { BoardViewColumn } from '../BoardViewColumn';

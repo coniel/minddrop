@@ -8,6 +8,7 @@ import {
   Databases,
 } from '@minddrop/databases';
 import { useTranslation } from '@minddrop/i18n';
+import { DATABASE_FALLBACK_ICON } from '@minddrop/ui-databases';
 import {
   DropdownMenu,
   DropdownMenuGroup,
@@ -20,7 +21,6 @@ import {
   IconButton,
   IconButtonProps,
 } from '@minddrop/ui-primitives';
-import { DATABASE_FALLBACK_ICON } from '../constants';
 
 // Maximum number of entries listed when not searching
 const DEFAULT_ENTRIES_LIMIT = 10;

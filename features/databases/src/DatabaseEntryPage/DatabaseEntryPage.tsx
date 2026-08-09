@@ -1,5 +1,6 @@
 import { DatabaseEntries, Databases } from '@minddrop/databases';
-import { DATABASE_FALLBACK_ICON, PanelView } from '@minddrop/ui-components';
+import { PanelView } from '@minddrop/ui-components';
+import { DATABASE_FALLBACK_ICON } from '@minddrop/ui-databases';
 import {
   DatabaseEntryRenderer,
   DatabaseEntryRendererProps,

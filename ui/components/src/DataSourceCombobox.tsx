@@ -4,13 +4,13 @@ import { ViewDataSource, ViewDataSourceType } from '@minddrop/data-views';
 import { Databases } from '@minddrop/databases';
 import { useTranslation } from '@minddrop/i18n';
 import { Queries } from '@minddrop/queries';
+import { DATABASE_FALLBACK_ICON } from '@minddrop/ui-databases';
 import {
   Combobox,
   ComboboxOption,
   ComboboxOptionGroup,
   ComboboxProps,
 } from '@minddrop/ui-primitives';
-import { DATABASE_FALLBACK_ICON } from './constants';
 
 // Option values for the create new data source options
 const NEW_COLLECTION_VALUE = 'new-collection';

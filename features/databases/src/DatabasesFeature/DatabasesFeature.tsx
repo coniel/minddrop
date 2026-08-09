@@ -27,7 +27,7 @@ import {
   ViewDescriptor,
 } from '@minddrop/events';
 import { Tabs } from '@minddrop/feature-views';
-import { DATABASE_FALLBACK_ICON } from '@minddrop/ui-components';
+import { DATABASE_FALLBACK_ICON } from '@minddrop/ui-databases';
 import { DefaultViewAreaId } from '@minddrop/views';
 import { DatabaseEntryDialog } from '../DatabaseEntryDialog';
 import { DatabaseEntryRendererProps } from '../DatabaseEntryRenderer';

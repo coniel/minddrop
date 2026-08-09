@@ -2,11 +2,11 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { DataViewTypeComponentProps, DataViews } from '@minddrop/data-views';
 import { DatabaseEntries, Databases } from '@minddrop/databases';
 import { DatabaseEntryRenderer } from '@minddrop/feature-databases';
+import { AddCollectionEntryButton } from '@minddrop/ui-components';
 import {
-  AddCollectionEntryButton,
   CreateDatabaseEntryButton,
   DatabaseEntriesSearchField,
-} from '@minddrop/ui-components';
+} from '@minddrop/ui-databases';
 import { ScrollArea, useTransientState } from '@minddrop/ui-primitives';
 import { defaultNotebookViewOptions } from '../constants';
 import { NotebookViewOptions } from '../types';

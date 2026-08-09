@@ -1,5 +1,5 @@
 import { DropEventData } from '@minddrop/selection';
-import { AddExistingEntryDataKey } from '@minddrop/ui-components';
+import { AddExistingEntryDataKey } from '@minddrop/ui-databases';
 
 /**
  * Checks whether a drop event contains an add existing entry card.

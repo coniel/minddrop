@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { DatabaseEntries, DatabaseEntry, Databases } from '@minddrop/databases';
 import { useTranslation } from '@minddrop/i18n';
-import { DATABASE_FALLBACK_ICON } from '@minddrop/ui-components';
+import { DATABASE_FALLBACK_ICON } from '@minddrop/ui-databases';
 import {
   Group,
   KeyboardShortcut,

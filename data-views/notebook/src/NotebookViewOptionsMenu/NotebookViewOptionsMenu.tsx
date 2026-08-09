@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { Collections } from '@minddrop/collections';
 import { DataViewTypeSettingsMenuProps } from '@minddrop/data-views';
 import { Databases } from '@minddrop/databases';
-import { DatabaseLayoutSelectionMenu } from '@minddrop/ui-components';
+import { DatabaseLayoutSelectionMenu } from '@minddrop/ui-databases';
 import { DropdownMenuSeparator } from '@minddrop/ui-primitives';
 import { NotebookViewOptions } from '../types';
 

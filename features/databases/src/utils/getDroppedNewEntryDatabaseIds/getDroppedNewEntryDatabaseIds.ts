@@ -1,6 +1,6 @@
 import { DatabaseId } from '@minddrop/databases';
 import { DropEventData } from '@minddrop/selection';
-import { NewDatabaseEntriesDataKey } from '@minddrop/ui-components';
+import { NewDatabaseEntriesDataKey } from '@minddrop/ui-databases';
 import { isEntityId } from '@minddrop/utils';
 
 /**

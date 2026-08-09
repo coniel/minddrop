@@ -5,7 +5,7 @@ import { Databases } from '@minddrop/databases';
 import {
   DATABASE_FALLBACK_ICON,
   DatabaseLayoutSelectionMenu,
-} from '@minddrop/ui-components';
+} from '@minddrop/ui-databases';
 import {
   DropdownMenuItem,
   DropdownMenuPortal,

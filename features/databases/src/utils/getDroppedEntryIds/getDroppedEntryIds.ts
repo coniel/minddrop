@@ -1,6 +1,6 @@
 import { DatabaseEntry } from '@minddrop/databases';
 import { DropEventData } from '@minddrop/selection';
-import { DatabaseEntriesDataKey } from '@minddrop/ui-components';
+import { DatabaseEntriesDataKey } from '@minddrop/ui-databases';
 
 /**
  * Returns the IDs of the database entries contained in a drop event's

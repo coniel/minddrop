@@ -3,7 +3,7 @@ import {
   DatabaseEntriesDataKey,
   NewDatabaseEntriesDataKey,
   NewEntryPickerDataKey,
-} from '@minddrop/ui-components';
+} from '@minddrop/ui-databases';
 import { BoardViewData } from './types';
 
 export const defaultBoardViewData: BoardViewData = {

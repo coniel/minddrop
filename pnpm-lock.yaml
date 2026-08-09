@@ -221,9 +221,9 @@ importers:
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../../packages/test-utils
-      '@minddrop/ui-components':
+      '@minddrop/ui-databases':
         specifier: workspace:*
-        version: link:../../ui/components
+        version: link:../../ui/databases
       '@minddrop/ui-drag-and-drop':
         specifier: workspace:*
         version: link:../../ui/drag-and-drop
@@ -258,9 +258,9 @@ importers:
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../../packages/test-utils
-      '@minddrop/ui-components':
+      '@minddrop/ui-databases':
         specifier: workspace:*
-        version: link:../../ui/components
+        version: link:../../ui/databases
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives
@@ -301,6 +301,9 @@ importers:
       '@minddrop/ui-components':
         specifier: workspace:*
         version: link:../../ui/components
+      '@minddrop/ui-databases':
+        specifier: workspace:*
+        version: link:../../ui/databases
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives
@@ -421,6 +424,9 @@ importers:
       '@minddrop/ui-components':
         specifier: workspace:*
         version: link:../../ui/components
+      '@minddrop/ui-databases':
+        specifier: workspace:*
+        version: link:../../ui/databases
       '@minddrop/ui-icons':
         specifier: workspace:*
         version: link:../../ui/icons
@@ -503,6 +509,9 @@ importers:
       '@minddrop/ui-components':
         specifier: workspace:*
         version: link:../../ui/components
+      '@minddrop/ui-databases':
+        specifier: workspace:*
+        version: link:../../ui/databases
       '@minddrop/ui-drag-and-drop':
         specifier: workspace:*
         version: link:../../ui/drag-and-drop
@@ -2010,9 +2019,6 @@ importers:
       '@minddrop/databases':
         specifier: workspace:*
         version: link:../../packages/databases
-      '@minddrop/designs':
-        specifier: workspace:*
-        version: link:../../packages/designs
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
@@ -2025,9 +2031,9 @@ importers:
       '@minddrop/queries':
         specifier: workspace:*
         version: link:../../packages/queries
-      '@minddrop/selection':
+      '@minddrop/ui-databases':
         specifier: workspace:*
-        version: link:../../packages/selection
+        version: link:../databases
       '@minddrop/ui-icons':
         specifier: workspace:*
         version: link:../icons
@@ -2037,12 +2043,55 @@ importers:
       '@minddrop/ui-theme':
         specifier: workspace:*
         version: link:../theme
-      '@minddrop/utils':
-        specifier: workspace:*
-        version: link:../../packages/utils
       '@minddrop/views':
         specifier: workspace:*
         version: link:../../packages/views
+    devDependencies:
+      '@minddrop/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@minddrop/test-utils':
+        specifier: workspace:*
+        version: link:../../packages/test-utils
+      eslint:
+        specifier: ^9.39.3
+        version: 9.39.3
+      tsconfig:
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  ui/databases:
+    dependencies:
+      '@minddrop/databases':
+        specifier: workspace:*
+        version: link:../../packages/databases
+      '@minddrop/designs':
+        specifier: workspace:*
+        version: link:../../packages/designs
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../../packages/events
+      '@minddrop/file-system':
+        specifier: workspace:*
+        version: link:../../packages/file-system
+      '@minddrop/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
+      '@minddrop/selection':
+        specifier: workspace:*
+        version: link:../../packages/selection
+      '@minddrop/ui-icons':
+        specifier: workspace:*
+        version: link:../icons
+      '@minddrop/ui-primitives':
+        specifier: workspace:*
+        version: link:../primitives
+      '@minddrop/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
     devDependencies:
       '@minddrop/eslint-config':
         specifier: workspace:*

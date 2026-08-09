@@ -25,14 +25,12 @@
     "@minddrop/databases": "workspace:*",
     "@minddrop/file-system": "workspace:*",
     "@minddrop/queries": "workspace:*",
-    "@minddrop/selection": "workspace:*",
-    "@minddrop/designs": "workspace:*",
     "@minddrop/events": "workspace:*",
     "@minddrop/i18n": "workspace:*",
+    "@minddrop/ui-databases": "workspace:*",
     "@minddrop/ui-icons": "workspace:*",
     "@minddrop/ui-primitives": "workspace:*",
     "@minddrop/ui-theme": "workspace:*",
-    "@minddrop/views": "workspace:*",
-    "@minddrop/utils": "workspace:*"
+    "@minddrop/views": "workspace:*"
   }
 }
