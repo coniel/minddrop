@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { ElementTemplates } from '@minddrop/designs';
 import {
   DesignStudioStore,
-  addDeisgnElementFromTemplate,
+  addDesignElementFromTemplate,
 } from '@minddrop/feature-designs';
 import { SpaceFixtures, Spaces } from '@minddrop/spaces';
 import { render, screen, userEvent, waitFor } from '@minddrop/test-utils';
@@ -24,25 +24,23 @@ describe('<SpaceEditMode />', () => {
 
   afterEach(() => {
     cleanup();
-    DesignStudioStore.getState().clear();
+    DesignStudioStore.clear();
     SpaceViewStateStore.clear();
   });
 
   it('initializes the layout editor session for the space', () => {
     render(<SpaceEditMode space={space_1} />);
 
-    const state = DesignStudioStore.getState();
-
     // The space's layout is active with property binding disabled
-    expect(state.activeLayoutId).toBe(space_1.layout.id);
-    expect(state.propertyBindingEnabled).toBe(false);
+    expect(DesignStudioStore.getActiveLayoutId()).toBe(space_1.layout.id);
+    expect(DesignStudioStore.isPropertyBindingEnabled()).toBe(false);
   });
 
   it('persists element edits to the space', async () => {
     render(<SpaceEditMode space={space_1} />);
 
     // Add a text element from its template
-    addDeisgnElementFromTemplate(ElementTemplates.text, 'root', 0);
+    addDesignElementFromTemplate(ElementTemplates.text, 'root', 0);
 
     await waitFor(() => {
       // The added element was saved into the space's layout
@@ -55,7 +53,7 @@ describe('<SpaceEditMode />', () => {
     const user = userEvent.setup();
 
     // Add an element (added elements are selected and highlighted)
-    addDeisgnElementFromTemplate(ElementTemplates.text, 'root', 0);
+    addDesignElementFromTemplate(ElementTemplates.text, 'root', 0);
 
     await user.keyboard('{Delete}');
 
@@ -97,6 +95,6 @@ describe('<SpaceEditMode />', () => {
 
     unmount();
 
-    expect(DesignStudioStore.getState().initialized).toBe(false);
+    expect(DesignStudioStore.isInitialized()).toBe(false);
   });
 });

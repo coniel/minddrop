@@ -80,10 +80,8 @@ export const SpaceEditMode: React.FC<SpaceEditModeProps> = ({ space }) => {
       // The global selection shortcut prevents the default for
       // delete keys, so deletion must not respect defaultPrevented
       if (event.key === 'Delete' || event.key === 'Backspace') {
-        const { highlightedElementId } = DesignStudioStore.getState();
-
         // Nothing highlighted to delete
-        if (!highlightedElementId) {
+        if (!DesignStudioStore.getHighlightedElementId()) {
           return;
         }
 
@@ -99,8 +97,8 @@ export const SpaceEditMode: React.FC<SpaceEditModeProps> = ({ space }) => {
       // so it only arrives here when nothing consumed it
       if (event.key === 'Escape') {
         // Deselect the highlighted element, or exit edit mode
-        if (DesignStudioStore.getState().highlightedElementId) {
-          DesignStudioStore.getState().selectElement(null);
+        if (DesignStudioStore.getHighlightedElementId()) {
+          DesignStudioStore.selectElement(null);
         } else {
           setSpaceViewState(space.id, { editing: false });
         }
