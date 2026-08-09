@@ -1,5 +1,5 @@
 {
-  "name": "@minddrop/view-board",
+  "name": "@minddrop/data-view-board",
   "version": "0.0.0",
   "main": "src/index",
   "types": "src/index",

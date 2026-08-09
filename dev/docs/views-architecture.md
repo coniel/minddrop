@@ -27,8 +27,8 @@ persisted; the registry has no lifecycle beyond registration.
 The `features/data-views` package renders them (`DataViewRenderer`,
 `CreateDataViewForm`); `features/views` keeps the code-view side
 (`ViewRenderer`, view areas, tabs). The built-in data view type packages
-live in the top-level `data-views/` workspace directory (board-view,
-gallery-view, notebook-view, table-view).
+live in the top-level `data-views/` workspace directory (board, gallery,
+notebook, table).
 
 ## Data views are independent entities
 

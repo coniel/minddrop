@@ -56,10 +56,10 @@
     "@minddrop/ui-primitives": "workspace:*",
     "@minddrop/utils": "workspace:*",
     "@minddrop/views": "workspace:*",
-    "@minddrop/view-board": "workspace:*",
-    "@minddrop/notebook-view": "workspace:*",
-    "@minddrop/table-view": "workspace:*",
-    "@minddrop/view-gallery": "workspace:*",
+    "@minddrop/data-view-board": "workspace:*",
+    "@minddrop/data-view-gallery": "workspace:*",
+    "@minddrop/data-view-notebook": "workspace:*",
+    "@minddrop/data-view-table": "workspace:*",
     "@minddrop/workspaces": "workspace:*"
   }
 }

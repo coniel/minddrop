@@ -1,8 +1,8 @@
+import { BoardViewType } from '@minddrop/data-view-board';
+import { GalleryViewType } from '@minddrop/data-view-gallery';
+import { NotebookViewType } from '@minddrop/data-view-notebook';
+import { TableViewType } from '@minddrop/data-view-table';
 import { DataViewTypes } from '@minddrop/data-views';
-import { NotebookViewType } from '@minddrop/notebook-view';
-import { TableViewType } from '@minddrop/table-view';
-import { BoardViewType } from '@minddrop/view-board';
-import { GalleryViewType } from '@minddrop/view-gallery';
 
 export function initializeDataViewTypes() {
   // Register default view types

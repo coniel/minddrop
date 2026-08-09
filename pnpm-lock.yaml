@@ -192,7 +192,7 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
-  data-views/board-view:
+  data-views/board:
     dependencies:
       '@minddrop/collections':
         specifier: workspace:*
@@ -244,7 +244,7 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
-  data-views/gallery-view:
+  data-views/gallery:
     dependencies:
       '@minddrop/data-views':
         specifier: workspace:*
@@ -278,7 +278,7 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
-  data-views/notebook-view:
+  data-views/notebook:
     dependencies:
       '@minddrop/collections':
         specifier: workspace:*
@@ -318,7 +318,7 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
-  data-views/table-view:
+  data-views/table:
     dependencies:
       '@minddrop/data-views':
         specifier: workspace:*
@@ -497,9 +497,6 @@ importers:
       '@minddrop/stores':
         specifier: workspace:*
         version: link:../../packages/stores
-      '@minddrop/table-view':
-        specifier: workspace:*
-        version: link:../../data-views/table-view
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../../packages/test-utils
@@ -622,6 +619,18 @@ importers:
       '@minddrop/collections':
         specifier: workspace:*
         version: link:../../packages/collections
+      '@minddrop/data-view-board':
+        specifier: workspace:*
+        version: link:../../data-views/board
+      '@minddrop/data-view-gallery':
+        specifier: workspace:*
+        version: link:../../data-views/gallery
+      '@minddrop/data-view-notebook':
+        specifier: workspace:*
+        version: link:../../data-views/notebook
+      '@minddrop/data-view-table':
+        specifier: workspace:*
+        version: link:../../data-views/table
       '@minddrop/data-views':
         specifier: workspace:*
         version: link:../../packages/data-views
@@ -676,9 +685,6 @@ importers:
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
-      '@minddrop/notebook-view':
-        specifier: workspace:*
-        version: link:../../data-views/notebook-view
       '@minddrop/search':
         specifier: workspace:*
         version: link:../../packages/search
@@ -694,9 +700,6 @@ importers:
       '@minddrop/stores':
         specifier: workspace:*
         version: link:../../packages/stores
-      '@minddrop/table-view':
-        specifier: workspace:*
-        version: link:../../data-views/table-view
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../../packages/test-utils
@@ -718,12 +721,6 @@ importers:
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../../packages/utils
-      '@minddrop/view-board':
-        specifier: workspace:*
-        version: link:../../data-views/board-view
-      '@minddrop/view-gallery':
-        specifier: workspace:*
-        version: link:../../data-views/gallery-view
       '@minddrop/views':
         specifier: workspace:*
         version: link:../../packages/views
@@ -2028,6 +2025,9 @@ importers:
       '@minddrop/queries':
         specifier: workspace:*
         version: link:../../packages/queries
+      '@minddrop/selection':
+        specifier: workspace:*
+        version: link:../../packages/selection
       '@minddrop/ui-icons':
         specifier: workspace:*
         version: link:../icons

@@ -1,5 +1,5 @@
 {
-  "name": "@minddrop/view-gallery",
+  "name": "@minddrop/data-view-gallery",
   "version": "0.0.0",
   "main": "src/index",
   "types": "src/index",
