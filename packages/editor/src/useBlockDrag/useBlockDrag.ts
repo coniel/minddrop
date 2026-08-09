@@ -1,6 +1,7 @@
 import React, {
   RefObject,
   useCallback,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -8,7 +9,9 @@ import React, {
 import { Path, Element as SlateElement } from 'slate';
 import { ReactEditor } from 'slate-react';
 import { Element } from '@minddrop/ast';
-import { useDraggable } from '@minddrop/selection';
+import { Selection, dragContainsType, useDraggable } from '@minddrop/selection';
+import { getTransferData } from '@minddrop/utils';
+import { insertBlocksAt } from '../insertBlocksAt';
 import { moveBlocksTo } from '../moveBlocksTo';
 import { selectBlocks } from '../selectBlocks';
 import {
@@ -87,6 +90,10 @@ export interface UseBlockDrag {
  * be dropped on anything in the app which accepts them, rather than
  * only back into the editor they came from.
  *
+ * Blocks dragged from another editor are accepted as well, arriving
+ * as a move: dropping them inserts them at the indicator and removes
+ * them from the editor they were dragged out of.
+ *
  * The dragover and drop handlers are passed to Slate's `Editable`,
  * which skips its own handling of an event when the handler it was
  * given reports having consumed it. Events belonging to any other
@@ -138,12 +145,19 @@ export function useBlockDrag(
   const { onDragStart: startSelectionDrag, onDragEnd: endSelectionDrag } =
     useDraggable(draggedItem);
 
-  const clearDropTarget = useCallback(() => {
-    draggedPathsRef.current = null;
+  // Hides the indicator without dropping the drag itself, used when
+  // the drag moves off the editor but may yet come back
+  const clearDropIndicator = useCallback(() => {
     dropIndexRef.current = null;
 
     setDropIndicator(null);
   }, []);
+
+  const clearDropTarget = useCallback(() => {
+    draggedPathsRef.current = null;
+
+    clearDropIndicator();
+  }, [clearDropIndicator]);
 
   // The drag itself only ends on dragend, which fires after the
   // drop. Showing the controls again on the drop would flash them
@@ -207,9 +221,18 @@ export function useBlockDrag(
     (event: React.DragEvent) => {
       const container = containerRef.current;
 
+      if (!container) {
+        return false;
+      }
+
+      // A drag this editor did not start can still be carrying
+      // blocks dragged out of another editor
+      const foreignBlockDrag =
+        enabled && dragContainsType(event, [BLOCK_SELECTION_ITEM_TYPE]);
+
       // Any other drag, such as of selected text, is Slate's to
       // handle
-      if (!draggedPathsRef.current || !container) {
+      if (!draggedPathsRef.current && !foreignBlockDrag) {
         return false;
       }
 
@@ -234,7 +257,7 @@ export function useBlockDrag(
 
       return true;
     },
-    [editor, containerRef],
+    [editor, containerRef, enabled],
   );
 
   const handleDrop = useCallback(
@@ -242,7 +265,34 @@ export function useBlockDrag(
       const paths = draggedPathsRef.current;
       const index = dropIndexRef.current;
 
-      if (!paths) {
+      // Blocks dragged from this editor are moved within it
+      if (paths) {
+        event.preventDefault();
+
+        clearDropTarget();
+
+        if (index !== null) {
+          moveBlocksTo(editor, paths, index);
+        }
+
+        return true;
+      }
+
+      // Blocks cannot be dropped into a read-only editor
+      if (!enabled) {
+        return false;
+      }
+
+      // Blocks dragged from another editor arrive as elements on
+      // the drag's data
+      const data =
+        getTransferData<
+          Partial<Record<typeof BLOCK_SELECTION_ITEM_TYPE, Element[]>>
+        >(event);
+      const elements = data[BLOCK_SELECTION_ITEM_TYPE];
+
+      // Any other drop is Slate's to handle
+      if (!elements || !elements.length) {
         return false;
       }
 
@@ -251,12 +301,22 @@ export function useBlockDrag(
       clearDropTarget();
 
       if (index !== null) {
-        moveBlocksTo(editor, paths, index);
+        // The drag is a move, so the blocks leave the editor they
+        // were dragged out of. The dragged blocks are the app's
+        // selection, selected when the drag began.
+        Selection.delete();
+
+        // The selection painting over the arriving blocks needs the
+        // DOM focus, taken before the insertion because Slate defers
+        // it while the editor has operations pending
+        ReactEditor.focus(editor);
+
+        insertBlocksAt(editor, elements, index);
       }
 
       return true;
     },
-    [editor, clearDropTarget],
+    [editor, enabled, clearDropTarget],
   );
 
   const handleDragEnd = useCallback(
@@ -266,6 +326,39 @@ export function useBlockDrag(
     },
     [endBlockDrag, endSelectionDrag],
   );
+
+  // The indicator only follows dragover events over the editor, so
+  // a drag moving off the editor, or ending elsewhere, has to be
+  // watched for on the document. Only drags this editor started
+  // reach the dragend handler, which is bound to the drag's source.
+  useEffect(() => {
+    // A disabled editor never shows the indicator
+    if (!enabled) {
+      return;
+    }
+
+    const clearWhenOffEditor = (event: DragEvent) => {
+      // Only relevant while the indicator is showing
+      if (dropIndexRef.current === null) {
+        return;
+      }
+
+      const container = containerRef.current;
+
+      // The drag has moved off the editor
+      if (container && !container.contains(event.target as Node)) {
+        clearDropIndicator();
+      }
+    };
+
+    document.addEventListener('dragover', clearWhenOffEditor);
+    document.addEventListener('dragend', clearDropIndicator);
+
+    return () => {
+      document.removeEventListener('dragover', clearWhenOffEditor);
+      document.removeEventListener('dragend', clearDropIndicator);
+    };
+  }, [containerRef, enabled, clearDropIndicator]);
 
   return {
     dropIndicator,

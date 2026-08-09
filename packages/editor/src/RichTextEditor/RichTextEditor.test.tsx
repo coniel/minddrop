@@ -1,6 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Ast, Element } from '@minddrop/ast';
+import { SelectionItemSerializers } from '@minddrop/selection';
 import { act, fireEvent, render } from '@minddrop/test-utils';
+import { registerBlockSelectionSerializer } from '../registerBlockSelectionSerializer';
 import {
   cleanup,
   headingElement1,
@@ -11,6 +13,7 @@ import {
   paragraphElement2PlainText,
   setup,
 } from '../test-utils';
+import { BLOCK_SELECTION_ITEM_TYPE } from '../types';
 import { ACTIVATION_DELAY } from '../useHoveredBlock';
 import { RichTextEditor } from './RichTextEditor';
 
@@ -173,6 +176,10 @@ describe('RichTextEditor block drag and drop', () => {
   beforeEach(() => {
     setup();
 
+    // Serializes the dragged blocks onto the drag's data, which is
+    // what carries them between editors
+    registerBlockSelectionSerializer();
+
     // The gutter's activation delay is driven by a timer
     vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
   });
@@ -181,6 +188,8 @@ describe('RichTextEditor block drag and drop', () => {
     vi.useRealTimers();
 
     cleanup();
+
+    SelectionItemSerializers.unregister(BLOCK_SELECTION_ITEM_TYPE);
   });
 
   // Renders an editor and collects the values it emits. Blocks have
@@ -208,12 +217,40 @@ describe('RichTextEditor block drag and drop', () => {
     return {
       effectAllowed: '',
       dropEffect: '',
+      // The written data's types, which editors the drag did not
+      // start in use to recognise a block drag
+      get types() {
+        return Object.keys(data);
+      },
       setData: (format: string, value: string) => {
         data[format] = value;
       },
       getData: (format: string) => data[format],
       setDragImage: () => undefined,
     };
+  };
+
+  // Renders two editors and collects the values each emits, used to
+  // drag blocks from the first editor into the second
+  const renderTwoEditors = (secondReadOnly = false) => {
+    const firstValues: Element[][] = [];
+    const secondValues: Element[][] = [];
+
+    const result = render(
+      <>
+        <RichTextEditor
+          initialValue={[paragraphElement1, paragraphElement2]}
+          onChange={(value) => firstValues.push(value)}
+        />
+        <RichTextEditor
+          readOnly={secondReadOnly}
+          initialValue={[headingElement1]}
+          onChange={(value) => secondValues.push(value)}
+        />
+      </>,
+    );
+
+    return { ...result, firstValues, secondValues };
   };
 
   it('shows the drop indicator while a block is dragged over the editor', () => {
@@ -315,6 +352,109 @@ describe('RichTextEditor block drag and drop', () => {
     expect(
       baseElement.querySelector('.editor-block-drop-indicator'),
     ).toBeNull();
+  });
+
+  it('hides the indicator when the drag moves off the editor', () => {
+    const { getByText, getByLabelText, baseElement } = renderEditor();
+    const dataTransfer = createDataTransfer();
+
+    hoverBlock(getByText(paragraphElement1PlainText));
+    fireEvent.dragStart(getByLabelText(SELECT_LABEL), { dataTransfer });
+    fireEvent.dragOver(getByText(headingElement1PlainText), {
+      dataTransfer,
+      clientY: 1,
+    });
+
+    expect(
+      baseElement.querySelector('.editor-block-drop-indicator'),
+    ).not.toBeNull();
+
+    // Drag over somewhere else on the page
+    fireEvent.dragOver(baseElement, { dataTransfer });
+
+    expect(
+      baseElement.querySelector('.editor-block-drop-indicator'),
+    ).toBeNull();
+  });
+
+  it('moves blocks dropped into another editor', async () => {
+    const { getByText, getByLabelText, firstValues, secondValues } =
+      renderTwoEditors();
+    const dataTransfer = createDataTransfer();
+
+    // Drag the first editor's first paragraph over the second
+    // editor's heading
+    hoverBlock(getByText(paragraphElement1PlainText));
+    fireEvent.dragStart(getByLabelText(SELECT_LABEL), { dataTransfer });
+    fireEvent.dragOver(getByText(headingElement1PlainText), { dataTransfer });
+
+    await actFlush(() => {
+      fireEvent.drop(getByText(headingElement1PlainText), { dataTransfer });
+    });
+
+    // The paragraph lands above the heading in the second editor
+    const secondValue = secondValues[secondValues.length - 1];
+
+    expect(secondValue.map((element) => element.type)).toEqual([
+      'paragraph',
+      'heading',
+    ]);
+    expect(Ast.toPlainText([secondValue[0]])).toBe(paragraphElement1PlainText);
+
+    // The paragraph leaves the first editor
+    const firstValue = firstValues[firstValues.length - 1];
+
+    expect(Ast.toPlainText(firstValue)).toBe(paragraphElement2PlainText);
+  });
+
+  it('shows the drop indicator in the editor being dragged into', () => {
+    const { getByText, getByLabelText, baseElement } = renderTwoEditors();
+    const dataTransfer = createDataTransfer();
+
+    hoverBlock(getByText(paragraphElement1PlainText));
+    fireEvent.dragStart(getByLabelText(SELECT_LABEL), { dataTransfer });
+    fireEvent.dragOver(getByText(headingElement1PlainText), {
+      dataTransfer,
+      clientY: 1,
+    });
+
+    expect(
+      baseElement.querySelector('.editor-block-drop-indicator'),
+    ).not.toBeNull();
+  });
+
+  it('hides the other editor’s indicator when the drag ends', () => {
+    const { getByText, getByLabelText, baseElement } = renderTwoEditors();
+    const dataTransfer = createDataTransfer();
+
+    // Drag over the second editor, then end the drag without a drop
+    hoverBlock(getByText(paragraphElement1PlainText));
+    fireEvent.dragStart(getByLabelText(SELECT_LABEL), { dataTransfer });
+    fireEvent.dragOver(getByText(headingElement1PlainText), {
+      dataTransfer,
+      clientY: 1,
+    });
+    fireEvent.dragEnd(getByLabelText(SELECT_LABEL), { dataTransfer });
+
+    expect(
+      baseElement.querySelector('.editor-block-drop-indicator'),
+    ).toBeNull();
+  });
+
+  it('does not accept blocks dropped into a read-only editor', async () => {
+    const { getByText, getByLabelText, secondValues } = renderTwoEditors(true);
+    const dataTransfer = createDataTransfer();
+
+    hoverBlock(getByText(paragraphElement1PlainText));
+    fireEvent.dragStart(getByLabelText(SELECT_LABEL), { dataTransfer });
+    fireEvent.dragOver(getByText(headingElement1PlainText), { dataTransfer });
+
+    await actFlush(() => {
+      fireEvent.drop(getByText(headingElement1PlainText), { dataTransfer });
+    });
+
+    // The read-only editor is left untouched
+    expect(secondValues).toHaveLength(0);
   });
 });
 
