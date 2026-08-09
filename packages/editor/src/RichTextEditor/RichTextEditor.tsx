@@ -160,7 +160,13 @@ export const RichTextEditor: React.FC<EditorProps> = ({
   // against it while the menu is open, which they have to outlive:
   // they hold the menu's anchor, and are otherwise dropped as soon
   // as the pointer moves onto the menu.
+  //
+  // Held until the menu has fully closed rather than until it
+  // begins closing, the popup positioning itself against the anchor
+  // through its closing animation. The menu's visibility is state
+  // of its own.
   const [menuBlock, setMenuBlock] = useState<HoveredBlock | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   // Whether the title feature is enabled, captured on mount since
   // the Slate document is uncontrolled and cannot gain or lose the
@@ -447,6 +453,7 @@ export const RichTextEditor: React.FC<EditorProps> = ({
       // blocks being extended over with a menu
       if (!extend) {
         setMenuBlock(hoveredBlock);
+        setMenuOpen(true);
       }
     },
     [editorWithPlugins, hoveredBlock, selectBlock],
@@ -498,8 +505,6 @@ export const RichTextEditor: React.FC<EditorProps> = ({
     deleteBlocks(editorWithPlugins, menuBlockPaths());
   }, [editorWithPlugins, menuBlockPaths]);
 
-  // Dropping the block the menu was opened for lets the controls
-  // follow the pointer again
   const handleMenuOpenChange = useCallback<
     BlockActionsMenuProps['onOpenChange']
   >(
@@ -509,7 +514,7 @@ export const RichTextEditor: React.FC<EditorProps> = ({
         return;
       }
 
-      setMenuBlock(null);
+      setMenuOpen(false);
 
       // Dismissing the menu returns the DOM focus to the editor,
       // except when it was dismissed by clicking elsewhere, where
@@ -521,6 +526,20 @@ export const RichTextEditor: React.FC<EditorProps> = ({
     },
     [editorWithPlugins],
   );
+
+  // Dropping the block the menu was opened for lets the controls
+  // follow the pointer again. Dropped only once the close has fully
+  // settled: the block anchors the closing popup, and unmounting
+  // the anchor mid-animation throws the popup to the viewport's
+  // origin for its final frames.
+  const handleMenuOpenChangeComplete = useCallback<
+    BlockActionsMenuProps['onOpenChangeComplete']
+  >((open) => {
+    // Only a completed close drops the block
+    if (!open) {
+      setMenuBlock(null);
+    }
+  }, []);
 
   // Ends a drag started from the controls, dropping the hovered
   // block along with it. The block has moved, so the controls would
@@ -673,8 +692,9 @@ export const RichTextEditor: React.FC<EditorProps> = ({
 
           {/* Actions acting on the selected blocks */}
           <BlockActionsMenu
-            open={menuBlock !== null}
+            open={menuOpen}
             onOpenChange={handleMenuOpenChange}
+            onOpenChangeComplete={handleMenuOpenChangeComplete}
             anchorRef={blockHandleRef}
             onTurnInto={handleTurnInto}
             onCopy={handleCopyBlocks}

@@ -25,6 +25,16 @@ export interface BlockActionsMenuProps {
   onOpenChange: NonNullable<DropdownMenuRootProps['onOpenChange']>;
 
   /**
+   * Callback fired once an open or close has fully settled,
+   * including any animation. The anchor must stay mounted until a
+   * close completes, the closing popup positioning itself against
+   * it to the end.
+   */
+  onOpenChangeComplete: NonNullable<
+    DropdownMenuRootProps['onOpenChangeComplete']
+  >;
+
+  /**
    * The element the menu is positioned against, being the handle
    * it was opened from.
    */
@@ -63,6 +73,7 @@ export interface BlockActionsMenuProps {
 export const BlockActionsMenu: React.FC<BlockActionsMenuProps> = ({
   open,
   onOpenChange,
+  onOpenChangeComplete,
   anchorRef,
   onTurnInto,
   onCopy,
@@ -104,7 +115,11 @@ export const BlockActionsMenu: React.FC<BlockActionsMenuProps> = ({
   );
 
   return (
-    <DropdownMenuRoot open={open} onOpenChange={onOpenChange}>
+    <DropdownMenuRoot
+      open={open}
+      onOpenChange={onOpenChange}
+      onOpenChangeComplete={onOpenChangeComplete}
+    >
       {/* The menu is opened by the handle rather than by a trigger,
           a trigger opening on pointer down and so on the gesture
           which drags the handle. One is rendered all the same, and

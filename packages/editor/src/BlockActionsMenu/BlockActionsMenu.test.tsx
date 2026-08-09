@@ -17,6 +17,7 @@ function renderMenu(props: Partial<BlockActionsMenuProps> = {}) {
     <BlockActionsMenu
       open
       onOpenChange={() => undefined}
+      onOpenChangeComplete={() => undefined}
       anchorRef={createRef()}
       onTurnInto={() => undefined}
       onCopy={() => undefined}
@@ -90,6 +91,7 @@ describe('BlockActionsMenu', () => {
         <BlockActionsMenu
           open
           onOpenChange={() => undefined}
+          onOpenChangeComplete={() => undefined}
           anchorRef={createRef()}
           onTurnInto={() => undefined}
           onCopy={() => undefined}
