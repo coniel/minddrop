@@ -18,9 +18,11 @@ See [minddrop.app](https://minddrop.app) for more.
 
 The desktop app is built with [Electrobun](https://electrobun.dev) and [Bun](https://bun.com), with a [React](https://react.dev) 19 interface bundled by [Vite](https://vite.dev). Entries are read from and written to the file system as Markdown, JSON, or YAML. Alongside them, an SQLite database mirrors every entry and its properties, which lets the app start from SQL rather than from a full disk scan: it loads immediately, then reconciles against the file system in the background and patches its stores with whatever changed while it was closed. That same table is what queries run against. Full text search is [MiniSearch](https://lucaong.github.io/minisearch), held in memory, persisted to disk between runs, and rebuilt from SQL whenever it goes stale.
 
-State lives in [Zustand](https://zustand.docs.pmnd.rs) stores, styling is plain CSS with a shared token layer, and packages talk to each other through a typed event bus rather than direct calls. The marketing site is a static [Astro](https://astro.build) build.
+State lives in [Zustand](https://zustand.docs.pmnd.rs) stores. Interface primitives are built on [Base UI](https://base-ui.com), which handles the behaviour and accessibility of things like menus and dialogs, and styled with plain CSS over a shared token layer. Packages call each other directly, through a namespace each one exports for its own domain, such as `Databases.create`. Anything that happens as a consequence goes the other way, over a typed event bus: a package dispatches an event when something changes, and whoever cares subscribes to it, so no package has to know who is downstream of it.
 
 Everything is written in TypeScript, tested with [Vitest](https://vitest.dev), and managed as a [pnpm](https://pnpm.io) workspace orchestrated by [Turborepo](https://turborepo.com).
+
+The app ships with its own baked in dev tools for inspecting store state, watching events as they are dispatched, reading logs, and browsing the component stories.
 
 ## Repository structure
 
@@ -75,3 +77,7 @@ pnpm build
 ```
 
 Add `--filter <package>` to any of them to narrow the run to a single package.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for how the packages are laid out, the conventions a change is expected to follow, and what to run before opening a pull request.
