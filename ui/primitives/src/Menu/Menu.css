@@ -479,3 +479,13 @@
     width: calc(100% + var(--space-1) * 2);
   }
 }
+
+/* Collapse stray separators left behind by conditionally rendered
+   menu sections: separators at the edges of a menu and separators
+   stacked back to back render nothing. Targets the wrapper div, as
+   it is the menu's direct child rather than the separator itself. */
+.menu > .menu-separator-wrapper:first-child,
+.menu > .menu-separator-wrapper:last-child,
+.menu > .menu-separator-wrapper + .menu-separator-wrapper {
+  display: none;
+}

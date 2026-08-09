@@ -8,7 +8,7 @@ export const MenuSeparator = React.forwardRef<
   HTMLDivElement,
   MenuSeparatorProps
 >(({ className, ...other }, ref) => (
-  <div ref={ref}>
+  <div ref={ref} className="menu-separator-wrapper">
     <Separator
       className={propsToClass('menu-separator', { className })}
       orientation="horizontal"
