@@ -11,14 +11,12 @@
     "typecheck": "turbo run typecheck --continue",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "test": "turbo run test",
-    "test:watch": "turbo run test:watch",
-    "prepare": "husky install"
+    "test:watch": "turbo run test:watch"
   },
   "devDependencies": {
     "@minddrop/eslint-config": "workspace:*",
     "@trivago/prettier-plugin-sort-imports": "^5.2.0",
     "eslint": "^9.39.3",
-    "husky": "^8.0.3",
     "prettier": "^3.4.2",
     "turbo": "^2.3.3",
     "vitest": "^4.0.1"
