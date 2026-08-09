@@ -14,6 +14,11 @@ export interface DataViewOptionsMenuProps {
    * The data view for which to render the options menu.
    */
   view: DataView;
+
+  /**
+   * Called when the menu opens or closes.
+   */
+  onOpenChange?: (open: boolean) => void;
 }
 
 /**
@@ -23,6 +28,7 @@ export interface DataViewOptionsMenuProps {
  */
 export const DataViewOptionsMenu: React.FC<DataViewOptionsMenuProps> = ({
   view,
+  onOpenChange,
 }) => {
   const viewType = DataViewTypes.use(view.type);
 
@@ -46,7 +52,7 @@ export const DataViewOptionsMenu: React.FC<DataViewOptionsMenuProps> = ({
   }
 
   return (
-    <DropdownMenuRoot>
+    <DropdownMenuRoot onOpenChange={onOpenChange}>
       <DropdownMenuTrigger>
         <IconButton
           icon="settings-2"
