@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { DropEventData } from '@minddrop/selection';
-import { AddExistingEntryDataKey } from '../../constants';
+import { AddExistingEntryDataKey } from '@minddrop/ui-components';
 import { dropContainsAddExistingEntryCard } from './dropContainsAddExistingEntryCard';
 
 // Builds a drop event data object containing the given transfer data

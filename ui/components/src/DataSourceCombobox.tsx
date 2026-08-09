@@ -10,13 +10,11 @@ import {
   ComboboxOptionGroup,
   ComboboxProps,
 } from '@minddrop/ui-primitives';
+import { DATABASE_FALLBACK_ICON } from './constants';
 
 // Option values for the create new data source options
 const NEW_COLLECTION_VALUE = 'new-collection';
 const NEW_QUERY_VALUE = 'new-query';
-
-// Fallback icon for databases without a custom icon
-const DATABASE_FALLBACK_ICON = 'content-icon:shapes:inherit';
 
 export type DataSourceSelection =
   | ViewDataSource

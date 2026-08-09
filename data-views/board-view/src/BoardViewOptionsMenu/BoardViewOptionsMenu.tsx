@@ -2,7 +2,10 @@ import { useMemo } from 'react';
 import { Collections } from '@minddrop/collections';
 import { DataViewTypeSettingsMenuProps, DataViews } from '@minddrop/data-views';
 import { Databases } from '@minddrop/databases';
-import { DatabaseLayoutSelectionMenu } from '@minddrop/ui-components';
+import {
+  DATABASE_FALLBACK_ICON,
+  DatabaseLayoutSelectionMenu,
+} from '@minddrop/ui-components';
 import {
   DropdownMenuItem,
   DropdownMenuPortal,
@@ -17,7 +20,7 @@ import {
   MenuGroup,
   MenuLabel,
 } from '@minddrop/ui-primitives';
-import { DATABASE_FALLBACK_ICON, defaultBoardViewData } from '../constants';
+import { defaultBoardViewData } from '../constants';
 import {
   BoardViewData,
   BoardViewOptions,

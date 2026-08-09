@@ -1,8 +1,8 @@
 /* A zero sized anchor which sticks to the bottom center of the
    scrollport, keeping the toolbar in view regardless of how tall
-   or wide the board is. Adds no height of its own, so it never
+   or wide the view is. Adds no height of its own, so it never
    grows the scrollable area. */
-.board-view-toolbar {
+.data-view-floating-toolbar {
   position: sticky;
   bottom: var(--space-4);
   left: 50%;
@@ -11,7 +11,7 @@
   z-index: 1;
 }
 
-.board-view-toolbar-content {
+.data-view-floating-toolbar-content {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -24,9 +24,9 @@
   border-radius: var(--radius-lg);
   background-color: var(--surface-overlay);
   box-shadow: var(--shadow-overlay);
-  /* Hidden until the board is hovered. The right transition
-     animates the toolbar back to center when unpinning after
-     the options menu closes. */
+  /* Hidden until the view is hovered. The right transition
+     animates the toolbar back to center when unpinning after a
+     menu closes. */
   opacity: 0;
   pointer-events: none;
   transition:
@@ -34,20 +34,21 @@
     right var(--duration-normal) var(--ease-out);
 }
 
-/* Reveal the toolbar while hovering the board */
-.board-view-scroll:hover .board-view-toolbar-content {
+/* Reveal the toolbar while hovering the view. Views opt in by
+   adding the host class to their scroll root. */
+.data-view-floating-toolbar-host:hover .data-view-floating-toolbar-content {
   opacity: 1;
   pointer-events: auto;
 }
 
 /* Keep the toolbar visible while one of its menus is open, since
-   the pointer leaves the board when moving into the menu popup */
-.board-view-toolbar-content:has([aria-expanded='true']) {
+   the pointer leaves the view when moving into the menu popup */
+.data-view-floating-toolbar-content:has([aria-expanded='true']) {
   opacity: 1;
   pointer-events: auto;
 }
 
-.board-view-toolbar-card {
+.data-view-floating-toolbar-card {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -60,14 +61,14 @@
   transition: border-color var(--duration-normal) var(--ease-out);
 }
 
-.board-view-toolbar-card:hover {
+.data-view-floating-toolbar-card:hover {
   border-color: var(--border-default);
 }
 
-.board-view-toolbar-card:active {
+.data-view-floating-toolbar-card:active {
   cursor: grabbing;
 }
 
-.board-view-toolbar-card[data-dragging] {
+.data-view-floating-toolbar-card[data-dragging] {
   opacity: 0.5;
 }

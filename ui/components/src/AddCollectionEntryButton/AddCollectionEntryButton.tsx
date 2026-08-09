@@ -20,15 +20,13 @@ import {
   IconButton,
   IconButtonProps,
 } from '@minddrop/ui-primitives';
+import { DATABASE_FALLBACK_ICON } from '../constants';
 
 // Maximum number of entries listed when not searching
 const DEFAULT_ENTRIES_LIMIT = 10;
 
 // Maximum number of matched entries listed when searching
 const SEARCH_ENTRIES_LIMIT = 15;
-
-// Fallback icon for databases without a custom icon
-const DATABASE_FALLBACK_ICON = 'content-icon:shapes:inherit';
 
 export interface AddCollectionEntryButtonProps
   extends Omit<IconButtonProps, 'icon' | 'label' | 'stringLabel'> {

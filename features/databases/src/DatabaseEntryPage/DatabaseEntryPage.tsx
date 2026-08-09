@@ -1,12 +1,10 @@
 import { DatabaseEntries, Databases } from '@minddrop/databases';
-import { PanelView } from '@minddrop/ui-components';
+import { DATABASE_FALLBACK_ICON, PanelView } from '@minddrop/ui-components';
 import {
   DatabaseEntryRenderer,
   DatabaseEntryRendererProps,
 } from '../DatabaseEntryRenderer';
 import './DatabaseEntryPage.css';
-
-const DATABASE_FALLBACK_ICON = 'content-icon:shapes:inherit';
 
 /**
  * Renders a database entry as a standalone page in a panel view.

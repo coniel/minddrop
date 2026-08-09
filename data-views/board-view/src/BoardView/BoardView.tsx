@@ -15,6 +15,7 @@ import {
   Databases,
 } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
+import { DataViewOptionsMenu } from '@minddrop/feature-data-views';
 import {
   DatabaseEntryContextProvider,
   dropContainsAddExistingEntryCard,
@@ -23,12 +24,12 @@ import {
   getDroppedNewEntryDatabaseIds,
 } from '@minddrop/feature-databases';
 import { DropEventData } from '@minddrop/selection';
+import { DataViewFloatingToolbar } from '@minddrop/ui-components';
 import { FlexDropContainer } from '@minddrop/ui-drag-and-drop';
 import { ScrollArea } from '@minddrop/ui-primitives';
 import { BoardViewColumn } from '../BoardViewColumn';
 import { BoardViewEntryPicker } from '../BoardViewEntryPicker';
 import { BoardViewNewEntryPicker } from '../BoardViewNewEntryPicker';
-import { BoardViewToolbar } from '../BoardViewToolbar';
 import { BOARD_ACCEPTED_DATA_TYPES, defaultBoardViewData } from '../constants';
 import { BoardColumns, BoardViewData, BoardViewOptions } from '../types';
 import {
@@ -75,6 +76,9 @@ export const BoardViewComponent: React.FC<
   // entry or new entry card
   const [entryPicker, setEntryPicker] = useState<EntryPickerState | null>(null);
 
+  // Whether the view options menu in the toolbar is open
+  const [optionsMenuOpen, setOptionsMenuOpen] = useState(false);
+
   // The ID of the just created entry whose card should autofocus
   // its editor, cleared once the card has mounted
   const [autoFocusEntryId, setAutoFocusEntryId] = useState<string>();
@@ -104,6 +108,19 @@ export const BoardViewComponent: React.FC<
       ),
     [entries, view.options?.cardLayoutOverrides],
   );
+
+  // Derive a toolbar card for each database the board's entries
+  // belong to, excluding those whose card the user has hidden
+  const toolbarDatabaseCards = useMemo(() => {
+    const toolbarCards = view.options?.toolbarCards;
+
+    return Databases.getFromEntries(entries)
+      .filter((database) => !toolbarCards?.[database.id]?.hidden)
+      .map((database) => ({
+        databaseId: database.id,
+        templateId: toolbarCards?.[database.id]?.templateId,
+      }));
+  }, [entries, view.options?.toolbarCards]);
 
   // Persist the updated column layout to the view data
   const updateColumns = useCallback(
@@ -486,7 +503,7 @@ export const BoardViewComponent: React.FC<
   return (
     <ScrollArea
       ref={scrollRootRef}
-      className="board-view-scroll"
+      className="board-view-scroll data-view-floating-toolbar-host"
       stateKey="content"
     >
       <DatabaseEntryContextProvider
@@ -527,7 +544,13 @@ export const BoardViewComponent: React.FC<
       </DatabaseEntryContextProvider>
 
       {/* Floating toolbar */}
-      <BoardViewToolbar view={view} entryIds={entries} />
+      <DataViewFloatingToolbar
+        databaseCards={toolbarDatabaseCards}
+        menuOpen={optionsMenuOpen}
+      >
+        {/* View settings menu */}
+        <DataViewOptionsMenu view={view} onOpenChange={setOptionsMenuOpen} />
+      </DataViewFloatingToolbar>
     </ScrollArea>
   );
 };

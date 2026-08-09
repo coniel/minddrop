@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { DatabaseFixtures } from '@minddrop/databases';
 import { DropEventData } from '@minddrop/selection';
-import { NewDatabaseEntriesDataKey } from '../../constants';
+import { NewDatabaseEntriesDataKey } from '@minddrop/ui-components';
 import { getDroppedNewEntryDatabaseIds } from './getDroppedNewEntryDatabaseIds';
 
 const { objectDatabase, urlDatabase } = DatabaseFixtures;

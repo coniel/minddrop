@@ -1,3 +1,6 @@
+// Fallback icon for databases without a custom icon
+export const DATABASE_FALLBACK_ICON = 'content-icon:shapes:inherit';
+
 // Selection item type under which dragged database entries are
 // serialized into drag event data transfer objects
 export const DatabaseEntriesDataKey = 'database-entries';

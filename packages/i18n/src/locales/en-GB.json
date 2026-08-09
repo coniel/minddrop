@@ -285,6 +285,10 @@
       "errors": {
         "titleInvalidCharacters": "Title cannot contain / or \\.",
         "titleConflict": "An entry with this title already exists."
+      },
+      "toolbar": {
+        "newEntry": "New entry",
+        "addExistingEntry": "Add existing entry"
       }
     },
     "labels": {
@@ -1522,8 +1526,6 @@
       "label": "Board",
       "addColumn": "Add column",
       "removeColumn": "Remove column",
-      "addExistingEntry": "Add existing entry",
-      "newEntry": "New entry",
       "toolbarCards": "Toolbar cards",
       "showToolbarCard": "Show card",
       "toolbarCardTemplate": "Entry template",

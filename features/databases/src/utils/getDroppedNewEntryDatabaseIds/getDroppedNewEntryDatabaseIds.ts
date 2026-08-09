@@ -1,7 +1,7 @@
 import { DatabaseId } from '@minddrop/databases';
 import { DropEventData } from '@minddrop/selection';
+import { NewDatabaseEntriesDataKey } from '@minddrop/ui-components';
 import { isEntityId } from '@minddrop/utils';
-import { NewDatabaseEntriesDataKey } from '../../constants';
 
 /**
  * Returns the IDs of the databases in which a drop event's new entry

@@ -3,15 +3,12 @@ import {
   DatabaseEntriesDataKey,
   NewDatabaseEntriesDataKey,
   NewEntryPickerDataKey,
-} from '@minddrop/feature-databases';
+} from '@minddrop/ui-components';
 import { BoardViewData } from './types';
 
 export const defaultBoardViewData: BoardViewData = {
   columns: [[], [], []],
 };
-
-// Fallback icon for databases without a custom icon
-export const DATABASE_FALLBACK_ICON = 'content-icon:shapes:inherit';
 
 // Data types the board's drop zones accept
 export const BOARD_ACCEPTED_DATA_TYPES = [

@@ -315,6 +315,10 @@ declare module 'i18next' {
               titleInvalidCharacters: string;
               titleConflict: string;
             };
+            toolbar: {
+              newEntry: string;
+              addExistingEntry: string;
+            };
           };
           labels: {
             databases: string;
@@ -1535,8 +1539,6 @@ declare module 'i18next' {
             label: string;
             addColumn: string;
             removeColumn: string;
-            addExistingEntry: string;
-            newEntry: string;
             toolbarCards: string;
             showToolbarCard: string;
             toolbarCardTemplate: string;

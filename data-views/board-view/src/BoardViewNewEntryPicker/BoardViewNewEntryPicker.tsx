@@ -6,6 +6,7 @@ import {
   Databases,
 } from '@minddrop/databases';
 import { useTranslation } from '@minddrop/i18n';
+import { DATABASE_FALLBACK_ICON } from '@minddrop/ui-components';
 import {
   Group,
   KeyboardShortcut,
@@ -13,7 +14,6 @@ import {
   SearchableMenuItem,
   Text,
 } from '@minddrop/ui-primitives';
-import { DATABASE_FALLBACK_ICON } from '../constants';
 import './BoardViewNewEntryPicker.css';
 
 export interface BoardViewNewEntryPickerProps {

@@ -27,6 +27,7 @@ import {
   ViewDescriptor,
 } from '@minddrop/events';
 import { Tabs } from '@minddrop/feature-views';
+import { DATABASE_FALLBACK_ICON } from '@minddrop/ui-components';
 import { DefaultViewAreaId } from '@minddrop/views';
 import { DatabaseEntryDialog } from '../DatabaseEntryDialog';
 import { DatabaseEntryRendererProps } from '../DatabaseEntryRenderer';
@@ -49,8 +50,6 @@ import {
   initializeDatabasesFeatureEventHandlers,
 } from '../initializeFeatureEventHandlers';
 import { resolveOpenMode } from '../utils';
-
-const DATABASE_FALLBACK_ICON = 'content-icon:shapes:inherit';
 
 // Unique view instance ids used to match the views in tabs
 const databaseViewId = (databaseId: string) =>
