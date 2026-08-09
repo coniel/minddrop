@@ -26,6 +26,7 @@ import { defaultMarkConfigs } from '../default-mark-configs';
 import { deleteBlocks } from '../deleteBlocks';
 import { duplicateBlocks } from '../duplicateBlocks';
 import { insertTrailingParagraph } from '../insertTrailingParagraph';
+import { selectAutoFocusTarget } from '../selectAutoFocusTarget';
 import { turnBlocksInto } from '../turnBlocksInto';
 import { BlockElementProps } from '../types';
 import { useBlockDrag } from '../useBlockDrag';
@@ -80,7 +81,9 @@ export interface EditorProps {
   onBlur?: React.FocusEventHandler<HTMLDivElement>;
 
   /**
-   * If true, the editor will be focused on mount.
+   * If true, the editor will be focused on mount, with the caret
+   * placed at the end of the content, or in the title when there
+   * is no content.
    */
   autoFocus?: boolean;
 
@@ -564,8 +567,13 @@ export const RichTextEditor: React.FC<EditorProps> = ({
     [handleDragEnd, clearHoveredBlock],
   );
 
+  // Focus the editor on mount with the caret at the end of the
+  // content, or in the title when there is no content, selecting
+  // before focusing so the focus restores the placed selection
+  // rather than defaulting to the start
   useEffect(() => {
     if (autoFocus) {
+      selectAutoFocusTarget(editorRef.current);
       ReactEditor.focus(editorRef.current);
     }
   }, [autoFocus]);
