@@ -36,6 +36,12 @@ declare module 'i18next' {
           back: string;
           forward: string;
         };
+        canvas: {
+          fitView: string;
+          resetView: string;
+          zoomIn: string;
+          zoomOut: string;
+        };
         designStudio: {
           title: string;
           open: string;

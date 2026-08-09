@@ -1,0 +1,86 @@
+.ui-canvas-node {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  &.ui-canvas-node-selected {
+    outline: 2px solid var(--primary-700);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+
+  .ui-canvas-node-drag-handle {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: var(--space-4);
+    cursor: grab;
+  }
+
+  .ui-canvas-node-drag-handle:active {
+    cursor: grabbing;
+  }
+
+  .ui-canvas-node-resize-handle {
+    position: absolute;
+    z-index: 1;
+  }
+
+  .ui-canvas-node-resize-handle-left {
+    top: 8px;
+    bottom: 8px;
+    left: -4px;
+    width: 8px;
+    cursor: ew-resize;
+  }
+
+  .ui-canvas-node-resize-handle-right {
+    top: 8px;
+    bottom: 8px;
+    right: -4px;
+    width: 8px;
+    cursor: ew-resize;
+  }
+
+  .ui-canvas-node-resize-handle-bottom {
+    right: 8px;
+    bottom: -4px;
+    left: 8px;
+    height: 8px;
+    cursor: ns-resize;
+  }
+
+  .ui-canvas-node-resize-handle-top-left {
+    top: -4px;
+    left: -4px;
+    width: 12px;
+    height: 12px;
+    cursor: nwse-resize;
+  }
+
+  .ui-canvas-node-resize-handle-top-right {
+    top: -4px;
+    right: -4px;
+    width: 12px;
+    height: 12px;
+    cursor: nesw-resize;
+  }
+
+  .ui-canvas-node-resize-handle-bottom-left {
+    bottom: -4px;
+    left: -4px;
+    width: 12px;
+    height: 12px;
+    cursor: nesw-resize;
+  }
+
+  .ui-canvas-node-resize-handle-bottom-right {
+    right: -4px;
+    bottom: -4px;
+    width: 12px;
+    height: 12px;
+    cursor: nwse-resize;
+  }
+}

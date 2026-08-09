@@ -244,6 +244,61 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
+  data-views/canvas:
+    dependencies:
+      '@minddrop/collections':
+        specifier: workspace:*
+        version: link:../../packages/collections
+      '@minddrop/data-views':
+        specifier: workspace:*
+        version: link:../../packages/data-views
+      '@minddrop/databases':
+        specifier: workspace:*
+        version: link:../../packages/databases
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../../packages/events
+      '@minddrop/feature-data-views':
+        specifier: workspace:*
+        version: link:../../features/data-views
+      '@minddrop/feature-databases':
+        specifier: workspace:*
+        version: link:../../features/databases
+      '@minddrop/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
+      '@minddrop/selection':
+        specifier: workspace:*
+        version: link:../../packages/selection
+      '@minddrop/test-utils':
+        specifier: workspace:*
+        version: link:../../packages/test-utils
+      '@minddrop/ui-canvas':
+        specifier: workspace:*
+        version: link:../../ui/canvas
+      '@minddrop/ui-databases':
+        specifier: workspace:*
+        version: link:../../ui/databases
+      '@minddrop/ui-primitives':
+        specifier: workspace:*
+        version: link:../../ui/primitives
+      '@minddrop/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
+    devDependencies:
+      '@minddrop/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      eslint:
+        specifier: ^9.39.3
+        version: 9.39.3
+      tsconfig:
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
   data-views/gallery:
     dependencies:
       '@minddrop/data-views':
@@ -585,6 +640,9 @@ importers:
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../../packages/test-utils
+      '@minddrop/ui-canvas':
+        specifier: workspace:*
+        version: link:../../ui/canvas
       '@minddrop/ui-components':
         specifier: workspace:*
         version: link:../../ui/components
@@ -631,6 +689,9 @@ importers:
       '@minddrop/data-view-board':
         specifier: workspace:*
         version: link:../../data-views/board
+      '@minddrop/data-view-canvas':
+        specifier: workspace:*
+        version: link:../../data-views/canvas
       '@minddrop/data-view-gallery':
         specifier: workspace:*
         version: link:../../data-views/gallery
@@ -2007,6 +2068,31 @@ importers:
       tsconfig:
         specifier: workspace:*
         version: link:../tsconfig
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  ui/canvas:
+    dependencies:
+      '@minddrop/stores':
+        specifier: workspace:*
+        version: link:../../packages/stores
+      '@minddrop/test-utils':
+        specifier: workspace:*
+        version: link:../../packages/test-utils
+      '@minddrop/ui-primitives':
+        specifier: workspace:*
+        version: link:../primitives
+    devDependencies:
+      '@minddrop/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      eslint:
+        specifier: ^9.39.3
+        version: 9.39.3
+      tsconfig:
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
       typescript:
         specifier: ^5.9.3
         version: 5.9.3

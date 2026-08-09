@@ -7,6 +7,12 @@
     "back": "Back",
     "forward": "Forward"
   },
+  "canvas": {
+    "fitView": "Fit view",
+    "resetView": "Reset view",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out"
+  },
   "designStudio": {
     "title": "Design Studio",
     "open": "Open design studio",
