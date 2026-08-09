@@ -514,6 +514,17 @@ export const RichTextEditor: React.FC<EditorProps> = ({
         return;
       }
 
+      // The menu is opened through its `open` prop rather than by
+      // one of its own triggers, so no opening click ever reaches
+      // it. Without one it takes itself to be hover-opened, and
+      // closes when the pointer leaves the popup. The menu only
+      // ever opens from a click, so hover closes are vetoed.
+      if (eventDetails.reason === 'trigger-hover') {
+        eventDetails.cancel();
+
+        return;
+      }
+
       setMenuOpen(false);
 
       // Dismissing the menu returns the DOM focus to the editor,

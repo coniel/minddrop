@@ -656,6 +656,29 @@ describe('RichTextEditor block selection', () => {
     expect(isSelected(getByText(paragraphElement1PlainText))).toBe(true);
   });
 
+  it('keeps the actions menu open when the pointer leaves it', async () => {
+    const { getByText, getByLabelText, queryByText } = renderEditor();
+
+    hoverBlock(getByText(paragraphElement1PlainText));
+
+    await actFlush(() => {
+      fireEvent.click(getByLabelText(SELECT_LABEL));
+    });
+
+    expect(queryByText('Duplicate')).not.toBeNull();
+
+    // The menu never opens from hover, so the pointer leaving the
+    // popup must not close it either. The leave is watched for on
+    // the positioner, which does not let it bubble.
+    await actFlush(() => {
+      fireEvent.mouseLeave(
+        getByText('Duplicate').closest('.dropdown-menu-positioner')!,
+      );
+    });
+
+    expect(queryByText('Duplicate')).not.toBeNull();
+  });
+
   it('keeps the selection while the actions menu is open', async () => {
     const { getByText, getByLabelText, baseElement } = renderEditor();
 
