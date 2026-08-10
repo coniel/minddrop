@@ -7,7 +7,7 @@ import {
   QuerySortNode,
   updateQueryNode,
 } from '@minddrop/queries';
-import { Group, Select, SelectOption, Stack } from '@minddrop/ui-primitives';
+import { Group, Select, SelectOption } from '@minddrop/ui-primitives';
 import { QueryNodeMismatchWarning } from '../QueryNodeMismatchWarning';
 import { QueryNodeShell } from '../QueryNodeShell';
 import { getQueryUpstreamProperties } from '../utils';
@@ -39,6 +39,28 @@ export interface QuerySortNodeCardProps {
    * node.
    */
   onCompleteConnection(nodeId: string): void;
+
+  /**
+   * Callback fired when the node's remove action is pressed.
+   */
+  onRemove(nodeId: string): void;
+
+  /**
+   * Callback fired when the node's break connections action is
+   * pressed.
+   */
+  onBreakConnections(nodeId: string): void;
+
+  /**
+   * Callback fired when the node's connect to nearest action
+   * is pressed.
+   */
+  onConnectNearest(nodeId: string): void;
+
+  /**
+   * Whether the node is selected on the canvas.
+   */
+  selected?: boolean;
 }
 
 // The selectable sort directions
@@ -59,6 +81,10 @@ export const QuerySortNodeCard: React.FC<QuerySortNodeCardProps> = ({
   counts,
   onStartConnection,
   onCompleteConnection,
+  onRemove,
+  onBreakConnections,
+  onConnectNearest,
+  selected,
 }) => {
   // Sortable properties of the databases feeding the node
   const properties = useMemo(
@@ -100,6 +126,7 @@ export const QuerySortNodeCard: React.FC<QuerySortNodeCardProps> = ({
 
   return (
     <QueryNodeShell
+      queryId={query.id}
       node={node}
       title="queries.nodes.sort"
       inputCount={counts?.input}
@@ -107,30 +134,31 @@ export const QuerySortNodeCard: React.FC<QuerySortNodeCardProps> = ({
       outputCount={counts?.output}
       hasInputPort
       hasOutputPort
+      selected={selected}
       onStartConnection={onStartConnection}
       onCompleteConnection={onCompleteConnection}
+      onRemove={onRemove}
+      onBreakConnections={onBreakConnections}
+      onConnectNearest={onConnectNearest}
+      warning={<QueryNodeMismatchWarning query={query} nodeId={node.id} />}
     >
-      <Stack gap={2}>
-        <Group gap={2}>
-          {/* Property picker */}
-          <Select
-            placeholder="queries.editor.selectProperty"
-            options={propertyOptions}
-            value={node.property || undefined}
-            onValueChange={handlePropertyChange}
-          />
+      <Group gap={2}>
+        {/* Property picker */}
+        <Select
+          placeholder="queries.editor.selectProperty"
+          options={propertyOptions}
+          emptyMessage="queries.editor.noProperties"
+          value={node.property || undefined}
+          onValueChange={handlePropertyChange}
+        />
 
-          {/* Direction picker */}
-          <Select<'ascending' | 'descending'>
-            options={DIRECTION_OPTIONS}
-            value={node.direction}
-            onValueChange={handleDirectionChange}
-          />
-        </Group>
-
-        {/* Warning for inputs missing the sort's property */}
-        <QueryNodeMismatchWarning query={query} nodeId={node.id} />
-      </Stack>
+        {/* Direction picker */}
+        <Select<'ascending' | 'descending'>
+          options={DIRECTION_OPTIONS}
+          value={node.direction}
+          onValueChange={handleDirectionChange}
+        />
+      </Group>
     </QueryNodeShell>
   );
 };

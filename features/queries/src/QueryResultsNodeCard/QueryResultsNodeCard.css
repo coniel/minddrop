@@ -1,5 +1,5 @@
-/* Cap the results list height so long result sets scroll
-   within the node instead of growing it */
-.queries-results-node-scroll {
-  max-height: 320px;
+/* Match the entry list's spacing above the empty hint */
+.queries-results-node-empty {
+  display: block;
+  padding-top: var(--space-2);
 }

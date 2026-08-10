@@ -61,6 +61,9 @@ describe('<QueryFilterNodeCard />', () => {
         node={filterNode}
         onStartConnection={vi.fn()}
         onCompleteConnection={vi.fn()}
+        onRemove={vi.fn()}
+        onBreakConnections={vi.fn()}
+        onConnectNearest={vi.fn()}
       />,
     );
 
@@ -92,6 +95,9 @@ describe('<QueryFilterNodeCard />', () => {
         node={filterNode}
         onStartConnection={vi.fn()}
         onCompleteConnection={vi.fn()}
+        onRemove={vi.fn()}
+        onBreakConnections={vi.fn()}
+        onConnectNearest={vi.fn()}
       />,
     );
 
@@ -124,6 +130,9 @@ describe('<QueryFilterNodeCard />', () => {
         node={node}
         onStartConnection={vi.fn()}
         onCompleteConnection={vi.fn()}
+        onRemove={vi.fn()}
+        onBreakConnections={vi.fn()}
+        onConnectNearest={vi.fn()}
       />,
     );
 
@@ -148,6 +157,9 @@ describe('<QueryFilterNodeCard />', () => {
         node={node}
         onStartConnection={vi.fn()}
         onCompleteConnection={vi.fn()}
+        onRemove={vi.fn()}
+        onBreakConnections={vi.fn()}
+        onConnectNearest={vi.fn()}
       />,
     );
 

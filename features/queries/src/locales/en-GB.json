@@ -17,7 +17,15 @@
       "valuePlaceholder": "Value",
       "ascending": "Ascending",
       "descending": "Descending",
-      "propertyMismatch": "An input does not contain this property"
+      "propertyMismatch": "An input does not contain this property",
+      "outputEntries": "Output entries",
+      "searchEntries": "Search entries",
+      "removeNode": "Remove node",
+      "removeConnection": "Remove connection",
+      "breakConnections": "Break all connections",
+      "connectNearest": "Connect to nearest nodes",
+      "noProperties": "Connect an input to see properties",
+      "connectNodes": "Connect nodes to see results"
     },
     "nodes": {
       "source": "Source",
@@ -69,8 +77,6 @@
       "custom": "Custom date"
     },
     "results": {
-      "count_one": "{{count}} result",
-      "count_other": "{{count}} results",
       "empty": "No matching entries"
     }
   }

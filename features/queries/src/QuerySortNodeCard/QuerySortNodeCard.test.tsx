@@ -79,6 +79,9 @@ describe('<QuerySortNodeCard />', () => {
         node={node}
         onStartConnection={vi.fn()}
         onCompleteConnection={vi.fn()}
+        onRemove={vi.fn()}
+        onBreakConnections={vi.fn()}
+        onConnectNearest={vi.fn()}
       />,
     );
 
@@ -103,6 +106,9 @@ describe('<QuerySortNodeCard />', () => {
         node={node}
         onStartConnection={vi.fn()}
         onCompleteConnection={vi.fn()}
+        onRemove={vi.fn()}
+        onBreakConnections={vi.fn()}
+        onConnectNearest={vi.fn()}
       />,
     );
 

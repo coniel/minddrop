@@ -2,7 +2,10 @@ import { Events } from '@minddrop/events';
 import { i18n } from '@minddrop/i18n';
 import { entityId } from '@minddrop/utils';
 import { QueriesStore } from '../QueriesStore';
-import { DEFAULT_RESULTS_NODE_POSITION } from '../constants';
+import {
+  DEFAULT_RESULTS_NODE_POSITION,
+  DEFAULT_SOURCE_NODE_POSITION,
+} from '../constants';
 import { QueryCreatedEvent, QueryCreatedEventData } from '../events';
 import { Query } from '../types';
 import { createQueryNode } from '../utils';
@@ -24,8 +27,13 @@ export async function createQuery(name?: string): Promise<Query> {
     created: new Date(),
     lastModified: new Date(),
     name: name || i18n.t('queries.labels.query'),
-    // Every query graph starts with its permanent results node
-    nodes: [createQueryNode('results', DEFAULT_RESULTS_NODE_POSITION)],
+    // Every query graph starts with an unconfigured source node
+    // and its permanent results node, spaced to fit a filter
+    // node between them
+    nodes: [
+      createQueryNode('source', DEFAULT_SOURCE_NODE_POSITION),
+      createQueryNode('results', DEFAULT_RESULTS_NODE_POSITION),
+    ],
     connections: [],
   };
 

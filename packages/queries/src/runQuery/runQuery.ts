@@ -1,6 +1,5 @@
-import { Databases } from '@minddrop/databases';
 import { getQuery } from '../getQuery';
-import { compileQueryGraph } from '../utils';
+import { runQueryNode } from '../runQueryNode';
 
 /**
  * Runs a query's node graph against the SQL data, returning
@@ -29,13 +28,6 @@ export async function runQuery(queryId: string): Promise<string[]> {
     return [];
   }
 
-  // Compile the graph and read the scopes reaching the results
-  // node
-  const compiled = compileQueryGraph(query)[resultsNode.id];
-
-  return Databases.sql.queryScopedEntries(
-    compiled.outputScopes,
-    compiled.sorts,
-    compiled.limit !== null ? { limit: compiled.limit } : undefined,
-  );
+  // Run the graph up to the results node
+  return runQueryNode(queryId, resultsNode.id);
 }

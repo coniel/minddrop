@@ -198,6 +198,17 @@ export const Canvas: React.FC<CanvasProps> = ({
   // Handle wheel events for zoom and pan
   const handleWheel = useCallback(
     (event: WheelEvent) => {
+      // Let scrollable content inside the canvas consume plain
+      // scrolls, zoom gestures still target the canvas
+      if (
+        !event.ctrlKey &&
+        !event.metaKey &&
+        viewportRef.current &&
+        scrollsNestedContent(event, viewportRef.current)
+      ) {
+        return;
+      }
+
       event.preventDefault();
 
       // Ctrl/Cmd + scroll = zoom toward cursor
@@ -819,4 +830,45 @@ function getCanvasCursor(panning: boolean, lassoing: boolean): string | null {
  */
 function mergeIds(baseline: string[], ids: string[]): string[] {
   return Array.from(new Set([...baseline, ...ids]));
+}
+
+/**
+ * Checks whether a wheel event can be consumed by a scrollable
+ * element between its target and the canvas viewport, in the
+ * direction of the scroll.
+ */
+function scrollsNestedContent(
+  event: WheelEvent,
+  viewport: HTMLElement,
+): boolean {
+  let element = event.target instanceof HTMLElement ? event.target : null;
+
+  // Walk up from the target to the canvas viewport
+  while (element && element !== viewport) {
+    const { overflowX, overflowY } = getComputedStyle(element);
+
+    // The element scrolls vertically under the wheel's vertical
+    // delta
+    if (
+      event.deltaY !== 0 &&
+      (overflowY === 'auto' || overflowY === 'scroll') &&
+      element.scrollHeight > element.clientHeight
+    ) {
+      return true;
+    }
+
+    // The element scrolls horizontally under the wheel's
+    // horizontal delta
+    if (
+      event.deltaX !== 0 &&
+      (overflowX === 'auto' || overflowX === 'scroll') &&
+      element.scrollWidth > element.clientWidth
+    ) {
+      return true;
+    }
+
+    element = element.parentElement;
+  }
+
+  return false;
 }

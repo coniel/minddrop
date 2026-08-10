@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DatabaseFixtures, Databases } from '@minddrop/databases';
 import { DatabaseId } from '@minddrop/databases';
@@ -17,24 +16,14 @@ interface FocusStealingHostProps {
 
 /**
  * Hosts the picker inside a wrapper which focuses itself on any
- * mousedown and unmounts the picker on dismissal, mimicking the
- * canvas viewport's focus-scoped shortcut handling and the
- * builder's dismiss behaviour.
+ * mousedown, mimicking the canvas viewport's focus-scoped
+ * shortcut handling.
  */
-const FocusStealingHost: React.FC<FocusStealingHostProps> = ({ onSelect }) => {
-  const [open, setOpen] = useState(true);
-
-  return (
-    <div tabIndex={-1} onMouseDown={(event) => event.currentTarget.focus()}>
-      {open && (
-        <QuerySourcePicker
-          onSelect={onSelect}
-          onDismiss={() => setOpen(false)}
-        />
-      )}
-    </div>
-  );
-};
+const FocusStealingHost: React.FC<FocusStealingHostProps> = ({ onSelect }) => (
+  <div tabIndex={-1} onMouseDown={(event) => event.currentTarget.focus()}>
+    <QuerySourcePicker onSelect={onSelect} />
+  </div>
+);
 
 describe('<QuerySourcePicker />', () => {
   beforeEach(() => {
@@ -58,8 +47,8 @@ describe('<QuerySourcePicker />', () => {
     // Click a database option
     await user.click(screen.getByText(objectDatabase.name));
 
-    // The database is selected rather than the picker being
-    // dismissed by the host stealing focus on mousedown
+    // The database is selected rather than the click being
+    // swallowed by the host stealing focus on mousedown
     expect(onSelect).toHaveBeenCalledWith(objectDatabase.id);
   });
 });

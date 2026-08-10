@@ -46,6 +46,28 @@ export interface QueryFilterNodeCardProps {
    * node.
    */
   onCompleteConnection(nodeId: string): void;
+
+  /**
+   * Callback fired when the node's remove action is pressed.
+   */
+  onRemove(nodeId: string): void;
+
+  /**
+   * Callback fired when the node's break connections action is
+   * pressed.
+   */
+  onBreakConnections(nodeId: string): void;
+
+  /**
+   * Callback fired when the node's connect to nearest action
+   * is pressed.
+   */
+  onConnectNearest(nodeId: string): void;
+
+  /**
+   * Whether the node is selected on the canvas.
+   */
+  selected?: boolean;
 }
 
 // Builds operator label translation keys
@@ -62,6 +84,10 @@ export const QueryFilterNodeCard: React.FC<QueryFilterNodeCardProps> = ({
   counts,
   onStartConnection,
   onCompleteConnection,
+  onRemove,
+  onBreakConnections,
+  onConnectNearest,
+  selected,
 }) => {
   // Properties of the databases feeding the node
   const properties = useMemo(
@@ -128,6 +154,7 @@ export const QueryFilterNodeCard: React.FC<QueryFilterNodeCardProps> = ({
 
   return (
     <QueryNodeShell
+      queryId={query.id}
       node={node}
       title="queries.nodes.filter"
       inputCount={counts?.input}
@@ -135,8 +162,13 @@ export const QueryFilterNodeCard: React.FC<QueryFilterNodeCardProps> = ({
       outputCount={counts?.output}
       hasInputPort
       hasOutputPort
+      selected={selected}
       onStartConnection={onStartConnection}
       onCompleteConnection={onCompleteConnection}
+      onRemove={onRemove}
+      onBreakConnections={onBreakConnections}
+      onConnectNearest={onConnectNearest}
+      warning={<QueryNodeMismatchWarning query={query} nodeId={node.id} />}
     >
       <Stack gap={2}>
         <Group gap={2}>
@@ -144,6 +176,7 @@ export const QueryFilterNodeCard: React.FC<QueryFilterNodeCardProps> = ({
           <Select
             placeholder="queries.editor.selectProperty"
             options={propertyOptions}
+            emptyMessage="queries.editor.noProperties"
             value={node.property || undefined}
             onValueChange={handlePropertyChange}
           />
@@ -169,9 +202,6 @@ export const QueryFilterNodeCard: React.FC<QueryFilterNodeCardProps> = ({
             onChange={handleValueChange}
           />
         )}
-
-        {/* Warning for inputs missing the filter's property */}
-        <QueryNodeMismatchWarning query={query} nodeId={node.id} />
       </Stack>
     </QueryNodeShell>
   );

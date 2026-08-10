@@ -1486,6 +1486,14 @@ declare module 'i18next' {
             ascending: string;
             descending: string;
             propertyMismatch: string;
+            outputEntries: string;
+            searchEntries: string;
+            removeNode: string;
+            removeConnection: string;
+            breakConnections: string;
+            connectNearest: string;
+            noProperties: string;
+            connectNodes: string;
           };
           nodes: {
             source: string;
@@ -1537,8 +1545,6 @@ declare module 'i18next' {
             custom: string;
           };
           results: {
-            count_one: string;
-            count_other: string;
             empty: string;
           };
         };

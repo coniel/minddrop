@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { DatabaseId, Databases } from '@minddrop/databases';
 import { useTranslation } from '@minddrop/i18n';
 import { SearchableMenu, SearchableMenuItem } from '@minddrop/ui-primitives';
@@ -10,22 +10,15 @@ export interface QuerySourcePickerProps {
    * Called with the picked database.
    */
   onSelect: (databaseId: DatabaseId) => void;
-
-  /**
-   * Called when the picker is dismissed without a selection.
-   */
-  onDismiss: () => void;
 }
 
 /**
- * Renders a placeholder card with a search box for picking the
- * database a new source node emits entries from.
+ * Renders a search box with a database list for picking the
+ * database a source node emits entries from.
  */
 export const QuerySourcePicker: React.FC<QuerySourcePickerProps> = ({
   onSelect,
-  onDismiss,
 }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
   const [query, setQuery] = useState('');
   const { t } = useTranslation({ keyPrefix: 'queries.sourcePicker' });
 
@@ -35,21 +28,12 @@ export const QuerySourcePicker: React.FC<QuerySourcePickerProps> = ({
   // Databases listed as options, fuzzy matched while searching
   const databases = query ? Databases.search(query) : allDatabases;
 
-  // Dismiss the picker on Escape. The search field clears a
-  // non-empty query itself and stops propagation, so only an
-  // empty query reaches here.
-  function handleKeyDown(event: React.KeyboardEvent): void {
-    if (event.key === 'Escape') {
-      onDismiss();
-    }
-  }
-
   // Keep focus in the search input when pressing the picker's
   // other elements, so selection clicks never blur the input
   function handleMouseDown(event: React.MouseEvent): void {
     // Keep the press from reaching the canvas viewport, which
-    // focuses itself on mousedown and would blur the input,
-    // dismissing the picker before the selection click lands
+    // focuses itself on mousedown and would blur the input
+    // before the selection click lands
     event.stopPropagation();
 
     if (!(event.target instanceof HTMLInputElement)) {
@@ -57,31 +41,11 @@ export const QuerySourcePicker: React.FC<QuerySourcePickerProps> = ({
     }
   }
 
-  // Dismiss the picker when focus leaves it. Selection clicks
-  // never blur the input, so any blur out of the picker is an
-  // outside interaction.
-  function handleBlur(event: React.FocusEvent): void {
-    // Focus moved within the picker
-    if (
-      event.relatedTarget &&
-      containerRef.current?.contains(event.relatedTarget)
-    ) {
-      return;
-    }
-
-    onDismiss();
-  }
-
   return (
-    <div
-      ref={containerRef}
-      className="queries-source-picker"
-      onKeyDown={handleKeyDown}
-      onMouseDown={handleMouseDown}
-      onBlur={handleBlur}
-    >
+    <div className="queries-source-picker" onMouseDown={handleMouseDown}>
       <SearchableMenu
         scrollable
+        searchVariant="outline"
         searchTerm={query}
         onSearchTermChange={setQuery}
         searchPlaceholder="queries.sourcePicker.searchPlaceholder"

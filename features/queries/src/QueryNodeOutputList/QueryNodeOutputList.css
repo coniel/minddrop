@@ -1,0 +1,30 @@
+/* Split the output list from the node's fields with a full
+   width divider, bleeding over the node body's horizontal
+   padding */
+.queries-node-output-list {
+  margin: var(--space-1) calc(var(--space-3) * -1) 0;
+  padding: var(--space-3) var(--space-3) 0;
+  border-top: 1px solid var(--border-subtle);
+}
+
+/* Cap the list height so long flows scroll within the node
+   instead of growing it. The cap goes on the viewport: the
+   root sizes to its content, so a root-level max-height would
+   only clip without scrolling. */
+.queries-node-output-list-scroll .scroll-area-viewport {
+  max-height: 240px;
+}
+
+/* Placeholder spanning the full virtual list height, the
+   virtualizer positions rows within it */
+.queries-node-output-list-items {
+  position: relative;
+}
+
+/* Virtualized rows, offset by the virtualizer's transform */
+.queries-node-output-list-item {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}

@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from 'react';
-import { DatabaseId } from '@minddrop/databases';
 import {
   Queries,
   QueryNode,
@@ -8,6 +7,7 @@ import {
   createQueryNode,
   removeQueryConnection,
   removeQueryNode,
+  removeQueryNodeConnections,
   updateQueryNode,
 } from '@minddrop/queries';
 import { dragContainsType, toMimeType } from '@minddrop/selection';
@@ -20,6 +20,7 @@ import {
   CanvasSelection,
   CanvasToolbar,
   useCanvas,
+  useCanvasStore,
   useFitOnNodesReady,
 } from '@minddrop/ui-canvas';
 import { QueryBuilderToolbar } from '../QueryBuilderToolbar';
@@ -32,16 +33,13 @@ import { QueryLimitNodeCard } from '../QueryLimitNodeCard';
 import { QueryResultsNodeCard } from '../QueryResultsNodeCard';
 import { QuerySortNodeCard } from '../QuerySortNodeCard';
 import { QuerySourceNodeCard } from '../QuerySourceNodeCard';
-import { QuerySourcePicker } from '../QuerySourcePicker';
 import {
   QUERY_NODE_WIDTHS,
   QueryNodeCardDataKey,
   QuerySourceCardDataKey,
 } from '../constants';
+import { connectQueryNodeToNearest } from '../utils';
 import './QueryBuilderCanvas.css';
-
-// The width of the source database picker card
-const SOURCE_PICKER_WIDTH = 260;
 
 export interface QueryBuilderCanvasProps {
   /**
@@ -67,7 +65,7 @@ export const QueryBuilderCanvas: React.FC<QueryBuilderCanvasProps> = ({
 );
 
 /**
- * Renders the builder's canvas, nodes, connections, pickers and
+ * Renders the builder's canvas, nodes, connections and
  * toolbars. Separated from the root component so it can use the
  * canvas context provided there.
  */
@@ -78,16 +76,18 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
   const [pendingConnection, setPendingConnection] =
     useState<PendingQueryConnection | null>(null);
 
-  // The active source database picker's anchor point in canvas
-  // coordinates, spawned by dropping the source toolbar card
-  const [sourcePicker, setSourcePicker] = useState<CanvasPoint | null>(null);
-
   const query = Queries.use(queryId);
 
   // Entry flow counts per node
   const counts = Queries.useNodeCounts(queryId);
 
   const canvas = useCanvas();
+
+  // The canvas's selected node IDs, driving the cards' action
+  // bars
+  const selectedNodeIds = useCanvasStore((state) =>
+    state.selection?.type === 'nodes' ? state.selection.ids : null,
+  );
 
   // Fit the graph into view when the builder opens
   useFitOnNodesReady(query ? query.nodes.map((node) => node.id) : []);
@@ -194,21 +194,89 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
     [query, queryId, canvas],
   );
 
-  // Add a node of the given type centered on a canvas point
-  const addNode = useCallback(
-    (type: QueryNodeType, point: CanvasPoint, database?: string) => {
+  // Remove a node along with its connections. The results node
+  // is permanent and removing it leaves the graph unchanged.
+  const handleRemoveNode = useCallback(
+    (nodeId: string) => {
       if (!query) {
         return;
       }
 
-      const node = createQueryNode(
-        type,
-        {
-          x: Math.round(point.x - QUERY_NODE_WIDTHS[type] / 2),
-          y: Math.round(point.y),
-        },
-        { database },
-      );
+      const { nodes, connections } = removeQueryNode(query, nodeId);
+
+      // Persist only when the node was actually removed
+      if (nodes !== query.nodes) {
+        Queries.update(queryId, { nodes, connections });
+      }
+
+      // Drop the selection targeting the removed node
+      canvas.clearSelection();
+    },
+    [query, queryId, canvas],
+  );
+
+  // Break all of a node's incoming and outgoing connections
+  const handleBreakNodeConnections = useCallback(
+    (nodeId: string) => {
+      if (!query) {
+        return;
+      }
+
+      const connections = removeQueryNodeConnections(query.connections, nodeId);
+
+      // Persist only when the node had connections
+      if (connections !== query.connections) {
+        Queries.update(queryId, { connections });
+      }
+    },
+    [query, queryId],
+  );
+
+  // Connect a node to its nearest neighbours on both sides
+  const handleConnectNodeToNearest = useCallback(
+    (nodeId: string) => {
+      if (!query) {
+        return;
+      }
+
+      const connections = connectQueryNodeToNearest(query, nodeId);
+
+      // Persist only when new connections were created
+      if (connections !== query.connections) {
+        Queries.update(queryId, { connections });
+      }
+    },
+    [query, queryId],
+  );
+
+  // Remove a connection from the graph
+  const handleRemoveConnection = useCallback(
+    (connectionId: string) => {
+      if (!query) {
+        return;
+      }
+
+      Queries.update(queryId, {
+        connections: removeQueryConnection(query.connections, connectionId),
+      });
+
+      // Drop the selection targeting the removed connection
+      canvas.clearSelection();
+    },
+    [query, queryId, canvas],
+  );
+
+  // Add a node of the given type centered on a canvas point
+  const addNode = useCallback(
+    (type: QueryNodeType, point: CanvasPoint) => {
+      if (!query) {
+        return;
+      }
+
+      const node = createQueryNode(type, {
+        x: Math.round(point.x - QUERY_NODE_WIDTHS[type] / 2),
+        y: Math.round(point.y),
+      });
 
       Queries.update(queryId, { nodes: [...query.nodes, node] });
     },
@@ -229,13 +297,10 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
     (event: React.DragEvent, canvasPoint: CanvasPoint) => {
       event.preventDefault();
 
-      // Source cards spawn the database picker at the drop
-      // position
+      // Source cards create an unconfigured source node at the
+      // drop position, showing its database search
       if (event.dataTransfer.getData(toMimeType(QuerySourceCardDataKey))) {
-        setSourcePicker({
-          x: Math.round(canvasPoint.x),
-          y: Math.round(canvasPoint.y),
-        });
+        addNode('source', canvasPoint);
 
         return;
       }
@@ -254,8 +319,6 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
     [addNode],
   );
 
-  // Clear the connection selection when the empty canvas is
-  // pressed. The canvas clears the node selection itself.
   // Start a connection drag from a node's output port
   const handleStartConnection = useCallback(
     (nodeId: string, event: React.MouseEvent) => {
@@ -319,25 +382,6 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
     [queryId],
   );
 
-  // Create a source node for the picked database at the picker
-  // position
-  const handleSourcePickerSelect = useCallback(
-    (databaseId: DatabaseId) => {
-      if (!sourcePicker) {
-        return;
-      }
-
-      setSourcePicker(null);
-      addNode('source', sourcePicker, databaseId);
-    },
-    [sourcePicker, addNode],
-  );
-
-  // Dismiss the source picker without a selection
-  const handleSourcePickerDismiss = useCallback(() => {
-    setSourcePicker(null);
-  }, []);
-
   // Render the card matching a node's type
   function renderNodeCard(node: QueryNode) {
     if (!query) {
@@ -346,12 +390,20 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
 
     const cardProps = {
       counts: counts[node.id],
+      // The action bar shows on the single selected node
+      selected:
+        selectedNodeIds?.length === 1 && selectedNodeIds[0] === node.id,
       onStartConnection: handleStartConnection,
       onCompleteConnection: handleCompleteConnection,
+      onRemove: handleRemoveNode,
+      onBreakConnections: handleBreakNodeConnections,
+      onConnectNearest: handleConnectNodeToNearest,
     };
 
     if (node.type === 'source') {
-      return <QuerySourceNodeCard node={node} {...cardProps} />;
+      return (
+        <QuerySourceNodeCard queryId={queryId} node={node} {...cardProps} />
+      );
     }
 
     if (node.type === 'filter') {
@@ -368,30 +420,6 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
 
     return (
       <QueryResultsNodeCard queryId={queryId} node={node} {...cardProps} />
-    );
-  }
-
-  // Render the active source picker at its canvas position
-  function renderSourcePicker() {
-    if (!sourcePicker) {
-      return null;
-    }
-
-    return (
-      <div
-        className="query-builder-picker"
-        style={{
-          transform: `translate(${
-            sourcePicker.x - SOURCE_PICKER_WIDTH / 2
-          }px, ${sourcePicker.y}px)`,
-          width: SOURCE_PICKER_WIDTH,
-        }}
-      >
-        <QuerySourcePicker
-          onSelect={handleSourcePickerSelect}
-          onDismiss={handleSourcePickerDismiss}
-        />
-      </div>
     );
   }
 
@@ -415,6 +443,7 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
         <QueryConnectionsLayer
           query={query}
           pendingConnection={pendingConnection}
+          onRemoveConnection={handleRemoveConnection}
         />
 
         {/* The graph's nodes */}
@@ -433,9 +462,6 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
             {renderNodeCard(node)}
           </CanvasNode>
         ))}
-
-        {/* Active source database picker */}
-        {renderSourcePicker()}
       </Canvas>
 
       {/* Node cards toolbar */}

@@ -5,6 +5,7 @@ export * from './updateQueryNode';
 export * from './removeQueryNode';
 export * from './addQueryConnection';
 export * from './removeQueryConnection';
+export * from './removeQueryNodeConnections';
 export * from './isCompleteQueryFilterNode';
 export * from './resolveRelativeDate';
 export * from './resolveQueryDateRange';

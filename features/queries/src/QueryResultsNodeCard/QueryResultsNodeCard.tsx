@@ -1,7 +1,7 @@
-import { QueryNodeCounts, QueryResultsNode } from '@minddrop/queries';
-import { ScrollArea } from '@minddrop/ui-primitives';
+import { Queries, QueryNodeCounts, QueryResultsNode } from '@minddrop/queries';
+import { Text } from '@minddrop/ui-primitives';
+import { QueryNodeOutputList } from '../QueryNodeOutputList';
 import { QueryNodeShell } from '../QueryNodeShell';
-import { QueryResultsList } from '../QueryResultsList';
 import './QueryResultsNodeCard.css';
 
 export interface QueryResultsNodeCardProps {
@@ -31,11 +31,36 @@ export interface QueryResultsNodeCardProps {
    * node.
    */
   onCompleteConnection(nodeId: string): void;
+
+  /**
+   * Callback fired when a node's remove action is pressed.
+   * Unused, the results node is permanent.
+   */
+  onRemove(nodeId: string): void;
+
+  /**
+   * Callback fired when a node's break connections action is
+   * pressed. Unused, the results node shows no action bar.
+   */
+  onBreakConnections(nodeId: string): void;
+
+  /**
+   * Callback fired when a node's connect to nearest action is
+   * pressed. Unused, the results node shows no action bar.
+   */
+  onConnectNearest(nodeId: string): void;
+
+  /**
+   * Whether the node is selected on the canvas. Unused, the
+   * results node shows no action bar.
+   */
+  selected?: boolean;
 }
 
 /**
  * Renders the query's permanent results node, showing the
- * entries reaching it as a scrollable list.
+ * entries reaching it as a searchable list, or a hint while no
+ * node is connected into it.
  */
 export const QueryResultsNodeCard: React.FC<QueryResultsNodeCardProps> = ({
   queryId,
@@ -43,19 +68,37 @@ export const QueryResultsNodeCard: React.FC<QueryResultsNodeCardProps> = ({
   counts,
   onStartConnection,
   onCompleteConnection,
-}) => (
-  <QueryNodeShell
-    node={node}
-    title="queries.nodes.results"
-    inputCount={counts?.input}
-    totalInputCount={counts?.inputTotal}
-    hasInputPort
-    hasOutputPort={false}
-    onStartConnection={onStartConnection}
-    onCompleteConnection={onCompleteConnection}
-  >
-    <ScrollArea className="queries-results-node-scroll">
-      <QueryResultsList queryId={queryId} />
-    </ScrollArea>
-  </QueryNodeShell>
-);
+}) => {
+  const query = Queries.use(queryId);
+
+  // Whether any node flows into the results node
+  const hasInput =
+    query?.connections.some((connection) => connection.to === node.id) || false;
+
+  return (
+    <QueryNodeShell
+      queryId={queryId}
+      node={node}
+      title="queries.nodes.results"
+      inputCount={counts?.input}
+      totalInputCount={counts?.inputTotal}
+      hasInputPort
+      hasOutputPort={false}
+      onStartConnection={onStartConnection}
+      onCompleteConnection={onCompleteConnection}
+    >
+      {/* Hint shown before any node is connected */}
+      {!hasInput && (
+        <Text
+          size="sm"
+          color="muted"
+          text="queries.editor.connectNodes"
+          className="queries-results-node-empty"
+        />
+      )}
+
+      {/* The entries reaching the node */}
+      {hasInput && <QueryNodeOutputList queryId={queryId} nodeId={node.id} />}
+    </QueryNodeShell>
+  );
+};

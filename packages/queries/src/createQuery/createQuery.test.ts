@@ -13,6 +13,13 @@ const newQuery = {
   nodes: [
     {
       id: expect.any(String),
+      type: 'source',
+      database: '',
+      x: expect.any(Number),
+      y: expect.any(Number),
+    },
+    {
+      id: expect.any(String),
       type: 'results',
       x: expect.any(Number),
       y: expect.any(Number),
@@ -27,7 +34,7 @@ describe('createQuery', () => {
 
   afterEach(cleanup);
 
-  it('creates a query with a results node', async () => {
+  it('creates a query with a source and results node', async () => {
     const query = await createQuery();
 
     expect(query).toEqual(newQuery);

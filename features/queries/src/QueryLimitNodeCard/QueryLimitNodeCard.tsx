@@ -35,6 +35,28 @@ export interface QueryLimitNodeCardProps {
    * node.
    */
   onCompleteConnection(nodeId: string): void;
+
+  /**
+   * Callback fired when the node's remove action is pressed.
+   */
+  onRemove(nodeId: string): void;
+
+  /**
+   * Callback fired when the node's break connections action is
+   * pressed.
+   */
+  onBreakConnections(nodeId: string): void;
+
+  /**
+   * Callback fired when the node's connect to nearest action
+   * is pressed.
+   */
+  onConnectNearest(nodeId: string): void;
+
+  /**
+   * Whether the node is selected on the canvas.
+   */
+  selected?: boolean;
 }
 
 /**
@@ -47,6 +69,10 @@ export const QueryLimitNodeCard: React.FC<QueryLimitNodeCardProps> = ({
   counts,
   onStartConnection,
   onCompleteConnection,
+  onRemove,
+  onBreakConnections,
+  onConnectNearest,
+  selected,
 }) => {
   // Persist a count change, treating cleared inputs as uncapped
   function handleCountChange(count: number | null): void {
@@ -59,6 +85,7 @@ export const QueryLimitNodeCard: React.FC<QueryLimitNodeCardProps> = ({
 
   return (
     <QueryNodeShell
+      queryId={query.id}
       node={node}
       title="queries.nodes.limit"
       inputCount={counts?.input}
@@ -66,8 +93,12 @@ export const QueryLimitNodeCard: React.FC<QueryLimitNodeCardProps> = ({
       outputCount={counts?.output}
       hasInputPort
       hasOutputPort
+      selected={selected}
       onStartConnection={onStartConnection}
       onCompleteConnection={onCompleteConnection}
+      onRemove={onRemove}
+      onBreakConnections={onBreakConnections}
+      onConnectNearest={onConnectNearest}
     >
       <NumberField
         defaultValue={node.count > 0 ? node.count : undefined}

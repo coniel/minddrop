@@ -9,10 +9,17 @@
 }
 
 .queries-node-header {
+  position: relative;
   padding: var(--space-2) var(--space-3);
 }
 
+/* Center the type label to the card, out of the header's flex
+   flow so the flanking counts never shift it */
 .queries-node-header .queries-node-title {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
@@ -21,8 +28,41 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* Raise the output list toggle above the node drag handle so it
+   receives presses, and keep it from growing the compact header */
+.queries-node-header .queries-node-output-toggle {
+  position: relative;
+  z-index: 2;
+  margin: -4px 0;
+}
+
+/* Floating action bar centered above the selected node */
+.queries-node-actions {
+  position: absolute;
+  bottom: calc(100% + var(--space-2));
+  left: 50%;
+  z-index: 2;
+  transform: translateX(-50%);
+  padding: var(--space-1);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  background-color: var(--surface-overlay);
+  box-shadow: var(--shadow-overlay);
+}
+
 .queries-node-body {
   padding: 0 var(--space-3) var(--space-3);
+}
+
+/* The node background matches the default menu item hover
+   surface, step the entry lists' hover and press states one
+   level up so they stay visible */
+:root:not([data-input-mode='keyboard']) .queries-node .menu-item:hover {
+  background-color: var(--surface-neutral-hover);
+}
+
+.queries-node .menu-item:not(:has(button:hover)):active {
+  background-color: var(--surface-neutral-active);
 }
 
 /* Connection ports, centered on the node's edges at header

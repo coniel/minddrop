@@ -14,11 +14,3 @@
 .query-builder-node .ui-canvas-node-drag-handle {
   height: 38px;
 }
-
-/* The active source picker, positioned in canvas coordinates
-   inside the transform layer */
-.query-builder-picker {
-  position: absolute;
-  top: 0;
-  left: 0;
-}

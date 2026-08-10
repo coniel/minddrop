@@ -42,3 +42,10 @@
   stroke-width: 12;
   pointer-events: stroke;
 }
+
+/* Removal button on the selected edge, opting back into pointer
+   events within the inert layer */
+.queries-connection-remove {
+  overflow: visible;
+  pointer-events: auto;
+}

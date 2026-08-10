@@ -6,9 +6,14 @@ import {
   useCanvas,
   useCanvasStore,
 } from '@minddrop/ui-canvas';
+import { IconButton } from '@minddrop/ui-primitives';
 import { QUERY_NODE_PORT_Y, QUERY_NODE_WIDTHS } from '../constants';
 import { getQueryMismatchedConnectionIds } from '../utils';
 import './QueryConnectionsLayer.css';
+
+// The size of the selected edge's remove button in pixels,
+// matching the small icon button height
+const REMOVE_BUTTON_SIZE = 24;
 
 export interface PendingQueryConnection {
   /**
@@ -33,6 +38,12 @@ export interface QueryConnectionsLayerProps {
    * following the pointer.
    */
   pendingConnection: PendingQueryConnection | null;
+
+  /**
+   * Callback fired when the selected edge's remove button is
+   * pressed.
+   */
+  onRemoveConnection(connectionId: string): void;
 }
 
 /**
@@ -43,6 +54,7 @@ export interface QueryConnectionsLayerProps {
 export const QueryConnectionsLayer: React.FC<QueryConnectionsLayerProps> = ({
   query,
   pendingConnection,
+  onRemoveConnection,
 }) => {
   // Canvas actions for applying edge clicks to the selection
   const store = useCanvas();
@@ -115,6 +127,11 @@ export const QueryConnectionsLayer: React.FC<QueryConnectionsLayerProps> = ({
     // their databases do not contain
     const mismatched = mismatchedConnectionIds.has(connection.id);
 
+    // The edge midpoint anchoring the remove button. The bezier's
+    // control point offsets cancel out at the curve's center,
+    // leaving the endpoint average.
+    const midpoint = { x: (from.x + to.x) / 2, y: (from.y + to.y) / 2 };
+
     return (
       <g key={connection.id}>
         {/* Invisible wide stroke for easier clicking */}
@@ -129,6 +146,26 @@ export const QueryConnectionsLayer: React.FC<QueryConnectionsLayerProps> = ({
           }${mismatched ? ' queries-connection-mismatched' : ''}`}
           d={path}
         />
+
+        {/* Removal button at the sole selected edge's midpoint */}
+        {selected && selectedIds?.length === 1 && (
+          <foreignObject
+            className="queries-connection-remove"
+            x={midpoint.x - REMOVE_BUTTON_SIZE / 2}
+            y={midpoint.y - REMOVE_BUTTON_SIZE / 2}
+            width={REMOVE_BUTTON_SIZE}
+            height={REMOVE_BUTTON_SIZE}
+          >
+            <IconButton
+              icon="x"
+              size="sm"
+              variant="filled"
+              danger="on-hover"
+              label="queries.editor.removeConnection"
+              onClick={() => onRemoveConnection(connection.id)}
+            />
+          </foreignObject>
+        )}
       </g>
     );
   }
