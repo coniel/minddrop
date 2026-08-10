@@ -49,6 +49,9 @@
       "not-equals": "Is not equal to",
       "contains": "Contains",
       "not-contains": "Does not contain",
+      "contains-any": "Contains any of",
+      "contains-all": "Contains all of",
+      "contains-none": "Contains none of",
       "starts-with": "Starts with",
       "ends-with": "Ends with",
       "greater-than": "Is greater than",
@@ -74,6 +77,8 @@
       "one-week-from-now": "One week from now",
       "one-month-ago": "One month ago",
       "one-month-from-now": "One month from now",
+      "last-days": "Last N days",
+      "next-days": "Next N days",
       "custom": "Custom date"
     },
     "results": {

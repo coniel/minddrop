@@ -72,7 +72,14 @@ export const QUERY_OPERATORS_BY_PROPERTY_TYPE: Record<
   'last-modified': DATE_OPERATORS,
   toggle: ['is-true', 'is-false'],
   select: ['is', 'is-not', 'is-empty', 'is-not-empty'],
-  collection: ['is-empty', 'is-not-empty'],
+  // Collections test membership of the picked entries
+  collection: [
+    'contains-any',
+    'contains-all',
+    'contains-none',
+    'is-empty',
+    'is-not-empty',
+  ],
 };
 
 // The operators available for multiselect select properties

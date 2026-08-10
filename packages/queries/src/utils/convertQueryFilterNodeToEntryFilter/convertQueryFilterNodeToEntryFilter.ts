@@ -56,8 +56,13 @@ export function convertQueryFilterNodeToEntryFilter(
     return convertDateFilter(node, propertyType);
   }
 
-  // Multi-value properties compare via membership tests
-  if (propertyType === 'select' || propertyType === 'collection') {
+  // Collections compare against the picked entry ID lists
+  if (propertyType === 'collection') {
+    return convertCollectionFilter(node, propertyType);
+  }
+
+  // Select values compare via membership tests
+  if (propertyType === 'select') {
     return convertSelectFilter(node, propertyType);
   }
 
@@ -140,8 +145,75 @@ function convertDateFilter(
 }
 
 /**
- * Converts a select/collection comparison into a membership
- * filter.
+ * Converts a collection comparison into membership filters over
+ * the picked entry IDs: any-of matches via OR, all-of and
+ * none-of via AND.
+ */
+function convertCollectionFilter(
+  node: QueryFilterNode,
+  propertyType: PropertyType,
+): EntryFilter | EntryFilterGroup | null {
+  // The value must be a list of picked entry IDs
+  if (!Array.isArray(node.value) || node.value.length === 0) {
+    return null;
+  }
+
+  const base = { property: node.property, propertyType };
+
+  if (node.operator === 'contains-any') {
+    return groupEntryFilters(
+      'or',
+      node.value.map((entryId) => ({
+        ...base,
+        operator: 'has-value',
+        value: entryId,
+      })),
+    );
+  }
+
+  if (node.operator === 'contains-all') {
+    return groupEntryFilters(
+      'and',
+      node.value.map((entryId) => ({
+        ...base,
+        operator: 'has-value',
+        value: entryId,
+      })),
+    );
+  }
+
+  if (node.operator === 'contains-none') {
+    return groupEntryFilters(
+      'and',
+      node.value.map((entryId) => ({
+        ...base,
+        operator: 'not-has-value',
+        value: entryId,
+      })),
+    );
+  }
+
+  return null;
+}
+
+/**
+ * Wraps entry filters in a combinator group, returning a single
+ * filter ungrouped.
+ */
+function groupEntryFilters(
+  combinator: EntryFilterGroup['combinator'],
+  filters: EntryFilter[],
+): EntryFilter | EntryFilterGroup {
+  // Single filters need no group
+  if (filters.length === 1) {
+    return filters[0];
+  }
+
+  return { combinator, filters };
+}
+
+/**
+ * Converts a select comparison into a membership filter.
  */
 function convertSelectFilter(
   node: QueryFilterNode,
@@ -240,5 +312,5 @@ function convertTextFilter(
 function isQueryDateValue(
   value: QueryFilterValue | undefined,
 ): value is QueryDateValue {
-  return typeof value === 'object' && value !== null;
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
 }

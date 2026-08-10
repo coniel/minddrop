@@ -102,6 +102,103 @@ describe('convertQueryFilterNodeToEntryFilter', () => {
     });
   });
 
+  it('converts collection any-of comparisons to OR membership groups', () => {
+    expect(
+      convertQueryFilterNodeToEntryFilter({
+        ...textNode,
+        propertyType: 'collection',
+        operator: 'contains-any',
+        value: ['entry_1', 'entry_2'],
+      }),
+    ).toEqual({
+      combinator: 'or',
+      filters: [
+        {
+          property: 'Content',
+          propertyType: 'collection',
+          operator: 'has-value',
+          value: 'entry_1',
+        },
+        {
+          property: 'Content',
+          propertyType: 'collection',
+          operator: 'has-value',
+          value: 'entry_2',
+        },
+      ],
+    });
+  });
+
+  it('converts collection all-of comparisons to AND membership groups', () => {
+    expect(
+      convertQueryFilterNodeToEntryFilter({
+        ...textNode,
+        propertyType: 'collection',
+        operator: 'contains-all',
+        value: ['entry_1', 'entry_2'],
+      }),
+    ).toEqual({
+      combinator: 'and',
+      filters: [
+        {
+          property: 'Content',
+          propertyType: 'collection',
+          operator: 'has-value',
+          value: 'entry_1',
+        },
+        {
+          property: 'Content',
+          propertyType: 'collection',
+          operator: 'has-value',
+          value: 'entry_2',
+        },
+      ],
+    });
+  });
+
+  it('converts collection none-of comparisons to negated AND groups', () => {
+    expect(
+      convertQueryFilterNodeToEntryFilter({
+        ...textNode,
+        propertyType: 'collection',
+        operator: 'contains-none',
+        value: ['entry_1', 'entry_2'],
+      }),
+    ).toEqual({
+      combinator: 'and',
+      filters: [
+        {
+          property: 'Content',
+          propertyType: 'collection',
+          operator: 'not-has-value',
+          value: 'entry_1',
+        },
+        {
+          property: 'Content',
+          propertyType: 'collection',
+          operator: 'not-has-value',
+          value: 'entry_2',
+        },
+      ],
+    });
+  });
+
+  it('converts single entry collection comparisons without a group', () => {
+    expect(
+      convertQueryFilterNodeToEntryFilter({
+        ...textNode,
+        propertyType: 'collection',
+        operator: 'contains-any',
+        value: ['entry_1'],
+      }),
+    ).toEqual({
+      property: 'Content',
+      propertyType: 'collection',
+      operator: 'has-value',
+      value: 'entry_1',
+    });
+  });
+
   it('expands date comparisons to day ranges', () => {
     expect(
       convertQueryFilterNodeToEntryFilter({

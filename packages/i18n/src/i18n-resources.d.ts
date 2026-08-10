@@ -1517,6 +1517,9 @@ declare module 'i18next' {
             'not-equals': string;
             contains: string;
             'not-contains': string;
+            'contains-any': string;
+            'contains-all': string;
+            'contains-none': string;
             'starts-with': string;
             'ends-with': string;
             'greater-than': string;
@@ -1542,6 +1545,8 @@ declare module 'i18next' {
             'one-week-from-now': string;
             'one-month-ago': string;
             'one-month-from-now': string;
+            'last-days': string;
+            'next-days': string;
             custom: string;
           };
           results: {

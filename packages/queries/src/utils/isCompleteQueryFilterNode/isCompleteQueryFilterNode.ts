@@ -3,8 +3,8 @@ import { QueryFilterNode } from '../../types';
 
 /**
  * Checks whether a filter node is fully configured and can be
- * included in query execution. Empty string values count as
- * unset.
+ * included in query execution. Empty string and empty list
+ * values count as unset.
  *
  * @param node - The filter node to check.
  *
@@ -33,6 +33,11 @@ export function isCompleteQueryFilterNode(node: QueryFilterNode): boolean {
 
   // Empty string values are incomplete
   if (node.value === '') {
+    return false;
+  }
+
+  // Empty entry ID lists are incomplete
+  if (Array.isArray(node.value) && node.value.length === 0) {
     return false;
   }
 

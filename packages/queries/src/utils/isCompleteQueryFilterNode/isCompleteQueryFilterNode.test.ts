@@ -47,6 +47,12 @@ describe('isCompleteQueryFilterNode', () => {
     );
   });
 
+  it('returns false with an empty entry ID list value', () => {
+    expect(isCompleteQueryFilterNode({ ...completeNode, value: [] })).toBe(
+      false,
+    );
+  });
+
   it('returns true for value-less operators without a value', () => {
     expect(
       isCompleteQueryFilterNode({

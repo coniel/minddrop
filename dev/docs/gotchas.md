@@ -326,6 +326,18 @@ To locate the offending file, request per-file semantic diagnostics via
 the TS API in a try/catch loop over the program's source files (a tsc
 run dies on the first crash without naming the file).
 
+## packages/queries
+
+### Package typecheck fails on unrelated ui/icons errors
+
+`npx tsc --noEmit -p packages/queries/tsconfig.json` reports errors
+in `ui/icons` (missing `--jsx` for `content-icons.min.tsx`, a
+symbol-to-string conversion) pulled in through the dependency
+chain. They pre-date any queries work (verified on 2026-08-10
+against earlier commits) and do not indicate a problem in the
+queries package; the same files typecheck fine through
+`features/queries`, whose tsconfig sets `jsx`.
+
 ## features/designs
 
 ### `LayoutAutoFocusContext` is deliberately single-purpose
@@ -491,6 +503,20 @@ a single update. A consumer that supports multi-selection must handle
 it; implementing only `onFrameChange` silently drops group moves.
 
 ## ui/primitives
+
+### Base UI render-prop spreads silently overwrite own handlers
+
+Components passed to a Base UI `render` prop receive Base UI's
+merged props (its internal handlers plus `useButton` wrappers,
+which always include `onClick`/`onMouseDown`/`onPointerDown`).
+Writing `onMouseDown={...} {...other}` therefore drops the
+component's own handler whenever Base UI supplies one of the same
+name — there is no error, the handler just never runs. Spread
+`{...other}` first and define handlers after it, chaining the
+incoming handler before custom behaviour (see
+`ComboboxChipRemove`, whose propagation stops were overwritten
+this way, letting chip-remove mousedowns reach the trigger and
+toggle the popup).
 
 ### Registry context values must be split from the data they collect
 

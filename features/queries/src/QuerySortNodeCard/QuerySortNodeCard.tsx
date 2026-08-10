@@ -7,7 +7,7 @@ import {
   QuerySortNode,
   updateQueryNode,
 } from '@minddrop/queries';
-import { Group, Select, SelectOption } from '@minddrop/ui-primitives';
+import { Select, SelectOption, Stack } from '@minddrop/ui-primitives';
 import { QueryNodeMismatchWarning } from '../QueryNodeMismatchWarning';
 import { QueryNodeShell } from '../QueryNodeShell';
 import { getQueryUpstreamProperties } from '../utils';
@@ -142,7 +142,7 @@ export const QuerySortNodeCard: React.FC<QuerySortNodeCardProps> = ({
       onConnectNearest={onConnectNearest}
       warning={<QueryNodeMismatchWarning query={query} nodeId={node.id} />}
     >
-      <Group gap={2}>
+      <Stack gap={2}>
         {/* Property picker */}
         <Select
           placeholder="queries.editor.selectProperty"
@@ -158,7 +158,7 @@ export const QuerySortNodeCard: React.FC<QuerySortNodeCardProps> = ({
           value={node.direction}
           onValueChange={handleDirectionChange}
         />
-      </Group>
+      </Stack>
     </QueryNodeShell>
   );
 };

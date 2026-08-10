@@ -37,6 +37,13 @@ export type QuerySelectOperator =
   | 'is-empty'
   | 'is-not-empty';
 
+export type QueryCollectionOperator =
+  | 'contains-any'
+  | 'contains-all'
+  | 'contains-none'
+  | 'is-empty'
+  | 'is-not-empty';
+
 export type QueryExistenceOperator = 'is-empty' | 'is-not-empty';
 
 export type QueryOperator =
@@ -45,4 +52,5 @@ export type QueryOperator =
   | QueryDateOperator
   | QueryToggleOperator
   | QuerySelectOperator
+  | QueryCollectionOperator
   | QueryExistenceOperator;

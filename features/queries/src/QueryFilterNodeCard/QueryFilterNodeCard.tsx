@@ -13,7 +13,7 @@ import {
   VALUE_LESS_QUERY_OPERATORS,
   updateQueryNode,
 } from '@minddrop/queries';
-import { Group, Select, Stack } from '@minddrop/ui-primitives';
+import { Select, Stack } from '@minddrop/ui-primitives';
 import { QueryNodeMismatchWarning } from '../QueryNodeMismatchWarning';
 import { QueryNodeShell } from '../QueryNodeShell';
 import { QueryNodeValueInput } from '../QueryNodeValueInput';
@@ -171,26 +171,24 @@ export const QueryFilterNodeCard: React.FC<QueryFilterNodeCardProps> = ({
       warning={<QueryNodeMismatchWarning query={query} nodeId={node.id} />}
     >
       <Stack gap={2}>
-        <Group gap={2}>
-          {/* Property picker */}
-          <Select
-            placeholder="queries.editor.selectProperty"
-            options={propertyOptions}
-            emptyMessage="queries.editor.noProperties"
-            value={node.property || undefined}
-            onValueChange={handlePropertyChange}
-          />
+        {/* Property picker */}
+        <Select
+          placeholder="queries.editor.selectProperty"
+          options={propertyOptions}
+          emptyMessage="queries.editor.noProperties"
+          value={node.property || undefined}
+          onValueChange={handlePropertyChange}
+        />
 
-          {/* Operator picker for the selected property */}
-          {propertySchema && (
-            <Select<QueryOperator>
-              placeholder="queries.editor.selectOperator"
-              options={operatorOptions}
-              value={node.operator || undefined}
-              onValueChange={handleOperatorChange}
-            />
-          )}
-        </Group>
+        {/* Operator picker for the selected property */}
+        {propertySchema && (
+          <Select<QueryOperator>
+            placeholder="queries.editor.selectOperator"
+            options={operatorOptions}
+            value={node.operator || undefined}
+            onValueChange={handleOperatorChange}
+          />
+        )}
 
         {/* Value input for the selected operator */}
         {propertySchema && (

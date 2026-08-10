@@ -1,5 +1,6 @@
-import { useRef } from 'react';
-import { createI18nKeyBuilder } from '@minddrop/i18n';
+import { useMemo, useRef } from 'react';
+import { DatabaseEntries, Databases } from '@minddrop/databases';
+import { createI18nKeyBuilder, useTranslation } from '@minddrop/i18n';
 import { PropertySchema } from '@minddrop/properties';
 import {
   QueryDateValue,
@@ -9,13 +10,16 @@ import {
   VALUE_LESS_QUERY_OPERATORS,
 } from '@minddrop/queries';
 import {
+  Combobox,
+  ComboboxOption,
   DateField,
-  Group,
   NumberField,
   Select,
   SelectOption,
+  Stack,
   TextInput,
 } from '@minddrop/ui-primitives';
+import { SOURCE_FALLBACK_ICON } from '../constants';
 
 export interface QueryNodeValueInputProps {
   /**
@@ -93,6 +97,12 @@ export const QueryNodeValueInput: React.FC<QueryNodeValueInputProps> = ({
     return <QueryNodeDateValueInput value={value} onChange={onChange} />;
   }
 
+  // Collection properties pick the entries compared against
+  // the collection's members
+  if (property.type === 'collection') {
+    return <QueryNodeEntryValueInput value={value} onChange={onChange} />;
+  }
+
   // Select properties pick from the property's options
   if (property.type === 'select') {
     return (
@@ -111,6 +121,7 @@ export const QueryNodeValueInput: React.FC<QueryNodeValueInputProps> = ({
   if (property.type === 'number') {
     return (
       <NumberField
+        size="md"
         defaultValue={typeof value === 'number' ? value : undefined}
         onValueChange={handleNumberChange}
       />
@@ -120,9 +131,84 @@ export const QueryNodeValueInput: React.FC<QueryNodeValueInputProps> = ({
   // Text-like property types use a plain text input
   return (
     <TextInput
+      size="md"
       placeholder="queries.editor.valuePlaceholder"
       defaultValue={typeof value === 'string' ? value : undefined}
       onValueChange={handleDebouncedChange}
+    />
+  );
+};
+
+interface QueryNodeEntryValueInputProps {
+  /**
+   * The filter's current comparison value.
+   */
+  value?: QueryFilterValue;
+
+  /**
+   * Callback fired with the new value.
+   */
+  onChange(value: QueryFilterValue | undefined): void;
+}
+
+/**
+ * Renders a searchable multi entry picker for collection
+ * membership comparisons, listing all database entries as
+ * options and showing the picked entries as chips.
+ */
+const QueryNodeEntryValueInput: React.FC<QueryNodeEntryValueInputProps> = ({
+  value,
+  onChange,
+}) => {
+  const { t } = useTranslation({ keyPrefix: 'queries' });
+
+  // Subscribe to entry changes so the options stay fresh
+  const entries = DatabaseEntries.Store.useAllItemsArray();
+
+  // The picked entry IDs
+  const pickedIds = Array.isArray(value) ? value : [];
+
+  // Entries as options, alphabetical, icon'd by the database
+  // they belong to
+  const options = useMemo<ComboboxOption[]>(
+    () =>
+      [...entries]
+        .sort((entryA, entryB) => entryA.title.localeCompare(entryB.title))
+        .map((entry) => ({
+          label: entry.title,
+          value: entry.id,
+          contentIcon:
+            Databases.get(entry.database, false)?.icon || SOURCE_FALLBACK_ICON,
+        })),
+    [entries],
+  );
+
+  // The picked entries' options, shown as chips
+  const selected = options.filter((option) => pickedIds.includes(option.value));
+
+  // Persist the picked entries' IDs, treating cleared picks as
+  // unset
+  function handleValueChange(
+    picked: ComboboxOption | ComboboxOption[] | null,
+  ): void {
+    // Single values never occur in multi-select mode
+    if (!Array.isArray(picked)) {
+      return;
+    }
+
+    onChange(picked.length ? picked.map((option) => option.value) : undefined);
+  }
+
+  return (
+    <Combobox
+      multiple
+      size="md"
+      items={options}
+      placeholder={t('editor.selectValue')}
+      searchPlaceholder="queries.editor.searchEntries"
+      emptyText={t('results.empty')}
+      value={selected}
+      onValueChange={handleValueChange}
     />
   );
 };
@@ -139,19 +225,31 @@ interface QueryNodeDateValueInputProps {
   onChange(value: QueryFilterValue | undefined): void;
 }
 
+// The selectable date options: relative presets, day ranges
+// around the current day, and a custom absolute date
+type QueryDateOption =
+  | QueryRelativeDatePreset
+  | 'last-days'
+  | 'next-days'
+  | 'custom';
+
 /**
- * Renders a relative date preset picker with a date picker for
- * custom absolute dates.
+ * Renders a relative date preset picker with a day count field
+ * for relative ranges and a date picker for custom absolute
+ * dates.
  */
 const QueryNodeDateValueInput: React.FC<QueryNodeDateValueInputProps> = ({
   value,
   onChange,
 }) => {
+  // Debounces day count edits
+  const daysTimeoutRef = useRef<number>(undefined);
+
   // The current date value, if set
   const dateValue = isQueryDateValue(value) ? value : undefined;
 
   // The selected picker option
-  let selected: QueryRelativeDatePreset | 'custom' | undefined;
+  let selected: QueryDateOption | undefined;
 
   if (dateValue?.type === 'relative') {
     selected = dateValue.preset;
@@ -161,25 +259,59 @@ const QueryNodeDateValueInput: React.FC<QueryNodeDateValueInputProps> = ({
     selected = 'custom';
   }
 
-  const options: SelectOption<QueryRelativeDatePreset | 'custom'>[] = [
+  // Day ranges map to their direction's option
+  if (dateValue?.type === 'relative-range') {
+    selected = dateValue.direction === 'past' ? 'last-days' : 'next-days';
+  }
+
+  const options: SelectOption<QueryDateOption>[] = [
     // Relative presets resolved at query run time
     ...RELATIVE_DATE_PRESETS.map((preset) => ({
       label: dateI18nKey(preset),
       value: preset,
     })),
+    // Day ranges counted from the current day
+    { label: dateI18nKey('last-days'), value: 'last-days' as const },
+    { label: dateI18nKey('next-days'), value: 'next-days' as const },
     // Absolute date picked via the date field
     { label: dateI18nKey('custom'), value: 'custom' },
   ];
 
-  // Persist the picked preset, defaulting custom to today
-  function handleSelect(picked: QueryRelativeDatePreset | 'custom'): void {
+  // Persist the picked option, defaulting custom to today and
+  // day ranges to a week, keeping the count across direction
+  // changes
+  function handleSelect(picked: QueryDateOption): void {
     if (picked === 'custom') {
       onChange({ type: 'absolute', date: new Date() });
 
       return;
     }
 
+    if (picked === 'last-days' || picked === 'next-days') {
+      onChange({
+        type: 'relative-range',
+        days: dateValue?.type === 'relative-range' ? dateValue.days : 7,
+        direction: picked === 'last-days' ? 'past' : 'next',
+      });
+
+      return;
+    }
+
     onChange({ type: 'relative', preset: picked });
+  }
+
+  // Persist an edited day count after a short pause in typing,
+  // keeping the last count for cleared inputs
+  function handleDaysChange(days: number | null): void {
+    window.clearTimeout(daysTimeoutRef.current);
+
+    if (days === null || dateValue?.type !== 'relative-range') {
+      return;
+    }
+
+    daysTimeoutRef.current = window.setTimeout(() => {
+      onChange({ ...dateValue, days });
+    }, 400);
   }
 
   // Persist a picked absolute date, treating cleared dates as
@@ -189,17 +321,32 @@ const QueryNodeDateValueInput: React.FC<QueryNodeDateValueInputProps> = ({
   }
 
   return (
-    <Group gap={2}>
-      <Select<QueryRelativeDatePreset | 'custom'>
+    <Stack gap={2}>
+      <Select<QueryDateOption>
         placeholder="queries.editor.selectValue"
         options={options}
         value={selected}
         onValueChange={handleSelect}
       />
-      {dateValue?.type === 'absolute' && (
-        <DateField value={dateValue.date} onValueChange={handleDateChange} />
+
+      {/* Day count for relative ranges */}
+      {dateValue?.type === 'relative-range' && (
+        <NumberField
+          size="md"
+          min={1}
+          defaultValue={dateValue.days}
+          onValueChange={handleDaysChange}
+        />
       )}
-    </Group>
+
+      {dateValue?.type === 'absolute' && (
+        <DateField
+          size="md"
+          value={dateValue.date}
+          onValueChange={handleDateChange}
+        />
+      )}
+    </Stack>
   );
 };
 
@@ -209,5 +356,5 @@ const QueryNodeDateValueInput: React.FC<QueryNodeDateValueInputProps> = ({
 function isQueryDateValue(
   value: QueryFilterValue | undefined,
 ): value is QueryDateValue {
-  return typeof value === 'object' && value !== null;
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
 }

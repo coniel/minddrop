@@ -174,11 +174,18 @@ export interface QueryConnection {
   to: string;
 }
 
-export type QueryFilterValue = string | number | QueryDateValue;
+export type QueryFilterValue = string | number | string[] | QueryDateValue;
 
 export type QueryDateValue =
   | { type: 'absolute'; date: Date }
-  | { type: 'relative'; preset: QueryRelativeDatePreset };
+  | { type: 'relative'; preset: QueryRelativeDatePreset }
+  | {
+      type: 'relative-range';
+      days: number;
+      direction: QueryRelativeRangeDirection;
+    };
+
+export type QueryRelativeRangeDirection = 'past' | 'next';
 
 export type QueryRelativeDatePreset =
   | 'today'
