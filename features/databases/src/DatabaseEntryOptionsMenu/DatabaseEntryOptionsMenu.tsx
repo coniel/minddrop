@@ -3,8 +3,8 @@ import { Collections } from '@minddrop/collections';
 import { DatabaseEntries } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
 import { CollectionSelectionSubmenu } from '@minddrop/ui-components';
+import { DatabaseEntryRenderSource } from '@minddrop/ui-databases';
 import { ActionMenuItem, DropdownMenuSeparator } from '@minddrop/ui-primitives';
-import { DatabaseEntryRenderSource } from '../DatabaseEntryContext';
 import {
   CloseDatabaseEntryDialogEvent,
   OpenDatabaseViewEvent,

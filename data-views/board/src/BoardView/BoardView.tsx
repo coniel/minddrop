@@ -17,7 +17,6 @@ import {
 import { Events } from '@minddrop/events';
 import { DataViewOptionsMenu } from '@minddrop/feature-data-views';
 import {
-  DatabaseEntryContextProvider,
   dropContainsAddExistingEntryCard,
   dropContainsNewEntryPickerCard,
   getDroppedEntryIds,
@@ -28,6 +27,7 @@ import {
   DataViewEntryPicker,
   DataViewFloatingToolbar,
   DataViewNewEntryPicker,
+  DatabaseEntryContextProvider,
 } from '@minddrop/ui-databases';
 import { FlexDropContainer } from '@minddrop/ui-drag-and-drop';
 import { ScrollArea } from '@minddrop/ui-primitives';

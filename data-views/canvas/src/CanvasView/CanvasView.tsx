@@ -11,7 +11,6 @@ import {
 import { Events } from '@minddrop/events';
 import { DataViewOptionsMenu } from '@minddrop/feature-data-views';
 import {
-  DatabaseEntryContextProvider,
   DatabaseEntryRenderer,
   dropContainsAddExistingEntryCard,
   dropContainsNewEntryPickerCard,
@@ -36,6 +35,7 @@ import {
   DataViewEntryPicker,
   DataViewFloatingToolbar,
   DataViewNewEntryPicker,
+  DatabaseEntryContextProvider,
 } from '@minddrop/ui-databases';
 import { getTransferData, uuid } from '@minddrop/utils';
 import {

@@ -13,7 +13,11 @@ import { LayoutRenderer } from '@minddrop/feature-designs';
 import { useTranslation } from '@minddrop/i18n';
 import { PropertyValue } from '@minddrop/properties';
 import { useDraggable } from '@minddrop/selection';
-import { DatabaseEntriesDataKey } from '@minddrop/ui-databases';
+import {
+  DatabaseEntriesDataKey,
+  DatabaseEntryRenderSource,
+  useDatabaseEntryContext,
+} from '@minddrop/ui-databases';
 import {
   DropdownMenu,
   IconButton,
@@ -21,10 +25,6 @@ import {
   TransientViewStateScope,
 } from '@minddrop/ui-primitives';
 import { setDragPreview } from '@minddrop/utils';
-import {
-  DatabaseEntryRenderSource,
-  useDatabaseEntryContext,
-} from '../DatabaseEntryContext';
 import { DatabaseEntryOptionsMenu } from '../DatabaseEntryOptionsMenu';
 import {
   OpenDatabaseEntryViewEvent,
