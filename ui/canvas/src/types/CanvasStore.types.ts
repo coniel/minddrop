@@ -7,7 +7,11 @@ import {
   CanvasNodeSide,
 } from './CanvasConnection.types';
 import { CanvasNodeFrame, CanvasPoint } from './CanvasNode.types';
-import { CanvasSelection } from './CanvasSelection.types';
+import {
+  CanvasConnectionHitTest,
+  CanvasLassoState,
+  CanvasSelection,
+} from './CanvasSelection.types';
 
 /**
  * The size of the canvas viewport element in pixels.
@@ -121,6 +125,19 @@ export interface CanvasState {
    * The current selection, or null when nothing is selected.
    */
   selection: CanvasSelection | null;
+
+  /**
+   * The in-progress drag-to-select marquee, or null when no
+   * lasso drag is in progress.
+   */
+  lasso: CanvasLassoState | null;
+
+  /**
+   * Hit tests a frame against the canvas's connections, or null
+   * when no connections layer is mounted. Registered by the
+   * connections layer, which owns the connections.
+   */
+  connectionHitTest: CanvasConnectionHitTest | null;
 
   /**
    * The alignment guides for the node being dragged or resized,
@@ -281,6 +298,33 @@ export interface CanvasState {
    * Clears the selection.
    */
   clearSelection: () => void;
+
+  /**
+   * Starts a drag-to-select marquee. Does nothing when the canvas
+   * is not selectable.
+   * @param origin - The point the drag started from, in canvas coordinates.
+   * @param additive - Whether the lasso adds to the existing selection.
+   */
+  startLasso: (origin: CanvasPoint, additive: boolean) => void;
+
+  /**
+   * Updates the in-progress marquee's cursor position. Does
+   * nothing when no lasso drag is in progress.
+   * @param point - The cursor position in canvas coordinates.
+   */
+  updateLasso: (point: CanvasPoint) => void;
+
+  /**
+   * Clears the in-progress marquee.
+   */
+  clearLasso: () => void;
+
+  /**
+   * Registers the callback hit testing frames against the
+   * canvas's connections.
+   * @param hitTest - The hit test callback, or null to unregister.
+   */
+  setConnectionHitTest: (hitTest: CanvasConnectionHitTest | null) => void;
 
   /**
    * Sets the alignment guides for the node being dragged or

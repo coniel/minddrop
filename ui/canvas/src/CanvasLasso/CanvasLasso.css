@@ -1,0 +1,11 @@
+.ui-canvas-lasso {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-style: solid;
+  /* Matches the primary outline nodes get when selected */
+  border-color: var(--border-primary);
+  background-color: var(--surface-primary);
+  opacity: 0.5;
+  pointer-events: none;
+}

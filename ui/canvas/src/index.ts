@@ -1,6 +1,7 @@
 export * from './Canvas';
 export * from './CanvasAlignmentGuides';
 export * from './CanvasConnectionsLayer';
+export * from './CanvasLasso';
 export * from './CanvasNode';
 export * from './CanvasProvider';
 export * from './CanvasNameField';

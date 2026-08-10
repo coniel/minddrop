@@ -1,5 +1,6 @@
-import { useId } from 'react';
+import { useEffect, useId, useRef } from 'react';
 import { ContentColor } from '@minddrop/ui-theme';
+import { useCanvasContext } from '../CanvasContext';
 import {
   CONNECTION_ARROW_SIZES,
   CONNECTION_HALO_WIDTH,
@@ -17,6 +18,7 @@ import {
 } from '../useCanvasConnectionReconnect';
 import { useCanvasStore } from '../useCanvasStore';
 import {
+  connectionIntersectsFrame,
   getConnectionColor,
   getConnectionDasharray,
   getConnectionHaloColor,
@@ -65,6 +67,12 @@ export const CanvasConnectionsLayer: React.FC<CanvasConnectionsLayerProps> = ({
   onConnectionMouseDown,
   onConnectionReconnect,
 }) => {
+  const { store } = useCanvasContext();
+
+  // The connections the registered hit test runs against, kept in
+  // a ref so it never has to be re-registered
+  const connectionsRef = useRef(connections);
+
   // Live node frames, keeping curves attached during node drags
   const nodes = useCanvasStore((state) => state.nodes);
 
@@ -75,6 +83,48 @@ export const CanvasConnectionsLayer: React.FC<CanvasConnectionsLayerProps> = ({
   const { getConnectionProps } = useCanvasConnectionReconnect({
     onReconnect: onConnectionReconnect,
   });
+
+  useEffect(() => {
+    connectionsRef.current = connections;
+  }, [connections]);
+
+  // Register the hit test the canvas uses to lasso select
+  // connections. The layer owns the connections, so the canvas
+  // has no way to test them itself.
+  useEffect(() => {
+    store.setConnectionHitTest((frame) =>
+      connectionsRef.current
+        .filter((connection) => {
+          const fromFrame = store.getNode(connection.from.nodeId);
+          const toFrame = store.getNode(connection.to.nodeId);
+
+          // Skip connections to nodes not mounted on the canvas
+          if (!fromFrame || !toFrame) {
+            return false;
+          }
+
+          return connectionIntersectsFrame(
+            {
+              point: getSideMidpoint(fromFrame, connection.from.side),
+              side: connection.from.side,
+              frame: fromFrame,
+            },
+            {
+              point: getSideMidpoint(toFrame, connection.to.side),
+              side: connection.to.side,
+              frame: toFrame,
+            },
+            connection.shape,
+            frame,
+          );
+        })
+        .map((connection) => connection.id),
+    );
+
+    return () => {
+      store.setConnectionHitTest(null);
+    };
+  }, [store]);
 
   // Marker references are document-global, so the IDs are prefixed
   // to stay unique across mounted canvases

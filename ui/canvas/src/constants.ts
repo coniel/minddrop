@@ -69,6 +69,18 @@ export const CONNECTION_ARROW_SIZES: Record<CanvasConnectionThickness, number> =
     thick: 16,
   };
 
+/**
+ * Number of points a connection curve is sampled at when hit
+ * testing it against a frame.
+ */
+export const CONNECTION_HIT_SAMPLES = 24;
+
+/**
+ * Cursor travel in screen pixels before a press on the canvas
+ * background starts a selection lasso rather than a click.
+ */
+export const LASSO_DRAG_THRESHOLD = 4;
+
 /** Length of the stub leaving each side on straight-shape connections. */
 export const CONNECTION_ELBOW_STUB = 24;
 

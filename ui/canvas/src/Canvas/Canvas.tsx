@@ -1,12 +1,23 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { TranslationKey } from '@minddrop/i18n';
 import { CanvasAlignmentGuides } from '../CanvasAlignmentGuides';
 import { useCanvasContext } from '../CanvasContext';
+import { CanvasLasso } from '../CanvasLasso';
 import { CanvasNameField } from '../CanvasNameField';
-import { CONNECTION_PROXIMITY, GRID_SIZE } from '../constants';
-import { CanvasPoint } from '../types';
+import {
+  CONNECTION_PROXIMITY,
+  GRID_SIZE,
+  LASSO_DRAG_THRESHOLD,
+} from '../constants';
+import { CanvasNodeFrame, CanvasPoint } from '../types';
 import { useCanvasStore } from '../useCanvasStore';
-import { getConnectionHandleTarget, screenToCanvas } from '../utils';
+import { useInteractionLock } from '../useInteractionLock';
+import {
+  framesIntersect,
+  getConnectionHandleTarget,
+  getFrameFromPoints,
+  screenToCanvas,
+} from '../utils';
 import './Canvas.css';
 
 export interface CanvasBackgroundOptions {
@@ -78,6 +89,12 @@ export interface CanvasProps {
   onDragOver?: (event: React.DragEvent<HTMLDivElement>) => void;
 
   /**
+   * Whether dragging from the empty canvas background paints a
+   * selection lasso. Defaults to true.
+   */
+  lasso?: boolean;
+
+  /**
    * How keyboard shortcuts (space pan, zoom keys) are scoped:
    * 'focus' (default) handles keys only while focus is within the
    * viewport, 'window' listens globally for full-screen canvases,
@@ -100,6 +117,7 @@ export const Canvas: React.FC<CanvasProps> = ({
   onBackgroundMouseDown,
   onDrop,
   onDragOver,
+  lasso = true,
   shortcutScope = 'focus',
 }) => {
   const { store, viewportRef, transformLayerRef } = useCanvasContext();
@@ -108,6 +126,16 @@ export const Canvas: React.FC<CanvasProps> = ({
   const isPanning = useRef(false);
   const panStart = useRef({ x: 0, y: 0, panX: 0, panY: 0 });
   const isSpaceHeld = useRef(false);
+  const lassoStart = useRef<LassoStart | null>(null);
+  // Mirrors the panning ref for the interaction lock, which the
+  // ref alone cannot drive since it does not re-render
+  const [panning, setPanning] = useState(false);
+  const lassoDrag = useCanvasStore((state) => state.lasso);
+
+  // Hold the pointer while the canvas itself is being dragged, so
+  // panning and lassoing over text neither select it nor swap the
+  // cursor
+  useInteractionLock(getCanvasCursor(panning, Boolean(lassoDrag)));
 
   /**
    * Converts a point in client coordinates to canvas coordinates.
@@ -215,6 +243,7 @@ export const Canvas: React.FC<CanvasProps> = ({
       if (event.button === 1 || (event.button === 0 && isSpaceHeld.current)) {
         event.preventDefault();
         isPanning.current = true;
+        setPanning(true);
 
         const currentPan = store.getPan();
 
@@ -244,8 +273,39 @@ export const Canvas: React.FC<CanvasProps> = ({
         return;
       }
 
-      // Pressing the empty canvas background deselects
-      store.clearSelection();
+      // A left press on the background arms a selection lasso.
+      // Clearing the selection is deferred to mouse up, where a
+      // press that never dragged deselects.
+      if (lasso && event.button === 0 && store.getSelectable()) {
+        // Keep the browser from starting a text selection anchored
+        // at the press. It has to happen here: a selection already
+        // under way carries on painting regardless of the content
+        // the marquee is dragged across being unselectable.
+        event.preventDefault();
+
+        // Suppressing the default also suppresses the focus move
+        // it would have made. Focus-scoped canvases took focus to
+        // the viewport above; others have no focusable viewport,
+        // so focused content is blurred instead.
+        if (
+          shortcutScope !== 'focus' &&
+          document.activeElement instanceof HTMLElement
+        ) {
+          document.activeElement.blur();
+        }
+
+        lassoStart.current = {
+          clientX: event.clientX,
+          clientY: event.clientY,
+          origin: clientToCanvas(event.clientX, event.clientY),
+          additive: event.shiftKey,
+          baselineNodeIds: store.getSelectedNodeIds(),
+          baselineConnectionIds: store.getSelectedConnectionIds(),
+        };
+      } else {
+        // Pressing the empty canvas background deselects
+        store.clearSelection();
+      }
 
       if (onBackgroundMouseDown) {
         onBackgroundMouseDown(
@@ -261,6 +321,7 @@ export const Canvas: React.FC<CanvasProps> = ({
       shortcutScope,
       onBackgroundMouseDown,
       clientToCanvas,
+      lasso,
     ],
   );
 
@@ -269,6 +330,14 @@ export const Canvas: React.FC<CanvasProps> = ({
   // edges are detected from outside their node as well.
   const handleMouseMove = useCallback(
     (event: React.MouseEvent<HTMLDivElement>) => {
+      // A marquee sweeping past a node's edges is not reaching
+      // for its connection handles
+      if (store.getLasso()) {
+        store.setHoveredConnectionHandle(null);
+
+        return;
+      }
+
       const point = clientToCanvas(event.clientX, event.clientY);
 
       // The proximity threshold is in screen pixels, so it is
@@ -289,21 +358,114 @@ export const Canvas: React.FC<CanvasProps> = ({
     store.setHoveredConnectionHandle(null);
   }, [store]);
 
-  // Global mouse move/up for panning
-  useEffect(() => {
-    const handleMouseMove = (event: MouseEvent) => {
-      if (!isPanning.current) {
+  // Select everything the marquee touches: nodes when it touches
+  // any, and connections only when it touches no node at all
+  const applyLassoSelection = useCallback(
+    (frame: CanvasNodeFrame, start: LassoStart) => {
+      const nodes = store.getNodes();
+
+      // The nodes the marquee overlaps
+      const nodeIds = Object.keys(nodes).filter((nodeId) =>
+        framesIntersect(nodes[nodeId], frame),
+      );
+
+      // An additive lasso adds to the selection as it was when
+      // the drag started, so shrinking the marquee still drops
+      // the nodes it no longer touches
+      const selectedNodeIds = start.additive
+        ? mergeIds(start.baselineNodeIds, nodeIds)
+        : nodeIds;
+
+      // Nodes take precedence, so a mixed sweep selects only them
+      if (selectedNodeIds.length) {
+        store.selectNodes(selectedNodeIds);
+
         return;
       }
 
-      const newX = panStart.current.panX + (event.clientX - panStart.current.x);
-      const newY = panStart.current.panY + (event.clientY - panStart.current.y);
+      const connectionIds = store.hitTestConnections(frame);
+      const selectedConnectionIds = start.additive
+        ? mergeIds(start.baselineConnectionIds, connectionIds)
+        : connectionIds;
 
-      store.setPan(newX, newY);
+      if (selectedConnectionIds.length) {
+        store.selectConnections(selectedConnectionIds);
+
+        return;
+      }
+
+      // The marquee touches nothing
+      store.clearSelection();
+    },
+    [store],
+  );
+
+  // Global mouse move/up for panning and lasso selection
+  useEffect(() => {
+    const handleMouseMove = (event: MouseEvent) => {
+      if (isPanning.current) {
+        const newX =
+          panStart.current.panX + (event.clientX - panStart.current.x);
+        const newY =
+          panStart.current.panY + (event.clientY - panStart.current.y);
+
+        store.setPan(newX, newY);
+
+        return;
+      }
+
+      const start = lassoStart.current;
+
+      // No lasso is armed
+      if (!start) {
+        return;
+      }
+
+      // The lasso only starts once the press travels past the
+      // threshold, leaving a plain background click a click
+      if (!store.getLasso()) {
+        const distance = Math.hypot(
+          event.clientX - start.clientX,
+          event.clientY - start.clientY,
+        );
+
+        if (distance < LASSO_DRAG_THRESHOLD) {
+          return;
+        }
+
+        store.startLasso(start.origin, start.additive);
+      }
+
+      const point = clientToCanvas(event.clientX, event.clientY);
+
+      store.updateLasso(point);
+      applyLassoSelection(getFrameFromPoints(start.origin, point), start);
     };
 
     const handleMouseUp = () => {
       isPanning.current = false;
+      setPanning(false);
+
+      const start = lassoStart.current;
+
+      lassoStart.current = null;
+
+      // No lasso was armed
+      if (!start) {
+        return;
+      }
+
+      // A press that never crossed the threshold deselects,
+      // except when it was a shift press adding to the selection
+      if (!store.getLasso()) {
+        if (!start.additive) {
+          store.clearSelection();
+        }
+
+        return;
+      }
+
+      store.clearLasso();
     };
 
     window.addEventListener('mousemove', handleMouseMove);
@@ -313,7 +475,7 @@ export const Canvas: React.FC<CanvasProps> = ({
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [store]);
+  }, [store, clientToCanvas, applyLassoSelection]);
 
   // Track space key for space+drag panning, and zoom/fit shortcuts
   const processKeyDown = useCallback(
@@ -405,6 +567,7 @@ export const Canvas: React.FC<CanvasProps> = ({
       if (event.code === 'Space') {
         isSpaceHeld.current = false;
         isPanning.current = false;
+        setPanning(false);
       }
     },
     [],
@@ -447,6 +610,7 @@ export const Canvas: React.FC<CanvasProps> = ({
   const handleBlur = useCallback(() => {
     isSpaceHeld.current = false;
     isPanning.current = false;
+    setPanning(false);
   }, []);
 
   // Wrap drops to include the drop point in canvas coordinates
@@ -502,6 +666,9 @@ export const Canvas: React.FC<CanvasProps> = ({
 
         {/* Snapping alignment guides */}
         <CanvasAlignmentGuides />
+
+        {/* Drag-to-select marquee */}
+        <CanvasLasso />
       </div>
 
       {/* Editable canvas name */}
@@ -515,3 +682,69 @@ export const Canvas: React.FC<CanvasProps> = ({
     </div>
   );
 };
+
+/**
+ * An armed lasso drag: where the press started and the selection
+ * it builds on.
+ */
+interface LassoStart {
+  /**
+   * The press's horizontal position in client coordinates, for
+   * measuring travel against the drag threshold.
+   */
+  clientX: number;
+
+  /**
+   * The press's vertical position in client coordinates.
+   */
+  clientY: number;
+
+  /**
+   * The press point in canvas coordinates, the marquee's fixed
+   * corner.
+   */
+  origin: CanvasPoint;
+
+  /**
+   * Whether the lasso adds to the selection that existed when the
+   * press started.
+   */
+  additive: boolean;
+
+  /**
+   * The nodes selected when the press started, which an additive
+   * lasso adds to.
+   */
+  baselineNodeIds: string[];
+
+  /**
+   * The connections selected when the press started, which an
+   * additive lasso adds to.
+   */
+  baselineConnectionIds: string[];
+}
+
+/**
+ * Returns the cursor held for the duration of a canvas drag, or
+ * null when the canvas itself is not being dragged.
+ */
+function getCanvasCursor(panning: boolean, lassoing: boolean): string | null {
+  if (panning) {
+    return 'grabbing';
+  }
+
+  // The lasso leaves the pointer as it is, only stopping content
+  // it sweeps over from swapping the cursor
+  if (lassoing) {
+    return 'default';
+  }
+
+  return null;
+}
+
+/**
+ * Merges two lists of IDs, dropping duplicates.
+ */
+function mergeIds(baseline: string[], ids: string[]): string[] {
+  return Array.from(new Set([...baseline, ...ids]));
+}

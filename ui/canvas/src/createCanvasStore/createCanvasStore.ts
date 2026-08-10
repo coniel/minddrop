@@ -12,7 +12,9 @@ import {
   CanvasConnectionDrag,
   CanvasConnectionDragTarget,
   CanvasConnectionEnd,
+  CanvasConnectionHitTest,
   CanvasConnectionReconnect,
+  CanvasLassoState,
   CanvasNodeFrame,
   CanvasNodeSide,
   CanvasPoint,
@@ -120,6 +122,20 @@ export interface CanvasStore {
    * @param connectionId - The ID of the connection to check.
    */
   isConnectionSelected(connectionId: string): boolean;
+
+  /**
+   * Returns the in-progress drag-to-select marquee, or null when
+   * no lasso drag is in progress.
+   */
+  getLasso(): CanvasLassoState | null;
+
+  /**
+   * Returns the IDs of the connections a frame touches, empty
+   * when no connections layer is mounted.
+   *
+   * @param frame - The frame to test, in canvas coordinates.
+   */
+  hitTestConnections(frame: CanvasNodeFrame): string[];
 
   /**
    * Returns the alignment guides for the node being dragged or
@@ -296,6 +312,36 @@ export interface CanvasStore {
   clearSelection(): void;
 
   /**
+   * Starts a drag-to-select marquee. Does nothing when the canvas
+   * is not selectable.
+   *
+   * @param origin - The point the drag started from, in canvas coordinates.
+   * @param additive - Whether the lasso adds to the existing selection.
+   */
+  startLasso(origin: CanvasPoint, additive: boolean): void;
+
+  /**
+   * Updates the in-progress marquee's cursor position. Does
+   * nothing when no lasso drag is in progress.
+   *
+   * @param point - The cursor position in canvas coordinates.
+   */
+  updateLasso(point: CanvasPoint): void;
+
+  /**
+   * Clears the in-progress marquee.
+   */
+  clearLasso(): void;
+
+  /**
+   * Registers the callback hit testing frames against the
+   * canvas's connections.
+   *
+   * @param hitTest - The hit test callback, or null to unregister.
+   */
+  setConnectionHitTest(hitTest: CanvasConnectionHitTest | null): void;
+
+  /**
    * Sets the alignment guides for the node being dragged or
    * resized.
    *
@@ -374,6 +420,13 @@ export function createCanvasStore(config: CanvasStoreConfig = {}): CanvasStore {
       getSelectedIds(store.getState(), 'nodes').includes(nodeId),
     isConnectionSelected: (connectionId) =>
       getSelectedIds(store.getState(), 'connections').includes(connectionId),
+    getLasso: () => store.getState().lasso,
+    hitTestConnections: (frame) => {
+      const { connectionHitTest } = store.getState();
+
+      // No connections layer is mounted on this canvas
+      return connectionHitTest ? connectionHitTest(frame) : [];
+    },
     getAlignmentGuides: () => store.getState().alignmentGuides,
     getConnectionDrag: () => store.getState().connectionDrag,
     getHoveredConnectionHandle: () => store.getState().hoveredConnectionHandle,
@@ -402,6 +455,12 @@ export function createCanvasStore(config: CanvasStoreConfig = {}): CanvasStore {
     toggleConnectionSelection: (id) =>
       store.getState().toggleConnectionSelection(id),
     clearSelection: () => store.getState().clearSelection(),
+    startLasso: (origin, additive) =>
+      store.getState().startLasso(origin, additive),
+    updateLasso: (point) => store.getState().updateLasso(point),
+    clearLasso: () => store.getState().clearLasso(),
+    setConnectionHitTest: (hitTest) =>
+      store.getState().setConnectionHitTest(hitTest),
     setAlignmentGuides: (guides) => store.getState().setAlignmentGuides(guides),
     startConnectionDrag: (fromNodeId, fromSide, point, reconnect) =>
       store
@@ -440,6 +499,8 @@ function createInternalStore(config: CanvasStoreConfig) {
     snapToObjects: initialSnapToObjects,
     selectable,
     selection: null,
+    lasso: null,
+    connectionHitTest: null,
     alignmentGuides: [],
     connectionDrag: null,
     hoveredConnectionHandle: null,
@@ -578,6 +639,30 @@ function createInternalStore(config: CanvasStoreConfig) {
 
     clearSelection: () =>
       set((state) => (state.selection ? { selection: null } : {})),
+
+    startLasso: (origin, additive) =>
+      set((state) => {
+        // Selection is disabled for this canvas instance
+        if (!state.selectable) {
+          return {};
+        }
+
+        return { lasso: { origin, point: origin, additive } };
+      }),
+
+    updateLasso: (point) =>
+      set((state) => {
+        // No lasso drag in progress
+        if (!state.lasso) {
+          return {};
+        }
+
+        return { lasso: { ...state.lasso, point } };
+      }),
+
+    clearLasso: () => set((state) => (state.lasso ? { lasso: null } : {})),
+
+    setConnectionHitTest: (hitTest) => set({ connectionHitTest: hitTest }),
 
     setAlignmentGuides: (guides) =>
       set((state) => {

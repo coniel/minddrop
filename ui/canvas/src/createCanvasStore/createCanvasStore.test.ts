@@ -461,6 +461,91 @@ describe('createCanvasStore', () => {
     });
   });
 
+  describe('lasso', () => {
+    it('has no lasso by default', () => {
+      const store = createCanvasStore();
+
+      expect(store.getLasso()).toBeNull();
+    });
+
+    it('starts a lasso at the origin point', () => {
+      const store = createCanvasStore();
+
+      store.startLasso({ x: 10, y: 20 }, false);
+
+      expect(store.getLasso()).toEqual({
+        origin: { x: 10, y: 20 },
+        point: { x: 10, y: 20 },
+        additive: false,
+      });
+    });
+
+    it('updates the lasso point', () => {
+      const store = createCanvasStore();
+
+      store.startLasso({ x: 10, y: 20 }, true);
+      store.updateLasso({ x: 50, y: 60 });
+
+      expect(store.getLasso()).toEqual({
+        origin: { x: 10, y: 20 },
+        point: { x: 50, y: 60 },
+        additive: true,
+      });
+    });
+
+    it('ignores updates when no lasso is in progress', () => {
+      const store = createCanvasStore();
+
+      store.updateLasso({ x: 50, y: 60 });
+
+      expect(store.getLasso()).toBeNull();
+    });
+
+    it('clears the lasso', () => {
+      const store = createCanvasStore();
+
+      store.startLasso({ x: 10, y: 20 }, false);
+      store.clearLasso();
+
+      expect(store.getLasso()).toBeNull();
+    });
+
+    it('does not start a lasso when the canvas is not selectable', () => {
+      const store = createCanvasStore({ selectable: false });
+
+      store.startLasso({ x: 10, y: 20 }, false);
+
+      expect(store.getLasso()).toBeNull();
+    });
+  });
+
+  describe('hitTestConnections', () => {
+    const frame = { x: 0, y: 0, width: 100, height: 100 };
+
+    it('returns no connections when no hit test is registered', () => {
+      const store = createCanvasStore();
+
+      expect(store.hitTestConnections(frame)).toEqual([]);
+    });
+
+    it('returns the results of the registered hit test', () => {
+      const store = createCanvasStore();
+
+      store.setConnectionHitTest(() => ['connection-1']);
+
+      expect(store.hitTestConnections(frame)).toEqual(['connection-1']);
+    });
+
+    it('returns no connections once the hit test is unregistered', () => {
+      const store = createCanvasStore();
+
+      store.setConnectionHitTest(() => ['connection-1']);
+      store.setConnectionHitTest(null);
+
+      expect(store.hitTestConnections(frame)).toEqual([]);
+    });
+  });
+
   describe('setAlignmentGuides', () => {
     const guide = { axis: 'x' as const, position: 100, start: 0, end: 200 };
 
