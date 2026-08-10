@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useOptionalCanvasContext } from '../CanvasContext';
 import { CONNECTION_PROXIMITY } from '../constants';
 import { CanvasConnectionEnd, CanvasNodeSide } from '../types';
+import { useInteractionLock } from '../useInteractionLock';
 import {
   getConnectionDropTarget,
   getSideMidpoint,
@@ -64,6 +65,10 @@ export function useCanvasConnectionDrag(
   // The active drag, driving the window mouse listeners
   const [dragging, setDragging] = useState(false);
   const context = useOptionalCanvasContext();
+
+  // Hold the pointer for the drag, keeping the handle's cursor
+  // over whatever content the connection is dragged across
+  useInteractionLock(dragging ? 'crosshair' : null);
 
   // Start a connection drag when a handle is pressed
   const handleMouseDown = useCallback(
@@ -188,23 +193,6 @@ export function useCanvasConnectionDrag(
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [dragging, handleMouseMove, handleMouseUp, handleKeyDown]);
-
-  // Lock text selection globally while a drag is active, so
-  // moving the pointer across text content does not paint a
-  // selection
-  useEffect(() => {
-    if (!dragging) {
-      return;
-    }
-
-    const previousUserSelect = document.body.style.userSelect;
-
-    document.body.style.userSelect = 'none';
-
-    return () => {
-      document.body.style.userSelect = previousUserSelect;
-    };
-  }, [dragging]);
 
   const getConnectionHandleProps = useCallback(
     (side: CanvasNodeSide) => ({

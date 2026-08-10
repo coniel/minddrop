@@ -471,23 +471,51 @@ describe('useCanvasNode', () => {
     expect(store.getNode('node-1')?.width).toBe(310);
   });
 
-  it('locks text selection during interactions', () => {
+  it('locks the pointer for the duration of a resize', () => {
     const store = createCanvasStore();
 
     const { getByTestId } = renderNode(store);
 
-    // Selection locks for the duration of a resize
     fireEvent.mouseDown(getByTestId('resize-handle'), {
       clientX: 0,
       clientY: 0,
     });
 
-    expect(document.body.style.userSelect).toBe('none');
+    // The resized edge's cursor holds across the whole document
+    expect(document.body.classList.contains('ui-canvas-interacting')).toBe(
+      true,
+    );
+    expect(
+      document.body.style.getPropertyValue('--ui-canvas-interaction-cursor'),
+    ).toBe('ew-resize');
 
     // The lock lifts when the interaction ends
     releaseMouse();
 
-    expect(document.body.style.userSelect).toBe('');
+    expect(document.body.classList.contains('ui-canvas-interacting')).toBe(
+      false,
+    );
+  });
+
+  it('locks the pointer for the duration of a drag', () => {
+    const store = createCanvasStore();
+
+    const { getByTestId } = renderNode(store);
+
+    fireEvent.mouseDown(getByTestId('drag-handle'), {
+      clientX: 0,
+      clientY: 0,
+    });
+
+    expect(
+      document.body.style.getPropertyValue('--ui-canvas-interaction-cursor'),
+    ).toBe('grabbing');
+
+    releaseMouse();
+
+    expect(document.body.classList.contains('ui-canvas-interacting')).toBe(
+      false,
+    );
   });
 
   it('syncs the frame from updated controlled props', () => {

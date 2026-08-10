@@ -19,6 +19,7 @@ import {
   CanvasNodeFrame,
   CanvasPoint,
 } from '../types';
+import { useInteractionLock } from '../useInteractionLock';
 import {
   framesIntersect,
   getEdgeSnap,
@@ -56,6 +57,22 @@ interface DragState {
   originX: number;
   originY: number;
 }
+
+interface NodeInteraction {
+  type: 'drag' | 'resize';
+  cursor: string;
+}
+
+/** The cursor held for the duration of a resize from each edge. */
+const RESIZE_CURSORS: Record<CanvasNodeResizeEdge, string> = {
+  left: 'ew-resize',
+  right: 'ew-resize',
+  bottom: 'ns-resize',
+  'top-left': 'nwse-resize',
+  'top-right': 'nesw-resize',
+  'bottom-left': 'nesw-resize',
+  'bottom-right': 'nwse-resize',
+};
 
 export interface UseCanvasNodeOptions {
   /**
@@ -225,10 +242,9 @@ export function useCanvasNode(
   const [position, setPosition] = useState({ x, y });
   const [size, setSize] = useState({ width, height: height ?? 0 });
   const [measuredHeight, setMeasuredHeight] = useState(0);
-  // The in-progress interaction, driving the window mouse listeners
-  const [interaction, setInteraction] = useState<'drag' | 'resize' | null>(
-    null,
-  );
+  // The in-progress interaction, driving the window mouse
+  // listeners and the interaction lock
+  const [interaction, setInteraction] = useState<NodeInteraction | null>(null);
   // Latest position/size for reading inside the mouseup handler
   const positionRef = useRef(position);
   const sizeRef = useRef(size);
@@ -249,6 +265,10 @@ export function useCanvasNode(
   );
 
   const selected = useSyncExternalStore(subscribeToStore, getSelectedSnapshot);
+
+  // Hold the pointer for the interaction, so dragging over text
+  // content neither selects it nor swaps the cursor
+  useInteractionLock(interaction ? interaction.cursor : null);
 
   // Auto-height nodes follow their content height
   const autoHeight = height === undefined;
@@ -372,7 +392,7 @@ export function useCanvasNode(
         originY: positionRef.current.y,
       };
 
-      setInteraction('drag');
+      setInteraction({ type: 'drag', cursor: 'grabbing' });
 
       if (onDragStateChange) {
         onDragStateChange(true);
@@ -436,7 +456,7 @@ export function useCanvasNode(
         originY: positionRef.current.y,
       };
 
-      setInteraction('resize');
+      setInteraction({ type: 'resize', cursor: RESIZE_CURSORS[edge] });
     },
     [],
   );
@@ -884,23 +904,6 @@ export function useCanvasNode(
     };
   }, [interaction, handleMouseMove, handleMouseUp]);
 
-  // Lock text selection globally while an interaction is active,
-  // so moving the pointer across text content (e.g. editors
-  // inside nodes) does not paint a selection
-  useEffect(() => {
-    if (!interaction) {
-      return;
-    }
-
-    const previousUserSelect = document.body.style.userSelect;
-
-    document.body.style.userSelect = 'none';
-
-    return () => {
-      document.body.style.userSelect = previousUserSelect;
-    };
-  }, [interaction]);
-
   const getDragHandleProps = useCallback(
     () => ({ onMouseDown: handleDragHandleMouseDown }),
     [handleDragHandleMouseDown],
@@ -942,8 +945,8 @@ export function useCanvasNode(
     getSelectionProps,
     getResizeHandleProps,
     selected,
-    isDragging: interaction === 'drag',
-    isResizing: interaction === 'resize',
+    isDragging: interaction?.type === 'drag',
+    isResizing: interaction?.type === 'resize',
     wasDragged,
   };
 }

@@ -255,7 +255,7 @@ describe('useCanvasConnectionReconnect', () => {
     expect(store.getConnectionDrag()).toBeNull();
   });
 
-  it('locks text selection and the cursor during the drag', () => {
+  it('locks the pointer during the drag', () => {
     const store = createCanvasStore();
 
     const { getByTestId } = renderHitArea(store);
@@ -267,12 +267,36 @@ describe('useCanvasConnectionReconnect', () => {
     });
     moveMouse(390, 60);
 
-    expect(document.body.style.userSelect).toBe('none');
-    expect(document.body.style.cursor).toBe('grabbing');
+    expect(document.body.classList.contains('ui-canvas-interacting')).toBe(
+      true,
+    );
+    expect(
+      document.body.style.getPropertyValue('--ui-canvas-interaction-cursor'),
+    ).toBe('grabbing');
 
     releaseMouse();
 
-    expect(document.body.style.userSelect).toBe('');
-    expect(document.body.style.cursor).toBe('');
+    expect(document.body.classList.contains('ui-canvas-interacting')).toBe(
+      false,
+    );
+  });
+
+  it('suppresses the text selection the press would start', () => {
+    const store = createCanvasStore();
+
+    const { getByTestId } = renderHitArea(store);
+
+    // A selection started on the press carries on painting
+    // across the content the curve is dragged over, so the press
+    // has to suppress its default behaviour
+    const allowed = fireEvent.mouseDown(getByTestId('hit-area'), {
+      button: 0,
+      clientX: 380,
+      clientY: 50,
+    });
+
+    expect(allowed).toBe(false);
+
+    releaseMouse();
   });
 });

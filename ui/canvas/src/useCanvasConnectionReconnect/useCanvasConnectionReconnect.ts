@@ -10,6 +10,7 @@ import {
   CanvasNodeFrame,
   CanvasPoint,
 } from '../types';
+import { useInteractionLock } from '../useInteractionLock';
 import {
   getConnectionDropTarget,
   getSideMidpoint,
@@ -102,6 +103,10 @@ export function useCanvasConnectionReconnect(
 
   const context = useOptionalCanvasContext();
 
+  // Hold the pointer for the drag, keeping the curve's cursor
+  // over whatever content the end is dragged across
+  useInteractionLock(dragging ? 'grabbing' : null);
+
   // Convert a mouse event's position to canvas coordinates
   const eventToCanvas = useCallback(
     (event: { clientX: number; clientY: number }): CanvasPoint => {
@@ -131,6 +136,12 @@ export function useCanvasConnectionReconnect(
       if (!context) {
         return;
       }
+
+      // Keep the browser from starting a text selection anchored
+      // at the curve. It has to happen on the press: a selection
+      // already under way carries on painting regardless of the
+      // content it is dragged across being unselectable.
+      event.preventDefault();
 
       // Arm the press; the drag starts once the cursor travels
       // past the drag threshold
@@ -276,25 +287,6 @@ export function useCanvasConnectionReconnect(
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [pending, handleMouseMove, handleMouseUp, handleKeyDown]);
-
-  // Lock text selection and show the grabbing cursor globally
-  // while a drag is active
-  useEffect(() => {
-    if (!dragging) {
-      return;
-    }
-
-    const previousUserSelect = document.body.style.userSelect;
-    const previousCursor = document.body.style.cursor;
-
-    document.body.style.userSelect = 'none';
-    document.body.style.cursor = 'grabbing';
-
-    return () => {
-      document.body.style.userSelect = previousUserSelect;
-      document.body.style.cursor = previousCursor;
-    };
-  }, [dragging]);
 
   const getConnectionProps = useCallback(
     (connection: CanvasConnection) => ({

@@ -179,17 +179,24 @@ describe('useCanvasConnectionDrag', () => {
     expect(store.getConnectionDrag()).toBeNull();
   });
 
-  it('locks text selection during the drag', () => {
+  it('locks the pointer during the drag', () => {
     const store = createCanvasStore();
 
     const { getByTestId } = renderHandles(store);
 
     fireEvent.mouseDown(getByTestId('handle-right'), { button: 0 });
 
-    expect(document.body.style.userSelect).toBe('none');
+    expect(document.body.classList.contains('ui-canvas-interacting')).toBe(
+      true,
+    );
+    expect(
+      document.body.style.getPropertyValue('--ui-canvas-interaction-cursor'),
+    ).toBe('crosshair');
 
     releaseMouse();
 
-    expect(document.body.style.userSelect).toBe('');
+    expect(document.body.classList.contains('ui-canvas-interacting')).toBe(
+      false,
+    );
   });
 });

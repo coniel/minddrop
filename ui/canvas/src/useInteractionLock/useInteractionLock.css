@@ -1,0 +1,8 @@
+/* Overrides every element's own cursor and selectability for the
+   duration of a drag, so content the pointer passes over cannot
+   take a text selection or swap the cursor */
+body.ui-canvas-interacting,
+body.ui-canvas-interacting * {
+  cursor: var(--ui-canvas-interaction-cursor, default) !important;
+  user-select: none !important;
+}

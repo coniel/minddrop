@@ -15,4 +15,5 @@ export * from './useCanvasNode';
 export * from './useCanvasStore';
 export * from './useCanvasTransformLayer';
 export * from './useFitOnNodesReady';
+export * from './useInteractionLock';
 export * from './utils';
