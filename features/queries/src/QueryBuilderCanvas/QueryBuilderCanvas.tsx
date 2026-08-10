@@ -19,6 +19,7 @@ import {
   CanvasProvider,
   CanvasToolbar,
   useCanvas,
+  useCanvasStore,
   useFitOnNodesReady,
 } from '@minddrop/ui-canvas';
 import { QueryBuilderToolbar } from '../QueryBuilderToolbar';
@@ -41,18 +42,6 @@ import './QueryBuilderCanvas.css';
 
 // The width of the source database picker card
 const SOURCE_PICKER_WIDTH = 260;
-
-interface BuilderSelection {
-  /**
-   * Whether a node or a connection is selected.
-   */
-  type: 'node' | 'connection';
-
-  /**
-   * The ID of the selected node or connection.
-   */
-  id: string;
-}
 
 export interface QueryBuilderCanvasProps {
   /**
@@ -89,8 +78,11 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
   const [pendingConnection, setPendingConnection] =
     useState<PendingQueryConnection | null>(null);
 
-  // The selected node or connection, targeted by deletion
-  const [selection, setSelection] = useState<BuilderSelection | null>(null);
+  // The selected connection, targeted by deletion. Node selection
+  // is held by the canvas.
+  const [selectedConnectionId, setSelectedConnectionId] = useState<
+    string | null
+  >(null);
 
   // The active source database picker's anchor point in canvas
   // coordinates, spawned by dropping the source toolbar card
@@ -102,6 +94,9 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
   const counts = Queries.useNodeCounts(queryId);
 
   const canvas = useCanvas();
+
+  // The canvas's selection, held for nodes
+  const canvasSelection = useCanvasStore((state) => state.selection);
 
   // Fit the graph into view when the builder opens
   useFitOnNodesReady(query ? query.nodes.map((node) => node.id) : []);
@@ -144,7 +139,15 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
     };
   }, [connecting, canvas]);
 
-  // Delete the selected node or connection, and cancel the
+  // Drop the connection selection when nodes are selected, so
+  // that only one of the two is ever selected
+  useEffect(() => {
+    if (canvasSelection?.type === 'nodes') {
+      setSelectedConnectionId(null);
+    }
+  }, [canvasSelection]);
+
+  // Delete the selected nodes or connection, and cancel the
   // selection and pending connection on Escape
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -154,8 +157,9 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
       }
 
       if (event.key === 'Escape') {
-        setSelection(null);
+        setSelectedConnectionId(null);
         setPendingConnection(null);
+        canvas.clearSelection();
 
         return;
       }
@@ -164,29 +168,47 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
         return;
       }
 
-      if (!selection || !query) {
+      if (!query) {
         return;
       }
 
       // Remove the selected connection
-      if (selection.type === 'connection') {
+      if (selectedConnectionId) {
         Queries.update(queryId, {
-          connections: removeQueryConnection(query.connections, selection.id),
+          connections: removeQueryConnection(
+            query.connections,
+            selectedConnectionId,
+          ),
         });
-        setSelection(null);
+        setSelectedConnectionId(null);
 
         return;
       }
 
-      // Remove the selected node along with its connections. The
-      // results node is permanent and returned unchanged.
-      const { nodes, connections } = removeQueryNode(query, selection.id);
+      const selectedNodeIds = canvas.getSelectedNodeIds();
 
-      if (nodes !== query.nodes) {
-        Queries.update(queryId, { nodes, connections });
+      if (!selectedNodeIds.length) {
+        return;
       }
 
-      setSelection(null);
+      // Remove the selected nodes along with their connections.
+      // The results node is permanent and returned unchanged.
+      const graph = selectedNodeIds.reduce(
+        (current, nodeId) => ({
+          ...current,
+          ...removeQueryNode(current, nodeId),
+        }),
+        query,
+      );
+
+      if (graph.nodes !== query.nodes) {
+        Queries.update(queryId, {
+          nodes: graph.nodes,
+          connections: graph.connections,
+        });
+      }
+
+      canvas.clearSelection();
     };
 
     window.addEventListener('keydown', handleKeyDown);
@@ -194,7 +216,7 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [selection, query, queryId]);
+  }, [selectedConnectionId, query, queryId, canvas]);
 
   // Add a node of the given type centered on a canvas point
   const addNode = useCallback(
@@ -256,15 +278,16 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
     [addNode],
   );
 
-  // Clear the selection when the empty canvas is pressed
+  // Clear the connection selection when the empty canvas is
+  // pressed. The canvas clears the node selection itself.
   const handleBackgroundMouseDown = useCallback(() => {
-    setSelection(null);
+    setSelectedConnectionId(null);
   }, []);
 
   // Start a connection drag from a node's output port
   const handleStartConnection = useCallback(
     (nodeId: string, event: React.MouseEvent) => {
-      setSelection(null);
+      setSelectedConnectionId(null);
       setPendingConnection({
         from: nodeId,
         toPoint: canvas.clientToCanvas({
@@ -421,12 +444,8 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
         <QueryConnectionsLayer
           query={query}
           pendingConnection={pendingConnection}
-          selectedConnectionId={
-            selection?.type === 'connection' ? selection.id : null
-          }
-          onSelectConnection={(connectionId) =>
-            setSelection({ type: 'connection', id: connectionId })
-          }
+          selectedConnectionId={selectedConnectionId}
+          onSelectConnection={setSelectedConnectionId}
         />
 
         {/* The graph's nodes */}
@@ -439,10 +458,8 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
             width={QUERY_NODE_WIDTHS[node.type]}
             resizeEdges="none"
             dragMode="handle"
-            selected={selection?.type === 'node' && selection.id === node.id}
             className="query-builder-node"
             onFrameChange={(frame) => handleNodeFrameChange(node.id, frame)}
-            onClick={() => setSelection({ type: 'node', id: node.id })}
           >
             {renderNodeCard(node)}
           </CanvasNode>
