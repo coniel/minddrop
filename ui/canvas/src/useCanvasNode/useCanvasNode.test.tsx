@@ -20,17 +20,30 @@ const TestNode: React.FC<TestNodeProps> = ({
   resizeEdge = 'right',
   ...options
 }) => {
-  const { nodeProps, getDragHandleProps, getResizeHandleProps, wasDragged } =
-    useCanvasNode(options);
+  const {
+    nodeProps,
+    getDragHandleProps,
+    getSelectionProps,
+    getResizeHandleProps,
+    selected,
+    wasDragged,
+  } = useCanvasNode(options);
 
   return (
-    <div {...nodeProps}>
+    <div
+      {...nodeProps}
+      data-testid="node"
+      data-selected={selected ? 'true' : 'false'}
+      {...getSelectionProps()}
+    >
       <div
         data-testid="drag-handle"
         data-was-dragged={wasDragged() ? 'true' : 'false'}
         {...getDragHandleProps()}
       />
       <div data-testid="resize-handle" {...getResizeHandleProps(resizeEdge)} />
+      <button data-testid="node-button" type="button" />
+      <p data-testid="node-text">Card text</p>
     </div>
   );
 };
@@ -522,5 +535,132 @@ describe('useCanvasNode', () => {
     releaseMouse();
 
     expect(reported).toEqual({ x: 25, y: 10, width: 300, height: 200 });
+  });
+
+  describe('selection', () => {
+    it('selects the node on press', () => {
+      const store = createCanvasStore();
+
+      const { getByTestId } = renderNode(store);
+
+      fireEvent.mouseDown(getByTestId('node'), { button: 0 });
+
+      expect(store.getSelectedNodeIds()).toEqual(['node-1']);
+      expect(getByTestId('node').dataset.selected).toBe('true');
+    });
+
+    it('selects the node when its drag handle is pressed', () => {
+      const store = createCanvasStore();
+
+      const { getByTestId } = renderNode(store);
+
+      fireEvent.mouseDown(getByTestId('drag-handle'), {
+        button: 0,
+        clientX: 0,
+        clientY: 0,
+      });
+
+      expect(store.getSelectedNodeIds()).toEqual(['node-1']);
+    });
+
+    it('replaces the selection on a plain press', () => {
+      const store = createCanvasStore();
+
+      store.selectNodes(['node-2']);
+
+      const { getByTestId } = renderNode(store);
+
+      fireEvent.mouseDown(getByTestId('node'), { button: 0 });
+
+      expect(store.getSelectedNodeIds()).toEqual(['node-1']);
+    });
+
+    it('toggles the node on a modifier press', () => {
+      const store = createCanvasStore();
+
+      store.selectNodes(['node-2']);
+
+      const { getByTestId } = renderNode(store);
+
+      fireEvent.mouseDown(getByTestId('node'), { button: 0, shiftKey: true });
+
+      expect(store.getSelectedNodeIds()).toEqual(['node-2', 'node-1']);
+
+      fireEvent.mouseDown(getByTestId('node'), { button: 0, metaKey: true });
+
+      expect(store.getSelectedNodeIds()).toEqual(['node-2']);
+    });
+
+    it('keeps a multi-node selection intact when pressing a member', () => {
+      const store = createCanvasStore();
+
+      store.selectNodes(['node-1', 'node-2']);
+
+      const { getByTestId } = renderNode(store);
+
+      fireEvent.mouseDown(getByTestId('node'), { button: 0 });
+
+      expect(store.getSelectedNodeIds()).toEqual(['node-1', 'node-2']);
+    });
+
+    it('selects on a press on inert content within the node', () => {
+      const store = createCanvasStore();
+
+      const { getByTestId } = renderNode(store);
+
+      fireEvent.mouseDown(getByTestId('node-text'), { button: 0 });
+
+      expect(store.getSelectedNodeIds()).toEqual(['node-1']);
+    });
+
+    it('does not select on a press on interactive content', () => {
+      const store = createCanvasStore();
+
+      const { getByTestId } = renderNode(store);
+
+      fireEvent.mouseDown(getByTestId('node-button'), { button: 0 });
+
+      expect(store.getSelection()).toBeNull();
+    });
+
+    it('does not select on a non-left button press', () => {
+      const store = createCanvasStore();
+
+      const { getByTestId } = renderNode(store);
+
+      fireEvent.mouseDown(getByTestId('node'), { button: 1 });
+
+      expect(store.getSelection()).toBeNull();
+    });
+
+    it('does not select unselectable nodes', () => {
+      const store = createCanvasStore();
+
+      const { getByTestId } = renderNode(store, { selectable: false });
+
+      fireEvent.mouseDown(getByTestId('node'), { button: 0 });
+
+      expect(store.getSelection()).toBeNull();
+    });
+
+    it('reports unselectable nodes as unselected while they are selected', () => {
+      const store = createCanvasStore();
+
+      store.selectNodes(['node-1']);
+
+      const { getByTestId } = renderNode(store, { selectable: false });
+
+      expect(getByTestId('node').dataset.selected).toBe('false');
+    });
+
+    it('is inert without a canvas provider', () => {
+      const { getByTestId } = render(
+        <TestNode id="node-1" x={0} y={0} width={300} height={200} />,
+      );
+
+      fireEvent.mouseDown(getByTestId('node'), { button: 0 });
+
+      expect(getByTestId('node').dataset.selected).toBe('false');
+    });
   });
 });

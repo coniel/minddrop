@@ -235,12 +235,19 @@ export const Canvas: React.FC<CanvasProps> = ({
 
       const target = event.target as HTMLElement;
 
-      // Pressing the empty canvas background (the viewport itself
-      // or the transform layer, not content rendered within)
+      // Presses on content rendered within the canvas are handled
+      // by the content itself
       if (
-        onBackgroundMouseDown &&
-        (target === event.currentTarget || target === transformLayerRef.current)
+        target !== event.currentTarget &&
+        target !== transformLayerRef.current
       ) {
+        return;
+      }
+
+      // Pressing the empty canvas background deselects
+      store.clearSelection();
+
+      if (onBackgroundMouseDown) {
         onBackgroundMouseDown(
           event,
           clientToCanvas(event.clientX, event.clientY),
@@ -329,6 +336,27 @@ export const Canvas: React.FC<CanvasProps> = ({
 
       // Don't handle shortcuts when typing in inputs
       if (isTextInput) {
+        return;
+      }
+
+      // Escape clears the selection
+      if (event.key === 'Escape') {
+        store.clearSelection();
+
+        return;
+      }
+
+      // Cmd/Ctrl + A selects every node on the canvas
+      if (event.key === 'a' && (event.metaKey || event.ctrlKey)) {
+        // Leave the shortcut to the app when the canvas does not
+        // support selection
+        if (!store.getSelectable()) {
+          return;
+        }
+
+        event.preventDefault();
+        store.selectNodes(Object.keys(store.getNodes()));
+
         return;
       }
 

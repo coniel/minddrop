@@ -4,7 +4,9 @@ import {
   useLayoutEffect,
   useRef,
   useState,
+  useSyncExternalStore,
 } from 'react';
+import { isInteractiveTarget } from '@minddrop/utils';
 import { CanvasContextValue, useOptionalCanvasContext } from '../CanvasContext';
 import {
   NODE_MIN_HEIGHT,
@@ -101,6 +103,13 @@ export interface UseCanvasNodeOptions {
   bounded?: boolean;
 
   /**
+   * Whether pressing the node selects it on the canvas. Defaults
+   * to true. Set to false for nodes whose consumer drives its own
+   * selection model.
+   */
+  selectable?: boolean;
+
+  /**
    * Called once when a drag or resize interaction ends and the
    * frame changed, with the rounded result frame.
    */
@@ -144,12 +153,26 @@ export interface UseCanvasNodeResult {
   };
 
   /**
+   * Returns props to spread onto the element whose presses select
+   * the node, usually the node itself.
+   */
+  getSelectionProps: () => {
+    onMouseDown: (event: React.MouseEvent) => void;
+  };
+
+  /**
    * Returns props to spread onto a resize handle for the given
    * edge.
    */
   getResizeHandleProps: (edge: CanvasNodeResizeEdge) => {
     onMouseDown: (event: React.MouseEvent) => void;
   };
+
+  /**
+   * Whether the node is part of the canvas's current selection.
+   * Always false for standalone nodes and unselectable nodes.
+   */
+  selected: boolean;
 
   /**
    * Whether the node is currently being dragged.
@@ -169,10 +192,11 @@ export interface UseCanvasNodeResult {
 }
 
 /**
- * Headless drag/resize behaviour for a canvas node: tracks the
- * node's live frame during interactions (scaling mouse deltas by
- * the canvas zoom), registers the frame with the canvas instance,
- * and reports the final frame when an interaction ends.
+ * Headless drag/resize/selection behaviour for a canvas node:
+ * tracks the node's live frame during interactions (scaling mouse
+ * deltas by the canvas zoom), registers the frame with the canvas
+ * instance, reports the final frame when an interaction ends, and
+ * applies presses to the canvas's selection.
  *
  * Works without a CanvasProvider for standalone bounded usage, in
  * which case the zoom is treated as 1.
@@ -189,6 +213,7 @@ export function useCanvasNode(
     minWidth = NODE_MIN_WIDTH,
     minHeight = NODE_MIN_HEIGHT,
     bounded = false,
+    selectable = true,
     onFrameChange,
     onDragStateChange,
   } = options;
@@ -208,6 +233,22 @@ export function useCanvasNode(
   const positionRef = useRef(position);
   const sizeRef = useRef(size);
   const context = useOptionalCanvasContext();
+
+  // Subscribe to the canvas instance's store, which holds the
+  // selection. Standalone nodes have no store to subscribe to.
+  const subscribeToStore = useCallback(
+    (onStoreChange: VoidFunction) =>
+      context ? context.store.useStore.subscribe(onStoreChange) : () => {},
+    [context],
+  );
+
+  // Whether the node is in the canvas's current selection
+  const getSelectedSnapshot = useCallback(
+    () => Boolean(selectable && context?.store.isNodeSelected(id)),
+    [context, selectable, id],
+  );
+
+  const selected = useSyncExternalStore(subscribeToStore, getSelectedSnapshot);
 
   // Auto-height nodes follow their content height
   const autoHeight = height === undefined;
@@ -338,6 +379,43 @@ export function useCanvasNode(
       }
     },
     [onDragStateChange],
+  );
+
+  // Apply a press on the node to the canvas's selection: a
+  // modifier press toggles the node, a plain press on a node
+  // outside the selection replaces it. Presses on a node within a
+  // multi-node selection leave the selection intact, so the group
+  // stays together while it is dragged.
+  const handleSelectMouseDown = useCallback(
+    (event: React.MouseEvent) => {
+      // Only the left button selects
+      if (event.button !== 0 || !selectable || !context) {
+        return;
+      }
+
+      // Presses on content that handles them itself, such as
+      // inputs, buttons, menus and editors, never select the node
+      if (isInteractiveTarget(event.target)) {
+        return;
+      }
+
+      const { store } = context;
+
+      // Shift and the platform's multi-select modifier both toggle
+      if (event.shiftKey || event.metaKey || event.ctrlKey) {
+        store.toggleNodeSelection(id);
+
+        return;
+      }
+
+      // The node is already selected, leave the selection as it is
+      if (store.isNodeSelected(id)) {
+        return;
+      }
+
+      store.selectNodes([id]);
+    },
+    [context, id, selectable],
   );
 
   // Start a resize operation on mousedown
@@ -828,6 +906,11 @@ export function useCanvasNode(
     [handleDragHandleMouseDown],
   );
 
+  const getSelectionProps = useCallback(
+    () => ({ onMouseDown: handleSelectMouseDown }),
+    [handleSelectMouseDown],
+  );
+
   const getResizeHandleProps = useCallback(
     (edge: CanvasNodeResizeEdge) => ({
       onMouseDown: (event: React.MouseEvent) =>
@@ -856,7 +939,9 @@ export function useCanvasNode(
       'data-canvas-node-id': id,
     },
     getDragHandleProps,
+    getSelectionProps,
     getResizeHandleProps,
+    selected,
     isDragging: interaction === 'drag',
     isResizing: interaction === 'resize',
     wasDragged,

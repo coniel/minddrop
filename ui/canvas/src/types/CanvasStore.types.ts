@@ -7,6 +7,7 @@ import {
   CanvasNodeSide,
 } from './CanvasConnection.types';
 import { CanvasNodeFrame, CanvasPoint } from './CanvasNode.types';
+import { CanvasSelection } from './CanvasSelection.types';
 
 /**
  * The size of the canvas viewport element in pixels.
@@ -56,6 +57,12 @@ export interface CanvasStoreConfig {
    * Whether node interactions snap to other nodes initially.
    */
   initialSnapToObjects?: boolean;
+
+  /**
+   * Whether nodes and connections on the canvas can be selected.
+   * Defaults to true.
+   */
+  selectable?: boolean;
 }
 
 /**
@@ -104,6 +111,16 @@ export interface CanvasState {
    * of the other nodes on the canvas.
    */
   snapToObjects: boolean;
+
+  /**
+   * Whether nodes and connections on the canvas can be selected.
+   */
+  selectable: boolean;
+
+  /**
+   * The current selection, or null when nothing is selected.
+   */
+  selection: CanvasSelection | null;
 
   /**
    * The alignment guides for the node being dragged or resized,
@@ -229,6 +246,41 @@ export interface CanvasState {
    * Toggles whether node drags and resizes snap to other nodes.
    */
   toggleSnapToObjects: () => void;
+
+  /**
+   * Selects the given nodes, replacing a connection selection.
+   * Selecting no nodes clears the selection.
+   * @param ids - The IDs of the nodes to select.
+   * @param additive - Whether to add to an existing node selection.
+   */
+  selectNodes: (ids: string[], additive?: boolean) => void;
+
+  /**
+   * Selects the given connections, replacing a node selection.
+   * Selecting no connections clears the selection.
+   * @param ids - The IDs of the connections to select.
+   * @param additive - Whether to add to an existing connection selection.
+   */
+  selectConnections: (ids: string[], additive?: boolean) => void;
+
+  /**
+   * Adds a node to the selection, or removes it when already
+   * selected. Replaces a connection selection.
+   * @param id - The ID of the node to toggle.
+   */
+  toggleNodeSelection: (id: string) => void;
+
+  /**
+   * Adds a connection to the selection, or removes it when already
+   * selected. Replaces a node selection.
+   * @param id - The ID of the connection to toggle.
+   */
+  toggleConnectionSelection: (id: string) => void;
+
+  /**
+   * Clears the selection.
+   */
+  clearSelection: () => void;
 
   /**
    * Sets the alignment guides for the node being dragged or

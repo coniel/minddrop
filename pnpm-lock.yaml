@@ -2140,6 +2140,9 @@ importers:
       '@minddrop/ui-theme':
         specifier: workspace:*
         version: link:../theme
+      '@minddrop/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
     devDependencies:
       '@minddrop/eslint-config':
         specifier: workspace:*

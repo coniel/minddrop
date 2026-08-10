@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { isInteractiveTarget } from '@minddrop/utils';
 import { CanvasNodeFrame } from '../types';
 import {
   CanvasNodeConnection,
@@ -61,9 +62,10 @@ export interface CanvasNodeProps {
   dragMode?: 'node' | 'handle';
 
   /**
-   * Whether the node is selected, adding selection styling.
+   * Whether pressing the node selects it on the canvas. Defaults
+   * to true.
    */
-  selected?: boolean;
+  selectable?: boolean;
 
   /**
    * Whether the node renders connection handles on its side
@@ -123,6 +125,7 @@ const RESIZE_EDGES: Record<'all' | 'horizontal', CanvasNodeResizeEdge[]> = {
  * Renders a draggable, resizable canvas node. Dragging happens
  * from the whole node or a top-edge bar depending on the drag
  * mode; resize handles are rendered on the configured edges.
+ * Pressing the node's drag handle selects it on the canvas.
  * Must be rendered within a Canvas.
  */
 export const CanvasNode: React.FC<CanvasNodeProps> = ({
@@ -135,7 +138,7 @@ export const CanvasNode: React.FC<CanvasNodeProps> = ({
   minHeight,
   resizeEdges = 'all',
   dragMode = 'node',
-  selected,
+  selectable,
   connectable,
   onConnect,
   onFrameChange,
@@ -147,7 +150,9 @@ export const CanvasNode: React.FC<CanvasNodeProps> = ({
   const {
     nodeProps,
     getDragHandleProps,
+    getSelectionProps,
     getResizeHandleProps,
+    selected,
     isDragging,
     isResizing,
     wasDragged,
@@ -159,6 +164,7 @@ export const CanvasNode: React.FC<CanvasNodeProps> = ({
     height,
     minWidth,
     minHeight,
+    selectable,
     onFrameChange,
   });
   const { getConnectionHandleProps } = useCanvasConnectionDrag({
@@ -195,6 +201,21 @@ export const CanvasNode: React.FC<CanvasNodeProps> = ({
       connectable === true && state.connectionDrag?.targetNodeId === id,
   );
 
+  // Select the node on press, and start a drag from the whole
+  // node when the drag mode makes it the handle. Presses on
+  // interactive content within the node do neither, so the content
+  // stays usable without having to swallow the event.
+  const handleMouseDown = useCallback(
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      getSelectionProps().onMouseDown(event);
+
+      if (dragMode === 'node' && !isInteractiveTarget(event.target)) {
+        getDragHandleProps().onMouseDown(event);
+      }
+    },
+    [getSelectionProps, getDragHandleProps, dragMode],
+  );
+
   // Fire clicks only when the press did not drag the node
   const handleClick = useCallback(
     (event: React.MouseEvent<HTMLDivElement>) => {
@@ -223,9 +244,9 @@ export const CanvasNode: React.FC<CanvasNodeProps> = ({
       }${isConnectionTarget ? ' ui-canvas-node-connection-target' : ''}${
         className ? ` ${className}` : ''
       }`}
+      onMouseDown={handleMouseDown}
       onClick={handleClick}
       onDoubleClick={onDoubleClick}
-      {...(dragMode === 'node' ? getDragHandleProps() : {})}
     >
       {children}
 

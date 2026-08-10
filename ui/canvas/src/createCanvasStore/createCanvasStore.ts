@@ -1,4 +1,5 @@
 import { createStore } from '@minddrop/stores';
+import { sameIds } from '@minddrop/utils';
 import {
   DEFAULT_MAX_ZOOM,
   DEFAULT_MIN_ZOOM,
@@ -15,6 +16,7 @@ import {
   CanvasNodeFrame,
   CanvasNodeSide,
   CanvasPoint,
+  CanvasSelection,
   CanvasState,
   CanvasStoreConfig,
   CanvasViewportSize,
@@ -80,6 +82,44 @@ export interface CanvasStore {
    * nodes.
    */
   getSnapToObjects(): boolean;
+
+  /**
+   * Returns whether nodes and connections on the canvas can be
+   * selected.
+   */
+  getSelectable(): boolean;
+
+  /**
+   * Returns the current selection, or null when nothing is
+   * selected.
+   */
+  getSelection(): CanvasSelection | null;
+
+  /**
+   * Returns the IDs of the selected nodes, empty when the
+   * selection contains connections.
+   */
+  getSelectedNodeIds(): string[];
+
+  /**
+   * Returns the IDs of the selected connections, empty when the
+   * selection contains nodes.
+   */
+  getSelectedConnectionIds(): string[];
+
+  /**
+   * Returns whether a node is selected.
+   *
+   * @param nodeId - The ID of the node to check.
+   */
+  isNodeSelected(nodeId: string): boolean;
+
+  /**
+   * Returns whether a connection is selected.
+   *
+   * @param connectionId - The ID of the connection to check.
+   */
+  isConnectionSelected(connectionId: string): boolean;
 
   /**
    * Returns the alignment guides for the node being dragged or
@@ -217,6 +257,45 @@ export interface CanvasStore {
   toggleSnapToObjects(): void;
 
   /**
+   * Selects the given nodes, replacing a connection selection.
+   * Selecting no nodes clears the selection.
+   *
+   * @param ids - The IDs of the nodes to select.
+   * @param additive - Whether to add to an existing node selection.
+   */
+  selectNodes(ids: string[], additive?: boolean): void;
+
+  /**
+   * Selects the given connections, replacing a node selection.
+   * Selecting no connections clears the selection.
+   *
+   * @param ids - The IDs of the connections to select.
+   * @param additive - Whether to add to an existing connection selection.
+   */
+  selectConnections(ids: string[], additive?: boolean): void;
+
+  /**
+   * Adds a node to the selection, or removes it when already
+   * selected. Replaces a connection selection.
+   *
+   * @param id - The ID of the node to toggle.
+   */
+  toggleNodeSelection(id: string): void;
+
+  /**
+   * Adds a connection to the selection, or removes it when already
+   * selected. Replaces a node selection.
+   *
+   * @param id - The ID of the connection to toggle.
+   */
+  toggleConnectionSelection(id: string): void;
+
+  /**
+   * Clears the selection.
+   */
+  clearSelection(): void;
+
+  /**
    * Sets the alignment guides for the node being dragged or
    * resized.
    *
@@ -286,6 +365,15 @@ export function createCanvasStore(config: CanvasStoreConfig = {}): CanvasStore {
     getNodes: () => store.getState().nodes,
     getSnapToGrid: () => store.getState().snapToGrid,
     getSnapToObjects: () => store.getState().snapToObjects,
+    getSelectable: () => store.getState().selectable,
+    getSelection: () => store.getState().selection,
+    getSelectedNodeIds: () => getSelectedIds(store.getState(), 'nodes'),
+    getSelectedConnectionIds: () =>
+      getSelectedIds(store.getState(), 'connections'),
+    isNodeSelected: (nodeId) =>
+      getSelectedIds(store.getState(), 'nodes').includes(nodeId),
+    isConnectionSelected: (connectionId) =>
+      getSelectedIds(store.getState(), 'connections').includes(connectionId),
     getAlignmentGuides: () => store.getState().alignmentGuides,
     getConnectionDrag: () => store.getState().connectionDrag,
     getHoveredConnectionHandle: () => store.getState().hoveredConnectionHandle,
@@ -307,6 +395,13 @@ export function createCanvasStore(config: CanvasStoreConfig = {}): CanvasStore {
     toggleSnapToGrid: () => store.getState().toggleSnapToGrid(),
     setSnapToObjects: (enabled) => store.getState().setSnapToObjects(enabled),
     toggleSnapToObjects: () => store.getState().toggleSnapToObjects(),
+    selectNodes: (ids, additive) => store.getState().selectNodes(ids, additive),
+    selectConnections: (ids, additive) =>
+      store.getState().selectConnections(ids, additive),
+    toggleNodeSelection: (id) => store.getState().toggleNodeSelection(id),
+    toggleConnectionSelection: (id) =>
+      store.getState().toggleConnectionSelection(id),
+    clearSelection: () => store.getState().clearSelection(),
     setAlignmentGuides: (guides) => store.getState().setAlignmentGuides(guides),
     startConnectionDrag: (fromNodeId, fromSide, point, reconnect) =>
       store
@@ -331,6 +426,7 @@ function createInternalStore(config: CanvasStoreConfig) {
     initialPan = { x: 0, y: 0 },
     initialSnapToGrid = false,
     initialSnapToObjects = false,
+    selectable = true,
   } = config;
 
   return createStore<CanvasState>((set, get) => ({
@@ -342,6 +438,8 @@ function createInternalStore(config: CanvasStoreConfig) {
     nodes: {},
     snapToGrid: initialSnapToGrid,
     snapToObjects: initialSnapToObjects,
+    selectable,
+    selection: null,
     alignmentGuides: [],
     connectionDrag: null,
     hoveredConnectionHandle: null,
@@ -466,6 +564,21 @@ function createInternalStore(config: CanvasStoreConfig) {
     toggleSnapToObjects: () =>
       set((state) => ({ snapToObjects: !state.snapToObjects })),
 
+    selectNodes: (ids, additive) =>
+      set((state) => getSelectionUpdate(state, 'nodes', ids, additive)),
+
+    selectConnections: (ids, additive) =>
+      set((state) => getSelectionUpdate(state, 'connections', ids, additive)),
+
+    toggleNodeSelection: (id) =>
+      set((state) => getToggleUpdate(state, 'nodes', id)),
+
+    toggleConnectionSelection: (id) =>
+      set((state) => getToggleUpdate(state, 'connections', id)),
+
+    clearSelection: () =>
+      set((state) => (state.selection ? { selection: null } : {})),
+
     setAlignmentGuides: (guides) =>
       set((state) => {
         // Skip updates that leave the guides empty, since this
@@ -524,6 +637,85 @@ function createInternalStore(config: CanvasStoreConfig) {
         return { hoveredConnectionHandle: target };
       }),
   }));
+}
+
+/**
+ * Returns the IDs in the selection when it is of the given type,
+ * and an empty list otherwise.
+ */
+function getSelectedIds(
+  state: CanvasState,
+  type: CanvasSelection['type'],
+): string[] {
+  return state.selection?.type === type ? state.selection.ids : [];
+}
+
+/**
+ * Returns the state update selecting the given IDs, merging them
+ * into the current selection when additive.
+ */
+function getSelectionUpdate(
+  state: CanvasState,
+  type: CanvasSelection['type'],
+  ids: string[],
+  additive?: boolean,
+): Partial<CanvasState> {
+  // Selection is disabled for this canvas instance
+  if (!state.selectable) {
+    return {};
+  }
+
+  // A selection of the other type is replaced rather than merged
+  // into, so additive only carries over matching selections
+  const current = additive ? getSelectedIds(state, type) : [];
+  const selectedIds = current.length
+    ? Array.from(new Set([...current, ...ids]))
+    : ids;
+
+  // Selecting nothing clears the selection
+  if (!selectedIds.length) {
+    return state.selection ? { selection: null } : {};
+  }
+
+  // Skip updates that do not change the selection, since the
+  // lasso recomputes it on every frame of a drag
+  if (
+    state.selection?.type === type &&
+    sameIds(state.selection.ids, selectedIds)
+  ) {
+    return {};
+  }
+
+  return { selection: { type, ids: selectedIds } };
+}
+
+/**
+ * Returns the state update adding an ID to the selection, or
+ * removing it when it is already selected.
+ */
+function getToggleUpdate(
+  state: CanvasState,
+  type: CanvasSelection['type'],
+  id: string,
+): Partial<CanvasState> {
+  // Selection is disabled for this canvas instance
+  if (!state.selectable) {
+    return {};
+  }
+
+  const current = getSelectedIds(state, type);
+
+  // Remove the ID when it is already selected, add it otherwise
+  const selectedIds = current.includes(id)
+    ? current.filter((selectedId) => selectedId !== id)
+    : [...current, id];
+
+  // Deselecting the last item clears the selection
+  if (!selectedIds.length) {
+    return { selection: null };
+  }
+
+  return { selection: { type, ids: selectedIds } };
 }
 
 /**

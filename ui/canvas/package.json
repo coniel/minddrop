@@ -20,6 +20,7 @@
     "@minddrop/stores": "workspace:*",
     "@minddrop/test-utils": "workspace:*",
     "@minddrop/ui-primitives": "workspace:*",
-    "@minddrop/ui-theme": "workspace:*"
+    "@minddrop/ui-theme": "workspace:*",
+    "@minddrop/utils": "workspace:*"
   }
 }

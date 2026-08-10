@@ -330,6 +330,137 @@ describe('createCanvasStore', () => {
     });
   });
 
+  describe('selection', () => {
+    it('has no selection by default', () => {
+      const store = createCanvasStore();
+
+      expect(store.getSelection()).toBeNull();
+      expect(store.getSelectedNodeIds()).toEqual([]);
+      expect(store.getSelectedConnectionIds()).toEqual([]);
+    });
+
+    it('selects nodes', () => {
+      const store = createCanvasStore();
+
+      store.selectNodes(['node-1', 'node-2']);
+
+      expect(store.getSelection()).toEqual({
+        type: 'nodes',
+        ids: ['node-1', 'node-2'],
+      });
+      expect(store.isNodeSelected('node-1')).toBe(true);
+      expect(store.isNodeSelected('node-3')).toBe(false);
+    });
+
+    it('replaces a connection selection with a node selection', () => {
+      const store = createCanvasStore();
+
+      store.selectConnections(['connection-1']);
+      store.selectNodes(['node-1']);
+
+      expect(store.getSelection()).toEqual({ type: 'nodes', ids: ['node-1'] });
+      expect(store.getSelectedConnectionIds()).toEqual([]);
+      expect(store.isConnectionSelected('connection-1')).toBe(false);
+    });
+
+    it('merges additive selections of the same type', () => {
+      const store = createCanvasStore();
+
+      store.selectNodes(['node-1']);
+      store.selectNodes(['node-2'], true);
+
+      expect(store.getSelectedNodeIds()).toEqual(['node-1', 'node-2']);
+    });
+
+    it('does not merge additive selections across types', () => {
+      const store = createCanvasStore();
+
+      store.selectNodes(['node-1']);
+      store.selectConnections(['connection-1'], true);
+
+      expect(store.getSelection()).toEqual({
+        type: 'connections',
+        ids: ['connection-1'],
+      });
+    });
+
+    it('clears the selection when selecting nothing', () => {
+      const store = createCanvasStore();
+
+      store.selectNodes(['node-1']);
+      store.selectNodes([]);
+
+      expect(store.getSelection()).toBeNull();
+    });
+
+    it('skips updates that do not change the selection', () => {
+      const store = createCanvasStore();
+
+      store.selectNodes(['node-1', 'node-2']);
+
+      const selection = store.getSelection();
+
+      // An identical update keeps the same state object, avoiding
+      // subscriber churn on every frame of a lasso drag
+      store.selectNodes(['node-2', 'node-1']);
+
+      expect(store.getSelection()).toBe(selection);
+    });
+
+    it('toggles a node into and out of the selection', () => {
+      const store = createCanvasStore();
+
+      store.selectNodes(['node-1']);
+      store.toggleNodeSelection('node-2');
+
+      expect(store.getSelectedNodeIds()).toEqual(['node-1', 'node-2']);
+
+      store.toggleNodeSelection('node-1');
+
+      expect(store.getSelectedNodeIds()).toEqual(['node-2']);
+    });
+
+    it('clears the selection when the last item is toggled off', () => {
+      const store = createCanvasStore();
+
+      store.selectNodes(['node-1']);
+      store.toggleNodeSelection('node-1');
+
+      expect(store.getSelection()).toBeNull();
+    });
+
+    it('replaces a node selection when toggling a connection', () => {
+      const store = createCanvasStore();
+
+      store.selectNodes(['node-1']);
+      store.toggleConnectionSelection('connection-1');
+
+      expect(store.getSelection()).toEqual({
+        type: 'connections',
+        ids: ['connection-1'],
+      });
+    });
+
+    it('clears the selection', () => {
+      const store = createCanvasStore();
+
+      store.selectNodes(['node-1']);
+      store.clearSelection();
+
+      expect(store.getSelection()).toBeNull();
+    });
+
+    it('ignores selections when the canvas is not selectable', () => {
+      const store = createCanvasStore({ selectable: false });
+
+      store.selectNodes(['node-1']);
+      store.toggleConnectionSelection('connection-1');
+
+      expect(store.getSelectable()).toBe(false);
+      expect(store.getSelection()).toBeNull();
+    });
+  });
+
   describe('setAlignmentGuides', () => {
     const guide = { axis: 'x' as const, position: 100, start: 0, end: 200 };
 
