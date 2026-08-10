@@ -239,6 +239,18 @@
 }
 
 /* ------------------------------------------------------------
+   EMPTY MESSAGE
+   ------------------------------------------------------------ */
+
+/* Message shown in place of items when there are no options,
+   capped in width so long explanations wrap */
+.select-empty-message {
+  display: block;
+  max-width: 220px;
+  padding: var(--space-1) var(--space-3);
+}
+
+/* ------------------------------------------------------------
    ITEM
    ------------------------------------------------------------ */
 

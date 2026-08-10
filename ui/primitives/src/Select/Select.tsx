@@ -1,5 +1,5 @@
 import { TranslationKey, useTranslation } from '@minddrop/i18n';
-import { TextColor } from '../Text';
+import { Text, TextColor } from '../Text';
 import { SelectIcon } from './SelectIcon';
 import { SelectItem } from './SelectItem';
 import { SelectPopup } from './SelectPopup';
@@ -71,6 +71,13 @@ export interface SelectProps<TValue extends string | number> {
   options?: SelectOption<TValue>[];
 
   /*
+   * Message shown in the popup when there are no options,
+   * explaining why and/or how to get some. Can be an i18n key.
+   * Ignored when `children` is provided.
+   */
+  emptyMessage?: TranslationKey;
+
+  /*
    * The controlled value of the select.
    */
   value?: TValue;
@@ -114,6 +121,7 @@ export const Select = <TValue extends string | number = string>({
   variant = 'outline',
   size = 'md',
   options = [],
+  emptyMessage,
   placeholder,
   stringPlaceholder,
   onValueChange,
@@ -153,6 +161,16 @@ export const Select = <TValue extends string | number = string>({
         )}
       </SelectTrigger>
       <SelectPopup alignOffset={alignOffset}>
+        {/* Message shown when there are no options */}
+        {!children && options.length === 0 && emptyMessage && (
+          <Text
+            size="sm"
+            color="muted"
+            text={emptyMessage}
+            className="select-empty-message"
+          />
+        )}
+
         {children
           ? children
           : options.map(({ label, stringLabel, description, value }) => (
