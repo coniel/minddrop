@@ -1,0 +1,60 @@
+.floating-toolbar {
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  background-color: var(--surface-overlay);
+  box-shadow: var(--shadow-overlay);
+  /* Hidden until the host is hovered. The right transition
+     animates positioned toolbars back to their resting place
+     when unpinning after a menu closes. */
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity var(--duration-normal) var(--ease-out),
+    right var(--duration-normal) var(--ease-out);
+}
+
+/* --- Sizes --- */
+
+.floating-toolbar-size-sm {
+  min-height: var(--space-5);
+  min-width: var(--space-5);
+  padding: calc(var(--space-1) / 2);
+  gap: calc(var(--space-1) / 2);
+  border-radius: var(--radius-md);
+}
+
+.floating-toolbar-size-md {
+  min-height: var(--space-6);
+  min-width: var(--space-6);
+  padding: var(--space-1);
+  gap: var(--space-1);
+}
+
+.floating-toolbar-size-lg {
+  min-height: var(--space-7);
+  min-width: var(--space-7);
+  padding: var(--space-2);
+  gap: var(--space-2);
+}
+
+/* --- Visibility --- */
+
+/* Reveal the toolbar while hovering the host. Hosts opt in by
+   adding the host class to their scroll root. */
+.floating-toolbar-host:hover .floating-toolbar {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Keep the toolbar visible while one of its menus is open, since
+   the pointer leaves the host when moving into the menu popup */
+.floating-toolbar:has([aria-expanded='true']) {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Toolbars which are not revealed on hover */
+.floating-toolbar-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
