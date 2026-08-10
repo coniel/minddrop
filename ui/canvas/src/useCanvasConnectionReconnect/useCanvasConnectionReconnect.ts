@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useOptionalCanvasContext } from '../CanvasContext';
 import {
   CONNECTION_PROXIMITY,
@@ -54,6 +54,12 @@ export interface UseCanvasConnectionReconnectResult {
   getConnectionProps: (connection: CanvasConnection) => {
     onMouseDown: (event: React.MouseEvent) => void;
   };
+
+  /**
+   * Whether the pointer moved past the drag threshold during the
+   * latest press. Used to distinguish clicks from drags.
+   */
+  wasDragged: () => boolean;
 }
 
 /**
@@ -101,6 +107,10 @@ export function useCanvasConnectionReconnect(
   // Whether the armed press has become a drag
   const [dragging, setDragging] = useState(false);
 
+  // Read by the click handling the hook leaves to the consumer,
+  // after the drag state has already been reset
+  const didDrag = useRef(false);
+
   const context = useOptionalCanvasContext();
 
   // Hold the pointer for the drag, keeping the curve's cursor
@@ -142,6 +152,8 @@ export function useCanvasConnectionReconnect(
       // already under way carries on painting regardless of the
       // content it is dragged across being unselectable.
       event.preventDefault();
+
+      didDrag.current = false;
 
       // Arm the press; the drag starts once the cursor travels
       // past the drag threshold
@@ -193,6 +205,8 @@ export function useCanvasConnectionReconnect(
           fixed.point,
           { connectionId: pending.connection.id, end: fixed.looseEnd },
         );
+
+        didDrag.current = true;
 
         setDragging(true);
       }
@@ -296,7 +310,9 @@ export function useCanvasConnectionReconnect(
     [handleMouseDown],
   );
 
-  return { getConnectionProps };
+  const wasDragged = useCallback(() => didDrag.current, []);
+
+  return { getConnectionProps, wasDragged };
 }
 
 /**

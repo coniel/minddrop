@@ -273,7 +273,7 @@ const CanvasViewContent: React.FC<
 
   // Select a connection when its curve is pressed, anchoring the
   // connection toolbar at the pressed point
-  const handleConnectionMouseDown = useCallback(
+  const handleConnectionClick = useCallback(
     (connectionId: string, event: React.MouseEvent) => {
       setConnectionSelection({
         connectionId,
@@ -771,7 +771,7 @@ const CanvasViewContent: React.FC<
         <CanvasConnectionsLayer
           connections={reconciledConnections}
           selectedId={connectionSelection?.connectionId}
-          onConnectionMouseDown={handleConnectionMouseDown}
+          onConnectionClick={handleConnectionClick}
           onConnectionReconnect={handleConnectionReconnect}
         />
 

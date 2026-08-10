@@ -134,21 +134,49 @@ describe('CanvasConnectionsLayer', () => {
     expect(markers.length).toBe(3);
   });
 
-  it('reports presses on a connection', () => {
+  it('reports clicks on a connection', () => {
     const store = createCanvasStore();
-    let pressed: string | null = null;
+    let clicked: string | null = null;
 
     const { container } = renderLayer(store, {
-      onConnectionMouseDown: (connectionId) => {
-        pressed = connectionId;
+      onConnectionClick: (connectionId) => {
+        clicked = connectionId;
       },
     });
 
     const hitArea = container.querySelector('.ui-canvas-connection-hit-area');
 
-    fireEvent.mouseDown(hitArea!);
+    fireEvent.mouseDown(hitArea!, { button: 0, clientX: 0, clientY: 0 });
+    fireEvent.click(hitArea!);
 
-    expect(pressed).toBe('connection-1');
+    expect(clicked).toBe('connection-1');
+  });
+
+  it('does not report a click for a press that re-routes the connection', () => {
+    const store = createCanvasStore();
+    let clicked: string | null = null;
+
+    const { container } = renderLayer(store, {
+      onConnectionClick: (connectionId) => {
+        clicked = connectionId;
+      },
+    });
+
+    const hitArea = container.querySelector('.ui-canvas-connection-hit-area');
+
+    // Grabbing the curve to re-drag it must not also select it
+    fireEvent.mouseDown(hitArea!, { button: 0, clientX: 300, clientY: 50 });
+
+    act(() => {
+      window.dispatchEvent(
+        new MouseEvent('mousemove', { clientX: 340, clientY: 90 }),
+      );
+      window.dispatchEvent(new MouseEvent('mouseup'));
+    });
+
+    fireEvent.click(hitArea!);
+
+    expect(clicked).toBeNull();
   });
 
   it('renders arrowheads according to the arrows setting', () => {

@@ -43,12 +43,11 @@ export interface CanvasConnectionsLayerProps {
   selectedId?: string | null;
 
   /**
-   * Called when a connection's curve is pressed.
+   * Called when a connection's curve is clicked. Not called for
+   * presses that turn into a re-connect drag, so dragging a
+   * connection never also acts on it.
    */
-  onConnectionMouseDown?: (
-    connectionId: string,
-    event: React.MouseEvent,
-  ) => void;
+  onConnectionClick?: (connectionId: string, event: React.MouseEvent) => void;
 
   /**
    * Called when a connection end is dragged onto a new target
@@ -67,7 +66,7 @@ export interface CanvasConnectionsLayerProps {
 export const CanvasConnectionsLayer: React.FC<CanvasConnectionsLayerProps> = ({
   connections,
   selectedId,
-  onConnectionMouseDown,
+  onConnectionClick,
   onConnectionReconnect,
 }) => {
   const { store } = useCanvasContext();
@@ -83,7 +82,7 @@ export const CanvasConnectionsLayer: React.FC<CanvasConnectionsLayerProps> = ({
   const connectionDrag = useCanvasStore((state) => state.connectionDrag);
 
   // Drag-to-re-connect behaviour for the connection hit areas
-  const { getConnectionProps } = useCanvasConnectionReconnect({
+  const { getConnectionProps, wasDragged } = useCanvasConnectionReconnect({
     onReconnect: onConnectionReconnect,
   });
 
@@ -251,13 +250,13 @@ export const CanvasConnectionsLayer: React.FC<CanvasConnectionsLayerProps> = ({
     // Re-connect drag arming for this connection's hit area
     const reconnectProps = getConnectionProps(connection);
 
-    // Report the press for selection and arm a re-connect drag
-    function handleHitAreaMouseDown(event: React.MouseEvent) {
-      if (onConnectionMouseDown) {
-        onConnectionMouseDown(connection.id, event);
+    // Report the click only when the press did not re-route the
+    // connection, so grabbing a curve to re-drag it does not also
+    // act on it
+    function handleHitAreaClick(event: React.MouseEvent) {
+      if (onConnectionClick && !wasDragged()) {
+        onConnectionClick(connection.id, event);
       }
-
-      reconnectProps.onMouseDown(event);
     }
 
     return (
@@ -271,7 +270,8 @@ export const CanvasConnectionsLayer: React.FC<CanvasConnectionsLayerProps> = ({
         <path
           className="ui-canvas-connection-hit-area"
           d={path}
-          onMouseDown={handleHitAreaMouseDown}
+          onMouseDown={reconnectProps.onMouseDown}
+          onClick={handleHitAreaClick}
         />
 
         {/* Hover/selection halo under the curve, stroking the
