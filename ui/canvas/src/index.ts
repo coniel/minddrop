@@ -1,4 +1,5 @@
 export * from './Canvas';
+export * from './CanvasConnectionsLayer';
 export * from './CanvasNode';
 export * from './CanvasProvider';
 export * from './CanvasZoomToolbar';
@@ -6,6 +7,8 @@ export * from './constants';
 export * from './createCanvasStore';
 export * from './types';
 export * from './useCanvas';
+export * from './useCanvasConnectionDrag';
+export * from './useCanvasConnectionReconnect';
 export * from './useCanvasNode';
 export * from './useCanvasStore';
 export * from './useCanvasTransformLayer';

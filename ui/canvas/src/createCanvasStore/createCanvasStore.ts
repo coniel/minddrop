@@ -7,7 +7,12 @@ import {
   ZOOM_STEP,
 } from '../constants';
 import {
+  CanvasConnectionDrag,
+  CanvasConnectionDragTarget,
+  CanvasConnectionEnd,
+  CanvasConnectionReconnect,
   CanvasNodeFrame,
+  CanvasNodeSide,
   CanvasPoint,
   CanvasState,
   CanvasStoreConfig,
@@ -63,6 +68,18 @@ export interface CanvasStore {
    * Returns all registered node frames keyed by node ID.
    */
   getNodes(): Record<string, CanvasNodeFrame>;
+
+  /**
+   * Returns the in-progress connection drag, or null when no
+   * connection is being dragged.
+   */
+  getConnectionDrag(): CanvasConnectionDrag | null;
+
+  /**
+   * Returns the node side whose connection handle the cursor is
+   * near, or null when none is near.
+   */
+  getHoveredConnectionHandle(): CanvasConnectionEnd | null;
 
   /**
    * Sets the zoom level, optionally zooming toward a focal point.
@@ -155,6 +172,46 @@ export interface CanvasStore {
    * @param size - The new viewport size.
    */
   setViewportSize(size: CanvasViewportSize): void;
+
+  /**
+   * Starts a drag-to-connect interaction from a node side.
+   *
+   * @param fromNodeId - The ID of the node the drag is anchored to.
+   * @param fromSide - The side of the node the drag is anchored to.
+   * @param point - The starting cursor position in canvas coordinates.
+   * @param reconnect - The existing connection the drag re-routes, when re-connecting.
+   */
+  startConnectionDrag(
+    fromNodeId: string,
+    fromSide: CanvasNodeSide,
+    point: CanvasPoint,
+    reconnect?: CanvasConnectionReconnect,
+  ): void;
+
+  /**
+   * Updates the in-progress connection drag's cursor position and
+   * hovered target. Does nothing when no drag is in progress.
+   *
+   * @param point - The cursor position in canvas coordinates.
+   * @param target - The hovered target, or null when none is hovered.
+   */
+  updateConnectionDrag(
+    point: CanvasPoint,
+    target: CanvasConnectionDragTarget | null,
+  ): void;
+
+  /**
+   * Clears the in-progress connection drag.
+   */
+  clearConnectionDrag(): void;
+
+  /**
+   * Sets the node side whose connection handle the cursor is
+   * near. Skips updates that do not change the hovered handle.
+   *
+   * @param target - The nearby node side, or null when none is near.
+   */
+  setHoveredConnectionHandle(target: CanvasConnectionEnd | null): void;
 }
 
 /**
@@ -176,6 +233,8 @@ export function createCanvasStore(config: CanvasStoreConfig = {}): CanvasStore {
     getViewportSize: () => store.getState().viewportSize,
     getNode: (nodeId) => store.getState().nodes[nodeId] || null,
     getNodes: () => store.getState().nodes,
+    getConnectionDrag: () => store.getState().connectionDrag,
+    getHoveredConnectionHandle: () => store.getState().hoveredConnectionHandle,
     setZoom: (zoom, focalPoint) => store.getState().setZoom(zoom, focalPoint),
     setPan: (x, y) => store.getState().setPan(x, y),
     zoomIn: () => store.getState().zoomIn(),
@@ -190,6 +249,15 @@ export function createCanvasStore(config: CanvasStoreConfig = {}): CanvasStore {
       store.getState().updateNodeFrame(nodeId, frame),
     unregisterNode: (nodeId) => store.getState().unregisterNode(nodeId),
     setViewportSize: (size) => store.getState().setViewportSize(size),
+    startConnectionDrag: (fromNodeId, fromSide, point, reconnect) =>
+      store
+        .getState()
+        .startConnectionDrag(fromNodeId, fromSide, point, reconnect),
+    updateConnectionDrag: (point, target) =>
+      store.getState().updateConnectionDrag(point, target),
+    clearConnectionDrag: () => store.getState().clearConnectionDrag(),
+    setHoveredConnectionHandle: (target) =>
+      store.getState().setHoveredConnectionHandle(target),
   };
 }
 
@@ -211,6 +279,8 @@ function createInternalStore(config: CanvasStoreConfig) {
     maxZoom,
     viewportSize: { width: 0, height: 0 },
     nodes: {},
+    connectionDrag: null,
+    hoveredConnectionHandle: null,
 
     setZoom: (zoom, focalPoint) => {
       // Clamp zoom to the configured limits
@@ -322,6 +392,53 @@ function createInternalStore(config: CanvasStoreConfig) {
       }),
 
     setViewportSize: (size) => set({ viewportSize: size }),
+
+    startConnectionDrag: (fromNodeId, fromSide, point, reconnect) =>
+      set({
+        connectionDrag: {
+          fromNodeId,
+          fromSide,
+          point,
+          targetNodeId: null,
+          targetSide: null,
+          reconnect: reconnect ?? null,
+        },
+      }),
+
+    updateConnectionDrag: (point, target) =>
+      set((state) => {
+        // No drag in progress
+        if (!state.connectionDrag) {
+          return {};
+        }
+
+        return {
+          connectionDrag: {
+            ...state.connectionDrag,
+            point,
+            targetNodeId: target ? target.nodeId : null,
+            targetSide: target ? target.side : null,
+          },
+        };
+      }),
+
+    clearConnectionDrag: () => set({ connectionDrag: null }),
+
+    setHoveredConnectionHandle: (target) =>
+      set((state) => {
+        const current = state.hoveredConnectionHandle;
+
+        // Skip updates that do not change the hovered handle,
+        // since this fires on every cursor move over the canvas
+        if (
+          current?.nodeId === target?.nodeId &&
+          current?.side === target?.side
+        ) {
+          return {};
+        }
+
+        return { hoveredConnectionHandle: target };
+      }),
   }));
 }
 

@@ -1,0 +1,39 @@
+.ui-canvas-connections {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: visible;
+  pointer-events: none;
+
+  .ui-canvas-connection-hit-area {
+    fill: none;
+    stroke: transparent;
+    stroke-width: 16;
+    pointer-events: stroke;
+    cursor: grab;
+  }
+
+  .ui-canvas-connection-hit-area:active {
+    cursor: grabbing;
+  }
+
+  .ui-canvas-connection-halo {
+    fill: none;
+    stroke: var(--neutral-500);
+    stroke-linecap: round;
+    opacity: 0;
+    transition: opacity var(--duration-normal) var(--ease-out);
+  }
+
+  .ui-canvas-connection:hover .ui-canvas-connection-halo,
+  .ui-canvas-connection-selected .ui-canvas-connection-halo {
+    opacity: 0.35;
+  }
+
+  .ui-canvas-connection-line {
+    fill: none;
+    stroke: var(--border-default);
+    stroke-width: 2;
+    stroke-linecap: round;
+  }
+}

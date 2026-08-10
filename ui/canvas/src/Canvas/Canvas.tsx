@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { useCanvasContext } from '../CanvasContext';
-import { GRID_SIZE } from '../constants';
+import { CONNECTION_PROXIMITY, GRID_SIZE } from '../constants';
 import { CanvasPoint } from '../types';
 import { useCanvasStore } from '../useCanvasStore';
-import { screenToCanvas } from '../utils';
+import { getConnectionHandleTarget, screenToCanvas } from '../utils';
 import './Canvas.css';
 
 export interface CanvasBackgroundOptions {
@@ -234,6 +234,31 @@ export const Canvas: React.FC<CanvasProps> = ({
     ],
   );
 
+  // Track the cursor's proximity to node edges, revealing the
+  // nearby edge's connection handle. Viewport-level tracking so
+  // edges are detected from outside their node as well.
+  const handleMouseMove = useCallback(
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      const point = clientToCanvas(event.clientX, event.clientY);
+
+      // The proximity threshold is in screen pixels, so it is
+      // unscaled into canvas units
+      store.setHoveredConnectionHandle(
+        getConnectionHandleTarget(
+          store.getNodes(),
+          point,
+          CONNECTION_PROXIMITY / store.getZoom(),
+        ),
+      );
+    },
+    [store, clientToCanvas],
+  );
+
+  // Hide the connection handle when the cursor leaves the canvas
+  const handleMouseLeave = useCallback(() => {
+    store.setHoveredConnectionHandle(null);
+  }, [store]);
+
   // Global mouse move/up for panning
   useEffect(() => {
     const handleMouseMove = (event: MouseEvent) => {
@@ -407,6 +432,8 @@ export const Canvas: React.FC<CanvasProps> = ({
       }
       tabIndex={focusScoped ? -1 : undefined}
       onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
       onKeyDown={focusScoped ? handleReactKeyDown : undefined}
       onKeyUp={focusScoped ? handleReactKeyUp : undefined}
       onBlur={focusScoped ? handleBlur : undefined}

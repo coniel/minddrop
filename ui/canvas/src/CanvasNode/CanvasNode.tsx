@@ -1,6 +1,11 @@
 import { useCallback } from 'react';
 import { CanvasNodeFrame } from '../types';
+import {
+  CanvasNodeConnection,
+  useCanvasConnectionDrag,
+} from '../useCanvasConnectionDrag';
 import { CanvasNodeResizeEdge, useCanvasNode } from '../useCanvasNode';
+import { useCanvasStore } from '../useCanvasStore';
 import './CanvasNode.css';
 
 export interface CanvasNodeProps {
@@ -61,6 +66,19 @@ export interface CanvasNodeProps {
   selected?: boolean;
 
   /**
+   * Whether the node renders connection handles on its side
+   * midpoints, from which connections to other nodes can be
+   * dragged.
+   */
+  connectable?: boolean;
+
+  /**
+   * Called when a connection dragged from one of the node's
+   * connection handles is dropped on another node.
+   */
+  onConnect?: (connection: CanvasNodeConnection) => void;
+
+  /**
    * Called once when a drag or resize ends and the frame changed,
    * with the rounded result frame.
    */
@@ -118,6 +136,8 @@ export const CanvasNode: React.FC<CanvasNodeProps> = ({
   resizeEdges = 'all',
   dragMode = 'node',
   selected,
+  connectable,
+  onConnect,
   onFrameChange,
   onClick,
   onDoubleClick,
@@ -129,6 +149,7 @@ export const CanvasNode: React.FC<CanvasNodeProps> = ({
     getDragHandleProps,
     getResizeHandleProps,
     isDragging,
+    isResizing,
     wasDragged,
   } = useCanvasNode({
     id,
@@ -140,6 +161,39 @@ export const CanvasNode: React.FC<CanvasNodeProps> = ({
     minHeight,
     onFrameChange,
   });
+  const { getConnectionHandleProps } = useCanvasConnectionDrag({
+    nodeId: id,
+    onConnect,
+  });
+
+  // The side an in-progress connection drag started from on this
+  // node, keeping its handle visible during the drag
+  const connectionSourceSide = useCanvasStore((state) =>
+    connectable === true && state.connectionDrag?.fromNodeId === id
+      ? state.connectionDrag.fromSide
+      : null,
+  );
+
+  // Whether any connection drag is in progress, suppressing
+  // proximity handles on other nodes
+  const connectionDragActive = useCanvasStore(
+    (state) => connectable === true && state.connectionDrag !== null,
+  );
+
+  // The side of this node whose edge the cursor is near, tracked
+  // by the canvas from viewport cursor movement
+  const hoverSide = useCanvasStore((state) =>
+    connectable === true && state.hoveredConnectionHandle?.nodeId === id
+      ? state.hoveredConnectionHandle.side
+      : null,
+  );
+
+  // Whether an in-progress connection drag is targeting this node,
+  // highlighting it as the drop target
+  const isConnectionTarget = useCanvasStore(
+    (state) =>
+      connectable === true && state.connectionDrag?.targetNodeId === id,
+  );
 
   // Fire clicks only when the press did not drag the node
   const handleClick = useCallback(
@@ -154,12 +208,21 @@ export const CanvasNode: React.FC<CanvasNodeProps> = ({
   // The resize edges to render handles for
   const edges = resizeEdges === 'none' ? [] : RESIZE_EDGES[resizeEdges];
 
+  // The connection handle to render: the drag's source side while
+  // one is in progress, otherwise the cursor-adjacent side, hidden
+  // during other interactions
+  const connectionSide =
+    connectionSourceSide ??
+    (isDragging || isResizing || connectionDragActive ? null : hoverSide);
+
   return (
     <div
       {...nodeProps}
       className={`ui-canvas-node${selected ? ' ui-canvas-node-selected' : ''}${
         isDragging ? ' ui-canvas-node-dragging' : ''
-      }${className ? ` ${className}` : ''}`}
+      }${isConnectionTarget ? ' ui-canvas-node-connection-target' : ''}${
+        className ? ` ${className}` : ''
+      }`}
       onClick={handleClick}
       onDoubleClick={onDoubleClick}
       {...(dragMode === 'node' ? getDragHandleProps() : {})}
@@ -179,6 +242,14 @@ export const CanvasNode: React.FC<CanvasNodeProps> = ({
           {...getResizeHandleProps(edge)}
         />
       ))}
+
+      {/* Connection handle on the edge-adjacent side's midpoint */}
+      {connectable && connectionSide && (
+        <div
+          className={`ui-canvas-node-connection-handle ui-canvas-node-connection-handle-${connectionSide}`}
+          {...getConnectionHandleProps(connectionSide)}
+        />
+      )}
     </div>
   );
 };

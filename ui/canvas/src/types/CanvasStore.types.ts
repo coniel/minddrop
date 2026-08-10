@@ -1,3 +1,10 @@
+import {
+  CanvasConnectionDrag,
+  CanvasConnectionDragTarget,
+  CanvasConnectionEnd,
+  CanvasConnectionReconnect,
+  CanvasNodeSide,
+} from './CanvasConnection.types';
 import { CanvasNodeFrame, CanvasPoint } from './CanvasNode.types';
 
 /**
@@ -75,6 +82,20 @@ export interface CanvasState {
    * state-driven fit and centering computations.
    */
   nodes: Record<string, CanvasNodeFrame>;
+
+  /**
+   * The in-progress drag-to-connect interaction, or null when no
+   * connection is being dragged.
+   */
+  connectionDrag: CanvasConnectionDrag | null;
+
+  /**
+   * The node side whose edge the cursor is near, revealing its
+   * connection handle. Tracked by the Canvas component from
+   * viewport cursor movement, so edges are detected from both
+   * inside and outside their node.
+   */
+  hoveredConnectionHandle: CanvasConnectionEnd | null;
 
   /**
    * Sets the zoom level, optionally zooming toward a focal point.
@@ -158,4 +179,41 @@ export interface CanvasState {
    * @param size - The new viewport size.
    */
   setViewportSize: (size: CanvasViewportSize) => void;
+
+  /**
+   * Starts a drag-to-connect interaction from a node side.
+   * @param fromNodeId - The ID of the node the drag is anchored to.
+   * @param fromSide - The side of the node the drag is anchored to.
+   * @param point - The starting cursor position in canvas coordinates.
+   * @param reconnect - The existing connection the drag re-routes, when re-connecting.
+   */
+  startConnectionDrag: (
+    fromNodeId: string,
+    fromSide: CanvasNodeSide,
+    point: CanvasPoint,
+    reconnect?: CanvasConnectionReconnect,
+  ) => void;
+
+  /**
+   * Updates the in-progress connection drag's cursor position and
+   * hovered target. Does nothing when no drag is in progress.
+   * @param point - The cursor position in canvas coordinates.
+   * @param target - The hovered target, or null when none is hovered.
+   */
+  updateConnectionDrag: (
+    point: CanvasPoint,
+    target: CanvasConnectionDragTarget | null,
+  ) => void;
+
+  /**
+   * Clears the in-progress connection drag.
+   */
+  clearConnectionDrag: () => void;
+
+  /**
+   * Sets the node side whose connection handle the cursor is
+   * near. Skips updates that do not change the hovered handle.
+   * @param target - The nearby node side, or null when none is near.
+   */
+  setHoveredConnectionHandle: (target: CanvasConnectionEnd | null) => void;
 }

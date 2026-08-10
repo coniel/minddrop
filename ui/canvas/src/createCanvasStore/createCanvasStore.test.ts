@@ -185,4 +185,127 @@ describe('createCanvasStore', () => {
       expect(store.getNodes()).toEqual({});
     });
   });
+
+  describe('connection drag', () => {
+    it('starts a drag without a target', () => {
+      const store = createCanvasStore();
+
+      store.startConnectionDrag('node-1', 'right', { x: 100, y: 50 });
+
+      expect(store.getConnectionDrag()).toEqual({
+        fromNodeId: 'node-1',
+        fromSide: 'right',
+        point: { x: 100, y: 50 },
+        targetNodeId: null,
+        targetSide: null,
+        reconnect: null,
+      });
+    });
+
+    it('starts a drag re-routing an existing connection', () => {
+      const store = createCanvasStore();
+
+      store.startConnectionDrag(
+        'node-1',
+        'right',
+        { x: 100, y: 50 },
+        {
+          connectionId: 'connection-1',
+          end: 'to',
+        },
+      );
+
+      expect(store.getConnectionDrag()?.reconnect).toEqual({
+        connectionId: 'connection-1',
+        end: 'to',
+      });
+    });
+
+    it('updates the drag point and target', () => {
+      const store = createCanvasStore();
+
+      store.startConnectionDrag('node-1', 'right', { x: 100, y: 50 });
+      store.updateConnectionDrag(
+        { x: 300, y: 80 },
+        { nodeId: 'node-2', side: 'left' },
+      );
+
+      expect(store.getConnectionDrag()).toEqual({
+        fromNodeId: 'node-1',
+        fromSide: 'right',
+        point: { x: 300, y: 80 },
+        targetNodeId: 'node-2',
+        targetSide: 'left',
+        reconnect: null,
+      });
+    });
+
+    it('clears the target when updated without one', () => {
+      const store = createCanvasStore();
+
+      store.startConnectionDrag('node-1', 'right', { x: 100, y: 50 });
+      store.updateConnectionDrag(
+        { x: 300, y: 80 },
+        { nodeId: 'node-2', side: 'left' },
+      );
+      store.updateConnectionDrag({ x: 320, y: 90 }, null);
+
+      expect(store.getConnectionDrag()).toEqual({
+        fromNodeId: 'node-1',
+        fromSide: 'right',
+        point: { x: 320, y: 90 },
+        targetNodeId: null,
+        targetSide: null,
+        reconnect: null,
+      });
+    });
+
+    it('ignores updates when no drag is in progress', () => {
+      const store = createCanvasStore();
+
+      store.updateConnectionDrag({ x: 300, y: 80 }, null);
+
+      expect(store.getConnectionDrag()).toBeNull();
+    });
+
+    it('clears the drag', () => {
+      const store = createCanvasStore();
+
+      store.startConnectionDrag('node-1', 'right', { x: 100, y: 50 });
+      store.clearConnectionDrag();
+
+      expect(store.getConnectionDrag()).toBeNull();
+    });
+  });
+
+  describe('setHoveredConnectionHandle', () => {
+    it('sets and clears the hovered handle', () => {
+      const store = createCanvasStore();
+
+      store.setHoveredConnectionHandle({ nodeId: 'node-1', side: 'right' });
+
+      expect(store.getHoveredConnectionHandle()).toEqual({
+        nodeId: 'node-1',
+        side: 'right',
+      });
+
+      store.setHoveredConnectionHandle(null);
+
+      expect(store.getHoveredConnectionHandle()).toBeNull();
+    });
+
+    it('skips updates that do not change the handle', () => {
+      const store = createCanvasStore();
+
+      store.setHoveredConnectionHandle({ nodeId: 'node-1', side: 'right' });
+
+      const handle = store.getHoveredConnectionHandle();
+
+      // An identical update keeps the same state object, avoiding
+      // subscriber churn on every cursor move
+      store.setHoveredConnectionHandle({ nodeId: 'node-1', side: 'right' });
+
+      expect(store.getHoveredConnectionHandle()).toBe(handle);
+    });
+  });
 });
