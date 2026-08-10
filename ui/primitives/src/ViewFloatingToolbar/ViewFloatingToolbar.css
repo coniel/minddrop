@@ -1,0 +1,28 @@
+/* A zero sized anchor at the bottom center of its container,
+   keeping the toolbar in view regardless of how tall or wide the
+   content is. Adds no height of its own, so it never grows the
+   scrollable area. */
+.view-floating-toolbar-anchor {
+  bottom: var(--space-4);
+  left: 50%;
+  width: 0;
+  height: 0;
+  z-index: 1;
+}
+
+/* Sticks to the bottom of the nearest scrollport */
+.view-floating-toolbar-anchor-position-sticky {
+  position: sticky;
+}
+
+/* Pinned to the bottom of the nearest positioned ancestor */
+.view-floating-toolbar-anchor-position-absolute {
+  position: absolute;
+}
+
+.view-floating-toolbar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-50%);
+}

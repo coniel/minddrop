@@ -41,6 +41,7 @@ export * from './Toolbar';
 export * from './Toast';
 export * from './Tooltip';
 export * from './TransientViewState';
+export * from './ViewFloatingToolbar';
 export * from './WebView';
 export * from './constants';
 export * from './types';
