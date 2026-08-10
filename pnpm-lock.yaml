@@ -2211,6 +2211,9 @@ importers:
 
   ui/databases:
     dependencies:
+      '@minddrop/collections':
+        specifier: workspace:*
+        version: link:../../packages/collections
       '@minddrop/databases':
         specifier: workspace:*
         version: link:../../packages/databases

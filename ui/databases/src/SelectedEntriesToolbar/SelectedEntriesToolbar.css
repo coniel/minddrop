@@ -1,0 +1,11 @@
+/* Qualified with the toolbar class to win over its default gap
+   regardless of stylesheet order */
+.floating-toolbar.selected-entries-toolbar {
+  gap: var(--space-1);
+}
+
+.selected-entries-toolbar-count {
+  padding-left: var(--space-2);
+  /* Keeps the count and its label on a single line */
+  white-space: nowrap;
+}

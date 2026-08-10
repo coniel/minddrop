@@ -6,6 +6,7 @@ export * from './DatabaseLayoutSelectionMenu';
 export * from './DataViewEntryPicker';
 export * from './DataViewFloatingToolbar';
 export * from './DataViewNewEntryPicker';
+export * from './SelectedEntriesToolbar';
 export * from './useAddExistingEntryDraggable';
 export * from './useNewEntryDraggable';
 export * from './useNewEntryPickerDraggable';

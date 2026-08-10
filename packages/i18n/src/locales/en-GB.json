@@ -296,6 +296,17 @@
         "newEntry": "New entry",
         "addExistingEntry": "Add existing entry"
       },
+      "selection": {
+        "count_one": "{{count}} selected",
+        "count_other": "{{count}} selected",
+        "clear": "Clear selection",
+        "delete": "Delete",
+        "deleteConfirmation": {
+          "title": "Delete entries?",
+          "message": "The selected entries will be moved to the system trash.",
+          "confirm": "Delete"
+        }
+      },
       "pickers": {
         "searchEntriesPlaceholder": "Search entries...",
         "searchDatabasesPlaceholder": "Search databases and templates...",

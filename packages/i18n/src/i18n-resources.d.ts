@@ -350,6 +350,17 @@ declare module 'i18next' {
               newEntry: string;
               addExistingEntry: string;
             };
+            selection: {
+              count_one: string;
+              count_other: string;
+              clear: string;
+              delete: string;
+              deleteConfirmation: {
+                title: string;
+                message: string;
+                confirm: string;
+              };
+            };
             pickers: {
               searchEntriesPlaceholder: string;
               searchDatabasesPlaceholder: string;
