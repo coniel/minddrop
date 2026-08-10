@@ -110,6 +110,12 @@ export interface CanvasProps {
   onDragOver?: (event: React.DragEvent<HTMLDivElement>) => void;
 
   /**
+   * Called when a drag leaves the canvas or one of its child
+   * elements. Check relatedTarget to tell the two apart.
+   */
+  onDragLeave?: (event: React.DragEvent<HTMLDivElement>) => void;
+
+  /**
    * Whether dragging from the empty canvas background paints a
    * selection lasso. Defaults to true.
    */
@@ -164,6 +170,7 @@ export const Canvas: React.FC<CanvasProps> = ({
   onBackgroundMouseUp,
   onDrop,
   onDragOver,
+  onDragLeave,
   lasso = true,
   onNodesFrameChange,
   selectionToolbar,
@@ -761,6 +768,7 @@ export const Canvas: React.FC<CanvasProps> = ({
       onKeyUp={focusScoped ? handleReactKeyUp : undefined}
       onBlur={focusScoped ? handleBlur : undefined}
       onDragOver={onDragOver}
+      onDragLeave={onDragLeave}
       onDrop={onDrop ? handleDrop : undefined}
     >
       <div
