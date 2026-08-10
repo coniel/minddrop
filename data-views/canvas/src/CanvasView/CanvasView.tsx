@@ -759,7 +759,7 @@ const CanvasViewContent: React.FC<
 
   return (
     <div
-      className="canvas-view data-view-floating-toolbar-host"
+      className="canvas-view floating-toolbar-host"
       onKeyDown={handleKeyDown}
     >
       <Canvas

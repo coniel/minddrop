@@ -1,11 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { DatabaseId, Databases } from '@minddrop/databases';
 import {
   ContentIcon,
   Icon,
-  Toolbar,
   ToolbarSeparator,
   Tooltip,
+  ViewFloatingToolbar,
 } from '@minddrop/ui-primitives';
 import { DATABASE_FALLBACK_ICON } from '../constants';
 import { useAddExistingEntryDraggable } from '../useAddExistingEntryDraggable';
@@ -53,116 +53,38 @@ export interface DataViewFloatingToolbarProps {
  * add existing entry card, all of which create entries in the
  * view when dragged into it.
  *
- * Sticks to the bottom center of the nearest scrollport and is
- * revealed while the view is hovered. The view must carry the
- * `data-view-floating-toolbar-host` class for the hover reveal.
+ * Revealed while the view is hovered, which requires the view to
+ * carry the `floating-toolbar-host` class.
  */
 export const DataViewFloatingToolbar: React.FC<
   DataViewFloatingToolbarProps
-> = ({ databaseCards, menuOpen = false, children }) => {
-  const anchorRef = useRef<HTMLDivElement>(null);
+> = ({ databaseCards, menuOpen = false, children }) => (
+  <ViewFloatingToolbar menuOpen={menuOpen}>
+    {databaseCards.map((card) => (
+      <DatabaseCard
+        key={card.databaseId}
+        databaseId={card.databaseId}
+        templateId={card.templateId}
+      />
+    ))}
 
-  // The menu open state the pinning effect last reacted to, used
-  // to ignore renders in which it did not change
-  const previousMenuOpenRef = useRef(menuOpen);
+    {/* Separate the database cards from the default cards */}
+    {databaseCards.length > 0 && <ToolbarSeparator />}
 
-  // The toolbar's right edge offset from the anchor while a menu
-  // is open, pinning it in place
-  const [pinnedRightOffset, setPinnedRightOffset] = useState<number | null>(
-    null,
-  );
+    <NewEntryCard />
 
-  // Pin the toolbar's right edge while a menu is open, keeping
-  // the menu trigger (and thus the open menu) in place. On close,
-  // move the pin to the centered position so the CSS transition
-  // animates the toolbar back to center.
-  useEffect(() => {
-    // Ignore renders in which the menu's open state did not change
-    if (menuOpen === previousMenuOpenRef.current) {
-      return;
-    }
+    <AddExistingEntryCard />
 
-    previousMenuOpenRef.current = menuOpen;
+    {/* Trailing slot, e.g. the view's options menu */}
+    {children && (
+      <>
+        <ToolbarSeparator />
 
-    // Nothing to unpin when the toolbar was never pinned
-    if (!menuOpen && pinnedRightOffset === null) {
-      return;
-    }
-
-    const content = anchorRef.current?.querySelector(
-      '.data-view-floating-toolbar-content',
-    );
-
-    if (!(content instanceof HTMLElement)) {
-      setPinnedRightOffset(null);
-
-      return;
-    }
-
-    // The toolbar is centered on the anchor, so its right edge
-    // sits half its width to the right of it
-    const centeredOffset = content.offsetWidth / 2;
-
-    // Closing without a size change: already centered, unpin
-    // directly as no transition will fire
-    if (!menuOpen && pinnedRightOffset === centeredOffset) {
-      setPinnedRightOffset(null);
-
-      return;
-    }
-
-    setPinnedRightOffset(centeredOffset);
-  }, [menuOpen, pinnedRightOffset]);
-
-  // Unpin once the toolbar has animated back to the centered
-  // position, at which point clearing the pin causes no movement
-  function handleToolbarTransitionEnd(event: React.TransitionEvent) {
-    if (
-      event.target === event.currentTarget &&
-      event.propertyName === 'right'
-    ) {
-      setPinnedRightOffset(null);
-    }
-  }
-
-  return (
-    <div ref={anchorRef} className="data-view-floating-toolbar">
-      <Toolbar
-        className="data-view-floating-toolbar-content"
-        style={
-          pinnedRightOffset !== null
-            ? { left: 'auto', right: -pinnedRightOffset, transform: 'none' }
-            : undefined
-        }
-        onTransitionEnd={handleToolbarTransitionEnd}
-      >
-        {databaseCards.map((card) => (
-          <DatabaseCard
-            key={card.databaseId}
-            databaseId={card.databaseId}
-            templateId={card.templateId}
-          />
-        ))}
-
-        {/* Separate the database cards from the default cards */}
-        {databaseCards.length > 0 && <ToolbarSeparator />}
-
-        <NewEntryCard />
-
-        <AddExistingEntryCard />
-
-        {/* Trailing slot, e.g. the view's options menu */}
-        {children && (
-          <>
-            <ToolbarSeparator />
-
-            {children}
-          </>
-        )}
-      </Toolbar>
-    </div>
-  );
-};
+        {children}
+      </>
+    )}
+  </ViewFloatingToolbar>
+);
 
 interface DatabaseCardProps {
   /**

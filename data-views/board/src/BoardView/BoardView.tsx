@@ -509,7 +509,7 @@ export const BoardViewComponent: React.FC<
   return (
     <ScrollArea
       ref={scrollRootRef}
-      className="board-view-scroll data-view-floating-toolbar-host"
+      className="board-view-scroll floating-toolbar-host"
       stateKey="content"
     >
       <DatabaseEntryContextProvider
