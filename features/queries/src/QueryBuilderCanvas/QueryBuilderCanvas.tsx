@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import {
   Queries,
+  QueryConnection,
   QueryNode,
   QueryNodeType,
   addQueryConnection,
@@ -40,7 +41,7 @@ import {
   QueryNodeCardDataKey,
   QuerySourceCardDataKey,
 } from '../constants';
-import { connectQueryNodeToNearest } from '../utils';
+import { connectQueryNodeToNearest, getQueryConnectionAtPoint } from '../utils';
 import './QueryBuilderCanvas.css';
 
 interface NodeTypePickerState {
@@ -96,6 +97,10 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
   // on the empty canvas
   const [nodeTypePicker, setNodeTypePicker] =
     useState<NodeTypePickerState | null>(null);
+
+  // The ID of the connection a dragged toolbar card would
+  // splice its node into
+  const [spliceTargetId, setSpliceTargetId] = useState<string | null>(null);
 
   const query = Queries.use(queryId);
 
@@ -305,19 +310,88 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
     [query, queryId],
   );
 
-  // Allow dragging toolbar cards over the canvas
-  const handleDragOver = useCallback((event: React.DragEvent) => {
-    if (
-      dragContainsType(event, [QueryNodeCardDataKey, QuerySourceCardDataKey])
-    ) {
-      event.preventDefault();
+  // Insert a node of the given type into an existing
+  // connection, centered on the drop point
+  const spliceNode = useCallback(
+    (type: QueryNodeType, point: CanvasPoint, connection: QueryConnection) => {
+      if (!query) {
+        return;
+      }
+
+      const node = createQueryNode(type, {
+        x: Math.round(point.x - QUERY_NODE_WIDTHS[type] / 2),
+        y: Math.round(point.y),
+      });
+
+      const nodes = [...query.nodes, node];
+
+      // Replace the connection with a pair routing the flow
+      // through the new node
+      let connections = removeQueryConnection(query.connections, connection.id);
+
+      connections = addQueryConnection(
+        { ...query, nodes, connections },
+        connection.from,
+        node.id,
+      );
+      connections = addQueryConnection(
+        { ...query, nodes, connections },
+        node.id,
+        connection.to,
+      );
+
+      Queries.update(queryId, { nodes, connections });
+    },
+    [query, queryId],
+  );
+
+  // Allow dragging toolbar cards over the canvas, highlighting
+  // the connection under a dragged node card
+  const handleDragOver = useCallback(
+    (event: React.DragEvent) => {
+      // Node cards splice into the connection they are dropped
+      // onto, so track the edge under the drag
+      if (dragContainsType(event, [QueryNodeCardDataKey])) {
+        event.preventDefault();
+
+        if (!query) {
+          return;
+        }
+
+        const connection = getQueryConnectionAtPoint(
+          query,
+          canvas.clientToCanvas({ x: event.clientX, y: event.clientY }),
+        );
+
+        setSpliceTargetId(connection ? connection.id : null);
+
+        return;
+      }
+
+      // Source cards never splice, since sources take no input
+      if (dragContainsType(event, [QuerySourceCardDataKey])) {
+        event.preventDefault();
+      }
+    },
+    [query, canvas],
+  );
+
+  // Clear the splice highlight when the drag leaves the canvas
+  const handleDragLeave = useCallback((event: React.DragEvent) => {
+    // Ignore leaves into elements within the canvas
+    if (event.currentTarget.contains(event.relatedTarget as Node)) {
+      return;
     }
+
+    setSpliceTargetId(null);
   }, []);
 
   // Handle dropping a toolbar card onto the canvas
   const handleDrop = useCallback(
     (event: React.DragEvent, canvasPoint: CanvasPoint) => {
       event.preventDefault();
+
+      setSpliceTargetId(null);
 
       // Source cards create an unconfigured source node at the
       // drop position, showing its database search
@@ -336,9 +410,23 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
         return;
       }
 
-      addNode(JSON.parse(typeData) as QueryNodeType, canvasPoint);
+      const type = JSON.parse(typeData) as QueryNodeType;
+
+      // The highlighted connection is the insertion target
+      const target = query?.connections.find(
+        (connection) => connection.id === spliceTargetId,
+      );
+
+      // Splice the node into the connection it was dropped onto
+      if (target) {
+        spliceNode(type, canvasPoint, target);
+
+        return;
+      }
+
+      addNode(type, canvasPoint);
     },
-    [addNode],
+    [addNode, spliceNode, query, spliceTargetId],
   );
 
   // Open the node type picker when a connection drag is
@@ -514,6 +602,7 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
         namePlaceholder="queries.editor.namePlaceholder"
         onNameChange={handleNameChange}
         onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         onBackgroundMouseUp={handleBackgroundMouseUp}
         onSelectionDelete={handleSelectionDelete}
@@ -522,6 +611,7 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
         <QueryConnectionsLayer
           query={query}
           pendingConnection={renderedPendingConnection}
+          spliceTargetConnectionId={spliceTargetId}
           onRemoveConnection={handleRemoveConnection}
         />
 

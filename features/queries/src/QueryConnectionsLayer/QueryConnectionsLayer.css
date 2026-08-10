@@ -25,6 +25,12 @@
   stroke-dasharray: 6 4;
 }
 
+/* Edge a dragged toolbar card would splice its node into */
+.queries-connection-splice-target {
+  stroke: var(--primary-1000);
+  stroke-width: 2.5;
+}
+
 /* Connections into a filter whose property their databases do
    not contain, matching the filter node's warning */
 .queries-connection-mismatched {

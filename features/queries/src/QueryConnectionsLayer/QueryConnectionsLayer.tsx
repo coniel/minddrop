@@ -8,7 +8,10 @@ import {
 } from '@minddrop/ui-canvas';
 import { IconButton } from '@minddrop/ui-primitives';
 import { QUERY_NODE_PORT_Y, QUERY_NODE_WIDTHS } from '../constants';
-import { getQueryMismatchedConnectionIds } from '../utils';
+import {
+  getQueryEdgeControlPoints,
+  getQueryMismatchedConnectionIds,
+} from '../utils';
 import './QueryConnectionsLayer.css';
 
 // The size of the selected edge's remove button in pixels,
@@ -40,6 +43,12 @@ export interface QueryConnectionsLayerProps {
   pendingConnection: PendingQueryConnection | null;
 
   /**
+   * The ID of the connection highlighted as the insertion
+   * target while a toolbar card is dragged over it.
+   */
+  spliceTargetConnectionId: string | null;
+
+  /**
    * Callback fired when the selected edge's remove button is
    * pressed.
    */
@@ -54,6 +63,7 @@ export interface QueryConnectionsLayerProps {
 export const QueryConnectionsLayer: React.FC<QueryConnectionsLayerProps> = ({
   query,
   pendingConnection,
+  spliceTargetConnectionId,
   onRemoveConnection,
 }) => {
   // Canvas actions for applying edge clicks to the selection
@@ -123,6 +133,10 @@ export const QueryConnectionsLayer: React.FC<QueryConnectionsLayerProps> = ({
       store.selectConnections([connection.id]);
     }
 
+    // Highlight the edge a dragged toolbar card would splice
+    // its node into
+    const spliceTarget = connection.id === spliceTargetConnectionId;
+
     // Flag connections on a trail into a filter whose property
     // their databases do not contain
     const mismatched = mismatchedConnectionIds.has(connection.id);
@@ -143,7 +157,9 @@ export const QueryConnectionsLayer: React.FC<QueryConnectionsLayerProps> = ({
         <path
           className={`queries-connection${
             selected ? ' queries-connection-selected' : ''
-          }${mismatched ? ' queries-connection-mismatched' : ''}`}
+          }${mismatched ? ' queries-connection-mismatched' : ''}${
+            spliceTarget ? ' queries-connection-splice-target' : ''
+          }`}
           d={path}
         />
 
@@ -234,10 +250,7 @@ function nodeFrame(
  * points, curving horizontally out of the ports.
  */
 function edgePath(from: CanvasPoint, to: CanvasPoint): string {
-  // Curve strength grows with the horizontal distance
-  const bend = Math.max(40, Math.min(160, Math.abs(to.x - from.x) / 2));
+  const [p0, p1, p2, p3] = getQueryEdgeControlPoints(from, to);
 
-  return `M ${from.x} ${from.y} C ${from.x + bend} ${from.y}, ${
-    to.x - bend
-  } ${to.y}, ${to.x} ${to.y}`;
+  return `M ${p0.x} ${p0.y} C ${p1.x} ${p1.y}, ${p2.x} ${p2.y}, ${p3.x} ${p3.y}`;
 }
