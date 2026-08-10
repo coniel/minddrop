@@ -54,10 +54,7 @@ export const StoriesPanel: React.FC = () => {
           placeholder="devTools.stories.searchPlaceholder"
           value={search}
           clearable
-          autoComplete="off"
-          autoCorrect="off"
-          autoCapitalize="off"
-          spellCheck={false}
+          unassisted
           onChange={handleSearchChange}
           onClear={handleClearSearch}
         />

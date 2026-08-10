@@ -79,10 +79,7 @@ export const StatePanel: React.FC = () => {
           placeholder="devTools.state.storeSearchPlaceholder"
           value={storeSearch}
           clearable
-          autoComplete="off"
-          autoCorrect="off"
-          autoCapitalize="off"
-          spellCheck={false}
+          unassisted
           onChange={handleStoreSearchChange}
           onClear={handleClearStoreSearch}
         />
@@ -116,10 +113,7 @@ export const StatePanel: React.FC = () => {
       placeholder="devTools.state.searchPlaceholder"
       value={search}
       clearable
-      autoComplete="off"
-      autoCorrect="off"
-      autoCapitalize="off"
-      spellCheck={false}
+      unassisted
       onChange={handleSearchChange}
       onClear={handleClearSearch}
     />

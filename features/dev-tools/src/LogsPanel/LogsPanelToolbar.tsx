@@ -141,10 +141,7 @@ export const LogsPanelToolbar: React.FC<LogsPanelToolbarProps> = ({
         placeholder="devTools.logs.searchPlaceholder"
         value={search}
         clearable
-        autoComplete="off"
-        autoCorrect="off"
-        autoCapitalize="off"
-        spellCheck={false}
+        unassisted
         onChange={handleSearchChange}
         onClear={handleClearSearch}
       />

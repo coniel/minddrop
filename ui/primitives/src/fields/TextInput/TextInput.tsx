@@ -129,6 +129,14 @@ export interface TextInputProps {
   spellCheck?: boolean;
 
   /*
+   * Disables all input assistance (autocomplete, autocorrect,
+   * auto-capitalization and spellcheck) in one go, for inputs
+   * taking non-prose values such as search fields. Explicitly
+   * set assistance attribute props take precedence.
+   */
+  unassisted?: boolean;
+
+  /*
    * HTML name attribute.
    */
   name?: string;
@@ -186,6 +194,7 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
       textSize,
       trailing,
       type = 'text',
+      unassisted,
       value,
       variant = 'outline',
       weight,
@@ -246,10 +255,10 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
           value={value}
           defaultValue={defaultValue}
           placeholder={stringPlaceholder ?? (placeholder && t(placeholder))}
-          autoCapitalize={autoCapitalize}
-          autoComplete={autoComplete}
-          autoCorrect={autoCorrect}
-          spellCheck={spellCheck}
+          autoCapitalize={autoCapitalize ?? (unassisted ? 'off' : undefined)}
+          autoComplete={autoComplete ?? (unassisted ? 'off' : undefined)}
+          autoCorrect={autoCorrect ?? (unassisted ? 'off' : undefined)}
+          spellCheck={spellCheck ?? (unassisted ? false : undefined)}
           onBlur={onBlur}
           onChange={onChange}
           onFocus={onFocus}

@@ -31,6 +31,7 @@ export interface TextFieldProps
       | 'defaultValue'
       | 'placeholder'
       | 'autoComplete'
+      | 'unassisted'
       | 'onChange'
       | 'onValueChange'
     > {
@@ -105,6 +106,7 @@ export const TextField = React.forwardRef<HTMLDivElement, TextFieldProps>(
       textSize,
       trailing,
       type = 'text',
+      unassisted,
       value,
       variant = 'outline',
       weight,
@@ -138,6 +140,7 @@ export const TextField = React.forwardRef<HTMLDivElement, TextFieldProps>(
           placeholder={placeholder}
           stringPlaceholder={stringPlaceholder}
           autoComplete={autoComplete}
+          unassisted={unassisted}
           onChange={onChange}
           onValueChange={onValueChange}
           invalid={!!error || !!stringError}

@@ -74,10 +74,7 @@ export const DispatchEventForm: React.FC<DispatchEventFormProps> = ({
           className="dev-tools-dispatch-event-name"
           placeholder="devTools.events.dispatch.namePlaceholder"
           value={name}
-          autoComplete="off"
-          autoCorrect="off"
-          autoCapitalize="off"
-          spellCheck={false}
+          unassisted
           onChange={handleNameChange}
           onKeyDown={handleKeyDown}
         />
@@ -88,10 +85,7 @@ export const DispatchEventForm: React.FC<DispatchEventFormProps> = ({
           placeholder="devTools.events.dispatch.dataPlaceholder"
           value={data}
           invalid={!valid}
-          autoComplete="off"
-          autoCorrect="off"
-          autoCapitalize="off"
-          spellCheck={false}
+          unassisted
           onChange={handleDataChange}
           onKeyDown={handleKeyDown}
         />

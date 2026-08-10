@@ -136,10 +136,7 @@ export const SearchDialog: React.FC = () => {
             value={query}
             onValueChange={search}
             clearable
-            autoComplete="off"
-            autoCorrect="off"
-            autoCapitalize="off"
-            spellCheck={false}
+            unassisted
             {...getInputProps()}
           />
         </div>

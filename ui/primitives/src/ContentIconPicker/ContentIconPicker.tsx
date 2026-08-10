@@ -201,10 +201,7 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
         <TextField
           variant="ghost"
           placeholder="iconPicker.filter"
-          autoComplete="off"
-          autoCorrect="off"
-          autoCapitalize="off"
-          spellCheck={false}
+          unassisted
           onValueChange={handleQueryChange}
         />
         <Tooltip title="iconPicker.random">

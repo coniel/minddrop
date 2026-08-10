@@ -115,10 +115,7 @@ export const DatabaseEntriesSearchField: React.FC<
       onValueChange={setSearchQuery}
       clearable
       onClear={handleClear}
-      autoComplete="off"
-      autoCorrect="off"
-      autoCapitalize="off"
-      spellCheck={false}
+      unassisted
     />
   );
 };

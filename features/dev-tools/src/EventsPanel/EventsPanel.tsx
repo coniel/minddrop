@@ -91,10 +91,7 @@ export const EventsPanel: React.FC = () => {
         placeholder="devTools.events.searchPlaceholder"
         value={search}
         clearable
-        autoComplete="off"
-        autoCorrect="off"
-        autoCapitalize="off"
-        spellCheck={false}
+        unassisted
         onChange={handleSearchChange}
         onClear={handleClearSearch}
       />

@@ -164,10 +164,7 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
         <TextField
           variant="ghost"
           placeholder="emojiPicker.filter"
-          autoComplete="off"
-          autoCorrect="off"
-          autoCapitalize="off"
-          spellCheck={false}
+          unassisted
           onValueChange={handleQueryChange}
         />
         <Tooltip title="emojiPicker.random">

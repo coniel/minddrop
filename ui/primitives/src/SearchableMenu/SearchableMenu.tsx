@@ -378,10 +378,7 @@ export const SearchableMenu = React.forwardRef<
             onKeyDown={handleInputKeyDown}
             placeholder={searchPlaceholder}
             stringPlaceholder={stringSearchPlaceholder}
-            autoComplete="off"
-            autoCorrect="off"
-            autoCapitalize="off"
-            spellCheck={false}
+            unassisted
             leading={<Icon name="search" size={14} />}
           />
         </div>
