@@ -26,7 +26,9 @@
       "consumers": "Used by",
       "consumersEmpty": "Not used by any views",
       "entries": "Entries",
-      "entriesEmpty": "No entries"
+      "entriesEmpty": "No entries",
+      "selectEntry": "Select entry",
+      "selectAllEntries": "Select all entries"
     }
   }
 }

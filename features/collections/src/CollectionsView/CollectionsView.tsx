@@ -120,7 +120,7 @@ export const CollectionsView: React.FC = () => {
         </Stack>
 
         {/* The selected collection's details */}
-        <ScrollArea className="collections-view-details">
+        <div className="collections-view-details">
           {selectedCollection ? (
             <CollectionDetails collection={selectedCollection} />
           ) : (
@@ -133,7 +133,7 @@ export const CollectionsView: React.FC = () => {
               text="collections.details.noSelection"
             />
           )}
-        </ScrollArea>
+        </div>
       </Group>
     </PanelView>
   );

@@ -51,6 +51,8 @@ declare module 'i18next' {
             consumersEmpty: string;
             entries: string;
             entriesEmpty: string;
+            selectEntry: string;
+            selectAllEntries: string;
           };
         };
         test: string;

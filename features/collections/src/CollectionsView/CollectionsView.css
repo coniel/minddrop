@@ -29,13 +29,44 @@
   }
 
   .collections-view-details {
+    display: flex;
     flex: 1;
     min-width: 0;
+  }
+
+  /* Positions the entry selection toolbar against the bottom of
+     the column rather than the scrolled entry list */
+  .collection-details {
+    position: relative;
+    display: flex;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .collection-details-scroll {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .collection-details-content {
     padding: var(--space-4);
+    /* Leaves room for the entry selection toolbar */
+    padding-bottom: var(--space-7);
   }
 
   .collections-view-empty {
     padding: var(--space-2);
+  }
+
+  /* Sized to match the entry selection checkboxes */
+  .collection-details-section-icon {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .collection-details-entry-item {
+    flex: 1;
+    min-width: 0;
   }
 
   .collection-details-name {
