@@ -1,4 +1,5 @@
 import { DataView } from '@minddrop/data-views';
+import { CanvasConnection } from '@minddrop/ui-canvas';
 
 /**
  * A node on the canvas. Currently only entry nodes exist; the
@@ -41,6 +42,13 @@ export interface CanvasViewEntryNode {
   height?: number;
 }
 
+/**
+ * A visual connection between two canvas nodes. Endpoint node IDs
+ * are entry IDs when the node is an entry node, making them item
+ * references which must be mapped when serializing.
+ */
+export type CanvasViewConnection = CanvasConnection;
+
 export interface CanvasView extends DataView {
   type: 'canvas';
   options: Partial<CanvasViewOptions>;
@@ -82,4 +90,9 @@ export interface CanvasViewData {
    * render on top).
    */
   nodes: CanvasViewNode[];
+
+  /**
+   * The connections drawn between the canvas's nodes.
+   */
+  connections: CanvasViewConnection[];
 }

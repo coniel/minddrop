@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DataView, DataViewTypes, DataViews } from '@minddrop/data-views';
-import { CanvasViewData, CanvasViewNode } from '../types';
+import { CanvasViewConnection, CanvasViewData, CanvasViewNode } from '../types';
 import { CanvasViewType } from './CanvasViewType';
 
 const nodeA: CanvasViewNode = {
@@ -19,6 +19,12 @@ const nodeB: CanvasViewNode = {
   width: 300,
 };
 
+const connection: CanvasViewConnection = {
+  id: 'connection-1',
+  from: { nodeId: 'entry-a', side: 'right' },
+  to: { nodeId: 'entry-b', side: 'left' },
+};
+
 // A virtual canvas view loaded directly into the store, so
 // updates skip file persistence
 const canvasView: DataView<object, CanvasViewData> = {
@@ -30,7 +36,7 @@ const canvasView: DataView<object, CanvasViewData> = {
   dataSource: { type: 'collection', id: 'collection-1' },
   created: new Date('2026-01-01'),
   lastModified: new Date('2026-01-01'),
-  data: { nodes: [nodeA, nodeB] },
+  data: { nodes: [nodeA, nodeB], connections: [connection] },
 };
 
 describe('CanvasViewType', () => {
@@ -52,12 +58,26 @@ describe('CanvasViewType', () => {
     // merge, which node removal depends on.
     await DataViews.update(canvasView.id, { data: { nodes: [nodeA] } });
 
-    expect(DataViews.get(canvasView.id).data).toEqual({ nodes: [nodeA] });
+    expect(DataViews.get(canvasView.id).data).toEqual({
+      nodes: [nodeA],
+      connections: [connection],
+    });
+  });
+
+  it('replaces the connection list wholesale on update', async () => {
+    // Persist an empty connection list, asserting that removal
+    // persists and the sibling nodes key is untouched
+    await DataViews.update(canvasView.id, { data: { connections: [] } });
+
+    expect(DataViews.get(canvasView.id).data).toEqual({
+      nodes: [nodeA, nodeB],
+      connections: [],
+    });
   });
 
   it('indexes entry node IDs as references', async () => {
     const updated = await DataViews.update(canvasView.id, {
-      data: { nodes: [nodeA] },
+      data: { nodes: [nodeA], connections: [] },
     });
 
     expect(updated.references).toEqual(['entry-a']);

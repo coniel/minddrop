@@ -21,10 +21,15 @@ import {
 import { DropEventData, dragContainsType } from '@minddrop/selection';
 import {
   Canvas,
+  CanvasConnectionReconnection,
+  CanvasConnectionsLayer,
   CanvasNode,
+  CanvasNodeConnection,
   CanvasPoint,
   CanvasProvider,
   CanvasZoomToolbar,
+  useCanvas,
+  useCanvasStore,
   useFitOnNodesReady,
 } from '@minddrop/ui-canvas';
 import {
@@ -32,16 +37,62 @@ import {
   DataViewFloatingToolbar,
   DataViewNewEntryPicker,
 } from '@minddrop/ui-databases';
-import { getTransferData } from '@minddrop/utils';
+import { getTransferData, uuid } from '@minddrop/utils';
+import {
+  CanvasConnectionChanges,
+  CanvasConnectionToolbar,
+} from '../CanvasConnectionToolbar';
 import {
   CANVAS_ACCEPTED_DATA_TYPES,
+  CONNECTION_TOOLBAR_EXIT_DURATION,
   DEFAULT_NODE_WIDTH,
   ESTIMATED_NODE_HEIGHT,
   NODE_GAP,
 } from '../constants';
-import { CanvasViewData, CanvasViewNode, CanvasViewOptions } from '../types';
-import { placeEntryNode, reconcileNodes, updateNodeFrame } from '../utils';
+import {
+  CanvasViewConnection,
+  CanvasViewData,
+  CanvasViewNode,
+  CanvasViewOptions,
+} from '../types';
+import {
+  placeEntryNode,
+  reconcileConnections,
+  reconcileNodes,
+  updateNodeFrame,
+} from '../utils';
 import './CanvasView.css';
+
+interface ConnectionSelection {
+  /**
+   * The ID of the selected connection.
+   */
+  connectionId: string;
+
+  /**
+   * The canvas point the connection was selected at, anchoring
+   * the connection toolbar.
+   */
+  point: CanvasPoint;
+}
+
+interface ToolbarSelection {
+  /**
+   * The connection the toolbar configures.
+   */
+  connection: CanvasViewConnection;
+
+  /**
+   * The canvas point anchoring the toolbar.
+   */
+  point: CanvasPoint;
+
+  /**
+   * Whether the toolbar is shown. False while its exit transition
+   * plays before unmounting.
+   */
+  open: boolean;
+}
 
 interface EntryPickerState {
   /**
@@ -68,17 +119,15 @@ interface EntryPickerState {
 export const CanvasViewComponent: React.FC<
   DataViewTypeComponentProps<CanvasViewOptions, CanvasViewData>
 > = ({ view, entries }) => (
-  <div className="canvas-view data-view-floating-toolbar-host">
-    <CanvasProvider>
-      <CanvasViewContent view={view} entries={entries} />
-    </CanvasProvider>
-  </div>
+  <CanvasProvider>
+    <CanvasViewContent view={view} entries={entries} />
+  </CanvasProvider>
 );
 
 /**
- * Renders the canvas view's canvas, nodes, pickers and toolbar.
- * Separated from the root component so it can use the canvas
- * context provided there.
+ * Renders the canvas view's canvas, nodes, connections, pickers
+ * and toolbars. Separated from the root component so it can use
+ * the canvas context provided there.
  */
 const CanvasViewContent: React.FC<
   DataViewTypeComponentProps<CanvasViewOptions, CanvasViewData>
@@ -91,6 +140,17 @@ const CanvasViewContent: React.FC<
   // toolbar in place
   const [optionsMenuOpen, setOptionsMenuOpen] = useState(false);
 
+  // The selected connection and the canvas point it was selected
+  // at, anchoring the connection toolbar. Deletable via
+  // Delete/Backspace.
+  const [connectionSelection, setConnectionSelection] =
+    useState<ConnectionSelection | null>(null);
+
+  // The toolbar's displayed selection, kept mounted while its
+  // exit transition plays after deselection
+  const [toolbarSelection, setToolbarSelection] =
+    useState<ToolbarSelection | null>(null);
+
   // Resolve nodes from view data, falling back to an empty canvas
   const nodes = useMemo(() => view.data?.nodes || [], [view.data]);
 
@@ -101,6 +161,25 @@ const CanvasViewContent: React.FC<
   const reconciledNodes = useMemo(
     () => reconcileNodes(nodes, entries),
     [nodes, entries],
+  );
+
+  // Resolve connections from view data, falling back to none
+  const connections = useMemo(() => view.data?.connections || [], [view.data]);
+
+  // Reconcile the saved connections with the reconciled nodes,
+  // dropping connections attached to removed nodes
+  const reconciledConnections = useMemo(
+    () => reconcileConnections(connections, reconciledNodes),
+    [connections, reconciledNodes],
+  );
+
+  // The selected connection, when it still exists
+  const selectedConnection = useMemo(
+    () =>
+      reconciledConnections.find(
+        (connection) => connection.id === connectionSelection?.connectionId,
+      ) || null,
+    [reconciledConnections, connectionSelection],
   );
 
   // Map each entry to the card layout its database is
@@ -127,6 +206,16 @@ const CanvasViewContent: React.FC<
       }));
   }, [entries, view.options?.toolbarCards]);
 
+  // Canvas actions for converting selection clicks to canvas
+  // coordinates
+  const canvas = useCanvas();
+
+  // Whether a drag-to-connect or re-connect interaction is in
+  // progress
+  const connectionDragActive = useCanvasStore((state) =>
+    Boolean(state.connectionDrag),
+  );
+
   // Fit the placed nodes into view when the canvas opens
   useFitOnNodesReady(reconciledNodes.map((node) => node.id));
 
@@ -136,6 +225,252 @@ const CanvasViewContent: React.FC<
       DataViews.update(view.id, { data: { nodes: updatedNodes } });
     },
     [view.id],
+  );
+
+  // Persist the updated connections to the view data
+  const updateConnections = useCallback(
+    (updatedConnections: CanvasViewConnection[]) => {
+      DataViews.update(view.id, { data: { connections: updatedConnections } });
+    },
+    [view.id],
+  );
+
+  // Add a connection dragged between two nodes, skipping exact
+  // duplicates
+  const handleConnect = useCallback(
+    (connection: CanvasNodeConnection) => {
+      // An identical connection already exists
+      const duplicate = reconciledConnections.some(
+        (existing) =>
+          existing.from.nodeId === connection.from.nodeId &&
+          existing.from.side === connection.from.side &&
+          existing.to.nodeId === connection.to.nodeId &&
+          existing.to.side === connection.to.side,
+      );
+
+      if (duplicate) {
+        return;
+      }
+
+      updateConnections([
+        ...reconciledConnections,
+        { id: uuid(), from: connection.from, to: connection.to },
+      ]);
+    },
+    [reconciledConnections, updateConnections],
+  );
+
+  // Select a connection when its curve is pressed, anchoring the
+  // connection toolbar at the pressed point
+  const handleConnectionMouseDown = useCallback(
+    (connectionId: string, event: React.MouseEvent) => {
+      setConnectionSelection({
+        connectionId,
+        point: canvas.clientToCanvas({
+          x: event.clientX,
+          y: event.clientY,
+        }),
+      });
+    },
+    [canvas],
+  );
+
+  // Deselect the connection on any press outside the connection
+  // toolbar and its menus. Window-level capture, since an open
+  // menu swallows the outside press that dismisses it before it
+  // reaches the canvas.
+  useEffect(() => {
+    if (!connectionSelection) {
+      return;
+    }
+
+    const handleWindowPointerDown = (event: PointerEvent) => {
+      const target = event.target instanceof Element ? event.target : null;
+
+      // Ignore presses within the toolbar or an open menu
+      if (
+        target?.closest('.canvas-view-connection-toolbar') ||
+        target?.closest('.menu')
+      ) {
+        return;
+      }
+
+      setConnectionSelection(null);
+    };
+
+    window.addEventListener('pointerdown', handleWindowPointerDown, true);
+
+    return () => {
+      window.removeEventListener('pointerdown', handleWindowPointerDown, true);
+    };
+  }, [connectionSelection]);
+
+  // Show the toolbar for the selected connection, playing its
+  // exit transition before unmounting it on deselection
+  useEffect(() => {
+    // Show the toolbar for the current selection
+    if (selectedConnection && connectionSelection) {
+      setToolbarSelection({
+        connection: selectedConnection,
+        point: connectionSelection.point,
+        open: true,
+      });
+
+      return;
+    }
+
+    // Start the exit transition
+    setToolbarSelection((current) =>
+      current?.open ? { ...current, open: false } : current,
+    );
+
+    // Unmount once the exit transition has played
+    const timeout = window.setTimeout(
+      () => setToolbarSelection(null),
+      CONNECTION_TOOLBAR_EXIT_DURATION,
+    );
+
+    return () => window.clearTimeout(timeout);
+  }, [selectedConnection, connectionSelection]);
+
+  // Deselect the connection when a connection drag starts, so the
+  // toolbar does not linger over the drag
+  useEffect(() => {
+    if (connectionDragActive) {
+      setConnectionSelection(null);
+    }
+  }, [connectionDragActive]);
+
+  // Re-route a connection end dragged onto a new target, skipping
+  // changes that would duplicate an existing connection. Ends
+  // dropped on empty canvas remove the connection.
+  const handleConnectionReconnect = useCallback(
+    (reconnection: CanvasConnectionReconnection) => {
+      const { target } = reconnection;
+
+      // Dropped on empty canvas: remove the connection
+      if (!target) {
+        updateConnections(
+          reconciledConnections.filter(
+            (connection) => connection.id !== reconnection.connectionId,
+          ),
+        );
+
+        return;
+      }
+
+      // Replace the dragged end on the re-routed connection
+      const updated = reconciledConnections.map((connection) => {
+        // Leave other connections untouched
+        if (connection.id !== reconnection.connectionId) {
+          return connection;
+        }
+
+        // Replace the dragged end with its new target
+        if (reconnection.end === 'from') {
+          return { ...connection, from: target };
+        }
+
+        return { ...connection, to: target };
+      });
+
+      const rerouted = updated.find(
+        (connection) => connection.id === reconnection.connectionId,
+      );
+
+      // The re-routed connection no longer exists
+      if (!rerouted) {
+        return;
+      }
+
+      // An identical connection already exists; drop the change
+      const duplicate = updated.some(
+        (connection) =>
+          connection.id !== rerouted.id &&
+          connection.from.nodeId === rerouted.from.nodeId &&
+          connection.from.side === rerouted.from.side &&
+          connection.to.nodeId === rerouted.to.nodeId &&
+          connection.to.side === rerouted.to.side,
+      );
+
+      if (duplicate) {
+        return;
+      }
+
+      updateConnections(updated);
+    },
+    [reconciledConnections, updateConnections],
+  );
+
+  // Apply configuration changes to the selected connection
+  const handleConnectionChange = useCallback(
+    (changes: CanvasConnectionChanges) => {
+      updateConnections(
+        reconciledConnections.map((connection) =>
+          connection.id === connectionSelection?.connectionId
+            ? { ...connection, ...changes }
+            : connection,
+        ),
+      );
+    },
+    [reconciledConnections, connectionSelection, updateConnections],
+  );
+
+  // Remove the selected connection and clear the selection
+  const deleteSelectedConnection = useCallback(() => {
+    // No connection is selected
+    if (!connectionSelection) {
+      return;
+    }
+
+    // Filter the selected connection out of the persisted set
+    updateConnections(
+      reconciledConnections.filter(
+        (connection) => connection.id !== connectionSelection.connectionId,
+      ),
+    );
+    setConnectionSelection(null);
+  }, [connectionSelection, reconciledConnections, updateConnections]);
+
+  // Handle connection keyboard shortcuts bubbling up from the
+  // canvas: Escape deselects, Delete/Backspace removes the
+  // selected connection
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent) => {
+      const target = event.target as HTMLElement;
+      const tag = target.tagName;
+
+      // Don't handle shortcuts when typing in inputs
+      if (
+        tag === 'INPUT' ||
+        tag === 'TEXTAREA' ||
+        tag === 'SELECT' ||
+        target.isContentEditable
+      ) {
+        return;
+      }
+
+      // Escape deselects the connection
+      if (event.key === 'Escape' && connectionSelection) {
+        setConnectionSelection(null);
+
+        return;
+      }
+
+      // Delete/Backspace removes the selected connection. Stopped
+      // from propagating so the app's global delete-selection
+      // shortcut never sees it.
+      if (
+        (event.key === 'Delete' || event.key === 'Backspace') &&
+        connectionSelection
+      ) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        deleteSelectedConnection();
+      }
+    },
+    [connectionSelection, deleteSelectedConnection],
   );
 
   // Place duplicated entries next to their original. Fired before
@@ -391,12 +726,23 @@ const CanvasViewContent: React.FC<
   }
 
   return (
-    <>
+    <div
+      className="canvas-view data-view-floating-toolbar-host"
+      onKeyDown={handleKeyDown}
+    >
       <Canvas
         shortcutScope="focus"
         onDragOver={handleDragOver}
         onDrop={handleDrop}
       >
+        {/* Connection curves, rendered below the nodes */}
+        <CanvasConnectionsLayer
+          connections={reconciledConnections}
+          selectedId={connectionSelection?.connectionId}
+          onConnectionMouseDown={handleConnectionMouseDown}
+          onConnectionReconnect={handleConnectionReconnect}
+        />
+
         <DatabaseEntryContextProvider optionsMenu source={view.dataSource}>
           {reconciledNodes.map((node) => (
             <CanvasNode
@@ -408,7 +754,9 @@ const CanvasViewContent: React.FC<
               height={node.height}
               resizeEdges="horizontal"
               dragMode="handle"
+              connectable
               className="canvas-view-node"
+              onConnect={handleConnect}
               onFrameChange={(frame) =>
                 updateNodes(updateNodeFrame(reconciledNodes, node.id, frame))
               }
@@ -426,6 +774,17 @@ const CanvasViewContent: React.FC<
         {renderEntryPicker()}
       </Canvas>
 
+      {/* Selected connection configuration toolbar */}
+      {toolbarSelection && (
+        <CanvasConnectionToolbar
+          connection={toolbarSelection.connection}
+          point={toolbarSelection.point}
+          open={toolbarSelection.open}
+          onConnectionChange={handleConnectionChange}
+          onConnectionDelete={deleteSelectedConnection}
+        />
+      )}
+
       {/* Floating toolbar */}
       <DataViewFloatingToolbar
         databaseCards={toolbarDatabaseCards}
@@ -437,7 +796,7 @@ const CanvasViewContent: React.FC<
 
       {/* Zoom controls */}
       <CanvasZoomToolbar className="canvas-view-zoom-toolbar" />
-    </>
+    </div>
   );
 };
 

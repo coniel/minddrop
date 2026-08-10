@@ -27,7 +27,9 @@
     "@minddrop/test-utils": "workspace:*",
     "@minddrop/ui-canvas": "workspace:*",
     "@minddrop/ui-databases": "workspace:*",
+    "@minddrop/ui-icons": "workspace:*",
     "@minddrop/ui-primitives": "workspace:*",
+    "@minddrop/ui-theme": "workspace:*",
     "@minddrop/utils": "workspace:*"
   }
 }

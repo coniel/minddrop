@@ -1646,6 +1646,24 @@ declare module 'i18next' {
             toolbarCards: string;
             showToolbarCard: string;
             toolbarCardTemplate: string;
+            connectionArrows: string;
+            connectionArrowsNone: string;
+            connectionArrowsEnd: string;
+            connectionArrowsBoth: string;
+            connectionColor: string;
+            connectionShape: string;
+            connectionShapeCurved: string;
+            connectionShapeStraight: string;
+            connectionShapeDirect: string;
+            connectionStyle: string;
+            connectionStyleSolid: string;
+            connectionStyleDashed: string;
+            connectionStyleDotted: string;
+            connectionThickness: string;
+            connectionThicknessThin: string;
+            connectionThicknessMedium: string;
+            connectionThicknessThick: string;
+            connectionDelete: string;
           };
           board: {
             name: string;

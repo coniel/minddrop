@@ -4,7 +4,7 @@ import { CanvasViewOptionsMenu } from '../CanvasViewOptionsMenu';
 import { CanvasViewSkeleton } from '../CanvasViewSkeleton';
 import { defaultCanvasViewData } from '../constants';
 import { CanvasViewData, CanvasViewOptions } from '../types';
-import { mapNodeReferences } from '../utils';
+import { mapDataReferences } from '../utils';
 
 export const CanvasViewType: DataViewType<CanvasViewOptions, CanvasViewData> = {
   type: 'canvas',
@@ -16,6 +16,6 @@ export const CanvasViewType: DataViewType<CanvasViewOptions, CanvasViewData> = {
   component: CanvasViewComponent,
   settingsMenu: CanvasViewOptionsMenu,
   skeletonComponent: CanvasViewSkeleton,
-  serializeReferences: mapNodeReferences,
-  resolveReferences: mapNodeReferences,
+  serializeReferences: mapDataReferences,
+  resolveReferences: mapDataReferences,
 };

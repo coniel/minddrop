@@ -1,0 +1,48 @@
+.canvas-view-connection-toolbar {
+  position: absolute;
+  z-index: 1;
+
+  /* Anchor the toolbar's bottom left corner at the position */
+  transform: translateY(-100%);
+
+  /* Float the menus over the canvas */
+  .canvas-view-connection-toolbar-menus {
+    padding: var(--space-1);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    background-color: var(--surface-overlay);
+    box-shadow: var(--shadow-overlay);
+
+    /* Pop in/out from the anchor corner like a menu popup */
+    transform-origin: bottom left;
+    transition:
+      transform var(--duration-fast) var(--ease-out),
+      opacity var(--duration-fast) var(--ease-out);
+
+    @starting-style {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+  }
+
+  /* Exit transition while the toolbar closes */
+  &.canvas-view-connection-toolbar-closed
+    .canvas-view-connection-toolbar-menus {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  /* Square the color button up with the icon buttons */
+  .canvas-view-connection-toolbar-color-button {
+    width: 1.5rem;
+    padding: 0;
+  }
+
+  /* Swatch showing the current connection color */
+  .canvas-view-connection-toolbar-swatch {
+    display: block;
+    width: 14px;
+    height: 14px;
+    border-radius: var(--radius-full);
+  }
+}
