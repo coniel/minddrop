@@ -69,6 +69,15 @@ export const CONNECTION_ARROW_SIZES: Record<CanvasConnectionThickness, number> =
     thick: 16,
   };
 
+/** Padding between the selection box and the nodes it wraps. */
+export const SELECTION_BOX_PADDING = 8;
+
+/**
+ * Gap in screen pixels between the selection toolbar and the
+ * bounds it floats above.
+ */
+export const SELECTION_TOOLBAR_GAP = 12;
+
 /**
  * Number of points a connection curve is sampled at when hit
  * testing it against a frame.

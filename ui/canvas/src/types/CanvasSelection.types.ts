@@ -59,9 +59,24 @@ export interface CanvasLassoState {
 }
 
 /**
- * Returns the IDs of the connections a marquee touches.
- *
- * @param frame - The marquee's frame in canvas coordinates.
- * @returns The IDs of the intersecting connections.
+ * Geometry queries against a canvas's connections, registered by
+ * the connections layer since it is what holds them. The canvas
+ * itself only knows about nodes.
  */
-export type CanvasConnectionHitTest = (frame: CanvasNodeFrame) => string[];
+export interface CanvasConnectionGeometry {
+  /**
+   * Returns the IDs of the connections whose paths pass through
+   * a frame.
+   *
+   * @param frame - The frame to test, in canvas coordinates.
+   */
+  hitTest: (frame: CanvasNodeFrame) => string[];
+
+  /**
+   * Returns the frame enclosing the given connections' paths, or
+   * null when none of them resolve.
+   *
+   * @param ids - The IDs of the connections to enclose.
+   */
+  getBounds: (ids: string[]) => CanvasNodeFrame | null;
+}

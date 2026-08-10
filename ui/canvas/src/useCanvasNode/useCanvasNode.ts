@@ -266,9 +266,31 @@ export function useCanvasNode(
 
   const selected = useSyncExternalStore(subscribeToStore, getSelectedSnapshot);
 
+  // The offset of an in-progress group drag this node is part of.
+  // The store holds one offset for the whole selection, so the
+  // snapshot is a stable reference between updates.
+  const getSelectionOffsetSnapshot = useCallback(
+    () =>
+      selectable && context?.store.isNodeSelected(id)
+        ? context.store.getSelectionDrag()
+        : null,
+    [context, selectable, id],
+  );
+
+  const selectionOffset = useSyncExternalStore(
+    subscribeToStore,
+    getSelectionOffsetSnapshot,
+  );
+
   // Hold the pointer for the interaction, so dragging over text
   // content neither selects it nor swaps the cursor
   useInteractionLock(interaction ? interaction.cursor : null);
+
+  // The node's position, carrying the offset of a group drag it
+  // is part of
+  const offsetPosition = selectionOffset
+    ? { x: position.x + selectionOffset.x, y: position.y + selectionOffset.y }
+    : position;
 
   // Auto-height nodes follow their content height
   const autoHeight = height === undefined;
@@ -322,12 +344,19 @@ export function useCanvasNode(
     }
 
     context.store.registerNode(id, {
-      x: position.x,
-      y: position.y,
+      x: offsetPosition.x,
+      y: offsetPosition.y,
       width: size.width,
       height: effectiveHeight,
     });
-  }, [context, id, position.x, position.y, size.width, effectiveHeight]);
+  }, [
+    context,
+    id,
+    offsetPosition.x,
+    offsetPosition.y,
+    size.width,
+    effectiveHeight,
+  ]);
 
   // Unregister the node when it unmounts
   useEffect(() => {
@@ -926,8 +955,8 @@ export function useCanvasNode(
 
   return {
     frame: {
-      x: position.x,
-      y: position.y,
+      x: offsetPosition.x,
+      y: offsetPosition.y,
       width: size.width,
       height: effectiveHeight,
     },
@@ -935,7 +964,7 @@ export function useCanvasNode(
     nodeProps: {
       ref: nodeRef,
       style: {
-        transform: `translate(${position.x}px, ${position.y}px)`,
+        transform: `translate(${offsetPosition.x}px, ${offsetPosition.y}px)`,
         width: size.width,
         ...(autoHeight ? {} : { height: size.height }),
       },

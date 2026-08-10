@@ -10,6 +10,7 @@ import {
   CanvasConnection,
   CanvasConnectionAnchor,
   CanvasConnectionThickness,
+  CanvasNodeFrame,
   CanvasNodeSide,
 } from '../types';
 import {
@@ -23,7 +24,9 @@ import {
   getConnectionDasharray,
   getConnectionHaloColor,
   getConnectionPath,
+  getConnectionPathBounds,
   getSideMidpoint,
+  unionFrames,
 } from '../utils';
 import './CanvasConnectionsLayer.css';
 
@@ -88,41 +91,81 @@ export const CanvasConnectionsLayer: React.FC<CanvasConnectionsLayerProps> = ({
     connectionsRef.current = connections;
   }, [connections]);
 
-  // Register the hit test the canvas uses to lasso select
-  // connections. The layer owns the connections, so the canvas
-  // has no way to test them itself.
+  // Register the geometry queries the canvas uses to lasso select
+  // connections and to place UI over them. The layer owns the
+  // connections, so the canvas cannot resolve them itself.
   useEffect(() => {
-    store.setConnectionHitTest((frame) =>
-      connectionsRef.current
-        .filter((connection) => {
-          const fromFrame = store.getNode(connection.from.nodeId);
-          const toFrame = store.getNode(connection.to.nodeId);
+    /**
+     * Resolves a connection's anchors from the live node
+     * registry, or null when either endpoint is not mounted.
+     */
+    function getAnchors(connection: CanvasConnection) {
+      const fromFrame = store.getNode(connection.from.nodeId);
+      const toFrame = store.getNode(connection.to.nodeId);
 
-          // Skip connections to nodes not mounted on the canvas
-          if (!fromFrame || !toFrame) {
-            return false;
-          }
+      if (!fromFrame || !toFrame) {
+        return null;
+      }
 
-          return connectionIntersectsFrame(
-            {
-              point: getSideMidpoint(fromFrame, connection.from.side),
-              side: connection.from.side,
-              frame: fromFrame,
-            },
-            {
-              point: getSideMidpoint(toFrame, connection.to.side),
-              side: connection.to.side,
-              frame: toFrame,
-            },
-            connection.shape,
-            frame,
-          );
-        })
-        .map((connection) => connection.id),
-    );
+      return {
+        from: {
+          point: getSideMidpoint(fromFrame, connection.from.side),
+          side: connection.from.side,
+          frame: fromFrame,
+        },
+        to: {
+          point: getSideMidpoint(toFrame, connection.to.side),
+          side: connection.to.side,
+          frame: toFrame,
+        },
+      };
+    }
+
+    store.setConnectionGeometry({
+      hitTest: (frame) =>
+        connectionsRef.current
+          .filter((connection) => {
+            const anchors = getAnchors(connection);
+
+            // Skip connections to nodes not mounted on the canvas
+            if (!anchors) {
+              return false;
+            }
+
+            return connectionIntersectsFrame(
+              anchors.from,
+              anchors.to,
+              connection.shape,
+              frame,
+            );
+          })
+          .map((connection) => connection.id),
+
+      getBounds: (ids) => {
+        const frames = connectionsRef.current
+          .filter((connection) => ids.includes(connection.id))
+          .map((connection) => {
+            const anchors = getAnchors(connection);
+
+            // Skip connections to nodes not mounted on the canvas
+            if (!anchors) {
+              return null;
+            }
+
+            return getConnectionPathBounds(
+              anchors.from,
+              anchors.to,
+              connection.shape,
+            );
+          })
+          .filter((frame): frame is CanvasNodeFrame => Boolean(frame));
+
+        return unionFrames(frames);
+      },
+    });
 
     return () => {
-      store.setConnectionHitTest(null);
+      store.setConnectionGeometry(null);
     };
   }, [store]);
 

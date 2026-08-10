@@ -4,6 +4,8 @@ export * from './CanvasConnectionsLayer';
 export * from './CanvasLasso';
 export * from './CanvasNode';
 export * from './CanvasProvider';
+export * from './CanvasSelectionBox';
+export * from './CanvasSelectionToolbar';
 export * from './CanvasNameField';
 export * from './CanvasToolbar';
 export * from './constants';

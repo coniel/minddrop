@@ -12,7 +12,7 @@ import {
   CanvasConnectionDrag,
   CanvasConnectionDragTarget,
   CanvasConnectionEnd,
-  CanvasConnectionHitTest,
+  CanvasConnectionGeometry,
   CanvasConnectionReconnect,
   CanvasLassoState,
   CanvasNodeFrame,
@@ -130,12 +130,26 @@ export interface CanvasStore {
   getLasso(): CanvasLassoState | null;
 
   /**
+   * Returns the offset of the in-progress group drag, or null
+   * when no group drag is in progress.
+   */
+  getSelectionDrag(): CanvasPoint | null;
+
+  /**
    * Returns the IDs of the connections a frame touches, empty
    * when no connections layer is mounted.
    *
    * @param frame - The frame to test, in canvas coordinates.
    */
   hitTestConnections(frame: CanvasNodeFrame): string[];
+
+  /**
+   * Returns the frame enclosing the given connections, or null
+   * when none of them resolve.
+   *
+   * @param ids - The IDs of the connections to enclose.
+   */
+  getConnectionBounds(ids: string[]): CanvasNodeFrame | null;
 
   /**
    * Returns the alignment guides for the node being dragged or
@@ -334,12 +348,30 @@ export interface CanvasStore {
   clearLasso(): void;
 
   /**
-   * Registers the callback hit testing frames against the
-   * canvas's connections.
-   *
-   * @param hitTest - The hit test callback, or null to unregister.
+   * Starts a group drag of the selected nodes at a zero offset.
    */
-  setConnectionHitTest(hitTest: CanvasConnectionHitTest | null): void;
+  startSelectionDrag(): void;
+
+  /**
+   * Updates the in-progress group drag's offset. Does nothing
+   * when no group drag is in progress.
+   *
+   * @param offset - The offset from the drag's start, in canvas coordinates.
+   */
+  updateSelectionDrag(offset: CanvasPoint): void;
+
+  /**
+   * Clears the in-progress group drag.
+   */
+  clearSelectionDrag(): void;
+
+  /**
+   * Registers the geometry queries against the canvas's
+   * connections.
+   *
+   * @param geometry - The geometry queries, or null to unregister.
+   */
+  setConnectionGeometry(geometry: CanvasConnectionGeometry | null): void;
 
   /**
    * Sets the alignment guides for the node being dragged or
@@ -421,11 +453,18 @@ export function createCanvasStore(config: CanvasStoreConfig = {}): CanvasStore {
     isConnectionSelected: (connectionId) =>
       getSelectedIds(store.getState(), 'connections').includes(connectionId),
     getLasso: () => store.getState().lasso,
+    getSelectionDrag: () => store.getState().selectionDrag,
     hitTestConnections: (frame) => {
-      const { connectionHitTest } = store.getState();
+      const { connectionGeometry } = store.getState();
 
       // No connections layer is mounted on this canvas
-      return connectionHitTest ? connectionHitTest(frame) : [];
+      return connectionGeometry ? connectionGeometry.hitTest(frame) : [];
+    },
+    getConnectionBounds: (ids) => {
+      const { connectionGeometry } = store.getState();
+
+      // No connections layer is mounted on this canvas
+      return connectionGeometry ? connectionGeometry.getBounds(ids) : null;
     },
     getAlignmentGuides: () => store.getState().alignmentGuides,
     getConnectionDrag: () => store.getState().connectionDrag,
@@ -459,8 +498,12 @@ export function createCanvasStore(config: CanvasStoreConfig = {}): CanvasStore {
       store.getState().startLasso(origin, additive),
     updateLasso: (point) => store.getState().updateLasso(point),
     clearLasso: () => store.getState().clearLasso(),
-    setConnectionHitTest: (hitTest) =>
-      store.getState().setConnectionHitTest(hitTest),
+    startSelectionDrag: () => store.getState().startSelectionDrag(),
+    updateSelectionDrag: (offset) =>
+      store.getState().updateSelectionDrag(offset),
+    clearSelectionDrag: () => store.getState().clearSelectionDrag(),
+    setConnectionGeometry: (geometry) =>
+      store.getState().setConnectionGeometry(geometry),
     setAlignmentGuides: (guides) => store.getState().setAlignmentGuides(guides),
     startConnectionDrag: (fromNodeId, fromSide, point, reconnect) =>
       store
@@ -500,7 +543,8 @@ function createInternalStore(config: CanvasStoreConfig) {
     selectable,
     selection: null,
     lasso: null,
-    connectionHitTest: null,
+    selectionDrag: null,
+    connectionGeometry: null,
     alignmentGuides: [],
     connectionDrag: null,
     hoveredConnectionHandle: null,
@@ -662,7 +706,30 @@ function createInternalStore(config: CanvasStoreConfig) {
 
     clearLasso: () => set((state) => (state.lasso ? { lasso: null } : {})),
 
-    setConnectionHitTest: (hitTest) => set({ connectionHitTest: hitTest }),
+    startSelectionDrag: () =>
+      set((state) => {
+        // Selection is disabled for this canvas instance
+        if (!state.selectable) {
+          return {};
+        }
+
+        return { selectionDrag: { x: 0, y: 0 } };
+      }),
+
+    updateSelectionDrag: (offset) =>
+      set((state) => {
+        // No group drag in progress
+        if (!state.selectionDrag) {
+          return {};
+        }
+
+        return { selectionDrag: offset };
+      }),
+
+    clearSelectionDrag: () =>
+      set((state) => (state.selectionDrag ? { selectionDrag: null } : {})),
+
+    setConnectionGeometry: (geometry) => set({ connectionGeometry: geometry }),
 
     setAlignmentGuides: (guides) =>
       set((state) => {

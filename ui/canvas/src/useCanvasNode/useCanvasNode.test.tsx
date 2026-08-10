@@ -518,6 +518,77 @@ describe('useCanvasNode', () => {
     );
   });
 
+  describe('group drag offset', () => {
+    it('applies the offset to a selected node', () => {
+      const store = createCanvasStore();
+
+      renderNode(store);
+
+      act(() => {
+        store.selectNodes(['node-1']);
+        store.startSelectionDrag();
+        store.updateSelectionDrag({ x: 40, y: 20 });
+      });
+
+      expect(store.getNode('node-1')).toEqual({
+        x: 140,
+        y: 70,
+        width: 300,
+        height: 200,
+      });
+    });
+
+    it('leaves an unselected node where it is', () => {
+      const store = createCanvasStore();
+
+      renderNode(store);
+
+      act(() => {
+        store.selectNodes(['other-node']);
+        store.startSelectionDrag();
+        store.updateSelectionDrag({ x: 40, y: 20 });
+      });
+
+      expect(store.getNode('node-1')).toEqual({
+        x: 100,
+        y: 50,
+        width: 300,
+        height: 200,
+      });
+    });
+
+    it('ignores the offset for an unselectable node', () => {
+      const store = createCanvasStore();
+
+      renderNode(store, { selectable: false });
+
+      act(() => {
+        store.selectNodes(['node-1']);
+        store.startSelectionDrag();
+        store.updateSelectionDrag({ x: 40, y: 20 });
+      });
+
+      expect(store.getNode('node-1')?.x).toBe(100);
+    });
+
+    it('returns the node to its position when the drag is cleared', () => {
+      const store = createCanvasStore();
+
+      renderNode(store);
+
+      act(() => {
+        store.selectNodes(['node-1']);
+        store.startSelectionDrag();
+        store.updateSelectionDrag({ x: 40, y: 20 });
+        store.clearSelectionDrag();
+      });
+
+      // The consumer applies the move through the canvas's
+      // batched callback, which updates the controlled props
+      expect(store.getNode('node-1')?.x).toBe(100);
+    });
+  });
+
   it('syncs the frame from updated controlled props', () => {
     const store = createCanvasStore();
 

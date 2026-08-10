@@ -1,4 +1,3 @@
-import { CONNECTION_HIT_SAMPLES } from '../../constants';
 import {
   CanvasConnectionAnchor,
   CanvasConnectionShape,
@@ -6,8 +5,8 @@ import {
   CanvasPoint,
 } from '../../types';
 import { framesIntersect } from '../framesIntersect';
-import { getConnectionControlPoints } from '../getConnectionControlPoints';
-import { getElbowConnectionPoints } from '../getElbowConnectionPoints';
+import { getConnectionPathBounds } from '../getConnectionPathBounds';
+import { getConnectionPathPoints } from '../getConnectionPathPoints';
 
 /**
  * Returns whether a connection's path passes through a frame,
@@ -26,14 +25,14 @@ export function connectionIntersectsFrame(
   shape: CanvasConnectionShape | undefined,
   frame: CanvasNodeFrame,
 ): boolean {
-  // The path approximated as a polyline
-  const points = getPathPoints(from, to, shape);
-
-  // Cheap reject against the polyline's bounding box before
-  // testing every segment
-  if (!framesIntersect(getBoundingFrame(points), frame)) {
+  // Cheap reject against the path's bounds before testing every
+  // segment
+  if (!framesIntersect(getConnectionPathBounds(from, to, shape), frame)) {
     return false;
   }
+
+  // The path approximated as a polyline
+  const points = getConnectionPathPoints(from, to, shape);
 
   // Any segment crossing the frame makes the connection a hit
   return points.some((point, index) => {
@@ -41,89 +40,6 @@ export function connectionIntersectsFrame(
 
     return next ? segmentIntersectsFrame(point, next, frame) : false;
   });
-}
-
-/**
- * Returns the connection's path as a polyline, sampling curved
- * shapes along their bezier.
- */
-function getPathPoints(
-  from: CanvasConnectionAnchor,
-  to: CanvasConnectionAnchor,
-  shape: CanvasConnectionShape | undefined,
-): CanvasPoint[] {
-  // Axis-aligned routes are already a polyline
-  if (shape === 'straight') {
-    return getElbowConnectionPoints(from, to);
-  }
-
-  // Direct connections are a single segment
-  if (shape === 'direct') {
-    return [from.point, to.point];
-  }
-
-  const [control1, control2] = getConnectionControlPoints(from, to);
-
-  // Sample the cubic bezier at evenly spaced values of t
-  return Array.from({ length: CONNECTION_HIT_SAMPLES + 1 }, (_, index) =>
-    getBezierPoint(
-      from.point,
-      control1,
-      control2,
-      to.point,
-      index / CONNECTION_HIT_SAMPLES,
-    ),
-  );
-}
-
-/**
- * Returns the point on a cubic bezier at the given position along
- * the curve.
- */
-function getBezierPoint(
-  start: CanvasPoint,
-  control1: CanvasPoint,
-  control2: CanvasPoint,
-  end: CanvasPoint,
-  t: number,
-): CanvasPoint {
-  const inverse = 1 - t;
-
-  // The four cubic bernstein basis weights at t
-  const startWeight = inverse * inverse * inverse;
-  const control1Weight = 3 * inverse * inverse * t;
-  const control2Weight = 3 * inverse * t * t;
-  const endWeight = t * t * t;
-
-  return {
-    x:
-      start.x * startWeight +
-      control1.x * control1Weight +
-      control2.x * control2Weight +
-      end.x * endWeight,
-    y:
-      start.y * startWeight +
-      control1.y * control1Weight +
-      control2.y * control2Weight +
-      end.y * endWeight,
-  };
-}
-
-/**
- * Returns the frame enclosing a set of points.
- */
-function getBoundingFrame(points: CanvasPoint[]): CanvasNodeFrame {
-  const xs = points.map((point) => point.x);
-  const ys = points.map((point) => point.y);
-  const minX = Math.min(...xs);
-  const minY = Math.min(...ys);
-
-  return {
-    x: minX,
-    y: minY,
-    width: Math.max(...xs) - minX,
-    height: Math.max(...ys) - minY,
-  };
 }
 
 /**

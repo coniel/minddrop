@@ -8,7 +8,7 @@ import {
 } from './CanvasConnection.types';
 import { CanvasNodeFrame, CanvasPoint } from './CanvasNode.types';
 import {
-  CanvasConnectionHitTest,
+  CanvasConnectionGeometry,
   CanvasLassoState,
   CanvasSelection,
 } from './CanvasSelection.types';
@@ -133,11 +133,19 @@ export interface CanvasState {
   lasso: CanvasLassoState | null;
 
   /**
-   * Hit tests a frame against the canvas's connections, or null
+   * The offset of the in-progress group drag in canvas
+   * coordinates, or null when no group drag is in progress.
+   * Selected nodes add it to their position, so the move is
+   * published as a delta rather than written into each node.
+   */
+  selectionDrag: CanvasPoint | null;
+
+  /**
+   * Geometry queries against the canvas's connections, or null
    * when no connections layer is mounted. Registered by the
    * connections layer, which owns the connections.
    */
-  connectionHitTest: CanvasConnectionHitTest | null;
+  connectionGeometry: CanvasConnectionGeometry | null;
 
   /**
    * The alignment guides for the node being dragged or resized,
@@ -320,11 +328,28 @@ export interface CanvasState {
   clearLasso: () => void;
 
   /**
-   * Registers the callback hit testing frames against the
-   * canvas's connections.
-   * @param hitTest - The hit test callback, or null to unregister.
+   * Starts a group drag of the selected nodes at a zero offset.
    */
-  setConnectionHitTest: (hitTest: CanvasConnectionHitTest | null) => void;
+  startSelectionDrag: () => void;
+
+  /**
+   * Updates the in-progress group drag's offset. Does nothing
+   * when no group drag is in progress.
+   * @param offset - The offset from the drag's start, in canvas coordinates.
+   */
+  updateSelectionDrag: (offset: CanvasPoint) => void;
+
+  /**
+   * Clears the in-progress group drag.
+   */
+  clearSelectionDrag: () => void;
+
+  /**
+   * Registers the geometry queries against the canvas's
+   * connections.
+   * @param geometry - The geometry queries, or null to unregister.
+   */
+  setConnectionGeometry: (geometry: CanvasConnectionGeometry | null) => void;
 
   /**
    * Sets the alignment guides for the node being dragged or

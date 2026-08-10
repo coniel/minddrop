@@ -374,6 +374,30 @@ Such overlays must call `stopPropagation()` in their mousedown handler
 (see `QuerySourcePicker` in `features/queries`). The canvas view's
 `DataViewNewEntryPicker` / `DataViewEntryPicker` flows share this trap.
 
+### Group drags snap to the grid but never to other objects
+
+`CanvasSelectionBox` snaps the dragged group's bounds origin to the
+grid when `snapToGrid` is on, but does not apply object snapping even
+when `snapToObjects` is. `getObjectSnap` aligns a frame against a list
+of other frames, and for a group the obvious target list includes the
+selection's own members, which would snap the bounds to the nodes
+inside it. Doing it properly means excluding every selected node from
+the targets and aligning the union bounds rather than a node frame.
+
+A single-node drag is unaffected and still snaps to both.
+
+### A group drag reports through `onNodesFrameChange`, not `onFrameChange`
+
+Moving a multi-node selection deliberately does not fire each node's
+own `onFrameChange`. Consumers typically implement it as a read-modify
+-write against a snapshot captured in the closure, so N calls in one
+tick would each overwrite the last, and only one node would move.
+
+`Canvas` takes `onNodesFrameChange` instead, called once on group-drag
+mouseup with every moved node's frame, so the consumer applies them in
+a single update. A consumer that supports multi-selection must handle
+it; implementing only `onFrameChange` silently drops group moves.
+
 ## ui/primitives
 
 ### Registry context values must be split from the data they collect

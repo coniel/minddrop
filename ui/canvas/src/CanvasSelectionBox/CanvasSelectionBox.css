@@ -1,0 +1,16 @@
+.ui-canvas-selection-box {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-style: solid;
+  /* Matches the primary outline nodes get when selected */
+  border-color: var(--border-primary);
+  border-radius: var(--radius-sm);
+  background-color: var(--surface-primary);
+  opacity: 0.4;
+  cursor: grab;
+}
+
+.ui-canvas-selection-box:active {
+  cursor: grabbing;
+}

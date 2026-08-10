@@ -311,4 +311,52 @@ describe('Canvas', () => {
       releaseMouse();
     });
   });
+
+  describe('selection', () => {
+    it('renders the group box for a multi-node selection', () => {
+      const store = createCanvasStore();
+
+      const { container } = renderCanvas(store);
+
+      act(() => {
+        store.selectNodes(['node-1', 'node-2']);
+      });
+
+      expect(
+        container.querySelector('.ui-canvas-selection-box'),
+      ).not.toBeNull();
+    });
+
+    it('renders no selection toolbar without one supplied', () => {
+      const store = createCanvasStore();
+
+      const { container } = renderCanvas(store);
+
+      act(() => {
+        store.selectNodes(['node-1']);
+      });
+
+      expect(
+        container.querySelector('.ui-canvas-selection-toolbar'),
+      ).toBeNull();
+    });
+
+    it('renders the supplied selection toolbar above the selection', () => {
+      const store = createCanvasStore();
+
+      const { container } = renderCanvas(store, {
+        selectionToolbar: (selection) => (
+          <div data-testid="toolbar">{selection.ids.join(',')}</div>
+        ),
+      });
+
+      act(() => {
+        store.selectNodes(['node-1']);
+      });
+
+      expect(
+        container.querySelector('.ui-canvas-selection-toolbar')?.textContent,
+      ).toBe('node-1');
+    });
+  });
 });

@@ -1,0 +1,7 @@
+.ui-canvas-selection-toolbar {
+  position: absolute;
+  z-index: 1;
+
+  /* Center the toolbar's bottom edge on the anchor point */
+  transform: translate(-50%, -100%);
+}

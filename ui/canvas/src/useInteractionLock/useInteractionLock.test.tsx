@@ -2,6 +2,7 @@ import React from 'react';
 import { afterEach, describe, expect, it } from 'vitest';
 import { cleanup, render } from '@minddrop/test-utils';
 import { useInteractionLock } from './useInteractionLock';
+import { useIsInteracting } from './useIsInteracting';
 
 // Holds the lock with the given cursor for as long as it is
 // rendered
@@ -61,5 +62,54 @@ describe('useInteractionLock', () => {
 
     // The second interaction is still in progress
     expect(locked()).toBe(true);
+  });
+});
+
+// Reports whether an interaction is in progress
+const TestObserver: React.FC = () => (
+  <div data-testid="observer">{useIsInteracting() ? 'yes' : 'no'}</div>
+);
+
+describe('useIsInteracting', () => {
+  afterEach(cleanup);
+
+  it('reports no interaction while the lock is free', () => {
+    const { getByTestId } = render(<TestObserver />);
+
+    expect(getByTestId('observer').textContent).toBe('no');
+  });
+
+  it('reports an interaction while the lock is held', () => {
+    const { getByTestId, rerender } = render(
+      <>
+        <TestObserver />
+      </>,
+    );
+
+    rerender(
+      <>
+        <TestObserver />
+        <TestLock cursor="grabbing" />
+      </>,
+    );
+
+    expect(getByTestId('observer').textContent).toBe('yes');
+  });
+
+  it('reports again once the interaction ends', () => {
+    const { getByTestId, rerender } = render(
+      <>
+        <TestObserver />
+        <TestLock cursor="grabbing" />
+      </>,
+    );
+
+    rerender(
+      <>
+        <TestObserver />
+      </>,
+    );
+
+    expect(getByTestId('observer').textContent).toBe('no');
   });
 });

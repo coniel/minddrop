@@ -4,12 +4,14 @@ import { CanvasAlignmentGuides } from '../CanvasAlignmentGuides';
 import { useCanvasContext } from '../CanvasContext';
 import { CanvasLasso } from '../CanvasLasso';
 import { CanvasNameField } from '../CanvasNameField';
+import { CanvasSelectionBox } from '../CanvasSelectionBox';
+import { CanvasSelectionToolbar } from '../CanvasSelectionToolbar';
 import {
   CONNECTION_PROXIMITY,
   GRID_SIZE,
   LASSO_DRAG_THRESHOLD,
 } from '../constants';
-import { CanvasNodeFrame, CanvasPoint } from '../types';
+import { CanvasNodeFrame, CanvasPoint, CanvasSelection } from '../types';
 import { useCanvasStore } from '../useCanvasStore';
 import { useInteractionLock } from '../useInteractionLock';
 import {
@@ -95,6 +97,21 @@ export interface CanvasProps {
   lasso?: boolean;
 
   /**
+   * Called once with the final frames of every node moved by a
+   * multi-selection group drag. Group drags report through this
+   * instead of each node's own onFrameChange, so the moved nodes
+   * can be applied in a single update.
+   */
+  onNodesFrameChange?: (frames: Record<string, CanvasNodeFrame>) => void;
+
+  /**
+   * Returns the contents of the toolbar floating above the
+   * current selection. Called for any non-empty selection, so
+   * nodes and connections can render different toolbars.
+   */
+  selectionToolbar?: (selection: CanvasSelection) => React.ReactNode;
+
+  /**
    * How keyboard shortcuts (space pan, zoom keys) are scoped:
    * 'focus' (default) handles keys only while focus is within the
    * viewport, 'window' listens globally for full-screen canvases,
@@ -118,6 +135,8 @@ export const Canvas: React.FC<CanvasProps> = ({
   onDrop,
   onDragOver,
   lasso = true,
+  onNodesFrameChange,
+  selectionToolbar,
   shortcutScope = 'focus',
 }) => {
   const { store, viewportRef, transformLayerRef } = useCanvasContext();
@@ -669,6 +688,9 @@ export const Canvas: React.FC<CanvasProps> = ({
 
         {/* Drag-to-select marquee */}
         <CanvasLasso />
+
+        {/* Multi-selection group box, above the nodes it wraps */}
+        <CanvasSelectionBox onNodesFrameChange={onNodesFrameChange} />
       </div>
 
       {/* Editable canvas name */}
@@ -678,6 +700,11 @@ export const Canvas: React.FC<CanvasProps> = ({
           placeholder={namePlaceholder}
           onNameChange={onNameChange}
         />
+      )}
+
+      {/* Consumer-supplied toolbar floating above the selection */}
+      {selectionToolbar && (
+        <CanvasSelectionToolbar renderToolbar={selectionToolbar} />
       )}
     </div>
   );

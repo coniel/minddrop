@@ -519,6 +519,62 @@ describe('createCanvasStore', () => {
     });
   });
 
+  describe('selectionDrag', () => {
+    it('has no group drag by default', () => {
+      const store = createCanvasStore();
+
+      expect(store.getSelectionDrag()).toBeNull();
+    });
+
+    it('starts a group drag at a zero offset', () => {
+      const store = createCanvasStore();
+
+      store.startSelectionDrag();
+
+      expect(store.getSelectionDrag()).toEqual({ x: 0, y: 0 });
+    });
+
+    it('updates the group drag offset', () => {
+      const store = createCanvasStore();
+
+      store.startSelectionDrag();
+      store.updateSelectionDrag({ x: 40, y: -20 });
+
+      expect(store.getSelectionDrag()).toEqual({ x: 40, y: -20 });
+    });
+
+    it('ignores updates when no group drag is in progress', () => {
+      const store = createCanvasStore();
+
+      store.updateSelectionDrag({ x: 40, y: -20 });
+
+      expect(store.getSelectionDrag()).toBeNull();
+    });
+
+    it('clears the group drag', () => {
+      const store = createCanvasStore();
+
+      store.startSelectionDrag();
+      store.clearSelectionDrag();
+
+      expect(store.getSelectionDrag()).toBeNull();
+    });
+
+    it('does not start a group drag when the canvas is not selectable', () => {
+      const store = createCanvasStore({ selectable: false });
+
+      store.startSelectionDrag();
+
+      expect(store.getSelectionDrag()).toBeNull();
+    });
+  });
+
+  // Stand-in for the geometry the connections layer registers
+  const geometry = {
+    hitTest: () => ['connection-1'],
+    getBounds: () => ({ x: 0, y: 0, width: 50, height: 50 }),
+  };
+
   describe('hitTestConnections', () => {
     const frame = { x: 0, y: 0, width: 100, height: 100 };
 
@@ -531,18 +587,39 @@ describe('createCanvasStore', () => {
     it('returns the results of the registered hit test', () => {
       const store = createCanvasStore();
 
-      store.setConnectionHitTest(() => ['connection-1']);
+      store.setConnectionGeometry(geometry);
 
       expect(store.hitTestConnections(frame)).toEqual(['connection-1']);
     });
 
-    it('returns no connections once the hit test is unregistered', () => {
+    it('returns no connections once the geometry is unregistered', () => {
       const store = createCanvasStore();
 
-      store.setConnectionHitTest(() => ['connection-1']);
-      store.setConnectionHitTest(null);
+      store.setConnectionGeometry(geometry);
+      store.setConnectionGeometry(null);
 
       expect(store.hitTestConnections(frame)).toEqual([]);
+    });
+  });
+
+  describe('getConnectionBounds', () => {
+    it('returns no bounds when no geometry is registered', () => {
+      const store = createCanvasStore();
+
+      expect(store.getConnectionBounds(['connection-1'])).toBeNull();
+    });
+
+    it('returns the bounds from the registered geometry', () => {
+      const store = createCanvasStore();
+
+      store.setConnectionGeometry(geometry);
+
+      expect(store.getConnectionBounds(['connection-1'])).toEqual({
+        x: 0,
+        y: 0,
+        width: 50,
+        height: 50,
+      });
     });
   });
 
