@@ -17,6 +17,9 @@
   gap: var(--space-2);
 
   width: 100%;
+  /* Shrinkable in flex rows, truncating the value instead of
+     widening the row */
+  min-width: 0;
   border: 1px solid transparent;
   border-radius: var(--radius-md);
   outline: none;
@@ -52,6 +55,13 @@
     width: 1em;
     height: 1em;
   }
+}
+
+/* Truncate long values instead of overflowing the trigger */
+.select-value {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .select-value[data-placeholder] {
