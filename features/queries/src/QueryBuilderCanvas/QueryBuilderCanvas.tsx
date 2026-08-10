@@ -30,16 +30,32 @@ import {
 } from '../QueryConnectionsLayer';
 import { QueryFilterNodeCard } from '../QueryFilterNodeCard';
 import { QueryLimitNodeCard } from '../QueryLimitNodeCard';
+import { QueryNodeTypePicker } from '../QueryNodeTypePicker';
 import { QueryResultsNodeCard } from '../QueryResultsNodeCard';
 import { QuerySortNodeCard } from '../QuerySortNodeCard';
 import { QuerySourceNodeCard } from '../QuerySourceNodeCard';
 import {
+  QUERY_NODE_PORT_Y,
   QUERY_NODE_WIDTHS,
   QueryNodeCardDataKey,
   QuerySourceCardDataKey,
 } from '../constants';
 import { connectQueryNodeToNearest } from '../utils';
 import './QueryBuilderCanvas.css';
+
+interface NodeTypePickerState {
+  /**
+   * The ID of the node the released connection drag started
+   * from, connected into the picked node.
+   */
+  from: string;
+
+  /**
+   * The release point in canvas coordinates, where the picker
+   * is shown and the picked node is created.
+   */
+  point: CanvasPoint;
+}
 
 export interface QueryBuilderCanvasProps {
   /**
@@ -75,6 +91,11 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
   // The in-progress connection drag
   const [pendingConnection, setPendingConnection] =
     useState<PendingQueryConnection | null>(null);
+
+  // The node type picker opened by releasing a connection drag
+  // on the empty canvas
+  const [nodeTypePicker, setNodeTypePicker] =
+    useState<NodeTypePickerState | null>(null);
 
   const query = Queries.use(queryId);
 
@@ -141,6 +162,7 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
 
       if (event.key === 'Escape') {
         setPendingConnection(null);
+        setNodeTypePicker(null);
       }
     };
 
@@ -319,6 +341,54 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
     [addNode],
   );
 
+  // Open the node type picker when a connection drag is
+  // released on the empty canvas
+  const handleBackgroundMouseUp = useCallback(
+    (event: React.MouseEvent, canvasPoint: CanvasPoint) => {
+      if (!pendingConnection) {
+        return;
+      }
+
+      setNodeTypePicker({ from: pendingConnection.from, point: canvasPoint });
+    },
+    [pendingConnection],
+  );
+
+  // Create the node picked from the node type picker at the
+  // release point and connect the released drag into it
+  const handlePickNodeType = useCallback(
+    (type: QueryNodeType) => {
+      if (!query || !nodeTypePicker) {
+        return;
+      }
+
+      // Align the node's input port with the release point
+      const node = createQueryNode(type, {
+        x: Math.round(nodeTypePicker.point.x),
+        y: Math.round(nodeTypePicker.point.y - QUERY_NODE_PORT_Y),
+      });
+
+      const nodes = [...query.nodes, node];
+
+      // Connect the drag's origin node into the new node
+      const connections = addQueryConnection(
+        { ...query, nodes },
+        nodeTypePicker.from,
+        node.id,
+      );
+
+      Queries.update(queryId, { nodes, connections });
+
+      setNodeTypePicker(null);
+    },
+    [query, queryId, nodeTypePicker],
+  );
+
+  // Dismiss the node type picker without creating a node
+  const handleCloseNodeTypePicker = useCallback(() => {
+    setNodeTypePicker(null);
+  }, []);
+
   // Start a connection drag from a node's output port
   const handleStartConnection = useCallback(
     (nodeId: string, event: React.MouseEvent) => {
@@ -428,6 +498,14 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
     return null;
   }
 
+  // The rendered pending edge: the live drag, or the released
+  // drag frozen at the picker's position while it is open
+  const renderedPendingConnection =
+    pendingConnection ||
+    (nodeTypePicker
+      ? { from: nodeTypePicker.from, toPoint: nodeTypePicker.point }
+      : null);
+
   return (
     <>
       <Canvas
@@ -437,12 +515,13 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
         onNameChange={handleNameChange}
         onDragOver={handleDragOver}
         onDrop={handleDrop}
+        onBackgroundMouseUp={handleBackgroundMouseUp}
         onSelectionDelete={handleSelectionDelete}
       >
         {/* The graph's connections, under the nodes */}
         <QueryConnectionsLayer
           query={query}
-          pendingConnection={pendingConnection}
+          pendingConnection={renderedPendingConnection}
           onRemoveConnection={handleRemoveConnection}
         />
 
@@ -462,6 +541,16 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
             {renderNodeCard(node)}
           </CanvasNode>
         ))}
+
+        {/* Node type picker shown when a connection drag is
+            released on the empty canvas */}
+        {nodeTypePicker && (
+          <QueryNodeTypePicker
+            point={nodeTypePicker.point}
+            onPick={handlePickNodeType}
+            onClose={handleCloseNodeTypePicker}
+          />
+        )}
       </Canvas>
 
       {/* Node cards toolbar */}

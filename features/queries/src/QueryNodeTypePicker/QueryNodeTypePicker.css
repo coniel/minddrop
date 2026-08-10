@@ -1,0 +1,10 @@
+/* The node type menu shown when a connection drag is released
+   on the empty canvas, positioned at the release point in
+   canvas coordinates */
+.queries-node-type-picker {
+  position: absolute;
+
+  .menu {
+    min-width: 9rem;
+  }
+}

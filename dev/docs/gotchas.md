@@ -353,6 +353,19 @@ popovers are not a concern: base-ui dismissal `stopPropagation()`s
 Escape, so it never reaches window handlers while a popup consumes
 it.
 
+## features/queries
+
+### Builder canvas tests report unhandled SQL rejections
+
+Rendering `QueryBuilderCanvas` in tests mounts the results node's
+entries list, whose `useQueryNodeResults` effect calls
+`runQueryNode` and rejects with "SQL database not initialized"
+(the mock file system provides no SQL connection). The tests
+themselves pass, but vitest reports the rejections as unhandled
+errors at the end of the run (8 across the suite as of
+2026-08-10). Mock `Queries.useNodeResults` (alongside the existing
+`useNodeCounts` mock) to silence them when adding builder tests.
+
 ## features/views
 
 ### Breadcrumb trails are snapshots taken at open time
