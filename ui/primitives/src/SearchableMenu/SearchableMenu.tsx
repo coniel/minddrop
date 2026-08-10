@@ -16,7 +16,7 @@ import {
   MenuSearchRegistration,
 } from '../Menu/MenuSearchContext';
 import { VerticalScrollArea } from '../ScrollArea';
-import { TextInput } from '../fields/TextInput';
+import { TextInput, TextInputVariant } from '../fields/TextInput';
 import { useNavigableList } from '../hooks';
 import { propsToClass } from '../utils';
 import { SearchableMenuVirtualizedList } from './SearchableMenuVirtualizedList';
@@ -51,6 +51,12 @@ export interface SearchableMenuProps
    * translation. Takes priority over `searchPlaceholder`.
    */
   stringSearchPlaceholder?: string;
+
+  /**
+   * Visual style of the search input.
+   * @default 'subtle'
+   */
+  searchVariant?: TextInputVariant;
 
   /**
    * Controlled search term. When provided, the consumer owns
@@ -88,6 +94,7 @@ export const SearchableMenu = React.forwardRef<
       className,
       searchPlaceholder,
       stringSearchPlaceholder,
+      searchVariant = 'subtle',
       searchTerm: searchTermProp,
       onSearchTermChange,
       emptyText,
@@ -371,7 +378,7 @@ export const SearchableMenu = React.forwardRef<
         <div role="none" className="searchable-menu-search-input">
           <TextInput
             ref={inputRef}
-            variant="subtle"
+            variant={searchVariant}
             size="md"
             value={searchTerm}
             onValueChange={setSearchTerm}
