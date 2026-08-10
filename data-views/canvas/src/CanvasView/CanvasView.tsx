@@ -119,7 +119,10 @@ interface EntryPickerState {
 export const CanvasViewComponent: React.FC<
   DataViewTypeComponentProps<CanvasViewOptions, CanvasViewData>
 > = ({ view, entries }) => (
-  <CanvasProvider initialSnapToGrid={view.options?.snapToGrid}>
+  <CanvasProvider
+    initialSnapToGrid={view.options?.snapToGrid}
+    initialSnapToObjects={view.options?.snapToObjects}
+  >
     <CanvasViewContent view={view} entries={entries} />
   </CanvasProvider>
 );
@@ -219,6 +222,10 @@ const CanvasViewContent: React.FC<
   // Whether node interactions snap to the grid, toggled from the
   // canvas settings menu
   const snapToGrid = useCanvasStore((state) => state.snapToGrid);
+
+  // Whether node interactions snap to the other nodes, toggled
+  // from the canvas settings menu
+  const snapToObjects = useCanvasStore((state) => state.snapToObjects);
 
   // Fit the placed nodes into view when the canvas opens
   useFitOnNodesReady(reconciledNodes.map((node) => node.id));
@@ -346,6 +353,17 @@ const CanvasViewContent: React.FC<
 
     DataViews.update(view.id, { options: { snapToGrid } });
   }, [snapToGrid, view.id, view.options?.snapToGrid]);
+
+  // Persist the canvas's snap to objects setting when it is
+  // toggled
+  useEffect(() => {
+    // The setting matches what is saved, nothing to persist
+    if (snapToObjects === Boolean(view.options?.snapToObjects)) {
+      return;
+    }
+
+    DataViews.update(view.id, { options: { snapToObjects } });
+  }, [snapToObjects, view.id, view.options?.snapToObjects]);
 
   // Deselect the connection when a connection drag starts, so the
   // toolbar does not linger over the drag

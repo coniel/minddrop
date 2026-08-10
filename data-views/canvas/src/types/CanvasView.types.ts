@@ -88,6 +88,12 @@ export interface CanvasViewOptions {
    * canvas grid.
    */
   snapToGrid?: boolean;
+
+  /**
+   * Whether dragging and resizing cards snaps them to the edges
+   * and centers of the other cards.
+   */
+  snapToObjects?: boolean;
 }
 
 export interface CanvasViewData {
