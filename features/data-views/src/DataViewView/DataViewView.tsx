@@ -1,6 +1,7 @@
-import { Collections } from '@minddrop/collections';
-import { DataViews } from '@minddrop/data-views';
+import { Collection, Collections } from '@minddrop/collections';
+import { DataViews, ViewDataSourceType } from '@minddrop/data-views';
 import { DatabaseEntries } from '@minddrop/databases';
+import { Queries } from '@minddrop/queries';
 import { PanelView } from '@minddrop/ui-components';
 import { DataViewOptionsMenu } from '../DataViewOptionsMenu';
 import { DataViewRenderer } from '../DataViewRenderer';
@@ -30,8 +31,18 @@ export const DataViewView: React.FC<DataViewViewProps> = ({ dataViewId }) => {
     dataView?.dataSource.type === 'database' ? dataView.dataSource.id : '';
   const databaseEntryIds = DatabaseEntries.useIds(databaseId);
 
+  // Query result entry IDs when the data source is a query
+  const queryId =
+    dataView?.dataSource.type === 'query' ? dataView.dataSource.id : '';
+  const queryEntryIds = Queries.useResults(queryId);
+
   // Entries from whichever data source the view uses
-  const entries = collection ? collection.items : databaseEntryIds;
+  const entries = resolveEntries(
+    dataView?.dataSource.type,
+    collection,
+    databaseEntryIds,
+    queryEntryIds,
+  );
 
   return (
     <div className="data-view-view">
@@ -54,3 +65,26 @@ export const DataViewView: React.FC<DataViewViewProps> = ({ dataViewId }) => {
     </div>
   );
 };
+
+/**
+ * Returns the entry IDs provided by the view's data source
+ * type.
+ */
+function resolveEntries(
+  sourceType: ViewDataSourceType | undefined,
+  collection: Collection | null,
+  databaseEntryIds: string[],
+  queryEntryIds: string[],
+): string[] {
+  // Collection sources list their items directly
+  if (sourceType === 'collection') {
+    return collection?.items || [];
+  }
+
+  // Query sources list the query's result entries
+  if (sourceType === 'query') {
+    return queryEntryIds;
+  }
+
+  return databaseEntryIds;
+}

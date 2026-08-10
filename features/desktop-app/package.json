@@ -46,6 +46,7 @@
     "@minddrop/i18n": "workspace:*",
     "@minddrop/ui-drag-and-drop": "workspace:*",
     "@minddrop/ui-icons": "workspace:*",
+    "@minddrop/queries": "workspace:*",
     "@minddrop/search": "workspace:*",
     "@minddrop/sql": "workspace:*",
     "@minddrop/selection": "workspace:*",

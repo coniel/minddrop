@@ -1,0 +1,56 @@
+.query-builder-canvas {
+  position: relative;
+  display: flex;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Round node selection outlines to match the node cards */
+.query-builder-node {
+  border-radius: var(--radius-md);
+}
+
+/* Extend the drag handle over the whole node header */
+.query-builder-node .ui-canvas-node-drag-handle {
+  height: 38px;
+}
+
+/* Floating query name editor at the top left of the canvas */
+.query-builder-name {
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-3);
+  z-index: 1;
+  width: 240px;
+}
+
+/* Zoom controls at the bottom right of the canvas */
+.query-builder-zoom-toolbar {
+  position: absolute;
+  right: var(--space-4);
+  bottom: var(--space-4);
+  z-index: 1;
+  padding: var(--space-1);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  background-color: var(--surface-overlay);
+  box-shadow: var(--shadow-overlay);
+  /* Hidden until the builder is hovered */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--duration-normal) var(--ease-out);
+}
+
+/* Reveal the zoom controls while hovering the builder */
+.query-builder-canvas:hover .query-builder-zoom-toolbar {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* The active source picker, positioned in canvas coordinates
+   inside the transform layer */
+.query-builder-picker {
+  position: absolute;
+  top: 0;
+  left: 0;
+}

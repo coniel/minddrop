@@ -26,6 +26,7 @@ import {
 } from '@minddrop/feature-spaces';
 import { TabSetsStore, initializeViewsFeature } from '@minddrop/feature-views';
 import { initializeI18n } from '@minddrop/i18n';
+import { Queries } from '@minddrop/queries';
 import { Search } from '@minddrop/search';
 import { Spaces } from '@minddrop/spaces';
 import { Sql } from '@minddrop/sql';
@@ -133,6 +134,9 @@ async function runInitialization(): Promise<void> {
   // Load persisted collections. Requires entries and the item
   // reference adapters, both initialized by Databases.initialize.
   await Collections.initialize();
+
+  // Load persisted queries
+  await Queries.initialize();
 
   // Load persisted spaces
   await Spaces.initialize();

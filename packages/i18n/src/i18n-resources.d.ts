@@ -1428,6 +1428,76 @@ declare module 'i18next' {
           labels: {
             query: string;
             queries: string;
+            searchPlaceholder: string;
+          };
+          actions: {
+            new: string;
+            delete: string;
+          };
+          editor: {
+            noQueries: string;
+            namePlaceholder: string;
+            selectProperty: string;
+            selectOperator: string;
+            selectValue: string;
+            valuePlaceholder: string;
+            ascending: string;
+            descending: string;
+            propertyMismatch: string;
+          };
+          nodes: {
+            source: string;
+            filter: string;
+            sort: string;
+            limit: string;
+            results: string;
+          };
+          toolbar: {
+            source: string;
+            filter: string;
+            sort: string;
+            limit: string;
+          };
+          sourcePicker: {
+            searchPlaceholder: string;
+            empty: string;
+          };
+          operators: {
+            equals: string;
+            'not-equals': string;
+            contains: string;
+            'not-contains': string;
+            'starts-with': string;
+            'ends-with': string;
+            'greater-than': string;
+            'greater-than-or-equal': string;
+            'less-than': string;
+            'less-than-or-equal': string;
+            is: string;
+            'is-not': string;
+            'is-before': string;
+            'is-after': string;
+            'is-on-or-before': string;
+            'is-on-or-after': string;
+            'is-true': string;
+            'is-false': string;
+            'is-empty': string;
+            'is-not-empty': string;
+          };
+          dates: {
+            today: string;
+            yesterday: string;
+            tomorrow: string;
+            'one-week-ago': string;
+            'one-week-from-now': string;
+            'one-month-ago': string;
+            'one-month-from-now': string;
+            custom: string;
+          };
+          results: {
+            count_one: string;
+            count_other: string;
+            empty: string;
           };
         };
         calendar: {

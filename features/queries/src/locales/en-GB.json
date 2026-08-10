@@ -1,7 +1,77 @@
 {
   "queries": {
     "labels": {
-      "queries": "Queries"
+      "queries": "Queries",
+      "searchPlaceholder": "Search queries"
+    },
+    "actions": {
+      "new": "New query",
+      "delete": "Delete query"
+    },
+    "editor": {
+      "noQueries": "Create a query to get started",
+      "namePlaceholder": "Query name",
+      "selectProperty": "Property",
+      "selectOperator": "Operator",
+      "selectValue": "Value",
+      "valuePlaceholder": "Value",
+      "ascending": "Ascending",
+      "descending": "Descending",
+      "propertyMismatch": "An input does not contain this property"
+    },
+    "nodes": {
+      "source": "Source",
+      "filter": "Filter",
+      "sort": "Sort",
+      "limit": "Limit",
+      "results": "Results"
+    },
+    "toolbar": {
+      "source": "Source",
+      "filter": "Filter",
+      "sort": "Sort",
+      "limit": "Limit"
+    },
+    "sourcePicker": {
+      "searchPlaceholder": "Search databases",
+      "empty": "No matching databases"
+    },
+    "operators": {
+      "equals": "Is equal to",
+      "not-equals": "Is not equal to",
+      "contains": "Contains",
+      "not-contains": "Does not contain",
+      "starts-with": "Starts with",
+      "ends-with": "Ends with",
+      "greater-than": "Is greater than",
+      "greater-than-or-equal": "Is at least",
+      "less-than": "Is less than",
+      "less-than-or-equal": "Is at most",
+      "is": "Is",
+      "is-not": "Is not",
+      "is-before": "Is before",
+      "is-after": "Is after",
+      "is-on-or-before": "Is on or before",
+      "is-on-or-after": "Is on or after",
+      "is-true": "Is on",
+      "is-false": "Is off",
+      "is-empty": "Is empty",
+      "is-not-empty": "Is not empty"
+    },
+    "dates": {
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "tomorrow": "Tomorrow",
+      "one-week-ago": "One week ago",
+      "one-week-from-now": "One week from now",
+      "one-month-ago": "One month ago",
+      "one-month-from-now": "One month from now",
+      "custom": "Custom date"
+    },
+    "results": {
+      "count_one": "{{count}} result",
+      "count_other": "{{count}} results",
+      "empty": "No matching entries"
     }
   }
 }

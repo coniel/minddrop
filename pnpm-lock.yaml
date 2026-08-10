@@ -476,6 +476,9 @@ importers:
       '@minddrop/queries':
         specifier: workspace:*
         version: link:../../packages/queries
+      '@minddrop/test-utils':
+        specifier: workspace:*
+        version: link:../../packages/test-utils
       '@minddrop/ui-components':
         specifier: workspace:*
         version: link:../../ui/components
@@ -755,6 +758,9 @@ importers:
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
+      '@minddrop/queries':
+        specifier: workspace:*
+        version: link:../../packages/queries
       '@minddrop/search':
         specifier: workspace:*
         version: link:../../packages/search
@@ -927,6 +933,9 @@ importers:
 
   features/queries:
     dependencies:
+      '@minddrop/databases':
+        specifier: workspace:*
+        version: link:../../packages/databases
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
@@ -936,15 +945,30 @@ importers:
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
+      '@minddrop/properties':
+        specifier: workspace:*
+        version: link:../../packages/properties
       '@minddrop/queries':
         specifier: workspace:*
         version: link:../../packages/queries
+      '@minddrop/selection':
+        specifier: workspace:*
+        version: link:../../packages/selection
+      '@minddrop/test-utils':
+        specifier: workspace:*
+        version: link:../../packages/test-utils
+      '@minddrop/ui-canvas':
+        specifier: workspace:*
+        version: link:../../ui/canvas
       '@minddrop/ui-components':
         specifier: workspace:*
         version: link:../../ui/components
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives
+      '@minddrop/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
       '@minddrop/views':
         specifier: workspace:*
         version: link:../../packages/views

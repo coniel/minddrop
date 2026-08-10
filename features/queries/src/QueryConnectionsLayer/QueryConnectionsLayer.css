@@ -1,0 +1,44 @@
+/* A zero sized SVG at the canvas origin, edges draw in canvas
+   coordinates and overflow freely */
+.queries-connections-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.queries-connection {
+  fill: none;
+  stroke: var(--primary-800);
+  stroke-width: 1.5;
+}
+
+.queries-connection-selected {
+  stroke: var(--primary-1000);
+  stroke-width: 2.5;
+}
+
+.queries-connection-pending {
+  stroke-dasharray: 6 4;
+}
+
+/* Connections into a filter whose property their databases do
+   not contain, matching the filter node's warning */
+.queries-connection-mismatched {
+  stroke: var(--warning-800);
+}
+
+.queries-connection-selected.queries-connection-mismatched {
+  stroke: var(--warning-1000);
+}
+
+/* Wide invisible stroke making edges clickable */
+.queries-connection-hit-area {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 12;
+  pointer-events: stroke;
+}

@@ -1,0 +1,6 @@
+.queries-source-picker {
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background-color: var(--surface-raised);
+  box-shadow: var(--shadow-overlay);
+}

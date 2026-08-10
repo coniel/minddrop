@@ -1,0 +1,35 @@
+/* Split the warning from the node's fields with a full width
+   divider, bleeding over the node body's horizontal padding */
+.queries-node-mismatch-warning {
+  margin: var(--space-1) calc(var(--space-3) * -1) 0;
+  padding: var(--space-3) var(--space-3) 0;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.queries-node-mismatch-warning-message {
+  align-items: center;
+}
+
+/* Size the warning icon to match the warning text */
+.queries-node-mismatch-warning-message .icon {
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+}
+
+/* Size the source icons to match the warning icon, so the
+   source rows column-align with the warning message */
+.queries-node-mismatch-warning-sources {
+  --icon-size-default: 14px;
+}
+
+.queries-node-mismatch-warning-source-icon {
+  flex-shrink: 0;
+}
+
+/* Emoji source icons follow the source name text size */
+.queries-node-mismatch-warning-sources .emoji {
+  font-size: 12px;
+  line-height: 14px;
+  text-align: center;
+}

@@ -6,6 +6,6 @@ import { QueriesViewName } from './events';
  * Registers the queries feature's views.
  */
 export function registerQueryViews(): void {
-  // Register the queries list view
+  // Register the queries view
   Views.register({ type: QueriesViewName, component: QueriesView });
 }

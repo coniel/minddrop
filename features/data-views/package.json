@@ -23,6 +23,7 @@
     "@minddrop/file-system": "workspace:*",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/queries": "workspace:*",
+    "@minddrop/test-utils": "workspace:*",
     "@minddrop/ui-components": "workspace:*",
     "@minddrop/ui-databases": "workspace:*",
     "@minddrop/ui-icons": "workspace:*",

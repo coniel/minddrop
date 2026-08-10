@@ -1,0 +1,5 @@
+/* Cap the results list height so long result sets scroll
+   within the node instead of growing it */
+.queries-results-node-scroll {
+  max-height: 320px;
+}

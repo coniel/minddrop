@@ -7,10 +7,10 @@ import {
 } from '../events';
 import { locales } from '../locales';
 
-// View instance id of the singleton queries list view
+// View instance id of the singleton queries view
 const queriesViewId = 'queries:queries';
 
-// Icon shown in the queries list view's tab
+// Icon shown in the queries view tab
 const QUERIES_VIEW_ICON = 'content-icon:list-filter:inherit';
 
 /**
@@ -24,7 +24,7 @@ export function initializeQueriesFeature(): VoidFunction {
   I18n.registerTranslations(locales);
 
   // Listen for open queries view events, and open the queries
-  // list view when one is received
+  // view when one is received
   Events.addListener(OpenQueriesViewEvent, EventListenerId, () => {
     Events.dispatch<OpenViewEventData>(OpenViewEvent, {
       view: QueriesViewName,

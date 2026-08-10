@@ -40,6 +40,29 @@ Fix direction: widen the result item component's `onClick` prop to accept
 the mouse event (or drop the event parameter from the handler), then
 remove this entry.
 
+## ui/icons
+
+### Non-React package typechecks fail inside `ui/icons` source
+
+`npx tsc --noEmit -p packages/databases/tsconfig.json` (and the same for
+`packages/queries`) fails with three errors inside `ui/icons/src`: two
+TS6142 errors because `.tsx` files resolve without `--jsx` being set, and
+a TS2731 implicit symbol-to-string conversion in
+`stringifyIcon/stringifyIcon.ts`.
+
+Cause: `@minddrop/ui-icons` ships its types from source
+(`"types": "src/index"` in its package.json), so any consumer typecheck
+compiles the icons source under the consumer's own compiler options.
+Non-React packages (databases, queries, via `@minddrop/properties` →
+`@minddrop/ui-icons`) do not set `jsx`, so the `.tsx` sources fail.
+Feature packages set `jsx` and pass. Pre-existing on `main` as of
+2026-08-10 (verified on a clean tree without local changes); the affected
+packages' own sources have no errors.
+
+Fix direction: set `jsx` in the shared package tsconfig base (or ship
+built declarations for ui-icons), and wrap the `stringifyIcon` symbol
+conversion in `String(...)`; then remove this entry.
+
 ## packages/databases
 
 ### Concurrent file entry creation races on the storage directory
@@ -134,7 +157,7 @@ Failure chain, and three separate places that let it through:
 2. `initializeCollections` maps over the loaded configs and calls
    `resolveItemReferences(collection.items)`. With `items` undefined,
    `references.flatMap` throws, and the throw escapes the whole `.map`,
-   so *no* collections load even though only one file was bad.
+   so _no_ collections load even though only one file was bad.
 3. `initializeDesktopApp` awaits each loader in sequence with no
    isolation, and `App.tsx`'s `init()` never catches, so the rejection
    leaves `initializingApp` stuck at `true` and `App` returns `null`

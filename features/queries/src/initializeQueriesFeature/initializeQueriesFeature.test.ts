@@ -25,7 +25,7 @@ describe('initializeQueriesFeature', () => {
         OpenViewEvent,
         'test-open-queries',
         ({ data }) => {
-          // The queries list view opens as a singleton
+          // The queries view opens as a singleton
           expect(data.view).toBe(QueriesViewName);
           expect(data.id).toBe('queries:queries');
           resolve();
