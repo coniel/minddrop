@@ -11,11 +11,11 @@ import { runQuery } from '../runQuery';
 
 /**
  * Returns the IDs of entries matching a query, re-running the
- * query whenever the query changes or its source database's
- * SQL data syncs.
+ * query whenever the query changes or one of its source
+ * databases' SQL data syncs.
  *
- * Returns an empty array when the query does not exist or has
- * no source database.
+ * Returns an empty array when the query does not exist or no
+ * source is connected to its results node.
  *
  * @param queryId - The ID of the query to run.
  *
@@ -42,6 +42,11 @@ export function useQueryResults(queryId: string): string[] {
       return;
     }
 
+    // The databases feeding the query's graph
+    const sourceDatabaseIds = query.nodes.flatMap((node) =>
+      node.type === 'source' && node.database ? [node.database] : [],
+    );
+
     // Runs the query against the latest SQL data
     const rerunQuery = async () => {
       const entryIds = await runQuery(queryId);
@@ -55,12 +60,12 @@ export function useQueryResults(queryId: string): string[] {
     // Run the query for the current document state
     rerunQuery();
 
-    // Re-run when the source database's entries sync to SQL
+    // Re-run when a source database's entries sync to SQL
     Events.addListener<DatabaseEntriesSqlSyncedEventData>(
       Databases.events.entriesSqlSynced,
       listenerId,
       ({ data }) => {
-        if (data.databaseId === query.database) {
+        if (sourceDatabaseIds.includes(data.databaseId)) {
           rerunQuery();
         }
       },
@@ -74,12 +79,12 @@ export function useQueryResults(queryId: string): string[] {
       rerunQuery,
     );
 
-    // Re-run when the source database's entries are reindexed
+    // Re-run when a source database's entries are reindexed
     Events.addListener<DatabaseSqlReindexedEventData>(
       Databases.events.databaseSqlReindexed,
       listenerId,
       ({ data }) => {
-        if (data.databaseId === query.database) {
+        if (sourceDatabaseIds.includes(data.databaseId)) {
           rerunQuery();
         }
       },
@@ -90,7 +95,7 @@ export function useQueryResults(queryId: string): string[] {
       Databases.events.propertySqlSynced,
       listenerId,
       ({ data }) => {
-        if (data.databaseId === query.database) {
+        if (sourceDatabaseIds.includes(data.databaseId)) {
           rerunQuery();
         }
       },

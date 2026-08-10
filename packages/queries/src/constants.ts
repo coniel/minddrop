@@ -4,6 +4,9 @@ import type { QueryOperator } from './types';
 export const QueriesDirName = 'queries';
 export const QueryFileExtension = 'query';
 
+// Where a new query's results node is seeded on the canvas
+export const DEFAULT_RESULTS_NODE_POSITION = { x: 620, y: 120 };
+
 // Text comparison operators shared by text-like property types
 const TEXT_OPERATORS: QueryOperator[] = [
   'equals',

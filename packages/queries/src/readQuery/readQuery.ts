@@ -14,8 +14,8 @@ export async function readQuery(path: string): Promise<Query | null> {
     // Read the query config from the file system
     const query = await Fs.readJsonFile<Query>(path);
 
-    // Discard files predating the rules based query model
-    if (!query.rules) {
+    // Discard files predating the node graph query model
+    if (!query.nodes) {
       return null;
     }
 

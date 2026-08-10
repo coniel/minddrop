@@ -20,6 +20,7 @@ import { handleDataTransfer } from './handleDataTransfer';
 import {
   SCHEMA_SQL,
   SCHEMA_VERSION,
+  sqlCountScopedEntries,
   sqlDeleteDatabase,
   sqlDeleteEntries,
   sqlGetAllDatabases,
@@ -32,6 +33,7 @@ import {
   sqlGetEntryTextContent,
   sqlGetVersion,
   sqlQueryEntries,
+  sqlQueryScopedEntries,
   sqlReindexDatabaseEntries,
   sqlRenameProperty,
   sqlUpdateEntryMetadata,
@@ -76,6 +78,8 @@ export const sql = {
   getEntrySyncRecords: sqlGetEntrySyncRecords,
   getEntryPropertyValues: sqlGetEntryPropertyValues,
   queryEntries: sqlQueryEntries,
+  queryScopedEntries: sqlQueryScopedEntries,
+  countScopedEntries: sqlCountScopedEntries,
   SCHEMA_SQL,
   SCHEMA_VERSION,
 } as const;

@@ -19,6 +19,9 @@ export { sqlGetEntryPropertyValues } from './sqlGetEntryPropertyValues';
 export { sqlGetAllEntriesFull } from './sqlGetAllEntriesFull';
 export { sqlQueryEntries } from './sqlQueryEntries';
 export type { SqlQueryEntriesOptions } from './sqlQueryEntries';
+export { sqlQueryScopedEntries } from './sqlQueryScopedEntries';
+export type { SqlQueryScopedEntriesOptions } from './sqlQueryScopedEntries';
+export { sqlCountScopedEntries } from './sqlCountScopedEntries';
 
 // Init
 export { initializeDatabasesBackend } from './initializeDatabasesBackend';

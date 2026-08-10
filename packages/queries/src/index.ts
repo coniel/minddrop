@@ -5,5 +5,6 @@ export * from './events';
 export * from './constants';
 export * from './types';
 export * from './utils';
+export type { QueryNodeCounts } from './getQueryNodeCounts';
 export * from './test-utils/setup-fixtures';
 export * as QueryFixtures from './test-utils/queries.fixtures';

@@ -11,4 +11,7 @@ export {
 export { updateQuery as update } from './updateQuery';
 export { initializeQueries as initialize } from './initializeQueries';
 export { runQuery as run } from './runQuery';
+export { searchQueries as search } from './utils';
 export { useQueryResults as useResults } from './useQueryResults';
+export { getQueryNodeCounts as getNodeCounts } from './getQueryNodeCounts';
+export { useQueryNodeCounts as useNodeCounts } from './useQueryNodeCounts';

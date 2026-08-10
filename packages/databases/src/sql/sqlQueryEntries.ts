@@ -1,6 +1,5 @@
-import { Sql, SqlParam } from '@minddrop/sql';
 import { EntryFilterGroup, EntrySort } from '../types';
-import { buildEntryFilterSql, buildEntrySortSql } from '../utils';
+import { sqlQueryScopedEntries } from './sqlQueryScopedEntries';
 
 export interface SqlQueryEntriesOptions {
   /**
@@ -29,39 +28,6 @@ export async function sqlQueryEntries(
   sort: EntrySort[],
   options?: SqlQueryEntriesOptions,
 ): Promise<string[]> {
-  const params: SqlParam[] = [];
-
-  // Build the sort joins and ORDER BY terms
-  const sortSql = buildEntrySortSql(sort);
-
-  // Join parameters bind before the WHERE clause parameters
-  params.push(...sortSql.params);
-
-  // Scope the query to the database
-  let where = 'e.database_id = ?';
-
-  params.push(databaseId);
-
-  // Append the filter conditions when the filter tree contains
-  // any filters
-  const filterSql = filter ? buildEntryFilterSql(filter) : null;
-
-  if (filterSql) {
-    where = `${where} AND ${filterSql.sql}`;
-    params.push(...filterSql.params);
-  }
-
-  let sql = `SELECT e.id FROM entries e ${sortSql.joins} WHERE ${where} ORDER BY ${sortSql.orderBy}`;
-
-  // Cap the result count when a limit is given
-  if (options?.limit !== undefined) {
-    sql = `${sql} LIMIT ?`;
-    params.push(options.limit);
-  }
-
-  // Await the rows since RPC backed adapters resolve
-  // asynchronously despite the synchronous signature
-  const rows = await Sql.all<{ id: string }>(sql, ...params);
-
-  return rows.map((row) => row.id);
+  // A single-database query is a scoped query with one scope
+  return sqlQueryScopedEntries([{ databaseId, filter }], sort, options);
 }

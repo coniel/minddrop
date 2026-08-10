@@ -12,6 +12,7 @@ export * from './errors';
 export * from './events';
 export * from './database-templates';
 export * from './utils/withImplicitTitleProperty';
+export { MULTI_VALUE_PROPERTY_TYPES } from './constants';
 export * as Databases from './Databases';
 export * as DatabaseAutomations from './DatabaseAutomations';
 export * as DatabaseEntrySerializers from './DatabaseEntrySerializers';

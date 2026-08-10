@@ -82,6 +82,23 @@ export type EntryFilter =
   | EntryExistenceFilter;
 
 /**
+ * A database scope for SQL entry queries: the entries of a
+ * single database, optionally narrowed by a filter group.
+ */
+export interface EntryQueryScope {
+  /**
+   * The ID of the database whose entries are in scope.
+   */
+  databaseId: string;
+
+  /**
+   * The filter group narrowing the scope, or null to include
+   * all of the database's entries.
+   */
+  filter: EntryFilterGroup | null;
+}
+
+/**
  * A sort instruction for SQL entry queries.
  */
 export interface EntrySort {

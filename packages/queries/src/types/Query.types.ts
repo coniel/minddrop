@@ -1,3 +1,4 @@
+import { PropertyType } from '@minddrop/properties';
 import { EntityId } from '@minddrop/utils';
 import { QueryOperator } from './QueryOperator.types';
 
@@ -15,12 +16,6 @@ export interface Query {
   name: string;
 
   /**
-   * The ID of the source database the query runs against.
-   * An empty string until the user selects a database.
-   */
-  database: string;
-
-  /**
    * The date the query was created.
    */
   created: Date;
@@ -31,58 +26,67 @@ export interface Query {
   lastModified: Date;
 
   /**
-   * The root rule group. Always present, may contain no rules.
+   * The nodes making up the query graph. Always contains a
+   * results node.
    */
-  rules: QueryRuleGroup;
+  nodes: QueryNode[];
 
   /**
-   * The sort order applied to results.
+   * The connections between the graph's nodes.
    */
-  sort: QuerySort[];
+  connections: QueryConnection[];
 }
 
-export type QueryCombinator = 'and' | 'or';
+export type QueryNodeType = 'source' | 'filter' | 'sort' | 'limit' | 'results';
 
-export interface QueryRuleGroup {
+interface QueryNodeBase {
   /**
-   * A unique identifier for the group, used as the edit target
-   * when modifying the rule tree.
+   * A unique identifier for the node, used as the edit target
+   * when modifying the graph and as the connection endpoints.
    */
   id: string;
 
   /**
-   * Discriminates groups from rules in the rule tree.
+   * The node's horizontal position on the query canvas.
    */
-  type: 'group';
+  x: number;
 
   /**
-   * How the group's rules are combined.
+   * The node's vertical position on the query canvas.
    */
-  combinator: QueryCombinator;
-
-  /**
-   * The rules and nested groups making up the group.
-   */
-  rules: (QueryRule | QueryRuleGroup)[];
+  y: number;
 }
 
-export interface QueryRule {
-  /**
-   * A unique identifier for the rule, used as the edit target
-   * when modifying the rule tree.
-   */
-  id: string;
+/**
+ * A node emitting all entries of a database into the graph.
+ */
+export interface QuerySourceNode extends QueryNodeBase {
+  type: 'source';
 
   /**
-   * Discriminates rules from groups in the rule tree.
+   * The ID of the database whose entries the node emits.
    */
-  type: 'rule';
+  database: string;
+}
+
+/**
+ * A node narrowing its input entries by a single property
+ * comparison.
+ */
+export interface QueryFilterNode extends QueryNodeBase {
+  type: 'filter';
 
   /**
-   * The property name the rule filters by. An empty string
+   * The property name the filter compares. An empty string
    * until the user picks a property.
    */
   property: string;
+
+  /**
+   * The picked property's type, used to compile the comparison.
+   * An empty string until the user picks a property.
+   */
+  propertyType: PropertyType | '';
 
   /**
    * The comparison operator. An empty string until the user
@@ -94,10 +98,83 @@ export interface QueryRule {
    * The comparison value. Undefined until set, and unused by
    * value-less operators.
    */
-  value?: QueryRuleValue;
+  value?: QueryFilterValue;
 }
 
-export type QueryRuleValue = string | number | QueryDateValue;
+/**
+ * A node adding a sort criterion to its input entries.
+ * Successive sort nodes sort by the earlier criteria first.
+ */
+export interface QuerySortNode extends QueryNodeBase {
+  type: 'sort';
+
+  /**
+   * The property name to sort by. An empty string until the
+   * user picks a property.
+   */
+  property: string;
+
+  /**
+   * The picked property's type, used to compile the sort. An
+   * empty string until the user picks a property.
+   */
+  propertyType: PropertyType | '';
+
+  /**
+   * The sort direction.
+   */
+  direction: 'ascending' | 'descending';
+}
+
+/**
+ * A node capping the number of query results.
+ */
+export interface QueryLimitNode extends QueryNodeBase {
+  type: 'limit';
+
+  /**
+   * The maximum number of results. Zero means no limit.
+   */
+  count: number;
+}
+
+/**
+ * The node collecting the query's final results. Every query
+ * has exactly one, which cannot be removed.
+ */
+export interface QueryResultsNode extends QueryNodeBase {
+  type: 'results';
+}
+
+export type QueryNode =
+  | QuerySourceNode
+  | QueryFilterNode
+  | QuerySortNode
+  | QueryLimitNode
+  | QueryResultsNode;
+
+/**
+ * A directed connection between two query graph nodes, from an
+ * output port to an input port.
+ */
+export interface QueryConnection {
+  /**
+   * A unique identifier for the connection.
+   */
+  id: string;
+
+  /**
+   * The ID of the node the connection starts from.
+   */
+  from: string;
+
+  /**
+   * The ID of the node the connection leads to.
+   */
+  to: string;
+}
+
+export type QueryFilterValue = string | number | QueryDateValue;
 
 export type QueryDateValue =
   | { type: 'absolute'; date: Date }
@@ -111,15 +188,3 @@ export type QueryRelativeDatePreset =
   | 'one-week-from-now'
   | 'one-month-ago'
   | 'one-month-from-now';
-
-export interface QuerySort {
-  /**
-   * The property to sort by.
-   */
-  property: string;
-
-  /**
-   * The direction to sort by.
-   */
-  direction: 'ascending' | 'descending';
-}

@@ -43,6 +43,7 @@ export * from './getNewestDatabaseEntries';
 export * from './searchDatabaseEntriesByTitle';
 export * from './escapeLikePattern';
 export * from './buildEntryFilterSql';
+export * from './buildEntryScopesSql';
 export * from './buildEntrySortSql';
 export * from './searchDatabases';
 export * from './searchDatabaseEntryTemplates';

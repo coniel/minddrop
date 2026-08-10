@@ -6,27 +6,43 @@ function generateQueryFixture(number: number): Query {
   return {
     id: `query_${number}`,
     name: `Query ${number}`,
-    database: 'database_objects',
     created: new Date('2024-01-01T00:00:00.000Z'),
     lastModified: new Date('2024-01-01T00:00:00.000Z'),
-    rules: {
-      id: `query-rule-group_${number}`,
-      type: 'group',
-      combinator: 'and',
-      rules: [
-        {
-          id: `query-rule_${number}`,
-          type: 'rule',
-          property: 'Title',
-          operator: 'contains',
-          value: 'foo',
-        },
-      ],
-    },
-    sort: [
+    nodes: [
       {
+        id: `query-node_source-${number}`,
+        type: 'source',
+        x: 0,
+        y: 0,
+        database: 'database_objects',
+      },
+      {
+        id: `query-node_filter-${number}`,
+        type: 'filter',
+        x: 300,
+        y: 0,
         property: 'Title',
-        direction: 'ascending',
+        propertyType: 'title',
+        operator: 'contains',
+        value: 'foo',
+      },
+      {
+        id: `query-node_results-${number}`,
+        type: 'results',
+        x: 600,
+        y: 0,
+      },
+    ],
+    connections: [
+      {
+        id: `query-connection_a-${number}`,
+        from: `query-node_source-${number}`,
+        to: `query-node_filter-${number}`,
+      },
+      {
+        id: `query-connection_b-${number}`,
+        from: `query-node_filter-${number}`,
+        to: `query-node_results-${number}`,
       },
     ],
   };

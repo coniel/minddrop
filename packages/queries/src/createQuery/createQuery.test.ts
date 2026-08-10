@@ -10,14 +10,15 @@ const newQuery = {
   id: expect.any(String),
   created: mockDate,
   lastModified: mockDate,
-  database: '',
-  rules: {
-    id: expect.any(String),
-    type: 'group',
-    combinator: 'and',
-    rules: [],
-  },
-  sort: [],
+  nodes: [
+    {
+      id: expect.any(String),
+      type: 'results',
+      x: expect.any(Number),
+      y: expect.any(Number),
+    },
+  ],
+  connections: [],
   name: 'Query',
 };
 
@@ -26,7 +27,7 @@ describe('createQuery', () => {
 
   afterEach(cleanup);
 
-  it('creates a query', async () => {
+  it('creates a query with a results node', async () => {
     const query = await createQuery();
 
     expect(query).toEqual(newQuery);
