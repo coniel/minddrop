@@ -2,6 +2,31 @@
   "collections": {
     "labels": {
       "collections": "Collections"
+    },
+    "actions": {
+      "new": "New collection",
+      "options": "Collection options",
+      "delete": {
+        "label": "Delete collection",
+        "confirmation": {
+          "title": "Delete collection?",
+          "message": "The collection will be deleted. Its entries are not affected, but views using it as their data source will be left without one.",
+          "confirm": "Delete"
+        }
+      }
+    },
+    "list": {
+      "searchPlaceholder": "Search collections...",
+      "empty": "No collections",
+      "noResults": "No matching collections"
+    },
+    "details": {
+      "noSelection": "Select a collection",
+      "icon": "Collection icon",
+      "consumers": "Used by",
+      "consumersEmpty": "Not used by any views",
+      "entries": "Entries",
+      "entriesEmpty": "No entries"
     }
   }
 }

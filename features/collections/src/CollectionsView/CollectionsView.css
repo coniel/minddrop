@@ -1,5 +1,52 @@
 .collections-view {
   .collections-view-content {
+    flex: 1;
+    min-height: 0;
+    /* The columns are separated by a border rather than a gap */
+    gap: 0;
+  }
+
+  .collections-view-list {
+    width: 16rem;
+    flex-shrink: 0;
+    gap: 0;
+    border-right: 1px solid var(--border-subtle);
+  }
+
+  .collections-view-list-header {
     padding: var(--space-2);
+  }
+
+  .collections-view-search {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .collections-view-list-items {
+    flex: 1;
+    min-height: 0;
+    padding: 0 var(--space-2) var(--space-2);
+  }
+
+  .collections-view-details {
+    flex: 1;
+    min-width: 0;
+    padding: var(--space-4);
+  }
+
+  .collections-view-empty {
+    padding: var(--space-2);
+  }
+
+  .collection-details-name {
+    flex: 1;
+    min-width: 0;
+
+    /* The subtle variant does not pass typography props through, so
+       the name's text style is set here */
+    .text-input-input {
+      font-size: var(--text-md);
+      font-weight: var(--weight-semibold);
+    }
   }
 }

@@ -27,6 +27,31 @@ declare module 'i18next' {
             searchPlaceholder: string;
             empty: string;
           };
+          actions: {
+            new: string;
+            options: string;
+            delete: {
+              label: string;
+              confirmation: {
+                title: string;
+                message: string;
+                confirm: string;
+              };
+            };
+          };
+          list: {
+            searchPlaceholder: string;
+            empty: string;
+            noResults: string;
+          };
+          details: {
+            noSelection: string;
+            icon: string;
+            consumers: string;
+            consumersEmpty: string;
+            entries: string;
+            entriesEmpty: string;
+          };
         };
         test: string;
         app: {

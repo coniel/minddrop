@@ -421,9 +421,18 @@ importers:
       '@minddrop/collections':
         specifier: workspace:*
         version: link:../../packages/collections
+      '@minddrop/data-views':
+        specifier: workspace:*
+        version: link:../../packages/data-views
+      '@minddrop/databases':
+        specifier: workspace:*
+        version: link:../../packages/databases
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
+      '@minddrop/feature-data-views':
+        specifier: workspace:*
+        version: link:../data-views
       '@minddrop/file-system':
         specifier: workspace:*
         version: link:../../packages/file-system
@@ -433,6 +442,9 @@ importers:
       '@minddrop/ui-components':
         specifier: workspace:*
         version: link:../../ui/components
+      '@minddrop/ui-databases':
+        specifier: workspace:*
+        version: link:../../ui/databases
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives
