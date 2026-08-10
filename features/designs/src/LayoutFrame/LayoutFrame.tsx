@@ -207,6 +207,8 @@ export const LayoutFrame: React.FC<LayoutFrameProps> = ({
     width: controlledFrame.width,
     height: autoHeight ? undefined : controlledFrame.height,
     bounded: !layoutId,
+    // The studio drives its own element selection
+    selectable: false,
     onFrameChange: handleFrameChange,
   });
 

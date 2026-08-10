@@ -5,4 +5,7 @@ import { createCanvasStore } from '@minddrop/ui-canvas';
  * singleton full-screen view, so a module-level instance lets
  * non-React code (menus, store actions) control the viewport.
  */
-export const designStudioCanvasStore = createCanvasStore();
+export const designStudioCanvasStore = createCanvasStore({
+  // The studio selects design elements rather than canvas nodes
+  selectable: false,
+});
