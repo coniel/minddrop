@@ -54,6 +54,12 @@
       > * {
         pointer-events: auto;
       }
+
+      /* The zoom controls are docked in the header row rather
+         than floating over the canvas */
+      .ui-canvas-zoom-toolbar {
+        position: static;
+      }
     }
 
     .design-studio-workspace-design-name {

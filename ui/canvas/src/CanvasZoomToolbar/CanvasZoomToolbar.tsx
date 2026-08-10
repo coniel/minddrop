@@ -33,8 +33,9 @@ export interface CanvasZoomToolbarProps {
 
 /**
  * Renders zoom controls for the current canvas instance: zoom
- * in/out buttons, a zoom level dropdown and a fit view button.
- * Must be rendered within a CanvasProvider.
+ * in/out buttons, a zoom level dropdown, a reset zoom button and
+ * a fit view button. Floats at the top right of the nearest
+ * positioned ancestor. Must be rendered within a CanvasProvider.
  */
 export const CanvasZoomToolbar: React.FC<CanvasZoomToolbarProps> = ({
   onFit,
@@ -67,6 +68,11 @@ export const CanvasZoomToolbar: React.FC<CanvasZoomToolbarProps> = ({
     },
     [canvas],
   );
+
+  // Return the zoom level to 100%, centered on the viewport
+  const handleResetZoom = useCallback(() => {
+    handleSetZoom(1);
+  }, [handleSetZoom]);
 
   // Fit the canvas content into the viewport
   const handleFit = useCallback(() => {
@@ -130,6 +136,17 @@ export const CanvasZoomToolbar: React.FC<CanvasZoomToolbarProps> = ({
       />
 
       <ToolbarSeparator />
+
+      {/* Reset zoom button */}
+      <ToolbarIconButton
+        icon="rotate-ccw"
+        label="canvas.resetZoom"
+        tooltip={{ title: 'canvas.resetZoom', keyboardShortcut: ['0'] }}
+        variant="subtle"
+        size="sm"
+        onClick={handleResetZoom}
+        disabled={zoom === 1}
+      />
 
       {/* Fit view button */}
       <ToolbarIconButton

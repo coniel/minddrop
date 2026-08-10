@@ -11,29 +11,6 @@
   left: 50%;
 }
 
-/* Zoom controls at the bottom right of the canvas */
-.canvas-view-zoom-toolbar {
-  position: absolute;
-  right: var(--space-4);
-  bottom: var(--space-4);
-  z-index: 1;
-  padding: var(--space-1);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  background-color: var(--surface-overlay);
-  box-shadow: var(--shadow-overlay);
-  /* Hidden until the canvas is hovered */
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity var(--duration-normal) var(--ease-out);
-}
-
-/* Reveal the zoom controls while hovering the canvas */
-.canvas-view:hover .canvas-view-zoom-toolbar {
-  opacity: 1;
-  pointer-events: auto;
-}
-
 .canvas-view-node {
   border-radius: var(--radius-md);
 }

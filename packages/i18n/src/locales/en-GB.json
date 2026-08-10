@@ -10,6 +10,7 @@
   "canvas": {
     "fitView": "Fit view",
     "resetView": "Reset view",
+    "resetZoom": "Reset zoom",
     "zoomIn": "Zoom in",
     "zoomOut": "Zoom out"
   },

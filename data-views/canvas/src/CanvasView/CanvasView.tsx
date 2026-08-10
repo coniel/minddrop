@@ -795,7 +795,7 @@ const CanvasViewContent: React.FC<
       </DataViewFloatingToolbar>
 
       {/* Zoom controls */}
-      <CanvasZoomToolbar className="canvas-view-zoom-toolbar" />
+      <CanvasZoomToolbar />
     </div>
   );
 };

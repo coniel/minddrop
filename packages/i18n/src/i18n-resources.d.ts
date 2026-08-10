@@ -64,6 +64,7 @@ declare module 'i18next' {
         canvas: {
           fitView: string;
           resetView: string;
+          resetZoom: string;
           zoomIn: string;
           zoomOut: string;
         };

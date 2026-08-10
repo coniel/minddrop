@@ -471,7 +471,7 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
       <QueryBuilderToolbar />
 
       {/* Zoom controls */}
-      <CanvasZoomToolbar className="query-builder-zoom-toolbar" />
+      <CanvasZoomToolbar />
     </>
   );
 };
