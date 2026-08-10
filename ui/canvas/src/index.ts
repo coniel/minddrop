@@ -1,4 +1,5 @@
 export * from './Canvas';
+export * from './CanvasAlignmentGuides';
 export * from './CanvasConnectionsLayer';
 export * from './CanvasNode';
 export * from './CanvasProvider';

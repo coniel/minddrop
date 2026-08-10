@@ -5,10 +5,26 @@ import {
   useRef,
   useState,
 } from 'react';
-import { useOptionalCanvasContext } from '../CanvasContext';
-import { NODE_MIN_HEIGHT, NODE_MIN_WIDTH } from '../constants';
-import { CanvasNodeFrame, CanvasPoint } from '../types';
-import { snapToGrid } from '../utils';
+import { CanvasContextValue, useOptionalCanvasContext } from '../CanvasContext';
+import {
+  NODE_MIN_HEIGHT,
+  NODE_MIN_WIDTH,
+  OBJECT_SNAP_DISTANCE,
+} from '../constants';
+import {
+  CanvasAlignmentAxis,
+  CanvasAlignmentGuide,
+  CanvasNodeFrame,
+  CanvasPoint,
+} from '../types';
+import {
+  framesIntersect,
+  getEdgeSnap,
+  getGuideSpan,
+  getObjectSnap,
+  getViewportFrame,
+  snapToGrid,
+} from '../utils';
 
 /**
  * The edges and corners from which a node can be resized.
@@ -357,6 +373,7 @@ export function useCanvasNode(
       // Snapping is a canvas instance setting, so standalone
       // nodes never snap
       const snap = context ? context.store.getSnapToGrid() : false;
+      const snapObjects = context ? context.store.getSnapToObjects() : false;
 
       // Handle node dragging
       if (dragState.current) {
@@ -369,10 +386,41 @@ export function useCanvasNode(
           (event.clientY - dragState.current.startY) / scale;
 
         // Dragged nodes land their top left corner on the grid
+        const gridX = snap ? snapToGrid(rawX) : rawX;
+        const gridY = snap ? snapToGrid(rawY) : rawY;
+
+        // The node's registered frame, which carries its measured
+        // size including auto heights
+        const nodes = context ? context.store.getNodes() : {};
+        const registered = nodes[id];
+
+        // Snapping to the other nodes takes over from the grid
+        // where they align, so the two settings combine
+        const objectSnap =
+          snapObjects && registered
+            ? getObjectSnap(
+                {
+                  x: gridX,
+                  y: gridY,
+                  width: registered.width,
+                  height: registered.height,
+                },
+                getSnapTargets(context, id),
+                // The snapping distance is in screen pixels, so
+                // it is unscaled into canvas units
+                OBJECT_SNAP_DISTANCE / scale,
+              )
+            : null;
+
+        // Show the guides for the alignments the node snapped to
+        if (context) {
+          context.store.setAlignmentGuides(objectSnap ? objectSnap.guides : []);
+        }
+
         setPosition(
           clampPosition(
-            snap ? snapToGrid(rawX) : rawX,
-            snap ? snapToGrid(rawY) : rawY,
+            objectSnap ? objectSnap.x : gridX,
+            objectSnap ? objectSnap.y : gridY,
           ),
         );
       }
@@ -391,17 +439,73 @@ export function useCanvasNode(
         const rawDeltaX = (event.clientX - startX) / scale;
         const rawDeltaY = (event.clientY - startY) / scale;
 
-        // The edges the resize moves, which snapping aligns to
-        // the grid
+        // The edges the resize moves, which snapping aligns
         const anchors = getResizeAnchors(resizeState.current);
 
         // Shift the deltas so the moving edges land on grid lines
-        const deltaX = snap
+        const gridDeltaX = snap
           ? snapToGrid(anchors.x + rawDeltaX) - anchors.x
           : rawDeltaX;
-        const deltaY = snap
+        const gridDeltaY = snap
           ? snapToGrid(anchors.y + rawDeltaY) - anchors.y
           : rawDeltaY;
+
+        // The frames the moving edges align to
+        const others = getSnapTargets(context, id);
+
+        // The frame the resize projects to, whose extents the
+        // guides span
+        const projected = getResizeFrame(
+          resizeState.current,
+          gridDeltaX,
+          gridDeltaY,
+          event.shiftKey,
+        );
+
+        // The snapping distance is in screen pixels, so it is
+        // unscaled into canvas units
+        const threshold = OBJECT_SNAP_DISTANCE / scale;
+
+        // Snap each moving edge to the other nodes' edges and
+        // centers, which takes over from the grid where they align
+        const edgeSnapX =
+          snapObjects && resizeMovesAxis(edge, 'x')
+            ? getEdgeSnap(
+                anchors.x + gridDeltaX,
+                getGuideSpan(projected, 'x'),
+                others,
+                threshold,
+                'x',
+              )
+            : null;
+        const edgeSnapY =
+          snapObjects && resizeMovesAxis(edge, 'y')
+            ? getEdgeSnap(
+                anchors.y + gridDeltaY,
+                getGuideSpan(projected, 'y'),
+                others,
+                threshold,
+                'y',
+              )
+            : null;
+
+        const deltaX = edgeSnapX ? edgeSnapX.position - anchors.x : gridDeltaX;
+        const deltaY = edgeSnapY ? edgeSnapY.position - anchors.y : gridDeltaY;
+
+        // Show the guides for the alignments the edges snapped to
+        if (context) {
+          const guides: CanvasAlignmentGuide[] = [];
+
+          if (edgeSnapX?.guide) {
+            guides.push(edgeSnapX.guide);
+          }
+
+          if (edgeSnapY?.guide) {
+            guides.push(edgeSnapY.guide);
+          }
+
+          context.store.setAlignmentGuides(guides);
+        }
 
         // Workspace-bounds clamps only apply to bounded nodes;
         // canvas nodes resize freely in canvas coordinates
@@ -627,7 +731,7 @@ export function useCanvasNode(
         }
       }
     },
-    [context, bounded, minWidth, minHeight, clampPosition],
+    [context, id, bounded, minWidth, minHeight, clampPosition],
   );
 
   // End drag or resize on mouseup, reporting the frame when it
@@ -639,6 +743,12 @@ export function useCanvasNode(
     resizeState.current = null;
 
     setInteraction(null);
+
+    // The alignment guides only apply to an in-progress
+    // interaction
+    if (context) {
+      context.store.setAlignmentGuides([]);
+    }
 
     if (wasDragging && onDragStateChange) {
       onDragStateChange(false);
@@ -670,7 +780,16 @@ export function useCanvasNode(
     if (changed) {
       onFrameChange(frame);
     }
-  }, [onFrameChange, onDragStateChange, autoHeight, x, y, width, height]);
+  }, [
+    context,
+    onFrameChange,
+    onDragStateChange,
+    autoHeight,
+    x,
+    y,
+    width,
+    height,
+  ]);
 
   // Attach global mouse listeners while an interaction is active
   useEffect(() => {
@@ -741,6 +860,114 @@ export function useCanvasNode(
     isDragging: interaction === 'drag',
     isResizing: interaction === 'resize',
     wasDragged,
+  };
+}
+
+/**
+ * Returns the frames a node's interactions snap to: the other
+ * nodes at least partially within the viewport. Falls back to all
+ * other nodes while the viewport is unmeasured.
+ */
+function getSnapTargets(
+  context: CanvasContextValue | null,
+  id: string,
+): CanvasNodeFrame[] {
+  // Snapping is a canvas instance feature, so standalone nodes
+  // have nothing to snap to
+  if (!context) {
+    return [];
+  }
+
+  const { store } = context;
+
+  // The visible area in canvas coordinates
+  const viewport = getViewportFrame(
+    store.getPan(),
+    store.getZoom(),
+    store.getViewportSize(),
+  );
+
+  return Object.entries(store.getNodes())
+    .filter(([nodeId, frame]) => {
+      // The node cannot snap to itself
+      if (nodeId === id) {
+        return false;
+      }
+
+      // Off-screen nodes are not worth aligning to, since their
+      // guides would point off the canvas
+      return !viewport || framesIntersect(frame, viewport);
+    })
+    .map(([, frame]) => frame);
+}
+
+/**
+ * Returns whether a resize from the given edge moves the node's
+ * edges along an axis.
+ */
+function resizeMovesAxis(
+  edge: CanvasNodeResizeEdge,
+  axis: CanvasAlignmentAxis,
+): boolean {
+  // Horizontal moves come from the side edges and the corners
+  if (axis === 'x') {
+    return edge.endsWith('left') || edge.endsWith('right');
+  }
+
+  return edge.startsWith('top') || edge.startsWith('bottom');
+}
+
+/**
+ * Returns the frame a resize projects to for the given deltas,
+ * used to span the alignment guides over the resized node.
+ */
+function getResizeFrame(
+  state: ResizeState,
+  deltaX: number,
+  deltaY: number,
+  mirror: boolean,
+): CanvasNodeFrame {
+  const { originX, originY, originWidth, originHeight } = state;
+  const anchors = getResizeAnchors(state);
+
+  // The edges the resize leaves in place, which mirrored resizes
+  // move in the opposite direction
+  const oppositeX = state.edge.endsWith('left')
+    ? originX + originWidth
+    : originX;
+  const oppositeY = state.edge.startsWith('top')
+    ? originY + originHeight
+    : originY;
+
+  // The horizontal extent, unchanged when the resize does not
+  // move along the axis
+  const horizontal = resizeMovesAxis(state.edge, 'x')
+    ? getExtent(anchors.x + deltaX, mirror ? oppositeX - deltaX : oppositeX)
+    : { start: originX, end: originX + originWidth };
+
+  // The vertical extent
+  const vertical = resizeMovesAxis(state.edge, 'y')
+    ? getExtent(anchors.y + deltaY, mirror ? oppositeY - deltaY : oppositeY)
+    : { start: originY, end: originY + originHeight };
+
+  return {
+    x: horizontal.start,
+    y: vertical.start,
+    width: horizontal.end - horizontal.start,
+    height: vertical.end - vertical.start,
+  };
+}
+
+/**
+ * Returns the extent between two edge coordinates, in order.
+ */
+function getExtent(
+  edge: number,
+  opposite: number,
+): { start: number; end: number } {
+  return {
+    start: Math.min(edge, opposite),
+    end: Math.max(edge, opposite),
   };
 }
 

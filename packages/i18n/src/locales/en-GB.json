@@ -13,6 +13,7 @@
     "resetZoom": "Reset zoom",
     "settings": "Canvas settings",
     "snapToGrid": "Snap to grid",
+    "snapToObjects": "Snap to objects",
     "zoomIn": "Zoom in",
     "zoomOut": "Zoom out"
   },

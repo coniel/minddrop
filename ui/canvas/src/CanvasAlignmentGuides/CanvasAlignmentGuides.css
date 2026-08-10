@@ -1,0 +1,13 @@
+.ui-canvas-alignment-guides {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: visible;
+  pointer-events: none;
+
+  line {
+    /* A warm line stands apart from the primary coloured node
+       selection outlines */
+    stroke: var(--border-danger);
+  }
+}

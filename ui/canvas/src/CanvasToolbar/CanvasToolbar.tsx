@@ -47,6 +47,7 @@ export const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
   const minZoom = useCanvasStore((state) => state.minZoom);
   const maxZoom = useCanvasStore((state) => state.maxZoom);
   const snapToGrid = useCanvasStore((state) => state.snapToGrid);
+  const snapToObjects = useCanvasStore((state) => state.snapToObjects);
   const canvas = useCanvas();
 
   // Zoom in by one step, centered on the viewport
@@ -81,6 +82,14 @@ export const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
   const handleSnapToGridChange = useCallback(
     (enabled: boolean) => {
       canvas.setSnapToGrid(enabled);
+    },
+    [canvas],
+  );
+
+  // Turn snapping node interactions to other nodes on or off
+  const handleSnapToObjectsChange = useCallback(
+    (enabled: boolean) => {
+      canvas.setSnapToObjects(enabled);
     },
     [canvas],
   );
@@ -193,6 +202,13 @@ export const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
                   label="canvas.snapToGrid"
                   checked={snapToGrid}
                   onCheckedChange={handleSnapToGridChange}
+                />
+
+                {/* Snap to objects toggle */}
+                <DropdownMenuSwitchItem
+                  label="canvas.snapToObjects"
+                  checked={snapToObjects}
+                  onCheckedChange={handleSnapToObjectsChange}
                 />
               </DropdownMenuContent>
             </DropdownMenuPositioner>

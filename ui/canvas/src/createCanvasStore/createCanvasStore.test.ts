@@ -304,6 +304,64 @@ describe('createCanvasStore', () => {
     });
   });
 
+  describe('setSnapToObjects/toggleSnapToObjects', () => {
+    it('is off by default', () => {
+      const store = createCanvasStore();
+
+      expect(store.getSnapToObjects()).toBe(false);
+    });
+
+    it('applies the initial config', () => {
+      const store = createCanvasStore({ initialSnapToObjects: true });
+
+      expect(store.getSnapToObjects()).toBe(true);
+    });
+
+    it('sets and toggles snapping', () => {
+      const store = createCanvasStore();
+
+      store.setSnapToObjects(true);
+
+      expect(store.getSnapToObjects()).toBe(true);
+
+      store.toggleSnapToObjects();
+
+      expect(store.getSnapToObjects()).toBe(false);
+    });
+  });
+
+  describe('setAlignmentGuides', () => {
+    const guide = { axis: 'x' as const, position: 100, start: 0, end: 200 };
+
+    it('has no guides by default', () => {
+      const store = createCanvasStore();
+
+      expect(store.getAlignmentGuides()).toEqual([]);
+    });
+
+    it('sets and clears the guides', () => {
+      const store = createCanvasStore();
+
+      store.setAlignmentGuides([guide]);
+
+      expect(store.getAlignmentGuides()).toEqual([guide]);
+
+      store.setAlignmentGuides([]);
+
+      expect(store.getAlignmentGuides()).toEqual([]);
+    });
+
+    it('skips updates that leave the guides empty', () => {
+      const store = createCanvasStore();
+      const guides = store.getAlignmentGuides();
+
+      store.setAlignmentGuides([]);
+
+      // The state is untouched, so the array is the same instance
+      expect(store.getAlignmentGuides()).toBe(guides);
+    });
+  });
+
   describe('setHoveredConnectionHandle', () => {
     it('sets and clears the hovered handle', () => {
       const store = createCanvasStore();

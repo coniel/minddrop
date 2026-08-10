@@ -277,6 +277,187 @@ describe('useCanvasNode', () => {
     expect(store.getNode('node-1')?.width).toBe(308);
   });
 
+  it('snaps drags to nearby node edges when object snapping is enabled', () => {
+    const store = createCanvasStore({ initialSnapToObjects: true });
+
+    store.registerNode('node-2', { x: 145, y: 400, width: 300, height: 200 });
+
+    const { getByTestId } = renderNode(store);
+
+    // Drag to x 140, 5 short of the other node's left edge
+    fireEvent.mouseDown(getByTestId('drag-handle'), {
+      button: 0,
+      clientX: 0,
+      clientY: 0,
+    });
+    moveMouse(40, 20);
+
+    expect(store.getNode('node-1')).toEqual({
+      x: 145,
+      y: 70,
+      width: 300,
+      height: 200,
+    });
+  });
+
+  it('snaps drags to nearby node centers', () => {
+    const store = createCanvasStore({ initialSnapToObjects: true });
+
+    // A node whose center sits at x 250
+    store.registerNode('node-2', { x: 200, y: 500, width: 100, height: 100 });
+
+    const { getByTestId } = renderNode(store);
+
+    // Drag to x 103, putting the node's center 3 past the other
+    // node's center
+    fireEvent.mouseDown(getByTestId('drag-handle'), {
+      button: 0,
+      clientX: 0,
+      clientY: 0,
+    });
+    moveMouse(3, 0);
+
+    expect(store.getNode('node-1')?.x).toBe(100);
+  });
+
+  it('does not snap to nodes when object snapping is disabled', () => {
+    const store = createCanvasStore();
+
+    store.registerNode('node-2', { x: 145, y: 400, width: 300, height: 200 });
+
+    const { getByTestId } = renderNode(store);
+
+    fireEvent.mouseDown(getByTestId('drag-handle'), {
+      button: 0,
+      clientX: 0,
+      clientY: 0,
+    });
+    moveMouse(40, 20);
+
+    expect(store.getNode('node-1')?.x).toBe(140);
+    expect(store.getAlignmentGuides()).toEqual([]);
+  });
+
+  it('shows alignment guides while snapped, clearing them on release', () => {
+    const store = createCanvasStore({ initialSnapToObjects: true });
+
+    store.registerNode('node-2', { x: 145, y: 400, width: 300, height: 200 });
+
+    const { getByTestId } = renderNode(store);
+
+    fireEvent.mouseDown(getByTestId('drag-handle'), {
+      button: 0,
+      clientX: 0,
+      clientY: 0,
+    });
+    moveMouse(40, 20);
+
+    // The nodes are the same size, so their left edges, centers
+    // and right edges all line up
+    expect(store.getAlignmentGuides()).toEqual([
+      { axis: 'x', position: 145, start: 70, end: 600 },
+      { axis: 'x', position: 295, start: 70, end: 600 },
+      { axis: 'x', position: 445, start: 70, end: 600 },
+    ]);
+
+    releaseMouse();
+
+    expect(store.getAlignmentGuides()).toEqual([]);
+  });
+
+  it('does not snap drags to nodes outside the viewport', () => {
+    const store = createCanvasStore({ initialSnapToObjects: true });
+
+    store.setViewportSize({ width: 800, height: 300 });
+    // A node below the visible area
+    store.registerNode('node-2', { x: 145, y: 400, width: 300, height: 200 });
+
+    const { getByTestId } = renderNode(store);
+
+    fireEvent.mouseDown(getByTestId('drag-handle'), {
+      button: 0,
+      clientX: 0,
+      clientY: 0,
+    });
+    moveMouse(40, 20);
+
+    expect(store.getNode('node-1')?.x).toBe(140);
+  });
+
+  it('snaps drags to nodes partially within the viewport', () => {
+    const store = createCanvasStore({ initialSnapToObjects: true });
+
+    store.setViewportSize({ width: 800, height: 300 });
+    // A node whose top edge is visible
+    store.registerNode('node-2', { x: 145, y: 250, width: 300, height: 200 });
+
+    const { getByTestId } = renderNode(store);
+
+    fireEvent.mouseDown(getByTestId('drag-handle'), {
+      button: 0,
+      clientX: 0,
+      clientY: 0,
+    });
+    moveMouse(40, 20);
+
+    expect(store.getNode('node-1')?.x).toBe(145);
+  });
+
+  it('snaps resized edges to nearby node edges', () => {
+    const store = createCanvasStore({ initialSnapToObjects: true });
+
+    // A node whose left edge sits at 415
+    store.registerNode('node-2', { x: 415, y: 400, width: 300, height: 200 });
+
+    const { getByTestId } = renderNode(store);
+
+    // Move the right edge from 400 to 410, 5 short of the other
+    // node's left edge
+    fireEvent.mouseDown(getByTestId('resize-handle'), {
+      clientX: 0,
+      clientY: 0,
+    });
+    moveMouse(10, 0);
+
+    expect(store.getNode('node-1')?.width).toBe(315);
+    expect(store.getAlignmentGuides()).toEqual([
+      { axis: 'x', position: 415, start: 50, end: 600 },
+    ]);
+  });
+
+  it('snaps resized edges to nearby node centers', () => {
+    const store = createCanvasStore({ initialSnapToObjects: true });
+
+    // A node whose center sits at 405
+    store.registerNode('node-2', { x: 355, y: 400, width: 100, height: 200 });
+
+    const { getByTestId } = renderNode(store);
+
+    fireEvent.mouseDown(getByTestId('resize-handle'), {
+      clientX: 0,
+      clientY: 0,
+    });
+    moveMouse(2, 0);
+
+    expect(store.getNode('node-1')?.width).toBe(305);
+  });
+
+  it('does not snap resized edges to nodes when object snapping is disabled', () => {
+    const store = createCanvasStore();
+
+    store.registerNode('node-2', { x: 415, y: 400, width: 300, height: 200 });
+
+    const { getByTestId } = renderNode(store);
+
+    fireEvent.mouseDown(getByTestId('resize-handle'), {
+      clientX: 0,
+      clientY: 0,
+    });
+    moveMouse(10, 0);
+
+    expect(store.getNode('node-1')?.width).toBe(310);
+  });
+
   it('locks text selection during interactions', () => {
     const store = createCanvasStore();
 

@@ -7,6 +7,7 @@ import {
   ZOOM_STEP,
 } from '../constants';
 import {
+  CanvasAlignmentGuide,
   CanvasConnectionDrag,
   CanvasConnectionDragTarget,
   CanvasConnectionEnd,
@@ -73,6 +74,18 @@ export interface CanvasStore {
    * Returns whether node drags and resizes snap to the grid.
    */
   getSnapToGrid(): boolean;
+
+  /**
+   * Returns whether node drags and resizes snap to other
+   * nodes.
+   */
+  getSnapToObjects(): boolean;
+
+  /**
+   * Returns the alignment guides for the node being dragged or
+   * resized.
+   */
+  getAlignmentGuides(): CanvasAlignmentGuide[];
 
   /**
    * Returns the in-progress connection drag, or null when no
@@ -191,6 +204,27 @@ export interface CanvasStore {
   toggleSnapToGrid(): void;
 
   /**
+   * Sets whether node drags and resizes snap to the edges and
+   * centers of the other nodes on the canvas.
+   *
+   * @param enabled - Whether snapping is enabled.
+   */
+  setSnapToObjects(enabled: boolean): void;
+
+  /**
+   * Toggles whether node drags and resizes snap to other nodes.
+   */
+  toggleSnapToObjects(): void;
+
+  /**
+   * Sets the alignment guides for the node being dragged or
+   * resized.
+   *
+   * @param guides - The guides to show.
+   */
+  setAlignmentGuides(guides: CanvasAlignmentGuide[]): void;
+
+  /**
    * Starts a drag-to-connect interaction from a node side.
    *
    * @param fromNodeId - The ID of the node the drag is anchored to.
@@ -251,6 +285,8 @@ export function createCanvasStore(config: CanvasStoreConfig = {}): CanvasStore {
     getNode: (nodeId) => store.getState().nodes[nodeId] || null,
     getNodes: () => store.getState().nodes,
     getSnapToGrid: () => store.getState().snapToGrid,
+    getSnapToObjects: () => store.getState().snapToObjects,
+    getAlignmentGuides: () => store.getState().alignmentGuides,
     getConnectionDrag: () => store.getState().connectionDrag,
     getHoveredConnectionHandle: () => store.getState().hoveredConnectionHandle,
     setZoom: (zoom, focalPoint) => store.getState().setZoom(zoom, focalPoint),
@@ -269,6 +305,9 @@ export function createCanvasStore(config: CanvasStoreConfig = {}): CanvasStore {
     setViewportSize: (size) => store.getState().setViewportSize(size),
     setSnapToGrid: (enabled) => store.getState().setSnapToGrid(enabled),
     toggleSnapToGrid: () => store.getState().toggleSnapToGrid(),
+    setSnapToObjects: (enabled) => store.getState().setSnapToObjects(enabled),
+    toggleSnapToObjects: () => store.getState().toggleSnapToObjects(),
+    setAlignmentGuides: (guides) => store.getState().setAlignmentGuides(guides),
     startConnectionDrag: (fromNodeId, fromSide, point, reconnect) =>
       store
         .getState()
@@ -291,6 +330,7 @@ function createInternalStore(config: CanvasStoreConfig) {
     initialZoom = 1,
     initialPan = { x: 0, y: 0 },
     initialSnapToGrid = false,
+    initialSnapToObjects = false,
   } = config;
 
   return createStore<CanvasState>((set, get) => ({
@@ -301,6 +341,8 @@ function createInternalStore(config: CanvasStoreConfig) {
     viewportSize: { width: 0, height: 0 },
     nodes: {},
     snapToGrid: initialSnapToGrid,
+    snapToObjects: initialSnapToObjects,
+    alignmentGuides: [],
     connectionDrag: null,
     hoveredConnectionHandle: null,
 
@@ -418,6 +460,22 @@ function createInternalStore(config: CanvasStoreConfig) {
     setSnapToGrid: (enabled) => set({ snapToGrid: enabled }),
 
     toggleSnapToGrid: () => set((state) => ({ snapToGrid: !state.snapToGrid })),
+
+    setSnapToObjects: (enabled) => set({ snapToObjects: enabled }),
+
+    toggleSnapToObjects: () =>
+      set((state) => ({ snapToObjects: !state.snapToObjects })),
+
+    setAlignmentGuides: (guides) =>
+      set((state) => {
+        // Skip updates that leave the guides empty, since this
+        // fires on every frame of a node drag
+        if (!guides.length && !state.alignmentGuides.length) {
+          return {};
+        }
+
+        return { alignmentGuides: guides };
+      }),
 
     startConnectionDrag: (fromNodeId, fromSide, point, reconnect) =>
       set({

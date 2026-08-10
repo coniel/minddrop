@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { TranslationKey } from '@minddrop/i18n';
+import { CanvasAlignmentGuides } from '../CanvasAlignmentGuides';
 import { useCanvasContext } from '../CanvasContext';
 import { CanvasNameField } from '../CanvasNameField';
 import { CONNECTION_PROXIMITY, GRID_SIZE } from '../constants';
@@ -470,6 +471,9 @@ export const Canvas: React.FC<CanvasProps> = ({
         }}
       >
         {children}
+
+        {/* Snapping alignment guides */}
+        <CanvasAlignmentGuides />
       </div>
 
       {/* Editable canvas name */}

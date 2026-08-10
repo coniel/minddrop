@@ -25,6 +25,15 @@ export const NODE_MIN_HEIGHT = 100;
 export const GRID_SIZE = 24;
 
 /**
+ * Distance in screen pixels within which a dragged node snaps to
+ * another node's edges or center.
+ */
+export const OBJECT_SNAP_DISTANCE = 6;
+
+/** Tolerance within which two alignment lines count as aligned. */
+export const ALIGNMENT_TOLERANCE = 0.01;
+
+/**
  * Distance from a node in screen pixels within which connection
  * interactions engage: an edge's connection handle shows, and a
  * connection drag snaps to the node as its target.

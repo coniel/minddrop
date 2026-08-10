@@ -1,3 +1,4 @@
+import { CanvasAlignmentGuide } from './CanvasAlignment.types';
 import {
   CanvasConnectionDrag,
   CanvasConnectionDragTarget,
@@ -50,6 +51,11 @@ export interface CanvasStoreConfig {
    * Whether node interactions snap to the grid initially.
    */
   initialSnapToGrid?: boolean;
+
+  /**
+   * Whether node interactions snap to other nodes initially.
+   */
+  initialSnapToObjects?: boolean;
 }
 
 /**
@@ -92,6 +98,18 @@ export interface CanvasState {
    * Whether node drags and resizes snap to the canvas grid.
    */
   snapToGrid: boolean;
+
+  /**
+   * Whether node drags and resizes snap to the edges and centers
+   * of the other nodes on the canvas.
+   */
+  snapToObjects: boolean;
+
+  /**
+   * The alignment guides for the node being dragged or resized,
+   * empty when no node is aligned with another.
+   */
+  alignmentGuides: CanvasAlignmentGuide[];
 
   /**
    * The in-progress drag-to-connect interaction, or null when no
@@ -200,6 +218,24 @@ export interface CanvasState {
    * Toggles whether node drags and resizes snap to the grid.
    */
   toggleSnapToGrid: () => void;
+
+  /**
+   * Sets whether node drags and resizes snap to other nodes.
+   * @param enabled - Whether snapping is enabled.
+   */
+  setSnapToObjects: (enabled: boolean) => void;
+
+  /**
+   * Toggles whether node drags and resizes snap to other nodes.
+   */
+  toggleSnapToObjects: () => void;
+
+  /**
+   * Sets the alignment guides for the node being dragged or
+   * resized. Skips updates that leave the guides empty.
+   * @param guides - The guides to show.
+   */
+  setAlignmentGuides: (guides: CanvasAlignmentGuide[]) => void;
 
   /**
    * Starts a drag-to-connect interaction from a node side.
