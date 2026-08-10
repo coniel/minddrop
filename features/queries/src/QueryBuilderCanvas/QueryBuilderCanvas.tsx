@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { DatabaseId } from '@minddrop/databases';
 import {
   Queries,
@@ -17,11 +17,10 @@ import {
   CanvasNodeFrame,
   CanvasPoint,
   CanvasProvider,
-  CanvasZoomToolbar,
+  CanvasToolbar,
   useCanvas,
   useFitOnNodesReady,
 } from '@minddrop/ui-canvas';
-import { TextInput } from '@minddrop/ui-primitives';
 import { QueryBuilderToolbar } from '../QueryBuilderToolbar';
 import {
   PendingQueryConnection,
@@ -86,9 +85,6 @@ export const QueryBuilderCanvas: React.FC<QueryBuilderCanvasProps> = ({
 const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
   queryId,
 }) => {
-  // Debounces query name edits
-  const nameTimeoutRef = useRef<number>(undefined);
-
   // The in-progress connection drag
   const [pendingConnection, setPendingConnection] =
     useState<PendingQueryConnection | null>(null);
@@ -324,11 +320,7 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
   // Persist a name change after a short pause in typing
   const handleNameChange = useCallback(
     (name: string) => {
-      window.clearTimeout(nameTimeoutRef.current);
-
-      nameTimeoutRef.current = window.setTimeout(() => {
-        Queries.update(queryId, { name });
-      }, 400);
+      Queries.update(queryId, { name });
     },
     [queryId],
   );
@@ -418,6 +410,9 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
     <>
       <Canvas
         shortcutScope="focus"
+        name={query.name}
+        namePlaceholder="queries.editor.namePlaceholder"
+        onNameChange={handleNameChange}
         onDragOver={handleDragOver}
         onDrop={handleDrop}
         onBackgroundMouseDown={handleBackgroundMouseDown}
@@ -457,21 +452,11 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
         {renderSourcePicker()}
       </Canvas>
 
-      {/* Query name editor */}
-      <TextInput
-        key={queryId}
-        className="query-builder-name"
-        variant="subtle"
-        placeholder="queries.editor.namePlaceholder"
-        defaultValue={query.name}
-        onValueChange={handleNameChange}
-      />
-
       {/* Node cards toolbar */}
       <QueryBuilderToolbar />
 
       {/* Zoom controls */}
-      <CanvasZoomToolbar />
+      <CanvasToolbar />
     </>
   );
 };

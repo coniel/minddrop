@@ -70,6 +70,11 @@ export interface CanvasStore {
   getNodes(): Record<string, CanvasNodeFrame>;
 
   /**
+   * Returns whether node drags and resizes snap to the grid.
+   */
+  getSnapToGrid(): boolean;
+
+  /**
    * Returns the in-progress connection drag, or null when no
    * connection is being dragged.
    */
@@ -174,6 +179,18 @@ export interface CanvasStore {
   setViewportSize(size: CanvasViewportSize): void;
 
   /**
+   * Sets whether node drags and resizes snap to the grid.
+   *
+   * @param enabled - Whether snapping is enabled.
+   */
+  setSnapToGrid(enabled: boolean): void;
+
+  /**
+   * Toggles whether node drags and resizes snap to the grid.
+   */
+  toggleSnapToGrid(): void;
+
+  /**
    * Starts a drag-to-connect interaction from a node side.
    *
    * @param fromNodeId - The ID of the node the drag is anchored to.
@@ -233,6 +250,7 @@ export function createCanvasStore(config: CanvasStoreConfig = {}): CanvasStore {
     getViewportSize: () => store.getState().viewportSize,
     getNode: (nodeId) => store.getState().nodes[nodeId] || null,
     getNodes: () => store.getState().nodes,
+    getSnapToGrid: () => store.getState().snapToGrid,
     getConnectionDrag: () => store.getState().connectionDrag,
     getHoveredConnectionHandle: () => store.getState().hoveredConnectionHandle,
     setZoom: (zoom, focalPoint) => store.getState().setZoom(zoom, focalPoint),
@@ -249,6 +267,8 @@ export function createCanvasStore(config: CanvasStoreConfig = {}): CanvasStore {
       store.getState().updateNodeFrame(nodeId, frame),
     unregisterNode: (nodeId) => store.getState().unregisterNode(nodeId),
     setViewportSize: (size) => store.getState().setViewportSize(size),
+    setSnapToGrid: (enabled) => store.getState().setSnapToGrid(enabled),
+    toggleSnapToGrid: () => store.getState().toggleSnapToGrid(),
     startConnectionDrag: (fromNodeId, fromSide, point, reconnect) =>
       store
         .getState()
@@ -270,6 +290,7 @@ function createInternalStore(config: CanvasStoreConfig) {
     maxZoom = DEFAULT_MAX_ZOOM,
     initialZoom = 1,
     initialPan = { x: 0, y: 0 },
+    initialSnapToGrid = false,
   } = config;
 
   return createStore<CanvasState>((set, get) => ({
@@ -279,6 +300,7 @@ function createInternalStore(config: CanvasStoreConfig) {
     maxZoom,
     viewportSize: { width: 0, height: 0 },
     nodes: {},
+    snapToGrid: initialSnapToGrid,
     connectionDrag: null,
     hoveredConnectionHandle: null,
 
@@ -392,6 +414,10 @@ function createInternalStore(config: CanvasStoreConfig) {
       }),
 
     setViewportSize: (size) => set({ viewportSize: size }),
+
+    setSnapToGrid: (enabled) => set({ snapToGrid: enabled }),
+
+    toggleSnapToGrid: () => set((state) => ({ snapToGrid: !state.snapToGrid })),
 
     startConnectionDrag: (fromNodeId, fromSide, point, reconnect) =>
       set({

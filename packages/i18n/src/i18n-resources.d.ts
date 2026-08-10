@@ -65,6 +65,8 @@ declare module 'i18next' {
           fitView: string;
           resetView: string;
           resetZoom: string;
+          settings: string;
+          snapToGrid: string;
           zoomIn: string;
           zoomOut: string;
         };

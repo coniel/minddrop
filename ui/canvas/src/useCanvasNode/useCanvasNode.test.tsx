@@ -240,6 +240,43 @@ describe('useCanvasNode', () => {
     });
   });
 
+  it('snaps drags to the grid when snapping is enabled', () => {
+    const store = createCanvasStore({ initialSnapToGrid: true });
+
+    const { getByTestId } = renderNode(store);
+
+    // Drag to (140, 70), which snaps to the nearest grid lines
+    fireEvent.mouseDown(getByTestId('drag-handle'), {
+      button: 0,
+      clientX: 0,
+      clientY: 0,
+    });
+    moveMouse(40, 20);
+
+    expect(store.getNode('node-1')).toEqual({
+      x: 144,
+      y: 72,
+      width: 300,
+      height: 200,
+    });
+  });
+
+  it('snaps resized edges to the grid when snapping is enabled', () => {
+    const store = createCanvasStore({ initialSnapToGrid: true });
+
+    const { getByTestId } = renderNode(store);
+
+    // Move the right edge from 400 to 410, which snaps back to
+    // the grid line at 408
+    fireEvent.mouseDown(getByTestId('resize-handle'), {
+      clientX: 0,
+      clientY: 0,
+    });
+    moveMouse(10, 0);
+
+    expect(store.getNode('node-1')?.width).toBe(308);
+  });
+
   it('locks text selection during interactions', () => {
     const store = createCanvasStore();
 

@@ -11,6 +11,8 @@
     "fitView": "Fit view",
     "resetView": "Reset view",
     "resetZoom": "Reset zoom",
+    "settings": "Canvas settings",
+    "snapToGrid": "Snap to grid",
     "zoomIn": "Zoom in",
     "zoomOut": "Zoom out"
   },

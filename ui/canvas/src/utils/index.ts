@@ -14,3 +14,4 @@ export * from './getProximitySide';
 export * from './getSideMidpoint';
 export * from './getSideNormal';
 export * from './screenToCanvas';
+export * from './snapToGrid';

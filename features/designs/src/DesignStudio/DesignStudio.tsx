@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import { Design, Designs } from '@minddrop/designs';
 import {
   CloseAppSidebarEvent,
@@ -10,10 +10,10 @@ import {
 } from '@minddrop/events';
 import {
   CanvasProvider,
-  CanvasZoomToolbar,
+  CanvasToolbar,
   useFitOnNodesReady,
 } from '@minddrop/ui-canvas';
-import { Panel, TextInput } from '@minddrop/ui-primitives';
+import { Panel } from '@minddrop/ui-primitives';
 import { DesignDashboard } from '../DesignDashboard';
 import { DesignStudioLeftPanel } from '../DesignStudioLeftPanel';
 import { DesignStudioRootElement } from '../DesignStudioRootElement';
@@ -176,65 +176,26 @@ interface DesignStudioWorkspaceProps {
 
 /**
  * Renders the studio workspace: the canvas viewport with the
- * design's layout frames, and the header with the design name
- * input and zoom toolbar.
+ * design's layout frames, its name field and canvas toolbar.
  */
 const DesignStudioWorkspace: React.FC<DesignStudioWorkspaceProps> = ({
   design,
 }) => {
-  const nameInputRef = useRef<HTMLInputElement>(null);
-  const [designName, setDesignName] = useState(design.name);
-
   // Fit the design's layouts into view when the workspace opens
   useFitOnNodesReady(design.layouts.map((layout) => layout.id));
 
-  // Sync the name input when the design is renamed externally
-  useEffect(() => {
-    setDesignName(design.name);
-  }, [design.id, design.name]);
-
-  const handleNameBlur = useCallback(() => {
-    const trimmedName = designName.trim();
-
-    if (trimmedName && trimmedName !== design.name) {
-      renameDesign(trimmedName);
-    } else {
-      setDesignName(design.name);
-    }
-  }, [design, designName]);
-
-  const handleNameKeyDown = useCallback(
-    (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === 'Enter') {
-        nameInputRef.current?.blur();
-      }
-    },
-    [],
-  );
-
   return (
     <div className="design-studio-workspace">
-      <DesignStudioViewport>
+      <DesignStudioViewport name={design.name} onNameChange={renameDesign}>
         {design.layouts.map((layout) => (
           <LayoutFrame key={layout.id} layoutId={layout.id}>
             <LayoutRootElement />
           </LayoutFrame>
         ))}
       </DesignStudioViewport>
-      <div className="design-studio-workspace-header">
-        <div className="design-studio-workspace-design-name">
-          <TextInput
-            ref={nameInputRef}
-            variant="subtle"
-            size="sm"
-            value={designName}
-            onValueChange={setDesignName}
-            onBlur={handleNameBlur}
-            onKeyDown={handleNameKeyDown}
-          />
-        </div>
-        <CanvasZoomToolbar />
-      </div>
+
+      {/* Canvas controls */}
+      <CanvasToolbar />
     </div>
   );
 };

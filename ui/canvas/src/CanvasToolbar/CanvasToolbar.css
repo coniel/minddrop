@@ -1,9 +1,15 @@
-/* Zoom controls at the top right of the canvas */
-.ui-canvas-zoom-toolbar {
+/* Canvas controls at the top right of the canvas */
+.ui-canvas-toolbar {
   position: absolute;
   top: var(--space-4);
   right: var(--space-4);
   z-index: 1;
+  display: flex;
+  gap: var(--space-2);
+}
+
+/* The zoom and settings toolbars each float as their own card */
+.ui-canvas-toolbar .toolbar {
   padding: var(--space-1);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
@@ -11,6 +17,6 @@
   box-shadow: var(--shadow-overlay);
 }
 
-.ui-canvas-zoom-toolbar-zoom-button {
+.ui-canvas-toolbar-zoom-button {
   width: 3.375rem;
 }

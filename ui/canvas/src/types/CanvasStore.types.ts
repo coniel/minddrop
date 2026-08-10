@@ -45,6 +45,11 @@ export interface CanvasStoreConfig {
    * The initial pan offset.
    */
   initialPan?: CanvasPoint;
+
+  /**
+   * Whether node interactions snap to the grid initially.
+   */
+  initialSnapToGrid?: boolean;
 }
 
 /**
@@ -82,6 +87,11 @@ export interface CanvasState {
    * state-driven fit and centering computations.
    */
   nodes: Record<string, CanvasNodeFrame>;
+
+  /**
+   * Whether node drags and resizes snap to the canvas grid.
+   */
+  snapToGrid: boolean;
 
   /**
    * The in-progress drag-to-connect interaction, or null when no
@@ -179,6 +189,17 @@ export interface CanvasState {
    * @param size - The new viewport size.
    */
   setViewportSize: (size: CanvasViewportSize) => void;
+
+  /**
+   * Sets whether node drags and resizes snap to the grid.
+   * @param enabled - Whether snapping is enabled.
+   */
+  setSnapToGrid: (enabled: boolean) => void;
+
+  /**
+   * Toggles whether node drags and resizes snap to the grid.
+   */
+  toggleSnapToGrid: () => void;
 
   /**
    * Starts a drag-to-connect interaction from a node side.

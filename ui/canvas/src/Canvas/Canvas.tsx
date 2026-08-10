@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef } from 'react';
+import { TranslationKey } from '@minddrop/i18n';
 import { useCanvasContext } from '../CanvasContext';
+import { CanvasNameField } from '../CanvasNameField';
 import { CONNECTION_PROXIMITY, GRID_SIZE } from '../constants';
 import { CanvasPoint } from '../types';
 import { useCanvasStore } from '../useCanvasStore';
@@ -24,6 +26,23 @@ export interface CanvasProps {
    * Optional additional class name for the viewport element.
    */
   className?: string;
+
+  /**
+   * The canvas's name, shown in an editable field at the top
+   * left of the viewport. The field is omitted when no name is
+   * given.
+   */
+  name?: string;
+
+  /**
+   * The placeholder shown while the name field is empty.
+   */
+  namePlaceholder?: TranslationKey;
+
+  /**
+   * Called with the new name when a name edit is committed.
+   */
+  onNameChange?: (name: string) => void;
 
   /**
    * The canvas background configuration. Defaults to a dot grid.
@@ -73,6 +92,9 @@ export interface CanvasProps {
 export const Canvas: React.FC<CanvasProps> = ({
   children,
   className,
+  name,
+  namePlaceholder,
+  onNameChange,
   background = { type: 'dots' },
   onBackgroundMouseDown,
   onDrop,
@@ -449,6 +471,15 @@ export const Canvas: React.FC<CanvasProps> = ({
       >
         {children}
       </div>
+
+      {/* Editable canvas name */}
+      {name !== undefined && (
+        <CanvasNameField
+          name={name}
+          placeholder={namePlaceholder}
+          onNameChange={onNameChange}
+        />
+      )}
     </div>
   );
 };

@@ -278,6 +278,32 @@ describe('createCanvasStore', () => {
     });
   });
 
+  describe('setSnapToGrid/toggleSnapToGrid', () => {
+    it('is off by default', () => {
+      const store = createCanvasStore();
+
+      expect(store.getSnapToGrid()).toBe(false);
+    });
+
+    it('applies the initial config', () => {
+      const store = createCanvasStore({ initialSnapToGrid: true });
+
+      expect(store.getSnapToGrid()).toBe(true);
+    });
+
+    it('sets and toggles snapping', () => {
+      const store = createCanvasStore();
+
+      store.setSnapToGrid(true);
+
+      expect(store.getSnapToGrid()).toBe(true);
+
+      store.toggleSnapToGrid();
+
+      expect(store.getSnapToGrid()).toBe(false);
+    });
+  });
+
   describe('setHoveredConnectionHandle', () => {
     it('sets and clears the hovered handle', () => {
       const store = createCanvasStore();

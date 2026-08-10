@@ -7,7 +7,8 @@ import {
 } from 'react';
 import { useOptionalCanvasContext } from '../CanvasContext';
 import { NODE_MIN_HEIGHT, NODE_MIN_WIDTH } from '../constants';
-import { CanvasNodeFrame } from '../types';
+import { CanvasNodeFrame, CanvasPoint } from '../types';
+import { snapToGrid } from '../utils';
 
 /**
  * The edges and corners from which a node can be resized.
@@ -353,6 +354,10 @@ export function useCanvasNode(
       // screen-pixel mouse deltas are scaled down by the zoom
       const scale = context ? context.store.getZoom() : 1;
 
+      // Snapping is a canvas instance setting, so standalone
+      // nodes never snap
+      const snap = context ? context.store.getSnapToGrid() : false;
+
       // Handle node dragging
       if (dragState.current) {
         didDrag.current = true;
@@ -363,7 +368,13 @@ export function useCanvasNode(
           dragState.current.originY +
           (event.clientY - dragState.current.startY) / scale;
 
-        setPosition(clampPosition(rawX, rawY));
+        // Dragged nodes land their top left corner on the grid
+        setPosition(
+          clampPosition(
+            snap ? snapToGrid(rawX) : rawX,
+            snap ? snapToGrid(rawY) : rawY,
+          ),
+        );
       }
 
       // Handle node resizing
@@ -377,8 +388,20 @@ export function useCanvasNode(
           originX,
           originY,
         } = resizeState.current;
-        const deltaX = (event.clientX - startX) / scale;
-        const deltaY = (event.clientY - startY) / scale;
+        const rawDeltaX = (event.clientX - startX) / scale;
+        const rawDeltaY = (event.clientY - startY) / scale;
+
+        // The edges the resize moves, which snapping aligns to
+        // the grid
+        const anchors = getResizeAnchors(resizeState.current);
+
+        // Shift the deltas so the moving edges land on grid lines
+        const deltaX = snap
+          ? snapToGrid(anchors.x + rawDeltaX) - anchors.x
+          : rawDeltaX;
+        const deltaY = snap
+          ? snapToGrid(anchors.y + rawDeltaY) - anchors.y
+          : rawDeltaY;
 
         // Workspace-bounds clamps only apply to bounded nodes;
         // canvas nodes resize freely in canvas coordinates
@@ -719,4 +742,24 @@ export function useCanvasNode(
     isResizing: interaction === 'resize',
     wasDragged,
   };
+}
+
+/**
+ * Returns the canvas coordinates of the node edges a resize
+ * moves, which snapping aligns to the grid.
+ */
+function getResizeAnchors(state: ResizeState): CanvasPoint {
+  // Edges dragged from the left move the node's left edge, all
+  // others its right edge
+  const x = state.edge.endsWith('left')
+    ? state.originX
+    : state.originX + state.originWidth;
+
+  // Edges dragged from the top move the node's top edge, all
+  // others its bottom edge
+  const y = state.edge.startsWith('top')
+    ? state.originY
+    : state.originY + state.originHeight;
+
+  return { x, y };
 }
