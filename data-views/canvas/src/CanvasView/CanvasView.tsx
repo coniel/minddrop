@@ -27,7 +27,7 @@ import {
   CanvasNodeConnection,
   CanvasPoint,
   CanvasProvider,
-  CanvasZoomToolbar,
+  CanvasToolbar,
   useCanvas,
   useCanvasStore,
   useFitOnNodesReady,
@@ -119,7 +119,7 @@ interface EntryPickerState {
 export const CanvasViewComponent: React.FC<
   DataViewTypeComponentProps<CanvasViewOptions, CanvasViewData>
 > = ({ view, entries }) => (
-  <CanvasProvider>
+  <CanvasProvider initialSnapToGrid={view.options?.snapToGrid}>
     <CanvasViewContent view={view} entries={entries} />
   </CanvasProvider>
 );
@@ -215,6 +215,10 @@ const CanvasViewContent: React.FC<
   const connectionDragActive = useCanvasStore((state) =>
     Boolean(state.connectionDrag),
   );
+
+  // Whether node interactions snap to the grid, toggled from the
+  // canvas settings menu
+  const snapToGrid = useCanvasStore((state) => state.snapToGrid);
 
   // Fit the placed nodes into view when the canvas opens
   useFitOnNodesReady(reconciledNodes.map((node) => node.id));
@@ -332,6 +336,16 @@ const CanvasViewContent: React.FC<
 
     return () => window.clearTimeout(timeout);
   }, [selectedConnection, connectionSelection]);
+
+  // Persist the canvas's snap to grid setting when it is toggled
+  useEffect(() => {
+    // The setting matches what is saved, nothing to persist
+    if (snapToGrid === Boolean(view.options?.snapToGrid)) {
+      return;
+    }
+
+    DataViews.update(view.id, { options: { snapToGrid } });
+  }, [snapToGrid, view.id, view.options?.snapToGrid]);
 
   // Deselect the connection when a connection drag starts, so the
   // toolbar does not linger over the drag
@@ -795,7 +809,7 @@ const CanvasViewContent: React.FC<
       </DataViewFloatingToolbar>
 
       {/* Zoom controls */}
-      <CanvasZoomToolbar />
+      <CanvasToolbar />
     </div>
   );
 };

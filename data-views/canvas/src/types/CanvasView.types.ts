@@ -82,6 +82,12 @@ export interface CanvasViewOptions {
    * visible card creating blank entries.
    */
   toolbarCards?: Record<string, CanvasViewToolbarCardOptions>;
+
+  /**
+   * Whether dragging and resizing cards snaps them to the
+   * canvas grid.
+   */
+  snapToGrid?: boolean;
 }
 
 export interface CanvasViewData {
