@@ -16,24 +16,46 @@ export interface ComboboxChipRemoveProps
 export const ComboboxChipRemove = React.forwardRef<
   HTMLButtonElement,
   ComboboxChipRemoveProps
->(({ className, children, ...other }, ref) => {
-  const stopBubble = (event: React.SyntheticEvent) => {
-    event.stopPropagation();
-  };
+>(
+  (
+    { className, children, onPointerDown, onMouseDown, onClick, ...other },
+    ref,
+  ) => {
+    // Base UI merges its own handlers into the incoming props, so
+    // the passed handlers must run before the event is contained.
+    // Containment must cover mousedown: the trigger toggles the
+    // popup on mousedown, not click.
+    const handlePointerDown = (
+      event: React.PointerEvent<HTMLButtonElement>,
+    ) => {
+      onPointerDown?.(event);
+      event.stopPropagation();
+    };
 
-  return (
-    <button
-      ref={ref}
-      type="button"
-      className={`combobox-chip-remove${className ? ` ${className}` : ''}`}
-      onPointerDown={stopBubble}
-      onMouseDown={stopBubble}
-      onClick={stopBubble}
-      {...other}
-    >
-      {children || <Icon name="x" size={12} />}
-    </button>
-  );
-});
+    const handleMouseDown = (event: React.MouseEvent<HTMLButtonElement>) => {
+      onMouseDown?.(event);
+      event.stopPropagation();
+    };
+
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+      onClick?.(event);
+      event.stopPropagation();
+    };
+
+    return (
+      <button
+        ref={ref}
+        type="button"
+        className={`combobox-chip-remove${className ? ` ${className}` : ''}`}
+        {...other}
+        onPointerDown={handlePointerDown}
+        onMouseDown={handleMouseDown}
+        onClick={handleClick}
+      >
+        {children || <Icon name="x" size={12} />}
+      </button>
+    );
+  },
+);
 
 ComboboxChipRemove.displayName = 'ComboboxChipRemove';

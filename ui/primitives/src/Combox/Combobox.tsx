@@ -388,10 +388,8 @@ export const Combobox: React.FC<ComboboxProps> = ({
       items={groups ?? items}
       multiple={multiple}
       autoHighlight
-      {...(!multiple && {
-        value: singleValue,
-        onValueChange: handleValueChange,
-      })}
+      onValueChange={handleValueChange}
+      {...(!multiple && { value: singleValue })}
       {...(virtualized && {
         virtualized: true,
         open,
