@@ -1,5 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DesignStudioStore, getDesignElement } from '../../DesignStudioStore';
+import {
+  DesignStudioStore,
+  getDesignElement,
+  getDesignProperty,
+} from '../../DesignStudioStore';
 import { cleanup, element_0, setup } from '../../test-utils';
 import { setElementImage } from './setElementImage';
 
@@ -18,9 +22,7 @@ describe('setElementImage', () => {
 
     await setElementImage(element_0.id, IMAGE_FILE);
 
-    const property = DesignStudioStore.getDesign()?.properties.find(
-      (candidate) => candidate.name === 'Title',
-    );
+    const property = getDesignProperty('Title');
 
     // The property placeholder is set, the element is untouched
     expect(property?.placeholder).toBe(IMAGE_FILE);

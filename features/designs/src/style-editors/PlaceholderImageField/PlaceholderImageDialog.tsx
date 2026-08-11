@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Layouts, getPlaceholderMediaDirPath } from '@minddrop/designs';
+import { Layouts } from '@minddrop/designs';
 import { Fs, FsEntry } from '@minddrop/file-system';
 import { useTranslation } from '@minddrop/i18n';
 import { FilePropertySupportedFileExtensions } from '@minddrop/properties';
@@ -13,6 +13,8 @@ import {
   ScrollArea,
   Text,
 } from '@minddrop/ui-primitives';
+import { useMediaDirPath } from '../../MediaDirContext';
+import { listMediaImages } from '../../utils';
 import './PlaceholderImageDialog.css';
 
 export interface PlaceholderImageDialogProps {
@@ -35,8 +37,8 @@ export interface PlaceholderImageDialogProps {
 const IMAGE_EXTENSIONS = FilePropertySupportedFileExtensions.image;
 
 /**
- * Dialog for selecting a placeholder image from existing placeholder
- * media files, or uploading a new one.
+ * Dialog for selecting a placeholder image from the media files of
+ * the entity owning the layout, or uploading a new one.
  */
 export const PlaceholderImageDialog: React.FC<PlaceholderImageDialogProps> = ({
   open,
@@ -45,15 +47,16 @@ export const PlaceholderImageDialog: React.FC<PlaceholderImageDialogProps> = ({
 }) => {
   const { t } = useTranslation();
   const [files, setFiles] = useState<FsEntry[]>([]);
+  const mediaDirPath = useMediaDirPath();
 
-  // Load existing placeholder media files when the dialog opens
+  // Load existing media images when the dialog opens
   useEffect(() => {
     if (!open) {
       return;
     }
 
-    loadPlaceholderImages().then(setFiles);
-  }, [open]);
+    listMediaImages(mediaDirPath).then(setFiles);
+  }, [open, mediaDirPath]);
 
   // Handles clicking an image thumbnail — selects it and closes the dialog
   const handleThumbnailSelect = useCallback(
@@ -69,6 +72,10 @@ export const PlaceholderImageDialog: React.FC<PlaceholderImageDialogProps> = ({
   // Multiple files: add all to media and refresh the grid for
   // the user to pick one.
   const handleSelectNew = useCallback(async () => {
+    if (!mediaDirPath) {
+      throw new Error('Cannot add media, no media directory is set.');
+    }
+
     const filePaths = await Fs.openFilePicker({
       accept: IMAGE_EXTENSIONS,
       multiple: true,
@@ -78,9 +85,9 @@ export const PlaceholderImageDialog: React.FC<PlaceholderImageDialogProps> = ({
       return;
     }
 
-    // Add all selected files to the placeholder media directory
+    // Add all selected files to the media directory
     const fileNames = await Promise.all(
-      filePaths.map((path) => Layouts.addPlaceholderMedia(path)),
+      filePaths.map((path) => Layouts.addMediaFile(mediaDirPath, path)),
     );
 
     if (fileNames.length === 1) {
@@ -89,10 +96,10 @@ export const PlaceholderImageDialog: React.FC<PlaceholderImageDialogProps> = ({
       onOpenChange(false);
     } else {
       // Multiple files — refresh the grid so user can pick one
-      const updatedFiles = await loadPlaceholderImages();
+      const updatedFiles = await listMediaImages(mediaDirPath);
       setFiles(updatedFiles);
     }
-  }, [onSelect, onOpenChange]);
+  }, [onSelect, onOpenChange, mediaDirPath]);
 
   return (
     <DialogRoot open={open} onOpenChange={onOpenChange}>
@@ -150,47 +157,14 @@ export const PlaceholderImageDialog: React.FC<PlaceholderImageDialogProps> = ({
 };
 
 /**
- * Reads the placeholder media directory and returns only image
- * file entries, sorted newest first.
- */
-async function loadPlaceholderImages(): Promise<FsEntry[]> {
-  const dirPath = getPlaceholderMediaDirPath();
-  const dirExists = await Fs.exists(dirPath);
-
-  if (!dirExists) {
-    return [];
-  }
-
-  const entries = await Fs.readDir(dirPath);
-
-  // Filter to image files and sort newest first by filename
-  // (filenames are timestamp-prefixed, so lexicographic descending
-  // gives newest first)
-  return entries
-    .filter((entry) => {
-      if (!entry.name) {
-        return false;
-      }
-
-      const extension = entry.name.split('.').pop()?.toLowerCase();
-
-      return extension && IMAGE_EXTENSIONS.includes(extension);
-    })
-    .sort((a, b) => (b.name ?? '').localeCompare(a.name ?? ''));
-}
-
-/**
- * A thumbnail component for a single placeholder image file.
+ * A thumbnail component for a single media image file.
  */
 const Thumbnail: React.FC<{
   entry: FsEntry;
   onSelect: (name: string) => void;
 }> = ({ entry, onSelect }) => {
-  // Build the full path to the image file
-  const imagePath = Fs.concatPath(getPlaceholderMediaDirPath(), entry.name!);
-
   // Get the image src URL
-  const imageSrc = Fs.useImageSrc(imagePath);
+  const imageSrc = Fs.useImageSrc(entry.path);
 
   if (!imageSrc || !entry.name) {
     return null;

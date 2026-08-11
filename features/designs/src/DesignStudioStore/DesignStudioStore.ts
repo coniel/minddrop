@@ -12,6 +12,7 @@ import {
   RootElement,
   disablePagePanel as disablePagePanelTree,
   enablePagePanel as enablePagePanelTree,
+  resolveDesignMediaDirPath,
 } from '@minddrop/designs';
 import {
   PropertiesSchema,
@@ -107,6 +108,12 @@ export interface DesignStudioState {
    * when editing a standalone layout with no property schema.
    */
   propertyBindingEnabled: boolean;
+
+  /**
+   * The path to the media directory of the entity owning the layout
+   * being edited, or null if none.
+   */
+  mediaDirPath: string | null;
 
   /**
    * Initializes the store with a design, flattening each of its
@@ -304,6 +311,12 @@ export interface DesignStudioStore {
   isPropertyBindingEnabled(): boolean;
 
   /**
+   * Returns the media directory path of the entity owning the
+   * layout being edited, or null if none is set.
+   */
+  getMediaDirPath(): string | null;
+
+  /**
    * Initializes the store with a design, flattening each of its
    * layouts' element trees. No layout is active until one is
    * selected via setActiveLayout.
@@ -443,6 +456,7 @@ export const DesignStudioStore: DesignStudioStore = {
   getPropertyValues: () => store.getState().propertyValues,
   getSaveHandler: () => store.getState().saveHandler,
   isPropertyBindingEnabled: () => store.getState().propertyBindingEnabled,
+  getMediaDirPath: () => store.getState().mediaDirPath,
   initialize: (design, properties, propertyValues) =>
     store.getState().initialize(design, properties, propertyValues),
   setDesign: (design) => store.getState().setDesign(design),
@@ -492,6 +506,7 @@ function createInternalStore() {
     propertyValues: {},
     saveHandler: null,
     propertyBindingEnabled: true,
+    mediaDirPath: null,
 
     initialize: (design, properties = [], propertyValues = {}) => {
       // Flatten each layout's element tree into its own bucket
@@ -510,6 +525,7 @@ function createInternalStore() {
         propertyValues,
         saveHandler: null,
         propertyBindingEnabled: true,
+        mediaDirPath: resolveDesignMediaDirPath(design.id),
         initialized: true,
       });
     },
@@ -751,6 +767,7 @@ function createInternalStore() {
         propertyValues: {},
         saveHandler: null,
         propertyBindingEnabled: true,
+        mediaDirPath: null,
         initialized: false,
       }),
   }));
@@ -854,6 +871,12 @@ export interface InitializeLayoutEditorOptions {
   onSave: (layout: Layout) => Promise<void> | void;
 
   /**
+   * The path to the media directory of the entity owning the layout,
+   * where media added to its elements is stored.
+   */
+  mediaDirPath: string;
+
+  /**
    * Whether elements can be bound to design properties.
    * @default false
    */
@@ -889,10 +912,12 @@ export const initializeLayoutEditor = (
   // Activate the layout
   DesignStudioStore.setActiveLayout(layout.id);
 
-  // Persist edits through the save handler
+  // Persist edits through the save handler, storing media in the
+  // owner's media directory rather than the synthetic design's
   store.setState({
     saveHandler: (layouts) => options.onSave(layouts[0]),
     propertyBindingEnabled: options.propertyBinding ?? false,
+    mediaDirPath: options.mediaDirPath,
   });
 };
 
@@ -917,6 +942,19 @@ export const renameDesign = async (name: string) => {
   const updated = await Designs.update(design.id, { name });
 
   DesignStudioStore.setDesign(updated);
+};
+
+/**
+ * Returns a property of the design open in the studio, matched by
+ * name, or null if the design has no such property.
+ *
+ * @param name - The property name.
+ * @returns The property schema, or null.
+ */
+export const getDesignProperty = (name: string): PropertySchema | null => {
+  const design = DesignStudioStore.getDesign();
+
+  return design?.properties.find((property) => property.name === name) || null;
 };
 
 /**

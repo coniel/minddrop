@@ -6,6 +6,7 @@ export * from './getNewLayoutPosition';
 export * from './getRegionFlexStyle';
 export * from './isLeafElement';
 export * from './isPropertyCompatibleWithElement';
+export * from './listMediaImages';
 export * from './setElementImage';
 export * from './isValidDesignStudioDrop';
 export * from './reconstructTree';

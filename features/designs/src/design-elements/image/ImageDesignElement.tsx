@@ -1,14 +1,11 @@
-import { useMemo, useRef } from 'react';
-import {
-  ImageElement,
-  createImageCssStyle,
-  getPlaceholderMediaDirPath,
-} from '@minddrop/designs';
+import { useRef } from 'react';
+import { ImageElement, createImageCssStyle } from '@minddrop/designs';
 import { Fs } from '@minddrop/file-system';
 import { Icon } from '@minddrop/ui-primitives';
 import { useMeasuredImageWidth } from '@minddrop/utils';
 import { useElementProperty } from '../../DesignPropertiesProvider';
 import { useElementPlaceholderImage } from '../../useElementPlaceholder';
+import { useMediaFilePath } from '../../useMediaFilePath';
 
 export interface ImageDesignElementProps {
   /**
@@ -35,23 +32,17 @@ export const ImageDesignElement: React.FC<ImageDesignElementProps> = ({
   const imageRef = useRef<HTMLImageElement>(null);
   const property = useElementProperty(element.id);
   const placeholderImage = useElementPlaceholderImage(element, element.content);
+  const placeholderImagePath = useMediaFilePath(placeholderImage);
   const { width, isMeasured } = useMeasuredImageWidth(imageRef);
   const cssStyle = createImageCssStyle(element.style);
   const rootStyle = rootProps?.style as React.CSSProperties | undefined;
 
   // Use the bound property value (file path) if available,
-  // otherwise resolve the placeholder image from the media dir
-  const imagePath = useMemo(() => {
-    if (property?.value && typeof property.value === 'string') {
-      return property.value;
-    }
-
-    if (placeholderImage) {
-      return Fs.concatPath(getPlaceholderMediaDirPath(), placeholderImage);
-    }
-
-    return null;
-  }, [property?.value, placeholderImage]);
+  // otherwise fall back to the placeholder image
+  const imagePath =
+    typeof property?.value === 'string' && property.value
+      ? property.value
+      : placeholderImagePath;
 
   const imageSrc = Fs.useImageSrc(imagePath, width);
 

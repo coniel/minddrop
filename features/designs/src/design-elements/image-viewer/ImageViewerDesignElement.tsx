@@ -1,8 +1,7 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import {
   ImageViewerElement,
   createImageViewerCssStyle,
-  getPlaceholderMediaDirPath,
 } from '@minddrop/designs';
 import { Fs } from '@minddrop/file-system';
 import { ImageViewer } from '@minddrop/ui-components';
@@ -10,6 +9,7 @@ import { Icon } from '@minddrop/ui-primitives';
 import { useDesignPreview } from '../../DesignElements/DesignPreviewContext';
 import { useElementProperty } from '../../DesignPropertiesProvider';
 import { useElementPlaceholderImage } from '../../useElementPlaceholder';
+import { useMediaFilePath } from '../../useMediaFilePath';
 
 export interface ImageViewerDesignElementProps {
   /**
@@ -35,6 +35,7 @@ export const ImageViewerDesignElement: React.FC<
   const preview = useDesignPreview();
   const property = useElementProperty(element.id);
   const placeholderImage = useElementPlaceholderImage(element, element.content);
+  const placeholderImagePath = useMediaFilePath(placeholderImage);
   const containerStyle = createImageViewerCssStyle(element.style);
   const rootStyle = rootProps?.style as React.CSSProperties | undefined;
 
@@ -45,17 +46,10 @@ export const ImageViewerDesignElement: React.FC<
   }
 
   // Resolve the image path from the bound property or placeholder
-  const imagePath = useMemo(() => {
-    if (property?.value && typeof property.value === 'string') {
-      return property.value;
-    }
-
-    if (placeholderImage) {
-      return Fs.concatPath(getPlaceholderMediaDirPath(), placeholderImage);
-    }
-
-    return null;
-  }, [property?.value, placeholderImage]);
+  const imagePath =
+    typeof property?.value === 'string' && property.value
+      ? property.value
+      : placeholderImagePath;
 
   const imageSrc = Fs.useImageSrc(imagePath);
 

@@ -3,6 +3,7 @@ export * from './constants';
 export * from './LayoutFrame';
 export * from './DesignElements';
 export * from './LayoutRenderer';
+export * from './MediaDirContext';
 export * from './LayoutEditSurface';
 export * from './LayoutEditorLeftPanel';
 export * from './ViewsPanel';

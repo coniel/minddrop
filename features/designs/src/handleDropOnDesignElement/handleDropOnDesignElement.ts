@@ -1,6 +1,7 @@
 import { Layouts } from '@minddrop/designs';
 import { DropEventData } from '@minddrop/selection';
 import {
+  DesignStudioStore,
   addDesignElementFromTemplate,
   getDesignElement,
   moveDesignElement,
@@ -20,8 +21,8 @@ const IMAGE_MIME_TYPES = new Set([
 
 /**
  * Handles a native file drop on an image element by writing the
- * first image file as a placeholder media and setting it as the
- * element's image value.
+ * first image file into the media directory of the entity owning
+ * the layout and setting it as the element's image value.
  *
  * @param elementId - The ID of the image element.
  * @param files - The dropped files.
@@ -30,6 +31,12 @@ async function handleImageFileDrop(
   elementId: string,
   files: File[],
 ): Promise<void> {
+  const mediaDirPath = DesignStudioStore.getMediaDirPath();
+
+  if (!mediaDirPath) {
+    throw new Error('Cannot add media, no media directory is set.');
+  }
+
   // Find the first image file in the dropped files
   const imageFile = files.find((file) => IMAGE_MIME_TYPES.has(file.type));
 
@@ -37,8 +44,8 @@ async function handleImageFileDrop(
     return;
   }
 
-  // Write the image file to the placeholder-media directory
-  const fileName = await Layouts.writePlaceholderMedia(imageFile);
+  // Write the image file into the media directory
+  const fileName = await Layouts.writeMediaFile(mediaDirPath, imageFile);
 
   await setElementImage(elementId, fileName);
 }

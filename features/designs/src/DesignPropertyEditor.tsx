@@ -5,8 +5,8 @@ import { TranslationKey, createI18nKeyBuilder } from '@minddrop/i18n';
 import { PropertySchema, PropertyType } from '@minddrop/properties';
 import { InputLabel, Stack, Text, TextField } from '@minddrop/ui-primitives';
 import {
-  DesignStudioStore,
   addDesignProperty,
+  getDesignProperty,
   removeDesignProperty,
   renameDesignProperty,
   updateDesignProperty,
@@ -94,12 +94,7 @@ export const DesignPropertyEditor: React.FC<DesignPropertyEditorProps> = ({
     }
 
     // Check for name conflicts within the design
-    const design = DesignStudioStore.getDesign();
-    const conflicting = design?.properties.find(
-      (existing) => existing.name === name,
-    );
-
-    if (conflicting) {
+    if (getDesignProperty(name)) {
       return i18nKey('nameConflict');
     }
 

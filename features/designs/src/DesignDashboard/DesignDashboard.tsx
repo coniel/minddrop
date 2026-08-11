@@ -1,5 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Design, Designs, Layout } from '@minddrop/designs';
+import {
+  Design,
+  Designs,
+  Layout,
+  resolveDesignMediaDirPath,
+} from '@minddrop/designs';
 import { useTranslation } from '@minddrop/i18n';
 import {
   Button,
@@ -13,6 +18,7 @@ import {
 import { DesignPreviewProvider, DesignRootElement } from '../DesignElements';
 import { DesignPropertySchemasProvider } from '../DesignPropertiesProvider';
 import { DesignStudioStore } from '../DesignStudioStore';
+import { MediaDirProvider } from '../MediaDirContext';
 import './DesignDashboard.css';
 
 // Fallback preview height for layouts without a fixed frame
@@ -230,30 +236,32 @@ const DesignCardPreview: React.FC<DesignCardPreviewProps> = ({ design }) => {
       {bounds ? (
         <DesignPreviewProvider value>
           <DesignPropertySchemasProvider properties={design.properties}>
-            <div
-              ref={canvasRef}
-              className="design-dashboard-card-preview-canvas"
-              style={{
-                width: bounds.width,
-                height: bounds.height,
-                transform: `translate(-50%, -50%) scale(${scale})`,
-              }}
-            >
-              {design.layouts.map((layout) => (
-                <div
-                  key={layout.id}
-                  data-layout-id={layout.id}
-                  className="design-dashboard-card-preview-layout"
-                  style={{
-                    left: layout.frame.x - bounds.x,
-                    top: layout.frame.y - bounds.y,
-                    width: layout.frame.width,
-                  }}
-                >
-                  <DesignRootElement element={layout.tree} />
-                </div>
-              ))}
-            </div>
+            <MediaDirProvider value={resolveDesignMediaDirPath(design.id)}>
+              <div
+                ref={canvasRef}
+                className="design-dashboard-card-preview-canvas"
+                style={{
+                  width: bounds.width,
+                  height: bounds.height,
+                  transform: `translate(-50%, -50%) scale(${scale})`,
+                }}
+              >
+                {design.layouts.map((layout) => (
+                  <div
+                    key={layout.id}
+                    data-layout-id={layout.id}
+                    className="design-dashboard-card-preview-layout"
+                    style={{
+                      left: layout.frame.x - bounds.x,
+                      top: layout.frame.y - bounds.y,
+                      width: layout.frame.width,
+                    }}
+                  >
+                    <DesignRootElement element={layout.tree} />
+                  </div>
+                ))}
+              </div>
+            </MediaDirProvider>
           </DesignPropertySchemasProvider>
         </DesignPreviewProvider>
       ) : (

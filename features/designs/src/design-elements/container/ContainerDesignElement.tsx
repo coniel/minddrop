@@ -1,11 +1,10 @@
-import { useMemo, useRef } from 'react';
+import { useRef } from 'react';
 import {
   ContainerElement,
   PagePanelElement,
   createBackdropImageWrapperStyle,
   createContainerCssStyle,
   getBackgroundImageStyle,
-  getPlaceholderMediaDirPath,
   resolveContainerBackdrop,
 } from '@minddrop/designs';
 import { Fs } from '@minddrop/file-system';
@@ -13,6 +12,7 @@ import { useMeasuredImageWidth } from '@minddrop/utils';
 import { DesignElement } from '../../DesignElements/DesignElement';
 import { useElementProperty } from '../../DesignPropertiesProvider';
 import { useElementPlaceholderImage } from '../../useElementPlaceholder';
+import { useMediaFilePath } from '../../useMediaFilePath';
 import { getRegionFlexStyle } from '../../utils';
 
 export interface ContainerDesignElementProps {
@@ -39,21 +39,15 @@ export const ContainerDesignElement: React.FC<ContainerDesignElementProps> = ({
     element,
     style.backgroundImage,
   );
+  const placeholderImagePath = useMediaFilePath(placeholderImage);
   const { width, isMeasured } = useMeasuredImageWidth(containerRef);
 
   // Use the mapped property value (file path) as background image
-  // if available, otherwise resolve the placeholder from the design media dir
-  const imagePath = useMemo(() => {
-    if (property?.value && typeof property.value === 'string') {
-      return property.value;
-    }
-
-    if (placeholderImage) {
-      return Fs.concatPath(getPlaceholderMediaDirPath(), placeholderImage);
-    }
-
-    return null;
-  }, [property?.value, placeholderImage]);
+  // if available, otherwise fall back to the placeholder image
+  const imagePath =
+    typeof property?.value === 'string' && property.value
+      ? property.value
+      : placeholderImagePath;
 
   const imageSrc = Fs.useImageSrc(imagePath, width);
 

@@ -1,8 +1,10 @@
-import { useCallback, useMemo, useState } from 'react';
-import { Layouts, getPlaceholderMediaDirPath } from '@minddrop/designs';
+import { useCallback, useState } from 'react';
+import { Layouts } from '@minddrop/designs';
 import { Fs } from '@minddrop/file-system';
 import { FilePropertySupportedFileExtensions } from '@minddrop/properties';
 import { Button, Group, Stack } from '@minddrop/ui-primitives';
+import { useMediaDirPath } from '../../MediaDirContext';
+import { useMediaFilePath } from '../../useMediaFilePath';
 import { PlaceholderImageDialog } from './PlaceholderImageDialog';
 
 export interface PlaceholderImageFieldProps {
@@ -44,12 +46,10 @@ export const PlaceholderImageField: React.FC<PlaceholderImageFieldProps> = ({
   primary = false,
 }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const mediaDirPath = useMediaDirPath();
 
   // Resolve the full path to the current placeholder image
-  const imagePath = useMemo(
-    () => (image ? Fs.concatPath(getPlaceholderMediaDirPath(), image) : null),
-    [image],
-  );
+  const imagePath = useMediaFilePath(image);
 
   const imageSrc = Fs.useImageSrc(imagePath);
 
@@ -63,6 +63,10 @@ export const PlaceholderImageField: React.FC<PlaceholderImageFieldProps> = ({
 
   // Handles selecting a new image via the OS file picker
   const handleSelectNewImage = useCallback(async () => {
+    if (!mediaDirPath) {
+      throw new Error('Cannot add media, no media directory is set.');
+    }
+
     const filePath = await Fs.openFilePicker({
       accept: IMAGE_EXTENSIONS,
     });
@@ -71,38 +75,9 @@ export const PlaceholderImageField: React.FC<PlaceholderImageFieldProps> = ({
       return;
     }
 
-    const fileName = await Layouts.addPlaceholderMedia(filePath as string);
+    const fileName = await Layouts.addMediaFile(mediaDirPath, filePath);
     onSelect(fileName);
-  }, [onSelect]);
-
-  // Opens the dialog if existing images exist, otherwise opens the file picker
-  const handleImageDoubleClick = useCallback(async () => {
-    const dirPath = getPlaceholderMediaDirPath();
-    const dirExists = await Fs.exists(dirPath);
-
-    if (!dirExists) {
-      handleSelectNewImage();
-
-      return;
-    }
-
-    const entries = await Fs.readDir(dirPath);
-    const hasImages = entries.some((entry) => {
-      if (!entry.name) {
-        return false;
-      }
-
-      const extension = entry.name.split('.').pop()?.toLowerCase();
-
-      return extension && IMAGE_EXTENSIONS.includes(extension);
-    });
-
-    if (hasImages) {
-      setDialogOpen(true);
-    } else {
-      handleSelectNewImage();
-    }
-  }, [handleSelectNewImage]);
+  }, [onSelect, mediaDirPath]);
 
   return (
     <>
@@ -111,7 +86,7 @@ export const PlaceholderImageField: React.FC<PlaceholderImageFieldProps> = ({
           <img
             src={imageSrc}
             alt=""
-            onDoubleClick={handleImageDoubleClick}
+            onDoubleClick={() => setDialogOpen(true)}
             style={{
               width: '100%',
               borderRadius: 'var(--space-1)',

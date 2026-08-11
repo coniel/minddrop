@@ -1,8 +1,5 @@
 import React, { CSSProperties, useCallback, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Layouts, getPlaceholderMediaDirPath } from '@minddrop/designs';
-import { Fs } from '@minddrop/file-system';
-import { FilePropertySupportedFileExtensions } from '@minddrop/properties';
 import { Selection } from '@minddrop/selection';
 import { setDragPreview } from '@minddrop/utils';
 import { PlaceholderImageDialog } from '../../style-editors/PlaceholderImageField/PlaceholderImageDialog';
@@ -53,53 +50,12 @@ export const ImageStudioDesignElement: React.FC<
     [element.id],
   );
 
-  // Handles selecting a new image via the OS file picker
-  const handleSelectNewImage = useCallback(async () => {
-    const filePath = await Fs.openFilePicker({
-      accept: FilePropertySupportedFileExtensions.image,
-    });
-
-    if (!filePath) {
-      return;
-    }
-
-    const fileName = await Layouts.addPlaceholderMedia(filePath as string);
-
-    await setElementImage(element.id, fileName);
-  }, [element.id]);
-
-  // Opens the dialog if existing images exist, otherwise opens the file picker.
-  // Clears the drag overlay so it does not cover the dialog.
-  const handleDoubleClick = useCallback(async () => {
+  // Opens the image dialog, clearing the drag overlay so it does
+  // not cover the dialog
+  const handleDoubleClick = useCallback(() => {
     setOverlayRect(null);
-
-    const dirPath = getPlaceholderMediaDirPath();
-    const dirExists = await Fs.exists(dirPath);
-
-    if (!dirExists) {
-      handleSelectNewImage();
-
-      return;
-    }
-
-    const entries = await Fs.readDir(dirPath);
-    const imageExtensions = FilePropertySupportedFileExtensions.image;
-    const hasImages = entries.some((entry) => {
-      if (!entry.name) {
-        return false;
-      }
-
-      const extension = entry.name.split('.').pop()?.toLowerCase();
-
-      return extension && imageExtensions.includes(extension);
-    });
-
-    if (hasImages) {
-      setDialogOpen(true);
-    } else {
-      handleSelectNewImage();
-    }
-  }, [handleSelectNewImage]);
+    setDialogOpen(true);
+  }, []);
 
   // Show the drag overlay when the mouse enters the img
   const handleMouseEnter = useCallback((event: React.MouseEvent) => {

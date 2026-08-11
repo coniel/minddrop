@@ -1,9 +1,8 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 import {
   createBackdropImageWrapperStyle,
   createElementCssStyle,
   getBackgroundImageStyle,
-  getPlaceholderMediaDirPath,
   resolveContainerBackdrop,
 } from '@minddrop/designs';
 import { Fs } from '@minddrop/file-system';
@@ -15,6 +14,7 @@ import { useLayoutId } from '../LayoutIdContext';
 import { handleDropOnGap } from '../handleDropOnGap';
 import { FlatRootDesignElement } from '../types';
 import { useElementPlaceholderImage } from '../useElementPlaceholder';
+import { useMediaFilePath } from '../useMediaFilePath';
 import './DesignStudioRootElement.css';
 
 export interface DesignStudioRootElementProps {
@@ -60,13 +60,7 @@ export const DesignStudioRootElement: React.FC<
   );
 
   // Resolve background image path if set
-  const imagePath = useMemo(
-    () =>
-      backgroundImage
-        ? Fs.concatPath(getPlaceholderMediaDirPath(), backgroundImage)
-        : null,
-    [backgroundImage],
-  );
+  const imagePath = useMediaFilePath(backgroundImage);
 
   const imageSrc = Fs.useImageSrc(imagePath);
 

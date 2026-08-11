@@ -1,9 +1,8 @@
-import { CSSProperties, useCallback, useMemo } from 'react';
+import { CSSProperties, useCallback } from 'react';
 import {
   createBackdropImageWrapperStyle,
   createContainerCssStyle,
   getBackgroundImageStyle,
-  getPlaceholderMediaDirPath,
   resolveContainerBackdrop,
 } from '@minddrop/designs';
 import { Fs } from '@minddrop/file-system';
@@ -19,6 +18,7 @@ import {
   FlatPagePanelDesignElement,
 } from '../../types';
 import { useElementPlaceholderImage } from '../../useElementPlaceholder';
+import { useMediaFilePath } from '../../useMediaFilePath';
 import { getRegionFlexStyle } from '../../utils';
 
 export interface ContainerStudioDesignElementProps {
@@ -64,13 +64,7 @@ export const ContainerStudioDesignElement: React.FC<
   );
 
   // Resolve background image path if set
-  const imagePath = useMemo(
-    () =>
-      backgroundImage
-        ? Fs.concatPath(getPlaceholderMediaDirPath(), backgroundImage)
-        : null,
-    [backgroundImage],
-  );
+  const imagePath = useMediaFilePath(backgroundImage);
 
   const imageSrc = Fs.useImageSrc(imagePath);
 

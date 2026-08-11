@@ -10,6 +10,7 @@ import {
 import { LayoutAutoFocusProvider } from './LayoutAutoFocusContext';
 import { LayoutIdProvider } from './LayoutIdContext';
 import { LayoutRenderContextProvider } from './LayoutRenderContext';
+import { MediaDirProvider } from './MediaDirContext';
 
 export interface LayoutRendererProps
   extends Pick<
@@ -40,6 +41,12 @@ export interface LayoutRendererProps
   designProperties?: PropertiesSchema;
 
   /**
+   * The path to the media directory of the entity owning the layout,
+   * used to resolve the media files its elements reference.
+   */
+  mediaDirPath?: string | null;
+
+  /**
    * When true, the first editor element in the layout autofocuses
    * on mount.
    */
@@ -56,6 +63,7 @@ export const LayoutRenderer: React.FC<LayoutRendererProps> = ({
   context,
   autoFocusEditor = false,
   designProperties = [],
+  mediaDirPath = null,
   properties = [],
   propertyValues = {},
   propertyMap = {},
@@ -75,11 +83,13 @@ export const LayoutRenderer: React.FC<LayoutRendererProps> = ({
       >
         <LayoutIdProvider value={layout.id}>
           <LayoutRenderContextProvider value={context ?? null}>
-            <LayoutAutoFocusProvider autoFocus={autoFocusEditor}>
-              <TransientViewStateScope segment={layout.id}>
-                <DesignRootElement element={layout.tree} />
-              </TransientViewStateScope>
-            </LayoutAutoFocusProvider>
+            <MediaDirProvider value={mediaDirPath}>
+              <LayoutAutoFocusProvider autoFocus={autoFocusEditor}>
+                <TransientViewStateScope segment={layout.id}>
+                  <DesignRootElement element={layout.tree} />
+                </TransientViewStateScope>
+              </LayoutAutoFocusProvider>
+            </MediaDirProvider>
           </LayoutRenderContextProvider>
         </LayoutIdProvider>
       </DesignPropertiesProvider>

@@ -1,12 +1,21 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DesignElementTemplate, TextElementConfig } from '@minddrop/designs';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import {
+  DesignElementTemplate,
+  ElementTemplates,
+  TextElementConfig,
+  resolveDesignMediaDirPath,
+} from '@minddrop/designs';
 import { DropEventData } from '@minddrop/selection';
-import { getDesignElement } from '../DesignStudioStore';
+import {
+  addDesignElementFromTemplate,
+  getDesignElement,
+} from '../DesignStudioStore';
 import {
   DesignElementTemplatesDataKey,
   DesignElementsDataKey,
 } from '../constants';
 import {
+  MockFs,
   cleanup,
   element_0,
   element_1,
@@ -14,6 +23,7 @@ import {
   element_2,
   flat_root_1,
   setup,
+  testDesign,
   testLayout,
 } from '../test-utils';
 import { DesignStudioDropEventData, FlatRootDesignElement } from '../types';
@@ -44,6 +54,42 @@ describe('handleDropOnDesignElement', () => {
   beforeEach(setup);
 
   afterEach(cleanup);
+
+  describe('dropped image file', () => {
+    it("writes the image into the design's media directory", async () => {
+      // Add an image element to drop the file onto
+      addDesignElementFromTemplate(ElementTemplates.image, 'root', 0);
+
+      const imageElementId =
+        getDesignElement<FlatRootDesignElement>('root').children[0];
+
+      const drop = {
+        ...baseEvent,
+        targetId: imageElementId,
+        event: {
+          dataTransfer: {
+            files: [new File(['data'], 'photo.png', { type: 'image/png' })],
+          },
+        },
+      } as unknown as DropEventData<DesignStudioDropEventData>;
+
+      handleDropOnDesignElement(drop);
+
+      // Wait for the file write and element update to settle
+      await vi.waitFor(() => {
+        expect(getDesignElement(imageElementId)).toHaveProperty('content');
+      });
+
+      // The image landed in the design's media directory under the
+      // generated file name set on the element
+      const { content } = getDesignElement(imageElementId) as {
+        content: string;
+      };
+      const mediaDirPath = resolveDesignMediaDirPath(testDesign.id);
+
+      expect(MockFs.exists(`${mediaDirPath}/${content}`)).toBe(true);
+    });
+  });
 
   describe('invalid drop', () => {
     it('does nothing', () => {

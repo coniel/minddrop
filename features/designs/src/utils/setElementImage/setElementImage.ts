@@ -1,13 +1,13 @@
 import {
-  DesignStudioStore,
   getDesignElement,
+  getDesignProperty,
   updateDesignElement,
   updateDesignProperty,
 } from '../../DesignStudioStore';
 
 /**
- * Sets an image from the placeholder-media directory as an
- * element's image value: the bound design property's placeholder
+ * Sets an image from the owner's media directory as an element's
+ * image value: the bound design property's placeholder
  * when the element is bound, the element's own content image
  * otherwise. Elements in property mode without a bound property
  * are switched to static mode.
@@ -28,9 +28,7 @@ export async function setElementImage(
   // Bound elements receive the image as their design property's
   // placeholder
   if (!element.static && element.property) {
-    const property = DesignStudioStore.getDesign()?.properties.find(
-      (candidate) => candidate.name === element.property,
-    );
+    const property = getDesignProperty(element.property);
 
     if (property) {
       await updateDesignProperty({ ...property, placeholder: fileName });

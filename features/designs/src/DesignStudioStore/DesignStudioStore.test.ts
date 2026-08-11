@@ -4,6 +4,7 @@ import {
   Designs,
   ElementTemplates,
   Layout,
+  resolveDesignMediaDirPath,
 } from '@minddrop/designs';
 import { DEFAULT_STATIC_ICON } from '../constants';
 import {
@@ -31,6 +32,8 @@ import {
 
 const { layout_list_1, layout_page_1 } = DesignFixtures;
 
+const MEDIA_DIR_PATH = 'workspace/.minddrop/spaces/space_1/media';
+
 describe('DesignStudioStore', () => {
   afterEach(cleanup);
 
@@ -51,6 +54,10 @@ describe('DesignStudioStore', () => {
     expect(DesignStudioStore.getActiveLayoutId()).toBeNull();
     // Sets the properties
     expect(DesignStudioStore.getProperties()).toEqual(testDatabase.properties);
+    // Media resolves against the design's media directory
+    expect(DesignStudioStore.getMediaDirPath()).toBe(
+      resolveDesignMediaDirPath(testDesign.id),
+    );
   });
 
   it('activates a layout and selects its root element', () => {
@@ -197,7 +204,10 @@ describe('DesignStudioStore', () => {
     it('initializes the editor with a single active layout', () => {
       setup({ initializeStore: false });
 
-      initializeLayoutEditor(layout_page_1, { onSave: () => {} });
+      initializeLayoutEditor(layout_page_1, {
+        onSave: () => {},
+        mediaDirPath: MEDIA_DIR_PATH,
+      });
 
       // The layout is flattened and active with its root selected
       expect(DesignStudioStore.getElements(layout_page_1.id)).toEqual(
@@ -208,6 +218,9 @@ describe('DesignStudioStore', () => {
 
       // Property binding defaults to disabled
       expect(DesignStudioStore.isPropertyBindingEnabled()).toBe(false);
+
+      // Media resolves against the owner's media directory
+      expect(DesignStudioStore.getMediaDirPath()).toBe(MEDIA_DIR_PATH);
     });
 
     it('persists edits through the save handler', async () => {
@@ -220,6 +233,7 @@ describe('DesignStudioStore', () => {
         onSave: (layout) => {
           savedLayout = layout;
         },
+        mediaDirPath: MEDIA_DIR_PATH,
       });
 
       // Mutate an element and save
@@ -243,7 +257,10 @@ describe('DesignStudioStore', () => {
     it('forces added content elements into static mode', () => {
       setup({ initializeStore: false });
 
-      initializeLayoutEditor(layout_page_1, { onSave: () => {} });
+      initializeLayoutEditor(layout_page_1, {
+        onSave: () => {},
+        mediaDirPath: MEDIA_DIR_PATH,
+      });
 
       // Add a text and an icon element from their templates
       addDesignElementFromTemplate(ElementTemplates.text, 'root', 0);
@@ -270,7 +287,10 @@ describe('DesignStudioStore', () => {
     it('clears the editor session', () => {
       setup({ initializeStore: false });
 
-      initializeLayoutEditor(layout_page_1, { onSave: () => {} });
+      initializeLayoutEditor(layout_page_1, {
+        onSave: () => {},
+        mediaDirPath: MEDIA_DIR_PATH,
+      });
 
       clearLayoutEditor();
 
@@ -278,6 +298,7 @@ describe('DesignStudioStore', () => {
       expect(DesignStudioStore.isInitialized()).toBe(false);
       expect(DesignStudioStore.getSaveHandler()).toBeNull();
       expect(DesignStudioStore.isPropertyBindingEnabled()).toBe(true);
+      expect(DesignStudioStore.getMediaDirPath()).toBeNull();
     });
   });
 
