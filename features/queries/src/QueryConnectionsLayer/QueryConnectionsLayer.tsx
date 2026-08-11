@@ -3,6 +3,7 @@ import { Query, QueryConnection } from '@minddrop/queries';
 import {
   CanvasNodeFrame,
   CanvasPoint,
+  useCanvas,
   useCanvasStore,
 } from '@minddrop/ui-canvas';
 import { QUERY_NODE_PORT_Y, QUERY_NODE_WIDTHS } from '../constants';
@@ -32,17 +33,6 @@ export interface QueryConnectionsLayerProps {
    * following the pointer.
    */
   pendingConnection: PendingQueryConnection | null;
-
-  /**
-   * The ID of the selected connection.
-   */
-  selectedConnectionId: string | null;
-
-  /**
-   * Callback fired with the connection's ID when an edge is
-   * clicked.
-   */
-  onSelectConnection(connectionId: string): void;
 }
 
 /**
@@ -53,11 +43,17 @@ export interface QueryConnectionsLayerProps {
 export const QueryConnectionsLayer: React.FC<QueryConnectionsLayerProps> = ({
   query,
   pendingConnection,
-  selectedConnectionId,
-  onSelectConnection,
 }) => {
+  // Canvas actions for applying edge clicks to the selection
+  const store = useCanvas();
+
   // The nodes' live frames, updated as nodes are dragged
   const frames = useCanvasStore((state) => state.nodes);
+
+  // The canvas's selected connections
+  const selectedIds = useCanvasStore((state) =>
+    state.selection?.type === 'connections' ? state.selection.ids : null,
+  );
 
   // Subscribe to database changes so property mismatch styling
   // follows schema edits
@@ -101,7 +97,19 @@ export const QueryConnectionsLayer: React.FC<QueryConnectionsLayerProps> = ({
     }
 
     const path = edgePath(from, to);
-    const selected = connection.id === selectedConnectionId;
+    const selected = Boolean(selectedIds?.includes(connection.id));
+
+    // Select the clicked edge, with a modifier toggling it into
+    // the selection
+    function handleHitAreaClick(event: React.MouseEvent) {
+      if (event.shiftKey || event.metaKey || event.ctrlKey) {
+        store.toggleConnectionSelection(connection.id);
+
+        return;
+      }
+
+      store.selectConnections([connection.id]);
+    }
 
     // Flag connections on a trail into a filter whose property
     // their databases do not contain
@@ -113,7 +121,7 @@ export const QueryConnectionsLayer: React.FC<QueryConnectionsLayerProps> = ({
         <path
           className="queries-connection-hit-area"
           d={path}
-          onClick={() => onSelectConnection(connection.id)}
+          onClick={handleHitAreaClick}
         />
         <path
           className={`queries-connection${
