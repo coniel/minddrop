@@ -1,6 +1,3 @@
-// The internal store's type is derived from its implementation,
-// so it is imported back into the types it is described in
-import type { CanvasUseStore } from '../createCanvasStore';
 import { CanvasAlignmentGuide } from './CanvasAlignment.types';
 import {
   CanvasConnectionDrag,
@@ -15,417 +12,404 @@ import {
   CanvasLassoState,
   CanvasSelection,
 } from './CanvasSelection.types';
-import { CanvasViewportSize } from './CanvasState.types';
 
 /**
- * The API of a canvas instance's store, wrapping its state in
- * getters and actions.
+ * The size of the canvas viewport element in pixels.
  */
-export interface CanvasStore {
+export interface CanvasViewportSize {
   /**
-   * The internal Zustand store, for selector subscriptions.
+   * The viewport width.
    */
-  useStore: CanvasUseStore;
+  width: number;
 
   /**
-   * Returns the current zoom level (1 = 100%).
+   * The viewport height.
    */
-  getZoom(): number;
+  height: number;
+}
+
+/**
+ * Configuration options for creating a canvas store.
+ */
+export interface CanvasStoreConfig {
+  /**
+   * The minimum zoom level.
+   */
+  minZoom?: number;
 
   /**
-   * Returns the current pan offset in pixels.
+   * The maximum zoom level.
    */
-  getPan(): CanvasPoint;
+  maxZoom?: number;
 
   /**
-   * Returns the minimum zoom level.
+   * The initial zoom level.
    */
-  getMinZoom(): number;
+  initialZoom?: number;
 
   /**
-   * Returns the maximum zoom level.
+   * The initial pan offset.
    */
-  getMaxZoom(): number;
+  initialPan?: CanvasPoint;
 
   /**
-   * Returns the size of the viewport element. Zero until the
-   * viewport has mounted.
+   * Whether node interactions snap to the grid initially.
    */
-  getViewportSize(): CanvasViewportSize;
+  initialSnapToGrid?: boolean;
 
   /**
-   * Returns a registered node's frame.
-   *
-   * @param nodeId - The ID of the node to get.
+   * Whether node interactions snap to other nodes initially.
    */
-  getNode(nodeId: string): CanvasNodeFrame | null;
+  initialSnapToObjects?: boolean;
 
   /**
-   * Returns all registered node frames keyed by node ID.
+   * Whether nodes and connections on the canvas can be selected.
+   * Defaults to true.
    */
-  getNodes(): Record<string, CanvasNodeFrame>;
+  selectable?: boolean;
+}
+
+/**
+ * Viewport and node registry state for a single canvas instance.
+ */
+export interface CanvasState {
+  /**
+   * The current zoom level (1 = 100%).
+   */
+  zoom: number;
 
   /**
-   * Returns whether node drags and resizes snap to the grid.
+   * The current pan offset in pixels.
    */
-  getSnapToGrid(): boolean;
+  pan: CanvasPoint;
 
   /**
-   * Returns whether node drags and resizes snap to other
-   * nodes.
+   * The minimum zoom level.
    */
-  getSnapToObjects(): boolean;
+  minZoom: number;
 
   /**
-   * Returns whether nodes and connections on the canvas can be
-   * selected.
+   * The maximum zoom level.
    */
-  getSelectable(): boolean;
+  maxZoom: number;
 
   /**
-   * Returns the current selection, or null when nothing is
-   * selected.
+   * The size of the viewport element, kept up to date by the
+   * Canvas component. Zero until the viewport has mounted.
    */
-  getSelection(): CanvasSelection | null;
+  viewportSize: CanvasViewportSize;
 
   /**
-   * Returns the IDs of the selected nodes, empty when the
-   * selection contains connections.
+   * Registry of mounted node frames by node ID, used for
+   * state-driven fit and centering computations.
    */
-  getSelectedNodeIds(): string[];
+  nodes: Record<string, CanvasNodeFrame>;
 
   /**
-   * Returns the IDs of the selected connections, empty when the
-   * selection contains nodes.
+   * Whether node drags and resizes snap to the canvas grid.
    */
-  getSelectedConnectionIds(): string[];
+  snapToGrid: boolean;
 
   /**
-   * Returns whether a node is selected.
-   *
-   * @param nodeId - The ID of the node to check.
+   * Whether node drags and resizes snap to the edges and centers
+   * of the other nodes on the canvas.
    */
-  isNodeSelected(nodeId: string): boolean;
+  snapToObjects: boolean;
 
   /**
-   * Returns whether a connection is selected.
-   *
-   * @param connectionId - The ID of the connection to check.
+   * Whether nodes and connections on the canvas can be selected.
    */
-  isConnectionSelected(connectionId: string): boolean;
+  selectable: boolean;
 
   /**
-   * Returns the in-progress drag-to-select marquee, or null when
-   * no lasso drag is in progress.
+   * The current selection, or null when nothing is selected.
    */
-  getLasso(): CanvasLassoState | null;
+  selection: CanvasSelection | null;
 
   /**
-   * Returns the point the current selection was made at, or null
-   * when it was not made by a pointer interaction.
+   * The in-progress drag-to-select marquee, or null when no
+   * lasso drag is in progress.
    */
-  getSelectionPoint(): CanvasPoint | null;
+  lasso: CanvasLassoState | null;
 
   /**
-   * Records the point the current selection was made at. Any
-   * later selection change clears it, so it is set immediately
-   * after selecting.
-   *
-   * @param point - The point in canvas coordinates.
+   * The canvas point the current selection was made at, or null
+   * when it was not made by a pointer interaction. Anchors UI
+   * over selections which have no meaningful bounds to sit
+   * above, such as connections.
    */
-  setSelectionPoint(point: CanvasPoint): void;
+  selectionPoint: CanvasPoint | null;
 
   /**
-   * Returns the offset of the in-progress group drag, or null
-   * when no group drag is in progress.
+   * The offset of the in-progress group drag in canvas
+   * coordinates, or null when no group drag is in progress.
+   * Selected nodes add it to their position, so the move is
+   * published as a delta rather than written into each node.
    */
-  getSelectionDrag(): CanvasPoint | null;
+  selectionDrag: CanvasPoint | null;
 
   /**
-   * Returns the IDs of the connections a frame touches, empty
-   * when no connections layer is mounted.
-   *
-   * @param frame - The frame to test, in canvas coordinates.
+   * Geometry queries against the canvas's connections, or null
+   * when no connections layer is mounted. Registered by the
+   * connections layer, which owns the connections.
    */
-  hitTestConnections(frame: CanvasNodeFrame): string[];
+  connectionGeometry: CanvasConnectionGeometry | null;
 
   /**
-   * Returns the frame enclosing the given connections, or null
-   * when none of them resolve.
-   *
-   * @param ids - The IDs of the connections to enclose.
+   * The alignment guides for the node being dragged or resized,
+   * empty when no node is aligned with another.
    */
-  getConnectionBounds(ids: string[]): CanvasNodeFrame | null;
+  alignmentGuides: CanvasAlignmentGuide[];
 
   /**
-   * Returns the alignment guides for the node being dragged or
-   * resized.
-   */
-  getAlignmentGuides(): CanvasAlignmentGuide[];
-
-  /**
-   * Returns the in-progress connection drag, or null when no
+   * The in-progress drag-to-connect interaction, or null when no
    * connection is being dragged.
    */
-  getConnectionDrag(): CanvasConnectionDrag | null;
+  connectionDrag: CanvasConnectionDrag | null;
 
   /**
-   * Returns the node side whose connection handle the cursor is
-   * near, or null when none is near.
+   * The node side whose edge the cursor is near, revealing its
+   * connection handle. Tracked by the Canvas component from
+   * viewport cursor movement, so edges are detected from both
+   * inside and outside their node.
    */
-  getHoveredConnectionHandle(): CanvasConnectionEnd | null;
+  hoveredConnectionHandle: CanvasConnectionEnd | null;
 
   /**
    * Sets the zoom level, optionally zooming toward a focal point.
-   *
    * @param zoom - The new zoom level (clamped to minZoom–maxZoom).
    * @param focalPoint - The point in viewport coordinates to zoom toward.
    */
-  setZoom(zoom: number, focalPoint?: CanvasPoint): void;
+  setZoom: (zoom: number, focalPoint?: CanvasPoint) => void;
 
   /**
    * Sets the pan offset.
-   *
    * @param x - The horizontal offset.
    * @param y - The vertical offset.
    */
-  setPan(x: number, y: number): void;
+  setPan: (x: number, y: number) => void;
 
   /**
    * Zooms in by one step, centered on the viewport.
    * Snaps to 100% if the result is within the snap threshold.
    */
-  zoomIn(): void;
+  zoomIn: () => void;
 
   /**
    * Zooms out by one step, centered on the viewport.
    * Snaps to 100% if the result is within the snap threshold.
    */
-  zoomOut(): void;
+  zoomOut: () => void;
 
   /**
    * Resets zoom to 1 and pan to { x: 0, y: 0 }.
    */
-  resetView(): void;
+  resetView: () => void;
 
   /**
    * Fits all registered nodes into the viewport: scales and pans
    * so their union bounding box is centered with padding, never
    * zooming in beyond 100%. Resets the view when no nodes are
    * registered.
-   *
    * @param padding - Padding around the fitted nodes, in viewport pixels.
    */
-  fitToView(padding?: number): void;
+  fitToView: (padding?: number) => void;
 
   /**
    * Centers the viewport on a registered node's frame. Does
    * nothing if the node is not registered.
-   *
    * @param nodeId - The ID of the node to center on.
    * @param zoom - The zoom level to center at, defaults to 1.
    */
-  centerOnNode(nodeId: string, zoom?: number): void;
+  centerOnNode: (nodeId: string, zoom?: number) => void;
 
   /**
    * Centers the viewport on a frame.
-   *
    * @param frame - The frame to center on, in canvas coordinates.
    * @param zoom - The zoom level to center at, defaults to 1.
    */
-  centerOnFrame(frame: CanvasNodeFrame, zoom?: number): void;
+  centerOnFrame: (frame: CanvasNodeFrame, zoom?: number) => void;
 
   /**
    * Adds a node's frame to the registry, or replaces it if the
    * node is already registered.
-   *
-   * @param nodeId - The node ID.
+   * @param id - The node ID.
    * @param frame - The node's frame in canvas coordinates.
    */
-  registerNode(nodeId: string, frame: CanvasNodeFrame): void;
+  registerNode: (id: string, frame: CanvasNodeFrame) => void;
 
   /**
    * Applies a partial frame update to a registered node. Does
    * nothing if the node is not registered.
-   *
-   * @param nodeId - The node ID.
+   * @param id - The node ID.
    * @param frame - The frame values to update.
    */
-  updateNodeFrame(nodeId: string, frame: Partial<CanvasNodeFrame>): void;
+  updateNodeFrame: (id: string, frame: Partial<CanvasNodeFrame>) => void;
 
   /**
    * Removes a node's frame from the registry.
-   *
-   * @param nodeId - The node ID.
+   * @param id - The node ID.
    */
-  unregisterNode(nodeId: string): void;
+  unregisterNode: (id: string) => void;
 
   /**
    * Sets the viewport element size.
-   *
    * @param size - The new viewport size.
    */
-  setViewportSize(size: CanvasViewportSize): void;
+  setViewportSize: (size: CanvasViewportSize) => void;
 
   /**
    * Sets whether node drags and resizes snap to the grid.
-   *
    * @param enabled - Whether snapping is enabled.
    */
-  setSnapToGrid(enabled: boolean): void;
+  setSnapToGrid: (enabled: boolean) => void;
 
   /**
    * Toggles whether node drags and resizes snap to the grid.
    */
-  toggleSnapToGrid(): void;
+  toggleSnapToGrid: () => void;
 
   /**
-   * Sets whether node drags and resizes snap to the edges and
-   * centers of the other nodes on the canvas.
-   *
+   * Sets whether node drags and resizes snap to other nodes.
    * @param enabled - Whether snapping is enabled.
    */
-  setSnapToObjects(enabled: boolean): void;
+  setSnapToObjects: (enabled: boolean) => void;
 
   /**
    * Toggles whether node drags and resizes snap to other nodes.
    */
-  toggleSnapToObjects(): void;
+  toggleSnapToObjects: () => void;
 
   /**
    * Selects the given nodes, replacing a connection selection.
    * Selecting no nodes clears the selection.
-   *
    * @param ids - The IDs of the nodes to select.
    * @param additive - Whether to add to an existing node selection.
    */
-  selectNodes(ids: string[], additive?: boolean): void;
+  selectNodes: (ids: string[], additive?: boolean) => void;
 
   /**
    * Selects the given connections, replacing a node selection.
    * Selecting no connections clears the selection.
-   *
    * @param ids - The IDs of the connections to select.
    * @param additive - Whether to add to an existing connection selection.
    */
-  selectConnections(ids: string[], additive?: boolean): void;
+  selectConnections: (ids: string[], additive?: boolean) => void;
 
   /**
    * Adds a node to the selection, or removes it when already
    * selected. Replaces a connection selection.
-   *
    * @param id - The ID of the node to toggle.
    */
-  toggleNodeSelection(id: string): void;
+  toggleNodeSelection: (id: string) => void;
 
   /**
    * Adds a connection to the selection, or removes it when already
    * selected. Replaces a node selection.
-   *
    * @param id - The ID of the connection to toggle.
    */
-  toggleConnectionSelection(id: string): void;
+  toggleConnectionSelection: (id: string) => void;
 
   /**
    * Clears the selection.
    */
-  clearSelection(): void;
+  clearSelection: () => void;
 
   /**
    * Starts a drag-to-select marquee. Does nothing when the canvas
    * is not selectable.
-   *
    * @param origin - The point the drag started from, in canvas coordinates.
    * @param additive - Whether the lasso adds to the existing selection.
    */
-  startLasso(origin: CanvasPoint, additive: boolean): void;
+  startLasso: (origin: CanvasPoint, additive: boolean) => void;
 
   /**
    * Updates the in-progress marquee's cursor position. Does
    * nothing when no lasso drag is in progress.
-   *
    * @param point - The cursor position in canvas coordinates.
    */
-  updateLasso(point: CanvasPoint): void;
+  updateLasso: (point: CanvasPoint) => void;
 
   /**
    * Clears the in-progress marquee.
    */
-  clearLasso(): void;
+  clearLasso: () => void;
+
+  /**
+   * Records the point the current selection was made at. Any
+   * later selection change clears it, so it is set immediately
+   * after selecting.
+   * @param point - The point in canvas coordinates.
+   */
+  setSelectionPoint: (point: CanvasPoint) => void;
 
   /**
    * Starts a group drag of the selected nodes at a zero offset.
    */
-  startSelectionDrag(): void;
+  startSelectionDrag: () => void;
 
   /**
    * Updates the in-progress group drag's offset. Does nothing
    * when no group drag is in progress.
-   *
    * @param offset - The offset from the drag's start, in canvas coordinates.
    */
-  updateSelectionDrag(offset: CanvasPoint): void;
+  updateSelectionDrag: (offset: CanvasPoint) => void;
 
   /**
    * Clears the in-progress group drag.
    */
-  clearSelectionDrag(): void;
+  clearSelectionDrag: () => void;
 
   /**
    * Registers the geometry queries against the canvas's
    * connections.
-   *
    * @param geometry - The geometry queries, or null to unregister.
    */
-  setConnectionGeometry(geometry: CanvasConnectionGeometry | null): void;
+  setConnectionGeometry: (geometry: CanvasConnectionGeometry | null) => void;
 
   /**
    * Sets the alignment guides for the node being dragged or
-   * resized.
-   *
+   * resized. Skips updates that leave the guides empty.
    * @param guides - The guides to show.
    */
-  setAlignmentGuides(guides: CanvasAlignmentGuide[]): void;
+  setAlignmentGuides: (guides: CanvasAlignmentGuide[]) => void;
 
   /**
    * Starts a drag-to-connect interaction from a node side.
-   *
    * @param fromNodeId - The ID of the node the drag is anchored to.
    * @param fromSide - The side of the node the drag is anchored to.
    * @param point - The starting cursor position in canvas coordinates.
    * @param reconnect - The existing connection the drag re-routes, when re-connecting.
    * @param fromOffset - The anchored end's offset along its side, midpoint when omitted.
    */
-  startConnectionDrag(
+  startConnectionDrag: (
     fromNodeId: string,
     fromSide: CanvasNodeSide,
     point: CanvasPoint,
     reconnect?: CanvasConnectionReconnect,
     fromOffset?: number,
-  ): void;
+  ) => void;
 
   /**
    * Updates the in-progress connection drag's cursor position and
    * hovered target. Does nothing when no drag is in progress.
-   *
    * @param point - The cursor position in canvas coordinates.
    * @param target - The hovered target, or null when none is hovered.
    */
-  updateConnectionDrag(
+  updateConnectionDrag: (
     point: CanvasPoint,
     target: CanvasConnectionDragTarget | null,
-  ): void;
+  ) => void;
 
   /**
    * Clears the in-progress connection drag.
    */
-  clearConnectionDrag(): void;
+  clearConnectionDrag: () => void;
 
   /**
    * Sets the node side whose connection handle the cursor is
    * near. Skips updates that do not change the hovered handle.
-   *
    * @param target - The nearby node side, or null when none is near.
    */
-  setHoveredConnectionHandle(target: CanvasConnectionEnd | null): void;
+  setHoveredConnectionHandle: (target: CanvasConnectionEnd | null) => void;
 }
