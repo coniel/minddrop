@@ -9,6 +9,11 @@ import type {
 import { Events } from '@minddrop/events';
 import { Workspaces } from '@minddrop/workspaces';
 import { getSearchAdapter } from './SearchAdapter';
+import {
+  queueDatabaseReindex,
+  queueEntryDeletes,
+  queueEntryUpserts,
+} from './searchSyncBatch';
 
 /**
  * Registers event listeners that respond to database SQL
@@ -18,6 +23,9 @@ import { getSearchAdapter } from './SearchAdapter';
  * The databases package handles all SQL operations; the
  * search adapter only needs to update the MiniSearch
  * full-text index.
+ *
+ * Entry and re-index updates are buffered so that mass
+ * operations result in a single sync call.
  */
 export function initializeSearchSync(): void {
   // Handle entry sync (upsert/delete)
@@ -32,23 +40,11 @@ export function initializeSearchSync(): void {
       }
 
       if (data.action === 'upsert' && data.entries?.length) {
-        getSearchAdapter().searchSync({
-          workspaceId,
-          action: 'upsert',
-          entries: data.entries.map((entry) => ({
-            id: entry.id,
-            title: entry.title,
-            databaseId: entry.databaseId,
-          })),
-        });
+        queueEntryUpserts(workspaceId, data.entries);
       }
 
       if (data.action === 'delete' && data.entryIds.length > 0) {
-        getSearchAdapter().searchSync({
-          workspaceId,
-          action: 'delete',
-          entryIds: data.entryIds,
-        });
+        queueEntryDeletes(workspaceId, data.entryIds);
       }
     },
   );
@@ -100,10 +96,7 @@ export function initializeSearchSync(): void {
 
       // SQL rename is already done; just re-index MiniSearch
       // with updated property data
-      getSearchAdapter().searchReindexDatabase({
-        workspaceId,
-        databaseId: data.databaseId,
-      });
+      queueDatabaseReindex(workspaceId, data.databaseId);
     },
   );
 
@@ -138,24 +131,12 @@ export function initializeSearchSync(): void {
 
       // Sync upserted entries
       if (data.upsertedEntries.length > 0) {
-        getSearchAdapter().searchSync({
-          workspaceId,
-          action: 'upsert',
-          entries: data.upsertedEntries.map((entry) => ({
-            id: entry.id,
-            title: entry.title,
-            databaseId: entry.databaseId,
-          })),
-        });
+        queueEntryUpserts(workspaceId, data.upsertedEntries);
       }
 
       // Sync deleted entries
       if (data.deletedEntryIds.length > 0) {
-        getSearchAdapter().searchSync({
-          workspaceId,
-          action: 'delete',
-          entryIds: data.deletedEntryIds,
-        });
+        queueEntryDeletes(workspaceId, data.deletedEntryIds);
       }
     },
   );
@@ -172,10 +153,7 @@ export function initializeSearchSync(): void {
       }
 
       // SQL re-index is already done; just re-index MiniSearch
-      getSearchAdapter().searchReindexDatabase({
-        workspaceId,
-        databaseId: data.databaseId,
-      });
+      queueDatabaseReindex(workspaceId, data.databaseId);
     },
   );
 }
