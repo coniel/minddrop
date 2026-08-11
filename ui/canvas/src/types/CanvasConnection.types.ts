@@ -99,6 +99,15 @@ export interface CanvasConnection {
 }
 
 /**
+ * Style values applied to connections which do not set their
+ * own, and to the drag preview curve.
+ */
+export type CanvasConnectionStyleDefaults = Pick<
+  CanvasConnection,
+  'arrows' | 'shape' | 'color' | 'style' | 'thickness'
+>;
+
+/**
  * A resolved connection endpoint: the point a connection attaches
  * to and the node side it extends from.
  */

@@ -1,5 +1,4 @@
 import { useEffect, useId, useRef } from 'react';
-import { ContentColor } from '@minddrop/ui-theme';
 import { useCanvasContext } from '../CanvasContext';
 import {
   CONNECTION_ARROW_SIZES,
@@ -11,9 +10,8 @@ import {
   CanvasConnectionAnchor,
   CanvasConnectionDragTarget,
   CanvasConnectionReconnect,
-  CanvasConnectionThickness,
+  CanvasConnectionStyleDefaults,
   CanvasNodeFrame,
-  CanvasNodeSide,
 } from '../types';
 import { useCanvas } from '../useCanvas';
 import {
@@ -23,24 +21,19 @@ import {
 import { useCanvasStore } from '../useCanvasStore';
 import {
   connectionIntersectsFrame,
+  getConnectionAnchors,
   getConnectionColor,
   getConnectionDasharray,
   getConnectionHaloColor,
+  getConnectionMarkerVariants,
   getConnectionPath,
   getConnectionPathBounds,
+  getOppositeSide,
   getSideAnchorPoint,
+  resolveConnectionStyle,
   unionFrames,
 } from '../utils';
 import './CanvasConnectionsLayer.css';
-
-/**
- * Style values applied to connections which do not set their
- * own, and to the drag preview curve.
- */
-export type CanvasConnectionStyleDefaults = Pick<
-  CanvasConnection,
-  'arrows' | 'shape' | 'color' | 'style' | 'thickness'
->;
 
 export interface CanvasConnectionsLayerProps {
   /**
@@ -147,45 +140,13 @@ export const CanvasConnectionsLayer: React.FC<CanvasConnectionsLayerProps> = ({
   // connections and to place UI over them. The layer owns the
   // connections, so the canvas cannot resolve them itself.
   useEffect(() => {
-    /**
-     * Resolves a connection's anchors from the live node
-     * registry, or null when either endpoint is not mounted.
-     */
-    function getAnchors(connection: CanvasConnection) {
-      const fromFrame = store.getNode(connection.from.nodeId);
-      const toFrame = store.getNode(connection.to.nodeId);
-
-      if (!fromFrame || !toFrame) {
-        return null;
-      }
-
-      return {
-        from: {
-          point: getSideAnchorPoint(
-            fromFrame,
-            connection.from.side,
-            connection.from.offset,
-          ),
-          side: connection.from.side,
-          frame: fromFrame,
-        },
-        to: {
-          point: getSideAnchorPoint(
-            toFrame,
-            connection.to.side,
-            connection.to.offset,
-          ),
-          side: connection.to.side,
-          frame: toFrame,
-        },
-      };
-    }
-
     store.setConnectionGeometry({
       hitTest: (frame) =>
         connectionsRef.current
           .filter((connection) => {
-            const anchors = getAnchors(connection);
+            // Resolved against the live node registry, so hits
+            // follow nodes while they are dragged
+            const anchors = getConnectionAnchors(connection, store.getNodes());
 
             // Skip connections to nodes not mounted on the canvas
             if (!anchors) {
@@ -205,7 +166,7 @@ export const CanvasConnectionsLayer: React.FC<CanvasConnectionsLayerProps> = ({
         const frames = connectionsRef.current
           .filter((connection) => ids.includes(connection.id))
           .map((connection) => {
-            const anchors = getAnchors(connection);
+            const anchors = getConnectionAnchors(connection, store.getNodes());
 
             // Skip connections to nodes not mounted on the canvas
             if (!anchors) {
@@ -235,43 +196,22 @@ export const CanvasConnectionsLayer: React.FC<CanvasConnectionsLayerProps> = ({
 
   // Arrowheads are colored per connection and sized in absolute
   // units per thickness, so a marker is defined for each
-  // color/thickness combination in use. The default combination
-  // is always defined for the preview curve.
-  const markerVariants = new Map<
-    string,
-    { color: ContentColor; thickness: CanvasConnectionThickness }
-  >();
-
-  // The preview curve's combination when no re-connect styling
-  // applies
-  const previewColor =
-    previewStyle?.color ?? connectionDefaults?.color ?? 'default';
-  const previewThickness =
-    previewStyle?.thickness ?? connectionDefaults?.thickness ?? 'medium';
-
-  markerVariants.set(`${previewColor}-${previewThickness}`, {
-    color: previewColor,
-    thickness: previewThickness,
-  });
-
-  connections.forEach((connection) => {
-    const color = connection.color ?? connectionDefaults?.color ?? 'default';
-    const thickness =
-      connection.id === dropTargetConnectionId
-        ? 'thick'
-        : (connection.thickness ?? connectionDefaults?.thickness ?? 'medium');
-
-    markerVariants.set(`${color}-${thickness}`, { color, thickness });
+  // color/thickness combination in use
+  const markerVariants = getConnectionMarkerVariants(connections, {
+    connectionDefaults,
+    previewStyle,
+    dropTargetConnectionId,
   });
 
   // Render a connection's curve with its halo, hit area and
   // arrowheads
   function renderConnection(connection: CanvasConnection) {
-    const fromFrame = nodes[connection.from.nodeId];
-    const toFrame = nodes[connection.to.nodeId];
+    // Anchor each end to its side, with the frame for shape
+    // routing around the node
+    const anchors = getConnectionAnchors(connection, nodes);
 
     // Skip connections to nodes not mounted on the canvas
-    if (!fromFrame || !toFrame) {
+    if (!anchors) {
       return null;
     }
 
@@ -281,44 +221,23 @@ export const CanvasConnectionsLayer: React.FC<CanvasConnectionsLayerProps> = ({
       return null;
     }
 
-    // Anchor each end to its side, with the frame for shape
-    // routing around the node
-    const from: CanvasConnectionAnchor = {
-      point: getSideAnchorPoint(
-        fromFrame,
-        connection.from.side,
-        connection.from.offset,
-      ),
-      side: connection.from.side,
-      frame: fromFrame,
-    };
-    const to: CanvasConnectionAnchor = {
-      point: getSideAnchorPoint(
-        toFrame,
-        connection.to.side,
-        connection.to.offset,
-      ),
-      side: connection.to.side,
-      frame: toFrame,
-    };
-
-    const arrows = connection.arrows ?? connectionDefaults?.arrows ?? 'end';
-    const shape = connection.shape ?? connectionDefaults?.shape;
+    const { from, to } = anchors;
     const selected = Boolean(selectedIds?.includes(connection.id));
 
     // Highlight the drop target by thickening its curve
     const dropTarget = connection.id === dropTargetConnectionId;
 
     // The curve's configured stroke styling
-    const color = connection.color ?? connectionDefaults?.color ?? 'default';
-    const thickness = dropTarget
-      ? 'thick'
-      : (connection.thickness ?? connectionDefaults?.thickness ?? 'medium');
+    const {
+      arrows,
+      shape,
+      color,
+      style,
+      thickness: styledThickness,
+    } = resolveConnectionStyle([connection, connectionDefaults]);
+    const thickness = dropTarget ? 'thick' : styledThickness;
     const strokeWidth = CONNECTION_THICKNESSES[thickness];
-    const dasharray = getConnectionDasharray(
-      connection.style ?? connectionDefaults?.style,
-      strokeWidth,
-    );
+    const dasharray = getConnectionDasharray(style, strokeWidth);
 
     // Full path for the hit area and halo
     const path = getConnectionPath(from, to, shape);
@@ -443,7 +362,7 @@ export const CanvasConnectionsLayer: React.FC<CanvasConnectionsLayerProps> = ({
           }
         : {
             point: connectionDrag.point,
-            side: oppositeSide(connectionDrag.fromSide),
+            side: getOppositeSide(connectionDrag.fromSide),
           };
 
     // During a re-connect drag the preview replaces the hidden
@@ -455,26 +374,12 @@ export const CanvasConnectionsLayer: React.FC<CanvasConnectionsLayerProps> = ({
         )
       : undefined;
 
-    const color =
-      reconnecting?.color ??
-      previewStyle?.color ??
-      connectionDefaults?.color ??
-      'default';
-    const thickness =
-      reconnecting?.thickness ??
-      previewStyle?.thickness ??
-      connectionDefaults?.thickness ??
-      'medium';
+    const { arrows, shape, color, style, thickness } = resolveConnectionStyle([
+      reconnecting,
+      previewStyle,
+      connectionDefaults,
+    ]);
     const strokeWidth = CONNECTION_THICKNESSES[thickness];
-    const arrows =
-      reconnecting?.arrows ??
-      previewStyle?.arrows ??
-      connectionDefaults?.arrows ??
-      'end';
-    const shape =
-      reconnecting?.shape ?? previewStyle?.shape ?? connectionDefaults?.shape;
-    const style =
-      reconnecting?.style ?? previewStyle?.style ?? connectionDefaults?.style;
 
     // The preview path runs from the anchored end to the cursor,
     // which reverses the connection's direction when its source
@@ -509,7 +414,7 @@ export const CanvasConnectionsLayer: React.FC<CanvasConnectionsLayerProps> = ({
     <svg className="ui-canvas-connections" width={1} height={1}>
       {/* Arrowhead markers for each color/thickness in use */}
       <defs>
-        {Array.from(markerVariants.values()).map(({ color, thickness }) => (
+        {markerVariants.map(({ color, thickness }) => (
           <marker
             key={`${color}-${thickness}`}
             id={`${markerId}-arrow-${color}-${thickness}`}
@@ -537,22 +442,3 @@ export const CanvasConnectionsLayer: React.FC<CanvasConnectionsLayerProps> = ({
     </svg>
   );
 };
-
-/**
- * Returns the side opposite to the given side.
- */
-function oppositeSide(side: CanvasNodeSide): CanvasNodeSide {
-  if (side === 'top') {
-    return 'bottom';
-  }
-
-  if (side === 'bottom') {
-    return 'top';
-  }
-
-  if (side === 'left') {
-    return 'right';
-  }
-
-  return 'left';
-}

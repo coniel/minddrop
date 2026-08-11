@@ -4,7 +4,6 @@ import { CONNECTION_PROXIMITY } from '../constants';
 import {
   CanvasConnectionDragTarget,
   CanvasConnectionEnd,
-  CanvasNodeFrame,
   CanvasNodeSide,
   CanvasPoint,
 } from '../types';
@@ -12,6 +11,7 @@ import { useInteractionLock } from '../useInteractionLock';
 import {
   getConnectionDropTarget,
   getSideAnchorPoint,
+  pointInFrame,
   screenToCanvas,
 } from '../utils';
 
@@ -303,16 +303,4 @@ export function useCanvasConnectionDrag(
   );
 
   return { getConnectionHandleProps };
-}
-
-/**
- * Checks whether a canvas point lies within a node frame.
- */
-function pointInFrame(point: CanvasPoint, frame: CanvasNodeFrame): boolean {
-  return (
-    point.x >= frame.x &&
-    point.x <= frame.x + frame.width &&
-    point.y >= frame.y &&
-    point.y <= frame.y + frame.height
-  );
 }

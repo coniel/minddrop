@@ -9,13 +9,12 @@ import {
   CanvasConnectionDragTarget,
   CanvasConnectionEnd,
   CanvasConnectionReconnect,
-  CanvasNodeFrame,
   CanvasPoint,
 } from '../types';
 import { useInteractionLock } from '../useInteractionLock';
 import {
   getConnectionDropTarget,
-  getSideAnchorPoint,
+  getFixedConnectionEnd,
   screenToCanvas,
 } from '../utils';
 
@@ -203,7 +202,11 @@ export function useCanvasConnectionReconnect(
           return;
         }
 
-        const fixed = getFixedEnd(pending, context.store.getNode);
+        const fixed = getFixedConnectionEnd(
+          pending.connection,
+          pending.point,
+          context.store.getNodes(),
+        );
 
         // An endpoint frame is missing; the drag cannot start
         if (!fixed) {
@@ -338,49 +341,4 @@ export function useCanvasConnectionReconnect(
   const wasDragged = useCallback(() => didDrag.current, []);
 
   return { getConnectionProps, wasDragged };
-}
-
-/**
- * Resolves the fixed end of a re-connect drag: the endpoint
- * nearer the grab point becomes the loose end following the
- * cursor, while the farther one stays anchored.
- */
-function getFixedEnd(
-  pending: PendingReconnect,
-  getNode: (id: string) => CanvasNodeFrame | null | undefined,
-): {
-  end: CanvasConnectionEnd;
-  point: CanvasPoint;
-  looseEnd: 'from' | 'to';
-} | null {
-  const { connection, point } = pending;
-  const fromFrame = getNode(connection.from.nodeId);
-  const toFrame = getNode(connection.to.nodeId);
-
-  // Both endpoint frames must be registered
-  if (!fromFrame || !toFrame) {
-    return null;
-  }
-
-  const fromPoint = getSideAnchorPoint(
-    fromFrame,
-    connection.from.side,
-    connection.from.offset,
-  );
-  const toPoint = getSideAnchorPoint(
-    toFrame,
-    connection.to.side,
-    connection.to.offset,
-  );
-
-  // Distance from the grab point to each endpoint
-  const fromDistance = Math.hypot(point.x - fromPoint.x, point.y - fromPoint.y);
-  const toDistance = Math.hypot(point.x - toPoint.x, point.y - toPoint.y);
-
-  // The nearer end detaches; the farther end stays anchored
-  if (fromDistance <= toDistance) {
-    return { end: connection.to, point: toPoint, looseEnd: 'from' };
-  }
-
-  return { end: connection.from, point: fromPoint, looseEnd: 'to' };
 }
