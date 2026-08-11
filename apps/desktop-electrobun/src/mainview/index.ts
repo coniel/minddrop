@@ -9,6 +9,7 @@ import {
   handleWatchEvent,
   registerFileSystemAdapter,
 } from './registerFileSystemAdapter';
+import { registerScreenshotAdapterRpc } from './registerScreenshotAdapter';
 import { registerSearchAdapterRpc } from './registerSearchAdapter';
 import { registerSqlAdapterRpc } from './registerSqlAdapter';
 
@@ -50,3 +51,13 @@ Events.addListener(ToggleWindowFillEvent, 'desktop-electrobun', () => {
 // file system operations (image loading, binary uploads)
 const httpServerPort = await electrobun.rpc.request.getHttpServerPort({});
 Paths.httpServerHost = `http://localhost:${httpServerPort}`;
+
+// Enable screen capture on the dev channel only, leaving the
+// screenshot picker inert elsewhere
+if (electrobun.rpc) {
+  const appChannel = await electrobun.rpc.request.getAppChannel({});
+
+  if (appChannel === 'dev') {
+    registerScreenshotAdapterRpc(electrobun.rpc);
+  }
+}

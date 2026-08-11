@@ -7,6 +7,7 @@ import {
   setSyncChangesetSender,
 } from './databases';
 import { fileSystemRpcHandlers, setWatchEventSender } from './fileSystemRpc';
+import { screenshotRpcHandlers } from './screenshotRpc';
 import {
   handleSearchDatabaseSync,
   handleSearchFullText,
@@ -39,6 +40,8 @@ export const myWebviewRPC = BrowserView.defineRPC<WebviewRPC>({
       getHttpServerPort: () => httpServer.port,
       // Window RPC handlers
       ...windowRpcHandlers,
+      // Screenshot RPC handlers
+      ...screenshotRpcHandlers,
       // SQL RPC handlers
       sqlOpen: handleSqlOpen,
       sqlExec: handleSqlExec,

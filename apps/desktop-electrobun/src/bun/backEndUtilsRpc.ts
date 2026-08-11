@@ -1,6 +1,8 @@
-import { Utils } from 'electrobun/bun';
+import { Updater, Utils } from 'electrobun/bun';
 
 export const backEndUtilsRpcHandlers = {
+  getAppChannel: async () => Updater.localInfo.channel(),
+
   openFile: async ({ path }: { path: string }) => {
     Utils.openPath(path);
   },

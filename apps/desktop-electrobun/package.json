@@ -16,6 +16,7 @@
     "@minddrop/databases": "workspace:*",
     "@minddrop/events": "workspace:*",
     "@minddrop/feature-desktop-app": "workspace:*",
+    "@minddrop/feature-dev-tools": "workspace:*",
     "@minddrop/file-system": "workspace:*",
     "@minddrop/properties": "workspace:*",
     "@minddrop/search": "workspace:*",

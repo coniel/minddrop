@@ -125,6 +125,24 @@ export type WebviewRPC = {
         params: { path: string };
         response: void;
       };
+      getAppChannel: {
+        params: Record<string, never>;
+        response: string;
+      };
+      getViewportScreenOrigin: {
+        params: { cursorX: number; cursorY: number };
+        response: { x: number; y: number };
+      };
+      captureScreenRegion: {
+        params: {
+          x: number;
+          y: number;
+          width: number;
+          height: number;
+          fileName: string;
+        };
+        response: string;
+      };
       // SQL RPC
       sqlOpen: {
         params: { path: string; schema: string; version: number };

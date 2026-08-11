@@ -38,6 +38,9 @@ importers:
       '@minddrop/feature-desktop-app':
         specifier: workspace:*
         version: link:../../features/desktop-app
+      '@minddrop/feature-dev-tools':
+        specifier: workspace:*
+        version: link:../../features/dev-tools
       '@minddrop/file-system':
         specifier: workspace:*
         version: link:../../packages/file-system
