@@ -3,12 +3,8 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { act, cleanup, fireEvent, render } from '@minddrop/test-utils';
 import { CanvasProvider } from '../CanvasProvider';
 import { CanvasStore, createCanvasStore } from '../createCanvasStore';
-import { CanvasNodeFrame } from '../types';
-import {
-  CanvasNodeResizeEdge,
-  UseCanvasNodeOptions,
-  useCanvasNode,
-} from './useCanvasNode';
+import { CanvasNodeFrame, CanvasNodeResizeEdge } from '../types';
+import { UseCanvasNodeOptions, useCanvasNode } from './useCanvasNode';
 
 interface TestNodeProps extends UseCanvasNodeOptions {
   resizeEdge?: CanvasNodeResizeEdge;

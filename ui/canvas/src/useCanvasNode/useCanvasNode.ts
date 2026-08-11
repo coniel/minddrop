@@ -4,7 +4,6 @@ import {
   useLayoutEffect,
   useRef,
   useState,
-  useSyncExternalStore,
 } from 'react';
 import { isInteractiveTarget } from '@minddrop/utils';
 import { CanvasContextValue, useOptionalCanvasContext } from '../CanvasContext';
@@ -14,42 +13,21 @@ import {
   OBJECT_SNAP_DISTANCE,
 } from '../constants';
 import {
-  CanvasAlignmentAxis,
-  CanvasAlignmentGuide,
   CanvasNodeFrame,
-  CanvasPoint,
+  CanvasNodeResizeEdge,
+  CanvasNodeResizeState,
 } from '../types';
 import { useInteractionLock } from '../useInteractionLock';
 import {
-  framesIntersect,
-  getEdgeSnap,
-  getGuideSpan,
-  getObjectSnap,
+  getResizedNodeFrame,
+  getSnappedNodePosition,
+  getSnappedResizeDeltas,
   getViewportFrame,
-  snapToGrid,
+  getVisibleSnapTargets,
 } from '../utils';
-
-/**
- * The edges and corners from which a node can be resized.
- */
-export type CanvasNodeResizeEdge =
-  | 'left'
-  | 'right'
-  | 'bottom'
-  | 'top-left'
-  | 'top-right'
-  | 'bottom-left'
-  | 'bottom-right';
-
-interface ResizeState {
-  edge: CanvasNodeResizeEdge;
-  startX: number;
-  startY: number;
-  originWidth: number;
-  originHeight: number;
-  originX: number;
-  originY: number;
-}
+import { useCanvasNodeRegistration } from './useCanvasNodeRegistration';
+import { useCanvasNodeSelection } from './useCanvasNodeSelection';
+import { useMeasuredHeight } from './useMeasuredHeight';
 
 interface DragState {
   startX: number;
@@ -237,11 +215,10 @@ export function useCanvasNode(
 
   const nodeRef = useRef<HTMLDivElement>(null);
   const dragState = useRef<DragState | null>(null);
-  const resizeState = useRef<ResizeState | null>(null);
+  const resizeState = useRef<CanvasNodeResizeState | null>(null);
   const didDrag = useRef(false);
   const [position, setPosition] = useState({ x, y });
   const [size, setSize] = useState({ width, height: height ?? 0 });
-  const [measuredHeight, setMeasuredHeight] = useState(0);
   // The in-progress interaction, driving the window mouse
   // listeners and the interaction lock
   const [interaction, setInteraction] = useState<NodeInteraction | null>(null);
@@ -249,38 +226,12 @@ export function useCanvasNode(
   const positionRef = useRef(position);
   const sizeRef = useRef(size);
   const context = useOptionalCanvasContext();
+  const { selected, selectionOffset } = useCanvasNodeSelection(id, selectable);
 
-  // Subscribe to the canvas instance's store, which holds the
-  // selection. Standalone nodes have no store to subscribe to.
-  const subscribeToStore = useCallback(
-    (onStoreChange: VoidFunction) =>
-      context ? context.store.useStore.subscribe(onStoreChange) : () => {},
-    [context],
-  );
+  // Auto-height nodes follow their content height
+  const autoHeight = height === undefined;
 
-  // Whether the node is in the canvas's current selection
-  const getSelectedSnapshot = useCallback(
-    () => Boolean(selectable && context?.store.isNodeSelected(id)),
-    [context, selectable, id],
-  );
-
-  const selected = useSyncExternalStore(subscribeToStore, getSelectedSnapshot);
-
-  // The offset of an in-progress group drag this node is part of.
-  // The store holds one offset for the whole selection, so the
-  // snapshot is a stable reference between updates.
-  const getSelectionOffsetSnapshot = useCallback(
-    () =>
-      selectable && context?.store.isNodeSelected(id)
-        ? context.store.getSelectionDrag()
-        : null,
-    [context, selectable, id],
-  );
-
-  const selectionOffset = useSyncExternalStore(
-    subscribeToStore,
-    getSelectionOffsetSnapshot,
-  );
+  const measuredHeight = useMeasuredHeight(nodeRef);
 
   // Hold the pointer for the interaction, so dragging over text
   // content neither selects it nor swaps the cursor
@@ -292,11 +243,16 @@ export function useCanvasNode(
     ? { x: position.x + selectionOffset.x, y: position.y + selectionOffset.y }
     : position;
 
-  // Auto-height nodes follow their content height
-  const autoHeight = height === undefined;
-
   // The node's effective height: measured for auto-height nodes
   const effectiveHeight = autoHeight ? measuredHeight : size.height;
+
+  // Keep the node's live frame registered with the canvas instance
+  useCanvasNodeRegistration(id, {
+    x: offsetPosition.x,
+    y: offsetPosition.y,
+    width: size.width,
+    height: effectiveHeight,
+  });
 
   // Mirror position/size into refs for the mouseup handler
   useEffect(() => {
@@ -312,62 +268,6 @@ export function useCanvasNode(
     setPosition({ x, y });
     setSize({ width, height: height ?? 0 });
   }, [x, y, width, height]);
-
-  // Measure the node's content height for auto-height nodes
-  useEffect(() => {
-    const node = nodeRef.current;
-
-    if (!node) {
-      return;
-    }
-
-    const measure = () => {
-      setMeasuredHeight(node.offsetHeight);
-    };
-
-    // Initial measure before the first observer callback
-    measure();
-
-    const observer = new ResizeObserver(measure);
-
-    observer.observe(node);
-
-    return () => {
-      observer.disconnect();
-    };
-  }, []);
-
-  // Keep the node's live frame registered with the canvas instance
-  useEffect(() => {
-    if (!context) {
-      return;
-    }
-
-    context.store.registerNode(id, {
-      x: offsetPosition.x,
-      y: offsetPosition.y,
-      width: size.width,
-      height: effectiveHeight,
-    });
-  }, [
-    context,
-    id,
-    offsetPosition.x,
-    offsetPosition.y,
-    size.width,
-    effectiveHeight,
-  ]);
-
-  // Unregister the node when it unmounts
-  useEffect(() => {
-    if (!context) {
-      return;
-    }
-
-    return () => {
-      context.store.unregisterNode(id);
-    };
-  }, [context, id]);
 
   /**
    * Clamps a position so the node stays within its parent
@@ -505,356 +405,101 @@ export function useCanvasNode(
       // Handle node dragging
       if (dragState.current) {
         didDrag.current = true;
-        const rawX =
-          dragState.current.originX +
-          (event.clientX - dragState.current.startX) / scale;
-        const rawY =
-          dragState.current.originY +
-          (event.clientY - dragState.current.startY) / scale;
 
-        // Dragged nodes land their top left corner on the grid
-        const gridX = snap ? snapToGrid(rawX) : rawX;
-        const gridY = snap ? snapToGrid(rawY) : rawY;
+        // The position the pointer dragged the node to
+        const dragged = {
+          x:
+            dragState.current.originX +
+            (event.clientX - dragState.current.startX) / scale,
+          y:
+            dragState.current.originY +
+            (event.clientY - dragState.current.startY) / scale,
+        };
 
-        // The node's registered frame, which carries its measured
-        // size including auto heights
-        const nodes = context ? context.store.getNodes() : {};
-        const registered = nodes[id];
-
-        // Snapping to the other nodes takes over from the grid
-        // where they align, so the two settings combine
-        const objectSnap =
-          snapObjects && registered
-            ? getObjectSnap(
-                {
-                  x: gridX,
-                  y: gridY,
-                  width: registered.width,
-                  height: registered.height,
-                },
-                getSnapTargets(context, id),
-                // The snapping distance is in screen pixels, so
-                // it is unscaled into canvas units
-                OBJECT_SNAP_DISTANCE / scale,
-              )
-            : null;
+        const snapped = getSnappedNodePosition(
+          dragged,
+          context?.store.getNode(id) ?? null,
+          {
+            grid: snap,
+            objects: snapObjects,
+            targets: snapObjects ? getSnapTargets(context, id) : [],
+            // The snapping distance is in screen pixels, so it is
+            // unscaled into canvas units
+            threshold: OBJECT_SNAP_DISTANCE / scale,
+          },
+        );
 
         // Show the guides for the alignments the node snapped to
         if (context) {
-          context.store.setAlignmentGuides(objectSnap ? objectSnap.guides : []);
+          context.store.setAlignmentGuides(snapped.guides);
         }
 
-        setPosition(
-          clampPosition(
-            objectSnap ? objectSnap.x : gridX,
-            objectSnap ? objectSnap.y : gridY,
-          ),
-        );
+        setPosition(clampPosition(snapped.x, snapped.y));
       }
 
       // Handle node resizing
       if (resizeState.current) {
-        const {
-          edge,
-          startX,
-          startY,
-          originWidth,
-          originHeight,
-          originX,
-          originY,
-        } = resizeState.current;
-        const rawDeltaX = (event.clientX - startX) / scale;
-        const rawDeltaY = (event.clientY - startY) / scale;
+        const { startX, startY } = resizeState.current;
 
-        // The edges the resize moves, which snapping aligns
-        const anchors = getResizeAnchors(resizeState.current);
+        // The distance the pointer dragged the moving edges
+        const dragged = {
+          x: (event.clientX - startX) / scale,
+          y: (event.clientY - startY) / scale,
+        };
 
-        // Shift the deltas so the moving edges land on grid lines
-        const gridDeltaX = snap
-          ? snapToGrid(anchors.x + rawDeltaX) - anchors.x
-          : rawDeltaX;
-        const gridDeltaY = snap
-          ? snapToGrid(anchors.y + rawDeltaY) - anchors.y
-          : rawDeltaY;
-
-        // The frames the moving edges align to
-        const others = getSnapTargets(context, id);
-
-        // The frame the resize projects to, whose extents the
-        // guides span
-        const projected = getResizeFrame(
-          resizeState.current,
-          gridDeltaX,
-          gridDeltaY,
-          event.shiftKey,
-        );
-
-        // The snapping distance is in screen pixels, so it is
-        // unscaled into canvas units
-        const threshold = OBJECT_SNAP_DISTANCE / scale;
-
-        // Snap each moving edge to the other nodes' edges and
-        // centers, which takes over from the grid where they align
-        const edgeSnapX =
-          snapObjects && resizeMovesAxis(edge, 'x')
-            ? getEdgeSnap(
-                anchors.x + gridDeltaX,
-                getGuideSpan(projected, 'x'),
-                others,
-                threshold,
-                'x',
-              )
-            : null;
-        const edgeSnapY =
-          snapObjects && resizeMovesAxis(edge, 'y')
-            ? getEdgeSnap(
-                anchors.y + gridDeltaY,
-                getGuideSpan(projected, 'y'),
-                others,
-                threshold,
-                'y',
-              )
-            : null;
-
-        const deltaX = edgeSnapX ? edgeSnapX.position - anchors.x : gridDeltaX;
-        const deltaY = edgeSnapY ? edgeSnapY.position - anchors.y : gridDeltaY;
+        const snapped = getSnappedResizeDeltas(resizeState.current, dragged, {
+          grid: snap,
+          objects: snapObjects,
+          targets: snapObjects ? getSnapTargets(context, id) : [],
+          // The snapping distance is in screen pixels, so it is
+          // unscaled into canvas units
+          threshold: OBJECT_SNAP_DISTANCE / scale,
+          // Shift key enables mirror resizing from center
+          mirror: event.shiftKey,
+        });
 
         // Show the guides for the alignments the edges snapped to
         if (context) {
-          const guides: CanvasAlignmentGuide[] = [];
-
-          if (edgeSnapX?.guide) {
-            guides.push(edgeSnapX.guide);
-          }
-
-          if (edgeSnapY?.guide) {
-            guides.push(edgeSnapY.guide);
-          }
-
-          context.store.setAlignmentGuides(guides);
+          context.store.setAlignmentGuides(snapped.guides);
         }
 
-        // Workspace-bounds clamps only apply to bounded nodes;
+        // Bounded nodes are clamped to their parent element;
         // canvas nodes resize freely in canvas coordinates
-        const workspaceWidth = !bounded
-          ? Infinity
-          : (nodeRef.current?.parentElement?.offsetWidth ?? Infinity);
-        const workspaceHeight = !bounded
-          ? Infinity
-          : (nodeRef.current?.parentElement?.offsetHeight ?? Infinity);
-        const minPosition = !bounded ? -Infinity : 0;
-
-        // Anchored edges: the opposite edge from the one being
-        // dragged stays fixed.
-        const rightEdge = originX + originWidth;
-        const bottomEdge = originY + originHeight;
-
-        // Shift key enables mirror resizing from center
-        const mirror = event.shiftKey;
-        const centerX = originX + originWidth / 2;
-        const centerY = originY + originHeight / 2;
-
-        // Mirror-resize width/height caps that keep the node's
-        // leading edge inside the workspace in bounded mode
-        const maxMirrorWidth = !bounded ? Infinity : centerX * 2;
-        const maxMirrorHeight = !bounded ? Infinity : centerY * 2;
-
-        switch (edge) {
-          case 'right': {
-            const newWidth = Math.min(
-              Math.max(minWidth, originWidth + deltaX * (mirror ? 2 : 1)),
-              mirror ? maxMirrorWidth : workspaceWidth - originX,
-            );
-
-            if (mirror) {
-              const newX = centerX - newWidth / 2;
-
-              setSize((current) => ({ ...current, width: newWidth }));
-              setPosition((current) => ({ ...current, x: newX }));
-            } else {
-              setSize((current) => ({ ...current, width: newWidth }));
+        const bounds = bounded
+          ? {
+              width: nodeRef.current?.parentElement?.offsetWidth ?? Infinity,
+              height: nodeRef.current?.parentElement?.offsetHeight ?? Infinity,
             }
+          : null;
 
-            break;
-          }
+        // The frame values the resize lands on, leaving out the
+        // ones the dragged edge does not change
+        const resized = getResizedNodeFrame(
+          resizeState.current,
+          snapped.x,
+          snapped.y,
+          {
+            minWidth,
+            minHeight,
+            mirror: event.shiftKey,
+            bounds,
+          },
+        );
 
-          case 'left': {
-            if (mirror) {
-              const newWidth = Math.min(
-                Math.max(minWidth, originWidth - deltaX * 2),
-                (workspaceWidth - centerX) * 2,
-              );
-              const newX = centerX - newWidth / 2;
+        // Apply the resized dimensions
+        if (resized.width !== undefined || resized.height !== undefined) {
+          setSize((current) => ({
+            width: resized.width ?? current.width,
+            height: resized.height ?? current.height,
+          }));
+        }
 
-              setSize((current) => ({ ...current, width: newWidth }));
-              setPosition((current) => ({ ...current, x: newX }));
-            } else {
-              const newX = Math.max(
-                minPosition,
-                Math.min(rightEdge - minWidth, originX + deltaX),
-              );
-
-              setSize((current) => ({
-                ...current,
-                width: rightEdge - newX,
-              }));
-              setPosition((current) => ({ ...current, x: newX }));
-            }
-
-            break;
-          }
-
-          case 'bottom': {
-            const newHeight = Math.min(
-              Math.max(minHeight, originHeight + deltaY * (mirror ? 2 : 1)),
-              mirror ? maxMirrorHeight : workspaceHeight - originY,
-            );
-
-            if (mirror) {
-              const newY = centerY - newHeight / 2;
-
-              setSize((current) => ({ ...current, height: newHeight }));
-              setPosition((current) => ({ ...current, y: newY }));
-            } else {
-              setSize((current) => ({ ...current, height: newHeight }));
-            }
-
-            break;
-          }
-
-          case 'top-left': {
-            if (mirror) {
-              const newWidth = Math.min(
-                Math.max(minWidth, originWidth - deltaX * 2),
-                (workspaceWidth - centerX) * 2,
-              );
-              const newHeight = Math.min(
-                Math.max(minHeight, originHeight - deltaY * 2),
-                (workspaceHeight - centerY) * 2,
-              );
-
-              setSize({ width: newWidth, height: newHeight });
-              setPosition({
-                x: centerX - newWidth / 2,
-                y: centerY - newHeight / 2,
-              });
-            } else {
-              const newX = Math.max(
-                minPosition,
-                Math.min(rightEdge - minWidth, originX + deltaX),
-              );
-              const newY = Math.max(
-                minPosition,
-                Math.min(bottomEdge - minHeight, originY + deltaY),
-              );
-
-              setSize({
-                width: rightEdge - newX,
-                height: bottomEdge - newY,
-              });
-              setPosition({ x: newX, y: newY });
-            }
-
-            break;
-          }
-
-          case 'top-right': {
-            if (mirror) {
-              const newWidth = Math.min(
-                Math.max(minWidth, originWidth + deltaX * 2),
-                maxMirrorWidth,
-              );
-              const newHeight = Math.min(
-                Math.max(minHeight, originHeight - deltaY * 2),
-                (workspaceHeight - centerY) * 2,
-              );
-
-              setSize({ width: newWidth, height: newHeight });
-              setPosition({
-                x: centerX - newWidth / 2,
-                y: centerY - newHeight / 2,
-              });
-            } else {
-              const newWidth = Math.min(
-                Math.max(minWidth, originWidth + deltaX),
-                workspaceWidth - originX,
-              );
-              const newY = Math.max(
-                minPosition,
-                Math.min(bottomEdge - minHeight, originY + deltaY),
-              );
-
-              setSize({ width: newWidth, height: bottomEdge - newY });
-              setPosition((current) => ({ ...current, y: newY }));
-            }
-
-            break;
-          }
-
-          case 'bottom-left': {
-            if (mirror) {
-              const newWidth = Math.min(
-                Math.max(minWidth, originWidth - deltaX * 2),
-                (workspaceWidth - centerX) * 2,
-              );
-              const newHeight = Math.min(
-                Math.max(minHeight, originHeight + deltaY * 2),
-                maxMirrorHeight,
-              );
-
-              setSize({ width: newWidth, height: newHeight });
-              setPosition({
-                x: centerX - newWidth / 2,
-                y: centerY - newHeight / 2,
-              });
-            } else {
-              const newX = Math.max(
-                minPosition,
-                Math.min(rightEdge - minWidth, originX + deltaX),
-              );
-              const newHeight = Math.min(
-                Math.max(minHeight, originHeight + deltaY),
-                workspaceHeight - originY,
-              );
-
-              setSize({ width: rightEdge - newX, height: newHeight });
-              setPosition((current) => ({ ...current, x: newX }));
-            }
-
-            break;
-          }
-
-          case 'bottom-right': {
-            if (mirror) {
-              const newWidth = Math.min(
-                Math.max(minWidth, originWidth + deltaX * 2),
-                maxMirrorWidth,
-              );
-              const newHeight = Math.min(
-                Math.max(minHeight, originHeight + deltaY * 2),
-                maxMirrorHeight,
-              );
-
-              setSize({ width: newWidth, height: newHeight });
-              setPosition({
-                x: centerX - newWidth / 2,
-                y: centerY - newHeight / 2,
-              });
-            } else {
-              const newWidth = Math.min(
-                Math.max(minWidth, originWidth + deltaX),
-                workspaceWidth - originX,
-              );
-              const newHeight = Math.min(
-                Math.max(minHeight, originHeight + deltaY),
-                workspaceHeight - originY,
-              );
-
-              setSize({ width: newWidth, height: newHeight });
-            }
-
-            break;
-          }
+        // Apply the shift of the edges the resize moves
+        if (resized.x !== undefined || resized.y !== undefined) {
+          setPosition((current) => ({
+            x: resized.x ?? current.x,
+            y: resized.y ?? current.y,
+          }));
         }
       }
     },
@@ -981,129 +626,24 @@ export function useCanvasNode(
 }
 
 /**
- * Returns the frames a node's interactions snap to: the other
- * nodes at least partially within the viewport. Falls back to all
- * other nodes while the viewport is unmeasured.
+ * Returns the frames the node's interactions snap to, read from
+ * the canvas instance. Standalone nodes have nothing to snap to,
+ * since snapping is a canvas instance feature.
  */
 function getSnapTargets(
   context: CanvasContextValue | null,
   id: string,
 ): CanvasNodeFrame[] {
-  // Snapping is a canvas instance feature, so standalone nodes
-  // have nothing to snap to
   if (!context) {
     return [];
   }
 
   const { store } = context;
 
-  // The visible area in canvas coordinates
-  const viewport = getViewportFrame(
-    store.getPan(),
-    store.getZoom(),
-    store.getViewportSize(),
+  return getVisibleSnapTargets(
+    store.getNodes(),
+    id,
+    // The visible area in canvas coordinates
+    getViewportFrame(store.getPan(), store.getZoom(), store.getViewportSize()),
   );
-
-  return Object.entries(store.getNodes())
-    .filter(([nodeId, frame]) => {
-      // The node cannot snap to itself
-      if (nodeId === id) {
-        return false;
-      }
-
-      // Off-screen nodes are not worth aligning to, since their
-      // guides would point off the canvas
-      return !viewport || framesIntersect(frame, viewport);
-    })
-    .map(([, frame]) => frame);
-}
-
-/**
- * Returns whether a resize from the given edge moves the node's
- * edges along an axis.
- */
-function resizeMovesAxis(
-  edge: CanvasNodeResizeEdge,
-  axis: CanvasAlignmentAxis,
-): boolean {
-  // Horizontal moves come from the side edges and the corners
-  if (axis === 'x') {
-    return edge.endsWith('left') || edge.endsWith('right');
-  }
-
-  return edge.startsWith('top') || edge.startsWith('bottom');
-}
-
-/**
- * Returns the frame a resize projects to for the given deltas,
- * used to span the alignment guides over the resized node.
- */
-function getResizeFrame(
-  state: ResizeState,
-  deltaX: number,
-  deltaY: number,
-  mirror: boolean,
-): CanvasNodeFrame {
-  const { originX, originY, originWidth, originHeight } = state;
-  const anchors = getResizeAnchors(state);
-
-  // The edges the resize leaves in place, which mirrored resizes
-  // move in the opposite direction
-  const oppositeX = state.edge.endsWith('left')
-    ? originX + originWidth
-    : originX;
-  const oppositeY = state.edge.startsWith('top')
-    ? originY + originHeight
-    : originY;
-
-  // The horizontal extent, unchanged when the resize does not
-  // move along the axis
-  const horizontal = resizeMovesAxis(state.edge, 'x')
-    ? getExtent(anchors.x + deltaX, mirror ? oppositeX - deltaX : oppositeX)
-    : { start: originX, end: originX + originWidth };
-
-  // The vertical extent
-  const vertical = resizeMovesAxis(state.edge, 'y')
-    ? getExtent(anchors.y + deltaY, mirror ? oppositeY - deltaY : oppositeY)
-    : { start: originY, end: originY + originHeight };
-
-  return {
-    x: horizontal.start,
-    y: vertical.start,
-    width: horizontal.end - horizontal.start,
-    height: vertical.end - vertical.start,
-  };
-}
-
-/**
- * Returns the extent between two edge coordinates, in order.
- */
-function getExtent(
-  edge: number,
-  opposite: number,
-): { start: number; end: number } {
-  return {
-    start: Math.min(edge, opposite),
-    end: Math.max(edge, opposite),
-  };
-}
-
-/**
- * Returns the canvas coordinates of the node edges a resize
- * moves, which snapping aligns to the grid.
- */
-function getResizeAnchors(state: ResizeState): CanvasPoint {
-  // Edges dragged from the left move the node's left edge, all
-  // others its right edge
-  const x = state.edge.endsWith('left')
-    ? state.originX
-    : state.originX + state.originWidth;
-
-  // Edges dragged from the top move the node's top edge, all
-  // others its bottom edge
-  const y = state.edge.startsWith('top')
-    ? state.originY
-    : state.originY + state.originHeight;
-
-  return { x, y };
 }

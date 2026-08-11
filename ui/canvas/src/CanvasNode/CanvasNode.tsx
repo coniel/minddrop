@@ -1,11 +1,11 @@
 import { useCallback } from 'react';
 import { isInteractiveTarget } from '@minddrop/utils';
-import { CanvasNodeFrame } from '../types';
+import { CanvasNodeFrame, CanvasNodeResizeEdge } from '../types';
 import {
   CanvasNodeConnection,
   useCanvasConnectionDrag,
 } from '../useCanvasConnectionDrag';
-import { CanvasNodeResizeEdge, useCanvasNode } from '../useCanvasNode';
+import { useCanvasNode } from '../useCanvasNode';
 import { useCanvasStore } from '../useCanvasStore';
 import './CanvasNode.css';
 
