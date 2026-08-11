@@ -1,5 +1,4 @@
-import { useVirtualizer } from '@tanstack/react-virtual';
-import { useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   DatabaseEntries,
   Databases,
@@ -11,10 +10,10 @@ import { Queries } from '@minddrop/queries';
 import {
   Icon,
   MenuItem,
-  ScrollArea,
   Stack,
   Text,
   TextInput,
+  VirtualizedList,
 } from '@minddrop/ui-primitives';
 import './QueryNodeOutputList.css';
 
@@ -45,9 +44,6 @@ export const QueryNodeOutputList: React.FC<QueryNodeOutputListProps> = ({
   queryId,
   nodeId,
 }) => {
-  // The scroll area hosting the virtualized rows
-  const scrollAreaRef = useRef<HTMLDivElement>(null);
-
   // The entry title search term
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -69,17 +65,6 @@ export const QueryNodeOutputList: React.FC<QueryNodeOutputListProps> = ({
       .filter((entry) => flowIds.has(entry.id))
       .map((entry) => entry.id);
   }, [entryIds, searchTerm]);
-
-  // Renders only the rows visible in the scroll viewport
-  const virtualizer = useVirtualizer({
-    count: filteredIds.length,
-    getScrollElement: () =>
-      scrollAreaRef.current?.querySelector<HTMLElement>(
-        '.scroll-area-viewport',
-      ) ?? null,
-    estimateSize: () => ITEM_HEIGHT,
-    overscan: OVERSCAN,
-  });
 
   return (
     <Stack gap={2} className="queries-node-output-list">
@@ -103,38 +88,31 @@ export const QueryNodeOutputList: React.FC<QueryNodeOutputListProps> = ({
       )}
 
       {/* The output entries */}
-      {filteredIds.length > 0 && (
-        <ScrollArea
-          ref={scrollAreaRef}
-          className="queries-node-output-list-scroll"
-        >
-          {/* Placeholder spanning the full list height, rows
-              position within it */}
-          <div
-            role="presentation"
-            className="queries-node-output-list-items"
-            style={{ height: virtualizer.getTotalSize() }}
-          >
-            {virtualizer.getVirtualItems().map((virtualItem) => (
-              <div
-                key={filteredIds[virtualItem.index]}
-                className="queries-node-output-list-item"
-                style={{
-                  height: virtualItem.size,
-                  transform: `translateY(${virtualItem.start}px)`,
-                }}
-              >
-                <QueryNodeOutputListItem
-                  entryId={filteredIds[virtualItem.index]}
-                />
-              </div>
-            ))}
-          </div>
-        </ScrollArea>
-      )}
+      <VirtualizedList
+        items={filteredIds}
+        itemHeight={ITEM_HEIGHT}
+        itemKey={getItemKey}
+        overscan={OVERSCAN}
+        renderItem={renderItem}
+        className="queries-node-output-list-scroll"
+      />
     </Stack>
   );
 };
+
+/**
+ * Renders a single output entry row.
+ */
+function renderItem(entryId: string) {
+  return <QueryNodeOutputListItem entryId={entryId} />;
+}
+
+/**
+ * Returns the entry ID as the row key.
+ */
+function getItemKey(entryId: string): string {
+  return entryId;
+}
 
 interface QueryNodeOutputListItemProps {
   /**

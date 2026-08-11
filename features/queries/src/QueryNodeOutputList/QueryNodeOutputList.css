@@ -14,17 +14,3 @@
 .queries-node-output-list-scroll .scroll-area-viewport {
   max-height: 240px;
 }
-
-/* Placeholder spanning the full virtual list height, the
-   virtualizer positions rows within it */
-.queries-node-output-list-items {
-  position: relative;
-}
-
-/* Virtualized rows, offset by the virtualizer's transform */
-.queries-node-output-list-item {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-}
