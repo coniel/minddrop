@@ -1,7 +1,39 @@
 .ui-canvas-selection-toolbar {
   position: absolute;
   z-index: 1;
+}
 
-  /* Center the toolbar's bottom edge on the anchor point */
+/* Bottom left corner on the anchor, for selections anchored at
+   the point they were made */
+.ui-canvas-selection-toolbar-placement-point {
+  transform: translateY(-100%);
+  transform-origin: bottom left;
+}
+
+/* Bottom edge centered over the anchor, for selections whose
+   bounds the toolbar sits above */
+.ui-canvas-selection-toolbar-placement-bounds {
   transform: translate(-50%, -100%);
+  transform-origin: bottom center;
+}
+
+/* Pops in from the anchored corner like a menu popup */
+.ui-canvas-selection-toolbar-animated {
+  transition:
+    opacity var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out);
+}
+
+.ui-canvas-selection-toolbar-animated.ui-canvas-selection-toolbar-placement-point {
+  @starting-style {
+    opacity: 0;
+    transform: translateY(-100%) scale(0.95);
+  }
+}
+
+.ui-canvas-selection-toolbar-animated.ui-canvas-selection-toolbar-placement-bounds {
+  @starting-style {
+    opacity: 0;
+    transform: translate(-50%, -100%) scale(0.95);
+  }
 }

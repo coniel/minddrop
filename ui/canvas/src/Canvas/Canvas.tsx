@@ -503,6 +503,13 @@ export const Canvas: React.FC<CanvasProps> = ({
         return;
       }
 
+      // Anchor the lasso's selection where the drag was released
+      const release = store.getLasso()?.point;
+
+      if (release && store.getSelection()) {
+        store.setSelectionPoint(release);
+      }
+
       store.clearLasso();
     };
 

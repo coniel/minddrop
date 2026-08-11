@@ -519,6 +519,54 @@ describe('createCanvasStore', () => {
     });
   });
 
+  describe('selectionPoint', () => {
+    it('has no point by default', () => {
+      const store = createCanvasStore();
+
+      expect(store.getSelectionPoint()).toBeNull();
+    });
+
+    it('records the point the selection was made at', () => {
+      const store = createCanvasStore();
+
+      store.selectConnections(['connection-1']);
+      store.setSelectionPoint({ x: 40, y: 20 });
+
+      expect(store.getSelectionPoint()).toEqual({ x: 40, y: 20 });
+    });
+
+    it('drops the point when the selection changes', () => {
+      const store = createCanvasStore();
+
+      store.selectConnections(['connection-1']);
+      store.setSelectionPoint({ x: 40, y: 20 });
+      store.selectConnections(['connection-2']);
+
+      // The point belonged to the replaced selection
+      expect(store.getSelectionPoint()).toBeNull();
+    });
+
+    it('drops the point when the selection is cleared', () => {
+      const store = createCanvasStore();
+
+      store.selectConnections(['connection-1']);
+      store.setSelectionPoint({ x: 40, y: 20 });
+      store.clearSelection();
+
+      expect(store.getSelectionPoint()).toBeNull();
+    });
+
+    it('drops the point when a connection is toggled in', () => {
+      const store = createCanvasStore();
+
+      store.selectConnections(['connection-1']);
+      store.setSelectionPoint({ x: 40, y: 20 });
+      store.toggleConnectionSelection('connection-2');
+
+      expect(store.getSelectionPoint()).toBeNull();
+    });
+  });
+
   describe('selectionDrag', () => {
     it('has no group drag by default', () => {
       const store = createCanvasStore();

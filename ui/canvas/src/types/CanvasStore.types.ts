@@ -133,6 +133,14 @@ export interface CanvasState {
   lasso: CanvasLassoState | null;
 
   /**
+   * The canvas point the current selection was made at, or null
+   * when it was not made by a pointer interaction. Anchors UI
+   * over selections which have no meaningful bounds to sit
+   * above, such as connections.
+   */
+  selectionPoint: CanvasPoint | null;
+
+  /**
    * The offset of the in-progress group drag in canvas
    * coordinates, or null when no group drag is in progress.
    * Selected nodes add it to their position, so the move is
@@ -326,6 +334,14 @@ export interface CanvasState {
    * Clears the in-progress marquee.
    */
   clearLasso: () => void;
+
+  /**
+   * Records the point the current selection was made at. Any
+   * later selection change clears it, so it is set immediately
+   * after selecting.
+   * @param point - The point in canvas coordinates.
+   */
+  setSelectionPoint: (point: CanvasPoint) => void;
 
   /**
    * Starts a group drag of the selected nodes at a zero offset.

@@ -1,5 +1,9 @@
-import { SELECTION_BOX_PADDING, SELECTION_TOOLBAR_GAP } from '../constants';
-import { CanvasNodeFrame, CanvasSelection } from '../types';
+import {
+  SELECTION_BOX_PADDING,
+  SELECTION_TOOLBAR_GAP,
+  SELECTION_TOOLBAR_POINT_OFFSET,
+} from '../constants';
+import { CanvasNodeFrame, CanvasPoint, CanvasSelection } from '../types';
 import { useCanvasStore } from '../useCanvasStore';
 import { useIsInteracting } from '../useInteractionLock';
 import { canvasToScreen, getSelectionBounds } from '../utils';
@@ -10,6 +14,12 @@ export interface CanvasSelectionToolbarProps {
    * Returns the toolbar's contents for the current selection.
    */
   renderToolbar: (selection: CanvasSelection) => React.ReactNode;
+
+  /**
+   * Whether the toolbar scales and fades in when it appears.
+   * Defaults to true.
+   */
+  animated?: boolean;
 }
 
 /**
@@ -20,8 +30,10 @@ export interface CanvasSelectionToolbarProps {
  */
 export const CanvasSelectionToolbar: React.FC<CanvasSelectionToolbarProps> = ({
   renderToolbar,
+  animated = true,
 }) => {
   const selection = useCanvasStore((state) => state.selection);
+  const selectionPoint = useCanvasStore((state) => state.selectionPoint);
   const nodes = useCanvasStore((state) => state.nodes);
   const zoom = useCanvasStore((state) => state.zoom);
   const pan = useCanvasStore((state) => state.pan);
@@ -42,36 +54,93 @@ export const CanvasSelectionToolbar: React.FC<CanvasSelectionToolbarProps> = ({
     return null;
   }
 
-  const bounds = getBounds(selection, nodes, connectionGeometry);
+  const anchorPoint = getAnchorPoint(selection, selectionPoint, () =>
+    getBounds(selection, nodes, connectionGeometry),
+  );
 
-  // None of the selected items resolve to geometry
-  if (!bounds) {
+  // None of the selected items resolve to a position
+  if (!anchorPoint) {
     return null;
   }
 
-  // The toolbar clears the selection box's padding, so the gap
-  // reads the same for a group as for a single node
-  const padding =
-    selection.type === 'nodes' && selection.ids.length > 1
-      ? SELECTION_BOX_PADDING
-      : 0;
+  const anchor = canvasToScreen(anchorPoint.point, pan, zoom);
 
-  // The top center of the selection, in viewport coordinates
-  const anchor = canvasToScreen(
-    { x: bounds.x + bounds.width / 2, y: bounds.y - padding },
-    pan,
-    zoom,
-  );
+  // Point-anchored toolbars tuck in toward the cursor, which
+  // otherwise leaves them looking detached from it
+  const offset =
+    anchorPoint.placement === 'point' ? SELECTION_TOOLBAR_POINT_OFFSET : 0;
 
   return (
     <div
-      className="ui-canvas-selection-toolbar"
-      style={{ left: anchor.x, top: anchor.y - SELECTION_TOOLBAR_GAP }}
+      className={`ui-canvas-selection-toolbar ui-canvas-selection-toolbar-placement-${
+        anchorPoint.placement
+      }${animated ? ' ui-canvas-selection-toolbar-animated' : ''}`}
+      // The toolbar re-mounts when the selection changes, so the
+      // entry transition plays for each new selection rather than
+      // sliding between them
+      key={`${selection.type}:${selection.ids.join(',')}`}
+      style={{
+        left: anchor.x - offset,
+        top: anchor.y - SELECTION_TOOLBAR_GAP + offset,
+      }}
     >
       {renderToolbar(selection)}
     </div>
   );
 };
+
+/**
+ * Where the toolbar sits relative to its anchor: its bottom left
+ * corner on a point, or its bottom edge centered over bounds.
+ */
+type CanvasSelectionToolbarPlacement = 'point' | 'bounds';
+
+interface CanvasSelectionToolbarAnchor {
+  /**
+   * The anchor in canvas coordinates.
+   */
+  point: CanvasPoint;
+
+  /**
+   * How the toolbar sits relative to the anchor.
+   */
+  placement: CanvasSelectionToolbarPlacement;
+}
+
+/**
+ * Returns the anchor the toolbar is positioned against.
+ * Connections are anchored where they were selected, since a
+ * curve's bounds can put the toolbar far from the part of it
+ * that was clicked. Nodes are anchored above their bounds,
+ * matching the selection box drawn around them.
+ */
+function getAnchorPoint(
+  selection: CanvasSelection,
+  selectionPoint: CanvasPoint | null,
+  getSelectionFrame: () => CanvasNodeFrame | null,
+): CanvasSelectionToolbarAnchor | null {
+  if (selection.type === 'connections' && selectionPoint) {
+    return { point: selectionPoint, placement: 'point' };
+  }
+
+  const bounds = getSelectionFrame();
+
+  if (!bounds) {
+    return null;
+  }
+
+  // Clear the selection box's padding, so the gap reads the same
+  // for a group as for a single node
+  const padding =
+    selection.type === 'nodes' && selection.ids.length > 1
+      ? SELECTION_BOX_PADDING
+      : 0;
+
+  return {
+    point: { x: bounds.x + bounds.width / 2, y: bounds.y - padding },
+    placement: 'bounds',
+  };
+}
 
 /**
  * Returns the frame the toolbar floats above: the selected

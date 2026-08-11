@@ -168,6 +168,20 @@ describe('CanvasConnectionsLayer', () => {
     });
   });
 
+  it('records where the connection was clicked', () => {
+    const store = createCanvasStore();
+
+    const { container } = renderLayer(store);
+
+    const hitArea = container.querySelector('.ui-canvas-connection-hit-area');
+
+    fireEvent.mouseDown(hitArea!, { button: 0, clientX: 300, clientY: 50 });
+    fireEvent.click(hitArea!, { clientX: 300, clientY: 50 });
+
+    // Anchors the toolbar at the pressed part of the curve
+    expect(store.getSelectionPoint()).toEqual({ x: 300, y: 50 });
+  });
+
   it('toggles a connection into the selection with a modifier', () => {
     const store = createCanvasStore();
 

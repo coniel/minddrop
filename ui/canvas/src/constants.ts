@@ -79,6 +79,13 @@ export const SELECTION_BOX_PADDING = 8;
 export const SELECTION_TOOLBAR_GAP = 12;
 
 /**
+ * Distance in screen pixels a point-anchored selection toolbar
+ * is nudged down and left of the gap, tucking it against the
+ * cursor rather than leaving it floating away from the pointer.
+ */
+export const SELECTION_TOOLBAR_POINT_OFFSET = 12;
+
+/**
  * Number of points a connection curve is sampled at when hit
  * testing it against a frame.
  */

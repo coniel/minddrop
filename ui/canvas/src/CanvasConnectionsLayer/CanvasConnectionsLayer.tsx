@@ -13,6 +13,7 @@ import {
   CanvasNodeFrame,
   CanvasNodeSide,
 } from '../types';
+import { useCanvas } from '../useCanvas';
 import {
   CanvasConnectionReconnection,
   useCanvasConnectionReconnect,
@@ -63,6 +64,10 @@ export const CanvasConnectionsLayer: React.FC<CanvasConnectionsLayerProps> = ({
   onConnectionReconnect,
 }) => {
   const { store } = useCanvasContext();
+
+  // Canvas actions for converting press positions into canvas
+  // coordinates
+  const canvas = useCanvas();
 
   // The connections the registered hit test runs against, kept in
   // a ref so it never has to be re-registered
@@ -258,11 +263,15 @@ export const CanvasConnectionsLayer: React.FC<CanvasConnectionsLayerProps> = ({
       // Shift and the platform's multi-select modifier both toggle
       if (event.shiftKey || event.metaKey || event.ctrlKey) {
         store.toggleConnectionSelection(connection.id);
-
-        return;
+      } else {
+        store.selectConnections([connection.id]);
       }
 
-      store.selectConnections([connection.id]);
+      // Anchor the selection at the press, so UI over it appears
+      // where the curve was clicked rather than over its bounds
+      store.setSelectionPoint(
+        canvas.clientToCanvas({ x: event.clientX, y: event.clientY }),
+      );
     }
 
     return (

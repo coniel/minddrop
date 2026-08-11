@@ -114,6 +114,32 @@ describe('Canvas', () => {
       });
     });
 
+    it('records where the lasso was released', () => {
+      const store = createCanvasStore();
+
+      const { viewport } = renderCanvas(store);
+
+      pressBackground(viewport, 150, 40);
+      moveMouse(250, 60);
+      releaseMouse();
+
+      // Anchors the toolbar where the drag ended
+      expect(store.getSelectionPoint()).toEqual({ x: 250, y: 60 });
+    });
+
+    it('records no point for a lasso that selects nothing', () => {
+      const store = createCanvasStore();
+
+      const { viewport } = renderCanvas(store);
+
+      // Empty canvas below the nodes
+      pressBackground(viewport, 0, 400);
+      moveMouse(100, 500);
+      releaseMouse();
+
+      expect(store.getSelectionPoint()).toBeNull();
+    });
+
     it('selects only the nodes when the marquee touches both', () => {
       const store = createCanvasStore();
 

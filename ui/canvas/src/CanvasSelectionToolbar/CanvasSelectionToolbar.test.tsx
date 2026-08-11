@@ -100,6 +100,77 @@ describe('CanvasSelectionToolbar', () => {
     expect(toolbar()?.style.top).toBe('28px');
   });
 
+  it('anchors a connection selection where it was made', () => {
+    const store = createCanvasStore();
+
+    const { toolbar } = renderToolbar(store);
+
+    act(() => {
+      store.setConnectionGeometry({
+        hitTest: () => [],
+        getBounds: () => ({ x: 100, y: 40, width: 200, height: 20 }),
+      });
+      store.selectConnections(['connection-1']);
+      store.setSelectionPoint({ x: 280, y: 55 });
+    });
+
+    // The press point, not the centre of the curve's bounds,
+    // tucked down and left so it sits against the cursor
+    expect(toolbar()?.style.left).toBe('268px');
+    expect(toolbar()?.style.top).toBe('55px');
+
+    // Its bottom left corner sits on the point
+    expect(
+      toolbar()?.classList.contains(
+        'ui-canvas-selection-toolbar-placement-point',
+      ),
+    ).toBe(true);
+  });
+
+  it('anchors a node selection above its bounds, ignoring the point', () => {
+    const store = createCanvasStore();
+
+    const { toolbar } = renderToolbar(store);
+
+    act(() => {
+      store.selectNodes(['node-1']);
+      store.setSelectionPoint({ x: 280, y: 55 });
+    });
+
+    // Nodes keep the toolbar centered over the selection box
+    // drawn around them
+    expect(toolbar()?.style.left).toBe('50px');
+    expect(toolbar()?.style.top).toBe('-12px');
+    expect(
+      toolbar()?.classList.contains(
+        'ui-canvas-selection-toolbar-placement-bounds',
+      ),
+    ).toBe(true);
+  });
+
+  it('drops a stale point when the selection changes', () => {
+    const store = createCanvasStore();
+
+    const { toolbar } = renderToolbar(store);
+
+    act(() => {
+      store.setConnectionGeometry({
+        hitTest: () => [],
+        getBounds: () => ({ x: 100, y: 40, width: 200, height: 20 }),
+      });
+      store.selectConnections(['connection-1']);
+      store.setSelectionPoint({ x: 280, y: 55 });
+    });
+
+    act(() => {
+      store.selectConnections(['connection-2']);
+    });
+
+    // Back to the bounds anchor, rather than the previous
+    // selection's press point
+    expect(toolbar()?.style.left).toBe('200px');
+  });
+
   it('renders nothing for a connection selection with no geometry', () => {
     const store = createCanvasStore();
 
@@ -138,6 +209,20 @@ describe('CanvasSelectionToolbar', () => {
     // The node's top center at 50,0 scaled and panned
     expect(toolbar()?.style.left).toBe('130px');
     expect(toolbar()?.style.top).toBe('28px');
+  });
+
+  it('animates in by default', () => {
+    const store = createCanvasStore();
+
+    const { toolbar } = renderToolbar(store);
+
+    act(() => {
+      store.selectNodes(['node-1']);
+    });
+
+    expect(
+      toolbar()?.classList.contains('ui-canvas-selection-toolbar-animated'),
+    ).toBe(true);
   });
 
   it('hides while a drag is in progress', () => {

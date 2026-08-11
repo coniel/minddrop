@@ -130,6 +130,21 @@ export interface CanvasStore {
   getLasso(): CanvasLassoState | null;
 
   /**
+   * Returns the point the current selection was made at, or null
+   * when it was not made by a pointer interaction.
+   */
+  getSelectionPoint(): CanvasPoint | null;
+
+  /**
+   * Records the point the current selection was made at. Any
+   * later selection change clears it, so it is set immediately
+   * after selecting.
+   *
+   * @param point - The point in canvas coordinates.
+   */
+  setSelectionPoint(point: CanvasPoint): void;
+
+  /**
    * Returns the offset of the in-progress group drag, or null
    * when no group drag is in progress.
    */
@@ -453,6 +468,8 @@ export function createCanvasStore(config: CanvasStoreConfig = {}): CanvasStore {
     isConnectionSelected: (connectionId) =>
       getSelectedIds(store.getState(), 'connections').includes(connectionId),
     getLasso: () => store.getState().lasso,
+    getSelectionPoint: () => store.getState().selectionPoint,
+    setSelectionPoint: (point) => store.getState().setSelectionPoint(point),
     getSelectionDrag: () => store.getState().selectionDrag,
     hitTestConnections: (frame) => {
       const { connectionGeometry } = store.getState();
@@ -542,6 +559,7 @@ function createInternalStore(config: CanvasStoreConfig) {
     snapToObjects: initialSnapToObjects,
     selectable,
     selection: null,
+    selectionPoint: null,
     lasso: null,
     selectionDrag: null,
     connectionGeometry: null,
@@ -682,7 +700,11 @@ function createInternalStore(config: CanvasStoreConfig) {
       set((state) => getToggleUpdate(state, 'connections', id)),
 
     clearSelection: () =>
-      set((state) => (state.selection ? { selection: null } : {})),
+      set((state) =>
+        state.selection ? { selection: null, selectionPoint: null } : {},
+      ),
+
+    setSelectionPoint: (point) => set({ selectionPoint: point }),
 
     startLasso: (origin, additive) =>
       set((state) => {
@@ -826,7 +848,7 @@ function getSelectionUpdate(
 
   // Selecting nothing clears the selection
   if (!selectedIds.length) {
-    return state.selection ? { selection: null } : {};
+    return state.selection ? { selection: null, selectionPoint: null } : {};
   }
 
   // Skip updates that do not change the selection, since the
@@ -838,7 +860,9 @@ function getSelectionUpdate(
     return {};
   }
 
-  return { selection: { type, ids: selectedIds } };
+  // The point belonged to the selection being replaced. Callers
+  // that know where this one was made set it straight after.
+  return { selection: { type, ids: selectedIds }, selectionPoint: null };
 }
 
 /**
@@ -864,10 +888,10 @@ function getToggleUpdate(
 
   // Deselecting the last item clears the selection
   if (!selectedIds.length) {
-    return { selection: null };
+    return { selection: null, selectionPoint: null };
   }
 
-  return { selection: { type, ids: selectedIds } };
+  return { selection: { type, ids: selectedIds }, selectionPoint: null };
 }
 
 /**
