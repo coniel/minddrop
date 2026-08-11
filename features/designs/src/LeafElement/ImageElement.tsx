@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { ImageElement } from '@minddrop/designs';
 import { useImageSrc } from '@minddrop/file-system/src/useImageSrc';
 import { ImagePropertySchema } from '@minddrop/properties';
+import { useMeasuredImageWidth } from '@minddrop/utils';
 
 export interface DesignImageElementProps {
   /**
@@ -33,14 +34,23 @@ export const ImageElementRenderer = React.memo(
 
 const Image = React.memo(
   ({ path }: { path: string }) => {
-    const src = useImageSrc(path);
+    const imageRef = useRef<HTMLImageElement>(null);
+    const { width, isMeasured } = useMeasuredImageWidth(imageRef);
+    const src = useImageSrc(path, width);
 
     if (!src) {
       return null;
     }
 
     return (
-      <img loading="lazy" style={{ width: '100%', height: 'auto' }} src={src} />
+      <img
+        ref={imageRef}
+        loading="lazy"
+        style={{ width: '100%', height: 'auto' }}
+        // Held back until measured so that the full resolution image
+        // is not fetched before the requested width is known
+        src={isMeasured ? src : undefined}
+      />
     );
   },
   (prev, next) => prev.path === next.path,

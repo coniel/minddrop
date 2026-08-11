@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
 import {
   RootElement,
   createBackdropImageWrapperStyle,
@@ -8,6 +8,7 @@ import {
   resolveContainerBackdrop,
 } from '@minddrop/designs';
 import { Fs } from '@minddrop/file-system';
+import { useMeasuredImageWidth } from '@minddrop/utils';
 import { useElementProperty } from '../DesignPropertiesProvider';
 import { useElementPlaceholderImage } from '../useElementPlaceholder';
 import { DesignElement } from './DesignElement';
@@ -34,12 +35,14 @@ export const DesignRootElement: React.FC<DesignRootElementProps> = ({
   element,
   className,
 }) => {
+  const rootRef = useRef<HTMLDivElement>(null);
   const { style } = element;
   const property = useElementProperty(element.id);
   const placeholderImage = useElementPlaceholderImage(
     element,
     style.backgroundImage,
   );
+  const { width, isMeasured } = useMeasuredImageWidth(rootRef);
 
   // Use the mapped property value (file path) as background image
   // if available, otherwise resolve the placeholder from the design media dir
@@ -55,7 +58,12 @@ export const DesignRootElement: React.FC<DesignRootElementProps> = ({
     return null;
   }, [property?.value, placeholderImage]);
 
-  const imageSrc = Fs.useImageSrc(imagePath);
+  const imageSrc = Fs.useImageSrc(imagePath, width);
+
+  // Held back until measured so that the full resolution image is not
+  // fetched before the requested width is known. Layout branches below
+  // key off imageSrc instead, so that they do not change once measured.
+  const paintedImageSrc = isMeasured ? imageSrc : null;
 
   const { hasBackdropWithImage, gradientOverlayStyle } =
     resolveContainerBackdrop(style, imageSrc);
@@ -67,7 +75,10 @@ export const DesignRootElement: React.FC<DesignRootElementProps> = ({
   const containerCssStyle = {
     ...baseContainerStyle,
     ...(!hasBackdropWithImage &&
-      getBackgroundImageStyle(imageSrc, baseContainerStyle.backgroundColor)),
+      getBackgroundImageStyle(
+        paintedImageSrc,
+        baseContainerStyle.backgroundColor,
+      )),
   };
 
   const children = element.children.map((child) => (
@@ -82,6 +93,7 @@ export const DesignRootElement: React.FC<DesignRootElementProps> = ({
   if (hasBackdropWithImage) {
     return (
       <div
+        ref={rootRef}
         className={className}
         data-element-id={element.id}
         style={{
@@ -91,6 +103,7 @@ export const DesignRootElement: React.FC<DesignRootElementProps> = ({
             containerCssStyle,
             gradientOverlayStyle,
           ),
+          ...(!isMeasured && { backgroundImage: undefined }),
         }}
       >
         {gradientOverlayStyle && <div style={gradientOverlayStyle} />}
@@ -104,6 +117,7 @@ export const DesignRootElement: React.FC<DesignRootElementProps> = ({
   if (gradientOverlayStyle) {
     return (
       <div
+        ref={rootRef}
         className={className}
         data-element-id={element.id}
         style={{
@@ -120,6 +134,7 @@ export const DesignRootElement: React.FC<DesignRootElementProps> = ({
 
   return (
     <div
+      ref={rootRef}
       className={className}
       data-element-id={element.id}
       style={{ ...containerCssStyle, ...fillStyle }}

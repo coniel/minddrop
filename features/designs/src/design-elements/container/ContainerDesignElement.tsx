@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
 import {
   ContainerElement,
   PagePanelElement,
@@ -9,6 +9,7 @@ import {
   resolveContainerBackdrop,
 } from '@minddrop/designs';
 import { Fs } from '@minddrop/file-system';
+import { useMeasuredImageWidth } from '@minddrop/utils';
 import { DesignElement } from '../../DesignElements/DesignElement';
 import { useElementProperty } from '../../DesignPropertiesProvider';
 import { useElementPlaceholderImage } from '../../useElementPlaceholder';
@@ -31,12 +32,14 @@ export interface ContainerDesignElementProps {
 export const ContainerDesignElement: React.FC<ContainerDesignElementProps> = ({
   element,
 }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
   const { style } = element;
   const property = useElementProperty(element.id);
   const placeholderImage = useElementPlaceholderImage(
     element,
     style.backgroundImage,
   );
+  const { width, isMeasured } = useMeasuredImageWidth(containerRef);
 
   // Use the mapped property value (file path) as background image
   // if available, otherwise resolve the placeholder from the design media dir
@@ -52,7 +55,12 @@ export const ContainerDesignElement: React.FC<ContainerDesignElementProps> = ({
     return null;
   }, [property?.value, placeholderImage]);
 
-  const imageSrc = Fs.useImageSrc(imagePath);
+  const imageSrc = Fs.useImageSrc(imagePath, width);
+
+  // Held back until measured so that the full resolution image is not
+  // fetched before the requested width is known. Layout branches below
+  // key off imageSrc instead, so that they do not change once measured.
+  const paintedImageSrc = isMeasured ? imageSrc : null;
 
   const { hasBackdropWithImage, gradientOverlayStyle } =
     resolveContainerBackdrop(style, imageSrc);
@@ -64,7 +72,10 @@ export const ContainerDesignElement: React.FC<ContainerDesignElementProps> = ({
   const containerCssStyle = {
     ...baseContainerStyle,
     ...(!hasBackdropWithImage &&
-      getBackgroundImageStyle(imageSrc, baseContainerStyle.backgroundColor)),
+      getBackgroundImageStyle(
+        paintedImageSrc,
+        baseContainerStyle.backgroundColor,
+      )),
     // Panelled page root regions: panels stay fixed-width, content grows
     ...getRegionFlexStyle(element),
   };
@@ -78,11 +89,15 @@ export const ContainerDesignElement: React.FC<ContainerDesignElementProps> = ({
   if (hasBackdropWithImage) {
     return (
       <div
-        style={createBackdropImageWrapperStyle(
-          imageSrc!,
-          containerCssStyle,
-          gradientOverlayStyle,
-        )}
+        ref={containerRef}
+        style={{
+          ...createBackdropImageWrapperStyle(
+            imageSrc!,
+            containerCssStyle,
+            gradientOverlayStyle,
+          ),
+          ...(!isMeasured && { backgroundImage: undefined }),
+        }}
       >
         {gradientOverlayStyle && <div style={gradientOverlayStyle} />}
         <div style={containerCssStyle}>{children}</div>
@@ -95,6 +110,7 @@ export const ContainerDesignElement: React.FC<ContainerDesignElementProps> = ({
   if (gradientOverlayStyle) {
     return (
       <div
+        ref={containerRef}
         style={{
           position: 'relative',
           isolation: 'isolate',
@@ -107,5 +123,9 @@ export const ContainerDesignElement: React.FC<ContainerDesignElementProps> = ({
     );
   }
 
-  return <div style={containerCssStyle}>{children}</div>;
+  return (
+    <div ref={containerRef} style={containerCssStyle}>
+      {children}
+    </div>
+  );
 };

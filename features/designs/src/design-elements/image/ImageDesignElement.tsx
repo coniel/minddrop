@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
 import {
   ImageElement,
   createImageCssStyle,
@@ -6,6 +6,7 @@ import {
 } from '@minddrop/designs';
 import { Fs } from '@minddrop/file-system';
 import { Icon } from '@minddrop/ui-primitives';
+import { useMeasuredImageWidth } from '@minddrop/utils';
 import { useElementProperty } from '../../DesignPropertiesProvider';
 import { useElementPlaceholderImage } from '../../useElementPlaceholder';
 
@@ -31,8 +32,10 @@ export const ImageDesignElement: React.FC<ImageDesignElementProps> = ({
   element,
   rootProps,
 }) => {
+  const imageRef = useRef<HTMLImageElement>(null);
   const property = useElementProperty(element.id);
   const placeholderImage = useElementPlaceholderImage(element, element.content);
+  const { width, isMeasured } = useMeasuredImageWidth(imageRef);
   const cssStyle = createImageCssStyle(element.style);
   const rootStyle = rootProps?.style as React.CSSProperties | undefined;
 
@@ -50,7 +53,7 @@ export const ImageDesignElement: React.FC<ImageDesignElementProps> = ({
     return null;
   }, [property?.value, placeholderImage]);
 
-  const imageSrc = Fs.useImageSrc(imagePath);
+  const imageSrc = Fs.useImageSrc(imagePath, width);
 
   // Render the image.
   // For "contain", strip width/height so the img sizes naturally
@@ -64,7 +67,10 @@ export const ImageDesignElement: React.FC<ImageDesignElementProps> = ({
     return (
       <img
         {...rootProps}
-        src={imageSrc}
+        ref={imageRef}
+        // Held back until measured so that the full resolution image
+        // is not fetched before the requested width is known
+        src={isMeasured ? imageSrc : undefined}
         alt=""
         style={{
           ...cssStyle,
