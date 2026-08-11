@@ -22,6 +22,14 @@ import {
 } from '../utils';
 import './Canvas.css';
 
+export interface CanvasSelectionDeleteOptions {
+  /**
+   * Whether shift was held, which consumers may treat as a
+   * stronger form of deletion than the plain press.
+   */
+  shiftKey: boolean;
+}
+
 export interface CanvasBackgroundOptions {
   /**
    * The background pattern rendered behind the canvas content.
@@ -112,6 +120,16 @@ export interface CanvasProps {
   selectionToolbar?: (selection: CanvasSelection) => React.ReactNode;
 
   /**
+   * Called when Delete or Backspace is pressed with a selection.
+   * Deleting is the consumer's job, since only it knows what the
+   * selected IDs stand for.
+   */
+  onSelectionDelete?: (
+    selection: CanvasSelection,
+    options: CanvasSelectionDeleteOptions,
+  ) => void;
+
+  /**
    * How keyboard shortcuts (space pan, zoom keys) are scoped:
    * 'focus' (default) handles keys only while focus is within the
    * viewport, 'window' listens globally for full-screen canvases,
@@ -137,6 +155,7 @@ export const Canvas: React.FC<CanvasProps> = ({
   lasso = true,
   onNodesFrameChange,
   selectionToolbar,
+  onSelectionDelete,
   shortcutScope = 'focus',
 }) => {
   const { store, viewportRef, transformLayerRef } = useCanvasContext();
@@ -527,6 +546,25 @@ export const Canvas: React.FC<CanvasProps> = ({
         return;
       }
 
+      // Delete removes the selection through the consumer, which
+      // owns whatever the selected IDs stand for
+      if (event.key === 'Delete' || event.key === 'Backspace') {
+        const selection = store.getSelection();
+
+        if (!selection || !onSelectionDelete) {
+          return;
+        }
+
+        // Stopped as well as prevented, so an app-level delete
+        // shortcut does not act on the same press
+        event.preventDefault();
+        event.stopPropagation();
+
+        onSelectionDelete(selection, { shiftKey: event.shiftKey });
+
+        return;
+      }
+
       // Cmd/Ctrl + A selects every node on the canvas
       if (event.key === 'a' && (event.metaKey || event.ctrlKey)) {
         // Leave the shortcut to the app when the canvas does not
@@ -577,7 +615,7 @@ export const Canvas: React.FC<CanvasProps> = ({
         store.fitToView();
       }
     },
-    [store],
+    [store, onSelectionDelete],
   );
 
   // Release space panning on keyup

@@ -4,7 +4,7 @@ import { act, cleanup, fireEvent, render } from '@minddrop/test-utils';
 import { CanvasConnectionsLayer } from '../CanvasConnectionsLayer';
 import { CanvasProvider } from '../CanvasProvider';
 import { CanvasStore, createCanvasStore } from '../createCanvasStore';
-import { CanvasConnection } from '../types';
+import { CanvasConnection, CanvasSelection } from '../types';
 import { Canvas, CanvasProps } from './Canvas';
 
 // Two nodes with a horizontal gap between them, joined by a
@@ -339,6 +339,103 @@ describe('Canvas', () => {
       expect(
         container.querySelector('.ui-canvas-selection-toolbar'),
       ).toBeNull();
+    });
+
+    it('reports Delete with the current selection', () => {
+      const store = createCanvasStore();
+      const deleted: CanvasSelection[] = [];
+
+      const { viewport } = renderCanvas(store, {
+        onSelectionDelete: (selection) => {
+          deleted.push(selection);
+        },
+      });
+
+      act(() => {
+        store.selectNodes(['node-1', 'node-2']);
+      });
+
+      fireEvent.keyDown(viewport, { key: 'Delete' });
+
+      expect(deleted).toEqual([{ type: 'nodes', ids: ['node-1', 'node-2'] }]);
+    });
+
+    it('reports Backspace the same way', () => {
+      const store = createCanvasStore();
+      const deleted: CanvasSelection[] = [];
+
+      const { viewport } = renderCanvas(store, {
+        onSelectionDelete: (selection) => {
+          deleted.push(selection);
+        },
+      });
+
+      act(() => {
+        store.selectConnections(['connection-1']);
+      });
+
+      fireEvent.keyDown(viewport, { key: 'Backspace' });
+
+      expect(deleted).toEqual([{ type: 'connections', ids: ['connection-1'] }]);
+    });
+
+    it('reports whether shift was held', () => {
+      const store = createCanvasStore();
+      const modifiers: boolean[] = [];
+
+      const { viewport } = renderCanvas(store, {
+        onSelectionDelete: (_selection, options) => {
+          modifiers.push(options.shiftKey);
+        },
+      });
+
+      act(() => {
+        store.selectNodes(['node-1']);
+      });
+
+      fireEvent.keyDown(viewport, { key: 'Delete' });
+      fireEvent.keyDown(viewport, { key: 'Delete', shiftKey: true });
+
+      // Consumers escalate to a stronger deletion on shift
+      expect(modifiers).toEqual([false, true]);
+    });
+
+    it('does not report Delete without a selection', () => {
+      const store = createCanvasStore();
+      const deleted: CanvasSelection[] = [];
+
+      const { viewport } = renderCanvas(store, {
+        onSelectionDelete: (selection) => {
+          deleted.push(selection);
+        },
+      });
+
+      fireEvent.keyDown(viewport, { key: 'Delete' });
+
+      expect(deleted).toEqual([]);
+    });
+
+    it('does not report Delete while typing', () => {
+      const store = createCanvasStore();
+      const deleted: CanvasSelection[] = [];
+
+      const { container } = renderCanvas(store, {
+        onSelectionDelete: (selection) => {
+          deleted.push(selection);
+        },
+      });
+
+      act(() => {
+        store.selectNodes(['node-1']);
+      });
+
+      // An input within the canvas owns its own Delete presses
+      const input = document.createElement('input');
+
+      container.querySelector('.ui-canvas-viewport')?.appendChild(input);
+      fireEvent.keyDown(input, { key: 'Delete' });
+
+      expect(deleted).toEqual([]);
     });
 
     it('renders the supplied selection toolbar above the selection', () => {
