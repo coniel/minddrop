@@ -232,6 +232,51 @@ describe('buildEntryFilterSql', () => {
     expect(lastModified?.sql).toBe('(e.last_modified < ?)');
   });
 
+  it('compares entry ID filters against the entries ID column', () => {
+    const isOneOf = buildEntryFilterSql(
+      group('and', [{ operator: 'id-is-one-of', entryIds: ['a', 'b'] }]),
+    );
+    const isNotOneOf = buildEntryFilterSql(
+      group('and', [{ operator: 'id-is-not-one-of', entryIds: ['a', 'b'] }]),
+    );
+
+    expect(isOneOf?.sql).toBe('(e.id IN (?, ?))');
+    expect(isOneOf?.params).toEqual(['a', 'b']);
+    expect(isNotOneOf?.sql).toBe('(e.id NOT IN (?, ?))');
+    expect(isNotOneOf?.params).toEqual(['a', 'b']);
+  });
+
+  it('matches nothing for an empty entry ID set, and everything for its negation', () => {
+    const isOneOf = buildEntryFilterSql(
+      group('and', [{ operator: 'id-is-one-of', entryIds: [] }]),
+    );
+    const isNotOneOf = buildEntryFilterSql(
+      group('and', [{ operator: 'id-is-not-one-of', entryIds: [] }]),
+    );
+
+    expect(isOneOf?.sql).toBe('(0)');
+    expect(isOneOf?.params).toEqual([]);
+    expect(isNotOneOf?.sql).toBe('(1)');
+    expect(isNotOneOf?.params).toEqual([]);
+  });
+
+  it('nests entry ID filters inside groups alongside property filters', () => {
+    const result = buildEntryFilterSql(
+      group('and', [
+        {
+          property: 'Title',
+          propertyType: 'title',
+          operator: 'text-equals',
+          value: 'a',
+        },
+        { operator: 'id-is-one-of', entryIds: ['x'] },
+      ]),
+    );
+
+    expect(result?.sql).toBe('(e.title = ? COLLATE NOCASE AND e.id IN (?))');
+    expect(result?.params).toEqual(['a', 'x']);
+  });
+
   it('joins group filters with the combinator and parenthesizes nested groups', () => {
     const result = buildEntryFilterSql(
       group('and', [

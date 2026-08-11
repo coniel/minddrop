@@ -3,8 +3,10 @@ import { MULTI_VALUE_PROPERTY_TYPES } from '../../constants';
 import {
   EntryFilter,
   EntryFilterGroup,
+  EntryIdFilter,
   EntryMultiValueFilter,
   EntryNumberFilter,
+  EntryPropertyFilter,
   EntryTextFilter,
 } from '../../types';
 import { escapeLikePattern } from '../escapeLikePattern';
@@ -90,6 +92,12 @@ function isFilterGroup(
  * the property type.
  */
 function buildFilterSql(filter: EntryFilter): EntryFilterSql {
+  // Entry ID filters compare the entries table's ID column
+  // rather than a property value
+  if (isEntryIdFilter(filter)) {
+    return buildEntryIdSql(filter);
+  }
+
   // Title/created/last-modified live as columns on the entries
   // table, compare them directly
   const pseudoColumn = getPseudoPropertyColumn(filter.propertyType);
@@ -125,6 +133,34 @@ function buildFilterSql(filter: EntryFilter): EntryFilterSql {
 }
 
 /**
+ * Checks whether a filter targets entry IDs rather than a
+ * property value.
+ */
+function isEntryIdFilter(filter: EntryFilter): filter is EntryIdFilter {
+  return 'entryIds' in filter;
+}
+
+/**
+ * Builds a membership test against an explicit set of entry
+ * IDs.
+ */
+function buildEntryIdSql(filter: EntryIdFilter): EntryFilterSql {
+  // An empty set matches no entries, and its negation matches
+  // all of them
+  if (filter.entryIds.length === 0) {
+    return { sql: filter.operator === 'id-is-one-of' ? '0' : '1', params: [] };
+  }
+
+  const placeholders = filter.entryIds.map(() => '?').join(', ');
+  const keyword = filter.operator === 'id-is-one-of' ? 'IN' : 'NOT IN';
+
+  return {
+    sql: `e.id ${keyword} (${placeholders})`,
+    params: [...filter.entryIds],
+  };
+}
+
+/**
  * Returns the entries table column for the title, created and
  * last-modified pseudo-properties, or null for regular
  * properties.
@@ -151,7 +187,7 @@ function getPseudoPropertyColumn(propertyType: string): string | null {
  */
 function buildPseudoPropertySql(
   column: string,
-  filter: EntryFilter,
+  filter: EntryPropertyFilter,
 ): EntryFilterSql {
   switch (filter.operator) {
     // Text comparisons on the title column
@@ -227,7 +263,7 @@ function likeComparison(
  * Builds an existence test checking whether any row exists for
  * the property, routed to the table matching the property type.
  */
-function buildExistenceSql(filter: EntryFilter): EntryFilterSql {
+function buildExistenceSql(filter: EntryPropertyFilter): EntryFilterSql {
   // Multi-value properties store their values in the
   // entry_property_values table
   const table = MULTI_VALUE_PROPERTY_TYPES.has(filter.propertyType)

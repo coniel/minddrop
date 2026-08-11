@@ -75,11 +75,30 @@ export interface EntryExistenceFilter extends EntryFilterBase {
   operator: 'is-empty' | 'is-not-empty';
 }
 
-export type EntryFilter =
+/**
+ * A membership test against an explicit set of entry IDs. Does
+ * not extend EntryFilterBase because it targets the entry
+ * itself rather than one of its properties.
+ */
+export interface EntryIdFilter {
+  operator: 'id-is-one-of' | 'id-is-not-one-of';
+
+  /**
+   * The entry IDs to test membership against.
+   */
+  entryIds: string[];
+}
+
+/**
+ * A comparison against one of an entry's property values.
+ */
+export type EntryPropertyFilter =
   | EntryTextFilter
   | EntryNumberFilter
   | EntryMultiValueFilter
   | EntryExistenceFilter;
+
+export type EntryFilter = EntryPropertyFilter | EntryIdFilter;
 
 /**
  * A database scope for SQL entry queries: the entries of a
