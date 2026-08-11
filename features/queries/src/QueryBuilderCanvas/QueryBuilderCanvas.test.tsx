@@ -88,9 +88,13 @@ describe('<QueryBuilderCanvas />', () => {
     );
 
     // Both connections leading to the invalid filter are
-    // flagged, the connection out of it is not
-    const flagged = container.querySelectorAll(
-      '.queries-connection-mismatched',
+    // flagged by the mismatch color, the connection out of it
+    // is not
+    const lines = Array.from(
+      container.querySelectorAll('.ui-canvas-connection-line'),
+    );
+    const flagged = lines.filter((line) =>
+      (line.getAttribute('style') || '').includes('--yellow-600'),
     );
 
     expect(flagged.length).toBe(2);

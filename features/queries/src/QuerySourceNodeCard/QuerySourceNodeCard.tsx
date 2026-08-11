@@ -5,6 +5,12 @@ import {
   QuerySourceNode,
   updateQueryNode,
 } from '@minddrop/queries';
+import {
+  CanvasConnectionDragTarget,
+  CanvasConnectionEnd,
+  CanvasNodeConnection,
+  CanvasPoint,
+} from '@minddrop/ui-canvas';
 import { ContentIcon, Group, Text } from '@minddrop/ui-primitives';
 import { QueryNodeShell } from '../QueryNodeShell';
 import { QuerySourcePicker } from '../QuerySourcePicker';
@@ -28,38 +34,26 @@ export interface QuerySourceNodeCardProps {
   counts?: QueryNodeCounts;
 
   /**
-   * Callback fired when a connection drag starts from the
-   * node's output port.
+   * Callback fired when a connection drag from the node's
+   * output port is dropped on a target node.
    */
-  onStartConnection(nodeId: string, event: React.MouseEvent): void;
+  onConnect?(connection: CanvasNodeConnection): void;
 
   /**
-   * Callback fired when a connection drag is released over the
-   * node.
+   * Callback fired when a connection drag from the node's
+   * output port is released with no target node.
    */
-  onCompleteConnection(nodeId: string): void;
+  onConnectRelease?(point: CanvasPoint, from: CanvasConnectionEnd): void;
 
   /**
-   * Callback fired when the node's remove action is pressed.
+   * Resolves connection drag drop targets against the graph's
+   * validity rules, re-anchoring accepted targets onto their
+   * input port.
    */
-  onRemove(nodeId: string): void;
-
-  /**
-   * Callback fired when the node's break connections action is
-   * pressed.
-   */
-  onBreakConnections(nodeId: string): void;
-
-  /**
-   * Callback fired when the node's connect to nearest action
-   * is pressed.
-   */
-  onConnectNearest(nodeId: string): void;
-
-  /**
-   * Whether the node is selected on the canvas.
-   */
-  selected?: boolean;
+  resolveConnectTarget?(
+    from: CanvasConnectionEnd,
+    target: CanvasConnectionDragTarget,
+  ): CanvasConnectionDragTarget | null;
 }
 
 /**
@@ -71,12 +65,9 @@ export const QuerySourceNodeCard: React.FC<QuerySourceNodeCardProps> = ({
   queryId,
   node,
   counts,
-  onStartConnection,
-  onCompleteConnection,
-  onRemove,
-  onBreakConnections,
-  onConnectNearest,
-  selected,
+  onConnect,
+  onConnectRelease,
+  resolveConnectTarget,
 }) => {
   const query = Queries.use(queryId);
   const database = Databases.use(node.database);
@@ -102,12 +93,9 @@ export const QuerySourceNodeCard: React.FC<QuerySourceNodeCardProps> = ({
       outputCount={counts?.output}
       hasInputPort={false}
       hasOutputPort
-      selected={selected}
-      onStartConnection={onStartConnection}
-      onCompleteConnection={onCompleteConnection}
-      onRemove={onRemove}
-      onBreakConnections={onBreakConnections}
-      onConnectNearest={onConnectNearest}
+      onConnect={onConnect}
+      onConnectRelease={onConnectRelease}
+      resolveConnectTarget={resolveConnectTarget}
     >
       {/* Database search shown until a database is picked */}
       {!node.database && <QuerySourcePicker onSelect={handleSelectDatabase} />}

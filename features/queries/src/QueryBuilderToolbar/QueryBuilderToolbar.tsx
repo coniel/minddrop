@@ -1,6 +1,11 @@
 import { TranslationKey } from '@minddrop/i18n';
 import { QueryNodeType } from '@minddrop/queries';
-import { Icon, IconProps, Toolbar, Tooltip } from '@minddrop/ui-primitives';
+import {
+  Icon,
+  IconProps,
+  Tooltip,
+  ViewFloatingToolbar,
+} from '@minddrop/ui-primitives';
 import { useQueryToolbarCardDraggable } from '../useQueryToolbarCardDraggable';
 import './QueryBuilderToolbar.css';
 
@@ -9,30 +14,28 @@ import './QueryBuilderToolbar.css';
  * draggable card for each node type. Dragging a card onto the
  * canvas creates the node at the drop position.
  *
- * Sticks to the bottom center of the canvas and is revealed
+ * Floats at the bottom center of the canvas and is revealed
  * while the builder is hovered.
  */
 export const QueryBuilderToolbar: React.FC = () => (
-  <div className="query-builder-toolbar">
-    <Toolbar className="query-builder-toolbar-content">
-      <ToolbarCard
-        type="source"
-        icon="database"
-        tooltip="queries.toolbar.source"
-      />
-      <ToolbarCard
-        type="filter"
-        icon="list-filter"
-        tooltip="queries.toolbar.filter"
-      />
-      <ToolbarCard
-        type="sort"
-        icon="arrow-up-down"
-        tooltip="queries.toolbar.sort"
-      />
-      <ToolbarCard type="limit" icon="hash" tooltip="queries.toolbar.limit" />
-    </Toolbar>
-  </div>
+  <ViewFloatingToolbar position="absolute">
+    <ToolbarCard
+      type="source"
+      icon="database"
+      tooltip="queries.toolbar.source"
+    />
+    <ToolbarCard
+      type="filter"
+      icon="list-filter"
+      tooltip="queries.toolbar.filter"
+    />
+    <ToolbarCard
+      type="sort"
+      icon="arrow-up-down"
+      tooltip="queries.toolbar.sort"
+    />
+    <ToolbarCard type="limit" icon="hash" tooltip="queries.toolbar.limit" />
+  </ViewFloatingToolbar>
 );
 
 interface ToolbarCardProps {

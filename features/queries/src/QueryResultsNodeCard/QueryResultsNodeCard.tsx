@@ -1,4 +1,10 @@
 import { Queries, QueryNodeCounts, QueryResultsNode } from '@minddrop/queries';
+import {
+  CanvasConnectionDragTarget,
+  CanvasConnectionEnd,
+  CanvasNodeConnection,
+  CanvasPoint,
+} from '@minddrop/ui-canvas';
 import { Text } from '@minddrop/ui-primitives';
 import { QueryNodeOutputList } from '../QueryNodeOutputList';
 import { QueryNodeShell } from '../QueryNodeShell';
@@ -21,40 +27,26 @@ export interface QueryResultsNodeCardProps {
   counts?: QueryNodeCounts;
 
   /**
-   * Callback fired when a connection drag starts from a node's
-   * output port. Unused, the results node has no output port.
+   * Callback fired when a connection drag from the node's
+   * output port is dropped on a target node.
    */
-  onStartConnection(nodeId: string, event: React.MouseEvent): void;
+  onConnect?(connection: CanvasNodeConnection): void;
 
   /**
-   * Callback fired when a connection drag is released over the
-   * node.
+   * Callback fired when a connection drag from the node's
+   * output port is released with no target node.
    */
-  onCompleteConnection(nodeId: string): void;
+  onConnectRelease?(point: CanvasPoint, from: CanvasConnectionEnd): void;
 
   /**
-   * Callback fired when a node's remove action is pressed.
-   * Unused, the results node is permanent.
+   * Resolves connection drag drop targets against the graph's
+   * validity rules, re-anchoring accepted targets onto their
+   * input port.
    */
-  onRemove(nodeId: string): void;
-
-  /**
-   * Callback fired when a node's break connections action is
-   * pressed. Unused, the results node shows no action bar.
-   */
-  onBreakConnections(nodeId: string): void;
-
-  /**
-   * Callback fired when a node's connect to nearest action is
-   * pressed. Unused, the results node shows no action bar.
-   */
-  onConnectNearest(nodeId: string): void;
-
-  /**
-   * Whether the node is selected on the canvas. Unused, the
-   * results node shows no action bar.
-   */
-  selected?: boolean;
+  resolveConnectTarget?(
+    from: CanvasConnectionEnd,
+    target: CanvasConnectionDragTarget,
+  ): CanvasConnectionDragTarget | null;
 }
 
 /**
@@ -66,8 +58,9 @@ export const QueryResultsNodeCard: React.FC<QueryResultsNodeCardProps> = ({
   queryId,
   node,
   counts,
-  onStartConnection,
-  onCompleteConnection,
+  onConnect,
+  onConnectRelease,
+  resolveConnectTarget,
 }) => {
   const query = Queries.use(queryId);
 
@@ -84,8 +77,9 @@ export const QueryResultsNodeCard: React.FC<QueryResultsNodeCardProps> = ({
       totalInputCount={counts?.inputTotal}
       hasInputPort
       hasOutputPort={false}
-      onStartConnection={onStartConnection}
-      onCompleteConnection={onCompleteConnection}
+      onConnect={onConnect}
+      onConnectRelease={onConnectRelease}
+      resolveConnectTarget={resolveConnectTarget}
     >
       {/* Hint shown before any node is connected */}
       {!hasInput && (

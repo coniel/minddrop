@@ -17,9 +17,10 @@ export const QUERY_NODE_WIDTHS: Record<QueryNodeType, number> = {
   results: 300,
 };
 
-// The vertical center of a node's ports, aligned with the
-// node header
-export const QUERY_NODE_PORT_Y = 19;
+// The vertical center of a node's ports and edge anchors,
+// aligned with the header's flow count labels (8px header
+// padding plus half the 16.8px xs text line)
+export const QUERY_NODE_PORT_Y = 16;
 
 // Icon shown for source databases without an icon
 export const SOURCE_FALLBACK_ICON = 'content-icon:shapes:inherit';

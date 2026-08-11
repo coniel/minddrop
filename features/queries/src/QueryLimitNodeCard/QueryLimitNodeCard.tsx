@@ -5,6 +5,12 @@ import {
   QueryNodeCounts,
   updateQueryNode,
 } from '@minddrop/queries';
+import {
+  CanvasConnectionDragTarget,
+  CanvasConnectionEnd,
+  CanvasNodeConnection,
+  CanvasPoint,
+} from '@minddrop/ui-canvas';
 import { NumberField } from '@minddrop/ui-primitives';
 import { QueryNodeShell } from '../QueryNodeShell';
 
@@ -25,38 +31,26 @@ export interface QueryLimitNodeCardProps {
   counts?: QueryNodeCounts;
 
   /**
-   * Callback fired when a connection drag starts from the
-   * node's output port.
+   * Callback fired when a connection drag from the node's
+   * output port is dropped on a target node.
    */
-  onStartConnection(nodeId: string, event: React.MouseEvent): void;
+  onConnect?(connection: CanvasNodeConnection): void;
 
   /**
-   * Callback fired when a connection drag is released over the
-   * node.
+   * Callback fired when a connection drag from the node's
+   * output port is released with no target node.
    */
-  onCompleteConnection(nodeId: string): void;
+  onConnectRelease?(point: CanvasPoint, from: CanvasConnectionEnd): void;
 
   /**
-   * Callback fired when the node's remove action is pressed.
+   * Resolves connection drag drop targets against the graph's
+   * validity rules, re-anchoring accepted targets onto their
+   * input port.
    */
-  onRemove(nodeId: string): void;
-
-  /**
-   * Callback fired when the node's break connections action is
-   * pressed.
-   */
-  onBreakConnections(nodeId: string): void;
-
-  /**
-   * Callback fired when the node's connect to nearest action
-   * is pressed.
-   */
-  onConnectNearest(nodeId: string): void;
-
-  /**
-   * Whether the node is selected on the canvas.
-   */
-  selected?: boolean;
+  resolveConnectTarget?(
+    from: CanvasConnectionEnd,
+    target: CanvasConnectionDragTarget,
+  ): CanvasConnectionDragTarget | null;
 }
 
 /**
@@ -67,12 +61,9 @@ export const QueryLimitNodeCard: React.FC<QueryLimitNodeCardProps> = ({
   query,
   node,
   counts,
-  onStartConnection,
-  onCompleteConnection,
-  onRemove,
-  onBreakConnections,
-  onConnectNearest,
-  selected,
+  onConnect,
+  onConnectRelease,
+  resolveConnectTarget,
 }) => {
   // Persist a count change, treating cleared inputs as uncapped
   function handleCountChange(count: number | null): void {
@@ -93,12 +84,9 @@ export const QueryLimitNodeCard: React.FC<QueryLimitNodeCardProps> = ({
       outputCount={counts?.output}
       hasInputPort
       hasOutputPort
-      selected={selected}
-      onStartConnection={onStartConnection}
-      onCompleteConnection={onCompleteConnection}
-      onRemove={onRemove}
-      onBreakConnections={onBreakConnections}
-      onConnectNearest={onConnectNearest}
+      onConnect={onConnect}
+      onConnectRelease={onConnectRelease}
+      resolveConnectTarget={resolveConnectTarget}
     >
       <NumberField
         defaultValue={node.count > 0 ? node.count : undefined}

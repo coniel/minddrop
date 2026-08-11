@@ -73,17 +73,7 @@ describe('<QuerySortNodeCard />', () => {
       propertyType: 'text',
     });
 
-    render(
-      <QuerySortNodeCard
-        query={query}
-        node={node}
-        onStartConnection={vi.fn()}
-        onCompleteConnection={vi.fn()}
-        onRemove={vi.fn()}
-        onBreakConnections={vi.fn()}
-        onConnectNearest={vi.fn()}
-      />,
-    );
+    render(<QuerySortNodeCard query={query} node={node} />);
 
     expect(
       screen.getByText('An input does not contain this property'),
@@ -100,17 +90,7 @@ describe('<QuerySortNodeCard />', () => {
       propertyType: 'formatted-text',
     });
 
-    render(
-      <QuerySortNodeCard
-        query={query}
-        node={node}
-        onStartConnection={vi.fn()}
-        onCompleteConnection={vi.fn()}
-        onRemove={vi.fn()}
-        onBreakConnections={vi.fn()}
-        onConnectNearest={vi.fn()}
-      />,
-    );
+    render(<QuerySortNodeCard query={query} node={node} />);
 
     expect(
       screen.queryByText('An input does not contain this property'),

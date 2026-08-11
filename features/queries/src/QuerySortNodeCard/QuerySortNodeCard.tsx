@@ -7,6 +7,12 @@ import {
   QuerySortNode,
   updateQueryNode,
 } from '@minddrop/queries';
+import {
+  CanvasConnectionDragTarget,
+  CanvasConnectionEnd,
+  CanvasNodeConnection,
+  CanvasPoint,
+} from '@minddrop/ui-canvas';
 import { Select, SelectOption, Stack } from '@minddrop/ui-primitives';
 import { QueryNodeMismatchWarning } from '../QueryNodeMismatchWarning';
 import { QueryNodeShell } from '../QueryNodeShell';
@@ -29,38 +35,26 @@ export interface QuerySortNodeCardProps {
   counts?: QueryNodeCounts;
 
   /**
-   * Callback fired when a connection drag starts from the
-   * node's output port.
+   * Callback fired when a connection drag from the node's
+   * output port is dropped on a target node.
    */
-  onStartConnection(nodeId: string, event: React.MouseEvent): void;
+  onConnect?(connection: CanvasNodeConnection): void;
 
   /**
-   * Callback fired when a connection drag is released over the
-   * node.
+   * Callback fired when a connection drag from the node's
+   * output port is released with no target node.
    */
-  onCompleteConnection(nodeId: string): void;
+  onConnectRelease?(point: CanvasPoint, from: CanvasConnectionEnd): void;
 
   /**
-   * Callback fired when the node's remove action is pressed.
+   * Resolves connection drag drop targets against the graph's
+   * validity rules, re-anchoring accepted targets onto their
+   * input port.
    */
-  onRemove(nodeId: string): void;
-
-  /**
-   * Callback fired when the node's break connections action is
-   * pressed.
-   */
-  onBreakConnections(nodeId: string): void;
-
-  /**
-   * Callback fired when the node's connect to nearest action
-   * is pressed.
-   */
-  onConnectNearest(nodeId: string): void;
-
-  /**
-   * Whether the node is selected on the canvas.
-   */
-  selected?: boolean;
+  resolveConnectTarget?(
+    from: CanvasConnectionEnd,
+    target: CanvasConnectionDragTarget,
+  ): CanvasConnectionDragTarget | null;
 }
 
 // The selectable sort directions
@@ -79,12 +73,9 @@ export const QuerySortNodeCard: React.FC<QuerySortNodeCardProps> = ({
   query,
   node,
   counts,
-  onStartConnection,
-  onCompleteConnection,
-  onRemove,
-  onBreakConnections,
-  onConnectNearest,
-  selected,
+  onConnect,
+  onConnectRelease,
+  resolveConnectTarget,
 }) => {
   // Sortable properties of the databases feeding the node
   const properties = useMemo(
@@ -134,12 +125,9 @@ export const QuerySortNodeCard: React.FC<QuerySortNodeCardProps> = ({
       outputCount={counts?.output}
       hasInputPort
       hasOutputPort
-      selected={selected}
-      onStartConnection={onStartConnection}
-      onCompleteConnection={onCompleteConnection}
-      onRemove={onRemove}
-      onBreakConnections={onBreakConnections}
-      onConnectNearest={onConnectNearest}
+      onConnect={onConnect}
+      onConnectRelease={onConnectRelease}
+      resolveConnectTarget={resolveConnectTarget}
       warning={<QueryNodeMismatchWarning query={query} nodeId={node.id} />}
     >
       <Stack gap={2}>

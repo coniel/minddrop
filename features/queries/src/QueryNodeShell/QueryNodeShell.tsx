@@ -1,6 +1,13 @@
 import { useState } from 'react';
 import { TranslationKey } from '@minddrop/i18n';
-import { Queries, QueryNode } from '@minddrop/queries';
+import { QueryNode } from '@minddrop/queries';
+import {
+  CanvasConnectionDragTarget,
+  CanvasConnectionEnd,
+  CanvasNodeConnection,
+  CanvasPoint,
+  useCanvasConnectionDrag,
+} from '@minddrop/ui-canvas';
 import {
   Group,
   IconButton,
@@ -9,6 +16,7 @@ import {
   Text,
 } from '@minddrop/ui-primitives';
 import { QueryNodeOutputList } from '../QueryNodeOutputList';
+import { QUERY_NODE_PORT_Y } from '../constants';
 import './QueryNodeShell.css';
 
 export interface QueryNodeShellProps {
@@ -60,41 +68,26 @@ export interface QueryNodeShellProps {
   hasOutputPort: boolean;
 
   /**
-   * Callback fired when a connection drag starts from the
-   * node's output port.
+   * Callback fired when a connection drag from the output port
+   * is dropped on a target node.
    */
-  onStartConnection(nodeId: string, event: React.MouseEvent): void;
+  onConnect?(connection: CanvasNodeConnection): void;
 
   /**
-   * Callback fired when a connection drag is released over the
-   * node, completing the connection into it.
+   * Callback fired when a connection drag from the output port
+   * is released with no target node.
    */
-  onCompleteConnection(nodeId: string): void;
+  onConnectRelease?(point: CanvasPoint, from: CanvasConnectionEnd): void;
 
   /**
-   * Whether the node is selected on the canvas, revealing the
-   * action bar above the card.
+   * Resolves connection drag drop targets against the graph's
+   * validity rules, re-anchoring accepted targets onto their
+   * input port.
    */
-  selected?: boolean;
-
-  /**
-   * Callback fired when the action bar's remove action is
-   * pressed. The action bar is hidden when omitted (the results
-   * node is permanent).
-   */
-  onRemove?(nodeId: string): void;
-
-  /**
-   * Callback fired when the action bar's break connections
-   * action is pressed. Shown while the node has connections.
-   */
-  onBreakConnections?(nodeId: string): void;
-
-  /**
-   * Callback fired when the action bar's connect to nearest
-   * action is pressed. Shown while the node has no connections.
-   */
-  onConnectNearest?(nodeId: string): void;
+  resolveConnectTarget?(
+    from: CanvasConnectionEnd,
+    target: CanvasConnectionDragTarget,
+  ): CanvasConnectionDragTarget | null;
 
   /**
    * Warning content rendered at the bottom of the node's body.
@@ -122,102 +115,33 @@ export const QueryNodeShell: React.FC<QueryNodeShellProps> = ({
   outputCount,
   hasInputPort,
   hasOutputPort,
-  selected,
-  onStartConnection,
-  onCompleteConnection,
-  onRemove,
-  onBreakConnections,
-  onConnectNearest,
+  onConnect,
+  onConnectRelease,
+  resolveConnectTarget,
   warning,
   children,
 }) => {
   // Whether the node's output entries list is shown
   const [showOutput, setShowOutput] = useState(false);
 
-  const query = Queries.use(queryId);
-
-  // Whether the node has any connections, switching the action
-  // bar between breaking and creating connections
-  const hasConnections =
-    query?.connections.some(
-      (connection) => connection.from === node.id || connection.to === node.id,
-    ) || false;
-
-  // Start a connection drag from the output port
-  function handleOutputPortMouseDown(event: React.MouseEvent): void {
-    // Keep the press from dragging the node or panning the canvas
-    event.preventDefault();
-    event.stopPropagation();
-
-    onStartConnection(node.id, event);
-  }
-
-  // Complete an in-progress connection released over the node
-  function handleMouseUp(): void {
-    onCompleteConnection(node.id);
-  }
+  // Drag-to-connect behaviour for the output port. Releases on
+  // the empty canvas open the node type picker, so the preview
+  // edge is held until the picker resolves.
+  const { getConnectionHandleProps } = useCanvasConnectionDrag({
+    nodeId: node.id,
+    onConnect,
+    onConnectRelease,
+    holdPreviewOnRelease: true,
+    resolveTarget: resolveConnectTarget,
+  });
 
   // Toggle the output entries list
   function handleToggleOutput(): void {
     setShowOutput((current) => !current);
   }
 
-  // Remove the node from the graph
-  function handleRemove(): void {
-    onRemove?.(node.id);
-  }
-
-  // Break all of the node's connections
-  function handleBreakConnections(): void {
-    onBreakConnections?.(node.id);
-  }
-
-  // Connect the node to its nearest neighbours
-  function handleConnectNearest(): void {
-    onConnectNearest?.(node.id);
-  }
-
   return (
-    <div className="queries-node" onMouseUp={handleMouseUp}>
-      {/* Floating action bar shown while the node is selected */}
-      {selected && onRemove && (
-        <Group gap={1} className="queries-node-actions">
-          {/* Break the node's connections */}
-          {hasConnections && (
-            <IconButton
-              icon="unlink"
-              size="sm"
-              color="muted"
-              label="queries.editor.breakConnections"
-              tooltip={{ title: 'queries.editor.breakConnections' }}
-              onClick={handleBreakConnections}
-            />
-          )}
-
-          {/* Connect the unconnected node to its neighbours */}
-          {!hasConnections && (
-            <IconButton
-              icon="link"
-              size="sm"
-              color="muted"
-              label="queries.editor.connectNearest"
-              tooltip={{ title: 'queries.editor.connectNearest' }}
-              onClick={handleConnectNearest}
-            />
-          )}
-
-          <IconButton
-            icon="trash"
-            size="sm"
-            color="muted"
-            danger="on-hover"
-            label="queries.editor.removeNode"
-            tooltip={{ title: 'queries.editor.removeNode' }}
-            onClick={handleRemove}
-          />
-        </Group>
-      )}
-
+    <div className="queries-node">
       <Group gap={2} className="queries-node-header">
         {/* The node's type label, centered to the card */}
         <Text
@@ -280,12 +204,13 @@ export const QueryNodeShell: React.FC<QueryNodeShellProps> = ({
         />
       )}
 
-      {/* Outgoing connection port */}
+      {/* Outgoing connection port, doubling as the drag-to-connect
+          handle anchored at the port height */}
       {hasOutputPort && (
         <div
           className="queries-node-port queries-node-port-output"
           data-query-node-port="output"
-          onMouseDown={handleOutputPortMouseDown}
+          {...getConnectionHandleProps('right', QUERY_NODE_PORT_Y)}
         />
       )}
     </div>

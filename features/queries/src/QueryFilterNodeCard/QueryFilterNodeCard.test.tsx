@@ -55,17 +55,7 @@ describe('<QueryFilterNodeCard />', () => {
   it('persists a property change, resetting the operator and value', async () => {
     const user = userEvent.setup();
 
-    render(
-      <QueryFilterNodeCard
-        query={query_1}
-        node={filterNode}
-        onStartConnection={vi.fn()}
-        onCompleteConnection={vi.fn()}
-        onRemove={vi.fn()}
-        onBreakConnections={vi.fn()}
-        onConnectNearest={vi.fn()}
-      />,
-    );
+    render(<QueryFilterNodeCard query={query_1} node={filterNode} />);
 
     // Pick an upstream database property
     await user.click(screen.getByText(filterNode.property));
@@ -89,17 +79,7 @@ describe('<QueryFilterNodeCard />', () => {
   it('persists an operator change', async () => {
     const user = userEvent.setup();
 
-    render(
-      <QueryFilterNodeCard
-        query={query_1}
-        node={filterNode}
-        onStartConnection={vi.fn()}
-        onCompleteConnection={vi.fn()}
-        onRemove={vi.fn()}
-        onBreakConnections={vi.fn()}
-        onConnectNearest={vi.fn()}
-      />,
-    );
+    render(<QueryFilterNodeCard query={query_1} node={filterNode} />);
 
     // Pick a different operator
     await user.click(screen.getByText('Contains'));
@@ -124,17 +104,7 @@ describe('<QueryFilterNodeCard />', () => {
       propertyType: 'text',
     });
 
-    render(
-      <QueryFilterNodeCard
-        query={query}
-        node={node}
-        onStartConnection={vi.fn()}
-        onCompleteConnection={vi.fn()}
-        onRemove={vi.fn()}
-        onBreakConnections={vi.fn()}
-        onConnectNearest={vi.fn()}
-      />,
-    );
+    render(<QueryFilterNodeCard query={query} node={node} />);
 
     expect(
       screen.getByText('An input does not contain this property'),
@@ -151,17 +121,7 @@ describe('<QueryFilterNodeCard />', () => {
       propertyType: 'formatted-text',
     });
 
-    render(
-      <QueryFilterNodeCard
-        query={query}
-        node={node}
-        onStartConnection={vi.fn()}
-        onCompleteConnection={vi.fn()}
-        onRemove={vi.fn()}
-        onBreakConnections={vi.fn()}
-        onConnectNearest={vi.fn()}
-      />,
-    );
+    render(<QueryFilterNodeCard query={query} node={node} />);
 
     expect(
       screen.queryByText('An input does not contain this property'),

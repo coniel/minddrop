@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Databases } from '@minddrop/databases';
 import {
   Queries,
-  QueryConnection,
   QueryNode,
   QueryNodeType,
   addQueryConnection,
@@ -14,21 +14,26 @@ import {
 import { dragContainsType, toMimeType } from '@minddrop/selection';
 import {
   Canvas,
+  CanvasConnection,
+  CanvasConnectionDragTarget,
+  CanvasConnectionEnd,
+  CanvasConnectionReconnect,
+  CanvasConnectionReconnection,
+  CanvasConnectionStyleDefaults,
+  CanvasConnectionsLayer,
   CanvasNode,
+  CanvasNodeConnection,
   CanvasNodeFrame,
   CanvasPoint,
   CanvasProvider,
   CanvasSelection,
   CanvasToolbar,
+  getConnectionAtPoint,
   useCanvas,
-  useCanvasStore,
   useFitOnNodesReady,
 } from '@minddrop/ui-canvas';
+import { QueryBuilderSelectionToolbar } from '../QueryBuilderSelectionToolbar';
 import { QueryBuilderToolbar } from '../QueryBuilderToolbar';
-import {
-  PendingQueryConnection,
-  QueryConnectionsLayer,
-} from '../QueryConnectionsLayer';
 import { QueryFilterNodeCard } from '../QueryFilterNodeCard';
 import { QueryLimitNodeCard } from '../QueryLimitNodeCard';
 import { QueryNodeTypePicker } from '../QueryNodeTypePicker';
@@ -41,15 +46,34 @@ import {
   QueryNodeCardDataKey,
   QuerySourceCardDataKey,
 } from '../constants';
-import { connectQueryNodeToNearest, getQueryConnectionAtPoint } from '../utils';
+import {
+  connectQueryNodeToNearest,
+  getQueryMismatchedConnectionIds,
+} from '../utils';
 import './QueryBuilderCanvas.css';
+
+// The maximum distance from an edge at which a dragged toolbar
+// card targets it for splicing, in canvas units
+const SPLICE_HIT_THRESHOLD = 12;
+
+// The shared look of query edges: plain flow lines without
+// arrowheads
+const CONNECTION_DEFAULTS: CanvasConnectionStyleDefaults = {
+  arrows: 'none',
+  color: 'blue',
+};
+
+// In-progress connection drags render as dashed previews
+const PREVIEW_STYLE: CanvasConnectionStyleDefaults = {
+  style: 'dashed',
+};
 
 interface NodeTypePickerState {
   /**
-   * The ID of the node the released connection drag started
-   * from, connected into the picked node.
+   * The endpoint the released connection drag started from,
+   * connected into the picked node.
    */
-  from: string;
+  from: CanvasConnectionEnd;
 
   /**
    * The release point in canvas coordinates, where the picker
@@ -74,7 +98,7 @@ export interface QueryBuilderCanvasProps {
 export const QueryBuilderCanvas: React.FC<QueryBuilderCanvasProps> = ({
   queryId,
 }) => (
-  <div className="query-builder-canvas">
+  <div className="query-builder-canvas floating-toolbar-host">
     <CanvasProvider>
       <QueryBuilderCanvasContent queryId={queryId} />
     </CanvasProvider>
@@ -89,10 +113,6 @@ export const QueryBuilderCanvas: React.FC<QueryBuilderCanvasProps> = ({
 const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
   queryId,
 }) => {
-  // The in-progress connection drag
-  const [pendingConnection, setPendingConnection] =
-    useState<PendingQueryConnection | null>(null);
-
   // The node type picker opened by releasing a connection drag
   // on the empty canvas
   const [nodeTypePicker, setNodeTypePicker] =
@@ -109,55 +129,44 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
 
   const canvas = useCanvas();
 
-  // The canvas's selected node IDs, driving the cards' action
-  // bars
-  const selectedNodeIds = useCanvasStore((state) =>
-    state.selection?.type === 'nodes' ? state.selection.ids : null,
-  );
+  // Subscribe to database changes so mismatch styling follows
+  // schema edits
+  Databases.useAll();
+
+  // The query's connections mapped onto canvas connections,
+  // anchored at the port height on the node edges. Mismatched
+  // filter trails take the warning color.
+  const connections = useMemo<CanvasConnection[]>(() => {
+    if (!query) {
+      return [];
+    }
+
+    // The connections making up mismatched filter trails
+    const mismatchedIds = getQueryMismatchedConnectionIds(query);
+
+    return query.connections.map((connection) => ({
+      id: connection.id,
+      from: {
+        nodeId: connection.from,
+        side: 'right' as const,
+        offset: QUERY_NODE_PORT_Y,
+      },
+      to: {
+        nodeId: connection.to,
+        side: 'left' as const,
+        offset: QUERY_NODE_PORT_Y,
+      },
+      // Match the mismatch warning's color family
+      color: mismatchedIds.has(connection.id) ? ('yellow' as const) : undefined,
+      thickness:
+        connection.id === spliceTargetId ? ('thick' as const) : undefined,
+    }));
+  }, [query, spliceTargetId]);
 
   // Fit the graph into view when the builder opens
   useFitOnNodesReady(query ? query.nodes.map((node) => node.id) : []);
 
-  // Whether a connection drag is in progress
-  const connecting = pendingConnection !== null;
-
-  // Follow the pointer with the pending connection's endpoint,
-  // dropping the connection when released outside a node
-  useEffect(() => {
-    if (!connecting) {
-      return;
-    }
-
-    const handleMouseMove = (event: MouseEvent) => {
-      setPendingConnection(
-        (current) =>
-          current && {
-            ...current,
-            toPoint: canvas.clientToCanvas({
-              x: event.clientX,
-              y: event.clientY,
-            }),
-          },
-      );
-    };
-
-    // Node mouse up handlers complete the connection before this
-    // listener clears it
-    const handleMouseUp = () => {
-      setPendingConnection(null);
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseup', handleMouseUp);
-
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
-    };
-  }, [connecting, canvas]);
-
-  // Cancel a pending connection on Escape. The canvas clears its
-  // own selection.
+  // Dismiss the node type picker on Escape
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       // Ignore keys pressed while typing in inputs
@@ -166,8 +175,8 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
       }
 
       if (event.key === 'Escape') {
-        setPendingConnection(null);
         setNodeTypePicker(null);
+        canvas.clearConnectionDrag();
       }
     };
 
@@ -176,7 +185,7 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
+  }, [canvas]);
 
   // Remove whichever kind of thing the canvas has selected
   const handleSelectionDelete = useCallback(
@@ -221,27 +230,6 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
     [query, queryId, canvas],
   );
 
-  // Remove a node along with its connections. The results node
-  // is permanent and removing it leaves the graph unchanged.
-  const handleRemoveNode = useCallback(
-    (nodeId: string) => {
-      if (!query) {
-        return;
-      }
-
-      const { nodes, connections } = removeQueryNode(query, nodeId);
-
-      // Persist only when the node was actually removed
-      if (nodes !== query.nodes) {
-        Queries.update(queryId, { nodes, connections });
-      }
-
-      // Drop the selection targeting the removed node
-      canvas.clearSelection();
-    },
-    [query, queryId, canvas],
-  );
-
   // Break all of a node's incoming and outgoing connections
   const handleBreakNodeConnections = useCallback(
     (nodeId: string) => {
@@ -276,21 +264,156 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
     [query, queryId],
   );
 
-  // Remove a connection from the graph
-  const handleRemoveConnection = useCallback(
-    (connectionId: string) => {
+  // Persist a connection dragged between two nodes
+  const handleConnect = useCallback(
+    (connection: CanvasNodeConnection) => {
       if (!query) {
         return;
       }
 
-      Queries.update(queryId, {
-        connections: removeQueryConnection(query.connections, connectionId),
-      });
+      const connections = addQueryConnection(
+        query,
+        connection.from.nodeId,
+        connection.to.nodeId,
+      );
 
-      // Drop the selection targeting the removed connection
-      canvas.clearSelection();
+      // Invalid connections leave the connections unchanged
+      if (connections !== query.connections) {
+        Queries.update(queryId, { connections });
+      }
     },
-    [query, queryId, canvas],
+    [query, queryId],
+  );
+
+  // Only snap connection drags to targets the graph accepts a
+  // connection into, re-anchored onto their input port
+  const handleResolveConnectTarget = useCallback(
+    (from: CanvasConnectionEnd, target: CanvasConnectionDragTarget) => {
+      if (!query) {
+        return null;
+      }
+
+      // Reject targets the graph rejects a connection into
+      if (
+        addQueryConnection(query, from.nodeId, target.nodeId) ===
+        query.connections
+      ) {
+        return null;
+      }
+
+      // Snap onto the target's input port
+      return {
+        nodeId: target.nodeId,
+        side: 'left' as const,
+        offset: QUERY_NODE_PORT_Y,
+      };
+    },
+    [query],
+  );
+
+  // Only snap re-connect drags to targets the re-routed
+  // connection is valid against, re-anchored onto their port
+  const handleResolveReconnectTarget = useCallback(
+    (
+      reconnect: CanvasConnectionReconnect,
+      target: CanvasConnectionDragTarget,
+    ) => {
+      if (!query) {
+        return null;
+      }
+
+      const original = query.connections.find(
+        (connection) => connection.id === reconnect.connectionId,
+      );
+
+      if (!original) {
+        return null;
+      }
+
+      // The candidate endpoints with the dragged end re-routed
+      const from = reconnect.end === 'from' ? target.nodeId : original.from;
+      const to = reconnect.end === 'to' ? target.nodeId : original.to;
+
+      // Validate against the graph without the original, which
+      // the re-route replaces
+      const removed = removeQueryConnection(query.connections, original.id);
+
+      if (
+        addQueryConnection({ ...query, connections: removed }, from, to) ===
+        removed
+      ) {
+        return null;
+      }
+
+      // Snap onto the port matching the dragged end's direction
+      return {
+        nodeId: target.nodeId,
+        side: reconnect.end === 'from' ? ('right' as const) : ('left' as const),
+        offset: QUERY_NODE_PORT_Y,
+      };
+    },
+    [query],
+  );
+
+  // Open the node type picker when a connection drag is
+  // released on the empty canvas. The canvas holds the preview
+  // edge until the picker resolves.
+  const handleConnectRelease = useCallback(
+    (point: CanvasPoint, from: CanvasConnectionEnd) => {
+      setNodeTypePicker({ from, point });
+    },
+    [],
+  );
+
+  // Re-route a connection end dragged onto a new node
+  const handleConnectionReconnect = useCallback(
+    (reconnection: CanvasConnectionReconnection) => {
+      if (!query) {
+        return;
+      }
+
+      // Drops on empty canvas remove the connection
+      if (!reconnection.target) {
+        Queries.update(queryId, {
+          connections: removeQueryConnection(
+            query.connections,
+            reconnection.connectionId,
+          ),
+        });
+
+        return;
+      }
+
+      const original = query.connections.find(
+        (connection) => connection.id === reconnection.connectionId,
+      );
+
+      if (!original) {
+        return;
+      }
+
+      // The re-routed endpoints
+      const from =
+        reconnection.end === 'from'
+          ? reconnection.target.nodeId
+          : original.from;
+      const to =
+        reconnection.end === 'to' ? reconnection.target.nodeId : original.to;
+
+      // Replace the connection, validating the new route
+      const removed = removeQueryConnection(query.connections, original.id);
+      const connections = addQueryConnection(
+        { ...query, connections: removed },
+        from,
+        to,
+      );
+
+      // Invalid routes keep the original connection
+      if (connections !== removed) {
+        Queries.update(queryId, { connections });
+      }
+    },
+    [query, queryId],
   );
 
   // Add a node of the given type centered on a canvas point
@@ -313,8 +436,16 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
   // Insert a node of the given type into an existing
   // connection, centered on the drop point
   const spliceNode = useCallback(
-    (type: QueryNodeType, point: CanvasPoint, connection: QueryConnection) => {
+    (type: QueryNodeType, point: CanvasPoint, connectionId: string) => {
       if (!query) {
+        return;
+      }
+
+      const connection = query.connections.find(
+        (queryConnection) => queryConnection.id === connectionId,
+      );
+
+      if (!connection) {
         return;
       }
 
@@ -354,13 +485,11 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
       if (dragContainsType(event, [QueryNodeCardDataKey])) {
         event.preventDefault();
 
-        if (!query) {
-          return;
-        }
-
-        const connection = getQueryConnectionAtPoint(
-          query,
+        const connection = getConnectionAtPoint(
+          connections,
+          canvas.getNodes(),
           canvas.clientToCanvas({ x: event.clientX, y: event.clientY }),
+          SPLICE_HIT_THRESHOLD,
         );
 
         setSpliceTargetId(connection ? connection.id : null);
@@ -373,7 +502,7 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
         event.preventDefault();
       }
     },
-    [query, canvas],
+    [connections, canvas],
   );
 
   // Clear the splice highlight when the drag leaves the canvas
@@ -412,34 +541,16 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
 
       const type = JSON.parse(typeData) as QueryNodeType;
 
-      // The highlighted connection is the insertion target
-      const target = query?.connections.find(
-        (connection) => connection.id === spliceTargetId,
-      );
-
-      // Splice the node into the connection it was dropped onto
-      if (target) {
-        spliceNode(type, canvasPoint, target);
+      // Splice the node into the highlighted connection
+      if (spliceTargetId) {
+        spliceNode(type, canvasPoint, spliceTargetId);
 
         return;
       }
 
       addNode(type, canvasPoint);
     },
-    [addNode, spliceNode, query, spliceTargetId],
-  );
-
-  // Open the node type picker when a connection drag is
-  // released on the empty canvas
-  const handleBackgroundMouseUp = useCallback(
-    (event: React.MouseEvent, canvasPoint: CanvasPoint) => {
-      if (!pendingConnection) {
-        return;
-      }
-
-      setNodeTypePicker({ from: pendingConnection.from, point: canvasPoint });
-    },
-    [pendingConnection],
+    [addNode, spliceNode, spliceTargetId],
   );
 
   // Create the node picked from the node type picker at the
@@ -461,59 +572,23 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
       // Connect the drag's origin node into the new node
       const connections = addQueryConnection(
         { ...query, nodes },
-        nodeTypePicker.from,
+        nodeTypePicker.from.nodeId,
         node.id,
       );
 
       Queries.update(queryId, { nodes, connections });
 
       setNodeTypePicker(null);
+      canvas.clearConnectionDrag();
     },
-    [query, queryId, nodeTypePicker],
+    [query, queryId, nodeTypePicker, canvas],
   );
 
   // Dismiss the node type picker without creating a node
   const handleCloseNodeTypePicker = useCallback(() => {
     setNodeTypePicker(null);
-  }, []);
-
-  // Start a connection drag from a node's output port
-  const handleStartConnection = useCallback(
-    (nodeId: string, event: React.MouseEvent) => {
-      setPendingConnection({
-        from: nodeId,
-        toPoint: canvas.clientToCanvas({
-          x: event.clientX,
-          y: event.clientY,
-        }),
-      });
-    },
-    [canvas],
-  );
-
-  // Complete a connection drag released over a node, persisting
-  // the connection when it is valid
-  const handleCompleteConnection = useCallback(
-    (nodeId: string) => {
-      if (!pendingConnection || !query) {
-        return;
-      }
-
-      const connections = addQueryConnection(
-        query,
-        pendingConnection.from,
-        nodeId,
-      );
-
-      // Invalid connections leave the connections unchanged
-      if (connections !== query.connections) {
-        Queries.update(queryId, { connections });
-      }
-
-      setPendingConnection(null);
-    },
-    [pendingConnection, query, queryId],
-  );
+    canvas.clearConnectionDrag();
+  }, [canvas]);
 
   // Persist a node's position when a drag ends
   const handleNodeFrameChange = useCallback(
@@ -532,6 +607,27 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
     [query, queryId],
   );
 
+  // Persist every node moved by a group drag in one update
+  const handleNodesFrameChange = useCallback(
+    (frames: Record<string, CanvasNodeFrame>) => {
+      if (!query) {
+        return;
+      }
+
+      const nodes = Object.entries(frames).reduce(
+        (current, [nodeId, frame]) =>
+          updateQueryNode(current, nodeId, {
+            x: frame.x,
+            y: frame.y,
+          }),
+        query.nodes,
+      );
+
+      Queries.update(queryId, { nodes });
+    },
+    [query, queryId],
+  );
+
   // Persist a name change after a short pause in typing
   const handleNameChange = useCallback(
     (name: string) => {
@@ -539,6 +635,23 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
     },
     [queryId],
   );
+
+  // Render the toolbar floating above the canvas selection
+  function renderSelectionToolbar(selection: CanvasSelection) {
+    if (!query) {
+      return null;
+    }
+
+    return (
+      <QueryBuilderSelectionToolbar
+        query={query}
+        selection={selection}
+        onRemove={handleSelectionDelete}
+        onBreakConnections={handleBreakNodeConnections}
+        onConnectNearest={handleConnectNodeToNearest}
+      />
+    );
+  }
 
   // Render the card matching a node's type
   function renderNodeCard(node: QueryNode) {
@@ -548,14 +661,9 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
 
     const cardProps = {
       counts: counts[node.id],
-      // The action bar shows on the single selected node
-      selected:
-        selectedNodeIds?.length === 1 && selectedNodeIds[0] === node.id,
-      onStartConnection: handleStartConnection,
-      onCompleteConnection: handleCompleteConnection,
-      onRemove: handleRemoveNode,
-      onBreakConnections: handleBreakNodeConnections,
-      onConnectNearest: handleConnectNodeToNearest,
+      onConnect: handleConnect,
+      onConnectRelease: handleConnectRelease,
+      resolveConnectTarget: handleResolveConnectTarget,
     };
 
     if (node.type === 'source') {
@@ -586,14 +694,6 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
     return null;
   }
 
-  // The rendered pending edge: the live drag, or the released
-  // drag frozen at the picker's position while it is open
-  const renderedPendingConnection =
-    pendingConnection ||
-    (nodeTypePicker
-      ? { from: nodeTypePicker.from, toPoint: nodeTypePicker.point }
-      : null);
-
   return (
     <>
       <Canvas
@@ -604,15 +704,18 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
-        onBackgroundMouseUp={handleBackgroundMouseUp}
+        onNodesFrameChange={handleNodesFrameChange}
+        selectionToolbar={renderSelectionToolbar}
         onSelectionDelete={handleSelectionDelete}
       >
         {/* The graph's connections, under the nodes */}
-        <QueryConnectionsLayer
-          query={query}
-          pendingConnection={renderedPendingConnection}
-          spliceTargetConnectionId={spliceTargetId}
-          onRemoveConnection={handleRemoveConnection}
+        <CanvasConnectionsLayer
+          connections={connections}
+          connectionDefaults={CONNECTION_DEFAULTS}
+          dropTargetConnectionId={spliceTargetId}
+          previewStyle={PREVIEW_STYLE}
+          onConnectionReconnect={handleConnectionReconnect}
+          resolveReconnectTarget={handleResolveReconnectTarget}
         />
 
         {/* The graph's nodes */}
