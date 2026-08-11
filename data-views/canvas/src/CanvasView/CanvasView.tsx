@@ -782,10 +782,13 @@ const CanvasViewContent: React.FC<
         {renderEntryPicker()}
       </Canvas>
 
-      {/* Floating toolbar */}
+      {/* Floating toolbar. The canvas pans rather than scrolls,
+          so the toolbar is pinned to the view instead of stuck
+          to a scrollport. */}
       <DataViewFloatingToolbar
         databaseCards={toolbarDatabaseCards}
         menuOpen={optionsMenuOpen}
+        position="absolute"
       >
         {/* View settings menu */}
         <DataViewOptionsMenu view={view} onOpenChange={setOptionsMenuOpen} />

@@ -3,14 +3,6 @@
   height: 100%;
 }
 
-/* The canvas does not scroll, so the floating toolbar's anchor is
-   pinned absolutely instead of relying on scrollport stickiness */
-.canvas-view .data-view-floating-toolbar {
-  position: absolute;
-  bottom: var(--space-4);
-  left: 50%;
-}
-
 .canvas-view-node {
   border-radius: var(--radius-md);
 }

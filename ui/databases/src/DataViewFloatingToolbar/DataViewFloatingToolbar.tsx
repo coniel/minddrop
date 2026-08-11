@@ -6,6 +6,7 @@ import {
   ToolbarSeparator,
   Tooltip,
   ViewFloatingToolbar,
+  ViewFloatingToolbarPosition,
 } from '@minddrop/ui-primitives';
 import { DATABASE_FALLBACK_ICON } from '../constants';
 import { useAddExistingEntryDraggable } from '../useAddExistingEntryDraggable';
@@ -41,6 +42,14 @@ export interface DataViewFloatingToolbarProps {
   menuOpen?: boolean;
 
   /**
+   * How the toolbar is positioned. Views which do not scroll
+   * must use 'absolute', since sticking has no scrollport to
+   * resolve against.
+   * @default 'sticky'
+   */
+  position?: ViewFloatingToolbarPosition;
+
+  /**
    * Content rendered after the default cards, preceded by a
    * separator.
    */
@@ -58,8 +67,8 @@ export interface DataViewFloatingToolbarProps {
  */
 export const DataViewFloatingToolbar: React.FC<
   DataViewFloatingToolbarProps
-> = ({ databaseCards, menuOpen = false, children }) => (
-  <ViewFloatingToolbar menuOpen={menuOpen}>
+> = ({ databaseCards, menuOpen = false, position, children }) => (
+  <ViewFloatingToolbar menuOpen={menuOpen} position={position}>
     {databaseCards.map((card) => (
       <DatabaseCard
         key={card.databaseId}
