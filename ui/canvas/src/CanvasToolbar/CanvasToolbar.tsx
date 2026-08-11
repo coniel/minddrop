@@ -7,7 +7,7 @@ import {
   DropdownMenuRoot,
   DropdownMenuSwitchItem,
   DropdownMenuTrigger,
-  Toolbar,
+  FloatingToolbar,
   ToolbarButton,
   ToolbarIconButton,
   ToolbarSeparator,
@@ -106,7 +106,7 @@ export const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
   return (
     <div className={`ui-canvas-toolbar${className ? ` ${className}` : ''}`}>
       {/* Zoom controls */}
-      <Toolbar className="ui-canvas-toolbar-zoom">
+      <FloatingToolbar size="md" visible className="ui-canvas-toolbar-zoom">
         {/* Zoom out button */}
         <ToolbarIconButton
           icon="minus"
@@ -180,10 +180,10 @@ export const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
           size="sm"
           onClick={handleFit}
         />
-      </Toolbar>
+      </FloatingToolbar>
 
       {/* Canvas settings */}
-      <Toolbar className="ui-canvas-toolbar-settings">
+      <FloatingToolbar size="md" visible className="ui-canvas-toolbar-settings">
         <DropdownMenuRoot>
           <DropdownMenuTrigger>
             <ToolbarIconButton
@@ -214,7 +214,7 @@ export const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
             </DropdownMenuPositioner>
           </DropdownMenuPortal>
         </DropdownMenuRoot>
-      </Toolbar>
+      </FloatingToolbar>
     </div>
   );
 };

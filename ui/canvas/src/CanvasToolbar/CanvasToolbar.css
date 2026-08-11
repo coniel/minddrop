@@ -8,15 +8,6 @@
   gap: var(--space-2);
 }
 
-/* The zoom and settings toolbars each float as their own card */
-.ui-canvas-toolbar .toolbar {
-  padding: var(--space-1);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  background-color: var(--surface-overlay);
-  box-shadow: var(--shadow-overlay);
-}
-
 .ui-canvas-toolbar-zoom-button {
   width: 3.375rem;
 }
