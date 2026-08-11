@@ -1,20 +1,17 @@
-import { useVirtualizer } from '@tanstack/react-virtual';
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { MenuItem } from '../Menu/MenuItem';
 import { MenuSearchRegistration } from '../Menu/MenuSearchContext';
-import { VerticalScrollArea } from '../ScrollArea';
+import { VirtualizedList } from '../VirtualizedList';
 import { NavigableListItemProps } from '../hooks/useNavigableList';
 
 /* --- SearchableMenuVirtualizedList ---
-   Renders searchable menu items using @tanstack/react-virtual for
-   efficient rendering of large lists. Used automatically by
-   SearchableMenu when the item count exceeds the threshold. */
+   Renders searchable menu items in a virtualized list for
+   efficient handling of large item counts. Used automatically
+   by SearchableMenu when the item count exceeds the
+   threshold. */
 
 /** Item height estimate in pixels */
 const ITEM_HEIGHT = 32;
-
-/** Overscan count for smoother scrolling */
-const OVERSCAN = 20;
 
 export interface SearchableMenuVirtualizedListProps {
   /**
@@ -45,83 +42,48 @@ export interface SearchableMenuVirtualizedListProps {
 export const SearchableMenuVirtualizedList: React.FC<
   SearchableMenuVirtualizedListProps
 > = ({ activeIds, registry, highlightedIndex, getItemProps }) => {
-  const scrollAreaRef = useRef<HTMLDivElement>(null);
+  // Renders the menu item registered under the given ID
+  function renderItem(id: string, index: number) {
+    const registration = registry.get(id);
 
-  const virtualizer = useVirtualizer({
-    count: activeIds.length,
-    getScrollElement: () =>
-      scrollAreaRef.current?.querySelector<HTMLElement>(
-        '.scroll-area-viewport',
-      ) ?? null,
-    estimateSize: () => ITEM_HEIGHT,
-    overscan: OVERSCAN,
-  });
-
-  // Scroll the highlighted item into view on keyboard navigation
-  useEffect(() => {
-    if (highlightedIndex >= 0) {
-      virtualizer.scrollToIndex(highlightedIndex, { align: 'auto' });
+    // Skip IDs which have no registered item
+    if (!registration) {
+      return null;
     }
-  }, [highlightedIndex, virtualizer]);
 
-  const totalSize = virtualizer.getTotalSize();
+    const itemNavigationProps = getItemProps(index);
+    const props = registration.propsRef.current;
 
-  if (!activeIds.length) {
-    return null;
+    return (
+      <MenuItem
+        onMouseMove={itemNavigationProps.onMouseMove}
+        onMouseLeave={itemNavigationProps.onMouseLeave}
+        onClick={itemNavigationProps.onClick}
+        label={props.label}
+        stringLabel={props.stringLabel}
+        icon={props.icon}
+        contentIcon={props.contentIcon}
+        active={itemNavigationProps.highlighted}
+      />
+    );
   }
 
   return (
-    <VerticalScrollArea
-      ref={scrollAreaRef}
-      visibility="scroll"
+    <VirtualizedList
+      measure
+      items={activeIds}
+      itemHeight={ITEM_HEIGHT}
+      itemKey={getItemKey}
+      renderItem={renderItem}
+      scrollToIndex={highlightedIndex}
       className="searchable-menu-virtualized-list"
-    >
-      <div
-        role="presentation"
-        className="searchable-menu-virtualized-placeholder"
-        style={{ height: totalSize }}
-      >
-        {virtualizer.getVirtualItems().map((virtualItem) => {
-          const id = activeIds[virtualItem.index];
-          const registration = registry.get(id);
-
-          if (!registration) {
-            return null;
-          }
-
-          const itemNavProps = getItemProps(virtualItem.index);
-          const props = registration.propsRef.current;
-
-          return (
-            <div
-              key={id}
-              ref={virtualizer.measureElement}
-              data-index={virtualItem.index}
-              aria-setsize={activeIds.length}
-              aria-posinset={virtualItem.index + 1}
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: virtualItem.size,
-                transform: `translateY(${virtualItem.start}px)`,
-              }}
-            >
-              <MenuItem
-                onMouseMove={itemNavProps.onMouseMove}
-                onMouseLeave={itemNavProps.onMouseLeave}
-                onClick={itemNavProps.onClick}
-                label={props.label}
-                stringLabel={props.stringLabel}
-                icon={props.icon}
-                contentIcon={props.contentIcon}
-                active={itemNavProps.highlighted}
-              />
-            </div>
-          );
-        })}
-      </div>
-    </VerticalScrollArea>
+    />
   );
 };
+
+/**
+ * Returns the item ID as the row key.
+ */
+function getItemKey(id: string): string {
+  return id;
+}

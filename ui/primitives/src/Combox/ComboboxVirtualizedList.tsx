@@ -1,20 +1,16 @@
 import { Combobox as ComboboxPrimitive } from '@base-ui/react/combobox';
-import { useVirtualizer } from '@tanstack/react-virtual';
-import React, { useRef } from 'react';
-import { VerticalScrollArea } from '../ScrollArea';
+import React from 'react';
+import { VirtualizedList, VirtualizerInstance } from '../VirtualizedList';
 import { ComboboxOption } from './Combobox';
 import { ComboboxItem } from './ComboboxItem';
 
 /* --- ComboboxVirtualizedList ---
-   Renders combobox items using @tanstack/react-virtual for
-   efficient rendering of large lists. Automatically used by the
-   Combobox wrapper when the item count exceeds the threshold. */
+   Renders combobox items in a virtualized list for efficient
+   rendering of large lists. Automatically used by the Combobox
+   wrapper when the item count exceeds the threshold. */
 
 /** Item height estimate in pixels */
 const ITEM_HEIGHT = 32;
-
-/** Overscan count for smoother scrolling */
-const OVERSCAN = 20;
 
 export interface ComboboxVirtualizedListProps {
   /**
@@ -30,78 +26,34 @@ export interface ComboboxVirtualizedListProps {
   virtualizerRef: React.RefObject<VirtualizerInstance | null>;
 }
 
-export type VirtualizerInstance = ReturnType<
-  typeof useVirtualizer<HTMLElement, Element>
->;
-
 /** Virtualized item list for large combobox datasets. */
 export const ComboboxVirtualizedList: React.FC<
   ComboboxVirtualizedListProps
 > = ({ open, virtualizerRef }) => {
   const filteredItems = ComboboxPrimitive.useFilteredItems<ComboboxOption>();
-  const scrollAreaRef = useRef<HTMLDivElement>(null);
 
-  const virtualizer = useVirtualizer({
-    enabled: open,
-    count: filteredItems.length,
-    getScrollElement: () =>
-      scrollAreaRef.current?.querySelector<HTMLElement>(
-        '.scroll-area-viewport',
-      ) ?? null,
-    estimateSize: () => ITEM_HEIGHT,
-    overscan: OVERSCAN,
-  });
-
-  React.useImperativeHandle(virtualizerRef, () => virtualizer);
-
-  const totalSize = virtualizer.getTotalSize();
-
-  if (!filteredItems.length) {
-    return null;
+  // Renders a single combobox option
+  function renderItem(item: ComboboxOption, index: number) {
+    return (
+      <ComboboxItem
+        index={index}
+        value={item}
+        label={item.label}
+        icon={item.icon}
+        contentIcon={item.contentIcon}
+      />
+    );
   }
 
   return (
-    <VerticalScrollArea
-      ref={scrollAreaRef}
-      visibility="scroll"
+    <VirtualizedList
+      measure
+      enabled={open}
+      items={filteredItems}
+      itemHeight={ITEM_HEIGHT}
+      renderItem={renderItem}
+      virtualizerRef={virtualizerRef}
       className="combobox-list-scroll-area"
-    >
-      <div
-        role="presentation"
-        className="combobox-virtualized-placeholder"
-        style={{ height: totalSize }}
-      >
-        {virtualizer.getVirtualItems().map((virtualItem) => {
-          const item = filteredItems[virtualItem.index];
-
-          if (!item) {
-            return null;
-          }
-
-          return (
-            <ComboboxItem
-              key={virtualItem.key}
-              index={virtualItem.index}
-              data-index={virtualItem.index}
-              ref={virtualizer.measureElement}
-              value={item}
-              label={item.label}
-              icon={item.icon}
-              contentIcon={item.contentIcon}
-              aria-setsize={filteredItems.length}
-              aria-posinset={virtualItem.index + 1}
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: virtualItem.size,
-                transform: `translateY(${virtualItem.start}px)`,
-              }}
-            />
-          );
-        })}
-      </div>
-    </VerticalScrollArea>
+    />
   );
 };

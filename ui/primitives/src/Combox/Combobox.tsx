@@ -3,6 +3,7 @@ import React, { useCallback, useRef, useState } from 'react';
 import { TranslationKey } from '@minddrop/i18n';
 import { ContentIcon } from '../ContentIcon';
 import { IconProp, IconRenderer } from '../IconRenderer';
+import { VirtualizerInstance } from '../VirtualizedList';
 import { ComboboxChip } from './ComboboxChip';
 import { ComboboxChipRemove } from './ComboboxChipRemove';
 import { ComboboxChips } from './ComboboxChips';
@@ -26,10 +27,7 @@ import {
   ComboboxTriggerVariant,
 } from './ComboboxTrigger';
 import { ComboboxValue } from './ComboboxValue';
-import {
-  ComboboxVirtualizedList,
-  VirtualizerInstance,
-} from './ComboboxVirtualizedList';
+import { ComboboxVirtualizedList } from './ComboboxVirtualizedList';
 import './Combobox.css';
 
 /* --- Combobox ---

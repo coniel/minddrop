@@ -73,8 +73,3 @@
 .searchable-menu-virtualized-list .scroll-area-viewport {
   max-height: inherit;
 }
-
-.searchable-menu-virtualized-placeholder {
-  position: relative;
-  width: 100%;
-}

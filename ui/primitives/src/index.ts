@@ -42,6 +42,7 @@ export * from './Toast';
 export * from './Tooltip';
 export * from './TransientViewState';
 export * from './ViewFloatingToolbar';
+export * from './VirtualizedList';
 export * from './WebView';
 export * from './constants';
 export * from './types';

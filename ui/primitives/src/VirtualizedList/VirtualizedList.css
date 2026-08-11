@@ -1,0 +1,14 @@
+/* Placeholder spanning the full virtual list height, the
+   virtualizer positions rows within it */
+.virtualized-list-placeholder {
+  position: relative;
+  width: 100%;
+}
+
+/* Virtualized rows, offset by the virtualizer's transform */
+.virtualized-list-item {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
