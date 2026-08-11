@@ -1787,7 +1787,19 @@ declare module 'i18next' {
         };
         tabs: {
           new: string;
+          newToTheLeft: string;
+          newToTheRight: string;
           close: string;
+          closeOthers: string;
+          closeToTheLeft: string;
+          closeToTheRight: string;
+          duplicate: string;
+          unsplit: string;
+          split: {
+            label: string;
+            search: string;
+            tabs: string;
+          };
         };
         devTools: {
           labels: {

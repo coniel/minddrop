@@ -1,6 +1,10 @@
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { SortableList } from '@minddrop/ui-drag-and-drop';
 import {
+  ContextMenuContent,
+  ContextMenuPortal,
+  ContextMenuPositioner,
+  ContextMenuRoot,
   IconButton,
   TabsList,
   Tabs as TabsRoot,
@@ -13,6 +17,7 @@ import { setActiveTab } from '../setActiveTab';
 import { setTabOrder } from '../setTabOrder';
 import { useTabShortcuts } from '../useTabShortcuts';
 import { Tab } from './Tab';
+import { TabOptionsMenu } from './TabOptionsMenu';
 import './TabsToolbar.css';
 
 interface TabsToolbarProps {
@@ -36,6 +41,8 @@ export const TabsToolbar: FC<TabsToolbarProps> = ({
   viewAreaId,
   shortcuts = false,
 }) => {
+  const [menuTabId, setMenuTabId] = useState<string | null>(null);
+  const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const tabs = useTabs(viewAreaId);
   const activeTabId = useActiveTabId(viewAreaId);
 
@@ -68,6 +75,20 @@ export const TabsToolbar: FC<TabsToolbarProps> = ({
     setTabOrder(viewAreaId, newOrder);
   }
 
+  // Open the options menu on the right clicked tab
+  function handleTabContextMenu(tabId: string, anchor: HTMLElement) {
+    setMenuTabId(tabId);
+    setMenuAnchor(anchor);
+  }
+
+  // Clear the options menu state when it closes
+  function handleMenuOpenChange(open: boolean) {
+    if (!open) {
+      setMenuTabId(null);
+      setMenuAnchor(null);
+    }
+  }
+
   return (
     <div className="view-tabs-toolbar electrobun-webkit-app-region-no-drag">
       <TabsRoot
@@ -96,6 +117,7 @@ export const TabsToolbar: FC<TabsToolbarProps> = ({
                 viewAreaId={viewAreaId}
                 tab={tab}
                 sortable={sortable}
+                onContextMenu={handleTabContextMenu}
               />
             );
           }}
@@ -110,6 +132,31 @@ export const TabsToolbar: FC<TabsToolbarProps> = ({
           />
         </SortableList>
       </TabsRoot>
+
+      {/* Tab options menu, opened by right clicking a tab */}
+      <ContextMenuRoot
+        open={menuTabId !== null}
+        onOpenChange={handleMenuOpenChange}
+      >
+        <ContextMenuPortal>
+          <ContextMenuPositioner
+            anchor={menuAnchor}
+            side="bottom"
+            align="start"
+            sideOffset={4}
+          >
+            <ContextMenuContent>
+              {menuTabId && (
+                <TabOptionsMenu
+                  viewAreaId={viewAreaId}
+                  tabId={menuTabId}
+                  tabs={tabs}
+                />
+              )}
+            </ContextMenuContent>
+          </ContextMenuPositioner>
+        </ContextMenuPortal>
+      </ContextMenuRoot>
     </div>
   );
 };

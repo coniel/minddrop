@@ -1,5 +1,12 @@
 export { newTab } from './newTab';
 export { closeTab } from './closeTab';
+export { closeOtherTabs } from './closeOtherTabs';
+export { closeTabsToTheLeft } from './closeTabsToTheLeft';
+export { closeTabsToTheRight } from './closeTabsToTheRight';
+export { duplicateTab } from './duplicateTab';
+export { splitTab } from './splitTab';
+export { splitTabWithTab } from './splitTabWithTab';
+export { unsplitTab } from './unsplitTab';
 export { setActiveTab } from './setActiveTab';
 export { setTabOrder } from './setTabOrder';
 export { updateTabsForView } from './updateTabsForView';

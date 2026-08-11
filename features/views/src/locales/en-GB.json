@@ -1,6 +1,18 @@
 {
   "tabs": {
     "new": "New Tab",
-    "close": "Close tab"
+    "newToTheLeft": "New tab to the left",
+    "newToTheRight": "New tab to the right",
+    "close": "Close tab",
+    "closeOthers": "Close other tabs",
+    "closeToTheLeft": "Close tabs to the left",
+    "closeToTheRight": "Close tabs to the right",
+    "duplicate": "Duplicate tab",
+    "unsplit": "Unsplit",
+    "split": {
+      "label": "Split",
+      "search": "Search",
+      "tabs": "Tabs"
+    }
   }
 }

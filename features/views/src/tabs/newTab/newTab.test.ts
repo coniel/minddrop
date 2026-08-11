@@ -24,6 +24,17 @@ describe('newTab', () => {
     expect(activeTabId).toBe(tabs[0].id);
   });
 
+  it('inserts the tab at the given index', () => {
+    newTab(VIEW_AREA_ID);
+    const first = getSet(VIEW_AREA_ID).activeTabId!;
+
+    newTab(VIEW_AREA_ID, { index: 0 });
+
+    const { tabs, activeTabId } = getSet(VIEW_AREA_ID);
+
+    expect(tabs.map((tab) => tab.id)).toEqual([activeTabId, first]);
+  });
+
   it('creates the tab with an empty transient state', () => {
     newTab(VIEW_AREA_ID);
 
