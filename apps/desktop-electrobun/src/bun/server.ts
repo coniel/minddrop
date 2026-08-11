@@ -2,6 +2,8 @@ import { serve } from 'bun';
 import fs from 'node:fs';
 import fsp from 'node:fs/promises';
 import path from 'path';
+import { bracketImageWidth } from '@minddrop/utils';
+import { getResizedImage } from './imageCache';
 
 // Basic MIME type helper
 function getMimeType(filePath: string) {
@@ -16,8 +18,28 @@ function getMimeType(filePath: string) {
       '.jpg': 'image/jpeg',
       '.jpeg': 'image/jpeg',
       '.gif': 'image/gif',
+      '.webp': 'image/webp',
+      '.avif': 'image/avif',
     }[ext] || 'application/octet-stream'
   );
+}
+
+// Resolve the path of a resized variant for a requested display width,
+// or null when the original file should be served
+async function resolveResizedPath(filePath: string, width: string | null) {
+  if (!width) {
+    return null;
+  }
+
+  // Re-bracket defensively, clients are expected to send bracketed
+  // widths but the param is arbitrary user input
+  const bracketedWidth = bracketImageWidth(Number(width));
+
+  if (!bracketedWidth) {
+    return null;
+  }
+
+  return getResizedImage(filePath, bracketedWidth);
 }
 
 // Wrap response with CORS headers
@@ -55,7 +77,13 @@ export const httpServer = serve({
           if (!stat.isFile())
             return withCors(new Response('Not a file', { status: 400 }));
 
-          const data = await fsp.readFile(filePath);
+          // Serve a downscaled variant when a display width is requested
+          const resizedPath = await resolveResizedPath(
+            filePath,
+            url.searchParams.get('width'),
+          );
+
+          const data = await fsp.readFile(resizedPath ?? filePath);
           const mimeType = getMimeType(filePath);
 
           return withCors(

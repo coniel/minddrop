@@ -6,6 +6,7 @@ import {
   Utils,
 } from 'electrobun/bun';
 import { myWebviewRPC } from './bun-rpc';
+import { pruneImageCache } from './imageCache';
 import { initializeSearch } from './search';
 import { initializeSql } from './sql';
 import { setWindowRpcTarget } from './windowRpc';
@@ -222,3 +223,6 @@ initializeSql();
 
 // Register search platform adapters (file system for index I/O)
 initializeSearch();
+
+// Trim the resized image cache back under its size limit
+pruneImageCache();

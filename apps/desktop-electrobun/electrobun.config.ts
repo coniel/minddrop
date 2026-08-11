@@ -11,6 +11,10 @@ export default {
     copy: {
       'dist/index.html': 'views/mainview/index.html',
       'dist/assets': 'views/mainview/assets',
+      // Sharp's platform-specific native bindings. The bundled bun code
+      // requires these at runtime, so they have to sit in a node_modules
+      // dir the bundle can resolve from.
+      '../../node_modules/@img': 'node_modules/@img',
     },
     bun: {
       entrypoint: 'src/bun/index.ts',
