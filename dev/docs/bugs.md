@@ -199,3 +199,25 @@ hit this; it now uses `trashDir` like the rest of the package.
 Workaround / convention: use `Fs.trashDir` to remove a directory. If
 `removeDir` is ever genuinely needed, the adapter would need a working
 native call (or a Bun version bump that fixes `fsp.rm`).
+
+## features/queries
+
+### Query node results run against an unopened SQL database in tests
+
+`npx vitest run` in `features/queries` reports 8 unhandled rejections on
+`main` (pre-existing, found 2026-08-11 while verifying an unrelated
+ui-canvas refactor): `Error: SQL database not initialized. Call Sql.open()
+first.` The tests themselves pass, so the failures are invisible unless
+the run's error summary is read.
+
+Trace: `useQueryNodeResults`'s `rerunNode`
+(`packages/queries/src/useQueryNodeResults/useQueryNodeResults.ts:53`)
+calls `runQueryNode`, which reaches
+`sqlQueryScopedEntries` and then `Sql.all`, where `getConnection` throws
+because no test opens a database. The rejection escapes because the
+effect's promise is never caught.
+
+Fix direction: catch and surface query run failures in
+`useQueryNodeResults` rather than letting them reject unhandled (a query
+against an unavailable database is a runtime possibility, not only a test
+artefact), and open an in-memory database in the feature's test setup.
