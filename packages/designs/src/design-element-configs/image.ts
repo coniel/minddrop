@@ -10,9 +10,9 @@ export interface ImageElement extends DesignElementBase {
   style: ImageElementStyle;
 
   /**
-   * The file name of the element's own image stored in the
-   * placeholder-media directory. Displayed when the element is
-   * static.
+   * The file name of the element's own image stored in the media
+   * directory of the entity owning the layout. Displayed when the
+   * element is static.
    */
   content?: string;
 }

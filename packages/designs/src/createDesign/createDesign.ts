@@ -5,7 +5,7 @@ import { entityId } from '@minddrop/utils';
 import { DesignsStore } from '../DesignsStore';
 import { DesignCreatedEvent, DesignCreatedEventData } from '../events';
 import { Design } from '../types';
-import { getDesignsDirPath } from '../utils';
+import { resolveDesignsDirPath } from '../utils';
 import { writeDesign } from '../writeDesign';
 
 /**
@@ -18,7 +18,7 @@ import { writeDesign } from '../writeDesign';
  */
 export async function createDesign(name?: string): Promise<Design> {
   // Ensure the designs directory exists
-  await Fs.ensureDir(getDesignsDirPath());
+  await Fs.ensureDir(resolveDesignsDirPath());
 
   const design: Design = {
     id: entityId('design'),

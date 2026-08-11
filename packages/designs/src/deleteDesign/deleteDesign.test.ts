@@ -3,7 +3,10 @@ import { Events } from '@minddrop/events';
 import { DesignsStore } from '../DesignsStore';
 import { DesignDeletedEvent, DesignDeletedEventData } from '../events';
 import { MockFs, cleanup, design_books, setup } from '../test-utils';
-import { getDesignFilePath } from '../utils';
+import {
+  resolveDesignBundleDirPath,
+  resolveDesignMediaDirPath,
+} from '../utils';
 import { deleteDesign } from './deleteDesign';
 
 describe('deleteDesign', () => {
@@ -11,10 +14,22 @@ describe('deleteDesign', () => {
 
   afterEach(cleanup);
 
-  it('deletes the design file', async () => {
+  it('deletes the design bundle directory', async () => {
     await deleteDesign(design_books.id);
 
-    expect(MockFs.exists(getDesignFilePath(design_books.id))).toBe(false);
+    expect(MockFs.exists(resolveDesignBundleDirPath(design_books.id))).toBe(
+      false,
+    );
+  });
+
+  it('deletes the design media along with the bundle', async () => {
+    const mediaPath = `${resolveDesignMediaDirPath(design_books.id)}/image.png`;
+
+    MockFs.addFiles([{ path: mediaPath, textContent: 'image data' }]);
+
+    await deleteDesign(design_books.id);
+
+    expect(MockFs.exists(mediaPath)).toBe(false);
   });
 
   it('removes the design from the store', async () => {

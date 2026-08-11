@@ -12,7 +12,7 @@ import {
   setup,
 } from '../test-utils';
 import { Design, Layout } from '../types';
-import { getDesignFilePath } from '../utils';
+import { resolveDesignFilePath } from '../utils';
 import { updateLayout } from './updateLayout';
 
 const lastModified = new Date('2000-01-01T00:00:00.000Z');
@@ -65,7 +65,7 @@ describe('updateLayout', () => {
     await updateLayout(layout_card_1.id, update);
 
     const written = MockFs.readJsonFile<Design>(
-      getDesignFilePath(design_books.id),
+      resolveDesignFilePath(design_books.id),
     );
 
     expect(written?.layouts.find((l) => l.id === layout_card_1.id)).toEqual(

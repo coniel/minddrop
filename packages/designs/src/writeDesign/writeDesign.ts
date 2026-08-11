@@ -1,6 +1,6 @@
 import { Fs } from '@minddrop/file-system';
 import { getDesign } from '../getDesign';
-import { getDesignFilePath } from '../utils';
+import { resolveDesignBundleDirPath, resolveDesignFilePath } from '../utils';
 
 /**
  * Writes a design to the file system.
@@ -11,6 +11,9 @@ export async function writeDesign(designId: string): Promise<void> {
   // Get the design
   const design = getDesign(designId);
 
+  // Ensure the design's bundle directory exists
+  await Fs.ensureDir(resolveDesignBundleDirPath(design.id));
+
   // Write the design to the file system
-  await Fs.writeJsonFile(getDesignFilePath(design.id), design);
+  await Fs.writeJsonFile(resolveDesignFilePath(design.id), design);
 }

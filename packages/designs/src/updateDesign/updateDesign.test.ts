@@ -4,7 +4,7 @@ import { DesignsStore } from '../DesignsStore';
 import { DesignUpdatedEvent, DesignUpdatedEventData } from '../events';
 import { MockFs, cleanup, design_books, setup } from '../test-utils';
 import { Design } from '../types';
-import { getDesignFilePath } from '../utils';
+import { resolveDesignFilePath } from '../utils';
 import { updateDesign } from './updateDesign';
 
 const lastModified = new Date('2000-01-01T00:00:00.000Z');
@@ -39,7 +39,7 @@ describe('updateDesign', () => {
     await updateDesign(design_books.id, update);
 
     expect(
-      MockFs.readJsonFile<Design>(getDesignFilePath(design_books.id)),
+      MockFs.readJsonFile<Design>(resolveDesignFilePath(design_books.id)),
     ).toEqual(updatedDesign);
   });
 

@@ -6,7 +6,7 @@ import { DesignNotFoundError } from '../errors';
 import { LayoutCreatedEvent, LayoutCreatedEventData } from '../events';
 import { MockFs, cleanup, design_empty, setup } from '../test-utils';
 import { Design, Layout } from '../types';
-import { getDesignFilePath } from '../utils';
+import { resolveDesignFilePath } from '../utils';
 import { createLayout } from './createLayout';
 
 const created = new Date('2000-01-01T00:00:00.000Z');
@@ -63,7 +63,7 @@ describe('createLayout', () => {
     const result = await createLayout(design_empty.id, 'card', 'My card');
 
     const written = MockFs.readJsonFile<Design>(
-      getDesignFilePath(design_empty.id),
+      resolveDesignFilePath(design_empty.id),
     );
 
     expect(written?.layouts).toEqual([result]);

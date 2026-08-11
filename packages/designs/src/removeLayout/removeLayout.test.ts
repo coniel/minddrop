@@ -12,7 +12,7 @@ import {
   setup,
 } from '../test-utils';
 import { Design } from '../types';
-import { getDesignFilePath } from '../utils';
+import { resolveDesignFilePath } from '../utils';
 import { removeLayout } from './removeLayout';
 
 describe('removeLayout', () => {
@@ -54,7 +54,7 @@ describe('removeLayout', () => {
     await removeLayout(layout_card_1.id);
 
     const written = MockFs.readJsonFile<Design>(
-      getDesignFilePath(design_books.id),
+      resolveDesignFilePath(design_books.id),
     );
 
     expect(

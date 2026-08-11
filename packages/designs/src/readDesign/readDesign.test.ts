@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { cleanup, design_books, setup } from '../test-utils';
-import { getDesignFilePath } from '../utils';
+import { MockFs, cleanup, design_books, setup } from '../test-utils';
+import { resolveDesignBundleDirPath, resolveDesignsDirPath } from '../utils';
 import { readDesign } from './readDesign';
 
 describe('readDesign', () => {
@@ -8,14 +8,38 @@ describe('readDesign', () => {
 
   afterEach(cleanup);
 
-  it('reads the design from the file system', async () => {
-    const design = await readDesign(getDesignFilePath(design_books.id));
+  it('reads the design from its bundle directory', async () => {
+    const design = await readDesign(
+      resolveDesignBundleDirPath(design_books.id),
+    );
 
     expect(design).toEqual(design_books);
   });
 
-  it('returns null if the design does not exist', async () => {
-    const design = await readDesign('non-existent-path');
+  it('returns null if the bundle directory does not exist', async () => {
+    const design = await readDesign(
+      resolveDesignBundleDirPath('missing-design'),
+    );
+
+    expect(design).toBeNull();
+  });
+
+  it('returns null if the directory contains no design file', async () => {
+    const bundleDirPath = resolveDesignBundleDirPath('not-a-bundle');
+
+    MockFs.addFiles([`${bundleDirPath}/other.json`]);
+
+    const design = await readDesign(bundleDirPath);
+
+    expect(design).toBeNull();
+  });
+
+  it('returns null for a stray file in the designs directory', async () => {
+    const filePath = `${resolveDesignsDirPath()}/stranger.other`;
+
+    MockFs.addFiles([filePath]);
+
+    const design = await readDesign(filePath);
 
     expect(design).toBeNull();
   });

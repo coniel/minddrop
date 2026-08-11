@@ -1,7 +1,7 @@
 import { MockFileDescriptor } from '@minddrop/file-system';
 import { PropertiesSchema } from '@minddrop/properties';
 import { Design } from '../../types';
-import { getDesignFilePath } from '../../utils';
+import { resolveDesignFilePath } from '../../utils';
 import {
   layout_card_1,
   layout_card_2,
@@ -76,6 +76,6 @@ export const designs = [
 ];
 
 export const designFiles: MockFileDescriptor[] = designs.map((design) => ({
-  path: getDesignFilePath(design.id),
+  path: resolveDesignFilePath(design.id),
   textContent: JSON.stringify(design),
 }));

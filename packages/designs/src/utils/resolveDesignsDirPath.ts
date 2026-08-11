@@ -7,6 +7,6 @@ import { DesignsDirName } from '../constants';
  *
  * @returns The path to the designs directory.
  */
-export function getDesignsDirPath() {
+export function resolveDesignsDirPath() {
   return Fs.concatPath(Paths.workspace, Paths.hiddenDirName, DesignsDirName);
 }

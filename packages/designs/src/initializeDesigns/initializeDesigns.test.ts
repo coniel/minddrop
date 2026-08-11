@@ -7,7 +7,7 @@ import {
   design_empty,
   setup,
 } from '../test-utils';
-import { getDesignFilePath } from '../utils';
+import { resolveDesignFilePath, resolveDesignsDirPath } from '../utils';
 import { initializeDesigns } from './initializeDesigns';
 
 describe('initializeDesigns', () => {
@@ -22,9 +22,9 @@ describe('initializeDesigns', () => {
     expect(DesignsStore.get(design_empty.id)).toEqual(design_empty);
   });
 
-  it('ignores non-design files in the designs directory', async () => {
+  it('ignores entries which are not design bundles', async () => {
     MockFs.writeTextFile(
-      `${getDesignFilePath('stranger').replace(/\.design$/, '.other')}`,
+      `${resolveDesignsDirPath()}/stranger.other`,
       JSON.stringify({ id: 'stranger', name: 'stranger' }),
     );
 
@@ -34,7 +34,12 @@ describe('initializeDesigns', () => {
   });
 
   it('handles failed design reads', async () => {
-    MockFs.writeTextFile(getDesignFilePath('invalid-design'), 'invalid json');
+    MockFs.addFiles([
+      {
+        path: resolveDesignFilePath('invalid-design'),
+        textContent: 'invalid json',
+      },
+    ]);
 
     await initializeDesigns();
 

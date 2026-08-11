@@ -3,7 +3,7 @@ import { Fs } from '@minddrop/file-system';
 import { DesignsStore } from '../DesignsStore';
 import { DesignDeletedEvent, DesignDeletedEventData } from '../events';
 import { getDesign } from '../getDesign';
-import { getDesignFilePath } from '../utils';
+import { resolveDesignBundleDirPath } from '../utils';
 
 /**
  * Deletes a design.
@@ -14,8 +14,8 @@ export async function deleteDesign(id: string): Promise<void> {
   // Get the design
   const design = getDesign(id);
 
-  // Delete the design file
-  await Fs.removeFile(getDesignFilePath(id));
+  // Delete the design's bundle directory, taking its media with it
+  await Fs.removeDir(resolveDesignBundleDirPath(id), { recursive: true });
 
   // Remove the design from the store
   DesignsStore.remove(id);

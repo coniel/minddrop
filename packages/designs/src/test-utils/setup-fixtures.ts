@@ -1,6 +1,6 @@
 import { MockFileSystem } from '@minddrop/file-system';
 import { DesignsStore } from '../DesignsStore';
-import { getDesignsDirPath } from '../utils';
+import { resolveDesignsDirPath } from '../utils';
 import { designFiles, designs } from './fixtures';
 
 export interface SetupDesignFixturesOptions {
@@ -16,7 +16,7 @@ export function setupDesignFixtures(
   },
 ) {
   // Create the designs directory
-  MockFs.createDir(getDesignsDirPath(), { recursive: true });
+  MockFs.createDir(resolveDesignsDirPath(), { recursive: true });
 
   if (options.loadDesigns !== false) {
     // Load designs into the store (this also makes their inner layouts

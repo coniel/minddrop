@@ -5,7 +5,7 @@ import { DesignsStore } from '../DesignsStore';
 import { DesignCreatedEvent, DesignCreatedEventData } from '../events';
 import { MockFs, cleanup, setup } from '../test-utils';
 import { Design, DesignId } from '../types';
-import { getDesignFilePath, getDesignsDirPath } from '../utils';
+import { resolveDesignFilePath, resolveDesignsDirPath } from '../utils';
 import { createDesign } from './createDesign';
 
 const newDesign: Design = {
@@ -27,7 +27,7 @@ describe('createDesign', () => {
 
     await createDesign('Books');
 
-    expect(MockFs.exists(getDesignsDirPath())).toBe(true);
+    expect(MockFs.exists(resolveDesignsDirPath())).toBe(true);
   });
 
   it('adds the design to the store', async () => {
@@ -39,7 +39,7 @@ describe('createDesign', () => {
   it('writes the design to the file system', async () => {
     const result = await createDesign('Books');
 
-    expect(MockFs.exists(getDesignFilePath(result.id))).toBe(true);
+    expect(MockFs.exists(resolveDesignFilePath(result.id))).toBe(true);
   });
 
   it('defaults the design name to the localized new design label', async () => {
