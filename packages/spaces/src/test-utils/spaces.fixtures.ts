@@ -2,7 +2,7 @@ import { Layout } from '@minddrop/designs';
 import { MockFileDescriptor } from '@minddrop/file-system';
 import { DefaultSpaceIcon } from '../constants';
 import { Space } from '../types';
-import { getSpaceFilePath, getSpacesDirPath } from '../utils';
+import { resolveSpaceFilePath, resolveSpacesDirPath } from '../utils';
 import {
   spaceLayout_1,
   spaceLayout_2,
@@ -29,9 +29,9 @@ export const space_3 = generateSpaceFixture(3, spaceLayout_3);
 export const spaces = [space_1, space_2, space_3];
 
 export const spaceFiles: (string | MockFileDescriptor)[] = [
-  getSpacesDirPath(),
+  resolveSpacesDirPath(),
   ...spaces.map((space) => ({
-    path: getSpaceFilePath(space.id),
+    path: resolveSpaceFilePath(space.id),
     textContent: JSON.stringify(space),
   })),
 ];

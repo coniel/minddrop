@@ -1,6 +1,6 @@
 import { MockFileSystem } from '@minddrop/file-system';
 import { SpacesStore } from '../SpacesStore';
-import { getSpacesDirPath } from '../utils';
+import { resolveSpacesDirPath } from '../utils';
 import { spaceFiles, spaces } from './spaces.fixtures';
 
 export interface SetupSpaceFixturesOptions {
@@ -16,7 +16,7 @@ export function setupSpaceFixtures(
   },
 ) {
   // Create the spaces directory
-  MockFs.createDir(getSpacesDirPath(), { recursive: true });
+  MockFs.createDir(resolveSpacesDirPath(), { recursive: true });
 
   if (options.loadSpaces !== false) {
     // Load spaces into the store

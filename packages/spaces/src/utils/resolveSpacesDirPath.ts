@@ -7,6 +7,6 @@ import { SpacesDirName } from '../constants';
  *
  * @returns The path to the spaces directory.
  */
-export function getSpacesDirPath() {
+export function resolveSpacesDirPath() {
   return Fs.concatPath(Paths.workspace, Paths.hiddenDirName, SpacesDirName);
 }

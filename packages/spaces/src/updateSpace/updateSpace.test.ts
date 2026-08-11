@@ -4,7 +4,7 @@ import { SpacesStore } from '../SpacesStore';
 import { SpaceUpdatedEvent, SpaceUpdatedEventData } from '../events';
 import { MockFs, cleanup, mockDate, setup, space_1 } from '../test-utils';
 import { Space } from '../types';
-import { getSpaceFilePath } from '../utils';
+import { resolveSpaceFilePath } from '../utils';
 import { updateSpace } from './updateSpace';
 
 const update = {
@@ -30,7 +30,7 @@ describe('updateSpace', () => {
   it('writes the space config to the file system', async () => {
     await updateSpace(space_1.id, update);
 
-    expect(MockFs.readJsonFile(getSpaceFilePath(space_1.id))).toEqual(
+    expect(MockFs.readJsonFile(resolveSpaceFilePath(space_1.id))).toEqual(
       updatedSpace,
     );
   });

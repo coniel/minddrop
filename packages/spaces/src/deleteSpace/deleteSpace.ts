@@ -3,7 +3,7 @@ import { Fs } from '@minddrop/file-system';
 import { SpacesStore } from '../SpacesStore';
 import { SpaceDeletedEvent, SpaceDeletedEventData } from '../events';
 import { getSpace } from '../getSpace';
-import { getSpaceFilePath } from '../utils';
+import { resolveSpaceBundleDirPath } from '../utils';
 
 /**
  * Deletes a space, removing it from the store and deleting it from the
@@ -20,8 +20,8 @@ export async function deleteSpace(spaceId: string): Promise<void> {
   // Delete the space from the store
   SpacesStore.remove(spaceId);
 
-  // Delete the space config from the file system
-  await Fs.removeFile(getSpaceFilePath(spaceId));
+  // Delete the space's bundle directory, taking its media with it
+  await Fs.removeDir(resolveSpaceBundleDirPath(spaceId), { recursive: true });
 
   // Dispatch the space deleted event
   Events.dispatch<SpaceDeletedEventData>(SpaceDeletedEvent, space);

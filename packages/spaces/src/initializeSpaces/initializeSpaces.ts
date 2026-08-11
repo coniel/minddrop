@@ -1,10 +1,9 @@
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { SpacesStore } from '../SpacesStore';
-import { SpaceFileExtension } from '../constants';
 import { SpacesLoadedEvent, SpacesLoadedEventData } from '../events';
 import { readSpace } from '../readSpace';
-import { getSpacesDirPath } from '../utils';
+import { resolveSpacesDirPath } from '../utils';
 
 /**
  * Initializes spaces by loading space configs from the spaces
@@ -13,22 +12,18 @@ import { getSpacesDirPath } from '../utils';
  * If the spaces directory does not exist, it will be created.
  */
 export async function initializeSpaces(): Promise<void> {
-  const spacesDirPath = getSpacesDirPath();
+  const spacesDirPath = resolveSpacesDirPath();
 
   // Ensure that the spaces directory exists
   await Fs.ensureDir(spacesDirPath);
 
-  // Load spaces from the spaces directory
+  // Read the entries in the spaces directory
   const files = await Fs.readDir(spacesDirPath);
 
-  // Filter out files that are not space configs
-  const spaceFilePaths = files
-    .filter((file) => file.path.endsWith(SpaceFileExtension))
-    .map((file) => file.path);
-
-  // Read the space files
+  // Read a space from each entry, discarding entries which are not
+  // space bundles
   const spacePromises = await Promise.all(
-    spaceFilePaths.map((path) => readSpace(path)),
+    files.map((file) => readSpace(file.path)),
   );
 
   // Filter out null spaces

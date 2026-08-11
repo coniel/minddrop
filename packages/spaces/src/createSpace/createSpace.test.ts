@@ -5,7 +5,7 @@ import { SpacesStore } from '../SpacesStore';
 import { DefaultSpaceIcon } from '../constants';
 import { SpaceCreatedEvent } from '../events';
 import { MockFs, cleanup, mockDate, setup, spaceLayout_1 } from '../test-utils';
-import { getSpaceFilePath } from '../utils';
+import { resolveSpaceFilePath } from '../utils';
 import { createSpace } from './createSpace';
 
 const newSpace = {
@@ -67,7 +67,9 @@ describe('createSpace', () => {
   it('writes the space config to the file system', async () => {
     const space = await createSpace();
 
-    expect(MockFs.readJsonFile(getSpaceFilePath(space.id))).toEqual(newSpace);
+    expect(MockFs.readJsonFile(resolveSpaceFilePath(space.id))).toEqual(
+      newSpace,
+    );
   });
 
   it('dispatches the space created event', async () =>

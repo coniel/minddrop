@@ -3,7 +3,7 @@ import { Events } from '@minddrop/events';
 import { SpacesStore } from '../SpacesStore';
 import { SpacesLoadedEvent } from '../events';
 import { MockFs, cleanup, setup, spaces } from '../test-utils';
-import { getSpaceFilePath, getSpacesDirPath } from '../utils';
+import { resolveSpaceFilePath, resolveSpacesDirPath } from '../utils';
 import { initializeSpaces } from './initializeSpaces';
 
 describe('initializeSpaces', () => {
@@ -13,11 +13,11 @@ describe('initializeSpaces', () => {
 
   it('creates the spaces directory if it does not exist', async () => {
     // Remove the spaces directory
-    MockFs.removeFile(getSpacesDirPath());
+    MockFs.removeFile(resolveSpacesDirPath());
 
     await initializeSpaces();
 
-    expect(MockFs.exists(getSpacesDirPath())).toBe(true);
+    expect(MockFs.exists(resolveSpacesDirPath())).toBe(true);
   });
 
   it('loads spaces from the spaces directory into the store', async () => {
@@ -28,7 +28,12 @@ describe('initializeSpaces', () => {
 
   it('filters out null spaces', async () => {
     // Create an invalid space file
-    MockFs.writeTextFile(getSpaceFilePath('invalid-space'), 'invalid json');
+    MockFs.addFiles([
+      {
+        path: resolveSpaceFilePath('invalid-space'),
+        textContent: 'invalid json',
+      },
+    ]);
 
     await initializeSpaces();
 

@@ -3,7 +3,7 @@ import { Events } from '@minddrop/events';
 import { SpacesStore } from '../SpacesStore';
 import { SpaceDeletedEvent } from '../events';
 import { MockFs, cleanup, setup, space_1 } from '../test-utils';
-import { getSpaceFilePath } from '../utils';
+import { resolveSpaceBundleDirPath, resolveSpaceMediaDirPath } from '../utils';
 import { deleteSpace } from './deleteSpace';
 
 describe('deleteSpace', () => {
@@ -17,10 +17,20 @@ describe('deleteSpace', () => {
     expect(SpacesStore.get(space_1.id)).toBeNull();
   });
 
-  it('deletes the space config from the file system', async () => {
+  it('deletes the space bundle directory from the file system', async () => {
     await deleteSpace(space_1.id);
 
-    expect(MockFs.exists(getSpaceFilePath(space_1.id))).toBe(false);
+    expect(MockFs.exists(resolveSpaceBundleDirPath(space_1.id))).toBe(false);
+  });
+
+  it('deletes the space media along with the bundle', async () => {
+    const mediaPath = `${resolveSpaceMediaDirPath(space_1.id)}/image.png`;
+
+    MockFs.addFiles([{ path: mediaPath, textContent: 'image data' }]);
+
+    await deleteSpace(space_1.id);
+
+    expect(MockFs.exists(mediaPath)).toBe(false);
   });
 
   it('dispatches the space deleted event', async () =>

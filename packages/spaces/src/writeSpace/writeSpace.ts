@@ -1,6 +1,6 @@
 import { Fs } from '@minddrop/file-system';
 import { getSpace } from '../getSpace';
-import { getSpaceFilePath, getSpacesDirPath } from '../utils';
+import { resolveSpaceBundleDirPath, resolveSpaceFilePath } from '../utils';
 
 /**
  * Writes a space to the file system.
@@ -12,9 +12,9 @@ export async function writeSpace(id: string): Promise<void> {
   // Get the space
   const space = getSpace(id);
 
-  // Ensure the spaces directory exists
-  await Fs.ensureDir(getSpacesDirPath());
+  // Ensure the space's bundle directory exists
+  await Fs.ensureDir(resolveSpaceBundleDirPath(id));
 
   // Write the space config to the file system
-  Fs.writeJsonFile(getSpaceFilePath(id), space);
+  Fs.writeJsonFile(resolveSpaceFilePath(id), space);
 }
