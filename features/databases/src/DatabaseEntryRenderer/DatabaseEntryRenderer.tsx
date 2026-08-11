@@ -7,7 +7,7 @@ import {
   layoutContextBaseType,
   withImplicitTitleProperty,
 } from '@minddrop/databases';
-import { Designs, Layouts } from '@minddrop/designs';
+import { Designs, Layouts, resolveDesignMediaDirPath } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
 import { LayoutRenderer } from '@minddrop/feature-designs';
 import { useTranslation } from '@minddrop/i18n';
@@ -335,6 +335,7 @@ const Entry: React.FC<EntryProps> = ({
           context={layoutContext}
           autoFocusEditor={autoFocusEditor}
           designProperties={design?.properties}
+          mediaDirPath={design ? resolveDesignMediaDirPath(design.id) : null}
           propertyMap={propertyMap}
           propertyValues={propertyValues}
           properties={rendererProperties}
