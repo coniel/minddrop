@@ -37,7 +37,13 @@ export interface Query {
   connections: QueryConnection[];
 }
 
-export type QueryNodeType = 'source' | 'filter' | 'sort' | 'limit' | 'results';
+export type QueryNodeType =
+  | 'source'
+  | 'filter'
+  | 'collection-filter'
+  | 'sort'
+  | 'limit'
+  | 'results';
 
 interface QueryNodeBase {
   /**
@@ -102,6 +108,34 @@ export interface QueryFilterNode extends QueryNodeBase {
 }
 
 /**
+ * A node narrowing its input entries by membership of a
+ * collection.
+ */
+export interface QueryCollectionFilterNode extends QueryNodeBase {
+  type: 'collection-filter';
+
+  /**
+   * Whether membership is tested against a single collection or
+   * against every collection at once.
+   */
+  source: 'collection' | 'any-collection';
+
+  /**
+   * The ID of the collection to test membership against. An
+   * empty string until the user picks a collection, and unused
+   * by the any-collection source. Not a CollectionId because
+   * virtual collections use composite IDs.
+   */
+  collection: string;
+
+  /**
+   * Whether the filter keeps the collection's members or
+   * everything but them.
+   */
+  operator: 'is-in' | 'is-not-in';
+}
+
+/**
  * A node adding a sort criterion to its input entries.
  * Successive sort nodes sort by the earlier criteria first.
  */
@@ -149,6 +183,7 @@ export interface QueryResultsNode extends QueryNodeBase {
 export type QueryNode =
   | QuerySourceNode
   | QueryFilterNode
+  | QueryCollectionFilterNode
   | QuerySortNode
   | QueryLimitNode
   | QueryResultsNode;

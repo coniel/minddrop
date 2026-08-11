@@ -29,6 +29,11 @@ export const QueryBuilderToolbar: React.FC = () => (
       tooltip="queries.toolbar.filter"
     />
     <ToolbarCard
+      type="collection-filter"
+      icon="library"
+      tooltip="queries.toolbar.collectionFilter"
+    />
+    <ToolbarCard
       type="sort"
       icon="arrow-up-down"
       tooltip="queries.toolbar.sort"

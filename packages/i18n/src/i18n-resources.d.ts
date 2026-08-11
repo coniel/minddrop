@@ -1498,6 +1498,7 @@ declare module 'i18next' {
           nodes: {
             source: string;
             filter: string;
+            collectionFilter: string;
             sort: string;
             limit: string;
             results: string;
@@ -1505,12 +1506,26 @@ declare module 'i18next' {
           toolbar: {
             source: string;
             filter: string;
+            collectionFilter: string;
             sort: string;
             limit: string;
           };
           sourcePicker: {
             searchPlaceholder: string;
             empty: string;
+          };
+          collectionPicker: {
+            select: string;
+            anyCollection: string;
+            groups: {
+              collections: string;
+            };
+            searchPlaceholder: string;
+            empty: string;
+          };
+          collectionOperators: {
+            'is-in': string;
+            'is-not-in': string;
           };
           operators: {
             equals: string;

@@ -1,12 +1,16 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { CollectionFixtures, Collections } from '@minddrop/collections';
 import { query_1 } from '../../test-utils/queries.fixtures';
 import {
   Query,
+  QueryCollectionFilterNode,
   QueryConnection,
   QueryFilterNode,
   QueryNode,
 } from '../../types';
 import { compileQueryGraph } from './compileQueryGraph';
+
+const { collection_1, collection_2, collection_virtual_1 } = CollectionFixtures;
 
 // A second filter node comparing a number property
 const amountFilter: QueryFilterNode = {
@@ -19,6 +23,29 @@ const amountFilter: QueryFilterNode = {
   operator: 'greater-than',
   value: 5,
 };
+
+// A filter node keeping the fixture collection's members
+const collectionFilter: QueryCollectionFilterNode = {
+  id: 'query-node_collection',
+  type: 'collection-filter',
+  x: 0,
+  y: 0,
+  source: 'collection',
+  collection: collection_1.id,
+  operator: 'is-in',
+};
+
+// Builds a graph running the fixture source through the given
+// collection filter configuration
+function collectionFilterQuery(data: Partial<QueryCollectionFilterNode>) {
+  return graphQuery(
+    [sourceNode, { ...collectionFilter, ...data }, resultsNode],
+    [
+      { from: sourceNode.id, to: collectionFilter.id },
+      { from: collectionFilter.id, to: resultsNode.id },
+    ],
+  );
+}
 
 // Builds a query fixture from nodes and connections
 function graphQuery(
@@ -39,6 +66,15 @@ function graphQuery(
 const [sourceNode, filterNode, resultsNode] = query_1.nodes;
 
 describe('compileQueryGraph', () => {
+  beforeEach(() => {
+    // Collection filters compile the collection's current items
+    Collections.Store.load([collection_1]);
+  });
+
+  afterEach(() => {
+    Collections.Store.clear();
+  });
+
   it('emits a source node database as an unfiltered scope', () => {
     const compiled = compileQueryGraph(query_1);
 
@@ -104,6 +140,99 @@ describe('compileQueryGraph', () => {
         },
       ],
     });
+  });
+
+  it('ANDs a collection membership test onto its input scopes', () => {
+    const compiled = compileQueryGraph(collectionFilterQuery({}));
+
+    expect(compiled[collectionFilter.id].outputScopes).toEqual([
+      {
+        databaseId: 'database_objects',
+        filter: {
+          combinator: 'and',
+          filters: [{ operator: 'id-is-one-of', entryIds: collection_1.items }],
+        },
+      },
+    ]);
+  });
+
+  it('compiles is-not-in collection filters to a negated membership test', () => {
+    const compiled = compileQueryGraph(
+      collectionFilterQuery({ operator: 'is-not-in' }),
+    );
+    const scope = compiled[collectionFilter.id].outputScopes[0];
+
+    expect(scope.filter).toEqual({
+      combinator: 'and',
+      filters: [{ operator: 'id-is-not-one-of', entryIds: collection_1.items }],
+    });
+  });
+
+  it('pools every collection for any-collection filters', () => {
+    // Virtual collections count as membership, so entries held
+    // by another entry's collection property are not orphans.
+    // The virtual fixture shares the first collection's items,
+    // so give it its own.
+    const virtualCollection = {
+      ...collection_virtual_1,
+      items: ['database-entry_virtual-member'],
+    };
+
+    Collections.Store.load([collection_2, virtualCollection]);
+
+    const compiled = compileQueryGraph(
+      collectionFilterQuery({ source: 'any-collection', collection: '' }),
+    );
+    const scope = compiled[collectionFilter.id].outputScopes[0];
+
+    expect(scope.filter).toEqual({
+      combinator: 'and',
+      filters: [
+        {
+          operator: 'id-is-one-of',
+          entryIds: [
+            ...collection_1.items,
+            ...collection_2.items,
+            ...virtualCollection.items,
+          ],
+        },
+      ],
+    });
+  });
+
+  it('deduplicates entries held by several collections', () => {
+    // A collection holding the same entries as the first
+    Collections.Store.load([{ ...collection_2, items: collection_1.items }]);
+
+    const compiled = compileQueryGraph(
+      collectionFilterQuery({ source: 'any-collection', collection: '' }),
+    );
+    const scope = compiled[collectionFilter.id].outputScopes[0];
+
+    expect(scope.filter).toEqual({
+      combinator: 'and',
+      filters: [{ operator: 'id-is-one-of', entryIds: collection_1.items }],
+    });
+  });
+
+  it('passes entries through a collection filter without a collection', () => {
+    const compiled = compileQueryGraph(
+      collectionFilterQuery({ collection: '' }),
+    );
+
+    expect(compiled[collectionFilter.id].outputScopes).toEqual([
+      { databaseId: 'database_objects', filter: null },
+    ]);
+  });
+
+  it('passes entries through a collection filter referencing a missing collection', () => {
+    const compiled = compileQueryGraph(
+      collectionFilterQuery({ collection: 'collection_missing' }),
+    );
+
+    expect(compiled[collectionFilter.id].outputScopes).toEqual([
+      { databaseId: 'database_objects', filter: null },
+    ]);
   });
 
   it('ORs parallel branches merging into a node', () => {

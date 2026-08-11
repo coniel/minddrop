@@ -34,6 +34,7 @@ import {
 } from '@minddrop/ui-canvas';
 import { QueryBuilderSelectionToolbar } from '../QueryBuilderSelectionToolbar';
 import { QueryBuilderToolbar } from '../QueryBuilderToolbar';
+import { QueryCollectionFilterNodeCard } from '../QueryCollectionFilterNodeCard';
 import { QueryFilterNodeCard } from '../QueryFilterNodeCard';
 import { QueryLimitNodeCard } from '../QueryLimitNodeCard';
 import { QueryNodeTypePicker } from '../QueryNodeTypePicker';
@@ -674,6 +675,16 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
 
     if (node.type === 'filter') {
       return <QueryFilterNodeCard query={query} node={node} {...cardProps} />;
+    }
+
+    if (node.type === 'collection-filter') {
+      return (
+        <QueryCollectionFilterNodeCard
+          query={query}
+          node={node}
+          {...cardProps}
+        />
+      );
     }
 
     if (node.type === 'sort') {

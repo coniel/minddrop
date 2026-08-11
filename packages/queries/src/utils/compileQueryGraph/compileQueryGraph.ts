@@ -1,9 +1,11 @@
+import { Collections } from '@minddrop/collections';
 import {
   EntryFilterGroup,
+  EntryIdFilter,
   EntryQueryScope,
   EntrySort,
 } from '@minddrop/databases';
-import { Query, QueryNode } from '../../types';
+import { Query, QueryCollectionFilterNode, QueryNode } from '../../types';
 import { convertQueryFilterNodeToEntryFilter } from '../convertQueryFilterNodeToEntryFilter';
 
 export interface CompiledQueryNode {
@@ -47,7 +49,8 @@ export type CompiledQueryGraph = Record<string, CompiledQueryNode>;
  * sort criteria and limits.
  *
  * Entries flow from source nodes through the graph: filter
- * nodes AND their comparison onto each scope, parallel branches
+ * nodes AND their comparison onto each scope, collection filter
+ * nodes AND a membership test onto each scope, parallel branches
  * merging into a node are combined with OR, sort nodes append
  * their criterion in flow order, and limit nodes carry the
  * smallest cap. Incomplete nodes pass their input through
@@ -142,6 +145,46 @@ function compileNode(
     };
   }
 
+  // Collection filter nodes narrow their input to the
+  // collection's members, or to everything but them
+  if (node.type === 'collection-filter') {
+    const memberIds = resolveCollectionFilterMembers(node);
+
+    // A missing collection passes entries through unchanged, as
+    // an unconfigured filter does
+    if (!memberIds) {
+      return {
+        inputScopes,
+        outputScopes: inputScopes,
+        sorts,
+        inputLimit: limit,
+        limit,
+      };
+    }
+
+    const condition: EntryIdFilter = {
+      operator: node.operator === 'is-in' ? 'id-is-one-of' : 'id-is-not-one-of',
+      entryIds: memberIds,
+    };
+
+    // Narrow each scope by the membership test
+    const outputScopes = inputScopes.map((scope) => ({
+      databaseId: scope.databaseId,
+      filter: {
+        combinator: 'and' as const,
+        filters: scope.filter ? [scope.filter, condition] : [condition],
+      },
+    }));
+
+    return {
+      inputScopes,
+      outputScopes,
+      sorts,
+      inputLimit: limit,
+      limit,
+    };
+  }
+
   // Sort nodes append their criterion after the upstream sorts,
   // ignoring properties already sorted upstream
   if (node.type === 'sort') {
@@ -190,6 +233,36 @@ function compileNode(
     inputLimit: limit,
     limit,
   };
+}
+
+/**
+ * Returns the entry IDs a collection filter node tests
+ * membership against, or null when it references a collection
+ * which does not exist.
+ *
+ * Any-collection filters span every collection, virtual ones
+ * included, so entries held by another entry's collection
+ * property count as members.
+ */
+function resolveCollectionFilterMembers(
+  node: QueryCollectionFilterNode,
+): string[] | null {
+  // Any-collection filters pool every collection's items
+  if (node.source === 'any-collection') {
+    const memberIds = Collections.getAll().flatMap(
+      (collection) => collection.items,
+    );
+
+    // An entry held by several collections appears once
+    return Array.from(new Set(memberIds));
+  }
+
+  // An unset collection has nothing to test against
+  if (!node.collection) {
+    return null;
+  }
+
+  return Collections.get(node.collection, false)?.items ?? null;
 }
 
 /**

@@ -12,6 +12,7 @@ export const QuerySourceCardDataKey = 'query-source-card';
 export const QUERY_NODE_WIDTHS: Record<QueryNodeType, number> = {
   source: 220,
   filter: 280,
+  'collection-filter': 280,
   sort: 280,
   limit: 200,
   results: 300,

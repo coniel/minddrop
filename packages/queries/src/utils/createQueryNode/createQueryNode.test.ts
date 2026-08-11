@@ -32,6 +32,20 @@ describe('createQueryNode', () => {
     });
   });
 
+  it('creates a collection filter node without a collection', () => {
+    const node = createQueryNode('collection-filter', { x: 0, y: 0 });
+
+    expect(node).toEqual({
+      id: expect.any(String),
+      type: 'collection-filter',
+      x: 0,
+      y: 0,
+      source: 'collection',
+      collection: '',
+      operator: 'is-in',
+    });
+  });
+
   it('creates an unconfigured ascending sort node', () => {
     const node = createQueryNode('sort', { x: 0, y: 0 });
 

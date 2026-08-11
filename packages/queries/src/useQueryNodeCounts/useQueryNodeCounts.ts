@@ -1,5 +1,14 @@
 import { useEffect, useId, useState } from 'react';
 import {
+  CollectionCreatedEvent,
+  CollectionCreatedEventData,
+  CollectionDeletedEvent,
+  CollectionDeletedEventData,
+  CollectionUpdatedEvent,
+  CollectionUpdatedEventData,
+  CollectionsLoadedEvent,
+} from '@minddrop/collections';
+import {
   DatabaseEntriesSqlSyncedEventData,
   DatabaseSqlReindexedEventData,
   Databases,
@@ -7,6 +16,7 @@ import {
 import { Events } from '@minddrop/events';
 import { useQuery } from '../QueriesStore';
 import { QueryNodeCounts, getQueryNodeCounts } from '../getQueryNodeCounts';
+import { getQueryCollectionReferences } from '../utils';
 
 /**
  * Returns the entry counts flowing into and out of each node of
@@ -47,6 +57,15 @@ export function useQueryNodeCounts(
       node.type === 'source' && node.database ? [node.database] : [],
     );
 
+    // The collections the graph filters by, whose items are
+    // compiled into the query
+    const collections = getQueryCollectionReferences(query);
+
+    // Whether a collection's contents feed the query
+    const referencesCollection = (collectionId: string) =>
+      collections.anyCollection ||
+      collections.collectionIds.includes(collectionId);
+
     // Recounts the node flows against the latest SQL data
     const recount = async () => {
       const nodeCounts = await getQueryNodeCounts(queryId);
@@ -86,6 +105,48 @@ export function useQueryNodeCounts(
       },
     );
 
+    // Re-count when a referenced collection's items change
+    Events.addListener<CollectionUpdatedEventData>(
+      CollectionUpdatedEvent,
+      listenerId,
+      ({ data }) => {
+        if (referencesCollection(data.updated.id)) {
+          recount();
+        }
+      },
+    );
+
+    // Re-count when a referenced collection is created, which
+    // includes virtual collections hydrated on demand
+    Events.addListener<CollectionCreatedEventData>(
+      CollectionCreatedEvent,
+      listenerId,
+      ({ data }) => {
+        if (referencesCollection(data.id)) {
+          recount();
+        }
+      },
+    );
+
+    // Re-count when a referenced collection is deleted
+    Events.addListener<CollectionDeletedEventData>(
+      CollectionDeletedEvent,
+      listenerId,
+      ({ data }) => {
+        if (referencesCollection(data.id)) {
+          recount();
+        }
+      },
+    );
+
+    // Re-count once collections load, which replaces the store's
+    // contents wholesale
+    Events.addListener(CollectionsLoadedEvent, listenerId, () => {
+      if (collections.anyCollection || collections.collectionIds.length > 0) {
+        recount();
+      }
+    });
+
     return () => {
       cancelled = true;
 
@@ -93,6 +154,10 @@ export function useQueryNodeCounts(
       Events.removeListener(Databases.events.entriesSqlSynced, listenerId);
       Events.removeListener(Databases.events.backgroundSynced, listenerId);
       Events.removeListener(Databases.events.databaseSqlReindexed, listenerId);
+      Events.removeListener(CollectionUpdatedEvent, listenerId);
+      Events.removeListener(CollectionCreatedEvent, listenerId);
+      Events.removeListener(CollectionDeletedEvent, listenerId);
+      Events.removeListener(CollectionsLoadedEvent, listenerId);
     };
   }, [queryId, query, listenerId]);
 

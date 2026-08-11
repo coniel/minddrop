@@ -11,4 +11,5 @@ export * from './resolveRelativeDate';
 export * from './resolveQueryDateRange';
 export * from './convertQueryFilterNodeToEntryFilter';
 export * from './compileQueryGraph';
+export * from './getQueryCollectionReferences';
 export * from './searchQueries';

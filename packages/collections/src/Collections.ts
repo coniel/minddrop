@@ -3,6 +3,7 @@ export { createVirtualCollection as createVirtual } from './createVirtualCollect
 export { loadVirtualCollections as loadVirtual } from './loadVirtualCollections';
 export { deleteCollection as delete } from './deleteCollection';
 export { getCollection as get } from './getCollection';
+export { getAllCollections as getAll } from './getAllCollections';
 export { writeCollection as write } from './writeCollection';
 export { readCollection as read } from './readCollection';
 export {

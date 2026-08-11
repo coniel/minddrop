@@ -30,6 +30,7 @@
     "nodes": {
       "source": "Source",
       "filter": "Filter",
+      "collectionFilter": "Collection",
       "sort": "Sort",
       "limit": "Limit",
       "results": "Results"
@@ -37,12 +38,26 @@
     "toolbar": {
       "source": "Source",
       "filter": "Filter",
+      "collectionFilter": "Collection filter",
       "sort": "Sort",
       "limit": "Limit"
     },
     "sourcePicker": {
       "searchPlaceholder": "Search databases",
       "empty": "No matching databases"
+    },
+    "collectionPicker": {
+      "select": "Select collection",
+      "anyCollection": "Any collection",
+      "groups": {
+        "collections": "Collections"
+      },
+      "searchPlaceholder": "Search collections",
+      "empty": "No matching collections"
+    },
+    "collectionOperators": {
+      "is-in": "Is in",
+      "is-not-in": "Is not in"
     },
     "operators": {
       "equals": "Is equal to",

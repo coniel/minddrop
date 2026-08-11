@@ -68,6 +68,11 @@ export const QueryNodeTypePicker: React.FC<QueryNodeTypePickerProps> = ({
           onClick={() => onPick('filter')}
         />
         <MenuItem
+          icon="library"
+          label="queries.nodes.collectionFilter"
+          onClick={() => onPick('collection-filter')}
+        />
+        <MenuItem
           icon="arrow-up-down"
           label="queries.nodes.sort"
           onClick={() => onPick('sort')}

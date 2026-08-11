@@ -1,5 +1,14 @@
 import { useEffect, useId, useState } from 'react';
 import {
+  CollectionCreatedEvent,
+  CollectionCreatedEventData,
+  CollectionDeletedEvent,
+  CollectionDeletedEventData,
+  CollectionUpdatedEvent,
+  CollectionUpdatedEventData,
+  CollectionsLoadedEvent,
+} from '@minddrop/collections';
+import {
   DatabaseEntriesSqlSyncedEventData,
   DatabasePropertySqlSyncedEventData,
   DatabaseSqlReindexedEventData,
@@ -8,6 +17,7 @@ import {
 import { Events } from '@minddrop/events';
 import { useQuery } from '../QueriesStore';
 import { runQuery } from '../runQuery';
+import { getQueryCollectionReferences } from '../utils';
 
 /**
  * Returns the IDs of entries matching a query, re-running the
@@ -46,6 +56,15 @@ export function useQueryResults(queryId: string): string[] {
     const sourceDatabaseIds = query.nodes.flatMap((node) =>
       node.type === 'source' && node.database ? [node.database] : [],
     );
+
+    // The collections the graph filters by, whose items are
+    // compiled into the query
+    const collections = getQueryCollectionReferences(query);
+
+    // Whether a collection's contents feed the query
+    const referencesCollection = (collectionId: string) =>
+      collections.anyCollection ||
+      collections.collectionIds.includes(collectionId);
 
     // Runs the query against the latest SQL data
     const rerunQuery = async () => {
@@ -101,6 +120,48 @@ export function useQueryResults(queryId: string): string[] {
       },
     );
 
+    // Re-run when a referenced collection's items change
+    Events.addListener<CollectionUpdatedEventData>(
+      CollectionUpdatedEvent,
+      listenerId,
+      ({ data }) => {
+        if (referencesCollection(data.updated.id)) {
+          rerunQuery();
+        }
+      },
+    );
+
+    // Re-run when a referenced collection is created, which
+    // includes virtual collections hydrated on demand
+    Events.addListener<CollectionCreatedEventData>(
+      CollectionCreatedEvent,
+      listenerId,
+      ({ data }) => {
+        if (referencesCollection(data.id)) {
+          rerunQuery();
+        }
+      },
+    );
+
+    // Re-run when a referenced collection is deleted
+    Events.addListener<CollectionDeletedEventData>(
+      CollectionDeletedEvent,
+      listenerId,
+      ({ data }) => {
+        if (referencesCollection(data.id)) {
+          rerunQuery();
+        }
+      },
+    );
+
+    // Re-run once collections load, which replaces the store's
+    // contents wholesale
+    Events.addListener(CollectionsLoadedEvent, listenerId, () => {
+      if (collections.anyCollection || collections.collectionIds.length > 0) {
+        rerunQuery();
+      }
+    });
+
     return () => {
       cancelled = true;
 
@@ -109,6 +170,10 @@ export function useQueryResults(queryId: string): string[] {
       Events.removeListener(Databases.events.backgroundSynced, listenerId);
       Events.removeListener(Databases.events.databaseSqlReindexed, listenerId);
       Events.removeListener(Databases.events.propertySqlSynced, listenerId);
+      Events.removeListener(CollectionUpdatedEvent, listenerId);
+      Events.removeListener(CollectionCreatedEvent, listenerId);
+      Events.removeListener(CollectionDeletedEvent, listenerId);
+      Events.removeListener(CollectionsLoadedEvent, listenerId);
     };
   }, [queryId, query, listenerId]);
 

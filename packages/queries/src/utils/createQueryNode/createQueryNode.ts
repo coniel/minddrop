@@ -36,6 +36,18 @@ export function createQueryNode(
     return { ...base, type, property: '', propertyType: '', operator: '' };
   }
 
+  // Collection filter nodes start without a collection, keeping
+  // its members once picked
+  if (type === 'collection-filter') {
+    return {
+      ...base,
+      type,
+      source: 'collection',
+      collection: '',
+      operator: 'is-in',
+    };
+  }
+
   // Sort nodes start unconfigured, sorting ascending
   if (type === 'sort') {
     return {

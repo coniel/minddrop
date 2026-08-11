@@ -16,6 +16,7 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "@minddrop/collections": "workspace:*",
     "@minddrop/databases": "workspace:*",
     "@minddrop/events": "workspace:*",
     "@minddrop/file-system": "workspace:*",

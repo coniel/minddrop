@@ -350,6 +350,19 @@ against earlier commits) and do not indicate a problem in the
 queries package; the same files typecheck fine through
 `features/queries`, whose tsconfig sets `jsx`.
 
+## ui/primitives
+
+### Grouped Combobox lists are never virtualized
+
+`Combobox` virtualizes automatically once a flat `items` list passes
+`VIRTUALIZE_THRESHOLD` (50), but the check is
+`!groups && items.length > VIRTUALIZE_THRESHOLD`, so passing `groups`
+opts out entirely no matter how many items the groups hold. Adding a
+group heading to an existing picker therefore silently drops
+virtualization. Fine for small lists (collection pickers, data
+sources), but don't reach for `groups` on a list that can grow to
+hundreds of entries without checking the render cost first.
+
 ## features/designs
 
 ### `LayoutAutoFocusContext` is deliberately single-purpose

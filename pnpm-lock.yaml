@@ -963,6 +963,9 @@ importers:
 
   features/queries:
     dependencies:
+      '@minddrop/collections':
+        specifier: workspace:*
+        version: link:../../packages/collections
       '@minddrop/databases':
         specifier: workspace:*
         version: link:../../packages/databases
@@ -1777,6 +1780,9 @@ importers:
 
   packages/queries:
     dependencies:
+      '@minddrop/collections':
+        specifier: workspace:*
+        version: link:../collections
       '@minddrop/databases':
         specifier: workspace:*
         version: link:../databases
