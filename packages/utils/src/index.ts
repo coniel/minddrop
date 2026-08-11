@@ -26,6 +26,7 @@ export * from './parseDateOrNow';
 export * from './reorderArray';
 export * from './sameIds';
 export * from './setDragPreview';
+export * from './slugify';
 export * from './validateDirName';
 export * from './restoreDates';
 export * from './throttle';
