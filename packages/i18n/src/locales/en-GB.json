@@ -1570,7 +1570,22 @@
       "connectionThicknessThin": "Thin",
       "connectionThicknessMedium": "Medium",
       "connectionThicknessThick": "Thick",
-      "connectionDelete": "Delete connection"
+      "connectionDelete": "Delete connection",
+      "alignLeft": "Align left",
+      "alignCenter": "Align centre",
+      "alignRight": "Align right",
+      "alignTop": "Align top",
+      "alignMiddle": "Align middle",
+      "alignBottom": "Align bottom",
+      "removeNodes": "Remove from canvas",
+      "removeNodesHint": "Shift-click to delete permanently",
+      "deleteEntries": {
+        "titleOne": "Delete entry?",
+        "title": "Delete entries?",
+        "messageOne": "The entry and its files will be moved to the system trash.",
+        "message": "The entries and their files will be moved to the system trash.",
+        "confirm": "Delete"
+      }
     },
     "board": {
       "name": "Board",

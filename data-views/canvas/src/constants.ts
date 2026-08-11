@@ -27,10 +27,6 @@ export const UNPLACED_ROW_SIZE = 4;
 // Gap between existing content and auto-placed unplaced entries
 export const UNPLACED_SECTION_GAP = 100;
 
-// Duration of the connection toolbar's exit transition before it
-// unmounts, matching the theme's fast duration token
-export const CONNECTION_TOOLBAR_EXIT_DURATION = 100;
-
 // Data types the canvas accepts drops of
 export const CANVAS_ACCEPTED_DATA_TYPES = [
   DatabaseEntriesDataKey,

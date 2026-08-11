@@ -38,16 +38,10 @@ export interface CanvasConnectionsLayerProps {
   connections: CanvasConnection[];
 
   /**
-   * The ID of the selected connection, adding selection styling.
+   * Whether clicking a connection selects it on the canvas.
+   * Defaults to true.
    */
-  selectedId?: string | null;
-
-  /**
-   * Called when a connection's curve is clicked. Not called for
-   * presses that turn into a re-connect drag, so dragging a
-   * connection never also acts on it.
-   */
-  onConnectionClick?: (connectionId: string, event: React.MouseEvent) => void;
+  selectable?: boolean;
 
   /**
    * Called when a connection end is dragged onto a new target
@@ -65,8 +59,7 @@ export interface CanvasConnectionsLayerProps {
  */
 export const CanvasConnectionsLayer: React.FC<CanvasConnectionsLayerProps> = ({
   connections,
-  selectedId,
-  onConnectionClick,
+  selectable = true,
   onConnectionReconnect,
 }) => {
   const { store } = useCanvasContext();
@@ -80,6 +73,11 @@ export const CanvasConnectionsLayer: React.FC<CanvasConnectionsLayerProps> = ({
 
   // The in-progress connection drag, driving the preview curve
   const connectionDrag = useCanvasStore((state) => state.connectionDrag);
+
+  // The selected connections, driving their selection styling
+  const selectedIds = useCanvasStore((state) =>
+    state.selection?.type === 'connections' ? state.selection.ids : null,
+  );
 
   // Drag-to-re-connect behaviour for the connection hit areas
   const { getConnectionProps, wasDragged } = useCanvasConnectionReconnect({
@@ -224,7 +222,7 @@ export const CanvasConnectionsLayer: React.FC<CanvasConnectionsLayerProps> = ({
     };
 
     const arrows = connection.arrows ?? 'end';
-    const selected = connection.id === selectedId;
+    const selected = Boolean(selectedIds?.includes(connection.id));
 
     // The curve's configured stroke styling
     const color = connection.color ?? 'default';
@@ -250,13 +248,21 @@ export const CanvasConnectionsLayer: React.FC<CanvasConnectionsLayerProps> = ({
     // Re-connect drag arming for this connection's hit area
     const reconnectProps = getConnectionProps(connection);
 
-    // Report the click only when the press did not re-route the
-    // connection, so grabbing a curve to re-drag it does not also
-    // act on it
+    // Select on click rather than press, so grabbing a curve to
+    // re-drag it does not also select it
     function handleHitAreaClick(event: React.MouseEvent) {
-      if (onConnectionClick && !wasDragged()) {
-        onConnectionClick(connection.id, event);
+      if (!selectable || wasDragged()) {
+        return;
       }
+
+      // Shift and the platform's multi-select modifier both toggle
+      if (event.shiftKey || event.metaKey || event.ctrlKey) {
+        store.toggleConnectionSelection(connection.id);
+
+        return;
+      }
+
+      store.selectConnections([connection.id]);
     }
 
     return (

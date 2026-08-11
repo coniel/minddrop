@@ -82,11 +82,29 @@ describe('CanvasConnectionsLayer', () => {
   it('marks the selected connection', () => {
     const store = createCanvasStore();
 
-    const { container } = renderLayer(store, { selectedId: 'connection-1' });
+    const { container } = renderLayer(store);
+
+    act(() => {
+      store.selectConnections(['connection-1']);
+    });
 
     expect(
       container.querySelector('.ui-canvas-connection-selected'),
     ).not.toBeNull();
+  });
+
+  it('does not mark connections for a node selection', () => {
+    const store = createCanvasStore();
+
+    const { container } = renderLayer(store);
+
+    act(() => {
+      store.selectNodes(['connection-1']);
+    });
+
+    expect(
+      container.querySelector('.ui-canvas-connection-selected'),
+    ).toBeNull();
   });
 
   it('applies the configured stroke styling', () => {
@@ -134,33 +152,46 @@ describe('CanvasConnectionsLayer', () => {
     expect(markers.length).toBe(3);
   });
 
-  it('reports clicks on a connection', () => {
+  it('selects a clicked connection', () => {
     const store = createCanvasStore();
-    let clicked: string | null = null;
 
-    const { container } = renderLayer(store, {
-      onConnectionClick: (connectionId) => {
-        clicked = connectionId;
-      },
-    });
+    const { container } = renderLayer(store);
 
     const hitArea = container.querySelector('.ui-canvas-connection-hit-area');
 
     fireEvent.mouseDown(hitArea!, { button: 0, clientX: 0, clientY: 0 });
     fireEvent.click(hitArea!);
 
-    expect(clicked).toBe('connection-1');
+    expect(store.getSelection()).toEqual({
+      type: 'connections',
+      ids: ['connection-1'],
+    });
   });
 
-  it('does not report a click for a press that re-routes the connection', () => {
+  it('toggles a connection into the selection with a modifier', () => {
     const store = createCanvasStore();
-    let clicked: string | null = null;
 
-    const { container } = renderLayer(store, {
-      onConnectionClick: (connectionId) => {
-        clicked = connectionId;
-      },
+    const { container } = renderLayer(store);
+
+    act(() => {
+      store.selectConnections(['connection-2']);
     });
+
+    const hitArea = container.querySelector('.ui-canvas-connection-hit-area');
+
+    fireEvent.mouseDown(hitArea!, { button: 0, clientX: 0, clientY: 0 });
+    fireEvent.click(hitArea!, { shiftKey: true });
+
+    expect(store.getSelectedConnectionIds()).toEqual([
+      'connection-2',
+      'connection-1',
+    ]);
+  });
+
+  it('does not select for a press that re-routes the connection', () => {
+    const store = createCanvasStore();
+
+    const { container } = renderLayer(store);
 
     const hitArea = container.querySelector('.ui-canvas-connection-hit-area');
 
@@ -176,7 +207,20 @@ describe('CanvasConnectionsLayer', () => {
 
     fireEvent.click(hitArea!);
 
-    expect(clicked).toBeNull();
+    expect(store.getSelection()).toBeNull();
+  });
+
+  it('does not select when the layer is not selectable', () => {
+    const store = createCanvasStore();
+
+    const { container } = renderLayer(store, { selectable: false });
+
+    const hitArea = container.querySelector('.ui-canvas-connection-hit-area');
+
+    fireEvent.mouseDown(hitArea!, { button: 0, clientX: 0, clientY: 0 });
+    fireEvent.click(hitArea!);
+
+    expect(store.getSelection()).toBeNull();
   });
 
   it('renders arrowheads according to the arrows setting', () => {

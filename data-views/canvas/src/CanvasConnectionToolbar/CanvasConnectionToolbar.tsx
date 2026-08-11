@@ -1,9 +1,4 @@
-import {
-  CanvasPoint,
-  canvasToScreen,
-  getConnectionColor,
-  useCanvasStore,
-} from '@minddrop/ui-canvas';
+import { getConnectionColor } from '@minddrop/ui-canvas';
 import { UiIconName } from '@minddrop/ui-icons';
 import {
   DropdownMenuColorSelectionItem,
@@ -36,24 +31,13 @@ export type CanvasConnectionChanges = Partial<
 
 export interface CanvasConnectionToolbarProps {
   /**
-   * The selected connection the toolbar configures.
+   * The selected connections the toolbar configures as one.
    */
-  connection: CanvasViewConnection;
+  connections: CanvasViewConnection[];
 
   /**
-   * The canvas point the toolbar is anchored at with its bottom
-   * left corner, i.e. where the connection was pressed.
-   */
-  point: CanvasPoint;
-
-  /**
-   * Whether the toolbar is shown. While false, the toolbar plays
-   * its exit transition before being unmounted by the parent.
-   */
-  open: boolean;
-
-  /**
-   * Called with the picked configuration changes.
+   * Called with the picked configuration changes, which apply to
+   * every selected connection.
    */
   onConnectionChange: (changes: CanvasConnectionChanges) => void;
 
@@ -84,23 +68,21 @@ const SHAPE_ICONS: Record<
 };
 
 /**
- * Renders a floating toolbar above the point the selected
- * connection was pressed at, with dropdown menus configuring its
- * arrowheads, line shape, style, thickness and color, and a
- * delete button. Positioned in
- * viewport coordinates so it keeps a constant size, tracking the
- * view's pan and zoom. Must be rendered within a CanvasProvider,
- * outside the canvas transform layer.
+ * Renders the actions for the canvas's selected connections, with
+ * dropdown menus configuring their arrowheads, line shape, style,
+ * thickness and color, and a delete button. Menus show the value
+ * shared across the selection, falling back to the first
+ * connection's where they differ.
  */
 export const CanvasConnectionToolbar: React.FC<
   CanvasConnectionToolbarProps
-> = ({ connection, point, open, onConnectionChange, onConnectionDelete }) => {
-  // The view transform, tracked so the toolbar follows pan/zoom
-  const zoom = useCanvasStore((state) => state.zoom);
-  const pan = useCanvasStore((state) => state.pan);
-
-  // The anchor point in viewport coordinates
-  const screenPoint = canvasToScreen(point, pan, zoom);
+> = ({ connections, onConnectionChange, onConnectionDelete }) => {
+  // The value each menu displays for the selection
+  const arrows = sharedValue(connections, 'arrows', 'end');
+  const shape = sharedValue(connections, 'shape', 'curved');
+  const style = sharedValue(connections, 'style', 'solid');
+  const thickness = sharedValue(connections, 'thickness', 'medium');
+  const color = sharedValue(connections, 'color', 'default');
 
   // Set the arrows setting from the picked menu value
   function handleArrowsChange(value: string) {
@@ -136,207 +118,217 @@ export const CanvasConnectionToolbar: React.FC<
   }
 
   return (
-    <div
-      className={`canvas-view-connection-toolbar${
-        open ? '' : ' canvas-view-connection-toolbar-closed'
-      }`}
-      style={{ left: screenPoint.x, top: screenPoint.y }}
-    >
-      <Toolbar className="canvas-view-connection-toolbar-menus">
-        {/* Arrowheads menu */}
-        <DropdownMenuRoot>
-          <DropdownMenuTrigger>
-            <ToolbarIconButton
-              icon={ARROW_ICONS[connection.arrows ?? 'end']}
-              label="dataViews.canvas.connectionArrows"
-              tooltip={{ title: 'dataViews.canvas.connectionArrows' }}
-              variant="ghost"
-              size="sm"
+    <Toolbar className="canvas-view-connection-toolbar">
+      {/* Arrowheads menu */}
+      <DropdownMenuRoot>
+        <DropdownMenuTrigger>
+          <ToolbarIconButton
+            icon={ARROW_ICONS[arrows]}
+            label="dataViews.canvas.connectionArrows"
+            tooltip={{ title: 'dataViews.canvas.connectionArrows' }}
+            variant="ghost"
+            size="sm"
+          />
+        </DropdownMenuTrigger>
+        <DropdownMenuPortal>
+          <DropdownMenuPositioner side="bottom" align="start">
+            <DropdownMenuContent minWidth={190}>
+              <DropdownMenuRadioGroup
+                value={arrows}
+                onValueChange={handleArrowsChange}
+              >
+                <DropdownMenuRadioItem
+                  value="none"
+                  icon="minus"
+                  label="dataViews.canvas.connectionArrowsNone"
+                />
+                <DropdownMenuRadioItem
+                  value="end"
+                  icon="move-right"
+                  label="dataViews.canvas.connectionArrowsEnd"
+                />
+                <DropdownMenuRadioItem
+                  value="both"
+                  icon="move-horizontal"
+                  label="dataViews.canvas.connectionArrowsBoth"
+                />
+              </DropdownMenuRadioGroup>
+            </DropdownMenuContent>
+          </DropdownMenuPositioner>
+        </DropdownMenuPortal>
+      </DropdownMenuRoot>
+
+      {/* Line shape menu */}
+      <DropdownMenuRoot>
+        <DropdownMenuTrigger>
+          <ToolbarIconButton
+            icon={SHAPE_ICONS[shape]}
+            label="dataViews.canvas.connectionShape"
+            tooltip={{ title: 'dataViews.canvas.connectionShape' }}
+            variant="ghost"
+            size="sm"
+          />
+        </DropdownMenuTrigger>
+        <DropdownMenuPortal>
+          <DropdownMenuPositioner side="bottom" align="start">
+            <DropdownMenuContent minWidth={140}>
+              <DropdownMenuRadioGroup
+                value={shape}
+                onValueChange={handleShapeChange}
+              >
+                <DropdownMenuRadioItem
+                  value="curved"
+                  icon="spline"
+                  label="dataViews.canvas.connectionShapeCurved"
+                />
+                <DropdownMenuRadioItem
+                  value="straight"
+                  icon="corner-down-right"
+                  label="dataViews.canvas.connectionShapeStraight"
+                />
+                <DropdownMenuRadioItem
+                  value="direct"
+                  icon="slash"
+                  label="dataViews.canvas.connectionShapeDirect"
+                />
+              </DropdownMenuRadioGroup>
+            </DropdownMenuContent>
+          </DropdownMenuPositioner>
+        </DropdownMenuPortal>
+      </DropdownMenuRoot>
+
+      {/* Line style menu */}
+      <DropdownMenuRoot>
+        <DropdownMenuTrigger>
+          <ToolbarIconButton
+            icon="circle-dashed"
+            label="dataViews.canvas.connectionStyle"
+            tooltip={{ title: 'dataViews.canvas.connectionStyle' }}
+            variant="ghost"
+            size="sm"
+          />
+        </DropdownMenuTrigger>
+        <DropdownMenuPortal>
+          <DropdownMenuPositioner side="bottom" align="start">
+            <DropdownMenuContent minWidth={140}>
+              <DropdownMenuRadioGroup
+                value={style}
+                onValueChange={handleStyleChange}
+              >
+                <DropdownMenuRadioItem
+                  value="solid"
+                  label="dataViews.canvas.connectionStyleSolid"
+                />
+                <DropdownMenuRadioItem
+                  value="dashed"
+                  label="dataViews.canvas.connectionStyleDashed"
+                />
+                <DropdownMenuRadioItem
+                  value="dotted"
+                  label="dataViews.canvas.connectionStyleDotted"
+                />
+              </DropdownMenuRadioGroup>
+            </DropdownMenuContent>
+          </DropdownMenuPositioner>
+        </DropdownMenuPortal>
+      </DropdownMenuRoot>
+
+      {/* Line thickness menu */}
+      <DropdownMenuRoot>
+        <DropdownMenuTrigger>
+          <ToolbarIconButton
+            icon="equal"
+            label="dataViews.canvas.connectionThickness"
+            tooltip={{ title: 'dataViews.canvas.connectionThickness' }}
+            variant="ghost"
+            size="sm"
+          />
+        </DropdownMenuTrigger>
+        <DropdownMenuPortal>
+          <DropdownMenuPositioner side="bottom" align="start">
+            <DropdownMenuContent minWidth={140}>
+              <DropdownMenuRadioGroup
+                value={thickness}
+                onValueChange={handleThicknessChange}
+              >
+                <DropdownMenuRadioItem
+                  value="thin"
+                  label="dataViews.canvas.connectionThicknessThin"
+                />
+                <DropdownMenuRadioItem
+                  value="medium"
+                  label="dataViews.canvas.connectionThicknessMedium"
+                />
+                <DropdownMenuRadioItem
+                  value="thick"
+                  label="dataViews.canvas.connectionThicknessThick"
+                />
+              </DropdownMenuRadioGroup>
+            </DropdownMenuContent>
+          </DropdownMenuPositioner>
+        </DropdownMenuPortal>
+      </DropdownMenuRoot>
+
+      {/* Color menu */}
+      <DropdownMenuRoot>
+        <DropdownMenuTrigger>
+          <ToolbarButton
+            size="sm"
+            variant="ghost"
+            className="canvas-view-connection-toolbar-color-button"
+          >
+            {/* Swatch showing the current color */}
+            <span
+              className="canvas-view-connection-toolbar-swatch"
+              style={{
+                backgroundColor: getConnectionColor(color),
+              }}
             />
-          </DropdownMenuTrigger>
-          <DropdownMenuPortal>
-            <DropdownMenuPositioner side="bottom" align="start">
-              <DropdownMenuContent minWidth={190}>
-                <DropdownMenuRadioGroup
-                  value={connection.arrows ?? 'end'}
-                  onValueChange={handleArrowsChange}
-                >
-                  <DropdownMenuRadioItem
-                    value="none"
-                    icon="minus"
-                    label="dataViews.canvas.connectionArrowsNone"
-                  />
-                  <DropdownMenuRadioItem
-                    value="end"
-                    icon="move-right"
-                    label="dataViews.canvas.connectionArrowsEnd"
-                  />
-                  <DropdownMenuRadioItem
-                    value="both"
-                    icon="move-horizontal"
-                    label="dataViews.canvas.connectionArrowsBoth"
-                  />
-                </DropdownMenuRadioGroup>
-              </DropdownMenuContent>
-            </DropdownMenuPositioner>
-          </DropdownMenuPortal>
-        </DropdownMenuRoot>
+          </ToolbarButton>
+        </DropdownMenuTrigger>
+        <DropdownMenuPortal>
+          <DropdownMenuPositioner side="bottom" align="start">
+            <DropdownMenuContent minWidth={160}>
+              {ContentColors.map((color) => (
+                <DropdownMenuColorSelectionItem
+                  key={color}
+                  color={color}
+                  onClick={() => handleColorChange(color)}
+                />
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenuPositioner>
+        </DropdownMenuPortal>
+      </DropdownMenuRoot>
 
-        {/* Line shape menu */}
-        <DropdownMenuRoot>
-          <DropdownMenuTrigger>
-            <ToolbarIconButton
-              icon={SHAPE_ICONS[connection.shape ?? 'curved']}
-              label="dataViews.canvas.connectionShape"
-              tooltip={{ title: 'dataViews.canvas.connectionShape' }}
-              variant="ghost"
-              size="sm"
-            />
-          </DropdownMenuTrigger>
-          <DropdownMenuPortal>
-            <DropdownMenuPositioner side="bottom" align="start">
-              <DropdownMenuContent minWidth={140}>
-                <DropdownMenuRadioGroup
-                  value={connection.shape ?? 'curved'}
-                  onValueChange={handleShapeChange}
-                >
-                  <DropdownMenuRadioItem
-                    value="curved"
-                    icon="spline"
-                    label="dataViews.canvas.connectionShapeCurved"
-                  />
-                  <DropdownMenuRadioItem
-                    value="straight"
-                    icon="corner-down-right"
-                    label="dataViews.canvas.connectionShapeStraight"
-                  />
-                  <DropdownMenuRadioItem
-                    value="direct"
-                    icon="slash"
-                    label="dataViews.canvas.connectionShapeDirect"
-                  />
-                </DropdownMenuRadioGroup>
-              </DropdownMenuContent>
-            </DropdownMenuPositioner>
-          </DropdownMenuPortal>
-        </DropdownMenuRoot>
+      <Separator orientation="vertical" />
 
-        {/* Line style menu */}
-        <DropdownMenuRoot>
-          <DropdownMenuTrigger>
-            <ToolbarIconButton
-              icon="circle-dashed"
-              label="dataViews.canvas.connectionStyle"
-              tooltip={{ title: 'dataViews.canvas.connectionStyle' }}
-              variant="ghost"
-              size="sm"
-            />
-          </DropdownMenuTrigger>
-          <DropdownMenuPortal>
-            <DropdownMenuPositioner side="bottom" align="start">
-              <DropdownMenuContent minWidth={140}>
-                <DropdownMenuRadioGroup
-                  value={connection.style ?? 'solid'}
-                  onValueChange={handleStyleChange}
-                >
-                  <DropdownMenuRadioItem
-                    value="solid"
-                    label="dataViews.canvas.connectionStyleSolid"
-                  />
-                  <DropdownMenuRadioItem
-                    value="dashed"
-                    label="dataViews.canvas.connectionStyleDashed"
-                  />
-                  <DropdownMenuRadioItem
-                    value="dotted"
-                    label="dataViews.canvas.connectionStyleDotted"
-                  />
-                </DropdownMenuRadioGroup>
-              </DropdownMenuContent>
-            </DropdownMenuPositioner>
-          </DropdownMenuPortal>
-        </DropdownMenuRoot>
-
-        {/* Line thickness menu */}
-        <DropdownMenuRoot>
-          <DropdownMenuTrigger>
-            <ToolbarIconButton
-              icon="equal"
-              label="dataViews.canvas.connectionThickness"
-              tooltip={{ title: 'dataViews.canvas.connectionThickness' }}
-              variant="ghost"
-              size="sm"
-            />
-          </DropdownMenuTrigger>
-          <DropdownMenuPortal>
-            <DropdownMenuPositioner side="bottom" align="start">
-              <DropdownMenuContent minWidth={140}>
-                <DropdownMenuRadioGroup
-                  value={connection.thickness ?? 'medium'}
-                  onValueChange={handleThicknessChange}
-                >
-                  <DropdownMenuRadioItem
-                    value="thin"
-                    label="dataViews.canvas.connectionThicknessThin"
-                  />
-                  <DropdownMenuRadioItem
-                    value="medium"
-                    label="dataViews.canvas.connectionThicknessMedium"
-                  />
-                  <DropdownMenuRadioItem
-                    value="thick"
-                    label="dataViews.canvas.connectionThicknessThick"
-                  />
-                </DropdownMenuRadioGroup>
-              </DropdownMenuContent>
-            </DropdownMenuPositioner>
-          </DropdownMenuPortal>
-        </DropdownMenuRoot>
-
-        {/* Color menu */}
-        <DropdownMenuRoot>
-          <DropdownMenuTrigger>
-            <ToolbarButton
-              size="sm"
-              variant="ghost"
-              className="canvas-view-connection-toolbar-color-button"
-            >
-              {/* Swatch showing the current color */}
-              <span
-                className="canvas-view-connection-toolbar-swatch"
-                style={{
-                  backgroundColor: getConnectionColor(connection.color),
-                }}
-              />
-            </ToolbarButton>
-          </DropdownMenuTrigger>
-          <DropdownMenuPortal>
-            <DropdownMenuPositioner side="bottom" align="start">
-              <DropdownMenuContent minWidth={160}>
-                {ContentColors.map((color) => (
-                  <DropdownMenuColorSelectionItem
-                    key={color}
-                    color={color}
-                    onClick={() => handleColorChange(color)}
-                  />
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenuPositioner>
-          </DropdownMenuPortal>
-        </DropdownMenuRoot>
-
-        <Separator orientation="vertical" />
-
-        {/* Delete button */}
-        <ToolbarIconButton
-          icon="trash"
-          label="dataViews.canvas.connectionDelete"
-          tooltip={{ title: 'dataViews.canvas.connectionDelete' }}
-          variant="ghost"
-          size="sm"
-          onClick={onConnectionDelete}
-        />
-      </Toolbar>
-    </div>
+      {/* Delete button */}
+      <ToolbarIconButton
+        icon="trash"
+        label="dataViews.canvas.connectionDelete"
+        tooltip={{ title: 'dataViews.canvas.connectionDelete' }}
+        variant="ghost"
+        size="sm"
+        onClick={onConnectionDelete}
+      />
+    </Toolbar>
   );
 };
+
+/**
+ * Returns the value a setting shares across the selection, or the
+ * first connection's value when they differ.
+ */
+function sharedValue<TKey extends keyof CanvasConnectionChanges>(
+  connections: CanvasViewConnection[],
+  key: TKey,
+  fallback: NonNullable<CanvasViewConnection[TKey]>,
+): NonNullable<CanvasViewConnection[TKey]> {
+  // No connection to read a value from
+  if (!connections.length) {
+    return fallback;
+  }
+
+  return connections[0][key] ?? fallback;
+}

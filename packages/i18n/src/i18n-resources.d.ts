@@ -1681,6 +1681,21 @@ declare module 'i18next' {
             connectionThicknessMedium: string;
             connectionThicknessThick: string;
             connectionDelete: string;
+            alignLeft: string;
+            alignCenter: string;
+            alignRight: string;
+            alignTop: string;
+            alignMiddle: string;
+            alignBottom: string;
+            removeNodes: string;
+            removeNodesHint: string;
+            deleteEntries: {
+              titleOne: string;
+              title: string;
+              messageOne: string;
+              message: string;
+              confirm: string;
+            };
           };
           board: {
             name: string;
