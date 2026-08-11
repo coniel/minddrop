@@ -2,6 +2,7 @@ import { parse, stringify } from 'yaml';
 
 export * from './Paths';
 export * from './back-end-utils';
+export * from './bracketImageWidth';
 export * from './constants';
 export * from './createContext';
 export * from './deepMerge';
@@ -37,6 +38,7 @@ export * from './types';
 export * from './useCreateCallback';
 export * from './useForm';
 export * from './useInputValue';
+export * from './useMeasuredImageWidth';
 export * from './useToggle';
 export * from './omitPath';
 export * from './parseDate';
