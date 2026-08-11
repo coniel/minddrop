@@ -15,7 +15,7 @@ import {
 import { MindDropApiProvider } from '@minddrop/extensions';
 import { DatabasesFeature } from '@minddrop/feature-databases';
 import { DesignsFeature } from '@minddrop/feature-designs';
-import { DevTools } from '@minddrop/feature-dev-tools';
+import { DevTools, ScreenshotPicker } from '@minddrop/feature-dev-tools';
 import { SearchFeature } from '@minddrop/feature-search';
 import { SpacesFeature } from '@minddrop/feature-spaces';
 import { TabsToolbar, ViewRenderer } from '@minddrop/feature-views';
@@ -107,6 +107,7 @@ export const DesktopApp: React.FC = () => {
             <SpacesFeature />
             <SearchFeature />
             <DevTools />
+            <ScreenshotPicker />
           </MindDropApiProvider>
         </IconsProvider>
       </ToastProvider>

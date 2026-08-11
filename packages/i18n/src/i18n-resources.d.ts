@@ -1862,6 +1862,11 @@ declare module 'i18next' {
             snapRight: string;
           };
           noPanels: string;
+          screenshots: {
+            pickHint: string;
+            nameHint: string;
+            namePlaceholder: string;
+          };
         };
         search: {
           open: string;

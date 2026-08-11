@@ -1,0 +1,54 @@
+.screenshot-picker {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+  cursor: crosshair;
+  background: transparent;
+}
+
+/* Hides the overlay for the duration of the capture */
+.screenshot-picker.screenshot-picker-capturing {
+  opacity: 0;
+}
+
+.screenshot-picker-outline {
+  position: absolute;
+  box-sizing: border-box;
+  border: 2px solid rgb(56 152 236);
+  border-radius: var(--radius-lg);
+  background: rgb(56 152 236 / 12%);
+  pointer-events: none;
+}
+
+/* Stacks the name field above its helper text, centred at the top */
+.screenshot-picker-panel {
+  display: flex;
+  position: fixed;
+  top: var(--space-5);
+  left: 50%;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.screenshot-picker-prompt {
+  width: 24rem;
+  cursor: auto;
+  pointer-events: auto;
+}
+
+.screenshot-picker-hint {
+  max-width: 80vw;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+  background: rgb(0 0 0 / 80%);
+  color: rgb(255 255 255);
+  font-size: 0.8125rem;
+  text-align: center;
+}
+
+.screenshot-picker-hint.screenshot-picker-hint-error {
+  background: rgb(158 32 32 / 95%);
+}

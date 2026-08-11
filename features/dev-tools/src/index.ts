@@ -7,6 +7,8 @@ export * from './initializeDevToolsFeature';
 export * from './JsonTree';
 export * from './LogsPanel';
 export * from './openDevTools';
+export * from './screenshotAdapter';
+export * from './ScreenshotPicker';
 export * from './snapDevToolsWindow';
 export * from './StatePanel';
 export * from './StoriesPanel';

@@ -71,6 +71,11 @@
       "snapLeft": "Snap left",
       "snapRight": "Snap right"
     },
-    "noPanels": "No dev tools panels registered."
+    "noPanels": "No dev tools panels registered.",
+    "screenshots": {
+      "pickHint": "Click an element to capture it, Esc to cancel",
+      "nameHint": "Name the capture, Enter to save, Esc to cancel",
+      "namePlaceholder": "Screenshot name"
+    }
   }
 }
