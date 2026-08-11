@@ -1,6 +1,10 @@
 import { useCallback } from 'react';
 import { LayoutRenderer } from '@minddrop/feature-designs';
-import { Spaces, setLayoutElementContent } from '@minddrop/spaces';
+import {
+  Spaces,
+  resolveSpaceMediaDirPath,
+  setLayoutElementContent,
+} from '@minddrop/spaces';
 import { PanelView } from '@minddrop/ui-components';
 import {
   ScrollArea,
@@ -80,6 +84,7 @@ export const SpaceView: React.FC<SpaceViewProps> = ({ spaceId }) => {
             <LayoutRenderer
               layout={space.layout}
               context="page"
+              mediaDirPath={resolveSpaceMediaDirPath(spaceId)}
               propertyMap={{}}
               propertyValues={{}}
               properties={[]}

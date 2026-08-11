@@ -15,7 +15,7 @@ import {
   initializeLayoutEditor,
   useDesignStudioStore,
 } from '@minddrop/feature-designs';
-import { Space, Spaces } from '@minddrop/spaces';
+import { Space, Spaces, resolveSpaceMediaDirPath } from '@minddrop/spaces';
 import { PanelView } from '@minddrop/ui-components';
 import { Panel, ScrollArea } from '@minddrop/ui-primitives';
 import { setSpaceViewState } from '../SpaceViewStateStore';
@@ -47,6 +47,7 @@ export const SpaceEditMode: React.FC<SpaceEditModeProps> = ({ space }) => {
       onSave: async (layout) => {
         await Spaces.update(space.id, { layout });
       },
+      mediaDirPath: resolveSpaceMediaDirPath(space.id),
     });
 
     return () => {
