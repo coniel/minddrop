@@ -83,17 +83,6 @@ export interface CanvasProps {
   ) => void;
 
   /**
-   * Called when a mouse press is released over the empty canvas
-   * background (not a node or other content).
-   * @param event - The mouse event.
-   * @param canvasPoint - The release point in canvas coordinates.
-   */
-  onBackgroundMouseUp?: (
-    event: React.MouseEvent<HTMLDivElement>,
-    canvasPoint: CanvasPoint,
-  ) => void;
-
-  /**
    * Called when data is dropped onto the canvas.
    * @param event - The drag event.
    * @param canvasPoint - The drop point in canvas coordinates.
@@ -167,7 +156,6 @@ export const Canvas: React.FC<CanvasProps> = ({
   onNameChange,
   background = { type: 'dots' },
   onBackgroundMouseDown,
-  onBackgroundMouseUp,
   onDrop,
   onDragOver,
   onDragLeave,
@@ -391,26 +379,6 @@ export const Canvas: React.FC<CanvasProps> = ({
       clientToCanvas,
       lasso,
     ],
-  );
-
-  // Report presses released over the empty canvas background
-  const handleMouseUp = useCallback(
-    (event: React.MouseEvent<HTMLDivElement>) => {
-      const target = event.target as HTMLElement;
-
-      // Releasing over the empty canvas background (the viewport
-      // itself or the transform layer, not content rendered within)
-      if (
-        onBackgroundMouseUp &&
-        (target === event.currentTarget || target === transformLayerRef.current)
-      ) {
-        onBackgroundMouseUp(
-          event,
-          clientToCanvas(event.clientX, event.clientY),
-        );
-      }
-    },
-    [transformLayerRef, onBackgroundMouseUp, clientToCanvas],
   );
 
   // Track the cursor's proximity to node edges, revealing the
@@ -761,7 +729,6 @@ export const Canvas: React.FC<CanvasProps> = ({
       }
       tabIndex={focusScoped ? -1 : undefined}
       onMouseDown={handleMouseDown}
-      onMouseUp={onBackgroundMouseUp ? handleMouseUp : undefined}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       onKeyDown={focusScoped ? handleReactKeyDown : undefined}

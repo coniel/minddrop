@@ -403,12 +403,14 @@ export interface CanvasStore {
    * @param fromSide - The side of the node the drag is anchored to.
    * @param point - The starting cursor position in canvas coordinates.
    * @param reconnect - The existing connection the drag re-routes, when re-connecting.
+   * @param fromOffset - The anchored end's offset along its side, midpoint when omitted.
    */
   startConnectionDrag(
     fromNodeId: string,
     fromSide: CanvasNodeSide,
     point: CanvasPoint,
     reconnect?: CanvasConnectionReconnect,
+    fromOffset?: number,
   ): void;
 
   /**
@@ -522,10 +524,16 @@ export function createCanvasStore(config: CanvasStoreConfig = {}): CanvasStore {
     setConnectionGeometry: (geometry) =>
       store.getState().setConnectionGeometry(geometry),
     setAlignmentGuides: (guides) => store.getState().setAlignmentGuides(guides),
-    startConnectionDrag: (fromNodeId, fromSide, point, reconnect) =>
+    startConnectionDrag: (fromNodeId, fromSide, point, reconnect, fromOffset) =>
       store
         .getState()
-        .startConnectionDrag(fromNodeId, fromSide, point, reconnect),
+        .startConnectionDrag(
+          fromNodeId,
+          fromSide,
+          point,
+          reconnect,
+          fromOffset,
+        ),
     updateConnectionDrag: (point, target) =>
       store.getState().updateConnectionDrag(point, target),
     clearConnectionDrag: () => store.getState().clearConnectionDrag(),
@@ -764,11 +772,12 @@ function createInternalStore(config: CanvasStoreConfig) {
         return { alignmentGuides: guides };
       }),
 
-    startConnectionDrag: (fromNodeId, fromSide, point, reconnect) =>
+    startConnectionDrag: (fromNodeId, fromSide, point, reconnect, fromOffset) =>
       set({
         connectionDrag: {
           fromNodeId,
           fromSide,
+          fromOffset,
           point,
           targetNodeId: null,
           targetSide: null,
@@ -789,6 +798,7 @@ function createInternalStore(config: CanvasStoreConfig) {
             point,
             targetNodeId: target ? target.nodeId : null,
             targetSide: target ? target.side : null,
+            targetOffset: target ? target.offset : undefined,
           },
         };
       }),

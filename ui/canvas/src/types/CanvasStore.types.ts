@@ -380,12 +380,14 @@ export interface CanvasState {
    * @param fromSide - The side of the node the drag is anchored to.
    * @param point - The starting cursor position in canvas coordinates.
    * @param reconnect - The existing connection the drag re-routes, when re-connecting.
+   * @param fromOffset - The anchored end's offset along its side, midpoint when omitted.
    */
   startConnectionDrag: (
     fromNodeId: string,
     fromSide: CanvasNodeSide,
     point: CanvasPoint,
     reconnect?: CanvasConnectionReconnect,
+    fromOffset?: number,
   ) => void;
 
   /**

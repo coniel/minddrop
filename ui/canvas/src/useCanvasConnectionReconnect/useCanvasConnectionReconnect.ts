@@ -6,14 +6,16 @@ import {
 } from '../constants';
 import {
   CanvasConnection,
+  CanvasConnectionDragTarget,
   CanvasConnectionEnd,
+  CanvasConnectionReconnect,
   CanvasNodeFrame,
   CanvasPoint,
 } from '../types';
 import { useInteractionLock } from '../useInteractionLock';
 import {
   getConnectionDropTarget,
-  getSideMidpoint,
+  getSideAnchorPoint,
   screenToCanvas,
 } from '../utils';
 
@@ -44,6 +46,19 @@ export interface UseCanvasConnectionReconnectOptions {
    * Called when a re-connect drag is dropped on a target node.
    */
   onReconnect?: (reconnection: CanvasConnectionReconnection) => void;
+
+  /**
+   * Resolves the hovered drop target: return null to reject it,
+   * keeping the drag unsnapped over it, or the target to snap
+   * to, optionally re-anchored to another side or offset.
+   * Targets are accepted as hovered when omitted.
+   * @param reconnect - The connection being re-routed and its dragged end.
+   * @param target - The hovered target.
+   */
+  resolveTarget?: (
+    reconnect: CanvasConnectionReconnect,
+    target: CanvasConnectionDragTarget,
+  ) => CanvasConnectionDragTarget | null;
 }
 
 export interface UseCanvasConnectionReconnectResult {
@@ -98,7 +113,7 @@ interface PendingReconnect {
 export function useCanvasConnectionReconnect(
   options: UseCanvasConnectionReconnectOptions,
 ): UseCanvasConnectionReconnectResult {
-  const { onReconnect } = options;
+  const { onReconnect, resolveTarget } = options;
 
   // The pressed connection, armed until the cursor travels past
   // the drag threshold
@@ -204,6 +219,7 @@ export function useCanvasConnectionReconnect(
           fixed.end.side,
           fixed.point,
           { connectionId: pending.connection.id, end: fixed.looseEnd },
+          fixed.end.offset,
         );
 
         didDrag.current = true;
@@ -220,16 +236,21 @@ export function useCanvasConnectionReconnect(
 
       // Resolve the target nearest the cursor, excluding the
       // fixed end's node
-      const target = getConnectionDropTarget(
+      let target = getConnectionDropTarget(
         context.store.getNodes(),
         point,
         drag.fromNodeId,
         CONNECTION_PROXIMITY / context.store.getZoom(),
       );
 
+      // Let the consumer reject or re-anchor the hovered target
+      if (target && drag.reconnect && resolveTarget) {
+        target = resolveTarget(drag.reconnect, target);
+      }
+
       context.store.updateConnectionDrag(point, target);
     },
-    [context, pending, dragging, eventToCanvas],
+    [context, pending, dragging, eventToCanvas, resolveTarget],
   );
 
   // End the drag on mouseup, reporting the re-connection when
@@ -265,7 +286,11 @@ export function useCanvasConnectionReconnect(
         end: drag.reconnect.end,
         target:
           drag.targetNodeId && drag.targetSide
-            ? { nodeId: drag.targetNodeId, side: drag.targetSide }
+            ? {
+                nodeId: drag.targetNodeId,
+                side: drag.targetSide,
+                offset: drag.targetOffset,
+              }
             : null,
       });
     }
@@ -337,8 +362,16 @@ function getFixedEnd(
     return null;
   }
 
-  const fromPoint = getSideMidpoint(fromFrame, connection.from.side);
-  const toPoint = getSideMidpoint(toFrame, connection.to.side);
+  const fromPoint = getSideAnchorPoint(
+    fromFrame,
+    connection.from.side,
+    connection.from.offset,
+  );
+  const toPoint = getSideAnchorPoint(
+    toFrame,
+    connection.to.side,
+    connection.to.offset,
+  );
 
   // Distance from the grab point to each endpoint
   const fromDistance = Math.hypot(point.x - fromPoint.x, point.y - fromPoint.y);

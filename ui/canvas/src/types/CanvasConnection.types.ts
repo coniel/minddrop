@@ -19,6 +19,14 @@ export interface CanvasConnectionEnd {
    * The node side the connection attaches to, at its midpoint.
    */
   side: CanvasNodeSide;
+
+  /**
+   * The anchor's distance from the side's start corner (the top
+   * corner for left/right sides, the left corner for top/bottom
+   * sides), clamped to the side's length. Anchors at the side's
+   * midpoint when omitted.
+   */
+  offset?: number;
 }
 
 /**
@@ -146,6 +154,13 @@ export interface CanvasConnectionDrag {
   fromSide: CanvasNodeSide;
 
   /**
+   * The anchored end's offset along its side, mirroring
+   * CanvasConnectionEnd's offset. Anchors at the side's midpoint
+   * when omitted.
+   */
+  fromOffset?: number;
+
+  /**
    * The current cursor position in canvas coordinates.
    */
   point: CanvasPoint;
@@ -167,6 +182,13 @@ export interface CanvasConnectionDrag {
    * when no valid target is hovered.
    */
   targetSide: CanvasNodeSide | null;
+
+  /**
+   * The hovered target end's offset along its side, mirroring
+   * CanvasConnectionEnd's offset. Anchors at the side's midpoint
+   * when omitted.
+   */
+  targetOffset?: number;
 }
 
 /**
@@ -182,4 +204,11 @@ export interface CanvasConnectionDragTarget {
    * The side of the target node nearest to the cursor.
    */
   side: CanvasNodeSide;
+
+  /**
+   * The target end's offset along its side, mirroring
+   * CanvasConnectionEnd's offset. Anchors at the side's midpoint
+   * when omitted.
+   */
+  offset?: number;
 }
