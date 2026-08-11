@@ -1,0 +1,1 @@
+export { searchAutomations } from './searchAutomations';

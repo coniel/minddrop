@@ -1,0 +1,1 @@
+export { getAutomation } from './getAutomation';

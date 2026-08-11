@@ -1,0 +1,1 @@
+export { readAutomation } from './readAutomation';

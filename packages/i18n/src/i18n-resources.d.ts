@@ -1576,6 +1576,11 @@ declare module 'i18next' {
             empty: string;
           };
         };
+        automations: {
+          labels: {
+            automation: string;
+          };
+        };
         calendar: {
           months: {
             january: string;

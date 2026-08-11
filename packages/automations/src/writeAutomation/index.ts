@@ -1,0 +1,1 @@
+export { writeAutomation } from './writeAutomation';
