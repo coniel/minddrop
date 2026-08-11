@@ -16,8 +16,18 @@ import {
 } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
 import { useQuery } from '../QueriesStore';
+import {
+  QueryDeletedEvent,
+  QueryDeletedEventData,
+  QueryUpdatedEvent,
+  QueryUpdatedEventData,
+} from '../events';
 import { runQuery } from '../runQuery';
-import { getQueryCollectionReferences } from '../utils';
+import {
+  getQueryCollectionReferences,
+  getQueryDatabases,
+  getQueryReferencedQueryIds,
+} from '../utils';
 
 /**
  * Returns the IDs of entries matching a query, re-running the
@@ -52,10 +62,12 @@ export function useQueryResults(queryId: string): string[] {
       return;
     }
 
-    // The databases feeding the query's graph
-    const sourceDatabaseIds = query.nodes.flatMap((node) =>
-      node.type === 'source' && node.database ? [node.database] : [],
-    );
+    // The databases feeding the query's graph, including those
+    // of the queries it sources
+    const sourceDatabaseIds = getQueryDatabases(query);
+
+    // The queries the graph draws results from
+    const referencedQueryIds = getQueryReferencedQueryIds(query);
 
     // The collections the graph filters by, whose items are
     // compiled into the query
@@ -162,6 +174,29 @@ export function useQueryResults(queryId: string): string[] {
       }
     });
 
+    // Re-run when a query the graph sources is edited, since
+    // its results are compiled into this query
+    Events.addListener<QueryUpdatedEventData>(
+      QueryUpdatedEvent,
+      listenerId,
+      ({ data }) => {
+        if (referencedQueryIds.includes(data.updated.id)) {
+          rerunQuery();
+        }
+      },
+    );
+
+    // Re-run when a sourced query is deleted
+    Events.addListener<QueryDeletedEventData>(
+      QueryDeletedEvent,
+      listenerId,
+      ({ data }) => {
+        if (referencedQueryIds.includes(data.id)) {
+          rerunQuery();
+        }
+      },
+    );
+
     return () => {
       cancelled = true;
 
@@ -174,6 +209,8 @@ export function useQueryResults(queryId: string): string[] {
       Events.removeListener(CollectionCreatedEvent, listenerId);
       Events.removeListener(CollectionDeletedEvent, listenerId);
       Events.removeListener(CollectionsLoadedEvent, listenerId);
+      Events.removeListener(QueryUpdatedEvent, listenerId);
+      Events.removeListener(QueryDeletedEvent, listenerId);
     };
   }, [queryId, query, listenerId]);
 

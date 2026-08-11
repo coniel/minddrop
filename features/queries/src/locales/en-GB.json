@@ -43,8 +43,13 @@
       "limit": "Limit"
     },
     "sourcePicker": {
-      "searchPlaceholder": "Search databases",
-      "empty": "No matching databases"
+      "select": "Select source",
+      "searchPlaceholder": "Search databases and queries",
+      "empty": "No matching sources",
+      "groups": {
+        "databases": "Databases",
+        "queries": "Queries"
+      }
     },
     "collectionPicker": {
       "select": "Select collection",

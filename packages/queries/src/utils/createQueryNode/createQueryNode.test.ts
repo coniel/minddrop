@@ -2,19 +2,15 @@ import { describe, expect, it } from 'vitest';
 import { createQueryNode } from './createQueryNode';
 
 describe('createQueryNode', () => {
-  it('creates a source node with the given database', () => {
-    const node = createQueryNode(
-      'source',
-      { x: 10, y: 20 },
-      { database: 'database_objects' },
-    );
+  it('creates an unconfigured source node', () => {
+    const node = createQueryNode('source', { x: 10, y: 20 });
 
     expect(node).toEqual({
       id: expect.any(String),
       type: 'source',
       x: 10,
       y: 20,
-      database: 'database_objects',
+      sources: [],
     });
   });
 

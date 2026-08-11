@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { CollectionFixtures, Collections } from '@minddrop/collections';
+import { QueriesStore } from '../../QueriesStore';
 import { query_1 } from '../../test-utils/queries.fixtures';
 import {
   Query,
@@ -7,6 +8,7 @@ import {
   QueryConnection,
   QueryFilterNode,
   QueryNode,
+  QuerySourceNode,
 } from '../../types';
 import { compileQueryGraph } from './compileQueryGraph';
 
@@ -33,6 +35,15 @@ const collectionFilter: QueryCollectionFilterNode = {
   source: 'collection',
   collection: collection_1.id,
   operator: 'is-in',
+};
+
+// A source node emitting the first fixture query's results
+const querySourceNode: QuerySourceNode = {
+  id: 'query-node_query-source',
+  type: 'source',
+  x: 0,
+  y: 0,
+  sources: [{ type: 'query', id: query_1.id }],
 };
 
 // Builds a graph running the fixture source through the given
@@ -73,6 +84,7 @@ describe('compileQueryGraph', () => {
 
   afterEach(() => {
     Collections.Store.clear();
+    QueriesStore.clear();
   });
 
   it('emits a source node database as an unfiltered scope', () => {
@@ -140,6 +152,109 @@ describe('compileQueryGraph', () => {
         },
       ],
     });
+  });
+
+  it("restricts the sourced query's databases to its results", () => {
+    QueriesStore.load([query_1]);
+
+    const query = graphQuery(
+      [querySourceNode, resultsNode],
+      [{ from: querySourceNode.id, to: resultsNode.id }],
+    );
+
+    const compiled = compileQueryGraph(query, {
+      [query_1.id]: ['database-entry_1', 'database-entry_2'],
+    });
+
+    expect(compiled[querySourceNode.id].outputScopes).toEqual([
+      {
+        databaseId: 'database_objects',
+        filter: {
+          combinator: 'and',
+          filters: [
+            {
+              operator: 'id-is-one-of',
+              entryIds: ['database-entry_1', 'database-entry_2'],
+            },
+          ],
+        },
+      },
+    ]);
+  });
+
+  it('emits a scope per source of a multi source node', () => {
+    const query = graphQuery(
+      [
+        {
+          ...querySourceNode,
+          sources: [
+            { type: 'database', id: 'database_objects' },
+            { type: 'database', id: 'database_urls' },
+          ],
+        },
+        resultsNode,
+      ],
+      [{ from: querySourceNode.id, to: resultsNode.id }],
+    );
+
+    const compiled = compileQueryGraph(query);
+
+    expect(compiled[querySourceNode.id].outputScopes).toEqual([
+      { databaseId: 'database_objects', filter: null },
+      { databaseId: 'database_urls', filter: null },
+    ]);
+  });
+
+  it('lets an unfiltered source absorb a query source on the same database', () => {
+    QueriesStore.load([query_1]);
+
+    // The fixture query sources the object database, so its
+    // results are a subset of that database's entries
+    const query = graphQuery(
+      [
+        {
+          ...querySourceNode,
+          sources: [
+            { type: 'query', id: query_1.id },
+            { type: 'database', id: 'database_objects' },
+          ],
+        },
+        resultsNode,
+      ],
+      [{ from: querySourceNode.id, to: resultsNode.id }],
+    );
+
+    const compiled = compileQueryGraph(query, {
+      [query_1.id]: ['database-entry_1'],
+    });
+
+    expect(compiled[querySourceNode.id].outputScopes).toEqual([
+      { databaseId: 'database_objects', filter: null },
+    ]);
+  });
+
+  it('emits no scopes for a source without a picked source', () => {
+    const query = graphQuery(
+      [{ ...querySourceNode, sources: [] }, resultsNode],
+      [{ from: querySourceNode.id, to: resultsNode.id }],
+    );
+
+    const compiled = compileQueryGraph(query);
+
+    expect(compiled[querySourceNode.id].outputScopes).toEqual([]);
+  });
+
+  it('emits no scopes for a query source whose results are unresolved', () => {
+    QueriesStore.load([query_1]);
+
+    const query = graphQuery(
+      [querySourceNode, resultsNode],
+      [{ from: querySourceNode.id, to: resultsNode.id }],
+    );
+
+    const compiled = compileQueryGraph(query);
+
+    expect(compiled[querySourceNode.id].outputScopes).toEqual([]);
   });
 
   it('ANDs a collection membership test onto its input scopes', () => {
@@ -285,7 +400,7 @@ describe('compileQueryGraph', () => {
       type: 'source',
       x: 0,
       y: 0,
-      database: 'database_urls',
+      sources: [{ type: 'database', id: 'database_urls' }],
     };
 
     const query = graphQuery(

@@ -144,6 +144,8 @@ declare module 'i18next' {
         labels: {
           untitled: string;
           copy: string;
+          increase: string;
+          decrease: string;
           optional: string;
           properties: string;
           design: string;
@@ -1511,8 +1513,13 @@ declare module 'i18next' {
             limit: string;
           };
           sourcePicker: {
+            select: string;
             searchPlaceholder: string;
             empty: string;
+            groups: {
+              databases: string;
+              queries: string;
+            };
           };
           collectionPicker: {
             select: string;

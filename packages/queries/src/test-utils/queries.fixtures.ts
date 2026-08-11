@@ -14,7 +14,7 @@ function generateQueryFixture(number: number): Query {
         type: 'source',
         x: 0,
         y: 0,
-        database: 'database_objects',
+        sources: [{ type: 'database', id: 'database_objects' }],
       },
       {
         id: `query-node_filter-${number}`,

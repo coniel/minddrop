@@ -1,5 +1,6 @@
 import { Databases, EntryQueryScope } from '@minddrop/databases';
 import { getQuery } from '../getQuery';
+import { resolveQuerySourceResults } from '../resolveQuerySourceResults';
 import { compileQueryGraph } from '../utils';
 
 export interface QueryNodeCounts {
@@ -42,7 +43,10 @@ export async function getQueryNodeCounts(
     return {};
   }
 
-  const compiled = compileQueryGraph(query);
+  // Run the queries feeding the graph's query source nodes
+  const queryResults = await resolveQuerySourceResults(query);
+
+  const compiled = compileQueryGraph(query, queryResults);
 
   // Count each distinct scope list once: pass-through nodes
   // share their input's scope list by reference

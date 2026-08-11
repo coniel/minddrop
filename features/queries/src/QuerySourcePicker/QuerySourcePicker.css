@@ -1,9 +1,0 @@
-/* Strip the menu chrome (overlay surface, border, shadow) so
-   the picker renders flat inside the source node's body */
-.queries-source-picker .searchable-menu {
-  min-width: 0;
-  padding: 0;
-  border: none;
-  background-color: transparent;
-  box-shadow: none;
-}

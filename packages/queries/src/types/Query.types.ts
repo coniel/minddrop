@@ -64,16 +64,37 @@ interface QueryNodeBase {
 }
 
 /**
- * A node emitting all entries of a database into the graph.
+ * A node emitting the raw entries a graph works on: all of a
+ * database's entries, another query's results, or the combined
+ * entries of several of both.
  */
 export interface QuerySourceNode extends QueryNodeBase {
   type: 'source';
 
   /**
-   * The ID of the database whose entries the node emits.
+   * The databases and queries the node emits the entries of.
+   * Empty until the user picks a source.
    */
-  database: string;
+  sources: QuerySourceReference[];
 }
+
+/**
+ * A reference to one of the things a source node draws its
+ * entries from.
+ */
+export interface QuerySourceReference {
+  /**
+   * What the reference draws its entries from.
+   */
+  type: QuerySourceType;
+
+  /**
+   * The ID of the referenced database or query.
+   */
+  id: string;
+}
+
+export type QuerySourceType = 'database' | 'query';
 
 /**
  * A node narrowing its input entries by a single property

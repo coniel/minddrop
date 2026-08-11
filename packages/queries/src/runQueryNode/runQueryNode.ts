@@ -1,5 +1,6 @@
 import { Databases } from '@minddrop/databases';
 import { getQuery } from '../getQuery';
+import { resolveQuerySourceResults } from '../resolveQuerySourceResults';
 import { compileQueryGraph } from '../utils';
 
 /**
@@ -26,8 +27,11 @@ export async function runQueryNode(
     return [];
   }
 
+  // Run the queries feeding the graph's query source nodes
+  const queryResults = await resolveQuerySourceResults(query);
+
   // Compile the graph and read the node's output scopes
-  const compiled = compileQueryGraph(query)[nodeId];
+  const compiled = compileQueryGraph(query, queryResults)[nodeId];
 
   // No results without the node
   if (!compiled) {

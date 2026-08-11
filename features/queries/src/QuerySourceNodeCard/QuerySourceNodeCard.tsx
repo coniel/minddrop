@@ -1,8 +1,11 @@
-import { DatabaseId, Databases } from '@minddrop/databases';
+import { useMemo } from 'react';
+import { Databases } from '@minddrop/databases';
+import { useTranslation } from '@minddrop/i18n';
 import {
   Queries,
   QueryNodeCounts,
   QuerySourceNode,
+  QuerySourceReference,
   updateQueryNode,
 } from '@minddrop/queries';
 import {
@@ -11,11 +14,13 @@ import {
   CanvasNodeConnection,
   CanvasPoint,
 } from '@minddrop/ui-canvas';
-import { ContentIcon, Group, Text } from '@minddrop/ui-primitives';
+import {
+  Combobox,
+  ComboboxOption,
+  ComboboxOptionGroup,
+} from '@minddrop/ui-primitives';
 import { QueryNodeShell } from '../QueryNodeShell';
-import { QuerySourcePicker } from '../QuerySourcePicker';
 import { SOURCE_FALLBACK_ICON } from '../constants';
-import './QuerySourceNodeCard.css';
 
 export interface QuerySourceNodeCardProps {
   /**
@@ -57,9 +62,9 @@ export interface QuerySourceNodeCardProps {
 }
 
 /**
- * Renders a source node showing the database whose entries it
- * emits into the graph, or a database search until a database
- * is picked.
+ * Renders a source node with a picker for the databases and
+ * queries whose entries it emits into the graph. Several
+ * sources emit their entries combined.
  */
 export const QuerySourceNodeCard: React.FC<QuerySourceNodeCardProps> = ({
   queryId,
@@ -70,17 +75,88 @@ export const QuerySourceNodeCard: React.FC<QuerySourceNodeCardProps> = ({
   resolveConnectTarget,
 }) => {
   const query = Queries.use(queryId);
-  const database = Databases.use(node.database);
+  const allDatabases = Databases.useAll();
+  const allQueries = Queries.useAll();
+  const { t } = useTranslation({ keyPrefix: 'queries.sourcePicker' });
 
-  // Persist the picked database on the node
-  function handleSelectDatabase(databaseId: DatabaseId): void {
-    if (!query) {
+  // The selectable sources, grouped by kind, with each option
+  // value mapped back onto the source it stands for. Option
+  // values are prefixed since a database and a query could
+  // share an ID.
+  const { groups, sources } = useMemo(() => {
+    const optionGroups: ComboboxOptionGroup[] = [];
+    const sourceMap = new Map<string, QuerySourceReference>();
+
+    // Databases emit all of their entries
+    const databaseOptions = allDatabases.map((database) => {
+      const value = sourceOptionValue({ type: 'database', id: database.id });
+
+      sourceMap.set(value, { type: 'database', id: database.id });
+
+      return {
+        label: database.name,
+        value,
+        contentIcon: database.icon || SOURCE_FALLBACK_ICON,
+      };
+    });
+
+    if (databaseOptions.length) {
+      optionGroups.push({
+        value: 'databases',
+        label: 'queries.sourcePicker.groups.databases',
+        items: databaseOptions,
+      });
+    }
+
+    // Queries emit their results. A query drawing from itself
+    // would be a reference cycle, so it is left out.
+    const queryOptions = allQueries
+      .filter((sourceQuery) => sourceQuery.id !== queryId)
+      .map((sourceQuery) => {
+        const value = sourceOptionValue({ type: 'query', id: sourceQuery.id });
+
+        sourceMap.set(value, { type: 'query', id: sourceQuery.id });
+
+        return {
+          label: sourceQuery.name,
+          value,
+          icon: 'list-filter' as const,
+        };
+      });
+
+    if (queryOptions.length) {
+      optionGroups.push({
+        value: 'queries',
+        label: 'queries.sourcePicker.groups.queries',
+        items: queryOptions,
+      });
+    }
+
+    return { groups: optionGroups, sources: sourceMap };
+  }, [allDatabases, allQueries, queryId]);
+
+  // The picked sources' options, shown as chips in the trigger
+  const pickedValues = node.sources.map(sourceOptionValue);
+  const selectedOptions = groups
+    .flatMap((group) => group.items)
+    .filter((option) => pickedValues.includes(option.value));
+
+  // Persist the picked sources
+  function handleSourcesChange(
+    picked: ComboboxOption | ComboboxOption[] | null,
+  ): void {
+    // Single values never occur in multi-select mode
+    if (!Array.isArray(picked) || !query) {
       return;
     }
 
     Queries.update(queryId, {
       nodes: updateQueryNode<QuerySourceNode>(query.nodes, node.id, {
-        database: databaseId,
+        sources: picked.flatMap((option) => {
+          const source = sources.get(option.value);
+
+          return source ? [source] : [];
+        }),
       }),
     });
   }
@@ -97,24 +173,24 @@ export const QuerySourceNodeCard: React.FC<QuerySourceNodeCardProps> = ({
       onConnectRelease={onConnectRelease}
       resolveConnectTarget={resolveConnectTarget}
     >
-      {/* Database search shown until a database is picked */}
-      {!node.database && <QuerySourcePicker onSelect={handleSelectDatabase} />}
-
-      {/* The picked database */}
-      {node.database && (
-        <Group
-          gap={2}
-          justify="center"
-          className="queries-source-node-database"
-        >
-          <ContentIcon icon={database?.icon || SOURCE_FALLBACK_ICON} />
-          <Text
-            size="sm"
-            stringText={database?.name || node.database}
-            color={database ? 'regular' : 'muted'}
-          />
-        </Group>
-      )}
+      <Combobox
+        multiple
+        size="md"
+        groups={groups}
+        placeholder={t('select')}
+        searchPlaceholder="queries.sourcePicker.searchPlaceholder"
+        emptyText={t('empty')}
+        value={selectedOptions}
+        onValueChange={handleSourcesChange}
+      />
     </QueryNodeShell>
   );
 };
+
+/**
+ * Builds a source's option value. Values carry the source's
+ * type since a database and a query could share an ID.
+ */
+function sourceOptionValue(source: QuerySourceReference): string {
+  return `${source.type}:${source.id}`;
+}

@@ -1,10 +1,11 @@
 import { Database, Databases } from '@minddrop/databases';
-import { Query } from '@minddrop/queries';
+import { Queries, Query, getQueryDatabases } from '@minddrop/queries';
 
 /**
  * Returns the databases emitted by the source nodes upstream of
  * a query graph node, in the order they are encountered walking
- * up the graph. Sources referencing missing databases are
+ * up the graph. Sources drawing from a query contribute that
+ * query's databases. Sources referencing missing databases are
  * skipped.
  *
  * @param query - The query containing the node.
@@ -34,10 +35,31 @@ export function getQueryUpstreamDatabases(
     // Collect source node databases
     const node = query.nodes.find((queryNode) => queryNode.id === currentId);
 
-    if (node?.type === 'source' && node.database) {
-      if (!databaseIds.includes(node.database)) {
-        databaseIds.push(node.database);
-      }
+    if (node?.type === 'source') {
+      node.sources.forEach((source) => {
+        // Database sources name their database directly
+        if (source.type === 'database') {
+          if (source.id && !databaseIds.includes(source.id)) {
+            databaseIds.push(source.id);
+          }
+
+          return;
+        }
+
+        // Query sources contribute the databases of the query
+        // they emit the results of
+        const sourcedQuery = source.id ? Queries.get(source.id, false) : null;
+
+        if (!sourcedQuery) {
+          return;
+        }
+
+        getQueryDatabases(sourcedQuery).forEach((databaseId) => {
+          if (!databaseIds.includes(databaseId)) {
+            databaseIds.push(databaseId);
+          }
+        });
+      });
 
       continue;
     }

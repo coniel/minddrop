@@ -63,6 +63,25 @@ Fix direction: set `jsx` in the shared package tsconfig base (or ship
 built declarations for ui-icons), and wrap the `stringifyIcon` symbol
 conversion in `String(...)`; then remove this entry.
 
+## ui/primitives
+
+### Multi-select `Combobox` nests a button inside its trigger button
+
+Rendering a `Combobox` with `multiple` and at least one selected item
+logs a React DOM validation error: "`<button>` cannot contain a nested
+`<button>`". Surfaced 2026-08-11 by the query source node card's tests,
+but structural in the primitive rather than caused by any consumer.
+
+Cause: `ComboboxTrigger` renders a `<button>`, and each selected chip
+inside it renders a `ComboboxChipRemove` `<button>`. Every multi-select
+consumer is affected, including `QueryNodeValueInput`'s entry picker;
+it simply has no test rendering it with a value, so the warning was
+never printed. Only a validation warning, the picker works.
+
+Fix direction: render the trigger as a non-button element (a `div` with
+the combobox role and keyboard handling), or move the chips outside the
+trigger; then remove this entry.
+
 ## packages/databases
 
 ### Concurrent file entry creation races on the storage directory

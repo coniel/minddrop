@@ -15,8 +15,18 @@ import {
 } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
 import { useQuery } from '../QueriesStore';
+import {
+  QueryDeletedEvent,
+  QueryDeletedEventData,
+  QueryUpdatedEvent,
+  QueryUpdatedEventData,
+} from '../events';
 import { QueryNodeCounts, getQueryNodeCounts } from '../getQueryNodeCounts';
-import { getQueryCollectionReferences } from '../utils';
+import {
+  getQueryCollectionReferences,
+  getQueryDatabases,
+  getQueryReferencedQueryIds,
+} from '../utils';
 
 /**
  * Returns the entry counts flowing into and out of each node of
@@ -52,10 +62,12 @@ export function useQueryNodeCounts(
       return;
     }
 
-    // The databases feeding the query's graph
-    const sourceDatabaseIds = query.nodes.flatMap((node) =>
-      node.type === 'source' && node.database ? [node.database] : [],
-    );
+    // The databases feeding the query's graph, including those
+    // of the queries it sources
+    const sourceDatabaseIds = getQueryDatabases(query);
+
+    // The queries the graph draws results from
+    const referencedQueryIds = getQueryReferencedQueryIds(query);
 
     // The collections the graph filters by, whose items are
     // compiled into the query
@@ -147,6 +159,29 @@ export function useQueryNodeCounts(
       }
     });
 
+    // Re-count when a query the graph sources is edited, since
+    // its results are compiled into this query
+    Events.addListener<QueryUpdatedEventData>(
+      QueryUpdatedEvent,
+      listenerId,
+      ({ data }) => {
+        if (referencedQueryIds.includes(data.updated.id)) {
+          recount();
+        }
+      },
+    );
+
+    // Re-count when a sourced query is deleted
+    Events.addListener<QueryDeletedEventData>(
+      QueryDeletedEvent,
+      listenerId,
+      ({ data }) => {
+        if (referencedQueryIds.includes(data.id)) {
+          recount();
+        }
+      },
+    );
+
     return () => {
       cancelled = true;
 
@@ -158,6 +193,8 @@ export function useQueryNodeCounts(
       Events.removeListener(CollectionCreatedEvent, listenerId);
       Events.removeListener(CollectionDeletedEvent, listenerId);
       Events.removeListener(CollectionsLoadedEvent, listenerId);
+      Events.removeListener(QueryUpdatedEvent, listenerId);
+      Events.removeListener(QueryDeletedEvent, listenerId);
     };
   }, [queryId, query, listenerId]);
 

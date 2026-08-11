@@ -23,7 +23,7 @@ export interface QueryToolbarCardDragUtils {
 /**
  * Returns drag utilities for a query builder toolbar card which
  * creates a node of the given type when dropped onto the
- * canvas. Source cards spawn a database picker instead.
+ * canvas. Source cards spawn a source picker instead.
  *
  * @param type - The type of node the card creates.
  *
@@ -45,7 +45,7 @@ export function useQueryToolbarCardDraggable(
 
       event.dataTransfer.effectAllowed = 'copy';
 
-      // Source cards spawn a database picker on drop
+      // Source cards spawn a source picker on drop
       if (type === 'source') {
         event.dataTransfer.setData(
           toMimeType(QuerySourceCardDataKey),

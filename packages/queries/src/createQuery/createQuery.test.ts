@@ -14,7 +14,7 @@ const newQuery = {
     {
       id: expect.any(String),
       type: 'source',
-      database: '',
+      sources: [],
       x: expect.any(Number),
       y: expect.any(Number),
     },

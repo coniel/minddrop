@@ -36,7 +36,7 @@ describe('getQueryUpstreamDatabases', () => {
       type: 'source',
       x: 0,
       y: 0,
-      database: urlDatabase.id,
+      sources: [{ type: 'database', id: urlDatabase.id }],
     };
     const query = {
       ...query_1,
@@ -62,7 +62,10 @@ describe('getQueryUpstreamDatabases', () => {
       ...query_1,
       nodes: query_1.nodes.map((node) =>
         node.id === sourceNode.id
-          ? { ...node, database: 'database_missing' }
+          ? {
+              ...node,
+              sources: [{ type: 'database' as const, id: 'database_missing' }],
+            }
           : node,
       ),
     };

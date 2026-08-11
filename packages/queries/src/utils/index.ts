@@ -12,4 +12,6 @@ export * from './resolveQueryDateRange';
 export * from './convertQueryFilterNodeToEntryFilter';
 export * from './compileQueryGraph';
 export * from './getQueryCollectionReferences';
+export * from './getQueryDatabases';
+export * from './getQueryReferencedQueryIds';
 export * from './searchQueries';

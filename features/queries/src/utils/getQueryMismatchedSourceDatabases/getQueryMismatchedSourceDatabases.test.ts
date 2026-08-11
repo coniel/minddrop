@@ -95,7 +95,7 @@ describe('getQueryMismatchedSourceDatabases', () => {
       type: 'source',
       x: 0,
       y: 0,
-      database: urlDatabase.id,
+      sources: [{ type: 'database', id: urlDatabase.id }],
     };
 
     // The filter matches only the URL database's property

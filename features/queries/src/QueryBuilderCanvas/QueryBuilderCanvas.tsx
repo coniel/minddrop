@@ -524,7 +524,7 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
       setSpliceTargetId(null);
 
       // Source cards create an unconfigured source node at the
-      // drop position, showing its database search
+      // drop position, showing its search
       if (event.dataTransfer.getData(toMimeType(QuerySourceCardDataKey))) {
         addNode('source', canvasPoint);
 

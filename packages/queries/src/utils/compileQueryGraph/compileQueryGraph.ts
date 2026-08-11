@@ -5,8 +5,16 @@ import {
   EntryQueryScope,
   EntrySort,
 } from '@minddrop/databases';
-import { Query, QueryCollectionFilterNode, QueryNode } from '../../types';
+import { getQuery } from '../../getQuery';
+import {
+  Query,
+  QueryCollectionFilterNode,
+  QueryNode,
+  QuerySourceNode,
+  QuerySourceReference,
+} from '../../types';
 import { convertQueryFilterNodeToEntryFilter } from '../convertQueryFilterNodeToEntryFilter';
+import { getQueryDatabases } from '../getQueryDatabases';
 
 export interface CompiledQueryNode {
   /**
@@ -45,6 +53,12 @@ export interface CompiledQueryNode {
 export type CompiledQueryGraph = Record<string, CompiledQueryNode>;
 
 /**
+ * The entry IDs returned by the queries referenced by query
+ * source nodes, keyed by query ID.
+ */
+export type QuerySourceResults = Record<string, string[]>;
+
+/**
  * Compiles a query's node graph into per-node database scopes,
  * sort criteria and limits.
  *
@@ -57,10 +71,14 @@ export type CompiledQueryGraph = Record<string, CompiledQueryNode>;
  * unchanged.
  *
  * @param query - The query whose graph to compile.
+ * @param queryResults - The results of the queries referenced by query source nodes, keyed by query ID.
  *
  * @returns The compiled graph, keyed by node ID.
  */
-export function compileQueryGraph(query: Query): CompiledQueryGraph {
+export function compileQueryGraph(
+  query: Query,
+  queryResults: QuerySourceResults = {},
+): CompiledQueryGraph {
   const compiled: CompiledQueryGraph = {};
 
   // Process nodes in dependency order so inputs compile before
@@ -84,7 +102,13 @@ export function compileQueryGraph(query: Query): CompiledQueryGraph {
     // Carry the smallest upstream limit
     const limit = mergeLimits(inputs.map((input) => input.limit));
 
-    compiled[node.id] = compileNode(node, inputScopes, sorts, limit);
+    compiled[node.id] = compileNode(
+      node,
+      inputScopes,
+      sorts,
+      limit,
+      queryResults,
+    );
   });
 
   return compiled;
@@ -98,14 +122,14 @@ function compileNode(
   inputScopes: EntryQueryScope[],
   sorts: EntrySort[],
   limit: number | null,
+  queryResults: QuerySourceResults,
 ): CompiledQueryNode {
-  // Source nodes emit their database's entries
+  // Source nodes emit their database's entries, or the results
+  // of the query they draw from
   if (node.type === 'source') {
     return {
       inputScopes,
-      outputScopes: node.database
-        ? [{ databaseId: node.database, filter: null }]
-        : [],
+      outputScopes: compileSourceScopes(node, queryResults),
       sorts,
       inputLimit: limit,
       limit,
@@ -233,6 +257,69 @@ function compileNode(
     inputLimit: limit,
     limit,
   };
+}
+
+/**
+ * Builds the scopes a source node emits, combining its sources
+ * the way parallel branches merging into a node combine: scopes
+ * on the same database are ORed, and an unfiltered scope
+ * absorbs filtered ones.
+ */
+function compileSourceScopes(
+  node: QuerySourceNode,
+  queryResults: QuerySourceResults,
+): EntryQueryScope[] {
+  return mergeScopes(
+    node.sources.map((source) =>
+      compileSourceReferenceScopes(source, queryResults),
+    ),
+  );
+}
+
+/**
+ * Builds the scopes a single source reference emits: a
+ * database's entries unfiltered, or one scope per database a
+ * referenced query draws from, each restricted to that query's
+ * results.
+ *
+ * Restricting by result IDs rather than inlining the referenced
+ * query's scopes preserves its own sorts and limit, which a
+ * scope filter cannot express.
+ */
+function compileSourceReferenceScopes(
+  source: QuerySourceReference,
+  queryResults: QuerySourceResults,
+): EntryQueryScope[] {
+  // An unset reference emits nothing
+  if (!source.id) {
+    return [];
+  }
+
+  // Database sources emit all of the database's entries
+  if (source.type === 'database') {
+    return [{ databaseId: source.id, filter: null }];
+  }
+
+  const entryIds = queryResults[source.id];
+  const referenced = getQuery(source.id, false);
+
+  // A query which is missing, or whose results have not been
+  // resolved, emits nothing
+  if (!entryIds || !referenced) {
+    return [];
+  }
+
+  const condition: EntryIdFilter = {
+    operator: 'id-is-one-of',
+    entryIds,
+  };
+
+  // Restrict each of the referenced query's databases to its
+  // results
+  return getQueryDatabases(referenced).map((databaseId) => ({
+    databaseId,
+    filter: { combinator: 'and' as const, filters: [condition] },
+  }));
 }
 
 /**
