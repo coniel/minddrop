@@ -88,8 +88,12 @@ export const QueryLimitNodeCard: React.FC<QueryLimitNodeCardProps> = ({
       onConnectRelease={onConnectRelease}
       resolveConnectTarget={resolveConnectTarget}
     >
+      {/* Clearable so the empty field, which means uncapped,
+          steps up to the minimum and back down to empty */}
       <NumberField
-        defaultValue={node.count > 0 ? node.count : undefined}
+        clearable
+        min={1}
+        value={node.count > 0 ? node.count : null}
         onValueChange={handleCountChange}
       />
     </QueryNodeShell>

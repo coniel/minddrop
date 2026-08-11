@@ -88,6 +88,8 @@
   "labels": {
     "untitled": "Untitled",
     "copy": "copy",
+    "increase": "Increase",
+    "decrease": "Decrease",
     "optional": "Optional",
     "properties": "Properties",
     "design": "Design",
