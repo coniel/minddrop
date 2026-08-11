@@ -1,13 +1,12 @@
 import { TranslationKey } from '@minddrop/i18n';
 import { QueryNodeType } from '@minddrop/queries';
 import {
-  Icon,
+  FloatingToolbarCard,
   IconProps,
   Tooltip,
   ViewFloatingToolbar,
 } from '@minddrop/ui-primitives';
-import { useQueryToolbarCardDraggable } from '../useQueryToolbarCardDraggable';
-import './QueryBuilderToolbar.css';
+import { useQueryToolbarCardDraggable } from './useQueryToolbarCardDraggable';
 
 /**
  * Renders the query builder's floating toolbar, containing a
@@ -63,13 +62,11 @@ const ToolbarCard: React.FC<ToolbarCardProps> = ({ type, icon, tooltip }) => {
 
   return (
     <Tooltip title={tooltip} side="top">
-      <div
-        className="query-builder-toolbar-card"
-        data-dragging={isDragging || undefined}
+      <FloatingToolbarCard
+        icon={icon}
+        dragging={isDragging}
         {...draggableProps}
-      >
-        <Icon name={icon} color="regular" />
-      </div>
+      />
     </Tooltip>
   );
 };

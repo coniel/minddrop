@@ -1,18 +1,16 @@
 import React from 'react';
 import { DatabaseId, Databases } from '@minddrop/databases';
 import {
-  ContentIcon,
-  Icon,
+  FloatingToolbarCard,
   ToolbarSeparator,
   Tooltip,
   ViewFloatingToolbar,
   ViewFloatingToolbarPosition,
 } from '@minddrop/ui-primitives';
-import { DATABASE_FALLBACK_ICON } from '../constants';
-import { useAddExistingEntryDraggable } from '../useAddExistingEntryDraggable';
-import { useNewEntryDraggable } from '../useNewEntryDraggable';
-import { useNewEntryPickerDraggable } from '../useNewEntryPickerDraggable';
-import './DataViewFloatingToolbar.css';
+import { DATABASE_FALLBACK_ICON } from './constants';
+import { useAddExistingEntryDraggable } from './useAddExistingEntryDraggable';
+import { useNewEntryDraggable } from './useNewEntryDraggable';
+import { useNewEntryPickerDraggable } from './useNewEntryPickerDraggable';
 
 export interface DataViewFloatingToolbarCard {
   /**
@@ -137,13 +135,11 @@ const DatabaseCard: React.FC<DatabaseCardProps> = ({
 
   return (
     <Tooltip stringTitle={tooltip} side="top">
-      <div
-        className="data-view-floating-toolbar-card"
-        data-dragging={isDragging || undefined}
+      <FloatingToolbarCard
+        contentIcon={database.icon || DATABASE_FALLBACK_ICON}
+        dragging={isDragging}
         {...draggableProps}
-      >
-        <ContentIcon icon={database.icon || DATABASE_FALLBACK_ICON} />
-      </div>
+      />
     </Tooltip>
   );
 };
@@ -157,13 +153,11 @@ const NewEntryCard: React.FC = () => {
 
   return (
     <Tooltip title="databases.entries.toolbar.newEntry" side="top">
-      <div
-        className="data-view-floating-toolbar-card"
-        data-dragging={isDragging || undefined}
+      <FloatingToolbarCard
+        icon="plus"
+        dragging={isDragging}
         {...draggableProps}
-      >
-        <Icon name="plus" color="regular" />
-      </div>
+      />
     </Tooltip>
   );
 };
@@ -177,13 +171,11 @@ const AddExistingEntryCard: React.FC = () => {
 
   return (
     <Tooltip title="databases.entries.toolbar.addExistingEntry" side="top">
-      <div
-        className="data-view-floating-toolbar-card"
-        data-dragging={isDragging || undefined}
+      <FloatingToolbarCard
+        icon="search"
+        dragging={isDragging}
         {...draggableProps}
-      >
-        <Icon name="search" color="regular" />
-      </div>
+      />
     </Tooltip>
   );
 };

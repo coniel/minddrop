@@ -1,8 +1,8 @@
-import { registerStory } from '@minddrop/dev-tools';
 /**
  * FloatingToolbar.stories.tsx
  * Dev reference for the FloatingToolbar component.
  */
+import { registerStory } from '@minddrop/dev-tools';
 import { Text } from '../Text';
 import { ToolbarIconButton, ToolbarSeparator } from '../Toolbar';
 import { Story, StoryItem, StoryRow, StorySection } from '../dev/Story';
