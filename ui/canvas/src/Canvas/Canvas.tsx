@@ -18,8 +18,12 @@ import {
   framesIntersect,
   getConnectionHandleTarget,
   getFrameFromPoints,
+  isTextInputTarget,
   screenToCanvas,
 } from '../utils';
+import { applyCanvasShortcut } from './applyCanvasShortcut';
+import { useCanvasViewportSize } from './useCanvasViewportSize';
+import { useCanvasWheel } from './useCanvasWheel';
 import './Canvas.css';
 
 export interface CanvasSelectionDeleteOptions {
@@ -202,95 +206,12 @@ export const Canvas: React.FC<CanvasProps> = ({
     [store, viewportRef],
   );
 
-  // Handle wheel events for zoom and pan
-  const handleWheel = useCallback(
-    (event: WheelEvent) => {
-      // Let scrollable content inside the canvas consume plain
-      // scrolls, zoom gestures still target the canvas
-      if (
-        !event.ctrlKey &&
-        !event.metaKey &&
-        viewportRef.current &&
-        scrollsNestedContent(event, viewportRef.current)
-      ) {
-        return;
-      }
-
-      event.preventDefault();
-
-      // Ctrl/Cmd + scroll = zoom toward cursor
-      if (event.ctrlKey || event.metaKey) {
-        const rect = viewportRef.current?.getBoundingClientRect();
-
-        if (!rect) {
-          return;
-        }
-
-        // Mouse position relative to the viewport
-        const mouseX = event.clientX - rect.left;
-        const mouseY = event.clientY - rect.top;
-
-        // Compute new zoom from scroll delta
-        const zoomFactor = 1 - event.deltaY * 0.005;
-        const newZoom = store.getZoom() * zoomFactor;
-
-        store.setZoom(newZoom, { x: mouseX, y: mouseY });
-
-        return;
-      }
-
-      // Shift + scroll = horizontal pan
-      const deltaX = event.shiftKey ? event.deltaY : event.deltaX;
-      const deltaY = event.shiftKey ? 0 : event.deltaY;
-      const currentPan = store.getPan();
-
-      store.setPan(currentPan.x - deltaX, currentPan.y - deltaY);
-    },
-    [store, viewportRef],
-  );
-
-  // Attach wheel listener with { passive: false } to allow preventDefault
-  useEffect(() => {
-    const viewport = viewportRef.current;
-
-    if (!viewport) {
-      return;
-    }
-
-    viewport.addEventListener('wheel', handleWheel, { passive: false });
-
-    return () => {
-      viewport.removeEventListener('wheel', handleWheel);
-    };
-  }, [handleWheel, viewportRef]);
+  // Zoom and pan from wheel events over the viewport
+  useCanvasWheel();
 
   // Keep the measured viewport size in the store for fit and
   // centering math
-  useEffect(() => {
-    const viewport = viewportRef.current;
-
-    if (!viewport) {
-      return;
-    }
-
-    const measure = () => {
-      store.setViewportSize({
-        width: viewport.offsetWidth,
-        height: viewport.offsetHeight,
-      });
-    };
-
-    // Initial measure before the first observer callback
-    measure();
-
-    const observer = new ResizeObserver(measure);
-
-    observer.observe(viewport);
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [store, viewportRef]);
+  useCanvasViewportSize();
 
   // Handle pan-drag starts and background presses
   const handleMouseDown = useCallback(
@@ -543,13 +464,7 @@ export const Canvas: React.FC<CanvasProps> = ({
   // Track space key for space+drag panning, and zoom/fit shortcuts
   const processKeyDown = useCallback(
     (event: KeyboardEvent | React.KeyboardEvent) => {
-      const target = event.target as HTMLElement;
-      const tag = target.tagName;
-      const isTextInput =
-        tag === 'INPUT' ||
-        tag === 'TEXTAREA' ||
-        tag === 'SELECT' ||
-        target.isContentEditable;
+      const isTextInput = isTextInputTarget(event.target);
 
       // Space for panning
       if (event.code === 'Space' && !event.repeat && !isTextInput) {
@@ -564,81 +479,7 @@ export const Canvas: React.FC<CanvasProps> = ({
         return;
       }
 
-      // Escape clears the selection
-      if (event.key === 'Escape') {
-        store.clearSelection();
-
-        return;
-      }
-
-      // Delete removes the selection through the consumer, which
-      // owns whatever the selected IDs stand for
-      if (event.key === 'Delete' || event.key === 'Backspace') {
-        const selection = store.getSelection();
-
-        if (!selection || !onSelectionDelete) {
-          return;
-        }
-
-        // Stopped as well as prevented, so an app-level delete
-        // shortcut does not act on the same press
-        event.preventDefault();
-        event.stopPropagation();
-
-        onSelectionDelete(selection, { shiftKey: event.shiftKey });
-
-        return;
-      }
-
-      // Cmd/Ctrl + A selects every node on the canvas
-      if (event.key === 'a' && (event.metaKey || event.ctrlKey)) {
-        // Leave the shortcut to the app when the canvas does not
-        // support selection
-        if (!store.getSelectable()) {
-          return;
-        }
-
-        event.preventDefault();
-        store.selectNodes(Object.keys(store.getNodes()));
-
-        return;
-      }
-
-      // + or = to zoom in
-      if (event.key === '+' || event.key === '=') {
-        event.preventDefault();
-        store.zoomIn();
-
-        return;
-      }
-
-      // - to zoom out
-      if (event.key === '-') {
-        event.preventDefault();
-        store.zoomOut();
-
-        return;
-      }
-
-      // 0 to zoom to 100%
-      if (event.key === '0') {
-        event.preventDefault();
-
-        const viewportSize = store.getViewportSize();
-
-        store.setZoom(1, {
-          x: viewportSize.width / 2,
-          y: viewportSize.height / 2,
-        });
-
-        return;
-      }
-
-      // H for home (fit all nodes in view)
-      if (event.key === 'h' || event.key === 'H') {
-        event.preventDefault();
-        store.fitToView();
-      }
+      applyCanvasShortcut(event, store, onSelectionDelete);
     },
     [store, onSelectionDelete],
   );
@@ -838,45 +679,4 @@ function getCanvasCursor(panning: boolean, lassoing: boolean): string | null {
  */
 function mergeIds(baseline: string[], ids: string[]): string[] {
   return Array.from(new Set([...baseline, ...ids]));
-}
-
-/**
- * Checks whether a wheel event can be consumed by a scrollable
- * element between its target and the canvas viewport, in the
- * direction of the scroll.
- */
-function scrollsNestedContent(
-  event: WheelEvent,
-  viewport: HTMLElement,
-): boolean {
-  let element = event.target instanceof HTMLElement ? event.target : null;
-
-  // Walk up from the target to the canvas viewport
-  while (element && element !== viewport) {
-    const { overflowX, overflowY } = getComputedStyle(element);
-
-    // The element scrolls vertically under the wheel's vertical
-    // delta
-    if (
-      event.deltaY !== 0 &&
-      (overflowY === 'auto' || overflowY === 'scroll') &&
-      element.scrollHeight > element.clientHeight
-    ) {
-      return true;
-    }
-
-    // The element scrolls horizontally under the wheel's
-    // horizontal delta
-    if (
-      event.deltaX !== 0 &&
-      (overflowX === 'auto' || overflowX === 'scroll') &&
-      element.scrollWidth > element.clientWidth
-    ) {
-      return true;
-    }
-
-    element = element.parentElement;
-  }
-
-  return false;
 }
