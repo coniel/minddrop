@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  Events,
   OpenViewEvent,
   OpenViewEventData,
   ViewDescriptor,
@@ -78,6 +77,12 @@ export interface PanelViewProps {
   breadcrumbs?: ViewDescriptor[];
 
   /**
+   * Content rendered in place of the header's breadcrumbs, icon and
+   * title, filling the header's available width.
+   */
+  header?: React.ReactNode;
+
+  /**
    * Action buttons rendered in the header toolbar. Items may be
    * action descriptors or custom React elements rendered as-is.
    */
@@ -104,6 +109,7 @@ export const PanelView: React.FC<PanelViewProps> = ({
   children,
   className,
   contentIcon,
+  header,
   icon,
   stringTitle,
   title,
@@ -132,26 +138,31 @@ export const PanelView: React.FC<PanelViewProps> = ({
         justify="between"
         className={propsToClass('header', { breadcrumbs: hasBreadcrumbs })}
       >
-        <Group gap={2} className="title">
-          {/* Breadcrumb trail leading to the current view */}
-          {trail.map((breadcrumb, index) => (
-            <React.Fragment key={breadcrumb.id || index}>
-              <PanelViewBreadcrumbButton breadcrumb={breadcrumb} />
-              <Icon
-                name="chevron-right"
-                color="muted"
-                className="breadcrumb-separator"
-              />
-            </React.Fragment>
-          ))}
-          {/* Content icon takes priority over the plain icon */}
-          {contentIcon ? (
-            <ContentIcon className="title-icon" icon={contentIcon} />
-          ) : (
-            <IconRenderer className="title-icon" icon={icon} />
-          )}
-          <Text>{resolvedTitle}</Text>
-        </Group>
+        {/* Custom header content replaces the title entirely */}
+        {header ? (
+          <div className="header-content">{header}</div>
+        ) : (
+          <Group gap={2} className="title">
+            {/* Breadcrumb trail leading to the current view */}
+            {trail.map((breadcrumb, index) => (
+              <React.Fragment key={breadcrumb.id || index}>
+                <PanelViewBreadcrumbButton breadcrumb={breadcrumb} />
+                <Icon
+                  name="chevron-right"
+                  color="muted"
+                  className="breadcrumb-separator"
+                />
+              </React.Fragment>
+            ))}
+            {/* Content icon takes priority over the plain icon */}
+            {contentIcon ? (
+              <ContentIcon className="title-icon" icon={contentIcon} />
+            ) : (
+              <IconRenderer className="title-icon" icon={icon} />
+            )}
+            <Text>{resolvedTitle}</Text>
+          </Group>
+        )}
         {/* Header action buttons */}
         {actions && actions.length > 0 && (
           <Toolbar>
@@ -194,9 +205,25 @@ interface PanelViewBreadcrumbButtonProps {
 const PanelViewBreadcrumbButton: React.FC<PanelViewBreadcrumbButtonProps> = ({
   breadcrumb,
 }) => {
+  const { t } = useTranslation();
+  const openView = Views.useOpenView();
+  const registered = Views.use(breadcrumb.view);
+
+  // The crumb's own content icon, falling back to the view's
+  // registered UI icon
+  const icon: IconProp | undefined = breadcrumb.icon ? (
+    <ContentIcon icon={breadcrumb.icon} />
+  ) : (
+    registered?.icon
+  );
+
+  // The crumb's own title, falling back to the view's registered one
+  const title =
+    breadcrumb.title ?? (registered?.title ? t(registered.title) : undefined);
+
   // Open the breadcrumb's view
   function handleClick() {
-    Events.dispatch<OpenViewEventData>(OpenViewEvent, { ...breadcrumb });
+    openView<OpenViewEventData>(OpenViewEvent, { ...breadcrumb });
   }
 
   return (
@@ -206,10 +233,8 @@ const PanelViewBreadcrumbButton: React.FC<PanelViewBreadcrumbButtonProps> = ({
       className="breadcrumb-button"
       onClick={handleClick}
     >
-      {breadcrumb.icon && (
-        <ContentIcon className="breadcrumb-icon" icon={breadcrumb.icon} />
-      )}
-      {breadcrumb.title}
+      <IconRenderer className="breadcrumb-icon" icon={icon} />
+      {title}
     </Button>
   );
 };
