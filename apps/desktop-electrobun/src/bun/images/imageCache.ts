@@ -2,6 +2,7 @@ import { Utils } from 'electrobun/bun';
 import fsp from 'node:fs/promises';
 import path from 'path';
 import sharp from 'sharp';
+import { fileExists } from './fileExists';
 
 // Extensions for which resized variants are generated. Gifs are
 // excluded as they are usually animated, which a plain resize
@@ -41,8 +42,8 @@ export async function getResizedImage(
 
     // Key the variant on the source path and its modification time so
     // that editing the source produces a fresh variant
-    const hash = Bun.hash(`${sourcePath}:${stats.mtimeMs}`).toString(16);
-    const cacheFileName = `${hash}-w${width}${extension}`;
+    const cacheKey = Bun.hash(`${sourcePath}:${stats.mtimeMs}`).toString(16);
+    const cacheFileName = `${cacheKey}-w${width}${extension}`;
     const cachePath = path.join(CACHE_DIR, cacheFileName);
 
     // Serve an already generated variant
@@ -159,18 +160,5 @@ async function generateVariant(
     console.warn(`[imageCache] resize failed for ${sourcePath}`, error);
 
     return null;
-  }
-}
-
-/**
- * Checks whether a file exists at the given path.
- */
-async function fileExists(filePath: string): Promise<boolean> {
-  try {
-    await fsp.access(filePath);
-
-    return true;
-  } catch {
-    return false;
   }
 }

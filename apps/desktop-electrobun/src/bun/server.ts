@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import fsp from 'node:fs/promises';
 import path from 'path';
 import { bracketImageWidth } from '@minddrop/utils';
-import { getResizedImage } from './imageCache';
+import { getAllImageStats, getImageStats, getResizedImage } from './images';
 
 // Basic MIME type helper
 function getMimeType(filePath: string) {
@@ -99,6 +99,40 @@ export const httpServer = serve({
             new Response(`File not found: ${filePath}`, { status: 404 }),
           );
         }
+      }
+
+      case '/image-stats/all': {
+        // The whole index, so the client can populate its cache in
+        // one request rather than per image as they render
+        return withCors(
+          new Response(JSON.stringify(getAllImageStats()), {
+            headers: {
+              'Content-Type': 'application/json',
+              'Cache-Control': 'no-store',
+            },
+          }),
+        );
+      }
+
+      case '/image-stats': {
+        const filePath = url.searchParams.get('path');
+
+        if (!filePath)
+          return withCors(new Response('Missing path', { status: 400 }));
+
+        const stats = await getImageStats(filePath);
+
+        // Not browser cached: the URL carries no modification time, so
+        // a cached response would outlive the image it describes. The
+        // analysis itself is cached server side and by the client hook.
+        return withCors(
+          new Response(JSON.stringify(stats), {
+            headers: {
+              'Content-Type': 'application/json',
+              'Cache-Control': 'no-store',
+            },
+          }),
+        );
       }
 
       case '/upload': {

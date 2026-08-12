@@ -6,7 +6,7 @@ import {
   Utils,
 } from 'electrobun/bun';
 import { myWebviewRPC } from './bun-rpc';
-import { pruneImageCache } from './imageCache';
+import { initializeImageStats, pruneImageCache } from './images';
 import { initializeSearch } from './search';
 import { initializeSql } from './sql';
 import { setWindowRpcTarget } from './windowRpc';
@@ -226,3 +226,7 @@ initializeSearch();
 
 // Trim the resized image cache back under its size limit
 pruneImageCache();
+
+// Load the image brightness analyses, dropping those whose source
+// image has been deleted or modified
+initializeImageStats();
