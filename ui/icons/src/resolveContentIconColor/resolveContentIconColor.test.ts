@@ -1,24 +1,24 @@
 import { describe, expect, it } from 'vitest';
 import { stringifyIcon } from '../stringifyIcon';
 import { contentIcon, emojiIcon } from '../test-utils';
-import { getContentIconColor } from './getContentIconColor';
+import { resolveContentIconColor } from './resolveContentIconColor';
 
-describe('getContentIconColor', () => {
+describe('resolveContentIconColor', () => {
   it('returns the color if the icon is a content icon', () => {
-    expect(getContentIconColor(contentIcon)).toBe(contentIcon.color);
+    expect(resolveContentIconColor(contentIcon)).toBe(contentIcon.color);
   });
 
   it('returns the color if the icon is a content icon string', () => {
-    expect(getContentIconColor(stringifyIcon(contentIcon))).toBe(
+    expect(resolveContentIconColor(stringifyIcon(contentIcon))).toBe(
       contentIcon.color,
     );
   });
 
   it('returns undefined if the icon is an emoji icon', () => {
-    expect(getContentIconColor(emojiIcon)).toBeUndefined();
+    expect(resolveContentIconColor(emojiIcon)).toBeUndefined();
   });
 
   it('returns undefined if the icon is an emoji icon string', () => {
-    expect(getContentIconColor(stringifyIcon(emojiIcon))).toBeUndefined();
+    expect(resolveContentIconColor(stringifyIcon(emojiIcon))).toBeUndefined();
   });
 });

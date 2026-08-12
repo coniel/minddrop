@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
 import { ContentColor } from '@minddrop/ui-theme';
 import { EmojiSkinTone } from '../emoji';
-import { getContentIconColor } from '../getContentIconColor';
 import { getEmojiIconSkinTone } from '../getEmojiIconSkinTone';
 import { UserIcon, UserIconType } from '../icons.types';
 import { parseIcon } from '../parseIcon';
+import { resolveContentIconColor } from '../resolveContentIconColor';
 
 interface IconData {
   // The parsed icon
@@ -36,7 +36,7 @@ export function useIcon(iconString?: string, defaultIcon?: UserIcon): IconData {
       },
     [iconString, defaultIcon],
   );
-  const color = useMemo(() => getContentIconColor(icon), [icon]);
+  const color = useMemo(() => resolveContentIconColor(icon), [icon]);
   const skinTone = useMemo(() => getEmojiIconSkinTone(icon), [icon]);
 
   return { icon, color, skinTone };

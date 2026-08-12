@@ -8,7 +8,7 @@ import { UserIcon, UserIconType } from '../icons.types';
  * @param icon - The icon to get the color of.
  * @returns The color of the content icon or undefined.
  */
-export function getContentIconColor(
+export function resolveContentIconColor(
   icon: string | UserIcon,
 ): ContentColor | undefined {
   // Icon is stringified
