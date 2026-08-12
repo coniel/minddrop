@@ -1,7 +1,7 @@
 import { Fs } from '@minddrop/file-system';
 import { WorkspaceNotFoundError } from '../errors';
 import { Workspace } from '../types';
-import { getWorkspaceConfigFilePath } from '../utils';
+import { resolveWorkspaceConfigFilePath } from '../utils';
 
 /**
  * Reads a workspace config from the file system.
@@ -21,7 +21,7 @@ export async function readWorkspaceConfig(
   throwOnNotFound = true,
 ): Promise<Workspace | null> {
   // Path to the workspace config file
-  const configPath = getWorkspaceConfigFilePath(path);
+  const configPath = resolveWorkspaceConfigFilePath(path);
 
   // Ensure the workspace config file exists
   if (!(await Fs.exists(configPath))) {

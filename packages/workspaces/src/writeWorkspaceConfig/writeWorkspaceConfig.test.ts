@@ -2,10 +2,10 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Fs } from '@minddrop/file-system';
 import { omitPath } from '@minddrop/utils';
 import { MockFs, cleanup, setup, workspace_1 } from '../test-utils';
-import { getWorkspaceConfigFilePath } from '../utils';
+import { resolveWorkspaceConfigFilePath } from '../utils';
 import { writeWorkspaceConfig } from './writeWorkspaceConfig';
 
-const configFilePath = getWorkspaceConfigFilePath(workspace_1.path);
+const configFilePath = resolveWorkspaceConfigFilePath(workspace_1.path);
 
 describe('writeWorkspaceConfig', () => {
   beforeEach(() => setup({ loadWorkspaceFiles: false }));

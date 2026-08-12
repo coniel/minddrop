@@ -4,7 +4,7 @@ import { WorkspacesStore } from '../WorkspacesStore';
 import { WorkspaceDeletedEvent } from '../events';
 import { MockFs, cleanup, setup, workspace_1 } from '../test-utils';
 import { WorkspacesConfig } from '../types';
-import { getWorkspacesConfigFilePath } from '../utils';
+import { resolveWorkspacesConfigFilePath } from '../utils';
 import { deleteWorkspace } from './deleteWorkspace';
 
 describe('deleteWorkspace', () => {
@@ -28,7 +28,7 @@ describe('deleteWorkspace', () => {
     await deleteWorkspace(workspace_1.id);
 
     const config = MockFs.readJsonFile<WorkspacesConfig>(
-      getWorkspacesConfigFilePath(),
+      resolveWorkspacesConfigFilePath(),
     );
 
     expect(config.paths.includes(workspace_1.path)).toBe(false);

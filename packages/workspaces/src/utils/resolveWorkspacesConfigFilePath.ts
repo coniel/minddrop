@@ -6,7 +6,7 @@ import { WorkspacesConfigFileName } from '../constants';
  *
  * @returns The path to the workspaces config file.
  */
-export function getWorkspacesConfigFilePath(): string {
+export function resolveWorkspacesConfigFilePath(): string {
   return Fs.concatPath(
     Fs.getBaseDirPath(BaseDirectory.AppConfig),
     WorkspacesConfigFileName,

@@ -6,7 +6,7 @@ import { WorkspacesConfigFileName } from '../constants';
 import { WorkspacesLoadedEvent, WorkspacesLoadedEventData } from '../events';
 import { readWorkspaceConfig } from '../readWorkspaceConfig';
 import { WorkspaceId, WorkspacesConfig } from '../types';
-import { getWorkspacesConfigFilePath } from '../utils';
+import { resolveWorkspacesConfigFilePath } from '../utils';
 import { writeWorkspaceConfig } from '../writeWorkspaceConfig';
 
 /**
@@ -17,7 +17,7 @@ import { writeWorkspaceConfig } from '../writeWorkspaceConfig';
  * @dispatches workspaces:loaded
  */
 export async function initializeWorkspaces(): Promise<void> {
-  const configFilePath = getWorkspacesConfigFilePath();
+  const configFilePath = resolveWorkspacesConfigFilePath();
 
   // Ensure the workspaces config file exists
   if (!(await Fs.exists(configFilePath))) {

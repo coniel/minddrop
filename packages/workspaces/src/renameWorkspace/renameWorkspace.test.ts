@@ -14,8 +14,8 @@ import {
 } from '../test-utils';
 import { Workspace, WorkspacesConfig } from '../types';
 import {
-  getWorkspaceConfigFilePath,
-  getWorkspacesConfigFilePath,
+  resolveWorkspaceConfigFilePath,
+  resolveWorkspacesConfigFilePath,
 } from '../utils';
 import { renameWorkspace } from './renameWorkspace';
 
@@ -61,16 +61,16 @@ describe('renameWorkspace', () => {
   it('writes the updated workspace to the file system', async () => {
     await renameWorkspace(workspace_1.id, newName);
 
-    expect(MockFs.readJsonFile(getWorkspaceConfigFilePath(newPath))).toEqual(
-      omitPath(updatedWorkspace),
-    );
+    expect(
+      MockFs.readJsonFile(resolveWorkspaceConfigFilePath(newPath)),
+    ).toEqual(omitPath(updatedWorkspace));
   });
 
   it('writes the workspaces config', async () => {
     await renameWorkspace(workspace_1.id, newName);
 
     const config = MockFs.readJsonFile<WorkspacesConfig>(
-      getWorkspacesConfigFilePath(),
+      resolveWorkspacesConfigFilePath(),
     );
 
     expect(config.paths.includes(newPath)).toBe(true);

@@ -1,7 +1,7 @@
 import { Fs } from '@minddrop/file-system';
 import { omitPath } from '@minddrop/utils';
 import { getWorkspace } from '../getWorkspace';
-import { getWorkspaceConfigFilePath } from '../utils';
+import { resolveWorkspaceConfigFilePath } from '../utils';
 
 /**
  * Writes a workspace config to the file system.
@@ -14,7 +14,7 @@ export async function writeWorkspaceConfig(id: string): Promise<void> {
   // Get the workspace
   const workspace = getWorkspace(id);
   // The path to the workspace config file inside the hidden config directory
-  const configFilePath = getWorkspaceConfigFilePath(workspace.path);
+  const configFilePath = resolveWorkspaceConfigFilePath(workspace.path);
 
   // Ensure that the hidden config directory exists
   await Fs.ensureDir(Fs.parentDirPath(configFilePath));

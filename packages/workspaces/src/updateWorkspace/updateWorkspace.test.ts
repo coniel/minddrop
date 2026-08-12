@@ -5,7 +5,7 @@ import { WorkspacesStore } from '../WorkspacesStore';
 import { WorkspaceUpdatedEvent, WorkspaceUpdatedEventData } from '../events';
 import { MockFs, cleanup, mockDate, setup, workspace_1 } from '../test-utils';
 import { Workspace } from '../types';
-import { getWorkspaceConfigFilePath } from '../utils';
+import { resolveWorkspaceConfigFilePath } from '../utils';
 import { UpdateWorkspaceData, updateWorkspace } from './updateWorkspace';
 
 const update: UpdateWorkspaceData = { icon: 'new-icon' };
@@ -39,7 +39,7 @@ describe('updateWorkspace', () => {
     await updateWorkspace(workspace_1.id, update);
 
     const config = MockFs.readJsonFile(
-      getWorkspaceConfigFilePath(workspace_1.path),
+      resolveWorkspaceConfigFilePath(workspace_1.path),
     );
 
     expect(config).toEqual(omitPath(updatedWorkspace));

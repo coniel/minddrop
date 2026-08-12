@@ -1,14 +1,14 @@
 import { Fs } from '@minddrop/file-system';
 import { WorkspacesStore } from '../WorkspacesStore';
 import { WorkspacesConfig } from '../types';
-import { getWorkspacesConfigFilePath } from '../utils';
+import { resolveWorkspacesConfigFilePath } from '../utils';
 
 /**
  * Writes the workspaces config file to the app config directory.
  */
 export async function writeWorkspacesConfig(): Promise<void> {
   // Path to the workspaces config file
-  const configFilePath = getWorkspacesConfigFilePath();
+  const configFilePath = resolveWorkspacesConfigFilePath();
 
   // Generate the workspaces config
   const workspacesConfig: WorkspacesConfig = {

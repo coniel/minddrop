@@ -15,8 +15,8 @@ import {
 import { Workspace, WorkspacesConfig } from '../types';
 import {
   generateWorkspaceConfig,
-  getWorkspaceConfigFilePath,
-  getWorkspacesConfigFilePath,
+  resolveWorkspaceConfigFilePath,
+  resolveWorkspacesConfigFilePath,
 } from '../utils';
 import { addWorkspace } from './addWorkspace';
 
@@ -76,7 +76,7 @@ describe('addWorkspace', () => {
     await addWorkspace(newWorkspacePath);
 
     const config = MockFs.readJsonFile<Workspace>(
-      getWorkspaceConfigFilePath(newWorkspacePath),
+      resolveWorkspaceConfigFilePath(newWorkspacePath),
     );
 
     // Should write the workspace config
@@ -91,7 +91,7 @@ describe('addWorkspace', () => {
     await addWorkspace(newWorkspacePath);
 
     const config = MockFs.readJsonFile<WorkspacesConfig>(
-      getWorkspacesConfigFilePath(),
+      resolveWorkspacesConfigFilePath(),
     );
 
     expect(config.paths.includes(newWorkspacePath)).toBe(true);

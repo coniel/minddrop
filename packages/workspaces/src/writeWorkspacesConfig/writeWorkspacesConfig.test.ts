@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { MockFs, cleanup, setup, workspacesConfig } from '../test-utils';
-import { getWorkspacesConfigFilePath } from '../utils';
+import { resolveWorkspacesConfigFilePath } from '../utils';
 import { writeWorkspacesConfig } from './writeWorkspacesConfig';
 
 describe('writeWorkspacesConfig', () => {
@@ -11,7 +11,7 @@ describe('writeWorkspacesConfig', () => {
   it('writes the workspaces config to the file system', async () => {
     writeWorkspacesConfig();
 
-    expect(MockFs.readJsonFile(getWorkspacesConfigFilePath())).toEqual(
+    expect(MockFs.readJsonFile(resolveWorkspacesConfigFilePath())).toEqual(
       workspacesConfig,
     );
   });

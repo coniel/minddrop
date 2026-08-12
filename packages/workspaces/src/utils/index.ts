@@ -1,3 +1,3 @@
-export * from './getWorkspaceConfigFilePath';
-export * from './getWorkspacesConfigFilePath';
 export * from './generateWorkspaceConfig';
+export * from './resolveWorkspaceConfigFilePath';
+export * from './resolveWorkspacesConfigFilePath';

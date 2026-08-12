@@ -13,8 +13,8 @@ import {
 } from '../test-utils';
 import { WorkspacesConfig } from '../types';
 import {
-  getWorkspaceConfigFilePath,
-  getWorkspacesConfigFilePath,
+  resolveWorkspaceConfigFilePath,
+  resolveWorkspacesConfigFilePath,
 } from '../utils';
 import { createWorkspace } from './createWorkspace';
 
@@ -70,7 +70,9 @@ describe('createWorkspace', () => {
   it('writes the workspace config to the file system', async () => {
     const result = await createWorkspace(workspacesRootPath, options);
 
-    const config = MockFs.readJsonFile(getWorkspaceConfigFilePath(result.path));
+    const config = MockFs.readJsonFile(
+      resolveWorkspaceConfigFilePath(result.path),
+    );
 
     expect(config).toEqual(omitPath(newWorkspace));
   });
@@ -79,7 +81,7 @@ describe('createWorkspace', () => {
     await createWorkspace(workspacesRootPath, options);
 
     const config = MockFs.readJsonFile<WorkspacesConfig>(
-      getWorkspacesConfigFilePath(),
+      resolveWorkspacesConfigFilePath(),
     );
 
     expect(config.paths.includes(path)).toBe(true);

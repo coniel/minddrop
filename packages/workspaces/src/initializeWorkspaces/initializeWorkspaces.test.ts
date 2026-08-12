@@ -3,7 +3,7 @@ import { Events } from '@minddrop/events';
 import { WorkspacesStore } from '../WorkspacesStore';
 import { WorkspacesLoadedEvent } from '../events';
 import { MockFs, cleanup, setup, workspaces } from '../test-utils';
-import { getWorkspacesConfigFilePath } from '../utils';
+import { resolveWorkspacesConfigFilePath } from '../utils';
 import { initializeWorkspaces } from './initializeWorkspaces';
 
 describe('initializeWorkspaces', () => {
@@ -13,11 +13,11 @@ describe('initializeWorkspaces', () => {
 
   it('creates the workspaces config file if it does not exist', async () => {
     // Remove the workspaces config file
-    MockFs.removeFile(getWorkspacesConfigFilePath());
+    MockFs.removeFile(resolveWorkspacesConfigFilePath());
 
     await initializeWorkspaces();
 
-    expect(MockFs.exists(getWorkspacesConfigFilePath())).toBe(true);
+    expect(MockFs.exists(resolveWorkspacesConfigFilePath())).toBe(true);
   });
 
   it('loads workspaces into the store', async () => {
