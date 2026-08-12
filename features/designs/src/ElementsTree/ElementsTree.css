@@ -8,6 +8,13 @@
   padding: var(--space-1) 0 var(--space-7);
 }
 
+/* --- Empty state --- */
+
+.elements-tree-empty {
+  margin: var(--space-4) var(--space-3);
+  text-align: center;
+}
+
 /* --- Tree node row --- */
 
 .elements-tree-node {

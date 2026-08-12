@@ -1,4 +1,4 @@
-import { ScrollArea } from '@minddrop/ui-primitives';
+import { ScrollArea, Text } from '@minddrop/ui-primitives';
 import { useDesignStudioStore } from '../DesignStudioStore';
 import { LayoutIdProvider } from '../LayoutIdContext';
 import { layoutTypeIconMap } from '../constants';
@@ -19,6 +19,15 @@ export const ElementsTree: React.FC = () => {
   return (
     <ScrollArea>
       <div className="elements-tree">
+        {design.layouts.length === 0 && (
+          <Text
+            block
+            size="sm"
+            color="subtle"
+            className="elements-tree-empty"
+            text="designs.layouts.empty"
+          />
+        )}
         {design.layouts.map((layout) => (
           <LayoutIdProvider key={layout.id} value={layout.id}>
             <ElementsTreeNode

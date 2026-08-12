@@ -103,7 +103,13 @@ export const DesignPropertiesPanel: React.FC<DesignPropertiesPanelProps> = ({
     <ScrollArea>
       <div className="design-properties-panel">
         {properties.length === 0 && draftProperties.length === 0 && (
-          <Text block size="sm" color="muted" text="designs.properties.empty" />
+          <Text
+            block
+            size="sm"
+            color="subtle"
+            className="design-properties-panel-empty"
+            text="designs.properties.empty"
+          />
         )}
         {/* Persisted properties oldest first, sortable */}
         <SortableList

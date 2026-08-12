@@ -1045,6 +1045,7 @@
     "name": "Design",
     "new": "New design",
     "layouts": {
+      "empty": "No layouts",
       "labels": {
         "add": "Add layout"
       },
@@ -1379,7 +1380,7 @@
       "label": "Title"
     },
     "properties": {
-      "empty": "No properties yet",
+      "empty": "No properties",
       "actions": {
         "add": "Add property",
         "delete": {

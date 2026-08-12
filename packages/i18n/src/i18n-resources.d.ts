@@ -1101,6 +1101,7 @@ declare module 'i18next' {
           name: string;
           new: string;
           layouts: {
+            empty: string;
             labels: {
               add: string;
             };
