@@ -8,8 +8,8 @@ let connection: SqlConnection | null = null;
 // Re-export registerAdapter for the public API
 export { registerSqlAdapter as registerAdapter };
 
-// Re-export getConfigPath for the public API
-export { getSqlConfigPath as getConfigPath } from './sqlConfig';
+// Re-export resolveConfigPath for the public API
+export { resolveSqlConfigPath as resolveConfigPath } from './sqlConfig';
 
 /**
  * Opens or creates a SQL database at the given path.

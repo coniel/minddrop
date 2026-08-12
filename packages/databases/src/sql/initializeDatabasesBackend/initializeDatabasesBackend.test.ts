@@ -19,7 +19,7 @@ import { initializeDatabasesBackend } from './initializeDatabasesBackend';
 vi.mock('@minddrop/sql', () => ({
   Sql: {
     open: vi.fn(async () => ({ schemaChanged: true })),
-    getConfigPath: () => '/mock-config',
+    resolveConfigPath: () => '/mock-config',
   },
 }));
 vi.mock('../sqlUpsertDatabase', () => ({ sqlUpsertDatabase: vi.fn() }));

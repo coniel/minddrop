@@ -65,7 +65,7 @@ export async function initializeDatabasesBackend(
   const databases = await readWorkspaceDatabases(workspacePath);
 
   // Open or create the SQL database
-  const dbPath = `${Sql.getConfigPath()}/${workspaceId}/data.db`;
+  const dbPath = `${Sql.resolveConfigPath()}/${workspaceId}/data.db`;
   const { schemaChanged } = await Sql.open(dbPath, {
     schema: SCHEMA_SQL,
     version: SCHEMA_VERSION,
