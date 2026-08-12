@@ -1,4 +1,11 @@
-import { CSSProperties, useEffect, useMemo, useRef } from 'react';
+import {
+  CSSProperties,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   DropdownMenuContent,
   DropdownMenuItem,
@@ -11,7 +18,8 @@ import {
   ToolbarIconButton,
   ToolbarSeparator,
 } from '@minddrop/ui-primitives';
-import { useContainedImage } from './useContainedImage';
+import { joinClassNames } from '@minddrop/utils';
+import { ImageSize, useContainedImage } from './useContainedImage';
 import { useImageViewerDrag } from './useImageViewerDrag';
 import { ZOOM_PRESETS, useImageViewerZoom } from './useImageViewerZoom';
 import './ImageViewer.css';
@@ -33,11 +41,30 @@ export interface ImageViewerProps {
   className?: string;
 
   /**
+   * Additional CSS class name applied to the image itself. Kept
+   * separate from `className` so that filters applied to the image
+   * do not also affect the floating toolbar.
+   */
+  imageClassName?: string;
+
+  /**
    * When true, disables all interactive controls (zoom, pan,
    * toolbar) and shows a message on hover indicating that
    * controls are disabled.
    */
   preview?: boolean;
+
+  /**
+   * The image's dimensions, if known before it loads. Lets the
+   * viewer lay the image out immediately rather than waiting for
+   * it to arrive.
+   */
+  naturalSize?: ImageSize | null;
+
+  /**
+   * Colour filling the image's space until it has loaded.
+   */
+  placeholderColor?: string;
 }
 
 /**
@@ -51,9 +78,13 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({
   src,
   style,
   className,
+  imageClassName,
   preview = false,
+  naturalSize: knownSize,
+  placeholderColor,
 }) => {
   const toolbarRef = useRef<HTMLDivElement>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   // Contained image fitting (base scale, centering, resize tracking)
   const {
@@ -63,8 +94,9 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({
     getCenteredPan,
     getEffectivePan,
     clampPan,
+    naturalSize,
     ready,
-  } = useContainedImage();
+  } = useContainedImage(knownSize);
 
   // Zoom state and controls
   const {
@@ -103,9 +135,19 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({
   useEffect(() => {
     if (src !== previousSrcRef.current) {
       previousSrcRef.current = src;
+      setIsLoaded(false);
       reset();
     }
   }, [src, reset]);
+
+  // Record the image's dimensions and drop the placeholder
+  const handleLoad = useCallback(
+    (event: React.SyntheticEvent<HTMLImageElement>) => {
+      handleImageLoad(event);
+      setIsLoaded(true);
+    },
+    [handleImageLoad],
+  );
 
   // Compute final transform values
   const effectivePan = getEffectivePan(zoom, pan);
@@ -157,7 +199,7 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({
   return (
     <div
       ref={containerRef}
-      className={`image-viewer-container${className ? ` ${className}` : ''}`}
+      className={joinClassNames('image-viewer-container', className)}
       style={{
         ...style,
         position: 'relative',
@@ -165,13 +207,29 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({
       }}
       {...containerHandlers}
     >
+      {/** Fills the image's space with its own average colour until
+       it arrives, so that opening a viewer does not flash the
+       empty container **/}
+      {placeholderColor && ready && !isLoaded && (
+        <div
+          className={joinClassNames('image-viewer-placeholder', imageClassName)}
+          style={{
+            width: naturalSize.width,
+            height: naturalSize.height,
+            backgroundColor: placeholderColor,
+            transform: `translate(${effectivePan.x}px, ${effectivePan.y}px) scale(${effectiveScale})`,
+            transformOrigin: '0 0',
+          }}
+        />
+      )}
+
       {/* Image with zoom/pan transform */}
       <img
         src={src}
         alt=""
-        className="image-viewer-image"
+        className={joinClassNames('image-viewer-image', imageClassName)}
         draggable={false}
-        onLoad={handleImageLoad}
+        onLoad={handleLoad}
         style={{
           transform: `translate(${effectivePan.x}px, ${effectivePan.y}px) scale(${effectiveScale})`,
           transformOrigin: '0 0',

@@ -9,6 +9,11 @@
   user-select: none;
 }
 
+.image-viewer-placeholder {
+  position: absolute;
+  pointer-events: none;
+}
+
 .image-viewer-toolbar-container {
   position: absolute;
   bottom: var(--space-2);

@@ -5,6 +5,11 @@ interface Point {
   y: number;
 }
 
+export interface ImageSize {
+  width: number;
+  height: number;
+}
+
 /**
  * Minimum number of pixels of the image that must remain
  * visible inside the container when panning.
@@ -48,9 +53,14 @@ interface ContainedImageResult {
   clampPan: (zoom: number, pan: Point) => Point;
 
   /**
-   * Whether the image has loaded and the base scale has
-   * been computed. Use this to hide the image until it's
-   * ready to prevent a flash of the unscaled image.
+   * The image's natural dimensions, zero until they are known.
+   */
+  naturalSize: ImageSize;
+
+  /**
+   * Whether the base scale has been computed. Use this to hide
+   * the image until it's ready to prevent a flash of the
+   * unscaled image.
    */
   ready: boolean;
 }
@@ -60,11 +70,30 @@ interface ContainedImageResult {
  * a container. Computes a base scale so the image fits fully
  * within the container at zoom=1, and provides centering
  * helpers for zoom/pan transforms.
+ *
+ * @param knownSize - The image's dimensions if known ahead of loading, letting the fit be computed before the image arrives.
  */
-export function useContainedImage(): ContainedImageResult {
+export function useContainedImage(
+  knownSize?: ImageSize | null,
+): ContainedImageResult {
   const containerRef = useRef<HTMLDivElement>(null);
   const [baseScale, setBaseScale] = useState(1);
-  const [naturalSize, setNaturalSize] = useState({ width: 0, height: 0 });
+  const [loadedSize, setLoadedSize] = useState({ width: 0, height: 0 });
+
+  // Depended on as primitives so that a caller passing a fresh
+  // object each render does not invalidate every memoized handler
+  const knownWidth = knownSize?.width ?? 0;
+  const knownHeight = knownSize?.height ?? 0;
+
+  // Prefer the dimensions measured from the loaded image, falling
+  // back to those known ahead of it
+  const naturalSize = useMemo(
+    () =>
+      loadedSize.width
+        ? loadedSize
+        : { width: knownWidth, height: knownHeight },
+    [loadedSize, knownWidth, knownHeight],
+  );
 
   // Recalculate base scale when the image or container dimensions change
   const recalculate = useCallback(() => {
@@ -113,7 +142,7 @@ export function useContainedImage(): ContainedImageResult {
     (event: React.SyntheticEvent<HTMLImageElement>) => {
       const img = event.currentTarget;
 
-      setNaturalSize({ width: img.naturalWidth, height: img.naturalHeight });
+      setLoadedSize({ width: img.naturalWidth, height: img.naturalHeight });
     },
     [],
   );
@@ -196,7 +225,7 @@ export function useContainedImage(): ContainedImageResult {
     [baseScale, naturalSize, getCenteredPan],
   );
 
-  // Ready once the image has loaded and dimensions are known
+  // Ready once dimensions are known, from either source
   const ready = naturalSize.width > 0 && naturalSize.height > 0;
 
   return useMemo(
@@ -207,6 +236,7 @@ export function useContainedImage(): ContainedImageResult {
       getCenteredPan,
       getEffectivePan,
       clampPan,
+      naturalSize,
       ready,
     }),
     [
@@ -215,6 +245,7 @@ export function useContainedImage(): ContainedImageResult {
       getCenteredPan,
       getEffectivePan,
       clampPan,
+      naturalSize,
       ready,
     ],
   );
