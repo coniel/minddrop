@@ -1,5 +1,5 @@
 import { Events, OpenViewEvent, OpenViewEventData } from '@minddrop/events';
-import { I18n, i18n } from '@minddrop/i18n';
+import { I18n } from '@minddrop/i18n';
 import {
   EventListenerId,
   OpenQueriesViewEvent,
@@ -9,9 +9,6 @@ import { locales } from '../locales';
 
 // View instance id of the singleton queries view
 const queriesViewId = 'queries:queries';
-
-// Icon shown in the queries view tab
-const QUERIES_VIEW_ICON = 'content-icon:list-filter:inherit';
 
 /**
  * Initializes the queries feature by registering translations
@@ -29,8 +26,6 @@ export function initializeQueriesFeature(): VoidFunction {
     Events.dispatch<OpenViewEventData>(OpenViewEvent, {
       view: QueriesViewName,
       id: queriesViewId,
-      title: i18n.t('queries.labels.queries'),
-      icon: QUERIES_VIEW_ICON,
     });
   });
 

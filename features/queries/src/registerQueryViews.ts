@@ -7,5 +7,10 @@ import { QueriesViewName } from './events';
  */
 export function registerQueryViews(): void {
   // Register the queries view
-  Views.register({ type: QueriesViewName, component: QueriesView });
+  Views.register({
+    type: QueriesViewName,
+    component: QueriesView,
+    title: 'queries.labels.queries',
+    icon: 'list-filter',
+  });
 }
