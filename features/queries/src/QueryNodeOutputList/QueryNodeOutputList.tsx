@@ -5,7 +5,6 @@ import {
   OpenDatabaseEntryViewEvent,
   OpenDatabaseEntryViewEventData,
 } from '@minddrop/databases';
-import { Events } from '@minddrop/events';
 import { Queries } from '@minddrop/queries';
 import {
   Icon,
@@ -15,6 +14,7 @@ import {
   TextInput,
   VirtualizedList,
 } from '@minddrop/ui-primitives';
+import { Views } from '@minddrop/views';
 import './QueryNodeOutputList.css';
 
 // Height of a compact list row in pixels
@@ -129,6 +129,7 @@ const QueryNodeOutputListItem: React.FC<QueryNodeOutputListItemProps> = ({
 }) => {
   const entry = DatabaseEntries.use(entryId);
   const database = Databases.use(entry?.database || '');
+  const openView = Views.useOpenView();
 
   if (!entry) {
     return null;
@@ -136,10 +137,9 @@ const QueryNodeOutputListItem: React.FC<QueryNodeOutputListItemProps> = ({
 
   // Open the entry view
   function handleClick(): void {
-    Events.dispatch<OpenDatabaseEntryViewEventData>(
-      OpenDatabaseEntryViewEvent,
-      { entryId },
-    );
+    openView<OpenDatabaseEntryViewEventData>(OpenDatabaseEntryViewEvent, {
+      entryId,
+    });
   }
 
   return (
