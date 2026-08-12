@@ -1,8 +1,6 @@
-import { useRef } from 'react';
 import { ImageElement, createImageCssStyle } from '@minddrop/designs';
-import { Fs } from '@minddrop/file-system';
+import { Image } from '@minddrop/ui-components';
 import { Icon } from '@minddrop/ui-primitives';
-import { useMeasuredImageWidth } from '@minddrop/utils';
 import { useElementProperty } from '../../DesignPropertiesProvider';
 import { useElementPlaceholderImage } from '../../useElementPlaceholder';
 import { useMediaFilePath } from '../../useMediaFilePath';
@@ -29,11 +27,9 @@ export const ImageDesignElement: React.FC<ImageDesignElementProps> = ({
   element,
   rootProps,
 }) => {
-  const imageRef = useRef<HTMLImageElement>(null);
   const property = useElementProperty(element.id);
   const placeholderImage = useElementPlaceholderImage(element, element.content);
   const placeholderImagePath = useMediaFilePath(placeholderImage);
-  const { width, isMeasured } = useMeasuredImageWidth(imageRef);
   const cssStyle = createImageCssStyle(element.style);
   const rootStyle = rootProps?.style as React.CSSProperties | undefined;
 
@@ -44,24 +40,20 @@ export const ImageDesignElement: React.FC<ImageDesignElementProps> = ({
       ? property.value
       : placeholderImagePath;
 
-  const imageSrc = Fs.useImageSrc(imagePath, width);
-
   // Render the image.
   // For "contain", strip width/height so the img sizes naturally
   // to its aspect ratio constrained by max-width/max-height.
   // This makes the element box match the visible image so
   // border-radius clips correctly (object-fit: contain would
   // otherwise letterbox inside an oversized element box).
-  if (imageSrc) {
+  if (imagePath) {
     const isContain = element.style.objectFit === 'contain';
 
     return (
-      <img
+      <Image
         {...rootProps}
-        ref={imageRef}
-        // Held back until measured so that the full resolution image
-        // is not fetched before the requested width is known
-        src={isMeasured ? imageSrc : undefined}
+        path={imagePath}
+        className={rootProps?.className as string | undefined}
         alt=""
         style={{
           ...cssStyle,

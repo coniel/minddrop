@@ -6,6 +6,7 @@ import {
 import { Fs } from '@minddrop/file-system';
 import { ImageViewer } from '@minddrop/ui-components';
 import { Icon } from '@minddrop/ui-primitives';
+import { Theme } from '@minddrop/ui-theme';
 import { useDesignPreview } from '../../DesignElements/DesignPreviewContext';
 import { useElementProperty } from '../../DesignPropertiesProvider';
 import { useElementPlaceholderImage } from '../../useElementPlaceholder';
@@ -52,6 +53,22 @@ export const ImageViewerDesignElement: React.FC<
       : placeholderImagePath;
 
   const imageSrc = Fs.useImageSrc(imagePath);
+  const stats = Fs.useImageStats(imagePath);
+
+  // Dark mode treatment applied by the theme to the image
+  const { className: treatmentClassName, pending: treatmentPending } =
+    Theme.useImageTreatment(imagePath);
+
+  // Lets the viewer lay the image out and fill its space before the
+  // full resolution image has arrived
+  const naturalSize =
+    stats?.width && stats.height
+      ? { width: stats.width, height: stats.height }
+      : null;
+
+  // Kept hidden until classified so that the image does not flash
+  // untreated. The viewer sizes and loads as usual behind it.
+  const treatmentVisibility = treatmentPending ? 'hidden' : undefined;
 
   // No image set - show placeholder with icon
   if (!imageSrc) {
@@ -87,7 +104,15 @@ export const ImageViewerDesignElement: React.FC<
       <div {...rootProps} style={{ ...containerStyle, ...rootStyle }}>
         <ImageViewer
           src={imageSrc}
-          style={{ width: '100%', height: '100%', pointerEvents: 'none' }}
+          imageClassName={treatmentClassName}
+          naturalSize={naturalSize}
+          placeholderColor={stats?.averageColor}
+          style={{
+            width: '100%',
+            height: '100%',
+            pointerEvents: 'none',
+            visibility: treatmentVisibility,
+          }}
           preview={false}
         />
       </div>
@@ -97,7 +122,14 @@ export const ImageViewerDesignElement: React.FC<
   return (
     <ImageViewer
       src={imageSrc}
-      style={{ ...containerStyle, ...rootStyle }}
+      imageClassName={treatmentClassName}
+      naturalSize={naturalSize}
+      placeholderColor={stats?.averageColor}
+      style={{
+        ...containerStyle,
+        ...rootStyle,
+        visibility: treatmentVisibility,
+      }}
       preview={preview}
     />
   );
