@@ -26,6 +26,42 @@ export const SetNavToolbarWidthEvent = 'app:nav-toolbar:set-width';
 export const ToggleWindowFillEvent = 'app:window:toggle-fill';
 export const AppErrorEvent = 'app:error';
 
+/**
+ * A pane of a view area.
+ */
+export type ViewPane = 'main' | 'split';
+
+/**
+ * Where a view opens relative to the current one.
+ */
+export type ViewOpenMode =
+  | 'in-place'
+  | 'new-tab'
+  | 'split'
+  | 'dialog'
+  | 'panel';
+
+export interface BaseOpenViewEventData {
+  /**
+   * The id of the target view area. Defaults to the app's primary
+   * view area when omitted.
+   */
+  viewAreaId?: string;
+
+  /**
+   * Where to open the view. Defaults to `in-place`, except where the
+   * opened entity carries its own default.
+   */
+  openMode?: ViewOpenMode;
+
+  /**
+   * The pane the open was triggered from, which `in-place` opens
+   * replace. Opens from outside a view area (e.g. the sidebar) leave
+   * it unset and replace the view area as a whole.
+   */
+  sourcePane?: ViewPane;
+}
+
 export type OpenViewEventData<TProps = DefaultViewProps> = {
   /**
    * The id of the target view area. Defaults to the app's primary
@@ -56,6 +92,13 @@ export type OpenViewEventData<TProps = DefaultViewProps> = {
    * of replacing the main content.
    */
   split?: boolean;
+
+  /**
+   * The pane the open was triggered from, which is the pane replaced
+   * when `split` is not set. Opens from outside a view area leave it
+   * unset and replace the view area as a whole.
+   */
+  sourcePane?: ViewPane;
 
   /**
    * When opening a split view, the width of the left pane as a
