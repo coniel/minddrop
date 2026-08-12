@@ -10,7 +10,6 @@ import {
   ViewDescriptor,
 } from '@minddrop/events';
 import { Tabs } from '@minddrop/feature-views';
-import { i18n } from '@minddrop/i18n';
 import {
   SpaceDeletedEvent,
   SpaceDeletedEventData,
@@ -36,16 +35,12 @@ const spaceViewId = (spaceId: string) => `spaces:space:${spaceId}`;
 // View instance id of the singleton spaces list view
 const spacesViewId = 'spaces:spaces';
 
-// Icon shown in the spaces list view's tab
-const SPACES_VIEW_ICON = 'content-icon:shapes:inherit';
-
 // Descriptor of the spaces list view, used both to open it and as
-// the breadcrumb parent of space views
+// the breadcrumb parent of space views. It carries no title or icon,
+// which resolve from the view's registration.
 const spacesViewDescriptor = (): ViewDescriptor => ({
   view: SpacesViewName,
   id: spacesViewId,
-  title: i18n.t('spaces.labels.spaces'),
-  icon: SPACES_VIEW_ICON,
 });
 
 /**
