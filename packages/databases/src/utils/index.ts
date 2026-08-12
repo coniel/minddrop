@@ -40,6 +40,7 @@ export * from './convertSqlRecordToEntry';
 export * from './rekeyDatabaseMetadata';
 export * from './setTimestampProperties';
 export * from './getNewestDatabaseEntries';
+export * from './getRecentDatabaseEntries';
 export * from './searchDatabaseEntriesByTitle';
 export * from './escapeLikePattern';
 export * from './buildEntryFilterSql';
