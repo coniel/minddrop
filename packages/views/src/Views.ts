@@ -9,3 +9,7 @@ export {
   ViewBreadcrumbsProvider as BreadcrumbsProvider,
   useViewBreadcrumbs as useBreadcrumbs,
 } from './ViewBreadcrumbsContext';
+export {
+  ViewPaneProvider as PaneProvider,
+  useOpenView,
+} from './ViewPaneContext';
