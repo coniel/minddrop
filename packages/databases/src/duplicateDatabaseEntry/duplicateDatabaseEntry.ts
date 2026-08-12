@@ -14,7 +14,7 @@ import { getDatabaseEntry } from '../getDatabaseEntry';
 import { DatabaseEntry, DatabaseEntryRenderSource } from '../types';
 import { updateDatabaseEntryProperty } from '../updateDatabaseEntryProperty';
 import { updateEntryMetadata } from '../updateEntryMetadata';
-import { getIncrmentalPropertyFilePath, getPropertyFilePath } from '../utils';
+import { getIncrementalPropertyFilePath, getPropertyFilePath } from '../utils';
 
 /**
  * Duplicates a database entry. Simple property values are copied onto
@@ -101,7 +101,7 @@ export async function duplicateDatabaseEntry(
     await ensurePropertyFileDirExists(duplicate.id, propertyName);
 
     // Get the destination path, incrementing the file name on conflict
-    const { path, name } = await getIncrmentalPropertyFilePath(
+    const { path, name } = await getIncrementalPropertyFilePath(
       duplicate.id,
       propertyName,
       fileName,

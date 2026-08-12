@@ -6,7 +6,7 @@ import { DatabaseEntry } from '../types';
 import { updateDatabaseEntryProperty } from '../updateDatabaseEntryProperty';
 import {
   getDefaultFileProperty,
-  getIncrmentalPropertyFilePath,
+  getIncrementalPropertyFilePath,
 } from '../utils';
 
 /**
@@ -40,7 +40,7 @@ export async function createDatabaseEntryFromFilePath(
   const entry = await createDatabaseEntry(database.id, titleFromPath(filePath));
 
   // Get the path to the property file
-  const { path, name } = await getIncrmentalPropertyFilePath(
+  const { path, name } = await getIncrementalPropertyFilePath(
     entry.id,
     property.name,
     Fs.fileNameFromPath(filePath),

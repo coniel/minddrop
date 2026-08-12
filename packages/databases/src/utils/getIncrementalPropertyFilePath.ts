@@ -11,7 +11,7 @@ import { getPropertyFilePath } from './getPropertyFilePath';
  * @param fileName - The name of the file, i.e. the value of the property.
  * @returns The path to the property file.
  */
-export async function getIncrmentalPropertyFilePath(
+export async function getIncrementalPropertyFilePath(
   entryId: string,
   propertyName: string,
   fileName: string,

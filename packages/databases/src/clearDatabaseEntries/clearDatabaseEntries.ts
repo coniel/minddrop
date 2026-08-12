@@ -7,7 +7,10 @@ import {
 } from '../events';
 import { getAllDatabaseEntries } from '../getAllDatabaseEntries';
 import { getDatabase } from '../getDatabase';
-import { getDatabasePropertyDirs, getEntryPropertyFilePaths } from '../utils';
+import {
+  getEntryPropertyFilePaths,
+  resolveDatabasePropertyDirs,
+} from '../utils';
 
 /**
  * Deletes all of a database's entries, moving their files to the system
@@ -60,7 +63,7 @@ export async function clearDatabaseEntries(databaseId: string): Promise<void> {
 
   // Trash the database's shared property directories as a whole, since every
   // entry that could own files in them has been cleared
-  for (const propertyDirPath of getDatabasePropertyDirs(database)) {
+  for (const propertyDirPath of resolveDatabasePropertyDirs(database)) {
     // Only trash directories that exist
     if (await Fs.exists(propertyDirPath)) {
       await Fs.trashDir(propertyDirPath);

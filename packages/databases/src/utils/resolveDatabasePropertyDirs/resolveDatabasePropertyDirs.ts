@@ -15,7 +15,7 @@ import { Database } from '../../types';
  * @param database - The database whose property directories to resolve.
  * @returns The property directory paths.
  */
-export function getDatabasePropertyDirs(database: Database): string[] {
+export function resolveDatabasePropertyDirs(database: Database): string[] {
   switch (database.propertyFileStorage) {
     // A single shared directory holds all property files
     case 'common': {

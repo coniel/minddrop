@@ -16,8 +16,8 @@ import { Database, PropertyFileStorage } from '../types';
 import { updateDatabaseEntryProperty } from '../updateDatabaseEntryProperty';
 import {
   databaseEntryAddress,
-  getDatabasePropertyDirs,
   getPropertyFilePath,
+  resolveDatabasePropertyDirs,
   resolveEntryFilePath,
   resolvePropertyFilePath,
   resolvePropertyFilesDirName,
@@ -104,8 +104,8 @@ export async function setDatabasePropertyFileStorage(
   );
 
   // The shared directories the old and new layouts use, for cleanup
-  const oldSharedDirs = getDatabasePropertyDirs(database);
-  const newSharedDirs = getDatabasePropertyDirs({
+  const oldSharedDirs = resolveDatabasePropertyDirs(database);
+  const newSharedDirs = resolveDatabasePropertyDirs({
     ...database,
     propertyFileStorage: storage,
     propertyFilesDir,

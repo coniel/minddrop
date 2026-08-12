@@ -7,7 +7,10 @@ import { getDatabase } from '../getDatabase';
 import { getDatabaseEntryTemplate } from '../getDatabaseEntryTemplate';
 import { DatabaseEntry } from '../types';
 import { updateDatabaseEntryProperty } from '../updateDatabaseEntryProperty';
-import { entryTemplateFilePath, getIncrmentalPropertyFilePath } from '../utils';
+import {
+  entryTemplateFilePath,
+  getIncrementalPropertyFilePath,
+} from '../utils';
 
 /**
  * Creates a new database entry from an entry template. Simple property
@@ -90,7 +93,7 @@ export async function createDatabaseEntryFromTemplate(
     await ensurePropertyFileDirExists(entry.id, propertyName);
 
     // Get the destination path, incrementing the file name on conflict
-    const { path, name } = await getIncrmentalPropertyFilePath(
+    const { path, name } = await getIncrementalPropertyFilePath(
       entry.id,
       propertyName,
       fileName,
