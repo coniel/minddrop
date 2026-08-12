@@ -1,15 +1,9 @@
 import { DataView } from '@minddrop/data-views';
+import { ViewOpenMode } from '@minddrop/events';
 import { PropertiesSchema, PropertyType } from '@minddrop/properties';
 import { EntityId } from '@minddrop/utils';
 import { DatabaseAutomation } from './DatabaseAutomation.types';
 import { DatabaseEntryTemplate } from './DatabaseEntryTemplate.types';
-
-export type DatabaseEntryOpenMode =
-  | 'dialog'
-  | 'panel'
-  | 'in-place'
-  | 'new-tab'
-  | 'split';
 
 export type PropertyFileStorage = 'root' | 'common' | 'property' | 'entry';
 
@@ -129,7 +123,7 @@ export interface Database {
    * - `split`: Opens the entry in split view next to the current main content.
    * @default 'dialog'
    */
-  entryOpenMode: DatabaseEntryOpenMode;
+  entryOpenMode: ViewOpenMode;
 
   /**
    * An ordered list of view IDs defining the sort order of the

@@ -1,9 +1,9 @@
+import { BaseOpenViewEventData } from '@minddrop/events';
 import { PropertySchema } from '@minddrop/properties';
 import {
   Database,
   DatabaseEntry,
   DatabaseEntryMetadata,
-  DatabaseEntryOpenMode,
   DatabaseEntryRenderSource,
   DatabaseEntryTemplate,
   SqlEntryRecord,
@@ -118,7 +118,7 @@ export interface DatabaseEntryTemplateRemovedEventData {
 // Navigation events
 export const OpenDatabaseViewEvent = 'databases:view:open';
 
-export interface OpenDatabaseViewEventData {
+export interface OpenDatabaseViewEventData extends BaseOpenViewEventData {
   /**
    * The ID of the database to open.
    */
@@ -132,17 +132,11 @@ export interface OpenDatabaseViewEventData {
 
 export const OpenDatabaseEntryViewEvent = 'database-entries:entry:open';
 
-export interface OpenDatabaseEntryViewEventData {
+export interface OpenDatabaseEntryViewEventData extends BaseOpenViewEventData {
   /**
    * The ID of the database entry to open.
    */
   entryId: string;
-
-  /**
-   * How to open the entry. If not provided, falls back to the
-   * database's `entryOpenMode` setting.
-   */
-  openMode?: DatabaseEntryOpenMode;
 }
 
 // Entry events
