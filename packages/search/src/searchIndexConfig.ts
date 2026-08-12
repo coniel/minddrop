@@ -5,6 +5,6 @@ import { BaseDirectory, Fs } from '@minddrop/file-system';
  * (e.g. `~/.config/MindDrop`). Used for MiniSearch
  * index persistence.
  */
-export function getSearchConfigPath(): string {
+export function resolveSearchConfigPath(): string {
   return Fs.getBaseDirPath(BaseDirectory.AppConfig);
 }

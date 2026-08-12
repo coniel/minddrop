@@ -2,7 +2,7 @@ import MiniSearch, { type Options as MiniSearchOptions } from 'minisearch';
 import { Databases } from '@minddrop/databases';
 import { Fs } from '@minddrop/file-system';
 import { MATCH_HIGHLIGHT_END, MATCH_HIGHLIGHT_START } from './constants';
-import { getSearchConfigPath } from './searchIndexConfig';
+import { resolveSearchConfigPath } from './searchIndexConfig';
 import type { FullTextMatchedProperty, FullTextSearchResult } from './types';
 
 interface SearchDocument {
@@ -29,8 +29,8 @@ const PERSIST_DEBOUNCE_MS = 5000;
 /**
  * Returns the file path for the persisted MiniSearch index.
  */
-function getIndexPath(workspaceId: string): string {
-  return `${getSearchConfigPath()}/${workspaceId}/search-index.json`;
+function resolveIndexPath(workspaceId: string): string {
+  return `${resolveSearchConfigPath()}/${workspaceId}/search-index.json`;
 }
 
 // Shared MiniSearch configuration used for both creating new
@@ -73,7 +73,7 @@ export async function initializeSearchIndex(
   workspaceId: string,
 ): Promise<void> {
   const currentVersion = Databases.sql.getVersion();
-  const indexPath = getIndexPath(workspaceId);
+  const indexPath = resolveIndexPath(workspaceId);
 
   // Try loading persisted index
   try {
@@ -618,7 +618,7 @@ export async function persistIndex(workspaceId: string): Promise<void> {
     index: miniSearch.toJSON(),
   });
 
-  const indexPath = getIndexPath(workspaceId);
+  const indexPath = resolveIndexPath(workspaceId);
 
   // Ensure the directory exists
   const dirPath = indexPath.replace(/\/[^/]+$/, '');
