@@ -2,7 +2,7 @@ import type { PropertyType } from '@minddrop/properties';
 import type { QueryOperator } from './types';
 
 export const QueriesDirName = 'queries';
-export const QueryFileExtension = 'query';
+export const QueryFileExtension = 'json';
 
 // Where a new query's unconfigured source node is seeded on the
 // canvas

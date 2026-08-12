@@ -1,7 +1,6 @@
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { QueriesStore } from '../QueriesStore';
-import { QueryFileExtension } from '../constants';
 import { QueriesLoadedEvent, QueriesLoadedEventData } from '../events';
 import { readQuery } from '../readQuery';
 import { getQueriesDirPath } from '../utils';
@@ -20,14 +19,9 @@ export async function initializeQueries(): Promise<void> {
   // Load queries from the queries directory
   const files = await Fs.readDir(queriesDirPath);
 
-  // Filter out files that are not query configs
-  const queryFilePaths = files
-    .filter((file) => file.path.endsWith(QueryFileExtension))
-    .map((file) => file.path);
-
   // Read the query files
   const queryPromises = await Promise.all(
-    queryFilePaths.map((path) => readQuery(path)),
+    files.map((file) => readQuery(file.path)),
   );
 
   // Filter out null queries

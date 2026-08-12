@@ -6,7 +6,6 @@ import {
 } from '@minddrop/item-references';
 import { Workspaces } from '@minddrop/workspaces';
 import { DataViewsStore } from '../DataViewsStore';
-import { ViewFileExtension } from '../constants';
 import { onItemAddressesChanged } from '../event-handlers';
 import { DataViewsLoadedEvent, DataViewsLoadedEventData } from '../events';
 import { extractDataViewReferences } from '../extractDataViewReferences';
@@ -36,10 +35,9 @@ export async function initializeDataViews(): Promise<void> {
     )
   ).flat();
 
-  // Get the data view file paths, filtering out any non-data view files
+  // Get the data view file paths, skipping workspaces without a views directory
   const viewPaths = viewFileEntries
     .filter((entry) => !!entry)
-    .filter((entry) => entry.path.endsWith(ViewFileExtension))
     .map((entry) => entry.path);
 
   // Read the data views

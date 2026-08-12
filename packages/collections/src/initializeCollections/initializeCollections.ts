@@ -8,7 +8,6 @@ import {
 } from '@minddrop/item-references';
 import { restoreDates } from '@minddrop/utils';
 import { CollectionsStore } from '../CollectionsStore';
-import { CollectionFileExtension } from '../constants';
 import { onItemAddressesChanged } from '../event-handlers';
 import { CollectionsLoadedEvent, CollectionsLoadedEventData } from '../events';
 import { locales } from '../locales';
@@ -34,14 +33,9 @@ export async function initializeCollections(): Promise<void> {
   // Load collections from the collections directory
   const files = await Fs.readDir(collectionsDirPath);
 
-  // Filter out files that are not collection configs
-  const collectionFilePaths = files
-    .filter((file) => file.path.endsWith(CollectionFileExtension))
-    .map((file) => file.path);
-
   // Read the collection files
   const collectionPromises = await Promise.all(
-    collectionFilePaths.map((path) => readCollection(path)),
+    files.map((file) => readCollection(file.path)),
   );
 
   // Filter out null collections
