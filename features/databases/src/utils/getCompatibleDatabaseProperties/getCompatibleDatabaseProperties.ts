@@ -1,4 +1,4 @@
-import { withImplicitTitleProperty } from '@minddrop/databases';
+import { withImplicitMetadataProperties } from '@minddrop/databases';
 import {
   PropertiesSchema,
   PropertySchema,
@@ -27,7 +27,7 @@ const compatiblePropertyTypesMap: Record<PropertyType, PropertyType[]> = {
 /**
  * Returns the database properties that a design property of the
  * given schema can be mapped to, including the implicit entry
- * Title property.
+ * metadata properties.
  */
 export function getCompatibleDatabaseProperties(
   designProperty: PropertySchema,
@@ -35,9 +35,9 @@ export function getCompatibleDatabaseProperties(
 ): PropertiesSchema {
   const compatibleTypes = compatiblePropertyTypesMap[designProperty.type] || [];
 
-  // Add the implicit Title property unless the database schema
-  // already declares a title property
-  const properties = withImplicitTitleProperty(databaseProperties);
+  // Add the metadata properties the database schema does not
+  // declare itself
+  const properties = withImplicitMetadataProperties(databaseProperties);
 
   return properties.filter((property) =>
     compatibleTypes.includes(property.type),

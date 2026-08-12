@@ -15,6 +15,7 @@ import {
   relatedEntry1,
   relatedEntry2,
   setup,
+  timestampEntry1,
 } from '../test-utils';
 import { virtualCollectionId } from '../utils';
 import { updateDatabaseEntryProperty } from './updateDatabaseEntryProperty';
@@ -90,6 +91,47 @@ describe('updateDatabaseEntryProperty', () => {
       );
 
       expect(updated.properties.References).toEqual([relatedEntry2.id]);
+    });
+  });
+
+  describe('timestamp metadata properties', () => {
+    it('ignores updates to implicit timestamp properties', async () => {
+      // The object database declares no timestamp properties, so
+      // Created and Last modified are implicit
+      await updateDatabaseEntryProperty(
+        objectEntry1.id,
+        'Created',
+        new Date('2030-01-01T00:00:00.000Z'),
+      );
+      await updateDatabaseEntryProperty(
+        objectEntry1.id,
+        'Last modified',
+        new Date('2030-01-01T00:00:00.000Z'),
+      );
+
+      const entry = DatabaseEntriesStore.get(objectEntry1.id);
+
+      // The metadata should be untouched and no property written
+      expect(entry?.properties).toEqual(objectEntry1.properties);
+      expect(entry?.created).toEqual(objectEntry1.created);
+      expect(entry?.lastModified).toEqual(objectEntry1.lastModified);
+    });
+
+    it('ignores updates to declared timestamp properties', async () => {
+      await updateDatabaseEntryProperty(
+        timestampEntry1.id,
+        'Created',
+        new Date('2030-01-01T00:00:00.000Z'),
+      );
+      await updateDatabaseEntryProperty(
+        timestampEntry1.id,
+        'Last Modified',
+        new Date('2030-01-01T00:00:00.000Z'),
+      );
+
+      const entry = DatabaseEntriesStore.get(timestampEntry1.id);
+
+      expect(entry?.properties).toEqual(timestampEntry1.properties);
     });
   });
 

@@ -189,11 +189,11 @@
       "description": "Richly formatted text edited using a text editor."
     },
     "created": {
-      "name": "Created date",
+      "name": "Created",
       "description": "Adds the date and time at which an entry was created to its properties."
     },
     "lastModified": {
-      "name": "Last modified date",
+      "name": "Last modified",
       "description": "Adds the date and time at which an entry was last modified to its properties."
     },
     "file": {

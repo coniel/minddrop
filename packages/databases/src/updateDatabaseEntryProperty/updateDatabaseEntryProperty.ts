@@ -8,7 +8,7 @@ import { getDatabaseEntry } from '../getDatabaseEntry';
 import { renameDatabaseEntry } from '../renameDatabaseEntry';
 import { DatabaseEntry } from '../types';
 import { updateDatabaseEntry } from '../updateDatabaseEntry';
-import { virtualCollectionId, withImplicitTitleProperty } from '../utils';
+import { virtualCollectionId, withImplicitMetadataProperties } from '../utils';
 
 /**
  * Updates a property on a database entry. Title property updates
@@ -35,10 +35,10 @@ export async function updateDatabaseEntryProperty(
   const database = getDatabase(entry.database);
 
   // Look up the property schema, including the implicit entry
-  // Title property
-  const propertySchema = withImplicitTitleProperty(database.properties).find(
-    (property) => property.name === propertyName,
-  );
+  // metadata properties
+  const propertySchema = withImplicitMetadataProperties(
+    database.properties,
+  ).find((property) => property.name === propertyName);
 
   // Ensure the property exists on the database
   if (!propertySchema) {
@@ -50,6 +50,15 @@ export async function updateDatabaseEntryProperty(
   // Title properties are updated by renaming the entry
   if (propertySchema.type === 'title') {
     return renameEntryToTitle(entry.id, String(value ?? ''));
+  }
+
+  // Timestamp metadata is managed by the system, so writes to it
+  // leave the entry unchanged
+  if (
+    propertySchema.type === 'created' ||
+    propertySchema.type === 'last-modified'
+  ) {
+    return entry;
   }
 
   // Collection properties are updated through their virtual

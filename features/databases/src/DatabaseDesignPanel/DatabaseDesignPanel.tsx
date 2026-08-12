@@ -4,9 +4,11 @@ import {
   LAYOUT_CONTEXTS,
   LayoutContext,
   layoutContextBaseType,
+  resolveDesignPropertyMap,
 } from '@minddrop/databases';
 import { Design, Designs } from '@minddrop/designs';
 import { createI18nKeyBuilder } from '@minddrop/i18n';
+import { METADATA_PROPERTY_TYPES } from '@minddrop/properties';
 import { UiIconName } from '@minddrop/ui-icons';
 import {
   ContentIcon,
@@ -157,12 +159,17 @@ interface DesignSectionProps {
 
 /**
  * Renders a select per design property for mapping it to one of
- * the database's compatible properties.
+ * the database's compatible properties. Metadata properties are
+ * auto-mapped unless overridden.
  */
 const PropertyMappingSection: React.FC<DesignSectionProps> = ({
   database,
   design,
 }) => {
+  // The stored mappings, filled in with the auto-mapped metadata
+  // properties
+  const propertyMap = resolveDesignPropertyMap(design.properties, database);
+
   // Map the design property to the selected database property,
   // or unmap it when the "none" option is selected
   function handleValueChange(designPropertyName: string, value: string) {
@@ -201,6 +208,22 @@ const PropertyMappingSection: React.FC<DesignSectionProps> = ({
           database.properties,
         );
 
+        const options: SelectOption<string>[] = compatibleProperties.map(
+          (property) => ({
+            value: property.name,
+            stringLabel: property.name,
+          }),
+        );
+
+        // Metadata properties are always auto-mapped, so they are
+        // not offered the "none" option
+        if (!METADATA_PROPERTY_TYPES.has(designProperty.type)) {
+          options.unshift({
+            value: NONE_VALUE,
+            label: 'databases.design.mapping.none',
+          });
+        }
+
         return (
           <Group
             key={designProperty.name}
@@ -216,21 +239,11 @@ const PropertyMappingSection: React.FC<DesignSectionProps> = ({
               <Select
                 size="sm"
                 variant="subtle"
-                value={
-                  database.designPropertyMap[designProperty.name] || NONE_VALUE
-                }
+                value={propertyMap[designProperty.name] || NONE_VALUE}
                 onValueChange={(value) =>
                   handleValueChange(designProperty.name, value)
                 }
-                options={[
-                  { value: NONE_VALUE, label: 'databases.design.mapping.none' },
-                  ...compatibleProperties.map(
-                    (property): SelectOption<string> => ({
-                      value: property.name,
-                      stringLabel: property.name,
-                    }),
-                  ),
-                ]}
+                options={options}
               />
             ) : (
               <Text

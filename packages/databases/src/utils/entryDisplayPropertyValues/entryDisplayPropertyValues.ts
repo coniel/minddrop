@@ -3,6 +3,7 @@ import { PropertyValue } from '@minddrop/properties';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabasesStore } from '../../DatabasesStore';
 import { createEntryVirtualViews } from '../createEntryVirtualViews';
+import { entryMetadataPropertyValues } from '../entryMetadataPropertyValues';
 import { getPropertyFilePath } from '../getPropertyFilePath';
 
 /**
@@ -36,9 +37,11 @@ export function entryDisplayPropertyValues(
     return {};
   }
 
-  // Start with the entry's raw property values
+  // Start with the entry's raw property values, backed by its
+  // metadata so title/timestamp properties resolve even when the
+  // schema does not declare them
   const values: Record<string, PropertyValue> = {
-    Title: entry.title,
+    ...entryMetadataPropertyValues(entry, database.properties),
     ...entry.properties,
   };
 

@@ -1,4 +1,4 @@
-import { Database, withImplicitTitleProperty } from '@minddrop/databases';
+import { Database, withImplicitMetadataProperties } from '@minddrop/databases';
 import { Query } from '@minddrop/queries';
 import { getQueryUpstreamDatabases } from '../getQueryUpstreamDatabases';
 
@@ -34,7 +34,7 @@ export function getQueryMismatchedSourceDatabases(
   // Collect the upstream databases lacking the property
   return getQueryUpstreamDatabases(query, nodeId).filter(
     (database) =>
-      !withImplicitTitleProperty(database.properties).some(
+      !withImplicitMetadataProperties(database.properties).some(
         (property) =>
           property.name === node.property &&
           property.type === node.propertyType,

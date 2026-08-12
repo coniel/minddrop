@@ -5,7 +5,8 @@ import {
   Databases,
   LayoutContext,
   layoutContextBaseType,
-  withImplicitTitleProperty,
+  resolveDesignPropertyMap,
+  withImplicitMetadataProperties,
 } from '@minddrop/databases';
 import { Designs, Layouts, resolveDesignMediaDirPath } from '@minddrop/designs';
 import { LayoutRenderer } from '@minddrop/feature-designs';
@@ -137,15 +138,19 @@ const Entry: React.FC<EntryProps> = ({
   // its design property (element ID -> design property -> database
   // property)
   const propertyMap = useMemo(() => {
-    if (!layout || !database) {
+    if (!layout || !database || !design) {
       return {};
     }
 
     const bindings = Layouts.getPropertyBindings(layout);
+    const designPropertyMap = resolveDesignPropertyMap(
+      design.properties,
+      database,
+    );
     const resolved: Record<string, string> = {};
 
     Object.entries(bindings).forEach(([elementId, designPropertyName]) => {
-      const databaseProperty = database.designPropertyMap[designPropertyName];
+      const databaseProperty = designPropertyMap[designPropertyName];
 
       if (databaseProperty) {
         resolved[elementId] = databaseProperty;
@@ -153,12 +158,12 @@ const Entry: React.FC<EntryProps> = ({
     });
 
     return resolved;
-  }, [database, layout]);
+  }, [database, design, layout]);
 
-  // Database properties including the implicit entry Title
-  // property, so title-mapped elements resolve a schema
+  // Database properties including the implicit entry metadata
+  // properties, so metadata-mapped elements resolve a schema
   const rendererProperties = useMemo(
-    () => withImplicitTitleProperty(database?.properties || []),
+    () => withImplicitMetadataProperties(database?.properties || []),
     [database],
   );
 
