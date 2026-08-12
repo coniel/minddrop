@@ -1,6 +1,8 @@
 {
   "search": {
     "open": "Search",
-    "placeholder": "Search..."
+    "placeholder": "Search...",
+    "recent": "Recent",
+    "noResults": "No results"
   }
 }

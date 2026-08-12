@@ -165,7 +165,7 @@ export const SearchDialog: React.FC = () => {
                       }
                       highlighted={itemProps.highlighted}
                       onMouseMove={itemProps.onMouseMove}
-                      onClick={itemProps.onClick}
+                      onClick={() => selectResult(result)}
                     />
                   );
                 })}

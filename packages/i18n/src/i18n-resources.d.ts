@@ -1905,6 +1905,8 @@ declare module 'i18next' {
         search: {
           open: string;
           placeholder: string;
+          recent: string;
+          noResults: string;
         };
         spaces: {
           labels: {

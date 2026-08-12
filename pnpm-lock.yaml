@@ -1033,9 +1033,15 @@ importers:
       '@minddrop/search':
         specifier: workspace:*
         version: link:../../packages/search
+      '@minddrop/ui-components':
+        specifier: workspace:*
+        version: link:../../ui/components
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives
+      '@minddrop/views':
+        specifier: workspace:*
+        version: link:../../packages/views
       '@minddrop/workspaces':
         specifier: workspace:*
         version: link:../../packages/workspaces
@@ -1134,6 +1140,9 @@ importers:
       '@minddrop/ui-drag-and-drop':
         specifier: workspace:*
         version: link:../../ui/drag-and-drop
+      '@minddrop/ui-icons':
+        specifier: workspace:*
+        version: link:../../ui/icons
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives
@@ -2087,9 +2096,15 @@ importers:
       '@minddrop/events':
         specifier: workspace:*
         version: link:../events
+      '@minddrop/i18n':
+        specifier: workspace:*
+        version: link:../i18n
       '@minddrop/stores':
         specifier: workspace:*
         version: link:../stores
+      '@minddrop/ui-icons':
+        specifier: workspace:*
+        version: link:../../ui/icons
       react:
         specifier: ^19.2.4
         version: 19.2.4

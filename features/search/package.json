@@ -14,7 +14,9 @@
     "@minddrop/events": "workspace:*",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/search": "workspace:*",
+    "@minddrop/ui-components": "workspace:*",
     "@minddrop/ui-primitives": "workspace:*",
+    "@minddrop/views": "workspace:*",
     "@minddrop/workspaces": "workspace:*",
     "react": "^19.1.0"
   },
