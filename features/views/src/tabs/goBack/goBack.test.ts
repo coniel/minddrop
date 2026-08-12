@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { SetViewAreaEventData } from '@minddrop/events';
+import { DefaultViewName, SetViewAreaEventData } from '@minddrop/events';
 import { TabSetsStore } from '../TabSetsStore';
 import { getSet } from '../getSet';
 import { newTab } from '../newTab';
@@ -36,20 +36,20 @@ describe('goBack', () => {
     const tab = getSet(VIEW_AREA_ID).tabs[0];
 
     expect(tab.main?.id).toBe('db:a');
-    expect(tab.backHistory).toHaveLength(0);
+    // The search view the tab was opened on remains behind db:a
+    expect(tab.backHistory).toHaveLength(1);
     expect(tab.forwardHistory).toHaveLength(1);
     expect(tab.forwardHistory?.[0].main?.id).toBe('db:b');
   });
 
   it('does nothing without back history', () => {
     newTab(VIEW_AREA_ID);
-    recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:a' }));
 
     goBack(VIEW_AREA_ID);
 
     const tab = getSet(VIEW_AREA_ID).tabs[0];
 
-    expect(tab.main?.id).toBe('db:a');
+    expect(tab.main?.view).toBe(DefaultViewName);
     expect(tab.forwardHistory).toHaveLength(0);
   });
 
@@ -90,7 +90,8 @@ describe('goBack', () => {
 
     const tab = getSet(VIEW_AREA_ID).tabs[0];
 
-    expect(tab.backHistory).toHaveLength(0);
+    // The search view the tab was opened on remains behind db:a
+    expect(tab.backHistory).toHaveLength(1);
     expect(tab.forwardHistory).toHaveLength(1);
   });
 

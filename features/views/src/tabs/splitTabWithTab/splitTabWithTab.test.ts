@@ -45,6 +45,9 @@ describe('splitTabWithTab', () => {
     newTab(VIEW_AREA_ID);
     const second = getSet(VIEW_AREA_ID).activeTabId!;
 
+    // Empty the source tab's main pane, as closing it does
+    updateTab(VIEW_AREA_ID, second, { main: null });
+
     splitTabWithTab(VIEW_AREA_ID, first, second);
 
     const { tabs } = getSet(VIEW_AREA_ID);

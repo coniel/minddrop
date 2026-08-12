@@ -2,7 +2,6 @@ import { FC } from 'react';
 import { DefaultViewName } from '@minddrop/events';
 import { useTranslation } from '@minddrop/i18n';
 import {
-  ContentIcon,
   ContextMenuGroup,
   ContextMenuItem,
   ContextMenuPortal,
@@ -11,6 +10,7 @@ import {
   ContextSubmenu,
   ContextSubmenuContent,
   ContextSubmenuTriggerItem,
+  IconRenderer,
 } from '@minddrop/ui-primitives';
 import { Tab } from '../TabSetsStore';
 import { closeOtherTabs } from '../closeOtherTabs';
@@ -18,15 +18,12 @@ import { closeTab } from '../closeTab';
 import { closeTabsToTheLeft } from '../closeTabsToTheLeft';
 import { closeTabsToTheRight } from '../closeTabsToTheRight';
 import { duplicateTab } from '../duplicateTab';
+import { getTabIcon } from '../getTabIcon';
 import { getTabLabel } from '../getTabLabel';
 import { newTab } from '../newTab';
 import { splitTab } from '../splitTab';
 import { splitTabWithTab } from '../splitTabWithTab';
-import { DEFAULT_ICON } from '../tabsConstants';
 import { unsplitTab } from '../unsplitTab';
-
-// Icon of the search split, shown until a search view exists
-const SEARCH_ICON = 'content-icon:search:default';
 
 interface TabOptionsMenuProps {
   /**
@@ -54,8 +51,6 @@ export const TabOptionsMenu: FC<TabOptionsMenuProps> = ({
   tabId,
   tabs,
 }) => {
-  const { t } = useTranslation();
-
   // The position of the tab the menu was opened on
   const tabIndex = tabs.findIndex((tab) => tab.id === tabId);
 
@@ -81,13 +76,10 @@ export const TabOptionsMenu: FC<TabOptionsMenuProps> = ({
     duplicateTab(viewAreaId, tabId);
   }
 
-  // Open a search view in the tab's split pane
+  // Open a search view in the tab's split pane, labelled and iconed
+  // from its registration
   function handleSplitWithSearch() {
-    splitTab(viewAreaId, tabId, {
-      view: DefaultViewName,
-      title: t('tabs.split.search'),
-      icon: SEARCH_ICON,
-    });
+    splitTab(viewAreaId, tabId, { view: DefaultViewName });
   }
 
   // Close the tab's split pane
@@ -250,8 +242,8 @@ const SplitWithTabItem: FC<SplitWithTabItemProps> = ({
 
   return (
     <ContextMenuItem
-      icon={<ContentIcon icon={sourceTab.main?.icon ?? DEFAULT_ICON} />}
-      stringLabel={getTabLabel(sourceTab, t('tabs.new'))}
+      icon={<IconRenderer icon={getTabIcon(sourceTab)} />}
+      stringLabel={getTabLabel(sourceTab, t('tabs.new'), t)}
       onSelect={handleSelect}
     />
   );

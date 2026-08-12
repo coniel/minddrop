@@ -72,7 +72,8 @@ describe('closeTabsForView', () => {
     // The tab survives because no visible pane shows the closed view
     expect(tabs).toHaveLength(1);
     expect(tabs[0].main?.id).toBe('db:c');
-    expect(tabs[0].backHistory).toHaveLength(1);
-    expect(tabs[0].backHistory?.[0].main?.id).toBe('db:a');
+    // The first entry is the search view the tab was opened on
+    expect(tabs[0].backHistory).toHaveLength(2);
+    expect(tabs[0].backHistory?.[1].main?.id).toBe('db:a');
   });
 });

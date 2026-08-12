@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
   CloseViewEvent,
+  DefaultViewName,
   Events,
   UpdateViewEvent,
   ViewAreaChangedEvent,
@@ -55,7 +56,7 @@ describe('initializeTabsSyncListeners', () => {
       changed(OTHER_VIEW_AREA_ID, { view: 'db:view', id: 'db:a' }),
     );
 
-    expect(getSet(VIEW_AREA_ID).tabs[0].main).toBeNull();
+    expect(getSet(VIEW_AREA_ID).tabs[0].main?.view).toBe(DefaultViewName);
   });
 
   it('updates tabs when a view changes', () => {
@@ -134,8 +135,9 @@ describe('initializeTabsSyncListeners', () => {
 
     const tab = getSet(VIEW_AREA_ID).tabs[0];
 
-    expect(tab.backHistory).toHaveLength(1);
-    expect(tab.backHistory?.[0].main?.id).toBe('db:a');
+    // The first entry is the search view the tab was opened on
+    expect(tab.backHistory).toHaveLength(2);
+    expect(tab.backHistory?.[1].main?.id).toBe('db:a');
   });
 
   it('patches history entries when a view changes', () => {
@@ -156,7 +158,8 @@ describe('initializeTabsSyncListeners', () => {
       title: 'A2',
     });
 
-    const historyEntry = getSet(VIEW_AREA_ID).tabs[0].backHistory?.[0];
+    // The first entry is the search view the tab was opened on
+    const historyEntry = getSet(VIEW_AREA_ID).tabs[0].backHistory?.[1];
 
     expect(historyEntry?.main?.id).toBe('db:a2');
     expect(historyEntry?.main?.title).toBe('A2');
@@ -175,7 +178,8 @@ describe('initializeTabsSyncListeners', () => {
 
     Events.dispatch(CloseViewEvent, { viewAreaId: VIEW_AREA_ID, id: 'db:a' });
 
-    expect(getSet(VIEW_AREA_ID).tabs[0].backHistory).toHaveLength(0);
+    // The search view the tab was opened on is not pruned
+    expect(getSet(VIEW_AREA_ID).tabs[0].backHistory).toHaveLength(1);
   });
 
   it('stops recording after cleanup', () => {
@@ -187,6 +191,6 @@ describe('initializeTabsSyncListeners', () => {
       changed(VIEW_AREA_ID, { view: 'db:view', id: 'db:a' }),
     );
 
-    expect(getSet(VIEW_AREA_ID).tabs[0].main).toBeNull();
+    expect(getSet(VIEW_AREA_ID).tabs[0].main?.view).toBe(DefaultViewName);
   });
 });

@@ -76,7 +76,8 @@ describe('updateTabsForView', () => {
 
     updateTabsForView(VIEW_AREA_ID, 'db:a', { id: 'db:a2', title: 'A2' });
 
-    const historyEntry = getSet(VIEW_AREA_ID).tabs[0].backHistory?.[0];
+    // The first entry is the search view the tab was opened on
+    const historyEntry = getSet(VIEW_AREA_ID).tabs[0].backHistory?.[1];
 
     expect(historyEntry?.main?.id).toBe('db:a2');
     expect(historyEntry?.main?.title).toBe('A2');

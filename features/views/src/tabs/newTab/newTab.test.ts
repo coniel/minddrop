@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { DefaultViewName } from '@minddrop/events';
 import { TabSetsStore } from '../TabSetsStore';
 import { getSet } from '../getSet';
 import { newTab } from './newTab';
@@ -20,7 +21,7 @@ describe('newTab', () => {
     const { tabs, activeTabId } = getSet(VIEW_AREA_ID);
 
     expect(tabs).toHaveLength(1);
-    expect(tabs[0].main).toBeNull();
+    expect(tabs[0].main?.view).toBe(DefaultViewName);
     expect(activeTabId).toBe(tabs[0].id);
   });
 

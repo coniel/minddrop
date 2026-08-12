@@ -6,6 +6,7 @@ import { goBack } from '../goBack';
 import { newTab } from '../newTab';
 import { setTransientViewState } from '../setTransientViewState';
 import { MAX_HISTORY_LENGTH } from '../tabsConstants';
+import { updateTab } from '../updateTab';
 import { recordViewArea } from './recordViewArea';
 
 const VIEW_AREA_ID = 'test-set';
@@ -60,8 +61,9 @@ describe('recordViewArea', () => {
 
     const tab = getSet(VIEW_AREA_ID).tabs[0];
 
-    expect(tab.backHistory).toHaveLength(1);
-    expect(tab.backHistory?.[0].main?.id).toBe('db:a');
+    // The first entry is the search view the tab was opened on
+    expect(tab.backHistory).toHaveLength(2);
+    expect(tab.backHistory?.[1].main?.id).toBe('db:a');
   });
 
   it('pushes the previous state when only the split changes', () => {
@@ -75,12 +77,18 @@ describe('recordViewArea', () => {
 
     const tab = getSet(VIEW_AREA_ID).tabs[0];
 
-    expect(tab.backHistory).toHaveLength(1);
-    expect(tab.backHistory?.[0].split).toBeNull();
+    // The first entry is the search view the tab was opened on
+    expect(tab.backHistory).toHaveLength(2);
+    expect(tab.backHistory?.[1].split).toBeNull();
   });
 
-  it('does not push when navigating away from a blank tab', () => {
+  it('does not push when navigating away from a viewless tab', () => {
     newTab(VIEW_AREA_ID);
+
+    // Empty the tab's main pane, as closing it does
+    const tab = getSet(VIEW_AREA_ID).tabs[0];
+
+    updateTab(VIEW_AREA_ID, tab.id, { main: null });
 
     recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:a' }));
 
@@ -94,7 +102,8 @@ describe('recordViewArea', () => {
 
     recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:b' }));
 
-    expect(getSet(VIEW_AREA_ID).tabs[0].backHistory).toHaveLength(1);
+    // Only the search view and db:a were pushed
+    expect(getSet(VIEW_AREA_ID).tabs[0].backHistory).toHaveLength(2);
   });
 
   it('does not push when only the split ratio changes', () => {
@@ -105,7 +114,8 @@ describe('recordViewArea', () => {
 
     const tab = getSet(VIEW_AREA_ID).tabs[0];
 
-    expect(tab.backHistory).toHaveLength(0);
+    // Only the search view the tab was opened on was pushed
+    expect(tab.backHistory).toHaveLength(1);
     expect(tab.splitRatio).toBe(70);
   });
 
@@ -123,7 +133,8 @@ describe('recordViewArea', () => {
 
     const tab = getSet(VIEW_AREA_ID).tabs[0];
 
-    expect(tab.backHistory).toHaveLength(0);
+    // Only the search view the tab was opened on was pushed
+    expect(tab.backHistory).toHaveLength(1);
     expect(tab.main?.title).toBe('New');
   });
 
@@ -223,7 +234,7 @@ describe('recordViewArea', () => {
 
     const updatedTab = getSet(VIEW_AREA_ID).tabs[0];
 
-    expect(updatedTab.backHistory?.[0].viewState?.main?.scroll).toBe(120);
+    expect(updatedTab.backHistory?.[1].viewState?.main?.scroll).toBe(120);
     expect(updatedTab.viewState?.main).toEqual({});
   });
 });

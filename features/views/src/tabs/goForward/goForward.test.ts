@@ -38,8 +38,9 @@ describe('goForward', () => {
     const tab = getSet(VIEW_AREA_ID).tabs[0];
 
     expect(tab.main?.id).toBe('db:b');
-    expect(tab.backHistory).toHaveLength(1);
-    expect(tab.backHistory?.[0].main?.id).toBe('db:a');
+    // The first entry is the search view the tab was opened on
+    expect(tab.backHistory).toHaveLength(2);
+    expect(tab.backHistory?.[1].main?.id).toBe('db:a');
     expect(tab.forwardHistory).toHaveLength(0);
   });
 
@@ -52,7 +53,8 @@ describe('goForward', () => {
     const tab = getSet(VIEW_AREA_ID).tabs[0];
 
     expect(tab.main?.id).toBe('db:a');
-    expect(tab.backHistory).toHaveLength(0);
+    // Only the search view the tab was opened on was pushed
+    expect(tab.backHistory).toHaveLength(1);
   });
 
   it('does nothing without an active tab', () => {

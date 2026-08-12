@@ -145,7 +145,10 @@ export const TabsToolbar: FC<TabsToolbarProps> = ({
             align="start"
             sideOffset={4}
           >
-            <ContextMenuContent>
+            {/* Focus is not restored to the tab on close, leaving it
+                to the view the action opened (e.g. the search view's
+                search field) */}
+            <ContextMenuContent finalFocus={false}>
               {menuTabId && (
                 <TabOptionsMenu
                   viewAreaId={viewAreaId}
