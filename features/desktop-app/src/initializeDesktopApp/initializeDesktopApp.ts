@@ -8,7 +8,6 @@ import {
   EditorMarks,
   registerBlockSelectionSerializer,
 } from '@minddrop/editor';
-import { Events } from '@minddrop/events';
 import { initializeExtensions } from '@minddrop/extensions';
 import { initializeCollectionsFeature } from '@minddrop/feature-collections';
 import { initializeDataViewsFeature } from '@minddrop/feature-data-views';
@@ -25,19 +24,20 @@ import {
   initializeSpacesFeature,
 } from '@minddrop/feature-spaces';
 import { TabSetsStore, initializeViewsFeature } from '@minddrop/feature-views';
+import { Fs } from '@minddrop/file-system';
 import { initializeI18n } from '@minddrop/i18n';
 import { Queries } from '@minddrop/queries';
 import { Search } from '@minddrop/search';
 import { Spaces } from '@minddrop/spaces';
 import { Sql } from '@minddrop/sql';
 import { initializeInputModalityTracking } from '@minddrop/ui-primitives';
-import { Theme, VariantChangedEventData } from '@minddrop/ui-theme';
 import { Workspaces } from '@minddrop/workspaces';
 import { AppUiState } from '../AppUiState';
 import { registerAppDataStoreListeners } from '../registerAppDataStoreListeners';
 import { registerWorkspaceStoreListeners } from '../registerWorkspaceStoreListeners';
 import { initializeDataViewTypes } from './initializeDataViewTypes';
 import { initializeSelection } from './initializeSelection';
+import { initializeTheme } from './initializeTheme';
 import { registerViews } from './registerViews';
 
 // In development mode, React runs effects twice on first load, so
@@ -91,13 +91,6 @@ async function runInitialization(): Promise<void> {
   // their UI state
   await initializeDevToolsFeature();
 
-  // Watch for theme variant changes
-  Events.addListener(
-    Theme.events.VariantChanged,
-    'app:set-body-theme-appearance-class',
-    setThemeAppearanceClassOnBody,
-  );
-
   EditorElements.registerDefaults();
   EditorMarks.registerDefaults();
   registerBlockSelectionSerializer();
@@ -148,27 +141,13 @@ async function runInitialization(): Promise<void> {
   // Initialize global selection keyboard shortcuts
   initializeSelection();
 
-  // Initialize theme
-  await Theme.initialize();
+  // Load the theme settings and apply them to <body>
+  await initializeTheme();
+
+  // Cache the image brightness analyses the file server already
+  // holds, so that images are treated on their first render
+  await Fs.preloadImageStats();
 
   // Initialize extensions
   await initializeExtensions([]);
-}
-
-/**
- * Toggles the theme appearance class on <body>
- * whenever the theme variant changes.
- */
-function setThemeAppearanceClassOnBody({
-  data,
-}: {
-  data: VariantChangedEventData;
-}) {
-  if (data.resolvedAppearance === 'dark') {
-    document.body.classList.remove('light-theme');
-    document.body.classList.add('dark-theme');
-  } else {
-    document.body.classList.remove('dark-theme');
-    document.body.classList.add('light-theme');
-  }
 }
