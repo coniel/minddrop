@@ -30,21 +30,12 @@ export interface PropertySchemaBase {
   placeholder?: string;
 
   /**
-   * Indicates that this property is a meta data property, such as a created
-   * or last-modified timestamp.
+   * Indicates that this property is a meta data property, such as a title,
+   * created or last-modified timestamp.
    *
-   * Item types can only contain one property of each meta type. The value is
-   * automatically managed by the system and cannot be modified directly.
-   *
-   * The name and icon of meta properties are not customizable.
+   * Item types can only contain one property of each meta type.
    */
   meta?: boolean;
-
-  /**
-   * Indicates that this property is protected, i.e., it cannot be deleted
-   * or modified by users.
-   */
-  protected?: boolean;
 }
 
 /**

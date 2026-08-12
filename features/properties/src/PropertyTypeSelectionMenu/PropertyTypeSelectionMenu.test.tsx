@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   CreatedPropertySchema,
   TextPropertySchema,
+  TitlePropertySchema,
 } from '@minddrop/properties';
 import { cleanup, render, screen, userEvent } from '@minddrop/test-utils';
 import { PropertyTypeSelectionMenu } from './PropertyTypeSelectionMenu';
@@ -32,7 +33,11 @@ describe('<PropertyTypeSelectionMenu />', () => {
       <PropertyTypeSelectionMenu
         defaultOpen
         onSelect={onSelect}
-        existingProperties={[TextPropertySchema, CreatedPropertySchema]}
+        existingProperties={[
+          TextPropertySchema,
+          TitlePropertySchema,
+          CreatedPropertySchema,
+        ]}
       >
         <button>Open</button>
       </PropertyTypeSelectionMenu>,
@@ -41,6 +46,7 @@ describe('<PropertyTypeSelectionMenu />', () => {
     // Should preserve non-meta properties
     expect(screen.queryByText(TextPropertySchema.name)).not.toBeNull();
     // Should omit meta properties
+    expect(screen.queryByText(TitlePropertySchema.name)).toBeNull();
     expect(screen.queryByText(CreatedPropertySchema.name)).toBeNull();
   });
 

@@ -10,5 +10,5 @@ export const TitlePropertySchema: PropertySchemaTemplate<TitlePropertySchema> =
     icon: 'content-icon:type:default',
     name: 'properties.title.name',
     description: 'properties.title.description',
-    protected: true,
+    meta: true,
   };

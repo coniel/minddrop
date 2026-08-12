@@ -52,8 +52,9 @@ export const PropertyTypeSelectionMenu: React.FC<
       searchable
       {...other}
     >
+      {/** Meta property types **/}
       <MenuGroup>
-        {basicProperties.map((schema) => (
+        {metaProperties.map((schema) => (
           <DropdownSearchableMenuItem
             key={schema.type}
             label={schema.name}
@@ -63,14 +64,17 @@ export const PropertyTypeSelectionMenu: React.FC<
           />
         ))}
       </MenuGroup>
+
       {metaProperties.length > 0 && <DropdownMenuSeparator />}
+
+      {/** Basic property types **/}
       <MenuGroup>
-        {metaProperties.map((schema) => (
+        {basicProperties.map((schema) => (
           <DropdownSearchableMenuItem
             key={schema.type}
             label={schema.name}
             contentIcon={schema.icon}
-            tooltip={{ title: schema.description }}
+            tooltip={{ description: schema.description }}
             onSelect={() => onSelect(schema)}
           />
         ))}
