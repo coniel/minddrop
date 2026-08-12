@@ -3,7 +3,7 @@ import { Fs } from '@minddrop/file-system';
 import { DataViewsStore } from '../DataViewsStore';
 import { DataViewDeletedEvent, DataViewDeletedEventData } from '../events';
 import { getDataView } from '../getDataView';
-import { getViewFilePath } from '../utils';
+import { resolveViewFilePath } from '../utils';
 
 /**
  * Deletes a data view, removing it from the store and deleting the file.
@@ -23,7 +23,7 @@ export async function deleteDataView(id: string): Promise<void> {
 
   // Delete the data view file from the file system if not virtual
   if (!view.virtual) {
-    await Fs.removeFile(getViewFilePath(id));
+    await Fs.removeFile(resolveViewFilePath(id));
   }
 
   // Dispatch a data view deleted event

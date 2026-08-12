@@ -12,7 +12,7 @@ import {
   setup,
 } from '../test-utils';
 import { DataView } from '../types';
-import { getViewFilePath } from '../utils';
+import { resolveViewFilePath } from '../utils';
 import { updateDataView } from './updateDataView';
 
 const update = {
@@ -42,9 +42,9 @@ describe('updateDataView', () => {
   it('writes the view to the file system', async () => {
     await updateDataView(dataView_gallery_1.id, update);
 
-    expect(MockFs.readJsonFile(getViewFilePath(dataView_gallery_1.id))).toEqual(
-      writtenView,
-    );
+    expect(
+      MockFs.readJsonFile(resolveViewFilePath(dataView_gallery_1.id)),
+    ).toEqual(writtenView);
   });
 
   it('returns the updated view', async () => {
@@ -69,7 +69,9 @@ describe('updateDataView', () => {
     await updateDataView(dataView_virtual_1.id, { name: 'Updated' });
 
     // Should not have created a file
-    expect(MockFs.exists(getViewFilePath(dataView_virtual_1.id))).toBe(false);
+    expect(MockFs.exists(resolveViewFilePath(dataView_virtual_1.id))).toBe(
+      false,
+    );
   });
 
   it('allows changing the ID of a virtual view', async () => {

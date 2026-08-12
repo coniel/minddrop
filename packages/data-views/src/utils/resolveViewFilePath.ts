@@ -1,6 +1,6 @@
 import { Fs } from '@minddrop/file-system';
 import { ViewFileExtension } from '../constants';
-import { getViewsDirPath } from './getViewsDirPath';
+import { resolveViewsDirPath } from './resolveViewsDirPath';
 
 /**
  * Returns the path to a data view file.
@@ -8,9 +8,9 @@ import { getViewsDirPath } from './getViewsDirPath';
  * @param id - The ID of the data view.
  * @returns The path to the data view file.
  */
-export function getViewFilePath(id: string): string {
+export function resolveViewFilePath(id: string): string {
   return Fs.concatPath(
-    getViewsDirPath(),
+    resolveViewsDirPath(),
     Fs.addFileExtension(id, ViewFileExtension),
   );
 }

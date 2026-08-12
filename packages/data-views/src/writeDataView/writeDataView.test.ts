@@ -14,8 +14,8 @@ import {
   setup,
 } from '../test-utils';
 import { DataView } from '../types';
-import { getViewFilePath } from '../utils';
-import { getViewsDirPath } from '../utils/getViewsDirPath';
+import { resolveViewFilePath } from '../utils';
+import { resolveViewsDirPath } from '../utils/resolveViewsDirPath';
 import { writeDataView } from './writeDataView';
 
 // A view referencing an entry via the referencing view type's data
@@ -35,18 +35,18 @@ describe('writeDataView', () => {
   it('writes the view to the file system', async () => {
     await writeDataView(dataView_gallery_1.id);
 
-    expect(MockFs.readJsonFile(getViewFilePath(dataView_gallery_1.id))).toEqual(
-      dataView_gallery_1,
-    );
+    expect(
+      MockFs.readJsonFile(resolveViewFilePath(dataView_gallery_1.id)),
+    ).toEqual(dataView_gallery_1);
   });
 
   it('creates the Views directory if it does not exist', async () => {
     // Remove the data views directory
-    MockFs.removeDir(getViewsDirPath());
+    MockFs.removeDir(resolveViewsDirPath());
 
     await writeDataView(dataView_gallery_1.id);
 
-    expect(MockFs.exists(getViewsDirPath())).toBe(true);
+    expect(MockFs.exists(resolveViewsDirPath())).toBe(true);
   });
 
   it('serializes item references and strips the references index', async () => {
@@ -62,7 +62,7 @@ describe('writeDataView', () => {
     await writeDataView(referencingView.id);
 
     const written = MockFs.readJsonFile<DataView>(
-      getViewFilePath(referencingView.id),
+      resolveViewFilePath(referencingView.id),
     );
 
     // The written data holds durable references

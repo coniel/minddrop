@@ -12,7 +12,7 @@ import {
   setup,
 } from '../../test-utils';
 import { DataView } from '../../types';
-import { getViewFilePath } from '../../utils';
+import { resolveViewFilePath } from '../../utils';
 import { onItemAddressesChanged } from './item-addresses-changed';
 
 // A persisted view referencing the changed entry
@@ -53,7 +53,7 @@ describe('onItemAddressesChanged', () => {
     ]);
 
     const written = MockFs.readJsonFile<DataView>(
-      getViewFilePath(referencingView.id),
+      resolveViewFilePath(referencingView.id),
     );
 
     // The rewritten file holds freshly serialized references
@@ -70,6 +70,6 @@ describe('onItemAddressesChanged', () => {
     ]);
 
     // No file is written for the unaffected view
-    expect(MockFs.exists(getViewFilePath(referencingView.id))).toBe(false);
+    expect(MockFs.exists(resolveViewFilePath(referencingView.id))).toBe(false);
   });
 });

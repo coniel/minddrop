@@ -2,7 +2,7 @@ import { Fs } from '@minddrop/file-system';
 import { InvalidParameterError } from '@minddrop/utils';
 import { getDataView } from '../getDataView';
 import { serializeDataViewConfig } from '../serializeDataViewConfig';
-import { getViewFilePath, getViewsDirPath } from '../utils';
+import { resolveViewFilePath, resolveViewsDirPath } from '../utils';
 
 /**
  * Writes a data view to the file system.
@@ -24,7 +24,7 @@ export async function writeDataView(id: string): Promise<void> {
   }
 
   // Ensure that the data views directory exists
-  await Fs.ensureDir(getViewsDirPath());
+  await Fs.ensureDir(resolveViewsDirPath());
 
   // Convert the config's item references into durable form
   const config = serializeDataViewConfig(view.type, {
@@ -36,7 +36,7 @@ export async function writeDataView(id: string): Promise<void> {
   const { references: _references, ...serializableView } = view;
 
   // Write the data view to the file system
-  await Fs.writeJsonFile(getViewFilePath(id), {
+  await Fs.writeJsonFile(resolveViewFilePath(id), {
     ...serializableView,
     ...config,
   });

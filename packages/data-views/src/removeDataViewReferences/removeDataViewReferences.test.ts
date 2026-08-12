@@ -8,7 +8,7 @@ import {
   setup,
 } from '../test-utils';
 import { DataView } from '../types';
-import { getViewFilePath } from '../utils';
+import { resolveViewFilePath } from '../utils';
 import { removeDataViewReferences } from './removeDataViewReferences';
 
 // A persisted view referencing two entries
@@ -40,7 +40,7 @@ describe('removeDataViewReferences', () => {
 
     // The cleaned config is persisted
     const written = MockFs.readJsonFile<DataView>(
-      getViewFilePath(referencingView.id),
+      resolveViewFilePath(referencingView.id),
     );
     expect(written.data).toEqual({ items: ['database-entry_two'] });
   });
@@ -49,6 +49,6 @@ describe('removeDataViewReferences', () => {
     await removeDataViewReferences(['database-entry_other']);
 
     // The unaffected view is not written to disk
-    expect(MockFs.exists(getViewFilePath(referencingView.id))).toBe(false);
+    expect(MockFs.exists(resolveViewFilePath(referencingView.id))).toBe(false);
   });
 });

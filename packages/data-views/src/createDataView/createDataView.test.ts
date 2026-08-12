@@ -10,7 +10,7 @@ import {
   setup,
 } from '../test-utils';
 import { DataView } from '../types';
-import { getViewFilePath } from '../utils';
+import { resolveViewFilePath } from '../utils';
 import { createDataView } from './createDataView';
 
 const newView: DataView = {
@@ -65,7 +65,7 @@ describe('createDataView', () => {
       newView.name,
     );
 
-    expect(MockFs.readJsonFile(getViewFilePath(view.id))).toMatchObject(
+    expect(MockFs.readJsonFile(resolveViewFilePath(view.id))).toMatchObject(
       writtenView,
     );
   });

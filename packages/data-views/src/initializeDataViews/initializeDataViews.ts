@@ -11,7 +11,7 @@ import { DataViewsLoadedEvent, DataViewsLoadedEventData } from '../events';
 import { extractDataViewReferences } from '../extractDataViewReferences';
 import { readDataView } from '../readDataView';
 import { resolveDataViewConfig } from '../resolveDataViewConfig';
-import { getViewsDirPath } from '../utils/getViewsDirPath';
+import { resolveViewsDirPath } from '../utils/resolveViewsDirPath';
 
 /**
  * Initializes data views by reading the data views directory and loading data views from the file system.
@@ -26,7 +26,7 @@ export async function initializeDataViews(): Promise<void> {
   const viewFileEntries = (
     await Promise.all(
       workspaces.map(async (workspace) => {
-        const viewDirPath = getViewsDirPath(workspace.path);
+        const viewDirPath = resolveViewsDirPath(workspace.path);
 
         if (await Fs.exists(viewDirPath)) {
           return Fs.readDir(viewDirPath);

@@ -9,7 +9,7 @@ import {
   dataView_virtual_1,
   setup,
 } from '../test-utils';
-import { getViewFilePath } from '../utils';
+import { resolveViewFilePath } from '../utils';
 import { deleteDataView } from './deleteDataView';
 
 describe('deleteDataView', () => {
@@ -26,7 +26,9 @@ describe('deleteDataView', () => {
   it('deletes the view file', async () => {
     await deleteDataView(dataView_gallery_1.id);
 
-    expect(MockFs.exists(getViewFilePath(dataView_gallery_1.id))).toBe(false);
+    expect(MockFs.exists(resolveViewFilePath(dataView_gallery_1.id))).toBe(
+      false,
+    );
   });
 
   it('does not delete a file for virtual views', async () => {

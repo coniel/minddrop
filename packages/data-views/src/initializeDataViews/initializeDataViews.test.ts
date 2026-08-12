@@ -14,7 +14,7 @@ import {
   dataViews,
   setup,
 } from '../test-utils';
-import { getViewFilePath } from '../utils';
+import { resolveViewFilePath } from '../utils';
 import { initializeDataViews } from './initializeDataViews';
 
 // The loaded views including their references index
@@ -62,7 +62,7 @@ describe('initializeDataViews', () => {
 
     MockFs.addFiles([
       {
-        path: getViewFilePath(referencingView.id),
+        path: resolveViewFilePath(referencingView.id),
         textContent: JSON.stringify(referencingView),
       },
     ]);
