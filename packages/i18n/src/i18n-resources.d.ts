@@ -1950,6 +1950,16 @@ declare module 'i18next' {
             light: string;
             dark: string;
           };
+          imageDimming: {
+            '1': string;
+            '2': string;
+            '3': string;
+            label: string;
+            off: string;
+          };
+          invertLightImages: {
+            label: string;
+          };
         };
       };
     };

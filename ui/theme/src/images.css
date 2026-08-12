@@ -1,0 +1,31 @@
+/**
+ * Dark mode image treatment. The per image classes describe what the
+ * image is, the body classes select which effects apply to it, so
+ * changing a setting is a class swap rather than a re-render of every
+ * mounted image.
+ *
+ * Only native filter functions are used. An SVG `filter: url()`
+ * reference gives a nicer tone curve but is rasterised on the CPU on
+ * every repaint, which stalls transformed images such as the zoomable
+ * image viewer.
+ */
+
+.dark-theme.image-dimming-1 .minddrop-image-bright {
+  filter: brightness(0.85);
+}
+
+.dark-theme.image-dimming-2 .minddrop-image-bright {
+  filter: brightness(0.72);
+}
+
+.dark-theme.image-dimming-3 .minddrop-image-bright {
+  filter: brightness(0.58);
+}
+
+/**
+ * Declared last so that inverting wins on images which are both
+ * bright and light background.
+ */
+.dark-theme.image-invert-light .minddrop-image-light-background {
+  filter: invert(1) hue-rotate(180deg);
+}

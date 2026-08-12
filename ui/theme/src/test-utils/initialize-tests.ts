@@ -13,7 +13,11 @@ import {
   StoreHydrateRequestEventData,
 } from '@minddrop/stores';
 import { ThemeStore } from '../ThemeStore';
-import { VariantChangedEvent } from '../events';
+import {
+  ImageDimmingChangedEvent,
+  InvertLightImagesChangedEvent,
+  VariantChangedEvent,
+} from '../events';
 
 initializeI18n();
 
@@ -59,6 +63,8 @@ export function cleanup() {
   // the rest of the run.
   TEST_LISTENER_IDS.forEach((id) => {
     Events.removeListener(VariantChangedEvent, id);
+    Events.removeListener(ImageDimmingChangedEvent, id);
+    Events.removeListener(InvertLightImagesChangedEvent, id);
   });
 
   // Clear the mock file system

@@ -2,7 +2,16 @@ import { Events } from '@minddrop/events';
 import { I18n } from '@minddrop/i18n';
 import { ThemeStore } from '../ThemeStore';
 import { ThemeSystem } from '../constants';
-import { VariantChangedEvent, VariantChangedEventData } from '../events';
+import {
+  ImageDimmingChangedEvent,
+  ImageDimmingChangedEventData,
+  InvertLightImagesChangedEvent,
+  InvertLightImagesChangedEventData,
+  VariantChangedEvent,
+  VariantChangedEventData,
+} from '../events';
+import { getImageDimming } from '../getImageDimming';
+import { getInvertLightImages } from '../getInvertLightImages';
 import { getThemeVariant } from '../getThemeVariant';
 import locales from '../locales';
 import { resolveThemeVariant } from '../resolveThemeVariant';
@@ -50,6 +59,19 @@ export async function initializeTheme() {
     variant,
     resolvedAppearance,
   });
+
+  // Dispatch the initial 'theme:image-dimming:changed' event so
+  // the app can set the initial CSS class.
+  Events.dispatch<ImageDimmingChangedEventData>(ImageDimmingChangedEvent, {
+    imageDimming: getImageDimming(),
+  });
+
+  // Dispatch the initial 'theme:invert-light-images:changed' event
+  // so the app can set the initial CSS class.
+  Events.dispatch<InvertLightImagesChangedEventData>(
+    InvertLightImagesChangedEvent,
+    { invertLightImages: getInvertLightImages() },
+  );
 }
 
 /**
