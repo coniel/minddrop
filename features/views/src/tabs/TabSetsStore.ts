@@ -1,6 +1,6 @@
-import { ViewDescriptor } from '@minddrop/events';
 import { createObjectStore } from '@minddrop/stores';
 import { EntityId } from '@minddrop/utils';
+import { ViewDescriptor } from '@minddrop/views';
 
 export interface TabView {
   /**

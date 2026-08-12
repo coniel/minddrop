@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
-import { BaseOpenViewEventData, Events } from '@minddrop/events';
+import { Events } from '@minddrop/events';
+import { BaseOpenViewEventData } from '../types';
 import { useViewPane } from './useViewPane';
 
 export type OpenView = <TData>(

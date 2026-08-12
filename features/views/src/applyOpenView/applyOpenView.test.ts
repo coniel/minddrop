@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { OpenViewEventData, ViewDescriptor } from '@minddrop/events';
+import { OpenViewEventData, ViewDescriptor } from '@minddrop/views';
 import { ViewAreaState, applyOpenView } from './applyOpenView';
 
 const mainView: ViewDescriptor = { view: 'test:view', id: 'main-view' };

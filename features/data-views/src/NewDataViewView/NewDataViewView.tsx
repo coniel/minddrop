@@ -1,7 +1,8 @@
 import { DataView, DataViewTypes } from '@minddrop/data-views';
-import { CloseViewEvent, CloseViewEventData, Events } from '@minddrop/events';
+import { Events } from '@minddrop/events';
 import { PanelView } from '@minddrop/ui-components';
 import { UiIconName } from '@minddrop/ui-icons';
+import { CloseViewEvent, CloseViewEventData } from '@minddrop/views';
 import { DataViewRenderer } from '../DataViewRenderer';
 import {
   NewDataViewViewId,

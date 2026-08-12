@@ -14,10 +14,13 @@ import {
   DatabaseUpdatedEventData,
   Databases,
 } from '@minddrop/databases';
+import { Events } from '@minddrop/events';
+import { Tabs } from '@minddrop/feature-views';
+import { DATABASE_FALLBACK_ICON } from '@minddrop/ui-databases';
 import {
   CloseViewEvent,
   CloseViewEventData,
-  Events,
+  DefaultViewAreaId,
   OpenViewEvent,
   OpenViewEventData,
   UpdateViewEvent,
@@ -25,10 +28,7 @@ import {
   ViewAreaChangedEvent,
   ViewAreaChangedEventData,
   ViewDescriptor,
-} from '@minddrop/events';
-import { Tabs } from '@minddrop/feature-views';
-import { DATABASE_FALLBACK_ICON } from '@minddrop/ui-databases';
-import { DefaultViewAreaId } from '@minddrop/views';
+} from '@minddrop/views';
 import { DatabaseEntryDialog } from '../DatabaseEntryDialog';
 import { DatabaseEntryRendererProps } from '../DatabaseEntryRenderer';
 import { DatabaseViewProps } from '../DatabaseView';

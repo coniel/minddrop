@@ -5,17 +5,17 @@ import {
   DataViewUpdatedEventData,
   DataViews,
 } from '@minddrop/data-views';
+import { Events } from '@minddrop/events';
+import { I18n, i18n } from '@minddrop/i18n';
 import {
   CloseViewEvent,
   CloseViewEventData,
-  Events,
   OpenViewEvent,
   OpenViewEventData,
   UpdateViewEvent,
   UpdateViewEventData,
   ViewDescriptor,
-} from '@minddrop/events';
-import { I18n, i18n } from '@minddrop/i18n';
+} from '@minddrop/views';
 import { DataViewViewProps } from '../DataViewView';
 import { NewDataViewViewProps } from '../NewDataViewView';
 import {

@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { ViewDescriptor } from '@minddrop/events';
+import { ViewDescriptor } from '../types';
 import { ViewBreadcrumbsContext } from './ViewBreadcrumbsContext';
 
 /**

@@ -1,6 +1,7 @@
 import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
+import { Events } from '@minddrop/events';
+import { IconButton } from '@minddrop/ui-primitives';
 import {
-  Events,
   OpenViewEvent,
   OpenViewEventData,
   SetViewAreaEvent,
@@ -10,9 +11,8 @@ import {
   ViewAreaReadyEvent,
   ViewAreaReadyEventData,
   ViewDescriptor,
-} from '@minddrop/events';
-import { IconButton } from '@minddrop/ui-primitives';
-import { Views } from '@minddrop/views';
+  Views,
+} from '@minddrop/views';
 import { TabViewStateProvider } from '../TabViewStateProvider';
 import { ViewAreaState, applyOpenView } from '../applyOpenView';
 import { matchesViewArea } from '../matchesViewArea';

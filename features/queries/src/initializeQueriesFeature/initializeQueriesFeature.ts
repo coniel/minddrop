@@ -1,5 +1,6 @@
-import { Events, OpenViewEvent, OpenViewEventData } from '@minddrop/events';
+import { Events } from '@minddrop/events';
 import { I18n } from '@minddrop/i18n';
+import { OpenViewEvent, OpenViewEventData } from '@minddrop/views';
 import {
   EventListenerId,
   OpenQueriesViewEvent,

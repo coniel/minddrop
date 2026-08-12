@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { SetViewAreaEventData } from '@minddrop/events';
+import { SetViewAreaEventData } from '@minddrop/views';
 import { TabSetsStore } from '../TabSetsStore';
 import { getSet } from '../getSet';
 import { newTab } from '../newTab';

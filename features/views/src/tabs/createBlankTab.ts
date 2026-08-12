@@ -1,5 +1,5 @@
-import { DefaultViewName } from '@minddrop/events';
 import { entityId } from '@minddrop/utils';
+import { DefaultViewName } from '@minddrop/views';
 import { Tab } from './TabSetsStore';
 import { DEFAULT_SPLIT_RATIO } from './tabsConstants';
 

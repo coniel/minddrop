@@ -1,5 +1,5 @@
 import { DatabaseEntries, Databases } from '@minddrop/databases';
-import { ViewOpenMode } from '@minddrop/events';
+import { ViewOpenMode } from '@minddrop/views';
 
 /**
  * Resolves the open mode for a database entry. Uses the provided

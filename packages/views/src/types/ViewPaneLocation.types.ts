@@ -1,4 +1,4 @@
-import { ViewPane } from '@minddrop/events';
+import { ViewPane } from './ViewPane.types';
 
 export interface ViewPaneLocation {
   /**

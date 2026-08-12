@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
-import { Events, OpenViewEvent, OpenViewEventData } from '@minddrop/events';
+import { Events } from '@minddrop/events';
+import { OpenViewEvent, OpenViewEventData } from '@minddrop/views';
 import {
   DesignStudioEventListenerId,
   DesignStudioViewName,

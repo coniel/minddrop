@@ -1,14 +1,14 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DataViewFixtures, DataViews } from '@minddrop/data-views';
+import { Events } from '@minddrop/events';
 import {
   CloseViewEvent,
   CloseViewEventData,
-  Events,
   OpenViewEvent,
   OpenViewEventData,
   UpdateViewEvent,
   UpdateViewEventData,
-} from '@minddrop/events';
+} from '@minddrop/views';
 import { DataViewViewProps } from '../DataViewView';
 import { NewDataViewViewProps } from '../NewDataViewView';
 import {

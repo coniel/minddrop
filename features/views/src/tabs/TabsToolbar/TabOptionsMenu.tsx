@@ -1,5 +1,4 @@
 import { FC } from 'react';
-import { DefaultViewName } from '@minddrop/events';
 import { useTranslation } from '@minddrop/i18n';
 import {
   ContextMenuGroup,
@@ -12,6 +11,7 @@ import {
   ContextSubmenuTriggerItem,
   IconRenderer,
 } from '@minddrop/ui-primitives';
+import { DefaultViewName } from '@minddrop/views';
 import { Tab } from '../TabSetsStore';
 import { closeOtherTabs } from '../closeOtherTabs';
 import { closeTab } from '../closeTab';

@@ -1,4 +1,4 @@
-import { SetViewAreaEventData } from '@minddrop/events';
+import { SetViewAreaEventData } from '@minddrop/views';
 import { Tab } from './TabSetsStore';
 import { DEFAULT_SPLIT_RATIO } from './tabsConstants';
 import { toDescriptor } from './toDescriptor';

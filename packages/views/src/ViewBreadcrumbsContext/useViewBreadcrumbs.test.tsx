@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { ViewDescriptor } from '@minddrop/events';
 import { renderHook } from '@minddrop/test-utils';
+import { ViewDescriptor } from '../types';
 import { ViewBreadcrumbsProvider } from './ViewBreadcrumbsContext';
 import { useViewBreadcrumbs } from './useViewBreadcrumbs';
 

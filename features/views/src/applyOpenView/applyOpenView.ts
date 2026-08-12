@@ -1,4 +1,4 @@
-import { OpenViewEventData, ViewDescriptor } from '@minddrop/events';
+import { OpenViewEventData, ViewDescriptor } from '@minddrop/views';
 import { DEFAULT_SPLIT_RATIO } from '../tabs/tabsConstants';
 
 export interface ViewAreaState {

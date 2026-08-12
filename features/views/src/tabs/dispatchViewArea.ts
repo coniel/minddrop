@@ -1,8 +1,5 @@
-import {
-  Events,
-  SetViewAreaEvent,
-  SetViewAreaEventData,
-} from '@minddrop/events';
+import { Events } from '@minddrop/events';
+import { SetViewAreaEvent, SetViewAreaEventData } from '@minddrop/views';
 import { Tab } from './TabSetsStore';
 import { toSetViewAreaEventData } from './toSetViewAreaEventData';
 

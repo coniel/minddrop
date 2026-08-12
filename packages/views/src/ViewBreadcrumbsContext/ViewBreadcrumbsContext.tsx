@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { ViewDescriptor } from '@minddrop/events';
+import { ViewDescriptor } from '../types';
 
 export const ViewBreadcrumbsContext = createContext<ViewDescriptor[]>([]);
 

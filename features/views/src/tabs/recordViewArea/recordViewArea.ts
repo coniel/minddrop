@@ -1,4 +1,4 @@
-import { SetViewAreaEventData } from '@minddrop/events';
+import { SetViewAreaEventData } from '@minddrop/views';
 import { createBlankTab } from '../createBlankTab';
 import { getSet } from '../getSet';
 import { sameView } from '../sameView';

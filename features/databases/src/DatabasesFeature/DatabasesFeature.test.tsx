@@ -1,12 +1,12 @@
 import { afterEach, describe, expect, it } from 'vitest';
+import { Events } from '@minddrop/events';
+import { render } from '@minddrop/test-utils';
 import {
-  Events,
   OpenViewEvent,
   OpenViewEventData,
   ViewAreaChangedEvent,
   ViewAreaChangedEventData,
-} from '@minddrop/events';
-import { render } from '@minddrop/test-utils';
+} from '@minddrop/views';
 import { DatabasesFeatureState } from '../DatabasesFeatureState';
 import {
   DatabaseViewName,

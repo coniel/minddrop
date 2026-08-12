@@ -9,7 +9,6 @@ import {
   OpenConfirmationDialogEvent,
   OpenConfirmationDialogEventData,
   OpenRightPanelEvent,
-  OpenViewEventData,
   ToggleWindowFillEvent,
 } from '@minddrop/events';
 import { MindDropApiProvider } from '@minddrop/extensions';
@@ -32,7 +31,7 @@ import {
   TooltipProvider,
   useToastManager,
 } from '@minddrop/ui-primitives';
-import { DefaultViewAreaId, Views } from '@minddrop/views';
+import { DefaultViewAreaId, OpenViewEventData, Views } from '@minddrop/views';
 import { AppSidebar } from './AppSidebar';
 import { AppUiState } from './AppUiState';
 import { NavToolbar } from './NavToolbar';

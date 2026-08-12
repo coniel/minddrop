@@ -1,15 +1,15 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { Events } from '@minddrop/events';
+import { SpaceFixtures, Spaces } from '@minddrop/spaces';
+import { render } from '@minddrop/test-utils';
 import {
   CloseViewEvent,
   CloseViewEventData,
-  Events,
   OpenViewEvent,
   OpenViewEventData,
   UpdateViewEvent,
   UpdateViewEventData,
-} from '@minddrop/events';
-import { SpaceFixtures, Spaces } from '@minddrop/spaces';
-import { render } from '@minddrop/test-utils';
+} from '@minddrop/views';
 import { SpaceViewProps } from '../SpaceView';
 import {
   OpenSpaceViewEvent,

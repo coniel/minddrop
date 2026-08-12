@@ -1331,6 +1331,9 @@ importers:
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../utils
+      '@minddrop/views':
+        specifier: workspace:*
+        version: link:../views
       '@minddrop/workspaces':
         specifier: workspace:*
         version: link:../workspaces

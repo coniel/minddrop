@@ -28,6 +28,7 @@
     "@minddrop/stores": "workspace:*",
     "@minddrop/utils": "workspace:*",
     "@minddrop/data-views": "workspace:*",
+    "@minddrop/views": "workspace:*",
     "@minddrop/workspaces": "workspace:*"
   }
 }

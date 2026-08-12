@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { BaseOpenViewEventData, Events } from '@minddrop/events';
+import { Events } from '@minddrop/events';
 import { renderHook } from '@minddrop/test-utils';
+import { BaseOpenViewEventData } from '../types';
 import { ViewPaneProvider } from './ViewPaneContext';
 import { useOpenView } from './useOpenView';
 

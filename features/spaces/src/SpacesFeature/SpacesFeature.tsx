@@ -1,14 +1,5 @@
 import { useEffect } from 'react';
-import {
-  CloseViewEvent,
-  CloseViewEventData,
-  Events,
-  OpenViewEvent,
-  OpenViewEventData,
-  UpdateViewEvent,
-  UpdateViewEventData,
-  ViewDescriptor,
-} from '@minddrop/events';
+import { Events } from '@minddrop/events';
 import { Tabs } from '@minddrop/feature-views';
 import {
   SpaceDeletedEvent,
@@ -17,6 +8,15 @@ import {
   SpaceUpdatedEventData,
   Spaces,
 } from '@minddrop/spaces';
+import {
+  CloseViewEvent,
+  CloseViewEventData,
+  OpenViewEvent,
+  OpenViewEventData,
+  UpdateViewEvent,
+  UpdateViewEventData,
+  ViewDescriptor,
+} from '@minddrop/views';
 import { NewSpaceDialog } from '../NewSpaceDialog';
 import { SpaceViewProps } from '../SpaceView';
 import { SpaceViewStateStore } from '../SpaceViewStateStore';

@@ -1,5 +1,5 @@
-import { BaseOpenViewEventData } from '@minddrop/events';
 import { PropertySchema } from '@minddrop/properties';
+import { BaseOpenViewEventData } from '@minddrop/views';
 import {
   Database,
   DatabaseEntry,

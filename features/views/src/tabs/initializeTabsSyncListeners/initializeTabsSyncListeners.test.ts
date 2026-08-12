@@ -1,12 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { Events } from '@minddrop/events';
 import {
   CloseViewEvent,
   DefaultViewName,
-  Events,
   UpdateViewEvent,
   ViewAreaChangedEvent,
   ViewAreaChangedEventData,
-} from '@minddrop/events';
+} from '@minddrop/views';
 import { TabSetsStore } from '../TabSetsStore';
 import { getSet } from '../getSet';
 import { newTab } from '../newTab';

@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { Events, OpenViewEvent, OpenViewEventData } from '@minddrop/events';
+import { Events } from '@minddrop/events';
+import { OpenViewEvent, OpenViewEventData } from '@minddrop/views';
 import { CollectionsViewName, OpenCollectionsViewEvent } from '../events';
 import { cleanup, setup } from '../test-utils';
 import { initializeCollectionsFeature } from './initializeCollectionsFeature';

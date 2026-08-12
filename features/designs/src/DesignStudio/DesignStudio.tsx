@@ -2,10 +2,8 @@ import { useCallback, useEffect } from 'react';
 import { Design, Designs } from '@minddrop/designs';
 import {
   CloseAppSidebarEvent,
-  DefaultViewName,
   Events,
   OpenAppSidebarEvent,
-  OpenViewEvent,
   SetNavToolbarWidthEvent,
 } from '@minddrop/events';
 import {
@@ -14,6 +12,7 @@ import {
   useFitOnNodesReady,
 } from '@minddrop/ui-canvas';
 import { Panel } from '@minddrop/ui-primitives';
+import { DefaultViewName, OpenViewEvent } from '@minddrop/views';
 import { DesignDashboard } from '../DesignDashboard';
 import { DesignStudioLeftPanel } from '../DesignStudioLeftPanel';
 import { DesignStudioRootElement } from '../DesignStudioRootElement';

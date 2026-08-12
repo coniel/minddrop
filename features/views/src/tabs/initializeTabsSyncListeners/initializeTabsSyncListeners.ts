@@ -1,14 +1,14 @@
+import { Events } from '@minddrop/events';
 import {
   CloseViewEvent,
   CloseViewEventData,
-  Events,
   UpdateViewEvent,
   UpdateViewEventData,
   ViewAreaChangedEvent,
   ViewAreaChangedEventData,
   ViewAreaReadyEvent,
   ViewAreaReadyEventData,
-} from '@minddrop/events';
+} from '@minddrop/views';
 import { matchesViewArea } from '../../matchesViewArea';
 import { closeTabsForView } from '../closeTabsForView';
 import { recordViewArea } from '../recordViewArea';

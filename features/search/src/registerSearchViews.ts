@@ -1,5 +1,4 @@
-import { DefaultViewName } from '@minddrop/events';
-import { Views } from '@minddrop/views';
+import { DefaultViewName, Views } from '@minddrop/views';
 import { SearchView } from './SearchView';
 
 /**

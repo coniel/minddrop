@@ -1,4 +1,4 @@
-import { ViewDescriptor } from '@minddrop/events';
+import { ViewDescriptor } from '@minddrop/views';
 import { TabView } from '../TabSetsStore';
 import { viewMatches } from '../viewMatches';
 

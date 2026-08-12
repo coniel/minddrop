@@ -8,7 +8,6 @@ import {
   Events,
   OpenConfirmationDialogEvent,
   OpenConfirmationDialogEventData,
-  ViewOpenMode,
 } from '@minddrop/events';
 import {
   TranslationKey,
@@ -25,6 +24,7 @@ import {
 } from '@minddrop/ui-components';
 import { SelectOption, Stack } from '@minddrop/ui-primitives';
 import { validateDirName } from '@minddrop/utils';
+import { ViewOpenMode } from '@minddrop/views';
 import './DatabaseSettingsPanel.css';
 
 // Icon the picker falls back to when the current icon is cleared

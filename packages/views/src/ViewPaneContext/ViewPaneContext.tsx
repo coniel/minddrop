@@ -1,6 +1,5 @@
 import { createContext, useMemo } from 'react';
-import { ViewPane } from '@minddrop/events';
-import { ViewPaneLocation } from '../types';
+import { ViewPane, ViewPaneLocation } from '../types';
 
 export const ViewPaneContext = createContext<ViewPaneLocation | null>(null);
 

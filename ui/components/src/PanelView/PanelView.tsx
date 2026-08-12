@@ -1,9 +1,4 @@
 import React from 'react';
-import {
-  OpenViewEvent,
-  OpenViewEventData,
-  ViewDescriptor,
-} from '@minddrop/events';
 import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import { UiIconName } from '@minddrop/ui-icons';
 import {
@@ -20,7 +15,12 @@ import {
   TranslatableNode,
   propsToClass,
 } from '@minddrop/ui-primitives';
-import { Views } from '@minddrop/views';
+import {
+  OpenViewEvent,
+  OpenViewEventData,
+  ViewDescriptor,
+  Views,
+} from '@minddrop/views';
 import './PanelView.css';
 
 export interface PanelViewAction {
