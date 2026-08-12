@@ -6,3 +6,6 @@ export { getFileExtension as getExtension } from './getFileExtension';
 export { removeFileExtension as removeExtension } from './removeFileExtension';
 export { getFileExtension } from './getFileExtension';
 export { useImageSrc } from './useImageSrc';
+export { getImageStats } from './getImageStats';
+export { preloadImageStats } from './preloadImageStats';
+export { useImageStats } from './useImageStats';
