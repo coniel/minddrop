@@ -34,6 +34,7 @@ import {
   Text,
   TextInput,
 } from '@minddrop/ui-primitives';
+import { Views } from '@minddrop/views';
 import { CollectionOptionsMenu } from './CollectionOptionsMenu';
 
 // Icon shown for every collection until collections gain an icon field
@@ -298,13 +299,13 @@ const CollectionItem: React.FC<CollectionItemProps> = ({
 }) => {
   const { t } = useTranslation();
   const entry = DatabaseEntries.use(itemId);
+  const openView = Views.useOpenView();
 
   // Open the entry, using its database's configured open mode
   function handleOpenEntry() {
-    Events.dispatch<OpenDatabaseEntryViewEventData>(
-      OpenDatabaseEntryViewEvent,
-      { entryId: itemId },
-    );
+    openView<OpenDatabaseEntryViewEventData>(OpenDatabaseEntryViewEvent, {
+      entryId: itemId,
+    });
   }
 
   // Toggle the item's selected state
