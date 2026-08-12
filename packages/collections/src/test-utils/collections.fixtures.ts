@@ -1,6 +1,6 @@
 import { MockFileDescriptor } from '@minddrop/file-system';
 import { Collection } from '../types';
-import { getCollectionFilePath, getCollectionsDirPath } from '../utils';
+import { resolveCollectionFilePath, resolveCollectionsDirPath } from '../utils';
 
 function generateCollectionFixture(number: number): Collection {
   return {
@@ -36,9 +36,9 @@ export const collection_virtual_2 = generateVirtualCollectionFixture(2);
 export const collections_virtual = [collection_virtual_1, collection_virtual_2];
 
 export const collectionFiles: (string | MockFileDescriptor)[] = [
-  getCollectionsDirPath(),
+  resolveCollectionsDirPath(),
   ...collections.map((collection) => ({
-    path: getCollectionFilePath(collection.id),
+    path: resolveCollectionFilePath(collection.id),
     textContent: JSON.stringify(collection),
   })),
 ];

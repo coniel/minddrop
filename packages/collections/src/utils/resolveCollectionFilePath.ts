@@ -1,6 +1,6 @@
 import { Fs } from '@minddrop/file-system';
 import { CollectionFileExtension } from '../constants';
-import { getCollectionsDirPath } from './getCollectionsDirPath';
+import { resolveCollectionsDirPath } from './resolveCollectionsDirPath';
 
 /**
  * Returns the path to a collection file.
@@ -8,9 +8,9 @@ import { getCollectionsDirPath } from './getCollectionsDirPath';
  * @param id - The ID of the collection.
  * @returns The path to the collection file.
  */
-export function getCollectionFilePath(id: string) {
+export function resolveCollectionFilePath(id: string) {
   return Fs.concatPath(
-    getCollectionsDirPath(),
+    resolveCollectionsDirPath(),
     Fs.addFileExtension(id, CollectionFileExtension),
   );
 }

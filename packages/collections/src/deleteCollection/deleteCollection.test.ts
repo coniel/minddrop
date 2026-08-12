@@ -3,7 +3,7 @@ import { Events } from '@minddrop/events';
 import { CollectionsStore } from '../CollectionsStore';
 import { CollectionDeletedEvent } from '../events';
 import { MockFs, cleanup, collection_1, setup } from '../test-utils';
-import { getCollectionFilePath } from '../utils';
+import { resolveCollectionFilePath } from '../utils';
 import { deleteCollection } from './deleteCollection';
 
 describe('deleteCollection', () => {
@@ -20,7 +20,9 @@ describe('deleteCollection', () => {
   it('deletes the collection config from the file system', async () => {
     await deleteCollection(collection_1.id);
 
-    expect(MockFs.exists(getCollectionFilePath(collection_1.id))).toBe(false);
+    expect(MockFs.exists(resolveCollectionFilePath(collection_1.id))).toBe(
+      false,
+    );
   });
 
   it('dispatches the collection deleted event', async () =>

@@ -13,7 +13,7 @@ import { CollectionsLoadedEvent, CollectionsLoadedEventData } from '../events';
 import { locales } from '../locales';
 import { readCollection } from '../readCollection';
 import { Collection } from '../types';
-import { getCollectionsDirPath } from '../utils';
+import { resolveCollectionsDirPath } from '../utils';
 
 /**
  * Initializes collections by loading collection configs from the collections
@@ -25,7 +25,7 @@ export async function initializeCollections(): Promise<void> {
   // Register collection translations
   I18n.registerTranslations(locales);
 
-  const collectionsDirPath = getCollectionsDirPath();
+  const collectionsDirPath = resolveCollectionsDirPath();
 
   // Ensure that the collections directory exists
   await Fs.ensureDir(collectionsDirPath);

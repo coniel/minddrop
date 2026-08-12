@@ -7,7 +7,7 @@ import { CollectionsDirName } from '../constants';
  *
  * @returns The path to the collections directory.
  */
-export function getCollectionsDirPath() {
+export function resolveCollectionsDirPath() {
   return Fs.concatPath(
     Paths.workspace,
     Paths.hiddenDirName,

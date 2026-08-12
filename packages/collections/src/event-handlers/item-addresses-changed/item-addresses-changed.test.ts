@@ -8,7 +8,7 @@ import {
   setup,
 } from '../../test-utils';
 import { Collection } from '../../types';
-import { getCollectionFilePath } from '../../utils';
+import { resolveCollectionFilePath } from '../../utils';
 import { onItemAddressesChanged } from './item-addresses-changed';
 
 // The changed member's ID, present in collection_1 (and its virtual
@@ -39,7 +39,7 @@ describe('onItemAddressesChanged', () => {
     ]);
 
     const written = MockFs.readJsonFile<Collection>(
-      getCollectionFilePath(collection_1.id),
+      resolveCollectionFilePath(collection_1.id),
     );
 
     // The rewritten file holds freshly serialized member references
@@ -58,7 +58,7 @@ describe('onItemAddressesChanged', () => {
     ]);
 
     const written = MockFs.readJsonFile<Collection>(
-      getCollectionFilePath(collection_2.id),
+      resolveCollectionFilePath(collection_2.id),
     );
 
     // The unaffected file keeps its original raw member IDs

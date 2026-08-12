@@ -4,7 +4,7 @@ import { registerItemReferenceAdapter } from '@minddrop/item-references';
 import { CollectionsStore } from '../CollectionsStore';
 import { CollectionsLoadedEvent } from '../events';
 import { MockFs, cleanup, collections, setup } from '../test-utils';
-import { getCollectionFilePath, getCollectionsDirPath } from '../utils';
+import { resolveCollectionFilePath, resolveCollectionsDirPath } from '../utils';
 import { initializeCollections } from './initializeCollections';
 
 describe('initializeCollections', () => {
@@ -16,11 +16,11 @@ describe('initializeCollections', () => {
 
   it('creates the collections directory if it does not exist', async () => {
     // Remove the collections directory
-    MockFs.removeFile(getCollectionsDirPath());
+    MockFs.removeFile(resolveCollectionsDirPath());
 
     await initializeCollections();
 
-    expect(MockFs.exists(getCollectionsDirPath())).toBe(true);
+    expect(MockFs.exists(resolveCollectionsDirPath())).toBe(true);
   });
 
   it('loads collections from the collections directory into the store', async () => {
@@ -32,7 +32,7 @@ describe('initializeCollections', () => {
   it('filters out null collections', async () => {
     // Create an invalid collection file
     MockFs.writeTextFile(
-      getCollectionFilePath('invalid-collection'),
+      resolveCollectionFilePath('invalid-collection'),
       'invalid json',
     );
 

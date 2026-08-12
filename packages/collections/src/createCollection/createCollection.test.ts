@@ -3,7 +3,7 @@ import { Events } from '@minddrop/events';
 import { CollectionsStore } from '../CollectionsStore';
 import { CollectionCreatedEvent } from '../events';
 import { MockFs, cleanup, mockDate, setup } from '../test-utils';
-import { getCollectionFilePath } from '../utils';
+import { resolveCollectionFilePath } from '../utils';
 import { createCollection } from './createCollection';
 
 const newCollection = {
@@ -34,9 +34,9 @@ describe('createCollection', () => {
   it('writes the collection config to the file system', async () => {
     const collection = await createCollection();
 
-    expect(MockFs.readJsonFile(getCollectionFilePath(collection.id))).toEqual(
-      newCollection,
-    );
+    expect(
+      MockFs.readJsonFile(resolveCollectionFilePath(collection.id)),
+    ).toEqual(newCollection);
   });
 
   it('dispatches the collection created event', async () =>

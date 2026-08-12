@@ -3,7 +3,7 @@ import { Events } from '@minddrop/events';
 import { CollectionsStore } from '../CollectionsStore';
 import { CollectionUpdatedEvent, CollectionUpdatedEventData } from '../events';
 import { MockFs, cleanup, collection_1, mockDate, setup } from '../test-utils';
-import { getCollectionFilePath } from '../utils';
+import { resolveCollectionFilePath } from '../utils';
 import { addCollectionItems } from './addCollectionItems';
 
 const newItemIds = ['item-new-1', 'item-new-2'];
@@ -44,9 +44,9 @@ describe('addCollectionItems', () => {
   it('writes the collection config to the file system', async () => {
     const result = await addCollectionItems(collection_1.id, newItemIds);
 
-    expect(MockFs.readJsonFile(getCollectionFilePath(collection_1.id))).toEqual(
-      result,
-    );
+    expect(
+      MockFs.readJsonFile(resolveCollectionFilePath(collection_1.id)),
+    ).toEqual(result);
   });
 
   it('dispatches the collection updated event', async () =>

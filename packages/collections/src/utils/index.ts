@@ -1,3 +1,3 @@
-export * from './getCollectionFilePath';
-export * from './getCollectionsDirPath';
+export * from './resolveCollectionFilePath';
+export * from './resolveCollectionsDirPath';
 export * from './searchCollections';

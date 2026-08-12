@@ -2,7 +2,7 @@ import { Fs } from '@minddrop/file-system';
 import { serializeItemReferences } from '@minddrop/item-references';
 import { InvalidParameterError } from '@minddrop/utils';
 import { getCollection } from '../getCollection';
-import { getCollectionFilePath, getCollectionsDirPath } from '../utils';
+import { resolveCollectionFilePath, resolveCollectionsDirPath } from '../utils';
 
 /**
  * Writes a collection to the file system.
@@ -23,11 +23,11 @@ export async function writeCollection(id: string): Promise<void> {
   }
 
   // Ensure the collections directory exists
-  await Fs.ensureDir(getCollectionsDirPath());
+  await Fs.ensureDir(resolveCollectionsDirPath());
 
   // Convert the member item IDs into durable references
   const items = serializeItemReferences(collection.items);
 
   // Write the collection config
-  Fs.writeJsonFile(getCollectionFilePath(id), { ...collection, items });
+  Fs.writeJsonFile(resolveCollectionFilePath(id), { ...collection, items });
 }

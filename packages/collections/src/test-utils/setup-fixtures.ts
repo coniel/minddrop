@@ -1,7 +1,7 @@
 import { MockFileSystem } from '@minddrop/file-system';
 import { unregisterItemReferenceAdapter } from '@minddrop/item-references';
 import { CollectionsStore } from '../CollectionsStore';
-import { getCollectionsDirPath } from '../utils';
+import { resolveCollectionsDirPath } from '../utils';
 import {
   collectionFiles,
   collections,
@@ -23,7 +23,7 @@ export function setupCollectionFixtures(
   },
 ) {
   // Create the collections directory
-  MockFs.createDir(getCollectionsDirPath(), { recursive: true });
+  MockFs.createDir(resolveCollectionsDirPath(), { recursive: true });
 
   if (options.loadCollections !== false) {
     // Load collections into the store

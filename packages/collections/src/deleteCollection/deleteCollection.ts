@@ -3,7 +3,7 @@ import { Fs } from '@minddrop/file-system';
 import { CollectionsStore } from '../CollectionsStore';
 import { CollectionDeletedEvent, CollectionDeletedEventData } from '../events';
 import { getCollection } from '../getCollection';
-import { getCollectionFilePath } from '../utils';
+import { resolveCollectionFilePath } from '../utils';
 
 /**
  * Deletes a collection, removing it from the store and deleting it from the
@@ -22,7 +22,7 @@ export async function deleteCollection(collectionId: string): Promise<void> {
 
   // Delete the collection file from the file system if not virtual
   if (!collection.virtual) {
-    await Fs.removeFile(getCollectionFilePath(collectionId));
+    await Fs.removeFile(resolveCollectionFilePath(collectionId));
   }
 
   // Dispatch the collection deleted event

@@ -5,7 +5,7 @@ import { CollectionsStore } from '../CollectionsStore';
 import { CollectionNotFoundError } from '../errors';
 import { MockFs, cleanup, collection_1, setup } from '../test-utils';
 import { Collection } from '../types';
-import { getCollectionFilePath, getCollectionsDirPath } from '../utils';
+import { resolveCollectionFilePath, resolveCollectionsDirPath } from '../utils';
 import { writeCollection } from './writeCollection';
 
 describe('writeCollection', () => {
@@ -30,11 +30,11 @@ describe('writeCollection', () => {
 
   it('creates the collections directory if it does not exist', async () => {
     // Remove the collections directory
-    MockFs.removeDir(getCollectionsDirPath());
+    MockFs.removeDir(resolveCollectionsDirPath());
 
     await writeCollection(collection_1.id);
 
-    expect(MockFs.exists(getCollectionsDirPath())).toBe(true);
+    expect(MockFs.exists(resolveCollectionsDirPath())).toBe(true);
   });
 
   it('writes the collection config to the file system', async () => {
@@ -42,7 +42,7 @@ describe('writeCollection', () => {
 
     // Get the written collection config from the file system
     const collection = MockFs.readJsonFile(
-      getCollectionFilePath(collection_1.id),
+      resolveCollectionFilePath(collection_1.id),
     );
 
     expect(collection).toEqual(collection_1);
@@ -59,7 +59,7 @@ describe('writeCollection', () => {
     await writeCollection(collection_1.id);
 
     const collection = MockFs.readJsonFile<Collection>(
-      getCollectionFilePath(collection_1.id),
+      resolveCollectionFilePath(collection_1.id),
     );
 
     // The written items should be serialized references

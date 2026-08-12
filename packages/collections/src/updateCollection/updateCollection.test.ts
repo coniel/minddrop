@@ -11,7 +11,7 @@ import {
   setup,
 } from '../test-utils';
 import { Collection } from '../types';
-import { getCollectionFilePath } from '../utils';
+import { resolveCollectionFilePath } from '../utils';
 import { updateCollection } from './updateCollection';
 
 const update = {
@@ -37,9 +37,9 @@ describe('updateCollection', () => {
   it('writes the collection config to the file system', async () => {
     await updateCollection(collection_1.id, update);
 
-    expect(MockFs.readJsonFile(getCollectionFilePath(collection_1.id))).toEqual(
-      updatedCollection,
-    );
+    expect(
+      MockFs.readJsonFile(resolveCollectionFilePath(collection_1.id)),
+    ).toEqual(updatedCollection);
   });
 
   it('returns the updated collection', async () => {
@@ -51,9 +51,9 @@ describe('updateCollection', () => {
   it('does not write virtual collections to the file system', async () => {
     await updateCollection(collection_virtual_1.id, { name: 'Updated' });
 
-    expect(MockFs.exists(getCollectionFilePath(collection_virtual_1.id))).toBe(
-      false,
-    );
+    expect(
+      MockFs.exists(resolveCollectionFilePath(collection_virtual_1.id)),
+    ).toBe(false);
   });
 
   it('updates the ID of a virtual collection', async () => {

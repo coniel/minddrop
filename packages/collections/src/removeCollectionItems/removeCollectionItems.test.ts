@@ -3,7 +3,7 @@ import { Events } from '@minddrop/events';
 import { CollectionsStore } from '../CollectionsStore';
 import { CollectionUpdatedEvent, CollectionUpdatedEventData } from '../events';
 import { MockFs, cleanup, collection_1, mockDate, setup } from '../test-utils';
-import { getCollectionFilePath } from '../utils';
+import { resolveCollectionFilePath } from '../utils';
 import { removeCollectionItems } from './removeCollectionItems';
 
 describe('removeCollectionItems', () => {
@@ -49,9 +49,9 @@ describe('removeCollectionItems', () => {
       collection_1.items[0],
     ]);
 
-    expect(MockFs.readJsonFile(getCollectionFilePath(collection_1.id))).toEqual(
-      result,
-    );
+    expect(
+      MockFs.readJsonFile(resolveCollectionFilePath(collection_1.id)),
+    ).toEqual(result);
   });
 
   it('dispatches the collection updated event', async () =>
