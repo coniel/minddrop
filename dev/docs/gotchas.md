@@ -350,6 +350,47 @@ against earlier commits) and do not indicate a problem in the
 queries package; the same files typecheck fine through
 `features/queries`, whose tsconfig sets `jsx`.
 
+## ui/theme
+
+### Dark mode image dimming thresholds are provisional
+
+`classifyImageBrightness` decides which images the dark mode
+treatments apply to, using two fractions measured server side by
+`apps/desktop-electrobun/src/bun/imageStats.ts`: `brightFraction`
+(share of pixels above luminance 0.7, threshold 0.06) and
+`nearWhiteFraction` (above 0.85, threshold 0.4).
+
+`brightFraction` deliberately measures bright _area_ rather than
+average luminance. An earlier mean-luminance rule missed obviously
+glaring photos, because a bright subject against dark surroundings
+averages out to a middling value: a sunlit photo that reads as bright
+measured a mean of 0.45 while having 23% of its pixels above 0.7. The
+feature exists to stop a bright image hurting in dark mode, so a dark
+image with a bright patch should still be dimmed.
+
+The 0.06 threshold was calibrated against a single image and is
+expected to need revisiting once there is more variety to test with.
+False positives are cheap here (a slightly dimmed image), false
+negatives are the actual failure, so err low. To re-measure, run the
+analysis from `imageStats.ts` over sample images from within
+`apps/desktop-electrobun` (sharp resolves there).
+
+Note also that dimming is a whole-image `brightness()` multiply, so a
+mostly-dark image tripping the threshold on one bright patch has its
+shadows darkened too. Only-touch-the-highlights needs a tone curve,
+which means an SVG filter, which is too slow (see below).
+
+### Dark mode image effects must use native CSS filter functions
+
+`images.css` dims with `brightness()` and inverts with
+`invert()`/`hue-rotate()`. An SVG `filter: url(#...)` reference gives
+a much better tone curve (a gamma curve darkens highlights while
+leaving shadows intact, where `brightness()` scales everything) but
+Chromium rasterises reference filters on the CPU on every repaint. On
+a transformed element such as `ImageViewer`, that re-runs per frame
+during zoom and pan: images take seconds to appear and vanish while
+panning. Do not reintroduce one for image treatments.
+
 ## ui/primitives
 
 ### Grouped Combobox lists are never virtualized
@@ -603,6 +644,51 @@ therefore look broken outside Mac. A real fix means joining with `+`
 shortcuts in always-visible UI text where the mangling is prominent.
 
 ## apps/desktop-electrobun
+
+### The image viewer always loads the full resolution original
+
+Every other image consumer passes a measured width to `useImageSrc`
+and gets a bracketed downscaled variant. `ImageViewerDesignElement`
+passes none, so the viewer always fetches the original — a different
+URL from the variant a card already loaded, so opening an image from a
+card starts a fresh download rather than hitting the browser cache.
+
+This was masked as of the dark-mode-image-dimming work: the viewer now
+lays out from the intrinsic dimensions in the image stats index and
+fills the space with the image's average colour, so there is no longer
+a flash of empty container. Only tested against ~300 KB images though,
+where the download is negligible. Larger photos will spend real time
+in decode with the placeholder showing.
+
+If it needs fixing, the shape is: load the bracketed variant first
+(often already browser cached from the card), then swap to the
+original once the user zooms past the variant's resolution. The thing
+that used to block this is already solved — the viewer's zoom
+percentages read `naturalSize`, which now comes from the stats index
+rather than `img.naturalWidth`, so they stay correct against the
+original while a downscaled variant is on screen.
+
+### The resized image cache is only bounded by size, never cleaned up
+
+`getResizedImage` keys variants on `hash(sourcePath + mtime)`, so
+deleting, renaming, or editing a source image orphans its variants
+rather than removing them. Nothing hooks those events, and the
+filename is a one-way hash so the orphans cannot be traced back to a
+source. The only reclamation is `pruneImageCache()`, which runs once
+at startup and deletes oldest-first until the directory is back under
+500 MB.
+
+Correctness is never at risk: the mtime in the key means a stale
+variant cannot be served for a changed image, so this is wasted disk
+only. Two weaknesses if it is ever worth improving: the prune sorts by
+the cache file's write time and reads do not touch it, so it is FIFO
+rather than LRU and can evict variants that are in daily use; and
+running only at launch means a long session stays over the limit until
+the next restart.
+
+Note that `image-stats.json` deliberately lives **outside** the cache
+directory, both so the prune cannot delete it and because it cleans
+itself up (see `initializeImageStats`).
 
 ### Sharp's native bindings are only shipped for the build machine's platform
 
