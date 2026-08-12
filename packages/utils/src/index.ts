@@ -23,6 +23,7 @@ export * from './isSerializedDate';
 export * from './isUntitledTitle';
 export * from './isUrl';
 export * from './isValidUrl';
+export * from './joinClassNames';
 export * from './parseDateOrNow';
 export * from './reorderArray';
 export * from './sameIds';
