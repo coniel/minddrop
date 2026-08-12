@@ -22,6 +22,8 @@
   },
   "dependencies": {
     "@minddrop/events": "workspace:*",
-    "@minddrop/stores": "workspace:*"
+    "@minddrop/i18n": "workspace:*",
+    "@minddrop/stores": "workspace:*",
+    "@minddrop/ui-icons": "workspace:*"
   }
 }
