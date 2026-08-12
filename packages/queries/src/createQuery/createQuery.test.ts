@@ -3,7 +3,7 @@ import { Events } from '@minddrop/events';
 import { QueriesStore } from '../QueriesStore';
 import { QueryCreatedEvent } from '../events';
 import { MockFs, cleanup, mockDate, setup } from '../test-utils';
-import { getQueryFilePath } from '../utils';
+import { resolveQueryFilePath } from '../utils';
 import { createQuery } from './createQuery';
 
 const newQuery = {
@@ -49,7 +49,9 @@ describe('createQuery', () => {
   it('writes the query config to the file system', async () => {
     const query = await createQuery();
 
-    expect(MockFs.readJsonFile(getQueryFilePath(query.id))).toEqual(newQuery);
+    expect(MockFs.readJsonFile(resolveQueryFilePath(query.id))).toEqual(
+      newQuery,
+    );
   });
 
   it('dispatches the query created event', async () =>

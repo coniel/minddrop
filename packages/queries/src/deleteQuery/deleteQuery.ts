@@ -3,7 +3,7 @@ import { Fs } from '@minddrop/file-system';
 import { QueriesStore } from '../QueriesStore';
 import { QueryDeletedEvent, QueryDeletedEventData } from '../events';
 import { getQuery } from '../getQuery';
-import { getQueryFilePath } from '../utils';
+import { resolveQueryFilePath } from '../utils';
 
 /**
  * Deletes a query, removing it from the store and deleting it from the file
@@ -21,7 +21,7 @@ export async function deleteQuery(queryId: string): Promise<void> {
   QueriesStore.remove(queryId);
 
   // Delete the query config from the file system
-  await Fs.removeFile(getQueryFilePath(queryId));
+  await Fs.removeFile(resolveQueryFilePath(queryId));
 
   // Dispatch the query deleted event
   Events.dispatch<QueryDeletedEventData>(QueryDeletedEvent, query);

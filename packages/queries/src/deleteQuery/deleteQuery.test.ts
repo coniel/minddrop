@@ -3,7 +3,7 @@ import { Events } from '@minddrop/events';
 import { QueriesStore } from '../QueriesStore';
 import { QueryDeletedEvent } from '../events';
 import { MockFs, cleanup, query_1, setup } from '../test-utils';
-import { getQueryFilePath } from '../utils';
+import { resolveQueryFilePath } from '../utils';
 import { deleteQuery } from './deleteQuery';
 
 describe('deleteQuery', () => {
@@ -20,7 +20,7 @@ describe('deleteQuery', () => {
   it('deletes the query config from the file system', async () => {
     await deleteQuery(query_1.id);
 
-    expect(MockFs.exists(getQueryFilePath(query_1.id))).toBe(false);
+    expect(MockFs.exists(resolveQueryFilePath(query_1.id))).toBe(false);
   });
 
   it('dispatches the query deleted event', async () =>

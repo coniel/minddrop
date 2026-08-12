@@ -7,6 +7,6 @@ import { QueriesDirName } from '../constants';
  *
  * @returns The path to the queries directory.
  */
-export function getQueriesDirPath() {
+export function resolveQueriesDirPath() {
   return Fs.concatPath(Paths.workspace, Paths.hiddenDirName, QueriesDirName);
 }

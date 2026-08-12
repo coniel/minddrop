@@ -3,7 +3,7 @@ import { Fs } from '@minddrop/file-system';
 import { QueriesStore } from '../QueriesStore';
 import { QueriesLoadedEvent, QueriesLoadedEventData } from '../events';
 import { readQuery } from '../readQuery';
-import { getQueriesDirPath } from '../utils';
+import { resolveQueriesDirPath } from '../utils';
 
 /**
  * Initializes queries by loading query configs from the queries directory.
@@ -11,7 +11,7 @@ import { getQueriesDirPath } from '../utils';
  * If the queries directory does not exist, it will be created.
  */
 export async function initializeQueries(): Promise<void> {
-  const queriesDirPath = getQueriesDirPath();
+  const queriesDirPath = resolveQueriesDirPath();
 
   // Ensure that the queries directory exists
   await Fs.ensureDir(queriesDirPath);

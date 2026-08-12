@@ -1,6 +1,6 @@
 import { MockFileSystem } from '@minddrop/file-system';
 import { QueriesStore } from '../QueriesStore';
-import { getQueriesDirPath } from '../utils';
+import { resolveQueriesDirPath } from '../utils';
 import { queries, queryFiles } from './queries.fixtures';
 
 export interface SetupQueryFixturesOptions {
@@ -16,7 +16,7 @@ export function setupQueryFixtures(
   },
 ) {
   // Create the queries directory
-  MockFs.createDir(getQueriesDirPath(), { recursive: true });
+  MockFs.createDir(resolveQueriesDirPath(), { recursive: true });
 
   if (options.loadQueries !== false) {
     // Load queries into the store

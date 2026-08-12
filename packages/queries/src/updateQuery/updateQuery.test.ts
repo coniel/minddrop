@@ -4,7 +4,7 @@ import { QueriesStore } from '../QueriesStore';
 import { QueryUpdatedEvent, QueryUpdatedEventData } from '../events';
 import { MockFs, cleanup, mockDate, query_1, setup } from '../test-utils';
 import { Query } from '../types';
-import { getQueryFilePath } from '../utils';
+import { resolveQueryFilePath } from '../utils';
 import { updateQuery } from './updateQuery';
 
 const update = {
@@ -30,7 +30,7 @@ describe('updateQuery', () => {
   it('writes the query config to the file system', async () => {
     await updateQuery(query_1.id, update);
 
-    expect(MockFs.readJsonFile(getQueryFilePath(query_1.id))).toEqual(
+    expect(MockFs.readJsonFile(resolveQueryFilePath(query_1.id))).toEqual(
       updatedQuery,
     );
   });

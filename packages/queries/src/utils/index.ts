@@ -1,5 +1,5 @@
-export * from './getQueryFilePath';
-export * from './getQueriesDirPath';
+export * from './resolveQueryFilePath';
+export * from './resolveQueriesDirPath';
 export * from './createQueryNode';
 export * from './updateQueryNode';
 export * from './removeQueryNode';

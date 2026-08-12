@@ -3,7 +3,7 @@ import { Events } from '@minddrop/events';
 import { QueriesStore } from '../QueriesStore';
 import { QueriesLoadedEvent } from '../events';
 import { MockFs, cleanup, queries, setup } from '../test-utils';
-import { getQueriesDirPath, getQueryFilePath } from '../utils';
+import { resolveQueriesDirPath, resolveQueryFilePath } from '../utils';
 import { initializeQueries } from './initializeQueries';
 
 describe('initializeQueries', () => {
@@ -13,11 +13,11 @@ describe('initializeQueries', () => {
 
   it('creates the queries directory if it does not exist', async () => {
     // Remove the queries directory
-    MockFs.removeFile(getQueriesDirPath());
+    MockFs.removeFile(resolveQueriesDirPath());
 
     await initializeQueries();
 
-    expect(MockFs.exists(getQueriesDirPath())).toBe(true);
+    expect(MockFs.exists(resolveQueriesDirPath())).toBe(true);
   });
 
   it('loads queries from the queries directory into the store', async () => {
@@ -28,7 +28,7 @@ describe('initializeQueries', () => {
 
   it('filters out null queries', async () => {
     // Create an invalid query file
-    MockFs.writeTextFile(getQueryFilePath('invalid-query'), 'invalid json');
+    MockFs.writeTextFile(resolveQueryFilePath('invalid-query'), 'invalid json');
 
     await initializeQueries();
 

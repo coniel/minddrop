@@ -1,6 +1,6 @@
 import { Fs } from '@minddrop/file-system';
 import { getQuery } from '../getQuery';
-import { getQueriesDirPath, getQueryFilePath } from '../utils';
+import { resolveQueriesDirPath, resolveQueryFilePath } from '../utils';
 
 /**
  * Writes a query to the file system.
@@ -13,8 +13,8 @@ export async function writeQuery(id: string): Promise<void> {
   const query = getQuery(id);
 
   // Ensure the queries directory exists
-  await Fs.ensureDir(getQueriesDirPath());
+  await Fs.ensureDir(resolveQueriesDirPath());
 
   // Write the query config to the file system
-  Fs.writeJsonFile(getQueryFilePath(id), query);
+  Fs.writeJsonFile(resolveQueryFilePath(id), query);
 }

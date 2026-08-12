@@ -1,6 +1,6 @@
 import { MockFileDescriptor } from '@minddrop/file-system';
 import { Query } from '../types';
-import { getQueriesDirPath, getQueryFilePath } from '../utils';
+import { resolveQueriesDirPath, resolveQueryFilePath } from '../utils';
 
 function generateQueryFixture(number: number): Query {
   return {
@@ -55,9 +55,9 @@ export const query_3 = generateQueryFixture(3);
 export const queries = [query_1, query_2, query_3];
 
 export const queryFiles: (string | MockFileDescriptor)[] = [
-  getQueriesDirPath(),
+  resolveQueriesDirPath(),
   ...queries.map((query) => ({
-    path: getQueryFilePath(query.id),
+    path: resolveQueryFilePath(query.id),
     textContent: JSON.stringify(query),
   })),
 ];

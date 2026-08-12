@@ -1,6 +1,6 @@
 import { Fs } from '@minddrop/file-system';
 import { QueryFileExtension } from '../constants';
-import { getQueriesDirPath } from './getQueriesDirPath';
+import { resolveQueriesDirPath } from './resolveQueriesDirPath';
 
 /**
  * Returns the path to a query file.
@@ -8,9 +8,9 @@ import { getQueriesDirPath } from './getQueriesDirPath';
  * @param id - The ID of the query.
  * @returns The path to the query file.
  */
-export function getQueryFilePath(id: string) {
+export function resolveQueryFilePath(id: string) {
   return Fs.concatPath(
-    getQueriesDirPath(),
+    resolveQueriesDirPath(),
     Fs.addFileExtension(id, QueryFileExtension),
   );
 }
