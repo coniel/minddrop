@@ -11,7 +11,7 @@ import { createDesign } from './createDesign';
 const newDesign: Design = {
   id: expect.any(String) as unknown as DesignId,
   name: 'Books',
-  properties: [],
+  properties: expect.any(Array) as unknown as Design['properties'],
   layouts: [],
   created: expect.any(Date) as unknown as Date,
   lastModified: expect.any(Date) as unknown as Date,
@@ -40,6 +40,19 @@ describe('createDesign', () => {
     const result = await createDesign('Books');
 
     expect(MockFs.exists(resolveDesignFilePath(result.id))).toBe(true);
+  });
+
+  it('adds the entry metadata properties', async () => {
+    const result = await createDesign('Books');
+
+    expect(result.properties).toEqual([
+      expect.objectContaining({ type: 'title', name: 'Title' }),
+      expect.objectContaining({ type: 'created', name: 'Created' }),
+      expect.objectContaining({
+        type: 'last-modified',
+        name: 'Last modified',
+      }),
+    ]);
   });
 
   it('defaults the design name to the localized new design label', async () => {
