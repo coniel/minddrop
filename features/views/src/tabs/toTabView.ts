@@ -1,6 +1,5 @@
 import { ViewDescriptor } from '@minddrop/events';
 import { TabView } from './TabSetsStore';
-import { DEFAULT_ICON } from './tabsConstants';
 
 /**
  * Converts a view descriptor into a tab view.
@@ -13,13 +12,14 @@ export function toTabView(descriptor: ViewDescriptor | null): TabView | null {
     return null;
   }
 
-  // Map the descriptor onto a tab view, defaulting the icon
+  // Map the descriptor onto a tab view, leaving the icon unset when
+  // the view provides none so it resolves from its registration
   return {
     view: descriptor.view,
     id: descriptor.id,
     props: descriptor.props,
     title: descriptor.title,
-    icon: descriptor.icon ?? DEFAULT_ICON,
+    icon: descriptor.icon,
     breadcrumbs: descriptor.breadcrumbs,
   };
 }

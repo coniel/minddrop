@@ -29,9 +29,11 @@ export interface TabView {
   title?: string;
 
   /**
-   * The tab's icon as a serializable icon string.
+   * The tab's icon as a serializable icon string, when it is specific
+   * to the entity shown (e.g. a database's icon). Views with a fixed
+   * icon leave it unset and are iconed from their registration.
    */
-  icon: string;
+  icon?: string;
 
   /**
    * Descriptors of the view's ancestor views, ordered root first,

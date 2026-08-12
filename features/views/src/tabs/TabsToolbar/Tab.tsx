@@ -1,11 +1,11 @@
 import { FC } from 'react';
 import { createI18nKeyBuilder, useTranslation } from '@minddrop/i18n';
 import { SortableItemRenderProps } from '@minddrop/ui-drag-and-drop';
-import { ContentIcon, Icon, TabsTab } from '@minddrop/ui-primitives';
+import { Icon, IconRenderer, TabsTab } from '@minddrop/ui-primitives';
 import { Tab as TabData } from '../TabSetsStore';
 import { closeTab } from '../closeTab';
+import { getTabIcon } from '../getTabIcon';
 import { getTabLabel } from '../getTabLabel';
-import { DEFAULT_ICON } from '../tabsConstants';
 
 const tabsI18nKey = createI18nKeyBuilder('tabs.');
 
@@ -45,11 +45,11 @@ export const Tab: FC<TabProps> = ({
 
   const { ref, handleProps, style, className } = sortable;
 
-  // Use the view's icon, or a default when the tab is blank
-  const icon = tab.main?.icon ?? DEFAULT_ICON;
+  // The view's icon, its registered icon, or a default
+  const icon = getTabIcon(tab);
 
   // The tab's label, combining both pane titles when it is split
-  const label = getTabLabel(tab, t(tabsI18nKey('new')));
+  const label = getTabLabel(tab, t(tabsI18nKey('new')), t);
 
   // Close the tab, keeping the click from also activating it
   function handleClose(event: React.MouseEvent) {
@@ -82,7 +82,7 @@ export const Tab: FC<TabProps> = ({
       value={tab.id}
       className={['view-tab', className].filter(Boolean).join(' ')}
       style={style}
-      startIcon={<ContentIcon icon={icon} />}
+      startIcon={<IconRenderer icon={icon} />}
       onAuxClick={handleAuxClick}
       onContextMenu={handleContextMenu}
       {...handleProps}
