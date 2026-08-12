@@ -15,7 +15,7 @@ import type { StyleCategory } from './types';
 
 const colorNames: string[] = ContentColors;
 
-function getContentColorCss(
+function resolveContentColorCss(
   color: string,
   shade: number,
   fallback: string,
@@ -31,12 +31,12 @@ function getContentColorCss(
   return `var(--${color}-${shade})`;
 }
 
-function getBackgroundColorCss(color: string, opacity?: number): string {
+function resolveBackgroundColorCss(color: string, opacity?: number): string {
   if (color === 'transparent') {
     return 'transparent';
   }
 
-  const colorValue = getContentColorCss(color, 100, 'var(--surface-paper)');
+  const colorValue = resolveContentColorCss(color, 100, 'var(--surface-paper)');
 
   // Apply opacity to the background color value so it doesn't
   // affect child element opacity
@@ -53,8 +53,8 @@ function getBackgroundColorCss(color: string, opacity?: number): string {
   return colorValue;
 }
 
-function getBorderColorCss(color: string): string {
-  return getContentColorCss(color, 600, 'var(--surface-paper)');
+function resolveBorderColorCss(color: string): string {
+  return resolveContentColorCss(color, 600, 'var(--surface-paper)');
 }
 
 function resolveFontFamily(family: string): string {
@@ -106,7 +106,7 @@ function resolveBorderCss(style: {
   return {
     borderStyle: style.borderStyle,
     borderWidth: `${style.borderTopWidth}px ${style.borderRightWidth}px ${style.borderBottomWidth}px ${style.borderLeftWidth}px`,
-    borderColor: getBorderColorCss(style.borderColor),
+    borderColor: resolveBorderColorCss(style.borderColor),
     borderRadius: `${style.borderRadiusTopLeft}px ${style.borderRadiusTopRight}px ${style.borderRadiusBottomRight}px ${style.borderRadiusBottomLeft}px`,
   };
 }
@@ -148,7 +148,7 @@ export function createTextCssStyle(style: TextElementStyle): CSSProperties {
     letterSpacing: `${style['letter-spacing']}em`,
     textAlign: style['text-align'],
     textTransform: style['text-transform'],
-    color: getContentColorCss(style.color, 900, 'inherit'),
+    color: resolveContentColorCss(style.color, 900, 'inherit'),
     fontStyle: style.italic ? 'italic' : 'normal',
     textDecoration: style.underline ? 'underline' : 'none',
     maxWidth: style['max-width'] > 0 ? `${style['max-width']}px` : undefined,
@@ -190,7 +190,7 @@ export function createContainerCssStyle(
     minHeight: style.minHeight ? `${style.minHeight}px` : undefined,
     fontFamily: resolveFontFamily(style['font-family']),
     fontWeight: style['font-weight'],
-    color: getContentColorCss(style.color, 900, 'inherit'),
+    color: resolveContentColorCss(style.color, 900, 'inherit'),
     // When gradient overlay is active, background color goes on the
     // overlay so it gets masked by the gradient too.
     // Opacity is applied to the background color (not the element)
@@ -198,7 +198,7 @@ export function createContainerCssStyle(
     backgroundColor:
       style.backdropBlurGradient && style.backdropBlur > 0
         ? 'transparent'
-        : getBackgroundColorCss(style.backgroundColor, style.opacity),
+        : resolveBackgroundColorCss(style.backgroundColor, style.opacity),
     ...resolveBorderCss(style),
     overflow: 'hidden',
   };
@@ -280,7 +280,7 @@ export function createBackdropGradientOverlayStyle(
   return {
     position: 'absolute',
     inset: 0,
-    backgroundColor: getBackgroundColorCss(
+    backgroundColor: resolveBackgroundColorCss(
       style.backgroundColor,
       style.opacity,
     ),
@@ -298,7 +298,7 @@ export function createIconCssStyle(style: IconElementStyle): CSSProperties {
     // Use container size if set, otherwise fall back to icon size
     width: style.containerSize > 0 ? `${style.containerSize}px` : undefined,
     height: style.containerSize > 0 ? `${style.containerSize}px` : undefined,
-    backgroundColor: getBackgroundColorCss(style.containerBackgroundColor),
+    backgroundColor: resolveBackgroundColorCss(style.containerBackgroundColor),
     borderRadius: style.containerRound
       ? '50%'
       : style.containerBorderRadius > 0
@@ -339,7 +339,7 @@ export function createViewCssStyle(style: ViewElementStyle): CSSProperties {
   return {
     ...resolveSizingCss(style, '100%'),
     ...resolveBorderCss(style),
-    backgroundColor: getBackgroundColorCss(style.backgroundColor),
+    backgroundColor: resolveBackgroundColorCss(style.backgroundColor),
     ...resolveMarginCss(style),
   };
 }
@@ -367,7 +367,7 @@ export function createEditorCssStyle(style: EditorElementStyle): CSSProperties {
     ...resolveBorderCss(style),
     fontFamily: resolveFontFamily(style['font-family']),
     fontWeight: style['font-weight'],
-    color: getContentColorCss(style.color, 900, 'inherit'),
+    color: resolveContentColorCss(style.color, 900, 'inherit'),
     opacity: style.opacity,
     ...resolveMarginCss(style),
   };
@@ -388,7 +388,7 @@ export function createEditorTitleCssStyle(
     lineHeight: style['title-line-height'],
     letterSpacing: `${style['title-letter-spacing']}em`,
     textAlign: style['title-text-align'],
-    color: getContentColorCss(style['title-color'], 900, 'inherit'),
+    color: resolveContentColorCss(style['title-color'], 900, 'inherit'),
     fontStyle: style['title-italic'] ? 'italic' : 'normal',
     textDecoration: style['title-underline'] ? 'underline' : 'none',
     opacity: style['title-opacity'],
@@ -451,7 +451,7 @@ export function createBackdropImageWrapperStyle(
  * is set (no meaningful color), returns just the image URL. When no
  * image is set, returns nothing so background-color applies normally.
  */
-export function getBackgroundImageStyle(
+export function resolveBackgroundImageStyle(
   imageSrc: string | null,
   backgroundColor: CSSProperties['backgroundColor'],
 ): CSSProperties {

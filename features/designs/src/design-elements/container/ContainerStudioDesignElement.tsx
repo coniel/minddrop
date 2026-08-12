@@ -2,7 +2,7 @@ import { CSSProperties, useCallback } from 'react';
 import {
   createBackdropImageWrapperStyle,
   createContainerCssStyle,
-  getBackgroundImageStyle,
+  resolveBackgroundImageStyle,
   resolveContainerBackdrop,
 } from '@minddrop/designs';
 import { Fs } from '@minddrop/file-system';
@@ -19,7 +19,7 @@ import {
 } from '../../types';
 import { useElementPlaceholderImage } from '../../useElementPlaceholder';
 import { useMediaFilePath } from '../../useMediaFilePath';
-import { getRegionFlexStyle } from '../../utils';
+import { resolveRegionFlexStyle } from '../../utils';
 
 export interface ContainerStudioDesignElementProps {
   /**
@@ -78,7 +78,10 @@ export const ContainerStudioDesignElement: React.FC<
   const containerCssStyle = {
     ...baseContainerStyle,
     ...(!hasBackdropWithImage &&
-      getBackgroundImageStyle(imageSrc, baseContainerStyle.backgroundColor)),
+      resolveBackgroundImageStyle(
+        imageSrc,
+        baseContainerStyle.backgroundColor,
+      )),
     // Ensure the container has a visible size when empty
     ...(isEmpty && {
       minHeight: 80,
@@ -86,7 +89,7 @@ export const ContainerStudioDesignElement: React.FC<
       backgroundColor: 'var(--neutral-400)',
     }),
     // Panelled page root regions: panels stay fixed-width, content grows
-    ...getRegionFlexStyle(element),
+    ...resolveRegionFlexStyle(element),
   };
 
   const children = isEmpty ? (

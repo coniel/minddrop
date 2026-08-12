@@ -4,7 +4,7 @@ import {
   PagePanelElement,
   createBackdropImageWrapperStyle,
   createContainerCssStyle,
-  getBackgroundImageStyle,
+  resolveBackgroundImageStyle,
   resolveContainerBackdrop,
 } from '@minddrop/designs';
 import { Fs } from '@minddrop/file-system';
@@ -13,7 +13,7 @@ import { DesignElement } from '../../DesignElements/DesignElement';
 import { useElementProperty } from '../../DesignPropertiesProvider';
 import { useElementPlaceholderImage } from '../../useElementPlaceholder';
 import { useMediaFilePath } from '../../useMediaFilePath';
-import { getRegionFlexStyle } from '../../utils';
+import { resolveRegionFlexStyle } from '../../utils';
 
 export interface ContainerDesignElementProps {
   /**
@@ -66,12 +66,12 @@ export const ContainerDesignElement: React.FC<ContainerDesignElementProps> = ({
   const containerCssStyle = {
     ...baseContainerStyle,
     ...(!hasBackdropWithImage &&
-      getBackgroundImageStyle(
+      resolveBackgroundImageStyle(
         paintedImageSrc,
         baseContainerStyle.backgroundColor,
       )),
     // Panelled page root regions: panels stay fixed-width, content grows
-    ...getRegionFlexStyle(element),
+    ...resolveRegionFlexStyle(element),
   };
 
   const children = element.children.map((child) => (

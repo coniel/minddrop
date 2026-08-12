@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import {
   createBackdropImageWrapperStyle,
   createElementCssStyle,
-  getBackgroundImageStyle,
+  resolveBackgroundImageStyle,
   resolveContainerBackdrop,
 } from '@minddrop/designs';
 import { Fs } from '@minddrop/file-system';
@@ -100,7 +100,10 @@ export const DesignStudioRootElement: React.FC<
   const containerCssStyle = {
     ...baseContainerStyle,
     ...(!hasBackdropWithImage &&
-      getBackgroundImageStyle(imageSrc, baseContainerStyle.backgroundColor)),
+      resolveBackgroundImageStyle(
+        imageSrc,
+        baseContainerStyle.backgroundColor,
+      )),
   };
 
   // Paint transparent layout backgrounds in the canvas colour so the

@@ -9,7 +9,7 @@ import { CSSProperties } from 'react';
  * @param element - The element to size.
  * @returns The flex sizing style.
  */
-export function getRegionFlexStyle(element: {
+export function resolveRegionFlexStyle(element: {
   type: string;
   role?: string;
 }): CSSProperties {

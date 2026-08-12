@@ -20,7 +20,7 @@ const colorNames = [
  * @param fallback - The fallback value for 'default' or unknown colors.
  * @returns A CSS color value string.
  */
-export function getContentColorCss(
+export function resolveContentColorCss(
   color: string,
   shade: number,
   fallback: string,

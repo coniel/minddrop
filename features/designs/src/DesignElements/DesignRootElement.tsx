@@ -3,7 +3,7 @@ import {
   RootElement,
   createBackdropImageWrapperStyle,
   createElementCssStyle,
-  getBackgroundImageStyle,
+  resolveBackgroundImageStyle,
   resolveContainerBackdrop,
 } from '@minddrop/designs';
 import { Fs } from '@minddrop/file-system';
@@ -69,7 +69,7 @@ export const DesignRootElement: React.FC<DesignRootElementProps> = ({
   const containerCssStyle = {
     ...baseContainerStyle,
     ...(!hasBackdropWithImage &&
-      getBackgroundImageStyle(
+      resolveBackgroundImageStyle(
         paintedImageSrc,
         baseContainerStyle.backgroundColor,
       )),
