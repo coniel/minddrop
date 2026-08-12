@@ -10,5 +10,7 @@ export function registerDesignViews(): void {
   Views.register({
     type: DesignStudioViewName,
     component: DesignStudio,
+    title: 'designStudio.title',
+    icon: 'palette',
   });
 }

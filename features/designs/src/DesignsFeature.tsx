@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { Events, OpenViewEvent, OpenViewEventData } from '@minddrop/events';
-import { useTranslation } from '@minddrop/i18n';
 import {
   DesignStudioEventListenerId,
   DesignStudioViewName,
@@ -8,15 +7,11 @@ import {
   OpenDesignStudioEventData,
 } from './events';
 
-const DESIGN_STUDIO_ICON = 'content-icon:palette:default';
-
 /**
  * Renders nothing — bootstraps the design studio feature by
  * registering event listeners.
  */
 export const DesignsFeature: React.FC = () => {
-  const { t } = useTranslation();
-
   useEffect(() => {
     // Track the current main content view so we can provide
     // back navigation when the design studio is opened without
@@ -56,8 +51,6 @@ export const DesignsFeature: React.FC = () => {
           {
             view: DesignStudioViewName,
             props: eventData,
-            title: t('designStudio.title'),
-            icon: DESIGN_STUDIO_ICON,
           },
         );
       },
@@ -70,7 +63,7 @@ export const DesignsFeature: React.FC = () => {
         `${DesignStudioEventListenerId}:view-tracker`,
       );
     };
-  }, [t]);
+  }, []);
 
   return null;
 };
