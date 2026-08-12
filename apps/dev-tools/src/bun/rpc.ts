@@ -176,25 +176,6 @@ function deleteManifest(slug: string): void {
 }
 
 /**
- * Adds a file to an existing manifest.
- */
-function addFileToManifest(slug: string, file: string): void {
-  const manifestPath = `${CHANGES_DIR}/${slug}.json`;
-
-  if (!existsSync(manifestPath)) {
-    throw new Error(`Manifest "${slug}" does not exist.`);
-  }
-
-  const content = readFileSync(manifestPath, 'utf-8');
-  const manifest = JSON.parse(content) as Manifest;
-
-  if (!manifest.files.includes(file)) {
-    manifest.files.push(file);
-    Bun.write(manifestPath, JSON.stringify(manifest, null, 2) + '\n');
-  }
-}
-
-/**
  * Reads all plan markdown files from the plans directory.
  */
 function readAllPlans(): { name: string; filename: string }[] {
@@ -327,10 +308,6 @@ export const rpcHandlers = {
 
   getUntrackedChanges: async () => {
     return getUntrackedChanges();
-  },
-
-  addFileToManifest: async ({ slug, file }: { slug: string; file: string }) => {
-    addFileToManifest(slug, file);
   },
 
   deleteManifest: async ({ slug }: { slug: string }) => {

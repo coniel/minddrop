@@ -1,4 +1,5 @@
 import { FileIcon } from './FileIcon';
+import { groupFilesByPackage } from './groupFilesByPackage';
 import type { FileStatus } from './types';
 import './Sidebar.css';
 
@@ -33,18 +34,27 @@ export const FileList: React.FC<FileListProps> = ({
   onSelectFile,
   fileStatuses,
 }) => {
+  // Group the files by the package they belong to
+  const groups = groupFilesByPackage(files);
+
   return (
     <div className="file-list">
-      {files.map((file) => (
-        <button
-          key={file}
-          className={`sidebar-file-button ${selectedPath === file ? 'selected' : ''} ${fileStatuses[file] ? `file-status-${fileStatuses[file]}` : ''}`}
-          onClick={() => onSelectFile(file)}
-          title={file}
-        >
-          <FileIcon filename={file} />
-          {getFileName(file)}
-        </button>
+      {groups.map((group) => (
+        <div key={group.label} className="sidebar-package-group">
+          <div className="sidebar-package-label">{group.label}</div>
+
+          {group.files.map((file) => (
+            <button
+              key={file}
+              className={`sidebar-file-button ${selectedPath === file ? 'selected' : ''} ${fileStatuses[file] ? `file-status-${fileStatuses[file]}` : ''}`}
+              onClick={() => onSelectFile(file)}
+              title={file}
+            >
+              <FileIcon filename={file} />
+              {getFileName(file)}
+            </button>
+          ))}
+        </div>
       ))}
     </div>
   );

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import type { ManifestWithSlug } from '../types';
 import { FileIcon } from './FileIcon';
 import { FileList } from './FileList';
+import { groupFilesByPackage } from './groupFilesByPackage';
 import type { FileStatus, Plan, SelectedFile } from './types';
 import './Sidebar.css';
 
@@ -25,11 +26,6 @@ interface SidebarProps {
    * Called when a file is selected for viewing.
    */
   onSelectFile: (file: SelectedFile) => void;
-
-  /**
-   * Called when an untracked file is assigned to a manifest.
-   */
-  onAssignFile: (file: string, slug: string) => void;
 
   /**
    * All available plans.
@@ -70,7 +66,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
   untrackedFiles,
   selectedFile,
   onSelectFile,
-  onAssignFile,
   plans,
   selectedPlan,
   onSelectPlan,
@@ -85,9 +80,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(
     () => new Set(manifests.map((manifest) => manifest.slug)),
   );
-
-  // Track which untracked file has its assign dropdown open
-  const [assigningFile, setAssigningFile] = useState<string | null>(null);
 
   // Toggle a group's expanded state (disabled in footer layout)
   const toggleGroup = (slug: string) => {
@@ -134,12 +126,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
     });
   };
 
-  // Handle assigning an untracked file to a manifest
-  const handleAssign = (file: string, slug: string) => {
-    onAssignFile(file, slug);
-    setAssigningFile(null);
-  };
-
   // Group plans by manifest slug using prefix matching
   const plansForManifest = (slug: string): Plan[] => {
     return plans.filter((plan) => {
@@ -148,6 +134,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
       return planSlug === slug || planSlug.startsWith(`${slug}-`);
     });
   };
+
+  // Untracked files grouped by the package they belong to
+  const untrackedGroups = groupFilesByPackage(untrackedFiles);
 
   // Plans that don't match any manifest
   const unmatchedPlans = plans.filter((plan) => {
@@ -161,9 +150,27 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <div className="sidebar" style={style}>
-      <div className="sidebar-header">Work Groups</div>
-
       <div className="sidebar-content">
+        {unmatchedPlans.length > 0 && (
+          <div className="sidebar-plans-section">
+            <div className="sidebar-header sidebar-header-plans">Plans</div>
+
+            {unmatchedPlans.map((plan) => (
+              <button
+                key={plan.filename}
+                className={`sidebar-plan-button ${selectedPlan === plan.filename ? 'selected' : ''}`}
+                onClick={() => onSelectPlan(plan.filename)}
+              >
+                {plan.name}
+              </button>
+            ))}
+          </div>
+        )}
+
+        <div className="sidebar-header sidebar-header-work-groups">
+          Work Groups
+        </div>
+
         {manifests.map((manifest) => {
           const groupPlans = plansForManifest(manifest.slug);
 
@@ -230,59 +237,22 @@ export const Sidebar: React.FC<SidebarProps> = ({
               </span>
             </div>
 
-            {untrackedFiles.map((file) => (
-              <div key={file} className="sidebar-untracked-file">
-                <button
-                  className={`sidebar-file-button ${selectedFile?.path === file ? 'selected' : ''} ${fileStatuses[file] ? `file-status-${fileStatuses[file]}` : ''}`}
-                  onClick={() => handleSelectUntrackedFile(file)}
-                >
-                  <FileIcon filename={file} />
-                  {getFileName(file)}
-                </button>
+            {untrackedGroups.map((group) => (
+              <div key={group.label} className="sidebar-package-group">
+                <div className="sidebar-package-label">{group.label}</div>
 
-                <div className="sidebar-assign-wrapper">
+                {group.files.map((file) => (
                   <button
-                    className="sidebar-assign-button"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      setAssigningFile(assigningFile === file ? null : file);
-                    }}
-                    title="Assign to work group"
+                    key={file}
+                    className={`sidebar-file-button ${selectedFile?.path === file ? 'selected' : ''} ${fileStatuses[file] ? `file-status-${fileStatuses[file]}` : ''}`}
+                    onClick={() => handleSelectUntrackedFile(file)}
+                    title={file}
                   >
-                    +
+                    <FileIcon filename={file} />
+                    {getFileName(file)}
                   </button>
-
-                  {assigningFile === file && (
-                    <div className="sidebar-assign-dropdown">
-                      {manifests.map((manifest) => (
-                        <button
-                          key={manifest.slug}
-                          className="sidebar-assign-option"
-                          onClick={() => handleAssign(file, manifest.slug)}
-                        >
-                          {manifest.title}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                ))}
               </div>
-            ))}
-          </div>
-        )}
-
-        {unmatchedPlans.length > 0 && (
-          <div className="sidebar-plans-section">
-            <div className="sidebar-header sidebar-header-plans">Plans</div>
-
-            {unmatchedPlans.map((plan) => (
-              <button
-                key={plan.filename}
-                className={`sidebar-plan-button ${selectedPlan === plan.filename ? 'selected' : ''}`}
-                onClick={() => onSelectPlan(plan.filename)}
-              >
-                {plan.name}
-              </button>
             ))}
           </div>
         )}

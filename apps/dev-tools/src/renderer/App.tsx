@@ -15,7 +15,7 @@ export const App: React.FC = () => {
   const [untrackedFiles, setUntrackedFiles] = useState<string[]>([]);
   const [selectedFile, setSelectedFile] = useState<SelectedFile | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>('diff');
-  const [splitDiff, setSplitDiff] = useState(true);
+  const [splitDiff, setSplitDiff] = useState(false);
   const [originalContent, setOriginalContent] = useState('');
   const [currentContent, setCurrentContent] = useState('');
   const [plans, setPlans] = useState<Plan[]>([]);
@@ -322,15 +322,6 @@ export const App: React.FC = () => {
     [refreshData],
   );
 
-  // Handle assigning an untracked file to a manifest
-  const handleAssignFile = useCallback(
-    async (file: string, slug: string) => {
-      await rpc.request.addFileToManifest({ slug, file });
-      await refreshData();
-    },
-    [refreshData],
-  );
-
   // Track whether we are in sidebar (horizontal) or footer (vertical) layout
   const [isHorizontal, setIsHorizontal] = useState(
     () => window.matchMedia('(min-width: 1201px)').matches,
@@ -415,7 +406,6 @@ export const App: React.FC = () => {
         untrackedFiles={untrackedFiles}
         selectedFile={selectedFile}
         onSelectFile={handleSelectFile}
-        onAssignFile={handleAssignFile}
         plans={plans}
         selectedPlan={selectedPlan}
         onSelectPlan={handleSelectPlan}

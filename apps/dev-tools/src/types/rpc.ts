@@ -87,14 +87,6 @@ export type DevReviewRPC = {
       };
 
       /**
-       * Adds a file to an existing manifest.
-       */
-      addFileToManifest: {
-        params: { slug: string; file: string };
-        response: void;
-      };
-
-      /**
        * Deletes a manifest file by slug.
        */
       deleteManifest: {
