@@ -5,6 +5,7 @@ import { Events } from '@minddrop/events';
 import { CollectionSelectionSubmenu } from '@minddrop/ui-components';
 import { DatabaseEntryRenderSource } from '@minddrop/ui-databases';
 import { ActionMenuItem, DropdownMenuSeparator } from '@minddrop/ui-primitives';
+import { Views } from '@minddrop/views';
 import {
   CloseDatabaseEntryDialogEvent,
   OpenDatabaseViewEvent,
@@ -33,6 +34,7 @@ export const DatabaseEntryOptionsMenu: React.FC<
   DatabaseEntryOptionsMenuProps
 > = ({ entryId, source }) => {
   const allCollections = Collections.useAll();
+  const openView = Views.useOpenView();
 
   // The collection the entry is rendered from, when rendered
   // from a collection
@@ -64,10 +66,10 @@ export const DatabaseEntryOptionsMenu: React.FC<
     // Close the entry dialog if open
     Events.dispatch(CloseDatabaseEntryDialogEvent, {});
 
-    Events.dispatch<OpenDatabaseViewEventData>(OpenDatabaseViewEvent, {
+    openView<OpenDatabaseViewEventData>(OpenDatabaseViewEvent, {
       databaseId: entry.database,
     });
-  }, [entryId]);
+  }, [entryId, openView]);
 
   // Duplicate the entry
   const handleDuplicate = useCallback(() => {

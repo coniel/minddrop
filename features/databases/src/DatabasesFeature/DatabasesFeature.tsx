@@ -146,10 +146,20 @@ export const DatabasesFeature: React.FC = () => {
       ({ data }) => {
         const database = Databases.get(data.databaseId, false);
 
+        // Open a blank tab to receive the database view
+        if (data.openMode === 'new-tab') {
+          Tabs.newTab(data.viewAreaId ?? DefaultViewAreaId);
+        }
+
+        // Open the database view, which has no dialog or panel
+        // presentation and so opens in place for those modes
         Events.dispatch<OpenViewEventData<DatabaseViewProps>>(OpenViewEvent, {
+          viewAreaId: data.viewAreaId,
+          sourcePane: data.sourcePane,
           view: DatabaseViewName,
           id: databaseViewId(data.databaseId),
           props: data,
+          split: data.openMode === 'split',
           title: database?.name,
           icon: database?.icon || DATABASE_FALLBACK_ICON,
         });
@@ -183,13 +193,15 @@ export const DatabasesFeature: React.FC = () => {
 
         // Open a blank tab to receive the entry view
         if (openMode === 'new-tab') {
-          Tabs.newTab(DefaultViewAreaId);
+          Tabs.newTab(data.viewAreaId ?? DefaultViewAreaId);
         }
 
         // Open the entry view in place of the current view (or in split view)
         Events.dispatch<OpenViewEventData<DatabaseEntryRendererProps>>(
           OpenViewEvent,
           {
+            viewAreaId: data.viewAreaId,
+            sourcePane: data.sourcePane,
             view: DatabaseEntryViewName,
             id: databaseEntryViewId(data.entryId),
             props: { entryId: data.entryId, layoutContext: 'page' },

@@ -1,8 +1,5 @@
-import {
-  DatabaseEntries,
-  DatabaseEntryOpenMode,
-  Databases,
-} from '@minddrop/databases';
+import { DatabaseEntries, Databases } from '@minddrop/databases';
+import { ViewOpenMode } from '@minddrop/events';
 
 /**
  * Resolves the open mode for a database entry. Uses the provided
@@ -10,8 +7,8 @@ import {
  */
 export function resolveOpenMode(
   entryId: string,
-  openMode?: DatabaseEntryOpenMode,
-): DatabaseEntryOpenMode {
+  openMode?: ViewOpenMode,
+): ViewOpenMode {
   if (openMode) {
     return openMode;
   }

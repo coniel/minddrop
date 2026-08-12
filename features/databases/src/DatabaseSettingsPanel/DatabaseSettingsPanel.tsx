@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import {
-  DatabaseEntryOpenMode,
   DatabaseEntrySerializers,
   Databases,
   PropertyFileStorage,
@@ -9,6 +8,7 @@ import {
   Events,
   OpenConfirmationDialogEvent,
   OpenConfirmationDialogEventData,
+  ViewOpenMode,
 } from '@minddrop/events';
 import {
   TranslationKey,
@@ -31,7 +31,7 @@ import './DatabaseSettingsPanel.css';
 const defaultIcon = 'content-icon:box:default';
 
 // The ways entries can be opened when clicked, offered in the Interface section
-const entryOpenModeOptions: SelectOption<DatabaseEntryOpenMode>[] = [
+const entryOpenModeOptions: SelectOption<ViewOpenMode>[] = [
   {
     label: 'databases.settings.entryOpenMode.options.dialog.label',
     description: 'databases.settings.entryOpenMode.options.dialog.description',
@@ -169,7 +169,7 @@ export const DatabaseSettingsPanel: React.FC<DatabaseSettingsPanelProps> = ({
   }
 
   // Change how entries are opened when clicked
-  function handleChangeEntryOpenMode(entryOpenMode: DatabaseEntryOpenMode) {
+  function handleChangeEntryOpenMode(entryOpenMode: ViewOpenMode) {
     Databases.update(databaseId, { entryOpenMode });
   }
 

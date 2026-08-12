@@ -8,7 +8,6 @@ import {
   withImplicitTitleProperty,
 } from '@minddrop/databases';
 import { Designs, Layouts, resolveDesignMediaDirPath } from '@minddrop/designs';
-import { Events } from '@minddrop/events';
 import { LayoutRenderer } from '@minddrop/feature-designs';
 import { useTranslation } from '@minddrop/i18n';
 import { PropertyValue } from '@minddrop/properties';
@@ -25,6 +24,7 @@ import {
   TransientViewStateScope,
 } from '@minddrop/ui-primitives';
 import { setDragPreview } from '@minddrop/utils';
+import { Views } from '@minddrop/views';
 import { DatabaseEntryOptionsMenu } from '../DatabaseEntryOptionsMenu';
 import {
   OpenDatabaseEntryViewEvent,
@@ -93,6 +93,7 @@ const Entry: React.FC<EntryProps> = ({
     autoFocusEntryId,
     onEntryAutoFocused,
   } = useDatabaseEntryContext();
+  const openView = Views.useOpenView();
   const { draggableProps, isDragging } = useDraggable({
     id: entry.id,
     type: DatabaseEntriesDataKey,
@@ -218,13 +219,10 @@ const Entry: React.FC<EntryProps> = ({
       return;
     }
 
-    Events.dispatch<OpenDatabaseEntryViewEventData>(
-      OpenDatabaseEntryViewEvent,
-      {
-        entryId: entry.id,
-      },
-    );
-  }, [entry.id, onClick]);
+    openView<OpenDatabaseEntryViewEventData>(OpenDatabaseEntryViewEvent, {
+      entryId: entry.id,
+    });
+  }, [entry.id, onClick, openView]);
 
   // Set the card itself as the drag preview, since the drag starts
   // from the invisible drag handle
