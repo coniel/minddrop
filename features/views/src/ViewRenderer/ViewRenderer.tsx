@@ -14,8 +14,10 @@ import {
 import { IconButton } from '@minddrop/ui-primitives';
 import { Views } from '@minddrop/views';
 import { TabViewStateProvider } from '../TabViewStateProvider';
+import { ViewAreaState, applyOpenView } from '../applyOpenView';
 import { matchesViewArea } from '../matchesViewArea';
 import { useActiveTabId } from '../tabs/TabSetsStore';
+import { DEFAULT_SPLIT_RATIO } from '../tabs/tabsConstants';
 import './ViewRenderer.css';
 
 interface ViewRendererProps {
@@ -26,28 +28,10 @@ interface ViewRendererProps {
   viewAreaId: string;
 }
 
-interface ViewAreaState {
-  /**
-   * The view shown in the main (left) pane, or null when empty.
-   */
-  main: ViewDescriptor | null;
-
-  /**
-   * The view shown in the split (right) pane, or null when there
-   * is no split.
-   */
-  split: ViewDescriptor | null;
-
-  /**
-   * The width of the main (left) pane as a percentage (0-100).
-   */
-  splitRatio: number;
-}
-
 const INITIAL_STATE: ViewAreaState = {
   main: null,
   split: null,
-  splitRatio: 50,
+  splitRatio: DEFAULT_SPLIT_RATIO,
 };
 
 // Stable empty trail for views opened without breadcrumbs
@@ -91,7 +75,7 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
   useEffect(() => {
     const listenerId = `feature-views:view-area:${viewAreaId}`;
 
-    // Open a view in the main pane (replacing any split) or the split pane
+    // Open a view in the pane the open targets
     Events.addListener<OpenViewEventData>(
       OpenViewEvent,
       listenerId,
@@ -101,30 +85,7 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
           return;
         }
 
-        const current = stateRef.current;
-        const descriptor: ViewDescriptor = {
-          view: data.view,
-          id: data.id,
-          props: data.props,
-          title: data.title,
-          icon: data.icon,
-          breadcrumbs: data.breadcrumbs,
-        };
-
-        // Open in the split pane, keeping the current main view
-        if (data.split) {
-          applyState(
-            {
-              ...current,
-              split: descriptor,
-              splitRatio: data.splitRatio ?? current.splitRatio,
-            },
-            true,
-          );
-        } else {
-          // Replace the main view and clear any split
-          applyState({ main: descriptor, split: null, splitRatio: 50 }, true);
-        }
+        applyState(applyOpenView(stateRef.current, data), true);
       },
     );
 
@@ -246,10 +207,12 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
           style={{ flex: splitRatio }}
         >
           <TabViewStateProvider viewAreaId={viewAreaId} pane="main">
-            <RegisteredView
-              key={viewInstanceKey(activeTabId, main)}
-              descriptor={main}
-            />
+            <Views.PaneProvider viewAreaId={viewAreaId} pane="main">
+              <RegisteredView
+                key={viewInstanceKey(activeTabId, main)}
+                descriptor={main}
+              />
+            </Views.PaneProvider>
           </TabViewStateProvider>
         </ViewAreaPane>
         <div
@@ -265,10 +228,12 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
           style={{ flex: 100 - splitRatio }}
         >
           <TabViewStateProvider viewAreaId={viewAreaId} pane="split">
-            <RegisteredView
-              key={viewInstanceKey(activeTabId, split)}
-              descriptor={split}
-            />
+            <Views.PaneProvider viewAreaId={viewAreaId} pane="split">
+              <RegisteredView
+                key={viewInstanceKey(activeTabId, split)}
+                descriptor={split}
+              />
+            </Views.PaneProvider>
           </TabViewStateProvider>
         </ViewAreaPane>
       </div>
@@ -278,10 +243,12 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
   return (
     <div className="view-area">
       <TabViewStateProvider viewAreaId={viewAreaId} pane="main">
-        <RegisteredView
-          key={viewInstanceKey(activeTabId, main)}
-          descriptor={main}
-        />
+        <Views.PaneProvider viewAreaId={viewAreaId} pane="main">
+          <RegisteredView
+            key={viewInstanceKey(activeTabId, main)}
+            descriptor={main}
+          />
+        </Views.PaneProvider>
       </TabViewStateProvider>
     </div>
   );
