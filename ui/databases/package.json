@@ -22,7 +22,7 @@
   "dependencies": {
     "@minddrop/collections": "workspace:*",
     "@minddrop/databases": "workspace:*",
-    "@minddrop/designs": "workspace:*",
+    "@minddrop/designs-legacy": "workspace:*",
     "@minddrop/events": "workspace:*",
     "@minddrop/file-system": "workspace:*",
     "@minddrop/i18n": "workspace:*",

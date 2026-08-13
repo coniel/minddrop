@@ -1,4 +1,4 @@
-import { DesignElement, Layout } from '@minddrop/designs';
+import { DesignElement, Layout } from '@minddrop/designs-legacy';
 
 /**
  * Returns the layout with the target view element's static

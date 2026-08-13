@@ -6,7 +6,7 @@ import {
   Layout,
   RootElement,
   ViewElement,
-} from '@minddrop/designs';
+} from '@minddrop/designs-legacy';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabasesStore } from '../../DatabasesStore';
 import { viewMetadataKey } from '../viewMetadataKey';

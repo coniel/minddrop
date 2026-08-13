@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { ElementTemplates } from '@minddrop/designs';
+import { ElementTemplates } from '@minddrop/designs-legacy';
 import {
   DesignStudioStore,
   addDesignElementFromTemplate,
-} from '@minddrop/feature-designs';
+} from '@minddrop/feature-designs-legacy';
 import { SpaceFixtures, Spaces } from '@minddrop/spaces';
 import { render, screen, userEvent, waitFor } from '@minddrop/test-utils';
 import { SpaceViewStateStore, setSpaceViewState } from '../SpaceViewStateStore';

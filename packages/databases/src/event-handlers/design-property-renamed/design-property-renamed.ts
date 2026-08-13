@@ -1,4 +1,4 @@
-import { DesignPropertyRenamedEventData } from '@minddrop/designs';
+import { DesignPropertyRenamedEventData } from '@minddrop/designs-legacy';
 import { DatabasesStore } from '../../DatabasesStore';
 import { updateDatabase } from '../../updateDatabase';
 

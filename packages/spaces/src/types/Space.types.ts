@@ -1,4 +1,4 @@
-import { Layout } from '@minddrop/designs';
+import { Layout } from '@minddrop/designs-legacy';
 import { EntityId } from '@minddrop/utils';
 
 export type SpaceId = EntityId<'space'>;

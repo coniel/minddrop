@@ -1,0 +1,15 @@
+import { LeafDesignElement } from '@minddrop/designs-legacy';
+
+export interface LeafElementRendererProps {
+  /**
+   * The leaf element to render.
+   */
+  element: LeafDesignElement;
+}
+
+export const LeafElementRenderer: React.FC<LeafElementRendererProps> = ({
+  element: _element,
+}) => {
+  // TODO: implement leaf element rendering
+  return null;
+};

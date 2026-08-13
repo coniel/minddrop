@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { Database, Databases } from '@minddrop/databases';
-import { Designs, Layout, LayoutType } from '@minddrop/designs';
+import { Designs, Layout, LayoutType } from '@minddrop/designs-legacy';
 import { TranslationKey, createI18nKeyBuilder } from '@minddrop/i18n';
 import {
   DropdownMenuRadioGroup,

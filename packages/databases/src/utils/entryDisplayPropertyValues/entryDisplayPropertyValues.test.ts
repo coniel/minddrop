@@ -5,7 +5,7 @@ import {
   DefaultTextElementStyle,
   DefaultViewElementStyle,
   Layout,
-} from '@minddrop/designs';
+} from '@minddrop/designs-legacy';
 import {
   cleanup,
   collectionEntry1,

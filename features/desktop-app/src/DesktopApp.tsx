@@ -13,7 +13,7 @@ import {
 } from '@minddrop/events';
 import { MindDropApiProvider } from '@minddrop/extensions';
 import { DatabasesFeature } from '@minddrop/feature-databases';
-import { DesignsFeature } from '@minddrop/feature-designs';
+import { DesignsFeature } from '@minddrop/feature-designs-legacy';
 import { DevTools, ScreenshotPicker } from '@minddrop/feature-dev-tools';
 import { SearchFeature } from '@minddrop/feature-search';
 import { SpacesFeature } from '@minddrop/feature-spaces';

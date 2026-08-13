@@ -14,7 +14,7 @@ import {
   deleteHighlightedElement,
   initializeLayoutEditor,
   useDesignStudioStore,
-} from '@minddrop/feature-designs';
+} from '@minddrop/feature-designs-legacy';
 import { Space, Spaces, resolveSpaceMediaDirPath } from '@minddrop/spaces';
 import { PanelView } from '@minddrop/ui-components';
 import { Panel, ScrollArea } from '@minddrop/ui-primitives';

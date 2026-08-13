@@ -3,7 +3,7 @@ import { Events, SetNavToolbarWidthEvent } from '@minddrop/events';
 import { CollectionsMenuItem } from '@minddrop/feature-collections';
 import { DataViewsMenuItem } from '@minddrop/feature-data-views';
 import { DatabasesSidebarMenu } from '@minddrop/feature-databases';
-import { OpenDesignStudioEvent } from '@minddrop/feature-designs';
+import { OpenDesignStudioEvent } from '@minddrop/feature-designs-legacy';
 import { QueriesMenuItem } from '@minddrop/feature-queries';
 import { OpenSearchDialogEvent } from '@minddrop/feature-search';
 import { SpacesMenuItem } from '@minddrop/feature-spaces';

@@ -6,7 +6,7 @@ import {
   DefaultTextElementStyle,
   DefaultViewElementStyle,
   Layout,
-} from '@minddrop/designs';
+} from '@minddrop/designs-legacy';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import {
   cleanup,

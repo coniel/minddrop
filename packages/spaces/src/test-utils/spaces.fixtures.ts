@@ -1,4 +1,4 @@
-import { Layout } from '@minddrop/designs';
+import { Layout } from '@minddrop/designs-legacy';
 import { MockFileDescriptor } from '@minddrop/file-system';
 import { DefaultSpaceIcon } from '../constants';
 import { Space } from '../types';

@@ -2,7 +2,7 @@ import { Events } from '@minddrop/events';
 import {
   OpenDesignStudioEvent,
   OpenDesignStudioEventData,
-} from '@minddrop/feature-designs';
+} from '@minddrop/feature-designs-legacy';
 import { OpenDatabaseViewEvent } from '../events';
 
 /**

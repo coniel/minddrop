@@ -2,7 +2,7 @@ import { Ast } from '@minddrop/ast';
 import { Collections } from '@minddrop/collections';
 import { DataViews } from '@minddrop/data-views';
 import { Databases } from '@minddrop/databases';
-import { Designs } from '@minddrop/designs';
+import { Designs } from '@minddrop/designs-legacy';
 import {
   EditorElements,
   EditorMarks,
@@ -12,7 +12,7 @@ import { initializeExtensions } from '@minddrop/extensions';
 import { initializeCollectionsFeature } from '@minddrop/feature-collections';
 import { initializeDataViewsFeature } from '@minddrop/feature-data-views';
 import { DatabaseViewStateStore } from '@minddrop/feature-databases';
-import { LayoutRegionSizesStore } from '@minddrop/feature-designs';
+import { LayoutRegionSizesStore } from '@minddrop/feature-designs-legacy';
 import { initializeDevToolsFeature } from '@minddrop/feature-dev-tools';
 // Register the component stories with the story registry
 import '@minddrop/feature-markdown-editor/stories';

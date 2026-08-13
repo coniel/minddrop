@@ -1,7 +1,7 @@
 import { registerCollectionViews } from '@minddrop/feature-collections';
 import { registerDataViewViews } from '@minddrop/feature-data-views';
 import { registerDatabaseViews } from '@minddrop/feature-databases';
-import { registerDesignViews } from '@minddrop/feature-designs';
+import { registerDesignViews } from '@minddrop/feature-designs-legacy';
 import { registerQueryViews } from '@minddrop/feature-queries';
 import { registerSearchViews } from '@minddrop/feature-search';
 import { registerSpaceViews } from '@minddrop/feature-spaces';

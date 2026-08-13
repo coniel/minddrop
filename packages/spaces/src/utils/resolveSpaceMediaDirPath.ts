@@ -1,4 +1,4 @@
-import { MediaDirName } from '@minddrop/designs';
+import { MediaDirName } from '@minddrop/designs-legacy';
 import { Fs } from '@minddrop/file-system';
 import { resolveSpaceBundleDirPath } from './resolveSpaceBundleDirPath';
 

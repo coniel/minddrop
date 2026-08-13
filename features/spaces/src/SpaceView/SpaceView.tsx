@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { LayoutRenderer } from '@minddrop/feature-designs';
+import { LayoutRenderer } from '@minddrop/feature-designs-legacy';
 import {
   Spaces,
   resolveSpaceMediaDirPath,

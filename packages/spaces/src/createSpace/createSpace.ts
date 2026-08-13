@@ -1,4 +1,4 @@
-import { DefaultPageLayout, Layout } from '@minddrop/designs';
+import { DefaultPageLayout, Layout } from '@minddrop/designs-legacy';
 import { Events } from '@minddrop/events';
 import { i18n } from '@minddrop/i18n';
 import { entityId } from '@minddrop/utils';

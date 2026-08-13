@@ -552,18 +552,18 @@ importers:
       '@minddrop/databases':
         specifier: workspace:*
         version: link:../../packages/databases
-      '@minddrop/designs':
+      '@minddrop/designs-legacy':
         specifier: workspace:*
-        version: link:../../packages/designs
+        version: link:../../packages/designs-legacy
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
       '@minddrop/feature-data-views':
         specifier: workspace:*
         version: link:../data-views
-      '@minddrop/feature-designs':
+      '@minddrop/feature-designs-legacy':
         specifier: workspace:*
-        version: link:../designs
+        version: link:../designs-legacy
       '@minddrop/feature-markdown-editor':
         specifier: workspace:*
         version: link:../markdown-editor
@@ -626,7 +626,7 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
-  features/designs:
+  features/designs-legacy:
     dependencies:
       '@minddrop/collections':
         specifier: workspace:*
@@ -637,9 +637,9 @@ importers:
       '@minddrop/databases':
         specifier: workspace:*
         version: link:../../packages/databases
-      '@minddrop/designs':
+      '@minddrop/designs-legacy':
         specifier: workspace:*
-        version: link:../../packages/designs
+        version: link:../../packages/designs-legacy
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
@@ -737,9 +737,9 @@ importers:
       '@minddrop/databases':
         specifier: workspace:*
         version: link:../../packages/databases
-      '@minddrop/designs':
+      '@minddrop/designs-legacy':
         specifier: workspace:*
-        version: link:../../packages/designs
+        version: link:../../packages/designs-legacy
       '@minddrop/editor':
         specifier: workspace:*
         version: link:../../packages/editor
@@ -758,9 +758,9 @@ importers:
       '@minddrop/feature-databases':
         specifier: workspace:*
         version: link:../databases
-      '@minddrop/feature-designs':
+      '@minddrop/feature-designs-legacy':
         specifier: workspace:*
-        version: link:../designs
+        version: link:../designs-legacy
       '@minddrop/feature-dev-tools':
         specifier: workspace:*
         version: link:../dev-tools
@@ -1113,15 +1113,15 @@ importers:
       '@minddrop/data-views':
         specifier: workspace:*
         version: link:../../packages/data-views
-      '@minddrop/designs':
+      '@minddrop/designs-legacy':
         specifier: workspace:*
-        version: link:../../packages/designs
+        version: link:../../packages/designs-legacy
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
-      '@minddrop/feature-designs':
+      '@minddrop/feature-designs-legacy':
         specifier: workspace:*
-        version: link:../designs
+        version: link:../designs-legacy
       '@minddrop/feature-views':
         specifier: workspace:*
         version: link:../views
@@ -1347,9 +1347,9 @@ importers:
       '@minddrop/data-views':
         specifier: workspace:*
         version: link:../data-views
-      '@minddrop/designs':
+      '@minddrop/designs-legacy':
         specifier: workspace:*
-        version: link:../designs
+        version: link:../designs-legacy
       '@minddrop/events':
         specifier: workspace:*
         version: link:../events
@@ -1398,6 +1398,49 @@ importers:
         version: 5.9.3
 
   packages/designs:
+    dependencies:
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../events
+      '@minddrop/file-system':
+        specifier: workspace:*
+        version: link:../file-system
+      '@minddrop/i18n':
+        specifier: workspace:*
+        version: link:../i18n
+      '@minddrop/properties':
+        specifier: workspace:*
+        version: link:../properties
+      '@minddrop/stores':
+        specifier: workspace:*
+        version: link:../stores
+      '@minddrop/ui-icons':
+        specifier: workspace:*
+        version: link:../../ui/icons
+      '@minddrop/utils':
+        specifier: workspace:*
+        version: link:../utils
+    devDependencies:
+      '@minddrop/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@types/react':
+        specifier: ^19.2.4
+        version: 19.2.14
+      eslint:
+        specifier: ^9.39.3
+        version: 9.39.3
+      react:
+        specifier: ^19.2.4
+        version: 19.2.4
+      tsconfig:
+        specifier: workspace:*
+        version: link:../tsconfig
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  packages/designs-legacy:
     dependencies:
       '@minddrop/events':
         specifier: workspace:*
@@ -1995,9 +2038,9 @@ importers:
 
   packages/spaces:
     dependencies:
-      '@minddrop/designs':
+      '@minddrop/designs-legacy':
         specifier: workspace:*
-        version: link:../designs
+        version: link:../designs-legacy
       '@minddrop/events':
         specifier: workspace:*
         version: link:../events
@@ -2339,9 +2382,9 @@ importers:
       '@minddrop/databases':
         specifier: workspace:*
         version: link:../../packages/databases
-      '@minddrop/designs':
+      '@minddrop/designs-legacy':
         specifier: workspace:*
-        version: link:../../packages/designs
+        version: link:../../packages/designs-legacy
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events

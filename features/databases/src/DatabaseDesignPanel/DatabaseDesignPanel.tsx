@@ -6,7 +6,7 @@ import {
   layoutContextBaseType,
   resolveDesignPropertyMap,
 } from '@minddrop/databases';
-import { Design, Designs } from '@minddrop/designs';
+import { Design, Designs } from '@minddrop/designs-legacy';
 import { createI18nKeyBuilder } from '@minddrop/i18n';
 import { METADATA_PROPERTY_TYPES } from '@minddrop/properties';
 import { UiIconName } from '@minddrop/ui-icons';

@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Collections } from '@minddrop/collections';
 import { DataViews } from '@minddrop/data-views';
-import { DesignFixtures } from '@minddrop/designs';
+import { DesignFixtures } from '@minddrop/designs-legacy';
 import { Events } from '@minddrop/events';
 import {
   ItemAddressesChangedEvent,

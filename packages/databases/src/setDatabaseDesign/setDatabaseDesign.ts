@@ -1,4 +1,4 @@
-import { Designs } from '@minddrop/designs';
+import { Designs } from '@minddrop/designs-legacy';
 import { getDatabase } from '../getDatabase';
 import { Database } from '../types';
 import { updateDatabase } from '../updateDatabase';

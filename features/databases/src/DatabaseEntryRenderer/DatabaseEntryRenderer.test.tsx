@@ -5,7 +5,7 @@ import {
   DatabaseFixtures,
   Databases,
 } from '@minddrop/databases';
-import { DesignFixtures, Designs } from '@minddrop/designs';
+import { DesignFixtures, Designs } from '@minddrop/designs-legacy';
 import { render, screen } from '@minddrop/test-utils';
 import { cleanup, setup } from '../test-utils';
 import { DatabaseEntryRenderer } from './DatabaseEntryRenderer';

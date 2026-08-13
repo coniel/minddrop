@@ -13,7 +13,7 @@ import {
 import {
   DesignPropertyRenamedEvent,
   DesignPropertyRenamedEventData,
-} from '@minddrop/designs';
+} from '@minddrop/designs-legacy';
 import { Events } from '@minddrop/events';
 import {
   ItemAddressesChangedEvent,

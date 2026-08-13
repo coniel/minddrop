@@ -1,4 +1,4 @@
-import { Layout } from '@minddrop/designs';
+import { Layout } from '@minddrop/designs-legacy';
 import { PropertyValue } from '@minddrop/properties';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabasesStore } from '../../DatabasesStore';

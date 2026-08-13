@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DefaultPageLayout } from '@minddrop/designs';
+import { DefaultPageLayout } from '@minddrop/designs-legacy';
 import { Events } from '@minddrop/events';
 import { SpacesStore } from '../SpacesStore';
 import { DefaultSpaceIcon } from '../constants';

@@ -3,7 +3,7 @@ import {
   DefaultViewElementStyle,
   Layout,
   ViewElement,
-} from '@minddrop/designs';
+} from '@minddrop/designs-legacy';
 
 function generateSpaceLayoutFixture(number: number): Layout {
   return {
