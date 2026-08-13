@@ -10,6 +10,7 @@ export default {
     // Vite builds to dist/, we copy from there
     copy: {
       'dist/index.html': 'views/mainview/index.html',
+      'dist/onboarding.html': 'views/mainview/onboarding.html',
       'dist/assets': 'views/mainview/assets',
       // Sharp's platform-specific native bindings. The bundled bun code
       // requires these at runtime, so they have to sit in a node_modules

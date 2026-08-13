@@ -109,6 +109,10 @@ export type WebviewRPC = {
         params: Record<string, never>;
         response: void;
       };
+      onboardingComplete: {
+        params: Record<string, never>;
+        response: void;
+      };
       openUrl: {
         params: { url: string };
         response: void;

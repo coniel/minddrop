@@ -3,8 +3,15 @@ import type { BrowserWindow } from 'electrobun/bun';
 // The window whose fill state is toggled
 let targetWindow: BrowserWindow | null = null;
 
+// Called when the onboarding window reports that a workspace is ready
+let onboardingCompleteHandler: (() => void) | null = null;
+
 export function setWindowRpcTarget(window: BrowserWindow): void {
   targetWindow = window;
+}
+
+export function setOnboardingCompleteHandler(handler: () => void): void {
+  onboardingCompleteHandler = handler;
 }
 
 export const windowRpcHandlers = {
@@ -21,5 +28,9 @@ export const windowRpcHandlers = {
     } else {
       targetWindow.maximize();
     }
+  },
+
+  onboardingComplete: () => {
+    onboardingCompleteHandler?.();
   },
 };
