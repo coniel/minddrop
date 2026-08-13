@@ -2,6 +2,7 @@ import { Events } from '@minddrop/events';
 import { FileNotFoundError, Fs } from '@minddrop/file-system';
 import { InvalidParameterError } from '@minddrop/utils';
 import { WorkspacesStore } from '../WorkspacesStore';
+import { DefaultWorkspaceIcon } from '../constants';
 import { WorkspacesLoadedEvent, WorkspacesLoadedEventData } from '../events';
 import { readWorkspaceConfig } from '../readWorkspaceConfig';
 import { Workspace } from '../types';
@@ -50,7 +51,7 @@ export async function addWorkspace(path: string): Promise<Workspace> {
     workspace = generateWorkspaceConfig({
       path,
       name: Fs.fileNameFromPath(path),
-      icon: 'content-icon:box:default',
+      icon: DefaultWorkspaceIcon,
     });
 
     // Add the workspace to the store
