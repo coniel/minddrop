@@ -1,0 +1,12 @@
+.onboarding-create-workspace-form {
+  width: 100%;
+  max-width: 380px;
+
+  .text-field {
+    flex: 1;
+  }
+
+  .onboarding-selected-location {
+    word-break: break-all;
+  }
+}

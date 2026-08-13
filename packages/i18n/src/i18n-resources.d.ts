@@ -1813,6 +1813,44 @@ declare module 'i18next' {
             };
           };
         };
+        onboarding: {
+          welcome: {
+            title: string;
+            description: string;
+            actions: {
+              create: string;
+              open: string;
+            };
+          };
+          form: {
+            title: string;
+            name: {
+              label: string;
+              placeholder: string;
+              default: string;
+            };
+            icon: {
+              label: string;
+            };
+            location: {
+              label: string;
+              description: string;
+              action: string;
+            };
+            actions: {
+              back: string;
+              create: string;
+            };
+            errors: {
+              locationMissing: string;
+              pathConflict: string;
+            };
+          };
+          errors: {
+            notAWorkspace: string;
+            unknown: string;
+          };
+        };
         tabs: {
           new: string;
           newToTheLeft: string;

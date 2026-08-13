@@ -1,0 +1,28 @@
+.onboarding-app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+
+  .onboarding-drag-handle {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 38px;
+  }
+
+  .onboarding-content {
+    flex: 1;
+    justify-content: center;
+    padding: var(--space-7);
+  }
+
+  .onboarding-description {
+    max-width: 380px;
+    text-align: center;
+  }
+
+  .onboarding-actions {
+    min-width: 260px;
+  }
+}

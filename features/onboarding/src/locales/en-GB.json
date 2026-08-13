@@ -1,0 +1,40 @@
+{
+  "onboarding": {
+    "welcome": {
+      "title": "Welcome to MindDrop",
+      "description": "A workspace is a folder on your computer where MindDrop stores all your content as plain text files.",
+      "actions": {
+        "create": "Create a workspace",
+        "open": "Open an existing workspace"
+      }
+    },
+    "form": {
+      "title": "Create a workspace",
+      "name": {
+        "label": "Name",
+        "placeholder": "Workspace name",
+        "default": "MindDrop Workspace"
+      },
+      "icon": {
+        "label": "Workspace icon"
+      },
+      "location": {
+        "label": "Location",
+        "description": "The workspace folder is created inside the folder you choose.",
+        "action": "Choose folder"
+      },
+      "actions": {
+        "back": "Back",
+        "create": "Create workspace"
+      },
+      "errors": {
+        "locationMissing": "Choose a location for the workspace",
+        "pathConflict": "A folder with this name already exists in this location"
+      }
+    },
+    "errors": {
+      "notAWorkspace": "This folder is not a MindDrop workspace",
+      "unknown": "Something went wrong. Please try again."
+    }
+  }
+}
