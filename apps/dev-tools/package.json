@@ -8,6 +8,7 @@
     "dev:hmr": "concurrently \"bun run hmr\" \"bun run dev\"",
     "hmr": "vite --port 5914",
     "build": "vite build && electrobun build",
+    "generate:icon": "bun run scripts/generate-icon.ts",
     "start": "bun run dev"
   },
   "dependencies": {
@@ -27,6 +28,7 @@
     "@types/three": "^0.165.0",
     "@vitejs/plugin-react": "^5.1.4",
     "concurrently": "^9.1.0",
+    "sharp": "^0.35.3",
     "typescript": "^5.9.3",
     "vite": "^7.3.1"
   }
