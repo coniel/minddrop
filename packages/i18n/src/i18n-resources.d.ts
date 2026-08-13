@@ -1880,6 +1880,7 @@ declare module 'i18next' {
             events: string;
             state: string;
             stories: string;
+            tokens: string;
           };
           logs: {
             searchPlaceholder: string;

@@ -7,6 +7,7 @@ import { EventsPanel } from '../EventsPanel';
 import { LogsPanel } from '../LogsPanel';
 import { StatePanel } from '../StatePanel';
 import { StoriesPanel } from '../StoriesPanel';
+import { TokensPanel } from '../TokensPanel';
 import { locales } from '../locales';
 
 /**
@@ -52,6 +53,15 @@ export async function initializeDevToolsFeature(): Promise<void> {
     icon: 'shapes',
     shortcut: 's',
     component: StoriesPanel,
+  });
+
+  // Register the design token comparison panel
+  registerDevToolsPanel({
+    id: 'tokens',
+    label: 'devTools.panels.tokens',
+    icon: 'palette',
+    shortcut: 't',
+    component: TokensPanel,
   });
 
   // Capture console output and dispatched events from here on,
