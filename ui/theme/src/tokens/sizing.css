@@ -52,6 +52,20 @@
   --radius-full: calc(var(--radius-unit) * 999); /* pills, circles */
 
   /* ------------------------------------------------------------
+     SIZES
+     Coarse box sizes for content areas: cover images, embeds,
+     media frames. Fixed rem, deliberately unaffected by density,
+     so content boxes keep their size under compact spacing.
+     ------------------------------------------------------------ */
+
+  --size-xs: 5rem; /*  80px - thumbnails, small covers */
+  --size-sm: 8rem; /* 128px - compact cover images */
+  --size-md: 12rem; /* 192px - default cover height */
+  --size-lg: 16rem; /* 256px - tall covers, small embeds */
+  --size-xl: 20rem; /* 320px - default embed height */
+  --size-2xl: 30rem; /* 480px - large embeds */
+
+  /* ------------------------------------------------------------
      BORDER WIDTHS
      ------------------------------------------------------------ */
 

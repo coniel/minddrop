@@ -14,7 +14,7 @@ dev plans.
 | `tokens/roles.css`                                     | The accent channel and every semantic color role (`--text-*`, `--surface-*`, `--border-*`)                                                  |
 | `tokens/schemes.css`                                   | `.scheme-<hue>` container classes that rebind the accent channel                                                                            |
 | `tokens/typography.css`                                | Font families, `--font-size-*`, `--font-weight-*`, `--line-height-*`, `--letter-spacing-*`, `--measure-*`                                   |
-| `tokens/sizing.css`                                    | `--space-*`, `--radius-*` (both unit-scalable), `--border-width-*`, `--icon-size-*`                                                         |
+| `tokens/sizing.css`                                    | `--space-*`, `--radius-*` (both unit-scalable), `--size-*`, `--border-width-*`, `--icon-size-*`                                             |
 | `tokens/elevation.css`                                 | `--shadow-*` scale and semantic aliases, per theme                                                                                          |
 | `tokens/app.css`                                       | App-internal tokens excluded from the design vocabulary: control heights, focus ring, `--opacity-disabled`, `--level-*`, motion             |
 
@@ -81,6 +81,14 @@ Spacing and radius resolve through overridable units:
 A container override like `--space-unit: 0.2rem` ("compact") or
 `--radius-unit: 0` ("sharp") rescales everything inside with no participation
 from designs. Density must clamp on touch surfaces (a WG 6 concern).
+
+## Box sizes
+
+`--size-xs..2xl` (80/128/192/256/320/480px, added in WG 2) are coarse box
+sizes for content areas: cover-image heights, embed heights, media frames.
+Fixed rem, deliberately not resolved through `--space-unit`, so content boxes
+keep their size when a container goes compact. The designs vocabulary uses
+them wherever legacy designs had free numeric width/height fields.
 
 ## Migration from the legacy tokens (complete)
 

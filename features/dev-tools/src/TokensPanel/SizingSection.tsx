@@ -2,8 +2,8 @@ import React from 'react';
 import { ValueRow } from './ValueRow';
 
 /**
- * Renders the sizing token values: spacing, radius, border widths
- * and icon sizes.
+ * Renders the sizing token values: spacing, radius, box sizes,
+ * border widths and icon sizes.
  */
 export const SizingSection: React.FC = () => (
   <div className="dev-tools-tokens-section">
@@ -47,6 +47,29 @@ export const SizingSection: React.FC = () => (
             <div
               className="dev-tools-tokens-box"
               style={{ borderRadius: `var(${step.token})` }}
+            />
+          }
+        />
+      ))}
+    </div>
+
+    <h3 className="dev-tools-tokens-heading">Sizes</h3>
+
+    <p className="dev-tools-tokens-hint">
+      Coarse box sizes for content areas (covers, embeds). Fixed rem,
+      deliberately unaffected by density.
+    </p>
+
+    <div className="dev-tools-tokens-group">
+      {SizeSteps.map((step) => (
+        <ValueRow
+          key={step.token}
+          token={step.token}
+          note={step.note}
+          sample={
+            <div
+              className="dev-tools-tokens-bar"
+              style={{ width: `var(${step.token})` }}
             />
           }
         />
@@ -145,6 +168,18 @@ const RadiusSteps: SizingStep[] = [
   { token: '--radius-lg', note: '8px' },
   { token: '--radius-xl', note: '12px' },
   { token: '--radius-full', note: '999px' },
+];
+
+/**
+ * The box size scale.
+ */
+const SizeSteps: SizingStep[] = [
+  { token: '--size-xs', note: '80px' },
+  { token: '--size-sm', note: '128px' },
+  { token: '--size-md', note: '192px' },
+  { token: '--size-lg', note: '256px' },
+  { token: '--size-xl', note: '320px' },
+  { token: '--size-2xl', note: '480px' },
 ];
 
 /**
