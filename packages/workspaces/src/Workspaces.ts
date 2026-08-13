@@ -8,6 +8,7 @@ export { removeWorkspace as remove } from './removeWorkspace';
 export { readWorkspaceConfig as readConfig } from './readWorkspaceConfig';
 export { renameWorkspace as rename } from './renameWorkspace';
 export { initializeWorkspaces as initialize } from './initializeWorkspaces';
+export { isWorkspaceDirectory as isWorkspace } from './utils';
 export { updateWorkspace as update } from './updateWorkspace';
 export {
   useWorkspace as use,
