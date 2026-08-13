@@ -1,0 +1,39 @@
+import { Events } from '@minddrop/events';
+import { Fs } from '@minddrop/file-system';
+import { DesignsStore } from '../DesignsStore';
+import { DesignsLoadedEvent, DesignsLoadedEventData } from '../events';
+import { readDesign } from '../readDesign';
+import { registerDesignRole } from '../registerDesignRole';
+import { BuiltInDesignRoles } from '../roles';
+import { resolveDesignsDirPath } from '../utils';
+
+/**
+ * Initializes designs: registers the built-in roles, then reads
+ * design bundles from the file system into the store.
+ *
+ * @dispatches 'designs:loaded'
+ */
+export async function initializeDesigns(): Promise<void> {
+  // Register the built-in design roles
+  BuiltInDesignRoles.forEach(registerDesignRole);
+
+  // Nothing to load if the designs directory does not exist yet
+  if (!(await Fs.exists(resolveDesignsDirPath()))) {
+    return;
+  }
+
+  // Read the entries in the designs directory
+  const entries = await Fs.readDir(resolveDesignsDirPath());
+
+  // Read a design from each entry, discarding entries which are
+  // not valid design bundles
+  const designs = (
+    await Promise.all(entries.map((entry) => readDesign(entry.path)))
+  ).filter((design) => design !== null);
+
+  // Load designs into the store
+  DesignsStore.load(designs);
+
+  // Dispatch a designs loaded event
+  Events.dispatch<DesignsLoadedEventData>(DesignsLoadedEvent, designs);
+}
