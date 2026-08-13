@@ -24,6 +24,7 @@ export * from './IconRenderer';
 export * from './KeyboardShortcut';
 export * from './Layout';
 export * from './Menu';
+export * from './MindDropLogo';
 export * from './SearchableMenu';
 export * from './hooks';
 export * from './Panel';
