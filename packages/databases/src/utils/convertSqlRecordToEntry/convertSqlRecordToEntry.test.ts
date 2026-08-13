@@ -72,7 +72,6 @@ describe('convertSqlRecordToEntry', () => {
             options: { sortBy: 'title' },
           },
         },
-        viewLayoutOverrides: { 'view-1': 'layout-2' },
       }),
     };
 
@@ -82,7 +81,6 @@ describe('convertSqlRecordToEntry', () => {
       embeddedViewConfigs: {
         'layout-1:Content': { options: { sortBy: 'title' } },
       },
-      viewLayoutOverrides: { 'view-1': 'layout-2' },
     });
   });
 });

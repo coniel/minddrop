@@ -121,7 +121,9 @@ describe('duplicateDatabaseEntry', () => {
 
   it('copies the source entry metadata onto the duplicate', async () => {
     const metadata: DatabaseEntryMetadata = {
-      viewLayoutOverrides: { 'view-1': 'layout-1' },
+      embeddedViewConfigs: {
+        'layout-1:Content': { options: { sortBy: 'title' } },
+      },
     };
 
     // Set up metadata on the source entry

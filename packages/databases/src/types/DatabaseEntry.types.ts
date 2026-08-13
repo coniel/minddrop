@@ -64,10 +64,4 @@ export interface DatabaseEntryMetadata {
    * embedded in layouts, keyed by `propertyName:layoutId`.
    */
   embeddedViewConfigs?: Record<string, DatabaseEntryViewConfig>;
-
-  /**
-   * Per-view layout overrides for this entry, keyed by
-   * view ID. If set, used instead of the database default.
-   */
-  viewLayoutOverrides?: Record<string, string>;
 }

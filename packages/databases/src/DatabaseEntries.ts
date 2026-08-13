@@ -44,6 +44,4 @@ export { getAllDatabaseEntries as getAll } from './getAllDatabaseEntries';
 export { getNewestDatabaseEntries as getNewest } from './utils';
 export { getRecentDatabaseEntries as getRecent } from './utils';
 export { searchDatabaseEntriesByTitle as searchByTitle } from './utils';
-export { setEntryViewLayoutOverride as setViewLayoutOverride } from './setEntryViewLayoutOverride';
-export { clearEntryViewLayoutOverride as clearViewLayoutOverride } from './clearEntryViewLayoutOverride';
 export { resolveEntryLayoutOverrides as resolveLayoutOverrides } from './resolveEntryLayoutOverrides';

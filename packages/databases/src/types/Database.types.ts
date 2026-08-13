@@ -109,12 +109,6 @@ export interface Database {
   defaultLayouts: Record<string, string>;
 
   /**
-   * A [view ID]: [layout ID] map overriding the default
-   * layout for specific views.
-   */
-  viewLayouts?: Record<string, string>;
-
-  /**
    * How entries are opened when clicked.
    * - `dialog`: Opens the entry as a dialog overlay.
    * - `panel`: Opens the entry in a slide out panel.
