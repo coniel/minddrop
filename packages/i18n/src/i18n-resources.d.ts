@@ -1100,6 +1100,40 @@ declare module 'i18next' {
         designs: {
           name: string;
           new: string;
+          roles: {
+            'card-title': {
+              label: string;
+            };
+            'card-subtitle': {
+              label: string;
+            };
+            'card-body': {
+              label: string;
+            };
+            'card-cover': {
+              label: string;
+            };
+            'list-title': {
+              label: string;
+            };
+            'page-title': {
+              label: string;
+            };
+            'page-body': {
+              label: string;
+            };
+            'page-content': {
+              label: string;
+            };
+          };
+          roleVariants: {
+            sm: string;
+            md: string;
+            lg: string;
+          };
+          roleVariantAxes: {
+            size: string;
+          };
           layouts: {
             empty: string;
             labels: {
@@ -1123,6 +1157,11 @@ declare module 'i18next' {
               description: string;
             };
             list: {
+              name: string;
+              label: string;
+              description: string;
+            };
+            space: {
               name: string;
               label: string;
               description: string;

@@ -1044,6 +1044,40 @@
   "designs": {
     "name": "Design",
     "new": "New design",
+    "roles": {
+      "card-title": {
+        "label": "Card title"
+      },
+      "card-subtitle": {
+        "label": "Card subtitle"
+      },
+      "card-body": {
+        "label": "Card body"
+      },
+      "card-cover": {
+        "label": "Card cover"
+      },
+      "list-title": {
+        "label": "List title"
+      },
+      "page-title": {
+        "label": "Page title"
+      },
+      "page-body": {
+        "label": "Page body"
+      },
+      "page-content": {
+        "label": "Content"
+      }
+    },
+    "roleVariants": {
+      "sm": "Small",
+      "md": "Medium",
+      "lg": "Large"
+    },
+    "roleVariantAxes": {
+      "size": "Size"
+    },
     "layouts": {
       "empty": "No layouts",
       "labels": {
@@ -1070,6 +1104,11 @@
         "name": "List",
         "label": "List layout",
         "description": "The layout of an entry when displayed in a list."
+      },
+      "space": {
+        "name": "Space",
+        "label": "Space layout",
+        "description": "The layout of a space's page."
       }
     },
     "typography": {
