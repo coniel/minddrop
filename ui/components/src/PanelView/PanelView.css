@@ -10,7 +10,7 @@
        height stays the same when there are no actions. */
     min-height: calc(1.75rem + var(--space-2) * 2 + 1px);
     padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4);
-    border-bottom: 1px solid var(--border-subtle);
+    border-bottom: var(--border-width-thin) solid var(--border-subtle);
     flex-shrink: 0;
 
     /* The breadcrumb button's own padding provides part of the
@@ -35,9 +35,9 @@
 
       /* Match the title's text style and icon gap so the content
          does not shift when the title becomes a breadcrumb */
-      font-size: var(--text-base);
-      font-weight: var(--weight-normal);
-      line-height: var(--leading-snug);
+      font-size: var(--font-size-base);
+      font-weight: var(--font-weight-regular);
+      line-height: var(--line-height-snug);
       gap: var(--space-2);
 
       /* Offset the button's 1px border so the icon lines up with

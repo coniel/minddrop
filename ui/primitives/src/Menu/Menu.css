@@ -13,7 +13,7 @@
 
 .menu {
   background-color: var(--surface-overlay);
-  border: 1px solid var(--border-subtle);
+  border: var(--border-width-thin) solid var(--border-subtle);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-overlay);
   padding: var(--space-1);
@@ -88,7 +88,7 @@
 .menu-label {
   display: flex;
   align-items: center;
-  height: 1.75rem;
+  height: var(--control-height-md);
   padding: 0 var(--space-2);
   border-radius: var(--radius-md);
   transition: background-color var(--duration-fast) var(--ease-out);
@@ -97,12 +97,12 @@
 
   &[role='button'] {
     &:hover {
-      background-color: var(--surface-neutral);
+      background-color: var(--surface-accent);
       transition: none;
     }
 
     &:not(:has(button:hover)):active {
-      background-color: var(--surface-neutral-hover);
+      background-color: var(--surface-accent-hover);
     }
   }
 
@@ -154,21 +154,21 @@
 
   color: var(--text-regular);
   font-family: var(--font-ui);
-  font-size: var(--text-sm);
-  font-weight: var(--weight-normal);
-  line-height: 1;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-none);
 
   /* --- Size --- */
 
   &.menu-item-size-compact {
-    height: 1.75rem;
+    height: var(--control-height-md);
   }
 
   /* --- Highlighted / force-visible --- */
 
   &[data-highlighted],
   &.menu-item-force-actions-visible {
-    background-color: var(--surface-neutral);
+    background-color: var(--surface-accent);
   }
 
   /* --- Hover ---
@@ -177,37 +177,37 @@
      Applies by default, while the input mode is still unknown. */
 
   :root:not([data-input-mode='keyboard']) &:hover {
-    background-color: var(--surface-neutral);
+    background-color: var(--surface-accent);
   }
 
   &:not(:has(button:hover)):active {
-    background-color: var(--surface-neutral-hover);
+    background-color: var(--surface-accent-hover);
   }
 
   /* --- Active/selected --- */
 
   &.menu-item-active {
-    background-color: var(--surface-neutral);
+    background-color: var(--surface-accent);
 
     &[data-highlighted],
     &.menu-item-force-actions-visible {
-      background-color: var(--surface-neutral-hover);
+      background-color: var(--surface-accent-hover);
     }
 
     &:not(:has(button:hover)):active {
-      background-color: var(--surface-neutral-active);
+      background-color: var(--surface-accent-active);
     }
   }
 
   :root:not([data-input-mode='keyboard']) &.menu-item-active:hover {
-    background-color: var(--surface-neutral-hover);
+    background-color: var(--surface-accent-hover);
   }
 
   /* --- Muted --- */
 
   &.menu-item-muted {
     color: var(--text-muted);
-    font-weight: var(--weight-medium);
+    font-weight: var(--font-weight-medium);
 
     &.menu-item-active,
     &[data-highlighted] {
@@ -238,7 +238,7 @@
 
   &.menu-item-disabled {
     pointer-events: none;
-    opacity: 0.45;
+    opacity: var(--opacity-disabled);
   }
 
   /* --- Label --- */
@@ -263,7 +263,7 @@
     align-items: center;
     justify-content: center;
     font-size: 0.8rem;
-    line-height: 1;
+    line-height: var(--line-height-none);
   }
 
   /* --- Submenu indicator --- */
@@ -319,7 +319,7 @@
   width: 0.875rem;
   height: 0.875rem;
   border-radius: var(--radius-full);
-  border: 1px solid var(--border-default);
+  border: var(--border-width-thin) solid var(--border-default);
   transition:
     background-color var(--duration-fast) var(--ease-out),
     border-color var(--duration-fast) var(--ease-out);
@@ -365,7 +365,7 @@
   width: 1.0625rem;
   height: 1.0625rem;
   border-radius: var(--radius-full);
-  border: 1px solid transparent;
+  border: var(--border-width-thin) solid transparent;
   flex-shrink: 0;
 }
 

@@ -15,7 +15,7 @@
 
   &[data-disabled] {
     pointer-events: none;
-    opacity: 0.45;
+    opacity: var(--opacity-disabled);
   }
 }
 
@@ -36,7 +36,7 @@
   align-items: center;
   width: 100%;
   border-radius: var(--radius-full);
-  background-color: var(--surface-neutral-active);
+  background-color: var(--surface-accent-active);
 }
 
 /* --- Indicator (filled portion) --- */
@@ -52,13 +52,13 @@
 .slider-thumb {
   border-radius: var(--radius-full);
   background-color: white;
-  box-shadow: 0 1px 3px lch(0 0 0 / 0.2);
+  box-shadow: var(--shadow-xs);
   outline: none;
   transition: box-shadow var(--duration-fast) var(--ease-out);
 
   &:focus-visible {
-    outline: 2px solid var(--border-primary);
-    outline-offset: 2px;
+    outline: var(--focus-ring-width) solid var(--focus-ring-color);
+    outline-offset: var(--focus-ring-offset);
   }
 
   &:hover {

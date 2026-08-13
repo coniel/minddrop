@@ -9,7 +9,7 @@
   .toolbar {
     padding: 0 0.5rem;
     align-items: center;
-    border-bottom: 1px solid var(--border-subtle);
+    border-bottom: var(--border-width-thin) solid var(--border-subtle);
 
     .invisible-text-field {
       flex: 1;

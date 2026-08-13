@@ -47,7 +47,7 @@ export const ConfirmationDialogStories = () => {
             {lastAction && (
               <span
                 style={{
-                  fontSize: 'var(--text-sm)',
+                  fontSize: 'var(--font-size-sm)',
                   color: 'var(--text-muted)',
                 }}
               >

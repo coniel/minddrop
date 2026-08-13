@@ -222,7 +222,7 @@ export const TextInputStories = () => (
               trailing={
                 <span
                   style={{
-                    fontSize: 'var(--text-sm)',
+                    fontSize: 'var(--font-size-sm)',
                     color: 'var(--text-subtle)',
                   }}
                 >
@@ -253,7 +253,7 @@ export const TextInputStories = () => (
               trailing={
                 <span
                   style={{
-                    fontSize: 'var(--text-xs)',
+                    fontSize: 'var(--font-size-xs)',
                     color: 'var(--text-subtle)',
                   }}
                 >

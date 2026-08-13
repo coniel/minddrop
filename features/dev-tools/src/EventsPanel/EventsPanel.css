@@ -17,13 +17,13 @@
    together with a gap between batches */
 .dev-tools-event-batch + .dev-tools-event-batch {
   margin-top: var(--space-5);
-  border-top: 1px solid var(--border-subtle);
+  border-top: var(--border-width-thin) solid var(--border-subtle);
 }
 
 /* --- Entries --- */
 
 .dev-tools-event-entry {
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: var(--border-width-thin) solid var(--border-subtle);
 }
 
 .dev-tools-event-entry-row {
@@ -43,7 +43,7 @@
   }
 
   &[data-expandable='true']:hover {
-    background-color: var(--surface-neutral-hover);
+    background-color: var(--surface-accent-hover);
   }
 }
 

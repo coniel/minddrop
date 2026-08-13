@@ -18,7 +18,7 @@
       right: var(--space-1);
       top: 50%;
       transform: translateY(-50%);
-      background-color: var(--surface-neutral);
+      background-color: var(--surface-accent);
     }
 
     &:hover .option-delete-button {
@@ -36,8 +36,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.5rem;
-  height: 1.5rem;
+  width: var(--control-height-sm);
+  height: var(--control-height-sm);
   flex-shrink: 0;
   border-radius: var(--radius-md);
   border: none;
@@ -46,7 +46,7 @@
   cursor: pointer;
 
   &:hover {
-    background-color: var(--surface-neutral);
+    background-color: var(--surface-accent);
   }
 }
 
@@ -54,7 +54,7 @@
   width: 1rem;
   height: 1rem;
   border-radius: var(--radius-full);
-  border: 1px solid transparent;
+  border: var(--border-width-thin) solid transparent;
   flex-shrink: 0;
 }
 

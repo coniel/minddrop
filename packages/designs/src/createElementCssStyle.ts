@@ -36,7 +36,11 @@ function resolveBackgroundColorCss(color: string, opacity?: number): string {
     return 'transparent';
   }
 
-  const colorValue = resolveContentColorCss(color, 100, 'var(--surface-paper)');
+  const colorValue = resolveContentColorCss(
+    color,
+    100,
+    'var(--surface-overlay)',
+  );
 
   // Apply opacity to the background color value so it doesn't
   // affect child element opacity
@@ -54,7 +58,7 @@ function resolveBackgroundColorCss(color: string, opacity?: number): string {
 }
 
 function resolveBorderColorCss(color: string): string {
-  return resolveContentColorCss(color, 600, 'var(--surface-paper)');
+  return resolveContentColorCss(color, 600, 'var(--surface-overlay)');
 }
 
 function resolveFontFamily(family: string): string {

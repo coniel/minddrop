@@ -15,7 +15,7 @@
   cursor: default;
 
   &[data-disabled] {
-    opacity: 0.45;
+    opacity: var(--opacity-disabled);
     pointer-events: none;
   }
 }
@@ -31,7 +31,7 @@
   border: 1.5px solid var(--border-strong);
   border-radius: var(--radius-sm);
   background-color: transparent;
-  color: var(--contrast-color);
+  color: var(--text-on-solid);
 
   display: flex;
   align-items: center;
@@ -98,18 +98,18 @@
 
 .checkbox-field-label {
   font-family: var(--font-ui);
-  font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
   color: var(--text-regular);
-  line-height: var(--leading-normal);
+  line-height: var(--line-height-normal);
   cursor: default;
 }
 
 .checkbox-field-description {
   font-family: var(--font-ui);
-  font-size: var(--text-sm);
+  font-size: var(--font-size-sm);
   color: var(--text-muted);
-  line-height: var(--leading-normal);
+  line-height: var(--line-height-normal);
 }
 
 /* ------------------------------------------------------------
@@ -124,8 +124,8 @@
 
 .checkbox-group-label {
   font-family: var(--font-ui);
-  font-size: var(--text-sm);
-  font-weight: var(--weight-semibold);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
   color: var(--text-muted);
   margin-bottom: var(--space-1);
 }

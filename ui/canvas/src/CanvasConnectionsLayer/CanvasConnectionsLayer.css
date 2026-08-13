@@ -22,7 +22,7 @@
     stroke: var(--neutral-500);
     stroke-linecap: round;
     opacity: 0;
-    transition: opacity var(--duration-normal) var(--ease-out);
+    transition: var(--transition-opacity);
   }
 
   .ui-canvas-connection:hover .ui-canvas-connection-halo,

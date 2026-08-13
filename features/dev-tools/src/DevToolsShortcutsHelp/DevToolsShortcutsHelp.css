@@ -5,14 +5,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: lch(0 0 0 / 0.45);
+  background-color: var(--surface-scrim);
 }
 
 .dev-tools-shortcuts-help-card {
   min-width: 240px;
   padding: var(--space-4);
   background-color: var(--surface-overlay);
-  border: 1px solid var(--border-default);
+  border: var(--border-width-thin) solid var(--border-default);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-overlay);
 }

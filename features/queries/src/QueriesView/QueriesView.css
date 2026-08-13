@@ -10,7 +10,7 @@
     flex-direction: column;
     width: 260px;
     flex-shrink: 0;
-    border-right: 1px solid var(--border-subtle);
+    border-right: var(--border-width-thin) solid var(--border-subtle);
   }
 
   .queries-view-list-header {

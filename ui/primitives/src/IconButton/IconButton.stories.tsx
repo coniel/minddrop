@@ -91,7 +91,7 @@ export const IconButtonStories = () => (
         <StoryItem label="contrast">
           <div
             style={{
-              background: 'var(--surface-solid-neutral)',
+              background: 'var(--surface-solid-accent)',
               padding: 'var(--space-2)',
               borderRadius: 'var(--radius-md)',
             }}
@@ -232,7 +232,7 @@ export const IconButtonStories = () => (
         <StoryItem label="contrast">
           <div
             style={{
-              background: 'var(--surface-solid-neutral)',
+              background: 'var(--surface-solid-accent)',
               padding: 'var(--space-2)',
               borderRadius: 'var(--radius-md)',
             }}

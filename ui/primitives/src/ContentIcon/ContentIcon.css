@@ -2,8 +2,8 @@
 
 .content-icon {
   border-radius: var(--radius-xs);
-  width: var(--icon-size-default);
-  height: var(--icon-size-default);
+  width: var(--icon-size-md);
+  height: var(--icon-size-md);
   color: currentColor;
   stroke: currentColor;
 }

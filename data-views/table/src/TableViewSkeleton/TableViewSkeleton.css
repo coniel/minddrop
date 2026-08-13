@@ -8,7 +8,7 @@
 
 .table-view-skeleton-header {
   display: flex;
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: var(--border-width-thin) solid var(--border-subtle);
 }
 
 .table-view-skeleton-header-cell {
@@ -45,7 +45,7 @@
 .table-view-skeleton-row {
   display: flex;
   height: 2.5rem;
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: var(--border-width-thin) solid var(--border-subtle);
 }
 
 .table-view-skeleton-cell {

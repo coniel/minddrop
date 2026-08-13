@@ -18,7 +18,7 @@
   width: 0.75rem;
   height: 0.75rem;
   border-radius: var(--radius-full);
-  border: 1px solid transparent;
+  border: var(--border-width-thin) solid transparent;
   flex-shrink: 0;
 }
 
@@ -36,7 +36,7 @@
 
 .color-select-swatch-transparent {
   background: repeating-conic-gradient(
-      var(--surface-neutral) 0% 25%,
+      var(--surface-accent) 0% 25%,
       transparent 0% 50%
     )
     0 0 / 6px 6px;

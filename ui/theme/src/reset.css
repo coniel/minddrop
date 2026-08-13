@@ -108,7 +108,7 @@ body,
 }
 
 body {
-  line-height: 1;
+  line-height: var(--line-height-none);
 }
 ol,
 ul {

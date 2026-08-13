@@ -113,7 +113,7 @@ export const ContainerStudioDesignElement: React.FC<
       <span
         style={{
           color: 'var(--contrast-500)',
-          fontSize: 'var(--text-xs)',
+          fontSize: 'var(--font-size-xs)',
           textAlign: 'center',
         }}
       >

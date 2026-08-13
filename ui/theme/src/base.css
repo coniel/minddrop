@@ -1,0 +1,46 @@
+/* ============================================================
+   BASE STYLES
+   Element-level defaults applied app wide: cursor behaviour and
+   the body's type and color grounding.
+   ============================================================ */
+
+/* Override pointer cursor on interactive elements (except links) */
+button,
+select,
+summary,
+[role='button'],
+input[type='button'],
+input[type='submit'],
+input[type='reset'],
+input[type='checkbox'],
+input[type='radio'],
+input[type='range'],
+input[type='file'],
+input[type='color'],
+input[type='image'] {
+  cursor: default;
+}
+
+input:not([type='checkbox']):not([type='radio']):not([type='color']):not(
+    [type='range']
+  ):not([type='file']):not([type='button']):not([type='submit']):not(
+    [type='reset']
+  ):not([type='image']),
+textarea,
+[contenteditable] {
+  cursor: text;
+}
+
+a[href] {
+  cursor: pointer;
+}
+
+body {
+  font-family: var(--font-ui);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-snug);
+  color: var(--text-regular);
+  background-color: var(--surface-app);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

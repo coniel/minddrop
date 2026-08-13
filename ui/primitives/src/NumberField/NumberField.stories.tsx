@@ -203,7 +203,7 @@ export const NumberFieldStories = () => {
                 leading={
                   <span
                     style={{
-                      fontSize: 'var(--text-sm)',
+                      fontSize: 'var(--font-size-sm)',
                       color: 'var(--text-subtle)',
                     }}
                   >
@@ -220,7 +220,7 @@ export const NumberFieldStories = () => {
                 trailing={
                   <span
                     style={{
-                      fontSize: 'var(--text-sm)',
+                      fontSize: 'var(--font-size-sm)',
                       color: 'var(--text-subtle)',
                     }}
                   >
@@ -238,7 +238,7 @@ export const NumberFieldStories = () => {
                 leading={
                   <span
                     style={{
-                      fontSize: 'var(--text-sm)',
+                      fontSize: 'var(--font-size-sm)',
                       color: 'var(--text-subtle)',
                     }}
                   >
@@ -248,7 +248,7 @@ export const NumberFieldStories = () => {
                 trailing={
                   <span
                     style={{
-                      fontSize: 'var(--text-sm)',
+                      fontSize: 'var(--font-size-sm)',
                       color: 'var(--text-subtle)',
                     }}
                   >

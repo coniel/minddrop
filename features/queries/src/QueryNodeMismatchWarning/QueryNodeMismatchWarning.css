@@ -3,7 +3,7 @@
 .queries-node-mismatch-warning {
   margin: var(--space-1) calc(var(--space-3) * -1) 0;
   padding: var(--space-3) var(--space-3) 0;
-  border-top: 1px solid var(--border-subtle);
+  border-top: var(--border-width-thin) solid var(--border-subtle);
 }
 
 .queries-node-mismatch-warning-message {
@@ -13,14 +13,14 @@
 /* Size the warning icon to match the warning text */
 .queries-node-mismatch-warning-message .icon {
   flex-shrink: 0;
-  width: 14px;
-  height: 14px;
+  width: var(--icon-size-xs);
+  height: var(--icon-size-xs);
 }
 
 /* Size the source icons to match the warning icon, so the
    source rows column-align with the warning message */
 .queries-node-mismatch-warning-sources {
-  --icon-size-default: 14px;
+  --icon-size-md: var(--icon-size-xs);
 }
 
 .queries-node-mismatch-warning-source-icon {

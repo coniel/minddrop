@@ -9,7 +9,7 @@
   .toolbar {
     padding: 0 0.5rem;
     align-items: center;
-    border-bottom: 1px solid var(--border-subtle);
+    border-bottom: var(--border-width-thin) solid var(--border-subtle);
 
     .invisible-text-field {
       flex: 1;
@@ -50,8 +50,8 @@
 
   .color-selection-button {
     padding: 0;
-    width: 28px;
-    height: 28px;
+    width: var(--control-height-md);
+    height: var(--control-height-md);
   }
 
   .color-select-popover {

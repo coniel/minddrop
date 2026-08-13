@@ -185,10 +185,10 @@ export const DialogStories = () => (
                     boxSizing: 'border-box',
                     borderRadius: 'var(--radius-md)',
                     border: '1px solid var(--border-default)',
-                    background: 'var(--surface-neutral)',
+                    background: 'var(--surface-accent)',
                     color: 'var(--text-regular)',
                     fontFamily: 'var(--font-ui)',
-                    fontSize: 'var(--text-sm)',
+                    fontSize: 'var(--font-size-sm)',
                     outline: 'none',
                   }}
                 />

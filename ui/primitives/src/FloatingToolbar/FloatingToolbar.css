@@ -1,5 +1,5 @@
 .floating-toolbar {
-  border: 1px solid var(--border-subtle);
+  border: var(--border-width-thin) solid var(--border-subtle);
   border-radius: var(--radius-lg);
   background-color: var(--surface-overlay);
   box-shadow: var(--shadow-overlay);
@@ -67,7 +67,7 @@
   justify-content: center;
   width: var(--space-6);
   height: var(--space-6);
-  border: 1px solid var(--border-subtle);
+  border: var(--border-width-thin) solid var(--border-subtle);
   border-radius: var(--radius-md);
   background-color: var(--surface-raised);
   cursor: grab;

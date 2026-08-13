@@ -7,5 +7,5 @@ import { resolveContentColorCss } from './resolveContentColorCss';
  * @returns A CSS color value string.
  */
 export function resolveBackgroundColorStyle(color: string): string {
-  return resolveContentColorCss(color, 100, 'var(--surface-paper)');
+  return resolveContentColorCss(color, 100, 'var(--surface-overlay)');
 }

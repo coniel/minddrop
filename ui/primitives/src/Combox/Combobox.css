@@ -15,12 +15,12 @@
   width: 100%;
   gap: var(--space-1);
 
-  border: 1px solid transparent;
+  border: var(--border-width-thin) solid transparent;
   border-radius: var(--radius-md);
 
   font-family: var(--font-ui);
-  font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
   color: var(--text-regular);
   background: none;
 
@@ -66,7 +66,7 @@
 
 .combobox-trigger-placeholder {
   color: var(--text-placeholder);
-  font-weight: var(--weight-normal);
+  font-weight: var(--font-weight-regular);
 }
 
 /* ============================================================
@@ -74,7 +74,7 @@
    ============================================================ */
 
 .combobox-trigger-size-md {
-  min-height: 1.75rem;
+  min-height: var(--control-height-md);
   padding: 3px var(--space-2) 3px 3px;
 
   .combobox-trigger-content,
@@ -85,7 +85,7 @@
 
 .combobox-trigger-size-lg,
 .combobox-trigger:not(.combobox-trigger-size-md) {
-  min-height: 2.25rem;
+  min-height: var(--control-height-lg);
   padding: var(--space-1) var(--space-2) var(--space-1) var(--space-1);
 
   .combobox-chip {
@@ -108,7 +108,7 @@
   background-color: var(--surface-subtle);
 
   &:hover:not(:has(.combobox-chip:hover)) {
-    background-color: var(--surface-neutral);
+    background-color: var(--surface-accent);
   }
 }
 
@@ -118,7 +118,7 @@
   border-color: var(--border-default);
 
   &:hover:not(:has(.combobox-chip:hover)) {
-    background-color: var(--surface-neutral);
+    background-color: var(--surface-accent);
     border-color: var(--border-strong);
   }
 }
@@ -126,12 +126,12 @@
 /* --- Filled --- */
 
 .combobox-trigger-variant-filled {
-  background-color: var(--surface-paper);
+  background-color: var(--surface-overlay);
   border-color: var(--border-default);
   box-shadow: var(--shadow-raised);
 
   &:hover:not(:has(.combobox-chip:hover)) {
-    background-color: var(--surface-neutral);
+    background-color: var(--surface-accent);
     border-color: var(--border-strong);
   }
 }
@@ -164,13 +164,13 @@
   padding: 1px var(--space-1);
 
   font-family: var(--font-ui);
-  font-size: var(--text-xs);
-  font-weight: var(--weight-medium);
-  line-height: 1;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-none);
   white-space: nowrap;
 
   background-color: var(--surface-subtle);
-  border: 1px solid var(--border-default);
+  border: var(--border-width-thin) solid var(--border-default);
   border-radius: var(--radius-sm);
   color: var(--text-regular);
 }
@@ -201,7 +201,7 @@
   padding: 0 var(--space-1);
   border: none;
   border-radius: inherit;
-  background-color: var(--surface-neutral);
+  background-color: var(--surface-accent);
   color: var(--text-muted);
 }
 
@@ -252,7 +252,7 @@
 .combobox-popup {
   width: max(220px, var(--anchor-width));
   background-color: var(--surface-overlay);
-  border: 1px solid var(--border-subtle);
+  border: var(--border-width-thin) solid var(--border-subtle);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-overlay);
   padding: var(--space-1) 0 var(--space-1) var(--space-1);
@@ -278,14 +278,14 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  height: 1.75rem;
+  height: var(--control-height-md);
   padding: 0 var(--space-2);
   margin-right: var(--space-1);
   margin-bottom: var(--space-1);
 
-  border: 1px solid transparent;
+  border: var(--border-width-thin) solid transparent;
   border-radius: var(--radius-md);
-  background-color: var(--surface-neutral);
+  background-color: var(--surface-accent);
 }
 
 .combobox-input-icon {
@@ -304,14 +304,14 @@
   background: transparent;
 
   font-family: var(--font-ui);
-  font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
   color: var(--text-regular);
-  line-height: 1;
+  line-height: var(--line-height-none);
 
   &::placeholder {
     color: var(--text-placeholder);
-    font-weight: var(--weight-normal);
+    font-weight: var(--font-weight-regular);
   }
 }
 
@@ -349,7 +349,7 @@
 
 .combobox-empty {
   font-family: var(--font-ui);
-  font-size: var(--text-sm);
+  font-size: var(--font-size-sm);
   color: var(--text-subtle);
   text-align: center;
   margin-right: var(--space-1);

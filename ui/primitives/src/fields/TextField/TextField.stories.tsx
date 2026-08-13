@@ -276,7 +276,7 @@ export const TextFieldStories = () => (
               trailing={
                 <span
                   style={{
-                    fontSize: 'var(--text-sm)',
+                    fontSize: 'var(--font-size-sm)',
                     color: 'var(--text-subtle)',
                   }}
                 >
@@ -307,7 +307,7 @@ export const TextFieldStories = () => (
               trailing={
                 <span
                   style={{
-                    fontSize: 'var(--text-xs)',
+                    fontSize: 'var(--font-size-xs)',
                     color: 'var(--text-subtle)',
                     cursor: 'pointer',
                   }}
@@ -435,7 +435,7 @@ export const TextFieldStories = () => (
                 color: 'white',
                 border: 'none',
                 fontFamily: 'var(--font-ui)',
-                fontSize: 'var(--text-base)',
+                fontSize: 'var(--font-size-base)',
                 cursor: 'default',
                 flexShrink: 0,
               }}
@@ -464,8 +464,8 @@ export const TextFieldStories = () => (
                 borderRadius: 'var(--radius-md)',
                 border: '1px solid var(--border-default)',
                 fontFamily: 'var(--font-ui)',
-                fontSize: 'var(--text-sm)',
-                background: 'var(--surface-paper)',
+                fontSize: 'var(--font-size-sm)',
+                background: 'var(--surface-overlay)',
                 color: 'var(--text-muted)',
                 cursor: 'default',
               }}

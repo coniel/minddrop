@@ -1,5 +1,5 @@
 .data-view-new-entry-picker {
-  border: 1px solid var(--border-subtle);
+  border: var(--border-width-thin) solid var(--border-subtle);
   border-radius: var(--radius-lg);
   background-color: var(--surface-overlay);
 }

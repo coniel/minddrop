@@ -34,7 +34,7 @@ export const IconPlaceholderField: React.FC<IconPlaceholderFieldProps> = ({
     <Stack gap={2} style={{ alignItems: 'center' }}>
       <div
         style={{
-          ['--icon-size-default' as string]: '40px',
+          ['--icon-size-md' as string]: '40px',
           fontSize: '40px',
           lineHeight: 1,
           display: 'inline-flex',

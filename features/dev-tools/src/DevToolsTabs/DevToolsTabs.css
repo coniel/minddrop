@@ -3,7 +3,7 @@
   gap: var(--space-1);
 
   .icon-button-active {
-    background-color: var(--surface-neutral-hover);
+    background-color: var(--surface-accent-hover);
 
     .icon {
       color: var(--text-regular);

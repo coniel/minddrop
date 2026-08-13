@@ -14,7 +14,7 @@
 .screenshot-picker-outline {
   position: absolute;
   box-sizing: border-box;
-  border: 2px solid rgb(56 152 236);
+  border: var(--border-width-medium) solid rgb(56 152 236);
   border-radius: var(--radius-lg);
   background: rgb(56 152 236 / 12%);
   pointer-events: none;

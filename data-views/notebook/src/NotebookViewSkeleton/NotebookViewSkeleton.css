@@ -11,7 +11,7 @@
 .notebook-view-skeleton-list {
   width: 280px;
   flex-shrink: 0;
-  border-right: 1px solid var(--border-subtle);
+  border-right: var(--border-width-thin) solid var(--border-subtle);
   display: flex;
   flex-direction: column;
 }
@@ -21,19 +21,19 @@
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-2);
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: var(--border-width-thin) solid var(--border-subtle);
 }
 
 .notebook-view-skeleton-search {
   flex: 1;
-  height: 28px;
+  height: var(--control-height-md);
   border-radius: var(--radius-md);
   background-color: var(--surface-skeleton);
 }
 
 .notebook-view-skeleton-button {
-  width: 28px;
-  height: 28px;
+  width: var(--control-height-md);
+  height: var(--control-height-md);
   flex-shrink: 0;
   border-radius: var(--radius-md);
   background-color: var(--surface-skeleton);
@@ -46,7 +46,7 @@
   flex-direction: column;
   gap: var(--space-1);
   padding: var(--space-4) var(--space-3);
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: var(--border-width-thin) solid var(--border-subtle);
 }
 
 .notebook-view-skeleton-list-item-selected {

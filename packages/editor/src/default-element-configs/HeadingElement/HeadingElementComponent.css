@@ -1,21 +1,21 @@
 .heading-1-element {
-  font-size: var(--text-xl);
-  font-weight: var(--weight-semibold);
-  line-height: var(--leading-tight);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
   padding-top: var(--space-5);
 }
 
 .heading-2-element {
-  font-size: var(--text-lg);
-  font-weight: var(--weight-semibold);
-  line-height: var(--leading-tight);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
   padding-top: var(--space-4);
 }
 
 .heading-3-element {
-  font-size: var(--text-md);
-  font-weight: var(--weight-bold);
-  line-height: var(--leading-tight);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
   padding-top: var(--space-4);
 }
 

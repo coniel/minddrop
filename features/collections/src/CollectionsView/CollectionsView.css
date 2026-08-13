@@ -10,7 +10,7 @@
     width: 16rem;
     flex-shrink: 0;
     gap: 0;
-    border-right: 1px solid var(--border-subtle);
+    border-right: var(--border-width-thin) solid var(--border-subtle);
   }
 
   .collections-view-list-header {
@@ -76,8 +76,8 @@
     /* The subtle variant does not pass typography props through, so
        the name's text style is set here */
     .text-input-input {
-      font-size: var(--text-md);
-      font-weight: var(--weight-semibold);
+      font-size: var(--font-size-md);
+      font-weight: var(--font-weight-semibold);
     }
   }
 }

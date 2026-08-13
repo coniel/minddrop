@@ -9,7 +9,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 1.5rem;
+  height: var(--control-height-sm);
   padding: 0;
   border: none;
   border-radius: 0;
@@ -18,7 +18,7 @@
   outline: none;
 
   &:hover {
-    background-color: var(--surface-neutral);
+    background-color: var(--surface-accent);
   }
 
   &:focus-visible {
@@ -43,7 +43,7 @@
 }
 
 .position-grid-cell-active {
-  background-color: var(--surface-neutral-active);
+  background-color: var(--surface-accent-active);
 }
 
 .position-grid-dot {

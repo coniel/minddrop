@@ -11,12 +11,12 @@
 
 .story-title {
   font-family: var(--font-ui);
-  font-size: var(--text-xl);
-  font-weight: var(--weight-semibold);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
   color: var(--text-regular);
   margin: 0 0 var(--space-5);
   padding-bottom: var(--space-4);
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: var(--border-width-thin) solid var(--border-subtle);
 }
 
 .story-sections {
@@ -42,23 +42,23 @@
   flex-direction: column;
   gap: var(--space-1);
   padding-bottom: var(--space-3);
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: var(--border-width-thin) solid var(--border-subtle);
 }
 
 .story-section-title {
   font-family: var(--font-ui);
-  font-size: var(--text-base);
-  font-weight: var(--weight-semibold);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
   color: var(--text-regular);
   margin: 0;
 }
 
 .story-section-description {
   font-family: var(--font-ui);
-  font-size: var(--text-sm);
+  font-size: var(--font-size-sm);
   color: var(--text-muted);
   margin: 0;
-  line-height: var(--leading-snug);
+  line-height: var(--line-height-snug);
 }
 
 .story-section-content {
@@ -75,11 +75,11 @@
 
 .story-row-label {
   font-family: var(--font-ui);
-  font-size: var(--text-xs);
-  font-weight: var(--weight-medium);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
   color: var(--text-subtle);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: var(--letter-spacing-wide);
 }
 
 .story-row-items {
@@ -104,6 +104,6 @@
 
 .story-item-label {
   font-family: var(--font-mono);
-  font-size: var(--text-xs);
+  font-size: var(--font-size-xs);
   color: var(--text-subtle);
 }

@@ -8,5 +8,5 @@ import { resolveContentColorCss } from './resolveContentColorCss';
  * @returns A CSS color value string.
  */
 export function resolveBorderColorStyle(color: string): string {
-  return resolveContentColorCss(color, 600, 'var(--surface-paper)');
+  return resolveContentColorCss(color, 600, 'var(--surface-overlay)');
 }

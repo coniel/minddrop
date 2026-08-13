@@ -4,7 +4,7 @@
 
 /* Divider between consecutive rows within a section */
 .setting:not(:last-child) {
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: var(--border-width-thin) solid var(--border-subtle);
 }
 
 /* Title and description column, allowed to shrink and truncate */

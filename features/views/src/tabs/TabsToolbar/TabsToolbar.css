@@ -63,8 +63,8 @@
 }
 
 .view-tab-close .icon {
-  width: 14px;
-  height: 14px;
+  width: var(--icon-size-xs);
+  height: var(--icon-size-xs);
 }
 
 .view-tab:hover .view-tab-close {

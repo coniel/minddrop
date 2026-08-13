@@ -1,6 +1,6 @@
 .dev-tools-json-tree {
   font-family: var(--font-mono, monospace);
-  font-size: var(--text-xs);
+  font-size: var(--font-size-xs);
   line-height: 1.5;
   color: var(--text-regular);
 }
@@ -17,7 +17,7 @@
 
 .dev-tools-json-children {
   padding-left: var(--space-4);
-  border-left: 1px solid var(--border-subtle);
+  border-left: var(--border-width-thin) solid var(--border-subtle);
   margin-left: var(--space-1);
 }
 
@@ -32,8 +32,8 @@
   /* Sized down from the dev tools default to sit within the
      tree's smaller rows */
   .icon {
-    width: 0.875rem;
-    height: 0.875rem;
+    width: var(--icon-size-xs);
+    height: var(--icon-size-xs);
   }
 }
 

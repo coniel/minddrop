@@ -44,8 +44,8 @@
       }
 
       .text {
-        font-size: var(--text-xl);
-        font-weight: var(--weight-semibold);
+        font-size: var(--font-size-2xl);
+        font-weight: var(--font-weight-semibold);
       }
     }
   }

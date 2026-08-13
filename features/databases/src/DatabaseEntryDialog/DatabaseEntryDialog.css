@@ -3,7 +3,7 @@
 .entry-dialog-backdrop {
   position: fixed;
   inset: 0;
-  background-color: lch(0 0 0 / 0.5);
+  background-color: var(--surface-scrim);
   z-index: var(--level-dialog-backdrop);
   display: flex;
   align-items: center;

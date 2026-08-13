@@ -2,7 +2,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--border-subtle);
+  border: var(--border-width-thin) solid var(--border-subtle);
   border-radius: var(--radius-md);
   background-color: var(--surface-raised);
   box-shadow: var(--shadow-sm);
@@ -21,7 +21,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: var(--letter-spacing-wider);
 }
 
 .queries-node-count {
@@ -44,11 +44,11 @@
    surface, step the entry lists' hover and press states one
    level up so they stay visible */
 :root:not([data-input-mode='keyboard']) .queries-node .menu-item:hover {
-  background-color: var(--surface-neutral-hover);
+  background-color: var(--surface-accent-hover);
 }
 
 .queries-node .menu-item:not(:has(button:hover)):active {
-  background-color: var(--surface-neutral-active);
+  background-color: var(--surface-accent-active);
 }
 
 /* Connection ports, centered on the node's edges at the flow
@@ -61,7 +61,7 @@
   z-index: 2;
   width: 12px;
   height: 12px;
-  border: 2px solid var(--primary-800);
+  border: var(--border-width-medium) solid var(--border-primary-hover);
   border-radius: var(--radius-full);
   background-color: var(--surface-raised);
 }
@@ -76,5 +76,5 @@
 }
 
 .queries-node-port-output:hover {
-  background-color: var(--primary-800);
+  background-color: var(--border-primary-hover);
 }

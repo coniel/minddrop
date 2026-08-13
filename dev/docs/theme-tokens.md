@@ -82,23 +82,27 @@ A container override like `--space-unit: 0.2rem` ("compact") or
 `--radius-unit: 0` ("sharp") rescales everything inside with no participation
 from designs. Density must clamp on touch surfaces (a WG 6 concern).
 
-## Coexistence with the legacy tokens
+## Migration from the legacy tokens (complete)
 
-The legacy files (`tokens.css`, `light.css`, `dark.css`) are untouched and
-stay live until WG 1 (`theme-tokens-migration`) deletes them. The new files
-are imported **after** them in `src/index.ts`, so where a token name is
-carried over, the new definition wins the cascade. Every carried-over name
-resolves to a pixel-identical value at default scope (accent defaults to
-neutral), so unmigrated components render unchanged.
+WG 1 (`theme-tokens-migration`) migrated every consumer and deleted the
+legacy files (`tokens.css`, `light.css`, `dark.css`). The non-token base
+styles that lived at the bottom of legacy `tokens.css` (cursor rules, `body`
+styles) now live in `src/base.css`. WG 1 also adopted the sweep-driven
+tokens at their motivating raw-value sites (focus rings, control heights,
+disabled opacity, scrim backdrops, border widths, icon sizes, letter
+spacing, measures, opacity transitions) and moved raw primary-step
+selection styling onto `--surface-selected` / `--border-selected` /
+`--surface-primary-subtle`. Deliberate exceptions that keep scale steps or
+raw values: content-color classes (ContentIcon, pickers), scrollbar thumb
+translucents, and FloatingActionButton's fixed light-mode palette. The
+rename record, kept for reference:
 
-Three name groups:
-
-1. **Carried over, same meaning** (redefined in the new files; no migration
-   needed): the color roles (`--text-muted`, `--surface-raised`,
-   `--border-default`, ...), `--space-1..7`, `--radius-xs..full`,
-   `--shadow-sm/md/lg/raised/overlay`, font families, `--level-*`,
-   `--duration-*`, `--ease-*`, `--transition-colors`.
-2. **Renamed** (old name only in legacy files; WG 1 migrates consumers):
+1. **Carried over, same meaning** (same name, same value): the color roles
+   (`--text-muted`, `--surface-raised`, `--border-default`, ...),
+   `--space-1..7`, `--radius-xs..full`, `--shadow-sm/md/lg/raised/overlay`,
+   font families, `--level-*`, `--duration-*`, `--ease-*`,
+   `--transition-colors`.
+2. **Renamed** (consumers migrated by WG 1):
 
    | Legacy                              | New                                  |
    | ----------------------------------- | ------------------------------------ |
@@ -120,12 +124,11 @@ Three name groups:
    the page title rounds from 31px to 32px (expect a 1px visual shift when
    migrating).
 
-3. **Legacy-only, dropped or homeless** (WG 1 decides per use):
-   `--text-danger`-style roles all carried; but `--contrast-color`,
-   `--contrast-color-light` and `--surface-paper` are not part of the new
-   vocabulary. The non-token content at the bottom of legacy `tokens.css`
-   (cursor rules, `body` styles) moves to a new `src/base.css` when the
-   legacy files are deleted; it is not vocabulary.
+3. **Legacy-only, dropped** (not part of the new vocabulary): filled control
+   variant backgrounds (`--surface-paper`) were mapped to `--surface-overlay`
+   (slight shift: pure white to accent-100 in light, one step darker in dark);
+   checkbox/radio marks (`--contrast-color`) were mapped to `--text-on-solid`.
+   `--contrast-color-light` had no consumers outside the legacy theme files.
 
 ## Settled decisions (WG 0)
 

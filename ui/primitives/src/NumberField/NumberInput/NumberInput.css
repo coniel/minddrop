@@ -99,7 +99,7 @@
 }
 
 .text-input-variant-outline .number-input-group:hover {
-  --number-input-bg: var(--surface-neutral);
+  --number-input-bg: var(--surface-accent);
 }
 
 /* subtle */
@@ -108,16 +108,16 @@
 }
 
 .text-input-variant-subtle .number-input-group:hover {
-  --number-input-bg: var(--surface-neutral);
+  --number-input-bg: var(--surface-accent);
 }
 
 /* filled */
 .text-input-variant-filled {
-  --number-input-bg: var(--surface-paper);
+  --number-input-bg: var(--surface-overlay);
 }
 
 .text-input-variant-filled .number-input-group:hover {
-  --number-input-bg: var(--surface-neutral);
+  --number-input-bg: var(--surface-accent);
 }
 
 /* --- Trailing slot fades out on stepper hover --- */

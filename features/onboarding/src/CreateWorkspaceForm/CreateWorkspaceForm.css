@@ -1,6 +1,6 @@
 .onboarding-create-workspace-form {
   width: 100%;
-  max-width: 380px;
+  max-width: var(--measure-narrow);
 
   .text-field {
     flex: 1;

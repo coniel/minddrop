@@ -14,7 +14,7 @@
 
 .date-cell-value {
   font-family: var(--font-ui);
-  font-size: var(--text-base);
+  font-size: var(--font-size-base);
   color: var(--text-regular);
   flex: 1;
   min-width: 0;

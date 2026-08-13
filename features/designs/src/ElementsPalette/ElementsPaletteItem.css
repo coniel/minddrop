@@ -5,7 +5,7 @@
   padding: var(--space-1) var(--space-2);
   color: var(--text-default);
   background-color: var(--surface-subtle);
-  border: 1px solid var(--border-subtle);
+  border: var(--border-width-thin) solid var(--border-subtle);
   border-radius: var(--radius-md);
   cursor: grab;
   user-select: none;

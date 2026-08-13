@@ -1,7 +1,7 @@
 .markdown-editor-stories-frame {
-  max-width: 640px;
+  max-width: var(--measure-content);
   padding: var(--space-4);
-  border: 1px solid var(--border-default);
+  border: var(--border-width-thin) solid var(--border-default);
   border-radius: var(--radius-md);
 }
 

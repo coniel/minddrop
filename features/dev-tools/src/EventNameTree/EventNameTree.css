@@ -22,7 +22,7 @@
   flex-shrink: 0;
   min-width: 1.2rem;
   padding: 1px 5px;
-  background-color: var(--surface-neutral-hover);
+  background-color: var(--surface-accent-hover);
   border-radius: var(--radius-full);
   color: var(--text-subtle);
   font-family: var(--font-mono, monospace);

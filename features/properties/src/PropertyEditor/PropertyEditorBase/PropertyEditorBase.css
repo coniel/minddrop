@@ -1,6 +1,6 @@
 .property-editor {
   background-color: var(--surface-overlay);
-  border-bottom: 1px solid var(--border-default);
+  border-bottom: var(--border-width-thin) solid var(--border-default);
   box-shadow: 0 -1px 0 var(--border-default);
 
   .property-editor-display {

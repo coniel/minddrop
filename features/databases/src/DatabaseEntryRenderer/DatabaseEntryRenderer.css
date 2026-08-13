@@ -4,7 +4,7 @@
 
 .database-entry-card
   > *:not(.database-entry-drag-handle):not(.database-entry-options) {
-  outline: 1px solid transparent;
+  outline: var(--border-width-thin) solid transparent;
   transition: outline-color var(--duration-normal) var(--ease-out);
 }
 
@@ -52,7 +52,7 @@
 .database-entry-fallback {
   padding: var(--space-3);
   border-radius: var(--radius-md);
-  border: 1px solid var(--border-subtle);
+  border: var(--border-width-thin) solid var(--border-subtle);
 }
 
 .database-entry-page {

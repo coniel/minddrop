@@ -6,13 +6,9 @@
 .confirmation-dialog-backdrop {
   position: fixed;
   inset: 0;
-  background-color: lch(0 0 0 / 0.25);
-  transition: opacity var(--duration-normal) var(--ease-out);
+  background-color: var(--surface-scrim);
+  transition: var(--transition-opacity);
   z-index: var(--level-dialog-backdrop);
-
-  .dark-theme & {
-    background-color: lch(0 0 0 / 0.6);
-  }
 
   &[data-starting-style],
   &[data-ending-style] {
@@ -32,7 +28,7 @@
   padding: var(--space-5);
 
   background-color: var(--surface-overlay);
-  border: 1px solid var(--border-subtle);
+  border: var(--border-width-thin) solid var(--border-subtle);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-overlay);
 
@@ -50,18 +46,18 @@
 .confirmation-dialog-title {
   margin: 0 0 var(--space-2);
   font-family: var(--font-ui);
-  font-size: var(--text-base);
-  font-weight: var(--weight-semibold);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
   color: var(--text-regular);
-  line-height: var(--leading-tight);
+  line-height: var(--line-height-tight);
 }
 
 .confirmation-dialog-message {
   margin: 0 0 var(--space-5);
   font-family: var(--font-ui);
-  font-size: var(--text-sm);
+  font-size: var(--font-size-sm);
   color: var(--text-muted);
-  line-height: var(--leading-normal);
+  line-height: var(--line-height-normal);
 }
 
 .confirmation-dialog-actions {

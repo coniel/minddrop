@@ -8,9 +8,9 @@
   /* Fill the remaining width so that the caret has room to render
    * after the last character rather than on top of it. */
   flex: 1;
-  font-size: var(--text-md);
-  line-height: var(--leading-normal);
-  font-weight: var(--weight-normal);
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-normal);
+  font-weight: var(--font-weight-regular);
 }
 
 .unordered-list-item-element .bullet {
@@ -29,7 +29,7 @@
 .unordered-list-item-element .bullet::before {
   content: '•';
   font-size: 1.5em;
-  line-height: 1;
+  line-height: var(--line-height-none);
   font-family: Arial, sans-serif;
   color: currentcolor;
 }

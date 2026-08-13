@@ -7,7 +7,7 @@
   min-width: 320px;
   min-height: 200px;
   background-color: var(--surface-app);
-  border: 1px solid var(--border-default);
+  border: var(--border-width-thin) solid var(--border-default);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-overlay);
 }
@@ -19,7 +19,7 @@
   flex-shrink: 0;
   padding: var(--space-1) var(--space-3) var(--space-1) var(--space-1);
   background-color: var(--surface-overlay);
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: var(--border-width-thin) solid var(--border-subtle);
   user-select: none;
   cursor: grab;
 

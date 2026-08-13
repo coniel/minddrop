@@ -30,7 +30,7 @@
   }
 
   .resize-handle:hover .resize-indicator {
-    background-color: var(--primary-400);
+    background-color: var(--surface-primary-hover);
     animation-duration: 1.3s;
     transition-delay: 0.3s;
     transition-duration: 0.2s;
@@ -38,7 +38,7 @@
 
   &.app-sidebar-is-dragging .resize-handle .resize-indicator,
   &.app-sidebar-is-dragging .resize-handle:hover .resize-indicator {
-    background-color: var(--primary-400);
+    background-color: var(--surface-primary-hover);
     animation-duration: 0s;
     transition-delay: 0s;
     transition-duration: 0s;

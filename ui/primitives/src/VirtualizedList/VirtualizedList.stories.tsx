@@ -38,7 +38,7 @@ const rowStyle = {
   height: '100%',
   padding: '0 var(--space-3)',
   fontFamily: 'var(--font-ui)',
-  fontSize: 'var(--text-sm)',
+  fontSize: 'var(--font-size-sm)',
   color: 'var(--text-muted)',
 };
 
@@ -52,9 +52,9 @@ const renderCard = (item: DemoItem) => (
       margin: '0 var(--space-3) var(--space-2)',
       padding: 'var(--space-2) var(--space-3)',
       borderRadius: 'var(--radius-md)',
-      background: 'var(--surface-neutral)',
+      background: 'var(--surface-accent)',
       fontFamily: 'var(--font-ui)',
-      fontSize: 'var(--text-sm)',
+      fontSize: 'var(--font-size-sm)',
       color: 'var(--text-muted)',
     }}
   >

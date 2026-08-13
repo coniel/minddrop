@@ -10,10 +10,10 @@
   justify-content: center;
   flex-shrink: 0;
 
-  width: 2.25rem;
-  height: 2.25rem;
+  width: var(--control-height-lg);
+  height: var(--control-height-lg);
   padding: 0;
-  border: 1px solid hsl(208 11.3% 88.9%);
+  border: var(--border-width-thin) solid hsl(208 11.3% 88.9%);
   border-radius: var(--radius-full);
   outline: none;
   user-select: none;
@@ -32,8 +32,8 @@
     box-shadow 0.15s ease;
 
   .icon {
-    width: 1.125rem;
-    height: 1.125rem;
+    width: var(--icon-size-md);
+    height: var(--icon-size-md);
     flex-shrink: 0;
     color: hsl(206 6% 43.5%);
   }
@@ -58,11 +58,11 @@
   &:disabled,
   &[aria-disabled='true'] {
     pointer-events: none;
-    opacity: 0.45;
+    opacity: var(--opacity-disabled);
   }
 
   &:focus-visible {
-    outline: 2px solid var(--border-primary);
-    outline-offset: 2px;
+    outline: var(--focus-ring-width) solid var(--focus-ring-color);
+    outline-offset: var(--focus-ring-offset);
   }
 }

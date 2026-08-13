@@ -21,13 +21,13 @@
   display: flex;
   align-items: center;
   gap: var(--space-1);
-  height: 1.75rem;
+  height: var(--control-height-md);
   padding: 0 var(--space-2);
   user-select: none;
 }
 
 .elements-tree-node:hover {
-  background-color: var(--surface-neutral);
+  background-color: var(--surface-accent);
 }
 
 /* Selected state */
@@ -75,7 +75,7 @@
 /* --- Vertical indent guide --- */
 
 .elements-tree-indent-guide {
-  border-left: 1px solid var(--border-subtle);
+  border-left: var(--border-width-thin) solid var(--border-subtle);
 }
 
 /* --- Element type icon --- */
@@ -95,8 +95,8 @@
 /* --- Label --- */
 
 .elements-tree-node-label {
-  font-size: var(--text-xs);
-  line-height: 1;
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-none);
   color: var(--text-muted);
   white-space: nowrap;
   overflow: hidden;

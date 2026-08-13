@@ -13,7 +13,7 @@
   justify-content: center;
   flex-shrink: 0;
 
-  border: 1px solid transparent;
+  border: var(--border-width-thin) solid transparent;
   background: none;
   outline: none;
   user-select: none;
@@ -23,20 +23,20 @@
   transition: var(--transition-colors);
 
   .icon {
-    width: 1rem;
-    height: 1rem;
+    width: var(--icon-size-sm);
+    height: var(--icon-size-sm);
     flex-shrink: 0;
   }
 
   &:disabled,
   &[aria-disabled='true'] {
     pointer-events: none;
-    opacity: 0.45;
+    opacity: var(--opacity-disabled);
   }
 
   &:focus-visible {
-    outline: 2px solid var(--border-primary);
-    outline-offset: 2px;
+    outline: var(--focus-ring-width) solid var(--focus-ring-color);
+    outline-offset: var(--focus-ring-offset);
   }
 }
 
@@ -51,7 +51,7 @@
 }
 
 .toggle-label {
-  line-height: 1;
+  line-height: var(--line-height-none);
 }
 
 /* ------------------------------------------------------------
@@ -59,52 +59,52 @@
    ------------------------------------------------------------ */
 
 .toggle-size-sm {
-  width: 1.5rem;
-  height: 1.5rem;
-  font-size: var(--text-xs);
+  width: var(--control-height-sm);
+  height: var(--control-height-sm);
+  font-size: var(--font-size-xs);
 
   .icon {
-    width: 0.875rem;
-    height: 0.875rem;
+    width: var(--icon-size-xs);
+    height: var(--icon-size-xs);
   }
 
   &.toggle-text {
     width: auto;
-    height: 1.5rem;
+    height: var(--control-height-sm);
     padding: 0 var(--space-2);
   }
 }
 
 .toggle-size-md {
-  width: 1.75rem;
-  height: 1.75rem;
-  font-size: var(--text-sm);
+  width: var(--control-height-md);
+  height: var(--control-height-md);
+  font-size: var(--font-size-sm);
 
   .icon {
-    width: 1rem;
-    height: 1rem;
+    width: var(--icon-size-sm);
+    height: var(--icon-size-sm);
   }
 
   &.toggle-text {
     width: auto;
-    height: 1.75rem;
+    height: var(--control-height-md);
     padding: 0 var(--space-3);
   }
 }
 
 .toggle-size-lg {
-  width: 2.25rem;
-  height: 2.25rem;
-  font-size: var(--text-base);
+  width: var(--control-height-lg);
+  height: var(--control-height-lg);
+  font-size: var(--font-size-base);
 
   .icon {
-    width: 1.125rem;
-    height: 1.125rem;
+    width: var(--icon-size-md);
+    height: var(--icon-size-md);
   }
 
   &.toggle-text {
     width: auto;
-    height: 2.25rem;
+    height: var(--control-height-lg);
     padding: 0 var(--space-4);
   }
 }
@@ -122,7 +122,7 @@
   }
 
   &:hover {
-    background-color: var(--surface-neutral-hover);
+    background-color: var(--surface-accent-hover);
     transition: none;
 
     &.toggle-text,
@@ -133,7 +133,7 @@
 
   &:active,
   &[data-pressed] {
-    background-color: var(--surface-neutral-active);
+    background-color: var(--surface-accent-active);
 
     &.toggle-text,
     .icon {
@@ -155,7 +155,7 @@
   }
 
   &:hover {
-    background-color: var(--surface-neutral);
+    background-color: var(--surface-accent);
     transition: none;
 
     &.toggle-text,
@@ -166,7 +166,7 @@
 
   &:active,
   &[data-pressed] {
-    background-color: var(--surface-neutral-active);
+    background-color: var(--surface-accent-active);
 
     &.toggle-text,
     .icon {
@@ -188,7 +188,7 @@
   }
 
   &:hover {
-    background-color: var(--surface-neutral);
+    background-color: var(--surface-accent);
     border-color: var(--border-strong);
     transition: none;
 
@@ -200,7 +200,7 @@
 
   &:active,
   &[data-pressed] {
-    background-color: var(--surface-neutral-hover);
+    background-color: var(--surface-accent-hover);
 
     &.toggle-text,
     .icon {
@@ -214,7 +214,7 @@
    ------------------------------------------------------------ */
 
 .toggle-variant-filled {
-  background-color: var(--surface-paper);
+  background-color: var(--surface-overlay);
   border-color: var(--border-default);
   box-shadow: var(--shadow-raised);
 
@@ -224,7 +224,7 @@
   }
 
   &:hover {
-    background-color: var(--surface-neutral);
+    background-color: var(--surface-accent);
     border-color: var(--border-strong);
     transition: none;
 
@@ -236,7 +236,7 @@
 
   &:active,
   &[data-pressed] {
-    background-color: var(--surface-neutral-hover);
+    background-color: var(--surface-accent-hover);
     box-shadow: none;
 
     &.toggle-text,

@@ -1,6 +1,6 @@
 .panel {
   background-color: var(--surface-overlay);
-  border: 1px solid var(--border-subtle);
+  border: var(--border-width-thin) solid var(--border-subtle);
   border-radius: var(--radius-xl);
   box-shadow:
     0 2px 8px rgba(0, 0, 0, 0.06),

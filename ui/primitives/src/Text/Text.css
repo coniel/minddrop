@@ -5,42 +5,42 @@
 
 .text {
   font-family: var(--font-ui);
-  font-size: var(--text-base);
-  font-weight: var(--weight-normal);
-  line-height: var(--leading-snug);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-snug);
   color: var(--text-regular);
 
   /* --- Size --- */
 
   &.text-size-xs {
-    font-size: var(--text-xs);
+    font-size: var(--font-size-xs);
   }
   &.text-size-sm {
-    font-size: var(--text-sm);
+    font-size: var(--font-size-sm);
   }
   &.text-size-base {
-    font-size: var(--text-base);
+    font-size: var(--font-size-base);
   }
   &.text-size-lg {
-    font-size: var(--text-lg);
+    font-size: var(--font-size-xl);
   }
   &.text-size-xl {
-    font-size: var(--text-xl);
+    font-size: var(--font-size-2xl);
   }
 
   /* --- Weight --- */
 
   &.text-weight-normal {
-    font-weight: var(--weight-normal);
+    font-weight: var(--font-weight-regular);
   }
   &.text-weight-medium {
-    font-weight: var(--weight-medium);
+    font-weight: var(--font-weight-medium);
   }
   &.text-weight-semibold {
-    font-weight: var(--weight-semibold);
+    font-weight: var(--font-weight-semibold);
   }
   &.text-weight-bold {
-    font-weight: var(--weight-bold);
+    font-weight: var(--font-weight-bold);
   }
 
   /* --- Color --- */
@@ -92,7 +92,7 @@
 
   &.text-paragraph {
     display: block;
-    line-height: var(--leading-normal);
+    line-height: var(--line-height-normal);
 
     &:not(:last-child) {
       margin-bottom: var(--space-3);

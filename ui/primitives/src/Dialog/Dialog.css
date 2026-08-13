@@ -9,8 +9,8 @@
   position: fixed;
   min-height: 100dvh;
   inset: 0;
-  background-color: lch(0 0 0 / 0.25);
-  transition: opacity var(--duration-normal) var(--ease-out);
+  background-color: var(--surface-scrim);
+  transition: var(--transition-opacity);
   z-index: var(--level-dialog-backdrop);
 
   /* iOS 26+: Ensure backdrop covers the entire visible viewport */
@@ -22,10 +22,6 @@
   &[data-ending-style] {
     opacity: 0;
   }
-}
-
-.dark-theme .dialog-backdrop {
-  background-color: lch(0 0 0 / 0.6);
 }
 
 /* --- Popup --- */
@@ -42,7 +38,7 @@
   padding: var(--space-5);
 
   background-color: var(--surface-overlay);
-  border: 1px solid var(--border-subtle);
+  border: var(--border-width-thin) solid var(--border-subtle);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-overlay);
 
@@ -87,18 +83,18 @@
 /* --- Title --- */
 
 .dialog-title {
-  font-size: var(--text-lg);
-  font-weight: var(--weight-semibold);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
   color: var(--text-regular);
-  line-height: var(--leading-tight);
+  line-height: var(--line-height-tight);
   margin: 0 0 var(--space-2);
 }
 
 /* --- Description --- */
 
 .dialog-description {
-  font-size: var(--text-base);
+  font-size: var(--font-size-base);
   color: var(--text-muted);
-  line-height: var(--leading-normal);
+  line-height: var(--line-height-normal);
   margin: 0 0 var(--space-5);
 }

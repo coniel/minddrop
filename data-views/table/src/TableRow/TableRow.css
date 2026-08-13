@@ -16,7 +16,7 @@
   align-items: center;
   justify-content: center;
   font-family: var(--font-ui);
-  font-size: var(--text-xs);
+  font-size: var(--font-size-xs);
   color: var(--text-disabled);
   user-select: none;
   white-space: nowrap;
@@ -69,13 +69,13 @@
 }
 
 .table-cell-input--sm {
-  font-size: var(--text-sm);
+  font-size: var(--font-size-sm);
 }
 .table-cell-input--md {
-  font-size: var(--text-base);
+  font-size: var(--font-size-base);
 }
 .table-cell-input--lg {
-  font-size: var(--text-base);
+  font-size: var(--font-size-base);
 }
 
 /* ---- Static display cells (select / date / number) ---- */
@@ -86,7 +86,7 @@
   width: 100%;
   height: var(--table-row-height, 1.75rem);
   font-family: var(--font-ui);
-  font-size: var(--text-sm);
+  font-size: var(--font-size-sm);
   color: var(--text-regular);
   cursor: text;
 }

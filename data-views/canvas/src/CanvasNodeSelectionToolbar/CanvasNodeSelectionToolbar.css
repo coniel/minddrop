@@ -1,7 +1,7 @@
 /* Float the actions over the canvas */
 .canvas-view-node-selection-toolbar {
   padding: var(--space-1);
-  border: 1px solid var(--border-subtle);
+  border: var(--border-width-thin) solid var(--border-subtle);
   border-radius: var(--radius-lg);
   background-color: var(--surface-overlay);
   box-shadow: var(--shadow-overlay);

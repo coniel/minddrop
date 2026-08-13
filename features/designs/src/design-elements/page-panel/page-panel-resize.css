@@ -31,7 +31,7 @@
   left: 50%;
   width: 2px;
   transform: translateX(-50%);
-  background-color: var(--primary-700);
+  background-color: var(--border-primary);
   opacity: 0;
   transition: opacity 0.1s ease;
 }

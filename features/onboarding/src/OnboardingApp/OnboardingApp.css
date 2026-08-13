@@ -18,7 +18,7 @@
   }
 
   .onboarding-description {
-    max-width: 380px;
+    max-width: var(--measure-narrow);
     text-align: center;
   }
 

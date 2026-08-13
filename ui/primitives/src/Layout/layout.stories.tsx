@@ -26,7 +26,7 @@ const Box = ({ label }: { label?: string }) => (
       height: '1.75rem',
       minWidth: '2rem',
       fontFamily: 'var(--font-ui)',
-      fontSize: 'var(--text-xs)',
+      fontSize: 'var(--font-size-xs)',
       color: 'var(--text-primary-muted)',
       flexShrink: 0,
     }}
@@ -261,7 +261,7 @@ export const LayoutStories = () => (
                     height: '1.75rem',
                     borderRadius: 'var(--radius-md)',
                     border: '1px solid var(--border-default)',
-                    background: 'var(--surface-neutral)',
+                    background: 'var(--surface-accent)',
                   }}
                 />
               </Stack>
@@ -274,7 +274,7 @@ export const LayoutStories = () => (
                     height: '1.75rem',
                     borderRadius: 'var(--radius-md)',
                     border: '1px solid var(--border-default)',
-                    background: 'var(--surface-neutral)',
+                    background: 'var(--surface-accent)',
                   }}
                 />
               </Stack>
@@ -443,7 +443,7 @@ export const LayoutStories = () => (
                     height: '1.75rem',
                     borderRadius: 'var(--radius-md)',
                     border: '1px solid var(--border-default)',
-                    background: 'var(--surface-neutral)',
+                    background: 'var(--surface-accent)',
                   }}
                 />
               </FlexItem>

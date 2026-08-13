@@ -7,16 +7,16 @@
    * after the last character rather than on top of it. */
   flex: 1;
   padding-left: var(--space-2);
-  font-size: var(--text-md);
-  line-height: var(--leading-normal);
-  font-weight: var(--weight-normal);
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-normal);
+  font-weight: var(--font-weight-regular);
 }
 
 .to-do-element .checkbox {
   display: flex;
   align-items: center;
   /* Align the checkbox with the first line of the content */
-  height: calc(var(--text-md) * var(--leading-normal));
+  height: calc(var(--font-size-md) * var(--line-height-normal));
   outline: none;
 }
 

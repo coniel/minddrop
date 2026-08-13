@@ -35,7 +35,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  border-top: 1px solid var(--border-subtle);
+  border-top: var(--border-width-thin) solid var(--border-subtle);
 
   .scroll-area {
     flex: 1;

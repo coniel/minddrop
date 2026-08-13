@@ -26,7 +26,7 @@
   align-items: center;
   justify-content: center;
   background-color: var(--surface-overlay);
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: var(--border-width-thin) solid var(--border-subtle);
 }
 
 .table-header-checkbox {
@@ -43,7 +43,7 @@
   min-width: 100px;
   overflow: visible;
   box-sizing: border-box;
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: var(--border-width-thin) solid var(--border-subtle);
   background-color: var(--surface-overlay);
   transition: background-color var(--duration-fast);
 }
@@ -71,15 +71,15 @@
 }
 
 .table-header-cell-icon {
-  width: var(--text-base);
-  height: var(--text-base);
+  width: var(--font-size-base);
+  height: var(--font-size-base);
   flex-shrink: 0;
 }
 
 .table-header-cell-name {
   font-family: var(--font-ui);
-  font-size: var(--text-base);
-  font-weight: var(--weight-normal);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-regular);
   color: var(--text-subtle);
   overflow: hidden;
   white-space: nowrap;

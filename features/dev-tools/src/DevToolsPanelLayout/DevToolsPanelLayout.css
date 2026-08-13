@@ -12,7 +12,7 @@
   flex-shrink: 0;
   padding: var(--space-1) var(--space-2);
   background-color: var(--surface-overlay);
-  border-right: 1px solid var(--border-subtle);
+  border-right: var(--border-width-thin) solid var(--border-subtle);
 }
 
 .dev-tools-panel-main {
@@ -30,7 +30,7 @@
   flex-shrink: 0;
   padding: var(--space-1) var(--space-2);
   background-color: var(--surface-overlay);
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: var(--border-width-thin) solid var(--border-subtle);
 }
 
 .dev-tools-panel-content {

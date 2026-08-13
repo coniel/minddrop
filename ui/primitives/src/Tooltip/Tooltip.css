@@ -10,7 +10,7 @@
 .tooltip {
   /* Dark surface regardless of theme */
   background-color: hsl(220 13% 12%);
-  border: 1px solid hsl(220 13% 20%);
+  border: var(--border-width-thin) solid hsl(220 13% 20%);
   color: hsl(220 10% 92%);
   box-shadow: var(--shadow-lg);
 
@@ -33,7 +33,7 @@
   /* Description text */
   .tooltip-description {
     color: hsl(220 10% 65%);
-    line-height: var(--leading-snug);
+    line-height: var(--line-height-snug);
     margin-top: var(--space-1);
   }
 

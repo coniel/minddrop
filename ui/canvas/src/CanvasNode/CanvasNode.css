@@ -4,13 +4,13 @@
   left: 0;
 
   &.ui-canvas-node-selected {
-    outline: 2px solid var(--primary-700);
+    outline: var(--border-width-medium) solid var(--border-selected);
     outline-offset: 2px;
     border-radius: var(--radius-sm);
   }
 
   &.ui-canvas-node-connection-target {
-    outline: 2px solid var(--primary-700);
+    outline: var(--border-width-medium) solid var(--border-selected);
     outline-offset: 2px;
     border-radius: var(--radius-sm);
   }
@@ -96,7 +96,7 @@
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    background-color: var(--primary-700);
+    background-color: var(--border-primary);
     cursor: crosshair;
   }
 

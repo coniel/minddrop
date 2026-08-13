@@ -22,9 +22,9 @@ const LoremParagraphs = ({ count = 20 }: { count?: number }) => (
         key={i}
         style={{
           margin: '0 0 var(--space-3)',
-          fontSize: 'var(--text-sm)',
+          fontSize: 'var(--font-size-sm)',
           color: 'var(--text-muted)',
-          lineHeight: 'var(--leading-normal)',
+          lineHeight: 'var(--line-height-normal)',
         }}
       >
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
@@ -52,11 +52,11 @@ const WideContent = () => (
           height: 80,
           flexShrink: 0,
           borderRadius: 'var(--radius-md)',
-          background: 'var(--surface-neutral)',
+          background: 'var(--surface-accent)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontSize: 'var(--text-sm)',
+          fontSize: 'var(--font-size-sm)',
           color: 'var(--text-muted)',
         }}
       >

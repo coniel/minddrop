@@ -31,7 +31,7 @@
   padding: var(--space-4);
 
   background-color: var(--surface-overlay);
-  border: 1px solid var(--border-subtle);
+  border: var(--border-width-thin) solid var(--border-subtle);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-overlay);
 
@@ -64,34 +64,34 @@
 /* --- Type variants — colored left border --- */
 
 .toast-type-success {
-  border-left: 3px solid var(--border-primary);
+  border-left: var(--border-width-thick) solid var(--border-primary);
 }
 
 .toast-type-error {
-  border-left: 3px solid var(--border-danger);
+  border-left: var(--border-width-thick) solid var(--border-danger);
 }
 
 .toast-type-warning {
-  border-left: 3px solid var(--border-warning);
+  border-left: var(--border-width-thick) solid var(--border-warning);
 }
 
 /* --- Title --- */
 
 .toast-title {
   margin: 0;
-  font-size: var(--text-sm);
-  font-weight: var(--weight-semibold);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
   color: var(--text-regular);
-  line-height: var(--leading-tight);
+  line-height: var(--line-height-tight);
 }
 
 /* --- Description --- */
 
 .toast-description {
   margin: var(--space-1) 0 0;
-  font-size: var(--text-sm);
+  font-size: var(--font-size-sm);
   color: var(--text-muted);
-  line-height: var(--leading-normal);
+  line-height: var(--line-height-normal);
 }
 
 /* --- Close button --- */
@@ -104,8 +104,8 @@
   align-items: center;
   justify-content: center;
 
-  width: 1.5rem;
-  height: 1.5rem;
+  width: var(--control-height-sm);
+  height: var(--control-height-sm);
   padding: 0;
 
   background: none;
@@ -128,12 +128,12 @@
 
   padding: var(--space-1) var(--space-3);
 
-  font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
   font-family: var(--font-ui);
 
   background: none;
-  border: 1px solid var(--border-moderate);
+  border: var(--border-width-thin) solid var(--border-moderate);
   border-radius: var(--radius-md);
   color: var(--text-regular);
   cursor: pointer;

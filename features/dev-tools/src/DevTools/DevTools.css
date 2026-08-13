@@ -23,7 +23,7 @@
   flex-shrink: 0;
   padding: var(--space-1) var(--space-3) var(--space-1) var(--space-1);
   background-color: var(--surface-overlay);
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: var(--border-width-thin) solid var(--border-subtle);
 }
 
 .dev-tools-body {
@@ -46,7 +46,7 @@
 .dev-tools-window {
   .icon,
   .content-icon {
-    width: 1rem;
-    height: 1rem;
+    width: var(--icon-size-sm);
+    height: var(--icon-size-sm);
   }
 }

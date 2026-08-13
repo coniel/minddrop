@@ -13,7 +13,7 @@
 }
 
 .board-view-column-empty .board-view-column-content {
-  border: 1px solid transparent;
+  border: var(--border-width-thin) solid transparent;
   border-radius: var(--radius-lg);
   transition: border-color var(--duration-normal) var(--ease-out);
 }
