@@ -97,7 +97,7 @@ async function getViewUrl(): Promise<string> {
 const url = await getViewUrl();
 
 new BrowserWindow({
-  title: 'Dev Review',
+  title: 'MD Dev',
   url,
   rpc,
   frame: {

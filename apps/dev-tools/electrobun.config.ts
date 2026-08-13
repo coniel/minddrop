@@ -2,7 +2,7 @@ import type { ElectrobunConfig } from 'electrobun';
 
 export default {
   app: {
-    name: 'DevReview',
+    name: 'MD Dev',
     identifier: 'dev-review.minddrop.dev',
     version: '0.0.1',
   },
