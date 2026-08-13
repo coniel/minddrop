@@ -1,0 +1,67 @@
+/* ============================================================
+   APP-INTERNAL TOKENS
+   Tokens for building app chrome. These are NOT design system
+   vocabulary: designs and the design studio never expose them.
+   They live here so component CSS has one source for the app's
+   own repeated values.
+   ============================================================ */
+
+.light-theme,
+.dark-theme {
+  /* ------------------------------------------------------------
+     CONTROL HEIGHTS
+     Shared heights for buttons, inputs, selects, tabs, toggles.
+     ------------------------------------------------------------ */
+
+  --control-height-sm: 1.5rem; /* 24px */
+  --control-height-md: 1.75rem; /* 28px */
+  --control-height-lg: 2.25rem; /* 36px */
+
+  /* ------------------------------------------------------------
+     FOCUS RING
+     ------------------------------------------------------------ */
+
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+
+  /* Pulls the ring inside the element for inputs and selects */
+  --focus-ring-offset-inset: -1px;
+
+  --focus-ring-color: var(--border-primary);
+
+  /* ------------------------------------------------------------
+     OPACITY
+     ------------------------------------------------------------ */
+
+  --opacity-disabled: 0.45;
+
+  /* ------------------------------------------------------------
+     LEVELS
+     Stacking order for floating layers.
+     ------------------------------------------------------------ */
+
+  --level-dialog-backdrop: 40;
+  --level-dialog: 50;
+  --level-popover: 60;
+  --level-toast: 65;
+  --level-tooltip: 70;
+
+  /* ------------------------------------------------------------
+     MOTION
+     ------------------------------------------------------------ */
+
+  --duration-fast: 100ms;
+  --duration-normal: 200ms;
+  --duration-slow: 300ms;
+
+  --ease-default: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+
+  --transition-colors:
+    background-color var(--duration-normal) var(--ease-out),
+    color var(--duration-normal) var(--ease-out),
+    border-color var(--duration-normal) var(--ease-out);
+
+  --transition-opacity: opacity var(--duration-normal) var(--ease-out);
+}

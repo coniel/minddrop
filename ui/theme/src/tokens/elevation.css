@@ -1,0 +1,38 @@
+/* ============================================================
+   ELEVATION
+   Shadow scale plus semantic aliases. Values are per theme:
+   dark surfaces need stronger shadows to read as elevated.
+   ============================================================ */
+
+.light-theme {
+  --shadow-xs: 0px 1px 3px lch(0 0 0 / 0.2); /* thumbs, small handles */
+
+  --shadow-sm: 0px 1px 1px lch(0 0 0 / 0.04), 0px 2px 4px lch(0 0 0 / 0.04);
+
+  --shadow-md:
+    lch(0 0 0 / 0.022) 0px 3px 6px -2px, lch(0 0 0 / 0.044) 0px 1px 1px;
+
+  --shadow-lg:
+    lch(0 0 0 / 0.08) 0px 8px 24px -4px, lch(0 0 0 / 0.04) 0px 2px 4px;
+}
+
+.dark-theme {
+  --shadow-xs: 0px 1px 3px lch(0 0 0 / 0.2); /* thumbs, small handles */
+
+  --shadow-sm: 0px 1px 1px lch(0 0 0 / 0.12), 0px 2px 4px lch(0 0 0 / 0.12);
+
+  --shadow-md:
+    lch(0 0 0 / 0.06) 0px 4px 4px -1px, lch(0 0 0 / 0.12) 0px 1px 1px 0px;
+
+  --shadow-lg:
+    lch(0 0 0 / 0.24) 0px 8px 24px -4px, lch(0 0 0 / 0.12) 0px 2px 4px;
+}
+
+.light-theme,
+.dark-theme {
+  /* Content lifted above the ground: cards, panels */
+  --shadow-raised: var(--shadow-md);
+
+  /* Floating content: menus, popovers, dialogs */
+  --shadow-overlay: var(--shadow-lg);
+}

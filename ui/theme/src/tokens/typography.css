@@ -1,0 +1,89 @@
+/* ============================================================
+   TYPOGRAPHY
+   Font families, the type scale, weights, line heights, letter
+   spacing and reading measures. Roles carry the semantics (a
+   card title, a caption); the scale stays a scale, so helper
+   text here is guidance, not a claim of meaning.
+   ============================================================ */
+
+.light-theme,
+.dark-theme {
+  /* ------------------------------------------------------------
+     FONT FAMILIES
+     ------------------------------------------------------------ */
+
+  /* App chrome */
+  --font-ui:
+    ui-sans-serif, -apple-system, BlinkMacSystemFont,
+    'Segoe UI Variable Display', 'Segoe UI', Helvetica, Arial, sans-serif,
+    'Apple Color Emoji';
+
+  /* Code and tabular content */
+  --font-mono:
+    ui-monospace, 'SF Mono', 'Cascadia Code', 'Consolas', 'Monaco',
+    'Liberation Mono', 'Courier New', monospace;
+
+  /* Content, sans-serif */
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue',
+    Arial, sans-serif;
+
+  /* Content, serif */
+  --font-serif: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
+
+  /* ------------------------------------------------------------
+     FONT SIZE SCALE
+     Steps up to base serve dense interface text; md and above
+     serve content.
+     ------------------------------------------------------------ */
+
+  --font-size-2xs: 0.6875rem; /* 11px - smallest legible labels */
+  --font-size-xs: 0.75rem; /* 12px - captions, badges, fine print */
+  --font-size-sm: 0.8125rem; /* 13px - secondary text */
+  --font-size-base: 0.875rem; /* 14px - default interface text */
+  --font-size-md: 1rem; /* 16px - content body */
+  --font-size-lg: 1.125rem; /* 18px - large body, small heading */
+  --font-size-xl: 1.25rem; /* 20px - content subheading */
+  --font-size-2xl: 1.5rem; /* 24px - section heading */
+  --font-size-3xl: 1.75rem; /* 28px - large heading */
+  --font-size-4xl: 2rem; /* 32px - page title */
+  --font-size-5xl: 2.5rem; /* 40px - display, cover title */
+
+  /* ------------------------------------------------------------
+     FONT WEIGHTS
+     ------------------------------------------------------------ */
+
+  --font-weight-regular: 400; /* body text */
+  --font-weight-medium: 500; /* gentle emphasis, labels */
+  --font-weight-semibold: 600; /* headings, buttons */
+  --font-weight-bold: 700; /* strong emphasis */
+
+  /* ------------------------------------------------------------
+     LINE HEIGHTS
+     ------------------------------------------------------------ */
+
+  --line-height-none: 1; /* single-line labels in centered controls */
+  --line-height-tight: 1.2; /* headings, titles */
+  --line-height-snug: 1.4; /* interface text */
+  --line-height-normal: 1.5; /* short-form content */
+  --line-height-relaxed: 1.65; /* reading-length body text */
+  --line-height-loose: 1.75; /* airy long-form reading */
+
+  /* ------------------------------------------------------------
+     LETTER SPACING
+     ------------------------------------------------------------ */
+
+  --letter-spacing-tight: -0.02em; /* display sizes and large titles */
+  --letter-spacing-normal: 0em; /* everything by default */
+  --letter-spacing-wide: 0.05em; /* uppercase labels, eyebrows */
+  --letter-spacing-wider: 0.08em; /* keycaps, overlines */
+
+  /* ------------------------------------------------------------
+     MEASURES
+     Readable line-length limits for text blocks.
+     ------------------------------------------------------------ */
+
+  --measure-narrow: 24rem; /* 384px - captions, empty-state prose */
+  --measure-content: 40rem; /* 640px - reading-length body text */
+  --measure-wide: 54rem; /* 864px - wide content, forms */
+}

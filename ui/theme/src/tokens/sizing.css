@@ -1,0 +1,72 @@
+/* ============================================================
+   SIZING
+   Spacing, radius, border width and icon size. Spacing and
+   radius resolve through overridable units, so a container can
+   scale its density ("compact", "spacious") or corner style
+   ("sharp", "round") with a single scoped override and every
+   token inside follows.
+   ============================================================ */
+
+.light-theme,
+.dark-theme {
+  /* ------------------------------------------------------------
+     SPACING
+     Step names are scale indices. Steps 1 to 4 are linear
+     multiples of the unit; 5 and up grow faster (6, 8, 12, 16
+     units). Fractional indices fill the sub-unit range.
+     ------------------------------------------------------------ */
+
+  /* Density unit spacing steps scale from */
+  --space-unit: 0.25rem; /* 4px */
+
+  /* Fixed hairline gap, deliberately unaffected by density */
+  --space-px: 1px;
+
+  --space-0-5: calc(var(--space-unit) * 0.5); /*  2px - inset nudges */
+  --space-0-75: calc(var(--space-unit) * 0.75); /*  3px - track padding */
+  --space-1: calc(var(--space-unit) * 1); /*  4px - tight gaps */
+  --space-1-5: calc(var(--space-unit) * 1.5); /*  6px - compact padding */
+  --space-2: calc(var(--space-unit) * 2); /*  8px - default gap */
+  --space-3: calc(var(--space-unit) * 3); /* 12px - grouped content */
+  --space-4: calc(var(--space-unit) * 4); /* 16px - block padding */
+  --space-5: calc(var(--space-unit) * 6); /* 24px - section gap */
+  --space-6: calc(var(--space-unit) * 8); /* 32px - large section gap */
+  --space-7: calc(var(--space-unit) * 12); /* 48px - page-level spacing */
+  --space-8: calc(var(--space-unit) * 16); /* 64px - hero spacing */
+
+  /* ------------------------------------------------------------
+     BORDER RADIUS
+     Steps are multiples of the radius unit. The full step stays
+     fully round under any positive unit and squares off when the
+     unit is zeroed for sharp corners.
+     ------------------------------------------------------------ */
+
+  /* Corner unit radius steps scale from */
+  --radius-unit: 0.0625rem; /* 1px */
+
+  --radius-xs: calc(var(--radius-unit) * 3); /*  3px - smallest chips */
+  --radius-sm: calc(var(--radius-unit) * 4); /*  4px - badges, tags, inputs */
+  --radius-md: calc(var(--radius-unit) * 6); /*  6px - default rounding */
+  --radius-lg: calc(var(--radius-unit) * 8); /*  8px - cards, panels */
+  --radius-xl: calc(var(--radius-unit) * 12); /* 12px - large containers */
+  --radius-full: calc(var(--radius-unit) * 999); /* pills, circles */
+
+  /* ------------------------------------------------------------
+     BORDER WIDTHS
+     ------------------------------------------------------------ */
+
+  --border-width-thin: 1px; /* default borders, dividers */
+  --border-width-medium: 2px; /* emphasized outlines */
+  --border-width-thick: 3px; /* statement borders, accent bars */
+
+  /* ------------------------------------------------------------
+     ICON SIZES
+     ------------------------------------------------------------ */
+
+  --icon-size-2xs: 0.75rem; /* 12px - inline with captions */
+  --icon-size-xs: 0.875rem; /* 14px - inline with small text */
+  --icon-size-sm: 1rem; /* 16px - compact controls, menu items */
+  --icon-size-md: 1.125rem; /* 18px - default interface icons */
+  --icon-size-lg: 1.5rem; /* 24px - prominent icons */
+  --icon-size-xl: 2.5rem; /* 40px - feature icons, placeholders */
+}

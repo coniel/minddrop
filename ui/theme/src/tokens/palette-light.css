@@ -1,0 +1,253 @@
+/* ============================================================
+   PALETTE - LIGHT
+   The raw color scales the design system resolves against.
+   Every scale keeps consistent step semantics: step 1200 text on
+   step 300 background is accessible in every scale. Components
+   and designs never reference these directly; they use the role
+   tokens in roles.css.
+   ============================================================ */
+
+.light-theme {
+  /* ------------------------------------------------------------
+     NEUTRAL SCALE
+     The default scale roles resolve against when no scheme is
+     applied.
+     ------------------------------------------------------------ */
+
+  --neutral-100: hsl(206 30% 98.8%);
+  --neutral-200: hsl(210 16.7% 97.6%);
+  --neutral-300: hsl(209 13.3% 95.3%);
+  --neutral-400: hsl(209 12.2% 93.2%);
+  --neutral-500: hsl(208 11.7% 91.1%);
+  --neutral-600: hsl(208 11.3% 88.9%);
+  --neutral-700: hsl(207 11.1% 85.9%);
+  --neutral-800: hsl(205 10.7% 78%);
+  --neutral-900: hsl(206 6% 56.1%);
+  --neutral-1000: hsl(206 5.8% 52.3%);
+  --neutral-1100: hsl(206 6% 43.5%);
+  --neutral-1200: hsl(206 24% 9%);
+
+  /* ------------------------------------------------------------
+     PRIMARY SCALE
+     Brand scale. Fixed: never rebinds under a scheme, so the
+     primary action color stays a stable anchor everywhere.
+     ------------------------------------------------------------ */
+
+  --primary-100: hsl(225 60% 99.4%);
+  --primary-200: hsl(223 100% 98.6%);
+  --primary-300: hsl(223 98.4% 97.1%);
+  --primary-400: hsl(223 92.9% 95%);
+  --primary-500: hsl(224 87.1% 92%);
+  --primary-600: hsl(224 81.9% 87.8%);
+  --primary-700: hsl(225 77.4% 82.1%);
+  --primary-800: hsl(226 75.4% 74.5%);
+  --primary-900: hsl(226 70% 55.5%);
+  --primary-1000: hsl(226 58.6% 51.3%);
+  --primary-1100: hsl(226 55% 45%);
+  --primary-1200: hsl(226 62% 17%);
+
+  /* ------------------------------------------------------------
+     INTENT SCALES
+     Fixed: these carry meaning, not decoration, so they never
+     rebind under a scheme. Aliased from the palette hues.
+     ------------------------------------------------------------ */
+
+  --danger-100: var(--red-100);
+  --danger-200: var(--red-200);
+  --danger-300: var(--red-300);
+  --danger-400: var(--red-400);
+  --danger-500: var(--red-500);
+  --danger-600: var(--red-600);
+  --danger-700: var(--red-700);
+  --danger-800: var(--red-800);
+  --danger-900: var(--red-900);
+  --danger-1000: var(--red-1000);
+  --danger-1100: var(--red-1100);
+  --danger-1200: var(--red-1200);
+
+  --warning-100: var(--yellow-100);
+  --warning-200: var(--yellow-200);
+  --warning-300: var(--yellow-300);
+  --warning-400: var(--yellow-400);
+  --warning-500: var(--yellow-500);
+  --warning-600: var(--yellow-600);
+  --warning-700: var(--yellow-700);
+  --warning-800: var(--yellow-800);
+  --warning-900: var(--yellow-900);
+  --warning-1000: var(--yellow-1000);
+  --warning-1100: var(--yellow-1100);
+  --warning-1200: var(--yellow-1200);
+
+  --info-100: var(--blue-100);
+  --info-200: var(--blue-200);
+  --info-300: var(--blue-300);
+  --info-400: var(--blue-400);
+  --info-500: var(--blue-500);
+  --info-600: var(--blue-600);
+  --info-700: var(--blue-700);
+  --info-800: var(--blue-800);
+  --info-900: var(--blue-900);
+  --info-1000: var(--blue-1000);
+  --info-1100: var(--blue-1100);
+  --info-1200: var(--blue-1200);
+
+  --success-100: var(--green-100);
+  --success-200: var(--green-200);
+  --success-300: var(--green-300);
+  --success-400: var(--green-400);
+  --success-500: var(--green-500);
+  --success-600: var(--green-600);
+  --success-700: var(--green-700);
+  --success-800: var(--green-800);
+  --success-900: var(--green-900);
+  --success-1000: var(--green-1000);
+  --success-1100: var(--green-1100);
+  --success-1200: var(--green-1200);
+
+  /* ------------------------------------------------------------
+     PALETTE HUES
+     User-selectable hues. A hue is never a style option on an
+     element; it is applied as a scheme on a container (see
+     schemes.css), so role tokens inside resolve against it.
+     ------------------------------------------------------------ */
+
+  --blue-100: hsl(206 100% 99.2%);
+  --blue-200: hsl(210 100% 98%);
+  --blue-300: hsl(209 100% 96.5%);
+  --blue-400: hsl(210 98.8% 94%);
+  --blue-500: hsl(209 95% 90.1%);
+  --blue-600: hsl(209 81.2% 84.5%);
+  --blue-700: hsl(208 77.5% 76.9%);
+  --blue-800: hsl(206 81.9% 65.3%);
+  --blue-900: hsl(206 100% 50%);
+  --blue-1000: hsl(208 100% 47.3%);
+  --blue-1100: hsl(211 100% 43.2%);
+  --blue-1200: hsl(211 100% 15%);
+
+  --cyan-100: hsl(185 60% 98.7%);
+  --cyan-200: hsl(185 73.3% 97.1%);
+  --cyan-300: hsl(186 70.2% 94.4%);
+  --cyan-400: hsl(186 63.8% 90.6%);
+  --cyan-500: hsl(187 58.3% 85.4%);
+  --cyan-600: hsl(188 54.6% 78.4%);
+  --cyan-700: hsl(189 53.7% 68.7%);
+  --cyan-800: hsl(189 60.3% 52.5%);
+  --cyan-900: hsl(190 95% 39%);
+  --cyan-1000: hsl(191 91.2% 36.8%);
+  --cyan-1100: hsl(192 85% 31%);
+  --cyan-1200: hsl(192 88% 12.5%);
+
+  --red-100: hsl(359 100% 99.4%);
+  --red-200: hsl(359 100% 98.6%);
+  --red-300: hsl(360 100% 96.8%);
+  --red-400: hsl(360 97.9% 94.8%);
+  --red-500: hsl(360 90.2% 91.9%);
+  --red-600: hsl(360 81.7% 87.8%);
+  --red-700: hsl(359 74.2% 81.7%);
+  --red-800: hsl(359 69.5% 74.3%);
+  --red-900: hsl(358 75% 59%);
+  --red-1000: hsl(358 69.4% 55.2%);
+  --red-1100: hsl(358 65% 48.7%);
+  --red-1200: hsl(354 50% 14.6%);
+
+  --pink-100: hsl(322 100% 99.4%);
+  --pink-200: hsl(323 100% 98.4%);
+  --pink-300: hsl(323 86.3% 96.5%);
+  --pink-400: hsl(323 78.7% 94.2%);
+  --pink-500: hsl(323 72.2% 91.1%);
+  --pink-600: hsl(323 66.3% 86.6%);
+  --pink-700: hsl(323 62% 80.1%);
+  --pink-800: hsl(323 60.3% 72.4%);
+  --pink-900: hsl(322 65% 54.5%);
+  --pink-1000: hsl(322 63.9% 50.7%);
+  --pink-1100: hsl(322 75% 46%);
+  --pink-1200: hsl(320 70% 13.5%);
+
+  --purple-100: hsl(255 65% 99.4%);
+  --purple-200: hsl(252 100% 99%);
+  --purple-300: hsl(252 96.9% 97.4%);
+  --purple-400: hsl(252 91.5% 95.5%);
+  --purple-500: hsl(252 85.1% 93%);
+  --purple-600: hsl(252 77.8% 89.4%);
+  --purple-700: hsl(252 71% 83.7%);
+  --purple-800: hsl(252 68.6% 76.3%);
+  --purple-900: hsl(252 56% 57.5%);
+  --purple-1000: hsl(251 48.1% 53.5%);
+  --purple-1100: hsl(250 43% 48%);
+  --purple-1200: hsl(254 60% 18.5%);
+
+  --green-100: hsl(116 50% 98.9%);
+  --green-200: hsl(120 60% 97.1%);
+  --green-300: hsl(120 53.6% 94.8%);
+  --green-400: hsl(121 47.5% 91.4%);
+  --green-500: hsl(122 42.6% 86.5%);
+  --green-600: hsl(124 39% 79.7%);
+  --green-700: hsl(126 37.1% 70.2%);
+  --green-800: hsl(131 38.1% 56.3%);
+  --green-900: hsl(131 41% 46.5%);
+  --green-1000: hsl(132 43.1% 42.2%);
+  --green-1100: hsl(133 50% 32.5%);
+  --green-1200: hsl(130 30% 14.9%);
+
+  --yellow-100: hsl(60 54% 98.5%);
+  --yellow-200: hsl(52 100% 95.5%);
+  --yellow-300: hsl(55 100% 90.9%);
+  --yellow-400: hsl(54 100% 86.6%);
+  --yellow-500: hsl(52 97.9% 82%);
+  --yellow-600: hsl(50 89.4% 76.1%);
+  --yellow-700: hsl(47 80.4% 68%);
+  --yellow-800: hsl(48 100% 46.1%);
+  --yellow-900: hsl(53 92% 50%);
+  --yellow-1000: hsl(50 100% 48.5%);
+  --yellow-1100: hsl(42 100% 29%);
+  --yellow-1200: hsl(40 55% 13.5%);
+
+  --orange-100: hsl(24 70% 99%);
+  --orange-200: hsl(24 83.3% 97.6%);
+  --orange-300: hsl(24 100% 95.3%);
+  --orange-400: hsl(25 100% 92.2%);
+  --orange-500: hsl(25 100% 88.2%);
+  --orange-600: hsl(25 100% 82.8%);
+  --orange-700: hsl(24 100% 75.3%);
+  --orange-800: hsl(24 94.5% 64.3%);
+  --orange-900: hsl(24 94% 50%);
+  --orange-1000: hsl(24 100% 46.5%);
+  --orange-1100: hsl(24 100% 37%);
+  --orange-1200: hsl(15 60% 17%);
+
+  --brown-100: hsl(30 40% 99.1%);
+  --brown-200: hsl(30 50% 97.6%);
+  --brown-300: hsl(30 52.5% 94.6%);
+  --brown-400: hsl(30 53% 91.2%);
+  --brown-500: hsl(29 52.9% 86.8%);
+  --brown-600: hsl(29 52.5% 80.9%);
+  --brown-700: hsl(29 51.5% 72.8%);
+  --brown-800: hsl(28 50% 63.1%);
+  --brown-900: hsl(28 34% 51%);
+  --brown-1000: hsl(27 31.8% 47.6%);
+  --brown-1100: hsl(25 30% 41%);
+  --brown-1200: hsl(20 30% 19%);
+
+  --gray-100: hsl(0 0% 99%);
+  --gray-200: hsl(0 0% 97.3%);
+  --gray-300: hsl(0 0% 95.1%);
+  --gray-400: hsl(0 0% 93%);
+  --gray-500: hsl(0 0% 90.9%);
+  --gray-600: hsl(0 0% 88.7%);
+  --gray-700: hsl(0 0% 85.8%);
+  --gray-800: hsl(0 0% 78%);
+  --gray-900: hsl(0 0% 56.1%);
+  --gray-1000: hsl(0 0% 52.3%);
+  --gray-1100: hsl(0 0% 43.5%);
+  --gray-1200: hsl(0 0% 9%);
+
+  /* ------------------------------------------------------------
+     THEME GROUND
+     ------------------------------------------------------------ */
+
+  /* The app canvas color, deliberately purer than neutral step 100 */
+  --app-background: #ffffff;
+
+  /* Dimming layer behind dialogs and full-screen overlays */
+  --surface-scrim: lch(0 0 0 / 0.25);
+}
