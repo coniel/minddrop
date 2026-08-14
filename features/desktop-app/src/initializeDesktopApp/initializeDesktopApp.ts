@@ -1,14 +1,8 @@
-import { Ast } from '@minddrop/ast';
 import { Collections } from '@minddrop/collections';
 import { DataViews } from '@minddrop/data-views';
 import { Databases } from '@minddrop/databases';
 import { Designs } from '@minddrop/designs-legacy';
-import {
-  EditorElements,
-  EditorMarks,
-  registerBlockSelectionSerializer,
-} from '@minddrop/editor';
-import { initializeExtensions } from '@minddrop/extensions';
+import { registerBlockSelectionSerializer } from '@minddrop/editor';
 import { initializeCollectionsFeature } from '@minddrop/feature-collections';
 import { initializeDataViewsFeature } from '@minddrop/feature-data-views';
 import { DatabaseViewStateStore } from '@minddrop/feature-databases';
@@ -91,10 +85,7 @@ async function runInitialization(): Promise<void> {
   // their UI state
   await initializeDevToolsFeature();
 
-  EditorElements.registerDefaults();
-  EditorMarks.registerDefaults();
   registerBlockSelectionSerializer();
-  Ast.registerDefaultConfigs();
   initializeDataViewTypes();
   registerViews();
   initializeViewsFeature();
@@ -147,9 +138,6 @@ async function runInitialization(): Promise<void> {
   // Cache the image brightness analyses the file server already
   // holds, so that images are treated on their first render
   await Fs.preloadImageStats();
-
-  // Initialize extensions
-  await initializeExtensions([]);
 
   // Watch the workspace directories for changes made outside the
   // app. Started last so that it cannot race the initial loads.

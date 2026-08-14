@@ -11,7 +11,6 @@ import {
   OpenRightPanelEvent,
   ToggleWindowFillEvent,
 } from '@minddrop/events';
-import { MindDropApiProvider } from '@minddrop/extensions';
 import { DatabasesFeature } from '@minddrop/feature-databases';
 import { DesignsFeature } from '@minddrop/feature-designs-legacy';
 import { DevTools, ScreenshotPicker } from '@minddrop/feature-dev-tools';
@@ -84,30 +83,28 @@ export const DesktopApp: React.FC = () => {
           defaultEmojiSkinTone={defaultEmojiSkinTone}
           onDefaultEmojiSkinToneChange={handleChangeDefaultEmojiSkinTone}
         >
-          <MindDropApiProvider>
-            <div className="app">
-              <div
-                className="app-topbar electrobun-webkit-app-region-drag"
-                onDoubleClick={handleTopbarDoubleClick}
-              >
-                <NavToolbar />
-                <TabsToolbar viewAreaId={DefaultViewAreaId} shortcuts />
-              </div>
-              <div className="content-panels">
-                {showSidebar && <AppSidebar />}
-                <ViewRenderer viewAreaId={DefaultViewAreaId} />
-                <RightPanel />
-              </div>
+          <div className="app">
+            <div
+              className="app-topbar electrobun-webkit-app-region-drag"
+              onDoubleClick={handleTopbarDoubleClick}
+            >
+              <NavToolbar />
+              <TabsToolbar viewAreaId={DefaultViewAreaId} shortcuts />
             </div>
-            <DatabasesFeature />
-            <ConfirmationDialogFeature />
-            <ErrorToastFeature />
-            <DesignsFeature />
-            <SpacesFeature />
-            <SearchFeature />
-            <DevTools />
-            <ScreenshotPicker />
-          </MindDropApiProvider>
+            <div className="content-panels">
+              {showSidebar && <AppSidebar />}
+              <ViewRenderer viewAreaId={DefaultViewAreaId} />
+              <RightPanel />
+            </div>
+          </div>
+          <DatabasesFeature />
+          <ConfirmationDialogFeature />
+          <ErrorToastFeature />
+          <DesignsFeature />
+          <SpacesFeature />
+          <SearchFeature />
+          <DevTools />
+          <ScreenshotPicker />
         </IconsProvider>
       </ToastProvider>
     </TooltipProvider>
