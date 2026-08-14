@@ -3,34 +3,53 @@ import {
   PropertiesSchema,
   PropertyMap,
 } from '@minddrop/properties';
-import { getMarkdownContent } from '../getMarkdownContent';
+import { parseFrontmatter } from '../utils';
+
+export interface SetPropertiesOnMarkdownOptions {
+  /**
+   * The entry's current file content. Its frontmatter is merged into rather
+   * than replaced, so anything MindDrop does not model survives.
+   */
+  existingContent?: string;
+}
 
 /**
- * Adds the provided properties as frontmatter to the given markdown content.
- * Removes any existing frontmatter.
+ * Applies the provided properties to the given markdown content as frontmatter.
  *
- * If the properties object is empty, no frontmatter will be added, and any existing
- * frontmatter will be removed.
+ * When the entry's current file content is provided, its frontmatter is edited
+ * in place: comments, key order, quoting style, block scalars and keys absent
+ * from the schema all survive. Otherwise the frontmatter is generated fresh.
  *
  * @param schema - The properties schema.
- * @param properties - The properties to be added as frontmatter.
+ * @param properties - The properties to write as frontmatter.
  * @param markdown - The markdown content to which the properties will be added.
- * @returns The markdown content with the properties added as frontmatter.
+ * @param options - Options for preserving the existing frontmatter.
+ * @returns The markdown content with the properties applied as frontmatter.
  */
 export function setPropertiesOnMarkdown(
   schema: PropertiesSchema,
   properties: PropertyMap,
   markdown: string,
+  options: SetPropertiesOnMarkdownOptions = {},
 ): string {
-  // Convert the properties to YAML
-  const frontmatter = Properties.toYaml(schema, properties);
+  // The frontmatter currently on disk, which is merged into rather than
+  // regenerated so that unmodelled keys and formatting are not destroyed
+  const existingFrontmatter = options.existingContent
+    ? parseFrontmatter(options.existingContent).source
+    : null;
 
-  // If the properties object is empty, remove the frontmatter
-  // and return the markdown content.
-  if (!Object.keys(properties).length) {
-    return getMarkdownContent(markdown);
+  const frontmatter =
+    existingFrontmatter === null
+      ? Properties.toYaml(schema, properties)
+      : Properties.mergeYaml(schema, properties, existingFrontmatter);
+
+  const body = parseFrontmatter(markdown).body;
+
+  // A document with no keys left serializes to an empty flow map. Omit the
+  // block entirely rather than writing `{}` between a pair of fences.
+  if (!frontmatter.trim() || frontmatter.trim() === '{}') {
+    return body;
   }
 
-  // Add the frontmatter to the markdown content
-  return `---\n${frontmatter}---\n\n${getMarkdownContent(markdown)}`;
+  return `---\n${frontmatter}---\n\n${body}`;
 }

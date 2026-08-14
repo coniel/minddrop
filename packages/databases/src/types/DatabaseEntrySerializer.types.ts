@@ -27,13 +27,20 @@ export interface DatabaseEntrySerializer<
   /**
    * The serializer function to serialize an entry.
    *
+   * When the entry's current file content is provided, formats which support
+   * it merge into that content rather than regenerating it, so that anything
+   * the properties schema does not model survives the write.
+   *
    * @param schema - The database properties schema.
    * @param properties - The entry properties.
+   * @param existingContent - The entry's current file content, if it exists.
+   * @param options - Serializer specific options.
    * @returns The serialized entry.
    */
   serialize: (
     schema: PropertiesSchema,
     properties: PropertyMap,
+    existingContent?: string,
     options?: TOptions,
   ) => string;
 

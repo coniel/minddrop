@@ -15,6 +15,11 @@ export function parsePropertiesFromYaml<
   // Parse the properties string
   const parsed = YAML.parse(string);
 
+  // Empty or comment only YAML parses to null
+  if (!parsed) {
+    return {} as TProperties;
+  }
+
   // Parse dates string into Date objects
   Object.entries(parsed).forEach(([key, value]) => {
     if (isSerializedDate(value)) {

@@ -99,6 +99,69 @@ describe('writeDatabaseEntry', () => {
     expect(contents).not.toContain(relatedEntry1.id);
   });
 
+  describe('preserving unmodelled frontmatter', () => {
+    it('preserves keys absent from the database schema', async () => {
+      // An entry whose file carries a key the database does not model,
+      // as though the user had added it in another editor
+      MockFs.writeTextFile(
+        objectEntry1.path,
+        `---\nIcon: ${objectEntry1.properties.Icon}\ncustom: keep me\n---\n\nTest content`,
+      );
+
+      await writeDatabaseEntry(objectEntry1.id);
+
+      expect(MockFs.readTextFile(objectEntry1.path)).toContain(
+        'custom: keep me',
+      );
+    });
+
+    it('preserves comments', async () => {
+      MockFs.writeTextFile(
+        objectEntry1.path,
+        `---\n# a comment\nIcon: ${objectEntry1.properties.Icon}\n---\n\nTest content`,
+      );
+
+      await writeDatabaseEntry(objectEntry1.id);
+
+      expect(MockFs.readTextFile(objectEntry1.path)).toContain('# a comment');
+    });
+
+    it('preserves the formatting of untouched keys', async () => {
+      MockFs.writeTextFile(
+        objectEntry1.path,
+        `---\nIcon: "${objectEntry1.properties.Icon}"\nnotes: |\n  first\n  second\n---\n\nTest content`,
+      );
+
+      await writeDatabaseEntry(objectEntry1.id);
+
+      const contents = MockFs.readTextFile(objectEntry1.path);
+
+      expect(contents).toContain(`Icon: "${objectEntry1.properties.Icon}"`);
+      expect(contents).toContain('notes: |');
+    });
+
+    it('preserves unmodelled keys after a restart has dropped them from the store', async () => {
+      // The SQL index only carries schema properties, so after a restart the
+      // in-memory entry has no knowledge of the user's own frontmatter keys
+      DatabaseEntriesStore.update(objectEntry1.id, {
+        properties: {
+          Content: 'Test content',
+          Icon: 'content-icon:shapes:blue',
+        },
+      });
+      MockFs.writeTextFile(
+        objectEntry1.path,
+        `---\nIcon: ${objectEntry1.properties.Icon}\ncustom: keep me\n---\n\nTest content`,
+      );
+
+      await writeDatabaseEntry(objectEntry1.id);
+
+      expect(MockFs.readTextFile(objectEntry1.path)).toContain(
+        'custom: keep me',
+      );
+    });
+  });
+
   it('omits collection members that do not resolve', async () => {
     // Reference a non-existent entry
     DatabaseEntriesStore.update(collectionEntry1.id, {

@@ -8,7 +8,7 @@ export const markdownEntrySerializer: DatabaseEntrySerializer = {
   name: 'databases.entrySerializers.markdown.name',
   description: 'databases.entrySerializers.markdown.description',
   fileExtension: 'md',
-  serialize: (schema, properties) => {
+  serialize: (schema, properties, existingContent) => {
     let markdown = '';
 
     // Find all formatted text properties
@@ -39,8 +39,14 @@ export const markdownEntrySerializer: DatabaseEntrySerializer = {
       markdown = markdown.slice(0, -2);
     }
 
-    // Add the non-formatted text properties as frontmatter
-    return Markdown.setProperties(schema, nonFormattedTextProperties, markdown);
+    // Add the non-formatted text properties as frontmatter, merging into the
+    // entry's existing frontmatter so unmodelled keys and formatting survive
+    return Markdown.setProperties(
+      schema,
+      nonFormattedTextProperties,
+      markdown,
+      { existingContent },
+    );
   },
   deserialize: (schema, serializedProperties) => {
     // Get the markdown content and properties

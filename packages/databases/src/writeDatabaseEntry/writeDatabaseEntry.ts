@@ -30,9 +30,19 @@ export async function writeDatabaseEntry(id: string): Promise<void> {
   // Convert collection property members to durable addresses
   const properties = serializeCollectionProperties(entry.properties, database);
 
+  // Read the entry's current content so the serializer can merge into it
+  // rather than regenerating it, preserving anything MindDrop does not model
+  const existingContent = (await Fs.exists(entry.path))
+    ? await Fs.readTextFile(entry.path)
+    : undefined;
+
   // Serialize the entry's properties
   const serializer = getDatabaseEntrySerializer(database.entrySerializer);
-  const serializedEntry = serializer.serialize(database.properties, properties);
+  const serializedEntry = serializer.serialize(
+    database.properties,
+    properties,
+    existingContent,
+  );
 
   // Write the entry file
   await Fs.writeTextFile(entry.path, serializedEntry);

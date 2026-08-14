@@ -1,4 +1,4 @@
-import { parse, stringify } from 'yaml';
+import { isMap, parse, parseDocument, stringify } from 'yaml';
 
 export * from './Paths';
 export * from './back-end-utils';
@@ -49,4 +49,6 @@ export { v4 as uuid } from 'uuid';
 export const YAML = {
   parse,
   stringify,
+  parseDocument,
+  isMap,
 };

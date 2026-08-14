@@ -54,6 +54,22 @@ detected by path, which made the gap easy to miss.
 Do not reintroduce a timestamp comparison here. mtime is also unsuitable, on
 top of the reasons above, because a restore or checkout moves it without the
 content changing, which would re-index the whole workspace.
+### Multiple formatted-text properties cannot round-trip byte-exact
+
+`writeDatabaseEntry` merges into the entry's existing frontmatter, so
+unmodelled keys, comments and YAML formatting survive a write. The
+**body** has no such guarantee when a database declares more than one
+`formatted-text` property.
+
+In that case `getFormattedTextPropertiesFromMarkdown` splits the body on
+`##` headings, using the property name as the heading, and
+`markdownEntrySerializer.serialize` writes the sections back in
+property-map order. So content before the first heading and headings not
+matching a schema property are folded into the preceding section, and
+section order follows the property map rather than the original file.
+
+Databases with a single `formatted-text` property (the common case) are
+unaffected, since the whole body is that property's value.
 
 ### The implicit Title property's name is a translated identifier
 

@@ -4,6 +4,7 @@ import {
   PropertyMap,
 } from '@minddrop/properties';
 import { FrontmatterParseError } from '../errors';
+import { parseFrontmatter } from '../utils';
 
 /**
  * Returns the properties from a markdown document.
@@ -17,16 +18,16 @@ export function getPropertiesFromMarkdown(
   markdown: string,
 ): PropertyMap {
   // Extract front matter
-  const match = markdown.match(/^---\n([\s\S]+?)\n---/);
+  const { source } = parseFrontmatter(markdown);
 
   // If there is no front matter, return empty properties
-  if (!match) {
+  if (source === null) {
     return {};
   }
 
   try {
     // Parse front matter
-    return Properties.fromYaml(schema, match[1]);
+    return Properties.fromYaml(schema, source);
   } catch (error) {
     console.error(error);
 
