@@ -23,7 +23,8 @@ import {
  */
 export function stringifyElementsToMarkdown(elements: Element[]): string {
   const numbers = resolveListItemNumbers(elements);
-  let markdown = '';
+  // Leading whitespace belongs to the document rather than to any block
+  let markdown = elements[0]?.spacingBefore ?? '';
 
   elements.forEach((element, index) => {
     const config = getElementTypeConfig(element.type);
@@ -38,9 +39,11 @@ export function stringifyElementsToMarkdown(elements: Element[]): string {
 
     const previous = elements[index - 1];
 
-    // Separate the block from the one before it
+    // Separate the block from the one before it, preferring the spacing the
+    // document was written with
     if (previous) {
-      markdown += resolveSeparator(previous, element, numbers);
+      markdown +=
+        previous.spacingAfter ?? resolveSeparator(previous, element, numbers);
     }
 
     const prefixes = resolveAncestryPrefixes(
@@ -49,20 +52,40 @@ export function stringifyElementsToMarkdown(elements: Element[]): string {
       numbers,
     );
 
-    markdown += applyPrefixes(config.toMarkdown(element), prefixes);
+    // An untouched block writes back the slice it was parsed from, which is
+    // the only way its exact spelling survives. An edited one no longer has
+    // one, and is rebuilt from its own data.
+    const body = element.source ?? config.toMarkdown(element);
+
+    markdown += applyPrefixes(body, prefixes, element.source !== undefined);
   });
 
-  return markdown;
+  // Trailing whitespace is held by the last block, since there is no block
+  // after it to lead
+  return markdown + (elements[elements.length - 1]?.spacingAfter ?? '');
 }
 
 /**
- * Prefixes each of a block's lines with what its containers contribute.
+ * Prefixes a block's lines with what its containers contribute.
  *
- * @param markdown - The block's markdown, without container prefixes.
+ * A block's own slice already carries the prefixes of every line but its
+ * first, since only the first line's prefix sits before the offset the
+ * block was sliced from.
+ *
+ * @param markdown - The block's markdown.
  * @param prefixes - The prefixes the block's containers contribute.
+ * @param fromSource - Whether the markdown is the block's own slice.
  * @returns The prefixed markdown.
  */
-function applyPrefixes(markdown: string, prefixes: AncestryPrefixes): string {
+function applyPrefixes(
+  markdown: string,
+  prefixes: AncestryPrefixes,
+  fromSource: boolean,
+): string {
+  if (fromSource) {
+    return `${prefixes.first}${markdown}`;
+  }
+
   return markdown
     .split('\n')
     .map((line, index) => {

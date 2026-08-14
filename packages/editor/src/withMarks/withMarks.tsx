@@ -1,7 +1,14 @@
-import { Node, Path, Range, Text, Transforms } from 'slate';
+import {
+  Node,
+  Path,
+  Range,
+  Editor as SlateEditor,
+  Text,
+  Transforms,
+} from 'slate';
 import { RenderLeafProps } from 'slate-react';
 import { Element } from '@minddrop/ast';
-import { Editor, InlineShortcut, MarkConfig } from '../types';
+import { Editor, InlineShortcut, MarkConfig, MarkShortcut } from '../types';
 import { withInlineShortcuts } from '../withInlineShortcuts';
 
 /**
@@ -24,8 +31,23 @@ function markConfigToInlineShortcuts(markConfig: MarkConfig): InlineShortcut[] {
       {
         triggers: [configShortcut.trigger],
         action: (editor: Editor) => {
+          const syntaxKey = `${markConfig.key}Syntax`;
+
           // Toggle the mark on
           editor.toggleMark(markConfig.key, configShortcut.value);
+
+          // Record the delimiter which was actually typed, so that the
+          // mark is written back with the spelling the user chose rather
+          // than the serializer's default. The delimiter only means
+          // anything while the mark it belongs to is applied.
+          if (SlateEditor.marks(editor)?.[markConfig.key]) {
+            editor.addMark(
+              syntaxKey,
+              resolveTriggerSyntax(configShortcut.trigger),
+            );
+          } else {
+            editor.removeMark(syntaxKey);
+          }
 
           if (editor.selection && !Range.isCollapsed(editor.selection)) {
             // If a wrapping shortcut was used, collapse
@@ -34,12 +56,28 @@ function markConfigToInlineShortcuts(markConfig: MarkConfig): InlineShortcut[] {
 
             // Toggle the mark off
             editor.toggleMark(markConfig.key, configShortcut.value);
+            editor.removeMark(syntaxKey);
           }
         },
       },
     ],
     [] as InlineShortcut[],
   );
+}
+
+/**
+ * Returns the delimiter a shortcut's trigger types, which is the opening
+ * delimiter for a wrapping trigger and the trigger itself otherwise.
+ *
+ * @param trigger - The shortcut's trigger.
+ * @returns The delimiter.
+ */
+function resolveTriggerSyntax(trigger: MarkShortcut['trigger']): string {
+  if (typeof trigger === 'string') {
+    return trigger;
+  }
+
+  return trigger.start;
 }
 
 /**

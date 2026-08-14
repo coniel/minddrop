@@ -58,6 +58,12 @@ export interface ListItemFrame extends BaseFrame<'list-item'> {
   checked?: boolean;
 
   /**
+   * The character between the checkbox brackets as authored, since a
+   * checked box can be written with either case.
+   */
+  checkedSyntax?: string;
+
+  /**
    * Whether the item is loose, meaning its blocks are separated by blank
    * lines.
    */

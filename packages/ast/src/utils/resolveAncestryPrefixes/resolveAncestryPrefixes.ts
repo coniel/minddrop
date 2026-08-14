@@ -1,4 +1,4 @@
-import { Frame } from '../../types';
+import { Frame, ListItemFrame } from '../../types';
 
 export interface AncestryPrefixes {
   /**
@@ -76,12 +76,16 @@ function resolveFramePrefixes(
   }
 
   const indent = frame.indent || '';
+  // The number the author wrote wins over the computed one, since only the
+  // list's first number changes how it renders and rewriting the rest would
+  // edit a file the user did not touch. Computed numbering fills in for
+  // items which were never authored, such as ones typed in the editor.
   const marker = frame.ordered
-    ? `${numbers.get(frame.id) ?? frame.number ?? 1}${frame.marker}`
+    ? `${frame.number ?? numbers.get(frame.id) ?? 1}${frame.marker}`
     : frame.marker;
 
   return {
-    first: `${indent}${marker} ${resolveTaskBox(frame.checked)}`,
+    first: `${indent}${marker} ${resolveTaskBox(frame)}`,
     // Continuation lines align with the item's content rather than its
     // marker, so the marker is replaced by its own width in spaces
     continuation: `${indent}${' '.repeat(marker.length + 1)}`,
@@ -89,15 +93,20 @@ function resolveFramePrefixes(
 }
 
 /**
- * Returns the task list checkbox for an item's checked state.
+ * Returns the task list checkbox for an item's checked state, spelled as
+ * the author wrote it where that is known.
  *
- * @param checked - The item's checked state, absent on plain items.
+ * @param frame - The item's frame.
  * @returns The checkbox, or an empty string for a plain item.
  */
-function resolveTaskBox(checked: boolean | undefined): string {
-  if (checked === undefined) {
+function resolveTaskBox(frame: ListItemFrame): string {
+  if (frame.checked === undefined) {
     return '';
   }
 
-  return checked ? '[x] ' : '[ ] ';
+  if (frame.checkedSyntax) {
+    return `[${frame.checkedSyntax}] `;
+  }
+
+  return frame.checked ? '[x] ' : '[ ] ';
 }

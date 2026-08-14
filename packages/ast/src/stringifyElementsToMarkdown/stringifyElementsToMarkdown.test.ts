@@ -156,23 +156,17 @@ describe('stringifyElementsToMarkdown', () => {
   });
 
   describe('ordered list numbering', () => {
-    function generateOrderedItem(
-      id: string,
-      number: number,
-      marker = '.',
-    ): ListItemFrame {
-      return generateListItemFrame(id, {
-        ordered: true,
-        marker,
-        number,
-      });
+    // Items with no authored number are ones the editor created, which are
+    // the only ones the computed numbering has to fill in
+    function generateOrderedItem(id: string, marker = '.'): ListItemFrame {
+      return generateListItemFrame(id, { ordered: true, marker });
     }
 
-    it('numbers items sequentially regardless of the authored numbers', () => {
+    it('numbers items which were never authored sequentially', () => {
       const elements = [
-        generateParagraph('One', [generateOrderedItem('item-1', 1)]),
-        generateParagraph('Two', [generateOrderedItem('item-2', 1)]),
-        generateParagraph('Three', [generateOrderedItem('item-3', 1)]),
+        generateParagraph('One', [generateOrderedItem('item-1')]),
+        generateParagraph('Two', [generateOrderedItem('item-2')]),
+        generateParagraph('Three', [generateOrderedItem('item-3')]),
       ];
 
       expect(stringifyElementsToMarkdown(elements)).toBe(
@@ -180,21 +174,35 @@ describe('stringifyElementsToMarkdown', () => {
       );
     });
 
-    it('starts from the first item of the list', () => {
+    it('keeps the numbers the author wrote', () => {
       const elements = [
-        generateParagraph('Three', [generateOrderedItem('item-1', 3)]),
-        generateParagraph('Four', [generateOrderedItem('item-2', 9)]),
+        generateParagraph('One', [
+          generateListItemFrame('item-1', {
+            ordered: true,
+            marker: '.',
+            number: 1,
+          }),
+        ]),
+        generateParagraph('Two', [
+          generateListItemFrame('item-2', {
+            ordered: true,
+            marker: '.',
+            number: 1,
+          }),
+        ]),
       ];
 
-      expect(stringifyElementsToMarkdown(elements)).toBe('3. Three\n4. Four');
+      // Only the first number changes how a list renders, so rewriting the
+      // rest would edit a file the user did not touch
+      expect(stringifyElementsToMarkdown(elements)).toBe('1. One\n1. Two');
     });
 
     it('restarts numbering for a separate list', () => {
       const elements = [
-        generateParagraph('One', [generateOrderedItem('item-1', 1)]),
-        generateParagraph('Two', [generateOrderedItem('item-2', 1)]),
+        generateParagraph('One', [generateOrderedItem('item-1')]),
+        generateParagraph('Two', [generateOrderedItem('item-2')]),
         generateParagraph('Break'),
-        generateParagraph('One again', [generateOrderedItem('item-3', 1)]),
+        generateParagraph('One again', [generateOrderedItem('item-3')]),
       ];
 
       expect(stringifyElementsToMarkdown(elements)).toBe(
@@ -204,9 +212,9 @@ describe('stringifyElementsToMarkdown', () => {
 
     it('restarts numbering when the delimiter changes', () => {
       const elements = [
-        generateParagraph('One', [generateOrderedItem('item-1', 1)]),
-        generateParagraph('Two', [generateOrderedItem('item-2', 1)]),
-        generateParagraph('One again', [generateOrderedItem('item-3', 1, ')')]),
+        generateParagraph('One', [generateOrderedItem('item-1')]),
+        generateParagraph('Two', [generateOrderedItem('item-2')]),
+        generateParagraph('One again', [generateOrderedItem('item-3', ')')]),
       ];
 
       expect(stringifyElementsToMarkdown(elements)).toBe(
@@ -215,18 +223,18 @@ describe('stringifyElementsToMarkdown', () => {
     });
 
     it('numbers a nested list independently of its parent', () => {
-      const parent = generateOrderedItem('item-1', 1);
+      const parent = generateOrderedItem('item-1');
       const elements = [
         generateParagraph('One', [parent]),
         generateParagraph('Nested one', [
           parent,
-          generateOrderedItem('nested-1', 1),
+          generateOrderedItem('nested-1'),
         ]),
         generateParagraph('Nested two', [
           parent,
-          generateOrderedItem('nested-2', 1),
+          generateOrderedItem('nested-2'),
         ]),
-        generateParagraph('Two', [generateOrderedItem('item-2', 1)]),
+        generateParagraph('Two', [generateOrderedItem('item-2')]),
       ];
 
       expect(stringifyElementsToMarkdown(elements)).toBe(
@@ -235,11 +243,11 @@ describe('stringifyElementsToMarkdown', () => {
     });
 
     it('does not advance the list for an item continuation block', () => {
-      const item = generateOrderedItem('item-1', 1);
+      const item = generateOrderedItem('item-1');
       const elements = [
         generateParagraph('One', [item]),
         generateParagraph('Still one', [item]),
-        generateParagraph('Two', [generateOrderedItem('item-2', 1)]),
+        generateParagraph('Two', [generateOrderedItem('item-2')]),
       ];
 
       expect(stringifyElementsToMarkdown(elements)).toBe(

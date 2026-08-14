@@ -40,6 +40,7 @@ import { withBlockShortcuts } from '../withBlockShortcuts';
 import { withMarkHotkeys } from '../withMarkHotkeys';
 import { withMarks } from '../withMarks';
 import { withReturnBehaviour } from '../withReturnBehaviour';
+import { withSourceInvalidation } from '../withSourceInvalidation';
 import {
   TITLE_ELEMENT_TYPE,
   TitleContext,
@@ -203,9 +204,12 @@ export const RichTextEditor: React.FC<EditorProps> = ({
         withBlockSelection(
           withBlockIds(
             withBlockReset(
-              withBlockShortcuts(withReturnBehaviour(editor), [
-                ...EditorElementConfigs,
-              ]),
+              withBlockShortcuts(
+                // Applied innermost so that it sees the operations every
+                // other plugin produces
+                withSourceInvalidation(withReturnBehaviour(editor)),
+                [...EditorElementConfigs],
+              ),
               'paragraph',
             ),
           ),

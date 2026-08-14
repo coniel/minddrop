@@ -17,6 +17,7 @@ import {
   TableElementConfig,
   TableRowElementConfig,
   ThematicBreakElementConfig,
+  UnsupportedElementConfig,
 } from './element-configs';
 import { ElementTypeConfig } from './types';
 
@@ -51,6 +52,7 @@ export function getElementTypeConfigs(): ElementTypeConfig[] {
       TableRowElementConfig,
       TableCellElementConfig,
       ThematicBreakElementConfig,
+      UnsupportedElementConfig,
 
       // Inline elements
       BreakElementConfig,

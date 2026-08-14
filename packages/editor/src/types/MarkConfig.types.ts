@@ -1,4 +1,5 @@
 import { RenderLeafProps } from 'slate-react';
+import { MarkKey } from '@minddrop/ast';
 import { InlineShortcutWrapTrigger } from './InlineShortcut.types';
 
 export interface MarkHotkey {
@@ -43,7 +44,7 @@ export interface MarkConfig {
    * applied. Formatting is applied to a text node if the node has this
    * key set to a truthy value, e.g: `bold: true`
    */
-  key: string;
+  key: MarkKey;
 
   /**
    * The component used to render the mark. Wraps the editable span

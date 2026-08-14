@@ -28,6 +28,29 @@ export interface BaseElement<TType extends string = string> {
    * Only block elements carry an ancestry.
    */
   ancestry?: Frame[];
+
+  /**
+   * The block's own slice of the document it was parsed from, excluding the
+   * line prefix its containers contribute to its first line. Written back
+   * verbatim, which is what makes an untouched block survive byte for byte.
+   *
+   * Cleared when the block is edited, after which it no longer describes
+   * the block and its markdown is rebuilt from the element's own data.
+   */
+  source?: string;
+
+  /**
+   * The text between this block's content and the next block's line prefix,
+   * as it was parsed. Only absent once the block has been edited or
+   * inserted.
+   */
+  spacingAfter?: string;
+
+  /**
+   * The text before the block's line prefix, as it was parsed. Only carried
+   * by the document's first block, where it holds any leading whitespace.
+   */
+  spacingBefore?: string;
 }
 
 export type ElementCustomData = object;

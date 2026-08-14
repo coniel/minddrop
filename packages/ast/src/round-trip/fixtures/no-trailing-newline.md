@@ -1,0 +1,1 @@
+A document which does not end in a newline.

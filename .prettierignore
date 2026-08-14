@@ -10,3 +10,6 @@ apps/desktop/src-tauri/gen
 
 # Package manager lockfile
 pnpm-lock.yaml
+
+# Round trip fixtures, whose exact bytes are the thing under test
+packages/ast/src/round-trip/fixtures

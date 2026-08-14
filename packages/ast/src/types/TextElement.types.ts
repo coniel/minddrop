@@ -1,3 +1,9 @@
+/**
+ * The marks a text leaf can carry. Markdown has exactly four inline
+ * formatting constructs which wrap arbitrary text, so the set is fixed.
+ */
+export type MarkKey = 'bold' | 'italic' | 'strikethrough' | 'code';
+
 export interface TextElement {
   /**
    * The actual text content.

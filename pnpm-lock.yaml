@@ -1217,9 +1217,18 @@ importers:
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../utils
-      marked:
-        specifier: ^15.0.7
-        version: 15.0.7
+      remark-gfm:
+        specifier: ^3.0.1
+        version: 3.0.1
+      remark-math:
+        specifier: ^5.1.1
+        version: 5.1.1
+      remark-parse:
+        specifier: ^10.0.2
+        version: 10.0.2
+      unified:
+        specifier: ^10.1.2
+        version: 10.1.2
     devDependencies:
       '@minddrop/eslint-config':
         specifier: workspace:*
@@ -7837,12 +7846,6 @@ packages:
 
   /markdown-table@3.0.4:
     resolution: {integrity: sha512-wiYz4+JrLyb/DqW2hkFJxP7Vd7JuTDm77fvbM8VfEQdmSMqcImWeeRbHwZjBjIFki/VaMK2BhFi7oUUZeM5bqw==}
-    dev: false
-
-  /marked@15.0.7:
-    resolution: {integrity: sha512-dgLIeKGLx5FwziAnsk4ONoGwHwGPJzselimvlVskE9XLN4Orv9u2VA3GWw/lYUqjfA0rUT/6fqKwfZJapP9BEg==}
-    engines: {node: '>= 18'}
-    hasBin: true
     dev: false
 
   /math-intrinsics@1.1.0:
