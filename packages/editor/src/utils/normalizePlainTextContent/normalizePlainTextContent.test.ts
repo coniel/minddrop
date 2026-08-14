@@ -1,17 +1,14 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { Element } from '@minddrop/ast';
 import {
   cleanup,
   createTestEditor,
   linkElement1,
   paragraphElement1,
-  setup,
 } from '../../test-utils';
 import { normalizePlainTextContent } from './normalizePlainTextContent';
 
 describe('normalizePlainTextContent', () => {
-  beforeEach(setup);
-
   afterEach(cleanup);
 
   it('unwraps nested elements', () => {

@@ -6,7 +6,8 @@ export function generateElementTypeConfig(
 ): ElementTypeConfig {
   return {
     type,
-    display: 'block',
+    level: 'block',
+    content: 'inline',
     toMarkdown: () => '',
     ...config,
   };
@@ -18,7 +19,8 @@ export function generateInlineElementTypeConfig(
 ): ElementTypeConfig {
   return {
     type,
-    display: 'inline',
+    level: 'inline',
+    content: 'inline',
     toMarkdown: () => '',
     ...config,
   };

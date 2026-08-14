@@ -3,6 +3,7 @@ import { stringifyParagraphElementToMarkdown } from './stringifyParagraphElement
 
 export const ParagraphElementConfig: ElementTypeConfig = {
   type: 'paragraph',
-  display: 'block',
+  level: 'block',
+  content: 'inline',
   toMarkdown: stringifyParagraphElementToMarkdown,
 };

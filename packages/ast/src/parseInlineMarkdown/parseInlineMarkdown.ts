@@ -57,7 +57,7 @@ function transformTokens(
       slateNodes.push({
         text: token.text || '',
         code: true,
-        codeSyntax: token.raw[0],
+        codeSyntax: resolveCodeSyntax(token.raw),
         ...marks,
       });
     } else if (token.type === 'link') {
@@ -65,7 +65,7 @@ function transformTokens(
 
       slateNodes.push({
         type: 'link',
-        href: token.href!,
+        url: token.href!,
         title: token.title,
         children,
       } as Element);
@@ -75,4 +75,17 @@ function transformTokens(
   });
 
   return slateNodes;
+}
+
+/**
+ * Returns the full opening fence of a code span, which can be more than one
+ * backtick when the content itself contains backticks.
+ *
+ * @param raw - The code span's source.
+ * @returns The opening fence.
+ */
+function resolveCodeSyntax(raw: string): string {
+  const fence = /^`+/.exec(raw);
+
+  return fence ? fence[0] : '`';
 }

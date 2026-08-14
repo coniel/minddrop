@@ -35,16 +35,6 @@ export interface TextElement {
   strikethroughSyntax?: string;
 
   /**
-   * Whether the text is underlined.
-   */
-  underline?: boolean;
-
-  /**
-   * The markdown syntax used to underline the text (e.g. '<u>').
-   */
-  underlineSyntax?: string;
-
-  /**
    * Whether the text is code style.
    */
   code?: boolean;

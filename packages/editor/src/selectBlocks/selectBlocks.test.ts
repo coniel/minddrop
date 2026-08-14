@@ -1,5 +1,5 @@
 import { Range } from 'slate';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { Selection } from '@minddrop/selection';
 import {
   cleanup,
@@ -7,7 +7,6 @@ import {
   paragraphElement1,
   paragraphElement2,
   paragraphElement3,
-  setup,
 } from '../test-utils';
 import { BLOCK_SELECTION_ITEM_TYPE, Editor } from '../types';
 import { getBlockAlignedRange, getSelectedBlocks } from '../utils';
@@ -27,8 +26,6 @@ function createEditor(): Editor {
 }
 
 describe('selectBlocks', () => {
-  beforeEach(setup);
-
   afterEach(cleanup);
 
   it('covers the blocks between the given ones whole', () => {

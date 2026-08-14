@@ -5,7 +5,7 @@ import {
   Element as SlateElement,
 } from 'slate';
 import { Ast, Element } from '@minddrop/ast';
-import { EditorBlockElementConfigsStore } from '../BlockElementTypeConfigsStore';
+import { getEditorElementConfig } from '../EditorElementConfigs';
 import { Transforms } from '../Transforms';
 import { Editor } from '../types';
 import { isBlockElement } from '../utils';
@@ -26,19 +26,14 @@ export function insertBlockElement<TElement extends Element = Element>(
   type: string,
   data?: Partial<TElement>,
 ): void {
-  const config = EditorBlockElementConfigsStore.get(type);
+  const config = getEditorElementConfig(type);
 
-  // Element types must be registered in order to be rendered
+  // Element types must have a component in order to be rendered
   if (!config) {
     return;
   }
 
-  // Generate the element using the type's initial data when it
-  // has any, applying the requested data on top of it.
-  const base = config.initialize
-    ? config.initialize()
-    : Ast.generateElement(type);
-  const element = { ...base, ...data } as Element;
+  const element = { ...Ast.generateElement(type), ...data } as Element;
 
   // The block element the cursor is currently in
   const entry = SlateEditor.above<Element>(editor, {

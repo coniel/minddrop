@@ -1,12 +1,7 @@
 import React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { boldMarkConfig } from '../default-mark-configs';
-import {
-  cleanup,
-  createTestEditor,
-  paragraphElement1,
-  setup,
-} from '../test-utils';
+import { boldMarkConfig } from '../MarkConfigs';
+import { cleanup, createTestEditor, paragraphElement1 } from '../test-utils';
 import { Editor, MarkConfig } from '../types';
 import { withMarkHotkeys } from './withMarkHotkeys';
 
@@ -20,8 +15,6 @@ describe('withMarkHotkeys', () => {
   let editor: Editor;
 
   beforeEach(() => {
-    setup();
-
     // Create an editor containing some content
     editor = createTestEditor([paragraphElement1]);
   });

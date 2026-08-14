@@ -1,67 +1,152 @@
-import { ElementTypeConfigsStore } from '../ElementTypeConfigsStore';
-import { Element } from '../types';
+import { getElementTypeConfig } from '../ElementTypeConfigs';
+import { SerializationError } from '../errors';
+import { Element, Frame } from '../types';
+import {
+  AncestryPrefixes,
+  isSameList,
+  resolveAncestryPrefixes,
+  resolveInnermostListItem,
+  resolveListItemNumbers,
+  resolveSharedFrameDepth,
+} from '../utils';
 
 /**
- * Stringifies an array of elements to markdown.
+ * Stringifies an array of blocks to markdown.
  *
- * @param elementConfigs - The element type configs to use for stringification.
- * @param elements - The elements to stringify.
+ * The document is flat, so containers are rebuilt from each block's
+ * ancestry: every line is prefixed by what its containers contribute, and
+ * the gap between two blocks is decided by the containers they share.
+ *
+ * @param elements - The blocks to stringify.
  * @returns The markdown string.
+ * @throws SerializationError if a block has no element type config.
  */
-export function stringifyElementsToMarkdown(
-  elements: Element[],
-  elementConfigs = ElementTypeConfigsStore.getAll(),
-): string {
-  let index = 0;
-  let currentElement = elements[index];
-  const markdown: string[] = [];
+export function stringifyElementsToMarkdown(elements: Element[]): string {
+  const numbers = resolveListItemNumbers(elements);
+  let markdown = '';
 
-  function setCurrentElement() {
-    currentElement = elements[index];
-  }
+  elements.forEach((element, index) => {
+    const config = getElementTypeConfig(element.type);
 
-  if (!currentElement) {
-    return '';
-  }
-
-  while (currentElement) {
-    const config = elementConfigs.find((c) => c.type === currentElement.type);
-    const next = elements[index + 1];
-
-    // If no matching config is found, we have no way to stringify the element,
-    // so we skip it.
+    // Skipping the block would silently destroy the user's content, so an
+    // unknown type is a bug rather than something to swallow
     if (!config) {
-      index += 1;
-      setCurrentElement();
-      continue;
+      throw new SerializationError(
+        `No element type config found for '${element.type}'`,
+      );
     }
 
-    // If the next element is of the same type and a `stringifyBatch` function is provided,
-    // stringify the current element and all subsequent elements of the same type as a batch.
-    if (
-      next &&
-      next.type === currentElement.type &&
-      config.stringifyBatchToMarkdown
-    ) {
-      const batch = [currentElement, next];
-      index += 2;
+    const previous = elements[index - 1];
 
-      while (elements[index]?.type === currentElement.type) {
-        batch.push(elements[index]);
-        index += 1;
-      }
-
-      markdown.push(config.stringifyBatchToMarkdown(batch));
-      setCurrentElement();
-      continue;
+    // Separate the block from the one before it
+    if (previous) {
+      markdown += resolveSeparator(previous, element, numbers);
     }
 
-    // Otherwise, stringify the current element.
-    markdown.push(config.toMarkdown(currentElement));
-    index += 1;
+    const prefixes = resolveAncestryPrefixes(
+      element.ancestry,
+      previous?.ancestry,
+      numbers,
+    );
 
-    setCurrentElement();
+    markdown += applyPrefixes(config.toMarkdown(element), prefixes);
+  });
+
+  return markdown;
+}
+
+/**
+ * Prefixes each of a block's lines with what its containers contribute.
+ *
+ * @param markdown - The block's markdown, without container prefixes.
+ * @param prefixes - The prefixes the block's containers contribute.
+ * @returns The prefixed markdown.
+ */
+function applyPrefixes(markdown: string, prefixes: AncestryPrefixes): string {
+  return markdown
+    .split('\n')
+    .map((line, index) => {
+      const prefix = index === 0 ? prefixes.first : prefixes.continuation;
+
+      // A prefix on an otherwise empty line would leave trailing whitespace
+      return line ? `${prefix}${line}` : prefix.trimEnd();
+    })
+    .join('\n');
+}
+
+/**
+ * Returns the text separating two consecutive blocks.
+ *
+ * Blocks in a tight list sit on consecutive lines, everything else is
+ * separated by a blank line. A blank line inside a container still carries
+ * that container's prefix.
+ *
+ * @param previous - The preceding block.
+ * @param element - The block being serialized.
+ * @param numbers - The displayed number of each ordered item frame.
+ * @returns The separator.
+ */
+function resolveSeparator(
+  previous: Element,
+  element: Element,
+  numbers: Map<string, number>,
+): string {
+  // Tight list blocks are not separated by a blank line
+  if (isTight(previous.ancestry, element.ancestry)) {
+    return '\n';
   }
 
-  return markdown.join('\n\n');
+  const sharedDepth = resolveSharedFrameDepth(
+    previous.ancestry,
+    element.ancestry,
+  );
+  const shared = (element.ancestry || []).slice(0, sharedDepth);
+  // The blank line belongs to the containers both blocks are inside, so it
+  // carries their continuation prefix
+  const blankLine = resolveAncestryPrefixes(
+    shared,
+    shared,
+    numbers,
+  ).continuation.trimEnd();
+
+  return `\n${blankLine}\n`;
+}
+
+/**
+ * Determines whether two consecutive blocks belong to a tight list, meaning
+ * no blank line separates them.
+ *
+ * @param ancestry - The preceding block's ancestry.
+ * @param nextAncestry - The following block's ancestry.
+ * @returns Whether the blocks are tight.
+ */
+function isTight(ancestry: Frame[] = [], nextAncestry: Frame[] = []): boolean {
+  const depth = resolveSharedFrameDepth(ancestry, nextAncestry);
+  const frame = ancestry[depth];
+  const nextFrame = nextAncestry[depth];
+
+  // Both blocks sit directly inside the same innermost container
+  if (!frame && !nextFrame) {
+    const item = resolveInnermostListItem(ancestry);
+
+    return !!item && !item.spread;
+  }
+
+  // One block nests inside a container the other is not in, which only
+  // keeps them together when they are already inside a shared container
+  if (!frame || !nextFrame) {
+    const nested = frame || nextFrame;
+
+    return depth > 0 && nested.kind === 'list-item' && !nested.spread;
+  }
+
+  // The blocks are in sibling containers, which are only tight when they are
+  // items of the same list
+  return (
+    frame.kind === 'list-item' &&
+    nextFrame.kind === 'list-item' &&
+    isSameList(frame, nextFrame) &&
+    !frame.spread &&
+    !nextFrame.spread
+  );
 }

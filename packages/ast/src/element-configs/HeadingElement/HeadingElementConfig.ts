@@ -3,6 +3,7 @@ import { stringifyHeadingElementToMarkdown } from './stringifyHeadingElementToMa
 
 export const HeadingElementConfig: ElementTypeConfig = {
   type: 'heading',
-  display: 'block',
+  level: 'block',
+  content: 'inline',
   toMarkdown: stringifyHeadingElementToMarkdown,
 };

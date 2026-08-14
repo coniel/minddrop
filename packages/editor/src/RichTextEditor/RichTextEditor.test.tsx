@@ -11,7 +11,6 @@ import {
   paragraphElement1PlainText,
   paragraphElement2,
   paragraphElement2PlainText,
-  setup,
 } from '../test-utils';
 import { BLOCK_SELECTION_ITEM_TYPE } from '../types';
 import { ACTIVATION_DELAY } from '../useHoveredBlock';
@@ -40,8 +39,6 @@ const hoverBlock = (element: HTMLElement) => {
 
 describe('RichTextEditor block gutter', () => {
   beforeEach(() => {
-    setup();
-
     // The gutter's activation delay is driven by a timer
     vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
   });
@@ -174,8 +171,6 @@ describe('RichTextEditor block gutter', () => {
 
 describe('RichTextEditor block drag and drop', () => {
   beforeEach(() => {
-    setup();
-
     // Serializes the dragged blocks onto the drag's data, which is
     // what carries them between editors
     registerBlockSelectionSerializer();
@@ -460,8 +455,6 @@ describe('RichTextEditor block drag and drop', () => {
 
 describe('RichTextEditor block selection', () => {
   beforeEach(() => {
-    setup();
-
     // The gutter's activation delay is driven by a timer
     vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
   });

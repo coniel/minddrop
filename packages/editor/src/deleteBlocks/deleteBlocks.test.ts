@@ -1,5 +1,5 @@
 import { Range } from 'slate';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { Ast } from '@minddrop/ast';
 import {
   cleanup,
@@ -7,14 +7,11 @@ import {
   paragraphElement1,
   paragraphElement2,
   paragraphElement3,
-  setup,
   titleElement1,
 } from '../test-utils';
 import { deleteBlocks } from './deleteBlocks';
 
 describe('deleteBlocks', () => {
-  beforeEach(setup);
-
   afterEach(cleanup);
 
   it('removes the given blocks', () => {

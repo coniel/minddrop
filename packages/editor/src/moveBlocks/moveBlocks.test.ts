@@ -1,18 +1,15 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import {
   cleanup,
   createTestEditor,
   paragraphElement1,
   paragraphElement2,
   paragraphElement3,
-  setup,
   titleElement1,
 } from '../test-utils';
 import { moveBlocks } from './moveBlocks';
 
 describe('moveBlocks', () => {
-  beforeEach(setup);
-
   afterEach(cleanup);
 
   it('moves the blocks up', () => {

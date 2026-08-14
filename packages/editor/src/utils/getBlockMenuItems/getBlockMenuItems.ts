@@ -1,7 +1,7 @@
 import { Element } from '@minddrop/ast';
 import { TranslationKey } from '@minddrop/i18n';
 import { IconProp } from '@minddrop/ui-primitives';
-import { EditorBlockElementConfigsStore } from '../../BlockElementTypeConfigsStore';
+import { EditorElementConfigs } from '../../EditorElementConfigs';
 
 export interface BlockMenuItem {
   /**
@@ -26,13 +26,12 @@ export interface BlockMenuItem {
 }
 
 /**
- * Collects the block menu entries of all registered block element
- * types, in registration order.
+ * Collects the block menu entries of every block element type.
  *
  * @returns The block menu entries.
  */
 export function getBlockMenuItems(): BlockMenuItem[] {
-  return EditorBlockElementConfigsStore.getAll().flatMap((config) =>
+  return EditorElementConfigs.flatMap((config) =>
     // Types without menu entries are omitted from the menu
     (config.menuItems || []).map((menuItem) => ({
       type: config.type,

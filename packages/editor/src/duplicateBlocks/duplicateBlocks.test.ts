@@ -1,11 +1,10 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { Ast, ParagraphElement } from '@minddrop/ast';
 import {
   cleanup,
   createTestEditor,
   paragraphElement1,
   paragraphElement2,
-  setup,
 } from '../test-utils';
 import { IdentifiedElement } from '../types';
 import { getBlockAlignedRange } from '../utils';
@@ -20,8 +19,6 @@ const identifiedParagraph: IdentifiedElement<ParagraphElement> = {
 };
 
 describe('duplicateBlocks', () => {
-  beforeEach(setup);
-
   afterEach(cleanup);
 
   it('inserts the copies below the originals', () => {

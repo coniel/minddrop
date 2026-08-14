@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { ParagraphElement } from '@minddrop/ast';
 import {
   cleanup,
@@ -7,7 +7,6 @@ import {
   paragraphElement2,
   paragraphElement3,
   paragraphElement4,
-  setup,
   titleElement1,
 } from '../test-utils';
 import { IdentifiedElement } from '../types';
@@ -15,8 +14,6 @@ import { getBlockAlignedRange } from '../utils';
 import { moveBlocksTo } from './moveBlocksTo';
 
 describe('moveBlocksTo', () => {
-  beforeEach(setup);
-
   afterEach(cleanup);
 
   it('moves a block down to the insertion point', () => {

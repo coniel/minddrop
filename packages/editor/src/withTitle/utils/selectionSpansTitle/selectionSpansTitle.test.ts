@@ -1,10 +1,9 @@
 import { Transforms } from 'slate';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import {
   cleanup,
   createTestEditor,
   paragraphElement1,
-  setup,
   titleElement1,
 } from '../../../test-utils';
 import { selectionSpansTitle } from './selectionSpansTitle';
@@ -12,8 +11,6 @@ import { selectionSpansTitle } from './selectionSpansTitle';
 const createEditor = () => createTestEditor([titleElement1, paragraphElement1]);
 
 describe('selectionSpansTitle', () => {
-  beforeEach(setup);
-
   afterEach(cleanup);
 
   it('returns false when there is no selection', () => {

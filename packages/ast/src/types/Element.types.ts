@@ -1,3 +1,4 @@
+import { Frame } from './Frame.types';
 import { TextElement } from './TextElement.types';
 
 export interface BaseElement<TType extends string = string> {
@@ -10,14 +11,23 @@ export interface BaseElement<TType extends string = string> {
   /**
    * The element's children.
    *
-   * Block elements can have either other elements or inline elements
-   * as their children, but not a mix of both.
+   * Block elements contain inline elements and text elements. No block
+   * element contains another block element: containment is expressed by
+   * `ancestry` instead.
    *
    * Inline elements can only have text elements as children.
    *
-   * All void elements must have a single empty text child.
+   * Void elements must have a single empty text child.
    */
   children: (Element | TextElement)[];
+
+  /**
+   * The containers the block sits inside, outermost first. Rendered as
+   * indentation and serialized as line prefixes.
+   *
+   * Only block elements carry an ancestry.
+   */
+  ancestry?: Frame[];
 }
 
 export type ElementCustomData = object;

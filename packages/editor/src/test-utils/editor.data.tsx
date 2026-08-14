@@ -1,25 +1,26 @@
 import {
   Ast,
   HeadingElement,
+  InlineMathElement,
   LinkElement,
-  MathBlockElement,
-  MathInlineElement,
+  ListItemFrame,
+  MathElement,
   ParagraphElement,
-  ToDoElement,
+  ThematicBreakElement,
 } from '@minddrop/ast';
-import { defaultMarkConfigs } from '../default-mark-configs';
-import { EditorBlockElementConfig, EditorInlineElementConfig } from '../types';
+import { MarkConfigs } from '../MarkConfigs';
+import { EditorBlockElementConfig } from '../types';
 import { TITLE_ELEMENT_TYPE, TitleElement } from '../withTitle';
 
 export {
   boldMarkConfig,
   italicMarkConfig,
-  underlineMarkConfig,
   strikethroughMarkConfig,
-} from '../default-mark-configs';
+  codeMarkConfig,
+} from '../MarkConfigs';
 
 export const EDITOR_TEST_DATA = {
-  markConfigs: defaultMarkConfigs,
+  markConfigs: MarkConfigs,
 };
 
 /* ********************* */
@@ -61,47 +62,23 @@ export const paragraphElementConfig: EditorBlockElementConfig<ParagraphElement> 
     ],
   };
 
-export const toDoElementConfig: EditorBlockElementConfig<ToDoElement> = {
-  type: 'to-do',
-  initialize: () =>
-    Ast.generateElement<ToDoElement>('to-do', {
-      checked: false,
+export const mathElementConfig: EditorBlockElementConfig<MathElement> = {
+  type: 'math',
+  convert: (element) =>
+    Ast.generateElement<MathElement>('math', {
+      children: [{ text: Ast.toPlainText(element) }],
     }),
   component: ({ attributes, children }) => (
     <div {...attributes}>{children}</div>
   ),
 };
 
-export const blockMathElementConfig: EditorBlockElementConfig<MathBlockElement> =
-  {
-    type: 'math-block',
-    isVoid: true,
-    initialize: () =>
-      Ast.generateElement<MathBlockElement>('math-block', {
-        expression: '',
-      }),
-    convert: (element) =>
-      Ast.generateElement<MathBlockElement>('math-block', {
-        expression: Ast.toPlainText(element),
-      }),
-    component: ({ attributes, children, element }) => (
-      <div {...attributes}>
-        {element}
-        {children}
-      </div>
-    ),
-  };
-
 /* ********************** */
 /* Inline element configs */
 /* ********************** */
 
-export const linkElementConfig: EditorInlineElementConfig<LinkElement> = {
+export const linkElementConfig: EditorBlockElementConfig<LinkElement> = {
   type: 'link',
-  initialize: () =>
-    Ast.generateElement<LinkElement>('link', {
-      url: '',
-    }),
   component: ({ attributes, children, element }) => (
     <a {...attributes} href={element.url}>
       {children}
@@ -109,17 +86,12 @@ export const linkElementConfig: EditorInlineElementConfig<LinkElement> = {
   ),
 };
 
-export const inlineMathElementConfig: EditorInlineElementConfig<MathInlineElement> =
+export const inlineMathElementConfig: EditorBlockElementConfig<InlineMathElement> =
   {
-    type: 'math-inline',
-    isVoid: true,
-    initialize: () =>
-      Ast.generateElement<MathInlineElement>('math-inline', {
-        expression: '',
-      }),
+    type: 'inline-math',
     component: ({ attributes, children, element }) => (
       <span {...attributes}>
-        {element.expression}
+        {element.value}
         {children}
       </span>
     ),
@@ -160,7 +132,7 @@ export const paragraphElement3PlainText =
   'An object at rest remains at rest, and an object that is moving will continue to move straight and with constant velocity, if and only if there is no net force acting on that object.';
 export const paragraphElement4PlainText =
   'The acceleration, or rate of change of velocity, is the derivative of the velocity with respect to time.';
-export const blockMathElement1PlainText = 'e=mc^2';
+export const mathElement1PlainText = 'e=mc^2';
 export const paragraphElement1 = Ast.generateElement<ParagraphElement>(
   'paragraph',
   {
@@ -200,22 +172,61 @@ export const emptyTitleElement =
   Ast.generateElement<TitleElement>(TITLE_ELEMENT_TYPE);
 
 // Math block
-export const blockMathElement1 = Ast.generateElement<MathBlockElement>(
-  'math-block',
+export const mathElement1 = Ast.generateElement<MathElement>('math', {
+  children: [{ text: mathElement1PlainText }],
+});
+
+// Thematic break, the simplest void block
+export const thematicBreakElement1 = Ast.generateElement<ThematicBreakElement>(
+  'thematic-break',
   {
-    expression: blockMathElement1PlainText,
+    syntax: '---',
   },
 );
 
-// To-do
-export const toDoElementCompleted1 = Ast.generateElement<ToDoElement>('to-do', {
-  checked: true,
-});
+/* ****** */
+/* Frames */
+/* ****** */
 
-export const toDoElementIncomplete1 = Ast.generateElement<ToDoElement>(
-  'to-do',
+export const listItemFrame1: ListItemFrame = {
+  id: 'list-item-1',
+  kind: 'list-item',
+  ordered: false,
+  marker: '-',
+};
+
+export const listItemFrame2: ListItemFrame = {
+  id: 'list-item-2',
+  kind: 'list-item',
+  ordered: false,
+  marker: '-',
+};
+
+// Task items, which are list items carrying a checked state
+export const taskItemFrameCompleted: ListItemFrame = {
+  ...listItemFrame1,
+  checked: true,
+};
+
+export const taskItemFrameIncomplete: ListItemFrame = {
+  ...listItemFrame2,
+  checked: false,
+};
+
+// List item blocks
+export const listItemElement1 = Ast.generateElement<ParagraphElement>(
+  'paragraph',
   {
-    checked: false,
+    ancestry: [listItemFrame1],
+    children: [{ text: 'First item' }],
+  },
+);
+
+export const listItemElement2 = Ast.generateElement<ParagraphElement>(
+  'paragraph',
+  {
+    ancestry: [listItemFrame2],
+    children: [{ text: 'Second item' }],
   },
 );
 
@@ -231,10 +242,10 @@ export const linkElement1 = Ast.generateElement<LinkElement>('link', {
   children: [{ text: 'MindDrop website' }],
 });
 
-export const inlineMathElement1 = Ast.generateElement<MathInlineElement>(
-  'math-inline',
+export const inlineMathElement1 = Ast.generateElement<InlineMathElement>(
+  'inline-math',
   {
-    expression: inlineMathElement1PlainText,
+    value: inlineMathElement1PlainText,
   },
 );
 
@@ -246,8 +257,7 @@ export const inlineMathElement1 = Ast.generateElement<MathInlineElement>(
 export const blockElementConfigs = [
   headingElementConfig,
   paragraphElementConfig,
-  blockMathElementConfig,
-  toDoElementConfig,
+  mathElementConfig,
 ];
 
 // Inline element configs
@@ -267,9 +277,10 @@ export const blockElements = [
   paragraphElement3,
   paragraphElement4,
   emptyParagraphElement,
-  blockMathElement1,
-  toDoElementCompleted1,
-  toDoElementIncomplete1,
+  mathElement1,
+  thematicBreakElement1,
+  listItemElement1,
+  listItemElement2,
 ];
 
 // Inline level elements

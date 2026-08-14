@@ -1,5 +1,5 @@
 import { Element } from '@minddrop/ast';
-import { EditorBlockElementConfigsStore } from '../BlockElementTypeConfigsStore';
+import { getEditorElementConfig } from '../EditorElementConfigs';
 
 /**
  * Converts a block element from one type to another type.
@@ -16,7 +16,7 @@ export function convertElement(
   shortcut?: string,
 ): Element {
   // Get the new element config
-  const config = EditorBlockElementConfigsStore.get(newType);
+  const config = getEditorElementConfig(newType);
 
   if (!config) {
     // If the new element type is not a registered type,

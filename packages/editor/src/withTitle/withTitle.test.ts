@@ -1,5 +1,5 @@
 import { Editor as SlateEditor, Transforms } from 'slate';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { Element } from '@minddrop/ast';
 import {
   cleanup,
@@ -7,14 +7,13 @@ import {
   emptyParagraphElement,
   emptyTitleElement,
   linkElement1,
+  listItemElement1,
   paragraphElement1,
   paragraphElement1PlainText,
   paragraphElement2,
   paragraphElement2PlainText,
-  setup,
   titleElement1,
   titleElement1PlainText,
-  toDoElementIncomplete1,
 } from '../test-utils';
 import { withBlockReset } from '../withBlockReset';
 import { TITLE_ELEMENT_TYPE } from './TitleElement';
@@ -24,8 +23,6 @@ const createEditor = (content: Element[]) =>
   withTitle(createTestEditor(content));
 
 describe('withTitle', () => {
-  beforeEach(setup);
-
   afterEach(cleanup);
 
   describe('normalizeNode', () => {
@@ -341,9 +338,7 @@ describe('withTitle', () => {
       // Compose the title plugin over the block reset plugin as
       // in the editor's plugin chain
       const editor = withTitle(
-        withBlockReset(
-          createTestEditor([titleElement1, toDoElementIncomplete1]),
-        ),
+        withBlockReset(createTestEditor([titleElement1, listItemElement1])),
       );
 
       // Set the selection to the start of the to-do element

@@ -1,19 +1,16 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import {
   cleanup,
   createTestEditor,
   paragraphElement1,
   paragraphElement2,
   paragraphElement3,
-  setup,
   titleElement1,
 } from '../test-utils';
 import { getBlockAlignedRange } from '../utils';
 import { insertBlocksAt } from './insertBlocksAt';
 
 describe('insertBlocksAt', () => {
-  beforeEach(setup);
-
   afterEach(cleanup);
 
   it('inserts the blocks at the insertion point', () => {

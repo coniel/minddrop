@@ -2,15 +2,14 @@ import React from 'react';
 import { useSlateStatic } from 'slate-react';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { render } from '@minddrop/test-utils';
-import { EditorBlockElementConfigsStore } from '../../BlockElementTypeConfigsStore';
 import { RichTextEditor } from '../../RichTextEditor';
 import {
+  addTestElementConfig,
   cleanup,
   headingElement1,
   headingElement1PlainText,
   paragraphElement1,
   paragraphElement1PlainText,
-  setup,
 } from '../../test-utils';
 import { BlockElementProps, Editor } from '../../types';
 import { getBlockFromDomNode } from './getBlockFromDomNode';
@@ -33,10 +32,8 @@ const EditorProbeComponent: React.FC<BlockElementProps> = ({
 
 describe('getBlockFromDomNode', () => {
   beforeEach(() => {
-    setup();
-
     // Register the editor probe element type
-    EditorBlockElementConfigsStore.add({
+    addTestElementConfig({
       type: 'editor-probe',
       component: EditorProbeComponent,
     });

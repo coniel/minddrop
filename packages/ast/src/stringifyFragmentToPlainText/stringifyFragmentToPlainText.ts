@@ -1,45 +1,34 @@
-import { ElementTypeConfigsStore } from '../ElementTypeConfigsStore';
-import { Fragment } from '../types';
+import { getElementTypeConfig } from '../ElementTypeConfigs';
+import { Element, Fragment } from '../types';
 
 /**
  * Stringifies an array of text and inline elements
  * into the plain text version of their content.
  *
- * @param inlineElementConfigs - The inline element configs to use, defaults to registered configs.
  * @param fragment - The fragment to stringify.
  * @returns The plain text content of the fragment.
  */
-export function stringifyFragmentToPlainText(
-  inlineElementConfigs = ElementTypeConfigsStore.getAll(),
-  fragment: Fragment,
-): string {
+export function stringifyFragmentToPlainText(fragment: Fragment): string {
   let result = '';
 
   for (const child of fragment) {
-    // Child is a text element
-    if ('text' in child) {
-      // Append the text content
+    // Child is a text element, so its text is the plain text
+    if (!('type' in child)) {
       result += child.text;
       continue;
     }
 
-    // Child is an inline element
-    if ('type' in child) {
-      // Get the element config
-      const config = inlineElementConfigs.find((c) => c.type === child.type);
+    const element = child as Element;
+    const config = getElementTypeConfig(element.type);
 
-      if (config?.toPlainText) {
-        // Stringify the element using the config's `toPlainText` method
-        result += config.toPlainText(child);
-        continue;
-      }
-
-      // Stringify the element's children
-      result += stringifyFragmentToPlainText(
-        inlineElementConfigs,
-        child.children || [],
-      );
+    // Stringify the element using the config's `toPlainText` method
+    if (config?.toPlainText) {
+      result += config.toPlainText(element);
+      continue;
     }
+
+    // Otherwise stringify the element's children
+    result += stringifyFragmentToPlainText(element.children || []);
   }
 
   return result;

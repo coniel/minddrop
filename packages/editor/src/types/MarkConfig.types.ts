@@ -1,5 +1,4 @@
 import { RenderLeafProps } from 'slate-react';
-import { Element, Fragment } from '@minddrop/ast';
 import { InlineShortcutWrapTrigger } from './InlineShortcut.types';
 
 export interface MarkHotkey {
@@ -62,28 +61,4 @@ export interface MarkConfig {
    *
    */
   shortcuts?: MarkShortcut[];
-
-  /**
-   * HTML deserializers are called when HTML text is inserted into the editor.
-   *
-   * A { [node name]: HtmlDeserializer } map where [node name] corresponds to an
-   * HTML element node name (in all caps), such a SPAN, A, IMG, etc.
-   *
-   * Use an asterisk (*) as the node name in order to match afainst all HTML
-   * element types.
-   */
-  htmlDeserializers?: Record<string, HtmlMarkDeserializer>;
 }
-
-/**
- * Function called to deserialize an HTML element into a mark.
- *
- * They should return the mark's value, such as `true`, or `null` the mark should not be applied.
- */
-export type HtmlMarkDeserializer<
-  THtmlElement extends HTMLElement = HTMLElement,
-> = (
-  element: THtmlElement,
-  parent: HTMLElement | null,
-  children: Fragment | Element[] | null,
-) => boolean | string | number | null;

@@ -1,19 +1,16 @@
 import { Editor as SlateEditor } from 'slate';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { HeadingElement, ToDoElement } from '@minddrop/ast';
+import { afterEach, describe, expect, it } from 'vitest';
+import { HeadingElement } from '@minddrop/ast';
 import {
-  blockMathElement1,
   cleanup,
   createTestEditor,
   emptyParagraphElement,
+  mathElement1,
   paragraphElement1,
-  setup,
 } from '../test-utils';
 import { insertBlockElement } from './insertBlockElement';
 
 describe('insertBlockElement', () => {
-  beforeEach(setup);
-
   afterEach(cleanup);
 
   it('does nothing if the element type is not registered', () => {
@@ -59,7 +56,7 @@ describe('insertBlockElement', () => {
   });
 
   it('inserts below empty void blocks', () => {
-    const editor = createTestEditor([blockMathElement1]);
+    const editor = createTestEditor([mathElement1]);
 
     // Place the cursor in the void block
     editor.selection = {
@@ -71,24 +68,10 @@ describe('insertBlockElement', () => {
 
     // Should have kept the void block
     expect(editor.children.length).toBe(2);
-    expect(editor.children[0]).toEqual(blockMathElement1);
+    expect(editor.children[0]).toEqual(mathElement1);
   });
 
-  it("applies the element type's initial data", () => {
-    const editor = createTestEditor([paragraphElement1]);
-
-    editor.selection = {
-      anchor: { path: [0, 0], offset: 0 },
-      focus: { path: [0, 0], offset: 0 },
-    };
-
-    insertBlockElement(editor, 'to-do');
-
-    // Should have applied the initial data from the type's config
-    expect((editor.children[1] as ToDoElement).checked).toBe(false);
-  });
-
-  it('applies the given data over the initial data', () => {
+  it('applies the given data', () => {
     const editor = createTestEditor([paragraphElement1]);
 
     editor.selection = {

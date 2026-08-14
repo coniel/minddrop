@@ -1,0 +1,11 @@
+.strikethrough-mark {
+  text-decoration: line-through;
+}
+
+.code-mark {
+  padding: 0 var(--space-1);
+  border-radius: var(--radius-sm);
+  background-color: var(--surface-subtle);
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}

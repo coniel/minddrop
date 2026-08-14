@@ -1,32 +1,36 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { vi } from 'vitest';
 import { Selection } from '@minddrop/selection';
 import { act, cleanup as cleanupRender } from '@minddrop/test-utils';
-import { EditorBlockElementConfigsStore } from '../BlockElementTypeConfigsStore';
-import { EditorInlineElementConfigsStore } from '../InlineElementTypeConfigsStore';
-import { MarkConfigsStore } from '../MarkConfigsStore';
-import { defaultMarkConfigs } from '../default-mark-configs';
-import { registerMarkConfig } from '../registerMarkConfig';
-import { blockElementConfigs, inlineElementConfigs } from './editor.data';
+import { EditorElementConfigs } from '../EditorElementConfigs';
+import { EditorBlockElementConfig } from '../types';
 
-export function setup() {
-  act(() => {
-    // Register element types
-    blockElementConfigs.forEach((config) => {
-      EditorBlockElementConfigsStore.add(config);
-    });
+// The element configs the editor ships with, restored after each test
+const defaultElementConfigs = [...EditorElementConfigs];
 
-    inlineElementConfigs.forEach((config) => {
-      EditorInlineElementConfigsStore.add(config);
-    });
-
-    // Register marks
-    defaultMarkConfigs.forEach((config) => registerMarkConfig(config));
-  });
+/**
+ * Makes an element type available to the editor for the duration of a test.
+ * The element set is otherwise fixed, so this exists only to give tests
+ * types of their own to act on.
+ *
+ * @param config - The element config to add.
+ */
+export function addTestElementConfig(
+  config: EditorBlockElementConfig<any>,
+): void {
+  EditorElementConfigs.push(config);
 }
 
 export function cleanup() {
   // React testing library cleanup
   cleanupRender();
+
+  // Drop any element types a test added
+  EditorElementConfigs.splice(
+    0,
+    EditorElementConfigs.length,
+    ...defaultElementConfigs,
+  );
 
   act(() => {
     // Clear all mock functions
@@ -34,12 +38,5 @@ export function cleanup() {
 
     // Clear the app's selection, which block selections take part in
     Selection.clear();
-
-    // Clear registered elements
-    EditorBlockElementConfigsStore.clear();
-    EditorInlineElementConfigsStore.clear();
-
-    // Clear registered marks
-    MarkConfigsStore.clear();
   });
 }

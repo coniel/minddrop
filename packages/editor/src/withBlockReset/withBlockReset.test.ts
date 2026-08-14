@@ -1,5 +1,5 @@
 import { Editor, Node } from 'slate';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { Ast, Element } from '@minddrop/ast';
 import { Transforms } from '../Transforms';
 import {
@@ -7,7 +7,6 @@ import {
   createTestEditor,
   headingElement1,
   linkElement1,
-  setup,
 } from '../test-utils';
 import { withBlockReset } from './withBlockReset';
 
@@ -17,8 +16,6 @@ const emptyHeading = { ...headingElement1, children: [{ text: '' }] };
 const defaultType = 'paragraph';
 
 describe('withBlockReset', () => {
-  beforeEach(setup);
-
   afterEach(cleanup);
 
   it('resets the block type when a break is insterted in an empty block', () => {

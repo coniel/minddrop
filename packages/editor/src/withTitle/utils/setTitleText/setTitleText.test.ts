@@ -1,10 +1,9 @@
 import { HistoryEditor } from 'slate-history';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import {
   cleanup,
   createTestEditor,
   paragraphElement1,
-  setup,
   titleElement1,
 } from '../../../test-utils';
 import { setTitleText } from './setTitleText';
@@ -19,8 +18,6 @@ const countUndoableOperations = (editor: ReturnType<typeof createEditor>) =>
   );
 
 describe('setTitleText', () => {
-  beforeEach(setup);
-
   afterEach(cleanup);
 
   it('replaces the title text', () => {

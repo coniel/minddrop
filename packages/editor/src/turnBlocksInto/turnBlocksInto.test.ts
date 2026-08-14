@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { HeadingElement, ParagraphElement } from '@minddrop/ast';
 import {
   cleanup,
@@ -7,14 +7,11 @@ import {
   paragraphElement1,
   paragraphElement1PlainText,
   paragraphElement2,
-  setup,
 } from '../test-utils';
 import { IdentifiedElement } from '../types';
 import { turnBlocksInto } from './turnBlocksInto';
 
 describe('turnBlocksInto', () => {
-  beforeEach(setup);
-
   afterEach(cleanup);
 
   it('converts the block to the given type', () => {

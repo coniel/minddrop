@@ -14,7 +14,5 @@ export * from './getElementAbove';
 export * from './getRangeAnchor';
 export * from './getSelectedBlocks';
 export * from './isBlockSelectionItem';
-export * from './registerDefaulElements';
-export * from './registerDefaultMarks';
 export * from './element-level';
 export * from './normalizePlainTextContent';

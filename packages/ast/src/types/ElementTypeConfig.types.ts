@@ -1,5 +1,23 @@
 import { Element } from '../types';
 
+/**
+ * Whether the element participates in the block flow or sits inside a
+ * block's inline content.
+ */
+export type ElementLevel = 'block' | 'inline';
+
+/**
+ * What the element contains, which determines how the editor treats its
+ * children.
+ *
+ * - `inline`: inline elements and text leaves
+ * - `literal`: a single text leaf carrying raw content, with no marks and no
+ *   inline parsing
+ * - `table`: rows and cells, internal to the block
+ * - `void`: a single empty text leaf, not editable
+ */
+export type ElementContent = 'inline' | 'literal' | 'table' | 'void';
+
 export interface ElementTypeConfig<TElement extends Element = Element> {
   /**
    * The type of the element. Used to determine which component is used to
@@ -13,37 +31,24 @@ export interface ElementTypeConfig<TElement extends Element = Element> {
    * The level of an element determines its "flow" in the editor
    * similar to how block and inline elements work in HTML.
    */
-  display: 'block' | 'inline';
+  level: ElementLevel;
 
   /**
-   * Elements default to being non-void, meaning that their children are
-   * fully editable as text. But in some cases, like for images, you want
-   * to ensure that the editor doesn't treat their content as editable
-   * text, but instead as a black box.
-   *
-   * Note that void elements must contain a single empty text child.
+   * What the element contains.
    */
-  isVoid?: boolean;
+  content: ElementContent;
 
   /**
    * Callback used to serialize the element's content to a markdown string.
+   *
+   * The returned markdown carries no ancestry line prefixes: those are
+   * applied by the serializer, which is the only place that knows the
+   * surrounding blocks.
    *
    * @param element - The Element to stringify.
    * @returns The markdown text.
    */
   toMarkdown(element: TElement): string;
-
-  /**
-   * Callback used to serialize an array of consecutive elements to a
-   * markdown string.
-   *
-   * Useful when you need to serialize a series of elements of the same
-   * type into a single block of markdown, like when serializing a list.
-   *
-   * @param elements - The elements to stringify.
-   * @returns The markdown text.
-   */
-  stringifyBatchToMarkdown?(element: TElement[]): string;
 
   /**
    * Callback used to stringify an element into plain text.

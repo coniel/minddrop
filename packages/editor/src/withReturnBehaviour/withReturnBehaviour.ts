@@ -1,5 +1,5 @@
 import { Transforms } from 'slate';
-import { EditorBlockElementConfigsStore } from '../BlockElementTypeConfigsStore';
+import { getEditorElementConfig } from '../EditorElementConfigs';
 import { Editor } from '../types';
 import { getElementAbove } from '../utils';
 
@@ -24,7 +24,7 @@ export function withReturnBehaviour(editor: Editor): Editor {
     }
 
     // Get the element's type config
-    const config = EditorBlockElementConfigsStore.get(element.type);
+    const config = getEditorElementConfig(element.type);
 
     if (!config) {
       return;

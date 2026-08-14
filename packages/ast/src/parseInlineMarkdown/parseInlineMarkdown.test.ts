@@ -31,7 +31,7 @@ describe('parseInlineMarkdown', () => {
       { text: 'Hello, ' },
       {
         type: 'link',
-        href: 'https://example.com',
+        url: 'https://example.com',
         title: null,
         children: [{ text: 'world' }],
       },
@@ -84,7 +84,7 @@ describe('parseInlineMarkdown', () => {
       { text: ', ', italic: true, italicSyntax: '_' },
       {
         type: 'link',
-        href: 'https://example.com',
+        url: 'https://example.com',
         title: null,
         children: [
           {

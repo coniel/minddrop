@@ -1,9 +1,9 @@
 import { BaseEditor, NodeEntry } from 'slate';
 import { Transforms } from 'slate';
 import { ReactEditor } from 'slate-react';
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { afterAll, describe, expect, it } from 'vitest';
 import { Element, TextElement } from '@minddrop/ast';
-import { cleanup, createTestEditor, setup } from '../../test-utils';
+import { cleanup, createTestEditor } from '../../test-utils';
 import {
   inlineMathElement1,
   paragraphElement1,
@@ -19,8 +19,6 @@ declare module 'slate' {
 }
 
 describe('getElementAbove', () => {
-  beforeAll(setup);
-
   afterAll(cleanup);
 
   it('gets the element above the selection', () => {

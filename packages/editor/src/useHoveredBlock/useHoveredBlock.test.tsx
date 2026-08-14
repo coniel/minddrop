@@ -2,15 +2,14 @@ import React, { useRef } from 'react';
 import { useSlateStatic } from 'slate-react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, fireEvent, render } from '@minddrop/test-utils';
-import { EditorBlockElementConfigsStore } from '../BlockElementTypeConfigsStore';
 import { RichTextEditor } from '../RichTextEditor';
 import {
+  addTestElementConfig,
   cleanup,
   headingElement1,
   headingElement1PlainText,
   paragraphElement1,
   paragraphElement1PlainText,
-  setup,
   titleElement1PlainText,
 } from '../test-utils';
 import { BlockElementProps, Editor } from '../types';
@@ -114,13 +113,11 @@ function hoverBlock(element: HTMLElement) {
 
 describe('useHoveredBlock', () => {
   beforeEach(() => {
-    setup();
-
     // The activation delay is driven by a timer
     vi.useFakeTimers();
 
     // Register the editor probe element type
-    EditorBlockElementConfigsStore.add({
+    addTestElementConfig({
       type: 'editor-probe',
       component: EditorProbeComponent,
     });

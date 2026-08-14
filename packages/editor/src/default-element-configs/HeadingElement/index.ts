@@ -1,1 +1,1 @@
-export * from './HeadingOneElementConfig';
+export * from './HeadingElementConfig';

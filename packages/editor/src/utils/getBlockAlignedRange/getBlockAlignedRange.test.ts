@@ -1,19 +1,16 @@
 import { Editor as SlateEditor } from 'slate';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { Transforms } from '../../Transforms';
 import {
   cleanup,
   createTestEditor,
   paragraphElement1,
   paragraphElement2,
-  setup,
   titleElement1,
 } from '../../test-utils';
 import { getBlockAlignedRange } from './getBlockAlignedRange';
 
 describe('getBlockAlignedRange', () => {
-  beforeEach(setup);
-
   afterEach(cleanup);
 
   it('returns null when the selection is a cursor', () => {

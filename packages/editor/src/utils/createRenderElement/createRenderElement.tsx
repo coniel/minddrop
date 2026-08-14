@@ -1,11 +1,7 @@
 import React, { useContext } from 'react';
 import { RenderElementProps } from 'slate-react';
 import { BlockSelectionContext } from '../../BlockSelectionContext';
-import {
-  BlockElementProps,
-  EditorBlockElementConfig,
-  EditorInlineElementConfig,
-} from '../../types';
+import { BlockElementProps, EditorBlockElementConfig } from '../../types';
 import { hasBlockId } from '../block-id';
 
 /**
@@ -19,7 +15,7 @@ import { hasBlockId } from '../block-id';
  * @returns A renderElement function.
  */
 export function createRenderElement(
-  configs: (EditorInlineElementConfig | EditorBlockElementConfig)[],
+  configs: EditorBlockElementConfig[],
 ): (props: RenderElementProps) => React.ReactElement {
   // eslint-disable-next-line react/display-name
   return (props: RenderElementProps) => {
@@ -27,14 +23,10 @@ export function createRenderElement(
     const config = configs.find(({ type }) => type === props.element.type);
 
     if (config) {
-      // Typecast as block element to prevent TS complaining
-      // about block/inline element component/props mismatch.
-      const Component = (config as EditorBlockElementConfig).component;
-
       return (
         <RenderedElement
           {...(props as BlockElementProps)}
-          component={Component}
+          component={config.component}
         />
       );
     }

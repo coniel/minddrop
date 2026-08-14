@@ -168,6 +168,17 @@ the specific layout's reference changes), not the all-designs hooks.
 
 ## packages/editor
 
+### List items render as plain paragraphs until frames land
+
+The element model makes list items and quotes ancestry frames on a block
+rather than element types of their own, so a list item is a `paragraph`
+carrying a `list-item` frame. Serialization rebuilds the markers from the
+ancestry, so nothing is lost on disk, but the editor has no frame
+rendering yet: bullets, numbers, checkboxes and indentation are invisible
+while editing. Frame rendering and the interactions that go with it
+(Tab/Shift-Tab, downward-closed selection, drag) are the
+`markdown-editor-syntax-coverage` work group.
+
 ### Block IDs are session scoped and never reach the markdown
 
 `withBlockIds` gives every top level block an `id`, but the content is

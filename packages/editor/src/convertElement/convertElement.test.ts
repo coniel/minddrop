@@ -1,41 +1,38 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
+import { HeadingElement } from '@minddrop/ast';
 import { cleanup } from '@minddrop/test-utils';
-import {
-  paragraphElement1,
-  paragraphElement1PlainText,
-  setup,
-} from '../test-utils';
+import { headingElement1, paragraphElement1 } from '../test-utils';
 import { convertElement } from './convertElement';
 
 describe('convertElement', () => {
-  beforeEach(setup);
-
   afterEach(cleanup);
 
   describe('with `convert` callback', () => {
     it("uses the new element type's `convert` callback to convert it", () => {
-      // Convert a paragraph into a math block
-      const converted = convertElement(paragraphElement1, 'math-block');
+      // Convert a paragraph into a heading, whose convert callback reads
+      // the level from the shortcut which triggered it
+      const converted = convertElement(
+        paragraphElement1,
+        'heading',
+        '### ',
+      ) as HeadingElement;
 
-      // Should have paragraph text as expression
-      expect(converted).toMatchObject({
-        expression: paragraphElement1PlainText,
-      });
+      expect(converted.type).toBe('heading');
+      expect(converted.level).toBe(3);
     });
   });
 
   describe('without `convert` callback', () => {
     it('changes the element type to the new type', () => {
-      // Convert a paragraph into a heading
-      const converted = convertElement(paragraphElement1, 'heading');
+      // Convert a heading into a paragraph
+      const converted = convertElement(headingElement1, 'paragraph');
 
-      // Should change type to 'heading'
-      expect(converted.type).toBe('heading');
+      // Should change type to 'paragraph'
+      expect(converted.type).toBe('paragraph');
     });
   });
 
-  it('does nothing if new type is not a registered element type', () => {
-    // Convert a paragraph into an unregistered element type
+  it('does nothing if the new type has no editor config', () => {
     const converted = convertElement(paragraphElement1, 'foo');
 
     // Should maintain paragraph type

@@ -1,79 +1,50 @@
 import { describe, expect, it } from 'vitest';
-import { generateInlineElementTypeConfig } from '../test-utils';
+import { ImageElement, LinkElement } from '../element-configs';
 import { Fragment } from '../types';
+import { generateElement } from '../utils';
 import { stringifyFragmentToPlainText } from './stringifyFragmentToPlainText';
 
-const elementConfigWithToPlainText = generateInlineElementTypeConfig(
-  'with-to-plain-text',
-  {
-    toPlainText: () => 'plain text',
-  },
-);
-const elementConfigWithoutToPlainText = generateInlineElementTypeConfig(
-  'without-to-plain-text',
-);
-
-const configs = [elementConfigWithToPlainText, elementConfigWithoutToPlainText];
+const imageElement = generateElement<ImageElement>('image', {
+  url: 'cat.png',
+  alt: 'A cat',
+});
 
 describe('stringifyFragmentToPlainText', () => {
   it('stringifies text elements', () => {
     const fragment = [{ text: 'Hello, world!' }];
 
-    expect(stringifyFragmentToPlainText(configs, fragment)).toBe(
-      'Hello, world!',
-    );
+    expect(stringifyFragmentToPlainText(fragment)).toBe('Hello, world!');
   });
 
   it('stringifies inline elements using `toPlainText` from config', () => {
-    const fragment: Fragment = [
-      {
-        type: 'with-to-plain-text',
-        children: [{ text: 'Hello, world!' }],
-      },
-    ];
-
-    expect(stringifyFragmentToPlainText(configs, fragment)).toBe('plain text');
+    expect(stringifyFragmentToPlainText([imageElement])).toBe('A cat');
   });
 
   it('stringifies inline elements which do not have `toPlainText` in config', () => {
-    const fragment: Fragment = [
-      {
-        type: 'without-to-plain-text',
-        children: [{ text: 'Hello, world!' }],
-      },
-    ];
+    const linkElement = generateElement<LinkElement>('link', {
+      url: 'https://example.com',
+      children: [{ text: 'Hello, world!' }],
+    });
 
-    expect(stringifyFragmentToPlainText(configs, fragment)).toBe(
-      'Hello, world!',
-    );
+    expect(stringifyFragmentToPlainText([linkElement])).toBe('Hello, world!');
   });
 
   it('stringifies nested inline elements', () => {
-    const fragment: Fragment = [
-      {
-        type: 'without-to-plain-text',
-        children: [
-          {
-            type: 'with-to-plain-text',
-            children: [{ text: 'Hello, world!' }],
-          },
-        ],
-      },
-    ];
+    const linkElement = generateElement<LinkElement>('link', {
+      url: 'https://example.com',
+      children: [imageElement],
+    });
 
-    expect(stringifyFragmentToPlainText(configs, fragment)).toBe('plain text');
+    expect(stringifyFragmentToPlainText([linkElement])).toBe('A cat');
   });
 
   it('stringifies inline elements which do not have a config', () => {
     const fragment: Fragment = [
-      {
-        type: 'missing-config',
+      generateElement('missing-config', {
         children: [{ text: 'Hello, world!' }],
-      },
+      }),
     ];
 
-    expect(stringifyFragmentToPlainText(configs, fragment)).toBe(
-      'Hello, world!',
-    );
+    expect(stringifyFragmentToPlainText(fragment)).toBe('Hello, world!');
   });
 });

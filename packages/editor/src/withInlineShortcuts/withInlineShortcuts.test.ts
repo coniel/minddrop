@@ -1,7 +1,7 @@
 import { Transforms } from 'slate';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { Ast, Element } from '@minddrop/ast';
-import { cleanup, createTestEditor, setup } from '../test-utils';
+import { cleanup, createTestEditor } from '../test-utils';
 import { emptyParagraphElement, linkElement1 } from '../test-utils/editor.data';
 import { InlineShortcut } from '../types';
 import { withInlineShortcuts } from './withInlineShortcuts';
@@ -14,8 +14,6 @@ const createEditor = (
 ) => withInlineShortcuts(createTestEditor(content), shortcuts);
 
 describe('withInlineShortcuts', () => {
-  beforeEach(setup);
-
   afterEach(cleanup);
 
   it('inserts the text if not a shortcut', () => {

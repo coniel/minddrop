@@ -1,6 +1,6 @@
-export * as EditorElements from './EditorElements';
-export * as EditorMarks from './EditorMarks';
 export * from './types';
+export * from './EditorElementConfigs';
+export * from './MarkConfigs';
 export * from './registerBlockSelectionSerializer';
 export * from './RichTextEditor';
 export * from './withTitle';

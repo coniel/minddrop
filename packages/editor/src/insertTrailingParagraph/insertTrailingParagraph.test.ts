@@ -1,19 +1,16 @@
 import { Editor as SlateEditor } from 'slate';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import {
-  blockMathElement1,
   cleanup,
   createTestEditor,
   emptyParagraphElement,
   headingElement1,
+  mathElement1,
   paragraphElement1,
-  setup,
 } from '../test-utils';
 import { insertTrailingParagraph } from './insertTrailingParagraph';
 
 describe('insertTrailingParagraph', () => {
-  beforeEach(setup);
-
   afterEach(cleanup);
 
   it('appends an empty paragraph when the document does not end in an empty element', () => {
@@ -51,7 +48,7 @@ describe('insertTrailingParagraph', () => {
   });
 
   it('appends a paragraph when the document ends in an empty void element', () => {
-    const editor = createTestEditor([paragraphElement1, blockMathElement1]);
+    const editor = createTestEditor([paragraphElement1, mathElement1]);
 
     insertTrailingParagraph(editor);
 

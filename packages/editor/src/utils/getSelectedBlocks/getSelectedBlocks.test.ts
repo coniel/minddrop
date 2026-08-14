@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { selectBlocks } from '../../selectBlocks';
 import {
   cleanup,
@@ -6,7 +6,6 @@ import {
   paragraphElement1,
   paragraphElement2,
   paragraphElement3,
-  setup,
 } from '../../test-utils';
 import { Editor } from '../../types';
 import { assignBlockIds } from '../../withBlockIds';
@@ -25,8 +24,6 @@ function createEditor(): Editor {
 }
 
 describe('getSelectedBlocks', () => {
-  beforeEach(setup);
-
   afterEach(cleanup);
 
   it('returns the selected blocks', () => {

@@ -14,15 +14,13 @@ import { Selection } from '@minddrop/selection';
 import { isUntitledTitle } from '@minddrop/utils';
 import { BlockActionsMenu, BlockActionsMenuProps } from '../BlockActionsMenu';
 import { BlockDropIndicator } from '../BlockDropIndicator';
-import { EditorBlockElementConfigsStore } from '../BlockElementTypeConfigsStore';
 import { BlockGutter, BlockInsertPosition } from '../BlockGutter';
 import { BlockMenu } from '../BlockMenu';
 import { BlockSelectionContext } from '../BlockSelectionContext';
-import { EditorInlineElementConfigsStore } from '../InlineElementTypeConfigsStore';
-import { MarkConfigsStore } from '../MarkConfigsStore';
+import { EditorElementConfigs } from '../EditorElementConfigs';
+import { MarkConfigs } from '../MarkConfigs';
 import { Transforms } from '../Transforms';
 import { clearBlockSelection } from '../clearBlockSelection';
-import { defaultMarkConfigs } from '../default-mark-configs';
 import { deleteBlocks } from '../deleteBlocks';
 import { duplicateBlocks } from '../duplicateBlocks';
 import { insertTrailingParagraph } from '../insertTrailingParagraph';
@@ -205,15 +203,14 @@ export const RichTextEditor: React.FC<EditorProps> = ({
         withBlockSelection(
           withBlockIds(
             withBlockReset(
-              withBlockShortcuts(
-                withReturnBehaviour(editor),
-                EditorBlockElementConfigsStore.getAll(),
-              ),
+              withBlockShortcuts(withReturnBehaviour(editor), [
+                ...EditorElementConfigs,
+              ]),
               'paragraph',
             ),
           ),
         ),
-        MarkConfigsStore.getAllArray(),
+        MarkConfigs,
       ),
     [editor],
   );
@@ -310,10 +307,7 @@ export const RichTextEditor: React.FC<EditorProps> = ({
   // Create a renderElement function using the registered
   // element type configuration objects.
   const renderElement = useMemo(() => {
-    const renderRegisteredElement = createRenderElement([
-      ...EditorBlockElementConfigsStore.getAll(),
-      ...EditorInlineElementConfigsStore.getAll(),
-    ]);
+    const renderRegisteredElement = createRenderElement(EditorElementConfigs);
 
     if (!hasTitle) {
       return renderRegisteredElement;
@@ -334,7 +328,7 @@ export const RichTextEditor: React.FC<EditorProps> = ({
   }, [hasTitle]);
 
   const markHotkeys = useMemo(
-    () => withMarkHotkeys(editor, defaultMarkConfigs),
+    () => withMarkHotkeys(editor, MarkConfigs),
     [editor],
   );
 

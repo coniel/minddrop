@@ -5,8 +5,7 @@ import {
 import { withHistory } from 'slate-history';
 import { withReact } from 'slate-react';
 import { Editor } from '../../types';
-import { isInlineElement } from '../element-level';
-import { getElementTypeConfig } from '../getElementTypeConfig';
+import { isInlineElement, isVoidElement } from '../element-level';
 
 /**
  * Creates a new editor configured with the React and History
@@ -27,11 +26,7 @@ export function createEditor(): Editor {
 
   // Checks if an element is a void
   editor.isVoid = (element) => {
-    // Get the element's configuration object
-    const config = getElementTypeConfig(element.type);
-
-    // Return `true` if the element is configured as void
-    return !!config && config.isVoid === true;
+    return isVoidElement(element.type);
   };
 
   editor.toggleMark = (mark: string, value?: boolean | string | number) => {

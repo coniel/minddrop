@@ -1,5 +1,5 @@
 import { Editor as SlateEditor } from 'slate';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { Element } from '@minddrop/ast';
 import { Transforms } from '../Transforms';
 import {
@@ -8,7 +8,6 @@ import {
   headingElement1,
   linkElement1,
   paragraphElement1,
-  setup,
 } from '../test-utils';
 import { Editor } from '../types';
 import { hasBlockId } from '../utils';
@@ -34,8 +33,6 @@ function getBlockId(editor: Editor, index: number): string | null {
 }
 
 describe('withBlockIds', () => {
-  beforeEach(setup);
-
   afterEach(cleanup);
 
   it('assigns an ID to blocks which do not have one', () => {

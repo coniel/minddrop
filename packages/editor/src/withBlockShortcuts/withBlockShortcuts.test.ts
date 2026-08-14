@@ -1,5 +1,5 @@
 import { Editor, Node } from 'slate';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { Ast, Element, HeadingElement } from '@minddrop/ast';
 import { Transforms } from '../Transforms';
 import {
@@ -9,7 +9,6 @@ import {
   headingElementConfig,
   linkElement1,
   paragraphElement1,
-  setup,
 } from '../test-utils';
 import { EditorBlockElementConfig } from '../types';
 import { withBlockShortcuts } from './withBlockShortcuts';
@@ -20,8 +19,6 @@ const headingConfig: EditorBlockElementConfig<HeadingElement> = {
 };
 
 describe('withBlockShortcuts', () => {
-  beforeEach(setup);
-
   afterEach(cleanup);
 
   it('converts an element when a shortcut is typed at the start a block element', () => {

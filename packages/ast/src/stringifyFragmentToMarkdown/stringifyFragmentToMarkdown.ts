@@ -1,17 +1,35 @@
-import { LinkElement } from '../element-configs';
+import { getElementTypeConfig } from '../ElementTypeConfigs';
 import { Element, Fragment, TextElement } from '../types';
 
-interface Marks {
-  bold: boolean;
-  italic: boolean;
-  code: boolean;
-  underline: boolean;
-  strikethrough: boolean;
-  boldSyntax: string;
-  italicSyntax: string;
-  codeSyntax: string;
-  underlineSyntax: string;
-  strikethroughSyntax: string;
+type MarkName = 'bold' | 'italic' | 'strikethrough' | 'code';
+
+/**
+ * The order marks are opened in, so that a run of leaves sharing marks
+ * produces a stable spelling.
+ */
+const MarkOrder: MarkName[] = ['bold', 'italic', 'strikethrough', 'code'];
+
+/**
+ * The delimiter used when a leaf carries no recorded syntax, which is the
+ * case for marks applied in the editor rather than parsed from a document.
+ */
+const DefaultMarkSyntax: Record<MarkName, string> = {
+  bold: '**',
+  italic: '*',
+  strikethrough: '~~',
+  code: '`',
+};
+
+interface OpenMark {
+  /**
+   * The mark the delimiter belongs to.
+   */
+  name: MarkName;
+
+  /**
+   * The delimiter that opened it, which is re-emitted to close it.
+   */
+  syntax: string;
 }
 
 /**
@@ -23,102 +41,122 @@ interface Marks {
  */
 export function stringifyFragmentToMarkdown(fragment: Fragment): string {
   let buffer = '';
-  const activeMarks: Marks = {
-    bold: false,
-    italic: false,
-    code: false,
-    underline: false,
-    strikethrough: false,
-    boldSyntax: '',
-    italicSyntax: '',
-    codeSyntax: '',
-    underlineSyntax: '',
-    strikethroughSyntax: '',
-  };
+  // Marks currently open, outermost first, so they can be closed in the
+  // reverse of the order they were opened
+  const openMarks: OpenMark[] = [];
 
-  fragment.forEach((element) => {
-    if (!('type' in element)) {
-      buffer += closeMarks(activeMarks, element);
-      buffer += openMarks(activeMarks, element);
-      buffer += element.text;
-    } else if (element.type === 'link') {
-      buffer += `[${stringifyFragmentToMarkdown(element.children)}](${(element as LinkElement).url})`;
-    } else if ('type' in element) {
-      buffer += stringifyFragmentToMarkdown((element as Element).children);
+  fragment.forEach((child) => {
+    // Child is an inline element, which its config knows how to serialize
+    if ('type' in child) {
+      // Marks cannot span an inline element boundary
+      buffer += closeMarksFrom(openMarks, 0);
+      buffer += stringifyInlineElement(child as Element);
+
+      return;
     }
+
+    const leaf = child as TextElement;
+
+    buffer += closeMarksFrom(openMarks, firstClosingMarkIndex(openMarks, leaf));
+    buffer += openMarksFor(openMarks, leaf);
+    buffer += leaf.text;
   });
 
-  return buffer + closeMarks(activeMarks, { text: '' });
+  // Close anything still open at the end of the fragment
+  return buffer + closeMarksFrom(openMarks, 0);
 }
 
-function openMarks(activeMarks: Marks, element: TextElement): string {
+/**
+ * Serializes an inline element using its element type config.
+ *
+ * @param element - The inline element.
+ * @returns The element's markdown.
+ */
+function stringifyInlineElement(element: Element): string {
+  const config = getElementTypeConfig(element.type);
+
+  // An element with no config cannot be serialized, so fall back to its text
+  // content rather than dropping it
+  if (!config) {
+    return stringifyFragmentToMarkdown(element.children);
+  }
+
+  return config.toMarkdown(element);
+}
+
+/**
+ * Finds the outermost open mark which the given leaf no longer carries.
+ * Everything from there up must close, since markdown delimiters nest.
+ *
+ * @param openMarks - The currently open marks.
+ * @param leaf - The leaf being serialized.
+ * @returns The index to close from, or the stack length if nothing closes.
+ */
+function firstClosingMarkIndex(
+  openMarks: OpenMark[],
+  leaf: TextElement,
+): number {
+  const index = openMarks.findIndex((mark) => !leaf[mark.name]);
+
+  return index === -1 ? openMarks.length : index;
+}
+
+/**
+ * Closes every open mark from the given index up, innermost first.
+ *
+ * @param openMarks - The currently open marks, modified in place.
+ * @param index - The index to close from.
+ * @returns The closing delimiters.
+ */
+function closeMarksFrom(openMarks: OpenMark[], index: number): string {
   let result = '';
 
-  if (!activeMarks.bold && element.bold) {
-    result += element.boldSyntax || '**';
-    activeMarks.bold = true;
-    activeMarks.boldSyntax = element.boldSyntax || '';
-  }
-
-  if (!activeMarks.italic && element.italic) {
-    result += element.italicSyntax || '*';
-    activeMarks.italic = true;
-    activeMarks.italicSyntax = element.italicSyntax || '';
-  }
-
-  if (!activeMarks.code && element.code) {
-    result += element.codeSyntax || '`';
-    activeMarks.code = true;
-    activeMarks.codeSyntax = element.codeSyntax || '';
-  }
-
-  if (!activeMarks.underline && element.underline) {
-    result += element.underlineSyntax || '<u>';
-    activeMarks.underline = true;
-    activeMarks.underlineSyntax = element.underlineSyntax || '';
-  }
-
-  if (!activeMarks.strikethrough && element.strikethrough) {
-    result += element.strikethroughSyntax || '~~';
-    activeMarks.strikethrough = true;
-    activeMarks.strikethroughSyntax = element.strikethroughSyntax || '';
+  while (openMarks.length > index) {
+    result += openMarks.pop()!.syntax;
   }
 
   return result;
 }
 
-function closeMarks(activeMarks: Marks, element: TextElement): string {
+/**
+ * Opens every mark the leaf carries which is not already open.
+ *
+ * @param openMarks - The currently open marks, modified in place.
+ * @param leaf - The leaf being serialized.
+ * @returns The opening delimiters.
+ */
+function openMarksFor(openMarks: OpenMark[], leaf: TextElement): string {
   let result = '';
 
-  if (activeMarks.bold && !element.bold) {
-    result += activeMarks.boldSyntax || '**';
-    activeMarks.bold = false;
-    activeMarks.boldSyntax = '';
-  }
+  MarkOrder.forEach((name) => {
+    // Skip marks the leaf does not carry or which are already open
+    if (!leaf[name] || openMarks.some((mark) => mark.name === name)) {
+      return;
+    }
 
-  if (activeMarks.italic && !element.italic) {
-    result += activeMarks.italicSyntax || '*';
-    activeMarks.italic = false;
-    activeMarks.italicSyntax = '';
-  }
+    const syntax = resolveMarkSyntax(name, leaf);
 
-  if (activeMarks.code && !element.code) {
-    result += activeMarks.codeSyntax || '`';
-    activeMarks.code = false;
-    activeMarks.codeSyntax = '';
-  }
-
-  if (activeMarks.underline && !element.underline) {
-    result += activeMarks.underlineSyntax || '</u>';
-    activeMarks.underline = false;
-    activeMarks.underlineSyntax = '';
-  }
-
-  if (activeMarks.strikethrough && !element.strikethrough) {
-    result += activeMarks.strikethroughSyntax || '~~';
-    activeMarks.strikethrough = false;
-    activeMarks.strikethroughSyntax = '';
-  }
+    openMarks.push({ name, syntax });
+    result += syntax;
+  });
 
   return result;
+}
+
+/**
+ * Returns the delimiter a leaf's mark was authored with, falling back to the
+ * default spelling for marks applied in the editor.
+ *
+ * @param name - The mark.
+ * @param leaf - The leaf being serialized.
+ * @returns The delimiter.
+ */
+function resolveMarkSyntax(name: MarkName, leaf: TextElement): string {
+  const syntax = leaf[`${name}Syntax`];
+
+  if (typeof syntax === 'string' && syntax) {
+    return syntax;
+  }
+
+  return DefaultMarkSyntax[name];
 }

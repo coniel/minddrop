@@ -1,14 +1,12 @@
-import { afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { initializeI18n } from '@minddrop/i18n';
-import { cleanup, setup } from '../../test-utils';
+import { cleanup } from '../../test-utils';
 import { getBlockMenuItems } from '../getBlockMenuItems';
 import { filterBlockMenuItems } from './filterBlockMenuItems';
 
 describe('filterBlockMenuItems', () => {
   // Entries are matched against their translated labels
   beforeAll(() => initializeI18n());
-
-  beforeEach(setup);
 
   afterEach(cleanup);
 

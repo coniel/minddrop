@@ -1,5 +1,5 @@
 import { Editor as SlateEditor } from 'slate';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { Transforms } from '../../Transforms';
 import { selectBlocks } from '../../selectBlocks';
 import {
@@ -8,7 +8,6 @@ import {
   paragraphElement1,
   paragraphElement2,
   paragraphElement3,
-  setup,
 } from '../../test-utils';
 import { Editor } from '../../types';
 import { assignBlockIds } from '../../withBlockIds';
@@ -27,8 +26,6 @@ function createEditor(): Editor {
 }
 
 describe('getBlockSelectionRange', () => {
-  beforeEach(setup);
-
   afterEach(cleanup);
 
   it('returns the range of the selected blocks', () => {

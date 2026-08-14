@@ -3,13 +3,12 @@ import { Transforms } from 'slate';
 import { useSlateStatic } from 'slate-react';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { act, fireEvent, render, waitFor } from '@minddrop/test-utils';
-import { EditorBlockElementConfigsStore } from '../BlockElementTypeConfigsStore';
 import { RichTextEditor } from '../RichTextEditor';
 import {
+  addTestElementConfig,
   cleanup,
   paragraphElement1,
   paragraphElement1PlainText,
-  setup,
 } from '../test-utils';
 import { BlockElementProps, Editor } from '../types';
 import { TITLE_ELEMENT_TYPE } from './TitleElement';
@@ -46,10 +45,8 @@ const actFlush = (interaction: () => void) =>
 
 describe('RichTextEditor title', () => {
   beforeEach(() => {
-    setup();
-
     // Register the editor probe element type
-    EditorBlockElementConfigsStore.add({
+    addTestElementConfig({
       type: 'editor-probe',
       component: EditorProbeComponent,
     });

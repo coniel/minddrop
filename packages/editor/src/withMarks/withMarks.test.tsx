@@ -1,14 +1,14 @@
 import { Node } from 'slate';
 import { Editable, Slate } from 'slate-react';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { Ast, Element } from '@minddrop/ast';
+import { TextElement } from '@minddrop/ast';
 import { render } from '@minddrop/test-utils';
-import { cleanup, createTestEditor, setup } from '../test-utils';
+import { cleanup, createTestEditor } from '../test-utils';
 import { boldMarkConfig, paragraphElement1 } from '../test-utils/editor.data';
-import { Text } from '../types';
 import { withMarks } from './withMarks';
 
-const renderEditor = (children: Text[]) => {
+const renderEditor = (children: TextElement[]) => {
   const content: Element[] = [
     Ast.generateElement(paragraphElement1.type, { children }),
   ];
@@ -29,8 +29,6 @@ const renderEditor = (children: Text[]) => {
 };
 
 describe('withMarks', () => {
-  beforeEach(setup);
-
   afterEach(cleanup);
 
   it('renders formatted text using the mark component', () => {

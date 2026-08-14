@@ -1,8 +1,8 @@
 import { createRef } from 'react';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { Element } from '@minddrop/ast';
 import { fireEvent, render } from '@minddrop/test-utils';
-import { cleanup, setup } from '../test-utils';
+import { cleanup } from '../test-utils';
 import { BlockActionsMenu, BlockActionsMenuProps } from './BlockActionsMenu';
 
 /**
@@ -29,8 +29,6 @@ function renderMenu(props: Partial<BlockActionsMenuProps> = {}) {
 }
 
 describe('BlockActionsMenu', () => {
-  beforeEach(setup);
-
   afterEach(cleanup);
 
   it('renders nothing while closed', () => {

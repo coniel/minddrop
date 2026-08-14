@@ -1,6 +1,6 @@
 import { Path, Editor as SlateEditor, Element as SlateElement } from 'slate';
 import { Element } from '@minddrop/ast';
-import { EditorBlockElementConfigsStore } from '../BlockElementTypeConfigsStore';
+import { getEditorElementConfig } from '../EditorElementConfigs';
 import { Transforms } from '../Transforms';
 import { Editor } from '../types';
 
@@ -27,7 +27,7 @@ export function turnBlocksInto(
         return;
       }
 
-      const config = EditorBlockElementConfigsStore.get(type);
+      const config = getEditorElementConfig(type);
 
       // Nothing to convert to
       if (!config) {
@@ -35,11 +35,9 @@ export function turnBlocksInto(
       }
 
       // Types which define their own conversion decide what carries
-      // over. The rest start from their own initial data rather than
-      // from the block's, which belongs to the type it is leaving.
-      const converted = config.convert
-        ? config.convert(block)
-        : { ...(config.initialize ? config.initialize() : {}), type };
+      // over. The rest keep only the new type, since the block's data
+      // belongs to the type it is leaving.
+      const converted = config.convert ? config.convert(block) : { type };
 
       // Data belonging to the previous type is dropped, the block's
       // ID aside: a block which changes type is still the same block.

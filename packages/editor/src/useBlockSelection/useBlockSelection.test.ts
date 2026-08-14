@@ -1,6 +1,6 @@
 import React from 'react';
 import { Range, Editor as SlateEditor, Node as SlateNode } from 'slate';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { renderHook } from '@minddrop/test-utils';
 import { Transforms } from '../Transforms';
 import {
@@ -12,7 +12,6 @@ import {
   paragraphElement2PlainText,
   paragraphElement3,
   paragraphElement3PlainText,
-  setup,
 } from '../test-utils';
 import { Editor } from '../types';
 import { getBlockSelectionRange, getSelectedBlocks } from '../utils';
@@ -67,8 +66,6 @@ function keyDownEvent(
 }
 
 describe('useBlockSelection', () => {
-  beforeEach(setup);
-
   afterEach(cleanup);
 
   it('selects the block the cursor is in on Escape', () => {

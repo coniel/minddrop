@@ -1,5 +1,5 @@
 import { Range } from 'slate';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { Element } from '@minddrop/ast';
 import { Transforms } from '../Transforms';
 import { selectBlocks } from '../selectBlocks';
@@ -9,7 +9,6 @@ import {
   paragraphElement1,
   paragraphElement2,
   paragraphElement3,
-  setup,
   titleElement1,
 } from '../test-utils';
 import { Editor } from '../types';
@@ -39,8 +38,6 @@ function flushOperations(): Promise<void> {
 }
 
 describe('withBlockSelection', () => {
-  beforeEach(setup);
-
   afterEach(cleanup);
 
   it('covers whole blocks when the selection crosses a block boundary', async () => {

@@ -1,5 +1,4 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { Ast } from '@minddrop/ast';
 import { Selection, SelectionItemSerializers } from '@minddrop/selection';
 import { selectBlocks } from '../selectBlocks';
 import {
@@ -10,7 +9,6 @@ import {
   paragraphElement2,
   paragraphElement2PlainText,
   paragraphElement3,
-  setup,
 } from '../test-utils';
 import { BLOCK_SELECTION_ITEM_TYPE, Editor } from '../types';
 import { assignBlockIds } from '../withBlockIds';
@@ -45,10 +43,6 @@ function getSerializer() {
 
 describe('registerBlockSelectionSerializer', () => {
   beforeEach(() => {
-    setup();
-
-    // Register the element configs the blocks are stringified with
-    Ast.registerDefaultConfigs();
     registerBlockSelectionSerializer();
   });
 

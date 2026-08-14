@@ -1,21 +1,18 @@
 import { Editor as SlateEditor } from 'slate';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import {
-  blockMathElement1,
   cleanup,
   createTestEditor,
   emptyParagraphElement,
   emptyTitleElement,
   headingElement1,
   paragraphElement1,
-  setup,
+  thematicBreakElement1,
   titleElement1,
 } from '../test-utils';
 import { selectAutoFocusTarget } from './selectAutoFocusTarget';
 
 describe('selectAutoFocusTarget', () => {
-  beforeEach(setup);
-
   afterEach(cleanup);
 
   it('places the caret at the end of the last element', () => {
@@ -33,7 +30,7 @@ describe('selectAutoFocusTarget', () => {
   });
 
   it('appends a paragraph when the document ends in a void element', () => {
-    const editor = createTestEditor([paragraphElement1, blockMathElement1]);
+    const editor = createTestEditor([paragraphElement1, thematicBreakElement1]);
 
     selectAutoFocusTarget(editor);
 
@@ -85,7 +82,7 @@ describe('selectAutoFocusTarget', () => {
   });
 
   it('treats a body ending in a void element as content', () => {
-    const editor = createTestEditor([emptyTitleElement, blockMathElement1]);
+    const editor = createTestEditor([emptyTitleElement, thematicBreakElement1]);
 
     selectAutoFocusTarget(editor);
 
