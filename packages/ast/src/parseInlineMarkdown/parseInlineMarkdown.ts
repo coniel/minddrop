@@ -16,6 +16,7 @@ import {
 } from '../parseElementsFromMarkdown/mdast';
 import { Element, Fragment, TextElement } from '../types';
 import { generateElement } from '../utils';
+import { parseWikilinks } from './parseWikilinks';
 
 /**
  * Maps a block's mdast inline content into text elements and inline
@@ -75,7 +76,9 @@ function mapNode(
 
   switch (node.type) {
     case 'text':
-      return [{ ...marks, text: node.value || '' }];
+      // Wikilinks are not a markdown construct, so they arrive as text and
+      // are recovered from it
+      return parseWikilinks({ ...marks, text: node.value || '' });
 
     case 'strong':
       return mapNodes(children, source, {

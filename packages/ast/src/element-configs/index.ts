@@ -1,6 +1,7 @@
 export * from './BreakElement';
 export * from './CodeElement';
 export * from './DefinitionElement';
+export * from './WikilinkElement';
 export * from './FootnoteReferenceElement';
 export * from './HeadingElement';
 export * from './HtmlElement';

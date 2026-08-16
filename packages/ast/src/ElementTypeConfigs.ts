@@ -18,6 +18,7 @@ import {
   TableRowElementConfig,
   ThematicBreakElementConfig,
   UnsupportedElementConfig,
+  WikilinkElementConfig,
 } from './element-configs';
 import { ElementTypeConfig } from './types';
 
@@ -63,6 +64,7 @@ export function getElementTypeConfigs(): ElementTypeConfig[] {
       InlineMathElementConfig,
       LinkElementConfig,
       LinkReferenceElementConfig,
+      WikilinkElementConfig,
     ];
   }
 
