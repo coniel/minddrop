@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { hashContents } from '@minddrop/file-system';
 import {
   MockFs,
   cleanup,
@@ -11,6 +12,8 @@ import {
   relatedEntry1,
   relatedEntry2,
   setup,
+  timestampDatabase,
+  timestampEntry1,
 } from '../test-utils';
 import { SqlEntryRecord } from '../types';
 import { backgroundSyncDatabases } from './backgroundSyncDatabases';
@@ -53,7 +56,7 @@ describe('backgroundSyncDatabases', () => {
     );
 
     // Return the fixture entries as existing sync records with a
-    // stale timestamp so every entry appears modified
+    // hash no file contents produce, so every entry appears modified
     vi.mocked(sqlGetEntrySyncRecords).mockImplementation((databaseId) =>
       databaseEntrySqlRecords
         .filter((record) => record.databaseId === databaseId)
@@ -61,6 +64,7 @@ describe('backgroundSyncDatabases', () => {
           id: record.id,
           path: record.path,
           lastModified: 0,
+          contentHash: '',
         })),
     );
   });
@@ -113,6 +117,7 @@ describe('backgroundSyncDatabases', () => {
               ? record.path.replace(collectionDatabase.path, oldDatabasePath)
               : record.path,
           lastModified: 0,
+          contentHash: '',
         })),
     );
 
@@ -151,7 +156,60 @@ describe('backgroundSyncDatabases', () => {
       { silent: true },
     );
   });
+
+  it('does not upsert entries whose contents are unchanged', async () => {
+    indexAtCurrentContents();
+
+    await backgroundSyncDatabases(parentDir);
+
+    expect(upsertedRecords(timestampDatabase.id)).toEqual([]);
+  });
+
+  it('upserts an entry edited outside the app whose last-modified property did not change', async () => {
+    indexAtCurrentContents();
+
+    // Append to the entry's body as an external editor would,
+    // leaving its Last Modified property untouched
+    MockFs.writeTextFile(
+      timestampEntry1.path,
+      `${MockFs.readTextFile(timestampEntry1.path)}\n\nAdded externally`,
+    );
+
+    await backgroundSyncDatabases(parentDir);
+
+    // The edit should be detected from the contents rather than the
+    // property, which only the app updates
+    expect(
+      recordByPath(upsertedRecords(timestampDatabase.id), timestampEntry1.path),
+    ).toBeDefined();
+  });
 });
+
+/**
+ * Indexes every fixture entry at the contents currently on disk, so
+ * that nothing appears changed until a file is edited.
+ */
+function indexAtCurrentContents(): void {
+  // Hashed up front rather than inside the mock, which would rehash
+  // the edited contents at call time and see no change
+  const hashes = new Map(
+    databaseEntrySqlRecords.map((record) => [
+      record.id,
+      hashContents(MockFs.readTextFile(record.path)),
+    ]),
+  );
+
+  vi.mocked(sqlGetEntrySyncRecords).mockImplementation((databaseId) =>
+    databaseEntrySqlRecords
+      .filter((record) => record.databaseId === databaseId)
+      .map((record) => ({
+        id: record.id,
+        path: record.path,
+        lastModified: record.lastModified,
+        contentHash: hashes.get(record.id) ?? '',
+      })),
+  );
+}
 
 /**
  * Returns all records upserted for the given database.

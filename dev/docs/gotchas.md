@@ -20,6 +20,41 @@ deliberate decision.
 
 ## packages/databases
 
+### Last Modified means last modified by MindDrop
+
+`setTimestampProperties` is only reached from `createDatabaseEntry`,
+`updateDatabaseEntry` and `updateDatabaseEntryProperty`, so an entry edited
+in another editor keeps whatever the app last wrote. The value lags until
+the entry is next edited in the app.
+
+This is deliberate. The obvious fix, writing the file's mtime into the
+property when a change is detected, would be wrong often enough to matter:
+mtime says when the bytes landed on this disk, not when someone edited the
+entry. Dropbox and iCloud generally preserve the original, `git checkout`
+and `rsync` without `-t` stamp the file on arrival, and nothing in the
+filesystem says which case you are in. Persisting a guess into a
+user-visible value that later syncs to other devices makes the error
+permanent and indistinguishable from an authoritative value, where lagging
+is at least a known, bounded limitation.
+
+Users wanting external edits reflected are responsible for having their
+editor maintain the property.
+
+Note this concerns the displayed value only. External edits **are**
+detected, by content hash (see below).
+
+### Entry change detection compares content, never timestamps
+
+`backgroundSyncDatabases` diffs entries on `content_hash`. An earlier
+version compared `lastModified`, which silently missed every external edit
+in a database defining a `last-modified` property, since that property is
+only updated by the app. Renames and deletes were unaffected, being
+detected by path, which made the gap easy to miss.
+
+Do not reintroduce a timestamp comparison here. mtime is also unsuitable, on
+top of the reasons above, because a restore or checkout moves it without the
+content changing, which would re-index the whole workspace.
+
 ### The implicit Title property's name is a translated identifier
 
 `withImplicitTitleProperty` names the implicit entry title property with

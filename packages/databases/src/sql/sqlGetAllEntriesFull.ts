@@ -17,9 +17,10 @@ export function sqlGetAllEntriesFull(): SqlEntryRecord[] {
     title: string;
     created: number;
     last_modified: number;
+    content_hash: string;
     metadata: string;
   }>(
-    'SELECT id, database_id, path, title, created, last_modified, metadata FROM entries',
+    'SELECT id, database_id, path, title, created, last_modified, content_hash, metadata FROM entries',
   );
 
   // Query all scalar properties
@@ -99,6 +100,7 @@ export function sqlGetAllEntriesFull(): SqlEntryRecord[] {
       title: row.title,
       created: row.created,
       lastModified: row.last_modified,
+      contentHash: row.content_hash,
       metadata: row.metadata,
       properties: [...scalars, ...multiValueProperties],
     };

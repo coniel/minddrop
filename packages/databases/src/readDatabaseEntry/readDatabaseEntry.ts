@@ -1,4 +1,4 @@
-import { Fs } from '@minddrop/file-system';
+import { Fs, hashContents } from '@minddrop/file-system';
 import { PropertySchema } from '@minddrop/properties';
 import { entityId, titleFromPath } from '@minddrop/utils';
 import { Database, DatabaseEntry, DatabaseEntrySerializer } from '../types';
@@ -58,6 +58,10 @@ export async function readDatabaseEntry(
       title: titleFromPath(path),
       created,
       lastModified,
+      // Hashed from the file's text rather than stat'd, so that an
+      // external edit is detected even when the database has a
+      // 'last-modified' property, which only the app updates
+      contentHash: hashContents(serializedProperties),
       properties,
       metadata: {},
     };

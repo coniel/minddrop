@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { Fs } from '@minddrop/file-system';
+import { Fs, hashContents } from '@minddrop/file-system';
 import { markdownEntrySerializer } from '../entry-serializers';
 import {
   MockFs,
@@ -28,7 +28,25 @@ describe('readDatabaseEntry', () => {
       markdownEntrySerializer,
     );
 
-    expect(entry).toEqual({ ...objectEntry1, id: expect.any(String) });
+    expect(entry).toEqual({
+      ...objectEntry1,
+      id: expect.any(String),
+      contentHash: expect.any(String),
+    });
+  });
+
+  it('hashes the entry file contents', async () => {
+    const entry = await readDatabaseEntry(
+      objectEntry1.path,
+      objectDatabase,
+      markdownEntrySerializer,
+    );
+
+    // The hash should be of the file's contents, so that an external
+    // edit is detected whatever the entry's timestamp properties say
+    expect(entry?.contentHash).toBe(
+      hashContents(MockFs.readTextFile(objectEntry1.path)),
+    );
   });
 
   it('uses timestamp properties when available instead of file stat', async () => {

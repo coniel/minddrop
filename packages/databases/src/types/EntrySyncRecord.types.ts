@@ -17,4 +17,9 @@ export interface EntrySyncRecord {
    * The date the entry was last modified, as epoch milliseconds.
    */
   lastModified: number;
+
+  /**
+   * Hash of the entry file's contents as of the last index.
+   */
+  contentHash: string;
 }

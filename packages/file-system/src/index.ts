@@ -4,6 +4,7 @@ export * from './constants';
 export * from './events';
 export * from './FileSystem';
 export * from './startFileSystemWatcher';
+export * from './utils/hashContents';
 export * from './writeRegistry';
 export * from './mock';
 export * as FILE_SYSTEM_TEST_DATA from './test-utils/file-system.data';

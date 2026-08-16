@@ -43,6 +43,7 @@ export const objectEntry1SqlRecord: SqlEntryRecord = {
   title: 'Test Entry',
   created: 1704067200000,
   lastModified: 1704067200000,
+  contentHash: '',
   metadata: '{}',
   properties: [
     { name: 'Content', type: 'formatted-text', value: 'Test content' },
@@ -78,6 +79,7 @@ export const yamlObjectEntry1SqlRecord: SqlEntryRecord = {
   title: 'Test Entry',
   created: 1704067200000,
   lastModified: 1704067200000,
+  contentHash: '',
   metadata: '{}',
   properties: [
     { name: 'Title', type: 'text', value: 'Test Entry' },
@@ -121,6 +123,7 @@ export const urlEntry1SqlRecord: SqlEntryRecord = {
   title: 'Test Entry',
   created: 1704067200000,
   lastModified: 1704067200000,
+  contentHash: '',
   metadata: '{}',
   properties: [
     { name: 'URL', type: 'url', value: 'https://example.com/some-page' },
@@ -155,6 +158,7 @@ export const rootStorageEntry1SqlRecord: SqlEntryRecord = {
   title: 'Root Storage Entry 1',
   created: 1704067200000,
   lastModified: 1704067200000,
+  contentHash: '',
   metadata: '{}',
   properties: [{ name: 'Image', type: 'image', value: 'image.png' }],
 };
@@ -183,6 +187,7 @@ export const referenceEntry1SqlRecord: SqlEntryRecord = {
   title: 'Reference Entry 1',
   created: 1704067200000,
   lastModified: 1704067200000,
+  contentHash: '',
   metadata: '{}',
   properties: [{ name: 'Image', type: 'image', value: 'reference.png' }],
 };
@@ -208,6 +213,7 @@ export const rootStorageEntrySqlRecord_empty_value: SqlEntryRecord = {
   title: 'Root Storage Entry Empty Value',
   created: 1704067200000,
   lastModified: 1704067200000,
+  contentHash: '',
   metadata: '{}',
   properties: [],
 };
@@ -240,6 +246,7 @@ export const commonStorageEntry1SqlRecord: SqlEntryRecord = {
   title: 'Common Storage Entry 1',
   created: 1704067200000,
   lastModified: 1704067200000,
+  contentHash: '',
   metadata: '{}',
   properties: [{ name: 'Image', type: 'image', value: 'image.png' }],
 };
@@ -272,6 +279,7 @@ export const propertyStorageEntry1SqlRecord: SqlEntryRecord = {
   title: 'Property Storage Entry 1',
   created: 1704067200000,
   lastModified: 1704067200000,
+  contentHash: '',
   metadata: '{}',
   properties: [{ name: 'Image', type: 'image', value: 'image.png' }],
 };
@@ -304,6 +312,7 @@ export const entryStorageEntry1SqlRecord: SqlEntryRecord = {
   title: 'Entry Storage Entry 1',
   created: 1704067200000,
   lastModified: 1704067200000,
+  contentHash: '',
   metadata: '{}',
   properties: [{ name: 'Image', type: 'image', value: 'image.png' }],
 };
@@ -338,6 +347,7 @@ export const timestampEntry1SqlRecord: SqlEntryRecord = {
   title: 'Timestamp Entry',
   created: 1749981600000,
   lastModified: 1750428000000,
+  contentHash: '',
   metadata: '{}',
   properties: [
     { name: 'Created', type: 'created', value: 1749981600000 },
@@ -377,6 +387,7 @@ export const relatedEntry1SqlRecord: SqlEntryRecord = {
   title: 'Related Entry 1',
   created: 1704067200000,
   lastModified: 1704067200000,
+  contentHash: '',
   metadata: '{}',
   properties: [
     { name: 'Title', type: 'text', value: 'Related Entry 1' },
@@ -413,6 +424,7 @@ export const relatedEntry2SqlRecord: SqlEntryRecord = {
   title: 'Related Entry 2',
   created: 1704067200000,
   lastModified: 1704067200000,
+  contentHash: '',
   metadata: '{}',
   properties: [
     { name: 'Title', type: 'text', value: 'Related Entry 2' },
@@ -452,6 +464,7 @@ export const collectionEntry1SqlRecord: SqlEntryRecord = {
   title: 'Collection Entry 1',
   created: 1704067200000,
   lastModified: 1704067200000,
+  contentHash: '',
   metadata: '{}',
   properties: [
     { name: 'Title', type: 'text', value: 'Collection Entry 1' },

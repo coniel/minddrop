@@ -34,6 +34,7 @@ export function convertEntryToSqlRecord(
     title: entry.title,
     created: entry.created.getTime(),
     lastModified: entry.lastModified.getTime(),
+    contentHash: entry.contentHash ?? '',
     metadata: JSON.stringify(entry.metadata),
     properties,
   };

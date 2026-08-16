@@ -8,6 +8,7 @@ const existingRecord: EntrySyncRecord = {
   id: objectEntry1SqlRecord.id,
   path: objectEntry1SqlRecord.path,
   lastModified: objectEntry1SqlRecord.lastModified,
+  contentHash: objectEntry1SqlRecord.contentHash,
 };
 
 describe('matchEntriesToSqlRecords', () => {

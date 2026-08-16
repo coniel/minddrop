@@ -42,6 +42,13 @@ export interface DatabaseEntry<TProperties extends PropertyMap = PropertyMap> {
   lastModified: Date;
 
   /**
+   * Hash of the entry file's contents, used to detect changes made
+   * outside the app. Set when read from disk, absent on entries
+   * hydrated from the index.
+   */
+  contentHash?: string;
+
+  /**
    * The entry's properties.
    */
   properties: TProperties;

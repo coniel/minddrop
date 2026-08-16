@@ -37,6 +37,11 @@ export interface SqlEntryRecord {
   lastModified: number;
 
   /**
+   * Hash of the entry file's contents as of the last index.
+   */
+  contentHash: string;
+
+  /**
    * JSON-serialized DatabaseEntryMetadata.
    */
   metadata: string;

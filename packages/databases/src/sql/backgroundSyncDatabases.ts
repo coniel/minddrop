@@ -205,31 +205,28 @@ export async function backgroundSyncDatabases(
     // Get existing metadata from SQL
     const existingMetadata = sqlGetEntryMetadataMap(database.id);
 
-    // Index the existing timestamps by entry ID
-    const existingTimestamps = new Map(
-      existingRecords.map((record) => [record.id, record.lastModified]),
+    // Index the existing content hashes by entry ID. Hashes rather
+    // than timestamps, since an entry's 'last-modified' property is
+    // only updated by the app, leaving external edits undetected in
+    // databases which define one.
+    const existingHashes = new Map(
+      existingRecords.map((record) => [record.id, record.contentHash]),
     );
 
     // Find new or modified entries
     const changedRecords = records.filter((record) => {
-      const existingTimestamp = existingTimestamps.get(record.id);
+      const existingHash = existingHashes.get(record.id);
 
-      return (
-        existingTimestamp === undefined ||
-        existingTimestamp !== record.lastModified
-      );
+      return existingHash === undefined || existingHash !== record.contentHash;
     });
 
     // Find entries whose metadata changed but content did not
     const metadataOnlyChanged = records.filter((record) => {
-      const existingTimestamp = existingTimestamps.get(record.id);
+      const existingHash = existingHashes.get(record.id);
       const existingMeta = existingMetadata.get(record.id);
 
       // Skip entries already covered by the full upsert
-      if (
-        existingTimestamp === undefined ||
-        existingTimestamp !== record.lastModified
-      ) {
+      if (existingHash === undefined || existingHash !== record.contentHash) {
         return false;
       }
 
