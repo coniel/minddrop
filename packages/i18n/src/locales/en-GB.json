@@ -194,7 +194,7 @@
     },
     "lastModified": {
       "name": "Last modified",
-      "description": "Adds the date and time at which an entry was last modified to its properties."
+      "description": "Adds the date and time at which an entry was last modified in MindDrop to its properties. Edits made in other apps do not update it."
     },
     "file": {
       "name": "File",
