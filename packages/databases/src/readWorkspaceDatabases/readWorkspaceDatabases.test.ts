@@ -72,19 +72,7 @@ describe('readWorkspaceDatabases', () => {
   });
 
   it('re-mints duplicated config IDs', async () => {
-    const databasePath = `${workspace_1.path}/Copied Database`;
-    const configPath = `${databasePath}/${Paths.hiddenDirName}/${DatabaseConfigFileName}`;
-
-    // Add a database config duplicating an existing database's ID
-    MockFs.addFiles([
-      {
-        path: configPath,
-        textContent: JSON.stringify({
-          id: objectDatabase.id,
-          entrySerializer: 'markdown',
-        }),
-      },
-    ]);
+    addCopiedDatabase();
 
     const result = await readWorkspaceDatabases(workspace_1.path);
     const ids = result.map((current) => current.id);
@@ -92,4 +80,90 @@ describe('readWorkspaceDatabases', () => {
     // All IDs should be unique
     expect(new Set(ids).size).toBe(ids.length);
   });
+
+  it('keeps the ID for the config at the recorded path', async () => {
+    const copyPath = addCopiedDatabase();
+
+    // Read with the database recorded at the copy's path, which the
+    // scan reaches after the config it was copied from
+    const result = await readWorkspaceDatabases(
+      workspace_1.path,
+      new Map([[objectDatabase.id, copyPath]]),
+    );
+
+    // The config at the recorded path should keep the ID, the scan
+    // order notwithstanding
+    expect(databaseAtPath(result, copyPath).id).toBe(objectDatabase.id);
+    expect(databaseAtPath(result, objectDatabase.path).id).not.toBe(
+      objectDatabase.id,
+    );
+  });
+
+  it('persists the ID minted for the config which did not keep it', async () => {
+    const copyPath = addCopiedDatabase();
+
+    const result = await readWorkspaceDatabases(
+      workspace_1.path,
+      new Map([[objectDatabase.id, copyPath]]),
+    );
+
+    // The re-minted ID should be persisted back to its config file
+    const config = MockFs.readJsonFile<Database>(
+      configPathFor(objectDatabase.path),
+    );
+
+    expect(config.id).toBe(databaseAtPath(result, objectDatabase.path).id);
+  });
+
+  it('falls back to scan order when no config sits at the recorded path', async () => {
+    addCopiedDatabase();
+
+    // Read with the database recorded somewhere neither config is,
+    // as when both were copied in
+    const result = await readWorkspaceDatabases(
+      workspace_1.path,
+      new Map([[objectDatabase.id, `${workspace_1.path}/Moved Away`]]),
+    );
+
+    // The first config found should keep the ID
+    expect(databaseAtPath(result, objectDatabase.path).id).toBe(
+      objectDatabase.id,
+    );
+  });
 });
+
+/**
+ * Adds a config duplicating an existing database's ID, as copying
+ * that database's directory would.
+ *
+ * @returns The path of the copied database directory.
+ */
+function addCopiedDatabase(): string {
+  const databasePath = `${workspace_1.path}/Copied Database`;
+
+  MockFs.addFiles([
+    {
+      path: configPathFor(databasePath),
+      textContent: JSON.stringify({
+        id: objectDatabase.id,
+        entrySerializer: 'markdown',
+      }),
+    },
+  ]);
+
+  return databasePath;
+}
+
+/**
+ * Returns the path of a database directory's config file.
+ */
+function configPathFor(databasePath: string): string {
+  return `${databasePath}/${Paths.hiddenDirName}/${DatabaseConfigFileName}`;
+}
+
+/**
+ * Returns the read database sitting at the given path.
+ */
+function databaseAtPath(databases: Database[], path: string): Database {
+  return databases.find((database) => database.path === path)!;
+}

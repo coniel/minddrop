@@ -43,12 +43,17 @@ export async function backgroundSyncDatabases(
   loadCoreSerializers();
   Paths.workspace = workspacePath;
 
-  // Read current database configs from the filesystem
-  const fileSystemDatabases = await readWorkspaceDatabases(workspacePath);
-
   // Get existing databases from SQL
   const sqlDatabases = sqlGetAllDatabases();
   const sqlDatabaseIds = new Set(sqlDatabases.map((database) => database.id));
+
+  // Read current database configs from the filesystem, passing the
+  // recorded paths so that a copied database directory rather than
+  // the original is the one given a fresh ID
+  const fileSystemDatabases = await readWorkspaceDatabases(
+    workspacePath,
+    new Map(sqlDatabases.map((database) => [database.id, database.path])),
+  );
 
   // Detect new or updated databases
   const upsertedDatabases: Database[] = [];

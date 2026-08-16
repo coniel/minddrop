@@ -11,6 +11,7 @@ import {
   resolveCollectionProperties,
 } from '../../utils';
 import { SCHEMA_SQL, SCHEMA_VERSION } from '../schema';
+import { sqlGetAllDatabases } from '../sqlGetAllDatabases';
 import { sqlGetAllEntriesFull } from '../sqlGetAllEntriesFull';
 import { sqlUpsertDatabase } from '../sqlUpsertDatabase';
 import { sqlUpsertEntries } from '../sqlUpsertEntries';
@@ -61,15 +62,24 @@ export async function initializeDatabasesBackend(
   // Set the workspace path for path resolution
   Paths.workspace = workspacePath;
 
-  // Read database configs from the workspace
-  const databases = await readWorkspaceDatabases(workspacePath);
-
-  // Open or create the SQL database
+  // Open or create the SQL database. Opened before the workspace
+  // scan so that the scan can consult the recorded database paths.
   const dbPath = `${Sql.resolveConfigPath()}/${workspaceId}/data.db`;
   const { schemaChanged } = await Sql.open(dbPath, {
     schema: SCHEMA_SQL,
     version: SCHEMA_VERSION,
   });
+
+  // Read database configs from the workspace, passing the recorded
+  // paths so that a copied database directory rather than the
+  // original is the one given a fresh ID. Empty on a schema rebuild,
+  // leaving the scan order to decide.
+  const databases = await readWorkspaceDatabases(
+    workspacePath,
+    new Map(
+      sqlGetAllDatabases().map((database) => [database.id, database.path]),
+    ),
+  );
 
   // On schema change (new DB or version mismatch), populate
   // SQL from the filesystem. Otherwise trust SQL as the cache

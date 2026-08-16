@@ -23,6 +23,9 @@ vi.mock('@minddrop/sql', () => ({
   },
 }));
 vi.mock('../sqlUpsertDatabase', () => ({ sqlUpsertDatabase: vi.fn() }));
+vi.mock('../sqlGetAllDatabases', () => ({
+  sqlGetAllDatabases: vi.fn(() => []),
+}));
 vi.mock('../sqlUpsertEntries', () => ({ sqlUpsertEntries: vi.fn() }));
 vi.mock('../sqlGetAllEntriesFull', () => ({
   sqlGetAllEntriesFull: vi.fn(() => []),

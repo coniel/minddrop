@@ -9,10 +9,12 @@ import { databaseConfigFilePath } from '../utils';
  * scanning for .minddrop/database.json files recursively.
  *
  * @param workspacePath - The absolute path to the workspace directory.
+ * @param knownDatabasePaths - Map of database ID to the path last recorded for it, used to decide which of several configs claiming one ID keeps it.
  * @returns The database configs found in the workspace.
  */
 export async function readWorkspaceDatabases(
   workspacePath: string,
+  knownDatabasePaths: Map<string, string> = new Map(),
 ): Promise<Database[]> {
   // Read all files in the workspace recursively
   const workspaceFiles = await Fs.readDir(workspacePath, { recursive: true });
@@ -27,25 +29,18 @@ export async function readWorkspaceDatabases(
     (config): config is Database => config !== null,
   );
 
-  // Track seen IDs to detect configs duplicated by directory copies
-  const seenIds = new Set<string>();
+  // Work out which config keeps each claimed ID
+  const idKeepers = resolveIdKeepers(databases, knownDatabasePaths);
 
   return Promise.all(
     databases.map(async (database) => {
-      // Keep valid, unique config IDs as-is
-      if (
-        database.id &&
-        isEntityId(database.id, 'database') &&
-        !seenIds.has(database.id)
-      ) {
-        seenIds.add(database.id);
-
+      // Keep the ID of the config which owns it
+      if (idKeepers.get(database.id) === database) {
         return database;
       }
 
       // Mint a fresh ID for missing, untyped, or duplicated IDs
       const minted = { ...database, id: entityId('database') };
-      seenIds.add(minted.id);
 
       // Persist the minted ID back to the config file
       await writeDatabaseConfigFile(minted);
@@ -53,6 +48,53 @@ export async function readWorkspaceDatabases(
       return minted;
     }),
   );
+}
+
+/**
+ * Returns the config which keeps each claimed database ID, keyed by
+ * that ID.
+ *
+ * Copying a database directory duplicates its config file, leaving
+ * two directories claiming one ID. The one already recorded at its
+ * path keeps it, so that the copy rather than the original is the
+ * one re-minted, whatever order the scan reached them in.
+ */
+function resolveIdKeepers(
+  databases: Database[],
+  knownDatabasePaths: Map<string, string>,
+): Map<string, Database> {
+  const claimants = new Map<string, Database[]>();
+
+  // Group the configs by the ID they claim, skipping those with no
+  // usable ID as they are re-minted regardless
+  databases.forEach((database) => {
+    if (!database.id || !isEntityId(database.id, 'database')) {
+      return;
+    }
+
+    const claimed = claimants.get(database.id);
+
+    if (claimed) {
+      claimed.push(database);
+    } else {
+      claimants.set(database.id, [database]);
+    }
+  });
+
+  const keepers = new Map<string, Database>();
+
+  claimants.forEach((claimed, id) => {
+    // The config sitting where the app last recorded this database.
+    // Falling back to the first found keeps the choice deterministic
+    // when neither is recorded, as when both were copied in.
+    const recorded = claimed.find(
+      (database) => database.path === knownDatabasePaths.get(id),
+    );
+
+    keepers.set(id, recorded ?? claimed[0]);
+  });
+
+  return keepers;
 }
 
 /**
