@@ -4,7 +4,10 @@ import {
   cleanupDataViewFixtures,
   setupDataViewFixtures,
 } from '@minddrop/data-views';
-import { cleanupDesignFixtures, setupDesignFixtures } from '@minddrop/designs-legacy';
+import {
+  cleanupDesignFixtures,
+  setupDesignFixtures,
+} from '@minddrop/designs-legacy';
 import { Events } from '@minddrop/events';
 import { initializeMockFileSystem } from '@minddrop/file-system';
 import { initializeI18n } from '@minddrop/i18n';
