@@ -16,6 +16,7 @@ import {
   ParagraphElementConfig,
   ThematicBreakElementConfig,
   UnsupportedElementConfig,
+  WikilinkElementConfig,
 } from './default-element-configs';
 import { EditorBlockElementConfig } from './types';
 
@@ -44,6 +45,7 @@ export const EditorElementConfigs: EditorBlockElementConfig<any>[] = [
   InlineMathElementConfig,
   LinkElementConfig,
   LinkReferenceElementConfig,
+  WikilinkElementConfig,
 ];
 
 /**

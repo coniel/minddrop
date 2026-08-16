@@ -36,6 +36,8 @@ export {
 } from './DatabaseEntriesStore';
 export { getPropertyFilePath as propertyFilePath } from './utils';
 export { isEntryTitleTaken as isTitleTaken } from './utils';
+export { isGloballyUniqueEntryTitle as isGloballyUniqueTitle } from './utils';
+export { findDatabaseEntryByReference as findByReference } from './utils';
 export { validateDatabaseEntryTitle as validateTitle } from './validateDatabaseEntryTitle';
 export { readDatabaseEntries as readFiles } from './readDatabaseEntries';
 export { createEntryVirtualViews as createVirtualViews } from './utils';

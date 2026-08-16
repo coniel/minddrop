@@ -14,7 +14,11 @@ import {
   DatabaseUpdatedEventData,
   Databases,
 } from '@minddrop/databases';
-import { Events } from '@minddrop/events';
+import {
+  Events,
+  OpenReferenceEvent,
+  OpenReferenceEventData,
+} from '@minddrop/events';
 import { Tabs } from '@minddrop/feature-views';
 import { DATABASE_FALLBACK_ICON } from '@minddrop/ui-databases';
 import {
@@ -308,6 +312,26 @@ export const DatabasesFeature: React.FC = () => {
       },
     );
 
+    // Open the entry a reference names. References are dispatched to the app
+    // at large, so those naming no entry belong to something else and are
+    // left alone.
+    Events.addListener<OpenReferenceEventData>(
+      OpenReferenceEvent,
+      DatabaseEntriesEventListenerId,
+      ({ data }) => {
+        const entry = DatabaseEntries.findByReference(data.reference);
+
+        if (!entry) {
+          return;
+        }
+
+        Events.dispatch<OpenDatabaseEntryViewEventData>(
+          OpenDatabaseEntryViewEvent,
+          { entryId: entry.id },
+        );
+      },
+    );
+
     // Register feature-level event handlers (view state cleanup)
     initializeDatabasesFeatureEventHandlers();
 
@@ -325,6 +349,7 @@ export const DatabasesFeature: React.FC = () => {
         CloseDatabaseEntryDialogEvent,
         DatabaseEntriesEventListenerId,
       );
+      Events.removeListener(OpenReferenceEvent, DatabaseEntriesEventListenerId);
       Events.removeListener(DatabaseUpdatedEvent, EventListenerId);
       Events.removeListener(DatabaseRenamedEvent, EventListenerId);
       Events.removeListener(DatabaseDeletedEvent, EventListenerId);

@@ -8,6 +8,19 @@ export const CloseAppSidebarEvent = 'app:sidebar:close';
 export const SetNavToolbarWidthEvent = 'app:nav-toolbar:set-width';
 export const ToggleWindowFillEvent = 'app:window:toggle-fill';
 export const AppErrorEvent = 'app:error';
+export const OpenReferenceEvent = 'app:reference:open';
+
+export type OpenReferenceEventData = {
+  /**
+   * What is to be opened, as it was written in the link which points at it,
+   * e.g. `Book` or `Books/Book`.
+   *
+   * The reference is deliberately unresolved: it is dispatched to the app at
+   * large, and whichever package recognises it opens it. A reference which
+   * nothing recognises opens nothing.
+   */
+  reference: string;
+};
 
 export type SetNavToolbarWidthEventData = {
   /**

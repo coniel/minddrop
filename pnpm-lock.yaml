@@ -901,12 +901,18 @@ importers:
       '@minddrop/ast':
         specifier: workspace:*
         version: link:../../packages/ast
+      '@minddrop/databases':
+        specifier: workspace:*
+        version: link:../../packages/databases
       '@minddrop/dev-tools':
         specifier: workspace:*
         version: link:../../packages/dev-tools
       '@minddrop/editor':
         specifier: workspace:*
         version: link:../../packages/editor
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../../packages/events
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n

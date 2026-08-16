@@ -1,0 +1,9 @@
+.wikilink-element {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-decoration-style: dashed;
+  text-underline-offset: var(--space-0-5);
+  /* A link is followed rather than edited by a press, so it takes the
+     pointer which says so */
+  cursor: pointer;
+}

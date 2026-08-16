@@ -1020,6 +1020,13 @@
     "blockMenu": {
       "hint": "Type to filter"
     },
+    "linkMenu": {
+      "link": "Link",
+      "placeholder": "Paste link or search entries",
+      "webpage": "Link to webpage",
+      "noResults": "No matching entries",
+      "hint": "Search entries"
+    },
     "frames": {
       "taskItem": "Task item"
     },

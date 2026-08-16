@@ -1,6 +1,8 @@
 import { useCallback, useMemo } from 'react';
 import { Ast, Element } from '@minddrop/ast';
 import { EditorProps, RichTextEditor } from '@minddrop/editor';
+import { Events, OpenReferenceEvent } from '@minddrop/events';
+import { entryReferenceSource } from '../entryReferenceSource';
 
 /**
  * Title related props (`title`, `titlePlaceholder`, `titleStyle`,
@@ -33,6 +35,8 @@ export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
   initialValue,
   onChange,
   onDebouncedChange,
+  references = entryReferenceSource,
+  onOpenWikilink = openReference,
   ...other
 }) => {
   const value = useMemo(
@@ -59,7 +63,20 @@ export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
       initialValue={value}
       onChange={handleChange}
       onChangeDebounced={handleDebouncedChange}
+      references={references}
+      onOpenWikilink={onOpenWikilink}
       {...other}
     />
   );
 };
+
+/**
+ * Announces that a reference is to be opened, leaving it to whichever package
+ * recognises it to do so. The editor deals in references rather than in the
+ * things they name, so it has nothing more specific to say.
+ *
+ * @param reference - What the link points at, as it was written.
+ */
+function openReference(reference: string): void {
+  Events.dispatch(OpenReferenceEvent, { reference });
+}

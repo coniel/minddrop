@@ -1,0 +1,11 @@
+/* The searchable menu brings its own surface, so the popover positioning it
+   carries none of its own. Without this the menu is drawn inside a second,
+   identical surface. */
+.link-menu {
+  width: 20rem;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}

@@ -14,3 +14,4 @@ export * from './MathElement';
 export * from './ParagraphElement';
 export * from './ThematicBreakElement';
 export * from './UnsupportedElement';
+export * from './WikilinkElement';

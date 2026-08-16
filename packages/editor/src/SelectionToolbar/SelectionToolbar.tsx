@@ -8,6 +8,7 @@ import {
   PopoverPortal,
   PopoverPositioner,
   ToolbarIconButton,
+  ToolbarSeparator,
 } from '@minddrop/ui-primitives';
 import { MarkConfigs } from '../MarkConfigs';
 import { RangeAnchor } from '../utils';
@@ -28,6 +29,11 @@ export interface SelectionToolbarProps {
    * Callback fired when a mark is toggled on the selection.
    */
   onToggleMark: (mark: MarkKey) => void;
+
+  /**
+   * Callback fired when the selection is to be made a link.
+   */
+  onLink: () => void;
 }
 
 /**
@@ -37,6 +43,7 @@ export const SelectionToolbar: React.FC<SelectionToolbarProps> = ({
   anchor,
   activeMarks,
   onToggleMark,
+  onLink,
 }) => {
   // Positioned against the selected text rather than against a trigger
   // element, of which the toolbar has none
@@ -80,6 +87,16 @@ export const SelectionToolbar: React.FC<SelectionToolbarProps> = ({
                   <IconRenderer icon={markConfig.icon} />
                 </ToolbarIconButton>
               ))}
+              <ToolbarSeparator />
+
+              <ToolbarIconButton
+                size="sm"
+                label="editor.linkMenu.link"
+                tooltip={{ title: 'editor.linkMenu.link' }}
+                onClick={onLink}
+              >
+                <IconRenderer icon="link" />
+              </ToolbarIconButton>
             </FloatingToolbar>
           </PopoverContent>
         </PopoverPositioner>

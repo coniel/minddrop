@@ -19,35 +19,35 @@ import { BlockGutter, BlockInsertPosition } from '../BlockGutter';
 import { BlockMenu } from '../BlockMenu';
 import { BlockSelectionContext } from '../BlockSelectionContext';
 import { EditorElementConfigs } from '../EditorElementConfigs';
+import { LinkMenu } from '../LinkMenu';
 import { MarkConfigs } from '../MarkConfigs';
+import { ReferenceMenu } from '../ReferenceMenu';
 import { SelectionToolbar } from '../SelectionToolbar';
 import { Transforms } from '../Transforms';
+import { WikilinkContext } from '../WikilinkContext';
 import { clearBlockSelection } from '../clearBlockSelection';
 import { deleteBlocks } from '../deleteBlocks';
 import { duplicateBlocks } from '../duplicateBlocks';
-import { indentBlocks } from '../indentBlocks';
 import { insertTrailingParagraph } from '../insertTrailingParagraph';
-import { outdentBlocks } from '../outdentBlocks';
 import { selectAutoFocusTarget } from '../selectAutoFocusTarget';
 import { turnBlocksInto } from '../turnBlocksInto';
-import { BlockElementProps, Editor } from '../types';
+import { BlockElementProps, ReferenceSource } from '../types';
 import { useBlockDrag } from '../useBlockDrag';
 import { useBlockMenu } from '../useBlockMenu';
 import { useBlockSelection } from '../useBlockSelection';
+import { useEditorShortcuts } from '../useEditorShortcuts';
 import { HoveredBlock, useHoveredBlock } from '../useHoveredBlock';
+import { useLinkMenu } from '../useLinkMenu';
 import { useSelectedBlockIds } from '../useSelectedBlockIds';
 import { useSelectionToolbar } from '../useSelectionToolbar';
-import {
-  createEditor,
-  createRenderElement,
-  getElementAbove,
-  getSelectedBlocks,
-} from '../utils';
+import { useWikilinkMenu } from '../useWikilinkMenu';
+import { createEditor, createRenderElement, getSelectedBlocks } from '../utils';
 import { assignBlockIds, withBlockIds } from '../withBlockIds';
 import { withBlockReset } from '../withBlockReset';
 import { withBlockSelection } from '../withBlockSelection';
 import { withBlockShortcuts } from '../withBlockShortcuts';
 import { withFrames } from '../withFrames';
+import { withLinks } from '../withLinks';
 import { withMarkHotkeys } from '../withMarkHotkeys';
 import { withMarks } from '../withMarks';
 import { withReturnBehaviour } from '../withReturnBehaviour';
@@ -139,6 +139,20 @@ export interface EditorProps {
   onTitleChange?: (title: string) => void;
 
   /**
+   * Supplies the references a wikilink can point at, enabling the link
+   * menu's reference search. Without one, only web addresses can be linked
+   * to.
+   */
+  references?: ReferenceSource;
+
+  /**
+   * Callback fired when a wikilink is followed, receiving what the link
+   * points at as it was written between its brackets. The editor does not
+   * know what a reference names, so opening it is the consumer's to do.
+   */
+  onOpenWikilink?: (reference: string) => void;
+
+  /**
    * Callback used to validate the title on every change. Returns
    * a translated error message when the title is invalid. While
    * invalid, the error is shown in a tooltip anchored to the
@@ -162,6 +176,8 @@ export const RichTextEditor: React.FC<EditorProps> = ({
   titleStyle,
   onTitleChange,
   validateTitle,
+  references,
+  onOpenWikilink,
 }) => {
   const editor = useMemo(() => createEditor(), []);
   const editorRef = useRef(editor);
@@ -217,14 +233,16 @@ export const RichTextEditor: React.FC<EditorProps> = ({
             // Applied outside the block reset so that a return or a delete
             // steps out of a container before it resets the block
             withFrames(
-              withBlockReset(
-                withBlockShortcuts(
-                  // Applied innermost so that it sees the operations every
-                  // other plugin produces
-                  withSourceInvalidation(withReturnBehaviour(editor)),
-                  [...EditorElementConfigs],
+              withLinks(
+                withBlockReset(
+                  withBlockShortcuts(
+                    // Applied innermost so that it sees the operations every
+                    // other plugin produces
+                    withSourceInvalidation(withReturnBehaviour(editor)),
+                    [...EditorElementConfigs],
+                  ),
+                  'paragraph',
                 ),
-                'paragraph',
               ),
             ),
           ),
@@ -259,6 +277,12 @@ export const RichTextEditor: React.FC<EditorProps> = ({
     toggleMark: handleToggleMark,
     handleChange: handleSelectionToolbarChange,
   } = useSelectionToolbar(editorWithPlugins, !readOnly);
+  const linkMenu = useLinkMenu(editorWithPlugins, references);
+  const {
+    referenceMenuProps,
+    handleKeyDown: handleWikilinkMenuKeyDown,
+    handleChange: handleWikilinkMenuChange,
+  } = useWikilinkMenu(editorWithPlugins, references);
   const { hoveredBlock, clearHoveredBlock } = useHoveredBlock(
     editorWithPlugins,
     containerRef,
@@ -309,6 +333,9 @@ export const RichTextEditor: React.FC<EditorProps> = ({
       // Keep the selection toolbar against the selected text
       handleSelectionToolbarChange();
 
+      // Keep the wikilink menu query in sync with the editor
+      handleWikilinkMenuChange();
+
       // Strip the title node so consumers only receive the content
       const content = hasTitle
         ? (value as Element[]).slice(1)
@@ -329,6 +356,7 @@ export const RichTextEditor: React.FC<EditorProps> = ({
       handleEditorChange,
       handleBlockMenuChange,
       handleSelectionToolbarChange,
+      handleWikilinkMenuChange,
       hasTitle,
     ],
   );
@@ -361,32 +389,12 @@ export const RichTextEditor: React.FC<EditorProps> = ({
     [editor],
   );
 
-  // Tab and Shift-Tab step blocks in and out of the containers
-  // around them, which is the only thing Tab does in the editor.
-  const handleIndentKeyDown = useCallback(
-    (event: React.KeyboardEvent<HTMLDivElement>) => {
-      if (event.key !== 'Tab') {
-        return false;
-      }
-
-      // Tab would otherwise move the focus out of the editor
-      event.preventDefault();
-
-      const paths = getIndentTargetPaths(editorWithPlugins);
-
-      if (!paths.length) {
-        return true;
-      }
-
-      if (event.shiftKey) {
-        outdentBlocks(editorWithPlugins, paths);
-      } else {
-        indentBlocks(editorWithPlugins, paths);
-      }
-
-      return true;
-    },
-    [editorWithPlugins],
+  // What the shortcuts are given beyond the editor itself
+  const shortcutContext = useMemo(() => ({ onOpenWikilink }), [onOpenWikilink]);
+  const handleShortcutKeyDown = useEditorShortcuts(
+    editorWithPlugins,
+    shortcutContext,
+    !readOnly,
   );
 
   // Compose mark hotkeys with stopPropagation so that keyboard
@@ -401,14 +409,19 @@ export const RichTextEditor: React.FC<EditorProps> = ({
         return;
       }
 
+      // Runs before the block selection, which takes Escape and the arrows
+      // for itself
+      if (!readOnly && handleWikilinkMenuKeyDown(event)) {
+        return;
+      }
+
       // Runs after the block menu, which takes Escape for itself
       // while it is open
       if (handleBlockSelectionKeyDown(event)) {
         return;
       }
 
-      // Read-only editors cannot have their blocks moved
-      if (!readOnly && handleIndentKeyDown(event)) {
+      if (handleShortcutKeyDown(event)) {
         return;
       }
 
@@ -418,7 +431,8 @@ export const RichTextEditor: React.FC<EditorProps> = ({
       markHotkeys,
       handleBlockMenuKeyDown,
       handleBlockSelectionKeyDown,
-      handleIndentKeyDown,
+      handleShortcutKeyDown,
+      handleWikilinkMenuKeyDown,
       readOnly,
     ],
   );
@@ -732,84 +746,82 @@ export const RichTextEditor: React.FC<EditorProps> = ({
       initialValue={seededInitialValue}
       onChange={handleChange}
     >
-      <TitleContext.Provider value={titleContextValue}>
-        <BlockFramesProvider>
-          <BlockSelectionContext.Provider value={selectedBlockIds}>
-            <div ref={containerRef} className="editor-container">
-              <Editable
-                autoFocus={false}
-                readOnly={readOnly}
-                className="editor"
-                style={style}
-                renderElement={renderElement}
-                renderLeaf={renderLeaf}
-                onKeyDown={onKeyDown}
-                onClick={handleClick}
-                onFocus={onFocus}
-                onBlur={handleBlur}
-                onDragOver={handleDragOver}
-                onDrop={handleDrop}
+      <WikilinkContext.Provider value={onOpenWikilink}>
+        <TitleContext.Provider value={titleContextValue}>
+          <BlockFramesProvider>
+            <BlockSelectionContext.Provider value={selectedBlockIds}>
+              <div ref={containerRef} className="editor-container">
+                <Editable
+                  autoFocus={false}
+                  readOnly={readOnly}
+                  className="editor"
+                  style={style}
+                  renderElement={renderElement}
+                  renderLeaf={renderLeaf}
+                  onKeyDown={onKeyDown}
+                  onClick={handleClick}
+                  onFocus={onFocus}
+                  onBlur={handleBlur}
+                  onDragOver={handleDragOver}
+                  onDrop={handleDrop}
+                />
+
+                {/* Marks where dragged blocks would drop */}
+                <BlockDropIndicator position={dropIndicator} />
+
+                {/* Controls acting on the hovered block */}
+                <BlockGutter
+                  block={menuBlock ?? hoveredBlock}
+                  controlsRef={blockGutterRef}
+                  handleRef={blockHandleRef}
+                  onInsert={handleInsertBlock}
+                  onSelect={handleSelectBlock}
+                  onDragStart={handleBlockDragStart}
+                  onDragEnd={handleBlockDragEnd}
+                  hidden={isDragging}
+                />
+              </div>
+
+              {/* Actions acting on the selected blocks */}
+              <BlockActionsMenu
+                open={menuOpen}
+                onOpenChange={handleMenuOpenChange}
+                onOpenChangeComplete={handleMenuOpenChangeComplete}
+                anchorRef={blockHandleRef}
+                onTurnInto={handleTurnInto}
+                onCopy={handleCopyBlocks}
+                onDuplicate={handleDuplicateBlocks}
+                onDelete={handleDeleteBlocks}
               />
 
-              {/* Marks where dragged blocks would drop */}
-              <BlockDropIndicator position={dropIndicator} />
+              {/* Block insertion menu */}
+              <BlockMenu {...blockMenuProps} />
 
-              {/* Controls acting on the hovered block */}
-              <BlockGutter
-                block={menuBlock ?? hoveredBlock}
-                controlsRef={blockGutterRef}
-                handleRef={blockHandleRef}
-                onInsert={handleInsertBlock}
-                onSelect={handleSelectBlock}
-                onDragStart={handleBlockDragStart}
-                onDragEnd={handleBlockDragEnd}
-                hidden={isDragging}
+              {/* Formatting actions for the selected text */}
+              <SelectionToolbar
+                anchor={selectionToolbarAnchor}
+                activeMarks={activeMarks}
+                onToggleMark={handleToggleMark}
+                onLink={linkMenu.open}
               />
-            </div>
 
-            {/* Actions acting on the selected blocks */}
-            <BlockActionsMenu
-              open={menuOpen}
-              onOpenChange={handleMenuOpenChange}
-              onOpenChangeComplete={handleMenuOpenChangeComplete}
-              anchorRef={blockHandleRef}
-              onTurnInto={handleTurnInto}
-              onCopy={handleCopyBlocks}
-              onDuplicate={handleDuplicateBlocks}
-              onDelete={handleDeleteBlocks}
-            />
+              {/* References which can be linked to, opened by typing */}
+              <ReferenceMenu {...referenceMenuProps} />
 
-            {/* Block insertion menu */}
-            <BlockMenu {...blockMenuProps} />
-
-            {/* Formatting actions for the selected text */}
-            <SelectionToolbar
-              anchor={selectionToolbarAnchor}
-              activeMarks={activeMarks}
-              onToggleMark={handleToggleMark}
-            />
-          </BlockSelectionContext.Provider>
-        </BlockFramesProvider>
-      </TitleContext.Provider>
+              {/* Link creation menu */}
+              <LinkMenu
+                anchor={linkMenu.anchor}
+                query={linkMenu.query}
+                references={linkMenu.references}
+                onQueryChange={linkMenu.setQuery}
+                onSelectReference={linkMenu.selectReference}
+                onSelectUrl={linkMenu.selectUrl}
+                onClose={linkMenu.close}
+              />
+            </BlockSelectionContext.Provider>
+          </BlockFramesProvider>
+        </TitleContext.Provider>
+      </WikilinkContext.Provider>
     </Slate>
   );
 };
-
-/**
- * Returns the paths of the blocks an indent acts on, being the selected
- * blocks, or the block the cursor is in when none are selected.
- *
- * @param editor - An editor instance.
- * @returns The block paths.
- */
-function getIndentTargetPaths(editor: Editor): Path[] {
-  const selectedPaths = getSelectedBlocks(editor).map(([, path]) => path);
-
-  if (selectedPaths.length) {
-    return selectedPaths;
-  }
-
-  const entry = getElementAbove(editor);
-
-  return entry ? [entry[1]] : [];
-}

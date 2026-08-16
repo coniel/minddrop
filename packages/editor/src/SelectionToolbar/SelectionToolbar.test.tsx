@@ -34,6 +34,7 @@ describe('SelectionToolbar', () => {
         anchor={null}
         activeMarks={[]}
         onToggleMark={vi.fn()}
+        onLink={vi.fn()}
       />,
     );
 
@@ -46,6 +47,7 @@ describe('SelectionToolbar', () => {
         anchor={anchor}
         activeMarks={[]}
         onToggleMark={vi.fn()}
+        onLink={vi.fn()}
       />,
     );
 
@@ -62,6 +64,7 @@ describe('SelectionToolbar', () => {
         anchor={anchor}
         activeMarks={['bold']}
         onToggleMark={vi.fn()}
+        onLink={vi.fn()}
       />,
     );
 
@@ -82,6 +85,7 @@ describe('SelectionToolbar', () => {
         anchor={anchor}
         activeMarks={[]}
         onToggleMark={onToggleMark}
+        onLink={vi.fn()}
       />,
     );
 
@@ -96,6 +100,7 @@ describe('SelectionToolbar', () => {
         anchor={anchor}
         activeMarks={[]}
         onToggleMark={vi.fn()}
+        onLink={vi.fn()}
       />,
     );
 

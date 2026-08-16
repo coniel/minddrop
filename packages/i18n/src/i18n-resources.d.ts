@@ -1076,6 +1076,13 @@ declare module 'i18next' {
           blockMenu: {
             hint: string;
           };
+          linkMenu: {
+            link: string;
+            placeholder: string;
+            webpage: string;
+            noResults: string;
+            hint: string;
+          };
           frames: {
             taskItem: string;
           };
