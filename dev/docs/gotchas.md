@@ -54,6 +54,7 @@ detected by path, which made the gap easy to miss.
 Do not reintroduce a timestamp comparison here. mtime is also unsuitable, on
 top of the reasons above, because a restore or checkout moves it without the
 content changing, which would re-index the whole workspace.
+
 ### Multiple formatted-text properties cannot round-trip byte-exact
 
 `writeDatabaseEntry` merges into the entry's existing frontmatter, so
@@ -86,21 +87,6 @@ matching the hardcoded values key and any previously persisted mappings.
 The fix at that point is to treat `Title` as a stable identifier and add
 a separate translated display `label` to the property schema (updating
 the property mapping UI to render labels over names).
-
-### Pending entry metadata is keyed by database path, not entry
-
-`updateEntryMetadata` debounces writes into a pending map keyed by the
-database's **path** (`pendingUpdates: Map<databasePath, …>`). A metadata
-write queued in that window and then a **database rename** (which changes
-the database path) leaves the pending entry stranded under the old path:
-when its debounce timer fires it flushes to the pre-rename location.
-
-Rare in practice — renames are deliberate user actions, not concurrent
-with metadata edits — so it is not handled. Entry metadata is explicitly
-"safe to lose" supplementary state (`embeddedViewConfigs`,
-`viewLayoutOverrides`), so a dropped pending write is not data loss. If it
-ever needs solving, move the pending map entry from the old path key to
-the new one during the rename (no primitive for this exists yet).
 
 ### viewLayoutOverrides must not be keyed by virtual view IDs
 
