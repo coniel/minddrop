@@ -1,5 +1,5 @@
 import React, { RefObject, useMemo } from 'react';
-import { Element } from '@minddrop/ast';
+import { Element, Frame } from '@minddrop/ast';
 import {
   DropdownMenuContent,
   DropdownMenuPortal,
@@ -44,7 +44,11 @@ export interface BlockActionsMenuProps {
    * Callback fired when a block type is chosen, with the type and
    * the data the chosen menu item carries.
    */
-  onTurnInto: (type: string, data?: Partial<Element>) => void;
+  onTurnInto: (
+    type: string,
+    data?: Partial<Element>,
+    frame?: () => Frame,
+  ) => void;
 
   /**
    * Callback fired when the copy action is chosen.
@@ -174,12 +178,16 @@ function stopPropagation(event: React.SyntheticEvent): void {
  */
 function toTurnIntoItem(
   item: BlockMenuItem,
-  onTurnInto: (type: string, data?: Partial<Element>) => void,
+  onTurnInto: (
+    type: string,
+    data?: Partial<Element>,
+    frame?: () => Frame,
+  ) => void,
 ) {
   return {
     type: 'menu-item' as const,
     label: item.label,
     icon: item.icon,
-    onSelect: () => onTurnInto(item.type, item.data),
+    onSelect: () => onTurnInto(item.type, item.data, item.frame),
   };
 }

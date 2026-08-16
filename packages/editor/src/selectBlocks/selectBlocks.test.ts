@@ -1,5 +1,6 @@
 import { Range } from 'slate';
 import { afterEach, describe, expect, it } from 'vitest';
+import { ListItemFrame } from '@minddrop/ast';
 import { Selection } from '@minddrop/selection';
 import {
   cleanup,
@@ -60,6 +61,30 @@ describe('selectBlocks', () => {
       [0],
       [1],
     ]);
+  });
+
+  it('draws in the blocks nested inside the selected ones', () => {
+    const item1: ListItemFrame = {
+      id: 'item-1',
+      kind: 'list-item',
+      ordered: false,
+      marker: '-',
+    };
+    const editor = createTestEditor(
+      assignBlockIds([
+        { ...paragraphElement1, ancestry: [item1] },
+        { ...paragraphElement2, ancestry: [item1] },
+        paragraphElement3,
+      ]),
+    );
+
+    // Selecting the block which opens the item selects the item whole
+    selectBlocks(editor, [0], [0]);
+
+    expect(getBlockAlignedRange(editor)).toEqual({
+      firstIndex: 0,
+      lastIndex: 1,
+    });
   });
 
   it('clears a selection made elsewhere', () => {

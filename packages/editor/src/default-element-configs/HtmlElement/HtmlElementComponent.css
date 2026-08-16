@@ -1,0 +1,14 @@
+.html-element {
+  padding: var(--space-2) var(--space-3);
+  border: var(--border-width-thin) dashed var(--border-subtle);
+  border-radius: var(--radius-md);
+}
+
+.html-element-source {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+}

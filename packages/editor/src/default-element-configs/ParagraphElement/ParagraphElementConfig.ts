@@ -7,6 +7,7 @@ export const ParagraphElementConfig: EditorBlockElementConfig = {
   menuItems: [
     {
       label: 'editor.elements.paragraph.name',
+      keywords: 'editor.elements.paragraph.keywords',
       icon: 'align-left',
     },
   ],

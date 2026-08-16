@@ -1,4 +1,7 @@
+import { getLiteralContent } from '../../utils';
 import { InlineMathElement } from './InlineMathElement.types';
+
+const MathDelimiter = '$';
 
 /**
  * Stringifies an inline math element into markdown.
@@ -9,5 +12,5 @@ import { InlineMathElement } from './InlineMathElement.types';
 export const stringifyInlineMathElementToMarkdown = (
   element: InlineMathElement,
 ): string => {
-  return `$${element.value}$`;
+  return `${MathDelimiter}${getLiteralContent(element)}${MathDelimiter}`;
 };

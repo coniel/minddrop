@@ -1,0 +1,7 @@
+.inline-math-element {
+  padding-inline: var(--space-1);
+  border-radius: var(--radius-sm);
+  background-color: var(--surface-subtle);
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}

@@ -9,34 +9,45 @@ import { Descendant, Path, Editor as SlateEditor } from 'slate';
 import { HistoryEditor } from 'slate-history';
 import { Editable, ReactEditor, RenderElementProps, Slate } from 'slate-react';
 import { useDebouncedCallback } from 'use-debounce';
-import { Ast, Element } from '@minddrop/ast';
+import { Ast, Element, Frame } from '@minddrop/ast';
 import { Selection } from '@minddrop/selection';
 import { isUntitledTitle } from '@minddrop/utils';
 import { BlockActionsMenu, BlockActionsMenuProps } from '../BlockActionsMenu';
 import { BlockDropIndicator } from '../BlockDropIndicator';
+import { BlockFramesProvider } from '../BlockFramesContext';
 import { BlockGutter, BlockInsertPosition } from '../BlockGutter';
 import { BlockMenu } from '../BlockMenu';
 import { BlockSelectionContext } from '../BlockSelectionContext';
 import { EditorElementConfigs } from '../EditorElementConfigs';
 import { MarkConfigs } from '../MarkConfigs';
+import { SelectionToolbar } from '../SelectionToolbar';
 import { Transforms } from '../Transforms';
 import { clearBlockSelection } from '../clearBlockSelection';
 import { deleteBlocks } from '../deleteBlocks';
 import { duplicateBlocks } from '../duplicateBlocks';
+import { indentBlocks } from '../indentBlocks';
 import { insertTrailingParagraph } from '../insertTrailingParagraph';
+import { outdentBlocks } from '../outdentBlocks';
 import { selectAutoFocusTarget } from '../selectAutoFocusTarget';
 import { turnBlocksInto } from '../turnBlocksInto';
-import { BlockElementProps } from '../types';
+import { BlockElementProps, Editor } from '../types';
 import { useBlockDrag } from '../useBlockDrag';
 import { useBlockMenu } from '../useBlockMenu';
 import { useBlockSelection } from '../useBlockSelection';
 import { HoveredBlock, useHoveredBlock } from '../useHoveredBlock';
 import { useSelectedBlockIds } from '../useSelectedBlockIds';
-import { createEditor, createRenderElement, getSelectedBlocks } from '../utils';
+import { useSelectionToolbar } from '../useSelectionToolbar';
+import {
+  createEditor,
+  createRenderElement,
+  getElementAbove,
+  getSelectedBlocks,
+} from '../utils';
 import { assignBlockIds, withBlockIds } from '../withBlockIds';
 import { withBlockReset } from '../withBlockReset';
 import { withBlockSelection } from '../withBlockSelection';
 import { withBlockShortcuts } from '../withBlockShortcuts';
+import { withFrames } from '../withFrames';
 import { withMarkHotkeys } from '../withMarkHotkeys';
 import { withMarks } from '../withMarks';
 import { withReturnBehaviour } from '../withReturnBehaviour';
@@ -203,14 +214,18 @@ export const RichTextEditor: React.FC<EditorProps> = ({
       withMarks(
         withBlockSelection(
           withBlockIds(
-            withBlockReset(
-              withBlockShortcuts(
-                // Applied innermost so that it sees the operations every
-                // other plugin produces
-                withSourceInvalidation(withReturnBehaviour(editor)),
-                [...EditorElementConfigs],
+            // Applied outside the block reset so that a return or a delete
+            // steps out of a container before it resets the block
+            withFrames(
+              withBlockReset(
+                withBlockShortcuts(
+                  // Applied innermost so that it sees the operations every
+                  // other plugin produces
+                  withSourceInvalidation(withReturnBehaviour(editor)),
+                  [...EditorElementConfigs],
+                ),
+                'paragraph',
               ),
-              'paragraph',
             ),
           ),
         ),
@@ -238,6 +253,12 @@ export const RichTextEditor: React.FC<EditorProps> = ({
   } = useBlockMenu(editorWithPlugins);
   const { handleKeyDown: handleBlockSelectionKeyDown, selectBlock } =
     useBlockSelection(editorWithPlugins, !readOnly);
+  const {
+    anchor: selectionToolbarAnchor,
+    activeMarks,
+    toggleMark: handleToggleMark,
+    handleChange: handleSelectionToolbarChange,
+  } = useSelectionToolbar(editorWithPlugins, !readOnly);
   const { hoveredBlock, clearHoveredBlock } = useHoveredBlock(
     editorWithPlugins,
     containerRef,
@@ -285,6 +306,9 @@ export const RichTextEditor: React.FC<EditorProps> = ({
       // Keep the block menu query in sync with the editor
       handleBlockMenuChange();
 
+      // Keep the selection toolbar against the selected text
+      handleSelectionToolbarChange();
+
       // Strip the title node so consumers only receive the content
       const content = hasTitle
         ? (value as Element[]).slice(1)
@@ -304,6 +328,7 @@ export const RichTextEditor: React.FC<EditorProps> = ({
       handleDebouncedChange,
       handleEditorChange,
       handleBlockMenuChange,
+      handleSelectionToolbarChange,
       hasTitle,
     ],
   );
@@ -336,6 +361,34 @@ export const RichTextEditor: React.FC<EditorProps> = ({
     [editor],
   );
 
+  // Tab and Shift-Tab step blocks in and out of the containers
+  // around them, which is the only thing Tab does in the editor.
+  const handleIndentKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLDivElement>) => {
+      if (event.key !== 'Tab') {
+        return false;
+      }
+
+      // Tab would otherwise move the focus out of the editor
+      event.preventDefault();
+
+      const paths = getIndentTargetPaths(editorWithPlugins);
+
+      if (!paths.length) {
+        return true;
+      }
+
+      if (event.shiftKey) {
+        outdentBlocks(editorWithPlugins, paths);
+      } else {
+        indentBlocks(editorWithPlugins, paths);
+      }
+
+      return true;
+    },
+    [editorWithPlugins],
+  );
+
   // Compose mark hotkeys with stopPropagation so that keyboard
   // events don't bubble to parent handlers
   const onKeyDown = useCallback(
@@ -354,12 +407,18 @@ export const RichTextEditor: React.FC<EditorProps> = ({
         return;
       }
 
+      // Read-only editors cannot have their blocks moved
+      if (!readOnly && handleIndentKeyDown(event)) {
+        return;
+      }
+
       markHotkeys(event);
     },
     [
       markHotkeys,
       handleBlockMenuKeyDown,
       handleBlockSelectionKeyDown,
+      handleIndentKeyDown,
       readOnly,
     ],
   );
@@ -468,14 +527,14 @@ export const RichTextEditor: React.FC<EditorProps> = ({
   );
 
   const handleTurnInto = useCallback(
-    (type: string, data?: Partial<Element>) => {
+    (type: string, data?: Partial<Element>, frame?: () => Frame) => {
       // The menu holds the DOM focus, which the editor needs back
       // for its selection to paint attached to the blocks. Focus is
       // taken before the conversion because Slate defers it while
       // the editor has operations pending.
       ReactEditor.focus(editorWithPlugins);
 
-      turnBlocksInto(editorWithPlugins, menuBlockPaths(), type, data);
+      turnBlocksInto(editorWithPlugins, menuBlockPaths(), type, data, frame);
     },
     [editorWithPlugins, menuBlockPaths],
   );
@@ -674,55 +733,83 @@ export const RichTextEditor: React.FC<EditorProps> = ({
       onChange={handleChange}
     >
       <TitleContext.Provider value={titleContextValue}>
-        <BlockSelectionContext.Provider value={selectedBlockIds}>
-          <div ref={containerRef} className="editor-container">
-            <Editable
-              autoFocus={false}
-              readOnly={readOnly}
-              className="editor"
-              style={style}
-              renderElement={renderElement}
-              renderLeaf={renderLeaf}
-              onKeyDown={onKeyDown}
-              onClick={handleClick}
-              onFocus={onFocus}
-              onBlur={handleBlur}
-              onDragOver={handleDragOver}
-              onDrop={handleDrop}
+        <BlockFramesProvider>
+          <BlockSelectionContext.Provider value={selectedBlockIds}>
+            <div ref={containerRef} className="editor-container">
+              <Editable
+                autoFocus={false}
+                readOnly={readOnly}
+                className="editor"
+                style={style}
+                renderElement={renderElement}
+                renderLeaf={renderLeaf}
+                onKeyDown={onKeyDown}
+                onClick={handleClick}
+                onFocus={onFocus}
+                onBlur={handleBlur}
+                onDragOver={handleDragOver}
+                onDrop={handleDrop}
+              />
+
+              {/* Marks where dragged blocks would drop */}
+              <BlockDropIndicator position={dropIndicator} />
+
+              {/* Controls acting on the hovered block */}
+              <BlockGutter
+                block={menuBlock ?? hoveredBlock}
+                controlsRef={blockGutterRef}
+                handleRef={blockHandleRef}
+                onInsert={handleInsertBlock}
+                onSelect={handleSelectBlock}
+                onDragStart={handleBlockDragStart}
+                onDragEnd={handleBlockDragEnd}
+                hidden={isDragging}
+              />
+            </div>
+
+            {/* Actions acting on the selected blocks */}
+            <BlockActionsMenu
+              open={menuOpen}
+              onOpenChange={handleMenuOpenChange}
+              onOpenChangeComplete={handleMenuOpenChangeComplete}
+              anchorRef={blockHandleRef}
+              onTurnInto={handleTurnInto}
+              onCopy={handleCopyBlocks}
+              onDuplicate={handleDuplicateBlocks}
+              onDelete={handleDeleteBlocks}
             />
 
-            {/* Marks where dragged blocks would drop */}
-            <BlockDropIndicator position={dropIndicator} />
+            {/* Block insertion menu */}
+            <BlockMenu {...blockMenuProps} />
 
-            {/* Controls acting on the hovered block */}
-            <BlockGutter
-              block={menuBlock ?? hoveredBlock}
-              controlsRef={blockGutterRef}
-              handleRef={blockHandleRef}
-              onInsert={handleInsertBlock}
-              onSelect={handleSelectBlock}
-              onDragStart={handleBlockDragStart}
-              onDragEnd={handleBlockDragEnd}
-              hidden={isDragging}
+            {/* Formatting actions for the selected text */}
+            <SelectionToolbar
+              anchor={selectionToolbarAnchor}
+              activeMarks={activeMarks}
+              onToggleMark={handleToggleMark}
             />
-          </div>
-
-          {/* Actions acting on the selected blocks */}
-          <BlockActionsMenu
-            open={menuOpen}
-            onOpenChange={handleMenuOpenChange}
-            onOpenChangeComplete={handleMenuOpenChangeComplete}
-            anchorRef={blockHandleRef}
-            onTurnInto={handleTurnInto}
-            onCopy={handleCopyBlocks}
-            onDuplicate={handleDuplicateBlocks}
-            onDelete={handleDeleteBlocks}
-          />
-
-          {/* Block insertion menu */}
-          <BlockMenu {...blockMenuProps} />
-        </BlockSelectionContext.Provider>
+          </BlockSelectionContext.Provider>
+        </BlockFramesProvider>
       </TitleContext.Provider>
     </Slate>
   );
 };
+
+/**
+ * Returns the paths of the blocks an indent acts on, being the selected
+ * blocks, or the block the cursor is in when none are selected.
+ *
+ * @param editor - An editor instance.
+ * @returns The block paths.
+ */
+function getIndentTargetPaths(editor: Editor): Path[] {
+  const selectedPaths = getSelectedBlocks(editor).map(([, path]) => path);
+
+  if (selectedPaths.length) {
+    return selectedPaths;
+  }
+
+  const entry = getElementAbove(editor);
+
+  return entry ? [entry[1]] : [];
+}

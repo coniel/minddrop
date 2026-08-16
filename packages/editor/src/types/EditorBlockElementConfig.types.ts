@@ -73,6 +73,14 @@ export interface BlockMenuItemConfig<TElement extends Element = Element> {
   label: TranslationKey;
 
   /**
+   * The translation key of the terms the entry is found by in addition to
+   * its label, as a space separated list. Covers the names the construct
+   * goes by elsewhere, so that searching for what it is called in markdown
+   * or in another editor finds it.
+   */
+  keywords?: TranslationKey;
+
+  /**
    * The icon displayed next to the label.
    */
   icon: IconProp;

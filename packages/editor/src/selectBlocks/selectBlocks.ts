@@ -1,4 +1,5 @@
 import { Path, Editor as SlateEditor, Element as SlateElement } from 'slate';
+import { Element } from '@minddrop/ast';
 import { Selection } from '@minddrop/selection';
 import { Transforms } from '../Transforms';
 import {
@@ -6,7 +7,7 @@ import {
   BlockSelectionItem,
   Editor,
 } from '../types';
-import { hasBlockId } from '../utils';
+import { hasBlockId, resolveClosedBlockRange } from '../utils';
 
 /**
  * Selects the top level blocks between two blocks, covering both
@@ -29,26 +30,32 @@ export function selectBlocks(
   anchorPath: Path,
   focusPath: Path,
 ): void {
+  // Selecting a block selects everything drawn inside it, which the
+  // blocks below it can be
+  const { firstIndex, lastIndex } = resolveClosedBlockRange(
+    editor.children as Element[],
+    {
+      firstIndex: Math.min(anchorPath[0], focusPath[0]),
+      lastIndex: Math.max(anchorPath[0], focusPath[0]),
+    },
+  );
+
   // A selection running up the document is anchored to the end of
   // its anchor block rather than the start.
   const backward = Path.isBefore(focusPath, anchorPath);
+  const anchorIndex = backward ? lastIndex : firstIndex;
+  const focusIndex = backward ? firstIndex : lastIndex;
 
   const anchor = backward
-    ? SlateEditor.end(editor, anchorPath)
-    : SlateEditor.start(editor, anchorPath);
+    ? SlateEditor.end(editor, [anchorIndex])
+    : SlateEditor.start(editor, [anchorIndex]);
   const focus = backward
-    ? SlateEditor.start(editor, focusPath)
-    : SlateEditor.end(editor, focusPath);
+    ? SlateEditor.start(editor, [focusIndex])
+    : SlateEditor.end(editor, [focusIndex]);
 
   Transforms.select(editor, { anchor, focus });
 
-  Selection.select(
-    buildBlockSelectionItems(
-      editor,
-      Math.min(anchorPath[0], focusPath[0]),
-      Math.max(anchorPath[0], focusPath[0]),
-    ),
-  );
+  Selection.select(buildBlockSelectionItems(editor, firstIndex, lastIndex));
 }
 
 /**

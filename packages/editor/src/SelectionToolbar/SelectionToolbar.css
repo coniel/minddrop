@@ -1,0 +1,8 @@
+/* The toolbar brings its own floating surface, so the popover it is
+   positioned by carries none of its own */
+.selection-toolbar-popover {
+  padding: 0;
+  border: none;
+  background: none;
+  box-shadow: none;
+}

@@ -4,6 +4,8 @@ import './MarkConfigs.css';
 
 export const boldMarkConfig: MarkConfig = {
   key: 'bold',
+  label: 'editor.marks.bold',
+  icon: 'bold',
   component: ({ children }) => <strong>{children}</strong>,
   shortcuts: [
     { trigger: { start: '**', end: '**' } },
@@ -14,6 +16,8 @@ export const boldMarkConfig: MarkConfig = {
 
 export const italicMarkConfig: MarkConfig = {
   key: 'italic',
+  label: 'editor.marks.italic',
+  icon: 'italic',
   component: ({ children }) => <em>{children}</em>,
   shortcuts: [
     { trigger: { start: '_', end: '_' } },
@@ -24,6 +28,8 @@ export const italicMarkConfig: MarkConfig = {
 
 export const strikethroughMarkConfig: MarkConfig = {
   key: 'strikethrough',
+  label: 'editor.marks.strikethrough',
+  icon: 'strikethrough',
   component: ({ children }) => (
     <span className="strikethrough-mark">{children}</span>
   ),
@@ -36,8 +42,13 @@ export const strikethroughMarkConfig: MarkConfig = {
 
 export const codeMarkConfig: MarkConfig = {
   key: 'code',
+  label: 'editor.marks.code',
+  icon: 'code',
   component: ({ children }) => <code className="code-mark">{children}</code>,
-  shortcuts: [{ trigger: { start: '`', end: '`' } }],
+  shortcuts: [
+    { trigger: { start: '``', end: '``' } },
+    { trigger: { start: '`', end: '`' } },
+  ],
   hotkeys: [{ keys: ['mod', 'E'] }],
 };
 

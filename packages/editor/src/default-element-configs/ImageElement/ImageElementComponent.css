@@ -1,0 +1,19 @@
+/* Markdown has no block level image: an image is always inline, and one
+   sitting on its own line is a paragraph whose only content it is. Drawing
+   it as a block gives it a line of its own wherever it sits, so that text
+   around it within the same paragraph reads as the lines above and below
+   it. The markdown is unchanged either way. */
+.image-element,
+.image-element > [contenteditable='false'] {
+  display: block;
+}
+
+.image-element-image {
+  display: block;
+  /* Always the width of the content it sits in, scaling a small image up as
+     well as a large one down, with its aspect ratio kept */
+  width: 100%;
+  height: auto;
+  margin-block: var(--space-2);
+  border-radius: var(--radius-sm);
+}

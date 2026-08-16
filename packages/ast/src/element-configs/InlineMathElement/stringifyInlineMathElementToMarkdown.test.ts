@@ -6,9 +6,15 @@ import { stringifyInlineMathElementToMarkdown } from './stringifyInlineMathEleme
 describe('stringifyInlineMathElementToMarkdown', () => {
   it('stringifies inline math', () => {
     const element = generateElement<InlineMathElement>('inline-math', {
-      value: 'x = y',
+      children: [{ text: 'x = y' }],
     });
 
     expect(stringifyInlineMathElementToMarkdown(element)).toBe('$x = y$');
+  });
+
+  it('stringifies an empty expression', () => {
+    const element = generateElement<InlineMathElement>('inline-math');
+
+    expect(stringifyInlineMathElementToMarkdown(element)).toBe('$$');
   });
 });

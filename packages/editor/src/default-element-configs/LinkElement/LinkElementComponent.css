@@ -1,0 +1,5 @@
+.link-element {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-underline-offset: var(--space-0-5);
+}

@@ -1,0 +1,9 @@
+.image-reference-element > [contenteditable='false'] {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding-inline: var(--space-1);
+  border-radius: var(--radius-sm);
+  background-color: var(--surface-subtle);
+  color: var(--text-muted);
+}

@@ -1,6 +1,11 @@
 import { Editor as SlateEditor } from 'slate';
 import { afterEach, describe, expect, it } from 'vitest';
-import { HeadingElement } from '@minddrop/ast';
+import {
+  BlockquoteFrame,
+  Element,
+  HeadingElement,
+  ListItemFrame,
+} from '@minddrop/ast';
 import {
   cleanup,
   createTestEditor,
@@ -8,7 +13,23 @@ import {
   mathElement1,
   paragraphElement1,
 } from '../test-utils';
+import { Editor } from '../types';
 import { insertBlockElement } from './insertBlockElement';
+
+const item1: ListItemFrame = {
+  id: 'item-1',
+  kind: 'list-item',
+  ordered: false,
+  marker: '-',
+};
+
+const item2: ListItemFrame = { ...item1, id: 'item-2' };
+const quote1: BlockquoteFrame = { id: 'quote-1', kind: 'blockquote' };
+
+// Returns the containers a block sits inside as they stand in the editor
+function getAncestry(editor: Editor, index: number) {
+  return (editor.children[index] as Element).ancestry;
+}
 
 describe('insertBlockElement', () => {
   afterEach(cleanup);
@@ -83,6 +104,71 @@ describe('insertBlockElement', () => {
 
     // Should have applied the requested heading level
     expect((editor.children[1] as HeadingElement).level).toBe(3);
+  });
+
+  describe('containers', () => {
+    it('keeps the depth of the list item it replaces', () => {
+      const editor = createTestEditor([
+        { ...paragraphElement1, ancestry: [item1] },
+        // A child item, emptied by the menu query being deleted
+        { ...emptyParagraphElement, ancestry: [item1, item2] },
+      ]);
+
+      editor.selection = {
+        anchor: { path: [1, 0], offset: 0 },
+        focus: { path: [1, 0], offset: 0 },
+      };
+
+      insertBlockElement(editor, 'paragraph');
+
+      // Plain text inside the parent item, rather than dropping to the top
+      // of the document
+      expect(getAncestry(editor, 1)).toEqual([item1]);
+    });
+
+    it('stays inside a quote', () => {
+      const editor = createTestEditor([
+        { ...emptyParagraphElement, ancestry: [quote1] },
+      ]);
+
+      editor.selection = {
+        anchor: { path: [0, 0], offset: 0 },
+        focus: { path: [0, 0], offset: 0 },
+      };
+
+      insertBlockElement(editor, 'heading');
+
+      // A quote is not the block's own container, so it is kept
+      expect(getAncestry(editor, 0)).toEqual([quote1]);
+    });
+
+    it('nests a container entry inside the containers already there', () => {
+      const editor = createTestEditor([
+        { ...emptyParagraphElement, ancestry: [quote1] },
+      ]);
+
+      editor.selection = {
+        anchor: { path: [0, 0], offset: 0 },
+        focus: { path: [0, 0], offset: 0 },
+      };
+
+      insertBlockElement(editor, 'paragraph', undefined, () => item1);
+
+      expect(getAncestry(editor, 0)).toEqual([quote1, item1]);
+    });
+
+    it('carries no ancestry at the top of the document', () => {
+      const editor = createTestEditor([emptyParagraphElement]);
+
+      editor.selection = {
+        anchor: { path: [0, 0], offset: 0 },
+        focus: { path: [0, 0], offset: 0 },
+      };
+
+      insertBlockElement(editor, 'heading');
+
+      expect(getAncestry(editor, 0)).toBeUndefined();
+    });
   });
 
   it('places the cursor in the inserted element', () => {

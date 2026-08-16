@@ -1020,24 +1020,76 @@
     "blockMenu": {
       "hint": "Type to filter"
     },
+    "frames": {
+      "taskItem": "Task item"
+    },
+    "marks": {
+      "bold": "Bold",
+      "italic": "Italic",
+      "strikethrough": "Strikethrough",
+      "code": "Code"
+    },
     "elements": {
       "paragraph": {
-        "name": "Text"
+        "name": "Text",
+        "keywords": "paragraph plain body p"
       },
       "heading-1": {
-        "name": "Heading 1"
+        "name": "Heading 1",
+        "keywords": "heading title h1"
       },
       "heading-2": {
-        "name": "Heading 2"
+        "name": "Heading 2",
+        "keywords": "heading subtitle h2"
       },
       "heading-3": {
-        "name": "Heading 3"
+        "name": "Heading 3",
+        "keywords": "heading h3"
       },
-      "to-do": {
-        "name": "To-do"
+      "heading-4": {
+        "name": "Heading 4",
+        "keywords": "heading h4"
       },
-      "unordered-list-item": {
-        "name": "Bulleted list"
+      "heading-5": {
+        "name": "Heading 5",
+        "keywords": "heading h5"
+      },
+      "heading-6": {
+        "name": "Heading 6",
+        "keywords": "heading h6"
+      },
+      "code": {
+        "name": "Code",
+        "language": "Language",
+        "keywords": "code block fence snippet monospace pre"
+      },
+      "math": {
+        "name": "Math",
+        "keywords": "math equation formula latex tex katex"
+      },
+      "inline-math": {
+        "name": "Inline math",
+        "keywords": "inline math equation formula expression latex tex katex"
+      },
+      "thematic-break": {
+        "name": "Divider",
+        "keywords": "divider rule separator horizontal line hr thematic break"
+      },
+      "blockquote": {
+        "name": "Quote",
+        "keywords": "quote blockquote citation"
+      },
+      "list-item": {
+        "name": "Bulleted list",
+        "keywords": "bulleted list unordered bullet ul li"
+      },
+      "ordered-list-item": {
+        "name": "Numbered list",
+        "keywords": "numbered list ordered ol li"
+      },
+      "task-list-item": {
+        "name": "To-do list",
+        "keywords": "todo to-do task tasks checkbox check tick checklist done"
       }
     }
   },

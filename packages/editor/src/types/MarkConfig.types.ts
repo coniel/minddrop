@@ -1,5 +1,7 @@
 import { RenderLeafProps } from 'slate-react';
 import { MarkKey } from '@minddrop/ast';
+import { TranslationKey } from '@minddrop/i18n';
+import { IconProp } from '@minddrop/ui-primitives';
 import { InlineShortcutWrapTrigger } from './InlineShortcut.types';
 
 export interface MarkHotkey {
@@ -45,6 +47,17 @@ export interface MarkConfig {
    * key set to a truthy value, e.g: `bold: true`
    */
   key: MarkKey;
+
+  /**
+   * The translation key of the mark's name, used to label the control which
+   * applies it.
+   */
+  label: TranslationKey;
+
+  /**
+   * The icon of the control which applies the mark.
+   */
+  icon: IconProp;
 
   /**
    * The component used to render the mark. Wraps the editable span

@@ -1,7 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
+  BreakElementConfig,
+  CodeElementConfig,
+  DefinitionElementConfig,
+  FootnoteReferenceElementConfig,
   HeadingElementConfig,
+  HtmlElementConfig,
+  ImageElementConfig,
+  ImageReferenceElementConfig,
+  InlineHtmlElementConfig,
+  InlineMathElementConfig,
+  LinkElementConfig,
+  LinkReferenceElementConfig,
+  MathElementConfig,
   ParagraphElementConfig,
+  ThematicBreakElementConfig,
+  UnsupportedElementConfig,
 } from './default-element-configs';
 import { EditorBlockElementConfig } from './types';
 
@@ -12,8 +26,24 @@ import { EditorBlockElementConfig } from './types';
  * configs are static.
  */
 export const EditorElementConfigs: EditorBlockElementConfig<any>[] = [
+  // Blocks
+  CodeElementConfig,
+  DefinitionElementConfig,
   HeadingElementConfig,
+  HtmlElementConfig,
+  MathElementConfig,
   ParagraphElementConfig,
+  ThematicBreakElementConfig,
+  UnsupportedElementConfig,
+  // Inlines
+  BreakElementConfig,
+  FootnoteReferenceElementConfig,
+  ImageElementConfig,
+  ImageReferenceElementConfig,
+  InlineHtmlElementConfig,
+  InlineMathElementConfig,
+  LinkElementConfig,
+  LinkReferenceElementConfig,
 ];
 
 /**

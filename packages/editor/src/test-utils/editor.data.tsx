@@ -89,11 +89,8 @@ export const linkElementConfig: EditorBlockElementConfig<LinkElement> = {
 export const inlineMathElementConfig: EditorBlockElementConfig<InlineMathElement> =
   {
     type: 'inline-math',
-    component: ({ attributes, children, element }) => (
-      <span {...attributes}>
-        {element.value}
-        {children}
-      </span>
+    component: ({ attributes, children }) => (
+      <span {...attributes}>{children}</span>
     ),
   };
 
@@ -245,7 +242,7 @@ export const linkElement1 = Ast.generateElement<LinkElement>('link', {
 export const inlineMathElement1 = Ast.generateElement<InlineMathElement>(
   'inline-math',
   {
-    value: inlineMathElement1PlainText,
+    children: [{ text: inlineMathElement1PlainText }],
   },
 );
 

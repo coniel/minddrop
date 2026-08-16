@@ -1,13 +1,15 @@
 import { Path, Range, Editor as SlateEditor, Text } from 'slate';
 import { Element } from '@minddrop/ast';
+import { FrameShortcuts } from '../FrameShortcuts';
 import { Transforms } from '../Transforms';
 import { convertElement } from '../convertElement';
-import { Editor, EditorBlockElementConfig } from '../types';
+import { BlockShortcut, Editor, EditorBlockElementConfig } from '../types';
 import { getElementAbove, isBlockElement } from '../utils';
 
 /**
- * Adds support for block element shortcuts, enabling
- * the shortcuts of the given block element configs.
+ * Adds support for the markdown shortcuts which act on the block they are
+ * typed at the start of, both those which change a block's type and those
+ * which draw a container around it.
  *
  * @param editor - An editor instance.
  * @param configs - The block element configurations to enable shortcuts for.
@@ -18,96 +20,111 @@ export function withBlockShortcuts<TElement extends Element = Element>(
   configs: EditorBlockElementConfig<TElement>[],
 ): Editor {
   const { apply } = editor;
-
-  // Create a `{ [shortcutString]: convertFn }` map of
-  // shortcuts and their action.
-  const shortcuts: Record<string, (element: Element) => Element> =
-    configs.reduce((map, config) => {
-      if (!config.shortcuts) {
-        // If the config has no shortcuts, there is nothing to add
-        return map;
-      }
-      //
-
-      return config.shortcuts.reduce(
-        (nextMap, shortcut) => ({
-          // Shortcut converts the element into the config's element type
-          [shortcut]: (element: Element) =>
-            convertElement(element, config.type, shortcut),
-          ...nextMap,
-        }),
-        map,
-      );
-    }, {});
+  const shortcuts = resolveShortcuts(configs);
 
   editor.apply = (operation) => {
     // Apply the operation as normal
     apply(operation);
 
-    // When text is inserted, check if the inserted text is or
-    // completes a shortcut string. If so, run the conversion
-    // action and remove the shortcut text.
-    if (operation.type === 'insert_text') {
-      // Get the affected element
-      const entry = getElementAbove(editor, { at: operation.path });
-
-      if (!entry) {
-        return;
-      }
-
-      const element = entry[0] as Element;
-
-      if (!isBlockElement(element.type)) {
-        // If the element is not a block level element, stop here
-        return;
-      }
-
-      // Get the affected element's child node
-      const textNode = element.children[0];
-
-      if (Text.isText(textNode)) {
-        // If the first child node is a text node, check if its
-        // text content starts with one of the shortcut strings.
-        const match = Object.keys(shortcuts).find((shortcut) =>
-          textNode.text.startsWith(shortcut),
-        );
-
-        if (match) {
-          // If the text starts with a shortcut string, ensure that it was
-          // just inserted/completed by making sure that th selection is
-          // collapsed and focused at the end of the shortcut text.
-          if (
-            // There is a selection
-            !editor.selection ||
-            // Selection is collapsed
-            !Range.isCollapsed(editor.selection) ||
-            // Selection is focused at the end of the shortcut text
-            editor.selection.focus.offset !== match.length
-          ) {
-            // If the shortcut string was not inserted/completed as
-            // part of this insert, stop here.
-            return;
-          }
-
-          // Select the shortcut text
-          Transforms.select(editor, {
-            anchor: editor.selection.anchor,
-            focus: SlateEditor.start(editor, operation.path),
-          });
-          // Delete the selected (i.e. shortcut) text
-          Transforms.delete(editor);
-
-          // Run the conversion function to get the conversion data
-          const data = shortcuts[match](element);
-
-          // Apply the conversion data to the element to convert it
-          Transforms.setNodes<Element>(editor, data, {
-            at: Path.parent(operation.path),
-          });
-        }
-      }
+    // A shortcut is only ever completed by typing
+    if (operation.type !== 'insert_text') {
+      return;
     }
+
+    const entry = getElementAbove(editor, { at: operation.path });
+
+    if (!entry) {
+      return;
+    }
+
+    const element = entry[0] as Element;
+
+    // Shortcuts belong to the block, not to the inline elements within it
+    if (!isBlockElement(element.type)) {
+      return;
+    }
+
+    const textNode = element.children[0];
+
+    // The shortcut is typed at the start of the block, which is where its
+    // first text node is
+    if (!Text.isText(textNode)) {
+      return;
+    }
+
+    const shortcut = resolveTypedShortcut(shortcuts, textNode.text);
+
+    if (!shortcut) {
+      return;
+    }
+
+    // The shortcut is only triggered by the keystroke which completes it,
+    // which is the one leaving the cursor at its end
+    if (
+      !editor.selection ||
+      !Range.isCollapsed(editor.selection) ||
+      editor.selection.focus.offset !== shortcut.trigger.length
+    ) {
+      return;
+    }
+
+    const path = Path.parent(operation.path);
+
+    // The shortcut text is a command rather than content, so it is removed
+    Transforms.select(editor, {
+      anchor: editor.selection.anchor,
+      focus: SlateEditor.start(editor, operation.path),
+    });
+    Transforms.delete(editor);
+
+    shortcut.apply(editor, path, element);
   };
 
   return editor;
+}
+
+/**
+ * Collects the shortcuts which act on a block, being those of the element
+ * types alongside those which draw containers.
+ *
+ * @param configs - The block element configurations.
+ * @returns The shortcuts, longest trigger first.
+ */
+function resolveShortcuts<TElement extends Element>(
+  configs: EditorBlockElementConfig<TElement>[],
+): BlockShortcut[] {
+  const typeShortcuts = configs.flatMap((config) =>
+    (config.shortcuts || []).map((trigger) => ({
+      trigger,
+      apply: (editor: Editor, path: Path, element: Element) => {
+        Transforms.setNodes<Element>(
+          editor,
+          convertElement(element, config.type, trigger),
+          { at: path },
+        );
+      },
+    })),
+  );
+
+  // Ordered longest first so that a trigger which starts with another one
+  // is still reachable
+  return [...typeShortcuts, ...FrameShortcuts].sort(
+    (shortcut, other) => other.trigger.length - shortcut.trigger.length,
+  );
+}
+
+/**
+ * Returns the shortcut the text at the start of a block has completed.
+ *
+ * @param shortcuts - The available shortcuts, longest trigger first.
+ * @param text - The block's leading text.
+ * @returns The shortcut, or null if the text completes none.
+ */
+function resolveTypedShortcut(
+  shortcuts: BlockShortcut[],
+  text: string,
+): BlockShortcut | null {
+  const match = shortcuts.find((shortcut) => text.startsWith(shortcut.trigger));
+
+  return match || null;
 }

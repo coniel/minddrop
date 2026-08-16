@@ -1,0 +1,13 @@
+.definition-element {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  color: var(--text-subtle);
+}
+
+.definition-element-label {
+  color: var(--text-muted);
+}
+
+.definition-element-url {
+  word-break: break-all;
+}

@@ -1,0 +1,4 @@
+.footnote-reference-element sup {
+  user-select: none;
+  color: var(--text-primary);
+}

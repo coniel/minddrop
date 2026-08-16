@@ -11,6 +11,17 @@ import { Element } from '@minddrop/ast';
 import { Editor, InlineShortcut, MarkConfig, MarkShortcut } from '../types';
 import { withInlineShortcuts } from '../withInlineShortcuts';
 
+// The marks a code span cannot carry, along with the delimiters they would
+// have been written with
+const ConflictingCodeMarks = [
+  'bold',
+  'boldSyntax',
+  'italic',
+  'italicSyntax',
+  'strikethrough',
+  'strikethroughSyntax',
+];
+
 /**
  * Transforms a mark config's shortcuts into
  * InlineShortcut objects.
@@ -93,7 +104,25 @@ export function withMarks(
   editor: Editor,
   markConfigs: MarkConfig[],
 ): [Editor, (props: RenderLeafProps) => React.ReactElement] {
-  const { apply } = editor;
+  const { apply, normalizeNode } = editor;
+
+  editor.normalizeNode = (entry) => {
+    const [node, path] = entry;
+
+    // A code span is literal, so markdown has no way to write another mark
+    // inside one
+    if (Text.isText(node) && node.code) {
+      const conflicting = ConflictingCodeMarks.filter((key) => key in node);
+
+      if (conflicting.length) {
+        Transforms.unsetNodes(editor, conflicting, { at: path });
+
+        return;
+      }
+    }
+
+    normalizeNode(entry);
+  };
 
   editor.apply = (operation) => {
     apply(operation);

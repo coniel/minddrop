@@ -1,0 +1,5 @@
+.inline-html-element > [contenteditable='false'] {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  color: var(--text-muted);
+}

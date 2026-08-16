@@ -1,0 +1,105 @@
+.block-frames {
+  /* Positions each container's affordance in its own column */
+  position: relative;
+
+  /* The width a single container indents its content by, which its
+     affordance is also drawn in */
+  --block-frame-indent: var(--space-5);
+
+  /* The height of a block's first line, which markers are aligned
+     against so that they sit beside the text rather than the middle
+     of a wrapped block */
+  --block-frame-line-height: calc(
+    var(--font-size-md) * var(--line-height-normal)
+  );
+}
+
+/* A ticked off task gives up the emphasis its checkbox takes on. Applied to
+   the block rather than to the whole row, so that the containers' own
+   markers are not struck through along with it. */
+.block-frames-checked > :not(.block-frame-affordance) {
+  text-decoration: line-through;
+  color: var(--text-subtle);
+}
+
+.block-frame-affordance {
+  position: absolute;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--block-frame-indent);
+  user-select: none;
+}
+
+/* ---------------------------------------------------------------
+   QUOTE BAR
+   --------------------------------------------------------------- */
+
+.block-frame-quote-bar {
+  bottom: 0;
+}
+
+.block-frame-quote-bar::before {
+  content: '';
+  width: var(--border-width-medium);
+  height: 100%;
+  border-radius: var(--radius-full);
+  background-color: var(--border-default);
+}
+
+/* Bridges the gap between two of a quote's blocks, so that the bar
+   reads as one line rather than one segment per block */
+.block-frame-quote-bar:not(.block-frame-quote-bar-last) {
+  bottom: calc(-1 * var(--space-2));
+}
+
+/* ---------------------------------------------------------------
+   LIST MARKERS
+   --------------------------------------------------------------- */
+
+.block-frame-bullet,
+.block-frame-number,
+.block-frame-task-checkbox {
+  height: var(--block-frame-line-height);
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-normal);
+  color: var(--text-muted);
+}
+
+.block-frame-task-checkbox .icon {
+  outline: none;
+}
+
+/* A ticked box carries the emphasis its item's text gives up */
+.block-frame-task-checkbox-checked .icon {
+  stroke: var(--text-primary);
+}
+
+.block-frame-bullet::before {
+  content: '•';
+  font-size: 1.5em;
+  line-height: var(--line-height-none);
+}
+
+/* Numbers are end aligned so that a two digit number grows into the
+   indent rather than over the item's text */
+.block-frame-number {
+  justify-content: flex-end;
+  padding-inline-end: var(--space-1-5);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------------------------------------------------------------
+   FOOTNOTE LABEL
+   --------------------------------------------------------------- */
+
+.block-frame-footnote-label {
+  /* The label is wider than the column it opens, so it runs past it
+     rather than wrapping */
+  width: auto;
+  height: var(--block-frame-line-height);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  color: var(--text-subtle);
+}

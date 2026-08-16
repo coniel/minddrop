@@ -158,7 +158,7 @@ function mapNode(
     case 'inlineMath':
       return [
         generateElement<InlineMathElement>('inline-math', {
-          value: node.value || '',
+          children: [{ text: node.value || '' }],
         }),
       ];
 

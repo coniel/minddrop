@@ -1,0 +1,5 @@
+.break-element-marker {
+  user-select: none;
+  font-size: var(--font-size-xs);
+  color: var(--text-disabled);
+}

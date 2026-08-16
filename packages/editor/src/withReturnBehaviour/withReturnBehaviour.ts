@@ -34,7 +34,6 @@ export function withReturnBehaviour(editor: Editor): Editor {
       'returnBehaviour' in config &&
       config.returnBehaviour === 'line-break'
     ) {
-      console.log('line-break');
       // Insert a line break
       Transforms.insertText(editor, '\n');
 

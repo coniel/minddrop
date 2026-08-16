@@ -1,4 +1,5 @@
 export * from './BlockSelectionItem.types';
+export * from './BlockShortcut.types';
 export * from './Editor.types';
 export * from './InlineShortcut.types';
 export * from './EditorBlockElementProps.types';

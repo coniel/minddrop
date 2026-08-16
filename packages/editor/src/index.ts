@@ -1,8 +1,17 @@
 export * from './types';
 export * from './EditorElementConfigs';
+export * from './FrameMenuItems';
+export * from './FrameShortcuts';
 export * from './MarkConfigs';
+export * from './indentBlocks';
+export * from './insertInlineElement';
+export * from './outdentBlocks';
+export * from './pushFrame';
 export * from './registerBlockSelectionSerializer';
 export * from './RichTextEditor';
+export * from './SelectionToolbar';
+export * from './setTaskItemState';
+export * from './toggleTaskItem';
 export * from './withSourceInvalidation';
 export * from './withTitle';
 export * as EDITOR_TEST_DATA from './test-utils/editor.data';

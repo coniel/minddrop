@@ -10,6 +10,7 @@ import { Element } from '@minddrop/ast';
 import { BlockMenuProps } from './BlockMenu';
 import { Transforms } from './Transforms';
 import { insertBlockElement } from './insertBlockElement';
+import { insertInlineElement } from './insertInlineElement';
 import { Editor } from './types';
 import {
   BlockMenuItem,
@@ -18,6 +19,7 @@ import {
   getBlockMenuItems,
   getRangeAnchor,
   isBlockElement,
+  isInlineElement,
 } from './utils';
 
 const TRIGGER_CHARACTER = '/';
@@ -150,7 +152,15 @@ export function useBlockMenu(editor: Editor): UseBlockMenu {
       });
     }
 
-    insertBlockElement(editor, menuItem.type, menuItem.data);
+    // An inline entry goes into the block the cursor is in rather than
+    // becoming a block of its own
+    if (isInlineElement(menuItem.type)) {
+      insertInlineElement(editor, menuItem.type, menuItem.data);
+
+      return;
+    }
+
+    insertBlockElement(editor, menuItem.type, menuItem.data, menuItem.frame);
   }
 
   // Opens the menu when the trigger character is typed in a

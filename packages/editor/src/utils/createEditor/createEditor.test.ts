@@ -4,6 +4,7 @@ import {
   inlineMathElement1,
   mathElement1,
   paragraphElement1,
+  thematicBreakElement1,
 } from '../../test-utils/editor.data';
 import { createEditor } from './createEditor';
 
@@ -28,9 +29,13 @@ describe('createEditor', () => {
     const editor = createEditor();
 
     // Check if an void element is void. Should return true.
-    expect(editor.isVoid(inlineMathElement1)).toBeTruthy();
+    expect(editor.isVoid(thematicBreakElement1)).toBeTruthy();
 
     // Check if an non-void element is void, should return false.
     expect(editor.isVoid(paragraphElement1)).toBeFalsy();
+
+    // Inline math holds a literal expression to type into, so it is not
+    // void despite being inline
+    expect(editor.isVoid(inlineMathElement1)).toBeFalsy();
   });
 });

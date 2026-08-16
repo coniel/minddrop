@@ -1076,24 +1076,76 @@ declare module 'i18next' {
           blockMenu: {
             hint: string;
           };
+          frames: {
+            taskItem: string;
+          };
+          marks: {
+            bold: string;
+            italic: string;
+            strikethrough: string;
+            code: string;
+          };
           elements: {
             paragraph: {
               name: string;
+              keywords: string;
             };
             'heading-1': {
               name: string;
+              keywords: string;
             };
             'heading-2': {
               name: string;
+              keywords: string;
             };
             'heading-3': {
               name: string;
+              keywords: string;
             };
-            'to-do': {
+            'heading-4': {
               name: string;
+              keywords: string;
             };
-            'unordered-list-item': {
+            'heading-5': {
               name: string;
+              keywords: string;
+            };
+            'heading-6': {
+              name: string;
+              keywords: string;
+            };
+            code: {
+              name: string;
+              language: string;
+              keywords: string;
+            };
+            math: {
+              name: string;
+              keywords: string;
+            };
+            'inline-math': {
+              name: string;
+              keywords: string;
+            };
+            'thematic-break': {
+              name: string;
+              keywords: string;
+            };
+            blockquote: {
+              name: string;
+              keywords: string;
+            };
+            'list-item': {
+              name: string;
+              keywords: string;
+            };
+            'ordered-list-item': {
+              name: string;
+              keywords: string;
+            };
+            'task-list-item': {
+              name: string;
+              keywords: string;
             };
           };
         };

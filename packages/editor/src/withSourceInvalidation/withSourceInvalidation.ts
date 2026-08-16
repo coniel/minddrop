@@ -66,6 +66,13 @@ function resolveTouchedBlockIndexes(
     return [];
   }
 
+  // A block's containers are written as line prefixes, which are
+  // composed from its ancestry rather than taken from its source, so
+  // moving a block between containers leaves its source describing it
+  if (isAncestryChange(operation)) {
+    return [];
+  }
+
   const indexes = new Set<number>();
 
   if ('path' in operation && operation.path.length) {
@@ -86,4 +93,24 @@ function resolveTouchedBlockIndexes(
   }
 
   return [...indexes].filter((index) => index < editor.children.length);
+}
+
+/**
+ * Checks whether an operation only changes which containers a block sits
+ * inside.
+ *
+ * @param operation - The operation about to be applied.
+ * @returns Whether the operation is an ancestry change.
+ */
+function isAncestryChange(operation: Parameters<Editor['apply']>[0]): boolean {
+  if (operation.type !== 'set_node') {
+    return false;
+  }
+
+  const changed = [
+    ...Object.keys(operation.newProperties),
+    ...Object.keys(operation.properties),
+  ];
+
+  return changed.length > 0 && changed.every((key) => key === 'ancestry');
 }

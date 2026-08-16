@@ -1,0 +1,25 @@
+.math-element {
+  position: relative;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  background-color: var(--surface-subtle);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+}
+
+.math-element-label {
+  display: block;
+  user-select: none;
+  font-family: var(--font-sans);
+  font-size: var(--font-size-xs);
+  color: var(--text-subtle);
+}
+
+.math-element-source {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: var(--line-height-normal);
+}

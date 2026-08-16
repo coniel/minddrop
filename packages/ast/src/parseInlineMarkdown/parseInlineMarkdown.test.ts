@@ -117,7 +117,8 @@ describe('parseInlineMarkdown', () => {
       });
       expect(parseInline('$x$')[0]).toMatchObject({
         type: 'inline-math',
-        value: 'x',
+        // The expression is literal content, held in a text child
+        children: [{ text: 'x' }],
       });
       expect(parseInline('a <span>b</span>')[1]).toMatchObject({
         type: 'inline-html',

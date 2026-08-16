@@ -1,0 +1,10 @@
+.thematic-break-element {
+  padding-block: var(--space-2);
+}
+
+.thematic-break-element-rule {
+  height: var(--border-width-thin);
+  margin: 0;
+  border: none;
+  background-color: var(--border-default);
+}

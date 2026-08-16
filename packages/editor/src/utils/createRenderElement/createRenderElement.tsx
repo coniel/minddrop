@@ -1,8 +1,10 @@
 import React, { useContext } from 'react';
 import { RenderElementProps } from 'slate-react';
+import { BlockFrames } from '../../BlockFrames';
 import { BlockSelectionContext } from '../../BlockSelectionContext';
 import { BlockElementProps, EditorBlockElementConfig } from '../../types';
 import { hasBlockId } from '../block-id';
+import { isInlineElement } from '../element-level';
 
 /**
  * Creates a `renderElement` function used by Slate's `Editable` component
@@ -65,9 +67,19 @@ const RenderedElement: React.FC<RenderedElementProps> = ({
     'data-block-selected': selected || undefined,
   };
 
-  if (!Component) {
-    return <div {...attributes}>{props.children}</div>;
+  const rendered = Component ? (
+    <Component {...props} attributes={attributes} />
+  ) : (
+    <div {...attributes}>{props.children}</div>
+  );
+
+  // Inline elements sit within a block's content, so they are drawn by the
+  // block's own containers rather than by any of their own
+  if (isInlineElement(props.element.type)) {
+    return rendered;
   }
 
-  return <Component {...props} attributes={attributes} />;
+  // The block is drawn inside the containers it sits in, which render
+  // its indentation and their own markers around it
+  return <BlockFrames element={props.element}>{rendered}</BlockFrames>;
 };

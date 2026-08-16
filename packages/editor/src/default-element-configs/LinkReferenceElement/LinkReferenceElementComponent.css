@@ -1,0 +1,5 @@
+.link-reference-element {
+  color: var(--text-primary);
+  text-decoration: underline dotted;
+  text-underline-offset: var(--space-0-5);
+}

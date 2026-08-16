@@ -58,11 +58,17 @@ export function getBlockFromDomNode(
     return null;
   }
 
+  const blockNode = resolveBlockNode(domNode);
+
+  if (!blockNode) {
+    return null;
+  }
+
   let element: Element;
   let path: Path;
 
   try {
-    const slateNode = ReactEditor.toSlateNode(editor, domNode);
+    const slateNode = ReactEditor.toSlateNode(editor, blockNode);
 
     // Only elements are blocks
     if (!SlateElement.isElement(slateNode)) {
@@ -78,6 +84,23 @@ export function getBlockFromDomNode(
   }
 
   return { element, path, domNode };
+}
+
+/**
+ * Gets the DOM node Slate rendered a block into.
+ *
+ * A block inside a container is wrapped in an element which draws that
+ * container, so the editor's child is not always the block itself.
+ *
+ * @param domNode A direct child of the editor's DOM node.
+ * @returns The block's DOM node, or null if the child renders no block.
+ */
+function resolveBlockNode(domNode: HTMLElement): HTMLElement | null {
+  if (domNode.hasAttribute('data-slate-node')) {
+    return domNode;
+  }
+
+  return domNode.querySelector('[data-slate-node="element"]');
 }
 
 /**
