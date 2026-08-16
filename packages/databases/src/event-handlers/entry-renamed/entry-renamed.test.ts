@@ -19,7 +19,6 @@ import {
   setup,
 } from '../../test-utils';
 import { DatabaseEntryMetadata } from '../../types';
-import { updateEntryMetadata } from '../../updateEntryMetadata';
 import {
   resolveEntryMetadataFilePath,
   virtualCollectionId,
@@ -130,32 +129,6 @@ describe('onRenameEntry', () => {
     });
 
     // The sidecar should have followed the entry
-    expect(JSON.parse(MockFs.readTextFile(newSidecarPath))).toEqual(
-      entryMetadata,
-    );
-    expect(MockFs.exists(oldSidecarPath)).toBe(false);
-  });
-
-  it('re-keys pending metadata from the old to the new entry path', async () => {
-    const entryMetadata: DatabaseEntryMetadata = {
-      embeddedViewConfigs: {
-        'card:Related': { options: { foo: true }, data: {} },
-      },
-    };
-
-    // Queue pending metadata under the original entry path
-    updateEntryMetadata(collectionEntry1.id, entryMetadata);
-
-    // Update the store to reflect the rename
-    DatabaseEntriesStore.set(renamedEntry);
-
-    // onRenameEntry flushes first, then re-keys pending
-    await onRenameEntry({
-      original: collectionEntry1,
-      updated: renamedEntry,
-    });
-
-    // The flushed metadata should land in the renamed entry's sidecar
     expect(JSON.parse(MockFs.readTextFile(newSidecarPath))).toEqual(
       entryMetadata,
     );

@@ -61,7 +61,9 @@ export async function onItemAddressesChanged(
   );
 
   // Re-persist embedded view configs referencing the changed items
-  DataViews.getReferencing(changedIds)
-    .filter((view) => view.virtual)
-    .forEach(persistVirtualViewConfig);
+  await Promise.all(
+    DataViews.getReferencing(changedIds)
+      .filter((view) => view.virtual)
+      .map(persistVirtualViewConfig),
+  );
 }

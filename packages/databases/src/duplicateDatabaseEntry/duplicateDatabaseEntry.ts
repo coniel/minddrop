@@ -116,7 +116,7 @@ export async function duplicateDatabaseEntry(
 
   // Copy the source entry's supplementary metadata onto the duplicate
   if (Object.keys(entry.metadata).length > 0) {
-    updateEntryMetadata(duplicate.id, entry.metadata);
+    await updateEntryMetadata(duplicate.id, entry.metadata);
   }
 
   // The duplicate with its final property values

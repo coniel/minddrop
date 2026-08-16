@@ -8,10 +8,6 @@ import { DatabaseEntryRenamedEventData } from '../../events';
 import { getDatabase } from '../../getDatabase';
 import { moveEntryMetadataFile } from '../../moveEntryMetadataFile';
 import {
-  flushEntryMetadata,
-  rekeyPendingMetadata,
-} from '../../updateEntryMetadata';
-import {
   databaseEntryAddress,
   virtualCollectionId,
   virtualCollectionName,
@@ -28,14 +24,8 @@ export async function onRenameEntry(data: DatabaseEntryRenamedEventData) {
   // Get the database to access its properties schema
   const database = getDatabase(updated.database);
 
-  // Step 1: Flush any pending metadata write so nothing is lost
-  await flushEntryMetadata(original.path);
-
-  // Step 2: Move the sidecar to follow the entry to its new path
+  // Move the sidecar to follow the entry to its new path
   await moveEntryMetadataFile(database.path, original.path, updated.path);
-
-  // Step 3: Re-key any in-flight pending metadata write
-  rekeyPendingMetadata(original.path, updated.path);
 
   // Find all collection properties in the schema
   const collectionProperties = database.properties.filter(

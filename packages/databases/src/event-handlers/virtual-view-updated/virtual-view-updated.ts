@@ -5,7 +5,9 @@ import { persistVirtualViewConfig } from '../../persistVirtualViewConfig';
  * Called when a view is updated. If the view is a virtual entry view,
  * persists the updated options and data to the entry's metadata file.
  */
-export function onUpdateVirtualView(data: DataViewUpdatedEventData): void {
+export async function onUpdateVirtualView(
+  data: DataViewUpdatedEventData,
+): Promise<void> {
   const { updated } = data;
 
   // Only handle virtual views
@@ -14,5 +16,5 @@ export function onUpdateVirtualView(data: DataViewUpdatedEventData): void {
   }
 
   // Persist the updated view's config into its entry's metadata
-  persistVirtualViewConfig(updated);
+  await persistVirtualViewConfig(updated);
 }

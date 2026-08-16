@@ -14,7 +14,7 @@ import { parseVirtualViewId, viewMetadataKey } from '../utils';
  *
  * @param view - The virtual view whose config to persist.
  */
-export function persistVirtualViewConfig(view: DataView): void {
+export async function persistVirtualViewConfig(view: DataView): Promise<void> {
   // Parse the virtual view ID into its entry/property/layout parts
   const parsed = parseVirtualViewId(view.id);
 
@@ -55,6 +55,6 @@ export function persistVirtualViewConfig(view: DataView): void {
     },
   };
 
-  // Persist the metadata to the database metadata file
-  updateEntryMetadata(parsed.entryId, metadata);
+  // Persist the metadata to the entry's metadata sidecar
+  await updateEntryMetadata(parsed.entryId, metadata);
 }
