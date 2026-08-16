@@ -243,6 +243,43 @@
 
   /* --- Label --- */
 
+  /* An item with supporting text stacks the two, and grows past the
+     single line height the item otherwise keeps */
+  .item-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-0-5);
+    min-width: 0;
+  }
+
+  &:has(.item-text) {
+    height: auto;
+    padding-block: var(--space-1-5);
+    /* The item is taller than one line, so its contents sit against the
+       label rather than being centred against the label and description
+       together */
+    align-items: flex-start;
+  }
+
+  /* Nudged onto the label's line, which is shorter than the icon. Sizing
+     the icon to that line instead would squash it, the icon being the SVG
+     itself rather than a box around one. */
+  &:has(.item-text) .item-icon {
+    margin-top: calc(
+      (var(--font-size-sm) * var(--line-height-none) - 1rem) / 2
+    );
+  }
+
+  .description {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--text-muted);
+    font-size: var(--font-size-xs);
+  }
+
   .label {
     flex: 1;
     display: block;

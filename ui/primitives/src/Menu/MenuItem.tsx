@@ -39,6 +39,19 @@ export interface MenuItemProps {
   children?: React.ReactNode;
 
   /*
+   * Supporting text rendered below the label, for items whose label alone
+   * does not say what they are. Strings are treated as i18n keys and
+   * translated.
+   */
+  description?: TranslatableNode;
+
+  /*
+   * Plain string description rendered as-is without i18n translation.
+   * Takes priority over `description`.
+   */
+  stringDescription?: string;
+
+  /*
    * Icon for the item.
    */
   icon?: IconProp;
@@ -151,6 +164,7 @@ export const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(
       className,
       contentIcon,
       danger,
+      description,
       disabled,
       forceActionsVisible: forceActionsVisibleProp,
       hasSubmenu,
@@ -160,6 +174,7 @@ export const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(
       muted,
       role = 'menuitem',
       size,
+      stringDescription,
       stringLabel,
       trailingIcon,
       ...other
@@ -187,6 +202,19 @@ export const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(
       return children;
     }, [stringLabel, label, children]);
 
+    // Resolve the supporting text from the available sources
+    const resolvedDescription = useMemo(() => {
+      if (stringDescription) {
+        return stringDescription;
+      }
+
+      if (typeof description === 'string') {
+        return i18n.t(description);
+      }
+
+      return description;
+    }, [stringDescription, description]);
+
     return (
       <Provider value={{ setForceActionsVisible }}>
         <div
@@ -208,7 +236,14 @@ export const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(
           {contentIcon && (
             <ContentIcon className="item-icon" icon={contentIcon} />
           )}
-          <span className="label">{resolvedLabel}</span>
+          {resolvedDescription ? (
+            <span className="item-text">
+              <span className="label">{resolvedLabel}</span>
+              <span className="description">{resolvedDescription}</span>
+            </span>
+          ) : (
+            <span className="label">{resolvedLabel}</span>
+          )}
           {trailingIcon}
           {keyboardShortcut && (
             <KeyboardShortcut

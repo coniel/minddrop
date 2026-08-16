@@ -61,6 +61,8 @@ export const SearchableMenuVirtualizedList: React.FC<
         onClick={itemNavigationProps.onClick}
         label={props.label}
         stringLabel={props.stringLabel}
+        description={props.description}
+        stringDescription={props.stringDescription}
         icon={props.icon}
         contentIcon={props.contentIcon}
         active={itemNavigationProps.highlighted}

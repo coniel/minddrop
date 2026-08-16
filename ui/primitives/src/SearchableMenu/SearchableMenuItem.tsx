@@ -42,7 +42,16 @@ export type SearchableMenuItemProps = Omit<ActionMenuItemProps, 'textValue'> &
    ============================================================ */
 
 export const SearchableMenuItem: FC<SearchableMenuItemProps> = (props) => {
-  const { label, stringLabel, icon, contentIcon, disabled, children } = props;
+  const {
+    label,
+    stringLabel,
+    description,
+    stringDescription,
+    icon,
+    contentIcon,
+    disabled,
+    children,
+  } = props;
   const id = useId();
   const searchContext = useMenuSearchContext();
   const propsRef = useRef<ActionMenuItemProps>(props);
@@ -75,6 +84,8 @@ export const SearchableMenuItem: FC<SearchableMenuItemProps> = (props) => {
       onClick={navProps?.onClick}
       label={label}
       stringLabel={stringLabel}
+      description={description}
+      stringDescription={stringDescription}
       icon={icon}
       contentIcon={contentIcon}
       disabled={disabled}
