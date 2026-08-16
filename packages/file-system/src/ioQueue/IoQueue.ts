@@ -197,6 +197,18 @@ export class IoQueue {
   }
 
   /**
+   * Checks whether a write is queued for the given path but has
+   * not been flushed to disk yet.
+   *
+   * @param path - The file path.
+   * @param options - Write file options.
+   * @returns Whether a write is pending for the path.
+   */
+  hasPendingWrite(path: string, options?: FsWriteFileOptions): boolean {
+    return this.pendingWrites.has(compositeKey(path, options));
+  }
+
+  /**
    * Resets the read debounce timer. When it fires, all pending
    * reads are flushed in a single adapter call.
    */

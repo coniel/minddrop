@@ -254,6 +254,31 @@ looks:
   the dragged block used to be, so only `dragend` ends it — and it also drops
   the hovered block, the block having moved out from under the controls.
 
+## packages/file-system
+
+### The workspace watcher only covers workspaces open at startup
+
+`startFileSystemWatcher` is called once at the end of
+`initializeDesktopApp` with the paths of the workspaces loaded at that
+point. A workspace added during the session is not watched until the
+app restarts. Nothing surfaces when this happens: external changes to
+that workspace are simply invisible, exactly as they were before the
+watcher existed.
+
+### Self-write detection only covers text writes
+
+`Fs.writeTextFile` and `Fs.writeTextFiles` record a content hash, which
+is how the watcher recognises its own write and stays quiet about it.
+`Fs.writeBinaryFile` does not, so the app's own media writes are
+dispatched as ordinary changes. That is the recoverable direction (the
+owning package re-reads a file it already has), but a package reacting
+expensively to binary changes would want to know.
+
+Note the detection compares content rather than timing. An
+ignore-window keyed on "we wrote this path N ms ago" would silently
+swallow a genuine external change landing inside the window, which is
+both invisible and unreproducible.
+
 ## packages/sql
 
 ### Renderer SQL reads resolve asynchronously despite synchronous typings

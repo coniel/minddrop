@@ -443,4 +443,42 @@ describe('IoQueue', () => {
       expect(adapter.readTextFiles).toHaveBeenCalledTimes(1);
     });
   });
+
+  describe('hasPendingWrite', () => {
+    it('is true while a write is queued', () => {
+      const queue = new IoQueue(createMockAdapter());
+
+      // Queue a write
+      queue.write('a.txt', 'content');
+
+      expect(queue.hasPendingWrite('a.txt')).toBe(true);
+    });
+
+    it('is false once the write has flushed', () => {
+      const queue = new IoQueue(createMockAdapter());
+
+      // Queue a write and flush the debounce timer
+      queue.write('a.txt', 'content');
+      vi.advanceTimersByTime(10);
+
+      expect(queue.hasPendingWrite('a.txt')).toBe(false);
+    });
+
+    it('is false for paths with no queued write', () => {
+      const queue = new IoQueue(createMockAdapter());
+
+      expect(queue.hasPendingWrite('a.txt')).toBe(false);
+    });
+
+    it('does not match paths with different options', () => {
+      const queue = new IoQueue(createMockAdapter());
+
+      // Queue a write with a base directory
+      queue.write('config.json', 'content', {
+        baseDir: BaseDirectory.AppData,
+      });
+
+      expect(queue.hasPendingWrite('config.json')).toBe(false);
+    });
+  });
 });

@@ -1745,6 +1745,9 @@ importers:
 
   packages/file-system:
     dependencies:
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../events
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../utils

@@ -24,7 +24,7 @@ import {
   initializeSpacesFeature,
 } from '@minddrop/feature-spaces';
 import { TabSetsStore, initializeViewsFeature } from '@minddrop/feature-views';
-import { Fs } from '@minddrop/file-system';
+import { Fs, startFileSystemWatcher } from '@minddrop/file-system';
 import { initializeI18n } from '@minddrop/i18n';
 import { Queries } from '@minddrop/queries';
 import { Search } from '@minddrop/search';
@@ -150,4 +150,10 @@ async function runInitialization(): Promise<void> {
 
   // Initialize extensions
   await initializeExtensions([]);
+
+  // Watch the workspace directories for changes made outside the
+  // app. Started last so that it cannot race the initial loads.
+  await startFileSystemWatcher(
+    Workspaces.getAll().map((workspace) => workspace.path),
+  );
 }

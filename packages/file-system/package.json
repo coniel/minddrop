@@ -20,6 +20,7 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "@minddrop/events": "workspace:*",
     "@minddrop/utils": "workspace:*"
   }
 }

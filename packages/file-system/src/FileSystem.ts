@@ -12,8 +12,10 @@ import {
   FileSystem,
   FileSystemAdapter,
   FsOptions,
+  FsWriteFileOptions,
   OpenFilePickerOptions,
 } from './types';
+import { recordWrittenContents } from './writeRegistry';
 
 export type { IncrementedPath } from './incrementalPath';
 
@@ -35,6 +37,7 @@ export const Fs: Omit<FileSystem, 'openFilePicker'> &
     openFilePicker: typeof openFilePicker;
     setPathIncrement: typeof setPathIncrement;
     addFileExtension: typeof addFileExtension;
+    hasPendingWrite: typeof hasPendingWrite;
   } = {
   ...Api,
   incrementalPath,
@@ -46,6 +49,7 @@ export const Fs: Omit<FileSystem, 'openFilePicker'> &
   readYamlFile,
   writeYamlFile,
   addFileExtension,
+  hasPendingWrite,
   getBaseDirPath: (baseDir) => BaseDirPaths[baseDir],
   convertFileSrc: (...args) => FsAdapter.convertFileSrc(...args),
   isDirectory: (...args) => FsAdapter.isDirectory(...args),
@@ -61,8 +65,8 @@ export const Fs: Omit<FileSystem, 'openFilePicker'> &
   trashFile: (...args) => FsAdapter.trashFile(...args),
   rename: (...args) => FsAdapter.rename(...args),
   writeBinaryFile: (...args) => FsAdapter.writeBinaryFile(...args),
-  writeTextFile: (...args) => FsAdapter.writeTextFile(...args),
-  writeTextFiles: (...args) => FsAdapter.writeTextFiles(...args),
+  writeTextFile,
+  writeTextFiles,
   downloadFile: (...args) => FsAdapter.downloadFile(...args),
   watch: (...args) => FsAdapter.watch(...args),
   unwatch: (...args) => FsAdapter.unwatch(...args),
@@ -123,6 +127,70 @@ export const registerFileSystemAdapter = (
 
   setBaseDirPaths();
 };
+
+/**
+ * Writes a text file, recording its contents so that the resulting
+ * file system change event can be recognised as the app's own write.
+ *
+ * @param path - The file path.
+ * @param contents - The file contents.
+ * @param options - Write file options.
+ */
+async function writeTextFile(
+  path: string,
+  contents: string,
+  options?: FsWriteFileOptions,
+): Promise<void> {
+  recordWrite(path, contents, options);
+
+  await FsAdapter.writeTextFile(path, contents, options);
+}
+
+/**
+ * Writes multiple text files, recording their contents so that the
+ * resulting file system change events can be recognised as the app's
+ * own writes.
+ *
+ * @param entries - The files to write, each with a path and contents.
+ * @param options - Write file options shared by all entries.
+ */
+async function writeTextFiles(
+  entries: { path: string; contents: string }[],
+  options?: FsWriteFileOptions,
+): Promise<void> {
+  entries.forEach((entry) => recordWrite(entry.path, entry.contents, options));
+
+  await FsAdapter.writeTextFiles(entries, options);
+}
+
+/**
+ * Records written contents in the write registry, skipping writes
+ * into a base directory. Those target the app's own config
+ * directories, which are never watched.
+ */
+function recordWrite(
+  path: string,
+  contents: string,
+  options?: FsWriteFileOptions,
+): void {
+  if (options?.baseDir) {
+    return;
+  }
+
+  recordWrittenContents(path, contents);
+}
+
+/**
+ * Checks whether a write is queued for the given path but has not
+ * been flushed to disk yet. Always false when the I/O queue is
+ * skipped, as writes then go straight to the adapter.
+ *
+ * @param path - The file path.
+ * @returns Whether a write is pending for the path.
+ */
+function hasPendingWrite(path: string): boolean {
+  return ioQueue?.hasPendingWrite(path) ?? false;
+}
 
 /**
  * Opens the syetem file picker.
