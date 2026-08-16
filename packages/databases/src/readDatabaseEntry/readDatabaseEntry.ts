@@ -1,10 +1,15 @@
 import { Fs, hashContents } from '@minddrop/file-system';
-import { PropertySchema } from '@minddrop/properties';
 import { entityId, titleFromPath } from '@minddrop/utils';
 import { Database, DatabaseEntry, DatabaseEntrySerializer } from '../types';
+import { getTimestampProperty } from '../utils';
 
 /**
  * Reads a database entry from the file system.
+ *
+ * The returned timestamps are stat derived where the entry has no
+ * timestamp properties, which is only a seed for the entry's metadata
+ * sidecar. Callers with sidecar access resolve them with
+ * `mergeEntryMetadata`.
  *
  * @param path - The entry path.
  * @param database - The database the entry belongs to.
@@ -29,12 +34,12 @@ export async function readDatabaseEntry(
 
     // Use explicit timestamp properties if available, otherwise fall back
     // to file stat
-    let created = getTimestampFromProperties(
+    let created = getTimestampProperty(
       'created',
       database.properties,
       properties,
     );
-    let lastModified = getTimestampFromProperties(
+    let lastModified = getTimestampProperty(
       'last-modified',
       database.properties,
       properties,
@@ -71,40 +76,4 @@ export async function readDatabaseEntry(
     // In case of failure, return null
     return null;
   }
-}
-
-/**
- * Looks up a timestamp property value from the entry's deserialized
- * properties. Returns the Date if found, or null if the database has
- * no property of the given type.
- */
-function getTimestampFromProperties(
-  type: 'created' | 'last-modified',
-  schema: PropertySchema[],
-  properties: Record<string, unknown>,
-): Date | null {
-  // Find a property in the schema with the matching type
-  const property = schema.find((property) => property.type === type);
-
-  if (!property) {
-    return null;
-  }
-
-  // Get the value from the deserialized properties
-  const value = properties[property.name];
-
-  if (value instanceof Date) {
-    return value;
-  }
-
-  // Try parsing string values as dates
-  if (typeof value === 'string') {
-    const parsed = new Date(value);
-
-    if (!isNaN(parsed.getTime())) {
-      return parsed;
-    }
-  }
-
-  return null;
 }

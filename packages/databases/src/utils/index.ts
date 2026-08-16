@@ -44,6 +44,8 @@ export * from './convertEntryToSqlRecord';
 export * from './matchEntriesToSqlRecords';
 export * from './convertSqlRecordToEntry';
 export * from './setTimestampProperties';
+export * from './getTimestampProperty';
+export * from './mergeEntryMetadata';
 export * from './getNewestDatabaseEntries';
 export * from './getRecentDatabaseEntries';
 export * from './searchDatabaseEntriesByTitle';

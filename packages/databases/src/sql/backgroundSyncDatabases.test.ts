@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { hashContents } from '@minddrop/file-system';
+import { readEntryMetadata } from '../readEntryMetadata';
 import {
   MockFs,
   cleanup,
@@ -23,6 +24,11 @@ import { sqlDeleteEntries } from './sqlDeleteEntries';
 import { sqlGetAllDatabases } from './sqlGetAllDatabases';
 import { sqlGetEntrySyncRecords } from './sqlGetEntrySyncRecords';
 import { sqlUpsertEntries } from './sqlUpsertEntries';
+
+// A file's stat dates, as reset by a rewrite of the entry file
+const statDate = new Date('2026-02-02T00:00:00.000Z');
+// The entry's real creation date, as held by its sidecar
+const sidecarDate = new Date('2020-03-03T00:00:00.000Z');
 
 // Mock SQL operations since no database connection is available in tests
 vi.mock('@minddrop/sql', () => ({
@@ -178,7 +184,47 @@ describe('backgroundSyncDatabases', () => {
       collectionEntry1.path,
     );
 
-    expect(JSON.parse(record.metadata)).toEqual(metadata);
+    expect(JSON.parse(record.metadata)).toMatchObject(metadata);
+  });
+
+  it("seeds a changed entry's sidecar with its stat derived timestamps", async () => {
+    MockFs.setFileStats(collectionEntry1.path, {
+      created: statDate,
+      lastModified: statDate,
+    });
+
+    await backgroundSyncDatabases(parentDir);
+
+    const metadata = await readEntryMetadata(
+      collectionDatabase.path,
+      collectionEntry1.path,
+    );
+
+    expect(metadata.created).toEqual(statDate);
+    expect(metadata.lastModified).toEqual(statDate);
+  });
+
+  it('keeps a seeded entry timestamps when its file is rewritten', async () => {
+    await writeEntryMetadata(collectionDatabase.path, collectionEntry1.path, {
+      created: sidecarDate,
+      lastModified: sidecarDate,
+    });
+
+    // The rewrite replaced the inode, resetting the file's stat dates
+    MockFs.setFileStats(collectionEntry1.path, {
+      created: statDate,
+      lastModified: statDate,
+    });
+
+    await backgroundSyncDatabases(parentDir);
+
+    const record = recordByPath(
+      upsertedRecords(collectionDatabase.id),
+      collectionEntry1.path,
+    );
+
+    expect(record.created).toBe(sidecarDate.getTime());
+    expect(record.lastModified).toBe(sidecarDate.getTime());
   });
 
   it('sweeps a sidecar orphaned by an entry deleted outside the app', async () => {

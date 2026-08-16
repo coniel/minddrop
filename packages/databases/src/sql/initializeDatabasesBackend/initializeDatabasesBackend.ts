@@ -8,8 +8,10 @@ import type { Database, DatabaseEntry, SqlEntryRecord } from '../../types';
 import {
   convertEntryToSqlRecord,
   entryMetadataKey,
+  mergeEntryMetadata,
   resolveCollectionProperties,
 } from '../../utils';
+import { writeEntryMetadata } from '../../writeEntryMetadata';
 import { SCHEMA_SQL, SCHEMA_VERSION } from '../schema';
 import { sqlGetAllDatabases } from '../sqlGetAllDatabases';
 import { sqlGetAllEntriesFull } from '../sqlGetAllEntriesFull';
@@ -110,6 +112,10 @@ async function rebuildSqlFromFilesystem(databases: Database[]): Promise<void> {
   // Staged read results per database
   const staged: { database: Database; entries: DatabaseEntry[] }[] = [];
 
+  // Entries whose sidecar timestamps need writing, collected during the
+  // read pass and written in one batch at the end
+  const outdatedSidecars: { database: Database; entry: DatabaseEntry }[] = [];
+
   // Pass 1: read all entries so references can resolve across databases
   for (const database of databases) {
     // Insert database record
@@ -129,12 +135,19 @@ async function rebuildSqlFromFilesystem(databases: Database[]): Promise<void> {
       readAllEntryMetadata(database.path),
     ]);
 
-    // Merge metadata into entries before conversion
-    const entriesWithMetadata = rawEntries.map((entry) => {
-      const metadata = metadataMap[entryMetadataKey(entry.path)];
+    // Merge metadata into entries before conversion, resolving their
+    // timestamps against the sidecar
+    const entriesWithMetadata = rawEntries.map((rawEntry) => {
+      const { entry, sidecarOutdated } = mergeEntryMetadata(
+        rawEntry,
+        database.properties,
+        metadataMap[entryMetadataKey(rawEntry.path)],
+      );
 
-      if (metadata) {
-        return { ...entry, metadata };
+      // Collect entries whose sidecar has no timestamps yet, or whose
+      // timestamp properties have since been edited outside the app
+      if (sidecarOutdated) {
+        outdatedSidecars.push({ database, entry });
       }
 
       return entry;
@@ -170,4 +183,12 @@ async function rebuildSqlFromFilesystem(databases: Database[]): Promise<void> {
       sqlUpsertEntries(database.id, sqlRecords, { silent: true });
     }
   }
+
+  // Seed the sidecars in one batch at the end, keeping the index build
+  // itself a read pass
+  await Promise.all(
+    outdatedSidecars.map(({ database, entry }) =>
+      writeEntryMetadata(database.path, entry.path, entry.metadata),
+    ),
+  );
 }

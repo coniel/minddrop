@@ -13,6 +13,7 @@ import { getDatabaseEntrySerializer } from '../getDatabaseEntrySerializer';
 import { DatabaseEntry } from '../types';
 import { setTimestampProperties } from '../utils';
 import { writeDatabaseEntry } from '../writeDatabaseEntry';
+import { writeEntryMetadata } from '../writeEntryMetadata';
 
 /**
  * Creates a new database entry in the specified database.
@@ -84,7 +85,9 @@ export async function createDatabaseEntry<
       ['created', 'last-modified'],
       now,
     ),
-    metadata: {},
+    // Persist the timestamps to the entry's sidecar, from where they are
+    // read from then on, since file stat does not survive rewrites
+    metadata: { created: now, lastModified: now },
   };
 
   // Add the entry to the store
@@ -92,6 +95,9 @@ export async function createDatabaseEntry<
 
   // Werite the entry to the file system
   await writeDatabaseEntry(entry.id);
+
+  // Write the entry's metadata sidecar
+  await writeEntryMetadata(database.path, entry.path, entry.metadata);
 
   // Dispatch an entry created event
   Events.dispatch<DatabaseEntryCreatedEventData>(

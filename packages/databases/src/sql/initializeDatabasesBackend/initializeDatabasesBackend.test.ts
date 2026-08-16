@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { readEntryMetadata } from '../../readEntryMetadata';
 import {
   MockFs,
   cleanup,
@@ -12,8 +13,14 @@ import {
   setup,
 } from '../../test-utils';
 import { SqlEntryRecord } from '../../types';
+import { writeEntryMetadata } from '../../writeEntryMetadata';
 import { sqlUpsertEntries } from '../sqlUpsertEntries';
 import { initializeDatabasesBackend } from './initializeDatabasesBackend';
+
+// A file's stat dates, as reset by a rewrite of the entry file
+const statDate = new Date('2026-02-02T00:00:00.000Z');
+// The entry's real creation date, as held by its sidecar
+const sidecarDate = new Date('2020-03-03T00:00:00.000Z');
 
 // Mock SQL operations since no database connection is available in tests
 vi.mock('@minddrop/sql', () => ({
@@ -91,6 +98,55 @@ References: []
     );
 
     expect(propertyValue(collectionRecord, 'Related')).toEqual([]);
+  });
+
+  it('seeds an entry sidecar with its stat derived timestamps', async () => {
+    MockFs.setFileStats(collectionEntry1.path, {
+      created: statDate,
+      lastModified: statDate,
+    });
+
+    await initializeDatabasesBackend('workspace-1', parentDir);
+
+    const metadata = await readEntryMetadata(
+      collectionDatabase.path,
+      collectionEntry1.path,
+    );
+
+    expect(metadata.created).toEqual(statDate);
+    expect(metadata.lastModified).toEqual(statDate);
+  });
+
+  it('uses a seeded sidecar rather than re-seeding from stat', async () => {
+    await writeEntryMetadata(collectionDatabase.path, collectionEntry1.path, {
+      created: sidecarDate,
+      lastModified: sidecarDate,
+    });
+
+    // Stat reports a rewritten file, as an atomic write leaves behind
+    MockFs.setFileStats(collectionEntry1.path, {
+      created: statDate,
+      lastModified: statDate,
+    });
+
+    await initializeDatabasesBackend('workspace-1', parentDir);
+
+    // The indexed entry keeps the sidecar's timestamps
+    const record = recordByPath(
+      upsertedRecords(collectionDatabase.id),
+      collectionEntry1.path,
+    );
+
+    expect(record.created).toBe(sidecarDate.getTime());
+    expect(record.lastModified).toBe(sidecarDate.getTime());
+
+    // And the sidecar is left as it was
+    const metadata = await readEntryMetadata(
+      collectionDatabase.path,
+      collectionEntry1.path,
+    );
+
+    expect(metadata.created).toEqual(sidecarDate);
   });
 });
 

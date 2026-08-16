@@ -30,14 +30,17 @@ export interface DatabaseEntry<TProperties extends PropertyMap = PropertyMap> {
   title: string;
 
   /**
-   * The date the entry was created. Derived from the entry's 'created' property
-   * if present, otherwise from file stat.
+   * The date the entry was created. Derived from the entry's 'created'
+   * property if present, otherwise from its metadata sidecar, which is
+   * seeded from file stat the first time the entry is indexed.
    */
   created: Date;
 
   /**
-   * The date the entry was last modified. Derived from the entry's
-   * 'last-modified' property if present, otherwise from file stat.
+   * The date the entry was last modified by the app. Derived from the
+   * entry's 'last-modified' property if present, otherwise from its
+   * metadata sidecar, which is seeded from file stat the first time the
+   * entry is indexed. Edits made outside the app do not update it.
    */
   lastModified: Date;
 
@@ -54,8 +57,9 @@ export interface DatabaseEntry<TProperties extends PropertyMap = PropertyMap> {
   properties: TProperties;
 
   /**
-   * Supplementary data persisted to the database metadata file.
-   * Safe to lose without actual data loss.
+   * App managed data persisted to the entry's metadata sidecar.
+   * Losing it degrades the entry's timestamps to whenever its file
+   * was last rewritten.
    */
   metadata: DatabaseEntryMetadata;
 }
@@ -66,6 +70,18 @@ export interface DatabaseEntryViewConfig {
 }
 
 export interface DatabaseEntryMetadata {
+  /**
+   * The date the entry was created. Persisted here because file
+   * birthtime is reset by atomic writes and cannot be restored
+   * portably.
+   */
+  created?: Date;
+
+  /**
+   * The date the entry was last modified by the app.
+   */
+  lastModified?: Date;
+
   /**
    * Saved options/data for the virtual views backing view elements
    * embedded in layouts, keyed by `propertyName:layoutId`.

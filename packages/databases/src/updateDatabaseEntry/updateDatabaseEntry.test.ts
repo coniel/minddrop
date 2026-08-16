@@ -3,9 +3,11 @@ import { Events } from '@minddrop/events';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabaseEntryNotFoundError } from '../errors';
 import { DatabaseEntryUpdatedEvent } from '../events';
+import { readEntryMetadata } from '../readEntryMetadata';
 import {
   MockFs,
   cleanup,
+  objectDatabase,
   objectEntry1,
   setup,
   timestampEntry1,
@@ -54,6 +56,14 @@ describe('updateDatabaseEntry', () => {
     );
   });
 
+  it('writes the last modified date to the entry metadata sidecar', async () => {
+    const entry = await updateDatabaseEntry(objectEntry1.id, update);
+
+    const metadata = await readEntryMetadata(objectDatabase.path, entry.path);
+
+    expect(metadata.lastModified).toEqual(entry.lastModified);
+  });
+
   it('updates the entry in the store', async () => {
     const entry = await updateDatabaseEntry(objectEntry1.id, update);
 
@@ -86,6 +96,7 @@ describe('updateDatabaseEntry', () => {
           updated: {
             ...objectEntry1,
             lastModified: expect.any(Date),
+            metadata: { lastModified: expect.any(Date) },
             properties: {
               ...objectEntry1.properties,
               ...update.properties,

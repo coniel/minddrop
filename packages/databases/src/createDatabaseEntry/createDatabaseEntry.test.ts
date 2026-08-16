@@ -3,6 +3,7 @@ import { Events } from '@minddrop/events';
 import { i18n } from '@minddrop/i18n';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabaseEntryCreatedEvent } from '../events';
+import { readEntryMetadata } from '../readEntryMetadata';
 import {
   MockFs,
   cleanup,
@@ -22,6 +23,10 @@ const newEntry: DatabaseEntry = {
   path: `${objectDatabase.path}/${title}.md`,
   properties: {
     Content: 'Default Content',
+  },
+  metadata: {
+    created: objectEntry1.created,
+    lastModified: objectEntry1.created,
   },
 };
 
@@ -117,6 +122,15 @@ describe('createDatabaseEntry', () => {
 
     expect(entry.properties.Created).toEqual(objectEntry1.created);
     expect(entry.properties['Last Modified']).toEqual(objectEntry1.created);
+  });
+
+  it('writes the timestamps to the entry metadata sidecar', async () => {
+    const entry = await createDatabaseEntry(objectDatabase.id);
+
+    const metadata = await readEntryMetadata(objectDatabase.path, entry.path);
+
+    expect(metadata.created).toEqual(objectEntry1.created);
+    expect(metadata.lastModified).toEqual(objectEntry1.created);
   });
 
   it('dispatches an entry created event', async () =>

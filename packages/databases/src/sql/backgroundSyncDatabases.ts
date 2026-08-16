@@ -15,9 +15,11 @@ import {
   convertEntryToSqlRecord,
   entryMetadataKey,
   matchEntriesToSqlRecords,
+  mergeEntryMetadata,
   resolveCollectionProperties,
   resolveDatabaseMetadataDirPath,
 } from '../utils';
+import { writeEntryMetadata } from '../writeEntryMetadata';
 import { sqlDeleteDatabase } from './sqlDeleteDatabase';
 import { sqlDeleteEntries } from './sqlDeleteEntries';
 import { sqlGetAllDatabases } from './sqlGetAllDatabases';
@@ -173,6 +175,10 @@ export async function backgroundSyncDatabases(
     staged.push({ database, entries, existingRecords, deletedIds });
   }
 
+  // Entries whose sidecar timestamps need writing, collected during the
+  // diff pass and written in one batch at the end
+  const outdatedSidecars: { database: Database; entry: DatabaseEntry }[] = [];
+
   // Pass 2: resolve entry references, diff, and update SQL
   for (const { database, entries, existingRecords, deletedIds } of staged) {
     // Resolve collection property addresses to entry IDs
@@ -185,11 +191,6 @@ export async function backgroundSyncDatabases(
       ),
     }));
 
-    // Convert to SQL records
-    const records = resolvedEntries.map((entry) =>
-      convertEntryToSqlRecord(entry, database),
-    );
-
     // Index the existing content hashes by entry ID. Hashes rather
     // than timestamps, since an entry's 'last-modified' property is
     // only updated by the app, leaving external edits undetected in
@@ -199,28 +200,42 @@ export async function backgroundSyncDatabases(
     );
 
     // Find new or modified entries
-    const changedRecords = records.filter((record) => {
-      const existingHash = existingHashes.get(record.id);
+    const changedEntries = resolvedEntries.filter((entry) => {
+      const existingHash = existingHashes.get(entry.id);
 
-      return existingHash === undefined || existingHash !== record.contentHash;
+      return existingHash === undefined || existingHash !== entry.contentHash;
     });
 
     // Read the sidecars of the changed entries only. Sidecars hold
     // app-managed state written alongside the entry, so one changing
     // on its own is not a case worth scanning every entry for.
-    const changedWithMetadata = await Promise.all(
-      changedRecords.map(async (record) => ({
-        ...record,
-        metadata: JSON.stringify(
-          await readEntryMetadata(database.path, record.path),
+    const merged = await Promise.all(
+      changedEntries.map(async (entry) =>
+        mergeEntryMetadata(
+          entry,
+          database.properties,
+          await readEntryMetadata(database.path, entry.path),
         ),
-      })),
+      ),
+    );
+
+    // Convert the changed entries to SQL records
+    const changedRecords = merged.map(({ entry }) =>
+      convertEntryToSqlRecord(entry, database),
     );
 
     // Upsert changed entries to SQL
-    if (changedWithMetadata.length > 0) {
-      sqlUpsertEntries(database.id, changedWithMetadata, { silent: true });
+    if (changedRecords.length > 0) {
+      sqlUpsertEntries(database.id, changedRecords, { silent: true });
     }
+
+    // Collect the entries whose sidecar has no timestamps yet, or whose
+    // timestamp properties have since been edited outside the app
+    outdatedSidecars.push(
+      ...merged
+        .filter(({ sidecarOutdated }) => sidecarOutdated)
+        .map(({ entry }) => ({ database, entry })),
+    );
 
     // Delete removed entries from SQL
     if (deletedIds.length > 0) {
@@ -241,6 +256,14 @@ export async function backgroundSyncDatabases(
 
     allDeletedEntryIds.push(...deletedIds);
   }
+
+  // Seed the sidecars in one batch at the end, keeping the diff itself
+  // a read pass
+  await Promise.all(
+    outdatedSidecars.map(({ database, entry }) =>
+      writeEntryMetadata(database.path, entry.path, entry.metadata),
+    ),
+  );
 
   const hasChanges =
     upsertedDatabases.length > 0 ||

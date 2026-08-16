@@ -10,6 +10,7 @@ import { getDatabaseEntry } from '../getDatabaseEntry';
 import { DatabaseEntry } from '../types';
 import { setTimestampProperties } from '../utils';
 import { writeDatabaseEntry } from '../writeDatabaseEntry';
+import { writeEntryMetadata } from '../writeEntryMetadata';
 
 export interface DatabaseEntryUpdateData {
   markdown?: string;
@@ -56,20 +57,33 @@ export async function updateDatabaseEntry(
   const now = new Date();
   updatedEntry.lastModified = now;
 
+  const database = getDatabase(originalEntry.database);
+
   // Populate the last-modified timestamp property value so it persists to
   // the entry file
   updatedEntry.properties = setTimestampProperties(
-    getDatabase(originalEntry.database).properties,
+    database.properties,
     updatedEntry.properties,
     ['last-modified'],
     now,
   );
+
+  // Record the timestamp in the entry's metadata too, so that the app's
+  // own record of it does not drift from the property
+  updatedEntry.metadata = { ...originalEntry.metadata, lastModified: now };
 
   // Update the entry in the store
   DatabaseEntriesStore.update(id, updatedEntry);
 
   // Write the updated entry files to the file system
   await writeDatabaseEntry(id);
+
+  // Write the entry's metadata sidecar
+  await writeEntryMetadata(
+    database.path,
+    updatedEntry.path,
+    updatedEntry.metadata,
+  );
 
   // Dispatch entry update event
   Events.dispatch<DatabaseEntryUpdatedEventData>(DatabaseEntryUpdatedEvent, {
