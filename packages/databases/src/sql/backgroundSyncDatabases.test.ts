@@ -16,6 +16,8 @@ import {
   timestampEntry1,
 } from '../test-utils';
 import { SqlEntryRecord } from '../types';
+import { resolveEntryMetadataFilePath } from '../utils';
+import { writeEntryMetadata } from '../writeEntryMetadata';
 import { backgroundSyncDatabases } from './backgroundSyncDatabases';
 import { sqlDeleteEntries } from './sqlDeleteEntries';
 import { sqlGetAllDatabases } from './sqlGetAllDatabases';
@@ -155,6 +157,63 @@ describe('backgroundSyncDatabases', () => {
       [relatedEntry2.id],
       { silent: true },
     );
+  });
+
+  it("includes a changed entry's sidecar metadata in its upserted record", async () => {
+    const metadata = {
+      embeddedViewConfigs: { 'card:Related': { options: {}, data: {} } },
+    };
+
+    await writeEntryMetadata(
+      collectionDatabase.path,
+      collectionEntry1.path,
+      metadata,
+    );
+
+    await backgroundSyncDatabases(parentDir);
+
+    // Metadata is read for changed entries only, after the diff
+    const record = recordByPath(
+      upsertedRecords(collectionDatabase.id),
+      collectionEntry1.path,
+    );
+
+    expect(JSON.parse(record.metadata)).toEqual(metadata);
+  });
+
+  it('sweeps a sidecar orphaned by an entry deleted outside the app', async () => {
+    const deletedEntryPath = `${collectionDatabase.path}/Gone.md`;
+
+    // A sidecar left behind by an entry file deleted while the app
+    // was closed, so nothing was around to remove it
+    await writeEntryMetadata(collectionDatabase.path, deletedEntryPath, {
+      embeddedViewConfigs: { 'card:Related': { options: {}, data: {} } },
+    });
+
+    await backgroundSyncDatabases(parentDir);
+
+    expect(
+      MockFs.exists(
+        resolveEntryMetadataFilePath(collectionDatabase.path, deletedEntryPath),
+      ),
+    ).toBe(false);
+  });
+
+  it('keeps the sidecar of an entry which still exists', async () => {
+    await writeEntryMetadata(collectionDatabase.path, collectionEntry1.path, {
+      embeddedViewConfigs: { 'card:Related': { options: {}, data: {} } },
+    });
+
+    await backgroundSyncDatabases(parentDir);
+
+    expect(
+      MockFs.exists(
+        resolveEntryMetadataFilePath(
+          collectionDatabase.path,
+          collectionEntry1.path,
+        ),
+      ),
+    ).toBe(true);
   });
 
   it('does not upsert entries whose contents are unchanged', async () => {

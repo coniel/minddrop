@@ -6,29 +6,35 @@ import {
 } from '../events';
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntry } from '../getDatabaseEntry';
-import { readDatabaseMetadata } from '../readDatabaseMetadata';
 import { DatabaseEntryMetadata } from '../types';
-import { entryMetadataKey } from '../utils/entryMetadataKey';
-import { writeDatabaseMetadata } from '../writeDatabaseMetadata';
+import { writeEntryMetadata } from '../writeEntryMetadata';
 
 const DEBOUNCE_MS = 500;
 
-// Pending metadata updates per database path
-const pendingUpdates: Map<
-  string,
-  Record<string, DatabaseEntryMetadata>
-> = new Map();
+interface PendingWrite {
+  /**
+   * The absolute path to the database the entry belongs to.
+   */
+  databasePath: string;
 
-// Debounce timers per database path
+  /**
+   * The metadata to write.
+   */
+  metadata: DatabaseEntryMetadata;
+}
+
+// Pending metadata writes per entry path
+const pendingUpdates: Map<string, PendingWrite> = new Map();
+
+// Debounce timers per entry path
 const flushTimers: Map<string, ReturnType<typeof setTimeout>> = new Map();
 
 /**
  * Sets an entry's metadata, updating the store and queuing a debounced
- * write to the database metadata file. Successive calls for entries in
- * the same database are merged into a single read-modify-write cycle.
+ * write to the entry's metadata sidecar.
  *
- * Use `flushDatabaseMetadata` to force an immediate write (e.g. in tests
- * or before shutdown).
+ * Use `flushEntryMetadata` or `flushAllEntryMetadata` to force an
+ * immediate write (e.g. in tests or before shutdown).
  *
  * @param entryId - The ID of the entry to update.
  * @param metadata - The new metadata for the entry.
@@ -45,27 +51,26 @@ export function updateEntryMetadata(
   // compose from current state
   DatabaseEntriesStore.update(entryId, { metadata });
 
-  // Metadata is keyed by the entry's database-relative path since the
-  // file only holds this database's entries
-  const key = entryMetadataKey(entry.path, database.path);
+  // Queue the write. A sidecar holds one entry's metadata and is
+  // written whole, so a later update simply replaces an earlier one
+  pendingUpdates.set(entry.path, {
+    databasePath: database.path,
+    metadata,
+  });
 
-  // Merge the update into the pending map for this database
-  const pending = pendingUpdates.get(database.path) ?? {};
-  pending[key] = metadata;
-  pendingUpdates.set(database.path, pending);
-
-  // Clear any existing timer for this database
-  const existingTimer = flushTimers.get(database.path);
+  // Clear any existing timer for this entry
+  const existingTimer = flushTimers.get(entry.path);
 
   if (existingTimer) {
     clearTimeout(existingTimer);
   }
 
-  // Schedule a debounced flush
+  // Schedule a debounced flush. View config writes are churny enough
+  // to still want it, even writing one file per entry
   flushTimers.set(
-    database.path,
+    entry.path,
     setTimeout(() => {
-      flushDatabaseMetadata(database.path);
+      flushEntryMetadata(entry.path);
     }, DEBOUNCE_MS),
   );
 
@@ -77,62 +82,58 @@ export function updateEntryMetadata(
 }
 
 /**
- * Re-keys a pending metadata entry from one metadata key to another.
- * Used during rename to ensure queued-but-unflushed metadata follows
- * the entry to its new key. Keys are database-relative (see
- * `entryMetadataKey`).
+ * Re-keys a pending metadata write from one entry path to another.
+ * Used during rename so that queued-but-unflushed metadata follows the
+ * entry to its new path.
  *
- * No-op if the database has no pending updates or the old key
- * does not exist in the pending map.
+ * No-op if the entry has no pending write.
  *
- * @param databasePath - The absolute path to the database directory.
- * @param oldKey - The metadata key to re-key from.
- * @param newKey - The metadata key to re-key to.
+ * @param oldPath - The entry path to re-key from.
+ * @param newPath - The entry path to re-key to.
  */
-export function rekeyPendingMetadata(
-  databasePath: string,
-  oldKey: string,
-  newKey: string,
-): void {
-  const pending = pendingUpdates.get(databasePath);
+export function rekeyPendingMetadata(oldPath: string, newPath: string): void {
+  const pending = pendingUpdates.get(oldPath);
 
-  if (!pending || !(oldKey in pending)) {
+  if (!pending) {
     return;
   }
 
-  // Move the value from the old key to the new key
-  pending[newKey] = pending[oldKey];
-  delete pending[oldKey];
+  // Move the pending write to the new path
+  pendingUpdates.delete(oldPath);
+  pendingUpdates.set(newPath, pending);
 }
 
 /**
- * Immediately flushes any pending metadata updates for a database.
- * Reads the current metadata file, merges all queued updates, and
- * writes the result to disk.
+ * Immediately writes an entry's pending metadata to its sidecar.
  *
- * @param databasePath - The absolute path to the database directory.
+ * @param entryPath - The absolute path of the entry file.
  */
-export async function flushDatabaseMetadata(
-  databasePath: string,
-): Promise<void> {
-  const pending = pendingUpdates.get(databasePath);
+export async function flushEntryMetadata(entryPath: string): Promise<void> {
+  const pending = pendingUpdates.get(entryPath);
 
   if (!pending) {
     return;
   }
 
   // Clear pending state and cancel any scheduled timer
-  pendingUpdates.delete(databasePath);
-  const timer = flushTimers.get(databasePath);
+  pendingUpdates.delete(entryPath);
+  const timer = flushTimers.get(entryPath);
 
   if (timer) {
     clearTimeout(timer);
-    flushTimers.delete(databasePath);
+    flushTimers.delete(entryPath);
   }
 
-  // Read the current metadata, merge pending updates, and write back
-  const current = await readDatabaseMetadata(databasePath);
-  const merged = { ...current, ...pending };
+  // The sidecar holds only this entry's metadata, so it is written
+  // whole with no read and merge
+  await writeEntryMetadata(pending.databasePath, entryPath, pending.metadata);
+}
 
-  await writeDatabaseMetadata(databasePath, merged);
+/**
+ * Immediately writes every entry's pending metadata to its sidecar.
+ */
+export async function flushAllEntryMetadata(): Promise<void> {
+  const entryPaths = [...pendingUpdates.keys()];
+
+  await Promise.all(entryPaths.map(flushEntryMetadata));
 }

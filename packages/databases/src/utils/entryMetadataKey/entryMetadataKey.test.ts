@@ -2,30 +2,23 @@ import { describe, expect, it } from 'vitest';
 import { entryMetadataKey } from './entryMetadataKey';
 
 describe('entryMetadataKey', () => {
-  it('strips the database path prefix from the entry path', () => {
-    // A standard entry path inside its database directory
-    expect(
-      entryMetadataKey(
-        '/workspace/Objects/Test Entry.md',
-        '/workspace/Objects',
-      ),
-    ).toBe('Test Entry.md');
+  it('returns the entry file name without its extension', () => {
+    expect(entryMetadataKey('/workspace/Objects/Test Entry.md')).toBe(
+      'Test Entry',
+    );
   });
 
-  it('preserves nested paths after the database prefix', () => {
-    // Entries stored in their own subdirectory keep the nested path
+  it('returns the same key for an entry stored in its own subdirectory', () => {
+    // Entry-based property storage nests the entry in a directory
+    // named after it, which identifies the same entry
     expect(
-      entryMetadataKey(
-        '/workspace/Objects/Test Entry/Test Entry.md',
-        '/workspace/Objects',
-      ),
-    ).toBe('Test Entry/Test Entry.md');
+      entryMetadataKey('/workspace/Objects/Test Entry/Test Entry.md'),
+    ).toBe('Test Entry');
   });
 
-  it('falls back to the full entry path when the prefix is absent', () => {
-    // A path that does not start with the database path is returned as-is
-    expect(
-      entryMetadataKey('/workspace/Other/Entry.md', '/workspace/Objects'),
-    ).toBe('/workspace/Other/Entry.md');
+  it('keeps dots within the entry name', () => {
+    expect(entryMetadataKey('/workspace/Objects/v1.2 Notes.md')).toBe(
+      'v1.2 Notes',
+    );
   });
 });

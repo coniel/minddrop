@@ -10,21 +10,23 @@ import {
   urlEntry1,
 } from '../test-utils';
 import { DatabaseEntryMetadata } from '../types';
-import { databaseMetadataFilePath, entryMetadataKey } from '../utils';
+import { resolveEntryMetadataFilePath } from '../utils';
 import {
-  flushDatabaseMetadata,
+  flushAllEntryMetadata,
+  flushEntryMetadata,
   rekeyPendingMetadata,
   updateEntryMetadata,
 } from './updateEntryMetadata';
 
-const metadataFilePath = databaseMetadataFilePath(objectDatabase.path);
-
-// The database-relative keys the entries' metadata is stored under
-const objectMetadataKey = entryMetadataKey(
-  objectEntry1.path,
+// The sidecar paths the entries' metadata is written to
+const objectSidecarPath = resolveEntryMetadataFilePath(
   objectDatabase.path,
+  objectEntry1.path,
 );
-const urlMetadataKey = entryMetadataKey(urlEntry1.path, urlDatabase.path);
+const urlSidecarPath = resolveEntryMetadataFilePath(
+  urlDatabase.path,
+  urlEntry1.path,
+);
 
 const entryMetadata: DatabaseEntryMetadata = {
   embeddedViewConfigs: {
@@ -49,44 +51,37 @@ describe('updateEntryMetadata', () => {
     );
   });
 
-  it('creates the metadata file if it does not exist', async () => {
+  it('creates the sidecar if it does not exist', async () => {
     updateEntryMetadata(objectEntry1.id, entryMetadata);
-    await flushDatabaseMetadata(objectDatabase.path);
+    await flushEntryMetadata(objectEntry1.path);
 
-    const written = JSON.parse(MockFs.readTextFile(metadataFilePath));
-
-    expect(written).toEqual({
-      [objectMetadataKey]: entryMetadata,
-    });
+    expect(JSON.parse(MockFs.readTextFile(objectSidecarPath))).toEqual(
+      entryMetadata,
+    );
   });
 
-  it('preserves other entries when updating', async () => {
-    const existingMetadata: Record<string, DatabaseEntryMetadata> = {
-      'Other Entry.md': {
-        embeddedViewConfigs: { 'list:Tags': { options: {}, data: {} } },
-      },
-    };
-
-    // Write an existing metadata file
+  it('writes the sidecar whole, replacing what it held', async () => {
+    // Write a sidecar holding superseded metadata
     MockFs.addFiles([
       {
-        path: metadataFilePath,
-        textContent: JSON.stringify(existingMetadata),
+        path: objectSidecarPath,
+        textContent: JSON.stringify({
+          embeddedViewConfigs: { 'list:Tags': { options: {}, data: {} } },
+        }),
       },
     ]);
 
     updateEntryMetadata(objectEntry1.id, entryMetadata);
-    await flushDatabaseMetadata(objectDatabase.path);
+    await flushEntryMetadata(objectEntry1.path);
 
-    const written = JSON.parse(MockFs.readTextFile(metadataFilePath));
-
-    expect(written).toEqual({
-      ...existingMetadata,
-      [objectMetadataKey]: entryMetadata,
-    });
+    // A sidecar holds one entry's metadata, so there is nothing to
+    // merge and the new value stands alone
+    expect(JSON.parse(MockFs.readTextFile(objectSidecarPath))).toEqual(
+      entryMetadata,
+    );
   });
 
-  it('merges successive updates for the same database into one write', async () => {
+  it('keeps each entry to its own sidecar', async () => {
     const metadata1: DatabaseEntryMetadata = {
       embeddedViewConfigs: { 'card:Tags': { options: {}, data: {} } },
     };
@@ -94,72 +89,66 @@ describe('updateEntryMetadata', () => {
       embeddedViewConfigs: { 'list:Status': { options: {}, data: {} } },
     };
 
-    // Queue two updates for different entries in the same database
+    // Queue updates for entries in different databases
     updateEntryMetadata(objectEntry1.id, metadata1);
     updateEntryMetadata(urlEntry1.id, metadata2);
 
-    // Flush the object database (objectEntry1's database)
-    await flushDatabaseMetadata(objectDatabase.path);
+    await flushAllEntryMetadata();
 
-    const written = JSON.parse(MockFs.readTextFile(metadataFilePath));
-
-    // Only objectEntry1's metadata is in the object database's file
-    expect(written[objectMetadataKey]).toEqual(metadata1);
-    expect(Object.keys(written)).toEqual([objectMetadataKey]);
-
-    // Flush the url database separately
-    await flushDatabaseMetadata(urlDatabase.path);
-
-    const urlMetadataFilePath = databaseMetadataFilePath(urlDatabase.path);
-    const urlWritten = JSON.parse(MockFs.readTextFile(urlMetadataFilePath));
-
-    expect(urlWritten[urlMetadataKey]).toEqual(metadata2);
+    expect(JSON.parse(MockFs.readTextFile(objectSidecarPath))).toEqual(
+      metadata1,
+    );
+    expect(JSON.parse(MockFs.readTextFile(urlSidecarPath))).toEqual(metadata2);
   });
 
-  it('is a no-op when flushing a database with no pending updates', async () => {
-    // Should not throw or create any files
-    await flushDatabaseMetadata(objectDatabase.path);
+  it('keeps only the last of successive updates to one entry', async () => {
+    const superseded: DatabaseEntryMetadata = {
+      embeddedViewConfigs: { 'card:Tags': { options: {}, data: {} } },
+    };
 
-    expect(MockFs.exists(metadataFilePath)).toBe(false);
+    updateEntryMetadata(objectEntry1.id, superseded);
+    updateEntryMetadata(objectEntry1.id, entryMetadata);
+
+    await flushEntryMetadata(objectEntry1.path);
+
+    expect(JSON.parse(MockFs.readTextFile(objectSidecarPath))).toEqual(
+      entryMetadata,
+    );
+  });
+
+  it('is a no-op when flushing an entry with no pending update', async () => {
+    // Should not throw or create any files
+    await flushEntryMetadata(objectEntry1.path);
+
+    expect(MockFs.exists(objectSidecarPath)).toBe(false);
   });
 
   describe('rekeyPendingMetadata', () => {
-    it('moves a pending entry from the old key to the new key', async () => {
-      const newKey = 'Renamed Entry.md';
+    it('moves a pending write to the new entry path', async () => {
+      const newPath = `${objectDatabase.path}/Renamed Entry.md`;
 
-      // Queue metadata under the original entry's key
+      // Queue metadata under the original entry path
       updateEntryMetadata(objectEntry1.id, entryMetadata);
 
-      // Re-key from old to new
-      rekeyPendingMetadata(objectDatabase.path, objectMetadataKey, newKey);
+      // Re-key from the old path to the new
+      rekeyPendingMetadata(objectEntry1.path, newPath);
 
-      // Flush and verify the metadata was written under the new key
-      await flushDatabaseMetadata(objectDatabase.path);
+      await flushEntryMetadata(newPath);
 
-      const written = JSON.parse(MockFs.readTextFile(metadataFilePath));
-
-      expect(written[newKey]).toEqual(entryMetadata);
-      expect(written[objectMetadataKey]).toBeUndefined();
+      // The metadata should land in the renamed entry's sidecar
+      expect(
+        JSON.parse(
+          MockFs.readTextFile(
+            resolveEntryMetadataFilePath(objectDatabase.path, newPath),
+          ),
+        ),
+      ).toEqual(entryMetadata);
+      expect(MockFs.exists(objectSidecarPath)).toBe(false);
     });
 
-    it('is a no-op when there are no pending updates for the database', () => {
+    it('is a no-op when the entry has no pending write', () => {
       // Should not throw
-      rekeyPendingMetadata(objectDatabase.path, objectMetadataKey, 'new-id');
-    });
-
-    it('is a no-op when the old key does not exist in pending updates', async () => {
-      // Queue metadata under the entry's key
-      updateEntryMetadata(objectEntry1.id, entryMetadata);
-
-      // Try to re-key a non-existent key
-      rekeyPendingMetadata(objectDatabase.path, 'non-existent', 'new-id');
-
-      // Flush and verify the original entry is unchanged
-      await flushDatabaseMetadata(objectDatabase.path);
-
-      const written = JSON.parse(MockFs.readTextFile(metadataFilePath));
-
-      expect(written[objectMetadataKey]).toEqual(entryMetadata);
+      rekeyPendingMetadata(objectEntry1.path, 'new-path');
     });
   });
 });

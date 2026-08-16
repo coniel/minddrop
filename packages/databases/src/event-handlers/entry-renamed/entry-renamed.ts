@@ -6,12 +6,13 @@ import {
 } from '@minddrop/item-references';
 import { DatabaseEntryRenamedEventData } from '../../events';
 import { getDatabase } from '../../getDatabase';
-import { flushDatabaseMetadata } from '../../updateEntryMetadata';
-import { rekeyPendingMetadata } from '../../updateEntryMetadata/updateEntryMetadata';
+import { moveEntryMetadataFile } from '../../moveEntryMetadataFile';
+import {
+  flushEntryMetadata,
+  rekeyPendingMetadata,
+} from '../../updateEntryMetadata';
 import {
   databaseEntryAddress,
-  entryMetadataKey,
-  rekeyDatabaseMetadata,
   virtualCollectionId,
   virtualCollectionName,
 } from '../../utils';
@@ -27,18 +28,14 @@ export async function onRenameEntry(data: DatabaseEntryRenamedEventData) {
   // Get the database to access its properties schema
   const database = getDatabase(updated.database);
 
-  // Step 1: Flush any pending metadata writes so nothing is lost
-  await flushDatabaseMetadata(database.path);
+  // Step 1: Flush any pending metadata write so nothing is lost
+  await flushEntryMetadata(original.path);
 
-  // Metadata is keyed by the database-relative entry path
-  const oldMetadataKey = entryMetadataKey(original.path, database.path);
-  const newMetadataKey = entryMetadataKey(updated.path, database.path);
+  // Step 2: Move the sidecar to follow the entry to its new path
+  await moveEntryMetadataFile(database.path, original.path, updated.path);
 
-  // Step 2: Re-key the on-disk metadata file from the old to the new path
-  await rekeyDatabaseMetadata(database.path, oldMetadataKey, newMetadataKey);
-
-  // Step 3: Re-key any in-flight pending metadata entries
-  rekeyPendingMetadata(database.path, oldMetadataKey, newMetadataKey);
+  // Step 3: Re-key any in-flight pending metadata write
+  rekeyPendingMetadata(original.path, updated.path);
 
   // Find all collection properties in the schema
   const collectionProperties = database.properties.filter(

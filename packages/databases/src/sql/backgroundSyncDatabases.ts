@@ -1,8 +1,9 @@
-import { Sql } from '@minddrop/sql';
+import { Fs } from '@minddrop/file-system';
 import { Paths } from '@minddrop/utils';
 import { loadCoreSerializers } from '../DatabaseEntrySerializers';
+import { listEntryMetadataKeys } from '../listEntryMetadataKeys';
 import { readDatabaseEntries } from '../readDatabaseEntries';
-import { readDatabaseMetadata } from '../readDatabaseMetadata';
+import { readEntryMetadata } from '../readEntryMetadata';
 import { readWorkspaceDatabases } from '../readWorkspaceDatabases';
 import type {
   BackgroundSyncChangeset,
@@ -15,13 +16,13 @@ import {
   entryMetadataKey,
   matchEntriesToSqlRecords,
   resolveCollectionProperties,
+  resolveDatabaseMetadataDirPath,
 } from '../utils';
 import { sqlDeleteDatabase } from './sqlDeleteDatabase';
 import { sqlDeleteEntries } from './sqlDeleteEntries';
 import { sqlGetAllDatabases } from './sqlGetAllDatabases';
 import { sqlGetAllEntriesFull } from './sqlGetAllEntriesFull';
 import { sqlGetEntrySyncRecords } from './sqlGetEntrySyncRecords';
-import { sqlUpdateEntryMetadata } from './sqlUpdateEntryMetadata';
 import { sqlUpsertDatabase } from './sqlUpsertDatabase';
 import { sqlUpsertEntries } from './sqlUpsertEntries';
 
@@ -122,22 +123,9 @@ export async function backgroundSyncDatabases(
   // Pass 1: read and match all entries so references can resolve
   // across databases
   for (const database of fileSystemDatabases) {
-    // Read entries and metadata from disk in parallel
-    const [rawEntries, metadataMap] = await Promise.all([
-      readDatabaseEntries(database),
-      readDatabaseMetadata(database.path),
-    ]);
-
-    // Merge metadata into entries before conversion
-    const entriesWithMetadata = rawEntries.map((entry) => {
-      const metadata = metadataMap[entryMetadataKey(entry.path, database.path)];
-
-      if (metadata) {
-        return { ...entry, metadata };
-      }
-
-      return entry;
-    });
+    // Read the entries from disk. Their metadata is read after the
+    // diff, for the changed entries only.
+    const rawEntries = await readDatabaseEntries(database);
 
     // The database's SQL record holds its path as of the last sync
     const sqlDatabase = sqlDatabases.find(
@@ -163,7 +151,7 @@ export async function backgroundSyncDatabases(
     // Match fresh entries to existing entries by path so they
     // take over the existing IDs (disk reads mint fresh ones)
     const { records: entries, deletedIds } = matchEntriesToSqlRecords(
-      entriesWithMetadata,
+      rawEntries,
       existingRecords,
     );
 
@@ -202,9 +190,6 @@ export async function backgroundSyncDatabases(
       convertEntryToSqlRecord(entry, database),
     );
 
-    // Get existing metadata from SQL
-    const existingMetadata = sqlGetEntryMetadataMap(database.id);
-
     // Index the existing content hashes by entry ID. Hashes rather
     // than timestamps, since an entry's 'last-modified' property is
     // only updated by the app, leaving external edits undetected in
@@ -220,27 +205,21 @@ export async function backgroundSyncDatabases(
       return existingHash === undefined || existingHash !== record.contentHash;
     });
 
-    // Find entries whose metadata changed but content did not
-    const metadataOnlyChanged = records.filter((record) => {
-      const existingHash = existingHashes.get(record.id);
-      const existingMeta = existingMetadata.get(record.id);
-
-      // Skip entries already covered by the full upsert
-      if (existingHash === undefined || existingHash !== record.contentHash) {
-        return false;
-      }
-
-      return existingMeta !== record.metadata;
-    });
+    // Read the sidecars of the changed entries only. Sidecars hold
+    // app-managed state written alongside the entry, so one changing
+    // on its own is not a case worth scanning every entry for.
+    const changedWithMetadata = await Promise.all(
+      changedRecords.map(async (record) => ({
+        ...record,
+        metadata: JSON.stringify(
+          await readEntryMetadata(database.path, record.path),
+        ),
+      })),
+    );
 
     // Upsert changed entries to SQL
-    if (changedRecords.length > 0) {
-      sqlUpsertEntries(database.id, changedRecords, { silent: true });
-    }
-
-    // Update metadata for metadata-only changes
-    for (const record of metadataOnlyChanged) {
-      sqlUpdateEntryMetadata(record.id, JSON.parse(record.metadata));
+    if (changedWithMetadata.length > 0) {
+      sqlUpsertEntries(database.id, changedWithMetadata, { silent: true });
     }
 
     // Delete removed entries from SQL
@@ -248,12 +227,15 @@ export async function backgroundSyncDatabases(
       sqlDeleteEntries(database.id, deletedIds, { silent: true });
     }
 
+    // Sweep sidecars belonging to entries deleted outside the app,
+    // which have no owner to delete them
+    await sweepOrphanedMetadata(
+      database,
+      entries.map((entry) => entry.path),
+    );
+
     // Track changed entry IDs
     for (const record of changedRecords) {
-      allUpsertedEntryIds.add(record.id);
-    }
-
-    for (const record of metadataOnlyChanged) {
       allUpsertedEntryIds.add(record.id);
     }
 
@@ -293,14 +275,26 @@ export async function backgroundSyncDatabases(
 }
 
 /**
- * Returns a map of entry ID to serialized metadata JSON for
- * all entries in the given database.
+ * Removes metadata sidecars which no longer have an entry at their
+ * path, as when an entry file is deleted outside the app.
  */
-function sqlGetEntryMetadataMap(databaseId: string): Map<string, string> {
-  const rows = Sql.all<{ id: string; metadata: string }>(
-    'SELECT id, metadata FROM entries WHERE database_id = ?',
-    databaseId,
-  );
+async function sweepOrphanedMetadata(
+  database: Database,
+  entryPaths: string[],
+): Promise<void> {
+  // Listed rather than read, since only the keys are needed
+  const metadataKeys = await listEntryMetadataKeys(database.path);
 
-  return new Map(rows.map((row) => [row.id, row.metadata]));
+  // Sidecars are keyed by the entry's database-relative path
+  const entryKeys = new Set(entryPaths.map((path) => entryMetadataKey(path)));
+
+  const orphanedKeys = metadataKeys.filter((key) => !entryKeys.has(key));
+
+  await Promise.all(
+    orphanedKeys.map((key) =>
+      Fs.removeFile(
+        `${resolveDatabaseMetadataDirPath(database.path)}/${key}.json`,
+      ),
+    ),
+  );
 }

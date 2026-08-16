@@ -21,8 +21,7 @@ import {
 import { DatabaseEntryMetadata } from '../../types';
 import { updateEntryMetadata } from '../../updateEntryMetadata';
 import {
-  databaseMetadataFilePath,
-  entryMetadataKey,
+  resolveEntryMetadataFilePath,
   virtualCollectionId,
   virtualCollectionName,
   virtualViewId,
@@ -43,6 +42,16 @@ const renamedEntry = {
   title: 'Renamed Entry',
   path: `${collectionDatabase.path}/Renamed Entry.md`,
 };
+
+// The entry's metadata sidecar before and after the rename
+const oldSidecarPath = resolveEntryMetadataFilePath(
+  collectionDatabase.path,
+  collectionEntry1.path,
+);
+const newSidecarPath = resolveEntryMetadataFilePath(
+  collectionDatabase.path,
+  renamedEntry.path,
+);
 
 describe('onRenameEntry', () => {
   beforeEach(() => {
@@ -99,20 +108,16 @@ describe('onRenameEntry', () => {
     );
   });
 
-  it('re-keys metadata file from the old to the new entry path', async () => {
-    const metadataFilePath = databaseMetadataFilePath(collectionDatabase.path);
+  it('moves the sidecar from the old to the new entry path', async () => {
     const entryMetadata: DatabaseEntryMetadata = {
       embeddedViewConfigs: { 'card:Related': { options: {}, data: {} } },
     };
 
-    // Write metadata keyed by the original entry's database-relative key
+    // Write a sidecar for the original entry
     MockFs.addFiles([
       {
-        path: metadataFilePath,
-        textContent: JSON.stringify({
-          [entryMetadataKey(collectionEntry1.path, collectionDatabase.path)]:
-            entryMetadata,
-        }),
+        path: oldSidecarPath,
+        textContent: JSON.stringify(entryMetadata),
       },
     ]);
 
@@ -124,19 +129,14 @@ describe('onRenameEntry', () => {
       updated: renamedEntry,
     });
 
-    // Metadata should be re-keyed to the new entry's relative key
-    const written = JSON.parse(MockFs.readTextFile(metadataFilePath));
-
-    expect(
-      written[entryMetadataKey(renamedEntry.path, collectionDatabase.path)],
-    ).toEqual(entryMetadata);
-    expect(
-      written[entryMetadataKey(collectionEntry1.path, collectionDatabase.path)],
-    ).toBeUndefined();
+    // The sidecar should have followed the entry
+    expect(JSON.parse(MockFs.readTextFile(newSidecarPath))).toEqual(
+      entryMetadata,
+    );
+    expect(MockFs.exists(oldSidecarPath)).toBe(false);
   });
 
   it('re-keys pending metadata from the old to the new entry path', async () => {
-    const metadataFilePath = databaseMetadataFilePath(collectionDatabase.path);
     const entryMetadata: DatabaseEntryMetadata = {
       embeddedViewConfigs: {
         'card:Related': { options: { foo: true }, data: {} },
@@ -155,15 +155,11 @@ describe('onRenameEntry', () => {
       updated: renamedEntry,
     });
 
-    // The flushed metadata should be written under the new relative key
-    const written = JSON.parse(MockFs.readTextFile(metadataFilePath));
-
-    expect(
-      written[entryMetadataKey(renamedEntry.path, collectionDatabase.path)],
-    ).toEqual(entryMetadata);
-    expect(
-      written[entryMetadataKey(collectionEntry1.path, collectionDatabase.path)],
-    ).toBeUndefined();
+    // The flushed metadata should land in the renamed entry's sidecar
+    expect(JSON.parse(MockFs.readTextFile(newSidecarPath))).toEqual(
+      entryMetadata,
+    );
+    expect(MockFs.exists(oldSidecarPath)).toBe(false);
   });
 
   it('upserts the SQL entry record under the same ID', async () => {

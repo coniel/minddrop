@@ -1,8 +1,8 @@
 import { Sql } from '@minddrop/sql';
 import { Paths } from '@minddrop/utils';
 import { loadCoreSerializers } from '../../DatabaseEntrySerializers';
+import { readAllEntryMetadata } from '../../readAllEntryMetadata';
 import { readDatabaseEntries } from '../../readDatabaseEntries';
-import { readDatabaseMetadata } from '../../readDatabaseMetadata';
 import { readWorkspaceDatabases } from '../../readWorkspaceDatabases';
 import type { Database, DatabaseEntry, SqlEntryRecord } from '../../types';
 import {
@@ -126,12 +126,12 @@ async function rebuildSqlFromFilesystem(databases: Database[]): Promise<void> {
     // Read entries and metadata from disk in parallel
     const [rawEntries, metadataMap] = await Promise.all([
       readDatabaseEntries(database),
-      readDatabaseMetadata(database.path),
+      readAllEntryMetadata(database.path),
     ]);
 
     // Merge metadata into entries before conversion
     const entriesWithMetadata = rawEntries.map((entry) => {
-      const metadata = metadataMap[entryMetadataKey(entry.path, database.path)];
+      const metadata = metadataMap[entryMetadataKey(entry.path)];
 
       if (metadata) {
         return { ...entry, metadata };

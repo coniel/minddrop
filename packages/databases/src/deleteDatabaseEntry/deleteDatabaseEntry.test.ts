@@ -19,6 +19,9 @@ import {
   setup,
   urlEntry1,
 } from '../test-utils';
+import { objectDatabase } from '../test-utils';
+import { resolveEntryMetadataFilePath } from '../utils';
+import { writeEntryMetadata } from '../writeEntryMetadata';
 import { deleteDatabaseEntry } from './deleteDatabaseEntry';
 
 describe('deleteDatabaseEntry', () => {
@@ -93,4 +96,21 @@ describe('deleteDatabaseEntry', () => {
 
       deleteDatabaseEntry(objectEntry1.id);
     }));
+
+  it("deletes the entry's metadata sidecar", async () => {
+    const sidecarPath = resolveEntryMetadataFilePath(
+      objectDatabase.path,
+      objectEntry1.path,
+    );
+
+    // Give the entry a sidecar
+    await writeEntryMetadata(objectDatabase.path, objectEntry1.path, {
+      embeddedViewConfigs: { 'card:Tasks': { options: {}, data: {} } },
+    });
+
+    await deleteDatabaseEntry(objectEntry1.id);
+
+    // The sidecar would otherwise be orphaned in the metadata directory
+    expect(MockFs.exists(sidecarPath)).toBe(false);
+  });
 });

@@ -7,7 +7,10 @@ import {
 } from '../events';
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntry } from '../getDatabaseEntry';
-import { getEntryPropertyFilePaths } from '../utils';
+import {
+  getEntryPropertyFilePaths,
+  resolveEntryMetadataFilePath,
+} from '../utils';
 
 /**
  * Deletes a database entry, moving its files to the system trash.
@@ -42,6 +45,17 @@ export async function deleteDatabaseEntry(id: string): Promise<void> {
         await Fs.trashFile(propertyFilePath);
       }
     }
+  }
+
+  // Remove the entry's metadata sidecar, which would otherwise be
+  // orphaned in the metadata directory
+  const metadataFilePath = resolveEntryMetadataFilePath(
+    database.path,
+    entry.path,
+  );
+
+  if (await Fs.exists(metadataFilePath)) {
+    await Fs.removeFile(metadataFilePath);
   }
 
   // Dispatch the delete event before removing the entry from the

@@ -1,6 +1,7 @@
 export * from './databaseConfigFilePath';
 export * from './isDatabaseConfigFilePath';
-export * from './databaseMetadataFilePath';
+export * from './resolveDatabaseMetadataDirPath';
+export * from './resolveEntryMetadataFilePath';
 export * from './entryTemplateDirPath';
 export * from './entryTemplateFilePath';
 export * from './pruneEmptyPropertyValues';
@@ -42,7 +43,6 @@ export * from './entryDisplayPropertyValues';
 export * from './convertEntryToSqlRecord';
 export * from './matchEntriesToSqlRecords';
 export * from './convertSqlRecordToEntry';
-export * from './rekeyDatabaseMetadata';
 export * from './setTimestampProperties';
 export * from './getNewestDatabaseEntries';
 export * from './getRecentDatabaseEntries';
