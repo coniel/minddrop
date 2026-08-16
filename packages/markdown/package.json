@@ -12,7 +12,6 @@
   },
   "devDependencies": {
     "@minddrop/test-utils": "workspace:*",
-    "@types/mdast": "^4.0.0",
     "eslint": "^9.39.3",
     "@minddrop/eslint-config": "workspace:*",
     "tsconfig": "workspace:*",
@@ -20,18 +19,6 @@
   },
   "dependencies": {
     "@minddrop/events": "workspace:*",
-    "@minddrop/properties": "workspace:*",
-    "mdast-util-gfm": "^3.0.0",
-    "mdast-util-math": "^3.0.0",
-    "mdast-util-to-markdown": "^2.1.0",
-    "mdast-util-to-string": "^4.0.0",
-    "remark-frontmatter": "^4.0.1",
-    "remark-gfm": "^3.0.1",
-    "remark-math": "^5.1.1",
-    "remark-parse": "^10.0.2",
-    "remark-stringify": "^10.0.3",
-    "unified": "^10.1.2",
-    "unist-util-is": "^6.0.0",
-    "unist-util-remove": "^4.0.0"
+    "@minddrop/properties": "workspace:*"
   }
 }

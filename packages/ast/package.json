@@ -18,9 +18,9 @@
   },
   "dependencies": {
     "@minddrop/utils": "workspace:*",
-    "remark-gfm": "^3.0.1",
-    "remark-math": "^5.1.1",
-    "remark-parse": "^10.0.2",
-    "unified": "^10.1.2"
+    "remark-gfm": "^4.0.1",
+    "remark-math": "^6.0.0",
+    "remark-parse": "^11.0.0",
+    "unified": "^11.0.5"
   }
 }
