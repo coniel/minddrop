@@ -1,4 +1,5 @@
 export * from './databaseConfigFilePath';
+export * from './isDatabaseConfigFilePath';
 export * from './databaseMetadataFilePath';
 export * from './entryTemplateDirPath';
 export * from './entryTemplateFilePath';

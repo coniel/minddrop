@@ -1,3 +1,4 @@
+export * from './parseSpaceBundlePath';
 export * from './resolveSpaceBundleDirPath';
 export * from './resolveSpaceFilePath';
 export * from './resolveSpaceMediaDirPath';

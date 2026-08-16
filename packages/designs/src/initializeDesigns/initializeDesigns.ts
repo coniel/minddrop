@@ -1,6 +1,11 @@
 import { Events } from '@minddrop/events';
-import { Fs } from '@minddrop/file-system';
+import {
+  FileSystemChangedEvent,
+  FileSystemChangedEventData,
+  Fs,
+} from '@minddrop/file-system';
 import { DesignsStore } from '../DesignsStore';
+import { onFileSystemChanged } from '../event-handlers';
 import { DesignsLoadedEvent, DesignsLoadedEventData } from '../events';
 import { readDesign } from '../readDesign';
 import { registerDesignRole } from '../registerDesignRole';
@@ -16,6 +21,15 @@ import { resolveDesignsDirPath } from '../utils';
 export async function initializeDesigns(): Promise<void> {
   // Register the built-in design roles
   BuiltInDesignRoles.forEach(registerDesignRole);
+
+  // Apply changes made to design bundles outside of the app.
+  // Registered before the load so that designs created while the
+  // directory does not yet exist are still picked up.
+  Events.on<FileSystemChangedEventData>(
+    FileSystemChangedEvent,
+    'designs',
+    ({ data }) => onFileSystemChanged(data),
+  );
 
   // Nothing to load if the designs directory does not exist yet
   if (!(await Fs.exists(resolveDesignsDirPath()))) {

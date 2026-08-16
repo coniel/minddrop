@@ -16,6 +16,10 @@ import {
 } from '@minddrop/designs-legacy';
 import { Events } from '@minddrop/events';
 import {
+  FileSystemChangedEvent,
+  FileSystemChangedEventData,
+} from '@minddrop/file-system';
+import {
   ItemAddressesChangedEvent,
   ItemAddressesChangedEventData,
 } from '@minddrop/item-references';
@@ -29,6 +33,7 @@ import {
   onDatabaseViewUpdated,
   onDeleteDatabase,
   onDeleteEntry,
+  onFileSystemChanged,
   onItemAddressesChanged,
   onRemoveProperty,
   onRenameDatabase,
@@ -205,6 +210,12 @@ export function initializeDatabaseEventHandlers() {
     ({ data }) => {
       onUpdateVirtualView(data);
     },
+  );
+
+  Events.on<FileSystemChangedEventData>(
+    FileSystemChangedEvent,
+    'databases',
+    ({ data }) => onFileSystemChanged(data),
   );
 
   Events.on<DataViewCreatedEventData>(

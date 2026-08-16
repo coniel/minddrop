@@ -1,6 +1,11 @@
 import { Events } from '@minddrop/events';
-import { Fs } from '@minddrop/file-system';
+import {
+  FileSystemChangedEvent,
+  FileSystemChangedEventData,
+  Fs,
+} from '@minddrop/file-system';
 import { QueriesStore } from '../QueriesStore';
+import { onFileSystemChanged } from '../event-handlers';
 import { QueriesLoadedEvent, QueriesLoadedEventData } from '../events';
 import { readQuery } from '../readQuery';
 import { resolveQueriesDirPath } from '../utils';
@@ -29,6 +34,13 @@ export async function initializeQueries(): Promise<void> {
 
   // Load the queries into the store
   QueriesStore.load(queries);
+
+  // Apply changes made to query files outside of the app
+  Events.on<FileSystemChangedEventData>(
+    FileSystemChangedEvent,
+    'queries',
+    ({ data }) => onFileSystemChanged(data),
+  );
 
   // Dispatch a queries loaded event
   Events.dispatch<QueriesLoadedEventData>(QueriesLoadedEvent, queries);

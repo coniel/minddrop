@@ -1,3 +1,4 @@
+export * from './parseDesignBundlePath';
 export * from './resolveDesignsDirPath';
 export * from './resolveDesignBundleDirPath';
 export * from './resolveDesignFilePath';

@@ -1,16 +1,18 @@
 import { Events } from '@minddrop/events';
-import { Fs } from '@minddrop/file-system';
+import {
+  FileSystemChangedEvent,
+  FileSystemChangedEventData,
+  Fs,
+} from '@minddrop/file-system';
 import {
   ItemAddressesChangedEvent,
   ItemAddressesChangedEventData,
 } from '@minddrop/item-references';
 import { Workspaces } from '@minddrop/workspaces';
 import { DataViewsStore } from '../DataViewsStore';
-import { onItemAddressesChanged } from '../event-handlers';
+import { onFileSystemChanged, onItemAddressesChanged } from '../event-handlers';
 import { DataViewsLoadedEvent, DataViewsLoadedEventData } from '../events';
-import { extractDataViewReferences } from '../extractDataViewReferences';
-import { readDataView } from '../readDataView';
-import { resolveDataViewConfig } from '../resolveDataViewConfig';
+import { loadDataView } from '../loadDataView';
 import { resolveViewsDirPath } from '../utils/resolveViewsDirPath';
 
 /**
@@ -41,28 +43,20 @@ export async function initializeDataViews(): Promise<void> {
     .map((entry) => entry.path);
 
   // Read the data views
-  const viewPromises = await Promise.all(viewPaths.map(readDataView));
+  const viewPromises = await Promise.all(viewPaths.map(loadDataView));
 
-  // Filter out null data views, resolve durable references into
-  // item IDs, and index each view's references
-  const views = viewPromises
-    .filter((view) => view !== null)
-    .map((view) => {
-      // Resolve the config's durable references
-      const config = resolveDataViewConfig(view.type, {
-        options: view.options,
-        data: view.data,
-      });
-
-      return {
-        ...view,
-        ...config,
-        references: extractDataViewReferences(view.type, config),
-      };
-    });
+  // Filter out null data views
+  const views = viewPromises.filter((view) => view !== null);
 
   // Load the data views into the store
   DataViewsStore.load(views);
+
+  // Apply changes made to data view files outside of the app
+  Events.on<FileSystemChangedEventData>(
+    FileSystemChangedEvent,
+    'data-views',
+    ({ data }) => onFileSystemChanged(data),
+  );
 
   // Rewrite view files when referenced item addresses change
   Events.on<ItemAddressesChangedEventData>(
