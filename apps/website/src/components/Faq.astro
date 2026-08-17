@@ -4,11 +4,17 @@
  * pricing and Pro pages.
  */
 
+/*
+ * PLACEHOLDER. Not a figure anybody has stood behind yet, so it must be set
+ * from beta usage before the price goes live.
+ */
+const readAllowance = '2,000';
+
 const questions = [
   {
     question: 'Is the free version limited in any way?',
     answer:
-      'No. It is the whole app, free and open source, with no time limit and nothing held back. Pro adds sync, publishing, and AI on top of it.',
+      'No. It is the whole app, free and open source, with no time limit and nothing held back. Pro adds publishing, sync, and AI on top of it.',
   },
   {
     question: 'Do I need an account?',
@@ -21,13 +27,42 @@ const questions = [
       'Your entries stay where they are, as plain files on your computer, and the app keeps working. Sync and any published pages carry on for 14 days after a subscription ends, then stop.',
   },
   {
+    question: 'What happens to the copy on your servers?',
+    answer:
+      'It is deleted within 30 days of a subscription ending. You can also delete it yourself at any point, from the app, without ending your subscription.',
+  },
+  {
+    question: 'What if I lose my encryption key?',
+    answer:
+      'Nothing we can do brings it back, since we never hold it. You are given a recovery key when you turn sync on, so keep it somewhere safe. Even without either, your entries are still plain files on your computer.',
+  },
+  {
     question: 'How many devices can I sync?',
     answer: 'As many as you use. There is no device limit on a subscription.',
   },
   {
     question: 'Are the AI features capped?',
+    answer: `Only reading, since taking in images, documents, and web pages is the costly part. Those count against ${readAllowance} reads a month, however they arrive, whether you dropped one in yourself, pasted a link, a watched folder picked it up, or an automation did. Everything else is unlimited: designs, databases, automations, questions, and the everyday filling in of properties.`,
+  },
+  {
+    question: 'What is a read?',
     answer:
-      'They come with fair-use limits, set high enough that ordinary use will not reach them. You can also connect your own API key and use it instead.',
+      'One image, or around a thousand words of text, which is roughly two pages of a document. It counts the same wherever the words come from, so there is nothing to weigh up between attaching a document and pasting it in.',
+  },
+  {
+    question: 'Does a long document use up my whole month?',
+    answer:
+      'No. Filing something reads only as much as it needs, usually the first page or two, so a long PDF costs a couple of reads rather than hundreds. Asking for a summary of the whole thing reads the whole thing, and costs accordingly.',
+  },
+  {
+    question: 'What if I need more than that?',
+    answer:
+      'Connect your own API key, or point MindDrop at a model running on your own machine, and the AI features run through it with no limit and no extra charge. Top-ups are there if you would rather we handled it.',
+  },
+  {
+    question: 'Is tax included in the price?',
+    answer:
+      'Yes. Prices are in USD, with VAT and sales tax already included, so the amount you see is the amount you pay.',
   },
   {
     question: 'Can I get a refund?',

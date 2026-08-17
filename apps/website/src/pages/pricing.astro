@@ -7,30 +7,30 @@ const freeIncluded = [
   'Unlimited databases and entries',
   'Every view and layout',
   'The design studio',
-  'Version history',
+  'Version history on this computer',
   'Plain files on your own computer',
-  'Sync with Dropbox, iCloud, Drive, and more',
+  'Works inside any folder you already sync',
 ];
 
 const proIncluded = [
-  'Sync across your devices',
+  'Publishing to the web, on your own domain',
+  'Sync across your devices, in seconds',
   'Zero-knowledge encryption',
   'Version history on every device',
   '50 GB of storage',
-  'Publishing to the web',
   'Every AI feature',
 ];
 ---
 
 <BaseLayout
   title="Pricing"
-  description="MindDrop is free and open source. Pro adds sync, publishing to the web, and AI, on one plan."
+  description="MindDrop is free and open source. Pro adds publishing to the web, sync, and AI, on one plan."
 >
   <section class="page hero">
     <h1 class="hero-title">Pricing</h1>
 
     <p class="hero-lede">
-      MindDrop is free and open source. Pro adds sync, publishing to the web,
+      MindDrop is free and open source. Pro adds publishing to the web, sync,
       and AI, on one plan.
     </p>
   </section>
@@ -70,18 +70,19 @@ const proIncluded = [
       <h2 class="plan-name">Pro</h2>
 
       <p class="plan-summary">
-        Everything in the free version, plus sync, publishing, and AI.
+        Everything in the free version, plus publishing, sync, and AI.
       </p>
 
       <div class="plan-prices">
         <div class="plan-price">
-          <p class="plan-amount">$10</p>
+          <p class="plan-amount">$20</p>
           <p class="plan-note">Per month</p>
         </div>
 
         <div class="plan-price">
-          <p class="plan-amount">$99</p>
+          <p class="plan-amount">$200</p>
           <p class="plan-note">Per year</p>
+          <p class="plan-saving">Two months free</p>
         </div>
       </div>
 
@@ -105,7 +106,8 @@ const proIncluded = [
 
   <p class="page plans-note">
     Cancel whenever you like. Everything you have made stays yours, including
-    whatever the AI created. <a href="/pro">See everything in Pro</a>.
+    whatever the AI created. Prices are in USD, with VAT and sales tax included.
+    <a href="/pro">See everything in Pro</a>.
   </p>
 
   <Faq />
@@ -196,6 +198,15 @@ const proIncluded = [
     margin-block-start: var(--space-3);
     font-size: 0.875rem;
     color: var(--ink-muted);
+  }
+
+  /* Smaller than the note it follows, carried by the colour rather than size */
+  .plan-saving {
+    margin-block-start: var(--space-2);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--accent);
+    white-space: nowrap;
   }
 
   /* The rule runs from the label to the end of the panel */

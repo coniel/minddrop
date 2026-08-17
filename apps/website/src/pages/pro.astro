@@ -36,11 +36,11 @@ const syncCards: FeatureCard[] = [
 ];
 
 const included = [
-  'Sync across your devices',
+  'Publishing to the web, on your own domain',
+  'Sync across your devices, in seconds',
   'Zero-knowledge encryption',
   'Version history on every device',
   '50 GB of storage',
-  'Publishing to the web',
   'Every AI feature',
 ];
 
@@ -52,16 +52,16 @@ const publishCards: FeatureCard[] = [
     icon: 'globe',
   },
   {
-    title: 'Always up to date',
-    description:
-      'Edit an entry and the page follows. Nothing to export, upload, or remember to do again.',
-    icon: 'refresh',
-  },
-  {
     title: 'Your design is carried over',
     description:
       'Pages are laid out using the designs you built, so what you publish looks the same as it does in the app.',
     icon: 'palette',
+  },
+  {
+    title: 'Always up to date',
+    description:
+      'Edit an entry and the page follows. Nothing to export, upload, or remember to do again.',
+    icon: 'refresh',
   },
   {
     title: 'Views stay interactive',
@@ -185,7 +185,7 @@ const aiCards: FeatureCard[] = [
       <a class="button button-primary hero-button" href="#get-pro">Get Pro</a>
     </div>
 
-    <p class="hero-price">$10 a month or $99 a year.</p>
+    <p class="hero-price">$20 a month or $200 a year.</p>
   </section>
 
   <PageSection
@@ -235,8 +235,9 @@ const aiCards: FeatureCard[] = [
         <h2 class="get-pro-title">Pricing</h2>
 
         <p class="get-pro-description">
-          One price for everything in Pro. Cancel whenever you like: everything
-          you have made stays yours, including whatever the AI created.
+          One price for everything in Pro, with VAT and sales tax included.
+          Cancel whenever you like: everything you have made stays yours,
+          including whatever the AI created.
         </p>
 
         <h3 class="get-pro-included-title">What's included</h3>
@@ -275,7 +276,7 @@ const aiCards: FeatureCard[] = [
 
         <div class="get-pro-price get-pro-price-monthly">
           <p class="get-pro-amount">
-            $10 <span class="get-pro-currency">USD</span>
+            $20 <span class="get-pro-currency">USD</span>
           </p>
 
           <p class="get-pro-note">Per month</p>
@@ -283,10 +284,12 @@ const aiCards: FeatureCard[] = [
 
         <div class="get-pro-price get-pro-price-yearly">
           <p class="get-pro-amount">
-            $99 <span class="get-pro-currency">USD</span>
+            $200 <span class="get-pro-currency">USD</span>
           </p>
 
-          <p class="get-pro-note">Per year, saving $21</p>
+          <p class="get-pro-note">Per year</p>
+
+          <p class="get-pro-saving">Two months free</p>
         </div>
 
         {/* Points at the app until there is a checkout to send people to */}
@@ -527,6 +530,15 @@ const aiCards: FeatureCard[] = [
     margin-block-start: var(--space-3);
     font-size: 0.875rem;
     color: var(--ink-muted);
+  }
+
+  /* Smaller than the note it follows, carried by the colour rather than size */
+  .get-pro-saving {
+    margin-block-start: var(--space-2);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--accent);
+    white-space: nowrap;
   }
 
   /* Taller than the buttons in the furniture, being the page's last word */
