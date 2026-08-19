@@ -1,4 +1,7 @@
 export { create as createStore } from 'zustand';
+export { createStore as createVanillaStore } from 'zustand/vanilla';
+export type { StoreApi } from 'zustand/vanilla';
+export { useStore } from 'zustand';
 export { useShallow } from 'zustand/react/shallow';
 export * from './events';
 export * from './createArrayStore';
