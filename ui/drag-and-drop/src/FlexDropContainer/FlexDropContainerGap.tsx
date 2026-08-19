@@ -46,6 +46,13 @@ interface FlexDropContainerGapProps {
   expandOnActive?: boolean;
 
   /**
+   * Whether the gap takes a share of the container's free space,
+   * standing in for the distribution its children would otherwise
+   * be given.
+   */
+  grow?: boolean;
+
+  /**
    * Callback fired when the gap zone is dropped.
    */
   onDrop?: (data: DropEventData) => void;
@@ -62,6 +69,7 @@ export const FlexDropContainerGap: React.FC<FlexDropContainerGapProps> = ({
   isActive = false,
   accepts,
   expandOnActive = false,
+  grow = false,
   onDrop,
 }) => {
   // Track direct drags over this gap zone
@@ -137,7 +145,7 @@ export const FlexDropContainerGap: React.FC<FlexDropContainerGapProps> = ({
   // Size the gap along the main axis only
   const gapStyle: React.CSSProperties = {
     alignSelf: 'stretch',
-    flexGrow: 0,
+    flexGrow: grow ? 1 : 0,
     ...(isRow ? { width: activeSize } : { height: activeSize }),
   };
 

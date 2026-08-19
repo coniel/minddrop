@@ -126,6 +126,13 @@ export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
     [activateGap, deactivateGap],
   );
 
+  // Gap zones are flex items, so justify-content would distribute
+  // them along with the children, leaving space at the container's
+  // edges where the children should sit flush. The gaps take that
+  // space themselves instead, which leaves the children exactly
+  // where the distribution puts them.
+  const spacingGaps = resolveSpacingGaps(justify);
+
   const elements: ReactElement[] = [];
 
   // Always add a leading gap so drops can target the start position
@@ -140,6 +147,7 @@ export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
         isActive={activeGapIndex === 0}
         accepts={accepts}
         expandOnActive={expandActiveGap}
+        grow={spacingGaps.leading}
         onDrop={(data) => handleDropInGap(data, 0)}
       />,
     );
@@ -163,6 +171,7 @@ export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
           isActive={activeGapIndex === gapIndex}
           accepts={accepts}
           expandOnActive={expandActiveGap}
+          grow={spacingGaps.between}
           onDrop={(data) => handleDropInGap(data, gapIndex)}
         />,
       );
@@ -182,6 +191,7 @@ export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
       isActive={activeGapIndex === trailingIndex}
       accepts={accepts}
       expandOnActive={expandActiveGap}
+      grow={spacingGaps.trailing}
       onDrop={(data) => handleDropInGap(data, trailingIndex)}
     />,
   );
@@ -330,3 +340,31 @@ export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
 };
 
 export default FlexDropContainer;
+
+/**
+ * The gaps which take a share of the container's free space, so
+ * that its children end up where its distribution puts them.
+ */
+function resolveSpacingGaps(justify: React.CSSProperties['justifyContent']): {
+  leading: boolean;
+  between: boolean;
+  trailing: boolean;
+} {
+  // Centred children are pushed in from both edges
+  if (justify === 'center') {
+    return { leading: true, between: false, trailing: true };
+  }
+
+  // Children at the end are pushed off the leading edge
+  if (justify === 'end' || justify === 'flex-end') {
+    return { leading: true, between: false, trailing: false };
+  }
+
+  // Spread children keep the edges and share what is left between
+  // themselves
+  if (justify === 'space-between') {
+    return { leading: false, between: true, trailing: false };
+  }
+
+  return { leading: false, between: false, trailing: false };
+}
