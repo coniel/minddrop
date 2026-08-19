@@ -6,6 +6,8 @@ export const OpenConfirmationDialogEvent = 'app:confirmation-dialog:open';
 export const OpenAppSidebarEvent = 'app:sidebar:open';
 export const CloseAppSidebarEvent = 'app:sidebar:close';
 export const SetNavToolbarWidthEvent = 'app:nav-toolbar:set-width';
+export const SetNavToolbarBackActionEvent = 'app:nav-toolbar:set-back-action';
+export const NavToolbarBackEvent = 'app:nav-toolbar:back';
 export const ToggleWindowFillEvent = 'app:window:toggle-fill';
 export const AppErrorEvent = 'app:error';
 export const OpenReferenceEvent = 'app:reference:open';
@@ -29,6 +31,15 @@ export type SetNavToolbarWidthEventData = {
    */
   width: number;
 };
+
+export type SetNavToolbarBackActionEventData = {
+  /**
+   * The label of the view-provided back action overriding the tab
+   * history navigation. While set, the nav toolbar's back button
+   * dispatches NavToolbarBackEvent instead of navigating.
+   */
+  label: TranslationKey;
+} | null;
 
 export type AppErrorEventData = {
   /**
