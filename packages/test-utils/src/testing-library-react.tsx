@@ -1,9 +1,4 @@
-import type {
-  Matcher,
-  MatcherOptions,
-  SelectorMatcherOptions,
-  waitForOptions,
-} from '@testing-library/dom';
+import type { Matcher } from '@testing-library/dom';
 import {
   RenderHookOptions,
   RenderOptions,
@@ -11,6 +6,7 @@ import {
   render,
   renderHook,
   screen,
+  within,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React, { FC, ReactElement } from 'react';
@@ -75,6 +71,40 @@ const translateKey = (key: string): string =>
 const translateMatcher = (text: Matcher): Matcher =>
   typeof text === 'string' ? translateKey(text) : text;
 
+// The query families whose first argument is a text matcher, and so
+// accept translation keys
+const TranslatableQueryPattern =
+  /^(get|query|find)(All)?By(Text|AltText|LabelText|PlaceholderText)$/;
+
+/**
+ * Wraps the text-matcher queries of a query object (the screen, a
+ * render result or a within scope) so string matchers naming a
+ * translation are translated. Other members, including the role
+ * and test id queries, pass through untouched.
+ */
+function translateQueries<TQueries extends object>(
+  queries: TQueries,
+  translate: (text: Matcher) => Matcher = translateMatcher,
+): TQueries {
+  return Object.fromEntries(
+    Object.entries(queries).map(([name, member]) => {
+      // Skip members which are not text-matcher queries
+      if (
+        !TranslatableQueryPattern.test(name) ||
+        typeof member !== 'function'
+      ) {
+        return [name, member];
+      }
+
+      // Translate the matcher argument before delegating
+      const wrapped = (text: Matcher, ...rest: unknown[]) =>
+        (member as (...args: unknown[]) => unknown)(translate(text), ...rest);
+
+      return [name, wrapped];
+    }),
+  ) as TQueries;
+}
+
 interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
   translationKeyPrefix?: string;
 }
@@ -94,19 +124,7 @@ const customRender = (
   ui: ReactElement,
   options?: CustomRenderOptions,
 ): CustomRenderResult => {
-  const {
-    getByText,
-    getByAltText,
-    getByLabelText,
-    getByPlaceholderText,
-    getAllByText,
-    getAllByAltText,
-    getAllByLabelText,
-    getAllByPlaceholderText,
-    findByText,
-    findAllByText,
-    ...other
-  } = render(ui, {
+  const view = render(ui, {
     wrapper: WithProviders,
     ...options,
   });
@@ -124,177 +142,33 @@ const customRender = (
   const translatePrefixedMatcher = (text: Matcher) =>
     typeof text === 'string' ? translate(text) : text;
 
-  const getByTranslatedText = (key: string) => getByText(translate(key));
-  const getByTranslatedAltText = (key: string) => getByAltText(translate(key));
-  const getByTranslatedLabelText = (key: string) =>
-    getByLabelText(translate(key));
-  const getByTranslatedPlaceholderText = (key: string) =>
-    getByPlaceholderText(translate(key));
-  const getAllByTranslatedText = (key: string) => getAllByText(translate(key));
-  const getAllByTranslatedAltText = (key: string) =>
-    getAllByAltText(translate(key));
-  const getAllByTranslatedLabelText = (key: string) =>
-    getAllByLabelText(translate(key));
-  const getAllByTranslatedPlaceholderText = (key: string) =>
-    getAllByPlaceholderText(translate(key));
-
   return {
-    getByText: (text: Matcher, options?: SelectorMatcherOptions) =>
-      getByText(translatePrefixedMatcher(text), options),
-    getByAltText: (text: Matcher, options?: MatcherOptions) =>
-      getByAltText(translatePrefixedMatcher(text), options),
-    getByLabelText: (text: Matcher, options?: SelectorMatcherOptions) =>
-      getByLabelText(translatePrefixedMatcher(text), options),
-    getByPlaceholderText: (text: Matcher, options?: MatcherOptions) =>
-      getByPlaceholderText(translatePrefixedMatcher(text), options),
-    getAllByText: (text: Matcher, options?: SelectorMatcherOptions) =>
-      getAllByText(translatePrefixedMatcher(text), options),
-    getAllByAltText: (text: Matcher, options?: MatcherOptions) =>
-      getAllByAltText(translatePrefixedMatcher(text), options),
-    getAllByLabelText: (text: Matcher, options?: SelectorMatcherOptions) =>
-      getAllByLabelText(translatePrefixedMatcher(text), options),
-    getAllByPlaceholderText: (text: Matcher, options?: MatcherOptions) =>
-      getAllByPlaceholderText(translatePrefixedMatcher(text), options),
-    findByText: (text: Matcher, options?: SelectorMatcherOptions) =>
-      findByText(translatePrefixedMatcher(text), options),
-    findAllByText: (text: Matcher, options?: SelectorMatcherOptions) =>
-      findAllByText(translatePrefixedMatcher(text), options),
-    getByTranslatedText,
-    getByTranslatedAltText,
-    getByTranslatedLabelText,
-    getByTranslatedPlaceholderText,
-    getAllByTranslatedText,
-    getAllByTranslatedAltText,
-    getAllByTranslatedLabelText,
-    getAllByTranslatedPlaceholderText,
-    ...other,
+    ...translateQueries(view, translatePrefixedMatcher),
+    getByTranslatedText: (key: string) => view.getByText(translate(key)),
+    getByTranslatedAltText: (key: string) => view.getByAltText(translate(key)),
+    getByTranslatedLabelText: (key: string) =>
+      view.getByLabelText(translate(key)),
+    getByTranslatedPlaceholderText: (key: string) =>
+      view.getByPlaceholderText(translate(key)),
+    getAllByTranslatedText: (key: string) => view.getAllByText(translate(key)),
+    getAllByTranslatedAltText: (key: string) =>
+      view.getAllByAltText(translate(key)),
+    getAllByTranslatedLabelText: (key: string) =>
+      view.getAllByLabelText(translate(key)),
+    getAllByTranslatedPlaceholderText: (key: string) =>
+      view.getAllByPlaceholderText(translate(key)),
   };
 };
 
-const customScreen = {
-  ...screen,
-  getByText: <T extends HTMLElement = HTMLElement>(
-    text: Matcher,
-    options?: SelectorMatcherOptions,
-  ) => screen.getByText<T>(translateMatcher(text), options),
-  getByAltText: <T extends HTMLElement = HTMLElement>(
-    text: Matcher,
-    options?: MatcherOptions,
-  ) => screen.getByAltText<T>(translateMatcher(text), options),
-  getByLabelText: <T extends HTMLElement = HTMLElement>(
-    text: Matcher,
-    options?: SelectorMatcherOptions,
-  ) => screen.getByLabelText<T>(translateMatcher(text), options),
-  getByPlaceholderText: <T extends HTMLElement = HTMLElement>(
-    text: Matcher,
-    options?: MatcherOptions,
-  ) => screen.getByPlaceholderText<T>(translateMatcher(text), options),
-  getAllByText: <T extends HTMLElement = HTMLElement>(
-    text: Matcher,
-    options?: SelectorMatcherOptions,
-  ) => screen.getAllByText<T>(translateMatcher(text), options),
-  getAllByAltText: <T extends HTMLElement = HTMLElement>(
-    text: Matcher,
-    options?: MatcherOptions,
-  ) => screen.getAllByAltText<T>(translateMatcher(text), options),
-  getAllByLabelText: <T extends HTMLElement = HTMLElement>(
-    text: Matcher,
-    options?: SelectorMatcherOptions,
-  ) => screen.getAllByLabelText<T>(translateMatcher(text), options),
-  getAllByPlaceholderText: <T extends HTMLElement = HTMLElement>(
-    text: Matcher,
-    options?: MatcherOptions,
-  ) => screen.getAllByPlaceholderText<T>(translateMatcher(text), options),
-  queryByText: <T extends HTMLElement = HTMLElement>(
-    text: Matcher,
-    options?: SelectorMatcherOptions,
-  ) => screen.queryByText<T>(translateMatcher(text), options),
-  queryByAltText: <T extends HTMLElement = HTMLElement>(
-    text: Matcher,
-    options?: MatcherOptions,
-  ) => screen.queryByAltText<T>(translateMatcher(text), options),
-  queryByLabelText: <T extends HTMLElement = HTMLElement>(
-    text: Matcher,
-    options?: SelectorMatcherOptions,
-  ) => screen.queryByLabelText<T>(translateMatcher(text), options),
-  queryByPlaceholderText: <T extends HTMLElement = HTMLElement>(
-    text: Matcher,
-    options?: MatcherOptions,
-  ) => screen.queryByPlaceholderText<T>(translateMatcher(text), options),
-  queryAllByText: <T extends HTMLElement = HTMLElement>(
-    text: Matcher,
-    options?: SelectorMatcherOptions,
-  ) => screen.queryAllByText<T>(translateMatcher(text), options),
-  queryAllByAltText: <T extends HTMLElement = HTMLElement>(
-    text: Matcher,
-    options?: MatcherOptions,
-  ) => screen.queryAllByAltText<T>(translateMatcher(text), options),
-  queryAllByLabelText: <T extends HTMLElement = HTMLElement>(
-    text: Matcher,
-    options?: SelectorMatcherOptions,
-  ) => screen.queryAllByLabelText<T>(translateMatcher(text), options),
-  queryAllByPlaceholderText: <T extends HTMLElement = HTMLElement>(
-    text: Matcher,
-    options?: MatcherOptions,
-  ) => screen.queryAllByPlaceholderText<T>(translateMatcher(text), options),
-  findByText: <T extends HTMLElement = HTMLElement>(
-    text: Matcher,
-    options?: SelectorMatcherOptions,
-    waitForOptions?: waitForOptions,
-  ) => screen.findByText<T>(translateMatcher(text), options, waitForOptions),
-  findByAltText: <T extends HTMLElement = HTMLElement>(
-    text: Matcher,
-    options?: MatcherOptions,
-    waitForOptions?: waitForOptions,
-  ) => screen.findByAltText<T>(translateMatcher(text), options, waitForOptions),
-  findByLabelText: <T extends HTMLElement = HTMLElement>(
-    text: Matcher,
-    options?: SelectorMatcherOptions,
-    waitForOptions?: waitForOptions,
-  ) =>
-    screen.findByLabelText<T>(translateMatcher(text), options, waitForOptions),
-  findByPlaceholderText: <T extends HTMLElement = HTMLElement>(
-    text: Matcher,
-    options?: MatcherOptions,
-    waitForOptions?: waitForOptions,
-  ) =>
-    screen.findByPlaceholderText<T>(
-      translateMatcher(text),
-      options,
-      waitForOptions,
-    ),
-  findAllByText: <T extends HTMLElement = HTMLElement>(
-    text: Matcher,
-    options?: SelectorMatcherOptions,
-    waitForOptions?: waitForOptions,
-  ) => screen.findAllByText<T>(translateMatcher(text), options, waitForOptions),
-  findAllByAltText: <T extends HTMLElement = HTMLElement>(
-    text: Matcher,
-    options?: MatcherOptions,
-    waitForOptions?: waitForOptions,
-  ) =>
-    screen.findAllByAltText<T>(translateMatcher(text), options, waitForOptions),
-  findAllByLabelText: <T extends HTMLElement = HTMLElement>(
-    text: Matcher,
-    options?: SelectorMatcherOptions,
-    waitForOptions?: waitForOptions,
-  ) =>
-    screen.findAllByLabelText<T>(
-      translateMatcher(text),
-      options,
-      waitForOptions,
-    ),
-  findAllByPlaceholderText: <T extends HTMLElement = HTMLElement>(
-    text: Matcher,
-    options?: MatcherOptions,
-    waitForOptions?: waitForOptions,
-  ) =>
-    screen.findAllByPlaceholderText<T>(
-      translateMatcher(text),
-      options,
-      waitForOptions,
-    ),
-};
+const customScreen = translateQueries(screen);
+
+/**
+ * Scopes queries to an element like Testing Library's `within`,
+ * wrapping the text-matcher queries so translation keys are
+ * translated the same way the custom screen translates them.
+ */
+const customWithin = (element: HTMLElement): ReturnType<typeof within> =>
+  translateQueries(within(element));
 
 const customRenderHook = <TProps, TResult>(
   hook: (props: TProps) => TResult,
@@ -308,4 +182,5 @@ export * from '@testing-library/react';
 export { customRender as render };
 export { customRenderHook as renderHook };
 export { customScreen as screen };
+export { customWithin as within };
 export { userEvent };
