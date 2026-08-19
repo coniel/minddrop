@@ -16,9 +16,8 @@ export interface RadioToggleGroupProps<Value extends string = string> {
   defaultValue?: Value;
 
   /*
-   * Callback fired when the selection changes.
-   * Never called with an empty value — clicking the active
-   * toggle has no effect.
+   * Callback fired when the selection changes. Never called with
+   * an empty value.
    */
   onValueChange?: (value: Value) => void;
 
@@ -61,19 +60,29 @@ export function RadioToggleGroup<Value extends string>({
   children,
 }: RadioToggleGroupProps<Value>) {
   // Base UI ToggleGroup uses Value[]. We unwrap to/from single
-  // value and prevent deselection by ignoring empty arrays.
+  // value; pressing the active toggle reports an empty selection,
+  // which a radio group ignores so a choice is always active.
   const handleValueChange = useCallback(
     (next: Value[]) => {
-      if (!next.length) return;
+      // Ignore the empty selection from re-pressing the active toggle
+      if (!next.length) {
+        return;
+      }
+
       onValueChange?.(next[0]);
     },
     [onValueChange],
   );
 
+  // A group given a value stays controlled while nothing is
+  // selected, so an empty selection cannot leave the toggles
+  // running on their own state
+  const selection = resolveSelection(value);
+
   return (
     <ToggleGroupPrimitive
       ref={ref}
-      value={value ? [value] : undefined}
+      value={selection}
       defaultValue={defaultValue ? [defaultValue] : undefined}
       onValueChange={handleValueChange}
       disabled={disabled}
@@ -85,3 +94,18 @@ export function RadioToggleGroup<Value extends string>({
 }
 
 RadioToggleGroup.displayName = 'RadioToggleGroup';
+
+/**
+ * Wraps the selected value in the array Base UI expects, leaving
+ * groups without a `value` prop uncontrolled.
+ */
+function resolveSelection<Value extends string>(
+  value: Value | undefined,
+): Value[] | undefined {
+  if (value === undefined) {
+    return undefined;
+  }
+
+  // An empty value selects nothing while staying controlled
+  return value ? [value] : [];
+}

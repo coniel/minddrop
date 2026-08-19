@@ -109,6 +109,51 @@ export const SelectStories = () => (
     </StorySection>
 
     <StorySection
+      title="Hint and description"
+      description="A hint is a short note at the end of the label's line (e.g. the measurement an option resolves to). A description is helper text beneath the label explaining what the option is for."
+    >
+      <StoryRow>
+        <StoryItem label="hints">
+          <Select variant="outline" stringPlaceholder="Spacing...">
+            <SelectItem stringLabel="Small" stringHint="8px" value="sm" />
+            <SelectItem stringLabel="Medium" stringHint="16px" value="md" />
+            <SelectItem stringLabel="Large" stringHint="24px" value="lg" />
+          </Select>
+        </StoryItem>
+        <StoryItem label="descriptions">
+          <Select variant="outline" stringPlaceholder="Visibility...">
+            <SelectItem
+              stringLabel="Private"
+              stringDescription="Only you can see this document"
+              value="private"
+            />
+            <SelectItem
+              stringLabel="Shared"
+              stringDescription="Visible to everyone in the workspace"
+              value="shared"
+            />
+          </Select>
+        </StoryItem>
+        <StoryItem label="both">
+          <Select variant="outline" stringPlaceholder="Backup frequency...">
+            <SelectItem
+              stringLabel="Hourly"
+              stringHint="24/day"
+              stringDescription="Best protection, uses the most storage"
+              value="hourly"
+            />
+            <SelectItem
+              stringLabel="Daily"
+              stringHint="1/day"
+              stringDescription="A good balance for most workspaces"
+              value="daily"
+            />
+          </Select>
+        </StoryItem>
+      </StoryRow>
+    </StorySection>
+
+    <StorySection
       title="Custom children"
       description="Pass SelectItem children directly when you need icons, groupings, or custom item layouts."
     >

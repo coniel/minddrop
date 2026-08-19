@@ -2,6 +2,7 @@ import { Toggle as TogglePrimitive } from '@base-ui/react/toggle';
 import React from 'react';
 import { UiIconName } from '@minddrop/ui-icons';
 import { Icon } from '../Icon';
+import { Tooltip, TooltipProps } from '../Tooltip';
 import { propsToClass } from '../utils';
 import './Toggle.css';
 
@@ -64,6 +65,11 @@ export interface ToggleProps {
   value?: string;
 
   /*
+   * Tooltip shown on hover, explaining what the toggle does.
+   */
+  tooltip?: Omit<TooltipProps, 'children'>;
+
+  /*
    * Prevents interaction.
    */
   disabled?: boolean;
@@ -87,6 +93,7 @@ export const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(
       defaultPressed,
       onPressedChange,
       value,
+      tooltip,
       disabled,
       className,
     },
@@ -99,7 +106,7 @@ export const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(
       children || <span className="toggle-label">{label}</span>
     );
 
-    return (
+    const toggle = (
       <TogglePrimitive
         ref={ref}
         aria-label={label}
@@ -119,6 +126,12 @@ export const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(
         {content}
       </TogglePrimitive>
     );
+
+    if (tooltip) {
+      return <Tooltip {...tooltip}>{toggle}</Tooltip>;
+    }
+
+    return toggle;
   },
 );
 

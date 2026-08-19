@@ -1,5 +1,5 @@
 import { Tooltip as TooltipPrimitive } from '@base-ui/react/tooltip';
-import React, { FC } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from '@minddrop/i18n';
 import { KeyboardShortcut } from '../KeyboardShortcut';
 import { Text } from '../Text';
@@ -78,6 +78,40 @@ export const Tooltip: FC<TooltipProps> = ({
   ...other
 }) => {
   const { t } = useTranslation();
+  // A native drag suspends pointer events, so an open tooltip never
+  // hears the pointer leave and hangs over the page until the drop.
+  // Tracking open state here allows it to be dismissed.
+  const [openState, setOpenState] = useState(defaultOpen ?? false);
+
+  const isOpen = open ?? openState;
+
+  const handleOpenChange: NonNullable<
+    TooltipPrimitive.Root.Props['onOpenChange']
+  > = useCallback(
+    (nextOpen, eventDetails) => {
+      setOpenState(nextOpen);
+      onOpenChange?.(nextOpen, eventDetails);
+    },
+    [onOpenChange],
+  );
+
+  // Only the open tooltip watches for a drag, so this is a single
+  // listener however many tooltips are mounted
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
+    function handleDragStart(): void {
+      setOpenState(false);
+    }
+
+    document.addEventListener('dragstart', handleDragStart, true);
+
+    return () => {
+      document.removeEventListener('dragstart', handleDragStart, true);
+    };
+  }, [isOpen]);
 
   // Translated props take precedence over string versions
   const resolvedTitle = title
@@ -92,11 +126,7 @@ export const Tooltip: FC<TooltipProps> = ({
     : stringDescription;
 
   return (
-    <TooltipPrimitive.Root
-      defaultOpen={defaultOpen}
-      open={open}
-      onOpenChange={onOpenChange}
-    >
+    <TooltipPrimitive.Root open={isOpen} onOpenChange={handleOpenChange}>
       <TooltipPrimitive.Trigger delay={delay} render={children} />
       <TooltipPrimitive.Portal>
         <TooltipPrimitive.Positioner

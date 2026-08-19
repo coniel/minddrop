@@ -30,6 +30,29 @@ export interface SelectOption<TValue extends string | number> {
   description?: TranslationKey;
 
   /*
+   * Plain string description rendered as-is without i18n
+   * translation. Takes priority over `description`.
+   */
+  stringDescription?: string;
+
+  /*
+   * An optional short note shown at the end of the label's line,
+   * e.g. the measurement an option resolves to. Can be an i18n key.
+   */
+  hint?: TranslationKey;
+
+  /*
+   * Plain string hint rendered as-is without i18n translation.
+   * Takes priority over `hint`.
+   */
+  stringHint?: string;
+
+  /*
+   * Prevents the option from being selected.
+   */
+  disabled?: boolean;
+
+  /*
    * The value of the option.
    */
   value: TValue;
@@ -173,16 +196,31 @@ export const Select = <TValue extends string | number = string>({
 
         {children
           ? children
-          : options.map(({ label, stringLabel, description, value }) => (
-              <SelectItem
-                key={String(value)}
-                label={label}
-                description={description}
-                value={value}
-              >
-                {stringLabel}
-              </SelectItem>
-            ))}
+          : options.map(
+              ({
+                label,
+                stringLabel,
+                description,
+                stringDescription,
+                hint,
+                stringHint,
+                value,
+                disabled: optionDisabled,
+              }) => (
+                <SelectItem
+                  key={String(value)}
+                  label={label}
+                  description={description}
+                  stringDescription={stringDescription}
+                  hint={hint}
+                  stringHint={stringHint}
+                  value={value}
+                  disabled={optionDisabled}
+                >
+                  {stringLabel}
+                </SelectItem>
+              ),
+            )}
       </SelectPopup>
     </SelectRoot>
   );

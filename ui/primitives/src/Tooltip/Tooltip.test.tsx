@@ -1,6 +1,7 @@
-import { afterEach, beforeAll, describe, it } from 'vitest';
+import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 import {
   cleanup,
+  fireEvent,
   render,
   screen,
   userEvent,
@@ -91,6 +92,28 @@ describe('<Tooltip />', () => {
     await user.hover(screen.getByRole('button'));
 
     await waitFor(() => screen.getAllByText('Tooltip title'));
+  });
+
+  it('dismisses on drag start', async () => {
+    const user = userEvent.setup();
+
+    render(
+      <TooltipProvider>
+        <Tooltip stringTitle="Tooltip title">
+          <button type="button">tooltip</button>
+        </Tooltip>
+      </TooltipProvider>,
+    );
+
+    await user.hover(screen.getByRole('button'));
+
+    await waitFor(() => screen.getAllByText('Tooltip title'));
+
+    // A drag suspends pointer events, so the tooltip never hears the
+    // pointer leave and would hang over the page until the drop
+    fireEvent.dragStart(document);
+
+    await waitFor(() => expect(screen.queryByText('Tooltip title')).toBeNull());
   });
 
   it('renders the keyboard shortcut', async () => {

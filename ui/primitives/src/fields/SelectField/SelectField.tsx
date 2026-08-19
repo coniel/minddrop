@@ -3,6 +3,7 @@ import React from 'react';
 import { TranslationKey } from '@minddrop/i18n';
 import { Select } from '../../Select';
 import type { SelectProps, SelectSize, SelectVariant } from '../../Select';
+import type { TextSize } from '../../Text';
 import { FieldDescription } from '../FieldDescription';
 import { FieldError } from '../FieldError';
 import { FieldLabel } from '../FieldLabel';
@@ -36,6 +37,12 @@ export interface SelectFieldProps<TValue extends string | number>
   label?: TranslationKey;
 
   /*
+   * Size of the label text.
+   * @default 'sm'
+   */
+  labelSize?: TextSize;
+
+  /*
    * Helper text displayed below the select.
    * Hidden when error is present.
    * Can be an i18n key.
@@ -65,6 +72,7 @@ export const SelectField = React.forwardRef<
       disabled,
       error,
       label,
+      labelSize,
       onValueChange,
       options,
       placeholder,
@@ -85,7 +93,7 @@ export const SelectField = React.forwardRef<
         invalid={!!error}
         {...other}
       >
-        {label && <FieldLabel label={label} />}
+        {label && <FieldLabel size={labelSize} label={label} />}
 
         <Select
           variant={variant}

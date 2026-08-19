@@ -61,6 +61,9 @@ export function ToggleGroup<Value extends string>({
   return (
     <ToggleGroupPrimitive
       ref={ref}
+      // Base UI groups are single select unless told otherwise,
+      // where this group presses any number of its toggles
+      multiple
       value={value}
       defaultValue={defaultValue}
       onValueChange={onValueChange}

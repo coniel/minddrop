@@ -393,12 +393,12 @@
 }
 
 /* ------------------------------------------------------------
-   COLOR SELECTION MENU ITEM
-   Menu item representing a user-selectable content color.
-   The color swatch is a small circle using content color scales.
+   COLOR SWATCH
+   Small circle representing a user-selectable content color,
+   used by the color selection menu item and color pickers.
    ------------------------------------------------------------ */
 
-.color-selection-menu-item .color-swatch {
+.color-swatch {
   width: 1.0625rem;
   height: 1.0625rem;
   border-radius: var(--radius-full);
@@ -407,56 +407,56 @@
 }
 
 /* default — no color, uses border only */
-.color-selection-menu-item .color-swatch-default {
+.color-swatch-default {
   border-color: var(--border-default);
 }
 
-.color-selection-menu-item .color-swatch-blue {
+.color-swatch-blue {
   background-color: var(--blue-600);
   border-color: var(--blue-700);
 }
 
-.color-selection-menu-item .color-swatch-cyan {
+.color-swatch-cyan {
   background-color: var(--cyan-600);
   border-color: var(--cyan-700);
 }
 
-.color-selection-menu-item .color-swatch-red {
+.color-swatch-red {
   background-color: var(--red-600);
   border-color: var(--red-700);
 }
 
-.color-selection-menu-item .color-swatch-pink {
+.color-swatch-pink {
   background-color: var(--pink-600);
   border-color: var(--pink-700);
 }
 
-.color-selection-menu-item .color-swatch-purple {
+.color-swatch-purple {
   background-color: var(--purple-600);
   border-color: var(--purple-700);
 }
 
-.color-selection-menu-item .color-swatch-green {
+.color-swatch-green {
   background-color: var(--green-600);
   border-color: var(--green-700);
 }
 
-.color-selection-menu-item .color-swatch-orange {
+.color-swatch-orange {
   background-color: var(--orange-600);
   border-color: var(--orange-700);
 }
 
-.color-selection-menu-item .color-swatch-yellow {
+.color-swatch-yellow {
   background-color: var(--yellow-600);
   border-color: var(--yellow-700);
 }
 
-.color-selection-menu-item .color-swatch-brown {
+.color-swatch-brown {
   background-color: var(--brown-600);
   border-color: var(--brown-700);
 }
 
-.color-selection-menu-item .color-swatch-gray {
+.color-swatch-gray {
   background-color: var(--gray-600);
   border-color: var(--gray-700);
 }

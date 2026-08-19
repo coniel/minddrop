@@ -22,9 +22,32 @@ export interface SelectItemProps {
   description?: TranslationKey;
 
   /*
+   * Plain string description rendered as-is without i18n
+   * translation. Takes priority over `description`.
+   */
+  stringDescription?: string;
+
+  /*
+   * An optional short note shown at the end of the label's line,
+   * e.g. the measurement an option resolves to. Can be an i18n key.
+   */
+  hint?: TranslationKey;
+
+  /*
+   * Plain string hint rendered as-is without i18n translation.
+   * Takes priority over `hint`.
+   */
+  stringHint?: string;
+
+  /*
    * The value of the item.
    */
   value: string | number;
+
+  /*
+   * Prevents the item from being selected.
+   */
+  disabled?: boolean;
 
   /*
    * Class name applied to the root element.
@@ -50,7 +73,11 @@ export const SelectItem = ({
   label,
   stringLabel,
   description,
+  stringDescription,
+  hint,
+  stringHint,
   value,
+  disabled,
   className,
   hideIndicator = false,
   children,
@@ -60,13 +87,48 @@ export const SelectItem = ({
   // Resolve the displayed content from children or label
   const resolvedChildren = children ?? stringLabel ?? (label ? t(label) : null);
 
+  // Resolve the helper texts from their string or i18n variants
+  const resolvedDescription =
+    stringDescription ?? (description ? t(description) : null);
+  const resolvedHint = stringHint ?? (hint ? t(hint) : null);
+
+  // Renders the item's text, joined by its hint and description
+  // when it carries them
+  function renderBody() {
+    const text = (
+      <SelectPrimitive.ItemText className="select-item-text">
+        {resolvedChildren}
+      </SelectPrimitive.ItemText>
+    );
+
+    // Plain items are just their text
+    if (!resolvedDescription && !resolvedHint) {
+      return text;
+    }
+
+    return (
+      <div className="select-item-body">
+        <div className="select-item-line">
+          {text}
+          {resolvedHint && (
+            <span className="select-item-hint">{resolvedHint}</span>
+          )}
+        </div>
+        {resolvedDescription && (
+          <span className="select-item-description">{resolvedDescription}</span>
+        )}
+      </div>
+    );
+  }
+
   return (
     <SelectPrimitive.Item
       value={value}
+      disabled={disabled}
       className={propsToClass('select-item', {
         className,
         'hide-indicator': hideIndicator || undefined,
-        'has-description': description ? true : undefined,
+        'has-description': resolvedDescription ? true : undefined,
       })}
     >
       {!hideIndicator && (
@@ -74,19 +136,7 @@ export const SelectItem = ({
           <Icon name="check" />
         </SelectPrimitive.ItemIndicator>
       )}
-      {/* Stack the label and description when a description is provided */}
-      {description ? (
-        <div className="select-item-body">
-          <SelectPrimitive.ItemText className="select-item-text">
-            {resolvedChildren}
-          </SelectPrimitive.ItemText>
-          <span className="select-item-description">{t(description)}</span>
-        </div>
-      ) : (
-        <SelectPrimitive.ItemText className="select-item-text">
-          {resolvedChildren}
-        </SelectPrimitive.ItemText>
-      )}
+      {renderBody()}
     </SelectPrimitive.Item>
   );
 };

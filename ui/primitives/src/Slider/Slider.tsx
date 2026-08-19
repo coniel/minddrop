@@ -104,6 +104,10 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
           : [defaultValue]
         : undefined;
 
+    // One thumb per value puts a pair of handles on range sliders
+    const thumbCount =
+      normalizedValue?.length ?? normalizedDefault?.length ?? 1;
+
     const handleValueChange = onValueChange
       ? (nextValue: number | number[]) => {
           if (Array.isArray(nextValue) && nextValue.length === 1) {
@@ -140,10 +144,15 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
         <SliderPrimitive.Control className="slider-control">
           <SliderPrimitive.Track className="slider-track">
             <SliderPrimitive.Indicator className="slider-indicator" />
-            <SliderPrimitive.Thumb
-              className="slider-thumb"
-              aria-label={ariaLabel}
-            />
+            {/** A thumb per value, so array values render as a
+             * range slider **/}
+            {Array.from({ length: thumbCount }, (_, index) => (
+              <SliderPrimitive.Thumb
+                key={index}
+                className="slider-thumb"
+                aria-label={ariaLabel}
+              />
+            ))}
           </SliderPrimitive.Track>
         </SliderPrimitive.Control>
       </SliderPrimitive.Root>

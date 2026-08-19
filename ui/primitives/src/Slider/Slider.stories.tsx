@@ -9,6 +9,7 @@ import { Slider } from './Slider';
 
 export const SliderStories = () => {
   const [value, setValue] = useState(40);
+  const [range, setRange] = useState([20, 80]);
 
   return (
     <Story title="Slider">
@@ -47,6 +48,35 @@ export const SliderStories = () => {
                 value={value}
                 onValueChange={(nextValue) => setValue(nextValue as number)}
               />
+            </div>
+          </StoryItem>
+        </StoryRow>
+      </StorySection>
+
+      {/* --------------------------------------------------------
+          RANGE
+      -------------------------------------------------------- */}
+      <StorySection
+        title="Range"
+        description="Pass an array value to get one thumb per entry. The indicator fills between the thumbs."
+      >
+        <StoryRow>
+          <StoryItem label="uncontrolled pair">
+            <div style={{ width: 200 }}>
+              <Slider defaultValue={[25, 75]} />
+            </div>
+          </StoryItem>
+          <StoryItem label={`controlled: ${range.join('–')}`}>
+            <div style={{ width: 200 }}>
+              <Slider
+                value={range}
+                onValueChange={(nextValue) => setRange(nextValue as number[])}
+              />
+            </div>
+          </StoryItem>
+          <StoryItem label="three thumbs">
+            <div style={{ width: 200 }}>
+              <Slider defaultValue={[10, 50, 90]} />
             </div>
           </StoryItem>
         </StoryRow>

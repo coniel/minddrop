@@ -351,6 +351,22 @@
   min-width: 0;
 }
 
+/* --- Label line, holding the label and its trailing hint --- */
+
+.select-item-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.select-item-hint {
+  flex-shrink: 0;
+  font-size: var(--font-size-xs);
+  color: var(--text-subtle);
+}
+
 .select-item-description {
   font-size: var(--font-size-xs);
   line-height: var(--line-height-snug);
