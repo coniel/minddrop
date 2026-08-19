@@ -1,0 +1,13 @@
+.designs-badges-element {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  align-items: center;
+}
+
+.designs-badge {
+  display: inline-flex;
+  align-items: center;
+  line-height: var(--line-height-none);
+  white-space: nowrap;
+}

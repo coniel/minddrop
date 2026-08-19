@@ -1,0 +1,826 @@
+{
+  "designsStudio": {
+    "open": "Open design studio",
+    "title": "Design studio",
+    "backToDesigns": "Back to designs",
+    "palette": {
+      "elements": {
+        "default": "Elements",
+        "card": "Card elements",
+        "list": "List elements",
+        "page": "Page elements",
+        "space": "Space elements"
+      }
+    },
+    "layouts": {
+      "new": "New",
+      "backToLayouts": "Back to layouts"
+    },
+    "tree": {
+      "dropHint": "Drop an element here or onto the canvas"
+    },
+    "webview": {
+      "placeholder": "Displays a web page from a URL property",
+      "embedBlocked": "This site does not allow embedding",
+      "iframeTitle": "Embedded web page"
+    },
+    "view": {
+      "placeholder": "Displays a view from a collection property"
+    },
+    "style": {
+      "default": {
+        "label": "Default",
+        "description": "The theme's standard value"
+      },
+      "defaultFont": {
+        "label": "Default",
+        "description": "The theme's default font"
+      },
+      "sections": {
+        "typography": "Typography",
+        "colour": "Colour",
+        "spacing": "Spacing",
+        "border": "Border",
+        "size": "Size",
+        "contentWidth": "Content width",
+        "background": "Background colour",
+        "layout": "Layout",
+        "icon": "Icon",
+        "iconContainer": "Icon box",
+        "image": "Image",
+        "frame": "Frame",
+        "title": "Title",
+        "variants": "Variants",
+        "content": "Content",
+        "backgroundImage": "Background image",
+        "backgroundBlur": "Background blur",
+        "padding": "Padding",
+        "margin": "Margin"
+      },
+      "fields": {
+        "fontFamily": "Font",
+        "fontSize": "Size",
+        "fontWeight": "Weight",
+        "lineHeight": "Line height",
+        "letterSpacing": "Letter spacing",
+        "colour": "Text colour",
+        "textAlign": "Alignment",
+        "textTransform": "Capitalisation",
+        "italic": "Italic",
+        "truncate": "Truncate after",
+        "background": "Background",
+        "radius": "Corners",
+        "borderStyle": "Line",
+        "borderColour": "Colour",
+        "borderWidth": "Thickness",
+        "padding": "Padding",
+        "margin": "Margin",
+        "gap": "Gap between children",
+        "direction": "Direction",
+        "align": "Align children",
+        "spread": "Spread children apart",
+        "wrap": "Wrap children",
+        "width": "Width",
+        "maxWidth": "Maximum width",
+        "height": "Height",
+        "fixedHeight": "Fixed height",
+        "fillRatio": "Fill ratio",
+        "minHeight": "Minimum height",
+        "maxHeight": "Maximum height",
+        "aspectRatio": "Aspect ratio",
+        "orientation": "Orientation",
+        "objectFit": "Image fit",
+        "backgroundImageFit": "Image fit",
+        "iconSize": "Icon size",
+        "iconColour": "Icon colour",
+        "top": "Top",
+        "right": "Right",
+        "bottom": "Bottom",
+        "left": "Left",
+        "emphasis": "Emphasis",
+        "backdropBrightness": "Backdrop brightness",
+        "backdropFade": "Fade out the blur",
+        "backdropFadeDirection": "Fade direction",
+        "backdropFadeRange": "Fade range",
+        "backdropTint": "Tint",
+        "backdropTintStrength": "Tint strength"
+      },
+      "truncate": {
+        "off": {
+          "label": "Off",
+          "description": "Show the text in full, however long it runs"
+        },
+        "lines_one": "{{count}} line",
+        "lines_other": "{{count}} lines",
+        "decrease": "Fewer lines",
+        "increase": "More lines"
+      },
+      "toggle": {
+        "on": "On",
+        "off": "Off"
+      },
+      "fontFamily": {
+        "sans": {
+          "label": "Sans",
+          "description": "The default. Clean and neutral for most content"
+        },
+        "serif": {
+          "label": "Serif",
+          "description": "Traditional and bookish, for long-form reading"
+        },
+        "mono": {
+          "label": "Mono",
+          "description": "Fixed width, for code and figures that should line up"
+        }
+      },
+      "fontSize": {
+        "2xs": {
+          "label": "2X small",
+          "description": "11px. The smallest legible size, for chip labels"
+        },
+        "xs": {
+          "label": "Extra small",
+          "description": "12px. Captions, badges and fine print"
+        },
+        "sm": {
+          "label": "Small",
+          "description": "13px. Secondary text beside the main content"
+        },
+        "base": {
+          "label": "Base",
+          "description": "14px. The default size for interface text"
+        },
+        "md": {
+          "label": "Medium",
+          "description": "16px. Use for content body text"
+        },
+        "lg": {
+          "label": "Large",
+          "description": "18px. Large body text or a small heading"
+        },
+        "xl": {
+          "label": "Extra large",
+          "description": "20px. A content subheading"
+        },
+        "2xl": {
+          "label": "2X large",
+          "description": "24px. A section heading"
+        },
+        "3xl": {
+          "label": "3X large",
+          "description": "28px. A large heading"
+        },
+        "4xl": {
+          "label": "4X large",
+          "description": "32px. A page title"
+        },
+        "5xl": {
+          "label": "5X large",
+          "description": "40px. Display text and cover titles"
+        }
+      },
+      "fontWeight": {
+        "regular": {
+          "label": "Regular",
+          "description": "Body text and anything long enough to read"
+        },
+        "medium": {
+          "label": "Medium",
+          "description": "Gentle emphasis, and labels above fields"
+        },
+        "semibold": {
+          "label": "Semibold",
+          "description": "Headings and buttons"
+        },
+        "bold": {
+          "label": "Bold",
+          "description": "Strong emphasis. Use sparingly so it keeps working"
+        }
+      },
+      "lineHeight": {
+        "none": {
+          "label": "None",
+          "description": "Single lines that sit centred in their box"
+        },
+        "tight": {
+          "label": "Tight",
+          "description": "Headings and titles, where lines should group"
+        },
+        "snug": {
+          "label": "Snug",
+          "description": "Interface text of a line or two"
+        },
+        "normal": {
+          "label": "Normal",
+          "description": "Short-form content, a paragraph at a time"
+        },
+        "relaxed": {
+          "label": "Relaxed",
+          "description": "Body text people read at length"
+        },
+        "loose": {
+          "label": "Loose",
+          "description": "Airy long-form reading"
+        }
+      },
+      "letterSpacing": {
+        "tight": {
+          "label": "Tight",
+          "description": "Pulls large display text together"
+        },
+        "normal": {
+          "label": "Normal",
+          "description": "The default for everything at reading size"
+        },
+        "wide": {
+          "label": "Wide",
+          "description": "Uppercase labels and eyebrow text"
+        },
+        "wider": {
+          "label": "Wider",
+          "description": "Overlines and keycaps, where letters need air"
+        }
+      },
+      "measure": {
+        "full": {
+          "label": "Full",
+          "description": "Span the available width"
+        },
+        "narrow": {
+          "label": "Narrow",
+          "description": "480px. Focused prose and forms"
+        },
+        "content": {
+          "label": "Regular",
+          "description": "720px. A comfortable reading line length"
+        },
+        "wide": {
+          "label": "Wide",
+          "description": "960px. Wide content and forms"
+        }
+      },
+      "width": {
+        "auto": {
+          "label": "Auto",
+          "description": "As wide as the content needs"
+        },
+        "full": {
+          "label": "Full",
+          "description": "Fills the width of its parent"
+        }
+      },
+      "height": {
+        "fill": {
+          "label": "Fill"
+        },
+        "mode": {
+          "auto": {
+            "label": "Auto",
+            "description": "Grows and shrinks with its content"
+          },
+          "fixed": {
+            "label": "Fixed",
+            "description": "Always the height you choose, clipping any content past it"
+          },
+          "fill": {
+            "label": "Fill",
+            "description": "Shares the space around it with the other elements set to fill"
+          },
+          "ratio": {
+            "label": "Ratio",
+            "description": "Takes its height from its width, at the shape you choose"
+          }
+        },
+        "noMinimum": {
+          "label": "None"
+        },
+        "noMaximum": {
+          "label": "None"
+        },
+        "decrease": "Shorter",
+        "increase": "Taller",
+        "auto": {
+          "label": "Auto"
+        }
+      },
+      "space": {
+        "none": "None",
+        "px": {
+          "label": "Hairline",
+          "hint": "1px"
+        },
+        "0-5": {
+          "label": "Inset",
+          "hint": "2px"
+        },
+        "0-75": {
+          "label": "Track",
+          "hint": "3px"
+        },
+        "1": {
+          "label": "XS",
+          "hint": "4px"
+        },
+        "1-5": {
+          "label": "S",
+          "hint": "6px"
+        },
+        "2": {
+          "label": "M",
+          "hint": "8px"
+        },
+        "3": {
+          "label": "L",
+          "hint": "12px"
+        },
+        "4": {
+          "label": "XL",
+          "hint": "16px"
+        },
+        "5": {
+          "label": "2XL",
+          "hint": "24px"
+        },
+        "6": {
+          "label": "3XL",
+          "hint": "32px"
+        },
+        "7": {
+          "label": "4XL",
+          "hint": "48px"
+        },
+        "8": {
+          "label": "5XL",
+          "hint": "64px"
+        },
+        "decrease": "Less space",
+        "increase": "More space",
+        "sync": "Sync sides"
+      },
+      "size": {
+        "xs": {
+          "label": "XS",
+          "hint": "80px"
+        },
+        "sm": {
+          "label": "S",
+          "hint": "128px"
+        },
+        "md": {
+          "label": "M",
+          "hint": "192px"
+        },
+        "lg": {
+          "label": "L",
+          "hint": "256px"
+        },
+        "xl": {
+          "label": "XL",
+          "hint": "320px"
+        },
+        "2xl": {
+          "label": "2XL",
+          "hint": "480px"
+        }
+      },
+      "radius": {
+        "xs": {
+          "label": "Extra small",
+          "description": "Just off square, for the smallest chips"
+        },
+        "sm": {
+          "label": "Small",
+          "description": "Badges, tags and inputs"
+        },
+        "md": {
+          "label": "Medium",
+          "description": "The default rounding"
+        },
+        "lg": {
+          "label": "Large",
+          "description": "Cards and panels"
+        },
+        "xl": {
+          "label": "Extra large",
+          "description": "Large containers"
+        },
+        "full": {
+          "label": "Full",
+          "description": "Pills and circles"
+        }
+      },
+      "borderWidth": {
+        "thin": {
+          "label": "Thin",
+          "description": "The default for borders and dividers"
+        },
+        "medium": {
+          "label": "Medium",
+          "description": "Emphasised outlines"
+        },
+        "thick": {
+          "label": "Thick",
+          "description": "Statement borders and accent bars"
+        },
+        "accent": {
+          "label": "Accent",
+          "description": "A thick decorative bar for a single side"
+        },
+        "none": {
+          "label": "None"
+        },
+        "sync": "Sync border width"
+      },
+      "borderStyle": {
+        "solid": {
+          "label": "Solid",
+          "description": "An unbroken line"
+        },
+        "dashed": {
+          "label": "Dashed",
+          "description": "Suggests something provisional or droppable"
+        },
+        "dotted": {
+          "label": "Dotted",
+          "description": "The lightest way to mark an edge"
+        }
+      },
+      "iconSize": {
+        "2xs": {
+          "label": "2X small",
+          "description": "12px. Sits inline with captions"
+        },
+        "xs": {
+          "label": "Extra small",
+          "description": "14px. Sits inline with small text"
+        },
+        "sm": {
+          "label": "Small",
+          "description": "16px. Compact controls and menu items"
+        },
+        "md": {
+          "label": "Medium",
+          "description": "18px. The default interface icon"
+        },
+        "lg": {
+          "label": "Large",
+          "description": "24px. Prominent icons"
+        },
+        "xl": {
+          "label": "Extra large",
+          "description": "40px. Feature icons and placeholders"
+        }
+      },
+      "textColour": {
+        "regular": {
+          "label": "Regular",
+          "description": "The default. Full contrast for primary content"
+        },
+        "muted": {
+          "label": "Muted",
+          "description": "Supporting text that should still read easily"
+        },
+        "subtle": {
+          "label": "Subtle",
+          "description": "For secondary text that should not compete"
+        },
+        "on-solid": {
+          "label": "On solid",
+          "description": "Text sitting on a solid coloured fill"
+        },
+        "primary": {
+          "label": "Primary",
+          "description": "The brand colour, for links and key actions"
+        },
+        "danger": {
+          "label": "Danger",
+          "description": "Errors and destructive actions"
+        },
+        "warning": {
+          "label": "Warning",
+          "description": "Something needing attention but not broken"
+        },
+        "info": {
+          "label": "Info",
+          "description": "Neutral notices and hints"
+        },
+        "success": {
+          "label": "Success",
+          "description": "Confirmation that something worked"
+        }
+      },
+      "surfaceColour": {
+        "app": {
+          "label": "App",
+          "description": "The page background itself"
+        },
+        "subtle": {
+          "label": "Subtle",
+          "description": "A quiet tint, just off the page background"
+        },
+        "raised": {
+          "label": "Raised",
+          "description": "Cards and panels sitting above the page"
+        },
+        "overlay": {
+          "label": "Overlay",
+          "description": "Content floating over the page"
+        },
+        "accent": {
+          "label": "Accent",
+          "description": "A tint that follows the surrounding colour scheme"
+        },
+        "solid-accent": {
+          "label": "Solid accent",
+          "description": "A solid scheme fill. Pair with On solid text"
+        },
+        "neutral-subtle": {
+          "label": "Neutral subtle",
+          "description": "A quiet grey wash a scheme cannot recolour"
+        },
+        "neutral": {
+          "label": "Neutral",
+          "description": "The grey card surface a scheme cannot recolour"
+        },
+        "solid-neutral": {
+          "label": "Solid neutral",
+          "description": "A solid grey fill for contrasting text"
+        },
+        "primary-subtle": {
+          "label": "Primary subtle",
+          "description": "The lightest brand tint"
+        },
+        "primary": {
+          "label": "Primary",
+          "description": "A brand tint for highlighted content"
+        },
+        "solid-primary": {
+          "label": "Solid primary",
+          "description": "A solid brand fill. Pair with On solid text"
+        },
+        "danger": {
+          "label": "Danger",
+          "description": "A tint for errors and destructive areas"
+        },
+        "solid-danger": {
+          "label": "Solid danger",
+          "description": "A solid danger fill. Pair with On solid text"
+        },
+        "warning": {
+          "label": "Warning",
+          "description": "A tint for things needing attention"
+        },
+        "solid-warning": {
+          "label": "Solid warning",
+          "description": "A solid warning fill. Pair with On solid text"
+        },
+        "info": {
+          "label": "Info",
+          "description": "A tint for neutral notices"
+        },
+        "solid-info": {
+          "label": "Solid info",
+          "description": "A solid info fill. Pair with On solid text"
+        },
+        "success": {
+          "label": "Success",
+          "description": "A tint for confirmations"
+        },
+        "solid-success": {
+          "label": "Solid success",
+          "description": "A solid success fill. Pair with On solid text"
+        }
+      },
+      "rootBackground": {
+        "neutral": {
+          "label": "Neutral",
+          "description": "A neutral surface that lifts the card off the view"
+        },
+        "accent": {
+          "label": "Accent",
+          "description": "Takes on the accent colour of the colour scheme"
+        },
+        "transparent": {
+          "label": "Transparent",
+          "description": "Blends into the background of the view"
+        }
+      },
+      "rootEmphasis": {
+        "subtle": {
+          "label": "Subtle",
+          "description": "A quiet wash of the surface colour"
+        },
+        "regular": {
+          "label": "Regular",
+          "description": "The standard surface strength"
+        },
+        "solid": {
+          "label": "Solid",
+          "description": "A solid fill with contrasting text"
+        }
+      },
+      "borderColour": {
+        "neutral": {
+          "label": "Neutral",
+          "description": "Stays grey whatever the colour scheme"
+        },
+        "accent": {
+          "label": "Accent",
+          "description": "Takes on the colour scheme's hue"
+        }
+      },
+      "textAlign": {
+        "left": "Left",
+        "center": "Centre",
+        "right": "Right",
+        "justify": "Justify"
+      },
+      "textTransform": {
+        "none": "As is",
+        "uppercase": "UPPERCASE",
+        "uppercaseShort": "AB",
+        "lowercase": "lowercase",
+        "lowercaseShort": "ab",
+        "capitalize": "Capitalise",
+        "capitalizeShort": "Ab"
+      },
+      "direction": {
+        "column": "Stacked",
+        "row": "Side by side"
+      },
+      "align": {
+        "start": "Start",
+        "center": "Centre",
+        "end": "End",
+        "stretch": "Stretch"
+      },
+      "alignment": {
+        "vertical": {
+          "start": "Top",
+          "center": "Middle",
+          "end": "Bottom",
+          "stretch": "Stretched"
+        },
+        "horizontal": {
+          "start": "left",
+          "center": "centre",
+          "end": "right",
+          "stretch": "stretched"
+        },
+        "cell": "{{vertical}} {{horizontal}}"
+      },
+      "aspectRatio": {
+        "9/16": {
+          "label": "9:16"
+        },
+        "2/3": {
+          "label": "2:3"
+        },
+        "3/4": {
+          "label": "3:4"
+        },
+        "4/5": {
+          "label": "4:5"
+        },
+        "1/1": {
+          "label": "1:1"
+        },
+        "5/4": {
+          "label": "5:4"
+        },
+        "4/3": {
+          "label": "4:3"
+        },
+        "3/2": {
+          "label": "3:2"
+        },
+        "16/9": {
+          "label": "16:9"
+        }
+      },
+      "objectFit": {
+        "cover": {
+          "label": "Cover",
+          "description": "Fills the box, cropping whatever overflows"
+        },
+        "contain": {
+          "label": "Contain",
+          "description": "Fits the whole image in, leaving gaps"
+        },
+        "fill": {
+          "label": "Fill",
+          "description": "Stretches to the box, distorting the image"
+        }
+      },
+      "fillRatio": {
+        "1": {
+          "label": "1 share"
+        },
+        "2": {
+          "label": "2 shares"
+        },
+        "3": {
+          "label": "3 shares"
+        },
+        "4": {
+          "label": "4 shares"
+        },
+        "decrease": "Smaller share",
+        "increase": "Larger share"
+      },
+      "orientation": {
+        "portrait": "Portrait",
+        "square": "Square",
+        "landscape": "Landscape"
+      },
+      "aspectRatioSteps": {
+        "decrease": "Squarer",
+        "increase": "More extreme"
+      },
+      "backdropBlur": {
+        "subtle": {
+          "label": "Subtle",
+          "description": "A light haze of what sits behind"
+        },
+        "regular": {
+          "label": "Regular",
+          "description": "The standard frost"
+        },
+        "strong": {
+          "label": "Strong",
+          "description": "A heavy frost hiding the detail behind"
+        }
+      },
+      "fadeDirection": {
+        "to-top": "Fade upwards",
+        "to-bottom": "Fade downwards",
+        "to-left": "Fade leftwards",
+        "to-right": "Fade rightwards"
+      },
+      "backdropBrightness": {
+        "decrease": "Decrease brightness",
+        "increase": "Increase brightness"
+      },
+      "backdropTint": {
+        "none": {
+          "label": "None",
+          "description": "Leaves the blur uncoloured"
+        },
+        "neutral": {
+          "label": "Neutral",
+          "description": "A wash of the neutral surface colour"
+        },
+        "accent": {
+          "label": "Accent",
+          "description": "A wash of the colour scheme's accent colour"
+        }
+      },
+      "backdropTintStrength": {
+        "subtle": {
+          "label": "Subtle",
+          "description": "A faint cast of the tint colour"
+        },
+        "regular": {
+          "label": "Regular",
+          "description": "The standard wash strength"
+        },
+        "strong": {
+          "label": "Strong",
+          "description": "A heavy wash hiding most of the image"
+        }
+      },
+      "borderEmphasis": {
+        "subtle": {
+          "label": "Subtle",
+          "description": "A quiet edge that barely separates"
+        },
+        "regular": {
+          "label": "Regular",
+          "description": "The standard outline"
+        },
+        "strong": {
+          "label": "Strong",
+          "description": "A deliberate, visible edge"
+        }
+      },
+      "panels": {
+        "left": "Left panel",
+        "right": "Right panel",
+        "width": "Width",
+        "defaultOpen": "Default open"
+      }
+    },
+    "variants": {
+      "description": "Set by the design role. Pick from the options it offers"
+    },
+    "locked": {
+      "description": "Controlled by the design role, so it stays consistent"
+    },
+    "editor": {
+      "empty": "Select an element on the canvas to style it"
+    },
+    "preview": {
+      "toggleTheme": "Toggle dark mode"
+    }
+  }
+}

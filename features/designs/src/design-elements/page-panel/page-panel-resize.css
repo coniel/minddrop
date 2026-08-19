@@ -1,0 +1,41 @@
+.designs-page-panel-region {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  align-self: stretch;
+}
+
+.designs-page-panel-resize-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 9px;
+  cursor: col-resize;
+  z-index: 1;
+}
+
+.designs-page-panel-resize-handle-left {
+  right: -4px;
+}
+
+.designs-page-panel-resize-handle-right {
+  left: -4px;
+}
+
+/* Highlight line, centred in the handle, shown on hover */
+.designs-page-panel-resize-handle::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  transform: translateX(-50%);
+  background-color: var(--border-primary);
+  opacity: 0;
+  transition: opacity 0.1s ease;
+}
+
+.designs-page-panel-resize-handle:hover::after {
+  opacity: 1;
+}

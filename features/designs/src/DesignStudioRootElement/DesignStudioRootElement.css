@@ -1,0 +1,22 @@
+.designs-studio-root-element {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Full-screen frames have a fixed height, so their root scrolls
+   the content it cannot fit instead of drawing past the frame.
+   A panelled root's regions scroll themselves instead. */
+.designs-layout-frame-page .designs-studio-root-element,
+.designs-layout-frame-space .designs-studio-root-element {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* Cards preview the rounding their rendering context will give
+   them. The wrapper owns the backgrounds and border, so the
+   rounding clips them all together. */
+.designs-layout-frame-card .designs-studio-root-wrapper {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}

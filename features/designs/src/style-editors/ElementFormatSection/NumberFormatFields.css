@@ -1,0 +1,14 @@
+/* Separator characters read better slightly larger and lifted,
+   since commas and periods sit on the baseline */
+.designs-number-format-separator {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  transform: translateY(-6px);
+}
+
+/* Paired fields share the row evenly, and shrink rather than
+   overflow when the panel is narrow */
+.designs-number-format-field {
+  flex-basis: 0;
+  min-width: 0;
+}

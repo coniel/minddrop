@@ -1,0 +1,12 @@
+.designs-element-style-editor {
+  /* The sections scroll in the space left under the fixed header */
+  > .scroll-area {
+    flex: 1;
+    min-height: 0;
+  }
+}
+
+.designs-element-style-editor-empty {
+  padding: var(--space-4);
+  text-align: center;
+}

@@ -1,0 +1,205 @@
+/* No padding: the tree sits flush between the panel header above
+   and the separator below */
+.designs-elements-tree {
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- Empty state drop zone --- */
+
+.designs-elements-tree-drop-zone {
+  margin: var(--space-0-5) var(--space-2) var(--space-0-5) var(--space-1);
+  padding: var(--space-1-5) var(--space-1);
+  border: var(--border-width-thin) dashed var(--border-default);
+  border-radius: var(--radius-sm);
+}
+
+.designs-elements-tree-drop-zone[data-dragging-over='true'] {
+  border-color: var(--border-primary);
+  background-color: var(--surface-primary-subtle);
+}
+
+.designs-elements-tree-drop-zone-text {
+  text-align: center;
+  text-wrap: balance;
+}
+
+/* --- Tree node row --- */
+
+.designs-elements-tree-node {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  height: var(--control-height-md);
+  padding: 0 var(--space-2);
+  user-select: none;
+}
+
+/* --- Drag and drop --- */
+
+.designs-elements-tree-node[data-dragging='true'] {
+  opacity: 0.5;
+}
+
+/* Insertion line above or below the row. Lifted above the sibling
+   rows so the half crossing into a neighbour is not painted over. */
+.designs-elements-tree-node[data-drop-position]::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: var(--border-width-medium);
+  background-color: var(--border-primary);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Centred on the row boundary, so the bottom line of one row and
+   the top line of the next render in the same spot */
+.designs-elements-tree-node[data-drop-position='before']::after,
+.designs-elements-tree-node[data-drop-position='start']::after {
+  top: calc(var(--border-width-medium) / -2);
+}
+
+.designs-elements-tree-node[data-drop-position='after']::after,
+.designs-elements-tree-node[data-drop-position='end']::after {
+  bottom: calc(var(--border-width-medium) / -2);
+}
+
+/* The bottom edge of an open parent inserts as its first child,
+   so its line starts where the children do rather than reaching
+   outside the container */
+.designs-elements-tree-node[data-drop-inside-first='true'][data-drop-position='after']::after,
+.designs-elements-tree-node[data-drop-inside-first='true'][data-drop-position='end']::after {
+  left: var(--designs-tree-child-indent);
+}
+
+/* Dropping into the row's element rather than beside it */
+.designs-elements-tree-node[data-drop-position='inside'] {
+  background-color: var(--surface-primary);
+}
+
+.designs-elements-tree-node[data-drop-position='inside']::after {
+  display: none;
+}
+
+/* Hover is tracked by useHoveredItem rather than :hover, which a
+   native drag leaves stuck on the rows it passed over */
+
+.designs-elements-tree-node[data-hovered='true'] {
+  background-color: var(--surface-accent);
+}
+
+.designs-elements-tree-node[data-selected='true'] {
+  background-color: var(--surface-primary);
+}
+
+.designs-elements-tree-node[data-selected='true'][data-hovered='true'] {
+  background-color: var(--surface-primary-hover);
+}
+
+/* --- Chevron expand/collapse trigger --- */
+
+.designs-elements-tree-node-chevron-trigger {
+  all: unset;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 0.75rem;
+  height: 0.75rem;
+  flex-shrink: 0;
+}
+
+.designs-elements-tree-node-chevron {
+  width: 0.625rem;
+  height: 0.625rem;
+  color: var(--text-subtle);
+  transition: transform var(--duration-fast) ease;
+}
+
+/* Collapsed chevron points right */
+.designs-elements-tree-node-chevron-trigger:not([data-panel-open])
+  .designs-elements-tree-node-chevron {
+  transform: rotate(-90deg);
+}
+
+/* Placeholder keeps leaf nodes aligned with containers */
+.designs-elements-tree-node-chevron-placeholder {
+  width: 0.75rem;
+  height: 0.75rem;
+  flex-shrink: 0;
+}
+
+/* --- Vertical indent guide --- */
+
+.designs-elements-tree-indent-guide {
+  border-left: var(--border-width-thin) solid var(--border-subtle);
+}
+
+/* --- Element icon and label --- */
+
+.designs-elements-tree-node-icon {
+  width: 0.875rem;
+  height: 0.875rem;
+  color: var(--text-subtle);
+  flex-shrink: 0;
+}
+
+.designs-elements-tree-node[data-selected='true']
+  .designs-elements-tree-node-icon {
+  color: var(--text-primary-muted);
+}
+
+.designs-elements-tree-node-label {
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-none);
+  color: var(--text-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.designs-elements-tree-node[data-selected='true']
+  .designs-elements-tree-node-label {
+  color: var(--text-primary);
+}
+
+/* --- Bound property chip --- */
+
+.designs-elements-tree-node-value {
+  display: flex;
+  align-items: center;
+  gap: var(--space-0-5);
+  min-width: 0;
+}
+
+.designs-elements-tree-node-bind-arrow {
+  width: 0.625rem;
+  height: 0.625rem;
+  color: var(--text-subtle);
+  flex-shrink: 0;
+}
+
+.designs-elements-tree-node-property {
+  font-size: var(--font-size-2xs);
+  line-height: var(--line-height-none);
+  color: var(--text-primary-muted);
+  background-color: var(--surface-primary-subtle);
+  border-radius: var(--radius-sm);
+  padding: var(--space-0-5) var(--space-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* --- Static content --- */
+
+.designs-elements-tree-node-static {
+  font-size: var(--font-size-2xs);
+  line-height: var(--line-height-none);
+  color: var(--text-subtle);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}

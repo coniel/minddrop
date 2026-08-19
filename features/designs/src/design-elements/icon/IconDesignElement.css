@@ -1,0 +1,12 @@
+.designs-icon-element {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Scale SVG content icons to fill the token-sized icon box */
+.designs-icon-element .content-icon:not(.emoji) {
+  width: 100%;
+  height: 100%;
+}

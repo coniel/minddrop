@@ -1,0 +1,41 @@
+.designs-style-section {
+  padding: 0 var(--space-3);
+  border-bottom: var(--border-width-thin) solid var(--border-subtle);
+}
+
+/* Trigger row, which doubles as the collapsed section's button */
+.designs-style-section-trigger {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: var(--space-4) 0;
+  border: none;
+  background: none;
+  color: var(--text-muted);
+}
+
+.designs-style-section[data-open='false'] .designs-style-section-trigger:hover {
+  color: var(--text-regular);
+}
+
+.designs-style-section[data-open='false']
+  .designs-style-section-trigger:hover
+  .designs-style-section-label {
+  color: var(--text-regular);
+}
+
+.designs-style-section[data-open='true'] {
+  padding-bottom: var(--space-5);
+}
+
+/* The trigger row is 24px tall (icon button) but the label is 14px,
+   adding 5px below the text baseline. Subtract that from space-3 so
+   the visual gap to the first field matches permanent sections. */
+.designs-style-section[data-open='true'] .designs-style-section-trigger {
+  padding-bottom: calc(var(--space-3) - 5px);
+}
+
+/* The label takes the remaining width so the button sits at the end */
+.designs-style-section-label {
+  flex: 1;
+}

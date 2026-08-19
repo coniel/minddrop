@@ -1,0 +1,73 @@
+.designs-alignment-grid {
+  display: grid;
+  gap: var(--space-px);
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+}
+
+/* The cross axis runs across a column container and down a row
+   one, and carries the extra stretch position */
+.designs-alignment-grid[data-direction='column'] {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.designs-alignment-grid[data-direction='row'] {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.designs-alignment-grid-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--control-height-md);
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background-color: var(--surface-subtle);
+  outline: none;
+
+  &:hover {
+    background-color: var(--surface-accent);
+  }
+
+  &:focus-visible {
+    box-shadow: inset 0 0 0 var(--focus-ring-width) var(--focus-ring-color);
+  }
+}
+
+.designs-alignment-grid-cell[data-active='true'] {
+  background-color: var(--surface-accent-active);
+}
+
+.designs-alignment-grid-dot {
+  width: var(--space-1-5);
+  height: var(--space-1-5);
+  border-radius: var(--radius-full);
+  background-color: var(--text-muted);
+}
+
+.designs-alignment-grid-cell[data-active='true'] .designs-alignment-grid-dot {
+  background-color: var(--text-regular);
+}
+
+/* Stretched children fill the container across its cross axis, so
+   their cells draw a bar spanning that direction */
+.designs-alignment-grid-bar {
+  border-radius: var(--radius-full);
+  background-color: var(--text-muted);
+}
+
+.designs-alignment-grid[data-direction='column'] .designs-alignment-grid-bar {
+  width: 70%;
+  height: var(--space-0-5);
+}
+
+.designs-alignment-grid[data-direction='row'] .designs-alignment-grid-bar {
+  width: var(--space-0-5);
+  height: 70%;
+}
+
+.designs-alignment-grid-cell[data-active='true'] .designs-alignment-grid-bar {
+  background-color: var(--text-regular);
+}

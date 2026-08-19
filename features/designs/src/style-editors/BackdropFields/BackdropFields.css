@@ -1,0 +1,6 @@
+/* Inset the slider so its thumb stays inside the panel at the
+   ends of the track */
+.designs-backdrop-fade-extent {
+  padding-left: var(--space-2);
+  padding-right: var(--space-2);
+}

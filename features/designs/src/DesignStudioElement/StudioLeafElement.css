@@ -1,0 +1,13 @@
+.designs-studio-leaf-element {
+  display: flex;
+  flex-direction: column;
+  align-items: inherit;
+  min-width: 0;
+}
+
+/* Kill native image dragging inside the wrapper so the wrapper's
+   HTML5 drag-and-drop handles the interaction instead */
+.designs-studio-leaf-element img {
+  -webkit-user-drag: none;
+  user-select: none;
+}

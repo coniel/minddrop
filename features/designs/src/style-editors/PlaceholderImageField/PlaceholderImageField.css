@@ -1,0 +1,6 @@
+.designs-placeholder-image-preview {
+  width: 100%;
+  max-height: 120px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+}

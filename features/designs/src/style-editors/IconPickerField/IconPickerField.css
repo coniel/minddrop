@@ -1,0 +1,12 @@
+.designs-icon-picker-field {
+  align-items: center;
+}
+
+/* Scale the preview well above the interface icon sizes so the
+   picked icon is legible while choosing it */
+.designs-icon-picker-field-preview {
+  --icon-size-md: 40px;
+  display: inline-flex;
+  font-size: 40px;
+  line-height: 1;
+}

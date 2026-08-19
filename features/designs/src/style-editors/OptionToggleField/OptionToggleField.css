@@ -1,0 +1,5 @@
+/* Icon options span the panel rather than huddling at its left,
+   since a glyph gives less to aim at than a word does */
+.designs-option-toggle-field-icons {
+  display: flex;
+}

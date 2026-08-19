@@ -1,0 +1,11 @@
+.designs-elements-palette {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  /* The panel owns the trailing space below the last group */
+  padding: var(--space-2);
+
+  .menu-group {
+    row-gap: var(--space-1);
+  }
+}

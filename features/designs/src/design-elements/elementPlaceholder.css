@@ -1,0 +1,13 @@
+/* Shared surface for empty element placeholders: a diagonal
+   neutral hatch no layout background fill can be mistaken for,
+   with pinned neutral content colour so a preview scheme cannot
+   recolour it. The alpha stripes layer over whatever background
+   the element itself paints rather than replacing it. */
+.designs-element-placeholder {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    color-mix(in srgb, var(--neutral-1200) 5%, transparent) 0 6px,
+    transparent 6px 12px
+  );
+  color: var(--neutral-1000);
+}

@@ -1,0 +1,30 @@
+.designs-properties-panel {
+  display: flex;
+  flex-direction: column;
+
+  /* No top padding: the first row's border sits flush against the
+     panel header's border */
+  padding: 0 0 var(--space-7);
+}
+
+.designs-properties-panel-empty {
+  margin: var(--space-4) var(--space-3);
+  text-align: center;
+}
+
+.designs-properties-panel-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  height: var(--control-height-md);
+  padding: 0 var(--space-3);
+}
+
+.designs-properties-panel-item-name {
+  font-size: var(--font-size-sm);
+  color: var(--text-default);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

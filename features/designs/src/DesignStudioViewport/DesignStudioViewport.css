@@ -1,0 +1,9 @@
+.designs-studio-viewport {
+  /* Views render on the app surface, so the canvas matches it and
+     designs are previewed on the colour they will actually sit on */
+  --ui-canvas-background: var(--surface-app);
+
+  /* Design elements with a transparent background paint
+     themselves in the canvas colour via this variable */
+  --design-studio-canvas-background: var(--ui-canvas-background);
+}

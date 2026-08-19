@@ -1,0 +1,5 @@
+/* Sits beside the canvas name field, matching its height */
+.designs-layout-name-field.text-input {
+  width: 200px;
+  height: 2.125rem;
+}

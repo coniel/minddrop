@@ -1,0 +1,8 @@
+.designs-selection-overlay {
+  position: absolute;
+  pointer-events: none;
+  outline: var(--border-width-medium) solid var(--border-selected);
+  outline-offset: 2px;
+  border-radius: var(--space-1);
+  z-index: 1;
+}

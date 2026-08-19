@@ -1,0 +1,71 @@
+.designs-dashboard {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .designs-dashboard-header {
+    padding: var(--space-2) var(--space-4);
+    border-bottom: var(--border-width-thin) solid var(--border-subtle);
+  }
+
+  .designs-dashboard-content {
+    padding: var(--space-4) var(--space-4) var(--space-7);
+  }
+
+  .designs-dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+    gap: var(--space-4);
+  }
+
+  .designs-dashboard-card {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    font: inherit;
+    color: inherit;
+    text-align: left;
+    border: var(--border-width-thin) solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    background-color: var(--surface-raised);
+    overflow: hidden;
+    transition: border-color var(--duration-fast) var(--ease-default);
+
+    &:hover {
+      border-color: var(--border-default);
+    }
+
+    .designs-dashboard-card-preview {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 180px;
+      background-color: var(--surface-subtle);
+      color: var(--text-muted);
+      overflow: hidden;
+      pointer-events: none;
+
+      .dark-theme & {
+        background-color: var(--surface-app);
+      }
+    }
+
+    .designs-dashboard-card-preview-canvas {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+    }
+
+    .designs-dashboard-card-preview-layout {
+      position: absolute;
+      overflow: hidden;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-md);
+    }
+
+    .designs-dashboard-card-details {
+      padding: var(--space-3);
+    }
+  }
+}

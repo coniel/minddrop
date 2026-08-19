@@ -1,0 +1,23 @@
+.designs-empty-drop-hint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  width: 100%;
+  height: 100%;
+  /* Matches EmptyElementMinSize, so the hint fills the minimum
+     size its empty container is held open at */
+  min-height: 80px;
+}
+
+/* Icon and text inherit the placeholder surface's pinned neutral
+   colour */
+.designs-empty-drop-hint-icon {
+  flex-shrink: 0;
+}
+
+.designs-empty-drop-hint-text {
+  font-size: var(--font-size-xs);
+  text-align: center;
+}

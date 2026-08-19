@@ -1,0 +1,4 @@
+.designs-panel-section {
+  padding: var(--space-4) var(--space-3) var(--space-5);
+  border-bottom: var(--border-width-thin) solid var(--border-subtle);
+}

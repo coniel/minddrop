@@ -1,0 +1,43 @@
+.designs-palette-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-2);
+  color: var(--text-default);
+  background-color: var(--surface-subtle);
+  border: var(--border-width-thin) solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  cursor: grab;
+  user-select: none;
+
+  /* Ensure children inherit grab cursor instead of the global * { cursor: default } */
+  * {
+    cursor: inherit;
+  }
+
+  transition:
+    box-shadow 120ms ease,
+    border-color 120ms ease,
+    background-color 120ms ease;
+
+  /* Hover is tracked by useHoveredItem rather than :hover, which a
+     native drag leaves stuck on the item it started from */
+  &[data-hovered='true'] {
+    background-color: var(--surface-raised);
+    border-color: var(--border-default);
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* Driven by usePressedState rather than :active, which a drag
+     leaves stuck on the item it started from */
+  &[data-pressed='true'] {
+    cursor: grabbing;
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-strong);
+  }
+}
+
+.designs-palette-item-icon {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}

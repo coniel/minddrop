@@ -1,0 +1,24 @@
+.designs-scale-field-stepper {
+  display: flex;
+  align-items: center;
+  gap: var(--space-0-5);
+  padding: var(--space-0-5);
+  border-radius: var(--radius-md);
+  background-color: var(--surface-subtle);
+}
+
+/* The step fills the room between the buttons, which keeps them at
+   the ends of the field however wide the panel is */
+.designs-scale-field-step {
+  flex: 1;
+  justify-content: center;
+  min-width: 0;
+}
+
+.designs-scale-field-value {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-1);
+  overflow: hidden;
+  white-space: nowrap;
+}
