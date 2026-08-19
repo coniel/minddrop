@@ -1,12 +1,38 @@
 import type { CSSProperties } from 'react';
 import {
+  AspectRatio,
   BorderBlockStyle,
+  BorderColor,
+  BorderEmphasis,
+  ContainerDirection,
   HeightStyle,
   MarginStyle,
+  MaxWidthStyle,
   PaddingStyle,
-  WidthStyle,
 } from '../styles';
-import { tokenCssVariable } from '../tokens';
+import {
+  BorderColorToken,
+  BorderWidthToken,
+  tokenCssVariable,
+} from '../tokens';
+
+// The border colour role behind each treatment and emphasis pair.
+// Neutral maps to the pinned roles, accent to the schemable ones.
+const BorderColorRoles: Record<
+  BorderColor,
+  Record<BorderEmphasis, BorderColorToken>
+> = {
+  neutral: {
+    subtle: 'neutral-subtle',
+    regular: 'neutral',
+    strong: 'neutral-strong',
+  },
+  accent: {
+    subtle: 'subtle',
+    regular: 'default',
+    strong: 'strong',
+  },
+};
 
 /**
  * Emits margin CSS for the set margin sides.
@@ -61,69 +87,115 @@ export function paddingCss(style: PaddingStyle): CSSProperties {
 }
 
 /**
- * Emits border and corner radius CSS. A border is only drawn when
- * `borderStyle` is set; width and color fall back to their default
- * tokens. `borderEdges` limits the border to specific sides.
+ * Emits border CSS. A border is only drawn when `borderStyle` is
+ * set: uniformly thin without per-side widths, or only on the
+ * sides a width is set for. The corner radius is emitted
+ * separately by `radiusCss`, since containers leave rounding to
+ * the rendering context.
  */
 export function borderCss(style: BorderBlockStyle): CSSProperties {
   const css: CSSProperties = {};
-
-  // Corner radius applies independently of the border itself
-  if (style.borderRadius) {
-    css.borderRadius = tokenCssVariable('radius', style.borderRadius);
-  }
 
   // No border style means no border
   if (!style.borderStyle) {
     return css;
   }
 
-  // Compose the border shorthand from tokens with defaults
-  const width = tokenCssVariable('borderWidth', style.borderWidth ?? 'thin');
-  const color = tokenCssVariable('borderColor', style.borderColor ?? 'default');
-  const border = `${width} ${style.borderStyle} ${color}`;
+  // Resolve the colour shared by every drawn side
+  const color = tokenCssVariable(
+    'borderColor',
+    resolveBorderColorToken(style.borderColor, style.borderEmphasis),
+  );
 
-  // Without an edge restriction the border draws on all sides
-  if (!style.borderEdges || style.borderEdges.length === 0) {
-    css.border = border;
+  // Composes a side's border value from its width token
+  const border = (width: BorderWidthToken) =>
+    `${tokenCssVariable('borderWidth', width)} ${style.borderStyle} ${color}`;
+
+  const {
+    borderTopWidth,
+    borderRightWidth,
+    borderBottomWidth,
+    borderLeftWidth,
+  } = style;
+
+  // Without per-side widths the border draws uniformly thin
+  if (
+    !borderTopWidth &&
+    !borderRightWidth &&
+    !borderBottomWidth &&
+    !borderLeftWidth
+  ) {
+    css.border = border('thin');
 
     return css;
   }
 
-  // Draw the border only on the restricted edges
-  style.borderEdges.forEach((edge) => {
-    switch (edge) {
-      case 'top':
-        css.borderTop = border;
-        break;
-      case 'right':
-        css.borderRight = border;
-        break;
-      case 'bottom':
-        css.borderBottom = border;
-        break;
-      case 'left':
-        css.borderLeft = border;
-        break;
-    }
-  });
+  // A width on every side at the same step collapses back into the
+  // uniform shorthand
+  if (
+    borderTopWidth &&
+    borderTopWidth === borderRightWidth &&
+    borderTopWidth === borderBottomWidth &&
+    borderTopWidth === borderLeftWidth
+  ) {
+    css.border = border(borderTopWidth);
+
+    return css;
+  }
+
+  // Draw each side its width is set for
+  if (borderTopWidth) {
+    css.borderTop = border(borderTopWidth);
+  }
+
+  if (borderRightWidth) {
+    css.borderRight = border(borderRightWidth);
+  }
+
+  if (borderBottomWidth) {
+    css.borderBottom = border(borderBottomWidth);
+  }
+
+  if (borderLeftWidth) {
+    css.borderLeft = border(borderLeftWidth);
+  }
 
   return css;
 }
 
 /**
- * Emits width CSS: `full` fills the parent, measures cap at
- * readable line lengths, `auto` leaves the browser default.
+ * Emits the corner radius CSS, which applies independently of the
+ * border itself.
  */
-export function widthCss(style: WidthStyle): CSSProperties {
+export function radiusCss(style: BorderBlockStyle): CSSProperties {
   const css: CSSProperties = {};
 
-  // Emit the width unless left automatic
-  if (style.width === 'full') {
-    css.width = '100%';
-  } else if (style.width && style.width !== 'auto') {
-    css.width = tokenCssVariable('measure', style.width);
+  // Emit the corner radius as a radius token reference
+  if (style.borderRadius) {
+    css.borderRadius = tokenCssVariable('radius', style.borderRadius);
   }
+
+  return css;
+}
+
+/**
+ * Resolves a border colour treatment and emphasis pair onto the
+ * border colour role carrying that look, defaulting to the regular
+ * neutral outline.
+ */
+export function resolveBorderColorToken(
+  color?: BorderColor,
+  emphasis?: BorderEmphasis,
+): BorderColorToken {
+  return BorderColorRoles[color ?? 'neutral'][emphasis ?? 'regular'];
+}
+
+/**
+ * Emits width CSS. Elements are fluid, so only a measure capping
+ * the width at a readable line length is emitted.
+ */
+export function maxWidthCss(style: MaxWidthStyle): CSSProperties {
+  const css: CSSProperties = {};
 
   // Emit the maximum width
   if (style.maxWidth) {
@@ -137,17 +209,44 @@ export function widthCss(style: WidthStyle): CSSProperties {
  * Emits height CSS: `fill` grows into the remaining space of the
  * parent, size steps fix the box height.
  */
-export function heightCss(style: HeightStyle): CSSProperties {
+export function heightCss(
+  style: HeightStyle,
+  parentDirection: ContainerDirection = 'column',
+): CSSProperties {
   const css: CSSProperties = {};
 
-  if (style.height === 'fill') {
-    // Grow into the remaining space; the zero minimum lets the
-    // element shrink below its content size inside a flex parent
-    css.flexGrow = 1;
-    css.minHeight = 0;
-  } else if (style.height) {
-    css.height = tokenCssVariable('size', style.height);
+  // A fixed height is the same however the parent stacks
+  if (style.height !== 'fill') {
+    if (style.height) {
+      css.height = tokenCssVariable('size', style.height);
+    }
+
+    return css;
   }
 
+  // Filling a parent which stacks its children in a row means
+  // standing as tall as the row: growth there would widen the
+  // element rather than heighten it
+  if (parentDirection === 'row') {
+    css.alignSelf = 'stretch';
+
+    return css;
+  }
+
+  // Share the height with the other filling elements. The zero
+  // basis makes the ratio govern the whole height rather than what
+  // is left over once each has taken its content, and the zero
+  // minimum lets the element shrink below its content.
+  css.flexGrow = style.fillRatio ?? 1;
+  css.flexBasis = 0;
+  css.minHeight = 0;
+
   return css;
+}
+
+/**
+ * Spaces a ratio out into the CSS value it emits.
+ */
+export function resolveAspectRatio(aspectRatio: AspectRatio): string {
+  return aspectRatio.replace('/', ' / ');
 }

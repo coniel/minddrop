@@ -10,7 +10,10 @@ export * from './createRoleElement';
 export * from './createElementCssStyle';
 export { BuiltInDesignRoles } from './roles';
 export {
+  isRoleElement,
   resolveElementStyle,
+  resolveRoleStyle,
+  getRoleVariantAxes,
   resolveAutoBinding,
   resolveDesignMediaDirPath,
   elementTitleBindingId,
@@ -23,6 +26,7 @@ export {
 } from './utils';
 export type { PanelRegions } from './utils';
 export type { CreateDesignOptions } from './createDesign';
+export { defaultRootStyle } from './createLayout';
 export type { CreateLayoutOptions } from './createLayout';
 export type { UpdateDesignData } from './updateDesign';
 export type { UpdateLayoutData } from './updateLayout';

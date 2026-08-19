@@ -1,10 +1,10 @@
 import { SurfaceColorToken } from '../tokens';
-import { AspectRatio } from './ImageStyle';
+import { AspectRatio } from './blocks';
 import {
   BorderBlockStyle,
   HeightStyle,
   MarginStyle,
-  WidthStyle,
+  MaxWidthStyle,
 } from './blocks';
 
 /**
@@ -14,7 +14,7 @@ import {
 export interface EmbedStyle
   extends MarginStyle,
     BorderBlockStyle,
-    WidthStyle,
+    MaxWidthStyle,
     HeightStyle {
   /**
    * The background surface role.

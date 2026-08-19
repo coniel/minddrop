@@ -2,7 +2,13 @@ import type { CSSProperties } from 'react';
 import { EditorStyle } from '../styles';
 import { tokenCssVariable } from '../tokens';
 import { createTypographyCss } from './createTypographyCss';
-import { borderCss, marginCss, paddingCss, widthCss } from './cssBlocks';
+import {
+  borderCss,
+  marginCss,
+  maxWidthCss,
+  paddingCss,
+  radiusCss,
+} from './cssBlocks';
 
 /**
  * Emits CSS for a rich content editor style. The editor's title bar
@@ -13,12 +19,21 @@ export function createEditorCss(style: EditorStyle): CSSProperties {
     ...paddingCss(style),
     ...marginCss(style),
     ...borderCss(style),
-    ...widthCss(style),
+    ...radiusCss(style),
+    ...maxWidthCss(style),
   };
 
   // Emit the editor content typography
   if (style.fontFamily) {
     css.fontFamily = tokenCssVariable('fontFamily', style.fontFamily);
+  }
+
+  if (style.fontSize) {
+    css.fontSize = tokenCssVariable('fontSize', style.fontSize);
+  }
+
+  if (style.lineHeight) {
+    css.lineHeight = tokenCssVariable('lineHeight', style.lineHeight);
   }
 
   if (style.color) {

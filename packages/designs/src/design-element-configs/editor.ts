@@ -16,13 +16,19 @@ export interface EditorElement extends DesignElementBase {
   titleProperty?: string;
 }
 
+/**
+ * The editor is only inserted through the content role, so the
+ * config omits `group` to exclude it from the palette.
+ */
 export const EditorElementConfig: DesignElementConfig<EditorElement> = {
   type: 'editor',
   icon: 'text-cursor',
   label: 'design-studio.elements.editor',
-  group: 'content',
   styleCategory: 'editor',
   compatiblePropertyTypes: ['formatted-text'],
+  supportsStaticContent: false,
+  // An empty editor is where writing starts, so it always renders
+  emptyBehavior: 'none',
   template: {
     type: 'editor',
     style: {},

@@ -1,6 +1,6 @@
 import { ContainerStyle } from '../styles';
 import { DesignElementBase, DesignElementConfig } from '../types';
-import type { DesignElement } from './index';
+import type { DesignElement } from './DesignElement.types';
 
 /**
  * The side of the page a panel is docked to.
@@ -19,6 +19,12 @@ export interface PagePanelElement extends DesignElementBase {
    * The side of the page this panel is docked to.
    */
   side: PagePanelSide;
+
+  /**
+   * Whether the panel starts open when the page is displayed.
+   * Omitted panels start open.
+   */
+  defaultOpen?: boolean;
 
   /**
    * The panel width in pixels. Runtime geometry resized by the
@@ -48,6 +54,10 @@ export const PagePanelElementConfig: DesignElementConfig<PagePanelElement> = {
   label: 'design-studio.elements.page-panel',
   styleCategory: 'container',
   compatiblePropertyTypes: ['image'],
+  supportsStaticContent: false,
+  // Panels hold children rather than a value of their own, so
+  // they are never hidden for being empty
+  emptyBehavior: 'none',
   context: { layoutTypes: ['page', 'space'] },
   template: {
     type: 'page-panel',

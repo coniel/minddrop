@@ -20,11 +20,13 @@ export interface ImageViewerElement extends DesignElementBase {
 export const ImageViewerElementConfig: DesignElementConfig<ImageViewerElement> =
   {
     type: 'image-viewer',
-    icon: 'scan',
+    icon: 'scan-eye',
     label: 'design-studio.elements.image-viewer',
     group: 'media',
     styleCategory: 'embed',
     compatiblePropertyTypes: ['image'],
+    supportsStaticContent: true,
+    emptyBehavior: 'hide',
     template: {
       type: 'image-viewer',
       style: { height: 'fill' },

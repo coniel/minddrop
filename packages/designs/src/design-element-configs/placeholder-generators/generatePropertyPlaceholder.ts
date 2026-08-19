@@ -30,7 +30,10 @@ export function generatePropertyPlaceholder(
     case 'select':
       return generateBadgePlaceholder(2);
     case 'url':
-      return 'www.example.com';
+      // Carries every part a URL element can toggle (protocol,
+      // subdomain, domain, TLD and path) so that switching any of
+      // them off visibly changes the placeholder
+      return 'https://www.example.com/about';
     case 'icon':
       return 'content-icon:cat:default';
     default:

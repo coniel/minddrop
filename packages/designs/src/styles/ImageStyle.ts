@@ -1,26 +1,16 @@
 import {
+  AspectRatio,
   BorderBlockStyle,
   HeightStyle,
   MarginStyle,
-  WidthStyle,
+  ObjectFit,
 } from './blocks';
 
 /**
- * Fixed aspect presets emitting constant CSS ratios. Enumerated
- * vocabulary like text alignment, not theme tokens.
+ * Styles for image elements. Images have no width of their own:
+ * they span their container, sized by their height or proportions.
  */
-export type AspectRatio = 'square' | 'landscape' | 'portrait' | 'wide';
-
-export type ObjectFit = 'cover' | 'contain' | 'fill';
-
-/**
- * Styles for image elements.
- */
-export interface ImageStyle
-  extends MarginStyle,
-    BorderBlockStyle,
-    WidthStyle,
-    HeightStyle {
+export interface ImageStyle extends MarginStyle, BorderBlockStyle, HeightStyle {
   /**
    * The aspect ratio the image is cropped to. Omitted, the image
    * keeps its natural proportions.

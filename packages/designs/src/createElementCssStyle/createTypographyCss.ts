@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react';
 import { TypographyStyle } from '../styles';
 import { tokenCssVariable } from '../tokens';
-import { marginCss, widthCss } from './cssBlocks';
+import { marginCss, maxWidthCss } from './cssBlocks';
 
 /**
  * Emits CSS for a typography style. Omitted values emit nothing and
@@ -10,7 +10,7 @@ import { marginCss, widthCss } from './cssBlocks';
 export function createTypographyCss(style: TypographyStyle): CSSProperties {
   const css: CSSProperties = {
     ...marginCss(style),
-    ...widthCss(style),
+    ...maxWidthCss(style),
   };
 
   // Emit each set typography token as its CSS variable reference
@@ -49,10 +49,6 @@ export function createTypographyCss(style: TypographyStyle): CSSProperties {
 
   if (style.italic) {
     css.fontStyle = 'italic';
-  }
-
-  if (style.underline) {
-    css.textDecoration = 'underline';
   }
 
   // Truncation renders a line-clamped block

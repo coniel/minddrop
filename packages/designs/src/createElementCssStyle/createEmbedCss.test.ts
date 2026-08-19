@@ -10,9 +10,8 @@ describe('createEmbedCss', () => {
     expect(
       createEmbedCss({
         background: 'subtle',
-        aspectRatio: 'wide',
+        aspectRatio: '16/9',
         height: 'xl',
-        width: 'full',
         borderStyle: 'solid',
         borderRadius: 'lg',
         marginTop: '2',
@@ -21,8 +20,7 @@ describe('createEmbedCss', () => {
       backgroundColor: 'var(--surface-subtle)',
       aspectRatio: '16 / 9',
       height: 'var(--size-xl)',
-      width: '100%',
-      border: 'var(--border-width-thin) solid var(--border-default)',
+      border: 'var(--border-width-thin) solid var(--border-neutral)',
       borderRadius: 'var(--radius-lg)',
       marginTop: 'var(--space-2)',
     });
@@ -31,6 +29,7 @@ describe('createEmbedCss', () => {
   it('emits a fill height as flex growth', () => {
     expect(createEmbedCss({ height: 'fill' })).toEqual({
       flexGrow: 1,
+      flexBasis: 0,
       minHeight: 0,
     });
   });

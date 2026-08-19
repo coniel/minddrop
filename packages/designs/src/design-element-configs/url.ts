@@ -44,9 +44,15 @@ export const UrlElementConfig: DesignElementConfig<UrlElement> = {
   type: 'url',
   icon: 'link',
   label: 'design-studio.elements.url',
-  group: 'content',
+  group: 'elements',
   styleCategory: 'typography',
   compatiblePropertyTypes: ['url'],
+  // A fixed link belongs in a text element, so URL elements are
+  // always bound to a property
+  supportsStaticContent: false,
+  // A stand-in URL would read as a real link, so an element with
+  // no URL is left out of the entry entirely
+  emptyBehavior: 'hide',
   template: {
     type: 'url',
     style: {},

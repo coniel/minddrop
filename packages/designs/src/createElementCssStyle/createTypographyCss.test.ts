@@ -18,11 +18,9 @@ describe('createTypographyCss', () => {
         textAlign: 'center',
         textTransform: 'uppercase',
         italic: true,
-        underline: true,
         truncate: 2,
         marginTop: '2',
         marginBottom: '4',
-        width: 'full',
         maxWidth: 'content',
       }),
     ).toEqual({
@@ -35,26 +33,20 @@ describe('createTypographyCss', () => {
       textAlign: 'center',
       textTransform: 'uppercase',
       fontStyle: 'italic',
-      textDecoration: 'underline',
       display: '-webkit-box',
       WebkitBoxOrient: 'vertical',
       WebkitLineClamp: 2,
       overflow: 'hidden',
       marginTop: 'var(--space-2)',
       marginBottom: 'var(--space-4)',
-      width: '100%',
       maxWidth: 'var(--measure-content)',
     });
   });
 
-  it('emits a measure token width', () => {
-    expect(createTypographyCss({ width: 'narrow' })).toEqual({
-      width: 'var(--measure-narrow)',
+  it('caps the width at a measure', () => {
+    expect(createTypographyCss({ maxWidth: 'narrow' })).toEqual({
+      maxWidth: 'var(--measure-narrow)',
     });
-  });
-
-  it('emits nothing for an automatic width', () => {
-    expect(createTypographyCss({ width: 'auto' })).toEqual({});
   });
 
   it('does not truncate at zero lines', () => {

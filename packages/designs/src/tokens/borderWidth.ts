@@ -1,7 +1,7 @@
 /**
  * The border widths, from default hairlines to statement borders
- * and accent bars.
+ * and decorative single-side accent bars.
  */
-export const BorderWidthTokens = ['thin', 'medium', 'thick'] as const;
+export const BorderWidthTokens = ['thin', 'medium', 'thick', 'accent'] as const;
 
 export type BorderWidthToken = (typeof BorderWidthTokens)[number];

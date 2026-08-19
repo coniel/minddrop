@@ -1,28 +1,72 @@
 import type { CSSProperties } from 'react';
-import { ContainerAlign, ContainerJustify, ContainerStyle } from '../styles';
-import { tokenCssVariable } from '../tokens';
-import { borderCss, marginCss, paddingCss, widthCss } from './cssBlocks';
+import {
+  BackdropBlur,
+  BackdropFadeDirection,
+  BackdropTint,
+  BackdropTintStrength,
+  ContainerAlign,
+  ContainerDirection,
+  ContainerJustify,
+  ContainerStyle,
+} from '../styles';
+import { SurfaceColorToken, tokenCssVariable } from '../tokens';
+import {
+  borderCss,
+  heightCss,
+  marginCss,
+  maxWidthCss,
+  paddingCss,
+  resolveAspectRatio,
+} from './cssBlocks';
 
 /**
- * The fixed values behind the backdrop presets. A preset rather
- * than free values so containers cannot opt out of the vocabulary.
+ * The blur radius behind each preset. Presets rather than free
+ * values so containers cannot opt out of the vocabulary.
  */
-const BackdropBlurAmount = '12px';
-const BackdropFadeMask = 'linear-gradient(to bottom, black 40%, transparent)';
+const BackdropBlurAmounts: Record<BackdropBlur, string> = {
+  subtle: '4px',
+  regular: '12px',
+  strong: '20px',
+};
+
+// The CSS gradient direction behind each fade direction option
+const FadeDirections: Record<BackdropFadeDirection, string> = {
+  'to-top': 'to top',
+  'to-bottom': 'to bottom',
+  'to-left': 'to left',
+  'to-right': 'to right',
+};
+
+// The surface role each tint washes the blur with. Neutral pins
+// to the neutral surface, so a scheme cannot recolour it
+const TintSurfaces: Record<BackdropTint, SurfaceColorToken> = {
+  neutral: 'neutral',
+  accent: 'accent',
+};
+
+// The tint opacity behind each strength, as a percentage
+const TintOpacities: Record<BackdropTintStrength, number> = {
+  subtle: 30,
+  regular: 50,
+  strong: 75,
+};
 
 /**
  * Emits CSS for a container style. The background image itself is
  * applied by the renderer, which resolves the media file path; only
  * its fit and backdrop treatment emit here.
  */
-export function createContainerCss(style: ContainerStyle): CSSProperties {
+export function createContainerCss(
+  style: ContainerStyle,
+  parentDirection?: ContainerDirection,
+): CSSProperties {
   const css: CSSProperties = {
     display: 'flex',
     flexDirection: style.direction ?? 'column',
     ...paddingCss(style),
     ...marginCss(style),
     ...borderCss(style),
-    ...widthCss(style),
+    ...maxWidthCss(style),
   };
 
   // Emit the child alignment options
@@ -47,22 +91,7 @@ export function createContainerCss(style: ContainerStyle): CSSProperties {
     css.backgroundColor = tokenCssVariable('surfaceColor', style.background);
   }
 
-  if (style.shadow) {
-    css.boxShadow = tokenCssVariable('shadow', style.shadow);
-  }
-
-  if (style.minHeight) {
-    css.minHeight = tokenCssVariable('size', style.minHeight);
-  }
-
-  // Emit the typography passthrough inherited by children
-  if (style.fontFamily) {
-    css.fontFamily = tokenCssVariable('fontFamily', style.fontFamily);
-  }
-
-  if (style.color) {
-    css.color = tokenCssVariable('textColor', style.color);
-  }
+  Object.assign(css, containerHeightCss(style, parentDirection));
 
   return css;
 }
@@ -70,23 +99,119 @@ export function createContainerCss(style: ContainerStyle): CSSProperties {
 /**
  * Emits the CSS a renderer applies to the backdrop overlay covering
  * a container's background image. Returns null when the container
- * has no backdrop treatment.
+ * has no backdrop effects.
  */
-export function createBackdropCss(style: ContainerStyle): CSSProperties | null {
-  // No treatment, no overlay
-  if (!style.backdrop) {
+export function createBackdropCss(
+  style: Pick<
+    ContainerStyle,
+    | 'backdropBlur'
+    | 'backdropTint'
+    | 'backdropTintStrength'
+    | 'backdropBrightness'
+    | 'backdropFade'
+    | 'backdropFadeDirection'
+    | 'backdropFadeStart'
+    | 'backdropFadeExtent'
+  >,
+): CSSProperties | null {
+  // Collect the active backdrop filters
+  const filters: string[] = [];
+
+  if (style.backdropBlur) {
+    filters.push(`blur(${BackdropBlurAmounts[style.backdropBlur]})`);
+  }
+
+  // An unset brightness leaves the backdrop as it is, so only a
+  // changed value emits a filter
+  if (
+    style.backdropBrightness !== undefined &&
+    style.backdropBrightness !== 100
+  ) {
+    filters.push(`brightness(${style.backdropBrightness}%)`);
+  }
+
+  // No effects, no overlay
+  if (filters.length === 0) {
     return null;
   }
 
+  const filter = filters.join(' ');
+
   const css: CSSProperties = {
-    backdropFilter: `blur(${BackdropBlurAmount})`,
-    WebkitBackdropFilter: `blur(${BackdropBlurAmount})`,
+    backdropFilter: filter,
+    WebkitBackdropFilter: filter,
   };
 
-  // The fade variant masks the frost out across the overlay
-  if (style.backdrop === 'blur-fade') {
-    css.maskImage = BackdropFadeMask;
-    css.WebkitMaskImage = BackdropFadeMask;
+  // The tint washes the overlay with a translucent surface colour,
+  // so it fades out with the rest of the effects
+  if (style.backdropTint) {
+    const surface = tokenCssVariable(
+      'surfaceColor',
+      TintSurfaces[style.backdropTint],
+    );
+    const opacity = TintOpacities[style.backdropTintStrength ?? 'regular'];
+
+    css.backgroundColor = `color-mix(in srgb, ${surface} ${opacity}%, transparent)`;
+  }
+
+  // The fade masks the effects out across the overlay: full
+  // strength up to the start, fully faded out by the extent
+  if (style.backdropFade) {
+    const direction = FadeDirections[style.backdropFadeDirection ?? 'to-top'];
+    const start = style.backdropFadeStart ?? 0;
+    const extent = style.backdropFadeExtent ?? 50;
+    const mask = `linear-gradient(${direction}, black ${start}%, transparent ${extent}%)`;
+
+    css.maskImage = mask;
+    css.WebkitMaskImage = mask;
+  }
+
+  return css;
+}
+
+/**
+ * Emits the height rules: a fixed height, or the floor and cap of
+ * a content sized one. A bounded container scrolls what does not
+ * fit, so content cannot draw past its surface.
+ */
+function containerHeightCss(
+  style: ContainerStyle,
+  parentDirection?: ContainerDirection,
+): CSSProperties {
+  const css: CSSProperties = { ...heightCss(style, parentDirection) };
+
+  // Proportions take the height from the width, leaving the other
+  // height rules nothing to apply to
+  if (style.aspectRatio) {
+    css.aspectRatio = resolveAspectRatio(style.aspectRatio);
+    css.overflowX = 'hidden';
+    css.overflowY = 'auto';
+
+    return css;
+  }
+
+  // A fixed height leaves no room for a floor or a cap
+  if (style.height && style.height !== 'fill') {
+    css.overflowX = 'hidden';
+    css.overflowY = 'auto';
+
+    return css;
+  }
+
+  // A floor is what stops a filling container being squashed below
+  // its content, so it applies while filling too
+  if (style.minHeight) {
+    css.minHeight = tokenCssVariable('size', style.minHeight);
+  }
+
+  if (style.maxHeight) {
+    css.maxHeight = tokenCssVariable('size', style.maxHeight);
+  }
+
+  // A container held to a height scrolls whatever does not fit
+  if (style.height === 'fill' || style.maxHeight) {
+    css.overflowX = 'hidden';
+    css.overflowY = 'auto';
   }
 
   return css;

@@ -1,12 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import {
-  CardBodyRole,
-  CardCoverRole,
-  CardSubtitleRole,
-  CardTitleRole,
-  ListTitleRole,
-  PageTitleRole,
-} from '../roles';
+import { ContentRole, SubtitleRole, TitleRole } from '../roles';
 import { cleanup, setup } from '../test-utils';
 import { getCompatibleDesignRoles } from './getCompatibleDesignRoles';
 
@@ -17,35 +10,31 @@ describe('getCompatibleDesignRoles', () => {
   it('filters by layout type', () => {
     const roles = getCompatibleDesignRoles({
       designType: 'database',
-      layoutType: 'card',
-    });
-
-    // Only card roles restrict to the card layout type
-    expect(roles).toEqual([
-      CardTitleRole,
-      CardSubtitleRole,
-      CardBodyRole,
-      CardCoverRole,
-    ]);
-  });
-
-  it('filters by design type', () => {
-    const roles = getCompatibleDesignRoles({
-      designType: 'space',
       layoutType: 'list',
     });
 
-    // List roles restrict to database designs, so a space design
-    // excludes them
-    expect(roles).not.toContain(ListTitleRole);
+    // The content roles restrict themselves away from list layouts
+    expect(roles).not.toContain(ContentRole);
+    expect(roles).toContain(TitleRole);
+    expect(roles).toContain(SubtitleRole);
+  });
+
+  it('offers unrestricted roles in every context', () => {
+    const roles = getCompatibleDesignRoles({
+      designType: 'space',
+      layoutType: 'space',
+    });
+
+    // The title role restricts no context axis
+    expect(roles).toContain(TitleRole);
   });
 
   it('does not exclude on unset filter axes', () => {
     // A filter with only a layout type must not exclude roles
-    // restricted by design type
+    // restricted on other axes
     const roles = getCompatibleDesignRoles({ layoutType: 'page' });
 
-    expect(roles).toContain(PageTitleRole);
+    expect(roles).toContain(ContentRole);
   });
 
   it('excludes roles restricted to a parent role when none is given', () => {
@@ -56,6 +45,6 @@ describe('getCompatibleDesignRoles', () => {
       layoutType: 'page',
     });
 
-    expect(roles).toContain(PageTitleRole);
+    expect(roles).toContain(TitleRole);
   });
 });

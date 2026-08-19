@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react';
 import { BadgeStyle } from '../styles';
 import { tokenCssVariable } from '../tokens';
-import { marginCss } from './cssBlocks';
+import { marginCss, resolveBorderColorToken } from './cssBlocks';
 
 /**
  * Emits CSS for a badge style.
@@ -36,7 +36,7 @@ export function createBadgeCss(style: BadgeStyle): CSSProperties {
   if (style.borderStyle) {
     const color = tokenCssVariable(
       'borderColor',
-      style.borderColor ?? 'default',
+      resolveBorderColorToken(style.borderColor, style.borderEmphasis),
     );
 
     css.border = `${tokenCssVariable('borderWidth', 'thin')} ${style.borderStyle} ${color}`;

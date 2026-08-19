@@ -1,6 +1,7 @@
+import { DefaultContainerStyle } from '../styles';
 import { ContainerStyle } from '../styles';
 import { DesignElementBase, DesignElementConfig } from '../types';
-import type { DesignElement } from './index';
+import type { DesignElement } from './DesignElement.types';
 
 export interface ContainerElement extends DesignElementBase {
   type: 'container';
@@ -23,9 +24,13 @@ export const ContainerElementConfig: DesignElementConfig<ContainerElement> = {
   group: 'layout',
   styleCategory: 'container',
   compatiblePropertyTypes: ['image'],
+  supportsStaticContent: false,
+  // Containers hold children rather than a value of their own,
+  // so they are never hidden for being empty
+  emptyBehavior: 'none',
   template: {
     type: 'container',
-    style: {},
+    style: { ...DefaultContainerStyle },
     children: [],
   },
 };

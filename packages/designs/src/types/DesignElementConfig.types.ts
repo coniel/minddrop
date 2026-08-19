@@ -9,13 +9,24 @@ import type { LayoutType } from './Layout.types';
 /**
  * Palette group for a design element.
  */
-export type ElementGroup = 'content' | 'media' | 'layout';
+export type ElementGroup = 'elements' | 'media' | 'layout';
 
 /**
- * How an element behaves in a rendered entry when its bound
- * property has no value.
+ * How an element type behaves in a rendered entry when its bound
+ * property has no value:
+ *
+ * - `hide`: the element is omitted from the entry, so a design
+ *   never shows an empty slot where a value would have been.
+ * - `none`: the element renders regardless, because an empty state
+ *   is expected and normal for the type (the editor being the
+ *   clearest case: an empty editor is where writing starts).
+ *
+ * This is a fact about the element type rather than a per-element
+ * choice. Design placeholders are a separate concern: they exist so
+ * a designer can judge the look while designing, and never appear
+ * in a rendered entry.
  */
-export type ElementEmptyBehavior = 'hide' | 'placeholder';
+export type ElementEmptyBehavior = 'hide' | 'none';
 
 /**
  * Base interface shared by all design element types.
@@ -41,14 +52,6 @@ export interface DesignElementBase {
    * The name of the design property this element is bound to.
    */
   property?: string;
-
-  /**
-   * How the element behaves in a rendered entry when its bound
-   * property has no value. 'hide' removes the element; 'placeholder'
-   * shows the property's placeholder, falling back to hiding when
-   * the property has no placeholder. Defaults to 'hide'.
-   */
-  emptyBehavior?: ElementEmptyBehavior;
 }
 
 /**
@@ -110,6 +113,20 @@ export interface DesignElementConfig<
    * Property types this element can render when mapped.
    */
   compatiblePropertyTypes: readonly PropertyType[];
+
+  /**
+   * Whether the element can display static content of its own,
+   * rather than only binding to a design property. Elements
+   * without it are always property bound. Defaults to false.
+   */
+  supportsStaticContent?: boolean;
+
+  /**
+   * How the element behaves in a rendered entry when its bound
+   * property has no value. Defaults to 'none', so an element type
+   * only opts in to being hidden.
+   */
+  emptyBehavior?: ElementEmptyBehavior;
 
   /**
    * Where the element may be inserted. Omitted, the element is

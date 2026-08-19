@@ -11,5 +11,13 @@ export const PageContentRole: DesignRoleConfig = {
   label: 'designs.roles.page-content.label',
   icon: 'box',
   lockedStyle: {},
+  editableStyles: [
+    'gap',
+    'paddingTop',
+    'paddingRight',
+    'paddingBottom',
+    'paddingLeft',
+  ],
+  structural: true,
   context: { layoutTypes: ['page', 'space'] },
 };

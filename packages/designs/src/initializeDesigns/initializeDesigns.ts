@@ -31,8 +31,12 @@ export async function initializeDesigns(): Promise<void> {
     ({ data }) => onFileSystemChanged(data),
   );
 
-  // Nothing to load if the designs directory does not exist yet
+  // Nothing to load if the designs directory does not exist yet.
+  // The loaded event still fires so that listeners waiting on it
+  // are not left hanging in a workspace with no designs.
   if (!(await Fs.exists(resolveDesignsDirPath()))) {
+    Events.dispatch<DesignsLoadedEventData>(DesignsLoadedEvent, []);
+
     return;
   }
 

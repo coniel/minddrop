@@ -17,6 +17,10 @@ export const WebviewElementConfig: DesignElementConfig<WebviewElement> = {
   group: 'media',
   styleCategory: 'embed',
   compatiblePropertyTypes: ['url'],
+  supportsStaticContent: false,
+  // An entry with no URL has no page to embed, so the element is
+  // left out entirely
+  emptyBehavior: 'hide',
   template: {
     type: 'webview',
     style: { height: 'fill' },

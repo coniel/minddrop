@@ -1,5 +1,4 @@
 import {
-  BorderColorToken,
   BorderWidthToken,
   MeasureToken,
   RadiusToken,
@@ -9,11 +8,26 @@ import {
 
 export type BorderLineStyle = 'solid' | 'dashed' | 'dotted';
 
-export type BorderEdge = 'top' | 'right' | 'bottom' | 'left';
+export const BorderColors = ['neutral', 'accent'] as const;
 
 /**
- * Border styles shared by every borderable element. Width and radius
- * are uniform; `borderEdges` limits which sides draw, covering the
+ * The border colour treatments: `neutral` stays grey inside a
+ * colour scheme, `accent` takes on the scheme's hue.
+ */
+export type BorderColor = (typeof BorderColors)[number];
+
+export const BorderEmphases = ['subtle', 'regular', 'strong'] as const;
+
+/**
+ * How strongly the border colour applies, from a hairline wash to
+ * an emphasised outline.
+ */
+export type BorderEmphasis = (typeof BorderEmphases)[number];
+
+/**
+ * Border styles shared by every borderable element. A border draws
+ * once `borderStyle` is set: uniformly thin without per-side
+ * widths, or only on the sides a width is set for, covering the
  * accent-bar case (e.g. a thick left-only border).
  */
 export interface BorderBlockStyle {
@@ -23,19 +37,35 @@ export interface BorderBlockStyle {
   borderStyle?: BorderLineStyle;
 
   /**
-   * The border color role. Omitted, defaults to `default`.
+   * The border colour treatment. Omitted, defaults to `neutral`.
    */
-  borderColor?: BorderColorToken;
+  borderColor?: BorderColor;
 
   /**
-   * The border width. Omitted, defaults to `thin`.
+   * How strongly the border colour applies. Omitted, defaults to
+   * `regular`.
    */
-  borderWidth?: BorderWidthToken;
+  borderEmphasis?: BorderEmphasis;
 
   /**
-   * The edges the border draws on. Omitted, all edges draw.
+   * The top border width.
    */
-  borderEdges?: BorderEdge[];
+  borderTopWidth?: BorderWidthToken;
+
+  /**
+   * The right border width.
+   */
+  borderRightWidth?: BorderWidthToken;
+
+  /**
+   * The bottom border width.
+   */
+  borderBottomWidth?: BorderWidthToken;
+
+  /**
+   * The left border width.
+   */
+  borderLeftWidth?: BorderWidthToken;
 
   /**
    * The corner radius.
@@ -94,20 +124,10 @@ export interface PaddingStyle {
 }
 
 /**
- * Token-expressible widths: `full` fills the parent, measures cap
- * at readable line lengths.
+ * Element width styles. Elements are fluid, spanning the width
+ * they are given; a measure can only cap it at a readable length.
  */
-export type WidthValue = 'auto' | 'full' | MeasureToken;
-
-/**
- * Element width styles.
- */
-export interface WidthStyle {
-  /**
-   * The element width.
-   */
-  width?: WidthValue;
-
+export interface MaxWidthStyle {
   /**
    * The maximum element width.
    */
@@ -122,6 +142,12 @@ export interface WidthStyle {
 export type HeightValue = 'fill' | SizeToken;
 
 /**
+ * The share of the space a filling element takes, against the
+ * other filling elements beside it.
+ */
+export type FillRatio = 1 | 2 | 3 | 4;
+
+/**
  * Element height styles.
  */
 export interface HeightStyle {
@@ -129,4 +155,58 @@ export interface HeightStyle {
    * The element height.
    */
   height?: HeightValue;
+
+  /**
+   * The share of the space the element takes while filling.
+   * Omitted, it takes an equal share.
+   */
+  fillRatio?: FillRatio;
 }
+
+/**
+ * The proportions a box can be held to, taller than wide first.
+ * An enumerated vocabulary like text alignment, not theme tokens.
+ */
+export const AspectRatios = [
+  '9/16',
+  '2/3',
+  '3/4',
+  '4/5',
+  '1/1',
+  '5/4',
+  '4/3',
+  '3/2',
+  '16/9',
+] as const;
+
+export type AspectRatio = (typeof AspectRatios)[number];
+
+/**
+ * The proportions taller than wide, from the squarest to the
+ * tallest.
+ */
+export const PortraitAspectRatios: readonly AspectRatio[] = [
+  '4/5',
+  '3/4',
+  '2/3',
+  '9/16',
+];
+
+/**
+ * The proportions wider than tall, from the squarest to the
+ * widest.
+ */
+export const LandscapeAspectRatios: readonly AspectRatio[] = [
+  '5/4',
+  '4/3',
+  '3/2',
+  '16/9',
+];
+
+export type TextTransform = 'uppercase' | 'lowercase' | 'capitalize';
+
+/**
+ * How a box fits its imagery inside itself, shared by images and
+ * container background images.
+ */
+export type ObjectFit = 'cover' | 'contain' | 'fill';

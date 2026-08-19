@@ -15,7 +15,8 @@ describe('createBadgeCss', () => {
         color: 'on-solid',
         background: 'solid-accent',
         borderStyle: 'solid',
-        borderColor: 'strong',
+        borderColor: 'accent',
+        borderEmphasis: 'strong',
         borderRadius: 'full',
         padding: '0-5',
         marginRight: '1',
@@ -35,7 +36,7 @@ describe('createBadgeCss', () => {
 
   it('defaults the border color when only a border style is set', () => {
     expect(createBadgeCss({ borderStyle: 'dashed' })).toEqual({
-      border: 'var(--border-width-thin) dashed var(--border-default)',
+      border: 'var(--border-width-thin) dashed var(--border-neutral)',
     });
   });
 });

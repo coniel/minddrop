@@ -1,5 +1,4 @@
 import {
-  BorderColorToken,
   FontSizeToken,
   FontWeightToken,
   RadiusToken,
@@ -7,8 +6,13 @@ import {
   SurfaceColorToken,
   TextColorToken,
 } from '../tokens';
-import { TextTransform } from './TypographyStyle';
-import { BorderLineStyle, MarginStyle } from './blocks';
+import { TextTransform } from './blocks';
+import {
+  BorderColor,
+  BorderEmphasis,
+  BorderLineStyle,
+  MarginStyle,
+} from './blocks';
 
 /**
  * Styles for badge chips. Solid background fills pair with the
@@ -46,9 +50,14 @@ export interface BadgeStyle extends MarginStyle {
   borderStyle?: BorderLineStyle;
 
   /**
-   * The border color role.
+   * The border colour treatment.
    */
-  borderColor?: BorderColorToken;
+  borderColor?: BorderColor;
+
+  /**
+   * How strongly the border colour applies.
+   */
+  borderEmphasis?: BorderEmphasis;
 
   /**
    * The corner radius. `full` renders pills.

@@ -1,10 +1,15 @@
-import { FontFamilyToken, TextColorToken } from '../tokens';
+import {
+  FontFamilyToken,
+  FontSizeToken,
+  LineHeightToken,
+  TextColorToken,
+} from '../tokens';
 import { TypographyStyle } from './TypographyStyle';
 import {
   BorderBlockStyle,
   MarginStyle,
+  MaxWidthStyle,
   PaddingStyle,
-  WidthStyle,
 } from './blocks';
 
 /**
@@ -15,11 +20,21 @@ export interface EditorStyle
   extends PaddingStyle,
     MarginStyle,
     BorderBlockStyle,
-    WidthStyle {
+    MaxWidthStyle {
   /**
    * The font family of the editor content.
    */
   fontFamily?: FontFamilyToken;
+
+  /**
+   * The base font size of the editor content.
+   */
+  fontSize?: FontSizeToken;
+
+  /**
+   * The base line height of the editor content.
+   */
+  lineHeight?: LineHeightToken;
 
   /**
    * The text color role of the editor content.

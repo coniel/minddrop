@@ -1,16 +1,27 @@
 import type { CSSProperties } from 'react';
-import { AspectRatio, ImageStyle } from '../styles';
-import { borderCss, heightCss, marginCss, widthCss } from './cssBlocks';
+import { ContainerDirection, ImageStyle } from '../styles';
+import {
+  borderCss,
+  heightCss,
+  marginCss,
+  radiusCss,
+  resolveAspectRatio,
+} from './cssBlocks';
 
 /**
  * Emits CSS for an image style.
  */
-export function createImageCss(style: ImageStyle): CSSProperties {
+export function createImageCss(
+  style: ImageStyle,
+  parentDirection?: ContainerDirection,
+): CSSProperties {
   const css: CSSProperties = {
     ...marginCss(style),
     ...borderCss(style),
-    ...widthCss(style),
-    ...heightCss(style),
+    ...radiusCss(style),
+    ...heightCss(style, parentDirection),
+    // Images have no width of their own: they span their container
+    width: '100%',
   };
 
   // Emit the aspect preset as a constant CSS ratio
@@ -23,23 +34,4 @@ export function createImageCss(style: ImageStyle): CSSProperties {
   }
 
   return css;
-}
-
-/**
- * Maps an aspect preset onto its CSS ratio.
- */
-export function resolveAspectRatio(aspectRatio: AspectRatio): string {
-  if (aspectRatio === 'square') {
-    return '1 / 1';
-  }
-
-  if (aspectRatio === 'landscape') {
-    return '4 / 3';
-  }
-
-  if (aspectRatio === 'portrait') {
-    return '3 / 4';
-  }
-
-  return '16 / 9';
 }

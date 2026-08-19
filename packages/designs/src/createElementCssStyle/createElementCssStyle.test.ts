@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { RoleDesignElement, TextElement } from '../design-element-configs';
-import { CardTitleRole } from '../roles';
+import { TitleRole } from '../roles';
 import { DesignFixtures, cleanup, setup } from '../test-utils';
 import { createElementCssStyle } from './createElementCssStyle';
 
@@ -31,11 +31,11 @@ describe('createElementCssStyle', () => {
   it('applies role variant styles over the element style', () => {
     const element: RoleDesignElement<TextElement> = {
       ...element_text_1,
-      role: CardTitleRole.id,
+      role: TitleRole.id,
       style: { fontSize: 'sm', italic: true },
     };
 
-    expect(createElementCssStyle(element)).toEqual({
+    expect(createElementCssStyle(element, undefined, 'card')).toEqual({
       // Locked card title typography wins over the element's own size
       fontSize: 'var(--font-size-md)',
       fontWeight: 'var(--font-weight-semibold)',
@@ -49,12 +49,14 @@ describe('createElementCssStyle', () => {
   it('renders the selected role variant options', () => {
     const element: RoleDesignElement<TextElement> = {
       ...element_text_1,
-      role: CardTitleRole.id,
+      role: TitleRole.id,
       roleVariants: { size: 'lg' },
       style: {},
     };
 
-    expect(createElementCssStyle(element).fontSize).toBe('var(--font-size-xl)');
+    expect(createElementCssStyle(element, undefined, 'card').fontSize).toBe(
+      'var(--font-size-xl)',
+    );
   });
 
   it('degrades to the element style when the role is not registered', () => {

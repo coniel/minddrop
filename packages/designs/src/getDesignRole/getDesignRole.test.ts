@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DesignRoleNotRegisteredError } from '../errors';
-import { CardTitleRole } from '../roles';
+import { TitleRole } from '../roles';
 import { cleanup, setup } from '../test-utils';
 import { getDesignRole } from './getDesignRole';
 
@@ -9,7 +9,7 @@ describe('getDesignRole', () => {
   afterEach(cleanup);
 
   it('returns the registered role', () => {
-    expect(getDesignRole(CardTitleRole.id)).toEqual(CardTitleRole);
+    expect(getDesignRole(TitleRole.id)).toEqual(TitleRole);
   });
 
   it('throws when the role is not registered', () => {

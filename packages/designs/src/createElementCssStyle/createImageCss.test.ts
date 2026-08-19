@@ -2,16 +2,16 @@ import { describe, expect, it } from 'vitest';
 import { createImageCss } from './createImageCss';
 
 describe('createImageCss', () => {
-  it('emits nothing for an empty style', () => {
-    expect(createImageCss({})).toEqual({});
+  it('spans the container whatever else is set', () => {
+    // Images have no width of their own
+    expect(createImageCss({})).toEqual({ width: '100%' });
   });
 
   it('emits every set value', () => {
     expect(
       createImageCss({
-        aspectRatio: 'landscape',
+        aspectRatio: '4/3',
         objectFit: 'cover',
-        width: 'full',
         height: 'md',
         borderStyle: 'solid',
         borderRadius: 'md',
@@ -22,7 +22,7 @@ describe('createImageCss', () => {
       objectFit: 'cover',
       width: '100%',
       height: 'var(--size-md)',
-      border: 'var(--border-width-thin) solid var(--border-default)',
+      border: 'var(--border-width-thin) solid var(--border-neutral)',
       borderRadius: 'var(--radius-md)',
       marginBottom: 'var(--space-2)',
     });
@@ -31,15 +31,15 @@ describe('createImageCss', () => {
   it('emits a fill height as flex growth', () => {
     expect(createImageCss({ height: 'fill' })).toEqual({
       flexGrow: 1,
+      flexBasis: 0,
       minHeight: 0,
+      width: '100%',
     });
   });
 
-  it('maps each aspect preset onto its ratio', () => {
-    expect(createImageCss({ aspectRatio: 'square' }).aspectRatio).toBe('1 / 1');
-    expect(createImageCss({ aspectRatio: 'portrait' }).aspectRatio).toBe(
-      '3 / 4',
-    );
-    expect(createImageCss({ aspectRatio: 'wide' }).aspectRatio).toBe('16 / 9');
+  it('spaces each ratio out into its CSS value', () => {
+    expect(createImageCss({ aspectRatio: '1/1' }).aspectRatio).toBe('1 / 1');
+    expect(createImageCss({ aspectRatio: '2/3' }).aspectRatio).toBe('2 / 3');
+    expect(createImageCss({ aspectRatio: '16/9' }).aspectRatio).toBe('16 / 9');
   });
 });

@@ -65,6 +65,12 @@ declare module 'i18next' {
         };
         canvas: {
           fitView: string;
+          grid: {
+            label: string;
+            none: string;
+            dots: string;
+            lines: string;
+          };
           resetView: string;
           resetZoom: string;
           settings: string;
@@ -1160,25 +1166,25 @@ declare module 'i18next' {
           name: string;
           new: string;
           roles: {
-            'card-title': {
+            title: {
               label: string;
             };
-            'card-subtitle': {
+            subtitle: {
               label: string;
             };
-            'card-body': {
+            heading: {
               label: string;
             };
-            'card-cover': {
+            label: {
               label: string;
             };
-            'list-title': {
+            'text-value': {
               label: string;
             };
-            'page-title': {
+            content: {
               label: string;
             };
-            'page-body': {
+            'content-display': {
               label: string;
             };
             'page-content': {
@@ -1189,9 +1195,19 @@ declare module 'i18next' {
             sm: string;
             md: string;
             lg: string;
+            plain: string;
+            description: string;
+            caption: string;
+            quote: string;
+            default: string;
+            regular: string;
+            muted: string;
+            accent: string;
           };
           roleVariantAxes: {
             size: string;
+            appearance: string;
+            colour: string;
           };
           layouts: {
             empty: string;
@@ -1749,6 +1765,7 @@ declare module 'i18next' {
             view: string;
             'container-empty-hint': string;
             group: {
+              elements: string;
               content: string;
               media: string;
               layout: string;
@@ -2085,6 +2102,830 @@ declare module 'i18next' {
             actions: {
               create: string;
             };
+          };
+        };
+        designsStudio: {
+          open: string;
+          title: string;
+          backToDesigns: string;
+          palette: {
+            elements: {
+              default: string;
+              card: string;
+              list: string;
+              page: string;
+              space: string;
+            };
+          };
+          layouts: {
+            new: string;
+            backToLayouts: string;
+          };
+          tree: {
+            dropHint: string;
+          };
+          webview: {
+            placeholder: string;
+            embedBlocked: string;
+            iframeTitle: string;
+          };
+          view: {
+            placeholder: string;
+          };
+          style: {
+            default: {
+              label: string;
+              description: string;
+            };
+            defaultFont: {
+              label: string;
+              description: string;
+            };
+            sections: {
+              typography: string;
+              colour: string;
+              spacing: string;
+              border: string;
+              size: string;
+              contentWidth: string;
+              background: string;
+              layout: string;
+              icon: string;
+              iconContainer: string;
+              image: string;
+              frame: string;
+              title: string;
+              variants: string;
+              content: string;
+              backgroundImage: string;
+              backgroundBlur: string;
+              padding: string;
+              margin: string;
+            };
+            fields: {
+              fontFamily: string;
+              fontSize: string;
+              fontWeight: string;
+              lineHeight: string;
+              letterSpacing: string;
+              colour: string;
+              textAlign: string;
+              textTransform: string;
+              italic: string;
+              truncate: string;
+              background: string;
+              radius: string;
+              borderStyle: string;
+              borderColour: string;
+              borderWidth: string;
+              padding: string;
+              margin: string;
+              gap: string;
+              direction: string;
+              align: string;
+              spread: string;
+              wrap: string;
+              width: string;
+              maxWidth: string;
+              height: string;
+              fixedHeight: string;
+              fillRatio: string;
+              minHeight: string;
+              maxHeight: string;
+              aspectRatio: string;
+              orientation: string;
+              objectFit: string;
+              backgroundImageFit: string;
+              iconSize: string;
+              iconColour: string;
+              top: string;
+              right: string;
+              bottom: string;
+              left: string;
+              emphasis: string;
+              backdropBrightness: string;
+              backdropFade: string;
+              backdropFadeDirection: string;
+              backdropFadeRange: string;
+              backdropTint: string;
+              backdropTintStrength: string;
+            };
+            truncate: {
+              off: {
+                label: string;
+                description: string;
+              };
+              lines_one: string;
+              lines_other: string;
+              decrease: string;
+              increase: string;
+            };
+            toggle: {
+              on: string;
+              off: string;
+            };
+            fontFamily: {
+              sans: {
+                label: string;
+                description: string;
+              };
+              serif: {
+                label: string;
+                description: string;
+              };
+              mono: {
+                label: string;
+                description: string;
+              };
+            };
+            fontSize: {
+              '2xs': {
+                label: string;
+                description: string;
+              };
+              xs: {
+                label: string;
+                description: string;
+              };
+              sm: {
+                label: string;
+                description: string;
+              };
+              base: {
+                label: string;
+                description: string;
+              };
+              md: {
+                label: string;
+                description: string;
+              };
+              lg: {
+                label: string;
+                description: string;
+              };
+              xl: {
+                label: string;
+                description: string;
+              };
+              '2xl': {
+                label: string;
+                description: string;
+              };
+              '3xl': {
+                label: string;
+                description: string;
+              };
+              '4xl': {
+                label: string;
+                description: string;
+              };
+              '5xl': {
+                label: string;
+                description: string;
+              };
+            };
+            fontWeight: {
+              regular: {
+                label: string;
+                description: string;
+              };
+              medium: {
+                label: string;
+                description: string;
+              };
+              semibold: {
+                label: string;
+                description: string;
+              };
+              bold: {
+                label: string;
+                description: string;
+              };
+            };
+            lineHeight: {
+              none: {
+                label: string;
+                description: string;
+              };
+              tight: {
+                label: string;
+                description: string;
+              };
+              snug: {
+                label: string;
+                description: string;
+              };
+              normal: {
+                label: string;
+                description: string;
+              };
+              relaxed: {
+                label: string;
+                description: string;
+              };
+              loose: {
+                label: string;
+                description: string;
+              };
+            };
+            letterSpacing: {
+              tight: {
+                label: string;
+                description: string;
+              };
+              normal: {
+                label: string;
+                description: string;
+              };
+              wide: {
+                label: string;
+                description: string;
+              };
+              wider: {
+                label: string;
+                description: string;
+              };
+            };
+            measure: {
+              full: {
+                label: string;
+                description: string;
+              };
+              narrow: {
+                label: string;
+                description: string;
+              };
+              content: {
+                label: string;
+                description: string;
+              };
+              wide: {
+                label: string;
+                description: string;
+              };
+            };
+            width: {
+              auto: {
+                label: string;
+                description: string;
+              };
+              full: {
+                label: string;
+                description: string;
+              };
+            };
+            height: {
+              fill: {
+                label: string;
+              };
+              mode: {
+                auto: {
+                  label: string;
+                  description: string;
+                };
+                fixed: {
+                  label: string;
+                  description: string;
+                };
+                fill: {
+                  label: string;
+                  description: string;
+                };
+                ratio: {
+                  label: string;
+                  description: string;
+                };
+              };
+              noMinimum: {
+                label: string;
+              };
+              noMaximum: {
+                label: string;
+              };
+              decrease: string;
+              increase: string;
+              auto: {
+                label: string;
+              };
+            };
+            space: {
+              '1': {
+                label: string;
+                hint: string;
+              };
+              '2': {
+                label: string;
+                hint: string;
+              };
+              '3': {
+                label: string;
+                hint: string;
+              };
+              '4': {
+                label: string;
+                hint: string;
+              };
+              '5': {
+                label: string;
+                hint: string;
+              };
+              '6': {
+                label: string;
+                hint: string;
+              };
+              '7': {
+                label: string;
+                hint: string;
+              };
+              '8': {
+                label: string;
+                hint: string;
+              };
+              none: string;
+              px: {
+                label: string;
+                hint: string;
+              };
+              '0-5': {
+                label: string;
+                hint: string;
+              };
+              '0-75': {
+                label: string;
+                hint: string;
+              };
+              '1-5': {
+                label: string;
+                hint: string;
+              };
+              decrease: string;
+              increase: string;
+              sync: string;
+            };
+            size: {
+              xs: {
+                label: string;
+                hint: string;
+              };
+              sm: {
+                label: string;
+                hint: string;
+              };
+              md: {
+                label: string;
+                hint: string;
+              };
+              lg: {
+                label: string;
+                hint: string;
+              };
+              xl: {
+                label: string;
+                hint: string;
+              };
+              '2xl': {
+                label: string;
+                hint: string;
+              };
+            };
+            radius: {
+              xs: {
+                label: string;
+                description: string;
+              };
+              sm: {
+                label: string;
+                description: string;
+              };
+              md: {
+                label: string;
+                description: string;
+              };
+              lg: {
+                label: string;
+                description: string;
+              };
+              xl: {
+                label: string;
+                description: string;
+              };
+              full: {
+                label: string;
+                description: string;
+              };
+            };
+            borderWidth: {
+              thin: {
+                label: string;
+                description: string;
+              };
+              medium: {
+                label: string;
+                description: string;
+              };
+              thick: {
+                label: string;
+                description: string;
+              };
+              accent: {
+                label: string;
+                description: string;
+              };
+              none: {
+                label: string;
+              };
+              sync: string;
+            };
+            borderStyle: {
+              solid: {
+                label: string;
+                description: string;
+              };
+              dashed: {
+                label: string;
+                description: string;
+              };
+              dotted: {
+                label: string;
+                description: string;
+              };
+            };
+            iconSize: {
+              '2xs': {
+                label: string;
+                description: string;
+              };
+              xs: {
+                label: string;
+                description: string;
+              };
+              sm: {
+                label: string;
+                description: string;
+              };
+              md: {
+                label: string;
+                description: string;
+              };
+              lg: {
+                label: string;
+                description: string;
+              };
+              xl: {
+                label: string;
+                description: string;
+              };
+            };
+            textColour: {
+              regular: {
+                label: string;
+                description: string;
+              };
+              muted: {
+                label: string;
+                description: string;
+              };
+              subtle: {
+                label: string;
+                description: string;
+              };
+              'on-solid': {
+                label: string;
+                description: string;
+              };
+              primary: {
+                label: string;
+                description: string;
+              };
+              danger: {
+                label: string;
+                description: string;
+              };
+              warning: {
+                label: string;
+                description: string;
+              };
+              info: {
+                label: string;
+                description: string;
+              };
+              success: {
+                label: string;
+                description: string;
+              };
+            };
+            surfaceColour: {
+              app: {
+                label: string;
+                description: string;
+              };
+              subtle: {
+                label: string;
+                description: string;
+              };
+              raised: {
+                label: string;
+                description: string;
+              };
+              overlay: {
+                label: string;
+                description: string;
+              };
+              accent: {
+                label: string;
+                description: string;
+              };
+              'solid-accent': {
+                label: string;
+                description: string;
+              };
+              'neutral-subtle': {
+                label: string;
+                description: string;
+              };
+              neutral: {
+                label: string;
+                description: string;
+              };
+              'solid-neutral': {
+                label: string;
+                description: string;
+              };
+              'primary-subtle': {
+                label: string;
+                description: string;
+              };
+              primary: {
+                label: string;
+                description: string;
+              };
+              'solid-primary': {
+                label: string;
+                description: string;
+              };
+              danger: {
+                label: string;
+                description: string;
+              };
+              'solid-danger': {
+                label: string;
+                description: string;
+              };
+              warning: {
+                label: string;
+                description: string;
+              };
+              'solid-warning': {
+                label: string;
+                description: string;
+              };
+              info: {
+                label: string;
+                description: string;
+              };
+              'solid-info': {
+                label: string;
+                description: string;
+              };
+              success: {
+                label: string;
+                description: string;
+              };
+              'solid-success': {
+                label: string;
+                description: string;
+              };
+            };
+            rootBackground: {
+              neutral: {
+                label: string;
+                description: string;
+              };
+              accent: {
+                label: string;
+                description: string;
+              };
+              transparent: {
+                label: string;
+                description: string;
+              };
+            };
+            rootEmphasis: {
+              subtle: {
+                label: string;
+                description: string;
+              };
+              regular: {
+                label: string;
+                description: string;
+              };
+              solid: {
+                label: string;
+                description: string;
+              };
+            };
+            borderColour: {
+              neutral: {
+                label: string;
+                description: string;
+              };
+              accent: {
+                label: string;
+                description: string;
+              };
+            };
+            textAlign: {
+              left: string;
+              center: string;
+              right: string;
+              justify: string;
+            };
+            textTransform: {
+              none: string;
+              uppercase: string;
+              uppercaseShort: string;
+              lowercase: string;
+              lowercaseShort: string;
+              capitalize: string;
+              capitalizeShort: string;
+            };
+            direction: {
+              column: string;
+              row: string;
+            };
+            align: {
+              start: string;
+              center: string;
+              end: string;
+              stretch: string;
+            };
+            alignment: {
+              vertical: {
+                start: string;
+                center: string;
+                end: string;
+                stretch: string;
+              };
+              horizontal: {
+                start: string;
+                center: string;
+                end: string;
+                stretch: string;
+              };
+              cell: string;
+            };
+            aspectRatio: {
+              '9/16': {
+                label: string;
+              };
+              '2/3': {
+                label: string;
+              };
+              '3/4': {
+                label: string;
+              };
+              '4/5': {
+                label: string;
+              };
+              '1/1': {
+                label: string;
+              };
+              '5/4': {
+                label: string;
+              };
+              '4/3': {
+                label: string;
+              };
+              '3/2': {
+                label: string;
+              };
+              '16/9': {
+                label: string;
+              };
+            };
+            objectFit: {
+              cover: {
+                label: string;
+                description: string;
+              };
+              contain: {
+                label: string;
+                description: string;
+              };
+              fill: {
+                label: string;
+                description: string;
+              };
+            };
+            fillRatio: {
+              '1': {
+                label: string;
+              };
+              '2': {
+                label: string;
+              };
+              '3': {
+                label: string;
+              };
+              '4': {
+                label: string;
+              };
+              decrease: string;
+              increase: string;
+            };
+            orientation: {
+              portrait: string;
+              square: string;
+              landscape: string;
+            };
+            aspectRatioSteps: {
+              decrease: string;
+              increase: string;
+            };
+            backdropBlur: {
+              subtle: {
+                label: string;
+                description: string;
+              };
+              regular: {
+                label: string;
+                description: string;
+              };
+              strong: {
+                label: string;
+                description: string;
+              };
+            };
+            fadeDirection: {
+              'to-top': string;
+              'to-bottom': string;
+              'to-left': string;
+              'to-right': string;
+            };
+            backdropBrightness: {
+              decrease: string;
+              increase: string;
+            };
+            backdropTint: {
+              none: {
+                label: string;
+                description: string;
+              };
+              neutral: {
+                label: string;
+                description: string;
+              };
+              accent: {
+                label: string;
+                description: string;
+              };
+            };
+            backdropTintStrength: {
+              subtle: {
+                label: string;
+                description: string;
+              };
+              regular: {
+                label: string;
+                description: string;
+              };
+              strong: {
+                label: string;
+                description: string;
+              };
+            };
+            borderEmphasis: {
+              subtle: {
+                label: string;
+                description: string;
+              };
+              regular: {
+                label: string;
+                description: string;
+              };
+              strong: {
+                label: string;
+                description: string;
+              };
+            };
+            panels: {
+              left: string;
+              right: string;
+              width: string;
+              defaultOpen: string;
+            };
+          };
+          variants: {
+            description: string;
+          };
+          locked: {
+            description: string;
+          };
+          editor: {
+            empty: string;
+          };
+          preview: {
+            toggleTheme: string;
           };
         };
         theme: {

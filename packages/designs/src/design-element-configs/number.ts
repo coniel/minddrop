@@ -61,9 +61,11 @@ export const NumberElementConfig: DesignElementConfig<NumberElement> = {
   type: 'number',
   icon: 'hash',
   label: 'design-studio.elements.number',
-  group: 'content',
+  group: 'elements',
   styleCategory: 'typography',
   compatiblePropertyTypes: ['number'],
+  supportsStaticContent: true,
+  emptyBehavior: 'hide',
   template: {
     type: 'number',
     style: {},

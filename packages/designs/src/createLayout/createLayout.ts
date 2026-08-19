@@ -2,6 +2,7 @@ import { createI18nKeyBuilder, i18n } from '@minddrop/i18n';
 import { InvalidParameterError, entityId } from '@minddrop/utils';
 import { DesignTypeLayoutTypes } from '../constants';
 import { getDesign } from '../getDesign';
+import { DefaultContainerStyle, RootStyle } from '../styles';
 import { Layout, LayoutFrame, LayoutType } from '../types';
 import { updateDesign } from '../updateDesign';
 
@@ -23,7 +24,7 @@ export interface CreateLayoutOptions {
   type: LayoutType;
 
   /**
-   * The layout name. Defaults to the localized type label.
+   * The layout name. Defaults to the localized type name.
    */
   name?: string;
 
@@ -57,15 +58,17 @@ export async function createLayout(
     );
   }
 
-  // Build the new layout with an empty root tree
+  // Build the new layout with an empty root tree. The root carries
+  // the layout type, which decides its default background treatment
   const layout: Layout = {
     id: entityId('layout'),
     type: options.type,
-    name: options.name || i18n.t(layoutTypeI18nKey(options.type, 'label')),
+    name: options.name || i18n.t(layoutTypeI18nKey(options.type, 'name')),
     tree: {
       id: 'root',
       type: 'root',
-      style: {},
+      layoutType: options.type,
+      style: { ...DefaultContainerStyle, ...defaultRootStyle(options.type) },
       children: [],
     },
     frame: { ...defaultFrames[options.type], ...options.position },
@@ -77,4 +80,19 @@ export async function createLayout(
   await updateDesign(design.id, { layouts: [...design.layouts, layout] });
 
   return layout;
+}
+
+/**
+ * Resolves the default style values of a layout type's root:
+ * full-screen types carry a content gutter, which stays
+ * user-editable like any other style value. Seeded at creation and
+ * restored by the studio's styling reset.
+ */
+export function defaultRootStyle(type?: LayoutType): RootStyle {
+  // A page's content keeps a gutter from the screen edges
+  if (type === 'page' || type === 'space') {
+    return { contentPadding: '4' };
+  }
+
+  return {};
 }

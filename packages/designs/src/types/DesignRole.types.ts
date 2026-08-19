@@ -3,14 +3,23 @@ import type { PropertyType } from '@minddrop/properties';
 import type { UiIconName } from '@minddrop/ui-icons';
 import type { DesignElementStyle } from '../styles';
 import type { ElementContext } from './DesignElementConfig.types';
+import type { LayoutType } from './Layout.types';
 
 /**
  * Design role identifiers are plain strings. Built-in roles are
- * unprefixed ('card-title'); externally defined roles namespace
- * with a colon ('my-system:ingredient'), so existing identifiers
- * never change.
+ * unprefixed ('title'); externally defined roles namespace with a
+ * colon ('my-system:ingredient'), so existing identifiers never
+ * change.
  */
 export type DesignRoleId = string;
+
+/**
+ * Style values keyed by the layout type they apply in, letting a
+ * single role adapt its look to the context it is rendered in.
+ */
+export type RoleContextStyles = Partial<
+  Record<LayoutType, Partial<DesignElementStyle>>
+>;
 
 /**
  * A single option of a role variant axis (e.g. the Small option of
@@ -28,10 +37,18 @@ export interface DesignRoleVariant {
   label: TranslationKey;
 
   /**
-   * Style values locked by the variant. Applied over the role's
-   * locked styles at resolution time and not user-editable.
+   * Style values locked by the variant regardless of layout
+   * context. Applied over the role's locked styles at resolution
+   * time and not user-editable.
    */
-  style: Partial<DesignElementStyle>;
+  style?: Partial<DesignElementStyle>;
+
+  /**
+   * Per-layout-type style values locked by the variant, applied
+   * over its context-independent styles (e.g. the Medium size is a
+   * larger font on a page than on a card).
+   */
+  contextStyles?: RoleContextStyles;
 }
 
 /**
@@ -50,6 +67,13 @@ export interface DesignRoleVariantAxis {
    * i18n key for the axis' display label.
    */
   label: TranslationKey;
+
+  /**
+   * The layout types the axis is offered in. Omitted axes are
+   * offered everywhere the role is (e.g. a size axis that makes no
+   * sense on single-line list rows restricts itself away).
+   */
+  layoutTypes?: LayoutType[];
 
   /**
    * The axis options, in selection menu display order.
@@ -98,11 +122,34 @@ export interface DesignRoleConfig {
   lockedStyle: Partial<DesignElementStyle>;
 
   /**
+   * Per-layout-type style values locked by the role, applied over
+   * its context-independent locked styles so one role adapts its
+   * look to the layout it is rendered in.
+   */
+  contextStyles?: RoleContextStyles;
+
+  /**
    * The role's variant axes. Each axis contributes one selected
    * option's styles on top of the locked styles. Omitted for roles
    * with a single fixed look.
    */
   variants?: DesignRoleVariantAxis[];
+
+  /**
+   * The style keys the role's elements offer for editing. Keys the
+   * role locks stay hidden regardless. Omitted roles offer every
+   * key their element type's editors provide, so free-form roles
+   * need no list.
+   */
+  editableStyles?: string[];
+
+  /**
+   * Whether the role's elements offer static content alongside a
+   * property binding. Defaults to the element type's own support;
+   * set to false on roles which only make sense rendering bound
+   * data.
+   */
+  supportsStaticContent?: boolean;
 
   /**
    * Property types the role auto-binds to on insertion, resolved
@@ -111,6 +158,14 @@ export interface DesignRoleConfig {
    * structural roles.
    */
   bindsPropertyTypes?: readonly PropertyType[];
+
+  /**
+   * Whether the role marks a structural region created by its
+   * parent layout rather than inserted by the user (e.g. a page's
+   * content region). Structural roles are excluded from the
+   * elements palette.
+   */
+  structural?: boolean;
 
   /**
    * Where the role may be offered and inserted.

@@ -26,6 +26,10 @@ export const ViewElementConfig: DesignElementConfig<ViewElement> = {
   label: 'design-studio.elements.view',
   styleCategory: 'embed',
   compatiblePropertyTypes: ['collection'],
+  supportsStaticContent: false,
+  // An entry with no collection has no view to render, so the
+  // element is left out entirely
+  emptyBehavior: 'hide',
   context: { layoutTypes: ['page', 'space'] },
   template: {
     type: 'view',

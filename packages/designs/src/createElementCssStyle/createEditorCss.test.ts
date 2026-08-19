@@ -10,6 +10,8 @@ describe('createEditorCss', () => {
     expect(
       createEditorCss({
         fontFamily: 'serif',
+        fontSize: 'md',
+        lineHeight: 'relaxed',
         color: 'regular',
         paddingTop: '4',
         marginBottom: '2',
@@ -18,10 +20,12 @@ describe('createEditorCss', () => {
       }),
     ).toEqual({
       fontFamily: 'var(--font-serif)',
+      fontSize: 'var(--font-size-md)',
+      lineHeight: 'var(--line-height-relaxed)',
       color: 'var(--text-regular)',
       paddingTop: 'var(--space-4)',
       marginBottom: 'var(--space-2)',
-      border: 'var(--border-width-thin) solid var(--border-default)',
+      border: 'var(--border-width-thin) solid var(--border-neutral)',
       maxWidth: 'var(--measure-content)',
     });
   });

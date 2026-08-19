@@ -3,6 +3,7 @@ import { i18n } from '@minddrop/i18n';
 import { InvalidParameterError } from '@minddrop/utils';
 import { DesignsStore } from '../DesignsStore';
 import { getDesign } from '../getDesign';
+import { DefaultContainerStyle } from '../styles';
 import { DesignFixtures, cleanup, mockDate, setup } from '../test-utils';
 import { createLayout } from './createLayout';
 
@@ -18,11 +19,32 @@ describe('createLayout', () => {
     expect(layout).toEqual({
       id: expect.stringMatching(/^layout_/),
       type: 'card',
-      name: i18n.t('designs.layouts.card.label'),
-      tree: { id: 'root', type: 'root', style: {}, children: [] },
+      name: i18n.t('designs.layouts.card.name'),
+      tree: {
+        id: 'root',
+        type: 'root',
+        layoutType: 'card',
+        style: { ...DefaultContainerStyle },
+        children: [],
+      },
       frame: { x: 0, y: 0, width: 380 },
       created: mockDate,
       lastModified: mockDate,
+    });
+  });
+
+  it('stamps the root with the layout type', async () => {
+    const layout = await createLayout(design_books.id, { type: 'page' });
+
+    // The root's layout type decides its default background
+    // treatment at CSS generation
+    expect(layout.tree.layoutType).toBe('page');
+
+    // Full-screen roots start with a content gutter, which stays
+    // user-editable like any other style value
+    expect(layout.tree.style).toEqual({
+      ...DefaultContainerStyle,
+      contentPadding: '4',
     });
   });
 

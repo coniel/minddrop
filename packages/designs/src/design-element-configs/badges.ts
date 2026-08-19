@@ -20,9 +20,11 @@ export const BadgesElementConfig: DesignElementConfig<BadgesElement> = {
   type: 'badges',
   icon: 'rectangle-ellipsis',
   label: 'design-studio.elements.badges',
-  group: 'content',
+  group: 'elements',
   styleCategory: 'badge',
   compatiblePropertyTypes: ['select'],
+  supportsStaticContent: true,
+  emptyBehavior: 'hide',
   template: {
     type: 'badges',
     style: {

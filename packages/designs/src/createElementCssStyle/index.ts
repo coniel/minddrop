@@ -2,6 +2,7 @@ export * from './createElementCssStyle';
 export * from './createTypographyCss';
 export * from './createBadgeCss';
 export * from './createContainerCss';
+export * from './createRootCss';
 export * from './createImageCss';
 export * from './createIconCss';
 export * from './createEmbedCss';

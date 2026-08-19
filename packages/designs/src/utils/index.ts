@@ -6,6 +6,8 @@ export * from './resolveDesignMediaDirPath';
 export * from './elementTitleBindingId';
 export * from './isRoleElement';
 export * from './resolveElementStyle';
+export * from './resolveRoleStyle';
+export * from './getRoleVariantAxes';
 export * from './resolveAutoBinding';
 export * from './validateDesign';
 export * from './reviveDesignDates';

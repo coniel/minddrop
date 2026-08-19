@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { RoleDesignElement, TextElement } from '../../design-element-configs';
-import { CardTitleRole } from '../../roles';
+import { TitleRole } from '../../roles';
 import { DesignFixtures, cleanup, setup } from '../../test-utils';
 import { resolveElementStyle } from './resolveElementStyle';
 
@@ -16,50 +16,42 @@ describe('resolveElementStyle', () => {
       style: { fontSize: 'sm' },
     };
 
-    expect(resolveElementStyle(element)).toEqual({ fontSize: 'sm' });
+    expect(resolveElementStyle(element, 'card')).toEqual({ fontSize: 'sm' });
   });
 
-  it('applies the locked styles and axis defaults over the element style', () => {
+  it('applies the context-resolved role styles over the element style', () => {
     const element: RoleDesignElement<TextElement> = {
       ...element_text_1,
-      role: CardTitleRole.id,
+      role: TitleRole.id,
       // fontSize collides with the size axis default, italic does not
       style: { fontSize: 'sm', italic: true },
     };
 
-    expect(resolveElementStyle(element)).toEqual({
-      ...CardTitleRole.lockedStyle,
-      // The size axis applies its default option
+    expect(resolveElementStyle(element, 'card')).toEqual({
+      color: 'regular',
+      fontWeight: 'semibold',
+      lineHeight: 'tight',
+      // The size axis applies its default option's card font size
       fontSize: 'md',
       italic: true,
     });
   });
 
-  it('applies the selected option of each variant axis', () => {
+  it('resolves against the given layout context', () => {
     const element: RoleDesignElement<TextElement> = {
       ...element_text_1,
-      role: CardTitleRole.id,
+      role: TitleRole.id,
       roleVariants: { size: 'lg' },
       style: {},
     };
 
-    expect(resolveElementStyle(element)).toEqual({
-      ...CardTitleRole.lockedStyle,
+    // The same element resolves to a larger font on a page than on
+    // a card
+    expect(resolveElementStyle(element, 'card')).toMatchObject({
       fontSize: 'xl',
     });
-  });
-
-  it('falls back to the axis default for unknown option IDs', () => {
-    const element: RoleDesignElement<TextElement> = {
-      ...element_text_1,
-      role: CardTitleRole.id,
-      roleVariants: { size: 'unknown' },
-      style: {},
-    };
-
-    expect(resolveElementStyle(element)).toEqual({
-      ...CardTitleRole.lockedStyle,
-      fontSize: 'md',
+    expect(resolveElementStyle(element, 'page')).toMatchObject({
+      fontSize: '5xl',
     });
   });
 
@@ -70,6 +62,6 @@ describe('resolveElementStyle', () => {
       style: { fontSize: 'sm' },
     };
 
-    expect(resolveElementStyle(element)).toEqual({ fontSize: 'sm' });
+    expect(resolveElementStyle(element, 'card')).toEqual({ fontSize: 'sm' });
   });
 });

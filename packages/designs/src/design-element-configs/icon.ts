@@ -22,6 +22,8 @@ export const IconElementConfig: DesignElementConfig<IconElement> = {
   group: 'media',
   styleCategory: 'icon',
   compatiblePropertyTypes: ['icon'],
+  supportsStaticContent: true,
+  emptyBehavior: 'hide',
   template: {
     type: 'icon',
     icon: 'content-icon:cat:default',

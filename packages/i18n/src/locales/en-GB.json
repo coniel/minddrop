@@ -9,6 +9,12 @@
   },
   "canvas": {
     "fitView": "Fit view",
+    "grid": {
+      "label": "Grid",
+      "none": "None",
+      "dots": "Dots",
+      "lines": "Lines"
+    },
     "resetView": "Reset view",
     "resetZoom": "Reset zoom",
     "settings": "Canvas settings",
@@ -1104,38 +1110,48 @@
     "name": "Design",
     "new": "New design",
     "roles": {
-      "card-title": {
-        "label": "Card title"
+      "title": {
+        "label": "Title"
       },
-      "card-subtitle": {
-        "label": "Card subtitle"
+      "subtitle": {
+        "label": "Subtitle"
       },
-      "card-body": {
-        "label": "Card body"
+      "heading": {
+        "label": "Heading"
       },
-      "card-cover": {
-        "label": "Card cover"
+      "label": {
+        "label": "Label"
       },
-      "list-title": {
-        "label": "List title"
+      "text-value": {
+        "label": "Text value"
       },
-      "page-title": {
-        "label": "Page title"
+      "content": {
+        "label": "Content editor"
       },
-      "page-body": {
-        "label": "Page body"
+      "content-display": {
+        "label": "Content display"
       },
       "page-content": {
-        "label": "Content"
+        "label": "Content region"
       }
     },
     "roleVariants": {
       "sm": "Small",
       "md": "Medium",
-      "lg": "Large"
+      "lg": "Large",
+      "plain": "Plain",
+      "description": "Description",
+      "caption": "Caption",
+      "quote": "Quote",
+      "default": "Default",
+      "regular": "Regular",
+      "muted": "Muted",
+      "accent": "Accent"
     },
     "roleVariantAxes": {
-      "size": "Size"
+      "size": "Size",
+      "appearance": "Style",
+      "colour": "Colour"
     },
     "layouts": {
       "empty": "No layouts",
@@ -1591,6 +1607,7 @@
       "view": "View",
       "container-empty-hint": "Drop elements here",
       "group": {
+        "elements": "Elements",
         "content": "Content",
         "media": "Media",
         "layout": "Layout",

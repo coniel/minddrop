@@ -56,9 +56,11 @@ export const DateElementConfig: DesignElementConfig<DateElement> = {
   type: 'date',
   icon: 'calendar',
   label: 'design-studio.elements.date',
-  group: 'content',
+  group: 'elements',
   styleCategory: 'typography',
   compatiblePropertyTypes: ['date', 'created', 'last-modified'],
+  supportsStaticContent: true,
+  emptyBehavior: 'hide',
   template: {
     type: 'date',
     style: {},

@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DesignRoleNotRegisteredError } from '../errors';
-import { CardCoverRole, CardTitleRole, PageContentRole } from '../roles';
+import { PageContentRole, TitleRole } from '../roles';
 import { DesignFixtures, cleanup, setup } from '../test-utils';
 import { createRoleElement } from './createRoleElement';
 
@@ -12,18 +12,18 @@ describe('createRoleElement', () => {
 
   it('creates an element of the role base type carrying the role ID', () => {
     const element = createRoleElement(
-      CardTitleRole.id,
+      TitleRole.id,
       design_books,
       layout_card_1,
     );
 
     expect(element.type).toBe('text');
-    expect(element.role).toBe(CardTitleRole.id);
+    expect(element.role).toBe(TitleRole.id);
   });
 
   it('auto-binds to the first compatible unbound property', () => {
     const element = createRoleElement(
-      CardTitleRole.id,
+      TitleRole.id,
       design_books,
       layout_card_1,
     );
@@ -33,10 +33,9 @@ describe('createRoleElement', () => {
   });
 
   it('leaves the element unbound when no compatible property exists', () => {
-    // The design has one image property; bind-less designs leave the
-    // element unbound
+    // Bind-less designs leave the element unbound
     const element = createRoleElement(
-      CardCoverRole.id,
+      TitleRole.id,
       { ...design_books, properties: [] },
       layout_card_1,
     );

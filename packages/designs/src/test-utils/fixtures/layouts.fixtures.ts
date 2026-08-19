@@ -16,6 +16,7 @@ function generateLayoutFixture(type: LayoutType, version: number): Layout {
     tree: {
       id: 'root',
       type: 'root',
+      layoutType: type,
       style: {},
       children: [
         element_container_1,

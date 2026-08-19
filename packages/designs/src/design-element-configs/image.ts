@@ -24,8 +24,15 @@ export const ImageElementConfig: DesignElementConfig<ImageElement> = {
   group: 'media',
   styleCategory: 'image',
   compatiblePropertyTypes: ['image'],
+  supportsStaticContent: true,
+  emptyBehavior: 'hide',
   template: {
     type: 'image',
-    style: {},
+    // New images start on photograph proportions with a covering
+    // fit, the cover-image look most images are placed for
+    style: {
+      aspectRatio: '4/3',
+      objectFit: 'cover',
+    },
   },
 };

@@ -1,12 +1,15 @@
 /**
  * The border color roles: the schemable weights plus the fixed
- * brand and intent outlines. Hover and selection borders are not
- * design vocabulary.
+ * neutral, brand and intent outlines. Hover and selection borders
+ * are not design vocabulary.
  */
 export const BorderColorTokens = [
   'subtle',
   'default',
   'strong',
+  'neutral-subtle',
+  'neutral',
+  'neutral-strong',
   'primary-subtle',
   'primary',
   'danger-subtle',

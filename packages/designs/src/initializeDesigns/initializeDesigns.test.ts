@@ -5,7 +5,7 @@ import { DesignsStore } from '../DesignsStore';
 import { DesignsLoadedEvent, DesignsLoadedEventData } from '../events';
 import { BuiltInDesignRoles } from '../roles';
 import { DesignFixtures, MockFs, cleanup, setup } from '../test-utils';
-import { resolveDesignFilePath } from '../utils';
+import { resolveDesignFilePath, resolveDesignsDirPath } from '../utils';
 import { initializeDesigns } from './initializeDesigns';
 
 const { design_books, design_empty } = DesignFixtures;
@@ -47,6 +47,23 @@ describe('initializeDesigns', () => {
         'test',
         (payload) => {
           expect(payload.data.length).toBeGreaterThan(0);
+          done();
+        },
+      );
+
+      initializeDesigns();
+    }));
+
+  it('dispatches a designs loaded event when there are no designs', async () =>
+    new Promise<void>((done) => {
+      // Remove the designs directory, as in a fresh workspace
+      MockFs.removeDir(resolveDesignsDirPath());
+
+      Events.addListener<DesignsLoadedEventData>(
+        DesignsLoadedEvent,
+        'test',
+        (payload) => {
+          expect(payload.data).toEqual([]);
           done();
         },
       );
