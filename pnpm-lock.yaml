@@ -629,6 +629,85 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
+  features/designs:
+    dependencies:
+      '@minddrop/collections':
+        specifier: workspace:*
+        version: link:../../packages/collections
+      '@minddrop/data-views':
+        specifier: workspace:*
+        version: link:../../packages/data-views
+      '@minddrop/designs':
+        specifier: workspace:*
+        version: link:../../packages/designs
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../../packages/events
+      '@minddrop/feature-data-views':
+        specifier: workspace:*
+        version: link:../data-views
+      '@minddrop/feature-markdown-editor':
+        specifier: workspace:*
+        version: link:../markdown-editor
+      '@minddrop/feature-properties':
+        specifier: workspace:*
+        version: link:../properties
+      '@minddrop/file-system':
+        specifier: workspace:*
+        version: link:../../packages/file-system
+      '@minddrop/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
+      '@minddrop/properties':
+        specifier: workspace:*
+        version: link:../../packages/properties
+      '@minddrop/selection':
+        specifier: workspace:*
+        version: link:../../packages/selection
+      '@minddrop/stores':
+        specifier: workspace:*
+        version: link:../../packages/stores
+      '@minddrop/test-utils':
+        specifier: workspace:*
+        version: link:../../packages/test-utils
+      '@minddrop/ui-canvas':
+        specifier: workspace:*
+        version: link:../../ui/canvas
+      '@minddrop/ui-components':
+        specifier: workspace:*
+        version: link:../../ui/components
+      '@minddrop/ui-drag-and-drop':
+        specifier: workspace:*
+        version: link:../../ui/drag-and-drop
+      '@minddrop/ui-icons':
+        specifier: workspace:*
+        version: link:../../ui/icons
+      '@minddrop/ui-primitives':
+        specifier: workspace:*
+        version: link:../../ui/primitives
+      '@minddrop/ui-theme':
+        specifier: workspace:*
+        version: link:../../ui/theme
+      '@minddrop/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
+      '@minddrop/views':
+        specifier: workspace:*
+        version: link:../../packages/views
+    devDependencies:
+      '@minddrop/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      eslint:
+        specifier: ^9.39.3
+        version: 9.39.3
+      tsconfig:
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
   features/designs-legacy:
     dependencies:
       '@minddrop/collections':
@@ -740,6 +819,9 @@ importers:
       '@minddrop/databases':
         specifier: workspace:*
         version: link:../../packages/databases
+      '@minddrop/designs':
+        specifier: workspace:*
+        version: link:../../packages/designs
       '@minddrop/designs-legacy':
         specifier: workspace:*
         version: link:../../packages/designs-legacy
@@ -758,6 +840,9 @@ importers:
       '@minddrop/feature-databases':
         specifier: workspace:*
         version: link:../databases
+      '@minddrop/feature-designs':
+        specifier: workspace:*
+        version: link:../designs
       '@minddrop/feature-designs-legacy':
         specifier: workspace:*
         version: link:../designs-legacy

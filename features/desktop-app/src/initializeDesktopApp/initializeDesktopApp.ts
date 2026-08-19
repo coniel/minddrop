@@ -1,11 +1,13 @@
 import { Collections } from '@minddrop/collections';
 import { DataViews } from '@minddrop/data-views';
 import { Databases } from '@minddrop/databases';
+import { Designs as DesignsNext } from '@minddrop/designs';
 import { Designs } from '@minddrop/designs-legacy';
 import { registerBlockSelectionSerializer } from '@minddrop/editor';
 import { initializeCollectionsFeature } from '@minddrop/feature-collections';
 import { initializeDataViewsFeature } from '@minddrop/feature-data-views';
 import { DatabaseViewStateStore } from '@minddrop/feature-databases';
+import { initializeDesignsFeature } from '@minddrop/feature-designs';
 import { LayoutRegionSizesStore } from '@minddrop/feature-designs-legacy';
 import { initializeDevToolsFeature } from '@minddrop/feature-dev-tools';
 // Register the component stories with the story registry
@@ -91,6 +93,7 @@ async function runInitialization(): Promise<void> {
   initializeViewsFeature();
   initializeCollectionsFeature();
   initializeDataViewsFeature();
+  initializeDesignsFeature();
   initializeQueriesFeature();
 
   // Initialize workspaces (sets Paths.workspace and
@@ -108,6 +111,11 @@ async function runInitialization(): Promise<void> {
   await TabSetsStore.hydrate();
 
   await Designs.initialize();
+
+  // Initialize the rebuilt designs system, which runs alongside the
+  // legacy one until the migration completes
+  await DesignsNext.initialize();
+
   Sql.initialize();
   const { schemaChanged } = await Databases.initialize();
 

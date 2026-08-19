@@ -1,6 +1,9 @@
 import { FC, useCallback, useLayoutEffect, useState } from 'react';
 import {
   Events,
+  NavToolbarBackEvent,
+  SetNavToolbarBackActionEvent,
+  SetNavToolbarBackActionEventData,
   SetNavToolbarWidthEvent,
   SetNavToolbarWidthEventData,
 } from '@minddrop/events';
@@ -17,6 +20,10 @@ import './NavToolbar.css';
  */
 export const NavToolbar: FC = () => {
   const [width, setWidth] = useState(0);
+  // The view-provided back action overriding the tab history
+  // navigation, when one is registered
+  const [backAction, setBackAction] =
+    useState<SetNavToolbarBackActionEventData>(null);
 
   // Whether the active tab has history to navigate to
   const canGoBack = Tabs.useCanGoBack(DefaultViewAreaId);
@@ -33,15 +40,33 @@ export const NavToolbar: FC = () => {
       },
     );
 
+    // Views register a back action of their own, e.g. an editor
+    // backing out to its dashboard
+    Events.addListener<SetNavToolbarBackActionEventData>(
+      SetNavToolbarBackActionEvent,
+      'app-nav-toolbar',
+      ({ data }) => {
+        setBackAction(data);
+      },
+    );
+
     return () => {
       Events.removeListener(SetNavToolbarWidthEvent, 'app-nav-toolbar');
+      Events.removeListener(SetNavToolbarBackActionEvent, 'app-nav-toolbar');
     };
   }, []);
 
-  // Navigate the active tab back through its history
+  // Run the overriding back action, or navigate the active tab
+  // back through its history
   const handleClickBack = useCallback(() => {
+    if (backAction) {
+      Events.dispatch(NavToolbarBackEvent);
+
+      return;
+    }
+
     Tabs.goBack(DefaultViewAreaId);
-  }, []);
+  }, [backAction]);
 
   // Navigate the active tab forward through its history
   const handleClickForward = useCallback(() => {
@@ -53,10 +78,10 @@ export const NavToolbar: FC = () => {
       <Toolbar className="electrobun-webkit-app-region-no-drag">
         <ToolbarIconButton
           icon="chevron-left"
-          label="navigation.back"
-          tooltip={{ title: 'navigation.back' }}
+          label={backAction?.label ?? 'navigation.back'}
+          tooltip={{ title: backAction?.label ?? 'navigation.back' }}
           size="sm"
-          disabled={!canGoBack}
+          disabled={!backAction && !canGoBack}
           onClick={handleClickBack}
         />
         <ToolbarIconButton

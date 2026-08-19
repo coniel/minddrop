@@ -3,6 +3,10 @@ import { Events, SetNavToolbarWidthEvent } from '@minddrop/events';
 import { CollectionsMenuItem } from '@minddrop/feature-collections';
 import { DataViewsMenuItem } from '@minddrop/feature-data-views';
 import { DatabasesSidebarMenu } from '@minddrop/feature-databases';
+import {
+  DesignStudioIcon,
+  OpenDesignStudioEvent as OpenNextDesignStudioEvent,
+} from '@minddrop/feature-designs';
 import { OpenDesignStudioEvent } from '@minddrop/feature-designs-legacy';
 import { QueriesMenuItem } from '@minddrop/feature-queries';
 import { OpenSearchDialogEvent } from '@minddrop/feature-search';
@@ -26,6 +30,10 @@ export const AppSidebar: React.FC<SidebarProps> = ({ ...other }) => {
 
   function handleOpenDesignStudio() {
     Events.dispatch(OpenDesignStudioEvent);
+  }
+
+  function handleOpenNextDesignStudio() {
+    Events.dispatch(OpenNextDesignStudioEvent, {});
   }
 
   function handleResize(width: number) {
@@ -55,6 +63,12 @@ export const AppSidebar: React.FC<SidebarProps> = ({ ...other }) => {
           label="designStudio.open"
           tooltip={{ title: 'designStudio.open' }}
           onClick={handleOpenDesignStudio}
+        />
+        <ToolbarIconButton
+          icon={DesignStudioIcon}
+          label="designsStudio.open"
+          tooltip={{ title: 'designsStudio.open' }}
+          onClick={handleOpenNextDesignStudio}
         />
       </Toolbar>
       <MenuGroup>
