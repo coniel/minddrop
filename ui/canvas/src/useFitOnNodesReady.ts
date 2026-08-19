@@ -14,8 +14,13 @@ const FIT_MAX_ATTEMPTS = 10;
  * Later changes to the expected node set do not re-fit the view.
  *
  * @param expectedNodeIds - The IDs of the nodes to wait for.
+ * @param enabled - Whether to fit at all, for canvases which
+ *   restore a view of their own.
  */
-export function useFitOnNodesReady(expectedNodeIds: string[]): void {
+export function useFitOnNodesReady(
+  expectedNodeIds: string[],
+  enabled = true,
+): void {
   const { store } = useCanvasContext();
   const idsRef = useRef(expectedNodeIds);
 
@@ -25,6 +30,11 @@ export function useFitOnNodesReady(expectedNodeIds: string[]): void {
   });
 
   useEffect(() => {
+    // The canvas opens on a view of its own
+    if (!enabled) {
+      return;
+    }
+
     let done = false;
 
     // Fits the view if the viewport is measured and all expected
@@ -94,5 +104,5 @@ export function useFitOnNodesReady(expectedNodeIds: string[]): void {
       done = true;
       unsubscribe();
     };
-  }, [store]);
+  }, [store, enabled]);
 }

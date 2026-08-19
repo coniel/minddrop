@@ -3,6 +3,7 @@ export * from './CanvasAlignmentGuides';
 export * from './CanvasConnectionsLayer';
 export * from './CanvasLasso';
 export * from './CanvasNode';
+export * from './CanvasContext';
 export * from './CanvasProvider';
 export * from './CanvasSelectionBox';
 export * from './CanvasSelectionToolbar';

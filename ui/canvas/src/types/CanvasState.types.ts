@@ -29,6 +29,12 @@ export interface CanvasViewportSize {
 }
 
 /**
+ * The background grid patterns a canvas can render behind its
+ * content.
+ */
+export type CanvasGrid = 'none' | 'dots' | 'lines';
+
+/**
  * Configuration options for creating a canvas store.
  */
 export interface CanvasStoreConfig {
@@ -51,6 +57,11 @@ export interface CanvasStoreConfig {
    * The initial pan offset.
    */
   initialPan?: CanvasPoint;
+
+  /**
+   * The background grid pattern shown initially. Defaults to dots.
+   */
+  initialGrid?: CanvasGrid;
 
   /**
    * Whether node interactions snap to the grid initially.
@@ -104,6 +115,12 @@ export interface CanvasState {
    * state-driven fit and centering computations.
    */
   nodes: Record<string, CanvasNodeFrame>;
+
+  /**
+   * The background grid pattern rendered behind the canvas
+   * content.
+   */
+  grid: CanvasGrid;
 
   /**
    * Whether node drags and resizes snap to the canvas grid.
@@ -257,6 +274,12 @@ export interface CanvasState {
    * @param size - The new viewport size.
    */
   setViewportSize: (size: CanvasViewportSize) => void;
+
+  /**
+   * Sets the background grid pattern.
+   * @param grid - The grid pattern to render.
+   */
+  setGrid: (grid: CanvasGrid) => void;
 
   /**
    * Sets whether node drags and resizes snap to the grid.

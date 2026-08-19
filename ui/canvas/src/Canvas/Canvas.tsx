@@ -34,13 +34,6 @@ export interface CanvasSelectionDeleteOptions {
   shiftKey: boolean;
 }
 
-export interface CanvasBackgroundOptions {
-  /**
-   * The background pattern rendered behind the canvas content.
-   */
-  type: 'dots' | 'none';
-}
-
 export interface CanvasProps {
   /**
    * The canvas content, rendered inside the transform layer in
@@ -71,9 +64,10 @@ export interface CanvasProps {
   onNameChange?: (name: string) => void;
 
   /**
-   * The canvas background configuration. Defaults to a dot grid.
+   * Content rendered to the right of the canvas name field, e.g. a
+   * breadcrumb into the open part of the canvas.
    */
-  background?: CanvasBackgroundOptions;
+  nameAccessory?: React.ReactNode;
 
   /**
    * Called when the empty canvas background is pressed (not a
@@ -158,7 +152,7 @@ export const Canvas: React.FC<CanvasProps> = ({
   name,
   namePlaceholder,
   onNameChange,
-  background = { type: 'dots' },
+  nameAccessory,
   onBackgroundMouseDown,
   onDrop,
   onDragOver,
@@ -172,6 +166,7 @@ export const Canvas: React.FC<CanvasProps> = ({
   const { store, viewportRef, transformLayerRef } = useCanvasContext();
   const zoom = useCanvasStore((state) => state.zoom);
   const pan = useCanvasStore((state) => state.pan);
+  const grid = useCanvasStore((state) => state.grid);
   const isPanning = useRef(false);
   const panStart = useRef({ x: 0, y: 0, panX: 0, panY: 0 });
   const isSpaceHeld = useRef(false);
@@ -558,7 +553,7 @@ export const Canvas: React.FC<CanvasProps> = ({
     <div
       ref={viewportRef}
       className={`ui-canvas-viewport${
-        background.type === 'dots' ? ' ui-canvas-viewport-dots' : ''
+        grid === 'none' ? '' : ` ui-canvas-viewport-${grid}`
       }${className ? ` ${className}` : ''}`}
       style={
         {
@@ -598,13 +593,17 @@ export const Canvas: React.FC<CanvasProps> = ({
         <CanvasSelectionBox onNodesFrameChange={onNodesFrameChange} />
       </div>
 
-      {/* Editable canvas name */}
+      {/* Editable canvas name, with the consumer's accessory
+          content beside it */}
       {name !== undefined && (
-        <CanvasNameField
-          name={name}
-          placeholder={namePlaceholder}
-          onNameChange={onNameChange}
-        />
+        <div className="ui-canvas-name-bar">
+          <CanvasNameField
+            name={name}
+            placeholder={namePlaceholder}
+            onNameChange={onNameChange}
+          />
+          {nameAccessory}
+        </div>
       )}
 
       {/* Consumer-supplied toolbar floating above the selection */}

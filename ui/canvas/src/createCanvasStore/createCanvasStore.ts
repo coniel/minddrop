@@ -42,6 +42,8 @@ export function createCanvasStore(config: CanvasStoreConfig = {}): CanvasStore {
     getViewportSize: () => store.getState().viewportSize,
     getNode: (nodeId) => store.getState().nodes[nodeId] || null,
     getNodes: () => store.getState().nodes,
+    getGrid: () => store.getState().grid,
+    setGrid: (grid) => store.getState().setGrid(grid),
     getSnapToGrid: () => store.getState().snapToGrid,
     getSnapToObjects: () => store.getState().snapToObjects,
     getSelectable: () => store.getState().selectable,
@@ -135,6 +137,7 @@ function createInternalStore(config: CanvasStoreConfig) {
     maxZoom = DEFAULT_MAX_ZOOM,
     initialZoom = 1,
     initialPan = { x: 0, y: 0 },
+    initialGrid = 'dots',
     initialSnapToGrid = false,
     initialSnapToObjects = false,
     selectable = true,
@@ -147,6 +150,7 @@ function createInternalStore(config: CanvasStoreConfig) {
     maxZoom,
     viewportSize: { width: 0, height: 0 },
     nodes: {},
+    grid: initialGrid,
     snapToGrid: initialSnapToGrid,
     snapToObjects: initialSnapToObjects,
     selectable,
@@ -269,6 +273,8 @@ function createInternalStore(config: CanvasStoreConfig) {
       }),
 
     setViewportSize: (size) => set({ viewportSize: size }),
+
+    setGrid: (grid) => set({ grid }),
 
     setSnapToGrid: (enabled) => set({ snapToGrid: enabled }),
 

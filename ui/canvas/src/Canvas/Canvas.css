@@ -17,21 +17,48 @@
     outline: none;
   }
 
-  &.ui-canvas-viewport-dots::before {
+  /* Shared grid overlay plumbing: the pattern scales with zoom and
+     tracks the pan through the grid variables */
+  &.ui-canvas-viewport-dots::before,
+  &.ui-canvas-viewport-lines::before {
     content: '';
     position: absolute;
     inset: 0;
-    background-image: radial-gradient(
-      circle,
-      var(--border-default) 1px,
-      transparent 1px
-    );
     background-size: var(--ui-canvas-grid-size) var(--ui-canvas-grid-size);
     background-position: var(--ui-canvas-grid-offset-x)
       var(--ui-canvas-grid-offset-y);
     opacity: var(--ui-canvas-grid-opacity);
     pointer-events: none;
     transition: opacity 0.2s ease;
+  }
+
+  &.ui-canvas-viewport-dots::before {
+    background-image: radial-gradient(
+      circle,
+      var(--border-default) 1px,
+      transparent 1px
+    );
+  }
+
+  /* Full lines cover far more ground than dots, so they use the
+     subtle border colour at half strength to stay quiet */
+  &.ui-canvas-viewport-lines::before {
+    background-image:
+      linear-gradient(to right, var(--border-subtle) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--border-subtle) 1px, transparent 1px);
+    opacity: calc(var(--ui-canvas-grid-opacity) * 0.5);
+  }
+
+  /* The name bar at the top left of the canvas, mirroring the
+     canvas toolbar's top right position */
+  .ui-canvas-name-bar {
+    position: absolute;
+    top: var(--space-4);
+    left: var(--space-4);
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
   }
 
   .ui-canvas-transform-layer {

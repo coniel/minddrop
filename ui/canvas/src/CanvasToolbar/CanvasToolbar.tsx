@@ -1,10 +1,16 @@
 import { useCallback } from 'react';
+import { TranslationKey } from '@minddrop/i18n';
 import {
+  ActionMenuRadioItem,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuPortal,
   DropdownMenuPositioner,
+  DropdownMenuRadioGroup,
   DropdownMenuRoot,
+  DropdownMenuSeparator,
   DropdownMenuSwitchItem,
   DropdownMenuTrigger,
   FloatingToolbar,
@@ -12,12 +18,20 @@ import {
   ToolbarIconButton,
   ToolbarSeparator,
 } from '@minddrop/ui-primitives';
+import { CanvasGrid } from '../types';
 import { useCanvas } from '../useCanvas';
 import { useCanvasStore } from '../useCanvasStore';
 import './CanvasToolbar.css';
 
 /** Preset zoom levels shown in the dropdown menu. */
 const ZOOM_PRESETS = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 3];
+
+/** The grid pattern options shown in the settings menu. */
+const GRID_OPTIONS: { value: CanvasGrid; label: TranslationKey }[] = [
+  { value: 'none', label: 'canvas.grid.none' },
+  { value: 'dots', label: 'canvas.grid.dots' },
+  { value: 'lines', label: 'canvas.grid.lines' },
+];
 
 export interface CanvasToolbarProps {
   /**
@@ -30,6 +44,11 @@ export interface CanvasToolbarProps {
    * Optional additional class name for the toolbar container.
    */
   className?: string;
+
+  /**
+   * Consumer toolbars rendered left of the zoom controls.
+   */
+  children?: React.ReactNode;
 }
 
 /**
@@ -42,10 +61,12 @@ export interface CanvasToolbarProps {
 export const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
   onFit,
   className,
+  children,
 }) => {
   const zoom = useCanvasStore((state) => state.zoom);
   const minZoom = useCanvasStore((state) => state.minZoom);
   const maxZoom = useCanvasStore((state) => state.maxZoom);
+  const grid = useCanvasStore((state) => state.grid);
   const snapToGrid = useCanvasStore((state) => state.snapToGrid);
   const snapToObjects = useCanvasStore((state) => state.snapToObjects);
   const canvas = useCanvas();
@@ -78,6 +99,17 @@ export const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
     handleSetZoom(1);
   }, [handleSetZoom]);
 
+  // Switch the background grid pattern, narrowing the submenu's
+  // stringly typed value back onto the grid union
+  const handleGridChange = useCallback(
+    (value: string) => {
+      if (value === 'none' || value === 'dots' || value === 'lines') {
+        canvas.setGrid(value);
+      }
+    },
+    [canvas],
+  );
+
   // Turn snapping node interactions to the grid on or off
   const handleSnapToGridChange = useCallback(
     (enabled: boolean) => {
@@ -105,6 +137,9 @@ export const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
 
   return (
     <div className={`ui-canvas-toolbar${className ? ` ${className}` : ''}`}>
+      {/* Consumer toolbars sit left of the zoom controls */}
+      {children}
+
       {/* Zoom controls */}
       <FloatingToolbar size="md" visible className="ui-canvas-toolbar-zoom">
         {/* Zoom out button */}
@@ -210,6 +245,25 @@ export const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
                   checked={snapToObjects}
                   onCheckedChange={handleSnapToObjectsChange}
                 />
+
+                <DropdownMenuSeparator />
+
+                {/* Background grid pattern */}
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel label="canvas.grid.label" />
+                  <DropdownMenuRadioGroup
+                    value={grid}
+                    onValueChange={handleGridChange}
+                  >
+                    {GRID_OPTIONS.map((option) => (
+                      <ActionMenuRadioItem
+                        key={option.value}
+                        value={option.value}
+                        label={option.label}
+                      />
+                    ))}
+                  </DropdownMenuRadioGroup>
+                </DropdownMenuGroup>
               </DropdownMenuContent>
             </DropdownMenuPositioner>
           </DropdownMenuPortal>

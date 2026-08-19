@@ -1,10 +1,6 @@
-/* The name field at the top left of the canvas, mirroring the
-   canvas toolbar's top right position */
+/* The name field sizes itself; the name bar positions it at the
+   top left of the canvas */
 .ui-canvas-name-field.text-input {
-  position: absolute;
-  top: var(--space-4);
-  left: var(--space-4);
-  z-index: 1;
   width: 240px;
   /* Matches the toolbar height: a small button plus the
      toolbar's padding and border */

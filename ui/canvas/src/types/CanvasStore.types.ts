@@ -15,7 +15,7 @@ import {
   CanvasLassoState,
   CanvasSelection,
 } from './CanvasSelection.types';
-import { CanvasViewportSize } from './CanvasState.types';
+import { CanvasGrid, CanvasViewportSize } from './CanvasState.types';
 
 /**
  * The API of a canvas instance's store, wrapping its state in
@@ -266,6 +266,18 @@ export interface CanvasStore {
    * @param size - The new viewport size.
    */
   setViewportSize(size: CanvasViewportSize): void;
+
+  /**
+   * Returns the background grid pattern.
+   */
+  getGrid(): CanvasGrid;
+
+  /**
+   * Sets the background grid pattern.
+   *
+   * @param grid - The grid pattern to render.
+   */
+  setGrid(grid: CanvasGrid): void;
 
   /**
    * Sets whether node drags and resizes snap to the grid.
