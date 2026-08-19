@@ -83,7 +83,7 @@
      Readable line-length limits for text blocks.
      ------------------------------------------------------------ */
 
-  --measure-narrow: 24rem; /* 384px - captions, empty-state prose */
-  --measure-content: 40rem; /* 640px - reading-length body text */
-  --measure-wide: 54rem; /* 864px - wide content, forms */
+  --measure-narrow: 30rem; /* 480px - focused prose, forms */
+  --measure-content: 45rem; /* 720px - reading-length body text */
+  --measure-wide: 60rem; /* 960px - wide content, forms */
 }

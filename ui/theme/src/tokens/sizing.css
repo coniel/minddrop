@@ -71,7 +71,8 @@
 
   --border-width-thin: 1px; /* default borders, dividers */
   --border-width-medium: 2px; /* emphasized outlines */
-  --border-width-thick: 3px; /* statement borders, accent bars */
+  --border-width-thick: 3px; /* statement borders */
+  --border-width-accent: 6px; /* decorative single-side accent bars */
 
   /* ------------------------------------------------------------
      ICON SIZES

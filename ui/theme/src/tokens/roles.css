@@ -119,6 +119,12 @@
   /* The app canvas behind everything */
   --surface-app: var(--app-background);
 
+  /* Neutral fills pinned to the neutral palette, for surfaces
+     which stay grey inside a scheme */
+  --surface-neutral-subtle: var(--neutral-200);
+  --surface-neutral: var(--neutral-300);
+  --surface-solid-neutral: var(--neutral-900);
+
   /* Currently-selected content: text selection, active list item */
   --surface-selected: var(--primary-400);
 
@@ -176,6 +182,12 @@
   /* ------------------------------------------------------------
      BORDER ROLES - FIXED
      ------------------------------------------------------------ */
+
+  /* Neutral outlines pinned to the neutral palette, for borders
+     which stay grey inside a scheme */
+  --border-neutral-subtle: var(--neutral-500);
+  --border-neutral: var(--neutral-600);
+  --border-neutral-strong: var(--neutral-700);
 
   /* Outline around selected content */
   --border-selected: var(--primary-700);
