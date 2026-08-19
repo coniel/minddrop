@@ -5,6 +5,32 @@ touching the related code. Organised by package/feature. Add entries as
 they come up; delete entries when the underlying code changes make them
 obsolete.
 
+## Repo-wide
+
+### index.ts files with definitions predating the barrel-only rule
+
+index.ts files are now strictly barrel exports (see CLAUDE.md, adopted
+2026-08-19; `locales/index.ts` building the locales map is the one
+exception). The new designs packages comply, but older code still
+defines things in barrels. Known offenders to split when work next
+touches them:
+
+- `packages/databases/src/index.ts` (`DatabaseFixtures` assembly)
+- `packages/databases/src/automation-action-configs/index.ts`
+  (`coreDatabaseAutomationActionConfigs`)
+- `packages/databases/src/database-templates/index.ts`
+  (`coreDatabaseTemplates`)
+- `packages/databases/src/entry-serializers/index.ts`
+  (`coreEntrySerializers`)
+- `packages/i18n/src/index.ts` (`useTranslation`, `translateDynamic`,
+  `I18n` facade, more)
+- `packages/properties/src/schemas/index.ts` (`PropertySchemas`)
+- `packages/utils/src/index.ts` (`YAML` facade)
+- `ui/primitives/src/test-utils/index.ts` (`i18nTestString`)
+
+App entry points (`apps/*/src/**/index.ts`) are not barrels and are
+fine as they are.
+
 ## packages/data-views
 
 ### Some view-era names are deliberately retained after the data-views split
@@ -477,7 +503,90 @@ virtualization. Fine for small lists (collection pickers, data
 sources), but don't reach for `groups` on a list that can grow to
 hundreds of entries without checking the render cost first.
 
+### Never style a draggable with `:hover` or `:active`
+
+Native HTML5 drag (`draggable`/`dragstart`, as used by
+`@minddrop/selection`'s `useDraggable`) takes the pointer away from
+the page for the drag's duration. The browser freezes hover and
+swallows the pointer release, and does not reliably retire either
+afterwards:
+
+- `:active` sticks to the element the drag started from and never
+  clears. Every drag leaves another element looking pressed and they
+  accumulate.
+- `:hover` chains accumulate too. Several rows match `:hover` at
+  once, including rows the pointer left long ago. Confirmed by
+  `document.querySelectorAll(':hover')` returning two sibling rows
+  after a drop.
+
+Neither is fixable in CSS, because both are real browser state. A
+gating attribute only chooses when the stuck styling is visible: the
+whole accumulated set blinks off and back on as the gate toggles,
+which is the tell that something is stuck rather than mis-targeted.
+
+Track both in JS instead, where the state cannot accumulate:
+
+- `usePressedState` (ui-primitives) watches for the release on the
+  document, since the element never sees it once a drag begins, and
+  treats `drop`/`dragend` as releases. Style on
+  `[data-pressed='true']`.
+- `useHoveredItem` (features/designs) holds a single hovered ID, so
+  one row taking hover is what releases the last, and a late
+  `pointerleave` cannot unhover its successor. Style on
+  `[data-hovered='true']`.
+
+`useHoveredItem` also withholds hover from `dragstart` until the
+pointer moves under its own steam. A drop reflows the panel beneath a
+stationary pointer, and the browser announces whatever slid
+underneath as newly entered, which would otherwise light up a row the
+user never pointed at. Movement is measured against the last known
+position, since settling content fires moves at the position the
+pointer already occupies.
+
+The properties tab never showed any of this because `SortableList`
+drags with `setPointerCapture` and `pointermove`/`pointerup` rather
+than native DnD, so the pointer is never taken away. That difference
+is the diagnostic: if a drag surface has these symptoms, check which
+of the two mechanisms it uses first.
+
 ## features/designs
+
+### The studio store is instance-scoped, and must stay that way
+
+`createDesignStudioStore()` returns a store instance owned by the
+`DesignStudio` view (paired with its own canvas store). The legacy studio
+used a module-level singleton, which is why the studio and spaces edit
+mode could never be open at once and why spaces had to reach in through a
+synthetic-design wrapper. Anything reaching for module state here (a
+debounce timer, a history stack, a cached lookup) reintroduces that
+limitation: keep it in the factory closure.
+
+### Undo history covers exactly what the save path persists
+
+Snapshots hold `layouts` + `elementsByLayout`, not the whole design.
+Property and name edits persist through their own API calls
+(`Designs.addProperty`, `Designs.update`), while the save path writes only
+`{ layouts }` — so snapshotting the full design would let an undo revert a
+property in the store while disk kept it, and the property would reappear
+on reload. Widening history means widening the save path first.
+
+### Element CSS reads type, style and role only
+
+`createElementCssStyle`/`resolveElementStyle` take
+`DesignElementStyleSource` (a distributive `Omit<'children'>` over the
+element union), so the studio's flattened elements (children stored as ID
+references) resolve styles without a cast. Do not "fix" this back to
+`DesignElement`, and do not widen it to `{ type: string; style: unknown }`
+the way legacy did: the union narrowing is what removed legacy's eight
+`as never` casts.
+
+### RTL auto-cleanup is not active in this package
+
+The vitest config runs without globals, so React Testing Library never
+registers its automatic `cleanup`. Component tests must call RTL
+`cleanup` (re-exported from `@minddrop/test-utils`) in `afterEach`
+**before** the fixture cleanup, or queries in later tests match stale DOM
+from earlier ones.
 
 ### `LayoutAutoFocusContext` is deliberately single-purpose
 

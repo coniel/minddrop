@@ -240,3 +240,24 @@ Fix direction: catch and surface query run failures in
 `useQueryNodeResults` rather than letting them reject unhandled (a query
 against an unavailable database is a runtime possibility, not only a test
 artefact), and open an in-memory database in the feature's test setup.
+
+## features/designs
+
+### Background design saves fail silently
+
+`DesignStudioStore`'s debounced save path is fire-and-forget: nothing
+awaits the timer callback or the flush issued from `clear()`, so write
+rejections are contained rather than surfaced (found 2026-08-14 while
+building the debounced save path in the design studio rebuild). A failed
+write leaves the studio showing edits that never reached disk, with no
+indication until the design is reopened.
+
+Containing the rejection is deliberate, not accidental: an uncontained
+one produced a genuine unhandled rejection when a scheduled save fired
+after its design had been closed. Awaiting callers of `saveDesign` and
+`flushSave` still see errors; only the background path swallows them.
+
+Fix direction: give the store an error field the studio can subscribe to
+and surface a toast on write failure, then remove this entry. Note that
+the legacy studio had the same floating-promise behaviour, so this is a
+carried-over gap rather than a regression.
