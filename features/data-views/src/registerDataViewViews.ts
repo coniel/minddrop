@@ -13,11 +13,25 @@ import {
  */
 export function registerDataViewViews(): void {
   // Register the single data view view
-  Views.register({ type: DataViewViewName, component: DataViewView });
+  Views.register({
+    type: DataViewViewName,
+    component: DataViewView,
+    breadcrumbLevel: 'branch',
+  });
 
   // Register the data views list view
-  Views.register({ type: DataViewsViewName, component: DataViewsView });
+  Views.register({
+    type: DataViewsViewName,
+    component: DataViewsView,
+    title: 'dataViews.labels.views',
+    icon: 'layers',
+    breadcrumbLevel: 'root',
+  });
 
   // Register the new data view view
-  Views.register({ type: NewDataViewViewName, component: NewDataViewView });
+  Views.register({
+    type: NewDataViewViewName,
+    component: NewDataViewView,
+    breadcrumbLevel: 'branch',
+  });
 }

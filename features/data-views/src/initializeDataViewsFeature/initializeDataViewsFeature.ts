@@ -14,7 +14,6 @@ import {
   OpenViewEventData,
   UpdateViewEvent,
   UpdateViewEventData,
-  ViewDescriptor,
 } from '@minddrop/views';
 import { DataViewViewProps } from '../DataViewView';
 import { NewDataViewViewProps } from '../NewDataViewView';
@@ -36,23 +35,12 @@ import { locales } from '../locales';
 const dataViewViewId = (dataViewId: string) =>
   `data-views:data-view:${dataViewId}`;
 
-// View instance id of the singleton data views list view
+// View instance id of the singleton data views list view, which is
+// labelled and iconed from its registration
 const dataViewsViewId = 'data-views:data-views';
-
-// Icon shown in the data views list view's tab
-const DATA_VIEWS_VIEW_ICON = 'content-icon:layers:inherit';
 
 // Icon shown in the new data view view's tab
 const NEW_DATA_VIEW_VIEW_ICON = 'content-icon:plus:inherit';
-
-// Descriptor of the data views list view, used both to open it and
-// as the breadcrumb parent of data view views
-const dataViewsViewDescriptor = (): ViewDescriptor => ({
-  view: DataViewsViewName,
-  id: dataViewsViewId,
-  title: i18n.t('dataViews.labels.views'),
-  icon: DATA_VIEWS_VIEW_ICON,
-});
 
 /**
  * Initializes the data views feature by registering translations
@@ -79,7 +67,6 @@ export function initializeDataViewsFeature(): VoidFunction {
         props: { dataViewId: data.dataViewId },
         title: dataView?.name,
         icon: dataView?.icon,
-        breadcrumbs: [dataViewsViewDescriptor()],
       });
     },
   );
@@ -87,10 +74,10 @@ export function initializeDataViewsFeature(): VoidFunction {
   // Listen for open data views view events, and open the data
   // views list view when one is received
   Events.addListener(OpenDataViewsViewEvent, EventListenerId, () => {
-    Events.dispatch<OpenViewEventData>(
-      OpenViewEvent,
-      dataViewsViewDescriptor(),
-    );
+    Events.dispatch<OpenViewEventData>(OpenViewEvent, {
+      view: DataViewsViewName,
+      id: dataViewsViewId,
+    });
   });
 
   // Listen for open new data view view events, and open the view
@@ -105,7 +92,6 @@ export function initializeDataViewsFeature(): VoidFunction {
         props: { viewType: data.viewType },
         title: i18n.t('dataViews.labels.new'),
         icon: NEW_DATA_VIEW_VIEW_ICON,
-        breadcrumbs: [dataViewsViewDescriptor()],
       });
     },
   );

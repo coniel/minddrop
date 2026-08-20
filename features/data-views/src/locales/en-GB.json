@@ -3,6 +3,14 @@
     "labels": {
       "views": "Views"
     },
+    "list": {
+      "searchPlaceholder": "Search views...",
+      "empty": "No views",
+      "noResults": "No matching views"
+    },
+    "details": {
+      "noSelection": "Select a view"
+    },
     "missing": {
       "message": "This view no longer exists."
     },

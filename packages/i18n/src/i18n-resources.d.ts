@@ -1587,14 +1587,19 @@ declare module 'i18next' {
           labels: {
             query: string;
             queries: string;
-            searchPlaceholder: string;
           };
           actions: {
             new: string;
-            delete: string;
+          };
+          list: {
+            searchPlaceholder: string;
+            empty: string;
+            noResults: string;
+          };
+          details: {
+            noSelection: string;
           };
           editor: {
-            noQueries: string;
             namePlaceholder: string;
             selectProperty: string;
             selectOperator: string;
@@ -1906,6 +1911,14 @@ declare module 'i18next' {
             showChips: string;
             hideColumn: string;
           };
+          list: {
+            searchPlaceholder: string;
+            empty: string;
+            noResults: string;
+          };
+          details: {
+            noSelection: string;
+          };
           missing: {
             message: string;
           };
@@ -2074,6 +2087,14 @@ declare module 'i18next' {
           };
           actions: {
             new: string;
+          };
+          list: {
+            searchPlaceholder: string;
+            empty: string;
+            noResults: string;
+          };
+          details: {
+            noSelection: string;
           };
           view: {
             notFound: string;
