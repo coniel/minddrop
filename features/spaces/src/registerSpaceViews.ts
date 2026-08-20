@@ -8,7 +8,11 @@ import { SpaceViewName, SpacesViewName } from './events';
  */
 export function registerSpaceViews(): void {
   // Register the space view, which is labelled by its space
-  Views.register({ type: SpaceViewName, component: SpaceView });
+  Views.register({
+    type: SpaceViewName,
+    component: SpaceView,
+    breadcrumbLevel: 'branch',
+  });
 
   // Register the spaces list view
   Views.register({
@@ -16,5 +20,6 @@ export function registerSpaceViews(): void {
     component: SpacesView,
     title: 'spaces.labels.spaces',
     icon: 'shapes',
+    breadcrumbLevel: 'root',
   });
 }

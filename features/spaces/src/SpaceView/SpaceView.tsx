@@ -1,16 +1,7 @@
-import { useCallback } from 'react';
-import { LayoutRenderer } from '@minddrop/feature-designs-legacy';
-import {
-  Spaces,
-  resolveSpaceMediaDirPath,
-  setLayoutElementContent,
-} from '@minddrop/spaces';
+import { Spaces } from '@minddrop/spaces';
 import { PanelView } from '@minddrop/ui-components';
-import {
-  ScrollArea,
-  Text,
-  TransientViewStateScope,
-} from '@minddrop/ui-primitives';
+import { Text } from '@minddrop/ui-primitives';
+import { SpaceContent } from '../SpaceContent';
 import { setSpaceViewState, useSpaceViewState } from '../SpaceViewStateStore';
 import { SpaceEditMode } from './SpaceEditMode';
 import './SpaceView.css';
@@ -29,22 +20,6 @@ export interface SpaceViewProps {
 export const SpaceView: React.FC<SpaceViewProps> = ({ spaceId }) => {
   const space = Spaces.use(spaceId);
   const { editing } = useSpaceViewState(spaceId);
-
-  // Persist element static content updates (e.g. a created view
-  // reference) into the space's layout
-  const handleUpdateElementContent = useCallback(
-    (elementId: string, content: string) => {
-      // The space cannot be updated once deleted
-      if (!space) {
-        return;
-      }
-
-      Spaces.update(spaceId, {
-        layout: setLayoutElementContent(space.layout, elementId, content),
-      });
-    },
-    [spaceId, space],
-  );
 
   function handleEdit() {
     setSpaceViewState(spaceId, { editing: true });
@@ -79,19 +54,7 @@ export const SpaceView: React.FC<SpaceViewProps> = ({ spaceId }) => {
         ]}
       >
         {/* The space's layout */}
-        <TransientViewStateScope segment={spaceId}>
-          <ScrollArea className="space-view-content" stateKey="content">
-            <LayoutRenderer
-              layout={space.layout}
-              context="page"
-              mediaDirPath={resolveSpaceMediaDirPath(spaceId)}
-              propertyMap={{}}
-              propertyValues={{}}
-              properties={[]}
-              onUpdateElementContent={handleUpdateElementContent}
-            />
-          </ScrollArea>
-        </TransientViewStateScope>
+        <SpaceContent space={space} />
       </PanelView>
     </div>
   );

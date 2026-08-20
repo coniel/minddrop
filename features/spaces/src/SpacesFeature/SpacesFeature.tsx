@@ -15,7 +15,6 @@ import {
   OpenViewEventData,
   UpdateViewEvent,
   UpdateViewEventData,
-  ViewDescriptor,
 } from '@minddrop/views';
 import { NewSpaceDialog } from '../NewSpaceDialog';
 import { SpaceViewProps } from '../SpaceView';
@@ -32,16 +31,9 @@ import {
 // Unique view instance id used to match space views in tabs
 const spaceViewId = (spaceId: string) => `spaces:space:${spaceId}`;
 
-// View instance id of the singleton spaces list view
+// View instance id of the singleton spaces list view, which is
+// labelled and iconed from its registration
 const spacesViewId = 'spaces:spaces';
-
-// Descriptor of the spaces list view, used both to open it and as
-// the breadcrumb parent of space views. It carries no title or icon,
-// which resolve from the view's registration.
-const spacesViewDescriptor = (): ViewDescriptor => ({
-  view: SpacesViewName,
-  id: spacesViewId,
-});
 
 /**
  * Renders the spaces feature dialogs and registers event listeners
@@ -84,7 +76,6 @@ export const SpacesFeature: React.FC = () => {
           props: { spaceId: data.spaceId },
           title: space?.name,
           icon: space?.icon,
-          breadcrumbs: [spacesViewDescriptor()],
         });
       },
     );
@@ -92,7 +83,10 @@ export const SpacesFeature: React.FC = () => {
     // Listen for open spaces view events, and open the spaces
     // list view when one is received
     Events.addListener(OpenSpacesViewEvent, EventListenerId, () => {
-      Events.dispatch<OpenViewEventData>(OpenViewEvent, spacesViewDescriptor());
+      Events.dispatch<OpenViewEventData>(OpenViewEvent, {
+        view: SpacesViewName,
+        id: spacesViewId,
+      });
     });
 
     // Update the space's open view when the space changes

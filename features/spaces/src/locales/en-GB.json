@@ -4,7 +4,15 @@
       "spaces": "Spaces"
     },
     "actions": {
-      "new": "New"
+      "new": "New space"
+    },
+    "list": {
+      "searchPlaceholder": "Search spaces...",
+      "empty": "No spaces",
+      "noResults": "No matching spaces"
+    },
+    "details": {
+      "noSelection": "Select a space"
     },
     "view": {
       "notFound": "This space no longer exists.",
