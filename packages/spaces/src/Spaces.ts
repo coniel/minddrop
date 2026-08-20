@@ -3,6 +3,7 @@ export { deleteSpace as delete } from './deleteSpace';
 export { getSpace as get } from './getSpace';
 export { writeSpace as write } from './writeSpace';
 export { readSpace as read } from './readSpace';
+export { searchSpaces as search } from './utils';
 export {
   SpacesStore as Store,
   useSpace as use,
