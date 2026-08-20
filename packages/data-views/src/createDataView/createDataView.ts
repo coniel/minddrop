@@ -6,6 +6,7 @@ import { DataViewCreatedEvent, DataViewCreatedEventData } from '../events';
 import { extractDataViewReferences } from '../extractDataViewReferences';
 import { getDataViewType } from '../getDataViewType';
 import { DataView, ViewDataSource } from '../types';
+import { toContentIcon } from '../utils';
 import { writeDataView } from '../writeDataView';
 
 /**
@@ -34,7 +35,7 @@ export async function createDataView(
     dataSource,
     type: type,
     name: name || i18n.t(viewType.name),
-    icon: viewType.icon,
+    icon: toContentIcon(viewType.icon),
     created: new Date(),
     lastModified: new Date(),
   };

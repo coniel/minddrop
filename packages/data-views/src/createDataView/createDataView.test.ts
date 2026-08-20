@@ -10,14 +10,14 @@ import {
   setup,
 } from '../test-utils';
 import { DataView } from '../types';
-import { resolveViewFilePath } from '../utils';
+import { resolveViewFilePath, toContentIcon } from '../utils';
 import { createDataView } from './createDataView';
 
 const newView: DataView = {
   id: expect.any(String),
   name: dataViewType_gallery.name,
   type: dataViewType_gallery.type,
-  icon: dataViewType_gallery.icon,
+  icon: toContentIcon(dataViewType_gallery.icon),
   created: mockDate,
   lastModified: mockDate,
   dataSource: {

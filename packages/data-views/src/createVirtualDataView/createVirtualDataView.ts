@@ -5,6 +5,7 @@ import { DataViewCreatedEvent, DataViewCreatedEventData } from '../events';
 import { extractDataViewReferences } from '../extractDataViewReferences';
 import { getDataViewType } from '../getDataViewType';
 import { CreateVirtualDataViewData, DataView } from '../types';
+import { toContentIcon } from '../utils';
 
 /**
  * Creates a virtual data view that exists only in memory.
@@ -30,7 +31,7 @@ export function createVirtualDataView(
     dataSource: viewData.dataSource,
     type: viewData.type,
     name: viewData.name || i18n.t(viewType.name),
-    icon: viewType.icon,
+    icon: toContentIcon(viewType.icon),
     created: new Date(),
     lastModified: new Date(),
   };

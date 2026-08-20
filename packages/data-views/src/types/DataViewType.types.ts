@@ -23,7 +23,8 @@ export interface DataViewType<
   description: TranslationKey;
 
   /**
-   * The default icon for data views of this type.
+   * The name of the UI icon representing the data view type, also
+   * used as the default icon of data views of this type.
    */
   icon: string;
 

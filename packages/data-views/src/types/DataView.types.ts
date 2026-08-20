@@ -30,7 +30,10 @@ export interface DataView<
   type: string;
 
   /**
-   * The icon for the data view. Defaults to the data view type's icon.
+   * The data view's stringified content icon, defaulting to its type's
+   * icon.
+   * - `content-icon`: '[set-name]:[icon-name]:[color]'
+   * - `emoji`: 'emoji:[emoji-character]:[skin-tone]'
    */
   icon: string;
 

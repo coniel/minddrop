@@ -3,6 +3,7 @@ import { Events } from '@minddrop/events';
 import { DataViewsStore } from '../DataViewsStore';
 import { DataViewCreatedEvent } from '../events';
 import { cleanup, dataViewType_gallery, mockDate, setup } from '../test-utils';
+import { toContentIcon } from '../utils';
 import { createVirtualDataView } from './createVirtualDataView';
 
 const id = 'virtual-view-1';
@@ -13,7 +14,7 @@ const expectedView = {
   virtual: true,
   name: dataViewType_gallery.type,
   type: dataViewType_gallery.type,
-  icon: dataViewType_gallery.icon,
+  icon: toContentIcon(dataViewType_gallery.icon),
   dataSource,
   created: mockDate,
   lastModified: mockDate,
