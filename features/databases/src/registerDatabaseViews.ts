@@ -11,10 +11,12 @@ export function registerDatabaseViews(): void {
   Views.register({
     type: DatabaseViewName,
     component: DatabaseView,
+    breadcrumbLevel: 'branch',
   });
 
   Views.register({
     type: DatabaseEntryViewName,
     component: DatabaseEntryPage,
+    breadcrumbLevel: 'leaf',
   });
 }
