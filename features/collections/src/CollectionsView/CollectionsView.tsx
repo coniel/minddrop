@@ -1,19 +1,13 @@
-import { useEffect, useState } from 'react';
-import { Collections } from '@minddrop/collections';
-import { PanelView } from '@minddrop/ui-components';
-import {
-  Group,
-  Icon,
-  IconButton,
-  MenuGroup,
-  MenuItem,
-  ScrollArea,
-  Stack,
-  Text,
-  TextInput,
-} from '@minddrop/ui-primitives';
+import { useMemo, useState } from 'react';
+import { Collection, Collections } from '@minddrop/collections';
+import { ListPanelView, ListPanelViewItem } from '@minddrop/ui-components';
+import { IconButton } from '@minddrop/ui-primitives';
+import { Views } from '@minddrop/views';
 import { CollectionDetails } from './CollectionDetails';
 import './CollectionsView.css';
+
+// Icon shown for every collection until collections gain an icon field
+const COLLECTION_ICON = 'content-icon:library:default';
 
 /**
  * Renders a two column view of the persisted collections: a
@@ -22,119 +16,77 @@ import './CollectionsView.css';
  */
 export const CollectionsView: React.FC = () => {
   const [query, setQuery] = useState('');
-  const [selectedCollectionId, setSelectedCollectionId] = useState('');
+  const subview = Views.useSubview();
+  const setSubview = Views.useSetSubview();
   const collections = Collections.useAll();
-  const selectedCollection = Collections.use(selectedCollectionId);
+  const selectedCollection = Collections.use(subview?.id ?? '');
 
-  // List only persisted collections, excluding virtual ones
-  const persistedCollections = collections.filter(
-    (collection) => !collection.virtual,
+  // Collections listed in the left column: fuzzy name matches when
+  // searching, all persisted collections otherwise
+  const items = useMemo(() => {
+    // List only persisted collections, excluding virtual ones
+    const persisted = collections.filter((collection) => !collection.virtual);
+
+    const listed = query
+      ? Collections.search(
+          query,
+          persisted.map((collection) => collection.id),
+        )
+      : persisted;
+
+    return listed.map(toListItem);
+  }, [collections, query]);
+
+  // The collection rendered by the panel's content
+  const selectedItem = useMemo(
+    () => selectedCollection && toListItem(selectedCollection),
+    [selectedCollection],
   );
 
-  // Collections listed in the left column: fuzzy name matches
-  // when searching, all persisted collections otherwise
-  const listedCollections = query
-    ? Collections.search(
-        query,
-        persistedCollections.map((collection) => collection.id),
-      )
-    : persistedCollections;
-
-  // The collection selected by default, also used as the fallback
-  // when the selected collection is deleted
-  const firstCollectionId = persistedCollections[0]?.id;
-
-  // Select the first collection when nothing is selected
-  useEffect(() => {
-    if (!selectedCollection && firstCollectionId) {
-      setSelectedCollectionId(firstCollectionId);
-    }
-  }, [selectedCollection, firstCollectionId]);
-
-  // Create a new collection and select it
+  // Create a new collection and show it
   async function handleCreateCollection() {
     const collection = await Collections.create();
 
-    setSelectedCollectionId(collection.id);
+    setSubview({ id: collection.id });
   }
 
   return (
-    <PanelView
+    <ListPanelView
       className="collections-view"
       icon="library"
       title="collections.labels.collections"
+      items={items}
+      selectedItem={selectedItem}
+      query={query}
+      onQueryChange={setQuery}
+      searchPlaceholder="collections.list.searchPlaceholder"
+      emptyLabel="collections.list.empty"
+      noResultsLabel="collections.list.noResults"
+      noSelectionLabel="collections.details.noSelection"
+      addAction={
+        <IconButton
+          icon="plus"
+          size="md"
+          variant="subtle"
+          label="collections.actions.new"
+          onClick={handleCreateCollection}
+        />
+      }
     >
-      <Group align="stretch" className="collections-view-content">
-        {/* The list of collections */}
-        <Stack className="collections-view-list">
-          {/* Search field and new collection button */}
-          <Group gap={1} className="collections-view-list-header">
-            <TextInput
-              clearable
-              size="sm"
-              variant="subtle"
-              className="collections-view-search"
-              placeholder="collections.list.searchPlaceholder"
-              value={query}
-              leading={<Icon name="search" color="muted" />}
-              onValueChange={setQuery}
-            />
-            <IconButton
-              icon="plus"
-              size="sm"
-              variant="subtle"
-              label="collections.actions.new"
-              onClick={handleCreateCollection}
-            />
-          </Group>
-
-          <ScrollArea className="collections-view-list-items">
-            <MenuGroup>
-              {listedCollections.map((collection) => (
-                <MenuItem
-                  muted
-                  size="compact"
-                  icon="library"
-                  key={collection.id}
-                  stringLabel={collection.name}
-                  active={collection.id === selectedCollectionId}
-                  onClick={() => setSelectedCollectionId(collection.id)}
-                />
-              ))}
-            </MenuGroup>
-            {/* Empty state, differentiating no matches from no collections */}
-            {listedCollections.length === 0 && (
-              <Text
-                block
-                size="sm"
-                color="muted"
-                className="collections-view-empty"
-                text={
-                  query
-                    ? 'collections.list.noResults'
-                    : 'collections.list.empty'
-                }
-              />
-            )}
-          </ScrollArea>
-        </Stack>
-
-        {/* The selected collection's details */}
-        <div className="collections-view-details">
-          {selectedCollection ? (
-            <CollectionDetails collection={selectedCollection} />
-          ) : (
-            /* Empty state shown until a collection is selected */
-            <Text
-              block
-              size="sm"
-              color="muted"
-              className="collections-view-empty"
-              text="collections.details.noSelection"
-            />
-          )}
-        </div>
-      </Group>
-    </PanelView>
+      {selectedCollection && (
+        <CollectionDetails collection={selectedCollection} />
+      )}
+    </ListPanelView>
   );
 };
+
+/**
+ * Returns the collection as a list item.
+ */
+function toListItem(collection: Collection): ListPanelViewItem {
+  return {
+    id: collection.id,
+    label: collection.name,
+    contentIcon: COLLECTION_ICON,
+  };
+}

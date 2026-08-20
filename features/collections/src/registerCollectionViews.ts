@@ -7,5 +7,11 @@ import { CollectionsViewName } from './events';
  */
 export function registerCollectionViews(): void {
   // Register the collections list view
-  Views.register({ type: CollectionsViewName, component: CollectionsView });
+  Views.register({
+    type: CollectionsViewName,
+    component: CollectionsView,
+    title: 'collections.labels.collections',
+    icon: 'library',
+    breadcrumbLevel: 'root',
+  });
 }

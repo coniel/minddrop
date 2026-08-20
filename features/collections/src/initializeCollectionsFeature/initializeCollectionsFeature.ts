@@ -1,5 +1,5 @@
 import { Events } from '@minddrop/events';
-import { I18n, i18n } from '@minddrop/i18n';
+import { I18n } from '@minddrop/i18n';
 import { OpenViewEvent, OpenViewEventData } from '@minddrop/views';
 import {
   CollectionsViewName,
@@ -8,11 +8,9 @@ import {
 } from '../events';
 import { locales } from '../locales';
 
-// View instance id of the singleton collections list view
+// View instance id of the singleton collections list view, which is
+// labelled and iconed from its registration
 const collectionsViewId = 'collections:collections';
-
-// Icon shown in the collections list view's tab
-const COLLECTIONS_VIEW_ICON = 'content-icon:library:inherit';
 
 /**
  * Initializes the collections feature by registering translations
@@ -30,8 +28,6 @@ export function initializeCollectionsFeature(): VoidFunction {
     Events.dispatch<OpenViewEventData>(OpenViewEvent, {
       view: CollectionsViewName,
       id: collectionsViewId,
-      title: i18n.t('collections.labels.collections'),
-      icon: COLLECTIONS_VIEW_ICON,
     });
   });
 
