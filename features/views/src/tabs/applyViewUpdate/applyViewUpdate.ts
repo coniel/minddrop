@@ -1,4 +1,3 @@
-import { ViewDescriptor } from '@minddrop/views';
 import { TabView } from '../TabSetsStore';
 import { viewMatches } from '../viewMatches';
 
@@ -26,9 +25,7 @@ export interface ViewUpdateChanges {
 
 /**
  * Returns the tab view with the changes applied when it matches,
- * otherwise the original tab view unchanged. Breadcrumb entries
- * matching the updated view are patched as well so persisted
- * trails don't go stale (e.g. after a rename).
+ * otherwise the original tab view unchanged.
  *
  * @param tabView - The tab view to update, or null.
  * @param viewId - The instance id the view must match to be updated.
@@ -44,15 +41,9 @@ export function applyViewUpdate(
     return tabView;
   }
 
-  // Patch any breadcrumb entries matching the updated view
-  const breadcrumbs = patchBreadcrumbs(tabView.breadcrumbs, viewId, changes);
-
-  // Only the trail changes when the view itself does not match,
-  // keeping the tab view's identity when nothing changed at all
+  // Keep the tab view as it is when it is not the updated view
   if (!viewMatches(tabView, viewId)) {
-    return breadcrumbs === tabView.breadcrumbs
-      ? tabView
-      : { ...tabView, breadcrumbs };
+    return tabView;
   }
 
   // Apply the changes, merging props and keeping current values as
@@ -65,49 +56,5 @@ export function applyViewUpdate(
       : tabView.props,
     title: changes.title ?? tabView.title,
     icon: changes.icon ?? tabView.icon,
-    breadcrumbs,
   };
-}
-
-/**
- * Returns the breadcrumbs with the changes applied to entries
- * matching the updated view, or the original array unchanged when
- * no entry matches.
- */
-function patchBreadcrumbs(
-  breadcrumbs: ViewDescriptor[] | undefined,
-  viewId: string,
-  changes: ViewUpdateChanges,
-): ViewDescriptor[] | undefined {
-  // Nothing to patch without a trail
-  if (!breadcrumbs) {
-    return breadcrumbs;
-  }
-
-  // Track whether any entry actually matched
-  let changed = false;
-
-  // Apply the changes to matching entries, merging props and
-  // keeping current values as defaults
-  const patched = breadcrumbs.map((breadcrumb) => {
-    // Leave non-matching entries unchanged
-    if (breadcrumb.id !== viewId) {
-      return breadcrumb;
-    }
-
-    changed = true;
-
-    return {
-      ...breadcrumb,
-      id: changes.id ?? breadcrumb.id,
-      props: changes.props
-        ? { ...(breadcrumb.props as Record<string, unknown>), ...changes.props }
-        : breadcrumb.props,
-      title: changes.title ?? breadcrumb.title,
-      icon: changes.icon ?? breadcrumb.icon,
-    };
-  });
-
-  // Keep the original array's identity when nothing matched
-  return changed ? patched : breadcrumbs;
 }

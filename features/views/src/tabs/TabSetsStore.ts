@@ -1,6 +1,6 @@
 import { createObjectStore } from '@minddrop/stores';
 import { EntityId } from '@minddrop/utils';
-import { ViewDescriptor } from '@minddrop/views';
+import { SubviewDescriptor } from '@minddrop/views';
 
 export interface TabView {
   /**
@@ -36,10 +36,11 @@ export interface TabView {
   icon?: string;
 
   /**
-   * Descriptors of the view's ancestor views, ordered root first,
-   * rendered as the view's breadcrumb trail.
+   * The entity the view shows within itself (e.g. the selected data
+   * view in the data views list), which labels the tab and extends
+   * the view's breadcrumb trail.
    */
-  breadcrumbs?: ViewDescriptor[];
+  subview?: SubviewDescriptor;
 }
 
 export type TabId = EntityId<'tab'>;
@@ -180,18 +181,24 @@ export function useActiveTabId(viewAreaId: string): string | null {
 }
 
 /**
+ * Returns the active tab in the given set, or null when it has none.
+ *
+ * @param viewAreaId - The id of the view area.
+ */
+export function useActiveTab(viewAreaId: string): Tab | null {
+  const set = TabSetsStore.useItem(viewAreaId);
+
+  return set?.tabs.find((tab) => tab.id === set.activeTabId) ?? null;
+}
+
+/**
  * Returns whether the active tab in the given set has back history
  * to navigate to.
  *
  * @param viewAreaId - The id of the view area.
  */
 export function useCanGoBack(viewAreaId: string): boolean {
-  const set = TabSetsStore.useItem(viewAreaId);
-
-  // Find the active tab in the set
-  const activeTab = set?.tabs.find((tab) => tab.id === set.activeTabId);
-
-  return Boolean(activeTab?.backHistory?.length);
+  return Boolean(useActiveTab(viewAreaId)?.backHistory?.length);
 }
 
 /**
@@ -201,10 +208,5 @@ export function useCanGoBack(viewAreaId: string): boolean {
  * @param viewAreaId - The id of the view area.
  */
 export function useCanGoForward(viewAreaId: string): boolean {
-  const set = TabSetsStore.useItem(viewAreaId);
-
-  // Find the active tab in the set
-  const activeTab = set?.tabs.find((tab) => tab.id === set.activeTabId);
-
-  return Boolean(activeTab?.forwardHistory?.length);
+  return Boolean(useActiveTab(viewAreaId)?.forwardHistory?.length);
 }

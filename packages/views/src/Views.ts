@@ -12,4 +12,6 @@ export {
 export {
   ViewPaneProvider as PaneProvider,
   useOpenView,
+  useViewPane,
 } from './ViewPaneContext';
+export { SubviewProvider, useSubview, useSetSubview } from './SubviewContext';

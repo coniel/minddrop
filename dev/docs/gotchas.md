@@ -628,14 +628,31 @@ errors at the end of the run (8 across the suite as of
 
 ## features/views
 
-### Breadcrumb trails are snapshots taken at open time
+### Breadcrumb trails are derived from tab history, not composed by openers
 
-A view's `breadcrumbs` (`ViewDescriptor[]` on `OpenViewEventData`) are
-composed by the dispatcher when the view is opened, so an ancestor's
-title/icon in a trail can go stale after e.g. a rename. Only
-tab-persisted trails are patched on `UpdateViewEvent` (via
-`applyViewUpdate`); an open view area keeps rendering its descriptor
-snapshot until the view is reopened or its tab state is re-applied.
+A view's trail is the run of previously shown views in its pane's back
+history (`resolveBreadcrumbTrail`), trimmed where the hierarchy breaks:
+a `root` always starts a new trail, a `branch` only extends a root's,
+and a `leaf` extends anything. Views declare their place via
+`breadcrumbLevel` at registration and default to `root`, so a view
+which does not declare one never appears in a trail and never inherits
+one. Openers pass no trail, and clicking a crumb navigates back
+through the history rather than reopening the view, which also
+restores that state's scroll positions and selections.
+
+### A view's selection belongs in its subview, not in local state
+
+What a view shows within itself (the selected data view, space,
+collection, query, and later a space's inner tabs) is announced via
+`Views.useSetSubview()` and read back with `Views.useSubview()`. The
+view area stores it on the pane's descriptor, which makes it part of
+the tab: it survives tab switches and restarts, labels the tab, is
+navigable with back/forward, and contributes a crumb to trails.
+Selecting is a navigation, so pass `{ replace: true }` for selections
+the view makes on its own behalf (defaults, keeping a title in sync)
+to avoid polluting the history. Unlike a view change, a subview change
+does **not** reset the pane's transient state, so scroll positions
+survive selection changes.
 
 ### View components must size themselves with `height: 100%`
 

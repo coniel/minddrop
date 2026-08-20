@@ -6,14 +6,15 @@ import { toHistoryEntry } from '../toHistoryEntry';
 import { writeSet } from '../writeSet';
 
 /**
- * Navigates the view area's active tab back to the previous state in
- * its history. Does nothing when there is no history to go back to.
+ * Navigates the view area's active tab back through its history. Does
+ * nothing when there is no history to go back to.
  *
  * @param viewAreaId - The id of the view area.
+ * @param steps - How many entries to navigate back through, clamped to the available history.
  *
  * @dispatches app:view-area:set
  */
-export function goBack(viewAreaId: string): void {
+export function goBack(viewAreaId: string, steps = 1): void {
   const tab = getActiveTab(viewAreaId);
   const backHistory = tab?.backHistory ?? [];
 
@@ -22,21 +23,31 @@ export function goBack(viewAreaId: string): void {
     return;
   }
 
-  // Take the nearest entry as the state to restore
-  const entry = backHistory[backHistory.length - 1];
+  // Clamp the requested steps to the available history
+  const stepCount = Math.min(Math.max(steps, 1), backHistory.length);
+
+  // The index of the entry whose state is restored
+  const entryIndex = backHistory.length - stepCount;
+  const entry = backHistory[entryIndex];
+
+  // The entries navigated past, ordered nearest to the restored entry
+  // last so they are navigated forward through in reverse
+  const skipped = backHistory.slice(entryIndex + 1).reverse();
 
   // Restore the entry's state onto the tab, moving the current state
-  // onto the forward history
+  // and the entries navigated past onto the forward history
   const updatedTab = {
     ...tab,
     main: entry.main,
     split: entry.split,
     splitRatio: entry.splitRatio,
     viewState: entry.viewState ?? {},
-    backHistory: backHistory.slice(0, -1),
-    forwardHistory: [...(tab.forwardHistory ?? []), toHistoryEntry(tab)].slice(
-      -MAX_HISTORY_LENGTH,
-    ),
+    backHistory: backHistory.slice(0, entryIndex),
+    forwardHistory: [
+      ...(tab.forwardHistory ?? []),
+      toHistoryEntry(tab),
+      ...skipped,
+    ].slice(-MAX_HISTORY_LENGTH),
   };
 
   // Write the updated tab back into its set

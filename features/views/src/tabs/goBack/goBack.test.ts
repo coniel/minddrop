@@ -42,6 +42,39 @@ describe('goBack', () => {
     expect(tab.forwardHistory?.[0].main?.id).toBe('db:b');
   });
 
+  it('navigates back through multiple entries', () => {
+    newTab(VIEW_AREA_ID);
+    recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:a' }));
+    recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:b' }));
+    recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:c' }));
+
+    goBack(VIEW_AREA_ID, 2);
+
+    const tab = getSet(VIEW_AREA_ID).tabs[0];
+
+    expect(tab.main?.id).toBe('db:a');
+    // The entries navigated past are forward of the restored state,
+    // nearest last
+    expect(tab.forwardHistory?.map((entry) => entry.main?.id)).toEqual([
+      'db:c',
+      'db:b',
+    ]);
+  });
+
+  it('clamps the steps to the available history', () => {
+    newTab(VIEW_AREA_ID);
+    recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:a' }));
+    recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:b' }));
+
+    goBack(VIEW_AREA_ID, 10);
+
+    const tab = getSet(VIEW_AREA_ID).tabs[0];
+
+    // The search view the tab was opened on is the furthest entry
+    expect(tab.main?.view).toBe(DefaultViewName);
+    expect(tab.backHistory).toHaveLength(0);
+  });
+
   it('does nothing without back history', () => {
     newTab(VIEW_AREA_ID);
 

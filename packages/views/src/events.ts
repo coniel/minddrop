@@ -1,3 +1,4 @@
+import type { SubviewDescriptor } from './types/Subview.types';
 import type {
   DefaultViewProps,
   ViewDescriptor,
@@ -7,6 +8,8 @@ import type { ViewPane } from './types/ViewPane.types';
 export const OpenViewEvent = 'app:view:open';
 export const UpdateViewEvent = 'app:view:update';
 export const CloseViewEvent = 'app:view:close';
+export const NavigateBackEvent = 'app:view-area:navigate-back';
+export const SetSubviewEvent = 'app:view:set-subview';
 export const SetViewAreaEvent = 'app:view-area:set';
 export const ViewAreaChangedEvent = 'app:view-area:changed';
 export const ViewAreaReadyEvent = 'app:view-area:ready';
@@ -65,13 +68,46 @@ export type OpenViewEventData<TProps = DefaultViewProps> = {
    * in its tab.
    */
   icon?: string;
+};
+
+export type SetSubviewEventData = {
+  /**
+   * The id of the target view area. Defaults to the app's primary
+   * view area when omitted.
+   */
+  viewAreaId?: string;
 
   /**
-   * Descriptors of the view's ancestor views, ordered root first.
-   * Rendered as a breadcrumb trail by the opened view. Breadcrumb
-   * descriptors never carry their own trails.
+   * The pane whose view the subview belongs to. Defaults to the
+   * main pane when omitted.
    */
-  breadcrumbs?: ViewDescriptor[];
+  sourcePane?: ViewPane;
+
+  /**
+   * The entity the view now shows, or null when it shows none.
+   */
+  subview: SubviewDescriptor | null;
+
+  /**
+   * When true, replaces the view's current subview instead of
+   * navigating to it, leaving the history untouched (e.g. when a
+   * view selects a default).
+   */
+  replace?: boolean;
+};
+
+export type NavigateBackEventData = {
+  /**
+   * The id of the target view area. Defaults to the app's primary
+   * view area when omitted.
+   */
+  viewAreaId?: string;
+
+  /**
+   * How many entries to navigate back through.
+   * @default 1
+   */
+  steps?: number;
 };
 
 export type UpdateViewEventData<TProps = DefaultViewProps> = {
@@ -146,9 +182,16 @@ export type SetViewAreaEventData = {
 
 /**
  * Payload of the view area changed event. Describes the full state of
- * a view area (same shape as `SetViewAreaEventData`).
+ * a view area, plus how the state came about.
  */
-export type ViewAreaChangedEventData = SetViewAreaEventData;
+export type ViewAreaChangedEventData = SetViewAreaEventData & {
+  /**
+   * When true, the state replaces the view area's current one rather
+   * than being navigated to, so listeners (e.g. tabs) leave their
+   * history untouched.
+   */
+  replace?: boolean;
+};
 
 /**
  * Payload of the view area ready event, announced by a view area once

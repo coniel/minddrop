@@ -47,6 +47,11 @@ function paneLabel(
     return undefined;
   }
 
+  // Views showing an entity within themselves are labelled by it
+  if (view.subview?.title) {
+    return view.subview.title;
+  }
+
   // Views opened for a specific entity carry its title
   if (view.title) {
     return view.title;

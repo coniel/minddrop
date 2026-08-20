@@ -19,6 +19,6 @@ export function toDescriptor(tabView: TabView | null): ViewDescriptor | null {
     props: tabView.props,
     title: tabView.title,
     icon: tabView.icon,
-    breadcrumbs: tabView.breadcrumbs,
+    subview: tabView.subview,
   };
 }

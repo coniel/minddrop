@@ -1,3 +1,5 @@
+import type { SubviewDescriptor } from './Subview.types';
+
 /**
  * The default props type for view payloads.
  *
@@ -39,9 +41,9 @@ export type ViewDescriptor<TProps = DefaultViewProps> = {
   icon?: string;
 
   /**
-   * Descriptors of the view's ancestor views, ordered root first.
-   * Rendered as a breadcrumb trail by the opened view. Breadcrumb
-   * descriptors never carry their own trails.
+   * The entity the view currently shows within itself, which labels
+   * the view's tab and extends its breadcrumb trail. Changing it is
+   * a navigation, so views can be navigated back and forward through.
    */
-  breadcrumbs?: ViewDescriptor[];
+  subview?: SubviewDescriptor;
 };

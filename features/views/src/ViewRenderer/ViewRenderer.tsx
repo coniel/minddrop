@@ -1,9 +1,18 @@
-import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  FC,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { Events } from '@minddrop/events';
 import { IconButton } from '@minddrop/ui-primitives';
 import {
   OpenViewEvent,
   OpenViewEventData,
+  SetSubviewEvent,
+  SetSubviewEventData,
   SetViewAreaEvent,
   SetViewAreaEventData,
   ViewAreaChangedEvent,
@@ -15,8 +24,13 @@ import {
 } from '@minddrop/views';
 import { TabViewStateProvider } from '../TabViewStateProvider';
 import { ViewAreaState, applyOpenView } from '../applyOpenView';
+import { applySetSubview } from '../applySetSubview';
 import { matchesViewArea } from '../matchesViewArea';
-import { useActiveTabId } from '../tabs/TabSetsStore';
+import {
+  type ViewAreaPane as ViewAreaPaneId,
+  useActiveTabId,
+} from '../tabs/TabSetsStore';
+import { useBreadcrumbTrail } from '../tabs/resolveBreadcrumbTrail';
 import { DEFAULT_SPLIT_RATIO } from '../tabs/tabsConstants';
 import './ViewRenderer.css';
 
@@ -33,9 +47,6 @@ const INITIAL_STATE: ViewAreaState = {
   split: null,
   splitRatio: DEFAULT_SPLIT_RATIO,
 };
-
-// Stable empty trail for views opened without breadcrumbs
-const NO_BREADCRUMBS: ViewDescriptor[] = [];
 
 /**
  * Renders the views for a view area. Driven entirely by view events
@@ -56,7 +67,7 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
   // (e.g. tabs) can mirror it. Not announced for transient updates
   // such as ongoing resize drags.
   const applyState = useCallback(
-    (next: ViewAreaState, announce: boolean) => {
+    (next: ViewAreaState, announce: boolean, replace?: boolean) => {
       // Store the new state on the ref and in component state
       stateRef.current = next;
       setState(next);
@@ -65,6 +76,7 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
       if (announce) {
         Events.dispatch<ViewAreaChangedEventData>(ViewAreaChangedEvent, {
           viewAreaId,
+          replace,
           ...next,
         });
       }
@@ -86,6 +98,20 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
         }
 
         applyState(applyOpenView(stateRef.current, data), true);
+      },
+    );
+
+    // Record the entity a view now shows within itself
+    Events.addListener<SetSubviewEventData>(
+      SetSubviewEvent,
+      listenerId,
+      ({ data }) => {
+        // Ignore events targeting a different view area
+        if (!matchesViewArea(data.viewAreaId, viewAreaId)) {
+          return;
+        }
+
+        applyState(applySetSubview(stateRef.current, data), true, data.replace);
       },
     );
 
@@ -113,6 +139,7 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
 
     return () => {
       Events.removeListener(OpenViewEvent, listenerId);
+      Events.removeListener(SetSubviewEvent, listenerId);
       Events.removeListener(SetViewAreaEvent, listenerId);
     };
   }, [applyState, viewAreaId]);
@@ -211,6 +238,8 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
               <RegisteredView
                 key={viewInstanceKey(activeTabId, main)}
                 descriptor={main}
+                viewAreaId={viewAreaId}
+                pane="main"
               />
             </Views.PaneProvider>
           </TabViewStateProvider>
@@ -232,6 +261,8 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
               <RegisteredView
                 key={viewInstanceKey(activeTabId, split)}
                 descriptor={split}
+                viewAreaId={viewAreaId}
+                pane="split"
               />
             </Views.PaneProvider>
           </TabViewStateProvider>
@@ -247,6 +278,8 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
           <RegisteredView
             key={viewInstanceKey(activeTabId, main)}
             descriptor={main}
+            viewAreaId={viewAreaId}
+            pane="main"
           />
         </Views.PaneProvider>
       </TabViewStateProvider>
@@ -272,27 +305,81 @@ interface RegisteredViewProps {
    * The view to resolve and render.
    */
   descriptor: ViewDescriptor;
+
+  /**
+   * The id of the view area the view is rendered in.
+   */
+  viewAreaId: string;
+
+  /**
+   * The pane the view is rendered in.
+   */
+  pane: ViewAreaPaneId;
 }
 
 /**
  * Resolves a registered view by its type and renders it with its
- * props, providing the view's breadcrumb trail to its content.
+ * props, providing the views it was reached through as its breadcrumb
+ * trail.
  */
-const RegisteredView: FC<RegisteredViewProps> = ({ descriptor }) => {
+const RegisteredView: FC<RegisteredViewProps> = ({
+  descriptor,
+  pane,
+  viewAreaId,
+}) => {
   const registered = Views.use(descriptor.view);
 
-  // Render nothing when no view is registered for the type
-  if (!registered) {
-    return null;
-  }
+  // Render the view's content through a stable element so that the
+  // trail and subview updates below re-render only the providers
+  const content = useMemo(() => {
+    // Nothing to render when no view is registered for the type
+    if (!registered) {
+      return null;
+    }
 
-  const ViewComponent = registered.component;
+    return <registered.component {...descriptor.props} />;
+  }, [registered, descriptor.props]);
 
   return (
-    <Views.BreadcrumbsProvider
-      breadcrumbs={descriptor.breadcrumbs ?? NO_BREADCRUMBS}
-    >
-      <ViewComponent {...descriptor.props} />
+    <ViewBreadcrumbs viewAreaId={viewAreaId} pane={pane}>
+      <Views.SubviewProvider subview={descriptor.subview ?? null}>
+        {content}
+      </Views.SubviewProvider>
+    </ViewBreadcrumbs>
+  );
+};
+
+interface ViewBreadcrumbsProps {
+  /**
+   * The id of the view area the view is rendered in.
+   */
+  viewAreaId: string;
+
+  /**
+   * The pane the view is rendered in.
+   */
+  pane: ViewAreaPaneId;
+
+  /**
+   * The view content the trail applies to.
+   */
+  children: React.ReactNode;
+}
+
+/**
+ * Provides the views a pane's view was reached through as its
+ * breadcrumb trail.
+ */
+const ViewBreadcrumbs: FC<ViewBreadcrumbsProps> = ({
+  viewAreaId,
+  pane,
+  children,
+}) => {
+  const breadcrumbs = useBreadcrumbTrail(viewAreaId, pane);
+
+  return (
+    <Views.BreadcrumbsProvider breadcrumbs={breadcrumbs}>
+      {children}
     </Views.BreadcrumbsProvider>
   );
 };

@@ -1,4 +1,5 @@
-import { SetViewAreaEventData } from '@minddrop/views';
+import { ViewAreaChangedEventData, ViewDescriptor } from '@minddrop/views';
+import { TabView } from '../TabSetsStore';
 import { createBlankTab } from '../createBlankTab';
 import { getSet } from '../getSet';
 import { sameView } from '../sameView';
@@ -17,7 +18,7 @@ import { writeSet } from '../writeSet';
  */
 export function recordViewArea(
   viewAreaId: string,
-  state: SetViewAreaEventData,
+  state: ViewAreaChangedEventData,
 ): void {
   const set = getSet(viewAreaId);
   let tabs = set.tabs;
@@ -44,7 +45,17 @@ export function recordViewArea(
     // metadata/split ratio refresh
     const mainNavigated = !sameView(tab.main, state.main);
     const splitNavigated = !sameView(tab.split, state.split);
-    const navigated = mainNavigated || splitNavigated;
+
+    // Whether a pane's view shows a different entity within itself,
+    // which is navigated to without the view itself changing
+    const subviewChanged =
+      !sameSubview(tab.main, state.main) ||
+      !sameSubview(tab.split, state.split);
+
+    // Replaying states (e.g. a view selecting a default) are recorded
+    // without becoming history
+    const navigated =
+      !state.replace && (mainNavigated || splitNavigated || subviewChanged);
 
     // Push the previous state onto the back history on navigation,
     // except when navigating away from a blank tab
@@ -58,15 +69,28 @@ export function recordViewArea(
     // Navigating clears the forward history, replays preserve it
     const forwardHistory = navigated ? [] : (tab.forwardHistory ?? []);
 
-    // Reset the transient state of panes that navigated (their history
-    // snapshot was captured above), keeping the state of panes that
-    // merely replayed
-    const viewState = navigated
-      ? {
-          main: mainNavigated ? {} : tab.viewState?.main,
-          split: splitNavigated ? {} : tab.viewState?.split,
-        }
-      : tab.viewState;
+    // Reset the transient state of panes that navigated to a different
+    // view (their history snapshot was captured above), keeping the
+    // state of panes that merely replayed or changed subview
+    const viewState =
+      mainNavigated || splitNavigated
+        ? {
+            main: mainNavigated ? {} : tab.viewState?.main,
+            split: splitNavigated ? {} : tab.viewState?.split,
+          }
+        : tab.viewState;
+
+    // Keep the tab as it is when the state merely replays what it
+    // already shows, so subscribers and the persisted set are left
+    // untouched
+    if (
+      !navigated &&
+      sameTabView(tab.main, state.main) &&
+      sameTabView(tab.split, state.split) &&
+      tab.splitRatio === state.splitRatio
+    ) {
+      return tab;
+    }
 
     // Overwrite the active tab's views and split ratio with the state
     return {
@@ -80,6 +104,44 @@ export function recordViewArea(
     };
   });
 
+  // Whether the recording changed anything at all
+  const changed =
+    activeTabId !== set.activeTabId ||
+    nextTabs.some((tab, index) => set.tabs[index] !== tab);
+
+  // Nothing to write when every tab was left as it was
+  if (!changed) {
+    return;
+  }
+
   // Write the updated tabs and active tab
   writeSet(viewAreaId, { tabs: nextTabs, activeTabId });
+}
+
+/**
+ * Whether two views show the same thing, down to the metadata they
+ * and their subview are labelled by.
+ */
+function sameTabView(
+  a: TabView | ViewDescriptor | null,
+  b: TabView | ViewDescriptor | null,
+): boolean {
+  return (
+    sameView(a, b) &&
+    sameSubview(a, b) &&
+    a?.title === b?.title &&
+    a?.icon === b?.icon &&
+    a?.subview?.title === b?.subview?.title &&
+    a?.subview?.icon === b?.subview?.icon
+  );
+}
+
+/**
+ * Whether two views show the same entity within themselves.
+ */
+function sameSubview(
+  a: TabView | ViewDescriptor | null,
+  b: TabView | ViewDescriptor | null,
+): boolean {
+  return a?.subview?.id === b?.subview?.id;
 }

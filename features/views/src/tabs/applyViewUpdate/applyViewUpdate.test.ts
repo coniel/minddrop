@@ -43,34 +43,4 @@ describe('applyViewUpdate', () => {
   it('returns null for a null tab view', () => {
     expect(applyViewUpdate(null, 'db:a', { title: 'X' })).toBeNull();
   });
-
-  it('patches breadcrumb entries matching the updated view', () => {
-    const withTrail: TabView = {
-      ...tabView,
-      id: 'db:entry',
-      breadcrumbs: [
-        { view: 'db:view', id: 'db:a', title: 'A', icon: 'icon-a' },
-      ],
-    };
-
-    const updated = applyViewUpdate(withTrail, 'db:a', {
-      title: 'Renamed',
-      icon: 'icon-renamed',
-    });
-
-    expect(updated?.breadcrumbs).toEqual([
-      { view: 'db:view', id: 'db:a', title: 'Renamed', icon: 'icon-renamed' },
-    ]);
-  });
-
-  it('returns the tab view unchanged when neither it nor its trail matches', () => {
-    const withTrail: TabView = {
-      ...tabView,
-      breadcrumbs: [{ view: 'db:view', id: 'db:parent', title: 'Parent' }],
-    };
-
-    expect(applyViewUpdate(withTrail, 'db:other', { title: 'X' })).toBe(
-      withTrail,
-    );
-  });
 });

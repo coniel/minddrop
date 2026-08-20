@@ -1,14 +1,15 @@
 import { createContext } from 'react';
-import { ViewDescriptor } from '../types';
+import { Breadcrumb } from '../types';
 
-export const ViewBreadcrumbsContext = createContext<ViewDescriptor[]>([]);
+export const ViewBreadcrumbsContext = createContext<Breadcrumb[]>([]);
 
 export interface ViewBreadcrumbsProviderProps {
   /**
-   * Descriptors of the current view's ancestor views, ordered root
-   * first.
+   * The views the current view was reached through, ordered root
+   * first, followed by the current view itself when it shows a
+   * subview.
    */
-  breadcrumbs: ViewDescriptor[];
+  breadcrumbs: Breadcrumb[];
 
   /**
    * The view content the breadcrumbs apply to.

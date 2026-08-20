@@ -3,3 +3,5 @@ export * from './ViewDescriptor.types';
 export * from './ViewPane.types';
 export * from './ViewPaneLocation.types';
 export * from './OpenView.types';
+export * from './Subview.types';
+export * from './Breadcrumb.types';

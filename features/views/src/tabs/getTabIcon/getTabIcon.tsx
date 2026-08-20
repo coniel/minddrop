@@ -11,6 +11,11 @@ import { DEFAULT_ICON } from '../tabsConstants';
  * @param tab - The tab to icon.
  */
 export function getTabIcon(tab: Tab): IconProp {
+  // Views showing an entity within themselves are iconed by it
+  if (tab.main?.subview?.icon) {
+    return <ContentIcon icon={tab.main.subview.icon} />;
+  }
+
   // Views opened for a specific entity carry its content icon, which
   // the user can change
   if (tab.main?.icon) {

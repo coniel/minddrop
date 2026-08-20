@@ -2,6 +2,8 @@ import { Events } from '@minddrop/events';
 import {
   CloseViewEvent,
   CloseViewEventData,
+  NavigateBackEvent,
+  NavigateBackEventData,
   UpdateViewEvent,
   UpdateViewEventData,
   ViewAreaChangedEvent,
@@ -11,6 +13,7 @@ import {
 } from '@minddrop/views';
 import { matchesViewArea } from '../../matchesViewArea';
 import { closeTabsForView } from '../closeTabsForView';
+import { goBack } from '../goBack';
 import { recordViewArea } from '../recordViewArea';
 import { restoreActiveTab } from '../restoreActiveTab';
 import { updateTabsForView } from '../updateTabsForView';
@@ -72,6 +75,20 @@ export function initializeTabsSyncListeners(viewAreaId: string): VoidFunction {
     },
   );
 
+  // Navigate the active tab back when a view's breadcrumb is clicked
+  Events.addListener<NavigateBackEventData>(
+    NavigateBackEvent,
+    listenerId,
+    ({ data }) => {
+      // Ignore navigations targeting other view areas
+      if (!matchesViewArea(data.viewAreaId, viewAreaId)) {
+        return;
+      }
+
+      goBack(viewAreaId, data.steps);
+    },
+  );
+
   // Restore the active tab's content once the view area is ready to
   // receive it (covers the view area mounting after this)
   Events.addListener<ViewAreaReadyEventData>(
@@ -98,5 +115,6 @@ export function initializeTabsSyncListeners(viewAreaId: string): VoidFunction {
     Events.removeListener(UpdateViewEvent, listenerId);
     Events.removeListener(CloseViewEvent, listenerId);
     Events.removeListener(ViewAreaReadyEvent, listenerId);
+    Events.removeListener(NavigateBackEvent, listenerId);
   };
 }

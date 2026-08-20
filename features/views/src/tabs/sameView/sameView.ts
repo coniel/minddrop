@@ -4,7 +4,7 @@ import { TabView } from '../TabSetsStore';
 /**
  * Whether two views identify the same view instance, comparing the
  * view type, instance id and props while ignoring display metadata
- * (title, icon, breadcrumbs).
+ * (title, icon).
  *
  * @param a - The first view to compare, or null for an empty pane.
  * @param b - The second view to compare, or null for an empty pane.

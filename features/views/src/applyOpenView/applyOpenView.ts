@@ -37,7 +37,6 @@ export function applyOpenView(
     props: data.props,
     title: data.title,
     icon: data.icon,
-    breadcrumbs: data.breadcrumbs,
   };
 
   // Open in the split pane, keeping the current main view
