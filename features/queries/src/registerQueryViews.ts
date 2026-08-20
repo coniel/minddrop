@@ -12,5 +12,6 @@ export function registerQueryViews(): void {
     component: QueriesView,
     title: 'queries.labels.queries',
     icon: 'list-filter',
+    breadcrumbLevel: 'root',
   });
 }

@@ -1,15 +1,20 @@
 {
   "queries": {
     "labels": {
-      "queries": "Queries",
-      "searchPlaceholder": "Search queries"
+      "queries": "Queries"
     },
     "actions": {
-      "new": "New query",
-      "delete": "Delete query"
+      "new": "New query"
+    },
+    "list": {
+      "searchPlaceholder": "Search queries...",
+      "empty": "No queries",
+      "noResults": "No matching queries"
+    },
+    "details": {
+      "noSelection": "Create a query to get started"
     },
     "editor": {
-      "noQueries": "Create a query to get started",
       "namePlaceholder": "Query name",
       "selectProperty": "Property",
       "selectOperator": "Operator",

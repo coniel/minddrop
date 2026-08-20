@@ -1,161 +1,85 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Queries, Query } from '@minddrop/queries';
-import { PanelView } from '@minddrop/ui-components';
-import {
-  Group,
-  IconButton,
-  MenuGroup,
-  MenuItem,
-  ScrollArea,
-  Text,
-  TextInput,
-} from '@minddrop/ui-primitives';
+import { ListPanelView, ListPanelViewItem } from '@minddrop/ui-components';
+import { IconButton } from '@minddrop/ui-primitives';
+import { Views } from '@minddrop/views';
 import { QueryBuilderCanvas } from '../QueryBuilderCanvas';
-import './QueriesView.css';
+
+// Icon shown for every query, which has no icon of its own
+const QUERY_ICON = 'content-icon:list-filter:default';
 
 /**
- * Renders the queries view as two columns: the list of queries
- * and the selected query's builder canvas.
+ * Renders a two column view of the queries: a searchable list of
+ * queries on the left, and the selected query's builder canvas on
+ * the right.
  */
 export const QueriesView: React.FC = () => {
-  const [selectedQueryId, setSelectedQueryId] = useState('');
-  const [search, setSearch] = useState('');
+  const [query, setQuery] = useState('');
+  const subview = Views.useSubview();
+  const setSubview = Views.useSetSubview();
   const queries = Queries.useAll();
 
-  // Queries shown in the list, filtered by the search text
-  const listedQueries = search ? Queries.search(search) : queries;
+  // Queries listed in the left column: fuzzy name matches when
+  // searching, all queries otherwise
+  const items = useMemo(
+    () => (query ? Queries.search(query) : queries).map(toListItem),
+    [queries, query],
+  );
 
-  // The selected query, falling back to the first query when
-  // none is selected or the selected query was deleted
-  const selectedQuery =
-    queries.find((query) => query.id === selectedQueryId) || queries[0];
+  // The query rendered by the panel's content
+  const selectedQuery = queries.find(
+    (listedQuery) => listedQuery.id === subview?.id,
+  );
+  const selectedItem = useMemo(
+    () => selectedQuery && toListItem(selectedQuery),
+    [selectedQuery],
+  );
 
-  // Create a new query and select it, clearing the search so
-  // the new query is visible in the list
-  async function handleClickNewQuery(): Promise<void> {
-    const query = await Queries.create();
+  // Create a new query and show it, clearing the search so the new
+  // query is visible in the list
+  async function handleCreateQuery(): Promise<void> {
+    const createdQuery = await Queries.create();
 
-    setSelectedQueryId(query.id);
-    setSearch('');
-  }
-
-  // Clear the search text
-  function handleClearSearch(): void {
-    setSearch('');
+    setSubview({ id: createdQuery.id });
+    setQuery('');
   }
 
   return (
-    <PanelView
-      className="queries-view"
+    <ListPanelView
       icon="list-filter"
       title="queries.labels.queries"
-    >
-      <div className="queries-view-columns">
-        {/* The list of queries */}
-        <div className="queries-view-list-column">
-          <Group gap={1} className="queries-view-list-header">
-            <TextInput
-              className="queries-view-search-input"
-              variant="subtle"
-              size="sm"
-              placeholder="queries.labels.searchPlaceholder"
-              value={search}
-              clearable
-              onValueChange={setSearch}
-              onClear={handleClearSearch}
-            />
-            <IconButton
-              icon="plus"
-              variant="subtle"
-              size="sm"
-              label="queries.actions.new"
-              onClick={handleClickNewQuery}
-            />
-          </Group>
-          <ScrollArea className="queries-view-list">
-            <MenuGroup>
-              {listedQueries.map((query) => (
-                <QueriesViewItem
-                  key={query.id}
-                  query={query}
-                  active={query.id === selectedQuery?.id}
-                  onSelect={setSelectedQueryId}
-                />
-              ))}
-            </MenuGroup>
-          </ScrollArea>
-        </div>
-
-        {/* The selected query's builder canvas */}
-        {selectedQuery ? (
-          <QueryBuilderCanvas
-            key={selectedQuery.id}
-            queryId={selectedQuery.id}
-          />
-        ) : (
-          <div className="queries-view-empty">
-            <Text text="queries.editor.noQueries" color="muted" />
-          </div>
-        )}
-      </div>
-    </PanelView>
-  );
-};
-
-interface QueriesViewItemProps {
-  /**
-   * The query rendered by this item.
-   */
-  query: Query;
-
-  /**
-   * Whether the query is the currently selected one.
-   */
-  active: boolean;
-
-  /**
-   * Callback fired with the query's ID when the item is clicked.
-   */
-  onSelect(queryId: string): void;
-}
-
-/**
- * Renders a query list item which selects the query on click,
- * with a hover action to delete the query.
- */
-const QueriesViewItem: React.FC<QueriesViewItemProps> = ({
-  query,
-  active,
-  onSelect,
-}) => {
-  // Select the query
-  function handleClick(): void {
-    onSelect(query.id);
-  }
-
-  // Delete the query
-  function handleClickDelete(event: React.MouseEvent): void {
-    event.stopPropagation();
-
-    Queries.delete(query.id);
-  }
-
-  return (
-    <MenuItem
-      muted
-      active={active}
-      icon="list-filter"
-      stringLabel={query.name}
-      onClick={handleClick}
-      actions={
+      items={items}
+      selectedItem={selectedItem}
+      query={query}
+      onQueryChange={setQuery}
+      searchPlaceholder="queries.list.searchPlaceholder"
+      emptyLabel="queries.list.empty"
+      noResultsLabel="queries.list.noResults"
+      noSelectionLabel="queries.details.noSelection"
+      addAction={
         <IconButton
-          icon="trash"
-          size="sm"
-          label="queries.actions.delete"
-          danger="on-hover"
-          onClick={handleClickDelete}
+          icon="plus"
+          size="md"
+          variant="subtle"
+          label="queries.actions.new"
+          onClick={handleCreateQuery}
         />
       }
-    />
+    >
+      {selectedQuery && (
+        <QueryBuilderCanvas key={selectedQuery.id} queryId={selectedQuery.id} />
+      )}
+    </ListPanelView>
   );
 };
+
+/**
+ * Returns the query as a list item.
+ */
+function toListItem(query: Query): ListPanelViewItem {
+  return {
+    id: query.id,
+    label: query.name,
+    contentIcon: QUERY_ICON,
+  };
+}
