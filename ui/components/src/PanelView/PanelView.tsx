@@ -1,4 +1,5 @@
 import React from 'react';
+import { Events } from '@minddrop/events';
 import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import { UiIconName } from '@minddrop/ui-icons';
 import {
@@ -16,12 +17,15 @@ import {
   propsToClass,
 } from '@minddrop/ui-primitives';
 import {
-  OpenViewEvent,
-  OpenViewEventData,
-  ViewDescriptor,
+  Breadcrumb,
+  NavigateBackEvent,
+  NavigateBackEventData,
   Views,
 } from '@minddrop/views';
 import './PanelView.css';
+
+// The number of crumbs a header shows, dropping the furthest
+const MAX_BREADCRUMBS = 3;
 
 export interface PanelViewAction {
   /**
@@ -70,11 +74,12 @@ export interface PanelViewProps {
   contentIcon?: string;
 
   /**
-   * Breadcrumbs rendered before the title, linking to ancestor
-   * views. Defaults to the trail of the view instance the panel
-   * is rendered in.
+   * Breadcrumbs rendered before the title, overriding the trail of
+   * views the panel's view was reached through. Panels nested within
+   * a view pass an empty trail, the view's own being shown by the
+   * panel it is rendered in.
    */
-  breadcrumbs?: ViewDescriptor[];
+  breadcrumbs?: Breadcrumb[];
 
   /**
    * Content rendered in place of the header's breadcrumbs, icon and
@@ -115,13 +120,11 @@ export const PanelView: React.FC<PanelViewProps> = ({
   title,
 }) => {
   const { t } = useTranslation();
-  const contextBreadcrumbs = Views.useBreadcrumbs();
+  const navigationTrail = Views.useBreadcrumbs();
 
-  // Explicitly passed breadcrumbs override the view instance's trail
-  const trail = breadcrumbs ?? contextBreadcrumbs;
-
-  // Whether the header renders a breadcrumb trail
-  const hasBreadcrumbs = trail.length > 0;
+  // Show the nearest crumbs only, keeping long trails within the
+  // header's width
+  const trail = (breadcrumbs ?? navigationTrail).slice(-MAX_BREADCRUMBS);
 
   // Resolve the display title, treating string titles as i18n keys
   let resolvedTitle: React.ReactNode = title;
@@ -134,19 +137,17 @@ export const PanelView: React.FC<PanelViewProps> = ({
 
   return (
     <Panel className={propsToClass('panel-view', { className })}>
-      <Group
-        justify="between"
-        className={propsToClass('header', { breadcrumbs: hasBreadcrumbs })}
-      >
+      <Group justify="between" className="header">
         {/* Custom header content replaces the title entirely */}
         {header ? (
           <div className="header-content">{header}</div>
         ) : (
           <Group gap={2} className="title">
-            {/* Breadcrumb trail leading to the current view */}
+            {/* The views the current view was reached through, each
+                leading back to its point in the history */}
             {trail.map((breadcrumb, index) => (
-              <React.Fragment key={breadcrumb.id || index}>
-                <PanelViewBreadcrumbButton breadcrumb={breadcrumb} />
+              <React.Fragment key={index}>
+                <PanelViewBreadcrumb breadcrumb={breadcrumb} />
                 <Icon
                   name="chevron-right"
                   color="muted"
@@ -191,22 +192,23 @@ export const PanelView: React.FC<PanelViewProps> = ({
   );
 };
 
-interface PanelViewBreadcrumbButtonProps {
+interface PanelViewBreadcrumbProps {
   /**
-   * The descriptor of the ancestor view the breadcrumb links to.
+   * The breadcrumb to render.
    */
-  breadcrumb: ViewDescriptor;
+  breadcrumb: Breadcrumb;
 }
 
 /**
- * Renders a clickable breadcrumb (icon and title) which opens the
- * breadcrumb's view when clicked.
+ * Renders a breadcrumb (icon and title) which navigates back to the
+ * view it leads to. Crumbs of the view currently shown carry no
+ * history position and are rendered as plain labels.
  */
-const PanelViewBreadcrumbButton: React.FC<PanelViewBreadcrumbButtonProps> = ({
+const PanelViewBreadcrumb: React.FC<PanelViewBreadcrumbProps> = ({
   breadcrumb,
 }) => {
   const { t } = useTranslation();
-  const openView = Views.useOpenView();
+  const pane = Views.useViewPane();
   const registered = Views.use(breadcrumb.view);
 
   // The crumb's own content icon, falling back to the view's
@@ -221,9 +223,22 @@ const PanelViewBreadcrumbButton: React.FC<PanelViewBreadcrumbButtonProps> = ({
   const title =
     breadcrumb.title ?? (registered?.title ? t(registered.title) : undefined);
 
-  // Open the breadcrumb's view
+  // Navigate back to the crumb's point in the history
   function handleClick() {
-    openView<OpenViewEventData>(OpenViewEvent, { ...breadcrumb });
+    Events.dispatch<NavigateBackEventData>(NavigateBackEvent, {
+      steps: breadcrumb.steps,
+      viewAreaId: pane?.viewAreaId,
+    });
+  }
+
+  // The crumb leads to the view already shown
+  if (!breadcrumb.steps) {
+    return (
+      <Group gap={2} className="breadcrumb-label">
+        <IconRenderer className="breadcrumb-icon" icon={icon} />
+        <Text color="muted">{title}</Text>
+      </Group>
+    );
   }
 
   return (

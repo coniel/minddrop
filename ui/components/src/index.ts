@@ -4,6 +4,7 @@ export * from './CollectionSelectionSubmenu';
 export * from './DataSourceCombobox';
 export * from './Image';
 export * from './ImageViewer';
+export * from './ListPanelView';
 export * from './PanelView';
 export * from './Setting';
 export * from './ThemeVariantPicker';

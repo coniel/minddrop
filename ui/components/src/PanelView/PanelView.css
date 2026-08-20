@@ -13,18 +13,19 @@
     border-bottom: var(--border-width-thin) solid var(--border-subtle);
     flex-shrink: 0;
 
-    /* The breadcrumb button's own padding provides part of the
-       left inset */
-    &.header-breadcrumbs {
-      padding-left: var(--space-2);
-    }
+    /* Room for a navigable crumb's hover background, taken out of the
+       layout below so that crumbs are spaced the same whether or not
+       they are navigable */
+    --breadcrumb-hover-inset: var(--space-1);
 
     .header-content {
       flex: 1;
       min-width: 0;
     }
 
-    .title-icon {
+    .title-icon,
+    .breadcrumb-icon,
+    .breadcrumb-separator {
       width: 1rem;
       height: 1rem;
       flex-shrink: 0;
@@ -40,21 +41,11 @@
       line-height: var(--line-height-snug);
       gap: var(--space-2);
 
-      /* Offset the button's 1px border so the icon lines up with
-         the plain title's icon */
-      padding: 0 calc(var(--space-2) - 1px);
-
-      .breadcrumb-icon {
-        width: 1rem;
-        height: 1rem;
-        flex-shrink: 0;
-      }
-    }
-
-    .breadcrumb-separator {
-      width: 1rem;
-      height: 1rem;
-      flex-shrink: 0;
+      /* Padded for the hover background, then pulled back by the same
+         amount (plus the button's transparent border) so the label
+         lines up with a plain crumb's */
+      padding: 0 var(--breadcrumb-hover-inset);
+      margin: 0 calc((var(--breadcrumb-hover-inset) + 1px) * -1);
     }
   }
 }

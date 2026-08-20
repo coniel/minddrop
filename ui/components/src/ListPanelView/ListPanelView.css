@@ -1,0 +1,47 @@
+.list-panel-view {
+  .list-panel-view-content {
+    flex: 1;
+    min-height: 0;
+    /* The columns are separated by a border rather than a gap */
+    gap: 0;
+  }
+
+  .list-panel-view-list {
+    width: 16rem;
+    flex-shrink: 0;
+    gap: 0;
+    border-right: var(--border-width-thin) solid var(--border-subtle);
+  }
+
+  .list-panel-view-list-header {
+    padding: var(--space-2);
+  }
+
+  .list-panel-view-search {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .list-panel-view-list-items {
+    flex: 1;
+    min-height: 0;
+    padding: 0 var(--space-2) var(--space-2);
+  }
+
+  .list-panel-view-details {
+    display: flex;
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* Fills the details column, which content rendered as a row flex
+     item does not do on its own */
+  .list-panel-view-details > * {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .list-panel-view-empty {
+    padding: var(--space-2);
+  }
+}
