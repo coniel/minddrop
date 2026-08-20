@@ -8,6 +8,7 @@ export { getDataSourceDataViews as getByDataSource } from './getDataSourceDataVi
 export { getReferencingDataViews as getReferencing } from './getReferencingDataViews';
 export { removeDataViewReferences as removeReferences } from './removeDataViewReferences';
 export { readDataView as read } from './readDataView';
+export { searchDataViews as search } from './utils';
 export { updateDataView as update } from './updateDataView';
 export { updateDataViewOptions as updateOptions } from './updateDataViewOptions';
 export { updateDataViewData as updateData } from './updateDataViewData';
