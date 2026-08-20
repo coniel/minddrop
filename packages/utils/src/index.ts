@@ -12,6 +12,7 @@ export * from './errors';
 export * from './formatDate';
 export * from './formatIsoDate';
 export * from './fuzzySearch';
+export * from './fuzzySearchBy';
 export * from './getFileExtensionFromUrl';
 export * from './getWindowSizeSlot';
 export * from './getTransferData';
