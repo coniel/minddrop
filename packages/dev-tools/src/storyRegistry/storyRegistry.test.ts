@@ -2,7 +2,9 @@ import { afterEach, describe, expect, it } from 'vitest';
 import {
   Story,
   getRegisteredStories,
+  loadStories,
   registerStory,
+  registerStoryLoader,
   subscribeToStories,
   unregisterStory,
 } from './storyRegistry';
@@ -77,6 +79,43 @@ describe('unregisterStory', () => {
     expect(getRegisteredStories().some((group) => group.group === 'Test')).toBe(
       false,
     );
+  });
+});
+
+describe('loadStories', () => {
+  it('lists the stories registered by the loaders', async () => {
+    registerStoryLoader(async () => registerStory(buttonStory));
+
+    await loadStories();
+
+    const group = getRegisteredStories().find((item) => item.group === 'Test');
+
+    expect(group?.items.map((item) => item.label)).toEqual(['Button']);
+  });
+
+  it('does not run a loader which has already run', async () => {
+    let loadCount = 0;
+
+    registerStoryLoader(async () => {
+      loadCount += 1;
+    });
+
+    await loadStories();
+    await loadStories();
+
+    expect(loadCount).toBe(1);
+  });
+
+  it('runs a loader registered after an earlier load', async () => {
+    await loadStories();
+
+    registerStoryLoader(async () => registerStory(textStory));
+
+    await loadStories();
+
+    const group = getRegisteredStories().find((item) => item.group === 'Test');
+
+    expect(group?.items.map((item) => item.label)).toEqual(['Text']);
   });
 });
 

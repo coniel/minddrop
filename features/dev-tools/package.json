@@ -12,6 +12,7 @@
   "dependencies": {
     "@minddrop/dev-tools": "workspace:*",
     "@minddrop/events": "workspace:*",
+    "@minddrop/feature-markdown-editor": "workspace:*",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/stores": "workspace:*",
     "@minddrop/ui-primitives": "workspace:*",

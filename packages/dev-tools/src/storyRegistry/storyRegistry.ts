@@ -42,8 +42,17 @@ export interface StoryGroup {
   items: StoryItem[];
 }
 
+/**
+ * Loads a package's story files, each of which registers its own
+ * stories as it is loaded.
+ */
+export type StoryLoader = () => Promise<unknown>;
+
 const registry: Story[] = [];
 const registryListeners = new Set<VoidFunction>();
+
+const storyLoaders = new Set<StoryLoader>();
+const loadedStoryLoaders = new Set<StoryLoader>();
 
 // Stories are handed out grouped, which is recomputed only when
 // a story is registered
@@ -90,6 +99,36 @@ export function unregisterStory(group: string, label: string): void {
 
   registry.splice(index, 1);
   notifyListeners();
+}
+
+/**
+ * Registers a loader for a package's story files, which is run the
+ * first time the stories are needed rather than at start up.
+ *
+ * @param loader - The loader to register.
+ */
+export function registerStoryLoader(loader: StoryLoader): void {
+  storyLoaders.add(loader);
+}
+
+/**
+ * Runs the registered story loaders which have not run yet, listing
+ * the stories they register.
+ */
+export async function loadStories(): Promise<void> {
+  // Loaders which have already run would re-register the same
+  // stories, so only the outstanding ones are run
+  const pendingLoaders = [...storyLoaders].filter(
+    (loader) => !loadedStoryLoaders.has(loader),
+  );
+
+  await Promise.all(
+    pendingLoaders.map(async (loader) => {
+      await loader();
+
+      loadedStoryLoaders.add(loader);
+    }),
+  );
 }
 
 /**

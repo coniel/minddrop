@@ -10,9 +10,6 @@ import { DatabaseViewStateStore } from '@minddrop/feature-databases';
 import { initializeDesignsFeature } from '@minddrop/feature-designs';
 import { LayoutRegionSizesStore } from '@minddrop/feature-designs-legacy';
 import { initializeDevToolsFeature } from '@minddrop/feature-dev-tools';
-// Register the component stories with the story registry
-import '@minddrop/feature-markdown-editor/stories';
-import '@minddrop/ui-primitives/stories';
 import { initializeQueriesFeature } from '@minddrop/feature-queries';
 import { initializeSearch } from '@minddrop/feature-search';
 import {
@@ -117,6 +114,7 @@ async function runInitialization(): Promise<void> {
   await DesignsNext.initialize();
 
   Sql.initialize();
+
   const { schemaChanged } = await Databases.initialize();
 
   // Load persisted data views. Requires entries and the item

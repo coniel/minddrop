@@ -1,8 +1,9 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   StoryGroup,
   StoryItem,
   filterStories,
+  loadStories,
   useStories,
 } from '@minddrop/dev-tools';
 import {
@@ -34,6 +35,12 @@ export const StoriesPanel: React.FC = () => {
   const activeStory =
     getStoryById(groups, activeStoryId) ?? groups[0]?.items[0] ?? null;
   const ActiveStory = activeStory?.component;
+
+  // Load the story files, which are kept out of the app's start up
+  // path and so are loaded the first time the panel is opened
+  useEffect(() => {
+    loadStories();
+  }, []);
 
   const handleSearchChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {

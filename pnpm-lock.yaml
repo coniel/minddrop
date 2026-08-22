@@ -949,6 +949,9 @@ importers:
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
+      '@minddrop/feature-markdown-editor':
+        specifier: workspace:*
+        version: link:../markdown-editor
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n

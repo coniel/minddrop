@@ -1,4 +1,7 @@
-import { registerDevToolsPanel } from '@minddrop/dev-tools';
+import {
+  registerDevToolsPanel,
+  registerStoryLoader,
+} from '@minddrop/dev-tools';
 import { startConsoleLogCapture } from '@minddrop/dev-tools';
 import { startEventCapture } from '@minddrop/dev-tools';
 import { I18n } from '@minddrop/i18n';
@@ -45,6 +48,13 @@ export async function initializeDevToolsFeature(): Promise<void> {
     shortcut: 'i',
     component: StatePanel,
   });
+
+  // Register the component story loaders, which the stories panel
+  // runs the first time it is opened
+  registerStoryLoader(
+    () => import('@minddrop/feature-markdown-editor/stories'),
+  );
+  registerStoryLoader(() => import('@minddrop/ui-primitives/stories'));
 
   // Register the UI component stories panel
   registerDevToolsPanel({
