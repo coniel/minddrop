@@ -1,8 +1,8 @@
 import js from '@eslint/js';
+import onlyWarn from 'eslint-plugin-only-warn';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 import turboPlugin from 'eslint-plugin-turbo';
 import tseslint from 'typescript-eslint';
-import onlyWarn from 'eslint-plugin-only-warn';
 
 /**
  * A shared ESLint configuration for the repository.
@@ -24,6 +24,18 @@ export const config = [
           ignoreRestSiblings: true,
           argsIgnorePattern: '_',
           varsIgnorePattern: '_',
+        },
+      ],
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: 'lucide-react',
+              message:
+                "Use the Icon or ContentIcon components from '@minddrop/ui-primitives'. The root module statically imports every icon, which puts the whole set in the module graph. 'lucide-react/dynamic' loads them one at a time and stays allowed.",
+            },
+          ],
         },
       ],
       'padding-line-between-statements': [
