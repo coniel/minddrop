@@ -34,5 +34,3 @@ export type { DesignRoleContextFilter } from './getCompatibleDesignRoles';
 export * as Designs from './Designs';
 export * as Layouts from './Layouts';
 export * as DesignRoles from './DesignRoles';
-export * from './test-utils/setup-fixtures';
-export * as DesignFixtures from './test-utils/fixtures';

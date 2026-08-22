@@ -3,9 +3,9 @@ import { unregisterItemReferenceAdapter } from '@minddrop/item-references';
 import { CollectionsStore } from '../CollectionsStore';
 import { resolveCollectionsDirPath } from '../utils';
 import {
-  collectionFiles,
   collections,
   collections_virtual,
+  getCollectionFiles,
 } from './collections.fixtures';
 
 export interface SetupCollectionFixturesOptions {
@@ -32,7 +32,7 @@ export function setupCollectionFixtures(
 
   if (options.loadCollectionFiles !== false) {
     // Load collection files into the mock file system
-    MockFs.addFiles(collectionFiles);
+    MockFs.addFiles(getCollectionFiles());
   }
 
   if (options.loadVirtualCollections !== false) {

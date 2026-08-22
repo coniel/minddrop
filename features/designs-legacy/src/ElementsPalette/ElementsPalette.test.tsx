@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DataViewFixtures, DataViewTypes } from '@minddrop/data-views';
+import { DataViewTypes } from '@minddrop/data-views';
+import { DataViewFixtures } from '@minddrop/data-views/test-utils';
 import { render, screen } from '@minddrop/test-utils';
 import { cleanup, setup } from '../test-utils';
 import { ElementsPalette } from './ElementsPalette';

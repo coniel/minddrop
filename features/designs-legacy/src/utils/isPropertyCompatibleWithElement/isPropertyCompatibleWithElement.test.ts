@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
   cleanupDataViewFixtures,
   setupDataViewFixtures,
-} from '@minddrop/data-views';
+} from '@minddrop/data-views/test-utils';
 import {
   ContainerElement,
   DefaultContainerElementStyle,
@@ -12,7 +12,7 @@ import {
   TextElement,
   ViewElement,
 } from '@minddrop/designs-legacy';
-import { initializeMockFileSystem } from '@minddrop/file-system';
+import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
 import { isPropertyCompatibleWithElement } from './isPropertyCompatibleWithElement';
 
 const MockFs = initializeMockFileSystem();

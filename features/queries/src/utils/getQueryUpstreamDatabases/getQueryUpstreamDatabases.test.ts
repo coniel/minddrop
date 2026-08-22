@@ -1,6 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DatabaseFixtures, Databases } from '@minddrop/databases';
-import { QueryFixtures, QuerySourceNode } from '@minddrop/queries';
+import { Databases } from '@minddrop/databases';
+import { DatabaseFixtures } from '@minddrop/databases/test-utils';
+import { QuerySourceNode } from '@minddrop/queries';
+import { QueryFixtures } from '@minddrop/queries/test-utils';
 import { cleanup, setup } from '../../test-utils';
 import { getQueryUpstreamDatabases } from './getQueryUpstreamDatabases';
 

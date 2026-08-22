@@ -1,9 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import {
-  DatabaseEntries,
-  DatabaseFixtures,
-  Databases,
-} from '@minddrop/databases';
+import { DatabaseEntries, Databases } from '@minddrop/databases';
+import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { cleanup, setup } from '../../test-utils';
 import { resolveOpenMode } from './resolveOpenMode';
 

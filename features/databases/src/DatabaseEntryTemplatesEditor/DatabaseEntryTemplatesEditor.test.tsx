@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { DatabaseFixtures } from '@minddrop/databases';
+import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { render, screen } from '@minddrop/test-utils';
 import { cleanup, setup } from '../test-utils';
 import { DatabaseEntryTemplatesEditor } from './DatabaseEntryTemplatesEditor';

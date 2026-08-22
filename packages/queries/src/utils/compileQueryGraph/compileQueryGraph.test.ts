@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { CollectionFixtures, Collections } from '@minddrop/collections';
+import { Collections } from '@minddrop/collections';
+import { CollectionFixtures } from '@minddrop/collections/test-utils';
 import { QueriesStore } from '../../QueriesStore';
 import { query_1 } from '../../test-utils/queries.fixtures';
 import {

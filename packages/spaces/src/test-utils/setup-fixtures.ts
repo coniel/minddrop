@@ -1,7 +1,7 @@
 import { MockFileSystem } from '@minddrop/file-system';
 import { SpacesStore } from '../SpacesStore';
 import { resolveSpacesDirPath } from '../utils';
-import { spaceFiles, spaces } from './spaces.fixtures';
+import { getSpaceFiles, spaces } from './spaces.fixtures';
 
 export interface SetupSpaceFixturesOptions {
   loadSpaces?: boolean;
@@ -25,7 +25,7 @@ export function setupSpaceFixtures(
 
   if (options.loadSpaceFiles !== false) {
     // Load space files into the mock file system
-    MockFs.addFiles(spaceFiles);
+    MockFs.addFiles(getSpaceFiles());
   }
 }
 

@@ -75,7 +75,9 @@ export const designs = [
   design_empty,
 ];
 
-export const designFiles: MockFileDescriptor[] = designs.map((design) => ({
-  path: resolveDesignFilePath(design.id),
-  textContent: JSON.stringify(design),
-}));
+export function getDesignFiles(): MockFileDescriptor[] {
+  return designs.map((design) => ({
+    path: resolveDesignFilePath(design.id),
+    textContent: JSON.stringify(design),
+  }));
+}

@@ -1,7 +1,7 @@
 import { MockFileSystem } from '@minddrop/file-system';
 import { AutomationsStore } from '../AutomationsStore';
 import { resolveAutomationsDirPath } from '../utils';
-import { automationFiles, automations } from './automations.fixtures';
+import { automations, getAutomationFiles } from './automations.fixtures';
 
 export interface SetupAutomationFixturesOptions {
   loadAutomations?: boolean;
@@ -25,7 +25,7 @@ export function setupAutomationFixtures(
 
   if (options.loadAutomationFiles !== false) {
     // Load automation files into the mock file system
-    MockFs.addFiles(automationFiles);
+    MockFs.addFiles(getAutomationFiles());
   }
 }
 

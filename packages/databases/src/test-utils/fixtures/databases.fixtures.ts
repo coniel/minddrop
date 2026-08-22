@@ -1,11 +1,11 @@
-import { DesignFixtures } from '@minddrop/designs-legacy';
+import { DesignFixtures } from '@minddrop/designs-legacy/test-utils';
 import { Fs, MockFileDescriptor } from '@minddrop/file-system';
 import {
   FilePropertySchema,
   ImagePropertySchema,
   UrlPropertySchema,
 } from '@minddrop/properties';
-import { WorkspaceFixtures } from '@minddrop/workspaces';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { Database, DatabaseEntryTemplate } from '../../types';
 import { databaseConfigFilePath, entryTemplateFilePath } from '../../utils';
 import { fetchWebpageMetadataAutomation } from './database-automations.fixtures';

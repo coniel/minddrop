@@ -13,7 +13,5 @@ export { DefaultPageLayout, defaultLayoutIds } from './default-layouts';
 export * from './errors';
 export * from './events';
 export * from './constants';
-export * from './test-utils/setup-fixtures';
-export * as DesignFixtures from './test-utils/fixtures';
 export * as Designs from './Designs';
 export * as Layouts from './Layouts';

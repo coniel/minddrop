@@ -1,11 +1,11 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { Sql } from '@minddrop/sql';
 import {
-  createTestSqlAdapter,
   objectDatabase,
   objectEntry1SqlRecord,
   urlDatabase,
 } from '../test-utils';
+import { createTestSqlAdapter } from '../test-utils/createTestSqlAdapter';
 import { EntryFilterGroup, SqlEntryRecord } from '../types';
 import { SCHEMA_SQL } from './schema';
 import { sqlQueryEntries } from './sqlQueryEntries';

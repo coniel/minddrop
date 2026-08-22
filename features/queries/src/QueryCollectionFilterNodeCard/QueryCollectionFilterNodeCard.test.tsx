@@ -1,10 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { CollectionFixtures, Collections } from '@minddrop/collections';
-import {
-  Queries,
-  QueryCollectionFilterNode,
-  QueryFixtures,
-} from '@minddrop/queries';
+import { Collections } from '@minddrop/collections';
+import { CollectionFixtures } from '@minddrop/collections/test-utils';
+import { Queries, QueryCollectionFilterNode } from '@minddrop/queries';
+import { QueryFixtures } from '@minddrop/queries/test-utils';
 import { render, screen, userEvent, waitFor } from '@minddrop/test-utils';
 import { cleanup, setup } from '../test-utils';
 import { QueryCollectionFilterNodeCard } from './QueryCollectionFilterNodeCard';

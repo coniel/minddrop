@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Paths, isEntityId } from '@minddrop/utils';
-import { WorkspaceFixtures } from '@minddrop/workspaces';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DatabaseConfigFileName } from '../constants';
 import {
   MockFs,

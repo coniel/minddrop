@@ -3,7 +3,7 @@ import { DesignRolesStore } from '../DesignRolesStore';
 import { DesignsStore } from '../DesignsStore';
 import { BuiltInDesignRoles } from '../roles';
 import { resolveDesignsDirPath } from '../utils';
-import { designFiles, designs } from './fixtures';
+import { designs, getDesignFiles } from './fixtures';
 
 export interface SetupDesignFixturesOptions {
   loadDesigns?: boolean;
@@ -25,7 +25,7 @@ export function setupDesignFixtures(
 
   if (options.loadDesignFiles !== false) {
     // Add design files to the file system
-    MockFs.addFiles(designFiles);
+    MockFs.addFiles(getDesignFiles());
   }
 
   if (options.loadRoles !== false) {

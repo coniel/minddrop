@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DesignFixtures } from '@minddrop/designs-legacy';
+import { DesignFixtures } from '@minddrop/designs-legacy/test-utils';
 import { getDatabase } from '../../getDatabase';
 import { cleanup, objectDatabase, setup } from '../../test-utils';
 import { updateDatabase } from '../../updateDatabase';

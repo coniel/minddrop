@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
-  DatabaseFixtures,
   DatabaseUpdatedEvent,
   DatabaseUpdatedEventData,
 } from '@minddrop/databases';
+import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { Events, OpenConfirmationDialogEvent } from '@minddrop/events';
 import { TextPropertySchema } from '@minddrop/properties';
 import {

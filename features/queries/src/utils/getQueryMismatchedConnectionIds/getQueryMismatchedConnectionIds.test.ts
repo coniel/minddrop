@@ -1,12 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DatabaseFixtures, Databases } from '@minddrop/databases';
+import { Databases } from '@minddrop/databases';
+import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import {
   Query,
   QueryConnection,
   QueryFilterNode,
-  QueryFixtures,
   QueryNode,
 } from '@minddrop/queries';
+import { QueryFixtures } from '@minddrop/queries/test-utils';
 import { cleanup, setup } from '../../test-utils';
 import { getQueryMismatchedConnectionIds } from './getQueryMismatchedConnectionIds';
 

@@ -1,1 +1,3 @@
-export * from './file-system.data';
+export * from '../mock';
+export * from './file-system.fixtures';
+export * as FileSystemFixtures from './file-system.fixtures';

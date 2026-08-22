@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, it } from 'vitest';
-import { SpaceFixtures, Spaces } from '@minddrop/spaces';
+import { Spaces } from '@minddrop/spaces';
+import { SpaceFixtures } from '@minddrop/spaces/test-utils';
 import { render, screen } from '@minddrop/test-utils';
 import { cleanup, setup } from '../test-utils';
 import { SpaceView } from './SpaceView';

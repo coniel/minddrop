@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { CollectionFixtures, Collections } from '@minddrop/collections';
+import { Collections } from '@minddrop/collections';
+import { CollectionFixtures } from '@minddrop/collections/test-utils';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { sqlUpsertEntries } from '../../sql';
 import {

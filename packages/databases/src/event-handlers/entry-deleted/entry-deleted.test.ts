@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Collections } from '@minddrop/collections';
-import { DataViewFixtures, DataViews } from '@minddrop/data-views';
+import { DataViews } from '@minddrop/data-views';
+import { DataViewFixtures } from '@minddrop/data-views/test-utils';
 import {
   cleanup,
   collectionDatabase,

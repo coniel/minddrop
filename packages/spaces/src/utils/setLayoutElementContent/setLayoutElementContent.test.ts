@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { DesignFixtures, Layout } from '@minddrop/designs-legacy';
+import { Layout } from '@minddrop/designs-legacy';
+import { DesignFixtures } from '@minddrop/designs-legacy/test-utils';
 import { spaceLayout_1, viewSpaceLayout } from '../../test-utils';
 import { setLayoutElementContent } from './setLayoutElementContent';
 

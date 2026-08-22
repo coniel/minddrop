@@ -2,12 +2,19 @@ import { vi } from 'vitest';
 import {
   cleanupCollectionFixtures,
   setupCollectionFixtures,
-} from '@minddrop/collections';
+} from '@minddrop/collections/test-utils';
 import { Events } from '@minddrop/events';
-import { initializeMockFileSystem } from '@minddrop/file-system';
+import {
+  initializeMockFileSystem,
+  setMockWorkspacePaths,
+} from '@minddrop/file-system/test-utils';
 import { initializeI18n } from '@minddrop/i18n';
 
 initializeI18n();
+
+// The fixture file paths resolve against the mock workspace, so it is
+// set before they are read
+setMockWorkspacePaths();
 
 export const MockFs = initializeMockFileSystem();
 

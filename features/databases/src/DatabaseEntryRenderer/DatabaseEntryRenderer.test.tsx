@@ -2,10 +2,11 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
   DatabaseEntries,
   DatabaseEntrySerializers,
-  DatabaseFixtures,
   Databases,
 } from '@minddrop/databases';
-import { DesignFixtures, Designs } from '@minddrop/designs-legacy';
+import { DatabaseFixtures } from '@minddrop/databases/test-utils';
+import { Designs } from '@minddrop/designs-legacy';
+import { DesignFixtures } from '@minddrop/designs-legacy/test-utils';
 import { render, screen } from '@minddrop/test-utils';
 import { cleanup, setup } from '../test-utils';
 import { DatabaseEntryRenderer } from './DatabaseEntryRenderer';

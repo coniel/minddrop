@@ -3,6 +3,10 @@
   "version": "0.0.0",
   "main": "src/index",
   "types": "src/index",
+  "exports": {
+    ".": "./src/index.ts",
+    "./test-utils": "./src/test-utils/index.ts"
+  },
   "scripts": {
     "lint": "eslint .  --max-warnings 0",
     "test": "vitest run",

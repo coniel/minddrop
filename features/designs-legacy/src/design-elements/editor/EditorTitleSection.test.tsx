@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { Design, DesignFixtures, Designs } from '@minddrop/designs-legacy';
+import { Design, Designs } from '@minddrop/designs-legacy';
+import { DesignFixtures } from '@minddrop/designs-legacy/test-utils';
 import { render, screen, userEvent } from '@minddrop/test-utils';
 import {
   DesignStudioStore,

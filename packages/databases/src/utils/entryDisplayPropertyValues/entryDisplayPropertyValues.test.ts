@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DataViewFixtures } from '@minddrop/data-views';
+import { DataViewFixtures } from '@minddrop/data-views/test-utils';
 import {
   DefaultContainerElementStyle,
   DefaultTextElementStyle,

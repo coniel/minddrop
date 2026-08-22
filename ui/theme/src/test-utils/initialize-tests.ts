@@ -1,10 +1,11 @@
 import { act } from '@testing-library/react';
 import { Events } from '@minddrop/events';
+import { MockFileSystem } from '@minddrop/file-system';
 import {
-  FILE_SYSTEM_TEST_DATA,
-  MockFileSystem,
   initializeMockFileSystem,
-} from '@minddrop/file-system';
+  setMockWorkspacePaths,
+} from '@minddrop/file-system/test-utils';
+import { FileSystemFixtures } from '@minddrop/file-system/test-utils';
 import { initializeI18n } from '@minddrop/i18n';
 import {
   StoreHydrateEvent,
@@ -21,7 +22,7 @@ import {
 
 initializeI18n();
 
-const { configsFileDescriptor } = FILE_SYSTEM_TEST_DATA;
+const { configsFileDescriptor } = FileSystemFixtures;
 
 // Listeners registered per test, removed again on cleanup so that each
 // test registers its own. Listener IDs are unique per event, so a stale
@@ -38,6 +39,10 @@ let MockFsAdapter: MockFileSystem;
 
 export function setup() {
   // Initialize mock file system
+  // The fixture file paths resolve against the mock workspace, so it is
+  // set before they are read
+  setMockWorkspacePaths();
+
   MockFsAdapter = initializeMockFileSystem([configsFileDescriptor]);
 
   // Stand in for the platform layer, which answers a store's hydrate

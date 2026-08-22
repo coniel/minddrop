@@ -1,11 +1,11 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import {
-  DesignFixtures,
   Designs,
   ElementTemplates,
   Layout,
   resolveDesignMediaDirPath,
 } from '@minddrop/designs-legacy';
+import { DesignFixtures } from '@minddrop/designs-legacy/test-utils';
 import { DEFAULT_STATIC_ICON } from '../constants';
 import {
   cleanup,

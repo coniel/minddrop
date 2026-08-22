@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
-import { SpaceFixtures, Spaces } from '@minddrop/spaces';
+import { Spaces } from '@minddrop/spaces';
+import { SpaceFixtures } from '@minddrop/spaces/test-utils';
 import { render } from '@minddrop/test-utils';
 import {
   CloseViewEvent,
@@ -28,7 +29,7 @@ describe('<SpacesFeature />', () => {
     // Load a space into the store and its file into the mock
     // file system so it can be deleted
     Spaces.Store.load([space_1]);
-    MockFs.addFiles(SpaceFixtures.spaceFiles);
+    MockFs.addFiles(SpaceFixtures.getSpaceFiles());
   });
 
   afterEach(cleanup);

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { DatabaseFixtures } from '@minddrop/databases';
+import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { DropEventData } from '@minddrop/selection';
 import { DatabaseEntriesDataKey } from '@minddrop/ui-databases';
 import { getDroppedEntryIds } from './getDroppedEntryIds';

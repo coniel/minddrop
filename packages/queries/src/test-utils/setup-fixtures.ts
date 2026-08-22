@@ -1,7 +1,7 @@
 import { MockFileSystem } from '@minddrop/file-system';
 import { QueriesStore } from '../QueriesStore';
 import { resolveQueriesDirPath } from '../utils';
-import { queries, queryFiles } from './queries.fixtures';
+import { getQueryFiles, queries } from './queries.fixtures';
 
 export interface SetupQueryFixturesOptions {
   loadQueries?: boolean;
@@ -25,7 +25,7 @@ export function setupQueryFixtures(
 
   if (options.loadQueryFiles !== false) {
     // Load query files into the mock file system
-    MockFs.addFiles(queryFiles);
+    MockFs.addFiles(getQueryFiles());
   }
 }
 

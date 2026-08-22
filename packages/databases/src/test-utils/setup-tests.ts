@@ -3,13 +3,16 @@ import { Collections } from '@minddrop/collections';
 import {
   cleanupDataViewFixtures,
   setupDataViewFixtures,
-} from '@minddrop/data-views';
+} from '@minddrop/data-views/test-utils';
 import {
   cleanupDesignFixtures,
   setupDesignFixtures,
-} from '@minddrop/designs-legacy';
+} from '@minddrop/designs-legacy/test-utils';
 import { Events } from '@minddrop/events';
-import { initializeMockFileSystem } from '@minddrop/file-system';
+import {
+  initializeMockFileSystem,
+  setMockWorkspacePaths,
+} from '@minddrop/file-system/test-utils';
 import { initializeI18n } from '@minddrop/i18n';
 import {
   registerItemReferenceAdapter,
@@ -18,7 +21,7 @@ import {
 import {
   cleanupWorkspaceFixtures,
   setupWorkspaceFixtures,
-} from '@minddrop/workspaces';
+} from '@minddrop/workspaces/test-utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabaseEntrySerializersStore } from '../DatabaseEntrySerializersStore';
 import { DatabasesStore } from '../DatabasesStore';
@@ -35,6 +38,10 @@ import {
 } from './setup-fixtures';
 
 initializeI18n();
+
+// The fixture file paths resolve against the mock workspace, so it is
+// set before they are read
+setMockWorkspacePaths();
 
 export const MockFs = initializeMockFileSystem();
 

@@ -1,5 +1,6 @@
-import { DatabaseFixtures } from '@minddrop/databases';
-import { Design, DesignFixtures } from '@minddrop/designs-legacy';
+import { DatabaseFixtures } from '@minddrop/databases/test-utils';
+import { Design } from '@minddrop/designs-legacy';
+import { DesignFixtures } from '@minddrop/designs-legacy/test-utils';
 import {
   FlatContainerDesignElement,
   FlatLeafDesignElement,

@@ -1,10 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
-  DataViewFixtures,
   DataViewTypeComponentProps,
   DataViewTypes,
   DataViews,
 } from '@minddrop/data-views';
+import { DataViewFixtures } from '@minddrop/data-views/test-utils';
 import { render, screen } from '@minddrop/test-utils';
 import { cleanup, setup } from '../test-utils';
 import { DataViewView } from './DataViewView';

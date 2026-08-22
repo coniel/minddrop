@@ -1,9 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import {
-  DatabaseEntries,
-  DatabaseFixtures,
-  Databases,
-} from '@minddrop/databases';
+import { DatabaseEntries, Databases } from '@minddrop/databases';
+import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { render, screen, userEvent, waitFor } from '@minddrop/test-utils';
 import { cleanup, setup } from '../test-utils';
 import { CreateDatabaseEntryButton } from './CreateDatabaseEntryButton';

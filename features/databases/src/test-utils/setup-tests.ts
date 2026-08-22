@@ -1,13 +1,15 @@
 import { vi } from 'vitest';
-import { DataViewFixtures, DataViewTypes } from '@minddrop/data-views';
-import {
-  DatabaseFixtures,
-  DatabaseTemplates,
-  Databases,
-} from '@minddrop/databases';
-import { DesignFixtures, Designs } from '@minddrop/designs-legacy';
+import { DataViewTypes } from '@minddrop/data-views';
+import { DataViewFixtures } from '@minddrop/data-views/test-utils';
+import { DatabaseTemplates, Databases } from '@minddrop/databases';
+import { DatabaseFixtures } from '@minddrop/databases/test-utils';
+import { Designs } from '@minddrop/designs-legacy';
+import { DesignFixtures } from '@minddrop/designs-legacy/test-utils';
 import { Events } from '@minddrop/events';
-import { initializeMockFileSystem } from '@minddrop/file-system';
+import {
+  initializeMockFileSystem,
+  setMockWorkspacePaths,
+} from '@minddrop/file-system/test-utils';
 import { initializeI18n } from '@minddrop/i18n';
 import { cleanup as cleanupRender } from '@minddrop/test-utils';
 import { Paths } from '@minddrop/utils';
@@ -21,6 +23,10 @@ interface SetupOptions {
 }
 
 initializeI18n();
+
+// The fixture file paths resolve against the mock workspace, so it is
+// set before they are read
+setMockWorkspacePaths();
 
 export const MockFs = initializeMockFileSystem([
   Paths.workspace,

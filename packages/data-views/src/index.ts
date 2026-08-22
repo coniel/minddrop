@@ -8,7 +8,5 @@ export * from './resolveDataViewConfig';
 export * from './extractDataViewReferences';
 export * from './removeDataViewReferences';
 export * from './utils';
-export * from './test-utils/setup-fixtures';
 export * as DataViews from './DataViews';
 export * as DataViewTypes from './DataViewTypes';
-export * as DataViewFixtures from './test-utils/fixtures';

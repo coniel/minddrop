@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { Queries, QueryFixtures, QueryLimitNode } from '@minddrop/queries';
+import { Queries, QueryLimitNode } from '@minddrop/queries';
+import { QueryFixtures } from '@minddrop/queries/test-utils';
 import { render, screen, userEvent, waitFor } from '@minddrop/test-utils';
 import { cleanup, setup } from '../test-utils';
 import { QueryLimitNodeCard } from './QueryLimitNodeCard';

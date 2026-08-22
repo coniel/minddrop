@@ -1,10 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
-  DatabaseFixtures,
   DatabaseUpdatedEvent,
   DatabaseUpdatedEventData,
   Databases,
 } from '@minddrop/databases';
+import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { Events, OpenConfirmationDialogEvent } from '@minddrop/events';
 import {
   fillForm,

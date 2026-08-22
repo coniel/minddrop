@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { QueryFixtures } from '@minddrop/queries';
+import { QueryFixtures } from '@minddrop/queries/test-utils';
 import { connectQueryNodeToNearest } from './connectQueryNodeToNearest';
 
 const { query_1 } = QueryFixtures;

@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DataView, DataViewFixtures } from '@minddrop/data-views';
+import { DataView } from '@minddrop/data-views';
+import { DataViewFixtures } from '@minddrop/data-views/test-utils';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { cleanup, objectEntry1, setup } from '../../test-utils';
 import { databaseEntryAddress, viewMetadataKey } from '../../utils';

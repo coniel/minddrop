@@ -51,10 +51,12 @@ export const automation_virtual_1: Automation = {
 // All automations including the virtual ones
 export const allAutomations = [...automations, automation_virtual_1];
 
-export const automationFiles: (string | MockFileDescriptor)[] = [
-  resolveAutomationsDirPath(),
-  ...automations.map((automation) => ({
-    path: resolveAutomationFilePath(automation.id),
-    textContent: JSON.stringify(automation),
-  })),
-];
+export function getAutomationFiles(): (string | MockFileDescriptor)[] {
+  return [
+    resolveAutomationsDirPath(),
+    ...automations.map((automation) => ({
+      path: resolveAutomationFilePath(automation.id),
+      textContent: JSON.stringify(automation),
+    })),
+  ];
+}

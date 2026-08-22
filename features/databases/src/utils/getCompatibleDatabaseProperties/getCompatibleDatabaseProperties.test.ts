@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { DatabaseFixtures } from '@minddrop/databases';
+import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { initializeI18n } from '@minddrop/i18n';
 import { PropertySchema } from '@minddrop/properties';
 import { getCompatibleDatabaseProperties } from './getCompatibleDatabaseProperties';

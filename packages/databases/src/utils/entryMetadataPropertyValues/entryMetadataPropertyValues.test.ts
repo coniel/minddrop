@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { initializeI18n } from '@minddrop/i18n';
-import { DatabaseFixtures } from '../../index';
+import { DatabaseFixtures } from '../../test-utils';
 import { entryMetadataPropertyValues } from './entryMetadataPropertyValues';
 
 // Initialize translations used for the implicit property names

@@ -54,10 +54,12 @@ export const query_3 = generateQueryFixture(3);
 
 export const queries = [query_1, query_2, query_3];
 
-export const queryFiles: (string | MockFileDescriptor)[] = [
-  resolveQueriesDirPath(),
-  ...queries.map((query) => ({
-    path: resolveQueryFilePath(query.id),
-    textContent: JSON.stringify(query),
-  })),
-];
+export function getQueryFiles(): (string | MockFileDescriptor)[] {
+  return [
+    resolveQueriesDirPath(),
+    ...queries.map((query) => ({
+      path: resolveQueryFilePath(query.id),
+      textContent: JSON.stringify(query),
+    })),
+  ];
+}

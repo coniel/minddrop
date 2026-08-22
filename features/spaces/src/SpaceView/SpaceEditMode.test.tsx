@@ -4,7 +4,8 @@ import {
   DesignStudioStore,
   addDesignElementFromTemplate,
 } from '@minddrop/feature-designs-legacy';
-import { SpaceFixtures, Spaces } from '@minddrop/spaces';
+import { Spaces } from '@minddrop/spaces';
+import { SpaceFixtures } from '@minddrop/spaces/test-utils';
 import { render, screen, userEvent, waitFor } from '@minddrop/test-utils';
 import { SpaceViewStateStore, setSpaceViewState } from '../SpaceViewStateStore';
 import { MockFs, cleanup, setup } from '../test-utils';
@@ -19,7 +20,7 @@ describe('<SpaceEditMode />', () => {
     // Load the space into the store and its file into the mock
     // file system so edits can be written
     Spaces.Store.load([space_1]);
-    MockFs.addFiles(SpaceFixtures.spaceFiles);
+    MockFs.addFiles(SpaceFixtures.getSpaceFiles());
   });
 
   afterEach(() => {

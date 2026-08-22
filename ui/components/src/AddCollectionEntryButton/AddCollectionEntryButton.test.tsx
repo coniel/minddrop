@@ -1,11 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { CollectionFixtures, Collections } from '@minddrop/collections';
-import {
-  DatabaseEntries,
-  DatabaseEntry,
-  DatabaseFixtures,
-  Databases,
-} from '@minddrop/databases';
+import { Collections } from '@minddrop/collections';
+import { CollectionFixtures } from '@minddrop/collections/test-utils';
+import { DatabaseEntries, DatabaseEntry, Databases } from '@minddrop/databases';
+import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { render, screen, userEvent, waitFor } from '@minddrop/test-utils';
 import { cleanup, setup } from '../test-utils';
 import { AddCollectionEntryButton } from './AddCollectionEntryButton';

@@ -1,10 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Sql } from '@minddrop/sql';
-import {
-  createTestSqlAdapter,
-  objectDatabase,
-  objectEntry1SqlRecord,
-} from '../test-utils';
+import { objectDatabase, objectEntry1SqlRecord } from '../test-utils';
+import { createTestSqlAdapter } from '../test-utils/createTestSqlAdapter';
 import { SCHEMA_SQL } from './schema';
 import { sqlGetAllDatabases } from './sqlGetAllDatabases';
 import { sqlGetEntrySyncRecords } from './sqlGetEntrySyncRecords';

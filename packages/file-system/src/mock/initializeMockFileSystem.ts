@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Paths, YAML, restoreDates } from '@minddrop/utils';
+import { YAML, restoreDates } from '@minddrop/utils';
 import { registerFileSystemAdapter } from '../FileSystem';
 import { concatPath } from '../concatPath';
 import { fileNameFromPath } from '../fileNameFromPath';
@@ -22,10 +22,7 @@ import { mockExists } from './mockExists';
 import { mockGetFileEntry } from './mockGetFileEntry';
 import { mockRemoveFileEntry } from './mockRemoveFileEntry';
 import { printFileTree } from './printFileTree';
-
-// Set a mock workspace path
-Paths.workspace = 'workspace';
-Paths.workspaceConfigs = `${Paths.workspace}/.minddrop`;
+import { setMockWorkspacePaths } from './setMockWorkspacePaths';
 
 const baseDirs = [
   BaseDirectory.AppData,
@@ -36,6 +33,9 @@ const baseDirs = [
 export function initializeMockFileSystem(
   filesToLoad: (MockFileDescriptor | string)[] = [],
 ): MockFileSystem {
+  // Point the workspace paths at the mock workspace
+  setMockWorkspacePaths();
+
   const init = initializeMockFsRoot([...baseDirs, ...filesToLoad]);
 
   // The mock file system root

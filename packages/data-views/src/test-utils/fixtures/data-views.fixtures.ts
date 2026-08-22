@@ -1,6 +1,6 @@
 import { Fs, MockFileDescriptor } from '@minddrop/file-system';
 import { Paths } from '@minddrop/utils';
-import { WorkspaceFixtures } from '@minddrop/workspaces';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { ViewFileExtension, ViewsDirName } from '../../constants';
 import { DataView, ViewDataSource } from '../../types';
 

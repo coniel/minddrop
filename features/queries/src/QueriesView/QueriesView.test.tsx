@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { DatabaseFixtures, Databases } from '@minddrop/databases';
+import { Databases } from '@minddrop/databases';
+import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { Events } from '@minddrop/events';
-import { Queries, QueryFixtures } from '@minddrop/queries';
+import { Queries } from '@minddrop/queries';
+import { QueryFixtures } from '@minddrop/queries/test-utils';
 import { render, screen, userEvent, waitFor } from '@minddrop/test-utils';
 import {
   SetSubviewEvent,

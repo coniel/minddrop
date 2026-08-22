@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { createDataTransfer } from '@minddrop/utils';
+import { createDataTransfer } from '@minddrop/utils/test-utils';
 import {
   cleanup,
   rootStorageDatabase,

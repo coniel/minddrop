@@ -28,10 +28,12 @@ export const space_3 = generateSpaceFixture(3, spaceLayout_3);
 
 export const spaces = [space_1, space_2, space_3];
 
-export const spaceFiles: (string | MockFileDescriptor)[] = [
-  resolveSpacesDirPath(),
-  ...spaces.map((space) => ({
-    path: resolveSpaceFilePath(space.id),
-    textContent: JSON.stringify(space),
-  })),
-];
+export function getSpaceFiles(): (string | MockFileDescriptor)[] {
+  return [
+    resolveSpacesDirPath(),
+    ...spaces.map((space) => ({
+      path: resolveSpaceFilePath(space.id),
+      textContent: JSON.stringify(space),
+    })),
+  ];
+}

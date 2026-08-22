@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DataViewFixtures, DataViews } from '@minddrop/data-views';
+import { DataViews } from '@minddrop/data-views';
+import { DataViewFixtures } from '@minddrop/data-views/test-utils';
 import { Events } from '@minddrop/events';
 import {
   CloseViewEvent,

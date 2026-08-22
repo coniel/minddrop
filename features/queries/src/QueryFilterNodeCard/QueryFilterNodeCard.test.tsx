@@ -1,6 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { DatabaseFixtures, Databases } from '@minddrop/databases';
-import { Queries, QueryFilterNode, QueryFixtures } from '@minddrop/queries';
+import { Databases } from '@minddrop/databases';
+import { DatabaseFixtures } from '@minddrop/databases/test-utils';
+import { Queries, QueryFilterNode } from '@minddrop/queries';
+import { QueryFixtures } from '@minddrop/queries/test-utils';
 import { render, screen, userEvent, waitFor } from '@minddrop/test-utils';
 import { cleanup, setup } from '../test-utils';
 import { QueryFilterNodeCard } from './QueryFilterNodeCard';

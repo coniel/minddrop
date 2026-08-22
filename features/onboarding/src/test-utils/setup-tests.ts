@@ -1,6 +1,9 @@
 import { vi } from 'vitest';
 import { Events } from '@minddrop/events';
-import { initializeMockFileSystem } from '@minddrop/file-system';
+import {
+  initializeMockFileSystem,
+  setMockWorkspacePaths,
+} from '@minddrop/file-system/test-utils';
 import { I18n, initializeI18n } from '@minddrop/i18n';
 import { cleanup as cleanupRender } from '@minddrop/test-utils';
 import { Workspaces } from '@minddrop/workspaces';
@@ -17,6 +20,10 @@ if (!Element.prototype.getAnimations) {
 
 // The folder used as the workspace location in tests
 export const parentDirPath = 'Users/test/Documents';
+
+// The fixture file paths resolve against the mock workspace, so it is
+// set before they are read
+setMockWorkspacePaths();
 
 export const MockFs = initializeMockFileSystem([
   `${parentDirPath}/placeholder.md`,

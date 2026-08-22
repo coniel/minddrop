@@ -44,7 +44,6 @@ export * from './useMeasuredImageWidth';
 export * from './useToggle';
 export * from './omitPath';
 export * from './parseDate';
-export * from './test-utils';
 export { v4 as uuid } from 'uuid';
 
 export const YAML = {
