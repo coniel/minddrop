@@ -9,7 +9,7 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@types/node": "^20.0.0",
+    "@types/node": "^24.0.0",
     "eslint": "^9.39.3",
     "@minddrop/eslint-config": "workspace:*",
     "tsconfig": "workspace:*",
