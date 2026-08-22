@@ -13,6 +13,10 @@ import { registerScreenshotAdapterRpc } from './registerScreenshotAdapter';
 import { registerSearchAdapterRpc } from './registerSearchAdapter';
 import { registerSqlAdapterRpc } from './registerSqlAdapter';
 
+// Names the code the front end is running, so it is clear which
+// changes are loaded after a rebuild or a refresh
+console.log('[init] mainview revision', import.meta.env.VITE_APP_REVISION);
+
 export const rpc = Electroview.defineRPC<WebviewRPC>({
   // Disable RPC timeout to allow for long-running operations
   // like native file dialogs that block until user interaction.
@@ -50,6 +54,7 @@ Events.addListener(ToggleWindowFillEvent, 'desktop-electrobun', () => {
 // Fetch the HTTP server port and store it for use by
 // file system operations (image loading, binary uploads)
 const httpServerPort = await electrobun.rpc.request.getHttpServerPort({});
+
 Paths.httpServerHost = `http://localhost:${httpServerPort}`;
 
 // Enable screen capture on the dev channel only, leaving the
