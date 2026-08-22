@@ -5,6 +5,7 @@ import {
 } from './setup-fixtures';
 
 export * from './setup-tests';
+export * from './setup-sql';
 export * from './fixtures';
 
 export const DatabaseFixtures = {
