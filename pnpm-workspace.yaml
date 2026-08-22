@@ -1,7 +1,5 @@
 packages:
   - 'apps/*'
-  - 'dev/*'
-  - 'extensions/*'
   - 'features/*'
   - 'packages/*'
   - 'ui/*'

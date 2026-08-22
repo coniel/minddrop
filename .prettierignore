@@ -2,11 +2,11 @@
 **/*.min.tsx
 **/*.min.json
 
-# Generated Tauri schemas
-apps/desktop/src-tauri/gen
-
 # Build output
 **/dist
+
+# Generated Astro content types
+apps/website/.astro
 
 # Package manager lockfile
 pnpm-lock.yaml
