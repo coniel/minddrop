@@ -1,7 +1,10 @@
 import { vi } from 'vitest';
-import { cleanupDesignFixtures, setupDesignFixtures } from '@minddrop/designs';
+import {
+  cleanupDesignFixtures,
+  setupDesignFixtures,
+} from '@minddrop/designs/test-utils';
 import { Events } from '@minddrop/events';
-import { initializeMockFileSystem } from '@minddrop/file-system';
+import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
 import { I18n, initializeI18n } from '@minddrop/i18n';
 import { locales } from '../locales';
 

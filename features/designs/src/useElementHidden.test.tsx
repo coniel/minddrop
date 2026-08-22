@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, it } from 'vitest';
-import { DesignElement, DesignFixtures, TextElement } from '@minddrop/designs';
+import { DesignElement, TextElement } from '@minddrop/designs';
+import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { PropertyMap } from '@minddrop/properties';
 import { cleanup as cleanupRender, render, screen } from '@minddrop/test-utils';
 import { DesignPropertiesProvider } from './DesignPropertiesProvider';

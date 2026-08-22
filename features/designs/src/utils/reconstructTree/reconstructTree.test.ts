@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { DesignFixtures } from '@minddrop/designs';
+import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { flattenTree } from '../flattenTree';
 import { reconstructTree } from './reconstructTree';
 

@@ -1,11 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   DesignElementTemplate,
-  DesignFixtures,
   ImageElementConfig,
   TextElementConfig,
   resolveDesignMediaDirPath,
 } from '@minddrop/designs';
+import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { DropEventData } from '@minddrop/selection';
 import {
   DesignStudioStore,

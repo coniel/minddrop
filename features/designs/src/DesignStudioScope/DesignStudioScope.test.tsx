@@ -1,9 +1,6 @@
 import { afterEach, beforeEach, describe, it } from 'vitest';
-import {
-  DatabaseDesign,
-  DesignFixtures,
-  resolveDesignMediaDirPath,
-} from '@minddrop/designs';
+import { DatabaseDesign, resolveDesignMediaDirPath } from '@minddrop/designs';
+import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { cleanup as cleanupRender, render, screen } from '@minddrop/test-utils';
 import {
   DesignStudioProvider,

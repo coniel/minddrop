@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DesignFixtures } from '@minddrop/designs';
+import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { render, screen } from '@minddrop/test-utils';
 import { cleanup, setup } from '../test-utils';
 import { LayoutRenderer } from './LayoutRenderer';

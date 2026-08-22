@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DesignFixtures, TextElementConfig } from '@minddrop/designs';
+import { TextElementConfig } from '@minddrop/designs';
+import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { toMimeType } from '@minddrop/selection';
 import {
   cleanup as cleanupRender,

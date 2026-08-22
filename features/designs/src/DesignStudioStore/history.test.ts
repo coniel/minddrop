@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { DesignFixtures, Designs, TextElementConfig } from '@minddrop/designs';
+import { Designs, TextElementConfig } from '@minddrop/designs';
+import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { cleanup, setup } from '../test-utils';
 import { FlatContainerDesignElement, FlatTextElement } from '../types';
 import {

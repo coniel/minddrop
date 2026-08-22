@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DesignFixtures, Layout } from '@minddrop/designs';
+import { Layout } from '@minddrop/designs';
+import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { i18n } from '@minddrop/i18n';
 import {
   cleanup as cleanupRender,

@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DesignFixtures } from '@minddrop/designs';
+import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { PropertiesSchema } from '@minddrop/properties';
 import {
   cleanup as cleanupRender,

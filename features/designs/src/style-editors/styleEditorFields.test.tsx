@@ -1,7 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
   ContainerStyle,
-  DesignFixtures,
   FontSizeToken,
   FontSizeTokens,
   PagePanelSide,
@@ -11,6 +10,7 @@ import {
   TypographyStyle,
   isRoleElement,
 } from '@minddrop/designs';
+import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { i18n } from '@minddrop/i18n';
 import {
   cleanup as cleanupRender,

@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { DesignFixtures, Designs } from '@minddrop/designs';
+import { Designs } from '@minddrop/designs';
+import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { cleanup, setup } from '../test-utils';
 import { flattenTree } from '../utils';
 import {

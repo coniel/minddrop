@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { DesignFixtures, TextElementConfig } from '@minddrop/designs';
+import { TextElementConfig } from '@minddrop/designs';
+import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { DropEventData } from '@minddrop/selection';
 import {
   DesignElementTemplatesDataKey,

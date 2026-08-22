@@ -2,11 +2,11 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
   DateElement,
   DesignElement,
-  DesignFixtures,
   Layout,
   NumberElement,
   UrlElement,
 } from '@minddrop/designs';
+import { DesignFixtures } from '@minddrop/designs/test-utils';
 import {
   cleanup as cleanupRender,
   fireEvent,

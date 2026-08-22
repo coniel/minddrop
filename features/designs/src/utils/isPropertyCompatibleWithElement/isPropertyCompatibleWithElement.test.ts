@@ -2,8 +2,9 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
   cleanupDataViewFixtures,
   setupDataViewFixtures,
-} from '@minddrop/data-views';
-import { DesignFixtures, ViewElement, createElement } from '@minddrop/designs';
+} from '@minddrop/data-views/test-utils';
+import { ViewElement, createElement } from '@minddrop/designs';
+import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { MockFs, cleanup, setup } from '../../test-utils';
 import { isPropertyCompatibleWithElement } from './isPropertyCompatibleWithElement';
 
