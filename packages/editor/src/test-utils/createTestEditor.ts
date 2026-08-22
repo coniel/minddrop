@@ -1,7 +1,7 @@
 import { Element } from '@minddrop/ast';
 import { Transforms } from '../Transforms';
 import { createEditor } from '../utils';
-import { emptyParagraphElement } from './editor.data';
+import { emptyParagraphElement } from './editor.fixtures';
 
 /**
  * Creates a new editor with the given content.

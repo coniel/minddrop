@@ -5,7 +5,10 @@ import { Ast, Element } from '@minddrop/ast';
 import { TextElement } from '@minddrop/ast';
 import { render } from '@minddrop/test-utils';
 import { cleanup, createTestEditor } from '../test-utils';
-import { boldMarkConfig, paragraphElement1 } from '../test-utils/editor.data';
+import {
+  boldMarkConfig,
+  paragraphElement1,
+} from '../test-utils/editor.fixtures';
 import { withMarks } from './withMarks';
 
 const renderEditor = (children: TextElement[]) => {

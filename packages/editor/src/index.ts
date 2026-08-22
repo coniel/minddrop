@@ -21,5 +21,4 @@ export * from './toggleTaskItem';
 export * from './withLinks';
 export * from './withSourceInvalidation';
 export * from './withTitle';
-export * as EDITOR_TEST_DATA from './test-utils/editor.data';
 export * from './default-element-configs';

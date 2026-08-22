@@ -4,6 +4,10 @@
   "main": "src/index",
   "type": "module",
   "types": "src/index",
+  "exports": {
+    ".": "./src/index.ts",
+    "./test-utils": "./src/test-utils/index.ts"
+  },
   "scripts": {
     "lint": "eslint . --max-warnings 0 --no-warn-ignored",
     "typecheck": "tsc --noEmit",

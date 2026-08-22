@@ -4,7 +4,7 @@ import {
   listItemFrame1,
   paragraphElement1,
   paragraphElement2,
-} from '../../test-utils/editor.data';
+} from '../../test-utils/editor.fixtures';
 import { IdentifiedElement } from '../../types';
 import {
   resolveBlockFrames,

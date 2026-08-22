@@ -19,7 +19,7 @@ export {
   codeMarkConfig,
 } from '../MarkConfigs';
 
-export const EDITOR_TEST_DATA = {
+export const EditorFixtures = {
   markConfigs: MarkConfigs,
 };
 

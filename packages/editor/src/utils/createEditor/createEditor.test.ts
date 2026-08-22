@@ -5,7 +5,7 @@ import {
   mathElement1,
   paragraphElement1,
   thematicBreakElement1,
-} from '../../test-utils/editor.data';
+} from '../../test-utils/editor.fixtures';
 import { createEditor } from './createEditor';
 
 describe('createEditor', () => {

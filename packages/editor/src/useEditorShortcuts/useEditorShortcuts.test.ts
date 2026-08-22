@@ -12,7 +12,10 @@ import {
 } from '@minddrop/utils';
 import { EditorShortcuts } from '../EditorShortcuts';
 import { cleanup, createTestEditor } from '../test-utils';
-import { listItemElement1, paragraphElement1 } from '../test-utils/editor.data';
+import {
+  listItemElement1,
+  paragraphElement1,
+} from '../test-utils/editor.fixtures';
 import { Editor, EditorShortcutContext } from '../types';
 
 // Runs the shortcut registered for a hotkey, as the hook does

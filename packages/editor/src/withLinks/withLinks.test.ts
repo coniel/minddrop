@@ -2,7 +2,7 @@ import { Editor as SlateEditor, Transforms } from 'slate';
 import { describe, expect, it } from 'vitest';
 import { Ast, Element, LinkElement } from '@minddrop/ast';
 import { createTestEditor } from '../test-utils';
-import { paragraphElement1 } from '../test-utils/editor.data';
+import { paragraphElement1 } from '../test-utils/editor.fixtures';
 import { Editor } from '../types';
 import { withLinks } from './withLinks';
 

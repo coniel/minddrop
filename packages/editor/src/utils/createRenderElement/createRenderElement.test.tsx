@@ -5,7 +5,7 @@ import {
   headingElementConfig,
   paragraphElement1,
   paragraphElementConfig,
-} from '../../test-utils/editor.data';
+} from '../../test-utils/editor.fixtures';
 import { BlockElementProps, EditorBlockElementConfig } from '../../types';
 import { createRenderElement } from './createRenderElement';
 

@@ -2,7 +2,10 @@ import { Transforms } from 'slate';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { Ast, Element } from '@minddrop/ast';
 import { cleanup, createTestEditor } from '../test-utils';
-import { emptyParagraphElement, linkElement1 } from '../test-utils/editor.data';
+import {
+  emptyParagraphElement,
+  linkElement1,
+} from '../test-utils/editor.fixtures';
 import { InlineShortcut } from '../types';
 import { withInlineShortcuts } from './withInlineShortcuts';
 

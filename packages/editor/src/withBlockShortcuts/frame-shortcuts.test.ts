@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { Element, ListItemFrame } from '@minddrop/ast';
 import { EditorElementConfigs } from '../EditorElementConfigs';
 import { createTestEditor } from '../test-utils';
-import { emptyParagraphElement } from '../test-utils/editor.data';
+import { emptyParagraphElement } from '../test-utils/editor.fixtures';
 import { Editor } from '../types';
 import { withBlockShortcuts } from './withBlockShortcuts';
 

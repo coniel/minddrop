@@ -14,7 +14,7 @@ import {
 import { render } from '@minddrop/test-utils';
 import { EditorElementConfigs } from '../EditorElementConfigs';
 import { cleanup, createTestEditor } from '../test-utils';
-import { thematicBreakElement1 } from '../test-utils/editor.data';
+import { thematicBreakElement1 } from '../test-utils/editor.fixtures';
 import { createRenderElement } from '../utils';
 
 const renderEditor = (content: Element[]) => {

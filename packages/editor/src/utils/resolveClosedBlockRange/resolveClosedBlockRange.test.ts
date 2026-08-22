@@ -4,7 +4,7 @@ import {
   paragraphElement1,
   paragraphElement2,
   paragraphElement3,
-} from '../../test-utils/editor.data';
+} from '../../test-utils/editor.fixtures';
 import { resolveClosedBlockRange } from './resolveClosedBlockRange';
 
 const item1: ListItemFrame = {

@@ -7,7 +7,7 @@ import { cleanup, createTestEditor } from '../../test-utils';
 import {
   inlineMathElement1,
   paragraphElement1,
-} from '../../test-utils/editor.data';
+} from '../../test-utils/editor.fixtures';
 import { getElementAbove } from './getElementAbove';
 
 declare module 'slate' {

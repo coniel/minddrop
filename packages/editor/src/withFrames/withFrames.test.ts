@@ -6,7 +6,7 @@ import {
   emptyParagraphElement,
   paragraphElement1,
   paragraphElement1PlainText,
-} from '../test-utils/editor.data';
+} from '../test-utils/editor.fixtures';
 import { Editor } from '../types';
 import { withFrames } from './withFrames';
 

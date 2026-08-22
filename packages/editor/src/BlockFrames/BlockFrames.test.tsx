@@ -10,7 +10,7 @@ import {
   listItemFrame1,
   paragraphElement1,
   paragraphElement2,
-} from '../test-utils/editor.data';
+} from '../test-utils/editor.fixtures';
 import { createRenderElement } from '../utils';
 import { assignBlockIds } from '../withBlockIds';
 
