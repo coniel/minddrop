@@ -8,7 +8,11 @@ import {
   resolveDesignPropertyMap,
   withImplicitMetadataProperties,
 } from '@minddrop/databases';
-import { Designs, Layouts, resolveDesignMediaDirPath } from '@minddrop/designs-legacy';
+import {
+  Designs,
+  Layouts,
+  resolveDesignMediaDirPath,
+} from '@minddrop/designs-legacy';
 import { LayoutRenderer } from '@minddrop/feature-designs-legacy';
 import { useTranslation } from '@minddrop/i18n';
 import { PropertyValue } from '@minddrop/properties';

@@ -1,4 +1,7 @@
-import { WebviewElement, createWebviewCssStyle } from '@minddrop/designs-legacy';
+import {
+  WebviewElement,
+  createWebviewCssStyle,
+} from '@minddrop/designs-legacy';
 import { Icon, Text, WebView } from '@minddrop/ui-primitives';
 import { useElementProperty } from '../../DesignPropertiesProvider';
 import { toEmbedUrl } from './toEmbedUrl';

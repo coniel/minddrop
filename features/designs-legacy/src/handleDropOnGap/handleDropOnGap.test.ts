@@ -1,5 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DesignElementTemplate, TextElementConfig } from '@minddrop/designs-legacy';
+import {
+  DesignElementTemplate,
+  TextElementConfig,
+} from '@minddrop/designs-legacy';
 import { DropEventData } from '@minddrop/selection';
 import { getDesignElement } from '../DesignStudioStore';
 import {

@@ -1,4 +1,7 @@
-import { FormattedTextElement, createTextCssStyle } from '@minddrop/designs-legacy';
+import {
+  FormattedTextElement,
+  createTextCssStyle,
+} from '@minddrop/designs-legacy';
 import { useElementProperty } from '../../DesignPropertiesProvider';
 import { useElementPlaceholder } from '../../useElementPlaceholder';
 
