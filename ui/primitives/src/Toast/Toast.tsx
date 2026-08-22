@@ -1,7 +1,7 @@
 import { Toast as ToastPrimitive } from '@base-ui/react/toast';
-import { X } from 'lucide-react';
 import React from 'react';
 import { useTranslation } from '@minddrop/i18n';
+import { Icon } from '../Icon';
 import { TranslatableNode } from '../types';
 import { propsToClass } from '../utils';
 import './Toast.css';
@@ -128,7 +128,7 @@ export const ToastClose = React.forwardRef<HTMLButtonElement, ToastCloseProps>(
         aria-label={t('toast.close')}
         {...other}
       >
-        {children ?? <X size={16} />}
+        {children ?? <Icon name="x" size={16} />}
       </ToastPrimitive.Close>
     );
   },
