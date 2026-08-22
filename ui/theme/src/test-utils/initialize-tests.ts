@@ -1,10 +1,7 @@
 import { act } from '@testing-library/react';
 import { Events } from '@minddrop/events';
 import { MockFileSystem } from '@minddrop/file-system';
-import {
-  initializeMockFileSystem,
-  setMockWorkspacePaths,
-} from '@minddrop/file-system/test-utils';
+import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
 import { FileSystemFixtures } from '@minddrop/file-system/test-utils';
 import { initializeI18n } from '@minddrop/i18n';
 import {
@@ -39,10 +36,6 @@ let MockFsAdapter: MockFileSystem;
 
 export function setup() {
   // Initialize mock file system
-  // The fixture file paths resolve against the mock workspace, so it is
-  // set before they are read
-  setMockWorkspacePaths();
-
   MockFsAdapter = initializeMockFileSystem([configsFileDescriptor]);
 
   // Stand in for the platform layer, which answers a store's hydrate

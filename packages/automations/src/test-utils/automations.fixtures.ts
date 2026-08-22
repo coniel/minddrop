@@ -1,6 +1,5 @@
 import { MockFileDescriptor } from '@minddrop/file-system';
 import { Automation } from '../types';
-import { resolveAutomationFilePath, resolveAutomationsDirPath } from '../utils';
 
 function generateAutomationFixture(number: number): Automation {
   return {
@@ -51,11 +50,16 @@ export const automation_virtual_1: Automation = {
 // All automations including the virtual ones
 export const allAutomations = [...automations, automation_virtual_1];
 
+// Spelled out rather than resolved, so that the fixtures pin the paths
+// down instead of agreeing with whatever the path utils produce
+const automationsDirPath =
+  'path/to/workspaces/Workspace 1/.minddrop/automations';
+
 export function getAutomationFiles(): (string | MockFileDescriptor)[] {
   return [
-    resolveAutomationsDirPath(),
+    automationsDirPath,
     ...automations.map((automation) => ({
-      path: resolveAutomationFilePath(automation.id),
+      path: `${automationsDirPath}/${automation.id}.json`,
       textContent: JSON.stringify(automation),
     })),
   ];

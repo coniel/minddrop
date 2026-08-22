@@ -1,7 +1,6 @@
 import { MockFileDescriptor } from '@minddrop/file-system';
 import { PropertiesSchema } from '@minddrop/properties';
 import { Design } from '../../types';
-import { resolveDesignFilePath } from '../../utils';
 import {
   layout_card_1,
   layout_card_2,
@@ -75,9 +74,13 @@ export const designs = [
   design_empty,
 ];
 
+// Spelled out rather than resolved, so that the fixtures pin the paths
+// down instead of agreeing with whatever the path utils produce
+const designsDirPath = 'path/to/workspaces/Workspace 1/.minddrop/designs';
+
 export function getDesignFiles(): MockFileDescriptor[] {
   return designs.map((design) => ({
-    path: resolveDesignFilePath(design.id),
+    path: `${designsDirPath}/${design.id}/design.json`,
     textContent: JSON.stringify(design),
   }));
 }

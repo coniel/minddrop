@@ -5,10 +5,7 @@ import {
   setupDesignFixtures,
 } from '@minddrop/designs-legacy/test-utils';
 import { Events } from '@minddrop/events';
-import {
-  initializeMockFileSystem,
-  setMockWorkspacePaths,
-} from '@minddrop/file-system/test-utils';
+import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
 import { initializeI18n } from '@minddrop/i18n';
 import { cleanup as cleanupRender } from '@minddrop/test-utils';
 import { Paths } from '@minddrop/utils';
@@ -20,10 +17,6 @@ interface SetupOptions {
 }
 
 initializeI18n();
-
-// The fixture file paths resolve against the mock workspace, so it is
-// set before they are read
-setMockWorkspacePaths();
 
 export const MockFs = initializeMockFileSystem([Paths.workspace]);
 

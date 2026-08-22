@@ -1,9 +1,6 @@
 import { vi } from 'vitest';
 import { Events } from '@minddrop/events';
-import {
-  initializeMockFileSystem,
-  setMockWorkspacePaths,
-} from '@minddrop/file-system/test-utils';
+import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
 import { I18n, initializeI18n } from '@minddrop/i18n';
 import { locales } from '../locales';
 import { getCollectionFiles } from './collections.fixtures';
@@ -15,10 +12,6 @@ import {
 
 initializeI18n();
 I18n.registerTranslations(locales);
-
-// The fixture file paths resolve against the mock workspace, so it is
-// set before they are read
-setMockWorkspacePaths();
 
 export const MockFs = initializeMockFileSystem([...getCollectionFiles()]);
 export const mockDate = new Date('2026-01-01T00:00:00.000Z');

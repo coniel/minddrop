@@ -1,6 +1,5 @@
 import { MockFileDescriptor } from '@minddrop/file-system';
 import { Collection } from '../types';
-import { resolveCollectionFilePath, resolveCollectionsDirPath } from '../utils';
 
 function generateCollectionFixture(number: number): Collection {
   return {
@@ -35,11 +34,16 @@ export const collection_virtual_2 = generateVirtualCollectionFixture(2);
 
 export const collections_virtual = [collection_virtual_1, collection_virtual_2];
 
+// Spelled out rather than resolved, so that the fixtures pin the paths
+// down instead of agreeing with whatever the path utils produce
+const collectionsDirPath =
+  'path/to/workspaces/Workspace 1/.minddrop/collections';
+
 export function getCollectionFiles(): (string | MockFileDescriptor)[] {
   return [
-    resolveCollectionsDirPath(),
+    collectionsDirPath,
     ...collections.map((collection) => ({
-      path: resolveCollectionFilePath(collection.id),
+      path: `${collectionsDirPath}/${collection.id}.json`,
       textContent: JSON.stringify(collection),
     })),
   ];

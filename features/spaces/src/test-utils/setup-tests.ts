@@ -1,10 +1,7 @@
 import { vi } from 'vitest';
 import { DataViews } from '@minddrop/data-views';
 import { Events } from '@minddrop/events';
-import {
-  initializeMockFileSystem,
-  setMockWorkspacePaths,
-} from '@minddrop/file-system/test-utils';
+import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
 import { initializeI18n } from '@minddrop/i18n';
 import { Spaces } from '@minddrop/spaces';
 import { cleanup as cleanupRender } from '@minddrop/test-utils';
@@ -16,10 +13,6 @@ initializeI18n();
 if (!Element.prototype.getAnimations) {
   Element.prototype.getAnimations = () => [];
 }
-
-// The fixture file paths resolve against the mock workspace, so it is
-// set before they are read
-setMockWorkspacePaths();
 
 export const MockFs = initializeMockFileSystem([]);
 

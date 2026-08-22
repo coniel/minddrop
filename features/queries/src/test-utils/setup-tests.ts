@@ -1,9 +1,6 @@
 import { vi } from 'vitest';
 import { Events } from '@minddrop/events';
-import {
-  initializeMockFileSystem,
-  setMockWorkspacePaths,
-} from '@minddrop/file-system/test-utils';
+import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
 import { I18n, initializeI18n } from '@minddrop/i18n';
 import {
   cleanupQueryFixtures,
@@ -16,10 +13,6 @@ initializeI18n();
 
 // Register the feature's translations so labels resolve
 I18n.registerTranslations(locales);
-
-// The fixture file paths resolve against the mock workspace, so it is
-// set before they are read
-setMockWorkspacePaths();
 
 export const MockFs = initializeMockFileSystem();
 

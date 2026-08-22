@@ -2,7 +2,6 @@ import { Layout } from '@minddrop/designs-legacy';
 import { MockFileDescriptor } from '@minddrop/file-system';
 import { DefaultSpaceIcon } from '../constants';
 import { Space } from '../types';
-import { resolveSpaceFilePath, resolveSpacesDirPath } from '../utils';
 import {
   spaceLayout_1,
   spaceLayout_2,
@@ -28,11 +27,15 @@ export const space_3 = generateSpaceFixture(3, spaceLayout_3);
 
 export const spaces = [space_1, space_2, space_3];
 
+// Spelled out rather than resolved, so that the fixtures pin the paths
+// down instead of agreeing with whatever the path utils produce
+const spacesDirPath = 'path/to/workspaces/Workspace 1/.minddrop/spaces';
+
 export function getSpaceFiles(): (string | MockFileDescriptor)[] {
   return [
-    resolveSpacesDirPath(),
+    spacesDirPath,
     ...spaces.map((space) => ({
-      path: resolveSpaceFilePath(space.id),
+      path: `${spacesDirPath}/${space.id}/space.json`,
       textContent: JSON.stringify(space),
     })),
   ];
