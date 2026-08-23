@@ -39,11 +39,9 @@ export function stringifyElementsToMarkdown(elements: Element[]): string {
 
     const previous = elements[index - 1];
 
-    // Separate the block from the one before it, preferring the spacing the
-    // document was written with
+    // Separate the block from the one before it
     if (previous) {
-      markdown +=
-        previous.spacingAfter ?? resolveSeparator(previous, element, numbers);
+      markdown += resolveSpacing(previous, element, numbers);
     }
 
     const prefixes = resolveAncestryPrefixes(
@@ -95,6 +93,31 @@ function applyPrefixes(
       return line ? `${prefix}${line}` : prefix.trimEnd();
     })
     .join('\n');
+}
+
+/**
+ * Returns the text between two consecutive blocks, preferring the spacing
+ * the document was written with.
+ *
+ * That spacing is only used while it still separates the two blocks.
+ * Spacing without a line break does not, and would run them together into a
+ * single line, so a separator is composed instead.
+ *
+ * @param previous - The preceding block.
+ * @param element - The block being serialized.
+ * @param numbers - The displayed number of each ordered item frame.
+ * @returns The spacing.
+ */
+function resolveSpacing(
+  previous: Element,
+  element: Element,
+  numbers: Map<string, number>,
+): string {
+  if (previous.spacingAfter?.includes('\n')) {
+    return previous.spacingAfter;
+  }
+
+  return resolveSeparator(previous, element, numbers);
 }
 
 /**

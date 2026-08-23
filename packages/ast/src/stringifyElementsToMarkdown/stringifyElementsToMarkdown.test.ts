@@ -50,6 +50,32 @@ describe('stringifyElementsToMarkdown', () => {
     );
   });
 
+  it('separates blocks by the spacing they were parsed with', () => {
+    const elements = [
+      generateElement<ParagraphElement>('paragraph', {
+        children: [{ text: 'One' }],
+        spacingAfter: '\n\n\n\n',
+      }),
+      generateParagraph('Two'),
+    ];
+
+    expect(stringifyElementsToMarkdown(elements)).toBe('One\n\n\n\nTwo');
+  });
+
+  it('ignores parsed spacing which does not break the line', () => {
+    const elements = [
+      // Spacing left over from when the block was the last one in the
+      // document, which would run the two blocks together
+      generateElement<ParagraphElement>('paragraph', {
+        children: [{ text: 'One' }],
+        spacingAfter: '',
+      }),
+      generateParagraph('Two'),
+    ];
+
+    expect(stringifyElementsToMarkdown(elements)).toBe('One\n\nTwo');
+  });
+
   it('stringifies headings', () => {
     const elements = [
       generateElement<HeadingElement>('heading', {
