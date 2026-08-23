@@ -1153,6 +1153,23 @@
       "appearance": "Style",
       "colour": "Colour"
     },
+    "propertyElements": {
+      "variants": {
+        "plain": "Plain",
+        "short": "Short value",
+        "long": "Long value",
+        "subtitle": "Subtitle",
+        "caption": "Caption",
+        "quote": "Quote"
+      },
+      "samples": {
+        "short": "Lorem ipsum",
+        "long": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
+        "subtitle": "Lorem ipsum dolor sit amet",
+        "caption": "Lorem ipsum dolor sit amet",
+        "quote": "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+      }
+    },
     "layouts": {
       "empty": "No layouts",
       "labels": {
@@ -1603,10 +1620,12 @@
       "icon": "Icon",
       "editor": "Editor",
       "badges": "Badges",
+      "property": "Property",
       "webview": "Web view",
       "view": "View",
       "container-empty-hint": "Drop elements here",
       "group": {
+        "properties": "Properties",
         "elements": "Elements",
         "content": "Content",
         "media": "Media",

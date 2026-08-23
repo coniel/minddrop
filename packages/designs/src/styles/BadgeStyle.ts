@@ -15,10 +15,14 @@ import {
 } from './blocks';
 
 /**
- * Styles for badge chips. Solid background fills pair with the
- * `on-solid` text color role.
+ * Styles for badge chips.
  */
 export interface BadgeStyle extends MarginStyle {
+  /**
+   * The text colour step.
+   */
+  color?: TextColorToken;
+
   /**
    * The font size step.
    */
@@ -33,11 +37,6 @@ export interface BadgeStyle extends MarginStyle {
    * The text case transform.
    */
   textTransform?: TextTransform;
-
-  /**
-   * The text color role.
-   */
-  color?: TextColorToken;
 
   /**
    * The background surface role.

@@ -2,7 +2,7 @@ import { DataViewTypes } from '@minddrop/data-views';
 import {
   DesignElement,
   ViewElement,
-  getElementConfig,
+  getElementCompatiblePropertyTypes,
 } from '@minddrop/designs';
 import { PropertyType } from '@minddrop/properties';
 import { FlatDesignElement } from '../../types';
@@ -10,9 +10,10 @@ import { isStaticContentElement } from '../isStaticContentElement';
 
 /**
  * Checks whether a design property type can be rendered by an
- * element. Compatibility comes from the element type's config,
- * with view elements additionally checked against the data
- * sources their view type supports.
+ * element. Compatibility comes from the element type's config, or
+ * the property element config for property elements, with view
+ * elements additionally checked against the data sources their
+ * view type supports.
  *
  * @param propertyType - The property type to check.
  * @param element - The element the property would be bound to.
@@ -29,10 +30,8 @@ export function isPropertyCompatibleWithElement(
     return false;
   }
 
-  const { compatiblePropertyTypes } = getElementConfig(element.type);
-
-  // The element type must be able to render the property type
-  if (!compatiblePropertyTypes.includes(propertyType)) {
+  // The element must be able to render the property type
+  if (!getElementCompatiblePropertyTypes(element).includes(propertyType)) {
     return false;
   }
 

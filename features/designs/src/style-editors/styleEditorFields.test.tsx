@@ -38,8 +38,8 @@ import {
   OptionToggleField,
   OptionToggleFieldOption,
 } from './OptionToggleField';
+import { RoleVariantFields } from './RoleVariantFields';
 import { TokenSelect } from './TokenSelect';
-import { VariantAxisFields } from './VariantAxisFields';
 import { fieldLabelKey, fontSizeOptionKey } from './styleI18nKeys';
 import { useStyleEditor } from './useStyleEditor';
 
@@ -1053,7 +1053,7 @@ function openCardLayoutWithRole(): DesignStudioStore {
 function renderVariantFields(studio: DesignStudioStore) {
   return render(
     <DesignStudioProvider store={studio}>
-      <VariantAxisFields elementId={element_text_1.id} />
+      <RoleVariantFields elementId={element_text_1.id} />
     </DesignStudioProvider>,
   );
 }

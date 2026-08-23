@@ -11,6 +11,7 @@ export * from './image-viewer';
 export * from './icon';
 export * from './editor';
 export * from './webview';
+export * from './property';
 export * from './container';
 export * from './page-panel';
 export * from './root';

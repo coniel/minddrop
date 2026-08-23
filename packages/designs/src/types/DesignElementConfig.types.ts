@@ -9,7 +9,7 @@ import type { LayoutType } from './Layout.types';
 /**
  * Palette group for a design element.
  */
-export type ElementGroup = 'elements' | 'media' | 'layout';
+export type ElementGroup = 'properties' | 'elements' | 'media' | 'layout';
 
 /**
  * How an element type behaves in a rendered entry when its bound

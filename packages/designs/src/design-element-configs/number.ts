@@ -57,11 +57,12 @@ export interface NumberElement extends DesignElementBase {
   format?: NumberFormat;
 }
 
+// Omits a palette group: numbers are placed through the number
+// property element
 export const NumberElementConfig: DesignElementConfig<NumberElement> = {
   type: 'number',
   icon: 'hash',
   label: 'design-studio.elements.number',
-  group: 'elements',
   styleCategory: 'typography',
   compatiblePropertyTypes: ['number'],
   supportsStaticContent: true,

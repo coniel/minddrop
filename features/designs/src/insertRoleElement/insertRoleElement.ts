@@ -1,6 +1,7 @@
-import { createRoleElement, isRoleElement } from '@minddrop/designs';
+import { createRoleElement } from '@minddrop/designs';
 import { DesignStudioStore } from '../DesignStudioStore';
-import { FlatDesignElement, FlatParentDesignElement } from '../types';
+import { FlatDesignElement } from '../types';
+import { isStudioRootPanelled } from '../utils';
 
 /**
  * Inserts a new element playing the given role into a layout,
@@ -41,7 +42,7 @@ export function insertRoleElement(
   }
 
   // New elements can't be dropped into the panel row itself
-  if (parentId === 'root' && isPanelledRoot(studio, resolvedLayoutId)) {
+  if (parentId === 'root' && isStudioRootPanelled(studio, resolvedLayoutId)) {
     return;
   }
 
@@ -60,42 +61,4 @@ export function insertRoleElement(
   studio.addElement(flatElement, parentId, index, layoutId);
   studio.selectElement(flatElement.id, layoutId);
   studio.saveDesign();
-}
-
-/**
- * Checks whether a layout's root holds panel/content regions rather
- * than free-form content.
- */
-function isPanelledRoot(
-  studio: DesignStudioStore,
-  layoutId: string | null,
-): boolean {
-  const root = studio.getDesignElement<FlatParentDesignElement>(
-    'root',
-    layoutId ?? undefined,
-  );
-
-  if (!root) {
-    return false;
-  }
-
-  // The root is panelled when any child is a panel or the
-  // structural content region
-  return root.children.some((childId) => {
-    const child = studio.getDesignElement(childId, layoutId ?? undefined);
-
-    if (!child) {
-      return false;
-    }
-
-    if (child.type === 'page-panel') {
-      return true;
-    }
-
-    return (
-      child.type === 'container' &&
-      isRoleElement(child) &&
-      child.role === 'page-content'
-    );
-  });
 }

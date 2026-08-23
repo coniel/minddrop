@@ -21,6 +21,7 @@ import {
   PagePanelDesignElement,
   PagePanelStudioDesignElement,
 } from './page-panel';
+import { PropertyDesignElement } from './property';
 import { TextDesignElement } from './text';
 import { UrlDesignElement } from './url';
 import { ViewDesignElement } from './view';
@@ -93,6 +94,7 @@ const elementUIs: ElementUIConfig[] = [
   elementUI({ type: 'editor', DisplayComponent: EditorDesignElement }),
   elementUI({ type: 'webview', DisplayComponent: WebviewDesignElement }),
   elementUI({ type: 'view', DisplayComponent: ViewDesignElement }),
+  elementUI({ type: 'property', DisplayComponent: PropertyDesignElement }),
   elementUI({
     type: 'container',
     DisplayComponent: ContainerDesignElement,

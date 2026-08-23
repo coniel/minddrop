@@ -8,6 +8,7 @@ import {
   maxWidthCss,
   paddingCss,
   radiusCss,
+  textColorCss,
 } from './cssBlocks';
 
 /**
@@ -36,9 +37,8 @@ export function createEditorCss(style: EditorStyle): CSSProperties {
     css.lineHeight = tokenCssVariable('lineHeight', style.lineHeight);
   }
 
-  if (style.color) {
-    css.color = tokenCssVariable('textColor', style.color);
-  }
+  // The text colour treatment, adjusted by its emphasis
+  Object.assign(css, textColorCss(style));
 
   return css;
 }

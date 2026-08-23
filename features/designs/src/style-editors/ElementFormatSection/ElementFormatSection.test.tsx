@@ -27,7 +27,7 @@ import {
 import { DateFormatFields } from './DateFormatFields';
 import { NumberFormatFields } from './NumberFormatFields';
 import { UrlFormatFields } from './UrlFormatFields';
-import { elementFormatEditors } from './elementFormatEditors';
+import { elementFormatEditorMap } from './elementFormatEditorMap';
 
 const { design_books, layout_card_1, element_text_1 } = DesignFixtures;
 
@@ -70,15 +70,15 @@ describe('element format editors', () => {
 
   describe('registry', () => {
     it('has an editor for each element type which formats its value', () => {
-      expect(elementFormatEditors.url).toBe(UrlFormatFields);
-      expect(elementFormatEditors.date).toBe(DateFormatFields);
-      expect(elementFormatEditors.number).toBe(NumberFormatFields);
+      expect(elementFormatEditorMap.url).toBe(UrlFormatFields);
+      expect(elementFormatEditorMap.date).toBe(DateFormatFields);
+      expect(elementFormatEditorMap.number).toBe(NumberFormatFields);
     });
 
     it('has no editor for element types displaying their value as is', () => {
-      expect(elementFormatEditors.text).toBeUndefined();
-      expect(elementFormatEditors.container).toBeUndefined();
-      expect(elementFormatEditors.image).toBeUndefined();
+      expect(elementFormatEditorMap.text).toBeUndefined();
+      expect(elementFormatEditorMap.container).toBeUndefined();
+      expect(elementFormatEditorMap.image).toBeUndefined();
     });
   });
 

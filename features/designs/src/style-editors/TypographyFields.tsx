@@ -9,8 +9,6 @@ import {
   LineHeightToken,
   LineHeightTokens,
   TextAlign,
-  TextColorToken,
-  TextColorTokens,
   TextTransform,
 } from '@minddrop/designs';
 import { useTranslation } from '@minddrop/i18n';
@@ -28,7 +26,6 @@ import {
   fontWeightOptionKey,
   letterSpacingOptionKey,
   lineHeightOptionKey,
-  textColourOptionKey,
 } from './styleI18nKeys';
 
 // The alignment options, in reading order
@@ -104,7 +101,6 @@ export const TypographyStyleKeys: string[] = [
   'fontSize',
   'lineHeight',
   'letterSpacing',
-  'color',
   'textAlign',
   'textTransform',
   'truncate',
@@ -224,16 +220,6 @@ export const TypographyFields: React.FC<TypographyFieldsProps> = ({
           optionKey={letterSpacingOptionKey}
           defaultToken="normal"
           onChange={(value) => setValue('letterSpacing', value)}
-        />
-      )}
-      {isEditable('color') && (
-        <TokenSelect
-          label={fieldLabelKey('colour')}
-          tokens={TextColorTokens}
-          value={getValue<TextColorToken>('color')}
-          optionKey={textColourOptionKey}
-          defaultToken="regular"
-          onChange={(value) => setValue('color', value)}
         />
       )}
       {isEditable('textAlign') && (

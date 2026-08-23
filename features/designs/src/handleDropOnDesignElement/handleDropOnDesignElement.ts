@@ -3,8 +3,10 @@ import { DropEventData } from '@minddrop/selection';
 import { DesignStudioStore } from '../DesignStudioStore';
 import {
   DesignElementTemplatesDataKey,
+  DesignPropertyElementsDataKey,
   DesignRolesDataKey,
 } from '../constants';
+import { insertPropertyElement } from '../insertPropertyElement';
 import { insertRoleElement } from '../insertRoleElement';
 import { setElementImage } from '../setElementImage';
 import { FlatChildDesignElement, FlatParentDesignElement } from '../types';
@@ -63,9 +65,11 @@ export function handleDropOnDesignElement(
   const designElements = drop.data['design-elements'];
   const templates = drop.data[DesignElementTemplatesDataKey];
   const roles = drop.data[DesignRolesDataKey];
+  const propertyElements = drop.data[DesignPropertyElementsDataKey];
 
   // Handle drops inside an empty container-like element
   if (drop.position === 'inside' && targetElement.type === 'container') {
+    // A role was dropped, insert a new element playing that role
     if (roles && roles.length) {
       return insertRoleElement(
         studio,
@@ -76,6 +80,19 @@ export function handleDropOnDesignElement(
       );
     }
 
+    // A property element was dropped, insert a new element for its
+    // property type
+    if (propertyElements && propertyElements.length) {
+      return insertPropertyElement(
+        studio,
+        propertyElements[0].propertyType,
+        targetElement.id,
+        0,
+        layoutId,
+      );
+    }
+
+    // An element template was dropped, add it as a new element
     if (templates && templates.length) {
       return studio.addDesignElementFromTemplate(
         templates[0],
@@ -85,6 +102,8 @@ export function handleDropOnDesignElement(
       );
     }
 
+    // An existing design element was dropped, move it into the
+    // container
     if (designElements && designElements.length) {
       const droppedElement = resolveDroppedElement(
         studio,
@@ -92,6 +111,7 @@ export function handleDropOnDesignElement(
         layoutId,
       );
 
+      // The element may have been deleted mid-drag
       if (!droppedElement) {
         return;
       }
@@ -130,6 +150,18 @@ export function handleDropOnDesignElement(
     );
   }
 
+  // A property element was dropped, insert a new element for its
+  // property type
+  if (propertyElements && propertyElements.length) {
+    return insertPropertyElement(
+      studio,
+      propertyElements[0].propertyType,
+      parentElement.id,
+      targetIndex,
+      layoutId,
+    );
+  }
+
   // An element template was dropped, add it as a new element
   if (templates && templates.length) {
     return studio.addDesignElementFromTemplate(
@@ -148,6 +180,7 @@ export function handleDropOnDesignElement(
       layoutId,
     );
 
+    // The element may have been deleted mid-drag
     if (!droppedElement) {
       return;
     }

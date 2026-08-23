@@ -28,7 +28,8 @@ export interface IconContainerStyle {
 }
 
 /**
- * Styles for icon elements.
+ * Styles for icon elements. The text colour step colours the icon
+ * glyph.
  */
 export interface IconStyle extends MarginStyle {
   /**
@@ -37,7 +38,7 @@ export interface IconStyle extends MarginStyle {
   size?: IconSizeToken;
 
   /**
-   * The icon color role.
+   * The icon colour step.
    */
   color?: TextColorToken;
 

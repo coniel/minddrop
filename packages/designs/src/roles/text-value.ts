@@ -38,7 +38,7 @@ export const TextValueRole: DesignRoleConfig = {
         {
           id: 'caption',
           label: 'designs.roleVariants.caption',
-          style: { fontSize: 'xs', color: 'muted' },
+          style: { fontSize: 'xs', color: 'subtle' },
         },
         {
           id: 'quote',
@@ -59,12 +59,12 @@ export const TextValueRole: DesignRoleConfig = {
         {
           id: 'muted',
           label: 'designs.roleVariants.muted',
-          style: { color: 'muted' },
+          style: { color: 'subtle' },
         },
         {
           id: 'accent',
           label: 'designs.roleVariants.accent',
-          style: { color: 'primary' },
+          style: { color: 'solid' },
         },
       ],
     },

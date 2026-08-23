@@ -7,10 +7,10 @@ describe('createIconCss', () => {
   });
 
   it('emits a square icon size and color', () => {
-    expect(createIconCss({ size: 'lg', color: 'subtle' })).toEqual({
+    expect(createIconCss({ size: 'lg', color: 'solid' })).toEqual({
       width: 'var(--icon-size-lg)',
       height: 'var(--icon-size-lg)',
-      color: 'var(--text-subtle)',
+      color: 'var(--text-solid)',
     });
   });
 });

@@ -1209,6 +1209,23 @@ declare module 'i18next' {
             appearance: string;
             colour: string;
           };
+          propertyElements: {
+            variants: {
+              plain: string;
+              short: string;
+              long: string;
+              subtitle: string;
+              caption: string;
+              quote: string;
+            };
+            samples: {
+              short: string;
+              long: string;
+              subtitle: string;
+              caption: string;
+              quote: string;
+            };
+          };
           layouts: {
             empty: string;
             labels: {
@@ -1766,10 +1783,12 @@ declare module 'i18next' {
             icon: string;
             editor: string;
             badges: string;
+            property: string;
             webview: string;
             view: string;
             'container-empty-hint': string;
             group: {
+              properties: string;
               elements: string;
               content: string;
               media: string;
@@ -2177,6 +2196,7 @@ declare module 'i18next' {
               frame: string;
               title: string;
               variants: string;
+              variant: string;
               content: string;
               backgroundImage: string;
               backgroundBlur: string;
@@ -2598,39 +2618,15 @@ declare module 'i18next' {
               };
             };
             textColour: {
-              regular: {
-                label: string;
-                description: string;
-              };
-              muted: {
-                label: string;
-                description: string;
-              };
               subtle: {
                 label: string;
                 description: string;
               };
-              'on-solid': {
+              regular: {
                 label: string;
                 description: string;
               };
-              primary: {
-                label: string;
-                description: string;
-              };
-              danger: {
-                label: string;
-                description: string;
-              };
-              warning: {
-                label: string;
-                description: string;
-              };
-              info: {
-                label: string;
-                description: string;
-              };
-              success: {
+              solid: {
                 label: string;
                 description: string;
               };

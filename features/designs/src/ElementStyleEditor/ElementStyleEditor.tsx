@@ -2,7 +2,8 @@ import { useState } from 'react';
 import {
   LayoutType,
   defaultRootStyle,
-  getElementConfig,
+  getElementStyleCategory,
+  isPropertyElement,
 } from '@minddrop/designs';
 import { TranslationKey, createI18nKeyBuilder } from '@minddrop/i18n';
 import { PanelView } from '@minddrop/ui-components';
@@ -22,9 +23,10 @@ import {
 import { resolveNodeLabel } from '../ElementsTree';
 import {
   ElementContentSection,
+  PropertyElementVariantFields,
+  RoleVariantFields,
   StyleSectionResetContext,
-  VariantAxisFields,
-  elementFormatEditors,
+  elementFormatEditorMap,
   styleCategoryEditors,
 } from '../style-editors';
 import { hasPagePanels } from '../utils';
@@ -92,13 +94,18 @@ export const ElementStyleEditor: React.FC = () => {
     );
   }
 
-  const config = getElementConfig(element.type);
   // The element's display identity: its role's label and icon when
   // it plays one, the element type's otherwise
   const nodeLabel = resolveNodeLabel(element);
-  const StyleEditor = styleCategoryEditors[config.styleCategory];
-  // Only element types which format their value have one
-  const FormatEditor = elementFormatEditors[element.type];
+  // Property elements take their category from their selected
+  // presentation variant
+  const StyleEditor = styleCategoryEditors[getElementStyleCategory(element)];
+  // Only element types which format their value have one; property
+  // elements format per their property type
+  const FormatEditor =
+    elementFormatEditorMap[
+      isPropertyElement(element) ? element.propertyType : element.type
+    ];
 
   // The reset appears once there is styling to clear
   const actions =
@@ -152,7 +159,10 @@ export const ElementStyleEditor: React.FC = () => {
               )}
 
               {/** Variant pickers, for elements playing a design role **/}
-              <VariantAxisFields elementId={selectedElementId} />
+              <RoleVariantFields elementId={selectedElementId} />
+
+              {/** Variant pickers, for property elements **/}
+              <PropertyElementVariantFields elementId={selectedElementId} />
 
               {/** The style fields of the element's style category **/}
               <StyleEditor

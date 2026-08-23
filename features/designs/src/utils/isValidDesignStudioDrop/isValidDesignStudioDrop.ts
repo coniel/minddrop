@@ -2,6 +2,7 @@ import { DropEventData } from '@minddrop/selection';
 import {
   DesignElementTemplatesDataKey,
   DesignElementsDataKey,
+  DesignPropertyElementsDataKey,
   DesignRolesDataKey,
 } from '../../constants';
 import { DesignStudioDropEventData } from '../../types';
@@ -31,6 +32,11 @@ export function isValidDesignStudioDrop(
 
   // Drop event contains design roles
   if (DesignRolesDataKey in dropEvent.data) {
+    return true;
+  }
+
+  // Drop event contains property elements
+  if (DesignPropertyElementsDataKey in dropEvent.data) {
     return true;
   }
 

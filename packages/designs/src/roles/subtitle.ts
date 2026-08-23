@@ -10,7 +10,7 @@ export const SubtitleRole: DesignRoleConfig = {
   label: 'designs.roles.subtitle.label',
   icon: 'text',
   lockedStyle: {
-    color: 'muted',
+    color: 'subtle',
     lineHeight: 'snug',
   },
   contextStyles: {

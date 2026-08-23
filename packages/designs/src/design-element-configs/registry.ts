@@ -12,6 +12,7 @@ import { ImageElementConfig } from './image';
 import { ImageViewerElementConfig } from './image-viewer';
 import { NumberElementConfig } from './number';
 import { PagePanelElementConfig } from './page-panel';
+import { PropertyElementTypeConfig } from './property';
 import { RootElementConfig } from './root';
 import { TextElementConfig } from './text';
 import { UrlElementConfig } from './url';
@@ -34,6 +35,7 @@ const elementConfigs: DesignElementConfig[] = [
   IconElementConfig,
   WebviewElementConfig,
   ViewElementConfig,
+  PropertyElementTypeConfig,
   ContainerElementConfig,
   PagePanelElementConfig,
   RootElementConfig,

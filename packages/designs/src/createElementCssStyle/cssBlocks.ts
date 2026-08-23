@@ -13,6 +13,7 @@ import {
 import {
   BorderColorToken,
   BorderWidthToken,
+  TextColorToken,
   tokenCssVariable,
 } from '../tokens';
 
@@ -188,6 +189,40 @@ export function resolveBorderColorToken(
   emphasis?: BorderEmphasis,
 ): BorderColorToken {
   return BorderColorRoles[color ?? 'neutral'][emphasis ?? 'regular'];
+}
+
+// The text colour role behind each step. The design scale's one
+// quiet step sits at the muted role's weight.
+const TextColorRoles: Record<TextColorToken, string> = {
+  regular: 'regular',
+  subtle: 'muted',
+  solid: 'solid',
+};
+
+/**
+ * Emits text colour CSS. Without a colour step nothing is emitted,
+ * so the text inherits the surrounding text colour.
+ */
+export function textColorCss(style: { color?: TextColorToken }): CSSProperties {
+  const css: CSSProperties = {};
+
+  // No step set: inherit
+  if (!style.color) {
+    return css;
+  }
+
+  // Unknown steps (values from removed vocabulary) degrade to
+  // inheritance rather than breaking CSS emission
+  const role = TextColorRoles[style.color];
+
+  if (!role) {
+    return css;
+  }
+
+  // Emit the step's role
+  css.color = tokenCssVariable('textColor', role);
+
+  return css;
 }
 
 /**

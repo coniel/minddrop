@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react';
 import { IconStyle } from '../styles';
 import { tokenCssVariable } from '../tokens';
-import { marginCss } from './cssBlocks';
+import { marginCss, textColorCss } from './cssBlocks';
 
 /**
  * Emits CSS for the icon itself. The optional box around the icon
@@ -18,9 +18,8 @@ export function createIconCss(style: IconStyle): CSSProperties {
     css.height = tokenCssVariable('iconSize', style.size);
   }
 
-  if (style.color) {
-    css.color = tokenCssVariable('textColor', style.color);
-  }
+  // The text colour treatment, adjusted by its emphasis
+  Object.assign(css, textColorCss(style));
 
   return css;
 }

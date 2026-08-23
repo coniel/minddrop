@@ -16,6 +16,11 @@ export type TextAlign = 'left' | 'center' | 'right' | 'justify';
  */
 export interface TypographyStyle extends MarginStyle, MaxWidthStyle {
   /**
+   * The text colour step. Omitted, the text renders regular.
+   */
+  color?: TextColorToken;
+
+  /**
    * The font family.
    */
   fontFamily?: FontFamilyToken;
@@ -39,11 +44,6 @@ export interface TypographyStyle extends MarginStyle, MaxWidthStyle {
    * The letter spacing step.
    */
   letterSpacing?: LetterSpacingToken;
-
-  /**
-   * The text color role.
-   */
-  color?: TextColorToken;
 
   /**
    * The horizontal text alignment.

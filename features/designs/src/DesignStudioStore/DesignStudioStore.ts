@@ -12,6 +12,7 @@ import {
   RootElement,
   disablePagePanel,
   enablePagePanel,
+  getElementCompatiblePropertyTypes,
   getElementConfig,
   resolveAutoBinding,
   resolveDesignMediaDirPath,
@@ -1412,10 +1413,11 @@ export function createDesignStudioStore(): DesignStudioStore {
         return;
       }
 
-      const config = getElementConfig(element.type);
+      const compatiblePropertyTypes =
+        getElementCompatiblePropertyTypes(element);
 
-      // Element types which render no property have nothing to bind
-      if (config.compatiblePropertyTypes.length === 0) {
+      // Elements which render no property have nothing to bind
+      if (compatiblePropertyTypes.length === 0) {
         return;
       }
 
@@ -1437,7 +1439,7 @@ export function createDesignStudioStore(): DesignStudioStore {
       const property = resolveAutoBinding(
         design,
         layout,
-        config.compatiblePropertyTypes,
+        compatiblePropertyTypes,
       );
 
       // The element stays unbound when every compatible property is
@@ -1504,7 +1506,7 @@ export function createDesignStudioStore(): DesignStudioStore {
         // arrives ready to render
         bindElementToProperty(
           element,
-          config.compatiblePropertyTypes,
+          getElementCompatiblePropertyTypes(element),
           layoutId,
         );
       }

@@ -14,7 +14,6 @@ import {
   SizeToken,
   SpaceToken,
   SurfaceColorToken,
-  TextColorToken,
 } from '@minddrop/designs';
 import { TranslationKey, createI18nKeyBuilder } from '@minddrop/i18n';
 
@@ -51,7 +50,6 @@ const sizeKey = createI18nKeyBuilder('designsStudio.style.size.');
 const radiusKey = createI18nKeyBuilder('designsStudio.style.radius.');
 const borderStyleKey = createI18nKeyBuilder('designsStudio.style.borderStyle.');
 const iconSizeKey = createI18nKeyBuilder('designsStudio.style.iconSize.');
-const textColourKey = createI18nKeyBuilder('designsStudio.style.textColour.');
 const surfaceColourKey = createI18nKeyBuilder(
   'designsStudio.style.surfaceColour.',
 );
@@ -214,16 +212,6 @@ export function iconSizeOptionKey(
   part: OptionKeyPart,
 ): TranslationKey {
   return iconSizeKey(token, part);
-}
-
-/**
- * Resolves the label or helper text key of a text colour option.
- */
-export function textColourOptionKey(
-  token: TextColorToken,
-  part: OptionKeyPart,
-): TranslationKey {
-  return textColourKey(token, part);
 }
 
 /**

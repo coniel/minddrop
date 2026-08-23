@@ -9,6 +9,7 @@ import type { ImageElement } from './image';
 import type { ImageViewerElement } from './image-viewer';
 import type { NumberElement } from './number';
 import type { PagePanelElement } from './page-panel';
+import type { PropertyElement } from './property';
 import type { RootElement } from './root';
 import type { TextElement } from './text';
 import type { UrlElement } from './url';
@@ -30,7 +31,8 @@ export type LeafDesignElement =
   | IconElement
   | EditorElement
   | WebviewElement
-  | ViewElement;
+  | ViewElement
+  | PropertyElement;
 
 /**
  * Union of all design element types.
@@ -98,5 +100,6 @@ export type DesignElementTemplate =
   | Template<EditorElement>
   | Template<WebviewElement>
   | Template<ViewElement>
+  | Template<PropertyElement>
   | Template<ContainerElement>
   | Template<PagePanelElement>;

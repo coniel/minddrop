@@ -1,6 +1,8 @@
 import {
   DesignRoles,
   getElementConfig,
+  getPropertyElementConfig,
+  isPropertyElement,
   isRoleElement,
 } from '@minddrop/designs';
 import { TranslationKey } from '@minddrop/i18n';
@@ -51,9 +53,16 @@ export function resolveNodeLabel(element: FlatDesignElement): NodeLabel {
     ? DesignRoles.Store.get(element.role)
     : null;
 
+  // Property elements are named after their property element
+  // config, falling back to the element type when the property
+  // type has none
+  const propertyElementConfig = isPropertyElement(element)
+    ? getPropertyElementConfig(element.propertyType, false)
+    : null;
+
   const nodeLabel: NodeLabel = {
-    label: role?.label ?? config.label,
-    icon: role?.icon ?? config.icon,
+    label: role?.label ?? propertyElementConfig?.label ?? config.label,
+    icon: role?.icon ?? propertyElementConfig?.icon ?? config.icon,
   };
 
   // Static elements display their own content rather than a binding

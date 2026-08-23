@@ -19,7 +19,7 @@ import { sectionLabelKey } from './styleI18nKeys';
  * without enumerating every combination. Renders nothing for
  * elements without a role or a role offering no variants.
  */
-export const VariantAxisFields: React.FC<StyleEditorProps> = ({
+export const RoleVariantFields: React.FC<StyleEditorProps> = ({
   elementId,
 }) => {
   const studio = useDesignStudio();

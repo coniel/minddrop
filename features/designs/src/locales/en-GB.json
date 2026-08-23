@@ -51,6 +51,7 @@
         "frame": "Frame",
         "title": "Title",
         "variants": "Variants",
+        "variant": "Variant",
         "content": "Content",
         "backgroundImage": "Background image",
         "backgroundBlur": "Background blur",
@@ -472,41 +473,17 @@
         }
       },
       "textColour": {
-        "regular": {
-          "label": "Regular",
-          "description": "The default. Full contrast for primary content"
-        },
-        "muted": {
-          "label": "Muted",
-          "description": "Supporting text that should still read easily"
-        },
         "subtle": {
           "label": "Subtle",
-          "description": "For secondary text that should not compete"
+          "description": "A faded step for supporting text"
         },
-        "on-solid": {
-          "label": "On solid",
-          "description": "Text sitting on a solid coloured fill"
+        "regular": {
+          "label": "Regular",
+          "description": "Full contrast. The near-black version of the entry's colour"
         },
-        "primary": {
-          "label": "Primary",
-          "description": "The brand colour, for links and key actions"
-        },
-        "danger": {
-          "label": "Danger",
-          "description": "Errors and destructive actions"
-        },
-        "warning": {
-          "label": "Warning",
-          "description": "Something needing attention but not broken"
-        },
-        "info": {
-          "label": "Info",
-          "description": "Neutral notices and hints"
-        },
-        "success": {
-          "label": "Success",
-          "description": "Confirmation that something worked"
+        "solid": {
+          "label": "Solid",
+          "description": "The entry's colour at full strength"
         }
       },
       "surfaceColour": {

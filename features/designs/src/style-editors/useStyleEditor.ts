@@ -1,22 +1,27 @@
 import { useCallback } from 'react';
+import { resolveElementStyle } from '@minddrop/designs';
 import {
   useActiveLayoutType,
   useDesignStudio,
   useElement,
 } from '../DesignStudioStore';
-import { getRoleEditableStyleKeys, getRoleLockedStyleKeys } from '../utils';
+import {
+  getElementEditableStyleKeys,
+  getElementLockedStyleKeys,
+} from '../utils';
 import { SpaceSide } from './SpaceFields';
 
 export interface StyleEditor {
   /**
-   * The element's own style, before its role's styles are applied.
-   * Editors show what the user set, not the resolved result.
+   * The element's own style, before its role or variant styles are
+   * applied. Editors show what the user set, not the resolved
+   * result.
    */
   style: Record<string, unknown>;
 
   /**
-   * Whether a style key is editable, meaning the element's role
-   * does not control it.
+   * Whether a style key is editable, meaning neither the element's
+   * role nor its variant controls it.
    */
   isEditable: (key: string) => boolean;
 
@@ -24,6 +29,14 @@ export interface StyleEditor {
    * Reads a style value, typed by the caller.
    */
   getValue: <TValue>(key: string) => TValue | undefined;
+
+  /**
+   * Reads a style key's effective value: the element's own,
+   * falling back to what its role or variant theme styles resolve
+   * to. For fields whose control should reflect the rendered
+   * default rather than sitting unset.
+   */
+  getResolvedValue: <TValue>(key: string) => TValue | undefined;
 
   /**
    * Writes a style value, clearing the key when the value is
@@ -39,10 +52,10 @@ export interface StyleEditor {
 
 /**
  * Binds an element's style to the studio store for the style
- * editors, hiding every key its design role controls: keys the
- * role locks, and keys outside the role's editable styles list.
- * Suppressed keys render no field at all, so a role's look cannot
- * be contradicted from the panel.
+ * editors, hiding every key its design role or property element
+ * variant controls: locked keys, and keys outside the editable
+ * styles list. Suppressed keys render no field at all, so a
+ * controlled look cannot be contradicted from the panel.
  *
  * @param elementId - The ID of the element being edited.
  * @returns The style editing helpers.
@@ -54,14 +67,24 @@ export function useStyleEditor(elementId: string): StyleEditor {
   // resolve against
   const layoutType = useActiveLayoutType();
 
-  // The keys the element's role locks, recomputed as the element
-  // or its variant selection changes
-  const lockedKeys = getRoleLockedStyleKeys(element, layoutType ?? undefined);
+  // The keys the element's role or variant locks, recomputed as
+  // the element or its variant selection changes
+  const lockedKeys = getElementLockedStyleKeys(
+    element,
+    layoutType ?? undefined,
+  );
 
-  // The keys the role offers for editing, null when unrestricted
-  const editableKeys = getRoleEditableStyleKeys(element);
+  // The keys offered for editing, null when unrestricted
+  const editableKeys = getElementEditableStyleKeys(element);
 
   const style = element.style as Record<string, unknown>;
+
+  // The effective style, with the role or variant theme styles
+  // resolved over the element's own
+  const resolvedStyle = resolveElementStyle(
+    element,
+    layoutType ?? undefined,
+  ) as Record<string, unknown>;
 
   const isEditable = useCallback(
     (key: string) =>
@@ -72,6 +95,11 @@ export function useStyleEditor(elementId: string): StyleEditor {
   const getValue = useCallback(
     <TValue>(key: string) => style[key] as TValue | undefined,
     [style],
+  );
+
+  const getResolvedValue = useCallback(
+    <TValue>(key: string) => resolvedStyle[key] as TValue | undefined,
+    [resolvedStyle],
   );
 
   const setValue = useCallback(
@@ -92,5 +120,12 @@ export function useStyleEditor(elementId: string): StyleEditor {
     [isEditable],
   );
 
-  return { style, isEditable, getValue, setValue, editableSides };
+  return {
+    style,
+    isEditable,
+    getValue,
+    getResolvedValue,
+    setValue,
+    editableSides,
+  };
 }

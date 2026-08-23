@@ -11,8 +11,6 @@ import {
   SpaceToken,
   SurfaceColorToken,
   SurfaceColorTokens,
-  TextColorToken,
-  TextColorTokens,
   TextTransform,
 } from '@minddrop/designs';
 import { BorderColorOptions, BorderEmphasisOptions } from './BorderFields';
@@ -21,6 +19,7 @@ import { SpaceField } from './SpaceField';
 import { MarginSides, MarginStyleKeys, SpaceFields } from './SpaceFields';
 import { StyleEditorProps } from './StyleEditorProps';
 import { StyleSection } from './StyleSection';
+import { TextColourFields } from './TextColourFields';
 import { TokenSelect } from './TokenSelect';
 import { TextTransformOptions } from './TypographyFields';
 import {
@@ -31,7 +30,6 @@ import {
   radiusOptionKey,
   sectionLabelKey,
   surfaceColourOptionKey,
-  textColourOptionKey,
 } from './styleI18nKeys';
 import { useStyleEditor } from './useStyleEditor';
 
@@ -48,7 +46,7 @@ const BorderLineStyles: readonly BorderLineStyle[] = [
  * values, since a chip should stay symmetrical.
  */
 export const BadgeStyleEditor: React.FC<StyleEditorProps> = ({ elementId }) => {
-  const { isEditable, getValue, setValue, editableSides } =
+  const { isEditable, getValue, getResolvedValue, setValue, editableSides } =
     useStyleEditor(elementId);
 
   // The neutral default is stored as an unset key
@@ -99,16 +97,7 @@ export const BadgeStyleEditor: React.FC<StyleEditorProps> = ({ elementId }) => {
             }
           />
         )}
-        {isEditable('color') && (
-          <TokenSelect
-            label={fieldLabelKey('colour')}
-            tokens={TextColorTokens}
-            value={getValue<TextColorToken>('color')}
-            optionKey={textColourOptionKey}
-            defaultToken="regular"
-            onChange={(value) => setValue('color', value)}
-          />
-        )}
+        <TextColourFields editor={{ isEditable, getResolvedValue, setValue }} />
       </StyleSection>
 
       <StyleSection

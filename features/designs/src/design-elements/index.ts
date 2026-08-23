@@ -8,6 +8,7 @@ export * from './image';
 export * from './image-viewer';
 export * from './number';
 export * from './page-panel';
+export * from './property';
 export * from './text';
 export * from './url';
 export * from './view';

@@ -1,7 +1,11 @@
 import { DesignRolesStore } from '../../DesignRolesStore';
 import { DesignElementStyleSource } from '../../design-element-configs';
+import { getPropertyElementConfig } from '../../property-element-configs';
 import { LayoutType } from '../../types';
+import { getPropertyElementVariant } from '../getPropertyElementVariant';
+import { isPropertyElement } from '../isPropertyElement';
 import { isRoleElement } from '../isRoleElement';
+import { resolvePropertyElementStyle } from '../resolvePropertyElementStyle';
 import { resolveRoleStyle } from '../resolveRoleStyle';
 
 /**
@@ -20,6 +24,47 @@ export function resolveElementStyle<TElement extends DesignElementStyleSource>(
   element: TElement,
   layoutType?: LayoutType,
 ): TElement['style'] {
+  // Property elements resolve through their selected variant's
+  // theme styles instead of a role
+  if (isPropertyElement(element)) {
+    const config = getPropertyElementConfig(element.propertyType, false);
+
+    // A property type without a config degrades to the element's
+    // own style
+    if (!config) {
+      return element.style;
+    }
+
+    // The variant decides which of the element's own values may
+    // override the theme
+    const variant = getPropertyElementVariant(config, element.variant);
+
+    // The variant's context-resolved theme styles
+    const themeStyle = resolvePropertyElementStyle(
+      config,
+      element.variant,
+      layoutType,
+    );
+
+    // The element's values on whitelisted keys, which apply over
+    // the theme's: theme styles are overridable defaults on the
+    // keys the variant offers for editing, locks on the rest
+    const style = element.style as Record<string, unknown>;
+    const overrides = variant.editableStyles
+      ? Object.fromEntries(
+          Object.entries(style).filter(([key]) =>
+            variant.editableStyles?.includes(key),
+          ),
+        )
+      : style;
+
+    return {
+      ...element.style,
+      ...themeStyle,
+      ...overrides,
+    } as TElement['style'];
+  }
+
   // Elements without a role use their own style as is
   if (!isRoleElement(element)) {
     return element.style;

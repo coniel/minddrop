@@ -88,6 +88,35 @@ describe('<ElementsPalette />', () => {
     expect(itemLabels).not.toContain('designs.roles.page-content.label');
   });
 
+  it('lists the property elements under the properties group', () => {
+    const studio = createDesignStudioStore();
+
+    studio.initialize(design_books);
+    studio.setActiveLayout(layout_card_1.id);
+
+    renderPalette(studio);
+
+    // The properties group lists one element per property type
+    screen.getByText('design-studio.elements.group.properties');
+    screen.getByText('properties.text.name');
+    screen.getByText('properties.number.name');
+    screen.getByText('properties.date.name');
+  });
+
+  it('lists number and date only as property elements', () => {
+    const studio = createDesignStudioStore();
+
+    studio.initialize(design_books);
+    studio.setActiveLayout(layout_card_1.id);
+
+    renderPalette(studio);
+
+    // The standalone number and date entries moved under the
+    // properties group, so each label appears exactly once
+    expect(screen.getAllByText('properties.number.name')).toHaveLength(1);
+    expect(screen.getAllByText('properties.date.name')).toHaveLength(1);
+  });
+
   it('lists the unstyled element types by group', () => {
     const studio = createDesignStudioStore();
 
@@ -104,8 +133,9 @@ describe('<ElementsPalette />', () => {
     screen.getByText('design-studio.elements.group.layout');
     screen.getByText('design-studio.elements.container');
 
-    // Free-form text is placed through its purpose roles instead
-    expect(screen.queryByText('design-studio.elements.text')).toBeNull();
+    // Free-form text is placed through its purpose roles instead:
+    // the only "Text" entry is the text property element
+    expect(screen.getAllByText('design-studio.elements.text')).toHaveLength(1);
   });
 });
 

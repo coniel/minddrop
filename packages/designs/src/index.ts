@@ -5,15 +5,23 @@ export * from './errors';
 export * from './events';
 export * from './constants';
 export * from './design-element-configs';
+export * from './property-element-configs';
+export * from './themes';
 export * from './createElement';
 export * from './createRoleElement';
+export * from './createPropertyElement';
 export * from './createElementCssStyle';
 export { BuiltInDesignRoles } from './roles';
 export {
   isRoleElement,
+  isPropertyElement,
   resolveElementStyle,
   resolveRoleStyle,
+  resolvePropertyElementStyle,
   getRoleVariantAxes,
+  getPropertyElementVariant,
+  getElementCompatiblePropertyTypes,
+  getElementStyleCategory,
   resolveAutoBinding,
   resolveDesignMediaDirPath,
   elementTitleBindingId,

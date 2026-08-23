@@ -49,6 +49,11 @@
   /* Tertiary text: hints, fine print */
   --text-subtle: var(--accent-1000);
 
+  /* Text in the scheme's colour at full strength. Pairs with the
+     solid surface emphasis in name: solid means the colour
+     undiluted */
+  --text-solid: var(--accent-1100);
+
   /* Placeholder text in empty fields */
   --text-placeholder: var(--accent-900);
 

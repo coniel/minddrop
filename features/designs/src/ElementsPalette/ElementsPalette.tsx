@@ -5,6 +5,7 @@ import {
   ElementGroup,
   LayoutType,
   getElementConfigs,
+  getPropertyElementConfigs,
 } from '@minddrop/designs';
 import { TranslationKey, createI18nKeyBuilder } from '@minddrop/i18n';
 import { MenuGroup, MenuLabel } from '@minddrop/ui-primitives';
@@ -14,6 +15,7 @@ import {
 } from '../DesignStudioStore';
 import { isElementInContext } from '../utils';
 import { ElementPaletteItem } from './ElementPaletteItem';
+import { PropertyElementPaletteItem } from './PropertyElementPaletteItem';
 import { RolePaletteItem } from './RolePaletteItem';
 import './ElementsPalette.css';
 
@@ -49,6 +51,11 @@ export const ElementsPalette: React.FC = () => {
     layoutType: layoutType ?? undefined,
   }).filter((role) => !role.structural);
 
+  // Property elements insertable in the current design and layout
+  const propertyElements = getPropertyElementConfigs().filter((config) =>
+    isElementInContext(config.context, { designType, layoutType }),
+  );
+
   // Element types insertable in the current design and layout,
   // bucketed by their palette group
   const elementGroups = resolveElementGroups(designType, layoutType);
@@ -60,6 +67,18 @@ export const ElementsPalette: React.FC = () => {
           <MenuLabel label={paletteElementsKey(layoutType ?? 'default')} />
           {roles.map((role) => (
             <RolePaletteItem key={role.id} role={role} />
+          ))}
+        </MenuGroup>
+      )}
+
+      {propertyElements.length > 0 && (
+        <MenuGroup>
+          <MenuLabel label="design-studio.elements.group.properties" />
+          {propertyElements.map((config) => (
+            <PropertyElementPaletteItem
+              key={config.propertyType}
+              config={config}
+            />
           ))}
         </MenuGroup>
       )}

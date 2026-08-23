@@ -1,6 +1,6 @@
-import { getElementConfig } from '@minddrop/designs';
+import { getElementConfig, getPropertyElementConfig } from '@minddrop/designs';
 import { useTranslation } from '@minddrop/i18n';
-import { PropertySchema } from '@minddrop/properties';
+import { PropertySchema, PropertyType } from '@minddrop/properties';
 import { useDesignPreview } from './DesignElements';
 import {
   useDesignProperties,
@@ -12,6 +12,12 @@ interface PlaceholderElement {
    * The element type.
    */
   type: string;
+
+  /**
+   * The property type of a property element, which names its type
+   * label.
+   */
+  propertyType?: PropertyType;
 
   /**
    * Whether the element displays static content.
@@ -53,8 +59,16 @@ export function useElementPlaceholder(element: PlaceholderElement): string {
     return '';
   }
 
-  // Studio/preview fallback ensuring elements never render empty
-  const typeLabel = t(getElementConfig(element.type).label);
+  // Studio/preview fallback ensuring elements never render empty.
+  // Property elements are named after their property element
+  // config, falling back to the element type when the property
+  // type has none.
+  const propertyElementConfig = element.propertyType
+    ? getPropertyElementConfig(element.propertyType, false)
+    : null;
+  const typeLabel = t(
+    propertyElementConfig?.label ?? getElementConfig(element.type).label,
+  );
 
   // Static elements display their own content
   if (element.static) {

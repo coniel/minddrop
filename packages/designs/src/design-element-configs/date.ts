@@ -52,11 +52,12 @@ export interface DateElement extends DesignElementBase {
   format?: DateFormat;
 }
 
+// Omits a palette group: dates are placed through the date
+// property element
 export const DateElementConfig: DesignElementConfig<DateElement> = {
   type: 'date',
   icon: 'calendar',
   label: 'design-studio.elements.date',
-  group: 'elements',
   styleCategory: 'typography',
   compatiblePropertyTypes: ['date', 'created', 'last-modified'],
   supportsStaticContent: true,

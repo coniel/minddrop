@@ -2,8 +2,6 @@ import { useCallback } from 'react';
 import {
   FontFamilyToken,
   FontFamilyTokens,
-  TextColorToken,
-  TextColorTokens,
   TypographyStyle,
 } from '@minddrop/designs';
 import { BorderFields, BorderStyleKeys } from './BorderFields';
@@ -16,13 +14,13 @@ import {
 } from './SpaceFields';
 import { StyleEditorProps } from './StyleEditorProps';
 import { StyleSection } from './StyleSection';
+import { TextColourFields } from './TextColourFields';
 import { TokenSelect } from './TokenSelect';
 import { TypographyFields, TypographyStyleKeys } from './TypographyFields';
 import {
   fieldLabelKey,
   fontFamilyOptionKey,
   sectionLabelKey,
-  textColourOptionKey,
 } from './styleI18nKeys';
 import { useStyleEditor } from './useStyleEditor';
 
@@ -95,16 +93,7 @@ export const EditorStyleEditor: React.FC<StyleEditorProps> = ({
             onChange={(value) => setValue('fontFamily', value)}
           />
         )}
-        {isEditable('color') && (
-          <TokenSelect
-            label={fieldLabelKey('colour')}
-            tokens={TextColorTokens}
-            value={getValue<TextColorToken>('color')}
-            optionKey={textColourOptionKey}
-            defaultToken="regular"
-            onChange={(value) => setValue('color', value)}
-          />
-        )}
+        <TextColourFields editor={editor} />
       </StyleSection>
 
       {isEditable('title') && (

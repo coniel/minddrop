@@ -1,19 +1,10 @@
 /**
- * The text color roles: the schemable hierarchy (`regular` to
- * `subtle`), `on-solid` for text over solid fills, and the fixed
- * brand and intent roles. State roles (placeholder, disabled) are
- * not design vocabulary.
+ * The text colour steps, in display order. Colour always follows
+ * the entry's colour: `subtle` is a faded near-black version,
+ * `regular` the near-black version itself, and `solid` the colour
+ * at full strength. Without an entry colour every step resolves to
+ * greys.
  */
-export const TextColorTokens = [
-  'regular',
-  'muted',
-  'subtle',
-  'on-solid',
-  'primary',
-  'danger',
-  'warning',
-  'info',
-  'success',
-] as const;
+export const TextColorTokens = ['subtle', 'regular', 'solid'] as const;
 
 export type TextColorToken = (typeof TextColorTokens)[number];

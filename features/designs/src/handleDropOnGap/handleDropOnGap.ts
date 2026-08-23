@@ -3,8 +3,10 @@ import { DesignStudioStore } from '../DesignStudioStore';
 import {
   DesignElementTemplatesDataKey,
   DesignElementsDataKey,
+  DesignPropertyElementsDataKey,
   DesignRolesDataKey,
 } from '../constants';
+import { insertPropertyElement } from '../insertPropertyElement';
 import { insertRoleElement } from '../insertRoleElement';
 import { FlatParentDesignElement } from '../types';
 import { isValidDesignStudioDrop, resolveDroppedElement } from '../utils';
@@ -34,10 +36,25 @@ export function handleDropOnGap(
   const designElements = drop.data[DesignElementsDataKey];
   const templates = drop.data[DesignElementTemplatesDataKey];
   const roles = drop.data[DesignRolesDataKey];
+  const propertyElements = drop.data[DesignPropertyElementsDataKey];
 
   // If a role was dropped, insert a new element playing that role
   if (roles && roles.length) {
     insertRoleElement(studio, roles[0].roleId, containerId, gapIndex, layoutId);
+
+    return;
+  }
+
+  // If a property element was dropped, insert a new element for
+  // its property type
+  if (propertyElements && propertyElements.length) {
+    insertPropertyElement(
+      studio,
+      propertyElements[0].propertyType,
+      containerId,
+      gapIndex,
+      layoutId,
+    );
 
     return;
   }

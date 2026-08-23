@@ -38,6 +38,12 @@ export function createElementCssStyle(
     case 'date':
     case 'url':
       return createTypographyCss(resolveElementStyle(element, layoutType));
+    case 'property':
+      // Property elements dispatch on their selected variant's
+      // style category. Every variant shipped so far renders
+      // typography; further categories arrive with the variants
+      // that use them.
+      return createTypographyCss(resolveElementStyle(element, layoutType));
     case 'badges':
       return createBadgeCss(resolveElementStyle(element, layoutType));
     case 'root':

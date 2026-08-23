@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react';
 import { TypographyStyle } from '../styles';
 import { tokenCssVariable } from '../tokens';
-import { marginCss, maxWidthCss } from './cssBlocks';
+import { marginCss, maxWidthCss, textColorCss } from './cssBlocks';
 
 /**
  * Emits CSS for a typography style. Omitted values emit nothing and
@@ -34,9 +34,8 @@ export function createTypographyCss(style: TypographyStyle): CSSProperties {
     css.letterSpacing = tokenCssVariable('letterSpacing', style.letterSpacing);
   }
 
-  if (style.color) {
-    css.color = tokenCssVariable('textColor', style.color);
-  }
+  // The text colour treatment, adjusted by its emphasis
+  Object.assign(css, textColorCss(style));
 
   // Emit the literal-value typography options
   if (style.textAlign) {

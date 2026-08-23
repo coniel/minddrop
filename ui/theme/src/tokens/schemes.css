@@ -32,8 +32,12 @@
 .scheme-brown,
 .scheme-gray {
   --text-regular: var(--accent-1200);
-  --text-muted: var(--accent-1100);
-  --text-subtle: var(--accent-1000);
+  /* Quiet text fades the near-black step rather than dropping to
+     the ramp's vivid mid-tones, which read louder than regular
+     text, not quieter */
+  --text-muted: color-mix(in srgb, var(--accent-1200) 72%, transparent);
+  --text-subtle: color-mix(in srgb, var(--accent-1200) 52%, transparent);
+  --text-solid: var(--accent-1100);
   --text-placeholder: var(--accent-900);
   --text-disabled: var(--accent-800);
   --text-on-solid: var(--accent-100);

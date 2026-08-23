@@ -5,13 +5,12 @@ import {
   RadiusTokens,
   SpaceToken,
   SurfaceColorTokens,
-  TextColorToken,
-  TextColorTokens,
 } from '@minddrop/designs';
 import { SpaceField } from './SpaceField';
 import { MarginSides, MarginStyleKeys, SpaceFields } from './SpaceFields';
 import { StyleEditorProps } from './StyleEditorProps';
 import { StyleSection } from './StyleSection';
+import { TextColourFields } from './TextColourFields';
 import { TokenSelect } from './TokenSelect';
 import {
   fieldLabelKey,
@@ -19,7 +18,6 @@ import {
   radiusOptionKey,
   sectionLabelKey,
   surfaceColourOptionKey,
-  textColourOptionKey,
 } from './styleI18nKeys';
 import { useStyleEditor } from './useStyleEditor';
 
@@ -30,7 +28,7 @@ import { useStyleEditor } from './useStyleEditor';
  * removes it.
  */
 export const IconStyleEditor: React.FC<StyleEditorProps> = ({ elementId }) => {
-  const { isEditable, getValue, setValue, editableSides } =
+  const { isEditable, getValue, getResolvedValue, setValue, editableSides } =
     useStyleEditor(elementId);
 
   const container = getValue<IconContainerStyle>('container');
@@ -78,15 +76,10 @@ export const IconStyleEditor: React.FC<StyleEditorProps> = ({ elementId }) => {
             onChange={(value) => setValue('size', value)}
           />
         )}
-        {isEditable('color') && (
-          <TokenSelect
-            label={fieldLabelKey('iconColour')}
-            tokens={TextColorTokens}
-            value={getValue<TextColorToken>('color')}
-            optionKey={textColourOptionKey}
-            onChange={(value) => setValue('color', value)}
-          />
-        )}
+        <TextColourFields
+          editor={{ isEditable, getResolvedValue, setValue }}
+          label={fieldLabelKey('iconColour')}
+        />
       </StyleSection>
 
       {isEditable('container') && (

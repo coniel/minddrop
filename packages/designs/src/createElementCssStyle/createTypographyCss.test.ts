@@ -14,7 +14,7 @@ describe('createTypographyCss', () => {
         fontWeight: 'semibold',
         lineHeight: 'relaxed',
         letterSpacing: 'wide',
-        color: 'muted',
+        color: 'subtle',
         textAlign: 'center',
         textTransform: 'uppercase',
         italic: true,

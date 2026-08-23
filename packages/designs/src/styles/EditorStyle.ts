@@ -37,7 +37,7 @@ export interface EditorStyle
   lineHeight?: LineHeightToken;
 
   /**
-   * The text color role of the editor content.
+   * The text colour step of the editor content.
    */
   color?: TextColorToken;
 

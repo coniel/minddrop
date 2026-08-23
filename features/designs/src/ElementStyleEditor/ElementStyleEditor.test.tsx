@@ -13,8 +13,9 @@ import {
   DesignStudioStore,
   createDesignStudioStore,
 } from '../DesignStudioStore';
+import { insertPropertyElement } from '../insertPropertyElement';
 import { cleanup, setup } from '../test-utils';
-import { FlatRootDesignElement } from '../types';
+import { FlatPropertyElement, FlatRootDesignElement } from '../types';
 import { ElementStyleEditor } from './ElementStyleEditor';
 
 const {
@@ -222,6 +223,99 @@ describe('<ElementStyleEditor />', () => {
 
     // The role's size axis is offered
     screen.getByText('designs.roleVariantAxes.size');
+  });
+
+  it('renders the variant picker of a property element', () => {
+    const studio = openCardLayout();
+
+    // Insert a text property element, which selects it
+    insertPropertyElement(studio, 'text', 'root', 0, layout_card_1.id);
+
+    renderEditor(studio);
+
+    // Each presentation variant is offered with its sample
+    screen.getByText('designs.propertyElements.variants.short');
+    screen.getByText('designs.propertyElements.variants.quote');
+    screen.getByText('designs.propertyElements.samples.long');
+  });
+
+  it('offers the colour treatment fields on a text property element', () => {
+    const studio = openCardLayout();
+
+    // Insert a text property element, which selects it
+    insertPropertyElement(studio, 'text', 'root', 0, layout_card_1.id);
+
+    renderEditor(studio);
+
+    openSection('designsStudio.style.sections.colour');
+
+    // The colour steps are offered
+    screen.getByText('designsStudio.style.textColour.regular.label');
+    screen.getByText('designsStudio.style.textColour.subtle.label');
+    screen.getByText('designsStudio.style.textColour.solid.label');
+  });
+
+  it('offers no editor for a style key the property variant controls', () => {
+    const studio = openCardLayout();
+
+    // Insert a text property element presented as a subtitle,
+    // whose theme styles lock its colour, line height and font size
+    insertPropertyElement(studio, 'text', 'root', 0, layout_card_1.id);
+
+    const elementId = studio.getSelectedElementId() as string;
+    const element = studio.getDesignElement<FlatPropertyElement>(
+      elementId,
+      layout_card_1.id,
+    );
+
+    studio.setDesignElement(elementId, {
+      ...element,
+      variant: 'subtitle',
+    });
+
+    renderEditor(studio);
+
+    openSection('designsStudio.style.sections.typography');
+
+    const textSection = getSection(
+      'designsStudio.style.sections.typography',
+    ) as HTMLElement;
+
+    // The locked keys render no field at all
+    expect(
+      within(textSection).queryByText('designsStudio.style.fields.lineHeight'),
+    ).toBeNull();
+    expect(
+      within(textSection).queryByText('designsStudio.style.fields.fontSize'),
+    ).toBeNull();
+
+    // Keys outside the variant's editable styles list render no
+    // field either
+    expect(
+      within(textSection).queryByText(
+        'designsStudio.style.fields.letterSpacing',
+      ),
+    ).toBeNull();
+
+    // Keys the variant offers stay editable
+    within(textSection).getByText('designsStudio.style.fields.textAlign');
+  });
+
+  it('renders the format section per property type', () => {
+    const studio = openCardLayout();
+
+    // Insert a number property element, which selects it
+    insertPropertyElement(studio, 'number', 'root', 0, layout_card_1.id);
+
+    renderEditor(studio);
+
+    // The number format settings are offered
+    screen.getByText('designs.number-format.label');
+
+    // A single fixed presentation offers no variant picker
+    expect(
+      screen.queryByText('designsStudio.style.sections.variant'),
+    ).toBeNull();
   });
 });
 

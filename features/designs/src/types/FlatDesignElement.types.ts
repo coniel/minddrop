@@ -10,6 +10,7 @@ import {
   LeafDesignElement,
   NumberElement,
   PagePanelElement,
+  PropertyElement,
   RootElement,
   TextElement,
   UrlElement,
@@ -44,6 +45,7 @@ export type FlatIconElement = IconElement & Parent;
 export type FlatEditorElement = EditorElement & Parent;
 export type FlatViewElement = ViewElement & Parent;
 export type FlatWebviewElement = WebviewElement & Parent;
+export type FlatPropertyElement = PropertyElement & Parent;
 
 export type FlatDesignElement =
   | FlatRootDesignElement

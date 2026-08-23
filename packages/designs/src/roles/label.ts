@@ -14,7 +14,7 @@ export const LabelRole: DesignRoleConfig = {
     fontSize: 'xs',
     fontWeight: 'medium',
     lineHeight: 'snug',
-    color: 'muted',
+    color: 'subtle',
   },
   contextStyles: {
     // Single-line list rows keep labels on one line
@@ -38,7 +38,7 @@ export const LabelRole: DesignRoleConfig = {
         {
           id: 'accent',
           label: 'designs.roleVariants.accent',
-          style: { color: 'primary' },
+          style: { color: 'solid' },
         },
       ],
     },

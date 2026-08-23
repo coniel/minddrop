@@ -68,12 +68,12 @@ export const HeadingRole: DesignRoleConfig = {
         {
           id: 'muted',
           label: 'designs.roleVariants.muted',
-          style: { color: 'muted' },
+          style: { color: 'subtle' },
         },
         {
           id: 'accent',
           label: 'designs.roleVariants.accent',
-          style: { color: 'primary' },
+          style: { color: 'solid' },
         },
       ],
     },

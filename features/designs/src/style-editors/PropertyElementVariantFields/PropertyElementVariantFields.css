@@ -1,0 +1,42 @@
+/* ============================================================
+   PROPERTY ELEMENT VARIANT FIELDS
+   The presentation variant radio list: one option per variant,
+   its label above a sample rendered in the variant's styling.
+   ============================================================ */
+
+.designs-property-variant-options {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 2px;
+}
+
+/* Options are content-sized rows, overriding the group's fixed
+   toggle dimensions and single-line text */
+.designs-property-variant-options .designs-property-variant-option {
+  width: auto;
+  height: auto;
+  justify-content: flex-start;
+  padding: var(--space-2);
+  text-align: left;
+  white-space: normal;
+}
+
+.designs-property-variant-option-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+/* Samples start from what unstyled canvas text inherits (the
+   app's ambient type), so variant styling shifts them the same
+   way it shifts the canvas, and never overflow the row */
+.designs-property-variant-option-sample {
+  display: block;
+  min-width: 0;
+  overflow-wrap: break-word;
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-snug);
+  color: var(--text-regular);
+}

@@ -1,6 +1,7 @@
 import { MarginSides, MarginStyleKeys, SpaceFields } from './SpaceFields';
 import { StyleEditorProps } from './StyleEditorProps';
 import { StyleSection } from './StyleSection';
+import { TextColourFields, TextColourStyleKeys } from './TextColourFields';
 import { TypographyFields, TypographyStyleKeys } from './TypographyFields';
 import { sectionLabelKey } from './styleI18nKeys';
 import { useStyleEditor } from './useStyleEditor';
@@ -12,7 +13,7 @@ import { useStyleEditor } from './useStyleEditor';
 export const TypographyStyleEditor: React.FC<StyleEditorProps> = ({
   elementId,
 }) => {
-  const { isEditable, getValue, setValue, editableSides } =
+  const { isEditable, getValue, getResolvedValue, setValue, editableSides } =
     useStyleEditor(elementId);
 
   return (
@@ -29,6 +30,16 @@ export const TypographyStyleEditor: React.FC<StyleEditorProps> = ({
           getValue={getValue}
           setValue={setValue}
         />
+      </StyleSection>
+
+      <StyleSection
+        label={sectionLabelKey('colour')}
+        keys={TextColourStyleKeys}
+        isEditable={isEditable}
+        getValue={getValue}
+        setValue={setValue}
+      >
+        <TextColourFields editor={{ isEditable, getResolvedValue, setValue }} />
       </StyleSection>
 
       <StyleSection

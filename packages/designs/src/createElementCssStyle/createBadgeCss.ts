@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react';
 import { BadgeStyle } from '../styles';
 import { tokenCssVariable } from '../tokens';
-import { marginCss, resolveBorderColorToken } from './cssBlocks';
+import { marginCss, resolveBorderColorToken, textColorCss } from './cssBlocks';
 
 /**
  * Emits CSS for a badge style.
@@ -24,9 +24,8 @@ export function createBadgeCss(style: BadgeStyle): CSSProperties {
     css.textTransform = style.textTransform;
   }
 
-  if (style.color) {
-    css.color = tokenCssVariable('textColor', style.color);
-  }
+  // The text colour treatment, adjusted by its emphasis
+  Object.assign(css, textColorCss(style));
 
   if (style.background) {
     css.backgroundColor = tokenCssVariable('surfaceColor', style.background);

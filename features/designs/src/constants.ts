@@ -23,6 +23,13 @@ export const DesignElementsDataKey = 'design-elements';
 export const DesignRolesDataKey = 'design-roles';
 
 /**
+ * Drag-and-drop data key carrying property elements dragged from
+ * the elements palette. Property element drops instantiate an
+ * element dynamically rather than from a bare template.
+ */
+export const DesignPropertyElementsDataKey = 'design-property-elements';
+
+/**
  * Drag-and-drop data key carrying layout types dragged from the
  * layouts panel onto the canvas, where they are dropped to create
  * a layout at the drop point.
