@@ -1,5 +1,9 @@
 .view-area {
   flex: 1;
+  /* Sized by the space the panel row gives it rather than by its
+     view's content width, so a wide view cannot push the panels
+     beside it out of the window */
+  min-width: 0;
 }
 
 .view-area-split {
