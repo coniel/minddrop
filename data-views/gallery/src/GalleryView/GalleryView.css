@@ -3,6 +3,11 @@
   flex-direction: column;
   flex: 1;
   min-height: 0;
+  /* Keeps the view's width tied to the space it is given rather than
+     to the width its cards would like, so wide card content cannot
+     push the view past its container */
+  min-width: 0;
+  container-type: inline-size;
 }
 
 .gallery-view-scroll {
@@ -14,9 +19,11 @@
   padding-bottom: 30vh;
 }
 
+/* Columns are sized by the minimum column width rather than by a
+   count, so the browser fits the columns to the available width */
 .gallery-view-content {
   padding: var(--space-4);
-  column-count: var(--gallery-column-count, 1);
+  column-width: var(--gallery-min-column-width, 300px);
   column-gap: var(--gallery-gap, 1rem);
 }
 
