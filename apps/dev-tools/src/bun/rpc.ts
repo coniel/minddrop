@@ -7,10 +7,13 @@ const REPO_ROOT = Bun.spawnSync(['git', 'rev-parse', '--show-toplevel'])
   .stdout.toString()
   .trim();
 // Shared dev data dir, lives outside the repo so all agent
-// worktrees read and write the same manifests and plans
+// worktrees read and write the same manifests
 const DEV_DIR = `${process.env.HOME}/Documents/MindDrop 2/dev`;
 const CHANGES_DIR = `${DEV_DIR}/changes`;
-const PLANS_DIR = `${DEV_DIR}/plans`;
+// Plans live in the workspace as a MindDrop database
+const PLANS_DIR = `${process.env.HOME}/Documents/MindDrop 2/Dev plans`;
+// Plan statuses which are no longer active work
+const ARCHIVED_PLAN_STATUSES = ['Completed', 'Abandoned'];
 
 /**
  * Reads and parses all manifest JSON files from the changes directory.
@@ -176,7 +179,8 @@ function deleteManifest(slug: string): void {
 }
 
 /**
- * Reads all plan markdown files from the plans directory.
+ * Reads all active plan entries from the plans database, omitting
+ * completed and abandoned ones.
  */
 function readAllPlans(): { name: string; filename: string }[] {
   if (!existsSync(PLANS_DIR)) {
@@ -187,26 +191,26 @@ function readAllPlans(): { name: string; filename: string }[] {
 
   return entries
     .filter((entry) => entry.endsWith('.md'))
+    .filter((filename) => {
+      const status = readPlanProperty(filename, 'Status');
+
+      return !ARCHIVED_PLAN_STATUSES.includes(status);
+    })
     .map((filename) => ({
-      name: extractPlanHeading(filename),
+      name: extractPlanTitle(filename),
       filename,
     }));
 }
 
 /**
- * Extracts the first markdown heading from a plan file.
- * Falls back to a formatted version of the filename.
+ * Returns a plan's display title, falling back to a formatted
+ * version of its filename.
  */
-function extractPlanHeading(filename: string): string {
-  try {
-    const content = readFileSync(`${PLANS_DIR}/${filename}`, 'utf-8');
-    const match = content.match(/^#\s+(.+)$/m);
+function extractPlanTitle(filename: string): string {
+  const title = readPlanProperty(filename, 'Title');
 
-    if (match) {
-      return match[1].trim();
-    }
-  } catch {
-    // Fall back to filename-based name
+  if (title) {
+    return title;
   }
 
   // Fallback: remove extension, replace dashes with spaces, title-case
@@ -215,6 +219,41 @@ function extractPlanHeading(filename: string): string {
     .split('-')
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
+}
+
+/**
+ * Reads a single-line property value from a plan's frontmatter.
+ * Returns an empty string when the property is absent.
+ */
+function readPlanProperty(filename: string, property: string): string {
+  let content: string;
+
+  try {
+    content = readFileSync(`${PLANS_DIR}/${filename}`, 'utf-8');
+  } catch {
+    return '';
+  }
+
+  // Properties only exist inside a leading frontmatter block
+  if (!content.startsWith('---\n')) {
+    return '';
+  }
+
+  const frontmatterEnd = content.indexOf('\n---\n', 4);
+
+  if (frontmatterEnd === -1) {
+    return '';
+  }
+
+  const frontmatter = content.slice(4, frontmatterEnd);
+  const match = frontmatter.match(new RegExp(`^${property}:[ \\t]*(.+)$`, 'm'));
+
+  if (!match) {
+    return '';
+  }
+
+  // Values may be quoted when they contain YAML control characters
+  return match[1].trim().replace(/^"(.*)"$/, '$1');
 }
 
 /**

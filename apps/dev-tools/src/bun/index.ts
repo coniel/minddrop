@@ -16,10 +16,11 @@ const REPO_ROOT = Bun.spawnSync(['git', 'rev-parse', '--show-toplevel'])
   .stdout.toString()
   .trim();
 // Shared dev data dir, lives outside the repo so all agent
-// worktrees read and write the same manifests and plans
+// worktrees read and write the same manifests
 const DEV_DIR = `${process.env.HOME}/Documents/MindDrop 2/dev`;
 const CHANGES_DIR = `${DEV_DIR}/changes`;
-const PLANS_DIR = `${DEV_DIR}/plans`;
+// Plans live in the workspace as a MindDrop database
+const PLANS_DIR = `${process.env.HOME}/Documents/MindDrop 2/Dev plans`;
 const GIT_DIR = `${REPO_ROOT}/.git`;
 
 // Create typed RPC for the webview
