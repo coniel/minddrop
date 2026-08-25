@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { EmojiItem, EmojiSkinTone, MinifiedEmoji } from './Emoji.types';
+import { EmojiItem, EmojiSkinTone, MinifiedEmoji } from '../types';
 import {
   buildEmojiLabelIndex,
   getSkinToneVariant,

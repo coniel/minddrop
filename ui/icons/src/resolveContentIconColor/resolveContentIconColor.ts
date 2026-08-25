@@ -1,5 +1,6 @@
 import { ContentColor } from '@minddrop/ui-theme';
-import { UserIcon, UserIconType } from '../icons.types';
+import { parseIcon } from '../parseIcon';
+import { UserIcon, UserIconType } from '../types';
 
 /**
  * Returns the color of a content icon if the icon is a content icon
@@ -11,22 +12,14 @@ import { UserIcon, UserIconType } from '../icons.types';
 export function resolveContentIconColor(
   icon: string | UserIcon,
 ): ContentColor | undefined {
-  // Icon is stringified
-  if (typeof icon === 'string') {
-    // Icon is not a content icon
-    if (!icon.startsWith(UserIconType.ContentIcon)) {
-      return undefined;
-    }
-
-    // Extract color from icon string
-    return (icon.split(':')[2] as ContentColor) || undefined;
-  }
+  // Parse stringified icons
+  const parsedIcon = typeof icon === 'string' ? parseIcon(icon) : icon;
 
   // Icon is not a content icon
-  if (icon.type !== UserIconType.ContentIcon) {
+  if (!parsedIcon || parsedIcon.type !== UserIconType.ContentIcon) {
     return undefined;
   }
 
   // Return the icon color
-  return icon.color;
+  return parsedIcon.color || undefined;
 }

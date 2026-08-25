@@ -146,6 +146,7 @@ declare module 'i18next' {
           filter: string;
           random: string;
           change: string;
+          defaultSet: string;
         };
         labels: {
           untitled: string;

@@ -1,3 +1,4 @@
+export { initializeIcons as initialize } from './initializeIcons';
 export { stringifyIcon as stringify } from './stringifyIcon';
 export { parseIcon as parse } from './parseIcon';
 export { isContentIcon } from './isContentIcon';

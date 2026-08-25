@@ -116,6 +116,10 @@ jsonFiles.forEach((file) => {
 });
 
 const minifiedIconsMetadata = {
+  // The set self-describes its ID and display name so it can be
+  // registered from its data alone
+  id: 'lucide',
+  name: 'Lucide',
   categories,
   labels,
   icons: iconsMetadata,

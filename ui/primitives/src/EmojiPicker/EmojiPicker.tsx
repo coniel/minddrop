@@ -8,7 +8,12 @@ import {
   useRef,
   useState,
 } from 'react';
-import { Emoji, EmojiItem, EmojiSkinTone } from '@minddrop/ui-icons';
+import {
+  Emoji,
+  EmojiItem,
+  EmojiSkinTone,
+  useEmojiData,
+} from '@minddrop/ui-icons';
 import { IconButton } from '../IconButton';
 import { MenuLabel } from '../Menu';
 import { ScrollArea } from '../ScrollArea';
@@ -42,10 +47,6 @@ export interface EmojiPickerProps
   defaultSkinTone?: EmojiSkinTone;
 }
 
-// Pre-compute initial state at module level so the first mount
-// has nothing to compute.
-const initialResultsByGroup = Emoji.group(Emoji.all);
-
 const HEADER_ROW_HEIGHT = 48;
 const EMOJI_ROW_HEIGHT = 34;
 const EMOJIS_PER_ROW = 13;
@@ -73,8 +74,6 @@ function buildVirtualItems(
   return items;
 }
 
-const initialVirtualItems = buildVirtualItems(initialResultsByGroup);
-
 export const EmojiPicker: FC<EmojiPickerProps> = ({
   onSelect,
   onSelectSkinTone,
@@ -87,21 +86,28 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
   const deferredQuery = useDeferredValue(query);
   const [skinTone, setSkinTone] = useState(defaultSkinTone);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  // Get the emoji data, triggering its load on first use
+  const emojiData = useEmojiData();
 
   const { results, resultsByGroup } = useMemo(() => {
-    if (!deferredQuery) {
-      return { results: Emoji.all, resultsByGroup: initialResultsByGroup };
+    // Nothing to show until the data loads
+    if (!emojiData) {
+      return { results: [], resultsByGroup: [] };
     }
 
-    const results = Emoji.search(deferredQuery);
+    // Show everything using the grouping computed at load time
+    if (!deferredQuery) {
+      return { results: emojiData.all, resultsByGroup: emojiData.grouped };
+    }
+
+    const results = emojiData.search(deferredQuery);
 
     return { results, resultsByGroup: Emoji.group(results) };
-  }, [deferredQuery]);
+  }, [emojiData, deferredQuery]);
 
   const virtualItems = useMemo(
-    () =>
-      deferredQuery ? buildVirtualItems(resultsByGroup) : initialVirtualItems,
-    [deferredQuery, resultsByGroup],
+    () => buildVirtualItems(resultsByGroup),
+    [resultsByGroup],
   );
 
   const virtualizer = useVirtualizer({
@@ -129,10 +135,16 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
   );
 
   const handleClickRandom = useCallback(() => {
-    const randomEmoji = Emoji.all[Math.floor(Math.random() * Emoji.all.length)];
+    // No emoji to pick from until the data loads
+    if (!emojiData) {
+      return;
+    }
+
+    const randomEmoji =
+      emojiData.all[Math.floor(Math.random() * emojiData.all.length)];
 
     handleSelect(randomEmoji);
-  }, [handleSelect]);
+  }, [emojiData, handleSelect]);
 
   const handleSelectSkinTone = useCallback(
     (value: EmojiSkinTone) => {

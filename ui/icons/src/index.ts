@@ -1,9 +1,9 @@
-import ContentIconMetadata from './content-icons.min.json';
-
 export * from './IconsProvider';
-export * from './icons.types';
+export * from './types';
 export * from './emoji';
 export * from './useIcon';
+export * from './constants';
+export * from './contentIconSetRegistry';
+export * from './initializeIcons';
+export * from './useLoadedContentIconSets';
 export * as Icons from './IconsApi';
-
-export { ContentIconMetadata };

@@ -16,3 +16,20 @@ export interface MinifiedEmojiData {
   subgroups: string[];
   emoji: MinifiedEmoji[];
 }
+
+export interface EmojiData {
+  /**
+   * Every emoji in the data set.
+   */
+  all: EmojiItem[];
+
+  /**
+   * The emoji grouped into [group, EmojiItem[]] tuples.
+   */
+  grouped: [string, EmojiItem[]][];
+
+  /**
+   * Fuzzy searches the emoji by name and label.
+   */
+  search: (query: string) => EmojiItem[];
+}

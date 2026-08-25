@@ -9,8 +9,18 @@ import {
   useState,
 } from 'react';
 import { createI18nKeyBuilder } from '@minddrop/i18n';
-import { ContentIconMetadata, ContentIconName } from '@minddrop/ui-icons';
+import {
+  BuiltInContentIconSetId,
+  ContentIconName,
+  Icons,
+  LoadedContentIconSet,
+  UnminifiedContentIcon,
+  UserIconType,
+  groupByCategory,
+  useLoadedContentIconSets,
+} from '@minddrop/ui-icons';
 import { ContentColor } from '@minddrop/ui-theme';
+import { Button } from '../Button';
 import { ContentIcon } from '../ContentIcon';
 import { IconButton } from '../IconButton';
 import { MenuLabel } from '../Menu';
@@ -19,16 +29,6 @@ import { Toolbar } from '../Toolbar';
 import { Tooltip } from '../Tooltip';
 import { ContentColorValues } from '../constants';
 import { propsToClass } from '../utils';
-import {
-  MinifiedContentIcon,
-  UnminifiedContentIcon,
-} from './ContentIconPicker.types';
-import {
-  buildIconLabelIndex,
-  groupByCategory,
-  searchContentIcons,
-  unminifyContentIcon,
-} from './utils';
 import './ContentIconPicker.css';
 import { TextField } from '../fields/TextField';
 
@@ -37,7 +37,7 @@ export interface ContentIconPickerProps
   /**
    * Calback fired when an icon is selected.
    */
-  onSelect?(icon: ContentIconName, color: ContentColor): void;
+  onSelect?(icon: ContentIconName, color: ContentColor, set: string): void;
 
   /**
    * Calback fired when an icon color is selected.
@@ -54,20 +54,6 @@ export interface ContentIconPickerProps
    */
   recent?: string[];
 }
-
-const unminifiedIcons = ContentIconMetadata.icons.map((icon) =>
-  unminifyContentIcon(
-    icon as MinifiedContentIcon,
-    ContentIconMetadata.categories,
-    ContentIconMetadata.labels,
-  ),
-);
-
-const { labels: allLabels, labelToIcon } = buildIconLabelIndex(unminifiedIcons);
-
-// Pre-compute initial state at module level so the first mount
-// has nothing to compute.
-const initialResultsByCategory = groupByCategory(unminifiedIcons);
 
 // Fixed row heights for the flat virtual grid
 const HEADER_ROW_HEIGHT = 40;
@@ -94,9 +80,6 @@ function buildVirtualItems(
   return items;
 }
 
-// Pre-compute initial virtual items at module level.
-const initialVirtualItems = buildVirtualItems(initialResultsByCategory);
-
 export const ContentIconPicker: FC<ContentIconPickerProps> = ({
   onSelect,
   onSelectColor,
@@ -110,33 +93,41 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
   // previous results immediately while computing new ones at low priority.
   const deferredQuery = useDeferredValue(query);
   const [color, setColor] = useState<ContentColor>(defaultColor);
+  const [activeSetId, setActiveSetId] = useState(BuiltInContentIconSetId);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const iconSets = useLoadedContentIconSets();
+
+  // The set whose icons are listed
+  const activeSet = useMemo(
+    () =>
+      iconSets?.find((set) => set.id === activeSetId) || iconSets?.[0] || null,
+    [iconSets, activeSetId],
+  );
 
   const { results, resultsByCategory } = useMemo(() => {
-    // Skip recomputation for the initial empty-query case.
+    // Nothing to show until the sets load
+    if (!activeSet) {
+      return { results: [], resultsByCategory: [] };
+    }
+
+    // Show the set's icons when not searching, using the category
+    // grouping computed when the set loaded
     if (!deferredQuery) {
       return {
-        results: unminifiedIcons,
-        resultsByCategory: initialResultsByCategory,
+        results: activeSet.icons,
+        resultsByCategory: activeSet.iconsByCategory,
       };
     }
 
-    const results = searchContentIcons(
-      unminifiedIcons,
-      allLabels,
-      labelToIcon,
-      deferredQuery,
-    );
+    // Search within the active set
+    const results = activeSet.search(deferredQuery);
 
     return { results, resultsByCategory: groupByCategory(results) };
-  }, [deferredQuery]);
+  }, [activeSet, deferredQuery]);
 
   const virtualItems = useMemo(
-    () =>
-      deferredQuery
-        ? buildVirtualItems(resultsByCategory)
-        : initialVirtualItems,
-    [deferredQuery, resultsByCategory],
+    () => buildVirtualItems(resultsByCategory),
+    [resultsByCategory],
   );
 
   const virtualizer = useVirtualizer({
@@ -158,17 +149,23 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
         return;
       }
 
-      onSelect(value.name, color);
+      onSelect(value.name, color, value.set);
     },
     [onSelect, color],
   );
 
   const handleClickRandom = useCallback(() => {
+    // No icons to pick from until the sets load
+    if (!activeSet) {
+      return;
+    }
+
+    // Pick from the active set's icons
     const randomIcon =
-      unminifiedIcons[Math.floor(Math.random() * unminifiedIcons.length)];
+      activeSet.icons[Math.floor(Math.random() * activeSet.icons.length)];
 
     handleSelect(randomIcon);
-  }, [handleSelect]);
+  }, [activeSet, handleSelect]);
 
   const handleSelectColor = useCallback(
     (value: ContentColor) => {
@@ -188,6 +185,18 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
       className={propsToClass('content-icon-picker', { className })}
       {...other}
     >
+      {iconSets && iconSets.length > 1 && (
+        <Toolbar className="set-toolbar">
+          {iconSets.map((set) => (
+            <SetSelectButton
+              key={set.id}
+              set={set}
+              active={set.id === activeSet?.id}
+              onClick={setActiveSetId}
+            />
+          ))}
+        </Toolbar>
+      )}
       <Toolbar className="color-toolbar">
         {ContentColorValues.map((color) => (
           <ColorSelectButton
@@ -219,7 +228,7 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
             <div className="category-group-icons">
               {results.map((icon) => (
                 <IconSelectButton
-                  key={icon.name}
+                  key={`${icon.set}:${icon.name}`}
                   icon={icon}
                   color={color}
                   onSelect={handleSelect}
@@ -278,7 +287,7 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
                   >
                     {item.icons.map((icon) => (
                       <IconSelectButton
-                        key={icon.name}
+                        key={`${icon.set}:${icon.name}`}
                         icon={icon}
                         color={color}
                         onSelect={handleSelect}
@@ -295,6 +304,32 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
   );
 };
 
+const SetSelectButton: React.FC<{
+  set: LoadedContentIconSet;
+  active: boolean;
+  onClick: (setId: string) => void;
+}> = ({ set, active, onClick }) => {
+  const handleClick = useCallback(() => onClick(set.id), [onClick, set.id]);
+
+  // The built-in set is labelled with a translated default name
+  if (set.id === BuiltInContentIconSetId) {
+    return (
+      <Button
+        label="iconPicker.defaultSet"
+        variant={active ? 'filled' : 'ghost'}
+        onClick={handleClick}
+      />
+    );
+  }
+
+  // Custom sets are labelled with their display name
+  return (
+    <Button variant={active ? 'filled' : 'ghost'} onClick={handleClick}>
+      {set.name}
+    </Button>
+  );
+};
+
 const IconSelectButton = memo<{
   icon: UnminifiedContentIcon;
   color: ContentColor;
@@ -308,7 +343,15 @@ const IconSelectButton = memo<{
       stringLabel={icon.name}
       onClick={handleSelect}
     >
-      <ContentIcon icon={`content-icon:${icon.name}:${color}`} color={color} />
+      <ContentIcon
+        icon={Icons.stringify({
+          type: UserIconType.ContentIcon,
+          set: icon.set,
+          icon: icon.name,
+          color,
+        })}
+        color={color}
+      />
     </IconButton>
   );
 });

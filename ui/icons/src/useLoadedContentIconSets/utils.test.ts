@@ -1,8 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-  MinifiedContentIcon,
-  UnminifiedContentIcon,
-} from './ContentIconPicker.types';
+import { MinifiedContentIcon, UnminifiedContentIcon } from '../types';
 import {
   buildIconLabelIndex,
   groupByCategory,
@@ -16,12 +13,14 @@ const minifiedIcon: MinifiedContentIcon = ['cat', [0, 2], [1, 3]];
 
 const contentIcon1: UnminifiedContentIcon = {
   name: minifiedIcon[0],
+  set: 'lucide',
   categories: [categories[0], categories[2]],
   labels: [minifiedIcon[0], labels[1], labels[3], categories[0], categories[2]],
 };
 
 const contentIcon2: UnminifiedContentIcon = {
   name: 'dog',
+  set: 'lucide',
   categories: [categories[0], categories[1]],
   labels: ['dog', labels[1], labels[2], categories[0], categories[1]],
 };
@@ -31,12 +30,12 @@ const { labels: allLabels, labelToIcon } = buildIconLabelIndex([
   contentIcon2,
 ]);
 
-describe('<IconPicker /> utils', () => {
+describe('useLoadedContentIconSets utils', () => {
   describe('unminifyIcons', () => {
     it('unminifies icons', () => {
-      expect(unminifyContentIcon(minifiedIcon, categories, labels)).toEqual(
-        contentIcon1,
-      );
+      expect(
+        unminifyContentIcon(minifiedIcon, 'lucide', categories, labels),
+      ).toEqual(contentIcon1);
     });
   });
 

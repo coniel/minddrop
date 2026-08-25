@@ -1,4 +1,4 @@
-import { UserIcon, UserIconEmoji, UserIconType } from '../icons.types';
+import { UserIcon, UserIconEmoji, UserIconType } from '../types';
 
 /**
  * Returns true if the icon is an emoji icon.

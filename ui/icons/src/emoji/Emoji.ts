@@ -1,21 +1,5 @@
-import { EmojiSkinTone, MinifiedEmojiData } from './Emoji.types';
-import emojiJsonData from './emoji.min.json';
-import {
-  buildEmojiLabelIndex,
-  getSkinToneVariant,
-  groupByGroup,
-  searchEmoji,
-  unminifyEmoji,
-} from './utils';
-
-const emojiData = emojiJsonData as unknown as MinifiedEmojiData;
-
-const unminifiedEmoji = emojiData.emoji.map((minifiedEmoji) =>
-  unminifyEmoji(minifiedEmoji, emojiData.groups, emojiData.subgroups),
-);
-
-const { labels: allLabels, labelToEmoji } =
-  buildEmojiLabelIndex(unminifiedEmoji);
+import { EmojiSkinTone } from '../types';
+import { getSkinToneVariant, groupByGroup } from './utils';
 
 export type EmojiSkinToneLabel =
   | 'none'
@@ -35,10 +19,7 @@ const skinTones: { value: EmojiSkinTone; label: EmojiSkinToneLabel }[] = [
 ];
 
 export const Emoji = {
-  all: unminifiedEmoji,
   skinTones,
-  search: (query: string) =>
-    searchEmoji(unminifiedEmoji, allLabels, labelToEmoji, query),
   getSkinToneVariant,
   group: groupByGroup,
 };

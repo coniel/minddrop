@@ -1,4 +1,4 @@
-import { UserIcon, UserIconContentIcon } from '../icons.types';
+import { UserIcon, UserIconContentIcon } from '../types';
 
 /**
  * Returns true if the icon is a content icon.

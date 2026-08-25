@@ -2,6 +2,7 @@ import { ReactElement, useState } from 'react';
 import {
   ContentIconName,
   EmojiSkinTone,
+  Icons,
   UserIconType,
   useIcons,
 } from '@minddrop/ui-icons';
@@ -69,7 +70,7 @@ export interface IconPickerProps {
   /**
    * Callback fired when an icon is selected.
    */
-  onSelectIcon?(icon: ContentIconName, color: ContentColor): void;
+  onSelectIcon?(icon: ContentIconName, color: ContentColor, set: string): void;
 
   /**
    * Callback fired when an icon color is selected.
@@ -135,7 +136,10 @@ export const IconPicker: React.FC<IconPickerProps> = ({
   const [tab, setTab] = useState<UserIconType>(
     defaultPicker || UserIconType.ContentIcon,
   );
-  const [icon, setIcon] = useState<ContentIconName | null>(null);
+  const [icon, setIcon] = useState<{
+    name: ContentIconName;
+    set: string;
+  } | null>(null);
   const [emoji, setEmoji] = useState<string | null>(null);
   const { defaultEmojiSkinTone, onDefaultEmojiSkinToneChange } = useIcons();
   const initialEmojiSkinTone = defaultEmojiSkinToneProp || defaultEmojiSkinTone;
@@ -143,16 +147,21 @@ export const IconPicker: React.FC<IconPickerProps> = ({
   const handleSelectIcon = (
     icon: ContentIconName,
     color: ContentColor,
+    set: string,
     preventClose = false,
   ) => {
-    setIcon(icon);
+    setIcon({ name: icon, set });
 
     if (onSelectIcon) {
-      onSelectIcon(icon, color);
+      onSelectIcon(icon, color, set);
     }
 
     if (onSelect) {
-      onSelect(`content-icon:${icon}:${color}`);
+      // Stringifying qualifies the icon with its set when it is not
+      // from the built-in set
+      onSelect(
+        Icons.stringify({ type: UserIconType.ContentIcon, set, icon, color }),
+      );
     }
 
     if (closeOnSelect && !preventClose) {
@@ -182,7 +191,7 @@ export const IconPicker: React.FC<IconPickerProps> = ({
 
   const handleSelectIconColor = (color: ContentColor) => {
     if (icon) {
-      handleSelectIcon(icon, color, true);
+      handleSelectIcon(icon.name, color, icon.set, true);
     }
 
     if (onSelectIconColor) {
@@ -235,7 +244,8 @@ export const IconPicker: React.FC<IconPickerProps> = ({
               {tab !== UserIconType.Emoji && (
                 <ContentIconPicker
                   defaultColor={
-                    getIconColorFromIconString(currentIcon) || defaultIconColor
+                    (currentIcon && Icons.resolveColor(currentIcon)) ||
+                    defaultIconColor
                   }
                   onSelect={handleSelectIcon}
                   onSelectColor={handleSelectIconColor}
@@ -246,7 +256,7 @@ export const IconPicker: React.FC<IconPickerProps> = ({
                   onSelect={handleSelectEmoji}
                   onSelectSkinTone={handleSelectEmojiSkinTone}
                   defaultSkinTone={
-                    getEmojiSkinToneFromIconString(currentIcon) ||
+                    (currentIcon && Icons.getSkinTone(currentIcon)) ||
                     initialEmojiSkinTone
                   }
                 />
@@ -263,36 +273,4 @@ export const IconPicker: React.FC<IconPickerProps> = ({
 // React's portal event system to parent components
 function stopPropagation(event: React.MouseEvent) {
   event.stopPropagation();
-}
-
-function getIconColorFromIconString(
-  iconString: string | undefined,
-): ContentColor {
-  if (!iconString) {
-    return 'default';
-  }
-
-  const parts = iconString.split(':');
-
-  if (parts[0] === 'content-icon' && parts[2]) {
-    return parts[2] as ContentColor;
-  }
-
-  return 'default';
-}
-
-function getEmojiSkinToneFromIconString(
-  iconString: string | undefined,
-): EmojiSkinTone | undefined {
-  if (!iconString) {
-    return undefined;
-  }
-
-  const parts = iconString.split(':');
-
-  if (parts[0] === 'emoji' && parts[2]) {
-    return parseInt(parts[2]) as EmojiSkinTone;
-  }
-
-  return undefined;
 }

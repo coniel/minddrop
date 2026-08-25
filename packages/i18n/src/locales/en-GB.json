@@ -89,7 +89,8 @@
     "label": "Icons",
     "filter": "Search icons...",
     "random": "Random",
-    "change": "Change icon"
+    "change": "Change icon",
+    "defaultSet": "Default"
   },
   "labels": {
     "untitled": "Untitled",

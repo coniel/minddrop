@@ -1,17 +1,25 @@
 import { describe, expect, it } from 'vitest';
-import { UserIconContentIcon, UserIconEmoji } from '../icons.types';
 import {
   contentIcon,
   contentIconString,
   emojiIcon,
   emojiIconString,
+  setContentIcon,
+  setContentIconString,
 } from '../test-utils';
+import { UserIconContentIcon, UserIconEmoji } from '../types';
 import { parseIcon } from './parseIcon';
 
 describe('parseIcon', () => {
   it('parses content icons', () => {
     expect(parseIcon(contentIconString)).toEqual<UserIconContentIcon>(
       contentIcon,
+    );
+  });
+
+  it('parses content icons with an explicit set', () => {
+    expect(parseIcon(setContentIconString)).toEqual<UserIconContentIcon>(
+      setContentIcon,
     );
   });
 

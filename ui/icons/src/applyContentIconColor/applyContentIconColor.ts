@@ -1,7 +1,7 @@
 import { ContentColor } from '@minddrop/ui-theme';
-import { UserIcon, UserIconType } from '../icons.types';
 import { parseIcon } from '../parseIcon';
 import { stringifyIcon } from '../stringifyIcon';
+import { UserIcon, UserIconType } from '../types';
 
 /**
  * Applies the specified color to the content icon.

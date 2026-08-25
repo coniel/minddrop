@@ -1,8 +1,5 @@
 import { fuzzySearch } from '@minddrop/utils';
-import {
-  MinifiedContentIcon,
-  UnminifiedContentIcon,
-} from './ContentIconPicker.types';
+import { MinifiedContentIcon, UnminifiedContentIcon } from '../types';
 
 /**
  * Converts a minified content icon into a content
@@ -11,11 +8,13 @@ import {
  */
 export function unminifyContentIcon(
   icon: MinifiedContentIcon,
+  set: string,
   categories: string[],
   labels: string[],
 ): UnminifiedContentIcon {
   return {
     name: icon[0],
+    set,
     categories: icon[1].map((index) => categories[index]),
     // Merge categories into labels to make them searchable
     labels: [

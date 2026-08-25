@@ -1,5 +1,5 @@
-import { EmojiSkinTone } from '../emoji';
-import { UserIcon, UserIconType } from '../icons.types';
+import { EmojiSkinTone } from '../types';
+import { UserIcon, UserIconType } from '../types';
 
 /**
  * Returns the skin tone of an icon if the icon is an emoji icon

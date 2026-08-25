@@ -1,15 +1,6 @@
-import { IconName } from 'lucide-react/dynamic';
-import { HTMLProps } from 'react';
 import { ContentColor } from '@minddrop/ui-theme';
-import { ContentIcons } from './content-icons.min';
-import { EmojiSkinTone } from './emoji';
-
-export type UiIconName = IconName;
-export type ContentIconName = keyof typeof ContentIcons;
-export type ContentIconSet = Record<
-  ContentIconName,
-  React.ComponentType<HTMLProps<SVGSVGElement>>
->;
+import { ContentIconName } from './ContentIcon.types';
+import { EmojiSkinTone } from './Emoji.types';
 
 export enum UserIconType {
   Default = 'default',
@@ -27,6 +18,7 @@ export type UserIconEmoji = {
 
 export type UserIconContentIcon = {
   type: UserIconType.ContentIcon;
+  set: string;
   icon: ContentIconName;
   color: ContentColor;
 };

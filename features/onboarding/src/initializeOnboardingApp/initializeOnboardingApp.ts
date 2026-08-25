@@ -1,4 +1,5 @@
 import { I18n, initializeI18n } from '@minddrop/i18n';
+import { Icons } from '@minddrop/ui-icons';
 import { initializeInputModalityTracking } from '@minddrop/ui-primitives';
 import { Workspaces } from '@minddrop/workspaces';
 import { locales } from '../locales';
@@ -36,6 +37,9 @@ async function runInitialization(): Promise<void> {
 
   // Track whether the user is navigating by keyboard or pointer
   initializeInputModalityTracking();
+
+  // Register the content icon sets, which load on first use
+  Icons.initialize();
 
   // Load any workspaces still listed in the workspaces config, so that
   // adding a workspace does not drop them from the config file

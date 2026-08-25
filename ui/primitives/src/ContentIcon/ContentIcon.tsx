@@ -1,8 +1,8 @@
 import {
   ContentIconName,
   UserIcon,
+  useContentIconSet,
   useIcon,
-  useIcons,
 } from '@minddrop/ui-icons';
 import { ContentColor } from '@minddrop/ui-theme';
 import { TextColor } from '../types/Text.types';
@@ -64,6 +64,7 @@ export const ContentIcon: React.FC<ContentIconProps> = ({
   return (
     <IconSetIcon
       className={className}
+      set={icon.set}
       name={icon.icon}
       color={color === 'content-icon' ? icon.color : color}
     />
@@ -78,6 +79,11 @@ interface IconSetIconProps extends React.HTMLProps<SVGSVGElement> {
   color?: ContentColor | TextColor | 'current-color';
 
   /**
+   * Name of the icon set the icon belongs to.
+   */
+  set: string;
+
+  /**
    * The name of the content icon to display.
    */
   name: ContentIconName;
@@ -85,12 +91,28 @@ interface IconSetIconProps extends React.HTMLProps<SVGSVGElement> {
 
 const IconSetIcon: React.FC<IconSetIconProps> = ({
   className,
+  set,
   name,
   color = 'current-color',
   ...other
 }) => {
-  const { ContentIcons } = useIcons();
-  const IconComponent = ContentIcons[name];
+  // Get the icon set, triggering its load on first use
+  const setContents = useContentIconSet(set);
+
+  // Render an empty icon frame while the set loads
+  if (!setContents) {
+    return (
+      <svg
+        data-testid="content-icon"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        className={`icon-set-icon ${propsToClass('content-icon', { className, color })}`}
+      />
+    );
+  }
+
+  const IconComponent = setContents.icons[name];
 
   if (!IconComponent) {
     return null;

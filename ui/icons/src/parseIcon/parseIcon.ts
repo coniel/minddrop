@@ -1,6 +1,7 @@
 import { ContentColor } from '@minddrop/ui-theme';
-import { EmojiSkinTone } from '../emoji';
-import { ContentIconName, UserIcon, UserIconType } from '../icons.types';
+import { BuiltInContentIconSetId } from '../constants';
+import { EmojiSkinTone } from '../types';
+import { ContentIconName, UserIcon, UserIconType } from '../types';
 
 /**
  * Parses a UserIcon from its string representation.
@@ -13,12 +14,26 @@ export function parseIcon(iconString?: string): UserIcon | null {
     return null;
   }
 
-  // Stringified icon config is in the format 'icon-set:icon:color'
-  const [type, icon, color] = iconString.split(':');
+  // Stringified icon config is in the format 'type:icon:color', with
+  // an optional icon set segment: 'type:set:icon:color'
+  const segments = iconString.split(':');
+  const [type, icon, color] = segments;
 
   if (type === UserIconType.ContentIcon) {
+    // Four segments carry the icon set explicitly
+    if (segments.length === 4) {
+      return {
+        type,
+        set: segments[1],
+        icon: segments[2] as ContentIconName,
+        color: segments[3] as ContentColor,
+      };
+    }
+
+    // Unqualified icons belong to the built-in set
     return {
       type,
+      set: BuiltInContentIconSetId,
       icon: icon as ContentIconName,
       color: color as ContentColor,
     };

@@ -23,6 +23,7 @@ import { Queries } from '@minddrop/queries';
 import { Search } from '@minddrop/search';
 import { Spaces } from '@minddrop/spaces';
 import { Sql } from '@minddrop/sql';
+import { Icons } from '@minddrop/ui-icons';
 import { initializeInputModalityTracking } from '@minddrop/ui-primitives';
 import { Workspaces } from '@minddrop/workspaces';
 import { AppUiState } from '../AppUiState';
@@ -60,6 +61,9 @@ export function initializeDesktopApp(): Promise<void> {
 async function runInitialization(): Promise<void> {
   // Track whether the user is navigating by keyboard or pointer
   initializeInputModalityTracking();
+
+  // Register the content icon sets, which load on first use
+  Icons.initialize();
 
   // Register search translations
   initializeSearch();
