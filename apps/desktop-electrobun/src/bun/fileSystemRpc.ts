@@ -3,7 +3,7 @@ import { type FSWatcher, watch as fsWatch } from 'node:fs';
 import fsp from 'node:fs/promises';
 import path from 'path';
 import { BaseDirectory } from '@minddrop/file-system';
-import type { FsFileStats, FsWatchEventKind } from '@minddrop/file-system';
+import type { FsWatchEventKind } from '@minddrop/file-system';
 import { InvalidParameterError } from '@minddrop/utils';
 
 function getBaseDirPath(dir: BaseDirectory): string {
@@ -361,12 +361,13 @@ export const fileSystemRpcHandlers = {
     path: filePath,
   }: {
     path: string;
-  }): Promise<FsFileStats> => {
+  }): Promise<{ created: string; lastModified: string }> => {
     const stat = await fsp.stat(filePath);
 
+    // Serialize the dates explicitly, as they cross the RPC as strings
     return {
-      created: stat.birthtime,
-      lastModified: stat.mtime,
+      created: stat.birthtime.toISOString(),
+      lastModified: stat.mtime.toISOString(),
     };
   },
 

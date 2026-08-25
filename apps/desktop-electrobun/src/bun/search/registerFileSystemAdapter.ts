@@ -52,7 +52,16 @@ export function registerBunFileSystemAdapter(): void {
         newPathBaseDir: options?.newPathBaseDir,
       }),
     convertFileSrc: (filePath) => filePath,
-    stat: (path) => fs.fsStat({ path }),
+    stat: async (path) => {
+      // Revive the stat dates, which the handler serializes to
+      // ISO strings for the RPC boundary
+      const stats = await fs.fsStat({ path });
+
+      return {
+        created: new Date(stats.created),
+        lastModified: new Date(stats.lastModified),
+      };
+    },
     // Stub out methods not needed on the Bun side for search
     copyFile: async () => {},
     removeDir: async () => {},

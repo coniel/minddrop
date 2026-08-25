@@ -132,7 +132,15 @@ export const registerFileSystemAdapter = (rpc: any) =>
       await rpc.request.fsUnwatch({ id });
     },
 
-    stat: (path) => rpc.request.fsStat({ path }),
+    stat: async (path) => {
+      // Revive the stat dates, which cross the RPC as ISO strings
+      const stats = await rpc.request.fsStat({ path });
+
+      return {
+        created: new Date(stats.created),
+        lastModified: new Date(stats.lastModified),
+      };
+    },
   });
 
 const uploadQueue = {
