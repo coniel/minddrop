@@ -1,6 +1,7 @@
 import { registerBackendUtilsAdapter as register } from '@minddrop/utils';
+import type { WebviewRpcClient } from '../types';
 
-export const registerBackEndUtilsAdapter = (rpc: any) =>
+export const registerBackEndUtilsAdapter = (rpc: WebviewRpcClient) =>
   register({
     openFile: (path: string) => rpc.request.openFile({ path }),
 

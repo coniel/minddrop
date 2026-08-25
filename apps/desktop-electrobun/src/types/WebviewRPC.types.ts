@@ -44,6 +44,10 @@ export type WebviewRPC = {
         params: { path: string; baseDir?: BaseDirectory };
         response: string;
       };
+      fsReadTextFiles: {
+        params: { paths: string[]; baseDir?: BaseDirectory };
+        response: [string, string][];
+      };
       fsRemoveDir: {
         params: { path: string; baseDir?: BaseDirectory; recursive?: boolean };
         response: void;
@@ -77,6 +81,13 @@ export type WebviewRPC = {
         params: { path: string; contents: string; baseDir?: BaseDirectory };
         response: void;
       };
+      fsWriteTextFiles: {
+        params: {
+          entries: { path: string; contents: string }[];
+          baseDir?: BaseDirectory;
+        };
+        response: void;
+      };
       fsDownloadFile: {
         params: { url: string; path: string; baseDir?: BaseDirectory };
         response: void;
@@ -92,6 +103,10 @@ export type WebviewRPC = {
       fsUnwatch: {
         params: { id: string };
         response: void;
+      };
+      fsStat: {
+        params: { path: string };
+        response: { created: string; lastModified: string };
       };
       fsOpenFilePicker: {
         params: {
@@ -247,3 +262,12 @@ export type WebviewRPC = {
     };
   }>;
 };
+
+/**
+ * The typed RPC client built from the schema, as passed into the
+ * frontend adapters. Recovers the type of the client created in
+ * mainview/index.ts without importing from it, which would be a cycle.
+ */
+export type WebviewRpcClient = ReturnType<
+  typeof import('electrobun/view').Electroview.defineRPC<WebviewRPC>
+>;

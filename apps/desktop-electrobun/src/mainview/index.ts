@@ -40,11 +40,13 @@ export const rpc = Electroview.defineRPC<WebviewRPC>({
 // Initialize Electrobun with RPC
 const electrobun = new Electrobun.Electroview({ rpc });
 
-registerFileSystemAdapter(electrobun.rpc);
-registerBackEndUtilsAdapter(electrobun.rpc);
-registerSqlAdapterRpc(electrobun.rpc);
-registerDatabasesBackendAdapterRpc(electrobun.rpc);
-registerSearchAdapterRpc(electrobun.rpc);
+// Register the adapters with the typed client directly, as
+// Electroview types its rpc property as optional
+registerFileSystemAdapter(rpc);
+registerBackEndUtilsAdapter(rpc);
+registerSqlAdapterRpc(rpc);
+registerDatabasesBackendAdapterRpc(rpc);
+registerSearchAdapterRpc(rpc);
 
 // Toggle the window fill when the top bar is double-clicked
 Events.addListener(ToggleWindowFillEvent, 'desktop-electrobun', () => {
@@ -53,7 +55,7 @@ Events.addListener(ToggleWindowFillEvent, 'desktop-electrobun', () => {
 
 // Fetch the HTTP server port and store it for use by
 // file system operations (image loading, binary uploads)
-const httpServerPort = await electrobun.rpc.request.getHttpServerPort({});
+const httpServerPort = await rpc.request.getHttpServerPort({});
 
 Paths.httpServerHost = `http://localhost:${httpServerPort}`;
 

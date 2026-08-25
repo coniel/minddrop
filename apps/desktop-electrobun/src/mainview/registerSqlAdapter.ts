@@ -5,14 +5,16 @@ import type {
   SqlOperation,
   SqlParam,
 } from '@minddrop/sql';
+import type { WebviewRpcClient } from '../types';
 
 /**
  * Registers a SQL adapter that forwards SQL operations
  * to the Bun process via RPC.
  */
-export function registerSqlAdapterRpc(rpc: any): void {
+export function registerSqlAdapterRpc(rpc: WebviewRpcClient): void {
   const adapter: SqlAdapter = {
-    open(path: string): SqlConnection {
+    // The Bun process opens the database itself, so the path is unused
+    open(): SqlConnection {
       return {
         exec(sql: string): void {
           rpc.request.sqlExec({ sql });
@@ -27,7 +29,10 @@ export function registerSqlAdapterRpc(rpc: any): void {
         },
 
         all(sql: string, ...params: SqlParam[]): unknown[] {
-          return rpc.request.sqlAll({ sql, params });
+          // Resolves asynchronously despite the synchronous signature.
+          // Renderer-side readers await the result, which is a no-op
+          // under the truly synchronous adapters.
+          return rpc.request.sqlAll({ sql, params }) as unknown as unknown[];
         },
 
         transaction(operations: SqlOperation[]): void {

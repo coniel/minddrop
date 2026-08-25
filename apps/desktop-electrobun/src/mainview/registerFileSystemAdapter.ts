@@ -1,6 +1,7 @@
 import { registerFileSystemAdapter as register } from '@minddrop/file-system';
 import type { FsWatchEvent } from '@minddrop/file-system';
 import { Paths } from '@minddrop/utils';
+import type { WebviewRpcClient } from '../types';
 
 const watchCallbacks = new Map<string, (event: FsWatchEvent) => void>();
 
@@ -16,7 +17,7 @@ export function handleWatchEvent(event: {
   }
 }
 
-export const registerFileSystemAdapter = (rpc: any) =>
+export const registerFileSystemAdapter = (rpc: WebviewRpcClient) =>
   register({
     getBaseDirPath: (dir) => rpc.request.fsGetBaseDirPath({ dir }),
 
@@ -84,7 +85,7 @@ export const registerFileSystemAdapter = (rpc: any) =>
         newPathBaseDir: options.newPathBaseDir,
       }),
 
-    writeBinaryFile: async (path, file, options = {}) => {
+    writeBinaryFile: async (path, file) => {
       return uploadQueue.add(async () => {
         const response = await fetch(
           `${Paths.httpServerHost}/upload?path=${encodeURIComponent(path)}`,
