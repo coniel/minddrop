@@ -1,5 +1,6 @@
 import { Events } from '@minddrop/events';
 import { SelectionStore } from '../SelectionStore';
+import { SelectionItemsRemovedEvent } from '../events';
 import { SelectionItem } from '../types';
 import { dedupeSelectionItemsArray } from '../utils';
 
@@ -7,7 +8,7 @@ import { dedupeSelectionItemsArray } from '../utils';
  * Removes the provided items from the current selection.
  *
  * @param items - The selection items to remove from the current selection.
- * @dispatches 'selection:items:remove'
+ * @dispatches 'selection:items:removed'
  */
 export function removeFromSelection(items: SelectionItem[]): void {
   // Remove potential duplicates from the items array
@@ -16,6 +17,6 @@ export function removeFromSelection(items: SelectionItem[]): void {
   // Remove the items from the current selection
   SelectionStore.getState().removeSelectedItems(itemsToRemove);
 
-  // Dispatch a 'selection:items:remove' event
-  Events.dispatch('selection:items:remove', itemsToRemove);
+  // Dispatch selection items removed event
+  Events.dispatch(SelectionItemsRemovedEvent, itemsToRemove);
 }

@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { SelectionStore } from '../SelectionStore';
+import { SelectionItemsRemovedEvent } from '../events';
 import {
   cleanup,
   selectionItem_A_1,
@@ -34,9 +35,9 @@ describe('removeFromSelection', () => {
     ]);
   });
 
-  it('dispatches a `selection:items:remove` event', () =>
+  it('dispatches a `selection:items:removed` event', () =>
     new Promise<void>((done) => {
-      Events.addListener('selection:items:remove', 'test', (payload) => {
+      Events.addListener(SelectionItemsRemovedEvent, 'test', (payload) => {
         // Payload data should be the removed items without duplicates
         expect(payload.data).toEqual([selectionItem_A_1]);
         done();
