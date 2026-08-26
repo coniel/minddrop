@@ -2,10 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { InvalidParameterError } from '@minddrop/utils';
 import { TextElement } from '../design-element-configs';
-import {
-  DesignPropertyRenamedEvent,
-  DesignPropertyRenamedEventData,
-} from '../events';
+import { DesignPropertyRenamedEvent } from '../events';
 import { getDesign } from '../getDesign';
 import { getLayoutPropertyBindings } from '../getLayoutPropertyBindings';
 import { DesignFixtures, cleanup, setup } from '../test-utils';
@@ -65,15 +62,11 @@ describe('renameDesignProperty', () => {
 
   it('dispatches a property renamed event', async () =>
     new Promise<void>((done) => {
-      Events.addListener<DesignPropertyRenamedEventData>(
-        DesignPropertyRenamedEvent,
-        'test',
-        (payload) => {
-          expect(payload.data.oldName).toBe('Subtitle');
-          expect(payload.data.newName).toBe('Tagline');
-          done();
-        },
-      );
+      Events.addListener(DesignPropertyRenamedEvent, 'test', (payload) => {
+        expect(payload.data.oldName).toBe('Subtitle');
+        expect(payload.data.newName).toBe('Tagline');
+        done();
+      });
 
       renameDesignProperty(design_books.id, 'Subtitle', 'Tagline');
     }));

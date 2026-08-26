@@ -1,7 +1,7 @@
 import { Events } from '@minddrop/events';
 import { DesignsStore } from '../DesignsStore';
 import { DesignNotFoundError } from '../errors';
-import { LayoutUpdatedEvent, LayoutUpdatedEventData } from '../events';
+import { LayoutUpdatedEvent } from '../events';
 import { getLayout } from '../getLayout';
 import { Layout } from '../types';
 import { updateDesign } from '../updateDesign';
@@ -54,7 +54,7 @@ export async function updateLayout(
   await updateDesign(design.id, { layouts: newLayouts });
 
   // Dispatch a layout updated event
-  Events.dispatch<LayoutUpdatedEventData>(LayoutUpdatedEvent, {
+  Events.dispatch(LayoutUpdatedEvent, {
     original,
     updated: updatedLayout,
   });

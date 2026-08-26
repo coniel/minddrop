@@ -1,17 +1,10 @@
 import { Events } from '@minddrop/events';
-import {
-  FileSystemChangedEvent,
-  FileSystemChangedEventData,
-  Fs,
-} from '@minddrop/file-system';
-import {
-  ItemAddressesChangedEvent,
-  ItemAddressesChangedEventData,
-} from '@minddrop/item-references';
+import { FileSystemChangedEvent, Fs } from '@minddrop/file-system';
+import { ItemAddressesChangedEvent } from '@minddrop/item-references';
 import { Workspaces } from '@minddrop/workspaces';
 import { DataViewsStore } from '../DataViewsStore';
 import { onFileSystemChanged, onItemAddressesChanged } from '../event-handlers';
-import { DataViewsLoadedEvent, DataViewsLoadedEventData } from '../events';
+import { DataViewsLoadedEvent } from '../events';
 import { loadDataView } from '../loadDataView';
 import { resolveViewsDirPath } from '../utils/resolveViewsDirPath';
 
@@ -52,19 +45,15 @@ export async function initializeDataViews(): Promise<void> {
   DataViewsStore.load(views);
 
   // Apply changes made to data view files outside of the app
-  Events.on<FileSystemChangedEventData>(
-    FileSystemChangedEvent,
-    'data-views',
-    ({ data }) => onFileSystemChanged(data),
+  Events.on(FileSystemChangedEvent, 'data-views', ({ data }) =>
+    onFileSystemChanged(data),
   );
 
   // Rewrite view files when referenced item addresses change
-  Events.on<ItemAddressesChangedEventData>(
-    ItemAddressesChangedEvent,
-    'data-views',
-    ({ data }) => onItemAddressesChanged(data),
+  Events.on(ItemAddressesChangedEvent, 'data-views', ({ data }) =>
+    onItemAddressesChanged(data),
   );
 
   // Dispatch a data views loaded event
-  Events.dispatch<DataViewsLoadedEventData>(DataViewsLoadedEvent, views);
+  Events.dispatch(DataViewsLoadedEvent, views);
 }

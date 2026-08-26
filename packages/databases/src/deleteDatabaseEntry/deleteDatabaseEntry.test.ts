@@ -3,10 +3,7 @@ import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabaseEntryNotFoundError } from '../errors';
-import {
-  DatabaseEntryDeletedEvent,
-  DatabaseEntryDeletedEventData,
-} from '../events';
+import { DatabaseEntryDeletedEvent } from '../events';
 import {
   MockFs,
   cleanup,
@@ -84,15 +81,11 @@ describe('deleteDatabaseEntry', () => {
 
   it('dispatches an entry deleted event', async () =>
     new Promise<void>((done) => {
-      Events.addListener<DatabaseEntryDeletedEventData>(
-        DatabaseEntryDeletedEvent,
-        'test',
-        ({ data }) => {
-          // Payload should be the deleted entry
-          expect(data).toEqual(objectEntry1);
-          done();
-        },
-      );
+      Events.addListener(DatabaseEntryDeletedEvent, 'test', ({ data }) => {
+        // Payload should be the deleted entry
+        expect(data).toEqual(objectEntry1);
+        done();
+      });
 
       deleteDatabaseEntry(objectEntry1.id);
     }));

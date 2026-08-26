@@ -4,7 +4,7 @@ import {
   deepMerge as deepMergeFn,
 } from '@minddrop/utils';
 import { DataViewsStore } from '../DataViewsStore';
-import { DataViewUpdatedEvent, DataViewUpdatedEventData } from '../events';
+import { DataViewUpdatedEvent } from '../events';
 import { extractDataViewReferences } from '../extractDataViewReferences';
 import { getDataView } from '../getDataView';
 import {
@@ -72,7 +72,7 @@ export async function updateDataView(
   const finalView = getDataView(updatedView.id);
 
   // Dispatch a data view updated event
-  Events.dispatch<DataViewUpdatedEventData>(DataViewUpdatedEvent, {
+  Events.dispatch(DataViewUpdatedEvent, {
     original: view,
     updated: finalView,
   });

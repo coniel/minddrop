@@ -4,7 +4,7 @@ import { i18n } from '@minddrop/i18n';
 import { MetadataPropertySchemas, PropertySchema } from '@minddrop/properties';
 import { entityId } from '@minddrop/utils';
 import { DesignsStore } from '../DesignsStore';
-import { DesignCreatedEvent, DesignCreatedEventData } from '../events';
+import { DesignCreatedEvent } from '../events';
 import { Design, DesignType } from '../types';
 import { resolveDesignsDirPath } from '../utils';
 import { writeDesign } from '../writeDesign';
@@ -68,7 +68,7 @@ export async function createDesign(
   await writeDesign(design.id);
 
   // Dispatch a design created event
-  Events.dispatch<DesignCreatedEventData>(DesignCreatedEvent, design);
+  Events.dispatch(DesignCreatedEvent, design);
 
   return design;
 }

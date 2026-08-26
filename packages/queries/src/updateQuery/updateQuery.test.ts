@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { QueriesStore } from '../QueriesStore';
-import { QueryUpdatedEvent, QueryUpdatedEventData } from '../events';
+import { QueryUpdatedEvent } from '../events';
 import { MockFs, cleanup, mockDate, query_1, setup } from '../test-utils';
 import { Query } from '../types';
 import { resolveQueryFilePath } from '../utils';
@@ -43,15 +43,11 @@ describe('updateQuery', () => {
 
   it('dispatches the query updated event', async () =>
     new Promise<void>((done) => {
-      Events.addListener<QueryUpdatedEventData>(
-        QueryUpdatedEvent,
-        'test-query-updated',
-        (payload) => {
-          expect(payload.data.original).toEqual(query_1);
-          expect(payload.data.updated).toEqual(updatedQuery);
-          done();
-        },
-      );
+      Events.addListener(QueryUpdatedEvent, 'test-query-updated', (payload) => {
+        expect(payload.data.original).toEqual(query_1);
+        expect(payload.data.updated).toEqual(updatedQuery);
+        done();
+      });
 
       updateQuery(query_1.id, update);
     }));

@@ -1,7 +1,6 @@
 import { Events } from '@minddrop/events';
 import { Sql } from '@minddrop/sql';
 import { DatabaseEntriesSqlSyncedEvent } from '../events';
-import type { DatabaseEntriesSqlSyncedEventData } from '../events';
 
 /**
  * Deletes one or more entries from the SQL database.
@@ -26,13 +25,10 @@ export function sqlDeleteEntries(
 
   // Dispatch SQL synced event unless silenced
   if (!options?.silent) {
-    Events.dispatch<DatabaseEntriesSqlSyncedEventData>(
-      DatabaseEntriesSqlSyncedEvent,
-      {
-        action: 'delete',
-        entryIds,
-        databaseId,
-      },
-    );
+    Events.dispatch(DatabaseEntriesSqlSyncedEvent, {
+      action: 'delete',
+      entryIds,
+      databaseId,
+    });
   }
 }

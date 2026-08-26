@@ -1,7 +1,7 @@
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { DesignsStore } from '../DesignsStore';
-import { DesignDeletedEvent, DesignDeletedEventData } from '../events';
+import { DesignDeletedEvent } from '../events';
 import { getDesign } from '../getDesign';
 import { resolveDesignBundleDirPath } from '../utils';
 
@@ -28,5 +28,5 @@ export async function deleteDesign(id: string): Promise<void> {
   DesignsStore.remove(id);
 
   // Dispatch a design deleted event
-  Events.dispatch<DesignDeletedEventData>(DesignDeletedEvent, design);
+  Events.dispatch(DesignDeletedEvent, design);
 }

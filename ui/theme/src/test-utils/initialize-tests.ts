@@ -4,12 +4,7 @@ import { MockFileSystem } from '@minddrop/file-system';
 import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
 import { FileSystemFixtures } from '@minddrop/file-system/test-utils';
 import { initializeI18n } from '@minddrop/i18n';
-import {
-  StoreHydrateEvent,
-  StoreHydrateEventData,
-  StoreHydrateRequestEvent,
-  StoreHydrateRequestEventData,
-} from '@minddrop/stores';
+import { StoreHydrateEvent, StoreHydrateRequestEvent } from '@minddrop/stores';
 import { ThemeStore } from '../ThemeStore';
 import {
   ImageDimmingChangedEvent,
@@ -41,11 +36,11 @@ export function setup() {
   // Stand in for the platform layer, which answers a store's hydrate
   // request with its persisted data. Without a responder, hydrate()
   // never resolves and initializeTheme() never completes.
-  Events.addListener<StoreHydrateRequestEventData>(
+  Events.addListener(
     StoreHydrateRequestEvent,
     HYDRATE_LISTENER_ID,
     ({ data }) => {
-      Events.dispatch<StoreHydrateEventData>(StoreHydrateEvent, {
+      Events.dispatch(StoreHydrateEvent, {
         namespace: data.namespace,
         data: {},
       });

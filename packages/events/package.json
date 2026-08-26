@@ -4,6 +4,10 @@
   "main": "src/index",
   "type": "module",
   "types": "src/index",
+  "exports": {
+    ".": "./src/index.ts",
+    "./EventDataMap": "./src/types/EventDataMap.types.ts"
+  },
   "scripts": {
     "lint": "eslint .  --max-warnings 0",
     "typecheck": "tsc --noEmit",

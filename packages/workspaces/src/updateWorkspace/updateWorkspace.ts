@@ -1,7 +1,7 @@
 import { Events } from '@minddrop/events';
 import { InvalidParameterError } from '@minddrop/utils';
 import { WorkspacesStore } from '../WorkspacesStore';
-import { WorkspaceUpdatedEvent, WorkspaceUpdatedEventData } from '../events';
+import { WorkspaceUpdatedEvent } from '../events';
 import { getWorkspace } from '../getWorkspace';
 import { Workspace } from '../types';
 import { writeWorkspaceConfig } from '../writeWorkspaceConfig';
@@ -41,7 +41,7 @@ export async function updateWorkspace(
   const updatedWorkspace = getWorkspace(id);
 
   // Dispatch a workspace updated event
-  Events.dispatch<WorkspaceUpdatedEventData>(WorkspaceUpdatedEvent, {
+  Events.dispatch(WorkspaceUpdatedEvent, {
     original: workspace,
     updated: updatedWorkspace,
   });

@@ -1,11 +1,10 @@
 import { Events } from '@minddrop/events';
 import { I18n } from '@minddrop/i18n';
-import { OpenViewEvent, OpenViewEventData } from '@minddrop/views';
+import { OpenViewEvent } from '@minddrop/views';
 import { DesignStudioViewId, DesignStudioViewName } from '../constants';
 import {
   DesignsFeatureEventListenerId,
   OpenDesignStudioEvent,
-  OpenDesignStudioEventData,
 } from '../events';
 import { locales } from '../locales';
 
@@ -20,18 +19,15 @@ export function initializeDesignsFeature(): VoidFunction {
   I18n.registerTranslations(locales);
 
   // Open the design studio view on open design studio events
-  Events.addListener<OpenDesignStudioEventData>(
+  Events.addListener(
     OpenDesignStudioEvent,
     DesignsFeatureEventListenerId,
     ({ data }) => {
-      Events.dispatch<OpenViewEventData<OpenDesignStudioEventData>>(
-        OpenViewEvent,
-        {
-          view: DesignStudioViewName,
-          id: DesignStudioViewId,
-          props: data,
-        },
-      );
+      Events.dispatch(OpenViewEvent, {
+        view: DesignStudioViewName,
+        id: DesignStudioViewId,
+        props: data,
+      });
     },
   );
 

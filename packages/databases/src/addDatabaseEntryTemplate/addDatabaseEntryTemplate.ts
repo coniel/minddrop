@@ -1,10 +1,7 @@
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { entityId } from '@minddrop/utils';
-import {
-  DatabaseEntryTemplateAddedEvent,
-  DatabaseEntryTemplateAddedEventData,
-} from '../events';
+import { DatabaseEntryTemplateAddedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
 import {
   Database,
@@ -78,10 +75,10 @@ export async function addDatabaseEntryTemplate(
   const updated = await updateDatabase(databaseId, { entryTemplates });
 
   // Dispatch the entry template added event
-  Events.dispatch<DatabaseEntryTemplateAddedEventData>(
-    DatabaseEntryTemplateAddedEvent,
-    { database: updated, template: newTemplate },
-  );
+  Events.dispatch(DatabaseEntryTemplateAddedEvent, {
+    database: updated,
+    template: newTemplate,
+  });
 
   return updated;
 }

@@ -1,28 +1,16 @@
-import {
-  CollectionUpdatedEvent,
-  CollectionUpdatedEventData,
-} from '@minddrop/collections';
+import { CollectionUpdatedEvent } from '@minddrop/collections';
 import {
   DataViewCreatedEvent,
-  DataViewCreatedEventData,
   DataViewDeletedEvent,
-  DataViewDeletedEventData,
   DataViewUpdatedEvent,
-  DataViewUpdatedEventData,
 } from '@minddrop/data-views';
 import {
   DesignPropertyRenamedEvent,
   DesignPropertyRenamedEventData,
 } from '@minddrop/designs-legacy';
 import { Events } from '@minddrop/events';
-import {
-  FileSystemChangedEvent,
-  FileSystemChangedEventData,
-} from '@minddrop/file-system';
-import {
-  ItemAddressesChangedEvent,
-  ItemAddressesChangedEventData,
-} from '@minddrop/item-references';
+import { FileSystemChangedEvent } from '@minddrop/file-system';
+import { ItemAddressesChangedEvent } from '@minddrop/item-references';
 import {
   onAddProperty,
   onClearEntries,
@@ -48,31 +36,18 @@ import {
 } from './event-handlers';
 import {
   DatabaseCreatedEvent,
-  DatabaseCreatedEventData,
   DatabaseDeletedEvent,
-  DatabaseDeletedEventData,
   DatabaseEntriesClearedEvent,
-  DatabaseEntriesClearedEventData,
   DatabaseEntryCreatedEvent,
-  DatabaseEntryCreatedEventData,
   DatabaseEntryDeletedEvent,
-  DatabaseEntryDeletedEventData,
   DatabaseEntryMetadataUpdatedEvent,
-  DatabaseEntryMetadataUpdatedEventData,
   DatabaseEntryRenamedEvent,
-  DatabaseEntryRenamedEventData,
   DatabaseEntryUpdatedEvent,
-  DatabaseEntryUpdatedEventData,
   DatabasePropertyAddedEvent,
-  DatabasePropertyAddedEventData,
   DatabasePropertyRemovedEvent,
-  DatabasePropertyRemovedEventData,
   DatabasePropertyRenamedEvent,
-  DatabasePropertyRenamedEventData,
   DatabaseRenamedEvent,
-  DatabaseRenamedEventData,
   DatabaseUpdatedEvent,
-  DatabaseUpdatedEventData,
 } from './events';
 
 /**
@@ -80,165 +55,89 @@ import {
  * lifecycle events.
  */
 export function initializeDatabaseEventHandlers() {
-  Events.on<DatabaseCreatedEventData>(
-    DatabaseCreatedEvent,
-    'databases',
-    ({ data }) => {
-      onCreateDatabase(data);
-    },
+  Events.on(DatabaseCreatedEvent, 'databases', ({ data }) => {
+    onCreateDatabase(data);
+  });
+
+  Events.on(DatabaseUpdatedEvent, 'databases', ({ data }) => {
+    onUpdateDatabase(data);
+  });
+
+  Events.on(DatabaseDeletedEvent, 'databases', ({ data }) => {
+    onDeleteDatabase(data);
+  });
+
+  Events.on(DatabaseRenamedEvent, 'databases', ({ data }) => {
+    onRenameDatabase(data);
+  });
+
+  Events.on(DatabasePropertyAddedEvent, 'databases', ({ data }) => {
+    onAddProperty(data);
+  });
+
+  Events.on(DatabasePropertyRemovedEvent, 'databases', ({ data }) => {
+    onRemoveProperty(data);
+  });
+
+  Events.on(DatabasePropertyRenamedEvent, 'databases', ({ data }) => {
+    onRenameProperty(data);
+  });
+
+  Events.on(DesignPropertyRenamedEvent, 'databases', ({ data }) => {
+    // Cast because the legacy design event is intentionally not in
+    // the event data registry
+    onRenameDesignProperty(data as DesignPropertyRenamedEventData);
+  });
+
+  Events.on(DatabaseEntryCreatedEvent, 'databases', ({ data }) => {
+    onCreateEntry(data);
+  });
+
+  Events.on(DatabaseEntryUpdatedEvent, 'databases', ({ data }) => {
+    onUpdateEntry(data);
+  });
+
+  Events.on(DatabaseEntryDeletedEvent, 'databases', ({ data }) => {
+    onDeleteEntry(data);
+  });
+
+  Events.on(DatabaseEntriesClearedEvent, 'databases', ({ data }) => {
+    onClearEntries(data);
+  });
+
+  Events.on(DatabaseEntryRenamedEvent, 'databases', ({ data }) => {
+    onRenameEntry(data);
+  });
+
+  Events.on(DatabaseEntryMetadataUpdatedEvent, 'databases', ({ data }) => {
+    onUpdateEntryMetadata(data);
+  });
+
+  Events.on(CollectionUpdatedEvent, 'databases', ({ data }) =>
+    onUpdateCollection(data),
   );
 
-  Events.on<DatabaseUpdatedEventData>(
-    DatabaseUpdatedEvent,
-    'databases',
-    ({ data }) => {
-      onUpdateDatabase(data);
-    },
+  Events.on(ItemAddressesChangedEvent, 'databases', ({ data }) =>
+    onItemAddressesChanged(data),
   );
 
-  Events.on<DatabaseDeletedEventData>(
-    DatabaseDeletedEvent,
-    'databases',
-    ({ data }) => {
-      onDeleteDatabase(data);
-    },
+  Events.on(DataViewUpdatedEvent, 'databases', ({ data }) => {
+    onUpdateVirtualView(data);
+  });
+
+  Events.on(FileSystemChangedEvent, 'databases', ({ data }) =>
+    onFileSystemChanged(data),
   );
 
-  Events.on<DatabaseRenamedEventData>(
-    DatabaseRenamedEvent,
-    'databases',
-    ({ data }) => {
-      onRenameDatabase(data);
-    },
-  );
+  Events.on(DataViewCreatedEvent, 'databases:database-views', ({ data }) => {
+    onDatabaseViewCreated(data);
+  });
 
-  Events.on<DatabasePropertyAddedEventData>(
-    DatabasePropertyAddedEvent,
-    'databases',
-    ({ data }) => {
-      onAddProperty(data);
-    },
-  );
+  Events.on(DataViewUpdatedEvent, 'databases:database-views', ({ data }) => {
+    onDatabaseViewUpdated(data);
+  });
 
-  Events.on<DatabasePropertyRemovedEventData>(
-    DatabasePropertyRemovedEvent,
-    'databases',
-    ({ data }) => {
-      onRemoveProperty(data);
-    },
-  );
-
-  Events.on<DatabasePropertyRenamedEventData>(
-    DatabasePropertyRenamedEvent,
-    'databases',
-    ({ data }) => {
-      onRenameProperty(data);
-    },
-  );
-
-  Events.on<DesignPropertyRenamedEventData>(
-    DesignPropertyRenamedEvent,
-    'databases',
-    ({ data }) => {
-      onRenameDesignProperty(data);
-    },
-  );
-
-  Events.on<DatabaseEntryCreatedEventData>(
-    DatabaseEntryCreatedEvent,
-    'databases',
-    ({ data }) => {
-      onCreateEntry(data);
-    },
-  );
-
-  Events.on<DatabaseEntryUpdatedEventData>(
-    DatabaseEntryUpdatedEvent,
-    'databases',
-    ({ data }) => {
-      onUpdateEntry(data);
-    },
-  );
-
-  Events.on<DatabaseEntryDeletedEventData>(
-    DatabaseEntryDeletedEvent,
-    'databases',
-    ({ data }) => {
-      onDeleteEntry(data);
-    },
-  );
-
-  Events.on<DatabaseEntriesClearedEventData>(
-    DatabaseEntriesClearedEvent,
-    'databases',
-    ({ data }) => {
-      onClearEntries(data);
-    },
-  );
-
-  Events.on<DatabaseEntryRenamedEventData>(
-    DatabaseEntryRenamedEvent,
-    'databases',
-    ({ data }) => {
-      onRenameEntry(data);
-    },
-  );
-
-  Events.on<DatabaseEntryMetadataUpdatedEventData>(
-    DatabaseEntryMetadataUpdatedEvent,
-    'databases',
-    ({ data }) => {
-      onUpdateEntryMetadata(data);
-    },
-  );
-
-  Events.on<CollectionUpdatedEventData>(
-    CollectionUpdatedEvent,
-    'databases',
-    ({ data }) => onUpdateCollection(data),
-  );
-
-  Events.on<ItemAddressesChangedEventData>(
-    ItemAddressesChangedEvent,
-    'databases',
-    ({ data }) => onItemAddressesChanged(data),
-  );
-
-  Events.on<DataViewUpdatedEventData>(
-    DataViewUpdatedEvent,
-    'databases',
-    ({ data }) => {
-      onUpdateVirtualView(data);
-    },
-  );
-
-  Events.on<FileSystemChangedEventData>(
-    FileSystemChangedEvent,
-    'databases',
-    ({ data }) => onFileSystemChanged(data),
-  );
-
-  Events.on<DataViewCreatedEventData>(
-    DataViewCreatedEvent,
-    'databases:database-views',
-    ({ data }) => {
-      onDatabaseViewCreated(data);
-    },
-  );
-
-  Events.on<DataViewUpdatedEventData>(
-    DataViewUpdatedEvent,
-    'databases:database-views',
-    ({ data }) => {
-      onDatabaseViewUpdated(data);
-    },
-  );
-
-  Events.on<DataViewDeletedEventData>(
-    DataViewDeletedEvent,
-    'databases:database-views',
-    ({ data }) => {
-      onDatabaseViewDeleted(data);
-    },
-  );
+  Events.on(DataViewDeletedEvent, 'databases:database-views', ({ data }) => {
+    onDatabaseViewDeleted(data);
+  });
 }

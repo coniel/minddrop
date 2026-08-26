@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { PathConflictError } from '@minddrop/file-system';
 import { DatabasesStore } from '../DatabasesStore';
-import { DatabaseRenamedEvent, DatabaseRenamedEventData } from '../events';
+import { DatabaseRenamedEvent } from '../events';
 import {
   MockFs,
   cleanup,
@@ -53,20 +53,16 @@ describe('renameDatabase', () => {
 
   it('dispatches a database renamed event', async () =>
     new Promise<void>((done) => {
-      Events.addListener<DatabaseRenamedEventData>(
-        DatabaseRenamedEvent,
-        'test',
-        ({ data }) => {
-          // Payload should contain the original and renamed database
-          expect(data.original).toEqual(objectDatabase);
-          expect(data.updated).toMatchObject({
-            id: objectDatabase.id,
-            name: newName,
-            path: newPath,
-          });
-          done();
-        },
-      );
+      Events.addListener(DatabaseRenamedEvent, 'test', ({ data }) => {
+        // Payload should contain the original and renamed database
+        expect(data.original).toEqual(objectDatabase);
+        expect(data.updated).toMatchObject({
+          id: objectDatabase.id,
+          name: newName,
+          path: newPath,
+        });
+        done();
+      });
 
       renameDatabase(objectDatabase.id, newName);
     }));

@@ -1,3 +1,4 @@
+import { EventData, EventName } from './EventDataMap.types';
 import { EventListenerCallback } from './EventListenerCallback.types';
 import { EventListenerMap } from './EventListenerMap.types';
 
@@ -19,16 +20,16 @@ export interface EventsApi {
    * @param callback - The  callback function.
    * @param once - When `true`, the listener is removed when triggered.
    */
-  on<TData = unknown>(
-    eventName: string,
+  on<TEvent extends EventName>(
+    eventName: TEvent,
     listenerId: string,
-    callback: EventListenerCallback<TData>,
+    callback: EventListenerCallback<EventData<TEvent>>,
     once?: boolean,
   ): void;
-  addListener<TData = unknown>(
-    eventName: string,
+  addListener<TEvent extends EventName>(
+    eventName: TEvent,
     listenerId: string,
-    callback: EventListenerCallback<TData>,
+    callback: EventListenerCallback<EventData<TEvent>>,
     once?: boolean,
   ): void;
 
@@ -44,10 +45,10 @@ export interface EventsApi {
    * @param callback - The  callback function.
    * @param once - When `true`, the listener is removed when triggered.
    */
-  prependListener(
-    eventName: string,
+  prependListener<TEvent extends EventName>(
+    eventName: TEvent,
     listenerId: string,
-    callback: EventListenerCallback,
+    callback: EventListenerCallback<EventData<TEvent>>,
     once?: boolean,
   ): void;
 
@@ -64,11 +65,11 @@ export interface EventsApi {
    * @param callback - The  callback function.
    * @param once - When `true`, the listener is removed when triggered.
    */
-  addListenerBefore(
-    eventName: string,
+  addListenerBefore<TEvent extends EventName>(
+    eventName: TEvent,
     beforeListenerId: string,
     listenerId: string,
-    callback: EventListenerCallback,
+    callback: EventListenerCallback<EventData<TEvent>>,
     once?: boolean,
   ): void;
 
@@ -85,11 +86,11 @@ export interface EventsApi {
    * @param callback - The  callback function.
    * @param once - When `true`, the listener is removed when triggered.
    */
-  addListenerAfter(
-    eventName: string,
+  addListenerAfter<TEvent extends EventName>(
+    eventName: TEvent,
     afterListenerId: string,
     listenerId: string,
-    callback: EventListenerCallback,
+    callback: EventListenerCallback<EventData<TEvent>>,
     once?: boolean,
   ): void;
 
@@ -100,7 +101,7 @@ export interface EventsApi {
    * @param eventName - The name of the event on which to check.
    * @param listenerId - The ID of the listener to check for.
    */
-  hasListener(eventName: string, listenerId: string): boolean;
+  hasListener(eventName: EventName, listenerId: string): boolean;
 
   /**
    * Removes the listener with ID `listenerId` from the listeners array for the
@@ -109,7 +110,7 @@ export interface EventsApi {
    * @param eventName - The name of the event from which to remove the listener.
    * @param listenerId - The ID of the listener to remove.
    */
-  removeListener(eventName: string, listenerId: string): void;
+  removeListener(eventName: EventName, listenerId: string): void;
 
   /**
    * Synchronously calls each of the listeners registered for the event named `eventName`,
@@ -121,7 +122,10 @@ export interface EventsApi {
    * @param eventName - The name of the event.
    * @param data - The data associated with the event.
    */
-  dispatch<TData = unknown>(eventName: string, data?: TData): Promise<void>;
+  dispatch<TEvent extends EventName>(
+    eventName: TEvent,
+    data?: EventData<TEvent>,
+  ): Promise<void>;
 
   /**
    * Clears all event listeners.

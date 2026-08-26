@@ -3,10 +3,7 @@ import { Collections } from '@minddrop/collections';
 import { DataViews } from '@minddrop/data-views';
 import { DesignFixtures } from '@minddrop/designs-legacy/test-utils';
 import { Events } from '@minddrop/events';
-import {
-  ItemAddressesChangedEvent,
-  ItemAddressesChangedEventData,
-} from '@minddrop/item-references';
+import { ItemAddressesChangedEvent } from '@minddrop/item-references';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import {
   DatabaseEntriesSqlSyncedEvent,
@@ -58,10 +55,8 @@ describe('onRenameDatabase', () => {
 
     // Register the reference rewrite listener normally wired by
     // initializeDatabaseEventHandlers
-    Events.on<ItemAddressesChangedEventData>(
-      ItemAddressesChangedEvent,
-      'test',
-      ({ data }) => onItemAddressesChanged(data),
+    Events.on(ItemAddressesChangedEvent, 'test', ({ data }) =>
+      onItemAddressesChanged(data),
     );
 
     // Create the renamed database directory so reference
@@ -172,15 +167,11 @@ describe('onRenameDatabase', () => {
     const deleteEvents: DatabaseSqlSyncedEventData[] = [];
 
     // Capture database delete sync events
-    Events.addListener<DatabaseSqlSyncedEventData>(
-      DatabaseSqlSyncedEvent,
-      'test',
-      ({ data }) => {
-        if (data.action === 'delete') {
-          deleteEvents.push(data);
-        }
-      },
-    );
+    Events.addListener(DatabaseSqlSyncedEvent, 'test', ({ data }) => {
+      if (data.action === 'delete') {
+        deleteEvents.push(data);
+      }
+    });
 
     await onRenameDatabase({
       original: collectionDatabase,
@@ -195,15 +186,11 @@ describe('onRenameDatabase', () => {
     const deleteEvents: DatabaseEntriesSqlSyncedEventData[] = [];
 
     // Capture entry delete sync events
-    Events.addListener<DatabaseEntriesSqlSyncedEventData>(
-      DatabaseEntriesSqlSyncedEvent,
-      'test',
-      ({ data }) => {
-        if (data.action === 'delete') {
-          deleteEvents.push(data);
-        }
-      },
-    );
+    Events.addListener(DatabaseEntriesSqlSyncedEvent, 'test', ({ data }) => {
+      if (data.action === 'delete') {
+        deleteEvents.push(data);
+      }
+    });
 
     await onRenameDatabase({
       original: collectionDatabase,

@@ -1,3 +1,7 @@
+// Load the event data registry so the augmentation below has a
+// module to merge into (nothing else here imports the events package)
+import type {} from '@minddrop/events/EventDataMap';
+
 export const ItemAddressesChangedEvent = 'item-references:addresses:changed';
 
 /**
@@ -21,3 +25,9 @@ export interface ItemAddressChange {
 }
 
 export type ItemAddressesChangedEventData = ItemAddressChange[];
+
+declare module '@minddrop/events/EventDataMap' {
+  interface EventDataMap {
+    'item-references:addresses:changed': ItemAddressesChangedEventData;
+  }
+}

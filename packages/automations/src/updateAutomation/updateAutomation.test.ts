@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { AutomationsStore } from '../AutomationsStore';
-import { AutomationUpdatedEvent, AutomationUpdatedEventData } from '../events';
+import { AutomationUpdatedEvent } from '../events';
 import {
   MockFs,
   automation_1,
@@ -65,7 +65,7 @@ describe('updateAutomation', () => {
 
   it('dispatches the automation updated event', async () =>
     new Promise<void>((done) => {
-      Events.addListener<AutomationUpdatedEventData>(
+      Events.addListener(
         AutomationUpdatedEvent,
         'test-automation-updated',
         (payload) => {

@@ -7,7 +7,7 @@ import {
 } from '@minddrop/item-references';
 import { InvalidParameterError } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
-import { DatabaseUpdatedEvent, DatabaseUpdatedEventData } from '../events';
+import { DatabaseUpdatedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntry } from '../getDatabaseEntry';
 import {
@@ -147,13 +147,9 @@ describe('setDatabasePropertyFileStorage', () => {
   it('dispatches address changes when crossing the entry boundary', async () => {
     let dispatched: ItemAddressesChangedEventData | undefined;
 
-    Events.addListener<ItemAddressesChangedEventData>(
-      ItemAddressesChangedEvent,
-      'test',
-      (payload) => {
-        dispatched = payload.data;
-      },
-    );
+    Events.addListener(ItemAddressesChangedEvent, 'test', (payload) => {
+      dispatched = payload.data;
+    });
 
     await setDatabasePropertyFileStorage(rootStorageDatabase.id, 'entry');
 
@@ -300,13 +296,9 @@ describe('setDatabasePropertyFileStorage', () => {
   it('dispatches an update event and persists the config', async () => {
     let dispatchedMode: string | undefined;
 
-    Events.addListener<DatabaseUpdatedEventData>(
-      DatabaseUpdatedEvent,
-      'test',
-      (payload) => {
-        dispatchedMode = payload.data.updated.propertyFileStorage;
-      },
-    );
+    Events.addListener(DatabaseUpdatedEvent, 'test', (payload) => {
+      dispatchedMode = payload.data.updated.propertyFileStorage;
+    });
 
     await setDatabasePropertyFileStorage(rootStorageDatabase.id, 'common');
 

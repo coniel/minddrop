@@ -1,12 +1,8 @@
 import { Events } from '@minddrop/events';
-import {
-  FileSystemChangedEvent,
-  FileSystemChangedEventData,
-  Fs,
-} from '@minddrop/file-system';
+import { FileSystemChangedEvent, Fs } from '@minddrop/file-system';
 import { SpacesStore } from '../SpacesStore';
 import { onFileSystemChanged } from '../event-handlers';
-import { SpacesLoadedEvent, SpacesLoadedEventData } from '../events';
+import { SpacesLoadedEvent } from '../events';
 import { readSpace } from '../readSpace';
 import { resolveSpacesDirPath } from '../utils';
 
@@ -38,12 +34,10 @@ export async function initializeSpaces(): Promise<void> {
   SpacesStore.load(spaces);
 
   // Apply changes made to space bundles outside of the app
-  Events.on<FileSystemChangedEventData>(
-    FileSystemChangedEvent,
-    'spaces',
-    ({ data }) => onFileSystemChanged(data),
+  Events.on(FileSystemChangedEvent, 'spaces', ({ data }) =>
+    onFileSystemChanged(data),
   );
 
   // Dispatch a spaces loaded event
-  Events.dispatch<SpacesLoadedEventData>(SpacesLoadedEvent, spaces);
+  Events.dispatch(SpacesLoadedEvent, spaces);
 }

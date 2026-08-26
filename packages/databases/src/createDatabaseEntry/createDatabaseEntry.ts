@@ -4,10 +4,7 @@ import { i18n } from '@minddrop/i18n';
 import { Properties, PropertyMap } from '@minddrop/properties';
 import { entityId, titleFromPath } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
-import {
-  DatabaseEntryCreatedEvent,
-  DatabaseEntryCreatedEventData,
-} from '../events';
+import { DatabaseEntryCreatedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntrySerializer } from '../getDatabaseEntrySerializer';
 import { DatabaseEntry } from '../types';
@@ -100,10 +97,7 @@ export async function createDatabaseEntry<
   await writeEntryMetadata(database.path, entry.path, entry.metadata);
 
   // Dispatch an entry created event
-  Events.dispatch<DatabaseEntryCreatedEventData>(
-    DatabaseEntryCreatedEvent,
-    entry,
-  );
+  Events.dispatch(DatabaseEntryCreatedEvent, entry);
 
   return entry;
 }

@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Events } from '@minddrop/events';
-import { SelectionCopiedEvent, SelectionCopiedEventData } from '../events';
+import { SelectionCopiedEvent } from '../events';
 import { cleanup, selection, serialzedSelection, setup } from '../test-utils';
 import { copySelection } from './copySelection';
 
@@ -66,17 +66,13 @@ describe('copySelection', () => {
 
   it('dispatches a selection copy event', () =>
     new Promise<void>((done) => {
-      Events.addListener<SelectionCopiedEventData>(
-        SelectionCopiedEvent,
-        'test',
-        (payload) => {
-          // Payload data should contain the event
-          expect(payload.data.event).toEqual(clipboardEvent);
-          // Payload data should contain the selection
-          expect(payload.data.selection).toEqual(selection);
-          done();
-        },
-      );
+      Events.addListener(SelectionCopiedEvent, 'test', (payload) => {
+        // Payload data should contain the event
+        expect(payload.data.event).toEqual(clipboardEvent);
+        // Payload data should contain the selection
+        expect(payload.data.selection).toEqual(selection);
+        done();
+      });
 
       // Trigger a copy
       copySelection(clipboardEvent);

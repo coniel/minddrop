@@ -1,10 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { DatabasesStore } from '../DatabasesStore';
-import {
-  DatabaseEntryTemplateRemovedEvent,
-  DatabaseEntryTemplateRemovedEventData,
-} from '../events';
+import { DatabaseEntryTemplateRemovedEvent } from '../events';
 import {
   MockFs,
   cleanup,
@@ -57,7 +54,7 @@ describe('removeDatabaseEntryTemplate', () => {
 
   it('dispatches an entry template removed event', async () =>
     new Promise<void>((done) => {
-      Events.addListener<DatabaseEntryTemplateRemovedEventData>(
+      Events.addListener(
         DatabaseEntryTemplateRemovedEvent,
         'test',
         (payload) => {

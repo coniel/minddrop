@@ -1,10 +1,7 @@
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
-import {
-  DatabaseEntriesClearedEvent,
-  DatabaseEntriesClearedEventData,
-} from '../events';
+import { DatabaseEntriesClearedEvent } from '../events';
 import { getAllDatabaseEntries } from '../getAllDatabaseEntries';
 import { getDatabase } from '../getDatabase';
 import {
@@ -71,8 +68,5 @@ export async function clearDatabaseEntries(databaseId: string): Promise<void> {
   }
 
   // Dispatch a single cleared event with all deleted entries
-  await Events.dispatch<DatabaseEntriesClearedEventData>(
-    DatabaseEntriesClearedEvent,
-    { databaseId, entries },
-  );
+  await Events.dispatch(DatabaseEntriesClearedEvent, { databaseId, entries });
 }

@@ -45,15 +45,13 @@ describe('updateDesign', () => {
 
   it('dispatches a design updated event', async () =>
     new Promise<void>((done) => {
-      Events.addListener<DesignUpdatedEventData>(
-        DesignUpdatedEvent,
-        'test',
-        (payload) => {
-          expect(payload.data.original).toEqual(design_books);
-          expect(payload.data.updated).toEqual(updatedDesign);
-          done();
-        },
-      );
+      Events.addListener(DesignUpdatedEvent, 'test', (payload) => {
+        const data = payload.data as DesignUpdatedEventData;
+
+        expect(data.original).toEqual(design_books);
+        expect(data.updated).toEqual(updatedDesign);
+        done();
+      });
 
       updateDesign(design_books.id, update);
     }));

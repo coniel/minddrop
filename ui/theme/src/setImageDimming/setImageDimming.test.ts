@@ -3,10 +3,7 @@ import { Events } from '@minddrop/events';
 import { InvalidParameterError } from '@minddrop/utils';
 import { ThemeStore } from '../ThemeStore';
 import { ImageDimmingLevel1, ImageDimmingLevel3 } from '../constants';
-import {
-  ImageDimmingChangedEvent,
-  ImageDimmingChangedEventData,
-} from '../events';
+import { ImageDimmingChangedEvent } from '../events';
 import { cleanup, setup } from '../test-utils';
 import { setImageDimming } from './setImageDimming';
 
@@ -35,15 +32,11 @@ describe('setImageDimming', () => {
   it('dispatches a `theme:image-dimming:changed` event', () =>
     new Promise<void>((done) => {
       // Listen to `theme:image-dimming:changed` events
-      Events.addListener<ImageDimmingChangedEventData>(
-        ImageDimmingChangedEvent,
-        'test',
-        (payload) => {
-          // Payload data should contain the image dimming value
-          expect(payload.data.imageDimming).toBe(ImageDimmingLevel3);
-          done();
-        },
-      );
+      Events.addListener(ImageDimmingChangedEvent, 'test', (payload) => {
+        // Payload data should contain the image dimming value
+        expect(payload.data.imageDimming).toBe(ImageDimmingLevel3);
+        done();
+      });
 
       // Set the image dimming value
       setImageDimming(ImageDimmingLevel3);

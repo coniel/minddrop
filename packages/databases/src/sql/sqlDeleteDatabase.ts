@@ -1,7 +1,6 @@
 import { Events } from '@minddrop/events';
 import { Sql } from '@minddrop/sql';
 import { DatabaseSqlSyncedEvent } from '../events';
-import type { DatabaseSqlSyncedEventData } from '../events';
 
 /**
  * Deletes a database record from the databases table and
@@ -15,7 +14,7 @@ export function sqlDeleteDatabase(
 
   // Dispatch SQL synced event unless silenced
   if (!options?.silent) {
-    Events.dispatch<DatabaseSqlSyncedEventData>(DatabaseSqlSyncedEvent, {
+    Events.dispatch(DatabaseSqlSyncedEvent, {
       action: 'delete',
       databaseId,
     });

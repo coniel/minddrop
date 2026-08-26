@@ -14,7 +14,6 @@ import {
   DefaultViewName,
   OpenViewEvent,
   UpdateViewEvent,
-  UpdateViewEventData,
 } from '@minddrop/views';
 import { DesignDashboard } from '../DesignDashboard';
 import { DesignStudioLeftPanel } from '../DesignStudioLeftPanel';
@@ -138,7 +137,7 @@ const DesignStudioSession: React.FC<DesignStudioSessionProps> = ({
 
     viewTitle.current = title;
 
-    Events.dispatch<UpdateViewEventData>(UpdateViewEvent, {
+    Events.dispatch(UpdateViewEvent, {
       id: DesignStudioViewId,
       title,
     });
@@ -289,7 +288,7 @@ const DesignStudioSession: React.FC<DesignStudioSessionProps> = ({
  * clears it when no design ID is given.
  */
 function setViewDesign(designId?: DesignId): void {
-  Events.dispatch<UpdateViewEventData<DesignStudioViewProps>>(UpdateViewEvent, {
+  Events.dispatch(UpdateViewEvent, {
     id: DesignStudioViewId,
     props: { designId, fromDashboard: Boolean(designId) },
   });

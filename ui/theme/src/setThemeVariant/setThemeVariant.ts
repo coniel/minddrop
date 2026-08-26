@@ -2,7 +2,7 @@ import { Events } from '@minddrop/events';
 import { InvalidParameterError } from '@minddrop/utils';
 import { ThemeStore } from '../ThemeStore';
 import { ThemeDark, ThemeLight, ThemeSystem } from '../constants';
-import { VariantChangedEvent, VariantChangedEventData } from '../events';
+import { VariantChangedEvent } from '../events';
 import { resolveThemeVariant } from '../resolveThemeVariant';
 import { ThemeVariant } from '../types';
 
@@ -31,7 +31,7 @@ export function setThemeVariant(variant: ThemeVariant): void {
   const resolvedAppearance = resolveThemeVariant(variant);
 
   // Dispatch a 'theme:variant:changed' event
-  Events.dispatch<VariantChangedEventData>(VariantChangedEvent, {
+  Events.dispatch(VariantChangedEvent, {
     variant,
     resolvedAppearance,
   });

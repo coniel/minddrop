@@ -1,6 +1,6 @@
 import { Events } from '@minddrop/events';
 import { DataViewsStore } from '../DataViewsStore';
-import { DataViewsLoadedEvent, DataViewsLoadedEventData } from '../events';
+import { DataViewsLoadedEvent } from '../events';
 import { extractDataViewReferences } from '../extractDataViewReferences';
 import { DataView, VirtualDataViewData } from '../types';
 
@@ -29,5 +29,5 @@ export function loadVirtualDataViews(data: VirtualDataViewData[]): void {
   DataViewsStore.load(views);
 
   // Dispatch a data views loaded event
-  Events.dispatch<DataViewsLoadedEventData>(DataViewsLoadedEvent, views);
+  Events.dispatch(DataViewsLoadedEvent, views);
 }

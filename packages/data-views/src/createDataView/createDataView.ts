@@ -2,7 +2,7 @@ import { Events } from '@minddrop/events';
 import { i18n } from '@minddrop/i18n';
 import { entityId } from '@minddrop/utils';
 import { DataViewsStore } from '../DataViewsStore';
-import { DataViewCreatedEvent, DataViewCreatedEventData } from '../events';
+import { DataViewCreatedEvent } from '../events';
 import { extractDataViewReferences } from '../extractDataViewReferences';
 import { getDataViewType } from '../getDataViewType';
 import { DataView, ViewDataSource } from '../types';
@@ -63,7 +63,7 @@ export async function createDataView(
   await writeDataView(view.id);
 
   // Dispatch a data view created event
-  Events.dispatch<DataViewCreatedEventData>(DataViewCreatedEvent, view);
+  Events.dispatch(DataViewCreatedEvent, view);
 
   return view;
 }

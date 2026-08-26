@@ -1,9 +1,5 @@
 import { Databases } from '@minddrop/databases';
-import {
-  Events,
-  OpenConfirmationDialogEvent,
-  OpenConfirmationDialogEventData,
-} from '@minddrop/events';
+import { Events, OpenConfirmationDialogEvent } from '@minddrop/events';
 import { PropertyEditor } from '@minddrop/feature-properties';
 import { TranslationKey, createI18nKeyBuilder } from '@minddrop/i18n';
 import { PropertySchema } from '@minddrop/properties';
@@ -93,33 +89,30 @@ export const DatabasePropertyEditor: React.FC<DatabasePropertyEditorProps> = ({
     return new Promise<boolean>((resolve) => {
       if (updatedProperty.name !== property.name) {
         const i18nRoot = 'properties.actions.rename.confirmation';
-        Events.dispatch<OpenConfirmationDialogEventData>(
-          OpenConfirmationDialogEvent,
-          {
-            title: `${i18nRoot}.title`,
-            message: `${i18nRoot}.message`,
-            confirmLabel: `${i18nRoot}.confirm`,
-            onConfirm: () => {
-              // TODO: Implement renameProperty method. It must also
-              // re-key the property's value in the database's entry
-              // templates, which are keyed by property name and
-              // would otherwise silently stop applying.
-              // Databases.renameProperty(
-              //   database,
-              //   property.name,
-              //   updatedProperty.name,
-              // );
-              Databases.updateProperty(databaseId, {
-                ...updatedProperty,
-                name: property.name,
-              });
-              resolve(true);
-            },
-            onCancel: () => {
-              resolve(false);
-            },
+        Events.dispatch(OpenConfirmationDialogEvent, {
+          title: `${i18nRoot}.title`,
+          message: `${i18nRoot}.message`,
+          confirmLabel: `${i18nRoot}.confirm`,
+          onConfirm: () => {
+            // TODO: Implement renameProperty method. It must also
+            // re-key the property's value in the database's entry
+            // templates, which are keyed by property name and
+            // would otherwise silently stop applying.
+            // Databases.renameProperty(
+            //   database,
+            //   property.name,
+            //   updatedProperty.name,
+            // );
+            Databases.updateProperty(databaseId, {
+              ...updatedProperty,
+              name: property.name,
+            });
+            resolve(true);
           },
-        );
+          onCancel: () => {
+            resolve(false);
+          },
+        });
       } else {
         Databases.updateProperty(databaseId, updatedProperty);
         resolve(true);

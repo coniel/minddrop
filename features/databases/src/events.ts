@@ -14,3 +14,10 @@ export const DatabaseEntryViewName = 'databases:view:entry';
 
 export const DatabaseEntriesEventListenerId = 'database-entries-feature';
 export const CloseDatabaseEntryDialogEvent = 'databases:entry-dialog:close';
+
+declare module '@minddrop/events/EventDataMap' {
+  interface EventDataMap {
+    'databases:new-database-dialog:open': void;
+    'databases:entry-dialog:close': void;
+  }
+}

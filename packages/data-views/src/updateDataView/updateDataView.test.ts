@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { InvalidParameterError } from '@minddrop/utils';
 import { DataViewsStore } from '../DataViewsStore';
-import { DataViewUpdatedEvent, DataViewUpdatedEventData } from '../events';
+import { DataViewUpdatedEvent } from '../events';
 import {
   MockFs,
   cleanup,
@@ -98,15 +98,11 @@ describe('updateDataView', () => {
 
   it('dispatches a view updated event', async () =>
     new Promise<void>((done) => {
-      Events.addListener<DataViewUpdatedEventData>(
-        DataViewUpdatedEvent,
-        'test',
-        (payload) => {
-          expect(payload.data.original).toEqual(dataView_gallery_1);
-          expect(payload.data.updated).toEqual(updatedView);
-          done();
-        },
-      );
+      Events.addListener(DataViewUpdatedEvent, 'test', (payload) => {
+        expect(payload.data.original).toEqual(dataView_gallery_1);
+        expect(payload.data.updated).toEqual(updatedView);
+        done();
+      });
 
       updateDataView(dataView_gallery_1.id, update);
     }));

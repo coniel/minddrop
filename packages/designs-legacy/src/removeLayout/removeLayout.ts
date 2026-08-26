@@ -1,7 +1,7 @@
 import { Events } from '@minddrop/events';
 import { DesignsStore } from '../DesignsStore';
 import { DesignNotFoundError } from '../errors';
-import { LayoutDeletedEvent, LayoutDeletedEventData } from '../events';
+import { LayoutDeletedEvent } from '../events';
 import { getLayout } from '../getLayout';
 import { Layout } from '../types';
 import { updateDesign } from '../updateDesign';
@@ -41,7 +41,7 @@ export async function removeLayout(id: string): Promise<Layout> {
   await updateDesign(design.id, { layouts: newLayouts });
 
   // Dispatch a layout deleted event
-  Events.dispatch<LayoutDeletedEventData>(LayoutDeletedEvent, layout);
+  Events.dispatch(LayoutDeletedEvent, layout);
 
   return layout;
 }

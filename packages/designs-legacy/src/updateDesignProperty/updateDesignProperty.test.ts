@@ -65,15 +65,13 @@ describe('updateDesignProperty', () => {
     const updatedProperty = { ...target, placeholder: 'Lorem ipsum' };
 
     return new Promise<void>((done) => {
-      Events.addListener<DesignPropertyUpdatedEventData>(
-        DesignPropertyUpdatedEvent,
-        'test',
-        (payload) => {
-          expect(payload.data.design.id).toBe(design_books.id);
-          expect(payload.data.property).toEqual(updatedProperty);
-          done();
-        },
-      );
+      Events.addListener(DesignPropertyUpdatedEvent, 'test', (payload) => {
+        const data = payload.data as DesignPropertyUpdatedEventData;
+
+        expect(data.design.id).toBe(design_books.id);
+        expect(data.property).toEqual(updatedProperty);
+        done();
+      });
 
       updateDesignProperty(design_books.id, updatedProperty);
     });

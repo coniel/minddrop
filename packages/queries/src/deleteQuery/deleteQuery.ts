@@ -1,7 +1,7 @@
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { QueriesStore } from '../QueriesStore';
-import { QueryDeletedEvent, QueryDeletedEventData } from '../events';
+import { QueryDeletedEvent } from '../events';
 import { getQuery } from '../getQuery';
 import { resolveQueryFilePath } from '../utils';
 
@@ -24,5 +24,5 @@ export async function deleteQuery(queryId: string): Promise<void> {
   await Fs.removeFile(resolveQueryFilePath(queryId));
 
   // Dispatch the query deleted event
-  Events.dispatch<QueryDeletedEventData>(QueryDeletedEvent, query);
+  Events.dispatch(QueryDeletedEvent, query);
 }

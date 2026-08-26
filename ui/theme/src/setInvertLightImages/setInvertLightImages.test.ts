@@ -1,10 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { ThemeStore } from '../ThemeStore';
-import {
-  InvertLightImagesChangedEvent,
-  InvertLightImagesChangedEventData,
-} from '../events';
+import { InvertLightImagesChangedEvent } from '../events';
 import { cleanup, setup } from '../test-utils';
 import { setInvertLightImages } from './setInvertLightImages';
 
@@ -24,15 +21,11 @@ describe('setInvertLightImages', () => {
   it('dispatches a `theme:invert-light-images:changed` event', () =>
     new Promise<void>((done) => {
       // Listen to `theme:invert-light-images:changed` events
-      Events.addListener<InvertLightImagesChangedEventData>(
-        InvertLightImagesChangedEvent,
-        'test',
-        (payload) => {
-          // Payload data should contain the setting value
-          expect(payload.data.invertLightImages).toBe(true);
-          done();
-        },
-      );
+      Events.addListener(InvertLightImagesChangedEvent, 'test', (payload) => {
+        // Payload data should contain the setting value
+        expect(payload.data.invertLightImages).toBe(true);
+        done();
+      });
 
       // Enable light image inversion
       setInvertLightImages(true);

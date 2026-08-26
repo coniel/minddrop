@@ -1,6 +1,6 @@
 import { Events } from '@minddrop/events';
 import { CollectionsStore } from '../CollectionsStore';
-import { CollectionCreatedEvent, CollectionCreatedEventData } from '../events';
+import { CollectionCreatedEvent } from '../events';
 import { Collection } from '../types';
 
 /**
@@ -34,10 +34,7 @@ export function createVirtualCollection(
   CollectionsStore.set(collection);
 
   // Dispatch the collection created event
-  Events.dispatch<CollectionCreatedEventData>(
-    CollectionCreatedEvent,
-    collection,
-  );
+  Events.dispatch(CollectionCreatedEvent, collection);
 
   return collection;
 }

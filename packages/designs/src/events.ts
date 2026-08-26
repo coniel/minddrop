@@ -43,3 +43,15 @@ export interface DesignPropertyRenamedEventData {
 
 export type DesignRoleRegisteredEventData = DesignRoleConfig;
 export type DesignRoleUnregisteredEventData = DesignRoleConfig;
+
+declare module '@minddrop/events/EventDataMap' {
+  interface EventDataMap {
+    'designs:loaded': DesignsLoadedEventData;
+    'designs:design:created': DesignCreatedEventData;
+    'designs:design:updated': DesignUpdatedEventData;
+    'designs:design:deleted': DesignDeletedEventData;
+    'designs:property:renamed': DesignPropertyRenamedEventData;
+    'designs:role:registered': DesignRoleRegisteredEventData;
+    'designs:role:unregistered': DesignRoleUnregisteredEventData;
+  }
+}

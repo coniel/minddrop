@@ -1,26 +1,14 @@
 import { useEffect, useId, useState } from 'react';
 import {
   CollectionCreatedEvent,
-  CollectionCreatedEventData,
   CollectionDeletedEvent,
-  CollectionDeletedEventData,
   CollectionUpdatedEvent,
-  CollectionUpdatedEventData,
   CollectionsLoadedEvent,
 } from '@minddrop/collections';
-import {
-  DatabaseEntriesSqlSyncedEventData,
-  DatabaseSqlReindexedEventData,
-  Databases,
-} from '@minddrop/databases';
+import { Databases } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
 import { useQuery } from '../QueriesStore';
-import {
-  QueryDeletedEvent,
-  QueryDeletedEventData,
-  QueryUpdatedEvent,
-  QueryUpdatedEventData,
-} from '../events';
+import { QueryDeletedEvent, QueryUpdatedEvent } from '../events';
 import { QueryNodeCounts, getQueryNodeCounts } from '../getQueryNodeCounts';
 import {
   getQueryCollectionReferences,
@@ -92,7 +80,7 @@ export function useQueryNodeCounts(
     recount();
 
     // Re-count when a source database's entries sync to SQL
-    Events.addListener<DatabaseEntriesSqlSyncedEventData>(
+    Events.addListener(
       Databases.events.entriesSqlSynced,
       listenerId,
       ({ data }) => {
@@ -107,7 +95,7 @@ export function useQueryNodeCounts(
     Events.addListener(Databases.events.backgroundSynced, listenerId, recount);
 
     // Re-count when a source database's entries are reindexed
-    Events.addListener<DatabaseSqlReindexedEventData>(
+    Events.addListener(
       Databases.events.databaseSqlReindexed,
       listenerId,
       ({ data }) => {
@@ -118,38 +106,26 @@ export function useQueryNodeCounts(
     );
 
     // Re-count when a referenced collection's items change
-    Events.addListener<CollectionUpdatedEventData>(
-      CollectionUpdatedEvent,
-      listenerId,
-      ({ data }) => {
-        if (referencesCollection(data.updated.id)) {
-          recount();
-        }
-      },
-    );
+    Events.addListener(CollectionUpdatedEvent, listenerId, ({ data }) => {
+      if (referencesCollection(data.updated.id)) {
+        recount();
+      }
+    });
 
     // Re-count when a referenced collection is created, which
     // includes virtual collections hydrated on demand
-    Events.addListener<CollectionCreatedEventData>(
-      CollectionCreatedEvent,
-      listenerId,
-      ({ data }) => {
-        if (referencesCollection(data.id)) {
-          recount();
-        }
-      },
-    );
+    Events.addListener(CollectionCreatedEvent, listenerId, ({ data }) => {
+      if (referencesCollection(data.id)) {
+        recount();
+      }
+    });
 
     // Re-count when a referenced collection is deleted
-    Events.addListener<CollectionDeletedEventData>(
-      CollectionDeletedEvent,
-      listenerId,
-      ({ data }) => {
-        if (referencesCollection(data.id)) {
-          recount();
-        }
-      },
-    );
+    Events.addListener(CollectionDeletedEvent, listenerId, ({ data }) => {
+      if (referencesCollection(data.id)) {
+        recount();
+      }
+    });
 
     // Re-count once collections load, which replaces the store's
     // contents wholesale
@@ -161,26 +137,18 @@ export function useQueryNodeCounts(
 
     // Re-count when a query the graph sources is edited, since
     // its results are compiled into this query
-    Events.addListener<QueryUpdatedEventData>(
-      QueryUpdatedEvent,
-      listenerId,
-      ({ data }) => {
-        if (referencedQueryIds.includes(data.updated.id)) {
-          recount();
-        }
-      },
-    );
+    Events.addListener(QueryUpdatedEvent, listenerId, ({ data }) => {
+      if (referencedQueryIds.includes(data.updated.id)) {
+        recount();
+      }
+    });
 
     // Re-count when a sourced query is deleted
-    Events.addListener<QueryDeletedEventData>(
-      QueryDeletedEvent,
-      listenerId,
-      ({ data }) => {
-        if (referencedQueryIds.includes(data.id)) {
-          recount();
-        }
-      },
-    );
+    Events.addListener(QueryDeletedEvent, listenerId, ({ data }) => {
+      if (referencedQueryIds.includes(data.id)) {
+        recount();
+      }
+    });
 
     return () => {
       cancelled = true;

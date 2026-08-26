@@ -3,10 +3,7 @@ import { Collections } from '@minddrop/collections';
 import { Events } from '@minddrop/events';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabaseEntryNotFoundError } from '../errors';
-import {
-  DatabaseEntryDuplicatedEvent,
-  DatabaseEntryDuplicatedEventData,
-} from '../events';
+import { DatabaseEntryDuplicatedEvent } from '../events';
 import {
   MockFs,
   cleanup,
@@ -167,21 +164,17 @@ describe('duplicateDatabaseEntry', () => {
 
   it('dispatches an entry duplicated event', async () =>
     new Promise<void>((done) => {
-      Events.addListener<DatabaseEntryDuplicatedEventData>(
-        DatabaseEntryDuplicatedEvent,
-        'test',
-        ({ data }) => {
-          // Payload should contain the original, the duplicate,
-          // and the source
-          expect(data.original).toEqual(objectEntry1);
-          expect(data.duplicate.title).toBe('Test Entry 1');
-          expect(data.source).toEqual({
-            type: 'database',
-            id: objectDatabase.id,
-          });
-          done();
-        },
-      );
+      Events.addListener(DatabaseEntryDuplicatedEvent, 'test', ({ data }) => {
+        // Payload should contain the original, the duplicate,
+        // and the source
+        expect(data.original).toEqual(objectEntry1);
+        expect(data.duplicate.title).toBe('Test Entry 1');
+        expect(data.source).toEqual({
+          type: 'database',
+          id: objectDatabase.id,
+        });
+        done();
+      });
 
       duplicateDatabaseEntry(objectEntry1.id, {
         type: 'database',

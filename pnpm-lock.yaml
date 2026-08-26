@@ -1806,6 +1806,9 @@ importers:
 
   packages/item-references:
     dependencies:
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../events
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../utils

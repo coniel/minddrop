@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { DesignsStore } from '../DesignsStore';
-import { DesignUpdatedEvent, DesignUpdatedEventData } from '../events';
+import { DesignUpdatedEvent } from '../events';
 import {
   DesignFixtures,
   MockFs,
@@ -48,15 +48,11 @@ describe('updateDesign', () => {
 
   it('dispatches a design updated event', async () =>
     new Promise<void>((done) => {
-      Events.addListener<DesignUpdatedEventData>(
-        DesignUpdatedEvent,
-        'test',
-        (payload) => {
-          expect(payload.data.original.name).toBe(design_books.name);
-          expect(payload.data.updated.name).toBe('Novels');
-          done();
-        },
-      );
+      Events.addListener(DesignUpdatedEvent, 'test', (payload) => {
+        expect(payload.data.original.name).toBe(design_books.name);
+        expect(payload.data.updated.name).toBe('Novels');
+        done();
+      });
 
       updateDesign(design_books.id, { name: 'Novels' });
     }));

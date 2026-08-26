@@ -1,13 +1,13 @@
 import { Events } from '@minddrop/events';
 import { SelectionItemSerializersStore } from '../SelectionItemSerializersStore';
 import { clearSelection } from '../clearSelection';
-import { SelectionDeletedEvent, SelectionDeletedEventData } from '../events';
+import { SelectionDeletedEvent } from '../events';
 import { getSelection } from '../getSelection';
 import { SelectionItem } from '../types';
 import { groupSelectionItemsByType } from '../utils';
 
 /**
- * Delets the current selection.
+ * Deletes the current selection.
  *
  * @dispatches selection:deleted
  */
@@ -43,8 +43,5 @@ export function deleteSelection(): void {
   clearSelection();
 
   // Dispatch a selection deleted event
-  Events.dispatch<SelectionDeletedEventData>(
-    SelectionDeletedEvent,
-    deletedItems,
-  );
+  Events.dispatch(SelectionDeletedEvent, deletedItems);
 }

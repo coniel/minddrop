@@ -3,7 +3,7 @@ import { Events } from '@minddrop/events';
 import { InvalidParameterError } from '@minddrop/utils';
 import { ThemeStore } from '../ThemeStore';
 import { ThemeDark, ThemeLight } from '../constants';
-import { VariantChangedEvent, VariantChangedEventData } from '../events';
+import { VariantChangedEvent } from '../events';
 import { cleanup, setup } from '../test-utils';
 import { setThemeVariant } from './setThemeVariant';
 
@@ -42,16 +42,12 @@ describe('setThemeVariant', () => {
   it('dispatches a `theme:variant:changed` event', () =>
     new Promise<void>((done) => {
       // Listen to `theme:variant:changed` events
-      Events.addListener<VariantChangedEventData>(
-        VariantChangedEvent,
-        'test',
-        (payload) => {
-          // Payload data should contain the variant and resolved appearance
-          expect(payload.data.variant).toBe(ThemeDark);
-          expect(payload.data.resolvedAppearance).toBe(ThemeDark);
-          done();
-        },
-      );
+      Events.addListener(VariantChangedEvent, 'test', (payload) => {
+        // Payload data should contain the variant and resolved appearance
+        expect(payload.data.variant).toBe(ThemeDark);
+        expect(payload.data.resolvedAppearance).toBe(ThemeDark);
+        done();
+      });
 
       // Set the theme variant
       setThemeVariant(ThemeDark);
@@ -60,15 +56,11 @@ describe('setThemeVariant', () => {
   it('dispatches with resolved appearance for fixed variants', () =>
     new Promise<void>((done) => {
       // Listen to `theme:variant:changed` events
-      Events.addListener<VariantChangedEventData>(
-        VariantChangedEvent,
-        'test',
-        (payload) => {
-          // For a 'light' variant, resolved appearance should be 'light'
-          expect(payload.data.resolvedAppearance).toBe(ThemeLight);
-          done();
-        },
-      );
+      Events.addListener(VariantChangedEvent, 'test', (payload) => {
+        // For a 'light' variant, resolved appearance should be 'light'
+        expect(payload.data.resolvedAppearance).toBe(ThemeLight);
+        done();
+      });
 
       // Set the theme variant to 'light'
       setThemeVariant(ThemeLight);

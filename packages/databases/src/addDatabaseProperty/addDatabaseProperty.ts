@@ -1,9 +1,6 @@
 import { Events } from '@minddrop/events';
 import { PropertySchema } from '@minddrop/properties';
-import {
-  DatabasePropertyAddedEvent,
-  DatabasePropertyAddedEventData,
-} from '../events';
+import { DatabasePropertyAddedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
 import { Database } from '../types';
 import { updateDatabase } from '../updateDatabase';
@@ -31,7 +28,7 @@ export async function addDatabaseProperty(
   const updated = await updateDatabase(id, { properties });
 
   // Dispatch the property added event
-  Events.dispatch<DatabasePropertyAddedEventData>(DatabasePropertyAddedEvent, {
+  Events.dispatch(DatabasePropertyAddedEvent, {
     database: updated,
     property,
   });

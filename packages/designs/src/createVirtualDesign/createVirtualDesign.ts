@@ -1,7 +1,7 @@
 import { Events } from '@minddrop/events';
 import { i18n } from '@minddrop/i18n';
 import { DesignsStore } from '../DesignsStore';
-import { DesignCreatedEvent, DesignCreatedEventData } from '../events';
+import { DesignCreatedEvent } from '../events';
 import { CreateVirtualDesignData, Design } from '../types';
 
 /**
@@ -36,7 +36,7 @@ export function createVirtualDesign(data: CreateVirtualDesignData): Design {
   DesignsStore.set(design);
 
   // Dispatch a design created event
-  Events.dispatch<DesignCreatedEventData>(DesignCreatedEvent, design);
+  Events.dispatch(DesignCreatedEvent, design);
 
   return design;
 }

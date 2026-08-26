@@ -1,7 +1,7 @@
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { CollectionsStore } from '../CollectionsStore';
-import { CollectionDeletedEvent, CollectionDeletedEventData } from '../events';
+import { CollectionDeletedEvent } from '../events';
 import { getCollection } from '../getCollection';
 import { resolveCollectionFilePath } from '../utils';
 
@@ -26,8 +26,5 @@ export async function deleteCollection(collectionId: string): Promise<void> {
   }
 
   // Dispatch the collection deleted event
-  Events.dispatch<CollectionDeletedEventData>(
-    CollectionDeletedEvent,
-    collection,
-  );
+  Events.dispatch(CollectionDeletedEvent, collection);
 }

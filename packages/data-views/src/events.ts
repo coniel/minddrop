@@ -28,3 +28,14 @@ export const DataViewTypeUnregisteredEvent =
 
 export type DataViewTypeRegisteredEventData = DataViewType;
 export type DataViewTypeUnregisteredEventData = DataViewType;
+
+declare module '@minddrop/events/EventDataMap' {
+  interface EventDataMap {
+    'data-views:data-view:created': DataViewCreatedEventData;
+    'data-views:data-view:updated': DataViewUpdatedEventData;
+    'data-views:data-view:deleted': DataViewDeletedEventData;
+    'data-views:loaded': DataViewsLoadedEventData;
+    'data-views:data-view-type:registered': DataViewTypeRegisteredEventData;
+    'data-views:data-view-type:unregistered': DataViewTypeUnregisteredEventData;
+  }
+}

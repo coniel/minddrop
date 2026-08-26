@@ -1,10 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { DatabasesStore } from '../DatabasesStore';
-import {
-  DatabaseEntryTemplateAddedEvent,
-  DatabaseEntryTemplateAddedEventData,
-} from '../events';
+import { DatabaseEntryTemplateAddedEvent } from '../events';
 import {
   MockFs,
   cleanup,
@@ -93,16 +90,12 @@ describe('addDatabaseEntryTemplate', () => {
 
   it('dispatches an entry template added event', async () =>
     new Promise<void>((done) => {
-      Events.addListener<DatabaseEntryTemplateAddedEventData>(
-        DatabaseEntryTemplateAddedEvent,
-        'test',
-        (payload) => {
-          // Payload data should contain the updated database and new template
-          expect(payload.data.database.id).toBe(entryTemplatesDatabase.id);
-          expect(payload.data.template.name).toBe('New Template');
-          done();
-        },
-      );
+      Events.addListener(DatabaseEntryTemplateAddedEvent, 'test', (payload) => {
+        // Payload data should contain the updated database and new template
+        expect(payload.data.database.id).toBe(entryTemplatesDatabase.id);
+        expect(payload.data.template.name).toBe('New Template');
+        done();
+      });
 
       addDatabaseEntryTemplate(entryTemplatesDatabase.id, {
         name: 'New Template',

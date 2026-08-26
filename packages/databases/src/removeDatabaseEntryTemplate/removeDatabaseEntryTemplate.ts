@@ -1,9 +1,6 @@
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
-import {
-  DatabaseEntryTemplateRemovedEvent,
-  DatabaseEntryTemplateRemovedEventData,
-} from '../events';
+import { DatabaseEntryTemplateRemovedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
 import { Database } from '../types';
 import { updateDatabase } from '../updateDatabase';
@@ -52,10 +49,10 @@ export async function removeDatabaseEntryTemplate(
 
   if (template) {
     // Dispatch the entry template removed event
-    Events.dispatch<DatabaseEntryTemplateRemovedEventData>(
-      DatabaseEntryTemplateRemovedEvent,
-      { database: updated, template },
-    );
+    Events.dispatch(DatabaseEntryTemplateRemovedEvent, {
+      database: updated,
+      template,
+    });
   }
 
   return updated;

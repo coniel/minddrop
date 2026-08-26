@@ -1,9 +1,6 @@
 import { Events } from '@minddrop/events';
 import { InvalidParameterError } from '@minddrop/utils';
-import {
-  DesignPropertyRemovedEvent,
-  DesignPropertyRemovedEventData,
-} from '../events';
+import { DesignPropertyRemovedEvent } from '../events';
 import { getDesign } from '../getDesign';
 import { Design } from '../types';
 import { updateDesign } from '../updateDesign';
@@ -50,7 +47,7 @@ export async function removeDesignProperty(
   });
 
   // Dispatch a property removed event
-  Events.dispatch<DesignPropertyRemovedEventData>(DesignPropertyRemovedEvent, {
+  Events.dispatch(DesignPropertyRemovedEvent, {
     design: updated,
     property,
   });

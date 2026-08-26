@@ -8,10 +8,7 @@ import {
   OpenDatabaseEntryViewEventData,
 } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
-import {
-  OpenDataViewViewEvent,
-  OpenDataViewViewEventData,
-} from '@minddrop/feature-data-views';
+import { OpenDataViewViewEvent } from '@minddrop/feature-data-views';
 import { useTranslation } from '@minddrop/i18n';
 import {
   DATABASE_FALLBACK_ICON,
@@ -137,7 +134,7 @@ export const CollectionDetails: React.FC<CollectionDetailsProps> = ({
 
   // Open the clicked consumer's view
   function handleOpenConsumer(dataViewId: string) {
-    Events.dispatch<OpenDataViewViewEventData>(OpenDataViewViewEvent, {
+    Events.dispatch(OpenDataViewViewEvent, {
       dataViewId,
     });
   }

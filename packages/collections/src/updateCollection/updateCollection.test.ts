@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { CollectionsStore } from '../CollectionsStore';
-import { CollectionUpdatedEvent, CollectionUpdatedEventData } from '../events';
+import { CollectionUpdatedEvent } from '../events';
 import {
   MockFs,
   cleanup,
@@ -83,7 +83,7 @@ describe('updateCollection', () => {
 
   it('dispatches the collection updated event', async () =>
     new Promise<void>((done) => {
-      Events.addListener<CollectionUpdatedEventData>(
+      Events.addListener(
         CollectionUpdatedEvent,
         'test-collection-updated',
         (payload) => {

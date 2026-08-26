@@ -1,6 +1,5 @@
 import { Events } from '@minddrop/events';
 import { DatabaseSqlReindexedEvent } from '../events';
-import type { DatabaseSqlReindexedEventData } from '../events';
 import { getAllDatabaseEntries } from '../getAllDatabaseEntries';
 import type { Database } from '../types';
 import { convertEntryToSqlRecord } from '../utils';
@@ -29,7 +28,7 @@ export function sqlReindexDatabaseEntries(database: Database): void {
   sqlUpsertEntries(database.id, records, { silent: true });
 
   // Dispatch reindexed event
-  Events.dispatch<DatabaseSqlReindexedEventData>(DatabaseSqlReindexedEvent, {
+  Events.dispatch(DatabaseSqlReindexedEvent, {
     databaseId: database.id,
   });
 }

@@ -1,11 +1,11 @@
-import { addEventListener } from './addEventListener';
-import { addEventListenerAfter } from './addEventListenerAfter';
-import { addEventListenerBefore } from './addEventListenerBefore';
-import { dispatchEvent } from './dispatchEvent';
-import { hasEventListener } from './hasEventListener';
-import { prependEventListener } from './prependEventListener';
-import { removeEventListener } from './removeEventListener';
-import { EventListenerMap, EventsApi } from './types';
+import { addEventListener } from '../addEventListener';
+import { addEventListenerAfter } from '../addEventListenerAfter';
+import { addEventListenerBefore } from '../addEventListenerBefore';
+import { dispatchEvent } from '../dispatchEvent';
+import { hasEventListener } from '../hasEventListener';
+import { prependEventListener } from '../prependEventListener';
+import { removeEventListener } from '../removeEventListener';
+import { EventListenerMap, EventsApi } from '../types';
 
 let eventListeners: EventListenerMap = {};
 

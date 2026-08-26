@@ -15,3 +15,12 @@ export type QueryUpdatedEventData = {
 export type QueryDeletedEventData = Query;
 
 export type QueriesLoadedEventData = Query[];
+
+declare module '@minddrop/events/EventDataMap' {
+  interface EventDataMap {
+    'queries:query:created': QueryCreatedEventData;
+    'queries:query:updated': QueryUpdatedEventData;
+    'queries:query:deleted': QueryDeletedEventData;
+    'queries:loaded': QueriesLoadedEventData;
+  }
+}

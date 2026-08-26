@@ -2,7 +2,7 @@ import { Events } from '@minddrop/events';
 import { i18n } from '@minddrop/i18n';
 import { entityId } from '@minddrop/utils';
 import { CollectionsStore } from '../CollectionsStore';
-import { CollectionCreatedEvent, CollectionCreatedEventData } from '../events';
+import { CollectionCreatedEvent } from '../events';
 import { Collection } from '../types';
 import { writeCollection } from '../writeCollection';
 
@@ -33,10 +33,7 @@ export async function createCollection(name?: string): Promise<Collection> {
   await writeCollection(collection.id);
 
   // Dispatch the collection created event
-  Events.dispatch<CollectionCreatedEventData>(
-    CollectionCreatedEvent,
-    collection,
-  );
+  Events.dispatch(CollectionCreatedEvent, collection);
 
   return collection;
 }

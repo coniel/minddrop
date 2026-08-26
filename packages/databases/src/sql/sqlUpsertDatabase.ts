@@ -1,7 +1,6 @@
 import { Events } from '@minddrop/events';
 import { Sql } from '@minddrop/sql';
 import { DatabaseSqlSyncedEvent } from '../events';
-import type { DatabaseSqlSyncedEventData } from '../events';
 
 /**
  * Upserts a database record into the databases table and
@@ -30,7 +29,7 @@ export function sqlUpsertDatabase(
 
   // Dispatch SQL synced event unless silenced
   if (!options?.silent) {
-    Events.dispatch<DatabaseSqlSyncedEventData>(DatabaseSqlSyncedEvent, {
+    Events.dispatch(DatabaseSqlSyncedEvent, {
       action: 'upsert',
       databaseId: databaseData.id,
       database: databaseData,

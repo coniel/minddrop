@@ -21,7 +21,7 @@ export function useOpenView(): OpenView {
 
   return useCallback<OpenView>(
     (event, data) => {
-      Events.dispatch<BaseOpenViewEventData>(event, {
+      Events.dispatch(event, {
         ...data,
         viewAreaId: data.viewAreaId ?? pane?.viewAreaId,
         sourcePane: data.sourcePane ?? pane?.pane,

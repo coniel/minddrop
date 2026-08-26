@@ -16,12 +16,7 @@ import {
   TranslatableNode,
   propsToClass,
 } from '@minddrop/ui-primitives';
-import {
-  Breadcrumb,
-  NavigateBackEvent,
-  NavigateBackEventData,
-  Views,
-} from '@minddrop/views';
+import { Breadcrumb, NavigateBackEvent, Views } from '@minddrop/views';
 import './PanelView.css';
 
 // The number of crumbs a header shows, dropping the furthest
@@ -225,7 +220,7 @@ const PanelViewBreadcrumb: React.FC<PanelViewBreadcrumbProps> = ({
 
   // Navigate back to the crumb's point in the history
   function handleClick() {
-    Events.dispatch<NavigateBackEventData>(NavigateBackEvent, {
+    Events.dispatch(NavigateBackEvent, {
       steps: breadcrumb.steps,
       viewAreaId: pane?.viewAreaId,
     });

@@ -2,10 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabaseEntryTemplateNotFoundError } from '../errors';
-import {
-  DatabaseEntryTemplateUpdatedEvent,
-  DatabaseEntryTemplateUpdatedEventData,
-} from '../events';
+import { DatabaseEntryTemplateUpdatedEvent } from '../events';
 import {
   MockFs,
   cleanup,
@@ -115,7 +112,7 @@ describe('updateDatabaseEntryTemplate', () => {
 
   it('dispatches an entry template updated event', async () =>
     new Promise<void>((done) => {
-      Events.addListener<DatabaseEntryTemplateUpdatedEventData>(
+      Events.addListener(
         DatabaseEntryTemplateUpdatedEvent,
         'test',
         (payload) => {

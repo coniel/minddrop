@@ -10,15 +10,10 @@ import { Events } from '@minddrop/events';
 import { IconButton } from '@minddrop/ui-primitives';
 import {
   OpenViewEvent,
-  OpenViewEventData,
   SetSubviewEvent,
-  SetSubviewEventData,
   SetViewAreaEvent,
-  SetViewAreaEventData,
   ViewAreaChangedEvent,
-  ViewAreaChangedEventData,
   ViewAreaReadyEvent,
-  ViewAreaReadyEventData,
   ViewDescriptor,
   Views,
 } from '@minddrop/views';
@@ -74,7 +69,7 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
 
       // Announce the change to listeners for this view area
       if (announce) {
-        Events.dispatch<ViewAreaChangedEventData>(ViewAreaChangedEvent, {
+        Events.dispatch(ViewAreaChangedEvent, {
           viewAreaId,
           replace,
           ...next,
@@ -88,54 +83,42 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
     const listenerId = `feature-views:view-area:${viewAreaId}`;
 
     // Open a view in the pane the open targets
-    Events.addListener<OpenViewEventData>(
-      OpenViewEvent,
-      listenerId,
-      ({ data }) => {
-        // Ignore events targeting a different view area
-        if (!matchesViewArea(data.viewAreaId, viewAreaId)) {
-          return;
-        }
+    Events.addListener(OpenViewEvent, listenerId, ({ data }) => {
+      // Ignore events targeting a different view area
+      if (!matchesViewArea(data.viewAreaId, viewAreaId)) {
+        return;
+      }
 
-        applyState(applyOpenView(stateRef.current, data), true);
-      },
-    );
+      applyState(applyOpenView(stateRef.current, data), true);
+    });
 
     // Record the entity a view now shows within itself
-    Events.addListener<SetSubviewEventData>(
-      SetSubviewEvent,
-      listenerId,
-      ({ data }) => {
-        // Ignore events targeting a different view area
-        if (!matchesViewArea(data.viewAreaId, viewAreaId)) {
-          return;
-        }
+    Events.addListener(SetSubviewEvent, listenerId, ({ data }) => {
+      // Ignore events targeting a different view area
+      if (!matchesViewArea(data.viewAreaId, viewAreaId)) {
+        return;
+      }
 
-        applyState(applySetSubview(stateRef.current, data), true, data.replace);
-      },
-    );
+      applyState(applySetSubview(stateRef.current, data), true, data.replace);
+    });
 
     // Replace the entire state (e.g. when a tab is activated)
-    Events.addListener<SetViewAreaEventData>(
-      SetViewAreaEvent,
-      listenerId,
-      ({ data }) => {
-        // Ignore events targeting a different view area
-        if (!matchesViewArea(data.viewAreaId, viewAreaId)) {
-          return;
-        }
+    Events.addListener(SetViewAreaEvent, listenerId, ({ data }) => {
+      // Ignore events targeting a different view area
+      if (!matchesViewArea(data.viewAreaId, viewAreaId)) {
+        return;
+      }
 
-        // Apply the incoming state
-        applyState(
-          { main: data.main, split: data.split, splitRatio: data.splitRatio },
-          true,
-        );
-      },
-    );
+      // Apply the incoming state
+      applyState(
+        { main: data.main, split: data.split, splitRatio: data.splitRatio },
+        true,
+      );
+    });
 
     // Announce that the listeners are ready so the initial content can
     // be restored (e.g. by the tabs feature)
-    Events.dispatch<ViewAreaReadyEventData>(ViewAreaReadyEvent, { viewAreaId });
+    Events.dispatch(ViewAreaReadyEvent, { viewAreaId });
 
     return () => {
       Events.removeListener(OpenViewEvent, listenerId);
@@ -202,7 +185,7 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
         document.body.style.userSelect = '';
 
         // Announce the final ratio so it is recorded on the active tab
-        Events.dispatch<ViewAreaChangedEventData>(ViewAreaChangedEvent, {
+        Events.dispatch(ViewAreaChangedEvent, {
           viewAreaId,
           ...stateRef.current,
         });

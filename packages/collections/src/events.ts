@@ -15,3 +15,12 @@ export type CollectionUpdatedEventData = {
 export type CollectionDeletedEventData = Collection;
 
 export type CollectionsLoadedEventData = Collection[];
+
+declare module '@minddrop/events/EventDataMap' {
+  interface EventDataMap {
+    'collections:collection:created': CollectionCreatedEventData;
+    'collections:collection:updated': CollectionUpdatedEventData;
+    'collections:collection:deleted': CollectionDeletedEventData;
+    'collections:loaded': CollectionsLoadedEventData;
+  }
+}

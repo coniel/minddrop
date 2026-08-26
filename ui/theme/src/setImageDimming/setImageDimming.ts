@@ -2,10 +2,7 @@ import { Events } from '@minddrop/events';
 import { InvalidParameterError } from '@minddrop/utils';
 import { ThemeStore } from '../ThemeStore';
 import { ImageDimmingValues } from '../constants';
-import {
-  ImageDimmingChangedEvent,
-  ImageDimmingChangedEventData,
-} from '../events';
+import { ImageDimmingChangedEvent } from '../events';
 import { ImageDimming } from '../types';
 
 /**
@@ -30,7 +27,7 @@ export function setImageDimming(imageDimming: ImageDimming): void {
   ThemeStore.set('imageDimming', imageDimming);
 
   // Dispatch a 'theme:image-dimming:changed' event
-  Events.dispatch<ImageDimmingChangedEventData>(ImageDimmingChangedEvent, {
+  Events.dispatch(ImageDimmingChangedEvent, {
     imageDimming,
   });
 }

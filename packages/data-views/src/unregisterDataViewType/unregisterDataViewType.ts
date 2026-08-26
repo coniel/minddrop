@@ -25,5 +25,5 @@ export function unregisterDataViewType(type: string): void {
   DataViewTypesStore.remove(type);
 
   // Dispatch the data view type unregistered event
-  Events.dispatch(DataViewTypeUnregisteredEvent, type);
+  Events.dispatch(DataViewTypeUnregisteredEvent, viewType);
 }

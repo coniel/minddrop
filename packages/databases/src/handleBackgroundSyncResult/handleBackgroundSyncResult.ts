@@ -3,7 +3,6 @@ import { Events } from '@minddrop/events';
 import {
   ItemAddressChange,
   ItemAddressesChangedEvent,
-  ItemAddressesChangedEventData,
 } from '@minddrop/item-references';
 import { restoreDates } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
@@ -91,10 +90,7 @@ export async function handleBackgroundSyncResult(
 
   // Dispatch the moved entries' address changes
   if (addressChanges.length > 0) {
-    await Events.dispatch<ItemAddressesChangedEventData>(
-      ItemAddressesChangedEvent,
-      addressChanges,
-    );
+    await Events.dispatch(ItemAddressesChangedEvent, addressChanges);
   }
 
   // Dispatch a single event with the full changeset

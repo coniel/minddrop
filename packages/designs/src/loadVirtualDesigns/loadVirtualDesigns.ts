@@ -1,6 +1,6 @@
 import { Events } from '@minddrop/events';
 import { DesignsStore } from '../DesignsStore';
-import { DesignsLoadedEvent, DesignsLoadedEventData } from '../events';
+import { DesignsLoadedEvent } from '../events';
 import { Design, VirtualDesignData } from '../types';
 
 /**
@@ -29,7 +29,7 @@ export function loadVirtualDesigns(data: VirtualDesignData[]): Design[] {
   DesignsStore.load(designs);
 
   // Dispatch a designs loaded event
-  Events.dispatch<DesignsLoadedEventData>(DesignsLoadedEvent, designs);
+  Events.dispatch(DesignsLoadedEvent, designs);
 
   return designs;
 }

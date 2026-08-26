@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { DataViewsStore } from '../DataViewsStore';
-import { DataViewsLoadedEvent, DataViewsLoadedEventData } from '../events';
+import { DataViewsLoadedEvent } from '../events';
 import { cleanup, mockDate, setup } from '../test-utils';
 import { loadVirtualDataViews } from './loadVirtualDataViews';
 
@@ -70,15 +70,11 @@ describe('loadVirtualDataViews', () => {
 
   it('dispatches a views loaded event', () =>
     new Promise<void>((done) => {
-      Events.addListener<DataViewsLoadedEventData>(
-        DataViewsLoadedEvent,
-        'test',
-        (payload) => {
-          expect(payload.data).toHaveLength(2);
-          expect(payload.data[0].virtual).toBe(true);
-          done();
-        },
-      );
+      Events.addListener(DataViewsLoadedEvent, 'test', (payload) => {
+        expect(payload.data).toHaveLength(2);
+        expect(payload.data[0].virtual).toBe(true);
+        done();
+      });
 
       loadVirtualDataViews(data);
     }));

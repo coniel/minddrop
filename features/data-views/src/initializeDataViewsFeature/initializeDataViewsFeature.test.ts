@@ -4,22 +4,15 @@ import { DataViewFixtures } from '@minddrop/data-views/test-utils';
 import { Events } from '@minddrop/events';
 import {
   CloseViewEvent,
-  CloseViewEventData,
   OpenViewEvent,
-  OpenViewEventData,
   UpdateViewEvent,
-  UpdateViewEventData,
 } from '@minddrop/views';
-import { DataViewViewProps } from '../DataViewView';
-import { NewDataViewViewProps } from '../NewDataViewView';
 import {
   DataViewViewName,
   NewDataViewViewId,
   NewDataViewViewName,
   OpenDataViewViewEvent,
-  OpenDataViewViewEventData,
   OpenNewDataViewViewEvent,
-  OpenNewDataViewViewEventData,
 } from '../events';
 import { cleanup, setup } from '../test-utils';
 import { initializeDataViewsFeature } from './initializeDataViewsFeature';
@@ -43,28 +36,24 @@ describe('initializeDataViewsFeature', () => {
 
   it('opens the data view view on open data view view event', () =>
     new Promise<void>((resolve) => {
-      Events.addListener<OpenViewEventData<DataViewViewProps>>(
-        OpenViewEvent,
-        'test-open-data-view',
-        ({ data }) => {
-          // The data view view opens with the data view's details
-          expect(data.view).toBe(DataViewViewName);
-          expect(data.id).toBe(`data-views:data-view:${dataView_gallery_1.id}`);
-          expect(data.props!.dataViewId).toBe(dataView_gallery_1.id);
-          expect(data.title).toBe(dataView_gallery_1.name);
-          expect(data.icon).toBe(dataView_gallery_1.icon);
-          resolve();
-        },
-      );
+      Events.addListener(OpenViewEvent, 'test-open-data-view', ({ data }) => {
+        // The data view view opens with the data view's details
+        expect(data.view).toBe(DataViewViewName);
+        expect(data.id).toBe(`data-views:data-view:${dataView_gallery_1.id}`);
+        expect(data.props!.dataViewId).toBe(dataView_gallery_1.id);
+        expect(data.title).toBe(dataView_gallery_1.name);
+        expect(data.icon).toBe(dataView_gallery_1.icon);
+        resolve();
+      });
 
-      Events.dispatch<OpenDataViewViewEventData>(OpenDataViewViewEvent, {
+      Events.dispatch(OpenDataViewViewEvent, {
         dataViewId: dataView_gallery_1.id,
       });
     }));
 
   it('opens the new data view view on open new data view view event', () =>
     new Promise<void>((resolve) => {
-      Events.addListener<OpenViewEventData<NewDataViewViewProps>>(
+      Events.addListener(
         OpenViewEvent,
         'test-open-new-data-view',
         ({ data }) => {
@@ -76,14 +65,14 @@ describe('initializeDataViewsFeature', () => {
         },
       );
 
-      Events.dispatch<OpenNewDataViewViewEventData>(OpenNewDataViewViewEvent, {
+      Events.dispatch(OpenNewDataViewViewEvent, {
         viewType: dataView_gallery_1.type,
       });
     }));
 
   it('updates the data view view when the data view is updated', () =>
     new Promise<void>((resolve) => {
-      Events.addListener<UpdateViewEventData>(
+      Events.addListener(
         UpdateViewEvent,
         'test-update-data-view',
         ({ data }) => {
@@ -99,14 +88,10 @@ describe('initializeDataViewsFeature', () => {
 
   it('closes the data view view when the data view is deleted', () =>
     new Promise<void>((resolve) => {
-      Events.addListener<CloseViewEventData>(
-        CloseViewEvent,
-        'test-close-data-view',
-        ({ data }) => {
-          expect(data.id).toBe(`data-views:data-view:${dataView_gallery_1.id}`);
-          resolve();
-        },
-      );
+      Events.addListener(CloseViewEvent, 'test-close-data-view', ({ data }) => {
+        expect(data.id).toBe(`data-views:data-view:${dataView_gallery_1.id}`);
+        resolve();
+      });
 
       DataViews.delete(dataView_gallery_1.id);
     }));

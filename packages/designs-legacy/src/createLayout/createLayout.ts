@@ -1,7 +1,7 @@
 import { Events } from '@minddrop/events';
 import { createI18nKeyBuilder, i18n } from '@minddrop/i18n';
 import { entityId } from '@minddrop/utils';
-import { LayoutCreatedEvent, LayoutCreatedEventData } from '../events';
+import { LayoutCreatedEvent } from '../events';
 import { getDesign } from '../getDesign';
 import { DefaultContainerElementStyle } from '../styles';
 import { Layout, LayoutFrame, LayoutType } from '../types';
@@ -70,7 +70,7 @@ export async function createLayout(
   await updateDesign(design.id, { layouts: [...design.layouts, layout] });
 
   // Dispatch a layout created event
-  Events.dispatch<LayoutCreatedEventData>(LayoutCreatedEvent, layout);
+  Events.dispatch(LayoutCreatedEvent, layout);
 
   return layout;
 }

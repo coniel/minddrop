@@ -2,10 +2,7 @@ import { Collections } from '@minddrop/collections';
 import { Events } from '@minddrop/events';
 import { InvalidParameterError } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
-import {
-  DatabaseEntryUpdatedEvent,
-  DatabaseEntryUpdatedEventData,
-} from '../events';
+import { DatabaseEntryUpdatedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntry } from '../getDatabaseEntry';
 import { DatabaseEntry } from '../types';
@@ -71,7 +68,7 @@ export async function clearDatabaseEntryProperty(
   await writeDatabaseEntry(entryId);
 
   // Dispatch entry update event
-  Events.dispatch<DatabaseEntryUpdatedEventData>(DatabaseEntryUpdatedEvent, {
+  Events.dispatch(DatabaseEntryUpdatedEvent, {
     original: originalEntry,
     updated: updatedEntry,
   });

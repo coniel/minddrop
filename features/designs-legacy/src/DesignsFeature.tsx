@@ -19,7 +19,7 @@ export const DesignsFeature: React.FC = () => {
     // an explicit back event.
     let currentView: OpenViewEventData | null = null;
 
-    Events.addListener<OpenViewEventData>(
+    Events.addListener(
       OpenViewEvent,
       `${DesignStudioEventListenerId}:view-tracker`,
       ({ data }) => {
@@ -34,26 +34,23 @@ export const DesignsFeature: React.FC = () => {
 
     // Listen for design studio open events and open the design
     // studio when one is received.
-    Events.addListener<OpenDesignStudioEventData>(
+    Events.addListener(
       OpenDesignStudioEvent,
       DesignStudioEventListenerId,
       ({ data }) => {
         // If no back event was provided but there is a tracked
         // current view, set it as the back target.
-        const eventData = { ...data };
+        const eventData = { ...(data as OpenDesignStudioEventData) };
 
         if (!eventData.backEvent && currentView) {
           eventData.backEvent = OpenViewEvent;
           eventData.backEventData = currentView;
         }
 
-        Events.dispatch<OpenViewEventData<OpenDesignStudioEventData>>(
-          OpenViewEvent,
-          {
-            view: DesignStudioViewName,
-            props: eventData,
-          },
-        );
+        Events.dispatch(OpenViewEvent, {
+          view: DesignStudioViewName,
+          props: eventData,
+        });
       },
     );
 

@@ -4,11 +4,7 @@ import {
   Databases,
   PropertyFileStorage,
 } from '@minddrop/databases';
-import {
-  Events,
-  OpenConfirmationDialogEvent,
-  OpenConfirmationDialogEventData,
-} from '@minddrop/events';
+import { Events, OpenConfirmationDialogEvent } from '@minddrop/events';
 import {
   TranslationKey,
   createI18nKeyBuilder,
@@ -236,19 +232,16 @@ export const DatabaseSettingsPanel: React.FC<DatabaseSettingsPanelProps> = ({
     );
 
     // Open a confirmation dialog for the destructive delete action
-    Events.dispatch<OpenConfirmationDialogEventData>(
-      OpenConfirmationDialogEvent,
-      {
-        title: i18nKey('title'),
-        message: i18nKey('message'),
-        confirmLabel: i18nKey('confirm'),
-        danger: true,
-        onConfirm: () => {
-          // Move the database to the system trash
-          Databases.delete(databaseId);
-        },
+    Events.dispatch(OpenConfirmationDialogEvent, {
+      title: i18nKey('title'),
+      message: i18nKey('message'),
+      confirmLabel: i18nKey('confirm'),
+      danger: true,
+      onConfirm: () => {
+        // Move the database to the system trash
+        Databases.delete(databaseId);
       },
-    );
+    });
   }
 
   // Prompt for confirmation before clearing all entries
@@ -258,19 +251,16 @@ export const DatabaseSettingsPanel: React.FC<DatabaseSettingsPanelProps> = ({
     );
 
     // Open a confirmation dialog for the destructive clear action
-    Events.dispatch<OpenConfirmationDialogEventData>(
-      OpenConfirmationDialogEvent,
-      {
-        title: i18nKey('title'),
-        message: i18nKey('message'),
-        confirmLabel: i18nKey('confirm'),
-        danger: true,
-        onConfirm: () => {
-          // Move all of the database's entries to the system trash
-          Databases.clearEntries(databaseId);
-        },
+    Events.dispatch(OpenConfirmationDialogEvent, {
+      title: i18nKey('title'),
+      message: i18nKey('message'),
+      confirmLabel: i18nKey('confirm'),
+      danger: true,
+      onConfirm: () => {
+        // Move all of the database's entries to the system trash
+        Databases.clearEntries(databaseId);
       },
-    );
+    });
   }
 
   if (!database) {

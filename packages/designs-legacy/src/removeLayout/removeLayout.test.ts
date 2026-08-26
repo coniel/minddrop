@@ -3,7 +3,7 @@ import { Events } from '@minddrop/events';
 import { DesignsStore } from '../DesignsStore';
 import { defaultLayouts } from '../default-layouts';
 import { DesignNotFoundError, LayoutNotFoundError } from '../errors';
-import { LayoutDeletedEvent, LayoutDeletedEventData } from '../events';
+import { LayoutDeletedEvent } from '../events';
 import {
   MockFs,
   cleanup,
@@ -64,14 +64,10 @@ describe('removeLayout', () => {
 
   it('dispatches a layout deleted event', async () =>
     new Promise<void>((done) => {
-      Events.addListener<LayoutDeletedEventData>(
-        LayoutDeletedEvent,
-        'test',
-        (payload) => {
-          expect(payload.data).toEqual(layout_card_1);
-          done();
-        },
-      );
+      Events.addListener(LayoutDeletedEvent, 'test', (payload) => {
+        expect(payload.data).toEqual(layout_card_1);
+        done();
+      });
 
       removeLayout(layout_card_1.id);
     }));

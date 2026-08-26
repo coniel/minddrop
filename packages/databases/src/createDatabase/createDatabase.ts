@@ -22,7 +22,7 @@ export type CreateDatabaseOptions = Partial<
  * @param options - The database creation options.
  * @returns The new database.
  *
- * @dispatches databases:database:create
+ * @dispatches databases:database:created
  */
 export async function createDatabase(
   options: CreateDatabaseOptions,

@@ -20,3 +20,9 @@ export interface DesignStudioViewProps extends OpenDesignStudioEventData {
    */
   fromDashboard?: boolean;
 }
+
+declare module '@minddrop/events/EventDataMap' {
+  interface EventDataMap {
+    'designs:studio-next:open': OpenDesignStudioEventData;
+  }
+}

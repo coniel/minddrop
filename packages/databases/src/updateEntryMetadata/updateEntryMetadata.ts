@@ -1,9 +1,6 @@
 import { Events } from '@minddrop/events';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
-import {
-  DatabaseEntryMetadataUpdatedEvent,
-  DatabaseEntryMetadataUpdatedEventData,
-} from '../events';
+import { DatabaseEntryMetadataUpdatedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntry } from '../getDatabaseEntry';
 import { DatabaseEntryMetadata } from '../types';
@@ -19,7 +16,7 @@ import { writeEntryMetadata } from '../writeEntryMetadata';
  * @throws {DatabaseEntryNotFoundError} If the entry does not exist.
  * @throws {DatabaseNotFoundError} If the entry database does not exist.
  *
- * @dispatches databases:entry:metadata:updated
+ * @dispatches database-entries:entry:metadata-updated
  */
 export async function updateEntryMetadata(
   entryId: string,
@@ -37,8 +34,9 @@ export async function updateEntryMetadata(
   await writeEntryMetadata(database.path, entry.path, metadata);
 
   // Dispatch metadata updated event
-  Events.dispatch<DatabaseEntryMetadataUpdatedEventData>(
-    DatabaseEntryMetadataUpdatedEvent,
-    { entryId, databaseId: entry.database, metadata },
-  );
+  Events.dispatch(DatabaseEntryMetadataUpdatedEvent, {
+    entryId,
+    databaseId: entry.database,
+    metadata,
+  });
 }

@@ -7,7 +7,6 @@ import {
   TEXT_PROPERTY_TYPES,
 } from '../constants';
 import { DatabaseEntriesSqlSyncedEvent } from '../events';
-import type { DatabaseEntriesSqlSyncedEventData } from '../events';
 import type { SqlEntryPropertyRecord, SqlEntryRecord } from '../types';
 
 /**
@@ -66,15 +65,12 @@ export function sqlUpsertEntries(
 
   // Dispatch SQL synced event unless silenced
   if (!options?.silent) {
-    Events.dispatch<DatabaseEntriesSqlSyncedEventData>(
-      DatabaseEntriesSqlSyncedEvent,
-      {
-        action: 'upsert',
-        entryIds: entries.map((entry) => entry.id),
-        databaseId,
-        entries,
-      },
-    );
+    Events.dispatch(DatabaseEntriesSqlSyncedEvent, {
+      action: 'upsert',
+      entryIds: entries.map((entry) => entry.id),
+      databaseId,
+      entries,
+    });
   }
 }
 

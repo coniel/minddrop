@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { i18n } from '@minddrop/i18n';
 import { DesignsStore } from '../DesignsStore';
-import { DesignCreatedEvent, DesignCreatedEventData } from '../events';
+import { DesignCreatedEvent } from '../events';
 import { MockFs, cleanup, setup } from '../test-utils';
 import { Design, DesignId } from '../types';
 import { resolveDesignFilePath, resolveDesignsDirPath } from '../utils';
@@ -63,14 +63,10 @@ describe('createDesign', () => {
 
   it('dispatches a design created event', async () =>
     new Promise<void>((done) => {
-      Events.addListener<DesignCreatedEventData>(
-        DesignCreatedEvent,
-        'test',
-        (payload) => {
-          expect(payload.data).toMatchObject(newDesign);
-          done();
-        },
-      );
+      Events.addListener(DesignCreatedEvent, 'test', (payload) => {
+        expect(payload.data).toMatchObject(newDesign);
+        done();
+      });
 
       createDesign('Books');
     }));

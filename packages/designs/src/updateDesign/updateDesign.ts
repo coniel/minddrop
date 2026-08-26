@@ -1,7 +1,7 @@
 import { Events } from '@minddrop/events';
 import { PropertiesSchema } from '@minddrop/properties';
 import { DesignsStore } from '../DesignsStore';
-import { DesignUpdatedEvent, DesignUpdatedEventData } from '../events';
+import { DesignUpdatedEvent } from '../events';
 import { getDesign } from '../getDesign';
 import { Design } from '../types';
 import { writeDesign } from '../writeDesign';
@@ -54,7 +54,7 @@ export async function updateDesign(
   const updatedDesign = getDesign(id);
 
   // Dispatch a design updated event
-  Events.dispatch<DesignUpdatedEventData>(DesignUpdatedEvent, {
+  Events.dispatch(DesignUpdatedEvent, {
     original: design,
     updated: updatedDesign,
   });

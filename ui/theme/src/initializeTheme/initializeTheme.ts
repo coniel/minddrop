@@ -4,11 +4,8 @@ import { ThemeStore } from '../ThemeStore';
 import { ThemeSystem } from '../constants';
 import {
   ImageDimmingChangedEvent,
-  ImageDimmingChangedEventData,
   InvertLightImagesChangedEvent,
-  InvertLightImagesChangedEventData,
   VariantChangedEvent,
-  VariantChangedEventData,
 } from '../events';
 import { getImageDimming } from '../getImageDimming';
 import { getInvertLightImages } from '../getInvertLightImages';
@@ -28,7 +25,7 @@ export async function initializeTheme() {
 
   // Listen for 'theme:variant:changed' events to manage
   // the OS dark mode listener.
-  Events.addListener<VariantChangedEventData>(
+  Events.addListener(
     VariantChangedEvent,
     'theme:initialize:manage-os-listener',
     (payload) => {
@@ -55,23 +52,22 @@ export async function initializeTheme() {
   // Dispatch the initial 'theme:variant:changed' event so the
   // app can set the initial CSS class and the OS listener is
   // set up if needed.
-  Events.dispatch<VariantChangedEventData>(VariantChangedEvent, {
+  Events.dispatch(VariantChangedEvent, {
     variant,
     resolvedAppearance,
   });
 
   // Dispatch the initial 'theme:image-dimming:changed' event so
   // the app can set the initial CSS class.
-  Events.dispatch<ImageDimmingChangedEventData>(ImageDimmingChangedEvent, {
+  Events.dispatch(ImageDimmingChangedEvent, {
     imageDimming: getImageDimming(),
   });
 
   // Dispatch the initial 'theme:invert-light-images:changed' event
   // so the app can set the initial CSS class.
-  Events.dispatch<InvertLightImagesChangedEventData>(
-    InvertLightImagesChangedEvent,
-    { invertLightImages: getInvertLightImages() },
-  );
+  Events.dispatch(InvertLightImagesChangedEvent, {
+    invertLightImages: getInvertLightImages(),
+  });
 }
 
 /**
@@ -87,7 +83,7 @@ function onOsDarkModeChange() {
   const resolvedAppearance = resolveThemeVariant(variant);
 
   // Dispatch a 'theme:variant:changed' event
-  Events.dispatch<VariantChangedEventData>(VariantChangedEvent, {
+  Events.dispatch(VariantChangedEvent, {
     variant,
     resolvedAppearance,
   });

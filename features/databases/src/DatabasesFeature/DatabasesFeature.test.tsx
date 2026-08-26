@@ -1,18 +1,12 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { render } from '@minddrop/test-utils';
-import {
-  OpenViewEvent,
-  OpenViewEventData,
-  ViewAreaChangedEvent,
-  ViewAreaChangedEventData,
-} from '@minddrop/views';
+import { OpenViewEvent, ViewAreaChangedEvent } from '@minddrop/views';
 import { DatabasesFeatureState } from '../DatabasesFeatureState';
 import {
   DatabaseViewName,
   EventListenerId,
   OpenDatabaseViewEvent,
-  OpenDatabaseViewEventData,
 } from '../events';
 import { cleanup } from '../test-utils';
 import { DatabasesFeature } from './DatabasesFeature';
@@ -27,18 +21,14 @@ describe('DatabasesFeature', () => {
     new Promise<void>((resolve) => {
       render(<DatabasesFeature />);
 
-      Events.addListener<OpenViewEventData<OpenDatabaseViewEventData>>(
-        OpenViewEvent,
-        EventListenerId,
-        ({ data }) => {
-          // Should include the database view name
-          expect(data.view).toBe(DatabaseViewName);
-          expect(data.props!.databaseId).toBe('test-database');
-          resolve();
-        },
-      );
+      Events.addListener(OpenViewEvent, EventListenerId, ({ data }) => {
+        // Should include the database view name
+        expect(data.view).toBe(DatabaseViewName);
+        expect(data.props!.databaseId).toBe('test-database');
+        resolve();
+      });
 
-      Events.dispatch<OpenDatabaseViewEventData>(OpenDatabaseViewEvent, {
+      Events.dispatch(OpenDatabaseViewEvent, {
         databaseId: 'test-database',
       });
     }));
@@ -54,7 +44,7 @@ describe('DatabasesFeature', () => {
         resolve();
       });
 
-      Events.dispatch<ViewAreaChangedEventData>(ViewAreaChangedEvent, {
+      Events.dispatch(ViewAreaChangedEvent, {
         viewAreaId: 'main',
         main: {
           view: DatabaseViewName,
@@ -78,7 +68,7 @@ describe('DatabasesFeature', () => {
       });
 
       // Show a non-database view
-      Events.dispatch<ViewAreaChangedEventData>(ViewAreaChangedEvent, {
+      Events.dispatch(ViewAreaChangedEvent, {
         viewAreaId: 'main',
         main: { view: 'some-other:view:name' },
         split: null,

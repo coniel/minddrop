@@ -32,3 +32,11 @@ export interface InvertLightImagesChangedEventData {
    */
   invertLightImages: boolean;
 }
+
+declare module '@minddrop/events/EventDataMap' {
+  interface EventDataMap {
+    'theme:variant:changed': VariantChangedEventData;
+    'theme:image-dimming:changed': ImageDimmingChangedEventData;
+    'theme:invert-light-images:changed': InvertLightImagesChangedEventData;
+  }
+}

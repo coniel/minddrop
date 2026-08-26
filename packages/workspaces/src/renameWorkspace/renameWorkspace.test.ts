@@ -3,7 +3,7 @@ import { Events } from '@minddrop/events';
 import { Fs, PathConflictError } from '@minddrop/file-system';
 import { omitPath } from '@minddrop/utils';
 import { WorkspacesStore } from '../WorkspacesStore';
-import { WorkspaceUpdatedEvent, WorkspaceUpdatedEventData } from '../events';
+import { WorkspaceUpdatedEvent } from '../events';
 import {
   MockFs,
   cleanup,
@@ -85,15 +85,11 @@ describe('renameWorkspace', () => {
 
   it('dispatches a workspace updated event', async () =>
     new Promise<void>((done) => {
-      Events.addListener<WorkspaceUpdatedEventData>(
-        WorkspaceUpdatedEvent,
-        'test',
-        (payload) => {
-          expect(payload.data.original).toEqual(workspace_1);
-          expect(payload.data.updated).toEqual(updatedWorkspace);
-          done();
-        },
-      );
+      Events.addListener(WorkspaceUpdatedEvent, 'test', (payload) => {
+        expect(payload.data.original).toEqual(workspace_1);
+        expect(payload.data.updated).toEqual(updatedWorkspace);
+        done();
+      });
 
       renameWorkspace(workspace_1.id, newName);
     }));

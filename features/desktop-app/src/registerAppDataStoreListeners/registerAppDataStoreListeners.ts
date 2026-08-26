@@ -19,14 +19,10 @@ const STORES_DIR = 'stores';
  */
 export function registerAppDataStoreListeners(): VoidFunction {
   // Listen for store persist events and write data to disk
-  Events.addListener<StorePersistEventData>(
-    StorePersistEvent,
-    LISTENER_ID,
-    handlePersist,
-  );
+  Events.addListener(StorePersistEvent, LISTENER_ID, handlePersist);
 
   // Listen for store hydrate requests and read data from disk
-  Events.addListener<StoreHydrateRequestEventData>(
+  Events.addListener(
     StoreHydrateRequestEvent,
     LISTENER_ID,
     handleHydrateRequest,
@@ -102,10 +98,13 @@ async function handleHydrateRequest({
   }
 
   // Read the persisted store data
-  const storeData = await Fs.readJsonFile(filePath, {
-    baseDir: BaseDirectory.AppData,
-    restoreDates: false,
-  });
+  const storeData = await Fs.readJsonFile<Record<string, unknown> | unknown[]>(
+    filePath,
+    {
+      baseDir: BaseDirectory.AppData,
+      restoreDates: false,
+    },
+  );
 
   // Dispatch hydrate event with the loaded data
   await Events.dispatch(StoreHydrateEvent, {

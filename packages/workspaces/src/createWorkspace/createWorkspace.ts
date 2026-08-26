@@ -1,7 +1,7 @@
 import { Events } from '@minddrop/events';
 import { Fs, PathConflictError } from '@minddrop/file-system';
 import { WorkspacesStore } from '../WorkspacesStore';
-import { WorkspaceCreatedEvent, WorkspaceCreatedEventData } from '../events';
+import { WorkspaceCreatedEvent } from '../events';
 import { Workspace } from '../types';
 import { generateWorkspaceConfig } from '../utils';
 import { writeWorkspaceConfig } from '../writeWorkspaceConfig';
@@ -49,7 +49,7 @@ export async function createWorkspace(
   await writeWorkspacesConfig();
 
   // Dispatch a workspace created event
-  Events.dispatch<WorkspaceCreatedEventData>(WorkspaceCreatedEvent, workspace);
+  Events.dispatch(WorkspaceCreatedEvent, workspace);
 
   // Return the new workspace
   return workspace;

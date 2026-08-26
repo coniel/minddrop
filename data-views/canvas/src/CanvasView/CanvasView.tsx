@@ -4,15 +4,10 @@ import { DataViewTypeComponentProps, DataViews } from '@minddrop/data-views';
 import {
   DatabaseEntries,
   DatabaseEntryDuplicatedEvent,
-  DatabaseEntryDuplicatedEventData,
   DatabaseId,
   Databases,
 } from '@minddrop/databases';
-import {
-  Events,
-  OpenConfirmationDialogEvent,
-  OpenConfirmationDialogEventData,
-} from '@minddrop/events';
+import { Events, OpenConfirmationDialogEvent } from '@minddrop/events';
 import { DataViewOptionsMenu } from '@minddrop/feature-data-views';
 import {
   DatabaseEntryRenderer,
@@ -372,19 +367,16 @@ const CanvasViewContent: React.FC<
       // singular wording is picked by key
       const single = nodeIds.length === 1;
 
-      Events.dispatch<OpenConfirmationDialogEventData>(
-        OpenConfirmationDialogEvent,
-        {
-          title: single ? `${i18nRoot}.titleOne` : `${i18nRoot}.title`,
-          message: single ? `${i18nRoot}.messageOne` : `${i18nRoot}.message`,
-          confirmLabel: `${i18nRoot}.confirm`,
-          danger: true,
-          onConfirm: () => {
-            nodeIds.forEach((entryId) => DatabaseEntries.delete(entryId));
-            canvas.clearSelection();
-          },
+      Events.dispatch(OpenConfirmationDialogEvent, {
+        title: single ? `${i18nRoot}.titleOne` : `${i18nRoot}.title`,
+        message: single ? `${i18nRoot}.messageOne` : `${i18nRoot}.message`,
+        confirmLabel: `${i18nRoot}.confirm`,
+        danger: true,
+        onConfirm: () => {
+          nodeIds.forEach((entryId) => DatabaseEntries.delete(entryId));
+          canvas.clearSelection();
         },
-      );
+      });
     },
     [canvas],
   );
@@ -487,7 +479,7 @@ const CanvasViewContent: React.FC<
   // the duplicate is added to the collection, so placing it now
   // keeps it from being reconciled into the auto-placed grid.
   useEffect(() => {
-    Events.addListener<DatabaseEntryDuplicatedEventData>(
+    Events.addListener(
       DatabaseEntryDuplicatedEvent,
       `canvas-view-${view.id}`,
       ({ data }) => {

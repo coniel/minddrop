@@ -2,7 +2,7 @@ import { Events } from '@minddrop/events';
 import { i18n } from '@minddrop/i18n';
 import { AutomationsStore } from '../AutomationsStore';
 import { DefaultAutomationIcon } from '../constants';
-import { AutomationCreatedEvent, AutomationCreatedEventData } from '../events';
+import { AutomationCreatedEvent } from '../events';
 import { Automation, CreateVirtualAutomationData } from '../types';
 
 /**
@@ -35,10 +35,7 @@ export function createVirtualAutomation(
   AutomationsStore.set(automation);
 
   // Dispatch the automation created event
-  Events.dispatch<AutomationCreatedEventData>(
-    AutomationCreatedEvent,
-    automation,
-  );
+  Events.dispatch(AutomationCreatedEvent, automation);
 
   return automation;
 }

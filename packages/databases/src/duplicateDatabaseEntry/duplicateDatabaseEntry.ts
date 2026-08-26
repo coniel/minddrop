@@ -5,10 +5,7 @@ import { Properties, PropertyMap } from '@minddrop/properties';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { createDatabaseEntry } from '../createDatabaseEntry';
 import { ensurePropertyFileDirExists } from '../ensurePropertyFileDirExists';
-import {
-  DatabaseEntryDuplicatedEvent,
-  DatabaseEntryDuplicatedEventData,
-} from '../events';
+import { DatabaseEntryDuplicatedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntry } from '../getDatabaseEntry';
 import { DatabaseEntry, DatabaseEntryRenderSource } from '../types';
@@ -125,10 +122,11 @@ export async function duplicateDatabaseEntry(
   // Dispatch the duplicated event before adding the duplicate to the
   // source collection so listeners can position the duplicate relative
   // to the original before it appears in the collection
-  await Events.dispatch<DatabaseEntryDuplicatedEventData>(
-    DatabaseEntryDuplicatedEvent,
-    { original: entry, duplicate: finalDuplicate, source },
-  );
+  await Events.dispatch(DatabaseEntryDuplicatedEvent, {
+    original: entry,
+    duplicate: finalDuplicate,
+    source,
+  });
 
   // Add the duplicate to the collection when duplicated from one
   if (source?.type === 'collection') {

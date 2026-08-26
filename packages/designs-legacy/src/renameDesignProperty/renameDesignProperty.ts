@@ -1,9 +1,6 @@
 import { Events } from '@minddrop/events';
 import { InvalidParameterError } from '@minddrop/utils';
-import {
-  DesignPropertyRenamedEvent,
-  DesignPropertyRenamedEventData,
-} from '../events';
+import { DesignPropertyRenamedEvent } from '../events';
 import { getDesign } from '../getDesign';
 import { Design } from '../types';
 import { updateDesign } from '../updateDesign';
@@ -62,7 +59,7 @@ export async function renameDesignProperty(
   });
 
   // Dispatch a property renamed event
-  Events.dispatch<DesignPropertyRenamedEventData>(DesignPropertyRenamedEvent, {
+  Events.dispatch(DesignPropertyRenamedEvent, {
     design: updated,
     oldName,
     newName,

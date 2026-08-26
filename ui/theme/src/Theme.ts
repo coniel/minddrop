@@ -13,11 +13,13 @@ import {
   VariantChangedEvent,
 } from './events';
 
+// Const-asserted so the names keep their literal types, which key
+// the event data registry
 export const events = {
   VariantChanged: VariantChangedEvent,
   ImageDimmingChanged: ImageDimmingChangedEvent,
   InvertLightImagesChanged: InvertLightImagesChangedEvent,
-};
+} as const;
 
 export const constants = {
   System: ThemeSystem,

@@ -1,20 +1,11 @@
 import { useEffect } from 'react';
 import { Events } from '@minddrop/events';
 import { Tabs } from '@minddrop/feature-views';
-import {
-  SpaceDeletedEvent,
-  SpaceDeletedEventData,
-  SpaceUpdatedEvent,
-  SpaceUpdatedEventData,
-  Spaces,
-} from '@minddrop/spaces';
+import { SpaceDeletedEvent, SpaceUpdatedEvent, Spaces } from '@minddrop/spaces';
 import {
   CloseViewEvent,
-  CloseViewEventData,
   OpenViewEvent,
-  OpenViewEventData,
   UpdateViewEvent,
-  UpdateViewEventData,
 } from '@minddrop/views';
 import { NewSpaceDialog } from '../NewSpaceDialog';
 import { SpaceViewProps } from '../SpaceView';
@@ -22,7 +13,6 @@ import { SpaceViewStateStore } from '../SpaceViewStateStore';
 import {
   EventListenerId,
   OpenSpaceViewEvent,
-  OpenSpaceViewEventData,
   OpenSpacesViewEvent,
   SpaceViewName,
   SpacesViewName,
@@ -57,33 +47,29 @@ export const SpacesFeature: React.FC = () => {
       }
 
       // Close the view
-      Events.dispatch<CloseViewEventData>(CloseViewEvent, {
+      Events.dispatch(CloseViewEvent, {
         id: tabView.id ?? spaceViewId(props.spaceId),
       });
     });
 
     // Listen for open space view events, and open the space view
     // when one is received
-    Events.addListener<OpenSpaceViewEventData>(
-      OpenSpaceViewEvent,
-      EventListenerId,
-      ({ data }) => {
-        const space = Spaces.get(data.spaceId, false);
+    Events.addListener(OpenSpaceViewEvent, EventListenerId, ({ data }) => {
+      const space = Spaces.get(data.spaceId, false);
 
-        Events.dispatch<OpenViewEventData<SpaceViewProps>>(OpenViewEvent, {
-          view: SpaceViewName,
-          id: spaceViewId(data.spaceId),
-          props: { spaceId: data.spaceId },
-          title: space?.name,
-          icon: space?.icon,
-        });
-      },
-    );
+      Events.dispatch(OpenViewEvent, {
+        view: SpaceViewName,
+        id: spaceViewId(data.spaceId),
+        props: { spaceId: data.spaceId },
+        title: space?.name,
+        icon: space?.icon,
+      });
+    });
 
     // Listen for open spaces view events, and open the spaces
     // list view when one is received
     Events.addListener(OpenSpacesViewEvent, EventListenerId, () => {
-      Events.dispatch<OpenViewEventData>(OpenViewEvent, {
+      Events.dispatch(OpenViewEvent, {
         view: SpacesViewName,
         id: spacesViewId,
       });
@@ -91,31 +77,23 @@ export const SpacesFeature: React.FC = () => {
 
     // Update the space's open view when the space changes
     // (e.g. renamed or re-iconed)
-    Events.addListener<SpaceUpdatedEventData>(
-      SpaceUpdatedEvent,
-      EventListenerId,
-      ({ data }) => {
-        Events.dispatch<UpdateViewEventData>(UpdateViewEvent, {
-          id: spaceViewId(data.updated.id),
-          title: data.updated.name,
-          icon: data.updated.icon,
-        });
-      },
-    );
+    Events.addListener(SpaceUpdatedEvent, EventListenerId, ({ data }) => {
+      Events.dispatch(UpdateViewEvent, {
+        id: spaceViewId(data.updated.id),
+        title: data.updated.name,
+        icon: data.updated.icon,
+      });
+    });
 
     // Close the space's open view and drop its view state when
     // the space is deleted
-    Events.addListener<SpaceDeletedEventData>(
-      SpaceDeletedEvent,
-      EventListenerId,
-      ({ data }) => {
-        SpaceViewStateStore.remove(data.id);
+    Events.addListener(SpaceDeletedEvent, EventListenerId, ({ data }) => {
+      SpaceViewStateStore.remove(data.id);
 
-        Events.dispatch<CloseViewEventData>(CloseViewEvent, {
-          id: spaceViewId(data.id),
-        });
-      },
-    );
+      Events.dispatch(CloseViewEvent, {
+        id: spaceViewId(data.id),
+      });
+    });
 
     return () => {
       Events.removeListener(OpenSpaceViewEvent, EventListenerId);

@@ -3,7 +3,7 @@ import { Events } from '@minddrop/events';
 import { i18n } from '@minddrop/i18n';
 import { DesignsStore } from '../DesignsStore';
 import { DesignNotFoundError } from '../errors';
-import { LayoutCreatedEvent, LayoutCreatedEventData } from '../events';
+import { LayoutCreatedEvent } from '../events';
 import { MockFs, cleanup, design_empty, setup } from '../test-utils';
 import { Design, Layout } from '../types';
 import { resolveDesignFilePath } from '../utils';
@@ -96,14 +96,10 @@ describe('createLayout', () => {
 
   it('dispatches a layout created event', async () =>
     new Promise<void>((done) => {
-      Events.addListener<LayoutCreatedEventData>(
-        LayoutCreatedEvent,
-        'test',
-        (payload) => {
-          expect(payload.data).toMatchObject(newLayout);
-          done();
-        },
-      );
+      Events.addListener(LayoutCreatedEvent, 'test', (payload) => {
+        expect(payload.data).toMatchObject(newLayout);
+        done();
+      });
 
       createLayout(design_empty.id, 'card', 'My card');
     }));

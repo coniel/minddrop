@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { SpacesStore } from '../SpacesStore';
-import { SpaceUpdatedEvent, SpaceUpdatedEventData } from '../events';
+import { SpaceUpdatedEvent } from '../events';
 import { MockFs, cleanup, mockDate, setup, space_1 } from '../test-utils';
 import { Space } from '../types';
 import { resolveSpaceFilePath } from '../utils';
@@ -43,15 +43,11 @@ describe('updateSpace', () => {
 
   it('dispatches the space updated event', async () =>
     new Promise<void>((done) => {
-      Events.addListener<SpaceUpdatedEventData>(
-        SpaceUpdatedEvent,
-        'test-space-updated',
-        (payload) => {
-          expect(payload.data.original).toEqual(space_1);
-          expect(payload.data.updated).toEqual(updatedSpace);
-          done();
-        },
-      );
+      Events.addListener(SpaceUpdatedEvent, 'test-space-updated', (payload) => {
+        expect(payload.data.original).toEqual(space_1);
+        expect(payload.data.updated).toEqual(updatedSpace);
+        done();
+      });
 
       updateSpace(space_1.id, update);
     }));

@@ -1,6 +1,6 @@
 import { Events } from '@minddrop/events';
 import { SelectionStore } from '../SelectionStore';
-import { SelectionClearedEvent, SelectionClearedEventData } from '../events';
+import { SelectionClearedEvent } from '../events';
 import { getSelection } from '../getSelection';
 import { removeFromSelection } from '../removeFromSelection';
 
@@ -18,5 +18,5 @@ export function clearSelection(): void {
   SelectionStore.getState().setIsDragging(false);
 
   // Dispatch a selection cleared event
-  Events.dispatch<SelectionClearedEventData>(SelectionClearedEvent, selection);
+  Events.dispatch(SelectionClearedEvent, selection);
 }

@@ -8,6 +8,13 @@ import { useOpenView } from './useOpenView';
 const TestOpenEvent = 'test:view:open';
 const ListenerId = 'use-open-view-test';
 
+// Register the test event so the captured data is typed
+declare module '@minddrop/events/EventDataMap' {
+  interface EventDataMap {
+    'test:view:open': BaseOpenViewEventData;
+  }
+}
+
 // Renders the hook inside a pane
 function renderInPane() {
   return renderHook(() => useOpenView(), {
@@ -23,13 +30,9 @@ function renderInPane() {
 function captureDispatch(): { data?: BaseOpenViewEventData } {
   const captured: { data?: BaseOpenViewEventData } = {};
 
-  Events.addListener<BaseOpenViewEventData>(
-    TestOpenEvent,
-    ListenerId,
-    ({ data }) => {
-      captured.data = data;
-    },
-  );
+  Events.addListener(TestOpenEvent, ListenerId, ({ data }) => {
+    captured.data = data;
+  });
 
   return captured;
 }

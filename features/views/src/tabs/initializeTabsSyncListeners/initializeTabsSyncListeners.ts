@@ -1,15 +1,10 @@
 import { Events } from '@minddrop/events';
 import {
   CloseViewEvent,
-  CloseViewEventData,
   NavigateBackEvent,
-  NavigateBackEventData,
   UpdateViewEvent,
-  UpdateViewEventData,
   ViewAreaChangedEvent,
-  ViewAreaChangedEventData,
   ViewAreaReadyEvent,
-  ViewAreaReadyEventData,
 } from '@minddrop/views';
 import { matchesViewArea } from '../../matchesViewArea';
 import { closeTabsForView } from '../closeTabsForView';
@@ -29,80 +24,60 @@ export function initializeTabsSyncListeners(viewAreaId: string): VoidFunction {
   const listenerId = `feature-views:tabs:${viewAreaId}`;
 
   // Record view area changes onto the active tab
-  Events.addListener<ViewAreaChangedEventData>(
-    ViewAreaChangedEvent,
-    listenerId,
-    ({ data }) => {
-      // Ignore changes from other view areas
-      if (data.viewAreaId !== viewAreaId) {
-        return;
-      }
+  Events.addListener(ViewAreaChangedEvent, listenerId, ({ data }) => {
+    // Ignore changes from other view areas
+    if (data.viewAreaId !== viewAreaId) {
+      return;
+    }
 
-      recordViewArea(viewAreaId, data);
-    },
-  );
+    recordViewArea(viewAreaId, data);
+  });
 
   // Update tabs when a view's metadata changes (e.g. a rename)
-  Events.addListener<UpdateViewEventData>(
-    UpdateViewEvent,
-    listenerId,
-    ({ data }) => {
-      // Ignore updates targeting other view areas
-      if (!matchesViewArea(data.viewAreaId, viewAreaId)) {
-        return;
-      }
+  Events.addListener(UpdateViewEvent, listenerId, ({ data }) => {
+    // Ignore updates targeting other view areas
+    if (!matchesViewArea(data.viewAreaId, viewAreaId)) {
+      return;
+    }
 
-      updateTabsForView(viewAreaId, data.id, {
-        id: data.newId,
-        props: data.props,
-        title: data.title,
-        icon: data.icon,
-      });
-    },
-  );
+    updateTabsForView(viewAreaId, data.id, {
+      id: data.newId,
+      props: data.props,
+      title: data.title,
+      icon: data.icon,
+    });
+  });
 
   // Close tabs when their view is closed (e.g. a delete)
-  Events.addListener<CloseViewEventData>(
-    CloseViewEvent,
-    listenerId,
-    ({ data }) => {
-      // Ignore closes targeting other view areas
-      if (!matchesViewArea(data.viewAreaId, viewAreaId)) {
-        return;
-      }
+  Events.addListener(CloseViewEvent, listenerId, ({ data }) => {
+    // Ignore closes targeting other view areas
+    if (!matchesViewArea(data.viewAreaId, viewAreaId)) {
+      return;
+    }
 
-      closeTabsForView(viewAreaId, data.id);
-    },
-  );
+    closeTabsForView(viewAreaId, data.id);
+  });
 
   // Navigate the active tab back when a view's breadcrumb is clicked
-  Events.addListener<NavigateBackEventData>(
-    NavigateBackEvent,
-    listenerId,
-    ({ data }) => {
-      // Ignore navigations targeting other view areas
-      if (!matchesViewArea(data.viewAreaId, viewAreaId)) {
-        return;
-      }
+  Events.addListener(NavigateBackEvent, listenerId, ({ data }) => {
+    // Ignore navigations targeting other view areas
+    if (!matchesViewArea(data.viewAreaId, viewAreaId)) {
+      return;
+    }
 
-      goBack(viewAreaId, data.steps);
-    },
-  );
+    goBack(viewAreaId, data.steps);
+  });
 
   // Restore the active tab's content once the view area is ready to
   // receive it (covers the view area mounting after this)
-  Events.addListener<ViewAreaReadyEventData>(
-    ViewAreaReadyEvent,
-    listenerId,
-    ({ data }) => {
-      // Ignore ready events from other view areas
-      if (data.viewAreaId !== viewAreaId) {
-        return;
-      }
+  Events.addListener(ViewAreaReadyEvent, listenerId, ({ data }) => {
+    // Ignore ready events from other view areas
+    if (data.viewAreaId !== viewAreaId) {
+      return;
+    }
 
-      restoreActiveTab(viewAreaId);
-    },
-  );
+    restoreActiveTab(viewAreaId);
+  });
 
   // Fallback for the reverse order, where the view area is already
   // mounted and listening before this runs

@@ -5,7 +5,6 @@ import {
   SetNavToolbarBackActionEvent,
   SetNavToolbarBackActionEventData,
   SetNavToolbarWidthEvent,
-  SetNavToolbarWidthEventData,
 } from '@minddrop/events';
 import { Tabs } from '@minddrop/feature-views';
 import { Toolbar, ToolbarIconButton } from '@minddrop/ui-primitives';
@@ -32,7 +31,7 @@ export const NavToolbar: FC = () => {
   // Registered as a layout effect so the width is in place before the
   // first paint, catching the sidebar's initial width dispatch
   useLayoutEffect(() => {
-    Events.addListener<SetNavToolbarWidthEventData>(
+    Events.addListener(
       SetNavToolbarWidthEvent,
       'app-nav-toolbar',
       ({ data }) => {
@@ -42,7 +41,7 @@ export const NavToolbar: FC = () => {
 
     // Views register a back action of their own, e.g. an editor
     // backing out to its dashboard
-    Events.addListener<SetNavToolbarBackActionEventData>(
+    Events.addListener(
       SetNavToolbarBackActionEvent,
       'app-nav-toolbar',
       ({ data }) => {

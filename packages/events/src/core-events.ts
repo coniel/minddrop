@@ -96,3 +96,20 @@ export type OpenConfirmationDialogEventData = {
    */
   onCancel?: () => void;
 };
+
+// The right panel open event's data is a view descriptor, so it is
+// registered by the package which defines that type
+declare module './types/EventDataMap.types' {
+  interface EventDataMap {
+    'app:right-panel:close': void;
+    'app:confirmation-dialog:open': OpenConfirmationDialogEventData;
+    'app:sidebar:open': void;
+    'app:sidebar:close': void;
+    'app:nav-toolbar:set-width': SetNavToolbarWidthEventData;
+    'app:nav-toolbar:set-back-action': SetNavToolbarBackActionEventData;
+    'app:nav-toolbar:back': void;
+    'app:window:toggle-fill': void;
+    'app:error': AppErrorEventData;
+    'app:reference:open': OpenReferenceEventData;
+  }
+}

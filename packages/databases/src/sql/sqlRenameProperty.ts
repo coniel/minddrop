@@ -1,7 +1,6 @@
 import { Events } from '@minddrop/events';
 import { Sql } from '@minddrop/sql';
 import { DatabasePropertySqlSyncedEvent } from '../events';
-import type { DatabasePropertySqlSyncedEventData } from '../events';
 
 /**
  * Renames a property across all entries in a database.
@@ -37,13 +36,10 @@ export function sqlRenameProperty(
   ]);
 
   // Dispatch SQL synced event
-  Events.dispatch<DatabasePropertySqlSyncedEventData>(
-    DatabasePropertySqlSyncedEvent,
-    {
-      action: 'rename',
-      databaseId,
-      oldName,
-      newName,
-    },
-  );
+  Events.dispatch(DatabasePropertySqlSyncedEvent, {
+    action: 'rename',
+    databaseId,
+    oldName,
+    newName,
+  });
 }

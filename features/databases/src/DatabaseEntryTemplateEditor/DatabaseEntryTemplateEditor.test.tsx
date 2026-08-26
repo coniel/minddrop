@@ -1,9 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import {
-  DatabaseUpdatedEvent,
-  DatabaseUpdatedEventData,
-  Databases,
-} from '@minddrop/databases';
+import { DatabaseUpdatedEvent, Databases } from '@minddrop/databases';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { Events, OpenConfirmationDialogEvent } from '@minddrop/events';
 import {
@@ -13,7 +9,6 @@ import {
   userEvent,
   waitFor,
 } from '@minddrop/test-utils';
-import { ConfirmationDialogProps } from '@minddrop/ui-primitives';
 import { cleanup, setup } from '../test-utils';
 import {
   DatabaseEntryTemplateEditor,
@@ -140,18 +135,14 @@ describe('<DatabaseEntryTemplateEditor />', () => {
     it('updates the template on save', () =>
       new Promise<void>((done) => {
         // Listen for database updates and verify the template was updated
-        Events.addListener<DatabaseUpdatedEventData>(
-          DatabaseUpdatedEvent,
-          'test',
-          ({ data }) => {
-            expect(
-              data.updated.entryTemplates?.find(
-                (template) => template.id === entryTemplate1.id,
-              )?.name,
-            ).toBe('Renamed Template');
-            done();
-          },
-        );
+        Events.addListener(DatabaseUpdatedEvent, 'test', ({ data }) => {
+          expect(
+            data.updated.entryTemplates?.find(
+              (template) => template.id === entryTemplate1.id,
+            )?.name,
+          ).toBe('Renamed Template');
+          done();
+        });
 
         renameTemplate();
       }));
@@ -185,7 +176,7 @@ describe('<DatabaseEntryTemplateEditor />', () => {
 
       it('mentions stored files when the template has some', () =>
         new Promise<void>((done) => {
-          Events.addListener<ConfirmationDialogProps>(
+          Events.addListener(
             OpenConfirmationDialogEvent,
             'test',
             ({ data }) => {
@@ -202,7 +193,7 @@ describe('<DatabaseEntryTemplateEditor />', () => {
 
       it('omits stored files when the template has none', () =>
         new Promise<void>((done) => {
-          Events.addListener<ConfirmationDialogProps>(
+          Events.addListener(
             OpenConfirmationDialogEvent,
             'test',
             ({ data }) => {
@@ -220,7 +211,7 @@ describe('<DatabaseEntryTemplateEditor />', () => {
       it('confirms before deleting the template', () =>
         new Promise<void>((done) => {
           // Listen for the confirmation dialog event
-          Events.addListener<ConfirmationDialogProps>(
+          Events.addListener(
             OpenConfirmationDialogEvent,
             'test',
             ({ data }) => {
@@ -230,18 +221,14 @@ describe('<DatabaseEntryTemplateEditor />', () => {
           );
 
           // Listen for database updates and verify the template was removed
-          Events.addListener<DatabaseUpdatedEventData>(
-            DatabaseUpdatedEvent,
-            'test',
-            ({ data }) => {
-              expect(
-                data.updated.entryTemplates?.find(
-                  (template) => template.id === entryTemplate1.id,
-                ),
-              ).toBeUndefined();
-              done();
-            },
-          );
+          Events.addListener(DatabaseUpdatedEvent, 'test', ({ data }) => {
+            expect(
+              data.updated.entryTemplates?.find(
+                (template) => template.id === entryTemplate1.id,
+              ),
+            ).toBeUndefined();
+            done();
+          });
 
           clickDeleteTemplate();
         }));
@@ -301,18 +288,14 @@ describe('<DatabaseEntryTemplateEditor />', () => {
     it('adds the template on save', () =>
       new Promise<void>((done) => {
         // Listen for database updates and verify the template was added
-        Events.addListener<DatabaseUpdatedEventData>(
-          DatabaseUpdatedEvent,
-          'test',
-          ({ data }) => {
-            expect(
-              data.updated.entryTemplates?.find(
-                (template) => template.name === 'New template',
-              ),
-            ).toBeDefined();
-            done();
-          },
-        );
+        Events.addListener(DatabaseUpdatedEvent, 'test', ({ data }) => {
+          expect(
+            data.updated.entryTemplates?.find(
+              (template) => template.name === 'New template',
+            ),
+          ).toBeDefined();
+          done();
+        });
 
         saveDraftTemplate();
       }));

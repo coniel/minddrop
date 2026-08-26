@@ -1,6 +1,6 @@
 import { Events } from '@minddrop/events';
 import { AutomationsStore } from '../AutomationsStore';
-import { AutomationsLoadedEvent, AutomationsLoadedEventData } from '../events';
+import { AutomationsLoadedEvent } from '../events';
 import { Automation, VirtualAutomationData } from '../types';
 
 /**
@@ -25,8 +25,5 @@ export function loadVirtualAutomations(data: VirtualAutomationData[]): void {
   AutomationsStore.load(automations);
 
   // Dispatch an automations loaded event
-  Events.dispatch<AutomationsLoadedEventData>(
-    AutomationsLoadedEvent,
-    automations,
-  );
+  Events.dispatch(AutomationsLoadedEvent, automations);
 }

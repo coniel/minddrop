@@ -1,17 +1,14 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { AppErrorEvent, AppErrorEventData, Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
-import {
-  ItemAddressesChangedEvent,
-  ItemAddressesChangedEventData,
-} from '@minddrop/item-references';
+import { ItemAddressesChangedEvent } from '@minddrop/item-references';
 import { Paths } from '@minddrop/utils';
 import { DatabaseEntrySerializersStore } from '../DatabaseEntrySerializersStore';
 import { EntryConversionBackupDirName } from '../constants';
 import { jsonEntrySerializer } from '../entry-serializers';
 import { DatabaseEntrySerializerNotRegisteredError } from '../errors';
 import { onItemAddressesChanged } from '../event-handlers';
-import { DatabaseUpdatedEvent, DatabaseUpdatedEventData } from '../events';
+import { DatabaseUpdatedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntry } from '../getDatabaseEntry';
 import {
@@ -42,10 +39,8 @@ describe('setDatabaseEntrySerializer', () => {
 
     // Register the reference rewrite listener normally wired by
     // initializeDatabaseEventHandlers
-    Events.on<ItemAddressesChangedEventData>(
-      ItemAddressesChangedEvent,
-      'test',
-      ({ data }) => onItemAddressesChanged(data),
+    Events.on(ItemAddressesChangedEvent, 'test', ({ data }) =>
+      onItemAddressesChanged(data),
     );
   });
 
@@ -126,13 +121,9 @@ describe('setDatabaseEntrySerializer', () => {
   it('dispatches an update event and persists the config', async () => {
     let dispatchedSerializer: string | undefined;
 
-    Events.addListener<DatabaseUpdatedEventData>(
-      DatabaseUpdatedEvent,
-      'test',
-      (payload) => {
-        dispatchedSerializer = payload.data.updated.entrySerializer;
-      },
-    );
+    Events.addListener(DatabaseUpdatedEvent, 'test', (payload) => {
+      dispatchedSerializer = payload.data.updated.entrySerializer;
+    });
 
     await setDatabaseEntrySerializer(objectDatabase.id, 'json');
 
@@ -190,7 +181,7 @@ describe('setDatabaseEntrySerializer', () => {
 
     let dispatchedError: AppErrorEventData | undefined;
 
-    Events.addListener<AppErrorEventData>(AppErrorEvent, 'test', (payload) => {
+    Events.addListener(AppErrorEvent, 'test', (payload) => {
       dispatchedError = payload.data;
     });
 

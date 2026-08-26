@@ -2,7 +2,7 @@ import { Events } from '@minddrop/events';
 import { Fs, PathConflictError } from '@minddrop/file-system';
 import { Paths } from '@minddrop/utils';
 import { DatabasesStore } from '../DatabasesStore';
-import { DatabaseRenamedEvent, DatabaseRenamedEventData } from '../events';
+import { DatabaseRenamedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
 import { Database } from '../types';
 import { writeDatabaseConfig } from '../writeDatabaseConfig';
@@ -54,7 +54,7 @@ export async function renameDatabase(
   });
 
   // Dispatch the rename event
-  await Events.dispatch<DatabaseRenamedEventData>(DatabaseRenamedEvent, {
+  await Events.dispatch(DatabaseRenamedEvent, {
     original: database,
     updated: renamedDatabase,
   });

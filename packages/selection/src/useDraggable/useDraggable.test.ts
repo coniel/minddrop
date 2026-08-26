@@ -2,12 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Events } from '@minddrop/events';
 import { act, renderHook } from '@minddrop/test-utils';
 import { SelectionStore } from '../SelectionStore';
-import {
-  SelectionDragEndedEvent,
-  SelectionDragEndedEventData,
-  SelectionDragStartedEvent,
-  SelectionDragStartedEventData,
-} from '../events';
+import { SelectionDragEndedEvent, SelectionDragStartedEvent } from '../events';
 import {
   cleanup,
   selectionItem_A_1 as draggedItem,
@@ -126,17 +121,13 @@ describe('useDraggable', () => {
     it('dispatches a drag started event', () =>
       new Promise<void>((done) => {
         // Listen to 'selection:drag:start' events
-        Events.addListener<SelectionDragStartedEventData>(
-          SelectionDragStartedEvent,
-          'test',
-          (payload) => {
-            // Payload data should contain the event
-            expect(payload.data.event).toEqual(dragEvent);
-            // Payload data should contain the selection
-            expect(payload.data.selection).toEqual([draggedItem]);
-            done();
-          },
-        );
+        Events.addListener(SelectionDragStartedEvent, 'test', (payload) => {
+          // Payload data should contain the event
+          expect(payload.data.event).toEqual(dragEvent);
+          // Payload data should contain the selection
+          expect(payload.data.selection).toEqual([draggedItem]);
+          done();
+        });
 
         const { result } = init();
 
@@ -161,17 +152,13 @@ describe('useDraggable', () => {
     it('dispatches a drag ended event', () =>
       new Promise<void>((done) => {
         // Listen to 'selection:drag:end' events
-        Events.addListener<SelectionDragEndedEventData>(
-          SelectionDragEndedEvent,
-          'test',
-          (payload) => {
-            // Payload data should contain the event
-            expect(payload.data.event).toEqual(dragEvent);
-            // Payload data should contain the selection
-            expect(payload.data.selection).toEqual([draggedItem]);
-            done();
-          },
-        );
+        Events.addListener(SelectionDragEndedEvent, 'test', (payload) => {
+          // Payload data should contain the event
+          expect(payload.data.event).toEqual(dragEvent);
+          // Payload data should contain the selection
+          expect(payload.data.selection).toEqual([draggedItem]);
+          done();
+        });
 
         const { result } = init();
 

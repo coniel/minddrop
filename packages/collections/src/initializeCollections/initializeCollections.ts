@@ -3,13 +3,12 @@ import { Fs } from '@minddrop/file-system';
 import { I18n } from '@minddrop/i18n';
 import {
   ItemAddressesChangedEvent,
-  ItemAddressesChangedEventData,
   resolveItemReferences,
 } from '@minddrop/item-references';
 import { restoreDates } from '@minddrop/utils';
 import { CollectionsStore } from '../CollectionsStore';
 import { onItemAddressesChanged } from '../event-handlers';
-import { CollectionsLoadedEvent, CollectionsLoadedEventData } from '../events';
+import { CollectionsLoadedEvent } from '../events';
 import { locales } from '../locales';
 import { readCollection } from '../readCollection';
 import { Collection } from '../types';
@@ -54,15 +53,10 @@ export async function initializeCollections(): Promise<void> {
   CollectionsStore.load(collections);
 
   // Rewrite collection files when member item addresses change
-  Events.on<ItemAddressesChangedEventData>(
-    ItemAddressesChangedEvent,
-    'collections',
-    ({ data }) => onItemAddressesChanged(data),
+  Events.on(ItemAddressesChangedEvent, 'collections', ({ data }) =>
+    onItemAddressesChanged(data),
   );
 
   // Dispatch a collections loaded event
-  Events.dispatch<CollectionsLoadedEventData>(
-    CollectionsLoadedEvent,
-    collections,
-  );
+  Events.dispatch(CollectionsLoadedEvent, collections);
 }

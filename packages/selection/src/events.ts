@@ -29,3 +29,15 @@ type DragEventData = {
 
 export type SelectionDragStartedEventData = DragEventData;
 export type SelectionDragEndedEventData = DragEventData;
+
+declare module '@minddrop/events/EventDataMap' {
+  interface EventDataMap {
+    'selection:items:added': SelectionItemsAddedEventData;
+    'selection:items:removed': SelectionItemsRemovedEventData;
+    'selection:cleared': SelectionClearedEventData;
+    'selection:copied': SelectionCopiedEventData;
+    'selection:deleted': SelectionDeletedEventData;
+    'selection:drag:started': SelectionDragStartedEventData;
+    'selection:drag:ended': SelectionDragEndedEventData;
+  }
+}

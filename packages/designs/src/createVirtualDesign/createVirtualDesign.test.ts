@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { DesignsStore } from '../DesignsStore';
-import { DesignCreatedEvent, DesignCreatedEventData } from '../events';
+import { DesignCreatedEvent } from '../events';
 import { MockFs, cleanup, setup } from '../test-utils';
 import { resolveDesignFilePath } from '../utils';
 import { createVirtualDesign } from './createVirtualDesign';
@@ -46,14 +46,10 @@ describe('createVirtualDesign', () => {
 
   it('dispatches a design created event', async () =>
     new Promise<void>((done) => {
-      Events.addListener<DesignCreatedEventData>(
-        DesignCreatedEvent,
-        'test',
-        (payload) => {
-          expect(payload.data.virtual).toBe(true);
-          done();
-        },
-      );
+      Events.addListener(DesignCreatedEvent, 'test', (payload) => {
+        expect(payload.data.virtual).toBe(true);
+        done();
+      });
 
       createVirtualDesign({
         id: 'design_virtual-1',

@@ -15,3 +15,12 @@ export type AutomationUpdatedEventData = {
 export type AutomationDeletedEventData = Automation;
 
 export type AutomationsLoadedEventData = Automation[];
+
+declare module '@minddrop/events/EventDataMap' {
+  interface EventDataMap {
+    'automations:automation:created': AutomationCreatedEventData;
+    'automations:automation:updated': AutomationUpdatedEventData;
+    'automations:automation:deleted': AutomationDeletedEventData;
+    'automations:loaded': AutomationsLoadedEventData;
+  }
+}

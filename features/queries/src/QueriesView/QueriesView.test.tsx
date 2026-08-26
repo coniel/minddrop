@@ -6,12 +6,7 @@ import { Events } from '@minddrop/events';
 import { Queries } from '@minddrop/queries';
 import { QueryFixtures } from '@minddrop/queries/test-utils';
 import { render, screen, userEvent, waitFor } from '@minddrop/test-utils';
-import {
-  SetSubviewEvent,
-  SetSubviewEventData,
-  SubviewDescriptor,
-  Views,
-} from '@minddrop/views';
+import { SetSubviewEvent, SubviewDescriptor, Views } from '@minddrop/views';
 import { cleanup, setup } from '../test-utils';
 import { QueriesView } from './QueriesView';
 
@@ -121,10 +116,8 @@ const SubviewHarness: React.FC<{ children: React.ReactNode }> = ({
   const [subview, setSubview] = useState<SubviewDescriptor | null>(null);
 
   useEffect(() => {
-    Events.addListener<SetSubviewEventData>(
-      SetSubviewEvent,
-      'test-subview',
-      ({ data }) => setSubview(data.subview),
+    Events.addListener(SetSubviewEvent, 'test-subview', ({ data }) =>
+      setSubview(data.subview),
     );
 
     return () => Events.removeListener(SetSubviewEvent, 'test-subview');

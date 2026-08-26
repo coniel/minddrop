@@ -3,9 +3,7 @@ import { DatabaseAutomationActionConfigsStore } from '../DatabaseAutomationActio
 import { coreDatabaseAutomationActionConfigs } from '../automation-action-configs';
 import {
   DatabaseEntryCreatedEvent,
-  DatabaseEntryCreatedEventData,
   DatabaseEntryUpdatedEvent,
-  DatabaseEntryUpdatedEventData,
 } from '../events';
 import { runCreateEntryDatabaseAutomations } from '../runCreateEntryDatabaseAutomations';
 import { runUpdatePropertyDatabaseAutomations } from '../runUpdatePropertyDatabaseAutomations';
@@ -28,7 +26,7 @@ export function initializeDatabaseAutomations(): void {
   );
 
   // Listen for new entries being created and run create-entry automations
-  Events.addListener<DatabaseEntryCreatedEventData>(
+  Events.addListener(
     DatabaseEntryCreatedEvent,
     Listeners['create-entry'],
     (event) => {
@@ -45,7 +43,7 @@ export function initializeDatabaseAutomations(): void {
   );
 
   // Listen for entries being updated and run update-property automations
-  Events.addListener<DatabaseEntryUpdatedEventData>(
+  Events.addListener(
     DatabaseEntryUpdatedEvent,
     Listeners['update-property'],
     (event) =>

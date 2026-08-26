@@ -10,7 +10,6 @@ import { DataViewTypeComponentProps, DataViews } from '@minddrop/data-views';
 import {
   DatabaseEntries,
   DatabaseEntryDuplicatedEvent,
-  DatabaseEntryDuplicatedEventData,
   DatabaseId,
   Databases,
 } from '@minddrop/databases';
@@ -136,7 +135,7 @@ export const BoardViewComponent: React.FC<
   // before the duplicate is added to the collection, so placing it
   // now keeps it from being reconciled into the first column.
   useEffect(() => {
-    Events.addListener<DatabaseEntryDuplicatedEventData>(
+    Events.addListener(
       DatabaseEntryDuplicatedEvent,
       `board-view-${view.id}`,
       ({ data }) => {

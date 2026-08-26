@@ -1,8 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import {
-  DatabaseUpdatedEvent,
-  DatabaseUpdatedEventData,
-} from '@minddrop/databases';
+import { DatabaseUpdatedEvent } from '@minddrop/databases';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { Events, OpenConfirmationDialogEvent } from '@minddrop/events';
 import { TextPropertySchema } from '@minddrop/properties';
@@ -15,7 +12,6 @@ import {
   userEvent,
   waitFor,
 } from '@minddrop/test-utils';
-import { ConfirmationDialogProps } from '@minddrop/ui-primitives';
 import { cleanup, setup } from '../test-utils';
 import {
   DatabasePropertyEditor,
@@ -54,18 +50,14 @@ describe('<DatabasePropertyEditor />', () => {
     it('updates the property on save', () =>
       new Promise<void>((done) => {
         // Listen for database updates and verify the property was updated
-        Events.addListener<DatabaseUpdatedEventData>(
-          DatabaseUpdatedEvent,
-          'test',
-          ({ data }) => {
-            expect(
-              data.updated.properties.find(
-                (candidate) => candidate.name === property.name,
-              )?.icon,
-            ).toBe(emojiIconString);
-            done();
-          },
-        );
+        Events.addListener(DatabaseUpdatedEvent, 'test', ({ data }) => {
+          expect(
+            data.updated.properties.find(
+              (candidate) => candidate.name === property.name,
+            )?.icon,
+          ).toBe(emojiIconString);
+          done();
+        });
 
         updatePropertyIcon();
       }));
@@ -103,7 +95,7 @@ describe('<DatabasePropertyEditor />', () => {
       it('confirms before renaming the property', () =>
         new Promise<void>((done) => {
           // Listen for the confirmation dialog event
-          Events.addListener<ConfirmationDialogProps>(
+          Events.addListener(
             OpenConfirmationDialogEvent,
             'test',
             ({ data }) => {
@@ -113,13 +105,9 @@ describe('<DatabasePropertyEditor />', () => {
           );
 
           // TODO: Assert the property was renamed once renaming is implemented
-          Events.addListener<DatabaseUpdatedEventData>(
-            DatabaseUpdatedEvent,
-            'test',
-            () => {
-              done();
-            },
-          );
+          Events.addListener(DatabaseUpdatedEvent, 'test', () => {
+            done();
+          });
 
           renameProperty();
         }));
@@ -127,7 +115,7 @@ describe('<DatabasePropertyEditor />', () => {
       it('closes the form after renaming', () =>
         new Promise<void>((done) => {
           // Listen for the confirmation dialog event
-          Events.addListener<ConfirmationDialogProps>(
+          Events.addListener(
             OpenConfirmationDialogEvent,
             'test',
             async ({ data }) => {
@@ -148,7 +136,7 @@ describe('<DatabasePropertyEditor />', () => {
       it('does nothing on cancel', () =>
         new Promise<void>((done) => {
           // Listen for the confirmation dialog event
-          Events.addListener<ConfirmationDialogProps>(
+          Events.addListener(
             OpenConfirmationDialogEvent,
             'test',
             ({ data }) => {
@@ -186,7 +174,7 @@ describe('<DatabasePropertyEditor />', () => {
       it('confirms before deleting the property', () =>
         new Promise<void>((done) => {
           // Listen for the confirmation dialog event
-          Events.addListener<ConfirmationDialogProps>(
+          Events.addListener(
             OpenConfirmationDialogEvent,
             'test',
             ({ data }) => {
@@ -196,18 +184,14 @@ describe('<DatabasePropertyEditor />', () => {
           );
 
           // Listen for database updates and verify the property was deleted
-          Events.addListener<DatabaseUpdatedEventData>(
-            DatabaseUpdatedEvent,
-            'test',
-            ({ data }) => {
-              expect(
-                data.updated.properties.find(
-                  (candidate) => candidate.name === property.name,
-                ),
-              ).toBeUndefined();
-              done();
-            },
-          );
+          Events.addListener(DatabaseUpdatedEvent, 'test', ({ data }) => {
+            expect(
+              data.updated.properties.find(
+                (candidate) => candidate.name === property.name,
+              ),
+            ).toBeUndefined();
+            done();
+          });
 
           clickDeleteProperty();
         }));
@@ -258,18 +242,14 @@ describe('<DatabasePropertyEditor />', () => {
     it('adds the property on save', () =>
       new Promise<void>((done) => {
         // Listen for database updates and verify the property was added
-        Events.addListener<DatabaseUpdatedEventData>(
-          DatabaseUpdatedEvent,
-          'test',
-          ({ data }) => {
-            expect(
-              data.updated.properties.find(
-                (property) => property.name === 'New property',
-              ),
-            ).toBeDefined();
-            done();
-          },
-        );
+        Events.addListener(DatabaseUpdatedEvent, 'test', ({ data }) => {
+          expect(
+            data.updated.properties.find(
+              (property) => property.name === 'New property',
+            ),
+          ).toBeDefined();
+          done();
+        });
 
         saveDraftProperty();
       }));

@@ -1,7 +1,7 @@
 import { Events } from '@minddrop/events';
 import { InvalidParameterError } from '@minddrop/utils';
 import { DatabasesStore } from '../DatabasesStore';
-import { DatabaseUpdatedEvent, DatabaseUpdatedEventData } from '../events';
+import { DatabaseUpdatedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
 import { Database } from '../types';
 import { writeDatabaseConfig } from '../writeDatabaseConfig';
@@ -24,7 +24,7 @@ export type UpdateDatabaseData = Partial<
  * @param data - The data to update the database with.
  * @returns The updated database config.
  *
- * @dispatches databases:database:update
+ * @dispatches databases:database:updated
  *
  * @throws {InvalidParameterError} If the data includes the name, property file storage, or entry serializer fields.
  */
@@ -73,7 +73,7 @@ export async function updateDatabase(
   await writeDatabaseConfig(id);
 
   // Dispatch a database updated event
-  Events.dispatch<DatabaseUpdatedEventData>(DatabaseUpdatedEvent, {
+  Events.dispatch(DatabaseUpdatedEvent, {
     original: config,
     updated: updatedConfig,
   });

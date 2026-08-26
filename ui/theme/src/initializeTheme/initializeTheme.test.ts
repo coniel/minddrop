@@ -95,13 +95,9 @@ describe('initializeTheme', () => {
       // Track dispatched event data
       let eventData: VariantChangedEventData | null = null;
 
-      Events.addListener<VariantChangedEventData>(
-        VariantChangedEvent,
-        'test',
-        (payload) => {
-          eventData = payload.data;
-        },
-      );
+      Events.addListener(VariantChangedEvent, 'test', (payload) => {
+        eventData = payload.data;
+      });
 
       // Initialize theme
       await initializeTheme();
@@ -125,13 +121,9 @@ describe('initializeTheme', () => {
       // Track dispatched event data
       let eventData: VariantChangedEventData | null = null;
 
-      Events.addListener<VariantChangedEventData>(
-        VariantChangedEvent,
-        'test',
-        (payload) => {
-          eventData = payload.data;
-        },
-      );
+      Events.addListener(VariantChangedEvent, 'test', (payload) => {
+        eventData = payload.data;
+      });
 
       // Initialize theme
       await initializeTheme();
@@ -161,13 +153,9 @@ describe('initializeTheme', () => {
       // Track dispatched event data
       let eventData: VariantChangedEventData | null = null;
 
-      Events.addListener<VariantChangedEventData>(
-        VariantChangedEvent,
-        'test',
-        (payload) => {
-          eventData = payload.data;
-        },
-      );
+      Events.addListener(VariantChangedEvent, 'test', (payload) => {
+        eventData = payload.data;
+      });
 
       // Simulate OS appearance change to dark mode
       simulateOsAppearanceChange(ThemeDark);
@@ -213,13 +201,9 @@ describe('initializeTheme', () => {
       // Track the resolved appearance from the event
       let lastResolvedAppearance: string | null = null;
 
-      Events.addListener<VariantChangedEventData>(
-        VariantChangedEvent,
-        'test-os-change',
-        (payload) => {
-          lastResolvedAppearance = payload.data.resolvedAppearance;
-        },
-      );
+      Events.addListener(VariantChangedEvent, 'test-os-change', (payload) => {
+        lastResolvedAppearance = payload.data.resolvedAppearance;
+      });
 
       // Simulate OS appearance change to dark mode
       simulateOsAppearanceChange(ThemeDark);
@@ -249,13 +233,9 @@ describe('initializeTheme', () => {
       // Track whether a new event is dispatched
       let eventDispatched = false;
 
-      Events.addListener<VariantChangedEventData>(
-        VariantChangedEvent,
-        'test-no-os-change',
-        () => {
-          eventDispatched = true;
-        },
-      );
+      Events.addListener(VariantChangedEvent, 'test-no-os-change', () => {
+        eventDispatched = true;
+      });
 
       // Simulate OS appearance change to light mode
       simulateOsAppearanceChange(ThemeLight);

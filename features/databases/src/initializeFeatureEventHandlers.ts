@@ -1,7 +1,4 @@
-import {
-  DatabaseDeletedEvent,
-  type DatabaseDeletedEventData,
-} from '@minddrop/databases';
+import { DatabaseDeletedEvent } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
 import { onDeleteDatabase } from './event-handlers';
 import { EventListenerId } from './events';
@@ -12,7 +9,7 @@ import { EventListenerId } from './events';
  */
 export function initializeDatabasesFeatureEventHandlers(): void {
   // Handle database deleted events
-  Events.addListener<DatabaseDeletedEventData>(
+  Events.addListener(
     DatabaseDeletedEvent,
     `${EventListenerId}:view-state`,
     ({ data }) => {

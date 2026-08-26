@@ -11,3 +11,11 @@ export interface OpenSpaceViewEventData {
    */
   spaceId: string;
 }
+
+declare module '@minddrop/events/EventDataMap' {
+  interface EventDataMap {
+    'spaces:new-space-dialog:open': void;
+    'spaces:space-view:open': OpenSpaceViewEventData;
+    'spaces:spaces-view:open': void;
+  }
+}

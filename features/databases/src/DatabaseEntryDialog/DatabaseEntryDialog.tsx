@@ -3,7 +3,6 @@ import {
   DatabaseEntries,
   Databases,
   OpenDatabaseEntryViewEvent,
-  OpenDatabaseEntryViewEventData,
 } from '@minddrop/databases';
 import { DropdownMenu, FloatingActionButton } from '@minddrop/ui-primitives';
 import { DatabaseEntryOptionsMenu } from '../DatabaseEntryOptionsMenu';
@@ -111,24 +110,18 @@ export const DatabaseEntryDialog: React.FC<DatabaseEntryDialogProps> = ({
 
   const handleOpenNewTab = useCallback(() => {
     onOpenChange(false);
-    Events.dispatch<OpenDatabaseEntryViewEventData>(
-      OpenDatabaseEntryViewEvent,
-      {
-        entryId,
-        openMode: 'new-tab',
-      },
-    );
+    Events.dispatch(OpenDatabaseEntryViewEvent, {
+      entryId,
+      openMode: 'new-tab',
+    });
   }, [entryId, onOpenChange]);
 
   const handleOpenSplit = useCallback(() => {
     onOpenChange(false);
-    Events.dispatch<OpenDatabaseEntryViewEventData>(
-      OpenDatabaseEntryViewEvent,
-      {
-        entryId,
-        openMode: 'split',
-      },
-    );
+    Events.dispatch(OpenDatabaseEntryViewEvent, {
+      entryId,
+      openMode: 'split',
+    });
   }, [entryId, onOpenChange]);
 
   // Close the dialog when clicking the backdrop or a hover zone

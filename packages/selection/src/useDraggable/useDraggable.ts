@@ -2,12 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { Events } from '@minddrop/events';
 import { SelectionStore } from '../SelectionStore';
 import { addToSelection } from '../addToSelection';
-import {
-  SelectionDragEndedEvent,
-  SelectionDragEndedEventData,
-  SelectionDragStartedEvent,
-  SelectionDragStartedEventData,
-} from '../events';
+import { SelectionDragEndedEvent, SelectionDragStartedEvent } from '../events';
 import { getSelection } from '../getSelection';
 import { isSelected } from '../isSelected';
 import { select } from '../select';
@@ -83,14 +78,11 @@ export function useDraggable(selectionItem: SelectionItem): DragUtils {
       SelectionStore.getState().setIsDragging(true);
       setIsDragging(true);
 
-      // Dispatch a 'selection:drag:start' event
-      Events.dispatch<SelectionDragStartedEventData>(
-        SelectionDragStartedEvent,
-        {
-          event,
-          selection: getSelection(),
-        },
-      );
+      // Dispatch a 'selection:drag:started' event
+      Events.dispatch(SelectionDragStartedEvent, {
+        event,
+        selection: getSelection(),
+      });
     },
     [selectionItem],
   );
@@ -101,7 +93,7 @@ export function useDraggable(selectionItem: SelectionItem): DragUtils {
     SelectionStore.getState().setIsDragging(false);
 
     // Dispatch a drag ended event
-    Events.dispatch<SelectionDragEndedEventData>(SelectionDragEndedEvent, {
+    Events.dispatch(SelectionDragEndedEvent, {
       event,
       selection: getSelection(),
     });

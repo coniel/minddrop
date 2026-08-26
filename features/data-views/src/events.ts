@@ -23,3 +23,11 @@ export interface OpenNewDataViewViewEventData {
    */
   viewType: string;
 }
+
+declare module '@minddrop/events/EventDataMap' {
+  interface EventDataMap {
+    'data-views:data-view-view:open': OpenDataViewViewEventData;
+    'data-views:data-views-view:open': void;
+    'data-views:new-data-view-view:open': OpenNewDataViewViewEventData;
+  }
+}

@@ -25,7 +25,7 @@ export const AppSidebar: React.FC<SidebarProps> = ({ ...other }) => {
   }, [sidebarWidth]);
 
   function handleOpenSearch() {
-    Events.dispatch(OpenSearchDialogEvent, {});
+    Events.dispatch(OpenSearchDialogEvent);
   }
 
   function handleOpenDesignStudio() {

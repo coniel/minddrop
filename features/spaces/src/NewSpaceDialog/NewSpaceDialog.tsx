@@ -22,7 +22,6 @@ import {
   EventListenerId,
   OpenNewSpaceDialogEvent,
   OpenSpaceViewEvent,
-  OpenSpaceViewEventData,
 } from '../events';
 import './NewSpaceDialog.css';
 
@@ -103,7 +102,7 @@ export const NewSpaceDialog: React.FC<NewSpaceDialogProps> = ({
     closeDialog();
 
     // Open the new space
-    Events.dispatch<OpenSpaceViewEventData>(OpenSpaceViewEvent, {
+    Events.dispatch(OpenSpaceViewEvent, {
       spaceId: space.id,
     });
   }

@@ -38,13 +38,9 @@ describe('handleBackgroundSyncResult', () => {
 
     let dispatched: ItemAddressesChangedEventData | undefined;
 
-    Events.addListener<ItemAddressesChangedEventData>(
-      ItemAddressesChangedEvent,
-      'test',
-      (payload) => {
-        dispatched = payload.data;
-      },
-    );
+    Events.addListener(ItemAddressesChangedEvent, 'test', (payload) => {
+      dispatched = payload.data;
+    });
 
     // The synced record carries the entry's new path
     const record = convertEntryToSqlRecord(

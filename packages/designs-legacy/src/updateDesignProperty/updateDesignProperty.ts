@@ -1,10 +1,7 @@
 import { Events } from '@minddrop/events';
 import { PropertySchema } from '@minddrop/properties';
 import { InvalidParameterError } from '@minddrop/utils';
-import {
-  DesignPropertyUpdatedEvent,
-  DesignPropertyUpdatedEventData,
-} from '../events';
+import { DesignPropertyUpdatedEvent } from '../events';
 import { getDesign } from '../getDesign';
 import { Design } from '../types';
 import { updateDesign } from '../updateDesign';
@@ -55,7 +52,7 @@ export async function updateDesignProperty(
   });
 
   // Dispatch a property updated event
-  Events.dispatch<DesignPropertyUpdatedEventData>(DesignPropertyUpdatedEvent, {
+  Events.dispatch(DesignPropertyUpdatedEvent, {
     design: updated,
     property: updatedProperty,
   });

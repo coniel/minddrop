@@ -1,6 +1,6 @@
 import { Events } from '@minddrop/events';
 import { CollectionsStore } from '../CollectionsStore';
-import { CollectionsLoadedEvent, CollectionsLoadedEventData } from '../events';
+import { CollectionsLoadedEvent } from '../events';
 
 export interface VirtualCollectionData {
   /**
@@ -38,8 +38,5 @@ export function loadVirtualCollections(data: VirtualCollectionData[]): void {
   CollectionsStore.load(collections);
 
   // Dispatch a collections loaded event
-  Events.dispatch<CollectionsLoadedEventData>(
-    CollectionsLoadedEvent,
-    collections,
-  );
+  Events.dispatch(CollectionsLoadedEvent, collections);
 }

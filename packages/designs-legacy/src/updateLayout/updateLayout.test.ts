@@ -75,15 +75,13 @@ describe('updateLayout', () => {
 
   it('dispatches a layout updated event', async () =>
     new Promise<void>((done) => {
-      Events.addListener<LayoutUpdatedEventData>(
-        LayoutUpdatedEvent,
-        'test',
-        (payload) => {
-          expect(payload.data.original).toEqual(layout_card_1);
-          expect(payload.data.updated).toEqual(updatedLayout);
-          done();
-        },
-      );
+      Events.addListener(LayoutUpdatedEvent, 'test', (payload) => {
+        const data = payload.data as LayoutUpdatedEventData;
+
+        expect(data.original).toEqual(layout_card_1);
+        expect(data.updated).toEqual(updatedLayout);
+        done();
+      });
 
       updateLayout(layout_card_1.id, update);
     }));

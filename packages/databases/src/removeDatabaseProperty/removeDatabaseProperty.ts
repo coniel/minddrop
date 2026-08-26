@@ -1,8 +1,5 @@
 import { Events } from '@minddrop/events';
-import {
-  DatabasePropertyRemovedEvent,
-  DatabasePropertyRemovedEventData,
-} from '../events';
+import { DatabasePropertyRemovedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
 import { Database } from '../types';
 import { updateDatabase } from '../updateDatabase';
@@ -34,10 +31,10 @@ export async function removeDatabaseProperty(
 
   // Dispatch the property removed event if the property existed
   if (property) {
-    Events.dispatch<DatabasePropertyRemovedEventData>(
-      DatabasePropertyRemovedEvent,
-      { database: updated, property },
-    );
+    Events.dispatch(DatabasePropertyRemovedEvent, {
+      database: updated,
+      property,
+    });
   }
 
   return updated;

@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { Events } from '@minddrop/events';
-import { OpenViewEvent, OpenViewEventData } from '@minddrop/views';
+import { OpenViewEvent } from '@minddrop/views';
 import { DesignStudioViewId, DesignStudioViewName } from '../constants';
-import { OpenDesignStudioEvent, OpenDesignStudioEventData } from '../events';
+import { OpenDesignStudioEvent } from '../events';
 import { cleanup, setup } from '../test-utils';
 import { initializeDesignsFeature } from './initializeDesignsFeature';
 
@@ -26,7 +26,7 @@ describe('initializeDesignsFeature', () => {
 
   it('opens the design studio view on open design studio events', () =>
     new Promise<void>((resolve) => {
-      Events.addListener<OpenViewEventData<OpenDesignStudioEventData>>(
+      Events.addListener(
         OpenViewEvent,
         'test-open-design-studio',
         ({ data }) => {
@@ -38,7 +38,7 @@ describe('initializeDesignsFeature', () => {
         },
       );
 
-      Events.dispatch<OpenDesignStudioEventData>(OpenDesignStudioEvent, {
+      Events.dispatch(OpenDesignStudioEvent, {
         designId: design_books.id,
       });
     }));

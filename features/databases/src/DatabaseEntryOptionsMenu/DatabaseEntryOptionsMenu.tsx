@@ -64,7 +64,7 @@ export const DatabaseEntryOptionsMenu: React.FC<
     }
 
     // Close the entry dialog if open
-    Events.dispatch(CloseDatabaseEntryDialogEvent, {});
+    Events.dispatch(CloseDatabaseEntryDialogEvent);
 
     openView<OpenDatabaseViewEventData>(OpenDatabaseViewEvent, {
       databaseId: entry.database,
@@ -79,7 +79,7 @@ export const DatabaseEntryOptionsMenu: React.FC<
   // Delete the entry
   const handleDelete = useCallback(() => {
     // Close the entry dialog if open
-    Events.dispatch(CloseDatabaseEntryDialogEvent, {});
+    Events.dispatch(CloseDatabaseEntryDialogEvent);
 
     // Delete the entry, moving its files to the system trash
     DatabaseEntries.delete(entryId);

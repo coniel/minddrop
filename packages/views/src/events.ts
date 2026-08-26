@@ -203,3 +203,19 @@ export type ViewAreaReadyEventData = {
    */
   viewAreaId: string;
 };
+
+// The right panel renders a view, so its open event carries the view
+// open event data and is registered here alongside it
+declare module '@minddrop/events/EventDataMap' {
+  interface EventDataMap {
+    'app:view:open': OpenViewEventData;
+    'app:view:update': UpdateViewEventData;
+    'app:view:close': CloseViewEventData;
+    'app:view-area:navigate-back': NavigateBackEventData;
+    'app:view:set-subview': SetSubviewEventData;
+    'app:view-area:set': SetViewAreaEventData;
+    'app:view-area:changed': ViewAreaChangedEventData;
+    'app:view-area:ready': ViewAreaReadyEventData;
+    'app:right-panel:open': OpenViewEventData;
+  }
+}

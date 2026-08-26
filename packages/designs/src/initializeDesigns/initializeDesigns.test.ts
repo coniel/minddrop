@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { DesignRolesStore } from '../DesignRolesStore';
 import { DesignsStore } from '../DesignsStore';
-import { DesignsLoadedEvent, DesignsLoadedEventData } from '../events';
+import { DesignsLoadedEvent } from '../events';
 import { BuiltInDesignRoles } from '../roles';
 import { DesignFixtures, MockFs, cleanup, setup } from '../test-utils';
 import { resolveDesignFilePath, resolveDesignsDirPath } from '../utils';
@@ -42,14 +42,10 @@ describe('initializeDesigns', () => {
 
   it('dispatches a designs loaded event', async () =>
     new Promise<void>((done) => {
-      Events.addListener<DesignsLoadedEventData>(
-        DesignsLoadedEvent,
-        'test',
-        (payload) => {
-          expect(payload.data.length).toBeGreaterThan(0);
-          done();
-        },
-      );
+      Events.addListener(DesignsLoadedEvent, 'test', (payload) => {
+        expect(payload.data.length).toBeGreaterThan(0);
+        done();
+      });
 
       initializeDesigns();
     }));
@@ -59,14 +55,10 @@ describe('initializeDesigns', () => {
       // Remove the designs directory, as in a fresh workspace
       MockFs.removeDir(resolveDesignsDirPath());
 
-      Events.addListener<DesignsLoadedEventData>(
-        DesignsLoadedEvent,
-        'test',
-        (payload) => {
-          expect(payload.data).toEqual([]);
-          done();
-        },
-      );
+      Events.addListener(DesignsLoadedEvent, 'test', (payload) => {
+        expect(payload.data).toEqual([]);
+        done();
+      });
 
       initializeDesigns();
     }));

@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Events } from '@minddrop/events';
 import { Fs } from '../FileSystem';
-import { FileSystemChangedEvent, FileSystemChangedEventData } from '../events';
+import { FileSystemChangedEvent } from '../events';
 import { initializeMockFileSystem } from '../mock';
 import { FileSystemChange } from '../types';
 import { clearWriteRegistry } from '../writeRegistry';
@@ -32,13 +32,9 @@ describe('startFileSystemWatcher', () => {
     changes = [];
 
     // Collect the changes dispatched by the watcher
-    Events.on<FileSystemChangedEventData>(
-      FileSystemChangedEvent,
-      'test',
-      ({ data }) => {
-        changes.push(data);
-      },
-    );
+    Events.on(FileSystemChangedEvent, 'test', ({ data }) => {
+      changes.push(data);
+    });
 
     stopWatcher = await startFileSystemWatcher([WorkspacePath]);
   });

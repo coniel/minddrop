@@ -9,12 +9,7 @@ import {
 import { Views } from '@minddrop/views';
 import { DataViewContent } from './DataViewContent';
 import { DataViewOptionsMenu } from './DataViewOptionsMenu';
-import {
-  OpenDataViewViewEvent,
-  OpenDataViewViewEventData,
-  OpenNewDataViewViewEvent,
-  OpenNewDataViewViewEventData,
-} from './events';
+import { OpenDataViewViewEvent, OpenNewDataViewViewEvent } from './events';
 
 /**
  * Renders a two column view of the persisted data views: a
@@ -51,14 +46,14 @@ export const DataViewsView: React.FC = () => {
 
   // Open the new data view view for the selected view type
   function handleSelectViewType(viewType: string) {
-    Events.dispatch<OpenNewDataViewViewEventData>(OpenNewDataViewViewEvent, {
+    Events.dispatch(OpenNewDataViewViewEvent, {
       viewType,
     });
   }
 
   // Open the selected data view in a view of its own
   function handleExpandDataView() {
-    Events.dispatch<OpenDataViewViewEventData>(OpenDataViewViewEvent, {
+    Events.dispatch(OpenDataViewViewEvent, {
       dataViewId: selectedDataView?.id ?? '',
     });
   }

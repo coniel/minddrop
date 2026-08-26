@@ -1,7 +1,7 @@
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { SpacesStore } from '../SpacesStore';
-import { SpaceDeletedEvent, SpaceDeletedEventData } from '../events';
+import { SpaceDeletedEvent } from '../events';
 import { getSpace } from '../getSpace';
 import { resolveSpaceBundleDirPath } from '../utils';
 
@@ -24,5 +24,5 @@ export async function deleteSpace(spaceId: string): Promise<void> {
   await Fs.removeDir(resolveSpaceBundleDirPath(spaceId), { recursive: true });
 
   // Dispatch the space deleted event
-  Events.dispatch<SpaceDeletedEventData>(SpaceDeletedEvent, space);
+  Events.dispatch(SpaceDeletedEvent, space);
 }

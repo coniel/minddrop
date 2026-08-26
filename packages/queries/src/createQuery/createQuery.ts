@@ -6,7 +6,7 @@ import {
   DEFAULT_RESULTS_NODE_POSITION,
   DEFAULT_SOURCE_NODE_POSITION,
 } from '../constants';
-import { QueryCreatedEvent, QueryCreatedEventData } from '../events';
+import { QueryCreatedEvent } from '../events';
 import { Query } from '../types';
 import { createQueryNode } from '../utils';
 import { writeQuery } from '../writeQuery';
@@ -44,7 +44,7 @@ export async function createQuery(name?: string): Promise<Query> {
   await writeQuery(query.id);
 
   // Dispatch the query created event
-  Events.dispatch<QueryCreatedEventData>(QueryCreatedEvent, query);
+  Events.dispatch(QueryCreatedEvent, query);
 
   return query;
 }

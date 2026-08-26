@@ -1,9 +1,6 @@
 import { Events } from '@minddrop/events';
 import { ThemeStore } from '../ThemeStore';
-import {
-  InvertLightImagesChangedEvent,
-  InvertLightImagesChangedEventData,
-} from '../events';
+import { InvertLightImagesChangedEvent } from '../events';
 
 /**
  * Sets whether images with a light background are inverted and
@@ -16,8 +13,5 @@ export function setInvertLightImages(invertLightImages: boolean): void {
   ThemeStore.set('invertLightImages', invertLightImages);
 
   // Dispatch a 'theme:invert-light-images:changed' event
-  Events.dispatch<InvertLightImagesChangedEventData>(
-    InvertLightImagesChangedEvent,
-    { invertLightImages },
-  );
+  Events.dispatch(InvertLightImagesChangedEvent, { invertLightImages });
 }

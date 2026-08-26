@@ -324,3 +324,32 @@ export interface DatabaseSqlReindexedEventData {
    */
   databaseId: string;
 }
+
+declare module '@minddrop/events/EventDataMap' {
+  interface EventDataMap {
+    'databases:database:created': DatabaseCreatedEventData;
+    'databases:database:updated': DatabaseUpdatedEventData;
+    'databases:database:deleted': DatabaseDeletedEventData;
+    'databases:database:renamed': DatabaseRenamedEventData;
+    'databases:property:added': DatabasePropertyAddedEventData;
+    'databases:property:removed': DatabasePropertyRemovedEventData;
+    'databases:property:renamed': DatabasePropertyRenamedEventData;
+    'databases:entry-template:added': DatabaseEntryTemplateAddedEventData;
+    'databases:entry-template:updated': DatabaseEntryTemplateUpdatedEventData;
+    'databases:entry-template:removed': DatabaseEntryTemplateRemovedEventData;
+    'databases:view:open': OpenDatabaseViewEventData;
+    'database-entries:entry:open': OpenDatabaseEntryViewEventData;
+    'databases:entry:created': DatabaseEntryCreatedEventData;
+    'databases:entry:updated': DatabaseEntryUpdatedEventData;
+    'databases:entry:deleted': DatabaseEntryDeletedEventData;
+    'databases:entry:renamed': DatabaseEntryRenamedEventData;
+    'databases:entry:duplicated': DatabaseEntryDuplicatedEventData;
+    'databases:entries:cleared': DatabaseEntriesClearedEventData;
+    'database-entries:entry:metadata-updated': DatabaseEntryMetadataUpdatedEventData;
+    'database-entries:sql-synced': DatabaseEntriesSqlSyncedEventData;
+    'databases:database:sql-synced': DatabaseSqlSyncedEventData;
+    'databases:property:sql-synced': DatabasePropertySqlSyncedEventData;
+    'databases:sql-background-synced': DatabasesBackgroundSyncedEventData;
+    'databases:database:sql-reindexed': DatabaseSqlReindexedEventData;
+  }
+}

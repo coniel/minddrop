@@ -2,7 +2,6 @@ import { StoreApi, UseBoundStore, create } from 'zustand';
 import { Events } from '@minddrop/events';
 import {
   StoreHydrateEvent,
-  StoreHydrateEventData,
   StoreHydrateRequestEvent,
   StoreHydratedEvent,
   StorePersistEvent,
@@ -231,7 +230,7 @@ export function createArrayStore<TItem extends object>(
   // Handles both the initial hydrate() call and subsequent
   // hydration events (e.g. from file watchers).
   if (persist) {
-    Events.addListener<StoreHydrateEventData>(
+    Events.addListener(
       StoreHydrateEvent,
       `stores:${persist.namespace}`,
       (event) => {

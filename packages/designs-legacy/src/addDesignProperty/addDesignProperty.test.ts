@@ -61,15 +61,13 @@ describe('addDesignProperty', () => {
 
   it('dispatches a property added event', async () =>
     new Promise<void>((done) => {
-      Events.addListener<DesignPropertyAddedEventData>(
-        DesignPropertyAddedEvent,
-        'test',
-        (payload) => {
-          expect(payload.data.design.id).toBe(design_empty.id);
-          expect(payload.data.property).toEqual(newProperty);
-          done();
-        },
-      );
+      Events.addListener(DesignPropertyAddedEvent, 'test', (payload) => {
+        const data = payload.data as DesignPropertyAddedEventData;
+
+        expect(data.design.id).toBe(design_empty.id);
+        expect(data.property).toEqual(newProperty);
+        done();
+      });
 
       addDesignProperty(design_empty.id, newProperty);
     }));

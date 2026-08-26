@@ -1,6 +1,6 @@
 import { Events } from '@minddrop/events';
 import { Fs } from '../FileSystem';
-import { FileSystemChangedEvent, FileSystemChangedEventData } from '../events';
+import { FileSystemChangedEvent } from '../events';
 import { FileSystemChangeKind, FsWatchEventKind } from '../types';
 import { hasWrittenContents, matchesWrittenContents } from '../writeRegistry';
 
@@ -168,7 +168,7 @@ async function isSelfWrite(path: string): Promise<boolean> {
  * Dispatches a file system changed event.
  */
 function dispatchChange(path: string, kind: FileSystemChangeKind): void {
-  Events.dispatch<FileSystemChangedEventData>(FileSystemChangedEvent, {
+  Events.dispatch(FileSystemChangedEvent, {
     path,
     kind,
   });

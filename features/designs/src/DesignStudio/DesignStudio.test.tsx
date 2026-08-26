@@ -78,13 +78,9 @@ describe('<DesignStudio />', () => {
 function captureViewUpdates(): UpdateViewEventData<DesignStudioViewProps>[] {
   const updates: UpdateViewEventData<DesignStudioViewProps>[] = [];
 
-  Events.addListener<UpdateViewEventData<DesignStudioViewProps>>(
-    UpdateViewEvent,
-    ListenerId,
-    ({ data }) => {
-      updates.push(data);
-    },
-  );
+  Events.addListener(UpdateViewEvent, ListenerId, ({ data }) => {
+    updates.push(data);
+  });
 
   return updates;
 }

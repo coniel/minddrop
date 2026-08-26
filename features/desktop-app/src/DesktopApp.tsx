@@ -138,22 +138,14 @@ const RightPanel: React.FC = () => {
 
   useEffect(() => {
     // Show the view sent to the right panel
-    Events.addListener<OpenViewEventData>(
-      OpenRightPanelEvent,
-      'desktop-app',
-      ({ data }) => {
-        setView(data);
-      },
-    );
+    Events.addListener(OpenRightPanelEvent, 'desktop-app', ({ data }) => {
+      setView(data);
+    });
 
     // Clear the right panel
-    Events.addListener<OpenViewEventData>(
-      CloseRightPanelEvent,
-      'desktop-app',
-      () => {
-        setView(null);
-      },
-    );
+    Events.addListener(CloseRightPanelEvent, 'desktop-app', () => {
+      setView(null);
+    });
 
     return () => {
       Events.removeListener(OpenRightPanelEvent, 'desktop-app');
@@ -180,7 +172,7 @@ const ConfirmationDialogFeature: React.FC = () => {
     useState<OpenConfirmationDialogEventData | null>(null);
 
   useEffect(() => {
-    Events.addListener<OpenConfirmationDialogEventData>(
+    Events.addListener(
       OpenConfirmationDialogEvent,
       'desktop-app',
       ({ data }) => {
@@ -211,14 +203,10 @@ const ErrorToastFeature: React.FC = () => {
 
   useEffect(() => {
     // Show an error toast for each dispatched app error
-    Events.addListener<AppErrorEventData>(
-      AppErrorEvent,
-      'desktop-app',
-      ({ data }) => {
-        // Keep error toasts visible until dismissed manually
-        manager.add({ type: 'error', timeout: 0, data });
-      },
-    );
+    Events.addListener(AppErrorEvent, 'desktop-app', ({ data }) => {
+      // Keep error toasts visible until dismissed manually
+      manager.add({ type: 'error', timeout: 0, data });
+    });
 
     return () => {
       Events.removeListener(AppErrorEvent, 'desktop-app');

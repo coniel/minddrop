@@ -4,7 +4,7 @@ import { i18n } from '@minddrop/i18n';
 import { entityId } from '@minddrop/utils';
 import { SpacesStore } from '../SpacesStore';
 import { DefaultSpaceIcon } from '../constants';
-import { SpaceCreatedEvent, SpaceCreatedEventData } from '../events';
+import { SpaceCreatedEvent } from '../events';
 import { Space } from '../types';
 import { writeSpace } from '../writeSpace';
 
@@ -72,7 +72,7 @@ export async function createSpace(
   await writeSpace(space.id);
 
   // Dispatch the space created event
-  Events.dispatch<SpaceCreatedEventData>(SpaceCreatedEvent, space);
+  Events.dispatch(SpaceCreatedEvent, space);
 
   return space;
 }

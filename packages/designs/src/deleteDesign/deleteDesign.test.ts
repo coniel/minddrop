@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { DesignsStore } from '../DesignsStore';
-import { DesignDeletedEvent, DesignDeletedEventData } from '../events';
+import { DesignDeletedEvent } from '../events';
 import { DesignFixtures, MockFs, cleanup, setup } from '../test-utils';
 import { resolveDesignBundleDirPath } from '../utils';
 import { deleteDesign } from './deleteDesign';
@@ -37,14 +37,10 @@ describe('deleteDesign', () => {
 
   it('dispatches a design deleted event', async () =>
     new Promise<void>((done) => {
-      Events.addListener<DesignDeletedEventData>(
-        DesignDeletedEvent,
-        'test',
-        (payload) => {
-          expect(payload.data.id).toBe(design_books.id);
-          done();
-        },
-      );
+      Events.addListener(DesignDeletedEvent, 'test', (payload) => {
+        expect(payload.data.id).toBe(design_books.id);
+        done();
+      });
 
       deleteDesign(design_books.id);
     }));

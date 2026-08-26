@@ -1,7 +1,7 @@
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { AutomationsStore } from '../AutomationsStore';
-import { AutomationsLoadedEvent, AutomationsLoadedEventData } from '../events';
+import { AutomationsLoadedEvent } from '../events';
 import { readAutomation } from '../readAutomation';
 import { resolveAutomationsDirPath } from '../utils';
 
@@ -34,8 +34,5 @@ export async function initializeAutomations(): Promise<void> {
   AutomationsStore.load(automations);
 
   // Dispatch an automations loaded event
-  Events.dispatch<AutomationsLoadedEventData>(
-    AutomationsLoadedEvent,
-    automations,
-  );
+  Events.dispatch(AutomationsLoadedEvent, automations);
 }

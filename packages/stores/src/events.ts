@@ -82,3 +82,12 @@ export type StoreHydratedEventData = {
    */
   namespace: string;
 };
+
+declare module '@minddrop/events/EventDataMap' {
+  interface EventDataMap {
+    'stores:persist': StorePersistEventData;
+    'stores:hydrate-request': StoreHydrateRequestEventData;
+    'stores:hydrate': StoreHydrateEventData;
+    'stores:hydrated': StoreHydratedEventData;
+  }
+}

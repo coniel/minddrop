@@ -15,12 +15,12 @@ import { EventListenerCallback, EventListenerMap } from '../types';
  * @param callback - The  callback function.
  * @param once - When `true`, the listener is removed when triggered.
  */
-export function addEventListenerBefore(
-  eventListeners: EventListenerMap,
+export function addEventListenerBefore<TData = unknown>(
+  eventListeners: EventListenerMap<TData>,
   eventName: string,
   beforeListenerId: string,
   listenerId: string,
-  callback: EventListenerCallback,
+  callback: EventListenerCallback<TData>,
   once = false,
 ): void {
   // If the listener is already registered for this event,

@@ -1,14 +1,11 @@
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
-import {
-  ItemAddressesChangedEvent,
-  ItemAddressesChangedEventData,
-} from '@minddrop/item-references';
+import { ItemAddressesChangedEvent } from '@minddrop/item-references';
 import { Properties } from '@minddrop/properties';
 import { InvalidParameterError, validateDirName } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabasesStore } from '../DatabasesStore';
-import { DatabaseUpdatedEvent, DatabaseUpdatedEventData } from '../events';
+import { DatabaseUpdatedEvent } from '../events';
 import { getAllDatabaseEntries } from '../getAllDatabaseEntries';
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntry } from '../getDatabaseEntry';
@@ -37,7 +34,7 @@ import { writeDatabaseConfig } from '../writeDatabaseConfig';
  * @returns The updated database config.
  *
  * @dispatches item-references:addresses:changed
- * @dispatches databases:database:update
+ * @dispatches databases:database:updated
  */
 export async function setDatabasePropertyFileStorage(
   id: string,
@@ -218,7 +215,7 @@ export async function setDatabasePropertyFileStorage(
   // Dispatch the moved entries' address changes when crossing the
   // entry boundary changed entry paths
   if (wasEntry !== willEntry && entryMoves.length > 0) {
-    await Events.dispatch<ItemAddressesChangedEventData>(
+    await Events.dispatch(
       ItemAddressesChangedEvent,
       entryMoves.map(({ entry }) => ({
         id: entry.id,
@@ -229,7 +226,7 @@ export async function setDatabasePropertyFileStorage(
   }
 
   // Dispatch a database updated event
-  Events.dispatch<DatabaseUpdatedEventData>(DatabaseUpdatedEvent, {
+  Events.dispatch(DatabaseUpdatedEvent, {
     original: database,
     updated,
   });

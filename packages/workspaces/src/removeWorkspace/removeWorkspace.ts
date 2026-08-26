@@ -1,6 +1,6 @@
 import { Events } from '@minddrop/events';
 import { WorkspacesStore } from '../WorkspacesStore';
-import { WorkspaceDeletedEvent, WorkspaceDeletedEventData } from '../events';
+import { WorkspaceDeletedEvent } from '../events';
 import { getWorkspace } from '../getWorkspace';
 import { writeWorkspacesConfig } from '../writeWorkspacesConfig';
 
@@ -22,5 +22,5 @@ export async function removeWorkspace(id: string): Promise<void> {
   await writeWorkspacesConfig();
 
   // Dispatch a workspace deleted event
-  Events.dispatch<WorkspaceDeletedEventData>(WorkspaceDeletedEvent, workspace);
+  Events.dispatch(WorkspaceDeletedEvent, workspace);
 }

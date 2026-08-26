@@ -111,16 +111,14 @@ describe('renameDesignProperty', () => {
     const target = design_books.properties[0];
 
     return new Promise<void>((done) => {
-      Events.addListener<DesignPropertyRenamedEventData>(
-        DesignPropertyRenamedEvent,
-        'test',
-        (payload) => {
-          expect(payload.data.design.id).toBe(design_books.id);
-          expect(payload.data.oldName).toBe(target.name);
-          expect(payload.data.newName).toBe('Heading');
-          done();
-        },
-      );
+      Events.addListener(DesignPropertyRenamedEvent, 'test', (payload) => {
+        const data = payload.data as DesignPropertyRenamedEventData;
+
+        expect(data.design.id).toBe(design_books.id);
+        expect(data.oldName).toBe(target.name);
+        expect(data.newName).toBe('Heading');
+        done();
+      });
 
       renameDesignProperty(design_books.id, target.name, 'Heading');
     });

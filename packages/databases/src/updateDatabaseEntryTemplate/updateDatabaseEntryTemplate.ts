@@ -1,10 +1,7 @@
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { Properties } from '@minddrop/properties';
-import {
-  DatabaseEntryTemplateUpdatedEvent,
-  DatabaseEntryTemplateUpdatedEventData,
-} from '../events';
+import { DatabaseEntryTemplateUpdatedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntryTemplate } from '../getDatabaseEntryTemplate';
 import {
@@ -129,10 +126,10 @@ export async function updateDatabaseEntryTemplate(
   const updated = await updateDatabase(databaseId, { entryTemplates });
 
   // Dispatch the entry template updated event
-  Events.dispatch<DatabaseEntryTemplateUpdatedEventData>(
-    DatabaseEntryTemplateUpdatedEvent,
-    { database: updated, template: updatedTemplate },
-  );
+  Events.dispatch(DatabaseEntryTemplateUpdatedEvent, {
+    database: updated,
+    template: updatedTemplate,
+  });
 
   return updated;
 }

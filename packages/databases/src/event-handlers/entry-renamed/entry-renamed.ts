@@ -1,9 +1,6 @@
 import { Collections } from '@minddrop/collections';
 import { Events } from '@minddrop/events';
-import {
-  ItemAddressesChangedEvent,
-  ItemAddressesChangedEventData,
-} from '@minddrop/item-references';
+import { ItemAddressesChangedEvent } from '@minddrop/item-references';
 import { DatabaseEntryRenamedEventData } from '../../events';
 import { getDatabase } from '../../getDatabase';
 import { moveEntryMetadataFile } from '../../moveEntryMetadataFile';
@@ -55,14 +52,11 @@ export async function onRenameEntry(data: DatabaseEntryRenamedEventData) {
   );
 
   // Dispatch the entry's address change
-  await Events.dispatch<ItemAddressesChangedEventData>(
-    ItemAddressesChangedEvent,
-    [
-      {
-        id: updated.id,
-        oldReference: databaseEntryAddress(original.path),
-        newReference: databaseEntryAddress(updated.path),
-      },
-    ],
-  );
+  await Events.dispatch(ItemAddressesChangedEvent, [
+    {
+      id: updated.id,
+      oldReference: databaseEntryAddress(original.path),
+      newReference: databaseEntryAddress(updated.path),
+    },
+  ]);
 }

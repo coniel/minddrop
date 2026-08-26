@@ -1,10 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { DatabaseEntryTemplate, Databases } from '@minddrop/databases';
-import {
-  Events,
-  OpenConfirmationDialogEvent,
-  OpenConfirmationDialogEventData,
-} from '@minddrop/events';
+import { Events, OpenConfirmationDialogEvent } from '@minddrop/events';
 import { TranslationKey } from '@minddrop/i18n';
 import { Properties, PropertyMap, PropertyValue } from '@minddrop/properties';
 import {
@@ -275,18 +271,15 @@ export const DatabaseEntryTemplateEditor: React.FC<
       : `${i18nRoot}.message`;
 
     // Confirm the deletion before removing the template
-    Events.dispatch<OpenConfirmationDialogEventData>(
-      OpenConfirmationDialogEvent,
-      {
-        title: `${i18nRoot}.title`,
-        message,
-        confirmLabel: `${i18nRoot}.confirm`,
-        danger: true,
-        onConfirm: () => {
-          Databases.removeEntryTemplate(databaseId, template.id);
-        },
+    Events.dispatch(OpenConfirmationDialogEvent, {
+      title: `${i18nRoot}.title`,
+      message,
+      confirmLabel: `${i18nRoot}.confirm`,
+      danger: true,
+      onConfirm: () => {
+        Databases.removeEntryTemplate(databaseId, template.id);
       },
-    );
+    });
   }
 
   return (

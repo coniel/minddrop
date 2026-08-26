@@ -10,11 +10,7 @@ import {
   MenuLabel,
 } from '@minddrop/ui-primitives';
 import { useActiveDatabaseId } from '../DatabasesFeatureState';
-import {
-  OpenDatabaseViewEvent,
-  OpenDatabaseViewEventData,
-  OpenNewDatabaseDialogEvent,
-} from '../events';
+import { OpenDatabaseViewEvent, OpenNewDatabaseDialogEvent } from '../events';
 
 /** Renders the collapsible databases section in the app sidebar. */
 export const DatabasesSidebarMenu: React.FC = () => {
@@ -27,7 +23,7 @@ export const DatabasesSidebarMenu: React.FC = () => {
   }
 
   function handleOpenDatabaseView(databaseId: string) {
-    Events.dispatch<OpenDatabaseViewEventData>(OpenDatabaseViewEvent, {
+    Events.dispatch(OpenDatabaseViewEvent, {
       databaseId,
     });
   }

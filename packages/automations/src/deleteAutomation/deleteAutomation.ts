@@ -1,7 +1,7 @@
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { AutomationsStore } from '../AutomationsStore';
-import { AutomationDeletedEvent, AutomationDeletedEventData } from '../events';
+import { AutomationDeletedEvent } from '../events';
 import { getAutomation } from '../getAutomation';
 import { resolveAutomationFilePath } from '../utils';
 
@@ -27,8 +27,5 @@ export async function deleteAutomation(automationId: string): Promise<void> {
   }
 
   // Dispatch the automation deleted event
-  Events.dispatch<AutomationDeletedEventData>(
-    AutomationDeletedEvent,
-    automation,
-  );
+  Events.dispatch(AutomationDeletedEvent, automation);
 }

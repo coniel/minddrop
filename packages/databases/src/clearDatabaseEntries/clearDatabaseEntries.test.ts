@@ -3,10 +3,7 @@ import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabaseNotFoundError } from '../errors';
-import {
-  DatabaseEntriesClearedEvent,
-  DatabaseEntriesClearedEventData,
-} from '../events';
+import { DatabaseEntriesClearedEvent } from '../events';
 import { getAllDatabaseEntries } from '../getAllDatabaseEntries';
 import {
   MockFs,
@@ -97,16 +94,12 @@ describe('clearDatabaseEntries', () => {
       // Capture the database's entries before clearing
       const entries = getAllDatabaseEntries(objectDatabase.id);
 
-      Events.addListener<DatabaseEntriesClearedEventData>(
-        DatabaseEntriesClearedEvent,
-        'test',
-        ({ data }) => {
-          // Payload should carry the database ID and the deleted entries
-          expect(data.databaseId).toBe(objectDatabase.id);
-          expect(data.entries).toEqual(entries);
-          done();
-        },
-      );
+      Events.addListener(DatabaseEntriesClearedEvent, 'test', ({ data }) => {
+        // Payload should carry the database ID and the deleted entries
+        expect(data.databaseId).toBe(objectDatabase.id);
+        expect(data.entries).toEqual(entries);
+        done();
+      });
 
       clearDatabaseEntries(objectDatabase.id);
     }));
@@ -117,13 +110,9 @@ describe('clearDatabaseEntries', () => {
 
     // Listen for a cleared event on the now-empty database
     let dispatched = false;
-    Events.addListener<DatabaseEntriesClearedEventData>(
-      DatabaseEntriesClearedEvent,
-      'test',
-      () => {
-        dispatched = true;
-      },
-    );
+    Events.addListener(DatabaseEntriesClearedEvent, 'test', () => {
+      dispatched = true;
+    });
 
     await clearDatabaseEntries(objectDatabase.id);
 

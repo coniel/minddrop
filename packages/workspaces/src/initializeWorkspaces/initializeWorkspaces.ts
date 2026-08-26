@@ -3,7 +3,7 @@ import { BaseDirectory, Fs } from '@minddrop/file-system';
 import { Paths, entityId, isEntityId } from '@minddrop/utils';
 import { WorkspacesStore } from '../WorkspacesStore';
 import { WorkspacesConfigFileName } from '../constants';
-import { WorkspacesLoadedEvent, WorkspacesLoadedEventData } from '../events';
+import { WorkspacesLoadedEvent } from '../events';
 import { readWorkspaceConfig } from '../readWorkspaceConfig';
 import { WorkspaceId, WorkspacesConfig } from '../types';
 import { resolveWorkspacesConfigFilePath } from '../utils';
@@ -73,5 +73,5 @@ export async function initializeWorkspaces(): Promise<void> {
   }
 
   // Dispatch a workspaces loaded event
-  Events.dispatch<WorkspacesLoadedEventData>(WorkspacesLoadedEvent, workspaces);
+  Events.dispatch(WorkspacesLoadedEvent, workspaces);
 }

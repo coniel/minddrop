@@ -40,7 +40,7 @@ describe('initializeTabsSyncListeners', () => {
   it('records view area changes onto the active tab', () => {
     newTab(VIEW_AREA_ID);
 
-    Events.dispatch<ViewAreaChangedEventData>(
+    Events.dispatch(
       ViewAreaChangedEvent,
       changed(VIEW_AREA_ID, { view: 'db:view', id: 'db:a' }),
     );
@@ -51,7 +51,7 @@ describe('initializeTabsSyncListeners', () => {
   it('ignores view area changes from another view area', () => {
     newTab(VIEW_AREA_ID);
 
-    Events.dispatch<ViewAreaChangedEventData>(
+    Events.dispatch(
       ViewAreaChangedEvent,
       changed(OTHER_VIEW_AREA_ID, { view: 'db:view', id: 'db:a' }),
     );
@@ -61,7 +61,7 @@ describe('initializeTabsSyncListeners', () => {
 
   it('updates tabs when a view changes', () => {
     newTab(VIEW_AREA_ID);
-    Events.dispatch<ViewAreaChangedEventData>(
+    Events.dispatch(
       ViewAreaChangedEvent,
       changed(VIEW_AREA_ID, { view: 'db:view', id: 'db:a', title: 'A' }),
     );
@@ -79,7 +79,7 @@ describe('initializeTabsSyncListeners', () => {
 
   it('ignores view updates targeting another view area', () => {
     newTab(VIEW_AREA_ID);
-    Events.dispatch<ViewAreaChangedEventData>(
+    Events.dispatch(
       ViewAreaChangedEvent,
       changed(VIEW_AREA_ID, { view: 'db:view', id: 'db:a', title: 'A' }),
     );
@@ -96,7 +96,7 @@ describe('initializeTabsSyncListeners', () => {
 
   it('closes tabs when a view closes', () => {
     newTab(VIEW_AREA_ID);
-    Events.dispatch<ViewAreaChangedEventData>(
+    Events.dispatch(
       ViewAreaChangedEvent,
       changed(VIEW_AREA_ID, { view: 'db:view', id: 'db:a' }),
     );
@@ -108,7 +108,7 @@ describe('initializeTabsSyncListeners', () => {
 
   it('ignores view closes targeting another view area', () => {
     newTab(VIEW_AREA_ID);
-    Events.dispatch<ViewAreaChangedEventData>(
+    Events.dispatch(
       ViewAreaChangedEvent,
       changed(VIEW_AREA_ID, { view: 'db:view', id: 'db:a' }),
     );
@@ -124,11 +124,11 @@ describe('initializeTabsSyncListeners', () => {
   it('builds up navigation history from view area changes', () => {
     newTab(VIEW_AREA_ID);
 
-    Events.dispatch<ViewAreaChangedEventData>(
+    Events.dispatch(
       ViewAreaChangedEvent,
       changed(VIEW_AREA_ID, { view: 'db:view', id: 'db:a' }),
     );
-    Events.dispatch<ViewAreaChangedEventData>(
+    Events.dispatch(
       ViewAreaChangedEvent,
       changed(VIEW_AREA_ID, { view: 'db:view', id: 'db:b' }),
     );
@@ -142,11 +142,11 @@ describe('initializeTabsSyncListeners', () => {
 
   it('patches history entries when a view changes', () => {
     newTab(VIEW_AREA_ID);
-    Events.dispatch<ViewAreaChangedEventData>(
+    Events.dispatch(
       ViewAreaChangedEvent,
       changed(VIEW_AREA_ID, { view: 'db:view', id: 'db:a', title: 'A' }),
     );
-    Events.dispatch<ViewAreaChangedEventData>(
+    Events.dispatch(
       ViewAreaChangedEvent,
       changed(VIEW_AREA_ID, { view: 'db:view', id: 'db:b' }),
     );
@@ -167,11 +167,11 @@ describe('initializeTabsSyncListeners', () => {
 
   it('prunes history entries when a view closes', () => {
     newTab(VIEW_AREA_ID);
-    Events.dispatch<ViewAreaChangedEventData>(
+    Events.dispatch(
       ViewAreaChangedEvent,
       changed(VIEW_AREA_ID, { view: 'db:view', id: 'db:a' }),
     );
-    Events.dispatch<ViewAreaChangedEventData>(
+    Events.dispatch(
       ViewAreaChangedEvent,
       changed(VIEW_AREA_ID, { view: 'db:view', id: 'db:b' }),
     );
@@ -186,7 +186,7 @@ describe('initializeTabsSyncListeners', () => {
     newTab(VIEW_AREA_ID);
     cleanup();
 
-    Events.dispatch<ViewAreaChangedEventData>(
+    Events.dispatch(
       ViewAreaChangedEvent,
       changed(VIEW_AREA_ID, { view: 'db:view', id: 'db:a' }),
     );

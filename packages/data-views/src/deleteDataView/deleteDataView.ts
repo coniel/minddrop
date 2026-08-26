@@ -1,7 +1,7 @@
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { DataViewsStore } from '../DataViewsStore';
-import { DataViewDeletedEvent, DataViewDeletedEventData } from '../events';
+import { DataViewDeletedEvent } from '../events';
 import { getDataView } from '../getDataView';
 import { resolveViewFilePath } from '../utils';
 
@@ -27,5 +27,5 @@ export async function deleteDataView(id: string): Promise<void> {
   }
 
   // Dispatch a data view deleted event
-  Events.dispatch<DataViewDeletedEventData>(DataViewDeletedEvent, view);
+  Events.dispatch(DataViewDeletedEvent, view);
 }

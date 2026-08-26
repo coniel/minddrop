@@ -1,22 +1,15 @@
 import {
   DataViewDeletedEvent,
-  DataViewDeletedEventData,
   DataViewUpdatedEvent,
-  DataViewUpdatedEventData,
   DataViews,
 } from '@minddrop/data-views';
 import { Events } from '@minddrop/events';
 import { I18n, i18n } from '@minddrop/i18n';
 import {
   CloseViewEvent,
-  CloseViewEventData,
   OpenViewEvent,
-  OpenViewEventData,
   UpdateViewEvent,
-  UpdateViewEventData,
 } from '@minddrop/views';
-import { DataViewViewProps } from '../DataViewView';
-import { NewDataViewViewProps } from '../NewDataViewView';
 import {
   DataViewViewName,
   DataViewsViewName,
@@ -24,10 +17,8 @@ import {
   NewDataViewViewId,
   NewDataViewViewName,
   OpenDataViewViewEvent,
-  OpenDataViewViewEventData,
   OpenDataViewsViewEvent,
   OpenNewDataViewViewEvent,
-  OpenNewDataViewViewEventData,
 } from '../events';
 import { locales } from '../locales';
 
@@ -55,26 +46,22 @@ export function initializeDataViewsFeature(): VoidFunction {
 
   // Listen for open data view view events, and open the data
   // view's view when one is received
-  Events.addListener<OpenDataViewViewEventData>(
-    OpenDataViewViewEvent,
-    EventListenerId,
-    ({ data }) => {
-      const dataView = DataViews.get(data.dataViewId, false);
+  Events.addListener(OpenDataViewViewEvent, EventListenerId, ({ data }) => {
+    const dataView = DataViews.get(data.dataViewId, false);
 
-      Events.dispatch<OpenViewEventData<DataViewViewProps>>(OpenViewEvent, {
-        view: DataViewViewName,
-        id: dataViewViewId(data.dataViewId),
-        props: { dataViewId: data.dataViewId },
-        title: dataView?.name,
-        icon: dataView?.icon,
-      });
-    },
-  );
+    Events.dispatch(OpenViewEvent, {
+      view: DataViewViewName,
+      id: dataViewViewId(data.dataViewId),
+      props: { dataViewId: data.dataViewId },
+      title: dataView?.name,
+      icon: dataView?.icon,
+    });
+  });
 
   // Listen for open data views view events, and open the data
   // views list view when one is received
   Events.addListener(OpenDataViewsViewEvent, EventListenerId, () => {
-    Events.dispatch<OpenViewEventData>(OpenViewEvent, {
+    Events.dispatch(OpenViewEvent, {
       view: DataViewsViewName,
       id: dataViewsViewId,
     });
@@ -82,44 +69,32 @@ export function initializeDataViewsFeature(): VoidFunction {
 
   // Listen for open new data view view events, and open the view
   // creation view when one is received
-  Events.addListener<OpenNewDataViewViewEventData>(
-    OpenNewDataViewViewEvent,
-    EventListenerId,
-    ({ data }) => {
-      Events.dispatch<OpenViewEventData<NewDataViewViewProps>>(OpenViewEvent, {
-        view: NewDataViewViewName,
-        id: NewDataViewViewId,
-        props: { viewType: data.viewType },
-        title: i18n.t('dataViews.labels.new'),
-        icon: NEW_DATA_VIEW_VIEW_ICON,
-      });
-    },
-  );
+  Events.addListener(OpenNewDataViewViewEvent, EventListenerId, ({ data }) => {
+    Events.dispatch(OpenViewEvent, {
+      view: NewDataViewViewName,
+      id: NewDataViewViewId,
+      props: { viewType: data.viewType },
+      title: i18n.t('dataViews.labels.new'),
+      icon: NEW_DATA_VIEW_VIEW_ICON,
+    });
+  });
 
   // Update the data view's open view when the data view changes
   // (e.g. renamed or re-iconed)
-  Events.addListener<DataViewUpdatedEventData>(
-    DataViewUpdatedEvent,
-    EventListenerId,
-    ({ data }) => {
-      Events.dispatch<UpdateViewEventData>(UpdateViewEvent, {
-        id: dataViewViewId(data.updated.id),
-        title: data.updated.name,
-        icon: data.updated.icon,
-      });
-    },
-  );
+  Events.addListener(DataViewUpdatedEvent, EventListenerId, ({ data }) => {
+    Events.dispatch(UpdateViewEvent, {
+      id: dataViewViewId(data.updated.id),
+      title: data.updated.name,
+      icon: data.updated.icon,
+    });
+  });
 
   // Close the data view's open view when the data view is deleted
-  Events.addListener<DataViewDeletedEventData>(
-    DataViewDeletedEvent,
-    EventListenerId,
-    ({ data }) => {
-      Events.dispatch<CloseViewEventData>(CloseViewEvent, {
-        id: dataViewViewId(data.id),
-      });
-    },
-  );
+  Events.addListener(DataViewDeletedEvent, EventListenerId, ({ data }) => {
+    Events.dispatch(CloseViewEvent, {
+      id: dataViewViewId(data.id),
+    });
+  });
 
   return () => {
     Events.removeListener(OpenDataViewViewEvent, EventListenerId);

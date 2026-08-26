@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { AutomationsStore } from '../AutomationsStore';
-import { AutomationsLoadedEvent, AutomationsLoadedEventData } from '../events';
+import { AutomationsLoadedEvent } from '../events';
 import {
   MockFs,
   automation_1,
@@ -35,7 +35,7 @@ describe('initializeAutomations', () => {
 
   it('dispatches the automations loaded event', async () =>
     new Promise<void>((done) => {
-      Events.addListener<AutomationsLoadedEventData>(
+      Events.addListener(
         AutomationsLoadedEvent,
         'test-automations-loaded',
         (payload) => {

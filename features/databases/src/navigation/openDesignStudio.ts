@@ -1,8 +1,5 @@
 import { Events } from '@minddrop/events';
-import {
-  OpenDesignStudioEvent,
-  OpenDesignStudioEventData,
-} from '@minddrop/feature-designs-legacy';
+import { OpenDesignStudioEvent } from '@minddrop/feature-designs-legacy';
 import { OpenDatabaseViewEvent } from '../events';
 
 /**
@@ -13,7 +10,7 @@ import { OpenDatabaseViewEvent } from '../events';
  * @param designId - The ID of the design to open in the editor.
  */
 export function openDesignStudio(databaseId: string, designId?: string) {
-  Events.dispatch<OpenDesignStudioEventData>(OpenDesignStudioEvent, {
+  Events.dispatch(OpenDesignStudioEvent, {
     designId,
     backButtonLabel: 'databases.design.actions.back',
     backEvent: OpenDatabaseViewEvent,

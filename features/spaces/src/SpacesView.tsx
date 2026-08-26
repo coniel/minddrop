@@ -5,11 +5,7 @@ import { ListPanelView, ListPanelViewItem } from '@minddrop/ui-components';
 import { IconButton } from '@minddrop/ui-primitives';
 import { Views } from '@minddrop/views';
 import { SpaceContent } from './SpaceContent';
-import {
-  OpenNewSpaceDialogEvent,
-  OpenSpaceViewEvent,
-  OpenSpaceViewEventData,
-} from './events';
+import { OpenNewSpaceDialogEvent, OpenSpaceViewEvent } from './events';
 
 /**
  * Renders a two column view of the spaces: a searchable list of
@@ -41,7 +37,7 @@ export const SpacesView: React.FC = () => {
 
   // Open the selected space in a view of its own
   function handleExpandSpace() {
-    Events.dispatch<OpenSpaceViewEventData>(OpenSpaceViewEvent, {
+    Events.dispatch(OpenSpaceViewEvent, {
       spaceId: selectedSpace?.id ?? '',
     });
   }

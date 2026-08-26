@@ -1,9 +1,6 @@
 import { Events } from '@minddrop/events';
 import { SelectionStore } from '../SelectionStore';
-import {
-  SelectionItemsAddedEvent,
-  SelectionItemsAddedEventData,
-} from '../events';
+import { SelectionItemsAddedEvent } from '../events';
 import { SelectionItem } from '../types';
 import { containsSelectionItem, dedupeSelectionItemsArray } from '../utils';
 
@@ -11,7 +8,7 @@ import { containsSelectionItem, dedupeSelectionItemsArray } from '../utils';
  * Adds the provided items to the current selection.
  *
  * @param items - The selection items to add to the selection.
- * @dipatches 'selection:items:add'
+ * @dispatches 'selection:items:added'
  */
 export function addToSelection(items: SelectionItem[]): void {
   // Get the current selection
@@ -30,8 +27,5 @@ export function addToSelection(items: SelectionItem[]): void {
   SelectionStore.getState().addSelectedItems(itemsToAdd);
 
   // Dispatch selection items added event
-  Events.dispatch<SelectionItemsAddedEventData>(
-    SelectionItemsAddedEvent,
-    itemsToAdd,
-  );
+  Events.dispatch(SelectionItemsAddedEvent, itemsToAdd);
 }

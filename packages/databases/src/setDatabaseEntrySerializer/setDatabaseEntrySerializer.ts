@@ -1,14 +1,11 @@
-import { AppErrorEvent, AppErrorEventData, Events } from '@minddrop/events';
+import { AppErrorEvent, Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
-import {
-  ItemAddressesChangedEvent,
-  ItemAddressesChangedEventData,
-} from '@minddrop/item-references';
+import { ItemAddressesChangedEvent } from '@minddrop/item-references';
 import { Paths } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabasesStore } from '../DatabasesStore';
 import { EntryConversionBackupDirName } from '../constants';
-import { DatabaseUpdatedEvent, DatabaseUpdatedEventData } from '../events';
+import { DatabaseUpdatedEvent } from '../events';
 import { getAllDatabaseEntries } from '../getAllDatabaseEntries';
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntry } from '../getDatabaseEntry';
@@ -33,7 +30,7 @@ import { writeDatabaseConfig } from '../writeDatabaseConfig';
  * @throws {DatabaseNotFoundError} If the database does not exist.
  * @throws {DatabaseEntrySerializerNotRegisteredError} If the serializer is not registered.
  *
- * @dispatches databases:database:update
+ * @dispatches databases:database:updated
  * @dispatches item-references:addresses:changed
  * @dispatches app:error
  */
@@ -141,7 +138,7 @@ export async function setDatabaseEntrySerializer(
     });
 
     // Notify the UI of the failed conversion
-    Events.dispatch<AppErrorEventData>(AppErrorEvent, {
+    Events.dispatch(AppErrorEvent, {
       title: 'databases.settings.entrySerializer.error.title',
       message: 'databases.settings.entrySerializer.error.message',
       error,
@@ -159,7 +156,7 @@ export async function setDatabaseEntrySerializer(
   }
 
   // Dispatch the converted entries' address changes
-  await Events.dispatch<ItemAddressesChangedEventData>(
+  await Events.dispatch(
     ItemAddressesChangedEvent,
     entries.map((entry) => ({
       id: entry.id,
@@ -171,7 +168,7 @@ export async function setDatabaseEntrySerializer(
   const updated = getDatabase(id);
 
   // Dispatch a database updated event
-  Events.dispatch<DatabaseUpdatedEventData>(DatabaseUpdatedEvent, {
+  Events.dispatch(DatabaseUpdatedEvent, {
     original: database,
     updated,
   });

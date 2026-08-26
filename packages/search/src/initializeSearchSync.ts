@@ -1,11 +1,5 @@
 import { Databases } from '@minddrop/databases';
-import type {
-  DatabaseEntriesSqlSyncedEventData,
-  DatabasePropertySqlSyncedEventData,
-  DatabaseSqlReindexedEventData,
-  DatabaseSqlSyncedEventData,
-  DatabasesBackgroundSyncedEventData,
-} from '@minddrop/databases';
+import type {} from '@minddrop/databases';
 import { Events } from '@minddrop/events';
 import { Workspaces } from '@minddrop/workspaces';
 import { getSearchAdapter } from './SearchAdapter';
@@ -29,120 +23,104 @@ import {
  */
 export function initializeSearchSync(): void {
   // Handle entry sync (upsert/delete)
-  Events.on<DatabaseEntriesSqlSyncedEventData>(
-    Databases.events.entriesSqlSynced,
-    'search:sync',
-    ({ data }) => {
-      const workspaceId = getWorkspaceId();
+  Events.on(Databases.events.entriesSqlSynced, 'search:sync', ({ data }) => {
+    const workspaceId = getWorkspaceId();
 
-      if (!workspaceId) {
-        return;
-      }
+    if (!workspaceId) {
+      return;
+    }
 
-      if (data.action === 'upsert' && data.entries?.length) {
-        queueEntryUpserts(workspaceId, data.entries);
-      }
+    if (data.action === 'upsert' && data.entries?.length) {
+      queueEntryUpserts(workspaceId, data.entries);
+    }
 
-      if (data.action === 'delete' && data.entryIds.length > 0) {
-        queueEntryDeletes(workspaceId, data.entryIds);
-      }
-    },
-  );
+    if (data.action === 'delete' && data.entryIds.length > 0) {
+      queueEntryDeletes(workspaceId, data.entryIds);
+    }
+  });
 
   // Handle database sync (upsert/delete)
-  Events.on<DatabaseSqlSyncedEventData>(
-    Databases.events.databaseSqlSynced,
-    'search:sync',
-    ({ data }) => {
-      const workspaceId = getWorkspaceId();
+  Events.on(Databases.events.databaseSqlSynced, 'search:sync', ({ data }) => {
+    const workspaceId = getWorkspaceId();
 
-      if (!workspaceId) {
-        return;
-      }
+    if (!workspaceId) {
+      return;
+    }
 
-      if (data.action === 'upsert' && data.database) {
-        getSearchAdapter().searchDatabaseSync({
-          workspaceId,
-          action: 'upsert',
-          database: data.database,
-        });
-      }
+    if (data.action === 'upsert' && data.database) {
+      getSearchAdapter().searchDatabaseSync({
+        workspaceId,
+        action: 'upsert',
+        database: data.database,
+      });
+    }
 
-      if (data.action === 'delete') {
-        getSearchAdapter().searchDatabaseSync({
-          workspaceId,
-          action: 'delete',
-          database: {
-            id: data.databaseId,
-            name: '',
-            path: '',
-            icon: '',
-          },
-        });
-      }
-    },
-  );
+    if (data.action === 'delete') {
+      getSearchAdapter().searchDatabaseSync({
+        workspaceId,
+        action: 'delete',
+        database: {
+          id: data.databaseId,
+          name: '',
+          path: '',
+          icon: '',
+        },
+      });
+    }
+  });
 
   // Handle property rename (re-index MiniSearch)
-  Events.on<DatabasePropertySqlSyncedEventData>(
-    Databases.events.propertySqlSynced,
-    'search:sync',
-    ({ data }) => {
-      const workspaceId = getWorkspaceId();
+  Events.on(Databases.events.propertySqlSynced, 'search:sync', ({ data }) => {
+    const workspaceId = getWorkspaceId();
 
-      if (!workspaceId) {
-        return;
-      }
+    if (!workspaceId) {
+      return;
+    }
 
-      // SQL rename is already done; just re-index MiniSearch
-      // with updated property data
-      queueDatabaseReindex(workspaceId, data.databaseId);
-    },
-  );
+    // SQL rename is already done; just re-index MiniSearch
+    // with updated property data
+    queueDatabaseReindex(workspaceId, data.databaseId);
+  });
 
   // Handle background sync changeset
-  Events.on<DatabasesBackgroundSyncedEventData>(
-    Databases.events.backgroundSynced,
-    'search:sync',
-    ({ data }) => {
-      const workspaceId = getWorkspaceId();
+  Events.on(Databases.events.backgroundSynced, 'search:sync', ({ data }) => {
+    const workspaceId = getWorkspaceId();
 
-      if (!workspaceId) {
-        return;
-      }
+    if (!workspaceId) {
+      return;
+    }
 
-      // Sync upserted databases
-      for (const database of data.upsertedDatabases) {
-        getSearchAdapter().searchDatabaseSync({
-          workspaceId,
-          action: 'upsert',
-          database,
-        });
-      }
+    // Sync upserted databases
+    for (const database of data.upsertedDatabases) {
+      getSearchAdapter().searchDatabaseSync({
+        workspaceId,
+        action: 'upsert',
+        database,
+      });
+    }
 
-      // Sync deleted databases
-      for (const id of data.deletedDatabaseIds) {
-        getSearchAdapter().searchDatabaseSync({
-          workspaceId,
-          action: 'delete',
-          database: { id, name: '', path: '', icon: '' },
-        });
-      }
+    // Sync deleted databases
+    for (const id of data.deletedDatabaseIds) {
+      getSearchAdapter().searchDatabaseSync({
+        workspaceId,
+        action: 'delete',
+        database: { id, name: '', path: '', icon: '' },
+      });
+    }
 
-      // Sync upserted entries
-      if (data.upsertedEntries.length > 0) {
-        queueEntryUpserts(workspaceId, data.upsertedEntries);
-      }
+    // Sync upserted entries
+    if (data.upsertedEntries.length > 0) {
+      queueEntryUpserts(workspaceId, data.upsertedEntries);
+    }
 
-      // Sync deleted entries
-      if (data.deletedEntryIds.length > 0) {
-        queueEntryDeletes(workspaceId, data.deletedEntryIds);
-      }
-    },
-  );
+    // Sync deleted entries
+    if (data.deletedEntryIds.length > 0) {
+      queueEntryDeletes(workspaceId, data.deletedEntryIds);
+    }
+  });
 
   // Handle database reindex (property added/removed)
-  Events.on<DatabaseSqlReindexedEventData>(
+  Events.on(
     Databases.events.databaseSqlReindexed,
     'search:sync',
     ({ data }) => {

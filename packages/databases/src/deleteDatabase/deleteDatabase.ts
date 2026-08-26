@@ -1,7 +1,7 @@
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { DatabasesStore } from '../DatabasesStore';
-import { DatabaseDeletedEvent, DatabaseDeletedEventData } from '../events';
+import { DatabaseDeletedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
 
 /**
@@ -22,10 +22,7 @@ export async function deleteDatabase(id: string): Promise<void> {
 
   // Dispatch the delete event before removing the database from the
   // store so consumers can tear down while it is still resolvable
-  await Events.dispatch<DatabaseDeletedEventData>(
-    DatabaseDeletedEvent,
-    database,
-  );
+  await Events.dispatch(DatabaseDeletedEvent, database);
 
   // Remove the database from the store
   DatabasesStore.remove(id);

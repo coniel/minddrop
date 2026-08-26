@@ -85,15 +85,13 @@ describe('removeDesignProperty', () => {
     const target = design_books.properties[0];
 
     return new Promise<void>((done) => {
-      Events.addListener<DesignPropertyRemovedEventData>(
-        DesignPropertyRemovedEvent,
-        'test',
-        (payload) => {
-          expect(payload.data.design.id).toBe(design_books.id);
-          expect(payload.data.property).toEqual(target);
-          done();
-        },
-      );
+      Events.addListener(DesignPropertyRemovedEvent, 'test', (payload) => {
+        const data = payload.data as DesignPropertyRemovedEventData;
+
+        expect(data.design.id).toBe(design_books.id);
+        expect(data.property).toEqual(target);
+        done();
+      });
 
       removeDesignProperty(design_books.id, target.name);
     });

@@ -3,7 +3,7 @@ import { FileNotFoundError, Fs } from '@minddrop/file-system';
 import { InvalidParameterError } from '@minddrop/utils';
 import { WorkspacesStore } from '../WorkspacesStore';
 import { DefaultWorkspaceIcon } from '../constants';
-import { WorkspacesLoadedEvent, WorkspacesLoadedEventData } from '../events';
+import { WorkspacesLoadedEvent } from '../events';
 import { readWorkspaceConfig } from '../readWorkspaceConfig';
 import { Workspace } from '../types';
 import { generateWorkspaceConfig } from '../utils';
@@ -20,7 +20,7 @@ import { writeWorkspacesConfig } from '../writeWorkspacesConfig';
  *
  * @throws {FileNotFoundError} If the workspace directory does not exist.
  *
- * @dispatches worksapces:loaded
+ * @dispatches workspaces:loaded
  */
 export async function addWorkspace(path: string): Promise<Workspace> {
   // Ensure the path exists
@@ -68,9 +68,7 @@ export async function addWorkspace(path: string): Promise<Workspace> {
   await writeWorkspacesConfig();
 
   // Dispatch a workspaces loaded event
-  Events.dispatch<WorkspacesLoadedEventData>(WorkspacesLoadedEvent, [
-    workspace,
-  ]);
+  Events.dispatch(WorkspacesLoadedEvent, [workspace]);
 
   // Return the added workspace
   return workspace;

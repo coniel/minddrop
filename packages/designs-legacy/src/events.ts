@@ -1,9 +1,13 @@
 import { PropertySchema } from '@minddrop/properties';
 import { Design, Layout } from './types';
 
-export const DesignCreatedEvent = 'designs:design:created';
-export const DesignDeletedEvent = 'designs:design:deleted';
-export const DesignUpdatedEvent = 'designs:design:updated';
+// Typed as plain strings: the designs package registers these same
+// event names in the event data registry with its own data types, so
+// keeping the literal types here would type call sites with the wrong
+// data in programs which include both packages
+export const DesignCreatedEvent: string = 'designs:design:created';
+export const DesignDeletedEvent: string = 'designs:design:deleted';
+export const DesignUpdatedEvent: string = 'designs:design:updated';
 
 export type DesignCreatedEventData = Design;
 export type DesignDeletedEventData = Design;
@@ -15,7 +19,8 @@ export type DesignUpdatedEventData = {
 export const DesignPropertyAddedEvent = 'designs:property:added';
 export const DesignPropertyUpdatedEvent = 'designs:property:updated';
 export const DesignPropertyRemovedEvent = 'designs:property:removed';
-export const DesignPropertyRenamedEvent = 'designs:property:renamed';
+// Plain string for the same reason as the design events above
+export const DesignPropertyRenamedEvent: string = 'designs:property:renamed';
 
 export interface DesignPropertyAddedEventData {
   /**
