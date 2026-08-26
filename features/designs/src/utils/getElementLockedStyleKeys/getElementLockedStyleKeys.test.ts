@@ -35,8 +35,8 @@ describe('getElementLockedStyleKeys', () => {
   });
 
   it("locks the role's context-resolved style keys", () => {
-    // The subtitle role locks styles and offers no variant axes
-    const element = { ...flatTextElement, role: 'subtitle' };
+    // The heading role locks styles of its own on top of its axes
+    const element = { ...flatTextElement, role: 'heading' };
 
     const lockedKeys = getElementLockedStyleKeys(element, 'card');
 
@@ -49,9 +49,9 @@ describe('getElementLockedStyleKeys', () => {
   });
 
   it('locks keys per layout context', () => {
-    const element = { ...flatTextElement, role: 'title' };
+    const element = { ...flatTextElement, role: 'heading' };
 
-    // Titles truncate on list rows only
+    // Headings truncate on list rows only
     expect(getElementLockedStyleKeys(element, 'list').has('truncate')).toBe(
       true,
     );
@@ -61,10 +61,10 @@ describe('getElementLockedStyleKeys', () => {
   });
 
   it("locks the keys of the selected variant option alongside the role's own", () => {
-    // The title role locks styles and offers a size axis
+    // The heading role locks styles and offers a size axis
     const element = {
       ...flatTextElement,
-      role: 'title',
+      role: 'heading',
       roleVariants: { size: 'lg' },
     };
 
@@ -81,7 +81,7 @@ describe('getElementLockedStyleKeys', () => {
 
   it('locks the default option keys when the element selects no variant', () => {
     // No roleVariants at all, so the axis default applies
-    const element = { ...flatTextElement, role: 'title' };
+    const element = { ...flatTextElement, role: 'heading' };
 
     // The default size option sets the font size
     expect(getElementLockedStyleKeys(element, 'card').has('fontSize')).toBe(
@@ -93,7 +93,7 @@ describe('getElementLockedStyleKeys', () => {
     // Select an option which does not exist on the size axis
     const element = {
       ...flatTextElement,
-      role: 'title',
+      role: 'heading',
       roleVariants: { size: 'not-an-option' },
     };
 
@@ -104,11 +104,11 @@ describe('getElementLockedStyleKeys', () => {
   });
 
   it('leaves keys the role does not control unlocked', () => {
-    const element = { ...flatTextElement, role: 'title' };
+    const element = { ...flatTextElement, role: 'heading' };
 
     const lockedKeys = getElementLockedStyleKeys(element, 'card');
 
-    // The title role controls neither alignment nor margins
+    // The heading role controls neither alignment nor margins
     expect(lockedKeys.has('textAlign')).toBe(false);
     expect(lockedKeys.has('marginTop')).toBe(false);
   });

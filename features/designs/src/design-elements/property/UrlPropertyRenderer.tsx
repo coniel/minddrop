@@ -1,24 +1,24 @@
-import { UrlElement } from '@minddrop/designs';
+import { UrlPropertyElement } from '@minddrop/designs';
 import { useElementProperty } from '../../DesignPropertiesProvider';
 import { DesignText } from '../../DesignText';
 import { useElementCssStyle } from '../../useElementCssStyle';
 import { useElementPlaceholder } from '../../useElementPlaceholder';
-import { formatUrl } from './formatUrl';
+import { formatUrl } from '../../utils';
 
-export interface UrlDesignElementProps {
+export interface UrlPropertyRendererProps {
   /**
-   * The URL element to render.
+   * The URL property element to render.
    */
-  element: UrlElement;
+  element: UrlPropertyElement;
 }
 
 /**
- * Display renderer for a URL design element.
- * Shows the mapped property value when available, otherwise falls
+ * Display renderer for a URL property element rendered as a link.
+ * Shows the bound property value when available, otherwise falls
  * back to the element's placeholder text, with URL parts shown or
- * hidden per the element's visibility flags.
+ * hidden per the element's format options.
  */
-export const UrlDesignElement: React.FC<UrlDesignElementProps> = ({
+export const UrlPropertyRenderer: React.FC<UrlPropertyRendererProps> = ({
   element,
 }) => {
   const property = useElementProperty(element.id);
@@ -29,15 +29,7 @@ export const UrlDesignElement: React.FC<UrlDesignElementProps> = ({
     property?.value != null ? String(property.value) : placeholder;
 
   // Format the URL based on visible parts
-  const displayText = rawText
-    ? formatUrl(rawText, {
-        showProtocol: element.showProtocol,
-        showSubdomain: element.showSubdomain,
-        showDomain: element.showDomain,
-        showTld: element.showTld,
-        showPath: element.showPath,
-      })
-    : rawText;
+  const displayText = rawText ? formatUrl(rawText, element.format) : rawText;
 
   return <DesignText text={displayText} css={useElementCssStyle(element)} />;
 };

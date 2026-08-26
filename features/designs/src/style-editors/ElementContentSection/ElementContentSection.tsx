@@ -1,6 +1,7 @@
 import {
   DesignRoles,
   getElementConfig,
+  isPropertyElement,
   isRoleElement,
 } from '@minddrop/designs';
 import { useTranslation } from '@minddrop/i18n';
@@ -10,22 +11,14 @@ import {
   useDesignStudioStore,
   useElement,
 } from '../../DesignStudioStore';
-import { DefaultStaticIcon } from '../../constants';
 import { FlatDesignElement } from '../../types';
 import {
   isPropertyCompatibleWithElement,
   isStaticContentElement,
 } from '../../utils';
 import { PanelSection } from '../PanelSection';
-import { DateContentField } from './DateContentField';
 import { ElementPropertyField } from './ElementPropertyField';
-import { IconContentField } from './IconContentField';
-import { ImageContentField } from './ImageContentField';
-import { NumberContentField } from './NumberContentField';
 import { StaticContentField } from './StaticContentField';
-
-// Element types whose static content is an image file
-const ImageContentTypes = ['image', 'image-viewer'];
 
 // Element types binding their image property from the background
 // fields of their style editor instead
@@ -74,15 +67,8 @@ export const ElementContentSection: React.FC<ElementContentSectionProps> = ({
       // cannot unset a field
       const { property: _removed, ...unboundElement } = element;
 
-      // Give an icon element something visible to start from
-      const iconDefault =
-        element.type === 'icon' && !element.icon
-          ? { icon: DefaultStaticIcon }
-          : {};
-
       studio.setDesignElement(elementId, {
         ...unboundElement,
-        ...iconDefault,
         static: true,
       });
 
@@ -90,11 +76,7 @@ export const ElementContentSection: React.FC<ElementContentSectionProps> = ({
     }
 
     // Clear the static content when returning to bound mode
-    if (element.type === 'icon') {
-      studio.updateDesignElement(elementId, { static: false, icon: '' });
-    } else {
-      studio.updateDesignElement(elementId, { static: false, content: '' });
-    }
+    studio.updateDesignElement(elementId, { static: false, content: '' });
 
     // Bind the first compatible property left unbound, so the
     // switch lands on a working binding when one is available
@@ -118,6 +100,14 @@ export const ElementContentSection: React.FC<ElementContentSectionProps> = ({
     Boolean(getElementConfig(element.type).supportsStaticContent) &&
     roleSupportsStaticContent(element);
 
+  // A property element holds nothing but its binding, so its
+  // section is named after the binding and the select inside it
+  // goes unlabelled
+  const isProperty = isPropertyElement(element);
+  const sectionLabel = isProperty
+    ? 'designs.property.label'
+    : 'designs.content.label';
+
   // Without property binding there is only static content to set
   if (!propertyBindingEnabled) {
     if (!supportsContent) {
@@ -125,8 +115,8 @@ export const ElementContentSection: React.FC<ElementContentSectionProps> = ({
     }
 
     return (
-      <PanelSection label="designs.content.label">
-        <ContentField elementId={elementId} type={element.type} />
+      <PanelSection label={sectionLabel}>
+        <StaticContentField elementId={elementId} />
       </PanelSection>
     );
   }
@@ -150,7 +140,7 @@ export const ElementContentSection: React.FC<ElementContentSectionProps> = ({
   const mode = isStaticContentElement(element) ? 'static' : 'property';
 
   return (
-    <PanelSection label="designs.content.label">
+    <PanelSection label={sectionLabel}>
       {supportsContent && (
         <RadioToggleGroup
           size="md"
@@ -164,7 +154,10 @@ export const ElementContentSection: React.FC<ElementContentSectionProps> = ({
 
       {/** Bound mode: the property select **/}
       {mode === 'property' && hasCompatibleProperties && (
-        <ElementPropertyField elementId={elementId} />
+        <ElementPropertyField
+          elementId={elementId}
+          label={isProperty ? undefined : 'designs.property.label'}
+        />
       )}
       {mode === 'property' && !hasCompatibleProperties && (
         <Text
@@ -177,45 +170,10 @@ export const ElementContentSection: React.FC<ElementContentSectionProps> = ({
 
       {/** Static mode: the content input for the element type **/}
       {mode === 'static' && supportsContent && (
-        <ContentField elementId={elementId} type={element.type} />
+        <StaticContentField elementId={elementId} />
       )}
     </PanelSection>
   );
-};
-
-interface ContentFieldProps {
-  /**
-   * The ID of the element to edit.
-   */
-  elementId: string;
-
-  /**
-   * The element type, which decides the kind of input shown.
-   */
-  type: string;
-}
-
-/**
- * Renders the static content input matching the element type.
- */
-const ContentField: React.FC<ContentFieldProps> = ({ elementId, type }) => {
-  if (type === 'icon') {
-    return <IconContentField elementId={elementId} />;
-  }
-
-  if (ImageContentTypes.includes(type)) {
-    return <ImageContentField elementId={elementId} />;
-  }
-
-  if (type === 'date') {
-    return <DateContentField elementId={elementId} />;
-  }
-
-  if (type === 'number') {
-    return <NumberContentField elementId={elementId} />;
-  }
-
-  return <StaticContentField elementId={elementId} />;
 };
 
 /**

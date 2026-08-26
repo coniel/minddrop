@@ -28,9 +28,8 @@ describe('<ElementsPalette />', () => {
     renderPalette(studio);
 
     // Roles offered on cards are listed
-    screen.getByText('designs.roles.title.label');
     screen.getByText('designs.roles.heading.label');
-    screen.getByText('designs.roles.text-value.label');
+    screen.getByText('designs.roles.label.label');
     screen.getByText('designs.roles.content.label');
   });
 
@@ -43,8 +42,8 @@ describe('<ElementsPalette />', () => {
 
     renderPalette(studio);
 
-    // The title role is offered everywhere
-    screen.getByText('designs.roles.title.label');
+    // The heading role is offered everywhere
+    screen.getByText('designs.roles.heading.label');
 
     // The content roles restrict themselves away from list layouts
     expect(screen.queryByText('designs.roles.content.label')).toBeNull();
@@ -77,7 +76,7 @@ describe('<ElementsPalette />', () => {
     const { container } = renderPalette(studio);
 
     // Roles offered on pages are listed
-    screen.getByText('designs.roles.title.label');
+    screen.getByText('designs.roles.heading.label');
 
     // The page content region is created by the panel toggles,
     // never dragged from the palette
@@ -98,12 +97,17 @@ describe('<ElementsPalette />', () => {
 
     // The properties group lists one element per property type
     screen.getByText('design-studio.elements.group.properties');
+    screen.getByText('properties.title.name');
     screen.getByText('properties.text.name');
     screen.getByText('properties.number.name');
     screen.getByText('properties.date.name');
+    screen.getByText('properties.select.name');
+    screen.getByText('properties.url.name');
+    screen.getByText('properties.image.name');
+    screen.getByText('properties.icon.name');
   });
 
-  it('lists number and date only as property elements', () => {
+  it('lists each property element exactly once', () => {
     const studio = createDesignStudioStore();
 
     studio.initialize(design_books);
@@ -111,10 +115,12 @@ describe('<ElementsPalette />', () => {
 
     renderPalette(studio);
 
-    // The standalone number and date entries moved under the
-    // properties group, so each label appears exactly once
+    // Every standalone entry the property elements replaced is
+    // gone, so each label appears exactly once
     expect(screen.getAllByText('properties.number.name')).toHaveLength(1);
     expect(screen.getAllByText('properties.date.name')).toHaveLength(1);
+    expect(screen.getAllByText('properties.image.name')).toHaveLength(1);
+    expect(screen.getAllByText('properties.url.name')).toHaveLength(1);
   });
 
   it('lists the unstyled element types by group', () => {
@@ -126,10 +132,6 @@ describe('<ElementsPalette />', () => {
     renderPalette(studio);
 
     // Each group's label and members are listed
-    screen.getByText('design-studio.elements.group.elements');
-    screen.getByText('design-studio.elements.badges');
-    screen.getByText('design-studio.elements.group.media');
-    screen.getByText('design-studio.elements.image');
     screen.getByText('design-studio.elements.group.layout');
     screen.getByText('design-studio.elements.container');
 

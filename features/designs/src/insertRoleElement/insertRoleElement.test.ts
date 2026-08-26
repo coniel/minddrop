@@ -25,7 +25,7 @@ describe('insertRoleElement', () => {
   afterEach(cleanup);
 
   it('inserts an element playing the role', () => {
-    insertRoleElement(studio, 'title', 'root', 0, layout_card_1.id);
+    insertRoleElement(studio, 'content', 'root', 0, layout_card_1.id);
 
     // The new element is the root's first child
     const root = studio.getDesignElement('root', layout_card_1.id);
@@ -33,23 +33,23 @@ describe('insertRoleElement', () => {
     const inserted = studio.getDesignElement(insertedId, layout_card_1.id);
 
     // It plays the role and uses the role's element type
-    expect(isRoleElement(inserted) && inserted.role).toBe('title');
-    expect(inserted.type).toBe('text');
+    expect(isRoleElement(inserted) && inserted.role).toBe('content');
+    expect(inserted.type).toBe('editor');
   });
 
   it('auto-binds the element to a compatible property', () => {
-    insertRoleElement(studio, 'title', 'root', 0, layout_card_1.id);
+    insertRoleElement(studio, 'content', 'root', 0, layout_card_1.id);
 
     const root = studio.getDesignElement('root', layout_card_1.id);
     const insertedId = (root as { children: string[] }).children[0];
     const inserted = studio.getDesignElement(insertedId, layout_card_1.id);
 
-    // The card title role binds title properties
-    expect(inserted.property).toBe('Title');
+    // The content role binds formatted text properties
+    expect(inserted.property).toBe('Notes');
   });
 
   it('selects the inserted element', () => {
-    insertRoleElement(studio, 'title', 'root', 0, layout_card_1.id);
+    insertRoleElement(studio, 'content', 'root', 0, layout_card_1.id);
 
     const root = studio.getDesignElement('root', layout_card_1.id);
     const insertedId = (root as { children: string[] }).children[0];
@@ -60,7 +60,7 @@ describe('insertRoleElement', () => {
   it('does nothing when no design is open', () => {
     const emptyStudio = createDesignStudioStore();
 
-    insertRoleElement(emptyStudio, 'title', 'root', 0);
+    insertRoleElement(emptyStudio, 'content', 'root', 0);
 
     expect(emptyStudio.getDesign()).toBeNull();
   });

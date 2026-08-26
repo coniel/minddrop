@@ -1,4 +1,4 @@
-import { Layouts } from '@minddrop/designs';
+import { Layouts, isPropertyElement } from '@minddrop/designs';
 import { DropEventData } from '@minddrop/selection';
 import { DesignStudioStore } from '../DesignStudioStore';
 import {
@@ -45,7 +45,8 @@ export function handleDropOnDesignElement(
   // If native files were dropped on an image element, handle as
   // a placeholder image drop
   if (
-    targetElement.type === 'image' &&
+    isPropertyElement(targetElement) &&
+    targetElement.propertyType === 'image' &&
     drop.event.dataTransfer.files.length > 0
   ) {
     handleImageFileDrop(

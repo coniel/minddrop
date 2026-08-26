@@ -66,11 +66,11 @@ describe('<ElementsTree />', () => {
   });
 
   it('names role elements after their role and chips their binding', () => {
-    // A title element playing the card title role, bound to a property
+    // A text element playing the heading role, bound to a property
     const roleElement: RoleDesignElement<TextElement> = {
       ...element_text_1,
       id: 'role-element',
-      role: 'title',
+      role: 'heading',
       property: 'Title',
     };
 
@@ -81,8 +81,8 @@ describe('<ElementsTree />', () => {
     const { container } = renderTree(studio, layout_card_1.id);
 
     // The node takes the role's label, not the element type's. The
-    // label and the chipped binding both read "Title" here, so each
-    // is matched within its own span.
+    // label and the chipped binding are matched within their own
+    // spans.
     const labels = Array.from(
       container.querySelectorAll('.designs-elements-tree-node-label'),
     ).map((label) => label.textContent);
@@ -90,7 +90,7 @@ describe('<ElementsTree />', () => {
       container.querySelectorAll('.designs-elements-tree-node-property'),
     ).map((property) => property.textContent);
 
-    expect(labels).toContain('Title');
+    expect(labels).toContain('Heading');
 
     // The bound property is chipped after the label
     expect(properties).toContain('Title');

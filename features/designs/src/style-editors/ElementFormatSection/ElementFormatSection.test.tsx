@@ -1,10 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
-  DateElement,
+  DatePropertyElement,
   DesignElement,
   Layout,
-  NumberElement,
-  UrlElement,
+  NumberPropertyElement,
 } from '@minddrop/designs';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
 import {
@@ -20,37 +19,32 @@ import {
 } from '../../DesignStudioStore';
 import { cleanup, setup } from '../../test-utils';
 import {
-  FlatDateElement,
-  FlatNumberElement,
-  FlatUrlElement,
+  FlatDatePropertyElement,
+  FlatNumberPropertyElement,
+  FlatUrlPropertyElement,
 } from '../../types';
 import { DateFormatFields } from './DateFormatFields';
 import { NumberFormatFields } from './NumberFormatFields';
 import { UrlFormatFields } from './UrlFormatFields';
 import { elementFormatEditorMap } from './elementFormatEditorMap';
 
-const { design_books, layout_card_1, element_text_1 } = DesignFixtures;
+const {
+  design_books,
+  layout_card_1,
+  element_property_url_1,
+  element_property_date_1,
+  element_property_number_1,
+} = DesignFixtures;
 
-// A URL element, built from the text element fixture's base shape
-const element_url: UrlElement = {
-  ...element_text_1,
-  id: 'url-element',
-  type: 'url',
-};
+const element_url = element_property_url_1;
 
-// A date element in the default absolute mode
-const element_date: DateElement = {
-  ...element_text_1,
-  id: 'date-element',
-  type: 'date',
-};
+// A date property element in the default absolute mode
+const element_date = element_property_date_1;
 
-// A number element carrying a full format, for checking that
-// editing one field leaves the others alone
-const element_number: NumberElement = {
-  ...element_text_1,
-  id: 'number-element',
-  type: 'number',
+// A number property element carrying a full format, for checking
+// that editing one field leaves the others alone
+const element_number: NumberPropertyElement = {
+  ...element_property_number_1,
   format: {
     decimals: 2,
     thousandsSeparator: 'comma',
@@ -69,7 +63,7 @@ describe('element format editors', () => {
   });
 
   describe('registry', () => {
-    it('has an editor for each element type which formats its value', () => {
+    it('has an editor for each property type which formats its value', () => {
       expect(elementFormatEditorMap.url).toBe(UrlFormatFields);
       expect(elementFormatEditorMap.date).toBe(DateFormatFields);
       expect(elementFormatEditorMap.number).toBe(NumberFormatFields);
@@ -113,10 +107,12 @@ describe('element format editors', () => {
 
       fireEvent.click(protocolSwitch);
 
-      const element = studio.getDesignElement<FlatUrlElement>(element_url.id);
+      const element = studio.getDesignElement<FlatUrlPropertyElement>(
+        element_url.id,
+      );
 
       // Parts default to visible, so the first toggle hides one
-      expect(element.showProtocol).toBe(false);
+      expect(element.format?.showProtocol).toBe(false);
     });
   });
 
@@ -137,7 +133,7 @@ describe('element format editors', () => {
 
     it('disables the style and time controls in relative mode', () => {
       // A date element already set to relative mode
-      const relativeElement: DateElement = {
+      const relativeElement: DatePropertyElement = {
         ...element_date,
         format: { mode: 'relative', dateStyle: 'medium', showTime: false },
       };
@@ -168,7 +164,9 @@ describe('element format editors', () => {
 
       fireEvent.click(screen.getByText('designs.date-format.mode.relative'));
 
-      const element = studio.getDesignElement<FlatDateElement>(element_date.id);
+      const element = studio.getDesignElement<FlatDatePropertyElement>(
+        element_date.id,
+      );
 
       expect(element.format?.mode).toBe('relative');
     });
@@ -208,7 +206,7 @@ describe('element format editors', () => {
 
       fireEvent.change(prefixField, { target: { value: '£' } });
 
-      const element = studio.getDesignElement<FlatNumberElement>(
+      const element = studio.getDesignElement<FlatNumberPropertyElement>(
         element_number.id,
       );
 

@@ -25,7 +25,6 @@ import {
 } from '@minddrop/properties';
 import { StoreApi, createVanillaStore } from '@minddrop/stores';
 import { deepMerge, entityId, reorderArray, uuid } from '@minddrop/utils';
-import { DefaultStaticIcon } from '../constants';
 import {
   FlatChildDesignElement,
   FlatDesignElement,
@@ -1495,11 +1494,6 @@ export function createDesignStudioStore(): DesignStudioStore {
       // are always property bound are left alone.
       if (!api.isPropertyBindingEnabled() && config.supportsStaticContent) {
         element.static = true;
-
-        // Default the icon so static mode has a visible value
-        if (element.type === 'icon' && !element.icon) {
-          element.icon = DefaultStaticIcon;
-        }
       } else {
         // Bind the element to a compatible property, so an element
         // dropped into a design that has an obvious match for it

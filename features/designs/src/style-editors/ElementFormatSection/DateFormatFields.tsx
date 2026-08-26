@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react';
-import { DateElement, DateMode, DateStyle } from '@minddrop/designs';
+import { DateMode, DatePropertyElement, DateStyle } from '@minddrop/designs';
 import { useTranslation } from '@minddrop/i18n';
 import {
   RadioToggleGroup,
@@ -10,7 +10,7 @@ import {
   Toggle,
 } from '@minddrop/ui-primitives';
 import { useDesignStudio, useElementData } from '../../DesignStudioStore';
-import { FlatDateElement } from '../../types';
+import { FlatDatePropertyElement } from '../../types';
 import { PanelSection } from '../PanelSection';
 
 // A fixed sample date the style preset options are formatted with,
@@ -72,7 +72,7 @@ export const DateFormatFields: React.FC<DateFormatFieldsProps> = ({
   // shows what the canvas renders
   const { mode, dateStyle, showTime } = useElementData(
     elementId,
-    (element: FlatDateElement) => ({
+    (element: FlatDatePropertyElement) => ({
       mode: element.format?.mode ?? 'date',
       dateStyle: element.format?.dateStyle ?? 'medium',
       showTime: element.format?.showTime ?? false,
@@ -95,7 +95,7 @@ export const DateFormatFields: React.FC<DateFormatFieldsProps> = ({
 
   const handleModeChange = useCallback(
     (value: string) => {
-      studio.updateDesignElement<DateElement>(elementId, {
+      studio.updateDesignElement<DatePropertyElement>(elementId, {
         format: { mode: value as DateMode },
       });
     },
@@ -104,7 +104,7 @@ export const DateFormatFields: React.FC<DateFormatFieldsProps> = ({
 
   const handleDateStyleChange = useCallback(
     (value: string) => {
-      studio.updateDesignElement<DateElement>(elementId, {
+      studio.updateDesignElement<DatePropertyElement>(elementId, {
         format: { dateStyle: value as DateStyle },
       });
     },
@@ -113,7 +113,7 @@ export const DateFormatFields: React.FC<DateFormatFieldsProps> = ({
 
   const handleShowTimeChange = useCallback(
     (checked: boolean) => {
-      studio.updateDesignElement<DateElement>(elementId, {
+      studio.updateDesignElement<DatePropertyElement>(elementId, {
         format: { showTime: checked },
       });
     },

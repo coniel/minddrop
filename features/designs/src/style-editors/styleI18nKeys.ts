@@ -13,7 +13,6 @@ import {
   RadiusToken,
   SizeToken,
   SpaceToken,
-  SurfaceColorToken,
 } from '@minddrop/designs';
 import { TranslationKey, createI18nKeyBuilder } from '@minddrop/i18n';
 
@@ -50,9 +49,6 @@ const sizeKey = createI18nKeyBuilder('designsStudio.style.size.');
 const radiusKey = createI18nKeyBuilder('designsStudio.style.radius.');
 const borderStyleKey = createI18nKeyBuilder('designsStudio.style.borderStyle.');
 const iconSizeKey = createI18nKeyBuilder('designsStudio.style.iconSize.');
-const surfaceColourKey = createI18nKeyBuilder(
-  'designsStudio.style.surfaceColour.',
-);
 const aspectRatioKey = createI18nKeyBuilder('designsStudio.style.aspectRatio.');
 const objectFitKey = createI18nKeyBuilder('designsStudio.style.objectFit.');
 const fillRatioOptionKey = createI18nKeyBuilder(
@@ -212,16 +208,6 @@ export function iconSizeOptionKey(
   part: OptionKeyPart,
 ): TranslationKey {
   return iconSizeKey(token, part);
-}
-
-/**
- * Resolves the label or helper text key of a surface colour option.
- */
-export function surfaceColourOptionKey(
-  token: SurfaceColorToken,
-  part: OptionKeyPart,
-): TranslationKey {
-  return surfaceColourKey(token, part);
 }
 
 /**

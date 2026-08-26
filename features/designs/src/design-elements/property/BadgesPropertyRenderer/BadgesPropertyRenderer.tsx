@@ -1,25 +1,26 @@
-import { CSSProperties } from 'react';
-import { BadgesElement } from '@minddrop/designs';
+import { SelectPropertyElement } from '@minddrop/designs';
 import { SelectPropertySchema } from '@minddrop/properties';
-import { ContentColor, ContentColors } from '@minddrop/ui-theme';
-import { useElementProperty } from '../../DesignPropertiesProvider';
-import { useElementPlaceholder } from '../../useElementPlaceholder';
-import './BadgesDesignElement.css';
-import { useElementCssStyle } from '../../useElementCssStyle';
+import { ContentColors } from '@minddrop/ui-theme';
+import { useElementProperty } from '../../../DesignPropertiesProvider';
+import { useElementCssStyle } from '../../../useElementCssStyle';
+import { useElementPlaceholder } from '../../../useElementPlaceholder';
+import { parseBadgeLabels, resolveBadgeColorCss } from '../../../utils';
+import './BadgesPropertyRenderer.css';
 
-export interface BadgesDesignElementProps {
+export interface BadgesPropertyRendererProps {
   /**
-   * The badges element to render.
+   * The select property element to render.
    */
-  element: BadgesElement;
+  element: SelectPropertyElement;
 }
 
 /**
- * Display renderer for a badges design element.
- * Renders select property values as styled span elements,
- * falling back to placeholder badges when no property is mapped.
+ * Display renderer for a select property element rendered as
+ * badges. Renders the selected option values as chips coloured by
+ * the option's own colour, falling back to placeholder badges when
+ * no property is bound.
  */
-export const BadgesDesignElement: React.FC<BadgesDesignElementProps> = ({
+export const BadgesPropertyRenderer: React.FC<BadgesPropertyRendererProps> = ({
   element,
 }) => {
   const property = useElementProperty(element.id);
@@ -31,7 +32,7 @@ export const BadgesDesignElement: React.FC<BadgesDesignElementProps> = ({
     useElementCssStyle(element);
   const wrapperCss = { marginTop, marginRight, marginBottom, marginLeft };
 
-  // When a property is mapped, render its select values as badges
+  // When a property is bound, render its select values as badges
   if (property?.value != null) {
     const schema = property.schema as SelectPropertySchema;
 
@@ -51,7 +52,7 @@ export const BadgesDesignElement: React.FC<BadgesDesignElementProps> = ({
           // The option colour applies over the element's own tokens
           const itemCss = {
             ...baseItemCss,
-            ...createBadgeColorCss(option?.color),
+            ...resolveBadgeColorCss(option?.color),
           };
 
           return (
@@ -65,7 +66,7 @@ export const BadgesDesignElement: React.FC<BadgesDesignElementProps> = ({
   }
 
   // Placeholder fallback - split comma-separated string into badges
-  const placeholderLabels = parsePlaceholder(placeholder);
+  const placeholderLabels = parseBadgeLabels(placeholder);
 
   if (placeholderLabels.length === 0) {
     return <div className="designs-badges-element" style={wrapperCss} />;
@@ -86,7 +87,7 @@ export const BadgesDesignElement: React.FC<BadgesDesignElementProps> = ({
         // The placeholder colour applies over the element's own tokens
         const itemCss = {
           ...baseItemCss,
-          ...createBadgeColorCss(color),
+          ...resolveBadgeColorCss(color),
         };
 
         return (
@@ -104,25 +105,6 @@ export const BadgesDesignElement: React.FC<BadgesDesignElementProps> = ({
 };
 
 /**
- * Returns background and text color CSS for a badge based on its
- * content color, following the Chip primitive's colour convention.
- * Falls back to neutral styling when no colour is provided.
- */
-function createBadgeColorCss(color?: ContentColor): CSSProperties {
-  if (!color || color === 'default') {
-    return {
-      backgroundColor: 'var(--neutral-300)',
-      color: 'var(--text-muted)',
-    };
-  }
-
-  return {
-    backgroundColor: `var(--${color}-400)`,
-    color: `var(--${color}-1100)`,
-  };
-}
-
-/**
  * Hashes a string into an index within the given range using
  * a simple character-code sum. Used to derive a starting colour
  * offset from an element ID so that different badges elements
@@ -136,19 +118,4 @@ function hashStringToIndex(value: string, range: number): number {
   }
 
   return hash;
-}
-
-/**
- * Splits a comma-separated placeholder string into trimmed labels,
- * filtering out empty segments.
- */
-function parsePlaceholder(placeholder?: string): string[] {
-  if (!placeholder) {
-    return [];
-  }
-
-  return placeholder
-    .split(',')
-    .map((segment) => segment.trim())
-    .filter(Boolean);
 }

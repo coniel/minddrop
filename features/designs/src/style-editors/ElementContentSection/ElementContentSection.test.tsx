@@ -13,14 +13,13 @@ import {
   createDesignStudioStore,
 } from '../../DesignStudioStore';
 import { cleanup, setup } from '../../test-utils';
-import { FlatTextElement } from '../../types';
+import { FlatDesignElement, FlatTextElement } from '../../types';
 import { ElementContentSection } from './ElementContentSection';
 
 const { design_books, layout_card_1, element_text_1 } = DesignFixtures;
 
-// Schemas widening the fixture design so URL, webview and editor
-// elements have a compatible property to bind to
-const urlProperty: PropertiesSchema = [{ type: 'url', name: 'Link' }];
+// A schema widening the fixture design so formatted text elements
+// have a compatible property to bind to
 const formattedTextProperty: PropertiesSchema = [
   { type: 'formatted-text', name: 'Body' },
 ];
@@ -136,16 +135,15 @@ describe('<ElementContentSection />', () => {
   });
 
   it('offers no static mode for roles restricted to bound data', () => {
-    const studio = openCardLayout();
+    const studio = openCardLayout(formattedTextProperty);
 
-    // Give the text element the title role, which renders entry
-    // data only
-    const element = studio.getDesignElement(
-      element_text_1.id,
-      layout_card_1.id,
-    );
-
-    const roleElement = { ...element, role: 'title' };
+    // Give the text element the content display role, which
+    // renders entry data only
+    const roleElement = {
+      ...readTextElement(studio),
+      type: 'formatted-text',
+      role: 'content-display',
+    } as FlatDesignElement;
 
     studio.setDesignElement(element_text_1.id, roleElement);
 
@@ -159,11 +157,11 @@ describe('<ElementContentSection />', () => {
   });
 
   it('offers no static mode for always bound element types', () => {
-    // A fixed link belongs in a text element, so URL elements are
-    // property bound only
-    const studio = openCardLayout(urlProperty);
+    // Formatting is authored in an editor, which only a bound
+    // property provides
+    const studio = openCardLayout(formattedTextProperty);
 
-    convertTextElement(studio, 'url');
+    convertTextElement(studio, 'formatted-text');
 
     renderSection(studio);
 
@@ -171,9 +169,9 @@ describe('<ElementContentSection />', () => {
   });
 
   it('keeps an always bound element in property mode', async () => {
-    const studio = openCardLayout(urlProperty);
+    const studio = openCardLayout(formattedTextProperty);
 
-    convertTextElement(studio, 'url');
+    convertTextElement(studio, 'formatted-text');
 
     // A stale static flag must not strand the section without
     // controls, since there is no toggle to leave static mode
@@ -217,6 +215,31 @@ describe('<ElementContentSection />', () => {
       screen.queryByText('designs.content.emptyBehavior.label'),
     ).toBeNull();
     expect(screen.queryByRole('switch')).toBeNull();
+  });
+
+  it('names the section after the binding on a property element', () => {
+    const studio = openCardLayout();
+
+    // A property element holds nothing but its binding, so the
+    // section is named after it
+    convertToPropertyElement(studio);
+
+    renderSection(studio);
+
+    screen.getByText('designs.property.label');
+    expect(screen.queryByText('designs.content.label')).toBeNull();
+  });
+
+  it('leaves the property select unlabelled on a property element', () => {
+    const studio = openCardLayout();
+
+    convertToPropertyElement(studio);
+
+    renderSection(studio);
+
+    // The section header already names the select, so the label
+    // appears once rather than above the field too
+    expect(screen.getAllByText('designs.property.label')).toHaveLength(1);
   });
 
   it('renders nothing for elements binding their image from the background fields', () => {
@@ -271,6 +294,20 @@ function convertTextElement(studio: DesignStudioStore, type: string) {
     ...element,
     type,
   } as FlatTextElement);
+}
+
+/**
+ * Replaces the layout's text element with a text property element,
+ * keeping its ID so the section renders for the same element.
+ */
+function convertToPropertyElement(studio: DesignStudioStore) {
+  const { property: _removed, ...element } = readTextElement(studio);
+
+  studio.setDesignElement(element_text_1.id, {
+    ...element,
+    type: 'property',
+    propertyType: 'text',
+  } as FlatDesignElement);
 }
 
 /**

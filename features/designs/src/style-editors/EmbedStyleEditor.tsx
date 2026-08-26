@@ -1,10 +1,10 @@
 import {
   AspectRatio,
   AspectRatios,
+  BackgroundEmphasis,
   HeightValue,
-  SurfaceColorToken,
-  SurfaceColorTokens,
 } from '@minddrop/designs';
+import { BackgroundField } from './BackgroundField';
 import { BorderFields, BorderStyleKeys } from './BorderFields';
 import { HeightField } from './HeightField';
 import { MarginSides, MarginStyleKeys, SpaceFields } from './SpaceFields';
@@ -15,7 +15,6 @@ import {
   aspectRatioOptionKey,
   fieldLabelKey,
   sectionLabelKey,
-  surfaceColourOptionKey,
 } from './styleI18nKeys';
 import { useStyleEditor } from './useStyleEditor';
 
@@ -38,11 +37,9 @@ export const EmbedStyleEditor: React.FC<StyleEditorProps> = ({ elementId }) => {
         setValue={setValue}
       >
         {isEditable('background') && (
-          <TokenSelect
+          <BackgroundField
             label={fieldLabelKey('background')}
-            tokens={SurfaceColorTokens}
-            value={getValue<SurfaceColorToken>('background')}
-            optionKey={surfaceColourOptionKey}
+            value={getValue<BackgroundEmphasis>('background')}
             onChange={(value) => setValue('background', value)}
           />
         )}

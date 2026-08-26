@@ -3,7 +3,7 @@ import { useElementProperty } from '../../DesignPropertiesProvider';
 import { DesignText } from '../../DesignText';
 import { useElementCssStyle } from '../../useElementCssStyle';
 import { useElementPlaceholder } from '../../useElementPlaceholder';
-import { formatNumber } from '../number/formatNumber';
+import { formatNumber } from '../../utils';
 
 export interface NumberPropertyRendererProps {
   /**

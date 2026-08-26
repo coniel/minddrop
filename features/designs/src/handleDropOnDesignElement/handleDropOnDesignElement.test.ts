@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   DesignElementTemplate,
-  ImageElementConfig,
+  PropertyElementTypeConfig,
   TextElementConfig,
   resolveDesignMediaDirPath,
 } from '@minddrop/designs';
@@ -67,6 +67,13 @@ const baseEvent = {
   event: new Event('drop'),
 } as unknown as DropEventData<DesignStudioDropEventData>;
 
+// An image property element, the drop target of the image file
+// drops
+const imageElementTemplate: DesignElementTemplate = {
+  ...PropertyElementTypeConfig.template,
+  propertyType: 'image',
+};
+
 describe('handleDropOnDesignElement', () => {
   let studio: DesignStudioStore;
 
@@ -99,11 +106,7 @@ describe('handleDropOnDesignElement', () => {
   describe('dropped image file', () => {
     it("writes the image into the design's media directory", async () => {
       // Add an image element to drop the file onto
-      studio.addDesignElementFromTemplate(
-        ImageElementConfig.template as DesignElementTemplate,
-        'root',
-        0,
-      );
+      studio.addDesignElementFromTemplate(imageElementTemplate, 'root', 0);
 
       const imageElementId = getChildren()[0];
 
@@ -138,19 +141,11 @@ describe('handleDropOnDesignElement', () => {
       expect(MockFs.exists(`${mediaDirPath}/${placeholder}`)).toBe(true);
     });
 
-    it("sets the image as an unbound element's own content", async () => {
+    it('leaves an unbound element without an image', async () => {
       // Bind the design's only image property elsewhere, so the new
       // image element has nothing left to bind to
-      studio.addDesignElementFromTemplate(
-        ImageElementConfig.template as DesignElementTemplate,
-        'root',
-        0,
-      );
-      studio.addDesignElementFromTemplate(
-        ImageElementConfig.template as DesignElementTemplate,
-        'root',
-        0,
-      );
+      studio.addDesignElementFromTemplate(imageElementTemplate, 'root', 0);
+      studio.addDesignElementFromTemplate(imageElementTemplate, 'root', 0);
 
       const imageElementId = getChildren()[0];
 
@@ -169,30 +164,22 @@ describe('handleDropOnDesignElement', () => {
 
       handleDropOnDesignElement(studio, drop);
 
-      // Wait for the file write and element update to settle
+      // Property elements render bound values only, so the drop
+      // leaves the element with nothing of its own
       await vi.waitFor(() => {
-        expect(studio.getDesignElement(imageElementId)).toHaveProperty(
-          'content',
+        expect(MockFs.exists(resolveDesignMediaDirPath(testDesign.id))).toBe(
+          true,
         );
       });
 
-      // The image landed in the design's media directory under the
-      // generated file name set on the element
-      const { content } = studio.getDesignElement(imageElementId) as {
-        content: string;
-      };
-      const mediaDirPath = resolveDesignMediaDirPath(testDesign.id);
-
-      expect(MockFs.exists(`${mediaDirPath}/${content}`)).toBe(true);
+      expect(studio.getDesignElement(imageElementId)).not.toHaveProperty(
+        'content',
+      );
     });
 
     it('ignores dropped files which are not images', async () => {
       // Add an image element to drop the file onto
-      studio.addDesignElementFromTemplate(
-        ImageElementConfig.template as DesignElementTemplate,
-        'root',
-        0,
-      );
+      studio.addDesignElementFromTemplate(imageElementTemplate, 'root', 0);
 
       const imageElementId = getChildren()[0];
 

@@ -37,12 +37,6 @@ export const DesignPropertyElementsDataKey = 'design-property-elements';
 export const DesignLayoutTypesDataKey = 'design-layout-types';
 
 /**
- * The icon applied when an icon element enters static mode, so
- * that it has a visible value to start from.
- */
-export const DefaultStaticIcon = 'content-icon:cat:default';
-
-/**
  * The size, in pixels, an empty container or layout root is held
  * open at in the studio. Without it a layout with no elements
  * collapses to nothing and cannot be dropped onto. Kept in sync

@@ -72,7 +72,6 @@
         "background": "Background",
         "radius": "Corners",
         "borderStyle": "Line",
-        "borderColour": "Colour",
         "borderWidth": "Thickness",
         "padding": "Padding",
         "margin": "Margin",
@@ -486,103 +485,21 @@
           "description": "The entry's colour at full strength"
         }
       },
-      "surfaceColour": {
-        "app": {
-          "label": "App",
-          "description": "The page background itself"
-        },
-        "subtle": {
-          "label": "Subtle",
-          "description": "A quiet tint, just off the page background"
-        },
-        "raised": {
-          "label": "Raised",
-          "description": "Cards and panels sitting above the page"
-        },
-        "overlay": {
-          "label": "Overlay",
-          "description": "Content floating over the page"
-        },
-        "accent": {
-          "label": "Accent",
-          "description": "A tint that follows the surrounding colour scheme"
-        },
-        "solid-accent": {
-          "label": "Solid accent",
-          "description": "A solid scheme fill. Pair with On solid text"
-        },
-        "neutral-subtle": {
-          "label": "Neutral subtle",
-          "description": "A quiet grey wash a scheme cannot recolour"
-        },
-        "neutral": {
-          "label": "Neutral",
-          "description": "The grey card surface a scheme cannot recolour"
-        },
-        "solid-neutral": {
-          "label": "Solid neutral",
-          "description": "A solid grey fill for contrasting text"
-        },
-        "primary-subtle": {
-          "label": "Primary subtle",
-          "description": "The lightest brand tint"
-        },
-        "primary": {
-          "label": "Primary",
-          "description": "A brand tint for highlighted content"
-        },
-        "solid-primary": {
-          "label": "Solid primary",
-          "description": "A solid brand fill. Pair with On solid text"
-        },
-        "danger": {
-          "label": "Danger",
-          "description": "A tint for errors and destructive areas"
-        },
-        "solid-danger": {
-          "label": "Solid danger",
-          "description": "A solid danger fill. Pair with On solid text"
-        },
-        "warning": {
-          "label": "Warning",
-          "description": "A tint for things needing attention"
-        },
-        "solid-warning": {
-          "label": "Solid warning",
-          "description": "A solid warning fill. Pair with On solid text"
-        },
-        "info": {
-          "label": "Info",
-          "description": "A tint for neutral notices"
-        },
-        "solid-info": {
-          "label": "Solid info",
-          "description": "A solid info fill. Pair with On solid text"
-        },
-        "success": {
-          "label": "Success",
-          "description": "A tint for confirmations"
-        },
-        "solid-success": {
-          "label": "Solid success",
-          "description": "A solid success fill. Pair with On solid text"
-        }
-      },
       "rootBackground": {
-        "neutral": {
-          "label": "Neutral",
-          "description": "A neutral surface that lifts the card off the view"
-        },
         "accent": {
           "label": "Accent",
-          "description": "Takes on the accent colour of the colour scheme"
+          "description": "Takes on the entry's colour"
         },
         "transparent": {
           "label": "Transparent",
           "description": "Blends into the background of the view"
         }
       },
-      "rootEmphasis": {
+      "backgroundEmphasis": {
+        "none": {
+          "label": "None",
+          "description": "No background of its own"
+        },
         "subtle": {
           "label": "Subtle",
           "description": "A quiet wash of the surface colour"
@@ -594,16 +511,6 @@
         "solid": {
           "label": "Solid",
           "description": "A solid fill with contrasting text"
-        }
-      },
-      "borderColour": {
-        "neutral": {
-          "label": "Neutral",
-          "description": "Stays grey whatever the colour scheme"
-        },
-        "accent": {
-          "label": "Accent",
-          "description": "Takes on the colour scheme's hue"
         }
       },
       "textAlign": {
@@ -743,13 +650,9 @@
           "label": "None",
           "description": "Leaves the blur uncoloured"
         },
-        "neutral": {
-          "label": "Neutral",
-          "description": "A wash of the neutral surface colour"
-        },
         "accent": {
           "label": "Accent",
-          "description": "A wash of the colour scheme's accent colour"
+          "description": "A wash of the entry's colour"
         }
       },
       "backdropTintStrength": {

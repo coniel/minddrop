@@ -3,7 +3,7 @@ import { useElementProperty } from '../../DesignPropertiesProvider';
 import { DesignText } from '../../DesignText';
 import { useElementCssStyle } from '../../useElementCssStyle';
 import { useElementPlaceholder } from '../../useElementPlaceholder';
-import { formatDesignDate } from '../date/formatDesignDate';
+import { formatDesignDate } from '../../utils';
 
 export interface DatePropertyRendererProps {
   /**

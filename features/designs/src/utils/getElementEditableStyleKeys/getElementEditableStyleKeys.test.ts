@@ -35,12 +35,12 @@ describe('getElementEditableStyleKeys', () => {
   });
 
   it("returns the role's editable style keys", () => {
-    const element = { ...flatTextElement, role: 'title' };
+    const element = { ...flatTextElement, role: 'heading' };
 
     const keys = getElementEditableStyleKeys(element);
 
-    // The title role offers alignment but reserves the font family
-    // for the theme
+    // The heading role offers alignment but reserves the font
+    // family for the theme
     expect(keys).toContain('textAlign');
     expect(keys).not.toContain('fontFamily');
   });

@@ -1,3 +1,4 @@
+import { isPropertyElement } from '@minddrop/designs';
 import { DesignStudioStore } from '../DesignStudioStore';
 
 /**
@@ -5,7 +6,8 @@ import { DesignStudioStore } from '../DesignStudioStore';
  * image value: the bound design property's placeholder
  * when the element is bound, the element's own content image
  * otherwise. Elements in property mode without a bound property
- * are switched to static mode.
+ * are switched to static mode. Property elements render bound
+ * values only, so an unbound one takes no image.
  *
  * @param studio - The design studio store instance.
  * @param elementId - The ID of the element to set the image on.
@@ -32,6 +34,11 @@ export async function setElementImage(
 
       return;
     }
+  }
+
+  // Property elements have no static content to fall back on
+  if (isPropertyElement(element)) {
+    return;
   }
 
   // Set the image as the element's own content image, switching

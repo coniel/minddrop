@@ -1,7 +1,8 @@
 /* ============================================================
    PROPERTY ELEMENT VARIANT FIELDS
    The presentation variant radio list: one option per variant,
-   its label above a sample rendered in the variant's styling.
+   its label above a description or a sample rendered in the
+   variant's styling.
    ============================================================ */
 
 .designs-property-variant-options {
@@ -27,6 +28,17 @@
   flex-direction: column;
   gap: var(--space-1);
   min-width: 0;
+}
+
+/* Sits under the variant's name as supporting text, quieter and
+   smaller than the name it explains */
+.designs-property-variant-option-description {
+  display: block;
+  min-width: 0;
+  overflow-wrap: break-word;
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-snug);
+  color: var(--text-muted);
 }
 
 /* Samples start from what unstyled canvas text inherits (the

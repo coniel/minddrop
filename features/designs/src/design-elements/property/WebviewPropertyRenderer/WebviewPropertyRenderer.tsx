@@ -1,33 +1,33 @@
-import { WebviewElement } from '@minddrop/designs';
+import { UrlPropertyElement } from '@minddrop/designs';
 import { useTranslation } from '@minddrop/i18n';
 import { Icon, Text, WebView } from '@minddrop/ui-primitives';
-import { useElementProperty } from '../../DesignPropertiesProvider';
-import { toEmbedUrl } from './toEmbedUrl';
-import '../elementPlaceholder.css';
-import './WebviewDesignElement.css';
-import { useElementCssStyle } from '../../useElementCssStyle';
+import { useElementProperty } from '../../../DesignPropertiesProvider';
+import { useElementCssStyle } from '../../../useElementCssStyle';
+import { toEmbedUrl } from '../../../utils';
+import '../../elementPlaceholder.css';
+import './WebviewPropertyRenderer.css';
 
-export interface WebviewDesignElementProps {
+export interface WebviewPropertyRendererProps {
   /**
-   * The webview element to render.
+   * The URL property element to render.
    */
-  element: WebviewElement;
+  element: UrlPropertyElement;
 }
 
 /**
- * Display renderer for a webview design element.
- * Shows the mapped property URL in an iframe when available,
- * otherwise renders a placeholder preview with an icon and
- * description text.
+ * Display renderer for a URL property element rendered as an
+ * embedded page. Shows the bound property URL in an iframe when
+ * available, otherwise renders a placeholder preview with an icon
+ * and description text.
  */
-export const WebviewDesignElement: React.FC<WebviewDesignElementProps> = ({
-  element,
-}) => {
+export const WebviewPropertyRenderer: React.FC<
+  WebviewPropertyRendererProps
+> = ({ element }) => {
   const { t } = useTranslation();
   const property = useElementProperty(element.id);
   const cssStyle = useElementCssStyle(element);
 
-  // Use the mapped property value if available
+  // Use the bound property value if available
   const rawUrl =
     property?.value && typeof property.value === 'string'
       ? property.value

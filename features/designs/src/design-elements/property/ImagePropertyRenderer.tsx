@@ -1,5 +1,5 @@
 import {
-  ImageElement,
+  ImagePropertyElement,
   ImageStyle,
   resolveElementStyle,
 } from '@minddrop/designs';
@@ -12,32 +12,33 @@ import { useElementPlaceholderImage } from '../../useElementPlaceholder';
 import { useMediaFilePath } from '../../useMediaFilePath';
 import '../elementPlaceholder.css';
 
-export interface ImageDesignElementProps {
+export interface ImagePropertyRendererProps {
   /**
-   * The image element to render.
+   * The image property element to render.
    */
-  element: ImageElement;
+  element: ImagePropertyElement;
 }
 
 /**
- * Display renderer for an image design element.
- * Shows the mapped property image when available,
- * otherwise falls back to the placeholder image or
- * a placeholder div with an image icon.
+ * Display renderer for an image property element rendered as a
+ * placed picture. Shows the bound property image when available,
+ * otherwise falls back to the placeholder image or a placeholder
+ * box with an image icon.
  */
-export const ImageDesignElement: React.FC<ImageDesignElementProps> = ({
+export const ImagePropertyRenderer: React.FC<ImagePropertyRendererProps> = ({
   element,
 }) => {
   const property = useElementProperty(element.id);
-  const placeholderImage = useElementPlaceholderImage(element, element.content);
+  const placeholderImage = useElementPlaceholderImage(element);
   const placeholderImagePath = useMediaFilePath(placeholderImage);
-  // The surrounding layout's type, which role styles resolve against
+  // The surrounding layout's type, which theme styles resolve against
   const layoutType = useLayoutType();
-  // Resolve the element's style with its role styles applied
-  const style: ImageStyle = resolveElementStyle(
+  // The element's effective style. The selected variant decides the
+  // style shape at render time, which the element type cannot narrow.
+  const style = resolveElementStyle(
     element,
     layoutType ?? undefined,
-  );
+  ) as ImageStyle;
   const cssStyle = useElementCssStyle(element);
 
   // Use the bound property value (file path) if available,

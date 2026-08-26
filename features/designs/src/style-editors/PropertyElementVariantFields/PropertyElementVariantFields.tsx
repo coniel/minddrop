@@ -1,5 +1,10 @@
 import {
+  BadgeStyle,
+  LayoutType,
+  PropertyElementConfig,
+  PropertyElementVariantConfig,
   TypographyStyle,
+  createBadgeCss,
   createTypographyCss,
   getPropertyElementConfig,
   getPropertyElementVariant,
@@ -8,14 +13,17 @@ import {
 } from '@minddrop/designs';
 import { useTranslation } from '@minddrop/i18n';
 import { InputLabel, RadioToggleGroup, Toggle } from '@minddrop/ui-primitives';
+import { ContentColors } from '@minddrop/ui-theme';
 import {
   useActiveLayoutType,
   useDesignStudio,
   useElement,
 } from '../../DesignStudioStore';
+import { parseBadgeLabels, resolveBadgeColorCss } from '../../utils';
 import { PanelSection } from '../PanelSection';
 import { StyleEditorProps } from '../StyleEditorProps';
 import { sectionLabelKey } from '../styleI18nKeys';
+import '../../design-elements/property/BadgesPropertyRenderer/BadgesPropertyRenderer.css';
 import './PropertyElementVariantFields.css';
 
 /**
@@ -83,27 +91,129 @@ export const PropertyElementVariantFields: React.FC<StyleEditorProps> = ({
               {/** The variant's name **/}
               <InputLabel size="xs" label={option.label} />
 
-              {/** A sample rendered in the variant's styling **/}
-              {option.sample && (
-                <span
-                  className="designs-property-variant-option-sample"
-                  style={createTypographyCss(
-                    // The theme styles are typography for text
-                    // variants, which are the only sampled ones
-                    resolvePropertyElementStyle(
-                      config,
-                      option.id,
-                      layoutType ?? undefined,
-                    ) as TypographyStyle,
-                  )}
-                >
-                  {t(option.sample)}
+              {/** What the variant renders, for variants a sample
+               * cannot speak for **/}
+              {option.description && (
+                <span className="designs-property-variant-option-description">
+                  {t(option.description)}
                 </span>
               )}
+
+              {/** A sample rendered in the variant's styling **/}
+              <VariantSample
+                config={config}
+                variant={option}
+                layoutType={layoutType ?? undefined}
+              />
             </div>
           </Toggle>
         ))}
       </RadioToggleGroup>
     </PanelSection>
+  );
+};
+
+interface VariantSampleProps {
+  /**
+   * The property element config the variant belongs to.
+   */
+  config: PropertyElementConfig;
+
+  /**
+   * The variant to sample.
+   */
+  variant: PropertyElementVariantConfig;
+
+  /**
+   * The type of the layout being edited, which the variant's theme
+   * styles resolve against.
+   */
+  layoutType?: LayoutType;
+}
+
+/**
+ * Renders a variant's sample content the way the variant itself
+ * renders it: badge variants as chips, the rest as a line of text.
+ * Renders nothing for variants without a sample.
+ */
+const VariantSample: React.FC<VariantSampleProps> = ({
+  config,
+  variant,
+  layoutType,
+}) => {
+  const { t } = useTranslation();
+
+  // Variants a sample cannot speak for are described instead
+  if (!variant.sample) {
+    return null;
+  }
+
+  // The styling the variant renders the sample in
+  const style = resolvePropertyElementStyle(config, variant.id, layoutType);
+
+  // Badge variants render a chip per label, as the canvas does
+  if (variant.styleCategory === 'badge') {
+    return (
+      <BadgesSample labels={t(variant.sample)} style={style as BadgeStyle} />
+    );
+  }
+
+  return (
+    <span
+      className="designs-property-variant-option-sample"
+      style={createTypographyCss(style as TypographyStyle)}
+    >
+      {t(variant.sample)}
+    </span>
+  );
+};
+
+interface BadgesSampleProps {
+  /**
+   * The comma-separated sample labels, one chip each.
+   */
+  labels: string;
+
+  /**
+   * The badge styling the chips are rendered in.
+   */
+  style: BadgeStyle;
+}
+
+/**
+ * Renders a badge variant's sample as coloured chips. Sample
+ * labels carry no select options of their own, so they take the
+ * content colours in order, as the canvas colours its placeholder
+ * badges.
+ */
+const BadgesSample: React.FC<BadgesSampleProps> = ({ labels, style }) => {
+  // The chip CSS, without the margins which space the row on the
+  // canvas rather than the chips inside it
+  const {
+    marginTop: _top,
+    marginRight: _right,
+    marginBottom: _bottom,
+    marginLeft: _left,
+    ...chipCss
+  } = createBadgeCss(style);
+
+  // The colours the sample chips cycle through
+  const palette = ContentColors.filter((color) => color !== 'default');
+
+  return (
+    <div className="designs-badges-element">
+      {parseBadgeLabels(labels).map((label, index) => (
+        <span
+          key={label}
+          className="designs-badge"
+          style={{
+            ...chipCss,
+            ...resolveBadgeColorCss(palette[index % palette.length]),
+          }}
+        >
+          {label}
+        </span>
+      ))}
+    </div>
   );
 };

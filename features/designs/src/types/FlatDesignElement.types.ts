@@ -1,21 +1,16 @@
 import {
-  BadgesElement,
   ContainerElement,
-  DateElement,
+  DatePropertyElement,
   EditorElement,
   FormattedTextElement,
-  IconElement,
-  ImageElement,
-  ImageViewerElement,
   LeafDesignElement,
-  NumberElement,
+  NumberPropertyElement,
   PagePanelElement,
   PropertyElement,
   RootElement,
   TextElement,
-  UrlElement,
+  UrlPropertyElement,
   ViewElement,
-  WebviewElement,
 } from '@minddrop/designs';
 
 type Parent = { parent: string };
@@ -33,19 +28,14 @@ export type FlatPagePanelDesignElement = Omit<PagePanelElement, 'children'> &
 
 export type FlatLeafDesignElement = LeafDesignElement & Parent;
 
-export type FlatBadgesElement = BadgesElement & Parent;
 export type FlatTextElement = TextElement & Parent;
 export type FlatFormattedTextElement = FormattedTextElement & Parent;
-export type FlatNumberElement = NumberElement & Parent;
-export type FlatDateElement = DateElement & Parent;
-export type FlatImageElement = ImageElement & Parent;
-export type FlatImageViewerElement = ImageViewerElement & Parent;
-export type FlatUrlElement = UrlElement & Parent;
-export type FlatIconElement = IconElement & Parent;
 export type FlatEditorElement = EditorElement & Parent;
 export type FlatViewElement = ViewElement & Parent;
-export type FlatWebviewElement = WebviewElement & Parent;
 export type FlatPropertyElement = PropertyElement & Parent;
+export type FlatNumberPropertyElement = NumberPropertyElement & Parent;
+export type FlatDatePropertyElement = DatePropertyElement & Parent;
+export type FlatUrlPropertyElement = UrlPropertyElement & Parent;
 
 export type FlatDesignElement =
   | FlatRootDesignElement

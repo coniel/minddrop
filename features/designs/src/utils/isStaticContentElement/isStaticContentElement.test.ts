@@ -4,7 +4,7 @@ import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { cleanup, setup } from '../../test-utils';
 import { isStaticContentElement } from './isStaticContentElement';
 
-const { element_text_1 } = DesignFixtures;
+const { element_text_1, element_property_text_1 } = DesignFixtures;
 
 describe('isStaticContentElement', () => {
   beforeEach(setup);
@@ -21,10 +21,10 @@ describe('isStaticContentElement', () => {
   });
 
   it('is never static for always bound element types', () => {
-    // URL elements have no static mode, so a stale flag from an
-    // earlier design must not put one into static mode
-    const element = { ...element_text_1, type: 'url', static: true };
+    // Property elements have no static mode, so a stale flag from
+    // an earlier design must not put one into static mode
+    const element = { ...element_property_text_1, static: true };
 
-    expect(isStaticContentElement(element as TextElement)).toBe(false);
+    expect(isStaticContentElement(element)).toBe(false);
   });
 });

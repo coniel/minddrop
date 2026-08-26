@@ -512,8 +512,9 @@ describe('style editor fields', () => {
 
       renderVariantFields(studio);
 
-      // Choose the large size option
-      await userEvent.click(screen.getByRole('combobox'));
+      // Choose the large size option off the size axis, which the
+      // heading role lists ahead of its colour axis
+      await userEvent.click(screen.getAllByRole('combobox')[0]);
       await userEvent.click(screen.getByText('designs.roleVariants.lg'));
 
       expect(readRoleVariants(studio)).toEqual({ size: 'lg' });
@@ -658,40 +659,46 @@ describe('style editor fields', () => {
         screen.getByText('designsStudio.style.sections.background'),
       );
 
-      // Choose the accent treatment off the toggle
+      // Choose the transparent treatment off the toggle
+      await userEvent.click(
+        screen.getByText(
+          'designsStudio.style.rootBackground.transparent.label',
+        ),
+      );
+
+      expect(readRootStyle(studio).background).toBe('transparent');
+    });
+
+    it('clears the key when set back to the coloured default', async () => {
+      const studio = openCardLayout();
+
+      seedRootBackground(studio, 'transparent');
+
+      renderRootEditor(studio);
+
+      // Choose the coloured default
       await userEvent.click(
         screen.getByText('designsStudio.style.rootBackground.accent.label'),
       );
 
-      expect(readRootStyle(studio).background).toBe('accent');
-    });
-
-    it('clears the key when set back to the neutral default', async () => {
-      const studio = openCardLayout();
-
-      seedRootBackground(studio, 'accent');
-
-      renderRootEditor(studio);
-
-      // Choose the neutral default
-      await userEvent.click(
-        screen.getByText('designsStudio.style.rootBackground.neutral.label'),
-      );
-
       // The key is removed rather than stored, since an unset
-      // background already renders as the neutral treatment
+      // background already renders as the coloured treatment
       expect('background' in readRootStyle(studio)).toBe(false);
     });
 
     it('stores the transparent treatment explicitly', async () => {
       const studio = openCardLayout();
 
-      seedRootBackground(studio, 'accent');
-
       renderRootEditor(studio);
 
+      // Open the background section, which starts collapsed while
+      // the root sets none of its keys
+      await userEvent.click(
+        screen.getByText('designsStudio.style.sections.background'),
+      );
+
       // Choose the transparent treatment, which opts out of the
-      // neutral default
+      // coloured default
       await userEvent.click(
         screen.getByText(
           'designsStudio.style.rootBackground.transparent.label',
@@ -704,20 +711,20 @@ describe('style editor fields', () => {
     it('writes the chosen emphasis level to the root style', async () => {
       const studio = openCardLayout();
 
-      seedRootBackground(studio, 'neutral');
+      seedRootBackground(studio, 'accent');
 
       renderRootEditor(studio);
 
       // Switch to a solid fill
       await userEvent.click(
-        screen.getByText('designsStudio.style.rootEmphasis.solid.label'),
+        screen.getByText('designsStudio.style.backgroundEmphasis.solid.label'),
       );
 
       expect(readRootStyle(studio).emphasis).toBe('solid');
 
       // Switching back to the subtle default clears the key
       await userEvent.click(
-        screen.getByText('designsStudio.style.rootEmphasis.subtle.label'),
+        screen.getByText('designsStudio.style.backgroundEmphasis.subtle.label'),
       );
 
       expect('emphasis' in readRootStyle(studio)).toBe(false);
@@ -732,7 +739,9 @@ describe('style editor fields', () => {
 
       // The transparent treatment has no strength to vary
       expect(
-        screen.queryByText('designsStudio.style.rootEmphasis.subtle.label'),
+        screen.queryByText(
+          'designsStudio.style.backgroundEmphasis.subtle.label',
+        ),
       ).toBeNull();
     });
 
@@ -748,7 +757,7 @@ describe('style editor fields', () => {
       );
 
       // The list root offers the same semantic treatments as cards
-      screen.getByText('designsStudio.style.rootBackground.neutral.label');
+      screen.getByText('designsStudio.style.rootBackground.accent.label');
     });
 
     it('offers a full-screen root only its background sections', async () => {
@@ -839,13 +848,13 @@ describe('style editor fields', () => {
         screen.getByText('designsStudio.style.sections.background'),
       );
 
-      // Choosing the neutral treatment stores it, since it is not
+      // Choosing the coloured treatment stores it, since it is not
       // the page default
       await userEvent.click(
-        screen.getByText('designsStudio.style.rootBackground.neutral.label'),
+        screen.getByText('designsStudio.style.rootBackground.accent.label'),
       );
 
-      expect(readRootStyle(studio).background).toBe('neutral');
+      expect(readRootStyle(studio).background).toBe('accent');
 
       // Returning to the transparent default clears the key
       await userEvent.click(
@@ -1034,13 +1043,13 @@ function openPageLayout(): DesignStudioStore {
 }
 
 /**
- * Opens the card layout with its text element playing the card
- * title role, which offers a size variant axis.
+ * Opens the card layout with its text element playing the heading
+ * role, which offers a size variant axis.
  */
 function openCardLayoutWithRole(): DesignStudioStore {
   const studio = openCardLayout();
 
-  const roleElement = { ...readTextElement(studio), role: 'title' };
+  const roleElement = { ...readTextElement(studio), role: 'heading' };
 
   studio.setDesignElement(element_text_1.id, roleElement);
 

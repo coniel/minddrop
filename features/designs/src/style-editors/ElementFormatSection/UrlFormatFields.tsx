@@ -1,8 +1,8 @@
 import { useCallback } from 'react';
-import { UrlElement } from '@minddrop/designs';
+import { UrlFormat, UrlPropertyElement } from '@minddrop/designs';
 import { Stack, SwitchField } from '@minddrop/ui-primitives';
 import { useDesignStudio, useElementData } from '../../DesignStudioStore';
-import { FlatUrlElement } from '../../types';
+import { FlatUrlPropertyElement } from '../../types';
 import { PanelSection } from '../PanelSection';
 
 // The URL parts, in the order they appear in a URL
@@ -22,8 +22,8 @@ export interface UrlFormatFieldsProps {
 }
 
 /**
- * Renders the switches controlling which parts of a URL element's
- * value are displayed.
+ * Renders the switches controlling which parts of a URL property
+ * element's value are displayed.
  */
 export const UrlFormatFields: React.FC<UrlFormatFieldsProps> = ({
   elementId,
@@ -31,17 +31,24 @@ export const UrlFormatFields: React.FC<UrlFormatFieldsProps> = ({
   const studio = useDesignStudio();
   // Every part defaults to visible, matching how formatUrl renders
   // an element which has not set the flag
-  const parts = useElementData(elementId, (element: FlatUrlElement) => ({
-    showProtocol: element.showProtocol ?? true,
-    showSubdomain: element.showSubdomain ?? true,
-    showDomain: element.showDomain ?? true,
-    showTld: element.showTld ?? true,
-    showPath: element.showPath ?? true,
-  }));
+  const parts = useElementData(
+    elementId,
+    (element: FlatUrlPropertyElement) => ({
+      showProtocol: element.format?.showProtocol ?? true,
+      showSubdomain: element.format?.showSubdomain ?? true,
+      showDomain: element.format?.showDomain ?? true,
+      showTld: element.format?.showTld ?? true,
+      showPath: element.format?.showPath ?? true,
+    }),
+  );
 
+  // The store deep merges nested objects, so writing one part
+  // leaves the rest of the format intact
   const handleToggle = useCallback(
-    (field: keyof typeof parts, checked: boolean) => {
-      studio.updateDesignElement<UrlElement>(elementId, { [field]: checked });
+    (field: keyof UrlFormat, checked: boolean) => {
+      studio.updateDesignElement<UrlPropertyElement>(elementId, {
+        format: { [field]: checked },
+      });
     },
     [studio, elementId],
   );

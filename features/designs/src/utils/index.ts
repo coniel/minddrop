@@ -1,4 +1,8 @@
 export * from './flattenTree';
+export * from './formatDesignDate';
+export * from './formatNumber';
+export * from './formatUrl';
+export * from './toEmbedUrl';
 export * from './reconstructTree';
 export * from './getElementLockedStyleKeys';
 export * from './getElementEditableStyleKeys';
@@ -8,6 +12,8 @@ export * from './isStudioRootPanelled';
 export * from './isPropertyCompatibleWithElement';
 export * from './isStaticContentElement';
 export * from './isValidDesignStudioDrop';
+export * from './parseBadgeLabels';
+export * from './resolveBadgeColorCss';
 export * from './listMediaImages';
 export * from './readLayoutTypeDragData';
 export * from './resolveDroppedElement';

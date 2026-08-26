@@ -93,14 +93,14 @@ describe('<ElementStyleEditor />', () => {
   it('offers no editor for a style key the element role controls', () => {
     const studio = openCardLayout();
 
-    // Give the text element the card title role, which locks its
+    // Give the text element the heading role, which locks its
     // weight, line height and colour
     const element = studio.getDesignElement(
       element_text_1.id,
       layout_card_1.id,
     );
 
-    const roleElement = { ...element, role: 'title' };
+    const roleElement = { ...element, role: 'heading' };
 
     studio.setDesignElement(element_text_1.id, roleElement);
     studio.selectElement(element_text_1.id, layout_card_1.id);
@@ -214,7 +214,7 @@ describe('<ElementStyleEditor />', () => {
       layout_card_1.id,
     );
 
-    const roleElement = { ...element, role: 'title' };
+    const roleElement = { ...element, role: 'heading' };
 
     studio.setDesignElement(element_text_1.id, roleElement);
     studio.selectElement(element_text_1.id, layout_card_1.id);
@@ -239,6 +239,55 @@ describe('<ElementStyleEditor />', () => {
     screen.getByText('designs.propertyElements.samples.long');
   });
 
+  it('describes the variants a sample cannot speak for', () => {
+    const studio = openCardLayout();
+
+    // Insert an image property element, whose variants render
+    // pictures rather than text
+    insertPropertyElement(studio, 'image', 'root', 0, layout_card_1.id);
+
+    renderEditor(studio);
+
+    // Each presentation variant is offered with a line explaining
+    // what it renders
+    screen.getByText('designs.propertyElements.descriptions.image');
+    screen.getByText('designs.propertyElements.descriptions.viewer');
+  });
+
+  it('samples a badge variant as the chips it renders', () => {
+    const studio = openCardLayout();
+
+    // Insert a select property element, whose default presentation
+    // renders badges
+    insertPropertyElement(studio, 'select', 'root', 0, layout_card_1.id);
+
+    const { container } = renderEditor(studio);
+
+    // Every badge size previews a chip per sample label rather
+    // than the raw comma-separated string
+    const rows = Array.from(
+      container.querySelectorAll('.designs-badges-element'),
+    );
+
+    expect(rows).toHaveLength(3);
+
+    rows.forEach((row) => {
+      const chips = Array.from(row.querySelectorAll('.designs-badge')).map(
+        (chip) => chip.textContent,
+      );
+
+      expect(chips).toEqual(['Lorem', 'Ipsum']);
+    });
+
+    // Each size previews its own chip size, so the options read as
+    // the sizes they are
+    const sizes = rows.map(
+      (row) => row.querySelector<HTMLElement>('.designs-badge')?.style.fontSize,
+    );
+
+    expect(new Set(sizes).size).toBe(3);
+  });
+
   it('offers the colour treatment fields on a text property element', () => {
     const studio = openCardLayout();
 
@@ -253,6 +302,44 @@ describe('<ElementStyleEditor />', () => {
     screen.getByText('designsStudio.style.textColour.regular.label');
     screen.getByText('designsStudio.style.textColour.subtle.label');
     screen.getByText('designsStudio.style.textColour.solid.label');
+  });
+
+  it('offers badges neither colour nor chip shape', () => {
+    const studio = openCardLayout();
+
+    // Insert a select property element, whose default presentation
+    // renders badges
+    insertPropertyElement(studio, 'select', 'root', 0, layout_card_1.id);
+
+    renderEditor(studio);
+
+    // A chip's fill and label colour come from its select option,
+    // and its size, rounding and padding are the chip shape its
+    // variant sets, so no section offers them
+    const sectionLabels = Array.from(
+      document.querySelectorAll('.designs-style-section-label'),
+    ).map((label) => label.textContent);
+
+    expect(sectionLabels).not.toContain(
+      i18n.t('designsStudio.style.sections.colour'),
+    );
+    expect(sectionLabels).not.toContain(
+      i18n.t('designsStudio.style.sections.background'),
+    );
+    expect(sectionLabels).not.toContain(
+      i18n.t('designsStudio.style.sections.border'),
+    );
+    expect(sectionLabels).not.toContain(
+      i18n.t('designsStudio.style.sections.padding'),
+    );
+
+    // The label's own type and the space around the chips remain
+    expect(sectionLabels).toContain(
+      i18n.t('designsStudio.style.sections.typography'),
+    );
+    expect(sectionLabels).toContain(
+      i18n.t('designsStudio.style.sections.margin'),
+    );
   });
 
   it('offers no editor for a style key the property variant controls', () => {

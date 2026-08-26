@@ -5,6 +5,7 @@ export * from './TokenSelect';
 export * from './OptionToggleField';
 export * from './BooleanToggleField';
 export * from './AlignmentGrid';
+export * from './BackgroundField';
 export * from './BorderFields';
 export * from './ContainerHeightFields';
 export * from './HeightField';

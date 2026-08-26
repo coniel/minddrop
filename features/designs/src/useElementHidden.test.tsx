@@ -7,7 +7,8 @@ import { DesignPropertiesProvider } from './DesignPropertiesProvider';
 import { cleanup, setup } from './test-utils';
 import { useElementHidden } from './useElementHidden';
 
-const { design_books, element_text_1 } = DesignFixtures;
+const { design_books, element_text_1, element_property_text_1 } =
+  DesignFixtures;
 
 describe('useElementHidden', () => {
   beforeEach(setup);
@@ -61,13 +62,13 @@ describe('useElementHidden', () => {
     screen.getByText('shown');
   });
 
-  it('hides embed element types whose property is empty', () => {
-    // An entry with no URL has no page to embed
-    const element = {
-      ...element_text_1,
-      type: 'webview',
+  it('hides property elements whose property is empty', () => {
+    // A design never shows an empty slot where a value would
+    // have been
+    const element: DesignElement = {
+      ...element_property_text_1,
       property: 'Subtitle',
-    } as DesignElement;
+    };
 
     renderHidden(element);
 

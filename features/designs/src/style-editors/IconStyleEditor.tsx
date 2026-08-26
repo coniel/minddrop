@@ -1,11 +1,12 @@
 import {
+  BackgroundEmphasis,
   IconContainerStyle,
   IconSizeToken,
   IconSizeTokens,
   RadiusTokens,
   SpaceToken,
-  SurfaceColorTokens,
 } from '@minddrop/designs';
+import { BackgroundField } from './BackgroundField';
 import { SpaceField } from './SpaceField';
 import { MarginSides, MarginStyleKeys, SpaceFields } from './SpaceFields';
 import { StyleEditorProps } from './StyleEditorProps';
@@ -17,7 +18,6 @@ import {
   iconSizeOptionKey,
   radiusOptionKey,
   sectionLabelKey,
-  surfaceColourOptionKey,
 } from './styleI18nKeys';
 import { useStyleEditor } from './useStyleEditor';
 
@@ -90,12 +90,12 @@ export const IconStyleEditor: React.FC<StyleEditorProps> = ({ elementId }) => {
           getValue={getContainerValue}
           setValue={setContainerValue}
         >
-          <TokenSelect
+          <BackgroundField
             label={fieldLabelKey('background')}
-            tokens={SurfaceColorTokens}
             value={container?.background}
-            optionKey={surfaceColourOptionKey}
-            onChange={(value) => setContainerValue('background', value)}
+            onChange={(value: BackgroundEmphasis | undefined) =>
+              setContainerValue('background', value)
+            }
           />
           <TokenSelect
             label={fieldLabelKey('radius')}

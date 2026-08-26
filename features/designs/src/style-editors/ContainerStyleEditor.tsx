@@ -1,15 +1,15 @@
 import {
+  BackgroundEmphasis,
   ContainerDirection,
   ContainerJustify,
   MeasureToken,
   RootBackground,
-  RootBackgroundEmphasis,
   SpaceToken,
-  SurfaceColorToken,
 } from '@minddrop/designs';
 import { useActiveLayoutType, useElement } from '../DesignStudioStore';
 import { AlignmentGrid } from './AlignmentGrid';
 import { BackdropFields, BackdropStyleKeys } from './BackdropFields';
+import { BackgroundField, BackgroundStyleKeys } from './BackgroundField';
 import { BackgroundImageSection } from './BackgroundImageSection';
 import { BooleanToggleField } from './BooleanToggleField';
 import { BorderFields, BorderStyleKeys } from './BorderFields';
@@ -32,12 +32,7 @@ import {
 } from './SpaceFields';
 import { StyleEditorProps } from './StyleEditorProps';
 import { StyleSection } from './StyleSection';
-import { TokenSelect } from './TokenSelect';
-import {
-  fieldLabelKey,
-  sectionLabelKey,
-  surfaceColourOptionKey,
-} from './styleI18nKeys';
+import { fieldLabelKey, sectionLabelKey } from './styleI18nKeys';
 import { useStyleEditor } from './useStyleEditor';
 
 // The border keys a container writes to: the shared block minus
@@ -46,23 +41,8 @@ const ContainerBorderKeys = BorderStyleKeys.filter(
   (key) => key !== 'borderRadius',
 );
 
-// The surfaces a container can sit on. The intent fills stay
-// reserved for semantic colouring rather than free styling
-const ContainerSurfaceTokens: readonly SurfaceColorToken[] = [
-  'app',
-  'subtle',
-  'raised',
-  'overlay',
-  'accent',
-];
-
 // The semantic background treatments a layout root can take
 const RootBackgroundOptions: OptionToggleFieldOption<RootBackground>[] = [
-  {
-    value: 'neutral',
-    label: 'designsStudio.style.rootBackground.neutral.label',
-    description: 'designsStudio.style.rootBackground.neutral.description',
-  },
   {
     value: 'accent',
     label: 'designsStudio.style.rootBackground.accent.label',
@@ -72,26 +52,6 @@ const RootBackgroundOptions: OptionToggleFieldOption<RootBackground>[] = [
     value: 'transparent',
     label: 'designsStudio.style.rootBackground.transparent.label',
     description: 'designsStudio.style.rootBackground.transparent.description',
-  },
-];
-
-// How strongly a root's neutral or accent background applies its
-// surface
-const RootEmphasisOptions: OptionToggleFieldOption<RootBackgroundEmphasis>[] = [
-  {
-    value: 'subtle',
-    label: 'designsStudio.style.rootEmphasis.subtle.label',
-    description: 'designsStudio.style.rootEmphasis.subtle.description',
-  },
-  {
-    value: 'regular',
-    label: 'designsStudio.style.rootEmphasis.regular.label',
-    description: 'designsStudio.style.rootEmphasis.regular.description',
-  },
-  {
-    value: 'solid',
-    label: 'designsStudio.style.rootEmphasis.solid.label',
-    description: 'designsStudio.style.rootEmphasis.solid.description',
   },
 ];
 
@@ -161,10 +121,10 @@ export const ContainerStyleEditor: React.FC<StyleEditorProps> = ({
 
   // The treatment an unset root background resolves to: full-screen
   // roots blend into the surface they fill, floating roots take the
-  // subtle neutral wash
+  // subtle coloured wash
   const rootBackgroundDefault: RootBackground = isFullScreenRoot
     ? 'transparent'
-    : 'neutral';
+    : 'accent';
 
   // Spreading children apart is the one distribution the alignment
   // grid cannot place, so it is offered as a switch of its own
@@ -189,7 +149,7 @@ export const ContainerStyleEditor: React.FC<StyleEditorProps> = ({
 
   // The subtle default is stored as an unset key, so a root reset
   // to it emits no emphasis
-  function handleRootEmphasisChange(emphasis: RootBackgroundEmphasis) {
+  function handleRootEmphasisChange(emphasis: BackgroundEmphasis | undefined) {
     setValue('emphasis', emphasis === 'subtle' ? undefined : emphasis);
   }
 
@@ -344,7 +304,7 @@ export const ContainerStyleEditor: React.FC<StyleEditorProps> = ({
 
       <StyleSection
         label={sectionLabelKey('background')}
-        keys={['background', 'emphasis']}
+        keys={[...BackgroundStyleKeys, 'emphasis']}
         isEditable={isEditable}
         getValue={getValue}
         setValue={setValue}
@@ -360,25 +320,24 @@ export const ContainerStyleEditor: React.FC<StyleEditorProps> = ({
             onChange={handleRootBackgroundChange}
           />
         )}
-        {/** Only coloured and neutral treatments have a strength
-         * to vary, so a transparent root offers no emphasis **/}
+        {/** Only the coloured treatment has a strength to vary, so
+         * a transparent root offers no emphasis. The root fills
+         * always, so its scale carries no none step. **/}
         {isLayoutRoot &&
           isEditable('emphasis') &&
           (getValue<RootBackground>('background') ?? rootBackgroundDefault) !==
             'transparent' && (
-            <OptionToggleField
+            <BackgroundField
               label={fieldLabelKey('emphasis')}
-              options={RootEmphasisOptions}
-              value={getValue<RootBackgroundEmphasis>('emphasis') ?? 'subtle'}
+              none={false}
+              value={getValue<BackgroundEmphasis>('emphasis') ?? 'subtle'}
               onChange={handleRootEmphasisChange}
             />
           )}
         {!isLayoutRoot && isEditable('background') && (
-          <TokenSelect
+          <BackgroundField
             label={fieldLabelKey('background')}
-            tokens={ContainerSurfaceTokens}
-            value={getValue<SurfaceColorToken>('background')}
-            optionKey={surfaceColourOptionKey}
+            value={getValue<BackgroundEmphasis>('background')}
             onChange={(value) => setValue('background', value)}
           />
         )}

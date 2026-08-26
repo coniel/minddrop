@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import {
-  NumberElement,
+  NumberPropertyElement,
   SignDisplay,
   ThousandsSeparator,
 } from '@minddrop/designs';
@@ -18,7 +18,7 @@ import {
   Toggle,
 } from '@minddrop/ui-primitives';
 import { useDesignStudio, useElementData } from '../../DesignStudioStore';
-import { FlatNumberElement } from '../../types';
+import { FlatNumberPropertyElement } from '../../types';
 import { PanelSection } from '../PanelSection';
 import './NumberFormatFields.css';
 
@@ -77,7 +77,7 @@ export const NumberFormatFields: React.FC<NumberFormatFieldsProps> = ({
   // Defaults match formatNumber's own defaults, so the panel shows
   // what the canvas renders
   const { decimals, thousandsSeparator, prefix, suffix, signDisplay } =
-    useElementData(elementId, (element: FlatNumberElement) => ({
+    useElementData(elementId, (element: FlatNumberPropertyElement) => ({
       decimals: element.format?.decimals ?? 0,
       thousandsSeparator: element.format?.thousandsSeparator ?? 'none',
       prefix: element.format?.prefix ?? '',
@@ -88,8 +88,8 @@ export const NumberFormatFields: React.FC<NumberFormatFieldsProps> = ({
   // The store deep merges nested objects, so writing one format
   // field leaves the rest of the format intact
   const updateFormat = useCallback(
-    (format: Partial<NumberElement['format']>) => {
-      studio.updateDesignElement<NumberElement>(elementId, { format });
+    (format: Partial<NumberPropertyElement['format']>) => {
+      studio.updateDesignElement<NumberPropertyElement>(elementId, { format });
     },
     [studio, elementId],
   );

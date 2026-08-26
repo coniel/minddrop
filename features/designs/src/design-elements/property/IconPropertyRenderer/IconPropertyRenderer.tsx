@@ -1,41 +1,40 @@
 import { CSSProperties } from 'react';
 import {
-  IconElement,
+  IconPropertyElement,
   IconStyle,
   createIconContainerCss,
   resolveElementStyle,
   tokenCssVariable,
 } from '@minddrop/designs';
 import { ContentIcon, Icon } from '@minddrop/ui-primitives';
-import { useElementProperty } from '../../DesignPropertiesProvider';
-import { useLayoutType } from '../../LayoutTypeContext';
-import { useElementPlaceholderIcon } from '../../useElementPlaceholder';
-import '../elementPlaceholder.css';
-import './IconDesignElement.css';
-import { useElementCssStyle } from '../../useElementCssStyle';
+import { useElementProperty } from '../../../DesignPropertiesProvider';
+import { useLayoutType } from '../../../LayoutTypeContext';
+import { useElementCssStyle } from '../../../useElementCssStyle';
+import { useElementPlaceholderIcon } from '../../../useElementPlaceholder';
+import '../../elementPlaceholder.css';
+import './IconPropertyRenderer.css';
 
-export interface IconDesignElementProps {
+export interface IconPropertyRendererProps {
   /**
-   * The icon element to render.
+   * The icon property element to render.
    */
-  element: IconElement;
+  element: IconPropertyElement;
 }
 
 /**
- * Display renderer for an icon design element.
- * Shows the mapped property icon when available, otherwise falls
- * back to the resolved placeholder icon or a placeholder box with
- * a smile icon. When the style defines a container, the icon is
- * wrapped in the container box.
+ * Display renderer for an icon property element. Shows the bound
+ * property icon when available, otherwise falls back to the
+ * resolved placeholder icon or a placeholder box with a smile
+ * icon. When the style defines a box, the icon is wrapped in it.
  */
-export const IconDesignElement: React.FC<IconDesignElementProps> = ({
+export const IconPropertyRenderer: React.FC<IconPropertyRendererProps> = ({
   element,
 }) => {
   const property = useElementProperty(element.id);
-  const placeholderIcon = useElementPlaceholderIcon(element, element.icon);
-  // The surrounding layout's type, which role styles resolve against
+  const placeholderIcon = useElementPlaceholderIcon(element);
+  // The surrounding layout's type, which theme styles resolve against
   const layoutType = useLayoutType();
-  // Resolve the element's style with its role styles applied
+  // Resolve the element's style with its variant theme styles applied
   const style: IconStyle = resolveElementStyle(
     element,
     layoutType ?? undefined,
@@ -51,7 +50,7 @@ export const IconDesignElement: React.FC<IconDesignElementProps> = ({
     cssStyle;
   const marginCss = { marginTop, marginRight, marginBottom, marginLeft };
 
-  // Use the mapped property value if available, otherwise the placeholder
+  // Use the bound property value if available, otherwise the placeholder
   const iconValue =
     property?.value && typeof property.value === 'string'
       ? property.value

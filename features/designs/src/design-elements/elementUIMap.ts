@@ -5,27 +5,19 @@ import {
 } from '@minddrop/designs';
 import { DesignRootElement } from '../DesignElements/DesignRootElement';
 import { FlatDesignElement } from '../types';
-import { BadgesDesignElement } from './badges';
 import {
   ContainerDesignElement,
   ContainerStudioDesignElement,
 } from './container';
-import { DateDesignElement } from './date';
 import { EditorDesignElement } from './editor';
 import { FormattedTextDesignElement } from './formatted-text';
-import { IconDesignElement, IconStudioDesignElement } from './icon';
-import { ImageDesignElement } from './image';
-import { ImageViewerDesignElement } from './image-viewer';
-import { NumberDesignElement } from './number';
 import {
   PagePanelDesignElement,
   PagePanelStudioDesignElement,
 } from './page-panel';
 import { PropertyDesignElement } from './property';
 import { TextDesignElement } from './text';
-import { UrlDesignElement } from './url';
 import { ViewDesignElement } from './view';
-import { WebviewDesignElement } from './webview';
 
 /**
  * UI configuration for a design element type.
@@ -72,27 +64,12 @@ function elementUI<TElement extends DesignElement>(config: {
  * The element UIs of all built-in element types.
  */
 const elementUIs: ElementUIConfig[] = [
-  elementUI({ type: 'badges', DisplayComponent: BadgesDesignElement }),
   elementUI({ type: 'text', DisplayComponent: TextDesignElement }),
   elementUI({
     type: 'formatted-text',
     DisplayComponent: FormattedTextDesignElement,
   }),
-  elementUI({ type: 'number', DisplayComponent: NumberDesignElement }),
-  elementUI({ type: 'date', DisplayComponent: DateDesignElement }),
-  elementUI({ type: 'url', DisplayComponent: UrlDesignElement }),
-  elementUI({ type: 'image', DisplayComponent: ImageDesignElement }),
-  elementUI({
-    type: 'image-viewer',
-    DisplayComponent: ImageViewerDesignElement,
-  }),
-  elementUI({
-    type: 'icon',
-    DisplayComponent: IconDesignElement,
-    StudioComponent: IconStudioDesignElement as never,
-  }),
   elementUI({ type: 'editor', DisplayComponent: EditorDesignElement }),
-  elementUI({ type: 'webview', DisplayComponent: WebviewDesignElement }),
   elementUI({ type: 'view', DisplayComponent: ViewDesignElement }),
   elementUI({ type: 'property', DisplayComponent: PropertyDesignElement }),
   elementUI({

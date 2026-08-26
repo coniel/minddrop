@@ -1,14 +1,14 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
   ContainerElementConfig,
+  DesignElementTemplate,
   Designs,
-  IconElementConfig,
-  ImageElementConfig,
   Layout,
+  PropertyElement,
+  PropertyElementTypeConfig,
   RoleDesignElement,
   TextElement,
   TextElementConfig,
-  UrlElementConfig,
   resolveDesignMediaDirPath,
 } from '@minddrop/designs';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
@@ -545,19 +545,14 @@ describe('DesignStudioStore', () => {
         mediaDirPath: MEDIA_DIR_PATH,
       });
 
-      // Add a text and an icon element from their templates
+      // Add a text element from its template
       studio.addDesignElementFromTemplate(
         TextElementConfig.template,
         'root',
         0,
       );
-      studio.addDesignElementFromTemplate(
-        IconElementConfig.template,
-        'root',
-        1,
-      );
 
-      // Resolve the added elements through the root's children
+      // Resolve the added element through the root's children
       const root = studio.getDesignElement<FlatParentDesignElement>('root');
       const elements = studio.getElements(layout_page_1.id);
 
@@ -565,13 +560,6 @@ describe('DesignStudioStore', () => {
       expect(elements[root.children[0]]).toMatchObject({
         type: 'text',
         static: true,
-      });
-
-      // Icon elements receive a default static icon
-      expect(elements[root.children[1]]).toMatchObject({
-        type: 'icon',
-        static: true,
-        icon: 'content-icon:cat:default',
       });
     });
 
@@ -649,7 +637,11 @@ describe('DesignStudioStore', () => {
       studio.initialize(design, design.properties);
       studio.setActiveLayout(emptyCardLayout.id);
 
-      studio.addDesignElementFromTemplate(UrlElementConfig.template, 'root', 0);
+      studio.addDesignElementFromTemplate(
+        propertyElementTemplate('url'),
+        'root',
+        0,
+      );
 
       expect(getAddedElement().property).toBe('Website');
     });
@@ -700,7 +692,7 @@ describe('DesignStudioStore', () => {
       // Image elements can only bind to the design's single image
       // property, which the first element claims
       studio.addDesignElementFromTemplate(
-        ImageElementConfig.template,
+        propertyElementTemplate('image'),
         'root',
         0,
       );
@@ -708,7 +700,7 @@ describe('DesignStudioStore', () => {
       expect(getAddedElement().property).toBe('Cover');
 
       studio.addDesignElementFromTemplate(
-        ImageElementConfig.template,
+        propertyElementTemplate('image'),
         'root',
         0,
       );
@@ -866,3 +858,12 @@ describe('DesignStudioStore', () => {
     });
   });
 });
+
+/**
+ * Builds a property element template for the given property type.
+ */
+function propertyElementTemplate(
+  propertyType: PropertyElement['propertyType'],
+): DesignElementTemplate {
+  return { ...PropertyElementTypeConfig.template, propertyType };
+}

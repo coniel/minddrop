@@ -1,0 +1,19 @@
+/* ============================================================
+   LINK PROPERTY RENDERER
+   A URL property rendered as a link. The colour comes from the
+   element's own style, so only the link affordance lives here.
+   ============================================================ */
+
+.designs-link-element {
+  text-decoration: underline;
+  text-underline-offset: var(--space-0-5);
+  /* A link is followed rather than read, so it takes the pointer
+     which says so */
+  cursor: pointer;
+}
+
+/* Previews show the link's look without following it, so they
+   drop the pointer promising a destination */
+span.designs-link-element {
+  cursor: default;
+}

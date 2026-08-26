@@ -1,3 +1,4 @@
+import { TranslationKey } from '@minddrop/i18n';
 import { SelectField, SelectOption } from '@minddrop/ui-primitives';
 import {
   useDesignStudio,
@@ -17,6 +18,13 @@ export interface ElementPropertyFieldProps {
    * The ID of the element to bind a design property to.
    */
   elementId: string;
+
+  /**
+   * The i18n key of the select's label. Omitted, the select is
+   * rendered without one, for sections whose header already names
+   * it.
+   */
+  label?: TranslationKey;
 }
 
 /**
@@ -26,6 +34,7 @@ export interface ElementPropertyFieldProps {
  */
 export const ElementPropertyField: React.FC<ElementPropertyFieldProps> = ({
   elementId,
+  label,
 }) => {
   const studio = useDesignStudio();
   const properties = useDesignStudioStore((state) => {
@@ -79,7 +88,7 @@ export const ElementPropertyField: React.FC<ElementPropertyFieldProps> = ({
     <SelectField
       variant="subtle"
       size="md"
-      label="designs.property.label"
+      label={label}
       labelSize="xs"
       value={element.property || NoProperty}
       onValueChange={handleValueChange}

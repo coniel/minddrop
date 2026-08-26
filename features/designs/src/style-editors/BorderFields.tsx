@@ -1,7 +1,5 @@
 import { useState } from 'react';
 import {
-  BorderColor,
-  BorderColors,
   BorderEmphases,
   BorderEmphasis,
   BorderLineStyle,
@@ -33,29 +31,15 @@ import { StyleEditor } from './useStyleEditor';
 
 const borderWidthKey = createI18nKeyBuilder('designsStudio.style.borderWidth.');
 
-const borderColourKey = createI18nKeyBuilder(
-  'designsStudio.style.borderColour.',
-);
-
 const borderEmphasisKey = createI18nKeyBuilder(
   'designsStudio.style.borderEmphasis.',
 );
 
 /**
- * The colour treatments a border can take: pinned neutral, or the
- * colour scheme's accent.
+ * How strongly the border colour applies. The colour itself always
+ * follows the entry's, so emphasis is the only choice on offer.
  */
-export const BorderColorOptions: OptionToggleFieldOption<BorderColor>[] =
-  BorderColors.map((color) => ({
-    value: color,
-    label: borderColourKey(color, 'label'),
-    description: borderColourKey(color, 'description'),
-  }));
-
-/**
- * How strongly the border colour applies.
- */
-export const BorderEmphasisOptions: OptionToggleFieldOption<BorderEmphasis>[] =
+const BorderEmphasisOptions: OptionToggleFieldOption<BorderEmphasis>[] =
   BorderEmphases.map((emphasis) => ({
     value: emphasis,
     label: borderEmphasisKey(emphasis, 'label'),
@@ -97,7 +81,6 @@ const NoneValue = 'none';
  */
 export const BorderStyleKeys: string[] = [
   'borderStyle',
-  'borderColor',
   'borderEmphasis',
   ...SideWidthKeys,
   'borderRadius',
@@ -204,11 +187,6 @@ export const BorderFields: React.FC<BorderFieldsProps> = ({
     setValue('borderStyle', value);
   }
 
-  // The neutral default is stored as an unset key
-  function handleColorChange(color: BorderColor) {
-    setValue('borderColor', color === 'neutral' ? undefined : color);
-  }
-
   // The regular default is stored as an unset key
   function handleEmphasisChange(emphasis: BorderEmphasis) {
     setValue('borderEmphasis', emphasis === 'regular' ? undefined : emphasis);
@@ -292,7 +270,6 @@ export const BorderFields: React.FC<BorderFieldsProps> = ({
   // corners independently of the border itself
   function clearBorder() {
     setValue('borderStyle', undefined);
-    setValue('borderColor', undefined);
     setValue('borderEmphasis', undefined);
 
     SideWidthKeys.forEach((sideKey) => {
@@ -362,14 +339,6 @@ export const BorderFields: React.FC<BorderFieldsProps> = ({
             ))}
           </RadioToggleGroup>
         </Stack>
-      )}
-      {isEditable('borderColor') && (
-        <OptionToggleField
-          label={fieldLabelKey('borderColour')}
-          options={BorderColorOptions}
-          value={getValue<BorderColor>('borderColor') ?? 'neutral'}
-          onChange={handleColorChange}
-        />
       )}
       {isEditable('borderEmphasis') && (
         <OptionToggleField

@@ -1,5 +1,4 @@
-import React from 'react';
-import { ImageViewerElement } from '@minddrop/designs';
+import { ImagePropertyElement } from '@minddrop/designs';
 import { Fs } from '@minddrop/file-system';
 import { ImageViewer } from '@minddrop/ui-components';
 import { Icon } from '@minddrop/ui-primitives';
@@ -11,25 +10,25 @@ import { useElementPlaceholderImage } from '../../useElementPlaceholder';
 import { useMediaFilePath } from '../../useMediaFilePath';
 import '../elementPlaceholder.css';
 
-export interface ImageViewerDesignElementProps {
+export interface ImageViewerPropertyRendererProps {
   /**
-   * The image viewer element to render.
+   * The image property element to render.
    */
-  element: ImageViewerElement;
+  element: ImagePropertyElement;
 }
 
 /**
- * Display renderer for an image viewer design element.
- * Resolves the image source from the mapped property or
- * placeholder, then delegates to the generic ImageViewer
- * component for zoom/pan interaction.
+ * Display renderer for an image property element rendered as a
+ * viewer. Resolves the image source from the bound property or
+ * placeholder, then delegates to the generic ImageViewer component
+ * for zoom/pan interaction.
  */
-export const ImageViewerDesignElement: React.FC<
-  ImageViewerDesignElementProps
+export const ImageViewerPropertyRenderer: React.FC<
+  ImageViewerPropertyRendererProps
 > = ({ element }) => {
   const preview = useDesignPreview();
   const property = useElementProperty(element.id);
-  const placeholderImage = useElementPlaceholderImage(element, element.content);
+  const placeholderImage = useElementPlaceholderImage(element);
   const placeholderImagePath = useMediaFilePath(placeholderImage);
   const containerStyle = useElementCssStyle(element);
 
