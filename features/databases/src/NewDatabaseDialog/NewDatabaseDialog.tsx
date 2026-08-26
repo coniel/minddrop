@@ -27,7 +27,11 @@ import {
   TextField,
 } from '@minddrop/ui-primitives';
 import { Paths, useForm } from '@minddrop/utils';
-import { EventListenerId, OpenNewDatabaseDialogEvent } from '../events';
+import {
+  EventListenerId,
+  OpenDatabaseViewEvent,
+  OpenNewDatabaseDialogEvent,
+} from '../events';
 import './NewDatabaseDialog.css';
 
 const defaultIcon = 'content-icon:box:default';
@@ -106,8 +110,8 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
     if (!setSelectedTemplate) return;
 
     if (await validateAllAsync()) {
-      // Create the new item type
-      await Databases.create({
+      // Create the new database
+      const database = await Databases.create({
         ...selectedTemplate,
         name: values.name,
         entryName: values.entryName,
@@ -118,10 +122,10 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
       closeDialog();
       reset();
 
-      // Go to the new item type view
-      Events.dispatch('database:view:open', {
-        type: values.name,
-        tab: 'properties',
+      // Go to the new database's view with the properties panel open
+      Events.dispatch(OpenDatabaseViewEvent, {
+        databaseId: database.id,
+        configurationPanelOpen: true,
       });
     }
   }
