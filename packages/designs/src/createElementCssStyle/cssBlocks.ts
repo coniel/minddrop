@@ -1,8 +1,8 @@
 import type { CSSProperties } from 'react';
 import {
   AspectRatio,
+  BackgroundEmphasis,
   BorderBlockStyle,
-  BorderColor,
   BorderEmphasis,
   ContainerDirection,
   HeightStyle,
@@ -13,26 +13,23 @@ import {
 import {
   BorderColorToken,
   BorderWidthToken,
+  SurfaceColorToken,
   TextColorToken,
   tokenCssVariable,
 } from '../tokens';
 
-// The border colour role behind each treatment and emphasis pair.
-// Neutral maps to the pinned roles, accent to the schemable ones.
-const BorderColorRoles: Record<
-  BorderColor,
-  Record<BorderEmphasis, BorderColorToken>
-> = {
-  neutral: {
-    subtle: 'neutral-subtle',
-    regular: 'neutral',
-    strong: 'neutral-strong',
-  },
-  accent: {
-    subtle: 'subtle',
-    regular: 'default',
-    strong: 'strong',
-  },
+// The border colour role behind each emphasis step
+const BorderColorRoles: Record<BorderEmphasis, BorderColorToken> = {
+  subtle: 'subtle',
+  regular: 'default',
+  strong: 'strong',
+};
+
+// The surface role behind each background emphasis step
+const SurfaceRoles: Record<BackgroundEmphasis, SurfaceColorToken> = {
+  subtle: 'subtle',
+  regular: 'accent',
+  solid: 'solid-accent',
 };
 
 /**
@@ -105,7 +102,7 @@ export function borderCss(style: BorderBlockStyle): CSSProperties {
   // Resolve the colour shared by every drawn side
   const color = tokenCssVariable(
     'borderColor',
-    resolveBorderColorToken(style.borderColor, style.borderEmphasis),
+    resolveBorderColorToken(style.borderEmphasis),
   );
 
   // Composes a side's border value from its width token
@@ -180,15 +177,48 @@ export function radiusCss(style: BorderBlockStyle): CSSProperties {
 }
 
 /**
- * Resolves a border colour treatment and emphasis pair onto the
- * border colour role carrying that look, defaulting to the regular
- * neutral outline.
+ * Resolves a border emphasis step onto the border colour role
+ * carrying that weight, defaulting to the standard outline.
  */
 export function resolveBorderColorToken(
-  color?: BorderColor,
   emphasis?: BorderEmphasis,
 ): BorderColorToken {
-  return BorderColorRoles[color ?? 'neutral'][emphasis ?? 'regular'];
+  return BorderColorRoles[emphasis ?? 'regular'];
+}
+
+/**
+ * Emits the background CSS of a background emphasis step. A solid
+ * fill flips the text inside it to the contrasting role, so
+ * contrast pairing is never a choice the designer makes. Without a
+ * step nothing is emitted, so the element renders unfilled.
+ */
+export function backgroundCss(style: {
+  background?: BackgroundEmphasis;
+}): CSSProperties {
+  const css: CSSProperties = {};
+
+  // No step set: no background
+  if (!style.background) {
+    return css;
+  }
+
+  // Unknown steps (values from removed vocabulary) degrade to no
+  // background rather than breaking CSS emission
+  const surface = SurfaceRoles[style.background];
+
+  if (!surface) {
+    return css;
+  }
+
+  // Paint the step's surface
+  css.backgroundColor = tokenCssVariable('surfaceColor', surface);
+
+  // A solid fill needs the contrasting text colour to stay readable
+  if (style.background === 'solid') {
+    css.color = tokenCssVariable('textColor', 'on-solid');
+  }
+
+  return css;
 }
 
 // The text colour role behind each step. The design scale's one

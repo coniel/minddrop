@@ -2,11 +2,11 @@ import { describe, expect, it } from 'vitest';
 import { createRootCss } from './createRootCss';
 
 describe('createRootCss', () => {
-  it('defaults an empty style to the subtle neutral treatment', () => {
+  it('defaults an empty style to the subtle coloured treatment', () => {
     expect(createRootCss({})).toEqual({
       display: 'flex',
       flexDirection: 'column',
-      backgroundColor: 'var(--surface-neutral-subtle)',
+      backgroundColor: 'var(--surface-subtle)',
     });
   });
 
@@ -20,23 +20,15 @@ describe('createRootCss', () => {
     });
   });
 
-  it('defaults floating roots to the subtle neutral treatment', () => {
+  it('defaults floating roots to the subtle coloured treatment', () => {
     expect(createRootCss({}, undefined, 'card')).toMatchObject({
-      backgroundColor: 'var(--surface-neutral-subtle)',
+      backgroundColor: 'var(--surface-subtle)',
     });
   });
 
   it('paints a transparent root in the surface views render on', () => {
     expect(createRootCss({ background: 'transparent' })).toMatchObject({
       backgroundColor: 'var(--surface-app)',
-    });
-  });
-
-  it('paints a regular neutral root on the pinned neutral surface', () => {
-    expect(
-      createRootCss({ background: 'neutral', emphasis: 'regular' }),
-    ).toMatchObject({
-      backgroundColor: 'var(--surface-neutral)',
     });
   });
 
@@ -58,9 +50,9 @@ describe('createRootCss', () => {
 
   it('pairs a solid emphasis with the contrasting text colour', () => {
     expect(
-      createRootCss({ background: 'neutral', emphasis: 'solid' }),
+      createRootCss({ background: 'accent', emphasis: 'solid' }),
     ).toMatchObject({
-      backgroundColor: 'var(--surface-solid-neutral)',
+      backgroundColor: 'var(--surface-solid-accent)',
       color: 'var(--text-on-solid)',
     });
   });

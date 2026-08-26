@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react';
 import { IconStyle } from '../styles';
 import { tokenCssVariable } from '../tokens';
-import { marginCss, textColorCss } from './cssBlocks';
+import { backgroundCss, marginCss, textColorCss } from './cssBlocks';
 
 /**
  * Emits CSS for the icon itself. The optional box around the icon
@@ -36,13 +36,11 @@ export function createIconContainerCss(style: IconStyle): CSSProperties | null {
 
   const css: CSSProperties = {};
 
+  // The box fill, which flips the glyph inside it to the
+  // contrasting colour when solid
+  Object.assign(css, backgroundCss(style.container));
+
   // Emit each set container token as its CSS variable reference
-  if (style.container.background) {
-    css.backgroundColor = tokenCssVariable(
-      'surfaceColor',
-      style.container.background,
-    );
-  }
 
   if (style.container.radius) {
     css.borderRadius = tokenCssVariable('radius', style.container.radius);

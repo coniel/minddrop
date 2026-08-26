@@ -1,25 +1,16 @@
 import { SpaceToken } from '../tokens';
 import { ContainerStyle } from './ContainerStyle';
+import { BackgroundEmphasis } from './blocks';
 
-export const RootBackgrounds = ['neutral', 'accent', 'transparent'] as const;
+export const RootBackgrounds = ['accent', 'transparent'] as const;
 
 /**
- * The background treatments a layout root can take: `neutral` sits
- * on the pinned neutral surface a scheme cannot recolour, `accent`
- * takes on the colour scheme's accent surface, and `transparent`
- * paints the surface views render on so the layout blends into the
- * view behind it.
+ * The background treatments a layout root can take: `accent` takes
+ * on the entry's colour, staying grey outside a colour scheme, and
+ * `transparent` paints the surface views render on so the layout
+ * blends into the view behind it.
  */
 export type RootBackground = (typeof RootBackgrounds)[number];
-
-export const RootBackgroundEmphases = ['subtle', 'regular', 'solid'] as const;
-
-/**
- * How strongly a neutral or accent background applies its
- * surface: a quiet wash, the standard strength, or a solid fill
- * paired with contrasting text.
- */
-export type RootBackgroundEmphasis = (typeof RootBackgroundEmphases)[number];
 
 /**
  * Styles for layout roots. The background is a semantic treatment
@@ -31,7 +22,7 @@ export type RootBackgroundEmphasis = (typeof RootBackgroundEmphases)[number];
 export interface RootStyle extends Omit<ContainerStyle, 'background'> {
   /**
    * The background treatment. Defaults to `transparent` on page
-   * and space layouts, `neutral` otherwise.
+   * and space layouts, `accent` otherwise.
    */
   background?: RootBackground;
 
@@ -39,7 +30,7 @@ export interface RootStyle extends Omit<ContainerStyle, 'background'> {
    * The background emphasis level. Defaults to `subtle`. Ignored
    * by the transparent treatment, which has no strength to vary.
    */
-  emphasis?: RootBackgroundEmphasis;
+  emphasis?: BackgroundEmphasis;
 
   /**
    * Horizontal padding around a page's content. Kept outside the

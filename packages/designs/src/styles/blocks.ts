@@ -8,19 +8,22 @@ import {
 
 export type BorderLineStyle = 'solid' | 'dashed' | 'dotted';
 
-export const BorderColors = ['neutral', 'accent'] as const;
+export const BackgroundEmphases = ['subtle', 'regular', 'solid'] as const;
 
 /**
- * The border colour treatments: `neutral` stays grey inside a
- * colour scheme, `accent` takes on the scheme's hue.
+ * How strongly a background applies its surface: a quiet wash, the
+ * standard strength, or a solid fill flipping the text inside it to
+ * the contrasting role. An unset background is what "no background"
+ * means, so the scale carries no none step.
  */
-export type BorderColor = (typeof BorderColors)[number];
+export type BackgroundEmphasis = (typeof BackgroundEmphases)[number];
 
 export const BorderEmphases = ['subtle', 'regular', 'strong'] as const;
 
 /**
  * How strongly the border colour applies, from a hairline wash to
- * an emphasised outline.
+ * an emphasised outline. The colour itself always follows the
+ * entry's, so emphasis is the only choice a border makes.
  */
 export type BorderEmphasis = (typeof BorderEmphases)[number];
 
@@ -35,11 +38,6 @@ export interface BorderBlockStyle {
    * The border line style. Omitted, no border is drawn.
    */
   borderStyle?: BorderLineStyle;
-
-  /**
-   * The border colour treatment. Omitted, defaults to `neutral`.
-   */
-  borderColor?: BorderColor;
 
   /**
    * How strongly the border colour applies. Omitted, defaults to

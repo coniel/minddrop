@@ -20,7 +20,7 @@ describe('createEmbedCss', () => {
       backgroundColor: 'var(--surface-subtle)',
       aspectRatio: '16 / 9',
       height: 'var(--size-xl)',
-      border: 'var(--border-width-thin) solid var(--border-neutral)',
+      border: 'var(--border-width-thin) solid var(--border-default)',
       borderRadius: 'var(--radius-lg)',
       marginTop: 'var(--space-2)',
     });

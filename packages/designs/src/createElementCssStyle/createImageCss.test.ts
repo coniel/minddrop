@@ -22,7 +22,7 @@ describe('createImageCss', () => {
       objectFit: 'cover',
       width: '100%',
       height: 'var(--size-md)',
-      border: 'var(--border-width-thin) solid var(--border-neutral)',
+      border: 'var(--border-width-thin) solid var(--border-default)',
       borderRadius: 'var(--radius-md)',
       marginBottom: 'var(--space-2)',
     });

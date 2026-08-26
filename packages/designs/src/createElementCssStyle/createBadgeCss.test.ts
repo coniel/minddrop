@@ -12,11 +12,6 @@ describe('createBadgeCss', () => {
         fontSize: 'xs',
         fontWeight: 'medium',
         textTransform: 'uppercase',
-        color: 'subtle',
-        background: 'solid-accent',
-        borderStyle: 'solid',
-        borderColor: 'accent',
-        borderEmphasis: 'strong',
         borderRadius: 'full',
         padding: '0-5',
         marginRight: '1',
@@ -25,18 +20,18 @@ describe('createBadgeCss', () => {
       fontSize: 'var(--font-size-xs)',
       fontWeight: 'var(--font-weight-medium)',
       textTransform: 'uppercase',
-      color: 'var(--text-muted)',
-      backgroundColor: 'var(--surface-solid-accent)',
-      border: 'var(--border-width-thin) solid var(--border-strong)',
       borderRadius: 'var(--radius-full)',
       padding: 'var(--space-0-5)',
       marginRight: 'var(--space-1)',
     });
   });
 
-  it('defaults the border color when only a border style is set', () => {
-    expect(createBadgeCss({ borderStyle: 'dashed' })).toEqual({
-      border: 'var(--border-width-thin) dashed var(--border-neutral)',
-    });
+  it('emits no colours of its own', () => {
+    // A chip's fill and label colour come from its select option,
+    // applied by the renderer over this CSS
+    const css = createBadgeCss({ fontSize: 'xs', padding: '0-5' });
+
+    expect(css).not.toHaveProperty('color');
+    expect(css).not.toHaveProperty('backgroundColor');
   });
 });

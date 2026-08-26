@@ -11,6 +11,7 @@ import {
 } from '../styles';
 import { SurfaceColorToken, tokenCssVariable } from '../tokens';
 import {
+  backgroundCss,
   borderCss,
   heightCss,
   marginCss,
@@ -37,10 +38,8 @@ const FadeDirections: Record<BackdropFadeDirection, string> = {
   'to-right': 'to right',
 };
 
-// The surface role each tint washes the blur with. Neutral pins
-// to the neutral surface, so a scheme cannot recolour it
+// The surface role each tint washes the blur with
 const TintSurfaces: Record<BackdropTint, SurfaceColorToken> = {
-  neutral: 'neutral',
   accent: 'accent',
 };
 
@@ -86,10 +85,9 @@ export function createContainerCss(
     css.gap = tokenCssVariable('space', style.gap);
   }
 
-  // Emit the surface and elevation tokens
-  if (style.background) {
-    css.backgroundColor = tokenCssVariable('surfaceColor', style.background);
-  }
+  // The container fill, which flips the text inside it to the
+  // contrasting colour when solid
+  Object.assign(css, backgroundCss(style));
 
   Object.assign(css, containerHeightCss(style, parentDirection));
 

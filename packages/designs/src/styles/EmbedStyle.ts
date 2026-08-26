@@ -1,5 +1,4 @@
-import { SurfaceColorToken } from '../tokens';
-import { AspectRatio } from './blocks';
+import { AspectRatio, BackgroundEmphasis } from './blocks';
 import {
   BorderBlockStyle,
   HeightStyle,
@@ -17,9 +16,10 @@ export interface EmbedStyle
     MaxWidthStyle,
     HeightStyle {
   /**
-   * The background surface role.
+   * How strongly the frame's fill applies the surface. Omitted, the
+   * frame renders unfilled.
    */
-  background?: SurfaceColorToken;
+  background?: BackgroundEmphasis;
 
   /**
    * The aspect ratio of the frame. Omitted, the frame sizes from

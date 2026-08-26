@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react';
 import { ContainerDirection, EmbedStyle } from '../styles';
-import { tokenCssVariable } from '../tokens';
 import {
+  backgroundCss,
   borderCss,
   heightCss,
   marginCss,
@@ -26,9 +26,9 @@ export function createEmbedCss(
     ...heightCss(style, parentDirection),
   };
 
-  if (style.background) {
-    css.backgroundColor = tokenCssVariable('surfaceColor', style.background);
-  }
+  // The frame's fill, which flips the text inside it to the
+  // contrasting colour when solid
+  Object.assign(css, backgroundCss(style));
 
   // Emit the aspect preset as a constant CSS ratio
   if (style.aspectRatio) {

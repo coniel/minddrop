@@ -18,13 +18,12 @@ describe('createContainerCss', () => {
         justify: 'space-between',
         wrap: true,
         gap: '2',
-        background: 'raised',
+        background: 'regular',
         minHeight: 'md',
         paddingTop: '4',
         paddingLeft: '4',
         marginBottom: '2',
         borderStyle: 'solid',
-        borderColor: 'accent',
         borderEmphasis: 'subtle',
         borderTopWidth: 'medium',
         borderRightWidth: 'medium',
@@ -38,7 +37,7 @@ describe('createContainerCss', () => {
       justifyContent: 'space-between',
       flexWrap: 'wrap',
       gap: 'var(--space-2)',
-      backgroundColor: 'var(--surface-raised)',
+      backgroundColor: 'var(--surface-accent)',
       minHeight: 'var(--size-md)',
       paddingTop: 'var(--space-4)',
       paddingLeft: 'var(--space-4)',
@@ -157,11 +156,11 @@ describe('createContainerCss', () => {
     });
   });
 
-  it('defaults the border colour to the pinned neutral outline', () => {
+  it('defaults the border colour to the standard outline', () => {
     expect(createContainerCss({ borderStyle: 'solid' })).toEqual({
       display: 'flex',
       flexDirection: 'column',
-      border: 'var(--border-width-thin) solid var(--border-neutral)',
+      border: 'var(--border-width-thin) solid var(--border-default)',
     });
   });
 
@@ -169,15 +168,13 @@ describe('createContainerCss', () => {
     expect(
       createContainerCss({
         borderStyle: 'solid',
-        borderColor: 'neutral',
         borderEmphasis: 'strong',
         borderLeftWidth: 'thick',
       }),
     ).toEqual({
       display: 'flex',
       flexDirection: 'column',
-      borderLeft:
-        'var(--border-width-thick) solid var(--border-neutral-strong)',
+      borderLeft: 'var(--border-width-thick) solid var(--border-strong)',
     });
   });
 
@@ -191,8 +188,8 @@ describe('createContainerCss', () => {
     ).toEqual({
       display: 'flex',
       flexDirection: 'column',
-      borderTop: 'var(--border-width-thin) solid var(--border-neutral)',
-      borderBottom: 'var(--border-width-thick) solid var(--border-neutral)',
+      borderTop: 'var(--border-width-thin) solid var(--border-default)',
+      borderBottom: 'var(--border-width-thick) solid var(--border-default)',
     });
   });
 
@@ -208,7 +205,7 @@ describe('createContainerCss', () => {
     ).toEqual({
       display: 'flex',
       flexDirection: 'column',
-      border: 'var(--border-width-medium) solid var(--border-neutral)',
+      border: 'var(--border-width-medium) solid var(--border-default)',
     });
   });
 });
@@ -254,11 +251,11 @@ describe('createBackdropCss', () => {
   it('washes the blur with the tint at the regular strength', () => {
     const css = createBackdropCss({
       backdropBlur: 'regular',
-      backdropTint: 'neutral',
+      backdropTint: 'accent',
     });
 
     expect(css?.backgroundColor).toBe(
-      'color-mix(in srgb, var(--surface-neutral) 50%, transparent)',
+      'color-mix(in srgb, var(--surface-accent) 50%, transparent)',
     );
   });
 

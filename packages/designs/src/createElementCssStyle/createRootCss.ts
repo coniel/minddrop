@@ -1,8 +1,8 @@
 import type { CSSProperties } from 'react';
 import {
+  BackgroundEmphasis,
   ContainerDirection,
   RootBackground,
-  RootBackgroundEmphasis,
   RootStyle,
 } from '../styles';
 import {
@@ -106,8 +106,8 @@ export function contentColumnCss(
 
 /**
  * Resolves the treatment an unset root background defaults to:
- * transparent for the full-screen page and space types, subtle
- * neutral for the floating card and list types.
+ * transparent for the full-screen page and space types, the subtle
+ * surface for the floating card and list types.
  */
 function defaultRootBackground(layoutType?: LayoutType): RootBackground {
   // Full-screen roots blend into the surface they fill
@@ -115,46 +115,30 @@ function defaultRootBackground(layoutType?: LayoutType): RootBackground {
     return 'transparent';
   }
 
-  return 'neutral';
+  return 'accent';
 }
+
+// The surface role behind each emphasis step of a coloured root
+const RootSurfaces: Record<BackgroundEmphasis, SurfaceColorToken> = {
+  subtle: 'subtle',
+  regular: 'accent',
+  solid: 'solid-accent',
+};
 
 /**
  * Maps a background treatment and emphasis level onto the surface
  * colour token carrying that look. The transparent treatment always
- * paints the surface views render on; neutral and accent pick a
- * step off their surface roles per level.
+ * paints the surface views render on; the accent treatment picks a
+ * step off the schemable surface roles per level.
  */
 function resolveRootSurface(
   background: RootBackground,
-  emphasis: RootBackgroundEmphasis,
+  emphasis: BackgroundEmphasis,
 ): SurfaceColorToken {
   // Transparent roots blend into the view, with no strength to vary
   if (background === 'transparent') {
     return 'app';
   }
 
-  // Neutral roots pin to the neutral surfaces, so a scheme cannot
-  // recolour them
-  if (background === 'neutral') {
-    if (emphasis === 'subtle') {
-      return 'neutral-subtle';
-    }
-
-    if (emphasis === 'solid') {
-      return 'solid-neutral';
-    }
-
-    return 'neutral';
-  }
-
-  // Accent roots take on the colour scheme's accent surfaces
-  if (emphasis === 'subtle') {
-    return 'subtle';
-  }
-
-  if (emphasis === 'solid') {
-    return 'solid-accent';
-  }
-
-  return 'accent';
+  return RootSurfaces[emphasis];
 }

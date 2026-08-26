@@ -1,5 +1,5 @@
-import { SizeToken, SpaceToken, SurfaceColorToken } from '../tokens';
-import { AspectRatio, ObjectFit } from './blocks';
+import { SizeToken, SpaceToken } from '../tokens';
+import { AspectRatio, BackgroundEmphasis, ObjectFit } from './blocks';
 import {
   BorderBlockStyle,
   HeightStyle,
@@ -22,11 +22,12 @@ export const BackdropBlurs = ['subtle', 'regular', 'strong'] as const;
  */
 export type BackdropBlur = (typeof BackdropBlurs)[number];
 
-export const BackdropTints = ['neutral', 'accent'] as const;
+export const BackdropTints = ['accent'] as const;
 
 /**
- * The colour washes a backdrop blur can be tinted with: the
- * neutral surface colour, or the colour scheme's accent surface.
+ * The colour washes a backdrop blur can be tinted with. Colour
+ * always follows the entry's, so the accent surface is the only
+ * wash on offer; an unset tint leaves the blur uncoloured.
  */
 export type BackdropTint = (typeof BackdropTints)[number];
 
@@ -86,9 +87,10 @@ export interface ContainerStyle
   gap?: SpaceToken;
 
   /**
-   * The background surface role.
+   * How strongly the background applies the surface. Omitted, the
+   * container renders no background of its own.
    */
-  background?: SurfaceColorToken;
+  background?: BackgroundEmphasis;
 
   /**
    * The height the container never shrinks below.

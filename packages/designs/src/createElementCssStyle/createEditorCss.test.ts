@@ -25,7 +25,7 @@ describe('createEditorCss', () => {
       color: 'var(--text-regular)',
       paddingTop: 'var(--space-4)',
       marginBottom: 'var(--space-2)',
-      border: 'var(--border-width-thin) solid var(--border-neutral)',
+      border: 'var(--border-width-thin) solid var(--border-default)',
       maxWidth: 'var(--measure-content)',
     });
   });

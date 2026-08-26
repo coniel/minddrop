@@ -3,26 +3,16 @@ import {
   FontWeightToken,
   RadiusToken,
   SpaceToken,
-  SurfaceColorToken,
-  TextColorToken,
 } from '../tokens';
 import { TextTransform } from './blocks';
-import {
-  BorderColor,
-  BorderEmphasis,
-  BorderLineStyle,
-  MarginStyle,
-} from './blocks';
+import { MarginStyle } from './blocks';
 
 /**
- * Styles for badge chips.
+ * Styles for badge chips. A chip's fill and label colour come from
+ * its select option, so they are not style values; its size,
+ * rounding and padding are the chip shape its variant sets.
  */
 export interface BadgeStyle extends MarginStyle {
-  /**
-   * The text colour step.
-   */
-  color?: TextColorToken;
-
   /**
    * The font size step.
    */
@@ -37,26 +27,6 @@ export interface BadgeStyle extends MarginStyle {
    * The text case transform.
    */
   textTransform?: TextTransform;
-
-  /**
-   * The background surface role.
-   */
-  background?: SurfaceColorToken;
-
-  /**
-   * The border line style. Omitted, no border is drawn.
-   */
-  borderStyle?: BorderLineStyle;
-
-  /**
-   * The border colour treatment.
-   */
-  borderColor?: BorderColor;
-
-  /**
-   * How strongly the border colour applies.
-   */
-  borderEmphasis?: BorderEmphasis;
 
   /**
    * The corner radius. `full` renders pills.

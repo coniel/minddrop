@@ -2,19 +2,19 @@ import {
   IconSizeToken,
   RadiusToken,
   SpaceToken,
-  SurfaceColorToken,
   TextColorToken,
 } from '../tokens';
-import { MarginStyle } from './blocks';
+import { BackgroundEmphasis, MarginStyle } from './blocks';
 
 /**
  * Styles for the box optionally rendered around an icon.
  */
 export interface IconContainerStyle {
   /**
-   * The background surface role.
+   * How strongly the box fill applies the surface. Omitted, the box
+   * renders unfilled.
    */
-  background?: SurfaceColorToken;
+  background?: BackgroundEmphasis;
 
   /**
    * The corner radius.
