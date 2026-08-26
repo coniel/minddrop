@@ -23,6 +23,7 @@ export const designProperties: PropertiesSchema = [
   { type: 'text', name: 'Subtitle' },
   { type: 'text', name: 'Summary' },
   { type: 'image', name: 'Cover' },
+  { type: 'formatted-text', name: 'Notes' },
 ];
 
 export const design_books: DatabaseDesign = {

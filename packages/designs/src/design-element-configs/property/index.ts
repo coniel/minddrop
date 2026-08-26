@@ -1,3 +1,4 @@
+export * from './base';
 export * from './title';
 export * from './text';
 export * from './number';
@@ -6,5 +7,5 @@ export * from './select';
 export * from './url';
 export * from './image';
 export * from './icon';
-export * from './typographyEditableStyles';
-export * from './registry';
+export * from './PropertyElement.types';
+export * from './config';

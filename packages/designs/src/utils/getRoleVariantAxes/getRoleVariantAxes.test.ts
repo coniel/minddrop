@@ -21,7 +21,7 @@ const sizeAxis: DesignRoleVariantAxis = {
 const role: DesignRoleConfig = {
   id: 'role',
   elementType: 'text',
-  label: 'designs.roles.title.label',
+  label: 'designs.roles.heading.label',
   icon: 'type',
   lockedStyle: {},
   variants: [intentAxis, sizeAxis],

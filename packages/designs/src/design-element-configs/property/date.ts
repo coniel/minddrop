@@ -1,5 +1,5 @@
-import { TypographyStyle } from '../styles';
-import { DesignElementBase, DesignElementConfig } from '../types';
+import { TypographyStyle } from '../../styles';
+import { PropertyElementBase } from './base';
 
 /**
  * Whether to display an absolute date or a relative description.
@@ -11,6 +11,9 @@ export type DateMode = 'date' | 'relative';
  */
 export type DateStyle = 'compact' | 'short' | 'medium' | 'long' | 'full';
 
+/**
+ * Date formatting options.
+ */
 export interface DateFormat {
   /**
    * Whether to display an absolute date or a relative
@@ -32,8 +35,11 @@ export interface DateFormat {
   showTime: boolean;
 }
 
-export interface DateElement extends DesignElementBase {
-  type: 'date';
+/**
+ * A property element rendering a date property.
+ */
+export interface DatePropertyElement extends PropertyElementBase {
+  propertyType: 'date';
 
   /**
    * The element style.
@@ -41,29 +47,7 @@ export interface DateElement extends DesignElementBase {
   style: TypographyStyle;
 
   /**
-   * Date content displayed when the element is static.
-   * Stored as an ISO date string (YYYY-MM-DD).
-   */
-  content?: string;
-
-  /**
    * Date formatting options.
    */
   format?: DateFormat;
 }
-
-// Omits a palette group: dates are placed through the date
-// property element
-export const DateElementConfig: DesignElementConfig<DateElement> = {
-  type: 'date',
-  icon: 'calendar',
-  label: 'design-studio.elements.date',
-  styleCategory: 'typography',
-  compatiblePropertyTypes: ['date', 'created', 'last-modified'],
-  supportsStaticContent: true,
-  emptyBehavior: 'hide',
-  template: {
-    type: 'date',
-    style: {},
-  },
-};

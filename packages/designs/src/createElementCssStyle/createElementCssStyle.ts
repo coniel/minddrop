@@ -1,7 +1,15 @@
 import type { CSSProperties } from 'react';
 import { DesignElementStyleSource } from '../design-element-configs';
-import { ContainerDirection } from '../styles';
+import {
+  BadgeStyle,
+  ContainerDirection,
+  EmbedStyle,
+  IconStyle,
+  ImageStyle,
+  TypographyStyle,
+} from '../styles';
 import { LayoutType } from '../types';
+import { getElementStyleCategory } from '../utils/getElementStyleCategory';
 import { resolveElementStyle } from '../utils/resolveElementStyle';
 import { createBadgeCss } from './createBadgeCss';
 import { createContainerCss } from './createContainerCss';
@@ -34,18 +42,9 @@ export function createElementCssStyle(
   switch (element.type) {
     case 'text':
     case 'formatted-text':
-    case 'number':
-    case 'date':
-    case 'url':
       return createTypographyCss(resolveElementStyle(element, layoutType));
     case 'property':
-      // Property elements dispatch on their selected variant's
-      // style category. Every variant shipped so far renders
-      // typography; further categories arrive with the variants
-      // that use them.
-      return createTypographyCss(resolveElementStyle(element, layoutType));
-    case 'badges':
-      return createBadgeCss(resolveElementStyle(element, layoutType));
+      return createPropertyElementCss(element, parentDirection, layoutType);
     case 'root':
       return createRootCss(
         resolveElementStyle(element, layoutType),
@@ -58,15 +57,6 @@ export function createElementCssStyle(
         resolveElementStyle(element, layoutType),
         parentDirection,
       );
-    case 'image':
-      return createImageCss(
-        resolveElementStyle(element, layoutType),
-        parentDirection,
-      );
-    case 'icon':
-      return createIconCss(resolveElementStyle(element, layoutType));
-    case 'image-viewer':
-    case 'webview':
     case 'view':
       return createEmbedCss(
         resolveElementStyle(element, layoutType),
@@ -74,5 +64,33 @@ export function createElementCssStyle(
       );
     case 'editor':
       return createEditorCss(resolveElementStyle(element, layoutType));
+  }
+}
+
+/**
+ * Emits the CSS for a property element, dispatching on the style
+ * category its selected presentation variant declares. The variant
+ * decides the style shape at render time, which the persisted
+ * element type cannot narrow, so each branch names the shape its
+ * generator reads.
+ */
+function createPropertyElementCss(
+  element: DesignElementStyleSource,
+  parentDirection?: ContainerDirection,
+  layoutType?: LayoutType,
+): CSSProperties {
+  const style = resolveElementStyle(element, layoutType);
+
+  switch (getElementStyleCategory(element)) {
+    case 'badge':
+      return createBadgeCss(style as BadgeStyle);
+    case 'image':
+      return createImageCss(style as ImageStyle, parentDirection);
+    case 'icon':
+      return createIconCss(style as IconStyle);
+    case 'embed':
+      return createEmbedCss(style as EmbedStyle, parentDirection);
+    default:
+      return createTypographyCss(style as TypographyStyle);
   }
 }

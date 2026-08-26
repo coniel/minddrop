@@ -23,6 +23,13 @@ export interface PropertyElementVariantConfig {
   label: TranslationKey;
 
   /**
+   * i18n key of a short line explaining what the variant renders,
+   * for variants a sample cannot speak for. Omitted, the variant
+   * is listed under its label alone.
+   */
+  description?: TranslationKey;
+
+  /**
    * The renderer the variant displays through, resolved to a
    * component feature-side.
    */

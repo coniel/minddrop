@@ -1,36 +1,20 @@
 import type { DesignRoleId } from '../types';
-import type { BadgesElement } from './badges';
 import type { ContainerElement } from './container';
-import type { DateElement } from './date';
 import type { EditorElement } from './editor';
 import type { FormattedTextElement } from './formatted-text';
-import type { IconElement } from './icon';
-import type { ImageElement } from './image';
-import type { ImageViewerElement } from './image-viewer';
-import type { NumberElement } from './number';
 import type { PagePanelElement } from './page-panel';
 import type { PropertyElement } from './property';
 import type { RootElement } from './root';
 import type { TextElement } from './text';
-import type { UrlElement } from './url';
 import type { ViewElement } from './view';
-import type { WebviewElement } from './webview';
 
 /**
  * Union of all leaf (non-container) design element types.
  */
 export type LeafDesignElement =
-  | BadgesElement
   | TextElement
   | FormattedTextElement
-  | NumberElement
-  | DateElement
-  | UrlElement
-  | ImageElement
-  | ImageViewerElement
-  | IconElement
   | EditorElement
-  | WebviewElement
   | ViewElement
   | PropertyElement;
 
@@ -88,17 +72,9 @@ type Template<T> = Omit<T, 'id'>;
  * Union of all design element template types (element without id).
  */
 export type DesignElementTemplate =
-  | Template<BadgesElement>
   | Template<TextElement>
   | Template<FormattedTextElement>
-  | Template<NumberElement>
-  | Template<DateElement>
-  | Template<UrlElement>
-  | Template<ImageElement>
-  | Template<ImageViewerElement>
-  | Template<IconElement>
   | Template<EditorElement>
-  | Template<WebviewElement>
   | Template<ViewElement>
   | Template<PropertyElement>
   | Template<ContainerElement>

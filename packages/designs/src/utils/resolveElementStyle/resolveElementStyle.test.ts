@@ -5,7 +5,7 @@ import {
   TextElement,
   TextPropertyElement,
 } from '../../design-element-configs';
-import { TitleRole } from '../../roles';
+import { HeadingRole } from '../../roles';
 import { DesignFixtures, cleanup, setup } from '../../test-utils';
 import { resolveElementStyle } from './resolveElementStyle';
 
@@ -27,7 +27,7 @@ describe('resolveElementStyle', () => {
   it('applies the context-resolved role styles over the element style', () => {
     const element: RoleDesignElement<TextElement> = {
       ...element_text_1,
-      role: TitleRole.id,
+      role: HeadingRole.id,
       // fontSize collides with the size axis default, italic does not
       style: { fontSize: 'sm', italic: true },
     };
@@ -37,7 +37,7 @@ describe('resolveElementStyle', () => {
       fontWeight: 'semibold',
       lineHeight: 'tight',
       // The size axis applies its default option's card font size
-      fontSize: 'md',
+      fontSize: 'base',
       italic: true,
     });
   });
@@ -45,7 +45,7 @@ describe('resolveElementStyle', () => {
   it('resolves against the given layout context', () => {
     const element: RoleDesignElement<TextElement> = {
       ...element_text_1,
-      role: TitleRole.id,
+      role: HeadingRole.id,
       roleVariants: { size: 'lg' },
       style: {},
     };
@@ -53,10 +53,10 @@ describe('resolveElementStyle', () => {
     // The same element resolves to a larger font on a page than on
     // a card
     expect(resolveElementStyle(element, 'card')).toMatchObject({
-      fontSize: 'xl',
+      fontSize: 'md',
     });
     expect(resolveElementStyle(element, 'page')).toMatchObject({
-      fontSize: '5xl',
+      fontSize: '2xl',
     });
   });
 

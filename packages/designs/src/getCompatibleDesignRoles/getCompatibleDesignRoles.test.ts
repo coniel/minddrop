@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { ContentRole, SubtitleRole, TitleRole } from '../roles';
+import { ContentRole, HeadingRole, LabelRole } from '../roles';
 import { cleanup, setup } from '../test-utils';
 import { getCompatibleDesignRoles } from './getCompatibleDesignRoles';
 
@@ -15,8 +15,8 @@ describe('getCompatibleDesignRoles', () => {
 
     // The content roles restrict themselves away from list layouts
     expect(roles).not.toContain(ContentRole);
-    expect(roles).toContain(TitleRole);
-    expect(roles).toContain(SubtitleRole);
+    expect(roles).toContain(HeadingRole);
+    expect(roles).toContain(LabelRole);
   });
 
   it('offers unrestricted roles in every context', () => {
@@ -25,8 +25,8 @@ describe('getCompatibleDesignRoles', () => {
       layoutType: 'space',
     });
 
-    // The title role restricts no context axis
-    expect(roles).toContain(TitleRole);
+    // The heading role restricts no context axis
+    expect(roles).toContain(HeadingRole);
   });
 
   it('does not exclude on unset filter axes', () => {
@@ -45,6 +45,6 @@ describe('getCompatibleDesignRoles', () => {
       layoutType: 'page',
     });
 
-    expect(roles).toContain(TitleRole);
+    expect(roles).toContain(HeadingRole);
   });
 });

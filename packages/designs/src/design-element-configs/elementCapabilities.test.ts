@@ -7,14 +7,6 @@ import { getElementConfig, getElementConfigs } from './index';
 const staticContentSupport: Record<string, boolean> = {
   text: true,
   'formatted-text': false,
-  number: true,
-  date: true,
-  badges: true,
-  image: true,
-  'image-viewer': true,
-  icon: true,
-  url: false,
-  webview: false,
   view: false,
   editor: false,
   property: false,
@@ -27,14 +19,6 @@ const staticContentSupport: Record<string, boolean> = {
 const emptyBehaviors: Record<string, ElementEmptyBehavior> = {
   text: 'hide',
   'formatted-text': 'hide',
-  number: 'hide',
-  date: 'hide',
-  url: 'hide',
-  badges: 'hide',
-  image: 'hide',
-  'image-viewer': 'hide',
-  icon: 'hide',
-  webview: 'hide',
   view: 'hide',
   property: 'hide',
   editor: 'none',
@@ -58,10 +42,10 @@ describe('element capabilities', () => {
     });
   });
 
-  it('makes URL elements property bound only', () => {
-    // A fixed link belongs in a text element, so the URL element
-    // offers no static mode
-    expect(getElementConfig('url').supportsStaticContent).toBe(false);
+  it('makes property elements property bound only', () => {
+    // Property elements render a bound property by definition, so
+    // they offer no static mode
+    expect(getElementConfig('property').supportsStaticContent).toBe(false);
     expect(getElementConfig('text').supportsStaticContent).toBe(true);
   });
 
@@ -84,6 +68,6 @@ describe('element capabilities', () => {
     // A design never shows an empty slot where a value would have
     // been, and never a design placeholder in its place
     expect(getElementConfig('text').emptyBehavior).toBe('hide');
-    expect(getElementConfig('url').emptyBehavior).toBe('hide');
+    expect(getElementConfig('property').emptyBehavior).toBe('hide');
   });
 });

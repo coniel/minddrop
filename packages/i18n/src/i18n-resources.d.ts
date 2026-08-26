@@ -1166,19 +1166,10 @@ declare module 'i18next' {
           name: string;
           new: string;
           roles: {
-            title: {
-              label: string;
-            };
-            subtitle: {
-              label: string;
-            };
             heading: {
               label: string;
             };
             label: {
-              label: string;
-            };
-            'text-value': {
               label: string;
             };
             content: {
@@ -1195,10 +1186,6 @@ declare module 'i18next' {
             sm: string;
             md: string;
             lg: string;
-            plain: string;
-            description: string;
-            caption: string;
-            quote: string;
             default: string;
             regular: string;
             muted: string;
@@ -1206,7 +1193,6 @@ declare module 'i18next' {
           };
           roleVariantAxes: {
             size: string;
-            appearance: string;
             colour: string;
           };
           propertyElements: {
@@ -1217,6 +1203,25 @@ declare module 'i18next' {
               subtitle: string;
               caption: string;
               quote: string;
+              sm: string;
+              md: string;
+              lg: string;
+              'badges-sm': string;
+              badges: string;
+              'badges-lg': string;
+              text: string;
+              'url-text': string;
+              link: string;
+              webview: string;
+              image: string;
+              viewer: string;
+            };
+            descriptions: {
+              'url-text': string;
+              link: string;
+              webview: string;
+              image: string;
+              viewer: string;
             };
             samples: {
               short: string;
@@ -1224,6 +1229,8 @@ declare module 'i18next' {
               subtitle: string;
               caption: string;
               quote: string;
+              title: string;
+              select: string;
             };
           };
           layouts: {
@@ -1774,17 +1781,17 @@ declare module 'i18next' {
             'page-panel': string;
             text: string;
             title: string;
-            'formatted-text': string;
             number: string;
             date: string;
             url: string;
             image: string;
             'image-viewer': string;
             icon: string;
-            editor: string;
             badges: string;
-            property: string;
             webview: string;
+            'formatted-text': string;
+            editor: string;
+            property: string;
             view: string;
             'container-empty-hint': string;
             group: {
@@ -2217,7 +2224,6 @@ declare module 'i18next' {
               background: string;
               radius: string;
               borderStyle: string;
-              borderColour: string;
               borderWidth: string;
               padding: string;
               margin: string;
@@ -2631,93 +2637,7 @@ declare module 'i18next' {
                 description: string;
               };
             };
-            surfaceColour: {
-              app: {
-                label: string;
-                description: string;
-              };
-              subtle: {
-                label: string;
-                description: string;
-              };
-              raised: {
-                label: string;
-                description: string;
-              };
-              overlay: {
-                label: string;
-                description: string;
-              };
-              accent: {
-                label: string;
-                description: string;
-              };
-              'solid-accent': {
-                label: string;
-                description: string;
-              };
-              'neutral-subtle': {
-                label: string;
-                description: string;
-              };
-              neutral: {
-                label: string;
-                description: string;
-              };
-              'solid-neutral': {
-                label: string;
-                description: string;
-              };
-              'primary-subtle': {
-                label: string;
-                description: string;
-              };
-              primary: {
-                label: string;
-                description: string;
-              };
-              'solid-primary': {
-                label: string;
-                description: string;
-              };
-              danger: {
-                label: string;
-                description: string;
-              };
-              'solid-danger': {
-                label: string;
-                description: string;
-              };
-              warning: {
-                label: string;
-                description: string;
-              };
-              'solid-warning': {
-                label: string;
-                description: string;
-              };
-              info: {
-                label: string;
-                description: string;
-              };
-              'solid-info': {
-                label: string;
-                description: string;
-              };
-              success: {
-                label: string;
-                description: string;
-              };
-              'solid-success': {
-                label: string;
-                description: string;
-              };
-            };
             rootBackground: {
-              neutral: {
-                label: string;
-                description: string;
-              };
               accent: {
                 label: string;
                 description: string;
@@ -2727,7 +2647,11 @@ declare module 'i18next' {
                 description: string;
               };
             };
-            rootEmphasis: {
+            backgroundEmphasis: {
+              none: {
+                label: string;
+                description: string;
+              };
               subtle: {
                 label: string;
                 description: string;
@@ -2737,16 +2661,6 @@ declare module 'i18next' {
                 description: string;
               };
               solid: {
-                label: string;
-                description: string;
-              };
-            };
-            borderColour: {
-              neutral: {
-                label: string;
-                description: string;
-              };
-              accent: {
                 label: string;
                 description: string;
               };
@@ -2885,10 +2799,6 @@ declare module 'i18next' {
             };
             backdropTint: {
               none: {
-                label: string;
-                description: string;
-              };
-              neutral: {
                 label: string;
                 description: string;
               };

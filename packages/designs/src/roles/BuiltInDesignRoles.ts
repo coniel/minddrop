@@ -4,9 +4,6 @@ import { ContentDisplayRole } from './content-display';
 import { HeadingRole } from './heading';
 import { LabelRole } from './label';
 import { PageContentRole } from './page-content';
-import { SubtitleRole } from './subtitle';
-import { TextValueRole } from './text-value';
-import { TitleRole } from './title';
 
 /**
  * The built-in design roles, registered on initialization. The
@@ -14,11 +11,8 @@ import { TitleRole } from './title';
  * how a typical layout stacks them top to bottom.
  */
 export const BuiltInDesignRoles: DesignRoleConfig[] = [
-  TitleRole,
-  SubtitleRole,
   HeadingRole,
   LabelRole,
-  TextValueRole,
   ContentRole,
   ContentDisplayRole,
   PageContentRole,

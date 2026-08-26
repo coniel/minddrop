@@ -1,8 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-  NumberPropertyElementConfig,
-  TextPropertyElementConfig,
-} from '../../property-element-configs';
+import { TextPropertyElementConfig } from '../../property-element-configs';
 import { DesignTheme } from '../../types';
 import { resolvePropertyElementStyle } from './resolvePropertyElementStyle';
 
@@ -57,7 +54,14 @@ describe('resolvePropertyElementStyle', () => {
 
   it('resolves nothing for variants without a theme entry', () => {
     expect(
-      resolvePropertyElementStyle(NumberPropertyElementConfig, undefined),
+      resolvePropertyElementStyle(
+        TextPropertyElementConfig,
+        undefined,
+        'card',
+        {
+          propertyElements: {},
+        },
+      ),
     ).toEqual({});
   });
 

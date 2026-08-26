@@ -2,17 +2,27 @@ import type { PropertyType } from '@minddrop/properties';
 import { InvalidParameterError } from '@minddrop/utils';
 import type { PropertyElementConfig } from '../types';
 import { DatePropertyElementConfig } from './date';
+import { IconPropertyElementConfig } from './icon';
+import { ImagePropertyElementConfig } from './image';
 import { NumberPropertyElementConfig } from './number';
+import { SelectPropertyElementConfig } from './select';
 import { TextPropertyElementConfig } from './text';
+import { TitlePropertyElementConfig } from './title';
+import { UrlPropertyElementConfig } from './url';
 
 /**
  * All built-in property element configs. The palette lists
  * property elements in this order.
  */
 const propertyElementConfigs: PropertyElementConfig[] = [
+  TitlePropertyElementConfig,
   TextPropertyElementConfig,
   NumberPropertyElementConfig,
   DatePropertyElementConfig,
+  SelectPropertyElementConfig,
+  UrlPropertyElementConfig,
+  ImagePropertyElementConfig,
+  IconPropertyElementConfig,
 ];
 
 // Configs indexed by property type for constant time lookup

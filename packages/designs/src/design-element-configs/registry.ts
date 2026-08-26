@@ -2,38 +2,22 @@ import type { PropertyType } from '@minddrop/properties';
 import { InvalidParameterError } from '@minddrop/utils';
 import type { DesignElementConfig } from '../types';
 import type { DesignElementType } from './DesignElement.types';
-import { BadgesElementConfig } from './badges';
 import { ContainerElementConfig } from './container';
-import { DateElementConfig } from './date';
 import { EditorElementConfig } from './editor';
 import { FormattedTextElementConfig } from './formatted-text';
-import { IconElementConfig } from './icon';
-import { ImageElementConfig } from './image';
-import { ImageViewerElementConfig } from './image-viewer';
-import { NumberElementConfig } from './number';
 import { PagePanelElementConfig } from './page-panel';
 import { PropertyElementTypeConfig } from './property';
 import { RootElementConfig } from './root';
 import { TextElementConfig } from './text';
-import { UrlElementConfig } from './url';
 import { ViewElementConfig } from './view';
-import { WebviewElementConfig } from './webview';
 
 /**
  * All built-in design element configs.
  */
 const elementConfigs: DesignElementConfig[] = [
-  BadgesElementConfig,
   TextElementConfig,
   FormattedTextElementConfig,
   EditorElementConfig,
-  NumberElementConfig,
-  DateElementConfig,
-  UrlElementConfig,
-  ImageElementConfig,
-  ImageViewerElementConfig,
-  IconElementConfig,
-  WebviewElementConfig,
   ViewElementConfig,
   PropertyElementTypeConfig,
   ContainerElementConfig,

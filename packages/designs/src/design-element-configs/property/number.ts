@@ -1,5 +1,5 @@
-import { TypographyStyle } from '../styles';
-import { DesignElementBase, DesignElementConfig } from '../types';
+import { TypographyStyle } from '../../styles';
+import { PropertyElementBase } from './base';
 
 /**
  * Thousands separator style for number formatting.
@@ -11,6 +11,9 @@ export type ThousandsSeparator = 'none' | 'comma' | 'period' | 'space';
  */
 export type SignDisplay = 'auto' | 'always' | 'never';
 
+/**
+ * Number formatting options.
+ */
 export interface NumberFormat {
   /**
    * Number of decimal places to display.
@@ -38,8 +41,11 @@ export interface NumberFormat {
   signDisplay: SignDisplay;
 }
 
-export interface NumberElement extends DesignElementBase {
-  type: 'number';
+/**
+ * A property element rendering a number property.
+ */
+export interface NumberPropertyElement extends PropertyElementBase {
+  propertyType: 'number';
 
   /**
    * The element style.
@@ -47,28 +53,7 @@ export interface NumberElement extends DesignElementBase {
   style: TypographyStyle;
 
   /**
-   * Number content displayed when the element is static.
-   */
-  content?: string;
-
-  /**
    * Number formatting options.
    */
   format?: NumberFormat;
 }
-
-// Omits a palette group: numbers are placed through the number
-// property element
-export const NumberElementConfig: DesignElementConfig<NumberElement> = {
-  type: 'number',
-  icon: 'hash',
-  label: 'design-studio.elements.number',
-  styleCategory: 'typography',
-  compatiblePropertyTypes: ['number'],
-  supportsStaticContent: true,
-  emptyBehavior: 'hide',
-  template: {
-    type: 'number',
-    style: {},
-  },
-};

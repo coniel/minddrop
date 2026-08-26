@@ -3,7 +3,7 @@ import { Events } from '@minddrop/events';
 import { DesignRolesStore } from '../DesignRolesStore';
 import { DesignRoleNotRegisteredError } from '../errors';
 import { DesignRoleUnregisteredEvent } from '../events';
-import { TitleRole } from '../roles';
+import { HeadingRole } from '../roles';
 import { cleanup, setup } from '../test-utils';
 import { unregisterDesignRole } from './unregisterDesignRole';
 
@@ -12,20 +12,20 @@ describe('unregisterDesignRole', () => {
   afterEach(cleanup);
 
   it('removes the role from the registry', () => {
-    unregisterDesignRole(TitleRole.id);
+    unregisterDesignRole(HeadingRole.id);
 
-    expect(DesignRolesStore.get(TitleRole.id)).toBeNull();
+    expect(DesignRolesStore.get(HeadingRole.id)).toBeNull();
   });
 
   it('dispatches a role unregistered event', async () =>
     new Promise<void>((done) => {
       // Listen for the role unregistered event
       Events.addListener(DesignRoleUnregisteredEvent, 'test', (payload) => {
-        expect(payload.data).toEqual(TitleRole);
+        expect(payload.data).toEqual(HeadingRole);
         done();
       });
 
-      unregisterDesignRole(TitleRole.id);
+      unregisterDesignRole(HeadingRole.id);
     }));
 
   it('throws when the role is not registered', () => {

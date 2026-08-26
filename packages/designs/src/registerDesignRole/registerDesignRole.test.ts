@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { DesignRolesStore } from '../DesignRolesStore';
 import { DesignRoleRegisteredEvent } from '../events';
-import { TitleRole } from '../roles';
+import { HeadingRole } from '../roles';
 import { cleanup, setup } from '../test-utils';
 import { registerDesignRole } from './registerDesignRole';
 
@@ -11,19 +11,19 @@ describe('registerDesignRole', () => {
   afterEach(cleanup);
 
   it('adds the role to the registry', () => {
-    registerDesignRole(TitleRole);
+    registerDesignRole(HeadingRole);
 
-    expect(DesignRolesStore.get(TitleRole.id)).toEqual(TitleRole);
+    expect(DesignRolesStore.get(HeadingRole.id)).toEqual(HeadingRole);
   });
 
   it('dispatches a role registered event', async () =>
     new Promise<void>((done) => {
       // Listen for the role registered event
       Events.addListener(DesignRoleRegisteredEvent, 'test', (payload) => {
-        expect(payload.data).toEqual(TitleRole);
+        expect(payload.data).toEqual(HeadingRole);
         done();
       });
 
-      registerDesignRole(TitleRole);
+      registerDesignRole(HeadingRole);
     }));
 });

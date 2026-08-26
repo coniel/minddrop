@@ -7,7 +7,7 @@ import { resolveRoleStyle } from './resolveRoleStyle';
 const role: DesignRoleConfig = {
   id: 'role',
   elementType: 'text',
-  label: 'designs.roles.title.label',
+  label: 'designs.roles.heading.label',
   icon: 'type',
   lockedStyle: { color: 'regular' },
   contextStyles: {

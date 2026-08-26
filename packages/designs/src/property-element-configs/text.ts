@@ -1,18 +1,5 @@
 import { PropertyElementConfig } from '../types';
-
-// The style keys text presentation variants offer for editing,
-// ported from the text value role
-const TextEditableStyles = [
-  'color',
-  'textAlign',
-  'textTransform',
-  'italic',
-  'truncate',
-  'marginTop',
-  'marginRight',
-  'marginBottom',
-  'marginLeft',
-];
+import { TypographyEditableStyles } from './typographyEditableStyles';
 
 /**
  * The text property element. Its presentation variants shift the
@@ -32,7 +19,7 @@ export const TextPropertyElementConfig: PropertyElementConfig = {
       renderer: 'text',
       sample: 'designs.propertyElements.samples.short',
       styleCategory: 'typography',
-      editableStyles: TextEditableStyles,
+      editableStyles: TypographyEditableStyles,
     },
     {
       id: 'long',
@@ -40,7 +27,7 @@ export const TextPropertyElementConfig: PropertyElementConfig = {
       renderer: 'text',
       sample: 'designs.propertyElements.samples.long',
       styleCategory: 'typography',
-      editableStyles: TextEditableStyles,
+      editableStyles: TypographyEditableStyles,
     },
     {
       id: 'subtitle',
@@ -49,7 +36,9 @@ export const TextPropertyElementConfig: PropertyElementConfig = {
       sample: 'designs.propertyElements.samples.subtitle',
       styleCategory: 'typography',
       // Subtitles never render italic, so the key is withheld
-      editableStyles: TextEditableStyles.filter((key) => key !== 'italic'),
+      editableStyles: TypographyEditableStyles.filter(
+        (key) => key !== 'italic',
+      ),
     },
     {
       id: 'caption',
@@ -57,7 +46,7 @@ export const TextPropertyElementConfig: PropertyElementConfig = {
       renderer: 'text',
       sample: 'designs.propertyElements.samples.caption',
       styleCategory: 'typography',
-      editableStyles: TextEditableStyles,
+      editableStyles: TypographyEditableStyles,
     },
     {
       id: 'quote',
@@ -65,7 +54,7 @@ export const TextPropertyElementConfig: PropertyElementConfig = {
       renderer: 'text',
       sample: 'designs.propertyElements.samples.quote',
       styleCategory: 'typography',
-      editableStyles: TextEditableStyles,
+      editableStyles: TypographyEditableStyles,
     },
   ],
 };

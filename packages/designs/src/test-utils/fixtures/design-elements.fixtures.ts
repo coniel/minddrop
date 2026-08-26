@@ -3,10 +3,15 @@ import {
   DatePropertyElement,
   DesignElement,
   EditorElement,
+  IconPropertyElement,
+  ImagePropertyElement,
   NumberPropertyElement,
   PropertyElement,
+  SelectPropertyElement,
   TextElement,
   TextPropertyElement,
+  TitlePropertyElement,
+  UrlPropertyElement,
 } from '../../design-element-configs';
 
 function generateTextElementFixture(version: number): TextElement {
@@ -65,3 +70,13 @@ export const element_property_number_1 =
   generatePropertyElementFixture<NumberPropertyElement>('number', 1);
 export const element_property_date_1 =
   generatePropertyElementFixture<DatePropertyElement>('date', 1);
+export const element_property_title_1 =
+  generatePropertyElementFixture<TitlePropertyElement>('title', 1);
+export const element_property_select_1 =
+  generatePropertyElementFixture<SelectPropertyElement>('select', 1);
+export const element_property_url_1 =
+  generatePropertyElementFixture<UrlPropertyElement>('url', 1);
+export const element_property_image_1 =
+  generatePropertyElementFixture<ImagePropertyElement>('image', 1);
+export const element_property_icon_1 =
+  generatePropertyElementFixture<IconPropertyElement>('icon', 1);

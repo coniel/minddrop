@@ -1110,20 +1110,11 @@
     "name": "Design",
     "new": "New design",
     "roles": {
-      "title": {
-        "label": "Title"
-      },
-      "subtitle": {
-        "label": "Subtitle"
-      },
       "heading": {
         "label": "Heading"
       },
       "label": {
         "label": "Label"
-      },
-      "text-value": {
-        "label": "Text value"
       },
       "content": {
         "label": "Content editor"
@@ -1139,10 +1130,6 @@
       "sm": "Small",
       "md": "Medium",
       "lg": "Large",
-      "plain": "Plain",
-      "description": "Description",
-      "caption": "Caption",
-      "quote": "Quote",
       "default": "Default",
       "regular": "Regular",
       "muted": "Muted",
@@ -1150,7 +1137,6 @@
     },
     "roleVariantAxes": {
       "size": "Size",
-      "appearance": "Style",
       "colour": "Colour"
     },
     "propertyElements": {
@@ -1160,14 +1146,35 @@
         "long": "Long value",
         "subtitle": "Subtitle",
         "caption": "Caption",
-        "quote": "Quote"
+        "quote": "Quote",
+        "sm": "Small",
+        "md": "Medium",
+        "lg": "Large",
+        "badges-sm": "Small badges",
+        "badges": "Badges",
+        "badges-lg": "Large badges",
+        "text": "Plain text",
+        "url-text": "Text",
+        "link": "Clickable link",
+        "webview": "Embedded page",
+        "image": "Image",
+        "viewer": "Image viewer"
+      },
+      "descriptions": {
+        "url-text": "The address itself, as plain text",
+        "link": "The address as a link, opening it when pressed",
+        "webview": "The page it points at, embedded in a frame",
+        "image": "A picture placed in the layout",
+        "viewer": "Fills its space, zoomable and pannable"
       },
       "samples": {
         "short": "Lorem ipsum",
         "long": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
         "subtitle": "Lorem ipsum dolor sit amet",
         "caption": "Lorem ipsum dolor sit amet",
-        "quote": "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+        "quote": "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+        "title": "Lorem ipsum dolor",
+        "select": "Lorem, Ipsum"
       }
     },
     "layouts": {
@@ -1611,17 +1618,17 @@
       "page-panel": "Panel",
       "text": "Text",
       "title": "Title",
-      "formatted-text": "Formatted text",
       "number": "Number",
       "date": "Date",
       "url": "URL",
       "image": "Image",
       "image-viewer": "Image viewer",
       "icon": "Icon",
-      "editor": "Editor",
       "badges": "Badges",
-      "property": "Property",
       "webview": "Web view",
+      "formatted-text": "Formatted text",
+      "editor": "Editor",
+      "property": "Property",
       "view": "View",
       "container-empty-hint": "Drop elements here",
       "group": {
