@@ -49,10 +49,15 @@ export function initializeDataViewsFeature(): VoidFunction {
   Events.addListener(OpenDataViewViewEvent, EventListenerId, ({ data }) => {
     const dataView = DataViews.get(data.dataViewId, false);
 
+    // Open the data view's view. The feature has no tab access, so
+    // new-tab opens fall back to in place, as do dialog and panel
     Events.dispatch(OpenViewEvent, {
+      viewAreaId: data.viewAreaId,
+      sourcePane: data.sourcePane,
       view: DataViewViewName,
       id: dataViewViewId(data.dataViewId),
       props: { dataViewId: data.dataViewId },
+      split: data.openMode === 'split',
       title: dataView?.name,
       icon: dataView?.icon,
     });
@@ -60,20 +65,30 @@ export function initializeDataViewsFeature(): VoidFunction {
 
   // Listen for open data views view events, and open the data
   // views list view when one is received
-  Events.addListener(OpenDataViewsViewEvent, EventListenerId, () => {
+  Events.addListener(OpenDataViewsViewEvent, EventListenerId, ({ data }) => {
+    // Open the data views list view. The feature has no tab access,
+    // so new-tab opens fall back to in place, as do dialog and panel
     Events.dispatch(OpenViewEvent, {
+      viewAreaId: data?.viewAreaId,
+      sourcePane: data?.sourcePane,
       view: DataViewsViewName,
       id: dataViewsViewId,
+      split: data?.openMode === 'split',
     });
   });
 
   // Listen for open new data view view events, and open the view
   // creation view when one is received
   Events.addListener(OpenNewDataViewViewEvent, EventListenerId, ({ data }) => {
+    // Open the view creation view. The feature has no tab access, so
+    // new-tab opens fall back to in place, as do dialog and panel
     Events.dispatch(OpenViewEvent, {
+      viewAreaId: data.viewAreaId,
+      sourcePane: data.sourcePane,
       view: NewDataViewViewName,
       id: NewDataViewViewId,
       props: { viewType: data.viewType },
+      split: data.openMode === 'split',
       title: i18n.t('dataViews.labels.new'),
       icon: NEW_DATA_VIEW_VIEW_ICON,
     });

@@ -1,11 +1,11 @@
 import { useCallback } from 'react';
-import { Events } from '@minddrop/events';
-import { BaseOpenViewEventData } from '../types';
+import { EventDataMap, Events } from '@minddrop/events';
+import { BaseOpenViewEventData, ViewOpenEventName } from '../types';
 import { useViewPane } from './useViewPane';
 
-export type OpenView = <TData>(
-  event: string,
-  data: TData & BaseOpenViewEventData,
+export type OpenView = <TEvent extends ViewOpenEventName>(
+  event: TEvent,
+  data: EventDataMap[TEvent],
 ) => void;
 
 /**
@@ -19,8 +19,13 @@ export type OpenView = <TData>(
 export function useOpenView(): OpenView {
   const pane = useViewPane();
 
-  return useCallback<OpenView>(
-    (event, data) => {
+  // The callback is typed loosely because the merged data cannot be
+  // related back to the generic event's data; the OpenView return
+  // type restores the typed signature
+  return useCallback(
+    (event: string, data: BaseOpenViewEventData) => {
+      // Dispatch the event, merging the pane under any values the
+      // caller set
       Events.dispatch(event, {
         ...data,
         viewAreaId: data.viewAreaId ?? pane?.viewAreaId,

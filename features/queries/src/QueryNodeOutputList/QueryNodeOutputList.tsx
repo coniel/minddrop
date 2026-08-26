@@ -3,7 +3,6 @@ import {
   DatabaseEntries,
   Databases,
   OpenDatabaseEntryViewEvent,
-  OpenDatabaseEntryViewEventData,
 } from '@minddrop/databases';
 import { Queries } from '@minddrop/queries';
 import {
@@ -137,7 +136,7 @@ const QueryNodeOutputListItem: React.FC<QueryNodeOutputListItemProps> = ({
 
   // Open the entry view
   function handleClick(): void {
-    openView<OpenDatabaseEntryViewEventData>(OpenDatabaseEntryViewEvent, {
+    openView(OpenDatabaseEntryViewEvent, {
       entryId,
     });
   }

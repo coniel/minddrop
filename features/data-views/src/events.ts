@@ -1,3 +1,5 @@
+import { BaseOpenViewEventData } from '@minddrop/views';
+
 export const EventListenerId = 'data-views-feature';
 export const OpenDataViewViewEvent = 'data-views:data-view-view:open';
 export const OpenDataViewsViewEvent = 'data-views:data-views-view:open';
@@ -10,14 +12,20 @@ export const NewDataViewViewName = 'data-views:view:new-data-view';
 // the view can close itself once the data view is created
 export const NewDataViewViewId = 'data-views:new-data-view';
 
-export interface OpenDataViewViewEventData {
+export interface OpenDataViewViewEventData extends BaseOpenViewEventData {
   /**
    * The ID of the data view to open.
    */
   dataViewId: string;
 }
 
-export interface OpenNewDataViewViewEventData {
+/**
+ * Data of the open data views view event, carrying only the pane
+ * fields.
+ */
+export type OpenDataViewsViewEventData = BaseOpenViewEventData;
+
+export interface OpenNewDataViewViewEventData extends BaseOpenViewEventData {
   /**
    * The type of data view to create.
    */
@@ -27,7 +35,7 @@ export interface OpenNewDataViewViewEventData {
 declare module '@minddrop/events/EventDataMap' {
   interface EventDataMap {
     'data-views:data-view-view:open': OpenDataViewViewEventData;
-    'data-views:data-views-view:open': void;
+    'data-views:data-views-view:open': OpenDataViewsViewEventData;
     'data-views:new-data-view-view:open': OpenNewDataViewViewEventData;
   }
 }

@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useOpenView } from '../ViewPaneContext';
-import { SetSubviewEvent, SetSubviewEventData } from '../events';
+import { SetSubviewEvent } from '../events';
 import { SubviewDescriptor } from '../types';
 
 export type SetSubview = (
@@ -21,7 +21,7 @@ export function useSetSubview(): SetSubview {
 
   return useCallback<SetSubview>(
     (subview, options) => {
-      openView<SetSubviewEventData>(SetSubviewEvent, {
+      openView(SetSubviewEvent, {
         subview,
         replace: options?.replace,
       });

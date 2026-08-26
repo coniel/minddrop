@@ -14,6 +14,7 @@ import { OpenNewSpaceDialogEvent, OpenSpaceViewEvent } from './events';
 export const SpacesView: React.FC = () => {
   const [query, setQuery] = useState('');
   const subview = Views.useSubview();
+  const openView = Views.useOpenView();
   const spaces = Spaces.useAll();
   const selectedSpace = Spaces.use(subview?.id ?? '');
 
@@ -37,7 +38,7 @@ export const SpacesView: React.FC = () => {
 
   // Open the selected space in a view of its own
   function handleExpandSpace() {
-    Events.dispatch(OpenSpaceViewEvent, {
+    openView(OpenSpaceViewEvent, {
       spaceId: selectedSpace?.id ?? '',
     });
   }

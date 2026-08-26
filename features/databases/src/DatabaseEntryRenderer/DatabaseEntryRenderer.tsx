@@ -31,10 +31,7 @@ import {
 import { setDragPreview } from '@minddrop/utils';
 import { Views } from '@minddrop/views';
 import { DatabaseEntryOptionsMenu } from '../DatabaseEntryOptionsMenu';
-import {
-  OpenDatabaseEntryViewEvent,
-  OpenDatabaseEntryViewEventData,
-} from '../events';
+import { OpenDatabaseEntryViewEvent } from '../events';
 import './DatabaseEntryRenderer.css';
 
 export interface DatabaseEntryRendererProps {
@@ -228,7 +225,7 @@ const Entry: React.FC<EntryProps> = ({
       return;
     }
 
-    openView<OpenDatabaseEntryViewEventData>(OpenDatabaseEntryViewEvent, {
+    openView(OpenDatabaseEntryViewEvent, {
       entryId: entry.id,
     });
   }, [entry.id, onClick, openView]);

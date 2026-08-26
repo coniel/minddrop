@@ -9,7 +9,6 @@ import { Views } from '@minddrop/views';
 import {
   CloseDatabaseEntryDialogEvent,
   OpenDatabaseViewEvent,
-  OpenDatabaseViewEventData,
 } from '../events';
 
 export interface DatabaseEntryOptionsMenuProps {
@@ -66,7 +65,7 @@ export const DatabaseEntryOptionsMenu: React.FC<
     // Close the entry dialog if open
     Events.dispatch(CloseDatabaseEntryDialogEvent);
 
-    openView<OpenDatabaseViewEventData>(OpenDatabaseViewEvent, {
+    openView(OpenDatabaseViewEvent, {
       databaseId: entry.database,
     });
   }, [entryId, openView]);

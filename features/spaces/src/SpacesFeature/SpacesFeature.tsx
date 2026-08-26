@@ -4,6 +4,7 @@ import { Tabs } from '@minddrop/feature-views';
 import { SpaceDeletedEvent, SpaceUpdatedEvent, Spaces } from '@minddrop/spaces';
 import {
   CloseViewEvent,
+  DefaultViewAreaId,
   OpenViewEvent,
   UpdateViewEvent,
 } from '@minddrop/views';
@@ -57,10 +58,20 @@ export const SpacesFeature: React.FC = () => {
     Events.addListener(OpenSpaceViewEvent, EventListenerId, ({ data }) => {
       const space = Spaces.get(data.spaceId, false);
 
+      // Open a blank tab to receive the space view
+      if (data.openMode === 'new-tab') {
+        Tabs.newTab(data.viewAreaId ?? DefaultViewAreaId);
+      }
+
+      // Open the space view, which has no dialog or panel
+      // presentation and so opens in place for those modes
       Events.dispatch(OpenViewEvent, {
+        viewAreaId: data.viewAreaId,
+        sourcePane: data.sourcePane,
         view: SpaceViewName,
         id: spaceViewId(data.spaceId),
         props: { spaceId: data.spaceId },
+        split: data.openMode === 'split',
         title: space?.name,
         icon: space?.icon,
       });
@@ -68,10 +79,20 @@ export const SpacesFeature: React.FC = () => {
 
     // Listen for open spaces view events, and open the spaces
     // list view when one is received
-    Events.addListener(OpenSpacesViewEvent, EventListenerId, () => {
+    Events.addListener(OpenSpacesViewEvent, EventListenerId, ({ data }) => {
+      // Open a blank tab to receive the spaces view
+      if (data?.openMode === 'new-tab') {
+        Tabs.newTab(data.viewAreaId ?? DefaultViewAreaId);
+      }
+
+      // Open the spaces list view, which has no dialog or panel
+      // presentation and so opens in place for those modes
       Events.dispatch(OpenViewEvent, {
+        viewAreaId: data?.viewAreaId,
+        sourcePane: data?.sourcePane,
         view: SpacesViewName,
         id: spacesViewId,
+        split: data?.openMode === 'split',
       });
     });
 

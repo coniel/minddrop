@@ -8,10 +8,16 @@ import { useOpenView } from './useOpenView';
 const TestOpenEvent = 'test:view:open';
 const ListenerId = 'use-open-view-test';
 
+// Data of the test open event, carrying a field of its own
+// alongside the pane fields
+interface TestOpenEventData extends BaseOpenViewEventData {
+  entryId: string;
+}
+
 // Register the test event so the captured data is typed
 declare module '@minddrop/events/EventDataMap' {
   interface EventDataMap {
-    'test:view:open': BaseOpenViewEventData;
+    'test:view:open': TestOpenEventData;
   }
 }
 

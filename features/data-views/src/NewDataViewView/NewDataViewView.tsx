@@ -2,7 +2,7 @@ import { DataView, DataViewTypes } from '@minddrop/data-views';
 import { Events } from '@minddrop/events';
 import { PanelView } from '@minddrop/ui-components';
 import { UiIconName } from '@minddrop/ui-icons';
-import { CloseViewEvent } from '@minddrop/views';
+import { CloseViewEvent, Views } from '@minddrop/views';
 import { DataViewRenderer } from '../DataViewRenderer';
 import { NewDataViewViewId, OpenDataViewViewEvent } from '../events';
 import './NewDataViewView.css';
@@ -22,10 +22,11 @@ export const NewDataViewView: React.FC<NewDataViewViewProps> = ({
   viewType,
 }) => {
   const viewTypeConfig = DataViewTypes.use(viewType);
+  const openView = Views.useOpenView();
 
   // Open the created data view's view and close this one
   function handleCreateView(view: DataView) {
-    Events.dispatch(OpenDataViewViewEvent, {
+    openView(OpenDataViewViewEvent, {
       dataViewId: view.id,
     });
 

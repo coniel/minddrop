@@ -1,3 +1,4 @@
+import { EventDataMap } from '@minddrop/events';
 import { ViewPane } from './ViewPane.types';
 
 /**
@@ -30,3 +31,14 @@ export interface BaseOpenViewEventData {
    */
   sourcePane?: ViewPane;
 }
+
+/**
+ * The names of registered events which open a view. An event is
+ * openable exactly when its data extends `BaseOpenViewEventData`,
+ * which is how it declares it accepts a target pane.
+ */
+export type ViewOpenEventName = {
+  [TEvent in keyof EventDataMap]: EventDataMap[TEvent] extends BaseOpenViewEventData
+    ? TEvent
+    : never;
+}[keyof EventDataMap];

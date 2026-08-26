@@ -5,7 +5,6 @@ import {
   DatabaseEntries,
   Databases,
   OpenDatabaseEntryViewEvent,
-  OpenDatabaseEntryViewEventData,
 } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
 import { OpenDataViewViewEvent } from '@minddrop/feature-data-views';
@@ -300,7 +299,7 @@ const CollectionItem: React.FC<CollectionItemProps> = ({
 
   // Open the entry, using its database's configured open mode
   function handleOpenEntry() {
-    openView<OpenDatabaseEntryViewEventData>(OpenDatabaseEntryViewEvent, {
+    openView(OpenDatabaseEntryViewEvent, {
       entryId: itemId,
     });
   }

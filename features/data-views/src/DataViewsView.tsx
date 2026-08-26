@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react';
 import { DataView, DataViews } from '@minddrop/data-views';
-import { Events } from '@minddrop/events';
 import {
   AddDataViewMenu,
   ListPanelView,
@@ -19,6 +18,7 @@ import { OpenDataViewViewEvent, OpenNewDataViewViewEvent } from './events';
 export const DataViewsView: React.FC = () => {
   const [query, setQuery] = useState('');
   const subview = Views.useSubview();
+  const openView = Views.useOpenView();
   const dataViews = DataViews.useAll();
   const selectedDataView = DataViews.use(subview?.id ?? '');
 
@@ -46,14 +46,14 @@ export const DataViewsView: React.FC = () => {
 
   // Open the new data view view for the selected view type
   function handleSelectViewType(viewType: string) {
-    Events.dispatch(OpenNewDataViewViewEvent, {
+    openView(OpenNewDataViewViewEvent, {
       viewType,
     });
   }
 
   // Open the selected data view in a view of its own
   function handleExpandDataView() {
-    Events.dispatch(OpenDataViewViewEvent, {
+    openView(OpenDataViewViewEvent, {
       dataViewId: selectedDataView?.id ?? '',
     });
   }
