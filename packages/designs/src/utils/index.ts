@@ -6,6 +6,7 @@ export * from './resolveDesignMediaDirPath';
 export * from './elementTitleBindingId';
 export * from './isRoleElement';
 export * from './isPropertyElement';
+export * from './isEditorVariantElement';
 export * from './resolveElementStyle';
 export * from './resolveRoleStyle';
 export * from './resolvePropertyElementStyle';

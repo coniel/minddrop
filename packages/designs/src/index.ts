@@ -15,6 +15,7 @@ export { BuiltInDesignRoles } from './roles';
 export {
   isRoleElement,
   isPropertyElement,
+  isEditorVariantElement,
   resolveElementStyle,
   resolveRoleStyle,
   resolvePropertyElementStyle,

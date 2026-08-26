@@ -14,6 +14,7 @@ describe('property element configs', () => {
     expect(propertyTypes).toEqual([
       'title',
       'text',
+      'formatted-text',
       'number',
       'date',
       'select',
@@ -52,9 +53,13 @@ describe('property element configs', () => {
   });
 
   it('gives every text-like variant an explicit font size', () => {
+    // Every category rendering the value as text, including the
+    // editing ones
+    const textCategories = ['typography', 'field', 'editor'];
+
     getPropertyElementConfigs().forEach((config) => {
       config.variants
-        .filter((variant) => variant.styleCategory === 'typography')
+        .filter((variant) => textCategories.includes(variant.styleCategory))
         .forEach((variant) => {
           // Nothing depends on what the surrounding context
           // happens to cascade

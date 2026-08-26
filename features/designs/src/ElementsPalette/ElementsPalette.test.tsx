@@ -30,7 +30,6 @@ describe('<ElementsPalette />', () => {
     // Roles offered on cards are listed
     screen.getByText('designs.roles.heading.label');
     screen.getByText('designs.roles.label.label');
-    screen.getByText('designs.roles.content.label');
   });
 
   it('excludes roles restricted away from the active layout', () => {
@@ -45,11 +44,8 @@ describe('<ElementsPalette />', () => {
     // The heading role is offered everywhere
     screen.getByText('designs.roles.heading.label');
 
-    // The content roles restrict themselves away from list layouts
-    expect(screen.queryByText('designs.roles.content.label')).toBeNull();
-    expect(
-      screen.queryByText('designs.roles.content-display.label'),
-    ).toBeNull();
+    // The content region restricts itself away from list layouts
+    expect(screen.queryByText('designs.roles.page-content.label')).toBeNull();
   });
 
   it('names the role group after the active layout type', () => {

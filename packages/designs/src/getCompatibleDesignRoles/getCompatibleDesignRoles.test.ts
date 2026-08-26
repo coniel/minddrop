@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { ContentRole, HeadingRole, LabelRole } from '../roles';
+import { HeadingRole, LabelRole, PageContentRole } from '../roles';
 import { cleanup, setup } from '../test-utils';
 import { getCompatibleDesignRoles } from './getCompatibleDesignRoles';
 
@@ -13,8 +13,8 @@ describe('getCompatibleDesignRoles', () => {
       layoutType: 'list',
     });
 
-    // The content roles restrict themselves away from list layouts
-    expect(roles).not.toContain(ContentRole);
+    // The content region restricts itself to page-like layouts
+    expect(roles).not.toContain(PageContentRole);
     expect(roles).toContain(HeadingRole);
     expect(roles).toContain(LabelRole);
   });
@@ -30,11 +30,11 @@ describe('getCompatibleDesignRoles', () => {
   });
 
   it('does not exclude on unset filter axes', () => {
-    // A filter with only a layout type must not exclude roles
-    // restricted on other axes
-    const roles = getCompatibleDesignRoles({ layoutType: 'page' });
+    // A filter without a layout type must not exclude roles
+    // restricted on the layout type axis
+    const roles = getCompatibleDesignRoles({ designType: 'database' });
 
-    expect(roles).toContain(ContentRole);
+    expect(roles).toContain(PageContentRole);
   });
 
   it('excludes roles restricted to a parent role when none is given', () => {

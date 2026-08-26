@@ -1,21 +1,22 @@
-import { FormattedTextElement } from '@minddrop/designs';
+import { FormattedTextPropertyElement } from '@minddrop/designs';
 import { useElementProperty } from '../../DesignPropertiesProvider';
 import { useElementCssStyle } from '../../useElementCssStyle';
 import { useElementPlaceholder } from '../../useElementPlaceholder';
 
-export interface FormattedTextDesignElementProps {
+export interface FormattedTextPropertyRendererProps {
   /**
-   * The formatted text element to render.
+   * The formatted text property element to render.
    */
-  element: FormattedTextElement;
+  element: FormattedTextPropertyElement;
 }
 
 /**
- * Display renderer for a formatted text design element.
- * Shows the mapped property value as static text.
+ * Display renderer for a formatted text property element. Shows
+ * the bound property value as static text when available,
+ * otherwise falls back to the resolved placeholder text.
  */
-export const FormattedTextDesignElement: React.FC<
-  FormattedTextDesignElementProps
+export const FormattedTextPropertyRenderer: React.FC<
+  FormattedTextPropertyRendererProps
 > = ({ element }) => {
   const property = useElementProperty(element.id);
   const placeholder = useElementPlaceholder(element);

@@ -1,37 +1,39 @@
 import { useCallback, useRef } from 'react';
 import {
-  EditorElement,
+  EditorStyle,
+  FormattedTextPropertyElement,
   createEditorTitleCss,
   elementTitleBindingId,
   resolveElementStyle,
 } from '@minddrop/designs';
 import { MarkdownEditor } from '@minddrop/feature-markdown-editor';
-import { useDesignPreview } from '../../DesignElements';
-import { useElementProperty } from '../../DesignPropertiesProvider';
-import { useLayoutAutoFocus } from '../../LayoutAutoFocusContext';
-import { useLayoutType } from '../../LayoutTypeContext';
-import { useElementPlaceholder } from '../../useElementPlaceholder';
-import './EditorDesignElement.css';
-import { useElementCssStyle } from '../../useElementCssStyle';
+import { useDesignPreview } from '../../../DesignElements';
+import { useElementProperty } from '../../../DesignPropertiesProvider';
+import { useLayoutAutoFocus } from '../../../LayoutAutoFocusContext';
+import { useLayoutType } from '../../../LayoutTypeContext';
+import { useElementCssStyle } from '../../../useElementCssStyle';
+import { useElementPlaceholder } from '../../../useElementPlaceholder';
+import './EditorPropertyRenderer.css';
 
-export interface EditorDesignElementProps {
+export interface EditorPropertyRendererProps {
   /**
-   * The editor element to render.
+   * The formatted text property element to render.
    */
-  element: EditorElement;
+  element: FormattedTextPropertyElement;
 }
 
 /**
- * Display renderer for an editor design element.
+ * Editor renderer for a formatted text property element.
  * Renders a MarkdownEditor with the mapped property value and,
  * when a title property is bound, the mapped title as the
  * editor's title block. In preview mode, the editor renders
- * read-only and non-interactive.
+ * read-only and non-interactive, showing the element's resolved
+ * placeholder as sample body content.
  *
  * The title block always renders when a title property is bound,
  * showing the editor's own untitled placeholder for unset values.
  */
-export const EditorDesignElement: React.FC<EditorDesignElementProps> = ({
+export const EditorPropertyRenderer: React.FC<EditorPropertyRendererProps> = ({
   element,
 }) => {
   // Result of the one-time layout autofocus claim, null until
@@ -49,19 +51,30 @@ export const EditorDesignElement: React.FC<EditorDesignElementProps> = ({
   }
 
   const titleProperty = useElementProperty(elementTitleBindingId(element.id));
+  // Sample body content shown in studio previews
+  const placeholder = useElementPlaceholder(element);
   // Sample title text shown in studio previews
   const titlePlaceholder = useElementPlaceholder({
-    type: 'editor',
+    type: element.type,
+    propertyType: element.propertyType,
     property: element.titleProperty,
   });
 
-  // The surrounding layout's type, which role styles resolve against
+  // The surrounding layout's type, which theme styles resolve
+  // against
   const layoutType = useLayoutType();
-  // Resolve the element's style with its role styles applied
-  const style = resolveElementStyle(element, layoutType ?? undefined);
+  // Resolve the element's style with its variant theme styles
+  // applied; the editor variant styles through the editor shape
+  const style = resolveElementStyle(
+    element,
+    layoutType ?? undefined,
+  ) as EditorStyle;
 
-  // Use the mapped property value if available
-  const value = property?.value != null ? String(property.value) : undefined;
+  // Use the mapped property value if available, falling back to
+  // the resolved placeholder as sample body content in previews
+  const boundValue =
+    property?.value != null ? String(property.value) : undefined;
+  const value = preview ? (boundValue ?? placeholder) : boundValue;
 
   // The bound title value, when set
   const boundTitle =
@@ -128,7 +141,10 @@ export const EditorDesignElement: React.FC<EditorDesignElementProps> = ({
 
   return (
     <div className="designs-editor-element" style={containerStyle}>
+      {/** The editor captures whether it has a title block on
+       * mount, so a changed title binding remounts it **/}
       <MarkdownEditor
+        key={element.titleProperty ?? 'no-title'}
         initialValue={value}
         title={title}
         titleStyle={

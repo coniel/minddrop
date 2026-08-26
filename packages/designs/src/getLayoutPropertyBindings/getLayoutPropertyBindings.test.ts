@@ -1,11 +1,15 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { EditorElement, TextElement } from '../design-element-configs';
+import {
+  FormattedTextPropertyElement,
+  TextElement,
+} from '../design-element-configs';
 import { DesignFixtures, cleanup, setup } from '../test-utils';
 import { Layout } from '../types';
 import { elementTitleBindingId } from '../utils';
 import { getLayoutPropertyBindings } from './getLayoutPropertyBindings';
 
-const { layout_card_1, element_text_1, element_editor_1 } = DesignFixtures;
+const { layout_card_1, element_text_1, element_property_formatted_text_1 } =
+  DesignFixtures;
 
 describe('getLayoutPropertyBindings', () => {
   beforeEach(setup);
@@ -39,8 +43,8 @@ describe('getLayoutPropertyBindings', () => {
   });
 
   it('collects editor title bindings under the title binding ID', () => {
-    const editor: EditorElement = {
-      ...element_editor_1,
+    const editor: FormattedTextPropertyElement = {
+      ...element_property_formatted_text_1,
       property: 'Body',
       titleProperty: 'Title',
     };

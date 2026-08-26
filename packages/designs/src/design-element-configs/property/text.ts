@@ -1,8 +1,10 @@
-import { TypographyStyle } from '../../styles';
+import { FieldStyle, TypographyStyle } from '../../styles';
 import { PropertyElementBase } from './base';
 
 /**
- * A property element rendering a text property.
+ * A property element rendering a text property. The style shape
+ * follows the selected variant: the display presentations take
+ * typography, the field editors the field style.
  */
 export interface TextPropertyElement extends PropertyElementBase {
   propertyType: 'text';
@@ -10,5 +12,5 @@ export interface TextPropertyElement extends PropertyElementBase {
   /**
    * The element style.
    */
-  style: TypographyStyle;
+  style: TypographyStyle | FieldStyle;
 }

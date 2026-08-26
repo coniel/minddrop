@@ -102,6 +102,66 @@ export const DefaultDesignTheme: DesignTheme = {
           list: { fontSize: 'sm', truncate: 1 },
         },
       },
+      // A single-line input in the standard field chrome: a quiet
+      // outline, gently rounded, padded to clear the text
+      field: {
+        style: {
+          fontSize: 'base',
+          lineHeight: 'none',
+          borderStyle: 'solid',
+          borderEmphasis: 'subtle',
+          borderRadius: 'sm',
+          paddingTop: '1',
+          paddingRight: '2',
+          paddingBottom: '1',
+          paddingLeft: '2',
+        },
+        contextStyles: {
+          list: { fontSize: 'sm', paddingTop: '0-5', paddingBottom: '0-5' },
+        },
+      },
+      // The same field grown to a textarea, at a reading line
+      // height for the multi-line value inside it
+      'multiline-field': {
+        style: {
+          fontSize: 'base',
+          lineHeight: 'normal',
+          borderStyle: 'solid',
+          borderEmphasis: 'subtle',
+          borderRadius: 'sm',
+          paddingTop: '1',
+          paddingRight: '2',
+          paddingBottom: '1',
+          paddingLeft: '2',
+        },
+        contextStyles: {
+          list: { fontSize: 'sm' },
+        },
+      },
+    },
+    'formatted-text': {
+      // The content document opened for writing: compact on cards,
+      // reading length on the pages and spaces it opens in. The
+      // editor's blocks read at the normal line height throughout.
+      editor: {
+        style: { fontSize: 'base', lineHeight: 'normal' },
+        contextStyles: {
+          card: { fontSize: 'sm' },
+          page: { fontSize: 'md', maxWidth: 'content' },
+          space: { fontSize: 'md', maxWidth: 'content' },
+        },
+      },
+      // The same document rendered read-only, on the same sizes
+      // and line height so switching between the two does not
+      // reflow the layout
+      display: {
+        style: { fontSize: 'base', lineHeight: 'normal' },
+        contextStyles: {
+          card: { fontSize: 'sm' },
+          page: { fontSize: 'md', maxWidth: 'content' },
+          space: { fontSize: 'md', maxWidth: 'content' },
+        },
+      },
     },
     // A number reads as a single-line value, sized to the layout
     // it is placed in

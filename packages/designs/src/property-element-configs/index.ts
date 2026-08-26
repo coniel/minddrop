@@ -1,5 +1,6 @@
 export * from './title';
 export * from './text';
+export * from './formatted-text';
 export * from './number';
 export * from './date';
 export * from './select';
@@ -7,4 +8,5 @@ export * from './url';
 export * from './image';
 export * from './icon';
 export * from './typographyEditableStyles';
+export * from './fieldEditableStyles';
 export * from './registry';

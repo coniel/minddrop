@@ -12,8 +12,7 @@ export interface RolePaletteItemProps {
 
 /**
  * Renders a draggable palette item for a design role. Dropping it
- * inserts an element playing the role, auto-bound to a compatible
- * design property.
+ * inserts an element playing the role.
  */
 export const RolePaletteItem: React.FC<RolePaletteItemProps> = ({ role }) => {
   const { draggableProps } = useDraggable({
@@ -26,7 +25,6 @@ export const RolePaletteItem: React.FC<RolePaletteItemProps> = ({ role }) => {
     <PaletteItem
       icon={role.icon}
       label={role.label}
-      compatiblePropertyTypes={role.bindsPropertyTypes}
       draggableProps={draggableProps}
     />
   );

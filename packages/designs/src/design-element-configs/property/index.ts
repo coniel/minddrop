@@ -1,6 +1,7 @@
 export * from './base';
 export * from './title';
 export * from './text';
+export * from './formatted-text';
 export * from './number';
 export * from './date';
 export * from './select';

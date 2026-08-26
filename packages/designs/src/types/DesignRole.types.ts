@@ -1,5 +1,4 @@
 import type { TranslationKey } from '@minddrop/i18n';
-import type { PropertyType } from '@minddrop/properties';
 import type { UiIconName } from '@minddrop/ui-icons';
 import type { DesignElementStyle } from '../styles';
 import type { ElementContext } from './DesignElementConfig.types';
@@ -150,14 +149,6 @@ export interface DesignRoleConfig {
    * data.
    */
   supportsStaticContent?: boolean;
-
-  /**
-   * Property types the role auto-binds to on insertion, resolved
-   * against the design's property schema. Binding priority follows
-   * the array order: earlier types are tried first. Omitted for
-   * structural roles.
-   */
-  bindsPropertyTypes?: readonly PropertyType[];
 
   /**
    * Whether the role marks a structural region created by its

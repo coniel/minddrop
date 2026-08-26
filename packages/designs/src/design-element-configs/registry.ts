@@ -3,8 +3,6 @@ import { InvalidParameterError } from '@minddrop/utils';
 import type { DesignElementConfig } from '../types';
 import type { DesignElementType } from './DesignElement.types';
 import { ContainerElementConfig } from './container';
-import { EditorElementConfig } from './editor';
-import { FormattedTextElementConfig } from './formatted-text';
 import { PagePanelElementConfig } from './page-panel';
 import { PropertyElementTypeConfig } from './property';
 import { RootElementConfig } from './root';
@@ -16,8 +14,6 @@ import { ViewElementConfig } from './view';
  */
 const elementConfigs: DesignElementConfig[] = [
   TextElementConfig,
-  FormattedTextElementConfig,
-  EditorElementConfig,
   ViewElementConfig,
   PropertyElementTypeConfig,
   ContainerElementConfig,

@@ -1117,12 +1117,6 @@
       "label": {
         "label": "Label"
       },
-      "content": {
-        "label": "Content editor"
-      },
-      "content-display": {
-        "label": "Content display"
-      },
       "page-content": {
         "label": "Content region"
       }
@@ -1159,14 +1153,22 @@
         "link": "Clickable link",
         "webview": "Embedded page",
         "image": "Image",
-        "viewer": "Image viewer"
+        "viewer": "Image viewer",
+        "field": "Text field",
+        "multiline-field": "Multiline field",
+        "editor": "Editor",
+        "display": "Display"
       },
       "descriptions": {
         "url-text": "The address itself, as plain text",
         "link": "The address as a link, opening it when pressed",
         "webview": "The page it points at, embedded in a frame",
         "image": "A picture placed in the layout",
-        "viewer": "Fills its space, zoomable and pannable"
+        "viewer": "Fills its space, zoomable and pannable",
+        "field": "A single-line input, edited in place",
+        "multiline-field": "A multi-line text area, edited in place",
+        "editor": "The content document, written in a rich editor",
+        "display": "The content document, rendered read-only"
       },
       "samples": {
         "short": "Lorem ipsum",
@@ -1175,7 +1177,9 @@
         "caption": "Lorem ipsum dolor sit amet",
         "quote": "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
         "title": "Lorem ipsum dolor",
-        "select": "Lorem, Ipsum"
+        "select": "Lorem, Ipsum",
+        "field": "Lorem ipsum",
+        "multiline-field": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
       }
     },
     "layouts": {

@@ -2,6 +2,7 @@ import { BadgeStyle } from './BadgeStyle';
 import { ContainerStyle } from './ContainerStyle';
 import { EditorStyle } from './EditorStyle';
 import { EmbedStyle } from './EmbedStyle';
+import { FieldStyle } from './FieldStyle';
 import { IconStyle } from './IconStyle';
 import { ImageStyle } from './ImageStyle';
 import { RootStyle } from './RootStyle';
@@ -18,7 +19,8 @@ export type DesignElementStyle =
   | ImageStyle
   | IconStyle
   | EmbedStyle
-  | EditorStyle;
+  | EditorStyle
+  | FieldStyle;
 
 /**
  * The style category determining which style shape an element type
@@ -31,4 +33,5 @@ export type StyleCategory =
   | 'image'
   | 'icon'
   | 'embed'
-  | 'editor';
+  | 'editor'
+  | 'field';

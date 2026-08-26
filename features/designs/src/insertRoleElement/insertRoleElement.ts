@@ -4,8 +4,7 @@ import { FlatDesignElement } from '../types';
 import { isStudioRootPanelled } from '../utils';
 
 /**
- * Inserts a new element playing the given role into a layout,
- * auto-bound to the first compatible unbound design property, and
+ * Inserts a new element playing the given role into a layout and
  * selects it. Does nothing when the role's layout or design cannot
  * be resolved.
  *
@@ -32,9 +31,7 @@ export function insertRoleElement(
   // Fall back to the active layout when no layout is given
   const resolvedLayoutId = layoutId ?? studio.getActiveLayoutId();
 
-  // Auto-binding needs the layout's existing bindings, taken from
-  // the live elements so that properties bound since the last save
-  // are already counted as taken
+  // Guard against inserting into a layout which no longer exists
   const layout = studio.getLiveLayout(resolvedLayoutId ?? undefined);
 
   if (!layout) {
@@ -46,9 +43,8 @@ export function insertRoleElement(
     return;
   }
 
-  // Instantiate the role's element type, auto-bound to a compatible
-  // unbound property
-  const element = createRoleElement(roleId, design, layout);
+  // Instantiate the role's element type
+  const element = createRoleElement(roleId);
 
   // Flatten the new element for the studio's element map. Newly
   // created container elements are always empty.

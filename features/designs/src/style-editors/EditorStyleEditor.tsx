@@ -4,7 +4,16 @@ import {
   FontFamilyTokens,
   TypographyStyle,
 } from '@minddrop/designs';
+import {
+  useDesignStudio,
+  useDesignStudioStore,
+  useElement,
+} from '../DesignStudioStore';
 import { BorderFields, BorderStyleKeys } from './BorderFields';
+import {
+  ElementTitlePropertyField,
+  TitleCompatiblePropertyTypes,
+} from './ElementTitlePropertyField';
 import {
   MarginSides,
   MarginStyleKeys,
@@ -26,16 +35,67 @@ import { useStyleEditor } from './useStyleEditor';
 
 /**
  * Renders the style editor for rich content editors: the body
- * type and frame, plus a nested type editor for the title bar
- * above the content.
+ * type and frame, plus a Title section binding a property as the
+ * title bar above the content and styling its typography.
  */
 export const EditorStyleEditor: React.FC<StyleEditorProps> = ({
   elementId,
 }) => {
+  const studio = useDesignStudio();
+  const properties = useDesignStudioStore((state) => {
+    // Only database designs carry a property schema
+    if (state.design?.type !== 'database') {
+      return [];
+    }
+
+    return state.design.properties;
+  });
+  const element = useElement(elementId);
   const editor = useStyleEditor(elementId);
   const { isEditable, getValue, setValue, editableSides } = editor;
 
   const title = getValue<TypographyStyle>('title');
+
+  // Whether the element has a bound title property, which keeps
+  // the Title section open alongside its style values
+  const hasTitleBinding = Boolean(
+    element && 'titleProperty' in element && element.titleProperty,
+  );
+
+  // Bind a default title property when the Title section is
+  // opened without a binding, so opening it shows a title bar
+  function handleTitleOpen() {
+    // Leave existing bindings untouched
+    if (!element || hasTitleBinding) {
+      return;
+    }
+
+    // Prefer the design's title property, falling back to the
+    // first text property
+    const defaultProperty =
+      properties.find((property) => property.type === 'title') ||
+      properties.find((property) =>
+        TitleCompatiblePropertyTypes.includes(property.type),
+      );
+
+    if (defaultProperty) {
+      studio.updateDesignElement(elementId, {
+        titleProperty: defaultProperty.name,
+      });
+    }
+  }
+
+  // Unbind the title property when the Title section is cleared,
+  // by element replacement since a merge cannot unset a field
+  function handleTitleClear() {
+    if (!element || !('titleProperty' in element) || !element.titleProperty) {
+      return;
+    }
+
+    const { titleProperty: _removed, ...unboundElement } = element;
+
+    studio.setDesignElement(elementId, unboundElement);
+  }
 
   // Write a single key of the nested title style, dropping the
   // title style entirely once none of its values remain set
@@ -73,6 +133,27 @@ export const EditorStyleEditor: React.FC<StyleEditorProps> = ({
 
   return (
     <>
+      {isEditable('title') && (
+        <StyleSection
+          label={sectionLabelKey('title')}
+          keys={TypographyStyleKeys}
+          isEditable={isTitleEditable}
+          getValue={getTitleValue}
+          setValue={setTitleValue}
+          hasCustomValues={hasTitleBinding}
+          onOpen={handleTitleOpen}
+          onClear={handleTitleClear}
+        >
+          <ElementTitlePropertyField elementId={elementId} />
+          <TypographyFields
+            isEditable={isTitleEditable}
+            getValue={getTitleValue}
+            setValue={setTitleValue}
+            showTruncate={false}
+          />
+        </StyleSection>
+      )}
+
       <StyleSection
         label={sectionLabelKey('typography')}
         keys={['fontFamily', 'color']}
@@ -95,23 +176,6 @@ export const EditorStyleEditor: React.FC<StyleEditorProps> = ({
         )}
         <TextColourFields editor={editor} />
       </StyleSection>
-
-      {isEditable('title') && (
-        <StyleSection
-          label={sectionLabelKey('title')}
-          keys={TypographyStyleKeys}
-          isEditable={isEditable}
-          getValue={getTitleValue}
-          setValue={setTitleValue}
-        >
-          <TypographyFields
-            isEditable={isTitleEditable}
-            getValue={getTitleValue}
-            setValue={setTitleValue}
-            showTruncate={false}
-          />
-        </StyleSection>
-      )}
 
       <StyleSection
         label={sectionLabelKey('border')}

@@ -1,8 +1,6 @@
 import {
   ContainerElement,
   DatePropertyElement,
-  EditorElement,
-  FormattedTextElement,
   LeafDesignElement,
   NumberPropertyElement,
   PagePanelElement,
@@ -29,8 +27,6 @@ export type FlatPagePanelDesignElement = Omit<PagePanelElement, 'children'> &
 export type FlatLeafDesignElement = LeafDesignElement & Parent;
 
 export type FlatTextElement = TextElement & Parent;
-export type FlatFormattedTextElement = FormattedTextElement & Parent;
-export type FlatEditorElement = EditorElement & Parent;
 export type FlatViewElement = ViewElement & Parent;
 export type FlatPropertyElement = PropertyElement & Parent;
 export type FlatNumberPropertyElement = NumberPropertyElement & Parent;

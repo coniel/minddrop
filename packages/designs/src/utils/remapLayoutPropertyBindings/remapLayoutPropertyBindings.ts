@@ -47,8 +47,8 @@ function remapElement(
     property: remapBinding(element.property, propertyName, newPropertyName),
   };
 
-  // Remap the editor element's title binding
-  if (remapped.type === 'editor') {
+  // Remap the title binding of elements with a title block
+  if ('titleProperty' in remapped) {
     remapped.titleProperty = remapBinding(
       remapped.titleProperty,
       propertyName,

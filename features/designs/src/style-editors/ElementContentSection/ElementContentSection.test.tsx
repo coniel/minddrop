@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { DesignRoles } from '@minddrop/designs';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { PropertiesSchema } from '@minddrop/properties';
 import {
@@ -17,12 +18,6 @@ import { FlatDesignElement, FlatTextElement } from '../../types';
 import { ElementContentSection } from './ElementContentSection';
 
 const { design_books, layout_card_1, element_text_1 } = DesignFixtures;
-
-// A schema widening the fixture design so formatted text elements
-// have a compatible property to bind to
-const formattedTextProperty: PropertiesSchema = [
-  { type: 'formatted-text', name: 'Body' },
-];
 
 describe('<ElementContentSection />', () => {
   beforeEach(setup);
@@ -135,14 +130,24 @@ describe('<ElementContentSection />', () => {
   });
 
   it('offers no static mode for roles restricted to bound data', () => {
-    const studio = openCardLayout(formattedTextProperty);
+    const studio = openCardLayout();
 
-    // Give the text element the content display role, which
-    // renders entry data only
+    // Register a role rendering entry data only and give it to
+    // the text element
+    DesignRoles.Store.set({
+      id: 'bound-only',
+      elementType: 'text',
+      label: 'designs.roles.heading.label',
+      icon: 'text',
+      lockedStyle: {},
+      editableStyles: [],
+      supportsStaticContent: false,
+      context: {},
+    });
+
     const roleElement = {
       ...readTextElement(studio),
-      type: 'formatted-text',
-      role: 'content-display',
+      role: 'bound-only',
     } as FlatDesignElement;
 
     studio.setDesignElement(element_text_1.id, roleElement);
@@ -157,11 +162,10 @@ describe('<ElementContentSection />', () => {
   });
 
   it('offers no static mode for always bound element types', () => {
-    // Formatting is authored in an editor, which only a bound
-    // property provides
-    const studio = openCardLayout(formattedTextProperty);
+    // Property elements render a bound property by definition
+    const studio = openCardLayout();
 
-    convertTextElement(studio, 'formatted-text');
+    convertToPropertyElement(studio);
 
     renderSection(studio);
 
@@ -169,9 +173,9 @@ describe('<ElementContentSection />', () => {
   });
 
   it('keeps an always bound element in property mode', async () => {
-    const studio = openCardLayout(formattedTextProperty);
+    const studio = openCardLayout();
 
-    convertTextElement(studio, 'formatted-text');
+    convertToPropertyElement(studio);
 
     // A stale static flag must not strand the section without
     // controls, since there is no toggle to leave static mode
@@ -200,11 +204,14 @@ describe('<ElementContentSection />', () => {
     expect(screen.queryByRole('switch')).toBeNull();
   });
 
-  it('offers no empty behaviour control for element types whose empty state is expected', () => {
-    const studio = openCardLayout(formattedTextProperty);
+  it('offers no empty behaviour control for editor variants', () => {
+    const studio = openCardLayout();
 
-    convertTextElement(studio, 'editor');
-    studio.updateDesignElement(element_text_1.id, { property: 'Body' });
+    convertToPropertyElement(studio);
+    studio.updateDesignElement(element_text_1.id, {
+      variant: 'field',
+      property: 'Subtitle',
+    });
 
     renderSection(studio);
 
@@ -281,19 +288,6 @@ function renderSection(studio: DesignStudioStore) {
       <ElementContentSection elementId={element_text_1.id} />
     </DesignStudioProvider>,
   );
-}
-
-/**
- * Retypes the layout's text element, so the section can be
- * rendered for element types with no fixture of their own.
- */
-function convertTextElement(studio: DesignStudioStore, type: string) {
-  const element = readTextElement(studio);
-
-  studio.setDesignElement(element_text_1.id, {
-    ...element,
-    type,
-  } as FlatTextElement);
 }
 
 /**

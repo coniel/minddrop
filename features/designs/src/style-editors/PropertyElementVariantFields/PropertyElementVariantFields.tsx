@@ -1,10 +1,12 @@
 import {
   BadgeStyle,
+  FieldStyle,
   LayoutType,
   PropertyElementConfig,
   PropertyElementVariantConfig,
   TypographyStyle,
   createBadgeCss,
+  createFieldCss,
   createTypographyCss,
   getPropertyElementConfig,
   getPropertyElementVariant,
@@ -133,8 +135,9 @@ interface VariantSampleProps {
 
 /**
  * Renders a variant's sample content the way the variant itself
- * renders it: badge variants as chips, the rest as a line of text.
- * Renders nothing for variants without a sample.
+ * renders it: badge variants as chips, field variants as a field
+ * box, the rest as a line of text. Renders nothing for variants
+ * without a sample.
  */
 const VariantSample: React.FC<VariantSampleProps> = ({
   config,
@@ -155,6 +158,18 @@ const VariantSample: React.FC<VariantSampleProps> = ({
   if (variant.styleCategory === 'badge') {
     return (
       <BadgesSample labels={t(variant.sample)} style={style as BadgeStyle} />
+    );
+  }
+
+  // Field variants render the sample inside the field box chrome
+  if (variant.styleCategory === 'field') {
+    return (
+      <span
+        className="designs-property-variant-option-sample"
+        style={createFieldCss(style as FieldStyle)}
+      >
+        {t(variant.sample)}
+      </span>
     );
   }
 

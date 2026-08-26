@@ -1173,12 +1173,6 @@ declare module 'i18next' {
             label: {
               label: string;
             };
-            content: {
-              label: string;
-            };
-            'content-display': {
-              label: string;
-            };
             'page-content': {
               label: string;
             };
@@ -1216,6 +1210,10 @@ declare module 'i18next' {
               webview: string;
               image: string;
               viewer: string;
+              field: string;
+              'multiline-field': string;
+              editor: string;
+              display: string;
             };
             descriptions: {
               'url-text': string;
@@ -1223,6 +1221,10 @@ declare module 'i18next' {
               webview: string;
               image: string;
               viewer: string;
+              field: string;
+              'multiline-field': string;
+              editor: string;
+              display: string;
             };
             samples: {
               short: string;
@@ -1232,6 +1234,8 @@ declare module 'i18next' {
               quote: string;
               title: string;
               select: string;
+              field: string;
+              'multiline-field': string;
             };
           };
           layouts: {

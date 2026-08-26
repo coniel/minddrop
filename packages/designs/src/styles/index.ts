@@ -7,4 +7,5 @@ export * from './ImageStyle';
 export * from './IconStyle';
 export * from './EmbedStyle';
 export * from './EditorStyle';
+export * from './FieldStyle';
 export * from './DesignElementStyle';

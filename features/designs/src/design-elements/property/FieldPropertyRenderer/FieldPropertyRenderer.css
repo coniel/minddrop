@@ -1,0 +1,17 @@
+/* Strip the browser chrome so the element style is the only
+ * styling the field carries; unset style keys then inherit like
+ * any other design element */
+.designs-field-element {
+  display: block;
+  width: 100%;
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+}
+
+/* The text area's height comes from its rows; manual resizing
+ * would fight the designed layout */
+.designs-field-element-multiline {
+  resize: none;
+}

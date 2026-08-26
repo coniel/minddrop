@@ -49,13 +49,26 @@ describe('useElementHidden', () => {
   });
 
   it('never hides element types whose empty state is expected', () => {
-    // An empty editor is where writing starts, so it must survive
-    // an empty property rather than vanishing from the entry
+    // Containers hold children rather than a value of their own
     const element = {
       ...element_text_1,
-      type: 'editor',
+      type: 'container',
       property: 'Summary',
     } as DesignElement;
+
+    renderHidden(element);
+
+    screen.getByText('shown');
+  });
+
+  it('never hides editor variants', () => {
+    // An empty editor is where writing starts, so it must survive
+    // an empty property rather than vanishing from the entry
+    const element: DesignElement = {
+      ...element_property_text_1,
+      variant: 'field',
+      property: 'Subtitle',
+    };
 
     renderHidden(element);
 

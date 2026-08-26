@@ -6,9 +6,7 @@ import { getElementConfig, getElementConfigs } from './index';
 // which are always property bound are listed as false.
 const staticContentSupport: Record<string, boolean> = {
   text: true,
-  'formatted-text': false,
   view: false,
-  editor: false,
   property: false,
   container: false,
   'page-panel': false,
@@ -18,10 +16,8 @@ const staticContentSupport: Record<string, boolean> = {
 // The empty behaviour of every element type
 const emptyBehaviors: Record<string, ElementEmptyBehavior> = {
   text: 'hide',
-  'formatted-text': 'hide',
   view: 'hide',
   property: 'hide',
-  editor: 'none',
   container: 'none',
   'page-panel': 'none',
   root: 'none',
@@ -49,18 +45,8 @@ describe('element capabilities', () => {
     expect(getElementConfig('text').supportsStaticContent).toBe(true);
   });
 
-  it('makes formatted text elements property bound only', () => {
-    // Formatting is authored in an editor, which only a bound
-    // property provides
-    expect(getElementConfig('formatted-text').supportsStaticContent).toBe(
-      false,
-    );
-  });
-
   it('always renders element types whose empty state is expected', () => {
-    // An empty editor is where writing starts, and containers hold
-    // children rather than a value of their own
-    expect(getElementConfig('editor').emptyBehavior).toBe('none');
+    // Containers hold children rather than a value of their own
     expect(getElementConfig('container').emptyBehavior).toBe('none');
   });
 

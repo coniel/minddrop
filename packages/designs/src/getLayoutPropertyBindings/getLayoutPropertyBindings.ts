@@ -32,8 +32,9 @@ function collectBindings(
     bindings[element.id] = element.property;
   }
 
-  // Editor elements can have a second, title-suffixed binding
-  if (element.type === 'editor' && element.titleProperty) {
+  // Elements with a title block can have a second, title-suffixed
+  // binding
+  if ('titleProperty' in element && element.titleProperty) {
     bindings[elementTitleBindingId(element.id)] = element.titleProperty;
   }
 

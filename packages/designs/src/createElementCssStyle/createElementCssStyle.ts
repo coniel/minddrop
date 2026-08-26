@@ -3,7 +3,9 @@ import { DesignElementStyleSource } from '../design-element-configs';
 import {
   BadgeStyle,
   ContainerDirection,
+  EditorStyle,
   EmbedStyle,
+  FieldStyle,
   IconStyle,
   ImageStyle,
   TypographyStyle,
@@ -15,6 +17,7 @@ import { createBadgeCss } from './createBadgeCss';
 import { createContainerCss } from './createContainerCss';
 import { createEditorCss } from './createEditorCss';
 import { createEmbedCss } from './createEmbedCss';
+import { createFieldCss } from './createFieldCss';
 import { createIconCss } from './createIconCss';
 import { createImageCss } from './createImageCss';
 import { createRootCss } from './createRootCss';
@@ -41,7 +44,6 @@ export function createElementCssStyle(
   // Dispatch on the element type, narrowing the style shape
   switch (element.type) {
     case 'text':
-    case 'formatted-text':
       return createTypographyCss(resolveElementStyle(element, layoutType));
     case 'property':
       return createPropertyElementCss(element, parentDirection, layoutType);
@@ -62,8 +64,6 @@ export function createElementCssStyle(
         resolveElementStyle(element, layoutType),
         parentDirection,
       );
-    case 'editor':
-      return createEditorCss(resolveElementStyle(element, layoutType));
   }
 }
 
@@ -90,6 +90,10 @@ function createPropertyElementCss(
       return createIconCss(style as IconStyle);
     case 'embed':
       return createEmbedCss(style as EmbedStyle, parentDirection);
+    case 'field':
+      return createFieldCss(style as FieldStyle);
+    case 'editor':
+      return createEditorCss(style as EditorStyle);
     default:
       return createTypographyCss(style as TypographyStyle);
   }

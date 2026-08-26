@@ -1,10 +1,12 @@
 import { PropertyElementConfig } from '../types';
+import { FieldEditableStyles } from './fieldEditableStyles';
 import { TypographyEditableStyles } from './typographyEditableStyles';
 
 /**
- * The text property element. Its presentation variants shift the
- * value between a single-line short value, multi-line long value,
- * secondary subtitle, fine-print caption and a quote.
+ * The text property element. Its display variants shift the value
+ * between a single-line short value, multi-line long value,
+ * secondary subtitle, fine-print caption and a quote; its field
+ * variants edit the value in place through an input or textarea.
  */
 export const TextPropertyElementConfig: PropertyElementConfig = {
   propertyType: 'text',
@@ -55,6 +57,26 @@ export const TextPropertyElementConfig: PropertyElementConfig = {
       sample: 'designs.propertyElements.samples.quote',
       styleCategory: 'typography',
       editableStyles: TypographyEditableStyles,
+    },
+    {
+      id: 'field',
+      label: 'designs.propertyElements.variants.field',
+      description: 'designs.propertyElements.descriptions.field',
+      renderer: 'text-field',
+      sample: 'designs.propertyElements.samples.field',
+      styleCategory: 'field',
+      editableStyles: FieldEditableStyles,
+      editor: true,
+    },
+    {
+      id: 'multiline-field',
+      label: 'designs.propertyElements.variants.multiline-field',
+      description: 'designs.propertyElements.descriptions.multiline-field',
+      renderer: 'multiline-field',
+      sample: 'designs.propertyElements.samples.multiline-field',
+      styleCategory: 'field',
+      editableStyles: FieldEditableStyles,
+      editor: true,
     },
   ],
 };

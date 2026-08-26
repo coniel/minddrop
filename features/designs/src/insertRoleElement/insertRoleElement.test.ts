@@ -1,5 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { isRoleElement } from '@minddrop/designs';
+import {
+  BuiltInDesignRoles,
+  DesignRoles,
+  isRoleElement,
+} from '@minddrop/designs';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
 import {
   DesignStudioStore,
@@ -25,7 +29,7 @@ describe('insertRoleElement', () => {
   afterEach(cleanup);
 
   it('inserts an element playing the role', () => {
-    insertRoleElement(studio, 'content', 'root', 0, layout_card_1.id);
+    insertRoleElement(studio, 'heading', 'root', 0, layout_card_1.id);
 
     // The new element is the root's first child
     const root = studio.getDesignElement('root', layout_card_1.id);
@@ -33,23 +37,24 @@ describe('insertRoleElement', () => {
     const inserted = studio.getDesignElement(insertedId, layout_card_1.id);
 
     // It plays the role and uses the role's element type
-    expect(isRoleElement(inserted) && inserted.role).toBe('content');
-    expect(inserted.type).toBe('editor');
+    expect(isRoleElement(inserted) && inserted.role).toBe('heading');
+    expect(inserted.type).toBe('text');
   });
 
-  it('auto-binds the element to a compatible property', () => {
-    insertRoleElement(studio, 'content', 'root', 0, layout_card_1.id);
+  it('inserts the element unbound', () => {
+    // Role elements render static content, so insertion binds no
+    // property
+    insertRoleElement(studio, 'heading', 'root', 0, layout_card_1.id);
 
     const root = studio.getDesignElement('root', layout_card_1.id);
     const insertedId = (root as { children: string[] }).children[0];
     const inserted = studio.getDesignElement(insertedId, layout_card_1.id);
 
-    // The content role binds formatted text properties
-    expect(inserted.property).toBe('Notes');
+    expect(inserted.property).toBeUndefined();
   });
 
   it('selects the inserted element', () => {
-    insertRoleElement(studio, 'content', 'root', 0, layout_card_1.id);
+    insertRoleElement(studio, 'heading', 'root', 0, layout_card_1.id);
 
     const root = studio.getDesignElement('root', layout_card_1.id);
     const insertedId = (root as { children: string[] }).children[0];
@@ -60,7 +65,7 @@ describe('insertRoleElement', () => {
   it('does nothing when no design is open', () => {
     const emptyStudio = createDesignStudioStore();
 
-    insertRoleElement(emptyStudio, 'content', 'root', 0);
+    insertRoleElement(emptyStudio, 'heading', 'root', 0);
 
     expect(emptyStudio.getDesign()).toBeNull();
   });

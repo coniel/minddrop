@@ -3,6 +3,7 @@ import { BadgeStyleEditor } from './BadgeStyleEditor';
 import { ContainerStyleEditor } from './ContainerStyleEditor';
 import { EditorStyleEditor } from './EditorStyleEditor';
 import { EmbedStyleEditor } from './EmbedStyleEditor';
+import { FieldStyleEditor } from './FieldStyleEditor';
 import { IconStyleEditor } from './IconStyleEditor';
 import { ImageStyleEditor } from './ImageStyleEditor';
 import { StyleEditorProps } from './StyleEditorProps';
@@ -24,4 +25,5 @@ export const styleCategoryEditors: Record<
   icon: IconStyleEditor,
   embed: EmbedStyleEditor,
   editor: EditorStyleEditor,
+  field: FieldStyleEditor,
 };

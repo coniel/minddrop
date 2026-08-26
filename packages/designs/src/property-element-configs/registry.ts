@@ -2,6 +2,7 @@ import type { PropertyType } from '@minddrop/properties';
 import { InvalidParameterError } from '@minddrop/utils';
 import type { PropertyElementConfig } from '../types';
 import { DatePropertyElementConfig } from './date';
+import { FormattedTextPropertyElementConfig } from './formatted-text';
 import { IconPropertyElementConfig } from './icon';
 import { ImagePropertyElementConfig } from './image';
 import { NumberPropertyElementConfig } from './number';
@@ -17,6 +18,7 @@ import { UrlPropertyElementConfig } from './url';
 const propertyElementConfigs: PropertyElementConfig[] = [
   TitlePropertyElementConfig,
   TextPropertyElementConfig,
+  FormattedTextPropertyElementConfig,
   NumberPropertyElementConfig,
   DatePropertyElementConfig,
   SelectPropertyElementConfig,

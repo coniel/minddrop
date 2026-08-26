@@ -2,7 +2,7 @@ import {
   ContainerElement,
   DatePropertyElement,
   DesignElement,
-  EditorElement,
+  FormattedTextPropertyElement,
   IconPropertyElement,
   ImagePropertyElement,
   NumberPropertyElement,
@@ -34,14 +34,6 @@ function generateContainerElementFixture(
   };
 }
 
-function generateEditorElementFixture(version: number): EditorElement {
-  return {
-    id: `editor-element-${version}`,
-    type: 'editor',
-    style: {},
-  };
-}
-
 function generatePropertyElementFixture<TElement extends PropertyElement>(
   propertyType: TElement['propertyType'],
   version: number,
@@ -62,10 +54,13 @@ export const element_container_1 = generateContainerElementFixture(1);
 export const element_container_2 = generateContainerElementFixture(2);
 export const element_container_3 = generateContainerElementFixture(3);
 
-export const element_editor_1 = generateEditorElementFixture(1);
-
 export const element_property_text_1 =
   generatePropertyElementFixture<TextPropertyElement>('text', 1);
+export const element_property_formatted_text_1 =
+  generatePropertyElementFixture<FormattedTextPropertyElement>(
+    'formatted-text',
+    1,
+  );
 export const element_property_number_1 =
   generatePropertyElementFixture<NumberPropertyElement>('number', 1);
 export const element_property_date_1 =

@@ -9,8 +9,6 @@ import {
   ContainerDesignElement,
   ContainerStudioDesignElement,
 } from './container';
-import { EditorDesignElement } from './editor';
-import { FormattedTextDesignElement } from './formatted-text';
 import {
   PagePanelDesignElement,
   PagePanelStudioDesignElement,
@@ -65,11 +63,6 @@ function elementUI<TElement extends DesignElement>(config: {
  */
 const elementUIs: ElementUIConfig[] = [
   elementUI({ type: 'text', DisplayComponent: TextDesignElement }),
-  elementUI({
-    type: 'formatted-text',
-    DisplayComponent: FormattedTextDesignElement,
-  }),
-  elementUI({ type: 'editor', DisplayComponent: EditorDesignElement }),
   elementUI({ type: 'view', DisplayComponent: ViewDesignElement }),
   elementUI({ type: 'property', DisplayComponent: PropertyDesignElement }),
   elementUI({

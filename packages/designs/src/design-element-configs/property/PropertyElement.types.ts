@@ -1,4 +1,5 @@
 import type { DatePropertyElement } from './date';
+import type { FormattedTextPropertyElement } from './formatted-text';
 import type { IconPropertyElement } from './icon';
 import type { ImagePropertyElement } from './image';
 import type { NumberPropertyElement } from './number';
@@ -14,6 +15,7 @@ import type { UrlPropertyElement } from './url';
 export type PropertyElement =
   | TitlePropertyElement
   | TextPropertyElement
+  | FormattedTextPropertyElement
   | NumberPropertyElement
   | DatePropertyElement
   | SelectPropertyElement

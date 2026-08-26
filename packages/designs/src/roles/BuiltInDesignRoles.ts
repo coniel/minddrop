@@ -1,6 +1,4 @@
 import { DesignRoleConfig } from '../types';
-import { ContentRole } from './content';
-import { ContentDisplayRole } from './content-display';
 import { HeadingRole } from './heading';
 import { LabelRole } from './label';
 import { PageContentRole } from './page-content';
@@ -13,7 +11,5 @@ import { PageContentRole } from './page-content';
 export const BuiltInDesignRoles: DesignRoleConfig[] = [
   HeadingRole,
   LabelRole,
-  ContentRole,
-  ContentDisplayRole,
   PageContentRole,
 ];

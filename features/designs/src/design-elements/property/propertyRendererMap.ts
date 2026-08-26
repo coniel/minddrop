@@ -1,6 +1,12 @@
 import { PropertyElement } from '@minddrop/designs';
 import { BadgesPropertyRenderer } from './BadgesPropertyRenderer';
 import { DatePropertyRenderer } from './DatePropertyRenderer';
+import { EditorPropertyRenderer } from './EditorPropertyRenderer';
+import {
+  MultilineFieldPropertyRenderer,
+  TextFieldPropertyRenderer,
+} from './FieldPropertyRenderer';
+import { FormattedTextPropertyRenderer } from './FormattedTextPropertyRenderer';
 import { IconPropertyRenderer } from './IconPropertyRenderer';
 import { ImagePropertyRenderer } from './ImagePropertyRenderer';
 import { ImageViewerPropertyRenderer } from './ImageViewerPropertyRenderer';
@@ -28,6 +34,10 @@ function renderer<TElement extends PropertyElement>(
  */
 export const propertyRendererMap: Record<string, PropertyRenderer> = {
   text: renderer(TextPropertyRenderer),
+  'text-field': renderer(TextFieldPropertyRenderer),
+  'multiline-field': renderer(MultilineFieldPropertyRenderer),
+  'formatted-text': renderer(FormattedTextPropertyRenderer),
+  editor: renderer(EditorPropertyRenderer),
   number: renderer(NumberPropertyRenderer),
   date: renderer(DatePropertyRenderer),
   badges: renderer(BadgesPropertyRenderer),
