@@ -59,7 +59,7 @@ export async function onRenameDatabase(
           const collectionId = virtualCollectionId(entry.id, property.name);
 
           // Skip if the virtual collection does not exist
-          if (!Collections.Store.get(collectionId)) {
+          if (!Collections.get(collectionId, false)) {
             return;
           }
 

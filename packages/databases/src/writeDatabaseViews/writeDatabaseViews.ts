@@ -16,9 +16,8 @@ export async function writeDatabaseViews(databaseId: string): Promise<void> {
     return;
   }
 
-  // Get all views owned by this database from the ViewsStore
-  const allViews = DataViews.Store.getAllArray();
-  const databaseViews = allViews.filter((view) => view.owner === databaseId);
+  // Get all views owned by this database
+  const databaseViews = DataViews.getByOwner(databaseId);
 
   // Strip runtime-only fields and convert each view's config
   // references into durable form for storage

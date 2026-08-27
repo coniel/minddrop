@@ -55,7 +55,7 @@ export async function onRenameProperty(
       const oldCollectionId = virtualCollectionId(entry.id, oldName);
 
       // Only update if the collection exists in the store
-      if (!Collections.Store.get(oldCollectionId)) {
+      if (!Collections.get(oldCollectionId, false)) {
         return;
       }
 

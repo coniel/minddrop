@@ -66,7 +66,7 @@ export async function updateDatabaseEntryProperty(
   if (propertySchema.type === 'collection' && Array.isArray(value)) {
     const collectionId = virtualCollectionId(entry.id, propertyName);
 
-    if (Collections.Store.get(collectionId)) {
+    if (Collections.get(collectionId, false)) {
       await Collections.update(collectionId, { items: value });
 
       return getDatabaseEntry(entry.id);

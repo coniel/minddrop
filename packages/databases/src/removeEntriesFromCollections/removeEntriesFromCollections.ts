@@ -12,8 +12,8 @@ export async function removeEntriesFromCollections(
   const removedIds = new Set(entryIds);
 
   // Find collections containing any of the entries
-  const affectedCollections = Collections.Store.getAllArray().filter(
-    (collection) => collection.items.some((id) => removedIds.has(id)),
+  const affectedCollections = Collections.getAll().filter((collection) =>
+    collection.items.some((id) => removedIds.has(id)),
   );
 
   // Remove the entries from each affected collection

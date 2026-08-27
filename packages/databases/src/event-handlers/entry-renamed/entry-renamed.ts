@@ -35,7 +35,7 @@ export async function onRenameEntry(data: DatabaseEntryRenamedEventData) {
       const collectionId = virtualCollectionId(updated.id, property.name);
 
       // Skip if the virtual collection does not exist
-      if (!Collections.Store.get(collectionId)) {
+      if (!Collections.get(collectionId, false)) {
         return;
       }
 

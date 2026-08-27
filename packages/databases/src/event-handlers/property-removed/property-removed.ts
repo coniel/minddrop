@@ -45,7 +45,7 @@ export async function onRemoveProperty(
       const collectionId = virtualCollectionId(entry.id, property.name);
 
       // Only delete if the collection exists in the store
-      if (Collections.Store.get(collectionId)) {
+      if (Collections.get(collectionId, false)) {
         return Collections.delete(collectionId);
       }
 
