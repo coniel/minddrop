@@ -1,4 +1,4 @@
-import { DesignFixtures } from '@minddrop/designs-legacy/test-utils';
+import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { Fs, MockFileDescriptor } from '@minddrop/file-system';
 import {
   FilePropertySchema,

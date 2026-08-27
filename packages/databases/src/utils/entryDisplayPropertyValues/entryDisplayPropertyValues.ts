@@ -1,7 +1,7 @@
-import { Layout } from '@minddrop/designs-legacy';
+import { Layout } from '@minddrop/designs';
 import { PropertyValue } from '@minddrop/properties';
-import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
-import { DatabasesStore } from '../../DatabasesStore';
+import { getDatabase } from '../../getDatabase';
+import { getDatabaseEntry } from '../../getDatabaseEntry';
 import { createEntryVirtualViews } from '../createEntryVirtualViews';
 import { entryMetadataPropertyValues } from '../entryMetadataPropertyValues';
 import { getPropertyFilePath } from '../getPropertyFilePath';
@@ -25,13 +25,13 @@ export function entryDisplayPropertyValues(
   layout: Layout,
   propertyMap: Record<string, string>,
 ): Record<string, PropertyValue> {
-  const entry = DatabaseEntriesStore.get(entryId);
+  const entry = getDatabaseEntry(entryId, false);
 
   if (!entry) {
     return {};
   }
 
-  const database = DatabasesStore.get(entry.database);
+  const database = getDatabase(entry.database, false);
 
   if (!database) {
     return {};

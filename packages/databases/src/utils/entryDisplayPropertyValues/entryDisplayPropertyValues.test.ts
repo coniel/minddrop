@@ -1,11 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DataViewFixtures } from '@minddrop/data-views/test-utils';
-import {
-  DefaultContainerElementStyle,
-  DefaultTextElementStyle,
-  DefaultViewElementStyle,
-  Layout,
-} from '@minddrop/designs-legacy';
+import { Layout } from '@minddrop/designs';
 import {
   cleanup,
   collectionEntry1,
@@ -21,9 +16,9 @@ import { entryDisplayPropertyValues } from './entryDisplayPropertyValues';
 
 const { dataViewType_table } = DataViewFixtures;
 
-// Layout with a view element for collection property tests
+// Layout with a collection element for collection property tests
 const designWithView: Layout = {
-  id: 'test-layout',
+  id: 'layout_test',
   type: 'card',
   name: 'Test Layout',
   frame: { x: 0, y: 0, width: 380 },
@@ -32,21 +27,22 @@ const designWithView: Layout = {
   tree: {
     id: 'root',
     type: 'root',
-    style: { ...DefaultContainerElementStyle },
+    style: {},
     children: [
       {
         id: 'view-element-1',
-        type: 'view',
-        viewType: dataViewType_table.type,
-        style: { ...DefaultViewElementStyle },
+        type: 'property',
+        propertyType: 'collection',
+        variant: dataViewType_table.type,
+        style: {},
       },
     ],
   },
 };
 
-// Simple layout with no view elements
+// Simple layout with no collection elements
 const simpleDesign: Layout = {
-  id: 'simple-layout',
+  id: 'layout_simple',
   type: 'card',
   name: 'Simple Layout',
   frame: { x: 0, y: 0, width: 380 },
@@ -55,12 +51,12 @@ const simpleDesign: Layout = {
   tree: {
     id: 'root',
     type: 'root',
-    style: { ...DefaultContainerElementStyle },
+    style: {},
     children: [
       {
         id: 'text-element-1',
         type: 'text',
-        style: { ...DefaultTextElementStyle },
+        style: {},
       },
     ],
   },

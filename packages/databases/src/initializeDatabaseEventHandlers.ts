@@ -4,10 +4,7 @@ import {
   DataViewDeletedEvent,
   DataViewUpdatedEvent,
 } from '@minddrop/data-views';
-import {
-  DesignPropertyRenamedEvent,
-  DesignPropertyRenamedEventData,
-} from '@minddrop/designs-legacy';
+import { DesignPropertyRenamedEvent } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
 import { FileSystemChangedEvent } from '@minddrop/file-system';
 import { ItemAddressesChangedEvent } from '@minddrop/item-references';
@@ -84,9 +81,7 @@ export function initializeDatabaseEventHandlers() {
   });
 
   Events.on(DesignPropertyRenamedEvent, 'databases', ({ data }) => {
-    // Cast because the legacy design event is intentionally not in
-    // the event data registry
-    onRenameDesignProperty(data as DesignPropertyRenamedEventData);
+    onRenameDesignProperty(data);
   });
 
   Events.on(DatabaseEntryCreatedEvent, 'databases', ({ data }) => {

@@ -1,4 +1,4 @@
-import { Designs, Layout } from '@minddrop/designs-legacy';
+import { Designs, Layout } from '@minddrop/designs';
 import { getDatabase } from '../getDatabase';
 import { LayoutContext, layoutContextBaseType } from '../layoutContexts';
 

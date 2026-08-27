@@ -5,10 +5,11 @@ import {
   DesignElement,
   Layout,
   RootElement,
-  ViewElement,
-} from '@minddrop/designs-legacy';
-import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
-import { DatabasesStore } from '../../DatabasesStore';
+  getPropertyElementConfig,
+  isPropertyElement,
+} from '@minddrop/designs';
+import { getDatabase } from '../../getDatabase';
+import { getDatabaseEntry } from '../../getDatabaseEntry';
 import { viewMetadataKey } from '../viewMetadataKey';
 import { virtualCollectionId } from '../virtualCollectionId';
 import { virtualCollectionName } from '../virtualCollectionName';
@@ -17,9 +18,9 @@ import { virtualViewId } from '../virtualViewId';
 /**
  * Creates virtual collections and views for a database entry's
  * collection properties. For each collection property mapped to
- * a view element in the layout, creates a virtual collection
- * containing the entry IDs and a virtual view with the element's
- * view type.
+ * a collection element in the layout, creates a virtual collection
+ * containing the entry IDs and a virtual view with the element
+ * variant's view type.
  *
  * Uses deterministic IDs so repeated calls for the same entry
  * are idempotent. Virtual resources are not cleaned up and
@@ -35,13 +36,13 @@ export function createEntryVirtualViews(
   layout: Layout,
   propertyMap: Record<string, string>,
 ): Record<string, string> {
-  const entry = DatabaseEntriesStore.get(entryId);
+  const entry = getDatabaseEntry(entryId, false);
 
   if (!entry) {
     return {};
   }
 
-  const database = DatabasesStore.get(entry.database);
+  const database = getDatabase(entry.database, false);
 
   if (!database) {
     return {};
@@ -67,14 +68,17 @@ export function createEntryVirtualViews(
       continue;
     }
 
-    // Find the element in the layout tree to get its viewType
+    // Find the element in the layout tree to get its view type
     const element = findElementById(layout.tree, elementId);
 
-    if (!element || element.type !== 'view') {
+    if (!element || !isPropertyElement(element, 'collection')) {
       continue;
     }
 
-    const viewType = (element as ViewElement).viewType;
+    // The element's variant is the view type the embedded view
+    // renders as, defaulting to the collection element's default
+    const viewType =
+      element.variant ?? getPropertyElementConfig('collection').defaultVariant;
     const collId = virtualCollectionId(entryId, property.name);
     const collName = virtualCollectionName(
       database.name,

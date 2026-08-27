@@ -1,4 +1,4 @@
-import { Designs, LayoutNotFoundError } from '@minddrop/designs-legacy';
+import { Designs, LayoutNotFoundError } from '@minddrop/designs';
 import { getDatabase } from '../getDatabase';
 import { LayoutContext, layoutContextBaseType } from '../layoutContexts';
 import { Database } from '../types';

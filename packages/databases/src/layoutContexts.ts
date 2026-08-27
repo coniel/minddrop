@@ -1,4 +1,4 @@
-import { LayoutType } from '@minddrop/designs-legacy';
+import { LayoutType } from '@minddrop/designs';
 
 /**
  * A context in which a database entry (or list of entries) is displayed.

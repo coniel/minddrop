@@ -2,12 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Collections } from '@minddrop/collections';
 import { DataViews } from '@minddrop/data-views';
 import { DataViewFixtures } from '@minddrop/data-views/test-utils';
-import {
-  DefaultContainerElementStyle,
-  DefaultTextElementStyle,
-  DefaultViewElementStyle,
-  Layout,
-} from '@minddrop/designs-legacy';
+import { Layout } from '@minddrop/designs';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabasesStore } from '../../DatabasesStore';
 import {
@@ -27,9 +22,9 @@ import { createEntryVirtualViews } from './createEntryVirtualViews';
 
 const { dataViewType_table, dataViewType_referencing } = DataViewFixtures;
 
-// Layout with a view element mapped to the 'Related' property
+// Layout with a collection element mapped to the 'Related' property
 const designWithView: Layout = {
-  id: 'test-layout',
+  id: 'layout_test',
   type: 'card',
   name: 'Test Layout',
   frame: { x: 0, y: 0, width: 380 },
@@ -38,18 +33,19 @@ const designWithView: Layout = {
   tree: {
     id: 'root',
     type: 'root',
-    style: { ...DefaultContainerElementStyle },
+    style: {},
     children: [
       {
         id: 'view-element-1',
-        type: 'view',
-        viewType: dataViewType_table.type,
-        style: { ...DefaultViewElementStyle },
+        type: 'property',
+        propertyType: 'collection',
+        variant: dataViewType_table.type,
+        style: {},
       },
       {
         id: 'text-element-1',
         type: 'text',
-        style: { ...DefaultTextElementStyle },
+        style: {},
       },
     ],
   },
@@ -107,8 +103,9 @@ describe('createEntryVirtualViews', () => {
     expect(result).toEqual({});
   });
 
-  it('skips collection properties mapped to non-view elements', () => {
-    // Map the collection property to a text element instead of a view
+  it('skips collection properties mapped to non-collection elements', () => {
+    // Map the collection property to a text element instead of a
+    // collection element
     const result = createEntryVirtualViews(
       collectionEntry1.id,
       designWithView,
@@ -245,15 +242,17 @@ describe('createEntryVirtualViews', () => {
         children: [
           {
             id: 'view-element-1',
-            type: 'view',
-            viewType: dataViewType_table.type,
-            style: { ...DefaultViewElementStyle },
+            type: 'property',
+            propertyType: 'collection',
+            variant: dataViewType_table.type,
+            style: {},
           },
           {
             id: 'view-element-2',
-            type: 'view',
-            viewType: dataViewType_table.type,
-            style: { ...DefaultViewElementStyle },
+            type: 'property',
+            propertyType: 'collection',
+            variant: dataViewType_table.type,
+            style: {},
           },
         ],
       },
@@ -327,9 +326,10 @@ describe('createEntryVirtualViews', () => {
         children: [
           {
             id: 'view-element-1',
-            type: 'view',
-            viewType: dataViewType_referencing.type,
-            style: { ...DefaultViewElementStyle },
+            type: 'property',
+            propertyType: 'collection',
+            variant: dataViewType_referencing.type,
+            style: {},
           },
         ],
       },

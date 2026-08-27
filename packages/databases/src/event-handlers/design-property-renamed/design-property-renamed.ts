@@ -1,5 +1,5 @@
-import { DesignPropertyRenamedEventData } from '@minddrop/designs-legacy';
-import { DatabasesStore } from '../../DatabasesStore';
+import { DesignPropertyRenamedEventData } from '@minddrop/designs';
+import { getAllDatabases } from '../../getAllDatabases';
 import { updateDatabase } from '../../updateDatabase';
 
 /**
@@ -13,7 +13,7 @@ export async function onRenameDesignProperty(
   const { design, oldName, newName } = data;
 
   // Get all databases that use the renamed design
-  const databases = DatabasesStore.getAllArray().filter(
+  const databases = getAllDatabases().filter(
     (database) => database.designId === design.id,
   );
 
