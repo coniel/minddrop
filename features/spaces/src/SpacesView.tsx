@@ -1,10 +1,12 @@
 import { useMemo, useState } from 'react';
 import { Events } from '@minddrop/events';
+import { DesignStudioIcon } from '@minddrop/feature-designs';
 import { Space, Spaces } from '@minddrop/spaces';
 import { ListPanelView, ListPanelViewItem } from '@minddrop/ui-components';
 import { IconButton } from '@minddrop/ui-primitives';
 import { Views } from '@minddrop/views';
 import { SpaceContent } from './SpaceContent';
+import { setSpaceViewState } from './SpaceViewStateStore';
 import { OpenNewSpaceDialogEvent, OpenSpaceViewEvent } from './events';
 
 /**
@@ -43,6 +45,20 @@ export const SpacesView: React.FC = () => {
     });
   }
 
+  // Open the selected space in a view of its own, in edit mode
+  function handleEditSpace() {
+    if (!selectedSpace) {
+      return;
+    }
+
+    // Enter edit mode before opening so the view mounts editing
+    setSpaceViewState(selectedSpace.id, { editing: true });
+
+    openView(OpenSpaceViewEvent, {
+      spaceId: selectedSpace.id,
+    });
+  }
+
   return (
     <ListPanelView
       icon="shapes"
@@ -52,6 +68,18 @@ export const SpacesView: React.FC = () => {
       query={query}
       onQueryChange={setQuery}
       onExpandItem={handleExpandSpace}
+      actions={
+        selectedSpace
+          ? [
+              {
+                icon: DesignStudioIcon,
+                label: 'spaces.view.actions.edit',
+                tooltip: { title: 'spaces.view.actions.edit' },
+                onClick: handleEditSpace,
+              },
+            ]
+          : undefined
+      }
       searchPlaceholder="spaces.list.searchPlaceholder"
       emptyLabel="spaces.list.empty"
       noResultsLabel="spaces.list.noResults"

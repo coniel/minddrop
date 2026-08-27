@@ -1,11 +1,6 @@
-import { useCallback } from 'react';
-import { LayoutRenderer } from '@minddrop/feature-designs-legacy';
-import {
-  Space,
-  Spaces,
-  resolveSpaceMediaDirPath,
-  setLayoutElementContent,
-} from '@minddrop/spaces';
+import { Designs } from '@minddrop/designs';
+import { LayoutRenderer } from '@minddrop/feature-designs';
+import { Space, resolveSpaceMediaDirPath } from '@minddrop/spaces';
 import { ScrollArea, TransientViewStateScope } from '@minddrop/ui-primitives';
 import './SpaceContent.css';
 
@@ -20,28 +15,25 @@ export interface SpaceContentProps {
  * Renders a space's layout in a scrollable container.
  */
 export const SpaceContent: React.FC<SpaceContentProps> = ({ space }) => {
-  // Persist element static content updates (e.g. a created view
-  // reference) into the space's layout
-  const handleUpdateElementContent = useCallback(
-    (elementId: string, content: string) => {
-      Spaces.update(space.id, {
-        layout: setLayoutElementContent(space.layout, elementId, content),
-      });
-    },
-    [space.id, space.layout],
-  );
+  // The space's design from the designs store, falling back to the
+  // persisted copy while the store hydrates
+  const design = Designs.use(space.design.id);
+  const layout = design?.layouts[0] ?? space.design.layouts[0];
+
+  if (!layout) {
+    return null;
+  }
 
   return (
     <TransientViewStateScope segment={space.id}>
       <ScrollArea className="space-content" stateKey="content">
         <LayoutRenderer
-          layout={space.layout}
+          layout={layout}
           context="page"
           mediaDirPath={resolveSpaceMediaDirPath(space.id)}
           propertyMap={{}}
           propertyValues={{}}
           properties={[]}
-          onUpdateElementContent={handleUpdateElementContent}
         />
       </ScrollArea>
     </TransientViewStateScope>

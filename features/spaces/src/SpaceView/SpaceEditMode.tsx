@@ -1,4 +1,5 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { Designs } from '@minddrop/designs';
 import {
   CloseAppSidebarEvent,
   Events,
@@ -6,20 +7,22 @@ import {
   SetNavToolbarWidthEvent,
 } from '@minddrop/events';
 import {
+  DesignStudioProvider,
+  DesignStudioScope,
   DesignStudioStore,
   ElementStyleEditor,
   LayoutEditSurface,
-  LayoutEditorLeftPanel,
-  clearLayoutEditor,
-  deleteHighlightedElement,
-  initializeLayoutEditor,
+  LayoutsPanel,
+  createDesignStudioStore,
+  useActiveLayout,
+  useDesignStudio,
   useDesignStudioStore,
-} from '@minddrop/feature-designs-legacy';
-import { Space, Spaces, resolveSpaceMediaDirPath } from '@minddrop/spaces';
+} from '@minddrop/feature-designs';
+import { Space, resolveSpaceMediaDirPath } from '@minddrop/spaces';
 import { PanelView } from '@minddrop/ui-components';
-import { Panel, ScrollArea } from '@minddrop/ui-primitives';
+import { IconButton, Panel, ScrollArea } from '@minddrop/ui-primitives';
 import { setSpaceViewState } from '../SpaceViewStateStore';
-import { EDIT_PANEL_WIDTH, PAGE_ELEMENT_TYPES } from '../constants';
+import { EDIT_PANEL_WIDTH } from '../constants';
 import './SpaceEditMode.css';
 
 export interface SpaceEditModeProps {
@@ -27,6 +30,12 @@ export interface SpaceEditModeProps {
    * The space being edited.
    */
   space: Space;
+
+  /**
+   * The studio store instance backing the editor session.
+   * Defaults to a new instance per mount.
+   */
+  studio?: DesignStudioStore;
 }
 
 /**
@@ -34,24 +43,49 @@ export interface SpaceEditModeProps {
  * around the space's editable layout. Every edit persists to the
  * space immediately.
  */
-export const SpaceEditMode: React.FC<SpaceEditModeProps> = ({ space }) => {
+export const SpaceEditMode: React.FC<SpaceEditModeProps> = ({
+  space,
+  studio: providedStudio,
+}) => {
+  // Studio store instance scoped to this editing session
+  const [studio] = useState(() => providedStudio ?? createDesignStudioStore());
+
+  return (
+    <DesignStudioProvider store={studio}>
+      <SpaceEditSession space={space} />
+    </DesignStudioProvider>
+  );
+};
+
+type SpaceEditSessionProps = Pick<SpaceEditModeProps, 'space'>;
+
+/**
+ * Renders the editing session within the studio store provider:
+ * the layouts panel, the editable layout surface and the element
+ * style editor.
+ */
+const SpaceEditSession: React.FC<SpaceEditSessionProps> = ({ space }) => {
+  const studio = useDesignStudio();
   const selectedElementId = useDesignStudioStore(
     (state) => state.selectedElementId,
   );
+  const design = useDesignStudioStore((state) => state.design);
+  const layout = useActiveLayout();
 
   // Initialize the layout editor session for the space's layout,
-  // persisting edits to the space. The session owns the layout
-  // while mounted, so it must not re-initialize on layout saves.
+  // persisting edits through the space's design. The session owns
+  // the layout while mounted, so it must not re-initialize on
+  // layout saves.
   useEffect(() => {
-    initializeLayoutEditor(space.layout, {
-      onSave: async (layout) => {
-        await Spaces.update(space.id, { layout });
+    studio.initializeLayoutEditor(space.design.layouts[0], {
+      onSave: async (updatedLayout) => {
+        await Designs.update(space.design.id, { layouts: [updatedLayout] });
       },
       mediaDirPath: resolveSpaceMediaDirPath(space.id),
     });
 
     return () => {
-      clearLayoutEditor();
+      studio.clearLayoutEditor();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [space.id]);
@@ -82,14 +116,14 @@ export const SpaceEditMode: React.FC<SpaceEditModeProps> = ({ space }) => {
       // delete keys, so deletion must not respect defaultPrevented
       if (event.key === 'Delete' || event.key === 'Backspace') {
         // Nothing highlighted to delete
-        if (!DesignStudioStore.getHighlightedElementId()) {
+        if (!studio.getHighlightedElementId()) {
           return;
         }
 
         event.preventDefault();
 
         // The space's root layout cannot be deleted
-        deleteHighlightedElement();
+        studio.deleteHighlightedElement();
 
         return;
       }
@@ -98,8 +132,8 @@ export const SpaceEditMode: React.FC<SpaceEditModeProps> = ({ space }) => {
       // so it only arrives here when nothing consumed it
       if (event.key === 'Escape') {
         // Deselect the highlighted element, or exit edit mode
-        if (DesignStudioStore.getHighlightedElementId()) {
-          DesignStudioStore.selectElement(null);
+        if (studio.getHighlightedElementId()) {
+          studio.selectElement(null);
         } else {
           setSpaceViewState(space.id, { editing: false });
         }
@@ -111,35 +145,48 @@ export const SpaceEditMode: React.FC<SpaceEditModeProps> = ({ space }) => {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [space.id]);
+  }, [space.id, studio]);
 
   function handleExitEditMode() {
     setSpaceViewState(space.id, { editing: false });
   }
 
+  // Nothing to render until the editor session is initialized
+  if (!design || !layout) {
+    return null;
+  }
+
   return (
-    <div className="space-edit-mode">
-      <Panel className="space-edit-mode-left-panel">
-        <LayoutEditorLeftPanel
-          backButtonLabel="spaces.view.actions.exitEditMode"
-          onClickBack={handleExitEditMode}
-          elementTypes={PAGE_ELEMENT_TYPES}
-          showViews={false}
-        />
-      </Panel>
-      {/* The space's editable layout */}
-      <PanelView
-        className="space-edit-mode-surface"
-        stringTitle={space.name}
-        contentIcon={space.icon}
-      >
-        <ScrollArea className="space-edit-mode-content">
-          <LayoutEditSurface layoutId={space.layout.id} />
-        </ScrollArea>
-      </PanelView>
-      <Panel className="space-edit-mode-right-panel">
-        {selectedElementId && <ElementStyleEditor />}
-      </Panel>
-    </div>
+    <DesignStudioScope design={design}>
+      <div className="space-edit-mode">
+        <Panel className="space-edit-mode-left-panel">
+          {/** Exit edit mode header **/}
+          <div className="space-edit-mode-left-header">
+            <IconButton
+              icon="arrow-left"
+              label="spaces.view.actions.exitEditMode"
+              tooltip={{ title: 'spaces.view.actions.exitEditMode' }}
+              color="neutral"
+              onClick={handleExitEditMode}
+            />
+          </div>
+          {/** Layout element tree and elements palette **/}
+          <LayoutsPanel />
+        </Panel>
+        {/* The space's editable layout */}
+        <PanelView
+          className="space-edit-mode-surface"
+          stringTitle={space.name}
+          contentIcon={space.icon}
+        >
+          <ScrollArea className="space-edit-mode-content">
+            <LayoutEditSurface layoutId={layout.id} />
+          </ScrollArea>
+        </PanelView>
+        <Panel className="space-edit-mode-right-panel">
+          {selectedElementId && <ElementStyleEditor />}
+        </Panel>
+      </div>
+    </DesignStudioScope>
   );
 };

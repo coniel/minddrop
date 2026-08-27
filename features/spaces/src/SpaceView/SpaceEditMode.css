@@ -5,6 +5,13 @@
 
   .space-edit-mode-left-panel {
     width: 300px;
+
+    .space-edit-mode-left-header {
+      display: flex;
+      align-items: center;
+      padding: var(--space-2);
+      border-bottom: var(--border-width-thin) solid var(--border-subtle);
+    }
   }
 
   .space-edit-mode-right-panel {
