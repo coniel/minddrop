@@ -112,6 +112,9 @@ function insertAt(editor: Editor, element: Element, path: Path): void {
   // Insert the element
   Transforms.insertNodes(editor, element, { at: path });
 
-  // Place the cursor at the end of the inserted element
-  Transforms.select(editor, SlateEditor.end(editor, path));
+  // Place the cursor at the start of the inserted element. The element is
+  // always inserted empty, but normalization may have built internal
+  // structure around it (a table's grid), whose end is the wrong place to
+  // start typing.
+  Transforms.select(editor, SlateEditor.start(editor, path));
 }

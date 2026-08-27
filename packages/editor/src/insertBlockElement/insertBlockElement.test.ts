@@ -5,6 +5,7 @@ import {
   Element,
   HeadingElement,
   ListItemFrame,
+  TableElement,
 } from '@minddrop/ast';
 import {
   cleanup,
@@ -14,6 +15,7 @@ import {
   paragraphElement1,
 } from '../test-utils';
 import { Editor } from '../types';
+import { withTables } from '../withTables';
 import { insertBlockElement } from './insertBlockElement';
 
 const item1: ListItemFrame = {
@@ -185,5 +187,22 @@ describe('insertBlockElement', () => {
     const end = SlateEditor.end(editor, [1]);
 
     expect(editor.selection).toEqual({ anchor: end, focus: end });
+  });
+
+  it('places the cursor in an inserted table’s first cell', () => {
+    // Tables need their normalization to build the inserted grid
+    const editor = withTables(createTestEditor([paragraphElement1]));
+
+    editor.selection = {
+      anchor: { path: [0, 0], offset: 0 },
+      focus: { path: [0, 0], offset: 0 },
+    };
+
+    insertBlockElement<TableElement>(editor, 'table', {
+      align: [null, null, null],
+    });
+
+    // The cursor sits in the first header cell rather than the grid's end
+    expect(editor.selection?.anchor.path.slice(0, 3)).toEqual([1, 0, 0]);
   });
 });

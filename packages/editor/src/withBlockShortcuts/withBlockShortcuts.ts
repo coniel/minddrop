@@ -44,6 +44,12 @@ export function withBlockShortcuts<TElement extends Element = Element>(
       return;
     }
 
+    // Shortcuts belong to top level blocks, not to the internal structure
+    // of one, such as a table's cells
+    if (entry[1].length !== 1) {
+      return;
+    }
+
     const textNode = element.children[0];
 
     // The shortcut is typed at the start of the block, which is where its

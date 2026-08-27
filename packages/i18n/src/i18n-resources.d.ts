@@ -1099,6 +1099,21 @@ declare module 'i18next' {
           frames: {
             taskItem: string;
           };
+          table: {
+            addColumn: string;
+            rowOptions: string;
+            columnOptions: string;
+            insertRowAbove: string;
+            insertRowBelow: string;
+            deleteRow: string;
+            insertColumnLeft: string;
+            insertColumnRight: string;
+            deleteColumn: string;
+            alignNone: string;
+            alignLeft: string;
+            alignCenter: string;
+            alignRight: string;
+          };
           marks: {
             bold: string;
             italic: string;
@@ -1164,6 +1179,10 @@ declare module 'i18next' {
               keywords: string;
             };
             'task-list-item': {
+              name: string;
+              keywords: string;
+            };
+            table: {
               name: string;
               keywords: string;
             };

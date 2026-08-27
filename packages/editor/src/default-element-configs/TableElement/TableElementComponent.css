@@ -1,0 +1,102 @@
+.table-element {
+  position: relative;
+  margin-block: var(--space-2);
+}
+
+.table-element-body {
+  display: flex;
+  align-items: stretch;
+}
+
+/* Shrinks below the table's intrinsic width so a wide table scrolls
+   inside the editor instead of growing past its edge */
+.table-element-scroll {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+/* Collapsed borders are not painted reliably inside a composited scroll
+   container, so each cell draws its trailing edges and the first row and
+   column draw the leading ones */
+.table-element-grid {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.table-cell-element {
+  position: relative;
+  border-right: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: var(--space-1) var(--space-2);
+  min-width: 120px;
+  vertical-align: top;
+}
+
+.table-cell-element:first-child {
+  border-left: 1px solid var(--border-subtle);
+}
+
+.table-element-grid tr:first-child .table-cell-element {
+  border-top: 1px solid var(--border-subtle);
+}
+
+.table-cell-element[data-header] {
+  background-color: var(--surface-subtle);
+  font-weight: 600;
+}
+
+/* The column menu sits on the header cell's edge, appearing on hover and
+   staying while its menu is open. It carries the header's background so
+   the cell text it floats over does not show through the button. */
+.table-cell-column-menu {
+  position: absolute;
+  top: var(--space-0-5);
+  right: var(--space-0-5);
+  background-color: var(--surface-subtle);
+  border-radius: var(--radius-sm);
+  opacity: 0;
+  user-select: none;
+}
+
+/* Hidden while typing, until the pointer moves again */
+.table-element:not([data-controls-hidden])
+  .table-cell-element:hover
+  .table-cell-column-menu,
+.table-cell-column-menu:has([aria-expanded='true']) {
+  opacity: 1;
+}
+
+/* The rail beside the table hosts the hovered row's menu and the column
+   append, outside the table's scrollable area. It takes no width of its
+   own, its controls floating beside the table rather than reserving space
+   the table could expand into. */
+.table-element-rail {
+  position: relative;
+  flex: 0 0 auto;
+  width: 0;
+  user-select: none;
+}
+
+/* The controls butt against the table's edge, their visual offset carried
+   as padding, so the pointer crosses onto them without ever leaving the
+   block's descendants and losing the hover */
+.table-element-row-menu {
+  position: absolute;
+  left: 0;
+  padding-left: var(--space-1);
+  transform: translateY(-50%);
+}
+
+/* In line with the header row, whose slot the row menu never takes */
+.table-element-add-column {
+  position: absolute;
+  top: var(--space-0-75);
+  left: 0;
+  padding-left: var(--space-1);
+  opacity: 0;
+}
+
+/* Hidden while typing, until the pointer moves again */
+.table-element:hover:not([data-controls-hidden]) .table-element-add-column {
+  opacity: 1;
+}

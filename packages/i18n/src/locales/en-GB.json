@@ -1043,6 +1043,21 @@
     "frames": {
       "taskItem": "Task item"
     },
+    "table": {
+      "addColumn": "Add column",
+      "rowOptions": "Row options",
+      "columnOptions": "Column options",
+      "insertRowAbove": "Insert row above",
+      "insertRowBelow": "Insert row below",
+      "deleteRow": "Delete row",
+      "insertColumnLeft": "Insert column left",
+      "insertColumnRight": "Insert column right",
+      "deleteColumn": "Delete column",
+      "alignNone": "No alignment",
+      "alignLeft": "Align left",
+      "alignCenter": "Align centre",
+      "alignRight": "Align right"
+    },
     "marks": {
       "bold": "Bold",
       "italic": "Italic",
@@ -1110,6 +1125,10 @@
       "task-list-item": {
         "name": "To-do list",
         "keywords": "todo to-do task tasks checkbox check tick checklist done"
+      },
+      "table": {
+        "name": "Table",
+        "keywords": "table grid rows columns cells"
       }
     }
   },

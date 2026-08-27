@@ -12,6 +12,7 @@ export * from './LinkElement';
 export * from './LinkReferenceElement';
 export * from './MathElement';
 export * from './ParagraphElement';
+export * from './TableElement';
 export * from './ThematicBreakElement';
 export * from './UnsupportedElement';
 export * from './WikilinkElement';

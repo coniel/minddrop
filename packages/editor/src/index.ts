@@ -10,6 +10,7 @@ export * from './insertLink';
 export * from './insertWikilink';
 export * from './outdentBlocks';
 export * from './pushFrame';
+export * from './tables';
 export * from './registerBlockSelectionSerializer';
 export * from './RichTextEditor';
 export * from './CursorMenu';

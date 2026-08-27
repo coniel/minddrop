@@ -1,7 +1,10 @@
 import { FC } from 'react';
 import { TranslationKey } from '@minddrop/i18n';
 import { MenuContents } from '../types';
-import { DropdownMenuContent } from './DropdownMenuContent';
+import {
+  DropdownMenuContent,
+  DropdownMenuContentProps,
+} from './DropdownMenuContent';
 import { DropdownMenuPortal } from './DropdownMenuPortal';
 import {
   DropdownMenuPositioner,
@@ -89,6 +92,13 @@ export interface DropdownMenuProps extends DropdownMenuRootProps {
    * Menu items rendered inside the content panel.
    */
   children?: React.ReactNode;
+
+  /**
+   * Where focus moves when the menu closes. Pass `false` for menus whose
+   * actions place focus themselves, which the default restoration to the
+   * previously focused element would otherwise undo.
+   */
+  finalFocus?: DropdownMenuContentProps['finalFocus'];
 }
 
 export const DropdownMenu: FC<DropdownMenuProps> = ({
@@ -106,6 +116,7 @@ export const DropdownMenu: FC<DropdownMenuProps> = ({
   onSearchTermChange,
   emptyText,
   children,
+  finalFocus,
   ...rootProps
 }) => (
   <DropdownMenuRoot {...rootProps}>
@@ -115,6 +126,7 @@ export const DropdownMenu: FC<DropdownMenuProps> = ({
         <DropdownMenuContent
           minWidth={minWidth}
           className={contentClassName}
+          finalFocus={finalFocus}
           content={content}
           searchable={searchable}
           searchPlaceholder={searchPlaceholder}

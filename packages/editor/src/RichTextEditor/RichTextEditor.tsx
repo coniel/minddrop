@@ -52,6 +52,7 @@ import { withMarkHotkeys } from '../withMarkHotkeys';
 import { withMarks } from '../withMarks';
 import { withReturnBehaviour } from '../withReturnBehaviour';
 import { withSourceInvalidation } from '../withSourceInvalidation';
+import { withTables } from '../withTables';
 import {
   TITLE_ELEMENT_TYPE,
   TitleContext,
@@ -230,18 +231,23 @@ export const RichTextEditor: React.FC<EditorProps> = ({
       withMarks(
         withBlockSelection(
           withBlockIds(
-            // Applied outside the block reset so that a return or a delete
-            // steps out of a container before it resets the block
-            withFrames(
-              withLinks(
-                withBlockReset(
-                  withBlockShortcuts(
-                    // Applied innermost so that it sees the operations every
-                    // other plugin produces
-                    withSourceInvalidation(withReturnBehaviour(editor)),
-                    [...EditorElementConfigs],
+            // Applied outside the frames so that a break or a delete inside
+            // a table is the table's to handle before anything steps out of
+            // a container
+            withTables(
+              // Applied outside the block reset so that a return or a delete
+              // steps out of a container before it resets the block
+              withFrames(
+                withLinks(
+                  withBlockReset(
+                    withBlockShortcuts(
+                      // Applied innermost so that it sees the operations every
+                      // other plugin produces
+                      withSourceInvalidation(withReturnBehaviour(editor)),
+                      [...EditorElementConfigs],
+                    ),
+                    'paragraph',
                   ),
-                  'paragraph',
                 ),
               ),
             ),

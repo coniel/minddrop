@@ -4,6 +4,7 @@ import {
   cleanup,
   createTestEditor,
   emptyParagraphElement,
+  generateTestTable,
   headingElement1,
   mathElement1,
   paragraphElement1,
@@ -54,6 +55,19 @@ describe('insertTrailingParagraph', () => {
 
     // Should have appended a paragraph
     expect(editor.children.length).toBe(3);
+  });
+
+  it('appends a paragraph when the document ends in a table with empty cells', () => {
+    const editor = createTestEditor([
+      paragraphElement1,
+      generateTestTable([['', '']]),
+    ]);
+
+    insertTrailingParagraph(editor);
+
+    // The click lands in a fresh paragraph rather than the table's last cell
+    expect(editor.children.length).toBe(3);
+    expect(editor.selection?.anchor.path[0]).toBe(2);
   });
 
   it('places the cursor in the trailing paragraph', () => {

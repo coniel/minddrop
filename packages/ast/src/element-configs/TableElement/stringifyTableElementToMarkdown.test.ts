@@ -36,7 +36,22 @@ describe('stringifyTableElementToMarkdown', () => {
     ]);
 
     expect(stringifyTableElementToMarkdown(table)).toBe(
-      '| a | b |\n| --- | --- |\n| c | d |',
+      '| a   | b   |\n| --- | --- |\n| c   | d   |',
+    );
+  });
+
+  it('pads each column to its longest cell', () => {
+    const table = generateTable([
+      ['Header one', 'Two'],
+      ['a', 'Longer body cell'],
+    ]);
+
+    expect(stringifyTableElementToMarkdown(table)).toBe(
+      [
+        '| Header one | Two              |',
+        '| ---------- | ---------------- |',
+        '| a          | Longer body cell |',
+      ].join('\n'),
     );
   });
 
@@ -47,14 +62,27 @@ describe('stringifyTableElementToMarkdown', () => {
     );
 
     expect(stringifyTableElementToMarkdown(table)).toBe(
-      '| a | b | c | d |\n| :--- | ---: | :---: | --- |',
+      '| a   | b   | c   | d   |\n| :-- | --: | :-: | --- |',
+    );
+  });
+
+  it('sizes alignment delimiters to the column width', () => {
+    const table = generateTable(
+      [['Wide header', 'Also wide']],
+      ['center', 'right'],
+    );
+
+    expect(stringifyTableElementToMarkdown(table)).toBe(
+      '| Wide header | Also wide |\n| :---------: | --------: |',
     );
   });
 
   it('escapes pipes in cell content', () => {
     const table = generateTable([['a | b']]);
 
-    expect(stringifyTableElementToMarkdown(table)).toBe('| a \\| b |\n| --- |');
+    expect(stringifyTableElementToMarkdown(table)).toBe(
+      '| a \\| b |\n| ------ |',
+    );
   });
 
   it('returns an empty string for a table with no rows', () => {

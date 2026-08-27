@@ -1,11 +1,13 @@
 import { ElementTypeConfig } from '../../types';
 import { stringifyTableElementToMarkdown } from './stringifyTableElementToMarkdown';
+import { stringifyTableElementToPlainText } from './stringifyTableElementToPlainText';
 
 export const TableElementConfig: ElementTypeConfig = {
   type: 'table',
   level: 'block',
   content: 'table',
   toMarkdown: stringifyTableElementToMarkdown,
+  toPlainText: stringifyTableElementToPlainText,
 };
 
 /**

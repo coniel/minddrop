@@ -11,6 +11,7 @@ import { BlockMenuProps } from './BlockMenu';
 import { Transforms } from './Transforms';
 import { insertBlockElement } from './insertBlockElement';
 import { insertInlineElement } from './insertInlineElement';
+import { getTableCellEntry } from './tables/getTableCellEntry';
 import { Editor } from './types';
 import {
   BlockMenuItem,
@@ -187,6 +188,11 @@ export function useBlockMenu(editor: Editor): UseBlockMenu {
     });
 
     if (!inBlockElement) {
+      return false;
+    }
+
+    // A cell cannot hold a block, so the menu never opens inside a table
+    if (getTableCellEntry(editor)) {
       return false;
     }
 

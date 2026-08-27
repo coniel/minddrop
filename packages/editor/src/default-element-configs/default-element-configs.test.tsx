@@ -11,9 +11,9 @@ import {
   ParagraphElement,
   UnsupportedElement,
 } from '@minddrop/ast';
-import { render } from '@minddrop/test-utils';
+import { fireEvent, render } from '@minddrop/test-utils';
 import { EditorElementConfigs } from '../EditorElementConfigs';
-import { cleanup, createTestEditor } from '../test-utils';
+import { cleanup, createTestEditor, generateTestTable } from '../test-utils';
 import { thematicBreakElement1 } from '../test-utils/editor.fixtures';
 import { createRenderElement } from '../utils';
 
@@ -54,6 +54,57 @@ describe('default element configs', () => {
       ]);
 
       expect(getByText('const a = 1;')).not.toBeNull();
+    });
+
+    it('renders a table as a grid of cells', () => {
+      const { container } = renderEditor([
+        generateTestTable(
+          [
+            ['a', 'b'],
+            ['c', 'd'],
+          ],
+          ['center', null],
+        ),
+      ]);
+
+      // The table renders one cell per column in each row
+      expect(container.querySelectorAll('table')).toHaveLength(1);
+      expect(container.querySelectorAll('tr')).toHaveLength(2);
+      expect(container.querySelectorAll('td')).toHaveLength(4);
+
+      // Only the header row's cells are marked as headers
+      expect(container.querySelectorAll('td[data-header]')).toHaveLength(2);
+
+      // Cells follow their column's alignment
+      const cells = container.querySelectorAll('td');
+
+      expect((cells[0] as HTMLElement).style.textAlign).toBe('center');
+      expect((cells[1] as HTMLElement).style.textAlign).toBe('');
+    });
+
+    it('hides a table’s controls while typing, until the pointer moves', () => {
+      const { container } = renderEditor([
+        generateTestTable([
+          ['a', 'b'],
+          ['c', 'd'],
+        ]),
+      ]);
+
+      const tableElement = container.querySelector(
+        '.table-element',
+      ) as HTMLElement;
+
+      // Typing inside the table hides the controls
+      fireEvent.keyDown(tableElement.querySelector('td') as HTMLElement, {
+        key: 'a',
+      });
+
+      expect(tableElement.hasAttribute('data-controls-hidden')).toBe(true);
+
+      // Moving the pointer brings them back
+      fireEvent.pointerMove(tableElement);
+
+      expect(tableElement.hasAttribute('data-controls-hidden')).toBe(false);
     });
 
     it('renders an HTML block as its source', () => {

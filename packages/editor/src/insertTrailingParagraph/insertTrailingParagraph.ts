@@ -6,6 +6,7 @@ import {
 } from 'slate';
 import { Ast } from '@minddrop/ast';
 import { Transforms } from '../Transforms';
+import { isTableElement } from '../tables/table-elements';
 import { Editor } from '../types';
 
 const PARAGRAPH_ELEMENT_TYPE = 'paragraph';
@@ -57,6 +58,12 @@ function isEmptyElement(editor: Editor, node: Descendant): boolean {
   // Void elements have no text of their own, so an empty one is
   // not somewhere the cursor can type
   if (editor.isVoid(node)) {
+    return false;
+  }
+
+  // A table is a grid rather than a blank line, so even one with empty
+  // cells is not the trailing element a click below the content expects
+  if (isTableElement(node)) {
     return false;
   }
 
