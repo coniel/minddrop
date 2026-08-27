@@ -1,11 +1,20 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { DataViewTypes } from '@minddrop/data-views';
+import { DataViewFixtures } from '@minddrop/data-views/test-utils';
+import { cleanup, setup } from '../test-utils';
 import { DefaultDesignTheme } from '../themes';
 import {
   getPropertyElementConfig,
   getPropertyElementConfigs,
 } from './registry';
 
+const { dataViewType_table } = DataViewFixtures;
+
 describe('property element configs', () => {
+  // The collection element's variants derive from the registered
+  // data view types
+  beforeEach(setup);
+  afterEach(cleanup);
   it('offers an element for every display property type', () => {
     const propertyTypes = getPropertyElementConfigs().map(
       (config) => config.propertyType,
@@ -21,6 +30,7 @@ describe('property element configs', () => {
       'url',
       'image',
       'icon',
+      'collection',
     ]);
   });
 
@@ -28,6 +38,23 @@ describe('property element configs', () => {
     getPropertyElementConfigs().forEach((config) => {
       expect(config.bindsPropertyTypes).toContain(config.propertyType);
     });
+  });
+
+  it('derives the collection variants from the registered collection view types', () => {
+    // Register a view type which cannot render collections
+    DataViewTypes.register({
+      ...dataViewType_table,
+      type: 'database-only',
+      supportedDataSources: ['database'],
+    });
+
+    const variantIds = getPropertyElementConfig('collection').variants.map(
+      (variant) => variant.id,
+    );
+
+    // One variant per registered view type supporting collection
+    // data sources; others are left out
+    expect(variantIds).toEqual(['table', 'gallery', 'board', 'referencing']);
   });
 
   it('names a default variant which exists', () => {

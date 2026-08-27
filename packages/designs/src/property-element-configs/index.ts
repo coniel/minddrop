@@ -7,6 +7,7 @@ export * from './select';
 export * from './url';
 export * from './image';
 export * from './icon';
+export * from './collection';
 export * from './typographyEditableStyles';
 export * from './fieldEditableStyles';
 export * from './registry';

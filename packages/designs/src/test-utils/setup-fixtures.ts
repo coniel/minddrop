@@ -1,3 +1,5 @@
+import { DataViewTypes } from '@minddrop/data-views';
+import { dataViewTypes } from '@minddrop/data-views/test-utils';
 import { MockFileSystem } from '@minddrop/file-system';
 import { DesignRolesStore } from '../DesignRolesStore';
 import { DesignsStore } from '../DesignsStore';
@@ -32,6 +34,10 @@ export function setupDesignFixtures(
     // Load the built-in roles into the registry
     DesignRolesStore.load(BuiltInDesignRoles);
   }
+
+  // Load the data view types the collection element's variants
+  // derive from
+  DataViewTypes.Store.load(dataViewTypes);
 }
 
 export function cleanupDesignFixtures() {
@@ -40,4 +46,7 @@ export function cleanupDesignFixtures() {
 
   // Clear the role registry
   DesignRolesStore.clear();
+
+  // Clear the data view type registry
+  DataViewTypes.Store.clear();
 }

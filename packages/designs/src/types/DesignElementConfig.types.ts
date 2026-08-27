@@ -7,9 +7,11 @@ import type { DesignRoleId } from './DesignRole.types';
 import type { LayoutType } from './Layout.types';
 
 /**
- * Palette group for a design element.
+ * Palette group for a design element or role. Property elements
+ * form their own Properties group through the property element
+ * config registry, so it is not a group value here.
  */
-export type ElementGroup = 'properties' | 'elements' | 'media' | 'layout';
+export type ElementGroup = 'layout';
 
 /**
  * How an element type behaves in a rendered entry when its bound

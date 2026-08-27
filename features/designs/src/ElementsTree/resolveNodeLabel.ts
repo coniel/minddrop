@@ -50,7 +50,7 @@ export function resolveNodeLabel(element: FlatDesignElement): NodeLabel {
   // Elements playing a role are named after it, falling back to the
   // element type when the role is not registered
   const role = isRoleElement(element)
-    ? DesignRoles.Store.get(element.role)
+    ? DesignRoles.get(element.role, false)
     : null;
 
   // Property elements are named after their property element

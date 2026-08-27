@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { HeadingRole, LabelRole, PageContentRole } from '../roles';
+import { HeadingRole, PageContentRole } from '../roles';
 import { cleanup, setup } from '../test-utils';
 import { getCompatibleDesignRoles } from './getCompatibleDesignRoles';
 
@@ -16,7 +16,6 @@ describe('getCompatibleDesignRoles', () => {
     // The content region restricts itself to page-like layouts
     expect(roles).not.toContain(PageContentRole);
     expect(roles).toContain(HeadingRole);
-    expect(roles).toContain(LabelRole);
   });
 
   it('offers unrestricted roles in every context', () => {

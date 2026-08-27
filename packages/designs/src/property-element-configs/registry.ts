@@ -1,6 +1,7 @@
 import type { PropertyType } from '@minddrop/properties';
 import { InvalidParameterError } from '@minddrop/utils';
 import type { PropertyElementConfig } from '../types';
+import { CollectionPropertyElementConfig } from './collection';
 import { DatePropertyElementConfig } from './date';
 import { FormattedTextPropertyElementConfig } from './formatted-text';
 import { IconPropertyElementConfig } from './icon';
@@ -25,6 +26,7 @@ const propertyElementConfigs: PropertyElementConfig[] = [
   UrlPropertyElementConfig,
   ImagePropertyElementConfig,
   IconPropertyElementConfig,
+  CollectionPropertyElementConfig,
 ];
 
 // Configs indexed by property type for constant time lookup

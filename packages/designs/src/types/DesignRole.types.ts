@@ -1,7 +1,7 @@
 import type { TranslationKey } from '@minddrop/i18n';
 import type { UiIconName } from '@minddrop/ui-icons';
 import type { DesignElementStyle } from '../styles';
-import type { ElementContext } from './DesignElementConfig.types';
+import type { ElementContext, ElementGroup } from './DesignElementConfig.types';
 import type { LayoutType } from './Layout.types';
 
 /**
@@ -143,12 +143,18 @@ export interface DesignRoleConfig {
   editableStyles?: string[];
 
   /**
-   * Whether the role's elements offer static content alongside a
-   * property binding. Defaults to the element type's own support;
-   * set to false on roles which only make sense rendering bound
-   * data.
+   * How the role's elements source their content. Omitted, both
+   * modes are offered per the element type's own support: set to
+   * 'bound' on roles which only make sense rendering bound data,
+   * 'static' on roles which never bind a property.
    */
-  supportsStaticContent?: boolean;
+  contentMode?: 'bound' | 'static';
+
+  /**
+   * Which palette group the role appears in. Omit to exclude the
+   * role from the palette.
+   */
+  group?: ElementGroup;
 
   /**
    * Whether the role marks a structural region created by its

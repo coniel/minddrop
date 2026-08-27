@@ -63,7 +63,7 @@ export function getElementLockedStyleKeys(
   }
 
   // Look up the element's role, which may no longer be registered
-  const role = DesignRoles.Store.get(element.role);
+  const role = DesignRoles.get(element.role, false);
 
   // An unregistered role locks nothing, matching how style
   // resolution degrades to the element's own style

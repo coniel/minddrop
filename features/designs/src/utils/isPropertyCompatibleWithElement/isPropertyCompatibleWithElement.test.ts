@@ -1,28 +1,14 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import {
-  cleanupDataViewFixtures,
-  setupDataViewFixtures,
-} from '@minddrop/data-views/test-utils';
-import { ViewElement, createElement } from '@minddrop/designs';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
-import { MockFs, cleanup, setup } from '../../test-utils';
+import { cleanup, setup } from '../../test-utils';
 import { isPropertyCompatibleWithElement } from './isPropertyCompatibleWithElement';
 
-const { element_text_1, element_container_1 } = DesignFixtures;
+const { element_text_1, element_container_1, element_property_collection_1 } =
+  DesignFixtures;
 
 describe('isPropertyCompatibleWithElement', () => {
-  beforeEach(() => {
-    setup();
-
-    // View type compatibility is checked against the registered
-    // data view types
-    setupDataViewFixtures(MockFs);
-  });
-
-  afterEach(() => {
-    cleanupDataViewFixtures();
-    cleanup();
-  });
+  beforeEach(setup);
+  afterEach(cleanup);
 
   it('returns false for static elements', () => {
     const staticElement = { ...element_text_1, static: true };
@@ -48,34 +34,16 @@ describe('isPropertyCompatibleWithElement', () => {
     );
   });
 
-  describe('view elements', () => {
-    it('returns true when the view type supports the data source', () => {
-      // The gallery view type supports collection data sources
-      const viewElement = {
-        ...(createElement('view') as ViewElement),
-        viewType: 'gallery',
-      };
-
-      expect(isPropertyCompatibleWithElement('collection', viewElement)).toBe(
-        true,
-      );
-    });
-
-    it('returns false when the view type is not registered', () => {
-      const viewElement = {
-        ...(createElement('view') as ViewElement),
-        viewType: 'nonexistent',
-      };
-
-      expect(isPropertyCompatibleWithElement('collection', viewElement)).toBe(
-        false,
-      );
-    });
-
-    it('returns false for property types carrying no data source', () => {
-      const viewElement = createElement('view') as ViewElement;
-
-      expect(isPropertyCompatibleWithElement('text', viewElement)).toBe(false);
-    });
+  it('resolves property element compatibility from its config', () => {
+    // Collection elements bind collection properties only
+    expect(
+      isPropertyCompatibleWithElement(
+        'collection',
+        element_property_collection_1,
+      ),
+    ).toBe(true);
+    expect(
+      isPropertyCompatibleWithElement('text', element_property_collection_1),
+    ).toBe(false);
   });
 });

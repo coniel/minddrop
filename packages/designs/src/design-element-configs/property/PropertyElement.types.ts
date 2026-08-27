@@ -1,3 +1,4 @@
+import type { CollectionPropertyElement } from './collection';
 import type { DatePropertyElement } from './date';
 import type { FormattedTextPropertyElement } from './formatted-text';
 import type { IconPropertyElement } from './icon';
@@ -21,4 +22,5 @@ export type PropertyElement =
   | SelectPropertyElement
   | UrlPropertyElement
   | ImagePropertyElement
-  | IconPropertyElement;
+  | IconPropertyElement
+  | CollectionPropertyElement;

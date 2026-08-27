@@ -1,6 +1,5 @@
 export * from './placeholder-generators';
 export * from './text';
-export * from './view';
 export * from './property';
 export * from './container';
 export * from './page-panel';

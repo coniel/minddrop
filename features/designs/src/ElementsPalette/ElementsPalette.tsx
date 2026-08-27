@@ -1,5 +1,6 @@
 import {
   DesignElementConfig,
+  DesignRoleConfig,
   DesignRoles,
   DesignType,
   ElementGroup,
@@ -7,7 +8,7 @@ import {
   getElementConfigs,
   getPropertyElementConfigs,
 } from '@minddrop/designs';
-import { TranslationKey, createI18nKeyBuilder } from '@minddrop/i18n';
+import { TranslationKey } from '@minddrop/i18n';
 import { MenuGroup, MenuLabel } from '@minddrop/ui-primitives';
 import {
   useActiveLayoutType,
@@ -19,58 +20,34 @@ import { PropertyElementPaletteItem } from './PropertyElementPaletteItem';
 import { RolePaletteItem } from './RolePaletteItem';
 import './ElementsPalette.css';
 
-// Names the role group after the layout being edited, e.g.
-// "Card elements", falling back to a plain label when no layout
-// is active
-const paletteElementsKey = createI18nKeyBuilder(
-  'designsStudio.palette.elements.',
-);
-
 /**
- * The element groups listed after the roles, in display order.
+ * The element groups listed after the properties, in display
+ * order.
  */
 const ElementGroups: { group: ElementGroup; label: TranslationKey }[] = [
-  { group: 'elements', label: 'design-studio.elements.group.elements' },
-  { group: 'media', label: 'design-studio.elements.group.media' },
   { group: 'layout', label: 'design-studio.elements.group.layout' },
 ];
 
 /**
- * Renders the studio's element palette: the design roles available
- * in the current design and layout, followed by the unstyled
- * element types they are built from.
+ * Renders the studio's element palette: the property elements
+ * insertable in the current design and layout, followed by the
+ * layout chrome group holding grouped element types and roles.
  */
 export const ElementsPalette: React.FC = () => {
   const designType = useDesignStudioStore((state) => state.design?.type);
   const layoutType = useActiveLayoutType();
-
-  // Roles compatible with the current design and layout, minus the
-  // structural ones created by their parent layout
-  const roles = DesignRoles.getCompatible({
-    designType,
-    layoutType: layoutType ?? undefined,
-  }).filter((role) => !role.structural);
 
   // Property elements insertable in the current design and layout
   const propertyElements = getPropertyElementConfigs().filter((config) =>
     isElementInContext(config.context, { designType, layoutType }),
   );
 
-  // Element types insertable in the current design and layout,
-  // bucketed by their palette group
+  // Grouped element types and roles insertable in the current
+  // design and layout
   const elementGroups = resolveElementGroups(designType, layoutType);
 
   return (
     <div className="designs-elements-palette">
-      {roles.length > 0 && (
-        <MenuGroup>
-          <MenuLabel label={paletteElementsKey(layoutType ?? 'default')} />
-          {roles.map((role) => (
-            <RolePaletteItem key={role.id} role={role} />
-          ))}
-        </MenuGroup>
-      )}
-
       {propertyElements.length > 0 && (
         <MenuGroup>
           <MenuLabel label="design-studio.elements.group.properties" />
@@ -83,11 +60,14 @@ export const ElementsPalette: React.FC = () => {
         </MenuGroup>
       )}
 
-      {elementGroups.map(({ label, configs }) => (
+      {elementGroups.map(({ label, configs, roles }) => (
         <MenuGroup key={label}>
           <MenuLabel label={label} />
           {configs.map((config) => (
             <ElementPaletteItem key={config.type} config={config} />
+          ))}
+          {roles.map((role) => (
+            <RolePaletteItem key={role.id} role={role} />
           ))}
         </MenuGroup>
       ))}
@@ -96,21 +76,37 @@ export const ElementsPalette: React.FC = () => {
 };
 
 /**
- * Buckets the element types insertable in the given context by
- * their palette group, dropping groups left empty. Element types
- * without a group are created by the studio rather than dragged,
- * so they never appear.
+ * Buckets the element types and roles insertable in the given
+ * context by their palette group, dropping groups left empty.
+ * Element types and roles without a group are created by the
+ * studio rather than dragged, so they never appear.
  */
 function resolveElementGroups(
   designType: DesignType | undefined,
   layoutType: LayoutType | null,
-): { label: TranslationKey; configs: DesignElementConfig[] }[] {
+): {
+  label: TranslationKey;
+  configs: DesignElementConfig[];
+  roles: DesignRoleConfig[];
+}[] {
+  // Element types insertable in the current design and layout
   const configs = getElementConfigs().filter((config) =>
     isElementInContext(config.context, { designType, layoutType }),
   );
 
+  // Roles compatible with the current design and layout, minus
+  // the structural ones created by their parent layout
+  const roles = DesignRoles.getCompatible({
+    designType,
+    layoutType: layoutType ?? undefined,
+  }).filter((role) => !role.structural);
+
   return ElementGroups.map(({ group, label }) => ({
     label,
     configs: configs.filter((config) => config.group === group),
-  })).filter(({ configs: groupConfigs }) => groupConfigs.length > 0);
+    roles: roles.filter((role) => role.group === group),
+  })).filter(
+    ({ configs: groupConfigs, roles: groupRoles }) =>
+      groupConfigs.length > 0 || groupRoles.length > 0,
+  );
 }

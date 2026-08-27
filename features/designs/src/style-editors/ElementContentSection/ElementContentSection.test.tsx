@@ -141,7 +141,7 @@ describe('<ElementContentSection />', () => {
       icon: 'text',
       lockedStyle: {},
       editableStyles: [],
-      supportsStaticContent: false,
+      contentMode: 'bound',
       context: {},
     });
 
@@ -159,6 +159,42 @@ describe('<ElementContentSection />', () => {
       screen.getAllByText('designs.content.mode.property').length,
     ).toBeGreaterThan(0);
     expect(screen.queryByText('designs.content.mode.static')).toBeNull();
+  });
+
+  it('offers only static content for static-only roles', async () => {
+    const studio = openCardLayout();
+
+    // Register a role rendering static chrome only and give it to
+    // the text element
+    DesignRoles.Store.set({
+      id: 'static-only',
+      elementType: 'text',
+      label: 'designs.roles.heading.label',
+      icon: 'text',
+      lockedStyle: {},
+      editableStyles: [],
+      contentMode: 'static',
+      context: {},
+    });
+
+    const roleElement = {
+      ...readTextElement(studio),
+      role: 'static-only',
+      static: true,
+    } as FlatDesignElement;
+
+    studio.setDesignElement(element_text_1.id, roleElement);
+
+    renderSection(studio);
+
+    // No mode toggle and no property select, only the content
+    // field itself
+    expect(screen.queryByText('designs.content.mode.property')).toBeNull();
+    expect(screen.queryByText('designs.content.mode.static')).toBeNull();
+
+    await userEvent.type(screen.getByRole('textbox'), 'Chapter one');
+
+    expect(readTextElement(studio).content).toBe('Chapter one');
   });
 
   it('offers no static mode for always bound element types', () => {

@@ -8,7 +8,6 @@ import {
   RootElement,
   TextElement,
   UrlPropertyElement,
-  ViewElement,
 } from '@minddrop/designs';
 
 type Parent = { parent: string };
@@ -27,7 +26,6 @@ export type FlatPagePanelDesignElement = Omit<PagePanelElement, 'children'> &
 export type FlatLeafDesignElement = LeafDesignElement & Parent;
 
 export type FlatTextElement = TextElement & Parent;
-export type FlatViewElement = ViewElement & Parent;
 export type FlatPropertyElement = PropertyElement & Parent;
 export type FlatNumberPropertyElement = NumberPropertyElement & Parent;
 export type FlatDatePropertyElement = DatePropertyElement & Parent;

@@ -59,11 +59,6 @@ export function createElementCssStyle(
         resolveElementStyle(element, layoutType),
         parentDirection,
       );
-    case 'view':
-      return createEmbedCss(
-        resolveElementStyle(element, layoutType),
-        parentDirection,
-      );
   }
 }
 

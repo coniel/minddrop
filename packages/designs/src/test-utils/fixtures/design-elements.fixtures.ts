@@ -1,4 +1,5 @@
 import {
+  CollectionPropertyElement,
   ContainerElement,
   DatePropertyElement,
   DesignElement,
@@ -75,3 +76,5 @@ export const element_property_image_1 =
   generatePropertyElementFixture<ImagePropertyElement>('image', 1);
 export const element_property_icon_1 =
   generatePropertyElementFixture<IconPropertyElement>('icon', 1);
+export const element_property_collection_1 =
+  generatePropertyElementFixture<CollectionPropertyElement>('collection', 1);

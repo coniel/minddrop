@@ -1170,9 +1170,6 @@ declare module 'i18next' {
             heading: {
               label: string;
             };
-            label: {
-              label: string;
-            };
             'page-content': {
               label: string;
             };
@@ -2160,15 +2157,6 @@ declare module 'i18next' {
           open: string;
           title: string;
           backToDesigns: string;
-          palette: {
-            elements: {
-              default: string;
-              card: string;
-              list: string;
-              page: string;
-              space: string;
-            };
-          };
           layouts: {
             new: string;
             backToLayouts: string;

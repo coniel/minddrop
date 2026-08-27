@@ -81,8 +81,8 @@ describe('<LayoutsPanel />', () => {
       // The tree is rooted at the layout type's name
       screen.getByText('designs.layouts.card.name');
 
-      // The palette offers the roles of the active layout type
-      screen.getByText('designsStudio.palette.elements.card');
+      // The palette offers the element groups of the active layout
+      screen.getByText('design-studio.elements.group.layout');
     });
 
     it('appends elements dropped below the tree to the root', () => {

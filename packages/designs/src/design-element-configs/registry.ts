@@ -7,14 +7,12 @@ import { PagePanelElementConfig } from './page-panel';
 import { PropertyElementTypeConfig } from './property';
 import { RootElementConfig } from './root';
 import { TextElementConfig } from './text';
-import { ViewElementConfig } from './view';
 
 /**
  * All built-in design element configs.
  */
 const elementConfigs: DesignElementConfig[] = [
   TextElementConfig,
-  ViewElementConfig,
   PropertyElementTypeConfig,
   ContainerElementConfig,
   PagePanelElementConfig,

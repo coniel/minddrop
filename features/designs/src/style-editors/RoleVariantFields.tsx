@@ -33,7 +33,7 @@ export const RoleVariantFields: React.FC<StyleEditorProps> = ({
     return null;
   }
 
-  const role = DesignRoles.Store.get(element.role);
+  const role = DesignRoles.get(element.role, false);
 
   // An unregistered role offers nothing to choose
   if (!role) {

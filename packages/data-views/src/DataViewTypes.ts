@@ -6,3 +6,4 @@ export {
 export { registerDataViewType as register } from './registerDataViewType';
 export { unregisterDataViewType as unregister } from './unregisterDataViewType';
 export { getDataViewType as get } from './getDataViewType';
+export { getDataViewTypes as getAll } from './getDataViewTypes';

@@ -13,3 +13,4 @@ export * from './WebviewPropertyRenderer';
 export * from './ImagePropertyRenderer';
 export * from './ImageViewerPropertyRenderer';
 export * from './IconPropertyRenderer';
+export * from './CollectionPropertyRenderer';

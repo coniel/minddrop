@@ -93,12 +93,18 @@ export const ElementContentSection: React.FC<ElementContentSectionProps> = ({
     return null;
   }
 
+  // The element's role content restriction, when it plays a role
+  const roleMode = resolveRoleContentMode(element);
+
   // Element types which are always property bound offer no static
   // mode, so they show no content mode toggle. A role can restrict
   // the same way when it only makes sense rendering bound data.
   const supportsContent =
     Boolean(getElementConfig(element.type).supportsStaticContent) &&
-    roleSupportsStaticContent(element);
+    roleMode !== 'bound';
+
+  // Static-only roles never bind a property
+  const supportsBinding = roleMode !== 'static';
 
   // A property element holds nothing but its binding, so its
   // section is named after the binding and the select inside it
@@ -108,8 +114,9 @@ export const ElementContentSection: React.FC<ElementContentSectionProps> = ({
     ? 'designs.property.label'
     : 'designs.content.label';
 
-  // Without property binding there is only static content to set
-  if (!propertyBindingEnabled) {
+  // Without property binding, and for static-only roles, there is
+  // only static content to set
+  if (!propertyBindingEnabled || !supportsBinding) {
     if (!supportsContent) {
       return null;
     }
@@ -177,14 +184,17 @@ export const ElementContentSection: React.FC<ElementContentSectionProps> = ({
 };
 
 /**
- * Checks whether the element's role offers static content, which
- * elements without a registered role always do.
+ * Resolves the element's role content restriction: 'bound' or
+ * 'static' when its role limits content to one mode, undefined
+ * otherwise. Elements without a registered role restrict nothing.
  */
-function roleSupportsStaticContent(element: FlatDesignElement): boolean {
+function resolveRoleContentMode(
+  element: FlatDesignElement,
+): 'bound' | 'static' | undefined {
   // Elements without a role restrict nothing
   if (!isRoleElement(element)) {
-    return true;
+    return undefined;
   }
 
-  return DesignRoles.Store.get(element.role)?.supportsStaticContent ?? true;
+  return DesignRoles.get(element.role, false)?.contentMode;
 }

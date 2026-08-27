@@ -1,4 +1,4 @@
-import { createRoleElement } from '@minddrop/designs';
+import { DesignRoles, createRoleElement } from '@minddrop/designs';
 import { DesignStudioStore } from '../DesignStudioStore';
 import { FlatDesignElement } from '../types';
 import { isStudioRootPanelled } from '../utils';
@@ -47,10 +47,15 @@ export function insertRoleElement(
   const element = createRoleElement(roleId);
 
   // Flatten the new element for the studio's element map. Newly
-  // created container elements are always empty.
+  // created container elements are always empty. Static-only
+  // roles start in static mode, so a dropped element is
+  // immediately editable.
   const flatElement = {
     ...element,
     parent: parentId,
+    ...(DesignRoles.get(roleId, false)?.contentMode === 'static' && {
+      static: true,
+    }),
     ...('children' in element && { children: [] }),
   } as FlatDesignElement;
 

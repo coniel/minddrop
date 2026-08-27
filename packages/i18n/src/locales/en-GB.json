@@ -1114,9 +1114,6 @@
       "heading": {
         "label": "Heading"
       },
-      "label": {
-        "label": "Label"
-      },
       "page-content": {
         "label": "Content region"
       }

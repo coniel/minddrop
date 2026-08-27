@@ -17,4 +17,8 @@ describe('getDesignRole', () => {
       DesignRoleNotRegisteredError,
     );
   });
+
+  it('returns null for unregistered roles when not throwing', () => {
+    expect(getDesignRole('unknown', false)).toBeNull();
+  });
 });

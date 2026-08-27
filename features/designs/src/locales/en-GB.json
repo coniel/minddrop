@@ -3,15 +3,6 @@
     "open": "Open design studio",
     "title": "Design studio",
     "backToDesigns": "Back to designs",
-    "palette": {
-      "elements": {
-        "default": "Elements",
-        "card": "Card elements",
-        "list": "List elements",
-        "page": "Page elements",
-        "space": "Space elements"
-      }
-    },
     "layouts": {
       "new": "New",
       "backToLayouts": "Back to layouts"

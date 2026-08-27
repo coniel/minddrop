@@ -1,5 +1,6 @@
 import { PropertyElement } from '@minddrop/designs';
 import { BadgesPropertyRenderer } from './BadgesPropertyRenderer';
+import { CollectionPropertyRenderer } from './CollectionPropertyRenderer';
 import { DatePropertyRenderer } from './DatePropertyRenderer';
 import { EditorPropertyRenderer } from './EditorPropertyRenderer';
 import {
@@ -47,4 +48,5 @@ export const propertyRendererMap: Record<string, PropertyRenderer> = {
   image: renderer(ImagePropertyRenderer),
   'image-viewer': renderer(ImageViewerPropertyRenderer),
   icon: renderer(IconPropertyRenderer),
+  view: renderer(CollectionPropertyRenderer),
 };

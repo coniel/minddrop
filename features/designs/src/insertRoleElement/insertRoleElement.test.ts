@@ -1,9 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import {
-  BuiltInDesignRoles,
-  DesignRoles,
-  isRoleElement,
-} from '@minddrop/designs';
+import { isRoleElement } from '@minddrop/designs';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
 import {
   DesignStudioStore,
@@ -41,9 +37,9 @@ describe('insertRoleElement', () => {
     expect(inserted.type).toBe('text');
   });
 
-  it('inserts the element unbound', () => {
-    // Role elements render static content, so insertion binds no
-    // property
+  it('inserts static-only role elements unbound and static', () => {
+    // The heading role renders static chrome only, so insertion
+    // binds no property and starts the element in static mode
     insertRoleElement(studio, 'heading', 'root', 0, layout_card_1.id);
 
     const root = studio.getDesignElement('root', layout_card_1.id);
@@ -51,6 +47,7 @@ describe('insertRoleElement', () => {
     const inserted = studio.getDesignElement(insertedId, layout_card_1.id);
 
     expect(inserted.property).toBeUndefined();
+    expect(inserted.static).toBe(true);
   });
 
   it('selects the inserted element', () => {

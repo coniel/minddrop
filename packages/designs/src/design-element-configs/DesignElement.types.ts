@@ -4,12 +4,11 @@ import type { PagePanelElement } from './page-panel';
 import type { PropertyElement } from './property';
 import type { RootElement } from './root';
 import type { TextElement } from './text';
-import type { ViewElement } from './view';
 
 /**
  * Union of all leaf (non-container) design element types.
  */
-export type LeafDesignElement = TextElement | ViewElement | PropertyElement;
+export type LeafDesignElement = TextElement | PropertyElement;
 
 /**
  * Union of all design element types.
@@ -66,7 +65,6 @@ type Template<T> = Omit<T, 'id'>;
  */
 export type DesignElementTemplate =
   | Template<TextElement>
-  | Template<ViewElement>
   | Template<PropertyElement>
   | Template<ContainerElement>
   | Template<PagePanelElement>;

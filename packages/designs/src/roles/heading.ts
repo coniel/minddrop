@@ -2,12 +2,14 @@ import { DesignRoleConfig } from '../types';
 
 /**
  * A section heading within a layout, sized well below the title so
- * the two read as separate levels. Meant for static text, though a
- * property can be bound in its place.
+ * the two read as separate levels. Static chrome: property values
+ * render through property elements, so headings never bind one.
  */
 export const HeadingRole: DesignRoleConfig = {
   id: 'heading',
   elementType: 'text',
+  contentMode: 'static',
+  group: 'layout',
   label: 'designs.roles.heading.label',
   icon: 'heading',
   lockedStyle: {

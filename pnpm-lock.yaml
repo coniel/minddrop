@@ -1505,6 +1505,9 @@ importers:
 
   packages/designs:
     dependencies:
+      '@minddrop/data-views':
+        specifier: workspace:*
+        version: link:../data-views
       '@minddrop/events':
         specifier: workspace:*
         version: link:../events

@@ -6,7 +6,6 @@ import { getElementConfig, getElementConfigs } from './index';
 // which are always property bound are listed as false.
 const staticContentSupport: Record<string, boolean> = {
   text: true,
-  view: false,
   property: false,
   container: false,
   'page-panel': false,
@@ -16,7 +15,6 @@ const staticContentSupport: Record<string, boolean> = {
 // The empty behaviour of every element type
 const emptyBehaviors: Record<string, ElementEmptyBehavior> = {
   text: 'hide',
-  view: 'hide',
   property: 'hide',
   container: 'none',
   'page-panel': 'none',

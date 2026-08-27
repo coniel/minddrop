@@ -15,7 +15,6 @@ import {
 } from './page-panel';
 import { PropertyDesignElement } from './property';
 import { TextDesignElement } from './text';
-import { ViewDesignElement } from './view';
 
 /**
  * UI configuration for a design element type.
@@ -63,7 +62,6 @@ function elementUI<TElement extends DesignElement>(config: {
  */
 const elementUIs: ElementUIConfig[] = [
   elementUI({ type: 'text', DisplayComponent: TextDesignElement }),
-  elementUI({ type: 'view', DisplayComponent: ViewDesignElement }),
   elementUI({ type: 'property', DisplayComponent: PropertyDesignElement }),
   elementUI({
     type: 'container',
