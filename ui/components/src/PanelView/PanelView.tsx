@@ -13,6 +13,7 @@ import {
   Panel,
   Text,
   Toolbar,
+  TooltipProps,
   TranslatableNode,
   propsToClass,
 } from '@minddrop/ui-primitives';
@@ -33,6 +34,11 @@ export interface PanelViewAction {
    * Translated via i18n before being applied.
    */
   label: TranslationKey;
+
+  /**
+   * Tooltip shown on hover.
+   */
+  tooltip?: Omit<TooltipProps, 'children'>;
 
   /**
    * Prevents interaction with the action.
@@ -173,6 +179,7 @@ export const PanelView: React.FC<PanelViewProps> = ({
                   key={action.label}
                   icon={action.icon}
                   label={action.label}
+                  tooltip={action.tooltip}
                   color="neutral"
                   disabled={action.disabled}
                   onClick={action.onClick}
