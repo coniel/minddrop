@@ -5,6 +5,7 @@ export { loadVirtualDataViews as loadVirtual } from './loadVirtualDataViews';
 export { deleteDataView as delete } from './deleteDataView';
 export { getDataView as get } from './getDataView';
 export { getDataSourceDataViews as getByDataSource } from './getDataSourceDataViews';
+export { getOwnedDataViews as getByOwner } from './getOwnedDataViews';
 export { getReferencingDataViews as getReferencing } from './getReferencingDataViews';
 export { removeDataViewReferences as removeReferences } from './removeDataViewReferences';
 export { readDataView as read } from './readDataView';
