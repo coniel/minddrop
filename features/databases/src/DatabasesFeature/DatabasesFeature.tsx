@@ -63,7 +63,7 @@ export const DatabasesFeature: React.FC = () => {
       }
 
       // Skip views whose entry resolves
-      if (DatabaseEntries.Store.get(props.entryId)) {
+      if (DatabaseEntries.get(props.entryId, false)) {
         return;
       }
 

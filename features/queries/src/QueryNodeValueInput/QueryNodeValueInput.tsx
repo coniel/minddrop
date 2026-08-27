@@ -163,7 +163,7 @@ const QueryNodeEntryValueInput: React.FC<QueryNodeEntryValueInputProps> = ({
   const { t } = useTranslation({ keyPrefix: 'queries' });
 
   // Subscribe to entry changes so the options stay fresh
-  const entries = DatabaseEntries.Store.useAllItemsArray();
+  const entries = DatabaseEntries.useAll();
 
   // The picked entry IDs
   const pickedIds = Array.isArray(value) ? value : [];

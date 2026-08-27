@@ -69,7 +69,7 @@ export const DataViewEntryPicker: React.FC<DataViewEntryPickerProps> = ({
   const { t } = useTranslation({ keyPrefix: 'databases.entries.pickers' });
 
   // Subscribe to entry changes so the listed options stay fresh
-  DatabaseEntries.Store.useAllItemsArray();
+  DatabaseEntries.useAll();
 
   // Entries offered as options: top fuzzy matches when searching,
   // newest first otherwise. Fetches extra newest entries to

@@ -14,10 +14,10 @@ export function resolveOpenMode(
   }
 
   // Look up the entry's database to get the default open mode
-  const entry = DatabaseEntries.Store.get(entryId);
+  const entry = DatabaseEntries.get(entryId, false);
 
   if (entry) {
-    const database = Databases.Store.get(entry.database);
+    const database = Databases.get(entry.database, false);
 
     if (database) {
       return database.entryOpenMode;

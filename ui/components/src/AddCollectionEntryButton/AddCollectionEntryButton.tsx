@@ -80,7 +80,7 @@ export const AddCollectionEntryButton: FC<AddCollectionEntryButtonProps> = ({
   const collection = Collections.use(collectionId);
 
   // Subscribe to entry changes so the listed options stay fresh
-  DatabaseEntries.Store.useAllItemsArray();
+  DatabaseEntries.useAll();
 
   // Single database mode renders a flat list without group headings
   const singleDatabase = typeof database === 'string';
