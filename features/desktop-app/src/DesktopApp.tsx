@@ -12,7 +12,6 @@ import {
   ToggleWindowFillEvent,
 } from '@minddrop/events';
 import { DatabasesFeature } from '@minddrop/feature-databases';
-import { DesignsFeature } from '@minddrop/feature-designs-legacy';
 import { DevTools, ScreenshotPicker } from '@minddrop/feature-dev-tools';
 import { SearchFeature } from '@minddrop/feature-search';
 import { SpacesFeature } from '@minddrop/feature-spaces';
@@ -100,7 +99,6 @@ export const DesktopApp: React.FC = () => {
           <DatabasesFeature />
           <ConfirmationDialogFeature />
           <ErrorToastFeature />
-          <DesignsFeature />
           <SpacesFeature />
           <SearchFeature />
           <DevTools />
