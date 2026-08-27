@@ -17,15 +17,17 @@ export const useDatabaseEntry = (entryId: string): DatabaseEntry | null =>
   DatabaseEntriesStore.useItem(entryId);
 
 /**
- * Retrieves all entries for a given database.
+ * Retrieves all entries for a given database, or across all
+ * databases when no database ID is given.
  *
+ * @param databaseId - The ID of the database to filter by.
  * @returns An array of all entries.
  */
-export const useDatabaseEntries = (databaseId: string): DatabaseEntry[] =>
+export const useDatabaseEntries = (databaseId?: string): DatabaseEntry[] =>
   DatabaseEntriesStore.useStore(
     (state) =>
       Object.values(state.items).filter(
-        (entry) => entry.database === databaseId,
+        (entry) => !databaseId || entry.database === databaseId,
       ),
     shallow,
   );
