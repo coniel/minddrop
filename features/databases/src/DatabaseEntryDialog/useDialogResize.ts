@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef } from 'react';
 import {
   LayoutRegionSizesStore,
   layoutRegionSizeKey,
-} from '@minddrop/feature-designs-legacy';
+} from '@minddrop/feature-designs';
 import { getWindowSizeSlot } from '@minddrop/utils';
 import {
   DIALOG_CONTEXT,

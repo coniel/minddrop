@@ -8,12 +8,8 @@ import {
   resolveDesignPropertyMap,
   withImplicitMetadataProperties,
 } from '@minddrop/databases';
-import {
-  Designs,
-  Layouts,
-  resolveDesignMediaDirPath,
-} from '@minddrop/designs-legacy';
-import { LayoutRenderer } from '@minddrop/feature-designs-legacy';
+import { Designs, Layouts, resolveDesignMediaDirPath } from '@minddrop/designs';
+import { LayoutRenderer } from '@minddrop/feature-designs';
 import { useTranslation } from '@minddrop/i18n';
 import { PropertyValue } from '@minddrop/properties';
 import { useDraggable } from '@minddrop/selection';
@@ -87,7 +83,9 @@ const Entry: React.FC<EntryProps> = ({
 }) => {
   const { t } = useTranslation();
   const database = Databases.use(entry.database);
-  const design = Designs.use(database?.designId || '');
+  const resolvedDesign = Designs.use(database?.designId || '');
+  // Only database designs apply to entries
+  const design = resolvedDesign?.type === 'database' ? resolvedDesign : null;
   const {
     draggable,
     optionsMenu,

@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import {
   LayoutRegionSizesStore,
   layoutRegionSizeKey,
-} from '@minddrop/feature-designs-legacy';
+} from '@minddrop/feature-designs';
 import { WindowSizeSlot, getWindowSizeSlot } from '@minddrop/utils';
 
 // Manages the entry dialog's size state. Restores a persisted size

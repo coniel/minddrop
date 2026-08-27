@@ -5,8 +5,8 @@ import {
   Databases,
 } from '@minddrop/databases';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
-import { Designs } from '@minddrop/designs-legacy';
-import { DesignFixtures } from '@minddrop/designs-legacy/test-utils';
+import { Designs } from '@minddrop/designs';
+import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { render, screen } from '@minddrop/test-utils';
 import { cleanup, setup } from '../test-utils';
 import { DatabaseEntryRenderer } from './DatabaseEntryRenderer';
@@ -16,22 +16,20 @@ const {
   layout_list_1,
   layout_card_1,
   element_text_1,
-  element_editor_1,
+  element_property_formatted_text_1,
   design_books,
 } = DesignFixtures;
 
-// A text element bound to the 'Heading' design property, showing
-// its placeholder rather than hiding when the value is unset
+// A text element bound to the 'Heading' design property
 const boundTextElement = {
   ...element_text_1,
   property: 'Heading',
-  emptyBehavior: 'placeholder' as const,
 };
 
 // A card layout whose only element is the bound text element
 const boundLayout = {
   ...layout_card_1,
-  id: 'bound-card',
+  id: 'layout_bound-card' as const,
   tree: { ...layout_card_1.tree, children: [boundTextElement] },
 };
 
@@ -76,17 +74,17 @@ const mappedEntry = {
   properties: { Body: 'Mapped Value' },
 };
 
-// An editor element with its title bound to the 'Heading' design
-// property
+// An editor variant formatted-text element with its title bound
+// to the 'Heading' design property
 const titleBoundEditorElement = {
-  ...element_editor_1,
+  ...element_property_formatted_text_1,
   titleProperty: 'Heading',
 };
 
 // A card layout whose only element is the title-bound editor
 const titleBoundLayout = {
   ...layout_card_1,
-  id: 'title-bound-card',
+  id: 'layout_title-bound-card' as const,
   tree: { ...layout_card_1.tree, children: [titleBoundEditorElement] },
 };
 
@@ -187,7 +185,7 @@ describe('<DatabaseEntryRenderer />', () => {
     screen.getByText('Mapped Value');
   });
 
-  it("renders the design property's placeholder when the property is unmapped", () => {
+  it('does not render the design placeholder when the property is unmapped', () => {
     // Register the bound design and a database with no property mapping
     Designs.Store.load([boundDesign]);
     Databases.Store.load([mappedDatabase({})]);
@@ -201,8 +199,10 @@ describe('<DatabaseEntryRenderer />', () => {
       />,
     );
 
-    // With no mapping, the element falls back to the design property placeholder
-    screen.getByText('Heading placeholder');
+    // Placeholders are a design aid: an unmapped bound element
+    // renders empty rather than showing placeholder text as if it
+    // were entry content
+    expect(screen.queryByText('Heading placeholder')).toBeNull();
   });
 
   it('renders the entry title in a title-bound editor element', () => {

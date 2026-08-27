@@ -1,19 +1,13 @@
+import { DesignId } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
-import { OpenDesignStudioEvent } from '@minddrop/feature-designs-legacy';
-import { OpenDatabaseViewEvent } from '../events';
+import { OpenDesignStudioEvent } from '@minddrop/feature-designs';
 
 /**
- * Opens the design studio with back navigation returning to the
- * database's configuration panel.
+ * Opens the design studio on the given design. The studio wires
+ * the app's nav back action itself, returning to the previous view.
  *
- * @param databaseId - The ID of the database to return to.
  * @param designId - The ID of the design to open in the editor.
  */
-export function openDesignStudio(databaseId: string, designId?: string) {
-  Events.dispatch(OpenDesignStudioEvent, {
-    designId,
-    backButtonLabel: 'databases.design.actions.back',
-    backEvent: OpenDatabaseViewEvent,
-    backEventData: { databaseId, configurationPanelOpen: true },
-  });
+export function openDesignStudio(designId?: DesignId) {
+  Events.dispatch(OpenDesignStudioEvent, { designId });
 }

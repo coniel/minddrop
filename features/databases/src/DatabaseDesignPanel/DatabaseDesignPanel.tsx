@@ -6,7 +6,7 @@ import {
   layoutContextBaseType,
   resolveDesignPropertyMap,
 } from '@minddrop/databases';
-import { Design, Designs } from '@minddrop/designs-legacy';
+import { DatabaseDesign, Designs } from '@minddrop/designs';
 import { createI18nKeyBuilder } from '@minddrop/i18n';
 import { METADATA_PROPERTY_TYPES } from '@minddrop/properties';
 import { UiIconName } from '@minddrop/ui-icons';
@@ -82,7 +82,7 @@ export const DatabaseDesignPanel: React.FC<DatabaseDesignPanelProps> = ({
   databaseId,
 }) => {
   const database = Databases.use(databaseId);
-  const designs = Designs.useAll();
+  const designs = Designs.useOfType('database');
 
   // Assign the selected design to the database
   function handleSelectDesign(designId: string) {
@@ -109,7 +109,7 @@ export const DatabaseDesignPanel: React.FC<DatabaseDesignPanelProps> = ({
   return (
     <Stack gap={4} className="database-design-panel">
       {/* Design selection header */}
-      <Group gap={2} className="database-design-panel-header">
+      <Group gap={1} className="database-design-panel-header">
         <Select
           size="lg"
           variant="subtle"
@@ -123,14 +123,14 @@ export const DatabaseDesignPanel: React.FC<DatabaseDesignPanelProps> = ({
             }),
           )}
         />
-        <Spacer />
         {design && (
           <IconButton
             size="lg"
-            icon="palette"
+            variant="subtle"
+            icon="pencil-ruler"
             label="databases.design.actions.edit"
             tooltip={{ title: 'databases.design.actions.edit' }}
-            onClick={() => openDesignStudio(databaseId, design.id)}
+            onClick={() => openDesignStudio(design.id)}
           />
         )}
       </Group>
@@ -154,7 +154,7 @@ interface DesignSectionProps {
   /**
    * The database's design.
    */
-  design: Design;
+  design: DatabaseDesign;
 }
 
 /**
