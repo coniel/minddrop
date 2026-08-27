@@ -11,6 +11,7 @@ export const NumberPropertyElementConfig: PropertyElementConfig = {
   icon: 'hash',
   bindsPropertyTypes: ['number'],
   defaultVariant: 'plain',
+  context: { designTypes: ['database'] },
   variants: [
     {
       id: 'plain',

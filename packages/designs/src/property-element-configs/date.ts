@@ -13,6 +13,7 @@ export const DatePropertyElementConfig: PropertyElementConfig = {
   icon: 'calendar',
   bindsPropertyTypes: ['date', 'created', 'last-modified'],
   defaultVariant: 'plain',
+  context: { designTypes: ['database'] },
   variants: [
     {
       id: 'plain',

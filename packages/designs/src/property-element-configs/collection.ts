@@ -14,7 +14,7 @@ export const CollectionPropertyElementConfig: PropertyElementConfig = {
   icon: 'app-window',
   bindsPropertyTypes: ['collection'],
   defaultVariant: 'gallery',
-  context: { layoutTypes: ['page', 'space'] },
+  context: { designTypes: ['database'], layoutTypes: ['page'] },
   get variants() {
     // One variant per registered view type able to render a
     // collection, so new view types join the vocabulary on

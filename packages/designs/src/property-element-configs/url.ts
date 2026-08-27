@@ -14,6 +14,7 @@ export const UrlPropertyElementConfig: PropertyElementConfig = {
   icon: 'link',
   bindsPropertyTypes: ['url'],
   defaultVariant: 'text',
+  context: { designTypes: ['database'] },
   variants: [
     {
       id: 'text',

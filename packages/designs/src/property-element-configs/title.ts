@@ -19,6 +19,7 @@ export const TitlePropertyElementConfig: PropertyElementConfig = {
   icon: 'type',
   bindsPropertyTypes: ['title'],
   defaultVariant: 'md',
+  context: { designTypes: ['database'] },
   variants: [
     {
       id: 'sm',

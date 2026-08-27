@@ -14,6 +14,7 @@ export const TextPropertyElementConfig: PropertyElementConfig = {
   icon: 'text',
   bindsPropertyTypes: ['text'],
   defaultVariant: 'short',
+  context: { designTypes: ['database'] },
   variants: [
     {
       id: 'short',

@@ -28,6 +28,7 @@ export const SelectPropertyElementConfig: PropertyElementConfig = {
   icon: 'rectangle-ellipsis',
   bindsPropertyTypes: ['select'],
   defaultVariant: 'badges',
+  context: { designTypes: ['database'] },
   variants: [
     {
       id: 'badges-sm',

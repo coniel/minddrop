@@ -11,6 +11,7 @@ export const IconPropertyElementConfig: PropertyElementConfig = {
   icon: 'smile',
   bindsPropertyTypes: ['icon'],
   defaultVariant: 'plain',
+  context: { designTypes: ['database'] },
   variants: [
     {
       id: 'plain',

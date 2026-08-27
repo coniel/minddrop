@@ -11,6 +11,7 @@ export const ImagePropertyElementConfig: PropertyElementConfig = {
   icon: 'image',
   bindsPropertyTypes: ['image'],
   defaultVariant: 'image',
+  context: { designTypes: ['database'] },
   variants: [
     {
       id: 'image',

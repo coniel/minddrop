@@ -13,7 +13,7 @@ export const FormattedTextPropertyElementConfig: PropertyElementConfig = {
   icon: 'text-quote',
   bindsPropertyTypes: ['formatted-text'],
   defaultVariant: 'editor',
-  context: { layoutTypes: ['card', 'page', 'space'] },
+  context: { designTypes: ['database'], layoutTypes: ['card', 'page'] },
   variants: [
     {
       id: 'editor',
