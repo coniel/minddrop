@@ -2207,6 +2207,7 @@ declare module 'i18next' {
               image: string;
               frame: string;
               title: string;
+              label: string;
               variants: string;
               variant: string;
               content: string;
@@ -2250,6 +2251,7 @@ declare module 'i18next' {
               backgroundImageFit: string;
               iconSize: string;
               iconColour: string;
+              variant: string;
               top: string;
               right: string;
               bottom: string;
@@ -2688,6 +2690,28 @@ declare module 'i18next' {
             direction: {
               column: string;
               row: string;
+            };
+            labelVariant: {
+              above: {
+                label: string;
+              };
+              side: {
+                label: string;
+              };
+              spread: {
+                label: string;
+              };
+            };
+            iconVariant: {
+              side: {
+                label: string;
+              };
+              above: {
+                label: string;
+              };
+            };
+            chromePreview: {
+              value: string;
             };
             align: {
               start: string;

@@ -4,6 +4,7 @@ import {
   RadiusToken,
   SpaceToken,
 } from '../tokens';
+import { PropertyChromeStyles } from './PropertyChromeStyles';
 import { TextTransform } from './blocks';
 import { MarginStyle } from './blocks';
 
@@ -12,7 +13,7 @@ import { MarginStyle } from './blocks';
  * its select option, so they are not style values; its size,
  * rounding and padding are the chip shape its variant sets.
  */
-export interface BadgeStyle extends MarginStyle {
+export interface BadgeStyle extends MarginStyle, PropertyChromeStyles {
   /**
    * The font size step.
    */

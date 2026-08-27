@@ -50,6 +50,7 @@
         "image": "Image",
         "frame": "Frame",
         "title": "Title",
+        "label": "Label",
         "variants": "Variants",
         "variant": "Variant",
         "content": "Content",
@@ -93,6 +94,7 @@
         "backgroundImageFit": "Image fit",
         "iconSize": "Icon size",
         "iconColour": "Icon colour",
+        "variant": "Variant",
         "top": "Top",
         "right": "Right",
         "bottom": "Bottom",
@@ -531,6 +533,28 @@
       "direction": {
         "column": "Stacked",
         "row": "Side by side"
+      },
+      "labelVariant": {
+        "above": {
+          "label": "Above"
+        },
+        "side": {
+          "label": "Side"
+        },
+        "spread": {
+          "label": "Spread"
+        }
+      },
+      "iconVariant": {
+        "side": {
+          "label": "Side"
+        },
+        "above": {
+          "label": "Above"
+        }
+      },
+      "chromePreview": {
+        "value": "Value"
       },
       "align": {
         "start": "Start",

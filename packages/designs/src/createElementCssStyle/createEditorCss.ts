@@ -1,6 +1,9 @@
 import type { CSSProperties } from 'react';
-import { EditorStyle } from '../styles';
+import { TitlePropertyElementConfig } from '../property-element-configs/title';
+import { EditorStyle, TypographyStyle } from '../styles';
 import { tokenCssVariable } from '../tokens';
+import { LayoutType } from '../types';
+import { resolvePropertyElementStyle } from '../utils/resolvePropertyElementStyle';
 import { createTypographyCss } from './createTypographyCss';
 import {
   borderCss,
@@ -44,8 +47,24 @@ export function createEditorCss(style: EditorStyle): CSSProperties {
 }
 
 /**
- * Emits the CSS a renderer applies to the editor's title bar.
+ * Emits the CSS a renderer applies to the editor's title bar: the
+ * title element theme styles of the title style's selected
+ * variant, resolved against the layout context, with the title's
+ * own colour applied over them.
  */
-export function createEditorTitleCss(style: EditorStyle): CSSProperties {
-  return createTypographyCss(style.title ?? {});
+export function createEditorTitleCss(
+  style: EditorStyle,
+  layoutType?: LayoutType,
+): CSSProperties {
+  const title = style.title ?? {};
+
+  // The title bar renders at a title element size, so the variant
+  // resolves through the title element's theme styles
+  const themeStyle = resolvePropertyElementStyle(
+    TitlePropertyElementConfig,
+    title.variant,
+    layoutType,
+  ) as TypographyStyle;
+
+  return createTypographyCss({ ...themeStyle, color: title.color });
 }

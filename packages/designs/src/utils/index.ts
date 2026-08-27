@@ -7,6 +7,7 @@ export * from './elementTitleBindingId';
 export * from './isRoleElement';
 export * from './isPropertyElement';
 export * from './isEditorVariantElement';
+export * from './supportsPropertyChrome';
 export * from './resolveElementStyle';
 export * from './resolveRoleStyle';
 export * from './resolvePropertyElementStyle';

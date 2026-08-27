@@ -1,0 +1,47 @@
+.designs-property-chrome {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.designs-property-chrome-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1-5);
+}
+
+.designs-property-chrome-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1-5);
+  min-width: 0;
+}
+
+/* The value takes the remaining row width */
+.designs-property-chrome-row > :last-child {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* The spread variant hugs the value to the row's far side */
+.designs-property-chrome-row-spread > :last-child {
+  flex: 0 1 auto;
+  margin-left: auto;
+}
+
+/* The label's base look: fine print beside or above the value */
+.designs-property-chrome-label {
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-tight);
+  white-space: nowrap;
+}
+
+/* Icon glyphs centre on the row and never squash */
+.designs-property-chrome-icon {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  font-size: var(--icon-size-sm);
+  line-height: 1;
+}

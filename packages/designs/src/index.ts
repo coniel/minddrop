@@ -16,6 +16,7 @@ export {
   isRoleElement,
   isPropertyElement,
   isEditorVariantElement,
+  supportsPropertyChrome,
   resolveElementStyle,
   resolveRoleStyle,
   resolvePropertyElementStyle,

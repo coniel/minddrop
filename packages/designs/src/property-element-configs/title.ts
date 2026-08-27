@@ -2,9 +2,10 @@ import { PropertyElementConfig } from '../types';
 import { TypographyEditableStyles } from './typographyEditableStyles';
 
 // The style keys a title size offers for editing. Titles never
-// render italic, so the key is withheld.
+// render italic, and as the entry's heading they carry no property
+// chrome, so those keys are withheld.
 const TitleEditableStyles = TypographyEditableStyles.filter(
-  (key) => key !== 'italic',
+  (key) => !['italic', 'label', 'icon'].includes(key),
 );
 
 /**

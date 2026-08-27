@@ -8,3 +8,5 @@ export * from './createIconCss';
 export * from './createEmbedCss';
 export * from './createEditorCss';
 export * from './createFieldCss';
+export * from './createPropertyLabelCss';
+export * from './createPropertyIconCss';

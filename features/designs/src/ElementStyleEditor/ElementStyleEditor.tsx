@@ -24,6 +24,8 @@ import { resolveNodeLabel } from '../ElementsTree';
 import {
   ElementContentSection,
   PropertyElementVariantFields,
+  PropertyIconSection,
+  PropertyLabelSection,
   RoleVariantFields,
   StyleSectionResetContext,
   elementFormatEditorMap,
@@ -163,6 +165,18 @@ export const ElementStyleEditor: React.FC = () => {
 
               {/** Variant pickers, for property elements **/}
               <PropertyElementVariantFields elementId={selectedElementId} />
+
+              {/** The property name label rendered alongside the value **/}
+              <PropertyLabelSection
+                key={`label-${selectedElementId}`}
+                elementId={selectedElementId}
+              />
+
+              {/** The property icon rendered alongside the value **/}
+              <PropertyIconSection
+                key={`icon-${selectedElementId}`}
+                elementId={selectedElementId}
+              />
 
               {/** The style fields of the element's style category **/}
               <StyleEditor

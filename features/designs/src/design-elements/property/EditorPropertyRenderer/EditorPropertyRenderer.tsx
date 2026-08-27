@@ -148,7 +148,9 @@ export const EditorPropertyRenderer: React.FC<EditorPropertyRendererProps> = ({
         initialValue={value}
         title={title}
         titleStyle={
-          element.titleProperty ? createEditorTitleCss(style) : undefined
+          element.titleProperty
+            ? createEditorTitleCss(style, layoutType ?? undefined)
+            : undefined
         }
         onTitleChange={preview ? undefined : handleTitleChange}
         validateTitle={preview ? undefined : validateTitle}

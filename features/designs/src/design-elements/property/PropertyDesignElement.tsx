@@ -3,6 +3,7 @@ import {
   getPropertyElementConfig,
   getPropertyElementVariant,
 } from '@minddrop/designs';
+import { PropertyChrome } from './PropertyChrome';
 import { propertyRendererMap } from './propertyRendererMap';
 
 export interface PropertyDesignElementProps {
@@ -14,8 +15,9 @@ export interface PropertyDesignElementProps {
 
 /**
  * Renders a property element through the renderer its selected
- * presentation variant declares. Renders nothing when the property
- * type has no config or the renderer is unknown.
+ * presentation variant declares, wrapped in the property chrome
+ * rendering the name label and icon when enabled. Renders nothing
+ * when the property type has no config or the renderer is unknown.
  */
 export const PropertyDesignElement: React.FC<PropertyDesignElementProps> = ({
   element,
@@ -37,5 +39,9 @@ export const PropertyDesignElement: React.FC<PropertyDesignElementProps> = ({
     return null;
   }
 
-  return <Renderer element={element} />;
+  return (
+    <PropertyChrome element={element}>
+      <Renderer element={element} />
+    </PropertyChrome>
+  );
 };

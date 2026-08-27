@@ -1,10 +1,10 @@
-import { useCallback } from 'react';
 import {
   FontFamilyToken,
   FontFamilyTokens,
-  TypographyStyle,
+  getPropertyElementConfig,
 } from '@minddrop/designs';
 import {
+  useActiveLayoutType,
   useDesignStudio,
   useDesignStudioStore,
   useElement,
@@ -14,6 +14,7 @@ import {
   ElementTitlePropertyField,
   TitleCompatiblePropertyTypes,
 } from './ElementTitlePropertyField';
+import { VariantSample } from './PropertyElementVariantFields';
 import {
   MarginSides,
   MarginStyleKeys,
@@ -25,18 +26,29 @@ import { StyleEditorProps } from './StyleEditorProps';
 import { StyleSection } from './StyleSection';
 import { TextColourFields } from './TextColourFields';
 import { TokenSelect } from './TokenSelect';
-import { TypographyFields, TypographyStyleKeys } from './TypographyFields';
+import { VariantOptionsField } from './VariantOptionsField';
 import {
   fieldLabelKey,
   fontFamilyOptionKey,
   sectionLabelKey,
 } from './styleI18nKeys';
+import { useNestedStyle } from './useNestedStyle';
 import { useStyleEditor } from './useStyleEditor';
+
+// The title element config, whose size variants the title bar
+// renders at
+const TitleElementConfig = getPropertyElementConfig('title');
+
+/**
+ * The keys of the nested title style the section governs.
+ */
+const EditorTitleStyleKeys = ['variant', 'color'];
 
 /**
  * Renders the style editor for rich content editors: the body
  * type and frame, plus a Title section binding a property as the
- * title bar above the content and styling its typography.
+ * title bar above the content, rendered at one of the title
+ * element's sizes.
  */
 export const EditorStyleEditor: React.FC<StyleEditorProps> = ({
   elementId,
@@ -52,9 +64,12 @@ export const EditorStyleEditor: React.FC<StyleEditorProps> = ({
   });
   const element = useElement(elementId);
   const editor = useStyleEditor(elementId);
+  // The title bar styles through a nested object
+  const title = useNestedStyle(editor, 'title');
+  // Title samples preview the variant styling as the active
+  // layout resolves it
+  const layoutType = useActiveLayoutType();
   const { isEditable, getValue, setValue, editableSides } = editor;
-
-  const title = getValue<TypographyStyle>('title');
 
   // Whether the element has a bound title property, which keeps
   // the Title section open alongside its style values
@@ -97,59 +112,46 @@ export const EditorStyleEditor: React.FC<StyleEditorProps> = ({
     studio.setDesignElement(elementId, unboundElement);
   }
 
-  // Write a single key of the nested title style, dropping the
-  // title style entirely once none of its values remain set
-  const setTitleValue = useCallback(
-    (key: string, value: unknown) => {
-      const nextTitle: Record<string, unknown> = { ...title };
-
-      // Remove keys the user cleared so the title style does not
-      // linger as an empty object
-      if (value === undefined) {
-        delete nextTitle[key];
-      } else {
-        nextTitle[key] = value;
-      }
-
-      const hasValues = Object.keys(nextTitle).length > 0;
-
-      setValue('title', hasValues ? nextTitle : undefined);
-    },
-    [title, setValue],
-  );
-
-  // Read a single key of the nested title style
-  const getTitleValue = useCallback(
-    <TValue,>(key: string) =>
-      (title as Record<string, unknown> | undefined)?.[key] as
-        | TValue
-        | undefined,
-    [title],
-  );
-
-  // The title style is nested, so a role either controls the whole
-  // title or none of it
-  const isTitleEditable = useCallback(() => isEditable('title'), [isEditable]);
-
   return (
     <>
       {isEditable('title') && (
         <StyleSection
           label={sectionLabelKey('title')}
-          keys={TypographyStyleKeys}
-          isEditable={isTitleEditable}
-          getValue={getTitleValue}
-          setValue={setTitleValue}
+          keys={EditorTitleStyleKeys}
+          isEditable={title.isEditable}
+          getValue={title.getValue}
+          setValue={title.setValue}
           hasCustomValues={hasTitleBinding}
           onOpen={handleTitleOpen}
           onClear={handleTitleClear}
         >
           <ElementTitlePropertyField elementId={elementId} />
-          <TypographyFields
-            isEditable={isTitleEditable}
-            getValue={getTitleValue}
-            setValue={setTitleValue}
-            showTruncate={false}
+          <VariantOptionsField
+            label={fieldLabelKey('variant')}
+            options={TitleElementConfig.variants.map((option) => ({
+              id: option.id,
+              label: option.label,
+              sample: (
+                <VariantSample
+                  config={TitleElementConfig}
+                  variant={option}
+                  layoutType={layoutType ?? undefined}
+                  truncate
+                />
+              ),
+            }))}
+            value={
+              title.getValue<string>('variant') ??
+              TitleElementConfig.defaultVariant
+            }
+            onValueChange={(value) => title.setValue('variant', value)}
+          />
+          <TextColourFields
+            editor={{
+              isEditable: title.isEditable,
+              getResolvedValue: title.getValue,
+              setValue: title.setValue,
+            }}
           />
         </StyleSection>
       )}

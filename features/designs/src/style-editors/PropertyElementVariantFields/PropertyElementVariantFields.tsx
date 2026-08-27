@@ -14,7 +14,6 @@ import {
   resolvePropertyElementStyle,
 } from '@minddrop/designs';
 import { useTranslation } from '@minddrop/i18n';
-import { InputLabel, RadioToggleGroup, Toggle } from '@minddrop/ui-primitives';
 import { ContentColors } from '@minddrop/ui-theme';
 import {
   useActiveLayoutType,
@@ -24,9 +23,9 @@ import {
 import { parseBadgeLabels, resolveBadgeColorCss } from '../../utils';
 import { PanelSection } from '../PanelSection';
 import { StyleEditorProps } from '../StyleEditorProps';
+import { VariantOptionsField } from '../VariantOptionsField';
 import { sectionLabelKey } from '../styleI18nKeys';
 import '../../design-elements/property/BadgesPropertyRenderer/BadgesPropertyRenderer.css';
-import './PropertyElementVariantFields.css';
 
 /**
  * Renders a property element's presentation variant picker: a
@@ -37,7 +36,6 @@ import './PropertyElementVariantFields.css';
 export const PropertyElementVariantFields: React.FC<StyleEditorProps> = ({
   elementId,
 }) => {
-  const { t } = useTranslation();
   const studio = useDesignStudio();
   const element = useElement(elementId);
   // Samples preview the variant styling as the active layout
@@ -77,45 +75,28 @@ export const PropertyElementVariantFields: React.FC<StyleEditorProps> = ({
 
   return (
     <PanelSection label={sectionLabelKey('variant')}>
-      <RadioToggleGroup
-        className="designs-property-variant-options"
+      <VariantOptionsField
+        options={config.variants.map((option) => ({
+          id: option.id,
+          label: option.label,
+          description: option.description,
+          sample: (
+            <VariantSample
+              config={config}
+              variant={option}
+              layoutType={layoutType ?? undefined}
+              truncate={config.propertyType === 'title'}
+            />
+          ),
+        }))}
         value={variant.id}
         onValueChange={handlePresentationChange}
-      >
-        {config.variants.map((option) => (
-          <Toggle
-            key={option.id}
-            value={option.id}
-            label={t(option.label)}
-            className="designs-property-variant-option"
-          >
-            <div className="designs-property-variant-option-content">
-              {/** The variant's name **/}
-              <InputLabel size="xs" label={option.label} />
-
-              {/** What the variant renders, for variants a sample
-               * cannot speak for **/}
-              {option.description && (
-                <span className="designs-property-variant-option-description">
-                  {t(option.description)}
-                </span>
-              )}
-
-              {/** A sample rendered in the variant's styling **/}
-              <VariantSample
-                config={config}
-                variant={option}
-                layoutType={layoutType ?? undefined}
-              />
-            </div>
-          </Toggle>
-        ))}
-      </RadioToggleGroup>
+      />
     </PanelSection>
   );
 };
 
-interface VariantSampleProps {
+export interface VariantSampleProps {
   /**
    * The property element config the variant belongs to.
    */
@@ -131,6 +112,12 @@ interface VariantSampleProps {
    * styles resolve against.
    */
   layoutType?: LayoutType;
+
+  /**
+   * Whether the sample is capped to a single ellipsised line, for
+   * outsized type a wrapping sample would let dominate the list.
+   */
+  truncate?: boolean;
 }
 
 /**
@@ -139,10 +126,11 @@ interface VariantSampleProps {
  * box, the rest as a line of text. Renders nothing for variants
  * without a sample.
  */
-const VariantSample: React.FC<VariantSampleProps> = ({
+export const VariantSample: React.FC<VariantSampleProps> = ({
   config,
   variant,
   layoutType,
+  truncate = false,
 }) => {
   const { t } = useTranslation();
 
@@ -153,6 +141,11 @@ const VariantSample: React.FC<VariantSampleProps> = ({
 
   // The styling the variant renders the sample in
   const style = resolvePropertyElementStyle(config, variant.id, layoutType);
+
+  // The single-line cap applies through a modifier class
+  const sampleClassName = truncate
+    ? 'designs-variant-option-sample designs-variant-option-sample-truncate'
+    : 'designs-variant-option-sample';
 
   // Badge variants render a chip per label, as the canvas does
   if (variant.styleCategory === 'badge') {
@@ -165,7 +158,7 @@ const VariantSample: React.FC<VariantSampleProps> = ({
   if (variant.styleCategory === 'field') {
     return (
       <span
-        className="designs-property-variant-option-sample"
+        className={sampleClassName}
         style={createFieldCss(style as FieldStyle)}
       >
         {t(variant.sample)}
@@ -175,7 +168,7 @@ const VariantSample: React.FC<VariantSampleProps> = ({
 
   return (
     <span
-      className="designs-property-variant-option-sample"
+      className={sampleClassName}
       style={createTypographyCss(style as TypographyStyle)}
     >
       {t(variant.sample)}

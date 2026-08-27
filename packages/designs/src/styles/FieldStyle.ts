@@ -5,6 +5,7 @@ import {
   LineHeightToken,
   TextColorToken,
 } from '../tokens';
+import { PropertyChromeStyles } from './PropertyChromeStyles';
 import {
   BackgroundEmphasis,
   BorderBlockStyle,
@@ -21,7 +22,8 @@ export interface FieldStyle
   extends PaddingStyle,
     MarginStyle,
     BorderBlockStyle,
-    MaxWidthStyle {
+    MaxWidthStyle,
+    PropertyChromeStyles {
   /**
    * The text colour step of the field value.
    */

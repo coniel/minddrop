@@ -4,10 +4,13 @@ import { TypographyEditableStyles } from './typographyEditableStyles';
 // The style keys the badges presentations offer for editing. A
 // chip's fill and label colour come from its select option, and its
 // size, rounding and padding are the chip shape the variant sets,
-// so only the label's weight and case are left to style.
+// so only the label's weight and case are left to style. The label
+// and icon keys enable the property chrome sections.
 const BadgesEditableStyles = [
   'fontWeight',
   'textTransform',
+  'label',
+  'icon',
   'marginTop',
   'marginRight',
   'marginBottom',

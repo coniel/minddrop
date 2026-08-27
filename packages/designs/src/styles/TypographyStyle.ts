@@ -6,15 +6,20 @@ import {
   LineHeightToken,
   TextColorToken,
 } from '../tokens';
+import { PropertyChromeStyles } from './PropertyChromeStyles';
 import { MarginStyle, MaxWidthStyle, TextTransform } from './blocks';
 
 export type TextAlign = 'left' | 'center' | 'right' | 'justify';
 
 /**
  * Styles for text-rendering elements. Every value resolves through
- * the theme; omitted values inherit.
+ * the theme; omitted values inherit. The chrome styles apply on
+ * property elements only.
  */
-export interface TypographyStyle extends MarginStyle, MaxWidthStyle {
+export interface TypographyStyle
+  extends MarginStyle,
+    MaxWidthStyle,
+    PropertyChromeStyles {
   /**
    * The text colour step. Omitted, the text renders regular.
    */

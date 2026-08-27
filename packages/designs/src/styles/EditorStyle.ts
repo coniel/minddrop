@@ -4,7 +4,6 @@ import {
   LineHeightToken,
   TextColorToken,
 } from '../tokens';
-import { TypographyStyle } from './TypographyStyle';
 import {
   BorderBlockStyle,
   MarginStyle,
@@ -13,8 +12,26 @@ import {
 } from './blocks';
 
 /**
+ * Styles for the title bar above an editor's body. The variant
+ * carries the title's typographic shape; only the colour is
+ * styled per element.
+ */
+export interface EditorTitleStyle {
+  /**
+   * The title element presentation variant the title bar renders
+   * at. Omitted or unknown, the title element's default applies.
+   */
+  variant?: string;
+
+  /**
+   * The title colour step. Omitted, the title renders regular.
+   */
+  color?: TextColorToken;
+}
+
+/**
  * Styles for rich content editor elements. The title bar above the
- * editor body is styled through the nested `title` typography.
+ * editor body is styled through the nested `title` style.
  */
 export interface EditorStyle
   extends PaddingStyle,
@@ -42,7 +59,7 @@ export interface EditorStyle
   color?: TextColorToken;
 
   /**
-   * The typography of the editor's title bar.
+   * The styling of the editor's title bar.
    */
-  title?: TypographyStyle;
+  title?: EditorTitleStyle;
 }

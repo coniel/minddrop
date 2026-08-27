@@ -1,0 +1,12 @@
+/* ============================================================
+   PROPERTY CHROME VARIANT PREVIEW
+   The chrome variant sample: the chrome piece arranged around a
+   stand-in value line through the chrome's own layout classes.
+   ============================================================ */
+
+/* The stand-in value line the chrome piece arranges around */
+.designs-chrome-variant-preview-value {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-none);
+  color: var(--text-regular);
+}

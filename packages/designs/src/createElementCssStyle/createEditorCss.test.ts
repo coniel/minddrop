@@ -32,18 +32,25 @@ describe('createEditorCss', () => {
 });
 
 describe('createEditorTitleCss', () => {
-  it('emits nothing without a title style', () => {
-    expect(createEditorTitleCss({})).toEqual({});
+  it('resolves the default title variant styles', () => {
+    expect(createEditorTitleCss({})).toEqual({
+      fontSize: 'var(--font-size-md)',
+      fontWeight: 'var(--font-weight-semibold)',
+      lineHeight: 'var(--line-height-tight)',
+    });
   });
 
-  it('emits the nested title typography', () => {
-    expect(
-      createEditorTitleCss({
-        title: { fontSize: '4xl', fontWeight: 'bold' },
-      }),
-    ).toEqual({
-      fontSize: 'var(--font-size-4xl)',
+  it('resolves the selected variant against the layout context', () => {
+    expect(createEditorTitleCss({ title: { variant: 'lg' } }, 'page')).toEqual({
+      fontSize: 'var(--font-size-5xl)',
       fontWeight: 'var(--font-weight-bold)',
+      lineHeight: 'var(--line-height-tight)',
     });
+  });
+
+  it('applies the title colour over the variant styles', () => {
+    expect(createEditorTitleCss({ title: { color: 'subtle' } }).color).toBe(
+      'var(--text-muted)',
+    );
   });
 });
