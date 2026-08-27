@@ -9,7 +9,7 @@
     "clean": "rimraf -rf ./dist",
     "compile": "rollup --config",
     "lint": "eslint .  --max-warnings 0",
-    "typecheck": "tsc --noEmit --jsx react-jsx",
+    "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest"
   },

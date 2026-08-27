@@ -7,7 +7,7 @@
     "lint": "eslint .  --max-warnings 0",
     "test": "vitest run --passWithNoTests",
     "test:watch": "vitest",
-    "typecheck": "tsc --noEmit --jsx react-jsx"
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "eslint": "^9.39.3",
