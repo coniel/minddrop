@@ -1,4 +1,4 @@
-import { Layout } from '@minddrop/designs-legacy';
+import { VirtualDesignData } from '@minddrop/designs';
 import { EntityId } from '@minddrop/utils';
 
 export type SpaceId = EntityId<'space'>;
@@ -22,10 +22,11 @@ export interface Space {
   icon: string;
 
   /**
-   * The space's layout. Always a space type layout, owned by the
-   * space rather than referencing a design.
+   * The space's design, owned and persisted by the space and
+   * loaded into the designs store as a virtual design. Always a
+   * space type design holding a single space layout.
    */
-  layout: Layout;
+  design: VirtualDesignData;
 
   /**
    * The date the space was created.
@@ -38,4 +39,4 @@ export interface Space {
   lastModified: Date;
 }
 
-export type UpdateSpaceData = Partial<Pick<Space, 'name' | 'icon' | 'layout'>>;
+export type UpdateSpaceData = Partial<Pick<Space, 'name' | 'icon' | 'design'>>;

@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { Designs } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
 import { SpacesStore } from '../SpacesStore';
 import { SpaceDeletedEvent } from '../events';
@@ -15,6 +16,12 @@ describe('deleteSpace', () => {
     await deleteSpace(space_1.id);
 
     expect(SpacesStore.get(space_1.id)).toBeNull();
+  });
+
+  it('removes the space owned design from the designs store', async () => {
+    await deleteSpace(space_1.id);
+
+    expect(Designs.Store.get(space_1.design.id)).toBeNull();
   });
 
   it('deletes the space bundle directory from the file system', async () => {

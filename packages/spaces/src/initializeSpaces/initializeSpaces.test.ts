@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { Designs } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
 import { SpacesStore } from '../SpacesStore';
 import { SpacesLoadedEvent } from '../events';
@@ -24,6 +25,21 @@ describe('initializeSpaces', () => {
     await initializeSpaces();
 
     expect(SpacesStore.getAllArray()).toEqual(spaces);
+  });
+
+  it('hydrates the spaces owned designs into the designs store', async () => {
+    await initializeSpaces();
+
+    // Each space's design should be loaded as a virtual design
+    spaces.forEach((space) => {
+      expect(Designs.Store.get(space.design.id)).toEqual(
+        expect.objectContaining({
+          id: space.design.id,
+          virtual: true,
+          owner: space.id,
+        }),
+      );
+    });
   });
 
   it('filters out null spaces', async () => {

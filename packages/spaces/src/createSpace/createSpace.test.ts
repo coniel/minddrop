@@ -1,10 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DefaultPageLayout } from '@minddrop/designs-legacy';
+import { Designs } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
 import { SpacesStore } from '../SpacesStore';
 import { DefaultSpaceIcon } from '../constants';
 import { SpaceCreatedEvent } from '../events';
-import { MockFs, cleanup, mockDate, setup, spaceLayout_1 } from '../test-utils';
+import { MockFs, cleanup, mockDate, setup } from '../test-utils';
 import { resolveSpaceFilePath } from '../utils';
 import { createSpace } from './createSpace';
 
@@ -14,12 +14,12 @@ const newSpace = {
   lastModified: mockDate,
   name: 'Untitled',
   icon: DefaultSpaceIcon,
-  layout: {
-    ...DefaultPageLayout,
+  design: {
     id: expect.any(String),
-    name: 'Page',
-    created: mockDate,
-    lastModified: mockDate,
+    type: 'space',
+    name: 'Untitled',
+    owner: expect.any(String),
+    layouts: [expect.objectContaining({ type: 'space' })],
   },
 };
 
@@ -38,6 +38,7 @@ describe('createSpace', () => {
     const space = await createSpace({ name: 'My Space' });
 
     expect(space.name).toBe('My Space');
+    expect(space.design.name).toBe('My Space');
   });
 
   it('uses the provided icon', async () => {
@@ -46,16 +47,25 @@ describe('createSpace', () => {
     expect(space.icon).toBe('emoji:🎬:default');
   });
 
-  it('copies the provided layout with a fresh ID', async () => {
-    const space = await createSpace({ layout: spaceLayout_1 });
+  it('seeds the design with a single empty space layout', async () => {
+    const space = await createSpace();
 
-    expect(space.layout).toEqual({
-      ...spaceLayout_1,
-      id: expect.any(String),
-      created: mockDate,
-      lastModified: mockDate,
-    });
-    expect(space.layout.id).not.toBe(spaceLayout_1.id);
+    expect(space.design.owner).toBe(space.id);
+    expect(space.design.layouts).toHaveLength(1);
+    expect(space.design.layouts[0].type).toBe('space');
+    expect(space.design.layouts[0].tree.children).toEqual([]);
+  });
+
+  it('registers the design as a virtual design owned by the space', async () => {
+    const space = await createSpace();
+
+    expect(Designs.Store.get(space.design.id)).toEqual(
+      expect.objectContaining({
+        type: 'space',
+        virtual: true,
+        owner: space.id,
+      }),
+    );
   });
 
   it('adds the space to the store', async () => {

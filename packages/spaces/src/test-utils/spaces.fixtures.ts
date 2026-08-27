@@ -1,4 +1,4 @@
-import { Layout } from '@minddrop/designs-legacy';
+import { Layout, VirtualDesignData } from '@minddrop/designs';
 import { MockFileDescriptor } from '@minddrop/file-system';
 import { DefaultSpaceIcon } from '../constants';
 import { Space } from '../types';
@@ -17,7 +17,20 @@ function generateSpaceFixture(number: number, layout: Layout): Space {
     icon: DefaultSpaceIcon,
     created: new Date('2024-01-01T00:00:00.000Z'),
     lastModified: new Date('2024-01-01T00:00:00.000Z'),
-    layout,
+    design: generateSpaceDesignFixture(number, layout),
+  };
+}
+
+function generateSpaceDesignFixture(
+  number: number,
+  layout: Layout,
+): VirtualDesignData {
+  return {
+    id: `design_space-design-${number}`,
+    type: 'space',
+    name: `Space ${number}`,
+    owner: `space_${number}`,
+    layouts: [layout],
   };
 }
 

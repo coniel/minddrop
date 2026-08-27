@@ -1,4 +1,4 @@
-import { DefaultPageLayout, Layout } from '@minddrop/designs-legacy';
+import { Designs, VirtualDesignData, buildLayout } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
 import { i18n } from '@minddrop/i18n';
 import { entityId } from '@minddrop/utils';
@@ -18,17 +18,12 @@ export interface CreateSpaceOptions {
    * The space icon. Defaults to the default space icon.
    */
   icon?: string;
-
-  /**
-   * The layout to base the space's layout on. Defaults to the
-   * default space layout.
-   */
-  layout?: Layout;
 }
 
 /**
  * Creates a new space, adding it to the store and writing it to the
- * file system.
+ * file system. The space's design is registered as a virtual design
+ * owned by the space.
  *
  * @param options - The space creation options.
  * @returns The created space.
@@ -38,35 +33,33 @@ export interface CreateSpaceOptions {
 export async function createSpace(
   options: CreateSpaceOptions = {},
 ): Promise<Space> {
-  // Use the provided layout as the base, or the default space layout
-  const baseLayout = options.layout || DefaultPageLayout;
+  const spaceId = entityId('space');
+  const name = options.name || i18n.t('labels.untitled');
 
-  // Build the space's layout as an independent copy of the base
-  // layout with its own ID
-  const layout: Layout = {
-    ...structuredClone(baseLayout),
-    id: entityId('layout'),
-    created: new Date(),
-    lastModified: new Date(),
+  // Seed the space's design with a single empty space layout
+  const design: VirtualDesignData = {
+    id: entityId('design'),
+    type: 'space',
+    name,
+    owner: spaceId,
+    layouts: [buildLayout('space')],
   };
-
-  // The default space layout's name is an i18n key, translate it
-  if (!options.layout) {
-    layout.name = i18n.t('designs.layouts.page.name');
-  }
 
   // Generate the space object
   const space: Space = {
-    id: entityId('space'),
+    id: spaceId,
     created: new Date(),
     lastModified: new Date(),
-    name: options.name || i18n.t('labels.untitled'),
+    name,
     icon: options.icon || DefaultSpaceIcon,
-    layout,
+    design,
   };
 
   // Add the space to the store
   SpacesStore.set(space);
+
+  // Register the design as a virtual design owned by the space
+  Designs.createVirtual(design);
 
   // Write the space config to the file system
   await writeSpace(space.id);

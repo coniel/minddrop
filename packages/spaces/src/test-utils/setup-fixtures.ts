@@ -1,3 +1,4 @@
+import { Designs } from '@minddrop/designs';
 import { MockFileSystem } from '@minddrop/file-system';
 import { SpacesStore } from '../SpacesStore';
 import { resolveSpacesDirPath } from '../utils';
@@ -21,6 +22,9 @@ export function setupSpaceFixtures(
   if (options.loadSpaces !== false) {
     // Load spaces into the store
     SpacesStore.load(spaces);
+
+    // Hydrate the spaces' owned designs into the designs store
+    Designs.loadVirtual(spaces.map((space) => space.design));
   }
 
   if (options.loadSpaceFiles !== false) {
@@ -31,4 +35,5 @@ export function setupSpaceFixtures(
 
 export function cleanupSpaceFixtures() {
   SpacesStore.clear();
+  Designs.Store.clear();
 }

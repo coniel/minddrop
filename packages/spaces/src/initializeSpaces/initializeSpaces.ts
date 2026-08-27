@@ -1,7 +1,8 @@
+import { DesignUpdatedEvent, Designs } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
 import { FileSystemChangedEvent, Fs } from '@minddrop/file-system';
 import { SpacesStore } from '../SpacesStore';
-import { onFileSystemChanged } from '../event-handlers';
+import { onFileSystemChanged, onUpdateVirtualDesign } from '../event-handlers';
 import { SpacesLoadedEvent } from '../events';
 import { readSpace } from '../readSpace';
 import { resolveSpacesDirPath } from '../utils';
@@ -33,9 +34,17 @@ export async function initializeSpaces(): Promise<void> {
   // Load the spaces into the store
   SpacesStore.load(spaces);
 
+  // Hydrate the spaces' owned designs into the designs store
+  Designs.loadVirtual(spaces.map((space) => space.design));
+
   // Apply changes made to space bundles outside of the app
   Events.on(FileSystemChangedEvent, 'spaces', ({ data }) =>
     onFileSystemChanged(data),
+  );
+
+  // Persist space owned design edits back into their space files
+  Events.on(DesignUpdatedEvent, 'spaces', ({ data }) =>
+    onUpdateVirtualDesign(data),
   );
 
   // Dispatch a spaces loaded event

@@ -1,2 +1,1 @@
-export * from './file-system-changed';
 export * from './virtual-design-updated';

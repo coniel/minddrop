@@ -1,3 +1,4 @@
+import { Designs } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { SpacesStore } from '../SpacesStore';
@@ -19,6 +20,11 @@ export async function deleteSpace(spaceId: string): Promise<void> {
 
   // Delete the space from the store
   SpacesStore.remove(spaceId);
+
+  // Remove the space's owned virtual design from the designs store
+  if (Designs.get(space.design.id, false)) {
+    await Designs.delete(space.design.id);
+  }
 
   // Delete the space's bundle directory, taking its media with it
   await Fs.removeDir(resolveSpaceBundleDirPath(spaceId), { recursive: true });
