@@ -1164,17 +1164,22 @@ export function createDesignStudioStore(): DesignStudioStore {
     },
 
     initializeLayoutEditor: (layout, options) => {
-      // Wrap the layout in a synthetic design so the studio's design
-      // based read paths work unchanged
-      const design: Design = {
+      // Shared fields of the synthetic design wrapping the layout
+      const baseDesign = {
         id: entityId('design'),
-        type: 'database',
         name: layout.name,
-        properties: [],
         layouts: [layout],
         created: layout.created,
         lastModified: layout.lastModified,
       };
+
+      // Wrap the layout in a synthetic design so the studio's design
+      // based read paths work unchanged. The design type derives from
+      // the layout type so element context filtering matches
+      const design: Design =
+        layout.type === 'space'
+          ? { ...baseDesign, type: 'space' }
+          : { ...baseDesign, type: 'database', properties: [] };
 
       // Initialize the store with the synthetic design
       api.initialize(design);

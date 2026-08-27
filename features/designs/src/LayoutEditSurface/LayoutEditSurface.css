@@ -1,0 +1,18 @@
+.designs-layout-edit-surface {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+
+  /* Stretch the root element to fill the surface so an empty
+     layout still exposes a full-height drop target */
+  > [data-element-id='root'] {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+
+    .designs-studio-root-element {
+      flex: 1;
+    }
+  }
+}
