@@ -33,10 +33,11 @@ export {
   orderPanelRegions,
   enablePagePanel,
   disablePagePanel,
+  defaultRootStyle,
+  buildLayout,
 } from './utils';
-export type { PanelRegions } from './utils';
+export type { PanelRegions, BuildLayoutOptions } from './utils';
 export type { CreateDesignOptions } from './createDesign';
-export { defaultRootStyle } from './createLayout';
 export type { CreateLayoutOptions } from './createLayout';
 export type { UpdateDesignData } from './updateDesign';
 export type { UpdateLayoutData } from './updateLayout';

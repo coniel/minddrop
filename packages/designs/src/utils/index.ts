@@ -21,6 +21,8 @@ export * from './reviveDesignDates';
 export * from './getLayoutDesign';
 export * from './remapLayoutPropertyBindings';
 export * from './generateMediaFileName';
+export * from './defaultRootStyle';
+export * from './buildLayout';
 export * from './isEmptyPropertyValue';
 export * from './isPanelledRoot';
 export * from './getPanelRegions';

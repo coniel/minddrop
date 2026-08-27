@@ -1,21 +1,9 @@
-import { createI18nKeyBuilder, i18n } from '@minddrop/i18n';
-import { InvalidParameterError, entityId } from '@minddrop/utils';
+import { InvalidParameterError } from '@minddrop/utils';
 import { DesignTypeLayoutTypes } from '../constants';
 import { getDesign } from '../getDesign';
-import { DefaultContainerStyle, RootStyle } from '../styles';
 import { Layout, LayoutFrame, LayoutType } from '../types';
 import { updateDesign } from '../updateDesign';
-
-const layoutTypeI18nKey = createI18nKeyBuilder('designs.layouts.');
-
-// Default canvas frames per layout type. Pages and spaces have a
-// fixed height; cards and lists are content sized.
-const defaultFrames: Record<LayoutType, LayoutFrame> = {
-  card: { x: 0, y: 0, width: 380 },
-  list: { x: 0, y: 0, width: 600 },
-  page: { x: 0, y: 0, width: 800, height: 600 },
-  space: { x: 0, y: 0, width: 800, height: 600 },
-};
+import { buildLayout } from '../utils';
 
 export interface CreateLayoutOptions {
   /**
@@ -58,41 +46,14 @@ export async function createLayout(
     );
   }
 
-  // Build the new layout with an empty root tree. The root carries
-  // the layout type, which decides its default background treatment
-  const layout: Layout = {
-    id: entityId('layout'),
-    type: options.type,
-    name: options.name || i18n.t(layoutTypeI18nKey(options.type, 'name')),
-    tree: {
-      id: 'root',
-      type: 'root',
-      layoutType: options.type,
-      style: { ...DefaultContainerStyle, ...defaultRootStyle(options.type) },
-      children: [],
-    },
-    frame: { ...defaultFrames[options.type], ...options.position },
-    created: new Date(),
-    lastModified: new Date(),
-  };
+  // Build the new layout with an empty root tree
+  const layout = buildLayout(options.type, {
+    name: options.name,
+    position: options.position,
+  });
 
   // Append the layout to the parent design and persist
   await updateDesign(design.id, { layouts: [...design.layouts, layout] });
 
   return layout;
-}
-
-/**
- * Resolves the default style values of a layout type's root:
- * full-screen types carry a content gutter, which stays
- * user-editable like any other style value. Seeded at creation and
- * restored by the studio's styling reset.
- */
-export function defaultRootStyle(type?: LayoutType): RootStyle {
-  // A page's content keeps a gutter from the screen edges
-  if (type === 'page' || type === 'space') {
-    return { contentPadding: '4' };
-  }
-
-  return {};
 }
