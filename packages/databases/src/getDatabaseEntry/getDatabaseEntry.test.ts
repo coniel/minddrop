@@ -19,4 +19,10 @@ describe('getDatabaseEntry', () => {
       DatabaseEntryNotFoundError,
     );
   });
+
+  it('returns null if the entry does not exist and throwOnNotFound is false', () => {
+    const entry = getDatabaseEntry('non-existent-entry', false);
+
+    expect(entry).toBeNull();
+  });
 });

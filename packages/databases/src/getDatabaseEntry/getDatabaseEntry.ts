@@ -6,19 +6,30 @@ import { DatabaseEntry } from '../types';
  * Retrieves a database entry by its ID.
  *
  * @param id - The ID of the entry to retrieve.
- * @returns The retrieved entry.
+ * @param throwOnNotFound - Whether to throw when the entry does not exist. Defaults to true.
+ * @returns The retrieved entry, or null when not found and not throwing.
  *
- * @throws {DatabaseEntryNotFoundError} If the entry does not exist.
+ * @throws {DatabaseEntryNotFoundError} If the entry does not exist and throwing is enabled.
  */
 export function getDatabaseEntry<
   TDatabaseEntry extends DatabaseEntry = DatabaseEntry,
->(id: string): TDatabaseEntry {
+>(id: string, throwOnNotFound?: true): TDatabaseEntry;
+export function getDatabaseEntry<
+  TDatabaseEntry extends DatabaseEntry = DatabaseEntry,
+>(id: string, throwOnNotFound: false): TDatabaseEntry | null;
+export function getDatabaseEntry<
+  TDatabaseEntry extends DatabaseEntry = DatabaseEntry,
+>(id: string, throwOnNotFound = true): TDatabaseEntry | null {
   // Get the entry
   const entry = DatabaseEntriesStore.get(id);
 
-  // Ensure the entry exists
+  // Handle the entry not existing
   if (!entry) {
-    throw new DatabaseEntryNotFoundError(id);
+    if (throwOnNotFound) {
+      throw new DatabaseEntryNotFoundError(id);
+    }
+
+    return null;
   }
 
   return entry as TDatabaseEntry;
