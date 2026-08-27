@@ -65,8 +65,8 @@ export const DesignDashboard: React.FC<DesignDashboardProps> = ({
         {onClickBack && (
           <IconButton
             icon="arrow-left"
-            label="designStudio.exit"
-            tooltip={{ title: 'designStudio.exit' }}
+            label="designsStudio.exit"
+            tooltip={{ title: 'designsStudio.exit' }}
             color="neutral"
             onClick={onClickBack}
           />

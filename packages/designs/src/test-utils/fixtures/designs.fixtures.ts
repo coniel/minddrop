@@ -97,7 +97,7 @@ export const designs: Design[] = [
 
 // Spelled out rather than resolved, so that the fixtures pin the paths
 // down instead of agreeing with whatever the path utils produce
-const designsDirPath = 'path/to/workspaces/Workspace 1/.minddrop/designs-next';
+const designsDirPath = 'path/to/workspaces/Workspace 1/.minddrop/designs';
 
 export function getDesignFiles(): MockFileDescriptor[] {
   return designs.map((design) => ({

@@ -79,12 +79,6 @@ declare module 'i18next' {
           zoomIn: string;
           zoomOut: string;
         };
-        designStudio: {
-          title: string;
-          open: string;
-          exit: string;
-          backToDesigns: string;
-        };
         actions: {
           back: string;
           cancel: string;
@@ -2156,6 +2150,7 @@ declare module 'i18next' {
         designsStudio: {
           open: string;
           title: string;
+          exit: string;
           backToDesigns: string;
           layouts: {
             new: string;

@@ -555,18 +555,18 @@ importers:
       '@minddrop/databases':
         specifier: workspace:*
         version: link:../../packages/databases
-      '@minddrop/designs-legacy':
+      '@minddrop/designs':
         specifier: workspace:*
-        version: link:../../packages/designs-legacy
+        version: link:../../packages/designs
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
       '@minddrop/feature-data-views':
         specifier: workspace:*
         version: link:../data-views
-      '@minddrop/feature-designs-legacy':
+      '@minddrop/feature-designs':
         specifier: workspace:*
-        version: link:../designs-legacy
+        version: link:../designs
       '@minddrop/feature-markdown-editor':
         specifier: workspace:*
         version: link:../markdown-editor
@@ -708,88 +708,6 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
-  features/designs-legacy:
-    dependencies:
-      '@minddrop/collections':
-        specifier: workspace:*
-        version: link:../../packages/collections
-      '@minddrop/data-views':
-        specifier: workspace:*
-        version: link:../../packages/data-views
-      '@minddrop/databases':
-        specifier: workspace:*
-        version: link:../../packages/databases
-      '@minddrop/designs-legacy':
-        specifier: workspace:*
-        version: link:../../packages/designs-legacy
-      '@minddrop/events':
-        specifier: workspace:*
-        version: link:../../packages/events
-      '@minddrop/feature-data-views':
-        specifier: workspace:*
-        version: link:../data-views
-      '@minddrop/feature-markdown-editor':
-        specifier: workspace:*
-        version: link:../markdown-editor
-      '@minddrop/feature-properties':
-        specifier: workspace:*
-        version: link:../properties
-      '@minddrop/file-system':
-        specifier: workspace:*
-        version: link:../../packages/file-system
-      '@minddrop/i18n':
-        specifier: workspace:*
-        version: link:../../packages/i18n
-      '@minddrop/properties':
-        specifier: workspace:*
-        version: link:../../packages/properties
-      '@minddrop/selection':
-        specifier: workspace:*
-        version: link:../../packages/selection
-      '@minddrop/stores':
-        specifier: workspace:*
-        version: link:../../packages/stores
-      '@minddrop/test-utils':
-        specifier: workspace:*
-        version: link:../../packages/test-utils
-      '@minddrop/ui-canvas':
-        specifier: workspace:*
-        version: link:../../ui/canvas
-      '@minddrop/ui-components':
-        specifier: workspace:*
-        version: link:../../ui/components
-      '@minddrop/ui-drag-and-drop':
-        specifier: workspace:*
-        version: link:../../ui/drag-and-drop
-      '@minddrop/ui-icons':
-        specifier: workspace:*
-        version: link:../../ui/icons
-      '@minddrop/ui-primitives':
-        specifier: workspace:*
-        version: link:../../ui/primitives
-      '@minddrop/ui-theme':
-        specifier: workspace:*
-        version: link:../../ui/theme
-      '@minddrop/utils':
-        specifier: workspace:*
-        version: link:../../packages/utils
-      '@minddrop/views':
-        specifier: workspace:*
-        version: link:../../packages/views
-    devDependencies:
-      '@minddrop/eslint-config':
-        specifier: workspace:*
-        version: link:../../packages/eslint-config
-      eslint:
-        specifier: ^9.39.3
-        version: 9.39.5
-      tsconfig:
-        specifier: workspace:*
-        version: link:../../packages/tsconfig
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-
   features/desktop-app:
     dependencies:
       '@minddrop/ast':
@@ -822,9 +740,6 @@ importers:
       '@minddrop/designs':
         specifier: workspace:*
         version: link:../../packages/designs
-      '@minddrop/designs-legacy':
-        specifier: workspace:*
-        version: link:../../packages/designs-legacy
       '@minddrop/editor':
         specifier: workspace:*
         version: link:../../packages/editor
@@ -843,9 +758,6 @@ importers:
       '@minddrop/feature-designs':
         specifier: workspace:*
         version: link:../designs
-      '@minddrop/feature-designs-legacy':
-        specifier: workspace:*
-        version: link:../designs-legacy
       '@minddrop/feature-dev-tools':
         specifier: workspace:*
         version: link:../dev-tools
@@ -1207,15 +1119,15 @@ importers:
       '@minddrop/data-views':
         specifier: workspace:*
         version: link:../../packages/data-views
-      '@minddrop/designs-legacy':
+      '@minddrop/designs':
         specifier: workspace:*
-        version: link:../../packages/designs-legacy
+        version: link:../../packages/designs
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
-      '@minddrop/feature-designs-legacy':
+      '@minddrop/feature-designs':
         specifier: workspace:*
-        version: link:../designs-legacy
+        version: link:../designs
       '@minddrop/feature-views':
         specifier: workspace:*
         version: link:../views
@@ -1450,9 +1362,9 @@ importers:
       '@minddrop/data-views':
         specifier: workspace:*
         version: link:../data-views
-      '@minddrop/designs-legacy':
+      '@minddrop/designs':
         specifier: workspace:*
-        version: link:../designs-legacy
+        version: link:../designs
       '@minddrop/events':
         specifier: workspace:*
         version: link:../events
@@ -1533,52 +1445,6 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
-      '@types/react':
-        specifier: ^19.2.4
-        version: 19.2.14
-      eslint:
-        specifier: ^9.39.3
-        version: 9.39.5
-      react:
-        specifier: ^19.2.4
-        version: 19.2.4
-      tsconfig:
-        specifier: workspace:*
-        version: link:../tsconfig
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-
-  packages/designs-legacy:
-    dependencies:
-      '@minddrop/events':
-        specifier: workspace:*
-        version: link:../events
-      '@minddrop/stores':
-        specifier: workspace:*
-        version: link:../stores
-      '@minddrop/ui-theme':
-        specifier: workspace:*
-        version: link:../../ui/theme
-    devDependencies:
-      '@minddrop/eslint-config':
-        specifier: workspace:*
-        version: link:../eslint-config
-      '@minddrop/file-system':
-        specifier: workspace:*
-        version: link:../file-system
-      '@minddrop/i18n':
-        specifier: workspace:*
-        version: link:../i18n
-      '@minddrop/properties':
-        specifier: workspace:*
-        version: link:../properties
-      '@minddrop/ui-icons':
-        specifier: workspace:*
-        version: link:../../ui/icons
-      '@minddrop/utils':
-        specifier: workspace:*
-        version: link:../utils
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -2007,9 +1873,9 @@ importers:
 
   packages/spaces:
     dependencies:
-      '@minddrop/designs-legacy':
+      '@minddrop/designs':
         specifier: workspace:*
-        version: link:../designs-legacy
+        version: link:../designs
       '@minddrop/events':
         specifier: workspace:*
         version: link:../events
@@ -2351,9 +2217,9 @@ importers:
       '@minddrop/databases':
         specifier: workspace:*
         version: link:../../packages/databases
-      '@minddrop/designs-legacy':
+      '@minddrop/designs':
         specifier: workspace:*
-        version: link:../../packages/designs-legacy
+        version: link:../../packages/designs
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events

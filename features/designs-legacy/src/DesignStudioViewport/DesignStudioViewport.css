@@ -1,5 +1,0 @@
-.design-studio-viewport {
-  /* Design elements with a transparent background paint
-     themselves in the canvas colour via this variable */
-  --design-studio-canvas-background: var(--ui-canvas-background);
-}

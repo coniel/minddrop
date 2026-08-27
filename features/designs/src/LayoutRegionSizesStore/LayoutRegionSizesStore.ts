@@ -32,17 +32,14 @@ export function layoutRegionSizeKey(
  * Persistent store for runtime UI sizing of layout regions, keyed by
  * `layoutId:context:region:windowSizeSlot`. Sizes are per window size
  * slot so they stay sensible across monitors.
- *
- * Named `-next` while the legacy designs feature owns the original
- * store name and namespace; flipped back once legacy is deleted.
  */
 export const LayoutRegionSizesStore = createKeyValueStore<
   Record<string, LayoutRegionSize>
 >(
-  'DesignsNext:LayoutRegionSizes',
+  'Designs:LayoutRegionSizes',
   {},
   {
     persistTo: 'workspace-config',
-    namespace: 'layout-region-sizes-next',
+    namespace: 'layout-region-sizes',
   },
 );

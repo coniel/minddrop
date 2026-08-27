@@ -2,7 +2,7 @@ import { DesignId } from '@minddrop/designs';
 
 export const DesignsFeatureEventListenerId = 'feature-designs';
 
-export const OpenDesignStudioEvent = 'designs:studio-next:open';
+export const OpenDesignStudioEvent = 'designs:studio:open';
 
 export interface OpenDesignStudioEventData {
   /**
@@ -23,6 +23,6 @@ export interface DesignStudioViewProps extends OpenDesignStudioEventData {
 
 declare module '@minddrop/events/EventDataMap' {
   interface EventDataMap {
-    'designs:studio-next:open': OpenDesignStudioEventData;
+    'designs:studio:open': OpenDesignStudioEventData;
   }
 }

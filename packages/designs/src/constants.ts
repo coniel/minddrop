@@ -1,11 +1,9 @@
 import { DesignType, LayoutType } from './types';
 
 /**
- * The workspace directory designs are stored in. Named `designs-next`
- * while the legacy designs package owns `designs`; flipped back once
- * legacy is deleted.
+ * The workspace directory designs are stored in.
  */
-export const DesignsDirName = 'designs-next';
+export const DesignsDirName = 'designs';
 export const DesignFileName = 'design.json';
 export const MediaDirName = 'media';
 export const i18nRoot = 'designs';

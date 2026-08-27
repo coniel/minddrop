@@ -51,16 +51,6 @@ file, so this holds in practice; a package which defines events but
 never imports `@minddrop/events` (e.g. `item-references`) must import
 the registry module explicitly or the augmentation errors with TS2664.
 
-### Legacy designs events are deliberately not registered
-
-`packages/designs-legacy` reuses the event names
-`designs:design:created`/`updated`/`deleted` and
-`designs:property:renamed`, which `packages/designs` registers with its
-own data types. Registering both would be a duplicate-key merge error,
-so the legacy constants are typed as plain `string` (see the comment in
-`packages/designs-legacy/src/events.ts`) and legacy listeners cast
-`event.data` instead. Goes away when the legacy packages are removed.
-
 ## packages/data-views
 
 ### Some view-era names are deliberately retained after the data-views split

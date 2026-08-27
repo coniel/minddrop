@@ -2,6 +2,7 @@
   "designsStudio": {
     "open": "Open design studio",
     "title": "Design studio",
+    "exit": "Exit design studio",
     "backToDesigns": "Back to designs",
     "layouts": {
       "new": "New",

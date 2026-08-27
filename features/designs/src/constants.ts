@@ -122,8 +122,8 @@ export const propertyTypeLabelMap: Record<PropertyType, TranslationKey> = {
  */
 export const DesignStudioIcon: UiIconName = 'pencil-ruler';
 
-export const DesignStudioViewName = 'designs:view:studio-next';
-export const DesignStudioViewId = 'designs:studio-next';
+export const DesignStudioViewName = 'designs:view:studio';
+export const DesignStudioViewId = 'designs:studio';
 
 // The studio view's title while no design is open
 export const DesignStudioViewTitle =
