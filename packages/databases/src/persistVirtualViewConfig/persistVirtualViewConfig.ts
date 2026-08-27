@@ -3,35 +3,35 @@ import {
   DataViewConfig,
   serializeDataViewConfig,
 } from '@minddrop/data-views';
+import { isEntityId } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabaseEntryMetadata } from '../types';
 import { updateEntryMetadata } from '../updateEntryMetadata';
-import { parseVirtualViewId, viewMetadataKey } from '../utils';
 
 /**
- * Persists an embedded virtual view's config into its entry's
- * metadata, converting item references into durable form.
+ * Persists an embedded virtual view's config into its owner
+ * entry's metadata, converting item references into durable form.
  *
  * @param view - The virtual view whose config to persist.
  */
 export async function persistVirtualViewConfig(view: DataView): Promise<void> {
-  // Parse the virtual view ID into its entry/property/layout parts
-  const parsed = parseVirtualViewId(view.id);
+  // Skip views not owned by a database entry
+  if (!view.owner || !isEntityId(view.owner, 'database-entry')) {
+    return;
+  }
 
-  // Skip views that are not embedded entry views
-  if (!parsed) {
+  // Skip views missing the metadata key identifying their config
+  if (!view.ownerKey) {
     return;
   }
 
   // Look up the entry the view is embedded in
-  const entry = DatabaseEntriesStore.get(parsed.entryId);
+  const entry = DatabaseEntriesStore.get(view.owner);
 
   // Skip views whose entry no longer exists
   if (!entry) {
     return;
   }
-
-  const metadataKey = viewMetadataKey(parsed.propertyName, parsed.layoutId);
 
   // Collect the view's persistable config
   const viewConfig: DataViewConfig = {};
@@ -51,10 +51,10 @@ export async function persistVirtualViewConfig(view: DataView): Promise<void> {
     ...entry.metadata,
     embeddedViewConfigs: {
       ...entry.metadata.embeddedViewConfigs,
-      [metadataKey]: serializedConfig,
+      [view.ownerKey]: serializedConfig,
     },
   };
 
   // Persist the metadata to the entry's metadata sidecar
-  await updateEntryMetadata(parsed.entryId, metadata);
+  await updateEntryMetadata(view.owner, metadata);
 }

@@ -16,17 +16,14 @@ export async function writeDatabaseViews(databaseId: string): Promise<void> {
     return;
   }
 
-  // Get all views for this database from the ViewsStore
+  // Get all views owned by this database from the ViewsStore
   const allViews = DataViews.Store.getAllArray();
-  const databaseViews = allViews.filter(
-    (view) =>
-      view.dataSource.type === 'database' && view.dataSource.id === databaseId,
-  );
+  const databaseViews = allViews.filter((view) => view.owner === databaseId);
 
   // Strip runtime-only fields and convert each view's config
   // references into durable form for storage
   const storedViews = databaseViews.map(
-    ({ dataSource, virtual, references, ...rest }) => ({
+    ({ dataSource, virtual, owner, ownerKey, references, ...rest }) => ({
       ...rest,
       ...serializeDataViewConfig(rest.type, {
         options: rest.options,

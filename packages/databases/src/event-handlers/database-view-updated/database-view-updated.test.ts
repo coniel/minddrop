@@ -17,10 +17,11 @@ describe('onDatabaseViewUpdated', () => {
   afterEach(cleanup);
 
   it('persists the updated view to the database config', () => {
-    // Create a virtual view for this database
+    // Create a virtual view owned by this database
     const view: DataView = {
       ...dataView_virtual_1,
       dataSource: { type: 'database', id: objectDatabase.id },
+      owner: objectDatabase.id,
     };
 
     // Add the view to the store
@@ -49,14 +50,14 @@ describe('onDatabaseViewUpdated', () => {
     expect(database!.views![0].name).toBe('Updated Table');
   });
 
-  it('ignores non-virtual views', () => {
-    // Create a non-virtual view
+  it('ignores views without an owner', () => {
+    // Create a view without an owner
     const view: DataView = {
       ...dataView_gallery_1,
       dataSource: { type: 'database', id: objectDatabase.id },
     };
 
-    // Call the handler with a non-virtual view
+    // Call the handler with an unowned view
     onDatabaseViewUpdated({ original: view, updated: view });
 
     // The database should not have been updated
@@ -65,11 +66,12 @@ describe('onDatabaseViewUpdated', () => {
     expect(database!.views).toBeUndefined();
   });
 
-  it('ignores views that do not belong to a database', () => {
-    // Create a virtual view with a non-database data source
+  it('ignores views not owned by a database', () => {
+    // Create a virtual view owned by an entry
     const view: DataView = {
       ...dataView_virtual_1,
       dataSource: { type: 'collection', id: 'some-collection' },
+      owner: 'database-entry_1',
     };
 
     // Call the handler

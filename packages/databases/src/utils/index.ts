@@ -33,7 +33,6 @@ export * from './entryMetadataPropertyValues';
 export * from './resolveDesignPropertyMap';
 export * from './parseViewMetadataKey';
 export * from './parseVirtualCollectionId';
-export * from './parseVirtualViewId';
 export * from './viewMetadataKey';
 export * from './virtualCollectionId';
 export * from './virtualCollectionName';

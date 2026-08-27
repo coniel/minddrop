@@ -20,6 +20,19 @@ export interface DataView<
   virtual?: boolean;
 
   /**
+   * The ID of the entity responsible for persisting the view's
+   * config. Set on virtual views only.
+   */
+  owner?: EntityId;
+
+  /**
+   * Distinguishes the view among its owner's views when the owner
+   * has more than one. Opaque to consumers. Set on virtual views
+   * only.
+   */
+  ownerKey?: string;
+
+  /**
    * A user defined name for the data view.
    */
   name: string;
@@ -78,7 +91,8 @@ export type CreateVirtualDataViewData = Pick<
   DataView,
   'id' | 'type' | 'dataSource'
 > &
-  Partial<Pick<DataView, 'name' | 'options' | 'data'>>;
+  Required<Pick<DataView, 'owner'>> &
+  Partial<Pick<DataView, 'name' | 'options' | 'data' | 'ownerKey'>>;
 
 export type UpdateDataViewData = Partial<
   Pick<DataView, 'name' | 'icon' | 'options' | 'data'>

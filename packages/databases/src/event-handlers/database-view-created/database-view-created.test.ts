@@ -17,10 +17,11 @@ describe('onDatabaseViewCreated', () => {
   afterEach(cleanup);
 
   it('persists the view to the database config', () => {
-    // Create a virtual view for this database
+    // Create a virtual view owned by this database
     const view: DataView = {
       ...dataView_virtual_1,
       dataSource: { type: 'database', id: objectDatabase.id },
+      owner: objectDatabase.id,
     };
 
     // Add the view to the store (simulates what happens before
@@ -37,8 +38,8 @@ describe('onDatabaseViewCreated', () => {
     expect(database!.views![0].id).toBe(dataView_virtual_1.id);
   });
 
-  it('ignores views that do not belong to a database', () => {
-    // Create a view with a non-database data source
+  it('ignores views not owned by a database', () => {
+    // Create a view without a database owner
     const view: DataView = {
       ...dataView_gallery_1,
       dataSource: { type: 'collection', id: 'some-collection' },

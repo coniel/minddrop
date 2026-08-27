@@ -81,7 +81,7 @@ export function createEntryVirtualViews(
       entry.title,
       property.name,
     );
-    const viewId = virtualViewId(entryId, property.name, layout.id);
+    const viewId = virtualViewId(entryId, layout.id, property.name);
     const entries = (entry.properties[property.name] as string[]) ?? [];
 
     // Create the virtual collection if it doesn't exist
@@ -92,7 +92,7 @@ export function createEntryVirtualViews(
     // Create the virtual view if it doesn't exist, applying any
     // saved view config from entry metadata
     if (!DataViews.get(viewId, false)) {
-      const metadataKey = viewMetadataKey(property.name, layout.id);
+      const metadataKey = viewMetadataKey(layout.id, property.name);
       const savedConfig = entry.metadata.embeddedViewConfigs?.[metadataKey];
 
       // Resolve the saved config's durable references into item IDs
@@ -104,6 +104,10 @@ export function createEntryVirtualViews(
         id: viewId,
         type: viewType,
         dataSource: { type: 'collection', id: collId },
+        // The entry owns the view and persists its config in its
+        // metadata under the owner key
+        owner: entry.id,
+        ownerKey: metadataKey,
         name: property.name,
         options: resolvedConfig?.options,
         data: resolvedConfig?.data,

@@ -28,6 +28,7 @@ export function createVirtualDataView(
   const view: DataView = {
     id: viewData.id,
     virtual: true,
+    owner: viewData.owner,
     dataSource: viewData.dataSource,
     type: viewData.type,
     name: viewData.name || i18n.t(viewType.name),
@@ -35,6 +36,11 @@ export function createVirtualDataView(
     created: new Date(),
     lastModified: new Date(),
   };
+
+  // Set the owner key if provided
+  if (viewData.ownerKey) {
+    view.ownerKey = viewData.ownerKey;
+  }
 
   // Merge data view type default options with any provided options
   if (viewType?.defaultOptions || viewData.options) {

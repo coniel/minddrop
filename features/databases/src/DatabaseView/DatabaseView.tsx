@@ -289,10 +289,15 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
    * Creates a new virtual view of the specified type and sets it as active.
    */
   function handleAddView(type: string) {
+    if (!database) {
+      return;
+    }
+
     const newView = DataViews.createVirtual({
       id: uuid(),
       type,
-      dataSource: { type: 'database', id: databaseId },
+      dataSource: { type: 'database', id: database.id },
+      owner: database.id,
     });
 
     setActiveViewId(newView.id);

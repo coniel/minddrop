@@ -3,18 +3,24 @@ import { DataView } from '@minddrop/data-views';
 import { DataViewFixtures } from '@minddrop/data-views/test-utils';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { cleanup, objectEntry1, setup } from '../../test-utils';
-import { databaseEntryAddress, viewMetadataKey } from '../../utils';
+import {
+  databaseEntryAddress,
+  viewMetadataKey,
+  virtualViewId,
+} from '../../utils';
 import { onUpdateVirtualView } from './virtual-view-updated';
 
 const { dataViewType_referencing } = DataViewFixtures;
 
 const layoutId = 'layout-card-1';
 const propertyName = 'Related';
-const viewId = `${objectEntry1.id}:${propertyName}:${layoutId}`;
+const viewId = virtualViewId(objectEntry1.id, layoutId, propertyName);
 
 const baseView: DataView = {
   id: viewId,
   virtual: true,
+  owner: objectEntry1.id,
+  ownerKey: viewMetadataKey(layoutId, propertyName),
   name: 'Related',
   type: 'board',
   icon: 'content-icon:shapes:blue',
@@ -28,12 +34,12 @@ describe('onUpdateVirtualView', () => {
 
   afterEach(cleanup);
 
-  it('does nothing for non-virtual views', () => {
-    const nonVirtualView: DataView = { ...baseView, virtual: false };
+  it('does nothing for views without an owner', () => {
+    const unownedView: DataView = { ...baseView, owner: undefined };
 
     onUpdateVirtualView({
-      original: nonVirtualView,
-      updated: { ...nonVirtualView, data: { columns: [] } },
+      original: unownedView,
+      updated: { ...unownedView, data: { columns: [] } },
     });
 
     // Entry metadata should remain unchanged
@@ -42,12 +48,15 @@ describe('onUpdateVirtualView', () => {
     expect(entry.metadata).toEqual({});
   });
 
-  it('does nothing if the virtual view ID cannot be parsed', () => {
-    const invalidIdView: DataView = { ...baseView, id: 'invalid-id' };
+  it('does nothing for views not owned by a database entry', () => {
+    const databaseOwnedView: DataView = {
+      ...baseView,
+      owner: 'database_some-database',
+    };
 
     onUpdateVirtualView({
-      original: invalidIdView,
-      updated: { ...invalidIdView, data: { columns: [] } },
+      original: databaseOwnedView,
+      updated: { ...databaseOwnedView, data: { columns: [] } },
     });
 
     // Entry metadata should remain unchanged
@@ -59,7 +68,7 @@ describe('onUpdateVirtualView', () => {
   it('does nothing if the entry does not exist', () => {
     const unknownEntryView: DataView = {
       ...baseView,
-      id: `Unknown/Entry.md:${propertyName}:${layoutId}`,
+      owner: 'database-entry_unknown',
     };
 
     // Should not throw
@@ -82,7 +91,7 @@ describe('onUpdateVirtualView', () => {
     });
 
     const entry = DatabaseEntriesStore.get(objectEntry1.id)!;
-    const metadataKey = viewMetadataKey(propertyName, layoutId);
+    const metadataKey = viewMetadataKey(layoutId, propertyName);
 
     expect(entry.metadata.embeddedViewConfigs?.[metadataKey]).toEqual({
       options: { sortOrder: 'asc' },
@@ -109,7 +118,7 @@ describe('onUpdateVirtualView', () => {
     // The persisted config holds the entry's durable address
     expect(
       entry.metadata.embeddedViewConfigs?.[
-        viewMetadataKey(propertyName, layoutId)
+        viewMetadataKey(layoutId, propertyName)
       ],
     ).toEqual({ data: { items: [databaseEntryAddress(objectEntry1.path)] } });
   });
@@ -118,7 +127,7 @@ describe('onUpdateVirtualView', () => {
     // Set up existing metadata on the entry
     const existingMetadata = {
       embeddedViewConfigs: {
-        'Tasks:other-layout': {
+        'other-layout:Tasks': {
           options: { layout: 'grid' },
         },
       },
@@ -142,14 +151,14 @@ describe('onUpdateVirtualView', () => {
     const entry = DatabaseEntriesStore.get(objectEntry1.id)!;
 
     // Existing config should be preserved
-    expect(entry.metadata.embeddedViewConfigs?.['Tasks:other-layout']).toEqual({
+    expect(entry.metadata.embeddedViewConfigs?.['other-layout:Tasks']).toEqual({
       options: { layout: 'grid' },
     });
 
     // New config should be added
     expect(
       entry.metadata.embeddedViewConfigs?.[
-        viewMetadataKey(propertyName, layoutId)
+        viewMetadataKey(layoutId, propertyName)
       ],
     ).toEqual({
       data: { columns: [] },

@@ -13,6 +13,7 @@ export function onCreateDatabase(data: DatabaseCreatedEventData) {
     id: entityId('data-view'),
     type: 'table',
     dataSource: { type: 'database', id: data.id },
+    owner: data.id,
   });
 
   // Sync to SQL

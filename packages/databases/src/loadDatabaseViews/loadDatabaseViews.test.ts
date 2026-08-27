@@ -37,6 +37,7 @@ describe('loadDatabaseViews', () => {
       type: 'database',
       id: objectDatabase.id,
     });
+    expect(view!.owner).toBe(objectDatabase.id);
   });
 
   it('does nothing when databases have no views', () => {

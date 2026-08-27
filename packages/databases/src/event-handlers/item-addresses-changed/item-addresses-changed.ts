@@ -1,5 +1,6 @@
 import { DataViews } from '@minddrop/data-views';
 import { ItemAddressesChangedEventData } from '@minddrop/item-references';
+import { isEntityId } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabasesStore } from '../../DatabasesStore';
 import { persistVirtualViewConfig } from '../../persistVirtualViewConfig';
@@ -63,7 +64,7 @@ export async function onItemAddressesChanged(
   // Re-persist embedded view configs referencing the changed items
   await Promise.all(
     DataViews.getReferencing(changedIds)
-      .filter((view) => view.virtual)
+      .filter((view) => view.owner && isEntityId(view.owner, 'database-entry'))
       .map(persistVirtualViewConfig),
   );
 }

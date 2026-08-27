@@ -12,6 +12,8 @@ const data = [
     name: 'View 1',
     icon: 'layout',
     dataSource: { type: 'database' as const, id: 'database-1' },
+    owner: 'database_owner-1' as const,
+    ownerKey: 'layout_1:Related',
   },
   {
     id: 'virtual-2',
@@ -57,6 +59,15 @@ describe('loadVirtualDataViews', () => {
       type: 'database',
       id: 'database-1',
     });
+  });
+
+  it('carries owner and owner key onto the loaded views', () => {
+    loadVirtualDataViews(data);
+
+    const view = DataViewsStore.get('virtual-1');
+
+    expect(view?.owner).toBe('database_owner-1');
+    expect(view?.ownerKey).toBe('layout_1:Related');
   });
 
   it('sets created and lastModified dates', () => {

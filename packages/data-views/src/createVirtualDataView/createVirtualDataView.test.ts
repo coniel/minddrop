@@ -8,10 +8,12 @@ import { createVirtualDataView } from './createVirtualDataView';
 
 const id = 'virtual-view-1';
 const dataSource = { type: 'database' as const, id: 'database-1' };
+const owner = 'database_owner-1' as const;
 
 const expectedView = {
   id,
   virtual: true,
+  owner,
   name: dataViewType_gallery.type,
   type: dataViewType_gallery.type,
   icon: toContentIcon(dataViewType_gallery.icon),
@@ -32,13 +34,19 @@ describe('createVirtualDataView', () => {
       id,
       type: dataViewType_gallery.type,
       dataSource,
+      owner,
     });
 
     expect(result).toEqual(expectedView);
   });
 
   it('adds the view to the store', () => {
-    createVirtualDataView({ id, type: dataViewType_gallery.type, dataSource });
+    createVirtualDataView({
+      id,
+      type: dataViewType_gallery.type,
+      dataSource,
+      owner,
+    });
 
     expect(DataViewsStore.get(id)).toEqual(expectedView);
   });
@@ -48,6 +56,7 @@ describe('createVirtualDataView', () => {
       id,
       type: dataViewType_gallery.type,
       dataSource,
+      owner,
       name: 'Custom Name',
     });
 
@@ -59,6 +68,7 @@ describe('createVirtualDataView', () => {
       id,
       type: dataViewType_gallery.type,
       dataSource,
+      owner,
       options: { customOption: true },
     });
 
@@ -68,11 +78,25 @@ describe('createVirtualDataView', () => {
     });
   });
 
+  it('sets the owner key when provided', () => {
+    const result = createVirtualDataView({
+      id,
+      type: dataViewType_gallery.type,
+      dataSource,
+      owner,
+      ownerKey: 'layout_1:Related',
+    });
+
+    expect(result.ownerKey).toBe('layout_1:Related');
+    expect(DataViewsStore.get(id)?.ownerKey).toBe('layout_1:Related');
+  });
+
   it('sets provided data on the view', () => {
     const result = createVirtualDataView({
       id,
       type: dataViewType_gallery.type,
       dataSource,
+      owner,
       data: { sortOrder: 'asc' },
     });
 
@@ -94,6 +118,7 @@ describe('createVirtualDataView', () => {
         id,
         type: dataViewType_gallery.type,
         dataSource,
+        owner,
       });
     }));
 });

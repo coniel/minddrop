@@ -1,15 +1,16 @@
 /**
  * Generates the metadata key used to store a virtual view's
- * config in an entry's metadata. Uses propertyName:layoutId
- * format, consistent with the virtual view ID structure.
+ * config in an entry's metadata. The layout ID comes first
+ * because it cannot contain a colon, keeping the key
+ * unambiguous for any property name.
  *
- * @param propertyName - The collection property name.
  * @param layoutId - The layout ID.
+ * @param propertyName - The collection property name.
  * @returns The metadata key.
  */
 export function viewMetadataKey(
-  propertyName: string,
   layoutId: string,
+  propertyName: string,
 ): string {
-  return `${propertyName}:${layoutId}`;
+  return `${layoutId}:${propertyName}`;
 }

@@ -1,3 +1,4 @@
+import { EntityId } from '@minddrop/utils';
 import { ViewDataSource } from './ViewDataSource.types';
 
 export interface VirtualDataViewData {
@@ -25,6 +26,18 @@ export interface VirtualDataViewData {
    * The data source for the data view.
    */
   dataSource: ViewDataSource;
+
+  /**
+   * The ID of the entity responsible for persisting the view's
+   * config.
+   */
+  owner?: EntityId;
+
+  /**
+   * Distinguishes the view among its owner's views when the owner
+   * has more than one.
+   */
+  ownerKey?: string;
 
   /**
    * DataView type specific options.

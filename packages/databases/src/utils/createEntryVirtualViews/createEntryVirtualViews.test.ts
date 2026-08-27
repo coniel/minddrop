@@ -9,8 +9,10 @@ import {
   Layout,
 } from '@minddrop/designs-legacy';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
+import { DatabasesStore } from '../../DatabasesStore';
 import {
   cleanup,
+  collectionDatabase,
   collectionEntry1,
   objectEntry1,
   relatedEntry1,
@@ -133,8 +135,8 @@ describe('createEntryVirtualViews', () => {
     // Verify a virtual view was created
     const vViewId = virtualViewId(
       collectionEntry1.id,
-      'Related',
       designWithView.id,
+      'Related',
     );
     const view = DataViews.get(vViewId, false);
     const collId = virtualCollectionId(collectionEntry1.id, 'Related');
@@ -142,6 +144,63 @@ describe('createEntryVirtualViews', () => {
     expect(view).not.toBeNull();
     expect(view!.type).toBe(dataViewType_table.type);
     expect(view!.dataSource).toEqual({ type: 'collection', id: collId });
+  });
+
+  it('sets the entry as the view owner', () => {
+    createEntryVirtualViews(collectionEntry1.id, designWithView, propertyMap);
+
+    // Verify the view carries the entry as owner and the metadata
+    // key as owner key
+    const view = DataViews.get(
+      virtualViewId(collectionEntry1.id, designWithView.id, 'Related'),
+      false,
+    );
+
+    expect(view!.owner).toBe(collectionEntry1.id);
+    expect(view!.ownerKey).toBe(viewMetadataKey(designWithView.id, 'Related'));
+  });
+
+  it('applies saved config for a property name containing a colon', () => {
+    const colonProperty = 'Notes: Draft';
+    const savedConfig = { data: { sortOrder: 'asc' } };
+
+    // Add a collection property whose name contains a colon
+    DatabasesStore.set({
+      ...collectionDatabase,
+      properties: [
+        ...collectionDatabase.properties,
+        { type: 'collection', name: colonProperty },
+      ],
+    });
+
+    // Give the entry a value and a saved config for the property
+    DatabaseEntriesStore.set({
+      ...collectionEntry1,
+      properties: {
+        ...collectionEntry1.properties,
+        [colonProperty]: [relatedEntry1.id],
+      },
+      metadata: {
+        embeddedViewConfigs: {
+          [viewMetadataKey(designWithView.id, colonProperty)]: savedConfig,
+        },
+      },
+    });
+
+    createEntryVirtualViews(collectionEntry1.id, designWithView, {
+      'view-element-1': colonProperty,
+    });
+
+    // The saved config resolves through the owner key despite the colon
+    const view = DataViews.get(
+      virtualViewId(collectionEntry1.id, designWithView.id, colonProperty),
+      false,
+    );
+
+    expect(view!.ownerKey).toBe(
+      viewMetadataKey(designWithView.id, colonProperty),
+    );
+    expect(view!.data).toEqual(savedConfig.data);
   });
 
   it('returns a map of property names to virtual view IDs', () => {
@@ -153,8 +212,8 @@ describe('createEntryVirtualViews', () => {
 
     const expectedViewId = virtualViewId(
       collectionEntry1.id,
-      'Related',
       designWithView.id,
+      'Related',
     );
 
     expect(result).toEqual({ Related: expectedViewId });
@@ -169,8 +228,8 @@ describe('createEntryVirtualViews', () => {
     const collId = virtualCollectionId(collectionEntry1.id, 'Related');
     const vViewId = virtualViewId(
       collectionEntry1.id,
-      'Related',
       designWithView.id,
+      'Related',
     );
 
     expect(Collections.get(collId, false)).not.toBeNull();
@@ -214,13 +273,13 @@ describe('createEntryVirtualViews', () => {
     expect(result).toEqual({
       Related: virtualViewId(
         collectionEntry1.id,
-        'Related',
         multiViewDesign.id,
+        'Related',
       ),
       References: virtualViewId(
         collectionEntry1.id,
-        'References',
         multiViewDesign.id,
+        'References',
       ),
     });
   });
@@ -236,7 +295,7 @@ describe('createEntryVirtualViews', () => {
       ...collectionEntry1,
       metadata: {
         embeddedViewConfigs: {
-          [viewMetadataKey('Related', designWithView.id)]: savedConfig,
+          [viewMetadataKey(designWithView.id, 'Related')]: savedConfig,
         },
       },
     });
@@ -246,8 +305,8 @@ describe('createEntryVirtualViews', () => {
     // Verify the saved config was applied to the virtual view
     const vViewId = virtualViewId(
       collectionEntry1.id,
-      'Related',
       designWithView.id,
+      'Related',
     );
     const view = DataViews.get(vViewId, false);
 
@@ -281,7 +340,7 @@ describe('createEntryVirtualViews', () => {
       ...collectionEntry1,
       metadata: {
         embeddedViewConfigs: {
-          [viewMetadataKey('Related', referencingLayout.id)]: {
+          [viewMetadataKey(referencingLayout.id, 'Related')]: {
             data: { items: [databaseEntryAddress(relatedEntry1.path)] },
           },
         },
@@ -295,7 +354,7 @@ describe('createEntryVirtualViews', () => {
     );
 
     const view = DataViews.get(
-      virtualViewId(collectionEntry1.id, 'Related', referencingLayout.id),
+      virtualViewId(collectionEntry1.id, referencingLayout.id, 'Related'),
       false,
     );
 
@@ -309,8 +368,8 @@ describe('createEntryVirtualViews', () => {
     // View should have default options from view type (or none)
     const vViewId = virtualViewId(
       collectionEntry1.id,
-      'Related',
       designWithView.id,
+      'Related',
     );
     const view = DataViews.get(vViewId, false);
 

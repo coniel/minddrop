@@ -190,7 +190,7 @@ describe('onRenameEntry', () => {
 
   it('leaves virtual views untouched', async () => {
     const layoutId = layout_card_2.id;
-    const viewId = virtualViewId(collectionEntry1.id, 'Related', layoutId);
+    const viewId = virtualViewId(collectionEntry1.id, layoutId, 'Related');
     const dataSource = {
       type: 'collection' as const,
       id: virtualCollectionId(collectionEntry1.id, 'Related'),
@@ -201,6 +201,7 @@ describe('onRenameEntry', () => {
       id: viewId,
       type: 'board',
       dataSource,
+      owner: collectionEntry1.id,
       name: 'Related',
     });
 

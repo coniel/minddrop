@@ -64,6 +64,7 @@ describe('onDeleteEntry', () => {
       id: 'data-view_referencing-1',
       type: dataViewType_referencing.type,
       dataSource: { type: 'collection', id: 'collection-1' },
+      owner: collectionEntry1.id,
       name: 'Referencing',
       data: { items: [relatedEntry1.id, relatedEntry2.id] },
     });

@@ -25,6 +25,8 @@ export function loadDatabaseViews(databases: Database[]): void {
         data: storedView.data,
       }),
       dataSource: { type: 'database' as const, id: database.id },
+      // The database owning the view is responsible for persisting it
+      owner: database.id,
     }));
   });
 

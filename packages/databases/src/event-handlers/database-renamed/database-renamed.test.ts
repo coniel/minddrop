@@ -24,6 +24,7 @@ import {
   setup,
 } from '../../test-utils';
 import {
+  viewMetadataKey,
   virtualCollectionId,
   virtualCollectionName,
   virtualViewId,
@@ -86,12 +87,14 @@ describe('onRenameDatabase', () => {
     // Create virtual views for each collection property in each layout
     [layout_card_2.id, layout_card_3.id].forEach((layoutId) => {
       DataViews.createVirtual({
-        id: virtualViewId(collectionEntry1.id, 'Related', layoutId),
+        id: virtualViewId(collectionEntry1.id, layoutId, 'Related'),
         type: 'board',
         dataSource: {
           type: 'collection',
           id: virtualCollectionId(collectionEntry1.id, 'Related'),
         },
+        owner: collectionEntry1.id,
+        ownerKey: viewMetadataKey(layoutId, 'Related'),
         name: 'Related',
       });
     });
@@ -241,7 +244,7 @@ describe('onRenameDatabase', () => {
 
     // The view should still exist unchanged
     const view = DataViews.get(
-      virtualViewId(collectionEntry1.id, 'Related', layoutId),
+      virtualViewId(collectionEntry1.id, layoutId, 'Related'),
     );
 
     expect(view.dataSource).toEqual({

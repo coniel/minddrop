@@ -17,10 +17,11 @@ describe('onDatabaseViewDeleted', () => {
   afterEach(cleanup);
 
   it('persists the remaining views to the database config', () => {
-    // Create two virtual views for this database
+    // Create two virtual views owned by this database
     const view1: DataView = {
       ...dataView_virtual_1,
       dataSource: { type: 'database', id: objectDatabase.id },
+      owner: objectDatabase.id,
     };
 
     const view2: DataView = {
@@ -28,6 +29,7 @@ describe('onDatabaseViewDeleted', () => {
       id: 'view-virtual-board-1',
       virtual: true,
       dataSource: { type: 'database', id: objectDatabase.id },
+      owner: objectDatabase.id,
     };
 
     // Add both views to the store
@@ -48,8 +50,8 @@ describe('onDatabaseViewDeleted', () => {
     expect(database!.views![0].id).toBe('view-virtual-board-1');
   });
 
-  it('ignores views that do not belong to a database', () => {
-    // Create a virtual view with a non-database data source
+  it('ignores views not owned by a database', () => {
+    // Create a virtual view without a database owner
     const view: DataView = {
       ...dataView_virtual_1,
       dataSource: { type: 'collection', id: 'some-collection' },

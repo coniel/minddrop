@@ -144,9 +144,12 @@ export interface Database {
   automations?: DatabaseAutomation[];
 
   /**
-   * The database's views, stored without `dataSource` and `virtual`
-   * which are derived at load time, and without the runtime
-   * `references` index.
+   * The database's views, stored without `dataSource`, `virtual`,
+   * `owner`, and `ownerKey` which are derived at load time, and
+   * without the runtime `references` index.
    */
-  views?: Omit<DataView, 'dataSource' | 'virtual' | 'references'>[];
+  views?: Omit<
+    DataView,
+    'dataSource' | 'virtual' | 'owner' | 'ownerKey' | 'references'
+  >[];
 }

@@ -140,8 +140,8 @@ describe('entryDisplayPropertyValues', () => {
 
     const expectedViewId = virtualViewId(
       collectionEntry1.id,
-      'Related',
       designWithView.id,
+      'Related',
     );
 
     expect(result.Related).toBe(expectedViewId);

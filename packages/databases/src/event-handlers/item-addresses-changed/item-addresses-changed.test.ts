@@ -58,9 +58,11 @@ describe('onItemAddressesChanged', () => {
 
     // An embedded virtual view referencing the renamed entry
     DataViews.createVirtual({
-      id: virtualViewId(collectionEntry1.id, 'Related', 'layout-1'),
+      id: virtualViewId(collectionEntry1.id, 'layout-1', 'Related'),
       type: dataViewType_referencing.type,
       dataSource: { type: 'collection', id: 'collection-1' },
+      owner: collectionEntry1.id,
+      ownerKey: viewMetadataKey('layout-1', 'Related'),
       name: 'Related',
       data: { items: [relatedEntry1.id] },
     });
@@ -84,7 +86,7 @@ describe('onItemAddressesChanged', () => {
     // The embedded config holds the entry's new durable address
     expect(
       entry.metadata.embeddedViewConfigs?.[
-        viewMetadataKey('Related', 'layout-1')
+        viewMetadataKey('layout-1', 'Related')
       ],
     ).toEqual({
       options: dataViewType_referencing.defaultOptions,
