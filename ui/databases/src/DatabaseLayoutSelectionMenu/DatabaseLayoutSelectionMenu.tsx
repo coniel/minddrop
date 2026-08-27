@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { Database, Databases } from '@minddrop/databases';
-import { Designs, Layout, LayoutType } from '@minddrop/designs-legacy';
+import { Designs, Layout, LayoutType } from '@minddrop/designs';
 import { TranslationKey, createI18nKeyBuilder } from '@minddrop/i18n';
 import {
   DropdownMenuRadioGroup,
@@ -67,7 +67,7 @@ export const DatabaseLayoutSelectionMenu: React.FC<
   DatabaseLayoutSelectionMenuProps
 > = ({ databaseId, layoutType, value, onValueChange, submenu }) => {
   const allDatabases = Databases.useAll();
-  const allDesigns = Designs.useAll();
+  const allDesigns = Designs.useOfType('database');
 
   // Memoised so the array identity is stable between renders, keeping it
   // usable as a dependency below
