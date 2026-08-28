@@ -1,3 +1,4 @@
+export * from './DatabaseDefaultsSettings';
 export * from './DatabaseEntryDialog';
 export * from './DatabaseEntryOptionsMenu';
 export * from './DatabaseEntryRenderer';

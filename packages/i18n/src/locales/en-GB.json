@@ -355,6 +355,8 @@
       }
     },
     "settings": {
+      "label": "Databases",
+      "description": "Defaults applied to newly created databases.",
       "actions": {
         "delete": "Delete database"
       },

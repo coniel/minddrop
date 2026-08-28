@@ -588,6 +588,9 @@ importers:
       '@minddrop/selection':
         specifier: workspace:*
         version: link:../../packages/selection
+      '@minddrop/settings':
+        specifier: workspace:*
+        version: link:../../packages/settings
       '@minddrop/stores':
         specifier: workspace:*
         version: link:../../packages/stores
@@ -770,6 +773,9 @@ importers:
       '@minddrop/feature-search':
         specifier: workspace:*
         version: link:../search
+      '@minddrop/feature-settings':
+        specifier: workspace:*
+        version: link:../settings
       '@minddrop/feature-spaces':
         specifier: workspace:*
         version: link:../spaces
@@ -1100,6 +1106,49 @@ importers:
       react:
         specifier: ^19.1.0
         version: 19.2.4
+    devDependencies:
+      '@minddrop/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      eslint:
+        specifier: ^9.39.3
+        version: 9.39.5
+      tsconfig:
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  features/settings:
+    dependencies:
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../../packages/events
+      '@minddrop/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
+      '@minddrop/settings':
+        specifier: workspace:*
+        version: link:../../packages/settings
+      '@minddrop/stores':
+        specifier: workspace:*
+        version: link:../../packages/stores
+      '@minddrop/test-utils':
+        specifier: workspace:*
+        version: link:../../packages/test-utils
+      '@minddrop/ui-components':
+        specifier: workspace:*
+        version: link:../../ui/components
+      '@minddrop/ui-icons':
+        specifier: workspace:*
+        version: link:../../ui/icons
+      '@minddrop/ui-primitives':
+        specifier: workspace:*
+        version: link:../../ui/primitives
+      '@minddrop/views':
+        specifier: workspace:*
+        version: link:../../packages/views
     devDependencies:
       '@minddrop/eslint-config':
         specifier: workspace:*
@@ -1851,6 +1900,40 @@ importers:
       zustand:
         specifier: ^4.3.8
         version: 4.5.6(@types/react@19.2.14)(react@19.2.4)
+    devDependencies:
+      '@minddrop/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@minddrop/test-utils':
+        specifier: workspace:*
+        version: link:../test-utils
+      '@types/react':
+        specifier: ^19.2.14
+        version: 19.2.14
+      eslint:
+        specifier: ^9.39.3
+        version: 9.39.5
+      tsconfig:
+        specifier: workspace:*
+        version: link:../tsconfig
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  packages/settings:
+    dependencies:
+      '@minddrop/i18n':
+        specifier: workspace:*
+        version: link:../i18n
+      '@minddrop/stores':
+        specifier: workspace:*
+        version: link:../stores
+      '@minddrop/ui-icons':
+        specifier: workspace:*
+        version: link:../../ui/icons
+      react:
+        specifier: ^19.2.4
+        version: 19.2.4
     devDependencies:
       '@minddrop/eslint-config':
         specifier: workspace:*

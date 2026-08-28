@@ -411,6 +411,8 @@ declare module 'i18next' {
             };
           };
           settings: {
+            label: string;
+            description: string;
             actions: {
               delete: string;
             };
@@ -2866,6 +2868,11 @@ declare module 'i18next' {
           preview: {
             toggleTheme: string;
           };
+        };
+        settings: {
+          title: string;
+          open: string;
+          back: string;
         };
         theme: {
           appearance: {

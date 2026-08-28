@@ -9,6 +9,7 @@ import {
 } from '@minddrop/feature-designs';
 import { QueriesMenuItem } from '@minddrop/feature-queries';
 import { OpenSearchDialogEvent } from '@minddrop/feature-search';
+import { OpenSettingsEvent, SettingsIcon } from '@minddrop/feature-settings';
 import { SpacesMenuItem } from '@minddrop/feature-spaces';
 import {
   Sidebar,
@@ -32,6 +33,10 @@ export const AppSidebar: React.FC<SidebarProps> = ({ ...other }) => {
 
   function handleOpenDesignStudio() {
     Events.dispatch(OpenDesignStudioEvent, {});
+  }
+
+  function handleOpenSettings() {
+    Events.dispatch(OpenSettingsEvent, {});
   }
 
   function handleResize(width: number) {
@@ -72,6 +77,12 @@ export const AppSidebar: React.FC<SidebarProps> = ({ ...other }) => {
       <DatabasesSidebarMenu />
       <Toolbar className="sidebar-bottom-toolbar">
         <ThemeVariantPicker />
+        <ToolbarIconButton
+          icon={SettingsIcon}
+          label="settings.open"
+          tooltip={{ title: 'settings.open' }}
+          onClick={handleOpenSettings}
+        />
       </Toolbar>
     </Sidebar>
   );

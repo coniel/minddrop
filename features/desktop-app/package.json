@@ -39,6 +39,7 @@
     "@minddrop/feature-markdown-editor": "workspace:*",
     "@minddrop/feature-spaces": "workspace:*",
     "@minddrop/feature-search": "workspace:*",
+    "@minddrop/feature-settings": "workspace:*",
     "@minddrop/feature-views": "workspace:*",
     "@minddrop/spaces": "workspace:*",
     "@minddrop/file-system": "workspace:*",

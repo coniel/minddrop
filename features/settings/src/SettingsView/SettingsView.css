@@ -1,0 +1,16 @@
+.settings-view {
+  height: 100%;
+  flex: 1;
+  min-width: 0;
+}
+
+.settings-view-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.settings-view-section {
+  max-width: 680px;
+  padding: var(--space-7) var(--space-6);
+  margin: 0 auto;
+}
