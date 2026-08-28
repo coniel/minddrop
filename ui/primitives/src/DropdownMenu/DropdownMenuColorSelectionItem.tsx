@@ -17,11 +17,17 @@ export interface DropdownMenuColorSelectionItemProps
 
 export const DropdownMenuColorSelectionItem: FC<
   DropdownMenuColorSelectionItemProps
-> = ({ disabled, color, onClick, ...other }) => (
+> = ({ disabled, color, checked, onClick, ...other }) => (
   <MenuPrimitive.Item
     disabled={disabled}
     onClick={onClick}
-    render={<ColorSelectionMenuItem disabled={disabled} color={color} />}
+    render={
+      <ColorSelectionMenuItem
+        disabled={disabled}
+        color={color}
+        checked={checked}
+      />
+    }
     {...other}
   />
 );
