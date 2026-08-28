@@ -85,7 +85,7 @@ export const Sidebar: FC<SidebarProps> = ({
   return (
     <div
       ref={sidebar}
-      className={propsToClass('app-sidebar', { className, isDragging })}
+      className={propsToClass('sidebar', { className, isDragging })}
       {...other}
       style={{ ...style, width }}
       data-width={width}

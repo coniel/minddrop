@@ -1,4 +1,4 @@
-.app-sidebar {
+.sidebar {
   position: relative;
   /* No top padding so the sidebar content lines up with the content area */
   padding: 0 var(--space-2) var(--space-2);
@@ -7,7 +7,7 @@
   flex-direction: column;
   gap: var(--space-4);
 
-  .app-sidebar-bottom-toolbar {
+  .sidebar-bottom-toolbar {
     margin-top: auto;
   }
 
@@ -36,8 +36,8 @@
     transition-duration: 0.2s;
   }
 
-  &.app-sidebar-is-dragging .resize-handle .resize-indicator,
-  &.app-sidebar-is-dragging .resize-handle:hover .resize-indicator {
+  &.sidebar-is-dragging .resize-handle .resize-indicator,
+  &.sidebar-is-dragging .resize-handle:hover .resize-indicator {
     background-color: var(--surface-primary-hover);
     animation-duration: 0s;
     transition-delay: 0s;

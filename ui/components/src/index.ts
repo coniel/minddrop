@@ -7,4 +7,5 @@ export * from './ImageViewer';
 export * from './ListPanelView';
 export * from './PanelView';
 export * from './Setting';
+export * from './Sidebar';
 export * from './ThemeVariantPicker';

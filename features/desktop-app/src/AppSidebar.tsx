@@ -10,10 +10,13 @@ import {
 import { QueriesMenuItem } from '@minddrop/feature-queries';
 import { OpenSearchDialogEvent } from '@minddrop/feature-search';
 import { SpacesMenuItem } from '@minddrop/feature-spaces';
-import { ThemeVariantPicker } from '@minddrop/ui-components';
+import {
+  Sidebar,
+  SidebarProps,
+  ThemeVariantPicker,
+} from '@minddrop/ui-components';
 import { MenuGroup, Toolbar, ToolbarIconButton } from '@minddrop/ui-primitives';
 import { AppUiState } from './AppUiState';
-import { Sidebar, SidebarProps } from './Sidebar';
 
 export const AppSidebar: React.FC<SidebarProps> = ({ ...other }) => {
   const sidebarWidth = AppUiState.useValue('sidebarWidth');
@@ -67,7 +70,7 @@ export const AppSidebar: React.FC<SidebarProps> = ({ ...other }) => {
         <QueriesMenuItem />
       </MenuGroup>
       <DatabasesSidebarMenu />
-      <Toolbar className="app-sidebar-bottom-toolbar">
+      <Toolbar className="sidebar-bottom-toolbar">
         <ThemeVariantPicker />
       </Toolbar>
     </Sidebar>
