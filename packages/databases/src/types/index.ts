@@ -2,6 +2,7 @@ export * from './Database.types';
 export * from './DatabaseAutomation.types';
 export * from './DatabaseAutomationAction.types';
 export * from './DatabaseAutomationActionConfig.types';
+export * from './DatabaseDefaults.types';
 export * from './DatabaseEntry.types';
 export * from './DatabaseEntryRenderSource.types';
 export * from './DatabaseEntryTemplate.types';

@@ -2,8 +2,10 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { PathConflictError } from '@minddrop/file-system';
 import { PropertySchema } from '@minddrop/properties';
+import { DatabaseDefaultsStore } from '../DatabaseDefaultsStore';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabaseCreatedEvent } from '../events';
+import { setDatabaseDefault } from '../setDatabaseDefault';
 import { MockFs, cleanup, parentDir, setup } from '../test-utils';
 import { fetchWebpageMetadataAutomation } from '../test-utils/fixtures/database-automations.fixtures';
 import { Database, DatabaseId } from '../types';
@@ -25,7 +27,7 @@ const newDatabase: Database = {
   path: `${parentDir}/${options.name}`,
   entrySerializer: 'markdown',
   propertyFileStorage: 'property',
-  entryOpenMode: 'dialog',
+  entryOpenMode: 'in-place',
   properties: [],
   designId: null,
   designPropertyMap: {},
@@ -87,6 +89,36 @@ describe('createDatabase', () => {
       });
 
       expect(database.automations).toBeUndefined();
+    });
+  });
+
+  describe('defaults', () => {
+    afterEach(() => {
+      // Reset configured defaults to their built-in values
+      DatabaseDefaultsStore.reset();
+    });
+
+    it('applies configured defaults', async () => {
+      // Configure defaults for new databases
+      setDatabaseDefault('entryOpenMode', 'panel');
+      setDatabaseDefault('propertyFileStorage', 'entry');
+
+      const database = await createDatabase(options);
+
+      expect(database.entryOpenMode).toBe('panel');
+      expect(database.propertyFileStorage).toBe('entry');
+    });
+
+    it('prefers explicit options over configured defaults', async () => {
+      // Configure a default for new databases
+      setDatabaseDefault('propertyFileStorage', 'entry');
+
+      const database = await createDatabase({
+        ...options,
+        propertyFileStorage: 'common',
+      });
+
+      expect(database.propertyFileStorage).toBe('common');
     });
   });
 

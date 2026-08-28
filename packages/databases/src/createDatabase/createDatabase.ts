@@ -3,6 +3,7 @@ import { Fs, PathConflictError } from '@minddrop/file-system';
 import { Paths, entityId } from '@minddrop/utils';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabaseCreatedEvent } from '../events';
+import { getDatabaseDefaults } from '../getDatabaseDefaults';
 import { Database, DatabaseAutomationTemplate } from '../types';
 import { writeDatabaseConfig } from '../writeDatabaseConfig';
 
@@ -41,11 +42,10 @@ export async function createDatabase(
     id: entityId('automation'),
   }));
 
-  // Generate the database config
+  // Generate the database config, applying the user-configured
+  // defaults for new databases
   const databaseConfig: Database = {
-    entrySerializer: 'markdown',
-    propertyFileStorage: 'property',
-    entryOpenMode: 'dialog',
+    ...getDatabaseDefaults(),
     properties: [],
     designId: null,
     designPropertyMap: {},
