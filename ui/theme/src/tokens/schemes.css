@@ -61,6 +61,11 @@
   --border-default: var(--accent-600);
   --border-strong: var(--accent-700);
   --border-hover: var(--accent-800);
+
+  /* Text inherits its computed color from outside the scheme
+     (the app body), so re-declare it here for the re-anchored
+     role to reach text that sets no color of its own */
+  color: var(--text-regular);
 }
 
 /* Resets the accent channel to neutral inside an outer scheme */

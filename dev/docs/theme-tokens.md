@@ -63,6 +63,11 @@ re-resolution there. Consequences:
 - Anything else that rebinds `--accent-*` on a container (WG 6 consumer
   theming) must also re-anchor the schemable roles, or apply a `.scheme-*`
   class which already does.
+- The same trap exists for **inherited properties**: text inside a scheme
+  inherits its computed `color` from the app body (declared outside the
+  scheme), so the re-anchored `--text-regular` never reaches it on its own.
+  The shared scheme rule therefore also declares `color: var(--text-regular)`
+  so color-less text re-resolves at the scheme scope.
 
 ## Scalable spacing and radius
 
