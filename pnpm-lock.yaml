@@ -612,6 +612,9 @@ importers:
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives
+      '@minddrop/ui-theme':
+        specifier: workspace:*
+        version: link:../../ui/theme
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../../packages/utils
@@ -1438,6 +1441,9 @@ importers:
       '@minddrop/stores':
         specifier: workspace:*
         version: link:../stores
+      '@minddrop/ui-theme':
+        specifier: workspace:*
+        version: link:../../ui/theme
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../utils

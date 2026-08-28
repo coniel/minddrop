@@ -293,6 +293,7 @@
         "entryOptions": "Entry options",
         "goToDatabase": "Go to database",
         "removeFromCollection": "Remove from collection",
+        "color": "Colour",
         "create": "Create entry"
       },
       "errors": {
@@ -1005,6 +1006,11 @@
         "title": "Default layouts",
         "description": "The design layouts used to display the database's entries in each context. Individual views can override these defaults with a specific layout.",
         "noCompatible": "No compatible layouts"
+      },
+      "entryColor": {
+        "title": "Entry colour",
+        "description": "The property entries take their colour from: the Colour property, or a select property's option colours.",
+        "label": "Colour entries by"
       }
     }
   },

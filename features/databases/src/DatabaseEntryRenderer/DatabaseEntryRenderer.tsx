@@ -6,6 +6,7 @@ import {
   LayoutContext,
   layoutContextBaseType,
   resolveDesignPropertyMap,
+  resolveEntryColor,
   withImplicitMetadataProperties,
 } from '@minddrop/databases';
 import { Designs, Layouts, resolveDesignMediaDirPath } from '@minddrop/designs';
@@ -269,9 +270,14 @@ const Entry: React.FC<EntryProps> = ({
   // within contexts which enable it
   const showOptionsMenu = baseType === 'card' && optionsMenu;
 
+  // The entry's color, applied as a scheme class so the layout's
+  // schemable roles resolve against it
+  const entryColor = resolveEntryColor(database, entry);
+
   const className = [
     'database-entry',
     `database-entry-${baseType}`,
+    entryColor ? `scheme-${entryColor}` : '',
     showDragHandle && isDragging ? 'database-entry-dragging' : '',
   ]
     .filter(Boolean)

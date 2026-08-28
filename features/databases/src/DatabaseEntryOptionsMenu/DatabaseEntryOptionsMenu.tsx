@@ -4,7 +4,17 @@ import { DatabaseEntries } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
 import { CollectionSelectionSubmenu } from '@minddrop/ui-components';
 import { DatabaseEntryRenderSource } from '@minddrop/ui-databases';
-import { ActionMenuItem, DropdownMenuSeparator } from '@minddrop/ui-primitives';
+import {
+  ActionMenuItem,
+  DropdownMenuColorSelectionItem,
+  DropdownMenuPortal,
+  DropdownMenuPositioner,
+  DropdownMenuSeparator,
+  DropdownSubmenu,
+  DropdownSubmenuContent,
+  DropdownSubmenuTriggerItem,
+} from '@minddrop/ui-primitives';
+import { ContentColor, ContentColors } from '@minddrop/ui-theme';
 import { Views } from '@minddrop/views';
 import {
   CloseDatabaseEntryDialogEvent,
@@ -33,7 +43,11 @@ export const DatabaseEntryOptionsMenu: React.FC<
   DatabaseEntryOptionsMenuProps
 > = ({ entryId, source }) => {
   const allCollections = Collections.useAll();
+  const entry = DatabaseEntries.use(entryId);
   const openView = Views.useOpenView();
+
+  // The entry's current color, marking the selected swatch
+  const entryColor = entry?.metadata.color ?? 'default';
 
   // The collection the entry is rendered from, when rendered
   // from a collection
@@ -74,6 +88,14 @@ export const DatabaseEntryOptionsMenu: React.FC<
   const handleDuplicate = useCallback(() => {
     DatabaseEntries.duplicate(entryId, source);
   }, [entryId, source]);
+
+  // Set or clear the entry's color
+  const handleSetColor = useCallback(
+    (color: ContentColor) => {
+      DatabaseEntries.setColor(entryId, color === 'default' ? null : color);
+    },
+    [entryId],
+  );
 
   // Delete the entry
   const handleDelete = useCallback(() => {
@@ -119,6 +141,28 @@ export const DatabaseEntryOptionsMenu: React.FC<
         label="actions.duplicate"
         onSelect={handleDuplicate}
       />
+
+      {/* Set the entry color */}
+      <DropdownSubmenu>
+        <DropdownSubmenuTriggerItem
+          icon="palette"
+          label="databases.entries.actions.color"
+        />
+        <DropdownMenuPortal>
+          <DropdownMenuPositioner side="right" align="start" sideOffset={4}>
+            <DropdownSubmenuContent>
+              {ContentColors.map((color) => (
+                <DropdownMenuColorSelectionItem
+                  key={color}
+                  color={color}
+                  checked={color === entryColor}
+                  onClick={() => handleSetColor(color)}
+                />
+              ))}
+            </DropdownSubmenuContent>
+          </DropdownMenuPositioner>
+        </DropdownMenuPortal>
+      </DropdownSubmenu>
 
       {/* Collection controls, separated from the entry actions */}
       {showCollectionControls && (

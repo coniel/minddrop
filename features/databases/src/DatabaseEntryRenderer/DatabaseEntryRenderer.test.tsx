@@ -224,6 +224,65 @@ describe('<DatabaseEntryRenderer />', () => {
     screen.getByText('Title Entry');
   });
 
+  it('tints the entry with its meta color', () => {
+    // Give the entry a color
+    DatabaseEntries.Store.load([
+      { ...objectEntry1, metadata: { color: 'red' } },
+    ]);
+
+    const { container } = render(
+      <DatabaseEntryRenderer entryId={objectEntry1.id} layoutContext="card" />,
+    );
+
+    expect(
+      container.querySelector('.database-entry.scheme-red'),
+    ).not.toBeNull();
+  });
+
+  it('tints the entry by its select option color', () => {
+    // A database coloring entries by a select property
+    const statusDatabase = {
+      ...objectDatabase,
+      id: 'database_status' as const,
+      name: 'StatusDb',
+      path: `${objectDatabase.path}-status`,
+      colorProperty: 'Status',
+      properties: [
+        {
+          type: 'select' as const,
+          name: 'Status',
+          options: [{ value: 'Done', color: 'green' as const }],
+        },
+      ],
+    };
+    const statusEntry = {
+      ...objectEntry1,
+      id: 'database-entry_status-entry' as const,
+      database: 'database_status' as const,
+      path: `${objectDatabase.path}-status/Entry.md`,
+      properties: { Status: 'Done' },
+    };
+
+    Databases.Store.load([statusDatabase]);
+    DatabaseEntries.Store.load([statusEntry]);
+
+    const { container } = render(
+      <DatabaseEntryRenderer entryId={statusEntry.id} layoutContext="card" />,
+    );
+
+    expect(
+      container.querySelector('.database-entry.scheme-green'),
+    ).not.toBeNull();
+  });
+
+  it('applies no scheme class to uncolored entries', () => {
+    const { container } = render(
+      <DatabaseEntryRenderer entryId={objectEntry1.id} layoutContext="card" />,
+    );
+
+    expect(container.querySelector('[class*="scheme-"]')).toBeNull();
+  });
+
   it('renders a title-only fallback when the database has no design', () => {
     // A database with no design and an entry belonging to it
     const noDesignDatabase = {

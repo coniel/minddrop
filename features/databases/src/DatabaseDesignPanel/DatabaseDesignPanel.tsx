@@ -30,6 +30,9 @@ const layoutContextI18nKey = createI18nKeyBuilder('databases.layoutContexts.');
 // Select value representing no mapping
 const NONE_VALUE = 'none';
 
+// Select value representing the meta Color property
+const META_COLOR_VALUE = 'meta-color';
+
 /**
  * Maps layout contexts to their icons.
  */
@@ -141,6 +144,11 @@ export const DatabaseDesignPanel: React.FC<DatabaseDesignPanelProps> = ({
           <DefaultLayoutsSection database={database} design={design} />
         </Stack>
       )}
+
+      {/* Entry color source */}
+      <Stack gap={6} className="database-design-panel-section">
+        <EntryColorSection database={database} />
+      </Stack>
     </Stack>
   );
 };
@@ -344,6 +352,72 @@ const DefaultLayoutsSection: React.FC<DesignSectionProps> = ({
           </Stack>
         ))}
       </Stack>
+    </Stack>
+  );
+};
+
+interface EntryColorSectionProps {
+  /**
+   * The database being configured.
+   */
+  database: Database;
+}
+
+/**
+ * Renders the entry color source select: the meta Color property,
+ * or one of the database's select properties.
+ */
+const EntryColorSection: React.FC<EntryColorSectionProps> = ({ database }) => {
+  // The database's select properties, offered as color sources
+  const selectProperties = database.properties.filter(
+    (property) => property.type === 'select',
+  );
+
+  // The meta Color property is always offered, even when the
+  // database has not added it as an actual property
+  const options: SelectOption<string>[] = [
+    { value: META_COLOR_VALUE, label: 'properties.color.name' },
+    ...selectProperties.map((property) => ({
+      value: property.name,
+      stringLabel: property.name,
+    })),
+  ];
+
+  // Assign the selected color source to the database
+  function handleValueChange(value: string) {
+    Databases.setColorProperty(
+      database.id,
+      value === META_COLOR_VALUE ? null : value,
+    );
+  }
+
+  return (
+    <Stack gap={2}>
+      <Stack gap={1}>
+        <Text
+          size="sm"
+          weight="medium"
+          text="databases.design.entryColor.title"
+        />
+        <Text
+          block
+          size="xs"
+          color="muted"
+          text="databases.design.entryColor.description"
+        />
+      </Stack>
+      <Group gap={2} className="database-design-panel-row">
+        <Icon name="palette" color="muted" />
+        <Text size="sm" text="databases.design.entryColor.label" />
+        <Spacer />
+        <Select
+          size="sm"
+          variant="subtle"
+          value={database.colorProperty ?? META_COLOR_VALUE}
+          onValueChange={handleValueChange}
+          options={options}
+        />
+      </Group>
     </Stack>
   );
 };
