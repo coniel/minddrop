@@ -2,8 +2,12 @@
   position: relative;
 }
 
+/* Cards take their rounding from the rendering context, clipping
+   the layout's backgrounds with it */
 .database-entry-card
   > *:not(.database-entry-drag-handle):not(.database-entry-options) {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
   outline: var(--border-width-thin) solid transparent;
   transition: outline-color var(--duration-normal) var(--ease-out);
 }
