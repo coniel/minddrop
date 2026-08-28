@@ -6,6 +6,7 @@ export * from './errors';
 export * from './events';
 export * from './database-templates';
 export * from './utils/withImplicitMetadataProperties';
+export * from './utils/resolveEntryColor';
 export * from './utils/resolveDesignPropertyMap';
 export { MULTI_VALUE_PROPERTY_TYPES } from './constants';
 export { DatabaseDefaultsStore } from './DatabaseDefaultsStore';

@@ -125,6 +125,7 @@ export { getDatabaseDesignPropertyMap as getDesignPropertyMap } from './getDatab
 export { setDatabaseDesignPropertyMap as setDesignPropertyMap } from './setDatabaseDesignPropertyMap';
 export { clearDatabaseDesignPropertyMap as clearDesignPropertyMap } from './clearDatabaseDesignPropertyMap';
 export { setDatabaseDesign as setDesign } from './setDatabaseDesign';
+export { setDatabaseColorProperty as setColorProperty } from './setDatabaseColorProperty';
 export { setDatabaseDefaultLayout as setDefaultLayout } from './setDatabaseDefaultLayout';
 
 /**

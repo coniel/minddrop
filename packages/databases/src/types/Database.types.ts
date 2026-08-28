@@ -103,6 +103,12 @@ export interface Database {
   designPropertyMap: Record<string, string>;
 
   /**
+   * The name of the select property entries are colored by. When
+   * null or unset, entries are colored by the meta Color property.
+   */
+  colorProperty?: string | null;
+
+  /**
    * A [layout context]: [layout ID] map of the default layout to use when
    * rendering entries in each display context.
    */

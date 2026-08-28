@@ -33,6 +33,11 @@ export async function onRenameProperty(
     update.designPropertyMap = remappedDesignPropertyMap;
   }
 
+  // Follow the rename when the property colors the entries
+  if (database.colorProperty === oldName) {
+    update.colorProperty = newName;
+  }
+
   if (Object.keys(update).length) {
     await updateDatabase(database.id, update);
   }

@@ -49,6 +49,7 @@ export async function createDatabase(
     properties: [],
     designId: null,
     designPropertyMap: {},
+    colorProperty: null,
     defaultLayouts: {},
     ...options,
     id: entityId('database'),

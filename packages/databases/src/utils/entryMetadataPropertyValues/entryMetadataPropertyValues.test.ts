@@ -34,4 +34,22 @@ describe('entryMetadataPropertyValues', () => {
       'Last Modified': objectEntry1.lastModified,
     });
   });
+
+  it('resolves declared color properties from the entry metadata', () => {
+    const values = entryMetadataPropertyValues(
+      { ...objectEntry1, metadata: { color: 'red' } },
+      [...objectDatabase.properties, { type: 'color', name: 'Color' }],
+    );
+
+    expect(values.Color).toBe('red');
+  });
+
+  it('resolves null for entries without a color', () => {
+    const values = entryMetadataPropertyValues(objectEntry1, [
+      ...objectDatabase.properties,
+      { type: 'color', name: 'Color' },
+    ]);
+
+    expect(values.Color).toBeNull();
+  });
 });

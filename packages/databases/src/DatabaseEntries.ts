@@ -26,6 +26,7 @@ export { renameDatabaseEntry as rename } from './renameDatabaseEntry';
 export { updateDatabaseEntry as update } from './updateDatabaseEntry';
 export { clearDatabaseEntryProperty as clearProperty } from './clearDatabaseEntryProperty';
 export { updateDatabaseEntryProperty as updateProperty } from './updateDatabaseEntryProperty';
+export { setEntryColor as setColor } from './setEntryColor';
 export { writeDatabaseEntry as write } from './writeDatabaseEntry';
 export { readDatabaseEntry as read } from './readDatabaseEntry';
 export {

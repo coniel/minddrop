@@ -1,4 +1,5 @@
 import { PropertyMap } from '@minddrop/properties';
+import { ContentColor } from '@minddrop/ui-theme';
 import { EntityId } from '@minddrop/utils';
 import { DatabaseId } from './Database.types';
 
@@ -87,4 +88,9 @@ export interface DatabaseEntryMetadata {
    * embedded in layouts, keyed by `propertyName:layoutId`.
    */
   embeddedViewConfigs?: Record<string, DatabaseEntryViewConfig>;
+
+  /**
+   * The entry's color, i.e. the value of the meta Color property.
+   */
+  color?: ContentColor;
 }

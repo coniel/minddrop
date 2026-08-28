@@ -32,6 +32,11 @@ export function entryMetadataPropertyValues(
     if (property.type === 'last-modified') {
       values[property.name] = entry.lastModified;
     }
+
+    // The entry color
+    if (property.type === 'color') {
+      values[property.name] = entry.metadata.color ?? null;
+    }
   }
 
   return values;

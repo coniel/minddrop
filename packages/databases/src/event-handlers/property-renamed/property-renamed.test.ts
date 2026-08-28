@@ -62,6 +62,20 @@ describe('onRenameProperty', () => {
     });
   });
 
+  it('follows the rename when the property colors the entries', async () => {
+    await onRenameProperty({
+      database: {
+        ...objectDatabase,
+        colorProperty: 'Content',
+      },
+      oldName: 'Content',
+      newName: 'Body',
+    });
+
+    // The color property setting should follow the rename
+    expect(getDatabase(objectDatabase.id).colorProperty).toBe('Body');
+  });
+
   it('does not update the database when no map value matches', async () => {
     await onRenameProperty({
       database: {

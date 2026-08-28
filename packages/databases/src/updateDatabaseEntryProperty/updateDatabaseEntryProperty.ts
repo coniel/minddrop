@@ -2,10 +2,12 @@ import { Collections } from '@minddrop/collections';
 import { PathConflictError } from '@minddrop/file-system';
 import { i18n } from '@minddrop/i18n';
 import { PropertyValue } from '@minddrop/properties';
+import { ContentColor } from '@minddrop/ui-theme';
 import { InvalidParameterError } from '@minddrop/utils';
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntry } from '../getDatabaseEntry';
 import { renameDatabaseEntry } from '../renameDatabaseEntry';
+import { setEntryColor } from '../setEntryColor';
 import { DatabaseEntry } from '../types';
 import { updateDatabaseEntry } from '../updateDatabaseEntry';
 import { virtualCollectionId, withImplicitMetadataProperties } from '../utils';
@@ -59,6 +61,13 @@ export async function updateDatabaseEntryProperty(
     propertySchema.type === 'last-modified'
   ) {
     return entry;
+  }
+
+  // Colour properties store their value in the entry metadata
+  if (propertySchema.type === 'color') {
+    await setEntryColor(entry.id, (value as ContentColor) || null);
+
+    return getDatabaseEntry(entry.id);
   }
 
   // Collection properties are updated through their virtual

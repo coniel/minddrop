@@ -3,10 +3,12 @@ import { CollectionUpdatedEvent, Collections } from '@minddrop/collections';
 import { Events } from '@minddrop/events';
 import { InvalidParameterError, isUntitledTitle } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
+import { DatabasesStore } from '../DatabasesStore';
 import { onUpdateCollection } from '../event-handlers/collection-updated';
 import {
   cleanup,
   collectionEntry1,
+  objectDatabase,
   objectEntry1,
   relatedEntry1,
   relatedEntry2,
@@ -126,6 +128,40 @@ describe('updateDatabaseEntryProperty', () => {
       const entry = DatabaseEntriesStore.get(timestampEntry1.id);
 
       expect(entry?.properties).toEqual(timestampEntry1.properties);
+    });
+  });
+
+  describe('color properties', () => {
+    beforeEach(() => {
+      // Declare a Color property on the database
+      DatabasesStore.update(objectDatabase.id, {
+        properties: [
+          ...objectDatabase.properties,
+          { type: 'color', name: 'Color' },
+        ],
+      });
+    });
+
+    it('stores color updates in the entry metadata and property', async () => {
+      const updated = await updateDatabaseEntryProperty(
+        objectEntry1.id,
+        'Color',
+        'red',
+      );
+
+      // The color lands in the metadata and mirrors into the
+      // declared property so it persists to the entry file
+      expect(updated.metadata.color).toBe('red');
+      expect(updated.properties.Color).toBe('red');
+    });
+
+    it('clears the color on empty values', async () => {
+      await updateDatabaseEntryProperty(objectEntry1.id, 'Color', 'red');
+      await updateDatabaseEntryProperty(objectEntry1.id, 'Color', null);
+
+      const entry = DatabaseEntriesStore.get(objectEntry1.id);
+
+      expect(entry?.metadata.color).toBeUndefined();
     });
   });
 

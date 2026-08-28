@@ -35,6 +35,7 @@ function generateDatabase(
     lastModified: new Date('2024-01-01T00:00:00.000Z'),
     designId: design_cards.id,
     designPropertyMap: {},
+    colorProperty: null,
     defaultLayouts: { card: layout_card_3.id },
     path: `${parentDir}/${data.name}`,
     ...data,
