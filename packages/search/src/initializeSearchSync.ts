@@ -1,5 +1,4 @@
 import { Databases } from '@minddrop/databases';
-import type {} from '@minddrop/databases';
 import { Events } from '@minddrop/events';
 import { Workspaces } from '@minddrop/workspaces';
 import { getSearchAdapter } from './SearchAdapter';

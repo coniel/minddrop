@@ -91,21 +91,11 @@ export async function initializeSearchIndex(
       );
 
       indexes.set(workspaceId, miniSearch);
-      console.log(
-        `[search] Loaded persisted index for workspace ${workspaceId} (version ${currentVersion})`,
-      );
 
       return;
     }
-
-    console.log(
-      `[search] Index version mismatch (persisted: ${persisted.version}, current: ${currentVersion}), rebuilding`,
-    );
   } catch {
     // No persisted index or parse error, rebuild
-    console.log(
-      `[search] No persisted index found for workspace ${workspaceId}, building from scratch`,
-    );
   }
 
   // Build from SQL data
@@ -159,10 +149,6 @@ export async function rebuildSearchIndex(workspaceId: string): Promise<void> {
   // Bulk-add all documents
   miniSearch.addAll([...entryDocuments, ...databaseDocuments]);
   indexes.set(workspaceId, miniSearch);
-
-  console.log(
-    `[search] Built index for workspace ${workspaceId} with ${entryDocuments.length} entries and ${databaseDocuments.length} databases`,
-  );
 
   // Persist to disk
   await persistIndex(workspaceId);

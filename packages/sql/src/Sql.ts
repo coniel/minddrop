@@ -48,10 +48,6 @@ export async function open(
     const storedVersion = row ? parseInt(row.value, 10) : 0;
 
     if (storedVersion !== options.version) {
-      console.log(
-        `[sql] Schema version mismatch (stored: ${storedVersion}, current: ${options.version}), rebuilding`,
-      );
-
       // Close and delete the old database
       database.close();
 

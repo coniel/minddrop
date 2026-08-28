@@ -12,17 +12,10 @@ export async function initializeSearchData(
   workspaceId: string,
   schemaChanged: boolean,
 ): Promise<void> {
-  console.log(
-    `[search] Initializing search index for workspace ${workspaceId}`,
-  );
-
+  // Rebuild from SQL when the schema changed, otherwise load from disk
   if (schemaChanged) {
     await rebuildSearchIndex(workspaceId);
   } else {
     await initializeSearchIndex(workspaceId);
   }
-
-  console.log(
-    `[search] Search initialization complete for workspace ${workspaceId}`,
-  );
 }
