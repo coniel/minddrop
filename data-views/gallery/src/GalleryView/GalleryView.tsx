@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import React from 'react';
 import { DataViewTypeComponentProps } from '@minddrop/data-views';
 import { DatabaseEntryRenderer } from '@minddrop/feature-databases';
+import { DatabaseEntryContextProvider } from '@minddrop/ui-databases';
 import { ScrollArea } from '@minddrop/ui-primitives';
 import { GAP_SIZE, defaultGalleryViewOptions } from '../constants';
 import { GalleryGap, GalleryViewOptions } from '../types';
@@ -94,16 +95,18 @@ export const GalleryViewComponent: React.FC<
         stateKey="content"
         ref={scrollAreaRef}
       >
-        <div className="gallery-view-content">
-          {visibleEntries.map((entryId) => (
-            <DatabaseEntryRenderer
-              key={entryId}
-              entryId={entryId}
-              layoutContext="card"
-              layoutId={view.options?.cardLayoutId}
-            />
-          ))}
-        </div>
+        <DatabaseEntryContextProvider optionsMenu source={view.dataSource}>
+          <div className="gallery-view-content">
+            {visibleEntries.map((entryId) => (
+              <DatabaseEntryRenderer
+                key={entryId}
+                entryId={entryId}
+                layoutContext="card"
+                layoutId={view.options?.cardLayoutId}
+              />
+            ))}
+          </div>
+        </DatabaseEntryContextProvider>
       </ScrollArea>
     </div>
   );
