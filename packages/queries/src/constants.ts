@@ -72,6 +72,9 @@ export const QUERY_OPERATORS_BY_PROPERTY_TYPE: Record<
   'last-modified': DATE_OPERATORS,
   toggle: ['is-true', 'is-false'],
   select: ['is', 'is-not', 'is-empty', 'is-not-empty'],
+  // Color values live in entry metadata, which is not SQL
+  // indexed, so color cannot be filtered on yet
+  color: [],
   // Collections test membership of the picked entries
   collection: [
     'contains-any',

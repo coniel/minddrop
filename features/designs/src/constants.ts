@@ -114,6 +114,7 @@ export const propertyTypeLabelMap: Record<PropertyType, TranslationKey> = {
   'last-modified': 'properties.lastModified.name',
   file: 'properties.file.name',
   collection: 'properties.collection.name',
+  color: 'properties.color.name',
 };
 
 /**

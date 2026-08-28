@@ -1,5 +1,6 @@
 import { PropertySchemaTemplate, PropertyType } from '../types';
 import { CollectionPropertySchema } from './CollectionPropertySchema';
+import { ColorPropertySchema } from './ColorPropertySchema';
 import { CreatedPropertySchema } from './CreatedPropertySchema';
 import { DatePropertySchema } from './DatePropertySchema';
 import { FilePropertySchema } from './FilePropertySchema';
@@ -15,6 +16,7 @@ import { TogglePropertySchema } from './TogglePropertySchema';
 import { UrlPropertySchema } from './UrlPropertySchema';
 
 export * from './CollectionPropertySchema';
+export * from './ColorPropertySchema';
 export * from './CreatedPropertySchema';
 export * from './DatePropertySchema';
 export * from './FilePropertySchema';
@@ -44,4 +46,5 @@ export const PropertySchemas: Record<PropertyType, PropertySchemaTemplate> = {
   'last-modified': LastModifiedPropertySchema,
   file: FilePropertySchema,
   collection: CollectionPropertySchema,
+  color: ColorPropertySchema,
 };

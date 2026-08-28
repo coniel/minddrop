@@ -9,6 +9,7 @@ import {
 // given type can render
 const compatiblePropertyTypesMap: Record<PropertyType, PropertyType[]> = {
   collection: ['collection'],
+  color: ['color'],
   created: ['created'],
   date: ['date', 'created', 'last-modified'],
   file: ['file'],

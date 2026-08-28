@@ -1,5 +1,6 @@
 import {
   CollectionPropertySchema,
+  ColorPropertySchema,
   CreatedPropertySchema,
   DatePropertySchema,
   FilePropertySchema,
@@ -17,6 +18,7 @@ import {
 
 export type PropertySchema =
   | CollectionPropertySchema
+  | ColorPropertySchema
   | CreatedPropertySchema
   | DatePropertySchema
   | FormattedTextPropertySchema

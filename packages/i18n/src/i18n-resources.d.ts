@@ -216,6 +216,10 @@ declare module 'i18next' {
             name: string;
             description: string;
           };
+          color: {
+            name: string;
+            description: string;
+          };
           image: {
             name: string;
             description: string;
@@ -345,6 +349,7 @@ declare module 'i18next' {
               entryOptions: string;
               goToDatabase: string;
               removeFromCollection: string;
+              color: string;
               create: string;
             };
             errors: {
@@ -1057,6 +1062,11 @@ declare module 'i18next' {
               title: string;
               description: string;
               noCompatible: string;
+            };
+            entryColor: {
+              title: string;
+              description: string;
+              label: string;
             };
           };
         };

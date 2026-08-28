@@ -160,6 +160,10 @@
       "name": "URL",
       "description": "A field for web addresses."
     },
+    "color": {
+      "name": "Colour",
+      "description": "A colour assigned to the entry."
+    },
     "image": {
       "name": "Image",
       "description": "An image file or reference to an image item type."

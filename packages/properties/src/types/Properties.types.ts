@@ -4,6 +4,7 @@ export type PropertyMap = Record<string, PropertyValue>;
 
 export type PropertyType =
   | 'collection'
+  | 'color'
   | 'created'
   | 'date'
   | 'icon'
