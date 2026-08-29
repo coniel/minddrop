@@ -11,12 +11,12 @@ describe('createRootCss', () => {
   });
 
   it('defaults full-screen roots to the transparent treatment', () => {
-    // Page and space roots blend into the surface they fill
+    // Page and space roots let the view behind them show through
     expect(createRootCss({}, undefined, 'page')).toMatchObject({
-      backgroundColor: 'var(--surface-app)',
+      backgroundColor: 'transparent',
     });
     expect(createRootCss({}, undefined, 'space')).toMatchObject({
-      backgroundColor: 'var(--surface-app)',
+      backgroundColor: 'transparent',
     });
   });
 
@@ -33,9 +33,11 @@ describe('createRootCss', () => {
     });
   });
 
-  it('paints a transparent root in the surface views render on', () => {
+  it('leaves a transparent root unpainted', () => {
+    // Whatever the root is rendered over shows through, which may
+    // be an image rather than a flat colour
     expect(createRootCss({ background: 'transparent' })).toMatchObject({
-      backgroundColor: 'var(--surface-app)',
+      backgroundColor: 'transparent',
     });
   });
 
@@ -67,7 +69,7 @@ describe('createRootCss', () => {
   it('ignores the emphasis on a transparent root', () => {
     const css = createRootCss({ background: 'transparent', emphasis: 'solid' });
 
-    expect(css.backgroundColor).toBe('var(--surface-app)');
+    expect(css.backgroundColor).toBe('transparent');
     expect(css.color).toBeUndefined();
   });
 

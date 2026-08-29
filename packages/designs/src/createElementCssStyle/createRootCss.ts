@@ -18,9 +18,9 @@ import { createContainerCss } from './createContainerCss';
 /**
  * Emits CSS for a layout root style: the shared container blocks
  * with the semantic background treatment resolved to a surface
- * role. Unlike other styles, the background always emits, defaulting
- * per layout type, so a root never renders see-through over the
- * view behind it.
+ * role. The background always emits, defaulting per layout type,
+ * with the transparent treatment painting nothing so whatever the
+ * root is rendered over shows through.
  */
 export function createRootCss(
   style: RootStyle,
@@ -50,11 +50,13 @@ export function createRootCss(
   const treatment = background ?? defaultRootBackground(layoutType);
   const level = emphasis ?? 'subtle';
 
-  // The treatment's surface at the emphasis level
-  const surface = tokenCssVariable(
-    'surfaceColor',
-    resolveRootSurface(treatment, level),
-  );
+  // The treatment's surface at the emphasis level. A transparent
+  // root paints no colour of its own, so the container behind it
+  // (which may carry an image) shows through
+  const surface =
+    treatment === 'transparent'
+      ? 'transparent'
+      : tokenCssVariable('surfaceColor', RootSurfaces[level]);
 
   // Apply the surface, with a list root taking its colour through a
   // variable so the rendering context can swap it per row state
@@ -132,21 +134,3 @@ const RootSurfaces: Record<BackgroundEmphasis, SurfaceColorToken> = {
   regular: 'accent',
   solid: 'solid-accent',
 };
-
-/**
- * Maps a background treatment and emphasis level onto the surface
- * colour token carrying that look. The transparent treatment always
- * paints the surface views render on; the accent treatment picks a
- * step off the schemable surface roles per level.
- */
-function resolveRootSurface(
-  background: RootBackground,
-  emphasis: BackgroundEmphasis,
-): SurfaceColorToken {
-  // Transparent roots blend into the view, with no strength to vary
-  if (background === 'transparent') {
-    return 'app';
-  }
-
-  return RootSurfaces[emphasis];
-}
