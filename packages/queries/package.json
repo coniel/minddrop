@@ -15,7 +15,9 @@
   },
   "devDependencies": {
     "eslint": "^9.39.3",
+    "happy-dom": "^20.6.3",
     "@minddrop/eslint-config": "workspace:*",
+    "@minddrop/test-utils": "workspace:*",
     "tsconfig": "workspace:*",
     "typescript": "^5.9.3"
   },
