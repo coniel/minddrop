@@ -6,4 +6,5 @@ export * from './DataViewsView';
 export * from './NewDataViewView';
 export * from './DataViewsMenuItem';
 export * from './registerDataViewViews';
+export * from './useDataViewEntries';
 export { initializeDataViewsFeature } from './initializeDataViewsFeature';
