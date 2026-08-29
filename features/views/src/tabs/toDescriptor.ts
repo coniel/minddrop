@@ -20,5 +20,6 @@ export function toDescriptor(tabView: TabView | null): ViewDescriptor | null {
     title: tabView.title,
     icon: tabView.icon,
     subview: tabView.subview,
+    startsTrail: tabView.startsTrail,
   };
 }

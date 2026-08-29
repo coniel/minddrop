@@ -147,6 +147,12 @@ function toViewCrumb(tabView: TabView): Breadcrumb {
  * hierarchy, which extends the trail rather than starting a new one.
  */
 function extendsTrail(source: TabView, target: TabView): boolean {
+  // Views opened from outside a view area (e.g. the app sidebar) are
+  // navigated to rather than reached through the current view
+  if (target.startsTrail) {
+    return false;
+  }
+
   const targetLevel = breadcrumbLevel(target);
 
   // Views passed through rather than navigated to are neither trailed

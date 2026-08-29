@@ -114,6 +114,26 @@ describe('resolveBreadcrumbTrail', () => {
     );
   });
 
+  it('starts a new trail when a view is opened from outside a view area', () => {
+    // A leaf would normally stack onto the views it was opened from
+    const sidebarLeaf: TabView = { ...leaf, startsTrail: true };
+
+    expect(
+      resolveBreadcrumbTrail(tab(sidebarLeaf, [root, branch]), 'main'),
+    ).toEqual([]);
+  });
+
+  it('ends the trail at an ancestor opened from outside a view area', () => {
+    const sidebarBranch: TabView = { ...branch, startsTrail: true };
+
+    const trail = resolveBreadcrumbTrail(
+      tab(leaf, [root, sidebarBranch]),
+      'main',
+    );
+
+    expect(trail.map((crumb) => crumb.title)).toEqual(['Branch 1']);
+  });
+
   it('never trails a view passed through on the way to another', () => {
     expect(resolveBreadcrumbTrail(tab(leaf, [passedThrough]), 'main')).toEqual(
       [],

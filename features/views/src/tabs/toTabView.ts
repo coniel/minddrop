@@ -21,5 +21,6 @@ export function toTabView(descriptor: ViewDescriptor | null): TabView | null {
     title: descriptor.title,
     icon: descriptor.icon,
     subview: descriptor.subview,
+    startsTrail: descriptor.startsTrail,
   };
 }

@@ -46,4 +46,11 @@ export type ViewDescriptor<TProps = DefaultViewProps> = {
    * a navigation, so views can be navigated back and forward through.
    */
   subview?: SubviewDescriptor;
+
+  /**
+   * Whether the view was opened from outside a view area (e.g. the
+   * app sidebar), making it the start of a new breadcrumb trail
+   * regardless of its breadcrumb level.
+   */
+  startsTrail?: boolean;
 };

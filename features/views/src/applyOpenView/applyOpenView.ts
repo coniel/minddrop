@@ -37,6 +37,9 @@ export function applyOpenView(
     props: data.props,
     title: data.title,
     icon: data.icon,
+    // Opens from outside a view area are navigations to a new
+    // destination rather than steps down the current hierarchy
+    startsTrail: !data.sourcePane,
   };
 
   // Open in the split pane, keeping the current main view

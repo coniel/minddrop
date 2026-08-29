@@ -30,6 +30,18 @@ describe('applyOpenView', () => {
     expect(state.split).toBeNull();
   });
 
+  it('starts a new breadcrumb trail when the open has no source pane', () => {
+    const state = applyOpenView(splitState, open());
+
+    expect(state.main?.startsTrail).toBe(true);
+  });
+
+  it('continues the breadcrumb trail when opened from a pane', () => {
+    const state = applyOpenView(splitState, open({ sourcePane: 'main' }));
+
+    expect(state.main?.startsTrail).toBe(false);
+  });
+
   it('replaces only the main pane when opened from it', () => {
     const state = applyOpenView(splitState, open({ sourcePane: 'main' }));
 
@@ -84,7 +96,7 @@ describe('applyOpenView', () => {
       props: { a: 1 },
       title: 'Title',
       icon: 'icon',
-      breadcrumbs: undefined,
+      startsTrail: true,
     });
   });
 });

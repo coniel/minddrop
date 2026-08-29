@@ -41,6 +41,13 @@ export interface TabView {
    * the view's breadcrumb trail.
    */
   subview?: SubviewDescriptor;
+
+  /**
+   * Whether the view was opened from outside a view area (e.g. the
+   * app sidebar), making it the start of a new breadcrumb trail
+   * regardless of its breadcrumb level.
+   */
+  startsTrail?: boolean;
 }
 
 export type TabId = EntityId<'tab'>;
