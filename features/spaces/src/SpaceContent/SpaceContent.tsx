@@ -1,6 +1,10 @@
 import { Designs } from '@minddrop/designs';
 import { LayoutRenderer } from '@minddrop/feature-designs';
-import { Space, resolveSpaceMediaDirPath } from '@minddrop/spaces';
+import {
+  Space,
+  resolveSpaceMediaDirPath,
+  setLayoutElementContent,
+} from '@minddrop/spaces';
 import { ScrollArea, TransientViewStateScope } from '@minddrop/ui-primitives';
 import './SpaceContent.css';
 
@@ -24,6 +28,14 @@ export const SpaceContent: React.FC<SpaceContentProps> = ({ space }) => {
     return null;
   }
 
+  // Persist an element's content into the space's design, so a
+  // data view created from read mode is kept
+  function handleUpdateElementContent(elementId: string, content: string) {
+    Designs.update(space.design.id, {
+      layouts: [setLayoutElementContent(layout, elementId, content)],
+    });
+  }
+
   return (
     <TransientViewStateScope segment={space.id}>
       <ScrollArea className="space-content" stateKey="content">
@@ -34,6 +46,7 @@ export const SpaceContent: React.FC<SpaceContentProps> = ({ space }) => {
           propertyMap={{}}
           propertyValues={{}}
           properties={[]}
+          onUpdateElementContent={handleUpdateElementContent}
         />
       </ScrollArea>
     </TransientViewStateScope>
