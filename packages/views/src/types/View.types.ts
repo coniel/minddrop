@@ -31,8 +31,8 @@ export interface View {
   /**
    * The view's place in the breadcrumb hierarchy, deciding whether
    * navigating to it extends the trail or starts a new one.
-   * - `root`   — a static view (e.g. a list of spaces), always starts
-   *              a new trail
+   * - `root`   — a top level destination (e.g. a list of spaces, a
+   *              database), always starts a new trail
    * - `branch` — an entity containing other entities (e.g. a space),
    *              extends the trail of a root, otherwise starts one
    * - `leaf`   — an entity within a container (e.g. a database entry),

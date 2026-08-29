@@ -13,7 +13,7 @@ export function registerDatabaseViews(): void {
   Views.register({
     type: DatabaseViewName,
     component: DatabaseView,
-    breadcrumbLevel: 'branch',
+    breadcrumbLevel: 'root',
   });
 
   Views.register({
