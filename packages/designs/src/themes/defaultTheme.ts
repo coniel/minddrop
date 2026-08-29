@@ -141,14 +141,16 @@ export const DefaultDesignTheme: DesignTheme = {
     },
     'formatted-text': {
       // The content document opened for writing: compact on cards,
-      // reading length on the pages and spaces it opens in. The
-      // editor's blocks read at the normal line height throughout.
+      // larger on the pages and spaces it opens in. The editor
+      // fills the width it is given, leaving the reading measure to
+      // the layout root's content column. Its blocks read at the
+      // normal line height throughout.
       editor: {
         style: { fontSize: 'base', lineHeight: 'normal' },
         contextStyles: {
           card: { fontSize: 'sm' },
-          page: { fontSize: 'md', maxWidth: 'content' },
-          space: { fontSize: 'md', maxWidth: 'content' },
+          page: { fontSize: 'md' },
+          space: { fontSize: 'md' },
         },
       },
       // The same document rendered read-only, on the same sizes
@@ -158,8 +160,8 @@ export const DefaultDesignTheme: DesignTheme = {
         style: { fontSize: 'base', lineHeight: 'normal' },
         contextStyles: {
           card: { fontSize: 'sm' },
-          page: { fontSize: 'md', maxWidth: 'content' },
-          space: { fontSize: 'md', maxWidth: 'content' },
+          page: { fontSize: 'md' },
+          space: { fontSize: 'md' },
         },
       },
     },
