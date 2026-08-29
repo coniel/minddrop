@@ -1,4 +1,6 @@
+import { DataViewTypes } from '@minddrop/data-views';
 import {
+  DataViewElementConfig,
   DesignElementConfig,
   DesignRoleConfig,
   DesignRoles,
@@ -15,6 +17,7 @@ import {
   useDesignStudioStore,
 } from '../DesignStudioStore';
 import { isElementInContext } from '../utils';
+import { DataViewTypePaletteItem } from './DataViewTypePaletteItem';
 import { ElementPaletteItem } from './ElementPaletteItem';
 import { PropertyElementPaletteItem } from './PropertyElementPaletteItem';
 import { RolePaletteItem } from './RolePaletteItem';
@@ -36,11 +39,19 @@ const ElementGroups: { group: ElementGroup; label: TranslationKey }[] = [
 export const ElementsPalette: React.FC = () => {
   const designType = useDesignStudioStore((state) => state.design?.type);
   const layoutType = useActiveLayoutType();
+  const dataViewTypes = DataViewTypes.useAll();
 
   // Property elements insertable in the current design and layout
   const propertyElements = getPropertyElementConfigs().filter((config) =>
     isElementInContext(config.context, { designType, layoutType }),
   );
+
+  // Data view elements are listed one per registered data view
+  // type, gated on the element being insertable here
+  const dataViewsInContext = isElementInContext(DataViewElementConfig.context, {
+    designType,
+    layoutType,
+  });
 
   // Grouped element types and roles insertable in the current
   // design and layout
@@ -55,6 +66,18 @@ export const ElementsPalette: React.FC = () => {
             <PropertyElementPaletteItem
               key={config.propertyType}
               config={config}
+            />
+          ))}
+        </MenuGroup>
+      )}
+
+      {dataViewsInContext && dataViewTypes.length > 0 && (
+        <MenuGroup>
+          <MenuLabel label="design-studio.elements.group.views" />
+          {dataViewTypes.map((dataViewType) => (
+            <DataViewTypePaletteItem
+              key={dataViewType.type}
+              dataViewType={dataViewType}
             />
           ))}
         </MenuGroup>

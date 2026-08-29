@@ -45,13 +45,23 @@ export const DesignStudioProvider: React.FC<DesignStudioProviderProps> = ({
 /**
  * Returns the surrounding editor's design studio store instance.
  *
+ * @param throwOnMissing - Whether to throw when there is no
+ *   surrounding editor.
+ * @returns The studio store instance, or null when there is none
+ *   and throwOnMissing is false.
  * @throws If used outside of a DesignStudioProvider.
  */
-export function useDesignStudio(): DesignStudioStore {
+export function useDesignStudio(): DesignStudioStore;
+export function useDesignStudio(
+  throwOnMissing: false,
+): DesignStudioStore | null;
+export function useDesignStudio(
+  throwOnMissing = true,
+): DesignStudioStore | null {
   const store = useContext(DesignStudioContext);
 
   // Studio hooks are only meaningful inside an editor tree
-  if (!store) {
+  if (!store && throwOnMissing) {
     throw new Error(
       'useDesignStudio must be used within a DesignStudioProvider.',
     );

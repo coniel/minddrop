@@ -24,6 +24,10 @@ import { StaticContentField } from './StaticContentField';
 // fields of their style editor instead
 const BackgroundImageElementTypes = ['container', 'root', 'page-panel'];
 
+// Element types whose static content is a reference set elsewhere
+// rather than editable text
+const ReferenceContentElementTypes = ['data-view'];
+
 export interface ElementContentSectionProps {
   /**
    * The ID of the element to edit.
@@ -90,6 +94,12 @@ export const ElementContentSection: React.FC<ElementContentSectionProps> = ({
   // Containers bind their background image from the background
   // fields instead, so they have no content section
   if (BackgroundImageElementTypes.includes(element.type)) {
+    return null;
+  }
+
+  // Data view elements hold the ID of the data view they render,
+  // set by creating the view rather than by typing it
+  if (ReferenceContentElementTypes.includes(element.type)) {
     return null;
   }
 

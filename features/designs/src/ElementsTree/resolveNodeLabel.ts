@@ -1,3 +1,4 @@
+import { DataViews } from '@minddrop/data-views';
 import {
   DesignRoles,
   getElementConfig,
@@ -64,6 +65,16 @@ export function resolveNodeLabel(element: FlatDesignElement): NodeLabel {
     label: role?.label ?? propertyElementConfig?.label ?? config.label,
     icon: role?.icon ?? propertyElementConfig?.icon ?? config.icon,
   };
+
+  // Data view elements reference a data view by ID, so they
+  // display the view's name instead of their raw content
+  if (element.type === 'data-view') {
+    nodeLabel.staticContent = element.content
+      ? DataViews.get(element.content, false)?.name
+      : undefined;
+
+    return nodeLabel;
+  }
 
   // Static elements display their own content rather than a binding
   if (element.static) {

@@ -9,6 +9,7 @@ import {
   ContainerDesignElement,
   ContainerStudioDesignElement,
 } from './container';
+import { DataViewDesignElement } from './data-view';
 import {
   PagePanelDesignElement,
   PagePanelStudioDesignElement,
@@ -63,6 +64,7 @@ function elementUI<TElement extends DesignElement>(config: {
 const elementUIs: ElementUIConfig[] = [
   elementUI({ type: 'text', DisplayComponent: TextDesignElement }),
   elementUI({ type: 'property', DisplayComponent: PropertyDesignElement }),
+  elementUI({ type: 'data-view', DisplayComponent: DataViewDesignElement }),
   elementUI({
     type: 'container',
     DisplayComponent: ContainerDesignElement,
