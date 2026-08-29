@@ -17,3 +17,10 @@ export const DesignTypeLayoutTypes: Record<DesignType, LayoutType[]> = {
   space: ['space'],
   'component-library': [],
 };
+
+/**
+ * The CSS variable a list layout root reads its background colour
+ * from, letting the rendering context swap the colour for the
+ * hover and active states of a list row.
+ */
+export const ListRootSurfaceVariable = '--design-list-row-surface';

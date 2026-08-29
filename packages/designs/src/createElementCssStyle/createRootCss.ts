@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react';
+import { ListRootSurfaceVariable } from '../constants';
 import {
   BackgroundEmphasis,
   ContainerDirection,
@@ -49,11 +50,18 @@ export function createRootCss(
   const treatment = background ?? defaultRootBackground(layoutType);
   const level = emphasis ?? 'subtle';
 
-  // Apply the treatment's surface at the emphasis level
-  css.backgroundColor = tokenCssVariable(
+  // The treatment's surface at the emphasis level
+  const surface = tokenCssVariable(
     'surfaceColor',
     resolveRootSurface(treatment, level),
   );
+
+  // Apply the surface, with a list root taking its colour through a
+  // variable so the rendering context can swap it per row state
+  css.backgroundColor =
+    layoutType === 'list'
+      ? `var(${ListRootSurfaceVariable}, ${surface})`
+      : surface;
 
   // A solid fill needs the contrasting text colour to stay readable
   if (treatment !== 'transparent' && level === 'solid') {

@@ -26,6 +26,13 @@ describe('createRootCss', () => {
     });
   });
 
+  it('paints a list root through the row surface variable', () => {
+    // The rendering context swaps the variable per row state
+    expect(createRootCss({}, undefined, 'list')).toMatchObject({
+      backgroundColor: 'var(--design-list-row-surface, var(--surface-subtle))',
+    });
+  });
+
   it('paints a transparent root in the surface views render on', () => {
     expect(createRootCss({ background: 'transparent' })).toMatchObject({
       backgroundColor: 'var(--surface-app)',
