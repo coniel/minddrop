@@ -31,8 +31,12 @@
   min-height: 0;
 }
 
-.notebook-view-list-item[data-selected] {
-  background: var(--surface-subtle);
+/* The rendered row paints its own background, so the selected
+   colour is handed to it through the list row surface variable.
+   Set on the row itself rather than the wrapper so it outweighs
+   the row's hover colour */
+.notebook-view-list-item[data-selected] > * {
+  --design-list-row-surface: var(--surface-accent-active);
 }
 
 .notebook-view-resize-handle {
