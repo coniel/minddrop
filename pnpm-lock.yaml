@@ -800,6 +800,9 @@ importers:
       '@minddrop/selection':
         specifier: workspace:*
         version: link:../../packages/selection
+      '@minddrop/snapshots':
+        specifier: workspace:*
+        version: link:../../packages/snapshots
       '@minddrop/spaces':
         specifier: workspace:*
         version: link:../../packages/spaces
@@ -1950,6 +1953,34 @@ importers:
       '@types/react':
         specifier: ^19.2.14
         version: 19.2.14
+      eslint:
+        specifier: ^9.39.3
+        version: 9.39.5
+      tsconfig:
+        specifier: workspace:*
+        version: link:../tsconfig
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  packages/snapshots:
+    dependencies:
+      '@minddrop/databases':
+        specifier: workspace:*
+        version: link:../databases
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../events
+      '@minddrop/file-system':
+        specifier: workspace:*
+        version: link:../file-system
+      '@minddrop/utils':
+        specifier: workspace:*
+        version: link:../utils
+    devDependencies:
+      '@minddrop/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5

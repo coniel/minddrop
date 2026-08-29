@@ -1,11 +1,22 @@
 import { describe, expect, it } from 'vitest';
-import { initializeI18n } from '@minddrop/i18n';
+import { I18n, initializeI18n } from '@minddrop/i18n';
 import { isUntitledTitle } from './isUntitledTitle';
 
 // Initialize i18n so the untitled label resolves
 initializeI18n();
 
+// Register a French translation for the untitled label to test
+// titles generated under a language other than the current one
+I18n.registerTranslations({
+  'fr-FR': { labels: { untitled: 'Sans titre' } },
+});
+
 describe('isUntitledTitle', () => {
+  it('returns true for untitled labels of non-active languages', () => {
+    expect(isUntitledTitle('Sans titre')).toBe(true);
+    expect(isUntitledTitle('Sans titre 2')).toBe(true);
+  });
+
   it('returns true for the untitled label', () => {
     expect(isUntitledTitle('Untitled')).toBe(true);
   });

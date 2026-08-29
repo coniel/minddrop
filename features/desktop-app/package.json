@@ -42,6 +42,7 @@
     "@minddrop/feature-settings": "workspace:*",
     "@minddrop/feature-views": "workspace:*",
     "@minddrop/spaces": "workspace:*",
+    "@minddrop/snapshots": "workspace:*",
     "@minddrop/file-system": "workspace:*",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/ui-drag-and-drop": "workspace:*",

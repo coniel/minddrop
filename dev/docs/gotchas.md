@@ -166,6 +166,16 @@ create. The old entry's collection memberships and view references
 are cleaned up as a deletion, and the freshly minted entry starts
 unreferenced. This is inherent to the ID-free entry file design.
 
+### Property rename ledger recording is wired but dormant
+
+The snapshots package subscribes to `DatabasePropertyRenamedEvent`
+and records a rename ledger event (`kind: 'property'`), but nothing
+dispatches the event yet: `Databases.renameProperty` does not exist
+(`DatabasePropertyEditor` carries the TODO and currently refuses
+name changes). Whoever builds it gets ledger recording for free by
+dispatching the event, but must still re-key entry template property
+values per the TODO.
+
 ## packages/designs
 
 ### Layout lookups are linear scans by design — do not denormalise
@@ -468,6 +478,20 @@ chain. They pre-date any queries work (verified on 2026-08-10
 against earlier commits) and do not indicate a problem in the
 queries package; the same files typecheck fine through
 `features/queries`, whose tsconfig sets `jsx`.
+
+## packages/snapshots
+
+### The rename ledger records entity addresses, not file paths
+
+Rename events store logical addresses (`<database name>`,
+`<database name>/<entry title>`, `<database name>/<property name>`),
+never on-disk paths, so storage mode switches and file format changes
+do not touch the ledger. Item references, however, still address
+entries by workspace-relative file path with extension
+(`Books/Book.md`); until referencing moves to the same logical form,
+a consumer resolving an old reference through `replayRenames` must
+derive the logical address first (strip the extension and any
+entry-subdirectory nesting) and map the result back.
 
 ## ui/theme
 

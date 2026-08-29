@@ -26,6 +26,7 @@ import { Fs, startFileSystemWatcher } from '@minddrop/file-system';
 import { initializeI18n } from '@minddrop/i18n';
 import { Queries } from '@minddrop/queries';
 import { Search } from '@minddrop/search';
+import { Snapshots } from '@minddrop/snapshots';
 import { Spaces } from '@minddrop/spaces';
 import { Sql } from '@minddrop/sql';
 import { Icons } from '@minddrop/ui-icons';
@@ -126,6 +127,10 @@ async function runInitialization(): Promise<void> {
   await Designs.initialize();
 
   Sql.initialize();
+
+  // Subscribe to content package events before content
+  // initialization so no rename goes unrecorded
+  Snapshots.initialize();
 
   const { schemaChanged } = await Databases.initialize();
 
