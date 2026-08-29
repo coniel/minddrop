@@ -1,11 +1,14 @@
 import { Events } from '@minddrop/events';
+import { Tabs } from '@minddrop/feature-views';
 import { MenuItem } from '@minddrop/ui-primitives';
-import { OpenCollectionsViewEvent } from './events';
+import { CollectionsViewName, OpenCollectionsViewEvent } from './events';
 
 /**
  * Renders the sidebar menu item which opens the collections view.
  */
 export const CollectionsMenuItem: React.FC = () => {
+  const active = Tabs.useIsViewActive(CollectionsViewName);
+
   // Open the collections view
   function handleClick() {
     Events.dispatch(OpenCollectionsViewEvent);
@@ -14,6 +17,7 @@ export const CollectionsMenuItem: React.FC = () => {
   return (
     <MenuItem
       muted
+      active={active}
       icon="library"
       label="collections.labels.collections"
       onClick={handleClick}

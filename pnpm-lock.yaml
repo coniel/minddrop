@@ -451,6 +451,9 @@ importers:
       '@minddrop/feature-data-views':
         specifier: workspace:*
         version: link:../data-views
+      '@minddrop/feature-views':
+        specifier: workspace:*
+        version: link:../views
       '@minddrop/file-system':
         specifier: workspace:*
         version: link:../../packages/file-system
@@ -497,6 +500,9 @@ importers:
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
+      '@minddrop/feature-views':
+        specifier: workspace:*
+        version: link:../views
       '@minddrop/file-system':
         specifier: workspace:*
         version: link:../../packages/file-system
@@ -1036,6 +1042,9 @@ importers:
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
+      '@minddrop/feature-views':
+        specifier: workspace:*
+        version: link:../views
       '@minddrop/file-system':
         specifier: workspace:*
         version: link:../../packages/file-system
