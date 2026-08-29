@@ -6,6 +6,12 @@ export interface Breadcrumb {
   view: string;
 
   /**
+   * The unique id of the view instance the crumb leads to, when it
+   * has one (e.g. a specific database's view).
+   */
+  viewId?: string;
+
+  /**
    * The crumb's own display title, used by crumbs labelled by what
    * they show (e.g. a selected data view).
    */

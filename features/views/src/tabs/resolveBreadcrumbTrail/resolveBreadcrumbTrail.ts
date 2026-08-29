@@ -110,6 +110,7 @@ function toCrumbs(
     viewCrumb,
     {
       view: tabView.view,
+      viewId: tabView.id,
       title: tabView.subview.title,
       icon: tabView.subview.icon,
       steps,
@@ -135,6 +136,7 @@ function showsSame(
 function toViewCrumb(tabView: TabView): Breadcrumb {
   return {
     view: tabView.view,
+    viewId: tabView.id,
     title: tabView.title,
     icon: tabView.icon,
   };
