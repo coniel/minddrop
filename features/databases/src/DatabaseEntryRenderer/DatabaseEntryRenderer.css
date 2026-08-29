@@ -17,6 +17,20 @@
   outline-color: var(--border-subtle);
 }
 
+/* List rows read their background off a variable, so setting it
+   here recolours the row whichever background its design gives it */
+.database-entry-list > * {
+  transition: background-color var(--duration-fast) var(--ease-out);
+}
+
+.database-entry-list:hover {
+  --design-list-row-surface: var(--surface-accent);
+}
+
+.database-entry-list:active {
+  --design-list-row-surface: var(--surface-accent-hover);
+}
+
 .database-entry-dragging {
   opacity: 0.5;
 }
