@@ -10,7 +10,11 @@ export const MINISEARCH_OPTIONS: MiniSearchOptions<SearchDocument> = {
   fields: ['title', 'content', 'properties', 'tags'],
   storeFields: ['type', 'databaseId', 'databaseName', 'databaseIcon', 'title'],
   searchOptions: {
-    boost: { title: 2, tags: 2, properties: 1.5 },
+    boost: { title: 3, tags: 2, properties: 1.5 },
+    // Derate fuzzy (typo) matches so they cannot outrank exact
+    // and prefix matches, e.g. a fuzzy title match on "data"
+    // outscoring a prefix title match on "databases"
+    weights: { fuzzy: 0.2, prefix: 0.375 },
     fuzzy: (term: string) => {
       // Exact match only for very short terms
       if (term.length <= 2) {

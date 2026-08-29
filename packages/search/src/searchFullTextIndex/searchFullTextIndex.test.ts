@@ -82,6 +82,102 @@ describe('searchFullTextIndex', () => {
     expect(results[0].title).toBe('Books');
   });
 
+  it('ranks title matches above property value matches', async () => {
+    // Seed an entry whose title matches the query and one which
+    // only matches via a property value
+    seedEntries('database-1', [
+      { id: 'entry-5', title: 'Databases' },
+      {
+        id: 'entry-6',
+        title: 'data-view-owner',
+        properties: [
+          {
+            name: 'Packages',
+            type: 'select',
+            value: ['databases', 'feature-databases'],
+          },
+        ],
+      },
+    ]);
+
+    await rebuildSearchIndex(workspaceId);
+
+    const results = searchFullTextIndex(workspaceId, 'databa');
+
+    // The title match ranks above the property value match
+    const titleMatchIndex = results.findIndex(
+      (result) => result.id === 'entry-5',
+    );
+    const propertyMatchIndex = results.findIndex(
+      (result) => result.id === 'entry-6',
+    );
+
+    expect(titleMatchIndex).not.toBe(-1);
+    expect(propertyMatchIndex).not.toBe(-1);
+    expect(titleMatchIndex).toBeLessThan(propertyMatchIndex);
+  });
+
+  it('ranks whole-title matches above accumulated field matches', async () => {
+    // Seed an entry whose title is the match and one which
+    // matches in its title, content, and property values
+    seedEntries('database-1', [
+      { id: 'entry-7', title: 'Spaces' },
+      {
+        id: 'entry-8',
+        title: 'views-in-spaces',
+        properties: [
+          {
+            name: 'Packages',
+            type: 'select',
+            value: ['spaces', 'feature-spaces'],
+          },
+          {
+            name: 'Notes',
+            type: 'text',
+            value: 'notes about how spaces embed views',
+          },
+        ],
+      },
+    ]);
+
+    await rebuildSearchIndex(workspaceId);
+
+    const results = searchFullTextIndex(workspaceId, 'space');
+
+    // The whole-title match ranks above the multi-field match
+    const wholeTitleIndex = results.findIndex(
+      (result) => result.id === 'entry-7',
+    );
+    const multiFieldIndex = results.findIndex(
+      (result) => result.id === 'entry-8',
+    );
+
+    expect(wholeTitleIndex).not.toBe(-1);
+    expect(multiFieldIndex).not.toBe(-1);
+    expect(wholeTitleIndex).toBeLessThan(multiFieldIndex);
+  });
+
+  it('ranks title matches above matches in other fields only', async () => {
+    // Seed an entry which only matches via a property value
+    seedEntries('database-1', [
+      { id: 'entry-9', title: 'Groceries' },
+      {
+        id: 'entry-10',
+        title: 'Reading list',
+        properties: [
+          { name: 'Packages', type: 'select', value: ['groceries'] },
+        ],
+      },
+    ]);
+
+    await rebuildSearchIndex(workspaceId);
+
+    const results = searchFullTextIndex(workspaceId, 'groceries');
+
+    // The title match ranks first
+    expect(results[0].id).toBe('entry-9');
+  });
+
   it('returns matched properties with highlight markers', () => {
     const results = searchFullTextIndex(workspaceId, 'herbert');
 

@@ -10,6 +10,11 @@ import { findMatchedProperties, highlightAllMatches } from '../utils';
 /**
  * Performs a full-text fuzzy search across the workspace index.
  *
+ * Title matches always rank above matches in other fields:
+ * summed multi-field scores would otherwise let an entry with
+ * the query in several property values outrank an entry whose
+ * title is the match.
+ *
  * @param workspaceId - The workspace to search.
  * @param query - The search query string.
  * @param limit - Maximum number of results to return.
@@ -29,12 +34,29 @@ export function searchFullTextIndex(
     return [];
   }
 
-  // Search, optionally scoped to a single database
-  const results = miniSearch.search(query, {
-    filter: databaseId
-      ? (result) => result.databaseId === databaseId
-      : undefined,
+  // Optionally scope the search to a single database
+  const filter = databaseId
+    ? (result: SearchResult) => result.databaseId === databaseId
+    : undefined;
+
+  // Rank title matches by title relevance alone so that
+  // matches in other fields cannot inflate their position
+  const titleResults = miniSearch.search(query, {
+    fields: ['title'],
+    filter,
   });
+
+  // Full search across all fields for the remaining matches
+  const fullResults = miniSearch.search(query, { filter });
+
+  // Append the non-title matches below the title matches
+  const titleResultIds = new Set<string>(
+    titleResults.map((result) => result.id),
+  );
+  const results = [
+    ...titleResults,
+    ...fullResults.filter((result) => !titleResultIds.has(result.id)),
+  ];
 
   // Lowercase query terms for substring matching
   const queryTerms = query
