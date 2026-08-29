@@ -1,4 +1,5 @@
-import { initializeSearchIndex, rebuildSearchIndex } from './searchIndex';
+import { initializeSearchIndex } from './initializeSearchIndex';
+import { rebuildSearchIndex } from './rebuildSearchIndex';
 
 /**
  * Back-end only. Initializes MiniSearch for a workspace.
