@@ -1,5 +1,6 @@
 import type { DesignRoleId } from '../types';
 import type { ContainerElement } from './container';
+import type { DataViewElement } from './data-view';
 import type { PagePanelElement } from './page-panel';
 import type { PropertyElement } from './property';
 import type { RootElement } from './root';
@@ -8,7 +9,7 @@ import type { TextElement } from './text';
 /**
  * Union of all leaf (non-container) design element types.
  */
-export type LeafDesignElement = TextElement | PropertyElement;
+export type LeafDesignElement = TextElement | PropertyElement | DataViewElement;
 
 /**
  * Union of all design element types.
@@ -66,5 +67,6 @@ type Template<T> = Omit<T, 'id'>;
 export type DesignElementTemplate =
   | Template<TextElement>
   | Template<PropertyElement>
+  | Template<DataViewElement>
   | Template<ContainerElement>
   | Template<PagePanelElement>;

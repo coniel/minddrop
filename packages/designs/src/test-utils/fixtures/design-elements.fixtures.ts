@@ -1,6 +1,7 @@
 import {
   CollectionPropertyElement,
   ContainerElement,
+  DataViewElement,
   DatePropertyElement,
   DesignElement,
   FormattedTextPropertyElement,
@@ -19,6 +20,16 @@ function generateTextElementFixture(version: number): TextElement {
   return {
     id: `text-element-${version}`,
     type: 'text',
+    style: {},
+  };
+}
+
+function generateDataViewElementFixture(version: number): DataViewElement {
+  return {
+    id: `data-view-element-${version}`,
+    type: 'data-view',
+    static: true,
+    dataViewType: 'gallery',
     style: {},
   };
 }
@@ -50,6 +61,9 @@ function generatePropertyElementFixture<TElement extends PropertyElement>(
 export const element_text_1 = generateTextElementFixture(1);
 export const element_text_2 = generateTextElementFixture(2);
 export const element_text_3 = generateTextElementFixture(3);
+
+export const element_data_view_1 = generateDataViewElementFixture(1);
+export const element_data_view_2 = generateDataViewElementFixture(2);
 
 export const element_container_1 = generateContainerElementFixture(1);
 export const element_container_2 = generateContainerElementFixture(2);
