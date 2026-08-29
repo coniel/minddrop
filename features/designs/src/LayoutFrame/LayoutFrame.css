@@ -63,6 +63,10 @@
   .designs-layout-frame-content {
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-raised);
+    /* The frame stands in for the panel a layout is rendered in,
+       so it carries the panel surface and a transparent root shows
+       that rather than the canvas */
+    background-color: var(--surface-overlay);
 
     .designs-layout-frame-svg {
       display: block;
