@@ -6,11 +6,12 @@
   "types": "src/index",
   "scripts": {
     "lint": "eslint .  --max-warnings 0",
-    "test": "vitest run --passWithNoTests",
+    "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
+    "@types/node": "^24.0.0",
     "eslint": "^9.39.3",
     "@minddrop/eslint-config": "workspace:*",
     "tsconfig": "workspace:*",

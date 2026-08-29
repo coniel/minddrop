@@ -1,6 +1,6 @@
 import { Fs } from '@minddrop/file-system';
-import { getSqlAdapter, registerSqlAdapter } from './SqlAdapter';
-import type { SqlConnection, SqlOperation, SqlParam } from './types';
+import { getSqlAdapter, registerSqlAdapter } from '../SqlAdapter';
+import type { SqlConnection, SqlOperation, SqlParam } from '../types';
 
 // The currently active database connection
 let connection: SqlConnection | null = null;
@@ -9,7 +9,7 @@ let connection: SqlConnection | null = null;
 export { registerSqlAdapter as registerAdapter };
 
 // Re-export resolveConfigPath for the public API
-export { resolveSqlConfigPath as resolveConfigPath } from './sqlConfig';
+export { resolveSqlConfigPath as resolveConfigPath } from '../sqlConfig';
 
 /**
  * Opens or creates a SQL database at the given path.
