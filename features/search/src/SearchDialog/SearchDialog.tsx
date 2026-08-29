@@ -89,16 +89,18 @@ export const SearchDialog: React.FC = () => {
     [clear],
   );
 
-  // Open the selected result
+  // Open the selected result in a new tab
   const selectResult = useCallback(
     (result: FullTextSearchResult) => {
       if (result.type === 'database') {
         Events.dispatch(OpenDatabaseViewEvent, {
           databaseId: result.databaseId,
+          openMode: 'new-tab',
         });
       } else if (result.type === 'entry') {
         Events.dispatch(OpenDatabaseEntryViewEvent, {
           entryId: result.id,
+          openMode: 'new-tab',
         });
       }
 
