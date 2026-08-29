@@ -2018,6 +2018,9 @@ importers:
         specifier: workspace:*
         version: link:../utils
     devDependencies:
+      '@minddrop/data-views':
+        specifier: workspace:*
+        version: link:../data-views
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
