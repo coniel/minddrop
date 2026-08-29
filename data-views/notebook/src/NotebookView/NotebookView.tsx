@@ -7,7 +7,11 @@ import {
   CreateDatabaseEntryButton,
   DatabaseEntriesSearchField,
 } from '@minddrop/ui-databases';
-import { ScrollArea, useTransientState } from '@minddrop/ui-primitives';
+import {
+  ScrollArea,
+  TransientViewStateScope,
+  useTransientState,
+} from '@minddrop/ui-primitives';
 import { defaultNotebookViewOptions } from '../constants';
 import { NotebookViewOptions } from '../types';
 import { useListPanelResize } from '../useListPanelResize';
@@ -153,13 +157,18 @@ export const NotebookViewComponent: React.FC<
 
       {/* Page panel */}
       <div className="notebook-view-page-panel">
+        {/* Scoped per entry so each one keeps its own scroll position */}
         {selectedEntryId && (
-          <DatabaseEntryRenderer
-            key={selectedEntryId}
-            entryId={selectedEntryId}
-            layoutContext="page"
-            layoutId={entryLayoutOverrides[selectedEntryId]?.pageLayoutId}
-          />
+          <TransientViewStateScope segment={selectedEntryId}>
+            <ScrollArea className="notebook-view-page-scroll" stateKey="page">
+              <DatabaseEntryRenderer
+                key={selectedEntryId}
+                entryId={selectedEntryId}
+                layoutContext="page"
+                layoutId={entryLayoutOverrides[selectedEntryId]?.pageLayoutId}
+              />
+            </ScrollArea>
+          </TransientViewStateScope>
         )}
       </div>
     </div>

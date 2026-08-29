@@ -80,3 +80,8 @@
   display: flex;
   flex-direction: column;
 }
+
+.notebook-view-page-scroll {
+  flex: 1;
+  min-height: 0;
+}
