@@ -22,6 +22,7 @@ export { goForward } from './goForward';
 export { updateTab } from './updateTab';
 export { setTransientViewState } from './setTransientViewState';
 export { getTransientViewState } from './getTransientViewState';
+export { useIsViewActive } from './useIsViewActive';
 export {
   useTabs,
   useActiveTabId,
