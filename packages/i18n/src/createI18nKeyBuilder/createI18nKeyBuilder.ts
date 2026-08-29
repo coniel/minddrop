@@ -1,4 +1,4 @@
-import { TranslationKeySuffix } from './i18n.types';
+import { TranslationKeySuffix } from '../i18n.types';
 
 /**
  * Extends a string suffix union to also include the numeric

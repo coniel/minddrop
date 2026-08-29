@@ -1,5 +1,5 @@
 import i18n from 'i18next';
-import { LanguageKey, Translations } from './i18n.types';
+import { LanguageKey, Translations } from '../i18n.types';
 
 /**
  * Registers translations for a given set of locales by deep-merging
