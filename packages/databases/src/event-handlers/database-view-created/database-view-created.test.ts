@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DataView, DataViews } from '@minddrop/data-views';
 import { DataViewFixtures } from '@minddrop/data-views/test-utils';
 import { DatabasesStore } from '../../DatabasesStore';
@@ -7,10 +7,6 @@ import { objectDatabase } from '../../test-utils/fixtures';
 import { onDatabaseViewCreated } from './database-view-created';
 
 const { dataView_virtual_1, dataView_gallery_1 } = DataViewFixtures;
-
-vi.mock('../../writeDatabaseConfig', () => ({
-  writeDatabaseConfig: vi.fn(),
-}));
 
 describe('onDatabaseViewCreated', () => {
   beforeEach(setup);

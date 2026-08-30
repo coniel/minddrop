@@ -1,7 +1,7 @@
-import { DatabaseEntryUpdatedEventData } from '../events';
-import { getDatabase } from '../getDatabase';
-import { sqlUpsertEntries } from '../sql';
-import { convertEntryToSqlRecord } from '../utils';
+import { DatabaseEntryUpdatedEventData } from '../../events';
+import { getDatabase } from '../../getDatabase';
+import { sqlUpsertEntries } from '../../sql';
+import { convertEntryToSqlRecord } from '../../utils';
 
 /**
  * Called when a database entry is updated. Syncs the updated

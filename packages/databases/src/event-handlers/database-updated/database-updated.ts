@@ -1,5 +1,5 @@
-import { DatabaseUpdatedEventData } from '../events';
-import { sqlUpsertDatabase } from '../sql';
+import { DatabaseUpdatedEventData } from '../../events';
+import { sqlUpsertDatabase } from '../../sql';
 
 /**
  * Called when a database is updated. Syncs the updated

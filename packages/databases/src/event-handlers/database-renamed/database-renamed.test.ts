@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Collections } from '@minddrop/collections';
 import { DataViews } from '@minddrop/data-views';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
@@ -11,17 +11,20 @@ import {
   DatabaseSqlSyncedEvent,
   DatabaseSqlSyncedEventData,
 } from '../../events';
-import { sqlUpsertDatabase, sqlUpsertEntries } from '../../sql';
+import { sqlGetAllDatabases, sqlGetEntrySyncRecords } from '../../sql';
 import {
   MockFs,
   cleanup,
+  cleanupRecordingTestSqlDatabase,
   collectionDatabase,
   collectionEntry1,
+  getRecordedSqlStatements,
   noPropertiesDatabase,
   objectDatabase,
   parentDir,
   rootStorageDatabase,
   setup,
+  setupRecordingTestSqlDatabase,
 } from '../../test-utils';
 import {
   viewMetadataKey,
@@ -31,12 +34,6 @@ import {
 } from '../../utils';
 import { onItemAddressesChanged } from '../item-addresses-changed';
 import { onRenameDatabase } from './database-renamed';
-
-// Mock SQL operations since no database connection is available in tests
-vi.mock('../../sql', () => ({
-  sqlUpsertDatabase: vi.fn(),
-  sqlUpsertEntries: vi.fn(),
-}));
 
 const { layout_card_2, layout_card_3 } = DesignFixtures;
 
@@ -53,6 +50,9 @@ const renamedEntryPath = `${parentDir}/Renamed Database/Collection Entry 1.md`;
 describe('onRenameDatabase', () => {
   beforeEach(() => {
     setup();
+
+    // Open a recording in-memory SQL database
+    setupRecordingTestSqlDatabase();
 
     // Register the reference rewrite listener normally wired by
     // initializeDatabaseEventHandlers
@@ -100,7 +100,10 @@ describe('onRenameDatabase', () => {
     });
   });
 
-  afterEach(cleanup);
+  afterEach(() => {
+    cleanupRecordingTestSqlDatabase();
+    cleanup();
+  });
 
   it('does nothing to collections if the database has no collection properties', async () => {
     // Rename a database without collection properties
@@ -146,23 +149,20 @@ describe('onRenameDatabase', () => {
       updated: renamedDatabase,
     });
 
-    // Database upserted with the new name and path
-    expect(sqlUpsertDatabase).toHaveBeenCalledWith({
+    // Database record upserted with the new name and path
+    expect(sqlGetAllDatabases()).toContainEqual({
       id: renamedDatabase.id,
       name: renamedDatabase.name,
       path: renamedDatabase.path,
       icon: renamedDatabase.icon,
     });
 
-    // Entries re-upserted under the new database ID
-    expect(sqlUpsertEntries).toHaveBeenCalledWith(
-      renamedDatabase.id,
-      expect.arrayContaining([
-        expect.objectContaining({
-          id: collectionEntry1.id,
-          path: renamedEntryPath,
-        }),
-      ]),
+    // Entry records re-upserted under the new database ID
+    expect(sqlGetEntrySyncRecords(renamedDatabase.id)).toContainEqual(
+      expect.objectContaining({
+        id: collectionEntry1.id,
+        path: renamedEntryPath,
+      }),
     );
   });
 
@@ -278,8 +278,16 @@ describe('onRenameDatabase', () => {
       updated: { ...noPropertiesDatabase, name: 'Renamed' },
     });
 
-    // The database is still re-synced, but no entry upsert occurs
-    expect(sqlUpsertDatabase).toHaveBeenCalled();
-    expect(sqlUpsertEntries).not.toHaveBeenCalled();
+    // The database record is still re-synced
+    expect(sqlGetAllDatabases()).toContainEqual(
+      expect.objectContaining({ id: noPropertiesDatabase.id }),
+    );
+
+    // No entry upsert statements should have been executed
+    const entryUpserts = getRecordedSqlStatements().filter((statement) =>
+      statement.sql.includes('INSERT OR REPLACE INTO entries'),
+    );
+
+    expect(entryUpserts).toEqual([]);
   });
 });

@@ -1,5 +1,5 @@
-import { DatabaseEntryMetadataUpdatedEventData } from '../events';
-import { sqlUpdateEntryMetadata } from '../sql';
+import { DatabaseEntryMetadataUpdatedEventData } from '../../events';
+import { sqlUpdateEntryMetadata } from '../../sql';
 
 /**
  * Called when entry metadata is updated. Syncs the updated

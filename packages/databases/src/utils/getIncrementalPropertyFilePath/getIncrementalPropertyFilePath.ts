@@ -1,6 +1,6 @@
 import { Fs } from '@minddrop/file-system';
 import { IncrementedPath } from '@minddrop/file-system';
-import { getPropertyFilePath } from './getPropertyFilePath';
+import { getPropertyFilePath } from '../getPropertyFilePath';
 
 /**
  * Returns the path to an entry property's file, incrementing the file name

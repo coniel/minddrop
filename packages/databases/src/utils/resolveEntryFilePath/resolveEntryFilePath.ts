@@ -1,5 +1,5 @@
 import { Fs } from '@minddrop/file-system';
-import { PropertyFileStorage } from '../types';
+import { PropertyFileStorage } from '../../types';
 
 /**
  * Resolves the path to an entry's file for a given storage mode. In `entry`
