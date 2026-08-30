@@ -695,7 +695,16 @@ claim-once, broadcast, or element-targeted semantics. When a second
 one-shot layout signal appears, generalise then (e.g. a named claim
 token context) instead of adding another bespoke context.
 
-## features/desktop-app
+### Field property renderers use raw inputs by design
+
+`TextFieldPropertyRenderer` and `MultilineFieldPropertyRenderer` render
+raw `<input>`/`<textarea>` elements instead of the ui-primitives field
+components. This is deliberate, not an oversight: design-surface fields
+take their entire appearance from the element's user-configured CSS
+(passed via `style={css}`), so a primitive's own styling, wrappers, and
+focus treatment would fight the design's. Don't "fix" them to use
+primitives; any future field renderer on the design surface should
+follow the same pattern.
 
 ### Don't gate window keydown shortcuts on `defaultPrevented`
 
@@ -998,3 +1007,13 @@ Nothing surfaces when this happens: `getResizedImage` catches the
 load failure and serves the original image, so the app works and only
 the perf win is lost. Cross-platform builds need the other platforms'
 `@img` packages installed before `electrobun build` runs.
+
+### Screenshot capture is macOS-only on purpose
+
+`screenshotRpc.ts` shells out to the macOS `screencapture` binary and
+throws on any other platform. This is a known exception to the
+cross-platform rule: the RPC backs dev tooling (design screenshots),
+not runtime user functionality, so it was left platform-specific
+rather than reimplemented portably. If screenshots ever become a user
+feature, this needs a per-platform implementation; until then the
+`process.platform !== 'darwin'` guard is the intended behaviour.

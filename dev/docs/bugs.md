@@ -152,6 +152,24 @@ Fix direction: reconcile the error typing between `useForm` and the field
 primitives (e.g. make `useForm` validation produce translation keys and
 type `FieldProps.error` accordingly), then remove this entry.
 
+### Property rename is stubbed out and silently keeps the old name
+
+`DatabasePropertyEditor.tsx` (~line 97) shows a rename confirmation
+dialog, but its `onConfirm` deliberately calls `Databases.updateProperty`
+with the *old* name because `Databases.renameProperty` is not yet
+implemented (the call sits commented out behind a TODO). The user
+confirms a rename, every other edited field is saved, and the name
+silently stays as it was.
+
+The blocker documented in the TODO: entry templates key property values
+by property name, so a naive rename would leave template values keyed by
+the old name and they would silently stop applying.
+
+Fix direction: implement `Databases.renameProperty` so it re-keys the
+property's values in the database's entry templates (and any other
+name-keyed stores), wire it into the confirmation dialog, then remove
+this entry.
+
 ## features/desktop-app
 
 ### One structurally invalid persisted file blanks the whole app at startup
