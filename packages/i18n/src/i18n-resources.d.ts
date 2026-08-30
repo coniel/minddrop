@@ -241,6 +241,10 @@ declare module 'i18next' {
             name: string;
             description: string;
           };
+          tags: {
+            name: string;
+            description: string;
+          };
           icon: {
             name: string;
             description: string;
@@ -1992,6 +1996,11 @@ declare module 'i18next' {
             actions: {
               create: string;
             };
+          };
+        };
+        tags: {
+          labels: {
+            tag: string;
           };
         };
         onboarding: {

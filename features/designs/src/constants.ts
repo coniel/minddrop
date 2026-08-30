@@ -108,6 +108,7 @@ export const propertyTypeLabelMap: Record<PropertyType, TranslationKey> = {
   url: 'properties.url.name',
   image: 'properties.image.name',
   select: 'properties.select.name',
+  tags: 'properties.tags.name',
   icon: 'properties.icon.name',
   'formatted-text': 'properties.textFormatted.name',
   created: 'properties.created.name',

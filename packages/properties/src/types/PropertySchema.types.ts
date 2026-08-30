@@ -10,6 +10,7 @@ import {
   LastModifiedPropertySchema,
   NumberPropertySchema,
   SelectPropertySchema,
+  TagsPropertySchema,
   TextPropertySchema,
   TitlePropertySchema,
   TogglePropertySchema,
@@ -27,6 +28,7 @@ export type PropertySchema =
   | LastModifiedPropertySchema
   | NumberPropertySchema
   | SelectPropertySchema
+  | TagsPropertySchema
   | TextPropertySchema
   | TitlePropertySchema
   | TogglePropertySchema

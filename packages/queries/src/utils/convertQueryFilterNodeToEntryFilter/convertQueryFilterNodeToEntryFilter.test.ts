@@ -102,6 +102,22 @@ describe('convertQueryFilterNodeToEntryFilter', () => {
     });
   });
 
+  it('converts tags comparisons to membership tests', () => {
+    expect(
+      convertQueryFilterNodeToEntryFilter({
+        ...textNode,
+        propertyType: 'tags',
+        operator: 'not-contains',
+        value: 'Urgent',
+      }),
+    ).toEqual({
+      property: 'Content',
+      propertyType: 'tags',
+      operator: 'not-has-value',
+      value: 'Urgent',
+    });
+  });
+
   it('converts collection any-of comparisons to OR membership groups', () => {
     expect(
       convertQueryFilterNodeToEntryFilter({

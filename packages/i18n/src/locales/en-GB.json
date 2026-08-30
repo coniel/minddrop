@@ -185,6 +185,10 @@
       "name": "Multiselect",
       "description": "A dropdown list of options with multiple selection."
     },
+    "tags": {
+      "name": "Tags",
+      "description": "A list of tags shared across all databases."
+    },
     "icon": {
       "name": "Icon",
       "description": "An icon picker for selecting an icon."

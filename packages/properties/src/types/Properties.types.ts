@@ -12,6 +12,7 @@ export type PropertyType =
   | 'last-modified'
   | 'number'
   | 'select'
+  | 'tags'
   | 'text'
   | 'formatted-text'
   | 'title'

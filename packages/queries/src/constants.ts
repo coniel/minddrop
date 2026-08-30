@@ -33,6 +33,14 @@ const DATE_OPERATORS: QueryOperator[] = [
   'is-on-or-after',
 ];
 
+// The operators available for multiselect select properties
+export const MULTISELECT_QUERY_OPERATORS: QueryOperator[] = [
+  'contains',
+  'not-contains',
+  'is-empty',
+  'is-not-empty',
+];
+
 // The operators available for each property type. Multiselect
 // select properties use MULTISELECT_QUERY_OPERATORS instead.
 export const QUERY_OPERATORS_BY_PROPERTY_TYPE: Record<
@@ -72,6 +80,8 @@ export const QUERY_OPERATORS_BY_PROPERTY_TYPE: Record<
   'last-modified': DATE_OPERATORS,
   toggle: ['is-true', 'is-false'],
   select: ['is', 'is-not', 'is-empty', 'is-not-empty'],
+  // Tags are always multi-value, membership tests only
+  tags: MULTISELECT_QUERY_OPERATORS,
   // Color values live in entry metadata, which is not SQL
   // indexed, so color cannot be filtered on yet
   color: [],
@@ -84,14 +94,6 @@ export const QUERY_OPERATORS_BY_PROPERTY_TYPE: Record<
     'is-not-empty',
   ],
 };
-
-// The operators available for multiselect select properties
-export const MULTISELECT_QUERY_OPERATORS: QueryOperator[] = [
-  'contains',
-  'not-contains',
-  'is-empty',
-  'is-not-empty',
-];
 
 // Operators that do not take a comparison value
 export const VALUE_LESS_QUERY_OPERATORS = new Set<QueryOperator>([

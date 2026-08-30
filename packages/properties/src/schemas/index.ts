@@ -10,6 +10,7 @@ import { ImagePropertySchema } from './ImagePropertySchema';
 import { LastModifiedPropertySchema } from './LastModifiedPropertySchema';
 import { NumberPropertySchema } from './NumberPropertySchema';
 import { SelectPropertySchema } from './SelectPropertySchema';
+import { TagsPropertySchema } from './TagsPropertySchema';
 import { TextPropertySchema } from './TextPropertySchema';
 import { TitlePropertySchema } from './TitlePropertySchema';
 import { TogglePropertySchema } from './TogglePropertySchema';
@@ -26,6 +27,7 @@ export * from './ImagePropertySchema';
 export * from './LastModifiedPropertySchema';
 export * from './NumberPropertySchema';
 export * from './SelectPropertySchema';
+export * from './TagsPropertySchema';
 export * from './TextPropertySchema';
 export * from './TitlePropertySchema';
 export * from './TogglePropertySchema';
@@ -39,6 +41,7 @@ export const PropertySchemas: Record<PropertyType, PropertySchemaTemplate> = {
   date: DatePropertySchema,
   toggle: TogglePropertySchema,
   select: SelectPropertySchema,
+  tags: TagsPropertySchema,
   image: ImagePropertySchema,
   icon: IconPropertySchema,
   url: UrlPropertySchema,

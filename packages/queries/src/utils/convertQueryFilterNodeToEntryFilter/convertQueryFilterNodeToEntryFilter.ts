@@ -61,8 +61,8 @@ export function convertQueryFilterNodeToEntryFilter(
     return convertCollectionFilter(node, propertyType);
   }
 
-  // Select values compare via membership tests
-  if (propertyType === 'select') {
+  // Select and tags values compare via membership tests
+  if (propertyType === 'select' || propertyType === 'tags') {
     return convertSelectFilter(node, propertyType);
   }
 
@@ -213,7 +213,7 @@ function groupEntryFilters(
 }
 
 /**
- * Converts a select comparison into a membership filter.
+ * Converts a select or tags comparison into a membership filter.
  */
 function convertSelectFilter(
   node: QueryFilterNode,
