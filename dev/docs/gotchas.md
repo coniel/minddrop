@@ -517,6 +517,17 @@ a consumer resolving an old reference through `replayRenames` must
 derive the logical address first (strip the extension and any
 entry-subdirectory nesting) and map the result back.
 
+### `entityId` is how consumers disambiguate reused names
+
+Ledger addresses are names, and names can be reused: delete a
+database, later create a new one with the same name, and a replayed
+old reference resolves to the new occupant. Rename events therefore
+record the entity's fixed ID in `entityId` for kinds whose entities
+carry one (databases; entries and properties have no fixed IDs).
+Chain matching in `replayRenames`/`resolveRenameChainEnds` stays
+address-based — the ID is used by consumers to disambiguate chains
+by identity instead of relying on names being unique over time.
+
 ## packages/spaces
 
 ### Embedded data views outlive the space that embeds them

@@ -33,6 +33,24 @@ describe('recordRename', () => {
     expect(event.kind).toBe('database');
   });
 
+  it('records the entity ID when given', async () => {
+    // Record a rename including the entity's fixed ID
+    const event = await recordRename({
+      from: 'Books',
+      to: 'Library',
+      kind: 'database',
+      entityId: 'database_1',
+    });
+
+    // The event should record the entity ID
+    expect(event.entityId).toBe('database_1');
+
+    // The ID should round-trip through the ledger file
+    expect(await readRenameEvents()).toEqual([
+      expect.objectContaining({ entityId: 'database_1' }),
+    ]);
+  });
+
   it('assigns strictly increasing timestamps', async () => {
     // Record two renames within the same (frozen) millisecond
     const first = await recordRename({

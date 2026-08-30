@@ -22,4 +22,12 @@ export interface RenameEvent {
    * the database.
    */
   kind: RenameEventKind;
+
+  /**
+   * The renamed entity's fixed ID, present for kinds whose
+   * entities carry one. Used to disambiguate chains when a
+   * deleted entity's name is later reused; chain matching itself
+   * stays address-based.
+   */
+  entityId?: string;
 }

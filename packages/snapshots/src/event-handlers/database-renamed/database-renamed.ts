@@ -15,5 +15,6 @@ export async function onDatabaseRenamed(
     from: original.name,
     to: updated.name,
     kind: 'database',
+    entityId: updated.id,
   });
 }

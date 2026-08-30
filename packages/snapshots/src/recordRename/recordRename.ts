@@ -21,6 +21,12 @@ export interface RecordRenameOptions {
    * The kind of entity that was renamed.
    */
   kind: RenameEventKind;
+
+  /**
+   * The renamed entity's fixed ID, for kinds whose entities
+   * carry one.
+   */
+  entityId?: string;
 }
 
 /**
@@ -51,6 +57,11 @@ export async function recordRename(
     to: options.to,
     kind: options.kind,
   };
+
+  // Record the entity ID when the entity kind carries one
+  if (options.entityId) {
+    event.entityId = options.entityId;
+  }
 
   // Ensure the ledger directory exists
   await Fs.ensureDir(resolveRenamesDirPath());
