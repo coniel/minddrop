@@ -1,23 +1,47 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Collections } from '@minddrop/collections';
 import {
+  sqlGetAllDatabases,
+  sqlGetEntrySyncRecords,
+  sqlUpsertDatabase,
+  sqlUpsertEntries,
+} from '../../sql';
+import {
   cleanup,
+  cleanupTestSqlDatabase,
   collectionDatabase,
   collectionEntry1,
+  collectionEntry1SqlRecord,
   objectDatabase,
   rootStorageDatabase,
   setup,
+  setupTestSqlDatabase,
 } from '../../test-utils';
 import { virtualCollectionId, virtualCollectionName } from '../../utils';
 import { onDeleteDatabase } from './database-deleted';
 
-vi.mock('../../sql', () => ({
-  sqlDeleteDatabase: vi.fn(),
-}));
-
 describe('onDeleteDatabase', () => {
   beforeEach(() => {
     setup();
+
+    // Open an in-memory SQL database
+    setupTestSqlDatabase();
+
+    // Seed the collection database record
+    sqlUpsertDatabase(
+      {
+        id: collectionDatabase.id,
+        name: collectionDatabase.name,
+        path: collectionDatabase.path,
+        icon: collectionDatabase.icon,
+      },
+      { silent: true },
+    );
+
+    // Seed one of the collection database's entry records
+    sqlUpsertEntries(collectionDatabase.id, [collectionEntry1SqlRecord], {
+      silent: true,
+    });
 
     // Create virtual collections for the collection entry
     Collections.createVirtual(
@@ -40,7 +64,23 @@ describe('onDeleteDatabase', () => {
     );
   });
 
-  afterEach(cleanup);
+  afterEach(() => {
+    cleanupTestSqlDatabase();
+    cleanup();
+  });
+
+  it('deletes the database and its entries from SQL', async () => {
+    // Delete the collection database
+    await onDeleteDatabase(collectionDatabase);
+
+    // The database record should be gone from SQL
+    expect(sqlGetAllDatabases()).not.toContainEqual(
+      expect.objectContaining({ id: collectionDatabase.id }),
+    );
+
+    // The database's entry records should be cascade deleted
+    expect(sqlGetEntrySyncRecords(collectionDatabase.id)).toEqual([]);
+  });
 
   it('does nothing if the database has no collection properties', async () => {
     // Delete a database without collection properties

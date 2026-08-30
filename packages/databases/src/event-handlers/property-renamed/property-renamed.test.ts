@@ -1,23 +1,47 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Collections } from '@minddrop/collections';
 import { getDatabase } from '../../getDatabase';
 import {
+  sqlGetAllEntriesFull,
+  sqlUpsertDatabase,
+  sqlUpsertEntries,
+} from '../../sql';
+import {
   cleanup,
+  cleanupTestSqlDatabase,
   collectionDatabase,
   collectionEntry1,
+  collectionEntry1SqlRecord,
   objectDatabase,
   setup,
+  setupTestSqlDatabase,
 } from '../../test-utils';
 import { virtualCollectionId, virtualCollectionName } from '../../utils';
 import { onRenameProperty } from './property-renamed';
 
-vi.mock('../../sql', () => ({
-  sqlRenameProperty: vi.fn(),
-}));
-
 describe('onRenameProperty', () => {
   beforeEach(() => {
     setup();
+
+    // Open an in-memory SQL database
+    setupTestSqlDatabase();
+
+    // Seed the collection database record
+    sqlUpsertDatabase(
+      {
+        id: collectionDatabase.id,
+        name: collectionDatabase.name,
+        path: collectionDatabase.path,
+        icon: collectionDatabase.icon,
+      },
+      { silent: true },
+    );
+
+    // Seed the collection entry's record so the rename has
+    // property rows to update
+    sqlUpsertEntries(collectionDatabase.id, [collectionEntry1SqlRecord], {
+      silent: true,
+    });
 
     // Create virtual collections for the collection entry
     Collections.createVirtual(
@@ -40,7 +64,42 @@ describe('onRenameProperty', () => {
     );
   });
 
-  afterEach(cleanup);
+  afterEach(() => {
+    cleanupTestSqlDatabase();
+    cleanup();
+  });
+
+  it("renames the property across the entries' SQL records", async () => {
+    // Rename the 'Related' collection property to 'Links'
+    const renamedDatabase = {
+      ...collectionDatabase,
+      properties: collectionDatabase.properties.map((property) =>
+        property.name === 'Related' ? { ...property, name: 'Links' } : property,
+      ),
+    };
+
+    await onRenameProperty({
+      database: renamedDatabase,
+      oldName: 'Related',
+      newName: 'Links',
+    });
+
+    // Find the entry's SQL record
+    const record = sqlGetAllEntriesFull().find(
+      (entryRecord) => entryRecord.id === collectionEntry1.id,
+    )!;
+
+    // The property rows should carry the new name with their values
+    expect(record.properties).toContainEqual({
+      name: 'Links',
+      type: 'collection',
+      value: collectionEntry1.properties.Related,
+    });
+    // No rows should remain under the old name
+    expect(record.properties).not.toContainEqual(
+      expect.objectContaining({ name: 'Related' }),
+    );
+  });
 
   it('remaps design property map values pointing at the renamed property', async () => {
     // Rename 'Content' to 'Body' with a design property map that

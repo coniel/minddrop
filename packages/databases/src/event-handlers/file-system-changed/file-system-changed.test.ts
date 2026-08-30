@@ -1,31 +1,28 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { FileSystemChange } from '@minddrop/file-system';
 import { Paths } from '@minddrop/utils';
-import { registerDatabaseBackendAdapter } from '../../DatabaseBackendAdapter';
-import { MockFs, cleanup, objectDatabase, setup } from '../../test-utils';
+import {
+  MockBackendAdapter,
+  MockFs,
+  cleanup,
+  createMockBackendAdapter,
+  objectDatabase,
+  setup,
+} from '../../test-utils';
 import { databaseConfigFilePath } from '../../utils';
 import { onFileSystemChanged } from './file-system-changed';
 
-// The workspace paths the backend was asked to scan
-let scannedPaths: string[] = [];
-
 describe('onFileSystemChanged', () => {
+  // The registered mock backend's recorded call state
+  let backend: MockBackendAdapter;
+
   beforeEach(() => {
     setup();
     vi.useFakeTimers();
 
-    scannedPaths = [];
-
     // Stand in for the platform backend, recording the scans it
     // is asked for
-    registerDatabaseBackendAdapter({
-      initializeBackend: async () => {
-        throw new Error('not used');
-      },
-      backgroundSync: async (workspacePath) => {
-        scannedPaths.push(workspacePath);
-      },
-    });
+    backend = createMockBackendAdapter();
   });
 
   afterEach(() => {
@@ -38,7 +35,7 @@ describe('onFileSystemChanged', () => {
 
     await flushDebounce();
 
-    expect(scannedPaths).toEqual([Paths.workspace]);
+    expect(backend.backgroundSyncCalls).toEqual([Paths.workspace]);
   });
 
   it('scans the workspace when a database directory is deleted', async () => {
@@ -46,7 +43,7 @@ describe('onFileSystemChanged', () => {
 
     await flushDebounce();
 
-    expect(scannedPaths).toEqual([Paths.workspace]);
+    expect(backend.backgroundSyncCalls).toEqual([Paths.workspace]);
   });
 
   it('coalesces a burst of changes into a single scan', async () => {
@@ -56,7 +53,7 @@ describe('onFileSystemChanged', () => {
 
     await flushDebounce();
 
-    expect(scannedPaths.length).toBe(1);
+    expect(backend.backgroundSyncCalls.length).toBe(1);
   });
 
   it('scans the workspace when a config file appears outside every known database', async () => {
@@ -66,7 +63,7 @@ describe('onFileSystemChanged', () => {
 
     await flushDebounce();
 
-    expect(scannedPaths).toEqual([Paths.workspace]);
+    expect(backend.backgroundSyncCalls).toEqual([Paths.workspace]);
   });
 
   it('scans the workspace when a directory holding a config file is created', async () => {
@@ -82,7 +79,7 @@ describe('onFileSystemChanged', () => {
 
     await flushDebounce();
 
-    expect(scannedPaths).toEqual([Paths.workspace]);
+    expect(backend.backgroundSyncCalls).toEqual([Paths.workspace]);
   });
 
   it('ignores changes to app state in the workspace hidden directory', async () => {
@@ -92,7 +89,7 @@ describe('onFileSystemChanged', () => {
 
     await flushDebounce();
 
-    expect(scannedPaths).toEqual([]);
+    expect(backend.backgroundSyncCalls).toEqual([]);
   });
 
   it('ignores changes to directories the user keeps for their own purposes', async () => {
@@ -100,7 +97,7 @@ describe('onFileSystemChanged', () => {
 
     await flushDebounce();
 
-    expect(scannedPaths).toEqual([]);
+    expect(backend.backgroundSyncCalls).toEqual([]);
   });
 
   it('ignores a created directory which holds no config file', async () => {
@@ -108,7 +105,7 @@ describe('onFileSystemChanged', () => {
 
     await flushDebounce();
 
-    expect(scannedPaths).toEqual([]);
+    expect(backend.backgroundSyncCalls).toEqual([]);
   });
 });
 

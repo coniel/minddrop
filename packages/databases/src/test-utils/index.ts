@@ -6,6 +6,7 @@ import {
 
 export * from './setup-tests';
 export * from './setup-sql';
+export * from './createMockBackendAdapter';
 export * from './createRecordingSqlAdapter';
 export * from './fixtures';
 

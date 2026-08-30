@@ -1,17 +1,41 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Collections } from '@minddrop/collections';
-import { cleanup, objectDatabase, objectEntry1, setup } from '../../test-utils';
+import { sqlGetAllEntriesFull, sqlUpsertDatabase } from '../../sql';
+import {
+  cleanup,
+  cleanupTestSqlDatabase,
+  objectDatabase,
+  objectEntry1,
+  objectEntry1SqlRecord,
+  setup,
+  setupTestSqlDatabase,
+} from '../../test-utils';
 import { virtualCollectionId, virtualCollectionName } from '../../utils';
 import { onAddProperty } from './property-added';
 
-vi.mock('../../sql', () => ({
-  sqlReindexDatabaseEntries: vi.fn(),
-}));
-
 describe('onAddProperty', () => {
-  beforeEach(setup);
+  beforeEach(() => {
+    setup();
 
-  afterEach(cleanup);
+    // Open an in-memory SQL database
+    setupTestSqlDatabase();
+
+    // Seed the database record the re-indexed entries belong to
+    sqlUpsertDatabase(
+      {
+        id: objectDatabase.id,
+        name: objectDatabase.name,
+        path: objectDatabase.path,
+        icon: objectDatabase.icon,
+      },
+      { silent: true },
+    );
+  });
+
+  afterEach(() => {
+    cleanupTestSqlDatabase();
+    cleanup();
+  });
 
   it('does nothing if the property is not a collection type', () => {
     // Add a non-collection property
@@ -24,6 +48,17 @@ describe('onAddProperty', () => {
     const allCollections = Collections.Store.getAllArray();
     const virtualCollections = allCollections.filter((c) => c.virtual);
     expect(virtualCollections).toHaveLength(0);
+  });
+
+  it("re-indexes the database's entries in SQL", () => {
+    // Add a non-collection property
+    onAddProperty({
+      database: objectDatabase,
+      property: { type: 'text', name: 'Notes' },
+    });
+
+    // The database's entries should be re-upserted into SQL
+    expect(sqlGetAllEntriesFull()).toContainEqual(objectEntry1SqlRecord);
   });
 
   it('creates virtual collections for all existing entries', () => {

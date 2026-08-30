@@ -1,17 +1,27 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Collections } from '@minddrop/collections';
 import { DatabasesStore } from '../../DatabasesStore';
 import {
+  sqlGetAllEntriesFull,
+  sqlGetEntrySyncRecords,
+  sqlUpsertDatabase,
+} from '../../sql';
+import {
   MockFs,
   cleanup,
+  cleanupTestSqlDatabase,
   collectionDatabase,
   collectionEntry1,
   entryTemplate1,
   entryTemplate2,
   entryTemplatesDatabase,
   objectDatabase,
+  relatedEntry1,
+  relatedEntry2,
   setup,
+  setupTestSqlDatabase,
 } from '../../test-utils';
+import { Database } from '../../types';
 import {
   entryTemplateFilePath,
   virtualCollectionId,
@@ -19,13 +29,41 @@ import {
 } from '../../utils';
 import { onRemoveProperty } from './property-removed';
 
-vi.mock('../../sql', () => ({
-  sqlReindexDatabaseEntries: vi.fn(),
-}));
+/**
+ * Returns a copy of a database with the named property removed
+ * from its schema, matching the database shape carried by the
+ * property removed event.
+ */
+function withoutProperty(database: Database, propertyName: string): Database {
+  return {
+    ...database,
+    properties: database.properties.filter(
+      (property) => property.name !== propertyName,
+    ),
+  };
+}
 
 describe('onRemoveProperty', () => {
   beforeEach(() => {
     setup();
+
+    // Open an in-memory SQL database
+    setupTestSqlDatabase();
+
+    // Seed the database records the re-indexed entries belong to
+    [collectionDatabase, objectDatabase, entryTemplatesDatabase].forEach(
+      (database) => {
+        sqlUpsertDatabase(
+          {
+            id: database.id,
+            name: database.name,
+            path: database.path,
+            icon: database.icon,
+          },
+          { silent: true },
+        );
+      },
+    );
 
     // Create virtual collections for the collection entry
     Collections.createVirtual(
@@ -48,12 +86,47 @@ describe('onRemoveProperty', () => {
     );
   });
 
-  afterEach(cleanup);
+  afterEach(() => {
+    cleanupTestSqlDatabase();
+    cleanup();
+  });
+
+  it("re-indexes the database's entries in SQL", async () => {
+    // Find the Related property schema
+    const property = collectionDatabase.properties.find(
+      (p) => p.name === 'Related',
+    )!;
+
+    // The event carries the database with the property already removed
+    const database = withoutProperty(collectionDatabase, 'Related');
+
+    await onRemoveProperty({ database, property });
+
+    // The database's entries should be re-upserted into SQL
+    const recordIds = sqlGetEntrySyncRecords(collectionDatabase.id).map(
+      (record) => record.id,
+    );
+
+    expect(recordIds).toContain(collectionEntry1.id);
+    expect(recordIds).toContain(relatedEntry1.id);
+    expect(recordIds).toContain(relatedEntry2.id);
+
+    // The re-indexed records should no longer carry the removed property
+    const record = sqlGetAllEntriesFull().find(
+      (entryRecord) => entryRecord.id === collectionEntry1.id,
+    )!;
+    const propertyNames = record.properties.map(
+      (entryProperty) => entryProperty.name,
+    );
+
+    expect(propertyNames).not.toContain('Related');
+    expect(propertyNames).toContain('References');
+  });
 
   it('does nothing if the property is not a collection type', async () => {
     // Remove a non-collection property
     await onRemoveProperty({
-      database: objectDatabase,
+      database: withoutProperty(objectDatabase, 'Content'),
       property: { type: 'text', name: 'Content' },
     });
 
@@ -70,7 +143,10 @@ describe('onRemoveProperty', () => {
       (p) => p.name === 'Related',
     )!;
 
-    await onRemoveProperty({ database: collectionDatabase, property });
+    await onRemoveProperty({
+      database: withoutProperty(collectionDatabase, 'Related'),
+      property,
+    });
 
     // The 'Related' virtual collection should be deleted
     const related = Collections.Store.get(
@@ -91,7 +167,10 @@ describe('onRemoveProperty', () => {
         (p) => p.name === 'Notes',
       )!;
 
-      await onRemoveProperty({ database: entryTemplatesDatabase, property });
+      await onRemoveProperty({
+        database: withoutProperty(entryTemplatesDatabase, 'Notes'),
+        property,
+      });
 
       const templates = DatabasesStore.get(
         entryTemplatesDatabase.id,
@@ -115,7 +194,10 @@ describe('onRemoveProperty', () => {
         'template-image.png',
       );
 
-      await onRemoveProperty({ database: entryTemplatesDatabase, property });
+      await onRemoveProperty({
+        database: withoutProperty(entryTemplatesDatabase, 'Image'),
+        property,
+      });
 
       // The stored file should be deleted
       expect(MockFs.exists(storedImagePath)).toBeFalsy();
@@ -133,7 +215,10 @@ describe('onRemoveProperty', () => {
         (p) => p.name === 'Count',
       )!;
 
-      await onRemoveProperty({ database: entryTemplatesDatabase, property });
+      await onRemoveProperty({
+        database: withoutProperty(entryTemplatesDatabase, 'Count'),
+        property,
+      });
 
       const templates = DatabasesStore.get(
         entryTemplatesDatabase.id,

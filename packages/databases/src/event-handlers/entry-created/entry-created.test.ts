@@ -1,22 +1,46 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Collections } from '@minddrop/collections';
+import { sqlGetAllEntriesFull, sqlUpsertDatabase } from '../../sql';
 import {
   cleanup,
+  cleanupTestSqlDatabase,
   collectionDatabase,
   collectionEntry1,
+  collectionEntry1SqlRecord,
+  objectDatabase,
   objectEntry1,
+  objectEntry1SqlRecord,
   setup,
+  setupTestSqlDatabase,
 } from '../../test-utils';
 import { virtualCollectionId, virtualCollectionName } from '../../utils';
 import { onCreateEntry } from './entry-created';
 
-vi.mock('../../sql', () => ({
-  sqlUpsertEntries: vi.fn(),
-}));
-
 describe('onCreateEntry', () => {
-  beforeEach(setup);
-  afterEach(cleanup);
+  beforeEach(() => {
+    setup();
+
+    // Open an in-memory SQL database
+    setupTestSqlDatabase();
+
+    // Seed the database records the created entries belong to
+    [objectDatabase, collectionDatabase].forEach((database) => {
+      sqlUpsertDatabase(
+        {
+          id: database.id,
+          name: database.name,
+          path: database.path,
+          icon: database.icon,
+        },
+        { silent: true },
+      );
+    });
+  });
+
+  afterEach(() => {
+    cleanupTestSqlDatabase();
+    cleanup();
+  });
 
   it('does nothing if the database has no collection properties', () => {
     // Call the handler with an entry from a database without collection properties
@@ -25,6 +49,22 @@ describe('onCreateEntry', () => {
     // No virtual collections should have been created
     const collections = Collections.Store.getAllArray();
     expect(collections.length).toBe(0);
+  });
+
+  it('upserts the entry into SQL', () => {
+    // Call the handler
+    onCreateEntry(objectEntry1);
+
+    // The entry record and its properties should be in SQL
+    expect(sqlGetAllEntriesFull()).toContainEqual(objectEntry1SqlRecord);
+  });
+
+  it('upserts collection property values into SQL', () => {
+    // Call the handler with an entry holding collection properties
+    onCreateEntry(collectionEntry1);
+
+    // The record should carry the collection membership values
+    expect(sqlGetAllEntriesFull()).toContainEqual(collectionEntry1SqlRecord);
   });
 
   it('creates a virtual collection for each collection property', () => {

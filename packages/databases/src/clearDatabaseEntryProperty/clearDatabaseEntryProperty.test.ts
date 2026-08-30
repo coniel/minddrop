@@ -1,25 +1,24 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { CollectionUpdatedEvent, Collections } from '@minddrop/collections';
 import { Events } from '@minddrop/events';
 import { InvalidParameterError } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { onUpdateCollection } from '../event-handlers/collection-updated';
+import { sqlGetAllEntriesFull, sqlUpsertDatabase } from '../sql';
 import {
   MockFs,
   cleanup,
+  cleanupTestSqlDatabase,
+  collectionDatabase,
   collectionEntry1,
   mockDate,
   objectEntry1,
   setup,
+  setupTestSqlDatabase,
 } from '../test-utils';
 import { DatabaseEntry } from '../types';
 import { virtualCollectionId } from '../utils';
 import { clearDatabaseEntryProperty } from './clearDatabaseEntryProperty';
-
-// Mock SQL operations since no database connection is available in tests
-vi.mock('../sql', () => ({
-  sqlUpsertEntries: vi.fn(),
-}));
 
 const propertyName = 'Icon';
 
@@ -30,9 +29,29 @@ const clearedEntry: DatabaseEntry = {
 };
 
 describe('clearDatabaseEntryProperty', () => {
-  beforeEach(setup);
+  beforeEach(() => {
+    setup();
 
-  afterEach(cleanup);
+    // Open an in-memory SQL database
+    setupTestSqlDatabase();
+
+    // Seed the collection database record so the collection
+    // write-back handler can upsert its entries
+    sqlUpsertDatabase(
+      {
+        id: collectionDatabase.id,
+        name: collectionDatabase.name,
+        path: collectionDatabase.path,
+        icon: collectionDatabase.icon,
+      },
+      { silent: true },
+    );
+  });
+
+  afterEach(() => {
+    cleanupTestSqlDatabase();
+    cleanup();
+  });
 
   it('throws if the property does not exist on the database', async () => {
     await expect(
@@ -65,6 +84,23 @@ describe('clearDatabaseEntryProperty', () => {
     );
     expect(collection.items).toEqual([]);
     expect(result.properties.Related).toEqual([]);
+
+    // Find the entry's re-upserted SQL record
+    const record = sqlGetAllEntriesFull().find(
+      (entryRecord) => entryRecord.id === collectionEntry1.id,
+    )!;
+
+    // The cleared property should have no SQL value rows left
+    expect(record.properties).not.toContainEqual(
+      expect.objectContaining({ name: 'Related' }),
+    );
+    // Other collection properties should keep their value rows
+    expect(record.properties).toContainEqual(
+      expect.objectContaining({
+        name: 'References',
+        value: collectionEntry1.properties.References,
+      }),
+    );
   });
 
   it('removes the property from the entry', async () => {

@@ -5,14 +5,14 @@ import {
   cleanupWorkspaceFixtures,
 } from '@minddrop/workspaces/test-utils';
 import { DatabaseAutomationActionConfigsStore } from '../DatabaseAutomationActionConfigsStore';
-import { registerDatabaseBackendAdapter } from '../DatabaseBackendAdapter';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabaseTemplatesStore } from '../DatabaseTemplatesStore';
 import { getAllDatabases } from '../getAllDatabases';
-import type { InitializeBackendResult } from '../sql';
 import {
+  MockBackendAdapter,
   cleanup,
   collectionEntry1,
+  createMockBackendAdapter,
   databaseEntrySqlRecords,
   databases,
   setup,
@@ -23,26 +23,16 @@ import { initializeDatabases } from './initializeDatabases';
 const { workspace_1 } = WorkspaceFixtures;
 
 describe('initializeDatabases', () => {
-  // Workspace paths passed to the backend initialization call
-  let initializeCalls: string[] = [];
-  // Workspace paths passed to the background sync call
-  let backgroundSyncCalls: string[] = [];
+  // The registered mock backend's recorded call state
+  let backend: MockBackendAdapter;
 
   beforeEach(() => {
     // Load fixture files only, the stores are hydrated by
     // initializeDatabases itself
     setup({ loadDatabases: false, loadDatabaseEntries: false });
 
-    // Reset the recorded backend calls
-    initializeCalls = [];
-    backgroundSyncCalls = [];
-
     // Register a fake backend adapter serving the fixture data
-    registerFakeBackendAdapter({
-      databases,
-      entries: databaseEntrySqlRecords,
-      schemaChanged: false,
-    });
+    backend = createMockBackendAdapter();
   });
 
   afterEach(() => {
@@ -94,28 +84,26 @@ describe('initializeDatabases', () => {
   it('passes the workspace to the backend initialization', async () => {
     await initializeDatabases();
 
-    expect(initializeCalls).toEqual([workspace_1.path]);
+    expect(backend.initializeBackendCalls).toEqual([
+      { workspaceId: workspace_1.id, workspacePath: workspace_1.path },
+    ]);
   });
 
   it('triggers a background sync when the schema is unchanged', async () => {
     const result = await initializeDatabases();
 
     expect(result).toEqual({ schemaChanged: false });
-    expect(backgroundSyncCalls).toEqual([workspace_1.path]);
+    expect(backend.backgroundSyncCalls).toEqual([workspace_1.path]);
   });
 
   it('skips the background sync when the schema changed', async () => {
     // The backend already scanned the filesystem for the rebuild
-    registerFakeBackendAdapter({
-      databases,
-      entries: databaseEntrySqlRecords,
-      schemaChanged: true,
-    });
+    backend = createMockBackendAdapter({ schemaChanged: true });
 
     const result = await initializeDatabases();
 
     expect(result).toEqual({ schemaChanged: true });
-    expect(backgroundSyncCalls).toEqual([]);
+    expect(backend.backgroundSyncCalls).toEqual([]);
   });
 
   it('does nothing when there are no workspaces', async () => {
@@ -126,27 +114,7 @@ describe('initializeDatabases', () => {
 
     // No backend call should be made and nothing loaded
     expect(result).toEqual({ schemaChanged: false });
-    expect(initializeCalls).toEqual([]);
+    expect(backend.initializeBackendCalls).toEqual([]);
     expect(getAllDatabases()).toEqual([]);
   });
-
-  /**
-   * Registers a fake backend adapter which records its calls and
-   * resolves with the given initialization result.
-   */
-  function registerFakeBackendAdapter(result: InitializeBackendResult): void {
-    registerDatabaseBackendAdapter({
-      async initializeBackend(workspaceId, workspacePath) {
-        // Record the call for assertions
-        initializeCalls.push(workspacePath);
-
-        return result;
-      },
-
-      async backgroundSync(workspacePath) {
-        // Record the call for assertions
-        backgroundSyncCalls.push(workspacePath);
-      },
-    });
-  }
 });

@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { AppErrorEvent, AppErrorEventData, Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { ItemAddressesChangedEvent } from '@minddrop/item-references';
@@ -11,11 +11,15 @@ import { onItemAddressesChanged } from '../event-handlers';
 import { DatabaseUpdatedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntry } from '../getDatabaseEntry';
+import { sqlGetEntrySyncRecords, sqlUpsertDatabase } from '../sql';
 import {
   MockFs,
   cleanup,
+  cleanupRecordingTestSqlDatabase,
+  clearRecordedSqlStatements,
   collectionDatabase,
   collectionEntry1,
+  getRecordedSqlStatements,
   objectDatabase,
   objectEntry1,
   referenceEntry1,
@@ -23,19 +27,36 @@ import {
   rootStorageEntry1,
   rootStorageEntry1FileContents,
   setup,
+  setupRecordingTestSqlDatabase,
 } from '../test-utils';
 import { Database } from '../types';
 import { databaseConfigFilePath } from '../utils';
 import { setDatabaseEntrySerializer } from './setDatabaseEntrySerializer';
 
-// Mock SQL operations since no database connection is available in tests
-vi.mock('../sql', () => ({
-  sqlUpsertEntries: vi.fn(),
-}));
-
 describe('setDatabaseEntrySerializer', () => {
   beforeEach(() => {
     setup();
+
+    // Open a recording in-memory SQL database
+    setupRecordingTestSqlDatabase();
+
+    // Seed the database records the converted entries belong to
+    [objectDatabase, collectionDatabase, rootStorageDatabase].forEach(
+      (database) => {
+        sqlUpsertDatabase(
+          {
+            id: database.id,
+            name: database.name,
+            path: database.path,
+            icon: database.icon,
+          },
+          { silent: true },
+        );
+      },
+    );
+
+    // Drop the seeding statements so tests only see the conversion's SQL
+    clearRecordedSqlStatements();
 
     // Register the reference rewrite listener normally wired by
     // initializeDatabaseEventHandlers
@@ -44,7 +65,10 @@ describe('setDatabaseEntrySerializer', () => {
     );
   });
 
-  afterEach(cleanup);
+  afterEach(() => {
+    cleanupRecordingTestSqlDatabase();
+    cleanup();
+  });
 
   it('does nothing when the serializer is unchanged', async () => {
     const result = await setDatabaseEntrySerializer(
@@ -84,6 +108,14 @@ describe('setDatabaseEntrySerializer', () => {
 
     // The entry's stored path points to the new file
     expect(getDatabaseEntry(objectEntry1.id).path).toBe(newPath);
+
+    // The entry's SQL record carries the new path
+    expect(sqlGetEntrySyncRecords(objectDatabase.id)).toContainEqual(
+      expect.objectContaining({
+        id: objectEntry1.id,
+        path: newPath,
+      }),
+    );
   });
 
   it('moves the original entry files to the trash', async () => {
@@ -174,6 +206,14 @@ describe('setDatabaseEntrySerializer', () => {
     expect(getDatabase(rootStorageDatabase.id).entrySerializer).toBe(
       'markdown',
     );
+
+    // No entry upsert statements should have been executed, as the
+    // address change event is never dispatched on failure
+    const entryUpserts = getRecordedSqlStatements().filter((statement) =>
+      statement.sql.includes('INSERT OR REPLACE INTO entries'),
+    );
+
+    expect(entryUpserts).toEqual([]);
   });
 
   it('dispatches an app error event when the conversion fails', async () => {

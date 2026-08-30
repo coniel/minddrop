@@ -1,14 +1,19 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DataViews } from '@minddrop/data-views';
 import { DataViewFixtures } from '@minddrop/data-views/test-utils';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
+import { sqlGetEntrySyncRecords, sqlUpsertDatabase } from '../../sql';
 import {
   MockFs,
   cleanup,
+  cleanupRecordingTestSqlDatabase,
+  clearRecordedSqlStatements,
   collectionDatabase,
   collectionEntry1,
+  getRecordedSqlStatements,
   relatedEntry1,
   setup,
+  setupRecordingTestSqlDatabase,
 } from '../../test-utils';
 import {
   databaseEntryAddress,
@@ -17,17 +22,60 @@ import {
 } from '../../utils';
 import { onItemAddressesChanged } from './item-addresses-changed';
 
-// Mock SQL operations since no database connection is available in tests
-vi.mock('../../sql', () => ({
-  sqlUpsertEntries: vi.fn(),
-}));
-
 const { dataViewType_referencing } = DataViewFixtures;
 
 describe('onItemAddressesChanged', () => {
-  beforeEach(setup);
+  beforeEach(() => {
+    setup();
 
-  afterEach(cleanup);
+    // Open a recording in-memory SQL database
+    setupRecordingTestSqlDatabase();
+
+    // Seed the database record the changed entries belong to
+    sqlUpsertDatabase(
+      {
+        id: collectionDatabase.id,
+        name: collectionDatabase.name,
+        path: collectionDatabase.path,
+        icon: collectionDatabase.icon,
+      },
+      { silent: true },
+    );
+
+    // Drop the seeding statements so tests only see the handler's SQL
+    clearRecordedSqlStatements();
+  });
+
+  afterEach(() => {
+    cleanupRecordingTestSqlDatabase();
+    cleanup();
+  });
+
+  it("upserts the changed entries' SQL records", async () => {
+    const renamedPath = `${collectionDatabase.path}/Renamed Related.md`;
+
+    // Simulate a rename of an entry
+    DatabaseEntriesStore.update(relatedEntry1.id, {
+      title: 'Renamed Related',
+      path: renamedPath,
+    });
+
+    await onItemAddressesChanged([
+      {
+        id: relatedEntry1.id,
+        oldReference: databaseEntryAddress(relatedEntry1.path),
+        newReference: databaseEntryAddress(renamedPath),
+      },
+    ]);
+
+    // The entry's SQL record should carry the new path
+    expect(sqlGetEntrySyncRecords(collectionDatabase.id)).toContainEqual(
+      expect.objectContaining({
+        id: relatedEntry1.id,
+        path: renamedPath,
+      }),
+    );
+  });
 
   it("rewrites referencing entries' files with current addresses", async () => {
     // Simulate a rename of a referenced entry
@@ -106,5 +154,12 @@ describe('onItemAddressesChanged', () => {
     ]);
 
     expect(MockFs.readTextFile(collectionEntry1.path)).toBe(before);
+
+    // No entry upsert statements should have been executed
+    const entryUpserts = getRecordedSqlStatements().filter((statement) =>
+      statement.sql.includes('INSERT OR REPLACE INTO entries'),
+    );
+
+    expect(entryUpserts).toEqual([]);
   });
 });

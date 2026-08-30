@@ -1,19 +1,22 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Collections } from '@minddrop/collections';
 import { DataViews } from '@minddrop/data-views';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { Events } from '@minddrop/events';
 import { ItemAddressesChangedEvent } from '@minddrop/item-references';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
-import { sqlUpsertEntries } from '../../sql';
+import { sqlGetAllEntriesFull, sqlUpsertDatabase } from '../../sql';
 import {
   MockFs,
   cleanup,
+  cleanupTestSqlDatabase,
   collectionDatabase,
   collectionEntry1,
+  databases,
   objectEntry1,
   relatedEntry1,
   setup,
+  setupTestSqlDatabase,
 } from '../../test-utils';
 import { DatabaseEntryMetadata } from '../../types';
 import {
@@ -24,11 +27,6 @@ import {
 } from '../../utils';
 import { onItemAddressesChanged } from '../item-addresses-changed';
 import { onRenameEntry } from './entry-renamed';
-
-// Mock SQL operations since no database connection is available in tests
-vi.mock('../../sql', () => ({
-  sqlUpsertEntries: vi.fn(),
-}));
 
 const { layout_card_2 } = DesignFixtures;
 
@@ -52,6 +50,23 @@ const newSidecarPath = resolveEntryMetadataFilePath(
 describe('onRenameEntry', () => {
   beforeEach(() => {
     setup();
+
+    // Open an in-memory SQL database
+    setupTestSqlDatabase();
+
+    // Seed each fixture database's SQL record so entry upserts
+    // satisfy the database foreign key
+    databases.forEach((database) => {
+      sqlUpsertDatabase(
+        {
+          id: database.id,
+          name: database.name,
+          path: database.path,
+          icon: database.icon,
+        },
+        { silent: true },
+      );
+    });
 
     // Register the reference rewrite listener normally wired by
     // initializeDatabaseEventHandlers
@@ -80,7 +95,10 @@ describe('onRenameEntry', () => {
     );
   });
 
-  afterEach(cleanup);
+  afterEach(() => {
+    cleanupTestSqlDatabase();
+    cleanup();
+  });
 
   it('does nothing if the database has no collection properties', async () => {
     // Call the handler with an entry from a database without collection properties
@@ -143,14 +161,13 @@ describe('onRenameEntry', () => {
       updated: renamedObjectEntry,
     });
 
-    expect(sqlUpsertEntries).toHaveBeenCalledWith(
-      expect.any(String),
-      expect.arrayContaining([
-        expect.objectContaining({
-          id: objectEntry1.id,
-          title: 'Renamed',
-        }),
-      ]),
+    // The SQL record should carry the new title under the same ID
+    expect(sqlGetAllEntriesFull()).toContainEqual(
+      expect.objectContaining({
+        id: objectEntry1.id,
+        databaseId: objectEntry1.database,
+        title: 'Renamed',
+      }),
     );
   });
 

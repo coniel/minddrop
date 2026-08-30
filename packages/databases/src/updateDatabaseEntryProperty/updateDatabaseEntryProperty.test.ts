@@ -1,32 +1,51 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { CollectionUpdatedEvent, Collections } from '@minddrop/collections';
 import { Events } from '@minddrop/events';
 import { InvalidParameterError, isUntitledTitle } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabasesStore } from '../DatabasesStore';
 import { onUpdateCollection } from '../event-handlers/collection-updated';
+import { sqlGetAllEntriesFull, sqlUpsertDatabase } from '../sql';
 import {
   cleanup,
+  cleanupTestSqlDatabase,
+  collectionDatabase,
   collectionEntry1,
   objectDatabase,
   objectEntry1,
   relatedEntry1,
   relatedEntry2,
   setup,
+  setupTestSqlDatabase,
   timestampEntry1,
 } from '../test-utils';
 import { virtualCollectionId } from '../utils';
 import { updateDatabaseEntryProperty } from './updateDatabaseEntryProperty';
 
-// Mock SQL operations since no database connection is available in tests
-vi.mock('../sql', () => ({
-  sqlUpsertEntries: vi.fn(),
-}));
-
 describe('updateDatabaseEntryProperty', () => {
-  beforeEach(setup);
+  beforeEach(() => {
+    setup();
 
-  afterEach(cleanup);
+    // Open an in-memory SQL database
+    setupTestSqlDatabase();
+
+    // Seed the collection database record so the collection
+    // write-back handler can upsert its entries
+    sqlUpsertDatabase(
+      {
+        id: collectionDatabase.id,
+        name: collectionDatabase.name,
+        path: collectionDatabase.path,
+        icon: collectionDatabase.icon,
+      },
+      { silent: true },
+    );
+  });
+
+  afterEach(() => {
+    cleanupTestSqlDatabase();
+    cleanup();
+  });
 
   it('updates the property value', async () => {
     await updateDatabaseEntryProperty(
@@ -76,6 +95,18 @@ describe('updateDatabaseEntryProperty', () => {
       );
       expect(collection.items).toEqual([relatedEntry1.id]);
       expect(updated.properties.Related).toEqual([relatedEntry1.id]);
+
+      // Find the entry's re-upserted SQL record
+      const record = sqlGetAllEntriesFull().find(
+        (entryRecord) => entryRecord.id === collectionEntry1.id,
+      )!;
+
+      // The SQL value rows should carry the new membership
+      expect(record.properties).toContainEqual({
+        name: 'Related',
+        type: 'collection',
+        value: [relatedEntry1.id],
+      });
     });
 
     it('updates the property directly when no virtual collection exists', async () => {

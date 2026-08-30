@@ -1,20 +1,24 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { readEntryMetadata } from '../../readEntryMetadata';
 import {
   MockFs,
   cleanup,
+  cleanupTestSqlDatabase,
   collectionDatabase,
   collectionEntry1,
+  databases,
   parentDir,
   referenceEntry1,
   relatedEntry1,
   relatedEntry2,
   rootStorageDatabase,
   setup,
+  setupTestSqlDatabase,
 } from '../../test-utils';
 import { SqlEntryRecord } from '../../types';
 import { writeEntryMetadata } from '../../writeEntryMetadata';
-import { sqlUpsertEntries } from '../sqlUpsertEntries';
+import { sqlGetAllDatabases } from '../sqlGetAllDatabases';
+import { sqlGetAllEntriesFull } from '../sqlGetAllEntriesFull';
 import { initializeDatabasesBackend } from './initializeDatabasesBackend';
 
 // A file's stat dates, as reset by a rewrite of the entry file
@@ -22,32 +26,43 @@ const statDate = new Date('2026-02-02T00:00:00.000Z');
 // The entry's real creation date, as held by its sidecar
 const sidecarDate = new Date('2020-03-03T00:00:00.000Z');
 
-// Mock SQL operations since no database connection is available in tests
-vi.mock('@minddrop/sql', () => ({
-  Sql: {
-    open: vi.fn(async () => ({ schemaChanged: true })),
-    resolveConfigPath: () => '/mock-config',
-  },
-}));
-vi.mock('../sqlUpsertDatabase', () => ({ sqlUpsertDatabase: vi.fn() }));
-vi.mock('../sqlGetAllDatabases', () => ({
-  sqlGetAllDatabases: vi.fn(() => []),
-}));
-vi.mock('../sqlUpsertEntries', () => ({ sqlUpsertEntries: vi.fn() }));
-vi.mock('../sqlGetAllEntriesFull', () => ({
-  sqlGetAllEntriesFull: vi.fn(() => []),
-}));
-
 describe('initializeDatabasesBackend', () => {
-  beforeEach(setup);
+  beforeEach(() => {
+    setup();
 
-  afterEach(cleanup);
+    // Register the in-memory SQL adapter the backend opens its
+    // database through
+    setupTestSqlDatabase();
+  });
+
+  afterEach(() => {
+    cleanupTestSqlDatabase();
+    cleanup();
+  });
+
+  it('populates SQL with the workspace databases and entries', async () => {
+    const result = await initializeDatabasesBackend('workspace-1', parentDir);
+
+    // A fresh in-memory database always triggers a rebuild
+    expect(result.schemaChanged).toBe(true);
+
+    // The database records should be indexed in SQL
+    expect(
+      sqlGetAllDatabases()
+        .map((record) => record.id)
+        .sort(),
+    ).toEqual(databases.map((database) => database.id).sort());
+
+    // The returned entries should be the indexed SQL records
+    expect(result.entries).toEqual(sqlGetAllEntriesFull());
+    expect(result.entries.length).toBeGreaterThan(0);
+  });
 
   it('resolves collection property addresses to the minted entry IDs', async () => {
     await initializeDatabasesBackend('workspace-1', parentDir);
 
-    // Look up the upserted records by path
-    const records = upsertedRecords(collectionDatabase.id);
+    // Look up the indexed records by path
+    const records = indexedRecords(collectionDatabase.id);
     const collectionRecord = recordByPath(records, collectionEntry1.path);
     const related1Record = recordByPath(records, relatedEntry1.path);
     const related2Record = recordByPath(records, relatedEntry2.path);
@@ -63,11 +78,11 @@ describe('initializeDatabasesBackend', () => {
     await initializeDatabasesBackend('workspace-1', parentDir);
 
     const collectionRecord = recordByPath(
-      upsertedRecords(collectionDatabase.id),
+      indexedRecords(collectionDatabase.id),
       collectionEntry1.path,
     );
     const referenceRecord = recordByPath(
-      upsertedRecords(rootStorageDatabase.id),
+      indexedRecords(rootStorageDatabase.id),
       referenceEntry1.path,
     );
 
@@ -93,11 +108,13 @@ References: []
     await initializeDatabasesBackend('workspace-1', parentDir);
 
     const collectionRecord = recordByPath(
-      upsertedRecords(collectionDatabase.id),
+      indexedRecords(collectionDatabase.id),
       collectionEntry1.path,
     );
 
-    expect(propertyValue(collectionRecord, 'Related')).toEqual([]);
+    // An emptied multi-value property stores no rows, so the
+    // dropped member leaves the property absent from the record
+    expect(propertyValue(collectionRecord, 'Related')).toBeUndefined();
   });
 
   it('seeds an entry sidecar with its stat derived timestamps', async () => {
@@ -133,7 +150,7 @@ References: []
 
     // The indexed entry keeps the sidecar's timestamps
     const record = recordByPath(
-      upsertedRecords(collectionDatabase.id),
+      indexedRecords(collectionDatabase.id),
       collectionEntry1.path,
     );
 
@@ -151,13 +168,12 @@ References: []
 });
 
 /**
- * Returns all records upserted for the given database.
+ * Returns all records indexed in SQL for the given database.
  */
-function upsertedRecords(databaseId: string): SqlEntryRecord[] {
-  return vi
-    .mocked(sqlUpsertEntries)
-    .mock.calls.filter(([id]) => id === databaseId)
-    .flatMap(([, records]) => records);
+function indexedRecords(databaseId: string): SqlEntryRecord[] {
+  return sqlGetAllEntriesFull().filter(
+    (record) => record.databaseId === databaseId,
+  );
 }
 
 /**

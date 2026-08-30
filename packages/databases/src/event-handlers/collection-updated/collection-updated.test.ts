@@ -1,21 +1,20 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Collections } from '@minddrop/collections';
 import { CollectionFixtures } from '@minddrop/collections/test-utils';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
-import { sqlUpsertEntries } from '../../sql';
+import { sqlGetAllEntriesFull, sqlUpsertDatabase } from '../../sql';
 import {
   cleanup,
+  cleanupTestSqlDatabase,
   collectionDatabase,
   collectionEntry1,
+  databases,
   setup,
+  setupTestSqlDatabase,
 } from '../../test-utils';
+import { SqlEntryRecord } from '../../types';
 import { virtualCollectionId, virtualCollectionName } from '../../utils';
 import { onUpdateCollection } from './collection-updated';
-
-// Mock SQL operations since no database connection is available in tests
-vi.mock('../../sql', () => ({
-  sqlUpsertEntries: vi.fn(),
-}));
 
 const { collection_virtual_1 } = CollectionFixtures;
 
@@ -36,11 +35,21 @@ describe('onUpdateCollection', () => {
   beforeEach(() => {
     setup();
 
+    // Open an in-memory SQL database
+    setupTestSqlDatabase();
+
+    // Seed each fixture database's SQL record so entry upserts
+    // satisfy the database foreign key
+    seedSqlDatabases();
+
     // Add the virtual collection to the store
     Collections.Store.set(relatedCollection);
   });
 
-  afterEach(cleanup);
+  afterEach(() => {
+    cleanupTestSqlDatabase();
+    cleanup();
+  });
 
   it('does nothing for non-virtual collections', async () => {
     const { collection_1 } = CollectionFixtures;
@@ -86,20 +95,10 @@ describe('onUpdateCollection', () => {
     });
 
     // The record should carry the new membership
-    expect(sqlUpsertEntries).toHaveBeenCalledWith(
-      collectionDatabase.id,
-      expect.arrayContaining([
-        expect.objectContaining({
-          id: collectionEntry1.id,
-          properties: expect.arrayContaining([
-            expect.objectContaining({
-              name: 'Related',
-              value: updatedEntries,
-            }),
-          ]),
-        }),
-      ]),
-    );
+    const record = recordById(sqlGetAllEntriesFull(), collectionEntry1.id);
+
+    expect(record.databaseId).toBe(collectionDatabase.id);
+    expect(propertyValue(record, 'Related')).toEqual(updatedEntries);
   });
 
   it('does nothing if the entry does not exist', async () => {
@@ -116,3 +115,34 @@ describe('onUpdateCollection', () => {
     });
   });
 });
+
+/**
+ * Seeds each fixture database's SQL record.
+ */
+function seedSqlDatabases(): void {
+  databases.forEach((database) => {
+    sqlUpsertDatabase(
+      {
+        id: database.id,
+        name: database.name,
+        path: database.path,
+        icon: database.icon,
+      },
+      { silent: true },
+    );
+  });
+}
+
+/**
+ * Returns the record with the given ID.
+ */
+function recordById(records: SqlEntryRecord[], id: string): SqlEntryRecord {
+  return records.find((record) => record.id === id)!;
+}
+
+/**
+ * Returns the value of the named property on a record.
+ */
+function propertyValue(record: SqlEntryRecord, name: string) {
+  return record.properties.find((property) => property.name === name)?.value;
+}

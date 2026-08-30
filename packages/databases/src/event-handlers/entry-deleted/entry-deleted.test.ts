@@ -1,26 +1,57 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Collections } from '@minddrop/collections';
 import { DataViews } from '@minddrop/data-views';
 import { DataViewFixtures } from '@minddrop/data-views/test-utils';
 import {
+  sqlGetEntrySyncRecords,
+  sqlUpsertDatabase,
+  sqlUpsertEntries,
+} from '../../sql';
+import {
   cleanup,
+  cleanupTestSqlDatabase,
   collectionDatabase,
   collectionEntry1,
+  collectionEntry1SqlRecord,
   objectEntry1,
   relatedEntry1,
+  relatedEntry1SqlRecord,
   relatedEntry2,
+  relatedEntry2SqlRecord,
   setup,
+  setupTestSqlDatabase,
 } from '../../test-utils';
 import { virtualCollectionId, virtualCollectionName } from '../../utils';
 import { onDeleteEntry } from './entry-deleted';
 
-vi.mock('../../sql', () => ({
-  sqlDeleteEntries: vi.fn(),
-}));
-
 describe('onDeleteEntry', () => {
   beforeEach(() => {
     setup();
+
+    // Open an in-memory SQL database
+    setupTestSqlDatabase();
+
+    // Seed the collection database record
+    sqlUpsertDatabase(
+      {
+        id: collectionDatabase.id,
+        name: collectionDatabase.name,
+        path: collectionDatabase.path,
+        icon: collectionDatabase.icon,
+      },
+      { silent: true },
+    );
+
+    // Seed the collection database's entry records
+    sqlUpsertEntries(
+      collectionDatabase.id,
+      [
+        relatedEntry1SqlRecord,
+        relatedEntry2SqlRecord,
+        collectionEntry1SqlRecord,
+      ],
+      { silent: true },
+    );
 
     // Create virtual collections for the collection entry
     Collections.createVirtual(
@@ -43,7 +74,25 @@ describe('onDeleteEntry', () => {
     );
   });
 
-  afterEach(cleanup);
+  afterEach(() => {
+    cleanupTestSqlDatabase();
+    cleanup();
+  });
+
+  it('deletes the entry from SQL', async () => {
+    // Delete an entry
+    await onDeleteEntry(relatedEntry1);
+
+    // The deleted entry's record should be gone from SQL
+    const recordIds = sqlGetEntrySyncRecords(collectionDatabase.id).map(
+      (record) => record.id,
+    );
+
+    expect(recordIds).not.toContain(relatedEntry1.id);
+    // Other entry records should be untouched
+    expect(recordIds).toContain(relatedEntry2.id);
+    expect(recordIds).toContain(collectionEntry1.id);
+  });
 
   it('removes the entry from collections referencing it', async () => {
     // Delete an entry referenced by collectionEntry1's Related collection

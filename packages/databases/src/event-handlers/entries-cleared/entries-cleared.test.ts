@@ -1,25 +1,61 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Collections } from '@minddrop/collections';
 import {
+  sqlGetEntrySyncRecords,
+  sqlUpsertDatabase,
+  sqlUpsertEntries,
+} from '../../sql';
+import {
   cleanup,
+  cleanupRecordingTestSqlDatabase,
+  clearRecordedSqlStatements,
   collectionDatabase,
   collectionEntry1,
+  collectionEntry1SqlRecord,
+  getRecordedSqlStatements,
   objectDatabase,
   objectEntry1,
   relatedEntry1,
+  relatedEntry1SqlRecord,
   relatedEntry2,
+  relatedEntry2SqlRecord,
   setup,
+  setupRecordingTestSqlDatabase,
 } from '../../test-utils';
 import { virtualCollectionId, virtualCollectionName } from '../../utils';
 import { onClearEntries } from './entries-cleared';
 
-vi.mock('../../sql', () => ({
-  sqlDeleteEntries: vi.fn(),
-}));
-
 describe('onClearEntries', () => {
   beforeEach(() => {
     setup();
+
+    // Open a recording in-memory SQL database
+    setupRecordingTestSqlDatabase();
+
+    // Seed the collection database record
+    sqlUpsertDatabase(
+      {
+        id: collectionDatabase.id,
+        name: collectionDatabase.name,
+        path: collectionDatabase.path,
+        icon: collectionDatabase.icon,
+      },
+      { silent: true },
+    );
+
+    // Seed the collection database's entry records
+    sqlUpsertEntries(
+      collectionDatabase.id,
+      [
+        relatedEntry1SqlRecord,
+        relatedEntry2SqlRecord,
+        collectionEntry1SqlRecord,
+      ],
+      { silent: true },
+    );
+
+    // Drop the seeding statements so tests only see the handler's SQL
+    clearRecordedSqlStatements();
 
     // Create virtual collections for the collection entry
     Collections.createVirtual(
@@ -42,7 +78,10 @@ describe('onClearEntries', () => {
     );
   });
 
-  afterEach(cleanup);
+  afterEach(() => {
+    cleanupRecordingTestSqlDatabase();
+    cleanup();
+  });
 
   it('does nothing if no entries were cleared', async () => {
     // Call the handler with no entries
@@ -54,6 +93,31 @@ describe('onClearEntries', () => {
         virtualCollectionId(collectionEntry1.id, 'Related'),
       ),
     ).not.toBeNull();
+
+    // No entry delete statements should have been executed
+    const deleteStatements = getRecordedSqlStatements().filter((statement) =>
+      statement.sql.startsWith('DELETE FROM entries'),
+    );
+
+    expect(deleteStatements).toEqual([]);
+  });
+
+  it('deletes the cleared entries from SQL in a single batch', async () => {
+    // Clear two entries
+    await onClearEntries({
+      databaseId: collectionDatabase.id,
+      entries: [relatedEntry1, relatedEntry2],
+    });
+
+    // The cleared entries' records should be gone from SQL
+    const recordIds = sqlGetEntrySyncRecords(collectionDatabase.id).map(
+      (record) => record.id,
+    );
+
+    expect(recordIds).not.toContain(relatedEntry1.id);
+    expect(recordIds).not.toContain(relatedEntry2.id);
+    // Other entry records should be untouched
+    expect(recordIds).toContain(collectionEntry1.id);
   });
 
   it('does nothing if the database has no collection properties', async () => {
