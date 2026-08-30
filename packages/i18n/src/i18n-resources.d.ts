@@ -2137,6 +2137,11 @@ declare module 'i18next' {
             namePlaceholder: string;
           };
         };
+        desktopApp: {
+          labels: {
+            library: string;
+          };
+        };
         search: {
           open: string;
           placeholder: string;

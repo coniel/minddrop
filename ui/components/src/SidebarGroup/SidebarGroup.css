@@ -1,0 +1,19 @@
+/* ============================================================
+   SIDEBAR GROUP
+   Collapsible labelled group of sidebar menu items.
+   ============================================================ */
+
+.sidebar-group {
+  /* Separate the group from the content below it */
+  margin-bottom: var(--space-4);
+
+  /* Hairline gap between the label and the group's items */
+  .menu-label {
+    margin-bottom: var(--space-px);
+  }
+
+  /* Reduce the bottom margin to a hairline when collapsed */
+  &[data-closed] {
+    margin-bottom: var(--space-px);
+  }
+}

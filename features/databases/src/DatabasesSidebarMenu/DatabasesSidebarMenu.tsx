@@ -1,15 +1,8 @@
 import { Database, Databases } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
 import { Tabs } from '@minddrop/feature-views';
-import {
-  Button,
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-  MenuGroup,
-  MenuItem,
-  MenuLabel,
-} from '@minddrop/ui-primitives';
+import { SidebarGroup } from '@minddrop/ui-components';
+import { Button, MenuItem } from '@minddrop/ui-primitives';
 import {
   DatabaseViewName,
   OpenDatabaseViewEvent,
@@ -27,39 +20,23 @@ export const DatabasesSidebarMenu: React.FC = () => {
   }
 
   return (
-    <div className="databases-sidebar-menu">
-      <MenuGroup showLabelActionsOnHover>
-        <Collapsible defaultOpen>
-          <CollapsibleTrigger
-            nativeButton={false}
-            render={
-              <MenuLabel
-                button
-                label="databases.labels.databases"
-                style={{ marginBottom: 1 }}
-                actions={
-                  <Button
-                    size="sm"
-                    label="databases.actions.new"
-                    variant="subtle"
-                    color="primary"
-                    startIcon="plus"
-                    onClick={handleAddDatabase}
-                  />
-                }
-              />
-            }
-          />
-          <CollapsibleContent>
-            <MenuGroup>
-              {databases.map((database) => (
-                <DatabaseMenuItem key={database.id} database={database} />
-              ))}
-            </MenuGroup>
-          </CollapsibleContent>
-        </Collapsible>
-      </MenuGroup>
-    </div>
+    <SidebarGroup
+      label="databases.labels.databases"
+      actions={
+        <Button
+          size="sm"
+          label="databases.actions.new"
+          variant="subtle"
+          color="primary"
+          startIcon="plus"
+          onClick={handleAddDatabase}
+        />
+      }
+    >
+      {databases.map((database) => (
+        <DatabaseMenuItem key={database.id} database={database} />
+      ))}
+    </SidebarGroup>
   );
 };
 

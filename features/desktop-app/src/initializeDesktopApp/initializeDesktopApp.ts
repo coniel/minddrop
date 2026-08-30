@@ -23,7 +23,7 @@ import {
 } from '@minddrop/feature-spaces';
 import { TabSetsStore, initializeViewsFeature } from '@minddrop/feature-views';
 import { Fs, startFileSystemWatcher } from '@minddrop/file-system';
-import { initializeI18n } from '@minddrop/i18n';
+import { I18n, initializeI18n } from '@minddrop/i18n';
 import { Queries } from '@minddrop/queries';
 import { Search } from '@minddrop/search';
 import { Snapshots } from '@minddrop/snapshots';
@@ -33,6 +33,7 @@ import { Icons } from '@minddrop/ui-icons';
 import { initializeInputModalityTracking } from '@minddrop/ui-primitives';
 import { Workspaces } from '@minddrop/workspaces';
 import { AppUiState } from '../AppUiState';
+import { locales } from '../locales';
 import { registerAppDataStoreListeners } from '../registerAppDataStoreListeners';
 import { registerWorkspaceStoreListeners } from '../registerWorkspaceStoreListeners';
 import { initializeDataViewTypes } from './initializeDataViewTypes';
@@ -70,6 +71,9 @@ async function runInitialization(): Promise<void> {
 
   // Register the content icon sets, which load on first use
   Icons.initialize();
+
+  // Register desktop app translations
+  I18n.registerTranslations(locales);
 
   // Register search translations
   initializeSearch();

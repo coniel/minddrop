@@ -11,10 +11,11 @@ import { OpenSettingsEvent, SettingsIcon } from '@minddrop/feature-settings';
 import { SpacesMenuItem } from '@minddrop/feature-spaces';
 import {
   Sidebar,
+  SidebarGroup,
   SidebarProps,
   ThemeVariantPicker,
 } from '@minddrop/ui-components';
-import { MenuGroup, Toolbar, ToolbarIconButton } from '@minddrop/ui-primitives';
+import { Spacer, Toolbar, ToolbarIconButton } from '@minddrop/ui-primitives';
 import { AppUiState } from './AppUiState';
 
 export const AppSidebar: React.FC<SidebarProps> = ({ ...other }) => {
@@ -54,24 +55,27 @@ export const AppSidebar: React.FC<SidebarProps> = ({ ...other }) => {
     >
       <Toolbar>
         <ToolbarIconButton
-          icon="search"
-          label="search.open"
-          tooltip={{ title: 'search.open' }}
-          onClick={handleOpenSearch}
-        />
-        <ToolbarIconButton
           icon={DesignsIcon}
+          color="muted"
           label="designsStudio.open"
           tooltip={{ title: 'designsStudio.open' }}
           onClick={handleOpenDesignStudio}
         />
+        <Spacer />
+        <ToolbarIconButton
+          icon="search"
+          color="muted"
+          label="search.open"
+          tooltip={{ title: 'search.open' }}
+          onClick={handleOpenSearch}
+        />
       </Toolbar>
-      <MenuGroup>
+      <SidebarGroup marginTop="medium" label="desktopApp.labels.library">
         <SpacesMenuItem />
         <DataViewsMenuItem />
         <CollectionsMenuItem />
         <QueriesMenuItem />
-      </MenuGroup>
+      </SidebarGroup>
       <DatabasesSidebarMenu />
       <Toolbar className="sidebar-bottom-toolbar">
         <ThemeVariantPicker />
