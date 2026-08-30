@@ -1,0 +1,30 @@
+{
+  "name": "@minddrop/tags",
+  "version": "0.0.0",
+  "main": "src/index",
+  "types": "src/index",
+  "exports": {
+    ".": "./src/index.ts",
+    "./test-utils": "./src/test-utils/index.ts"
+  },
+  "scripts": {
+    "lint": "eslint .  --max-warnings 0",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "eslint": "^9.39.3",
+    "@minddrop/eslint-config": "workspace:*",
+    "tsconfig": "workspace:*",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@minddrop/events": "workspace:*",
+    "@minddrop/file-system": "workspace:*",
+    "@minddrop/i18n": "workspace:*",
+    "@minddrop/stores": "workspace:*",
+    "@minddrop/ui-theme": "workspace:*",
+    "@minddrop/utils": "workspace:*"
+  }
+}
