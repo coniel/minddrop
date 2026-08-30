@@ -12,9 +12,6 @@ import {
 } from '../test-utils';
 import { useDraggable } from './useDraggable';
 
-vi.mock('../dragStart', () => ({ dragStart: vi.fn() }));
-vi.mock('../dragEnd', () => ({ dragEnd: vi.fn() }));
-
 describe('useDraggable', () => {
   let selectionEventData: Record<string, string> = {};
   const dragEvent = {
@@ -102,20 +99,27 @@ describe('useDraggable', () => {
     it('sets the selected items data on the data transfer object', () => {
       const { result } = init();
 
-      // Initiate a drag
-      result.current.onDragStart(dragEvent);
+      act(() => {
+        // Initiate a drag
+        result.current.onDragStart(dragEvent);
+      });
 
+      // The selection should be serialized onto the event
       expect(selectionEventData).toEqual(serializedSelectionItem_A_1);
     });
 
-    it('sets dragging state to true', () => {
+    it('sets the dragging state to true', () => {
       const { result } = init();
 
-      // Initiate a drag
-      result.current.onDragStart(dragEvent);
+      act(() => {
+        // Initiate a drag
+        result.current.onDragStart(dragEvent);
+      });
 
-      // Should set `isDragging` to `true`
+      // The store's dragging state should be true
       expect(SelectionStore.getState().isDragging).toBe(true);
+      // The hook's dragging state should be true
+      expect(result.current.isDragging).toBe(true);
     });
 
     it('dispatches a drag started event', () =>
@@ -131,8 +135,10 @@ describe('useDraggable', () => {
 
         const { result } = init();
 
-        // Initiate a drag
-        result.current.onDragStart(dragEvent);
+        act(() => {
+          // Initiate a drag
+          result.current.onDragStart(dragEvent);
+        });
       }));
   });
 
@@ -140,13 +146,20 @@ describe('useDraggable', () => {
     it('sets the dragging state to false', () => {
       const { result } = init();
 
-      // Initiate a drag
-      result.current.onDragStart(dragEvent);
-      // End the drag
-      result.current.onDragEnd(dragEvent);
+      act(() => {
+        // Initiate a drag
+        result.current.onDragStart(dragEvent);
+      });
 
-      // Should set `isDragging` to `false`
+      act(() => {
+        // End the drag
+        result.current.onDragEnd(dragEvent);
+      });
+
+      // The store's dragging state should be false
       expect(SelectionStore.getState().isDragging).toBe(false);
+      // The hook's dragging state should be false
+      expect(result.current.isDragging).toBe(false);
     });
 
     it('dispatches a drag ended event', () =>
@@ -162,10 +175,15 @@ describe('useDraggable', () => {
 
         const { result } = init();
 
-        // Initiate a drag
-        result.current.onDragStart(dragEvent);
-        // End the drag
-        result.current.onDragEnd(dragEvent);
+        act(() => {
+          // Initiate a drag
+          result.current.onDragStart(dragEvent);
+        });
+
+        act(() => {
+          // End the drag
+          result.current.onDragEnd(dragEvent);
+        });
       }));
   });
 });
