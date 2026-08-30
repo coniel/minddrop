@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest';
+import { Transforms } from '../../Transforms';
 import { selectBlocks } from '../../selectBlocks';
 import {
   cleanup,
@@ -7,7 +8,7 @@ import {
   paragraphElement2,
   paragraphElement3,
 } from '../../test-utils';
-import { getSelectedBlocks } from './getSelectedBlocks';
+import { getIndentTargetPaths } from './getIndentTargetPaths';
 
 // Blocks carry the IDs the app's selection identifies them by
 const createEditor = () =>
@@ -17,7 +18,7 @@ const createEditor = () =>
     paragraphElement3,
   ]);
 
-describe('getSelectedBlocks', () => {
+describe('getIndentTargetPaths', () => {
   afterEach(cleanup);
 
   it('returns the selected blocks', () => {
@@ -25,27 +26,23 @@ describe('getSelectedBlocks', () => {
 
     selectBlocks(editor, [0], [1]);
 
-    expect(getSelectedBlocks(editor)).toEqual([
-      [editor.children[0], [0]],
-      [editor.children[1], [1]],
-    ]);
+    expect(getIndentTargetPaths(editor)).toEqual([[0], [1]]);
   });
 
-  it('returns the blocks in document order', () => {
+  it('returns the block the cursor is in when none are selected', () => {
     const editor = createEditor();
 
-    // Selected from the bottom up
-    selectBlocks(editor, [2], [1]);
+    Transforms.select(editor, { path: [1, 0], offset: 0 });
 
-    expect(getSelectedBlocks(editor).map(([, path]) => path)).toEqual([
-      [1],
-      [2],
-    ]);
+    expect(getIndentTargetPaths(editor)).toEqual([[1]]);
   });
 
-  it('returns an empty array when no blocks are selected', () => {
+  it('returns nothing without a selection', () => {
     const editor = createEditor();
 
-    expect(getSelectedBlocks(editor)).toEqual([]);
+    // The editor holds no cursor and no selected blocks
+    Transforms.deselect(editor);
+
+    expect(getIndentTargetPaths(editor)).toEqual([]);
   });
 });

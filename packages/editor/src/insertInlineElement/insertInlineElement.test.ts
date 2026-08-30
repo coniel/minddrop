@@ -1,17 +1,8 @@
 import { Editor as SlateEditor, Transforms } from 'slate';
 import { afterEach, describe, expect, it } from 'vitest';
-import { Element } from '@minddrop/ast';
-import { cleanup, createTestEditor } from '../test-utils';
+import { cleanup, createTestEditor, getInlines } from '../test-utils';
 import { paragraphElement1 } from '../test-utils/editor.fixtures';
-import { Editor } from '../types';
 import { insertInlineElement } from './insertInlineElement';
-
-// Returns the inline elements within a block
-function getInlines(editor: Editor, index: number): Element[] {
-  const block = editor.children[index] as Element;
-
-  return block.children.filter((child): child is Element => 'type' in child);
-}
 
 describe('insertInlineElement', () => {
   afterEach(cleanup);

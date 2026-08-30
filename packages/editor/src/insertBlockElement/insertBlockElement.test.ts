@@ -2,7 +2,6 @@ import { Editor as SlateEditor } from 'slate';
 import { afterEach, describe, expect, it } from 'vitest';
 import {
   BlockquoteFrame,
-  Element,
   HeadingElement,
   ListItemFrame,
   TableElement,
@@ -11,10 +10,10 @@ import {
   cleanup,
   createTestEditor,
   emptyParagraphElement,
+  getAncestry,
   mathElement1,
   paragraphElement1,
 } from '../test-utils';
-import { Editor } from '../types';
 import { withTables } from '../withTables';
 import { insertBlockElement } from './insertBlockElement';
 
@@ -27,11 +26,6 @@ const item1: ListItemFrame = {
 
 const item2: ListItemFrame = { ...item1, id: 'item-2' };
 const quote1: BlockquoteFrame = { id: 'quote-1', kind: 'blockquote' };
-
-// Returns the containers a block sits inside as they stand in the editor
-function getAncestry(editor: Editor, index: number) {
-  return (editor.children[index] as Element).ancestry;
-}
 
 describe('insertBlockElement', () => {
   afterEach(cleanup);

@@ -5,7 +5,7 @@ import { renderHook } from '@minddrop/test-utils';
 import { Transforms } from '../Transforms';
 import {
   cleanup,
-  createTestEditor,
+  createTestEditorWithBlockIds,
   paragraphElement1,
   paragraphElement1PlainText,
   paragraphElement2,
@@ -15,20 +15,16 @@ import {
 } from '../test-utils';
 import { Editor } from '../types';
 import { getBlockSelectionRange, getSelectedBlocks } from '../utils';
-import { assignBlockIds } from '../withBlockIds';
 import { useBlockSelection } from './useBlockSelection';
 
-/**
- * Creates an editor holding three paragraphs.
- *
- * @returns The editor.
- */
-function createEditor(): Editor {
-  // Blocks carry the IDs the app's selection identifies them by
-  return createTestEditor(
-    assignBlockIds([paragraphElement1, paragraphElement2, paragraphElement3]),
-  );
-}
+// Creates an editor holding three paragraphs, its blocks carrying the IDs
+// the app's selection identifies them by
+const createEditor = () =>
+  createTestEditorWithBlockIds([
+    paragraphElement1,
+    paragraphElement2,
+    paragraphElement3,
+  ]);
 
 /**
  * Gets the text of each of the editor's blocks, the blocks

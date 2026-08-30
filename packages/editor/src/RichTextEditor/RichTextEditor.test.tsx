@@ -4,6 +4,7 @@ import { SelectionItemSerializers } from '@minddrop/selection';
 import { act, fireEvent, render } from '@minddrop/test-utils';
 import { registerBlockSelectionSerializer } from '../registerBlockSelectionSerializer';
 import {
+  actFlush,
   cleanup,
   headingElement1,
   headingElement1PlainText,
@@ -19,13 +20,6 @@ import { RichTextEditor } from './RichTextEditor';
 // The accessible labels of the block gutter's buttons
 const INSERT_LABEL = 'Insert block';
 const SELECT_LABEL = 'Select block';
-
-// Slate batches operations and fires onChange in a microtask, so
-// editor interactions are wrapped in async act calls.
-const actFlush = (interaction: () => void) =>
-  act(async () => {
-    interaction();
-  });
 
 // Moves the pointer over an element and waits out the gutter's
 // activation delay, after which its controls are shown

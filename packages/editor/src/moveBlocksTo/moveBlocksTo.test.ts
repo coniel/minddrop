@@ -1,15 +1,16 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { Element, ListItemFrame, ParagraphElement } from '@minddrop/ast';
+import { ListItemFrame, ParagraphElement } from '@minddrop/ast';
 import {
   cleanup,
   createTestEditor,
+  getAncestry,
   paragraphElement1,
   paragraphElement2,
   paragraphElement3,
   paragraphElement4,
   titleElement1,
 } from '../test-utils';
-import { Editor, IdentifiedElement } from '../types';
+import { IdentifiedElement } from '../types';
 import { getBlockAlignedRange } from '../utils';
 import { moveBlocksTo } from './moveBlocksTo';
 
@@ -23,11 +24,6 @@ const item1: ListItemFrame = {
 const item2: ListItemFrame = { ...item1, id: 'item-2' };
 const item3: ListItemFrame = { ...item1, id: 'item-3' };
 const item4: ListItemFrame = { ...item1, id: 'item-4' };
-
-// Returns the containers a block sits inside as they stand in the editor
-function getAncestry(editor: Editor, index: number) {
-  return (editor.children[index] as Element).ancestry;
-}
 
 describe('moveBlocksTo', () => {
   afterEach(cleanup);

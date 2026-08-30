@@ -1,7 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import {
   BlockquoteFrame,
-  Element,
   HeadingElement,
   ListItemFrame,
   ParagraphElement,
@@ -9,12 +8,13 @@ import {
 import {
   cleanup,
   createTestEditor,
+  getAncestry,
   headingElement1,
   paragraphElement1,
   paragraphElement1PlainText,
   paragraphElement2,
 } from '../test-utils';
-import { Editor, IdentifiedElement } from '../types';
+import { IdentifiedElement } from '../types';
 import { turnBlocksInto } from './turnBlocksInto';
 
 const item1: ListItemFrame = {
@@ -26,11 +26,6 @@ const item1: ListItemFrame = {
 
 const item2: ListItemFrame = { ...item1, id: 'item-2' };
 const quote1: BlockquoteFrame = { id: 'quote-1', kind: 'blockquote' };
-
-// Returns the containers a block sits inside as they stand in the editor
-function getAncestry(editor: Editor, index: number) {
-  return (editor.children[index] as Element).ancestry;
-}
 
 describe('turnBlocksInto', () => {
   afterEach(cleanup);

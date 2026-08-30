@@ -1,37 +1,14 @@
 import { Editor as SlateEditor, Transforms } from 'slate';
 import { afterEach, describe, expect, it } from 'vitest';
-import { Ast, Element, WikilinkElement } from '@minddrop/ast';
-import { cleanup, createTestEditor } from '../test-utils';
-import { paragraphElement1 } from '../test-utils/editor.fixtures';
-import { Editor } from '../types';
+import { Ast, Element } from '@minddrop/ast';
+import { cleanup, createTestEditorWithText, getWikilinks } from '../test-utils';
 import { insertWikilink } from './insertWikilink';
-
-// Creates an editor holding a single block with the cursor at its end
-function createEditorWithText(text = ''): Editor {
-  const editor = createTestEditor([
-    { ...paragraphElement1, children: [{ text }] },
-  ]);
-
-  Transforms.select(editor, SlateEditor.end(editor, [0]));
-
-  return editor;
-}
-
-// Returns the wikilinks within the first block
-function getWikilinks(editor: Editor): WikilinkElement[] {
-  const block = editor.children[0] as Element;
-
-  return block.children.filter(
-    (child): child is WikilinkElement =>
-      'type' in child && child.type === 'wikilink',
-  );
-}
 
 describe('insertWikilink', () => {
   afterEach(cleanup);
 
   it('inserts a link showing its reference', () => {
-    const editor = createEditorWithText();
+    const editor = createTestEditorWithText();
 
     insertWikilink(editor, 'Book');
 
@@ -41,7 +18,7 @@ describe('insertWikilink', () => {
   });
 
   it('inserts a link showing the given label', () => {
-    const editor = createEditorWithText();
+    const editor = createTestEditorWithText();
 
     insertWikilink(editor, 'Books/Book', 'Book');
 
@@ -51,7 +28,7 @@ describe('insertWikilink', () => {
   });
 
   it('keeps the text it is inserted over as the label', () => {
-    const editor = createEditorWithText('this book');
+    const editor = createTestEditorWithText('this book');
 
     Transforms.select(editor, {
       anchor: SlateEditor.start(editor, [0]),
@@ -66,7 +43,7 @@ describe('insertWikilink', () => {
   });
 
   it('writes a link made from text back with that text as its label', () => {
-    const editor = createEditorWithText('this book');
+    const editor = createTestEditorWithText('this book');
 
     Transforms.select(editor, {
       anchor: SlateEditor.start(editor, [0]),
@@ -80,7 +57,7 @@ describe('insertWikilink', () => {
   });
 
   it('omits the label when the text is the reference itself', () => {
-    const editor = createEditorWithText('Book');
+    const editor = createTestEditorWithText('Book');
 
     Transforms.select(editor, {
       anchor: SlateEditor.start(editor, [0]),
@@ -92,7 +69,7 @@ describe('insertWikilink', () => {
   });
 
   it('leaves the cursor after the link', () => {
-    const editor = createEditorWithText();
+    const editor = createTestEditorWithText();
 
     insertWikilink(editor, 'Book');
     editor.insertText('!');
@@ -103,7 +80,7 @@ describe('insertWikilink', () => {
   });
 
   it('writes an unlabelled link back without a label', () => {
-    const editor = createEditorWithText();
+    const editor = createTestEditorWithText();
 
     insertWikilink(editor, 'Book');
 
@@ -111,7 +88,7 @@ describe('insertWikilink', () => {
   });
 
   it('writes a qualified link back with its label', () => {
-    const editor = createEditorWithText();
+    const editor = createTestEditorWithText();
 
     insertWikilink(editor, 'Books/Book', 'Book');
 

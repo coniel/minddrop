@@ -1,5 +1,14 @@
+export * from './actFlush';
 export * from './createTestEditor';
+export * from './createTestEditorWithBlockIds';
+export * from './createTestEditorWithSelectedText';
+export * from './createTestEditorWithText';
+export * from './getAncestry';
+export * from './getInlines';
+export * from './getLinks';
+export * from './getWikilinks';
 export * from './initialize-tests';
+export * from './keyDownEvent';
 export * from './editor.fixtures';
 export * from './table.fixtures';
 export * as EditorFixtures from './editor.fixtures';

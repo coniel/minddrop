@@ -4,27 +4,22 @@ import { ListItemFrame } from '@minddrop/ast';
 import { Selection } from '@minddrop/selection';
 import {
   cleanup,
-  createTestEditor,
+  createTestEditorWithBlockIds,
   paragraphElement1,
   paragraphElement2,
   paragraphElement3,
 } from '../test-utils';
-import { BLOCK_SELECTION_ITEM_TYPE, Editor } from '../types';
+import { BLOCK_SELECTION_ITEM_TYPE } from '../types';
 import { getBlockAlignedRange, getSelectedBlocks } from '../utils';
-import { assignBlockIds } from '../withBlockIds';
 import { selectBlocks } from './selectBlocks';
 
-/**
- * Creates an editor whose blocks carry block IDs, which the app's
- * selection identifies them by.
- *
- * @returns The editor.
- */
-function createEditor(): Editor {
-  return createTestEditor(
-    assignBlockIds([paragraphElement1, paragraphElement2, paragraphElement3]),
-  );
-}
+// Blocks carry the IDs the app's selection identifies them by
+const createEditor = () =>
+  createTestEditorWithBlockIds([
+    paragraphElement1,
+    paragraphElement2,
+    paragraphElement3,
+  ]);
 
 describe('selectBlocks', () => {
   afterEach(cleanup);
@@ -70,13 +65,11 @@ describe('selectBlocks', () => {
       ordered: false,
       marker: '-',
     };
-    const editor = createTestEditor(
-      assignBlockIds([
-        { ...paragraphElement1, ancestry: [item1] },
-        { ...paragraphElement2, ancestry: [item1] },
-        paragraphElement3,
-      ]),
-    );
+    const editor = createTestEditorWithBlockIds([
+      { ...paragraphElement1, ancestry: [item1] },
+      { ...paragraphElement2, ancestry: [item1] },
+      paragraphElement3,
+    ]);
 
     // Selecting the block which opens the item selects the item whole
     selectBlocks(editor, [0], [0]);

@@ -1,7 +1,7 @@
 import { Editor as SlateEditor, Transforms } from 'slate';
 import { describe, expect, it } from 'vitest';
 import { Element, ListItemFrame } from '@minddrop/ast';
-import { createTestEditor } from '../test-utils';
+import { createTestEditor, getAncestry } from '../test-utils';
 import {
   emptyParagraphElement,
   paragraphElement1,
@@ -28,11 +28,6 @@ function createEditorWithFrames(content: Element[], index = 0): Editor {
   Transforms.select(editor, SlateEditor.end(editor, [index]));
 
   return editor;
-}
-
-// Returns the containers a block sits inside as they stand in the editor
-function getAncestry(editor: Editor, index: number) {
-  return (editor.children[index] as Element).ancestry;
 }
 
 describe('withFrames', () => {

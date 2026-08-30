@@ -1,7 +1,7 @@
 import { Editor as SlateEditor, Transforms } from 'slate';
 import { describe, expect, it } from 'vitest';
-import { Ast, Element, LinkElement } from '@minddrop/ast';
-import { createTestEditor } from '../test-utils';
+import { Ast, Element } from '@minddrop/ast';
+import { createTestEditor, getLinks } from '../test-utils';
 import { paragraphElement1 } from '../test-utils/editor.fixtures';
 import { Editor } from '../types';
 import { withLinks } from './withLinks';
@@ -21,15 +21,6 @@ function createEditorWithLinks(text = ''): Editor {
 // Types text into the editor one character at a time, as a user does
 function type(editor: Editor, text: string): void {
   text.split('').forEach((character) => editor.insertText(character));
-}
-
-// Returns the links within the first block
-function getLinks(editor: Editor): LinkElement[] {
-  const block = editor.children[0] as Element;
-
-  return block.children.filter(
-    (child): child is LinkElement => 'type' in child && child.type === 'link',
-  );
 }
 
 // A clipboard holding the given plain text, and nothing in the formats the

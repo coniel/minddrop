@@ -7,12 +7,12 @@ import {
   Element as SlateElement,
 } from 'slate';
 import { Element } from '@minddrop/ast';
-import { BlockMenuProps } from './BlockMenu';
-import { Transforms } from './Transforms';
-import { insertBlockElement } from './insertBlockElement';
-import { insertInlineElement } from './insertInlineElement';
-import { getTableCellEntry } from './tables/getTableCellEntry';
-import { Editor } from './types';
+import { BlockMenuProps } from '../BlockMenu';
+import { Transforms } from '../Transforms';
+import { insertBlockElement } from '../insertBlockElement';
+import { insertInlineElement } from '../insertInlineElement';
+import { getTableCellEntry } from '../tables/getTableCellEntry';
+import { Editor } from '../types';
 import {
   BlockMenuItem,
   RangeAnchor,
@@ -21,7 +21,7 @@ import {
   getRangeAnchor,
   isBlockElement,
   isInlineElement,
-} from './utils';
+} from '../utils';
 
 const TRIGGER_CHARACTER = '/';
 

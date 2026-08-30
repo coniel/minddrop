@@ -4,26 +4,20 @@ import { Transforms } from '../../Transforms';
 import { selectBlocks } from '../../selectBlocks';
 import {
   cleanup,
-  createTestEditor,
+  createTestEditorWithBlockIds,
   paragraphElement1,
   paragraphElement2,
   paragraphElement3,
 } from '../../test-utils';
-import { Editor } from '../../types';
-import { assignBlockIds } from '../../withBlockIds';
 import { getBlockSelectionRange } from './getBlockSelectionRange';
 
-/**
- * Creates an editor whose blocks carry block IDs, which the app's
- * selection identifies them by.
- *
- * @returns The editor.
- */
-function createEditor(): Editor {
-  return createTestEditor(
-    assignBlockIds([paragraphElement1, paragraphElement2, paragraphElement3]),
-  );
-}
+// Blocks carry the IDs the app's selection identifies them by
+const createEditor = () =>
+  createTestEditorWithBlockIds([
+    paragraphElement1,
+    paragraphElement2,
+    paragraphElement3,
+  ]);
 
 describe('getBlockSelectionRange', () => {
   afterEach(cleanup);

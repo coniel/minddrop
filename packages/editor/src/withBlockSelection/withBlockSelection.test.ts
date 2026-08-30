@@ -5,7 +5,7 @@ import { Transforms } from '../Transforms';
 import { selectBlocks } from '../selectBlocks';
 import {
   cleanup,
-  createTestEditor,
+  createTestEditorWithBlockIds,
   paragraphElement1,
   paragraphElement2,
   paragraphElement3,
@@ -13,7 +13,6 @@ import {
 } from '../test-utils';
 import { Editor } from '../types';
 import { getBlockAlignedRange, getSelectedBlocks } from '../utils';
-import { assignBlockIds } from '../withBlockIds';
 import { withBlockSelection } from './withBlockSelection';
 
 /**
@@ -26,7 +25,7 @@ function createEditor(
   content: Element[] = [paragraphElement1, paragraphElement2],
 ): Editor {
   // Blocks carry the IDs the app's selection identifies them by
-  return withBlockSelection(createTestEditor(assignBlockIds(content)));
+  return withBlockSelection(createTestEditorWithBlockIds(content));
 }
 
 /**

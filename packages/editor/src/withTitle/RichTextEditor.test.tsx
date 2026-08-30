@@ -2,9 +2,10 @@ import React from 'react';
 import { Transforms } from 'slate';
 import { useSlateStatic } from 'slate-react';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { act, fireEvent, render, waitFor } from '@minddrop/test-utils';
+import { fireEvent, render, waitFor } from '@minddrop/test-utils';
 import { RichTextEditor } from '../RichTextEditor';
 import {
+  actFlush,
   addTestElementConfig,
   cleanup,
   paragraphElement1,
@@ -34,14 +35,6 @@ const editorProbeElement = {
   type: 'editor-probe',
   children: [{ text: '' }],
 };
-
-// Slate batches operations and fires onChange in a microtask,
-// so editor interactions are wrapped in async act calls to
-// flush the change handling between steps.
-const actFlush = (interaction: () => void) =>
-  act(async () => {
-    interaction();
-  });
 
 describe('RichTextEditor title', () => {
   beforeEach(() => {

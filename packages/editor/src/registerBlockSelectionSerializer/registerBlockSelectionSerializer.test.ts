@@ -3,28 +3,23 @@ import { Selection, SelectionItemSerializers } from '@minddrop/selection';
 import { selectBlocks } from '../selectBlocks';
 import {
   cleanup,
-  createTestEditor,
+  createTestEditorWithBlockIds,
   paragraphElement1,
   paragraphElement1PlainText,
   paragraphElement2,
   paragraphElement2PlainText,
   paragraphElement3,
 } from '../test-utils';
-import { BLOCK_SELECTION_ITEM_TYPE, Editor } from '../types';
-import { assignBlockIds } from '../withBlockIds';
+import { BLOCK_SELECTION_ITEM_TYPE } from '../types';
 import { registerBlockSelectionSerializer } from './registerBlockSelectionSerializer';
 
-/**
- * Creates an editor whose blocks carry block IDs, which the app's
- * selection identifies them by.
- *
- * @returns The editor.
- */
-function createEditor(): Editor {
-  return createTestEditor(
-    assignBlockIds([paragraphElement1, paragraphElement2, paragraphElement3]),
-  );
-}
+// Blocks carry the IDs the app's selection identifies them by
+const createEditor = () =>
+  createTestEditorWithBlockIds([
+    paragraphElement1,
+    paragraphElement2,
+    paragraphElement3,
+  ]);
 
 /**
  * Gets the registered block serializer.
