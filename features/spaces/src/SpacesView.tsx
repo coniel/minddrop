@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
+import { DesignsIcon } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
-import { DesignStudioIcon } from '@minddrop/feature-designs';
-import { Space, Spaces } from '@minddrop/spaces';
+import { Space, Spaces, SpacesIcon } from '@minddrop/spaces';
 import { ListPanelView, ListPanelViewItem } from '@minddrop/ui-components';
 import { IconButton } from '@minddrop/ui-primitives';
 import { Views } from '@minddrop/views';
@@ -61,7 +61,7 @@ export const SpacesView: React.FC = () => {
 
   return (
     <ListPanelView
-      icon="shapes"
+      icon={SpacesIcon}
       title="spaces.labels.spaces"
       items={items}
       selectedItem={selectedItem}
@@ -72,7 +72,7 @@ export const SpacesView: React.FC = () => {
         selectedSpace
           ? [
               {
-                icon: DesignStudioIcon,
+                icon: DesignsIcon,
                 label: 'spaces.view.actions.edit',
                 tooltip: { title: 'spaces.view.actions.edit' },
                 onClick: handleEditSpace,

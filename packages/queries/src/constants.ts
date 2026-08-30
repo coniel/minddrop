@@ -1,8 +1,19 @@
 import type { PropertyType } from '@minddrop/properties';
+import type { UiIconName } from '@minddrop/ui-icons';
 import type { QueryOperator } from './types';
 
 export const QueriesDirName = 'queries';
 export const QueryFileExtension = 'json';
+
+/**
+ * The icon used to represent queries in the UI.
+ */
+export const QueriesIcon: UiIconName = 'list-filter';
+
+/**
+ * The default icon assigned to newly created queries.
+ */
+export const DefaultQueryIcon = 'content-icon:list-filter:default';
 
 // Where a new query's unconfigured source node is seeded on the
 // canvas

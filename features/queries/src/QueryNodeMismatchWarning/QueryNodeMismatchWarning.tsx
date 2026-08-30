@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { Query } from '@minddrop/queries';
 import { ContentIcon, Group, Icon, Stack, Text } from '@minddrop/ui-primitives';
-import { SOURCE_FALLBACK_ICON } from '../constants';
 import { getQueryMismatchedSourceDatabases } from '../utils';
 import './QueryNodeMismatchWarning.css';
 
@@ -53,7 +52,7 @@ export const QueryNodeMismatchWarning: React.FC<
         {mismatchedDatabases.map((database) => (
           <Group key={database.id} gap={1}>
             <ContentIcon
-              icon={database.icon || SOURCE_FALLBACK_ICON}
+              icon={database.icon}
               className="queries-node-mismatch-warning-source-icon"
             />
             <Text size="xs" color="regular" stringText={database.name} />

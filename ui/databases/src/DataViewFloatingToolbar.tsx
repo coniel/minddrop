@@ -7,7 +7,6 @@ import {
   ViewFloatingToolbar,
   ViewFloatingToolbarPosition,
 } from '@minddrop/ui-primitives';
-import { DATABASE_FALLBACK_ICON } from './constants';
 import { useAddExistingEntryDraggable } from './useAddExistingEntryDraggable';
 import { useNewEntryDraggable } from './useNewEntryDraggable';
 import { useNewEntryPickerDraggable } from './useNewEntryPickerDraggable';
@@ -136,7 +135,7 @@ const DatabaseCard: React.FC<DatabaseCardProps> = ({
   return (
     <Tooltip stringTitle={tooltip} side="top">
       <FloatingToolbarCard
-        contentIcon={database.icon || DATABASE_FALLBACK_ICON}
+        contentIcon={database.icon}
         dragging={isDragging}
         {...draggableProps}
       />

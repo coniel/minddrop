@@ -4,6 +4,7 @@ import {
   DatabaseTemplate,
   DatabaseTemplates,
   Databases,
+  DefaultDatabaseIcon,
 } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
@@ -34,8 +35,6 @@ import {
 } from '../events';
 import './NewDatabaseDialog.css';
 
-const defaultIcon = 'content-icon:box:default';
-
 export interface NewDatabaseDialogProps {
   /**
    * Whether the dialog is open by default.
@@ -49,7 +48,7 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
 }) => {
   const databaseTemplates = DatabaseTemplates.useAll();
   const [dialogOpen, setDialogOpen] = useState(defaultOpen);
-  const [icon, setIcon] = useState(defaultIcon);
+  const [icon, setIcon] = useState(DefaultDatabaseIcon);
   // The blank template, used to create a database from scratch with only the
   // title, created, and last modified date properties.
   const blankTemplate = useMemo(
@@ -81,7 +80,7 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
     setTimeout(() => {
       reset();
       setSelectedTemplate(blankTemplate);
-      setIcon(defaultIcon);
+      setIcon(DefaultDatabaseIcon);
     }, 300);
   }, [reset, blankTemplate]);
 
@@ -131,7 +130,7 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
   }
 
   function handleClearIcon() {
-    setIcon(defaultIcon);
+    setIcon(DefaultDatabaseIcon);
   }
 
   function handleSelectIcon(selectedIcon: string) {

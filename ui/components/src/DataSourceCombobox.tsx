@@ -4,7 +4,6 @@ import { ViewDataSource, ViewDataSourceType } from '@minddrop/data-views';
 import { Databases } from '@minddrop/databases';
 import { useTranslation } from '@minddrop/i18n';
 import { Queries } from '@minddrop/queries';
-import { DATABASE_FALLBACK_ICON } from '@minddrop/ui-databases';
 import {
   Combobox,
   ComboboxOption,
@@ -170,7 +169,7 @@ export const DataSourceCombobox: FC<DataSourceComboboxProps> = ({
         options.push({
           value: database.id,
           label: database.name,
-          contentIcon: database.icon || DATABASE_FALLBACK_ICON,
+          contentIcon: database.icon,
         });
         selectionMap.set(database.id, { type: 'database', id: database.id });
       });

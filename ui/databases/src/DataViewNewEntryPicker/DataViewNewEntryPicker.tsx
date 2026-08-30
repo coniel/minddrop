@@ -13,7 +13,6 @@ import {
   SearchableMenuItem,
   Text,
 } from '@minddrop/ui-primitives';
-import { DATABASE_FALLBACK_ICON } from '../constants';
 import './DataViewNewEntryPicker.css';
 
 export interface DataViewNewEntryPickerProps {
@@ -153,7 +152,7 @@ export const DataViewNewEntryPicker: React.FC<DataViewNewEntryPickerProps> = ({
       <SearchableMenuItem
         key={database.id}
         stringLabel={database.entryName}
-        contentIcon={database.icon || DATABASE_FALLBACK_ICON}
+        contentIcon={database.icon}
         onSelect={() => onSelect(database.id)}
         secondaryOnSelect={() => handleSecondarySelect(database.id)}
       />,
@@ -181,7 +180,7 @@ export const DataViewNewEntryPicker: React.FC<DataViewNewEntryPickerProps> = ({
       <SearchableMenuItem
         key={`${database.id}:${template.id}`}
         stringLabel={`${database.entryName} · ${template.name}`}
-        contentIcon={database.icon || DATABASE_FALLBACK_ICON}
+        contentIcon={database.icon}
         onSelect={() => onSelect(database.id, template.id)}
         secondaryOnSelect={() =>
           handleSecondarySelect(database.id, template.id)

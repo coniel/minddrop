@@ -8,7 +8,6 @@ import {
   SearchableMenuItem,
   Text,
 } from '@minddrop/ui-primitives';
-import { DATABASE_FALLBACK_ICON } from '../constants';
 import './DataViewEntryPicker.css';
 
 // Maximum number of entries listed at once
@@ -151,13 +150,13 @@ export const DataViewEntryPicker: React.FC<DataViewEntryPickerProps> = ({
 
   // Render an entry option, icon'd by the database it belongs to
   function renderEntryItem(entry: DatabaseEntry) {
-    const entryDatabase = Databases.get(entry.database, false);
+    const entryDatabase = Databases.get(entry.database);
 
     return (
       <SearchableMenuItem
         key={entry.id}
         stringLabel={entry.title}
-        contentIcon={entryDatabase?.icon || DATABASE_FALLBACK_ICON}
+        contentIcon={entryDatabase.icon}
         onSelect={() => onSelect(entry.id)}
         secondaryOnSelect={() => handleSecondarySelect(entry.id)}
       />

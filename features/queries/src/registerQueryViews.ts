@@ -1,3 +1,4 @@
+import { QueriesIcon } from '@minddrop/queries';
 import { Views } from '@minddrop/views';
 import { QueriesView } from './QueriesView';
 import { QueriesViewName } from './events';
@@ -11,7 +12,7 @@ export function registerQueryViews(): void {
     type: QueriesViewName,
     component: QueriesView,
     title: 'queries.labels.queries',
-    icon: 'list-filter',
+    icon: QueriesIcon,
     breadcrumbLevel: 'root',
   });
 }

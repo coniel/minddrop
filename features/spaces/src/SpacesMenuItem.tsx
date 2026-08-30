@@ -1,5 +1,6 @@
 import { Events } from '@minddrop/events';
 import { Tabs } from '@minddrop/feature-views';
+import { SpacesIcon } from '@minddrop/spaces';
 import { MenuItem } from '@minddrop/ui-primitives';
 import { OpenSpacesViewEvent, SpacesViewName } from './events';
 
@@ -18,7 +19,7 @@ export const SpacesMenuItem: React.FC = () => {
     <MenuItem
       muted
       active={active}
-      icon="shapes"
+      icon={SpacesIcon}
       label="spaces.labels.spaces"
       onClick={handleClick}
     />

@@ -1,12 +1,14 @@
 import { useMemo, useState } from 'react';
-import { Queries, Query } from '@minddrop/queries';
+import {
+  DefaultQueryIcon,
+  Queries,
+  QueriesIcon,
+  Query,
+} from '@minddrop/queries';
 import { ListPanelView, ListPanelViewItem } from '@minddrop/ui-components';
 import { IconButton } from '@minddrop/ui-primitives';
 import { Views } from '@minddrop/views';
 import { QueryBuilderCanvas } from '../QueryBuilderCanvas';
-
-// Icon shown for every query, which has no icon of its own
-const QUERY_ICON = 'content-icon:list-filter:default';
 
 /**
  * Renders a two column view of the queries: a searchable list of
@@ -46,7 +48,7 @@ export const QueriesView: React.FC = () => {
 
   return (
     <ListPanelView
-      icon="list-filter"
+      icon={QueriesIcon}
       title="queries.labels.queries"
       items={items}
       selectedItem={selectedItem}
@@ -80,6 +82,6 @@ function toListItem(query: Query): ListPanelViewItem {
   return {
     id: query.id,
     label: query.name,
-    contentIcon: QUERY_ICON,
+    contentIcon: DefaultQueryIcon,
   };
 }

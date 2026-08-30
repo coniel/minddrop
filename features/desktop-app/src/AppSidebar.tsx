@@ -1,12 +1,10 @@
 import { useLayoutEffect } from 'react';
+import { DesignsIcon } from '@minddrop/designs';
 import { Events, SetNavToolbarWidthEvent } from '@minddrop/events';
 import { CollectionsMenuItem } from '@minddrop/feature-collections';
 import { DataViewsMenuItem } from '@minddrop/feature-data-views';
 import { DatabasesSidebarMenu } from '@minddrop/feature-databases';
-import {
-  DesignStudioIcon,
-  OpenDesignStudioEvent,
-} from '@minddrop/feature-designs';
+import { OpenDesignStudioEvent } from '@minddrop/feature-designs';
 import { QueriesMenuItem } from '@minddrop/feature-queries';
 import { OpenSearchDialogEvent } from '@minddrop/feature-search';
 import { OpenSettingsEvent, SettingsIcon } from '@minddrop/feature-settings';
@@ -62,7 +60,7 @@ export const AppSidebar: React.FC<SidebarProps> = ({ ...other }) => {
           onClick={handleOpenSearch}
         />
         <ToolbarIconButton
-          icon={DesignStudioIcon}
+          icon={DesignsIcon}
           label="designsStudio.open"
           tooltip={{ title: 'designsStudio.open' }}
           onClick={handleOpenDesignStudio}

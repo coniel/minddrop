@@ -1,13 +1,15 @@
 import { useMemo, useState } from 'react';
-import { Collection, Collections } from '@minddrop/collections';
+import {
+  Collection,
+  Collections,
+  CollectionsIcon,
+  DefaultCollectionIcon,
+} from '@minddrop/collections';
 import { ListPanelView, ListPanelViewItem } from '@minddrop/ui-components';
 import { IconButton } from '@minddrop/ui-primitives';
 import { Views } from '@minddrop/views';
 import { CollectionDetails } from './CollectionDetails';
 import './CollectionsView.css';
-
-// Icon shown for every collection until collections gain an icon field
-const COLLECTION_ICON = 'content-icon:library:default';
 
 /**
  * Renders a two column view of the persisted collections: a
@@ -53,7 +55,7 @@ export const CollectionsView: React.FC = () => {
   return (
     <ListPanelView
       className="collections-view"
-      icon="library"
+      icon={CollectionsIcon}
       title="collections.labels.collections"
       items={items}
       selectedItem={selectedItem}
@@ -87,6 +89,6 @@ function toListItem(collection: Collection): ListPanelViewItem {
   return {
     id: collection.id,
     label: collection.name,
-    contentIcon: COLLECTION_ICON,
+    contentIcon: DefaultCollectionIcon,
   };
 }

@@ -1,3 +1,4 @@
+import { DatabasesIcon } from '@minddrop/databases';
 import { SettingsViews } from '@minddrop/settings';
 import { Views } from '@minddrop/views';
 import { DatabaseDefaultsSettings } from './DatabaseDefaultsSettings';
@@ -27,7 +28,7 @@ export function registerDatabaseViews(): void {
     id: 'databases',
     label: 'databases.settings.label',
     description: 'databases.settings.description',
-    icon: 'database',
+    icon: DatabasesIcon,
     component: DatabaseDefaultsSettings,
   });
 }

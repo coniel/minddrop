@@ -1,3 +1,4 @@
+import { CollectionsIcon } from '@minddrop/collections';
 import { Views } from '@minddrop/views';
 import { CollectionsView } from './CollectionsView';
 import { CollectionsViewName } from './events';
@@ -11,7 +12,7 @@ export function registerCollectionViews(): void {
     type: CollectionsViewName,
     component: CollectionsView,
     title: 'collections.labels.collections',
-    icon: 'library',
+    icon: CollectionsIcon,
     breadcrumbLevel: 'root',
   });
 }

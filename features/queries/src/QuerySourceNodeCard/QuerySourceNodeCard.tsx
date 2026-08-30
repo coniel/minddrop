@@ -3,6 +3,7 @@ import { Databases } from '@minddrop/databases';
 import { useTranslation } from '@minddrop/i18n';
 import {
   Queries,
+  QueriesIcon,
   QueryNodeCounts,
   QuerySourceNode,
   QuerySourceReference,
@@ -20,7 +21,6 @@ import {
   ComboboxOptionGroup,
 } from '@minddrop/ui-primitives';
 import { QueryNodeShell } from '../QueryNodeShell';
-import { SOURCE_FALLBACK_ICON } from '../constants';
 
 export interface QuerySourceNodeCardProps {
   /**
@@ -96,7 +96,7 @@ export const QuerySourceNodeCard: React.FC<QuerySourceNodeCardProps> = ({
       return {
         label: database.name,
         value,
-        contentIcon: database.icon || SOURCE_FALLBACK_ICON,
+        contentIcon: database.icon,
       };
     });
 
@@ -120,7 +120,7 @@ export const QuerySourceNodeCard: React.FC<QuerySourceNodeCardProps> = ({
         return {
           label: sourceQuery.name,
           value,
-          icon: 'list-filter' as const,
+          icon: QueriesIcon,
         };
       });
 

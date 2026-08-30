@@ -22,6 +22,3 @@ export const QUERY_NODE_WIDTHS: Record<QueryNodeType, number> = {
 // aligned with the header's flow count labels (8px header
 // padding plus half the 16.8px xs text line)
 export const QUERY_NODE_PORT_Y = 16;
-
-// Icon shown for source databases without an icon
-export const SOURCE_FALLBACK_ICON = 'content-icon:shapes:inherit';

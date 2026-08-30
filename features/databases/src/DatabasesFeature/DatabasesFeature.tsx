@@ -10,7 +10,6 @@ import {
 } from '@minddrop/databases';
 import { Events, OpenReferenceEvent } from '@minddrop/events';
 import { Tabs } from '@minddrop/feature-views';
-import { DATABASE_FALLBACK_ICON } from '@minddrop/ui-databases';
 import {
   CloseViewEvent,
   DefaultViewAreaId,
@@ -93,7 +92,7 @@ export const DatabasesFeature: React.FC = () => {
     // Listen for open database view events, and open the database view
     // when one is received
     Events.addListener(OpenDatabaseViewEvent, EventListenerId, ({ data }) => {
-      const database = Databases.get(data.databaseId, false);
+      const database = Databases.get(data.databaseId);
 
       // Open a blank tab to receive the database view
       if (data.openMode === 'new-tab') {
@@ -109,8 +108,8 @@ export const DatabasesFeature: React.FC = () => {
         id: resolveDatabaseViewId(data.databaseId),
         props: data,
         split: data.openMode === 'split',
-        title: database?.name,
-        icon: database?.icon || DATABASE_FALLBACK_ICON,
+        title: database.name,
+        icon: database.icon,
       });
     });
 
@@ -137,7 +136,7 @@ export const DatabasesFeature: React.FC = () => {
         }
 
         const entry = DatabaseEntries.get(data.entryId);
-        const database = Databases.get(entry.database, false);
+        const database = Databases.get(entry.database);
 
         // Open a blank tab to receive the entry view
         if (openMode === 'new-tab') {
@@ -153,7 +152,7 @@ export const DatabasesFeature: React.FC = () => {
           props: { entryId: data.entryId, layoutContext: 'page' },
           split: openMode === 'split',
           title: entry.title,
-          icon: database?.icon || DATABASE_FALLBACK_ICON,
+          icon: database.icon,
         });
       },
     );
@@ -175,7 +174,7 @@ export const DatabasesFeature: React.FC = () => {
         newId: resolveDatabaseViewId(data.updated.id),
         props: { databaseId: data.updated.id },
         title: data.updated.name,
-        icon: data.updated.icon || DATABASE_FALLBACK_ICON,
+        icon: data.updated.icon,
       });
     });
 
@@ -185,7 +184,7 @@ export const DatabasesFeature: React.FC = () => {
       Events.dispatch(UpdateViewEvent, {
         id: resolveDatabaseViewId(data.updated.id),
         title: data.updated.name,
-        icon: data.updated.icon || DATABASE_FALLBACK_ICON,
+        icon: data.updated.icon,
       });
     });
 

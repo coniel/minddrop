@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 import { Collections } from '@minddrop/collections';
-import { DatabaseEntries } from '@minddrop/databases';
+import { DatabaseEntries, DatabasesIcon } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
 import { CollectionSelectionSubmenu } from '@minddrop/ui-components';
 import { DatabaseEntryRenderSource } from '@minddrop/ui-databases';
@@ -129,7 +129,7 @@ export const DatabaseEntryOptionsMenu: React.FC<
           from it */}
       {source?.type !== 'database' && (
         <ActionMenuItem
-          icon="database"
+          icon={DatabasesIcon}
           label="databases.entries.actions.goToDatabase"
           onSelect={handleGoToDatabase}
         />

@@ -2,10 +2,7 @@ import { useMemo } from 'react';
 import { Collections } from '@minddrop/collections';
 import { DataViewTypeSettingsMenuProps, DataViews } from '@minddrop/data-views';
 import { Databases } from '@minddrop/databases';
-import {
-  DATABASE_FALLBACK_ICON,
-  DatabaseLayoutSelectionMenu,
-} from '@minddrop/ui-databases';
+import { DatabaseLayoutSelectionMenu } from '@minddrop/ui-databases';
 import {
   DropdownMenuItem,
   DropdownMenuPortal,
@@ -188,7 +185,7 @@ const ToolbarCardMenu: React.FC<ToolbarCardMenuProps> = ({
     return (
       <DropdownMenuSwitchItem
         stringLabel={database.name}
-        contentIcon={database.icon || DATABASE_FALLBACK_ICON}
+        contentIcon={database.icon}
         checked={!cardOptions.hidden}
         onCheckedChange={handleVisibilityChange}
       />
@@ -199,7 +196,7 @@ const ToolbarCardMenu: React.FC<ToolbarCardMenuProps> = ({
     <DropdownSubmenu>
       <DropdownSubmenuTriggerItem
         stringLabel={database.name}
-        contentIcon={database.icon || DATABASE_FALLBACK_ICON}
+        contentIcon={database.icon}
       />
       <DropdownMenuPortal>
         <DropdownMenuPositioner side="right" align="start" sideOffset={4}>

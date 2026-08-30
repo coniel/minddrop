@@ -29,6 +29,7 @@
     "@minddrop/i18n": "workspace:*",
     "@minddrop/properties": "workspace:*",
     "@minddrop/stores": "workspace:*",
+    "@minddrop/ui-icons": "workspace:*",
     "@minddrop/utils": "workspace:*",
     "react": "^19.2.4"
   }

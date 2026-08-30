@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { DataView, DataViews } from '@minddrop/data-views';
+import { DataView, DataViews, DataViewsIcon } from '@minddrop/data-views';
 import {
   AddDataViewMenu,
   ListPanelView,
@@ -60,7 +60,7 @@ export const DataViewsView: React.FC = () => {
 
   return (
     <ListPanelView
-      icon="layers"
+      icon={DataViewsIcon}
       title="dataViews.labels.views"
       items={items}
       selectedItem={selectedItem}

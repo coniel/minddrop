@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Collection, Collections } from '@minddrop/collections';
+import {
+  Collection,
+  Collections,
+  DefaultCollectionIcon,
+} from '@minddrop/collections';
 import { DataView, DataViews } from '@minddrop/data-views';
 import {
   DatabaseEntries,
@@ -10,7 +14,6 @@ import { Events } from '@minddrop/events';
 import { OpenDataViewViewEvent } from '@minddrop/feature-data-views';
 import { useTranslation } from '@minddrop/i18n';
 import {
-  DATABASE_FALLBACK_ICON,
   DatabaseEntryContextProvider,
   SelectedEntriesToolbar,
 } from '@minddrop/ui-databases';
@@ -32,9 +35,6 @@ import {
 } from '@minddrop/ui-primitives';
 import { Views } from '@minddrop/views';
 import { CollectionOptionsMenu } from './CollectionOptionsMenu';
-
-// Icon shown for every collection until collections gain an icon field
-const COLLECTION_FALLBACK_ICON = 'content-icon:library:default';
 
 export interface CollectionDetailsProps {
   /**
@@ -164,14 +164,14 @@ export const CollectionDetails: React.FC<CollectionDetailsProps> = ({
             {/* The collection's fields */}
             <Group gap={2} className="collection-details-fields">
               {/* Selection is a no-op until collections have an icon field */}
-              <IconPicker closeOnSelect currentIcon={COLLECTION_FALLBACK_ICON}>
+              <IconPicker closeOnSelect currentIcon={DefaultCollectionIcon}>
                 <IconButton
                   size="lg"
                   variant="subtle"
                   color="neutral"
                   label="collections.details.icon"
                 >
-                  <ContentIcon icon={COLLECTION_FALLBACK_ICON} />
+                  <ContentIcon icon={DefaultCollectionIcon} />
                 </IconButton>
               </IconPicker>
               <TextInput
@@ -315,7 +315,7 @@ const CollectionItem: React.FC<CollectionItemProps> = ({
   }
 
   // The database the entry belongs to, providing the row icon
-  const database = Databases.get(entry.database, false);
+  const database = Databases.get(entry.database);
 
   return (
     <Group gap={2} className="collection-details-entry">
@@ -329,7 +329,7 @@ const CollectionItem: React.FC<CollectionItemProps> = ({
         size="compact"
         className="collection-details-entry-item"
         stringLabel={entry.title}
-        contentIcon={database?.icon || DATABASE_FALLBACK_ICON}
+        contentIcon={database.icon}
         onClick={handleOpenEntry}
       />
     </Group>

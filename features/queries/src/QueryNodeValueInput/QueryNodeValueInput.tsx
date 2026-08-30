@@ -19,7 +19,6 @@ import {
   Stack,
   TextInput,
 } from '@minddrop/ui-primitives';
-import { SOURCE_FALLBACK_ICON } from '../constants';
 
 export interface QueryNodeValueInputProps {
   /**
@@ -177,8 +176,7 @@ const QueryNodeEntryValueInput: React.FC<QueryNodeEntryValueInputProps> = ({
         .map((entry) => ({
           label: entry.title,
           value: entry.id,
-          contentIcon:
-            Databases.get(entry.database, false)?.icon || SOURCE_FALLBACK_ICON,
+          contentIcon: Databases.get(entry.database).icon,
         })),
     [entries],
   );

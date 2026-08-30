@@ -1,3 +1,4 @@
+import { SpacesIcon } from '@minddrop/spaces';
 import { Views } from '@minddrop/views';
 import { SpaceView } from './SpaceView';
 import { SpacesView } from './SpacesView';
@@ -19,7 +20,7 @@ export function registerSpaceViews(): void {
     type: SpacesViewName,
     component: SpacesView,
     title: 'spaces.labels.spaces',
-    icon: 'shapes',
+    icon: SpacesIcon,
     breadcrumbLevel: 'root',
   });
 }

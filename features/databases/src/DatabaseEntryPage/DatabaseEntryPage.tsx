@@ -1,6 +1,5 @@
 import { DatabaseEntries, Databases } from '@minddrop/databases';
 import { PanelView } from '@minddrop/ui-components';
-import { DATABASE_FALLBACK_ICON } from '@minddrop/ui-databases';
 import {
   DatabaseEntryRenderer,
   DatabaseEntryRendererProps,
@@ -20,7 +19,7 @@ export const DatabaseEntryPage: React.FC<DatabaseEntryRendererProps> = (
     <PanelView
       className="database-entry-page-panel"
       stringTitle={entry?.title || ''}
-      contentIcon={database?.icon || DATABASE_FALLBACK_ICON}
+      contentIcon={database?.icon}
     >
       <DatabaseEntryRenderer {...props} />
     </PanelView>

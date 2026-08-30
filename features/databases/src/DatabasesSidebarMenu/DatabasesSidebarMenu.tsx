@@ -88,7 +88,7 @@ const DatabaseMenuItem: React.FC<DatabaseMenuItemProps> = ({ database }) => {
     <MenuItem
       muted
       active={active}
-      contentIcon={database.icon || 'content-icon:shapes:inherit'}
+      contentIcon={database.icon}
       onClick={handleClick}
     >
       {database.name}

@@ -8,7 +8,11 @@ export * from './database-templates';
 export * from './utils/withImplicitMetadataProperties';
 export * from './utils/resolveEntryColor';
 export * from './utils/resolveDesignPropertyMap';
-export { MULTI_VALUE_PROPERTY_TYPES } from './constants';
+export {
+  DatabasesIcon,
+  DefaultDatabaseIcon,
+  MULTI_VALUE_PROPERTY_TYPES,
+} from './constants';
 export { DatabaseDefaultsStore } from './DatabaseDefaultsStore';
 export * as Databases from './Databases';
 export * as DatabaseAutomations from './DatabaseAutomations';

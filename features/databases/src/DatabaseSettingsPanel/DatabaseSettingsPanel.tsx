@@ -2,6 +2,7 @@ import { useState } from 'react';
 import {
   DatabaseEntrySerializers,
   Databases,
+  DefaultDatabaseIcon,
   PropertyFileStorage,
 } from '@minddrop/databases';
 import { Events, OpenConfirmationDialogEvent } from '@minddrop/events';
@@ -26,9 +27,6 @@ import {
   propertyFileStorageOptions,
 } from '../settingOptions';
 import './DatabaseSettingsPanel.css';
-
-// Icon the picker falls back to when the current icon is cleared
-const defaultIcon = 'content-icon:box:default';
 
 export interface DatabaseSettingsPanelProps {
   /**
@@ -77,7 +75,7 @@ export const DatabaseSettingsPanel: React.FC<DatabaseSettingsPanelProps> = ({
 
   // Reset the icon to the default when cleared
   function handleClearIcon() {
-    Databases.update(databaseId, { icon: defaultIcon });
+    Databases.update(databaseId, { icon: DefaultDatabaseIcon });
   }
 
   // Commit a name change by renaming the database

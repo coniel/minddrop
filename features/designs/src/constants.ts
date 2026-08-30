@@ -3,6 +3,13 @@ import { TranslationKey } from '@minddrop/i18n';
 import { PropertyType } from '@minddrop/properties';
 import { UiIconName } from '@minddrop/ui-icons';
 
+export const DesignStudioViewName = 'designs:view:studio';
+export const DesignStudioViewId = 'designs:studio';
+
+// The studio view's title while no design is open
+export const DesignStudioViewTitle =
+  'designsStudio.title' satisfies TranslationKey;
+
 /**
  * Drag-and-drop data key carrying design element templates
  * dragged from the elements palette.
@@ -117,16 +124,3 @@ export const propertyTypeLabelMap: Record<PropertyType, TranslationKey> = {
   collection: 'properties.collection.name',
   color: 'properties.color.name',
 };
-
-/**
- * The icon representing the design studio, shared by every
- * surface opening it.
- */
-export const DesignStudioIcon: UiIconName = 'pencil-ruler';
-
-export const DesignStudioViewName = 'designs:view:studio';
-export const DesignStudioViewId = 'designs:studio';
-
-// The studio view's title while no design is open
-export const DesignStudioViewTitle =
-  'designsStudio.title' satisfies TranslationKey;

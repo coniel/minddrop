@@ -8,7 +8,6 @@ import {
   Databases,
 } from '@minddrop/databases';
 import { useTranslation } from '@minddrop/i18n';
-import { DATABASE_FALLBACK_ICON } from '@minddrop/ui-databases';
 import {
   DropdownMenu,
   DropdownMenuGroup,
@@ -159,7 +158,7 @@ export const AddCollectionEntryButton: FC<AddCollectionEntryButtonProps> = ({
   // templates nest their options in a submenu, with the blank entry
   // option first.
   function renderCreateItem(createDatabase: Database) {
-    const contentIcon = createDatabase.icon || DATABASE_FALLBACK_ICON;
+    const contentIcon = createDatabase.icon;
     const templates = createDatabase.entryTemplates ?? [];
 
     // Databases without templates create an entry directly
@@ -206,13 +205,13 @@ export const AddCollectionEntryButton: FC<AddCollectionEntryButtonProps> = ({
   // Render an existing entry's add option, icon'd by the database
   // it belongs to
   function renderEntryItem(entry: DatabaseEntry) {
-    const entryDatabase = Databases.get(entry.database, false);
+    const entryDatabase = Databases.get(entry.database);
 
     return (
       <DropdownSearchableMenuItem
         key={entry.id}
         stringLabel={entry.title}
-        contentIcon={entryDatabase?.icon || DATABASE_FALLBACK_ICON}
+        contentIcon={entryDatabase.icon}
         onSelect={() => handleAdd(entry)}
       />
     );
@@ -225,7 +224,7 @@ export const AddCollectionEntryButton: FC<AddCollectionEntryButtonProps> = ({
       <DropdownSearchableMenuItem
         key={createDatabase.id}
         stringLabel={createDatabase.entryName}
-        contentIcon={createDatabase.icon || DATABASE_FALLBACK_ICON}
+        contentIcon={createDatabase.icon}
         onSelect={() => handleCreate(createDatabase.id)}
       />,
       ...(createDatabase.entryTemplates ?? []).map((template) =>
@@ -244,7 +243,7 @@ export const AddCollectionEntryButton: FC<AddCollectionEntryButtonProps> = ({
       <DropdownSearchableMenuItem
         key={`${createDatabase.id}:${template.id}`}
         stringLabel={`${createDatabase.entryName} · ${template.name}`}
-        contentIcon={createDatabase.icon || DATABASE_FALLBACK_ICON}
+        contentIcon={createDatabase.icon}
         onSelect={() => handleCreate(createDatabase.id, template.id)}
       />
     );

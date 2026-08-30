@@ -1,4 +1,4 @@
-import { DesignStudioIcon } from '@minddrop/feature-designs';
+import { DesignsIcon } from '@minddrop/designs';
 import { Spaces } from '@minddrop/spaces';
 import { PanelView } from '@minddrop/ui-components';
 import { Text } from '@minddrop/ui-primitives';
@@ -48,7 +48,7 @@ export const SpaceView: React.FC<SpaceViewProps> = ({ spaceId }) => {
         contentIcon={space.icon}
         actions={[
           {
-            icon: DesignStudioIcon,
+            icon: DesignsIcon,
             label: 'spaces.view.actions.edit',
             tooltip: { title: 'spaces.view.actions.edit' },
             onClick: handleEdit,
