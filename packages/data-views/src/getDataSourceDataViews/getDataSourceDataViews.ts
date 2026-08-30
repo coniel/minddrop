@@ -1,5 +1,5 @@
-import { DataViewsStore } from './DataViewsStore';
-import { DataView, ViewDataSource } from './types';
+import { DataViewsStore } from '../DataViewsStore';
+import { DataView, ViewDataSource } from '../types';
 
 /**
  * Retrieves all data views for a specific data source.

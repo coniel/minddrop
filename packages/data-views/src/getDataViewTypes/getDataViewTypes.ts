@@ -1,5 +1,5 @@
-import { DataViewTypesStore } from './DataViewTypesStore';
-import { DataViewType } from './types';
+import { DataViewTypesStore } from '../DataViewTypesStore';
+import { DataViewType } from '../types';
 
 /**
  * Returns all registered data view types.
