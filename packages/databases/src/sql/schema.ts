@@ -1,7 +1,7 @@
 // Increment this when the schema or indexing logic changes.
 // On startup, if the stored schema version does not match,
 // the SQL database is dropped and rebuilt from scratch.
-export const SCHEMA_VERSION = 9;
+export const SCHEMA_VERSION = 10;
 
 // SQL schema for creating tables
 export const SCHEMA_SQL = `
@@ -51,19 +51,6 @@ export const SCHEMA_SQL = `
   );
 
   CREATE INDEX IF NOT EXISTS idx_prop_values ON entry_property_values(entry_id, property_name);
-
-  CREATE TABLE IF NOT EXISTS tags (
-    id   TEXT PRIMARY KEY,
-    name TEXT NOT NULL UNIQUE
-  );
-
-  CREATE TABLE IF NOT EXISTS entry_tags (
-    entry_id TEXT NOT NULL,
-    tag_id   TEXT NOT NULL,
-    PRIMARY KEY (entry_id, tag_id),
-    FOREIGN KEY (entry_id) REFERENCES entries(id) ON DELETE CASCADE,
-    FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
-  );
 
   CREATE TABLE IF NOT EXISTS meta (
     key   TEXT PRIMARY KEY,

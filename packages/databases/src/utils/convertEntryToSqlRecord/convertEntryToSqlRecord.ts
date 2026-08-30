@@ -51,8 +51,9 @@ function normalizePropertyValue(
     return null;
   }
 
-  // Select and collection properties are stored as string arrays
-  if (type === 'collection' || type === 'select') {
+  // Select, tags and collection properties are stored as string
+  // arrays
+  if (type === 'collection' || type === 'select' || type === 'tags') {
     if (Array.isArray(value)) {
       return value.map(String);
     }

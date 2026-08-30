@@ -8,6 +8,7 @@ import { DesignPropertyRenamedEvent } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
 import { FileSystemChangedEvent } from '@minddrop/file-system';
 import { ItemAddressesChangedEvent } from '@minddrop/item-references';
+import { TagDeletedEvent, TagRenamedEvent } from '@minddrop/tags';
 import {
   onAddProperty,
   onClearEntries,
@@ -25,6 +26,8 @@ import {
   onRenameDesignProperty,
   onRenameEntry,
   onRenameProperty,
+  onTagDeleted,
+  onTagRenamed,
   onUpdateCollection,
   onUpdateDatabase,
   onUpdateEntry,
@@ -115,6 +118,10 @@ export function initializeDatabaseEventHandlers() {
   Events.on(ItemAddressesChangedEvent, 'databases', ({ data }) =>
     onItemAddressesChanged(data),
   );
+
+  Events.on(TagRenamedEvent, 'databases', ({ data }) => onTagRenamed(data));
+
+  Events.on(TagDeletedEvent, 'databases', ({ data }) => onTagDeleted(data));
 
   Events.on(DataViewUpdatedEvent, 'databases', ({ data }) => {
     onUpdateVirtualView(data);

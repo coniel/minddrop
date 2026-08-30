@@ -1459,6 +1459,9 @@ importers:
       '@minddrop/stores':
         specifier: workspace:*
         version: link:../stores
+      '@minddrop/tags':
+        specifier: workspace:*
+        version: link:../tags
       '@minddrop/ui-icons':
         specifier: workspace:*
         version: link:../../ui/icons

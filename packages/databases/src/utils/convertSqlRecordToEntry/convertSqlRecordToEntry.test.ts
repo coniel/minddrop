@@ -31,6 +31,18 @@ describe('convertSqlRecordToEntry', () => {
     );
   });
 
+  it('converts tags properties', () => {
+    const record: SqlEntryRecord = {
+      ...objectEntry1SqlRecord,
+      properties: [{ name: 'Tags', type: 'tags', value: ['Urgent', 'Home'] }],
+    };
+
+    const entry = convertSqlRecordToEntry(record);
+
+    // The tags value should restore to a string array
+    expect(entry.properties.Tags).toEqual(['Urgent', 'Home']);
+  });
+
   it('converts number properties', () => {
     const record: SqlEntryRecord = {
       ...objectEntry1SqlRecord,

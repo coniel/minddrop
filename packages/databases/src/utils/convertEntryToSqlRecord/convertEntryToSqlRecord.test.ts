@@ -51,4 +51,28 @@ describe('convertEntryToSqlRecord', () => {
       ),
     ).toEqual(rootStorageEntrySqlRecord_empty_value);
   });
+
+  it('converts tags properties to string arrays', () => {
+    // A database with a tags property and an entry referencing tags
+    const tagsDatabase = {
+      ...objectDatabase,
+      properties: [
+        ...objectDatabase.properties,
+        { type: 'tags' as const, name: 'Tags' },
+      ],
+    };
+    const taggedEntry = {
+      ...objectEntry1,
+      properties: { ...objectEntry1.properties, Tags: ['Urgent', 'Home'] },
+    };
+
+    const record = convertEntryToSqlRecord(taggedEntry, tagsDatabase);
+
+    // The tags value should convert to a string array record
+    expect(record.properties).toContainEqual({
+      name: 'Tags',
+      type: 'tags',
+      value: ['Urgent', 'Home'],
+    });
+  });
 });

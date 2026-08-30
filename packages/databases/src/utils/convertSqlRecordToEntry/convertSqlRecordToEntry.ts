@@ -52,7 +52,7 @@ function restorePropertyValue(
   }
 
   // Multi-value types are already string arrays
-  if (type === 'select' || type === 'collection') {
+  if (type === 'select' || type === 'tags' || type === 'collection') {
     return value;
   }
 

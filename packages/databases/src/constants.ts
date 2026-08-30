@@ -37,6 +37,7 @@ export const TEXT_PROPERTY_TYPES = new Set<PropertyType>([
 export const MULTI_VALUE_PROPERTY_TYPES = new Set<PropertyType>([
   'collection',
   'select',
+  'tags',
 ]);
 
 // Property types that map to value_integer (epoch ms or 0/1)

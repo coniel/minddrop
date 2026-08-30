@@ -18,4 +18,6 @@ export * from './entry-updated';
 export * from './property-added';
 export * from './property-removed';
 export * from './property-renamed';
+export * from './tag-deleted';
+export * from './tag-renamed';
 export * from './virtual-view-updated';

@@ -31,6 +31,7 @@
     "@minddrop/item-references": "workspace:*",
     "@minddrop/sql": "workspace:*",
     "@minddrop/stores": "workspace:*",
+    "@minddrop/tags": "workspace:*",
     "@minddrop/ui-icons": "workspace:*",
     "@minddrop/ui-theme": "workspace:*",
     "@minddrop/utils": "workspace:*",
