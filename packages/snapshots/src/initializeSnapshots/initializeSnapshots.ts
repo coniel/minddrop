@@ -5,11 +5,13 @@ import {
   DatabaseRenamedEvent,
 } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
+import { TagRenamedEvent } from '@minddrop/tags';
 import {
   onDatabaseEntryDeleted,
   onDatabaseEntryRenamed,
   onDatabasePropertyRenamed,
   onDatabaseRenamed,
+  onTagRenamed,
 } from '../event-handlers';
 
 /**
@@ -38,4 +40,7 @@ export function initializeSnapshots(): void {
   Events.on(DatabaseEntryDeletedEvent, 'snapshots', ({ data }) =>
     onDatabaseEntryDeleted(data),
   );
+
+  // Record tag renames in the rename ledger
+  Events.on(TagRenamedEvent, 'snapshots', ({ data }) => onTagRenamed(data));
 }

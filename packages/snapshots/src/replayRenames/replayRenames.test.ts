@@ -1,12 +1,44 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { MockFs, RenameEventFixtures, cleanup, setup } from '../test-utils';
+import { RenameEvent } from '../types';
 import { replayRenames } from './replayRenames';
 
 const { entryRenameEvent, databaseRenameEvent, getRenameEventFiles } =
   RenameEventFixtures;
 
+const renamesDirPath = 'path/to/workspaces/Workspace 1/.minddrop/renames';
+
 // A reference time from before any of the fixture events
 const beforeAllEvents = new Date('2025-12-01T00:00:00.000Z');
+
+// A chain of tag rename events, exercising the exact-match path
+// for single-segment tag addresses
+const tagRenameEvent: RenameEvent = {
+  timestamp: new Date('2026-01-04T09:00:00.000Z'),
+  from: 'Work',
+  to: 'Projects',
+  kind: 'tag',
+  entityId: 'tag_1',
+};
+const tagChainContinuationEvent: RenameEvent = {
+  timestamp: new Date('2026-01-05T09:00:00.000Z'),
+  from: 'Projects',
+  to: 'Focus',
+  kind: 'tag',
+  entityId: 'tag_1',
+};
+
+// The tag events' ledger files
+const tagRenameEventFiles = [
+  {
+    path: `${renamesDirPath}/20260104T090000000Z-projects.json`,
+    textContent: JSON.stringify(tagRenameEvent),
+  },
+  {
+    path: `${renamesDirPath}/20260105T090000000Z-focus.json`,
+    textContent: JSON.stringify(tagChainContinuationEvent),
+  },
+];
 
 describe('replayRenames', () => {
   beforeEach(() => {
@@ -90,5 +122,29 @@ describe('replayRenames', () => {
     expect(
       await replayRenames('Books', 'database', databaseRenameEvent.timestamp),
     ).toBe('Books');
+  });
+
+  it('resolves tag addresses through tag rename chains', async () => {
+    // Add the tag rename events to the ledger
+    MockFs.addFiles(tagRenameEventFiles);
+
+    // The address should follow the chain through both renames
+    expect(await replayRenames('Work', 'tag', beforeAllEvents)).toBe('Focus');
+  });
+
+  it('does not rewrite tag addresses on database renames', async () => {
+    // A tag sharing the renamed database's name is unaffected by
+    // the database rename
+    expect(await replayRenames('Books', 'tag', beforeAllEvents)).toBe('Books');
+  });
+
+  it('does not match same-named addresses of other kinds on tag renames', async () => {
+    // Add the tag rename events to the ledger
+    MockFs.addFiles(tagRenameEventFiles);
+
+    // A database sharing the renamed tag's name is unaffected
+    expect(await replayRenames('Work', 'database', beforeAllEvents)).toBe(
+      'Work',
+    );
   });
 });

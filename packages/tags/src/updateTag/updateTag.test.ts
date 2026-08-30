@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { InvalidParameterError } from '@minddrop/utils';
 import { TagsStore } from '../TagsStore';
-import { TagUpdatedEvent } from '../events';
+import { TagRenamedEvent, TagUpdatedEvent } from '../events';
 import { MockFs, cleanup, mockDate, setup, tag_1, tag_2 } from '../test-utils';
 import { Tag } from '../types';
 import { resolveTagFilePath } from '../utils';
@@ -76,4 +76,25 @@ describe('updateTag', () => {
 
       updateTag(tag_1.id, update);
     }));
+
+  it('dispatches the tag renamed event when the name changed', async () =>
+    new Promise<void>((done) => {
+      Events.addListener(TagRenamedEvent, 'test-tag-renamed', (payload) => {
+        expect(payload.data.original).toEqual(tag_1);
+        expect(payload.data.updated).toEqual(updatedTag);
+        done();
+      });
+
+      updateTag(tag_1.id, update);
+    }));
+
+  it('does not dispatch the tag renamed event when the name is unchanged', async () => {
+    // Listen for the tag renamed event, failing the test if it fires
+    Events.addListener(TagRenamedEvent, 'test-tag-not-renamed', () => {
+      throw new Error('TagRenamedEvent should not dispatch');
+    });
+
+    // Update only the color
+    await updateTag(tag_1.id, { color: 'yellow' });
+  });
 });

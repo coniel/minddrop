@@ -1,6 +1,6 @@
 import { Events } from '@minddrop/events';
 import { TagsStore } from '../TagsStore';
-import { TagUpdatedEvent } from '../events';
+import { TagRenamedEvent, TagUpdatedEvent } from '../events';
 import { getTag } from '../getTag';
 import { Tag, UpdateTagData } from '../types';
 import { validateTagName } from '../utils';
@@ -17,6 +17,7 @@ import { writeTag } from '../writeTag';
  * @throws InvalidParameterError if the new name is empty or already in use.
  *
  * @dispatches tags:tag:updated
+ * @dispatches tags:tag:renamed
  */
 export async function updateTag(
   tagId: string,
@@ -53,6 +54,14 @@ export async function updateTag(
     original: tag,
     updated: updatedTag,
   });
+
+  // Dispatch the tag renamed event when the name changed
+  if (tag.name !== updatedTag.name) {
+    await Events.dispatch(TagRenamedEvent, {
+      original: tag,
+      updated: updatedTag,
+    });
+  }
 
   return updatedTag;
 }

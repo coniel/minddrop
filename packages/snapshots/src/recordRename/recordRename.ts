@@ -34,7 +34,8 @@ export interface RecordRenameOptions {
  *
  * Events record entity addresses rather than file paths: the
  * database name for databases, `<database name>/<entry title>` for
- * entries and `<database name>/<property name>` for properties.
+ * entries, `<database name>/<property name>` for properties and
+ * the bare tag name for tags.
  * Addresses are independent of the on-disk layout, so storage mode
  * and file format changes do not affect them.
  *

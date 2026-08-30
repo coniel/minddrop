@@ -1,4 +1,4 @@
-export type RenameEventKind = 'entry' | 'database' | 'property';
+export type RenameEventKind = 'entry' | 'database' | 'property' | 'tag';
 
 export interface RenameEvent {
   /**

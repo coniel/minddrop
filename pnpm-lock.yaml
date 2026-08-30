@@ -2001,6 +2001,9 @@ importers:
       '@minddrop/file-system':
         specifier: workspace:*
         version: link:../file-system
+      '@minddrop/tags':
+        specifier: workspace:*
+        version: link:../tags
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../utils

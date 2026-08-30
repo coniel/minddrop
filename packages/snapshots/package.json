@@ -24,6 +24,7 @@
     "@minddrop/databases": "workspace:*",
     "@minddrop/events": "workspace:*",
     "@minddrop/file-system": "workspace:*",
+    "@minddrop/tags": "workspace:*",
     "@minddrop/utils": "workspace:*"
   }
 }
