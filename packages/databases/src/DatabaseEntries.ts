@@ -33,6 +33,7 @@ export {
   DatabaseEntriesStore as Store,
   useDatabaseEntry as use,
   useDatabaseEntries as useAll,
+  useDatabaseEntriesByIds as useByIds,
   useDatabaseEntryIds as useIds,
 } from './DatabaseEntriesStore';
 export { getPropertyFilePath as propertyFilePath } from './utils';
@@ -45,6 +46,8 @@ export { createEntryVirtualViews as createVirtualViews } from './utils';
 export { entryDisplayPropertyValues as displayPropertyValues } from './utils';
 export { getAllDatabaseEntries as getAll } from './getAllDatabaseEntries';
 export { getNewestDatabaseEntries as getNewest } from './utils';
+export { sortDatabaseEntries as sort } from './utils';
+export { sortDatabaseEntryIds as sortIds } from './utils';
 export { getRecentDatabaseEntries as getRecent } from './utils';
 export { searchDatabaseEntriesByTitle as searchByTitle } from './utils';
 export { resolveEntryLayoutOverrides as resolveLayoutOverrides } from './resolveEntryLayoutOverrides';

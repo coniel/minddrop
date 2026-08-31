@@ -33,6 +33,16 @@ export const useDatabaseEntries = (databaseId?: string): DatabaseEntry[] =>
   );
 
 /**
+ * Retrieves the entries matching the given IDs, omitting IDs
+ * which do not match an entry.
+ *
+ * @param entryIds - The IDs of the entries to retrieve.
+ * @returns An array of the matching entries.
+ */
+export const useDatabaseEntriesByIds = (entryIds: string[]): DatabaseEntry[] =>
+  DatabaseEntriesStore.useItemsArray(entryIds);
+
+/**
  * Retrieves the IDs of all entries for a given database.
  *
  * @returns An array of all entry IDs.

@@ -47,6 +47,8 @@ export * from './setTimestampProperties';
 export * from './getTimestampProperty';
 export * from './mergeEntryMetadata';
 export * from './getNewestDatabaseEntries';
+export * from './sortDatabaseEntries';
+export * from './sortDatabaseEntryIds';
 export * from './getRecentDatabaseEntries';
 export * from './searchDatabaseEntriesByTitle';
 export * from './escapeLikePattern';
