@@ -11,6 +11,7 @@ export const GalleryViewType: DataViewType<GalleryViewOptions> = {
   description: 'dataViews.gallery.description',
   icon: 'layout-grid',
   supportedDataSources: ['database', 'query', 'collection'],
+  sortable: true,
   defaultOptions: defaultGalleryViewOptions,
   component: GalleryViewComponent,
   skeletonComponent: GalleryViewSkeleton,

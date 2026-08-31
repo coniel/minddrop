@@ -11,6 +11,7 @@ export const NotebookViewType: DataViewType<NotebookViewOptions> = {
   description: 'dataViews.notebook.description',
   icon: 'notebook-text',
   supportedDataSources: ['database', 'query', 'collection'],
+  sortable: true,
   defaultOptions: defaultNotebookViewOptions,
   component: NotebookViewComponent,
   settingsMenu: NotebookViewOptionsMenu,
