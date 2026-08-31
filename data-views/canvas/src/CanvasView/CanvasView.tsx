@@ -116,6 +116,9 @@ const CanvasViewContent: React.FC<
   // toolbar in place
   const [optionsMenuOpen, setOptionsMenuOpen] = useState(false);
 
+  // The databases the canvas's entries belong to
+  const entryDatabases = Databases.useFromEntries(entries);
+
   // Resolve nodes from view data, falling back to an empty canvas
   const nodes = useMemo(() => view.data?.nodes || [], [view.data]);
 
@@ -154,13 +157,13 @@ const CanvasViewContent: React.FC<
   const toolbarDatabaseCards = useMemo(() => {
     const toolbarCards = view.options?.toolbarCards;
 
-    return Databases.getFromEntries(entries)
+    return entryDatabases
       .filter((database) => !toolbarCards?.[database.id]?.hidden)
       .map((database) => ({
         databaseId: database.id,
         templateId: toolbarCards?.[database.id]?.templateId,
       }));
-  }, [entries, view.options?.toolbarCards]);
+  }, [entryDatabases, view.options?.toolbarCards]);
 
   // Canvas actions for reading the selection and converting
   // points to canvas coordinates
