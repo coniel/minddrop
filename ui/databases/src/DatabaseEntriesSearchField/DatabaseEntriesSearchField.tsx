@@ -7,7 +7,7 @@ import {
   TextInputVariant,
   useTransientState,
 } from '@minddrop/ui-primitives';
-import { fuzzySearch } from '@minddrop/utils';
+import { fuzzySearchBy } from '@minddrop/utils';
 
 export interface DatabaseEntriesSearchFieldProps {
   /**
@@ -64,8 +64,10 @@ export const DatabaseEntriesSearchField: React.FC<
     const map: Record<string, string> = {};
 
     for (const entryId of entryIds) {
-      const entry = DatabaseEntries.get(entryId);
-      map[entryId] = entry.title;
+      const entry = DatabaseEntries.get(entryId, false);
+
+      // Entries which are not loaded have no title to match on
+      map[entryId] = entry?.title ?? '';
     }
 
     return map;
@@ -77,21 +79,9 @@ export const DatabaseEntriesSearchField: React.FC<
       return entryIds;
     }
 
-    // Build a parallel array of titles
-    const titles = entryIds.map((id) => entryTitles[id] || '');
-
-    // Run fuzzy search on the titles
-    const matchedTitles = fuzzySearch(titles, searchQuery);
-
-    // Map matched titles back to entry IDs by finding the index
-    // of each matched title in the original titles array
-    return matchedTitles
-      .map((title) => {
-        const index = titles.indexOf(title);
-
-        return index !== -1 ? entryIds[index] : null;
-      })
-      .filter((id): id is string => id !== null);
+    // Matching on the entry IDs rather than on their titles keeps
+    // entries which share a title distinct
+    return fuzzySearchBy(entryIds, searchQuery, (id) => entryTitles[id] ?? '');
   }, [entryIds, entryTitles, searchQuery]);
 
   // Notify the parent whenever the filtered results change
