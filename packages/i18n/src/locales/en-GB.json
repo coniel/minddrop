@@ -1641,7 +1641,8 @@
       "empty": "No designs yet",
       "noLayouts": "No layouts",
       "layoutCount_one": "{{count}} layout",
-      "layoutCount_other": "{{count}} layouts"
+      "layoutCount_other": "{{count}} layouts",
+      "cardDetails": "{{layoutCount}} \u00b7 {{lastModified}}"
     },
     "elements": {
       "root": "Root",

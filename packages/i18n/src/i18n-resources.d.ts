@@ -1805,6 +1805,7 @@ declare module 'i18next' {
             noLayouts: string;
             layoutCount_one: string;
             layoutCount_other: string;
+            cardDetails: string;
           };
           elements: {
             root: string;

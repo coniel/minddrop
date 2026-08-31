@@ -15,6 +15,7 @@ import {
   Stack,
   Text,
 } from '@minddrop/ui-primitives';
+import { formatDate } from '@minddrop/utils';
 import { DesignPreviewProvider, DesignRootElement } from '../DesignElements';
 import { DesignPropertySchemasProvider } from '../DesignPropertiesProvider';
 import { MediaDirProvider } from '../MediaDirContext';
@@ -141,8 +142,10 @@ const DesignCard: React.FC<DesignCardProps> = ({ design, onClick }) => {
           {design.name}
         </Text>
         <Text size="xs" color="muted">
-          {t(layoutCountKey, { count: design.layouts.length })} ·{' '}
-          {design.lastModified.toLocaleDateString()}
+          {t('design-studio.dashboard.cardDetails', {
+            layoutCount: t(layoutCountKey, { count: design.layouts.length }),
+            lastModified: formatDate(design.lastModified),
+          })}
         </Text>
       </Stack>
     </button>
