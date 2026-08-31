@@ -1,5 +1,4 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { Paths } from '@minddrop/utils';
 import { cleanup, objectDatabase, setup } from '../../test-utils';
 import { matchDatabaseReference } from './matchDatabaseReference';
 
@@ -8,12 +7,18 @@ describe('matchDatabaseReference', () => {
 
   afterEach(cleanup);
 
-  it('matches an existing database directory name to its database ID', () => {
-    expect(
-      matchDatabaseReference(
-        objectDatabase.path.replace(`${Paths.workspace}/`, ''),
-      ),
-    ).toEqual({ type: 'database', id: objectDatabase.id });
+  it('matches an existing database name to its database ID', () => {
+    expect(matchDatabaseReference(objectDatabase.name)).toEqual({
+      type: 'database',
+      id: objectDatabase.id,
+    });
+  });
+
+  it('matches case-insensitively', () => {
+    expect(matchDatabaseReference(objectDatabase.name.toUpperCase())).toEqual({
+      type: 'database',
+      id: objectDatabase.id,
+    });
   });
 
   it('does not match names that do not resolve to a database', () => {
@@ -21,6 +26,6 @@ describe('matchDatabaseReference', () => {
   });
 
   it('does not match addresses containing a path separator', () => {
-    expect(matchDatabaseReference('Unknown/Entry.md')).toBeNull();
+    expect(matchDatabaseReference('Unknown/Entry')).toBeNull();
   });
 });

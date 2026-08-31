@@ -6,7 +6,7 @@ export * from './entryTemplateDirPath';
 export * from './entryTemplateFilePath';
 export * from './pruneEmptyPropertyValues';
 export * from './databaseEntryAddress';
-export * from './databaseEntryPathFromAddress';
+export * from './matchDatabaseEntryAddress';
 export * from './serializeDatabaseEntryReference';
 export * from './matchDatabaseEntryReference';
 export * from './serializeDatabaseReference';

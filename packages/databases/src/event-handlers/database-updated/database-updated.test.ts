@@ -1,9 +1,15 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { sqlGetAllDatabases, sqlUpsertDatabase } from '../../sql';
+import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
+import {
+  sqlGetAllDatabases,
+  sqlGetEntrySyncRecords,
+  sqlUpsertDatabase,
+} from '../../sql';
 import {
   cleanup,
   cleanupTestSqlDatabase,
   objectDatabase,
+  objectEntry1,
   parentDir,
   setup,
   setupTestSqlDatabase,
@@ -56,6 +62,48 @@ describe('onUpdateDatabase', () => {
         icon: updatedDatabase.icon,
       },
     ]);
+  });
+
+  it("syncs the entries' paths when the serializer changed", () => {
+    // Repath the entry as the serializer conversion does before
+    // dispatching
+    const newPath = `${objectDatabase.path}/${objectEntry1.title}.json`;
+
+    DatabaseEntriesStore.update(objectEntry1.id, { path: newPath });
+
+    onUpdateDatabase({
+      original: objectDatabase,
+      updated: { ...objectDatabase, entrySerializer: 'json' },
+    });
+
+    // The entry's SQL record should carry the new path
+    expect(sqlGetEntrySyncRecords(objectDatabase.id)).toContainEqual(
+      expect.objectContaining({ id: objectEntry1.id, path: newPath }),
+    );
+  });
+
+  it("syncs the entries' paths when crossing the entry storage boundary", () => {
+    // Repath the entry as the storage change does before dispatching
+    const newPath = `${objectDatabase.path}/${objectEntry1.title}/${objectEntry1.title}.md`;
+
+    DatabaseEntriesStore.update(objectEntry1.id, { path: newPath });
+
+    onUpdateDatabase({
+      original: objectDatabase,
+      updated: { ...objectDatabase, propertyFileStorage: 'entry' },
+    });
+
+    // The entry's SQL record should carry the new path
+    expect(sqlGetEntrySyncRecords(objectDatabase.id)).toContainEqual(
+      expect.objectContaining({ id: objectEntry1.id, path: newPath }),
+    );
+  });
+
+  it('does not sync entries when the update left their files in place', () => {
+    onUpdateDatabase({ original: objectDatabase, updated: updatedDatabase });
+
+    // No entry records should have been written
+    expect(sqlGetEntrySyncRecords(objectDatabase.id)).toEqual([]);
   });
 
   it('leaves other databases untouched', () => {

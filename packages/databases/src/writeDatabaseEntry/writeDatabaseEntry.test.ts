@@ -92,10 +92,10 @@ describe('writeDatabaseEntry', () => {
 
     const contents = MockFs.readTextFile(collectionEntry1.path);
 
-    // Member references should be written as workspace-relative
-    // addresses rather than entry IDs
-    expect(contents).toContain(databaseEntryAddress(relatedEntry1.path));
-    expect(contents).toContain(databaseEntryAddress(relatedEntry2.path));
+    // Member references should be written as durable addresses rather
+    // than entry IDs
+    expect(contents).toContain(databaseEntryAddress(relatedEntry1));
+    expect(contents).toContain(databaseEntryAddress(relatedEntry2));
     expect(contents).not.toContain(relatedEntry1.id);
   });
 

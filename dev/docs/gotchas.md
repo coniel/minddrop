@@ -524,12 +524,8 @@ queries package; the same files typecheck fine through
 Rename events store logical addresses (`<database name>`,
 `<database name>/<entry title>`, `<database name>/<property name>`),
 never on-disk paths, so storage mode switches and file format changes
-do not touch the ledger. Item references, however, still address
-entries by workspace-relative file path with extension
-(`Books/Book.md`); until referencing moves to the same logical form,
-a consumer resolving an old reference through `replayRenames` must
-derive the logical address first (strip the extension and any
-entry-subdirectory nesting) and map the result back.
+do not touch the ledger. Item references use the same form, so an old
+reference can be fed to `replayRenames` as it stands.
 
 ### `entityId` is how consumers disambiguate reused names
 

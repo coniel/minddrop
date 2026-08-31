@@ -1,5 +1,4 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { Paths } from '@minddrop/utils';
 import { cleanup, objectDatabase, setup } from '../../test-utils';
 import { serializeDatabaseReference } from './serializeDatabaseReference';
 
@@ -8,9 +7,9 @@ describe('serializeDatabaseReference', () => {
 
   afterEach(cleanup);
 
-  it("serializes the database ID into the database's directory name", () => {
+  it("serializes the database ID into the database's name", () => {
     expect(serializeDatabaseReference(objectDatabase.id)).toBe(
-      objectDatabase.path.replace(`${Paths.workspace}/`, ''),
+      objectDatabase.name,
     );
   });
 

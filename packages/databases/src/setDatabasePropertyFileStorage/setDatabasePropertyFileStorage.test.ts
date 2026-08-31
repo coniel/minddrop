@@ -1,10 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
-import {
-  ItemAddressesChangedEvent,
-  ItemAddressesChangedEventData,
-} from '@minddrop/item-references';
+import { ItemAddressesChangedEvent } from '@minddrop/item-references';
 import { InvalidParameterError } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabaseUpdatedEvent } from '../events';
@@ -24,7 +21,7 @@ import {
   setup,
 } from '../test-utils';
 import { Database } from '../types';
-import { databaseConfigFilePath, databaseEntryAddress } from '../utils';
+import { databaseConfigFilePath } from '../utils';
 import { setDatabasePropertyFileStorage } from './setDatabasePropertyFileStorage';
 
 describe('setDatabasePropertyFileStorage', () => {
@@ -144,23 +141,18 @@ describe('setDatabasePropertyFileStorage', () => {
     );
   });
 
-  it('dispatches address changes when crossing the entry boundary', async () => {
-    let dispatched: ItemAddressesChangedEventData | undefined;
+  it('does not dispatch address changes when crossing the entry boundary', async () => {
+    let dispatched = false;
 
-    Events.addListener(ItemAddressesChangedEvent, 'test', (payload) => {
-      dispatched = payload.data;
+    Events.addListener(ItemAddressesChangedEvent, 'test', () => {
+      dispatched = true;
     });
 
     await setDatabasePropertyFileStorage(rootStorageDatabase.id, 'entry');
 
-    // The dispatch carries the moved entry's old and new addresses
-    expect(dispatched).toContainEqual({
-      id: rootStorageEntry1.id,
-      oldReference: databaseEntryAddress(rootStorageEntry1.path),
-      newReference: databaseEntryAddress(
-        getDatabaseEntry(rootStorageEntry1.id).path,
-      ),
-    });
+    // Addresses name entries by title, so wrapping their files in
+    // per-entry directories leaves the addresses untouched
+    expect(dispatched).toBe(false);
   });
 
   it('unwraps entries when switching away from entry storage', async () => {

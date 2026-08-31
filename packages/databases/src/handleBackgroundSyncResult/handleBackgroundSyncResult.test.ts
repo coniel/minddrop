@@ -10,6 +10,7 @@ import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import {
   cleanup,
   collectionDatabase,
+  objectDatabase,
   relatedEntry1,
   setup,
 } from '../test-utils';
@@ -33,8 +34,12 @@ describe('handleBackgroundSyncResult', () => {
 
   afterEach(cleanup);
 
-  it('dispatches address changes for entries that moved', async () => {
-    const renamedPath = `${collectionDatabase.path}/Renamed Related.md`;
+  it('dispatches address changes for entries that were renamed', async () => {
+    const renamed = {
+      ...relatedEntry1,
+      title: 'Renamed Related',
+      path: `${collectionDatabase.path}/Renamed Related.md`,
+    };
 
     let dispatched: ItemAddressesChangedEventData | undefined;
 
@@ -42,9 +47,73 @@ describe('handleBackgroundSyncResult', () => {
       dispatched = payload.data;
     });
 
-    // The synced record carries the entry's new path
+    // The synced record carries the entry's new title and path
+    const record = convertEntryToSqlRecord(renamed, collectionDatabase);
+
+    await handleBackgroundSyncResult({
+      ...emptyChangeset,
+      upsertedEntries: [record],
+    });
+
+    // The store holds the new path
+    expect(DatabaseEntriesStore.get(relatedEntry1.id)?.path).toBe(renamed.path);
+
+    // The dispatch carries the old and new addresses
+    expect(dispatched).toEqual([
+      {
+        id: relatedEntry1.id,
+        oldReference: databaseEntryAddress(relatedEntry1, collectionDatabase),
+        newReference: databaseEntryAddress(renamed, collectionDatabase),
+      },
+    ]);
+  });
+
+  it('dispatches address changes for entries moved to another database', async () => {
+    let dispatched: ItemAddressesChangedEventData | undefined;
+
+    Events.addListener(ItemAddressesChangedEvent, 'test', (payload) => {
+      dispatched = payload.data;
+    });
+
+    // The synced record places the entry in another database
     const record = convertEntryToSqlRecord(
-      { ...relatedEntry1, path: renamedPath },
+      {
+        ...relatedEntry1,
+        database: objectDatabase.id,
+        path: `${objectDatabase.path}/${relatedEntry1.title}.md`,
+      },
+      objectDatabase,
+    );
+
+    await handleBackgroundSyncResult({
+      ...emptyChangeset,
+      upsertedEntries: [record],
+    });
+
+    // The dispatch names the entry under either database
+    expect(dispatched).toEqual([
+      {
+        id: relatedEntry1.id,
+        oldReference: databaseEntryAddress(relatedEntry1, collectionDatabase),
+        newReference: databaseEntryAddress(relatedEntry1, objectDatabase),
+      },
+    ]);
+  });
+
+  it('does not dispatch address changes for entries that moved without being renamed', async () => {
+    let dispatched = false;
+
+    Events.addListener(ItemAddressesChangedEvent, 'test', () => {
+      dispatched = true;
+    });
+
+    // The synced record carries a new path under the same title, as
+    // when the database's file layout changed outside the app
+    const record = convertEntryToSqlRecord(
+      {
+        ...relatedEntry1,
+        path: `${collectionDatabase.path}/${relatedEntry1.title}/${relatedEntry1.title}.md`,
+      },
       collectionDatabase,
     );
 
@@ -53,27 +122,17 @@ describe('handleBackgroundSyncResult', () => {
       upsertedEntries: [record],
     });
 
-    // The store holds the new path
-    expect(DatabaseEntriesStore.get(relatedEntry1.id)?.path).toBe(renamedPath);
-
-    // The dispatch carries the old and new addresses
-    expect(dispatched).toEqual([
-      {
-        id: relatedEntry1.id,
-        oldReference: databaseEntryAddress(relatedEntry1.path),
-        newReference: databaseEntryAddress(renamedPath),
-      },
-    ]);
+    expect(dispatched).toBe(false);
   });
 
-  it('does not dispatch address changes for unmoved entries', async () => {
+  it('does not dispatch address changes for unchanged entries', async () => {
     let dispatched = false;
 
     Events.addListener(ItemAddressesChangedEvent, 'test', () => {
       dispatched = true;
     });
 
-    // The synced record carries the entry's unchanged path
+    // The synced record carries the entry's unchanged title and path
     const record = convertEntryToSqlRecord(relatedEntry1, collectionDatabase);
 
     await handleBackgroundSyncResult({

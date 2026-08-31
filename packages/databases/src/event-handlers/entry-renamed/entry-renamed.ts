@@ -55,8 +55,8 @@ export async function onRenameEntry(data: DatabaseEntryRenamedEventData) {
   await Events.dispatch(ItemAddressesChangedEvent, [
     {
       id: updated.id,
-      oldReference: databaseEntryAddress(original.path),
-      newReference: databaseEntryAddress(updated.path),
+      oldReference: databaseEntryAddress(original, database),
+      newReference: databaseEntryAddress(updated, database),
     },
   ]);
 }

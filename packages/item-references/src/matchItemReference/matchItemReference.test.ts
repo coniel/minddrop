@@ -15,7 +15,7 @@ const entryAdapter: ItemReferenceAdapter = {
 
     return {
       type: 'database-entry',
-      id: reference === 'Books/New book.md' ? null : `entry:${reference}`,
+      id: reference === 'Books/New book' ? null : `entry:${reference}`,
     };
   },
 };
@@ -39,9 +39,9 @@ describe('matchItemReference', () => {
   });
 
   it('matches references through the claiming adapter', () => {
-    expect(matchItemReference('Books/One.md')).toEqual({
+    expect(matchItemReference('Books/One')).toEqual({
       type: 'database-entry',
-      id: 'entry:Books/One.md',
+      id: 'entry:Books/One',
     });
   });
 
@@ -63,14 +63,14 @@ describe('matchItemReference', () => {
           : null,
     });
 
-    expect(matchItemReference('Books/One.md')).toEqual({
+    expect(matchItemReference('Books/One')).toEqual({
       type: 'database-entry',
-      id: 'entry:Books/One.md',
+      id: 'entry:Books/One',
     });
   });
 
   it('matches valid references to not-yet-existing items with a null ID', () => {
-    expect(matchItemReference('Books/New book.md')).toEqual({
+    expect(matchItemReference('Books/New book')).toEqual({
       type: 'database-entry',
       id: null,
     });
@@ -84,8 +84,8 @@ describe('matchItemReference', () => {
   });
 
   it('returns null for references nothing recognizes', () => {
-    expect(matchItemReference('Unknown/Thing.md')).toBeNull();
+    expect(matchItemReference('Unknown/Thing')).toBeNull();
     expect(matchItemReference('unknown')).toBeNull();
-    expect(matchItemReference('my_db/Thing.md')).toBeNull();
+    expect(matchItemReference('my_db/Thing')).toBeNull();
   });
 });

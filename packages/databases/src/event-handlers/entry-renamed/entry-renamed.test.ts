@@ -258,7 +258,7 @@ describe('onRenameEntry', () => {
     const contents = MockFs.readTextFile(collectionEntry1.path);
 
     // The referencing file should contain the new address
-    expect(contents).toContain('Collection Database/Renamed Related.md');
+    expect(contents).toContain('Collection Database/Renamed Related');
   });
 
   it('handles entries without collection properties', async () => {

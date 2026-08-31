@@ -6,8 +6,7 @@ import { serializeItemReference } from './serializeItemReference';
 // Maps entry IDs to fake path addresses, dropping the 'missing' entry
 const entryAdapter: ItemReferenceAdapter = {
   type: 'database-entry',
-  serialize: (id) =>
-    id === 'database-entry_missing' ? null : `Books/${id}.md`,
+  serialize: (id) => (id === 'database-entry_missing' ? null : `Books/${id}`),
   match: () => null,
 };
 
@@ -22,7 +21,7 @@ describe('serializeItemReference', () => {
 
   it('serializes the ID through its type adapter', () => {
     expect(serializeItemReference('database-entry_one')).toBe(
-      'Books/database-entry_one.md',
+      'Books/database-entry_one',
     );
   });
 

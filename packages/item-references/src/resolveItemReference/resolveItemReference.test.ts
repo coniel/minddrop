@@ -15,7 +15,7 @@ const entryAdapter: ItemReferenceAdapter = {
 
     return {
       type: 'database-entry',
-      id: reference === 'Books/New book.md' ? null : `entry:${reference}`,
+      id: reference === 'Books/New book' ? null : `entry:${reference}`,
     };
   },
 };
@@ -30,14 +30,14 @@ describe('resolveItemReference', () => {
   });
 
   it('resolves the reference into its runtime ID', () => {
-    expect(resolveItemReference('Books/One.md')).toBe('entry:Books/One.md');
+    expect(resolveItemReference('Books/One')).toBe('entry:Books/One');
   });
 
   it('returns null for valid references to not-yet-existing items', () => {
-    expect(resolveItemReference('Books/New book.md')).toBeNull();
+    expect(resolveItemReference('Books/New book')).toBeNull();
   });
 
   it('returns null for references nothing recognizes', () => {
-    expect(resolveItemReference('Unknown/Thing.md')).toBeNull();
+    expect(resolveItemReference('Unknown/Thing')).toBeNull();
   });
 });

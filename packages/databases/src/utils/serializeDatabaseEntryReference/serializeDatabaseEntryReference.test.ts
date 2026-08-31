@@ -1,6 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { cleanup, objectEntry1, setup } from '../../test-utils';
-import { databaseEntryAddress } from '../databaseEntryAddress';
+import { cleanup, objectDatabase, objectEntry1, setup } from '../../test-utils';
 import { serializeDatabaseEntryReference } from './serializeDatabaseEntryReference';
 
 describe('serializeDatabaseEntryReference', () => {
@@ -10,7 +9,7 @@ describe('serializeDatabaseEntryReference', () => {
 
   it("serializes the entry ID into the entry's address", () => {
     expect(serializeDatabaseEntryReference(objectEntry1.id)).toBe(
-      databaseEntryAddress(objectEntry1.path),
+      `${objectDatabase.name}/${objectEntry1.title}`,
     );
   });
 

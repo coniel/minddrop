@@ -81,10 +81,10 @@ export async function onRenameDatabase(
   if (renamedEntries.length > 0) {
     await Events.dispatch(
       ItemAddressesChangedEvent,
-      renamedEntries.map((entry, index) => ({
+      renamedEntries.map((entry) => ({
         id: entry.id,
-        oldReference: databaseEntryAddress(entries[index].path),
-        newReference: databaseEntryAddress(entry.path),
+        oldReference: databaseEntryAddress(entry, original),
+        newReference: databaseEntryAddress(entry, updated),
       })),
     );
   }

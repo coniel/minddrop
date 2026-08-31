@@ -1,6 +1,5 @@
 import { AppErrorEvent, Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
-import { ItemAddressesChangedEvent } from '@minddrop/item-references';
 import { Paths } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabasesStore } from '../DatabasesStore';
@@ -11,7 +10,7 @@ import { getDatabase } from '../getDatabase';
 import { getDatabaseEntry } from '../getDatabaseEntry';
 import { getDatabaseEntrySerializer } from '../getDatabaseEntrySerializer';
 import { Database, DatabaseEntry } from '../types';
-import { databaseEntryAddress, serializeCollectionProperties } from '../utils';
+import { serializeCollectionProperties } from '../utils';
 import { writeDatabaseConfig } from '../writeDatabaseConfig';
 
 /**
@@ -31,7 +30,6 @@ import { writeDatabaseConfig } from '../writeDatabaseConfig';
  * @throws {DatabaseEntrySerializerNotRegisteredError} If the serializer is not registered.
  *
  * @dispatches databases:database:updated
- * @dispatches item-references:addresses:changed
  * @dispatches app:error
  */
 export async function setDatabaseEntrySerializer(
@@ -74,8 +72,8 @@ export async function setDatabaseEntrySerializer(
     }
 
     // Phase 1: back up the original files and repath all entries to the
-    // new extension before serializing anything so intra-database
-    // addresses resolve to the new paths.
+    // new extension before writing anything, so each entry is written
+    // to its converted path.
     for (const entry of entries) {
       // The entry file path with the new serializer's extension
       const newPath = `${Fs.removeExtension(entry.path)}.${serializer.fileExtension}`;
@@ -155,20 +153,10 @@ export async function setDatabaseEntrySerializer(
     // Leave the backup directory in place, the conversion itself succeeded
   }
 
-  // Dispatch the converted entries' address changes
-  await Events.dispatch(
-    ItemAddressesChangedEvent,
-    entries.map((entry) => ({
-      id: entry.id,
-      oldReference: databaseEntryAddress(entry.path),
-      newReference: databaseEntryAddress(getDatabaseEntry(entry.id).path),
-    })),
-  );
-
   const updated = getDatabase(id);
 
   // Dispatch a database updated event
-  Events.dispatch(DatabaseUpdatedEvent, {
+  await Events.dispatch(DatabaseUpdatedEvent, {
     original: database,
     updated,
   });

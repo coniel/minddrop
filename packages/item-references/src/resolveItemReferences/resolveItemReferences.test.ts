@@ -15,7 +15,7 @@ const entryAdapter: ItemReferenceAdapter = {
 
     return {
       type: 'database-entry',
-      id: reference === 'Books/New book.md' ? null : `entry:${reference}`,
+      id: reference === 'Books/New book' ? null : `entry:${reference}`,
     };
   },
 };
@@ -43,34 +43,34 @@ describe('resolveItemReferences', () => {
       resolveItemReferences([
         'Books',
         'view_abc-123',
-        'Books/One.md',
-        'Books/Two.md',
+        'Books/One',
+        'Books/Two',
       ]),
     ).toEqual([
       'database_books',
       'view_abc-123',
-      'entry:Books/One.md',
-      'entry:Books/Two.md',
+      'entry:Books/One',
+      'entry:Books/Two',
     ]);
   });
 
   it('drops references nothing recognizes', () => {
     expect(
-      resolveItemReferences(['Unknown/Thing.md', 'unknown', 'my_db/Thing.md']),
+      resolveItemReferences(['Unknown/Thing', 'unknown', 'my_db/Thing']),
     ).toEqual([]);
   });
 
   it('drops valid references to not-yet-existing items by default', () => {
-    expect(
-      resolveItemReferences(['Books/One.md', 'Books/New book.md']),
-    ).toEqual(['entry:Books/One.md']);
+    expect(resolveItemReferences(['Books/One', 'Books/New book'])).toEqual([
+      'entry:Books/One',
+    ]);
   });
 
   it('keeps valid references to not-yet-existing items when requested', () => {
     expect(
-      resolveItemReferences(['Books/One.md', 'Books/New book.md'], {
+      resolveItemReferences(['Books/One', 'Books/New book'], {
         keepMissing: true,
       }),
-    ).toEqual(['entry:Books/One.md', 'Books/New book.md']);
+    ).toEqual(['entry:Books/One', 'Books/New book']);
   });
 });

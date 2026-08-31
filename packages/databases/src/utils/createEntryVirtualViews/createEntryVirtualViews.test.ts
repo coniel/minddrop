@@ -341,7 +341,9 @@ describe('createEntryVirtualViews', () => {
       metadata: {
         embeddedViewConfigs: {
           [viewMetadataKey(referencingLayout.id, 'Related')]: {
-            data: { items: [databaseEntryAddress(relatedEntry1.path)] },
+            data: {
+              items: [databaseEntryAddress(relatedEntry1)],
+            },
           },
         },
       },

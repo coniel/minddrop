@@ -5,6 +5,7 @@ import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { Events } from '@minddrop/events';
 import { ItemAddressesChangedEvent } from '@minddrop/item-references';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
+import { DatabasesStore } from '../../DatabasesStore';
 import {
   DatabaseEntriesSqlSyncedEvent,
   DatabaseEntriesSqlSyncedEventData,
@@ -254,21 +255,27 @@ describe('onRenameDatabase', () => {
   });
 
   it("rewrites referencing entries' files with the new addresses", async () => {
+    const renamedRoot = {
+      ...rootStorageDatabase,
+      name: 'Renamed Root',
+      path: `${parentDir}/Renamed Root`,
+    };
+
+    // Commit the rename to the store, as renameDatabase does before
+    // dispatching, so re-serialized references name the new database
+    DatabasesStore.set(renamedRoot);
+
     // Rename the database containing referenceEntry1, which is
     // referenced by collectionEntry1's References property
     await onRenameDatabase({
       original: rootStorageDatabase,
-      updated: {
-        ...rootStorageDatabase,
-        name: 'Renamed Root',
-        path: `${parentDir}/Renamed Root`,
-      },
+      updated: renamedRoot,
     });
 
     const contents = MockFs.readTextFile(collectionEntry1.path);
 
     // The referencing file should contain the new address
-    expect(contents).toContain('Renamed Root/Reference Entry 1.md');
+    expect(contents).toContain('Renamed Root/Reference Entry 1');
   });
 
   it('does not upsert entries when the database has no entries', async () => {

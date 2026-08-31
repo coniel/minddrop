@@ -7,6 +7,7 @@ import { readWorkspaceDatabases } from '../../readWorkspaceDatabases';
 import type { Database, DatabaseEntry, SqlEntryRecord } from '../../types';
 import {
   convertEntryToSqlRecord,
+  databaseEntryAddress,
   entryMetadataKey,
   mergeEntryMetadata,
   resolveCollectionProperties,
@@ -106,8 +107,9 @@ export async function initializeDatabasesBackend(
  * after a schema version change.
  */
 async function rebuildSqlFromFilesystem(databases: Database[]): Promise<void> {
-  // Workspace-wide path index used to resolve entry references
-  const entryIdByPath = new Map<string, string>();
+  // Workspace-wide address index used to resolve entry references,
+  // keyed lowercased to match addresses case-insensitively
+  const entryIdByAddress = new Map<string, string>();
 
   // Staged read results per database
   const staged: { database: Database; entries: DatabaseEntry[] }[] = [];
@@ -153,9 +155,12 @@ async function rebuildSqlFromFilesystem(databases: Database[]): Promise<void> {
       return entry;
     });
 
-    // Index the entries by path
+    // Index the entries by address
     entriesWithMetadata.forEach((entry) => {
-      entryIdByPath.set(entry.path, entry.id);
+      entryIdByAddress.set(
+        databaseEntryAddress(entry, database).toLowerCase(),
+        entry.id,
+      );
     });
 
     // Stage the read results for the resolution pass
@@ -170,7 +175,7 @@ async function rebuildSqlFromFilesystem(databases: Database[]): Promise<void> {
       properties: resolveCollectionProperties(
         entry.properties,
         database,
-        entryIdByPath,
+        entryIdByAddress,
       ),
     }));
 

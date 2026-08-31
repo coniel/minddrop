@@ -8,6 +8,7 @@ import { restoreDates } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabasesBackgroundSyncedEvent } from '../events';
+import { getDatabaseEntry } from '../getDatabaseEntry';
 import { loadDatabaseViews } from '../loadDatabaseViews';
 import { removeEntriesFromCollections } from '../removeEntriesFromCollections';
 import type { BackgroundSyncChangeset, Database } from '../types';
@@ -53,8 +54,8 @@ export async function handleBackgroundSyncResult(
     DatabasesStore.remove(id);
   }
 
-  // Address changes of entries that moved while the app was not
-  // running
+  // Address changes of entries that were renamed or moved between
+  // databases while the app was not running
   const addressChanges: ItemAddressChange[] = [];
 
   // Upsert new or updated entries. Record IDs are path-matched to
@@ -62,15 +63,22 @@ export async function handleBackgroundSyncResult(
   // in the store replace them under their existing key.
   for (const record of changeset.upsertedEntries) {
     const entry = convertSqlRecordToEntry(record);
-    const existing = DatabaseEntriesStore.get(entry.id);
+    const existing = getDatabaseEntry(entry.id, false);
 
-    // Record the address change when an existing entry moved
-    if (existing && existing.path !== entry.path) {
-      addressChanges.push({
-        id: entry.id,
-        oldReference: databaseEntryAddress(existing.path),
-        newReference: databaseEntryAddress(entry.path),
-      });
+    // Only a changed title or database changes an entry's address, so
+    // a file that moved without being renamed is not an address change
+    const addressChanged =
+      existing &&
+      (existing.title !== entry.title || existing.database !== entry.database);
+
+    if (addressChanged) {
+      const oldReference = databaseEntryAddress(existing);
+      const newReference = databaseEntryAddress(entry);
+
+      // The entry must be nameable either side of the change
+      if (oldReference && newReference) {
+        addressChanges.push({ id: entry.id, oldReference, newReference });
+      }
     }
 
     DatabaseEntriesStore.set(entry);

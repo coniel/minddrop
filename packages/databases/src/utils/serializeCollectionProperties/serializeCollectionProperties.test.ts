@@ -23,11 +23,11 @@ describe('serializeCollectionProperties', () => {
     );
 
     expect(serialized.Related).toEqual([
-      databaseEntryAddress(relatedEntry1.path),
-      databaseEntryAddress(relatedEntry2.path),
+      databaseEntryAddress(relatedEntry1),
+      databaseEntryAddress(relatedEntry2),
     ]);
     expect(serialized.References).toEqual([
-      databaseEntryAddress(referenceEntry1.path),
+      databaseEntryAddress(referenceEntry1),
     ]);
   });
 

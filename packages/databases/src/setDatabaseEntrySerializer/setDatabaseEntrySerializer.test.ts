@@ -1,13 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { AppErrorEvent, AppErrorEventData, Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
-import { ItemAddressesChangedEvent } from '@minddrop/item-references';
 import { Paths } from '@minddrop/utils';
 import { DatabaseEntrySerializersStore } from '../DatabaseEntrySerializersStore';
 import { EntryConversionBackupDirName } from '../constants';
 import { jsonEntrySerializer } from '../entry-serializers';
 import { DatabaseEntrySerializerNotRegisteredError } from '../errors';
-import { onItemAddressesChanged } from '../event-handlers';
+import { onUpdateDatabase } from '../event-handlers';
 import { DatabaseUpdatedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntry } from '../getDatabaseEntry';
@@ -58,11 +57,11 @@ describe('setDatabaseEntrySerializer', () => {
     // Drop the seeding statements so tests only see the conversion's SQL
     clearRecordedSqlStatements();
 
-    // Register the reference rewrite listener normally wired by
+    // Register the SQL sync listener normally wired by
     // initializeDatabaseEventHandlers
-    Events.on(ItemAddressesChangedEvent, 'test', ({ data }) =>
-      onItemAddressesChanged(data),
-    );
+    Events.on(DatabaseUpdatedEvent, 'test:sql-sync', ({ data }) => {
+      onUpdateDatabase(data);
+    });
   });
 
   afterEach(() => {
@@ -133,21 +132,21 @@ describe('setDatabaseEntrySerializer', () => {
 
     const newPath = `${Fs.removeExtension(collectionEntry1.path)}.yaml`;
 
-    // Collection members are written as workspace-relative addresses
-    // reflecting the converted entry paths
+    // Collection members are written as durable addresses
     expect(MockFs.readTextFile(newPath)).toContain(
-      'Collection Database/Related Entry 1.yaml',
+      'Collection Database/Related Entry 1',
     );
   });
 
-  it('rewrites references to the converted entries', async () => {
+  it('leaves references to the converted entries untouched', async () => {
+    const before = MockFs.readTextFile(collectionEntry1.path);
+
     // Convert the database containing the referenced entry
     await setDatabaseEntrySerializer(rootStorageDatabase.id, 'yaml');
 
-    // The referencing entry's file is rewritten with the new address
-    expect(MockFs.readTextFile(collectionEntry1.path)).toContain(
-      'Root Storage Database/Reference Entry 1.yaml',
-    );
+    // Addresses name entries by title, so the converted entries keep
+    // theirs and the referencing file needs no rewrite
+    expect(MockFs.readTextFile(collectionEntry1.path)).toBe(before);
   });
 
   it('dispatches an update event and persists the config', async () => {

@@ -1,6 +1,5 @@
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
-import { ItemAddressesChangedEvent } from '@minddrop/item-references';
 import { Properties } from '@minddrop/properties';
 import { InvalidParameterError, validateDirName } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
@@ -8,11 +7,9 @@ import { DatabasesStore } from '../DatabasesStore';
 import { DatabaseUpdatedEvent } from '../events';
 import { getAllDatabaseEntries } from '../getAllDatabaseEntries';
 import { getDatabase } from '../getDatabase';
-import { getDatabaseEntry } from '../getDatabaseEntry';
 import { Database, PropertyFileStorage } from '../types';
 import { updateDatabaseEntryProperty } from '../updateDatabaseEntryProperty';
 import {
-  databaseEntryAddress,
   getPropertyFilePath,
   resolveDatabasePropertyDirs,
   resolveEntryFilePath,
@@ -33,7 +30,6 @@ import { writeDatabaseConfig } from '../writeDatabaseConfig';
  * @param propertyFilesDir - The common directory name, used only in `common` mode.
  * @returns The updated database config.
  *
- * @dispatches item-references:addresses:changed
  * @dispatches databases:database:updated
  */
 export async function setDatabasePropertyFileStorage(
@@ -212,21 +208,8 @@ export async function setDatabasePropertyFileStorage(
 
   const updated = getDatabase(id);
 
-  // Dispatch the moved entries' address changes when crossing the
-  // entry boundary changed entry paths
-  if (wasEntry !== willEntry && entryMoves.length > 0) {
-    await Events.dispatch(
-      ItemAddressesChangedEvent,
-      entryMoves.map(({ entry }) => ({
-        id: entry.id,
-        oldReference: databaseEntryAddress(entry.path),
-        newReference: databaseEntryAddress(getDatabaseEntry(entry.id).path),
-      })),
-    );
-  }
-
   // Dispatch a database updated event
-  Events.dispatch(DatabaseUpdatedEvent, {
+  await Events.dispatch(DatabaseUpdatedEvent, {
     original: database,
     updated,
   });

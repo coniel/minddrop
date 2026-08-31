@@ -104,6 +104,28 @@ create the storage directory once before the parallel writes, make
 `createDir` ignore an already-existing directory, or catch and swallow
 `EEXIST`. No data is lost, but the losing writes fail outright.
 
+### A database renamed while the app is closed strands references to its entries
+
+Renaming a database directory outside the app leaves every persisted
+reference to its entries unresolvable: addresses lead with the database
+name, so `Books/Book` should become `Library/Book`, but nothing rewrites
+the referencing files. On the next load the stale references drop.
+
+`backgroundSyncDatabases` rebases the SQL sync records onto the database's
+new path, so entries keep their IDs, and `handleBackgroundSyncResult`
+dispatches `ItemAddressesChangedEvent` for entries whose title or database
+changed — a database _rename_ changes neither, so no rewrite is triggered.
+Predates the move to entity addresses in a different form: while
+references were file paths, the entries of a renamed database did change
+address, but the dispatch only covered entries in `upsertedEntries` (those
+whose file contents also changed), so unchanged entries were stranded the
+same way.
+
+Fix direction: capture the databases whose name changed in
+`handleBackgroundSyncResult` before the upsert loop overwrites the stored
+configs, and dispatch an address change for every entry of each, not only
+the upserted ones.
+
 ### Stale `DataViews.Store.getAll()` usage in views tests
 
 Four tests fail on `main` (present since at least b2245174):
@@ -156,7 +178,7 @@ type `FieldProps.error` accordingly), then remove this entry.
 
 `DatabasePropertyEditor.tsx` (~line 97) shows a rename confirmation
 dialog, but its `onConfirm` deliberately calls `Databases.updateProperty`
-with the *old* name because `Databases.renameProperty` is not yet
+with the _old_ name because `Databases.renameProperty` is not yet
 implemented (the call sits commented out behind a TODO). The user
 confirms a rename, every other edited field is saved, and the name
 silently stays as it was.

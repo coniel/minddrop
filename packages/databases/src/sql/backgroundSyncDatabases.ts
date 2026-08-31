@@ -13,6 +13,7 @@ import type {
 } from '../types';
 import {
   convertEntryToSqlRecord,
+  databaseEntryAddress,
   entryMetadataKey,
   matchEntriesToSqlRecords,
   mergeEntryMetadata,
@@ -111,8 +112,9 @@ export async function backgroundSyncDatabases(
     sqlDeleteDatabase(id, { silent: true });
   }
 
-  // Workspace-wide path index used to resolve entry references
-  const entryIdByPath = new Map<string, string>();
+  // Workspace-wide address index used to resolve entry references,
+  // keyed lowercased to match addresses case-insensitively
+  const entryIdByAddress = new Map<string, string>();
 
   // Staged per-database sync data for the resolution pass
   const staged: {
@@ -157,18 +159,14 @@ export async function backgroundSyncDatabases(
       existingRecords,
     );
 
-    const deletedIdSet = new Set(deletedIds);
-
-    // Index the existing entries by path, skipping deleted ones
-    existingRecords.forEach((record) => {
-      if (!deletedIdSet.has(record.id)) {
-        entryIdByPath.set(record.path, record.id);
-      }
-    });
-
-    // Index the fresh entries by path
+    // Index the entries by address. Only the entries still on disk are
+    // indexed, since an address names an entry by title rather than by
+    // the location it last occupied.
     entries.forEach((entry) => {
-      entryIdByPath.set(entry.path, entry.id);
+      entryIdByAddress.set(
+        databaseEntryAddress(entry, database).toLowerCase(),
+        entry.id,
+      );
     });
 
     // Stage the matched entries for the resolution pass
@@ -187,7 +185,7 @@ export async function backgroundSyncDatabases(
       properties: resolveCollectionProperties(
         entry.properties,
         database,
-        entryIdByPath,
+        entryIdByAddress,
       ),
     }));
 

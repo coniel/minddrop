@@ -1,13 +1,10 @@
-import { Fs } from '@minddrop/file-system';
 import { ItemReferenceMatch } from '@minddrop/item-references';
-import { Paths } from '@minddrop/utils';
-import { DatabasesStore } from '../../DatabasesStore';
+import { getAllDatabases } from '../../getAllDatabases';
 
 /**
- * Matches a durable reference against the database address format:
- * a bare directory name matching an existing database. Only
- * existing databases match, since any bare name could otherwise
- * claim the address.
+ * Matches a durable reference against the database address format: a
+ * bare name matching an existing database. Only existing databases
+ * match, since any bare name could otherwise claim the address.
  *
  * @param reference - The durable reference to match.
  * @returns The match, or null if the reference is not a database address.
@@ -15,15 +12,15 @@ import { DatabasesStore } from '../../DatabasesStore';
 export function matchDatabaseReference(
   reference: string,
 ): ItemReferenceMatch | null {
-  // Database addresses are bare directory names
+  // Database addresses are bare names
   if (reference.includes('/')) {
     return null;
   }
 
-  // Resolve the name to a database via its absolute path
-  const databasePath = Fs.concatPath(Paths.workspace, reference);
-  const database = DatabasesStore.getAllArray().find(
-    ({ path }) => path === databasePath,
+  // Resolve the name to a database, case-insensitively as with entry
+  // addresses
+  const database = getAllDatabases().find(
+    ({ name }) => name.toLowerCase() === reference.toLowerCase(),
   );
 
   // Names that do not resolve to a database are not addresses

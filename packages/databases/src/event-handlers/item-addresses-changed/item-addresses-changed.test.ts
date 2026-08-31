@@ -24,6 +24,13 @@ import { onItemAddressesChanged } from './item-addresses-changed';
 
 const { dataViewType_referencing } = DataViewFixtures;
 
+// The renamed state of relatedEntry1, used as the change's new address
+const renamedRelated = {
+  ...relatedEntry1,
+  title: 'Renamed Related',
+  path: `${collectionDatabase.path}/Renamed Related.md`,
+};
+
 describe('onItemAddressesChanged', () => {
   beforeEach(() => {
     setup();
@@ -52,19 +59,17 @@ describe('onItemAddressesChanged', () => {
   });
 
   it("upserts the changed entries' SQL records", async () => {
-    const renamedPath = `${collectionDatabase.path}/Renamed Related.md`;
-
     // Simulate a rename of an entry
     DatabaseEntriesStore.update(relatedEntry1.id, {
-      title: 'Renamed Related',
-      path: renamedPath,
+      title: renamedRelated.title,
+      path: renamedRelated.path,
     });
 
     await onItemAddressesChanged([
       {
         id: relatedEntry1.id,
-        oldReference: databaseEntryAddress(relatedEntry1.path),
-        newReference: databaseEntryAddress(renamedPath),
+        oldReference: databaseEntryAddress(relatedEntry1, collectionDatabase),
+        newReference: databaseEntryAddress(renamedRelated, collectionDatabase),
       },
     ]);
 
@@ -72,7 +77,7 @@ describe('onItemAddressesChanged', () => {
     expect(sqlGetEntrySyncRecords(collectionDatabase.id)).toContainEqual(
       expect.objectContaining({
         id: relatedEntry1.id,
-        path: renamedPath,
+        path: renamedRelated.path,
       }),
     );
   });
@@ -80,30 +85,26 @@ describe('onItemAddressesChanged', () => {
   it("rewrites referencing entries' files with current addresses", async () => {
     // Simulate a rename of a referenced entry
     DatabaseEntriesStore.update(relatedEntry1.id, {
-      title: 'Renamed Related',
-      path: `${collectionDatabase.path}/Renamed Related.md`,
+      title: renamedRelated.title,
+      path: renamedRelated.path,
     });
 
     await onItemAddressesChanged([
       {
         id: relatedEntry1.id,
-        oldReference: databaseEntryAddress(relatedEntry1.path),
-        newReference: databaseEntryAddress(
-          `${collectionDatabase.path}/Renamed Related.md`,
-        ),
+        oldReference: databaseEntryAddress(relatedEntry1, collectionDatabase),
+        newReference: databaseEntryAddress(renamedRelated, collectionDatabase),
       },
     ]);
 
     const contents = MockFs.readTextFile(collectionEntry1.path);
 
     // The referencing file should contain the new address
-    expect(contents).toContain('Collection Database/Renamed Related.md');
-    expect(contents).not.toContain('Collection Database/Related Entry 1.md');
+    expect(contents).toContain('Collection Database/Renamed Related');
+    expect(contents).not.toContain('Collection Database/Related Entry 1');
   });
 
   it('re-persists embedded view configs referencing changed items', async () => {
-    const renamedPath = `${collectionDatabase.path}/Renamed Related.md`;
-
     // An embedded virtual view referencing the renamed entry
     DataViews.createVirtual({
       id: virtualViewId(collectionEntry1.id, 'layout-1', 'Related'),
@@ -117,15 +118,15 @@ describe('onItemAddressesChanged', () => {
 
     // Simulate a rename of the referenced entry
     DatabaseEntriesStore.update(relatedEntry1.id, {
-      title: 'Renamed Related',
-      path: renamedPath,
+      title: renamedRelated.title,
+      path: renamedRelated.path,
     });
 
     await onItemAddressesChanged([
       {
         id: relatedEntry1.id,
-        oldReference: databaseEntryAddress(relatedEntry1.path),
-        newReference: databaseEntryAddress(renamedPath),
+        oldReference: databaseEntryAddress(relatedEntry1, collectionDatabase),
+        newReference: databaseEntryAddress(renamedRelated, collectionDatabase),
       },
     ]);
 
@@ -138,7 +139,9 @@ describe('onItemAddressesChanged', () => {
       ],
     ).toEqual({
       options: dataViewType_referencing.defaultOptions,
-      data: { items: [databaseEntryAddress(renamedPath)] },
+      data: {
+        items: [databaseEntryAddress(renamedRelated, collectionDatabase)],
+      },
     });
   });
 

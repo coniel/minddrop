@@ -120,7 +120,9 @@ describe('onUpdateVirtualView', () => {
       entry.metadata.embeddedViewConfigs?.[
         viewMetadataKey(layoutId, propertyName)
       ],
-    ).toEqual({ data: { items: [databaseEntryAddress(objectEntry1.path)] } });
+    ).toEqual({
+      data: { items: [databaseEntryAddress(objectEntry1)] },
+    });
   });
 
   it('preserves existing view configs for other keys', () => {
