@@ -234,7 +234,7 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({
           transform: `translate(${effectivePan.x}px, ${effectivePan.y}px) scale(${effectiveScale})`,
           transformOrigin: '0 0',
           visibility: ready ? 'visible' : 'hidden',
-          cursor: preview ? undefined : isDragging ? 'grabbing' : 'grab',
+          cursor: resolveImageCursor(preview, isDragging),
         }}
       />
 
@@ -309,3 +309,27 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({
     </div>
   );
 };
+
+/**
+ * Returns the cursor for the image element based on the viewer state.
+ *
+ * @param preview - Whether the viewer is in preview mode.
+ * @param isDragging - Whether the image is being panned.
+ * @returns The CSS cursor value, or undefined to leave the default.
+ */
+function resolveImageCursor(
+  preview: boolean,
+  isDragging: boolean,
+): 'grabbing' | 'grab' | undefined {
+  // Preview mode leaves the default cursor
+  if (preview) {
+    return undefined;
+  }
+
+  // Show the grabbing cursor while panning
+  if (isDragging) {
+    return 'grabbing';
+  }
+
+  return 'grab';
+}
