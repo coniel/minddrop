@@ -3,6 +3,7 @@ import { DataViewTypeComponentProps, DataViews } from '@minddrop/data-views';
 import { DatabaseEntries, Databases } from '@minddrop/databases';
 import { DatabaseEntryRenderer } from '@minddrop/feature-databases';
 import { AddCollectionEntryButton } from '@minddrop/ui-components';
+import { DataViewSortMenu } from '@minddrop/ui-data-views';
 import {
   CreateDatabaseEntryButton,
   DatabaseEntriesSearchField,
@@ -112,6 +113,10 @@ export const NotebookViewComponent: React.FC<
             stateKey="search"
             size="md"
           />
+
+          {/* Entry sort dropdown */}
+          <DataViewSortMenu view={view} size="md" variant="subtle" />
+
           {/* Collection sources also support adding existing entries */}
           {view.dataSource.type === 'collection' ? (
             <AddCollectionEntryButton
