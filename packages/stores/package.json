@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@minddrop/events": "workspace:*",
+    "@minddrop/file-system": "workspace:*",
     "zustand": "^4.3.8"
   }
 }

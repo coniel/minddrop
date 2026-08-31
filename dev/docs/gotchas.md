@@ -421,6 +421,17 @@ ignore-window keyed on "we wrote this path N ms ago" would silently
 swallow a genuine external change landing inside the window, which is
 both invisible and unreproducible.
 
+### The mock adapter's createDir ignores baseDir
+
+The test-utils mock file system adapter resolves `createDir` paths
+against the mock root and ignores the `baseDir` option, so a
+`createDir` + `writeJsonFile` pair using a `baseDir` fails on the
+write with "parent dir path does not exist" (the directory was created
+at the root instead). Tests exercising baseDir-scoped writes must
+pre-seed the scoped directory (e.g. `app-data/stores`) in the mock
+file system, or exercise the dir-creation branch through a
+baseDir-less path.
+
 ## packages/sql
 
 ### Renderer SQL reads resolve asynchronously despite synchronous typings
