@@ -31,10 +31,13 @@ describe('mapColumnReferences', () => {
   it('passes options through untouched', () => {
     expect(
       mapColumnReferences(
-        { options: { foo: 'bar' }, data: { columns: [['entry-1']] } },
+        { options: { sortProperty: 'Name' }, data: { columns: [['entry-1']] } },
         (value) => value,
       ),
-    ).toEqual({ options: { foo: 'bar' }, data: { columns: [['entry-1']] } });
+    ).toEqual({
+      options: { sortProperty: 'Name' },
+      data: { columns: [['entry-1']] },
+    });
   });
 
   it('passes configs without columns through unchanged', () => {

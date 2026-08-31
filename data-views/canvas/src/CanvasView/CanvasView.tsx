@@ -241,7 +241,7 @@ const CanvasViewContent: React.FC<
       return;
     }
 
-    DataViews.update(view.id, { options: { snapToGrid } });
+    DataViews.updateOptions(view.id, { snapToGrid });
   }, [snapToGrid, view.id, view.options?.snapToGrid]);
 
   // Persist the canvas's snap to objects setting when it is
@@ -252,7 +252,7 @@ const CanvasViewContent: React.FC<
       return;
     }
 
-    DataViews.update(view.id, { options: { snapToObjects } });
+    DataViews.updateOptions(view.id, { snapToObjects });
   }, [snapToObjects, view.id, view.options?.snapToObjects]);
 
   // Re-route a connection end dragged onto a new target, skipping
