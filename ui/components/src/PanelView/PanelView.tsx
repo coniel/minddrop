@@ -138,12 +138,12 @@ export const PanelView: React.FC<PanelViewProps> = ({
 
   return (
     <Panel className={propsToClass('panel-view', { className })}>
-      <Group justify="between" className="header">
+      <Group justify="between" className="panel-view-header">
         {/* Custom header content replaces the title entirely */}
         {header ? (
-          <div className="header-content">{header}</div>
+          <div className="panel-view-header-content">{header}</div>
         ) : (
-          <Group gap={2} className="title">
+          <Group gap={2} className="panel-view-title">
             {/* The views the current view was reached through, each
                 leading back to its point in the history */}
             {trail.map((breadcrumb, index) => (
@@ -152,15 +152,18 @@ export const PanelView: React.FC<PanelViewProps> = ({
                 <Icon
                   name="chevron-right"
                   color="muted"
-                  className="breadcrumb-separator"
+                  className="panel-view-breadcrumb-separator"
                 />
               </React.Fragment>
             ))}
             {/* Content icon takes priority over the plain icon */}
             {contentIcon ? (
-              <ContentIcon className="title-icon" icon={contentIcon} />
+              <ContentIcon
+                className="panel-view-title-icon"
+                icon={contentIcon}
+              />
             ) : (
-              <IconRenderer className="title-icon" icon={icon} />
+              <IconRenderer className="panel-view-title-icon" icon={icon} />
             )}
             <Text>{resolvedTitle}</Text>
           </Group>
@@ -236,8 +239,8 @@ const PanelViewBreadcrumb: React.FC<PanelViewBreadcrumbProps> = ({
   // The crumb leads to the view already shown
   if (!breadcrumb.steps) {
     return (
-      <Group gap={2} className="breadcrumb-label">
-        <IconRenderer className="breadcrumb-icon" icon={icon} />
+      <Group gap={2} className="panel-view-breadcrumb-label">
+        <IconRenderer className="panel-view-breadcrumb-icon" icon={icon} />
         <Text color="muted">{title}</Text>
       </Group>
     );
@@ -247,10 +250,10 @@ const PanelViewBreadcrumb: React.FC<PanelViewBreadcrumbProps> = ({
     <Button
       variant="ghost"
       size="sm"
-      className="breadcrumb-button"
+      className="panel-view-breadcrumb-button"
       onClick={handleClick}
     >
-      <IconRenderer className="breadcrumb-icon" icon={icon} />
+      <IconRenderer className="panel-view-breadcrumb-icon" icon={icon} />
       {title}
     </Button>
   );
