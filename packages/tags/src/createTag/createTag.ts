@@ -3,7 +3,8 @@ import { ContentColor } from '@minddrop/ui-theme';
 import { entityId } from '@minddrop/utils';
 import { TagsStore } from '../TagsStore';
 import { TagCreatedEvent } from '../events';
-import { Tag } from '../types';
+import { getTagGroup } from '../getTagGroup';
+import { Tag, TagGroupId } from '../types';
 import { resolveNextTagColor, validateTagName } from '../utils';
 import { writeTag } from '../writeTag';
 
@@ -13,18 +14,26 @@ import { writeTag } from '../writeTag';
  *
  * @param name - The name of the tag.
  * @param color - The tag color, defaults to the next color in the rotation.
+ * @param group - The ID of the group to assign the tag to.
  * @returns The created tag.
  *
  * @throws InvalidParameterError if the name is empty or already in use.
+ * @throws TagGroupNotFoundError if the group does not exist.
  *
  * @dispatches tags:tag:created
  */
 export async function createTag(
   name: string,
   color?: ContentColor,
+  group?: TagGroupId,
 ): Promise<Tag> {
   // Validate and trim the tag name
   const validatedName = validateTagName(name);
+
+  // Validate that the group exists when assigning one
+  if (group) {
+    getTagGroup(group);
+  }
 
   // Generate the tag object
   const tag: Tag = {
@@ -34,6 +43,11 @@ export async function createTag(
     name: validatedName,
     color: color || resolveNextTagColor(),
   };
+
+  // Assign the group when given
+  if (group) {
+    tag.group = group;
+  }
 
   // Add the tag to the store
   TagsStore.set(tag);

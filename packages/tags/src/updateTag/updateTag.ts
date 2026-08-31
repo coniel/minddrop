@@ -2,6 +2,7 @@ import { Events } from '@minddrop/events';
 import { TagsStore } from '../TagsStore';
 import { TagRenamedEvent, TagUpdatedEvent } from '../events';
 import { getTag } from '../getTag';
+import { getTagGroup } from '../getTagGroup';
 import { Tag, UpdateTagData } from '../types';
 import { validateTagName } from '../utils';
 import { writeTag } from '../writeTag';
@@ -15,6 +16,7 @@ import { writeTag } from '../writeTag';
  * @returns The updated tag.
  *
  * @throws InvalidParameterError if the new name is empty or already in use.
+ * @throws TagGroupNotFoundError if the assigned group does not exist.
  *
  * @dispatches tags:tag:updated
  * @dispatches tags:tag:renamed
@@ -26,9 +28,10 @@ export async function updateTag(
   // Get the tag
   const tag = getTag(tagId);
 
-  // Validate and trim the new name when renaming
-  const update: UpdateTagData = { ...data };
+  // Split the group assignment from the plain field updates
+  const { group, ...update } = data;
 
+  // Validate and trim the new name when renaming
   if (typeof update.name === 'string') {
     update.name = validateTagName(update.name, tagId);
   }
@@ -40,11 +43,19 @@ export async function updateTag(
     lastModified: new Date(),
   };
 
-  // Update the tag in the store
-  TagsStore.update(tagId, {
-    ...update,
-    lastModified: new Date(),
-  });
+  // Assign the group when given, validating that it exists
+  if (group) {
+    getTagGroup(group);
+    updatedTag.group = group;
+  }
+
+  // Clear the group when explicitly unset
+  if (group === null) {
+    delete updatedTag.group;
+  }
+
+  // Replace the tag in the store
+  TagsStore.set(updatedTag);
 
   // Write the tag config to the file system
   await writeTag(tagId);

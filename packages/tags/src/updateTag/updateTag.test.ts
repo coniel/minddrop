@@ -2,8 +2,17 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { InvalidParameterError } from '@minddrop/utils';
 import { TagsStore } from '../TagsStore';
+import { TagGroupNotFoundError } from '../errors';
 import { TagRenamedEvent, TagUpdatedEvent } from '../events';
-import { MockFs, cleanup, mockDate, setup, tag_1, tag_2 } from '../test-utils';
+import {
+  MockFs,
+  cleanup,
+  mockDate,
+  setup,
+  tagGroup_1,
+  tag_1,
+  tag_2,
+} from '../test-utils';
 import { Tag } from '../types';
 import { resolveTagFilePath } from '../utils';
 import { updateTag } from './updateTag';
@@ -96,5 +105,39 @@ describe('updateTag', () => {
 
     // Update only the color
     await updateTag(tag_1.id, { color: 'yellow' });
+  });
+
+  it('assigns the tag to the given group', async () => {
+    const tag = await updateTag(tag_1.id, { group: tagGroup_1.id });
+
+    expect(TagsStore.get(tag_1.id)?.group).toBe(tagGroup_1.id);
+    expect(tag.group).toBe(tagGroup_1.id);
+  });
+
+  it('throws if the given group does not exist', async () => {
+    await expect(() =>
+      updateTag(tag_1.id, { group: 'tag-group_missing' }),
+    ).rejects.toThrow(TagGroupNotFoundError);
+  });
+
+  it('ungroups the tag when the group is null', async () => {
+    // Assign the tag to a group
+    await updateTag(tag_1.id, { group: tagGroup_1.id });
+
+    await updateTag(tag_1.id, { group: null });
+
+    // The tag should no longer carry the group
+    expect(TagsStore.get(tag_1.id)?.group).toBeUndefined();
+  });
+
+  it('leaves the group untouched when not given', async () => {
+    // Assign the tag to a group
+    await updateTag(tag_1.id, { group: tagGroup_1.id });
+
+    // Update only the color
+    await updateTag(tag_1.id, { color: 'yellow' });
+
+    // The tag should still carry the group
+    expect(TagsStore.get(tag_1.id)?.group).toBe(tagGroup_1.id);
   });
 });

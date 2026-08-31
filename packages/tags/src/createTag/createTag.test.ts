@@ -2,8 +2,16 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { InvalidParameterError } from '@minddrop/utils';
 import { TagsStore } from '../TagsStore';
+import { TagGroupNotFoundError } from '../errors';
 import { TagCreatedEvent } from '../events';
-import { MockFs, cleanup, mockDate, setup, tag_1 } from '../test-utils';
+import {
+  MockFs,
+  cleanup,
+  mockDate,
+  setup,
+  tagGroup_1,
+  tag_1,
+} from '../test-utils';
 import { resolveTagFilePath } from '../utils';
 import { createTag } from './createTag';
 
@@ -71,4 +79,16 @@ describe('createTag', () => {
 
       createTag('Work', 'purple');
     }));
+
+  it('assigns the tag to the given group', async () => {
+    const tag = await createTag('Work', 'purple', tagGroup_1.id);
+
+    expect(tag.group).toBe(tagGroup_1.id);
+  });
+
+  it('throws if the given group does not exist', async () => {
+    await expect(() =>
+      createTag('Work', 'purple', 'tag-group_missing'),
+    ).rejects.toThrow(TagGroupNotFoundError);
+  });
 });

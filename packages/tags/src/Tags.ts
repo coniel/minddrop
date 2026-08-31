@@ -12,4 +12,5 @@ export {
 } from './TagsStore';
 export { updateTag as update } from './updateTag';
 export { searchTags as search } from './utils';
+export { loadTags as load } from './loadTags';
 export { initializeTags as initialize } from './initializeTags';
