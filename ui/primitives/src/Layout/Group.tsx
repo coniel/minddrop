@@ -27,7 +27,7 @@ export interface GroupProps extends React.HTMLAttributes<HTMLElement> {
 
   /*
    * Alignment of children along the cross axis (align-items).
-   * Defaults to center — the main advantage of Group over raw Flex.
+   * Defaults to center - the main advantage of Group over raw Flex.
    * @default 'center'
    */
   align?: GroupAlign;

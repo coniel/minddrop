@@ -24,7 +24,7 @@ export interface TooltipProps extends TooltipBaseProps, TooltipContentProps {
   children: TooltipPrimitive.Trigger.Props['render'];
 
   /*
-   * Primary content — typically the name of the action or element.
+   * Primary content - typically the name of the action or element.
    * Translated via i18n when a string is provided.
    */
   title?: TranslatableNode;

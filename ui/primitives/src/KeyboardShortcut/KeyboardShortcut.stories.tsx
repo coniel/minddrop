@@ -11,7 +11,7 @@ export const KeyboardShortcutStories = () => (
     {/* --------------------------------------------------------
         BASIC
         Renders an array of key names as a shortcut string.
-        Use 'Mod' for the primary modifier — it renders as ⌘
+        Use 'Mod' for the primary modifier - it renders as ⌘
         on Mac and Ctrl on Windows/Linux.
     -------------------------------------------------------- */}
     <StorySection

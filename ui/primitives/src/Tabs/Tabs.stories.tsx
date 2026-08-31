@@ -65,7 +65,7 @@ export const TabsStories = () => {
 
       {/* --------------------------------------------------------
           SIZES
-          sm, md (default), lg — matches Button sizing.
+          sm, md (default), lg - matches Button sizing.
       -------------------------------------------------------- */}
       <StorySection
         title="Sizes"

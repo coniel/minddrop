@@ -22,11 +22,11 @@ export interface ButtonBaseProps {
 
   /*
    * Visual style of the button.
-   * - `ghost`   — no background or border, appears on hover
-   * - `subtle`  — muted persistent background, no border; for dense panel UIs
-   * - `outline` — bordered, background appears on hover
-   * - `filled`  — bordered + background + shadow; default for most actions
-   * - `solid`   — high contrast filled; for primary call-to-action
+   * - `ghost`   - no background or border, appears on hover
+   * - `subtle`  - muted persistent background, no border; for dense panel UIs
+   * - `outline` - bordered, background appears on hover
+   * - `filled`  - bordered + background + shadow; default for most actions
+   * - `solid`   - high contrast filled; for primary call-to-action
    * @default 'ghost'
    */
   variant?: ButtonVariant;
@@ -59,7 +59,7 @@ export interface ButtonBaseProps {
   active?: boolean;
 
   /*
-   * Applies danger styling — shown on hover or always.
+   * Applies danger styling - shown on hover or always.
    */
   danger?: ButtonDanger;
 

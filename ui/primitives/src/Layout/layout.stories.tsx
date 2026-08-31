@@ -42,7 +42,7 @@ export const LayoutStories = () => (
         ============================================================ */}
 
     {/* --------------------------------------------------------
-        GROUP — BASIC
+        GROUP - BASIC
         Horizontal row with centered alignment by default.
         The main advantage over a raw div is that align: center
         and gap are handled automatically.
@@ -79,7 +79,7 @@ export const LayoutStories = () => (
     </StorySection>
 
     {/* --------------------------------------------------------
-        GROUP — GROW
+        GROUP - GROW
         Children stretch equally to fill available width.
         Useful for tab bars, segmented controls, equal-width
         button rows.
@@ -102,7 +102,7 @@ export const LayoutStories = () => (
     </StorySection>
 
     {/* --------------------------------------------------------
-        GROUP — WRAP
+        GROUP - WRAP
         Items wrap onto the next line when the container is
         too narrow. Useful for tag lists, filter chips.
     -------------------------------------------------------- */}
@@ -126,7 +126,7 @@ export const LayoutStories = () => (
     </StorySection>
 
     {/* --------------------------------------------------------
-        GROUP — REAL USAGE
+        GROUP - REAL USAGE
     -------------------------------------------------------- */}
     <StorySection
       title="Group — in use"
@@ -174,7 +174,7 @@ export const LayoutStories = () => (
         ============================================================ */}
 
     {/* --------------------------------------------------------
-        STACK — BASIC
+        STACK - BASIC
         Vertical column with stretch alignment by default so
         children fill the available width.
     -------------------------------------------------------- */}
@@ -210,7 +210,7 @@ export const LayoutStories = () => (
     </StorySection>
 
     {/* --------------------------------------------------------
-        STACK — GAP
+        STACK - GAP
     -------------------------------------------------------- */}
     <StorySection
       title="Stack — gap"
@@ -242,7 +242,7 @@ export const LayoutStories = () => (
     </StorySection>
 
     {/* --------------------------------------------------------
-        STACK — REAL USAGE
+        STACK - REAL USAGE
     -------------------------------------------------------- */}
     <StorySection
       title="Stack — in use"
@@ -313,12 +313,12 @@ export const LayoutStories = () => (
     </StorySection>
 
     {/* ============================================================
-        FLEX — BASE PRIMITIVE
+        FLEX - BASE PRIMITIVE
         ============================================================ */}
 
     {/* --------------------------------------------------------
-        FLEX — BASIC
-        The base primitive. Prefer Group or Stack in most cases —
+        FLEX - BASIC
+        The base primitive. Prefer Group or Stack in most cases -
         use Flex directly when you need direction control or
         non-standard wrap behaviour.
     -------------------------------------------------------- */}

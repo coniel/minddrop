@@ -1,11 +1,11 @@
-/* Tabs list — horizontal row of tab triggers */
+/* Tabs list - horizontal row of tab triggers */
 .tabs-list {
   display: flex;
   align-items: center;
   gap: var(--space-1);
 }
 
-/* Individual tab trigger — ghost-style base */
+/* Individual tab trigger - ghost-style base */
 .tabs-tab {
   display: flex;
   align-items: center;

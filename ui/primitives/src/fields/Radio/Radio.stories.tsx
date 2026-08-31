@@ -17,7 +17,7 @@ export const RadioStories = () => {
     <Story title="Radio">
       {/* --------------------------------------------------------
           RADIO FIELD
-          Always used inside a RadioGroup — the group manages
+          Always used inside a RadioGroup - the group manages
           which value is selected.
       -------------------------------------------------------- */}
       <StorySection
@@ -102,7 +102,7 @@ export const RadioStories = () => {
       </StorySection>
 
       {/* --------------------------------------------------------
-          RADIO CARD — OUTLINE
+          RADIO CARD - OUTLINE
           Bordered card, fills with primary tint when selected.
           Best for prominent choices like plan selection.
       -------------------------------------------------------- */}
@@ -170,7 +170,7 @@ export const RadioStories = () => {
       </StorySection>
 
       {/* --------------------------------------------------------
-          RADIO CARD — SUBTLE
+          RADIO CARD - SUBTLE
           Surface-filled card, stronger tint when selected.
           Sits more quietly in layouts with other content.
       -------------------------------------------------------- */}
@@ -207,7 +207,7 @@ export const RadioStories = () => {
       </StorySection>
 
       {/* --------------------------------------------------------
-          RADIO CARD — WITH ICON
+          RADIO CARD - WITH ICON
           Icon sits above the title inside the card content area.
       -------------------------------------------------------- */}
       <StorySection

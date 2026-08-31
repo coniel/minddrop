@@ -14,7 +14,7 @@ export const NumberFieldStories = () => {
     <Story title="NumberField">
       {/* --------------------------------------------------------
           VARIANTS
-          Inherits text-field variant styles directly — no
+          Inherits text-field variant styles directly - no
           duplicate CSS. Stepper buttons appear on hover.
       -------------------------------------------------------- */}
       <StorySection

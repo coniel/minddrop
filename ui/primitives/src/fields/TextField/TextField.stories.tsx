@@ -365,7 +365,7 @@ export const TextFieldStories = () => (
     </StorySection>
 
     {/* --------------------------------------------------------
-        GHOST — INLINE EDITING
+        GHOST - INLINE EDITING
         Ghost is borderless and invisible until focused.
         textSize/weight/color props match surrounding typography.
     -------------------------------------------------------- */}
@@ -412,7 +412,7 @@ export const TextFieldStories = () => (
 
     {/* --------------------------------------------------------
         SIDE BY SIDE WITH BUTTON/SELECT
-        The key use case — showing that sizes align exactly.
+        The key use case - showing that sizes align exactly.
     -------------------------------------------------------- */}
     <StorySection
       title="Composed with Button and Select"

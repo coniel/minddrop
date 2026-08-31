@@ -22,12 +22,12 @@ export interface PopoverContentProps extends PopoverPrimitive.Popup.Props {
 }
 
 /*
- * Root — manages open/close state.
+ * Root - manages open/close state.
  */
 export const Popover = PopoverPrimitive.Root;
 
 /*
- * Trigger — the element that opens the popover.
+ * Trigger - the element that opens the popover.
  * Accepts any renderable element via the render prop.
  */
 export const PopoverTrigger = ({
@@ -41,7 +41,7 @@ export const PopoverTrigger = ({
 PopoverTrigger.displayName = 'PopoverTrigger';
 
 /*
- * Positioner — positions the popup relative to the trigger.
+ * Positioner - positions the popup relative to the trigger.
  */
 export const PopoverPositioner = React.forwardRef<
   HTMLDivElement,
@@ -57,7 +57,7 @@ export const PopoverPositioner = React.forwardRef<
 PopoverPositioner.displayName = 'PopoverPositioner';
 
 /*
- * Content — the popup panel itself.
+ * Content - the popup panel itself.
  */
 export const PopoverContent = React.forwardRef<
   HTMLDivElement,
@@ -76,11 +76,11 @@ export const PopoverContent = React.forwardRef<
 PopoverContent.displayName = 'PopoverContent';
 
 /*
- * Close — a button that closes the popover.
+ * Close - a button that closes the popover.
  */
 export const PopoverClose = PopoverPrimitive.Close;
 
 /*
- * Portal — renders the popover outside the DOM hierarchy.
+ * Portal - renders the popover outside the DOM hierarchy.
  */
 export const PopoverPortal = PopoverPrimitive.Portal;

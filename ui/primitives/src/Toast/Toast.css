@@ -61,7 +61,7 @@
   }
 }
 
-/* --- Type variants — colored left border --- */
+/* --- Type variants - colored left border --- */
 
 .toast-type-success {
   border-left: var(--border-width-thick) solid var(--border-primary);
@@ -112,7 +112,6 @@
   border: none;
   border-radius: var(--radius-sm);
   color: var(--text-muted);
-  cursor: pointer;
 
   &:hover {
     color: var(--text-regular);
@@ -136,7 +135,6 @@
   border: var(--border-width-thin) solid var(--border-moderate);
   border-radius: var(--radius-md);
   color: var(--text-regular);
-  cursor: pointer;
 
   &:hover {
     background-color: var(--surface-hover);

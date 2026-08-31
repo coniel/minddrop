@@ -10,7 +10,7 @@ import { DateInput } from './DateInput';
 export const DateFieldStories = () => (
   <Story title="DateField">
     {/* --------------------------------------------------------
-        DATE INPUT — VARIANTS
+        DATE INPUT - VARIANTS
     -------------------------------------------------------- */}
     <StorySection
       title="DateInput — Variants"
@@ -41,7 +41,7 @@ export const DateFieldStories = () => (
     </StorySection>
 
     {/* --------------------------------------------------------
-        DATE INPUT — SIZES
+        DATE INPUT - SIZES
     -------------------------------------------------------- */}
     <StorySection
       title="DateInput — Sizes"
@@ -67,7 +67,7 @@ export const DateFieldStories = () => (
     </StorySection>
 
     {/* --------------------------------------------------------
-        DATE INPUT — WITH VALUE
+        DATE INPUT - WITH VALUE
     -------------------------------------------------------- */}
     <StorySection
       title="DateInput — With value"
@@ -95,7 +95,7 @@ export const DateFieldStories = () => (
     </StorySection>
 
     {/* --------------------------------------------------------
-        DATE INPUT — INVALID
+        DATE INPUT - INVALID
     -------------------------------------------------------- */}
     <StorySection
       title="DateInput — Invalid"
@@ -121,7 +121,7 @@ export const DateFieldStories = () => (
     </StorySection>
 
     {/* --------------------------------------------------------
-        DATE INPUT — DISABLED
+        DATE INPUT - DISABLED
     -------------------------------------------------------- */}
     <StorySection
       title="DateInput — Disabled"

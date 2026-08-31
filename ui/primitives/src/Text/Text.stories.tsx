@@ -78,7 +78,7 @@ export const TextStories = () => (
     {/* --------------------------------------------------------
         WEIGHTS
         Medium is the sweet spot for UI labels. Avoid bold
-        in dense UIs — semibold achieves emphasis without
+        in dense UIs - semibold achieves emphasis without
         heaviness.
     -------------------------------------------------------- */}
     <StorySection

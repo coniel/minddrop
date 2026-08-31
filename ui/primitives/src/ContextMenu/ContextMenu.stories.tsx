@@ -83,7 +83,7 @@ export const ContextMenuStories = () => {
       </StorySection>
 
       {/* --------------------------------------------------------
-          CONVENIENCE API — ICONS
+          CONVENIENCE API - ICONS
       -------------------------------------------------------- */}
       <StorySection
         title="Convenience — icons"
@@ -128,7 +128,7 @@ export const ContextMenuStories = () => {
       </StorySection>
 
       {/* --------------------------------------------------------
-          CONVENIENCE API — RADIO GROUP
+          CONVENIENCE API - RADIO GROUP
       -------------------------------------------------------- */}
       <StorySection
         title="Convenience — radio group"
@@ -150,7 +150,7 @@ export const ContextMenuStories = () => {
       </StorySection>
 
       {/* --------------------------------------------------------
-          COMPOSITIONAL API — SHIFT KEY SECONDARY STATE
+          COMPOSITIONAL API - SHIFT KEY SECONDARY STATE
       -------------------------------------------------------- */}
       <StorySection
         title="Compositional — shift secondary state"
@@ -187,7 +187,7 @@ export const ContextMenuStories = () => {
       </StorySection>
 
       {/* --------------------------------------------------------
-          COMPOSITIONAL API — SUBMENU
+          COMPOSITIONAL API - SUBMENU
       -------------------------------------------------------- */}
       <StorySection
         title="Compositional — submenu"
@@ -276,7 +276,7 @@ export const ContextMenuStories = () => {
       </StorySection>
 
       {/* --------------------------------------------------------
-          COMPOSITIONAL API — DISABLED ITEMS
+          COMPOSITIONAL API - DISABLED ITEMS
       -------------------------------------------------------- */}
       <StorySection
         title="Compositional — disabled items"

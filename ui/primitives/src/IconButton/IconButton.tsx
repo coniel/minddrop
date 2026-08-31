@@ -37,19 +37,19 @@ interface IconButtonBaseProps
 
   /*
    * Visual style.
-   * - `ghost`   — no background or border, appears on hover (default)
-   * - `subtle`  — muted persistent background, no border; for dense panel UIs
-   * - `outline` — bordered, background appears on hover
-   * - `filled`  — bordered + background + shadow
+   * - `ghost`   - no background or border, appears on hover (default)
+   * - `subtle`  - muted persistent background, no border; for dense panel UIs
+   * - `outline` - bordered, background appears on hover
+   * - `filled`  - bordered + background + shadow
    * @default 'ghost'
    */
   variant?: IconButtonVariant;
 
   /*
    * Icon color.
-   * - `neutral`  — standard muted icon color (default)
-   * - `muted`    — more receded, for secondary/supporting actions
-   * - `contrast` — for icons on solid/dark surfaces
+   * - `neutral`  - standard muted icon color (default)
+   * - `muted`    - more receded, for secondary/supporting actions
+   * - `contrast` - for icons on solid/dark surfaces
    * @default 'neutral'
    */
   color?: IconButtonColor;

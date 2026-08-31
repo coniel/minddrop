@@ -237,7 +237,7 @@
   color: var(--text-on-solid);
 }
 
-/* Range-middle overrides selected styling — middle days are not solid */
+/* Range-middle overrides selected styling - middle days are not solid */
 .calendar-day-range-middle.calendar-day-selected .calendar-day-button {
   background: none;
   color: var(--text-primary);

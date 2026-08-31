@@ -19,7 +19,7 @@ const RadioGroupContext = React.createContext<MenuRadioGroupContext | null>(
 );
 
 /* Returns context when inside a MenuRadioGroup, null otherwise.
-   Safe to call without a provider — used by MenuRadioItem to
+   Safe to call without a provider - used by MenuRadioItem to
    support both standalone and Base UI renderer modes. */
 export function useMenuRadioGroupContext(): MenuRadioGroupContext | null {
   return React.useContext(RadioGroupContext);
@@ -65,7 +65,7 @@ export const MenuRadioGroup: React.FC<MenuRadioGroupProps> = ({
   /* Use controlled value when provided, otherwise internal state */
   const value = valueProp !== undefined ? valueProp : valueInternal;
 
-  /* Change handler — updates internal state and notifies parent */
+  /* Change handler - updates internal state and notifies parent */
   const handleValueChange = (nextValue: string) => {
     if (valueProp === undefined) {
       setValueInternal(nextValue);

@@ -1,7 +1,7 @@
 /* ============================================================
    SCROLL AREA
    Built on Base UI ScrollArea primitive.
-   macOS-style overlay scrollbars — thin by default,
+   macOS-style overlay scrollbars - thin by default,
    expand on hover, fade in/out on scroll.
    ============================================================ */
 
@@ -32,7 +32,7 @@
   display: flex;
   border-radius: var(--radius-full);
   z-index: 10;
-  /* Invisible hit area — always full size for grabbing */
+  /* Invisible hit area - always full size for grabbing */
   background: transparent;
 
   /* Fade transition for visibility modes */
@@ -60,7 +60,7 @@
 
 /* --- Scrollbar visibility modes --- */
 
-/* hover — only visible when root is hovered */
+/* hover - only visible when root is hovered */
 .scroll-area-visibility-hover .scroll-area-scrollbar {
   opacity: 0;
   transition: opacity 400ms var(--ease-out);
@@ -71,7 +71,7 @@
   transition: opacity 150ms var(--ease-out);
 }
 
-/* scroll — hidden until scrolling, fades out after ~1.5s idle */
+/* scroll - hidden until scrolling, fades out after ~1.5s idle */
 .scroll-area-visibility-scroll .scroll-area-scrollbar {
   opacity: 0;
   transition: opacity 1000ms var(--ease-out);
@@ -85,7 +85,7 @@
   pointer-events: auto;
 }
 
-/* always — always visible */
+/* always - always visible */
 .scroll-area-visibility-always .scroll-area-scrollbar {
   opacity: 1;
 }

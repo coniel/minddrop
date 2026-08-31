@@ -43,12 +43,12 @@ export interface FlexItemProps extends React.HTMLAttributes<HTMLElement> {
 
   /*
    * Applies auto margin to push the item or its siblings away.
-   * - `left`   — pushes item to the far right of its row
-   * - `right`  — pushes item to the far left of its row
-   * - `x`      — centers item horizontally
-   * - `top`    — pushes item to the bottom of its column
-   * - `bottom` — pushes item to the top of its column
-   * - `y`      — centers item vertically
+   * - `left`   - pushes item to the far right of its row
+   * - `right`  - pushes item to the far left of its row
+   * - `x`      - centers item horizontally
+   * - `top`    - pushes item to the bottom of its column
+   * - `bottom` - pushes item to the top of its column
+   * - `y`      - centers item vertically
    */
   marginAuto?: FlexItemMarginAuto;
 }

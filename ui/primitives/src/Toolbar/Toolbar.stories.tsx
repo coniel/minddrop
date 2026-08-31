@@ -18,7 +18,7 @@ export const ToolbarStories = () => (
         BASIC
         Built on Base UI Toolbar for accessible keyboard nav.
         Arrow keys move focus between items, Tab exits the toolbar.
-        Always use Toolbar* components as children — plain buttons
+        Always use Toolbar* components as children - plain buttons
         won't participate in keyboard navigation.
     -------------------------------------------------------- */}
     <StorySection
@@ -178,7 +178,7 @@ export const ToolbarStories = () => (
 
     {/* --------------------------------------------------------
         VARIANTS
-        Toolbar inherits button variants — match the variant
+        Toolbar inherits button variants - match the variant
         to the surface context the toolbar lives in.
     -------------------------------------------------------- */}
     <StorySection

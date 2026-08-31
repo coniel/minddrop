@@ -66,7 +66,7 @@ export const ButtonStories = () => (
 
     {/* --------------------------------------------------------
         COLORS
-        Applied on top of any variant. Use primary sparingly —
+        Applied on top of any variant. Use primary sparingly -
         one per view. Use danger for destructive actions.
     -------------------------------------------------------- */}
     <StorySection
@@ -224,7 +224,7 @@ export const ButtonStories = () => (
     </StorySection>
 
     {/* --------------------------------------------------------
-        SUBTLE — PANEL USE
+        SUBTLE - PANEL USE
         Always-visible muted background without borders. Keeps
         controls discoverable in dense property editor panels
         without visual clutter.

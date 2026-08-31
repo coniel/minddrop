@@ -7,7 +7,7 @@ export interface KeyboardShortcutProps extends Omit<TextProps, 'children'> {
   /*
    * The shortcut keys to display.
    *
-   * Use 'Mod' for the primary modifier — renders as '⌘' on Mac, 'Ctrl' on
+   * Use 'Mod' for the primary modifier - renders as '⌘' on Mac, 'Ctrl' on
    * Windows/Linux. 'Alt' renders as '⌥' on Mac. 'Shift' and 'Enter' render
    * as '⇧' and '⏎' on Mac respectively.
    */

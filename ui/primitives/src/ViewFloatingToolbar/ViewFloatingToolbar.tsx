@@ -21,8 +21,8 @@ export interface ViewFloatingToolbarProps extends FloatingToolbarProps {
 
   /**
    * How the toolbar is positioned.
-   * - `sticky` — sticks to the bottom of the nearest scrollport
-   * - `absolute` — pinned to the bottom of the nearest positioned
+   * - `sticky` - sticks to the bottom of the nearest scrollport
+   * - `absolute` - pinned to the bottom of the nearest positioned
    *   ancestor, staying in place as its content scrolls
    * @default 'sticky'
    */

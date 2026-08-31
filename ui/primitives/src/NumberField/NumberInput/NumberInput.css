@@ -1,7 +1,7 @@
 /* ============================================================
    NUMBER INPUT
    Built on Base UI NumberField primitive.
-   Extends text-input styles — .text-input class is applied
+   Extends text-input styles - .text-input class is applied
    to the root so all variant/size/state styles are inherited.
    ============================================================ */
 
@@ -92,7 +92,7 @@
   );
 }
 
-/* ghost / outline — no background fill, use app surface */
+/* ghost / outline - no background fill, use app surface */
 .text-input-variant-ghost,
 .text-input-variant-outline {
   --number-input-bg: var(--surface-app);

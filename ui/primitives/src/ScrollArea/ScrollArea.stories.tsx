@@ -121,7 +121,7 @@ const StatePersistenceDemo = () => {
 export const ScrollAreaStories = () => (
   <Story title="ScrollArea">
     {/* --------------------------------------------------------
-        VERTICAL SCROLL AREA — VISIBILITY MODES
+        VERTICAL SCROLL AREA - VISIBILITY MODES
     -------------------------------------------------------- */}
     <StorySection
       title="VerticalScrollArea — visibility"
@@ -189,7 +189,7 @@ export const ScrollAreaStories = () => (
     </StorySection>
 
     {/* --------------------------------------------------------
-        SCROLL AREA — BOTH AXES
+        SCROLL AREA - BOTH AXES
     -------------------------------------------------------- */}
     <StorySection
       title="ScrollArea — both axes"

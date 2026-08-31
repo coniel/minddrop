@@ -154,7 +154,7 @@ export const DialogStories = () => (
     {/* --------------------------------------------------------
         CUSTOM CONTENT
         Dialog accepts any children. Title and Description are
-        optional — omit them for fully custom layouts.
+        optional - omit them for fully custom layouts.
     -------------------------------------------------------- */}
     <StorySection
       title="Custom content"

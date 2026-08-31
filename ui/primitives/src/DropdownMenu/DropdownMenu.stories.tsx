@@ -99,7 +99,7 @@ export const DropdownMenuStories = () => {
       </StorySection>
 
       {/* --------------------------------------------------------
-          CONVENIENCE API — ICONS + SHORTCUTS
+          CONVENIENCE API - ICONS + SHORTCUTS
       -------------------------------------------------------- */}
       <StorySection
         title="Convenience — icons and shortcuts"
@@ -148,7 +148,7 @@ export const DropdownMenuStories = () => {
       </StorySection>
 
       {/* --------------------------------------------------------
-          CONVENIENCE API — RADIO GROUP
+          CONVENIENCE API - RADIO GROUP
       -------------------------------------------------------- */}
       <StorySection
         title="Convenience — radio group"
@@ -311,7 +311,7 @@ export const DropdownMenuStories = () => {
       </StorySection>
 
       {/* --------------------------------------------------------
-          COMPOSITIONAL API — BASIC
+          COMPOSITIONAL API - BASIC
           Uses DropdownMenuRoot for full control over structure.
       -------------------------------------------------------- */}
       <StorySection
@@ -357,7 +357,7 @@ export const DropdownMenuStories = () => {
       </StorySection>
 
       {/* --------------------------------------------------------
-          COMPOSITIONAL API — LABELS + SEPARATORS
+          COMPOSITIONAL API - LABELS + SEPARATORS
       -------------------------------------------------------- */}
       <StorySection
         title="Compositional — labels and separators"
@@ -410,7 +410,7 @@ export const DropdownMenuStories = () => {
       </StorySection>
 
       {/* --------------------------------------------------------
-          COMPOSITIONAL API — SHIFT KEY SECONDARY STATE
+          COMPOSITIONAL API - SHIFT KEY SECONDARY STATE
       -------------------------------------------------------- */}
       <StorySection
         title="Compositional — shift secondary state"
@@ -451,7 +451,7 @@ export const DropdownMenuStories = () => {
       </StorySection>
 
       {/* --------------------------------------------------------
-          COMPOSITIONAL API — SUBMENU
+          COMPOSITIONAL API - SUBMENU
       -------------------------------------------------------- */}
       <StorySection
         title="Compositional — submenu"
@@ -547,7 +547,7 @@ export const DropdownMenuStories = () => {
       </StorySection>
 
       {/* --------------------------------------------------------
-          COMPOSITIONAL API — DISABLED ITEMS
+          COMPOSITIONAL API - DISABLED ITEMS
       -------------------------------------------------------- */}
       <StorySection
         title="Compositional — disabled items"

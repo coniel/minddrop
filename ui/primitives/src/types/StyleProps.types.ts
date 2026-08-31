@@ -23,105 +23,197 @@ export type ColorShade = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 export type Color = `${ColorName}-${ColorShade}`;
 
 export interface StyleProps {
-  /** Margin */
+  /**
+   * Margin.
+   */
   m?: Spacing;
-  /** MarginBlock */
+  /**
+   * MarginBlock.
+   */
   my?: Spacing;
-  /** MarginInline */
+  /**
+   * MarginInline.
+   */
   mx?: Spacing;
-  /** MarginTop */
+  /**
+   * MarginTop.
+   */
   mt?: Spacing;
-  /** MarginBottom */
+  /**
+   * MarginBottom.
+   */
   mb?: Spacing;
-  /** MarginInlineStart */
+  /**
+   * MarginInlineStart.
+   */
   ms?: Spacing;
-  /** MarginInlineEnd */
+  /**
+   * MarginInlineEnd.
+   */
   me?: Spacing;
-  /** MarginLeft */
+  /**
+   * MarginLeft.
+   */
   ml?: Spacing;
-  /** MarginRight */
+  /**
+   * MarginRight.
+   */
   mr?: Spacing;
 
-  /** Padding */
+  /**
+   * Padding.
+   */
   p?: Spacing;
-  /** PaddingBlock */
+  /**
+   * PaddingBlock.
+   */
   py?: Spacing;
-  /** PaddingInline */
+  /**
+   * PaddingInline.
+   */
   px?: Spacing;
-  /** PaddingTop */
+  /**
+   * PaddingTop.
+   */
   pt?: Spacing;
-  /** PaddingBottom */
+  /**
+   * PaddingBottom.
+   */
   pb?: Spacing;
-  /** PaddingInlineStart */
+  /**
+   * PaddingInlineStart.
+   */
   ps?: Spacing;
-  /** PaddingInlineEnd */
+  /**
+   * PaddingInlineEnd.
+   */
   pe?: Spacing;
-  /** PaddingLeft */
+  /**
+   * PaddingLeft.
+   */
   pl?: Spacing;
-  /** PaddingRight */
+  /**
+   * PaddingRight.
+   */
   pr?: Spacing;
 
-  /** BorderRadius */
+  /**
+   * BorderRadius.
+   */
   br?: Radius;
-  /** BorderTopLeftRadius */
+  /**
+   * BorderTopLeftRadius.
+   */
   btlr?: Radius;
-  /** BorderTopRightRadius */
+  /**
+   * BorderTopRightRadius.
+   */
   btrr?: Radius;
-  /** BorderBottomLeftRadius */
+  /**
+   * BorderBottomLeftRadius.
+   */
   bblr?: Radius;
-  /** BorderBottomRightRadius */
+  /**
+   * BorderBottomRightRadius.
+   */
   bbrr?: Radius;
 
-  /** Border */
+  /**
+   * Border.
+   */
   bd?: Border;
-  /** Background, theme key: theme.colors */
+  /**
+   * Background, theme key: theme.colors.
+   */
   bg?: Color;
-  /** Color */
+  /**
+   * Color.
+   */
   c?: Color;
   opacity?: React.CSSProperties['opacity'];
 
-  /** FontFamily */
+  /**
+   * FontFamily.
+   */
   ff?: 'monospace' | 'text' | 'heading';
-  /** FontSize, theme key: theme.fontSizes */
+  /**
+   * FontSize, theme key: theme.fontSizes.
+   */
   fz?: FontSize | `h${1 | 2 | 3 | 4 | 5 | 6}`;
-  /** FontWeight */
+  /**
+   * FontWeight.
+   */
   fw?: React.CSSProperties['fontWeight'];
-  /** LetterSpacing */
+  /**
+   * LetterSpacing.
+   */
   lts?: React.CSSProperties['letterSpacing'];
-  /** TextAlign */
+  /**
+   * TextAlign.
+   */
   ta?: React.CSSProperties['textAlign'];
-  /** LineHeight, theme key: lineHeights */
+  /**
+   * LineHeight, theme key: lineHeights.
+   */
   lh?: LineHeight | `h${1 | 2 | 3 | 4 | 5 | 6}`;
-  /** FontStyle */
+  /**
+   * FontStyle.
+   */
   fs?: React.CSSProperties['fontStyle'];
-  /** TextTransform */
+  /**
+   * TextTransform.
+   */
   tt?: React.CSSProperties['textTransform'];
-  /** TextDecoration */
+  /**
+   * TextDecoration.
+   */
   td?: React.CSSProperties['textDecoration'];
 
-  /** Width */
+  /**
+   * Width.
+   */
   w?: React.CSSProperties['width'];
-  /** MinWidth*/
+  /**
+   * MinWidth.
+   */
   miw?: React.CSSProperties['minWidth'];
-  /** MaxWidth */
+  /**
+   * MaxWidth.
+   */
   maw?: React.CSSProperties['maxWidth'];
-  /** Height */
+  /**
+   * Height.
+   */
   h?: React.CSSProperties['height'];
-  /** MinHeight */
+  /**
+   * MinHeight.
+   */
   mih?: React.CSSProperties['minHeight'];
-  /** MaxHeight */
+  /**
+   * MaxHeight.
+   */
   mah?: React.CSSProperties['maxHeight'];
 
-  /** BackgroundSize */
+  /**
+   * BackgroundSize.
+   */
   bgsz?: React.CSSProperties['backgroundSize'];
-  /** BackgroundPosition */
+  /**
+   * BackgroundPosition.
+   */
   bgp?: React.CSSProperties['backgroundPosition'];
-  /** BackgroundRepeat */
+  /**
+   * BackgroundRepeat.
+   */
   bgr?: React.CSSProperties['backgroundRepeat'];
-  /** BackgroundAttachment */
+  /**
+   * BackgroundAttachment.
+   */
   bga?: React.CSSProperties['backgroundAttachment'];
 
-  /** Position */
+  /**
+   * Position.
+   */
   pos?: React.CSSProperties['position'];
   top?: React.CSSProperties['top'];
   left?: React.CSSProperties['left'];

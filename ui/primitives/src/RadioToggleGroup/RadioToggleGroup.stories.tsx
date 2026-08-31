@@ -17,7 +17,7 @@ export const RadioToggleGroupStories = () => {
       {/* --------------------------------------------------------
           BASIC
           Single-select. Exactly one item is always active.
-          Clicking the active item has no effect — it cannot
+          Clicking the active item has no effect - it cannot
           be deselected. Use ToggleGroup for multi-select.
       -------------------------------------------------------- */}
       <StorySection

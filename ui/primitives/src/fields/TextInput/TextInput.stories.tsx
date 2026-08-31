@@ -317,7 +317,7 @@ export const TextInputStories = () => (
     </StorySection>
 
     {/* --------------------------------------------------------
-        GHOST — INLINE EDITING
+        GHOST - INLINE EDITING
     -------------------------------------------------------- */}
     <StorySection
       title="Ghost — inline editing"

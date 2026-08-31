@@ -129,3 +129,9 @@
   color: var(--text-muted);
   margin-bottom: var(--space-1);
 }
+
+.checkbox-group-separator {
+  height: 1px;
+  margin: 0;
+  background: var(--border-subtle);
+}

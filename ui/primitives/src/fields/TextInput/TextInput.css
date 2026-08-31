@@ -116,7 +116,7 @@
   }
 }
 
-/* lg is default — applied both explicitly and as fallback */
+/* lg is default - applied both explicitly and as fallback */
 .text-input-size-lg,
 .text-input:not(.text-input-size-sm):not(.text-input-size-md) {
   height: var(--control-height-lg);

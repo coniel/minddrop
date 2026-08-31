@@ -126,7 +126,7 @@ export const CollapsibleStories = () => {
 
       {/* --------------------------------------------------------
           IN USE
-          Common real-world pattern — sidebar section with a
+          Common real-world pattern - sidebar section with a
           label trigger and chevron icon.
       -------------------------------------------------------- */}
       <StorySection

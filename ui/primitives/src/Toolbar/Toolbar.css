@@ -16,7 +16,7 @@
 
 /* --- Separator --- */
 
-/* Vertical (default — inside horizontal toolbar) */
+/* Vertical (default - inside horizontal toolbar) */
 .toolbar-separator {
   width: 1px;
   height: 1rem;
@@ -25,7 +25,7 @@
   flex-shrink: 0;
 }
 
-/* Horizontal — inside vertical toolbar */
+/* Horizontal - inside vertical toolbar */
 .toolbar[aria-orientation='vertical'] .toolbar-separator {
   width: 100%;
   height: 1px;

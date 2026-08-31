@@ -12,7 +12,7 @@ export const FloatingToolbarStories = () => (
   <Story title="FloatingToolbar">
     {/* --------------------------------------------------------
         SIZES
-        The surface only — placement is left to the consumer.
+        The surface only - placement is left to the consumer.
         Use lg for a view's primary toolbar and md for secondary
         toolbars such as canvas zoom controls.
     -------------------------------------------------------- */}

@@ -18,7 +18,7 @@ export const ToggleGroupStories = () => {
           BASIC
           Multi-select. Any number of items can be active at once.
           Container size controls both container and child Toggle
-          sizes — child Toggles are slightly smaller than their
+          sizes - child Toggles are slightly smaller than their
           standalone equivalents to leave breathing room.
       -------------------------------------------------------- */}
       <StorySection

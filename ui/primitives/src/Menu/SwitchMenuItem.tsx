@@ -10,7 +10,7 @@ import { MenuItem, MenuItemProps } from './MenuItem';
    uncontrolled usage.
 
    When used inside an ActionMenuSwitchItem, toggle and
-   keyboard are handled by Base UI's CheckboxItem — this
+   keyboard are handled by Base UI's CheckboxItem - this
    component is purely presentational in that case.
    ============================================================ */
 
@@ -62,7 +62,7 @@ export const SwitchMenuItem = React.forwardRef<
     /* Use controlled value when provided, otherwise internal state */
     const checked = checkedProp !== undefined ? checkedProp : checkedInternal;
 
-    /* Toggle handler — clicking anywhere on the row toggles the switch.
+    /* Toggle handler - clicking anywhere on the row toggles the switch.
        Only used in standalone mode. When inside a renderer, Base UI's
        CheckboxItem handles the toggle and this handler is overridden
        by Base UI's merged onClick via {...other}. */

@@ -13,9 +13,9 @@ export interface FloatingToolbarProps extends ToolbarProps {
 
   /**
    * Size of the toolbar's surface.
-   * - `sm` — compact toolbars attached to a single element
-   * - `md` — secondary toolbars, e.g. canvas zoom controls
-   * - `lg` — a view's primary toolbar
+   * - `sm` - compact toolbars attached to a single element
+   * - `md` - secondary toolbars, e.g. canvas zoom controls
+   * - `lg` - a view's primary toolbar
    * @default 'lg'
    */
   size?: FloatingToolbarSize;

@@ -11,7 +11,7 @@ export const SeparatorStories = () => (
     {/* --------------------------------------------------------
         ORIENTATION
         Horizontal fills its container's width at 1px height.
-        Vertical fills its container's height at 1px width —
+        Vertical fills its container's height at 1px width -
         requires the parent to have a defined height.
     -------------------------------------------------------- */}
     <StorySection

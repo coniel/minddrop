@@ -24,16 +24,16 @@ export const ScrollAreaThumb = ScrollAreaPrimitive.Thumb;
 export const ScrollAreaCorner = ScrollAreaPrimitive.Corner;
 
 /* ============================================================
-   SCROLL AREA — vertical + horizontal with corner
+   SCROLL AREA - vertical + horizontal with corner
    ============================================================ */
 
 export interface ScrollAreaProps {
   children: React.ReactNode;
   /*
    * When to show the scrollbars.
-   * - hover  — visible when the container is hovered
-   * - scroll — visible while scrolling, fades out after ~1.5s
-   * - always — always visible
+   * - hover  - visible when the container is hovered
+   * - scroll - visible while scrolling, fades out after ~1.5s
+   * - always - always visible
    * @default 'hover'
    */
   visibility?: ScrollAreaVisibility;

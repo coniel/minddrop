@@ -24,7 +24,7 @@ export const PopoverStories = () => (
   <Story title="Popover">
     {/* --------------------------------------------------------
         BASIC
-        Popover is a low-level primitive — it provides no
+        Popover is a low-level primitive - it provides no
         internal padding or layout. Compose content freely inside
         PopoverContent.
     -------------------------------------------------------- */}

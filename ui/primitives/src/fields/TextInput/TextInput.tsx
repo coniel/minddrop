@@ -17,19 +17,19 @@ export interface TextInputProps {
 
   /*
    * Visual style of the input. Matches Button/Select variants.
-   * - `ghost`   — invisible until focused, for inline editing
-   * - `subtle`  — subtle surface fill
-   * - `outline` — bordered, no background
-   * - `filled`  — surface-paper background with shadow
+   * - `ghost`   - invisible until focused, for inline editing
+   * - `subtle`  - subtle surface fill
+   * - `outline` - bordered, no background
+   * - `filled`  - surface-paper background with shadow
    * @default 'outline'
    */
   variant?: TextInputVariant;
 
   /*
    * Height of the input. Matches Button/Select sizes exactly.
-   * - `sm` — 1.5rem (24px)
-   * - `md` — 1.75rem (28px)
-   * - `lg` — 2.25rem (36px)
+   * - `sm` - 1.5rem (24px)
+   * - `md` - 1.75rem (28px)
+   * - `lg` - 2.25rem (36px)
    * @default 'lg'
    */
   size?: TextInputSize;

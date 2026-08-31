@@ -21,7 +21,7 @@ export interface MenuRadioItemProps
   /*
    * Custom indicator rendered inside the radio circle.
    * When provided, context-based checked state is not used
-   * for the dot — the caller controls indicator visibility.
+   * for the dot - the caller controls indicator visibility.
    */
   indicator?: React.ReactNode;
 }
@@ -36,7 +36,7 @@ export const MenuRadioItem = React.forwardRef<
   /* Determine checked state from context (standalone mode) */
   const checked = context ? context.value === value : false;
 
-  /* Click handler for standalone mode — selects this value */
+  /* Click handler for standalone mode - selects this value */
   const handleClick = () => {
     if (disabled || !context) {
       return;

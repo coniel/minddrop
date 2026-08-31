@@ -64,17 +64,17 @@
 
 /* --- Width variants --- */
 
-/* sm — confirmations, simple prompts */
+/* sm - confirmations, simple prompts */
 .dialog-popup-width-sm {
   width: 28rem;
 }
 
-/* md — default */
+/* md - default */
 .dialog-popup-width-md {
   width: 50rem;
 }
 
-/* lg — complex forms, rich content */
+/* lg - complex forms, rich content */
 .dialog-popup-width-lg {
   width: 72rem;
   height: 80vh;

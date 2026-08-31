@@ -222,8 +222,8 @@ interface RadioCardBaseProps {
 
   /*
    * Visual style of the card.
-   * - `outline` — bordered, fills with primary tint when selected
-   * - `subtle`  — filled surface, stronger tint when selected
+   * - `outline` - bordered, fills with primary tint when selected
+   * - `subtle`  - filled surface, stronger tint when selected
    * @default 'outline'
    */
   variant?: RadioCardVariant;

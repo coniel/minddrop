@@ -24,7 +24,7 @@ function useCheckboxGroup() {
 }
 
 /* ============================================================
-   CHECKBOX (primitive — unstyled indicator only)
+   CHECKBOX (primitive - unstyled indicator only)
    Use CheckboxField for the full label+checkbox combo.
    ============================================================ */
 
@@ -318,14 +318,7 @@ export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
               onCheckedChange={handleSelectAll}
               disabled={disabled}
             />
-            <div
-              role="separator"
-              style={{
-                height: 1,
-                background: 'var(--border-subtle)',
-                margin: '0',
-              }}
-            />
+            <div role="separator" className="checkbox-group-separator" />
           </>
         )}
         {children}

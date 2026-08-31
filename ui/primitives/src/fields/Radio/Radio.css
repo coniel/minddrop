@@ -134,7 +134,7 @@
     background-color var(--duration-fast) var(--ease-out),
     border-color var(--duration-fast) var(--ease-out);
 
-  /* Radio indicator — top left */
+  /* Radio indicator - top left */
   .radio-indicator {
     position: absolute;
     top: var(--space-4);

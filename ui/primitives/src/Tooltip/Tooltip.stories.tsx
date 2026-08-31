@@ -99,7 +99,7 @@ export const TooltipStories = () => (
 
     {/* --------------------------------------------------------
         WITH ICON BUTTON
-        The most common use case — every IconButton should have
+        The most common use case - every IconButton should have
         a tooltip via its label prop, but Tooltip can be used
         directly when more control is needed.
     -------------------------------------------------------- */}

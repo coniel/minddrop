@@ -18,7 +18,7 @@ export const ConfirmationDialogStories = () => {
     <Story title="ConfirmationDialog">
       {/* --------------------------------------------------------
           BASIC
-          Standard confirmation — neutral confirm button.
+          Standard confirmation - neutral confirm button.
       -------------------------------------------------------- */}
       <StorySection
         title="Basic"
@@ -60,7 +60,7 @@ export const ConfirmationDialogStories = () => {
 
       {/* --------------------------------------------------------
           DANGER
-          Destructive action — confirm button uses danger styling.
+          Destructive action - confirm button uses danger styling.
       -------------------------------------------------------- */}
       <StorySection
         title="Danger"

@@ -894,6 +894,18 @@ it; implementing only `onFrameChange` silently drops group moves.
 
 ## ui/primitives
 
+### Select keeps raw overflow scrolling instead of ScrollArea
+
+`Select.css`'s `.select-list` scrolls with a plain `overflow-y: auto`
+rather than the `ScrollArea` primitive. This is deliberate: the base-ui
+Select owns the popup's scroll behaviour (the `ScrollUpArrow` and
+`ScrollDownArrow` elements plus keyboard-driven scrolling all operate on
+the `List` element as the scroll container, sized by the primitive's
+`--available-height` variable). Wrapping the list in `ScrollArea` would
+move scrolling to the ScrollArea viewport and break the arrows and
+keyboard scrolling, so the ScrollArea-everywhere convention does not
+apply here.
+
 ### Base UI render-prop spreads silently overwrite own handlers
 
 Components passed to a Base UI `render` prop receive Base UI's

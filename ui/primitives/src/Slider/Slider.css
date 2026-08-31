@@ -70,7 +70,7 @@
    SIZES
    ------------------------------------------------------------ */
 
-/* sm — 2px track, 10px thumb */
+/* sm - 2px track, 10px thumb */
 .slider-size-sm {
   .slider-track {
     height: 2px;
@@ -82,7 +82,7 @@
   }
 }
 
-/* md (default) — 4px track, 14px thumb */
+/* md (default) - 4px track, 14px thumb */
 .slider-size-md {
   .slider-track {
     height: 4px;
@@ -94,7 +94,7 @@
   }
 }
 
-/* lg — 6px track, 18px thumb */
+/* lg - 6px track, 18px thumb */
 .slider-size-lg {
   .slider-track {
     height: 6px;
