@@ -58,6 +58,12 @@ export interface MenuColorSelectionItemConfig {
   color: ContentColor;
 
   /**
+   * Renders a check on the right when this item's color is the
+   * selected one.
+   */
+  checked?: boolean;
+
+  /**
    * Event handler called when the user selects an item
    * (via mouse of keyboard). Calling `event.preventDefault`
    * in this handler will prevent the dropdown menu from

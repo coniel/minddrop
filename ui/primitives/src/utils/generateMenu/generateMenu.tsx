@@ -1,7 +1,8 @@
+import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 import React from 'react';
+import { ContentColor } from '@minddrop/ui-theme';
 import { ActionMenuItemProps } from '../../ActionMenuItem';
 import {
-  MenuColorSelectionItemProps,
   MenuContents,
   SubmenuContents,
   SubmenuTriggerItemProps,
@@ -16,7 +17,12 @@ export interface MenuComponents {
   SubmenuContent: React.ElementType;
   SubmenuPortal: React.ElementType;
   SubmenuPositioner: React.ElementType;
-  ColorSelectionItem: React.ComponentType<MenuColorSelectionItemProps>;
+  ColorSelectionItem: React.ComponentType<{
+    color: ContentColor | 'default';
+    checked?: boolean;
+    disabled?: boolean;
+    onClick?: MenuPrimitive.Item.Props['onClick'];
+  }>;
 }
 
 /**
@@ -95,11 +101,16 @@ export function generateMenu(
 
     // Generate ColorSelectionItem
     if (type === 'menu-color-selection-item') {
-      const { color, onSelect } = item;
+      const { color, checked, onSelect } = item;
 
       return [
         ...items,
-        <ColorSelectionItem key={index} color={color} onSelect={onSelect} />,
+        <ColorSelectionItem
+          key={index}
+          color={color}
+          checked={checked}
+          onClick={onSelect}
+        />,
       ];
     }
 

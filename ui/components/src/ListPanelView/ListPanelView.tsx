@@ -1,22 +1,68 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { TranslationKey } from '@minddrop/i18n';
 import {
+  ContextMenuContent,
+  ContextMenuPortal,
+  ContextMenuPositioner,
+  ContextMenuRoot,
+  ContextMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuPortal,
+  DropdownMenuPositioner,
+  DropdownMenuRoot,
+  DropdownMenuTrigger,
   Group,
   Icon,
+  IconButton,
   IconProp,
+  MenuContents,
   MenuGroup,
   MenuItem,
+  MenuItemDropdownMenu,
   ScrollArea,
   Stack,
   Text,
   TextInput,
   TranslatableNode,
   propsToClass,
+  useMenuItemContext,
 } from '@minddrop/ui-primitives';
 import { SubviewDescriptor, Views } from '@minddrop/views';
 import { PanelView, PanelViewAction } from '../PanelView';
 import { SidebarGroup } from '../SidebarGroup';
 import './ListPanelView.css';
+
+export interface ListPanelViewPopoverContext {
+  /**
+   * The element follow-up popovers anchor to: the options button
+   * the menu was opened from.
+   */
+  anchorRef: React.RefObject<HTMLButtonElement | null>;
+
+  /**
+   * Takes a hold keeping the anchor visible while a popover is
+   * open, returning a release function. Only provided for item
+   * popovers, whose anchor hides with the item's actions.
+   */
+  holdAnchorVisible?: () => VoidFunction;
+}
+
+export interface ListPanelViewAddPopoverContext {
+  /**
+   * The add button the popover anchors to.
+   */
+  anchorRef: React.RefObject<HTMLButtonElement | null>;
+
+  /**
+   * Whether the popover is open.
+   */
+  open: boolean;
+
+  /**
+   * Callback fired when the open state changes.
+   */
+  onOpenChange: (open: boolean) => void;
+}
 
 export interface ListPanelViewItem {
   /**
@@ -37,10 +83,16 @@ export interface ListPanelViewItem {
   contentIcon?: string;
 
   /**
-   * Actions displayed alongside the item's label, revealed when
-   * it is hovered.
+   * The item's menu, opened both from a hover-revealed options
+   * button and as the item's context menu.
    */
-  actions?: React.ReactNode;
+  menu?: MenuContents;
+
+  /**
+   * Popovers opened by the item's menu actions, anchored via the
+   * given context.
+   */
+  popovers?: (context: ListPanelViewPopoverContext) => React.ReactNode;
 }
 
 export interface ListPanelViewSection {
@@ -62,18 +114,30 @@ export interface ListPanelViewSection {
   stringLabel?: string;
 
   /**
-   * Actions displayed alongside a labelled section's label,
-   * revealed when it is hovered.
+   * The section's menu, opened both from a label options button
+   * and as the section's context menu.
    */
-  actions?: React.ReactNode;
+  menu?: MenuContents;
 
   /**
-   * Whether hovering anywhere in a labelled section reveals its
-   * label actions. When `false`, only hovering the label reveals
-   * them.
-   * @default true
+   * Popovers opened by the section's menu actions, anchored via
+   * the given context.
    */
-  showLabelActionsOnHover?: boolean;
+  popovers?: (context: ListPanelViewPopoverContext) => React.ReactNode;
+
+  /**
+   * Called when the section's add button is clicked, e.g. to open
+   * a creation dialog. The button is only rendered when this or
+   * `addPopover` is provided.
+   */
+  onAddClick?: () => void;
+
+  /**
+   * The popover opened by the section's add button, anchored via
+   * the given context. The button is only rendered when this or
+   * `onAddClick` is provided.
+   */
+  addPopover?: (context: ListPanelViewAddPopoverContext) => React.ReactNode;
 
   /**
    * The section's items.
@@ -137,6 +201,24 @@ export interface ListPanelViewProps {
   noSelectionLabel: TranslationKey;
 
   /**
+   * Accessible label of the items' menu buttons.
+   * @default 'actions.options'
+   */
+  itemMenuLabel?: TranslationKey;
+
+  /**
+   * Accessible label of the sections' menu buttons.
+   * @default 'actions.options'
+   */
+  sectionMenuLabel?: TranslationKey;
+
+  /**
+   * Label and tooltip of the sections' add buttons.
+   * @default 'actions.new'
+   */
+  sectionAddLabel?: TranslationKey;
+
+  /**
    * Control rendered beside the search field, creating a new item.
    */
   addAction?: React.ReactNode;
@@ -178,6 +260,11 @@ export interface ListPanelViewProps {
  * Renders a two column panel view: a searchable list of items on
  * the left, and the selected item's content on the right.
  *
+ * Items and sections can carry menus, rendered both behind
+ * hover-revealed options buttons and as context menus, and
+ * sections can carry an add button opening a popover or firing a
+ * callback.
+ *
  * The selected item is the view's subview, so selecting one can be
  * navigated back and forward through, and titles the view's tab.
  */
@@ -188,6 +275,7 @@ export const ListPanelView: React.FC<ListPanelViewProps> = ({
   className,
   emptyLabel,
   icon,
+  itemMenuLabel = 'actions.options',
   items,
   noResultsLabel,
   noSelectionLabel,
@@ -195,7 +283,9 @@ export const ListPanelView: React.FC<ListPanelViewProps> = ({
   onQueryChange,
   query,
   searchPlaceholder,
+  sectionAddLabel = 'actions.new',
   sectionEmptyLabel,
+  sectionMenuLabel = 'actions.options',
   sections,
   selectedItem,
   title,
@@ -236,19 +326,84 @@ export const ListPanelView: React.FC<ListPanelViewProps> = ({
     setSubview(toSubview(item));
   }
 
-  // Render an item as a selectable list row
-  function renderItem(item: ListPanelViewItem) {
+  // Render a section as a collapsible labelled group, or a plain
+  // headed group, wrapped in a context menu when it has a menu
+  function renderSection(section: ListPanelViewSection) {
+    const sectionContent = section.stringLabel ? (
+      /* Labelled sections collapse via their label */
+      <SidebarGroup
+        stringLabel={section.stringLabel}
+        actions={
+          <ListPanelViewSectionActions
+            section={section}
+            menuLabel={sectionMenuLabel}
+            addLabel={sectionAddLabel}
+          />
+        }
+        showLabelActionsOnHover={false}
+        emptyLabel={sectionEmptyLabel}
+      >
+        {section.items.map(renderItem)}
+      </SidebarGroup>
+    ) : (
+      <Stack gap={1}>
+        {section.header}
+        <MenuGroup>{section.items.map(renderItem)}</MenuGroup>
+      </Stack>
+    );
+
     return (
+      <React.Fragment key={section.id}>
+        {section.menu ? (
+          <ContextMenuRoot>
+            <ContextMenuTrigger>{sectionContent}</ContextMenuTrigger>
+            <ContextMenuPortal>
+              <ContextMenuPositioner>
+                <ContextMenuContent content={section.menu} />
+              </ContextMenuPositioner>
+            </ContextMenuPortal>
+          </ContextMenuRoot>
+        ) : (
+          sectionContent
+        )}
+      </React.Fragment>
+    );
+  }
+
+  // Render an item as a selectable list row, wrapped in a context
+  // menu when it has a menu
+  function renderItem(item: ListPanelViewItem) {
+    const row = (
       <MenuItem
         muted
         size="comfortable"
-        key={item.id}
         contentIcon={item.contentIcon}
         stringLabel={item.label}
-        actions={item.actions}
+        actions={
+          (item.menu || item.popovers) && (
+            <ListPanelViewItemActions item={item} menuLabel={itemMenuLabel} />
+          )
+        }
         active={item.id === selectedItem?.id}
         onClick={() => handleSelectItem(item)}
       />
+    );
+
+    return (
+      <React.Fragment key={item.id}>
+        {item.menu ? (
+          <ContextMenuRoot>
+            <ContextMenuTrigger>{row}</ContextMenuTrigger>
+            <ContextMenuPortal>
+              <ContextMenuPositioner>
+                <ContextMenuContent content={item.menu} />
+              </ContextMenuPositioner>
+            </ContextMenuPortal>
+          </ContextMenuRoot>
+        ) : (
+          row
+        )}
+      </React.Fragment>
     );
   }
 
@@ -284,25 +439,7 @@ export const ListPanelView: React.FC<ListPanelViewProps> = ({
             {sections ? (
               /* Sectioned list, each section headed by its header */
               <Stack gap={3} className="list-panel-view-sections">
-                {sections.map((section) =>
-                  section.stringLabel ? (
-                    /* Labelled sections collapse via their label */
-                    <SidebarGroup
-                      key={section.id}
-                      stringLabel={section.stringLabel}
-                      actions={section.actions}
-                      showLabelActionsOnHover={section.showLabelActionsOnHover}
-                      emptyLabel={sectionEmptyLabel}
-                    >
-                      {section.items.map(renderItem)}
-                    </SidebarGroup>
-                  ) : (
-                    <Stack gap={1} key={section.id}>
-                      {section.header}
-                      <MenuGroup>{section.items.map(renderItem)}</MenuGroup>
-                    </Stack>
-                  ),
-                )}
+                {sections.map(renderSection)}
               </Stack>
             ) : (
               /* Flat list of items */
@@ -340,6 +477,147 @@ export const ListPanelView: React.FC<ListPanelViewProps> = ({
         </div>
       </Group>
     </PanelView>
+  );
+};
+
+interface ListPanelViewItemActionsProps {
+  /**
+   * The item whose menu and popovers to render.
+   */
+  item: ListPanelViewItem;
+
+  /**
+   * Accessible label of the menu button.
+   */
+  menuLabel: TranslationKey;
+}
+
+/**
+ * Renders an item's hover-revealed menu button and its follow-up
+ * popovers, anchored at the button.
+ */
+const ListPanelViewItemActions: React.FC<ListPanelViewItemActionsProps> = ({
+  item,
+  menuLabel,
+}) => {
+  const optionsButtonRef = useRef<HTMLButtonElement>(null);
+  const { holdActionsVisible } = useMenuItemContext();
+
+  return (
+    <>
+      {item.menu && (
+        <MenuItemDropdownMenu>
+          <DropdownMenuTrigger>
+            <IconButton
+              ref={optionsButtonRef}
+              icon="ellipsis"
+              size="sm"
+              variant="subtle"
+              color="neutral"
+              label={menuLabel}
+            />
+          </DropdownMenuTrigger>
+          <DropdownMenuPortal>
+            <DropdownMenuPositioner side="bottom" align="start">
+              <DropdownMenuContent content={item.menu} />
+            </DropdownMenuPositioner>
+          </DropdownMenuPortal>
+        </MenuItemDropdownMenu>
+      )}
+
+      {/* Follow-up popovers anchored at the menu button */}
+      {item.popovers?.({
+        anchorRef: optionsButtonRef,
+        holdAnchorVisible: holdActionsVisible,
+      })}
+    </>
+  );
+};
+
+interface ListPanelViewSectionActionsProps {
+  /**
+   * The section whose add button, menu and popovers to render.
+   */
+  section: ListPanelViewSection;
+
+  /**
+   * Accessible label of the menu button.
+   */
+  menuLabel: TranslationKey;
+
+  /**
+   * Label and tooltip of the add button.
+   */
+  addLabel: TranslationKey;
+}
+
+/**
+ * Renders a section's label actions: the add button, the menu
+ * button, and their follow-up popovers.
+ */
+const ListPanelViewSectionActions: React.FC<
+  ListPanelViewSectionActionsProps
+> = ({ section, menuLabel, addLabel }) => {
+  const addButtonRef = useRef<HTMLButtonElement>(null);
+  const optionsButtonRef = useRef<HTMLButtonElement>(null);
+  const [addPopoverOpen, setAddPopoverOpen] = useState(false);
+
+  // Open the add popover and/or fire the add callback
+  function handleAddClick() {
+    if (section.addPopover) {
+      setAddPopoverOpen(true);
+    }
+
+    section.onAddClick?.();
+  }
+
+  return (
+    <>
+      {/* Adds an item to the section */}
+      {(section.onAddClick || section.addPopover) && (
+        <IconButton
+          ref={addButtonRef}
+          icon="plus"
+          size="sm"
+          variant="subtle"
+          color="neutral"
+          label={addLabel}
+          tooltip={{ title: addLabel }}
+          onClick={handleAddClick}
+        />
+      )}
+
+      {/* The section's menu */}
+      {section.menu && (
+        <DropdownMenuRoot>
+          <DropdownMenuTrigger>
+            <IconButton
+              ref={optionsButtonRef}
+              icon="ellipsis"
+              size="sm"
+              variant="subtle"
+              color="neutral"
+              label={menuLabel}
+            />
+          </DropdownMenuTrigger>
+          <DropdownMenuPortal>
+            <DropdownMenuPositioner side="bottom" align="start">
+              <DropdownMenuContent content={section.menu} />
+            </DropdownMenuPositioner>
+          </DropdownMenuPortal>
+        </DropdownMenuRoot>
+      )}
+
+      {/* Follow-up popovers anchored at the menu button */}
+      {section.popovers?.({ anchorRef: optionsButtonRef })}
+
+      {/* The add button's popover */}
+      {section.addPopover?.({
+        anchorRef: addButtonRef,
+        open: addPopoverOpen,
+        onOpenChange: setAddPopoverOpen,
+      })}
+    </>
   );
 };
 

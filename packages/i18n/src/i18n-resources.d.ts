@@ -83,6 +83,8 @@ declare module 'i18next' {
           back: string;
           cancel: string;
           clear: string;
+          new: string;
+          options: string;
           selectAll: string;
           save: string;
           done: string;
