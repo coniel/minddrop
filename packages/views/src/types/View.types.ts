@@ -31,13 +31,13 @@ export interface View {
   /**
    * The view's place in the breadcrumb hierarchy, deciding whether
    * navigating to it extends the trail or starts a new one.
-   * - `root`   — a top level destination (e.g. a list of spaces, a
+   * - `root`   - a top level destination (e.g. a list of spaces, a
    *              database), always starts a new trail
-   * - `branch` — an entity containing other entities (e.g. a space),
+   * - `branch` - an entity containing other entities (e.g. a space),
    *              extends the trail of a root, otherwise starts one
-   * - `leaf`   — an entity within a container (e.g. a database entry),
+   * - `leaf`   - an entity within a container (e.g. a database entry),
    *              always extends the trail
-   * - `none`   — a view passed through rather than navigated to (e.g.
+   * - `none`   - a view passed through rather than navigated to (e.g.
    *              the blank tab's search view), never trailed
    * @default 'root'
    */
