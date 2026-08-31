@@ -18,6 +18,22 @@
        they are navigable */
     --breadcrumb-hover-inset: var(--space-1);
 
+    /* The back button's own padding provides part of the leading
+       inset, so the header tightens its padding */
+    &:has(.panel-view-back-button) {
+      padding-left: var(--space-2);
+    }
+
+    .panel-view-back-button {
+      flex-shrink: 0;
+
+      /* Keeps the button's space while hidden so header content
+         does not shift as the back action comes and goes */
+      &.panel-view-back-button-hidden {
+        visibility: hidden;
+      }
+    }
+
     .panel-view-header-content {
       flex: 1;
       min-width: 0;

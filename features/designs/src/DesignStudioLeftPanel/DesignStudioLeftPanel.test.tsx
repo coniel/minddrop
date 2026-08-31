@@ -64,11 +64,12 @@ describe('<DesignStudioLeftPanel />', () => {
       screen.getByLabelText('designsStudio.layouts.backToLayouts'),
     );
 
-    // The layout closed, and with it the back button is gone
+    // The layout closed, and with it the back button is hidden,
+    // keeping its space so the tabs do not shift
     expect(studio.getActiveLayoutId()).toBeNull();
     expect(
-      screen.queryByLabelText('designsStudio.layouts.backToLayouts'),
-    ).toBeNull();
+      screen.getByLabelText('designsStudio.layouts.backToLayouts'),
+    ).toHaveClass('panel-view-back-button-hidden');
   });
 
   it('opens on the tab it was left on', async () => {

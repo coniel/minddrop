@@ -51,7 +51,38 @@ export interface PanelViewAction {
   onClick: React.MouseEventHandler<HTMLButtonElement>;
 }
 
+export interface PanelViewBackAction {
+  /**
+   * Accessible label announced by screen readers.
+   * Translated via i18n before being applied.
+   */
+  label: TranslationKey;
+
+  /**
+   * Tooltip shown on hover.
+   */
+  tooltip?: Omit<TooltipProps, 'children'>;
+
+  /**
+   * Hides the button while keeping its space, so header content
+   * does not shift when the back action comes and goes.
+   */
+  hidden?: boolean;
+
+  /**
+   * Click handler.
+   */
+  onClick: React.MouseEventHandler<HTMLButtonElement>;
+}
+
 export interface PanelViewProps {
+  /**
+   * Renders a back arrow button at the start of the header. The
+   * button provides part of the header's leading inset, replacing
+   * a portion of its padding.
+   */
+  backAction?: PanelViewBackAction;
+
   /**
    * Title text. Strings are treated as i18n keys and translated.
    */
@@ -111,6 +142,7 @@ export interface PanelViewProps {
  */
 export const PanelView: React.FC<PanelViewProps> = ({
   actions,
+  backAction,
   breadcrumbs,
   children,
   className,
@@ -139,6 +171,19 @@ export const PanelView: React.FC<PanelViewProps> = ({
   return (
     <Panel className={propsToClass('panel-view', { className })}>
       <Group justify="between" className="panel-view-header">
+        {/* Back arrow navigating out of the current header context */}
+        {backAction && (
+          <IconButton
+            icon="arrow-left"
+            label={backAction.label}
+            tooltip={backAction.tooltip}
+            color="neutral"
+            onClick={backAction.onClick}
+            className={propsToClass('panel-view-back-button', {
+              hidden: backAction.hidden,
+            })}
+          />
+        )}
         {/* Custom header content replaces the title entirely */}
         {header ? (
           <div className="panel-view-header-content">{header}</div>

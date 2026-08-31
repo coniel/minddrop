@@ -4,13 +4,6 @@
   height: 100%;
   overflow: hidden;
 
-  /* The header opens with the back icon button rather than title
-     text, whose own padding provides part of the inset (the same
-     treatment the breadcrumb variant gets) */
-  .panel-view > .header {
-    padding-left: var(--space-2);
-  }
-
   .designs-panel-tabs {
     display: flex;
     align-items: center;

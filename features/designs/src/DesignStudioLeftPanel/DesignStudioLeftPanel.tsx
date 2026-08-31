@@ -120,19 +120,14 @@ export const DesignStudioLeftPanel: React.FC = () => {
       <PanelView
         breadcrumbs={[]}
         actions={actions}
+        backAction={{
+          label: 'designsStudio.layouts.backToLayouts',
+          tooltip: { title: 'designsStudio.layouts.backToLayouts' },
+          hidden: !showBack,
+          onClick: handleClickBack,
+        }}
         header={
           <div className="designs-panel-tabs">
-            {showBack ? (
-              <IconButton
-                icon="arrow-left"
-                label="designsStudio.layouts.backToLayouts"
-                tooltip={{ title: 'designsStudio.layouts.backToLayouts' }}
-                color="neutral"
-                onClick={handleClickBack}
-              />
-            ) : (
-              <IconButtonSpacer size="md" />
-            )}
             <Spacer />
             <TabsList>
               {hasProperties && (
