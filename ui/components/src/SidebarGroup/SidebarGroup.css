@@ -16,4 +16,9 @@
   &[data-closed] {
     margin-bottom: var(--space-px);
   }
+
+  /* Indented to line up with the group's items */
+  .sidebar-group-empty {
+    padding: var(--space-1) var(--space-2);
+  }
 }

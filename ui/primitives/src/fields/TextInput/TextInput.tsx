@@ -124,6 +124,11 @@ export interface TextInputProps {
   autoCapitalize?: string;
 
   /*
+   * Whether the input is focused when mounted.
+   */
+  autoFocus?: boolean;
+
+  /*
    * spellCheck attribute.
    */
   spellCheck?: boolean;
@@ -173,6 +178,7 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
       autoCapitalize,
       autoComplete,
       autoCorrect,
+      autoFocus,
       className,
       clearable,
       color,
@@ -256,6 +262,7 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
           defaultValue={defaultValue}
           placeholder={stringPlaceholder ?? (placeholder && t(placeholder))}
           autoCapitalize={autoCapitalize ?? (unassisted ? 'off' : undefined)}
+          autoFocus={autoFocus}
           autoComplete={autoComplete ?? (unassisted ? 'off' : undefined)}
           autoCorrect={autoCorrect ?? (unassisted ? 'off' : undefined)}
           spellCheck={spellCheck ?? (unassisted ? false : undefined)}

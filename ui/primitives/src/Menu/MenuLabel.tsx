@@ -69,6 +69,12 @@ export const MenuLabel = forwardRef<HTMLDivElement, MenuLabelProps>(
       return children;
     }, [stringLabel, label, children]);
 
+    // Keep action clicks from triggering the label's own click
+    // behaviour (e.g. a collapse toggle)
+    function handleActionsClick(event: React.MouseEvent) {
+      event.stopPropagation();
+    }
+
     return (
       <div
         ref={ref}
@@ -87,7 +93,11 @@ export const MenuLabel = forwardRef<HTMLDivElement, MenuLabelProps>(
         >
           {resolvedLabel}
         </Text>
-        {actions && <div className="menu-label-actions">{actions}</div>}
+        {actions && (
+          <div className="menu-label-actions" onClick={handleActionsClick}>
+            {actions}
+          </div>
+        )}
       </div>
     );
   },

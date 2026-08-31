@@ -1,12 +1,8 @@
 {
-  "name": "@minddrop/tags",
+  "name": "@minddrop/feature-tags",
   "version": "0.0.0",
   "main": "src/index",
   "types": "src/index",
-  "exports": {
-    ".": "./src/index.ts",
-    "./test-utils": "./src/test-utils/index.ts"
-  },
   "scripts": {
     "lint": "eslint .  --max-warnings 0",
     "test": "vitest run",
@@ -20,12 +16,16 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "@minddrop/databases": "workspace:*",
     "@minddrop/events": "workspace:*",
+    "@minddrop/feature-views": "workspace:*",
     "@minddrop/file-system": "workspace:*",
     "@minddrop/i18n": "workspace:*",
-    "@minddrop/stores": "workspace:*",
-    "@minddrop/ui-icons": "workspace:*",
+    "@minddrop/tags": "workspace:*",
+    "@minddrop/test-utils": "workspace:*",
+    "@minddrop/ui-components": "workspace:*",
+    "@minddrop/ui-primitives": "workspace:*",
     "@minddrop/ui-theme": "workspace:*",
-    "@minddrop/utils": "workspace:*"
+    "@minddrop/views": "workspace:*"
   }
 }

@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { InvalidParameterError } from '@minddrop/utils';
 import { TagsStore } from '../TagsStore';
+import { DefaultTagIcon } from '../constants';
 import { TagGroupNotFoundError } from '../errors';
 import { TagCreatedEvent } from '../events';
 import {
@@ -21,6 +22,7 @@ const newTag = {
   lastModified: mockDate,
   name: 'Work',
   color: 'purple',
+  icon: DefaultTagIcon,
 };
 
 describe('createTag', () => {

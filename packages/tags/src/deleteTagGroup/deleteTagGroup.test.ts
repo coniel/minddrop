@@ -3,7 +3,14 @@ import { Events } from '@minddrop/events';
 import { TagGroupsStore } from '../TagGroupsStore';
 import { TagsStore } from '../TagsStore';
 import { TagGroupDeletedEvent } from '../events';
-import { MockFs, cleanup, setup, tagGroup_1, tag_1, tag_2 } from '../test-utils';
+import {
+  MockFs,
+  cleanup,
+  setup,
+  tagGroup_1,
+  tag_1,
+  tag_2,
+} from '../test-utils';
 import { updateTag } from '../updateTag';
 import { resolveTagGroupFilePath } from '../utils';
 import { deleteTagGroup } from './deleteTagGroup';

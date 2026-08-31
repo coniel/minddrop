@@ -21,6 +21,7 @@ import {
   SpaceViewStateStore,
   initializeSpacesFeature,
 } from '@minddrop/feature-spaces';
+import { initializeTagsFeature } from '@minddrop/feature-tags';
 import { TabSetsStore, initializeViewsFeature } from '@minddrop/feature-views';
 import { Fs, startFileSystemWatcher } from '@minddrop/file-system';
 import { I18n, initializeI18n } from '@minddrop/i18n';
@@ -29,6 +30,7 @@ import { Search } from '@minddrop/search';
 import { Snapshots } from '@minddrop/snapshots';
 import { Spaces } from '@minddrop/spaces';
 import { Sql } from '@minddrop/sql';
+import { Tags } from '@minddrop/tags';
 import { Icons } from '@minddrop/ui-icons';
 import { initializeInputModalityTracking } from '@minddrop/ui-primitives';
 import { Workspaces } from '@minddrop/workspaces';
@@ -110,6 +112,7 @@ async function runInitialization(): Promise<void> {
   initializeDesignsFeature();
   initializeQueriesFeature();
   initializeSettingsFeature();
+  initializeTagsFeature();
 
   // Initialize workspaces (sets Paths.workspace and
   // Paths.workspaceConfigs from the first loaded workspace)
@@ -135,6 +138,10 @@ async function runInitialization(): Promise<void> {
   // Subscribe to content package events before content
   // initialization so no rename goes unrecorded
   Snapshots.initialize();
+
+  // Load global tags and tag groups before entries referencing
+  // them are loaded
+  await Tags.initialize();
 
   const { schemaChanged } = await Databases.initialize();
 

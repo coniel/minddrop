@@ -2001,6 +2001,52 @@ declare module 'i18next' {
         tags: {
           labels: {
             tag: string;
+            tags: string;
+          };
+          defaults: {
+            tagName: string;
+          };
+          groupName: {
+            placeholder: string;
+          };
+          actions: {
+            add: string;
+            new: string;
+            newGroup: string;
+            newInGroup: string;
+            groupOptions: string;
+            renameGroup: string;
+            delete: {
+              label: string;
+              confirmation: {
+                title: string;
+                message_one: string;
+                message_other: string;
+                confirm: string;
+              };
+            };
+            deleteGroup: {
+              label: string;
+              confirmation: {
+                title: string;
+                message: string;
+                confirm: string;
+              };
+            };
+          };
+          list: {
+            searchPlaceholder: string;
+            empty: string;
+            noResults: string;
+            ungrouped: string;
+          };
+          details: {
+            noSelection: string;
+            icon: string;
+            namePlaceholder: string;
+            groupNone: string;
+            entries: string;
+            entriesEmpty: string;
           };
         };
         onboarding: {

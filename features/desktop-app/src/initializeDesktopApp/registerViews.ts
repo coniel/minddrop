@@ -6,6 +6,7 @@ import { registerQueryViews } from '@minddrop/feature-queries';
 import { registerSearchViews } from '@minddrop/feature-search';
 import { registerSettingsViews } from '@minddrop/feature-settings';
 import { registerSpaceViews } from '@minddrop/feature-spaces';
+import { registerTagViews } from '@minddrop/feature-tags';
 
 /**
  * Registers the views that can be opened by id via `OpenViewEvent`.
@@ -20,4 +21,5 @@ export function registerViews(): void {
   registerSearchViews();
   registerSettingsViews();
   registerSpaceViews();
+  registerTagViews();
 }

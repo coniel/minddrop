@@ -1,5 +1,6 @@
 import { MockFileDescriptor } from '@minddrop/file-system';
 import { ContentColor } from '@minddrop/ui-theme';
+import { DefaultTagIcon } from '../constants';
 import { Tag, TagId } from '../types';
 
 function generateTagFixture(number: number, color: ContentColor): Tag {
@@ -7,6 +8,7 @@ function generateTagFixture(number: number, color: ContentColor): Tag {
     id: `tag_${number}` as TagId,
     name: `Tag ${number}`,
     color,
+    icon: DefaultTagIcon,
     created: new Date('2024-01-01T00:00:00.000Z'),
     lastModified: new Date('2024-01-01T00:00:00.000Z'),
   };

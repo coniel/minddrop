@@ -38,6 +38,8 @@
     "@minddrop/feature-dev-tools": "workspace:*",
     "@minddrop/feature-markdown-editor": "workspace:*",
     "@minddrop/feature-spaces": "workspace:*",
+    "@minddrop/feature-tags": "workspace:*",
+    "@minddrop/tags": "workspace:*",
     "@minddrop/feature-search": "workspace:*",
     "@minddrop/feature-settings": "workspace:*",
     "@minddrop/feature-views": "workspace:*",

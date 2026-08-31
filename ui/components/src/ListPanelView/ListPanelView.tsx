@@ -15,6 +15,7 @@ import {
 } from '@minddrop/ui-primitives';
 import { SubviewDescriptor, Views } from '@minddrop/views';
 import { PanelView, PanelViewAction } from '../PanelView';
+import { SidebarGroup } from '../SidebarGroup';
 import './ListPanelView.css';
 
 export interface ListPanelViewItem {
@@ -36,11 +37,56 @@ export interface ListPanelViewItem {
   contentIcon?: string;
 }
 
-export interface ListPanelViewProps {
+export interface ListPanelViewSection {
   /**
-   * The items listed in the left column.
+   * A unique identifier for the section.
+   */
+  id: string;
+
+  /**
+   * Content rendered above the section's items. Ignored when
+   * `stringLabel` is provided.
+   */
+  header?: React.ReactNode;
+
+  /**
+   * Plain string label rendering the section as a collapsible
+   * labelled group.
+   */
+  stringLabel?: string;
+
+  /**
+   * Actions displayed alongside a labelled section's label,
+   * revealed when it is hovered.
+   */
+  actions?: React.ReactNode;
+
+  /**
+   * Whether hovering anywhere in a labelled section reveals its
+   * label actions. When `false`, only hovering the label reveals
+   * them.
+   * @default true
+   */
+  showLabelActionsOnHover?: boolean;
+
+  /**
+   * The section's items.
    */
   items: ListPanelViewItem[];
+}
+
+export interface ListPanelViewProps {
+  /**
+   * The items listed in the left column. Ignored when `sections`
+   * is provided.
+   */
+  items?: ListPanelViewItem[];
+
+  /**
+   * Sections of items listed in the left column, each rendered
+   * with its header above its items. Takes priority over `items`.
+   */
+  sections?: ListPanelViewSection[];
 
   /**
    * The selected item, titling the panel and rendered by the
@@ -72,6 +118,11 @@ export interface ListPanelViewProps {
    * Empty state shown when no items match the search query.
    */
   noResultsLabel: TranslationKey;
+
+  /**
+   * Empty state shown inside labelled sections without items.
+   */
+  sectionEmptyLabel?: TranslationKey;
 
   /**
    * Empty state shown in place of the content until an item
@@ -138,15 +189,25 @@ export const ListPanelView: React.FC<ListPanelViewProps> = ({
   onQueryChange,
   query,
   searchPlaceholder,
+  sectionEmptyLabel,
+  sections,
   selectedItem,
   title,
 }) => {
   const subview = Views.useSubview();
   const setSubview = Views.useSetSubview();
 
+  // Every listed item regardless of sectioning, driving the
+  // fallback selection and the empty states
+  const allItems = useMemo(
+    () =>
+      sections ? sections.flatMap((section) => section.items) : (items ?? []),
+    [sections, items],
+  );
+
   // The item the panel shows, falling back to the first listed item
   // when it shows none yet
-  const shownItem = selectedItem ?? items[0];
+  const shownItem = selectedItem ?? allItems[0];
 
   // The header's actions, plus the action opening the shown item in a
   // view of its own
@@ -167,6 +228,21 @@ export const ListPanelView: React.FC<ListPanelViewProps> = ({
   // Show the clicked item
   function handleSelectItem(item: ListPanelViewItem) {
     setSubview(toSubview(item));
+  }
+
+  // Render an item as a selectable list row
+  function renderItem(item: ListPanelViewItem) {
+    return (
+      <MenuItem
+        muted
+        size="comfortable"
+        key={item.id}
+        contentIcon={item.contentIcon}
+        stringLabel={item.label}
+        active={item.id === selectedItem?.id}
+        onClick={() => handleSelectItem(item)}
+      />
+    );
   }
 
   return (
@@ -198,21 +274,37 @@ export const ListPanelView: React.FC<ListPanelViewProps> = ({
           </Group>
 
           <ScrollArea className="list-panel-view-list-items">
-            <MenuGroup>
-              {items.map((item) => (
-                <MenuItem
-                  muted
-                  size="comfortable"
-                  key={item.id}
-                  contentIcon={item.contentIcon}
-                  stringLabel={item.label}
-                  active={item.id === selectedItem?.id}
-                  onClick={() => handleSelectItem(item)}
-                />
-              ))}
-            </MenuGroup>
-            {/* Empty state, differentiating no matches from no items */}
-            {items.length === 0 && (
+            {sections ? (
+              /* Sectioned list, each section headed by its header */
+              <Stack gap={3} className="list-panel-view-sections">
+                {sections.map((section) =>
+                  section.stringLabel ? (
+                    /* Labelled sections collapse via their label */
+                    <SidebarGroup
+                      key={section.id}
+                      stringLabel={section.stringLabel}
+                      actions={section.actions}
+                      showLabelActionsOnHover={section.showLabelActionsOnHover}
+                      emptyLabel={sectionEmptyLabel}
+                    >
+                      {section.items.map(renderItem)}
+                    </SidebarGroup>
+                  ) : (
+                    <Stack gap={1} key={section.id}>
+                      {section.header}
+                      <MenuGroup>{section.items.map(renderItem)}</MenuGroup>
+                    </Stack>
+                  ),
+                )}
+              </Stack>
+            ) : (
+              /* Flat list of items */
+              <MenuGroup>{allItems.map(renderItem)}</MenuGroup>
+            )}
+            {/* Empty state, differentiating no matches from no
+                items. Sections render their own empty states, so
+                it only shows when there are none */}
+            {allItems.length === 0 && (sections ?? []).length === 0 && (
               <Text
                 block
                 size="sm"

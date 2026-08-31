@@ -23,6 +23,11 @@ export interface Tag {
   color: ContentColor;
 
   /**
+   * Stringified content icon representing the tag.
+   */
+  icon: string;
+
+  /**
    * The ID of the group the tag belongs to. Absent for ungrouped
    * tags.
    */
@@ -39,7 +44,7 @@ export interface Tag {
   lastModified: Date;
 }
 
-export type UpdateTagData = Partial<Pick<Tag, 'name' | 'color'>> & {
+export type UpdateTagData = Partial<Pick<Tag, 'name' | 'color' | 'icon'>> & {
   /**
    * The ID of the group to assign the tag to, or null to ungroup
    * it.

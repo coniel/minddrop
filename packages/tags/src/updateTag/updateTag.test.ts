@@ -130,6 +130,12 @@ describe('updateTag', () => {
     expect(TagsStore.get(tag_1.id)?.group).toBeUndefined();
   });
 
+  it('updates the tag icon', async () => {
+    await updateTag(tag_1.id, { icon: 'content-icon:star:yellow' });
+
+    expect(TagsStore.get(tag_1.id)?.icon).toBe('content-icon:star:yellow');
+  });
+
   it('leaves the group untouched when not given', async () => {
     // Assign the tag to a group
     await updateTag(tag_1.id, { group: tagGroup_1.id });

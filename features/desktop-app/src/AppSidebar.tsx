@@ -9,6 +9,7 @@ import { QueriesMenuItem } from '@minddrop/feature-queries';
 import { OpenSearchDialogEvent } from '@minddrop/feature-search';
 import { OpenSettingsEvent, SettingsIcon } from '@minddrop/feature-settings';
 import { SpacesMenuItem } from '@minddrop/feature-spaces';
+import { TagsMenuItem } from '@minddrop/feature-tags';
 import {
   Sidebar,
   SidebarGroup,
@@ -75,6 +76,7 @@ export const AppSidebar: React.FC<SidebarProps> = ({ ...other }) => {
         <DataViewsMenuItem />
         <CollectionsMenuItem />
         <QueriesMenuItem />
+        <TagsMenuItem />
       </SidebarGroup>
       <DatabasesSidebarMenu />
       <Toolbar className="sidebar-bottom-toolbar">

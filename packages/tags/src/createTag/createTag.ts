@@ -2,6 +2,7 @@ import { Events } from '@minddrop/events';
 import { ContentColor } from '@minddrop/ui-theme';
 import { entityId } from '@minddrop/utils';
 import { TagsStore } from '../TagsStore';
+import { DefaultTagIcon } from '../constants';
 import { TagCreatedEvent } from '../events';
 import { getTagGroup } from '../getTagGroup';
 import { Tag, TagGroupId } from '../types';
@@ -42,6 +43,7 @@ export async function createTag(
     lastModified: new Date(),
     name: validatedName,
     color: color || resolveNextTagColor(),
+    icon: DefaultTagIcon,
   };
 
   // Assign the group when given

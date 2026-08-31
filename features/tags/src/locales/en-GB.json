@@ -1,0 +1,52 @@
+{
+  "tags": {
+    "labels": {
+      "tags": "Tags"
+    },
+    "defaults": {
+      "tagName": "New tag"
+    },
+    "groupName": {
+      "placeholder": "Group name"
+    },
+    "actions": {
+      "add": "Add",
+      "new": "New tag",
+      "newGroup": "New tag group",
+      "newInGroup": "New tag in group",
+      "groupOptions": "Group options",
+      "renameGroup": "Rename group",
+      "delete": {
+        "label": "Delete tag",
+        "confirmation": {
+          "title": "Delete tag?",
+          "message_one": "The tag will be deleted and removed from {{count}} entry.",
+          "message_other": "The tag will be deleted and removed from {{count}} entries.",
+          "confirm": "Delete"
+        }
+      },
+      "deleteGroup": {
+        "label": "Delete group",
+        "confirmation": {
+          "title": "Delete group?",
+          "message": "The group will be deleted. Its tags are not deleted and become ungrouped.",
+          "confirm": "Delete"
+        }
+      }
+    },
+    "list": {
+      "searchPlaceholder": "Search tags...",
+      "empty": "No tags",
+      "noResults": "No matching tags",
+      "ungrouped": "Ungrouped"
+    },
+    "details": {
+      "noSelection": "Select a tag",
+      "icon": "Tag icon",
+      "namePlaceholder": "Tag name",
+      "groupNone": "No group",
+      "entries": "Tagged entries",
+      "entriesEmpty": "No entries tagged yet"
+    }
+  }
+}

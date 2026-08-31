@@ -4,5 +4,6 @@ export * from './resolveTagGroupFilePath';
 export * from './resolveTagGroupsDirPath';
 export * from './searchTags';
 export * from './resolveNextTagColor';
+export * from './resolveUniqueTagName';
 export * from './validateTagName';
 export * from './validateTagGroupName';
