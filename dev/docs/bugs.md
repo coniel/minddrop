@@ -82,26 +82,6 @@ Fix direction: render the trigger as a non-button element (a `div` with
 the combobox role and keyboard handling), or move the chips outside the
 trigger; then remove this entry.
 
-## ui/databases
-
-### `DatabaseEntriesSearchField` drops entries whose titles are identical
-
-Searching in a list containing several entries with the same title
-returns one of them repeatedly in place of the others, so the duplicates
-disappear from the results and React logs duplicate key warnings for the
-repeated ID. Found 2026-08-31 while reading the field for the notebook
-view's search; the notebook view is currently its only consumer.
-
-Cause: `fuzzySearch` matches on a parallel array of titles and returns
-the matched titles rather than their positions, so the field maps each
-result back to an entry with `titles.indexOf(title)`, which always
-resolves to the first entry holding that title.
-
-Fix direction: match on positions rather than title strings, either by
-filtering `entryIds` against a set of matched titles (which also makes
-the results keep the incoming order) or by having `fuzzySearch` return
-indices alongside the strings; then remove this entry.
-
 ## packages/databases
 
 ### Concurrent file entry creation races on the storage directory
