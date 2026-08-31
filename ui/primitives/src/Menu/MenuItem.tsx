@@ -10,10 +10,12 @@ import { propsToClass } from '../utils';
 
 export interface MenuItemContext {
   /*
-   * Allows programmatic control of the visibility of the actions menu.
-   * Useful for maintaining visibility when opening a nested dropdown.
+   * Takes a hold keeping the item's actions visible, returning a
+   * release function. The actions stay visible while any hold is
+   * active, so overlapping popups (e.g. a dropdown handing over
+   * to a popover) do not hide their anchor.
    */
-  setForceActionsVisible: (visible: boolean) => void;
+  holdActionsVisible: () => VoidFunction;
 }
 
 const [hook, Provider] = createContext<MenuItemContext>();
@@ -181,9 +183,34 @@ export const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(
     },
     ref,
   ) => {
-    const [forceActionsVisible, setForceActionsVisible] = useState(
-      forceActionsVisibleProp,
-    );
+    const [actionsVisibleHolds, setActionsVisibleHolds] = useState(0);
+
+    // The actions are visible while any hold is active
+    const forceActionsVisible =
+      forceActionsVisibleProp || actionsVisibleHolds > 0;
+
+    // Takes a hold on the actions' visibility. Releasing is
+    // delayed so closing popups anchored to the actions do not
+    // reposition, and a hold taken in the meantime keeps them
+    // visible throughout
+    const holdActionsVisible = React.useCallback(() => {
+      setActionsVisibleHolds((holds) => holds + 1);
+
+      let released = false;
+
+      return () => {
+        // Releases only count down once
+        if (released) {
+          return;
+        }
+
+        released = true;
+
+        window.setTimeout(() => {
+          setActionsVisibleHolds((holds) => holds - 1);
+        }, 100);
+      };
+    }, []);
 
     // Resolve the display label from the available label sources
     const resolvedLabel = useMemo(() => {
@@ -216,7 +243,7 @@ export const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(
     }, [stringDescription, description]);
 
     return (
-      <Provider value={{ setForceActionsVisible }}>
+      <Provider value={{ holdActionsVisible }}>
         <div
           ref={ref}
           role={role}

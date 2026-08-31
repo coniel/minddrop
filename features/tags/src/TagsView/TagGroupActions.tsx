@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
   IconButton,
 } from '@minddrop/ui-primitives';
+import { NewTagPopover } from './NewTagPopover';
 import { TagGroupNamePopover } from './TagGroupNamePopover';
 
 export interface TagGroupActionsProps {
@@ -18,23 +19,16 @@ export interface TagGroupActionsProps {
    * The tag group the actions apply to.
    */
   group: TagGroup;
-
-  /**
-   * Callback fired when the new tag action is selected.
-   */
-  onCreateTag: () => void;
 }
 
 /**
  * Renders a tag group's actions menu. The rename action swaps
  * the menu for a naming popover.
  */
-export const TagGroupActions: React.FC<TagGroupActionsProps> = ({
-  group,
-  onCreateTag,
-}) => {
+export const TagGroupActions: React.FC<TagGroupActionsProps> = ({ group }) => {
   const optionsButtonRef = useRef<HTMLButtonElement>(null);
   const [renaming, setRenaming] = useState(false);
+  const [creatingTag, setCreatingTag] = useState(false);
 
   // Persist the new name, ignoring names already in use
   async function handleRename(name: string) {
@@ -79,7 +73,7 @@ export const TagGroupActions: React.FC<TagGroupActionsProps> = ({
               <DropdownMenuItem
                 icon="tag"
                 label="tags.actions.new"
-                onSelect={onCreateTag}
+                onSelect={() => setCreatingTag(true)}
               />
               <DropdownMenuSeparator />
               <DropdownMenuItem
@@ -97,6 +91,14 @@ export const TagGroupActions: React.FC<TagGroupActionsProps> = ({
           </DropdownMenuPositioner>
         </DropdownMenuPortal>
       </DropdownMenuRoot>
+
+      {/* The new tag form in place of the menu */}
+      <NewTagPopover
+        open={creatingTag}
+        onOpenChange={setCreatingTag}
+        anchor={optionsButtonRef}
+        defaultGroup={group}
+      />
 
       {/* Renames the group in place of the menu */}
       <TagGroupNamePopover

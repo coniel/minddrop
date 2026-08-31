@@ -2011,17 +2011,22 @@ declare module 'i18next' {
             tag: string;
             tags: string;
           };
-          defaults: {
-            tagName: string;
-          };
           groupName: {
             placeholder: string;
+          };
+          form: {
+            create: string;
+            nameTaken: string;
           };
           actions: {
             add: string;
             new: string;
             newGroup: string;
             newInGroup: string;
+            options: string;
+            rename: string;
+            color: string;
+            group: string;
             groupOptions: string;
             renameGroup: string;
             delete: {

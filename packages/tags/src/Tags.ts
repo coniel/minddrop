@@ -14,6 +14,7 @@ export { updateTag as update } from './updateTag';
 export {
   searchTags as search,
   resolveUniqueTagName as resolveUniqueName,
+  resolveNextTagColor as resolveNextColor,
 } from './utils';
 export { loadTags as load } from './loadTags';
 export { initializeTags as initialize } from './initializeTags';

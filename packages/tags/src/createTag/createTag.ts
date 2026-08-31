@@ -1,4 +1,5 @@
 import { Events } from '@minddrop/events';
+import { Icons } from '@minddrop/ui-icons';
 import { ContentColor } from '@minddrop/ui-theme';
 import { entityId } from '@minddrop/utils';
 import { TagsStore } from '../TagsStore';
@@ -36,14 +37,18 @@ export async function createTag(
     getTagGroup(group);
   }
 
-  // Generate the tag object
+  // The tag's color, defaulting to the next one in the rotation
+  const tagColor = color || resolveNextTagColor();
+
+  // Generate the tag object, with the default icon in the tag's
+  // color
   const tag: Tag = {
     id: entityId('tag'),
     created: new Date(),
     lastModified: new Date(),
     name: validatedName,
-    color: color || resolveNextTagColor(),
-    icon: DefaultTagIcon,
+    color: tagColor,
+    icon: Icons.applyColor(DefaultTagIcon, tagColor),
   };
 
   // Assign the group when given

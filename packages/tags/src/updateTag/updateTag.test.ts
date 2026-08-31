@@ -136,6 +136,20 @@ describe('updateTag', () => {
     expect(TagsStore.get(tag_1.id)?.icon).toBe('content-icon:star:yellow');
   });
 
+  it('syncs the tag color to an updated icon', async () => {
+    await updateTag(tag_1.id, { icon: 'content-icon:star:yellow' });
+
+    // The tag should take the icon's color
+    expect(TagsStore.get(tag_1.id)?.color).toBe('yellow');
+  });
+
+  it('recolors the icon on color updates', async () => {
+    await updateTag(tag_1.id, { color: 'yellow' });
+
+    // The icon should take the tag's new color
+    expect(TagsStore.get(tag_1.id)?.icon).toBe('content-icon:tag:yellow');
+  });
+
   it('leaves the group untouched when not given', async () => {
     // Assign the tag to a group
     await updateTag(tag_1.id, { group: tagGroup_1.id });

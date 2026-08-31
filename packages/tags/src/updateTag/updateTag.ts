@@ -1,4 +1,5 @@
 import { Events } from '@minddrop/events';
+import { Icons } from '@minddrop/ui-icons';
 import { TagsStore } from '../TagsStore';
 import { TagRenamedEvent, TagUpdatedEvent } from '../events';
 import { getTag } from '../getTag';
@@ -52,6 +53,18 @@ export async function updateTag(
   // Clear the group when explicitly unset
   if (group === null) {
     delete updatedTag.group;
+  }
+
+  // Keep the icon and color in sync: an updated icon carries its
+  // color to the tag, an updated color recolors the icon
+  if (update.icon && update.color === undefined) {
+    const iconColor = Icons.resolveColor(update.icon);
+
+    if (iconColor) {
+      updatedTag.color = iconColor;
+    }
+  } else if (update.color && update.icon === undefined) {
+    updatedTag.icon = Icons.applyColor(updatedTag.icon, update.color);
   }
 
   // Replace the tag in the store

@@ -15,7 +15,7 @@ describe('<TagGroupActions />', () => {
   afterEach(cleanup);
 
   it('renames the group on rename commit', async () => {
-    render(<TagGroupActions group={tagGroup_1} onCreateTag={() => {}} />);
+    render(<TagGroupActions group={tagGroup_1} />);
     const user = userEvent.setup();
 
     // Open the group options menu and start renaming
@@ -35,7 +35,7 @@ describe('<TagGroupActions />', () => {
     // Assign a tag to the group
     await Tags.update(tag_1.id, { group: tagGroup_1.id });
 
-    render(<TagGroupActions group={tagGroup_1} onCreateTag={() => {}} />);
+    render(<TagGroupActions group={tagGroup_1} />);
     const user = userEvent.setup();
 
     // Confirm the deletion as soon as the confirmation is requested

@@ -1286,6 +1286,9 @@ importers:
       '@minddrop/ui-components':
         specifier: workspace:*
         version: link:../../ui/components
+      '@minddrop/ui-icons':
+        specifier: workspace:*
+        version: link:../../ui/icons
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives

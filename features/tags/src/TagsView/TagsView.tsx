@@ -1,6 +1,6 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from '@minddrop/i18n';
-import { Tag, TagGroup, TagGroups, Tags, TagsIcon } from '@minddrop/tags';
+import { Tag, TagGroups, Tags, TagsIcon } from '@minddrop/tags';
 import {
   ListPanelView,
   ListPanelViewItem,
@@ -8,20 +8,19 @@ import {
 } from '@minddrop/ui-components';
 import { Views } from '@minddrop/views';
 import { NewTagMenu } from './NewTagMenu';
-import { TagDetails } from './TagDetails';
+import { TagEntries } from './TagEntries';
 import { TagGroupActions } from './TagGroupActions';
+import { TagItemActions } from './TagItemActions';
 import './TagsView.css';
 
 /**
  * Renders a two column view of the global tags: a searchable list
- * of tags sectioned by group on the left, and the selected tag's
- * details on the right.
+ * of tags sectioned by group on the left, and the entries tagged
+ * with the selected tag on the right.
  */
 export const TagsView: React.FC = () => {
   const [query, setQuery] = useState('');
-  const [draftTagId, setDraftTagId] = useState<string | null>(null);
   const subview = Views.useSubview();
-  const setSubview = Views.useSetSubview();
   const { t } = useTranslation();
   const tags = Tags.useAll();
   const groups = TagGroups.useAll();
@@ -34,25 +33,6 @@ export const TagsView: React.FC = () => {
     [tags, query],
   );
 
-  // Create a new tag with a unique default name, optionally into
-  // a group, and show it as a draft to be named
-  const handleCreateTag = useCallback(
-    async (group?: TagGroup) => {
-      const tag = await Tags.create(
-        Tags.resolveUniqueName(
-          t('tags.defaults.tagName'),
-          tags.map((existing) => existing.name),
-        ),
-        undefined,
-        group?.id,
-      );
-
-      setDraftTagId(tag.id);
-      setSubview({ id: tag.id });
-    },
-    [tags, t, setSubview],
-  );
-
   // The listed tags sectioned by group, ungrouped tags first
   const sections = useMemo(() => {
     // Collapsible group sections in alphabetical order
@@ -61,12 +41,7 @@ export const TagsView: React.FC = () => {
       .map((group) => ({
         id: group.id,
         stringLabel: group.name,
-        actions: (
-          <TagGroupActions
-            group={group}
-            onCreateTag={() => handleCreateTag(group)}
-          />
-        ),
+        actions: <TagGroupActions group={group} />,
         showLabelActionsOnHover: false,
         items: listedTags
           .filter((tag) => tag.group === group.id)
@@ -101,18 +76,13 @@ export const TagsView: React.FC = () => {
     return query
       ? allSections.filter((section) => section.items.length > 0)
       : allSections;
-  }, [groups, listedTags, query, t, handleCreateTag]);
+  }, [groups, listedTags, query, t]);
 
-  // The tag rendered by the panel's content
+  // The tag whose entries the panel's content lists
   const selectedItem = useMemo(
     () => selectedTag && toListItem(selectedTag),
     [selectedTag],
   );
-
-  // End the draft naming state
-  function handleNameCommit() {
-    setDraftTagId(null);
-  }
 
   // Create a new group with the committed name, ignoring names
   // already in use
@@ -139,31 +109,22 @@ export const TagsView: React.FC = () => {
       sectionEmptyLabel="tags.list.empty"
       noSelectionLabel="tags.details.noSelection"
       addAction={
-        <NewTagMenu
-          groups={groups}
-          onCreateTag={handleCreateTag}
-          onCreateGroup={handleCreateGroup}
-        />
+        <NewTagMenu groups={groups} onCreateGroup={handleCreateGroup} />
       }
     >
-      {selectedTag && (
-        <TagDetails
-          tag={selectedTag}
-          draft={selectedTag.id === draftTagId}
-          onNameCommit={handleNameCommit}
-        />
-      )}
+      {selectedTag && <TagEntries tag={selectedTag} />}
     </ListPanelView>
   );
 };
 
 /**
- * Returns the tag as a list item.
+ * Returns the tag as a list item carrying its actions menu.
  */
 function toListItem(tag: Tag): ListPanelViewItem {
   return {
     id: tag.id,
     label: tag.name,
     contentIcon: tag.icon,
+    actions: <TagItemActions tag={tag} />,
   };
 }

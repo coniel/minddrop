@@ -35,6 +35,12 @@ export interface ListPanelViewItem {
    * than a UI icon.
    */
   contentIcon?: string;
+
+  /**
+   * Actions displayed alongside the item's label, revealed when
+   * it is hovered.
+   */
+  actions?: React.ReactNode;
 }
 
 export interface ListPanelViewSection {
@@ -239,6 +245,7 @@ export const ListPanelView: React.FC<ListPanelViewProps> = ({
         key={item.id}
         contentIcon={item.contentIcon}
         stringLabel={item.label}
+        actions={item.actions}
         active={item.id === selectedItem?.id}
         onClick={() => handleSelectItem(item)}
       />

@@ -3,17 +3,22 @@
     "labels": {
       "tags": "Tags"
     },
-    "defaults": {
-      "tagName": "New tag"
-    },
     "groupName": {
       "placeholder": "Group name"
+    },
+    "form": {
+      "create": "Create",
+      "nameTaken": "A tag with this name already exists"
     },
     "actions": {
       "add": "Add",
       "new": "New tag",
       "newGroup": "New tag group",
       "newInGroup": "New tag in group",
+      "options": "Tag options",
+      "rename": "Rename",
+      "color": "Colour",
+      "group": "Group",
       "groupOptions": "Group options",
       "renameGroup": "Rename group",
       "delete": {

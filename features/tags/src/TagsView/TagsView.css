@@ -4,19 +4,6 @@
     gap: 0;
   }
 
-  .tag-details {
-    flex: 1;
-    min-width: 0;
-  }
-
-  /* Sized to mirror the tag list column */
-  .tag-details-fields {
-    width: 16rem;
-    flex-shrink: 0;
-    padding: var(--space-4);
-    border-right: var(--border-width-thin) solid var(--border-subtle);
-  }
-
   .tag-entries {
     flex: 1;
     min-width: 0;
@@ -25,16 +12,6 @@
   .tag-entries-content {
     padding: var(--space-4);
   }
-
-  .tag-details-name {
-    flex: 1;
-    min-width: 0;
-  }
-
-  /* Sized to its label rather than the column width */
-  .tag-details-delete {
-    align-self: flex-start;
-  }
 }
 
 /* Portaled outside the view, so styled at the top level. Sized to
@@ -42,4 +19,23 @@
 .tag-group-name-popover {
   width: 14rem;
   padding: var(--space-2) var(--space-3);
+}
+
+/* Portaled outside the view, so styled at the top level. Sized to
+   fit the form fields comfortably */
+.tag-form-popover {
+  width: 16rem;
+  padding: var(--space-2) var(--space-3);
+}
+
+/* Tighter than the form popover: the ghost fields carry their own
+   padding, so it lines up with the group name popover */
+.tag-rename-popover {
+  width: 14rem;
+  padding: var(--space-1) var(--space-2);
+}
+
+.tag-form-popover-name {
+  flex: 1;
+  min-width: 0;
 }
