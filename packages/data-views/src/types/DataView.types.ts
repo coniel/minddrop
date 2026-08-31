@@ -1,4 +1,5 @@
 import { EntityId } from '@minddrop/utils';
+import { DataViewSortOptions } from './DataViewSortOptions.types';
 import { ViewDataSource } from './ViewDataSource.types';
 
 export type DataViewId = EntityId<'data-view'>;
@@ -66,9 +67,10 @@ export interface DataView<
   lastModified: Date;
 
   /**
-   * DataView type specific options.
+   * DataView type specific options, alongside the sort options
+   * shared by all sortable view types.
    */
-  options?: TViewOptions;
+  options?: TViewOptions & DataViewSortOptions;
 
   /**
    * DataView type specific data.

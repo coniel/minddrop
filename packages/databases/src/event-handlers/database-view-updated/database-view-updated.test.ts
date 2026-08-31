@@ -27,13 +27,13 @@ describe('onDatabaseViewUpdated', () => {
     const updated: DataView = {
       ...view,
       name: 'Updated Table',
-      options: { sortBy: 'date' },
+      options: { sortProperty: 'Date' },
     };
 
     // Update the view in the store
     DataViews.Store.update(dataView_virtual_1.id, {
       name: 'Updated Table',
-      options: { sortBy: 'date' },
+      options: { sortProperty: 'Date' },
     });
 
     // Call the handler

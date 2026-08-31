@@ -33,7 +33,7 @@ describe('persistVirtualViewConfig', () => {
     // Persist a view with options and data
     await persistVirtualViewConfig({
       ...baseView,
-      options: { sortBy: 'name' },
+      options: { sortProperty: 'Name' },
       data: { columns: [] },
     });
 
@@ -44,7 +44,7 @@ describe('persistVirtualViewConfig', () => {
       entry.metadata.embeddedViewConfigs?.[
         viewMetadataKey(layoutId, propertyName)
       ],
-    ).toEqual({ options: { sortBy: 'name' }, data: { columns: [] } });
+    ).toEqual({ options: { sortProperty: 'Name' }, data: { columns: [] } });
   });
 
   it('skips views without an owner', async () => {

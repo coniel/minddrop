@@ -64,6 +64,16 @@ file extension and `views/` workspace data directory
 would be awkward). Don't "fix" these to data-view naming without a
 deliberate decision.
 
+### Untyped view options must be written through `DataViews.updateOptions`
+
+`DataView.options` is `TViewOptions & DataViewSortOptions`, so the
+default (untyped) `DataView` no longer has an empty `object` for its
+options and TypeScript's excess property check applies. Passing a view
+type's own options as a literal through `DataViews.update(id, {
+options: { columnOrder } })` is therefore rejected, while
+`DataViews.updateOptions(id, { columnOrder })` (which takes an `object`)
+is fine. Use the latter for view type specific options.
+
 ## packages/databases
 
 ### Last Modified means last modified by MindDrop
@@ -118,21 +128,25 @@ section order follows the property map rather than the original file.
 Databases with a single `formatted-text` property (the common case) are
 unaffected, since the whole body is that property's value.
 
-### The implicit Title property's name is a translated identifier
+### The implicit metadata properties' names are translated identifiers
 
-`withImplicitTitleProperty` names the implicit entry title property with
-`i18n.t('properties.title.name')`, but that name doubles as an
-**identifier** in two places that don't translate:
-`entryDisplayPropertyValues` hardcodes `Title: entry.title` as its
-values-map key, and `database.designPropertyMap` persists the name
-inside saved mappings.
+`withImplicitMetadataProperties` names the implicit title, created and
+last modified properties with `i18n.t(schema.name)`, but those names
+double as **identifiers** wherever a property name is persisted:
+`database.designPropertyMap` stores them inside saved mappings, and
+query filter and sort nodes store them as the property they act on.
 
-In en-GB everything lines up because the translation is "Title". If
-another locale is ever added, a translated implicit name would stop
-matching the hardcoded values key and any previously persisted mappings.
-The fix at that point is to treat `Title` as a stable identifier and add
-a separate translated display `label` to the property schema (updating
-the property mapping UI to render labels over names).
+In en-GB everything lines up because the translations are "Title",
+"Created" and "Last modified". Adding a second locale breaks anything
+persisted under the old name, silently, since the lookups just stop
+matching. The fix is to treat the untranslated type names as stable
+identifiers and add a separate translated display `label` to the
+property schema (updating the property mapping UI to render labels over
+names).
+
+Data view sort options avoid this: they record whether the sort targets
+a property or entry metadata, and reference metadata by type
+('created') rather than by the name it is surfaced under.
 
 ### viewLayoutOverrides must not be keyed by virtual view IDs
 

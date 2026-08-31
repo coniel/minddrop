@@ -69,12 +69,12 @@ describe('createVirtualDataView', () => {
       type: dataViewType_gallery.type,
       dataSource,
       owner,
-      options: { customOption: true },
+      options: { sortProperty: 'Rating' },
     });
 
     expect(result.options).toEqual({
       ...dataViewType_gallery.defaultOptions,
-      customOption: true,
+      sortProperty: 'Rating',
     });
   });
 

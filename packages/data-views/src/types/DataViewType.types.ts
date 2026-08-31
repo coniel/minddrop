@@ -35,6 +35,13 @@ export interface DataViewType<
   supportedDataSources: ViewDataSourceType[];
 
   /**
+   * Whether the view type renders its entries in a single order
+   * the user can sort. View types which position entries
+   * themselves are not sortable.
+   */
+  sortable?: boolean;
+
+  /**
    * The component used to render the data view.
    */
   component: React.ElementType<

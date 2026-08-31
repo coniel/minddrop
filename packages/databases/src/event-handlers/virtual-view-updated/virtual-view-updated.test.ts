@@ -81,7 +81,7 @@ describe('onUpdateVirtualView', () => {
   it('updates the entry metadata with the view config', () => {
     const updatedView: DataView = {
       ...baseView,
-      options: { sortOrder: 'asc' },
+      options: { sortDirection: 'ascending' },
       data: { columns: [['a', 'b'], ['c']] },
     };
 
@@ -94,7 +94,7 @@ describe('onUpdateVirtualView', () => {
     const metadataKey = viewMetadataKey(layoutId, propertyName);
 
     expect(entry.metadata.embeddedViewConfigs?.[metadataKey]).toEqual({
-      options: { sortOrder: 'asc' },
+      options: { sortDirection: 'ascending' },
       data: { columns: [['a', 'b'], ['c']] },
     });
   });

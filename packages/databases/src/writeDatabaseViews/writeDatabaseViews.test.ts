@@ -18,7 +18,7 @@ describe('writeDatabaseViews', () => {
       ...dataView_virtual_1,
       dataSource: { type: 'database', id: objectDatabase.id },
       owner: objectDatabase.id,
-      options: { sortBy: 'name' },
+      options: { sortProperty: 'Name' },
     };
 
     DataViews.Store.set(view);
@@ -32,7 +32,7 @@ describe('writeDatabaseViews', () => {
 
     expect(database!.views).toHaveLength(1);
     expect(database!.views![0].id).toBe(dataView_virtual_1.id);
-    expect(database!.views![0].options).toEqual({ sortBy: 'name' });
+    expect(database!.views![0].options).toEqual({ sortProperty: 'Name' });
     expect((database!.views![0] as DataView).dataSource).toBeUndefined();
     expect((database!.views![0] as DataView).virtual).toBeUndefined();
     expect((database!.views![0] as DataView).owner).toBeUndefined();

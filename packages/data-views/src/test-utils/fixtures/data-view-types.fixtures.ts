@@ -16,7 +16,12 @@ function generateViewTypeFixture(type: string): DataViewType {
   };
 }
 
-export const dataViewType_table = generateViewTypeFixture('table');
+// Table renders its entries in a sortable order
+export const dataViewType_table: DataViewType = {
+  ...generateViewTypeFixture('table'),
+  sortable: true,
+};
+
 export const dataViewType_gallery = generateViewTypeFixture('gallery');
 
 // Board only supports collection data source
