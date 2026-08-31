@@ -105,6 +105,12 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
     string | null
   >('activeViewId', viewState.activeViewId);
 
+  // Track which view's dropdown menu is open and anchor element
+  const [dropdownMenuViewId, setDropdownMenuViewId] = useState<string | null>(
+    null,
+  );
+  const [dropdownAnchor, setDropdownAnchor] = useState<Element | null>(null);
+
   // Resolve the active view ID, falling back to the first view
   const activeViewId = tabActiveViewId ?? databaseViews[0]?.id;
 
@@ -112,16 +118,6 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
   // otherwise use persisted state
   const configurationPanelOpen =
     configPanelOpenProp ?? viewState.configPanelOpen;
-
-  // Persist the active view ID and apply the prop override
-  // when the database view first mounts
-  useEffect(() => {
-    if (configPanelOpenProp !== undefined) {
-      setDatabaseViewState(databaseId, {
-        configPanelOpen: configPanelOpenProp,
-      });
-    }
-  }, [databaseId, configPanelOpenProp]);
 
   // Update the active view ID
   const setActiveViewId = useCallback(
@@ -141,6 +137,16 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
       configPanelOpen: !configurationPanelOpen,
     });
   }, [databaseId, configurationPanelOpen]);
+
+  // Persist the active view ID and apply the prop override
+  // when the database view first mounts
+  useEffect(() => {
+    if (configPanelOpenProp !== undefined) {
+      setDatabaseViewState(databaseId, {
+        configPanelOpen: configPanelOpenProp,
+      });
+    }
+  }, [databaseId, configPanelOpenProp]);
 
   // Sync activeViewId when views change (e.g. active view deleted)
   useEffect(() => {
@@ -220,12 +226,6 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
     DataViews.update(viewId, { icon });
   }, []);
 
-  // Track which view's dropdown menu is open and anchor element
-  const [dropdownMenuViewId, setDropdownMenuViewId] = useState<string | null>(
-    null,
-  );
-  const [dropdownAnchor, setDropdownAnchor] = useState<Element | null>(null);
-
   async function handleClickNewEntry() {
     if (!database) {
       return;
@@ -241,6 +241,43 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
     }
 
     DatabaseEntries.createFromTemplate(database.id, templateId);
+  }
+
+  // Open a tab's view options menu when its active tab is clicked
+  function handleTabClick(
+    event: React.MouseEvent<HTMLElement>,
+    viewId: string,
+    isActive: boolean,
+  ) {
+    // Only the active tab's click opens the menu
+    if (!isActive) {
+      return;
+    }
+
+    // Anchor the menu to the clicked tab
+    setDropdownAnchor(event.currentTarget);
+    setDropdownMenuViewId(viewId);
+  }
+
+  // Open a tab's view options menu on right click
+  function handleTabContextMenu(
+    event: React.MouseEvent<HTMLElement>,
+    viewId: string,
+  ) {
+    // Suppress the native context menu
+    event.preventDefault();
+
+    // Anchor the menu to the tab
+    setDropdownAnchor(event.currentTarget);
+    setDropdownMenuViewId(viewId);
+  }
+
+  function handleViewMenuOpenChange(open: boolean) {
+    // Clear the menu state when the menu closes
+    if (!open) {
+      setDropdownMenuViewId(null);
+      setDropdownAnchor(null);
+    }
   }
 
   // Render the new entry action, wrapping it in a template
@@ -412,17 +449,12 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
                           }
                           className={className}
                           style={style}
-                          onClick={(event) => {
-                            if (isActive) {
-                              setDropdownAnchor(event.currentTarget);
-                              setDropdownMenuViewId(databaseView.id);
-                            }
-                          }}
-                          onContextMenu={(event) => {
-                            event.preventDefault();
-                            setDropdownAnchor(event.currentTarget);
-                            setDropdownMenuViewId(databaseView.id);
-                          }}
+                          onClick={(event) =>
+                            handleTabClick(event, databaseView.id, isActive)
+                          }
+                          onContextMenu={(event) =>
+                            handleTabContextMenu(event, databaseView.id)
+                          }
                           {...handleProps}
                         >
                           {databaseView.name}
@@ -435,12 +467,7 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
                 {/* View options menu - opens when clicking the active tab */}
                 <ContextMenuRoot
                   open={dropdownMenuViewId !== null}
-                  onOpenChange={(open) => {
-                    if (!open) {
-                      setDropdownMenuViewId(null);
-                      setDropdownAnchor(null);
-                    }
-                  }}
+                  onOpenChange={handleViewMenuOpenChange}
                 >
                   <ContextMenuPortal>
                     <ContextMenuPositioner
