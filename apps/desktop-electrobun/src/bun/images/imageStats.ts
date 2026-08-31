@@ -44,7 +44,10 @@ let saveTimer: ReturnType<typeof setTimeout> | null = null;
  * image has since been deleted or modified.
  */
 export async function initializeImageStats(): Promise<void> {
+  // Read the persisted index into memory
   await loadAnalyses();
+
+  // Drop analyses whose source image changed or disappeared
   await discardStaleAnalyses();
 }
 
@@ -59,6 +62,7 @@ export async function getImageStats(
   sourcePath: string,
 ): Promise<ImageStats | null> {
   try {
+    // Stat the image and look up its stored analysis
     const fileStats = await fsp.stat(sourcePath);
     const stored = analyses.get(sourcePath);
 
@@ -81,6 +85,7 @@ export async function getImageStats(
       },
     );
 
+    // Register the analysis for concurrent requests to join
     inFlight.set(sourcePath, analysis);
 
     return analysis;
@@ -95,10 +100,13 @@ export async function getImageStats(
 /**
  * Returns every known image analysis, keyed by source image path, so
  * that the client can populate its cache in one request.
+ *
+ * @returns All known image stats keyed by source image path.
  */
 export function getAllImageStats(): Record<string, ImageStats> {
   const all: Record<string, ImageStats> = {};
 
+  // Collect each stored analysis without its modification time
   analyses.forEach((stored, sourcePath) => {
     all[sourcePath] = toImageStats(stored);
   });
@@ -111,9 +119,11 @@ export function getAllImageStats(): Record<string, ImageStats> {
  */
 async function loadAnalyses(): Promise<void> {
   try {
+    // Read and parse the index file
     const contents = await fsp.readFile(STATS_FILE_PATH, 'utf8');
     const parsed: unknown = JSON.parse(contents);
 
+    // Ignore an index that is not an object
     if (typeof parsed !== 'object' || parsed === null) {
       return;
     }
@@ -136,6 +146,7 @@ async function loadAnalyses(): Promise<void> {
  * modified since it was analysed.
  */
 async function discardStaleAnalyses(): Promise<void> {
+  // The source paths of all stored analyses
   const sourcePaths = Array.from(analyses.keys());
 
   // A single stat answers both whether the image still exists and
@@ -152,6 +163,7 @@ async function discardStaleAnalyses(): Promise<void> {
     }),
   );
 
+  // Keep only the paths flagged as stale
   const stalePaths = sourcePaths.filter((_, index) => staleness[index]);
 
   // Nothing to drop, so the index on disk is already correct
@@ -159,10 +171,12 @@ async function discardStaleAnalyses(): Promise<void> {
     return;
   }
 
+  // Drop the stale analyses from memory
   stalePaths.forEach((sourcePath) => {
     analyses.delete(sourcePath);
   });
 
+  // Persist the pruned index
   await saveAnalyses();
 }
 
@@ -178,6 +192,7 @@ async function analyzeAndStore(
   sourcePath: string,
   mtimeMs: number,
 ): Promise<ImageStats | null> {
+  // Run the analysis
   const stats = await analyzeImage(sourcePath);
 
   // Unanalysable images are not recorded, and retrying them on each
@@ -186,6 +201,7 @@ async function analyzeAndStore(
     return null;
   }
 
+  // Store the analysis and queue a write of the index
   analyses.set(sourcePath, { ...stats, mtimeMs });
   scheduleSave();
 
@@ -200,8 +216,10 @@ async function analyzeAndStore(
  */
 async function analyzeImage(sourcePath: string): Promise<ImageStats | null> {
   try {
+    // Read the image's intrinsic dimensions
     const dimensions = await readDimensions(sourcePath);
 
+    // Decode a small downscale to raw pixel data
     const { data, info } = await sharp(sourcePath)
       .resize(ANALYSIS_SIZE, ANALYSIS_SIZE, { fit: 'fill' })
       // Composite onto white so that transparent images are classified
@@ -211,6 +229,7 @@ async function analyzeImage(sourcePath: string): Promise<ImageStats | null> {
       .raw()
       .toBuffer({ resolveWithObject: true });
 
+    // The number of pixels in the decoded buffer
     const { channels } = info;
     const pixelCount = data.length / channels;
 
@@ -219,6 +238,7 @@ async function analyzeImage(sourcePath: string): Promise<ImageStats | null> {
       return null;
     }
 
+    // Running totals accumulated over the pixel loop
     let brightCount = 0;
     let nearWhiteCount = 0;
     let redTotal = 0;
@@ -227,11 +247,13 @@ async function analyzeImage(sourcePath: string): Promise<ImageStats | null> {
 
     // Measure each pixel's brightness band and colour contribution
     for (let index = 0; index < data.length; index += channels) {
+      // Read the pixel's channels and compute its relative luminance
       const red = data[index];
       const green = data[index + 1];
       const blue = data[index + 2];
       const luminance = (0.2126 * red + 0.7152 * green + 0.0722 * blue) / 255;
 
+      // Accumulate the channel totals for the average colour
       redTotal += red;
       greenTotal += green;
       blueTotal += blue;
@@ -247,6 +269,7 @@ async function analyzeImage(sourcePath: string): Promise<ImageStats | null> {
       }
     }
 
+    // Convert the counts and totals into fractions and an average colour
     return {
       brightFraction: brightCount / pixelCount,
       nearWhiteFraction: nearWhiteCount / pixelCount,
@@ -275,8 +298,10 @@ async function readDimensions(
   sourcePath: string,
 ): Promise<{ width?: number; height?: number }> {
   try {
+    // Read the image's metadata header
     const { width, height, orientation } = await sharp(sourcePath).metadata();
 
+    // Skip images whose header omits dimensions
     if (!width || !height) {
       return {};
     }
@@ -297,8 +322,14 @@ async function readDimensions(
 
 /**
  * Formats averaged colour channels as a hex colour string.
+ *
+ * @param red - The averaged red channel value.
+ * @param green - The averaged green channel value.
+ * @param blue - The averaged blue channel value.
+ * @returns The hex colour string.
  */
 function toHexColor(red: number, green: number, blue: number): string {
+  // Format a channel value as a two digit hex string
   const channel = (value: number) =>
     Math.round(value).toString(16).padStart(2, '0');
 
@@ -309,10 +340,12 @@ function toHexColor(red: number, green: number, blue: number): string {
  * Queues a write of the analysis index, replacing any queued write.
  */
 function scheduleSave(): void {
+  // Cancel any already queued write
   if (saveTimer) {
     clearTimeout(saveTimer);
   }
 
+  // Queue the write after the debounce delay
   saveTimer = setTimeout(() => {
     saveTimer = null;
     saveAnalyses();
@@ -324,6 +357,7 @@ function scheduleSave(): void {
  */
 async function saveAnalyses(): Promise<void> {
   try {
+    // Ensure the app data directory exists
     await fsp.mkdir(`${Utils.paths.appData}/MindDrop`, { recursive: true });
 
     // Write to a temporary path first so that a crash mid-write
@@ -334,6 +368,8 @@ async function saveAnalyses(): Promise<void> {
       temporaryPath,
       JSON.stringify(Object.fromEntries(analyses)),
     );
+
+    // Atomically replace the index with the completed write
     await fsp.rename(temporaryPath, STATS_FILE_PATH);
   } catch (error) {
     // The in-memory analyses stand even if they could not be persisted
@@ -343,6 +379,9 @@ async function saveAnalyses(): Promise<void> {
 
 /**
  * Strips the stored modification time, leaving the stats themselves.
+ *
+ * @param stored - The stored analysis to strip.
+ * @returns The image stats without the modification time.
  */
 function toImageStats({
   mtimeMs: _mtimeMs,
@@ -353,8 +392,12 @@ function toImageStats({
 
 /**
  * Checks whether a parsed index entry holds a complete analysis.
+ *
+ * @param value - The parsed value to check.
+ * @returns Whether the value is a complete stored analysis.
  */
 function isStoredImageStats(value: unknown): value is StoredImageStats {
+  // Reject non-object values
   if (typeof value !== 'object' || value === null) {
     return false;
   }
@@ -362,6 +405,7 @@ function isStoredImageStats(value: unknown): value is StoredImageStats {
   const { brightFraction, nearWhiteFraction, averageColor, mtimeMs } =
     value as Record<string, unknown>;
 
+  // Check each required measurement is present with the right type
   return (
     typeof brightFraction === 'number' &&
     typeof nearWhiteFraction === 'number' &&
