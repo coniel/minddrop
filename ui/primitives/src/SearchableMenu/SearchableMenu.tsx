@@ -141,25 +141,31 @@ export const SearchableMenu = React.forwardRef<
         return orderedIds;
       }
 
-      // Build parallel arrays of IDs and text values
-      const ids: string[] = [];
+      // Items are matched back by their text value, which two
+      // items can share, so each maps to a list of IDs
+      const idsByTextValue = new Map<string, string[]>();
       const textValues: string[] = [];
 
       registryRef.current.forEach((registration, id) => {
-        ids.push(id);
-        textValues.push(resolveTextValue(registration.propsRef.current));
+        const textValue = resolveTextValue(registration.propsRef.current);
+
+        idsByTextValue.set(textValue, [
+          ...(idsByTextValue.get(textValue) ?? []),
+          id,
+        ]);
+        textValues.push(textValue);
       });
 
       // Fuzzy match returns the matched text values in ranked order
       const matches = fuzzySearch(textValues, searchTerm);
 
-      // Map matched text values back to their IDs,
-      // preserving the fuzzy search ranking
+      // Map matched text values back to their IDs, each match
+      // taking the next item its text value belongs to
       return matches.reduce<string[]>((result, matchedText) => {
-        const index = textValues.indexOf(matchedText);
+        const id = idsByTextValue.get(matchedText)?.shift();
 
-        if (index !== -1) {
-          result.push(ids[index]);
+        if (id) {
+          result.push(id);
         }
 
         return result;
