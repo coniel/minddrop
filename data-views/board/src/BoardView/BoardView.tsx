@@ -84,6 +84,9 @@ export const BoardViewComponent: React.FC<
   // its editor, cleared once the card has mounted
   const [autoFocusEntryId, setAutoFocusEntryId] = useState<string>();
 
+  // The databases the board's entries belong to
+  const entryDatabases = Databases.useFromEntries(entries);
+
   // Resolve columns from view data, falling back to defaults
   const columns = useMemo(
     () => view.data?.columns || defaultBoardViewData.columns,
@@ -115,13 +118,13 @@ export const BoardViewComponent: React.FC<
   const toolbarDatabaseCards = useMemo(() => {
     const toolbarCards = view.options?.toolbarCards;
 
-    return Databases.getFromEntries(entries)
+    return entryDatabases
       .filter((database) => !toolbarCards?.[database.id]?.hidden)
       .map((database) => ({
         databaseId: database.id,
         templateId: toolbarCards?.[database.id]?.templateId,
       }));
-  }, [entries, view.options?.toolbarCards]);
+  }, [entryDatabases, view.options?.toolbarCards]);
 
   // Persist the updated column layout to the view data
   const updateColumns = useCallback(

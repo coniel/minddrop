@@ -27,6 +27,9 @@ import {
 // Radio value representing a blank entry with no template
 const BLANK_ENTRY = 'blank';
 
+// Stable empty list used while the collection is unavailable
+const NO_ITEMS: string[] = [];
+
 /**
  * Renders the board view settings menu content with a card
  * layout picker per database, toolbar card settings, and board
@@ -38,16 +41,14 @@ export const BoardViewOptionsMenu: React.FC<
   // Load the collection backing the view
   const collection = Collections.use(view.dataSource.id);
 
-  // Derive the databases the collection's entries belong to
-  const databaseIds = useMemo(() => {
-    if (!collection) {
-      return [];
-    }
+  // The databases the collection's entries belong to
+  const databases = Databases.useFromEntries(collection?.items ?? NO_ITEMS);
 
-    return Databases.getFromEntries(collection.items).map(
-      (database) => database.id,
-    );
-  }, [collection]);
+  // The layout pickers address their database by ID
+  const databaseIds = useMemo(
+    () => databases.map((database) => database.id),
+    [databases],
+  );
 
   // Set the card layout override for the database the
   // selection belongs to
