@@ -1,17 +1,17 @@
-.select-options {
+.properties-select-options {
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
   margin-bottom: var(--space-2);
 
-  .select-option-row {
+  .properties-select-option-row {
     position: relative;
 
     .text-input {
       padding-left: var(--space-1);
     }
 
-    .option-delete-button {
+    .properties-select-option-delete-button {
       opacity: 0;
       transition: opacity var(--duration-fast) var(--ease-out);
       position: absolute;
@@ -21,18 +21,13 @@
       background-color: var(--surface-accent);
     }
 
-    &:hover .option-delete-button {
+    &:hover .properties-select-option-delete-button {
       opacity: 1;
     }
   }
-
-  .option-name-input {
-    flex: 1;
-    position: relative;
-  }
 }
 
-.option-color-button {
+.properties-select-option-color-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -43,14 +38,13 @@
   border: none;
   background: none;
   padding: 0;
-  cursor: pointer;
 
   &:hover {
     background-color: var(--surface-accent);
   }
 }
 
-.option-color-swatch {
+.properties-select-option-color-swatch {
   width: 1rem;
   height: 1rem;
   border-radius: var(--radius-full);
@@ -58,69 +52,69 @@
   flex-shrink: 0;
 }
 
-.option-color-swatch-default {
+.properties-select-option-color-swatch-default {
   border-color: var(--border-default);
 }
 
-.option-color-swatch-blue {
+.properties-select-option-color-swatch-blue {
   background-color: var(--blue-600);
   border-color: var(--blue-700);
 }
 
-.option-color-swatch-cyan {
+.properties-select-option-color-swatch-cyan {
   background-color: var(--cyan-600);
   border-color: var(--cyan-700);
 }
 
-.option-color-swatch-red {
+.properties-select-option-color-swatch-red {
   background-color: var(--red-600);
   border-color: var(--red-700);
 }
 
-.option-color-swatch-pink {
+.properties-select-option-color-swatch-pink {
   background-color: var(--pink-600);
   border-color: var(--pink-700);
 }
 
-.option-color-swatch-purple {
+.properties-select-option-color-swatch-purple {
   background-color: var(--purple-600);
   border-color: var(--purple-700);
 }
 
-.option-color-swatch-green {
+.properties-select-option-color-swatch-green {
   background-color: var(--green-600);
   border-color: var(--green-700);
 }
 
-.option-color-swatch-orange {
+.properties-select-option-color-swatch-orange {
   background-color: var(--orange-600);
   border-color: var(--orange-700);
 }
 
-.option-color-swatch-yellow {
+.properties-select-option-color-swatch-yellow {
   background-color: var(--yellow-600);
   border-color: var(--yellow-700);
 }
 
-.option-color-swatch-brown {
+.properties-select-option-color-swatch-brown {
   background-color: var(--brown-600);
   border-color: var(--brown-700);
 }
 
-.option-color-swatch-gray {
+.properties-select-option-color-swatch-gray {
   background-color: var(--gray-600);
   border-color: var(--gray-700);
 }
 
-.select-multiselect {
+.properties-select-multiselect {
   margin-bottom: var(--space-3);
 }
 
-.select-options-add {
+.properties-select-options-add {
   display: flex;
   align-items: center;
 
-  .select-options-add-hint {
+  .properties-select-options-add-hint {
     display: flex;
     align-items: center;
     gap: var(--space-1);

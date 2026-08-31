@@ -36,25 +36,30 @@ export const SelectPropertyEditor: React.FC<SelectPropertyEditorProps> = ({
   onOpen,
   ...other
 }) => {
-  const [options, setOptions] = useState<SelectPropertyOption[]>(
-    property.options,
+  const inputRefs = useRef(new Map<number, HTMLInputElement>());
+  // Options carry a session-local id keying their row and input ref,
+  // keeping both stable when options are removed mid-list
+  const [options, setOptions] = useState<EditorOption[]>(() =>
+    property.options.map(toEditorOption),
   );
   const [multiselect, setMultiselect] = useState(property.multiselect ?? false);
   const [isOptionFocused, setIsOptionFocused] = useState(false);
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const prevLengthRef = useRef(options.length);
 
+  // Focus the last option's input when a new option is added
   useEffect(() => {
     if (options.length > prevLengthRef.current) {
-      inputRefs.current[options.length - 1]?.focus();
+      const lastOption = options[options.length - 1];
+
+      inputRefs.current.get(lastOption.id)?.focus();
     }
 
     prevLengthRef.current = options.length;
-  }, [options.length]);
+  }, [options]);
 
   // When opened with defaultOpen and no options, add and focus one immediately.
-  // Skip if property has its default name — PropertyEditorBase will focus the
-  // name field instead, and Enter will trigger option addition.
+  // Skip if property has its default name, in which case PropertyEditorBase
+  // will focus the name field instead, and Enter will trigger option addition.
   useEffect(() => {
     const isDefaultName =
       property.name === i18n.t(PropertySchemas[property.type].name);
@@ -67,21 +72,27 @@ export const SelectPropertyEditor: React.FC<SelectPropertyEditorProps> = ({
 
   async function handleSave(savedProperty: PropertySchema) {
     // Filter out empty options before saving
-    const filteredOptions = options.filter((opt) => opt.value.trim() !== '');
+    const filteredOptions = options.filter(
+      (option) => option.value.trim() !== '',
+    );
 
     // Update local state to match saved options
     setOptions(filteredOptions);
 
     return onSave({
       ...(savedProperty as SelectPropertySchema),
-      options: filteredOptions,
+      options: filteredOptions.map(toPropertyOption),
       multiselect,
     });
   }
 
   function handleCancel() {
     // Reset to the original options, filtering out any empty ones
-    setOptions(property.options.filter((opt) => opt.value.trim() !== ''));
+    setOptions(
+      property.options
+        .filter((option) => option.value.trim() !== '')
+        .map(toEditorOption),
+    );
     setMultiselect(property.multiselect ?? false);
 
     if (onCancel) {
@@ -90,37 +101,87 @@ export const SelectPropertyEditor: React.FC<SelectPropertyEditorProps> = ({
   }
 
   function handleAddOption() {
-    const usedColors = new Set(options.map((opt) => opt.color));
+    // Pick a random color, preferring ones no option uses yet
+    const usedColors = new Set(options.map((option) => option.color));
     const unusedColors = ContentColorValues.filter(
-      (c) => !usedColors.has(c.value),
+      (colorOption) => !usedColors.has(colorOption.value),
     );
     const pool = unusedColors.length > 0 ? unusedColors : ContentColorValues;
     const color = pool[Math.floor(Math.random() * pool.length)].value;
 
-    setOptions([...options, { value: '', color }]);
+    // Append the new empty option
+    setOptions([...options, toEditorOption({ value: '', color })]);
   }
 
-  function handleDeleteOption(index: number) {
-    setOptions(options.filter((_, i) => i !== index));
+  function handleDeleteOption(id: number) {
+    setOptions(options.filter((option) => option.id !== id));
   }
 
-  function handleOptionNameChange(index: number, value: string) {
+  function handleOptionNameChange(id: number, value: string) {
     setOptions(
-      options.map((opt, i) => (i === index ? { ...opt, value } : opt)),
+      options.map((option) =>
+        option.id === id ? { ...option, value } : option,
+      ),
     );
   }
 
-  function handleOptionColorChange(index: number, color: ContentColor) {
+  function handleOptionColorChange(id: number, color: ContentColor) {
     setOptions(
-      options.map((opt, i) => (i === index ? { ...opt, color } : opt)),
+      options.map((option) =>
+        option.id === id ? { ...option, color } : option,
+      ),
     );
+  }
+
+  function handleOptionKeyDown(
+    event: React.KeyboardEvent<HTMLInputElement>,
+    option: EditorOption,
+  ) {
+    // Enter adds a new option below
+    if (event.key === 'Enter') {
+      handleAddOption();
+
+      return;
+    }
+
+    if (event.key !== 'Escape') {
+      return;
+    }
+
+    // Escape removes the option if it is empty
+    if (option.value.trim() === '') {
+      handleDeleteOption(option.id);
+    }
+
+    // Blur the field
+    event.currentTarget.blur();
+  }
+
+  function handleOptionsBlur(event: React.FocusEvent<HTMLDivElement>) {
+    // Only unset the focus flag when focus leaves the options
+    // container entirely
+    if (!event.currentTarget.contains(event.relatedTarget)) {
+      setIsOptionFocused(false);
+    }
+  }
+
+  function setInputRef(id: number, element: HTMLInputElement | null) {
+    // Track the input by its option's id, dropping the entry on unmount
+    if (element) {
+      inputRefs.current.set(id, element);
+    } else {
+      inputRefs.current.delete(id);
+    }
   }
 
   function handleNameEnter() {
-    const firstEmptyIndex = options.findIndex((opt) => opt.value.trim() === '');
+    // Focus the first empty option, adding one if none are empty
+    const firstEmptyOption = options.find(
+      (option) => option.value.trim() === '',
+    );
 
-    if (firstEmptyIndex !== -1) {
-      inputRefs.current[firstEmptyIndex]?.focus();
+    if (firstEmptyOption) {
+      inputRefs.current.get(firstEmptyOption.id)?.focus();
     } else {
       handleAddOption();
     }
@@ -150,52 +211,42 @@ export const SelectPropertyEditor: React.FC<SelectPropertyEditorProps> = ({
       {...other}
     >
       <div
-        className="select-options"
+        className="properties-select-options"
         onFocus={() => setIsOptionFocused(true)}
-        onBlur={(e) => {
-          if (!e.currentTarget.contains(e.relatedTarget as Node)) {
-            setIsOptionFocused(false);
-          }
-        }}
+        onBlur={handleOptionsBlur}
       >
-        {options.map((option, index) => (
-          <div key={index} className="select-option-row">
+        {options.map((option) => (
+          <div key={option.id} className="properties-select-option-row">
             <TextInput
-              ref={(el) => {
-                inputRefs.current[index] = el;
-              }}
+              ref={(element) => setInputRef(option.id, element)}
               variant="subtle"
               size="md"
               value={option.value}
               placeholder="properties.select.options.placeholder"
-              onValueChange={(value) => handleOptionNameChange(index, value)}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter') {
-                  handleAddOption();
-                } else if (event.key === 'Escape') {
-                  // Blur the field, removing it if empty
-                  if (option.value.trim() === '') {
-                    handleDeleteOption(index);
-                  }
-
-                  (event.target as HTMLInputElement).blur();
-                }
-              }}
+              onValueChange={(value) =>
+                handleOptionNameChange(option.id, value)
+              }
+              onKeyDown={(event) => handleOptionKeyDown(event, option)}
               leading={
                 <DropdownMenu
                   trigger={
-                    <button className="option-color-button" type="button">
+                    <button
+                      className="properties-select-option-color-button"
+                      type="button"
+                    >
                       <span
-                        className={`option-color-swatch option-color-swatch-${option.color}`}
+                        className={`properties-select-option-color-swatch properties-select-option-color-swatch-${option.color}`}
                       />
                     </button>
                   }
                 >
-                  {ContentColorValues.map((c) => (
+                  {ContentColorValues.map((colorOption) => (
                     <DropdownMenuColorSelectionItem
-                      key={c.value}
-                      color={c.value}
-                      onClick={() => handleOptionColorChange(index, c.value)}
+                      key={colorOption.value}
+                      color={colorOption.value}
+                      onClick={() =>
+                        handleOptionColorChange(option.id, colorOption.value)
+                      }
                     />
                   ))}
                 </DropdownMenu>
@@ -207,12 +258,12 @@ export const SelectPropertyEditor: React.FC<SelectPropertyEditorProps> = ({
               variant="ghost"
               color="neutral"
               label="actions.delete"
-              className="option-delete-button"
-              onClick={() => handleDeleteOption(index)}
+              className="properties-select-option-delete-button"
+              onClick={() => handleDeleteOption(option.id)}
             />
           </div>
         ))}
-        <div className="select-options-add">
+        <div className="properties-select-options-add">
           <Button
             size="sm"
             variant="ghost"
@@ -220,7 +271,7 @@ export const SelectPropertyEditor: React.FC<SelectPropertyEditorProps> = ({
             onClick={handleAddOption}
           />
           {isOptionFocused && (
-            <div className="select-options-add-hint">
+            <div className="properties-select-options-add-hint">
               <KeyboardShortcut keys={['Enter']} color="subtle" size="xs" />
               <Text
                 color="subtle"
@@ -231,7 +282,7 @@ export const SelectPropertyEditor: React.FC<SelectPropertyEditorProps> = ({
           )}
         </div>
       </div>
-      <div className="select-multiselect">
+      <div className="properties-select-multiselect">
         <SwitchField
           size="sm"
           checked={multiselect}
@@ -242,3 +293,37 @@ export const SelectPropertyEditor: React.FC<SelectPropertyEditorProps> = ({
     </PropertyEditorBase>
   );
 };
+
+/**
+ * A select option carrying a session-local id used to key its row.
+ */
+interface EditorOption extends SelectPropertyOption {
+  id: number;
+}
+
+// Source of the session-local option ids
+let nextOptionId = 0;
+
+/**
+ * Wraps a select option with a session-local id.
+ *
+ * @param option - The option to wrap.
+ * @returns The option with an id.
+ */
+function toEditorOption(option: SelectPropertyOption): EditorOption {
+  nextOptionId += 1;
+
+  return { ...option, id: nextOptionId };
+}
+
+/**
+ * Strips the session-local id from an editor option.
+ *
+ * @param option - The editor option to strip.
+ * @returns The plain select option.
+ */
+function toPropertyOption(option: EditorOption): SelectPropertyOption {
+  const { id, ...propertyOption } = option;
+
+  return propertyOption;
+}
