@@ -75,11 +75,11 @@
 
 .combobox-trigger-size-md {
   min-height: var(--control-height-md);
-  padding: 3px var(--space-2) 3px 3px;
+  padding: var(--space-0-75) var(--space-2) var(--space-0-75) var(--space-0-75);
 
   .combobox-trigger-content,
   .combobox-trigger-content [role='toolbar'] {
-    gap: 3px;
+    gap: var(--space-0-75);
   }
 }
 
@@ -90,7 +90,7 @@
 
   .combobox-chip {
     height: 26px;
-    padding: 4px var(--space-1);
+    padding: var(--space-1);
 
     &:has(.combobox-chip-icon) {
       padding-right: var(--space-2);
@@ -161,7 +161,7 @@
   height: 20px;
   max-width: var(--combobox-chip-max-width, 100%);
 
-  padding: 1px var(--space-1);
+  padding: var(--space-px) var(--space-1);
 
   font-family: var(--font-ui);
   font-size: var(--font-size-xs);
@@ -186,7 +186,7 @@
 
 .combobox-chip-icon {
   flex-shrink: 0;
-  margin-right: 2px;
+  margin-right: var(--space-0-5);
   color: var(--text-subtle);
 }
 
