@@ -309,7 +309,7 @@ export function useSortableDrag({
   );
 
   /**
-   * Handles pointer up — finalizes the drag, calls onSort if
+   * Handles pointer up - finalizes the drag, calls onSort if
    * order changed, and resets all state.
    */
   const handlePointerUp = useCallback(() => {
@@ -351,7 +351,7 @@ export function useSortableDrag({
   }, []);
 
   /**
-   * Handles Escape key — cancels the drag without reordering.
+   * Handles Escape key - cancels the drag without reordering.
    */
   const handleKeyDown = useCallback((event: KeyboardEvent) => {
     if (event.key !== 'Escape') {
@@ -421,12 +421,12 @@ export function useSortableDrag({
         let shift = 0;
 
         if (state.activeIndex < overIndex) {
-          // Dragged item moved forward — items between active and over shift backward
+          // Dragged item moved forward - items between active and over shift backward
           if (index > state.activeIndex && index <= overIndex) {
             shift = -displacement;
           }
         } else if (state.activeIndex > overIndex) {
-          // Dragged item moved backward — items between over and active shift forward
+          // Dragged item moved backward - items between over and active shift forward
           if (index >= overIndex && index < state.activeIndex) {
             shift = displacement;
           }

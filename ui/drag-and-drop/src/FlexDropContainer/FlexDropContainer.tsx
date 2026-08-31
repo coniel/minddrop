@@ -309,14 +309,8 @@ export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
   const containerStyle: React.CSSProperties = {
     display: 'flex',
     flexDirection: direction,
-    alignItems:
-      align === 'start' ? 'flex-start' : align === 'end' ? 'flex-end' : align,
-    justifyContent:
-      justify === 'start'
-        ? 'flex-start'
-        : justify === 'end'
-          ? 'flex-end'
-          : justify,
+    alignItems: resolveFlexAlignment(align),
+    justifyContent: resolveFlexAlignment(justify),
     ...style,
     // Gap is handled by the gap zones
     gap: 0,
@@ -367,4 +361,27 @@ function resolveSpacingGaps(justify: React.CSSProperties['justifyContent']): {
   }
 
   return { leading: false, between: false, trailing: false };
+}
+
+/**
+ * Maps the shorthand 'start'/'end' alignment values to their
+ * flex equivalents, passing other values through unchanged.
+ *
+ * @param value - The alignment value to resolve.
+ * @returns The resolved flex alignment value.
+ */
+function resolveFlexAlignment<T extends string | undefined>(
+  value: T,
+): T | 'flex-start' | 'flex-end' {
+  // Map the start shorthand to its flex equivalent
+  if (value === 'start') {
+    return 'flex-start';
+  }
+
+  // Map the end shorthand to its flex equivalent
+  if (value === 'end') {
+    return 'flex-end';
+  }
+
+  return value;
 }
