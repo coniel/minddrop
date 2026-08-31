@@ -19,22 +19,22 @@
       }
     }
 
-    &.color-toolbar {
+    &.content-icon-picker-color-toolbar {
       padding: 0.5rem;
     }
   }
 
   /* Header virtual row */
-  .category-group {
+  .content-icon-picker-category-group {
     padding: 0.5rem 0.5rem 0 0.5rem;
   }
 
-  /* Icon virtual row — left padding matches old category-group + category-group-icons combined */
-  .category-group-icons {
+  /* Icon virtual row, left padding combines the header and icon row insets */
+  .content-icon-picker-category-group-icons {
     padding: 0 0.5rem 0 0.75rem;
   }
 
-  .options {
+  .content-icon-picker-options {
     flex: 1;
     min-height: 0;
     display: flex;
@@ -42,21 +42,20 @@
     overflow: hidden;
   }
 
-  .icon-selection-button {
+  .content-icon-picker-scroll-area {
+    flex: 1;
+    min-height: 0;
+  }
+
+  .content-icon-picker-icon-button {
     font-size: 24px;
     width: 32px;
     height: 32px;
   }
 
-  .color-selection-button {
+  .content-icon-picker-color-button {
     padding: 0;
     width: var(--control-height-md);
     height: var(--control-height-md);
-  }
-
-  .color-select-popover {
-    padding: 2px;
-    width: 196px;
-    z-index: 99999;
   }
 }

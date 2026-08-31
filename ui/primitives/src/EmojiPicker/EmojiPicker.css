@@ -19,22 +19,22 @@
       }
     }
 
-    &.color-toolbar {
+    &.emoji-picker-color-toolbar {
       padding: 0.5rem;
     }
   }
 
   /* Header virtual row */
-  .category-group {
+  .emoji-picker-category-group {
     padding: 0.5rem 0.5rem 0 0.5rem;
   }
 
-  /* Emoji virtual row — left padding matches old category-group + category-group-emoji combined */
-  .category-group-emoji {
+  /* Emoji virtual row, left padding combines the header and emoji row insets */
+  .emoji-picker-category-group-emoji {
     padding: 0 0.5rem 0 0.75rem;
   }
 
-  .options {
+  .emoji-picker-options {
     flex: 1;
     min-height: 0;
     display: flex;
@@ -42,7 +42,12 @@
     overflow: hidden;
   }
 
-  .emoji-button {
+  .emoji-picker-scroll-area {
+    flex: 1;
+    min-height: 0;
+  }
+
+  .emoji-picker-emoji-button {
     font-size: 24px;
     padding: 2px;
     width: 32px;

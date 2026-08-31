@@ -87,7 +87,7 @@ export const MenuLabel = forwardRef<HTMLDivElement, MenuLabelProps>(
         >
           {resolvedLabel}
         </Text>
-        {actions && <div className="actions">{actions}</div>}
+        {actions && <div className="menu-label-actions">{actions}</div>}
       </div>
     );
   },

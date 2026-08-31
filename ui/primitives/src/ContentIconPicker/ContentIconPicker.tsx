@@ -89,7 +89,7 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
   ...other
 }) => {
   const [query, setQuery] = useState('');
-  // useDeferredValue keeps the search input responsive — React shows the
+  // useDeferredValue keeps the search input responsive - React shows the
   // previous results immediately while computing new ones at low priority.
   const deferredQuery = useDeferredValue(query);
   const [color, setColor] = useState<ContentColor>(defaultColor);
@@ -186,7 +186,7 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
       {...other}
     >
       {iconSets && iconSets.length > 1 && (
-        <Toolbar className="set-toolbar">
+        <Toolbar className="content-icon-picker-set-toolbar">
           {iconSets.map((set) => (
             <SetSelectButton
               key={set.id}
@@ -197,7 +197,7 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
           ))}
         </Toolbar>
       )}
-      <Toolbar className="color-toolbar">
+      <Toolbar className="content-icon-picker-color-toolbar">
         {ContentColorValues.map((color) => (
           <ColorSelectButton
             key={color.value}
@@ -222,10 +222,10 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
           />
         </Tooltip>
       </Toolbar>
-      <div className="options">
+      <div className="content-icon-picker-options">
         {results.length <= 60 && (
-          <ScrollArea style={{ flex: 1, minHeight: 0 }}>
-            <div className="category-group-icons">
+          <ScrollArea className="content-icon-picker-scroll-area">
+            <div className="content-icon-picker-category-group-icons">
               {results.map((icon) => (
                 <IconSelectButton
                   key={`${icon.set}:${icon.name}`}
@@ -241,7 +241,7 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
           <ScrollArea
             key={virtualItems.length}
             ref={scrollContainerRef}
-            style={{ flex: 1, minHeight: 0 }}
+            className="content-icon-picker-scroll-area"
           >
             <div
               style={{
@@ -257,7 +257,7 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
                   return (
                     <div
                       key={virtualRow.key}
-                      className="category-group"
+                      className="content-icon-picker-category-group"
                       style={{
                         position: 'absolute',
                         top: 0,
@@ -275,7 +275,7 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
                 return (
                   <div
                     key={virtualRow.key}
-                    className="category-group-icons"
+                    className="content-icon-picker-category-group-icons"
                     style={{
                       position: 'absolute',
                       top: 0,
@@ -339,7 +339,7 @@ const IconSelectButton = memo<{
 
   return (
     <IconButton
-      className="icon-selection-button"
+      className="content-icon-picker-icon-button"
       stringLabel={icon.name}
       onClick={handleSelect}
     >
@@ -369,7 +369,7 @@ const ColorSelectButton: React.FC<{
   return (
     <IconButton
       label={colorKey(color)}
-      className="color-selection-button"
+      className="content-icon-picker-color-button"
       onClick={handleSelect}
     >
       <div

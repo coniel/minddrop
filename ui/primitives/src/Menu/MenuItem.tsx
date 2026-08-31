@@ -94,8 +94,8 @@ export interface MenuItemProps {
 
   /*
    * Density of the item.
-   * - `comfortable` — 2rem height (default)
-   * - `compact`     — 1.75rem height, for dense menus
+   * - `comfortable` - 2rem height (default)
+   * - `compact`     - 1.75rem height, for dense menus
    * @default 'comfortable'
    */
   size?: 'compact' | 'comfortable';
@@ -232,17 +232,19 @@ export const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(
           aria-disabled={disabled}
           {...other}
         >
-          {icon && <IconRenderer className="item-icon" icon={icon} />}
+          {icon && <IconRenderer className="menu-item-icon" icon={icon} />}
           {contentIcon && (
-            <ContentIcon className="item-icon" icon={contentIcon} />
+            <ContentIcon className="menu-item-icon" icon={contentIcon} />
           )}
           {resolvedDescription ? (
-            <span className="item-text">
-              <span className="label">{resolvedLabel}</span>
-              <span className="description">{resolvedDescription}</span>
+            <span className="menu-item-text">
+              <span className="menu-item-label">{resolvedLabel}</span>
+              <span className="menu-item-description">
+                {resolvedDescription}
+              </span>
             </span>
           ) : (
-            <span className="label">{resolvedLabel}</span>
+            <span className="menu-item-label">{resolvedLabel}</span>
           )}
           {trailingIcon}
           {keyboardShortcut && (
@@ -254,10 +256,16 @@ export const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(
             />
           )}
           {hasSubmenu && (
-            <Icon name="chevron-right" className="submenu-indicator" />
+            <Icon
+              name="chevron-right"
+              className="menu-item-submenu-indicator"
+            />
           )}
           {actions && (
-            <div className="actions" onClick={(e) => e.stopPropagation()}>
+            <div
+              className="menu-item-actions"
+              onClick={(event) => event.stopPropagation()}
+            >
               {actions}
             </div>
           )}

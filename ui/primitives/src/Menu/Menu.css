@@ -63,19 +63,21 @@
   /* --- Show actions on hover --- */
 
   &.menu-group-show-actions-on-hover {
-    .actions {
+    .menu-group-actions {
       opacity: 0;
       transition: opacity var(--duration-fast) var(--ease-out);
     }
 
-    &:hover .actions {
+    &:hover .menu-group-actions {
       opacity: 1;
     }
   }
 
   /* --- Show label actions on hover --- */
 
-  &.menu-group-show-label-actions-on-hover:hover .menu-label .actions {
+  &.menu-group-show-label-actions-on-hover:hover
+    .menu-label
+    .menu-label-actions {
     opacity: 1;
   }
 }
@@ -93,7 +95,7 @@
   border-radius: var(--radius-md);
   transition: background-color var(--duration-fast) var(--ease-out);
 
-  /* Button variant — interactive label */
+  /* Button variant, interactive label */
 
   &[role='button'] {
     &:hover {
@@ -111,11 +113,11 @@
   }
 
   /* Tighten right padding when actions are present */
-  &:has(.actions) {
+  &:has(.menu-label-actions) {
     padding-right: 0.125rem;
   }
 
-  .actions {
+  .menu-label-actions {
     display: flex;
     align-items: center;
     gap: var(--space-1);
@@ -127,8 +129,8 @@
     }
   }
 
-  &.menu-label-actions-always-visible .actions,
-  &:hover .actions {
+  &.menu-label-actions-always-visible .menu-label-actions,
+  &:hover .menu-label-actions {
     opacity: 1;
   }
 }
@@ -245,7 +247,7 @@
 
   /* An item with supporting text stacks the two, and grows past the
      single line height the item otherwise keeps */
-  .item-text {
+  .menu-item-text {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -253,7 +255,7 @@
     min-width: 0;
   }
 
-  &:has(.item-text) {
+  &:has(.menu-item-text) {
     height: auto;
     padding-block: var(--space-1-5);
     /* The item is taller than one line, so its contents sit against the
@@ -265,13 +267,13 @@
   /* Nudged onto the label's line, which is shorter than the icon. Sizing
      the icon to that line instead would squash it, the icon being the SVG
      itself rather than a box around one. */
-  &:has(.item-text) .item-icon {
+  &:has(.menu-item-text) .menu-item-icon {
     margin-top: calc(
       (var(--font-size-sm) * var(--line-height-none) - 1rem) / 2
     );
   }
 
-  .description {
+  .menu-item-description {
     display: block;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -280,7 +282,7 @@
     font-size: var(--font-size-xs);
   }
 
-  .label {
+  .menu-item-label {
     flex: 1;
     display: block;
     overflow: hidden;
@@ -292,7 +294,7 @@
 
   /* --- Icon --- */
 
-  .item-icon {
+  .menu-item-icon {
     flex-shrink: 0;
     width: 1rem;
     height: 1rem;
@@ -305,7 +307,7 @@
 
   /* --- Submenu indicator --- */
 
-  .submenu-indicator {
+  .menu-item-submenu-indicator {
     flex-shrink: 0;
     width: 1rem;
     height: 1rem;
@@ -314,7 +316,7 @@
 
   /* --- Actions --- */
 
-  .actions {
+  .menu-item-actions {
     flex-shrink: 0;
     display: flex;
     align-items: center;
@@ -330,9 +332,9 @@
     }
   }
 
-  &:hover .actions,
+  &:hover .menu-item-actions,
   &[data-highlighted],
-  &.menu-item-force-actions-visible .actions {
+  &.menu-item-force-actions-visible .menu-item-actions {
     opacity: 1;
     width: auto;
     position: relative;
@@ -361,7 +363,7 @@
     background-color var(--duration-fast) var(--ease-out),
     border-color var(--duration-fast) var(--ease-out);
 
-  /* Checked — filled primary background, matching Switch */
+  /* Checked - filled primary background, matching Switch */
   &:has(.menu-item-radio-dot) {
     background-color: var(--surface-solid-primary);
     border-color: var(--surface-solid-primary);
@@ -406,7 +408,7 @@
   flex-shrink: 0;
 }
 
-/* default — no color, uses border only */
+/* default - no color, uses border only */
 .color-swatch-default {
   border-color: var(--border-default);
 }

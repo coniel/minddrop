@@ -10,6 +10,7 @@ import { ContentColor } from '@minddrop/ui-theme';
 import { Button } from '../Button';
 import { ContentIconPicker } from '../ContentIconPicker';
 import { EmojiPicker } from '../EmojiPicker';
+import { Spacer } from '../Layout';
 import './IconPicker.css';
 import {
   Popover,
@@ -223,7 +224,7 @@ export const IconPicker: React.FC<IconPickerProps> = ({
         <PopoverPositioner align="start" side="bottom" anchor={anchor}>
           <PopoverContent>
             <div className="icon-picker" onClick={stopPropagation}>
-              <div className="header">
+              <div className="icon-picker-header">
                 <Button
                   label="iconPicker.label"
                   onClick={() => setTab(UserIconType.ContentIcon)}
@@ -234,7 +235,7 @@ export const IconPicker: React.FC<IconPickerProps> = ({
                   onClick={() => setTab(UserIconType.Emoji)}
                   variant={tab === UserIconType.Emoji ? 'filled' : 'ghost'}
                 />
-                <div style={{ flex: 1 }} />
+                <Spacer />
                 <Button
                   variant="ghost"
                   label="actions.clear"

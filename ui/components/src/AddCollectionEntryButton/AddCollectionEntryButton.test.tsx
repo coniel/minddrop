@@ -81,7 +81,7 @@ describe('<AddCollectionEntryButton />', () => {
       .getByText(objectEntry1.title)
       .closest('.menu-item');
 
-    expect(entryOption?.querySelector('.item-icon')).not.toBeNull();
+    expect(entryOption?.querySelector('.menu-item-icon')).not.toBeNull();
   });
 
   it('excludes entries already in the collection', async () => {

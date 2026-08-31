@@ -161,7 +161,7 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
 
   return (
     <div className={propsToClass('emoji-picker', { className })} {...other}>
-      <Toolbar className="color-toolbar">
+      <Toolbar className="emoji-picker-color-toolbar">
         {Emoji.skinTones.map((skinTone) => (
           <IconButton
             key={skinTone.value}
@@ -188,10 +188,10 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
           />
         </Tooltip>
       </Toolbar>
-      <div className="options">
+      <div className="emoji-picker-options">
         {results.length <= 60 && (
-          <ScrollArea style={{ flex: 1, minHeight: 0 }}>
-            <div className="category-group-emoji">
+          <ScrollArea className="emoji-picker-scroll-area">
+            <div className="emoji-picker-category-group-emoji">
               {results.map((emoji) => (
                 <EmojiButton
                   key={emoji.name}
@@ -207,7 +207,7 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
           <ScrollArea
             key={virtualItems.length}
             ref={scrollContainerRef}
-            style={{ flex: 1, minHeight: 0 }}
+            className="emoji-picker-scroll-area"
           >
             <div
               style={{
@@ -223,7 +223,7 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
                   return (
                     <div
                       key={virtualRow.key}
-                      className="category-group"
+                      className="emoji-picker-category-group"
                       style={{
                         position: 'absolute',
                         top: 0,
@@ -241,7 +241,7 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
                 return (
                   <div
                     key={virtualRow.key}
-                    className="category-group-emoji"
+                    className="emoji-picker-category-group-emoji"
                     style={{
                       position: 'absolute',
                       top: 0,
@@ -284,7 +284,7 @@ const EmojiButton = memo<{
 
   return (
     <IconButton
-      className="emoji-button"
+      className="emoji-picker-emoji-button"
       stringLabel={emoji.name}
       onClick={handleSelect}
     >

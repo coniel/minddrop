@@ -54,6 +54,6 @@ export const MenuGroup: React.FC<MenuGroupProps> = ({
     {...other}
   >
     {children}
-    {actions && <div className="actions">{actions}</div>}
+    {actions && <div className="menu-group-actions">{actions}</div>}
   </div>
 );

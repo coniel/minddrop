@@ -1,6 +1,6 @@
-.icon-picker .header {
+.icon-picker .icon-picker-header {
   display: flex;
-  column-gap: 4px;
-  padding: 8px;
+  column-gap: var(--space-1);
+  padding: var(--space-2);
   border-bottom: var(--border-width-thin) solid var(--border-subtle);
 }
