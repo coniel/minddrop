@@ -31,6 +31,7 @@
     "@minddrop/test-utils": "workspace:*",
     "@minddrop/ui-canvas": "workspace:*",
     "@minddrop/ui-components": "workspace:*",
+    "@minddrop/ui-data-views": "workspace:*",
     "@minddrop/ui-drag-and-drop": "workspace:*",
     "@minddrop/ui-icons": "workspace:*",
     "@minddrop/ui-primitives": "workspace:*",

@@ -1,9 +1,7 @@
 import { DataView, DataViews } from '@minddrop/data-views';
 import { DataViewElement } from '@minddrop/designs';
-import {
-  DataViewRenderer,
-  useDataViewEntries,
-} from '@minddrop/feature-data-views';
+import { DataViewRenderer } from '@minddrop/feature-data-views';
+import { useDataViewEntries } from '@minddrop/ui-data-views';
 import { useDesignProperties } from '../../DesignPropertiesProvider';
 import { useDesignStudio } from '../../DesignStudioStore';
 import { useElementCssStyle } from '../../useElementCssStyle';
