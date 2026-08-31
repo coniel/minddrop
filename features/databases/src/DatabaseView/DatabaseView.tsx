@@ -4,6 +4,7 @@ import { DatabaseEntries, Databases } from '@minddrop/databases';
 import { DataViewRenderer } from '@minddrop/feature-data-views';
 import { useTranslation } from '@minddrop/i18n';
 import { AddDataViewMenu, PanelView } from '@minddrop/ui-components';
+import { DataViewSortMenu } from '@minddrop/ui-data-views';
 import { SortableList } from '@minddrop/ui-drag-and-drop';
 import {
   ContentIcon,
@@ -18,6 +19,7 @@ import {
   DropdownMenuPositioner,
   DropdownMenuRoot,
   DropdownMenuTrigger,
+  Group,
   Icon,
   IconButton,
   MenuRenameItem,
@@ -465,42 +467,47 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
               onSelectViewType={handleAddView}
             />
 
-            {/* View settings dropdown */}
+            {/* Active view actions */}
             {view && (
-              <DropdownMenuRoot>
-                <DropdownMenuTrigger>
-                  <IconButton
-                    className="view-settings-button"
-                    size="sm"
-                    label="databases.actions.viewSettings"
-                    tooltip={{ title: 'databases.actions.viewSettings' }}
-                    icon="settings-2"
-                  />
-                </DropdownMenuTrigger>
-                <DropdownMenuPortal>
-                  <DropdownMenuPositioner side="bottom" align="end">
-                    <DropdownMenuContent>
-                      <MenuRenameItem
-                        value={view.name}
-                        contentIcon={view.icon}
-                        onValueChange={() => {}}
-                        onRename={handleRenameActiveView}
-                        onSelectIcon={handleSelectActiveViewIcon}
-                      />
-                      {activeViewType?.settingsMenu && (
-                        <>
-                          <MenuSeparator />
-                          {React.createElement(activeViewType.settingsMenu, {
-                            view,
-                            options: viewOptions,
-                            onUpdateOptions: handleUpdateViewOptions,
-                          })}
-                        </>
-                      )}
-                    </DropdownMenuContent>
-                  </DropdownMenuPositioner>
-                </DropdownMenuPortal>
-              </DropdownMenuRoot>
+              <Group gap={2} className="view-actions">
+                {/* Entry sort dropdown */}
+                <DataViewSortMenu view={view} size="sm" />
+
+                {/* View settings dropdown */}
+                <DropdownMenuRoot>
+                  <DropdownMenuTrigger>
+                    <IconButton
+                      size="sm"
+                      label="databases.actions.viewSettings"
+                      tooltip={{ title: 'databases.actions.viewSettings' }}
+                      icon="settings-2"
+                    />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuPortal>
+                    <DropdownMenuPositioner side="bottom" align="end">
+                      <DropdownMenuContent>
+                        <MenuRenameItem
+                          value={view.name}
+                          contentIcon={view.icon}
+                          onValueChange={() => {}}
+                          onRename={handleRenameActiveView}
+                          onSelectIcon={handleSelectActiveViewIcon}
+                        />
+                        {activeViewType?.settingsMenu && (
+                          <>
+                            <MenuSeparator />
+                            {React.createElement(activeViewType.settingsMenu, {
+                              view,
+                              options: viewOptions,
+                              onUpdateOptions: handleUpdateViewOptions,
+                            })}
+                          </>
+                        )}
+                      </DropdownMenuContent>
+                    </DropdownMenuPositioner>
+                  </DropdownMenuPortal>
+                </DropdownMenuRoot>
+              </Group>
             )}
           </div>
         )}

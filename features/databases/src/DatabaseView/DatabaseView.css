@@ -109,7 +109,7 @@
       border-bottom: var(--border-width-thin) solid var(--border-subtle);
       flex-shrink: 0;
 
-      .view-settings-button {
+      .view-actions {
         margin-left: auto;
       }
     }
