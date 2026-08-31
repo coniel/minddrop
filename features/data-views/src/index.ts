@@ -7,4 +7,5 @@ export * from './NewDataViewView';
 export * from './DataViewsMenuItem';
 export * from './registerDataViewViews';
 export * from './useDataViewEntries';
+export * from './useSortedDataViewEntries';
 export { initializeDataViewsFeature } from './initializeDataViewsFeature';

@@ -10,8 +10,12 @@ import {
   TransientViewStateScope,
 } from '@minddrop/ui-primitives';
 import { DataViewOptionsMenu } from '../DataViewOptionsMenu';
+import { useSortedDataViewEntries } from '../useSortedDataViewEntries';
 import { CreateDataViewForm } from './CreateDataViewForm';
 import './DataViewRenderer.css';
+
+// Stable empty list used when the renderer is given no entries
+const NO_ENTRIES: string[] = [];
 
 export interface DataViewRendererProps {
   /**
@@ -121,6 +125,9 @@ const ConfiguredView: React.FC<ConfiguredViewProps> = ({
 }) => {
   const viewType = DataViewTypes.use(view.type);
 
+  // Entries in the order configured by the view's sort options
+  const sortedEntries = useSortedDataViewEntries(view, entries ?? NO_ENTRIES);
+
   // Add newly created entry to the collection when
   // the view's data source is a collection
   const handleCreateEntry = useCallback(
@@ -160,7 +167,7 @@ const ConfiguredView: React.FC<ConfiguredViewProps> = ({
 
       {/* View content */}
       <TransientViewStateScope segment={view.id}>
-        <viewType.component view={view} entries={entries || []} />
+        <viewType.component view={view} entries={sortedEntries} />
       </TransientViewStateScope>
     </div>
   );
