@@ -224,6 +224,19 @@ export const PropertyEditorBase: React.FC<PropertyEditorBaseProps> = ({
     onDelete(property);
   }
 
+  function handleNameBlur() {
+    // Clear the focus flag and forward the blur to the field
+    setIsNameFocused(false);
+    fieldProps.name.onBlur?.();
+  }
+
+  function handleNameKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+    // Enter moves on from the name field
+    if (event.key === 'Enter' && onNameEnter) {
+      onNameEnter();
+    }
+  }
+
   return (
     <div
       className={propsToClass('property-editor', { className, open })}
@@ -252,7 +265,7 @@ export const PropertyEditorBase: React.FC<PropertyEditorBaseProps> = ({
         <Icon
           size={14}
           name="chevron-right"
-          className="collapsible-indicator"
+          className="property-editor-collapsible-indicator"
           color="current-color"
         />
       </Group>
@@ -283,15 +296,8 @@ export const PropertyEditorBase: React.FC<PropertyEditorBaseProps> = ({
               defaultValue={property.name}
               {...fieldProps.name}
               onFocus={() => setIsNameFocused(true)}
-              onBlur={() => {
-                setIsNameFocused(false);
-                fieldProps.name.onBlur?.();
-              }}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && onNameEnter) {
-                  onNameEnter();
-                }
-              }}
+              onBlur={handleNameBlur}
+              onKeyDown={handleNameKeyDown}
             />
           </Group>
           <FieldError error={fieldProps.name.error} />
