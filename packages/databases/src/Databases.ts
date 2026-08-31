@@ -113,6 +113,9 @@ export { setDatabaseEntrySerializer as setEntrySerializer } from './setDatabaseE
 export { setDatabasePropertyFileStorage as setPropertyFileStorage } from './setDatabasePropertyFileStorage';
 export { updateDatabaseProperty as updateProperty } from './updateDatabaseProperty';
 export { useDatabase as use, useDatabases as useAll } from './DatabasesStore';
+export { useDatabasesFromEntries as useFromEntries } from './useDatabasesFromEntries';
+export { resolveSortableEntryProperties as sortableProperties } from './utils';
+export { useSortableEntryProperties as useSortableProperties } from './useSortableEntryProperties';
 export { writeDatabaseConfig as writeConfig } from './writeDatabaseConfig';
 export {
   convertEntryToSqlRecord,

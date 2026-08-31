@@ -84,12 +84,31 @@ describe('sortDatabaseEntries', () => {
   });
 
   it('does not sort property values by a metadata type', () => {
-    // The entries have no property named 'title', so sorting by
-    // one falls back to the title tiebreaker rather than the
-    // title metadata
+    // The entries have no property named 'title', so they all
+    // trail as missing rather than being sorted by the title
+    // metadata
     expect(
       sortDatabaseEntries(entries, { by: 'property', property: 'title' }),
-    ).toEqual([middle, newest, oldest]);
+    ).toEqual([newest, middle, oldest]);
+  });
+
+  it('appends entries missing a value, newest first', () => {
+    expect(
+      sortDatabaseEntries(entries, {
+        by: 'property',
+        property: 'Rating',
+        direction: 'ascending',
+      }),
+    ).toEqual([newest, oldest, middle]);
+
+    // The trailing entries keep their order in either direction
+    expect(
+      sortDatabaseEntries(entries, {
+        by: 'property',
+        property: 'Rating',
+        direction: 'descending',
+      }),
+    ).toEqual([oldest, newest, middle]);
   });
 
   it('breaks ties on the entry title', () => {

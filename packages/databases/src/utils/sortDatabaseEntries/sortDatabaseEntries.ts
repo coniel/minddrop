@@ -1,4 +1,5 @@
 import { PropertyValue } from '@minddrop/properties';
+import { DefaultEntrySort } from '../../constants';
 import { DatabaseEntry } from '../../types';
 
 export interface EntrySortOptions {
@@ -24,9 +25,10 @@ export interface EntrySortOptions {
 
 /**
  * Orders entries by the value of the sorted property, defaulting
- * to their created date, newest first. Entries missing a value
- * sort last regardless of direction, and ties break on the entry
- * title.
+ * to their created date, newest first. Ties break on the entry
+ * title. Entries missing a value are appended after the sorted
+ * ones in either direction, newest first, as the sorted property
+ * says nothing about where among the others they belong.
  *
  * @param entries - The entries to sort.
  * @param sort - The sort options.
@@ -36,8 +38,10 @@ export function sortDatabaseEntries(
   entries: DatabaseEntry[],
   sort: EntrySortOptions = {},
 ): DatabaseEntry[] {
+  const direction = sort.direction ?? DefaultEntrySort.direction;
+
   // Descending sorts invert the comparison
-  const modifier = sort.direction === 'ascending' ? 1 : -1;
+  const modifier = direction === 'ascending' ? 1 : -1;
 
   // Resolve the sorted value of each entry up front, so that the
   // comparator does not repeat the lookup on every comparison
@@ -45,18 +49,26 @@ export function sortDatabaseEntries(
     entries.map((entry) => [entry.id, resolveSortValue(entry, sort)]),
   );
 
-  return [...entries].sort((entryA, entryB) => {
-    const valueA = values.get(entryA.id) ?? null;
-    const valueB = values.get(entryB.id) ?? null;
-    const missingA = isMissingValue(valueA);
-    const missingB = isMissingValue(valueB);
+  const sorted: DatabaseEntry[] = [];
+  const missing: DatabaseEntry[] = [];
 
-    // Entries missing a value sort last in either direction
-    if (missingA !== missingB) {
-      return missingA ? 1 : -1;
+  for (const entry of entries) {
+    // Entries with no value to sort on trail the sorted ones
+    if (isMissingValue(values.get(entry.id) ?? null)) {
+      missing.push(entry);
+
+      continue;
     }
 
-    const result = comparePropertyValues(valueA, valueB) * modifier;
+    sorted.push(entry);
+  }
+
+  sorted.sort((entryA, entryB) => {
+    const result =
+      comparePropertyValues(
+        values.get(entryA.id) ?? null,
+        values.get(entryB.id) ?? null,
+      ) * modifier;
 
     // Break ties on the title so that the order is stable
     if (result !== 0) {
@@ -65,6 +77,19 @@ export function sortDatabaseEntries(
 
     return compareText(entryA.title, entryB.title);
   });
+
+  // The trailing entries keep an order of their own, by created
+  // date rather than by the property none of them have
+  missing.sort(compareCreated);
+
+  return [...sorted, ...missing];
+}
+
+/**
+ * Compares two entries by their created date, newest first.
+ */
+function compareCreated(entryA: DatabaseEntry, entryB: DatabaseEntry): number {
+  return entryB.created.getTime() - entryA.created.getTime();
 }
 
 /**
@@ -74,12 +99,15 @@ function resolveSortValue(
   entry: DatabaseEntry,
   sort: EntrySortOptions,
 ): PropertyValue {
+  const by = sort.by ?? DefaultEntrySort.by;
+  const property = sort.property ?? DefaultEntrySort.property;
+
   // Property sorts read the entry's own properties by name
-  if (sort.by === 'property') {
-    return sort.property ? (entry.properties[sort.property] ?? null) : null;
+  if (by === 'property') {
+    return entry.properties[property] ?? null;
   }
 
-  return resolveMetadataValue(entry, sort.property);
+  return resolveMetadataValue(entry, property);
 }
 
 /**
@@ -88,7 +116,7 @@ function resolveSortValue(
  */
 function resolveMetadataValue(
   entry: DatabaseEntry,
-  type: string | undefined,
+  type: string,
 ): PropertyValue {
   // The entry title, which is derived from its file name
   if (type === 'title') {

@@ -37,6 +37,7 @@
     "@minddrop/utils": "workspace:*",
     "@minddrop/data-views": "workspace:*",
     "@minddrop/views": "workspace:*",
-    "@minddrop/workspaces": "workspace:*"
+    "@minddrop/workspaces": "workspace:*",
+    "react": "^19.2.4"
   }
 }

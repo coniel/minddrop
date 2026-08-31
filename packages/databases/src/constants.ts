@@ -1,5 +1,6 @@
 import type { PropertyType } from '@minddrop/properties';
 import type { UiIconName } from '@minddrop/ui-icons';
+import type { EntrySortOptions } from './utils';
 
 export const DatabaseConfigFileName = 'database.json';
 export const MetadataDirName = 'metadata';
@@ -16,6 +17,16 @@ export const DatabasesIcon: UiIconName = 'database';
  * The default icon assigned to newly created databases.
  */
 export const DefaultDatabaseIcon = 'content-icon:box:default';
+
+/**
+ * The sort applied to entries which are sorted without sort
+ * options of their own.
+ */
+export const DefaultEntrySort: Required<EntrySortOptions> = {
+  by: 'metadata',
+  property: 'created',
+  direction: 'descending',
+};
 
 // SQL exclusion list of property types excluded from the
 // full-text index, used in WHERE clauses to filter out

@@ -49,6 +49,7 @@ export * from './mergeEntryMetadata';
 export * from './getNewestDatabaseEntries';
 export * from './sortDatabaseEntries';
 export * from './sortDatabaseEntryIds';
+export * from './resolveSortableEntryProperties';
 export * from './getRecentDatabaseEntries';
 export * from './searchDatabaseEntriesByTitle';
 export * from './escapeLikePattern';
