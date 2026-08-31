@@ -28,6 +28,22 @@ export const METADATA_PROPERTY_TYPES = new Set<PropertyType>(
 );
 
 /**
+ * Property types whose values can be ordered. Multi-value, file
+ * based and rich text properties have no order to sort on.
+ */
+export const SORTABLE_PROPERTY_TYPES = new Set<PropertyType>([
+  'created',
+  'date',
+  'last-modified',
+  'number',
+  'select',
+  'text',
+  'title',
+  'toggle',
+  'url',
+]);
+
+/**
  * A [property type]: [file extensions] map of which file extensions
  * are supported by a given property type.
  */
