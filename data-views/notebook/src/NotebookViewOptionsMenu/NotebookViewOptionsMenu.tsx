@@ -6,6 +6,9 @@ import { DatabaseLayoutSelectionMenu } from '@minddrop/ui-databases';
 import { DropdownMenuSeparator } from '@minddrop/ui-primitives';
 import { NotebookViewOptions } from '../types';
 
+// Stable empty list used while the collection is unavailable
+const NO_ITEMS: string[] = [];
+
 /**
  * Renders the notebook view settings menu content with
  * list and page design pickers.
@@ -87,20 +90,16 @@ function useDatabaseIds(
     view.dataSource.type === 'collection' ? view.dataSource.id : '',
   );
 
+  // The databases a collection source's entries belong to
+  const databases = Databases.useFromEntries(collection?.items ?? NO_ITEMS);
+
   return useMemo(() => {
     if (view.dataSource.type === 'database') {
       return view.dataSource.id;
     }
 
-    // For collection data sources, derive databases from entries
-    if (collection) {
-      return Databases.getFromEntries(collection.items).map(
-        (database) => database.id,
-      );
-    }
-
-    return [];
-  }, [view.dataSource, collection]);
+    return databases.map((database) => database.id);
+  }, [view.dataSource, databases]);
 }
 
 /**

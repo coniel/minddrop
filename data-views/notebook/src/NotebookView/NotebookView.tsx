@@ -41,6 +41,9 @@ export const NotebookViewComponent: React.FC<
     [view.options?.listColumnWidth],
   );
 
+  // The databases the notebook's entries belong to
+  const entryDatabases = Databases.useFromEntries(entries);
+
   // Resolve the database ID(s) for the create button. If the
   // data source is a database, use it directly. Otherwise,
   // derive the databases from the current entries.
@@ -49,8 +52,8 @@ export const NotebookViewComponent: React.FC<
       return view.dataSource.id;
     }
 
-    return Databases.getFromEntries(entries).map((database) => database.id);
-  }, [view.dataSource, entries]);
+    return entryDatabases.map((database) => database.id);
+  }, [view.dataSource, entryDatabases]);
 
   // Build a per-entry layout override map from view options
   const entryLayoutOverrides = useMemo(
