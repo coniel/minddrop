@@ -374,6 +374,9 @@ importers:
       '@minddrop/ui-components':
         specifier: workspace:*
         version: link:../../ui/components
+      '@minddrop/ui-data-views':
+        specifier: workspace:*
+        version: link:../../ui/data-views
       '@minddrop/ui-databases':
         specifier: workspace:*
         version: link:../../ui/databases
@@ -518,6 +521,9 @@ importers:
       '@minddrop/ui-components':
         specifier: workspace:*
         version: link:../../ui/components
+      '@minddrop/ui-data-views':
+        specifier: workspace:*
+        version: link:../../ui/data-views
       '@minddrop/ui-databases':
         specifier: workspace:*
         version: link:../../ui/databases
@@ -606,6 +612,9 @@ importers:
       '@minddrop/ui-components':
         specifier: workspace:*
         version: link:../../ui/components
+      '@minddrop/ui-data-views':
+        specifier: workspace:*
+        version: link:../../ui/data-views
       '@minddrop/ui-databases':
         specifier: workspace:*
         version: link:../../ui/databases
@@ -688,6 +697,9 @@ importers:
       '@minddrop/ui-components':
         specifier: workspace:*
         version: link:../../ui/components
+      '@minddrop/ui-data-views':
+        specifier: workspace:*
+        version: link:../../ui/data-views
       '@minddrop/ui-drag-and-drop':
         specifier: workspace:*
         version: link:../../ui/drag-and-drop
@@ -1532,6 +1544,9 @@ importers:
       '@minddrop/workspaces':
         specifier: workspace:*
         version: link:../workspaces
+      react:
+        specifier: ^19.2.4
+        version: 19.2.4
     devDependencies:
       '@minddrop/eslint-config':
         specifier: workspace:*
@@ -2449,6 +2464,52 @@ importers:
       '@minddrop/views':
         specifier: workspace:*
         version: link:../../packages/views
+    devDependencies:
+      '@minddrop/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@minddrop/test-utils':
+        specifier: workspace:*
+        version: link:../../packages/test-utils
+      eslint:
+        specifier: ^9.39.3
+        version: 9.39.5
+      tsconfig:
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  ui/data-views:
+    dependencies:
+      '@minddrop/collections':
+        specifier: workspace:*
+        version: link:../../packages/collections
+      '@minddrop/data-views':
+        specifier: workspace:*
+        version: link:../../packages/data-views
+      '@minddrop/databases':
+        specifier: workspace:*
+        version: link:../../packages/databases
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../../packages/events
+      '@minddrop/file-system':
+        specifier: workspace:*
+        version: link:../../packages/file-system
+      '@minddrop/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
+      '@minddrop/queries':
+        specifier: workspace:*
+        version: link:../../packages/queries
+      '@minddrop/ui-primitives':
+        specifier: workspace:*
+        version: link:../primitives
+      '@minddrop/workspaces':
+        specifier: workspace:*
+        version: link:../../packages/workspaces
     devDependencies:
       '@minddrop/eslint-config':
         specifier: workspace:*

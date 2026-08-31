@@ -1968,6 +1968,13 @@ declare module 'i18next' {
             showChips: string;
             hideColumn: string;
           };
+          sort: {
+            label: string;
+            property: string;
+            direction: string;
+            ascending: string;
+            descending: string;
+          };
           list: {
             searchPlaceholder: string;
             empty: string;

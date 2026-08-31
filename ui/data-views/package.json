@@ -1,0 +1,33 @@
+{
+  "name": "@minddrop/ui-data-views",
+  "version": "0.0.0",
+  "main": "src/index",
+  "types": "src/index",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "lint": "eslint .  --max-warnings 0",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@minddrop/eslint-config": "workspace:*",
+    "@minddrop/test-utils": "workspace:*",
+    "eslint": "^9.39.3",
+    "tsconfig": "workspace:*",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@minddrop/collections": "workspace:*",
+    "@minddrop/data-views": "workspace:*",
+    "@minddrop/databases": "workspace:*",
+    "@minddrop/events": "workspace:*",
+    "@minddrop/file-system": "workspace:*",
+    "@minddrop/i18n": "workspace:*",
+    "@minddrop/queries": "workspace:*",
+    "@minddrop/ui-primitives": "workspace:*",
+    "@minddrop/workspaces": "workspace:*"
+  }
+}
