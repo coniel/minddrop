@@ -1,5 +1,6 @@
 import { DataViews } from '@minddrop/data-views';
 import { PanelView } from '@minddrop/ui-components';
+import { DataViewSortMenu } from '@minddrop/ui-data-views';
 import { DataViewContent } from '../DataViewContent';
 import { DataViewOptionsMenu } from '../DataViewOptionsMenu';
 import { DataViewRenderer } from '../DataViewRenderer';
@@ -19,24 +20,29 @@ export interface DataViewViewProps {
 export const DataViewView: React.FC<DataViewViewProps> = ({ dataViewId }) => {
   const dataView = DataViews.use(dataViewId);
 
+  // Notice shown when the data view no longer exists
+  if (!dataView) {
+    return (
+      <div className="data-view-view">
+        <PanelView className="data-view-view-panel">
+          <DataViewRenderer viewDeleted />
+        </PanelView>
+      </div>
+    );
+  }
+
   return (
     <div className="data-view-view">
       <PanelView
-        stringTitle={dataView?.name || ''}
-        contentIcon={dataView?.icon}
+        stringTitle={dataView.name}
+        contentIcon={dataView.icon}
         className="data-view-view-panel"
-        actions={
-          dataView
-            ? [<DataViewOptionsMenu key="options" view={dataView} />]
-            : []
-        }
+        actions={[
+          <DataViewSortMenu key="sort" view={dataView} />,
+          <DataViewOptionsMenu key="options" view={dataView} />,
+        ]}
       >
-        {dataView ? (
-          <DataViewContent dataView={dataView} />
-        ) : (
-          /* Notice shown when the data view no longer exists */
-          <DataViewRenderer viewDeleted />
-        )}
+        <DataViewContent dataView={dataView} />
       </PanelView>
     </div>
   );

@@ -1,6 +1,6 @@
 import { DataView } from '@minddrop/data-views';
+import { useDataViewEntries } from '@minddrop/ui-data-views';
 import { DataViewRenderer } from './DataViewRenderer';
-import { useDataViewEntries } from './useDataViewEntries';
 
 export interface DataViewContentProps {
   /**

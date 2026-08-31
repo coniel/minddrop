@@ -26,6 +26,7 @@
     "@minddrop/queries": "workspace:*",
     "@minddrop/test-utils": "workspace:*",
     "@minddrop/ui-components": "workspace:*",
+    "@minddrop/ui-data-views": "workspace:*",
     "@minddrop/ui-databases": "workspace:*",
     "@minddrop/ui-icons": "workspace:*",
     "@minddrop/ui-primitives": "workspace:*",

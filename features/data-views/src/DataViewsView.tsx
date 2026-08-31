@@ -5,6 +5,7 @@ import {
   ListPanelView,
   ListPanelViewItem,
 } from '@minddrop/ui-components';
+import { DataViewSortMenu } from '@minddrop/ui-data-views';
 import { Views } from '@minddrop/views';
 import { DataViewContent } from './DataViewContent';
 import { DataViewOptionsMenu } from './DataViewOptionsMenu';
@@ -80,7 +81,10 @@ export const DataViewsView: React.FC = () => {
       }
       actions={
         selectedDataView
-          ? [<DataViewOptionsMenu key="options" view={selectedDataView} />]
+          ? [
+              <DataViewSortMenu key="sort" view={selectedDataView} />,
+              <DataViewOptionsMenu key="options" view={selectedDataView} />,
+            ]
           : []
       }
     >

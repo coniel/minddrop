@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import { Collections } from '@minddrop/collections';
 import { DataView, DataViewTypes } from '@minddrop/data-views';
+import { DataViewSortMenu } from '@minddrop/ui-data-views';
 import { CreateDatabaseEntryButton } from '@minddrop/ui-databases';
 import {
   ContentIcon,
@@ -160,6 +161,7 @@ const ConfiguredView: React.FC<ConfiguredViewProps> = ({
               onCreateEntry={handleCreateEntry}
               color="neutral"
             />
+            <DataViewSortMenu view={view} />
             <DataViewOptionsMenu view={view} />
           </Toolbar>
         </div>
