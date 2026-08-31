@@ -1,6 +1,6 @@
 .designs-layout-frame {
   position: absolute;
-  padding: 12px;
+  padding: var(--space-3);
 
   /* --- Layout name input --- */
 

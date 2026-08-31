@@ -53,5 +53,5 @@
 
 .search-dialog-results-content {
   padding: var(--space-2) var(--space-2);
-  gap: 2px;
+  gap: var(--space-0-5);
 }

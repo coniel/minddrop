@@ -64,7 +64,7 @@
 .search-result-item-properties {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--space-0-5);
 
   /* icon width + row gap to align with label */
   padding-left: calc(1rem + var(--space-2));

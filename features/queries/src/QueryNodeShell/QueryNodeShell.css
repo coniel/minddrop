@@ -33,7 +33,7 @@
 .queries-node-header .queries-node-output-toggle {
   position: relative;
   z-index: 2;
-  margin: -4px 0;
+  margin: calc(var(--space-1) * -1) 0;
 }
 
 .queries-node-body {
