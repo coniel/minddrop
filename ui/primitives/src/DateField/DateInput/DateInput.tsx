@@ -218,6 +218,7 @@ export const DateInput = React.forwardRef<HTMLDivElement, DateInputProps>(
       <CalendarPopover
         mode="single"
         selected={selectedDate ?? undefined}
+        defaultMonth={selectedDate ?? undefined}
         onSelect={handleSelect}
         side={side}
         align={align}
