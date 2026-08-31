@@ -48,6 +48,13 @@
   margin-left: auto;
   margin-right: auto;
   margin-bottom: var(--space-1);
+
+  /* The month and year selects size to their labels rather than
+     sharing the row, so neither truncates */
+  .select {
+    width: auto;
+    flex-shrink: 0;
+  }
 }
 
 /* Year span rendered by DayPicker next to the month dropdown */

@@ -1779,6 +1779,20 @@ declare module 'i18next' {
             friday: string;
             saturday: string;
           };
+          monthsShort: {
+            january: string;
+            february: string;
+            march: string;
+            april: string;
+            may: string;
+            june: string;
+            july: string;
+            august: string;
+            september: string;
+            october: string;
+            november: string;
+            december: string;
+          };
           weekdaysShort: {
             sunday: string;
             monday: string;

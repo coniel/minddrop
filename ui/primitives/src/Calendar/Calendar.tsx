@@ -9,7 +9,9 @@ import { createI18nKeyBuilder, useTranslation } from '@minddrop/i18n';
 import { IconButton } from '../IconButton';
 import { Group } from '../Layout';
 import { Select } from '../Select';
+import { SelectIcon } from '../Select/SelectIcon';
 import { SelectItem } from '../Select/SelectItem';
+import { SelectValue } from '../Select/SelectValue';
 import './Calendar.css';
 
 export type CalendarProps = DayPickerProps;
@@ -44,6 +46,7 @@ const START_MONTH = new Date(CURRENT_YEAR - 100, 0);
 const END_MONTH = new Date(CURRENT_YEAR + 100, 11);
 
 const calendarMonthKey = createI18nKeyBuilder('calendar.months.');
+const calendarMonthShortKey = createI18nKeyBuilder('calendar.monthsShort.');
 
 const YEARS = Array.from({ length: 201 }, (_, i) => CURRENT_YEAR - 100 + i);
 
@@ -79,6 +82,8 @@ const CALENDAR_CLASS_NAMES: DayPickerProps['classNames'] = {
 };
 
 function MonthDropdown({ value, onChange }: DropdownProps) {
+  const { t } = useTranslation();
+
   const selectOptions = MONTH_KEYS.map((key, index) => ({
     value: String(index),
     label: calendarMonthKey(key),
@@ -99,6 +104,18 @@ function MonthDropdown({ value, onChange }: DropdownProps) {
       value={value !== undefined ? String(value) : undefined}
       options={selectOptions}
       onValueChange={handleChange}
+      trigger={
+        <>
+          {/* The trigger shows the short month name so the month and
+              year selects both fit without truncating */}
+          <SelectValue>
+            {value !== undefined
+              ? t(calendarMonthShortKey(MONTH_KEYS[Number(value)]))
+              : undefined}
+          </SelectValue>
+          <SelectIcon />
+        </>
+      }
     />
   );
 }
