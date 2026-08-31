@@ -307,7 +307,7 @@ export const DatabaseEntryTemplateEditor: React.FC<
         <Icon
           size={14}
           name="chevron-right"
-          className="collapsible-indicator"
+          className="database-entry-template-editor-collapsible-indicator"
           color="current-color"
         />
       </Group>

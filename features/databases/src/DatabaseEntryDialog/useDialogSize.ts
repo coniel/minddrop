@@ -178,7 +178,7 @@ export function useDialogSize(
         return;
       }
 
-      // Same slot — apply margin clamping based on the user's
+      // Same slot - apply margin clamping based on the user's
       // intended size
       if (!baseSizeRef.current) {
         return;
@@ -194,10 +194,10 @@ export function useDialogSize(
       let displayWidth: number;
 
       if (baseMarginFractionX < 0.1) {
-        // User was close to the edge — maintain fixed px margin
+        // User was close to the edge - maintain fixed px margin
         displayWidth = newViewportWidth - 2 * baseMarginX;
       } else {
-        // User had plenty of margin — enforce 10% minimum
+        // User had plenty of margin - enforce 10% minimum
         displayWidth = Math.min(
           base.width,
           newViewportWidth - EDGE_PADDING_X * 2,
@@ -210,10 +210,10 @@ export function useDialogSize(
       let displayHeight: number;
 
       if (baseMarginFractionY < 0.1) {
-        // User was close to the edge — maintain fixed px margin
+        // User was close to the edge - maintain fixed px margin
         displayHeight = newViewportHeight - 2 * baseMarginY;
       } else {
-        // User had plenty of margin — enforce edge padding minimum
+        // User had plenty of margin - enforce edge padding minimum
         displayHeight = Math.min(
           base.height,
           newViewportHeight - EDGE_PADDING_Y * 2,

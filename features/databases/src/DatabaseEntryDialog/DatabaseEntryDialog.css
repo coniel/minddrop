@@ -1,6 +1,6 @@
 /* --- Backdrop overlay --- */
 
-.entry-dialog-backdrop {
+.database-entry-dialog-backdrop {
   position: fixed;
   inset: 0;
   background-color: var(--surface-scrim);
@@ -12,15 +12,15 @@
 
 /* --- Resizable canvas --- */
 
-.entry-dialog-canvas {
+.database-entry-dialog-canvas {
   position: relative;
-  padding: 12px;
+  padding: var(--space-3);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-4);
 
   /* --- Corner resize handles (SVG arcs) --- */
 
-  .entry-dialog-resize-handle {
+  .database-entry-dialog-resize-handle {
     position: absolute;
     display: flex;
     align-items: center;
@@ -33,10 +33,10 @@
     }
   }
 
-  .entry-dialog-resize-handle-top-left,
-  .entry-dialog-resize-handle-top-right,
-  .entry-dialog-resize-handle-bottom-left,
-  .entry-dialog-resize-handle-bottom-right {
+  .database-entry-dialog-resize-handle-top-left,
+  .database-entry-dialog-resize-handle-top-right,
+  .database-entry-dialog-resize-handle-bottom-left,
+  .database-entry-dialog-resize-handle-bottom-right {
     width: 25px;
     height: 25px;
     z-index: 1;
@@ -48,28 +48,28 @@
     }
   }
 
-  .entry-dialog-resize-handle-top-left {
+  .database-entry-dialog-resize-handle-top-left {
     top: 0;
     left: 0;
     cursor: nwse-resize;
     transform: translate(-3px, -3px);
   }
 
-  .entry-dialog-resize-handle-top-right {
+  .database-entry-dialog-resize-handle-top-right {
     top: 0;
     right: 0;
     cursor: nesw-resize;
     transform: translate(3px, -3px);
   }
 
-  .entry-dialog-resize-handle-bottom-left {
+  .database-entry-dialog-resize-handle-bottom-left {
     bottom: 0;
     left: 0;
     cursor: nesw-resize;
     transform: translate(-3px, 3px);
   }
 
-  .entry-dialog-resize-handle-bottom-right {
+  .database-entry-dialog-resize-handle-bottom-right {
     bottom: 0;
     right: 0;
     cursor: nwse-resize;
@@ -78,14 +78,14 @@
 
   /* --- Navigation buttons (previous/next entry) --- */
 
-  .entry-dialog-nav-button {
+  .database-entry-dialog-nav-button {
     opacity: 0;
     transition: opacity 0.5s ease 0.15s;
   }
 
   /* --- Actions toolbar --- */
 
-  .entry-dialog-toolbar {
+  .database-entry-dialog-toolbar {
     position: absolute;
     top: var(--space-6);
     right: 0;
@@ -97,7 +97,7 @@
 
   /* --- Content wrapper --- */
 
-  .entry-dialog-content {
+  .database-entry-dialog-content {
     height: 100%;
     border-radius: var(--radius-xl);
     overflow: hidden;
@@ -105,7 +105,7 @@
 
   /* --- Hover zones (invisible areas that trigger handle visibility) --- */
 
-  .entry-dialog-hover-zone-top-left {
+  .database-entry-dialog-hover-zone-top-left {
     position: absolute;
     top: 10px;
     left: 0;
@@ -114,7 +114,7 @@
     transform: translate(-40px, -100%);
   }
 
-  .entry-dialog-hover-zone-top-left-vertical {
+  .database-entry-dialog-hover-zone-top-left-vertical {
     position: absolute;
     top: 0;
     left: 0;
@@ -123,7 +123,7 @@
     transform: translate(-40px, -40px);
   }
 
-  .entry-dialog-hover-zone-top-right {
+  .database-entry-dialog-hover-zone-top-right {
     position: absolute;
     top: 10px;
     right: 0;
@@ -132,7 +132,7 @@
     transform: translate(40px, -100%);
   }
 
-  .entry-dialog-hover-zone-bottom-left {
+  .database-entry-dialog-hover-zone-bottom-left {
     position: absolute;
     bottom: 10px;
     left: 0;
@@ -141,7 +141,7 @@
     transform: translate(-40px, 100%);
   }
 
-  .entry-dialog-hover-zone-bottom-left-vertical {
+  .database-entry-dialog-hover-zone-bottom-left-vertical {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -150,7 +150,7 @@
     transform: translate(-40px, 40px);
   }
 
-  .entry-dialog-hover-zone-bottom-right {
+  .database-entry-dialog-hover-zone-bottom-right {
     position: absolute;
     bottom: 10px;
     right: 0;
@@ -159,7 +159,7 @@
     transform: translate(40px, 100%);
   }
 
-  .entry-dialog-hover-zone-bottom-right-vertical {
+  .database-entry-dialog-hover-zone-bottom-right-vertical {
     position: absolute;
     bottom: 0;
     right: 0;
@@ -168,8 +168,8 @@
     transform: translate(40px, 40px);
   }
 
-  .entry-dialog-hover-zone-left,
-  .entry-dialog-hover-zone-right {
+  .database-entry-dialog-hover-zone-left,
+  .database-entry-dialog-hover-zone-right {
     position: absolute;
     top: 50%;
     width: 2.25rem;
@@ -180,41 +180,43 @@
     transform: translate(0, -50%);
   }
 
-  .entry-dialog-hover-zone-left {
+  .database-entry-dialog-hover-zone-left {
     right: 100%;
   }
 
-  .entry-dialog-hover-zone-right {
+  .database-entry-dialog-hover-zone-right {
     left: 100%;
   }
 
   /* --- Hover zone → handle visibility selectors --- */
 
-  .entry-dialog-hover-zone-top-left:hover
-    ~ .entry-dialog-resize-handle-top-left,
-  .entry-dialog-hover-zone-top-left-vertical:hover
-    ~ .entry-dialog-resize-handle-top-left,
-  .entry-dialog-resize-handle-top-left:hover,
-  .entry-dialog-hover-zone-top-right:hover
-    ~ .entry-dialog-resize-handle-top-right,
-  .entry-dialog-resize-handle-top-right:hover,
-  .entry-dialog-hover-zone-bottom-left:hover
-    ~ .entry-dialog-resize-handle-bottom-left,
-  .entry-dialog-hover-zone-bottom-left-vertical:hover
-    ~ .entry-dialog-resize-handle-bottom-left,
-  .entry-dialog-resize-handle-bottom-left:hover,
-  .entry-dialog-hover-zone-bottom-right:hover
-    ~ .entry-dialog-resize-handle-bottom-right,
-  .entry-dialog-hover-zone-bottom-right-vertical:hover
-    ~ .entry-dialog-resize-handle-bottom-right,
-  .entry-dialog-resize-handle-bottom-right:hover {
+  .database-entry-dialog-hover-zone-top-left:hover
+    ~ .database-entry-dialog-resize-handle-top-left,
+  .database-entry-dialog-hover-zone-top-left-vertical:hover
+    ~ .database-entry-dialog-resize-handle-top-left,
+  .database-entry-dialog-resize-handle-top-left:hover,
+  .database-entry-dialog-hover-zone-top-right:hover
+    ~ .database-entry-dialog-resize-handle-top-right,
+  .database-entry-dialog-resize-handle-top-right:hover,
+  .database-entry-dialog-hover-zone-bottom-left:hover
+    ~ .database-entry-dialog-resize-handle-bottom-left,
+  .database-entry-dialog-hover-zone-bottom-left-vertical:hover
+    ~ .database-entry-dialog-resize-handle-bottom-left,
+  .database-entry-dialog-resize-handle-bottom-left:hover,
+  .database-entry-dialog-hover-zone-bottom-right:hover
+    ~ .database-entry-dialog-resize-handle-bottom-right,
+  .database-entry-dialog-hover-zone-bottom-right-vertical:hover
+    ~ .database-entry-dialog-resize-handle-bottom-right,
+  .database-entry-dialog-resize-handle-bottom-right:hover {
     opacity: 1;
   }
 
-  .entry-dialog-hover-zone-left:hover .entry-dialog-nav-button-previous,
-  .entry-dialog-nav-button-previous:hover,
-  .entry-dialog-hover-zone-right:hover .entry-dialog-nav-button-next,
-  .entry-dialog-nav-button-next:hover {
+  .database-entry-dialog-hover-zone-left:hover
+    .database-entry-dialog-nav-button-previous,
+  .database-entry-dialog-nav-button-previous:hover,
+  .database-entry-dialog-hover-zone-right:hover
+    .database-entry-dialog-nav-button-next,
+  .database-entry-dialog-nav-button-next:hover {
     opacity: 1;
   }
 }

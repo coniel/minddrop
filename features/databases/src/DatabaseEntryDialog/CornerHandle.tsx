@@ -30,7 +30,7 @@ export const CornerHandle: React.FC<CornerHandleProps> = ({
   onMouseDown,
 }) => (
   <div
-    className={`entry-dialog-resize-handle entry-dialog-resize-handle-${corner}`}
+    className={`database-entry-dialog-resize-handle database-entry-dialog-resize-handle-${corner}`}
     onMouseDown={onMouseDown}
   >
     <svg width="25" height="25" overflow="visible">

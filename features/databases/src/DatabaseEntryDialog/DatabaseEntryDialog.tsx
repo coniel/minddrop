@@ -131,7 +131,7 @@ export const DatabaseEntryDialog: React.FC<DatabaseEntryDialogProps> = ({
 
       if (
         target === backdropRef.current ||
-        target.classList.contains('entry-dialog-hover-zone')
+        target.classList.contains('database-entry-dialog-hover-zone')
       ) {
         handleClose();
       }
@@ -146,64 +146,64 @@ export const DatabaseEntryDialog: React.FC<DatabaseEntryDialogProps> = ({
   return (
     <div
       ref={backdropRef}
-      className="entry-dialog-backdrop"
+      className="database-entry-dialog-backdrop"
       onClick={handleBackdropClick}
     >
       <div
         ref={canvasRef}
-        className="entry-dialog-canvas"
+        className="database-entry-dialog-canvas"
         style={{ width: size.width, height: size.height }}
       >
         {/* Corner resize handles */}
-        <div className="entry-dialog-hover-zone entry-dialog-hover-zone-top-left" />
-        <div className="entry-dialog-hover-zone entry-dialog-hover-zone-top-left-vertical" />
+        <div className="database-entry-dialog-hover-zone database-entry-dialog-hover-zone-top-left" />
+        <div className="database-entry-dialog-hover-zone database-entry-dialog-hover-zone-top-left-vertical" />
         <CornerHandle
           corner="top-left"
           onMouseDown={(event) => handleResizeMouseDown(event, 'top-left')}
         />
-        <div className="entry-dialog-hover-zone entry-dialog-hover-zone-top-right" />
+        <div className="database-entry-dialog-hover-zone database-entry-dialog-hover-zone-top-right" />
         <CornerHandle
           corner="top-right"
           onMouseDown={(event) => handleResizeMouseDown(event, 'top-right')}
         />
-        <div className="entry-dialog-hover-zone entry-dialog-hover-zone-bottom-left" />
-        <div className="entry-dialog-hover-zone entry-dialog-hover-zone-bottom-left-vertical" />
+        <div className="database-entry-dialog-hover-zone database-entry-dialog-hover-zone-bottom-left" />
+        <div className="database-entry-dialog-hover-zone database-entry-dialog-hover-zone-bottom-left-vertical" />
         <CornerHandle
           corner="bottom-left"
           onMouseDown={(event) => handleResizeMouseDown(event, 'bottom-left')}
         />
-        <div className="entry-dialog-hover-zone entry-dialog-hover-zone-bottom-right" />
-        <div className="entry-dialog-hover-zone entry-dialog-hover-zone-bottom-right-vertical" />
+        <div className="database-entry-dialog-hover-zone database-entry-dialog-hover-zone-bottom-right" />
+        <div className="database-entry-dialog-hover-zone database-entry-dialog-hover-zone-bottom-right-vertical" />
         <CornerHandle
           corner="bottom-right"
           onMouseDown={(event) => handleResizeMouseDown(event, 'bottom-right')}
         />
 
         {/* Content wrapper */}
-        <div className="entry-dialog-content">
+        <div className="database-entry-dialog-content">
           <DatabaseEntryRenderer entryId={entryId} layoutContext="dialog" />
         </div>
 
         {/* Previous entry navigation button */}
-        <div className="entry-dialog-hover-zone entry-dialog-hover-zone-left">
+        <div className="database-entry-dialog-hover-zone database-entry-dialog-hover-zone-left">
           <FloatingActionButton
-            className="entry-dialog-nav-button entry-dialog-nav-button-previous"
+            className="database-entry-dialog-nav-button database-entry-dialog-nav-button-previous"
             icon="chevron-left"
             label="databases.entries.actions.previousEntry"
           />
         </div>
 
         {/* Next entry navigation button */}
-        <div className="entry-dialog-hover-zone entry-dialog-hover-zone-right">
+        <div className="database-entry-dialog-hover-zone database-entry-dialog-hover-zone-right">
           <FloatingActionButton
-            className="entry-dialog-nav-button entry-dialog-nav-button-next"
+            className="database-entry-dialog-nav-button database-entry-dialog-nav-button-next"
             icon="chevron-right"
             label="databases.entries.actions.nextEntry"
           />
         </div>
 
         {/* Actions toolbar */}
-        <div className="entry-dialog-toolbar">
+        <div className="database-entry-dialog-toolbar">
           <FloatingActionButton
             icon="x"
             label="actions.close"
