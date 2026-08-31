@@ -157,7 +157,7 @@ export const TableViewComponent: React.FC<
   // Persist the new column order to view options
   const handleReorderColumns = useCallback(
     (columnOrder: string[]) => {
-      DataViews.update(view.id, { options: { columnOrder } });
+      DataViews.updateOptions(view.id, { columnOrder });
     },
     [view.id],
   );
@@ -165,8 +165,8 @@ export const TableViewComponent: React.FC<
   // Toggle a column's showChips setting
   const handleToggleShowChips = useCallback(
     (columnId: string, showChips: boolean) => {
-      DataViews.update(view.id, {
-        options: { columns: { [columnId]: { showChips } } },
+      DataViews.updateOptions(view.id, {
+        columns: { [columnId]: { showChips } },
       });
     },
     [view.id],
@@ -175,8 +175,8 @@ export const TableViewComponent: React.FC<
   // Hide a column by setting its hidden flag
   const handleHideColumn = useCallback(
     (columnId: string) => {
-      DataViews.update(view.id, {
-        options: { columns: { [columnId]: { hidden: true } } },
+      DataViews.updateOptions(view.id, {
+        columns: { [columnId]: { hidden: true } },
       });
     },
     [view.id],
@@ -193,7 +193,7 @@ export const TableViewComponent: React.FC<
         updatedColumns[id] = { ...updatedColumns[id], [widthKey]: value };
       }
 
-      DataViews.update(view.id, { options: { columns: updatedColumns } });
+      DataViews.updateOptions(view.id, { columns: updatedColumns });
     },
     [view.id, options.overflow, options.columns],
   );

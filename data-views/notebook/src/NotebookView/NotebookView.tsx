@@ -64,7 +64,7 @@ export const NotebookViewComponent: React.FC<
   // Persist the new width to the view options when resizing ends
   const handleResizeEnd = useCallback(
     (width: number) => {
-      DataViews.update(view.id, { options: { listColumnWidth: width } });
+      DataViews.updateOptions(view.id, { listColumnWidth: width });
     },
     [view.id],
   );
