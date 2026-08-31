@@ -23,6 +23,7 @@ import {
   MenuGroup,
   MenuItem,
   MenuLabel,
+  ScrollArea,
   Subheading,
   Text,
   TextField,
@@ -165,24 +166,26 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
     <DialogRoot open={dialogOpen} onOpenChange={toggleDialog}>
       <Dialog className="new-database-dialog">
         <div className="left-column">
-          <MenuGroup>
-            <MenuLabel label="databases.form.labels.templates" />
-            <MenuItem
-              onClick={handleSelectBlank}
-              active={isBlankTemplate}
-              contentIcon={blankTemplate.icon}
-              stringLabel={blankTemplate.name}
-            />
-            {databaseTemplates.map((template) => (
+          <ScrollArea>
+            <MenuGroup>
+              <MenuLabel label="databases.form.labels.templates" />
               <MenuItem
-                key={template.name}
-                onClick={() => handleSelectTemplate(template)}
-                active={selectedTemplate.name === template.name}
-                contentIcon={template.icon}
-                stringLabel={template.name}
+                onClick={handleSelectBlank}
+                active={isBlankTemplate}
+                contentIcon={blankTemplate.icon}
+                stringLabel={blankTemplate.name}
               />
-            ))}
-          </MenuGroup>
+              {databaseTemplates.map((template) => (
+                <MenuItem
+                  key={template.name}
+                  onClick={() => handleSelectTemplate(template)}
+                  active={selectedTemplate.name === template.name}
+                  contentIcon={template.icon}
+                  stringLabel={template.name}
+                />
+              ))}
+            </MenuGroup>
+          </ScrollArea>
         </div>
         <div className="right-column">
           <div className="header">

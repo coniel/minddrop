@@ -14,6 +14,7 @@ import {
   MenuGroup,
   MenuItem,
   MenuLabel,
+  ScrollArea,
   Text,
   TextField,
 } from '@minddrop/ui-primitives';
@@ -111,15 +112,17 @@ export const NewSpaceDialog: React.FC<NewSpaceDialogProps> = ({
     <DialogRoot open={dialogOpen} onOpenChange={toggleDialog}>
       <Dialog className="new-space-dialog">
         <div className="left-column">
-          <MenuGroup>
-            <MenuLabel label="spaces.form.labels.templates" />
-            {/* The blank space is the only template for now */}
-            <MenuItem
-              active
-              contentIcon={DefaultSpaceIcon}
-              label="spaces.templates.blank.name"
-            />
-          </MenuGroup>
+          <ScrollArea>
+            <MenuGroup>
+              <MenuLabel label="spaces.form.labels.templates" />
+              {/* The blank space is the only template for now */}
+              <MenuItem
+                active
+                contentIcon={DefaultSpaceIcon}
+                label="spaces.templates.blank.name"
+              />
+            </MenuGroup>
+          </ScrollArea>
         </div>
         <div className="right-column">
           <div className="header">
