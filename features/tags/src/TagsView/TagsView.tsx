@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from '@minddrop/i18n';
-import { Tag, TagGroups, Tags, TagsIcon } from '@minddrop/tags';
+import { Tag, TagGroup, TagGroups, Tags, TagsIcon } from '@minddrop/tags';
 import {
   ListPanelView,
   ListPanelViewItem,
@@ -8,9 +8,12 @@ import {
 } from '@minddrop/ui-components';
 import { Views } from '@minddrop/views';
 import { NewTagMenu } from './NewTagMenu';
+import { NewTagPopover } from './NewTagPopover';
 import { TagEntries } from './TagEntries';
-import { TagGroupActions } from './TagGroupActions';
-import { TagItemActions } from './TagItemActions';
+import { TagGroupNamePopover } from './TagGroupNamePopover';
+import { TagNamePopover } from './TagNamePopover';
+import { buildTagGroupMenu } from './buildTagGroupMenu';
+import { buildTagMenu } from './buildTagMenu';
 import './TagsView.css';
 
 /**
@@ -20,6 +23,11 @@ import './TagsView.css';
  */
 export const TagsView: React.FC = () => {
   const [query, setQuery] = useState('');
+  const [renamingTagId, setRenamingTagId] = useState<string | null>(null);
+  const [renamingGroupId, setRenamingGroupId] = useState<string | null>(null);
+  const [creatingTagGroupId, setCreatingTagGroupId] = useState<string | null>(
+    null,
+  );
   const subview = Views.useSubview();
   const { t } = useTranslation();
   const tags = Tags.useAll();
@@ -35,14 +43,66 @@ export const TagsView: React.FC = () => {
 
   // The listed tags sectioned by group, ungrouped tags first
   const sections = useMemo(() => {
+    // Returns the tag as a list item carrying its menu and rename
+    // popover
+    const toListItem = (tag: Tag): ListPanelViewItem => ({
+      id: tag.id,
+      label: tag.name,
+      contentIcon: tag.icon,
+      menu: buildTagMenu(tag, groups, () => setRenamingTagId(tag.id)),
+      popovers: ({ anchorRef, holdAnchorVisible }) => (
+        <TagNamePopover
+          open={renamingTagId === tag.id}
+          onOpenChange={(open) => setRenamingTagId(open ? tag.id : null)}
+          anchor={anchorRef}
+          holdAnchor={holdAnchorVisible}
+          tag={tag}
+        />
+      ),
+    });
+
     // Collapsible group sections in alphabetical order
     const groupSections: ListPanelViewSection[] = [...groups]
       .sort((a, b) => a.name.localeCompare(b.name))
       .map((group) => ({
         id: group.id,
         stringLabel: group.name,
-        actions: <TagGroupActions group={group} />,
-        showLabelActionsOnHover: false,
+        menu: buildTagGroupMenu(group, {
+          onCreateTag: () => setCreatingTagGroupId(group.id),
+          onRename: () => setRenamingGroupId(group.id),
+        }),
+        popovers: ({ anchorRef }) => (
+          <>
+            {/* Renames the group */}
+            <TagGroupNamePopover
+              open={renamingGroupId === group.id}
+              onOpenChange={(open) =>
+                setRenamingGroupId(open ? group.id : null)
+              }
+              anchor={anchorRef}
+              defaultName={group.name}
+              onSubmit={(name) => renameGroup(group, name)}
+            />
+
+            {/* The menu's new tag form */}
+            <NewTagPopover
+              open={creatingTagGroupId === group.id}
+              onOpenChange={(open) =>
+                setCreatingTagGroupId(open ? group.id : null)
+              }
+              anchor={anchorRef}
+              defaultGroup={group}
+            />
+          </>
+        ),
+        addPopover: ({ anchorRef, open, onOpenChange }) => (
+          <NewTagPopover
+            open={open}
+            onOpenChange={onOpenChange}
+            anchor={anchorRef}
+            defaultGroup={group}
+          />
+        ),
         items: listedTags
           .filter((tag) => tag.group === group.id)
           .map(toListItem),
@@ -76,11 +136,24 @@ export const TagsView: React.FC = () => {
     return query
       ? allSections.filter((section) => section.items.length > 0)
       : allSections;
-  }, [groups, listedTags, query, t]);
+  }, [
+    groups,
+    listedTags,
+    query,
+    t,
+    renamingTagId,
+    renamingGroupId,
+    creatingTagGroupId,
+  ]);
 
   // The tag whose entries the panel's content lists
   const selectedItem = useMemo(
-    () => selectedTag && toListItem(selectedTag),
+    () =>
+      selectedTag && {
+        id: selectedTag.id,
+        label: selectedTag.name,
+        contentIcon: selectedTag.icon,
+      },
     [selectedTag],
   );
 
@@ -108,6 +181,9 @@ export const TagsView: React.FC = () => {
       noResultsLabel="tags.list.noResults"
       sectionEmptyLabel="tags.list.empty"
       noSelectionLabel="tags.details.noSelection"
+      itemMenuLabel="tags.actions.options"
+      sectionMenuLabel="tags.actions.groupOptions"
+      sectionAddLabel="tags.actions.new"
       addAction={
         <NewTagMenu groups={groups} onCreateGroup={handleCreateGroup} />
       }
@@ -118,13 +194,17 @@ export const TagsView: React.FC = () => {
 };
 
 /**
- * Returns the tag as a list item carrying its actions menu.
+ * Persists a group's new name, ignoring names already in use.
  */
-function toListItem(tag: Tag): ListPanelViewItem {
-  return {
-    id: tag.id,
-    label: tag.name,
-    contentIcon: tag.icon,
-    actions: <TagItemActions tag={tag} />,
-  };
+async function renameGroup(group: TagGroup, name: string) {
+  // The name is unchanged
+  if (name === group.name) {
+    return;
+  }
+
+  try {
+    await TagGroups.update(group.id, { name });
+  } catch {
+    // The name is already in use, keep the current one
+  }
 }
