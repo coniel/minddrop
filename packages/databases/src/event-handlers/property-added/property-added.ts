@@ -10,7 +10,7 @@ import { virtualCollectionId, virtualCollectionName } from '../../utils';
  * properties.
  */
 export function onAddProperty(data: DatabasePropertyAddedEventData): void {
-  const { database, property } = data;
+  const { updated: database, property } = data;
 
   // Re-index all entries in SQL for the new property
   sqlReindexDatabaseEntries(database);

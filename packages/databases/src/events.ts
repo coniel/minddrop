@@ -33,9 +33,14 @@ export const DatabasePropertyRenamedEvent = 'databases:property:renamed';
 
 export interface DatabasePropertyAddedEventData {
   /**
-   * The database the property was added to.
+   * The database config from before the property was added.
    */
-  database: Database;
+  original: Database;
+
+  /**
+   * The database config with the property added.
+   */
+  updated: Database;
 
   /**
    * The property that was added.
@@ -45,9 +50,14 @@ export interface DatabasePropertyAddedEventData {
 
 export interface DatabasePropertyRemovedEventData {
   /**
-   * The database the property was removed from.
+   * The database config from before the property was removed.
    */
-  database: Database;
+  original: Database;
+
+  /**
+   * The database config with the property removed.
+   */
+  updated: Database;
 
   /**
    * The property that was removed.
@@ -57,9 +67,14 @@ export interface DatabasePropertyRemovedEventData {
 
 export interface DatabasePropertyRenamedEventData {
   /**
-   * The database the property belongs to.
+   * The database config from before the property was renamed.
    */
-  database: Database;
+  original: Database;
+
+  /**
+   * The database config with the property renamed.
+   */
+  updated: Database;
 
   /**
    * The original property name.

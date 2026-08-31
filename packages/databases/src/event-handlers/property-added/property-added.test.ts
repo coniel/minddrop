@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Collections } from '@minddrop/collections';
+import { PropertySchema } from '@minddrop/properties';
 import { sqlGetAllEntriesFull, sqlUpsertDatabase } from '../../sql';
 import {
   cleanup,
@@ -10,8 +11,21 @@ import {
   setup,
   setupTestSqlDatabase,
 } from '../../test-utils';
+import { Database } from '../../types';
 import { virtualCollectionId, virtualCollectionName } from '../../utils';
 import { onAddProperty } from './property-added';
+
+/**
+ * Returns a copy of a database with the property added to its
+ * schema, matching the database shape carried by the property
+ * added event.
+ */
+function withProperty(database: Database, property: PropertySchema): Database {
+  return {
+    ...database,
+    properties: [...database.properties, property],
+  };
+}
 
 describe('onAddProperty', () => {
   beforeEach(() => {
@@ -39,9 +53,12 @@ describe('onAddProperty', () => {
 
   it('does nothing if the property is not a collection type', () => {
     // Add a non-collection property
+    const property = { type: 'text' as const, name: 'Notes' };
+
     onAddProperty({
-      database: objectDatabase,
-      property: { type: 'text', name: 'Notes' },
+      original: objectDatabase,
+      updated: withProperty(objectDatabase, property),
+      property,
     });
 
     // No virtual collections should be created
@@ -52,9 +69,12 @@ describe('onAddProperty', () => {
 
   it("re-indexes the database's entries in SQL", () => {
     // Add a non-collection property
+    const property = { type: 'text' as const, name: 'Notes' };
+
     onAddProperty({
-      database: objectDatabase,
-      property: { type: 'text', name: 'Notes' },
+      original: objectDatabase,
+      updated: withProperty(objectDatabase, property),
+      property,
     });
 
     // The database's entries should be re-upserted into SQL
@@ -64,12 +84,12 @@ describe('onAddProperty', () => {
   it('creates virtual collections for all existing entries', () => {
     // Add a collection property
     const property = { type: 'collection' as const, name: 'Tags' };
-    const updated = {
-      ...objectDatabase,
-      properties: [...objectDatabase.properties, property],
-    };
 
-    onAddProperty({ database: updated, property });
+    onAddProperty({
+      original: objectDatabase,
+      updated: withProperty(objectDatabase, property),
+      property,
+    });
 
     // Should create a virtual collection for the existing entry
     const collection = Collections.Store.get(
@@ -78,7 +98,7 @@ describe('onAddProperty', () => {
     expect(collection).not.toBeNull();
     expect(collection!.virtual).toBe(true);
     expect(collection!.name).toBe(
-      virtualCollectionName(updated.name, objectEntry1.title, 'Tags'),
+      virtualCollectionName(objectDatabase.name, objectEntry1.title, 'Tags'),
     );
     expect(collection!.items).toEqual([]);
   });

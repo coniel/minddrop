@@ -16,8 +16,27 @@ import {
   setup,
   setupTestSqlDatabase,
 } from '../../test-utils';
+import { Database } from '../../types';
 import { virtualCollectionId, virtualCollectionName } from '../../utils';
 import { onRenameProperty } from './property-renamed';
+
+/**
+ * Returns a copy of a database with the named property renamed
+ * in its schema, matching the updated config carried by the
+ * property renamed event.
+ */
+function withRenamedProperty(
+  database: Database,
+  oldName: string,
+  newName: string,
+): Database {
+  return {
+    ...database,
+    properties: database.properties.map((property) =>
+      property.name === oldName ? { ...property, name: newName } : property,
+    ),
+  };
+}
 
 describe('onRenameProperty', () => {
   beforeEach(() => {
@@ -71,15 +90,9 @@ describe('onRenameProperty', () => {
 
   it("renames the property across the entries' SQL records", async () => {
     // Rename the 'Related' collection property to 'Links'
-    const renamedDatabase = {
-      ...collectionDatabase,
-      properties: collectionDatabase.properties.map((property) =>
-        property.name === 'Related' ? { ...property, name: 'Links' } : property,
-      ),
-    };
-
     await onRenameProperty({
-      database: renamedDatabase,
+      original: collectionDatabase,
+      updated: withRenamedProperty(collectionDatabase, 'Related', 'Links'),
       oldName: 'Related',
       newName: 'Links',
     });
@@ -104,11 +117,14 @@ describe('onRenameProperty', () => {
   it('remaps design property map values pointing at the renamed property', async () => {
     // Rename 'Content' to 'Body' with a design property map that
     // maps a design property onto it
+    const original = {
+      ...objectDatabase,
+      designPropertyMap: { Heading: 'Content', Cover: 'Icon' },
+    };
+
     await onRenameProperty({
-      database: {
-        ...objectDatabase,
-        designPropertyMap: { Heading: 'Content', Cover: 'Icon' },
-      },
+      original,
+      updated: withRenamedProperty(original, 'Content', 'Body'),
       oldName: 'Content',
       newName: 'Body',
     });
@@ -122,11 +138,14 @@ describe('onRenameProperty', () => {
   });
 
   it('follows the rename when the property colors the entries', async () => {
+    const original = {
+      ...objectDatabase,
+      colorProperty: 'Content',
+    };
+
     await onRenameProperty({
-      database: {
-        ...objectDatabase,
-        colorProperty: 'Content',
-      },
+      original,
+      updated: withRenamedProperty(original, 'Content', 'Body'),
       oldName: 'Content',
       newName: 'Body',
     });
@@ -136,11 +155,14 @@ describe('onRenameProperty', () => {
   });
 
   it('does not update the database when no map value matches', async () => {
+    const original = {
+      ...objectDatabase,
+      designPropertyMap: { Heading: 'Content' },
+    };
+
     await onRenameProperty({
-      database: {
-        ...objectDatabase,
-        designPropertyMap: { Heading: 'Content' },
-      },
+      original,
+      updated: withRenamedProperty(original, 'Icon', 'Symbol'),
       oldName: 'Icon',
       newName: 'Symbol',
     });
@@ -152,7 +174,8 @@ describe('onRenameProperty', () => {
   it('does nothing if the renamed property is not a collection type', async () => {
     // Rename a non-collection property
     await onRenameProperty({
-      database: objectDatabase,
+      original: objectDatabase,
+      updated: withRenamedProperty(objectDatabase, 'Content', 'Body'),
       oldName: 'Content',
       newName: 'Body',
     });
@@ -166,15 +189,9 @@ describe('onRenameProperty', () => {
 
   it('replaces virtual collections with new ones under the new property name', async () => {
     // Rename the 'Related' collection property to 'Links'
-    const renamedDatabase = {
-      ...collectionDatabase,
-      properties: collectionDatabase.properties.map((property) =>
-        property.name === 'Related' ? { ...property, name: 'Links' } : property,
-      ),
-    };
-
     await onRenameProperty({
-      database: renamedDatabase,
+      original: collectionDatabase,
+      updated: withRenamedProperty(collectionDatabase, 'Related', 'Links'),
       oldName: 'Related',
       newName: 'Links',
     });
@@ -205,15 +222,9 @@ describe('onRenameProperty', () => {
 
   it('does not affect other collection properties', async () => {
     // Rename the 'Related' collection property
-    const renamedDatabase = {
-      ...collectionDatabase,
-      properties: collectionDatabase.properties.map((property) =>
-        property.name === 'Related' ? { ...property, name: 'Links' } : property,
-      ),
-    };
-
     await onRenameProperty({
-      database: renamedDatabase,
+      original: collectionDatabase,
+      updated: withRenamedProperty(collectionDatabase, 'Related', 'Links'),
       oldName: 'Related',
       newName: 'Links',
     });

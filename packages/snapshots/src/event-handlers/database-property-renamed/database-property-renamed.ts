@@ -8,7 +8,7 @@ import { recordRename } from '../../recordRename';
 export async function onDatabasePropertyRenamed(
   data: DatabasePropertyRenamedEventData,
 ): Promise<void> {
-  const { database, oldName, newName } = data;
+  const { updated: database, oldName, newName } = data;
 
   // Record the rename in the rename ledger
   await recordRename({

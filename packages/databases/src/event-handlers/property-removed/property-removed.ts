@@ -21,7 +21,7 @@ import { entryTemplateFilePath, virtualCollectionId } from '../../utils';
 export async function onRemoveProperty(
   data: DatabasePropertyRemovedEventData,
 ): Promise<void> {
-  const { database, property } = data;
+  const { updated: database, property } = data;
 
   // Re-index all entries in SQL without the removed property
   sqlReindexDatabaseEntries(database);

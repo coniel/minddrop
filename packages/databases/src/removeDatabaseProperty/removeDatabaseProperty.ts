@@ -32,7 +32,8 @@ export async function removeDatabaseProperty(
   // Dispatch the property removed event if the property existed
   if (property) {
     Events.dispatch(DatabasePropertyRemovedEvent, {
-      database: updated,
+      original: config,
+      updated,
       property,
     });
   }

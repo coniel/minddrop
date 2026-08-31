@@ -29,7 +29,8 @@ export async function addDatabaseProperty(
 
   // Dispatch the property added event
   Events.dispatch(DatabasePropertyAddedEvent, {
-    database: updated,
+    original: config,
+    updated,
     property,
   });
 

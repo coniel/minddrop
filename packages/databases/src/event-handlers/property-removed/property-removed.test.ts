@@ -31,7 +31,7 @@ import { onRemoveProperty } from './property-removed';
 
 /**
  * Returns a copy of a database with the named property removed
- * from its schema, matching the database shape carried by the
+ * from its schema, matching the updated config carried by the
  * property removed event.
  */
 function withoutProperty(database: Database, propertyName: string): Database {
@@ -97,10 +97,11 @@ describe('onRemoveProperty', () => {
       (p) => p.name === 'Related',
     )!;
 
-    // The event carries the database with the property already removed
-    const database = withoutProperty(collectionDatabase, 'Related');
-
-    await onRemoveProperty({ database, property });
+    await onRemoveProperty({
+      original: collectionDatabase,
+      updated: withoutProperty(collectionDatabase, 'Related'),
+      property,
+    });
 
     // The database's entries should be re-upserted into SQL
     const recordIds = sqlGetEntrySyncRecords(collectionDatabase.id).map(
@@ -126,7 +127,8 @@ describe('onRemoveProperty', () => {
   it('does nothing if the property is not a collection type', async () => {
     // Remove a non-collection property
     await onRemoveProperty({
-      database: withoutProperty(objectDatabase, 'Content'),
+      original: objectDatabase,
+      updated: withoutProperty(objectDatabase, 'Content'),
       property: { type: 'text', name: 'Content' },
     });
 
@@ -144,7 +146,8 @@ describe('onRemoveProperty', () => {
     )!;
 
     await onRemoveProperty({
-      database: withoutProperty(collectionDatabase, 'Related'),
+      original: collectionDatabase,
+      updated: withoutProperty(collectionDatabase, 'Related'),
       property,
     });
 
@@ -168,7 +171,8 @@ describe('onRemoveProperty', () => {
       )!;
 
       await onRemoveProperty({
-        database: withoutProperty(entryTemplatesDatabase, 'Notes'),
+        original: entryTemplatesDatabase,
+        updated: withoutProperty(entryTemplatesDatabase, 'Notes'),
         property,
       });
 
@@ -195,7 +199,8 @@ describe('onRemoveProperty', () => {
       );
 
       await onRemoveProperty({
-        database: withoutProperty(entryTemplatesDatabase, 'Image'),
+        original: entryTemplatesDatabase,
+        updated: withoutProperty(entryTemplatesDatabase, 'Image'),
         property,
       });
 
@@ -216,7 +221,8 @@ describe('onRemoveProperty', () => {
       )!;
 
       await onRemoveProperty({
-        database: withoutProperty(entryTemplatesDatabase, 'Count'),
+        original: entryTemplatesDatabase,
+        updated: withoutProperty(entryTemplatesDatabase, 'Count'),
         property,
       });
 

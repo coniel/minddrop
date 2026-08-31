@@ -14,7 +14,7 @@ import { virtualCollectionId, virtualCollectionName } from '../../utils';
 export async function onRenameProperty(
   data: DatabasePropertyRenamedEventData,
 ): Promise<void> {
-  const { database, oldName, newName } = data;
+  const { updated: database, oldName, newName } = data;
 
   // Rename in SQL
   sqlRenameProperty(database.id, oldName, newName);

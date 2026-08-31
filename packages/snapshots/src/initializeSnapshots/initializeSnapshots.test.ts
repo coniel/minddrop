@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
+  Database,
   DatabaseEntryDeletedEvent,
   DatabaseEntryRenamedEvent,
   DatabasePropertyRenamedEvent,
@@ -14,6 +15,24 @@ import { readRenameEvents } from '../utils';
 import { initializeSnapshots } from './initializeSnapshots';
 
 const { objectDatabase, objectEntry1 } = DatabaseFixtures;
+
+/**
+ * Returns a copy of a database with the named property renamed
+ * in its schema, matching the updated config carried by the
+ * property renamed event.
+ */
+function renameProperty(
+  database: Database,
+  oldName: string,
+  newName: string,
+): Database {
+  return {
+    ...database,
+    properties: database.properties.map((property) =>
+      property.name === oldName ? { ...property, name: newName } : property,
+    ),
+  };
+}
 
 describe('initializeSnapshots', () => {
   beforeEach(() => {
@@ -68,7 +87,8 @@ describe('initializeSnapshots', () => {
   it('records property renames', async () => {
     // Dispatch a property rename event
     await Events.dispatch(DatabasePropertyRenamedEvent, {
-      database: objectDatabase,
+      original: objectDatabase,
+      updated: renameProperty(objectDatabase, 'Content', 'Body'),
       oldName: 'Content',
       newName: 'Body',
     });
