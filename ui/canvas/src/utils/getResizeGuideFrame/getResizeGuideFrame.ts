@@ -32,15 +32,19 @@ export function getResizeGuideFrame(
     ? originY + originHeight
     : originY;
 
+  // Mirrored resizes move the opposite edges the other way
+  const mirroredOppositeX = mirror ? oppositeX - deltaX : oppositeX;
+  const mirroredOppositeY = mirror ? oppositeY - deltaY : oppositeY;
+
   // The horizontal extent, unchanged when the resize does not
   // move along the axis
   const horizontal = resizeMovesAxis(state.edge, 'x')
-    ? getExtent(anchors.x + deltaX, mirror ? oppositeX - deltaX : oppositeX)
+    ? getExtent(anchors.x + deltaX, mirroredOppositeX)
     : { start: originX, end: originX + originWidth };
 
   // The vertical extent
   const vertical = resizeMovesAxis(state.edge, 'y')
-    ? getExtent(anchors.y + deltaY, mirror ? oppositeY - deltaY : oppositeY)
+    ? getExtent(anchors.y + deltaY, mirroredOppositeY)
     : { start: originY, end: originY + originHeight };
 
   return {
