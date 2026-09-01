@@ -36,7 +36,7 @@ export {
   useDatabaseEntriesByIds as useByIds,
   useDatabaseEntryIds as useIds,
 } from './DatabaseEntriesStore';
-export { getPropertyFilePath as propertyFilePath } from './utils';
+export { resolveEntryPropertyFilePath as propertyFilePath } from './utils';
 export { isEntryTitleTaken as isTitleTaken } from './utils';
 export { isGloballyUniqueEntryTitle as isGloballyUniqueTitle } from './utils';
 export { findDatabaseEntryByReference as findByReference } from './utils';

@@ -5,7 +5,7 @@ import { DatabaseEntryDeletedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntry } from '../getDatabaseEntry';
 import {
-  getEntryPropertyFilePaths,
+  resolveEntryPropertyFilePaths,
   resolveEntryMetadataFilePath,
 } from '../utils';
 
@@ -36,7 +36,7 @@ export async function deleteDatabaseEntry(id: string): Promise<void> {
     await Fs.trashFile(entry.path);
 
     // Trash each of the entry's file-property files
-    for (const propertyFilePath of getEntryPropertyFilePaths(entry.id)) {
+    for (const propertyFilePath of resolveEntryPropertyFilePaths(entry.id)) {
       // Only trash files that exist
       if (await Fs.exists(propertyFilePath)) {
         await Fs.trashFile(propertyFilePath);

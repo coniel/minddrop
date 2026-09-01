@@ -1,6 +1,6 @@
 import { Fs } from '@minddrop/file-system';
 import { IncrementedPath } from '@minddrop/file-system';
-import { getPropertyFilePath } from '../getPropertyFilePath';
+import { resolveEntryPropertyFilePath } from '../resolveEntryPropertyFilePath';
 
 /**
  * Returns the path to an entry property's file, incrementing the file name
@@ -11,12 +11,12 @@ import { getPropertyFilePath } from '../getPropertyFilePath';
  * @param fileName - The name of the file, i.e. the value of the property.
  * @returns The path to the property file.
  */
-export async function getIncrementalPropertyFilePath(
+export async function resolveIncrementalPropertyFilePath(
   entryId: string,
   propertyName: string,
   fileName: string,
 ): Promise<IncrementedPath> {
   return Fs.incrementalPath(
-    getPropertyFilePath(entryId, propertyName, fileName),
+    resolveEntryPropertyFilePath(entryId, propertyName, fileName),
   );
 }

@@ -1,7 +1,7 @@
 import { Properties } from '@minddrop/properties';
 import { getDatabase } from '../../getDatabase';
 import { getDatabaseEntry } from '../../getDatabaseEntry';
-import { getPropertyFilePath } from '../getPropertyFilePath';
+import { resolveEntryPropertyFilePath } from '../resolveEntryPropertyFilePath';
 
 /**
  * Returns the paths of the files owned by an entry's file-based
@@ -10,7 +10,7 @@ import { getPropertyFilePath } from '../getPropertyFilePath';
  * @param entryId - The ID of the entry.
  * @returns The entry's property file paths.
  */
-export function getEntryPropertyFilePaths(entryId: string): string[] {
+export function resolveEntryPropertyFilePaths(entryId: string): string[] {
   // Get the entry
   const entry = getDatabaseEntry(entryId);
   // Get the entry's database
@@ -27,6 +27,6 @@ export function getEntryPropertyFilePaths(entryId: string): string[] {
         return [];
       }
 
-      return [getPropertyFilePath(entryId, property.name, value)];
+      return [resolveEntryPropertyFilePath(entryId, property.name, value)];
     });
 }

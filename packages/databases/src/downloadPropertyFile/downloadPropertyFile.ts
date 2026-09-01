@@ -1,7 +1,7 @@
 import { Fs } from '@minddrop/file-system';
 import { getFileExtensionFromUrl, titleFromUrl } from '@minddrop/utils';
 import { getDatabaseEntry } from '../getDatabaseEntry';
-import { getIncrementalPropertyFilePath } from '../utils';
+import { resolveIncrementalPropertyFilePath } from '../utils';
 
 /**
  * Downloads a file from a URL and saves it as the specified entry property's
@@ -26,7 +26,7 @@ export async function downloadPropertyFile(
   const fileExtension = getFileExtensionFromUrl(url);
   const fileName = fileExtension ? `${fileTitle}.${fileExtension}` : fileTitle;
 
-  const { path } = await getIncrementalPropertyFilePath(
+  const { path } = await resolveIncrementalPropertyFilePath(
     entryId,
     propertyName,
     fileName,

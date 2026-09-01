@@ -12,22 +12,26 @@ import {
   rootStorageEntry1,
   setup,
 } from '../../test-utils';
-import { getPropertyFilePath } from './getPropertyFilePath';
+import { resolveEntryPropertyFilePath } from './resolveEntryPropertyFilePath';
 
-describe('getPropertyFilePath', () => {
+describe('resolveEntryPropertyFilePath', () => {
   beforeEach(setup);
 
   afterEach(cleanup);
 
   it('returns path for root based storage', () => {
     expect(
-      getPropertyFilePath(rootStorageEntry1.id, 'Image', 'image.png'),
+      resolveEntryPropertyFilePath(rootStorageEntry1.id, 'Image', 'image.png'),
     ).toBe(`${rootStorageDatabase.path}/image.png`);
   });
 
   it('returns path for common based storage', () => {
     expect(
-      getPropertyFilePath(commonStorageEntry1.id, 'Image', 'image.png'),
+      resolveEntryPropertyFilePath(
+        commonStorageEntry1.id,
+        'Image',
+        'image.png',
+      ),
     ).toBe(
       `${commonStorageDatabase.path}/${commonStorageDatabase.propertyFilesDir}/image.png`,
     );
@@ -35,13 +39,17 @@ describe('getPropertyFilePath', () => {
 
   it('returns path for property based storage', () => {
     expect(
-      getPropertyFilePath(propertyStorageEntry1.id, 'Image', 'image.png'),
+      resolveEntryPropertyFilePath(
+        propertyStorageEntry1.id,
+        'Image',
+        'image.png',
+      ),
     ).toBe(`${propertyStorageDatabase.path}/Image/image.png`);
   });
 
   it('returns path for entry based storage', () => {
     expect(
-      getPropertyFilePath(entryStorageEntry1.id, 'Image', 'image.png'),
+      resolveEntryPropertyFilePath(entryStorageEntry1.id, 'Image', 'image.png'),
     ).toBe(`${entryStorageDatabase.path}/Entry Storage Entry 1/image.png`);
   });
 
@@ -52,7 +60,7 @@ describe('getPropertyFilePath', () => {
     });
 
     expect(
-      getPropertyFilePath(rootStorageEntry1.id, 'Image', 'image.png'),
+      resolveEntryPropertyFilePath(rootStorageEntry1.id, 'Image', 'image.png'),
     ).toBe(`${rootStorageDatabase.path}/image.png`);
   });
 });

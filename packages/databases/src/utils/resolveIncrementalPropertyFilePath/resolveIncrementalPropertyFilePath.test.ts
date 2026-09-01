@@ -5,16 +5,16 @@ import {
   propertyStorageEntry1,
   setup,
 } from '../../test-utils';
-import { getIncrementalPropertyFilePath } from './getIncrementalPropertyFilePath';
+import { resolveIncrementalPropertyFilePath } from './resolveIncrementalPropertyFilePath';
 
-describe('getIncrementalPropertyFilePath', () => {
+describe('resolveIncrementalPropertyFilePath', () => {
   beforeEach(setup);
 
   afterEach(cleanup);
 
   it('returns the property file path when no conflicting file exists', async () => {
     // No photo.png exists in the property directory
-    const result = await getIncrementalPropertyFilePath(
+    const result = await resolveIncrementalPropertyFilePath(
       propertyStorageEntry1.id,
       'Image',
       'photo.png',
@@ -26,7 +26,7 @@ describe('getIncrementalPropertyFilePath', () => {
 
   it('increments the file name when a conflicting file exists', async () => {
     // The fixtures place an image.png in the property directory
-    const result = await getIncrementalPropertyFilePath(
+    const result = await resolveIncrementalPropertyFilePath(
       propertyStorageEntry1.id,
       'Image',
       'image.png',

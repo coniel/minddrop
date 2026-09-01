@@ -2,7 +2,7 @@ import { Fs } from '@minddrop/file-system';
 import { ensurePropertyFileDirExists } from '../ensurePropertyFileDirExists';
 import { getDatabaseEntry } from '../getDatabaseEntry';
 import { updateDatabaseEntryProperty } from '../updateDatabaseEntryProperty';
-import { getIncrementalPropertyFilePath } from '../utils';
+import { resolveIncrementalPropertyFilePath } from '../utils';
 
 /**
  * Writes an entry property's file to the correct location based on the
@@ -31,7 +31,7 @@ export async function writePropertyFile(
   await ensurePropertyFileDirExists(entry.id, propertyName);
 
   // Get the path to which to write the file
-  const { path, name } = await getIncrementalPropertyFilePath(
+  const { path, name } = await resolveIncrementalPropertyFilePath(
     entry.id,
     propertyName,
     file.name,

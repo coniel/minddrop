@@ -11,7 +11,7 @@ import { resolvePropertyFilesDirName } from '../resolvePropertyFilesDirName';
  * @param fileName - The name of the file, i.e. the value of the property.
  * @returns The path to the property file.
  */
-export function getPropertyFilePath(
+export function resolveEntryPropertyFilePath(
   entryId: string,
   propertyName: string,
   fileName: string,

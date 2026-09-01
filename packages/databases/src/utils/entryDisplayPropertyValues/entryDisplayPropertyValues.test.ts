@@ -10,7 +10,7 @@ import {
   relatedEntry2,
   setup,
 } from '../../test-utils';
-import { getPropertyFilePath } from '../getPropertyFilePath';
+import { resolveEntryPropertyFilePath } from '../resolveEntryPropertyFilePath';
 import { virtualViewId } from '../virtualViewId';
 import { entryDisplayPropertyValues } from './entryDisplayPropertyValues';
 
@@ -114,7 +114,7 @@ describe('entryDisplayPropertyValues', () => {
       {},
     );
 
-    const expectedPath = getPropertyFilePath(
+    const expectedPath = resolveEntryPropertyFilePath(
       propertyStorageEntry1.id,
       'Image',
       'image.png',

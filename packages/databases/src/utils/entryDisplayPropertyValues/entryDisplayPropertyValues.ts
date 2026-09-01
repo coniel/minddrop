@@ -4,7 +4,7 @@ import { getDatabase } from '../../getDatabase';
 import { getDatabaseEntry } from '../../getDatabaseEntry';
 import { createEntryVirtualViews } from '../createEntryVirtualViews';
 import { entryMetadataPropertyValues } from '../entryMetadataPropertyValues';
-import { getPropertyFilePath } from '../getPropertyFilePath';
+import { resolveEntryPropertyFilePath } from '../resolveEntryPropertyFilePath';
 
 /**
  * Returns the display-ready property values for a database entry.
@@ -54,7 +54,7 @@ export function entryDisplayPropertyValues(
 
     // Replace image file names with full file paths
     if (property.type === 'image' && typeof value === 'string') {
-      values[property.name] = getPropertyFilePath(
+      values[property.name] = resolveEntryPropertyFilePath(
         entryId,
         property.name,
         value,

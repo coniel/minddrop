@@ -10,7 +10,7 @@ import { getDatabase } from '../getDatabase';
 import { Database, PropertyFileStorage } from '../types';
 import { updateDatabaseEntryProperty } from '../updateDatabaseEntryProperty';
 import {
-  getPropertyFilePath,
+  resolveEntryPropertyFilePath,
   resolveDatabasePropertyDirs,
   resolveEntryFilePath,
   resolvePropertyFilePath,
@@ -90,7 +90,7 @@ export async function setDatabasePropertyFileStorage(
           entryTitle: entry.title,
           propertyName: property.name,
           fileName: value,
-          oldPath: getPropertyFilePath(entry.id, property.name, value),
+          oldPath: resolveEntryPropertyFilePath(entry.id, property.name, value),
         },
       ];
     }),

@@ -9,7 +9,7 @@ import { DatabaseEntry } from '../types';
 import { updateDatabaseEntryProperty } from '../updateDatabaseEntryProperty';
 import {
   entryTemplateFilePath,
-  getIncrementalPropertyFilePath,
+  resolveIncrementalPropertyFilePath,
 } from '../utils';
 
 /**
@@ -93,7 +93,7 @@ export async function createDatabaseEntryFromTemplate(
     await ensurePropertyFileDirExists(entry.id, propertyName);
 
     // Get the destination path, incrementing the file name on conflict
-    const { path, name } = await getIncrementalPropertyFilePath(
+    const { path, name } = await resolveIncrementalPropertyFilePath(
       entry.id,
       propertyName,
       fileName,

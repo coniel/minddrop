@@ -5,7 +5,7 @@ import { DatabaseEntriesClearedEvent } from '../events';
 import { getAllDatabaseEntries } from '../getAllDatabaseEntries';
 import { getDatabase } from '../getDatabase';
 import {
-  getEntryPropertyFilePaths,
+  resolveEntryPropertyFilePaths,
   resolveDatabasePropertyDirs,
 } from '../utils';
 
@@ -45,7 +45,7 @@ export async function clearDatabaseEntries(databaseId: string): Promise<void> {
       // Root storage keeps property files loose in the database root, so
       // trash each of the entry's file-property files individually
       if (database.propertyFileStorage === 'root') {
-        for (const propertyFilePath of getEntryPropertyFilePaths(entry.id)) {
+        for (const propertyFilePath of resolveEntryPropertyFilePaths(entry.id)) {
           // Only trash files that exist
           if (await Fs.exists(propertyFilePath)) {
             await Fs.trashFile(propertyFilePath);
