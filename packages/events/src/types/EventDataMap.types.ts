@@ -6,14 +6,12 @@
 export interface EventDataMap {}
 
 /**
- * An event name, which is a registered one or, until every event is
- * registered, any other string. The `string & {}` member keeps
- * autocomplete for registered names.
+ * A registered event name. Names outside the registry are not
+ * dispatchable or listenable.
  */
-export type EventName = keyof EventDataMap | (string & {});
+export type EventName = keyof EventDataMap;
 
 /**
- * The data of a registered event, unknown for unregistered ones.
+ * The data of a registered event.
  */
-export type EventData<TEvent extends EventName> =
-  TEvent extends keyof EventDataMap ? EventDataMap[TEvent] : unknown;
+export type EventData<TEvent extends EventName> = EventDataMap[TEvent];

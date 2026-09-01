@@ -101,6 +101,9 @@ export type OpenConfirmationDialogEventData = {
 // registered by the package which defines that type
 declare module './types/EventDataMap.types' {
   interface EventDataMap {
+    // The catch all listener name, which listens to every event
+    // rather than being an event of its own
+    '*': unknown;
     'app:right-panel:close': void;
     'app:confirmation-dialog:open': OpenConfirmationDialogEventData;
     'app:sidebar:open': void;

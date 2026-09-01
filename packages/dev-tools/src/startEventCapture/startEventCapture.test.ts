@@ -5,6 +5,16 @@ import { DevToolsNamespace } from '../constants';
 import { cleanup, setup } from '../test-utils';
 import { startEventCapture } from './startEventCapture';
 
+// A test event stood in for the events the app dispatches
+const TestCapturedEvent = 'test:captured';
+
+// Register the test event so it can be dispatched
+declare module '@minddrop/events/EventDataMap' {
+  interface EventDataMap {
+    'test:captured': { id: string } | undefined;
+  }
+}
+
 describe('startEventCapture', () => {
   let stopCapture: VoidFunction;
 
@@ -20,11 +30,11 @@ describe('startEventCapture', () => {
   });
 
   it('captures dispatched events', async () => {
-    await Events.dispatch('databases:create', { id: 'db_1' });
+    await Events.dispatch(TestCapturedEvent, { id: 'db_1' });
 
     const [entry] = DevToolsEventsStore.getAll();
 
-    expect(entry.name).toBe('databases:create');
+    expect(entry.name).toBe(TestCapturedEvent);
     expect(entry.data).toEqual({ id: 'db_1' });
   });
 
@@ -57,7 +67,7 @@ describe('startEventCapture', () => {
   it('stops capturing once stopped', async () => {
     stopCapture();
 
-    await Events.dispatch('databases:create');
+    await Events.dispatch(TestCapturedEvent);
 
     expect(DevToolsEventsStore.getAll()).toEqual([]);
   });

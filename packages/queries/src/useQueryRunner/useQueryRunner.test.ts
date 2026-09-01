@@ -7,7 +7,7 @@ import {
 } from '@minddrop/collections';
 import { CollectionFixtures } from '@minddrop/collections/test-utils';
 import { Databases } from '@minddrop/databases';
-import { Events } from '@minddrop/events';
+import { EventData, EventName, Events } from '@minddrop/events';
 import {
   act,
   cleanup as cleanupRender,
@@ -110,7 +110,10 @@ describe('useQueryRunner', () => {
    * @param event - The event name to dispatch.
    * @param data - The event data.
    */
-  async function dispatch(event: string, data?: unknown) {
+  async function dispatch<TEvent extends EventName>(
+    event: TEvent,
+    data?: EventData<TEvent>,
+  ) {
     await act(async () => {
       await Events.dispatch(event, data);
     });

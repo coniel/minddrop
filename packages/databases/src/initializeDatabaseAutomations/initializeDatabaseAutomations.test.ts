@@ -18,6 +18,14 @@ import {
 } from '../types';
 import { initializeDatabaseAutomations } from './initializeDatabaseAutomations';
 
+// Register the test events the test actions dispatch when run
+declare module '@minddrop/events/EventDataMap' {
+  interface EventDataMap {
+    'called-create-test': void;
+    'called-update-test': void;
+  }
+}
+
 const createActionConfig: DatabaseAutomationActionConfig = {
   type: 'create-test',
   name: 'Test',

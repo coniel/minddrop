@@ -46,16 +46,16 @@ describe('Events', () => {
     expect(Events.hasListener(TestVoidEvent, 'none')).toBe(false);
   });
 
-  it('leaves unregistered event data unknown', async () => {
-    let received: unknown;
+  it('rejects unregistered event names at compile time', () => {
+    // @ts-expect-error the event is not in the registry
+    Events.dispatch('test:unregistered');
 
-    // Unregistered events remain dispatchable with any data
-    Events.addListener('test:unregistered', 'test', ({ data }) => {
-      received = data;
-    });
+    // @ts-expect-error the event is not in the registry
+    Events.addListener('test:unregistered', 'test', () => {});
 
-    await Events.dispatch('test:unregistered', 'anything');
+    // @ts-expect-error the event is not in the registry
+    Events.removeListener('test:unregistered', 'test');
 
-    expect(received).toBe('anything');
+    expect(Events.hasListener(TestVoidEvent, 'none')).toBe(false);
   });
 });
