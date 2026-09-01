@@ -7,6 +7,9 @@ import { EventListenerMap } from '../types';
  * Asynchronously calls each of the side effects registered for the event named `eventName`,
  * passing the supplied arguments to each.
  *
+ * A listener which throws is reported to the console and does not
+ * affect the other listeners or the dispatching code.
+ *
  * @param eventName - The name of the event.
  * @param data - The data associated with the event.
  */
@@ -43,12 +46,25 @@ export async function dispatchEvent(
       if (skipListeners.includes(listener.id)) {
         continue;
       }
-      await listener.callback({
-        name: eventName,
-        stopPropagation,
-        skipPropagation,
-        data,
-      });
+
+      try {
+        await listener.callback({
+          name: eventName,
+          stopPropagation,
+          skipPropagation,
+          data,
+        });
+      } catch (error) {
+        // A listener's failure is its own. The code which dispatched
+        // the event has already done what the event reports and can
+        // neither prevent nor recover from what a listener does with
+        // it, so the failure is reported and the remaining listeners
+        // are called as usual
+        console.error(
+          `Event listener "${listener.id}" failed handling "${eventName}"`,
+          error,
+        );
+      }
     }
   }
 

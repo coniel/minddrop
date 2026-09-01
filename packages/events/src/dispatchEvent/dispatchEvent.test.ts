@@ -24,6 +24,14 @@ const asyncListener = {
   ),
 };
 
+// An event listener whose callback throws
+const failingListener = {
+  id: 'failing-listener',
+  callback: vi.fn().mockImplementation(() => {
+    throw new Error('Listener failed');
+  }),
+};
+
 // An event listener that stops propagation
 const stopPropagationListener = {
   id: 'stop-propagation-listener',
@@ -83,6 +91,36 @@ describe('dispatchEvent', () => {
     expect(syncListener.callback.mock.calls[0][0]).toEqual(event);
     expect(asyncListener.callback.mock.calls[0][0]).toEqual(event);
     expect(asyncFunction).toHaveBeenCalled();
+  });
+
+  describe('when a listener throws', () => {
+    beforeEach(() => {
+      // Keep the reported failure out of the test output
+      vi.spyOn(console, 'error').mockImplementation(() => undefined);
+
+      eventListeners['test-event'].listeners = [
+        failingListener,
+        syncListener,
+        asyncListener,
+      ];
+    });
+
+    afterEach(() => {
+      vi.mocked(console.error).mockRestore();
+    });
+
+    it('does not fail the dispatch', async () => {
+      await expect(
+        dispatchEvent(eventListeners, 'test-event'),
+      ).resolves.toBeUndefined();
+    });
+
+    it('calls the remaining listeners', async () => {
+      await dispatchEvent(eventListeners, 'test-event');
+
+      expect(syncListener.callback).toHaveBeenCalled();
+      expect(asyncListener.callback).toHaveBeenCalled();
+    });
   });
 
   it('stops propagation', async () => {
