@@ -2,7 +2,7 @@ import { Database, Databases } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
 import { Tabs } from '@minddrop/feature-views';
 import { SidebarGroup } from '@minddrop/ui-components';
-import { Button, MenuItem } from '@minddrop/ui-primitives';
+import { MenuItem } from '@minddrop/ui-primitives';
 import {
   DatabaseViewName,
   OpenDatabaseViewEvent,
@@ -14,24 +14,15 @@ import { resolveDatabaseViewId } from '../utils';
 export const DatabasesSidebarMenu: React.FC = () => {
   const databases = Databases.useAll();
 
-  function handleAddDatabase(event: React.MouseEvent) {
-    event.stopPropagation();
+  function handleAddDatabase() {
     Events.dispatch(OpenNewDatabaseDialogEvent);
   }
 
   return (
     <SidebarGroup
       label="databases.labels.databases"
-      actions={
-        <Button
-          size="sm"
-          label="databases.actions.new"
-          variant="subtle"
-          color="primary"
-          startIcon="plus"
-          onClick={handleAddDatabase}
-        />
-      }
+      addLabel="databases.actions.new"
+      onAddClick={handleAddDatabase}
     >
       {databases.map((database) => (
         <DatabaseMenuItem key={database.id} database={database} />

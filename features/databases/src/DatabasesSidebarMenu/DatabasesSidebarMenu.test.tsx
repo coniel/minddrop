@@ -37,6 +37,6 @@ describe('<DatabasesSidebarMenu />', () => {
 
       render(<DatabasesSidebarMenu />);
 
-      userEvent.click(screen.getByText('databases.actions.new'));
+      userEvent.click(screen.getByLabelText('databases.actions.new'));
     }));
 });
