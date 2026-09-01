@@ -434,6 +434,21 @@ ignore-window keyed on "we wrote this path N ms ago" would silently
 swallow a genuine external change landing inside the window, which is
 both invisible and unreproducible.
 
+### A read after a queued write returns the write's contents
+
+`IoQueue.read` returns a path's pending write contents when one is
+queued for it, for read-after-write consistency. Reading a file to find
+out what it held _before_ a write therefore cannot be done once that
+write is queued, even though it has not reached the disk yet. The queue
+does not serialize a read behind a write of the same path, so there is
+no ordering to rely on beyond the caller's own.
+
+Anything wanting to announce a write to listeners that care what it
+replaced should therefore carry the previous contents in the
+announcement rather than leave listeners to read for them. The write
+path generally has them in hand already: `writeDatabaseEntry` reads the
+file to merge into it.
+
 ### The mock adapter's createDir ignores baseDir
 
 The test-utils mock file system adapter resolves `createDir` paths
@@ -444,6 +459,21 @@ at the root instead). Tests exercising baseDir-scoped writes must
 pre-seed the scoped directory (e.g. `app-data/stores`) in the mock
 file system, or exercise the dir-creation branch through a
 baseDir-less path.
+
+### The mock adapter's rename does not move a directory's file contents
+
+The mock keeps file contents in a path-keyed map beside the entry tree,
+and `rename` moves the entry for the renamed path only. Renaming a
+directory therefore moves its descendants in the tree while leaving
+their contents behind under the old paths, so reading one of those
+files afterwards returns an empty string rather than what was written
+to it (`readTextFile` falls back to `''` for a path with no recorded
+contents, since the entry does exist).
+
+Tests covering a directory move should assert on the resulting tree
+rather than on file contents. `renameDatabaseEntry` moves a directory
+whenever the database stores entries in per-entry subdirectories, so
+this is reachable from existing code.
 
 ## packages/sql
 
