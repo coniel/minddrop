@@ -37,7 +37,7 @@ export interface FileSystemAdapter {
    * @param dir - The directory for which to retrieve the path.
    * @returns The directory path.
    */
-  getBaseDirPath(dir: BaseDirectory): Promise<string>;
+  resolveBaseDirPath(dir: BaseDirectory): Promise<string>;
 
   /**
    * Converts a file path to a URL that can be loaded into the app webview

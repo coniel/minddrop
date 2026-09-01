@@ -5,5 +5,5 @@ import { BaseDirectory, Fs } from '@minddrop/file-system';
  * (e.g. `~/.config/MindDrop`).
  */
 export function resolveSqlConfigPath(): string {
-  return Fs.getBaseDirPath(BaseDirectory.AppConfig);
+  return Fs.resolveBaseDirPath(BaseDirectory.AppConfig);
 }

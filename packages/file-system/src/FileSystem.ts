@@ -50,7 +50,7 @@ export const Fs: Omit<FileSystem, 'openFilePicker'> &
   writeYamlFile,
   addFileExtension,
   hasPendingWrite,
-  getBaseDirPath: (baseDir) => BaseDirPaths[baseDir],
+  resolveBaseDirPath: (baseDir) => BaseDirPaths[baseDir],
   convertFileSrc: (...args) => FsAdapter.convertFileSrc(...args),
   isDirectory: (...args) => FsAdapter.isDirectory(...args),
   copyFile: (...args) => FsAdapter.copyFile(...args),
@@ -79,7 +79,7 @@ async function setBaseDirPaths(): Promise<void> {
     BaseDirectory.AppConfig,
     BaseDirectory.Documents,
   ].forEach(async (dir) => {
-    BaseDirPaths[dir] = await FsAdapter.getBaseDirPath(dir);
+    BaseDirPaths[dir] = await FsAdapter.resolveBaseDirPath(dir);
   });
 }
 

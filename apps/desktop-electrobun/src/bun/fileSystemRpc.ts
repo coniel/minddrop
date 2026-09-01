@@ -12,7 +12,7 @@ import { InvalidParameterError } from '@minddrop/utils';
  * @param dir - The base directory to resolve.
  * @returns The base directory's absolute path.
  */
-function getBaseDirPath(dir: BaseDirectory): string {
+function resolveBaseDirPath(dir: BaseDirectory): string {
   // Map each supported base directory to its absolute path
   switch (dir) {
     case BaseDirectory.AppData:
@@ -40,7 +40,7 @@ function resolvePath(filePath: string, baseDir?: BaseDirectory): string {
   }
 
   // Join the path onto the base directory's path
-  return path.join(getBaseDirPath(baseDir), filePath);
+  return path.join(resolveBaseDirPath(baseDir), filePath);
 }
 
 /**
@@ -151,7 +151,7 @@ export const fileSystemRpcHandlers = {
   }: {
     dir: BaseDirectory;
   }): Promise<string> => {
-    return getBaseDirPath(dir);
+    return resolveBaseDirPath(dir);
   },
 
   // Checks whether a path points to a directory

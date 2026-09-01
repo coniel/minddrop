@@ -8,7 +8,7 @@ import { WorkspacesConfigFileName } from '../constants';
  */
 export function resolveWorkspacesConfigFilePath(): string {
   return Fs.concatPath(
-    Fs.getBaseDirPath(BaseDirectory.AppConfig),
+    Fs.resolveBaseDirPath(BaseDirectory.AppConfig),
     WorkspacesConfigFileName,
   );
 }

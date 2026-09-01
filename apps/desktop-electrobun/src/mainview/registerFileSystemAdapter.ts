@@ -19,7 +19,7 @@ export function handleWatchEvent(event: {
 
 export const registerFileSystemAdapter = (rpc: WebviewRpcClient) =>
   register({
-    getBaseDirPath: (dir) => rpc.request.fsGetBaseDirPath({ dir }),
+    resolveBaseDirPath: (dir) => rpc.request.fsGetBaseDirPath({ dir }),
 
     convertFileSrc: (path) => path,
 

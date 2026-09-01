@@ -8,5 +8,5 @@ import { BaseDirectory, Fs } from '@minddrop/file-system';
  * @returns The path of the workspace's index file.
  */
 export function resolveIndexPath(workspaceId: string): string {
-  return `${Fs.getBaseDirPath(BaseDirectory.AppConfig)}/${workspaceId}/search-index.json`;
+  return `${Fs.resolveBaseDirPath(BaseDirectory.AppConfig)}/${workspaceId}/search-index.json`;
 }

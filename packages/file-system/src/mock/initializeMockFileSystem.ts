@@ -58,7 +58,7 @@ export function initializeMockFileSystem(
   let nextWatcherId = 0;
 
   const MockFs: FileSystemAdapter = {
-    getBaseDirPath: async (baseDir) => baseDir,
+    resolveBaseDirPath: async (baseDir) => baseDir,
     convertFileSrc: (path) => path,
     openFilePicker: async () => {
       return filePickerResult as any;

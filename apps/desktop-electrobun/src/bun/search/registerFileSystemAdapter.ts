@@ -12,7 +12,7 @@ const fs = fileSystemRpcHandlers;
  */
 export function registerBunFileSystemAdapter(): void {
   registerFileSystemAdapter({
-    getBaseDirPath: (dir) => fs.fsGetBaseDirPath({ dir }),
+    resolveBaseDirPath: (dir) => fs.fsGetBaseDirPath({ dir }),
     readTextFile: (path, options) =>
       fs.fsReadTextFile({ path, baseDir: options?.baseDir }),
     readTextFiles: async (paths, options) => {
