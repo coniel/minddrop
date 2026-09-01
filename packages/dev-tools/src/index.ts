@@ -6,6 +6,7 @@ export * from './constants';
 export * from './DevToolsEventsStore';
 export * from './DevToolsLogsStore';
 export * from './DevToolsPanelsStore';
+export * from './dispatchDynamicEvent';
 export * from './registerDevToolsPanel';
 export * from './startConsoleLogCapture';
 export * from './startEventCapture';

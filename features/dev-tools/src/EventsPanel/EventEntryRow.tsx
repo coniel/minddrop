@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { DevToolsEventEntry } from '@minddrop/dev-tools';
-import { formatLogArgument, isExpandableLogValue } from '@minddrop/dev-tools';
-import { Events } from '@minddrop/events';
+import {
+  dispatchDynamicEvent,
+  formatLogArgument,
+  isExpandableLogValue,
+} from '@minddrop/dev-tools';
 import { Icon, IconButton, Text } from '@minddrop/ui-primitives';
 import { JsonTree } from '../JsonTree';
 
@@ -42,7 +45,7 @@ export const EventEntryRow: React.FC<EventEntryRowProps> = ({
 
   const handleRedispatch = (event: React.MouseEvent) => {
     event.stopPropagation();
-    Events.dispatch(entry.name, entry.data);
+    dispatchDynamicEvent(entry.name, entry.data);
   };
 
   return (

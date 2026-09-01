@@ -1,6 +1,5 @@
 import React from 'react';
-import { parseEventData } from '@minddrop/dev-tools';
-import { Events } from '@minddrop/events';
+import { dispatchDynamicEvent, parseEventData } from '@minddrop/dev-tools';
 import { useTranslation } from '@minddrop/i18n';
 import { Group, IconButton, Text, TextInput } from '@minddrop/ui-primitives';
 import './DispatchEventForm.css';
@@ -55,7 +54,7 @@ export const DispatchEventForm: React.FC<DispatchEventFormProps> = ({
       return;
     }
 
-    Events.dispatch(name.trim(), parsed.data);
+    dispatchDynamicEvent(name.trim(), parsed.data);
   };
 
   // Enter dispatches from either field, as the form has no
