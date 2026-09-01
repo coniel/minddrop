@@ -50,12 +50,11 @@ export const TagsView: React.FC = () => {
       label: tag.name,
       contentIcon: tag.icon,
       menu: buildTagMenu(tag, groups, () => setRenamingTagId(tag.id)),
-      popovers: ({ anchorRef, holdAnchorVisible }) => (
+      popovers: ({ anchor }) => (
         <TagNamePopover
           open={renamingTagId === tag.id}
           onOpenChange={(open) => setRenamingTagId(open ? tag.id : null)}
-          anchor={anchorRef}
-          holdAnchor={holdAnchorVisible}
+          anchor={anchor}
           tag={tag}
         />
       ),
@@ -71,7 +70,7 @@ export const TagsView: React.FC = () => {
           onCreateTag: () => setCreatingTagGroupId(group.id),
           onRename: () => setRenamingGroupId(group.id),
         }),
-        popovers: ({ anchorRef }) => (
+        popovers: ({ anchor }) => (
           <>
             {/* Renames the group */}
             <TagGroupNamePopover
@@ -79,7 +78,7 @@ export const TagsView: React.FC = () => {
               onOpenChange={(open) =>
                 setRenamingGroupId(open ? group.id : null)
               }
-              anchor={anchorRef}
+              anchor={anchor}
               defaultName={group.name}
               onSubmit={(name) => renameGroup(group, name)}
             />
@@ -90,16 +89,16 @@ export const TagsView: React.FC = () => {
               onOpenChange={(open) =>
                 setCreatingTagGroupId(open ? group.id : null)
               }
-              anchor={anchorRef}
+              anchor={anchor}
               defaultGroup={group}
             />
           </>
         ),
-        addPopover: ({ anchorRef, open, onOpenChange }) => (
+        addPopover: ({ anchor, open, onOpenChange }) => (
           <NewTagPopover
             open={open}
             onOpenChange={onOpenChange}
-            anchor={anchorRef}
+            anchor={anchor}
             defaultGroup={group}
           />
         ),

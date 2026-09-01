@@ -36,12 +36,6 @@ export interface TagNamePopoverProps {
    * The tag being renamed.
    */
   tag: Tag;
-
-  /**
-   * Takes a hold keeping the anchor visible while the popover is
-   * open, returning a release function.
-   */
-  holdAnchor?: () => VoidFunction;
 }
 
 /**
@@ -55,7 +49,6 @@ export const TagNamePopover: React.FC<TagNamePopoverProps> = ({
   onOpenChange,
   anchor,
   tag,
-  holdAnchor,
 }) => {
   const cancelledRef = useRef(false);
   const [name, setName] = useState(tag.name);
@@ -69,13 +62,6 @@ export const TagNamePopover: React.FC<TagNamePopoverProps> = ({
       cancelledRef.current = false;
     }
   }, [open, tag.name]);
-
-  // Keep the anchor visible while open
-  useEffect(() => {
-    if (open) {
-      return holdAnchor?.();
-    }
-  }, [open, holdAnchor]);
 
   // Persist the picked icon
   function handleSelectIcon(icon: string) {
