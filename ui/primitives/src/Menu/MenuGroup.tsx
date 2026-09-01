@@ -33,27 +33,35 @@ export interface MenuGroupProps extends React.HTMLProps<HTMLDivElement> {
   showLabelActionsOnHover?: boolean;
 }
 
-export const MenuGroup: React.FC<MenuGroupProps> = ({
-  actions,
-  children,
-  className,
-  marginTop,
-  padded,
-  showActionsOnHover,
-  showLabelActionsOnHover,
-  ...other
-}) => (
-  <div
-    className={propsToClass('menu-group', {
+export const MenuGroup = React.forwardRef<HTMLDivElement, MenuGroupProps>(
+  (
+    {
+      actions,
+      children,
+      className,
       marginTop,
       padded,
       showActionsOnHover,
       showLabelActionsOnHover,
-      className,
-    })}
-    {...other}
-  >
-    {children}
-    {actions && <div className="menu-group-actions">{actions}</div>}
-  </div>
+      ...other
+    },
+    ref,
+  ) => (
+    <div
+      ref={ref}
+      className={propsToClass('menu-group', {
+        marginTop,
+        padded,
+        showActionsOnHover,
+        showLabelActionsOnHover,
+        className,
+      })}
+      {...other}
+    >
+      {children}
+      {actions && <div className="menu-group-actions">{actions}</div>}
+    </div>
+  ),
 );
+
+MenuGroup.displayName = 'MenuGroup';

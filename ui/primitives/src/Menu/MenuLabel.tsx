@@ -40,6 +40,13 @@ export interface MenuLabelProps extends React.HTMLProps<HTMLDivElement> {
    * @default false
    */
   actionsAlwaysVisible?: boolean;
+
+  /*
+   * Highlights the label with its actions shown, marking it as the
+   * target of an open menu or popover.
+   * @default false
+   */
+  active?: boolean;
 }
 
 export const MenuLabel = forwardRef<HTMLDivElement, MenuLabelProps>(
@@ -47,6 +54,7 @@ export const MenuLabel = forwardRef<HTMLDivElement, MenuLabelProps>(
     {
       actions,
       actionsAlwaysVisible,
+      active,
       button,
       children,
       className,
@@ -80,6 +88,7 @@ export const MenuLabel = forwardRef<HTMLDivElement, MenuLabelProps>(
         ref={ref}
         className={propsToClass('menu-label', {
           actionsAlwaysVisible,
+          active,
           className,
         })}
         role={button ? 'button' : undefined}

@@ -1,17 +1,17 @@
 import { Menu } from '@base-ui/react/menu';
 import React from 'react';
 import { DropdownMenuRoot, DropdownMenuRootProps } from '../DropdownMenu';
-import { useMenuItemContext } from './MenuItem';
+import { useMenuTargetContext } from '../MenuTargetContext';
 
 /**
  * DropdownMenu root for use inside a MenuItem. Keeps the parent
- * item's action buttons visible while the dropdown is open so
- * the menu doesn't lose its anchor point.
+ * item highlighted with its action buttons visible while the
+ * dropdown is open, so the menu doesn't lose its anchor point.
  */
 export const MenuItemDropdownMenu: React.FC<DropdownMenuRootProps> = (
   props,
 ) => {
-  const { holdActionsVisible } = useMenuItemContext();
+  const menuTarget = useMenuTargetContext();
   const releaseHoldRef = React.useRef<VoidFunction | null>(null);
 
   function handleOpenChange(
@@ -25,7 +25,7 @@ export const MenuItemDropdownMenu: React.FC<DropdownMenuRootProps> = (
     // Hold the menu item actions visible while the dropdown is
     // open so it doesn't lose its anchor point
     if (open) {
-      releaseHoldRef.current = holdActionsVisible();
+      releaseHoldRef.current = menuTarget?.holdActionsVisible() ?? null;
     } else {
       releaseHoldRef.current?.();
       releaseHoldRef.current = null;

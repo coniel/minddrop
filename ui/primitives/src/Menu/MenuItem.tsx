@@ -1,26 +1,46 @@
-import React, { useMemo, useState } from 'react';
-import { i18n } from '@minddrop/i18n';
-import { createContext } from '@minddrop/utils';
+import React, { useMemo, useRef, useState } from 'react';
+import { TranslationKey, i18n } from '@minddrop/i18n';
 import { ContentIcon } from '../ContentIcon';
+import {
+  ContextMenuContent,
+  ContextMenuPortal,
+  ContextMenuPositioner,
+  ContextMenuRoot,
+  ContextMenuTrigger,
+} from '../ContextMenu';
+import {
+  DropdownMenuContent,
+  DropdownMenuPortal,
+  DropdownMenuPositioner,
+  DropdownMenuTrigger,
+} from '../DropdownMenu';
 import { Icon } from '../Icon';
+import { IconButton } from '../IconButton';
 import { IconProp, IconRenderer } from '../IconRenderer';
 import { KeyboardShortcut } from '../KeyboardShortcut';
-import { TranslatableNode } from '../types';
-import { propsToClass } from '../utils';
+import { MenuTargetContext, useActionsVisibleHold } from '../MenuTargetContext';
+import {
+  Anchor,
+  MenuContents,
+  MenuOpenChangeDetails,
+  TranslatableNode,
+} from '../types';
+import {
+  propsToClass,
+  resolveElementAnchor,
+  resolveEventAnchor,
+} from '../utils';
+import { MenuItemDropdownMenu } from './MenuItemDropdownMenu';
 
-export interface MenuItemContext {
+export interface MenuItemPopoverContext {
   /*
-   * Takes a hold keeping the item's actions visible, returning a
-   * release function. The actions stay visible while any hold is
-   * active, so overlapping popups (e.g. a dropdown handing over
-   * to a popover) do not hide their anchor.
+   * The anchor the item's follow-up popovers position themselves
+   * against, matching the menu which opened them: the right click
+   * position for the context menu, the options button for the
+   * dropdown.
    */
-  holdActionsVisible: () => VoidFunction;
+  anchor: Anchor;
 }
-
-const [hook, Provider] = createContext<MenuItemContext>();
-
-export const useMenuItemContext = hook;
 
 export interface MenuItemProps {
   /*
@@ -115,6 +135,24 @@ export interface MenuItemProps {
   danger?: boolean;
 
   /*
+   * The item's menu, opened both from a hover-revealed options
+   * button and as the item's context menu.
+   */
+  menu?: MenuContents;
+
+  /*
+   * Accessible label of the options button opening `menu`.
+   * @default 'actions.options'
+   */
+  menuLabel?: TranslationKey;
+
+  /*
+   * Popovers opened by the item's menu actions, anchored via the
+   * given context.
+   */
+  popovers?: (context: MenuItemPopoverContext) => React.ReactNode;
+
+  /*
    * Additional actions revealed on hover, anchored to the right.
    */
   actions?: React.ReactNode;
@@ -173,7 +211,10 @@ export const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(
       icon,
       keyboardShortcut,
       label,
+      menu,
+      menuLabel = 'actions.options',
       muted,
+      popovers,
       role = 'menuitem',
       size,
       stringDescription,
@@ -183,34 +224,19 @@ export const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(
     },
     ref,
   ) => {
-    const [actionsVisibleHolds, setActionsVisibleHolds] = useState(0);
+    const optionsButtonRef = useRef<HTMLButtonElement>(null);
+    const contextMenuHoldRef = useRef<VoidFunction | null>(null);
+    const [menuAnchor, setMenuAnchor] = useState<Anchor | null>(null);
+    const { actionsVisible, menuTarget } = useActionsVisibleHold();
 
-    // The actions are visible while any hold is active
-    const forceActionsVisible =
-      forceActionsVisibleProp || actionsVisibleHolds > 0;
+    // The item is highlighted with its actions shown while any
+    // hold is active
+    const forceActionsVisible = forceActionsVisibleProp || actionsVisible;
 
-    // Takes a hold on the actions' visibility. Releasing is
-    // delayed so closing popups anchored to the actions do not
-    // reposition, and a hold taken in the meantime keeps them
-    // visible throughout
-    const holdActionsVisible = React.useCallback(() => {
-      setActionsVisibleHolds((holds) => holds + 1);
-
-      let released = false;
-
-      return () => {
-        // Releases only count down once
-        if (released) {
-          return;
-        }
-
-        released = true;
-
-        window.setTimeout(() => {
-          setActionsVisibleHolds((holds) => holds - 1);
-        }, 100);
-      };
-    }, []);
+    // Popovers open where the menu that led to them did: at the
+    // right click position for the context menu, at the options
+    // button for the dropdown
+    const popoverAnchor = menuAnchor ?? optionsButtonRef;
 
     // Resolve the display label from the available label sources
     const resolvedLabel = useMemo(() => {
@@ -242,62 +268,126 @@ export const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(
       return description;
     }, [stringDescription, description]);
 
-    return (
-      <Provider value={{ holdActionsVisible }}>
-        <div
-          ref={ref}
-          role={role}
-          className={propsToClass('menu-item', {
-            size,
-            active,
-            muted,
-            danger,
-            disabled,
-            forceActionsVisible,
-            className,
-          })}
-          aria-disabled={disabled}
-          {...other}
-        >
-          {icon && <IconRenderer className="menu-item-icon" icon={icon} />}
-          {contentIcon && (
-            <ContentIcon className="menu-item-icon" icon={contentIcon} />
-          )}
-          {resolvedDescription ? (
-            <span className="menu-item-text">
-              <span className="menu-item-label">{resolvedLabel}</span>
-              <span className="menu-item-description">
-                {resolvedDescription}
-              </span>
-            </span>
-          ) : (
+    // Record where the context menu was opened, so the popovers it
+    // leads to open at the same point
+    function handleContextMenuOpenChange(
+      open: boolean,
+      eventDetails: MenuOpenChangeDetails,
+    ) {
+      if (open) {
+        setMenuAnchor(resolveEventAnchor(eventDetails.event));
+
+        // Highlight the item the menu belongs to while it is open
+        contextMenuHoldRef.current = menuTarget.holdActionsVisible();
+
+        return;
+      }
+
+      contextMenuHoldRef.current?.();
+      contextMenuHoldRef.current = null;
+    }
+
+    // Anchor the dropdown's popovers at the options button it was
+    // opened from, frozen in place because the button hides again
+    // as soon as the item loses hover
+    function handleDropdownOpenChange(open: boolean) {
+      if (open) {
+        setMenuAnchor(resolveElementAnchor(optionsButtonRef.current));
+      }
+    }
+
+    const item = (
+      <div
+        ref={ref}
+        role={role}
+        className={propsToClass('menu-item', {
+          size,
+          active,
+          muted,
+          danger,
+          disabled,
+          forceActionsVisible,
+          className,
+        })}
+        aria-disabled={disabled}
+        {...other}
+      >
+        {icon && <IconRenderer className="menu-item-icon" icon={icon} />}
+        {contentIcon && (
+          <ContentIcon className="menu-item-icon" icon={contentIcon} />
+        )}
+        {resolvedDescription ? (
+          <span className="menu-item-text">
             <span className="menu-item-label">{resolvedLabel}</span>
-          )}
-          {trailingIcon}
-          {keyboardShortcut && (
-            <KeyboardShortcut
-              color="muted"
-              size="xs"
-              weight="medium"
-              keys={keyboardShortcut}
-            />
-          )}
-          {hasSubmenu && (
-            <Icon
-              name="chevron-right"
-              className="menu-item-submenu-indicator"
-            />
-          )}
-          {actions && (
-            <div
-              className="menu-item-actions"
-              onClick={(event) => event.stopPropagation()}
-            >
-              {actions}
-            </div>
-          )}
-        </div>
-      </Provider>
+            <span className="menu-item-description">{resolvedDescription}</span>
+          </span>
+        ) : (
+          <span className="menu-item-label">{resolvedLabel}</span>
+        )}
+        {trailingIcon}
+        {keyboardShortcut && (
+          <KeyboardShortcut
+            color="muted"
+            size="xs"
+            weight="medium"
+            keys={keyboardShortcut}
+          />
+        )}
+        {hasSubmenu && (
+          <Icon name="chevron-right" className="menu-item-submenu-indicator" />
+        )}
+        {(actions || menu) && (
+          <div
+            className="menu-item-actions"
+            onClick={(event) => event.stopPropagation()}
+          >
+            {actions}
+
+            {/* Opens the item's menu */}
+            {menu && (
+              <MenuItemDropdownMenu onOpenChange={handleDropdownOpenChange}>
+                <DropdownMenuTrigger>
+                  <IconButton
+                    ref={optionsButtonRef}
+                    icon="ellipsis"
+                    size="sm"
+                    variant="ghost"
+                    color="neutral"
+                    label={menuLabel}
+                  />
+                </DropdownMenuTrigger>
+                <DropdownMenuPortal>
+                  <DropdownMenuPositioner side="bottom" align="start">
+                    <DropdownMenuContent content={menu} />
+                  </DropdownMenuPositioner>
+                </DropdownMenuPortal>
+              </MenuItemDropdownMenu>
+            )}
+          </div>
+        )}
+      </div>
+    );
+
+    return (
+      <MenuTargetContext.Provider value={menuTarget}>
+        {menu ? (
+          /* The menu doubles as the item's context menu, merged
+             onto the item itself rather than wrapping it */
+          <ContextMenuRoot onOpenChange={handleContextMenuOpenChange}>
+            <ContextMenuTrigger render={item} />
+            <ContextMenuPortal>
+              <ContextMenuPositioner>
+                <ContextMenuContent content={menu} />
+              </ContextMenuPositioner>
+            </ContextMenuPortal>
+          </ContextMenuRoot>
+        ) : (
+          item
+        )}
+
+        {/* Popovers opened by the menu's actions */}
+        {popovers?.({ anchor: popoverAnchor })}
+      </MenuTargetContext.Provider>
     );
   },
 );

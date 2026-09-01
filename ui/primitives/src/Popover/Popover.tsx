@@ -1,5 +1,6 @@
 import { Popover as PopoverPrimitive } from '@base-ui/react/popover';
 import React from 'react';
+import { useMenuTargetContext } from '../MenuTargetContext';
 import { propsToClass } from '../utils';
 import './Popover.css';
 
@@ -23,8 +24,54 @@ export interface PopoverContentProps extends PopoverPrimitive.Popup.Props {
 
 /*
  * Root - manages open/close state.
+ *
+ * Opened from a menu item or group label's menu, it keeps that
+ * target highlighted for as long as it is open, so the popover
+ * reads as belonging to the item it was opened from.
  */
-export const Popover = PopoverPrimitive.Root;
+export const Popover: React.FC<PopoverProps> = ({
+  defaultOpen,
+  onOpenChange,
+  open,
+  ...other
+}) => {
+  const menuTarget = useMenuTargetContext();
+  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(
+    Boolean(defaultOpen),
+  );
+
+  // Controlled popovers are opened by their consumer rather than
+  // by an interaction, so the open state is tracked rather than
+  // read from the change handler
+  const isOpen = open ?? uncontrolledOpen;
+
+  // Hold the target the popover was opened from highlighted while
+  // it is open
+  React.useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
+    return menuTarget?.holdActionsVisible();
+  }, [isOpen, menuTarget]);
+
+  function handleOpenChange(
+    nextOpen: boolean,
+    eventDetails: PopoverPrimitive.Root.ChangeEventDetails,
+  ) {
+    setUncontrolledOpen(nextOpen);
+    onOpenChange?.(nextOpen, eventDetails);
+  }
+
+  return (
+    <PopoverPrimitive.Root
+      defaultOpen={defaultOpen}
+      open={open}
+      onOpenChange={handleOpenChange}
+      {...other}
+    />
+  );
+};
 
 /*
  * Trigger - the element that opens the popover.

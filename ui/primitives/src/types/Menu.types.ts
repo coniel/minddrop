@@ -23,6 +23,13 @@ export interface MenuLabelConfig {
   stringLabel?: string;
 }
 
+export interface MenuOpenChangeDetails {
+  /**
+   * The event which opened or closed the menu.
+   */
+  event: Event;
+}
+
 export interface MenuSeparatorConfig {
   type: 'menu-separator';
 }

@@ -98,7 +98,8 @@
   /* Button variant, interactive label */
 
   &[role='button'] {
-    &:hover {
+    &:hover,
+    &.menu-label-active {
       background-color: var(--surface-accent);
       transition: none;
     }
@@ -112,9 +113,10 @@
     flex: 1;
   }
 
-  /* Tighten right padding when actions are present */
+  /* Inset the actions by the label's vertical padding, so the
+     buttons sit equally spaced from its edges */
   &:has(.menu-label-actions) {
-    padding-right: 0.125rem;
+    padding-right: var(--space-0-5);
   }
 
   .menu-label-actions {
@@ -130,6 +132,7 @@
   }
 
   &.menu-label-actions-always-visible .menu-label-actions,
+  &.menu-label-active .menu-label-actions,
   &:hover .menu-label-actions {
     opacity: 1;
   }
@@ -212,7 +215,8 @@
     font-weight: var(--font-weight-medium);
 
     &.menu-item-active,
-    &[data-highlighted] {
+    &[data-highlighted],
+    &.menu-item-force-actions-visible {
       color: var(--text-regular);
     }
   }
@@ -338,6 +342,16 @@
     opacity: 1;
     width: auto;
     position: relative;
+  }
+
+  /* Inset the actions by the item's vertical padding, so the
+     buttons sit equally spaced from its edges */
+  &:has(.menu-item-actions) {
+    padding-right: var(--space-1);
+  }
+
+  &.menu-item-size-compact:has(.menu-item-actions) {
+    padding-right: var(--space-0-5);
   }
 }
 
