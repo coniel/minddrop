@@ -301,3 +301,22 @@ Fix direction: give the store an error field the studio can subscribe to
 and surface a toast on write failure, then remove this entry. Note that
 the legacy studio had the same floating-promise behaviour, so this is a
 carried-over gap rather than a regression.
+
+## apps/desktop-electrobun
+
+### The app tsconfig typecheck fails with 18 pre-existing errors
+
+`npx tsc --noEmit -p apps/desktop-electrobun/tsconfig.json` reports 18
+errors unrelated to any recent change (verified identical on a clean
+tree). Two kinds:
+
+- `src/bun/bun-rpc.ts` handler typing: a handler returning
+  `number | undefined` does not satisfy the RPC schema's
+  `number | Promise<number>` return type.
+- Missing lib target: `String.replaceAll` and similar require the
+  `es2021` lib, which the config the bun files check under does not
+  include (e.g. `packages/ast/.../stringifyTableElementToMarkdown.ts`
+  errors only under this tsconfig, not under its own package's).
+
+The app builds and runs regardless; the typecheck is just not clean, so
+regressions in the app tsconfig go unnoticed.
