@@ -19,18 +19,22 @@ export type OpenView = <TEvent extends ViewOpenEventName>(
 export function useOpenView(): OpenView {
   const pane = useViewPane();
 
-  // The callback is typed loosely because the merged data cannot be
-  // related back to the generic event's data; the OpenView return
-  // type restores the typed signature
+  // The callback takes the base data rather than the event's own,
+  // as the merged data cannot be related back to the generic
+  // event's data; the OpenView return type restores the typed
+  // signature
   return useCallback(
-    (event: string, data: BaseOpenViewEventData) => {
-      // Dispatch the event, merging the pane under any values the
-      // caller set
-      Events.dispatch(event, {
+    (event: ViewOpenEventName, data: BaseOpenViewEventData) => {
+      // Merge the pane under any values the caller set
+      const eventData = {
         ...data,
         viewAreaId: data.viewAreaId ?? pane?.viewAreaId,
         sourcePane: data.sourcePane ?? pane?.pane,
-      });
+      };
+
+      // Dispatch the event, casting the merged data back to the
+      // event's own
+      Events.dispatch(event, eventData as EventDataMap[ViewOpenEventName]);
     },
     [pane],
   );
