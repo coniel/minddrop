@@ -1,4 +1,4 @@
-import { uuid } from '@minddrop/utils';
+import { entityId } from '@minddrop/utils';
 
 /**
  * Generates a block ID.
@@ -6,5 +6,5 @@ import { uuid } from '@minddrop/utils';
  * @returns A block ID.
  */
 export function generateBlockId(): string {
-  return uuid();
+  return entityId('block');
 }
