@@ -1,11 +1,13 @@
 import { DatabaseEntryRenamedEventData, Databases } from '@minddrop/databases';
 import { isUntitledTitle } from '@minddrop/utils';
 import { isRenameChainEnd } from '../../isRenameChainEnd';
+import { moveSnapshotHistory } from '../../moveSnapshotHistory';
 import { recordRename } from '../../recordRename';
 
 /**
  * Called when a database entry is renamed. Records the rename in
- * the rename ledger under the entry's layout-independent address.
+ * the rename ledger under the entry's layout-independent address,
+ * and moves the entry's history to its new title.
  */
 export async function onDatabaseEntryRenamed(
   data: DatabaseEntryRenamedEventData,
@@ -34,4 +36,12 @@ export async function onDatabaseEntryRenamed(
       kind: 'entry',
     });
   }
+
+  // Entry history is keyed by title, so it follows the entry to its
+  // new one whether or not the rename was recorded
+  await moveSnapshotHistory({
+    ownerPath: database.path,
+    fromKey: original.title,
+    toKey: updated.title,
+  });
 }

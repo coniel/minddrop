@@ -1,6 +1,7 @@
 import { vi } from 'vitest';
 import { Events } from '@minddrop/events';
 import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
+import { clearCaptureRegistry } from '../captureRegistry';
 
 export const MockFs = initializeMockFileSystem();
 export const mockDate = new Date('2026-06-01T00:00:00.000Z');
@@ -14,5 +15,6 @@ export function cleanup() {
   vi.clearAllMocks();
   MockFs.reset();
   Events._clearAll();
+  clearCaptureRegistry();
   vi.useRealTimers();
 }

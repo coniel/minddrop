@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Databases } from '@minddrop/databases';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { recordRename } from '../../recordRename';
-import { cleanup, setup } from '../../test-utils';
+import { MockFs, cleanup, setup } from '../../test-utils';
 import { readRenameEvents } from '../../utils';
 import { onDatabaseEntryRenamed } from './database-entry-renamed';
 
@@ -71,5 +71,41 @@ describe('onDatabaseEntryRenamed', () => {
         kind: 'entry',
       }),
     ]);
+  });
+
+  it("moves the entry's history to its new title", async () => {
+    const historyDirPath = `${objectDatabase.path}/.minddrop/history`;
+
+    MockFs.addFiles([
+      `${historyDirPath}/Test Entry/2026-05-01T000000Z/Test Entry.md`,
+    ]);
+
+    await onDatabaseEntryRenamed({
+      original: objectEntry1,
+      updated: { ...objectEntry1, title: 'Renamed' },
+    });
+
+    expect(MockFs.exists(`${historyDirPath}/Renamed/2026-05-01T000000Z`)).toBe(
+      true,
+    );
+    expect(MockFs.exists(`${historyDirPath}/Test Entry`)).toBe(false);
+  });
+
+  it('moves the history of an unrecorded rename', async () => {
+    const historyDirPath = `${objectDatabase.path}/.minddrop/history`;
+
+    MockFs.addFiles([
+      `${historyDirPath}/Untitled/2026-05-01T000000Z/Untitled.md`,
+    ]);
+
+    // A first naming, which the ledger deliberately does not record
+    await onDatabaseEntryRenamed({
+      original: { ...objectEntry1, title: 'Untitled' },
+      updated: { ...objectEntry1, title: 'Renamed' },
+    });
+
+    expect(MockFs.exists(`${historyDirPath}/Renamed/2026-05-01T000000Z`)).toBe(
+      true,
+    );
   });
 });

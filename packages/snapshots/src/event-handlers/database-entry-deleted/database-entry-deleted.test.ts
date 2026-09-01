@@ -2,11 +2,13 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Databases } from '@minddrop/databases';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { recordRename } from '../../recordRename';
-import { cleanup, setup } from '../../test-utils';
+import { MockFs, cleanup, setup } from '../../test-utils';
 import { readRenameEvents } from '../../utils';
 import { onDatabaseEntryDeleted } from './database-entry-deleted';
 
 const { objectDatabase, objectEntry1 } = DatabaseFixtures;
+
+const historyDirPath = `${objectDatabase.path}/.minddrop/history`;
 
 describe('onDatabaseEntryDeleted', () => {
   beforeEach(() => {
@@ -52,5 +54,27 @@ describe('onDatabaseEntryDeleted', () => {
     expect(await readRenameEvents()).toEqual([
       expect.objectContaining({ to: 'Objects/Test Entry' }),
     ]);
+  });
+
+  it('deletes the history of a deleted untitled entry', async () => {
+    MockFs.addFiles([
+      `${historyDirPath}/Untitled/2026-05-01T000000Z/Untitled.md`,
+    ]);
+
+    await onDatabaseEntryDeleted({ ...objectEntry1, title: 'Untitled' });
+
+    // The next untitled entry takes the freed title, so it must not
+    // find this entry's history under it
+    expect(MockFs.exists(`${historyDirPath}/Untitled`)).toBe(false);
+  });
+
+  it('keeps the history of a deleted titled entry', async () => {
+    MockFs.addFiles([
+      `${historyDirPath}/Test Entry/2026-05-01T000000Z/Test Entry.md`,
+    ]);
+
+    await onDatabaseEntryDeleted(objectEntry1);
+
+    expect(MockFs.exists(`${historyDirPath}/Test Entry`)).toBe(true);
   });
 });

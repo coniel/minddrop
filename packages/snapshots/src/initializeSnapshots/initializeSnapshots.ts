@@ -1,6 +1,7 @@
 import {
   DatabaseEntryDeletedEvent,
   DatabaseEntryRenamedEvent,
+  DatabaseEntryWrittenEvent,
   DatabasePropertyRenamedEvent,
   DatabaseRenamedEvent,
 } from '@minddrop/databases';
@@ -9,6 +10,7 @@ import { TagRenamedEvent } from '@minddrop/tags';
 import {
   onDatabaseEntryDeleted,
   onDatabaseEntryRenamed,
+  onDatabaseEntryWritten,
   onDatabasePropertyRenamed,
   onDatabaseRenamed,
   onTagRenamed,
@@ -16,11 +18,16 @@ import {
 
 /**
  * Initializes snapshots by subscribing to the content packages'
- * domain events, recording renames in the rename ledger as a side
- * effect. The content packages themselves know nothing about the
- * ledger.
+ * domain events, capturing snapshots and recording renames in the
+ * rename ledger as a side effect. The content packages themselves
+ * know nothing about snapshots.
  */
 export function initializeSnapshots(): void {
+  // Capture the contents an entry write replaced
+  Events.on(DatabaseEntryWrittenEvent, 'snapshots', ({ data }) =>
+    onDatabaseEntryWritten(data),
+  );
+
   // Record entry renames in the rename ledger
   Events.on(DatabaseEntryRenamedEvent, 'snapshots', ({ data }) =>
     onDatabaseEntryRenamed(data),

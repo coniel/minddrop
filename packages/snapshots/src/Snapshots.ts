@@ -1,4 +1,9 @@
 export { initializeSnapshots as initialize } from './initializeSnapshots';
+export { captureSnapshot as capture } from './captureSnapshot';
+export { listSnapshots as list } from './listSnapshots';
+export { readSnapshot as read } from './readSnapshot';
+export { moveSnapshotHistory as moveHistory } from './moveSnapshotHistory';
+export { deleteSnapshotHistory as deleteHistory } from './deleteSnapshotHistory';
 export { recordRename } from './recordRename';
 export { replayRenames } from './replayRenames';
 export { isRenameChainEnd } from './isRenameChainEnd';
