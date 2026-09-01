@@ -5,7 +5,8 @@ import {
 import { withHistory } from 'slate-history';
 import { withReact } from 'slate-react';
 import { Editor } from '../../types';
-import { isInlineElement, isVoidElement } from '../element-level';
+import { isInlineElement } from '../isInlineElement';
+import { isVoidElement } from '../isVoidElement';
 
 /**
  * Creates a new editor configured with the React and History

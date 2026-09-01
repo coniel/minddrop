@@ -1,5 +1,5 @@
 import { Element, Frame, resolveListItemNumbers } from '@minddrop/ast';
-import { hasBlockId } from '../block-id';
+import { hasBlockId } from '../hasBlockId';
 
 export interface RenderedFrame {
   /**

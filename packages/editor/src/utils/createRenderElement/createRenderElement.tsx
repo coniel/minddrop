@@ -3,8 +3,8 @@ import { RenderElementProps } from 'slate-react';
 import { BlockFrames } from '../../BlockFrames';
 import { BlockSelectionContext } from '../../BlockSelectionContext';
 import { BlockElementProps, EditorBlockElementConfig } from '../../types';
-import { hasBlockId } from '../block-id';
-import { isInlineElement } from '../element-level';
+import { hasBlockId } from '../hasBlockId';
+import { isInlineElement } from '../isInlineElement';
 
 /**
  * Creates a `renderElement` function used by Slate's `Editable` component

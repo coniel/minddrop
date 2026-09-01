@@ -1,5 +1,5 @@
 import { Element, ListItemFrame } from '../../types';
-import { isSameList } from '../frames';
+import { isSameList } from '../isSameList';
 
 interface OrderedRun {
   /**

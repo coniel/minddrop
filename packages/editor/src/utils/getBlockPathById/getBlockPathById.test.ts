@@ -5,7 +5,7 @@ import {
   paragraphElement2,
 } from '../../test-utils';
 import { assignBlockIds } from '../../withBlockIds';
-import { hasBlockId } from '../block-id';
+import { hasBlockId } from '../hasBlockId';
 import { getBlockPathById } from './getBlockPathById';
 
 describe('getBlockPathById', () => {

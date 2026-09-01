@@ -1,4 +1,5 @@
-export * from './block-id';
+export * from './generateBlockId';
+export * from './hasBlockId';
 export * from './createEditor';
 export * from './createRenderElement';
 export * from './filterBlockMenuItems';
@@ -15,7 +16,9 @@ export * from './getIndentTargetPaths';
 export * from './getRangeAnchor';
 export * from './getSelectedBlocks';
 export * from './isBlockSelectionItem';
-export * from './element-level';
+export * from './isBlockElement';
+export * from './isInlineElement';
+export * from './isVoidElement';
 export * from './normalizePlainTextContent';
 export * from './opensInnermostFrame';
 export * from './resolveLinkAtCursor';

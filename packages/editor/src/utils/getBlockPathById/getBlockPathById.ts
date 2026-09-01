@@ -1,6 +1,6 @@
 import { Path, Element as SlateElement } from 'slate';
 import { Editor } from '../../types';
-import { hasBlockId } from '../block-id';
+import { hasBlockId } from '../hasBlockId';
 
 /**
  * Gets the path of the top level block carrying the given block ID.

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { Element, Frame, ListItemFrame } from '../../types';
-import { generateElement } from '../generate-element';
+import { generateElement } from '../generateElement';
 import { resolveListItemNumbers } from './resolveListItemNumbers';
 
 function generateListItemFrame(
