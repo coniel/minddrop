@@ -24,7 +24,7 @@ export interface RegisterStoreListenersConfig {
    * Called on every event so the path tracks runtime changes,
    * such as the active workspace.
    */
-  getStoresDir: () => string;
+  resolveStoresDir: () => string;
 
   /**
    * The base directory against which the stores directory
@@ -73,7 +73,7 @@ async function handlePersist(
   }
 
   // Resolve the stores directory
-  const storesDir = config.getStoresDir();
+  const storesDir = config.resolveStoresDir();
 
   // File system options targeting the configured base directory
   const fsOptions = { baseDir: config.baseDir };
@@ -107,7 +107,7 @@ async function handleHydrateRequest(
 
   // Resolve the store file path
   const filePath = Fs.concatPath(
-    config.getStoresDir(),
+    config.resolveStoresDir(),
     `${data.namespace}.json`,
   );
 

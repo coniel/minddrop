@@ -16,7 +16,7 @@ export function registerAppDataStoreListeners(): VoidFunction {
   return registerStoreListeners({
     listenerId: LISTENER_ID,
     persistTo: 'app-config',
-    getStoresDir: () => STORES_DIR,
+    resolveStoresDir: () => STORES_DIR,
     baseDir: BaseDirectory.AppData,
   });
 }

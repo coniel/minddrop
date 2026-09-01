@@ -24,7 +24,7 @@ const workspaceLevelStore = createKeyValueStore<{ value: string }>(
 const config = {
   listenerId: 'test:store-listeners',
   persistTo: 'app-config' as const,
-  getStoresDir: () => 'stores',
+  resolveStoresDir: () => 'stores',
 };
 
 // Events.dispatch awaits each listener, so listeners run on the

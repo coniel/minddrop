@@ -18,6 +18,6 @@ export function registerWorkspaceStoreListeners(): VoidFunction {
   return registerStoreListeners({
     listenerId: LISTENER_ID,
     persistTo: 'workspace-config',
-    getStoresDir: () => Fs.concatPath(Paths.workspaceConfigs, STORES_DIR),
+    resolveStoresDir: () => Fs.concatPath(Paths.workspaceConfigs, STORES_DIR),
   });
 }
