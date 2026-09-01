@@ -7,9 +7,9 @@ import {
   selectionItem_B_1,
   setup,
 } from '../test-utils';
-import { getSelectionIds } from './getSelectionPaths';
+import { getSelectionIds } from './getSelectionIds';
 
-describe('getSelectionPaths', () => {
+describe('getSelectionIds', () => {
   beforeEach(() => {
     setup();
 

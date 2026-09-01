@@ -1,6 +1,6 @@
 export { deleteSelection as delete } from './deleteSelection';
 export { getSelection as get } from './getSelection';
-export { getSelectionIds as getIds } from './getSelectionPaths';
+export { getSelectionIds as getIds } from './getSelectionIds';
 export { isSelected } from './isSelected';
 export { selectionIsEmpty as isEmpty } from './selectionIsEmpty';
 export { addToSelection as add } from './addToSelection';
