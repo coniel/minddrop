@@ -1,6 +1,7 @@
 import { Combobox as ComboboxPrimitive } from '@base-ui/react/combobox';
 import React, { useCallback, useRef, useState } from 'react';
 import { TranslationKey } from '@minddrop/i18n';
+import { ContentColor } from '@minddrop/ui-theme';
 import { ContentIcon } from '../ContentIcon';
 import { IconProp, IconRenderer } from '../IconRenderer';
 import { VirtualizerInstance } from '../VirtualizedList';
@@ -64,6 +65,11 @@ export interface ComboboxOption {
    * Supports emoji, asset, and other content icon formats.
    */
   contentIcon?: string;
+
+  /**
+   * Content color applied to the item's chip when selected.
+   */
+  color?: ContentColor;
 }
 
 export interface ComboboxOptionGroup {
@@ -276,7 +282,10 @@ export const Combobox: React.FC<ComboboxProps> = ({
   const renderMultipleValue = (selectedValues: ComboboxOption[]) => (
     <ComboboxChips>
       {selectedValues.map((item) => (
-        <ComboboxPrimitive.Chip key={item.value} render={<ComboboxChip />}>
+        <ComboboxPrimitive.Chip
+          key={item.value}
+          render={<ComboboxChip color={item.color} />}
+        >
           {renderChipContent(item)}
           <ComboboxPrimitive.ChipRemove render={<ComboboxChipRemove />} />
         </ComboboxPrimitive.Chip>
@@ -374,7 +383,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
     }
 
     return (
-      <ComboboxChip>
+      <ComboboxChip color={selectedValue.color}>
         {renderChipContent(selectedValue)}
         <ComboboxChipRemove onClick={clearSingleValue} />
       </ComboboxChip>

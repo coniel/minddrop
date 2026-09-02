@@ -55,6 +55,8 @@
 
 .combobox-trigger-icon {
   flex-shrink: 0;
+  width: 1em;
+  height: 1em;
   color: var(--text-subtle);
 }
 
@@ -186,8 +188,21 @@
 
 .combobox-chip-icon {
   flex-shrink: 0;
-  margin-right: var(--space-0-5);
   color: var(--text-subtle);
+}
+
+/* Shrink chip icons below the default content icon size to fit
+   the compact chip height */
+.combobox-chip .combobox-chip-icon {
+  width: var(--icon-size-xs);
+  height: var(--icon-size-xs);
+  font-size: var(--icon-size-xs);
+}
+
+/* Colored chips tint the icon with the chip's text color,
+   overriding the icon's own tint */
+.combobox-chip-colored .combobox-chip-icon {
+  color: inherit;
 }
 
 .combobox-chip-remove {
@@ -207,6 +222,70 @@
 
 .combobox-chip:hover .combobox-chip-remove {
   display: flex;
+}
+
+/* ------------------------------------------------------------
+   CHIP CONTENT COLORS
+   ------------------------------------------------------------ */
+
+.combobox-chip-color-blue {
+  background-color: var(--blue-400);
+  border-color: transparent;
+  color: var(--blue-1100);
+}
+
+.combobox-chip-color-cyan {
+  background-color: var(--cyan-400);
+  border-color: transparent;
+  color: var(--cyan-1100);
+}
+
+.combobox-chip-color-red {
+  background-color: var(--red-400);
+  border-color: transparent;
+  color: var(--red-1100);
+}
+
+.combobox-chip-color-pink {
+  background-color: var(--pink-400);
+  border-color: transparent;
+  color: var(--pink-1100);
+}
+
+.combobox-chip-color-purple {
+  background-color: var(--purple-400);
+  border-color: transparent;
+  color: var(--purple-1100);
+}
+
+.combobox-chip-color-green {
+  background-color: var(--green-400);
+  border-color: transparent;
+  color: var(--green-1100);
+}
+
+.combobox-chip-color-orange {
+  background-color: var(--orange-400);
+  border-color: transparent;
+  color: var(--orange-1100);
+}
+
+.combobox-chip-color-yellow {
+  background-color: var(--yellow-400);
+  border-color: transparent;
+  color: var(--yellow-1100);
+}
+
+.combobox-chip-color-brown {
+  background-color: var(--brown-400);
+  border-color: transparent;
+  color: var(--brown-1100);
+}
+
+.combobox-chip-color-gray {
+  background-color: var(--gray-400);
+  border-color: transparent;
+  color: var(--gray-1100);
 }
 
 /* ============================================================
