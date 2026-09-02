@@ -281,32 +281,6 @@ Fix direction: catch and surface query run failures in
 against an unavailable database is a runtime possibility, not only a test
 artefact), and open an in-memory database in the feature's test setup.
 
-## packages/snapshots
-
-### An entry given a deleted entry's title inherits its history
-
-Snapshot history is keyed by entry title within a database, and a
-deleted entry's history is deliberately kept so that the entry can be
-restored from it later. Titles are therefore reusable keys: create an
-entry called "Notes", capture history against it, delete it, and a new
-entry later given the same title opens with the dead entry's snapshots
-as its own. `captureSnapshot` also seeds its idle gap from the newest
-snapshot it finds, so the new entry's first capture can be skipped as
-though it belonged to the same editing session.
-
-Untitled entries, which would hit this constantly since every new entry
-passes through a title the app hands out, are already handled:
-`onDatabaseEntryDeleted` deletes the history of an entry deleted while
-untitled, beside the rename-chain retraction it already did.
-
-Fix direction: nothing cheap. Keying history by a durable entry ID was
-considered and abandoned for the whole app (see the archived
-`persisted-entry-ids.md`), and pruning a named entry's history on
-deletion would cost the restore-a-deleted-entry case the snapshots work
-is partly for. Most likely the review UI should let the user delete a
-subject's history, making the collision recoverable by hand rather than
-prevented.
-
 ## features/designs
 
 ### Background design saves fail silently

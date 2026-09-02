@@ -1,11 +1,6 @@
 export * from './Snapshots';
 export * as Snapshots from './Snapshots';
 export type { RecordRenameOptions } from './recordRename';
-export type { CaptureSnapshotOptions } from './captureSnapshot';
-export type { ListSnapshotsOptions } from './listSnapshots';
-export type { ReadSnapshotOptions } from './readSnapshot';
-export type { MoveSnapshotHistoryOptions } from './moveSnapshotHistory';
-export type { DeleteSnapshotHistoryOptions } from './deleteSnapshotHistory';
 export * from './constants';
 export * from './types';
 export * from './utils';
