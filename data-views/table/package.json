@@ -18,9 +18,11 @@
   },
   "dependencies": {
     "@minddrop/databases": "workspace:*",
+    "@minddrop/tags": "workspace:*",
     "@minddrop/ui-drag-and-drop": "workspace:*",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/ui-primitives": "workspace:*",
+    "@minddrop/ui-tags": "workspace:*",
     "@minddrop/utils": "workspace:*",
     "@minddrop/data-views": "workspace:*",
     "@tanstack/react-virtual": "^3.0.0"

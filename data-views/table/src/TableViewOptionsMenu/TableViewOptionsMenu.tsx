@@ -21,7 +21,14 @@ import './TableViewOptionsMenu.css';
 
 const t = createI18nKeyBuilder('dataViews.table.options.');
 
-const SUPPORTED_TYPES = new Set(['text', 'title', 'number', 'select', 'date']);
+const SUPPORTED_TYPES = new Set([
+  'text',
+  'title',
+  'number',
+  'select',
+  'date',
+  'tags',
+]);
 
 /**
  * Renders the settings menu for configuring table view options.

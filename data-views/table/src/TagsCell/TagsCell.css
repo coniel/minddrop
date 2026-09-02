@@ -1,0 +1,49 @@
+/* ============================================================
+   TAGS CELL
+   Renders as a chip list div, swaps to an open Combobox on click.
+   ============================================================ */
+
+.tags-cell {
+  width: 100%;
+  min-width: 0;
+  cursor: default;
+  min-height: var(--table-row-height, 1.75rem);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  overflow: hidden;
+}
+
+.tags-cell-chevron {
+  flex-shrink: 0;
+  margin-left: auto;
+  color: var(--text-light);
+  display: none;
+}
+
+.tags-cell:hover .tags-cell-chevron {
+  display: block;
+}
+
+/* Tag icons inside chips, sized to the chip text and tinted
+   with the chip's text color over the icon's own tint */
+.chip .tags-cell-chip-icon {
+  flex-shrink: 0;
+  width: var(--icon-size-2xs);
+  height: var(--icon-size-2xs);
+  font-size: var(--icon-size-2xs);
+  margin-right: var(--space-1);
+  color: inherit;
+}
+
+/* Plain text display when chips are disabled */
+.tags-cell-text {
+  font-family: var(--font-ui);
+  font-size: var(--font-size-base);
+  color: var(--text-regular);
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

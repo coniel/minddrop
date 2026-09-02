@@ -24,7 +24,14 @@ import { TableColumn, TableViewOptions } from '../types';
 import { useColumnResize } from '../useColumnResize';
 import './TableView.css';
 
-const SUPPORTED_TYPES = new Set(['text', 'title', 'number', 'select', 'date']);
+const SUPPORTED_TYPES = new Set([
+  'text',
+  'title',
+  'number',
+  'select',
+  'date',
+  'tags',
+]);
 const INPUT_TYPES = new Set(['text', 'title']);
 
 /**
@@ -87,6 +94,27 @@ export const TableViewComponent: React.FC<
 
           if (columnConfig?.showChips === false) {
             column.showChips = false;
+          }
+        }
+
+        if (p.type === 'tags') {
+          // Copy the tag group limit from the property schema
+          const group = (p as unknown as { group?: string }).group;
+
+          if (group) {
+            column.group = group;
+          }
+
+          // Copy the showChips setting from the column config
+          const columnConfig = options.columns[p.name];
+
+          if (columnConfig?.showChips === false) {
+            column.showChips = false;
+          }
+
+          // Copy the showChipIcons setting from the column config
+          if (columnConfig?.showChipIcons === false) {
+            column.showChipIcons = false;
           }
         }
 
@@ -167,6 +195,16 @@ export const TableViewComponent: React.FC<
     (columnId: string, showChips: boolean) => {
       DataViews.updateOptions(view.id, {
         columns: { [columnId]: { showChips } },
+      });
+    },
+    [view.id],
+  );
+
+  // Toggle a tags column's showChipIcons setting
+  const handleToggleShowChipIcons = useCallback(
+    (columnId: string, showChipIcons: boolean) => {
+      DataViews.updateOptions(view.id, {
+        columns: { [columnId]: { showChipIcons } },
       });
     },
     [view.id],
@@ -281,10 +319,26 @@ export const TableViewComponent: React.FC<
   );
 
   const handleCellChange = useCallback(
-    (rowId: string, columnId: string, value: string) => {
+    (rowId: string, columnId: string, value: string | string[]) => {
       const column = columns.find((c) => c.id === columnId);
 
       if (!column) {
+        return;
+      }
+
+      // Tags cells commit their value as a tag name array
+      if (column.type === 'tags') {
+        DatabaseEntries.updateProperty(
+          rowId,
+          columnId,
+          Array.isArray(value) ? value : [],
+        );
+
+        return;
+      }
+
+      // All other cells commit string values
+      if (Array.isArray(value)) {
         return;
       }
 
@@ -437,6 +491,7 @@ export const TableViewComponent: React.FC<
               onToggleAll={handleToggleAll}
               onReorderColumns={handleReorderColumns}
               onToggleShowChips={handleToggleShowChips}
+              onToggleShowChipIcons={handleToggleShowChipIcons}
               onHideColumn={handleHideColumn}
             />
             <div

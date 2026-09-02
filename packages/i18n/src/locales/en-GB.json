@@ -1842,6 +1842,7 @@
       },
       "columnMenu": "Column options",
       "showChips": "Show chips",
+      "showChipIcons": "Show icons",
       "hideColumn": "Hide column"
     },
     "sort": {

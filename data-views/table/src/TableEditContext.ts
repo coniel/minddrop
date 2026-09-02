@@ -9,7 +9,11 @@ import { createContext, useContext } from 'react';
  */
 interface TableEditContextValue {
   activeCell: { rowId: string; columnId: string } | null;
-  onCellChange: (rowId: string, columnId: string, value: string) => void;
+  onCellChange: (
+    rowId: string,
+    columnId: string,
+    value: string | string[],
+  ) => void;
   deactivate: () => void;
 }
 

@@ -22,6 +22,7 @@ const COLUMN_TYPE_ICONS: Record<string, UiIconName> = {
   number: 'hash',
   select: 'circle-dot',
   date: 'calendar',
+  tags: 'tag',
 };
 
 interface TableHeaderProps {
@@ -71,6 +72,11 @@ interface TableHeaderProps {
   onToggleShowChips: (columnId: string, showChips: boolean) => void;
 
   /**
+   * Callback when a tags column's chip icon display is toggled.
+   */
+  onToggleShowChipIcons: (columnId: string, showChipIcons: boolean) => void;
+
+  /**
    * Callback when a column is hidden.
    */
   onHideColumn: (columnId: string) => void;
@@ -89,6 +95,7 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
   onToggleAll,
   onReorderColumns,
   onToggleShowChips,
+  onToggleShowChipIcons,
   onHideColumn,
 }) => {
   const allSelected = totalCount > 0 && selectedCount === totalCount;
@@ -259,8 +266,8 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
                     anchor={() => cellRefs.current[column.id]}
                   >
                     <DropdownMenuContent>
-                      {/* Show chips toggle for select columns */}
-                      {column.type === 'select' && (
+                      {/* Show chips toggle for select and tags columns */}
+                      {(column.type === 'select' || column.type === 'tags') && (
                         <>
                           <DropdownMenuSwitchItem
                             label="dataViews.table.showChips"
@@ -269,6 +276,16 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
                               onToggleShowChips(column.id, checked)
                             }
                           />
+                          {/* Chip icons toggle for tags columns */}
+                          {column.type === 'tags' && (
+                            <DropdownMenuSwitchItem
+                              label="dataViews.table.showChipIcons"
+                              checked={column.showChipIcons !== false}
+                              onCheckedChange={(checked) =>
+                                onToggleShowChipIcons(column.id, checked)
+                              }
+                            />
+                          )}
                           <DropdownMenuSeparator />
                         </>
                       )}

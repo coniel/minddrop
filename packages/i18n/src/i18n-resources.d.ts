@@ -246,6 +246,11 @@ declare module 'i18next' {
           tags: {
             name: string;
             description: string;
+            group: {
+              label: string;
+              all: string;
+            };
+            manage: string;
           };
           icon: {
             name: string;
@@ -1983,6 +1988,7 @@ declare module 'i18next' {
             };
             columnMenu: string;
             showChips: string;
+            showChipIcons: string;
             hideColumn: string;
           };
           sort: {
@@ -2026,6 +2032,12 @@ declare module 'i18next' {
           labels: {
             tag: string;
             tags: string;
+          };
+          field: {
+            placeholder: string;
+            create: string;
+            searchPlaceholder: string;
+            noResults: string;
           };
           groupName: {
             placeholder: string;

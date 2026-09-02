@@ -31,6 +31,12 @@ export interface ColumnConfig {
    * Defaults to true when undefined.
    */
   showChips?: boolean;
+
+  /**
+   * Whether to display tag icons inside a tags column's chips.
+   * Defaults to true when undefined.
+   */
+  showChipIcons?: boolean;
 }
 
 export interface TableViewOptions {
@@ -70,6 +76,18 @@ export interface TableColumn {
    * Defaults to true when undefined.
    */
   showChips?: boolean;
+
+  /**
+   * Whether to display tag icons inside a tags column's chips.
+   * Defaults to true when undefined.
+   */
+  showChipIcons?: boolean;
+
+  /**
+   * The ID of the tag group a tags column's selection is limited
+   * to. Absent when all tags are selectable.
+   */
+  group?: string;
 }
 
 export interface TableRowData {

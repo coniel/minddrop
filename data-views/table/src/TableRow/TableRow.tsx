@@ -6,6 +6,7 @@ import { DateCell, DateDisplay } from '../DateCell';
 import { NumberCell } from '../NumberCell';
 import { SelectCell, SelectDisplay } from '../SelectCell';
 import { useTableEditContext } from '../TableEditContext';
+import { TagsCell, TagsDisplay } from '../TagsCell';
 import { TextCell } from '../TextCell';
 import { FieldSize, TableColumn } from '../types';
 import { propertyValueToString } from '../utils';
@@ -172,6 +173,29 @@ export const TableRow = React.memo(
 
             const isActiveCell =
               isActiveRow && activeCell?.columnId === column.id;
+
+            // Tags cells receive the raw tag name array rather
+            // than the joined display string
+            if (column.type === 'tags') {
+              const names = toTagNames(entry.properties[column.id]);
+
+              return (
+                <div
+                  role="cell"
+                  key={column.id}
+                  className="table-cell"
+                  data-col-id={column.id}
+                  style={columnFlexStyles[column.id]}
+                >
+                  {isActiveCell ? (
+                    <TagsCell value={names} column={column} />
+                  ) : (
+                    <TagsDisplay value={names} column={column} />
+                  )}
+                </div>
+              );
+            }
+
             const Component = isActiveCell
               ? EDITOR_COMPONENTS[column.type]
               : DISPLAY_COMPONENTS[column.type];
@@ -205,3 +229,17 @@ export const TableRow = React.memo(
 );
 
 TableRow.displayName = 'TableRow';
+
+/**
+ * Coerces a tags property value to a tag name array.
+ *
+ * @param value - The property value to coerce.
+ * @returns The tag names.
+ */
+function toTagNames(value: unknown): string[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value.filter((name): name is string => typeof name === 'string');
+}
