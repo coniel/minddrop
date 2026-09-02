@@ -13,30 +13,30 @@ export interface TagsSelectFieldProps
     TagsComboboxProps,
     'value' | 'onChange' | 'group' | 'variant' | 'size' | 'placeholder'
   > {
-  /*
+  /**
    * Class name applied to the root element.
    */
   className?: string;
 
-  /*
+  /**
    * Label text. Can be an i18n key.
    */
   label?: TranslationKey;
 
-  /*
+  /**
    * Size of the label text.
    * @default 'sm'
    */
   labelSize?: TextSize;
 
-  /*
+  /**
    * Helper text displayed below the field.
    * Hidden when error is present.
    * Can be an i18n key.
    */
   description?: TranslationKey;
 
-  /*
+  /**
    * Error message. Also sets the field to invalid state.
    * Can be an i18n key.
    */

@@ -174,8 +174,8 @@ export const TableRow = React.memo(
             const isActiveCell =
               isActiveRow && activeCell?.columnId === column.id;
 
-            // Tags cells receive the raw tag name array rather
-            // than the joined display string
+            // Render tags cells with the raw tag name array rather
+            // than the joined display string.
             if (column.type === 'tags') {
               const names = toTagNames(entry.properties[column.id]);
 

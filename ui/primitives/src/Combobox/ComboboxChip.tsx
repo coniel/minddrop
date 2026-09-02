@@ -19,8 +19,7 @@ export interface ComboboxChipProps
 /** Chip displaying a selected combobox value. */
 export const ComboboxChip = React.forwardRef<HTMLDivElement, ComboboxChipProps>(
   ({ className, color, ...other }, ref) => {
-    // Colored chips get a color modifier class and a colored
-    // marker class used to restyle the chip's content
+    // The color modifier classes applied to colored chips
     const colorClass =
       color && color !== 'default'
         ? ` combobox-chip-colored combobox-chip-color-${color}`

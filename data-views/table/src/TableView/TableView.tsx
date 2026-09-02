@@ -326,7 +326,7 @@ export const TableViewComponent: React.FC<
         return;
       }
 
-      // Tags cells commit their value as a tag name array
+      // Persist tags values as tag name arrays
       if (column.type === 'tags') {
         DatabaseEntries.updateProperty(
           rowId,
@@ -337,7 +337,7 @@ export const TableViewComponent: React.FC<
         return;
       }
 
-      // All other cells commit string values
+      // Ignore array values, which only tags cells commit
       if (Array.isArray(value)) {
         return;
       }

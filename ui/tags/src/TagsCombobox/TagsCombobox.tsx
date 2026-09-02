@@ -129,10 +129,11 @@ export const TagsCombobox: React.FC<TagsComboboxProps> = ({
           return option;
         }
 
-        // Selected tags outside the group limit keep their color
+        // Look up selected tags outside the group limit, so their
+        // chips keep the tag color.
         const tag = tags.find((candidate) => candidate.name === name);
 
-        // Unknown names degrade to default color chips
+        // Fall back to a default color chip for unknown names
         return tag ? tagToOption(tag) : { label: name, value: name };
       }),
     [value, options, tags],
@@ -143,7 +144,7 @@ export const TagsCombobox: React.FC<TagsComboboxProps> = ({
   async function handleValueChange(
     picked: ComboboxOption | ComboboxOption[] | null,
   ): Promise<void> {
-    // Single values never occur in multi-select mode
+    // Ignore single values, which never occur in multi-select mode
     if (!Array.isArray(picked)) {
       return;
     }
@@ -212,7 +213,7 @@ function tagToOption(tag: Tag): ComboboxOption {
  * @returns Whether the item matches the query.
  */
 function filterItem(item: ComboboxOption, query: string): boolean {
-  // The create option always matches, as it is derived from the query
+  // Always match the create option, as it is derived from the query
   if (item.value === CreateOptionValue) {
     return true;
   }
