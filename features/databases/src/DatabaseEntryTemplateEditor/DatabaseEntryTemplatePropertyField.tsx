@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { MarkdownEditor } from '@minddrop/feature-markdown-editor';
+import { TagsSelectField } from '@minddrop/ui-tags';
 import { Fs } from '@minddrop/file-system';
 import { i18n } from '@minddrop/i18n';
 import {
@@ -202,6 +203,20 @@ function renderField({
         placeholder={emptyPlaceholder}
         value={value instanceof Date ? value : null}
         onValueChange={(date) => onChange(date ?? undefined)}
+      />
+    );
+  }
+
+  // Tags properties use the shared tags picker
+  if (property.type === 'tags') {
+    return (
+      <TagsSelectField
+        size="md"
+        variant="subtle"
+        placeholder={emptyPlaceholder}
+        group={property.group}
+        value={Array.isArray(value) ? value : []}
+        onChange={onChange}
       />
     );
   }
