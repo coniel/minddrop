@@ -16,7 +16,9 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "@minddrop/events": "workspace:*",
     "@minddrop/i18n": "workspace:*",
+    "@minddrop/tags": "workspace:*",
     "@minddrop/test-utils": "workspace:*",
     "@minddrop/ui-theme": "workspace:*",
     "@minddrop/ui-primitives": "workspace:*",

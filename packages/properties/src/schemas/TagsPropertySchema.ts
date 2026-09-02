@@ -12,7 +12,7 @@ export interface TagsPropertySchema extends PropertySchemaBase {
 
 export const TagsPropertySchema: PropertySchemaTemplate<TagsPropertySchema> = {
   type: 'tags',
-  icon: 'content-icon:tags:default',
+  icon: 'content-icon:tag:default',
   name: 'properties.tags.name',
   description: 'properties.tags.description',
 };

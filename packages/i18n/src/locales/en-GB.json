@@ -189,7 +189,12 @@
     },
     "tags": {
       "name": "Tags",
-      "description": "A list of tags shared across all databases."
+      "description": "A list of tags shared across all databases.",
+      "group": {
+        "label": "Limit to group",
+        "all": "All tags"
+      },
+      "manage": "Manage tags"
     },
     "icon": {
       "name": "Icon",
