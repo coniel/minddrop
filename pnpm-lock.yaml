@@ -408,12 +408,18 @@ importers:
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
+      '@minddrop/tags':
+        specifier: workspace:*
+        version: link:../../packages/tags
       '@minddrop/ui-drag-and-drop':
         specifier: workspace:*
         version: link:../../ui/drag-and-drop
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives
+      '@minddrop/ui-tags':
+        specifier: workspace:*
+        version: link:../../ui/tags
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../../packages/utils
@@ -627,6 +633,9 @@ importers:
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives
+      '@minddrop/ui-tags':
+        specifier: workspace:*
+        version: link:../../ui/tags
       '@minddrop/ui-theme':
         specifier: workspace:*
         version: link:../../ui/theme
@@ -1017,12 +1026,18 @@ importers:
 
   features/properties:
     dependencies:
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../../packages/events
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
       '@minddrop/properties':
         specifier: workspace:*
         version: link:../../packages/properties
+      '@minddrop/tags':
+        specifier: workspace:*
+        version: link:../../packages/tags
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../../packages/test-utils
@@ -1090,6 +1105,9 @@ importers:
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives
+      '@minddrop/ui-tags':
+        specifier: workspace:*
+        version: link:../../ui/tags
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../../packages/utils
@@ -2667,6 +2685,37 @@ importers:
       react-day-picker:
         specifier: ^9.13.2
         version: 9.13.2(react@19.2.4)
+    devDependencies:
+      '@minddrop/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@minddrop/test-utils':
+        specifier: workspace:*
+        version: link:../../packages/test-utils
+      eslint:
+        specifier: ^9.39.3
+        version: 9.39.5
+      tsconfig:
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  ui/tags:
+    dependencies:
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../../packages/events
+      '@minddrop/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
+      '@minddrop/tags':
+        specifier: workspace:*
+        version: link:../../packages/tags
+      '@minddrop/ui-primitives':
+        specifier: workspace:*
+        version: link:../primitives
     devDependencies:
       '@minddrop/eslint-config':
         specifier: workspace:*

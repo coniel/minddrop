@@ -2,6 +2,12 @@
   "tags": {
     "labels": {
       "tag": "Tag"
+    },
+    "field": {
+      "placeholder": "Add tags...",
+      "create": "Create \"{{name}}\"",
+      "searchPlaceholder": "Search tags...",
+      "noResults": "No matching tags"
     }
   }
 }
