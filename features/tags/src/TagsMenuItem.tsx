@@ -1,8 +1,8 @@
 import { Events } from '@minddrop/events';
 import { Tabs } from '@minddrop/feature-views';
-import { TagsIcon } from '@minddrop/tags';
+import { OpenTagsViewEvent, TagsIcon } from '@minddrop/tags';
 import { MenuItem } from '@minddrop/ui-primitives';
-import { OpenTagsViewEvent, TagsViewName } from './events';
+import { TagsViewName } from './events';
 
 /**
  * Renders the sidebar menu item which opens the tags view.

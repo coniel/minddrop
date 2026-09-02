@@ -1,7 +1,9 @@
 import { Events } from '@minddrop/events';
+import { Tabs } from '@minddrop/feature-views';
 import { I18n } from '@minddrop/i18n';
-import { OpenViewEvent } from '@minddrop/views';
-import { EventListenerId, OpenTagsViewEvent, TagsViewName } from '../events';
+import { OpenTagsViewEvent } from '@minddrop/tags';
+import { DefaultViewAreaId, OpenViewEvent } from '@minddrop/views';
+import { EventListenerId, TagsViewName } from '../events';
 import { locales } from '../locales';
 
 // View instance id of the singleton tags list view, which is
@@ -20,7 +22,12 @@ export function initializeTagsFeature(): VoidFunction {
 
   // Listen for open tags view events, and open the tags list view
   // when one is received
-  Events.addListener(OpenTagsViewEvent, EventListenerId, () => {
+  Events.addListener(OpenTagsViewEvent, EventListenerId, ({ data }) => {
+    // Open a blank tab to receive the tags view
+    if (data?.openMode === 'new-tab') {
+      Tabs.newTab(DefaultViewAreaId);
+    }
+
     Events.dispatch(OpenViewEvent, {
       view: TagsViewName,
       id: tagsViewId,

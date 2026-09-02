@@ -9,6 +9,14 @@ export const TagGroupCreatedEvent = 'tags:group:created';
 export const TagGroupUpdatedEvent = 'tags:group:updated';
 export const TagGroupDeletedEvent = 'tags:group:deleted';
 export const TagGroupsLoadedEvent = 'tags:groups:loaded';
+export const OpenTagsViewEvent = 'tags:tags-view:open';
+
+export type OpenTagsViewEventData = {
+  /**
+   * Where to open the tags view. Defaults to in-place.
+   */
+  openMode?: 'in-place' | 'new-tab';
+};
 
 export type TagCreatedEventData = Tag;
 
@@ -48,5 +56,6 @@ declare module '@minddrop/events/EventDataMap' {
     'tags:group:updated': TagGroupUpdatedEventData;
     'tags:group:deleted': TagGroupDeletedEventData;
     'tags:groups:loaded': TagGroupsLoadedEventData;
+    'tags:tags-view:open': OpenTagsViewEventData | undefined;
   }
 }
