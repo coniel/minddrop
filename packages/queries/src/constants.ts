@@ -91,8 +91,14 @@ export const QUERY_OPERATORS_BY_PROPERTY_TYPE: Record<
   'last-modified': DATE_OPERATORS,
   toggle: ['is-true', 'is-false'],
   select: ['is', 'is-not', 'is-empty', 'is-not-empty'],
-  // Tags are always multi-value, membership tests only
-  tags: MULTISELECT_QUERY_OPERATORS,
+  // Tags test membership of the picked tags
+  tags: [
+    'contains-any',
+    'contains-all',
+    'contains-none',
+    'is-empty',
+    'is-not-empty',
+  ],
   // Color values live in entry metadata, which is not SQL
   // indexed, so color cannot be filtered on yet
   color: [],

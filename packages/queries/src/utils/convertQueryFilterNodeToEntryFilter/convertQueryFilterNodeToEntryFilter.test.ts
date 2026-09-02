@@ -102,18 +102,99 @@ describe('convertQueryFilterNodeToEntryFilter', () => {
     });
   });
 
-  it('converts tags comparisons to membership tests', () => {
+  it('converts tag any-of comparisons to OR membership groups', () => {
     expect(
       convertQueryFilterNodeToEntryFilter({
         ...textNode,
         propertyType: 'tags',
-        operator: 'not-contains',
-        value: 'Urgent',
+        operator: 'contains-any',
+        value: ['Urgent', 'Home'],
+      }),
+    ).toEqual({
+      combinator: 'or',
+      filters: [
+        {
+          property: 'Content',
+          propertyType: 'tags',
+          operator: 'has-value',
+          value: 'Urgent',
+        },
+        {
+          property: 'Content',
+          propertyType: 'tags',
+          operator: 'has-value',
+          value: 'Home',
+        },
+      ],
+    });
+  });
+
+  it('converts tag all-of comparisons to AND membership groups', () => {
+    expect(
+      convertQueryFilterNodeToEntryFilter({
+        ...textNode,
+        propertyType: 'tags',
+        operator: 'contains-all',
+        value: ['Urgent', 'Home'],
+      }),
+    ).toEqual({
+      combinator: 'and',
+      filters: [
+        {
+          property: 'Content',
+          propertyType: 'tags',
+          operator: 'has-value',
+          value: 'Urgent',
+        },
+        {
+          property: 'Content',
+          propertyType: 'tags',
+          operator: 'has-value',
+          value: 'Home',
+        },
+      ],
+    });
+  });
+
+  it('converts tag none-of comparisons to AND exclusion groups', () => {
+    expect(
+      convertQueryFilterNodeToEntryFilter({
+        ...textNode,
+        propertyType: 'tags',
+        operator: 'contains-none',
+        value: ['Urgent', 'Home'],
+      }),
+    ).toEqual({
+      combinator: 'and',
+      filters: [
+        {
+          property: 'Content',
+          propertyType: 'tags',
+          operator: 'not-has-value',
+          value: 'Urgent',
+        },
+        {
+          property: 'Content',
+          propertyType: 'tags',
+          operator: 'not-has-value',
+          value: 'Home',
+        },
+      ],
+    });
+  });
+
+  it('converts single item tag comparisons to a lone membership test', () => {
+    expect(
+      convertQueryFilterNodeToEntryFilter({
+        ...textNode,
+        propertyType: 'tags',
+        operator: 'contains-any',
+        value: ['Urgent'],
       }),
     ).toEqual({
       property: 'Content',
       propertyType: 'tags',
-      operator: 'not-has-value',
+      operator: 'has-value',
       value: 'Urgent',
     });
   });

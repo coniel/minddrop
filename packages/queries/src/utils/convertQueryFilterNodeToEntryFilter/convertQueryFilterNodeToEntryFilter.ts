@@ -56,13 +56,13 @@ export function convertQueryFilterNodeToEntryFilter(
     return convertDateFilter(node, propertyType);
   }
 
-  // Collections compare against the picked entry ID lists
-  if (propertyType === 'collection') {
+  // Collections and tags compare against the picked value lists
+  if (propertyType === 'collection' || propertyType === 'tags') {
     return convertCollectionFilter(node, propertyType);
   }
 
-  // Select and tags values compare via membership tests
-  if (propertyType === 'select' || propertyType === 'tags') {
+  // Select values compare via membership tests
+  if (propertyType === 'select') {
     return convertSelectFilter(node, propertyType);
   }
 
@@ -145,15 +145,15 @@ function convertDateFilter(
 }
 
 /**
- * Converts a collection comparison into membership filters over
- * the picked entry IDs: any-of matches via OR, all-of and
- * none-of via AND.
+ * Converts a collection or tags comparison into membership
+ * filters over the picked values: any-of matches via OR, all-of
+ * and none-of via AND.
  */
 function convertCollectionFilter(
   node: QueryFilterNode,
   propertyType: PropertyType,
 ): EntryFilter | EntryFilterGroup | null {
-  // The value must be a list of picked entry IDs
+  // The value must be a list of picked values
   if (!Array.isArray(node.value) || node.value.length === 0) {
     return null;
   }
@@ -163,10 +163,10 @@ function convertCollectionFilter(
   if (node.operator === 'contains-any') {
     return groupEntryFilters(
       'or',
-      node.value.map((entryId) => ({
+      node.value.map((value) => ({
         ...base,
         operator: 'has-value',
-        value: entryId,
+        value,
       })),
     );
   }
@@ -174,10 +174,10 @@ function convertCollectionFilter(
   if (node.operator === 'contains-all') {
     return groupEntryFilters(
       'and',
-      node.value.map((entryId) => ({
+      node.value.map((value) => ({
         ...base,
         operator: 'has-value',
-        value: entryId,
+        value,
       })),
     );
   }
@@ -185,10 +185,10 @@ function convertCollectionFilter(
   if (node.operator === 'contains-none') {
     return groupEntryFilters(
       'and',
-      node.value.map((entryId) => ({
+      node.value.map((value) => ({
         ...base,
         operator: 'not-has-value',
-        value: entryId,
+        value,
       })),
     );
   }
@@ -213,7 +213,7 @@ function groupEntryFilters(
 }
 
 /**
- * Converts a select or tags comparison into a membership filter.
+ * Converts a select comparison into a membership filter.
  */
 function convertSelectFilter(
   node: QueryFilterNode,
