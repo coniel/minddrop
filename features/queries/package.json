@@ -29,6 +29,7 @@
     "@minddrop/ui-canvas": "workspace:*",
     "@minddrop/ui-components": "workspace:*",
     "@minddrop/ui-primitives": "workspace:*",
+    "@minddrop/ui-tags": "workspace:*",
     "@minddrop/utils": "workspace:*",
     "@minddrop/views": "workspace:*"
   }

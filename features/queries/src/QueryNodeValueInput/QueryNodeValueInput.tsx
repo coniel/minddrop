@@ -1,5 +1,6 @@
 import { useMemo, useRef } from 'react';
 import { DatabaseEntries, Databases } from '@minddrop/databases';
+import { TagsSelectField } from '@minddrop/ui-tags';
 import { createI18nKeyBuilder, useTranslation } from '@minddrop/i18n';
 import { PropertySchema } from '@minddrop/properties';
 import {
@@ -100,6 +101,25 @@ export const QueryNodeValueInput: React.FC<QueryNodeValueInputProps> = ({
   // the collection's members
   if (property.type === 'collection') {
     return <QueryNodeEntryValueInput value={value} onChange={onChange} />;
+  }
+
+  // Persists picked tag names, treating cleared picks as unset
+  function handleTagsChange(names: string[]): void {
+    onChange(names.length ? names : undefined);
+  }
+
+  // Tags properties pick the tags compared against the entry's
+  // tags, limited to the property's group when one is set
+  if (property.type === 'tags') {
+    return (
+      <TagsSelectField
+        size="md"
+        group={property.group}
+        placeholder="queries.editor.selectValue"
+        value={Array.isArray(value) ? value : []}
+        onChange={handleTagsChange}
+      />
+    );
   }
 
   // Select properties pick from the property's options
