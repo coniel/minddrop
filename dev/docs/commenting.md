@@ -39,6 +39,23 @@ const contents = await Fs.readDir(fromDirPath);
 const contents = await Fs.readDir(fromDirPath);
 ```
 
+A trailing clause justifying the step is the most common way this creeps
+in. Delete it whenever the code, its name or its type already says it:
+
+```ts
+// BAD, the clause restates what the column's name already says
+// Drop the no-value column while it holds nothing, as it names no
+// option of its own
+
+// BAD, the Required<Pick<...>> type says the second half
+// The column settings every board falls back to, declared with their
+// values present so that consumers resolve concrete ones
+
+// GOOD
+// Drop the no-value column when empty
+// The column settings every board falls back to
+```
+
 Put the why where the surprising thing is, which is often not the step
 you first attached it to. A why in the wrong place reads as noise in one
 comment and leaves a real gap in another:
@@ -175,6 +192,27 @@ These constructions read as written-not-spoken and come up often:
 | `..., which is the ordinary rename`                           | `. This is the ordinary case for a rename`                            |
 | `reviving the timestamps JSON stores as strings`              | `JSON stores the timestamps as strings, so they are revived as dates` |
 | `Advisory for consumers: ...`                                 | `Used to ...`                                                         |
+
+**Use the plain verb.** "Holds", "carries" and "leads with" are the
+written register of "has", "returns" and "puts first". The elevated verb
+makes the reader translate it back:
+
+| Avoid                                          | Prefer                                          |
+| ---------------------------------------------- | ----------------------------------------------- |
+| `carries nothing for an option with no colour` | `returns nothing when the option has no colour` |
+| `leads with the no-value column`               | `puts the no-value column first`                |
+| `empty when it holds none`                     | `empty when it has none`                        |
+
+**Use the word for the state.** Spelling out a condition a single word
+already names is the same reach:
+
+| Avoid                           | Prefer            |
+| ------------------------------- | ----------------- |
+| `while it holds no entries`     | `when empty`      |
+| `a column which holds none yet` | `an empty column` |
+
+This applies to test names as much as to comments, since they are read
+as sentences.
 
 No em dashes in comments.
 
