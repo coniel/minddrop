@@ -1,0 +1,130 @@
+.kanban-view-scroll {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+/* Keep entry cards clear of the scrollport edges (and the
+   floating toolbar at the bottom) when scrolled into view */
+.kanban-view .database-entry {
+  scroll-margin-top: var(--space-4);
+  scroll-margin-bottom: calc(var(--space-7) + var(--space-5));
+}
+
+/* No padding on the right, which the columns overflow past when
+   they are wider than the board. The rows carry it instead. */
+.kanban-view {
+  padding: 0 0 var(--space-4) var(--space-4);
+  min-height: 100%;
+  /* Lanes with no surface of their own are held apart by their
+     own padding, so they take no gap on top of it */
+  --kanban-column-gap: 0px;
+}
+
+.kanban-view-columns-background-neutral,
+.kanban-view-columns-background-accent {
+  --kanban-column-gap: var(--space-4);
+}
+
+/* Outweighs the gap the rows carry as Groups */
+.kanban-view .kanban-view-headings,
+.kanban-view .kanban-view-columns {
+  gap: var(--kanban-column-gap);
+}
+
+/* Carries the board's right padding to the end of the columns,
+   past the point the board's own padding reaches */
+.kanban-view-headings::after,
+.kanban-view-columns::after {
+  content: '';
+  flex: none;
+  width: var(--space-4);
+  /* Cancels the row gap preceding it, leaving the padding alone */
+  margin-left: calc(var(--kanban-column-gap) * -1);
+}
+
+/* Held at the top of the board while the cards scroll under it,
+   carrying the panel's surface so that they do not show through.
+   Brings the board's top padding with it, which would otherwise
+   leave a strip of them visible above it. */
+.kanban-view-headings {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  /* Widens with the columns, so that the surface still covers
+     them once they overflow the board */
+  min-width: max-content;
+  padding-top: var(--space-4);
+  background-color: var(--surface-overlay);
+}
+
+.kanban-view-columns {
+  flex: 1;
+  min-height: 0;
+}
+
+/* Columns scrolling on their own are bound to the board's height,
+   leaving the board itself to scroll horizontally only */
+.kanban-view-columns-scroll {
+  height: 100%;
+}
+
+/* A lane's heading and column are sized together, so that the two
+   rows stay aligned */
+.kanban-view-heading,
+.kanban-view-column {
+  flex: 1;
+  min-width: 240px;
+}
+
+/* Fixed width lanes keep their width, overflowing the board
+   rather than sharing its width between them. The fill mode's
+   minimum width does not apply, since a narrow lane is narrower
+   than it. */
+.kanban-view-columns-fixed .kanban-view-heading,
+.kanban-view-columns-fixed .kanban-view-column {
+  flex: none;
+  min-width: 0;
+}
+
+.kanban-view-columns-narrow .kanban-view-heading,
+.kanban-view-columns-narrow .kanban-view-column {
+  width: 200px;
+}
+
+.kanban-view-columns-regular .kanban-view-heading,
+.kanban-view-columns-regular .kanban-view-column {
+  width: 340px;
+}
+
+.kanban-view-columns-wide .kanban-view-heading,
+.kanban-view-columns-wide .kanban-view-column {
+  width: 500px;
+}
+
+.kanban-view-columns-background-neutral .kanban-view-heading,
+.kanban-view-columns-background-neutral .kanban-view-column {
+  background-color: var(--surface-subtle);
+}
+
+/* Options with no colour of their own fall back to the neutral
+   surface, which is what the no-value column always uses */
+.kanban-view-columns-background-accent .kanban-view-heading,
+.kanban-view-columns-background-accent .kanban-view-column {
+  background-color: var(--kanban-lane-surface, var(--surface-subtle));
+}
+
+/* Keep pickers clear of the scrollport edges (and the floating
+   toolbar at the bottom) when scrolled into view */
+.kanban-view-picker {
+  scroll-margin-top: var(--space-4);
+  scroll-margin-bottom: calc(var(--space-7) + var(--space-5));
+}
+
+.kanban-view-empty {
+  flex: 1;
+  justify-content: center;
+  text-align: center;
+  padding: var(--space-6);
+}

@@ -351,6 +351,64 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
+  data-views/kanban:
+    dependencies:
+      '@minddrop/collections':
+        specifier: workspace:*
+        version: link:../../packages/collections
+      '@minddrop/data-views':
+        specifier: workspace:*
+        version: link:../../packages/data-views
+      '@minddrop/databases':
+        specifier: workspace:*
+        version: link:../../packages/databases
+      '@minddrop/feature-data-views':
+        specifier: workspace:*
+        version: link:../../features/data-views
+      '@minddrop/feature-databases':
+        specifier: workspace:*
+        version: link:../../features/databases
+      '@minddrop/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
+      '@minddrop/properties':
+        specifier: workspace:*
+        version: link:../../packages/properties
+      '@minddrop/selection':
+        specifier: workspace:*
+        version: link:../../packages/selection
+      '@minddrop/test-utils':
+        specifier: workspace:*
+        version: link:../../packages/test-utils
+      '@minddrop/ui-data-views':
+        specifier: workspace:*
+        version: link:../../ui/data-views
+      '@minddrop/ui-databases':
+        specifier: workspace:*
+        version: link:../../ui/databases
+      '@minddrop/ui-drag-and-drop':
+        specifier: workspace:*
+        version: link:../../ui/drag-and-drop
+      '@minddrop/ui-primitives':
+        specifier: workspace:*
+        version: link:../../ui/primitives
+      '@minddrop/ui-theme':
+        specifier: workspace:*
+        version: link:../../ui/theme
+    devDependencies:
+      '@minddrop/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      eslint:
+        specifier: ^9.39.3
+        version: 9.39.5
+      tsconfig:
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
   data-views/notebook:
     dependencies:
       '@minddrop/collections':
@@ -758,6 +816,9 @@ importers:
       '@minddrop/data-view-gallery':
         specifier: workspace:*
         version: link:../../data-views/gallery
+      '@minddrop/data-view-kanban':
+        specifier: workspace:*
+        version: link:../../data-views/kanban
       '@minddrop/data-view-notebook':
         specifier: workspace:*
         version: link:../../data-views/notebook

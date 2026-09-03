@@ -1,0 +1,28 @@
+.kanban-view-skeleton {
+  display: flex;
+  gap: 16px;
+  padding: var(--space-4);
+  pointer-events: none;
+}
+
+.kanban-view-skeleton-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-radius: var(--radius-md);
+  background-color: var(--surface-subtle);
+}
+
+.kanban-view-skeleton-heading {
+  width: 40%;
+  height: 16px;
+  border-radius: var(--radius-full);
+  background-color: var(--surface-skeleton);
+}
+
+.kanban-view-skeleton-card {
+  width: 100%;
+  border-radius: var(--radius-md);
+  background-color: var(--surface-skeleton);
+}

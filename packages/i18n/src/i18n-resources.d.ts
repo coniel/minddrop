@@ -1945,6 +1945,32 @@ declare module 'i18next' {
             showToolbarCard: string;
             toolbarCardTemplate: string;
           };
+          kanban: {
+            name: string;
+            description: string;
+            groupBy: string;
+            noValue: string;
+            noSelectProperty: {
+              title: string;
+              description: string;
+            };
+            options: {
+              columns: string;
+              width: string;
+              fill: string;
+              narrow: string;
+              regular: string;
+              wide: string;
+              background: string;
+              none: string;
+              neutral: string;
+              accent: string;
+              scroll: string;
+            };
+            toolbarCards: string;
+            showToolbarCard: string;
+            toolbarCardTemplate: string;
+          };
           gallery: {
             name: string;
             description: string;

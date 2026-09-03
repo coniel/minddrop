@@ -1799,6 +1799,32 @@
       "showToolbarCard": "Show card",
       "toolbarCardTemplate": "Entry template"
     },
+    "kanban": {
+      "name": "Kanban",
+      "description": "A board whose columns are the options of a select property.",
+      "groupBy": "Group by",
+      "noValue": "No value",
+      "noSelectProperty": {
+        "title": "Nothing to group by",
+        "description": "Add a select property to the database to generate the board's columns."
+      },
+      "options": {
+        "columns": "Columns",
+        "width": "Width",
+        "fill": "Fill space",
+        "narrow": "Narrow",
+        "regular": "Regular",
+        "wide": "Wide",
+        "background": "Background",
+        "none": "None",
+        "neutral": "Neutral",
+        "accent": "Accent",
+        "scroll": "Scroll columns"
+      },
+      "toolbarCards": "Toolbar cards",
+      "showToolbarCard": "Show card",
+      "toolbarCardTemplate": "Entry template"
+    },
     "gallery": {
       "name": "Gallery",
       "description": "A gallery view.",

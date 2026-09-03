@@ -1,0 +1,29 @@
+/* Continues the lane its heading starts, so the rounding sits on
+   the outer corners of the two together */
+.kanban-view-column {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 0 var(--space-2) var(--space-2);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+}
+
+.kanban-view-column-content {
+  flex: 1;
+}
+
+/* The cards scroll all the way to the column's bottom edge, so
+   the space under them moves inside the scrollport, where it
+   follows the last card rather than cropping it */
+.kanban-view-columns-scroll .kanban-view-column {
+  padding-bottom: 0;
+}
+
+.kanban-view-columns-scroll .kanban-view-column-content {
+  padding-bottom: var(--space-2);
+}
+
+.kanban-view-column-scroll {
+  flex: 1;
+  min-height: 0;
+}

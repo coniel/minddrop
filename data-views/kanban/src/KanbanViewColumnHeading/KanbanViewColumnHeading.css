@@ -1,0 +1,6 @@
+/* Rounds off the top of the lane, which the column below it
+   continues with a squared off top of its own */
+.kanban-view-heading {
+  padding: var(--space-3) var(--space-2);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
