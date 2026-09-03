@@ -1,0 +1,8 @@
+.design-renderer {
+  position: relative;
+  width: 100%;
+}
+
+.design-renderer-element {
+  position: absolute;
+}

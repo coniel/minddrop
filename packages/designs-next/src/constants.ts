@@ -19,6 +19,11 @@ export const DesignFileExtension = 'json';
 export const i18nRoot = 'designsNext';
 
 /**
+ * The type of the placeholder box element.
+ */
+export const BoxElementType = 'box';
+
+/**
  * The default width of a new design in grid units.
  */
 export const DefaultDesignColumns = 48;

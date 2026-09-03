@@ -2714,6 +2714,28 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
+  ui/designs-next:
+    dependencies:
+      '@minddrop/designs-next':
+        specifier: workspace:*
+        version: link:../../packages/designs-next
+    devDependencies:
+      '@minddrop/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@minddrop/test-utils':
+        specifier: workspace:*
+        version: link:../../packages/test-utils
+      eslint:
+        specifier: ^9.39.3
+        version: 9.39.5
+      tsconfig:
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
   ui/drag-and-drop:
     dependencies:
       '@minddrop/i18n':
