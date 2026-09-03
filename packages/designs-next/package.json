@@ -1,0 +1,23 @@
+{
+  "name": "@minddrop/designs-next",
+  "version": "0.0.0",
+  "main": "src/index",
+  "type": "module",
+  "types": "src/index",
+  "exports": {
+    ".": "./src/index.ts",
+    "./test-utils": "./src/test-utils/index.ts"
+  },
+  "scripts": {
+    "lint": "eslint .  --max-warnings 0",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@minddrop/eslint-config": "workspace:*",
+    "eslint": "^9.39.3",
+    "tsconfig": "workspace:*",
+    "typescript": "^5.9.3"
+  }
+}

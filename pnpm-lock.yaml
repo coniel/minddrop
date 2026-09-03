@@ -1686,6 +1686,21 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
+  packages/designs-next:
+    devDependencies:
+      '@minddrop/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      eslint:
+        specifier: ^9.39.3
+        version: 9.39.5
+      tsconfig:
+        specifier: workspace:*
+        version: link:../tsconfig
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
   packages/dev-tools:
     dependencies:
       '@minddrop/events':
