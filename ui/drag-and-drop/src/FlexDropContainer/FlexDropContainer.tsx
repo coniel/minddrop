@@ -63,12 +63,6 @@ interface FlexDropContainerProps extends Record<string, unknown> {
   accepts?: string[];
 
   /**
-   * Whether active gaps animate open to make room for the
-   * dragged element.
-   */
-  expandActiveGap?: boolean;
-
-  /**
    * Class name applied to the root container element.
    */
   className?: string;
@@ -88,7 +82,6 @@ export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
   justify = 'start',
   onDrop,
   accepts,
-  expandActiveGap = false,
   className = '',
   style = {},
   ...rest
@@ -146,7 +139,6 @@ export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
         index={0}
         isActive={activeGapIndex === 0}
         accepts={accepts}
-        expandOnActive={expandActiveGap}
         grow={spacingGaps.leading}
         onDrop={(data) => handleDropInGap(data, 0)}
       />,
@@ -170,7 +162,6 @@ export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
           index={gapIndex}
           isActive={activeGapIndex === gapIndex}
           accepts={accepts}
-          expandOnActive={expandActiveGap}
           grow={spacingGaps.between}
           onDrop={(data) => handleDropInGap(data, gapIndex)}
         />,
@@ -190,7 +181,6 @@ export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
       index={trailingIndex}
       isActive={activeGapIndex === trailingIndex}
       accepts={accepts}
-      expandOnActive={expandActiveGap}
       grow={spacingGaps.trailing}
       onDrop={(data) => handleDropInGap(data, trailingIndex)}
     />,

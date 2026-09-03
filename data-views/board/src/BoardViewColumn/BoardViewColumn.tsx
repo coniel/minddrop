@@ -120,7 +120,6 @@ export const BoardViewColumn: React.FC<BoardViewColumnProps> = ({
         gap={16}
         className="board-view-column-content"
         accepts={BOARD_ACCEPTED_DATA_TYPES}
-        expandActiveGap
         onDrop={handleDrop}
       >
         {cards}

@@ -40,12 +40,6 @@ interface FlexDropContainerGapProps {
   accepts?: string[];
 
   /**
-   * Whether the gap animates open to make room for the dragged
-   * element while active.
-   */
-  expandOnActive?: boolean;
-
-  /**
    * Whether the gap takes a share of the container's free space,
    * standing in for the distribution its children would otherwise
    * be given.
@@ -58,9 +52,6 @@ interface FlexDropContainerGapProps {
   onDrop?: (data: DropEventData) => void;
 }
 
-// Expanded size (in px) of an active gap with expansion enabled
-const EXPANDED_SIZE = 32;
-
 export const FlexDropContainerGap: React.FC<FlexDropContainerGapProps> = ({
   containerId,
   direction,
@@ -68,7 +59,6 @@ export const FlexDropContainerGap: React.FC<FlexDropContainerGapProps> = ({
   index,
   isActive = false,
   accepts,
-  expandOnActive = false,
   grow = false,
   onDrop,
 }) => {
@@ -138,20 +128,16 @@ export const FlexDropContainerGap: React.FC<FlexDropContainerGapProps> = ({
   // Determine the active dimension based on layout direction
   const isRow = direction === 'row';
 
-  // Expand the gap while active when expansion is enabled,
-  // otherwise keep the layout stable regardless of drag state
-  const activeSize = expandOnActive && showLine ? EXPANDED_SIZE : size;
-
   // Size the gap along the main axis only
   const gapStyle: React.CSSProperties = {
     alignSelf: 'stretch',
     flexGrow: grow ? 1 : 0,
-    ...(isRow ? { width: activeSize } : { height: activeSize }),
+    ...(isRow ? { width: size } : { height: size }),
   };
 
   return (
     <div
-      className={`flex-drop-gap${expandOnActive ? ' flex-drop-gap-expandable' : ''}`}
+      className="flex-drop-gap"
       style={gapStyle}
       onDragOver={handleDragOver}
       onDragEnter={handleDragEnter}
