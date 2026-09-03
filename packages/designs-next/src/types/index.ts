@@ -1,1 +1,2 @@
-export * from './BlockElement.types';
+export * from './Design.types';
+export * from './DesignElement.types';

@@ -1,4 +1,4 @@
-import { BlockElement } from '../../types';
+import { DesignElement } from '../../types';
 
 /**
  * Resolves which columns are occupied by at least one element.
@@ -8,7 +8,7 @@ import { BlockElement } from '../../types';
  * @returns A flag per column, true when occupied.
  */
 export function resolveOccupiedColumns(
-  elements: BlockElement[],
+  elements: DesignElement[],
   columns: number,
 ): boolean[] {
   // Start with every column unoccupied

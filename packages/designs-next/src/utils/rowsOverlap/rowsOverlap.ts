@@ -1,4 +1,4 @@
-import { BlockElement } from '../../types';
+import { DesignElement } from '../../types';
 
 /**
  * Checks whether two elements overlap vertically.
@@ -7,6 +7,6 @@ import { BlockElement } from '../../types';
  * @param b - The second element.
  * @returns True when the elements share at least one row.
  */
-export function rowsOverlap(a: BlockElement, b: BlockElement): boolean {
+export function rowsOverlap(a: DesignElement, b: DesignElement): boolean {
   return a.row < b.row + b.rowSpan && b.row < a.row + a.rowSpan;
 }

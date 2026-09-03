@@ -1,6 +1,8 @@
 export * from './columnsOverlap';
 export * from './remapElementColumns';
 export * from './resolveContextElements';
+export * from './resolveDesignFilePath';
+export * from './resolveDesignsDirPath';
 export * from './resolveElementRect';
 export * from './resolveOccupiedColumns';
 export * from './resolveRowLayout';
@@ -8,3 +10,5 @@ export * from './resolveScaledWidths';
 export * from './resolveScalingColumns';
 export * from './rowsOverlap';
 export * from './snapToMultiple';
+export * from './validateDesign';
+export * from './validateDesignElement';

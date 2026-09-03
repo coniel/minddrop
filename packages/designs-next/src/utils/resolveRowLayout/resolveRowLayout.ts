@@ -1,5 +1,5 @@
 import { UnitPixelSize } from '../../constants';
-import { BlockElement } from '../../types';
+import { DesignElement } from '../../types';
 
 export interface RowLayout {
   /**
@@ -24,7 +24,7 @@ export interface RowLayout {
  * @returns The row layout.
  */
 export function resolveRowLayout(
-  elements: BlockElement[],
+  elements: DesignElement[],
   rows: number,
   naturalHeights: Record<string, number>,
 ): RowLayout {

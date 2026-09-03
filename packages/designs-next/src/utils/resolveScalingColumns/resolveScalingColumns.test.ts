@@ -1,18 +1,18 @@
 import { describe, expect, it } from 'vitest';
-import { iconElement, titleElement } from '../../test-utils';
-import { BlockElement } from '../../types';
+import { iconDesignElement, titleDesignElement } from '../../test-utils';
+import { DesignElement } from '../../types';
 import { resolveScalingColumns } from './resolveScalingColumns';
 
 // Fixed element pinned to the left edge with a free gap to its right
-const fixedLeftElement: BlockElement = {
-  ...iconElement,
+const fixedLeftElement: DesignElement = {
+  ...iconDesignElement,
   widthMode: 'fixed-left',
   column: 0,
 };
 
 describe('resolveScalingColumns', () => {
   it('scales a fluid element across its own columns', () => {
-    const scaling = resolveScalingColumns([titleElement], 48);
+    const scaling = resolveScalingColumns([titleDesignElement], 48);
 
     // Title columns 2-29 scale, the gaps on both sides stay fixed
     expect(scaling[1]).toBe(false);
@@ -22,11 +22,14 @@ describe('resolveScalingColumns', () => {
   });
 
   it('keeps every gap fixed when a fluid element is present', () => {
-    const scaling = resolveScalingColumns([titleElement, iconElement], 48);
+    const scaling = resolveScalingColumns(
+      [titleDesignElement, iconDesignElement],
+      48,
+    );
 
     // Only the fluid title's columns scale, the fixed icon's unpinned
-    // side gap keeps its unit width
-    expect(scaling.filter(Boolean)).toHaveLength(titleElement.columnSpan);
+    // side gap keeps its unit width.
+    expect(scaling.filter(Boolean)).toHaveLength(titleDesignElement.columnSpan);
     expect(scaling[30]).toBe(false);
     expect(scaling[39]).toBe(false);
     expect(scaling[46]).toBe(false);
@@ -36,7 +39,7 @@ describe('resolveScalingColumns', () => {
     const scaling = resolveScalingColumns([fixedLeftElement], 48);
 
     // The element's own columns stay fixed, the free gap to its right
-    // absorbs the space
+    // absorbs the space.
     expect(scaling[0]).toBe(false);
     expect(scaling[5]).toBe(false);
     expect(scaling[6]).toBe(true);
@@ -44,7 +47,7 @@ describe('resolveScalingColumns', () => {
   });
 
   it('scales the left gap of a pinned-right element as a fallback', () => {
-    const scaling = resolveScalingColumns([iconElement], 48);
+    const scaling = resolveScalingColumns([iconDesignElement], 48);
 
     // The free gap to the element's left absorbs the space
     expect(scaling[0]).toBe(true);
@@ -55,7 +58,7 @@ describe('resolveScalingColumns', () => {
 
   it('scales both gaps of a centered element as a fallback', () => {
     const scaling = resolveScalingColumns(
-      [{ ...iconElement, widthMode: 'fixed-center', column: 20 }],
+      [{ ...iconDesignElement, widthMode: 'fixed-center', column: 20 }],
       48,
     );
 
@@ -68,7 +71,7 @@ describe('resolveScalingColumns', () => {
 
   it('stops absorbing at occupied columns', () => {
     const scaling = resolveScalingColumns(
-      [fixedLeftElement, { ...iconElement, widthMode: 'fixed-right' }],
+      [fixedLeftElement, { ...iconDesignElement, widthMode: 'fixed-right' }],
       48,
     );
 

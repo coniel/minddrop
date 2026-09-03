@@ -1,5 +1,5 @@
 import { UnitPixelSize } from '../../constants';
-import { BlockElement } from '../../types';
+import { DesignElement } from '../../types';
 import { resolveContextElements } from '../resolveContextElements';
 import { resolveScalingColumns } from '../resolveScalingColumns';
 
@@ -28,8 +28,8 @@ export interface ElementRect {
  * @returns The element's horizontal rect.
  */
 export function resolveElementRect(
-  element: BlockElement,
-  elements: BlockElement[],
+  element: DesignElement,
+  elements: DesignElement[],
   columns: number,
   cardWidth: number,
 ): ElementRect {

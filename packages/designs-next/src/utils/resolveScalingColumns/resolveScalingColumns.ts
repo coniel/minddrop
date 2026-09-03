@@ -1,4 +1,4 @@
-import { BlockElement } from '../../types';
+import { DesignElement } from '../../types';
 import { resolveOccupiedColumns } from '../resolveOccupiedColumns';
 
 /**
@@ -13,7 +13,7 @@ import { resolveOccupiedColumns } from '../resolveOccupiedColumns';
  * @returns A flag per column, true when the column scales.
  */
 export function resolveScalingColumns(
-  elements: BlockElement[],
+  elements: DesignElement[],
   columns: number,
 ): boolean[] {
   // Resolve which columns elements occupy
@@ -41,13 +41,13 @@ export function resolveScalingColumns(
     }
 
     // Fixed elements only absorb space as a fallback, a fluid element
-    // takes it all and leaves every gap at its unit width
+    // takes it all and leaves every gap at its unit width.
     if (hasFluid) {
       return;
     }
 
     // Pinned left or centered: the gap to the element's right absorbs
-    // the space
+    // the space.
     if (
       element.widthMode === 'fixed-left' ||
       element.widthMode === 'fixed-center'
@@ -62,7 +62,7 @@ export function resolveScalingColumns(
     }
 
     // Pinned right or centered: the gap to the element's left absorbs
-    // the space
+    // the space.
     if (
       element.widthMode === 'fixed-right' ||
       element.widthMode === 'fixed-center'

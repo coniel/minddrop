@@ -4,3 +4,26 @@
  * design size.
  */
 export const UnitPixelSize = 4;
+
+/**
+ * The workspace directory designs are stored in. Distinct from the
+ * legacy designs directory so the two can coexist until cutover.
+ */
+export const DesignsDirName = 'designs-next';
+
+/**
+ * The file extension of persisted design files.
+ */
+export const DesignFileExtension = 'json';
+
+export const i18nRoot = 'designsNext';
+
+/**
+ * The default width of a new design in grid units.
+ */
+export const DefaultDesignColumns = 48;
+
+/**
+ * The default height of a new design in grid units.
+ */
+export const DefaultDesignRows = 32;

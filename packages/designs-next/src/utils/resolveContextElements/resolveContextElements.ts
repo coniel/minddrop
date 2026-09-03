@@ -1,4 +1,4 @@
-import { BlockElement } from '../../types';
+import { DesignElement } from '../../types';
 import { columnsOverlap } from '../columnsOverlap';
 import { rowsOverlap } from '../rowsOverlap';
 
@@ -11,7 +11,7 @@ import { rowsOverlap } from '../rowsOverlap';
  * @param elements - The card's elements.
  * @returns The element's context elements.
  */
-export function resolveContextElements<TElement extends BlockElement>(
+export function resolveContextElements<TElement extends DesignElement>(
   element: TElement,
   elements: TElement[],
 ): TElement[] {

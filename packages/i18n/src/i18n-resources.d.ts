@@ -2116,6 +2116,9 @@ declare module 'i18next' {
             entriesEmpty: string;
           };
         };
+        designsNext: {
+          new: string;
+        };
         onboarding: {
           welcome: {
             title: string;

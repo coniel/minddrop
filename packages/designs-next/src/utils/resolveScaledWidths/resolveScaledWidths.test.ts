@@ -23,7 +23,7 @@ describe('resolveScaledWidths', () => {
 
   it('preserves proportional positions when columns shrink below one unit', () => {
     // Halving 48 scaling columns leaves half a unit per column, spread
-    // evenly rather than piled onto the leftmost columns
+    // evenly rather than piled onto the leftmost columns.
     const widths = resolveScaledWidths(new Array<boolean>(48).fill(true), 24);
     const firstHalfTotal = widths
       .slice(0, 24)

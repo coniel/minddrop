@@ -1,12 +1,13 @@
-import { BlockElement } from '../types';
+import { DesignElement } from '../types';
 
 // Column and row counts of the fixture card
 export const cardColumns = 48;
 export const cardRows = 32;
 
-// Full-width fluid cover across the card's top
-export const coverElement: BlockElement = {
-  id: 'element-cover',
+// Full-width fluid cover across the design's top
+export const coverDesignElement: DesignElement = {
+  id: 'element_cover',
+  type: 'box',
   column: 0,
   row: 0,
   columnSpan: 48,
@@ -16,8 +17,9 @@ export const coverElement: BlockElement = {
 };
 
 // Fluid title layered over the cover
-export const titleElement: BlockElement = {
-  id: 'element-title',
+export const titleDesignElement: DesignElement = {
+  id: 'element_title',
+  type: 'box',
   column: 2,
   row: 10,
   columnSpan: 28,
@@ -27,8 +29,9 @@ export const titleElement: BlockElement = {
 };
 
 // Fixed icon layered over the cover, side by side with the title
-export const iconElement: BlockElement = {
-  id: 'element-icon',
+export const iconDesignElement: DesignElement = {
+  id: 'element_icon',
+  type: 'box',
   column: 40,
   row: 8,
   columnSpan: 6,
@@ -38,8 +41,9 @@ export const iconElement: BlockElement = {
 };
 
 // Natural-height fluid body below the cover
-export const bodyElement: BlockElement = {
-  id: 'element-body',
+export const bodyDesignElement: DesignElement = {
+  id: 'element_body',
+  type: 'box',
   column: 2,
   row: 20,
   columnSpan: 44,
@@ -48,9 +52,9 @@ export const bodyElement: BlockElement = {
   naturalHeight: true,
 };
 
-export const blockElements = [
-  coverElement,
-  titleElement,
-  iconElement,
-  bodyElement,
+export const designElements = [
+  coverDesignElement,
+  titleDesignElement,
+  iconDesignElement,
+  bodyDesignElement,
 ];

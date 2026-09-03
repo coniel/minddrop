@@ -1,14 +1,23 @@
+import { EntityId } from '@minddrop/utils';
+
+export type DesignElementId = EntityId<'element'>;
+
 export type ElementWidthMode =
   | 'fluid'
   | 'fixed-left'
   | 'fixed-right'
   | 'fixed-center';
 
-export interface BlockElement {
+export interface DesignElement {
   /**
    * A unique identifier for the element.
    */
-  id: string;
+  id: DesignElementId;
+
+  /**
+   * The element type, keying the renderer's element registry.
+   */
+  type: string;
 
   /**
    * Zero-based column of the element's left edge, in grid units.

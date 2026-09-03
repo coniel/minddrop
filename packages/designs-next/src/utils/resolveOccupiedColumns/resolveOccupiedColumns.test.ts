@@ -1,10 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { iconElement, titleElement } from '../../test-utils';
+import { iconDesignElement, titleDesignElement } from '../../test-utils';
 import { resolveOccupiedColumns } from './resolveOccupiedColumns';
 
 describe('resolveOccupiedColumns', () => {
   it('marks the columns covered by element spans', () => {
-    const occupied = resolveOccupiedColumns([titleElement, iconElement], 48);
+    const occupied = resolveOccupiedColumns(
+      [titleDesignElement, iconDesignElement],
+      48,
+    );
 
     // Title columns 2-29 and icon columns 40-45 are occupied
     expect(occupied[1]).toBe(false);
@@ -18,7 +21,7 @@ describe('resolveOccupiedColumns', () => {
 
   it('clamps spans extending past the card bounds', () => {
     const occupied = resolveOccupiedColumns(
-      [{ ...iconElement, column: 44, columnSpan: 10 }],
+      [{ ...iconDesignElement, column: 44, columnSpan: 10 }],
       48,
     );
 

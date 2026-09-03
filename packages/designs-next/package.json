@@ -19,5 +19,12 @@
     "eslint": "^9.39.3",
     "tsconfig": "workspace:*",
     "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@minddrop/events": "workspace:*",
+    "@minddrop/file-system": "workspace:*",
+    "@minddrop/i18n": "workspace:*",
+    "@minddrop/stores": "workspace:*",
+    "@minddrop/utils": "workspace:*"
   }
 }

@@ -1,4 +1,4 @@
-import { BlockElement } from '../../types';
+import { DesignElement } from '../../types';
 import { resolveContextElements } from '../resolveContextElements';
 import { resolveScaledWidths } from '../resolveScaledWidths';
 import { resolveScalingColumns } from '../resolveScalingColumns';
@@ -16,7 +16,7 @@ import { resolveScalingColumns } from '../resolveScalingColumns';
  * @param newColumns - The target column count.
  * @returns The elements with columns and spans remapped.
  */
-export function remapElementColumns<TElement extends BlockElement>(
+export function remapElementColumns<TElement extends DesignElement>(
   elements: TElement[],
   oldColumns: number,
   newColumns: number,
