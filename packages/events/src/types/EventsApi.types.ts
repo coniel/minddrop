@@ -1,5 +1,6 @@
 import { EventData, EventName } from './EventDataMap.types';
 import { EventListenerCallback } from './EventListenerCallback.types';
+import { EventListenerCallbackMap } from './EventListenerCallbackMap.types';
 import { EventListenerMap } from './EventListenerMap.types';
 
 export interface EventsApi {
@@ -32,6 +33,18 @@ export interface EventsApi {
     callback: EventListenerCallback<EventData<TEvent>>,
     once?: boolean,
   ): void;
+
+  /**
+   * Adds a listener function to the **end** of the listeners array of
+   * each event in the callbacks map, all under the same listener ID.
+   *
+   * Skips events on which a listener with the same ID is already
+   * registered.
+   *
+   * @param listenerId - The ID of the listener which is being added.
+   * @param callbacks - Callback functions keyed by event name.
+   */
+  addListeners(listenerId: string, callbacks: EventListenerCallbackMap): void;
 
   /**
    * Adds the listener function to the **beginning** of the listeners array for

@@ -1,6 +1,7 @@
 import { addEventListener } from '../addEventListener';
 import { addEventListenerAfter } from '../addEventListenerAfter';
 import { addEventListenerBefore } from '../addEventListenerBefore';
+import { addEventListeners } from '../addEventListeners';
 import { dispatchEvent } from '../dispatchEvent';
 import { hasEventListener } from '../hasEventListener';
 import { prependEventListener } from '../prependEventListener';
@@ -13,6 +14,7 @@ export const Events: EventsApi = {
   listeners: eventListeners,
   addListener: (...args) => addEventListener(eventListeners, ...args),
   on: (...args) => addEventListener(eventListeners, ...args),
+  addListeners: (...args) => addEventListeners(eventListeners, ...args),
   prependListener: (...args) => prependEventListener(eventListeners, ...args),
   dispatch: (...args) => dispatchEvent(eventListeners, ...args),
   addListenerBefore: (...args) =>

@@ -36,6 +36,27 @@ describe('Events', () => {
     expect(received).toEqual({ value: 1 });
   });
 
+  it('types batch listener data from the event data registry', async () => {
+    let received: TestRegisteredEventData | undefined;
+    let voidCalled = false;
+
+    // Each callback's data derives from its key in the map
+    Events.addListeners('test', {
+      [TestRegisteredEvent]: ({ data }) => {
+        received = data;
+      },
+      [TestVoidEvent]: () => {
+        voidCalled = true;
+      },
+    });
+
+    await Events.dispatch(TestRegisteredEvent, { value: 1 });
+    await Events.dispatch(TestVoidEvent);
+
+    expect(received).toEqual({ value: 1 });
+    expect(voidCalled).toBe(true);
+  });
+
   it('rejects mismatched event data at compile time', () => {
     // @ts-expect-error wrong data shape for the event
     Events.dispatch(TestRegisteredEvent, { value: 'one' });
@@ -55,6 +76,9 @@ describe('Events', () => {
 
     // @ts-expect-error the event is not in the registry
     Events.removeListener('test:unregistered', 'test');
+
+    // @ts-expect-error the event is not in the registry
+    Events.addListeners('test', { 'test:unregistered': () => {} });
 
     expect(Events.hasListener(TestVoidEvent, 'none')).toBe(false);
   });
