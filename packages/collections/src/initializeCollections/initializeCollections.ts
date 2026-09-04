@@ -53,7 +53,7 @@ export async function initializeCollections(): Promise<void> {
   CollectionsStore.load(collections);
 
   // Rewrite collection files when member item addresses change
-  Events.on(ItemAddressesChangedEvent, 'collections', ({ data }) =>
+  Events.on(ItemAddressesChangedEvent, 'collections', (data) =>
     onItemAddressesChanged(data),
   );
 

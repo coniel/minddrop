@@ -36,7 +36,7 @@ describe('initializeDataViewsFeature', () => {
 
   it('opens the data view view on open data view view event', () =>
     new Promise<void>((resolve) => {
-      Events.addListener(OpenViewEvent, 'test-open-data-view', ({ data }) => {
+      Events.addListener(OpenViewEvent, 'test-open-data-view', (data) => {
         // The data view view opens with the data view's details
         expect(data.view).toBe(DataViewViewName);
         expect(data.id).toBe(`data-views:data-view:${dataView_gallery_1.id}`);
@@ -53,17 +53,13 @@ describe('initializeDataViewsFeature', () => {
 
   it('opens the new data view view on open new data view view event', () =>
     new Promise<void>((resolve) => {
-      Events.addListener(
-        OpenViewEvent,
-        'test-open-new-data-view',
-        ({ data }) => {
-          // The new data view view opens with the selected view type
-          expect(data.view).toBe(NewDataViewViewName);
-          expect(data.id).toBe(NewDataViewViewId);
-          expect(data.props!.viewType).toBe(dataView_gallery_1.type);
-          resolve();
-        },
-      );
+      Events.addListener(OpenViewEvent, 'test-open-new-data-view', (data) => {
+        // The new data view view opens with the selected view type
+        expect(data.view).toBe(NewDataViewViewName);
+        expect(data.id).toBe(NewDataViewViewId);
+        expect(data.props!.viewType).toBe(dataView_gallery_1.type);
+        resolve();
+      });
 
       Events.dispatch(OpenNewDataViewViewEvent, {
         viewType: dataView_gallery_1.type,
@@ -72,23 +68,19 @@ describe('initializeDataViewsFeature', () => {
 
   it('updates the data view view when the data view is updated', () =>
     new Promise<void>((resolve) => {
-      Events.addListener(
-        UpdateViewEvent,
-        'test-update-data-view',
-        ({ data }) => {
-          // The view title follows the data view
-          expect(data.id).toBe(`data-views:data-view:${dataView_gallery_1.id}`);
-          expect(data.title).toBe('Renamed view');
-          resolve();
-        },
-      );
+      Events.addListener(UpdateViewEvent, 'test-update-data-view', (data) => {
+        // The view title follows the data view
+        expect(data.id).toBe(`data-views:data-view:${dataView_gallery_1.id}`);
+        expect(data.title).toBe('Renamed view');
+        resolve();
+      });
 
       DataViews.update(dataView_gallery_1.id, { name: 'Renamed view' });
     }));
 
   it('closes the data view view when the data view is deleted', () =>
     new Promise<void>((resolve) => {
-      Events.addListener(CloseViewEvent, 'test-close-data-view', ({ data }) => {
+      Events.addListener(CloseViewEvent, 'test-close-data-view', (data) => {
         expect(data.id).toBe(`data-views:data-view:${dataView_gallery_1.id}`);
         resolve();
       });

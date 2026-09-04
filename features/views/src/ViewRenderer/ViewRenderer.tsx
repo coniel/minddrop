@@ -83,7 +83,7 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
     const listenerId = `feature-views:view-area:${viewAreaId}`;
 
     // Open a view in the pane the open targets
-    Events.addListener(OpenViewEvent, listenerId, ({ data }) => {
+    Events.addListener(OpenViewEvent, listenerId, (data) => {
       // Ignore events targeting a different view area
       if (!matchesViewArea(data.viewAreaId, viewAreaId)) {
         return;
@@ -93,7 +93,7 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
     });
 
     // Record the entity a view now shows within itself
-    Events.addListener(SetSubviewEvent, listenerId, ({ data }) => {
+    Events.addListener(SetSubviewEvent, listenerId, (data) => {
       // Ignore events targeting a different view area
       if (!matchesViewArea(data.viewAreaId, viewAreaId)) {
         return;
@@ -103,7 +103,7 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
     });
 
     // Replace the entire state (e.g. when a tab is activated)
-    Events.addListener(SetViewAreaEvent, listenerId, ({ data }) => {
+    Events.addListener(SetViewAreaEvent, listenerId, (data) => {
       // Ignore events targeting a different view area
       if (!matchesViewArea(data.viewAreaId, viewAreaId)) {
         return;

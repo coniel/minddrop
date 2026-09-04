@@ -87,8 +87,8 @@ describe('updateCollection', () => {
         CollectionUpdatedEvent,
         'test-collection-updated',
         (payload) => {
-          expect(payload.data.original).toEqual(collection_1);
-          expect(payload.data.updated).toEqual(updatedCollection);
+          expect(payload.original).toEqual(collection_1);
+          expect(payload.updated).toEqual(updatedCollection);
           done();
         },
       );

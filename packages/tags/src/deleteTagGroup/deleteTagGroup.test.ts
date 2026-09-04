@@ -50,7 +50,7 @@ describe('deleteTagGroup', () => {
         TagGroupDeletedEvent,
         'test-tag-group-deleted',
         (payload) => {
-          expect(payload.data).toEqual(tagGroup_1);
+          expect(payload).toEqual(tagGroup_1);
           done();
         },
       );

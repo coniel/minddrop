@@ -55,7 +55,7 @@ describe('updateDatabase', () => {
     new Promise<void>((done) => {
       Events.addListener(DatabaseUpdatedEvent, 'test', (payload) => {
         // Payload data should contain original and updated configs
-        expect(payload.data).toEqual({
+        expect(payload).toEqual({
           original: objectDatabase,
           updated: updatedConfig,
         });

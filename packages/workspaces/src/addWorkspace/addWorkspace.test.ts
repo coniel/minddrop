@@ -106,7 +106,7 @@ describe('addWorkspace', () => {
   it('dispatches a workspaces loaded event', async () =>
     new Promise<void>((done) => {
       Events.addListener(WorkspacesLoadedEvent, 'test', (payload) => {
-        expect(payload.data).toMatchObject([workspace_1]);
+        expect(payload).toMatchObject([workspace_1]);
         done();
       });
 

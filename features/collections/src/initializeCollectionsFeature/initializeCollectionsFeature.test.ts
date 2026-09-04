@@ -22,7 +22,7 @@ describe('initializeCollectionsFeature', () => {
 
   it('opens the collections view on open collections view event', () =>
     new Promise<void>((resolve) => {
-      Events.addListener(OpenViewEvent, 'test-open-collections', ({ data }) => {
+      Events.addListener(OpenViewEvent, 'test-open-collections', (data) => {
         // The collections list view opens as a singleton
         expect(data.view).toBe(CollectionsViewName);
         expect(data.id).toBe('collections:collections');

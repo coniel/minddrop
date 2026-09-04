@@ -64,7 +64,7 @@ describe('createDesign', () => {
   it('dispatches a design created event', async () =>
     new Promise<void>((done) => {
       Events.addListener(DesignCreatedEvent, 'test', (payload) => {
-        expect(payload.data.name).toBe('Books');
+        expect(payload.name).toBe('Books');
         done();
       });
 

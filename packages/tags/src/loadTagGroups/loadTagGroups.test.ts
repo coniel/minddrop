@@ -41,7 +41,7 @@ describe('loadTagGroups', () => {
   it('dispatches a tag groups loaded event', async () =>
     new Promise<void>((done) => {
       Events.addListener(TagGroupsLoadedEvent, 'test', (payload) => {
-        expect(payload.data).toEqual(tagGroups);
+        expect(payload).toEqual(tagGroups);
         done();
       });
 

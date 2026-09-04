@@ -36,16 +36,12 @@ export function setup() {
   // Stand in for the platform layer, which answers a store's hydrate
   // request with its persisted data. Without a responder, hydrate()
   // never resolves and initializeTheme() never completes.
-  Events.addListener(
-    StoreHydrateRequestEvent,
-    HYDRATE_LISTENER_ID,
-    ({ data }) => {
-      Events.dispatch(StoreHydrateEvent, {
-        namespace: data.namespace,
-        data: {},
-      });
-    },
-  );
+  Events.addListener(StoreHydrateRequestEvent, HYDRATE_LISTENER_ID, (data) => {
+    Events.dispatch(StoreHydrateEvent, {
+      namespace: data.namespace,
+      data: {},
+    });
+  });
 }
 
 export function cleanup() {

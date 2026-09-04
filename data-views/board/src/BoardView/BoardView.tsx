@@ -141,7 +141,7 @@ export const BoardViewComponent: React.FC<
     Events.addListener(
       DatabaseEntryDuplicatedEvent,
       `board-view-${view.id}`,
-      ({ data }) => {
+      (data) => {
         // Ignore duplications from other sources
         if (data.source?.id !== view.dataSource.id) {
           return;

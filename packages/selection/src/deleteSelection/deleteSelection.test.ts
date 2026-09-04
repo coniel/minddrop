@@ -51,7 +51,7 @@ describe('deleteSelection', () => {
     new Promise<void>((done) => {
       Events.addListener(SelectionDeletedEvent, 'test', (payload) => {
         // Payload data should contain only the deleted items
-        expect(payload.data).toEqual([selectionItem_A_1]);
+        expect(payload).toEqual([selectionItem_A_1]);
         done();
       });
 

@@ -50,7 +50,7 @@ describe('loadVirtualAutomations', () => {
         AutomationsLoadedEvent,
         'test-automations-loaded',
         (payload) => {
-          expect(payload.data[0].id).toBe(automation_virtual_1.id);
+          expect(payload[0].id).toBe(automation_virtual_1.id);
           done();
         },
       );

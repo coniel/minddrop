@@ -38,7 +38,7 @@ describe('deleteDesign', () => {
   it('dispatches a design deleted event', async () =>
     new Promise<void>((done) => {
       Events.addListener(DesignDeletedEvent, 'test', (payload) => {
-        expect(payload.data.id).toBe(design_books.id);
+        expect(payload.id).toBe(design_books.id);
         done();
       });
 

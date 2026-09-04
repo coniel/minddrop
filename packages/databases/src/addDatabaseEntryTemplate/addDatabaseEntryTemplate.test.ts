@@ -92,8 +92,8 @@ describe('addDatabaseEntryTemplate', () => {
     new Promise<void>((done) => {
       Events.addListener(DatabaseEntryTemplateAddedEvent, 'test', (payload) => {
         // Payload data should contain the updated database and new template
-        expect(payload.data.database.id).toBe(entryTemplatesDatabase.id);
-        expect(payload.data.template.name).toBe('New Template');
+        expect(payload.database.id).toBe(entryTemplatesDatabase.id);
+        expect(payload.template.name).toBe('New Template');
         done();
       });
 

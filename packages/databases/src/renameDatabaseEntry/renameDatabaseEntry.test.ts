@@ -102,7 +102,7 @@ describe('renameDatabaseEntry', () => {
     new Promise<void>((done) => {
       Events.addListener(DatabaseEntryRenamedEvent, 'test', (payload) => {
         // Payload data should contain the original and updated entry
-        expect(payload.data).toEqual({
+        expect(payload).toEqual({
           original: objectEntry1,
           updated: {
             ...objectEntry1,

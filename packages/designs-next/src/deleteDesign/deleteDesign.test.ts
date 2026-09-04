@@ -48,7 +48,7 @@ describe('deleteDesign', () => {
         DesignDeletedEvent,
         'test-design-deleted',
         (payload) => {
-          expect(payload.data).toEqual(cardDesign_1);
+          expect(payload).toEqual(cardDesign_1);
           done();
         },
       );

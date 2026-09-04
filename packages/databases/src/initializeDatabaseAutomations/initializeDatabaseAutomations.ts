@@ -29,16 +29,13 @@ export function initializeDatabaseAutomations(): void {
   Events.addListener(
     DatabaseEntryCreatedEvent,
     Listeners['create-entry'],
-    (event) => {
-      runCreateEntryDatabaseAutomations(event.data);
+    (entry) => {
+      runCreateEntryDatabaseAutomations(entry);
 
       // Also run update-property automations with empty properties
       // on the original entry as new properties are considered to be
       // 'updated' from nothing to something.
-      runUpdatePropertyDatabaseAutomations(
-        { ...event.data, properties: {} },
-        event.data,
-      );
+      runUpdatePropertyDatabaseAutomations({ ...entry, properties: {} }, entry);
     },
   );
 
@@ -46,11 +43,8 @@ export function initializeDatabaseAutomations(): void {
   Events.addListener(
     DatabaseEntryUpdatedEvent,
     Listeners['update-property'],
-    (event) =>
-      runUpdatePropertyDatabaseAutomations(
-        event.data.original,
-        event.data.updated,
-      ),
+    ({ original, updated }) =>
+      runUpdatePropertyDatabaseAutomations(original, updated),
   );
 }
 

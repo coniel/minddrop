@@ -117,8 +117,8 @@ describe('updateDatabaseEntryTemplate', () => {
         'test',
         (payload) => {
           // Payload data should contain the updated database and template
-          expect(payload.data.database.id).toBe(entryTemplatesDatabase.id);
-          expect(payload.data.template.name).toBe('Renamed');
+          expect(payload.database.id).toBe(entryTemplatesDatabase.id);
+          expect(payload.template.name).toBe('Renamed');
           done();
         },
       );

@@ -29,7 +29,7 @@ describe('initializeWorkspaces', () => {
   it('dispatches a workspaces loaded event', async () =>
     new Promise<void>((done) => {
       Events.addListener(WorkspacesLoadedEvent, 'test', (payload) => {
-        expect(payload.data).toEqual(workspaces);
+        expect(payload).toEqual(workspaces);
         done();
       });
 

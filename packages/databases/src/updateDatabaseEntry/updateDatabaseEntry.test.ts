@@ -91,7 +91,7 @@ describe('updateDatabaseEntry', () => {
     new Promise<void>((done) => {
       Events.addListener(DatabaseEntryUpdatedEvent, 'test', (payload) => {
         // Payload data should cotain the original and updated entry
-        expect(payload.data).toEqual({
+        expect(payload).toEqual({
           original: objectEntry1,
           updated: {
             ...objectEntry1,

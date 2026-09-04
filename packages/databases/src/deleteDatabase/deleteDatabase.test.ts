@@ -35,7 +35,7 @@ describe('deleteDatabase', () => {
 
   it('dispatches a database deleted event', async () =>
     new Promise<void>((done) => {
-      Events.addListener(DatabaseDeletedEvent, 'test', ({ data }) => {
+      Events.addListener(DatabaseDeletedEvent, 'test', (data) => {
         // Payload should be the deleted database
         expect(data).toEqual(objectDatabase);
         done();

@@ -39,7 +39,7 @@ describe('removeFromSelection', () => {
     new Promise<void>((done) => {
       Events.addListener(SelectionItemsRemovedEvent, 'test', (payload) => {
         // Payload data should be the removed items without duplicates
-        expect(payload.data).toEqual([selectionItem_A_1]);
+        expect(payload).toEqual([selectionItem_A_1]);
         done();
       });
 

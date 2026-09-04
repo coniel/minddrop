@@ -20,7 +20,7 @@ describe('registerDesignRole', () => {
     new Promise<void>((done) => {
       // Listen for the role registered event
       Events.addListener(DesignRoleRegisteredEvent, 'test', (payload) => {
-        expect(payload.data).toEqual(HeadingRole);
+        expect(payload).toEqual(HeadingRole);
         done();
       });
 

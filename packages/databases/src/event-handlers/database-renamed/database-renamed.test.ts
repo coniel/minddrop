@@ -57,7 +57,7 @@ describe('onRenameDatabase', () => {
 
     // Register the reference rewrite listener normally wired by
     // initializeDatabaseEventHandlers
-    Events.on(ItemAddressesChangedEvent, 'test', ({ data }) =>
+    Events.on(ItemAddressesChangedEvent, 'test', (data) =>
       onItemAddressesChanged(data),
     );
 
@@ -171,7 +171,7 @@ describe('onRenameDatabase', () => {
     const deleteEvents: DatabaseSqlSyncedEventData[] = [];
 
     // Capture database delete sync events
-    Events.addListener(DatabaseSqlSyncedEvent, 'test', ({ data }) => {
+    Events.addListener(DatabaseSqlSyncedEvent, 'test', (data) => {
       if (data.action === 'delete') {
         deleteEvents.push(data);
       }
@@ -190,7 +190,7 @@ describe('onRenameDatabase', () => {
     const deleteEvents: DatabaseEntriesSqlSyncedEventData[] = [];
 
     // Capture entry delete sync events
-    Events.addListener(DatabaseEntriesSqlSyncedEvent, 'test', ({ data }) => {
+    Events.addListener(DatabaseEntriesSqlSyncedEvent, 'test', (data) => {
       if (data.action === 'delete') {
         deleteEvents.push(data);
       }

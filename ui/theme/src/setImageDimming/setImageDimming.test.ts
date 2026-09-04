@@ -34,7 +34,7 @@ describe('setImageDimming', () => {
       // Listen to `theme:image-dimming:changed` events
       Events.addListener(ImageDimmingChangedEvent, 'test', (payload) => {
         // Payload data should contain the image dimming value
-        expect(payload.data.imageDimming).toBe(ImageDimmingLevel3);
+        expect(payload.imageDimming).toBe(ImageDimmingLevel3);
         done();
       });
 

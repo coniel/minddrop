@@ -45,12 +45,12 @@ export async function initializeDataViews(): Promise<void> {
   DataViewsStore.load(views);
 
   // Apply changes made to data view files outside of the app
-  Events.on(FileSystemChangedEvent, 'data-views', ({ data }) =>
+  Events.on(FileSystemChangedEvent, 'data-views', (data) =>
     onFileSystemChanged(data),
   );
 
   // Rewrite view files when referenced item addresses change
-  Events.on(ItemAddressesChangedEvent, 'data-views', ({ data }) =>
+  Events.on(ItemAddressesChangedEvent, 'data-views', (data) =>
     onItemAddressesChanged(data),
   );
 

@@ -57,7 +57,7 @@ describe('createQuery', () => {
   it('dispatches the query created event', async () =>
     new Promise<void>((done) => {
       Events.addListener(QueryCreatedEvent, 'test-query-created', (payload) => {
-        expect(payload.data).toEqual(newQuery);
+        expect(payload).toEqual(newQuery);
         done();
       });
 

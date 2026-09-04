@@ -30,7 +30,7 @@ describe('<SpacesFeature />', () => {
     new Promise<void>((resolve) => {
       render(<SpacesFeature />);
 
-      Events.addListener(OpenViewEvent, 'test-open-space', ({ data }) => {
+      Events.addListener(OpenViewEvent, 'test-open-space', (data) => {
         // The space view opens with the space's details
         expect(data.view).toBe(SpaceViewName);
         expect(data.id).toBe(`spaces:space:${space_1.id}`);
@@ -49,7 +49,7 @@ describe('<SpacesFeature />', () => {
     new Promise<void>((resolve) => {
       render(<SpacesFeature />);
 
-      Events.addListener(UpdateViewEvent, 'test-update-space', ({ data }) => {
+      Events.addListener(UpdateViewEvent, 'test-update-space', (data) => {
         // The view title and icon follow the space
         expect(data.id).toBe(`spaces:space:${space_1.id}`);
         expect(data.title).toBe('Renamed space');
@@ -63,7 +63,7 @@ describe('<SpacesFeature />', () => {
     new Promise<void>((resolve) => {
       render(<SpacesFeature />);
 
-      Events.addListener(CloseViewEvent, 'test-close-space', ({ data }) => {
+      Events.addListener(CloseViewEvent, 'test-close-space', (data) => {
         expect(data.id).toBe(`spaces:space:${space_1.id}`);
         resolve();
       });

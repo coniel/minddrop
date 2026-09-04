@@ -145,7 +145,7 @@ describe('createKeyValueStore', () => {
     it('dispatches a persist event on set', async () =>
       new Promise<void>((done) => {
         Events.addListener(StorePersistEvent, 'test', (payload) => {
-          expect(payload.data).toEqual({
+          expect(payload).toEqual({
             persistTo: 'app-config',
             namespace: 'test-kv',
             data: { ...defaults, theme: 'dark' },
@@ -161,7 +161,7 @@ describe('createKeyValueStore', () => {
         store.set('theme', 'dark');
 
         Events.addListener(StorePersistEvent, 'test', (payload) => {
-          expect(payload.data).toEqual({
+          expect(payload).toEqual({
             persistTo: 'app-config',
             namespace: 'test-kv',
             data: defaults,
@@ -177,7 +177,7 @@ describe('createKeyValueStore', () => {
         store.set('theme', 'dark');
 
         Events.addListener(StorePersistEvent, 'test', (payload) => {
-          expect(payload.data).toEqual({
+          expect(payload).toEqual({
             persistTo: 'app-config',
             namespace: 'test-kv',
             data: defaults,
@@ -204,7 +204,7 @@ describe('createKeyValueStore', () => {
       it('dispatches a load request event', async () =>
         new Promise<void>((done) => {
           Events.addListener(StoreHydrateRequestEvent, 'test', (payload) => {
-            expect(payload.data).toEqual({
+            expect(payload).toEqual({
               persistTo: 'app-config',
               namespace: 'test-kv',
             });
@@ -266,9 +266,8 @@ describe('createKeyValueStore', () => {
         await freshStore.hydrate();
 
         expect(callback).toHaveBeenCalledWith(
-          expect.objectContaining({
-            data: { namespace: 'hydrated-event-test' },
-          }),
+          { namespace: 'hydrated-event-test' },
+          StoreHydratedEvent,
         );
       });
     });

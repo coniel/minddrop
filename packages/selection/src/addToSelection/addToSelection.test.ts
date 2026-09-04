@@ -57,7 +57,7 @@ describe('addToSelection', () => {
       Events.addListener(SelectionItemsAddedEvent, 'test', (payload) => {
         // Payload data should be the added items, exluding
         // duplicates.
-        expect(payload.data).toEqual([selectionItem_A_2]);
+        expect(payload).toEqual([selectionItem_A_2]);
         done();
       });
 

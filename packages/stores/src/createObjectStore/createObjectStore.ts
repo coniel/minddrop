@@ -224,13 +224,13 @@ export function createObjectStore<TItem extends object>(
     Events.addListener(
       StoreHydrateEvent,
       `stores:${persist.namespace}`,
-      (event) => {
-        if (event.data.namespace !== persist!.namespace) {
+      (hydration) => {
+        if (hydration.namespace !== persist!.namespace) {
           return;
         }
 
         // Load the persisted data as an array of items
-        const items = Object.values(event.data.data) as TItem[];
+        const items = Object.values(hydration.data) as TItem[];
         store.getState().load(items);
 
         // Notify that the store has been hydrated

@@ -28,9 +28,7 @@ export async function initializeTheme() {
   Events.addListener(
     VariantChangedEvent,
     'theme:initialize:manage-os-listener',
-    (payload) => {
-      const { variant } = payload.data;
-
+    ({ variant }) => {
       if (variant === ThemeSystem) {
         // If the variant is 'system', listen for OS dark
         // mode changes.

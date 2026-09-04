@@ -24,7 +24,7 @@ export function initializeTabsSyncListeners(viewAreaId: string): VoidFunction {
   const listenerId = `feature-views:tabs:${viewAreaId}`;
 
   // Record view area changes onto the active tab
-  Events.addListener(ViewAreaChangedEvent, listenerId, ({ data }) => {
+  Events.addListener(ViewAreaChangedEvent, listenerId, (data) => {
     // Ignore changes from other view areas
     if (data.viewAreaId !== viewAreaId) {
       return;
@@ -34,7 +34,7 @@ export function initializeTabsSyncListeners(viewAreaId: string): VoidFunction {
   });
 
   // Update tabs when a view's metadata changes (e.g. a rename)
-  Events.addListener(UpdateViewEvent, listenerId, ({ data }) => {
+  Events.addListener(UpdateViewEvent, listenerId, (data) => {
     // Ignore updates targeting other view areas
     if (!matchesViewArea(data.viewAreaId, viewAreaId)) {
       return;
@@ -49,7 +49,7 @@ export function initializeTabsSyncListeners(viewAreaId: string): VoidFunction {
   });
 
   // Close tabs when their view is closed (e.g. a delete)
-  Events.addListener(CloseViewEvent, listenerId, ({ data }) => {
+  Events.addListener(CloseViewEvent, listenerId, (data) => {
     // Ignore closes targeting other view areas
     if (!matchesViewArea(data.viewAreaId, viewAreaId)) {
       return;
@@ -59,7 +59,7 @@ export function initializeTabsSyncListeners(viewAreaId: string): VoidFunction {
   });
 
   // Navigate the active tab back when a view's breadcrumb is clicked
-  Events.addListener(NavigateBackEvent, listenerId, ({ data }) => {
+  Events.addListener(NavigateBackEvent, listenerId, (data) => {
     // Ignore navigations targeting other view areas
     if (!matchesViewArea(data.viewAreaId, viewAreaId)) {
       return;
@@ -70,7 +70,7 @@ export function initializeTabsSyncListeners(viewAreaId: string): VoidFunction {
 
   // Restore the active tab's content once the view area is ready to
   // receive it (covers the view area mounting after this)
-  Events.addListener(ViewAreaReadyEvent, listenerId, ({ data }) => {
+  Events.addListener(ViewAreaReadyEvent, listenerId, (data) => {
     // Ignore ready events from other view areas
     if (data.viewAreaId !== viewAreaId) {
       return;

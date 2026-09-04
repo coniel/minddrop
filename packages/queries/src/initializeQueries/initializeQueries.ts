@@ -32,7 +32,7 @@ export async function initializeQueries(): Promise<void> {
   QueriesStore.load(queries);
 
   // Apply changes made to query files outside of the app
-  Events.on(FileSystemChangedEvent, 'queries', ({ data }) =>
+  Events.on(FileSystemChangedEvent, 'queries', (data) =>
     onFileSystemChanged(data),
   );
 

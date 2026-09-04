@@ -44,7 +44,7 @@ describe('handleBackgroundSyncResult', () => {
     let dispatched: ItemAddressesChangedEventData | undefined;
 
     Events.addListener(ItemAddressesChangedEvent, 'test', (payload) => {
-      dispatched = payload.data;
+      dispatched = payload;
     });
 
     // The synced record carries the entry's new title and path
@@ -72,7 +72,7 @@ describe('handleBackgroundSyncResult', () => {
     let dispatched: ItemAddressesChangedEventData | undefined;
 
     Events.addListener(ItemAddressesChangedEvent, 'test', (payload) => {
-      dispatched = payload.data;
+      dispatched = payload;
     });
 
     // The synced record places the entry in another database

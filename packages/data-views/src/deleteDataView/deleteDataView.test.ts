@@ -44,7 +44,7 @@ describe('deleteDataView', () => {
   it('dispatches a view deleted event', async () =>
     new Promise<void>((done) => {
       Events.addListener(DataViewDeletedEvent, 'test', (payload) => {
-        expect(payload.data).toEqual(dataView_gallery_1);
+        expect(payload).toEqual(dataView_gallery_1);
         done();
       });
 

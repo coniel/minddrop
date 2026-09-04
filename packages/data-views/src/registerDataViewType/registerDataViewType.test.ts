@@ -21,7 +21,7 @@ describe('registerDataViewType', () => {
   it('dispatches the view type registered event', () =>
     new Promise<void>((done) => {
       Events.addListener(DataViewTypeRegisteredEvent, 'test', (payload) => {
-        expect(payload.data).toEqual(dataViewType_gallery);
+        expect(payload).toEqual(dataViewType_gallery);
         done();
       });
 

@@ -53,8 +53,8 @@ describe('loadVirtualCollections', () => {
   it('dispatches a collections loaded event', () =>
     new Promise<void>((done) => {
       Events.addListener(CollectionsLoadedEvent, 'test', (payload) => {
-        expect(payload.data).toHaveLength(2);
-        expect(payload.data[0].virtual).toBe(true);
+        expect(payload).toHaveLength(2);
+        expect(payload[0].virtual).toBe(true);
         done();
       });
 

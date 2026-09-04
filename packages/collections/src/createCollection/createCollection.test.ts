@@ -45,7 +45,7 @@ describe('createCollection', () => {
         CollectionCreatedEvent,
         'test-collection-created',
         (payload) => {
-          expect(payload.data).toEqual(newCollection);
+          expect(payload).toEqual(newCollection);
           done();
         },
       );

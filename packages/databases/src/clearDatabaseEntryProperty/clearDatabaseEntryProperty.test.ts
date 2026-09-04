@@ -68,7 +68,7 @@ describe('clearDatabaseEntryProperty', () => {
     );
 
     // Register the collection write-back handler
-    Events.addListener(CollectionUpdatedEvent, 'test', ({ data }) =>
+    Events.addListener(CollectionUpdatedEvent, 'test', (data) =>
       onUpdateCollection(data),
     );
 

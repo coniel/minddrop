@@ -44,8 +44,8 @@ describe('updateQuery', () => {
   it('dispatches the query updated event', async () =>
     new Promise<void>((done) => {
       Events.addListener(QueryUpdatedEvent, 'test-query-updated', (payload) => {
-        expect(payload.data.original).toEqual(query_1);
-        expect(payload.data.updated).toEqual(updatedQuery);
+        expect(payload.original).toEqual(query_1);
+        expect(payload.updated).toEqual(updatedQuery);
         done();
       });
 

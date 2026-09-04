@@ -24,7 +24,7 @@ describe('dispatchDynamicEvent', () => {
   it('dispatches the event under the given name', async () => {
     let received: unknown;
 
-    Events.addListener(TestDynamicEvent, 'test', ({ data }) => {
+    Events.addListener(TestDynamicEvent, 'test', (data) => {
       received = data;
     });
 

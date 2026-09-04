@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { Event, EventListenerMap } from '../types';
+import { EventListenerMap } from '../types';
 import { dispatchEvent } from './dispatchEvent';
 
 const asyncFunction = vi.fn();
@@ -32,33 +32,10 @@ const failingListener = {
   }),
 };
 
-// An event listener that stops propagation
-const stopPropagationListener = {
-  id: 'stop-propagation-listener',
-  callback: vi
-    .fn()
-    .mockImplementation((event: Event) => event.stopPropagation()),
-};
-
-// An event listener that skips propagation to 'sync-listener'
-const skipPropagationListener = {
-  id: 'stop-propagation-listener',
-  callback: vi
-    .fn()
-    .mockImplementation((event: Event) =>
-      event.skipPropagation(syncListener.id),
-    ),
-};
-
-// An event listener that skips propagation to 'sync-listener'
-// and 'async-listener'.
-const multiSkipPropagationListener = {
-  id: 'multi-stop-propagation-listener',
-  callback: vi
-    .fn()
-    .mockImplementation((event: Event) =>
-      event.skipPropagation([syncListener.id, asyncListener.id]),
-    ),
+// A catch-all event listener
+const catchAllListener = {
+  id: 'catch-all-listener',
+  callback: vi.fn(),
 };
 
 let eventListeners: EventListenerMap;
@@ -78,19 +55,20 @@ describe('dispatchEvent', () => {
     vi.clearAllMocks();
   });
 
-  it('synchrounously calls registered listeners for the event', async () => {
-    const event = {
-      name: 'test-event',
-      data,
-      stopPropagation: expect.any(Function),
-      skipPropagation: expect.any(Function),
-    };
+  it('calls registered listeners with the data and event name', async () => {
+    await dispatchEvent(eventListeners, 'test-event', data);
+
+    expect(syncListener.callback).toHaveBeenCalledWith(data, 'test-event');
+    expect(asyncListener.callback).toHaveBeenCalledWith(data, 'test-event');
+    expect(asyncFunction).toHaveBeenCalled();
+  });
+
+  it('calls catch-all listeners with the dispatched event name', async () => {
+    eventListeners['*'] = { listeners: [catchAllListener] };
 
     await dispatchEvent(eventListeners, 'test-event', data);
 
-    expect(syncListener.callback.mock.calls[0][0]).toEqual(event);
-    expect(asyncListener.callback.mock.calls[0][0]).toEqual(event);
-    expect(asyncFunction).toHaveBeenCalled();
+    expect(catchAllListener.callback).toHaveBeenCalledWith(data, 'test-event');
   });
 
   describe('when a listener throws', () => {
@@ -121,58 +99,5 @@ describe('dispatchEvent', () => {
       expect(syncListener.callback).toHaveBeenCalled();
       expect(asyncListener.callback).toHaveBeenCalled();
     });
-  });
-
-  it('stops propagation', async () => {
-    // Register 'stopPropagationListener' before 'syncListener'
-    eventListeners['test-event'].listeners = [
-      stopPropagationListener,
-      syncListener,
-    ];
-
-    // Dispatch a 'test-event'
-    await dispatchEvent(eventListeners, 'test-event');
-
-    // Should call 'stopPropagationListener' but not 'synListener'
-    expect(stopPropagationListener.callback).toHaveBeenCalled();
-    expect(syncListener.callback).not.toHaveBeenCalled();
-  });
-
-  it('skips a listener', async () => {
-    // Register 'skipPropagationListener' before 'syncListener'
-    // and 'asyncListener'
-    eventListeners['test-event'].listeners = [
-      skipPropagationListener,
-      syncListener,
-      asyncListener,
-    ];
-
-    // Dispatch a 'test-event'
-    await dispatchEvent(eventListeners, 'test-event');
-
-    // Should call 'skipPropagationListener' and 'asyncListener',
-    // but not 'synListener'
-    expect(skipPropagationListener.callback).toHaveBeenCalled();
-    expect(asyncListener.callback).toHaveBeenCalled();
-    expect(syncListener.callback).not.toHaveBeenCalled();
-  });
-
-  it('skips multiple listeners', async () => {
-    // Register 'multiSkipPropagationListener' before 'syncListener'
-    // and 'asyncListener'
-    eventListeners['test-event'].listeners = [
-      multiSkipPropagationListener,
-      syncListener,
-      asyncListener,
-    ];
-
-    // Dispatch a 'test-event'
-    await dispatchEvent(eventListeners, 'test-event');
-
-    // Should call 'multiSkipPropagationListener' but not
-    // 'asyncListener' or 'synListener'
-    expect(multiSkipPropagationListener.callback).toHaveBeenCalled();
-    expect(asyncListener.callback).not.toHaveBeenCalled();
-    expect(syncListener.callback).not.toHaveBeenCalled();
   });
 });

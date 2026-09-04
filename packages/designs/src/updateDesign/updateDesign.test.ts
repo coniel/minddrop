@@ -49,8 +49,8 @@ describe('updateDesign', () => {
   it('dispatches a design updated event', async () =>
     new Promise<void>((done) => {
       Events.addListener(DesignUpdatedEvent, 'test', (payload) => {
-        expect(payload.data.original.name).toBe(design_books.name);
-        expect(payload.data.updated.name).toBe('Novels');
+        expect(payload.original.name).toBe(design_books.name);
+        expect(payload.updated.name).toBe('Novels');
         done();
       });
 

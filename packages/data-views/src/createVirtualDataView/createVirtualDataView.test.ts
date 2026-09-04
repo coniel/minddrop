@@ -109,7 +109,7 @@ describe('createVirtualDataView', () => {
         DataViewCreatedEvent,
         'test-virtual-created',
         (payload) => {
-          expect(payload.data).toEqual(expectedView);
+          expect(payload).toEqual(expectedView);
           done();
         },
       );

@@ -23,7 +23,7 @@ describe('setInvertLightImages', () => {
       // Listen to `theme:invert-light-images:changed` events
       Events.addListener(InvertLightImagesChangedEvent, 'test', (payload) => {
         // Payload data should contain the setting value
-        expect(payload.data.invertLightImages).toBe(true);
+        expect(payload.invertLightImages).toBe(true);
         done();
       });
 

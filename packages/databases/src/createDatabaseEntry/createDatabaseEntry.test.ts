@@ -137,7 +137,7 @@ describe('createDatabaseEntry', () => {
     new Promise<void>((done) => {
       Events.addListener(DatabaseEntryCreatedEvent, 'test', (payload) => {
         // Payload data should be the new entry
-        expect(payload.data).toEqual({ ...newEntry, id: expect.any(String) });
+        expect(payload).toEqual({ ...newEntry, id: expect.any(String) });
         done();
       });
 

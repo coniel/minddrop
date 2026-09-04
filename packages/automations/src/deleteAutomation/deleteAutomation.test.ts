@@ -56,7 +56,7 @@ describe('deleteAutomation', () => {
         AutomationDeletedEvent,
         'test-automation-deleted',
         (payload) => {
-          expect(payload.data).toEqual(automation_1);
+          expect(payload).toEqual(automation_1);
           done();
         },
       );

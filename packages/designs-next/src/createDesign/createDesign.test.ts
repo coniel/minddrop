@@ -67,7 +67,7 @@ describe('createDesign', () => {
         DesignCreatedEvent,
         'test-design-created',
         (payload) => {
-          expect(payload.data).toEqual(newDesign);
+          expect(payload).toEqual(newDesign);
           done();
         },
       );

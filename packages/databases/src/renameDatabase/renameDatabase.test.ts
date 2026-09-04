@@ -53,7 +53,7 @@ describe('renameDatabase', () => {
 
   it('dispatches a database renamed event', async () =>
     new Promise<void>((done) => {
-      Events.addListener(DatabaseRenamedEvent, 'test', ({ data }) => {
+      Events.addListener(DatabaseRenamedEvent, 'test', (data) => {
         // Payload should contain the original and renamed database
         expect(data.original).toEqual(objectDatabase);
         expect(data.updated).toMatchObject({

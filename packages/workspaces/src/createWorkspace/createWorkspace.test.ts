@@ -90,7 +90,7 @@ describe('createWorkspace', () => {
   it('dispatches a workspace created event', async () =>
     new Promise<void>((done) => {
       Events.addListener(WorkspaceCreatedEvent, 'test', (payload) => {
-        expect(payload.data).toMatchObject(newWorkspace);
+        expect(payload).toMatchObject(newWorkspace);
         done();
       });
 

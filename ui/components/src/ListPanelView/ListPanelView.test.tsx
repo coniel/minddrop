@@ -56,7 +56,7 @@ describe('<ListPanelView />', () => {
     const announcements: unknown[] = [];
 
     // Capture subview announcements
-    Events.addListener(SetSubviewEvent, 'test', ({ data }) => {
+    Events.addListener(SetSubviewEvent, 'test', (data) => {
       announcements.push(data);
     });
 
@@ -79,7 +79,7 @@ describe('<ListPanelView />', () => {
     const user = userEvent.setup();
 
     // Capture subview announcements
-    Events.addListener(SetSubviewEvent, 'test', ({ data }) => {
+    Events.addListener(SetSubviewEvent, 'test', (data) => {
       announcements.push(data);
     });
 

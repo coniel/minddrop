@@ -70,7 +70,7 @@ describe('onRenameEntry', () => {
 
     // Register the reference rewrite listener normally wired by
     // initializeDatabaseEventHandlers
-    Events.on(ItemAddressesChangedEvent, 'test', ({ data }) =>
+    Events.on(ItemAddressesChangedEvent, 'test', (data) =>
       onItemAddressesChanged(data),
     );
 

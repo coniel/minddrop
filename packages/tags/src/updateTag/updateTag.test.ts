@@ -78,8 +78,8 @@ describe('updateTag', () => {
   it('dispatches the tag updated event', async () =>
     new Promise<void>((done) => {
       Events.addListener(TagUpdatedEvent, 'test-tag-updated', (payload) => {
-        expect(payload.data.original).toEqual(tag_1);
-        expect(payload.data.updated).toEqual(updatedTag);
+        expect(payload.original).toEqual(tag_1);
+        expect(payload.updated).toEqual(updatedTag);
         done();
       });
 
@@ -89,8 +89,8 @@ describe('updateTag', () => {
   it('dispatches the tag renamed event when the name changed', async () =>
     new Promise<void>((done) => {
       Events.addListener(TagRenamedEvent, 'test-tag-renamed', (payload) => {
-        expect(payload.data.original).toEqual(tag_1);
-        expect(payload.data.updated).toEqual(updatedTag);
+        expect(payload.original).toEqual(tag_1);
+        expect(payload.updated).toEqual(updatedTag);
         done();
       });
 

@@ -64,8 +64,8 @@ describe('updateDesign', () => {
         DesignUpdatedEvent,
         'test-design-updated',
         (payload) => {
-          expect(payload.data.original).toEqual(cardDesign_1);
-          expect(payload.data.updated.name).toBe('Renamed');
+          expect(payload.original).toEqual(cardDesign_1);
+          expect(payload.updated.name).toBe('Renamed');
           done();
         },
       );

@@ -21,7 +21,7 @@ describe('unregisterDesignRole', () => {
     new Promise<void>((done) => {
       // Listen for the role unregistered event
       Events.addListener(DesignRoleUnregisteredEvent, 'test', (payload) => {
-        expect(payload.data).toEqual(HeadingRole);
+        expect(payload).toEqual(HeadingRole);
         done();
       });
 

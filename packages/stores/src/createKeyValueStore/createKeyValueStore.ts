@@ -168,13 +168,13 @@ export function createKeyValueStore<TValues extends StoreValues>(
     Events.addListener(
       StoreHydrateEvent,
       `stores:${persist.namespace}`,
-      (event) => {
-        if (event.data.namespace !== persist!.namespace) {
+      (hydration) => {
+        if (hydration.namespace !== persist!.namespace) {
           return;
         }
 
         // Load the persisted data as partial values
-        store.getState().load(event.data.data as Partial<TValues>);
+        store.getState().load(hydration.data as Partial<TValues>);
 
         // Notify that the store has been hydrated
         Events.dispatch(StoreHydratedEvent, {

@@ -54,8 +54,8 @@ describe('updateWorkspace', () => {
   it('dispatches a workspace updated event', async () =>
     new Promise<void>((done) => {
       Events.addListener(WorkspaceUpdatedEvent, 'test', (payload) => {
-        expect(payload.data.original).toEqual(workspace_1);
-        expect(payload.data.updated).toEqual(updatedWorkspace);
+        expect(payload.original).toEqual(workspace_1);
+        expect(payload.updated).toEqual(updatedWorkspace);
         done();
       });
 

@@ -69,8 +69,8 @@ describe('updateAutomation', () => {
         AutomationUpdatedEvent,
         'test-automation-updated',
         (payload) => {
-          expect(payload.data.original).toEqual(automation_1);
-          expect(payload.data.updated).toEqual(updatedAutomation);
+          expect(payload.original).toEqual(automation_1);
+          expect(payload.updated).toEqual(updatedAutomation);
           done();
         },
       );

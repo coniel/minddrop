@@ -22,7 +22,7 @@ describe('initializeQueriesFeature', () => {
 
   it('opens the queries view on open queries view event', () =>
     new Promise<void>((resolve) => {
-      Events.addListener(OpenViewEvent, 'test-open-queries', ({ data }) => {
+      Events.addListener(OpenViewEvent, 'test-open-queries', (data) => {
         // The queries view opens as a singleton
         expect(data.view).toBe(QueriesViewName);
         expect(data.id).toBe('queries:queries');

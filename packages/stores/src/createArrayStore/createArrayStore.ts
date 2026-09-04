@@ -233,13 +233,13 @@ export function createArrayStore<TItem extends object>(
     Events.addListener(
       StoreHydrateEvent,
       `stores:${persist.namespace}`,
-      (event) => {
-        if (event.data.namespace !== persist!.namespace) {
+      (hydration) => {
+        if (hydration.namespace !== persist!.namespace) {
           return;
         }
 
         // Load the persisted data as an array of items
-        store.getState().load(event.data.data as TItem[]);
+        store.getState().load(hydration.data as TItem[]);
 
         // Notify that the store has been hydrated
         Events.dispatch(StoreHydratedEvent, {

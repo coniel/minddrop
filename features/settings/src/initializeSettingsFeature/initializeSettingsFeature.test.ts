@@ -21,7 +21,7 @@ describe('initializeSettingsFeature', () => {
 
   it('opens the settings view on open settings events', () =>
     new Promise<void>((resolve) => {
-      Events.addListener(OpenViewEvent, 'test-open-settings', ({ data }) => {
+      Events.addListener(OpenViewEvent, 'test-open-settings', (data) => {
         // The settings view opens with the requested settings view
         expect(data.view).toBe(SettingsViewName);
         expect(data.id).toBe(SettingsViewId);

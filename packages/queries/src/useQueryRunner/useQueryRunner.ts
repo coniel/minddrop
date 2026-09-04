@@ -87,7 +87,7 @@ export function useQueryRunner<TValue>(
     Events.addListener(
       Databases.events.entriesSqlSynced,
       listenerId,
-      ({ data }) => {
+      (data) => {
         if (sourceDatabaseIds.includes(data.databaseId)) {
           rerun();
         }
@@ -102,7 +102,7 @@ export function useQueryRunner<TValue>(
     Events.addListener(
       Databases.events.databaseSqlReindexed,
       listenerId,
-      ({ data }) => {
+      (data) => {
         if (sourceDatabaseIds.includes(data.databaseId)) {
           rerun();
         }
@@ -113,7 +113,7 @@ export function useQueryRunner<TValue>(
     Events.addListener(
       Databases.events.propertySqlSynced,
       listenerId,
-      ({ data }) => {
+      (data) => {
         if (sourceDatabaseIds.includes(data.databaseId)) {
           rerun();
         }
@@ -121,7 +121,7 @@ export function useQueryRunner<TValue>(
     );
 
     // Re-run when a referenced collection's items change
-    Events.addListener(CollectionUpdatedEvent, listenerId, ({ data }) => {
+    Events.addListener(CollectionUpdatedEvent, listenerId, (data) => {
       if (referencesCollection(data.updated.id)) {
         rerun();
       }
@@ -129,14 +129,14 @@ export function useQueryRunner<TValue>(
 
     // Re-run when a referenced collection is created, which
     // includes virtual collections hydrated on demand
-    Events.addListener(CollectionCreatedEvent, listenerId, ({ data }) => {
+    Events.addListener(CollectionCreatedEvent, listenerId, (data) => {
       if (referencesCollection(data.id)) {
         rerun();
       }
     });
 
     // Re-run when a referenced collection is deleted
-    Events.addListener(CollectionDeletedEvent, listenerId, ({ data }) => {
+    Events.addListener(CollectionDeletedEvent, listenerId, (data) => {
       if (referencesCollection(data.id)) {
         rerun();
       }
@@ -152,14 +152,14 @@ export function useQueryRunner<TValue>(
 
     // Re-run when a query the graph sources is edited, since
     // its results are compiled into this query
-    Events.addListener(QueryUpdatedEvent, listenerId, ({ data }) => {
+    Events.addListener(QueryUpdatedEvent, listenerId, (data) => {
       if (referencedQueryIds.includes(data.updated.id)) {
         rerun();
       }
     });
 
     // Re-run when a sourced query is deleted
-    Events.addListener(QueryDeletedEvent, listenerId, ({ data }) => {
+    Events.addListener(QueryDeletedEvent, listenerId, (data) => {
       if (referencedQueryIds.includes(data.id)) {
         rerun();
       }

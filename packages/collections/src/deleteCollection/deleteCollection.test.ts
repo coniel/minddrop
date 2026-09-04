@@ -31,7 +31,7 @@ describe('deleteCollection', () => {
         CollectionDeletedEvent,
         'test-collection-deleted',
         (payload) => {
-          expect(payload.data).toEqual(collection_1);
+          expect(payload).toEqual(collection_1);
           done();
         },
       );

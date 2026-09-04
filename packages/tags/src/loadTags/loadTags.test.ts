@@ -38,7 +38,7 @@ describe('loadTags', () => {
   it('dispatches a tags loaded event', async () =>
     new Promise<void>((done) => {
       Events.addListener(TagsLoadedEvent, 'test', (payload) => {
-        expect(payload.data).toEqual(tags);
+        expect(payload).toEqual(tags);
         done();
       });
 

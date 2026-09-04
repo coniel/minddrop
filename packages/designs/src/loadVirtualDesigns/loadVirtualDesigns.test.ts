@@ -27,7 +27,7 @@ describe('loadVirtualDesigns', () => {
 
       // Listen for the loaded event
       Events.addListener(DesignsLoadedEvent, 'test', (payload) => {
-        expect(payload.data).toHaveLength(1);
+        expect(payload).toHaveLength(1);
         expect(createdListener).not.toHaveBeenCalled();
         done();
       });

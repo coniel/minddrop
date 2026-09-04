@@ -22,7 +22,7 @@ describe('DatabasesFeature', () => {
     new Promise<void>((resolve) => {
       render(<DatabasesFeature />);
 
-      Events.addListener(OpenViewEvent, EventListenerId, ({ data }) => {
+      Events.addListener(OpenViewEvent, EventListenerId, (data) => {
         // Should include the database view name
         expect(data.view).toBe(DatabaseViewName);
         expect(data.props!.databaseId).toBe(objectDatabase.id);

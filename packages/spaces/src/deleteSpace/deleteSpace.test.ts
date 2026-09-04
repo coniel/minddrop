@@ -93,7 +93,7 @@ describe('deleteSpace', () => {
   it('dispatches the space deleted event', async () =>
     new Promise<void>((done) => {
       Events.addListener(SpaceDeletedEvent, 'test-space-deleted', (payload) => {
-        expect(payload.data).toEqual(space_1);
+        expect(payload).toEqual(space_1);
         done();
       });
 

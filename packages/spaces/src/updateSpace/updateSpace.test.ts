@@ -44,8 +44,8 @@ describe('updateSpace', () => {
   it('dispatches the space updated event', async () =>
     new Promise<void>((done) => {
       Events.addListener(SpaceUpdatedEvent, 'test-space-updated', (payload) => {
-        expect(payload.data.original).toEqual(space_1);
-        expect(payload.data.updated).toEqual(updatedSpace);
+        expect(payload.original).toEqual(space_1);
+        expect(payload.updated).toEqual(updatedSpace);
         done();
       });
 

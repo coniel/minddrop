@@ -164,7 +164,7 @@ describe('duplicateDatabaseEntry', () => {
 
   it('dispatches an entry duplicated event', async () =>
     new Promise<void>((done) => {
-      Events.addListener(DatabaseEntryDuplicatedEvent, 'test', ({ data }) => {
+      Events.addListener(DatabaseEntryDuplicatedEvent, 'test', (data) => {
         // Payload should contain the original, the duplicate,
         // and the source
         expect(data.original).toEqual(objectEntry1);

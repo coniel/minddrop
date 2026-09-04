@@ -91,7 +91,7 @@ export const DatabasesFeature: React.FC = () => {
 
     // Listen for open database view events, and open the database view
     // when one is received
-    Events.addListener(OpenDatabaseViewEvent, EventListenerId, ({ data }) => {
+    Events.addListener(OpenDatabaseViewEvent, EventListenerId, (data) => {
       const database = Databases.get(data.databaseId);
 
       // Open a blank tab to receive the database view
@@ -118,7 +118,7 @@ export const DatabasesFeature: React.FC = () => {
     Events.addListener(
       OpenDatabaseEntryViewEvent,
       DatabaseEntriesEventListenerId,
-      ({ data }) => {
+      (data) => {
         // Resolve the open mode, falling back to the database default
         const openMode = resolveOpenMode(data.entryId, data.openMode);
 
@@ -168,7 +168,7 @@ export const DatabasesFeature: React.FC = () => {
 
     // Update the database's open view when the database changes
     // (e.g. re-iconed)
-    Events.addListener(DatabaseUpdatedEvent, EventListenerId, ({ data }) => {
+    Events.addListener(DatabaseUpdatedEvent, EventListenerId, (data) => {
       Events.dispatch(UpdateViewEvent, {
         id: resolveDatabaseViewId(data.original.id),
         newId: resolveDatabaseViewId(data.updated.id),
@@ -180,7 +180,7 @@ export const DatabasesFeature: React.FC = () => {
 
     // Update the database's open view title when the database
     // is renamed
-    Events.addListener(DatabaseRenamedEvent, EventListenerId, ({ data }) => {
+    Events.addListener(DatabaseRenamedEvent, EventListenerId, (data) => {
       Events.dispatch(UpdateViewEvent, {
         id: resolveDatabaseViewId(data.updated.id),
         title: data.updated.name,
@@ -189,7 +189,7 @@ export const DatabasesFeature: React.FC = () => {
     });
 
     // Close the database's open view when the database is deleted
-    Events.addListener(DatabaseDeletedEvent, EventListenerId, ({ data }) => {
+    Events.addListener(DatabaseDeletedEvent, EventListenerId, (data) => {
       Events.dispatch(CloseViewEvent, {
         id: resolveDatabaseViewId(data.id),
       });
@@ -200,7 +200,7 @@ export const DatabasesFeature: React.FC = () => {
     Events.addListener(
       DatabaseDeletedEvent,
       DatabaseEntriesEventListenerId,
-      ({ data }) => {
+      (data) => {
         // Collect the database's entries
         const entries = DatabaseEntries.getAll(data.id);
 
@@ -217,7 +217,7 @@ export const DatabasesFeature: React.FC = () => {
     Events.addListener(
       DatabaseEntryRenamedEvent,
       DatabaseEntriesEventListenerId,
-      ({ data }) => {
+      (data) => {
         Events.dispatch(UpdateViewEvent, {
           id: resolveDatabaseEntryViewId(data.updated.id),
           title: data.updated.title,
@@ -229,7 +229,7 @@ export const DatabasesFeature: React.FC = () => {
     Events.addListener(
       DatabaseEntryDeletedEvent,
       DatabaseEntriesEventListenerId,
-      ({ data }) => {
+      (data) => {
         Events.dispatch(CloseViewEvent, {
           id: resolveDatabaseEntryViewId(data.id),
         });
@@ -242,7 +242,7 @@ export const DatabasesFeature: React.FC = () => {
     Events.addListener(
       OpenReferenceEvent,
       DatabaseEntriesEventListenerId,
-      ({ data }) => {
+      (data) => {
         const entry = DatabaseEntries.findByReference(data.reference);
 
         if (!entry) {

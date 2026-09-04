@@ -38,12 +38,12 @@ export async function initializeSpaces(): Promise<void> {
   Designs.loadVirtual(spaces.map((space) => space.design));
 
   // Apply changes made to space bundles outside of the app
-  Events.on(FileSystemChangedEvent, 'spaces', ({ data }) =>
+  Events.on(FileSystemChangedEvent, 'spaces', (data) =>
     onFileSystemChanged(data),
   );
 
   // Persist space owned design edits back into their space files
-  Events.on(DesignUpdatedEvent, 'spaces', ({ data }) =>
+  Events.on(DesignUpdatedEvent, 'spaces', (data) =>
     onUpdateVirtualDesign(data),
   );
 

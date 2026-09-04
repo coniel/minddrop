@@ -77,8 +77,8 @@ describe('updateTagGroup', () => {
         TagGroupUpdatedEvent,
         'test-tag-group-updated',
         (payload) => {
-          expect(payload.data.original).toEqual(tagGroup_1);
-          expect(payload.data.updated).toEqual(updatedGroup);
+          expect(payload.original).toEqual(tagGroup_1);
+          expect(payload.updated).toEqual(updatedGroup);
           done();
         },
       );

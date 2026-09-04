@@ -81,7 +81,7 @@ describe('deleteDatabaseEntry', () => {
 
   it('dispatches an entry deleted event', async () =>
     new Promise<void>((done) => {
-      Events.addListener(DatabaseEntryDeletedEvent, 'test', ({ data }) => {
+      Events.addListener(DatabaseEntryDeletedEvent, 'test', (data) => {
         // Payload should be the deleted entry
         expect(data).toEqual(objectEntry1);
         done();

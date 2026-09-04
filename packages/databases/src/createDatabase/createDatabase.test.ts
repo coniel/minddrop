@@ -147,7 +147,7 @@ describe('createDatabase', () => {
     new Promise<void>((done) => {
       Events.addListener(DatabaseCreatedEvent, 'test', (payload) => {
         // Payload data should be the database config
-        expect(payload.data).toMatchObject(newDatabase);
+        expect(payload).toMatchObject(newDatabase);
         done();
       });
 

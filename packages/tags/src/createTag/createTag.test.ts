@@ -74,7 +74,7 @@ describe('createTag', () => {
   it('dispatches the tag created event', async () =>
     new Promise<void>((done) => {
       Events.addListener(TagCreatedEvent, 'test-tag-created', (payload) => {
-        expect(payload.data).toEqual(newTag);
+        expect(payload).toEqual(newTag);
         done();
       });
 

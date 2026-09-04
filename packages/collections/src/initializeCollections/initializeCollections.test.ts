@@ -44,7 +44,7 @@ describe('initializeCollections', () => {
   it('dispatches a collections loaded event', async () =>
     new Promise<void>((done) => {
       Events.addListener(CollectionsLoadedEvent, 'test', (payload) => {
-        expect(payload.data).toEqual(collections);
+        expect(payload).toEqual(collections);
         done();
       });
 

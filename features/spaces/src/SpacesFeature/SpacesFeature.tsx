@@ -55,7 +55,7 @@ export const SpacesFeature: React.FC = () => {
 
     // Listen for open space view events, and open the space view
     // when one is received
-    Events.addListener(OpenSpaceViewEvent, EventListenerId, ({ data }) => {
+    Events.addListener(OpenSpaceViewEvent, EventListenerId, (data) => {
       const space = Spaces.get(data.spaceId, false);
 
       // Open a blank tab to receive the space view
@@ -79,7 +79,7 @@ export const SpacesFeature: React.FC = () => {
 
     // Listen for open spaces view events, and open the spaces
     // list view when one is received
-    Events.addListener(OpenSpacesViewEvent, EventListenerId, ({ data }) => {
+    Events.addListener(OpenSpacesViewEvent, EventListenerId, (data) => {
       // Open a blank tab to receive the spaces view
       if (data?.openMode === 'new-tab') {
         Tabs.newTab(data.viewAreaId ?? DefaultViewAreaId);
@@ -98,7 +98,7 @@ export const SpacesFeature: React.FC = () => {
 
     // Update the space's open view when the space changes
     // (e.g. renamed or re-iconed)
-    Events.addListener(SpaceUpdatedEvent, EventListenerId, ({ data }) => {
+    Events.addListener(SpaceUpdatedEvent, EventListenerId, (data) => {
       Events.dispatch(UpdateViewEvent, {
         id: spaceViewId(data.updated.id),
         title: data.updated.name,
@@ -108,7 +108,7 @@ export const SpacesFeature: React.FC = () => {
 
     // Close the space's open view and drop its view state when
     // the space is deleted
-    Events.addListener(SpaceDeletedEvent, EventListenerId, ({ data }) => {
+    Events.addListener(SpaceDeletedEvent, EventListenerId, (data) => {
       SpaceViewStateStore.remove(data.id);
 
       Events.dispatch(CloseViewEvent, {

@@ -68,9 +68,9 @@ describe('copySelection', () => {
     new Promise<void>((done) => {
       Events.addListener(SelectionCopiedEvent, 'test', (payload) => {
         // Payload data should contain the event
-        expect(payload.data.event).toEqual(clipboardEvent);
+        expect(payload.event).toEqual(clipboardEvent);
         // Payload data should contain the selection
-        expect(payload.data.selection).toEqual(selection);
+        expect(payload.selection).toEqual(selection);
         done();
       });
 

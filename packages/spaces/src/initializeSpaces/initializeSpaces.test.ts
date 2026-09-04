@@ -59,7 +59,7 @@ describe('initializeSpaces', () => {
   it('dispatches a spaces loaded event', async () =>
     new Promise<void>((done) => {
       Events.addListener(SpacesLoadedEvent, 'test', (payload) => {
-        expect(payload.data).toEqual(spaces);
+        expect(payload).toEqual(spaces);
         done();
       });
 

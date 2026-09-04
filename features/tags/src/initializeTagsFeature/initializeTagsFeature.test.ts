@@ -23,7 +23,7 @@ describe('initializeTagsFeature', () => {
 
   it('opens the tags view on open tags view event', () =>
     new Promise<void>((resolve) => {
-      Events.addListener(OpenViewEvent, 'test-open-tags', ({ data }) => {
+      Events.addListener(OpenViewEvent, 'test-open-tags', (data) => {
         // The tags list view opens as a singleton
         expect(data.view).toBe(TagsViewName);
         expect(data.id).toBe('tags:tags');

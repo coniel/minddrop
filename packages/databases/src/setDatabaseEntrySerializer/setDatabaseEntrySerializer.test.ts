@@ -59,7 +59,7 @@ describe('setDatabaseEntrySerializer', () => {
 
     // Register the SQL sync listener normally wired by
     // initializeDatabaseEventHandlers
-    Events.on(DatabaseUpdatedEvent, 'test:sql-sync', ({ data }) => {
+    Events.on(DatabaseUpdatedEvent, 'test:sql-sync', (data) => {
       onUpdateDatabase(data);
     });
   });
@@ -153,7 +153,7 @@ describe('setDatabaseEntrySerializer', () => {
     let dispatchedSerializer: string | undefined;
 
     Events.addListener(DatabaseUpdatedEvent, 'test', (payload) => {
-      dispatchedSerializer = payload.data.updated.entrySerializer;
+      dispatchedSerializer = payload.updated.entrySerializer;
     });
 
     await setDatabaseEntrySerializer(objectDatabase.id, 'json');
@@ -221,7 +221,7 @@ describe('setDatabaseEntrySerializer', () => {
     let dispatchedError: AppErrorEventData | undefined;
 
     Events.addListener(AppErrorEvent, 'test', (payload) => {
-      dispatchedError = payload.data;
+      dispatchedError = payload;
     });
 
     await setDatabaseEntrySerializer(rootStorageDatabase.id, 'failing');

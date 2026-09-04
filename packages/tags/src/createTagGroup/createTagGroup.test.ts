@@ -63,7 +63,7 @@ describe('createTagGroup', () => {
         TagGroupCreatedEvent,
         'test-tag-group-created',
         (payload) => {
-          expect(payload.data).toEqual(newGroup);
+          expect(payload).toEqual(newGroup);
           done();
         },
       );

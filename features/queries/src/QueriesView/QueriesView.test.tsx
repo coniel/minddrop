@@ -116,7 +116,7 @@ const SubviewHarness: React.FC<{ children: React.ReactNode }> = ({
   const [subview, setSubview] = useState<SubviewDescriptor | null>(null);
 
   useEffect(() => {
-    Events.addListener(SetSubviewEvent, 'test-subview', ({ data }) =>
+    Events.addListener(SetSubviewEvent, 'test-subview', (data) =>
       setSubview(data.subview),
     );
 

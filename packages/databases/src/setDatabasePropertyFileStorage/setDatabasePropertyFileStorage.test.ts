@@ -289,7 +289,7 @@ describe('setDatabasePropertyFileStorage', () => {
     let dispatchedMode: string | undefined;
 
     Events.addListener(DatabaseUpdatedEvent, 'test', (payload) => {
-      dispatchedMode = payload.data.updated.propertyFileStorage;
+      dispatchedMode = payload.updated.propertyFileStorage;
     });
 
     await setDatabasePropertyFileStorage(rootStorageDatabase.id, 'common');

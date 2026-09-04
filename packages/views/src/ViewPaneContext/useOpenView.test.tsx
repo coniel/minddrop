@@ -36,7 +36,7 @@ function renderInPane() {
 function captureDispatch(): { data?: BaseOpenViewEventData } {
   const captured: { data?: BaseOpenViewEventData } = {};
 
-  Events.addListener(TestOpenEvent, ListenerId, ({ data }) => {
+  Events.addListener(TestOpenEvent, ListenerId, (data) => {
     captured.data = data;
   });
 

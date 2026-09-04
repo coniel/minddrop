@@ -34,7 +34,7 @@ describe('initializeDataViews', () => {
   it('dispatches a views loaded event', async () =>
     new Promise<void>((done) => {
       Events.addListener(DataViewsLoadedEvent, 'test', (payload) => {
-        expect(payload.data).toEqual(loadedViews);
+        expect(payload).toEqual(loadedViews);
         done();
       });
 

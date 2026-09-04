@@ -25,7 +25,7 @@ describe('loadDesigns', () => {
         DesignsLoadedEvent,
         'test-designs-loaded',
         (payload) => {
-          expect(payload.data).toEqual(designs);
+          expect(payload).toEqual(designs);
           done();
         },
       );

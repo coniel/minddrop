@@ -59,8 +59,8 @@ describe('removeDatabaseEntryTemplate', () => {
         'test',
         (payload) => {
           // Payload data should contain the updated database and removed template
-          expect(payload.data.database.id).toBe(entryTemplatesDatabase.id);
-          expect(payload.data.template).toEqual(entryTemplate1);
+          expect(payload.database.id).toBe(entryTemplatesDatabase.id);
+          expect(payload.template).toEqual(entryTemplate1);
           done();
         },
       );

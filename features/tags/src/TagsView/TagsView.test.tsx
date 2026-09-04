@@ -54,13 +54,9 @@ describe('<TagsView />', () => {
     const user = userEvent.setup();
 
     // Confirm the deletion as soon as the confirmation is requested
-    Events.addListener(
-      OpenConfirmationDialogEvent,
-      'test-confirm',
-      ({ data }) => {
-        data.onConfirm();
-      },
-    );
+    Events.addListener(OpenConfirmationDialogEvent, 'test-confirm', (data) => {
+      data.onConfirm();
+    });
 
     // Open the tag's context menu and click the delete action
     fireEvent.contextMenu(screen.getByText(tag_1.name));

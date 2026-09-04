@@ -127,9 +127,9 @@ describe('useDraggable', () => {
         // Listen to 'selection:drag:start' events
         Events.addListener(SelectionDragStartedEvent, 'test', (payload) => {
           // Payload data should contain the event
-          expect(payload.data.event).toEqual(dragEvent);
+          expect(payload.event).toEqual(dragEvent);
           // Payload data should contain the selection
-          expect(payload.data.selection).toEqual([draggedItem]);
+          expect(payload.selection).toEqual([draggedItem]);
           done();
         });
 
@@ -167,9 +167,9 @@ describe('useDraggable', () => {
         // Listen to 'selection:drag:end' events
         Events.addListener(SelectionDragEndedEvent, 'test', (payload) => {
           // Payload data should contain the event
-          expect(payload.data.event).toEqual(dragEvent);
+          expect(payload.event).toEqual(dragEvent);
           // Payload data should contain the selection
-          expect(payload.data.selection).toEqual([draggedItem]);
+          expect(payload.selection).toEqual([draggedItem]);
           done();
         });
 

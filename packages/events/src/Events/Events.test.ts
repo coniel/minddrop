@@ -27,7 +27,7 @@ describe('Events', () => {
     let received: TestRegisteredEventData | undefined;
 
     // The callback data derives from the registered event name
-    Events.addListener(TestRegisteredEvent, 'test', ({ data }) => {
+    Events.addListener(TestRegisteredEvent, 'test', (data) => {
       received = data;
     });
 
@@ -42,7 +42,7 @@ describe('Events', () => {
 
     // Each callback's data derives from its key in the map
     Events.addListeners('test', {
-      [TestRegisteredEvent]: ({ data }) => {
+      [TestRegisteredEvent]: (data) => {
         received = data;
       },
       [TestVoidEvent]: () => {

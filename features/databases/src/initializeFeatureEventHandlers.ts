@@ -12,7 +12,7 @@ export function initializeDatabasesFeatureEventHandlers(): void {
   Events.addListener(
     DatabaseDeletedEvent,
     `${EventListenerId}:view-state`,
-    ({ data }) => {
+    (data) => {
       onDeleteDatabase(data);
     },
   );

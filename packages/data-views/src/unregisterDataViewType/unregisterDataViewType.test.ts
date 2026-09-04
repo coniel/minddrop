@@ -26,7 +26,7 @@ describe('unregisterDataViewType', () => {
   it('dispatches the view type unregistered event', () =>
     new Promise<void>((done) => {
       Events.addListener(DataViewTypeUnregisteredEvent, 'test', (payload) => {
-        expect(payload.data).toEqual(dataViewType_gallery);
+        expect(payload).toEqual(dataViewType_gallery);
         done();
       });
 

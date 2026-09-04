@@ -135,7 +135,7 @@ describe('<DatabaseEntryTemplateEditor />', () => {
     it('updates the template on save', () =>
       new Promise<void>((done) => {
         // Listen for database updates and verify the template was updated
-        Events.addListener(DatabaseUpdatedEvent, 'test', ({ data }) => {
+        Events.addListener(DatabaseUpdatedEvent, 'test', (data) => {
           expect(
             data.updated.entryTemplates?.find(
               (template) => template.id === entryTemplate1.id,
@@ -176,34 +176,26 @@ describe('<DatabaseEntryTemplateEditor />', () => {
 
       it('mentions stored files when the template has some', () =>
         new Promise<void>((done) => {
-          Events.addListener(
-            OpenConfirmationDialogEvent,
-            'test',
-            ({ data }) => {
-              // entryTemplate1 has an image value, so a file is stored
-              expect(data.message).toBe(
-                'databases.entryTemplates.actions.delete.confirmation.messageWithFiles',
-              );
-              done();
-            },
-          );
+          Events.addListener(OpenConfirmationDialogEvent, 'test', (data) => {
+            // entryTemplate1 has an image value, so a file is stored
+            expect(data.message).toBe(
+              'databases.entryTemplates.actions.delete.confirmation.messageWithFiles',
+            );
+            done();
+          });
 
           clickDeleteTemplate();
         }));
 
       it('omits stored files when the template has none', () =>
         new Promise<void>((done) => {
-          Events.addListener(
-            OpenConfirmationDialogEvent,
-            'test',
-            ({ data }) => {
-              // entryTemplate2 has no property values, so no files
-              expect(data.message).toBe(
-                'databases.entryTemplates.actions.delete.confirmation.message',
-              );
-              done();
-            },
-          );
+          Events.addListener(OpenConfirmationDialogEvent, 'test', (data) => {
+            // entryTemplate2 has no property values, so no files
+            expect(data.message).toBe(
+              'databases.entryTemplates.actions.delete.confirmation.message',
+            );
+            done();
+          });
 
           clickDeleteTemplate(entryTemplate2);
         }));
@@ -211,17 +203,13 @@ describe('<DatabaseEntryTemplateEditor />', () => {
       it('confirms before deleting the template', () =>
         new Promise<void>((done) => {
           // Listen for the confirmation dialog event
-          Events.addListener(
-            OpenConfirmationDialogEvent,
-            'test',
-            ({ data }) => {
-              // Confirm the delete action
-              data.onConfirm();
-            },
-          );
+          Events.addListener(OpenConfirmationDialogEvent, 'test', (data) => {
+            // Confirm the delete action
+            data.onConfirm();
+          });
 
           // Listen for database updates and verify the template was removed
-          Events.addListener(DatabaseUpdatedEvent, 'test', ({ data }) => {
+          Events.addListener(DatabaseUpdatedEvent, 'test', (data) => {
             expect(
               data.updated.entryTemplates?.find(
                 (template) => template.id === entryTemplate1.id,
@@ -288,7 +276,7 @@ describe('<DatabaseEntryTemplateEditor />', () => {
     it('adds the template on save', () =>
       new Promise<void>((done) => {
         // Listen for database updates and verify the template was added
-        Events.addListener(DatabaseUpdatedEvent, 'test', ({ data }) => {
+        Events.addListener(DatabaseUpdatedEvent, 'test', (data) => {
           expect(
             data.updated.entryTemplates?.find(
               (template) => template.name === 'New template',

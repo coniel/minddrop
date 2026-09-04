@@ -47,7 +47,7 @@ describe('createVirtualDesign', () => {
   it('dispatches a design created event', async () =>
     new Promise<void>((done) => {
       Events.addListener(DesignCreatedEvent, 'test', (payload) => {
-        expect(payload.data.virtual).toBe(true);
+        expect(payload.virtual).toBe(true);
         done();
       });
 

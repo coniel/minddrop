@@ -51,7 +51,7 @@ describe('initializeDesigns', () => {
         DesignsLoadedEvent,
         'test-designs-loaded',
         (payload) => {
-          expect(payload.data).toEqual(designs);
+          expect(payload).toEqual(designs);
           done();
         },
       );
@@ -68,7 +68,7 @@ describe('initializeDesigns', () => {
         DesignsLoadedEvent,
         'test-designs-loaded',
         (payload) => {
-          expect(payload.data).toEqual([]);
+          expect(payload).toEqual([]);
           done();
         },
       );

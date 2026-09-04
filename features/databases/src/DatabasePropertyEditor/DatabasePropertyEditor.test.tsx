@@ -50,7 +50,7 @@ describe('<DatabasePropertyEditor />', () => {
     it('updates the property on save', () =>
       new Promise<void>((done) => {
         // Listen for database updates and verify the property was updated
-        Events.addListener(DatabaseUpdatedEvent, 'test', ({ data }) => {
+        Events.addListener(DatabaseUpdatedEvent, 'test', (data) => {
           expect(
             data.updated.properties.find(
               (candidate) => candidate.name === property.name,
@@ -95,14 +95,10 @@ describe('<DatabasePropertyEditor />', () => {
       it('confirms before renaming the property', () =>
         new Promise<void>((done) => {
           // Listen for the confirmation dialog event
-          Events.addListener(
-            OpenConfirmationDialogEvent,
-            'test',
-            ({ data }) => {
-              // Confirm the rename action
-              data.onConfirm();
-            },
-          );
+          Events.addListener(OpenConfirmationDialogEvent, 'test', (data) => {
+            // Confirm the rename action
+            data.onConfirm();
+          });
 
           // TODO: Assert the property was renamed once renaming is implemented
           Events.addListener(DatabaseUpdatedEvent, 'test', () => {
@@ -118,7 +114,7 @@ describe('<DatabasePropertyEditor />', () => {
           Events.addListener(
             OpenConfirmationDialogEvent,
             'test',
-            async ({ data }) => {
+            async (data) => {
               // Confirm the rename action
               data.onConfirm();
               // Form should be closed
@@ -136,18 +132,14 @@ describe('<DatabasePropertyEditor />', () => {
       it('does nothing on cancel', () =>
         new Promise<void>((done) => {
           // Listen for the confirmation dialog event
-          Events.addListener(
-            OpenConfirmationDialogEvent,
-            'test',
-            ({ data }) => {
-              // Cancel the rename action
-              data.onCancel!();
-              // Form should be still open
-              expect(screen.getByText('actions.save')).toBeVisible();
+          Events.addListener(OpenConfirmationDialogEvent, 'test', (data) => {
+            // Cancel the rename action
+            data.onCancel!();
+            // Form should be still open
+            expect(screen.getByText('actions.save')).toBeVisible();
 
-              done();
-            },
-          );
+            done();
+          });
 
           renameProperty();
         }));
@@ -174,17 +166,13 @@ describe('<DatabasePropertyEditor />', () => {
       it('confirms before deleting the property', () =>
         new Promise<void>((done) => {
           // Listen for the confirmation dialog event
-          Events.addListener(
-            OpenConfirmationDialogEvent,
-            'test',
-            ({ data }) => {
-              // Confirm the delete action
-              data.onConfirm();
-            },
-          );
+          Events.addListener(OpenConfirmationDialogEvent, 'test', (data) => {
+            // Confirm the delete action
+            data.onConfirm();
+          });
 
           // Listen for database updates and verify the property was deleted
-          Events.addListener(DatabaseUpdatedEvent, 'test', ({ data }) => {
+          Events.addListener(DatabaseUpdatedEvent, 'test', (data) => {
             expect(
               data.updated.properties.find(
                 (candidate) => candidate.name === property.name,
@@ -242,7 +230,7 @@ describe('<DatabasePropertyEditor />', () => {
     it('adds the property on save', () =>
       new Promise<void>((done) => {
         // Listen for database updates and verify the property was added
-        Events.addListener(DatabaseUpdatedEvent, 'test', ({ data }) => {
+        Events.addListener(DatabaseUpdatedEvent, 'test', (data) => {
           expect(
             data.updated.properties.find(
               (property) => property.name === 'New property',

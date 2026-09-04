@@ -39,7 +39,7 @@ describe('initializeAutomations', () => {
         AutomationsLoadedEvent,
         'test-automations-loaded',
         (payload) => {
-          expect(payload.data.length).toBe(automations.length);
+          expect(payload.length).toBe(automations.length);
           done();
         },
       );

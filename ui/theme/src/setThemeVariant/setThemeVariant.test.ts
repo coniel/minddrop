@@ -44,8 +44,8 @@ describe('setThemeVariant', () => {
       // Listen to `theme:variant:changed` events
       Events.addListener(VariantChangedEvent, 'test', (payload) => {
         // Payload data should contain the variant and resolved appearance
-        expect(payload.data.variant).toBe(ThemeDark);
-        expect(payload.data.resolvedAppearance).toBe(ThemeDark);
+        expect(payload.variant).toBe(ThemeDark);
+        expect(payload.resolvedAppearance).toBe(ThemeDark);
         done();
       });
 
@@ -58,7 +58,7 @@ describe('setThemeVariant', () => {
       // Listen to `theme:variant:changed` events
       Events.addListener(VariantChangedEvent, 'test', (payload) => {
         // For a 'light' variant, resolved appearance should be 'light'
-        expect(payload.data.resolvedAppearance).toBe(ThemeLight);
+        expect(payload.resolvedAppearance).toBe(ThemeLight);
         done();
       });
 

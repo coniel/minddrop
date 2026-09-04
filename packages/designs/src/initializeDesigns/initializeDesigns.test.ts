@@ -43,7 +43,7 @@ describe('initializeDesigns', () => {
   it('dispatches a designs loaded event', async () =>
     new Promise<void>((done) => {
       Events.addListener(DesignsLoadedEvent, 'test', (payload) => {
-        expect(payload.data.length).toBeGreaterThan(0);
+        expect(payload.length).toBeGreaterThan(0);
         done();
       });
 
@@ -56,7 +56,7 @@ describe('initializeDesigns', () => {
       MockFs.removeDir(resolveDesignsDirPath());
 
       Events.addListener(DesignsLoadedEvent, 'test', (payload) => {
-        expect(payload.data).toEqual([]);
+        expect(payload).toEqual([]);
         done();
       });
 

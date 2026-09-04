@@ -42,11 +42,9 @@ export async function initializeTheme(): Promise<void> {
  * whenever the theme variant changes.
  */
 function setThemeAppearanceClassOnBody({
-  data,
-}: {
-  data: VariantChangedEventData;
-}) {
-  if (data.resolvedAppearance === 'dark') {
+  resolvedAppearance,
+}: VariantChangedEventData) {
+  if (resolvedAppearance === 'dark') {
     document.body.classList.remove('light-theme');
     document.body.classList.add('dark-theme');
   } else {
@@ -60,10 +58,8 @@ function setThemeAppearanceClassOnBody({
  * dimming setting changes.
  */
 function setImageDimmingClassOnBody({
-  data,
-}: {
-  data: ImageDimmingChangedEventData;
-}) {
+  imageDimming,
+}: ImageDimmingChangedEventData) {
   document.body.classList.remove(
     'image-dimming-1',
     'image-dimming-2',
@@ -71,8 +67,8 @@ function setImageDimmingClassOnBody({
   );
 
   // The 'off' setting is the absence of a class
-  if (data.imageDimming !== Theme.constants.ImageDimmingOff) {
-    document.body.classList.add(`image-dimming-${data.imageDimming}`);
+  if (imageDimming !== Theme.constants.ImageDimmingOff) {
+    document.body.classList.add(`image-dimming-${imageDimming}`);
   }
 }
 
@@ -81,9 +77,7 @@ function setImageDimmingClassOnBody({
  * setting changes.
  */
 function setInvertLightImagesClassOnBody({
-  data,
-}: {
-  data: InvertLightImagesChangedEventData;
-}) {
-  document.body.classList.toggle('image-invert-light', data.invertLightImages);
+  invertLightImages,
+}: InvertLightImagesChangedEventData) {
+  document.body.classList.toggle('image-invert-light', invertLightImages);
 }

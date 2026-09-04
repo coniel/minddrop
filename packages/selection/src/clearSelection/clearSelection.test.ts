@@ -45,7 +45,7 @@ describe('clearSelection', () => {
     new Promise<void>((done) => {
       Events.addListener(SelectionClearedEvent, 'test', (payload) => {
         // Payload data should be the items cleared from the selection
-        expect(payload.data).toEqual(selection);
+        expect(payload).toEqual(selection);
         done();
       });
 

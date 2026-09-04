@@ -19,7 +19,7 @@ describe('<DatabasesSidebarMenu />', () => {
 
   it('opens the database view when a database menu item is clicked', () =>
     new Promise<void>((done) => {
-      Events.addListener(OpenDatabaseViewEvent, 'test', ({ data }) => {
+      Events.addListener(OpenDatabaseViewEvent, 'test', (data) => {
         expect(data.databaseId).toBe(DatabaseFixtures.objectDatabase.id);
         done();
       });

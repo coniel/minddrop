@@ -46,7 +46,7 @@ describe('createVirtualCollection', () => {
         CollectionCreatedEvent,
         'test-virtual-created',
         (payload) => {
-          expect(payload.data).toEqual(expectedCollection);
+          expect(payload).toEqual(expectedCollection);
           done();
         },
       );

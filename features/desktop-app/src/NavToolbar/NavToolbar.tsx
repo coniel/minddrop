@@ -31,20 +31,16 @@ export const NavToolbar: FC = () => {
   // Registered as a layout effect so the width is in place before the
   // first paint, catching the sidebar's initial width dispatch
   useLayoutEffect(() => {
-    Events.addListener(
-      SetNavToolbarWidthEvent,
-      'app-nav-toolbar',
-      ({ data }) => {
-        setWidth(data.width);
-      },
-    );
+    Events.addListener(SetNavToolbarWidthEvent, 'app-nav-toolbar', (data) => {
+      setWidth(data.width);
+    });
 
     // Views register a back action of their own, e.g. an editor
     // backing out to its dashboard
     Events.addListener(
       SetNavToolbarBackActionEvent,
       'app-nav-toolbar',
-      ({ data }) => {
+      (data) => {
         setBackAction(data);
       },
     );

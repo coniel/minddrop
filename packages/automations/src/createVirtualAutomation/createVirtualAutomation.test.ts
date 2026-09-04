@@ -65,7 +65,7 @@ describe('createVirtualAutomation', () => {
         AutomationCreatedEvent,
         'test-automation-created',
         (payload) => {
-          expect(payload.data).toEqual(newAutomation);
+          expect(payload).toEqual(newAutomation);
           done();
         },
       );

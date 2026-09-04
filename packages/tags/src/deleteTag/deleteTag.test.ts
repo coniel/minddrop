@@ -26,7 +26,7 @@ describe('deleteTag', () => {
   it('dispatches the tag deleted event', async () =>
     new Promise<void>((done) => {
       Events.addListener(TagDeletedEvent, 'test-tag-deleted', (payload) => {
-        expect(payload.data).toEqual(tag_1);
+        expect(payload).toEqual(tag_1);
         done();
       });
 

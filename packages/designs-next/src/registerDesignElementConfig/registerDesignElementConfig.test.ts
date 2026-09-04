@@ -25,7 +25,7 @@ describe('registerDesignElementConfig', () => {
         DesignElementConfigRegisteredEvent,
         'test',
         (payload) => {
-          expect(payload.data).toBe(boxElementConfig);
+          expect(payload).toBe(boxElementConfig);
           done();
         },
       );

@@ -32,7 +32,7 @@ describe('startFileSystemWatcher', () => {
     changes = [];
 
     // Collect the changes dispatched by the watcher
-    Events.on(FileSystemChangedEvent, 'test', ({ data }) => {
+    Events.on(FileSystemChangedEvent, 'test', (data) => {
       changes.push(data);
     });
 

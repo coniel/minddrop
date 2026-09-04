@@ -46,7 +46,7 @@ export function initializeDataViewsFeature(): VoidFunction {
 
   // Listen for open data view view events, and open the data
   // view's view when one is received
-  Events.addListener(OpenDataViewViewEvent, EventListenerId, ({ data }) => {
+  Events.addListener(OpenDataViewViewEvent, EventListenerId, (data) => {
     const dataView = DataViews.get(data.dataViewId, false);
 
     // Open the data view's view. The feature has no tab access, so
@@ -65,7 +65,7 @@ export function initializeDataViewsFeature(): VoidFunction {
 
   // Listen for open data views view events, and open the data
   // views list view when one is received
-  Events.addListener(OpenDataViewsViewEvent, EventListenerId, ({ data }) => {
+  Events.addListener(OpenDataViewsViewEvent, EventListenerId, (data) => {
     // Open the data views list view. The feature has no tab access,
     // so new-tab opens fall back to in place, as do dialog and panel
     Events.dispatch(OpenViewEvent, {
@@ -79,7 +79,7 @@ export function initializeDataViewsFeature(): VoidFunction {
 
   // Listen for open new data view view events, and open the view
   // creation view when one is received
-  Events.addListener(OpenNewDataViewViewEvent, EventListenerId, ({ data }) => {
+  Events.addListener(OpenNewDataViewViewEvent, EventListenerId, (data) => {
     // Open the view creation view. The feature has no tab access, so
     // new-tab opens fall back to in place, as do dialog and panel
     Events.dispatch(OpenViewEvent, {
@@ -96,7 +96,7 @@ export function initializeDataViewsFeature(): VoidFunction {
 
   // Update the data view's open view when the data view changes
   // (e.g. renamed or re-iconed)
-  Events.addListener(DataViewUpdatedEvent, EventListenerId, ({ data }) => {
+  Events.addListener(DataViewUpdatedEvent, EventListenerId, (data) => {
     Events.dispatch(UpdateViewEvent, {
       id: dataViewViewId(data.updated.id),
       title: data.updated.name,
@@ -105,7 +105,7 @@ export function initializeDataViewsFeature(): VoidFunction {
   });
 
   // Close the data view's open view when the data view is deleted
-  Events.addListener(DataViewDeletedEvent, EventListenerId, ({ data }) => {
+  Events.addListener(DataViewDeletedEvent, EventListenerId, (data) => {
     Events.dispatch(CloseViewEvent, {
       id: dataViewViewId(data.id),
     });

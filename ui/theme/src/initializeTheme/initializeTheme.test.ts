@@ -96,7 +96,7 @@ describe('initializeTheme', () => {
       let eventData: VariantChangedEventData | null = null;
 
       Events.addListener(VariantChangedEvent, 'test', (payload) => {
-        eventData = payload.data;
+        eventData = payload;
       });
 
       // Initialize theme
@@ -122,7 +122,7 @@ describe('initializeTheme', () => {
       let eventData: VariantChangedEventData | null = null;
 
       Events.addListener(VariantChangedEvent, 'test', (payload) => {
-        eventData = payload.data;
+        eventData = payload;
       });
 
       // Initialize theme
@@ -154,7 +154,7 @@ describe('initializeTheme', () => {
       let eventData: VariantChangedEventData | null = null;
 
       Events.addListener(VariantChangedEvent, 'test', (payload) => {
-        eventData = payload.data;
+        eventData = payload;
       });
 
       // Simulate OS appearance change to dark mode
@@ -202,7 +202,7 @@ describe('initializeTheme', () => {
       let lastResolvedAppearance: string | null = null;
 
       Events.addListener(VariantChangedEvent, 'test-os-change', (payload) => {
-        lastResolvedAppearance = payload.data.resolvedAppearance;
+        lastResolvedAppearance = payload.resolvedAppearance;
       });
 
       // Simulate OS appearance change to dark mode

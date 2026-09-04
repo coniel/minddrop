@@ -230,7 +230,7 @@ describe('createObjectStore', () => {
     it('dispatches a persist event on set', async () =>
       new Promise<void>((done) => {
         Events.addListener(StorePersistEvent, 'test', (payload) => {
-          expect(payload.data).toEqual({
+          expect(payload).toEqual({
             persistTo: 'app-config',
             namespace: 'test-package',
             data: { 'item-1': item1 },
@@ -246,7 +246,7 @@ describe('createObjectStore', () => {
         store.set(item1);
 
         Events.addListener(StorePersistEvent, 'test', (payload) => {
-          expect(payload.data).toEqual({
+          expect(payload).toEqual({
             persistTo: 'app-config',
             namespace: 'test-package',
             data: { 'item-1': { ...item1, name: 'Updated' } },
@@ -263,7 +263,7 @@ describe('createObjectStore', () => {
         store.set(item2);
 
         Events.addListener(StorePersistEvent, 'test', (payload) => {
-          expect(payload.data).toEqual({
+          expect(payload).toEqual({
             persistTo: 'app-config',
             namespace: 'test-package',
             data: { 'item-2': item2 },
@@ -279,7 +279,7 @@ describe('createObjectStore', () => {
         store.set(item1);
 
         Events.addListener(StorePersistEvent, 'test', (payload) => {
-          expect(payload.data).toEqual({
+          expect(payload).toEqual({
             persistTo: 'app-config',
             namespace: 'test-package',
             data: {},
@@ -306,7 +306,7 @@ describe('createObjectStore', () => {
       it('dispatches a load request event', async () =>
         new Promise<void>((done) => {
           Events.addListener(StoreHydrateRequestEvent, 'test', (payload) => {
-            expect(payload.data).toEqual({
+            expect(payload).toEqual({
               persistTo: 'app-config',
               namespace: 'test-package',
             });
@@ -368,9 +368,8 @@ describe('createObjectStore', () => {
         await freshStore.hydrate();
 
         expect(callback).toHaveBeenCalledWith(
-          expect.objectContaining({
-            data: { namespace: 'hydrated-event-test' },
-          }),
+          { namespace: 'hydrated-event-test' },
+          StoreHydratedEvent,
         );
       });
     });

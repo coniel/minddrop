@@ -94,7 +94,7 @@ describe('clearDatabaseEntries', () => {
       // Capture the database's entries before clearing
       const entries = getAllDatabaseEntries(objectDatabase.id);
 
-      Events.addListener(DatabaseEntriesClearedEvent, 'test', ({ data }) => {
+      Events.addListener(DatabaseEntriesClearedEvent, 'test', (data) => {
         // Payload should carry the database ID and the deleted entries
         expect(data.databaseId).toBe(objectDatabase.id);
         expect(data.entries).toEqual(entries);

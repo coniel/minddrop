@@ -73,7 +73,7 @@ describe('createDataView', () => {
   it('dispatches a view created event', async () =>
     new Promise<void>((done) => {
       Events.addListener(DataViewCreatedEvent, 'test', (payload) => {
-        expect(payload.data).toEqual(newView);
+        expect(payload).toEqual(newView);
         done();
       });
 

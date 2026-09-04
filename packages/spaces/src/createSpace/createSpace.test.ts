@@ -85,7 +85,7 @@ describe('createSpace', () => {
   it('dispatches the space created event', async () =>
     new Promise<void>((done) => {
       Events.addListener(SpaceCreatedEvent, 'test-space-created', (payload) => {
-        expect(payload.data).toEqual(newSpace);
+        expect(payload).toEqual(newSpace);
         done();
       });
 

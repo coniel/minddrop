@@ -26,17 +26,13 @@ describe('initializeDesignsFeature', () => {
 
   it('opens the design studio view on open design studio events', () =>
     new Promise<void>((resolve) => {
-      Events.addListener(
-        OpenViewEvent,
-        'test-open-design-studio',
-        ({ data }) => {
-          // The design studio view opens with the requested design
-          expect(data.view).toBe(DesignStudioViewName);
-          expect(data.id).toBe(DesignStudioViewId);
-          expect(data.props!.designId).toBe(design_books.id);
-          resolve();
-        },
-      );
+      Events.addListener(OpenViewEvent, 'test-open-design-studio', (data) => {
+        // The design studio view opens with the requested design
+        expect(data.view).toBe(DesignStudioViewName);
+        expect(data.id).toBe(DesignStudioViewId);
+        expect(data.props!.designId).toBe(design_books.id);
+        resolve();
+      });
 
       Events.dispatch(OpenDesignStudioEvent, {
         designId: design_books.id,

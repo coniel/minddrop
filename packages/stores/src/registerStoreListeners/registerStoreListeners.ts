@@ -44,13 +44,13 @@ export function registerStoreListeners(
   config: RegisterStoreListenersConfig,
 ): VoidFunction {
   // Listen for store persist events and write data to disk
-  Events.addListener(StorePersistEvent, config.listenerId, (event) =>
-    handlePersist(config, event.data),
+  Events.addListener(StorePersistEvent, config.listenerId, (data) =>
+    handlePersist(config, data),
   );
 
   // Listen for store hydrate requests and read data from disk
-  Events.addListener(StoreHydrateRequestEvent, config.listenerId, (event) =>
-    handleHydrateRequest(config, event.data),
+  Events.addListener(StoreHydrateRequestEvent, config.listenerId, (data) =>
+    handleHydrateRequest(config, data),
   );
 
   return () => {

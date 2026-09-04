@@ -26,7 +26,7 @@ describe('deleteQuery', () => {
   it('dispatches the query deleted event', async () =>
     new Promise<void>((done) => {
       Events.addListener(QueryDeletedEvent, 'test-query-deleted', (payload) => {
-        expect(payload.data).toEqual(query_1);
+        expect(payload).toEqual(query_1);
         done();
       });
 

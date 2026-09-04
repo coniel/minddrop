@@ -22,7 +22,7 @@ export function initializeDesignsFeature(): VoidFunction {
   Events.addListener(
     OpenDesignStudioEvent,
     DesignsFeatureEventListenerId,
-    ({ data }) => {
+    (data) => {
       Events.dispatch(OpenViewEvent, {
         view: DesignStudioViewName,
         id: DesignStudioViewId,

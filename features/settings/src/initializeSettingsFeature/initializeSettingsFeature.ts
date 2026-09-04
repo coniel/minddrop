@@ -19,7 +19,7 @@ export function initializeSettingsFeature(): VoidFunction {
   Events.addListener(
     OpenSettingsEvent,
     SettingsFeatureEventListenerId,
-    ({ data }) => {
+    (data) => {
       Events.dispatch(OpenViewEvent, {
         view: SettingsViewName,
         id: SettingsViewId,

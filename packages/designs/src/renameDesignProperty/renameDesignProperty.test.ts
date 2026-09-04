@@ -63,8 +63,8 @@ describe('renameDesignProperty', () => {
   it('dispatches a property renamed event', async () =>
     new Promise<void>((done) => {
       Events.addListener(DesignPropertyRenamedEvent, 'test', (payload) => {
-        expect(payload.data.oldName).toBe('Subtitle');
-        expect(payload.data.newName).toBe('Tagline');
+        expect(payload.oldName).toBe('Subtitle');
+        expect(payload.newName).toBe('Tagline');
         done();
       });
 

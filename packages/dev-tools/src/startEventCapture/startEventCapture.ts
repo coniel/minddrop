@@ -13,20 +13,20 @@ const CatchAllEventName = '*';
  * @returns A callback which stops capturing events.
  */
 export function startEventCapture(): VoidFunction {
-  Events.on(CatchAllEventName, DevToolsNamespace, (event) => {
+  Events.on(CatchAllEventName, DevToolsNamespace, (data, eventName) => {
     // The catch all listener reports itself alongside the events
     // it catches
-    if (event.name === CatchAllEventName) {
+    if (eventName === CatchAllEventName) {
       return;
     }
 
     // Using the dev tools persists their own state, which would
     // otherwise fill the events with the user's every click
-    if (isDevToolsEvent(event.data)) {
+    if (isDevToolsEvent(data)) {
       return;
     }
 
-    addDevToolsEvent(event.name, event.data);
+    addDevToolsEvent(eventName, data);
   });
 
   return () => Events.removeListener(CatchAllEventName, DevToolsNamespace);

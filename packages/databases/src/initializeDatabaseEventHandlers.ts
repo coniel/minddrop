@@ -69,39 +69,38 @@ import {
  */
 export function initializeDatabaseEventHandlers() {
   Events.addListeners('databases', {
-    [DatabaseCreatedEvent]: ({ data }) => onCreateDatabase(data),
-    [DatabaseUpdatedEvent]: ({ data }) => onUpdateDatabase(data),
-    [DatabaseDeletedEvent]: ({ data }) => onDeleteDatabase(data),
-    [DatabaseRenamedEvent]: ({ data }) => onRenameDatabase(data),
-    [DatabasePropertyAddedEvent]: ({ data }) => onAddProperty(data),
-    [DatabasePropertyRemovedEvent]: ({ data }) => onRemoveProperty(data),
-    [DatabasePropertyRenamedEvent]: ({ data }) => onRenameProperty(data),
-    [DesignPropertyRenamedEvent]: ({ data }) => onRenameDesignProperty(data),
-    [DatabaseEntryCreatedEvent]: ({ data }) => onCreateEntry(data),
-    [DatabaseEntryUpdatedEvent]: ({ data }) => onUpdateEntry(data),
-    [DatabaseEntryDeletedEvent]: ({ data }) => onDeleteEntry(data),
-    [DatabaseEntriesClearedEvent]: ({ data }) => onClearEntries(data),
-    [DatabaseEntryRenamedEvent]: ({ data }) => onRenameEntry(data),
-    [DatabaseEntryMetadataUpdatedEvent]: ({ data }) =>
-      onUpdateEntryMetadata(data),
-    [CollectionUpdatedEvent]: ({ data }) => onUpdateCollection(data),
-    [ItemAddressesChangedEvent]: ({ data }) => onItemAddressesChanged(data),
-    [TagRenamedEvent]: ({ data }) => onTagRenamed(data),
-    [TagDeletedEvent]: ({ data }) => onTagDeleted(data),
-    [TagGroupDeletedEvent]: ({ data }) => onTagGroupDeleted(data),
-    [DataViewUpdatedEvent]: ({ data }) => onUpdateVirtualView(data),
-    [FileSystemChangedEvent]: ({ data }) => onFileSystemChanged(data),
+    [DatabaseCreatedEvent]: onCreateDatabase,
+    [DatabaseUpdatedEvent]: onUpdateDatabase,
+    [DatabaseDeletedEvent]: onDeleteDatabase,
+    [DatabaseRenamedEvent]: onRenameDatabase,
+    [DatabasePropertyAddedEvent]: onAddProperty,
+    [DatabasePropertyRemovedEvent]: onRemoveProperty,
+    [DatabasePropertyRenamedEvent]: onRenameProperty,
+    [DesignPropertyRenamedEvent]: onRenameDesignProperty,
+    [DatabaseEntryCreatedEvent]: onCreateEntry,
+    [DatabaseEntryUpdatedEvent]: onUpdateEntry,
+    [DatabaseEntryDeletedEvent]: onDeleteEntry,
+    [DatabaseEntriesClearedEvent]: onClearEntries,
+    [DatabaseEntryRenamedEvent]: onRenameEntry,
+    [DatabaseEntryMetadataUpdatedEvent]: onUpdateEntryMetadata,
+    [CollectionUpdatedEvent]: onUpdateCollection,
+    [ItemAddressesChangedEvent]: onItemAddressesChanged,
+    [TagRenamedEvent]: onTagRenamed,
+    [TagDeletedEvent]: onTagDeleted,
+    [TagGroupDeletedEvent]: onTagGroupDeleted,
+    [DataViewUpdatedEvent]: onUpdateVirtualView,
+    [FileSystemChangedEvent]: onFileSystemChanged,
   });
 
   Events.addListeners('databases:database-views', {
-    [DataViewCreatedEvent]: ({ data }) => onDatabaseViewCreated(data),
-    [DataViewUpdatedEvent]: ({ data }) => onDatabaseViewUpdated(data),
-    [DataViewDeletedEvent]: ({ data }) => onDatabaseViewDeleted(data),
+    [DataViewCreatedEvent]: onDatabaseViewCreated,
+    [DataViewUpdatedEvent]: onDatabaseViewUpdated,
+    [DataViewDeletedEvent]: onDatabaseViewDeleted,
   });
 
   Events.addListeners('databases:database-designs', {
-    [DesignCreatedEvent]: ({ data }) => onDatabaseDesignCreated(data),
-    [DesignUpdatedEvent]: ({ data }) => onDatabaseDesignUpdated(data),
-    [DesignDeletedEvent]: ({ data }) => onDatabaseDesignDeleted(data),
+    [DesignCreatedEvent]: onDatabaseDesignCreated,
+    [DesignUpdatedEvent]: onDatabaseDesignUpdated,
+    [DesignDeletedEvent]: onDatabaseDesignDeleted,
   });
 }

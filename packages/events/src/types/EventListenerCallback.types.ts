@@ -1,5 +1,4 @@
-import { Event } from './Event.types';
-
 export type EventListenerCallback<TData = unknown> = (
-  event: Event<TData>,
+  data: TData,
+  eventName: string,
 ) => void | Promise<void>;

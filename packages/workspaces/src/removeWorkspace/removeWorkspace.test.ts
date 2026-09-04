@@ -31,7 +31,7 @@ describe('removeWorkspace', () => {
   it('dispatches a workspaces deleted event', async () =>
     new Promise<void>((done) => {
       Events.addListener(WorkspaceDeletedEvent, 'test', (payload) => {
-        expect(payload.data).toEqual(workspace_1);
+        expect(payload).toEqual(workspace_1);
         done();
       });
 

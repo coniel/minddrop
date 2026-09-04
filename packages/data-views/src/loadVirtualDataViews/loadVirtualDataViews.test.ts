@@ -82,8 +82,8 @@ describe('loadVirtualDataViews', () => {
   it('dispatches a views loaded event', () =>
     new Promise<void>((done) => {
       Events.addListener(DataViewsLoadedEvent, 'test', (payload) => {
-        expect(payload.data).toHaveLength(2);
-        expect(payload.data[0].virtual).toBe(true);
+        expect(payload).toHaveLength(2);
+        expect(payload[0].virtual).toBe(true);
         done();
       });
 

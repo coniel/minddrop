@@ -22,7 +22,7 @@ export function initializeTagsFeature(): VoidFunction {
 
   // Listen for open tags view events, and open the tags list view
   // when one is received
-  Events.addListener(OpenTagsViewEvent, EventListenerId, ({ data }) => {
+  Events.addListener(OpenTagsViewEvent, EventListenerId, (data) => {
     // Open a blank tab to receive the tags view
     if (data?.openMode === 'new-tab') {
       Tabs.newTab(DefaultViewAreaId);

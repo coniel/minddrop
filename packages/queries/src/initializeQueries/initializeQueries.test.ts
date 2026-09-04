@@ -38,7 +38,7 @@ describe('initializeQueries', () => {
   it('dispatches a queries loaded event', async () =>
     new Promise<void>((done) => {
       Events.addListener(QueriesLoadedEvent, 'test', (payload) => {
-        expect(payload.data).toEqual(queries);
+        expect(payload).toEqual(queries);
         done();
       });
 

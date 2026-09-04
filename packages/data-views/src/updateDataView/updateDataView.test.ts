@@ -99,8 +99,8 @@ describe('updateDataView', () => {
   it('dispatches a view updated event', async () =>
     new Promise<void>((done) => {
       Events.addListener(DataViewUpdatedEvent, 'test', (payload) => {
-        expect(payload.data.original).toEqual(dataView_gallery_1);
-        expect(payload.data.updated).toEqual(updatedView);
+        expect(payload.original).toEqual(dataView_gallery_1);
+        expect(payload.updated).toEqual(updatedView);
         done();
       });
 
