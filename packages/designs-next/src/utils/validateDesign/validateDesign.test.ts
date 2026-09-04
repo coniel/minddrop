@@ -45,6 +45,11 @@ describe('validateDesign', () => {
     );
   });
 
+  it('accepts an entity ID owner and rejects other owners', () => {
+    expect(validateDesign({ ...cardDesign_1, owner: 'database_1' })).toBe(true);
+    expect(validateDesign({ ...cardDesign_1, owner: 1 })).toBe(false);
+  });
+
   it('rejects invalid elements', () => {
     expect(
       validateDesign({

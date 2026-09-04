@@ -69,4 +69,10 @@ export interface Design {
    * Timestamp at which the design was last modified.
    */
   lastModified: Date;
+
+  /**
+   * The ID of the entity which owns the design. Owned designs have
+   * no design file of their own.
+   */
+  owner?: EntityId;
 }

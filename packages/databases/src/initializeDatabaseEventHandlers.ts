@@ -5,6 +5,11 @@ import {
   DataViewUpdatedEvent,
 } from '@minddrop/data-views';
 import { DesignPropertyRenamedEvent } from '@minddrop/designs';
+import {
+  DesignCreatedEvent,
+  DesignDeletedEvent,
+  DesignUpdatedEvent,
+} from '@minddrop/designs-next';
 import { Events } from '@minddrop/events';
 import { FileSystemChangedEvent } from '@minddrop/file-system';
 import { ItemAddressesChangedEvent } from '@minddrop/item-references';
@@ -18,6 +23,9 @@ import {
   onClearEntries,
   onCreateDatabase,
   onCreateEntry,
+  onDatabaseDesignCreated,
+  onDatabaseDesignDeleted,
+  onDatabaseDesignUpdated,
   onDatabaseViewCreated,
   onDatabaseViewDeleted,
   onDatabaseViewUpdated,
@@ -150,5 +158,17 @@ export function initializeDatabaseEventHandlers() {
 
   Events.on(DataViewDeletedEvent, 'databases:database-views', ({ data }) => {
     onDatabaseViewDeleted(data);
+  });
+
+  Events.on(DesignCreatedEvent, 'databases:database-designs', ({ data }) => {
+    onDatabaseDesignCreated(data);
+  });
+
+  Events.on(DesignUpdatedEvent, 'databases:database-designs', ({ data }) => {
+    onDatabaseDesignUpdated(data);
+  });
+
+  Events.on(DesignDeletedEvent, 'databases:database-designs', ({ data }) => {
+    onDatabaseDesignDeleted(data);
   });
 }

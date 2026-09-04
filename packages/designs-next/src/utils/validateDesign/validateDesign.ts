@@ -58,6 +58,11 @@ export function validateDesign(candidate: unknown): candidate is Design {
     return false;
   }
 
+  // The owner must be an entity ID when present
+  if (design.owner !== undefined && typeof design.owner !== 'string') {
+    return false;
+  }
+
   return true;
 }
 

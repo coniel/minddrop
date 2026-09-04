@@ -4,6 +4,7 @@ import {
   cleanupDataViewFixtures,
   setupDataViewFixtures,
 } from '@minddrop/data-views/test-utils';
+import { Designs as DesignsNext } from '@minddrop/designs-next';
 import {
   cleanupDesignFixtures,
   setupDesignFixtures,
@@ -73,6 +74,7 @@ export function cleanup() {
   cleanupDesignFixtures();
   cleanupDataViewFixtures();
   cleanupWorkspaceFixtures();
+  DesignsNext.Store.clear();
 
   // Clear stores
   DatabasesStore.clear();

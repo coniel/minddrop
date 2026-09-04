@@ -3,7 +3,13 @@ import { Events } from '@minddrop/events';
 import { DesignsStore } from '../DesignsStore';
 import { DesignNotFoundError } from '../errors';
 import { DesignDeletedEvent } from '../events';
-import { MockFs, cardDesign_1, cleanup, setup } from '../test-utils';
+import {
+  MockFs,
+  cardDesign_1,
+  cleanup,
+  ownedCardDesign_1,
+  setup,
+} from '../test-utils';
 import { resolveDesignFilePath } from '../utils';
 import { deleteDesign } from './deleteDesign';
 
@@ -22,6 +28,12 @@ describe('deleteDesign', () => {
     await deleteDesign(cardDesign_1.id);
 
     expect(MockFs.exists(resolveDesignFilePath(cardDesign_1.id))).toBe(false);
+  });
+
+  it('removes owned designs from the store', async () => {
+    await deleteDesign(ownedCardDesign_1.id);
+
+    expect(DesignsStore.get(ownedCardDesign_1.id)).toBeNull();
   });
 
   it('throws if the design does not exist', async () => {

@@ -28,7 +28,7 @@ export interface UpdateDesignData {
 }
 
 /**
- * Updates a design.
+ * Updates a design, writing it to the file system unless it is owned.
  *
  * @param id - The ID of the design to update.
  * @param data - The data to update the design with.
@@ -51,8 +51,10 @@ export async function updateDesign(
   // Get the updated design
   const updatedDesign = getDesign(id);
 
-  // Write the design to the file system
-  await writeDesign(design.id);
+  // Write unowned designs to the file system
+  if (!design.owner) {
+    await writeDesign(design.id);
+  }
 
   // Dispatch a design updated event
   Events.dispatch(DesignUpdatedEvent, {

@@ -8,6 +8,7 @@ import { initializeDatabaseAutomations } from '../initializeDatabaseAutomations'
 import { initializeDatabaseEntries } from '../initializeDatabaseEntries';
 import { initializeDatabaseEventHandlers } from '../initializeDatabaseEventHandlers';
 import { initializeDatabaseTemplates } from '../initializeDatabaseTemplates';
+import { loadDatabaseDesigns } from '../loadDatabaseDesigns';
 import { loadDatabaseViews } from '../loadDatabaseViews';
 import type { Database } from '../types';
 import {
@@ -75,6 +76,10 @@ export async function initializeDatabases(): Promise<{
   // Load database views into the ViewsStore (before event
   // handlers so the initial load does not trigger write-back)
   loadDatabaseViews(databases);
+
+  // Load database designs into the designs store (likewise before
+  // event handlers).
+  loadDatabaseDesigns(databases);
 
   // Register event handlers
   initializeDatabaseEventHandlers();

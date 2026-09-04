@@ -1,9 +1,7 @@
-import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { I18n } from '@minddrop/i18n';
-import { DesignsStore } from '../DesignsStore';
 import { DesignFileExtension } from '../constants';
-import { DesignsLoadedEvent } from '../events';
+import { loadDesigns } from '../loadDesigns';
 import { locales } from '../locales';
 import { readDesign } from '../readDesign';
 import { resolveDesignsDirPath } from '../utils';
@@ -18,11 +16,11 @@ export async function initializeDesigns(): Promise<void> {
   // Register the package's translations
   I18n.registerTranslations(locales);
 
-  // Nothing to load if the designs directory does not exist yet.
+  // Nothing to read if the designs directory does not exist yet.
   // The loaded event still fires so that listeners waiting on it
   // are not left hanging in a workspace with no designs.
   if (!(await Fs.exists(resolveDesignsDirPath()))) {
-    Events.dispatch(DesignsLoadedEvent, []);
+    loadDesigns([]);
 
     return;
   }
@@ -41,9 +39,6 @@ export async function initializeDesigns(): Promise<void> {
     await Promise.all(designFiles.map((entry) => readDesign(entry.path)))
   ).filter((design) => design !== null);
 
-  // Load designs into the store
-  DesignsStore.load(designs);
-
-  // Dispatch a designs loaded event
-  Events.dispatch(DesignsLoadedEvent, designs);
+  // Load the designs into the store
+  loadDesigns(designs);
 }

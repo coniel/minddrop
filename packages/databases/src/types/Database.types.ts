@@ -1,7 +1,9 @@
 import { DataView } from '@minddrop/data-views';
+import { Design } from '@minddrop/designs-next';
 import { PropertiesSchema, PropertyType } from '@minddrop/properties';
 import { EntityId } from '@minddrop/utils';
 import { ViewOpenMode } from '@minddrop/views';
+import { LayoutContext } from '../layoutContexts';
 import { DatabaseAutomation } from './DatabaseAutomation.types';
 import { DatabaseEntryTemplate } from './DatabaseEntryTemplate.types';
 
@@ -156,4 +158,16 @@ export interface Database {
     DataView,
     'dataSource' | 'virtual' | 'owner' | 'ownerKey' | 'references'
   >[];
+
+  /**
+   * The database's designs, stored without `owner` which is derived
+   * at load time.
+   */
+  designs?: Omit<Design, 'owner'>[];
+
+  /**
+   * A [layout context]: [design ID] map of the design to render
+   * entries with in each display context.
+   */
+  defaultDesigns?: Partial<Record<LayoutContext, string>>;
 }

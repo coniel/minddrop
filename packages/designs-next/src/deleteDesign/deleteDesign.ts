@@ -6,7 +6,7 @@ import { getDesign } from '../getDesign';
 import { resolveDesignFilePath } from '../utils';
 
 /**
- * Deletes a design, removing its file.
+ * Deletes a design, removing its file unless it is owned.
  *
  * @param id - The ID of the design to delete.
  *
@@ -18,8 +18,10 @@ export async function deleteDesign(id: string): Promise<void> {
   // Get the design
   const design = getDesign(id);
 
-  // Remove the design's file
-  await Fs.removeFile(resolveDesignFilePath(id));
+  // Remove unowned designs' files
+  if (!design.owner) {
+    await Fs.removeFile(resolveDesignFilePath(id));
+  }
 
   // Remove the design from the store
   DesignsStore.remove(id);

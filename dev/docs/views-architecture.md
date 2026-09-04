@@ -71,6 +71,16 @@ persisted by its owner, not by the data-views package):
   per-entry saved state under `entry.metadata.views` keyed
   `propertyName:layoutId`.
 
+The same owner-persisted shape applies to **database designs** in
+`designs-next`: `Database.designs` stores them (stripped of `owner`),
+`loadDatabaseDesigns` hydrates them into the designs store with the
+database as `owner`, and `writeDatabaseDesigns` persists them back,
+driven by the `designs-next:design:created/updated/deleted` handlers in
+`packages/databases`. Designs without an owner are persisted to their
+own design files instead. `Database.defaultDesigns` pins the design per
+layout context (`Databases.getDefaultDesign` resolves pinned → first
+owned design of the context's base type → null).
+
 ## Per-view layout configuration
 
 "Which layout should entries use in this view" is view-rendering

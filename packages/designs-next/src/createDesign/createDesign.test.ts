@@ -49,6 +49,18 @@ describe('createDesign', () => {
     );
   });
 
+  it('records the owner on owned designs', async () => {
+    const design = await createDesign({ type: 'card', owner: 'database_1' });
+
+    expect(DesignsStore.get(design.id)?.owner).toBe('database_1');
+  });
+
+  it('does not write owned designs to the file system', async () => {
+    const design = await createDesign({ type: 'card', owner: 'database_1' });
+
+    expect(MockFs.exists(resolveDesignFilePath(design.id))).toBe(false);
+  });
+
   it('dispatches the design created event', async () =>
     new Promise<void>((done) => {
       Events.addListener(

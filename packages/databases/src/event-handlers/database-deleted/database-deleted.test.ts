@@ -1,5 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Collections } from '@minddrop/collections';
+import { Designs } from '@minddrop/designs-next';
+import { DesignFixtures } from '@minddrop/designs-next/test-utils';
 import {
   sqlGetAllDatabases,
   sqlGetEntrySyncRecords,
@@ -19,6 +21,8 @@ import {
 } from '../../test-utils';
 import { virtualCollectionId, virtualCollectionName } from '../../utils';
 import { onDeleteDatabase } from './database-deleted';
+
+const { ownedCardDesign_1 } = DesignFixtures;
 
 describe('onDeleteDatabase', () => {
   beforeEach(() => {
@@ -80,6 +84,15 @@ describe('onDeleteDatabase', () => {
 
     // The database's entry records should be cascade deleted
     expect(sqlGetEntrySyncRecords(collectionDatabase.id)).toEqual([]);
+  });
+
+  it("deletes the database's designs", async () => {
+    // Load a design owned by the database
+    Designs.load([{ ...ownedCardDesign_1, owner: objectDatabase.id }]);
+
+    await onDeleteDatabase(objectDatabase);
+
+    expect(Designs.getByOwner(objectDatabase.id)).toEqual([]);
   });
 
   it('does nothing if the database has no collection properties', async () => {

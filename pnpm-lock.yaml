@@ -1618,6 +1618,9 @@ importers:
       '@minddrop/designs':
         specifier: workspace:*
         version: link:../designs
+      '@minddrop/designs-next':
+        specifier: workspace:*
+        version: link:../designs-next
       '@minddrop/events':
         specifier: workspace:*
         version: link:../events

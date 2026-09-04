@@ -17,12 +17,20 @@ export const useDesign = (id: string): Design | null => {
 };
 
 /**
- * Retrieves all designs.
+ * Retrieves all designs, or only those owned by the given entity.
  *
- * @returns An array of all designs.
+ * @param ownerId - The ID of the owning entity to filter by.
+ * @returns An array of the matching designs.
  */
-export const useDesigns = (): Design[] => {
-  return DesignsStore.useAllItemsArray();
+export const useDesigns = (ownerId?: string): Design[] => {
+  const designs = DesignsStore.useAllItemsArray();
+
+  if (!ownerId) {
+    return designs;
+  }
+
+  // Filter the designs down to the owner's
+  return designs.filter((design) => design.owner === ownerId);
 };
 
 /**

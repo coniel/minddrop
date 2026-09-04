@@ -3,7 +3,14 @@ import { Events } from '@minddrop/events';
 import { DesignsStore } from '../DesignsStore';
 import { DesignNotFoundError } from '../errors';
 import { DesignUpdatedEvent } from '../events';
-import { MockFs, cardDesign_1, cleanup, mockDate, setup } from '../test-utils';
+import {
+  MockFs,
+  cardDesign_1,
+  cleanup,
+  mockDate,
+  ownedCardDesign_1,
+  setup,
+} from '../test-utils';
 import { resolveDesignFilePath } from '../utils';
 import { updateDesign } from './updateDesign';
 
@@ -33,6 +40,15 @@ describe('updateDesign', () => {
 
     expect(MockFs.readJsonFile(resolveDesignFilePath(cardDesign_1.id))).toEqual(
       { ...cardDesign_1, name: 'Renamed', lastModified: mockDate },
+    );
+  });
+
+  it('updates owned designs without writing to the file system', async () => {
+    await updateDesign(ownedCardDesign_1.id, { name: 'Renamed' });
+
+    expect(DesignsStore.get(ownedCardDesign_1.id)?.name).toBe('Renamed');
+    expect(MockFs.exists(resolveDesignFilePath(ownedCardDesign_1.id))).toBe(
+      false,
     );
   });
 

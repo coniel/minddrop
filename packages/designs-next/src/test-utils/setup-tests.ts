@@ -4,7 +4,7 @@ import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
 import { I18n, initializeI18n } from '@minddrop/i18n';
 import { DesignsStore } from '../DesignsStore';
 import { locales } from '../locales';
-import { designs, getDesignFiles } from './designs.fixtures';
+import { designs, getDesignFiles, ownedDesigns } from './designs.fixtures';
 
 initializeI18n();
 I18n.registerTranslations(locales);
@@ -22,7 +22,7 @@ export interface SetupOptions {
 export function setup(options: SetupOptions = {}) {
   // Load the design fixtures into the store
   if (options.loadDesigns !== false) {
-    DesignsStore.load(designs);
+    DesignsStore.load([...designs, ...ownedDesigns]);
   }
 
   vi.useFakeTimers();

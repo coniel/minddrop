@@ -1,7 +1,14 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { InvalidParameterError } from '@minddrop/utils';
 import { DesignsStore } from '../DesignsStore';
 import { DesignNotFoundError } from '../errors';
-import { MockFs, cardDesign_1, cleanup, setup } from '../test-utils';
+import {
+  MockFs,
+  cardDesign_1,
+  cleanup,
+  ownedCardDesign_1,
+  setup,
+} from '../test-utils';
 import { resolveDesignFilePath } from '../utils';
 import { writeDesign } from './writeDesign';
 
@@ -35,6 +42,12 @@ describe('writeDesign', () => {
   it('throws if the design does not exist', async () => {
     await expect(() => writeDesign('design_missing')).rejects.toThrow(
       DesignNotFoundError,
+    );
+  });
+
+  it('throws if the design is owned', async () => {
+    await expect(() => writeDesign(ownedCardDesign_1.id)).rejects.toThrow(
+      InvalidParameterError,
     );
   });
 });

@@ -130,6 +130,8 @@ export { clearDatabaseDesignPropertyMap as clearDesignPropertyMap } from './clea
 export { setDatabaseDesign as setDesign } from './setDatabaseDesign';
 export { setDatabaseColorProperty as setColorProperty } from './setDatabaseColorProperty';
 export { setDatabaseDefaultLayout as setDefaultLayout } from './setDatabaseDefaultLayout';
+export { getDefaultDatabaseDesign as getDefaultDesign } from './getDefaultDatabaseDesign';
+export { setDatabaseDefaultDesign as setDefaultDesign } from './setDatabaseDefaultDesign';
 
 /**
  * Handles a drop event on a database.
