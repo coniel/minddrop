@@ -68,107 +68,40 @@ import {
  * lifecycle events.
  */
 export function initializeDatabaseEventHandlers() {
-  Events.on(DatabaseCreatedEvent, 'databases', ({ data }) => {
-    onCreateDatabase(data);
+  Events.addListeners('databases', {
+    [DatabaseCreatedEvent]: ({ data }) => onCreateDatabase(data),
+    [DatabaseUpdatedEvent]: ({ data }) => onUpdateDatabase(data),
+    [DatabaseDeletedEvent]: ({ data }) => onDeleteDatabase(data),
+    [DatabaseRenamedEvent]: ({ data }) => onRenameDatabase(data),
+    [DatabasePropertyAddedEvent]: ({ data }) => onAddProperty(data),
+    [DatabasePropertyRemovedEvent]: ({ data }) => onRemoveProperty(data),
+    [DatabasePropertyRenamedEvent]: ({ data }) => onRenameProperty(data),
+    [DesignPropertyRenamedEvent]: ({ data }) => onRenameDesignProperty(data),
+    [DatabaseEntryCreatedEvent]: ({ data }) => onCreateEntry(data),
+    [DatabaseEntryUpdatedEvent]: ({ data }) => onUpdateEntry(data),
+    [DatabaseEntryDeletedEvent]: ({ data }) => onDeleteEntry(data),
+    [DatabaseEntriesClearedEvent]: ({ data }) => onClearEntries(data),
+    [DatabaseEntryRenamedEvent]: ({ data }) => onRenameEntry(data),
+    [DatabaseEntryMetadataUpdatedEvent]: ({ data }) =>
+      onUpdateEntryMetadata(data),
+    [CollectionUpdatedEvent]: ({ data }) => onUpdateCollection(data),
+    [ItemAddressesChangedEvent]: ({ data }) => onItemAddressesChanged(data),
+    [TagRenamedEvent]: ({ data }) => onTagRenamed(data),
+    [TagDeletedEvent]: ({ data }) => onTagDeleted(data),
+    [TagGroupDeletedEvent]: ({ data }) => onTagGroupDeleted(data),
+    [DataViewUpdatedEvent]: ({ data }) => onUpdateVirtualView(data),
+    [FileSystemChangedEvent]: ({ data }) => onFileSystemChanged(data),
   });
 
-  Events.on(DatabaseUpdatedEvent, 'databases', ({ data }) => {
-    onUpdateDatabase(data);
+  Events.addListeners('databases:database-views', {
+    [DataViewCreatedEvent]: ({ data }) => onDatabaseViewCreated(data),
+    [DataViewUpdatedEvent]: ({ data }) => onDatabaseViewUpdated(data),
+    [DataViewDeletedEvent]: ({ data }) => onDatabaseViewDeleted(data),
   });
 
-  Events.on(DatabaseDeletedEvent, 'databases', ({ data }) => {
-    onDeleteDatabase(data);
-  });
-
-  Events.on(DatabaseRenamedEvent, 'databases', ({ data }) => {
-    onRenameDatabase(data);
-  });
-
-  Events.on(DatabasePropertyAddedEvent, 'databases', ({ data }) => {
-    onAddProperty(data);
-  });
-
-  Events.on(DatabasePropertyRemovedEvent, 'databases', ({ data }) => {
-    onRemoveProperty(data);
-  });
-
-  Events.on(DatabasePropertyRenamedEvent, 'databases', ({ data }) => {
-    onRenameProperty(data);
-  });
-
-  Events.on(DesignPropertyRenamedEvent, 'databases', ({ data }) => {
-    onRenameDesignProperty(data);
-  });
-
-  Events.on(DatabaseEntryCreatedEvent, 'databases', ({ data }) => {
-    onCreateEntry(data);
-  });
-
-  Events.on(DatabaseEntryUpdatedEvent, 'databases', ({ data }) => {
-    onUpdateEntry(data);
-  });
-
-  Events.on(DatabaseEntryDeletedEvent, 'databases', ({ data }) => {
-    onDeleteEntry(data);
-  });
-
-  Events.on(DatabaseEntriesClearedEvent, 'databases', ({ data }) => {
-    onClearEntries(data);
-  });
-
-  Events.on(DatabaseEntryRenamedEvent, 'databases', ({ data }) => {
-    onRenameEntry(data);
-  });
-
-  Events.on(DatabaseEntryMetadataUpdatedEvent, 'databases', ({ data }) => {
-    onUpdateEntryMetadata(data);
-  });
-
-  Events.on(CollectionUpdatedEvent, 'databases', ({ data }) =>
-    onUpdateCollection(data),
-  );
-
-  Events.on(ItemAddressesChangedEvent, 'databases', ({ data }) =>
-    onItemAddressesChanged(data),
-  );
-
-  Events.on(TagRenamedEvent, 'databases', ({ data }) => onTagRenamed(data));
-
-  Events.on(TagDeletedEvent, 'databases', ({ data }) => onTagDeleted(data));
-
-  Events.on(TagGroupDeletedEvent, 'databases', ({ data }) =>
-    onTagGroupDeleted(data),
-  );
-
-  Events.on(DataViewUpdatedEvent, 'databases', ({ data }) => {
-    onUpdateVirtualView(data);
-  });
-
-  Events.on(FileSystemChangedEvent, 'databases', ({ data }) =>
-    onFileSystemChanged(data),
-  );
-
-  Events.on(DataViewCreatedEvent, 'databases:database-views', ({ data }) => {
-    onDatabaseViewCreated(data);
-  });
-
-  Events.on(DataViewUpdatedEvent, 'databases:database-views', ({ data }) => {
-    onDatabaseViewUpdated(data);
-  });
-
-  Events.on(DataViewDeletedEvent, 'databases:database-views', ({ data }) => {
-    onDatabaseViewDeleted(data);
-  });
-
-  Events.on(DesignCreatedEvent, 'databases:database-designs', ({ data }) => {
-    onDatabaseDesignCreated(data);
-  });
-
-  Events.on(DesignUpdatedEvent, 'databases:database-designs', ({ data }) => {
-    onDatabaseDesignUpdated(data);
-  });
-
-  Events.on(DesignDeletedEvent, 'databases:database-designs', ({ data }) => {
-    onDatabaseDesignDeleted(data);
+  Events.addListeners('databases:database-designs', {
+    [DesignCreatedEvent]: ({ data }) => onDatabaseDesignCreated(data),
+    [DesignUpdatedEvent]: ({ data }) => onDatabaseDesignUpdated(data),
+    [DesignDeletedEvent]: ({ data }) => onDatabaseDesignDeleted(data),
   });
 }
