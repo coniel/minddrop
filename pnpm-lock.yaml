@@ -799,6 +799,34 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
+  features/designs-next:
+    dependencies:
+      '@minddrop/designs-next':
+        specifier: workspace:*
+        version: link:../../packages/designs-next
+      '@minddrop/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
+      '@minddrop/ui-designs-next':
+        specifier: workspace:*
+        version: link:../../ui/designs-next
+    devDependencies:
+      '@minddrop/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@minddrop/test-utils':
+        specifier: workspace:*
+        version: link:../../packages/test-utils
+      eslint:
+        specifier: ^9.39.3
+        version: 9.39.5
+      tsconfig:
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
   features/desktop-app:
     dependencies:
       '@minddrop/ast':
@@ -1700,6 +1728,9 @@ importers:
       '@minddrop/stores':
         specifier: workspace:*
         version: link:../stores
+      '@minddrop/ui-icons':
+        specifier: workspace:*
+        version: link:../../ui/icons
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../utils

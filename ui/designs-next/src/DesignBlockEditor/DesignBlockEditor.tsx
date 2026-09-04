@@ -5,6 +5,7 @@ import {
   ElementDragMode,
   ElementWidthMode,
   applyElementDrag,
+  getElementType,
   isElementPinOverridden,
 } from '@minddrop/designs-next';
 import { BlockEditorElementMenu } from '../BlockEditorElementMenu';
@@ -147,6 +148,9 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
       return;
     }
 
+    // The element type's block behaviour constraints
+    const config = getElementType(drag.original.type, false);
+
     // Unsnapped delta in grid units, quantized per mode by the drag
     // application.
     const options: ApplyElementDragOptions = {
@@ -156,6 +160,10 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
       columns,
       rows,
       snap,
+      // Floor the resize at the element type's intrinsic minimum
+      minRowSpan: config?.resolveMinRowSpan?.(drag.original),
+      // Step vertical resizes by the element type's line height
+      rowSpanStep: config?.resolveRowSpanStep?.(drag.original),
     };
 
     onElementsChange(

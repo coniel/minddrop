@@ -133,6 +133,85 @@ describe('applyElementDrag', () => {
     expect(resized.columnSpan).toBe(1);
   });
 
+  it('keeps spans at or above the minimum row span', () => {
+    const resized = applyElementDrag(iconDesignElement, {
+      ...baseOptions,
+      mode: 'resize-bottom',
+      deltaRows: -100,
+      minRowSpan: 4,
+    });
+
+    expect(resized.rowSpan).toBe(4);
+  });
+
+  it('stops the top edge at the minimum row span', () => {
+    const resized = applyElementDrag(iconDesignElement, {
+      ...baseOptions,
+      mode: 'resize-top',
+      deltaRows: 100,
+      minRowSpan: 4,
+    });
+
+    // The bottom edge stays put while the span floors at the minimum
+    expect(resized.rowSpan).toBe(4);
+    expect(resized.row + resized.rowSpan).toBe(
+      iconDesignElement.row + iconDesignElement.rowSpan,
+    );
+  });
+
+  it('steps vertical resizes by the row span step', () => {
+    // A drag short of a whole step snaps to nothing
+    const unchanged = applyElementDrag(iconDesignElement, {
+      ...baseOptions,
+      mode: 'resize-bottom',
+      deltaRows: 2,
+      rowSpanStep: 6,
+    });
+
+    expect(unchanged.rowSpan).toBe(iconDesignElement.rowSpan);
+
+    // A drag past half a step snaps to the whole step
+    const resized = applyElementDrag(iconDesignElement, {
+      ...baseOptions,
+      mode: 'resize-bottom',
+      deltaRows: 4,
+      rowSpanStep: 6,
+    });
+
+    expect(resized.rowSpan).toBe(iconDesignElement.rowSpan + 6);
+  });
+
+  it('steps top-edge resizes, keeping the bottom edge in place', () => {
+    const resized = applyElementDrag(iconDesignElement, {
+      ...baseOptions,
+      mode: 'resize-top',
+      deltaRows: -5,
+      rowSpanStep: 6,
+    });
+
+    expect(resized.rowSpan).toBe(iconDesignElement.rowSpan + 6);
+    expect(resized.row + resized.rowSpan).toBe(
+      iconDesignElement.row + iconDesignElement.rowSpan,
+    );
+  });
+
+  it('floors stepped spans truncated by the design bounds', () => {
+    // Positioned so the bottom bound is not a whole step away
+    const resized = applyElementDrag(
+      { ...iconDesignElement, row: 9 },
+      {
+        ...baseOptions,
+        mode: 'resize-bottom',
+        deltaRows: 100,
+        minRowSpan: 6,
+        rowSpanStep: 6,
+      },
+    );
+
+    // The bound allows 23 rows, flooring back onto 18
+    expect(resized.rowSpan).toBe(18);
+  });
+
   it('preserves extra element fields', () => {
     const moved = applyElementDrag(
       { ...titleDesignElement, label: 'Title' },

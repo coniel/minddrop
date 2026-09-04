@@ -8,6 +8,11 @@
       "fixedCenter": "Fixed width, centered",
       "overridden": "A fluid element absorbs the extra space, so the pin currently has no effect"
     },
-    "naturalHeight": "Natural height"
+    "naturalHeight": "Natural height",
+    "elements": {
+      "box": {
+        "label": "Box"
+      }
+    }
   }
 }

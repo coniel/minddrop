@@ -2126,6 +2126,17 @@ declare module 'i18next' {
             overridden: string;
           };
           naturalHeight: string;
+          elements: {
+            box: {
+              label: string;
+            };
+            heading: {
+              label: string;
+            };
+            text: {
+              label: string;
+            };
+          };
         };
         onboarding: {
           welcome: {

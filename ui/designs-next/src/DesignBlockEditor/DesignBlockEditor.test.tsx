@@ -1,11 +1,16 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DesignElement } from '@minddrop/designs-next';
+import { registerElementType } from '@minddrop/designs-next';
 import {
   cardColumns,
   cardRows,
   coverDesignElement,
   designElements,
   titleDesignElement,
+} from '@minddrop/designs-next/test-utils';
+import {
+  ElementConfigsStore,
+  boxElementConfig,
 } from '@minddrop/designs-next/test-utils';
 import { fireEvent, render, screen } from '@minddrop/test-utils';
 import { cleanup } from '../test-utils';
@@ -244,6 +249,28 @@ describe('DesignBlockEditor', () => {
     );
 
     expect(changedTitle?.naturalHeight).toBe(true);
+  });
+
+  it('floors resizes at the element type minimum row span', () => {
+    // A box config declaring an intrinsic minimum height
+    registerElementType({ ...boxElementConfig, resolveMinRowSpan: () => 4 });
+
+    const container = renderEditor();
+    const bottomHandle = container.querySelector(
+      '[data-element-id="element_icon"] .design-block-editor-handle-resize-bottom',
+    ) as HTMLElement;
+
+    // Drag the bottom edge far past the minimum
+    fireEvent.pointerDown(bottomHandle, { clientX: 0, clientY: 0 });
+    fireEvent.pointerMove(bottomHandle, { clientX: 0, clientY: -1000 });
+
+    const resizedIcon = changedElements?.find(
+      (element) => element.id === 'element_icon',
+    );
+
+    expect(resizedIcon?.rowSpan).toBe(4);
+
+    ElementConfigsStore.delete(boxElementConfig.type);
   });
 
   it('stops applying deltas after the pointer is released', () => {

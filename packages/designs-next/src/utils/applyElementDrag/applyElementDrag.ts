@@ -42,6 +42,19 @@ export interface ApplyElementDragOptions {
    * The snap resolution in grid units.
    */
   snap: number;
+
+  /**
+   * The element's minimum row span in grid units, acting as its
+   * vertical resize floor. Defaults to one unit.
+   */
+  minRowSpan?: number;
+
+  /**
+   * The element's vertical resize step in grid units. When given,
+   * vertical resize deltas snap to it instead of the snap
+   * resolution, keeping the span on whole steps.
+   */
+  rowSpanStep?: number;
 }
 
 /**
@@ -58,7 +71,16 @@ export function applyElementDrag<TElement extends DesignElement>(
   element: TElement,
   options: ApplyElementDragOptions,
 ): TElement {
-  const { mode, deltaColumns, deltaRows, columns, rows, snap } = options;
+  const {
+    mode,
+    deltaColumns,
+    deltaRows,
+    columns,
+    rows,
+    snap,
+    minRowSpan = 1,
+    rowSpanStep,
+  } = options;
 
   // Snap the element's edges onto the snap grid, keeping it inside
   // the design bounds.
@@ -78,9 +100,10 @@ export function applyElementDrag<TElement extends DesignElement>(
     };
   }
 
-  // Snap the drag delta so the untouched edges stay put
+  // Snap the drag delta so the untouched edges stay put. Vertical
+  // deltas snap to the row span step when the element has one.
   const snappedColumns = snapToMultiple(deltaColumns, snap);
-  const snappedRows = snapToMultiple(deltaRows, snap);
+  const snappedRows = snapToMultiple(deltaRows, rowSpanStep ?? snap);
 
   let resized = { ...element };
 
@@ -113,28 +136,59 @@ export function applyElementDrag<TElement extends DesignElement>(
 
   // Move the top edge while keeping the bottom edge in place
   if (mode.includes('top')) {
-    const row = clamp(
-      element.row + snappedRows,
-      0,
-      element.row + element.rowSpan - 1,
+    const bottomEdge = element.row + element.rowSpan;
+    const rowSpan = clampRowSpan(
+      element.rowSpan - snappedRows,
+      minRowSpan,
+      bottomEdge,
+      rowSpanStep,
     );
 
-    resized = {
-      ...resized,
-      row,
-      rowSpan: element.row + element.rowSpan - row,
-    };
+    resized = { ...resized, row: bottomEdge - rowSpan, rowSpan };
   }
 
   // Grow or shrink from the bottom edge
   if (mode.includes('bottom')) {
     resized = {
       ...resized,
-      rowSpan: clamp(element.rowSpan + snappedRows, 1, rows - element.row),
+      rowSpan: clampRowSpan(
+        element.rowSpan + snappedRows,
+        minRowSpan,
+        rows - element.row,
+        rowSpanStep,
+      ),
     };
   }
 
   return resized;
+}
+
+/**
+ * Clamps a row span to its bounds, flooring it back onto whole steps
+ * when a bound truncates a stepped span.
+ *
+ * @param rowSpan - The candidate row span.
+ * @param min - The minimum row span.
+ * @param max - The maximum row span.
+ * @param step - The row span step, when the element has one.
+ * @returns The clamped row span.
+ */
+function clampRowSpan(
+  rowSpan: number,
+  min: number,
+  max: number,
+  step?: number,
+): number {
+  // Clamp the span to its bounds
+  const clamped = clamp(rowSpan, min, max);
+
+  // Without a step the clamped span is final
+  if (!step) {
+    return clamped;
+  }
+
+  // Floor the span back onto a whole step, keeping the minimum
+  return Math.max(Math.floor(clamped / step) * step, min);
 }
 
 /**

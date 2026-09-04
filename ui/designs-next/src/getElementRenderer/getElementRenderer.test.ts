@@ -1,11 +1,20 @@
-import { describe, expect, it } from 'vitest';
-import { BoxElementType } from '@minddrop/designs-next';
-import { BoxElement } from '../BoxElement';
+import { afterEach, describe, expect, it } from 'vitest';
+import { ElementRenderersStore } from '../ElementRenderersStore';
+import { registerElementRenderer } from '../registerElementRenderer';
+import { DesignElementComponent } from '../types';
 import { getElementRenderer } from './getElementRenderer';
 
+const CustomElement: DesignElementComponent = () => null;
+
 describe('getElementRenderer', () => {
-  it('returns the built-in box element renderer', () => {
-    expect(getElementRenderer(BoxElementType)).toBe(BoxElement);
+  afterEach(() => {
+    ElementRenderersStore.delete('custom');
+  });
+
+  it('returns the registered renderer', () => {
+    registerElementRenderer('custom', CustomElement);
+
+    expect(getElementRenderer('custom')).toBe(CustomElement);
   });
 
   it('returns null for unregistered element types', () => {

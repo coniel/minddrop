@@ -19,7 +19,7 @@ export const DesignFileExtension = 'json';
 export const i18nRoot = 'designsNext';
 
 /**
- * The type of the placeholder box element.
+ * The type of the decorative box element.
  */
 export const BoxElementType = 'box';
 

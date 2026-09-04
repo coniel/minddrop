@@ -1,0 +1,10 @@
+.design-text-element {
+  flex: 1;
+  /* Line height on the 4px grid, matching TextLineHeightUnits */
+  font-size: 14px;
+  line-height: 20px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  overflow-wrap: break-word;
+}
