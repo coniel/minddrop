@@ -4,6 +4,7 @@ import {
   bodyDesignElement,
   cardDesign_1,
   coverDesignElement,
+  iconDesignElement,
 } from '@minddrop/designs-next/test-utils';
 import { act, render } from '@minddrop/test-utils';
 import { cleanup } from '../test-utils';
@@ -165,6 +166,74 @@ describe('DesignRenderer', () => {
     ).map((node) => node.getAttribute('data-element-id'));
 
     expect(ids).toEqual(cardDesign_1.elements.map((element) => element.id));
+  });
+
+  it('sizes aspect-locked designs from the render width', () => {
+    // A full-height fluid element in a 3/2 locked design
+    const design: Design = {
+      ...cardDesign_1,
+      aspectRatio: '3/2',
+      elements: [{ ...coverDesignElement, rowSpan: 32 }],
+    };
+    const { container } = render(
+      <DesignRenderer design={design} width={480} />,
+    );
+    const renderer = container.querySelector('.design-renderer') as HTMLElement;
+    const cover = container.querySelector(
+      '[data-element-id="element_cover"]',
+    ) as HTMLElement;
+
+    // 480px wide at 3/2 renders 320px tall, filled by the element
+    expect(renderer.style.height).toBe('320px');
+    expect(cover.style.top).toBe('0px');
+    expect(cover.style.height).toBe('320px');
+  });
+
+  it('pins fixed-height elements in aspect-locked designs', () => {
+    // A fluid cover with a bottom-pinned bar in rows 26-31
+    const design: Design = {
+      ...cardDesign_1,
+      aspectRatio: '3/2',
+      elements: [
+        coverDesignElement,
+        {
+          ...iconDesignElement,
+          id: 'element_bar',
+          column: 0,
+          columnSpan: 48,
+          row: 26,
+          rowSpan: 6,
+          heightMode: 'fixed-bottom',
+        },
+      ],
+    };
+    const { container } = render(
+      <DesignRenderer design={design} width={480} />,
+    );
+    const bar = container.querySelector(
+      '[data-element-id="element_bar"]',
+    ) as HTMLElement;
+
+    // The bar keeps its unit height against the card's bottom edge
+    expect(bar.style.height).toBe(`${6 * UnitPixelSize}px`);
+    expect(parseFloat(bar.style.top)).toBeCloseTo(
+      320 - (32 - 26) * UnitPixelSize,
+    );
+  });
+
+  it('ignores natural height in aspect-locked designs', () => {
+    // The natural body element inside a locked design
+    const design: Design = { ...cardDesign_1, aspectRatio: '3/2' };
+    const { container } = render(
+      <DesignRenderer design={design} width={480} />,
+    );
+    const body = container.querySelector(
+      '[data-element-id="element_body"]',
+    ) as HTMLElement;
+
+    // The body gets an engine-resolved height instead of a minimum
+    expect(body.style.minHeight).toBe('');
+    expect(body.style.height).not.toBe('');
   });
 
   it('stretches rows to fit measured natural heights', () => {

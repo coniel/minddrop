@@ -1,11 +1,23 @@
 import { isEntityId } from '@minddrop/utils';
-import { DesignElement, ElementWidthMode } from '../../types';
+import {
+  DesignElement,
+  ElementHeightMode,
+  ElementWidthMode,
+} from '../../types';
 
 // The width modes an element may declare
 const widthModes: ElementWidthMode[] = [
   'fluid',
   'fixed-left',
   'fixed-right',
+  'fixed-center',
+];
+
+// The height modes an element may declare
+const heightModes: ElementHeightMode[] = [
+  'fluid',
+  'fixed-top',
+  'fixed-bottom',
   'fixed-center',
 ];
 
@@ -54,6 +66,14 @@ export function validateDesignElement(
 
   // The natural height flag must be a boolean
   if (typeof element.naturalHeight !== 'boolean') {
+    return false;
+  }
+
+  // The height mode must be known when present
+  if (
+    element.heightMode !== undefined &&
+    !heightModes.includes(element.heightMode)
+  ) {
     return false;
   }
 

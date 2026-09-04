@@ -17,6 +17,20 @@
   outline: 2px solid var(--border-strong);
 }
 
+.design-block-editor-element-dragging {
+  z-index: 2;
+}
+
+.design-block-editor-grid-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, var(--border-subtle) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--border-subtle) 1px, transparent 1px);
+}
+
 .design-block-editor-handle {
   position: absolute;
 }

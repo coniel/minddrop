@@ -227,6 +227,70 @@ describe('DesignBlockEditor', () => {
     ).not.toBeNull();
   });
 
+  it('clears the selection on clicks outside the editor', () => {
+    renderEditor(titleDesignElement.id);
+
+    fireEvent.click(document.body);
+
+    expect(selectedElementId).toBeNull();
+  });
+
+  it('changes the height mode through the menu when aspect-locked', () => {
+    const { container } = render(
+      <DesignBlockEditor
+        elements={designElements}
+        columns={cardColumns}
+        rows={cardRows}
+        snap={2}
+        unitSize={10}
+        selectedId={titleDesignElement.id}
+        aspectLocked
+        onElementsChange={(elements) => {
+          changedElements = elements;
+        }}
+        onSelectionChange={() => undefined}
+      />,
+    );
+
+    expect(container.querySelector('.design-block-editor-menu')).not.toBeNull();
+
+    fireEvent.click(screen.getByLabelText('Fixed height, pinned bottom'));
+
+    const changedTitle = changedElements?.find(
+      (element) => element.id === titleDesignElement.id,
+    );
+
+    expect(changedTitle?.heightMode).toBe('fixed-bottom');
+  });
+
+  it('shows the grid overlay above other blocks during element drags', () => {
+    const container = renderEditor();
+    const title = container.querySelector(
+      '[data-element-id="element_title"]',
+    ) as HTMLElement;
+
+    expect(
+      container.querySelector('.design-block-editor-grid-overlay'),
+    ).toBeNull();
+
+    // The overlay appears for the drag, with the dragged block lifted
+    fireEvent.pointerDown(title, { clientX: 0, clientY: 0 });
+
+    expect(
+      container.querySelector('.design-block-editor-grid-overlay'),
+    ).not.toBeNull();
+    expect(
+      title.classList.contains('design-block-editor-element-dragging'),
+    ).toBe(true);
+
+    // Releasing the pointer removes it again
+    fireEvent.pointerUp(title);
+
+    expect(
+      container.querySelector('.design-block-editor-grid-overlay'),
+    ).toBeNull();
+  });
+
   it('hides the menu while a drag is in progress', () => {
     const container = renderEditor(titleDesignElement.id);
     const title = container.querySelector(

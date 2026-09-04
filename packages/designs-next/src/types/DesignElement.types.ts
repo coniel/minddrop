@@ -8,6 +8,12 @@ export type ElementWidthMode =
   | 'fixed-right'
   | 'fixed-center';
 
+export type ElementHeightMode =
+  | 'fluid'
+  | 'fixed-top'
+  | 'fixed-bottom'
+  | 'fixed-center';
+
 export interface DesignElement {
   /**
    * A unique identifier for the element.
@@ -49,7 +55,17 @@ export interface DesignElement {
 
   /**
    * Whether the element grows to its content's height, stretching the
-   * rows it spans and pushing rows below it down.
+   * rows it spans and pushing rows below it down. Ignored in
+   * aspect-locked designs.
    */
   naturalHeight: boolean;
+
+  /**
+   * How the element's height behaves in an aspect-locked design:
+   * fluid elements scale with the card's height, fixed elements keep
+   * their unit height and stay pinned to the given card edge (or
+   * centered). Absent means fluid. Ignored outside aspect-locked
+   * designs.
+   */
+  heightMode?: ElementHeightMode;
 }

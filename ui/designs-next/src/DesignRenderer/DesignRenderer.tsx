@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import {
   Design,
-  UnitPixelSize,
+  resolveAspectRatioValue,
   resolveElementRect,
   resolveRowLayout,
 } from '@minddrop/designs-next';
 import { getElementRenderer } from '../getElementRenderer';
+import { resolveVerticalStyles } from '../utils';
 import './DesignRenderer.css';
 
 export interface DesignRendererProps {
@@ -44,13 +45,18 @@ export const DesignRenderer: React.FC<DesignRendererProps> = ({
   // otherwise.
   const renderWidth = width ?? measuredWidth;
 
-  // Row pixel offsets, with rows stretched to fit natural element
-  // heights.
-  const rowLayout = resolveRowLayout(
-    design.elements,
-    design.rows,
-    naturalHeights,
-  );
+  // Aspect-locked designs take their height from the render width
+  const aspectRatio = design.aspectRatio
+    ? resolveAspectRatioValue(design.aspectRatio)
+    : null;
+  const aspectHeight =
+    aspectRatio && renderWidth !== null ? renderWidth / aspectRatio : null;
+
+  // Row pixel offsets with rows stretched to fit natural element
+  // heights, driving natural-height designs only.
+  const rowLayout = design.aspectRatio
+    ? null
+    : resolveRowLayout(design.elements, design.rows, naturalHeights);
 
   // Measure the container's width when no explicit width is given
   useEffect(() => {
@@ -116,7 +122,7 @@ export const DesignRenderer: React.FC<DesignRendererProps> = ({
     <div
       ref={containerRef}
       className="design-renderer"
-      style={{ width, height: rowLayout.totalHeight }}
+      style={{ width, height: aspectHeight ?? rowLayout?.totalHeight }}
     >
       {/* Array order doubles as paint order, later elements layer on top */}
       {renderWidth !== null &&
@@ -140,7 +146,7 @@ export const DesignRenderer: React.FC<DesignRendererProps> = ({
             <div
               key={element.id}
               ref={
-                element.naturalHeight
+                element.naturalHeight && aspectHeight === null
                   ? (node) => setMeasuredNode(element.id, node)
                   : undefined
               }
@@ -149,15 +155,12 @@ export const DesignRenderer: React.FC<DesignRendererProps> = ({
               style={{
                 left: rect.left,
                 width: rect.width,
-                top: rowLayout.tops[element.row],
-                // Natural elements size to their content, with their
-                // block span as the minimum.
-                height: element.naturalHeight
-                  ? undefined
-                  : element.rowSpan * UnitPixelSize,
-                minHeight: element.naturalHeight
-                  ? element.rowSpan * UnitPixelSize
-                  : undefined,
+                ...resolveVerticalStyles(
+                  element,
+                  design,
+                  aspectHeight,
+                  rowLayout,
+                ),
               }}
             >
               <ElementComponent element={element} />

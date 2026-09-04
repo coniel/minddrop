@@ -2126,6 +2126,13 @@ declare module 'i18next' {
             overridden: string;
           };
           naturalHeight: string;
+          heightMode: {
+            fluid: string;
+            fixedTop: string;
+            fixedBottom: string;
+            fixedCenter: string;
+            overridden: string;
+          };
           elements: {
             box: {
               label: string;

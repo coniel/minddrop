@@ -8,6 +8,18 @@ export type DesignId = EntityId<'design'>;
  */
 export type DesignType = 'card' | 'list' | 'page' | 'space';
 
+/**
+ * An aspect ratio as width/height (e.g. '3/2').
+ */
+export type AspectRatioToken =
+  | '2/3'
+  | '3/4'
+  | '4/5'
+  | '1/1'
+  | '4/3'
+  | '3/2'
+  | '16/9';
+
 export interface Design {
   /**
    * A unique identifier for the design.
@@ -33,6 +45,14 @@ export interface Design {
    * The design's height in grid units.
    */
   rows: number;
+
+  /**
+   * The design's aspect ratio. When set, the design renders at
+   * height = width / ratio at every width, element height modes
+   * apply, and the design-time rows derive from the ratio. Absent
+   * for natural-height designs.
+   */
+  aspectRatio?: AspectRatioToken;
 
   /**
    * The design's elements. Array order is paint order, later

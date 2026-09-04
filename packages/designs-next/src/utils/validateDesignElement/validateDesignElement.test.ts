@@ -48,6 +48,15 @@ describe('validateDesignElement', () => {
     ).toBe(false);
   });
 
+  it('accepts a known height mode and rejects unknown ones', () => {
+    expect(
+      validateDesignElement({ ...coverDesignElement, heightMode: 'fixed-top' }),
+    ).toBe(true);
+    expect(
+      validateDesignElement({ ...coverDesignElement, heightMode: 'stretch' }),
+    ).toBe(false);
+  });
+
   it('rejects a missing natural height flag', () => {
     expect(
       validateDesignElement({

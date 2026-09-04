@@ -1,4 +1,5 @@
 import { isEntityId } from '@minddrop/utils';
+import { CardAspectRatios } from '../../constants';
 import { Design, DesignType } from '../../types';
 import { validateDesignElement } from '../validateDesignElement';
 
@@ -38,6 +39,14 @@ export function validateDesign(candidate: unknown): candidate is Design {
 
   // The unit dimensions must be whole positive counts
   if (!isDimension(design.columns) || !isDimension(design.rows)) {
+    return false;
+  }
+
+  // The aspect ratio must be a known token when present
+  if (
+    design.aspectRatio !== undefined &&
+    !CardAspectRatios.includes(design.aspectRatio)
+  ) {
     return false;
   }
 

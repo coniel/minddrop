@@ -34,6 +34,11 @@ describe('validateDesign', () => {
     expect(validateDesign({ ...cardDesign_1, rows: 32.5 })).toBe(false);
   });
 
+  it('accepts a known aspect ratio and rejects unknown ones', () => {
+    expect(validateDesign({ ...cardDesign_1, aspectRatio: '3/2' })).toBe(true);
+    expect(validateDesign({ ...cardDesign_1, aspectRatio: '5/4' })).toBe(false);
+  });
+
   it('rejects a missing elements array', () => {
     expect(validateDesign({ ...cardDesign_1, elements: undefined })).toBe(
       false,

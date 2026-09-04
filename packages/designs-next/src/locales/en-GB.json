@@ -9,6 +9,13 @@
       "overridden": "A fluid element absorbs the extra space, so the pin currently has no effect"
     },
     "naturalHeight": "Natural height",
+    "heightMode": {
+      "fluid": "Fluid height",
+      "fixedTop": "Fixed height, pinned top",
+      "fixedBottom": "Fixed height, pinned bottom",
+      "fixedCenter": "Fixed height, centered",
+      "overridden": "A fluid-height element absorbs the extra space, so the pin currently has no effect"
+    },
     "elements": {
       "box": {
         "label": "Box"

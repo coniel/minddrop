@@ -1,3 +1,5 @@
+import { AspectRatioToken } from './types';
+
 /**
  * Pixel size of a grid unit in the fluid render. Square, so element
  * aspect ratios match the design and fixed elements render at their
@@ -29,6 +31,21 @@ export const BoxElementType = 'box';
  * authored at one width rather than offering size choices.
  */
 export const DefaultDesignColumns = 96;
+
+/**
+ * The aspect ratios offered for aspect-locked cards. Trimmed to
+ * ratios whose derived row counts land on whole units at the design
+ * width.
+ */
+export const CardAspectRatios: AspectRatioToken[] = [
+  '2/3',
+  '3/4',
+  '4/5',
+  '1/1',
+  '4/3',
+  '3/2',
+  '16/9',
+];
 
 /**
  * The default height of a new design in grid units.

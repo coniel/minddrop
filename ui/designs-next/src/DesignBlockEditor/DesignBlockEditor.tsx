@@ -1,15 +1,18 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   ApplyElementDragOptions,
   DesignElement,
   ElementDragMode,
+  ElementHeightMode,
   ElementWidthMode,
   applyElementDrag,
   getElementType,
   isElementPinOverridden,
+  isElementVerticalPinOverridden,
   snapToMultiple,
 } from '@minddrop/designs-next';
 import { BlockEditorElementMenu } from '../BlockEditorElementMenu';
+import { resolveElementClass, resolveMenuPosition } from '../utils';
 import './DesignBlockEditor.css';
 
 export interface DesignBlockEditorProps {
@@ -62,6 +65,12 @@ export interface DesignBlockEditorProps {
    * adjustable.
    */
   onRowsChange?: (rows: number) => void;
+
+  /**
+   * Whether the design is aspect-locked, offering element height
+   * modes instead of the natural height toggle.
+   */
+  aspectLocked?: boolean;
 }
 
 interface DragState {
@@ -129,12 +138,39 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
   onElementsChange,
   onSelectionChange,
   onRowsChange,
+  aspectLocked = false,
 }) => {
+  const rootRef = useRef<HTMLDivElement>(null);
   const dragRef = useRef<DragState | null>(null);
   const surfaceDragRef = useRef<SurfaceDragState | null>(null);
-  const [dragging, setDragging] = useState(false);
+  const [draggedElementId, setDraggedElementId] = useState<string | null>(null);
+  const [surfaceDragging, setSurfaceDragging] = useState(false);
 
   const selectedElement = elements.find((element) => element.id === selectedId);
+
+  // Any drag in progress hides the element menu
+  const dragging = draggedElementId !== null || surfaceDragging;
+
+  // Clear the selection on clicks landing anywhere outside the editor
+  useEffect(() => {
+    if (selectedId === null) {
+      return;
+    }
+
+    function handleDocumentClick(event: MouseEvent) {
+      if (
+        rootRef.current &&
+        event.target instanceof Node &&
+        !rootRef.current.contains(event.target)
+      ) {
+        onSelectionChange(null);
+      }
+    }
+
+    document.addEventListener('click', handleDocumentClick);
+
+    return () => document.removeEventListener('click', handleDocumentClick);
+  }, [selectedId, onSelectionChange]);
 
   // Begins a move or resize drag on an element, selecting it
   function handleElementPointerDown(
@@ -160,9 +196,9 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
       startY: event.clientY,
       original: element,
     };
-    // Hide the element menu while dragging so it never obscures the
-    // layout being adjusted.
-    setDragging(true);
+    // Track the dragged element so the grid overlay can layer the
+    // other blocks beneath the grid while positioning.
+    setDraggedElementId(elementId);
     onSelectionChange(elementId);
   }
 
@@ -214,7 +250,7 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
   // Ends the active drag
   function handlePointerUp() {
     dragRef.current = null;
-    setDragging(false);
+    setDraggedElementId(null);
   }
 
   // Begins a surface height drag
@@ -225,7 +261,7 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
     event.currentTarget.setPointerCapture(event.pointerId);
 
     surfaceDragRef.current = { startY: event.clientY, startRows: rows };
-    setDragging(true);
+    setSurfaceDragging(true);
   }
 
   // Applies the height drag, snapping the bottom edge onto the snap
@@ -259,7 +295,7 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
   // Ends the surface height drag
   function handleSurfacePointerUp() {
     surfaceDragRef.current = null;
-    setDragging(false);
+    setSurfaceDragging(false);
   }
 
   // Clears the selection when clicking the empty surface, ignoring
@@ -272,7 +308,9 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
 
   // Applies a change to the selected element
   function updateSelectedElement(
-    data: Partial<Pick<DesignElement, 'widthMode' | 'naturalHeight'>>,
+    data: Partial<
+      Pick<DesignElement, 'widthMode' | 'heightMode' | 'naturalHeight'>
+    >,
   ) {
     onElementsChange(
       elements.map((element) =>
@@ -286,6 +324,11 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
     updateSelectedElement({ widthMode });
   }
 
+  // Changes the selected element's height mode
+  function handleHeightModeChange(heightMode: ElementHeightMode) {
+    updateSelectedElement({ heightMode });
+  }
+
   // Toggles whether the selected element grows to its content's height
   function handleNaturalHeightChange(naturalHeight: boolean) {
     updateSelectedElement({ naturalHeight });
@@ -293,6 +336,7 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
 
   return (
     <div
+      ref={rootRef}
       role="presentation"
       className="design-block-editor"
       style={{
@@ -307,11 +351,11 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
         <div
           key={element.id}
           data-element-id={element.id}
-          className={
-            element.id === selectedId
-              ? 'design-block-editor-element design-block-editor-element-selected'
-              : 'design-block-editor-element'
-          }
+          className={resolveElementClass(
+            element.id,
+            selectedId,
+            draggedElementId,
+          )}
           style={{
             left: element.column * unitSize,
             top: element.row * unitSize,
@@ -337,6 +381,15 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
           ))}
         </div>
       ))}
+      {draggedElementId !== null && (
+        <div
+          className="design-block-editor-grid-overlay"
+          style={{
+            // Draw the overlay grid at the snap resolution
+            backgroundSize: `${snap * unitSize}px ${snap * unitSize}px`,
+          }}
+        />
+      )}
       {selectedElement && !dragging && (
         <div
           className="design-block-editor-menu"
@@ -345,7 +398,13 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
           <BlockEditorElementMenu
             element={selectedElement}
             pinOverridden={isElementPinOverridden(selectedElement, elements)}
+            aspectLocked={aspectLocked}
+            verticalPinOverridden={isElementVerticalPinOverridden(
+              selectedElement,
+              elements,
+            )}
             onWidthModeChange={handleWidthModeChange}
+            onHeightModeChange={handleHeightModeChange}
             onNaturalHeightChange={handleNaturalHeightChange}
           />
         </div>
@@ -365,36 +424,3 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
 // Bounds for the surface height drag, in grid units
 const MinSurfaceRows = 8;
 const MaxSurfaceRows = 200;
-
-// Vertical clearance the menu needs above a block, in pixels
-const MenuClearance = 48;
-
-// Gap between a block's edge and the menu, in pixels
-const MenuGap = 4;
-
-/**
- * Resolves the menu's position above the selected block, flipping
- * below it when the block sits too close to the top edge.
- *
- * @param element - The selected element.
- * @param unitSize - The rendered pixel size of a grid unit.
- * @returns The menu wrapper's position styles.
- */
-function resolveMenuPosition(
-  element: DesignElement,
-  unitSize: number,
-): React.CSSProperties {
-  const left = element.column * unitSize;
-  const top = element.row * unitSize;
-
-  // Check if the menu fits above the block. If not, place it below.
-  if (top < MenuClearance) {
-    return {
-      left,
-      top: (element.row + element.rowSpan) * unitSize + MenuGap,
-    };
-  }
-
-  // Anchor the menu's bottom edge just above the block
-  return { left, top: top - MenuGap, transform: 'translateY(-100%)' };
-}
