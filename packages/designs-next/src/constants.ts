@@ -26,6 +26,13 @@ export const i18nRoot = 'designsNext';
 export const BoxElementType = 'box';
 
 /**
+ * The gap below a growing block, in grid units, at or under which
+ * the growth shifts the elements below. Larger gaps absorb the
+ * growth instead, shifting only once the gap is consumed.
+ */
+export const AutoGrowGapThreshold = 4;
+
+/**
  * The width of a design in grid units. A single generous fixed
  * design-time width: rendering is fully fluid, so designs are
  * authored at one width rather than offering size choices.

@@ -1,18 +1,18 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { isEntityId } from '@minddrop/utils';
-import { ElementConfigsStore } from '../ElementConfigsStore';
-import { ElementTypeNotRegisteredError } from '../errors';
-import { registerElementType } from '../registerElementType';
+import { DesignElementConfigsStore } from '../DesignElementConfigsStore';
+import { DesignElementConfigNotRegisteredError } from '../errors';
+import { registerDesignElementConfig } from '../registerDesignElementConfig';
 import { boxElementConfig } from '../test-utils';
 import { createDesignElement } from './createDesignElement';
 
 describe('createDesignElement', () => {
   beforeEach(() => {
-    registerElementType(boxElementConfig);
+    registerDesignElementConfig(boxElementConfig);
   });
 
   afterEach(() => {
-    ElementConfigsStore.clear();
+    DesignElementConfigsStore.clear();
   });
 
   it('creates an element from the config defaults', () => {
@@ -43,7 +43,7 @@ describe('createDesignElement', () => {
 
   it('applies the config width mode and natural height defaults', () => {
     // A type defaulting to a pinned width and natural height
-    registerElementType({
+    registerDesignElementConfig({
       ...boxElementConfig,
       type: 'custom',
       defaultWidthMode: 'fixed-left',
@@ -58,7 +58,7 @@ describe('createDesignElement', () => {
 
   it('throws if the type is not registered', () => {
     expect(() => createDesignElement('unknown')).toThrow(
-      ElementTypeNotRegisteredError,
+      DesignElementConfigNotRegisteredError,
     );
   });
 });

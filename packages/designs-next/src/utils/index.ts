@@ -1,4 +1,5 @@
 export * from './applyElementDrag';
+export * from './applyElementSettings';
 export * from './columnsOverlap';
 export * from './isElementPinOverridden';
 export * from './isElementVerticalPinOverridden';

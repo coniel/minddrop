@@ -9,6 +9,24 @@
       "overridden": "A fluid element absorbs the extra space, so the pin currently has no effect"
     },
     "naturalHeight": "Natural height",
+    "settings": {
+      "bold": "Bold",
+      "italic": "Italic",
+      "background": {
+        "label": "Background",
+        "subtle": "Subtle",
+        "accent": "Accent",
+        "solidAccent": "Solid"
+      },
+      "cornerRadius": {
+        "label": "Corner radius",
+        "none": "None",
+        "sm": "Small",
+        "md": "Medium",
+        "lg": "Large",
+        "full": "Full"
+      }
+    },
     "heightMode": {
       "fluid": "Fluid height",
       "fixedTop": "Fixed height, pinned top",

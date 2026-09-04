@@ -1,2 +1,2 @@
 export * from './DesignNotFoundError';
-export * from './ElementTypeNotRegisteredError';
+export * from './DesignElementConfigNotRegisteredError';

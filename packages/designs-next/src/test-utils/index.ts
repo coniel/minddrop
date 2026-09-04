@@ -1,6 +1,6 @@
 export * from './setup-tests';
 export { locales } from '../locales';
-export { ElementConfigsStore } from '../ElementConfigsStore';
+export { DesignElementConfigsStore } from '../DesignElementConfigsStore';
 export * from './design-elements.fixtures';
 export * as DesignElementFixtures from './design-elements.fixtures';
 export * from './element-configs.fixtures';
