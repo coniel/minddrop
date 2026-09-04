@@ -21,6 +21,9 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "@minddrop/designs-next": "workspace:*"
+    "@minddrop/designs-next": "workspace:*",
+    "@minddrop/i18n": "workspace:*",
+    "@minddrop/ui-icons": "workspace:*",
+    "@minddrop/ui-primitives": "workspace:*"
   }
 }

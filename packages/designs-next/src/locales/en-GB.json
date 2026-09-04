@@ -1,5 +1,13 @@
 {
   "designsNext": {
-    "new": "New design"
+    "new": "New design",
+    "widthMode": {
+      "fluid": "Fluid width",
+      "fixedLeft": "Fixed width, pinned left",
+      "fixedRight": "Fixed width, pinned right",
+      "fixedCenter": "Fixed width, centered",
+      "overridden": "A fluid element absorbs the extra space, so the pin currently has no effect"
+    },
+    "naturalHeight": "Natural height"
   }
 }

@@ -21,6 +21,11 @@
   position: absolute;
 }
 
+.design-block-editor-menu {
+  position: absolute;
+  z-index: 1;
+}
+
 .design-block-editor-handle-resize-left {
   left: -3px;
   top: 0;

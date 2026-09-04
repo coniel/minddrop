@@ -1,5 +1,6 @@
 export * from './applyElementDrag';
 export * from './columnsOverlap';
+export * from './isElementPinOverridden';
 export * from './remapElementColumns';
 export * from './resolveContextElements';
 export * from './resolveDesignFilePath';

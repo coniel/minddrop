@@ -3,8 +3,11 @@ import {
   ApplyElementDragOptions,
   DesignElement,
   ElementDragMode,
+  ElementWidthMode,
   applyElementDrag,
+  isElementPinOverridden,
 } from '@minddrop/designs-next';
+import { BlockEditorElementMenu } from '../BlockEditorElementMenu';
 import './DesignBlockEditor.css';
 
 export interface DesignBlockEditorProps {
@@ -107,6 +110,8 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
 }) => {
   const dragRef = useRef<DragState | null>(null);
 
+  const selectedElement = elements.find((element) => element.id === selectedId);
+
   // Begins a move or resize drag on an element, selecting it
   function handleElementPointerDown(
     event: React.PointerEvent<HTMLDivElement>,
@@ -175,6 +180,27 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
     }
   }
 
+  // Applies a change to the selected element
+  function updateSelectedElement(
+    data: Partial<Pick<DesignElement, 'widthMode' | 'naturalHeight'>>,
+  ) {
+    onElementsChange(
+      elements.map((element) =>
+        element.id === selectedId ? { ...element, ...data } : element,
+      ),
+    );
+  }
+
+  // Changes the selected element's width mode
+  function handleWidthModeChange(widthMode: ElementWidthMode) {
+    updateSelectedElement({ widthMode });
+  }
+
+  // Toggles whether the selected element grows to its content's height
+  function handleNaturalHeightChange(naturalHeight: boolean) {
+    updateSelectedElement({ naturalHeight });
+  }
+
   return (
     <div
       role="presentation"
@@ -221,6 +247,52 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
           ))}
         </div>
       ))}
+      {selectedElement && (
+        <div
+          className="design-block-editor-menu"
+          style={resolveMenuPosition(selectedElement, unitSize)}
+        >
+          <BlockEditorElementMenu
+            element={selectedElement}
+            pinOverridden={isElementPinOverridden(selectedElement, elements)}
+            onWidthModeChange={handleWidthModeChange}
+            onNaturalHeightChange={handleNaturalHeightChange}
+          />
+        </div>
+      )}
     </div>
   );
 };
+
+// Vertical clearance the menu needs above a block, in pixels
+const MenuClearance = 48;
+
+// Gap between a block's edge and the menu, in pixels
+const MenuGap = 4;
+
+/**
+ * Resolves the menu's position above the selected block, flipping
+ * below it when the block sits too close to the top edge.
+ *
+ * @param element - The selected element.
+ * @param unitSize - The rendered pixel size of a grid unit.
+ * @returns The menu wrapper's position styles.
+ */
+function resolveMenuPosition(
+  element: DesignElement,
+  unitSize: number,
+): React.CSSProperties {
+  const left = element.column * unitSize;
+  const top = element.row * unitSize;
+
+  // Check if the menu fits above the block. If not, place it below.
+  if (top < MenuClearance) {
+    return {
+      left,
+      top: (element.row + element.rowSpan) * unitSize + MenuGap,
+    };
+  }
+
+  // Anchor the menu's bottom edge just above the block
+  return { left, top: top - MenuGap, transform: 'translateY(-100%)' };
+}

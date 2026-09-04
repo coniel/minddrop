@@ -2118,6 +2118,14 @@ declare module 'i18next' {
         };
         designsNext: {
           new: string;
+          widthMode: {
+            fluid: string;
+            fixedLeft: string;
+            fixedRight: string;
+            fixedCenter: string;
+            overridden: string;
+          };
+          naturalHeight: string;
         };
         onboarding: {
           welcome: {

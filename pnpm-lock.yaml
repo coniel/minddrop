@@ -2719,6 +2719,15 @@ importers:
       '@minddrop/designs-next':
         specifier: workspace:*
         version: link:../../packages/designs-next
+      '@minddrop/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
+      '@minddrop/ui-icons':
+        specifier: workspace:*
+        version: link:../icons
+      '@minddrop/ui-primitives':
+        specifier: workspace:*
+        version: link:../primitives
     devDependencies:
       '@minddrop/eslint-config':
         specifier: workspace:*
