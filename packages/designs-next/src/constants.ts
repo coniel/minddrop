@@ -24,9 +24,11 @@ export const i18nRoot = 'designsNext';
 export const BoxElementType = 'box';
 
 /**
- * The default width of a new design in grid units.
+ * The width of a design in grid units. A single generous fixed
+ * design-time width: rendering is fully fluid, so designs are
+ * authored at one width rather than offering size choices.
  */
-export const DefaultDesignColumns = 48;
+export const DefaultDesignColumns = 96;
 
 /**
  * The default height of a new design in grid units.

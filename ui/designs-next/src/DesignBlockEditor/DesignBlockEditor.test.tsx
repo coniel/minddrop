@@ -22,14 +22,18 @@ let changedElements: DesignElement[] | null;
 // The element ID passed to the most recent onSelectionChange call
 let selectedElementId: string | null | undefined;
 
+// The row count passed to the most recent onRowsChange call
+let changedRows: number | null;
+
 /**
  * Renders the editor with the fixture layout and recording
  * callbacks.
  *
  * @param selectedId - The controlled selection.
+ * @param resizable - Whether to make the surface height adjustable.
  * @returns The render container.
  */
-function renderEditor(selectedId: string | null = null) {
+function renderEditor(selectedId: string | null = null, resizable = false) {
   const { container } = render(
     <DesignBlockEditor
       elements={designElements}
@@ -44,6 +48,13 @@ function renderEditor(selectedId: string | null = null) {
       onSelectionChange={(elementId) => {
         selectedElementId = elementId;
       }}
+      onRowsChange={
+        resizable
+          ? (rows) => {
+              changedRows = rows;
+            }
+          : undefined
+      }
     />,
   );
 
@@ -54,6 +65,7 @@ describe('DesignBlockEditor', () => {
   beforeEach(() => {
     changedElements = null;
     selectedElementId = undefined;
+    changedRows = null;
 
     // Pointer capture is not implemented in the test environment
     if (!Element.prototype.setPointerCapture) {
@@ -215,6 +227,23 @@ describe('DesignBlockEditor', () => {
     ).not.toBeNull();
   });
 
+  it('hides the menu while a drag is in progress', () => {
+    const container = renderEditor(titleDesignElement.id);
+    const title = container.querySelector(
+      '[data-element-id="element_title"]',
+    ) as HTMLElement;
+
+    // The menu hides for the duration of the drag
+    fireEvent.pointerDown(title, { clientX: 0, clientY: 0 });
+
+    expect(container.querySelector('.design-block-editor-menu')).toBeNull();
+
+    // Releasing the pointer brings it back
+    fireEvent.pointerUp(title);
+
+    expect(container.querySelector('.design-block-editor-menu')).not.toBeNull();
+  });
+
   it('places the menu below blocks near the top edge', () => {
     // The cover sits at the top edge, the title further down
     const container = renderEditor(coverDesignElement.id);
@@ -271,6 +300,70 @@ describe('DesignBlockEditor', () => {
     expect(resizedIcon?.rowSpan).toBe(4);
 
     ElementConfigsStore.delete(boxElementConfig.type);
+  });
+
+  it('grows the card with a bottom-edge resize past the card bottom', () => {
+    const container = renderEditor(null, true);
+    const bottomHandle = container.querySelector(
+      '[data-element-id="element_title"] .design-block-editor-handle-resize-bottom',
+    ) as HTMLElement;
+
+    // Drag the title's bottom edge thirty rows down, past row 32
+    fireEvent.pointerDown(bottomHandle, { clientX: 0, clientY: 0 });
+    fireEvent.pointerMove(bottomHandle, { clientX: 0, clientY: 300 });
+
+    const resizedTitle = changedElements?.find(
+      (element) => element.id === titleDesignElement.id,
+    );
+
+    // The element extends past the old card bottom, and the card
+    // grows to its new bottom edge.
+    expect(resizedTitle?.rowSpan).toBe(titleDesignElement.rowSpan + 30);
+    expect(changedRows).toBe(
+      titleDesignElement.row + titleDesignElement.rowSpan + 30,
+    );
+  });
+
+  it('renders the surface height handle only when resizable', () => {
+    const fixed = renderEditor();
+
+    expect(
+      fixed.querySelector('.design-block-editor-surface-handle'),
+    ).toBeNull();
+
+    cleanup();
+
+    const resizable = renderEditor(null, true);
+
+    expect(
+      resizable.querySelector('.design-block-editor-surface-handle'),
+    ).not.toBeNull();
+  });
+
+  it('adjusts the row count through the surface handle', () => {
+    const container = renderEditor(null, true);
+    const handle = container.querySelector(
+      '.design-block-editor-surface-handle',
+    ) as HTMLElement;
+
+    // Drag the bottom edge four snapped rows down
+    fireEvent.pointerDown(handle, { clientX: 0, clientY: 0 });
+    fireEvent.pointerMove(handle, { clientX: 0, clientY: 40 });
+
+    expect(changedRows).toBe(cardRows + 4);
+  });
+
+  it('floors the surface height at the lowest element bottom edge', () => {
+    const container = renderEditor(null, true);
+    const handle = container.querySelector(
+      '.design-block-editor-surface-handle',
+    ) as HTMLElement;
+
+    // Drag far above the content, flooring at the body's bottom edge
+    fireEvent.pointerDown(handle, { clientX: 0, clientY: 0 });
+    fireEvent.pointerMove(handle, { clientX: 0, clientY: -1000 });
+
+    expect(changedRows).toBe(30);
   });
 
   it('stops applying deltas after the pointer is released', () => {

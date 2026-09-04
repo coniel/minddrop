@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import {
   ApplyElementDragOptions,
   DesignElement,
@@ -7,6 +7,7 @@ import {
   applyElementDrag,
   getElementType,
   isElementPinOverridden,
+  snapToMultiple,
 } from '@minddrop/designs-next';
 import { BlockEditorElementMenu } from '../BlockEditorElementMenu';
 import './DesignBlockEditor.css';
@@ -54,6 +55,13 @@ export interface DesignBlockEditorProps {
    * Callback fired when the selection changes.
    */
   onSelectionChange: (elementId: string | null) => void;
+
+  /**
+   * Callback fired with the new row count as the surface's bottom
+   * edge is dragged. When omitted, the surface height is not
+   * adjustable.
+   */
+  onRowsChange?: (rows: number) => void;
 }
 
 interface DragState {
@@ -78,6 +86,18 @@ interface DragState {
    * applying the drag delta.
    */
   original: DesignElement;
+}
+
+interface SurfaceDragState {
+  /**
+   * Pointer position at drag start.
+   */
+  startY: number;
+
+  /**
+   * The design's row count at drag start.
+   */
+  startRows: number;
 }
 
 // The resize handles rendered on every block, keyed by drag mode.
@@ -108,8 +128,11 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
   selectedId,
   onElementsChange,
   onSelectionChange,
+  onRowsChange,
 }) => {
   const dragRef = useRef<DragState | null>(null);
+  const surfaceDragRef = useRef<SurfaceDragState | null>(null);
+  const [dragging, setDragging] = useState(false);
 
   const selectedElement = elements.find((element) => element.id === selectedId);
 
@@ -137,6 +160,9 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
       startY: event.clientY,
       original: element,
     };
+    // Hide the element menu while dragging so it never obscures the
+    // layout being adjusted.
+    setDragging(true);
     onSelectionChange(elementId);
   }
 
@@ -151,6 +177,9 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
     // The element type's block behaviour constraints
     const config = getElementType(drag.original.type, false);
 
+    // Let bottom-edge resizes extend past the card when it can grow
+    const growable = drag.mode.includes('bottom') && Boolean(onRowsChange);
+
     // Unsnapped delta in grid units, quantized per mode by the drag
     // application.
     const options: ApplyElementDragOptions = {
@@ -158,7 +187,7 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
       deltaColumns: (event.clientX - drag.startX) / unitSize,
       deltaRows: (event.clientY - drag.startY) / unitSize,
       columns,
-      rows,
+      rows: growable ? MaxSurfaceRows : rows,
       snap,
       // Floor the resize at the element type's intrinsic minimum
       minRowSpan: config?.resolveMinRowSpan?.(drag.original),
@@ -166,18 +195,71 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
       rowSpanStep: config?.resolveRowSpanStep?.(drag.original),
     };
 
+    // Apply the drag to the element
+    const dragged = applyElementDrag(drag.original, options);
+
     onElementsChange(
       elements.map((element) =>
-        element.id === drag.elementId
-          ? applyElementDrag(drag.original, options)
-          : element,
+        element.id === drag.elementId ? dragged : element,
       ),
     );
+
+    // Grow the card with the element's bottom edge as it passes the
+    // card's bottom. The card never shrinks back during the drag.
+    if (growable && dragged.row + dragged.rowSpan > rows) {
+      onRowsChange?.(dragged.row + dragged.rowSpan);
+    }
   }
 
   // Ends the active drag
   function handlePointerUp() {
     dragRef.current = null;
+    setDragging(false);
+  }
+
+  // Begins a surface height drag
+  function handleSurfacePointerDown(event: React.PointerEvent<HTMLDivElement>) {
+    event.preventDefault();
+    event.stopPropagation();
+    // Capture so moves keep arriving while the pointer leaves the handle
+    event.currentTarget.setPointerCapture(event.pointerId);
+
+    surfaceDragRef.current = { startY: event.clientY, startRows: rows };
+    setDragging(true);
+  }
+
+  // Applies the height drag, snapping the bottom edge onto the snap
+  // grid and flooring it at the lowest element's bottom edge.
+  function handleSurfacePointerMove(event: React.PointerEvent<HTMLDivElement>) {
+    const drag = surfaceDragRef.current;
+
+    if (!drag || !onRowsChange) {
+      return;
+    }
+
+    // The lowest element bottom edge, keeping every element inside
+    // the design.
+    const contentBottom = elements.reduce(
+      (bottom, element) => Math.max(bottom, element.row + element.rowSpan),
+      0,
+    );
+
+    // Snap the dragged edge onto the snap grid
+    const deltaRows = (event.clientY - drag.startY) / unitSize;
+    const snapped = snapToMultiple(drag.startRows + deltaRows, snap);
+
+    onRowsChange(
+      Math.min(
+        Math.max(snapped, contentBottom, MinSurfaceRows),
+        MaxSurfaceRows,
+      ),
+    );
+  }
+
+  // Ends the surface height drag
+  function handleSurfacePointerUp() {
+    surfaceDragRef.current = null;
+    setDragging(false);
   }
 
   // Clears the selection when clicking the empty surface, ignoring
@@ -255,7 +337,7 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
           ))}
         </div>
       ))}
-      {selectedElement && (
+      {selectedElement && !dragging && (
         <div
           className="design-block-editor-menu"
           style={resolveMenuPosition(selectedElement, unitSize)}
@@ -268,9 +350,21 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
           />
         </div>
       )}
+      {onRowsChange && (
+        <div
+          className="design-block-editor-surface-handle"
+          onPointerDown={handleSurfacePointerDown}
+          onPointerMove={handleSurfacePointerMove}
+          onPointerUp={handleSurfacePointerUp}
+        />
+      )}
     </div>
   );
 };
+
+// Bounds for the surface height drag, in grid units
+const MinSurfaceRows = 8;
+const MaxSurfaceRows = 200;
 
 // Vertical clearance the menu needs above a block, in pixels
 const MenuClearance = 48;

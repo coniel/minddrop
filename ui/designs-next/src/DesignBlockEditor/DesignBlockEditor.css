@@ -26,6 +26,15 @@
   z-index: 1;
 }
 
+.design-block-editor-surface-handle {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  height: 8px;
+  cursor: ns-resize;
+}
+
 .design-block-editor-handle-resize-left {
   left: -3px;
   top: 0;
