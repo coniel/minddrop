@@ -2157,6 +2157,9 @@ declare module 'i18next' {
             };
             heading: {
               label: string;
+              level1: string;
+              level2: string;
+              level3: string;
             };
             text: {
               label: string;

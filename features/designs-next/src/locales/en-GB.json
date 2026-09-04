@@ -2,7 +2,10 @@
   "designsNext": {
     "elements": {
       "heading": {
-        "label": "Heading"
+        "label": "Heading",
+        "level1": "Heading 1",
+        "level2": "Heading 2",
+        "level3": "Heading 3"
       },
       "text": {
         "label": "Text"

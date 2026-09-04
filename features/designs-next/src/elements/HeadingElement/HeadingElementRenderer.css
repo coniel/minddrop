@@ -1,11 +1,25 @@
 .design-heading-element {
   flex: 1;
-  /* Line height on the 4px grid, matching HeadingLineHeightUnits */
-  font-size: 18px;
   font-weight: 600;
-  line-height: 24px;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   overflow: hidden;
   overflow-wrap: break-word;
+}
+
+/* Typography per level on the 4px grid, matching
+   HeadingLineHeightUnits */
+.design-heading-element-level-1 {
+  font-size: 24px;
+  line-height: 32px;
+}
+
+.design-heading-element-level-2 {
+  font-size: 18px;
+  line-height: 24px;
+}
+
+.design-heading-element-level-3 {
+  font-size: 15px;
+  line-height: 20px;
 }

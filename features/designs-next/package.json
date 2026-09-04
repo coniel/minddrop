@@ -23,6 +23,8 @@
   "dependencies": {
     "@minddrop/designs-next": "workspace:*",
     "@minddrop/i18n": "workspace:*",
-    "@minddrop/ui-designs-next": "workspace:*"
+    "@minddrop/ui-designs-next": "workspace:*",
+    "@minddrop/ui-icons": "workspace:*",
+    "@minddrop/ui-primitives": "workspace:*"
   }
 }

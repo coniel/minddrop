@@ -23,4 +23,17 @@ describe('TextElementRenderer', () => {
       screen.getByText('A longer piece of body text.'),
     ).toBeInTheDocument();
   });
+
+  it('applies the text settings modifier classes', () => {
+    render(
+      <TextElementRenderer
+        element={{ ...textElement, bold: true, italic: true }}
+      />,
+    );
+
+    const text = screen.getByText('A longer piece of body text.');
+
+    expect(text).toHaveClass('design-element-text-bold');
+    expect(text).toHaveClass('design-element-text-italic');
+  });
 });

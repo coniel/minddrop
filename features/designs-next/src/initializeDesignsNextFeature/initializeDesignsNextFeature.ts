@@ -1,15 +1,9 @@
-import { BoxElementType, registerElementType } from '@minddrop/designs-next';
+import { registerDesignElementConfig } from '@minddrop/designs-next';
 import { I18n } from '@minddrop/i18n';
-import { registerElementRenderer } from '@minddrop/ui-designs-next';
 import {
   BoxElementConfig,
-  BoxElementRenderer,
   HeadingElementConfig,
-  HeadingElementRenderer,
-  HeadingElementType,
   TextElementConfig,
-  TextElementRenderer,
-  TextElementType,
 } from '../elements';
 import { locales } from '../locales';
 
@@ -21,11 +15,8 @@ export function initializeDesignsNextFeature(): void {
   // Register the feature's translations
   I18n.registerTranslations(locales);
 
-  // Register the built-in element configs and renderers
-  registerElementType(BoxElementConfig);
-  registerElementRenderer(BoxElementType, BoxElementRenderer);
-  registerElementType(HeadingElementConfig);
-  registerElementRenderer(HeadingElementType, HeadingElementRenderer);
-  registerElementType(TextElementConfig);
-  registerElementRenderer(TextElementType, TextElementRenderer);
+  // Register the built-in element configs
+  registerDesignElementConfig(BoxElementConfig);
+  registerDesignElementConfig(HeadingElementConfig);
+  registerDesignElementConfig(TextElementConfig);
 }

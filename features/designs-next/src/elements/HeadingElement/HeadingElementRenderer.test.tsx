@@ -21,4 +21,32 @@ describe('HeadingElementRenderer', () => {
 
     expect(screen.getByText('Project overview')).toBeInTheDocument();
   });
+
+  it('applies the default level class without a level setting', () => {
+    render(<HeadingElementRenderer element={headingElement} />);
+
+    expect(screen.getByText('Project overview')).toHaveClass(
+      'design-heading-element-level-2',
+    );
+  });
+
+  it('applies the level class of the level setting', () => {
+    render(
+      <HeadingElementRenderer element={{ ...headingElement, level: 1 }} />,
+    );
+
+    expect(screen.getByText('Project overview')).toHaveClass(
+      'design-heading-element-level-1',
+    );
+  });
+
+  it('applies the text settings modifier classes', () => {
+    render(
+      <HeadingElementRenderer element={{ ...headingElement, bold: true }} />,
+    );
+
+    expect(screen.getByText('Project overview')).toHaveClass(
+      'design-element-text-bold',
+    );
+  });
 });

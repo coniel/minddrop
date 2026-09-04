@@ -810,6 +810,12 @@ importers:
       '@minddrop/ui-designs-next':
         specifier: workspace:*
         version: link:../../ui/designs-next
+      '@minddrop/ui-icons':
+        specifier: workspace:*
+        version: link:../../ui/icons
+      '@minddrop/ui-primitives':
+        specifier: workspace:*
+        version: link:../../ui/primitives
     devDependencies:
       '@minddrop/eslint-config':
         specifier: workspace:*

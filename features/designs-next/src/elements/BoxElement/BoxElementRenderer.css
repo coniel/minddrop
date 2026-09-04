@@ -1,5 +1,37 @@
 .design-box-element {
   flex: 1;
-  background-color: var(--surface-skeleton);
+}
+
+/* Background surfaces mapped to the theme's semantic surface tokens */
+.design-box-element-background-subtle {
+  background-color: var(--surface-subtle);
+}
+
+.design-box-element-background-accent {
+  background-color: var(--surface-accent);
+}
+
+.design-box-element-background-solid-accent {
+  background-color: var(--surface-solid-accent);
+}
+
+/* Corner radii mapped to the theme's radius tokens */
+.design-box-element-radius-none {
+  border-radius: 0;
+}
+
+.design-box-element-radius-sm {
   border-radius: var(--radius-sm);
+}
+
+.design-box-element-radius-md {
+  border-radius: var(--radius-md);
+}
+
+.design-box-element-radius-lg {
+  border-radius: var(--radius-lg);
+}
+
+.design-box-element-radius-full {
+  border-radius: var(--radius-full);
 }
