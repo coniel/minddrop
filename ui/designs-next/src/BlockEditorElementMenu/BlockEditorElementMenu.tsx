@@ -1,7 +1,11 @@
 import {
   DesignElement,
+  DesignElementSettingGroup,
+  DesignElementSettings,
+  DesignElementSettingsMenuProps,
   ElementHeightMode,
   ElementWidthMode,
+  getDesignElementConfig,
 } from '@minddrop/designs-next';
 import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import { UiIconName } from '@minddrop/ui-icons';
@@ -9,7 +13,10 @@ import {
   FloatingToolbar,
   RadioToggleGroup,
   Toggle,
+  ToolbarSeparator,
 } from '@minddrop/ui-primitives';
+import { BackgroundSettingsGroup } from './BackgroundSettingsGroup';
+import { TextSettingsGroup } from './TextSettingsGroup';
 import './BlockEditorElementMenu.css';
 
 export interface BlockEditorElementMenuProps {
@@ -50,6 +57,12 @@ export interface BlockEditorElementMenuProps {
    * Callback fired when the natural height toggle changes.
    */
   onNaturalHeightChange: (naturalHeight: boolean) => void;
+
+  /**
+   * Callback fired with the changed settings values when a settings
+   * control changes.
+   */
+  onSettingsChange: (settings: Record<string, unknown>) => void;
 }
 
 interface WidthModeOption {
@@ -152,13 +165,25 @@ const HeightModeOptions: HeightModeOption[] = [
   },
 ];
 
+// The system setting group components keyed by group name
+const SettingGroupComponents: Record<
+  DesignElementSettingGroup,
+  React.FC<
+    DesignElementSettingsMenuProps<DesignElement & DesignElementSettings>
+  >
+> = {
+  text: TextSettingsGroup,
+  background: BackgroundSettingsGroup,
+};
+
 /**
  * Renders the hovering menu bar for a selected block: the width mode
  * choices alongside either the natural height toggle or, in
- * aspect-locked designs, the height mode choices. Pin choices mute
- * while a fluid context neighbour overrides them, staying
- * interactive since the stored choice matters again once the
- * neighbour changes.
+ * aspect-locked designs, the height mode choices, followed by the
+ * element type's own settings menu and its system setting groups.
+ * Pin choices mute while a fluid context neighbour overrides them,
+ * staying interactive since the stored choice matters again once
+ * the neighbour changes.
  */
 export const BlockEditorElementMenu: React.FC<BlockEditorElementMenuProps> = ({
   element,
@@ -168,8 +193,14 @@ export const BlockEditorElementMenu: React.FC<BlockEditorElementMenuProps> = ({
   onWidthModeChange,
   onHeightModeChange,
   onNaturalHeightChange,
+  onSettingsChange,
 }) => {
   const { t } = useTranslation();
+
+  // The element type's settings menu and system setting groups
+  const config = getDesignElementConfig(element.type, false);
+  const SettingsMenu = config?.settingsMenu;
+  const settingGroups = config?.settingGroups;
 
   return (
     <FloatingToolbar size="sm" visible className="block-editor-element-menu">
@@ -235,6 +266,23 @@ export const BlockEditorElementMenu: React.FC<BlockEditorElementMenuProps> = ({
           tooltip={{ side: 'top', title: 'designsNext.naturalHeight' }}
         />
       )}
+      {(SettingsMenu || (settingGroups && settingGroups.length > 0)) && (
+        <ToolbarSeparator />
+      )}
+      {SettingsMenu && (
+        <SettingsMenu element={element} onSettingsChange={onSettingsChange} />
+      )}
+      {settingGroups?.map((group) => {
+        const SettingGroup = SettingGroupComponents[group];
+
+        return (
+          <SettingGroup
+            key={group}
+            element={element}
+            onSettingsChange={onSettingsChange}
+          />
+        );
+      })}
     </FloatingToolbar>
   );
 };

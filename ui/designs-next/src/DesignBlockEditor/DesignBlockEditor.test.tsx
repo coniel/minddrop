@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DesignElement } from '@minddrop/designs-next';
-import { registerElementType } from '@minddrop/designs-next';
+import { registerDesignElementConfig } from '@minddrop/designs-next';
 import {
   cardColumns,
   cardRows,
@@ -9,7 +9,7 @@ import {
   titleDesignElement,
 } from '@minddrop/designs-next/test-utils';
 import {
-  ElementConfigsStore,
+  DesignElementConfigsStore,
   boxElementConfig,
 } from '@minddrop/designs-next/test-utils';
 import { fireEvent, render, screen } from '@minddrop/test-utils';
@@ -346,7 +346,10 @@ describe('DesignBlockEditor', () => {
 
   it('floors resizes at the element type minimum row span', () => {
     // A box config declaring an intrinsic minimum height
-    registerElementType({ ...boxElementConfig, resolveMinRowSpan: () => 4 });
+    registerDesignElementConfig({
+      ...boxElementConfig,
+      resolveMinRowSpan: () => 4,
+    });
 
     const container = renderEditor();
     const bottomHandle = container.querySelector(
@@ -363,7 +366,7 @@ describe('DesignBlockEditor', () => {
 
     expect(resizedIcon?.rowSpan).toBe(4);
 
-    ElementConfigsStore.delete(boxElementConfig.type);
+    DesignElementConfigsStore.remove(boxElementConfig.type);
   });
 
   it('grows the card with a bottom-edge resize past the card bottom', () => {

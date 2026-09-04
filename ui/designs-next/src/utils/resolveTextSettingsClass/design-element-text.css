@@ -1,0 +1,9 @@
+/* Scoped under the renderer wrapper so the modifiers outweigh the
+   elements' own base typography classes */
+.design-renderer-element .design-element-text-bold {
+  font-weight: 700;
+}
+
+.design-renderer-element .design-element-text-italic {
+  font-style: italic;
+}

@@ -6,7 +6,8 @@ import {
   ElementHeightMode,
   ElementWidthMode,
   applyElementDrag,
-  getElementType,
+  applyElementSettings,
+  getDesignElementConfig,
   isElementPinOverridden,
   isElementVerticalPinOverridden,
   snapToMultiple,
@@ -211,7 +212,7 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
     }
 
     // The element type's block behaviour constraints
-    const config = getElementType(drag.original.type, false);
+    const config = getDesignElementConfig(drag.original.type, false);
 
     // Let bottom-edge resizes extend past the card when it can grow
     const growable = drag.mode.includes('bottom') && Boolean(onRowsChange);
@@ -334,6 +335,44 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
     updateSelectedElement({ naturalHeight });
   }
 
+  // Applies a settings change to the selected element, making room
+  // below it when the change raises its intrinsic minimum height.
+  function handleSettingsChange(settings: Record<string, unknown>) {
+    if (!selectedElement) {
+      return;
+    }
+
+    // The element type's height constraints
+    const config = getDesignElementConfig(selectedElement.type, false);
+
+    // The element with the settings applied
+    const updated = { ...selectedElement, ...settings };
+
+    // Apply the change, resolving the height constraints before and
+    // after it so line-based elements keep their line count.
+    const result = applyElementSettings(
+      elements,
+      selectedElement.id,
+      settings,
+      {
+        rows,
+        minRowSpan: config?.resolveMinRowSpan?.(updated),
+        rowSpanStep: config?.resolveRowSpanStep?.(updated),
+        previousRowSpanStep: config?.resolveRowSpanStep?.(selectedElement),
+      },
+    );
+
+    // Emit the adjusted layout
+    onElementsChange(result.elements);
+
+    // Follow the shift with the surface height, floored at the
+    // surface minimum. Aspect-locked designs keep their derived row
+    // count instead.
+    if (result.rows !== rows) {
+      onRowsChange?.(Math.max(result.rows, MinSurfaceRows));
+    }
+  }
+
   return (
     <div
       ref={rootRef}
@@ -406,6 +445,7 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
             onWidthModeChange={handleWidthModeChange}
             onHeightModeChange={handleHeightModeChange}
             onNaturalHeightChange={handleNaturalHeightChange}
+            onSettingsChange={handleSettingsChange}
           />
         </div>
       )}

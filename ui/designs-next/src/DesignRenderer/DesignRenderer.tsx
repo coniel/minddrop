@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import {
   Design,
+  getDesignElementConfig,
   resolveAspectRatioValue,
   resolveElementRect,
   resolveRowLayout,
 } from '@minddrop/designs-next';
-import { getElementRenderer } from '../getElementRenderer';
 import { resolveVerticalStyles } from '../utils';
 import './DesignRenderer.css';
 
@@ -128,7 +128,10 @@ export const DesignRenderer: React.FC<DesignRendererProps> = ({
       {renderWidth !== null &&
         design.elements.map((element) => {
           // Look up the element's renderer, skipping unregistered types
-          const ElementComponent = getElementRenderer(element.type);
+          const ElementComponent = getDesignElementConfig(
+            element.type,
+            false,
+          )?.component;
 
           if (!ElementComponent) {
             return null;
