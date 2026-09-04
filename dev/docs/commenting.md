@@ -14,12 +14,28 @@ Commenting only the steps that feel interesting is worse than commenting
 none of them, because it makes the ones that are there look arbitrary and
 leaves gaps in the skim.
 
+**A step is a blank-line-separated statement group**, which makes the
+rule checkable: scan the finished function for a group with no comment
+above it — each one is a gap in the skim. The groups most often left
+bare are the ones whose code looks self-explanatory, and those still
+take a comment, because a name only reads as documentation once the
+reader has dropped out of the comments and into the code:
+
+- The call to the well-named function the body was built around
+  (`applyElementSettings(...)` still takes `// Apply the change`).
+- The callback or emit handing the result off at the end
+  (`onElementsChange(result.elements)` still takes
+  `// Emit the adjusted layout`).
+
 Calibrate density against `packages/databases`, which is the reference.
 
 Not everything needs one:
 
 - Single-expression accessors are covered by their name and JSDoc.
 - A `return` of the value the previous step just built needs nothing.
+- A trivial early-return guard on a missing value
+  (`if (!selected) return`) needs nothing; a guard encoding a real
+  rule takes one.
 - Imports, type definitions and barrel files take no step comments.
 
 ## What a step comment says
@@ -173,7 +189,11 @@ const appendsInFlight = new Map<string, Promise<unknown>>();
 - **Plan entries or tickets.** They live outside the repo. State the
   constraint itself.
 - **Downstream consumers.** A package does not name the packages that
-  depend on it.
+  depend on it, and a function does not name its callers. "Resolves
+  the modifier classes for an element's text settings, shared by
+  text-bearing element renderers" narrates its consumers with the
+  "shared by" clause — the function just resolves the classes. Who
+  uses it is what call sites are for.
 
 Design reasoning belongs in the plan, not in the type or the function.
 
@@ -182,6 +202,25 @@ Design reasoning belongs in the plan, not in the type or the function.
 Write comments the way you would say them out loud. If a sentence would
 sound strange spoken, rewrite it. Prefer two plain sentences over one
 with clauses hung off it.
+
+This applies to JSDoc as much as to step comments, and a JSDoc
+description states only the function's main effect — it does not walk
+through the mechanism, whose details are found by reading the code.
+A description written in the implementation's own vocabulary fails on
+both counts:
+
+Avoid:
+
+> Applies a settings change to an element, adjusting the layout when
+> the change alters its intrinsic height: the element's span
+> re-quantizes onto the new step and floor, and the change propagates
+> through the bottom edge of the element's row band — elements sharing
+> its rows hold the edge while they reach below it.
+
+Prefer:
+
+> Applies a settings change to an element, adjusting the layout when
+> the change affects the element's height.
 
 These constructions read as written-not-spoken and come up often:
 
