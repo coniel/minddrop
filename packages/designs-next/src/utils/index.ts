@@ -1,3 +1,4 @@
+export * from './applyElementDrag';
 export * from './columnsOverlap';
 export * from './remapElementColumns';
 export * from './resolveContextElements';

@@ -7,6 +7,7 @@ import {
   iconDesignElement,
   titleDesignElement,
 } from '../../test-utils';
+import { DesignElement } from '../../types';
 import { resolveElementRect } from './resolveElementRect';
 
 describe('resolveElementRect', () => {
@@ -69,6 +70,32 @@ describe('resolveElementRect', () => {
     expect(rect.left).toBeCloseTo(
       480 - (48 - iconDesignElement.column) * UnitPixelSize,
     );
+  });
+
+  it('keeps consecutive left-pinned elements at their spacing', () => {
+    // Two left-pinned elements with a free gap to their right
+    const firstElement: DesignElement = {
+      ...iconDesignElement,
+      id: 'element_first',
+      widthMode: 'fixed-left',
+      column: 0,
+    };
+    const secondElement: DesignElement = {
+      ...iconDesignElement,
+      id: 'element_second',
+      widthMode: 'fixed-left',
+      column: 8,
+    };
+    const rect = resolveElementRect(
+      secondElement,
+      [firstElement, secondElement],
+      cardColumns,
+      480,
+    );
+
+    // The second element keeps its unit offset from the first
+    expect(rect.left).toBe(8 * UnitPixelSize);
+    expect(rect.width).toBe(secondElement.columnSpan * UnitPixelSize);
   });
 
   it('keeps a symmetrically placed centered element centered', () => {

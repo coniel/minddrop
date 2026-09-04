@@ -6,7 +6,9 @@ import { resolveOccupiedColumns } from '../resolveOccupiedColumns';
  * make their columns scale while all gaps keep their fixed unit
  * width. Only when no fluid element is present do fixed elements make
  * the gap columns on their unpinned side scale instead, so they stay
- * pinned to the other edge.
+ * pinned to the other edge. Gaps between consecutive same-side-pinned
+ * elements stay fixed, so a pinned chain holds its spacing and the
+ * extra space moves past the chain.
  *
  * @param elements - The card's elements.
  * @param columns - The card's column count.
@@ -46,11 +48,19 @@ export function resolveScalingColumns(
       return;
     }
 
+    // Check if the gap to the right leads to another left-pinned
+    // element. If so, the gap is internal to a left-pinned chain and
+    // stays fixed.
+    const chainsLeft =
+      element.widthMode === 'fixed-left' &&
+      resolveNextElement(element, elements)?.widthMode === 'fixed-left';
+
     // Pinned left or centered: the gap to the element's right absorbs
     // the space.
     if (
-      element.widthMode === 'fixed-left' ||
-      element.widthMode === 'fixed-center'
+      !chainsLeft &&
+      (element.widthMode === 'fixed-left' ||
+        element.widthMode === 'fixed-center')
     ) {
       for (
         let column = element.column + element.columnSpan;
@@ -61,11 +71,19 @@ export function resolveScalingColumns(
       }
     }
 
+    // Check if the gap to the left leads to another right-pinned
+    // element. If so, the gap is internal to a right-pinned chain and
+    // stays fixed.
+    const chainsRight =
+      element.widthMode === 'fixed-right' &&
+      resolvePreviousElement(element, elements)?.widthMode === 'fixed-right';
+
     // Pinned right or centered: the gap to the element's left absorbs
     // the space.
     if (
-      element.widthMode === 'fixed-right' ||
-      element.widthMode === 'fixed-center'
+      !chainsRight &&
+      (element.widthMode === 'fixed-right' ||
+        element.widthMode === 'fixed-center')
     ) {
       for (
         let column = element.column - 1;
@@ -78,4 +96,51 @@ export function resolveScalingColumns(
   });
 
   return scaling;
+}
+
+/**
+ * Resolves the nearest element to the right of an element.
+ *
+ * @param element - The element to look right from.
+ * @param elements - The elements to search.
+ * @returns The nearest element to the right, or null if there is none.
+ */
+function resolveNextElement(
+  element: DesignElement,
+  elements: DesignElement[],
+): DesignElement | null {
+  const end = element.column + element.columnSpan;
+
+  // Take the closest element starting at or past the right edge
+  return elements
+    .filter((other) => other.column >= end)
+    .reduce<DesignElement | null>(
+      (nearest, other) =>
+        !nearest || other.column < nearest.column ? other : nearest,
+      null,
+    );
+}
+
+/**
+ * Resolves the nearest element to the left of an element.
+ *
+ * @param element - The element to look left from.
+ * @param elements - The elements to search.
+ * @returns The nearest element to the left, or null if there is none.
+ */
+function resolvePreviousElement(
+  element: DesignElement,
+  elements: DesignElement[],
+): DesignElement | null {
+  // Take the closest element ending at or before the left edge
+  return elements
+    .filter((other) => other.column + other.columnSpan <= element.column)
+    .reduce<DesignElement | null>(
+      (nearest, other) =>
+        !nearest ||
+        other.column + other.columnSpan > nearest.column + nearest.columnSpan
+          ? other
+          : nearest,
+      null,
+    );
 }

@@ -1,0 +1,86 @@
+.design-block-editor {
+  position: relative;
+  background-color: var(--surface-overlay);
+  background-image:
+    linear-gradient(to right, var(--border-subtle) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--border-subtle) 1px, transparent 1px);
+}
+
+.design-block-editor-element {
+  position: absolute;
+  background-color: var(--surface-accent);
+  border-radius: var(--radius-xs);
+  touch-action: none;
+}
+
+.design-block-editor-element-selected {
+  outline: 2px solid var(--border-strong);
+}
+
+.design-block-editor-handle {
+  position: absolute;
+}
+
+.design-block-editor-handle-resize-left {
+  left: -3px;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  cursor: ew-resize;
+}
+
+.design-block-editor-handle-resize-right {
+  right: -3px;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  cursor: ew-resize;
+}
+
+.design-block-editor-handle-resize-top {
+  top: -3px;
+  left: 0;
+  right: 0;
+  height: 6px;
+  cursor: ns-resize;
+}
+
+.design-block-editor-handle-resize-bottom {
+  bottom: -3px;
+  left: 0;
+  right: 0;
+  height: 6px;
+  cursor: ns-resize;
+}
+
+.design-block-editor-handle-resize-top-left {
+  top: -4px;
+  left: -4px;
+  width: 8px;
+  height: 8px;
+  cursor: nwse-resize;
+}
+
+.design-block-editor-handle-resize-top-right {
+  top: -4px;
+  right: -4px;
+  width: 8px;
+  height: 8px;
+  cursor: nesw-resize;
+}
+
+.design-block-editor-handle-resize-bottom-left {
+  bottom: -4px;
+  left: -4px;
+  width: 8px;
+  height: 8px;
+  cursor: nesw-resize;
+}
+
+.design-block-editor-handle-resize-bottom-right {
+  bottom: -4px;
+  right: -4px;
+  width: 8px;
+  height: 8px;
+  cursor: nwse-resize;
+}

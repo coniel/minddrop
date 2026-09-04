@@ -69,6 +69,60 @@ describe('resolveScalingColumns', () => {
     expect(scaling[26]).toBe(true);
   });
 
+  it('keeps the gap between consecutive left-pinned elements fixed', () => {
+    // A second left-pinned element two units right of the first
+    const secondElement: DesignElement = {
+      ...fixedLeftElement,
+      id: 'element_second',
+      column: 8,
+    };
+    const scaling = resolveScalingColumns(
+      [fixedLeftElement, secondElement],
+      48,
+    );
+
+    // The gap inside the chain stays fixed, the gap past it absorbs
+    expect(scaling[6]).toBe(false);
+    expect(scaling[7]).toBe(false);
+    expect(scaling[14]).toBe(true);
+    expect(scaling[47]).toBe(true);
+  });
+
+  it('keeps the gap between consecutive right-pinned elements fixed', () => {
+    // A second right-pinned element two units left of the icon
+    const secondElement: DesignElement = {
+      ...iconDesignElement,
+      id: 'element_second',
+      column: 32,
+    };
+    const scaling = resolveScalingColumns(
+      [secondElement, iconDesignElement],
+      48,
+    );
+
+    // The gap inside the chain stays fixed, the gap before it absorbs
+    expect(scaling[38]).toBe(false);
+    expect(scaling[39]).toBe(false);
+    expect(scaling[31]).toBe(true);
+    expect(scaling[0]).toBe(true);
+  });
+
+  it('lets the gap absorb between differently pinned elements', () => {
+    // A left-pinned element followed by a centered one
+    const centeredElement: DesignElement = {
+      ...iconDesignElement,
+      widthMode: 'fixed-center',
+      column: 20,
+    };
+    const scaling = resolveScalingColumns(
+      [fixedLeftElement, centeredElement],
+      48,
+    );
+
+    expect(scaling[6]).toBe(true);
+    expect(scaling[19]).toBe(true);
+  });
+
   it('stops absorbing at occupied columns', () => {
     const scaling = resolveScalingColumns(
       [fixedLeftElement, { ...iconDesignElement, widthMode: 'fixed-right' }],

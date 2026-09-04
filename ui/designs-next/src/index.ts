@@ -1,4 +1,5 @@
 export * from './BoxElement';
+export * from './DesignBlockEditor';
 export * from './DesignRenderer';
 export * from './getElementRenderer';
 export * from './registerElementRenderer';
