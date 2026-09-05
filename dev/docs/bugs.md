@@ -82,6 +82,29 @@ Fix direction: render the trigger as a non-button element (a `div` with
 the combobox role and keyboard handling), or move the chips outside the
 trigger; then remove this entry.
 
+## ui/canvas
+
+### Toolbars attached to canvas content scale with the zoom
+
+Floating toolbars rendered inside canvas nodes scale with the canvas
+zoom, since the whole transform layer is scaled with a CSS transform:
+at 50% they are half size and hard to hit, at 200% they dwarf the
+content. Raised 2026-09-05 on the design editor's block element menu
+(`ui/designs-next`), but every consumer is affected: the canvas data
+view's node toolbars and the query builder canvas's node cards.
+
+Cause: the transform layer applies `scale(zoom)` to everything inside
+it, and node-level chrome is rendered inside the nodes it belongs to.
+Only the canvas-level toolbars (`CanvasToolbar`, the selection toolbar)
+sit outside the transform layer.
+
+Fix direction: a canvas-level mechanism for zoom-independent chrome
+anchored to canvas content, e.g. a `CanvasOverlay` slot outside the
+transform layer that positions its children from a node's frame (the
+way the selection toolbar is anchored), or a counter-scale of
+`1 / zoom` on the chrome elements. Needs one approach for all
+consumers rather than per-consumer fixes; then remove this entry.
+
 ## packages/databases
 
 ### Concurrent file entry creation races on the storage directory

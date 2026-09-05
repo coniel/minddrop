@@ -52,6 +52,19 @@ describe('updateDesign', () => {
     );
   });
 
+  it('sets the aspect ratio', async () => {
+    await updateDesign(cardDesign_1.id, { aspectRatio: '3/2' });
+
+    expect(DesignsStore.get(cardDesign_1.id)?.aspectRatio).toBe('3/2');
+  });
+
+  it('drops the aspect ratio field when cleared', async () => {
+    await updateDesign(cardDesign_1.id, { aspectRatio: '3/2' });
+    await updateDesign(cardDesign_1.id, { aspectRatio: null });
+
+    expect(DesignsStore.get(cardDesign_1.id)).not.toHaveProperty('aspectRatio');
+  });
+
   it('throws if the design does not exist', async () => {
     await expect(() =>
       updateDesign('design_missing', { name: 'Renamed' }),

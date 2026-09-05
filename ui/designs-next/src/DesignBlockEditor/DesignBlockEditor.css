@@ -1,9 +1,19 @@
 .design-block-editor {
   position: relative;
+  /* Grid lines stay one screen pixel wide within a zoomed canvas */
+  --design-block-editor-line: calc(1px / var(--ui-canvas-zoom, 1));
   background-color: var(--surface-overlay);
   background-image:
-    linear-gradient(to right, var(--border-subtle) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--border-subtle) 1px, transparent 1px);
+    linear-gradient(
+      to right,
+      var(--border-subtle) var(--design-block-editor-line),
+      transparent var(--design-block-editor-line)
+    ),
+    linear-gradient(
+      to bottom,
+      var(--border-subtle) var(--design-block-editor-line),
+      transparent var(--design-block-editor-line)
+    );
 }
 
 .design-block-editor-element {
@@ -13,8 +23,12 @@
   touch-action: none;
 }
 
+/* The selection ring sits inside the block, leaving the grid lines
+   around it visible, and stays two screen pixels wide within a
+   zoomed canvas */
 .design-block-editor-element-selected {
-  outline: 2px solid var(--border-strong);
+  box-shadow: inset 0 0 0 calc(2px / var(--ui-canvas-zoom, 1))
+    var(--border-strong);
 }
 
 .design-block-editor-element-dragging {
@@ -27,8 +41,16 @@
   z-index: 1;
   pointer-events: none;
   background-image:
-    linear-gradient(to right, var(--border-subtle) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--border-subtle) 1px, transparent 1px);
+    linear-gradient(
+      to right,
+      var(--border-subtle) var(--design-block-editor-line),
+      transparent var(--design-block-editor-line)
+    ),
+    linear-gradient(
+      to bottom,
+      var(--border-subtle) var(--design-block-editor-line),
+      transparent var(--design-block-editor-line)
+    );
 }
 
 .design-block-editor-handle {

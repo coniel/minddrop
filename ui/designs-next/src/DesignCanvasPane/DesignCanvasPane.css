@@ -1,0 +1,15 @@
+/* The pane hosts a canvas with its controls floating above it,
+   anchored to the pane */
+.design-canvas-pane {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* The layout sits at the canvas origin */
+.design-canvas-pane-layout {
+  position: absolute;
+  top: 0;
+  left: 0;
+}

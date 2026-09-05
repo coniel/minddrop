@@ -9,6 +9,25 @@
       "overridden": "A fluid element absorbs the extra space, so the pin currently has no effect"
     },
     "naturalHeight": "Natural height",
+    "editor": {
+      "snapTo": "Snap to {{size}} grid",
+      "autoHeight": "Auto height",
+      "square": "Square",
+      "portrait": "Portrait",
+      "landscape": "Landscape",
+      "previewWidth": "Preview at {{width}}",
+      "toggleTheme": "Toggle dark mode",
+      "widths": {
+        "narrow": "Narrow",
+        "narrowShort": "S",
+        "regular": "Regular",
+        "regularShort": "M",
+        "wide": "Wide",
+        "wideShort": "L",
+        "extraWide": "Extra wide",
+        "extraWideShort": "XL"
+      }
+    },
     "settings": {
       "bold": "Bold",
       "italic": "Italic",

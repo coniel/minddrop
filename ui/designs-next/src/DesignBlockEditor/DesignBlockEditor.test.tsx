@@ -25,6 +25,10 @@ let selectedElementId: string | null | undefined;
 // The row count passed to the most recent onRowsChange call
 let changedRows: number | null;
 
+// The number of onDragStart and onDragEnd calls
+let dragStarts: number;
+let dragEnds: number;
+
 /**
  * Renders the editor with the fixture layout and recording
  * callbacks.
@@ -55,6 +59,12 @@ function renderEditor(selectedId: string | null = null, resizable = false) {
             }
           : undefined
       }
+      onDragStart={() => {
+        dragStarts += 1;
+      }}
+      onDragEnd={() => {
+        dragEnds += 1;
+      }}
     />,
   );
 
@@ -66,6 +76,8 @@ describe('DesignBlockEditor', () => {
     changedElements = null;
     selectedElementId = undefined;
     changedRows = null;
+    dragStarts = 0;
+    dragEnds = 0;
 
     // Pointer capture is not implemented in the test environment
     if (!Element.prototype.setPointerCapture) {
@@ -173,6 +185,30 @@ describe('DesignBlockEditor', () => {
 
     expect(movedTitle?.column).toBe(titleDesignElement.column + 4);
     expect(movedTitle?.row).toBe(titleDesignElement.row);
+  });
+
+  it('divides pointer deltas by the measured display scale', () => {
+    const container = renderEditor();
+    const surface = container.querySelector(
+      '.design-block-editor',
+    ) as HTMLElement;
+    const title = container.querySelector(
+      '[data-element-id="element_title"]',
+    ) as HTMLElement;
+
+    // The surface renders at double its layout width
+    surface.getBoundingClientRect = () =>
+      ({ width: cardColumns * 20 }) as DOMRect;
+
+    // At double scale, forty screen pixels are two units
+    fireEvent.pointerDown(title, { clientX: 0, clientY: 0 });
+    fireEvent.pointerMove(title, { clientX: 40, clientY: 0 });
+
+    const movedTitle = changedElements?.find(
+      (element) => element.id === titleDesignElement.id,
+    );
+
+    expect(movedTitle?.column).toBe(titleDesignElement.column + 2);
   });
 
   it('resizes through the element handles', () => {
@@ -369,7 +405,7 @@ describe('DesignBlockEditor', () => {
     DesignElementConfigsStore.remove(boxElementConfig.type);
   });
 
-  it('grows the card with a bottom-edge resize past the card bottom', () => {
+  it('grows the layout with a bottom-edge resize past the layout bottom', () => {
     const container = renderEditor(null, true);
     const bottomHandle = container.querySelector(
       '[data-element-id="element_title"] .design-block-editor-handle-resize-bottom',
@@ -383,7 +419,7 @@ describe('DesignBlockEditor', () => {
       (element) => element.id === titleDesignElement.id,
     );
 
-    // The element extends past the old card bottom, and the card
+    // The element extends past the old layout bottom, and the layout
     // grows to its new bottom edge.
     expect(resizedTitle?.rowSpan).toBe(titleDesignElement.rowSpan + 30);
     expect(changedRows).toBe(
@@ -431,6 +467,67 @@ describe('DesignBlockEditor', () => {
     fireEvent.pointerMove(handle, { clientX: 0, clientY: -1000 });
 
     expect(changedRows).toBe(30);
+  });
+
+  it('reports the element drag lifecycle', () => {
+    const container = renderEditor();
+    const title = container.querySelector(
+      '[data-element-id="element_title"]',
+    ) as HTMLElement;
+
+    fireEvent.pointerDown(title, { clientX: 0, clientY: 0 });
+
+    expect(dragStarts).toBe(1);
+    expect(dragEnds).toBe(0);
+
+    fireEvent.pointerUp(title);
+
+    expect(dragEnds).toBe(1);
+
+    // A release without a drag in progress reports nothing
+    fireEvent.pointerUp(title);
+
+    expect(dragEnds).toBe(1);
+  });
+
+  it('reports the surface drag lifecycle', () => {
+    const container = renderEditor(null, true);
+    const handle = container.querySelector(
+      '.design-block-editor-surface-handle',
+    ) as HTMLElement;
+
+    fireEvent.pointerDown(handle, { clientX: 0, clientY: 0 });
+
+    expect(dragStarts).toBe(1);
+
+    fireEvent.pointerUp(handle);
+
+    expect(dragEnds).toBe(1);
+  });
+
+  it('removes the selected element on Delete', () => {
+    renderEditor(titleDesignElement.id);
+
+    fireEvent.keyDown(document.body, { key: 'Delete' });
+
+    expect(changedElements).toHaveLength(designElements.length - 1);
+    expect(
+      changedElements?.some((element) => element.id === titleDesignElement.id),
+    ).toBe(false);
+    expect(selectedElementId).toBeNull();
+  });
+
+  it('leaves Backspace to editable controls', () => {
+    renderEditor(titleDesignElement.id);
+
+    // A key press inside an input belongs to the input
+    const input = document.createElement('input');
+    document.body.appendChild(input);
+    fireEvent.keyDown(input, { key: 'Backspace' });
+
+    expect(changedElements).toBeNull();
+
+    input.remove();
   });
 
   it('stops applying deltas after the pointer is released', () => {

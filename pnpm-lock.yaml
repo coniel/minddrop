@@ -2768,12 +2768,21 @@ importers:
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
+      '@minddrop/ui-canvas':
+        specifier: workspace:*
+        version: link:../canvas
       '@minddrop/ui-icons':
         specifier: workspace:*
         version: link:../icons
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../primitives
+      '@minddrop/ui-theme':
+        specifier: workspace:*
+        version: link:../theme
+      '@minddrop/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
     devDependencies:
       '@minddrop/eslint-config':
         specifier: workspace:*

@@ -1,0 +1,29 @@
+/* Fixed width so the scheme trigger does not resize with the
+   selected colour's name, with the label left-aligned between the
+   swatch and the dropdown indicator */
+.design-preview-pane-scheme-trigger {
+  width: 6.5rem;
+  justify-content: flex-start;
+
+  /* The button's small-size icon gap is tuned for glyph icons and
+     sits too tight around the swatch; match the colour select's
+     swatch spacing instead */
+  gap: var(--space-2);
+}
+
+/* Match the colour select's trigger swatch size */
+.design-preview-pane-scheme-trigger .color-swatch {
+  width: 0.75rem;
+  height: 0.75rem;
+  flex-shrink: 0;
+}
+
+/* Push the dropdown indicator to the trigger's end */
+.design-preview-pane-scheme-trigger .icon:last-child {
+  margin-left: auto;
+}
+
+/* Make the rendered layout's bounds visible against the canvas */
+.design-preview-pane .design-renderer {
+  outline: 1px solid var(--border-subtle);
+}

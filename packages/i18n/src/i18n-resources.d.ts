@@ -2126,6 +2126,25 @@ declare module 'i18next' {
             overridden: string;
           };
           naturalHeight: string;
+          editor: {
+            snapTo: string;
+            autoHeight: string;
+            square: string;
+            portrait: string;
+            landscape: string;
+            previewWidth: string;
+            toggleTheme: string;
+            widths: {
+              narrow: string;
+              narrowShort: string;
+              regular: string;
+              regularShort: string;
+              wide: string;
+              wideShort: string;
+              extraWide: string;
+              extraWideShort: string;
+            };
+          };
           settings: {
             bold: string;
             italic: string;

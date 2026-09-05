@@ -2,7 +2,7 @@ import { Events } from '@minddrop/events';
 import { DesignsStore } from '../DesignsStore';
 import { DesignUpdatedEvent } from '../events';
 import { getDesign } from '../getDesign';
-import { Design, DesignElement } from '../types';
+import { AspectRatioToken, Design, DesignElement } from '../types';
 import { writeDesign } from '../writeDesign';
 
 export interface UpdateDesignData {
@@ -20,6 +20,12 @@ export interface UpdateDesignData {
    * The design's height in grid units.
    */
   rows?: number;
+
+  /**
+   * The design's aspect ratio. Null clears it, returning the design
+   * to natural height.
+   */
+  aspectRatio?: AspectRatioToken | null;
 
   /**
    * The design's elements.
@@ -45,8 +51,22 @@ export async function updateDesign(
   // Get the design
   const design = getDesign(id);
 
-  // Update the design and bump its last modified date
-  DesignsStore.update(design.id, { ...data, lastModified: new Date() });
+  // Apply the changes and bump the last modified date
+  const { aspectRatio, ...changes } = data;
+  const { aspectRatio: currentAspectRatio, ...current } = design;
+  const updated: Design = { ...current, ...changes, lastModified: new Date() };
+
+  // Keep the aspect ratio unless the update changes or clears it,
+  // dropping the field rather than storing a null.
+  const nextAspectRatio =
+    aspectRatio === undefined ? currentAspectRatio : aspectRatio;
+
+  if (nextAspectRatio) {
+    updated.aspectRatio = nextAspectRatio;
+  }
+
+  // Update the design in the store
+  DesignsStore.set(updated);
 
   // Get the updated design
   const updatedDesign = getDesign(id);

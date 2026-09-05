@@ -1,0 +1,20 @@
+.design-editor-pane {
+  border-right: 1px solid var(--border-default);
+}
+
+/* The layout reads as a bordered area on the canvas. The border ring
+   is drawn by an overlay extended one pixel past the right and
+   bottom edges, so it covers the layout's own grid boundary lines
+   on every side instead of stacking beside them. */
+.design-editor-pane .design-block-editor::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: calc(-1px / var(--ui-canvas-zoom, 1));
+  bottom: calc(-1px / var(--ui-canvas-zoom, 1));
+  border: calc(1px / var(--ui-canvas-zoom, 1)) solid var(--accent-800);
+  pointer-events: none;
+  /* Above the drag grid overlay and the dragged block */
+  z-index: 3;
+}

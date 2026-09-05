@@ -58,3 +58,20 @@ export const CardAspectRatios: AspectRatioToken[] = [
  * The default height of a new design in grid units.
  */
 export const DefaultDesignRows = 32;
+
+/**
+ * The minimum height of a design in grid units, flooring the
+ * surface height drag and the fit to content.
+ */
+export const MinDesignRows = 8;
+
+/**
+ * The maximum height of a design in grid units, capping the
+ * surface height drag and bottom-edge resizes past the design.
+ */
+export const MaxDesignRows = 200;
+
+/**
+ * The snap resolutions offered in the editor, in grid units.
+ */
+export const SnapPresets = [1, 2, 4];
