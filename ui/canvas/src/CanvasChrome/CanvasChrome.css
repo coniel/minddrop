@@ -1,0 +1,46 @@
+.ui-canvas-chrome {
+  /* Hugs its contents so the counter-scale acts on the chrome
+     rather than on the width of the element positioning it */
+  width: fit-content;
+  /* Undoes the zoom the transform layer applies, keeping the
+     chrome at its screen size */
+  transform: scale(calc(1 / var(--ui-canvas-zoom, 1)));
+}
+
+/* --- Origins --- */
+
+.ui-canvas-chrome-origin-top-left {
+  transform-origin: top left;
+}
+
+.ui-canvas-chrome-origin-top {
+  transform-origin: top center;
+}
+
+.ui-canvas-chrome-origin-top-right {
+  transform-origin: top right;
+}
+
+.ui-canvas-chrome-origin-left {
+  transform-origin: center left;
+}
+
+.ui-canvas-chrome-origin-center {
+  transform-origin: center;
+}
+
+.ui-canvas-chrome-origin-right {
+  transform-origin: center right;
+}
+
+.ui-canvas-chrome-origin-bottom-left {
+  transform-origin: bottom left;
+}
+
+.ui-canvas-chrome-origin-bottom {
+  transform-origin: bottom center;
+}
+
+.ui-canvas-chrome-origin-bottom-right {
+  transform-origin: bottom right;
+}

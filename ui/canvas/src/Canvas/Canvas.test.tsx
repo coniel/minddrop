@@ -482,4 +482,18 @@ describe('Canvas', () => {
       ).toBe('node-1');
     });
   });
+
+  describe('zoom', () => {
+    it('exposes the zoom to content as a CSS variable', () => {
+      const store = createCanvasStore();
+
+      const { viewport } = renderCanvas(store);
+
+      act(() => {
+        store.setZoom(2);
+      });
+
+      expect(viewport.style.getPropertyValue('--ui-canvas-zoom')).toBe('2');
+    });
+  });
 });

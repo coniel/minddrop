@@ -1,5 +1,6 @@
 export * from './Canvas';
 export * from './CanvasAlignmentGuides';
+export * from './CanvasChrome';
 export * from './CanvasConnectionsLayer';
 export * from './CanvasLasso';
 export * from './CanvasNode';
