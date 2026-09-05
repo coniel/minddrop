@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useId, useMemo } from 'react';
 import {
   DatabaseEntries,
   DatabaseEntry,
@@ -19,6 +19,7 @@ import {
   DatabaseEntryRenderSource,
   useDatabaseEntryContext,
 } from '@minddrop/ui-databases';
+import { useHoveredItem } from '@minddrop/ui-drag-and-drop';
 import {
   DropdownMenu,
   IconButton,
@@ -100,6 +101,12 @@ const Entry: React.FC<EntryProps> = ({
     type: DatabaseEntriesDataKey,
     data: entry,
   });
+
+  // Cards track hover themselves, since a native drag leaves
+  // browser hover state stuck on the cards it passed over. Keyed
+  // per instance, as the same entry can render in several views.
+  const hoverId = useId();
+  const { hoveredProps } = useHoveredItem(hoverId);
 
   // The base layout type the context resolves to, used for styling
   // and click behaviour
@@ -294,6 +301,7 @@ const Entry: React.FC<EntryProps> = ({
         tabIndex={isClickable ? 0 : undefined}
         onClick={isClickable ? onOpenEntry : undefined}
         onKeyDown={isClickable ? onKeyDown : undefined}
+        {...hoveredProps}
       >
         {/* Invisible drag bar along the top edge of the card */}
         {showDragHandle && (
@@ -322,6 +330,7 @@ const Entry: React.FC<EntryProps> = ({
       tabIndex={isClickable ? 0 : undefined}
       onClick={isClickable ? onOpenEntry : undefined}
       onKeyDown={isClickable ? onKeyDown : undefined}
+      {...hoveredProps}
     >
       {/* Invisible drag bar along the top edge of the card */}
       {showDragHandle && (

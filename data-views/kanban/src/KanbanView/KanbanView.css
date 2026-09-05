@@ -5,11 +5,11 @@
   min-height: 0;
 }
 
-/* Keep entry cards clear of the scrollport edges (and the
-   floating toolbar at the bottom) when scrolled into view */
+/* Keep entry cards clear of the scrollport edges when scrolled
+   into view */
 .kanban-view .database-entry {
   scroll-margin-top: var(--space-4);
-  scroll-margin-bottom: calc(var(--space-7) + var(--space-5));
+  scroll-margin-bottom: var(--space-4);
 }
 
 /* No padding on the right, which the columns overflow past when
@@ -113,13 +113,6 @@
 .kanban-view-columns-background-accent .kanban-view-heading,
 .kanban-view-columns-background-accent .kanban-view-column {
   background-color: var(--kanban-lane-surface, var(--surface-subtle));
-}
-
-/* Keep pickers clear of the scrollport edges (and the floating
-   toolbar at the bottom) when scrolled into view */
-.kanban-view-picker {
-  scroll-margin-top: var(--space-4);
-  scroll-margin-bottom: calc(var(--space-7) + var(--space-5));
 }
 
 .kanban-view-empty {

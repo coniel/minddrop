@@ -44,15 +44,40 @@ export interface ScrollAreaProps {
    * pickers).
    */
   stateKey?: string;
+  /*
+   * Ref to the scrollable viewport element, for consumers which
+   * scroll it programmatically.
+   */
+  viewportRef?: React.RefObject<HTMLDivElement | null>;
   className?: string;
   style?: React.CSSProperties;
 }
 
 export const ScrollArea = React.forwardRef<HTMLDivElement, ScrollAreaProps>(
-  ({ children, visibility = 'scroll', stateKey, className, style }, ref) => {
+  (
+    {
+      children,
+      visibility = 'scroll',
+      stateKey,
+      viewportRef: externalViewportRef,
+      className,
+      style,
+    },
+    ref,
+  ) => {
     const { setRef, handleScroll } = useScrollVisibility(visibility, ref);
     const { viewportRef, handlePersistScroll } =
       useScrollStatePersistence(stateKey);
+
+    // Attach the viewport to both the persistence hook and the
+    // consumer's ref
+    const setViewportRef = (element: HTMLDivElement | null) => {
+      viewportRef.current = element;
+
+      if (externalViewportRef) {
+        externalViewportRef.current = element;
+      }
+    };
 
     // Forward scroll events to persistence and visibility handling,
     // keeping the scrollbar hidden for programmatic restore scrolls
@@ -71,7 +96,7 @@ export const ScrollArea = React.forwardRef<HTMLDivElement, ScrollAreaProps>(
         style={style}
       >
         <ScrollAreaPrimitive.Viewport
-          ref={viewportRef}
+          ref={setViewportRef}
           className="scroll-area-viewport"
           onScroll={handleViewportScroll}
         >

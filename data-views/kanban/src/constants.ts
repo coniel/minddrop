@@ -1,9 +1,4 @@
-import {
-  AddExistingEntryDataKey,
-  DatabaseEntriesDataKey,
-  NewDatabaseEntriesDataKey,
-  NewEntryPickerDataKey,
-} from '@minddrop/ui-databases';
+import { DatabaseEntriesDataKey } from '@minddrop/ui-databases';
 import {
   KanbanColumnBackground,
   KanbanColumnWidth,
@@ -44,9 +39,4 @@ export const KANBAN_COLUMN_BACKGROUNDS: KanbanColumnBackground[] = [
 ];
 
 // Data types the kanban's drop zones accept
-export const KANBAN_ACCEPTED_DATA_TYPES = [
-  DatabaseEntriesDataKey,
-  NewDatabaseEntriesDataKey,
-  AddExistingEntryDataKey,
-  NewEntryPickerDataKey,
-];
+export const KANBAN_ACCEPTED_DATA_TYPES = [DatabaseEntriesDataKey];

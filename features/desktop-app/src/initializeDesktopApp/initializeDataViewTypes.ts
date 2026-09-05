@@ -1,7 +1,10 @@
 import { BoardViewType } from '@minddrop/data-view-board';
 import { CanvasViewType } from '@minddrop/data-view-canvas';
 import { GalleryViewType } from '@minddrop/data-view-gallery';
-import { KanbanViewType } from '@minddrop/data-view-kanban';
+import {
+  KanbanViewType,
+  initializeKanbanView,
+} from '@minddrop/data-view-kanban';
 import { NotebookViewType } from '@minddrop/data-view-notebook';
 import { TableViewType } from '@minddrop/data-view-table';
 import { DataViewTypes } from '@minddrop/data-views';
@@ -14,4 +17,7 @@ export function initializeDataViewTypes() {
   DataViewTypes.register(KanbanViewType);
   DataViewTypes.register(NotebookViewType);
   DataViewTypes.register(TableViewType);
+
+  // Register the kanban view's event handlers
+  initializeKanbanView();
 }

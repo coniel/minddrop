@@ -12,7 +12,9 @@
   transition: outline-color var(--duration-normal) var(--ease-out);
 }
 
-.database-entry-card:hover
+/* Hover is tracked by useHoveredItem rather than :hover, which a
+   native drag leaves stuck on the cards it passed over */
+.database-entry-card[data-hovered='true']
   > *:not(.database-entry-drag-handle):not(.database-entry-options) {
   outline-color: var(--border-subtle);
 }
@@ -23,7 +25,7 @@
   transition: background-color var(--duration-fast) var(--ease-out);
 }
 
-.database-entry-list:hover {
+.database-entry-list[data-hovered='true'] {
   --design-list-row-surface: var(--surface-accent);
 }
 
@@ -57,7 +59,7 @@
 
 /* Reveal the button on card hover, keyboard focus, or while its
    menu is open */
-.database-entry-card:hover .database-entry-options,
+.database-entry-card[data-hovered='true'] .database-entry-options,
 .database-entry-options:has(:focus-visible),
 .database-entry-options:has([data-popup-open]) {
   opacity: 1;

@@ -10,7 +10,7 @@ import { resolveEntryColumnValue } from '../resolveEntryColumnValue';
  * column per declared option, preceded by the column holding
  * entries without a value, which is left out when empty. Each
  * column's entries are ordered by the saved order, with entries
- * it does not place appended in the order they were given.
+ * it does not place prepended in the order they were given.
  *
  * @param entries - The entries to arrange into columns.
  * @param property - The select property the columns are generated from.
@@ -74,8 +74,9 @@ export function resolveKanbanColumns(
 
 /**
  * Orders a column's entries by the saved order, dropping saved
- * entries which are no longer in the column and appending
- * entries the saved order does not place.
+ * entries which are no longer in the column and prepending
+ * entries the saved order does not place, as those are likely to
+ * be newly added.
  *
  * @param entryIds - The IDs of the entries currently in the column.
  * @param savedOrder - The saved order of the column's entries.
@@ -94,5 +95,5 @@ function orderColumnEntries(
   // Filter for entries the saved order does not place
   const unplaced = entryIds.filter((entryId) => !placedIds.has(entryId));
 
-  return [...placed, ...unplaced];
+  return [...unplaced, ...placed];
 }

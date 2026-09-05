@@ -5,3 +5,4 @@ export * from './resolveEntryColumnValue';
 export * from './resolveGroupProperties';
 export * from './resolveKanbanColumns';
 export * from './resolveLaneStyle';
+export * from './resolveReorderedOptions';

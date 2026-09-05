@@ -362,9 +362,9 @@ importers:
       '@minddrop/databases':
         specifier: workspace:*
         version: link:../../packages/databases
-      '@minddrop/feature-data-views':
+      '@minddrop/events':
         specifier: workspace:*
-        version: link:../../features/data-views
+        version: link:../../packages/events
       '@minddrop/feature-databases':
         specifier: workspace:*
         version: link:../../features/databases
@@ -377,6 +377,9 @@ importers:
       '@minddrop/selection':
         specifier: workspace:*
         version: link:../../packages/selection
+      '@minddrop/stores':
+        specifier: workspace:*
+        version: link:../../packages/stores
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../../packages/test-utils
@@ -2808,6 +2811,9 @@ importers:
       '@minddrop/selection':
         specifier: workspace:*
         version: link:../../packages/selection
+      '@minddrop/stores':
+        specifier: workspace:*
+        version: link:../../packages/stores
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../../packages/test-utils

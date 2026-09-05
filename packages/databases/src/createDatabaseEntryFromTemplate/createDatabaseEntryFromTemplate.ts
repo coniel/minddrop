@@ -21,6 +21,7 @@ import {
  *
  * @param databaseId - The ID of the database to create the entry in.
  * @param templateId - The ID of the entry template to create the entry from.
+ * @param properties - Property values the entry is created with, overriding the template's values.
  *
  * @returns The newly created entry.
  *
@@ -32,6 +33,7 @@ import {
 export async function createDatabaseEntryFromTemplate(
   databaseId: string,
   templateId: string,
+  properties: PropertyMap = {},
 ): Promise<DatabaseEntry> {
   // Get the database config
   const database = getDatabase(databaseId);
@@ -67,12 +69,19 @@ export async function createDatabaseEntryFromTemplate(
     simpleProperties[propertyName] = value;
   }
 
-  // Create the entry with the template's simple values, using the
-  // template's default title if it has one.
+  // Drop template file values overridden by the given properties,
+  // whose values win over the template's.
+  for (const propertyName of Object.keys(properties)) {
+    delete fileProperties[propertyName];
+  }
+
+  // Create the entry with the template's simple values overridden
+  // by the given ones, using the template's default title if it
+  // has one.
   const entry = await createDatabaseEntry(
     databaseId,
     template.defaultTitle || undefined,
-    simpleProperties,
+    { ...simpleProperties, ...properties },
   );
 
   // Copy each file based property value's file to the entry

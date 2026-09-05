@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { i18n } from '@minddrop/i18n';
 import {
+  Properties,
   PropertySchema,
   PropertySchemas,
   SelectPropertyOption,
@@ -102,12 +103,7 @@ export const SelectPropertyEditor: React.FC<SelectPropertyEditorProps> = ({
 
   function handleAddOption() {
     // Pick a random color, preferring ones no option uses yet
-    const usedColors = new Set(options.map((option) => option.color));
-    const unusedColors = ContentColorValues.filter(
-      (colorOption) => !usedColors.has(colorOption.value),
-    );
-    const pool = unusedColors.length > 0 ? unusedColors : ContentColorValues;
-    const color = pool[Math.floor(Math.random() * pool.length)].value;
+    const color = Properties.resolveNewOptionColor(options);
 
     // Append the new empty option
     setOptions([...options, toEditorOption({ value: '', color })]);

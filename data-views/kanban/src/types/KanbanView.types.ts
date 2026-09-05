@@ -50,19 +50,6 @@ export interface KanbanView extends DataView {
   data: Partial<KanbanViewData>;
 }
 
-export interface KanbanViewToolbarCardOptions {
-  /**
-   * Whether the card is hidden from the toolbar.
-   */
-  hidden?: boolean;
-
-  /**
-   * The ID of the entry template used when creating entries via
-   * the card. Blank entries are created when omitted.
-   */
-  templateId?: string;
-}
-
 export interface KanbanViewOptions {
   /**
    * The name of the select property the columns are generated
@@ -70,6 +57,17 @@ export interface KanbanViewOptions {
    * omitted.
    */
   groupBy?: string;
+
+  /**
+   * The option values of the columns hidden from the board. The
+   * no-value column is keyed by an empty string.
+   */
+  hiddenOptions?: string[];
+
+  /**
+   * Whether columns holding no entries are hidden from the board.
+   */
+  hideEmptyColumns?: boolean;
 
   /**
    * The width the columns take.
@@ -93,13 +91,6 @@ export interface KanbanViewOptions {
    * their default card layout.
    */
   cardLayoutOverrides?: Record<string, string>;
-
-  /**
-   * The toolbar's database card configuration, keyed by database
-   * ID. Databases without an entry use the default behaviour: a
-   * visible card creating blank entries.
-   */
-  toolbarCards?: Record<string, KanbanViewToolbarCardOptions>;
 }
 
 export interface KanbanViewData {

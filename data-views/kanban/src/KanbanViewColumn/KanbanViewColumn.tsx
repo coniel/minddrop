@@ -26,17 +26,6 @@ export interface KanbanViewColumnProps {
   entryCardLayouts: Record<string, string>;
 
   /**
-   * An entry picker rendered among the column's cards at
-   * `pickerIndex`.
-   */
-  picker?: React.ReactNode;
-
-  /**
-   * The position within the column at which to render the picker.
-   */
-  pickerIndex?: number;
-
-  /**
    * Callback fired when something is dropped into this column.
    */
   onDrop: (
@@ -54,8 +43,6 @@ export const KanbanViewColumn: React.FC<KanbanViewColumnProps> = ({
   column,
   scroll,
   entryCardLayouts,
-  picker,
-  pickerIndex,
   onDrop,
 }) => {
   // Handle a drop into this column at a specific gap index
@@ -85,16 +72,6 @@ export const KanbanViewColumn: React.FC<KanbanViewColumnProps> = ({
     />
   ));
 
-  // Check if a picker is active in the column. If so, splice it
-  // in among the cards at its position.
-  if (picker && pickerIndex !== undefined) {
-    cards.splice(
-      pickerIndex,
-      0,
-      <React.Fragment key="picker">{picker}</React.Fragment>,
-    );
-  }
-
   // The cards' drop container, which the scrollport wraps when
   // the column scrolls on its own
   const dropContainer = (
@@ -111,7 +88,11 @@ export const KanbanViewColumn: React.FC<KanbanViewColumnProps> = ({
   );
 
   return (
-    <div className="kanban-view-column" style={resolveLaneStyle(column.color)}>
+    <div
+      data-kanban-column={column.value}
+      className="kanban-view-column"
+      style={resolveLaneStyle(column.color)}
+    >
       {/** Entry cards, in their own scrollport when set to **/}
       {scroll ? (
         <ScrollArea

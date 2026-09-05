@@ -7,4 +7,5 @@ export { generateDefaultProperties as defaults } from './generateDefaultProperti
 export {
   isFileBasedProperty as isFileBased,
   isUrlProperty as isUrl,
+  resolveNewOptionColor,
 } from './utils';

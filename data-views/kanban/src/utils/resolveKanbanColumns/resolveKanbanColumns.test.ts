@@ -72,7 +72,7 @@ describe('resolveKanbanColumns', () => {
     ]);
   });
 
-  it('appends entries the saved order does not place', () => {
+  it('prepends entries the saved order does not place', () => {
     const columns = resolveKanbanColumns(
       [doneEntry, otherDoneEntry],
       statusProperty,
@@ -80,8 +80,8 @@ describe('resolveKanbanColumns', () => {
     );
 
     expect(columnEntries(columns, 'Done')).toEqual([
-      otherDoneEntry.id,
       doneEntry.id,
+      otherDoneEntry.id,
     ]);
   });
 

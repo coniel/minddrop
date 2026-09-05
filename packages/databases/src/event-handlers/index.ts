@@ -21,6 +21,7 @@ export * from './entry-updated';
 export * from './entry-written';
 export * from './property-added';
 export * from './property-removed';
+export * from './property-option-renamed';
 export * from './property-renamed';
 export * from './tag-deleted';
 export * from './tag-group-deleted';

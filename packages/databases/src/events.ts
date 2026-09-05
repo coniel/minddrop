@@ -1,4 +1,4 @@
-import { PropertySchema } from '@minddrop/properties';
+import { PropertySchema, SelectPropertySchema } from '@minddrop/properties';
 import { BaseOpenViewEventData } from '@minddrop/views';
 import {
   Database,
@@ -85,6 +85,37 @@ export interface DatabasePropertyRenamedEventData {
    * The new property name.
    */
   newName: string;
+}
+
+// Property option events
+export const DatabasePropertyOptionRenamedEvent =
+  'databases:property-option:renamed';
+
+export interface DatabasePropertyOptionRenamedEventData {
+  /**
+   * The database config from before the option was renamed.
+   */
+  original: Database;
+
+  /**
+   * The database config with the option renamed.
+   */
+  updated: Database;
+
+  /**
+   * The property the option belongs to, with the option renamed.
+   */
+  property: SelectPropertySchema;
+
+  /**
+   * The original option value.
+   */
+  oldValue: string;
+
+  /**
+   * The new option value.
+   */
+  newValue: string;
 }
 
 // Entry template events
@@ -376,6 +407,7 @@ declare module '@minddrop/events/EventDataMap' {
     'databases:property:added': DatabasePropertyAddedEventData;
     'databases:property:removed': DatabasePropertyRemovedEventData;
     'databases:property:renamed': DatabasePropertyRenamedEventData;
+    'databases:property-option:renamed': DatabasePropertyOptionRenamedEventData;
     'databases:entry-template:added': DatabaseEntryTemplateAddedEventData;
     'databases:entry-template:updated': DatabaseEntryTemplateUpdatedEventData;
     'databases:entry-template:removed': DatabaseEntryTemplateRemovedEventData;

@@ -1663,7 +1663,7 @@
       "noLayouts": "No layouts",
       "layoutCount_one": "{{count}} layout",
       "layoutCount_other": "{{count}} layouts",
-      "cardDetails": "{{layoutCount}} \u00b7 {{lastModified}}"
+      "cardDetails": "{{layoutCount}} · {{lastModified}}"
     },
     "elements": {
       "root": "Root",
@@ -1819,11 +1819,26 @@
         "none": "None",
         "neutral": "Neutral",
         "accent": "Accent",
-        "scroll": "Scroll columns"
+        "scroll": "Scroll columns",
+        "hideEmpty": "Hide empty columns"
       },
-      "toolbarCards": "Toolbar cards",
-      "showToolbarCard": "Show card",
-      "toolbarCardTemplate": "Entry template"
+      "columns": {
+        "add": "Add column",
+        "newColumn": "New column",
+        "namePlaceholder": "Column name...",
+        "nameTaken": "A column with this name already exists",
+        "newEntry": "New entry",
+        "rename": "Rename",
+        "color": "Colour",
+        "hide": "Hide column",
+        "visible": "Visible columns",
+        "delete": "Delete column",
+        "deleteConfirmation": {
+          "title": "Delete column",
+          "message": "The option will be removed from the select property. Entries holding it will move to the No value column.",
+          "confirm": "Delete"
+        }
+      }
     },
     "gallery": {
       "name": "Gallery",

@@ -7,6 +7,7 @@ import {
   DatabaseEntryTemplateRemovedEvent,
   DatabaseEntryTemplateUpdatedEvent,
   DatabasePropertyAddedEvent,
+  DatabasePropertyOptionRenamedEvent,
   DatabasePropertyRemovedEvent,
   DatabasePropertyRenamedEvent,
   DatabasePropertySqlSyncedEvent,
@@ -49,6 +50,7 @@ export const events = {
   propertyAdded: DatabasePropertyAddedEvent,
   propertyRemoved: DatabasePropertyRemovedEvent,
   propertyRenamed: DatabasePropertyRenamedEvent,
+  propertyOptionRenamed: DatabasePropertyOptionRenamedEvent,
   entryTemplateAdded: DatabaseEntryTemplateAddedEvent,
   entryTemplateUpdated: DatabaseEntryTemplateUpdatedEvent,
   entryTemplateRemoved: DatabaseEntryTemplateRemovedEvent,
@@ -103,6 +105,7 @@ export { getDatabasesFromEntries as getFromEntries } from './getDatabasesFromEnt
 export { initializeDatabases as initialize } from './initializeDatabases';
 export { removeDatabaseProperty as removeProperty } from './removeDatabaseProperty';
 export { renameDatabase as rename } from './renameDatabase';
+export { renameDatabasePropertyOption as renamePropertyOption } from './renameDatabasePropertyOption';
 export { searchDatabases as search } from './utils';
 export { searchDatabaseEntryTemplates as searchEntryTemplates } from './utils';
 export { updateDatabase as update } from './updateDatabase';

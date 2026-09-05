@@ -1,31 +1,30 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { Collections } from '@minddrop/collections';
 import { DataViewTypeComponentProps, DataViews } from '@minddrop/data-views';
-import { DatabaseEntries, DatabaseId, Databases } from '@minddrop/databases';
-import { DataViewOptionsMenu } from '@minddrop/feature-data-views';
-import {
-  dropContainsAddExistingEntryCard,
-  dropContainsNewEntryPickerCard,
-  getDroppedEntryIds,
-  getDroppedNewEntryDatabaseIds,
-} from '@minddrop/feature-databases';
+import { DatabaseEntries, Databases } from '@minddrop/databases';
+import { getDroppedEntryIds } from '@minddrop/feature-databases';
 import { SelectPropertySchema } from '@minddrop/properties';
 import { DropEventData } from '@minddrop/selection';
+import { DatabaseEntryContextProvider } from '@minddrop/ui-databases';
 import {
-  DataViewEntryPicker,
-  DataViewFloatingToolbar,
-  DataViewNewEntryPicker,
-  DatabaseEntryContextProvider,
-} from '@minddrop/ui-databases';
-import {
-  Group,
-  ScrollArea,
-  Stack,
-  Text,
-  ViewFloatingToolbar,
-} from '@minddrop/ui-primitives';
+  SortableItemRenderProps,
+  SortableList,
+  useDragEdgeScroll,
+} from '@minddrop/ui-drag-and-drop';
+import { Group, ScrollArea, Stack, Text } from '@minddrop/ui-primitives';
+import { ContentColor } from '@minddrop/ui-theme';
 import { KanbanViewColumn } from '../KanbanViewColumn';
 import { KanbanViewColumnHeading } from '../KanbanViewColumnHeading';
+import {
+  clearPendingColumnRename,
+  usePendingColumnRename,
+} from '../PendingColumnRenameStore';
 import {
   NO_VALUE_COLUMN,
   defaultKanbanViewData,
@@ -37,26 +36,9 @@ import {
   applyColumnValue,
   placeEntryInColumn,
   resolveKanbanColumns,
+  resolveReorderedOptions,
 } from '../utils';
 import './KanbanView.css';
-
-interface EntryPickerState {
-  /**
-   * The picker to render: an existing entry picker or a new
-   * entry picker.
-   */
-  type: 'existing' | 'new';
-
-  /**
-   * The option value keying the column the picker is in.
-   */
-  columnValue: string;
-
-  /**
-   * The position within the column at which the picker is placed.
-   */
-  entryIndex: number;
-}
 
 /**
  * Renders a kanban view: a column per option of a select
@@ -67,24 +49,31 @@ export const KanbanViewComponent: React.FC<
   DataViewTypeComponentProps<KanbanViewOptions, KanbanViewData>
 > = ({ view, entries }) => {
   const scrollRootRef = useRef<HTMLDivElement>(null);
-
-  // The active entry picker, spawned by dropping the add existing
-  // entry or new entry card.
-  const [entryPicker, setEntryPicker] = useState<EntryPickerState | null>(null);
-
-  // Whether the view options menu in the toolbar is open
-  const [optionsMenuOpen, setOptionsMenuOpen] = useState(false);
+  const scrollViewportRef = useRef<HTMLDivElement>(null);
 
   // The ID of the just created entry whose card should autofocus
   // its editor, cleared once the card has mounted.
   const [autoFocusEntryId, setAutoFocusEntryId] = useState<string>();
 
+  // The value of the column the pointer is over, whose heading
+  // shows its actions.
+  const [hoveredColumnValue, setHoveredColumnValue] = useState<string | null>(
+    null,
+  );
+
   // The select property the columns are generated from
   const { property, databaseId } = useKanbanGroupProperty(view);
+
+  // The value of a just added column whose rename popover should
+  // open once its heading has rendered.
+  const pendingRenameValue = usePendingColumnRename(view.id);
 
   // Subscribes to the entries so that the columns re-resolve when
   // their property values change.
   const databaseEntries = DatabaseEntries.useByIds(entries);
+
+  // Scroll the board while a dragged card hovers near its edges
+  useDragEdgeScroll(scrollViewportRef);
 
   // Filter out entries from databases which do not declare the
   // group property, as they have no column to sit in.
@@ -107,6 +96,37 @@ export const KanbanViewComponent: React.FC<
     [groupedEntries, property, order],
   );
 
+  // The columns visible on the board, dropping hidden ones and,
+  // when set to, empty ones.
+  const visibleColumns = useMemo(() => {
+    const hiddenOptions = view.options?.hiddenOptions ?? [];
+    const hideEmpty = view.options?.hideEmptyColumns ?? false;
+
+    return columns.filter((column) => {
+      // Drop columns the user has hidden
+      if (hiddenOptions.includes(column.value)) {
+        return false;
+      }
+
+      // Drop empty columns when set to, except a just added one,
+      // which is empty but about to be named.
+      if (
+        hideEmpty &&
+        column.entryIds.length === 0 &&
+        column.value !== pendingRenameValue
+      ) {
+        return false;
+      }
+
+      return true;
+    });
+  }, [
+    columns,
+    view.options?.hiddenOptions,
+    view.options?.hideEmptyColumns,
+    pendingRenameValue,
+  ]);
+
   // Map each entry to the card layout its database is overridden
   // to use.
   const entryCardLayouts = useMemo(
@@ -118,24 +138,20 @@ export const KanbanViewComponent: React.FC<
     [entries, view.options?.cardLayoutOverrides],
   );
 
-  // Build the toolbar's card for the grouped database, which is
-  // the only one entries can be created in.
-  const toolbarDatabaseCards = useMemo(() => {
-    // Check that a database has resolved. Until one does there is
-    // nothing to create entries in.
-    if (!databaseId) {
-      return [];
+  // Bring a just added column's heading into view, since new
+  // columns land at the far end of the board.
+  useEffect(() => {
+    // Check that a column is awaiting its rename popover
+    if (!pendingRenameValue) {
+      return;
     }
 
-    const toolbarCard = view.options?.toolbarCards?.[databaseId];
-
-    // Check if the user has hidden the database's card
-    if (toolbarCard?.hidden) {
-      return [];
-    }
-
-    return [{ databaseId, templateId: toolbarCard?.templateId }];
-  }, [databaseId, view.options?.toolbarCards]);
+    scrollRootRef.current
+      ?.querySelector(
+        `[data-kanban-column="${CSS.escape(pendingRenameValue)}"]`,
+      )
+      ?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  }, [pendingRenameValue]);
 
   // Persist the updated entry order to the view data
   const updateOrder = useCallback(
@@ -143,6 +159,126 @@ export const KanbanViewComponent: React.FC<
       DataViews.update(view.id, { data: { order: updatedOrder } });
     },
     [view.id],
+  );
+
+  // Track the column or heading under the pointer, whose heading
+  // shows its actions. Tracked in state rather than via :hover,
+  // whose CSS state goes stale over scrolled content in WebKit,
+  // and because the heading and its column body sit in separate
+  // rows a plain :hover could not pair. Also fed by drag over
+  // events, since mouse events do not fire while dragging cards.
+  const handleBoardMouseMove = useCallback((event: React.MouseEvent) => {
+    const target = event.target instanceof Element ? event.target : null;
+
+    setHoveredColumnValue(
+      target
+        ?.closest('[data-kanban-column]')
+        ?.getAttribute('data-kanban-column') ?? null,
+    );
+  }, []);
+
+  // Clear the hovered column when the pointer leaves the board
+  const handleBoardMouseLeave = useCallback(() => {
+    setHoveredColumnValue(null);
+  }, []);
+
+  // Reorder the group property's options to match the dragged
+  // headings, keeping hidden columns in place.
+  const handleColumnSort = useCallback(
+    (orderedValues: string[]) => {
+      // Check that a group property resolved to write the order to
+      if (!property || !databaseId) {
+        return;
+      }
+
+      Databases.updateProperty(databaseId, {
+        ...property,
+        options: resolveReorderedOptions(
+          property.options,
+          orderedValues.filter((value) => value !== NO_VALUE_COLUMN),
+        ),
+      });
+    },
+    [property, databaseId],
+  );
+
+  // Rename a column's option, which also rewrites the value in
+  // the entries holding it.
+  const handleRenameColumn = useCallback(
+    (value: string, newValue: string) => {
+      // Check that a group property resolved to rename the option of
+      if (!property || !databaseId) {
+        return;
+      }
+
+      // Re-key the column's saved order optimistically, so its
+      // card order holds while the rename settles. The option
+      // renamed event re-keys other views over the database.
+      if (order[value]) {
+        updateOrder(
+          Object.fromEntries(
+            Object.entries(order).map(([orderValue, entryIds]) => [
+              orderValue === value ? newValue : orderValue,
+              entryIds,
+            ]),
+          ),
+        );
+      }
+
+      Databases.renamePropertyOption(
+        databaseId,
+        property.name,
+        value,
+        newValue,
+      );
+    },
+    [property, databaseId, order, updateOrder],
+  );
+
+  // Recolour a column's option
+  const handleSetColumnColor = useCallback(
+    (value: string, color: ContentColor) => {
+      // Check that a group property resolved to recolour the option of
+      if (!property || !databaseId) {
+        return;
+      }
+
+      Databases.updateProperty(databaseId, {
+        ...property,
+        options: property.options.map((option) =>
+          option.value === value ? { ...option, color } : option,
+        ),
+      });
+    },
+    [property, databaseId],
+  );
+
+  // Delete a column by removing its option from the group
+  // property. Entries holding the value fall into the no-value
+  // column.
+  const handleDeleteColumn = useCallback(
+    (value: string) => {
+      // Check that a group property resolved to remove the option from
+      if (!property || !databaseId) {
+        return;
+      }
+
+      Databases.updateProperty(databaseId, {
+        ...property,
+        options: property.options.filter((option) => option.value !== value),
+      });
+    },
+    [property, databaseId],
+  );
+
+  // Hide a column from the board
+  const handleHideColumn = useCallback(
+    (value: string) => {
+      DataViews.updateOptions(view.id, {
+        hiddenOptions: [...(view.options?.hiddenOptions ?? []), value],
+      });
+    },
+    [view.id, view.options?.hiddenOptions],
   );
 
   // Move an entry into a column, both positioning it and writing
@@ -191,49 +327,39 @@ export const KanbanViewComponent: React.FC<
     });
   }, []);
 
-  // Create an entry in a column, optionally from an entry
-  // template, giving it the column's group property value.
-  const createEntry = useCallback(
-    async (
-      newEntryDatabaseId: DatabaseId,
-      columnValue: string,
-      entryIndex: number,
-      templateId?: string,
-    ) => {
-      // Check that a group property is available, since the
-      // column's value is written to it.
-      if (!property) {
+  // Create an entry at the top of a column via its heading's new
+  // entry button, giving it the column's group property value.
+  const handleCreateColumnEntry = useCallback(
+    async (columnValue: string) => {
+      // Check that a group property resolved, since the column's
+      // value is written to it.
+      if (!property || !databaseId) {
         return;
       }
 
-      // Create the entry, from the template when the card has one
-      const entry = templateId
-        ? await DatabaseEntries.createFromTemplate(
-            newEntryDatabaseId,
-            templateId,
-          )
-        : await DatabaseEntries.create(newEntryDatabaseId);
+      // Give entries created in an option's column the option's
+      // value from the start, so they never pass through the
+      // no-value column.
+      const columnProperties =
+        columnValue !== NO_VALUE_COLUMN
+          ? { [property.name]: applyColumnValue(null, property, columnValue) }
+          : {};
 
-      // Position the entry before it enters the view, otherwise
-      // it briefly appears at the bottom of its column.
-      updateOrder(placeEntryInColumn(order, entry.id, columnValue, entryIndex));
+      const entry = await DatabaseEntries.create(
+        databaseId,
+        undefined,
+        columnProperties,
+      );
+
+      // Position the entry at the top of the column
+      updateOrder(placeEntryInColumn(order, entry.id, columnValue, 0));
 
       // Autofocus the new entry's editor once its card mounts
       setAutoFocusEntryId(entry.id);
 
-      // Bring the new entry's card into view if the drop position
-      // only partially fit on screen.
+      // Bring the new entry's card into view if the column's top
+      // sits off screen
       scrollEntryIntoView(entry.id);
-
-      // Check if the entry was created in an option's column. If
-      // so, it takes the option's value.
-      if (columnValue !== NO_VALUE_COLUMN) {
-        await DatabaseEntries.updateProperty(
-          entry.id,
-          property.name,
-          applyColumnValue(null, property, columnValue),
-        );
-      }
 
       // Check if the source is a collection. Collections list
       // their entries explicitly, unlike databases and queries.
@@ -243,6 +369,7 @@ export const KanbanViewComponent: React.FC<
     },
     [
       property,
+      databaseId,
       order,
       updateOrder,
       scrollEntryIntoView,
@@ -256,13 +383,12 @@ export const KanbanViewComponent: React.FC<
     setAutoFocusEntryId(undefined);
   }, []);
 
-  // Handle dropping an entry, new entry card, or add existing
-  // entry card into a column.
+  // Handle dropping an entry into a column
   const handleColumnDrop = useCallback(
     async (
       data: DropEventData,
       columnValue: string,
-      rawTargetEntryIndex: number,
+      targetEntryIndex: number,
     ) => {
       // Check that a group property is available to write the
       // column's value to
@@ -270,232 +396,66 @@ export const KanbanViewComponent: React.FC<
         return;
       }
 
-      // Shift drops below the picker back into column order
-      // positions. While the picker is open in the target column
-      // it occupies a slot the column order does not have.
-      const targetEntryIndex =
-        entryPicker &&
-        entryPicker.columnValue === columnValue &&
-        rawTargetEntryIndex > entryPicker.entryIndex
-          ? rawTargetEntryIndex - 1
-          : rawTargetEntryIndex;
-
-      // The type of picker card dropped, if any
-      const pickerType = droppedPickerType(data);
-
-      // Check if a picker card was dropped. If so, its picker
-      // spawns at the drop position.
-      if (pickerType) {
-        setEntryPicker({
-          type: pickerType,
-          columnValue,
-          entryIndex: targetEntryIndex,
-        });
-
-        return;
-      }
-
-      // The existing entry dropped, if any
+      // The dropped entry, if any
       const [droppedEntryId] = getDroppedEntryIds(data);
 
-      // Check if an existing entry was dropped. If so, it moves
-      // to the drop position and takes the column's value.
-      if (droppedEntryId) {
-        await moveEntryToColumn(
-          droppedEntryId,
-          property,
-          columnValue,
-          targetEntryIndex,
-        );
-
+      // Check that an entry was dropped
+      if (!droppedEntryId) {
         return;
       }
 
-      // The database of the new entry card dropped, if any
-      const [newEntryDatabaseId] = getDroppedNewEntryDatabaseIds(data);
-
-      // Check that a new entry card was dropped
-      if (!newEntryDatabaseId) {
-        return;
-      }
-
-      // Create the entry at the drop position, using the card's
-      // configured template when set.
-      await createEntry(
-        newEntryDatabaseId,
+      // Move the entry to the drop position, taking the column's
+      // value
+      await moveEntryToColumn(
+        droppedEntryId,
+        property,
         columnValue,
         targetEntryIndex,
-        toolbarCardTemplateId(view.options, newEntryDatabaseId),
       );
     },
-    [property, entryPicker, moveEntryToColumn, createEntry, view.options],
+    [property, moveEntryToColumn],
   );
 
-  // Handle picking an existing entry, replacing the picker
-  const handleEntryPickerSelect = useCallback(
-    async (entryId: string) => {
-      // Check that the picker and a group property are still
-      // available
-      if (!entryPicker || !property) {
-        return;
-      }
+  // Render a column's heading with its sortable render props
+  function renderColumnHeading(
+    value: string,
+    sortable: SortableItemRenderProps,
+  ) {
+    const column = visibleColumns.find(
+      (candidate) => candidate.value === value,
+    );
 
-      // Close the picker
-      setEntryPicker(null);
-
-      // Check if the source is a collection. Collections list
-      // their entries explicitly, unlike databases and queries.
-      if (view.dataSource.type === 'collection') {
-        await Collections.addItems(view.dataSource.id, [entryId]);
-      }
-
-      // Move the entry to the picker's position
-      await moveEntryToColumn(
-        entryId,
-        property,
-        entryPicker.columnValue,
-        entryPicker.entryIndex,
-      );
-    },
-    [
-      entryPicker,
-      property,
-      moveEntryToColumn,
-      view.dataSource.type,
-      view.dataSource.id,
-    ],
-  );
-
-  // Handle picking an entry while keeping the picker open
-  const handleEntryPickerSecondarySelect = useCallback(
-    async (entryId: string) => {
-      // Check that the picker and a group property are still
-      // available
-      if (!entryPicker || !property) {
-        return;
-      }
-
-      // Shift the picker down a slot, so that the entry lands
-      // above it.
-      setEntryPicker({
-        ...entryPicker,
-        entryIndex: entryPicker.entryIndex + 1,
-      });
-
-      // Check if the source is a collection. Collections list
-      // their entries explicitly, unlike databases and queries.
-      if (view.dataSource.type === 'collection') {
-        await Collections.addItems(view.dataSource.id, [entryId]);
-      }
-
-      // Move the entry to the picker's old position
-      await moveEntryToColumn(
-        entryId,
-        property,
-        entryPicker.columnValue,
-        entryPicker.entryIndex,
-      );
-    },
-    [
-      entryPicker,
-      property,
-      moveEntryToColumn,
-      view.dataSource.type,
-      view.dataSource.id,
-    ],
-  );
-
-  // Handle picking a database to create a new entry in, replacing
-  // the picker.
-  const handleNewEntryPickerSelect = useCallback(
-    async (newEntryDatabaseId: DatabaseId, templateId?: string) => {
-      // Check that the picker is still open
-      if (!entryPicker) {
-        return;
-      }
-
-      // Close the picker
-      setEntryPicker(null);
-
-      // Create the entry at the picker's position
-      await createEntry(
-        newEntryDatabaseId,
-        entryPicker.columnValue,
-        entryPicker.entryIndex,
-        templateId,
-      );
-    },
-    [entryPicker, createEntry],
-  );
-
-  // Handle picking a database while keeping the picker open
-  const handleNewEntryPickerSecondarySelect = useCallback(
-    async (newEntryDatabaseId: DatabaseId, templateId?: string) => {
-      // Check that the picker is still open
-      if (!entryPicker) {
-        return;
-      }
-
-      // Shift the picker down a slot, so that the new entry lands
-      // above it.
-      setEntryPicker({
-        ...entryPicker,
-        entryIndex: entryPicker.entryIndex + 1,
-      });
-
-      // Create the entry at the picker's old position
-      await createEntry(
-        newEntryDatabaseId,
-        entryPicker.columnValue,
-        entryPicker.entryIndex,
-        templateId,
-      );
-    },
-    [entryPicker, createEntry],
-  );
-
-  // Handle dismissing the picker without a selection
-  const handleEntryPickerDismiss = useCallback(() => {
-    setEntryPicker(null);
-  }, []);
-
-  // Render the picker active in the given column, if any
-  function renderColumnPicker(columnValue: string) {
-    // Check if a picker is active in this column
-    if (entryPicker?.columnValue !== columnValue) {
-      return undefined;
+    // Check that the value still names a visible column
+    if (!column) {
+      return null;
     }
 
-    // Check if the picker creates a new entry, in which case the
-    // database picker is rendered.
-    if (entryPicker.type === 'new') {
-      return (
-        <DataViewNewEntryPicker
-          scrollIntoView
-          className="kanban-view-picker"
-          onSelect={handleNewEntryPickerSelect}
-          onSecondarySelect={handleNewEntryPickerSecondarySelect}
-          onDismiss={handleEntryPickerDismiss}
-        />
-      );
-    }
-
-    // Render the existing entry picker, which adds an entry to
-    // the board.
     return (
-      <DataViewEntryPicker
-        scrollIntoView
-        className="kanban-view-picker"
-        excludeIds={entries}
-        onSelect={handleEntryPickerSelect}
-        onSecondarySelect={handleEntryPickerSecondarySelect}
-        onDismiss={handleEntryPickerDismiss}
+      <KanbanViewColumnHeading
+        column={column}
+        sortable={sortable}
+        draggable={canManageColumns && value !== NO_VALUE_COLUMN}
+        canManage={canManageColumns}
+        canCreateEntry={canManageColumns && canCreateEntries}
+        actionsVisible={hoveredColumnValue === value}
+        existingValues={property?.options.map((option) => option.value)}
+        autoOpenRename={pendingRenameValue === value}
+        onRenameAutoOpened={clearPendingColumnRename}
+        onRename={handleRenameColumn}
+        onSetColor={handleSetColumnColor}
+        onHide={handleHideColumn}
+        onDelete={handleDeleteColumn}
+        onCreateEntry={handleCreateColumnEntry}
       />
     );
   }
 
   // The classes styling the columns
   const columnClasses = resolveColumnClasses(view.options);
+
+  // Whether the group property's options can be managed from the
+  // board.
+  const canManageColumns = Boolean(property && databaseId);
 
   // Whether each column's cards scroll on their own
   const columnScroll =
@@ -524,16 +484,26 @@ export const KanbanViewComponent: React.FC<
   return (
     <ScrollArea
       ref={scrollRootRef}
-      className="kanban-view-scroll floating-toolbar-host"
+      viewportRef={scrollViewportRef}
+      className="kanban-view-scroll"
       stateKey="content"
     >
-      <Stack gap={0} className={`kanban-view ${columnClasses}`.trim()}>
-        {/** Column headings **/}
-        <Group gap={4} align="stretch" className="kanban-view-headings">
-          {columns.map((column) => (
-            <KanbanViewColumnHeading key={column.value} column={column} />
-          ))}
-        </Group>
+      <Stack
+        gap={0}
+        className={`kanban-view ${columnClasses}`.trim()}
+        onMouseMove={handleBoardMouseMove}
+        onMouseLeave={handleBoardMouseLeave}
+        onDragOver={handleBoardMouseMove}
+      >
+        {/** Column headings, draggable to reorder the options **/}
+        <SortableList
+          items={visibleColumns.map((column) => column.value)}
+          direction="horizontal"
+          gap={0}
+          className="kanban-view-headings"
+          onSort={handleColumnSort}
+          renderItem={renderColumnHeading}
+        />
 
         {/** Column bodies **/}
         <DatabaseEntryContextProvider
@@ -544,40 +514,18 @@ export const KanbanViewComponent: React.FC<
           onEntryAutoFocused={handleEntryAutoFocused}
         >
           <Group gap={4} align="stretch" className="kanban-view-columns">
-            {columns.map((column) => (
+            {visibleColumns.map((column) => (
               <KanbanViewColumn
                 key={column.value}
                 column={column}
                 scroll={columnScroll}
                 entryCardLayouts={entryCardLayouts}
-                picker={renderColumnPicker(column.value)}
-                pickerIndex={
-                  entryPicker?.columnValue === column.value
-                    ? entryPicker.entryIndex
-                    : undefined
-                }
                 onDrop={handleColumnDrop}
               />
             ))}
           </Group>
         </DatabaseEntryContextProvider>
       </Stack>
-
-      {/** Floating toolbar **/}
-      {canCreateEntries ? (
-        <DataViewFloatingToolbar
-          databaseCards={toolbarDatabaseCards}
-          menuOpen={optionsMenuOpen}
-        >
-          {/** View settings menu **/}
-          <DataViewOptionsMenu view={view} onOpenChange={setOptionsMenuOpen} />
-        </DataViewFloatingToolbar>
-      ) : (
-        <ViewFloatingToolbar menuOpen={optionsMenuOpen}>
-          {/** View settings menu **/}
-          <DataViewOptionsMenu view={view} onOpenChange={setOptionsMenuOpen} />
-        </ViewFloatingToolbar>
-      )}
     </ScrollArea>
   );
 };
@@ -615,55 +563,4 @@ function resolveColumnClasses(
   }
 
   return classes.join(' ');
-}
-
-/**
- * Resolves the entry template configured for a database's toolbar
- * card, ignoring templates which no longer exist.
- *
- * @param options - The view's options.
- * @param databaseId - The ID of the database whose card is being used.
- * @returns The ID of the card's entry template, or undefined when it has none.
- */
-function toolbarCardTemplateId(
-  options: Partial<KanbanViewOptions> | undefined,
-  databaseId: DatabaseId,
-): string | undefined {
-  const templateId = options?.toolbarCards?.[databaseId]?.templateId;
-
-  // Check if a template is configured for the card
-  if (!templateId) {
-    return undefined;
-  }
-
-  // Check that the template still exists on the database
-  const database = Databases.get(databaseId, false);
-  const exists = database?.entryTemplates?.some(
-    (template) => template.id === templateId,
-  );
-
-  return exists ? templateId : undefined;
-}
-
-/**
- * Resolves the type of picker card contained in a drop.
- *
- * @param data - The drop event data.
- * @returns The type of picker the dropped card spawns, or null if it is not a picker card.
- */
-function droppedPickerType(
-  data: DropEventData,
-): EntryPickerState['type'] | null {
-  // Check for an add existing entry card, which spawns the
-  // existing entry picker.
-  if (dropContainsAddExistingEntryCard(data)) {
-    return 'existing';
-  }
-
-  // Check for a new entry card, which spawns the new entry picker
-  if (dropContainsNewEntryPickerCard(data)) {
-    return 'new';
-  }
-
-  return null;
 }

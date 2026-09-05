@@ -1966,10 +1966,25 @@ declare module 'i18next' {
               neutral: string;
               accent: string;
               scroll: string;
+              hideEmpty: string;
             };
-            toolbarCards: string;
-            showToolbarCard: string;
-            toolbarCardTemplate: string;
+            columns: {
+              add: string;
+              newColumn: string;
+              namePlaceholder: string;
+              nameTaken: string;
+              newEntry: string;
+              rename: string;
+              color: string;
+              hide: string;
+              visible: string;
+              delete: string;
+              deleteConfirmation: {
+                title: string;
+                message: string;
+                confirm: string;
+              };
+            };
           };
           gallery: {
             name: string;

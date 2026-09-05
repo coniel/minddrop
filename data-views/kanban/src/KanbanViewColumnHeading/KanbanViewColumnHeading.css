@@ -1,6 +1,73 @@
 /* Rounds off the top of the lane, which the column below it
    continues with a squared off top of its own */
 .kanban-view-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
   padding: var(--space-3) var(--space-2);
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+/* Fills the heading so that the whole label area works as the
+   column's drag handle */
+.kanban-view-heading-label {
+  flex: 1;
+  min-width: 0;
+  align-self: stretch;
+}
+
+/* Marks the label area as the column's drag handle. The chip
+   keeps its own cursor, as clicking it opens the rename popover
+   rather than starting a drag. */
+.kanban-view-heading-label-draggable {
+  cursor: grab;
+}
+
+.sortable-list-item-dragging .kanban-view-heading-label-draggable {
+  cursor: grabbing;
+}
+
+/* Bare wrapper letting the chip render as itself while making it
+   a button opening the rename popover */
+.kanban-view-heading-chip-button {
+  display: inline-flex;
+  padding: 0;
+  border: none;
+  background: none;
+  border-radius: var(--radius-sm);
+}
+
+/* Marks the chip as actionable */
+.kanban-view-heading-chip-button:hover .chip,
+.kanban-view-heading-chip-button[data-popup-open] .chip {
+  box-shadow: 0 0 0 var(--border-width-medium) var(--border-strong);
+}
+
+/* Fits the popover snugly around the rename controls */
+.kanban-view-heading-rename-popover {
+  padding: var(--space-1);
+}
+
+/* Aligns the error with the name field, clear of the popover's
+   tight edges */
+.kanban-view-heading-rename-error {
+  padding: 0 var(--space-2) var(--space-1);
+}
+
+/* Revealed while the pointer is over the column, tracked via the
+   active class rather than :hover, whose state goes stale over
+   scrolled content in WebKit. Kept visible while keyboard
+   focused or holding an open menu; plain focus does not reveal
+   them, as closing the menu returns focus to its trigger, which
+   would otherwise hold them visible. Hidden controls also drop
+   out of hit testing via the visibility toggle. */
+.kanban-view-heading-actions {
+  visibility: hidden;
+}
+
+.kanban-view-heading-active .kanban-view-heading-actions,
+.kanban-view-heading-actions:has(:focus-visible),
+.kanban-view-heading-actions:has([data-popup-open]) {
+  visibility: visible;
 }

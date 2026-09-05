@@ -126,4 +126,37 @@ describe('createDatabaseEntryFromTemplate', () => {
     // The removed property's value should not be set on the entry
     expect(entry.properties.Notes).toBeUndefined();
   });
+  it('creates the entry with the given property values', async () => {
+    const entry = await createDatabaseEntryFromTemplate(
+      entryTemplatesDatabase.id,
+      entryTemplate1.id,
+      { Status: 'Todo' },
+    );
+
+    expect(entry.properties.Status).toBe('Todo');
+  });
+
+  it("overrides the template's values with the given ones", async () => {
+    const entry = await createDatabaseEntryFromTemplate(
+      entryTemplatesDatabase.id,
+      entryTemplate1.id,
+      { Notes: 'Overridden notes' },
+    );
+
+    expect(entry.properties.Notes).toBe('Overridden notes');
+  });
+
+  it("overrides the template's file values without copying the file", async () => {
+    const entry = await createDatabaseEntryFromTemplate(
+      entryTemplatesDatabase.id,
+      entryTemplate1.id,
+      { Image: 'custom.png' },
+    );
+
+    // The given value should win over the template's file copy
+    expect(entry.properties.Image).toBe('custom.png');
+    expect(
+      MockFs.exists(`${entryTemplatesDatabase.path}/Image/template-image.png`),
+    ).toBeFalsy();
+  });
 });

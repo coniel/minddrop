@@ -1,8 +1,8 @@
 import { DataViewTypeSettingsMenuProps } from '@minddrop/data-views';
-import { Databases } from '@minddrop/databases';
 import { createI18nKeyBuilder } from '@minddrop/i18n';
 import { DatabaseLayoutSelectionMenu } from '@minddrop/ui-databases';
 import {
+  DropdownMenuItem,
   DropdownMenuPortal,
   DropdownMenuPositioner,
   DropdownMenuRadioGroup,
@@ -17,21 +17,20 @@ import {
   MenuGroup,
   MenuLabel,
 } from '@minddrop/ui-primitives';
+import { setPendingColumnRename } from '../PendingColumnRenameStore';
+import { addKanbanColumn } from '../addKanbanColumn';
 import {
   KANBAN_COLUMN_BACKGROUNDS,
   KANBAN_COLUMN_WIDTHS,
+  NO_VALUE_COLUMN,
   defaultKanbanViewOptions,
 } from '../constants';
 import {
   KanbanColumnBackground,
   KanbanColumnWidth,
   KanbanViewOptions,
-  KanbanViewToolbarCardOptions,
 } from '../types';
 import { useKanbanGroupProperty } from '../useKanbanGroupProperty';
-
-// Radio value representing a blank entry with no template
-const BLANK_ENTRY = 'blank';
 
 // Builds the keys of the column settings' labels, which are named
 // after the value they label
@@ -50,15 +49,15 @@ const columnBackgroundItems: DropdownRadioSubmenuItem[] =
 /**
  * Renders the kanban view settings menu content with a picker
  * for the select property the columns are generated from, the
- * column width and background, a card layout picker, and the
- * toolbar card settings.
+ * column visibility and styling settings, and a card layout
+ * picker.
  */
 export const KanbanViewOptionsMenu: React.FC<
   DataViewTypeSettingsMenuProps<KanbanViewOptions>
 > = ({ view, options, onUpdateOptions }) => {
   const { available, property, databaseId } = useKanbanGroupProperty(view);
 
-  // The database IDs the layout and toolbar card pickers address
+  // The database IDs the card layout picker addresses
   const databaseIds = databaseId ? [databaseId] : [];
 
   // The column styling settings, falling back to the defaults
@@ -68,6 +67,9 @@ export const KanbanViewOptionsMenu: React.FC<
     options.columnBackground ?? defaultKanbanViewOptions.columnBackground;
   const columnScroll =
     options.columnScroll ?? defaultKanbanViewOptions.columnScroll;
+
+  // The option values of the hidden columns
+  const hiddenOptions = options.hiddenOptions ?? [];
 
   // Set the select property the columns are generated from
   function handleGroupByChange(propertyName: string) {
@@ -99,6 +101,33 @@ export const KanbanViewOptionsMenu: React.FC<
     onUpdateOptions({ columnScroll: checked });
   }
 
+  // Set whether columns holding no entries are hidden
+  function handleHideEmptyChange(checked: boolean) {
+    onUpdateOptions({ hideEmptyColumns: checked });
+  }
+
+  // Show or hide a column on the board
+  function handleColumnVisibilityChange(value: string, visible: boolean) {
+    onUpdateOptions({
+      hiddenOptions: visible
+        ? hiddenOptions.filter((hiddenValue) => hiddenValue !== value)
+        : [...hiddenOptions, value],
+    });
+  }
+
+  // Add a column with a default name to the group property,
+  // handing it over to the board to open its rename popover.
+  async function handleAddColumn() {
+    // Check that a group property resolved to append the option to
+    if (!property || !databaseId) {
+      return;
+    }
+
+    const value = await addKanbanColumn(databaseId, property);
+
+    setPendingColumnRename(view.id, value);
+  }
+
   // Set the card layout override for the database the selection
   // belongs to.
   function handleLayoutChange(layoutId: string, layoutDatabaseId?: string) {
@@ -111,19 +140,6 @@ export const KanbanViewOptionsMenu: React.FC<
       cardLayoutOverrides: {
         ...options.cardLayoutOverrides,
         [layoutDatabaseId]: layoutId,
-      },
-    });
-  }
-
-  // Set a database's toolbar card configuration
-  function handleToolbarCardChange(
-    cardDatabaseId: string,
-    cardOptions: KanbanViewToolbarCardOptions,
-  ) {
-    onUpdateOptions({
-      toolbarCards: {
-        ...options.toolbarCards,
-        [cardDatabaseId]: cardOptions,
       },
     });
   }
@@ -154,6 +170,36 @@ export const KanbanViewOptionsMenu: React.FC<
       {/** Column settings **/}
       <MenuGroup>
         <MenuLabel label="dataViews.kanban.options.columns" />
+        {/** Per-column visibility switches **/}
+        {property && (
+          <DropdownSubmenu>
+            <DropdownSubmenuTriggerItem label="dataViews.kanban.columns.visible" />
+            <DropdownMenuPortal>
+              <DropdownMenuPositioner side="right" align="start" sideOffset={4}>
+                <DropdownSubmenuContent>
+                  <DropdownMenuSwitchItem
+                    label="dataViews.kanban.noValue"
+                    checked={!hiddenOptions.includes(NO_VALUE_COLUMN)}
+                    onCheckedChange={(visible) =>
+                      handleColumnVisibilityChange(NO_VALUE_COLUMN, visible)
+                    }
+                  />
+                  {property.options.map((option) => (
+                    <DropdownMenuSwitchItem
+                      key={option.value}
+                      stringLabel={option.value}
+                      checked={!hiddenOptions.includes(option.value)}
+                      onCheckedChange={(visible) =>
+                        handleColumnVisibilityChange(option.value, visible)
+                      }
+                    />
+                  ))}
+                </DropdownSubmenuContent>
+              </DropdownMenuPositioner>
+            </DropdownMenuPortal>
+          </DropdownSubmenu>
+        )}
+
         <DropdownRadioSubmenu
           label="dataViews.kanban.options.width"
           items={columnWidthItems}
@@ -173,6 +219,21 @@ export const KanbanViewOptionsMenu: React.FC<
           checked={columnScroll}
           onCheckedChange={handleColumnScrollChange}
         />
+
+        <DropdownMenuSwitchItem
+          label="dataViews.kanban.options.hideEmpty"
+          checked={options.hideEmptyColumns ?? false}
+          onCheckedChange={handleHideEmptyChange}
+        />
+
+        {/** Add column with a default name **/}
+        {property && (
+          <DropdownMenuItem
+            icon="plus"
+            label="dataViews.kanban.columns.add"
+            onSelect={handleAddColumn}
+          />
+        )}
       </MenuGroup>
 
       <DropdownMenuSeparator />
@@ -184,27 +245,6 @@ export const KanbanViewOptionsMenu: React.FC<
         value={options.cardLayoutOverrides || {}}
         onValueChange={handleLayoutChange}
       />
-
-      {/** Toolbar card settings, hidden when there are no cards **/}
-      {databaseIds.length > 0 && (
-        <>
-          <DropdownMenuSeparator />
-
-          <MenuGroup>
-            <MenuLabel label="dataViews.kanban.toolbarCards" />
-            {databaseIds.map((cardDatabaseId) => (
-              <ToolbarCardMenu
-                key={cardDatabaseId}
-                databaseId={cardDatabaseId}
-                cardOptions={options.toolbarCards?.[cardDatabaseId] || {}}
-                onChange={(cardOptions) =>
-                  handleToolbarCardChange(cardDatabaseId, cardOptions)
-                }
-              />
-            ))}
-          </MenuGroup>
-        </>
-      )}
     </>
   );
 };
@@ -218,111 +258,3 @@ function isColumnWidth(value: string): value is KanbanColumnWidth {
 function isColumnBackground(value: string): value is KanbanColumnBackground {
   return KANBAN_COLUMN_BACKGROUNDS.some((background) => background === value);
 }
-
-interface ToolbarCardMenuProps {
-  /**
-   * The ID of the database whose toolbar card is configured.
-   */
-  databaseId: string;
-
-  /**
-   * The card's current configuration.
-   */
-  cardOptions: KanbanViewToolbarCardOptions;
-
-  /**
-   * Called with the card's updated configuration.
-   */
-  onChange: (cardOptions: KanbanViewToolbarCardOptions) => void;
-}
-
-/**
- * Renders a database's toolbar card settings. Databases without
- * entry templates render as a plain visibility switch. Databases
- * with templates render as a submenu containing the visibility
- * switch and the template used when creating entries via the card.
- */
-const ToolbarCardMenu: React.FC<ToolbarCardMenuProps> = ({
-  databaseId,
-  cardOptions,
-  onChange,
-}) => {
-  const database = Databases.use(databaseId);
-
-  // Check that the database is still available
-  if (!database) {
-    return null;
-  }
-
-  // The entry templates the card can create entries from
-  const templates = database.entryTemplates ?? [];
-
-  // Toggle the card's visibility in the toolbar
-  function handleVisibilityChange(visible: boolean) {
-    onChange({ ...cardOptions, hidden: !visible });
-  }
-
-  // Set the template used by the card, clearing it when the
-  // blank entry option is selected.
-  function handleTemplateChange(value: string) {
-    const { templateId, ...rest } = cardOptions;
-
-    onChange(value === BLANK_ENTRY ? rest : { ...rest, templateId: value });
-  }
-
-  // Check if the database has templates. Without them the card
-  // renders as a plain visibility switch.
-  if (templates.length === 0) {
-    return (
-      <DropdownMenuSwitchItem
-        stringLabel={database.name}
-        contentIcon={database.icon}
-        checked={!cardOptions.hidden}
-        onCheckedChange={handleVisibilityChange}
-      />
-    );
-  }
-
-  return (
-    <DropdownSubmenu>
-      <DropdownSubmenuTriggerItem
-        stringLabel={database.name}
-        contentIcon={database.icon}
-      />
-      <DropdownMenuPortal>
-        <DropdownMenuPositioner side="right" align="start" sideOffset={4}>
-          <DropdownSubmenuContent>
-            {/** Toolbar visibility switch **/}
-            <DropdownMenuSwitchItem
-              label="dataViews.kanban.showToolbarCard"
-              checked={!cardOptions.hidden}
-              onCheckedChange={handleVisibilityChange}
-            />
-
-            {/** Template picker **/}
-            <DropdownMenuSeparator />
-            <MenuGroup>
-              <MenuLabel label="dataViews.kanban.toolbarCardTemplate" />
-              <DropdownMenuRadioGroup
-                value={cardOptions.templateId || BLANK_ENTRY}
-                onValueChange={handleTemplateChange}
-              >
-                <DropdownMenuRadioItem
-                  value={BLANK_ENTRY}
-                  label="databases.entryTemplates.menus.blankEntry"
-                />
-                {templates.map((template) => (
-                  <DropdownMenuRadioItem
-                    key={template.id}
-                    value={template.id}
-                    stringLabel={template.name}
-                  />
-                ))}
-              </DropdownMenuRadioGroup>
-            </MenuGroup>
-          </DropdownSubmenuContent>
-        </DropdownMenuPositioner>
-      </DropdownMenuPortal>
-    </DropdownSubmenu>
-  );
-};

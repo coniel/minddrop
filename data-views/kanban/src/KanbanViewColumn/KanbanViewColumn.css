@@ -21,6 +21,10 @@
 
 .kanban-view-columns-scroll .kanban-view-column-content {
   padding-bottom: var(--space-2);
+  /* Fills the scrollport, where the flex growth sizing the
+     container in the non-scrolling mode does not apply, so that
+     a column's empty space accepts drops too */
+  min-height: 100%;
 }
 
 .kanban-view-column-scroll {
