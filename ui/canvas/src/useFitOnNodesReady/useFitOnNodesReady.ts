@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { useCanvasContext } from './CanvasContext';
+import { useCanvasContext } from '../CanvasContext';
 
 /**
  * Number of animation frames to wait for the expected nodes to
@@ -38,7 +38,10 @@ export function useFitOnNodesReady(
     let done = false;
 
     // Fits the view if the viewport is measured and all expected
-    // nodes have registered, returning whether it fitted
+    // nodes have registered, returning whether it fitted. Marks
+    // the fit done before moving the view, since the move notifies
+    // the store subscription below which would otherwise fit
+    // again re-entrantly.
     const tryFit = (): boolean => {
       const viewportSize = store.getViewportSize();
 
@@ -49,6 +52,7 @@ export function useFitOnNodesReady(
 
       // No nodes are expected, reset to the default view
       if (!idsRef.current.length) {
+        done = true;
         store.resetView();
 
         return true;
@@ -59,6 +63,7 @@ export function useFitOnNodesReady(
         return false;
       }
 
+      done = true;
       store.fitToView();
 
       return true;
@@ -72,7 +77,6 @@ export function useFitOnNodesReady(
     // Retry on every store change until the nodes are ready
     const unsubscribe = store.useStore.subscribe(() => {
       if (!done && tryFit()) {
-        done = true;
         unsubscribe();
       }
     });
