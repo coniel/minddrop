@@ -5,8 +5,8 @@ import { DatabaseEntryDeletedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntry } from '../getDatabaseEntry';
 import {
-  resolveEntryPropertyFilePaths,
   resolveEntryMetadataFilePath,
+  resolveEntryPropertyFilePaths,
 } from '../utils';
 
 /**

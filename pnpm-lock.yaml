@@ -1627,6 +1627,9 @@ importers:
       '@minddrop/file-system':
         specifier: workspace:*
         version: link:../file-system
+      '@minddrop/history':
+        specifier: workspace:*
+        version: link:../history
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../i18n

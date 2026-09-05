@@ -1,5 +1,11 @@
 import { Collections } from '@minddrop/collections';
 import { DataViews } from '@minddrop/data-views';
+import { History } from '@minddrop/history';
+import { isUntitledTitle } from '@minddrop/utils';
+import {
+  clearContentCapture,
+  contentCaptureKey,
+} from '../../contentCaptureRegistry';
 import { DatabaseEntryDeletedEventData } from '../../events';
 import { getDatabase } from '../../getDatabase';
 import { removeEntriesFromCollections } from '../../removeEntriesFromCollections';
@@ -8,8 +14,9 @@ import { virtualCollectionId } from '../../utils';
 
 /**
  * Called when a database entry is deleted. Removes from SQL,
- * deletes virtual collections for collection properties, and
- * removes the entry from collections referencing it.
+ * deletes virtual collections for collection properties, removes
+ * the entry from collections referencing it, and closes or deletes
+ * its history.
  */
 export async function onDeleteEntry(data: DatabaseEntryDeletedEventData) {
   // Delete from SQL
@@ -43,4 +50,28 @@ export async function onDeleteEntry(data: DatabaseEntryDeletedEventData) {
 
   // Remove the entry from view configs referencing it
   await DataViews.removeReferences([data.id]);
+
+  // Drop the entry's recorded capture, so an entry taking its title
+  // next is not measured against it.
+  clearContentCapture(contentCaptureKey(database.path, data.title));
+
+  // Check whether the entry was still untitled. Deleting it frees a
+  // title the app hands out, so the next new entry would inherit its
+  // history.
+  if (isUntitledTitle(data.title)) {
+    await History.delete({
+      ownerPath: database.path,
+      subjectKey: data.title,
+    });
+
+    return;
+  }
+
+  // Close the history of a named entry. It outlives the entry, so the
+  // entry can be restored from it.
+  await History.record({
+    ownerPath: database.path,
+    subjectKey: data.title,
+    kind: 'deleted',
+  });
 }

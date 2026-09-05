@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { Events } from '@minddrop/events';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabasesStore } from '../DatabasesStore';
 import {
@@ -6,6 +7,10 @@ import {
   DatabaseEntrySerializerNotRegisteredError,
   DatabaseNotFoundError,
 } from '../errors';
+import {
+  DatabaseEntryWrittenEvent,
+  DatabaseEntryWrittenEventData,
+} from '../events';
 import {
   MockFs,
   cleanup,
@@ -62,6 +67,57 @@ describe('writeDatabaseEntry', () => {
     await expect(writeDatabaseEntry(objectEntry1.id)).rejects.toThrow(
       DatabaseEntrySerializerNotRegisteredError,
     );
+  });
+
+  it('dispatches the written event with the contents either side of the write', async () => {
+    let data: DatabaseEntryWrittenEventData | null = null;
+
+    Events.addListener(DatabaseEntryWrittenEvent, 'test', (eventData) => {
+      data = eventData;
+    });
+
+    MockFs.writeTextFile(objectEntry1.path, 'The contents the write replaced');
+
+    await writeDatabaseEntry(objectEntry1.id);
+
+    expect(data).toEqual({
+      entry: objectEntry1,
+      database: objectDatabase,
+      previousContents: 'The contents the write replaced',
+      contents: MockFs.readTextFile(objectEntry1.path),
+    });
+  });
+
+  it('dispatches the written event without previous contents for a new file', async () => {
+    let data: DatabaseEntryWrittenEventData | null = null;
+
+    Events.addListener(DatabaseEntryWrittenEvent, 'test', (eventData) => {
+      data = eventData;
+    });
+
+    MockFs.removeFile(objectEntry1.path);
+
+    await writeDatabaseEntry(objectEntry1.id);
+
+    expect(data).toHaveProperty('previousContents', undefined);
+  });
+
+  it('does not write when the file already holds the serialized entry', async () => {
+    let dispatched = false;
+
+    // Write once so the file holds what a second write would produce
+    await writeDatabaseEntry(objectEntry1.id);
+
+    const contents = MockFs.readTextFile(objectEntry1.path);
+
+    Events.addListener(DatabaseEntryWrittenEvent, 'test', () => {
+      dispatched = true;
+    });
+
+    await writeDatabaseEntry(objectEntry1.id);
+
+    expect(dispatched).toBe(false);
+    expect(MockFs.readTextFile(objectEntry1.path)).toBe(contents);
   });
 
   it('ensures the entry subdirectory exists if the database uses entry based storage', async () => {

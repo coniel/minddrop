@@ -23,6 +23,7 @@ import {
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabaseEntrySerializersStore } from '../DatabaseEntrySerializersStore';
 import { DatabasesStore } from '../DatabasesStore';
+import { clearContentCaptureRegistry } from '../contentCaptureRegistry';
 import {
   matchDatabaseEntryReference,
   matchDatabaseReference,
@@ -85,6 +86,9 @@ export function cleanup() {
   // Unregister the item reference adapters
   unregisterItemReferenceAdapter('database-entry');
   unregisterItemReferenceAdapter('database');
+
+  // Clear the recorded content captures
+  clearContentCaptureRegistry();
 
   // Reset mock file system
   MockFs.reset();

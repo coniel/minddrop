@@ -1,3 +1,4 @@
+import { History } from '@minddrop/history';
 import { TagRenamedEventData } from '@minddrop/tags';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { getAllDatabaseEntries } from '../../getAllDatabaseEntries';
@@ -32,7 +33,7 @@ export async function onTagRenamed(data: TagRenamedEventData): Promise<void> {
 
     for (const entry of getAllDatabaseEntries(database.id)) {
       // Rewrite the entry's tags values
-      const updatedEntry = renameEntryTag(
+      const rewritten = renameEntryTag(
         entry,
         tagsPropertyNames,
         original.name,
@@ -40,18 +41,33 @@ export async function onTagRenamed(data: TagRenamedEventData): Promise<void> {
       );
 
       // Skip entries which do not reference the renamed tag
-      if (!updatedEntry) {
+      if (!rewritten) {
         continue;
       }
 
       // Update the entry in the store
-      DatabaseEntriesStore.update(entry.id, updatedEntry);
+      DatabaseEntriesStore.update(entry.id, rewritten.entry);
 
       // Write the updated entry to the file system
       await writeDatabaseEntry(entry.id);
 
+      // Record the rename against each property which held the tag
+      await Promise.all(
+        rewritten.properties.map((property) =>
+          History.record({
+            ownerPath: database.path,
+            subjectKey: entry.title,
+            kind: 'rename',
+            target: 'value-label',
+            property,
+            from: original.name,
+            to: updated.name,
+          }),
+        ),
+      );
+
       // Queue the entry's SQL record for the batch upsert
-      updatedRecords.push(convertEntryToSqlRecord(updatedEntry, database));
+      updatedRecords.push(convertEntryToSqlRecord(rewritten.entry, database));
     }
 
     // Update the SQL records with the rewritten values
@@ -63,16 +79,16 @@ export async function onTagRenamed(data: TagRenamedEventData): Promise<void> {
 
 /**
  * Returns a copy of the entry with the old tag name mapped to the
- * new one in its tags property values, or null when no value
- * references the old name.
+ * new one in its tags property values, alongside the properties
+ * which held it, or null when no value references the old name.
  */
 function renameEntryTag(
   entry: DatabaseEntry,
   tagsPropertyNames: string[],
   oldName: string,
   newName: string,
-): DatabaseEntry | null {
-  let changed = false;
+): { entry: DatabaseEntry; properties: string[] } | null {
+  const changedProperties: string[] = [];
   const properties = { ...entry.properties };
 
   for (const propertyName of tagsPropertyNames) {
@@ -87,8 +103,13 @@ function renameEntryTag(
     // name was already present
     const renamed = value.map((name) => (name === oldName ? newName : name));
     properties[propertyName] = [...new Set(renamed)];
-    changed = true;
+    changedProperties.push(propertyName);
   }
 
-  return changed ? { ...entry, properties } : null;
+  // Check whether any of the entry's properties held the tag
+  if (!changedProperties.length) {
+    return null;
+  }
+
+  return { entry: { ...entry, properties }, properties: changedProperties };
 }

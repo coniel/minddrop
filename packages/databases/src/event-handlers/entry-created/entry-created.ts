@@ -1,4 +1,5 @@
 import { Collections } from '@minddrop/collections';
+import { History } from '@minddrop/history';
 import { DatabaseEntryCreatedEventData } from '../../events';
 import { getDatabase } from '../../getDatabase';
 import { sqlUpsertEntries } from '../../sql';
@@ -9,16 +10,24 @@ import {
 } from '../../utils';
 
 /**
- * Called when a database entry is created. Syncs to SQL and
- * creates virtual collections for collection properties.
+ * Called when a database entry is created. Syncs to SQL, opens the
+ * entry's history and creates virtual collections for collection
+ * properties.
  */
-export function onCreateEntry(data: DatabaseEntryCreatedEventData) {
+export async function onCreateEntry(data: DatabaseEntryCreatedEventData) {
   // Get the database to access its properties schema
   const database = getDatabase(data.database);
 
   // Sync to SQL
   const record = convertEntryToSqlRecord(data, database);
   sqlUpsertEntries(database.id, [record]);
+
+  // Open the entry's history
+  await History.record({
+    ownerPath: database.path,
+    subjectKey: data.title,
+    kind: 'created',
+  });
 
   // Find all collection properties in the schema
   const collectionProperties = database.properties.filter(

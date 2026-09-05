@@ -3,6 +3,7 @@ import { Collections } from '@minddrop/collections';
 import { DataViews } from '@minddrop/data-views';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { Events } from '@minddrop/events';
+import { History } from '@minddrop/history';
 import { ItemAddressesChangedEvent } from '@minddrop/item-references';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { sqlGetAllEntriesFull, sqlUpsertDatabase } from '../../sql';
@@ -13,6 +14,7 @@ import {
   collectionDatabase,
   collectionEntry1,
   databases,
+  objectDatabase,
   objectEntry1,
   relatedEntry1,
   setup,
@@ -274,5 +276,36 @@ describe('onRenameEntry', () => {
         virtualCollectionId(collectionEntry1.id, 'Related'),
       ),
     ).not.toBeNull();
+  });
+
+  it("records the rename and moves the entry's history", async () => {
+    // Record something against the entry under its old title
+    await History.record({
+      ownerPath: objectDatabase.path,
+      subjectKey: objectEntry1.title,
+      kind: 'created',
+    });
+
+    await onRenameEntry({
+      original: objectEntry1,
+      updated: { ...objectEntry1, title: 'Renamed' },
+    });
+
+    // The history should have followed the entry to its new title,
+    // with the rename recorded in it.
+    expect(
+      await History.read({
+        ownerPath: objectDatabase.path,
+        subjectKey: 'Renamed',
+      }),
+    ).toEqual([
+      expect.objectContaining({ kind: 'created' }),
+      expect.objectContaining({
+        kind: 'rename',
+        target: 'self',
+        from: objectEntry1.title,
+        to: 'Renamed',
+      }),
+    ]);
   });
 });

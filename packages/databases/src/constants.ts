@@ -9,6 +9,22 @@ export const EntryConversionBackupDirName = 'entry-conversion-backup';
 export const PropertyFilesDirNameKey = 'databases.propertyFilesDirName';
 
 /**
+ * How long an entry must go uncaptured before the next write to it
+ * captures its content again, so that a burst of saves costs one
+ * capture at its start rather than one per save.
+ */
+export const ContentCaptureGapMs = 5 * 60 * 1000;
+
+/**
+ * Size thresholds which stretch the capture gap for large entries,
+ * ordered largest first.
+ */
+export const ContentCaptureSizeBands = [
+  { minBytes: 10_000_000, multiplier: 12 },
+  { minBytes: 1_000_000, multiplier: 4 },
+];
+
+/**
  * The icon used to represent databases in the UI.
  */
 export const DatabasesIcon: UiIconName = 'database';

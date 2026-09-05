@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { History } from '@minddrop/history';
 import { TagFixtures } from '@minddrop/tags/test-utils';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabasesStore } from '../../DatabasesStore';
@@ -137,5 +138,47 @@ describe('onTagRenamed', () => {
     // The tagless database's entry should be unchanged
     const entry = DatabaseEntriesStore.get(objectEntry1.id);
     expect(entry).toEqual(objectEntry1);
+  });
+
+  it('records the rename against the property holding the tag', async () => {
+    await onTagRenamed({ original: originalTag, updated: renamedTag });
+
+    const records = await History.read({
+      ownerPath: tagsDatabase.path,
+      subjectKey: taggedEntry.title,
+    });
+
+    expect(records).toContainEqual(
+      expect.objectContaining({
+        kind: 'rename',
+        target: 'value-label',
+        property: 'Tags',
+        from: 'Urgent',
+        to: 'Later',
+      }),
+    );
+  });
+
+  it('records nothing against entries which do not hold the tag', async () => {
+    // An entry in the same database whose tags do not include the
+    // renamed one
+    const untagged = {
+      ...taggedEntry,
+      id: 'database-entry_untagged-entry' as const,
+      title: 'Untagged Entry',
+      path: `${tagsDatabase.path}/Untagged Entry.md`,
+      properties: { ...taggedEntry.properties, Tags: ['Home'] },
+    };
+
+    DatabaseEntriesStore.set(untagged);
+
+    await onTagRenamed({ original: originalTag, updated: renamedTag });
+
+    expect(
+      await History.read({
+        ownerPath: tagsDatabase.path,
+        subjectKey: untagged.title,
+      }),
+    ).toEqual([]);
   });
 });

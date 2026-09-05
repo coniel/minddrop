@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Collections } from '@minddrop/collections';
 import { DataViews } from '@minddrop/data-views';
 import { DataViewFixtures } from '@minddrop/data-views/test-utils';
+import { History } from '@minddrop/history';
 import {
   sqlGetEntrySyncRecords,
   sqlUpsertDatabase,
@@ -13,6 +14,7 @@ import {
   collectionDatabase,
   collectionEntry1,
   collectionEntry1SqlRecord,
+  objectDatabase,
   objectEntry1,
   relatedEntry1,
   relatedEntry1SqlRecord,
@@ -153,5 +155,46 @@ describe('onDeleteEntry', () => {
         virtualCollectionId(collectionEntry1.id, 'References'),
       ),
     ).toBeNull();
+  });
+
+  it("closes a named entry's history, which outlives it", async () => {
+    await History.record({
+      ownerPath: objectDatabase.path,
+      subjectKey: objectEntry1.title,
+      kind: 'created',
+    });
+
+    await onDeleteEntry(objectEntry1);
+
+    expect(
+      await History.read({
+        ownerPath: objectDatabase.path,
+        subjectKey: objectEntry1.title,
+      }),
+    ).toEqual([
+      expect.objectContaining({ kind: 'created' }),
+      expect.objectContaining({ kind: 'deleted' }),
+    ]);
+  });
+
+  it("deletes an untitled entry's history", async () => {
+    const untitled = { ...objectEntry1, title: 'Untitled' };
+
+    await History.record({
+      ownerPath: objectDatabase.path,
+      subjectKey: untitled.title,
+      kind: 'created',
+    });
+
+    await onDeleteEntry(untitled);
+
+    // The title goes back into the pool, so the next new entry must
+    // not inherit what was recorded under it.
+    expect(
+      await History.read({
+        ownerPath: objectDatabase.path,
+        subjectKey: untitled.title,
+      }),
+    ).toEqual([]);
   });
 });

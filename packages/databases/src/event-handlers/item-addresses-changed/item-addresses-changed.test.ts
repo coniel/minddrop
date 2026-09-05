@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DataViews } from '@minddrop/data-views';
 import { DataViewFixtures } from '@minddrop/data-views/test-utils';
+import { History } from '@minddrop/history';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { sqlGetEntrySyncRecords, sqlUpsertDatabase } from '../../sql';
 import {
@@ -12,6 +13,7 @@ import {
   collectionEntry1,
   getRecordedSqlStatements,
   relatedEntry1,
+  relatedEntry2,
   setup,
   setupRecordingTestSqlDatabase,
 } from '../../test-utils';
@@ -164,5 +166,60 @@ describe('onItemAddressesChanged', () => {
     );
 
     expect(entryUpserts).toEqual([]);
+  });
+
+  it('records the change against entries which reference it', async () => {
+    // Simulate a rename of a referenced entry
+    DatabaseEntriesStore.update(relatedEntry1.id, {
+      title: renamedRelated.title,
+      path: renamedRelated.path,
+    });
+
+    await onItemAddressesChanged([
+      {
+        id: relatedEntry1.id,
+        oldReference: databaseEntryAddress(relatedEntry1, collectionDatabase),
+        newReference: databaseEntryAddress(renamedRelated, collectionDatabase),
+      },
+    ]);
+
+    // The referencing entry's history should be able to follow its
+    // older records to the new address.
+    expect(
+      await History.read({
+        ownerPath: collectionDatabase.path,
+        subjectKey: collectionEntry1.title,
+      }),
+    ).toContainEqual(
+      expect.objectContaining({
+        kind: 'rename',
+        target: 'reference',
+        from: databaseEntryAddress(relatedEntry1, collectionDatabase),
+        to: databaseEntryAddress(renamedRelated, collectionDatabase),
+      }),
+    );
+  });
+
+  it('records nothing against entries which do not reference it', async () => {
+    DatabaseEntriesStore.update(relatedEntry1.id, {
+      title: renamedRelated.title,
+      path: renamedRelated.path,
+    });
+
+    await onItemAddressesChanged([
+      {
+        id: relatedEntry1.id,
+        oldReference: databaseEntryAddress(relatedEntry1, collectionDatabase),
+        newReference: databaseEntryAddress(renamedRelated, collectionDatabase),
+      },
+    ]);
+
+    // relatedEntry2 is in the same database but references nothing
+    expect(
+      await History.read({
+        ownerPath: collectionDatabase.path,
+        subjectKey: relatedEntry2.title,
+      }),
+    ).toEqual([]);
   });
 });

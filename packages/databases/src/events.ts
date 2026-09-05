@@ -171,6 +171,33 @@ export interface DatabaseEntryRenamedEventData {
   updated: DatabaseEntry;
 }
 
+// Entry written event - fired after an entry file is written, and not
+// at all when the write would have changed nothing
+export const DatabaseEntryWrittenEvent = 'databases:entry:written';
+
+export interface DatabaseEntryWrittenEventData {
+  /**
+   * The entry that was written.
+   */
+  entry: DatabaseEntry;
+
+  /**
+   * The entry's database.
+   */
+  database: Database;
+
+  /**
+   * The contents the write replaced, absent when the entry had no
+   * file until this write.
+   */
+  previousContents?: string;
+
+  /**
+   * The contents that were written.
+   */
+  contents: string;
+}
+
 // Entry duplicated event - fired after an entry is duplicated, before
 // the duplicate is added to the source collection
 export const DatabaseEntryDuplicatedEvent = 'databases:entry:duplicated';
@@ -358,6 +385,7 @@ declare module '@minddrop/events/EventDataMap' {
     'databases:entry:updated': DatabaseEntryUpdatedEventData;
     'databases:entry:deleted': DatabaseEntryDeletedEventData;
     'databases:entry:renamed': DatabaseEntryRenamedEventData;
+    'databases:entry:written': DatabaseEntryWrittenEventData;
     'databases:entry:duplicated': DatabaseEntryDuplicatedEventData;
     'databases:entries:cleared': DatabaseEntriesClearedEventData;
     'database-entries:entry:metadata-updated': DatabaseEntryMetadataUpdatedEventData;

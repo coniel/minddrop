@@ -1,4 +1,6 @@
 export * from './databaseConfigFilePath';
+export * from './resolveContentCaptureGap';
+export * from './resolvePropertyChanges';
 export * from './isDatabaseConfigFilePath';
 export * from './resolveDatabaseMetadataDirPath';
 export * from './resolveEntryMetadataFilePath';

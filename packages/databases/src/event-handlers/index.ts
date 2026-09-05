@@ -18,6 +18,7 @@ export * from './entry-renamed';
 export * from './file-system-changed';
 export * from './item-addresses-changed';
 export * from './entry-updated';
+export * from './entry-written';
 export * from './property-added';
 export * from './property-removed';
 export * from './property-renamed';

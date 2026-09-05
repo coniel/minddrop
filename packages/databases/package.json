@@ -26,6 +26,7 @@
     "@minddrop/designs-next": "workspace:*",
     "@minddrop/events": "workspace:*",
     "@minddrop/file-system": "workspace:*",
+    "@minddrop/history": "workspace:*",
     "@minddrop/markdown": "workspace:*",
     "@minddrop/properties": "workspace:*",
     "@minddrop/i18n": "workspace:*",
