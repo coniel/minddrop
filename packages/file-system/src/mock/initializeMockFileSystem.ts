@@ -119,15 +119,10 @@ export function initializeMockFileSystem(
         getFullPath(newPath, { baseDir: options?.newPathBaseDir }),
       );
 
-      if (textFileContents[oldPath]) {
-        textFileContents[newPath] = textFileContents[oldPath];
-        delete textFileContents[oldPath];
-      }
-
-      if (binaryFiles[oldPath]) {
-        binaryFiles[newPath] = binaryFiles[oldPath];
-        delete binaryFiles[oldPath];
-      }
+      // Re-key the renamed path's contents, along with those of
+      // everything below it when a directory was renamed.
+      rekeyContents(textFileContents, oldPath, newPath);
+      rekeyContents(binaryFiles, oldPath, newPath);
     },
     writeBinaryFile: async (path, file, options) => {
       const fullPath = getFullPath(path, options);
@@ -452,6 +447,30 @@ export function initializeMockFileSystem(
       });
     },
   };
+}
+
+/**
+ * Moves the contents stored for a renamed path, and for everything
+ * below it when the renamed path is a directory, so that a directory
+ * rename carries its files' contents with it.
+ */
+function rekeyContents(
+  contents: Record<string, any>,
+  oldPath: string,
+  newPath: string,
+): void {
+  // Match the renamed path itself and anything below it
+  const keys = Object.keys(contents).filter(
+    (key) => key === oldPath || key.startsWith(`${oldPath}/`),
+  );
+
+  keys.forEach((key) => {
+    // Swap the old path prefix for the new one
+    const rekeyed = `${newPath}${key.slice(oldPath.length)}`;
+
+    contents[rekeyed] = contents[key];
+    delete contents[key];
+  });
 }
 
 function initializeMockFsRoot(

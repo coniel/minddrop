@@ -460,21 +460,6 @@ pre-seed the scoped directory (e.g. `app-data/stores`) in the mock
 file system, or exercise the dir-creation branch through a
 baseDir-less path.
 
-### The mock adapter's rename does not move a directory's file contents
-
-The mock keeps file contents in a path-keyed map beside the entry tree,
-and `rename` moves the entry for the renamed path only. Renaming a
-directory therefore moves its descendants in the tree while leaving
-their contents behind under the old paths, so reading one of those
-files afterwards returns an empty string rather than what was written
-to it (`readTextFile` falls back to `''` for a path with no recorded
-contents, since the entry does exist).
-
-Tests covering a directory move should assert on the resulting tree
-rather than on file contents. `renameDatabaseEntry` moves a directory
-whenever the database stores entries in per-entry subdirectories, so
-this is reachable from existing code.
-
 ## packages/sql
 
 ### Renderer SQL reads resolve asynchronously despite synchronous typings
