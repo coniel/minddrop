@@ -11,9 +11,12 @@ describe('resolveMenuPosition', () => {
     const position = resolveMenuPosition(titleDesignElement, 10);
 
     expect(position).toEqual({
-      left: titleDesignElement.column * 10,
-      top: titleDesignElement.row * 10 - 4,
-      transform: 'translateY(-100%)',
+      style: {
+        left: titleDesignElement.column * 10,
+        top: titleDesignElement.row * 10 - 4,
+        transform: 'translateY(-100%)',
+      },
+      placement: 'above',
     });
   });
 
@@ -22,8 +25,11 @@ describe('resolveMenuPosition', () => {
     const position = resolveMenuPosition(coverDesignElement, 10);
 
     expect(position).toEqual({
-      left: 0,
-      top: (coverDesignElement.row + coverDesignElement.rowSpan) * 10 + 4,
+      style: {
+        left: 0,
+        top: (coverDesignElement.row + coverDesignElement.rowSpan) * 10 + 4,
+      },
+      placement: 'below',
     });
   });
 });

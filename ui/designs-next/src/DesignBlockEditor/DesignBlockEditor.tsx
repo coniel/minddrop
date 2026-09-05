@@ -14,9 +14,14 @@ import {
   isElementVerticalPinOverridden,
   snapToMultiple,
 } from '@minddrop/designs-next';
+import { CanvasChrome, CanvasChromeOrigin } from '@minddrop/ui-canvas';
 import { useDeleteKey } from '@minddrop/utils';
 import { BlockEditorElementMenu } from '../BlockEditorElementMenu';
-import { resolveElementClass, resolveMenuPosition } from '../utils';
+import {
+  MenuPosition,
+  resolveElementClass,
+  resolveMenuPosition,
+} from '../utils';
 import './DesignBlockEditor.css';
 
 export interface DesignBlockEditorProps {
@@ -148,6 +153,13 @@ const ResizeHandles: ElementDragMode[] = [
   'resize-bottom-right',
 ];
 
+// The menu corner that stays on the block for each placement
+const MenuChromeOrigins: Record<MenuPosition['placement'], CanvasChromeOrigin> =
+  {
+    above: 'bottom-left',
+    below: 'top-left',
+  };
+
 /**
  * Renders the block editor surface: the design's unit grid with a
  * draggable block per element. Moving snaps the element's edges onto
@@ -175,6 +187,11 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
   const [surfaceDragging, setSurfaceDragging] = useState(false);
 
   const selectedElement = elements.find((element) => element.id === selectedId);
+
+  // Where the menu sits relative to the selected element
+  const menuPosition = selectedElement
+    ? resolveMenuPosition(selectedElement, unitSize)
+    : null;
 
   // Any drag in progress hides the element menu
   const dragging = draggedElementId !== null || surfaceDragging;
@@ -485,24 +502,25 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
           }}
         />
       )}
-      {selectedElement && !dragging && (
-        <div
-          className="design-block-editor-menu"
-          style={resolveMenuPosition(selectedElement, unitSize)}
-        >
-          <BlockEditorElementMenu
-            element={selectedElement}
-            pinOverridden={isElementPinOverridden(selectedElement, elements)}
-            aspectLocked={aspectLocked}
-            verticalPinOverridden={isElementVerticalPinOverridden(
-              selectedElement,
-              elements,
-            )}
-            onWidthModeChange={handleWidthModeChange}
-            onHeightModeChange={handleHeightModeChange}
-            onNaturalHeightChange={handleNaturalHeightChange}
-            onSettingsChange={handleSettingsChange}
-          />
+      {selectedElement && menuPosition && !dragging && (
+        <div className="design-block-editor-menu" style={menuPosition.style}>
+          {/* Keeps the menu at its screen size within a zoomed
+              canvas, growing away from the block */}
+          <CanvasChrome origin={MenuChromeOrigins[menuPosition.placement]}>
+            <BlockEditorElementMenu
+              element={selectedElement}
+              pinOverridden={isElementPinOverridden(selectedElement, elements)}
+              aspectLocked={aspectLocked}
+              verticalPinOverridden={isElementVerticalPinOverridden(
+                selectedElement,
+                elements,
+              )}
+              onWidthModeChange={handleWidthModeChange}
+              onHeightModeChange={handleHeightModeChange}
+              onNaturalHeightChange={handleNaturalHeightChange}
+              onSettingsChange={handleSettingsChange}
+            />
+          </CanvasChrome>
         </div>
       )}
       {onRowsChange && (
