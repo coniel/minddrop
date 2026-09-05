@@ -26,6 +26,11 @@ export const config = [
       // --max-warnings 0, so turning it on before the sweep fails
       // every package.
       'minddrop/multiline-comment-period': 'off',
+      // Switch to 'error' once the existing violations have been
+      // swept. Around 75 solo-wrapped directories across the repo
+      // predate the convention; the fixes move files, so the sweep
+      // waits for a moment with no unmerged worktree work.
+      'minddrop/companion-directory': 'off',
       '@typescript-eslint/no-unused-vars': [
         'error',
         {
