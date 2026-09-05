@@ -271,6 +271,15 @@ than one line even as a single sentence, always ends with one.
 // to the entry file.
 ```
 
+The period rule has a lint rule of its own,
+`minddrop/multiline-comment-period` in `packages/eslint-config`. It is
+**currently off**, because around 1,600 comments across the repo predate
+the convention and lint runs with `--max-warnings 0`. Every one of them is
+auto-fixable, so turning it on is a matter of running `eslint --fix` over
+the repo and flipping the rule to `error` in `base.js`. Doing that while
+several worktrees have unmerged work would cost more in conflicts than it
+saves, so it waits for a quiet moment.
+
 **Block comments are always multi-line.** Never `/** Foo **/` on one
 line. The exception is a comment inside JSX delimiting a child
 component, which stays on one line:

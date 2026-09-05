@@ -49,7 +49,7 @@ describe('writeHistoryContent', () => {
     );
 
     // The first file must keep what it was given rather than being
-    // written over by the second
+    // written over by the second.
     expect(file).not.toBe('20260601T000000000Z.md');
     expect(
       MockFs.readTextFile(`${contentDirPath}/20260601T000000000Z.md`),

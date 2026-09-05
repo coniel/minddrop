@@ -50,7 +50,7 @@ describe('moveHistory', () => {
     await moveHistory({ ownerPath, fromKey, toKey });
 
     // The old key's contents must end up under the new key, or the
-    // records that moved across would point at nothing
+    // records that moved across would point at nothing.
     expect(MockFs.exists(`${toPath}/content/20260901T091402311Z.md`)).toBe(
       true,
     );
@@ -70,7 +70,7 @@ describe('moveHistory', () => {
     await moveHistory({ ownerPath, fromKey, toKey });
 
     // The file already there keeps its contents, and the one that
-    // could not move stays where a user can still find it
+    // could not move stays where a user can still find it.
     expect(MockFs.readTextFile(`${toPath}/content/${name}`)).toBe(
       'The new key’s',
     );
@@ -83,7 +83,7 @@ describe('moveHistory', () => {
     await moveHistory({ ownerPath, fromKey, toKey });
 
     // The colliding log stays where it is rather than being
-    // overwritten by the one moving in
+    // overwritten by the one moving in.
     expect(MockFs.exists(`${fromPath}/history.json`)).toBe(true);
     expect(MockFs.exists(`${toPath}/content`)).toBe(true);
   });

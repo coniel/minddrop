@@ -72,7 +72,7 @@ async function moveEntry(path: string, toDirPath: string): Promise<void> {
   const target = Fs.concatPath(toDirPath, Fs.fileNameFromPath(path));
 
   // Check if the name is free, in which case the whole file or
-  // directory can be renamed across
+  // directory can be renamed across.
   if (!(await Fs.exists(target))) {
     await Fs.rename(path, target);
 

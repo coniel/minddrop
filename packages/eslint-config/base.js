@@ -3,6 +3,7 @@ import onlyWarn from 'eslint-plugin-only-warn';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 import turboPlugin from 'eslint-plugin-turbo';
 import tseslint from 'typescript-eslint';
+import { minddropPlugin } from './plugin.js';
 
 /**
  * A shared ESLint configuration for the repository.
@@ -15,9 +16,16 @@ export const config = [
   {
     plugins: {
       turbo: turboPlugin,
+      minddrop: minddropPlugin,
     },
     rules: {
       'turbo/no-undeclared-env-vars': 'warn',
+      // Switch to 'error' once the existing violations have been
+      // swept with `eslint --fix`. Around 1,600 comments across the
+      // repo predate the convention, and lint runs with
+      // --max-warnings 0, so turning it on before the sweep fails
+      // every package.
+      'minddrop/multiline-comment-period': 'off',
       '@typescript-eslint/no-unused-vars': [
         'error',
         {

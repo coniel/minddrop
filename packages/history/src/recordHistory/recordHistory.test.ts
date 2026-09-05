@@ -32,7 +32,7 @@ describe('recordHistory', () => {
 
   it('does not lose records made at the same time', async () => {
     // Appending reads the log it then writes back, so records made
-    // at once would overwrite one another unless they are serialized
+    // at once would overwrite one another unless they are serialized.
     await Promise.all([
       recordHistory({ ...subject, kind: 'created' }),
       recordHistory({ ...subject, kind: 'deleted' }),
