@@ -49,19 +49,27 @@ export interface CanvasToolbarProps {
    * Consumer toolbars rendered left of the zoom controls.
    */
   children?: React.ReactNode;
+
+  /**
+   * Whether the settings menu offers the snapping switches.
+   * Defaults to true.
+   */
+  snapping?: boolean;
 }
 
 /**
  * Renders the current canvas instance's controls: a zoom toolbar
  * (zoom in/out buttons, a zoom level dropdown, reset zoom and fit
- * view buttons) and a settings toolbar beside it. Floats at the
- * top right of the nearest positioned ancestor. Must be rendered
- * within a CanvasProvider.
+ * view buttons) and a settings toolbar beside it offering the grid
+ * pattern and, unless disabled, the snapping switches. Floats at
+ * the top right of the nearest positioned ancestor. Must be
+ * rendered within a CanvasProvider.
  */
 export const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
   onFit,
   className,
   children,
+  snapping = true,
 }) => {
   const zoom = useCanvasStore((state) => state.zoom);
   const minZoom = useCanvasStore((state) => state.minZoom);
@@ -232,21 +240,25 @@ export const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
           <DropdownMenuPortal>
             <DropdownMenuPositioner side="bottom" align="end">
               <DropdownMenuContent minWidth={200}>
-                {/* Snap to grid toggle */}
-                <DropdownMenuSwitchItem
-                  label="canvas.snapToGrid"
-                  checked={snapToGrid}
-                  onCheckedChange={handleSnapToGridChange}
-                />
+                {snapping && (
+                  <>
+                    {/* Snap to grid toggle */}
+                    <DropdownMenuSwitchItem
+                      label="canvas.snapToGrid"
+                      checked={snapToGrid}
+                      onCheckedChange={handleSnapToGridChange}
+                    />
 
-                {/* Snap to objects toggle */}
-                <DropdownMenuSwitchItem
-                  label="canvas.snapToObjects"
-                  checked={snapToObjects}
-                  onCheckedChange={handleSnapToObjectsChange}
-                />
+                    {/* Snap to objects toggle */}
+                    <DropdownMenuSwitchItem
+                      label="canvas.snapToObjects"
+                      checked={snapToObjects}
+                      onCheckedChange={handleSnapToObjectsChange}
+                    />
 
-                <DropdownMenuSeparator />
+                    <DropdownMenuSeparator />
+                  </>
+                )}
 
                 {/* Background grid pattern */}
                 <DropdownMenuGroup>

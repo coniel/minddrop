@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { TranslationKey } from '@minddrop/i18n';
+import { isEditableTarget } from '@minddrop/utils';
 import { CanvasAlignmentGuides } from '../CanvasAlignmentGuides';
 import { useCanvasContext } from '../CanvasContext';
 import { CanvasLasso } from '../CanvasLasso';
@@ -18,7 +19,6 @@ import {
   framesIntersect,
   getConnectionHandleTarget,
   getFrameFromPoints,
-  isTextInputTarget,
   screenToCanvas,
 } from '../utils';
 import { applyCanvasShortcut } from './applyCanvasShortcut';
@@ -459,7 +459,7 @@ export const Canvas: React.FC<CanvasProps> = ({
   // Track space key for space+drag panning, and zoom/fit shortcuts
   const processKeyDown = useCallback(
     (event: KeyboardEvent | React.KeyboardEvent) => {
-      const isTextInput = isTextInputTarget(event.target);
+      const isTextInput = isEditableTarget(event.target);
 
       // Space for panning
       if (event.code === 'Space' && !event.repeat && !isTextInput) {
@@ -557,6 +557,9 @@ export const Canvas: React.FC<CanvasProps> = ({
       }${className ? ` ${className}` : ''}`}
       style={
         {
+          // Exposed so content can size hairlines and chrome
+          // against the zoom
+          '--ui-canvas-zoom': zoom,
           '--ui-canvas-grid-size': `${gridSize}px`,
           '--ui-canvas-grid-offset-x': `${pan.x}px`,
           '--ui-canvas-grid-offset-y': `${pan.y}px`,

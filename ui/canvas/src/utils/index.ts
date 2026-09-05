@@ -40,7 +40,6 @@ export * from './getSideNormal';
 export * from './getToggleSelectionUpdate';
 export * from './getViewportFrame';
 export * from './getVisibleSnapTargets';
-export * from './isTextInputTarget';
 export * from './pointInFrame';
 export * from './resizeMovesAxis';
 export * from './resolveConnectionStyle';
