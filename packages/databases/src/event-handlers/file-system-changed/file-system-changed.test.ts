@@ -25,9 +25,9 @@ describe('onFileSystemChanged', () => {
     backend = createMockBackendAdapter();
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     vi.useRealTimers();
-    cleanup();
+    await cleanup();
   });
 
   it('scans the workspace after a change inside a database', async () => {

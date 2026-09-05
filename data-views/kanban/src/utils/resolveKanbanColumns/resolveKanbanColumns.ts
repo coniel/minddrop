@@ -15,12 +15,16 @@ import { resolveEntryColumnValue } from '../resolveEntryColumnValue';
  * @param entries - The entries to arrange into columns.
  * @param property - The select property the columns are generated from.
  * @param order - The saved placement of entries within their columns.
+ * @param valueAliases - Old option values mapped to their renamed values, for entries an in-flight rename has not rewritten yet.
+ * @param duplicateOriginals - Unplaced duplicate entry IDs mapped to their original's ID, placed below the original.
  * @returns The board's columns.
  */
 export function resolveKanbanColumns(
   entries: DatabaseEntry[],
   property: SelectPropertySchema,
   order: KanbanOrder,
+  valueAliases?: Record<string, string>,
+  duplicateOriginals?: Record<string, string>,
 ): KanbanColumn[] {
   // Bucket the entries by the column their property value places
   // them in.
@@ -28,7 +32,7 @@ export function resolveKanbanColumns(
 
   entries.forEach((entry) => {
     // The column the entry's property value places it in
-    const value = resolveEntryColumnValue(entry, property);
+    const value = resolveEntryColumnValue(entry, property, valueAliases);
     const bucket = buckets.get(value);
 
     // Check if the entry is the first to land in the column. If
@@ -63,6 +67,7 @@ export function resolveKanbanColumns(
     entryIds: orderColumnEntries(
       buckets.get(column.value) ?? [],
       order[column.value] ?? [],
+      duplicateOriginals,
     ),
   }));
 
@@ -76,24 +81,45 @@ export function resolveKanbanColumns(
  * Orders a column's entries by the saved order, dropping saved
  * entries which are no longer in the column and prepending
  * entries the saved order does not place, as those are likely to
- * be newly added.
+ * be newly added. Unplaced duplicates slot in below their
+ * original instead while their placement is in flight.
  *
  * @param entryIds - The IDs of the entries currently in the column.
  * @param savedOrder - The saved order of the column's entries.
+ * @param duplicateOriginals - Unplaced duplicate entry IDs mapped to their original's ID.
  * @returns The ordered entry IDs.
  */
 function orderColumnEntries(
   entryIds: string[],
   savedOrder: string[],
+  duplicateOriginals: Record<string, string> = {},
 ): string[] {
   const inColumn = new Set(entryIds);
 
   // Filter the saved order down to entries still in the column
-  const placed = savedOrder.filter((entryId) => inColumn.has(entryId));
-  const placedIds = new Set(placed);
+  const ordered = savedOrder.filter((entryId) => inColumn.has(entryId));
+  const placedIds = new Set(ordered);
 
   // Filter for entries the saved order does not place
   const unplaced = entryIds.filter((entryId) => !placedIds.has(entryId));
 
-  return [...unplaced, ...placed];
+  // Entries prepended for lack of a placement of their own
+  const prepended: string[] = [];
+
+  unplaced.forEach((entryId) => {
+    // Slot a duplicate in below its original while its placement
+    // is in flight.
+    const originalIndex = ordered.indexOf(duplicateOriginals[entryId]);
+
+    if (originalIndex !== -1) {
+      ordered.splice(originalIndex + 1, 0, entryId);
+
+      return;
+    }
+
+    // Prepend other unplaced entries
+    prepended.push(entryId);
+  });
+
+  return [...prepended, ...ordered];
 }

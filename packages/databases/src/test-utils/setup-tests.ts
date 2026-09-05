@@ -68,7 +68,10 @@ export function setup(options?: SetupDatabaseFixturesOptions) {
   vi.setSystemTime(mockDate);
 }
 
-export function cleanup() {
+export async function cleanup() {
+  // Clean up events
+  await Events.tests.cleanup();
+
   // Clear database fixtures
   cleanupDatabaseFixtures();
   // Clear external fixtures
@@ -92,9 +95,6 @@ export function cleanup() {
 
   // Reset mock file system
   MockFs.reset();
-
-  // Clear all event listeners
-  Events._clearAll();
 
   // Vi reset
   vi.useRealTimers();

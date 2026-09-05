@@ -20,9 +20,9 @@ export async function deleteTag(tagId: string): Promise<void> {
   // Delete the tag from the store
   TagsStore.remove(tagId);
 
-  // Delete the tag file from the file system
-  await Fs.removeFile(resolveTagFilePath(tagId));
-
   // Dispatch the tag deleted event
   Events.dispatch(TagDeletedEvent, tag);
+
+  // Delete the tag file from the file system
+  await Fs.removeFile(resolveTagFilePath(tagId));
 }

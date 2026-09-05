@@ -123,13 +123,18 @@ export async function updateDatabaseEntryTemplate(
   );
 
   // Update the database
-  const updated = await updateDatabase(databaseId, { entryTemplates });
+  const updatePromise = updateDatabase(databaseId, { entryTemplates });
+
+  // Get the updated config
+  const updated = getDatabase(databaseId);
 
   // Dispatch the entry template updated event
   Events.dispatch(DatabaseEntryTemplateUpdatedEvent, {
     database: updated,
     template: updatedTemplate,
   });
+
+  await updatePromise;
 
   return updated;
 }

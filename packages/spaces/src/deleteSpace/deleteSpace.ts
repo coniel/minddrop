@@ -21,6 +21,9 @@ export async function deleteSpace(spaceId: string): Promise<void> {
   // Delete the space from the store
   SpacesStore.remove(spaceId);
 
+  // Dispatch the space deleted event
+  Events.dispatch(SpaceDeletedEvent, space);
+
   // Remove the space's owned virtual design from the designs store
   if (Designs.get(space.design.id, false)) {
     await Designs.delete(space.design.id);
@@ -28,7 +31,4 @@ export async function deleteSpace(spaceId: string): Promise<void> {
 
   // Delete the space's bundle directory, taking its media with it
   await Fs.removeDir(resolveSpaceBundleDirPath(spaceId), { recursive: true });
-
-  // Dispatch the space deleted event
-  Events.dispatch(SpaceDeletedEvent, space);
 }

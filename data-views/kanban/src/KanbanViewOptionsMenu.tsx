@@ -17,20 +17,20 @@ import {
   MenuGroup,
   MenuLabel,
 } from '@minddrop/ui-primitives';
-import { setPendingColumnRename } from '../PendingColumnRenameStore';
-import { addKanbanColumn } from '../addKanbanColumn';
+import { setPendingColumnRename } from './PendingColumnRenameStore';
+import { addKanbanColumn } from './addKanbanColumn';
 import {
   KANBAN_COLUMN_BACKGROUNDS,
   KANBAN_COLUMN_WIDTHS,
   NO_VALUE_COLUMN,
   defaultKanbanViewOptions,
-} from '../constants';
+} from './constants';
 import {
   KanbanColumnBackground,
   KanbanColumnWidth,
   KanbanViewOptions,
-} from '../types';
-import { useKanbanGroupProperty } from '../useKanbanGroupProperty';
+} from './types';
+import { useKanbanGroupProperty } from './useKanbanGroupProperty';
 
 // Builds the keys of the column settings' labels, which are named
 // after the value they label

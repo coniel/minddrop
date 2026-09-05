@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { Events } from '@minddrop/events';
 import { i18n } from '@minddrop/i18n';
@@ -55,19 +55,24 @@ describe('<DesignStudio />', () => {
 
     render(<DesignStudio />);
 
-    // The studio's own title is used while no design is open
-    expect(updates.at(-1)).toEqual({
-      id: DesignStudioViewId,
-      title: i18n.t(DesignStudioViewTitle),
+    // The studio's own title is used while no design is open. The
+    // update lands as an unawaited event side effect.
+    await vi.waitFor(() => {
+      expect(updates.at(-1)).toEqual({
+        id: DesignStudioViewId,
+        title: i18n.t(DesignStudioViewTitle),
+      });
     });
 
     // Open a design from the dashboard
     await userEvent.click(screen.getByText(design_books.name));
 
     // The open design titles the view, labelling its tab
-    expect(updates.at(-1)).toEqual({
-      id: DesignStudioViewId,
-      title: design_books.name,
+    await vi.waitFor(() => {
+      expect(updates.at(-1)).toEqual({
+        id: DesignStudioViewId,
+        title: design_books.name,
+      });
     });
   });
 });

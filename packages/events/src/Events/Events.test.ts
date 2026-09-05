@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { Events } from './Events';
 
 // A test event registered in the event data registry below
@@ -20,7 +20,7 @@ declare module '../types/EventDataMap.types' {
 
 describe('Events', () => {
   afterEach(() => {
-    Events._clearAll();
+    Events.tests.cleanup();
   });
 
   it('types listener data from the event data registry', async () => {
@@ -31,9 +31,12 @@ describe('Events', () => {
       received = data;
     });
 
-    await Events.dispatch(TestRegisteredEvent, { value: 1 });
+    Events.dispatch(TestRegisteredEvent, { value: 1 });
 
-    expect(received).toEqual({ value: 1 });
+    // Listeners run queued rather than during the dispatch
+    await vi.waitFor(() => {
+      expect(received).toEqual({ value: 1 });
+    });
   });
 
   it('types batch listener data from the event data registry', async () => {
@@ -50,11 +53,41 @@ describe('Events', () => {
       },
     });
 
-    await Events.dispatch(TestRegisteredEvent, { value: 1 });
-    await Events.dispatch(TestVoidEvent);
+    Events.dispatch(TestRegisteredEvent, { value: 1 });
+    Events.dispatch(TestVoidEvent);
 
-    expect(received).toEqual({ value: 1 });
-    expect(voidCalled).toBe(true);
+    // Listeners run queued rather than during the dispatch
+    await vi.waitFor(() => {
+      expect(received).toEqual({ value: 1 });
+      expect(voidCalled).toBe(true);
+    });
+  });
+
+  it('awaits pending dispatches, including chained ones', async () => {
+    let chained = false;
+
+    // A listener whose side effect spans multiple await hops
+    Events.addListener(TestRegisteredEvent, 'test', async () => {
+      await Promise.resolve();
+      await Promise.resolve();
+
+      // Dispatch a further event from within the listener
+      Events.dispatch(TestVoidEvent);
+    });
+
+    // A listener for the chained dispatch
+    Events.addListener(TestVoidEvent, 'test', async () => {
+      await Promise.resolve();
+
+      chained = true;
+    });
+
+    Events.dispatch(TestRegisteredEvent, { value: 1 });
+
+    await Events.tests.awaitAllListeners();
+
+    // Both listener chains have settled
+    expect(chained).toBe(true);
   });
 
   it('rejects mismatched event data at compile time', () => {

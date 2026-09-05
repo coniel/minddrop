@@ -26,7 +26,7 @@ describe('createKeyValueStore', () => {
 
     beforeEach(() => {
       store.reset();
-      Events._clearAll();
+      Events.tests.cleanup();
     });
 
     describe('get', () => {
@@ -138,7 +138,7 @@ describe('createKeyValueStore', () => {
     beforeEach(() => {
       // Clear events first so old listeners don't receive
       // the persist event dispatched by store.reset()
-      Events._clearAll();
+      Events.tests.cleanup();
       store.reset();
     });
 
@@ -286,13 +286,18 @@ describe('createKeyValueStore', () => {
       );
 
       // Dispatch a load event with data for this store
-      await Events.dispatch(StoreHydrateEvent, {
+      Events.dispatch(StoreHydrateEvent, {
         namespace: 'kv-load-test',
         data: { theme: 'dark', fontSize: 20 },
       });
 
-      expect(freshStore.get('theme')).toBe('dark');
-      expect(freshStore.get('fontSize')).toBe(20);
+      // The hydrate listener runs queued rather than during the
+      // dispatch.
+      await vi.waitFor(() => {
+        expect(freshStore.get('theme')).toBe('dark');
+        expect(freshStore.get('fontSize')).toBe(20);
+      });
+
       // Unset values keep their defaults
       expect(freshStore.get('sidebarOpen')).toBe(true);
     });
@@ -309,7 +314,7 @@ describe('createKeyValueStore', () => {
       );
 
       // Dispatch a load event for a different namespace
-      await Events.dispatch(StoreHydrateEvent, {
+      Events.dispatch(StoreHydrateEvent, {
         namespace: 'other-package',
         data: { theme: 'dark' },
       });

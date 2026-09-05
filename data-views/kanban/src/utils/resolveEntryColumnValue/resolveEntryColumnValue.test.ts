@@ -50,4 +50,28 @@ describe('resolveEntryColumnValue', () => {
 
     expect(resolveEntryColumnValue(entry, multiselectStatusProperty)).toBe('');
   });
+
+  it('follows value aliases to their renamed option', () => {
+    const entry = {
+      ...objectEntry1,
+      properties: { ...objectEntry1.properties, Status: 'Old' },
+    };
+
+    expect(
+      resolveEntryColumnValue(entry, statusProperty, { Old: 'Todo' }),
+    ).toBe('Todo');
+  });
+
+  it('follows multi-select value aliases to their renamed option', () => {
+    const entry = {
+      ...objectEntry1,
+      properties: { ...objectEntry1.properties, Status: ['Blocked', 'Old'] },
+    };
+
+    expect(
+      resolveEntryColumnValue(entry, multiselectStatusProperty, {
+        Old: 'Done',
+      }),
+    ).toBe('Done');
+  });
 });

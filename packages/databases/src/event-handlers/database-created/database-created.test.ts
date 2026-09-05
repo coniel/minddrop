@@ -18,9 +18,9 @@ describe('onCreateDatabase', () => {
     setupTestSqlDatabase();
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupTestSqlDatabase();
-    cleanup();
+    await cleanup();
   });
 
   it('upserts the database into SQL', () => {

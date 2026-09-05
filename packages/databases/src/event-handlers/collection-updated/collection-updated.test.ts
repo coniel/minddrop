@@ -46,9 +46,9 @@ describe('onUpdateCollection', () => {
     Collections.Store.set(relatedCollection);
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupTestSqlDatabase();
-    cleanup();
+    await cleanup();
   });
 
   it('does nothing for non-virtual collections', async () => {

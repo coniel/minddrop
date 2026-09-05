@@ -48,9 +48,9 @@ describe('onUpdateEntry', () => {
     });
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupTestSqlDatabase();
-    cleanup();
+    await cleanup();
   });
 
   it('syncs the updated entry to SQL', async () => {

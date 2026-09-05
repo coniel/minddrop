@@ -59,11 +59,11 @@ export async function createDataView(
   // Add the data view to the store
   DataViewsStore.set(view);
 
-  // Write the data view to the file system
-  await writeDataView(view.id);
-
   // Dispatch a data view created event
   Events.dispatch(DataViewCreatedEvent, view);
+
+  // Write the data view to the file system
+  await writeDataView(view.id);
 
   return view;
 }

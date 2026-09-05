@@ -18,9 +18,9 @@ export async function removeWorkspace(id: string): Promise<void> {
   // Remove the workspace from the store
   WorkspacesStore.remove(id);
 
-  // Write the workspaces config to remove the workspace path from it
-  await writeWorkspacesConfig();
-
   // Dispatch a workspace deleted event
   Events.dispatch(WorkspaceDeletedEvent, workspace);
+
+  // Write the workspaces config to remove the workspace path from it
+  await writeWorkspacesConfig();
 }

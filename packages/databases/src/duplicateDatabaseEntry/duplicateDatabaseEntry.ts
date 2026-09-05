@@ -11,7 +11,10 @@ import { getDatabaseEntry } from '../getDatabaseEntry';
 import { DatabaseEntry, DatabaseEntryRenderSource } from '../types';
 import { updateDatabaseEntryProperty } from '../updateDatabaseEntryProperty';
 import { updateEntryMetadata } from '../updateEntryMetadata';
-import { resolveIncrementalPropertyFilePath, resolveEntryPropertyFilePath } from '../utils';
+import {
+  resolveEntryPropertyFilePath,
+  resolveIncrementalPropertyFilePath,
+} from '../utils';
 
 /**
  * Duplicates a database entry. Simple property values are copied onto
@@ -77,17 +80,23 @@ export async function duplicateDatabaseEntry(
   }
 
   // Create the duplicate with the source entry's title (incremented
-  // automatically on conflict) and simple values
+  // automatically on conflict) and simple values, marked with the
+  // source entry as its origin.
   const duplicate = await createDatabaseEntry(
     database.id,
     entry.title,
     simpleProperties,
+    entry.id,
   );
 
   // Copy each file based property value's file to the duplicate
   for (const [propertyName, fileName] of Object.entries(fileProperties)) {
     // Path to the source entry's property file
-    const sourcePath = resolveEntryPropertyFilePath(entry.id, propertyName, fileName);
+    const sourcePath = resolveEntryPropertyFilePath(
+      entry.id,
+      propertyName,
+      fileName,
+    );
 
     // Skip the property if the source file is missing
     if (!(await Fs.exists(sourcePath))) {
@@ -119,10 +128,8 @@ export async function duplicateDatabaseEntry(
   // The duplicate with its final property values
   const finalDuplicate = DatabaseEntriesStore.get(duplicate.id) ?? duplicate;
 
-  // Dispatch the duplicated event before adding the duplicate to the
-  // source collection so listeners can position the duplicate relative
-  // to the original before it appears in the collection
-  await Events.dispatch(DatabaseEntryDuplicatedEvent, {
+  // Dispatch the duplicated event
+  Events.dispatch(DatabaseEntryDuplicatedEvent, {
     original: entry,
     duplicate: finalDuplicate,
     source,

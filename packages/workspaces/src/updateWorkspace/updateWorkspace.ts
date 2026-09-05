@@ -34,9 +34,6 @@ export async function updateWorkspace(
     lastModified: new Date(),
   });
 
-  // Write the updated workspace config to the file system
-  await writeWorkspaceConfig(id);
-
   // Get the updated workspace
   const updatedWorkspace = getWorkspace(id);
 
@@ -45,6 +42,9 @@ export async function updateWorkspace(
     original: workspace,
     updated: updatedWorkspace,
   });
+
+  // Write the updated workspace config to the file system
+  await writeWorkspaceConfig(id);
 
   // Return the updated workspace
   return updatedWorkspace;

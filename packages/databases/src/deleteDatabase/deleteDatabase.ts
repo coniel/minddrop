@@ -17,13 +17,12 @@ export async function deleteDatabase(id: string): Promise<void> {
   // Get the current database config
   const database = getDatabase(id);
 
-  // Move the database directory to the system trash
-  await Fs.trashDir(database.path);
-
-  // Dispatch the delete event before removing the database from the
-  // store so consumers can tear down while it is still resolvable
-  await Events.dispatch(DatabaseDeletedEvent, database);
-
   // Remove the database from the store
   DatabasesStore.remove(id);
+
+  // Dispatch the delete event
+  Events.dispatch(DatabaseDeletedEvent, database);
+
+  // Move the database directory to the system trash
+  await Fs.trashDir(database.path);
 }

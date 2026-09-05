@@ -63,11 +63,6 @@ export async function updateDataView(
     DataViewsStore.update(id, updatedView);
   }
 
-  // Write the data view to the file system if not virtual
-  if (!view.virtual) {
-    await writeDataView(id);
-  }
-
   // Get the updated data view from the store
   const finalView = getDataView(updatedView.id);
 
@@ -76,6 +71,11 @@ export async function updateDataView(
     original: view,
     updated: finalView,
   });
+
+  // Write the data view to the file system if not virtual
+  if (!view.virtual) {
+    await writeDataView(id);
+  }
 
   // Return the updated data view
   return finalView;

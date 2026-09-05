@@ -72,6 +72,12 @@ export async function updateDatabaseEntry(
   // Update the entry in the store
   DatabaseEntriesStore.update(id, updatedEntry);
 
+  // Dispatch an entry updated event
+  Events.dispatch(DatabaseEntryUpdatedEvent, {
+    original: originalEntry,
+    updated: updatedEntry,
+  });
+
   // Write the updated entry files to the file system
   await writeDatabaseEntry(id);
 
@@ -81,12 +87,6 @@ export async function updateDatabaseEntry(
     updatedEntry.path,
     updatedEntry.metadata,
   );
-
-  // Dispatch entry update event
-  Events.dispatch(DatabaseEntryUpdatedEvent, {
-    original: originalEntry,
-    updated: updatedEntry,
-  });
 
   // Return the updated entry
   return updatedEntry;

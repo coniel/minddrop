@@ -68,9 +68,9 @@ describe('onTagDeleted', () => {
     MockFs.addFiles([tagsDatabase.path]);
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupRecordingTestSqlDatabase();
-    cleanup();
+    await cleanup();
   });
 
   it('removes the tag name from referencing entries', async () => {

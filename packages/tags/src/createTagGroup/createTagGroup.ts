@@ -32,11 +32,11 @@ export async function createTagGroup(name: string): Promise<TagGroup> {
   // Add the group to the store
   TagGroupsStore.set(group);
 
-  // Write the group config to the file system
-  await writeTagGroup(group.id);
-
   // Dispatch the tag group created event
   Events.dispatch(TagGroupCreatedEvent, group);
+
+  // Write the group config to the file system
+  await writeTagGroup(group.id);
 
   return group;
 }

@@ -45,14 +45,14 @@ export async function updateTagGroup(
     lastModified: new Date(),
   });
 
-  // Write the group config to the file system
-  await writeTagGroup(groupId);
-
   // Dispatch the tag group updated event
-  await Events.dispatch(TagGroupUpdatedEvent, {
+  Events.dispatch(TagGroupUpdatedEvent, {
     original: group,
     updated: updatedGroup,
   });
+
+  // Write the group config to the file system
+  await writeTagGroup(groupId);
 
   return updatedGroup;
 }

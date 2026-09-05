@@ -64,9 +64,9 @@ describe('setDatabaseEntrySerializer', () => {
     });
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupRecordingTestSqlDatabase();
-    cleanup();
+    await cleanup();
   });
 
   it('does nothing when the serializer is unchanged', async () => {

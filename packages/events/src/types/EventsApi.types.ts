@@ -2,6 +2,7 @@ import { EventData, EventName } from './EventDataMap.types';
 import { EventListenerCallback } from './EventListenerCallback.types';
 import { EventListenerCallbackMap } from './EventListenerCallbackMap.types';
 import { EventListenerMap } from './EventListenerMap.types';
+import { EventLogEntry } from './EventLogEntry.types';
 
 export interface EventsApi {
   /**
@@ -126,11 +127,12 @@ export interface EventsApi {
   removeListener(eventName: EventName, listenerId: string): void;
 
   /**
-   * Synchronously calls each of the listeners registered for the event named `eventName`,
+   * Calls each of the listeners registered for the event named `eventName`
    * in the order they were registered, passing the supplied arguments to each.
    *
-   * Asynchronously calls each of the side effects registered for the event named `eventName`,
-   * passing the supplied arguments to each.
+   * Dispatching is fire and forget: the event is logged to the event
+   * log synchronously, listeners are queued to run on a microtask,
+   * and nothing is awaited.
    *
    * @param eventName - The name of the event.
    * @param data - The data associated with the event.
@@ -138,12 +140,38 @@ export interface EventsApi {
   dispatch<TEvent extends EventName>(
     eventName: TEvent,
     data?: EventData<TEvent>,
-  ): Promise<void>;
+  ): void;
 
   /**
-   * Clears all event listeners.
+   * Tracks the dispatched events of a type whose side effects are
+   * in flight.
    *
-   * **Intended for use in test only!**
+   * @param eventName - The name of the event to track.
+   * @returns The event's in-flight log entries, most recent last.
    */
-  _clearAll(): void;
+  useLogs<TEvent extends EventName>(
+    eventName: TEvent,
+  ): EventLogEntry<EventData<TEvent>>[];
+
+  /**
+   * Test-only helpers.
+   */
+  tests: {
+    /**
+     * Waits until the listeners of every pending dispatch have
+     * settled.
+     *
+     * @returns A promise which resolves once no dispatches are pending.
+     */
+    awaitAllListeners(): Promise<void>;
+
+    /**
+     * Waits for pending dispatches to settle, then clears all event
+     * listeners and the event log. Clears synchronously when no
+     * dispatches are pending.
+     *
+     * @returns A promise which resolves once the listeners and log have been cleared.
+     */
+    cleanup(): Promise<void>;
+  };
 }

@@ -55,9 +55,9 @@ describe('onItemAddressesChanged', () => {
     clearRecordedSqlStatements();
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupRecordingTestSqlDatabase();
-    cleanup();
+    await cleanup();
   });
 
   it("upserts the changed entries' SQL records", async () => {

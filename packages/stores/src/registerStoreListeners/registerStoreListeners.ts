@@ -117,7 +117,7 @@ async function handleHydrateRequest(
   // Check if the store file exists
   if (!(await Fs.exists(filePath, fsOptions))) {
     // Dispatch hydrate event with empty data
-    await Events.dispatch(StoreHydrateEvent, {
+    Events.dispatch(StoreHydrateEvent, {
       namespace: data.namespace,
       data: {},
     });
@@ -135,7 +135,7 @@ async function handleHydrateRequest(
   );
 
   // Dispatch hydrate event with the loaded data
-  await Events.dispatch(StoreHydrateEvent, {
+  Events.dispatch(StoreHydrateEvent, {
     namespace: data.namespace,
     data: storeData,
   });

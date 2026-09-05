@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Collections } from '@minddrop/collections';
 import { DataViews } from '@minddrop/data-views';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
@@ -97,9 +97,9 @@ describe('onRenameEntry', () => {
     );
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupTestSqlDatabase();
-    cleanup();
+    await cleanup();
   });
 
   it('does nothing if the database has no collection properties', async () => {
@@ -257,10 +257,13 @@ describe('onRenameEntry', () => {
       updated: renamedRelated,
     });
 
-    const contents = MockFs.readTextFile(collectionEntry1.path);
-
-    // The referencing file should contain the new address
-    expect(contents).toContain('Collection Database/Renamed Related');
+    // The rewrite lands as an unawaited event side effect, so
+    // poll for the referencing file to contain the new address.
+    await vi.waitFor(() => {
+      expect(MockFs.readTextFile(collectionEntry1.path)).toContain(
+        'Collection Database/Renamed Related',
+      );
+    });
   });
 
   it('handles entries without collection properties', async () => {

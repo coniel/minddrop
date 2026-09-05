@@ -68,9 +68,9 @@ describe('onDeleteDatabase', () => {
     );
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupTestSqlDatabase();
-    cleanup();
+    await cleanup();
   });
 
   it('deletes the database and its entries from SQL', async () => {

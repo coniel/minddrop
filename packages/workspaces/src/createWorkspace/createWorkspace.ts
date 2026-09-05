@@ -39,6 +39,9 @@ export async function createWorkspace(
   // Add the workspace to the store
   WorkspacesStore.set(workspace);
 
+  // Dispatch a workspace created event
+  Events.dispatch(WorkspaceCreatedEvent, workspace);
+
   // Create the workspace directory
   await Fs.createDir(path);
 
@@ -47,9 +50,6 @@ export async function createWorkspace(
 
   // Write the workspaces config to add the new workspace path to it
   await writeWorkspacesConfig();
-
-  // Dispatch a workspace created event
-  Events.dispatch(WorkspaceCreatedEvent, workspace);
 
   // Return the new workspace
   return workspace;

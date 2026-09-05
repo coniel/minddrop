@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { Events } from '@minddrop/events';
 import { renderHook } from '@minddrop/test-utils';
 import { BaseOpenViewEventData } from '../types';
@@ -48,33 +48,41 @@ describe('useOpenView', () => {
     Events.removeListener(TestOpenEvent, ListenerId);
   });
 
-  it('tags the event with the surrounding pane', () => {
+  it('tags the event with the surrounding pane', async () => {
     const captured = captureDispatch();
     const { result } = renderInPane();
 
     result.current(TestOpenEvent, { entryId: 'entry-1' });
 
-    expect(captured.data).toEqual({
-      entryId: 'entry-1',
-      viewAreaId: 'main',
-      sourcePane: 'split',
+    // The capture listener runs queued rather than during the
+    // dispatch.
+    await vi.waitFor(() => {
+      expect(captured.data).toEqual({
+        entryId: 'entry-1',
+        viewAreaId: 'main',
+        sourcePane: 'split',
+      });
     });
   });
 
-  it('leaves the event untagged outside of a pane', () => {
+  it('leaves the event untagged outside of a pane', async () => {
     const captured = captureDispatch();
     const { result } = renderHook(() => useOpenView());
 
     result.current(TestOpenEvent, { entryId: 'entry-1' });
 
-    expect(captured.data).toEqual({
-      entryId: 'entry-1',
-      viewAreaId: undefined,
-      sourcePane: undefined,
+    // The capture listener runs queued rather than during the
+    // dispatch.
+    await vi.waitFor(() => {
+      expect(captured.data).toEqual({
+        entryId: 'entry-1',
+        viewAreaId: undefined,
+        sourcePane: undefined,
+      });
     });
   });
 
-  it('keeps the pane set by the caller', () => {
+  it('keeps the pane set by the caller', async () => {
     const captured = captureDispatch();
     const { result } = renderInPane();
 
@@ -84,11 +92,15 @@ describe('useOpenView', () => {
       sourcePane: 'main',
     });
 
-    expect(captured.data?.viewAreaId).toBe('other');
-    expect(captured.data?.sourcePane).toBe('main');
+    // The capture listener runs queued rather than during the
+    // dispatch.
+    await vi.waitFor(() => {
+      expect(captured.data?.viewAreaId).toBe('other');
+      expect(captured.data?.sourcePane).toBe('main');
+    });
   });
 
-  it('passes the event data through', () => {
+  it('passes the event data through', async () => {
     const captured = captureDispatch();
     const { result } = renderInPane();
 
@@ -97,6 +109,10 @@ describe('useOpenView', () => {
       openMode: 'in-place',
     });
 
-    expect(captured.data?.openMode).toBe('in-place');
+    // The capture listener runs queued rather than during the
+    // dispatch.
+    await vi.waitFor(() => {
+      expect(captured.data?.openMode).toBe('in-place');
+    });
   });
 });

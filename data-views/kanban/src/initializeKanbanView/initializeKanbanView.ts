@@ -19,29 +19,17 @@ const EventListenerId = 'data-view-kanban';
  * @returns A cleanup function which removes the event listeners.
  */
 export function initializeKanbanView(): VoidFunction {
-  // Follow group property renames, keeping the views grouped by
-  // the renamed property.
-  Events.addListener(
-    Databases.events.propertyRenamed,
-    EventListenerId,
-    ({ data }) => handlePropertyRenamed(data),
-  );
-
-  // Clear the group property from views grouped by a removed
-  // property, making the fallback to another property explicit.
-  Events.addListener(
-    Databases.events.propertyRemoved,
-    EventListenerId,
-    ({ data }) => handlePropertyRemoved(data),
-  );
-
-  // Follow option renames, carrying over the saved column order
-  // and hidden columns keyed by the old value.
-  Events.addListener(
-    Databases.events.propertyOptionRenamed,
-    EventListenerId,
-    ({ data }) => handlePropertyOptionRenamed(data),
-  );
+  Events.addListeners(EventListenerId, {
+    // Follow group property renames, keeping the views grouped by
+    // the renamed property.
+    [Databases.events.propertyRenamed]: handlePropertyRenamed,
+    // Clear the group property from views grouped by a removed
+    // property, making the fallback to another property explicit.
+    [Databases.events.propertyRemoved]: handlePropertyRemoved,
+    // Follow option renames, carrying over the saved column order
+    // and hidden columns keyed by the old value.
+    [Databases.events.propertyOptionRenamed]: handlePropertyOptionRenamed,
+  });
 
   return () => {
     Events.removeListener(Databases.events.propertyRenamed, EventListenerId);

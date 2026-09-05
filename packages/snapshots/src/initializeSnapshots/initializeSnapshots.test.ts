@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   Database,
   DatabaseEntryDeletedEvent,
@@ -52,55 +52,61 @@ describe('initializeSnapshots', () => {
 
   it('records entry renames', async () => {
     // Dispatch an entry rename event
-    await Events.dispatch(DatabaseEntryRenamedEvent, {
+    Events.dispatch(DatabaseEntryRenamedEvent, {
       original: objectEntry1,
       updated: { ...objectEntry1, title: 'Renamed' },
     });
 
-    // The rename should be recorded in the ledger
-    expect(await readRenameEvents()).toEqual([
-      expect.objectContaining({
-        from: 'Objects/Test Entry',
-        to: 'Objects/Renamed',
-        kind: 'entry',
-      }),
-    ]);
+    // The record lands as an unawaited event side effect
+    await vi.waitFor(async () => {
+      expect(await readRenameEvents()).toEqual([
+        expect.objectContaining({
+          from: 'Objects/Test Entry',
+          to: 'Objects/Renamed',
+          kind: 'entry',
+        }),
+      ]);
+    });
   });
 
   it('records database renames', async () => {
     // Dispatch a database rename event
-    await Events.dispatch(DatabaseRenamedEvent, {
+    Events.dispatch(DatabaseRenamedEvent, {
       original: objectDatabase,
       updated: { ...objectDatabase, name: 'Renamed Objects' },
     });
 
-    // The rename should be recorded in the ledger
-    expect(await readRenameEvents()).toEqual([
-      expect.objectContaining({
-        from: 'Objects',
-        to: 'Renamed Objects',
-        kind: 'database',
-      }),
-    ]);
+    // The record lands as an unawaited event side effect
+    await vi.waitFor(async () => {
+      expect(await readRenameEvents()).toEqual([
+        expect.objectContaining({
+          from: 'Objects',
+          to: 'Renamed Objects',
+          kind: 'database',
+        }),
+      ]);
+    });
   });
 
   it('records property renames', async () => {
     // Dispatch a property rename event
-    await Events.dispatch(DatabasePropertyRenamedEvent, {
+    Events.dispatch(DatabasePropertyRenamedEvent, {
       original: objectDatabase,
       updated: renameProperty(objectDatabase, 'Content', 'Body'),
       oldName: 'Content',
       newName: 'Body',
     });
 
-    // The rename should be recorded in the ledger
-    expect(await readRenameEvents()).toEqual([
-      expect.objectContaining({
-        from: 'Objects/Content',
-        to: 'Objects/Body',
-        kind: 'property',
-      }),
-    ]);
+    // The record lands as an unawaited event side effect
+    await vi.waitFor(async () => {
+      expect(await readRenameEvents()).toEqual([
+        expect.objectContaining({
+          from: 'Objects/Content',
+          to: 'Objects/Body',
+          kind: 'property',
+        }),
+      ]);
+    });
   });
 
   it('retracts dead untitled chains on entry deletion', async () => {
@@ -113,12 +119,14 @@ describe('initializeSnapshots', () => {
     });
 
     // Dispatch a deletion event for the untitled entry
-    await Events.dispatch(DatabaseEntryDeletedEvent, {
+    Events.dispatch(DatabaseEntryDeletedEvent, {
       ...objectEntry1,
       title: 'Untitled',
     });
 
-    // The dead chain's terminal event should be gone
-    expect(await readRenameEvents()).toEqual([]);
+    // The retraction lands as an unawaited event side effect
+    await vi.waitFor(async () => {
+      expect(await readRenameEvents()).toEqual([]);
+    });
   });
 });

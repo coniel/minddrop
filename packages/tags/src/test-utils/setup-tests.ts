@@ -29,7 +29,7 @@ export function setup(options: SetupTagFixturesOptions = {}) {
 export function cleanup() {
   vi.clearAllMocks();
   MockFs.reset();
-  Events._clearAll();
+  Events.tests.cleanup();
   vi.useRealTimers();
   cleanupTagFixtures();
 }

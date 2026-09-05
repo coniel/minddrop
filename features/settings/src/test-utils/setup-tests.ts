@@ -8,6 +8,6 @@ initializeI18n();
 export function cleanup() {
   // Clear registered settings views and event listeners
   SettingsViews.Store.clear();
-  Events._clearAll();
+  Events.tests.cleanup();
   vi.clearAllMocks();
 }

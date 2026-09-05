@@ -45,6 +45,15 @@ describe('duplicateDatabaseEntry', () => {
     expect(DatabaseEntriesStore.get(duplicate.id)).not.toBeNull();
   });
 
+  it('marks the duplicate with its origin', async () => {
+    const duplicate = await duplicateDatabaseEntry(objectEntry1.id);
+
+    // The duplicate records the entry it was made from
+    expect(duplicate.duplicatedFrom).toBe(objectEntry1.id);
+    // The mark is session state, kept out of the entry file
+    expect(MockFs.readTextFile(duplicate.path)).not.toContain('duplicatedFrom');
+  });
+
   it('leaves the source entry intact', async () => {
     await duplicateDatabaseEntry(objectEntry1.id);
 

@@ -32,7 +32,7 @@ export function cleanup() {
   cleanupDataViewFixtures();
   DatabaseFixtures.cleanup();
   cleanupWorkspaceFixtures();
-  Events._clearAll();
+  Events.tests.cleanup();
   MockFs.reset();
   vi.clearAllMocks();
 }

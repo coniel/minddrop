@@ -83,9 +83,9 @@ describe('onRenameProperty', () => {
     );
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupTestSqlDatabase();
-    cleanup();
+    await cleanup();
   });
 
   it("renames the property across the entries' SQL records", async () => {

@@ -53,16 +53,16 @@ export async function updateCollection(
     });
   }
 
+  // Dispatch the collection updated event
+  Events.dispatch(CollectionUpdatedEvent, {
+    original: collection,
+    updated: updatedCollection,
+  });
+
   // Write the collection config to the file system if not virtual
   if (!collection.virtual) {
     await writeCollection(collectionId);
   }
-
-  // Dispatch the collection updated event
-  await Events.dispatch(CollectionUpdatedEvent, {
-    original: collection,
-    updated: updatedCollection,
-  });
 
   return updatedCollection;
 }

@@ -1,4 +1,8 @@
-import { DEFAULT_NODE_WIDTH } from '../../constants';
+import {
+  DEFAULT_NODE_WIDTH,
+  ESTIMATED_NODE_HEIGHT,
+  NODE_GAP,
+} from '../../constants';
 import { CanvasViewNode } from '../../types';
 import { getUnplacedNodePositions } from '../getUnplacedNodePositions';
 
@@ -8,16 +12,19 @@ import { getUnplacedNodePositions } from '../getUnplacedNodePositions';
  *   removed.
  * - Entries present in the collection but not placed on the
  *   canvas are appended at deterministic positions below the
- *   placed nodes.
+ *   placed nodes, except duplicates whose in-flight placement
+ *   hint puts them below their original.
  * - Non-entry nodes pass through untouched.
  *
  * @param nodes - The saved canvas nodes.
  * @param entries - The IDs of the entries in the view's collection.
+ * @param duplicateOriginals - Unplaced duplicate entry IDs mapped to their original's ID.
  * @returns The reconciled nodes.
  */
 export function reconcileNodes(
   nodes: CanvasViewNode[],
   entries: string[],
+  duplicateOriginals: Record<string, string> = {},
 ): CanvasViewNode[] {
   const entrySet = new Set(entries);
   const placedEntries = new Set<string>();
@@ -45,10 +52,40 @@ export function reconcileNodes(
     return filtered;
   }
 
-  // Append nodes for the unplaced entries at deterministic
+  // Place duplicates below their original while their placement
+  // is in flight.
+  const duplicateNodes: CanvasViewNode[] = [];
+  const gridPlaced: string[] = [];
+
+  unplaced.forEach((entryId) => {
+    const original = filtered.find(
+      (node) =>
+        node.type === 'entry' && node.id === duplicateOriginals[entryId],
+    );
+
+    // Fall back to the auto-placed grid when the entry is no
+    // duplicate or its original is not on the canvas.
+    if (!original) {
+      gridPlaced.push(entryId);
+
+      return;
+    }
+
+    // Mirror the persisted placement: horizontally centered on
+    // the original, directly below it.
+    duplicateNodes.push({
+      type: 'entry',
+      id: entryId,
+      x: Math.round(original.x + original.width / 2 - DEFAULT_NODE_WIDTH / 2),
+      y: original.y + (original.height ?? ESTIMATED_NODE_HEIGHT) + NODE_GAP,
+      width: DEFAULT_NODE_WIDTH,
+    });
+  });
+
+  // Append nodes for the other unplaced entries at deterministic
   // positions
-  const positions = getUnplacedNodePositions(filtered, unplaced.length);
-  const unplacedNodes = unplaced.map<CanvasViewNode>((entryId, index) => ({
+  const positions = getUnplacedNodePositions(filtered, gridPlaced.length);
+  const unplacedNodes = gridPlaced.map<CanvasViewNode>((entryId, index) => ({
     type: 'entry',
     id: entryId,
     x: positions[index].x,
@@ -56,5 +93,5 @@ export function reconcileNodes(
     width: DEFAULT_NODE_WIDTH,
   }));
 
-  return [...filtered, ...unplacedNodes];
+  return [...filtered, ...duplicateNodes, ...unplacedNodes];
 }

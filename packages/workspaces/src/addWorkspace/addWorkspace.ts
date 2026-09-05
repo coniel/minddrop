@@ -46,6 +46,9 @@ export async function addWorkspace(path: string): Promise<Workspace> {
   // Attempt to read the workspace config
   let workspace = await readWorkspaceConfig(path, false);
 
+  // Whether the directory needs to be initialized as a new workspace
+  const initialize = !workspace;
+
   if (!workspace) {
     // If the directory is not a workspace, initialize it
     workspace = generateWorkspaceConfig({
@@ -53,22 +56,21 @@ export async function addWorkspace(path: string): Promise<Workspace> {
       name: Fs.fileNameFromPath(path),
       icon: DefaultWorkspaceIcon,
     });
+  }
 
-    // Add the workspace to the store
-    WorkspacesStore.set(workspace);
+  // Add the workspace to the store
+  WorkspacesStore.set(workspace);
 
-    // Write the workspace config
+  // Dispatch a workspaces loaded event
+  Events.dispatch(WorkspacesLoadedEvent, [workspace]);
+
+  // Write the config of a newly initialized workspace
+  if (initialize) {
     await writeWorkspaceConfig(workspace.id);
-  } else {
-    // If the workspace exists, add it to the store
-    WorkspacesStore.set(workspace);
   }
 
   // Write the workspaces config to add the new workspace path to it
   await writeWorkspacesConfig();
-
-  // Dispatch a workspaces loaded event
-  Events.dispatch(WorkspacesLoadedEvent, [workspace]);
 
   // Return the added workspace
   return workspace;

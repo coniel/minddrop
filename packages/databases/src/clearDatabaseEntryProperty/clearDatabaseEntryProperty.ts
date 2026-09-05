@@ -64,14 +64,14 @@ export async function clearDatabaseEntryProperty(
   // Update the entry in the store
   DatabaseEntriesStore.update(entryId, updatedEntry);
 
-  // Write the updated entry files to the file system
-  await writeDatabaseEntry(entryId);
-
   // Dispatch entry update event
   Events.dispatch(DatabaseEntryUpdatedEvent, {
     original: originalEntry,
     updated: updatedEntry,
   });
+
+  // Write the updated entry files to the file system
+  await writeDatabaseEntry(entryId);
 
   return updatedEntry;
 }

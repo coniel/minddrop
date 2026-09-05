@@ -26,6 +26,17 @@ export async function deleteDatabaseEntry(id: string): Promise<void> {
   // Get the entry's database
   const database = getDatabase(entry.database);
 
+  // Resolve the entry's property file paths. The resolver reads the
+  // entry from the store, so we need to collect the paths before
+  // removing the entry from the store.
+  const propertyFilePaths = resolveEntryPropertyFilePaths(id);
+
+  // Remove the entry from the store
+  DatabaseEntriesStore.remove(id);
+
+  // Dispatch the delete event
+  Events.dispatch(DatabaseEntryDeletedEvent, entry);
+
   // Entry-based storage keeps the entry file and its property files in a
   // per-entry subdirectory, so trashing the subdirectory removes them all
   if (database.propertyFileStorage === 'entry') {
@@ -36,7 +47,7 @@ export async function deleteDatabaseEntry(id: string): Promise<void> {
     await Fs.trashFile(entry.path);
 
     // Trash each of the entry's file-property files
-    for (const propertyFilePath of resolveEntryPropertyFilePaths(entry.id)) {
+    for (const propertyFilePath of propertyFilePaths) {
       // Only trash files that exist
       if (await Fs.exists(propertyFilePath)) {
         await Fs.trashFile(propertyFilePath);
@@ -54,11 +65,4 @@ export async function deleteDatabaseEntry(id: string): Promise<void> {
   if (await Fs.exists(metadataFilePath)) {
     await Fs.removeFile(metadataFilePath);
   }
-
-  // Dispatch the delete event before removing the entry from the
-  // store so consumers can tear down while it is still resolvable
-  await Events.dispatch(DatabaseEntryDeletedEvent, entry);
-
-  // Remove the entry from the store
-  DatabaseEntriesStore.remove(id);
 }

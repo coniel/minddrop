@@ -78,9 +78,9 @@ describe('onClearEntries', () => {
     );
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupRecordingTestSqlDatabase();
-    cleanup();
+    await cleanup();
   });
 
   it('does nothing if no entries were cleared', async () => {

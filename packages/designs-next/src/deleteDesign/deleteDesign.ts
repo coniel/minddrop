@@ -18,14 +18,14 @@ export async function deleteDesign(id: string): Promise<void> {
   // Get the design
   const design = getDesign(id);
 
-  // Remove unowned designs' files
-  if (!design.owner) {
-    await Fs.removeFile(resolveDesignFilePath(id));
-  }
-
   // Remove the design from the store
   DesignsStore.remove(id);
 
   // Dispatch a design deleted event
   Events.dispatch(DesignDeletedEvent, design);
+
+  // Remove unowned designs' files
+  if (!design.owner) {
+    await Fs.removeFile(resolveDesignFilePath(id));
+  }
 }

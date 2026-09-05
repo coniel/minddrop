@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Collections } from '@minddrop/collections';
 import { DataViews } from '@minddrop/data-views';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
@@ -101,9 +101,9 @@ describe('onRenameDatabase', () => {
     });
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupRecordingTestSqlDatabase();
-    cleanup();
+    await cleanup();
   });
 
   it('does nothing to collections if the database has no collection properties', async () => {
@@ -272,10 +272,13 @@ describe('onRenameDatabase', () => {
       updated: renamedRoot,
     });
 
-    const contents = MockFs.readTextFile(collectionEntry1.path);
-
-    // The referencing file should contain the new address
-    expect(contents).toContain('Renamed Root/Reference Entry 1');
+    // The rewrite lands as an unawaited event side effect, so
+    // poll for the referencing file to contain the new address.
+    await vi.waitFor(() => {
+      expect(MockFs.readTextFile(collectionEntry1.path)).toContain(
+        'Renamed Root/Reference Entry 1',
+      );
+    });
   });
 
   it('does not upsert entries when the database has no entries', async () => {

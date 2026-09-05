@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DataView, DataViews } from '@minddrop/data-views';
 import { Databases } from '@minddrop/databases';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
@@ -74,16 +74,20 @@ describe('initializeKanbanView', () => {
   });
 
   it('follows group property renames', async () => {
-    await Events.dispatch(Databases.events.propertyRenamed, {
+    Events.dispatch(Databases.events.propertyRenamed, {
       original: entryTemplatesDatabase,
       updated: entryTemplatesDatabase,
       oldName: 'Status',
       newName: 'Stage',
     });
 
-    expect(getKanbanView(kanbanView.id).options).toMatchObject({
-      groupBy: 'Stage',
+    // The handler runs queued rather than during the dispatch
+    await vi.waitFor(() => {
+      expect(getKanbanView(kanbanView.id).options).toMatchObject({
+        groupBy: 'Stage',
+      });
     });
+
     // Views over other databases keep their group property
     expect(getKanbanView(otherDatabaseView.id).options).toMatchObject({
       groupBy: 'Status',
@@ -91,16 +95,19 @@ describe('initializeKanbanView', () => {
   });
 
   it('clears the group property and order on property removal', async () => {
-    await Events.dispatch(Databases.events.propertyRemoved, {
+    Events.dispatch(Databases.events.propertyRemoved, {
       original: entryTemplatesDatabase,
       updated: entryTemplatesDatabase,
       property: { type: 'select', name: 'Status', options: [] },
     });
 
-    const view = getKanbanView(kanbanView.id);
+    // The handler runs queued rather than during the dispatch
+    await vi.waitFor(() => {
+      const view = getKanbanView(kanbanView.id);
 
-    expect(view.options).not.toHaveProperty('groupBy');
-    expect(view.data).toEqual({ order: {} });
+      expect(view.options).not.toHaveProperty('groupBy');
+      expect(view.data).toEqual({ order: {} });
+    });
     // Views over other databases keep their group property
     expect(getKanbanView(otherDatabaseView.id).options).toMatchObject({
       groupBy: 'Status',
@@ -108,7 +115,7 @@ describe('initializeKanbanView', () => {
   });
 
   it('re-keys the order and hidden state on option renames', async () => {
-    await Events.dispatch(Databases.events.propertyOptionRenamed, {
+    Events.dispatch(Databases.events.propertyOptionRenamed, {
       original: entryTemplatesDatabase,
       updated: entryTemplatesDatabase,
       property: renamedOptionProperty,
@@ -116,10 +123,13 @@ describe('initializeKanbanView', () => {
       newValue: 'Doing',
     });
 
-    const view = getKanbanView(kanbanView.id);
+    // The handler runs queued rather than during the dispatch
+    await vi.waitFor(() => {
+      const view = getKanbanView(kanbanView.id);
 
-    expect(view.data?.order).toEqual({ Doing: ['entry-1'], '': ['entry-2'] });
-    expect(view.options?.hiddenOptions).toEqual(['Doing']);
+      expect(view.data?.order).toEqual({ Doing: ['entry-1'], '': ['entry-2'] });
+      expect(view.options?.hiddenOptions).toEqual(['Doing']);
+    });
     // Views over other databases keep their saved order
     expect(getKanbanView(otherDatabaseView.id).data?.order).toEqual(
       kanbanView.data?.order,

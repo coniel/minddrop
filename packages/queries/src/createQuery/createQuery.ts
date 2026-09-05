@@ -40,11 +40,11 @@ export async function createQuery(name?: string): Promise<Query> {
   // Add the query to the store
   QueriesStore.set(query);
 
-  // Write the query config to the file system
-  await writeQuery(query.id);
-
   // Dispatch the query created event
   Events.dispatch(QueryCreatedEvent, query);
+
+  // Write the query config to the file system
+  await writeQuery(query.id);
 
   return query;
 }

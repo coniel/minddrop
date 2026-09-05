@@ -25,7 +25,10 @@ export async function addDatabaseProperty(
   const properties = [...config.properties, property];
 
   // Update the database
-  const updated = await updateDatabase(id, { properties });
+  const updatePromise = updateDatabase(id, { properties });
+
+  // Get the updated config
+  const updated = getDatabase(id);
 
   // Dispatch the property added event
   Events.dispatch(DatabasePropertyAddedEvent, {
@@ -33,6 +36,8 @@ export async function addDatabaseProperty(
     updated,
     property,
   });
+
+  await updatePromise;
 
   return updated;
 }

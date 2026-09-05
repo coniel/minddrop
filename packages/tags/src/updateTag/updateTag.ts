@@ -70,22 +70,22 @@ export async function updateTag(
   // Replace the tag in the store
   TagsStore.set(updatedTag);
 
-  // Write the tag config to the file system
-  await writeTag(tagId);
-
   // Dispatch the tag updated event
-  await Events.dispatch(TagUpdatedEvent, {
+  Events.dispatch(TagUpdatedEvent, {
     original: tag,
     updated: updatedTag,
   });
 
   // Dispatch the tag renamed event when the name changed
   if (tag.name !== updatedTag.name) {
-    await Events.dispatch(TagRenamedEvent, {
+    Events.dispatch(TagRenamedEvent, {
       original: tag,
       updated: updatedTag,
     });
   }
+
+  // Write the tag config to the file system
+  await writeTag(tagId);
 
   return updatedTag;
 }

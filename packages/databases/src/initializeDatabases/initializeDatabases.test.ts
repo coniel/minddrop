@@ -35,12 +35,12 @@ describe('initializeDatabases', () => {
     backend = createMockBackendAdapter();
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     // Clear the stores loaded by initializeDatabases
     DatabaseTemplatesStore.clear();
     DatabaseAutomationActionConfigsStore.clear();
 
-    cleanup();
+    await cleanup();
   });
 
   it('loads the databases into the store', async () => {

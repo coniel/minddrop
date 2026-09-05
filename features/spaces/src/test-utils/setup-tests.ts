@@ -22,7 +22,7 @@ export function cleanup() {
   cleanupRender();
   vi.clearAllMocks();
   MockFs.reset();
-  Events._clearAll();
+  Events.tests.cleanup();
   Spaces.Store.clear();
   DataViews.Store.clear();
 }

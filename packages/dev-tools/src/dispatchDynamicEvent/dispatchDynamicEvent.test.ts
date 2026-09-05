@@ -17,7 +17,7 @@ describe('dispatchDynamicEvent', () => {
   beforeEach(setup);
 
   afterEach(() => {
-    Events._clearAll();
+    Events.tests.cleanup();
     cleanup();
   });
 

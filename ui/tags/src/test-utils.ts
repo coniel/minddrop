@@ -15,7 +15,7 @@ export function setup() {
 export function cleanup() {
   cleanupRender();
   cleanupTagFixtures();
-  Events._clearAll();
+  Events.tests.cleanup();
   MockFs.reset();
   vi.clearAllMocks();
 }

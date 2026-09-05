@@ -92,14 +92,14 @@ export async function renameDatabaseEntry<
     lastModified: renamedDatabaseEntry.lastModified,
   });
 
-  // Write the updated entry file
-  await writeDatabaseEntry(id);
-
   // Dispatch the rename event
-  await Events.dispatch(DatabaseEntryRenamedEvent, {
+  Events.dispatch(DatabaseEntryRenamedEvent, {
     original: entry,
     updated: renamedDatabaseEntry,
   });
+
+  // Write the updated entry file
+  await writeDatabaseEntry(id);
 
   // Return the renamed entry
   return renamedDatabaseEntry;

@@ -115,7 +115,7 @@ describe('useQueryRunner', () => {
     data?: EventData<TEvent>,
   ) {
     await act(async () => {
-      await Events.dispatch(event, data);
+      Events.dispatch(event, data);
     });
   }
 

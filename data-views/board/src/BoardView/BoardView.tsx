@@ -93,13 +93,30 @@ export const BoardViewComponent: React.FC<
     [view.data],
   );
 
+  // Map each duplicate among the entries to the entry it was
+  // duplicated from. The reconciliation places a duplicate below
+  // its original until the placement listener has persisted its
+  // position.
+  const databaseEntries = DatabaseEntries.useByIds(entries);
+  const duplicateOriginals = useMemo(() => {
+    const originals: Record<string, string> = {};
+
+    databaseEntries.forEach((entry) => {
+      if (entry.duplicatedFrom) {
+        originals[entry.id] = entry.duplicatedFrom;
+      }
+    });
+
+    return originals;
+  }, [databaseEntries]);
+
   // Reconcile the saved column layout with the current entries
   // from the collection. Entries added to the collection but not
   // yet placed in a column go into the first column. Entries
   // removed from the collection are filtered out.
   const reconciledColumns = useMemo(
-    () => reconcileColumns(columns, entries),
-    [columns, entries],
+    () => reconcileColumns(columns, entries, duplicateOriginals),
+    [columns, entries, duplicateOriginals],
   );
 
   // Map each entry to the card layout its database is
@@ -134,9 +151,9 @@ export const BoardViewComponent: React.FC<
     [view.id],
   );
 
-  // Place duplicated entries directly below their original. Fired
-  // before the duplicate is added to the collection, so placing it
-  // now keeps it from being reconciled into the first column.
+  // Persist duplicated entries' placement directly below their
+  // original. Until this lands, the reconciliation places the
+  // duplicate there from the duplication's event log entry.
   useEffect(() => {
     Events.addListener(
       DatabaseEntryDuplicatedEvent,

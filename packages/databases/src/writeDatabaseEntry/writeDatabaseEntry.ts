@@ -60,7 +60,7 @@ export async function writeDatabaseEntry(id: string): Promise<void> {
   // Write the entry file
   await Fs.writeTextFile(entry.path, contents);
 
-  await Events.dispatch(DatabaseEntryWrittenEvent, {
+  Events.dispatch(DatabaseEntryWrittenEvent, {
     entry,
     database,
     previousContents,

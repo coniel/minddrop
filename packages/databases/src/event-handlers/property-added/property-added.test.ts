@@ -46,9 +46,9 @@ describe('onAddProperty', () => {
     );
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupTestSqlDatabase();
-    cleanup();
+    await cleanup();
   });
 
   it('does nothing if the property is not a collection type', () => {

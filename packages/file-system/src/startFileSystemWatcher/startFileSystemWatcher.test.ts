@@ -41,7 +41,7 @@ describe('startFileSystemWatcher', () => {
 
   afterEach(() => {
     stopWatcher();
-    Events._clearAll();
+    Events.tests.cleanup();
     clearWriteRegistry();
     vi.useRealTimers();
   });

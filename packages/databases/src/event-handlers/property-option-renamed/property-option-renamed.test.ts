@@ -78,7 +78,7 @@ describe('onRenamePropertyOption', () => {
     DatabaseEntriesStore.set(otherEntry);
 
     // Create the database directory so entry rewrites can write
-    // the entry files
+    // the entry files.
     MockFs.addFiles([selectDatabase.path]);
   });
 

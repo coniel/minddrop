@@ -70,9 +70,9 @@ describe('onTagRenamed', () => {
     MockFs.addFiles([tagsDatabase.path]);
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupRecordingTestSqlDatabase();
-    cleanup();
+    await cleanup();
   });
 
   it('rewrites the tag name in referencing entries', async () => {

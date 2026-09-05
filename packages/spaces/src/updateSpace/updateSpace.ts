@@ -32,14 +32,14 @@ export async function updateSpace(
   // Update the space in the store
   SpacesStore.update(spaceId, updatedSpace);
 
-  // Write the space config to the file system
-  await writeSpace(spaceId);
-
   // Dispatch the space updated event
   Events.dispatch(SpaceUpdatedEvent, {
     original: space,
     updated: updatedSpace,
   });
+
+  // Write the space config to the file system
+  await writeSpace(spaceId);
 
   return updatedSpace;
 }

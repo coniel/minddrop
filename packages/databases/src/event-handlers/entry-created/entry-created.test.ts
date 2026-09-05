@@ -38,9 +38,9 @@ describe('onCreateEntry', () => {
     });
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupTestSqlDatabase();
-    cleanup();
+    await cleanup();
   });
 
   it('does nothing if the database has no collection properties', async () => {

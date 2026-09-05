@@ -49,7 +49,7 @@ export function cleanup() {
   SelectionStore.getState().clear();
   SelectionItemSerializersStore.clear();
   // Clear event listeners
-  Events._clearAll();
+  Events.tests.cleanup();
   // Clear mocks
   vi.clearAllMocks();
 }

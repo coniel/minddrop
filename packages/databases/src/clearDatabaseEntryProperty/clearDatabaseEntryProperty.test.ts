@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { CollectionUpdatedEvent, Collections } from '@minddrop/collections';
 import { Events } from '@minddrop/events';
 import { InvalidParameterError } from '@minddrop/utils';
@@ -48,9 +48,9 @@ describe('clearDatabaseEntryProperty', () => {
     );
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupTestSqlDatabase();
-    cleanup();
+    await cleanup();
   });
 
   it('throws if the property does not exist on the database', async () => {
@@ -85,22 +85,25 @@ describe('clearDatabaseEntryProperty', () => {
     expect(collection.items).toEqual([]);
     expect(result.properties.Related).toEqual([]);
 
-    // Find the entry's re-upserted SQL record
-    const record = sqlGetAllEntriesFull().find(
-      (entryRecord) => entryRecord.id === collectionEntry1.id,
-    )!;
+    // The collection write-back lands as an unawaited event side
+    // effect, so poll for the re-upserted SQL record.
+    await vi.waitFor(() => {
+      const record = sqlGetAllEntriesFull().find(
+        (entryRecord) => entryRecord.id === collectionEntry1.id,
+      )!;
 
-    // The cleared property should have no SQL value rows left
-    expect(record.properties).not.toContainEqual(
-      expect.objectContaining({ name: 'Related' }),
-    );
-    // Other collection properties should keep their value rows
-    expect(record.properties).toContainEqual(
-      expect.objectContaining({
-        name: 'References',
-        value: collectionEntry1.properties.References,
-      }),
-    );
+      // The cleared property should have no SQL value rows left
+      expect(record.properties).not.toContainEqual(
+        expect.objectContaining({ name: 'Related' }),
+      );
+      // Other collection properties should keep their value rows
+      expect(record.properties).toContainEqual(
+        expect.objectContaining({
+          name: 'References',
+          value: collectionEntry1.properties.References,
+        }),
+      );
+    });
   });
 
   it('removes the property from the entry', async () => {

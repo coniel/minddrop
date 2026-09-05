@@ -61,11 +61,11 @@ export async function createSpace(
   // Register the design as a virtual design owned by the space
   Designs.createVirtual(design);
 
-  // Write the space config to the file system
-  await writeSpace(space.id);
-
   // Dispatch the space created event
   Events.dispatch(SpaceCreatedEvent, space);
+
+  // Write the space config to the file system
+  await writeSpace(space.id);
 
   return space;
 }

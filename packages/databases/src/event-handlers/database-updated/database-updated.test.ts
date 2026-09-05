@@ -44,9 +44,9 @@ describe('onUpdateDatabase', () => {
     );
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupTestSqlDatabase();
-    cleanup();
+    await cleanup();
   });
 
   it('syncs the updated metadata to SQL', () => {

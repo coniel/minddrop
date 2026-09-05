@@ -34,14 +34,14 @@ export async function updateQuery(
   // Update the query in the store
   QueriesStore.update(queryId, updatedQuery);
 
-  // Write the query config to the file system
-  await writeQuery(queryId);
-
   // Dispatch the query updated event
   Events.dispatch(QueryUpdatedEvent, {
     original: query,
     updated: updatedQuery,
   });
+
+  // Write the query config to the file system
+  await writeQuery(queryId);
 
   return updatedQuery;
 }

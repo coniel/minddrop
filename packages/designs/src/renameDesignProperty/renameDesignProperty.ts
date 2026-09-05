@@ -52,14 +52,16 @@ export async function renameDesignProperty(
     );
   }
 
-  // Rename the property and rebind layout elements bound to it,
-  // then persist
-  const updated = await updateDesign(id, {
+  // Rename the property and rebind layout elements bound to it
+  const updatePromise = updateDesign(id, {
     properties: design.properties.map((existing) =>
       existing.name === oldName ? { ...existing, name: newName } : existing,
     ),
     layouts: remapLayoutPropertyBindings(design.layouts, oldName, newName),
   });
+
+  // Get the updated design
+  const updated = getDesign(id);
 
   // Dispatch a property renamed event
   Events.dispatch(DesignPropertyRenamedEvent, {
@@ -67,6 +69,8 @@ export async function renameDesignProperty(
     oldName,
     newName,
   });
+
+  await updatePromise;
 
   return updated;
 }

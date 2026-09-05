@@ -19,6 +19,6 @@ export function cleanup() {
   Databases.Store.clear();
   DatabaseEntries.Store.clear();
 
-  Events._clearAll();
+  Events.tests.cleanup();
   vi.clearAllMocks();
 }

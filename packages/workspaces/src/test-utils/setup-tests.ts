@@ -19,6 +19,6 @@ export function cleanup() {
   vi.clearAllMocks();
   vi.useRealTimers();
   MockFs.reset();
-  Events._clearAll();
+  Events.tests.cleanup();
   cleanupWorkspaceFixtures();
 }

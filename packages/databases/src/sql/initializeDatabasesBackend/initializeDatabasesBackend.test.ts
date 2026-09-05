@@ -35,9 +35,9 @@ describe('initializeDatabasesBackend', () => {
     setupTestSqlDatabase();
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupTestSqlDatabase();
-    cleanup();
+    await cleanup();
   });
 
   it('populates SQL with the workspace databases and entries', async () => {

@@ -5,8 +5,8 @@ import { DatabaseEntriesClearedEvent } from '../events';
 import { getAllDatabaseEntries } from '../getAllDatabaseEntries';
 import { getDatabase } from '../getDatabase';
 import {
-  resolveEntryPropertyFilePaths,
   resolveDatabasePropertyDirs,
+  resolveEntryPropertyFilePaths,
 } from '../utils';
 
 /**
@@ -31,7 +31,22 @@ export async function clearDatabaseEntries(databaseId: string): Promise<void> {
     return;
   }
 
-  // Trash each entry's files and remove it from the store
+  // Resolve each entry's property file paths. The resolver reads the
+  // entries from the store, so we need to collect the paths before
+  // removing the entries from the store.
+  const propertyFilePaths = new Map(
+    entries.map((entry) => [entry.id, resolveEntryPropertyFilePaths(entry.id)]),
+  );
+
+  // Remove the entries from the store
+  for (const entry of entries) {
+    DatabaseEntriesStore.remove(entry.id);
+  }
+
+  // Dispatch a single cleared event with all deleted entries
+  Events.dispatch(DatabaseEntriesClearedEvent, { databaseId, entries });
+
+  // Trash each entry's files
   for (const entry of entries) {
     // Entry-based storage keeps the entry file and its property files in a
     // per-entry subdirectory, so trashing the subdirectory removes them all
@@ -45,7 +60,7 @@ export async function clearDatabaseEntries(databaseId: string): Promise<void> {
       // Root storage keeps property files loose in the database root, so
       // trash each of the entry's file-property files individually
       if (database.propertyFileStorage === 'root') {
-        for (const propertyFilePath of resolveEntryPropertyFilePaths(entry.id)) {
+        for (const propertyFilePath of propertyFilePaths.get(entry.id) ?? []) {
           // Only trash files that exist
           if (await Fs.exists(propertyFilePath)) {
             await Fs.trashFile(propertyFilePath);
@@ -53,9 +68,6 @@ export async function clearDatabaseEntries(databaseId: string): Promise<void> {
         }
       }
     }
-
-    // Remove the entry from the store
-    DatabaseEntriesStore.remove(entry.id);
   }
 
   // Trash the database's shared property directories as a whole, since every
@@ -66,7 +78,4 @@ export async function clearDatabaseEntries(databaseId: string): Promise<void> {
       await Fs.trashDir(propertyDirPath);
     }
   }
-
-  // Dispatch a single cleared event with all deleted entries
-  await Events.dispatch(DatabaseEntriesClearedEvent, { databaseId, entries });
 }

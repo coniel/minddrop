@@ -20,12 +20,12 @@ export async function deleteAutomation(automationId: string): Promise<void> {
   // Delete the automation from the store
   AutomationsStore.remove(automationId);
 
+  // Dispatch the automation deleted event
+  Events.dispatch(AutomationDeletedEvent, automation);
+
   // Delete the automation config from the file system, virtual
   // automations having no file of their own
   if (!automation.virtual) {
     await Fs.removeFile(resolveAutomationFilePath(automationId));
   }
-
-  // Dispatch the automation deleted event
-  Events.dispatch(AutomationDeletedEvent, automation);
 }

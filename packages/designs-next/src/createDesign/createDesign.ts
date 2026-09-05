@@ -57,13 +57,13 @@ export async function createDesign(
   // Add the design to the store
   DesignsStore.set(design);
 
+  // Dispatch a design created event
+  Events.dispatch(DesignCreatedEvent, design);
+
   // Write unowned designs to the file system
   if (!design.owner) {
     await writeDesign(design.id);
   }
-
-  // Dispatch a design created event
-  Events.dispatch(DesignCreatedEvent, design);
 
   return design;
 }

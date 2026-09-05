@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Events } from '@minddrop/events';
 import { DevToolsEventsStore } from '../DevToolsEventsStore';
 import { DevToolsNamespace } from '../constants';
@@ -30,16 +30,20 @@ describe('startEventCapture', () => {
   });
 
   it('captures dispatched events', async () => {
-    await Events.dispatch(TestCapturedEvent, { id: 'db_1' });
+    Events.dispatch(TestCapturedEvent, { id: 'db_1' });
 
-    const [entry] = DevToolsEventsStore.getAll();
+    // The capture listener runs queued rather than during the
+    // dispatch.
+    await vi.waitFor(() => {
+      const [entry] = DevToolsEventsStore.getAll();
 
-    expect(entry.name).toBe(TestCapturedEvent);
-    expect(entry.data).toEqual({ id: 'db_1' });
+      expect(entry.name).toBe(TestCapturedEvent);
+      expect(entry.data).toEqual({ id: 'db_1' });
+    });
   });
 
   it('does not capture the events the dev tools dispatch themselves', async () => {
-    await Events.dispatch('stores:persist', {
+    Events.dispatch('stores:persist', {
       namespace: DevToolsNamespace,
       persistTo: 'app-config',
       data: {},
@@ -49,17 +53,21 @@ describe('startEventCapture', () => {
   });
 
   it('captures the events of other stores', async () => {
-    await Events.dispatch('stores:persist', {
+    Events.dispatch('stores:persist', {
       namespace: 'app-ui',
       persistTo: 'app-config',
       data: {},
     });
 
-    expect(DevToolsEventsStore.getAll().length).toBe(1);
+    // The capture listener runs queued rather than during the
+    // dispatch.
+    await vi.waitFor(() => {
+      expect(DevToolsEventsStore.getAll().length).toBe(1);
+    });
   });
 
   it('does not capture the catch all listener itself', async () => {
-    await Events.dispatch('*');
+    Events.dispatch('*');
 
     expect(DevToolsEventsStore.getAll()).toEqual([]);
   });
@@ -67,7 +75,7 @@ describe('startEventCapture', () => {
   it('stops capturing once stopped', async () => {
     stopCapture();
 
-    await Events.dispatch(TestCapturedEvent);
+    Events.dispatch(TestCapturedEvent);
 
     expect(DevToolsEventsStore.getAll()).toEqual([]);
   });

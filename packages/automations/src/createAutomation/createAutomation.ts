@@ -37,11 +37,11 @@ export async function createAutomation(
   // Add the automation to the store
   AutomationsStore.set(automation);
 
-  // Write the automation config to the file system
-  await writeAutomation(automation.id);
-
   // Dispatch the automation created event
   Events.dispatch(AutomationCreatedEvent, automation);
+
+  // Write the automation config to the file system
+  await writeAutomation(automation.id);
 
   return automation;
 }

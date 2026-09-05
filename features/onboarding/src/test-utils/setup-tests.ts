@@ -28,6 +28,6 @@ export function cleanup() {
   cleanupRender();
   vi.clearAllMocks();
   MockFs.reset();
-  Events._clearAll();
+  Events.tests.cleanup();
   Workspaces.Store.clear();
 }

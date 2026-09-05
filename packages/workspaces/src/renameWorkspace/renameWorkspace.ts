@@ -48,12 +48,6 @@ export async function renameWorkspace(
   // Update the workspace in the store
   WorkspacesStore.update(workspace.id, update);
 
-  // Write the updated workspace config to the file system
-  await writeWorkspaceConfig(id);
-
-  // Write the workspaces config to update the workspace path in it
-  await writeWorkspacesConfig();
-
   // Get the updated workspace
   const updatedWorkspace = getWorkspace(id);
 
@@ -62,6 +56,12 @@ export async function renameWorkspace(
     original: workspace,
     updated: updatedWorkspace,
   });
+
+  // Write the updated workspace config to the file system
+  await writeWorkspaceConfig(id);
+
+  // Write the workspaces config to update the workspace path in it
+  await writeWorkspacesConfig();
 
   // Return the updated workspace
   return updatedWorkspace;

@@ -1,18 +1,16 @@
 import { RefObject, useEffect } from 'react';
 
 // Width of the zones along the element's edges which trigger
-// scrolling
+// scrolling.
 const EDGE_SIZE = 180;
 
 // Scroll speed in pixels per frame at the deepest point of an
-// edge zone
+// edge zone.
 const MAX_SPEED = 16;
 
 /**
  * Scrolls an element while a drag hovers near its edges, ramping
- * the speed up with proximity to the edge. Mouse events do not
- * fire during drags, so the position is tracked via drag over
- * events instead.
+ * the speed up with proximity to the edge.
  *
  * @param scrollElementRef - Ref to the scrollable element.
  */
@@ -55,7 +53,7 @@ export function useDragEdgeScroll(
     };
 
     // Update the velocity from the drag position, starting the
-    // frame loop when the drag sits in an edge zone
+    // frame loop when the drag sits in an edge zone.
     const handleDragOver = (event: DragEvent) => {
       const rect = element.getBoundingClientRect();
 

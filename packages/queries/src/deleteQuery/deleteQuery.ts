@@ -20,9 +20,9 @@ export async function deleteQuery(queryId: string): Promise<void> {
   // Delete the query from the store
   QueriesStore.remove(queryId);
 
-  // Delete the query config from the file system
-  await Fs.removeFile(resolveQueryFilePath(queryId));
-
   // Dispatch the query deleted event
   Events.dispatch(QueryDeletedEvent, query);
+
+  // Delete the query config from the file system
+  await Fs.removeFile(resolveQueryFilePath(queryId));
 }

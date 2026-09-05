@@ -86,9 +86,9 @@ describe('onRemoveProperty', () => {
     );
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupTestSqlDatabase();
-    cleanup();
+    await cleanup();
   });
 
   it("re-indexes the database's entries in SQL", async () => {

@@ -69,14 +69,14 @@ export async function updateDatabase(
   // Update the database in the store
   DatabasesStore.update(id, updatedConfig);
 
-  // Write the updated config to the file system
-  await writeDatabaseConfig(id);
-
   // Dispatch a database updated event
   Events.dispatch(DatabaseUpdatedEvent, {
     original: config,
     updated: updatedConfig,
   });
+
+  // Write the updated config to the file system
+  await writeDatabaseConfig(id);
 
   return updatedConfig;
 }

@@ -72,13 +72,18 @@ export async function addDatabaseEntryTemplate(
   const entryTemplates = [...(database.entryTemplates ?? []), newTemplate];
 
   // Update the database
-  const updated = await updateDatabase(databaseId, { entryTemplates });
+  const updatePromise = updateDatabase(databaseId, { entryTemplates });
+
+  // Get the updated config
+  const updated = getDatabase(databaseId);
 
   // Dispatch the entry template added event
   Events.dispatch(DatabaseEntryTemplateAddedEvent, {
     database: updated,
     template: newTemplate,
   });
+
+  await updatePromise;
 
   return updated;
 }

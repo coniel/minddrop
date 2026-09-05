@@ -12,5 +12,5 @@ export function cleanup() {
   DevToolsPanelsStore.clear();
   DevToolsLogsStore.clear();
   DevToolsEventsStore.clear();
-  Events._clearAll();
+  Events.tests.cleanup();
 }

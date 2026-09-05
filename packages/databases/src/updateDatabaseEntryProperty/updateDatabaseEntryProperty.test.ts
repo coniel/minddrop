@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { CollectionUpdatedEvent, Collections } from '@minddrop/collections';
 import { Events } from '@minddrop/events';
 import { InvalidParameterError, isUntitledTitle } from '@minddrop/utils';
@@ -42,9 +42,9 @@ describe('updateDatabaseEntryProperty', () => {
     );
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupTestSqlDatabase();
-    cleanup();
+    await cleanup();
   });
 
   it('updates the property value', async () => {
@@ -96,16 +96,19 @@ describe('updateDatabaseEntryProperty', () => {
       expect(collection.items).toEqual([relatedEntry1.id]);
       expect(updated.properties.Related).toEqual([relatedEntry1.id]);
 
-      // Find the entry's re-upserted SQL record
-      const record = sqlGetAllEntriesFull().find(
-        (entryRecord) => entryRecord.id === collectionEntry1.id,
-      )!;
+      // The collection write-back lands as an unawaited event side
+      // effect, so poll for the re-upserted SQL record.
+      await vi.waitFor(() => {
+        const record = sqlGetAllEntriesFull().find(
+          (entryRecord) => entryRecord.id === collectionEntry1.id,
+        )!;
 
-      // The SQL value rows should carry the new membership
-      expect(record.properties).toContainEqual({
-        name: 'Related',
-        type: 'collection',
-        value: [relatedEntry1.id],
+        // The SQL value rows should carry the new membership
+        expect(record.properties).toContainEqual({
+          name: 'Related',
+          type: 'collection',
+          value: [relatedEntry1.id],
+        });
       });
     });
 

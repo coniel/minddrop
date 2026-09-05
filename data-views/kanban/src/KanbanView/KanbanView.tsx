@@ -7,7 +7,12 @@ import React, {
 } from 'react';
 import { Collections } from '@minddrop/collections';
 import { DataViewTypeComponentProps, DataViews } from '@minddrop/data-views';
-import { DatabaseEntries, Databases } from '@minddrop/databases';
+import {
+  DatabaseEntries,
+  DatabaseEntryDuplicatedEvent,
+  Databases,
+} from '@minddrop/databases';
+import { Events } from '@minddrop/events';
 import { getDroppedEntryIds } from '@minddrop/feature-databases';
 import { SelectPropertySchema } from '@minddrop/properties';
 import { DropEventData } from '@minddrop/selection';
@@ -64,6 +69,27 @@ export const KanbanViewComponent: React.FC<
   // The select property the columns are generated from
   const { property, databaseId } = useKanbanGroupProperty(view);
 
+  // In-flight option renames on the group property, aliasing old
+  // values to new ones so entries the rename's side effects have
+  // not rewritten yet stay in the renamed column rather than
+  // dropping into the no-value column.
+  const optionRenames = Events.useLogs(Databases.events.propertyOptionRenamed);
+  const valueAliases = useMemo(() => {
+    const aliases: Record<string, string> = {};
+
+    optionRenames.forEach(({ data }) => {
+      // Match renames on the grouped database's group property
+      if (
+        data.updated.id === databaseId &&
+        data.property.name === property?.name
+      ) {
+        aliases[data.oldValue] = data.newValue;
+      }
+    });
+
+    return aliases;
+  }, [optionRenames, databaseId, property?.name]);
+
   // The value of a just added column whose rename popover should
   // open once its heading has rendered.
   const pendingRenameValue = usePendingColumnRename(view.id);
@@ -89,11 +115,35 @@ export const KanbanViewComponent: React.FC<
     [view.data],
   );
 
+  // Map each duplicate among the entries to the entry it was
+  // duplicated from. The column resolution places a duplicate below
+  // its original until the placement listener has persisted its
+  // position.
+  const duplicateOriginals = useMemo(() => {
+    const originals: Record<string, string> = {};
+
+    groupedEntries.forEach((entry) => {
+      if (entry.duplicatedFrom) {
+        originals[entry.id] = entry.duplicatedFrom;
+      }
+    });
+
+    return originals;
+  }, [groupedEntries]);
+
   // Generate the columns and place the entries in them
   const columns = useMemo(
     () =>
-      property ? resolveKanbanColumns(groupedEntries, property, order) : [],
-    [groupedEntries, property, order],
+      property
+        ? resolveKanbanColumns(
+            groupedEntries,
+            property,
+            order,
+            valueAliases,
+            duplicateOriginals,
+          )
+        : [],
+    [groupedEntries, property, order, valueAliases, duplicateOriginals],
   );
 
   // The columns visible on the board, dropping hidden ones and,
@@ -160,6 +210,57 @@ export const KanbanViewComponent: React.FC<
     },
     [view.id],
   );
+
+  // Persist a duplicated entry's placement directly below its
+  // original. Until the placement is persisted, the column
+  // resolution shows the duplicate there via its duplicatedFrom
+  // reference.
+  useEffect(() => {
+    Events.addListener(
+      DatabaseEntryDuplicatedEvent,
+      `kanban-view-${view.id}`,
+      (data) => {
+        // Ignore duplications from other sources
+        if (data.source?.id !== view.dataSource.id) {
+          return;
+        }
+
+        // Locate the original's column
+        const column = columns.find((candidate) =>
+          candidate.entryIds.includes(data.original.id),
+        );
+
+        // Skip the placement if the original is not on the board
+        if (!column) {
+          return;
+        }
+
+        // Index into the column's saved order rather than its
+        // rendered list, which also holds unplaced entries the
+        // order does not. An unplaced original resolves to the
+        // top, matching the display fallback.
+        const originalIndex = (order[column.value] ?? []).indexOf(
+          data.original.id,
+        );
+
+        updateOrder(
+          placeEntryInColumn(
+            order,
+            data.duplicate.id,
+            column.value,
+            originalIndex + 1,
+          ),
+        );
+      },
+    );
+
+    return () => {
+      Events.removeListener(
+        DatabaseEntryDuplicatedEvent,
+        `kanban-view-${view.id}`,
+      );
+    };
+  }, [view.id, view.dataSource.id, columns, order, updateOrder]);
 
   // Track the column or heading under the pointer, whose heading
   // shows its actions. Tracked in state rather than via :hover,
@@ -358,7 +459,7 @@ export const KanbanViewComponent: React.FC<
       setAutoFocusEntryId(entry.id);
 
       // Bring the new entry's card into view if the column's top
-      // sits off screen
+      // sits off screen.
       scrollEntryIntoView(entry.id);
 
       // Check if the source is a collection. Collections list
@@ -405,7 +506,7 @@ export const KanbanViewComponent: React.FC<
       }
 
       // Move the entry to the drop position, taking the column's
-      // value
+      // value.
       await moveEntryToColumn(
         droppedEntryId,
         property,

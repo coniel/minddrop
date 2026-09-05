@@ -10,9 +10,9 @@ import { getDatabase } from '../getDatabase';
 import { Database, PropertyFileStorage } from '../types';
 import { updateDatabaseEntryProperty } from '../updateDatabaseEntryProperty';
 import {
-  resolveEntryPropertyFilePath,
   resolveDatabasePropertyDirs,
   resolveEntryFilePath,
+  resolveEntryPropertyFilePath,
   resolvePropertyFilePath,
   resolvePropertyFilesDirName,
 } from '../utils';
@@ -203,16 +203,16 @@ export async function setDatabasePropertyFileStorage(
     lastModified: new Date(),
   });
 
-  // Persist the updated config to disk
-  await writeDatabaseConfig(id);
-
   const updated = getDatabase(id);
 
   // Dispatch a database updated event
-  await Events.dispatch(DatabaseUpdatedEvent, {
+  Events.dispatch(DatabaseUpdatedEvent, {
     original: database,
     updated,
   });
+
+  // Persist the updated config to disk
+  await writeDatabaseConfig(id);
 
   return updated;
 }

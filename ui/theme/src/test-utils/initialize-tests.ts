@@ -45,7 +45,7 @@ export function setup() {
 }
 
 export function cleanup() {
-  // Remove the listeners registered during the test. Events._clearAll()
+  // Remove the listeners registered during the test. Events.tests.cleanup()
   // is deliberately not used: it would also remove the hydrate listener
   // the theme store registers when its module is first loaded, which
   // cannot be registered again, leaving hydrate() unable to resolve for

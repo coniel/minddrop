@@ -76,9 +76,9 @@ describe('onDeleteEntry', () => {
     );
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupTestSqlDatabase();
-    cleanup();
+    await cleanup();
   });
 
   it('deletes the entry from SQL', async () => {

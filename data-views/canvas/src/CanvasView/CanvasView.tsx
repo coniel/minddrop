@@ -122,13 +122,30 @@ const CanvasViewContent: React.FC<
   // Resolve nodes from view data, falling back to an empty canvas
   const nodes = useMemo(() => view.data?.nodes || [], [view.data]);
 
+  // Map each duplicate among the entries to the entry it was
+  // duplicated from. The reconciliation places a duplicate below
+  // its original until the placement listener has persisted its
+  // position.
+  const databaseEntries = DatabaseEntries.useByIds(entries);
+  const duplicateOriginals = useMemo(() => {
+    const originals: Record<string, string> = {};
+
+    databaseEntries.forEach((entry) => {
+      if (entry.duplicatedFrom) {
+        originals[entry.id] = entry.duplicatedFrom;
+      }
+    });
+
+    return originals;
+  }, [databaseEntries]);
+
   // Reconcile the saved nodes with the current entries from the
   // collection. Entries added to the collection but not yet
   // placed get auto-placed positions. Nodes of entries removed
   // from the collection are filtered out.
   const reconciledNodes = useMemo(
-    () => reconcileNodes(nodes, entries),
-    [nodes, entries],
+    () => reconcileNodes(nodes, entries, duplicateOriginals),
+    [nodes, entries, duplicateOriginals],
   );
 
   // Resolve connections from view data, falling back to none
@@ -478,9 +495,9 @@ const CanvasViewContent: React.FC<
     [reconciledNodes, updateNodes],
   );
 
-  // Place duplicated entries next to their original. Fired before
-  // the duplicate is added to the collection, so placing it now
-  // keeps it from being reconciled into the auto-placed grid.
+  // Persist duplicated entries' placement below their original.
+  // Until this lands, the reconciliation places the duplicate
+  // there from the duplication's event log entry.
   useEffect(() => {
     Events.addListener(
       DatabaseEntryDuplicatedEvent,

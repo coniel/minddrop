@@ -21,11 +21,11 @@ export async function deleteDataView(id: string): Promise<void> {
   // Remove the data view from the store
   DataViewsStore.remove(id);
 
+  // Dispatch a data view deleted event
+  Events.dispatch(DataViewDeletedEvent, view);
+
   // Delete the data view file from the file system if not virtual
   if (!view.virtual) {
     await Fs.removeFile(resolveViewFilePath(id));
   }
-
-  // Dispatch a data view deleted event
-  Events.dispatch(DataViewDeletedEvent, view);
 }

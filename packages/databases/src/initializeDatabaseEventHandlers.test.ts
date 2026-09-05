@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Events } from '@minddrop/events';
 import { History } from '@minddrop/history';
 import { DatabaseEntryCreatedEvent, DatabaseEntryWrittenEvent } from './events';
@@ -40,29 +40,35 @@ describe('initializeDatabaseEventHandlers', () => {
     initializeDatabaseEventHandlers();
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupTestSqlDatabase();
-    cleanup();
+    await cleanup();
   });
 
   it('records history when an entry is created', async () => {
-    await Events.dispatch(DatabaseEntryCreatedEvent, objectEntry1);
+    Events.dispatch(DatabaseEntryCreatedEvent, objectEntry1);
 
-    expect(await History.read(subject)).toEqual([
-      expect.objectContaining({ kind: 'created' }),
-    ]);
+    // The record lands as an unawaited event side effect
+    await vi.waitFor(async () => {
+      expect(await History.read(subject)).toEqual([
+        expect.objectContaining({ kind: 'created' }),
+      ]);
+    });
   });
 
   it('records history when an entry is written', async () => {
-    await Events.dispatch(DatabaseEntryWrittenEvent, {
+    Events.dispatch(DatabaseEntryWrittenEvent, {
       entry: objectEntry1,
       database: objectDatabase,
       previousContents: 'The contents the write replaced',
       contents: 'The contents that were written',
     });
 
-    expect(await History.read(subject)).toEqual([
-      expect.objectContaining({ kind: 'content' }),
-    ]);
+    // The record lands as an unawaited event side effect
+    await vi.waitFor(async () => {
+      expect(await History.read(subject)).toEqual([
+        expect.objectContaining({ kind: 'content' }),
+      ]);
+    });
   });
 });

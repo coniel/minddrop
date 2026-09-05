@@ -7,7 +7,7 @@ import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabaseEntryCreatedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntrySerializer } from '../getDatabaseEntrySerializer';
-import { DatabaseEntry } from '../types';
+import { DatabaseEntry, DatabaseEntryId } from '../types';
 import { setTimestampProperties } from '../utils';
 import { writeDatabaseEntry } from '../writeDatabaseEntry';
 import { writeEntryMetadata } from '../writeEntryMetadata';
@@ -18,6 +18,7 @@ import { writeEntryMetadata } from '../writeEntryMetadata';
  * @param databaseId - The ID of the database to create the entry in.
  * @param title - The entry title. Defaults to "Untitled".
  * @param properties - The entry properties.
+ * @param duplicatedFrom - The ID of the entry this entry duplicates, held in the store for the session only.
  *
  * @returns The newly created entry.
  *
@@ -32,6 +33,7 @@ export async function createDatabaseEntry<
   databaseId: string,
   title = i18n.t('labels.untitled'),
   properties: Partial<TProperties> = {},
+  duplicatedFrom?: DatabaseEntryId,
 ): Promise<DatabaseEntry<TProperties>> {
   // The file extension for the entry's main file
   let fileExtension = '';
@@ -85,19 +87,20 @@ export async function createDatabaseEntry<
     // Persist the timestamps to the entry's sidecar, from where they are
     // read from then on, since file stat does not survive rewrites
     metadata: { created: now, lastModified: now },
+    ...(duplicatedFrom && { duplicatedFrom }),
   };
 
   // Add the entry to the store
   DatabaseEntriesStore.set(entry);
 
-  // Werite the entry to the file system
+  // Dispatch an entry created event
+  Events.dispatch(DatabaseEntryCreatedEvent, entry);
+
+  // Write the entry to the file system
   await writeDatabaseEntry(entry.id);
 
   // Write the entry's metadata sidecar
   await writeEntryMetadata(database.path, entry.path, entry.metadata);
-
-  // Dispatch an entry created event
-  Events.dispatch(DatabaseEntryCreatedEvent, entry);
 
   return entry;
 }

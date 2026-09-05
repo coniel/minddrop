@@ -22,7 +22,7 @@ const HoveredItemStore = createVanillaStore<HoveredItemState>(() => ({
 
 // The position the pointer is known to hold, used to tell real
 // movement from the move events fired when content shifts beneath a
-// stationary pointer
+// stationary pointer.
 let lastPosition: { x: number; y: number } | null = null;
 
 // Whether the document listeners are attached. They live for the
@@ -69,10 +69,10 @@ export function useHoveredItem(id: string): HoveredItem {
   listenForPointer();
 
   // Taking hover releases whichever item held it, which is what a
-  // missed pointerleave would otherwise leave behind
+  // missed pointerleave would otherwise leave behind.
   const handlePointerEnter = useCallback(() => {
     // The pointer has not moved since the drop, so this is the panel
-    // moving under it rather than the user pointing at anything
+    // moving under it rather than the user pointing at anything.
     if (HoveredItemStore.getState().parked) {
       return;
     }
@@ -81,7 +81,7 @@ export function useHoveredItem(id: string): HoveredItem {
   }, [id]);
 
   // Only release hover when it is still this item's to release, so
-  // that a late leave cannot unhover its successor
+  // that a late leave cannot unhover its successor.
   const handlePointerLeave = useCallback(() => {
     HoveredItemStore.setState((state) =>
       state.hoveredId === id ? { hoveredId: null } : state,
@@ -141,7 +141,7 @@ function listenForPointer(): void {
 
       // Content settling under a stationary pointer fires a move at
       // the position it already occupies, which is not the user
-      // moving it
+      // moving it.
       if (!moved) {
         return;
       }

@@ -66,9 +66,9 @@ describe('backgroundSyncDatabases', () => {
     clearRecordedSqlStatements();
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupRecordingTestSqlDatabase();
-    cleanup();
+    await cleanup();
   });
 
   it('resolves references to the existing entry IDs', async () => {

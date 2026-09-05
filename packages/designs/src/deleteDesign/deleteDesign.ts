@@ -18,15 +18,15 @@ export async function deleteDesign(id: string): Promise<void> {
   // Get the design
   const design = getDesign(id);
 
-  // Virtual designs have no bundle; only delete the bundle directory
-  // (and the media inside it) for bundle-backed designs
-  if (!design.virtual) {
-    await Fs.removeDir(resolveDesignBundleDirPath(id), { recursive: true });
-  }
-
   // Remove the design from the store
   DesignsStore.remove(id);
 
   // Dispatch a design deleted event
   Events.dispatch(DesignDeletedEvent, design);
+
+  // Virtual designs have no bundle; only delete the bundle directory
+  // (and the media inside it) for bundle-backed designs
+  if (!design.virtual) {
+    await Fs.removeDir(resolveDesignBundleDirPath(id), { recursive: true });
+  }
 }

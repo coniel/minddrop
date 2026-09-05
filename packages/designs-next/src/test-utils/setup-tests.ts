@@ -33,6 +33,6 @@ export function cleanup() {
   vi.clearAllMocks();
   MockFs.reset();
   DesignsStore.clear();
-  Events._clearAll();
+  Events.tests.cleanup();
   vi.useRealTimers();
 }

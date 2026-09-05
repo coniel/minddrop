@@ -45,7 +45,10 @@ export async function removeDatabaseEntryTemplate(
   }
 
   // Update the database
-  const updated = await updateDatabase(databaseId, { entryTemplates });
+  const updatePromise = updateDatabase(databaseId, { entryTemplates });
+
+  // Get the updated config
+  const updated = getDatabase(databaseId);
 
   if (template) {
     // Dispatch the entry template removed event
@@ -54,6 +57,8 @@ export async function removeDatabaseEntryTemplate(
       template,
     });
   }
+
+  await updatePromise;
 
   return updated;
 }

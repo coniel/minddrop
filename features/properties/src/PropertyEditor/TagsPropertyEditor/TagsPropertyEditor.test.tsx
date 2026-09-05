@@ -33,7 +33,7 @@ describe('<TagsPropertyEditor />', () => {
   afterEach(() => {
     cleanup();
     cleanupTagFixtures();
-    Events._clearAll();
+    Events.tests.cleanup();
     MockFs.reset();
     vi.clearAllMocks();
   });

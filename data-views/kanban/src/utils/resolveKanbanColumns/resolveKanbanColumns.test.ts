@@ -92,6 +92,41 @@ describe('resolveKanbanColumns', () => {
 
     expect(columnEntries(columns, 'Done')).toEqual([doneEntry.id]);
   });
+
+  it('slots unplaced duplicates in below their original', () => {
+    const duplicate = withStatus('database-entry_duplicate', 'Done');
+
+    const columns = resolveKanbanColumns(
+      [doneEntry, otherDoneEntry, duplicate],
+      statusProperty,
+      { Done: [doneEntry.id, otherDoneEntry.id] },
+      undefined,
+      { [duplicate.id]: doneEntry.id },
+    );
+
+    expect(columnEntries(columns, 'Done')).toEqual([
+      doneEntry.id,
+      duplicate.id,
+      otherDoneEntry.id,
+    ]);
+  });
+
+  it('prepends duplicates whose original is not placed', () => {
+    const duplicate = withStatus('database-entry_duplicate', 'Done');
+
+    const columns = resolveKanbanColumns(
+      [doneEntry, duplicate],
+      statusProperty,
+      { Done: [doneEntry.id] },
+      undefined,
+      { [duplicate.id]: 'database-entry_gone' },
+    );
+
+    expect(columnEntries(columns, 'Done')).toEqual([
+      duplicate.id,
+      doneEntry.id,
+    ]);
+  });
 });
 
 /**

@@ -41,7 +41,7 @@ function renderView(
 describe('<ListPanelView />', () => {
   afterEach(() => {
     cleanupRender();
-    Events._clearAll();
+    Events.tests.cleanup();
     vi.clearAllMocks();
   });
 

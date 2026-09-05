@@ -38,7 +38,7 @@ describe('useHoveredItem', () => {
     render(<Rows />);
 
     // The pointer moves on without the first row being told it was
-    // left, which is what a native drag does
+    // left, which is what a native drag does.
     fireEvent.pointerEnter(screen.getByTestId('one'));
     fireEvent.pointerEnter(screen.getByTestId('two'));
 
@@ -52,7 +52,7 @@ describe('useHoveredItem', () => {
     fireEvent.pointerEnter(screen.getByTestId('two'));
 
     // The first row's leave lands late, and must not unhover its
-    // successor
+    // successor.
     fireEvent.pointerLeave(screen.getByTestId('one'));
 
     expect(hoveredIds()).toEqual(['two']);
@@ -73,7 +73,7 @@ describe('useHoveredItem', () => {
     fireEvent.dragStart(document);
 
     // The reflow announces the row which slid underneath as entered,
-    // though the pointer has not moved
+    // though the pointer has not moved.
     fireEvent.pointerEnter(screen.getByTestId('two'));
 
     expect(hoveredIds()).toEqual([]);
@@ -85,7 +85,7 @@ describe('useHoveredItem', () => {
     fireEvent.dragStart(document);
 
     // Settling content fires a move at the position the pointer
-    // already occupies
+    // already occupies.
     fireEvent.pointerMove(document, RESTING);
     fireEvent.pointerMove(document, RESTING);
     fireEvent.pointerEnter(screen.getByTestId('two'));

@@ -15,7 +15,7 @@ export function cleanup() {
   vi.clearAllMocks();
 
   // Restore the mock file system to its initial state.
-  // Events._clearAll() is deliberately not used: it would also remove
+  // Events.tests.cleanup() is deliberately not used: it would also remove
   // the hydrate listeners persistent stores register when their modules
   // are first loaded, which cannot be registered again, leaving
   // hydrate() unable to resolve for the rest of the run. Tests remove

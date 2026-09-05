@@ -55,7 +55,7 @@ export function setup(
 export function cleanup() {
   cleanupRender();
   vi.clearAllMocks();
-  Events._clearAll();
+  Events.tests.cleanup();
 
   // Clear stores
   Databases.Store.clear();

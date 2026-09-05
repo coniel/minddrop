@@ -59,19 +59,17 @@ export async function renameDatabasePropertyOption(
     option.value === oldValue ? { ...option, value: newValue } : option,
   );
 
-  // Write the renamed option to the database config
+  // Update the property in the database config
   const updatePromise = updateDatabaseProperty(databaseId, {
     ...property,
     options,
   });
 
-  // The store already holds the updated config
+  // Get the updated config
   const updated = getDatabase(databaseId);
 
-  // Dispatch before awaiting the config write, so that listener
-  // side effects applied to the stores land in the same render as
-  // the schema change rather than a frame behind it.
-  const dispatchPromise = Events.dispatch(DatabasePropertyOptionRenamedEvent, {
+  // Dispatch the option renamed event
+  Events.dispatch(DatabasePropertyOptionRenamedEvent, {
     original,
     updated,
     property: { ...property, options },
@@ -79,5 +77,5 @@ export async function renameDatabasePropertyOption(
     newValue,
   });
 
-  await Promise.all([updatePromise, dispatchPromise]);
+  await updatePromise;
 }

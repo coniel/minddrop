@@ -54,7 +54,7 @@ export async function renameDatabase(
   });
 
   // Dispatch the rename event
-  await Events.dispatch(DatabaseRenamedEvent, {
+  Events.dispatch(DatabaseRenamedEvent, {
     original: database,
     updated: renamedDatabase,
   });

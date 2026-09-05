@@ -67,14 +67,14 @@ export async function createDatabase(
   // Add the database to the store
   DatabasesStore.set(databaseConfig);
 
+  // Dispatch database created event
+  Events.dispatch(DatabaseCreatedEvent, databaseConfig);
+
   // Create the database directory at the specified path
   await Fs.createDir(dbPath);
 
   // Write the database config to the file system
   await writeDatabaseConfig(databaseConfig.id);
-
-  // Dispatch database created event
-  Events.dispatch(DatabaseCreatedEvent, databaseConfig);
 
   return databaseConfig;
 }

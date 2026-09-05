@@ -26,7 +26,7 @@ export function setup(options: SetupDataViewFixturesOptions) {
 export function cleanup() {
   cleanupDataViewFixtures();
   cleanupWorkspaceFixtures();
-  Events._clearAll();
+  Events.tests.cleanup();
   MockFs.reset();
   vi.clearAllMocks();
   vi.useRealTimers();

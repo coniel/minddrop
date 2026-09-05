@@ -70,7 +70,7 @@ export const ScrollArea = React.forwardRef<HTMLDivElement, ScrollAreaProps>(
       useScrollStatePersistence(stateKey);
 
     // Attach the viewport to both the persistence hook and the
-    // consumer's ref
+    // consumer's ref.
     const setViewportRef = (element: HTMLDivElement | null) => {
       viewportRef.current = element;
 

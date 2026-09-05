@@ -57,11 +57,11 @@ export async function createTag(
   // Add the tag to the store
   TagsStore.set(tag);
 
-  // Write the tag config to the file system
-  await writeTag(tag.id);
-
   // Dispatch the tag created event
   Events.dispatch(TagCreatedEvent, tag);
+
+  // Write the tag config to the file system
+  await writeTag(tag.id);
 
   return tag;
 }

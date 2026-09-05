@@ -23,7 +23,7 @@ export function setup(options: SetupAutomationFixturesOptions) {
 export function cleanup() {
   vi.clearAllMocks();
   MockFs.reset();
-  Events._clearAll();
+  Events.tests.cleanup();
   vi.useRealTimers();
   cleanupAutomationFixtures();
 }

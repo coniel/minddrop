@@ -27,7 +27,10 @@ export async function removeDatabaseProperty(
   const properties = config.properties.filter((p) => p.name !== propertyName);
 
   // Update the database
-  const updated = await updateDatabase(databaseId, { properties });
+  const updatePromise = updateDatabase(databaseId, { properties });
+
+  // Get the updated config
+  const updated = getDatabase(databaseId);
 
   // Dispatch the property removed event if the property existed
   if (property) {
@@ -37,6 +40,8 @@ export async function removeDatabaseProperty(
       property,
     });
   }
+
+  await updatePromise;
 
   return updated;
 }

@@ -156,7 +156,7 @@ export async function setDatabaseEntrySerializer(
   const updated = getDatabase(id);
 
   // Dispatch a database updated event
-  await Events.dispatch(DatabaseUpdatedEvent, {
+  Events.dispatch(DatabaseUpdatedEvent, {
     original: database,
     updated,
   });

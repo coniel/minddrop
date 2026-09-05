@@ -36,17 +36,17 @@ export async function updateAutomation(
   // Update the automation in the store
   AutomationsStore.update(automationId, updatedAutomation);
 
-  // Write the automation config to the file system unless the
-  // automation is virtual, in which case its owner persists it
-  if (!automation.virtual) {
-    await writeAutomation(automationId);
-  }
-
   // Dispatch the automation updated event
   Events.dispatch(AutomationUpdatedEvent, {
     original: automation,
     updated: updatedAutomation,
   });
+
+  // Write the automation config to the file system unless the
+  // automation is virtual, in which case its owner persists it
+  if (!automation.virtual) {
+    await writeAutomation(automationId);
+  }
 
   return updatedAutomation;
 }

@@ -29,9 +29,9 @@ export async function deleteTagGroup(groupId: string): Promise<void> {
   // Delete the group from the store
   TagGroupsStore.remove(groupId);
 
-  // Delete the group file from the file system
-  await Fs.removeFile(resolveTagGroupFilePath(groupId));
-
   // Dispatch the tag group deleted event
   Events.dispatch(TagGroupDeletedEvent, group);
+
+  // Delete the group file from the file system
+  await Fs.removeFile(resolveTagGroupFilePath(groupId));
 }

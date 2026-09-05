@@ -29,11 +29,11 @@ export async function createCollection(name?: string): Promise<Collection> {
   // Add the collection to the store
   CollectionsStore.set(collection);
 
-  // Write the collection config to the file system
-  await writeCollection(collection.id);
-
   // Dispatch the collection created event
   Events.dispatch(CollectionCreatedEvent, collection);
+
+  // Write the collection config to the file system
+  await writeCollection(collection.id);
 
   return collection;
 }

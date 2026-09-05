@@ -58,9 +58,9 @@ describe('onUpdateEntryMetadata', () => {
     sqlUpsertEntries(urlDatabase.id, [urlEntry1SqlRecord], { silent: true });
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupTestSqlDatabase();
-    cleanup();
+    await cleanup();
   });
 
   it('syncs the updated metadata to SQL', () => {

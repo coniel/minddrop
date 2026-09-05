@@ -3,8 +3,8 @@ import { DataView } from '@minddrop/data-views';
 import { DatabaseId, Databases } from '@minddrop/databases';
 import { SelectPropertySchema } from '@minddrop/properties';
 import { useDataViewEntries } from '@minddrop/ui-data-views';
-import { KanbanViewOptions } from '../types';
-import { resolveGroupProperties } from '../utils';
+import { KanbanViewOptions } from './types';
+import { resolveGroupProperties } from './utils';
 
 export interface KanbanGroupProperty {
   /**

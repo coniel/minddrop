@@ -13,6 +13,6 @@ export function setup() {
 export function cleanup() {
   vi.clearAllMocks();
   MockFs.reset();
-  Events._clearAll();
+  Events.tests.cleanup();
   vi.useRealTimers();
 }

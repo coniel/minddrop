@@ -44,12 +44,6 @@ export async function updateDesign(
   // Update the design and bump its last modified date
   DesignsStore.update(design.id, { ...data, lastModified: new Date() });
 
-  // Persist bundle-backed designs; virtual designs are persisted by
-  // their owner via the update event
-  if (!design.virtual) {
-    await writeDesign(design.id);
-  }
-
   // Get the updated design
   const updatedDesign = getDesign(id);
 
@@ -58,6 +52,12 @@ export async function updateDesign(
     original: design,
     updated: updatedDesign,
   });
+
+  // Persist bundle-backed designs; virtual designs are persisted by
+  // their owner via the update event
+  if (!design.virtual) {
+    await writeDesign(design.id);
+  }
 
   return updatedDesign;
 }

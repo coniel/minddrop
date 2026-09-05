@@ -89,16 +89,9 @@ export async function handleBackgroundSyncResult(
     DatabaseEntriesStore.remove(id);
   }
 
-  // Remove deleted entries from collections and view configs
-  // referencing them
-  if (changeset.deletedEntryIds.length > 0) {
-    await removeEntriesFromCollections(changeset.deletedEntryIds);
-    await DataViews.removeReferences(changeset.deletedEntryIds);
-  }
-
   // Dispatch the moved entries' address changes
   if (addressChanges.length > 0) {
-    await Events.dispatch(ItemAddressesChangedEvent, addressChanges);
+    Events.dispatch(ItemAddressesChangedEvent, addressChanges);
   }
 
   // Dispatch a single event with the full changeset
@@ -113,4 +106,11 @@ export async function handleBackgroundSyncResult(
     upsertedEntries: changeset.upsertedEntries,
     deletedEntryIds: changeset.deletedEntryIds,
   });
+
+  // Remove deleted entries from collections and view configs
+  // referencing them
+  if (changeset.deletedEntryIds.length > 0) {
+    await removeEntriesFromCollections(changeset.deletedEntryIds);
+    await DataViews.removeReferences(changeset.deletedEntryIds);
+  }
 }

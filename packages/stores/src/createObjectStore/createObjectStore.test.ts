@@ -24,7 +24,7 @@ describe('createObjectStore', () => {
 
     beforeEach(() => {
       store.clear();
-      Events._clearAll();
+      Events.tests.cleanup();
     });
 
     describe('set', () => {
@@ -223,7 +223,7 @@ describe('createObjectStore', () => {
     beforeEach(() => {
       // Clear events first so old listeners don't receive
       // the persist event dispatched by store.clear()
-      Events._clearAll();
+      Events.tests.cleanup();
       store.clear();
     });
 
@@ -388,14 +388,18 @@ describe('createObjectStore', () => {
       );
 
       // Dispatch a load event with data for this store
-      await Events.dispatch(StoreHydrateEvent, {
+      Events.dispatch(StoreHydrateEvent, {
         namespace: 'load-test',
         data: { 'item-1': item1, 'item-2': item2 },
       });
 
-      expect(freshStore.getAll()).toEqual({
-        'item-1': item1,
-        'item-2': item2,
+      // The hydrate listener runs queued rather than during the
+      // dispatch.
+      await vi.waitFor(() => {
+        expect(freshStore.getAll()).toEqual({
+          'item-1': item1,
+          'item-2': item2,
+        });
       });
     });
 
@@ -411,7 +415,7 @@ describe('createObjectStore', () => {
       );
 
       // Dispatch a load event for a different namespace
-      await Events.dispatch(StoreHydrateEvent, {
+      Events.dispatch(StoreHydrateEvent, {
         namespace: 'other-package',
         data: { 'item-1': item1 },
       });

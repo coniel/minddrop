@@ -64,11 +64,11 @@ export async function createDesign(
   // Add the design to the store
   DesignsStore.set(design);
 
-  // Write the design to the file system
-  await writeDesign(design.id);
-
   // Dispatch a design created event
   Events.dispatch(DesignCreatedEvent, design);
+
+  // Write the design to the file system
+  await writeDesign(design.id);
 
   return design;
 }

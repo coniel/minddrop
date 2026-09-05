@@ -53,6 +53,12 @@ export interface DatabaseEntry<TProperties extends PropertyMap = PropertyMap> {
   contentHash?: string;
 
   /**
+   * The ID of the entry this entry was duplicated from. Held in
+   * the store for the session only, never persisted.
+   */
+  duplicatedFrom?: DatabaseEntryId;
+
+  /**
    * The entry's properties.
    */
   properties: TProperties;

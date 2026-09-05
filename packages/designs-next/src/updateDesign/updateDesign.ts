@@ -71,16 +71,16 @@ export async function updateDesign(
   // Get the updated design
   const updatedDesign = getDesign(id);
 
-  // Write unowned designs to the file system
-  if (!design.owner) {
-    await writeDesign(design.id);
-  }
-
   // Dispatch a design updated event
   Events.dispatch(DesignUpdatedEvent, {
     original: design,
     updated: updatedDesign,
   });
+
+  // Write unowned designs to the file system
+  if (!design.owner) {
+    await writeDesign(design.id);
+  }
 
   return updatedDesign;
 }

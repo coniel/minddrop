@@ -30,13 +30,13 @@ export async function updateEntryMetadata(
   // compose from current state
   DatabaseEntriesStore.update(entryId, { metadata });
 
-  // Write the entry's metadata sidecar
-  await writeEntryMetadata(database.path, entry.path, metadata);
-
   // Dispatch metadata updated event
   Events.dispatch(DatabaseEntryMetadataUpdatedEvent, {
     entryId,
     databaseId: entry.database,
     metadata,
   });
+
+  // Write the entry's metadata sidecar
+  await writeEntryMetadata(database.path, entry.path, metadata);
 }

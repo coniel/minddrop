@@ -20,11 +20,11 @@ export async function deleteCollection(collectionId: string): Promise<void> {
   // Delete the collection from the store
   CollectionsStore.remove(collectionId);
 
+  // Dispatch the collection deleted event
+  Events.dispatch(CollectionDeletedEvent, collection);
+
   // Delete the collection file from the file system if not virtual
   if (!collection.virtual) {
     await Fs.removeFile(resolveCollectionFilePath(collectionId));
   }
-
-  // Dispatch the collection deleted event
-  Events.dispatch(CollectionDeletedEvent, collection);
 }
