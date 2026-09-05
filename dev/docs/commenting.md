@@ -194,6 +194,32 @@ const appendsInFlight = new Map<string, Promise<unknown>>();
   text-bearing element renderers" narrates its consumers with the
   "shared by" clause — the function just resolves the classes. Who
   uses it is what call sites are for.
+- **The system around the function.** A function documents its own
+  contract, never the role its operation plays in a larger design, the
+  meaning other code assigns to its output, or a lifecycle other code
+  drives. The function knows and cares about none of that.
+
+  ```ts
+  // BAD, documents the event system's architecture from inside a
+  // store function which enforces none of it
+  /**
+   * Appends a dispatched event to the log. The entry marks the
+   * event's side effects as in flight, letting renderers explain
+   * transitional store states, and is removed once the event's
+   * listeners have settled.
+   */
+
+  // GOOD
+  /**
+   * Appends a dispatched event to the log.
+   */
+  ```
+
+  The test: could this JSDoc survive the surrounding system being
+  redesigned without the function's body changing? Here every dropped
+  sentence describes the dispatcher and the renderers, so it belongs
+  on the code that owns that behaviour — the dispatcher's JSDoc for
+  the lifecycle, the plan for the design.
 
 Design reasoning belongs in the plan, not in the type or the function.
 
