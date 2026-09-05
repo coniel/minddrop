@@ -1,15 +1,17 @@
 /* ============================================================
    TOGGLE GROUP
    Multi-select group container for Toggle components.
-   Size is controlled on the container - child Toggles are
-   slightly reduced to leave breathing room (see Toggle.css).
+   Size is controlled on the container, sizing the child
+   Toggles to the matching control height.
    ============================================================ */
 
+/* The group's box is the toggles' control height, lining up with
+   the other controls of its size; the background shows only
+   through the gaps between toggles */
 .toggle-group {
   display: inline-flex;
   align-items: center;
   gap: 1px;
-  padding: 0.1875rem;
   border-radius: var(--radius-md);
   background-color: var(--surface-subtle);
 }
@@ -17,16 +19,10 @@
 /* --- Sizes --- */
 
 .toggle-group-size-sm {
-  padding: 0.125rem;
   border-radius: var(--radius-sm);
 }
 
-.toggle-group-size-md {
-  padding: 0.1875rem;
-}
-
 .toggle-group-size-lg {
-  padding: 0.25rem;
   border-radius: var(--radius-lg);
 }
 
@@ -37,32 +33,49 @@
   border-radius: var(--radius-sm);
 }
 
+/* Text toggles size to their label */
+.toggle-group .toggle.toggle-text {
+  width: auto;
+}
+
 .toggle-group-size-sm .toggle {
-  width: 1.25rem;
-  height: 1.25rem;
+  width: var(--control-height-sm);
+  height: var(--control-height-sm);
 
   .icon {
     width: var(--icon-size-2xs);
     height: var(--icon-size-2xs);
   }
+
+  &.toggle-text {
+    padding: 0 var(--space-2);
+  }
 }
 
 .toggle-group-size-md .toggle {
-  width: var(--control-height-sm);
-  height: var(--control-height-sm);
+  width: var(--control-height-md);
+  height: var(--control-height-md);
 
   .icon {
     width: var(--icon-size-sm);
     height: var(--icon-size-sm);
   }
+
+  &.toggle-text {
+    padding: 0 var(--space-3);
+  }
 }
 
 .toggle-group-size-lg .toggle {
-  width: 2rem;
-  height: 2rem;
+  width: var(--control-height-lg);
+  height: var(--control-height-lg);
 
   .icon {
     width: var(--icon-size-sm);
     height: var(--icon-size-sm);
+  }
+
+  &.toggle-text {
+    padding: 0 var(--space-4);
   }
 }
