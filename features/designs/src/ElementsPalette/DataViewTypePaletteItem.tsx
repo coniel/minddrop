@@ -1,5 +1,5 @@
 import { DataViewType } from '@minddrop/data-views';
-import { useDraggable } from '@minddrop/selection';
+import { Selection } from '@minddrop/selection';
 import { PaletteItem } from '../PaletteItem';
 import { DesignElementTemplatesDataKey } from '../constants';
 
@@ -17,7 +17,7 @@ export interface DataViewTypePaletteItemProps {
 export const DataViewTypePaletteItem: React.FC<
   DataViewTypePaletteItemProps
 > = ({ dataViewType }) => {
-  const { draggableProps } = useDraggable({
+  const { draggableProps } = Selection.useDraggable({
     id: `template-data-view-${dataViewType.type}`,
     type: DesignElementTemplatesDataKey,
     data: { type: 'data-view', dataViewType: dataViewType.type, style: {} },

@@ -13,7 +13,7 @@ import { Designs, Layouts, resolveDesignMediaDirPath } from '@minddrop/designs';
 import { LayoutRenderer } from '@minddrop/feature-designs';
 import { useTranslation } from '@minddrop/i18n';
 import { PropertyValue } from '@minddrop/properties';
-import { useDraggable } from '@minddrop/selection';
+import { Selection } from '@minddrop/selection';
 import {
   DatabaseEntriesDataKey,
   DatabaseEntryRenderSource,
@@ -96,7 +96,7 @@ const Entry: React.FC<EntryProps> = ({
     onEntryAutoFocused,
   } = useDatabaseEntryContext();
   const openView = Views.useOpenView();
-  const { draggableProps, isDragging } = useDraggable({
+  const { draggableProps, isDragging } = Selection.useDraggable({
     id: entry.id,
     type: DatabaseEntriesDataKey,
     data: entry,

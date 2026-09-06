@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { DropEventData, useDroppable } from '@minddrop/selection';
+import { DropEventData, Selection } from '@minddrop/selection';
 import { Text } from '@minddrop/ui-primitives';
 import { useDesignStudio } from '../DesignStudioStore';
 import { useLayoutId } from '../LayoutIdContext';
@@ -31,7 +31,7 @@ export const ElementsTreeDropZone: React.FC<ElementsTreeDropZoneProps> = ({
     [studio, parentId, layoutId],
   );
 
-  const { droppableProps, isDraggingOver } = useDroppable({
+  const { droppableProps, isDraggingOver } = Selection.useDroppable({
     type: 'design-element',
     id: parentId,
     axis: 'container',

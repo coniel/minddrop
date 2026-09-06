@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { DropEventData, dragContainsType } from '@minddrop/selection';
+import { DropEventData, Selection } from '@minddrop/selection';
 import { getTransferData } from '@minddrop/utils';
 import './FlexDropContainerGap.css';
 
@@ -72,7 +72,7 @@ export const FlexDropContainerGap: React.FC<FlexDropContainerGapProps> = ({
   const handleDragOver = (event: React.DragEvent) => {
     // Ignore drags without an accepted data type, letting them
     // fall through to ancestor drop targets
-    if (accepts && !dragContainsType(event, accepts)) {
+    if (accepts && !Selection.dragContainsType(event, accepts)) {
       return;
     }
 
@@ -83,7 +83,7 @@ export const FlexDropContainerGap: React.FC<FlexDropContainerGapProps> = ({
 
   const handleDragEnter = (event: React.DragEvent) => {
     // Ignore drags without an accepted data type
-    if (accepts && !dragContainsType(event, accepts)) {
+    if (accepts && !Selection.dragContainsType(event, accepts)) {
       return;
     }
 
@@ -104,7 +104,7 @@ export const FlexDropContainerGap: React.FC<FlexDropContainerGapProps> = ({
 
   const handleDrop = (event: React.DragEvent) => {
     // Let unaccepted drops bubble to ancestor drop targets
-    if (accepts && !dragContainsType(event, accepts)) {
+    if (accepts && !Selection.dragContainsType(event, accepts)) {
       return;
     }
 

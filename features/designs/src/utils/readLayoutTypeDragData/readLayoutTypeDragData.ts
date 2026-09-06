@@ -1,4 +1,4 @@
-import { toMimeType } from '@minddrop/selection';
+import { Selection } from '@minddrop/selection';
 import { DesignLayoutTypesDataKey } from '../../constants';
 import { DesignLayoutTypeDragData } from '../../types';
 
@@ -13,7 +13,7 @@ export function readLayoutTypeDragData(
   event: React.DragEvent,
 ): DesignLayoutTypeDragData | null {
   const serialized = event.dataTransfer.getData(
-    toMimeType(DesignLayoutTypesDataKey),
+    Selection.toMimeType(DesignLayoutTypesDataKey),
   );
 
   // Drops carrying anything else are handled by the elements they

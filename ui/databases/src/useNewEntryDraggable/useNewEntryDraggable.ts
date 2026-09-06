@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { DatabaseId } from '@minddrop/databases';
-import { toMimeType } from '@minddrop/selection';
+import { Selection } from '@minddrop/selection';
 import { setDragPreview } from '@minddrop/utils';
 import { NewDatabaseEntriesDataKey } from '../constants';
 
@@ -45,7 +45,7 @@ export function useNewEntryDraggable(
       // Serialize the database into the drag event data
       event.dataTransfer.effectAllowed = 'copy';
       event.dataTransfer.setData(
-        toMimeType(NewDatabaseEntriesDataKey),
+        Selection.toMimeType(NewDatabaseEntriesDataKey),
         JSON.stringify([databaseId]),
       );
 

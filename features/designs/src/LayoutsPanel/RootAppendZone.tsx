@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { DropEventData, Selection, useDroppable } from '@minddrop/selection';
+import { DropEventData, Selection } from '@minddrop/selection';
 import { useDesignStudio, useElement } from '../DesignStudioStore';
 import { handleDropOnGap } from '../handleDropOnGap';
 import { FlatRootDesignElement } from '../types';
@@ -31,7 +31,7 @@ export const RootAppendZone: React.FC<React.PropsWithChildren> = ({
     [studio, root],
   );
 
-  const { droppableProps, isDraggingOver } = useDroppable({
+  const { droppableProps, isDraggingOver } = Selection.useDroppable({
     type: 'design-element',
     id: 'root',
     axis: 'container',

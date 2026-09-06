@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { QueryNodeType } from '@minddrop/queries';
-import { toMimeType } from '@minddrop/selection';
+import { Selection } from '@minddrop/selection';
 import { setDragPreview } from '@minddrop/utils';
 import { QueryNodeCardDataKey, QuerySourceCardDataKey } from '../constants';
 
@@ -48,13 +48,13 @@ export function useQueryToolbarCardDraggable(
       // Source cards spawn a source picker on drop
       if (type === 'source') {
         event.dataTransfer.setData(
-          toMimeType(QuerySourceCardDataKey),
+          Selection.toMimeType(QuerySourceCardDataKey),
           JSON.stringify(true),
         );
       } else {
         // Serialize the node type into the drag event data
         event.dataTransfer.setData(
-          toMimeType(QueryNodeCardDataKey),
+          Selection.toMimeType(QueryNodeCardDataKey),
           JSON.stringify(type),
         );
       }

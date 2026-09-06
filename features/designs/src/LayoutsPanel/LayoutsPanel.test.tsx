@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { TextElementConfig } from '@minddrop/designs';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
-import { toMimeType } from '@minddrop/selection';
+import { Selection } from '@minddrop/selection';
 import {
   cleanup as cleanupRender,
   fireEvent,
@@ -138,7 +138,7 @@ describe('<LayoutsPanel />', () => {
 function dropOnZone(zone: HTMLElement, data: Record<string, unknown>) {
   const serialized = Object.fromEntries(
     Object.entries(data).map(([key, value]) => [
-      toMimeType(key),
+      Selection.toMimeType(key),
       JSON.stringify(value),
     ]),
   );

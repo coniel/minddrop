@@ -9,7 +9,7 @@ import React, {
 import { Path, Element as SlateElement } from 'slate';
 import { ReactEditor } from 'slate-react';
 import { Element } from '@minddrop/ast';
-import { Selection, dragContainsType, useDraggable } from '@minddrop/selection';
+import { Selection } from '@minddrop/selection';
 import { getTransferData } from '@minddrop/utils';
 import { insertBlocksAt } from '../insertBlocksAt';
 import { moveBlocksTo } from '../moveBlocksTo';
@@ -143,7 +143,7 @@ export function useBlockDrag(
   }, [editor, hoveredBlock]);
 
   const { onDragStart: startSelectionDrag, onDragEnd: endSelectionDrag } =
-    useDraggable(draggedItem);
+    Selection.useDraggable(draggedItem);
 
   // Hides the indicator without dropping the drag itself, used when
   // the drag moves off the editor but may yet come back
@@ -228,7 +228,8 @@ export function useBlockDrag(
       // A drag this editor did not start can still be carrying
       // blocks dragged out of another editor
       const foreignBlockDrag =
-        enabled && dragContainsType(event, [BLOCK_SELECTION_ITEM_TYPE]);
+        enabled &&
+        Selection.dragContainsType(event, [BLOCK_SELECTION_ITEM_TYPE]);
 
       // Any other drag, such as of selected text, is Slate's to
       // handle

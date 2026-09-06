@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { dragContainsType } from '@minddrop/selection';
+import { Selection } from '@minddrop/selection';
 import {
   Canvas,
   CanvasPoint,
@@ -51,7 +51,7 @@ export const DesignStudioViewport: React.FC<DesignStudioViewportProps> = ({
 
   // Accept layout type drags, which the browser otherwise rejects
   const handleDragOver = useCallback((event: React.DragEvent) => {
-    if (dragContainsType(event, [DesignLayoutTypesDataKey])) {
+    if (Selection.dragContainsType(event, [DesignLayoutTypesDataKey])) {
       event.preventDefault();
     }
   }, []);

@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useTranslation } from '@minddrop/i18n';
-import { DropEventData, useDraggable, useDroppable } from '@minddrop/selection';
+import { DropEventData, Selection } from '@minddrop/selection';
 import { UiIconName } from '@minddrop/ui-icons';
 import {
   Collapsible,
@@ -109,7 +109,7 @@ export const ElementsTreeNode: React.FC<ElementsTreeNodeProps> = ({
     element?.type === 'root' &&
     hasPagePanels(studio, element, layoutId ?? undefined);
 
-  const { draggableProps, isDragging } = useDraggable({
+  const { draggableProps, isDragging } = Selection.useDraggable({
     id: elementId,
     type: DesignElementsDataKey,
     data: element,
@@ -154,7 +154,7 @@ export const ElementsTreeNode: React.FC<ElementsTreeNodeProps> = ({
   );
 
   const { droppableProps, dropIndicatorPosition, isDraggingOver } =
-    useDroppable({
+    Selection.useDroppable({
       index,
       type: 'design-element',
       id: elementId,

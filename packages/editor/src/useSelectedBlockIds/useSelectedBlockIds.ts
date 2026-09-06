@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from 'react';
-import { useSelection } from '@minddrop/selection';
+import { Selection } from '@minddrop/selection';
 import { clearBlockSelection } from '../clearBlockSelection';
 import { Editor } from '../types';
 import { isBlockSelectionItem } from '../utils';
@@ -15,7 +15,7 @@ import { isBlockSelectionItem } from '../utils';
  * @returns The IDs of the editor's selected blocks.
  */
 export function useSelectedBlockIds(editor: Editor): ReadonlySet<string> {
-  const selection = useSelection();
+  const selection = Selection.use();
 
   const selectedBlockIds = useMemo(
     () =>

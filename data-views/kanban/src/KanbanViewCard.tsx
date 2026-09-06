@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { DatabaseEntryRenderer } from '@minddrop/feature-databases';
-import { DropEventData, useDroppable } from '@minddrop/selection';
+import { DropEventData, Selection } from '@minddrop/selection';
 import { useFlexDropGapActivation } from '@minddrop/ui-drag-and-drop';
 import { KANBAN_ACCEPTED_DATA_TYPES } from './constants';
 
@@ -57,7 +57,7 @@ export const KanbanViewCard: React.FC<KanbanViewCardProps> = ({
 
   // Make the card a position-aware drop target for card-like drags
   const { droppableProps, isDraggingOver, dropIndicatorPosition } =
-    useDroppable({
+    Selection.useDroppable({
       id: entryId,
       type: 'kanban-card',
       index,

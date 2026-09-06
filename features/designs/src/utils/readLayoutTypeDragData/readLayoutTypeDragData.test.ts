@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { toMimeType } from '@minddrop/selection';
+import { Selection } from '@minddrop/selection';
 import { DesignLayoutTypesDataKey } from '../../constants';
 import { readLayoutTypeDragData } from './readLayoutTypeDragData';
 
 describe('readLayoutTypeDragData', () => {
   it('reads the dragged layout type', () => {
     const event = dragEventWithData(
-      toMimeType(DesignLayoutTypesDataKey),
+      Selection.toMimeType(DesignLayoutTypesDataKey),
       JSON.stringify([{ layoutType: 'card' }]),
     );
 
@@ -15,7 +15,7 @@ describe('readLayoutTypeDragData', () => {
 
   it('returns null when the drop carries no layout type', () => {
     const event = dragEventWithData(
-      toMimeType('design-element-templates'),
+      Selection.toMimeType('design-element-templates'),
       JSON.stringify([{ type: 'text' }]),
     );
 
@@ -24,7 +24,7 @@ describe('readLayoutTypeDragData', () => {
 
   it('returns null when the payload is empty', () => {
     const event = dragEventWithData(
-      toMimeType(DesignLayoutTypesDataKey),
+      Selection.toMimeType(DesignLayoutTypesDataKey),
       JSON.stringify([]),
     );
 

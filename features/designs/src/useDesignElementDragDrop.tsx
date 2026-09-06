@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { DropEventData, useDraggable, useDroppable } from '@minddrop/selection';
+import { DropEventData, Selection } from '@minddrop/selection';
 import { useFlexDropGapActivation } from '@minddrop/ui-drag-and-drop';
 import { setDragPreview } from '@minddrop/utils';
 import { useDesignStudio } from './DesignStudioStore';
@@ -39,7 +39,7 @@ export function useDesignElementDragDrop({
     isContainer &&
     (element as FlatContainerDesignElement).children.length === 0;
 
-  const { draggableProps, isDragging } = useDraggable({
+  const { draggableProps, isDragging } = Selection.useDraggable({
     id: element.id,
     type: DesignElementsDataKey,
     data: element,
@@ -55,7 +55,7 @@ export function useDesignElementDragDrop({
   );
 
   const { droppableProps, dropIndicatorPosition, isDraggingOver } =
-    useDroppable({
+    Selection.useDroppable({
       index,
       type: 'design-element',
       id: element.id,

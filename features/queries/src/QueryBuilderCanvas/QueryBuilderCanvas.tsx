@@ -11,7 +11,7 @@ import {
   removeQueryNodeConnections,
   updateQueryNode,
 } from '@minddrop/queries';
-import { dragContainsType, toMimeType } from '@minddrop/selection';
+import { Selection } from '@minddrop/selection';
 import {
   Canvas,
   CanvasConnection,
@@ -483,7 +483,7 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
     (event: React.DragEvent) => {
       // Node cards splice into the connection they are dropped
       // onto, so track the edge under the drag
-      if (dragContainsType(event, [QueryNodeCardDataKey])) {
+      if (Selection.dragContainsType(event, [QueryNodeCardDataKey])) {
         event.preventDefault();
 
         const connection = getConnectionAtPoint(
@@ -499,7 +499,7 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
       }
 
       // Source cards never splice, since sources take no input
-      if (dragContainsType(event, [QuerySourceCardDataKey])) {
+      if (Selection.dragContainsType(event, [QuerySourceCardDataKey])) {
         event.preventDefault();
       }
     },
@@ -525,7 +525,9 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
 
       // Source cards create an unconfigured source node at the
       // drop position, showing its search
-      if (event.dataTransfer.getData(toMimeType(QuerySourceCardDataKey))) {
+      if (
+        event.dataTransfer.getData(Selection.toMimeType(QuerySourceCardDataKey))
+      ) {
         addNode('source', canvasPoint);
 
         return;
@@ -533,7 +535,7 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
 
       // Node cards create their node at the drop position
       const typeData = event.dataTransfer.getData(
-        toMimeType(QueryNodeCardDataKey),
+        Selection.toMimeType(QueryNodeCardDataKey),
       );
 
       if (!typeData) {

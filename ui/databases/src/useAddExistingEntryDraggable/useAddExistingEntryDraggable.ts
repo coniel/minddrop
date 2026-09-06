@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { toMimeType } from '@minddrop/selection';
+import { Selection } from '@minddrop/selection';
 import { setDragPreview } from '@minddrop/utils';
 import { AddExistingEntryDataKey } from '../constants';
 
@@ -40,7 +40,7 @@ export function useAddExistingEntryDraggable(): AddExistingEntryDragUtils {
     // Mark the drag as an add existing entry card
     event.dataTransfer.effectAllowed = 'copy';
     event.dataTransfer.setData(
-      toMimeType(AddExistingEntryDataKey),
+      Selection.toMimeType(AddExistingEntryDataKey),
       JSON.stringify(true),
     );
 

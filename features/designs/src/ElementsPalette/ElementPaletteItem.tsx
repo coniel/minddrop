@@ -1,5 +1,5 @@
 import { DesignElementConfig } from '@minddrop/designs';
-import { useDraggable } from '@minddrop/selection';
+import { Selection } from '@minddrop/selection';
 import { PaletteItem } from '../PaletteItem';
 import { DesignElementTemplatesDataKey } from '../constants';
 
@@ -16,7 +16,7 @@ export interface ElementPaletteItemProps {
 export const ElementPaletteItem: React.FC<ElementPaletteItemProps> = ({
   config,
 }) => {
-  const { draggableProps } = useDraggable({
+  const { draggableProps } = Selection.useDraggable({
     id: `template-${config.type}`,
     type: DesignElementTemplatesDataKey,
     data: config.template,

@@ -17,7 +17,7 @@ import {
   getDroppedEntryIds,
   getDroppedNewEntryDatabaseIds,
 } from '@minddrop/feature-databases';
-import { DropEventData, dragContainsType } from '@minddrop/selection';
+import { DropEventData, Selection } from '@minddrop/selection';
 import {
   Canvas,
   CanvasConnectionReconnection,
@@ -560,7 +560,7 @@ const CanvasViewContent: React.FC<
 
   // Allow dragging accepted data types over the canvas
   const handleDragOver = useCallback((event: React.DragEvent) => {
-    if (dragContainsType(event, CANVAS_ACCEPTED_DATA_TYPES)) {
+    if (Selection.dragContainsType(event, CANVAS_ACCEPTED_DATA_TYPES)) {
       event.preventDefault();
     }
   }, []);
