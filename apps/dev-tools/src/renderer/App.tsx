@@ -3,6 +3,7 @@ import type {
   ManifestWithSlug,
   NewReviewComment,
   ReviewComment,
+  UntrackedChange,
 } from '../types';
 import { DiffViewer } from './DiffViewer';
 import { ReviewPanel } from './ReviewPanel';
@@ -25,7 +26,7 @@ export const App: React.FC = () => {
   // A comment's file to reveal once its content has loaded
   const pendingRevealRef = useRef<{ path: string; line: number } | null>(null);
   const [manifests, setManifests] = useState<ManifestWithSlug[]>([]);
-  const [untrackedFiles, setUntrackedFiles] = useState<string[]>([]);
+  const [untrackedFiles, setUntrackedFiles] = useState<UntrackedChange[]>([]);
   const [selectedFile, setSelectedFile] = useState<SelectedFile | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>('diff');
   const [splitDiff, setSplitDiff] = useState(false);
@@ -77,8 +78,13 @@ export const App: React.FC = () => {
         });
       }
 
-      // Also scan the main checkout against HEAD for untracked files
-      scans.set('HEAD:null', { baseRef: 'HEAD', worktree: null });
+      // Also scan each checkout untracked changes were found in
+      for (const change of untracked) {
+        scans.set(`${change.baseRef}:${change.worktree}`, {
+          baseRef: change.baseRef,
+          worktree: change.worktree,
+        });
+      }
 
       const statusResults = await Promise.all(
         [...scans.values()].map((scan) => rpc.request.getFileStatuses(scan)),
@@ -219,26 +225,26 @@ export const App: React.FC = () => {
 
   // Keyboard shortcuts: ctrl+j/k for next/prev file, ctrl+h/l for next/prev list
   useEffect(() => {
-    // Build an ordered list of file groups
-    const groups: {
-      files: string[];
-      manifestSlug: string | null;
-      baseRef: string;
-      worktree: string | null;
-    }[] = manifests.map((manifest) => ({
-      files: manifest.files,
-      manifestSlug: manifest.slug,
-      baseRef: manifest.baseRef,
-      worktree: manifest.worktree ?? null,
-    }));
+    // Build an ordered list of file groups, each entry carrying its own
+    // diff context
+    const groups: SelectedFile[][] = manifests.map((manifest) =>
+      manifest.files.map((path) => ({
+        path,
+        manifestSlug: manifest.slug,
+        baseRef: manifest.baseRef,
+        worktree: manifest.worktree ?? null,
+      })),
+    );
 
     if (untrackedFiles.length > 0) {
-      groups.push({
-        files: untrackedFiles,
-        manifestSlug: null,
-        baseRef: manifests.length > 0 ? manifests[0].baseRef : 'HEAD',
-        worktree: null,
-      });
+      groups.push(
+        untrackedFiles.map((change) => ({
+          path: change.path,
+          manifestSlug: null,
+          baseRef: change.baseRef,
+          worktree: change.worktree,
+        })),
+      );
     }
 
     const handler = (event: KeyboardEvent) => {
@@ -268,7 +274,12 @@ export const App: React.FC = () => {
 
       if (selectedFile) {
         for (let g = 0; g < groups.length; g++) {
-          const index = groups[g].files.indexOf(selectedFile.path);
+          const index = groups[g].findIndex(
+            (entry) =>
+              entry.path === selectedFile.path &&
+              entry.manifestSlug === selectedFile.manifestSlug &&
+              entry.worktree === selectedFile.worktree,
+          );
 
           if (index !== -1) {
             groupIndex = g;
@@ -284,16 +295,11 @@ export const App: React.FC = () => {
         const direction = event.key === 'j' ? 1 : -1;
         const nextIndex = fileIndex + direction;
 
-        if (nextIndex < 0 || nextIndex >= group.files.length) {
+        if (nextIndex < 0 || nextIndex >= group.length) {
           return;
         }
 
-        setSelectedFile({
-          path: group.files[nextIndex],
-          manifestSlug: group.manifestSlug,
-          baseRef: group.baseRef,
-          worktree: group.worktree,
-        });
+        setSelectedFile(group[nextIndex]);
       } else {
         // Next/prev group
         const direction = event.key === 'l' ? 1 : -1;
@@ -303,14 +309,7 @@ export const App: React.FC = () => {
           return;
         }
 
-        const nextGroup = groups[nextGroupIndex];
-
-        setSelectedFile({
-          path: nextGroup.files[0],
-          manifestSlug: nextGroup.manifestSlug,
-          baseRef: nextGroup.baseRef,
-          worktree: nextGroup.worktree,
-        });
+        setSelectedFile(groups[nextGroupIndex][0]);
       }
     };
 

@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import type { ManifestWithSlug } from '../types';
+import type { ManifestWithSlug, UntrackedChange } from '../types';
 import { FileIcon } from './FileIcon';
 import { FileList } from './FileList';
+import type { PackageFileGroup } from './groupFilesByPackage';
 import { groupFilesByPackage } from './groupFilesByPackage';
 import type { FileStatus, SelectedFile } from './types';
 import './Sidebar.css';
@@ -15,7 +16,7 @@ interface SidebarProps {
   /**
    * Files changed in git but not in any manifest.
    */
-  untrackedFiles: string[];
+  untrackedFiles: UntrackedChange[];
 
   /**
    * The currently selected file, if any.
@@ -99,15 +100,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
   };
 
   // Handle selecting an untracked file
-  const handleSelectUntrackedFile = (path: string) => {
-    // Use the first manifest's baseRef, or HEAD
-    const baseRef = manifests.length > 0 ? manifests[0].baseRef : 'HEAD';
-
+  const handleSelectUntrackedFile = (change: UntrackedChange) => {
     onSelectFile({
-      path,
+      path: change.path,
       manifestSlug: null,
-      baseRef,
-      worktree: null,
+      baseRef: change.baseRef,
+      worktree: change.worktree,
     });
   };
 
@@ -131,8 +129,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
     });
   };
 
-  // Untracked files grouped by the package they belong to
-  const untrackedGroups = groupFilesByPackage(untrackedFiles);
+  // Untracked files grouped by checkout, then by package
+  const untrackedSections = groupUntrackedChanges(untrackedFiles);
 
   // Matches for the current query, across every work group and untracked files
   const searchResults = searchFileNames(searchQuery, manifests, untrackedFiles);
@@ -170,7 +168,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <div className="sidebar-content sidebar-search-results">
           {searchResults.map((result) => (
             <button
-              key={`${result.manifestSlug ?? 'untracked'}:${result.path}`}
+              key={`${result.manifestSlug ?? 'untracked'}:${result.worktree ?? 'main'}:${result.path}`}
               className={`sidebar-file-button ${selectedFile?.path === result.path ? 'selected' : ''} ${fileStatuses[result.path] ? `file-status-${fileStatuses[result.path]}` : ''}`}
               onClick={() => handleSelectSearchResult(result)}
               title={result.path}
@@ -245,20 +243,33 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 </span>
               </div>
 
-              {untrackedGroups.map((group) => (
-                <div key={group.label} className="sidebar-package-group">
-                  <div className="sidebar-package-label">{group.label}</div>
+              {untrackedSections.map((section) => (
+                <div
+                  key={section.worktree ?? 'main'}
+                  className="sidebar-worktree-section"
+                >
+                  <div className="sidebar-worktree-label">
+                    {section.worktree ?? 'main'}
+                  </div>
 
-                  {group.files.map((file) => (
-                    <button
-                      key={file}
-                      className={`sidebar-file-button ${selectedFile?.path === file ? 'selected' : ''} ${fileStatuses[file] ? `file-status-${fileStatuses[file]}` : ''}`}
-                      onClick={() => handleSelectUntrackedFile(file)}
-                      title={file}
-                    >
-                      <FileIcon filename={file} />
-                      {getFileName(file)}
-                    </button>
+                  {section.groups.map((group) => (
+                    <div key={group.label} className="sidebar-package-group">
+                      <div className="sidebar-package-label">{group.label}</div>
+
+                      {group.files.map((file) => (
+                        <button
+                          key={file}
+                          className={`sidebar-file-button ${isSelectedUntracked(selectedFile, file, section.worktree) ? 'selected' : ''} ${fileStatuses[file] ? `file-status-${fileStatuses[file]}` : ''}`}
+                          onClick={() =>
+                            handleSelectUntrackedFile(section.changes[file])
+                          }
+                          title={file}
+                        >
+                          <FileIcon filename={file} />
+                          {getFileName(file)}
+                        </button>
+                      ))}
+                    </div>
                   ))}
                 </div>
               ))}
@@ -282,6 +293,71 @@ function getFileName(path: string): string {
  */
 function getDirectoryName(path: string): string {
   return path.split('/').slice(0, -1).join('/');
+}
+
+/**
+ * Returns whether the selected file is the given untracked file.
+ */
+function isSelectedUntracked(
+  selectedFile: SelectedFile | null,
+  path: string,
+  worktree: string | null,
+): boolean {
+  return (
+    selectedFile !== null &&
+    selectedFile.manifestSlug === null &&
+    selectedFile.path === path &&
+    selectedFile.worktree === worktree
+  );
+}
+
+/**
+ * The untracked changes of one checkout, grouped by package.
+ */
+interface UntrackedSection {
+  /**
+   * The worktree name, or null for the main checkout.
+   */
+  worktree: string | null;
+
+  /**
+   * The checkout's changed files grouped by package.
+   */
+  groups: PackageFileGroup[];
+
+  /**
+   * The checkout's changes keyed by path.
+   */
+  changes: Record<string, UntrackedChange>;
+}
+
+/**
+ * Groups untracked changes by the checkout they live in, then by
+ * package, preserving the order in which each checkout first appears.
+ */
+function groupUntrackedChanges(changes: UntrackedChange[]): UntrackedSection[] {
+  const sections: UntrackedSection[] = [];
+
+  // Collect each checkout's changes
+  for (const change of changes) {
+    let section = sections.find(
+      (candidate) => candidate.worktree === change.worktree,
+    );
+
+    if (!section) {
+      section = { worktree: change.worktree, groups: [], changes: {} };
+      sections.push(section);
+    }
+
+    section.changes[change.path] = change;
+  }
+
+  // Group each checkout's files by package
+  for (const section of sections) {
+    section.groups = groupFilesByPackage(Object.keys(section.changes));
+  }
+
+  return sections;
 }
 
 /**
@@ -317,7 +393,7 @@ interface SearchResult {
 function searchFileNames(
   query: string,
   manifests: ManifestWithSlug[],
-  untrackedFiles: string[],
+  untrackedFiles: UntrackedChange[],
 ): SearchResult[] {
   const trimmedQuery = query.trim().toLowerCase();
 
@@ -352,25 +428,22 @@ function searchFileNames(
     }
   }
 
-  // Untracked files fall back to the first work group's base ref
-  const untrackedBaseRef = manifests.length > 0 ? manifests[0].baseRef : 'HEAD';
-
   // Collect matches from untracked changes
-  for (const path of untrackedFiles) {
-    if (seenPaths.has(path)) {
+  for (const change of untrackedFiles) {
+    if (seenPaths.has(change.path)) {
       continue;
     }
 
-    if (!getFileName(path).toLowerCase().includes(trimmedQuery)) {
+    if (!getFileName(change.path).toLowerCase().includes(trimmedQuery)) {
       continue;
     }
 
-    seenPaths.add(path);
+    seenPaths.add(change.path);
     results.push({
-      path,
+      path: change.path,
       manifestSlug: null,
-      baseRef: untrackedBaseRef,
-      worktree: null,
+      baseRef: change.baseRef,
+      worktree: change.worktree,
     });
   }
 

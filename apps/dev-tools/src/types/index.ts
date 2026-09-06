@@ -6,4 +6,5 @@ export type {
   ReviewComment,
   ReviewCommentChanges,
   ReviewCommentStatus,
+  UntrackedChange,
 } from './rpc';

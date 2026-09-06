@@ -37,6 +37,29 @@ export interface ManifestWithSlug extends Manifest {
 }
 
 /**
+ * A changed file not listed in any manifest, with the diff context
+ * needed to open it.
+ */
+export interface UntrackedChange {
+  /**
+   * Repo-relative path of the changed file.
+   */
+  path: string;
+
+  /**
+   * Name of the agent worktree the change lives in, or null for the
+   * main checkout.
+   */
+  worktree: string | null;
+
+  /**
+   * The git ref the file is diffed against: the worktree branch's
+   * merge base with main, or HEAD for the main checkout.
+   */
+  baseRef: string;
+}
+
+/**
  * Whether a review comment still needs addressing.
  */
 export type ReviewCommentStatus = 'open' | 'resolved';
@@ -138,11 +161,12 @@ export type DevReviewRPC = {
       };
 
       /**
-       * Returns files changed in git that aren't listed in any manifest.
+       * Returns files changed in the main checkout or any agent worktree
+       * that aren't listed in a manifest for that checkout.
        */
       getUntrackedChanges: {
         params: Record<string, never>;
-        response: string[];
+        response: UntrackedChange[];
       };
 
       /**

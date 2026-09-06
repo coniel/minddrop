@@ -4,6 +4,7 @@ import type {
   ManifestWithSlug,
   NewReviewComment,
   ReviewCommentChanges,
+  UntrackedChange,
 } from '../types';
 import {
   createReviewComment,
@@ -22,6 +23,10 @@ const REPO_ROOT = Bun.spawnSync(['git', 'rev-parse', '--show-toplevel'])
 // worktrees read and write the same manifests
 const DEV_DIR = `${process.env.HOME}/Documents/MindDrop 2/dev`;
 const CHANGES_DIR = `${DEV_DIR}/changes`;
+// Agent session worktrees live inside the repo
+const WORKTREES_DIR = `${REPO_ROOT}/.claude/worktrees`;
+// The branch worktree changes are measured against
+const MAIN_BRANCH = 'main';
 
 /**
  * Reads and parses all manifest JSON files from the changes directory.
@@ -121,58 +126,111 @@ function collectGitOutput(
 }
 
 /**
- * Gets files with uncommitted changes or untracked by git
- * that aren't listed in any manifest.
+ * Lists the names of the agent worktrees registered with git.
  */
-function getUntrackedChanges(): string[] {
+function listWorktreeNames(): string[] {
+  const result = Bun.spawnSync(['git', 'worktree', 'list', '--porcelain'], {
+    cwd: REPO_ROOT,
+  });
+
+  if (result.exitCode !== 0) {
+    return [];
+  }
+
+  const names: string[] = [];
+
+  // Each worktree entry starts with its path line
+  for (const line of result.stdout.toString().split('\n')) {
+    if (!line.startsWith(`worktree ${WORKTREES_DIR}/`)) {
+      continue;
+    }
+
+    names.push(line.slice(`worktree ${WORKTREES_DIR}/`.length));
+  }
+
+  return names;
+}
+
+/**
+ * Resolves the commit a worktree branch diverged from main at, so only
+ * the branch's own work counts as changed rather than everything main
+ * gained since the branch last synced.
+ */
+function getMergeBase(root: string): string | null {
+  const result = Bun.spawnSync(['git', 'merge-base', MAIN_BRANCH, 'HEAD'], {
+    cwd: root,
+  });
+
+  if (result.exitCode !== 0) {
+    return null;
+  }
+
+  return result.stdout.toString().trim();
+}
+
+/**
+ * Gets files changed in the main checkout or any agent worktree that
+ * aren't listed in a manifest for the same checkout. Worktrees are
+ * diffed against their merge base with main so synced-in commits from
+ * other work do not show as changes.
+ */
+function getUntrackedChanges(): UntrackedChange[] {
   const manifests = readAllManifests();
 
-  // Collect all files that are already in manifests
+  // Collect the files already in manifests, keyed by checkout
   const manifestedFiles = new Set<string>();
 
   for (const manifest of manifests) {
     for (const file of manifest.files) {
-      manifestedFiles.add(file);
+      manifestedFiles.add(`${manifest.worktree ?? ''}:${file}`);
     }
   }
 
-  // Scan the main checkout against HEAD, and each manifest's
-  // worktree against its baseRef so WIP-committed changes show too
-  const scans = new Map<string, { root: string; ref: string }>();
+  // Scan the main checkout against HEAD
+  const scans: { root: string; worktree: string | null; ref: string }[] = [
+    { root: REPO_ROOT, worktree: null, ref: 'HEAD' },
+  ];
 
-  scans.set(`${REPO_ROOT}:HEAD`, { root: REPO_ROOT, ref: 'HEAD' });
+  // Scan every worktree against its merge base with main
+  for (const worktree of listWorktreeNames()) {
+    const root = `${WORKTREES_DIR}/${worktree}`;
+    const mergeBase = getMergeBase(root);
 
-  for (const manifest of manifests) {
-    const root = getWorktreeRoot(manifest.worktree);
-
-    if (root !== REPO_ROOT) {
-      scans.set(`${root}:${manifest.baseRef}`, {
-        root,
-        ref: manifest.baseRef,
-      });
+    if (mergeBase) {
+      scans.push({ root, worktree, ref: mergeBase });
     }
   }
 
-  const allChangedFiles = new Set<string>();
+  const changes: UntrackedChange[] = [];
 
-  for (const scan of scans.values()) {
+  for (const scan of scans) {
+    const changedFiles = new Set<string>();
+
     // Get changes vs the scan ref (modified + staged + committed)
     collectGitOutput(
       ['git', 'diff', '--name-only', scan.ref],
-      allChangedFiles,
+      changedFiles,
       scan.root,
     );
 
     // Get new files not yet tracked by git
     collectGitOutput(
       ['git', 'ls-files', '--others', '--exclude-standard'],
-      allChangedFiles,
+      changedFiles,
       scan.root,
     );
+
+    // Keep the files not covered by a manifest for this checkout
+    for (const path of changedFiles) {
+      if (manifestedFiles.has(`${scan.worktree ?? ''}:${path}`)) {
+        continue;
+      }
+
+      changes.push({ path, worktree: scan.worktree, baseRef: scan.ref });
+    }
   }
 
-  // Filter out files that are already in manifests
-  return [...allChangedFiles].filter((file) => !manifestedFiles.has(file));
+  return changes;
 }
 
 /**
