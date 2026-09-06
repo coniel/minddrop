@@ -125,7 +125,7 @@ const minifiedIconsMetadata = {
   icons: iconsMetadata,
 };
 
-const outputDir = '../icons/src';
+const outputDir = '../../ui/icons/src';
 const iconsOutputFile = `${outputDir}/content-icons.min.tsx`;
 const metaOutputFile = `${outputDir}/content-icons.min.json`;
 
