@@ -1,4 +1,4 @@
-import { DefaultViewAreaId } from '@minddrop/views';
+import { Views } from '@minddrop/views';
 
 /**
  * Checks whether a view event targets the given view area. Events
@@ -11,5 +11,5 @@ export function matchesViewArea(
   eventViewAreaId: string | undefined,
   viewAreaId: string,
 ): boolean {
-  return (eventViewAreaId ?? DefaultViewAreaId) === viewAreaId;
+  return (eventViewAreaId ?? Views.constants.DefaultAreaId) === viewAreaId;
 }

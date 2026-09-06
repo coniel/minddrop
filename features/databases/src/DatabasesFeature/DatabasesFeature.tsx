@@ -10,12 +10,7 @@ import {
 } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
 import { Tabs } from '@minddrop/feature-views';
-import {
-  CloseViewEvent,
-  DefaultViewAreaId,
-  OpenViewEvent,
-  UpdateViewEvent,
-} from '@minddrop/views';
+import { Views } from '@minddrop/views';
 import { DatabaseEntryDialog } from '../DatabaseEntryDialog';
 import { DatabaseEntryRendererProps } from '../DatabaseEntryRenderer';
 import { NewDatabaseDialog } from '../NewDatabaseDialog';
@@ -64,7 +59,7 @@ export const DatabasesFeature: React.FC = () => {
       }
 
       // Close the view
-      Events.dispatch(CloseViewEvent, {
+      Events.dispatch(Views.events.Close, {
         id: tabView.id ?? resolveDatabaseEntryViewId(props.entryId),
       });
     });
@@ -84,7 +79,7 @@ export const DatabasesFeature: React.FC = () => {
       }
 
       // Close the view
-      Events.dispatch(CloseViewEvent, {
+      Events.dispatch(Views.events.Close, {
         id: tabView.id ?? resolveDatabaseViewId(props.databaseId),
       });
     });
@@ -96,12 +91,12 @@ export const DatabasesFeature: React.FC = () => {
 
       // Open a blank tab to receive the database view
       if (data.openMode === 'new-tab') {
-        Tabs.newTab(data.viewAreaId ?? DefaultViewAreaId);
+        Tabs.newTab(data.viewAreaId ?? Views.constants.DefaultAreaId);
       }
 
       // Open the database view, which has no dialog or panel
       // presentation and so opens in place for those modes
-      Events.dispatch(OpenViewEvent, {
+      Events.dispatch(Views.events.Open, {
         viewAreaId: data.viewAreaId,
         sourcePane: data.sourcePane,
         view: DatabaseViewName,
@@ -140,11 +135,11 @@ export const DatabasesFeature: React.FC = () => {
 
         // Open a blank tab to receive the entry view
         if (openMode === 'new-tab') {
-          Tabs.newTab(data.viewAreaId ?? DefaultViewAreaId);
+          Tabs.newTab(data.viewAreaId ?? Views.constants.DefaultAreaId);
         }
 
         // Open the entry view in place of the current view (or in split view)
-        Events.dispatch(OpenViewEvent, {
+        Events.dispatch(Views.events.Open, {
           viewAreaId: data.viewAreaId,
           sourcePane: data.sourcePane,
           view: DatabaseEntryViewName,
@@ -169,7 +164,7 @@ export const DatabasesFeature: React.FC = () => {
     // Update the database's open view when the database changes
     // (e.g. re-iconed)
     Events.addListener(DatabaseUpdatedEvent, EventListenerId, (data) => {
-      Events.dispatch(UpdateViewEvent, {
+      Events.dispatch(Views.events.Update, {
         id: resolveDatabaseViewId(data.original.id),
         newId: resolveDatabaseViewId(data.updated.id),
         props: { databaseId: data.updated.id },
@@ -181,7 +176,7 @@ export const DatabasesFeature: React.FC = () => {
     // Update the database's open view title when the database
     // is renamed
     Events.addListener(DatabaseRenamedEvent, EventListenerId, (data) => {
-      Events.dispatch(UpdateViewEvent, {
+      Events.dispatch(Views.events.Update, {
         id: resolveDatabaseViewId(data.updated.id),
         title: data.updated.name,
         icon: data.updated.icon,
@@ -190,7 +185,7 @@ export const DatabasesFeature: React.FC = () => {
 
     // Close the database's open view when the database is deleted
     Events.addListener(DatabaseDeletedEvent, EventListenerId, (data) => {
-      Events.dispatch(CloseViewEvent, {
+      Events.dispatch(Views.events.Close, {
         id: resolveDatabaseViewId(data.id),
       });
     });
@@ -206,7 +201,7 @@ export const DatabasesFeature: React.FC = () => {
 
         entries.forEach((entry) => {
           // Close the entry's open view
-          Events.dispatch(CloseViewEvent, {
+          Events.dispatch(Views.events.Close, {
             id: resolveDatabaseEntryViewId(entry.id),
           });
         });
@@ -218,7 +213,7 @@ export const DatabasesFeature: React.FC = () => {
       DatabaseEntryRenamedEvent,
       DatabaseEntriesEventListenerId,
       (data) => {
-        Events.dispatch(UpdateViewEvent, {
+        Events.dispatch(Views.events.Update, {
           id: resolveDatabaseEntryViewId(data.updated.id),
           title: data.updated.title,
         });
@@ -230,7 +225,7 @@ export const DatabasesFeature: React.FC = () => {
       DatabaseEntryDeletedEvent,
       DatabaseEntriesEventListenerId,
       (data) => {
-        Events.dispatch(CloseViewEvent, {
+        Events.dispatch(Views.events.Close, {
           id: resolveDatabaseEntryViewId(data.id),
         });
       },

@@ -7,7 +7,7 @@ import {
   userEvent,
   waitFor,
 } from '@minddrop/test-utils';
-import { SetSubviewEvent, Views } from '@minddrop/views';
+import { Views } from '@minddrop/views';
 import {
   ListPanelView,
   ListPanelViewItem,
@@ -56,7 +56,7 @@ describe('<ListPanelView />', () => {
     const announcements: unknown[] = [];
 
     // Capture subview announcements
-    Events.addListener(SetSubviewEvent, 'test', (data) => {
+    Events.addListener(Views.events.SetSubview, 'test', (data) => {
       announcements.push(data);
     });
 
@@ -79,7 +79,7 @@ describe('<ListPanelView />', () => {
     const user = userEvent.setup();
 
     // Capture subview announcements
-    Events.addListener(SetSubviewEvent, 'test', (data) => {
+    Events.addListener(Views.events.SetSubview, 'test', (data) => {
       announcements.push(data);
     });
 

@@ -1,6 +1,6 @@
 import { Events } from '@minddrop/events';
 import { I18n } from '@minddrop/i18n';
-import { OpenViewEvent } from '@minddrop/views';
+import { Views } from '@minddrop/views';
 import {
   EventListenerId,
   OpenQueriesViewEvent,
@@ -24,7 +24,7 @@ export function initializeQueriesFeature(): VoidFunction {
   // Listen for open queries view events, and open the queries
   // view when one is received
   Events.addListener(OpenQueriesViewEvent, EventListenerId, () => {
-    Events.dispatch(OpenViewEvent, {
+    Events.dispatch(Views.events.Open, {
       view: QueriesViewName,
       id: queriesViewId,
     });

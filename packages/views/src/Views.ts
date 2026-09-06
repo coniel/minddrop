@@ -1,3 +1,33 @@
+import { DefaultViewAreaId, DefaultViewName } from './constants';
+import {
+  CloseViewEvent,
+  NavigateBackEvent,
+  OpenViewEvent,
+  SetSubviewEvent,
+  SetViewAreaEvent,
+  UpdateViewEvent,
+  ViewAreaChangedEvent,
+  ViewAreaReadyEvent,
+} from './events';
+
+// Const-asserted so the names keep their literal types, which key
+// the event data registry
+export const events = {
+  Open: OpenViewEvent,
+  Update: UpdateViewEvent,
+  Close: CloseViewEvent,
+  NavigateBack: NavigateBackEvent,
+  SetSubview: SetSubviewEvent,
+  SetArea: SetViewAreaEvent,
+  AreaChanged: ViewAreaChangedEvent,
+  AreaReady: ViewAreaReadyEvent,
+} as const;
+
+export const constants = {
+  DefaultAreaId: DefaultViewAreaId,
+  DefaultName: DefaultViewName,
+};
+
 export {
   ViewsStore as Store,
   useView as use,

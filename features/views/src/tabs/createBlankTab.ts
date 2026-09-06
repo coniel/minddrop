@@ -1,5 +1,5 @@
 import { entityId } from '@minddrop/utils';
-import { DefaultViewName } from '@minddrop/views';
+import { Views } from '@minddrop/views';
 import { Tab } from './TabSetsStore';
 import { DEFAULT_SPLIT_RATIO } from './tabsConstants';
 
@@ -12,7 +12,7 @@ export function createBlankTab(): Tab {
   // The view is labelled and iconed from its registration.
   return {
     id: entityId('tab'),
-    main: { view: DefaultViewName },
+    main: { view: Views.constants.DefaultName },
     split: null,
     splitRatio: DEFAULT_SPLIT_RATIO,
     backHistory: [],

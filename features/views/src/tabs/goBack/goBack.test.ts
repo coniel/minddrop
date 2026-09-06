@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DefaultViewName, SetViewAreaEventData } from '@minddrop/views';
+import { SetViewAreaEventData, Views } from '@minddrop/views';
 import { TabSetsStore } from '../TabSetsStore';
 import { getSet } from '../getSet';
 import { newTab } from '../newTab';
@@ -71,7 +71,7 @@ describe('goBack', () => {
     const tab = getSet(VIEW_AREA_ID).tabs[0];
 
     // The search view the tab was opened on is the furthest entry
-    expect(tab.main?.view).toBe(DefaultViewName);
+    expect(tab.main?.view).toBe(Views.constants.DefaultName);
     expect(tab.backHistory).toHaveLength(0);
   });
 
@@ -82,7 +82,7 @@ describe('goBack', () => {
 
     const tab = getSet(VIEW_AREA_ID).tabs[0];
 
-    expect(tab.main?.view).toBe(DefaultViewName);
+    expect(tab.main?.view).toBe(Views.constants.DefaultName);
     expect(tab.forwardHistory).toHaveLength(0);
   });
 

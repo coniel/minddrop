@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { DefaultViewAreaId } from '@minddrop/views';
+import { Views } from '@minddrop/views';
 import { matchesViewArea } from './matchesViewArea';
 
 describe('matchesViewArea', () => {
@@ -13,7 +13,9 @@ describe('matchesViewArea', () => {
 
   it('treats a missing event area as the default area', () => {
     // A missing viewAreaId resolves to the default area
-    expect(matchesViewArea(undefined, DefaultViewAreaId)).toBe(true);
+    expect(matchesViewArea(undefined, Views.constants.DefaultAreaId)).toBe(
+      true,
+    );
     expect(matchesViewArea(undefined, 'secondary')).toBe(false);
   });
 });

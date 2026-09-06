@@ -1,6 +1,6 @@
 import { Events } from '@minddrop/events';
 import { I18n } from '@minddrop/i18n';
-import { OpenViewEvent } from '@minddrop/views';
+import { Views } from '@minddrop/views';
 import { SettingsViewId, SettingsViewName } from '../constants';
 import { OpenSettingsEvent, SettingsFeatureEventListenerId } from '../events';
 import { locales } from '../locales';
@@ -20,7 +20,7 @@ export function initializeSettingsFeature(): VoidFunction {
     OpenSettingsEvent,
     SettingsFeatureEventListenerId,
     (data) => {
-      Events.dispatch(OpenViewEvent, {
+      Events.dispatch(Views.events.Open, {
         view: SettingsViewName,
         id: SettingsViewId,
         props: data,

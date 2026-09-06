@@ -1,6 +1,6 @@
 import { Events } from '@minddrop/events';
 import { I18n } from '@minddrop/i18n';
-import { OpenViewEvent } from '@minddrop/views';
+import { Views } from '@minddrop/views';
 import { DesignStudioViewId, DesignStudioViewName } from '../constants';
 import {
   DesignsFeatureEventListenerId,
@@ -23,7 +23,7 @@ export function initializeDesignsFeature(): VoidFunction {
     OpenDesignStudioEvent,
     DesignsFeatureEventListenerId,
     (data) => {
-      Events.dispatch(OpenViewEvent, {
+      Events.dispatch(Views.events.Open, {
         view: DesignStudioViewName,
         id: DesignStudioViewId,
         props: data,

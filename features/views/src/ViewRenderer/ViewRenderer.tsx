@@ -8,15 +8,7 @@ import React, {
 } from 'react';
 import { Events } from '@minddrop/events';
 import { IconButton } from '@minddrop/ui-primitives';
-import {
-  OpenViewEvent,
-  SetSubviewEvent,
-  SetViewAreaEvent,
-  ViewAreaChangedEvent,
-  ViewAreaReadyEvent,
-  ViewDescriptor,
-  Views,
-} from '@minddrop/views';
+import { ViewDescriptor, Views } from '@minddrop/views';
 import { TabViewStateProvider } from '../TabViewStateProvider';
 import { ViewAreaState, applyOpenView } from '../applyOpenView';
 import { applySetSubview } from '../applySetSubview';
@@ -45,8 +37,8 @@ const INITIAL_STATE: ViewAreaState = {
 
 /**
  * Renders the views for a view area. Driven entirely by view events
- * (`OpenViewEvent` / `SetViewAreaEvent`) scoped to its `viewAreaId`,
- * and announces its state via `ViewAreaChangedEvent`. Supports a split
+ * (`Views.events.Open` / `Views.events.SetArea`) scoped to its `viewAreaId`,
+ * and announces its state via `Views.events.AreaChanged`. Supports a split
  * (two-pane) layout with a draggable resize handle.
  */
 export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
@@ -69,7 +61,7 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
 
       // Announce the change to listeners for this view area
       if (announce) {
-        Events.dispatch(ViewAreaChangedEvent, {
+        Events.dispatch(Views.events.AreaChanged, {
           viewAreaId,
           replace,
           ...next,
@@ -83,7 +75,7 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
     const listenerId = `feature-views:view-area:${viewAreaId}`;
 
     // Open a view in the pane the open targets
-    Events.addListener(OpenViewEvent, listenerId, (data) => {
+    Events.addListener(Views.events.Open, listenerId, (data) => {
       // Ignore events targeting a different view area
       if (!matchesViewArea(data.viewAreaId, viewAreaId)) {
         return;
@@ -93,7 +85,7 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
     });
 
     // Record the entity a view now shows within itself
-    Events.addListener(SetSubviewEvent, listenerId, (data) => {
+    Events.addListener(Views.events.SetSubview, listenerId, (data) => {
       // Ignore events targeting a different view area
       if (!matchesViewArea(data.viewAreaId, viewAreaId)) {
         return;
@@ -103,7 +95,7 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
     });
 
     // Replace the entire state (e.g. when a tab is activated)
-    Events.addListener(SetViewAreaEvent, listenerId, (data) => {
+    Events.addListener(Views.events.SetArea, listenerId, (data) => {
       // Ignore events targeting a different view area
       if (!matchesViewArea(data.viewAreaId, viewAreaId)) {
         return;
@@ -118,12 +110,12 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
 
     // Announce that the listeners are ready so the initial content can
     // be restored (e.g. by the tabs feature)
-    Events.dispatch(ViewAreaReadyEvent, { viewAreaId });
+    Events.dispatch(Views.events.AreaReady, { viewAreaId });
 
     return () => {
-      Events.removeListener(OpenViewEvent, listenerId);
-      Events.removeListener(SetSubviewEvent, listenerId);
-      Events.removeListener(SetViewAreaEvent, listenerId);
+      Events.removeListener(Views.events.Open, listenerId);
+      Events.removeListener(Views.events.SetSubview, listenerId);
+      Events.removeListener(Views.events.SetArea, listenerId);
     };
   }, [applyState, viewAreaId]);
 
@@ -185,7 +177,7 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
         document.body.style.userSelect = '';
 
         // Announce the final ratio so it is recorded on the active tab
-        Events.dispatch(ViewAreaChangedEvent, {
+        Events.dispatch(Views.events.AreaChanged, {
           viewAreaId,
           ...stateRef.current,
         });

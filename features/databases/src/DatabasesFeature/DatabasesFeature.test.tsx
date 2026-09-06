@@ -2,12 +2,10 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { Events } from '@minddrop/events';
 import { render } from '@minddrop/test-utils';
-import { OpenViewEvent } from '@minddrop/views';
-import {
-  DatabaseViewName,
-  EventListenerId,
   OpenDatabaseViewEvent,
 } from '../events';
+import { Views } from '@minddrop/views';
+import { DatabaseViewName, EventListenerId } from '../events';
 import { cleanup, setup } from '../test-utils';
 import { DatabasesFeature } from './DatabasesFeature';
 
@@ -22,7 +20,7 @@ describe('DatabasesFeature', () => {
     new Promise<void>((resolve) => {
       render(<DatabasesFeature />);
 
-      Events.addListener(OpenViewEvent, EventListenerId, (data) => {
+      Events.addListener(Views.events.Open, EventListenerId, (data) => {
         // Should include the database view name
         expect(data.view).toBe(DatabaseViewName);
         expect(data.props!.databaseId).toBe(objectDatabase.id);

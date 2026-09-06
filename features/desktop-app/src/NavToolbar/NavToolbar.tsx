@@ -2,7 +2,7 @@ import { FC, useCallback, useLayoutEffect, useState } from 'react';
 import { Events, SetNavToolbarBackActionEventData } from '@minddrop/events';
 import { Tabs } from '@minddrop/feature-views';
 import { Toolbar, ToolbarIconButton } from '@minddrop/ui-primitives';
-import { DefaultViewAreaId } from '@minddrop/views';
+import { Views } from '@minddrop/views';
 import './NavToolbar.css';
 
 /**
@@ -19,8 +19,8 @@ export const NavToolbar: FC = () => {
     useState<SetNavToolbarBackActionEventData>(null);
 
   // Whether the active tab has history to navigate to
-  const canGoBack = Tabs.useCanGoBack(DefaultViewAreaId);
-  const canGoForward = Tabs.useCanGoForward(DefaultViewAreaId);
+  const canGoBack = Tabs.useCanGoBack(Views.constants.DefaultAreaId);
+  const canGoForward = Tabs.useCanGoForward(Views.constants.DefaultAreaId);
 
   // Registered as a layout effect so the width is in place before the
   // first paint, catching the sidebar's initial width dispatch
@@ -64,12 +64,12 @@ export const NavToolbar: FC = () => {
       return;
     }
 
-    Tabs.goBack(DefaultViewAreaId);
+    Tabs.goBack(Views.constants.DefaultAreaId);
   }, [backAction]);
 
   // Navigate the active tab forward through its history
   const handleClickForward = useCallback(() => {
-    Tabs.goForward(DefaultViewAreaId);
+    Tabs.goForward(Views.constants.DefaultAreaId);
   }, []);
 
   return (

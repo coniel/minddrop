@@ -3,7 +3,7 @@ import { Events } from '@minddrop/events';
 import { SettingsViews } from '@minddrop/settings';
 import { Sidebar } from '@minddrop/ui-components';
 import { MenuGroup, MenuItem } from '@minddrop/ui-primitives';
-import { UpdateViewEvent } from '@minddrop/views';
+import { Views } from '@minddrop/views';
 import { SettingsUiState } from './SettingsUiState';
 import { SettingsViewId } from './constants';
 
@@ -41,7 +41,7 @@ export const SettingsSidebar: React.FC<SettingsSidebarProps> = ({
   // Record the selected settings view on the app view so the
   // selection survives the view remounting on tab switches
   function handleSelectView(settingsViewId: string) {
-    Events.dispatch(UpdateViewEvent, {
+    Events.dispatch(Views.events.Update, {
       id: SettingsViewId,
       props: { view: settingsViewId },
     });

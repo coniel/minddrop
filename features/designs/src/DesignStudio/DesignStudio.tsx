@@ -4,11 +4,7 @@ import { Events } from '@minddrop/events';
 import { useTranslation } from '@minddrop/i18n';
 import { CanvasProvider } from '@minddrop/ui-canvas';
 import { isEditableTarget, useDeleteKey } from '@minddrop/utils';
-import {
-  DefaultViewName,
-  OpenViewEvent,
-  UpdateViewEvent,
-} from '@minddrop/views';
+import { Views } from '@minddrop/views';
 import { DesignDashboard } from '../DesignDashboard';
 import { DesignStudioLeftPanel } from '../DesignStudioLeftPanel';
 import { DesignStudioScope } from '../DesignStudioScope';
@@ -134,7 +130,7 @@ const DesignStudioSession: React.FC<DesignStudioSessionProps> = ({
 
     viewTitle.current = title;
 
-    Events.dispatch(UpdateViewEvent, {
+    Events.dispatch(Views.events.Update, {
       id: DesignStudioViewId,
       title,
     });
@@ -192,7 +188,7 @@ const DesignStudioSession: React.FC<DesignStudioSessionProps> = ({
   const handleClickBack = useCallback(() => {
     // Navigate to an empty view to unmount the design studio
     // and reopen the sidebar
-    Events.dispatch(OpenViewEvent, { view: DefaultViewName });
+    Events.dispatch(Views.events.Open, { view: Views.constants.DefaultName });
   }, []);
 
   // Open the design, recording it on the view so that it is
@@ -277,7 +273,7 @@ const DesignStudioSession: React.FC<DesignStudioSessionProps> = ({
  * clears it when no design ID is given.
  */
 function setViewDesign(designId?: DesignId): void {
-  Events.dispatch(UpdateViewEvent, {
+  Events.dispatch(Views.events.Update, {
     id: DesignStudioViewId,
     props: { designId, fromDashboard: Boolean(designId) },
   });

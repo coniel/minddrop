@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
-import { OpenViewEvent } from '@minddrop/views';
 import { Tags } from '@minddrop/tags';
+import { Views } from '@minddrop/views';
 import { TagsViewName } from '../events';
 import { cleanup, setup } from '../test-utils';
 import { initializeTagsFeature } from './initializeTagsFeature';
@@ -23,7 +23,7 @@ describe('initializeTagsFeature', () => {
 
   it('opens the tags view on open tags view event', () =>
     new Promise<void>((resolve) => {
-      Events.addListener(OpenViewEvent, 'test-open-tags', (data) => {
+      Events.addListener(Views.events.Open, 'test-open-tags', (data) => {
         // The tags list view opens as a singleton
         expect(data.view).toBe(TagsViewName);
         expect(data.id).toBe('tags:tags');

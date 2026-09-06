@@ -1,4 +1,4 @@
-import { DefaultViewName, Views } from '@minddrop/views';
+import { Views } from '@minddrop/views';
 import { SearchView } from './SearchView';
 
 /**
@@ -7,7 +7,7 @@ import { SearchView } from './SearchView';
  */
 export function registerSearchViews(): void {
   Views.register({
-    type: DefaultViewName,
+    type: Views.constants.DefaultName,
     component: SearchView,
     title: 'search.open',
     icon: 'search',

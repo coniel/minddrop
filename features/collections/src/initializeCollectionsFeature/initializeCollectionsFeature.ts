@@ -1,6 +1,6 @@
 import { Events } from '@minddrop/events';
 import { I18n } from '@minddrop/i18n';
-import { OpenViewEvent } from '@minddrop/views';
+import { Views } from '@minddrop/views';
 import {
   CollectionsViewName,
   EventListenerId,
@@ -25,7 +25,7 @@ export function initializeCollectionsFeature(): VoidFunction {
   // Listen for open collections view events, and open the
   // collections list view when one is received
   Events.addListener(OpenCollectionsViewEvent, EventListenerId, () => {
-    Events.dispatch(OpenViewEvent, {
+    Events.dispatch(Views.events.Open, {
       view: CollectionsViewName,
       id: collectionsViewId,
     });

@@ -3,11 +3,7 @@ import { Events } from '@minddrop/events';
 import { Spaces } from '@minddrop/spaces';
 import { SpaceFixtures } from '@minddrop/spaces/test-utils';
 import { render } from '@minddrop/test-utils';
-import {
-  CloseViewEvent,
-  OpenViewEvent,
-  UpdateViewEvent,
-} from '@minddrop/views';
+import { Views } from '@minddrop/views';
 import { OpenSpaceViewEvent, SpaceViewName } from '../events';
 import { MockFs, cleanup, setup } from '../test-utils';
 import { SpacesFeature } from './SpacesFeature';
@@ -30,7 +26,7 @@ describe('<SpacesFeature />', () => {
     new Promise<void>((resolve) => {
       render(<SpacesFeature />);
 
-      Events.addListener(OpenViewEvent, 'test-open-space', (data) => {
+      Events.addListener(Views.events.Open, 'test-open-space', (data) => {
         // The space view opens with the space's details
         expect(data.view).toBe(SpaceViewName);
         expect(data.id).toBe(`spaces:space:${space_1.id}`);
@@ -49,7 +45,7 @@ describe('<SpacesFeature />', () => {
     new Promise<void>((resolve) => {
       render(<SpacesFeature />);
 
-      Events.addListener(UpdateViewEvent, 'test-update-space', (data) => {
+      Events.addListener(Views.events.Update, 'test-update-space', (data) => {
         // The view title and icon follow the space
         expect(data.id).toBe(`spaces:space:${space_1.id}`);
         expect(data.title).toBe('Renamed space');
@@ -63,7 +59,7 @@ describe('<SpacesFeature />', () => {
     new Promise<void>((resolve) => {
       render(<SpacesFeature />);
 
-      Events.addListener(CloseViewEvent, 'test-close-space', (data) => {
+      Events.addListener(Views.events.Close, 'test-close-space', (data) => {
         expect(data.id).toBe(`spaces:space:${space_1.id}`);
         resolve();
       });

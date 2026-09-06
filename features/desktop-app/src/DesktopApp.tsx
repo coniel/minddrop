@@ -22,7 +22,7 @@ import {
   TooltipProvider,
   useToastManager,
 } from '@minddrop/ui-primitives';
-import { DefaultViewAreaId, OpenViewEventData, Views } from '@minddrop/views';
+import { OpenViewEventData, Views } from '@minddrop/views';
 import { AppSidebar } from './AppSidebar';
 import { AppUiState } from './AppUiState';
 import { NavToolbar } from './NavToolbar';
@@ -81,11 +81,14 @@ export const DesktopApp: React.FC = () => {
               onDoubleClick={handleTopbarDoubleClick}
             >
               <NavToolbar />
-              <TabsToolbar viewAreaId={DefaultViewAreaId} shortcuts />
+              <TabsToolbar
+                viewAreaId={Views.constants.DefaultAreaId}
+                shortcuts
+              />
             </div>
             <div className="content-panels">
               {showSidebar && <AppSidebar />}
-              <ViewRenderer viewAreaId={DefaultViewAreaId} />
+              <ViewRenderer viewAreaId={Views.constants.DefaultAreaId} />
               <RightPanel />
             </div>
           </div>

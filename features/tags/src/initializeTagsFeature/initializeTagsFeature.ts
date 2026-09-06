@@ -1,8 +1,8 @@
 import { Events } from '@minddrop/events';
 import { Tabs } from '@minddrop/feature-views';
 import { I18n } from '@minddrop/i18n';
-import { DefaultViewAreaId, OpenViewEvent } from '@minddrop/views';
 import { Tags } from '@minddrop/tags';
+import { Views } from '@minddrop/views';
 import { EventListenerId, TagsViewName } from '../events';
 import { locales } from '../locales';
 
@@ -25,10 +25,10 @@ export function initializeTagsFeature(): VoidFunction {
   Events.addListener(Tags.events.OpenView, EventListenerId, (data) => {
     // Open a blank tab to receive the tags view
     if (data?.openMode === 'new-tab') {
-      Tabs.newTab(DefaultViewAreaId);
+      Tabs.newTab(Views.constants.DefaultAreaId);
     }
 
-    Events.dispatch(OpenViewEvent, {
+    Events.dispatch(Views.events.Open, {
       view: TagsViewName,
       id: tagsViewId,
     });

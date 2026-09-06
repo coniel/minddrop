@@ -1,5 +1,5 @@
 import { Events } from '@minddrop/events';
-import { SetViewAreaEvent } from '@minddrop/views';
+import { Views } from '@minddrop/views';
 import { Tab } from './TabSetsStore';
 import { toSetViewAreaEventData } from './toSetViewAreaEventData';
 
@@ -13,5 +13,8 @@ import { toSetViewAreaEventData } from './toSetViewAreaEventData';
  */
 export function dispatchViewArea(viewAreaId: string, tab: Tab | null): void {
   // Convert the tab to a view area state and dispatch it
-  Events.dispatch(SetViewAreaEvent, toSetViewAreaEventData(viewAreaId, tab));
+  Events.dispatch(
+    Views.events.SetArea,
+    toSetViewAreaEventData(viewAreaId, tab),
+  );
 }

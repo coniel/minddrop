@@ -8,7 +8,7 @@ import {
   Text,
   VerticalScrollArea,
 } from '@minddrop/ui-primitives';
-import { DefaultViewName, OpenViewEvent } from '@minddrop/views';
+import { Views } from '@minddrop/views';
 import { SettingsSidebar } from '../SettingsSidebar';
 import { SettingsViewProps } from '../events';
 import './SettingsView.css';
@@ -81,5 +81,5 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ view }) => {
 
 // Exit the settings view by opening the default view
 function handleExit() {
-  Events.dispatch(OpenViewEvent, { view: DefaultViewName });
+  Events.dispatch(Views.events.Open, { view: Views.constants.DefaultName });
 }

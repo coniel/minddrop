@@ -8,7 +8,7 @@ import {
   screen,
   userEvent,
 } from '@minddrop/test-utils';
-import { UpdateViewEvent, UpdateViewEventData } from '@minddrop/views';
+import { UpdateViewEventData, Views } from '@minddrop/views';
 import { DesignStudioViewId, DesignStudioViewTitle } from '../constants';
 import { DesignStudioViewProps } from '../events';
 import { cleanup, setup } from '../test-utils';
@@ -23,7 +23,7 @@ describe('<DesignStudio />', () => {
 
   afterEach(() => {
     cleanupRender();
-    Events.removeListener(UpdateViewEvent, ListenerId);
+    Events.removeListener(Views.events.Update, ListenerId);
     cleanup();
   });
 
@@ -83,7 +83,7 @@ describe('<DesignStudio />', () => {
 function captureViewUpdates(): UpdateViewEventData<DesignStudioViewProps>[] {
   const updates: UpdateViewEventData<DesignStudioViewProps>[] = [];
 
-  Events.addListener(UpdateViewEvent, ListenerId, (data) => {
+  Events.addListener(Views.events.Update, ListenerId, (data) => {
     updates.push(data);
   });
 

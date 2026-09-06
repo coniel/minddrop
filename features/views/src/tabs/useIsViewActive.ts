@@ -1,4 +1,4 @@
-import { DefaultViewAreaId } from '@minddrop/views';
+import { Views } from '@minddrop/views';
 import { useActiveTab } from './TabSetsStore';
 import { useBreadcrumbTrail } from './resolveBreadcrumbTrail';
 
@@ -28,7 +28,7 @@ export function useIsViewActive(
   view: string,
   options: UseIsViewActiveOptions = {},
 ): boolean {
-  const { viewId, viewAreaId = DefaultViewAreaId } = options;
+  const { viewId, viewAreaId = Views.constants.DefaultAreaId } = options;
   const activeTab = useActiveTab(viewAreaId);
   const breadcrumbTrail = useBreadcrumbTrail(viewAreaId, 'main');
   const shownView = activeTab?.main;

@@ -5,11 +5,7 @@ import {
 } from '@minddrop/data-views';
 import { Events } from '@minddrop/events';
 import { I18n, i18n } from '@minddrop/i18n';
-import {
-  CloseViewEvent,
-  OpenViewEvent,
-  UpdateViewEvent,
-} from '@minddrop/views';
+import { Views } from '@minddrop/views';
 import {
   DataViewViewName,
   DataViewsViewName,
@@ -51,7 +47,7 @@ export function initializeDataViewsFeature(): VoidFunction {
 
     // Open the data view's view. The feature has no tab access, so
     // new-tab opens fall back to in place, as do dialog and panel
-    Events.dispatch(OpenViewEvent, {
+    Events.dispatch(Views.events.Open, {
       viewAreaId: data.viewAreaId,
       sourcePane: data.sourcePane,
       view: DataViewViewName,
@@ -68,7 +64,7 @@ export function initializeDataViewsFeature(): VoidFunction {
   Events.addListener(OpenDataViewsViewEvent, EventListenerId, (data) => {
     // Open the data views list view. The feature has no tab access,
     // so new-tab opens fall back to in place, as do dialog and panel
-    Events.dispatch(OpenViewEvent, {
+    Events.dispatch(Views.events.Open, {
       viewAreaId: data?.viewAreaId,
       sourcePane: data?.sourcePane,
       view: DataViewsViewName,
@@ -82,7 +78,7 @@ export function initializeDataViewsFeature(): VoidFunction {
   Events.addListener(OpenNewDataViewViewEvent, EventListenerId, (data) => {
     // Open the view creation view. The feature has no tab access, so
     // new-tab opens fall back to in place, as do dialog and panel
-    Events.dispatch(OpenViewEvent, {
+    Events.dispatch(Views.events.Open, {
       viewAreaId: data.viewAreaId,
       sourcePane: data.sourcePane,
       view: NewDataViewViewName,
@@ -97,7 +93,7 @@ export function initializeDataViewsFeature(): VoidFunction {
   // Update the data view's open view when the data view changes
   // (e.g. renamed or re-iconed)
   Events.addListener(DataViewUpdatedEvent, EventListenerId, (data) => {
-    Events.dispatch(UpdateViewEvent, {
+    Events.dispatch(Views.events.Update, {
       id: dataViewViewId(data.updated.id),
       title: data.updated.name,
       icon: data.updated.icon,
@@ -106,7 +102,7 @@ export function initializeDataViewsFeature(): VoidFunction {
 
   // Close the data view's open view when the data view is deleted
   Events.addListener(DataViewDeletedEvent, EventListenerId, (data) => {
-    Events.dispatch(CloseViewEvent, {
+    Events.dispatch(Views.events.Close, {
       id: dataViewViewId(data.id),
     });
   });

@@ -11,7 +11,7 @@ import {
   ContextSubmenuTriggerItem,
   IconRenderer,
 } from '@minddrop/ui-primitives';
-import { DefaultViewName } from '@minddrop/views';
+import { Views } from '@minddrop/views';
 import { Tab } from '../TabSetsStore';
 import { closeOtherTabs } from '../closeOtherTabs';
 import { closeTab } from '../closeTab';
@@ -79,7 +79,7 @@ export const TabOptionsMenu: FC<TabOptionsMenuProps> = ({
   // Open a search view in the tab's split pane, labelled and iconed
   // from its registration
   function handleSplitWithSearch() {
-    splitTab(viewAreaId, tabId, { view: DefaultViewName });
+    splitTab(viewAreaId, tabId, { view: Views.constants.DefaultName });
   }
 
   // Close the tab's split pane
