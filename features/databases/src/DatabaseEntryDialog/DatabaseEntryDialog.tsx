@@ -1,9 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
-import {
-  DatabaseEntries,
-  Databases,
-  OpenDatabaseEntryViewEvent,
-} from '@minddrop/databases';
+import { DatabaseEntries, Databases } from '@minddrop/databases';
 import { DropdownMenu, FloatingActionButton } from '@minddrop/ui-primitives';
 import { DatabaseEntryOptionsMenu } from '../DatabaseEntryOptionsMenu';
 import { DatabaseEntryRenderer } from '../DatabaseEntryRenderer';
@@ -110,7 +106,7 @@ export const DatabaseEntryDialog: React.FC<DatabaseEntryDialogProps> = ({
 
   const handleOpenNewTab = useCallback(() => {
     onOpenChange(false);
-    Events.dispatch(OpenDatabaseEntryViewEvent, {
+    Events.dispatch(DatabaseEntries.events.OpenView, {
       entryId,
       openMode: 'new-tab',
     });
@@ -118,7 +114,7 @@ export const DatabaseEntryDialog: React.FC<DatabaseEntryDialogProps> = ({
 
   const handleOpenSplit = useCallback(() => {
     onOpenChange(false);
-    Events.dispatch(OpenDatabaseEntryViewEvent, {
+    Events.dispatch(DatabaseEntries.events.OpenView, {
       entryId,
       openMode: 'split',
     });

@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { MULTI_VALUE_PROPERTY_TYPES } from '@minddrop/databases';
+import { Databases } from '@minddrop/databases';
 import {
   Queries,
   Query,
@@ -80,7 +80,8 @@ export const QuerySortNodeCard: React.FC<QuerySortNodeCardProps> = ({
   const properties = useMemo(
     () =>
       getQueryUpstreamProperties(query, node.id).filter(
-        (property) => !MULTI_VALUE_PROPERTY_TYPES.has(property.type),
+        (property) =>
+          !Databases.constants.MultiValuePropertyTypes.has(property.type),
       ),
     [query, node.id],
   );

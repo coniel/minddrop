@@ -1,10 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
-import {
-  DatabaseEntries,
-  Databases,
-  OpenDatabaseEntryViewEvent,
-  OpenDatabaseViewEvent,
-} from '@minddrop/databases';
+import { DatabaseEntries, Databases } from '@minddrop/databases';
 import type { FullTextSearchResult } from '@minddrop/search';
 import { PanelView } from '@minddrop/ui-components';
 import {
@@ -71,7 +66,7 @@ export const SearchView: React.FC = () => {
   // database's own open mode so the result never opens elsewhere
   const openEntry = useCallback(
     (entryId: string) => {
-      openView(OpenDatabaseEntryViewEvent, {
+      openView(DatabaseEntries.events.OpenView, {
         entryId,
         openMode: 'in-place',
       });
@@ -84,7 +79,7 @@ export const SearchView: React.FC = () => {
     (result: FullTextSearchResult) => {
       // Open the database itself
       if (result.type === 'database') {
-        openView(OpenDatabaseViewEvent, {
+        openView(Databases.events.OpenView, {
           databaseId: result.databaseId,
         });
 

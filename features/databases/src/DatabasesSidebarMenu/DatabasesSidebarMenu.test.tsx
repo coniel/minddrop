@@ -1,8 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { Databases } from '@minddrop/databases';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { Events } from '@minddrop/events';
 import { render, screen, userEvent } from '@minddrop/test-utils';
-import { OpenDatabaseViewEvent, OpenNewDatabaseDialogEvent } from '../events';
+import { OpenNewDatabaseDialogEvent } from '../events';
 import { cleanup, setup } from '../test-utils';
 import { DatabasesSidebarMenu } from './DatabasesSidebarMenu';
 
@@ -19,7 +20,7 @@ describe('<DatabasesSidebarMenu />', () => {
 
   it('opens the database view when a database menu item is clicked', () =>
     new Promise<void>((done) => {
-      Events.addListener(OpenDatabaseViewEvent, 'test', (data) => {
+      Events.addListener(Databases.events.OpenView, 'test', (data) => {
         expect(data.databaseId).toBe(DatabaseFixtures.objectDatabase.id);
         done();
       });

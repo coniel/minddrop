@@ -22,20 +22,20 @@ export function initializeKanbanView(): VoidFunction {
   Events.addListeners(EventListenerId, {
     // Follow group property renames, keeping the views grouped by
     // the renamed property.
-    [Databases.events.propertyRenamed]: handlePropertyRenamed,
+    [Databases.events.PropertyRenamed]: handlePropertyRenamed,
     // Clear the group property from views grouped by a removed
     // property, making the fallback to another property explicit.
-    [Databases.events.propertyRemoved]: handlePropertyRemoved,
+    [Databases.events.PropertyRemoved]: handlePropertyRemoved,
     // Follow option renames, carrying over the saved column order
     // and hidden columns keyed by the old value.
-    [Databases.events.propertyOptionRenamed]: handlePropertyOptionRenamed,
+    [Databases.events.PropertyOptionRenamed]: handlePropertyOptionRenamed,
   });
 
   return () => {
-    Events.removeListener(Databases.events.propertyRenamed, EventListenerId);
-    Events.removeListener(Databases.events.propertyRemoved, EventListenerId);
+    Events.removeListener(Databases.events.PropertyRenamed, EventListenerId);
+    Events.removeListener(Databases.events.PropertyRemoved, EventListenerId);
     Events.removeListener(
-      Databases.events.propertyOptionRenamed,
+      Databases.events.PropertyOptionRenamed,
       EventListenerId,
     );
   };

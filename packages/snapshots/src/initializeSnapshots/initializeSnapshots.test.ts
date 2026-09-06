@@ -1,12 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import {
-  Database,
-  DatabaseEntryDeletedEvent,
-  DatabaseEntryRenamedEvent,
-  DatabasePropertyRenamedEvent,
-  DatabaseRenamedEvent,
-  Databases,
-} from '@minddrop/databases';
+import { Database, DatabaseEntries, Databases } from '@minddrop/databases';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { Events } from '@minddrop/events';
 import { recordRename } from '../recordRename';
@@ -52,7 +45,7 @@ describe('initializeSnapshots', () => {
 
   it('records entry renames', async () => {
     // Dispatch an entry rename event
-    Events.dispatch(DatabaseEntryRenamedEvent, {
+    Events.dispatch(DatabaseEntries.events.Renamed, {
       original: objectEntry1,
       updated: { ...objectEntry1, title: 'Renamed' },
     });
@@ -71,7 +64,7 @@ describe('initializeSnapshots', () => {
 
   it('records database renames', async () => {
     // Dispatch a database rename event
-    Events.dispatch(DatabaseRenamedEvent, {
+    Events.dispatch(Databases.events.Renamed, {
       original: objectDatabase,
       updated: { ...objectDatabase, name: 'Renamed Objects' },
     });
@@ -90,7 +83,7 @@ describe('initializeSnapshots', () => {
 
   it('records property renames', async () => {
     // Dispatch a property rename event
-    Events.dispatch(DatabasePropertyRenamedEvent, {
+    Events.dispatch(Databases.events.PropertyRenamed, {
       original: objectDatabase,
       updated: renameProperty(objectDatabase, 'Content', 'Body'),
       oldName: 'Content',
@@ -119,7 +112,7 @@ describe('initializeSnapshots', () => {
     });
 
     // Dispatch a deletion event for the untitled entry
-    Events.dispatch(DatabaseEntryDeletedEvent, {
+    Events.dispatch(DatabaseEntries.events.Deleted, {
       ...objectEntry1,
       title: 'Untitled',
     });

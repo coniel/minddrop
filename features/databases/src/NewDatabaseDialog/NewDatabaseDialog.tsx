@@ -1,10 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
-  BlankDatabaseTemplate,
   DatabaseTemplate,
   DatabaseTemplates,
   Databases,
-  DefaultDatabaseIcon,
 } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
@@ -29,11 +27,7 @@ import {
   TextField,
 } from '@minddrop/ui-primitives';
 import { Paths, useForm } from '@minddrop/utils';
-import {
-  EventListenerId,
-  OpenDatabaseViewEvent,
-  OpenNewDatabaseDialogEvent,
-} from '../events';
+import { EventListenerId, OpenNewDatabaseDialogEvent } from '../events';
 import './NewDatabaseDialog.css';
 
 export interface NewDatabaseDialogProps {
@@ -49,11 +43,12 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
 }) => {
   const databaseTemplates = DatabaseTemplates.useAll();
   const [dialogOpen, setDialogOpen] = useState(defaultOpen);
-  const [icon, setIcon] = useState(DefaultDatabaseIcon);
+  const [icon, setIcon] = useState(Databases.constants.EntityDefaultIcon);
   // The blank template, used to create a database from scratch with only the
   // title, created, and last modified date properties.
   const blankTemplate = useMemo(
-    () => BlankDatabaseTemplate((key) => i18n.t(key, { defaultValue: key })),
+    () =>
+      Databases.templates.Blank((key) => i18n.t(key, { defaultValue: key })),
     [],
   );
   // The blank template is selected by default so the dialog opens ready to
@@ -81,7 +76,7 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
     setTimeout(() => {
       reset();
       setSelectedTemplate(blankTemplate);
-      setIcon(DefaultDatabaseIcon);
+      setIcon(Databases.constants.EntityDefaultIcon);
     }, 300);
   }, [reset, blankTemplate]);
 
@@ -123,7 +118,7 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
       reset();
 
       // Go to the new database's view with the properties panel open
-      Events.dispatch(OpenDatabaseViewEvent, {
+      Events.dispatch(Databases.events.OpenView, {
         databaseId: database.id,
         configurationPanelOpen: true,
       });
@@ -131,7 +126,7 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
   }
 
   function handleClearIcon() {
-    setIcon(DefaultDatabaseIcon);
+    setIcon(Databases.constants.EntityDefaultIcon);
   }
 
   function handleSelectIcon(selectedIcon: string) {

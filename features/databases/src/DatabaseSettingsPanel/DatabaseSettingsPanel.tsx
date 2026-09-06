@@ -2,7 +2,6 @@ import { useState } from 'react';
 import {
   DatabaseEntrySerializers,
   Databases,
-  DefaultDatabaseIcon,
   PropertyFileStorage,
 } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
@@ -75,7 +74,9 @@ export const DatabaseSettingsPanel: React.FC<DatabaseSettingsPanelProps> = ({
 
   // Reset the icon to the default when cleared
   function handleClearIcon() {
-    Databases.update(databaseId, { icon: DefaultDatabaseIcon });
+    Databases.update(databaseId, {
+      icon: Databases.constants.EntityDefaultIcon,
+    });
   }
 
   // Commit a name change by renaming the database

@@ -1,9 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { Databases } from '@minddrop/databases';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { Events } from '@minddrop/events';
 import { render } from '@minddrop/test-utils';
-  OpenDatabaseViewEvent,
-} from '../events';
 import { Views } from '@minddrop/views';
 import { DatabaseViewName, EventListenerId } from '../events';
 import { cleanup, setup } from '../test-utils';
@@ -27,7 +26,7 @@ describe('DatabasesFeature', () => {
         resolve();
       });
 
-      Events.dispatch(OpenDatabaseViewEvent, {
+      Events.dispatch(Databases.events.OpenView, {
         databaseId: objectDatabase.id,
       });
     }));

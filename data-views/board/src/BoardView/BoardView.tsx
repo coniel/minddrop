@@ -9,7 +9,6 @@ import { Collections } from '@minddrop/collections';
 import { DataViewTypeComponentProps, DataViews } from '@minddrop/data-views';
 import {
   DatabaseEntries,
-  DatabaseEntryDuplicatedEvent,
   DatabaseEntryTemplates,
   DatabaseId,
   Databases,
@@ -157,7 +156,7 @@ export const BoardViewComponent: React.FC<
   // duplicate there from the duplication's event log entry.
   useEffect(() => {
     Events.addListener(
-      DatabaseEntryDuplicatedEvent,
+      DatabaseEntries.events.Duplicated,
       `board-view-${view.id}`,
       (data) => {
         // Ignore duplications from other sources
@@ -180,7 +179,7 @@ export const BoardViewComponent: React.FC<
 
     return () => {
       Events.removeListener(
-        DatabaseEntryDuplicatedEvent,
+        DatabaseEntries.events.Duplicated,
         `board-view-${view.id}`,
       );
     };

@@ -1,14 +1,21 @@
+import { DatabaseEntryTemplateNotFoundError } from './errors';
 import {
   DatabaseEntryTemplateCreatedEvent,
   DatabaseEntryTemplateDeletedEvent,
   DatabaseEntryTemplateUpdatedEvent,
 } from './events';
 
+// Const-asserted so the names keep their literal types, which key
+// the event data registry
 export const events = {
-  created: DatabaseEntryTemplateCreatedEvent,
-  updated: DatabaseEntryTemplateUpdatedEvent,
-  deleted: DatabaseEntryTemplateDeletedEvent,
+  Created: DatabaseEntryTemplateCreatedEvent,
+  Updated: DatabaseEntryTemplateUpdatedEvent,
+  Deleted: DatabaseEntryTemplateDeletedEvent,
 } as const;
+
+export const errors = {
+  NotFound: DatabaseEntryTemplateNotFoundError,
+};
 
 export { DatabaseEntryTemplatesStore as Store } from './DatabaseEntryTemplatesStore';
 export { createDatabaseEntryTemplate as create } from './createDatabaseEntryTemplate';

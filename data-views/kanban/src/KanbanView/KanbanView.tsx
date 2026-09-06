@@ -7,11 +7,7 @@ import React, {
 } from 'react';
 import { Collections } from '@minddrop/collections';
 import { DataViewTypeComponentProps, DataViews } from '@minddrop/data-views';
-import {
-  DatabaseEntries,
-  DatabaseEntryDuplicatedEvent,
-  Databases,
-} from '@minddrop/databases';
+import { DatabaseEntries, Databases } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
 import { getDroppedEntryIds } from '@minddrop/feature-databases';
 import { SelectPropertySchema } from '@minddrop/properties';
@@ -73,7 +69,7 @@ export const KanbanViewComponent: React.FC<
   // values to new ones so entries the rename's side effects have
   // not rewritten yet stay in the renamed column rather than
   // dropping into the no-value column.
-  const optionRenames = Events.useLogs(Databases.events.propertyOptionRenamed);
+  const optionRenames = Events.useLogs(Databases.events.PropertyOptionRenamed);
   const valueAliases = useMemo(() => {
     const aliases: Record<string, string> = {};
 
@@ -217,7 +213,7 @@ export const KanbanViewComponent: React.FC<
   // reference.
   useEffect(() => {
     Events.addListener(
-      DatabaseEntryDuplicatedEvent,
+      DatabaseEntries.events.Duplicated,
       `kanban-view-${view.id}`,
       (data) => {
         // Ignore duplications from other sources
@@ -256,7 +252,7 @@ export const KanbanViewComponent: React.FC<
 
     return () => {
       Events.removeListener(
-        DatabaseEntryDuplicatedEvent,
+        DatabaseEntries.events.Duplicated,
         `kanban-view-${view.id}`,
       );
     };

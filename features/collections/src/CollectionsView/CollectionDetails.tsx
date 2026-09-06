@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Collection, Collections } from '@minddrop/collections';
 import { DataView, DataViews } from '@minddrop/data-views';
-import {
-  DatabaseEntries,
-  Databases,
-  OpenDatabaseEntryViewEvent,
-} from '@minddrop/databases';
+import { DatabaseEntries, Databases } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
 import { OpenDataViewViewEvent } from '@minddrop/feature-data-views';
 import { useTranslation } from '@minddrop/i18n';
@@ -298,7 +294,7 @@ const CollectionItem: React.FC<CollectionItemProps> = ({
 
   // Open the entry, using its database's configured open mode
   function handleOpenEntry() {
-    openView(OpenDatabaseEntryViewEvent, {
+    openView(DatabaseEntries.events.OpenView, {
       entryId: itemId,
     });
   }

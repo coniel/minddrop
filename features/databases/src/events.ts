@@ -1,8 +1,6 @@
-export {
-  OpenDatabaseViewEvent,
-  type OpenDatabaseViewEventData,
-  OpenDatabaseEntryViewEvent,
-  type OpenDatabaseEntryViewEventData,
+export type {
+  OpenDatabaseViewEventData,
+  OpenDatabaseEntryViewEventData,
 } from '@minddrop/databases';
 
 export const EventListenerId = 'databases-feature';

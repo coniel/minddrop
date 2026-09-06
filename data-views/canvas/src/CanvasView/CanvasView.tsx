@@ -3,7 +3,6 @@ import { Collections } from '@minddrop/collections';
 import { DataViewTypeComponentProps, DataViews } from '@minddrop/data-views';
 import {
   DatabaseEntries,
-  DatabaseEntryDuplicatedEvent,
   DatabaseEntryTemplates,
   DatabaseId,
   Databases,
@@ -501,7 +500,7 @@ const CanvasViewContent: React.FC<
   // there from the duplication's event log entry.
   useEffect(() => {
     Events.addListener(
-      DatabaseEntryDuplicatedEvent,
+      DatabaseEntries.events.Duplicated,
       `canvas-view-${view.id}`,
       (data) => {
         // Ignore duplications from other sources
@@ -533,7 +532,7 @@ const CanvasViewContent: React.FC<
 
     return () => {
       Events.removeListener(
-        DatabaseEntryDuplicatedEvent,
+        DatabaseEntries.events.Duplicated,
         `canvas-view-${view.id}`,
       );
     };

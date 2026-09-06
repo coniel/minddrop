@@ -1,6 +1,6 @@
 import { Collections } from '@minddrop/collections';
 import { DataViews } from '@minddrop/data-views';
-import { DatabaseDefaultsStore, Databases } from '@minddrop/databases';
+import { Databases } from '@minddrop/databases';
 import { Designs } from '@minddrop/designs';
 import { registerBlockSelectionSerializer } from '@minddrop/editor';
 import { initializeCollectionsFeature } from '@minddrop/feature-collections';
@@ -129,7 +129,7 @@ async function runInitialization(): Promise<void> {
   await TabSetsStore.hydrate();
 
   // Hydrate the defaults applied to newly created databases
-  await DatabaseDefaultsStore.hydrate();
+  await Databases.DefaultsStore.hydrate();
 
   await Designs.initialize();
 

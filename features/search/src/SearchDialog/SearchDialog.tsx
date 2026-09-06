@@ -1,8 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import {
-  OpenDatabaseEntryViewEvent,
-  OpenDatabaseViewEvent,
-} from '@minddrop/databases';
+import { DatabaseEntries, Databases } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
 import type { FullTextSearchResult } from '@minddrop/search';
 import {
@@ -93,12 +90,12 @@ export const SearchDialog: React.FC = () => {
   const selectResult = useCallback(
     (result: FullTextSearchResult) => {
       if (result.type === 'database') {
-        Events.dispatch(OpenDatabaseViewEvent, {
+        Events.dispatch(Databases.events.OpenView, {
           databaseId: result.databaseId,
           openMode: 'new-tab',
         });
       } else if (result.type === 'entry') {
-        Events.dispatch(OpenDatabaseEntryViewEvent, {
+        Events.dispatch(DatabaseEntries.events.OpenView, {
           entryId: result.id,
           openMode: 'new-tab',
         });

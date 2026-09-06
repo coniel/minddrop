@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { DatabaseUpdatedEvent } from '@minddrop/databases';
+import { Databases } from '@minddrop/databases';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { Events } from '@minddrop/events';
 import { Properties } from '@minddrop/properties';
@@ -50,7 +50,7 @@ describe('<DatabasePropertyEditor />', () => {
     it('updates the property on save', () =>
       new Promise<void>((done) => {
         // Listen for database updates and verify the property was updated
-        Events.addListener(DatabaseUpdatedEvent, 'test', (data) => {
+        Events.addListener(Databases.events.Updated, 'test', (data) => {
           expect(
             data.updated.properties.find(
               (candidate) => candidate.name === property.name,
@@ -105,7 +105,7 @@ describe('<DatabasePropertyEditor />', () => {
           );
 
           // TODO: Assert the property was renamed once renaming is implemented
-          Events.addListener(DatabaseUpdatedEvent, 'test', () => {
+          Events.addListener(Databases.events.Updated, 'test', () => {
             done();
           });
 
@@ -145,8 +145,9 @@ describe('<DatabasePropertyEditor />', () => {
               // Form should be still open
               expect(screen.getByText('actions.save')).toBeVisible();
 
-            done();
-          });
+              done();
+            },
+          );
 
           renameProperty();
         }));
@@ -183,7 +184,7 @@ describe('<DatabasePropertyEditor />', () => {
           );
 
           // Listen for database updates and verify the property was deleted
-          Events.addListener(DatabaseUpdatedEvent, 'test', (data) => {
+          Events.addListener(Databases.events.Updated, 'test', (data) => {
             expect(
               data.updated.properties.find(
                 (candidate) => candidate.name === property.name,
@@ -241,7 +242,7 @@ describe('<DatabasePropertyEditor />', () => {
     it('adds the property on save', () =>
       new Promise<void>((done) => {
         // Listen for database updates and verify the property was added
-        Events.addListener(DatabaseUpdatedEvent, 'test', (data) => {
+        Events.addListener(Databases.events.Updated, 'test', (data) => {
           expect(
             data.updated.properties.find(
               (property) => property.name === 'New property',

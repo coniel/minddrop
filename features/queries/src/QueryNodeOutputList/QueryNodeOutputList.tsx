@@ -1,9 +1,5 @@
 import { useMemo, useState } from 'react';
-import {
-  DatabaseEntries,
-  Databases,
-  OpenDatabaseEntryViewEvent,
-} from '@minddrop/databases';
+import { DatabaseEntries, Databases } from '@minddrop/databases';
 import { Queries } from '@minddrop/queries';
 import {
   Icon,
@@ -136,7 +132,7 @@ const QueryNodeOutputListItem: React.FC<QueryNodeOutputListItemProps> = ({
 
   // Open the entry view
   function handleClick(): void {
-    openView(OpenDatabaseEntryViewEvent, {
+    openView(DatabaseEntries.events.OpenView, {
       entryId,
     });
   }

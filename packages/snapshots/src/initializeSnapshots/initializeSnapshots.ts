@@ -1,9 +1,4 @@
-import {
-  DatabaseEntryDeletedEvent,
-  DatabaseEntryRenamedEvent,
-  DatabasePropertyRenamedEvent,
-  DatabaseRenamedEvent,
-} from '@minddrop/databases';
+import { DatabaseEntries, Databases } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
 import { Tags } from '@minddrop/tags';
 import {
@@ -22,22 +17,22 @@ import {
  */
 export function initializeSnapshots(): void {
   // Record entry renames in the rename ledger
-  Events.on(DatabaseEntryRenamedEvent, 'snapshots', (data) =>
+  Events.on(DatabaseEntries.events.Renamed, 'snapshots', (data) =>
     onDatabaseEntryRenamed(data),
   );
 
   // Record database renames in the rename ledger
-  Events.on(DatabaseRenamedEvent, 'snapshots', (data) =>
+  Events.on(Databases.events.Renamed, 'snapshots', (data) =>
     onDatabaseRenamed(data),
   );
 
   // Record property renames in the rename ledger
-  Events.on(DatabasePropertyRenamedEvent, 'snapshots', (data) =>
+  Events.on(Databases.events.PropertyRenamed, 'snapshots', (data) =>
     onDatabasePropertyRenamed(data),
   );
 
   // Retract dead untitled rename chains on entry deletion
-  Events.on(DatabaseEntryDeletedEvent, 'snapshots', (data) =>
+  Events.on(DatabaseEntries.events.Deleted, 'snapshots', (data) =>
     onDatabaseEntryDeleted(data),
   );
 

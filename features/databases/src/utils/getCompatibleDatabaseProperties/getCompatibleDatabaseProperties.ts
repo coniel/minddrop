@@ -1,4 +1,4 @@
-import { withImplicitMetadataProperties } from '@minddrop/databases';
+import { Databases } from '@minddrop/databases';
 import {
   PropertiesSchema,
   PropertySchema,
@@ -39,7 +39,8 @@ export function getCompatibleDatabaseProperties(
 
   // Add the metadata properties the database schema does not
   // declare itself
-  const properties = withImplicitMetadataProperties(databaseProperties);
+  const properties =
+    Databases.withImplicitMetadataProperties(databaseProperties);
 
   return properties.filter((property) =>
     compatibleTypes.includes(property.type),

@@ -1,4 +1,4 @@
-import { withImplicitMetadataProperties } from '@minddrop/databases';
+import { Databases } from '@minddrop/databases';
 import { PropertySchema } from '@minddrop/properties';
 import { Query } from '@minddrop/queries';
 import { getQueryUpstreamDatabases } from '../getQueryUpstreamDatabases';
@@ -25,11 +25,13 @@ export function getQueryUpstreamProperties(
 
   // Merge each database's schema, first occurrence per name wins
   databases.forEach((database) => {
-    withImplicitMetadataProperties(database.properties).forEach((property) => {
-      if (!merged.some((existing) => existing.name === property.name)) {
-        merged.push(property);
-      }
-    });
+    Databases.withImplicitMetadataProperties(database.properties).forEach(
+      (property) => {
+        if (!merged.some((existing) => existing.name === property.name)) {
+          merged.push(property);
+        }
+      },
+    );
   });
 
   return merged;

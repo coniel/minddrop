@@ -22,7 +22,7 @@ import {
  */
 export function initializeSearchSync(): void {
   // Handle entry sync (upsert/delete)
-  Events.on(Databases.events.entriesSqlSynced, 'search:sync', (data) => {
+  Events.on(Databases.events.EntriesSqlSynced, 'search:sync', (data) => {
     const workspaceId = getWorkspaceId();
 
     if (!workspaceId) {
@@ -39,7 +39,7 @@ export function initializeSearchSync(): void {
   });
 
   // Handle database sync (upsert/delete)
-  Events.on(Databases.events.databaseSqlSynced, 'search:sync', (data) => {
+  Events.on(Databases.events.SqlSynced, 'search:sync', (data) => {
     const workspaceId = getWorkspaceId();
 
     if (!workspaceId) {
@@ -69,7 +69,7 @@ export function initializeSearchSync(): void {
   });
 
   // Handle property rename (re-index MiniSearch)
-  Events.on(Databases.events.propertySqlSynced, 'search:sync', (data) => {
+  Events.on(Databases.events.PropertySqlSynced, 'search:sync', (data) => {
     const workspaceId = getWorkspaceId();
 
     if (!workspaceId) {
@@ -82,7 +82,7 @@ export function initializeSearchSync(): void {
   });
 
   // Handle background sync changeset
-  Events.on(Databases.events.backgroundSynced, 'search:sync', (data) => {
+  Events.on(Databases.events.BackgroundSynced, 'search:sync', (data) => {
     const workspaceId = getWorkspaceId();
 
     if (!workspaceId) {
@@ -119,7 +119,7 @@ export function initializeSearchSync(): void {
   });
 
   // Handle database reindex (property added/removed)
-  Events.on(Databases.events.databaseSqlReindexed, 'search:sync', (data) => {
+  Events.on(Databases.events.SqlReindexed, 'search:sync', (data) => {
     const workspaceId = getWorkspaceId();
 
     if (!workspaceId) {

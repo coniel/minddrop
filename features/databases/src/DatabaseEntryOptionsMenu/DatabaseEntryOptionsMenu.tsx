@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 import { Collections } from '@minddrop/collections';
-import { DatabaseEntries, DatabasesIcon } from '@minddrop/databases';
+import { DatabaseEntries, Databases } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
 import { CollectionSelectionSubmenu } from '@minddrop/ui-components';
 import { DatabaseEntryRenderSource } from '@minddrop/ui-databases';
@@ -16,10 +16,7 @@ import {
 } from '@minddrop/ui-primitives';
 import { ContentColor, ContentColors } from '@minddrop/ui-theme';
 import { Views } from '@minddrop/views';
-import {
-  CloseDatabaseEntryDialogEvent,
-  OpenDatabaseViewEvent,
-} from '../events';
+import { CloseDatabaseEntryDialogEvent } from '../events';
 
 export interface DatabaseEntryOptionsMenuProps {
   /**
@@ -79,7 +76,7 @@ export const DatabaseEntryOptionsMenu: React.FC<
     // Close the entry dialog if open
     Events.dispatch(CloseDatabaseEntryDialogEvent);
 
-    openView(OpenDatabaseViewEvent, {
+    openView(Databases.events.OpenView, {
       databaseId: entry.database,
     });
   }, [entryId, openView]);
@@ -129,7 +126,7 @@ export const DatabaseEntryOptionsMenu: React.FC<
           from it */}
       {source?.type !== 'database' && (
         <ActionMenuItem
-          icon={DatabasesIcon}
+          icon={Databases.constants.Icon}
           label="databases.entries.actions.goToDatabase"
           onSelect={handleGoToDatabase}
         />

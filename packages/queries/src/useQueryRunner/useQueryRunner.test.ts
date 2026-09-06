@@ -136,7 +136,7 @@ describe('useQueryRunner', () => {
     const { result } = await renderRunner(query_1.id);
 
     // Sync entries of the source database
-    await dispatch(Databases.events.entriesSqlSynced, {
+    await dispatch(Databases.events.EntriesSqlSynced, {
       action: 'upsert',
       entryIds: [],
       databaseId: SOURCE_DATABASE_ID,
@@ -151,7 +151,7 @@ describe('useQueryRunner', () => {
     const { result } = await renderRunner(query_1.id);
 
     // Sync entries of an unrelated database
-    await dispatch(Databases.events.entriesSqlSynced, {
+    await dispatch(Databases.events.EntriesSqlSynced, {
       action: 'upsert',
       entryIds: [],
       databaseId: 'database_other',
@@ -166,7 +166,7 @@ describe('useQueryRunner', () => {
     const { result } = await renderRunner(query_1.id);
 
     // Apply a background sync changeset
-    await dispatch(Databases.events.backgroundSynced, {
+    await dispatch(Databases.events.BackgroundSynced, {
       upsertedDatabases: [],
       deletedDatabaseIds: [],
       upsertedEntries: [],
@@ -182,7 +182,7 @@ describe('useQueryRunner', () => {
     const { result } = await renderRunner(query_1.id);
 
     // Reindex the source database
-    await dispatch(Databases.events.databaseSqlReindexed, {
+    await dispatch(Databases.events.SqlReindexed, {
       databaseId: SOURCE_DATABASE_ID,
     });
 
@@ -195,7 +195,7 @@ describe('useQueryRunner', () => {
     const { result } = await renderRunner(query_1.id);
 
     // Sync a property rename of the source database
-    await dispatch(Databases.events.propertySqlSynced, {
+    await dispatch(Databases.events.PropertySqlSynced, {
       action: 'rename',
       databaseId: SOURCE_DATABASE_ID,
       oldName: 'Old',
@@ -292,7 +292,7 @@ describe('useQueryRunner', () => {
     unmount();
 
     // Sync entries of the source database
-    await dispatch(Databases.events.entriesSqlSynced, {
+    await dispatch(Databases.events.EntriesSqlSynced, {
       action: 'upsert',
       entryIds: [],
       databaseId: SOURCE_DATABASE_ID,

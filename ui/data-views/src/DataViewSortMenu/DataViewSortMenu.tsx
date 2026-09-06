@@ -5,7 +5,7 @@ import {
   DataViewTypes,
   DataViews,
 } from '@minddrop/data-views';
-import { DefaultEntrySort } from '@minddrop/databases';
+import { Databases } from '@minddrop/databases';
 import {
   DropdownMenuContent,
   DropdownMenuPortal,
@@ -68,10 +68,13 @@ export const DataViewSortMenu: React.FC<DataViewSortMenuProps> = ({
 
   // The view's sort options, falling back to the defaults the
   // sorter applies
-  const sortBy = view.options?.sortBy ?? DefaultEntrySort.by;
-  const sortProperty = view.options?.sortProperty ?? DefaultEntrySort.property;
+  const sortBy =
+    view.options?.sortBy ?? Databases.constants.DefaultEntrySort.by;
+  const sortProperty =
+    view.options?.sortProperty ?? Databases.constants.DefaultEntrySort.property;
   const sortDirection =
-    view.options?.sortDirection ?? DefaultEntrySort.direction;
+    view.options?.sortDirection ??
+    Databases.constants.DefaultEntrySort.direction;
 
   // The sorted property, missing when the database no longer
   // declares it

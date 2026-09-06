@@ -4,10 +4,6 @@ import {
   DatabaseEntry,
   Databases,
   LayoutContext,
-  layoutContextBaseType,
-  resolveDesignPropertyMap,
-  resolveEntryColor,
-  withImplicitMetadataProperties,
 } from '@minddrop/databases';
 import { Designs, Layouts, resolveDesignMediaDirPath } from '@minddrop/designs';
 import { LayoutRenderer } from '@minddrop/feature-designs';
@@ -29,7 +25,6 @@ import {
 import { setDragPreview } from '@minddrop/utils';
 import { Views } from '@minddrop/views';
 import { DatabaseEntryOptionsMenu } from '../DatabaseEntryOptionsMenu';
-import { OpenDatabaseEntryViewEvent } from '../events';
 import './DatabaseEntryRenderer.css';
 
 export interface DatabaseEntryRendererProps {
@@ -52,7 +47,7 @@ export interface DatabaseEntryRendererProps {
 
   /**
    * Optional click handler. When provided, this is called instead
-   * of dispatching the default OpenDatabaseEntryViewEvent.
+   * of dispatching the default DatabaseEntries.events.OpenView.
    */
   onClick?: (entryId: string) => void;
 }
@@ -110,7 +105,7 @@ const Entry: React.FC<EntryProps> = ({
 
   // The base layout type the context resolves to, used for styling
   // and click behaviour
-  const baseType = layoutContextBaseType[layoutContext];
+  const baseType = Databases.constants.LayoutContextBaseType[layoutContext];
 
   // Whether this entry's layout should autofocus its editor,
   // set when the entry was just created from the containing view
@@ -150,7 +145,7 @@ const Entry: React.FC<EntryProps> = ({
     }
 
     const bindings = Layouts.getPropertyBindings(layout);
-    const designPropertyMap = resolveDesignPropertyMap(
+    const designPropertyMap = Databases.resolveDesignPropertyMap(
       design.properties,
       database,
     );
@@ -170,7 +165,7 @@ const Entry: React.FC<EntryProps> = ({
   // Database properties including the implicit entry metadata
   // properties, so metadata-mapped elements resolve a schema
   const rendererProperties = useMemo(
-    () => withImplicitMetadataProperties(database?.properties || []),
+    () => Databases.withImplicitMetadataProperties(database?.properties || []),
     [database],
   );
 
@@ -231,7 +226,7 @@ const Entry: React.FC<EntryProps> = ({
       return;
     }
 
-    openView(OpenDatabaseEntryViewEvent, {
+    openView(DatabaseEntries.events.OpenView, {
       entryId: entry.id,
     });
   }, [entry.id, onClick, openView]);
@@ -279,7 +274,7 @@ const Entry: React.FC<EntryProps> = ({
 
   // The entry's color, applied as a scheme class so the layout's
   // schemable roles resolve against it
-  const entryColor = resolveEntryColor(database, entry);
+  const entryColor = DatabaseEntries.resolveColor(database, entry);
 
   const className = [
     'database-entry',

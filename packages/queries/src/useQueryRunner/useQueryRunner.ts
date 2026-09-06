@@ -80,7 +80,7 @@ export function useQueryRunner<TValue>(
 
     // Re-run when a source database's entries sync to SQL
     Events.addListener(
-      Databases.events.entriesSqlSynced,
+      Databases.events.EntriesSqlSynced,
       listenerId,
       (data) => {
         if (sourceDatabaseIds.includes(data.databaseId)) {
@@ -91,22 +91,18 @@ export function useQueryRunner<TValue>(
 
     // Re-run after background syncs, whose changesets can span
     // databases
-    Events.addListener(Databases.events.backgroundSynced, listenerId, rerun);
+    Events.addListener(Databases.events.BackgroundSynced, listenerId, rerun);
 
     // Re-run when a source database's entries are reindexed
-    Events.addListener(
-      Databases.events.databaseSqlReindexed,
-      listenerId,
-      (data) => {
-        if (sourceDatabaseIds.includes(data.databaseId)) {
-          rerun();
-        }
-      },
-    );
+    Events.addListener(Databases.events.SqlReindexed, listenerId, (data) => {
+      if (sourceDatabaseIds.includes(data.databaseId)) {
+        rerun();
+      }
+    });
 
     // Re-run when a property rename syncs to SQL
     Events.addListener(
-      Databases.events.propertySqlSynced,
+      Databases.events.PropertySqlSynced,
       listenerId,
       (data) => {
         if (sourceDatabaseIds.includes(data.databaseId)) {
@@ -164,10 +160,10 @@ export function useQueryRunner<TValue>(
       cancelled = true;
 
       // Remove this instance's event listeners
-      Events.removeListener(Databases.events.entriesSqlSynced, listenerId);
-      Events.removeListener(Databases.events.backgroundSynced, listenerId);
-      Events.removeListener(Databases.events.databaseSqlReindexed, listenerId);
-      Events.removeListener(Databases.events.propertySqlSynced, listenerId);
+      Events.removeListener(Databases.events.EntriesSqlSynced, listenerId);
+      Events.removeListener(Databases.events.BackgroundSynced, listenerId);
+      Events.removeListener(Databases.events.SqlReindexed, listenerId);
+      Events.removeListener(Databases.events.PropertySqlSynced, listenerId);
       Events.removeListener(Collections.events.Updated, listenerId);
       Events.removeListener(Collections.events.Created, listenerId);
       Events.removeListener(Collections.events.Deleted, listenerId);

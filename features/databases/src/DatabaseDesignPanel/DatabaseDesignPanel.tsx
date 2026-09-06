@@ -1,11 +1,4 @@
-import {
-  Database,
-  Databases,
-  LAYOUT_CONTEXTS,
-  LayoutContext,
-  layoutContextBaseType,
-  resolveDesignPropertyMap,
-} from '@minddrop/databases';
+import { Database, Databases, LayoutContext } from '@minddrop/databases';
 import { DatabaseDesign, Designs } from '@minddrop/designs';
 import { createI18nKeyBuilder } from '@minddrop/i18n';
 import { Properties } from '@minddrop/properties';
@@ -51,23 +44,23 @@ const layoutContextIconMap: Record<LayoutContext, UiIconName> = {
  * Layout contexts grouped by base layout type, preserving order.
  * Each group renders together, separated by a gap.
  */
-const LAYOUT_CONTEXT_GROUPS = LAYOUT_CONTEXTS.reduce<LayoutContext[][]>(
-  (groups, context) => {
-    const currentGroup = groups[groups.length - 1];
+const LAYOUT_CONTEXT_GROUPS = Databases.constants.LayoutContexts.reduce<
+  LayoutContext[][]
+>((groups, context) => {
+  const currentGroup = groups[groups.length - 1];
 
-    if (
-      currentGroup &&
-      layoutContextBaseType[currentGroup[0]] === layoutContextBaseType[context]
-    ) {
-      currentGroup.push(context);
-    } else {
-      groups.push([context]);
-    }
+  if (
+    currentGroup &&
+    Databases.constants.LayoutContextBaseType[currentGroup[0]] ===
+      Databases.constants.LayoutContextBaseType[context]
+  ) {
+    currentGroup.push(context);
+  } else {
+    groups.push([context]);
+  }
 
-    return groups;
-  },
-  [],
-);
+  return groups;
+}, []);
 
 export interface DatabaseDesignPanelProps {
   /**
@@ -176,7 +169,10 @@ const PropertyMappingSection: React.FC<DesignSectionProps> = ({
 }) => {
   // The stored mappings, filled in with the auto-mapped metadata
   // properties
-  const propertyMap = resolveDesignPropertyMap(design.properties, database);
+  const propertyMap = Databases.resolveDesignPropertyMap(
+    design.properties,
+    database,
+  );
 
   // Map the design property to the selected database property,
   // or unmap it when the "none" option is selected
@@ -298,11 +294,16 @@ const DefaultLayoutsSection: React.FC<DesignSectionProps> = ({
       </Stack>
       <Stack gap={4}>
         {LAYOUT_CONTEXT_GROUPS.map((group) => (
-          <Stack key={layoutContextBaseType[group[0]]} gap={2}>
+          <Stack
+            key={Databases.constants.LayoutContextBaseType[group[0]]}
+            gap={2}
+          >
             {group.map((context) => {
               // Layouts of the context's base type
               const layouts = design.layouts.filter(
-                (layout) => layout.type === layoutContextBaseType[context],
+                (layout) =>
+                  layout.type ===
+                  Databases.constants.LayoutContextBaseType[context],
               );
               const pinnedId = database.defaultLayouts[context];
 

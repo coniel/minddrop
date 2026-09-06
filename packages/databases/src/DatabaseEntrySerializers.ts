@@ -1,5 +1,10 @@
 import { DatabaseEntrySerializersStore } from './DatabaseEntrySerializersStore';
 import { coreEntrySerializers } from './entry-serializers';
+import { DatabaseEntrySerializerNotRegisteredError } from './errors';
+
+export const errors = {
+  NotRegistered: DatabaseEntrySerializerNotRegisteredError,
+};
 
 export {
   DatabaseEntrySerializersStore as Store,

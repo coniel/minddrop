@@ -74,7 +74,7 @@ describe('initializeKanbanView', () => {
   });
 
   it('follows group property renames', async () => {
-    Events.dispatch(Databases.events.propertyRenamed, {
+    Events.dispatch(Databases.events.PropertyRenamed, {
       original: entryTemplatesDatabase,
       updated: entryTemplatesDatabase,
       oldName: 'Status',
@@ -95,7 +95,7 @@ describe('initializeKanbanView', () => {
   });
 
   it('clears the group property and order on property removal', async () => {
-    Events.dispatch(Databases.events.propertyRemoved, {
+    Events.dispatch(Databases.events.PropertyRemoved, {
       original: entryTemplatesDatabase,
       updated: entryTemplatesDatabase,
       property: { type: 'select', name: 'Status', options: [] },
@@ -115,7 +115,7 @@ describe('initializeKanbanView', () => {
   });
 
   it('re-keys the order and hidden state on option renames', async () => {
-    Events.dispatch(Databases.events.propertyOptionRenamed, {
+    Events.dispatch(Databases.events.PropertyOptionRenamed, {
       original: entryTemplatesDatabase,
       updated: entryTemplatesDatabase,
       property: renamedOptionProperty,

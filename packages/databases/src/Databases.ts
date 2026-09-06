@@ -1,4 +1,12 @@
 import {
+  DatabasesIcon,
+  DefaultDatabaseIcon,
+  DefaultEntrySort,
+  MULTI_VALUE_PROPERTY_TYPES,
+} from './constants';
+import { BlankDatabaseTemplate } from './database-templates';
+import { DatabaseNotFoundError } from './errors';
+import {
   DatabaseCreatedEvent,
   DatabaseDeletedEvent,
   DatabaseEntriesSqlSyncedEvent,
@@ -13,8 +21,10 @@ import {
   DatabaseSqlSyncedEvent,
   DatabaseUpdatedEvent,
   DatabasesBackgroundSyncedEvent,
+  OpenDatabaseViewEvent,
 } from './events';
 import { handleDataTransfer } from './handleDataTransfer';
+import { LAYOUT_CONTEXTS, layoutContextBaseType } from './layoutContexts';
 import {
   SCHEMA_SQL,
   SCHEMA_VERSION,
@@ -39,22 +49,42 @@ import {
   sqlUpsertEntries,
 } from './sql';
 
+// Const-asserted so the names keep their literal types, which key
+// the event data registry
 export const events = {
-  created: DatabaseCreatedEvent,
-  updated: DatabaseUpdatedEvent,
-  deleted: DatabaseDeletedEvent,
-  renamed: DatabaseRenamedEvent,
-  propertyAdded: DatabasePropertyAddedEvent,
-  propertyRemoved: DatabasePropertyRemovedEvent,
-  propertyRenamed: DatabasePropertyRenamedEvent,
-  propertyOptionRenamed: DatabasePropertyOptionRenamedEvent,
-  entryMetadataUpdated: DatabaseEntryMetadataUpdatedEvent,
-  entriesSqlSynced: DatabaseEntriesSqlSyncedEvent,
-  databaseSqlSynced: DatabaseSqlSyncedEvent,
-  propertySqlSynced: DatabasePropertySqlSyncedEvent,
-  databaseSqlReindexed: DatabaseSqlReindexedEvent,
-  backgroundSynced: DatabasesBackgroundSyncedEvent,
+  Created: DatabaseCreatedEvent,
+  Updated: DatabaseUpdatedEvent,
+  Deleted: DatabaseDeletedEvent,
+  Renamed: DatabaseRenamedEvent,
+  PropertyAdded: DatabasePropertyAddedEvent,
+  PropertyRemoved: DatabasePropertyRemovedEvent,
+  PropertyRenamed: DatabasePropertyRenamedEvent,
+  PropertyOptionRenamed: DatabasePropertyOptionRenamedEvent,
+  EntryMetadataUpdated: DatabaseEntryMetadataUpdatedEvent,
+  EntriesSqlSynced: DatabaseEntriesSqlSyncedEvent,
+  SqlSynced: DatabaseSqlSyncedEvent,
+  PropertySqlSynced: DatabasePropertySqlSyncedEvent,
+  SqlReindexed: DatabaseSqlReindexedEvent,
+  BackgroundSynced: DatabasesBackgroundSyncedEvent,
+  OpenView: OpenDatabaseViewEvent,
 } as const;
+
+export const errors = {
+  NotFound: DatabaseNotFoundError,
+};
+
+export const constants = {
+  Icon: DatabasesIcon,
+  EntityDefaultIcon: DefaultDatabaseIcon,
+  DefaultEntrySort,
+  LayoutContexts: LAYOUT_CONTEXTS,
+  LayoutContextBaseType: layoutContextBaseType,
+  MultiValuePropertyTypes: MULTI_VALUE_PROPERTY_TYPES,
+};
+
+export const templates = {
+  Blank: BlankDatabaseTemplate,
+};
 
 export const sql = {
   upsertDatabase: sqlUpsertDatabase,
@@ -85,6 +115,7 @@ export { initializeDatabasesBackend as initializeBackend } from './sql';
 export { backgroundSyncDatabases as backgroundSync } from './sql';
 export { handleBackgroundSyncResult } from './handleBackgroundSyncResult';
 export { DatabasesStore as Store } from './DatabasesStore';
+export { DatabaseDefaultsStore as DefaultsStore } from './DatabaseDefaultsStore';
 export { getAllDatabases as getAll } from './getAllDatabases';
 export { addDatabaseProperty as addProperty } from './addDatabaseProperty';
 export { createDatabase as create } from './createDatabase';
@@ -113,6 +144,8 @@ export {
   convertEntryToSqlRecord,
   convertSqlRecordToEntry,
   filterValidDatabaseFiles as filterFiles,
+  withImplicitMetadataProperties,
+  resolveDesignPropertyMap,
 } from './utils';
 export { readWorkspaceDatabases } from './readWorkspaceDatabases';
 export { getDefaultDatabaseLayout as getDefaultLayout } from './getDefaultDatabaseLayout';

@@ -1,10 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import {
-  DatabaseEntryTemplateCreatedEvent,
-  DatabaseEntryTemplateDeletedEvent,
-  DatabaseEntryTemplateUpdatedEvent,
-  Databases,
-} from '@minddrop/databases';
+import { DatabaseEntryTemplates, Databases } from '@minddrop/databases';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { Events } from '@minddrop/events';
 import {
@@ -141,7 +136,7 @@ describe('<DatabaseEntryTemplateEditor />', () => {
       new Promise<void>((done) => {
         // Listen for template updates and verify the new name
         Events.addListener(
-          DatabaseEntryTemplateUpdatedEvent,
+          DatabaseEntryTemplates.events.Updated,
           'test',
           (data) => {
             expect(data.id).toBe(entryTemplate1.id);
@@ -228,7 +223,7 @@ describe('<DatabaseEntryTemplateEditor />', () => {
 
           // Listen for template removals and verify the template
           Events.addListener(
-            DatabaseEntryTemplateDeletedEvent,
+            DatabaseEntryTemplates.events.Deleted,
             'test',
             (data) => {
               expect(data.id).toBe(entryTemplate1.id);
@@ -295,7 +290,7 @@ describe('<DatabaseEntryTemplateEditor />', () => {
       new Promise<void>((done) => {
         // Listen for template additions and verify the new template
         Events.addListener(
-          DatabaseEntryTemplateCreatedEvent,
+          DatabaseEntryTemplates.events.Created,
           'test',
           (data) => {
             expect(data.database).toBe(entryTemplatesDatabase.id);

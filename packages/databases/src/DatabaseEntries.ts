@@ -1,18 +1,31 @@
+import { DatabaseEntryNotFoundError } from './errors';
 import {
   DatabaseEntriesClearedEvent,
   DatabaseEntryCreatedEvent,
   DatabaseEntryDeletedEvent,
+  DatabaseEntryDuplicatedEvent,
   DatabaseEntryRenamedEvent,
   DatabaseEntryUpdatedEvent,
+  DatabaseEntryWrittenEvent,
+  OpenDatabaseEntryViewEvent,
 } from './events';
 
+// Const-asserted so the names keep their literal types, which key
+// the event data registry
 export const events = {
-  created: DatabaseEntryCreatedEvent,
-  updated: DatabaseEntryUpdatedEvent,
-  deleted: DatabaseEntryDeletedEvent,
-  renamed: DatabaseEntryRenamedEvent,
-  cleared: DatabaseEntriesClearedEvent,
+  Created: DatabaseEntryCreatedEvent,
+  Updated: DatabaseEntryUpdatedEvent,
+  Deleted: DatabaseEntryDeletedEvent,
+  Renamed: DatabaseEntryRenamedEvent,
+  Written: DatabaseEntryWrittenEvent,
+  Duplicated: DatabaseEntryDuplicatedEvent,
+  Cleared: DatabaseEntriesClearedEvent,
+  OpenView: OpenDatabaseEntryViewEvent,
 } as const;
+
+export const errors = {
+  NotFound: DatabaseEntryNotFoundError,
+};
 
 export { createDatabaseEntry as create } from './createDatabaseEntry';
 export { deleteDatabaseEntry as delete } from './deleteDatabaseEntry';
@@ -51,4 +64,5 @@ export { sortDatabaseEntries as sort } from './utils';
 export { sortDatabaseEntryIds as sortIds } from './utils';
 export { getRecentDatabaseEntries as getRecent } from './utils';
 export { searchDatabaseEntriesByTitle as searchByTitle } from './utils';
+export { resolveEntryColor as resolveColor } from './utils';
 export { resolveEntryLayoutOverrides as resolveLayoutOverrides } from './resolveEntryLayoutOverrides';

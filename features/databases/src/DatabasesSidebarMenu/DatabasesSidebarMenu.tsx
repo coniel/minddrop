@@ -3,11 +3,7 @@ import { Events } from '@minddrop/events';
 import { Tabs } from '@minddrop/feature-views';
 import { SidebarGroup } from '@minddrop/ui-components';
 import { MenuItem } from '@minddrop/ui-primitives';
-import {
-  DatabaseViewName,
-  OpenDatabaseViewEvent,
-  OpenNewDatabaseDialogEvent,
-} from '../events';
+import { DatabaseViewName, OpenNewDatabaseDialogEvent } from '../events';
 import { resolveDatabaseViewId } from '../utils';
 
 /** Renders the collapsible databases section in the app sidebar. */
@@ -49,7 +45,7 @@ const DatabaseMenuItem: React.FC<DatabaseMenuItemProps> = ({ database }) => {
   });
 
   function handleClick() {
-    Events.dispatch(OpenDatabaseViewEvent, { databaseId: database.id });
+    Events.dispatch(Databases.events.OpenView, { databaseId: database.id });
   }
 
   return (
