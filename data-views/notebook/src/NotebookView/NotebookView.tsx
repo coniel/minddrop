@@ -143,10 +143,11 @@ export const NotebookViewComponent: React.FC<
             onFilteredEntriesChange={setFilteredEntries}
             stateKey="search"
             size="md"
+            variant="ghost"
           />
 
           {/* Entry sort dropdown */}
-          <DataViewSortMenu view={view} size="md" variant="subtle" />
+          <DataViewSortMenu view={view} size="md" variant="ghost" />
 
           {/* Collection sources also support adding existing entries */}
           {view.dataSource.type === 'collection' ? (
@@ -156,14 +157,14 @@ export const NotebookViewComponent: React.FC<
               onCreateEntry={handleEntryAdded}
               onAddEntry={handleEntryAdded}
               size="md"
-              variant="subtle"
+              variant="ghost"
             />
           ) : (
             <CreateDatabaseEntryButton
               database={createDatabaseIds}
               onCreateEntry={handleEntryAdded}
               size="md"
-              variant="subtle"
+              variant="ghost"
             />
           )}
         </div>
