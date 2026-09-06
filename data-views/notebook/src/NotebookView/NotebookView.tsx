@@ -11,9 +11,13 @@ import {
 import {
   ScrollArea,
   TransientViewStateScope,
+  VirtualizedList,
   useTransientState,
 } from '@minddrop/ui-primitives';
-import { defaultNotebookViewOptions } from '../constants';
+import {
+  LIST_ITEM_HEIGHT_ESTIMATE,
+  defaultNotebookViewOptions,
+} from '../constants';
 import { NotebookViewOptions } from '../types';
 import { useListPanelResize } from '../useListPanelResize';
 import './NotebookView.css';
@@ -65,6 +69,12 @@ export const NotebookViewComponent: React.FC<
     [entries, view.options?.layoutOverrides],
   );
 
+  // The selected entry's row index, kept scrolled into view
+  const selectedEntryIndex = useMemo(
+    () => (selectedEntryId ? filteredEntries.indexOf(selectedEntryId) : -1),
+    [filteredEntries, selectedEntryId],
+  );
+
   // Persist the new width to the view options when resizing ends
   const handleResizeEnd = useCallback(
     (width: number) => {
@@ -104,6 +114,24 @@ export const NotebookViewComponent: React.FC<
     [setSelectedEntryId],
   );
 
+  // Renders a list row for an entry
+  const renderListItem = useCallback(
+    (entryId: string) => (
+      <div
+        className="notebook-view-list-item"
+        data-selected={entryId === selectedEntryId || undefined}
+      >
+        <DatabaseEntryRenderer
+          entryId={entryId}
+          layoutContext="navigation-list"
+          layoutId={entryLayoutOverrides[entryId]?.listLayoutId}
+          onClick={handleEntryClick}
+        />
+      </div>
+    ),
+    [selectedEntryId, entryLayoutOverrides, handleEntryClick],
+  );
+
   return (
     <div className="notebook-view" data-dragging={isDragging || undefined}>
       {/* List panel */}
@@ -140,22 +168,19 @@ export const NotebookViewComponent: React.FC<
           )}
         </div>
 
-        <ScrollArea className="notebook-view-list-scroll" stateKey="list">
-          {filteredEntries.map((entryId) => (
-            <div
-              key={entryId}
-              className="notebook-view-list-item"
-              data-selected={entryId === selectedEntryId || undefined}
-            >
-              <DatabaseEntryRenderer
-                entryId={entryId}
-                layoutContext="navigation-list"
-                layoutId={entryLayoutOverrides[entryId]?.listLayoutId}
-                onClick={handleEntryClick}
-              />
-            </div>
-          ))}
-        </ScrollArea>
+        {/* Rows are user designed layouts of varying height, so
+            they are measured rather than fixed */}
+        <VirtualizedList
+          items={filteredEntries}
+          itemHeight={LIST_ITEM_HEIGHT_ESTIMATE}
+          itemKey={getListItemKey}
+          measure
+          renderItem={renderListItem}
+          scrollToIndex={selectedEntryIndex}
+          visibility="hover"
+          stateKey="list"
+          className="notebook-view-list-scroll"
+        />
       </div>
 
       {/* Resize handle */}
@@ -182,3 +207,10 @@ export const NotebookViewComponent: React.FC<
     </div>
   );
 };
+
+/**
+ * Returns the entry ID as the row key.
+ */
+function getListItemKey(entryId: string): string {
+  return entryId;
+}
