@@ -94,6 +94,31 @@ describe('<Tooltip />', () => {
     await waitFor(() => screen.getAllByText('Tooltip title'));
   });
 
+  it('adopts the id of a child that carries its own', async () => {
+    const user = userEvent.setup();
+
+    render(
+      <TooltipProvider>
+        <Tooltip stringTitle="Tooltip title">
+          <button type="button" id="menu-trigger">
+            tooltip
+          </button>
+        </Tooltip>
+      </TooltipProvider>,
+    );
+
+    const button = screen.getByRole('button');
+
+    await user.hover(button);
+
+    await waitFor(() => screen.getAllByText('Tooltip title'));
+
+    // The trigger only reports the open state when its id matches the
+    // element that opened the tooltip, which the delay group relies on.
+    expect(button.id).toBe('menu-trigger');
+    expect(button.hasAttribute('data-popup-open')).toBe(true);
+  });
+
   it('dismisses on drag start', async () => {
     const user = userEvent.setup();
 

@@ -1,5 +1,5 @@
 import { Tooltip as TooltipPrimitive } from '@base-ui/react/tooltip';
-import { FC, useCallback, useEffect, useState } from 'react';
+import { FC, isValidElement, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from '@minddrop/i18n';
 import { KeyboardShortcut } from '../KeyboardShortcut';
 import { Text } from '../Text';
@@ -113,6 +113,14 @@ export const Tooltip: FC<TooltipProps> = ({
     };
   }, [isOpen]);
 
+  // A child that already carries an id (e.g. from a wrapping menu
+  // trigger) keeps it on the DOM element. The trigger must adopt the
+  // same id, otherwise it cannot tell that it opened the tooltip and
+  // the provider's instant-open grouping never kicks in.
+  const triggerId = isValidElement<{ id?: string }>(children)
+    ? children.props.id
+    : undefined;
+
   // Translated props take precedence over string versions
   const resolvedTitle = title
     ? typeof title === 'string'
@@ -127,7 +135,11 @@ export const Tooltip: FC<TooltipProps> = ({
 
   return (
     <TooltipPrimitive.Root open={isOpen} onOpenChange={handleOpenChange}>
-      <TooltipPrimitive.Trigger delay={delay} render={children} />
+      <TooltipPrimitive.Trigger
+        id={triggerId}
+        delay={delay}
+        render={children}
+      />
       <TooltipPrimitive.Portal>
         <TooltipPrimitive.Positioner
           className="tooltip-positioner"
