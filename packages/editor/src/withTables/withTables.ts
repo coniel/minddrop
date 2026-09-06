@@ -86,7 +86,7 @@ export function withTables(editor: Editor): Editor {
       }
 
       // Dissolve rows which escaped their table
-      if (isTableRowElement(node) && normalizeTableRow(editor, node, path)) {
+      if (isTableRowElement(node) && normalizeTableRow(editor, path)) {
         return;
       }
 
@@ -634,15 +634,10 @@ function normalizeTable(
  * Dissolves a row which sits outside a table.
  *
  * @param editor - An editor instance.
- * @param row - The row element.
  * @param path - The row's path.
  * @returns Whether anything was normalized.
  */
-function normalizeTableRow(
-  editor: Editor,
-  row: TableRowElement,
-  path: Path,
-): boolean {
+function normalizeTableRow(editor: Editor, path: Path): boolean {
   const [parent] = SlateEditor.parent(editor, path);
 
   // A row inside its table is where it belongs
@@ -740,7 +735,7 @@ function buildStarterGrid(
       Ast.generateElement<TableCellElement>('table-cell', { children: [] }),
       {
         at: path,
-        match: (node, nodePath) => nodePath.length === path.length + 1,
+        match: (_, nodePath) => nodePath.length === path.length + 1,
       },
     );
 
@@ -750,7 +745,7 @@ function buildStarterGrid(
       Ast.generateElement<TableRowElement>('table-row', { children: [] }),
       {
         at: path,
-        match: (node, nodePath) => nodePath.length === path.length + 1,
+        match: (_, nodePath) => nodePath.length === path.length + 1,
       },
     );
 
@@ -791,7 +786,7 @@ function resizeAlignment(
   align: TableColumnAlignment[] | undefined,
   columns: number,
 ): TableColumnAlignment[] {
-  return Array.from({ length: columns }, (unused, index) =>
+  return Array.from({ length: columns }, (_, index) =>
     align && index < align.length ? align[index] : null,
   );
 }

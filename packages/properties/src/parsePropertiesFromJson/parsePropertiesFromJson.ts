@@ -4,14 +4,14 @@ import { PropertiesSchema, PropertyMap } from '../types';
 /**
  * Parses stringified properties from JSON.
  *
- * @param schema - The properties schema.
+ * @param _schema - The properties schema, unused by the JSON format.
  * @param string - The properties string.
  *
  * @returns The parsed properties.
  */
 export function parsePropertiesFromJson<
   TProperties extends PropertyMap = PropertyMap,
->(schema: PropertiesSchema, string: string): TProperties {
+>(_schema: PropertiesSchema, string: string): TProperties {
   // Parse the properties string
   const parsed = JSON.parse(string);
 

@@ -55,7 +55,7 @@ export const stringifyTableElementToMarkdown = (
 function resolveColumnWidths(cellRows: string[][]): number[] {
   const columns = Math.max(0, ...cellRows.map((cells) => cells.length));
 
-  return Array.from({ length: columns }, (unused, column) =>
+  return Array.from({ length: columns }, (_, column) =>
     Math.max(
       MinimumColumnWidth,
       ...cellRows.map((cells) => cells[column]?.length ?? 0),
@@ -90,7 +90,7 @@ function stringifyDelimiterRow(
   columnCount: number,
   widths: number[],
 ): string {
-  const delimiters = Array.from({ length: columnCount }, (unused, column) =>
+  const delimiters = Array.from({ length: columnCount }, (_, column) =>
     stringifyDelimiter(align[column], widths[column] ?? MinimumColumnWidth),
   );
 

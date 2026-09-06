@@ -6,7 +6,7 @@ export const ThematicBreakElementConfig: EditorBlockElementConfig<ThematicBreakE
   {
     type: 'thematic-break',
     component: ThematicBreakElementComponent,
-    convert: (element, shortcut = '---') =>
+    convert: (_, shortcut = '---') =>
       // The break is written back with the character it was typed with
       Ast.generateElement<ThematicBreakElement>('thematic-break', {
         syntax: shortcut,

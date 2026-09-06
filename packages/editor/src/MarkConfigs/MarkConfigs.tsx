@@ -1,4 +1,3 @@
-import React from 'react';
 import { MarkConfig } from '../types';
 import './MarkConfigs.css';
 

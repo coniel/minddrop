@@ -32,7 +32,7 @@ export function removeTableColumn(
 
   SlateEditor.withoutNormalizing(editor, () => {
     // Take the column's cell out of every row
-    table.children.forEach((row, rowIndex) => {
+    table.children.forEach((_, rowIndex) => {
       Transforms.removeNodes(editor, {
         at: [...tablePath, rowIndex, columnIndex],
       });

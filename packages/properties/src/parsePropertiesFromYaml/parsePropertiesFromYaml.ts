@@ -4,14 +4,14 @@ import { PropertiesSchema, PropertyMap } from '../types';
 /**
  * Parses stringified properties from YAML.
  *
- * @param schema - The properties schema.
+ * @param _schema - The properties schema, unused by the YAML parser.
  * @param string - The properties string.
  *
  * @returns The parsed properties.
  */
 export function parsePropertiesFromYaml<
   TProperties extends PropertyMap = PropertyMap,
->(schema: PropertiesSchema, string: string): TProperties {
+>(_schema: PropertiesSchema, string: string): TProperties {
   // Parse the properties string
   const parsed = YAML.parse(string);
 

@@ -1,5 +1,5 @@
 import { Tooltip as TooltipPrimitive } from '@base-ui/react/tooltip';
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from '@minddrop/i18n';
 import { KeyboardShortcut } from '../KeyboardShortcut';
 import { Text } from '../Text';

@@ -25,7 +25,7 @@ export function insertTableColumn(
 
   SlateEditor.withoutNormalizing(editor, () => {
     // Give every row a cell at the new column
-    table.children.forEach((row, rowIndex) => {
+    table.children.forEach((_, rowIndex) => {
       Transforms.insertNodes(editor, generateTableCell(), {
         at: [...tablePath, rowIndex, columnIndex],
       });
