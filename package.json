@@ -19,7 +19,7 @@
     "eslint": "^9.39.3",
     "prettier": "^3.4.2",
     "turbo": "^2.3.3",
-    "vitest": "^4.0.1"
+    "vitest": "^4.1.11"
   },
   "engines": {
     "node": ">=22.12.0"
