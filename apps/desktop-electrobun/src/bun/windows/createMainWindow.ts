@@ -1,4 +1,10 @@
-import { BrowserWindow, ElectrobunEvent, Screen, Utils } from 'electrobun/bun';
+import {
+  BrowserWindow,
+  Display,
+  ElectrobunEvent,
+  Screen,
+  Utils,
+} from 'electrobun/bun';
 import { createWebviewRPC } from '../bun-rpc';
 import { setWindowRpcTarget } from '../windowRpc';
 import { resolveViewUrl } from './resolveViewUrl';
@@ -73,7 +79,10 @@ export async function createMainWindow(): Promise<BrowserWindow> {
   let saveTimeout: Timer | null = null;
 
   function saveState() {
-    if (saveTimeout) clearTimeout(saveTimeout);
+    if (saveTimeout) {
+      clearTimeout(saveTimeout);
+    }
+
     saveTimeout = setTimeout(() => {
       Bun.write(WINDOW_STATE_FILE, JSON.stringify(state));
     }, 500);
@@ -140,25 +149,17 @@ function isWindowEvent<Data>(
  */
 async function readWindowState(): Promise<WindowState> {
   try {
-    const saved = JSON.parse(
-      await Bun.file(WINDOW_STATE_FILE).text(),
-    ) as Partial<WindowState>;
+    const saved = parseWindowState(
+      JSON.parse(await Bun.file(WINDOW_STATE_FILE).text()),
+    );
     const targetDisplay = saved.displayId
       ? (findDisplayById(saved.displayId) ?? Screen.getPrimaryDisplay())
       : Screen.getPrimaryDisplay();
 
-    // Validate saved position is still on a connected display
-    const positionValid =
-      saved.x !== undefined &&
-      saved.y !== undefined &&
-      isPositionOnDisplay(targetDisplay, saved.x, saved.y);
-
     return {
       ...DEFAULT_STATE,
       ...saved,
-      // If position is off-screen, place in top-left area of the target display
-      x: positionValid ? saved.x! : targetDisplay.bounds.x + 100,
-      y: positionValid ? saved.y! : targetDisplay.bounds.y + 100,
+      ...resolveSavedPosition(saved, targetDisplay),
       displayId: String(targetDisplay.id),
     };
   } catch {
@@ -169,15 +170,75 @@ async function readWindowState(): Promise<WindowState> {
   }
 }
 
+/**
+ * Picks the window state fields out of parsed JSON, dropping any which
+ * are missing or of the wrong type.
+ */
+function parseWindowState(json: unknown): Partial<WindowState> {
+  if (typeof json !== 'object' || json === null) {
+    return {};
+  }
+
+  const state: Partial<WindowState> = {};
+  const x: unknown = Reflect.get(json, 'x');
+  const y: unknown = Reflect.get(json, 'y');
+  const width: unknown = Reflect.get(json, 'width');
+  const height: unknown = Reflect.get(json, 'height');
+  const displayId: unknown = Reflect.get(json, 'displayId');
+  const isFullScreen: unknown = Reflect.get(json, 'isFullScreen');
+
+  if (typeof x === 'number') {
+    state.x = x;
+  }
+
+  if (typeof y === 'number') {
+    state.y = y;
+  }
+
+  if (typeof width === 'number') {
+    state.width = width;
+  }
+
+  if (typeof height === 'number') {
+    state.height = height;
+  }
+
+  if (typeof displayId === 'string') {
+    state.displayId = displayId;
+  }
+
+  if (typeof isFullScreen === 'boolean') {
+    state.isFullScreen = isFullScreen;
+  }
+
+  return state;
+}
+
+/**
+ * Resolves the position to open the window at, keeping the saved one
+ * while it still falls on the target display and otherwise placing the
+ * window in the display's top-left area.
+ */
+function resolveSavedPosition(
+  saved: Partial<WindowState>,
+  display: Display,
+): { x: number; y: number } {
+  if (
+    saved.x !== undefined &&
+    saved.y !== undefined &&
+    isPositionOnDisplay(display, saved.x, saved.y)
+  ) {
+    return { x: saved.x, y: saved.y };
+  }
+
+  return { x: display.bounds.x + 100, y: display.bounds.y + 100 };
+}
+
 function findDisplayById(id: string) {
   return Screen.getAllDisplays().find((d) => String(d.id) === id);
 }
 
-function isPositionOnDisplay(
-  display: ReturnType<typeof Screen.getPrimaryDisplay>,
-  x: number,
-  y: number,
-) {
+function isPositionOnDisplay(display: Display, x: number, y: number) {
   const { x: dx, y: dy, width: dw, height: dh } = display.bounds;
 
   return x >= dx && x < dx + dw && y >= dy && y < dy + dh;
