@@ -8,7 +8,7 @@ import {
 } from '@minddrop/databases';
 import { DatabaseDesign, Designs } from '@minddrop/designs';
 import { createI18nKeyBuilder } from '@minddrop/i18n';
-import { METADATA_PROPERTY_TYPES } from '@minddrop/properties';
+import { Properties } from '@minddrop/properties';
 import { UiIconName } from '@minddrop/ui-icons';
 import {
   ContentIcon,
@@ -225,7 +225,7 @@ const PropertyMappingSection: React.FC<DesignSectionProps> = ({
 
         // Metadata properties are always auto-mapped, so they are
         // not offered the "none" option
-        if (!METADATA_PROPERTY_TYPES.has(designProperty.type)) {
+        if (!Properties.constants.MetadataTypes.has(designProperty.type)) {
           options.unshift({
             value: NONE_VALUE,
             label: 'databases.design.mapping.none',

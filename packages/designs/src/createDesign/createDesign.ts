@@ -1,7 +1,7 @@
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { i18n } from '@minddrop/i18n';
-import { MetadataPropertySchemas, PropertySchema } from '@minddrop/properties';
+import { Properties, PropertySchema } from '@minddrop/properties';
 import { entityId } from '@minddrop/utils';
 import { DesignsStore } from '../DesignsStore';
 import { DesignCreatedEvent } from '../events';
@@ -52,7 +52,7 @@ export async function createDesign(
       ? {
           ...base,
           type: 'database',
-          properties: MetadataPropertySchemas.map(
+          properties: Properties.constants.MetadataSchemas.map(
             (schema): PropertySchema => ({
               ...schema,
               name: i18n.t(schema.name),

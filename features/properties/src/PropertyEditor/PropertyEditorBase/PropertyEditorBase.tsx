@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { TranslationKey, i18n } from '@minddrop/i18n';
-import { PropertySchema, PropertySchemas } from '@minddrop/properties';
+import { Properties, PropertySchema } from '@minddrop/properties';
 import {
   Button,
   ContentIcon,
@@ -122,7 +122,7 @@ export const PropertyEditorBase: React.FC<PropertyEditorBaseProps> = ({
       return;
     }
 
-    const defaultName = i18n.t(PropertySchemas[property.type].name);
+    const defaultName = i18n.t(Properties.schemas[property.type].name);
 
     if (property.name === defaultName) {
       nameInputRef.current?.focus();

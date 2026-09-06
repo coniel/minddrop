@@ -1,10 +1,5 @@
 import { Fs } from '@minddrop/file-system';
-import {
-  FileExtensionToPropertyType,
-  FilePropertySchema,
-  Properties,
-  PropertySchema,
-} from '@minddrop/properties';
+import { Properties, PropertySchema } from '@minddrop/properties';
 import { getDatabase } from '../../getDatabase';
 
 /**
@@ -30,7 +25,7 @@ export function getDefaultFileProperty(
 
   // Get the property type which supports the file
   const propertyType =
-    FileExtensionToPropertyType[Fs.getFileExtension(fileName)];
+    Properties.constants.FileExtensionToType[Fs.getFileExtension(fileName)];
 
   // Check if a default property is provided for this property type
   let propertyName = database.defaultProperties?.[propertyType];
@@ -38,7 +33,7 @@ export function getDefaultFileProperty(
   // If a specific default property for this file type is not provided,
   // check if a default generic file property is provided.
   if (!propertyName) {
-    propertyName = database.defaultProperties?.[FilePropertySchema.type];
+    propertyName = database.defaultProperties?.[Properties.schemas.file.type];
   }
 
   // Get the default property if there is one
@@ -59,7 +54,7 @@ export function getDefaultFileProperty(
   // look for a generic file property.
   if (!property) {
     // Check if a default generic file property is specified
-    propertyName = database.defaultProperties?.[FilePropertySchema.type];
+    propertyName = database.defaultProperties?.[Properties.schemas.file.type];
     property = propertyName
       ? database.properties.find((property) => property.name === propertyName)
       : undefined;
@@ -68,7 +63,7 @@ export function getDefaultFileProperty(
     // first available generic file property.
     if (!propertyName || !property) {
       property = database.properties.find(
-        (property) => property.type === FilePropertySchema.type,
+        (property) => property.type === Properties.schemas.file.type,
       );
     }
   }

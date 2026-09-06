@@ -33,7 +33,7 @@ export * from './TitlePropertySchema';
 export * from './TogglePropertySchema';
 export * from './UrlPropertySchema';
 
-export const PropertySchemas: Record<PropertyType, PropertySchemaTemplate> = {
+export const PropertySchemas = {
   title: TitlePropertySchema,
   text: TextPropertySchema,
   'formatted-text': FormattedTextPropertySchema,
@@ -50,4 +50,4 @@ export const PropertySchemas: Record<PropertyType, PropertySchemaTemplate> = {
   file: FilePropertySchema,
   collection: CollectionPropertySchema,
   color: ColorPropertySchema,
-};
+} satisfies Record<PropertyType, PropertySchemaTemplate>;

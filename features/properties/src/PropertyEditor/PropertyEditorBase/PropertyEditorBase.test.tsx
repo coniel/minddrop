@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { i18n } from '@minddrop/i18n';
-import { PropertySchema, TextPropertySchema } from '@minddrop/properties';
+import { Properties, PropertySchema } from '@minddrop/properties';
 import {
   cleanup,
   emojiIconString,
@@ -20,8 +20,8 @@ const onDelete = vi.fn();
 // The editor renders concrete properties, whose names are user-facing text
 // rather than i18n keys. The schema is a template, so translate its name.
 const textProperty: PropertySchema = {
-  ...TextPropertySchema,
-  name: i18n.t(TextPropertySchema.name),
+  ...Properties.schemas.text,
+  name: i18n.t(Properties.schemas.text.name),
 };
 
 describe('<PropertyEditorBase />', () => {
@@ -31,12 +31,12 @@ describe('<PropertyEditorBase />', () => {
   });
 
   it('focuses and selects name input when opened with default name', async () => {
-    const defaultName = i18n.t(TextPropertySchema.name);
+    const defaultName = i18n.t(Properties.schemas.text.name);
 
     render(
       <PropertyEditorBase
         defaultOpen
-        property={{ ...TextPropertySchema, name: defaultName }}
+        property={{ ...Properties.schemas.text, name: defaultName }}
         onSave={onSave}
         onDelete={onDelete}
       />,
@@ -51,7 +51,7 @@ describe('<PropertyEditorBase />', () => {
     render(
       <PropertyEditorBase
         defaultOpen
-        property={{ ...TextPropertySchema, name: 'My Property' }}
+        property={{ ...Properties.schemas.text, name: 'My Property' }}
         onSave={onSave}
         onDelete={onDelete}
       />,
@@ -61,11 +61,11 @@ describe('<PropertyEditorBase />', () => {
   });
 
   it('focuses name input when editor is opened via click with default name', async () => {
-    const defaultName = i18n.t(TextPropertySchema.name);
+    const defaultName = i18n.t(Properties.schemas.text.name);
 
     render(
       <PropertyEditorBase
-        property={{ ...TextPropertySchema, name: defaultName }}
+        property={{ ...Properties.schemas.text, name: defaultName }}
         onSave={onSave}
         onDelete={onDelete}
       />,

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Layouts } from '@minddrop/designs';
 import { Fs, FsEntry } from '@minddrop/file-system';
 import { useTranslation } from '@minddrop/i18n';
-import { FilePropertySupportedFileExtensions } from '@minddrop/properties';
+import { Properties } from '@minddrop/properties';
 import {
   Button,
   Dialog,
@@ -34,7 +34,7 @@ export interface PlaceholderImageDialogProps {
   onSelect: (fileName: string) => void;
 }
 
-const ImageExtensions = FilePropertySupportedFileExtensions.image;
+const ImageExtensions = Properties.constants.SupportedFileExtensions.image;
 
 /**
  * Renders a dialog for picking an image from the media files of

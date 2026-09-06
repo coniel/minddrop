@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import { Layouts } from '@minddrop/designs';
 import { Fs } from '@minddrop/file-system';
-import { FilePropertySupportedFileExtensions } from '@minddrop/properties';
+import { Properties } from '@minddrop/properties';
 import { Button, Group, Stack } from '@minddrop/ui-primitives';
 import { useMediaDirPath } from '../../MediaDirContext';
 import { useMediaFilePath } from '../../useMediaFilePath';
@@ -31,7 +31,7 @@ export interface PlaceholderImageFieldProps {
   primary?: boolean;
 }
 
-const ImageExtensions = FilePropertySupportedFileExtensions.image;
+const ImageExtensions = Properties.constants.SupportedFileExtensions.image;
 
 /**
  * Renders an image picker with a preview, buttons for browsing

@@ -1,8 +1,5 @@
 import { Fs } from '@minddrop/file-system';
-import {
-  FilePropertySupportedFileExtensions,
-  Properties,
-} from '@minddrop/properties';
+import { Properties } from '@minddrop/properties';
 import { getDatabase } from '../../getDatabase';
 
 /**
@@ -44,7 +41,7 @@ export function filterValidDatabaseFiles(
   // Create a list of all supported file extensions
   const supportedFileExtensions = new Set(
     filePropertyTypes.flatMap(
-      (type) => FilePropertySupportedFileExtensions[type],
+      (type) => Properties.constants.SupportedFileExtensions[type],
     ),
   );
 

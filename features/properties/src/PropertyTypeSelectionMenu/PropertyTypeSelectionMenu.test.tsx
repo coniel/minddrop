@@ -1,9 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import {
-  CreatedPropertySchema,
-  TextPropertySchema,
-  TitlePropertySchema,
-} from '@minddrop/properties';
+import { Properties } from '@minddrop/properties';
 import { cleanup, render, screen, userEvent } from '@minddrop/test-utils';
 import { PropertyTypeSelectionMenu } from './PropertyTypeSelectionMenu';
 
@@ -25,7 +21,7 @@ describe('<PropertyTypeSelectionMenu />', () => {
 
     await user.click(screen.getByText('Open'));
 
-    expect(screen.getByText(TextPropertySchema.name)).toBeVisible();
+    expect(screen.getByText(Properties.schemas.text.name)).toBeVisible();
   });
 
   it('omits meta properties if in existing properties', () => {
@@ -34,9 +30,9 @@ describe('<PropertyTypeSelectionMenu />', () => {
         defaultOpen
         onSelect={onSelect}
         existingProperties={[
-          TextPropertySchema,
-          TitlePropertySchema,
-          CreatedPropertySchema,
+          Properties.schemas.text,
+          Properties.schemas.title,
+          Properties.schemas.created,
         ]}
       >
         <button>Open</button>
@@ -44,10 +40,10 @@ describe('<PropertyTypeSelectionMenu />', () => {
     );
 
     // Should preserve non-meta properties
-    expect(screen.queryByText(TextPropertySchema.name)).not.toBeNull();
+    expect(screen.queryByText(Properties.schemas.text.name)).not.toBeNull();
     // Should omit meta properties
-    expect(screen.queryByText(TitlePropertySchema.name)).toBeNull();
-    expect(screen.queryByText(CreatedPropertySchema.name)).toBeNull();
+    expect(screen.queryByText(Properties.schemas.title.name)).toBeNull();
+    expect(screen.queryByText(Properties.schemas.created.name)).toBeNull();
   });
 
   it('calls onSelect when a property type is selected', async () => {
@@ -58,8 +54,8 @@ describe('<PropertyTypeSelectionMenu />', () => {
     );
     const user = userEvent.setup();
 
-    await user.click(screen.getByText(TextPropertySchema.name));
+    await user.click(screen.getByText(Properties.schemas.text.name));
 
-    expect(onSelect).toHaveBeenCalledWith(TextPropertySchema);
+    expect(onSelect).toHaveBeenCalledWith(Properties.schemas.text);
   });
 });

@@ -1,6 +1,6 @@
 import { i18n } from '@minddrop/i18n';
 import {
-  MetadataPropertySchemas,
+  Properties,
   PropertiesSchema,
   PropertySchema,
 } from '@minddrop/properties';
@@ -17,7 +17,7 @@ export function withImplicitMetadataProperties(
   properties: PropertiesSchema,
 ): PropertiesSchema {
   // Metadata property types the schema does not declare itself
-  const missingSchemas = MetadataPropertySchemas.filter(
+  const missingSchemas = Properties.constants.MetadataSchemas.filter(
     (schema) => !properties.some((property) => property.type === schema.type),
   );
 

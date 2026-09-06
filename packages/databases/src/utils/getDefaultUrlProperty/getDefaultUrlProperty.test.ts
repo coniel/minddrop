@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { UrlPropertySchema } from '@minddrop/properties';
+import { Properties } from '@minddrop/properties';
 import { DatabasesStore } from '../../DatabasesStore';
 import { cleanup, objectDatabase, setup, urlDatabase } from '../../test-utils';
 import { getDefaultUrlProperty } from './getDefaultUrlProperty';
@@ -23,7 +23,7 @@ describe('getDefaultUrlProperty', () => {
     DatabasesStore.update(urlDatabase.id, {
       properties: [
         {
-          type: UrlPropertySchema.type,
+          type: Properties.schemas.url.type,
           name: 'URL 2',
         },
         ...urlDatabase.properties,
@@ -50,7 +50,7 @@ describe('getDefaultUrlProperty', () => {
     DatabasesStore.update(urlDatabase.id, {
       defaultProperties: {
         // Replace the default url property configuration with a non-existent property
-        [UrlPropertySchema.type]: 'Non-existent property',
+        [Properties.schemas.url.type]: 'Non-existent property',
       },
     });
 
@@ -64,7 +64,7 @@ describe('getDefaultUrlProperty', () => {
       ...urlDatabase,
       defaultProperties: {
         // Set a non-url property as the default url property
-        [UrlPropertySchema.type]: 'Text',
+        [Properties.schemas.url.type]: 'Text',
       },
       properties: [
         {

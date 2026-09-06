@@ -1,5 +1,5 @@
 import { Fs, FsEntry } from '@minddrop/file-system';
-import { FilePropertySupportedFileExtensions } from '@minddrop/properties';
+import { Properties } from '@minddrop/properties';
 
 /**
  * Lists the image files in a media directory, newest first. Media
@@ -39,5 +39,5 @@ function isImageFile(fileName?: string): boolean {
     return false;
   }
 
-  return FilePropertySupportedFileExtensions.image.includes(extension);
+  return Properties.constants.SupportedFileExtensions.image.includes(extension);
 }

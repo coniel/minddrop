@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { SelectPropertySchema } from '@minddrop/properties';
+import { Properties, SelectPropertySchema } from '@minddrop/properties';
 import {
   cleanup,
   fireEvent,
@@ -14,7 +14,7 @@ const onSave = vi.fn();
 const onDelete = vi.fn();
 
 const property: SelectPropertySchema = {
-  ...SelectPropertySchema,
+  ...Properties.schemas.select,
   name: 'Status',
   options: [
     { value: 'To do', color: 'blue' },
@@ -33,7 +33,7 @@ describe('<SelectPropertyEditor />', () => {
       <SelectPropertyEditor
         defaultOpen
         deletable={false}
-        property={{ ...SelectPropertySchema, name: 'Status', options: [] }}
+        property={{ ...Properties.schemas.select, name: 'Status', options: [] }}
         onSave={onSave}
         onDelete={onDelete}
       />,
@@ -51,7 +51,7 @@ describe('<SelectPropertyEditor />', () => {
       <SelectPropertyEditor
         defaultOpen
         deletable={false}
-        property={{ ...SelectPropertySchema, name: 'Status', options: [] }}
+        property={{ ...Properties.schemas.select, name: 'Status', options: [] }}
         onSave={onSave}
         onDelete={onDelete}
       />,
@@ -69,7 +69,7 @@ describe('<SelectPropertyEditor />', () => {
       <SelectPropertyEditor
         defaultOpen
         deletable={false}
-        property={{ ...SelectPropertySchema, name: 'Select', options: [] }}
+        property={{ ...Properties.schemas.select, name: 'Select', options: [] }}
         onSave={onSave}
         onDelete={onDelete}
       />,
@@ -86,7 +86,7 @@ describe('<SelectPropertyEditor />', () => {
     render(
       <SelectPropertyEditor
         deletable={false}
-        property={{ ...SelectPropertySchema, name: 'Status', options: [] }}
+        property={{ ...Properties.schemas.select, name: 'Status', options: [] }}
         onSave={onSave}
         onDelete={onDelete}
       />,

@@ -3,7 +3,7 @@ import { MarkdownEditor } from '@minddrop/feature-markdown-editor';
 import { Fs } from '@minddrop/file-system';
 import { i18n } from '@minddrop/i18n';
 import {
-  FilePropertySupportedFileExtensions,
+  Properties,
   PropertySchema,
   PropertyValue,
 } from '@minddrop/properties';
@@ -77,7 +77,7 @@ export const DatabaseEntryTemplatePropertyField: React.FC<
     // Restrict the picker to the property type's supported extensions
     const supportedExtensions =
       property.type === 'image' || property.type === 'file'
-        ? FilePropertySupportedFileExtensions[property.type]
+        ? Properties.constants.SupportedFileExtensions[property.type]
         : [];
 
     // Open the file picker

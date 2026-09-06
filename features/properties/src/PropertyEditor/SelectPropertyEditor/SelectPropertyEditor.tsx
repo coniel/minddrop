@@ -3,7 +3,6 @@ import { i18n } from '@minddrop/i18n';
 import {
   Properties,
   PropertySchema,
-  PropertySchemas,
   SelectPropertyOption,
   SelectPropertySchema,
 } from '@minddrop/properties';
@@ -63,7 +62,7 @@ export const SelectPropertyEditor: React.FC<SelectPropertyEditorProps> = ({
   // will focus the name field instead, and Enter will trigger option addition.
   useEffect(() => {
     const isDefaultName =
-      property.name === i18n.t(PropertySchemas[property.type].name);
+      property.name === i18n.t(Properties.schemas[property.type].name);
 
     if (other.defaultOpen && property.options.length === 0 && !isDefaultName) {
       handleAddOption();
@@ -185,7 +184,7 @@ export const SelectPropertyEditor: React.FC<SelectPropertyEditorProps> = ({
 
   function handleOpen() {
     const isDefaultName =
-      property.name === i18n.t(PropertySchemas[property.type].name);
+      property.name === i18n.t(Properties.schemas[property.type].name);
 
     if (options.length === 0 && !isDefaultName) {
       handleAddOption();

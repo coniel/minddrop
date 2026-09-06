@@ -1,9 +1,5 @@
 import { i18n } from '@minddrop/i18n';
-import {
-  METADATA_PROPERTY_TYPES,
-  MetadataPropertySchemas,
-  SORTABLE_PROPERTY_TYPES,
-} from '@minddrop/properties';
+import { Properties } from '@minddrop/properties';
 import { Database } from '../../types';
 import { EntrySortOptions } from '../sortDatabaseEntries';
 
@@ -53,7 +49,7 @@ export function resolveSortableEntryProperties(
 ): SortableEntryProperty[] {
   // Metadata properties are sortable whether or not the databases
   // declare them as properties of their own
-  const metadataProperties = MetadataPropertySchemas.map(
+  const metadataProperties = Properties.constants.MetadataSchemas.map(
     (schema): SortableEntryProperty => {
       // The databases' own properties of the metadata type
       const declared = databases.map((database) =>
@@ -85,12 +81,12 @@ export function resolveSortableEntryProperties(
   const properties = (firstDatabase?.properties ?? [])
     .filter((property) => {
       // Metadata backed properties are sorted by as metadata
-      if (METADATA_PROPERTY_TYPES.has(property.type)) {
+      if (Properties.constants.MetadataTypes.has(property.type)) {
         return false;
       }
 
       // Properties whose values have no order cannot be sorted by
-      if (!SORTABLE_PROPERTY_TYPES.has(property.type)) {
+      if (!Properties.constants.SortableTypes.has(property.type)) {
         return false;
       }
 

@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DatabaseUpdatedEvent } from '@minddrop/databases';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
-import { TextPropertySchema } from '@minddrop/properties';
 import { Events } from '@minddrop/events';
+import { Properties } from '@minddrop/properties';
 import {
   emojiIconString,
   fillForm,
@@ -206,7 +206,7 @@ describe('<DatabasePropertyEditor />', () => {
           isDraft
           databaseId={DatabaseFixtures.objectDatabase.id}
           property={{
-            ...TextPropertySchema,
+            ...Properties.schemas.text,
             name: 'New property',
           }}
           {...props}
@@ -230,7 +230,7 @@ describe('<DatabasePropertyEditor />', () => {
         <DatabasePropertyEditor
           isDraft
           databaseId={DatabaseFixtures.objectDatabase.id}
-          property={{ ...TextPropertySchema, name: 'Text' }}
+          property={{ ...Properties.schemas.text, name: 'Text' }}
         />,
       );
 

@@ -22,7 +22,8 @@ export function getDefaultUrlProperty(
   // Get the database
   const database = getDatabase(databaseId);
   // Check if a default url property is provided
-  const propertyName = database.defaultProperties?.[UrlPropertySchema.type];
+  const propertyName =
+    database.defaultProperties?.[Properties.schemas.url.type];
 
   // Get the default url property if there is one
   let property = propertyName

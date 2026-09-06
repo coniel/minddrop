@@ -1,7 +1,4 @@
-import {
-  METADATA_PROPERTY_TYPES,
-  PropertiesSchema,
-} from '@minddrop/properties';
+import { Properties, PropertiesSchema } from '@minddrop/properties';
 import { Database } from '../../types';
 import { withImplicitMetadataProperties } from '../withImplicitMetadataProperties';
 
@@ -34,7 +31,7 @@ export function resolveDesignPropertyMap(
     }
 
     // Only metadata properties are auto-mapped
-    if (!METADATA_PROPERTY_TYPES.has(designProperty.type)) {
+    if (!Properties.constants.MetadataTypes.has(designProperty.type)) {
       continue;
     }
 

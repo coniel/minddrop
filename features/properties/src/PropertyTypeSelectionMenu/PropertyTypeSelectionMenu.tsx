@@ -1,8 +1,8 @@
 import { ReactElement } from 'react';
 import {
+  Properties,
   PropertySchema,
   PropertySchemaTemplate,
-  PropertySchemas,
 } from '@minddrop/properties';
 import {
   DropdownMenu,
@@ -35,12 +35,12 @@ export const PropertyTypeSelectionMenu: React.FC<
   PropertyTypeSelectionMenuProps
 > = ({ children, onSelect, existingProperties = [], ...other }) => {
   const existingMetaProperties = existingProperties
-    .filter((property) => PropertySchemas[property.type]?.meta)
+    .filter((property) => Properties.schemas[property.type]?.meta)
     .map((property) => property.type);
-  const basicProperties = Object.values(PropertySchemas).filter(
+  const basicProperties = Object.values(Properties.schemas).filter(
     (property) => !property.meta,
   );
-  const metaProperties = Object.values(PropertySchemas)
+  const metaProperties = Object.values(Properties.schemas)
     .filter((property) => property.meta)
     .filter((schema) => !existingMetaProperties.includes(schema.type));
 

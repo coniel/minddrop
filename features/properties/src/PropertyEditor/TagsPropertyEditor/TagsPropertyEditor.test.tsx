@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Events } from '@minddrop/events';
-import { TagsPropertySchema } from '@minddrop/properties';
+import { Properties, TagsPropertySchema } from '@minddrop/properties';
 import { Tags } from '@minddrop/tags';
 import {
   MockFs,
@@ -22,7 +22,10 @@ const { tagGroup_1 } = TagGroupFixtures;
 const onSave = vi.fn(() => true);
 const onDelete = vi.fn();
 
-const property: TagsPropertySchema = { ...TagsPropertySchema, name: 'Tags' };
+const property: TagsPropertySchema = {
+  ...Properties.schemas.tags,
+  name: 'Tags',
+};
 
 describe('<TagsPropertyEditor />', () => {
   beforeEach(() => {

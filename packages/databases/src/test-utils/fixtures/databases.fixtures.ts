@@ -1,10 +1,6 @@
 import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { Fs, MockFileDescriptor } from '@minddrop/file-system';
-import {
-  FilePropertySchema,
-  ImagePropertySchema,
-  UrlPropertySchema,
-} from '@minddrop/properties';
+import { Properties } from '@minddrop/properties';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { Database, DatabaseEntryTemplate } from '../../types';
 import {
@@ -72,7 +68,7 @@ export const urlDatabase = generateDatabase({
   name: 'URL Database',
   entryName: 'URL',
   defaultProperties: {
-    [UrlPropertySchema.type]: 'URL',
+    [Properties.schemas.url.type]: 'URL',
   },
   properties: [
     {
@@ -114,8 +110,8 @@ export const rootStorageDatabase = generateDatabase({
   propertyFileStorage: 'root',
   propertyFilesDir: 'Media',
   defaultProperties: {
-    [FilePropertySchema.type]: genericFilePropertyName,
-    [ImagePropertySchema.type]: imagePropertyName,
+    [Properties.schemas.file.type]: genericFilePropertyName,
+    [Properties.schemas.image.type]: imagePropertyName,
   },
   properties: [
     {
@@ -137,8 +133,8 @@ export const commonStorageDatabase = generateDatabase({
   propertyFileStorage: 'common',
   propertyFilesDir: 'Media',
   defaultProperties: {
-    [FilePropertySchema.type]: genericFilePropertyName,
-    [ImagePropertySchema.type]: imagePropertyName,
+    [Properties.schemas.file.type]: genericFilePropertyName,
+    [Properties.schemas.image.type]: imagePropertyName,
   },
   properties: [
     {
@@ -159,8 +155,8 @@ export const propertyStorageDatabase = generateDatabase({
   entryName: 'Property Storage',
   propertyFileStorage: 'property',
   defaultProperties: {
-    [FilePropertySchema.type]: genericFilePropertyName,
-    [ImagePropertySchema.type]: imagePropertyName,
+    [Properties.schemas.file.type]: genericFilePropertyName,
+    [Properties.schemas.image.type]: imagePropertyName,
   },
   properties: [
     {
@@ -181,8 +177,8 @@ export const entryStorageDatabase = generateDatabase({
   entryName: 'Entry Storage',
   propertyFileStorage: 'entry',
   defaultProperties: {
-    [FilePropertySchema.type]: genericFilePropertyName,
-    [ImagePropertySchema.type]: imagePropertyName,
+    [Properties.schemas.file.type]: genericFilePropertyName,
+    [Properties.schemas.image.type]: imagePropertyName,
   },
   properties: [
     {

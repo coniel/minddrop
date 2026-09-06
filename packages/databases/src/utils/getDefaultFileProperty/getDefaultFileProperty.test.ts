@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { FilePropertySchema, ImagePropertySchema } from '@minddrop/properties';
+import { Properties } from '@minddrop/properties';
 import { DatabasesStore } from '../../DatabasesStore';
 import {
   cleanup,
@@ -24,7 +24,7 @@ describe('getDefaultFileProperty', () => {
       // image property.
       properties: [
         {
-          type: ImagePropertySchema.type,
+          type: Properties.schemas.image.type,
           name: 'Image 2',
         },
         ...rootStorageDatabase.properties,
@@ -44,7 +44,7 @@ describe('getDefaultFileProperty', () => {
       ...rootStorageDatabase,
       // Remove the default image property configuration from the database
       defaultProperties: {
-        [FilePropertySchema.type]: genericFilePropertyName,
+        [Properties.schemas.file.type]: genericFilePropertyName,
       },
     });
 
@@ -95,7 +95,7 @@ describe('getDefaultFileProperty', () => {
       defaultProperties: {
         ...rootStorageDatabase.defaultProperties,
         // Replace the default image property configuration with a non-existent property
-        [ImagePropertySchema.type]: 'Non-existent property',
+        [Properties.schemas.image.type]: 'Non-existent property',
       },
     });
 
@@ -113,7 +113,7 @@ describe('getDefaultFileProperty', () => {
       // Replace the default generic file property configuration with a non-existent property
       defaultProperties: {
         ...rootStorageDatabase.defaultProperties,
-        [FilePropertySchema.type]: 'Non-existent property',
+        [Properties.schemas.file.type]: 'Non-existent property',
       },
       // Remove image property
       properties: rootStorageDatabase.properties.filter(
@@ -152,7 +152,7 @@ describe('getDefaultFileProperty', () => {
       ...rootStorageDatabase,
       // Set a non-file property as the default file property
       defaultProperties: {
-        [ImagePropertySchema.type]: 'Text',
+        [Properties.schemas.image.type]: 'Text',
       },
       properties: [
         {
