@@ -1,5 +1,17 @@
 import { existsSync, readFileSync, readdirSync, unlinkSync } from 'node:fs';
-import type { Manifest, ManifestWithSlug } from '../types';
+import type {
+  Manifest,
+  ManifestWithSlug,
+  NewReviewComment,
+  ReviewCommentChanges,
+} from '../types';
+import {
+  createReviewComment,
+  deleteReviewComment,
+  deleteReviewCommentsDir,
+  readReviewComments,
+  updateReviewComment,
+} from './reviewComments';
 
 // Resolve repo root dynamically via git (import.meta.dir points to
 // the build output at runtime, not the source tree)
@@ -168,7 +180,7 @@ function getUntrackedChanges(): string[] {
 }
 
 /**
- * Deletes a manifest file by slug.
+ * Deletes a manifest file by slug along with its review comments.
  */
 function deleteManifest(slug: string): void {
   const manifestPath = `${CHANGES_DIR}/${slug}.json`;
@@ -176,6 +188,8 @@ function deleteManifest(slug: string): void {
   if (existsSync(manifestPath)) {
     unlinkSync(manifestPath);
   }
+
+  deleteReviewCommentsDir(slug);
 }
 
 /**
@@ -369,5 +383,35 @@ export const rpcHandlers = {
 
   getPlanContent: async ({ filename }: { filename: string }) => {
     return getPlanContent(filename);
+  },
+
+  getReviewComments: async ({ slug }: { slug: string }) => {
+    return readReviewComments(slug);
+  },
+
+  createReviewComment: async ({
+    slug,
+    comment,
+  }: {
+    slug: string;
+    comment: NewReviewComment;
+  }) => {
+    return createReviewComment(slug, comment);
+  },
+
+  updateReviewComment: async ({
+    slug,
+    id,
+    changes,
+  }: {
+    slug: string;
+    id: string;
+    changes: ReviewCommentChanges;
+  }) => {
+    updateReviewComment(slug, id, changes);
+  },
+
+  deleteReviewComment: async ({ slug, id }: { slug: string; id: string }) => {
+    deleteReviewComment(slug, id);
   },
 };

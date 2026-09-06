@@ -54,13 +54,52 @@
   margin-right: 6px;
 }
 
+.diff-viewer-file-comment {
+  margin-right: 12px;
+}
+
 .diff-viewer-split-toggle.disabled {
   opacity: 0.4;
 }
 
 .diff-viewer-editor {
+  position: relative;
   flex: 1;
   overflow: hidden;
+}
+
+.review-comment-line {
+  background: rgba(0, 122, 204, 0.12);
+}
+
+.review-comment-line-resolved {
+  background: rgba(46, 160, 67, 0.08);
+}
+
+.review-comment-line-focused {
+  background: rgba(0, 122, 204, 0.28);
+}
+
+.review-comment-glyph {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.review-comment-glyph::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-accent);
+}
+
+.review-comment-glyph-resolved::after {
+  background: #2ea043;
+}
+
+.review-comment-glyph-focused::after {
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.6);
 }
 
 .diff-viewer-statusbar {

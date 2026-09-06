@@ -37,6 +37,75 @@ export interface ManifestWithSlug extends Manifest {
 }
 
 /**
+ * Whether a review comment still needs addressing.
+ */
+export type ReviewCommentStatus = 'open' | 'resolved';
+
+/**
+ * A review comment on a work group, either anchored to a line range
+ * of a file or general to the whole work group.
+ */
+export interface ReviewComment {
+  /**
+   * Unique id, also the comment's filename stem.
+   */
+  id: string;
+
+  /**
+   * Repo-relative path of the commented file, or null for a general
+   * comment.
+   */
+  file: string | null;
+
+  /**
+   * First line of the commented range in the current file content,
+   * or null for a general comment.
+   */
+  startLine: number | null;
+
+  /**
+   * Last line of the commented range, or null for a general comment.
+   */
+  endLine: number | null;
+
+  /**
+   * The code that was selected when the comment was written, or null
+   * for a general comment.
+   */
+  snippet: string | null;
+
+  /**
+   * Whether the comment is open or resolved.
+   */
+  status: ReviewCommentStatus;
+
+  /**
+   * ISO date string of when the comment was written.
+   */
+  created: string;
+
+  /**
+   * The comment text.
+   */
+  text: string;
+}
+
+/**
+ * The fields needed to create a review comment.
+ */
+export type NewReviewComment = Pick<
+  ReviewComment,
+  'file' | 'startLine' | 'endLine' | 'snippet' | 'text'
+>;
+
+/**
+ * The fields of a review comment which can be changed after creation.
+ */
+export type ReviewCommentChanges = Partial<
+  Pick<ReviewComment, 'status' | 'text'>
+>;
+
+/**
  * RPC schema for communication between the Bun backend and
  * the webview renderer.
  */
@@ -109,6 +178,38 @@ export type DevReviewRPC = {
         params: { filename: string };
         response: string;
       };
+
+      /**
+       * Returns all review comments for a work group.
+       */
+      getReviewComments: {
+        params: { slug: string };
+        response: ReviewComment[];
+      };
+
+      /**
+       * Writes a new review comment file for a work group.
+       */
+      createReviewComment: {
+        params: { slug: string; comment: NewReviewComment };
+        response: ReviewComment;
+      };
+
+      /**
+       * Rewrites a review comment file with the given changes.
+       */
+      updateReviewComment: {
+        params: { slug: string; id: string; changes: ReviewCommentChanges };
+        response: void;
+      };
+
+      /**
+       * Deletes a review comment file.
+       */
+      deleteReviewComment: {
+        params: { slug: string; id: string };
+        response: void;
+      };
     };
   }>;
   webview: RPCSchema<{
@@ -122,6 +223,11 @@ export type DevReviewRPC = {
        * Sent when plan files have changed on disk.
        */
       plansChanged: Record<string, never>;
+
+      /**
+       * Sent when review comment files have changed on disk.
+       */
+      reviewCommentsChanged: Record<string, never>;
     };
   }>;
 };

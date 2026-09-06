@@ -92,4 +92,8 @@ body {
     cursor: row-resize;
     order: 1;
   }
+
+  .app-review-resize-handle {
+    display: none;
+  }
 }

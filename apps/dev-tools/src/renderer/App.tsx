@@ -1,16 +1,31 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { ManifestWithSlug } from '../types';
+import type {
+  ManifestWithSlug,
+  NewReviewComment,
+  ReviewComment,
+} from '../types';
 import { DiffViewer } from './DiffViewer';
 import { PlanViewer } from './PlanViewer';
+import { ReviewPanel } from './ReviewPanel';
 import { Sidebar } from './Sidebar';
 import { rpc } from './index';
-import type { FileStatus, Plan, SelectedFile, ViewMode } from './types';
+import type {
+  FileStatus,
+  Plan,
+  RevealRequest,
+  SelectedFile,
+  ViewMode,
+} from './types';
+import { useReviewComments } from './useReviewComments';
 import './App.css';
 
 /**
- * Renders the main dev review application layout with sidebar and diff viewer.
+ * Renders the main dev review application layout with sidebar, diff
+ * viewer and review panel.
  */
 export const App: React.FC = () => {
+  // A comment's file to reveal once its content has loaded
+  const pendingRevealRef = useRef<{ path: string; line: number } | null>(null);
   const [manifests, setManifests] = useState<ManifestWithSlug[]>([]);
   const [untrackedFiles, setUntrackedFiles] = useState<string[]>([]);
   const [selectedFile, setSelectedFile] = useState<SelectedFile | null>(null);
@@ -24,6 +39,22 @@ export const App: React.FC = () => {
   const [fileStatuses, setFileStatuses] = useState<Record<string, FileStatus>>(
     {},
   );
+  // The work group whose comments the review panel shows
+  const [activeSlug, setActiveSlug] = useState<string | null>(null);
+  const [reviewPanelOpen, setReviewPanelOpen] = useState(false);
+  const [focusedCommentId, setFocusedCommentId] = useState<string | null>(null);
+  const [reveal, setReveal] = useState<RevealRequest | null>(null);
+  const { comments, createComment, updateComment, deleteComment } =
+    useReviewComments(activeSlug);
+
+  // The manifest of the work group being reviewed
+  const activeManifest =
+    manifests.find((manifest) => manifest.slug === activeSlug) ?? null;
+
+  // Number of comments still to address, shown on the collapsed panel
+  const openCommentCount = comments.filter(
+    (comment) => comment.status === 'open',
+  ).length;
 
   // Fetch manifests, untracked changes, and file statuses
   const refreshData = useCallback(async () => {
@@ -158,10 +189,45 @@ export const App: React.FC = () => {
       } else {
         setViewMode('diff');
       }
+
+      // Reveal a comment's line now that its file content is loaded
+      if (pendingRevealRef.current?.path === selectedFile.path) {
+        setReveal({ line: pendingRevealRef.current.line, token: Date.now() });
+        pendingRevealRef.current = null;
+      }
     };
 
     loadContent();
   }, [selectedFile]);
+
+  // Drop the active work group when its manifest is removed
+  useEffect(() => {
+    if (
+      activeSlug &&
+      !manifests.some((manifest) => manifest.slug === activeSlug)
+    ) {
+      setActiveSlug(null);
+    }
+  }, [manifests, activeSlug]);
+
+  // Keyboard shortcut: ctrl+r to toggle the review panel
+  useEffect(() => {
+    const handler = (event: KeyboardEvent) => {
+      if (!event.ctrlKey || event.key !== 'r') {
+        return;
+      }
+
+      event.preventDefault();
+      event.stopPropagation();
+      setReviewPanelOpen((previous) => !previous);
+    };
+
+    window.addEventListener('keydown', handler, true);
+
+    return () => {
+      window.removeEventListener('keydown', handler, true);
+    };
+  }, []);
 
   // Keyboard shortcuts: ctrl+1/2/3 to switch view modes
   useEffect(() => {
@@ -301,17 +367,124 @@ export const App: React.FC = () => {
     };
   }, [manifests, untrackedFiles, selectedFile]);
 
-  // Handle selecting a file (clears selected plan)
+  // Handle selecting a file (clears selected plan, activates its work group)
   const handleSelectFile = useCallback((file: SelectedFile) => {
     setSelectedFile(file);
     setSelectedPlan(null);
+
+    if (file.manifestSlug) {
+      setActiveSlug(file.manifestSlug);
+    }
   }, []);
 
-  // Handle selecting a plan (clears selected file)
-  const handleSelectPlan = useCallback((filename: string) => {
-    setSelectedPlan(filename);
-    setSelectedFile(null);
-  }, []);
+  // Handle selecting a plan (clears selected file, activates its work group)
+  const handleSelectPlan = useCallback(
+    (filename: string) => {
+      setSelectedPlan(filename);
+      setSelectedFile(null);
+
+      // Plans belong to the work group their slug is prefixed with
+      const planSlug = filename.replace('.md', '');
+      const manifest = manifests.find(
+        (candidate) =>
+          planSlug === candidate.slug ||
+          planSlug.startsWith(`${candidate.slug}-`),
+      );
+
+      if (manifest) {
+        setActiveSlug(manifest.slug);
+      }
+    },
+    [manifests],
+  );
+
+  // Handle clicking a comment: open its file and scroll to its lines
+  const handleSelectComment = useCallback(
+    (comment: ReviewComment) => {
+      setFocusedCommentId(comment.id);
+
+      if (comment.file === null) {
+        return;
+      }
+
+      // The file is already open, reveal the lines directly
+      if (selectedFile?.path === comment.file) {
+        if (comment.startLine === null) {
+          return;
+        }
+
+        if (viewMode === 'original') {
+          setViewMode('current');
+        }
+
+        setReveal({ line: comment.startLine, token: Date.now() });
+
+        return;
+      }
+
+      if (!activeManifest) {
+        return;
+      }
+
+      // Reveal once the file's content has loaded, file-level comments
+      // only open the file
+      if (comment.startLine !== null) {
+        pendingRevealRef.current = {
+          path: comment.file,
+          line: comment.startLine,
+        };
+      }
+
+      setSelectedFile({
+        path: comment.file,
+        manifestSlug: activeManifest.slug,
+        baseRef: activeManifest.baseRef,
+        worktree: activeManifest.worktree ?? null,
+      });
+      setSelectedPlan(null);
+    },
+    [selectedFile, viewMode, activeManifest],
+  );
+
+  // Handle a new comment on selected code
+  const handleCreateFileComment = useCallback(
+    (comment: NewReviewComment) => {
+      createComment(comment);
+      setReviewPanelOpen(true);
+    },
+    [createComment],
+  );
+
+  // Handle a new general comment from the review panel
+  const handleCreateGeneralComment = useCallback(
+    (text: string) => {
+      createComment({
+        file: null,
+        startLine: null,
+        endLine: null,
+        snippet: null,
+        text,
+      });
+    },
+    [createComment],
+  );
+
+  // Handle resolving or reopening a comment
+  const handleResolveComment = useCallback(
+    (id: string, resolved: boolean) => {
+      updateComment(id, { status: resolved ? 'resolved' : 'open' });
+    },
+    [updateComment],
+  );
+
+  // Handle deleting a comment
+  const handleDeleteComment = useCallback(
+    (id: string) => {
+      deleteComment(id);
+      setFocusedCommentId((previous) => (previous === id ? null : previous));
+    },
+    [deleteComment],
+  );
 
   // Handle deleting a work group
   const handleDeleteManifest = useCallback(
@@ -399,6 +572,47 @@ export const App: React.FC = () => {
       : { height: sidebarSize }
     : undefined;
 
+  // Review panel resize state, width only as it is always a column
+  const [reviewPanelSize, setReviewPanelSize] = useState<number | null>(null);
+
+  // Handle review panel resize drag
+  const handleReviewResizeStart = useCallback((event: React.MouseEvent) => {
+    event.preventDefault();
+    isDragging.current = true;
+    document.body.style.userSelect = 'none';
+
+    const handleMouseMove = (moveEvent: MouseEvent) => {
+      if (!isDragging.current || !appRef.current) {
+        return;
+      }
+
+      const rect = appRef.current.getBoundingClientRect();
+
+      // Panel on the right, drag to resize width
+      const width = Math.max(
+        220,
+        Math.min(rect.right - moveEvent.clientX, rect.width - 400),
+      );
+      setReviewPanelSize(width);
+    };
+
+    const handleMouseUp = () => {
+      isDragging.current = false;
+      document.body.style.userSelect = '';
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+  }, []);
+
+  // Build review panel inline style from resize state
+  const reviewPanelStyle: React.CSSProperties | undefined =
+    reviewPanelSize && isHorizontal
+      ? { width: reviewPanelSize, minWidth: reviewPanelSize }
+      : undefined;
+
   return (
     <div className="app" ref={appRef}>
       <Sidebar
@@ -424,6 +638,12 @@ export const App: React.FC = () => {
             currentContent={currentContent}
             splitDiff={splitDiff}
             onSplitDiffChange={setSplitDiff}
+            comments={comments}
+            focusedCommentId={focusedCommentId}
+            reveal={reveal}
+            canComment={selectedFile.manifestSlug !== null}
+            onCreateComment={handleCreateFileComment}
+            onFocusComment={setFocusedCommentId}
           />
         ) : selectedPlan ? (
           <PlanViewer
@@ -437,6 +657,40 @@ export const App: React.FC = () => {
           <div className="app-empty">Select a file to view changes</div>
         )}
       </div>
+
+      {reviewPanelOpen ? (
+        <>
+          <div
+            className="app-resize-handle app-review-resize-handle"
+            onMouseDown={handleReviewResizeStart}
+          />
+          <ReviewPanel
+            slug={activeManifest?.slug ?? null}
+            title={activeManifest?.title ?? ''}
+            comments={comments}
+            fileOrder={activeManifest?.files ?? []}
+            focusedCommentId={focusedCommentId}
+            onSelectComment={handleSelectComment}
+            onResolveComment={handleResolveComment}
+            onDeleteComment={handleDeleteComment}
+            onCreateComment={handleCreateGeneralComment}
+            onClose={() => setReviewPanelOpen(false)}
+            style={reviewPanelStyle}
+          />
+        </>
+      ) : (
+        <button
+          className="review-toggle"
+          onClick={() => setReviewPanelOpen(true)}
+          title="Show review panel (ctrl+r)"
+        >
+          <span className="review-toggle-label">Review</span>
+
+          {openCommentCount > 0 && (
+            <span className="review-panel-count">{openCommentCount}</span>
+          )}
+        </button>
+      )}
     </div>
   );
 };

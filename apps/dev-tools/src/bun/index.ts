@@ -4,8 +4,9 @@ import {
   BrowserWindow,
   Updater,
 } from 'electrobun/bun';
-import { watch } from 'node:fs';
+import { mkdirSync, watch } from 'node:fs';
 import { DevReviewRPC } from '../types';
+import { REVIEWS_DIR } from './reviewComments';
 import { rpcHandlers } from './rpc';
 
 const DEV_SERVER_PORT = 5914;
@@ -143,6 +144,20 @@ try {
   console.log(`Watching ${PLANS_DIR} for plan changes`);
 } catch {
   console.log('Plans directory not found, skipping watcher');
+}
+
+// Watch the reviews directory for comment file updates, creating it
+// first so the watcher can attach before any comment is written
+try {
+  mkdirSync(REVIEWS_DIR, { recursive: true });
+  watch(REVIEWS_DIR, { recursive: true }, (_eventType, filename) => {
+    if (!filename || filename.endsWith('.md')) {
+      rpc.send.reviewCommentsChanged({});
+    }
+  });
+  console.log(`Watching ${REVIEWS_DIR} for review comment changes`);
+} catch {
+  console.log('Reviews directory not available, skipping watcher');
 }
 
 // Watch working tree for file changes (i18n regeneration + manifest refresh)

@@ -9,8 +9,20 @@ export type ViewMode = 'diff' | 'original' | 'current';
 export type FileStatus = 'added' | 'modified' | 'deleted';
 
 /**
- * Represents a currently selected file for viewing.
+ * A request to scroll a line of the current file into view.
  */
+export interface RevealRequest {
+  /**
+   * The line to reveal.
+   */
+  line: number;
+
+  /**
+   * Unique token so repeated requests for the same line are applied.
+   */
+  token: number;
+}
+
 /**
  * A plan file entry from dev/plans/.
  */
