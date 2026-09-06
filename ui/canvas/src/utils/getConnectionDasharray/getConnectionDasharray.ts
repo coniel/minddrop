@@ -20,7 +20,7 @@ export function getConnectionDasharray(
   }
 
   // Dots are zero-length dashes rounded into circles by the
-  // stroke's round line cap
+  // stroke's round line cap.
   if (style === 'dotted') {
     return `0.1 ${strokeWidth * 2.5}`;
   }

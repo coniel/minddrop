@@ -39,7 +39,7 @@ describe('insertRoleElement', () => {
 
   it('inserts static-only role elements unbound and static', () => {
     // The heading role renders static chrome only, so insertion
-    // binds no property and starts the element in static mode
+    // binds no property and starts the element in static mode.
     insertRoleElement(studio, 'heading', 'root', 0, layout_card_1.id);
 
     const root = studio.getDesignElement('root', layout_card_1.id);

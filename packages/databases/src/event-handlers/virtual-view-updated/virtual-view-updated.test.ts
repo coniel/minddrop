@@ -101,7 +101,7 @@ describe('onUpdateVirtualView', () => {
 
   it('serializes item references into durable form', () => {
     // A virtual view referencing an entry via the referencing view
-    // type's data
+    // type's data.
     const referencingView: DataView = {
       ...baseView,
       type: dataViewType_referencing.type,

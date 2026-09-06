@@ -15,13 +15,13 @@ const CatchAllEventName = '*';
 export function startEventCapture(): VoidFunction {
   Events.on(CatchAllEventName, DevToolsNamespace, (data, eventName) => {
     // The catch all listener reports itself alongside the events
-    // it catches
+    // it catches.
     if (eventName === CatchAllEventName) {
       return;
     }
 
     // Using the dev tools persists their own state, which would
-    // otherwise fill the events with the user's every click
+    // otherwise fill the events with the user's every click.
     if (isDevToolsEvent(data)) {
       return;
     }

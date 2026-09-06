@@ -172,11 +172,11 @@ export const SidebarGroup: React.FC<SidebarGroupProps> = ({
 
   // Popovers open where the menu that led to them did: at the
   // right click position for the context menu, at the options
-  // button for the dropdown
+  // button for the dropdown.
   const popoverAnchor = menuAnchor ?? optionsButtonRef;
 
   // Record where the context menu was opened, so the popovers it
-  // leads to open at the same point
+  // leads to open at the same point.
   function handleContextMenuOpenChange(
     open: boolean,
     eventDetails: MenuOpenChangeDetails,
@@ -190,7 +190,7 @@ export const SidebarGroup: React.FC<SidebarGroupProps> = ({
 
   // Anchor the dropdown's popovers at the options button it was
   // opened from, frozen in place because the button hides again as
-  // soon as the group loses hover
+  // soon as the group loses hover.
   function handleDropdownOpenChange(open: boolean) {
     if (open) {
       setMenuAnchor(resolveElementAnchor(optionsButtonRef.current));
@@ -215,7 +215,7 @@ export const SidebarGroup: React.FC<SidebarGroupProps> = ({
   function handleAddClick() {
     if (addPopover) {
       // Frozen in place because the button hides again as soon as
-      // the group loses hover
+      // the group loses hover.
       setAddAnchor(resolveElementAnchor(addButtonRef.current));
       setAddPopoverOpen(true);
     }

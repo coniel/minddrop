@@ -233,16 +233,16 @@ export const RichTextEditor: React.FC<EditorProps> = ({
           withBlockIds(
             // Applied outside the frames so that a break or a delete inside
             // a table is the table's to handle before anything steps out of
-            // a container
+            // a container.
             withTables(
               // Applied outside the block reset so that a return or a delete
-              // steps out of a container before it resets the block
+              // steps out of a container before it resets the block.
               withFrames(
                 withLinks(
                   withBlockReset(
                     withBlockShortcuts(
                       // Applied innermost so that it sees the operations every
-                      // other plugin produces
+                      // other plugin produces.
                       withSourceInvalidation(withReturnBehaviour(editor)),
                       [...EditorElementConfigs],
                     ),
@@ -297,7 +297,7 @@ export const RichTextEditor: React.FC<EditorProps> = ({
   );
 
   // The editor's blocks which are in the app's selection, provided
-  // to the blocks so that they render as selected
+  // to the blocks so that they render as selected.
   const selectedBlockIds = useSelectedBlockIds(editorWithPlugins);
 
   const {
@@ -313,7 +313,7 @@ export const RichTextEditor: React.FC<EditorProps> = ({
   const resolvedTitlePlaceholder = titleIsUntitled ? title : titlePlaceholder;
 
   // Title validation, placeholder, and styling state provided to
-  // the title element component
+  // the title element component.
   const titleContextValue = useMemo(
     () => ({
       titleError,
@@ -404,7 +404,7 @@ export const RichTextEditor: React.FC<EditorProps> = ({
   );
 
   // Compose mark hotkeys with stopPropagation so that keyboard
-  // events don't bubble to parent handlers
+  // events don't bubble to parent handlers.
   const onKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLDivElement>) => {
       event.stopPropagation();
@@ -416,13 +416,13 @@ export const RichTextEditor: React.FC<EditorProps> = ({
       }
 
       // Runs before the block selection, which takes Escape and the arrows
-      // for itself
+      // for itself.
       if (!readOnly && handleWikilinkMenuKeyDown(event)) {
         return;
       }
 
       // Runs after the block menu, which takes Escape for itself
-      // while it is open
+      // while it is open.
       if (handleBlockSelectionKeyDown(event)) {
         return;
       }
@@ -524,13 +524,13 @@ export const RichTextEditor: React.FC<EditorProps> = ({
       }
 
       // The selection is only rendered while the editor holds the
-      // DOM focus, which the button does not take
+      // DOM focus, which the button does not take.
       ReactEditor.focus(editorWithPlugins);
 
       selectBlock(hoveredBlock.path, extend);
 
       // Extending a selection is not a moment to be covering the
-      // blocks being extended over with a menu
+      // blocks being extended over with a menu.
       if (!extend) {
         setMenuBlock(hoveredBlock);
         setMenuOpen(true);
@@ -561,17 +561,17 @@ export const RichTextEditor: React.FC<EditorProps> = ({
 
   const handleCopyBlocks = useCallback(() => {
     // Return the DOM focus to the editor, whose selection the copy
-    // acts on
+    // acts on.
     ReactEditor.focus(editorWithPlugins);
 
     // Copied through the app's selection, which the blocks are part
-    // of, so that they arrive as markdown
+    // of, so that they arrive as markdown.
     Selection.copy();
   }, [editorWithPlugins]);
 
   const handleDuplicateBlocks = useCallback(() => {
     // Return the DOM focus to the editor before the operations, as
-    // in handleTurnInto
+    // in handleTurnInto.
     ReactEditor.focus(editorWithPlugins);
 
     duplicateBlocks(editorWithPlugins, menuBlockPaths());
@@ -579,7 +579,7 @@ export const RichTextEditor: React.FC<EditorProps> = ({
 
   const handleDeleteBlocks = useCallback(() => {
     // Return the DOM focus to the editor before the operations, as
-    // in handleTurnInto
+    // in handleTurnInto.
     ReactEditor.focus(editorWithPlugins);
 
     deleteBlocks(editorWithPlugins, menuBlockPaths());
@@ -647,7 +647,7 @@ export const RichTextEditor: React.FC<EditorProps> = ({
   // Focus the editor on mount with the caret at the end of the
   // content, or in the title when there is no content, selecting
   // before focusing so the focus restores the placed selection
-  // rather than defaulting to the start
+  // rather than defaulting to the start.
   useEffect(() => {
     if (autoFocus) {
       selectAutoFocusTarget(editorRef.current);
@@ -713,7 +713,7 @@ export const RichTextEditor: React.FC<EditorProps> = ({
       }
 
       // Presses in the editor place the cursor, which steps the
-      // selection down itself
+      // selection down itself.
       if (containerRef.current?.contains(target)) {
         return;
       }

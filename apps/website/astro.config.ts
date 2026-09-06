@@ -14,7 +14,7 @@ export default defineConfig({
     shikiConfig: {
       themes: { light: 'github-light', dark: 'github-dark' },
       // Emit both themes as custom properties rather than inlining one of
-      // them, so the stylesheet can pick between them with `light-dark()`
+      // them, so the stylesheet can pick between them with `light-dark()`.
       defaultColor: false,
     },
   },

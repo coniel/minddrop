@@ -49,7 +49,7 @@ export function mapDataReferences(
   });
 
   // Convert each connection's endpoint node IDs, dropping
-  // connections attached to a dropped or unknown node
+  // connections attached to a dropped or unknown node.
   const connections = data.connections?.flatMap((connection) => {
     const from = convertedIds.get(connection.from.nodeId);
     const to = convertedIds.get(connection.to.nodeId);

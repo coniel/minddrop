@@ -74,7 +74,7 @@ export function initializeTabsSyncListeners(viewAreaId: string): VoidFunction {
   });
 
   // Fallback for the reverse order, where the view area is already
-  // mounted and listening before this runs
+  // mounted and listening before this runs.
   queueMicrotask(() => {
     restoreActiveTab(viewAreaId);
   });

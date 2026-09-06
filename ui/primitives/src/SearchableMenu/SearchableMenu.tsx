@@ -9,7 +9,7 @@ import { TranslationKey, i18n } from '@minddrop/i18n';
 import { fuzzySearch } from '@minddrop/utils';
 import { ActionMenuItemProps } from '../ActionMenuItem';
 import { Icon } from '../Icon';
-import { MenuItem } from '../Menu/MenuItem';
+import { MenuItem } from '../Menu';
 import {
   MenuSearchContextProvider,
   MenuSearchContextValue,
@@ -109,7 +109,7 @@ export const SearchableMenu = React.forwardRef<
     const [internalSearchTerm, setInternalSearchTerm] = useState('');
 
     // The consumer owns both the term and the filtering when a
-    // search term is provided
+    // search term is provided.
     const controlled = searchTermProp !== undefined;
     const searchTerm = controlled ? searchTermProp : internalSearchTerm;
 
@@ -136,13 +136,13 @@ export const SearchableMenu = React.forwardRef<
 
     const activeIds = useMemo(() => {
       // Registered items are already filtered by the consumer when
-      // the search term is controlled
+      // the search term is controlled.
       if (!isSearchActive || controlled) {
         return orderedIds;
       }
 
       // Items are matched back by their text value, which two
-      // items can share, so each maps to a list of IDs
+      // items can share, so each maps to a list of IDs.
       const idsByTextValue = new Map<string, string[]>();
       const textValues: string[] = [];
 
@@ -160,7 +160,7 @@ export const SearchableMenu = React.forwardRef<
       const matches = fuzzySearch(textValues, searchTerm);
 
       // Map matched text values back to their IDs, each match
-      // taking the next item its text value belongs to
+      // taking the next item its text value belongs to.
       return matches.reduce<string[]>((result, matchedText) => {
         const id = idsByTextValue.get(matchedText)?.shift();
 
@@ -197,7 +197,7 @@ export const SearchableMenu = React.forwardRef<
     useEffect(() => {
       const frame = requestAnimationFrame(() => {
         // Prevent the browser's scroll-to-reveal, which fights
-        // consumer-driven scrolling of partially visible menus
+        // consumer-driven scrolling of partially visible menus.
         inputRef.current?.focus({ preventScroll: true });
       });
 
@@ -213,7 +213,7 @@ export const SearchableMenu = React.forwardRef<
 
     // Reclaim focus from other menu elements while mounted, so
     // typing goes to the search input even when the menu is a
-    // hover-opened submenu whose trigger item keeps focus
+    // hover-opened submenu whose trigger item keeps focus.
     useEffect(() => {
       const reclaimFocus = (event: FocusEvent) => {
         const target = event.target as HTMLElement | null;
@@ -229,7 +229,7 @@ export const SearchableMenu = React.forwardRef<
         }
 
         // Only reclaim from menu elements (e.g. the submenu's
-        // trigger item), leaving app-level focus moves untouched
+        // trigger item), leaving app-level focus moves untouched.
         if (target.closest('[role="menu"], [role="menuitem"]')) {
           inputRef.current?.focus({ preventScroll: true });
         }
@@ -252,7 +252,7 @@ export const SearchableMenu = React.forwardRef<
     }, []);
 
     // Focus the search input when the pointer enters the menu, as
-    // hover-opened submenus keep focus on their trigger item
+    // hover-opened submenus keep focus on their trigger item.
     const handleMouseEnter = useCallback(() => {
       inputRef.current?.focus({ preventScroll: true });
     }, []);
@@ -308,7 +308,7 @@ export const SearchableMenu = React.forwardRef<
       }
 
       // Shift-activation triggers the item's secondary action and
-      // keeps the menu open
+      // keeps the menu open.
       if (shiftKey && registration.propsRef.current.secondaryOnSelect) {
         registration.propsRef.current.secondaryOnSelect();
 
@@ -342,7 +342,7 @@ export const SearchableMenu = React.forwardRef<
     );
 
     // Wrap an item list in a capped height scroll area when
-    // the menu is scrollable
+    // the menu is scrollable.
     function renderList(list: React.ReactElement) {
       // Non-scrollable menus render the list as is
       if (!scrollable) {

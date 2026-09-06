@@ -7,7 +7,7 @@ import { Editor } from '../types';
 import { withLinks } from './withLinks';
 
 // Creates an editor with the plugin applied, holding a single empty block
-// with the cursor in it
+// with the cursor in it.
 function createEditorWithLinks(text = ''): Editor {
   const editor = withLinks(
     createTestEditor([{ ...paragraphElement1, children: [{ text }] }]),
@@ -24,7 +24,7 @@ function type(editor: Editor, text: string): void {
 }
 
 // A clipboard holding the given plain text, and nothing in the formats the
-// editor pastes its own content through
+// editor pastes its own content through.
 function clipboard(text: string): DataTransfer {
   return {
     getData: (format: string) => (format === 'text/plain' ? text : ''),

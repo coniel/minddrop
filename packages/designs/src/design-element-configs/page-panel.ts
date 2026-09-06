@@ -56,7 +56,7 @@ export const PagePanelElementConfig: DesignElementConfig<PagePanelElement> = {
   compatiblePropertyTypes: ['image'],
   supportsStaticContent: false,
   // Panels hold children rather than a value of their own, so
-  // they are never hidden for being empty
+  // they are never hidden for being empty.
   emptyBehavior: 'none',
   context: { layoutTypes: ['page', 'space'] },
   template: {

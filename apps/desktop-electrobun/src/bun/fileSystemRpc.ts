@@ -101,7 +101,7 @@ const watchers = new Map<string, FSWatcher[]>();
 let nextWatcherId = 0;
 
 // The callback used to send watch events to the webview, set once
-// the RPC channel is available
+// the RPC channel is available.
 let sendWatchEvent:
   | ((event: { id: string; kind: FsWatchEventKind; paths: string[] }) => void)
   | null = null;

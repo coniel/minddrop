@@ -154,7 +154,7 @@ export const SelectPropertyEditor: React.FC<SelectPropertyEditorProps> = ({
 
   function handleOptionsBlur(event: React.FocusEvent<HTMLDivElement>) {
     // Only unset the focus flag when focus leaves the options
-    // container entirely
+    // container entirely.
     if (!event.currentTarget.contains(event.relatedTarget)) {
       setIsOptionFocused(false);
     }

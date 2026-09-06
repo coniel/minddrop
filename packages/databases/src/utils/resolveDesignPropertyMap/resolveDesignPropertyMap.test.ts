@@ -10,7 +10,7 @@ initializeI18n();
 const { objectDatabase, timestampDatabase } = DatabaseFixtures;
 
 // A design declaring one property of each metadata type plus a
-// property which is not auto-mappable
+// property which is not auto-mappable.
 const designProperties: PropertiesSchema = [
   { type: 'title', name: 'Heading' },
   { type: 'created', name: 'Added' },

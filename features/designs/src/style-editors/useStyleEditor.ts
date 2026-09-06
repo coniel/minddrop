@@ -64,11 +64,11 @@ export function useStyleEditor(elementId: string): StyleEditor {
   const studio = useDesignStudio();
   const element = useElement(elementId);
   // The editor edits the active layout, whose type role styles
-  // resolve against
+  // resolve against.
   const layoutType = useActiveLayoutType();
 
   // The keys the element's role or variant locks, recomputed as
-  // the element or its variant selection changes
+  // the element or its variant selection changes.
   const lockedKeys = getElementLockedStyleKeys(
     element,
     layoutType ?? undefined,
@@ -80,7 +80,7 @@ export function useStyleEditor(elementId: string): StyleEditor {
   const style = element.style as Record<string, unknown>;
 
   // The effective style, with the role or variant theme styles
-  // resolved over the element's own
+  // resolved over the element's own.
   const resolvedStyle = Designs.resolveElementStyle(
     element,
     layoutType ?? undefined,
@@ -105,7 +105,7 @@ export function useStyleEditor(elementId: string): StyleEditor {
   const setValue = useCallback(
     (key: string, value: unknown) => {
       // The store deletes the key when the value is undefined, so
-      // cleared fields emit no CSS
+      // cleared fields emit no CSS.
       studio.updateElementStyle(
         elementId,
         key as Parameters<typeof studio.updateElementStyle>[1],

@@ -44,7 +44,7 @@ import {
 import './QueryBuilderCanvas.css';
 
 // The maximum distance from an edge at which a dragged toolbar
-// card targets it for splicing, in canvas units
+// card targets it for splicing, in canvas units.
 const SPLICE_HIT_THRESHOLD = 12;
 
 // The shared look of query edges: plain flow lines without
@@ -105,12 +105,12 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
   queryId,
 }) => {
   // The node type picker opened by releasing a connection drag
-  // on the empty canvas
+  // on the empty canvas.
   const [nodeTypePicker, setNodeTypePicker] =
     useState<NodeTypePickerState | null>(null);
 
   // The ID of the connection a dragged toolbar card would
-  // splice its node into
+  // splice its node into.
   const [spliceTargetId, setSpliceTargetId] = useState<string | null>(null);
 
   const query = Queries.use(queryId);
@@ -121,7 +121,7 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
   const canvas = useCanvas();
 
   // Subscribe to database changes so mismatch styling follows
-  // schema edits
+  // schema edits.
   Databases.useAll();
 
   // The query's connections mapped onto canvas connections,
@@ -280,7 +280,7 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
   );
 
   // Only snap connection drags to targets the graph accepts a
-  // connection into, re-anchored onto their input port
+  // connection into, re-anchored onto their input port.
   const handleResolveConnectTarget = useCallback(
     (from: CanvasConnectionEnd, target: CanvasConnectionDragTarget) => {
       if (!query) {
@@ -306,7 +306,7 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
   );
 
   // Only snap re-connect drags to targets the re-routed
-  // connection is valid against, re-anchored onto their port
+  // connection is valid against, re-anchored onto their port.
   const handleResolveReconnectTarget = useCallback(
     (
       reconnect: CanvasConnectionReconnect,
@@ -329,7 +329,7 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
       const to = reconnect.end === 'to' ? target.nodeId : original.to;
 
       // Validate against the graph without the original, which
-      // the re-route replaces
+      // the re-route replaces.
       const removed = Queries.removeConnection(query.connections, original.id);
 
       if (
@@ -428,7 +428,7 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
   );
 
   // Insert a node of the given type into an existing
-  // connection, centered on the drop point
+  // connection, centered on the drop point.
   const spliceNode = useCallback(
     (type: QueryNodeType, point: CanvasPoint, connectionId: string) => {
       if (!query) {
@@ -451,7 +451,7 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
       const nodes = [...query.nodes, node];
 
       // Replace the connection with a pair routing the flow
-      // through the new node
+      // through the new node.
       let connections = Queries.removeConnection(
         query.connections,
         connection.id,
@@ -474,11 +474,11 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
   );
 
   // Allow dragging toolbar cards over the canvas, highlighting
-  // the connection under a dragged node card
+  // the connection under a dragged node card.
   const handleDragOver = useCallback(
     (event: React.DragEvent) => {
       // Node cards splice into the connection they are dropped
-      // onto, so track the edge under the drag
+      // onto, so track the edge under the drag.
       if (Selection.dragContainsType(event, [QueryNodeCardDataKey])) {
         event.preventDefault();
 
@@ -520,7 +520,7 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
       setSpliceTargetId(null);
 
       // Source cards create an unconfigured source node at the
-      // drop position, showing its search
+      // drop position, showing its search.
       if (
         event.dataTransfer.getData(Selection.toMimeType(QuerySourceCardDataKey))
       ) {
@@ -553,7 +553,7 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
   );
 
   // Create the node picked from the node type picker at the
-  // release point and connect the released drag into it
+  // release point and connect the released drag into it.
   const handlePickNodeType = useCallback(
     (type: QueryNodeType) => {
       if (!query || !nodeTypePicker) {

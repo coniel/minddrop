@@ -9,7 +9,7 @@ const items = Array.from({ length: 100 }, (_, index) => `item-${index}`);
 const renderItem = (item: string) => <span>{item}</span>;
 
 // The stubbed viewport height, the test environment does not
-// lay elements out
+// lay elements out.
 const VIEWPORT_HEIGHT = 100;
 
 describe('<VirtualizedList />', () => {
@@ -19,7 +19,7 @@ describe('<VirtualizedList />', () => {
   );
 
   // Give the scroll viewport a height, without which the
-  // virtualizer renders no rows at all
+  // virtualizer renders no rows at all.
   beforeAll(() => {
     Object.defineProperty(HTMLElement.prototype, 'offsetHeight', {
       configurable: true,

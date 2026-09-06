@@ -24,7 +24,7 @@ export function groupEventsIntoBatches(
     const previous = currentBatch?.[currentBatch.length - 1];
 
     // The first event, and any event following a pause, start a
-    // new batch
+    // new batch.
     if (!previous || entry.timestamp - previous.timestamp > maxGap) {
       batches.push([entry]);
 

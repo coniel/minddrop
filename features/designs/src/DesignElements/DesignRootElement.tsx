@@ -24,7 +24,7 @@ export const DesignRootElement: React.FC<DesignRootElementProps> = ({
   className,
 }) => {
   // The root carries its layout type, which context-adapting role
-  // styles in the tree below resolve against
+  // styles in the tree below resolve against.
   return (
     <LayoutTypeProvider value={element.layoutType ?? null}>
       <ContainerSurface

@@ -36,7 +36,7 @@ import { fieldLabelKey, sectionLabelKey } from './styleI18nKeys';
 import { useStyleEditor } from './useStyleEditor';
 
 // The border keys a container writes to: the shared block minus
-// the radius, which the rendering context's scheme governs
+// the radius, which the rendering context's scheme governs.
 const ContainerBorderKeys = BorderStyleKeys.filter(
   (key) => key !== 'borderRadius',
 );
@@ -56,7 +56,7 @@ const RootBackgroundOptions: OptionToggleFieldOption<RootBackground>[] = [
 ];
 
 // The line length caps a page's content can take, from the
-// narrowest up to the full option standing in for an unset cap
+// narrowest up to the full option standing in for an unset cap.
 const ContentWidthOptions: OptionToggleFieldOption<MeasureToken | 'full'>[] = [
   {
     value: 'narrow',
@@ -109,31 +109,31 @@ export const ContainerStyleEditor: React.FC<StyleEditorProps> = ({
   const { isEditable, getValue, setValue, editableSides } = editor;
 
   // A layout's root is sized by whatever renders the layout: a view
-  // gives a card its width, and leaves it nothing to fill
+  // gives a card its width, and leaves it nothing to fill.
   const isLayoutRoot = element.type === 'root';
 
   // A page or space root hosts big full-screen elements, leaving
   // only its background to style: arrangement, sizing, spacing and
-  // borders belong to the elements and panels inside it
+  // borders belong to the elements and panels inside it.
   const isFullScreenRoot =
     isLayoutRoot &&
     (activeLayoutType === 'page' || activeLayoutType === 'space');
 
   // The treatment an unset root background resolves to: full-screen
   // roots blend into the surface they fill, floating roots take the
-  // subtle coloured wash
+  // subtle coloured wash.
   const rootBackgroundDefault: RootBackground = isFullScreenRoot
     ? 'transparent'
     : 'accent';
 
   // Spreading children apart is the one distribution the alignment
-  // grid cannot place, so it is offered as a switch of its own
+  // grid cannot place, so it is offered as a switch of its own.
   function handleSpreadChange(spread: true | undefined) {
     setValue('justify', spread ? 'space-between' : undefined);
   }
 
   // The layout type's default is stored as an unset key, so a root
-  // reset to it emits no background
+  // reset to it emits no background.
   function handleRootBackgroundChange(background: RootBackground) {
     setValue(
       'background',
@@ -142,13 +142,13 @@ export const ContainerStyleEditor: React.FC<StyleEditorProps> = ({
   }
 
   // The full option stands for an unset cap, so a region reset to
-  // it emits no maximum width
+  // it emits no maximum width.
   function handleContentWidthChange(width: MeasureToken | 'full') {
     setValue('maxWidth', width === 'full' ? undefined : width);
   }
 
   // The subtle default is stored as an unset key, so a root reset
-  // to it emits no emphasis
+  // to it emits no emphasis.
   function handleRootEmphasisChange(emphasis: BackgroundEmphasis | undefined) {
     setValue('emphasis', emphasis === 'subtle' ? undefined : emphasis);
   }

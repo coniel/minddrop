@@ -40,7 +40,7 @@ export const LayoutAutoFocusProvider: React.FC<
   LayoutAutoFocusProviderProps
 > = ({ autoFocus, children }) => {
   // Latest flag value, so claims from late-mounting editors see
-  // the flag being cleared after the initial mount
+  // the flag being cleared after the initial mount.
   const autoFocusRef = useRef(autoFocus);
 
   // Whether an editor has already claimed the autofocus
@@ -50,7 +50,7 @@ export const LayoutAutoFocusProvider: React.FC<
   autoFocusRef.current = autoFocus;
 
   // Stable context value so the layout tree does not re-render
-  // when the flag clears
+  // when the flag clears.
   const value = useMemo(
     () => ({
       claimAutoFocus: () => {

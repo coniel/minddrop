@@ -33,7 +33,7 @@ export function useElementCssStyle(
   }
 
   // Inside one, the wrapper owns the margins so they surround the
-  // chrome rather than just the value
+  // chrome rather than just the value.
   const { marginTop, marginRight, marginBottom, marginLeft, ...chromeless } =
     css;
 

@@ -103,7 +103,7 @@ describe('registerStoreListeners', () => {
     removeListeners = registerStoreListeners(config);
 
     // Hydrate the store, which resolves only if the listeners
-    // respond to the hydrate request
+    // respond to the hydrate request.
     await appLevelStore.hydrate();
 
     // Should leave the store with its default values

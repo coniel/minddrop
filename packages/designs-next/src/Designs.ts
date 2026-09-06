@@ -14,7 +14,7 @@ import {
 } from './events';
 
 // Const-asserted so the names keep their literal types, which key
-// the event data registry
+// the event data registry.
 export const events = {
   Created: DesignCreatedEvent,
   Updated: DesignUpdatedEvent,

@@ -79,7 +79,7 @@ export const ContainerSurface: React.FC<ContainerSurfaceProps> = ({
   const { width, isMeasured } = useMeasuredImageWidth(containerRef);
 
   // Use the mapped property value (file path) as background image
-  // if available, otherwise fall back to the placeholder image
+  // if available, otherwise fall back to the placeholder image.
   const imagePath =
     typeof property?.value === 'string' && property.value
       ? property.value
@@ -88,7 +88,7 @@ export const ContainerSurface: React.FC<ContainerSurfaceProps> = ({
   const imageSrc = Fs.useImageSrc(imagePath, width);
 
   // Held back until measured so that the full resolution image is
-  // not fetched before the requested width is known
+  // not fetched before the requested width is known.
   const paintedImageSrc = isMeasured ? imageSrc : null;
 
   // The backdrop overlay CSS, null when the container has none
@@ -100,7 +100,7 @@ export const ContainerSurface: React.FC<ContainerSurfaceProps> = ({
       createBackgroundImageCss(paintedImageSrc, style.backgroundImageFit)),
     // Anchor the backdrop overlay and contain its stacking so the
     // negative z-index overlay sits above the container background
-    // but below the in-flow children
+    // but below the in-flow children.
     ...(backdropCss && { position: 'relative' as const, isolation: 'isolate' }),
     ...(fill && { width: '100%', height: '100%' }),
     ...styleOverrides,

@@ -53,7 +53,7 @@ export const ElementTitlePropertyField: React.FC<
     }
 
     // Replace the element outright, since a merge cannot unset
-    // the binding
+    // the binding.
     const { titleProperty: _removed, ...unboundElement } = element;
 
     studio.setDesignElement(elementId, unboundElement);

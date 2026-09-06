@@ -4,7 +4,7 @@ import { DatabaseEntry } from '../../types';
 import { sortDatabaseEntries } from './sortDatabaseEntries';
 
 // Three entries created a day apart, with a Rating property
-// which the middle entry is missing
+// which the middle entry is missing.
 const oldest: DatabaseEntry = {
   ...objectEntry1,
   id: 'database-entry_oldest',

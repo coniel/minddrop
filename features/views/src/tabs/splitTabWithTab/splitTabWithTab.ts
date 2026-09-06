@@ -24,7 +24,7 @@ export function splitTabWithTab(
   const sourceTab = tabs.find((currentTab) => currentTab.id === sourceTabId);
 
   // Nothing to do when either tab does not exist, or the source tab
-  // has no view to move
+  // has no view to move.
   if (!tab || !sourceTab?.main) {
     return;
   }
@@ -33,7 +33,7 @@ export function splitTabWithTab(
   const nextTab = { ...tab, split: sourceTab.main };
 
   // Write the updated tab, dropping the source tab, and make the
-  // split tab active
+  // split tab active.
   writeSet(viewAreaId, {
     tabs: tabs
       .filter((currentTab) => currentTab.id !== sourceTabId)

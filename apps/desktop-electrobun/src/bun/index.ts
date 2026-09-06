@@ -13,7 +13,7 @@ import './server';
 // --- Application menu ---
 
 // Set up a standard macOS application menu so that keyboard shortcuts
-// like Cmd+C/V/X/Z/A/Q/W are handled by the native responder chain
+// like Cmd+C/V/X/Z/A/Q/W are handled by the native responder chain.
 ApplicationMenu.setApplicationMenu([
   {
     label: 'MindDrop',
@@ -79,5 +79,5 @@ initializeSearch();
 pruneImageCache();
 
 // Load the image brightness analyses, dropping those whose source
-// image has been deleted or modified
+// image has been deleted or modified.
 initializeImageStats();

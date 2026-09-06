@@ -16,7 +16,7 @@ const connection: CanvasConnection = {
 };
 
 // Renders the layer within a canvas provider backed by the given
-// store, with both endpoint node frames pre-registered
+// store, with both endpoint node frames pre-registered.
 const renderLayer = (
   store: CanvasStore,
   props: Partial<CanvasConnectionsLayerProps> = {},
@@ -42,7 +42,7 @@ describe('CanvasConnectionsLayer', () => {
     const line = container.querySelector('.ui-canvas-connection-line');
 
     // The curve runs from node-1's right midpoint toward node-2's
-    // left midpoint, ending behind the arrowhead
+    // left midpoint, ending behind the arrowhead.
     expect(line?.getAttribute('d')).toBe('M 200 50 C 300 50, 300 50, 389 50');
   });
 
@@ -318,7 +318,7 @@ describe('CanvasConnectionsLayer', () => {
     const { container } = renderLayer(store);
 
     // Drag the source end; the preview path runs from the target
-    // end toward the cursor, against the connection's direction
+    // end toward the cursor, against the connection's direction.
     act(() => {
       store.startConnectionDrag(
         'node-2',

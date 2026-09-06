@@ -54,7 +54,7 @@ export async function updateDesign(
   });
 
   // Persist bundle-backed designs; virtual designs are persisted by
-  // their owner via the update event
+  // their owner via the update event.
   if (!design.virtual) {
     await writeDesign(design.id);
   }

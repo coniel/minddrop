@@ -37,7 +37,7 @@ export const StatePanel: React.FC = () => {
   );
 
   // Fall back to the first store, so the panel always shows
-  // something when any store is registered
+  // something when any store is registered.
   const selectedStore =
     stores.find((store) => store.name === selectedStoreName) ??
     stores[0] ??

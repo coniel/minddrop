@@ -25,7 +25,7 @@ export async function deleteDesign(id: string): Promise<void> {
   Events.dispatch(DesignDeletedEvent, design);
 
   // Virtual designs have no bundle; only delete the bundle directory
-  // (and the media inside it) for bundle-backed designs
+  // (and the media inside it) for bundle-backed designs.
   if (!design.virtual) {
     await Fs.removeDir(resolveDesignBundleDirPath(id), { recursive: true });
   }

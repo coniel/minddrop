@@ -52,7 +52,7 @@ describe('withMarks', () => {
       editor.insertText('*');
 
       // Should mark the text as 'bold', recording the delimiter which was
-      // typed so that it is written back the same way
+      // typed so that it is written back the same way.
       expect(Node.get(editor, [0, 0])).toEqual({
         text: 'bold',
         bold: true,
@@ -62,7 +62,7 @@ describe('withMarks', () => {
 
     it('records the delimiter which was typed', () => {
       // Render an editor containing a text node partially wrapped by the
-      // underscore spelling of the bold shortcut
+      // underscore spelling of the bold shortcut.
       const { editor } = renderEditor([{ text: '__bold_' }]);
 
       // Complete the wrapping shortcut

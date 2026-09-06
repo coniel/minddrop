@@ -12,7 +12,7 @@ const { dataViewType_table } = DataViewFixtures;
 
 describe('property element configs', () => {
   // The collection element's variants derive from the registered
-  // data view types
+  // data view types.
   beforeEach(setup);
   afterEach(cleanup);
   it('offers an element for every display property type', () => {
@@ -53,7 +53,7 @@ describe('property element configs', () => {
     );
 
     // One variant per registered view type supporting collection
-    // data sources; others are left out
+    // data sources; others are left out.
     expect(variantIds).toEqual(['table', 'gallery', 'board', 'referencing']);
   });
 
@@ -68,12 +68,12 @@ describe('property element configs', () => {
   it('previews or describes every variant a picker offers', () => {
     getPropertyElementConfigs()
       // A single fixed presentation shows no picker, so it has
-      // nothing to explain
+      // nothing to explain.
       .filter((config) => config.variants.length > 1)
       .forEach((config) => {
         config.variants.forEach((variant) => {
           // A variant reads as either a sample of what it renders
-          // or a line saying what it renders, never as a bare name
+          // or a line saying what it renders, never as a bare name.
           expect(variant.sample || variant.description).toBeTruthy();
         });
       });
@@ -81,7 +81,7 @@ describe('property element configs', () => {
 
   it('gives every text-like variant an explicit font size', () => {
     // Every category rendering the value as text, including the
-    // editing ones
+    // editing ones.
     const textCategories = ['typography', 'field', 'editor'];
 
     getPropertyElementConfigs().forEach((config) => {
@@ -89,7 +89,7 @@ describe('property element configs', () => {
         .filter((variant) => textCategories.includes(variant.styleCategory))
         .forEach((variant) => {
           // Nothing depends on what the surrounding context
-          // happens to cascade
+          // happens to cascade.
           const themeStyle =
             DefaultDesignTheme.propertyElements[config.propertyType]?.[
               variant.id
@@ -104,7 +104,7 @@ describe('property element configs', () => {
     getPropertyElementConfigs().forEach((config) => {
       config.variants.forEach((variant) => {
         // Size is the variant's own typographic shape, never an
-        // element-level override
+        // element-level override.
         expect(variant.editableStyles ?? []).not.toContain('fontSize');
       });
     });
@@ -113,7 +113,7 @@ describe('property element configs', () => {
   it('splits a variant onto the style category it is rendered as', () => {
     // The URL element is the clearest case of the split: its two
     // text presentations are styled as typography, an embedded
-    // page as a frame
+    // page as a frame.
     const url = getPropertyElementConfig('url');
 
     expect(url.variants.map((variant) => variant.styleCategory)).toEqual([

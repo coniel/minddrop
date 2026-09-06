@@ -33,7 +33,7 @@ export async function setDatabaseDesign(
   }
 
   // Persist the new design assignment, clearing the property map and
-  // layout pins as they reference the previous design
+  // layout pins as they reference the previous design.
   return updateDatabase(databaseId, {
     designId,
     designPropertyMap: {},

@@ -43,7 +43,7 @@ describe('readDatabaseEntry', () => {
     );
 
     // The hash should be of the file's contents, so that an external
-    // edit is detected whatever the entry's timestamp properties say
+    // edit is detected whatever the entry's timestamp properties say.
     expect(entry?.contentHash).toBe(
       Fs.hashContents(MockFs.readTextFile(objectEntry1.path)),
     );
@@ -81,7 +81,7 @@ describe('readDatabaseEntry', () => {
     ))!;
 
     // objectDatabase has no created/last-modified properties, so should
-    // fall back to file stat
+    // fall back to file stat.
     expect(entry.created).toEqual(statCreatedDate);
     expect(entry.lastModified).toEqual(statLastModifiedDate);
   });

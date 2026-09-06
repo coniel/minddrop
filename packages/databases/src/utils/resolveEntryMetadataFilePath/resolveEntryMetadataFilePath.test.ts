@@ -13,7 +13,7 @@ describe('resolveEntryMetadataFilePath', () => {
 
   it('returns the same path for an entry stored in its own subdirectory', () => {
     // Entry-based property storage nests the entry in a directory
-    // named after it, which identifies the same entry
+    // named after it, which identifies the same entry.
     expect(
       resolveEntryMetadataFilePath(
         '/workspace/Objects',

@@ -18,7 +18,7 @@ export function resolveSplitFrameRepair(
   elements: Element[],
 ): Map<number, Frame[]> | null {
   // The containers the previous block sat inside, and those whose run has
-  // already ended
+  // already ended.
   let openIds: string[] = [];
   const closedIds = new Set<string>();
 

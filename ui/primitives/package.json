@@ -6,7 +6,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./stories": "./src/stories.ts",
-    "./dev": "./src/dev/Story.tsx"
+    "./dev": "./src/dev/Story/index.ts"
   },
   "scripts": {
     "lint": "eslint .  --max-warnings 0",

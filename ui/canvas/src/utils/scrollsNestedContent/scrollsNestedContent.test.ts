@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { scrollsNestedContent } from './scrollsNestedContent';
 
 // Builds a viewport containing a scrollable element which
-// contains the wheel event's target
+// contains the wheel event's target.
 function render(options: {
   overflow: string;
   axis: 'x' | 'y';
@@ -16,7 +16,7 @@ function render(options: {
   scroller.style.overflowY = options.axis === 'y' ? options.overflow : 'hidden';
 
   // jsdom does not lay elements out, so the scroll extents are
-  // set directly
+  // set directly.
   const extent = options.axis === 'x' ? 'scrollWidth' : 'scrollHeight';
   const size = options.axis === 'x' ? 'clientWidth' : 'clientHeight';
 

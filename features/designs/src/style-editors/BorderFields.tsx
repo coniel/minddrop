@@ -45,7 +45,7 @@ const BorderEmphasisOptions: OptionToggleFieldOption<BorderEmphasis>[] =
   }));
 
 // The border line styles, which are a fixed vocabulary rather
-// than a theme scale
+// than a theme scale.
 const BorderLineStyles: readonly BorderLineStyle[] = [
   'solid',
   'dashed',
@@ -71,7 +71,7 @@ const SideKeysByCross: Record<CrossSide, SideWidthKey> = {
 };
 
 // Value used by the option which stops a side drawing, since a
-// select cannot carry undefined as an option value
+// select cannot carry undefined as an option value.
 const NoneValue = 'none';
 
 /**
@@ -114,7 +114,7 @@ const LineStyleIcons: Record<BorderLineStyle, React.ReactNode> = {
 };
 
 // The options each side select offers: the width scale plus the
-// option which stops the side drawing
+// option which stops the side drawing.
 const WidthOptions: SelectOption<string>[] = [
   { value: NoneValue, label: borderWidthKey('none', 'label') },
   ...Designs.tokens.BorderWidth.map((token) => ({
@@ -153,7 +153,7 @@ export const BorderFields: React.FC<BorderFieldsProps> = ({
   const lineStyle = getValue<BorderLineStyle>('borderStyle');
 
   // The stored per-side widths, all absent when the border draws
-  // uniformly thin
+  // uniformly thin.
   const sideWidths = SideWidthKeys.map((key) =>
     getValue<BorderWidthToken>(key),
   );
@@ -196,7 +196,7 @@ export const BorderFields: React.FC<BorderFieldsProps> = ({
   }
 
   // Apply a side's width pick, keeping the other sides on the
-  // width they showed
+  // width they showed.
   function handleSideWidthChange(key: SideWidthKey, selected: string | number) {
     // The none option stops the side drawing
     if (selected === NoneValue) {
@@ -208,7 +208,7 @@ export const BorderFields: React.FC<BorderFieldsProps> = ({
       }
 
       // The uniform default has no keys to remove one from, so it
-      // materialises: the other sides keep their thin width
+      // materialises: the other sides keep their thin width.
       if (!hasSideWidths) {
         SideWidthKeys.forEach((sideKey) => {
           setValue(sideKey, sideKey === key ? undefined : 'thin');
@@ -265,7 +265,7 @@ export const BorderFields: React.FC<BorderFieldsProps> = ({
   }
 
   // Unset every border key except the radius, which rounds the
-  // corners independently of the border itself
+  // corners independently of the border itself.
   function clearBorder() {
     setValue('borderStyle', undefined);
     setValue('borderEmphasis', undefined);
@@ -284,7 +284,7 @@ export const BorderFields: React.FC<BorderFieldsProps> = ({
     }
 
     // Linking equalises every side on the first drawn width, with
-    // uniform thin collapsing back to unset keys
+    // uniform thin collapsing back to unset keys.
     if (lineStyle && hasSideWidths) {
       const width = sideWidths.find(Boolean) ?? 'thin';
 
@@ -297,7 +297,7 @@ export const BorderFields: React.FC<BorderFieldsProps> = ({
   }
 
   // Resolve the value a side's select shows: its own width, the
-  // uniform thin default, or none while it does not draw
+  // uniform thin default, or none while it does not draw.
   function sideValue(key: SideWidthKey): string {
     // Without a line style nothing draws
     if (!lineStyle) {

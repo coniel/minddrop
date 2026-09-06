@@ -108,7 +108,7 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
   const cellRefs = React.useRef<Record<string, HTMLDivElement | null>>({});
 
   // Tracks whether a pointer drag occurred, so we can suppress
-  // the click event that fires after a drag-and-release
+  // the click event that fires after a drag-and-release.
   const didDrag = React.useRef(false);
 
   // Track which handle's tooltip is open (null = none).
@@ -245,7 +245,7 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
                 onOpenChange={(open, details) => {
                   if (!open && details.reason === 'outside-press') {
                     // Check if the press landed on a header drag zone —
-                    // if so, let the cell's onClick handle the toggle
+                    // if so, let the cell's onClick handle the toggle.
                     const target = (details.event as MouseEvent)
                       ?.target as Element | null;
 

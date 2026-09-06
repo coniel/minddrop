@@ -26,7 +26,7 @@ export interface TextPlaceholderFieldProps {
 }
 
 // The word counts the slider steps through, coarser as the text
-// gets longer
+// gets longer.
 const DefaultWordCounts = [
   1, 2, 3, 4, 5, 8, 10, 12, 14, 16, 20, 25, 30, 35, 40, 50, 60, 70, 80, 100,
   120, 140, 160, 200, 250, 300,
@@ -42,7 +42,7 @@ export const TextPlaceholderField: React.FC<TextPlaceholderFieldProps> = ({
   wordCounts = DefaultWordCounts,
 }) => {
   // Start the slider at the step closest to the current text's
-  // length, so it picks up where the value left off
+  // length, so it picks up where the value left off.
   const [sliderStep, setSliderStep] = useState(() =>
     closestWordCountStep(value, wordCounts),
   );

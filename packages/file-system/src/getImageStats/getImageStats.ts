@@ -2,11 +2,11 @@ import { Paths } from '@minddrop/utils';
 import { ImageStats } from '../types';
 
 // Resolved analyses keyed by image path, so an image is only ever
-// fetched once per session
+// fetched once per session.
 const cache = new Map<string, ImageStats | null>();
 
 // Requests in progress keyed by image path, so simultaneous lookups
-// of the same image share a single request
+// of the same image share a single request.
 const inFlight = new Map<string, Promise<ImageStats | null>>();
 
 /**
@@ -51,7 +51,7 @@ export function peekImageStats(
   path: string | null,
 ): ImageStats | null | undefined {
   // Nothing to analyse, which is a resolved state rather than a
-  // pending one
+  // pending one.
   if (!path) {
     return null;
   }
@@ -104,7 +104,7 @@ async function fetchImageStats(path: string): Promise<ImageStats | null> {
     return stats;
   } catch {
     // Without a running file server, or for an image the server
-    // could not analyse, the image simply goes unclassified
+    // could not analyse, the image simply goes unclassified.
     cache.set(path, null);
 
     return null;

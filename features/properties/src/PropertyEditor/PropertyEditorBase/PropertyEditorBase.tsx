@@ -142,7 +142,7 @@ export const PropertyEditorBase: React.FC<PropertyEditorBaseProps> = ({
   ]);
 
   // Wrap drag handle props to track drag interactions and
-  // prevent the click handler from opening the editor
+  // prevent the click handler from opening the editor.
   const resolvedDragHandleProps = dragHandleProps
     ? {
         ...dragHandleProps,

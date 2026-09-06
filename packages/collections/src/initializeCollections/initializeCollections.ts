@@ -40,7 +40,7 @@ export async function initializeCollections(): Promise<void> {
   );
 
   // Restore serialized dates and resolve durable item
-  // references back into item IDs
+  // references back into item IDs.
   const collections = rawCollections.map((collection) => ({
     ...restoreDates<Collection>(collection),
     items: ItemReferences.resolve(collection.items),

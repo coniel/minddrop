@@ -12,7 +12,7 @@ import { resolveCollectionFilePath } from '../../utils';
 import { onItemAddressesChanged } from './item-addresses-changed';
 
 // The changed member's ID, present in collection_1 (and its virtual
-// twin) but not collection_2
+// twin) but not collection_2.
 const changedId = collection_1.items[0];
 
 describe('onItemAddressesChanged', () => {

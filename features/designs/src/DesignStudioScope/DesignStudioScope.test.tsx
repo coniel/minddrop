@@ -14,7 +14,7 @@ import { DesignStudioScope } from './DesignStudioScope';
 const { design_books, design_space_virtual } = DesignFixtures;
 
 // The design's title property, carrying a placeholder for elements
-// bound to it to display
+// bound to it to display.
 const design_with_placeholder: DatabaseDesign = {
   ...design_books,
   properties: design_books.properties.map((property) => {
@@ -51,7 +51,7 @@ describe('<DesignStudioScope />', () => {
     renderScope(design_space_virtual, <PlaceholderConsumer />);
 
     // With no property to resolve, the element falls back to the
-    // bound property's name
+    // bound property's name.
     screen.getByText('Title');
   });
 });

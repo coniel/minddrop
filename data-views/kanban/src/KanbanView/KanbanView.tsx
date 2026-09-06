@@ -488,7 +488,7 @@ export const KanbanViewComponent: React.FC<
       targetEntryIndex: number,
     ) => {
       // Check that a group property is available to write the
-      // column's value to
+      // column's value to.
       if (!property) {
         return;
       }
@@ -654,7 +654,7 @@ function resolveColumnClasses(
   }
 
   // Columns scrolling on their own are bound to the board's
-  // height rather than growing past it
+  // height rather than growing past it.
   if (scroll) {
     classes.push('kanban-view-columns-scroll');
   }

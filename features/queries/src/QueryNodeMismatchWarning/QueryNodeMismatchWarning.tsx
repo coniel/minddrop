@@ -25,7 +25,7 @@ export const QueryNodeMismatchWarning: React.FC<
   QueryNodeMismatchWarningProps
 > = ({ query, nodeId }) => {
   // Sources connected to the node whose entries lack the
-  // node's property
+  // node's property.
   const mismatchedDatabases = useMemo(
     () => getQueryMismatchedSourceDatabases(query, nodeId),
     [query, nodeId],

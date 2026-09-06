@@ -59,7 +59,7 @@ const DesignStudioElementInner: React.FC<{
 
   // Panel regions and the content region are fixed in place: they
   // can't be dragged, but still accept drops so content can be
-  // dropped inside them
+  // dropped inside them.
   const isRegion =
     element.type === 'page-panel' ||
     (element.type === 'container' &&
@@ -74,14 +74,14 @@ const DesignStudioElementInner: React.FC<{
   });
 
   // Select the element to open its style editor, activating the
-  // containing layout
+  // containing layout.
   const handleClick = useCallback(
     (event: React.MouseEvent) => {
       event.stopPropagation();
 
       // Shift-clicking selects the containing element instead, for
       // reaching a parent covered entirely by its children, and
-      // climbs a level further per click towards the root
+      // climbs a level further per click towards the root.
       if (event.shiftKey && 'parent' in element) {
         studio.selectElement(
           resolveShiftClickTarget(studio, element, layoutId ?? undefined),
@@ -97,7 +97,7 @@ const DesignStudioElementInner: React.FC<{
   );
 
   // Build the props that the component must spread
-  // on its outermost DOM element
+  // on its outermost DOM element.
   const rootProps = useMemo(
     () => ({
       ...dragDropProps,
@@ -122,13 +122,13 @@ const DesignStudioElementInner: React.FC<{
   }
 
   // Every element type which has children provides a StudioComponent, so
-  // only leaf elements reach the display fallback
+  // only leaf elements reach the display fallback.
   if ('children' in element) {
     return null;
   }
 
   // Leaf elements render their display component inside a wrapper
-  // carrying the interaction props
+  // carrying the interaction props.
   return (
     <StudioLeafElement element={element} rootProps={rootProps}>
       <ui.DisplayComponent element={element} />
@@ -163,7 +163,7 @@ function resolveShiftClickTarget(
   }
 
   // The selection already sits on the chain: climb one level
-  // above it, staying on the root once reached
+  // above it, staying on the root once reached.
   const selectedIndex = chain.indexOf(studio.getSelectedElementId() ?? '');
 
   if (selectedIndex !== -1) {

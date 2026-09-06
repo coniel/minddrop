@@ -44,7 +44,7 @@ export function sortDatabaseEntries(
   const modifier = direction === 'ascending' ? 1 : -1;
 
   // Resolve the sorted value of each entry up front, so that the
-  // comparator does not repeat the lookup on every comparison
+  // comparator does not repeat the lookup on every comparison.
   const values = new Map<string, PropertyValue>(
     entries.map((entry) => [entry.id, resolveSortValue(entry, sort)]),
   );
@@ -79,7 +79,7 @@ export function sortDatabaseEntries(
   });
 
   // The trailing entries keep an order of their own, by created
-  // date rather than by the property none of them have
+  // date rather than by the property none of them have.
   missing.sort(compareCreated);
 
   return [...sorted, ...missing];

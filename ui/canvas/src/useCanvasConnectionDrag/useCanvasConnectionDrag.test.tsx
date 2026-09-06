@@ -10,7 +10,7 @@ import {
 } from './useCanvasConnectionDrag';
 
 // Renders a connection handle for the node's right side, driven
-// by the hook
+// by the hook.
 const TestHandles: React.FC<UseCanvasConnectionDragOptions> = (options) => {
   const { getConnectionHandleProps } = useCanvasConnectionDrag(options);
 
@@ -20,7 +20,7 @@ const TestHandles: React.FC<UseCanvasConnectionDragOptions> = (options) => {
 };
 
 // Renders the handles within a canvas provider backed by the
-// given store, with the source node's frame pre-registered
+// given store, with the source node's frame pre-registered.
 const renderHandles = (
   store: CanvasStore,
   options: Partial<UseCanvasConnectionDragOptions> = {},

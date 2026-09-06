@@ -55,7 +55,7 @@ const storyLoaders = new Set<StoryLoader>();
 const loadedStoryLoaders = new Set<StoryLoader>();
 
 // Stories are handed out grouped, which is recomputed only when
-// a story is registered
+// a story is registered.
 let snapshot: StoryGroup[] = [];
 
 /**
@@ -117,7 +117,7 @@ export function registerStoryLoader(loader: StoryLoader): void {
  */
 export async function loadStories(): Promise<void> {
   // Loaders which have already run would re-register the same
-  // stories, so only the outstanding ones are run
+  // stories, so only the outstanding ones are run.
   const pendingLoaders = [...storyLoaders].filter(
     (loader) => !loadedStoryLoaders.has(loader),
   );

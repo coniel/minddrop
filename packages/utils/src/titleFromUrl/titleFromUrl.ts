@@ -13,14 +13,14 @@ export function titleFromUrl(url: string): string {
   }
 
   // Remove file extensions but preserve TLDs
-  // Only remove extension if there's a path separator before it
+  // Only remove extension if there's a path separator before it.
   title = title.replace(/\/[^/]*\.[a-zA-Z0-9]+$/, (match) => {
     // Remove the extension from the last segment
     return match.replace(/\.[a-zA-Z0-9]+$/, '');
   });
 
   // Replace characters that are invalid on Windows, macOS, or Linux
-  // Windows: < > : " / \ | ? *
+  // Windows: < > : " / \ | ? *.
   title = title.replace(/[<>:"|?*\\/]/g, '_');
 
   // Replace other problematic characters

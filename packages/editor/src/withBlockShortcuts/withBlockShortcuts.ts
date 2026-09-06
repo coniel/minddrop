@@ -45,7 +45,7 @@ export function withBlockShortcuts<TElement extends Element = Element>(
     }
 
     // Shortcuts belong to top level blocks, not to the internal structure
-    // of one, such as a table's cells
+    // of one, such as a table's cells.
     if (entry[1].length !== 1) {
       return;
     }
@@ -53,7 +53,7 @@ export function withBlockShortcuts<TElement extends Element = Element>(
     const textNode = element.children[0];
 
     // The shortcut is typed at the start of the block, which is where its
-    // first text node is
+    // first text node is.
     if (!Text.isText(textNode)) {
       return;
     }
@@ -113,7 +113,7 @@ function resolveShortcuts<TElement extends Element>(
   );
 
   // Ordered longest first so that a trigger which starts with another one
-  // is still reachable
+  // is still reachable.
   return [...typeShortcuts, ...FrameShortcuts].sort(
     (shortcut, other) => other.trigger.length - shortcut.trigger.length,
   );

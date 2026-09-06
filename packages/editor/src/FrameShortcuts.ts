@@ -13,7 +13,7 @@ import { BlockShortcut } from './types';
 const BulletMarkers = ['-', '*', '+'];
 
 // The bullet given to an item created by a shortcut which types no marker of
-// its own, being the checkbox shortcuts
+// its own, being the checkbox shortcuts.
 const DefaultBulletMarker = '-';
 
 // The delimiters CommonMark accepts after an ordered item's number
@@ -66,7 +66,7 @@ function buildListItemShortcut(
 ): BlockShortcut {
   return {
     // An ordered list is started by a number, of which only the first is
-    // honoured, so the shortcut is the list's own start
+    // honoured, so the shortcut is the list's own start.
     trigger: ordered ? `1${marker} ` : `${marker} `,
     apply: (editor, path) => {
       const frame: ListItemFrame = {
@@ -104,7 +104,7 @@ function buildCheckboxShortcut(trigger: string): BlockShortcut {
       }
 
       // Anywhere else it makes the block a task item of its own, a task item
-      // being a list item which carries a checked state
+      // being a list item which carries a checked state.
       const frame: ListItemFrame = {
         id: uuid(),
         kind: 'list-item',

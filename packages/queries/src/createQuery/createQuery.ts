@@ -29,7 +29,7 @@ export async function createQuery(name?: string): Promise<Query> {
     name: name || i18n.t('queries.labels.query'),
     // Every query graph starts with an unconfigured source node
     // and its permanent results node, spaced to fit a filter
-    // node between them
+    // node between them.
     nodes: [
       createQueryNode('source', DEFAULT_SOURCE_NODE_POSITION),
       createQueryNode('results', DEFAULT_RESULTS_NODE_POSITION),

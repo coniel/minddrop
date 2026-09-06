@@ -205,7 +205,7 @@ export function createArrayStore<TItem extends object>(
         }
 
         // Find the index of the first reordered item in the original array
-        // to know where to splice the reordered block back in
+        // to know where to splice the reordered block back in.
         const firstReorderedIndex = state.items.findIndex((item) =>
           orderMap.has(item[identifierKey] as string),
         );
@@ -314,7 +314,7 @@ export function createArrayStore<TItem extends object>(
 
       return new Promise<void>((resolve) => {
         // Store the resolve callback so the persistent hydrate
-        // listener can resolve the promise after loading data
+        // listener can resolve the promise after loading data.
         hydrateResolve = resolve;
 
         // Dispatch a hydrate request for the platform layer

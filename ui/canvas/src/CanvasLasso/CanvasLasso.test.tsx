@@ -6,7 +6,7 @@ import { CanvasStore, createCanvasStore } from '../createCanvasStore';
 import { CanvasLasso } from './CanvasLasso';
 
 // Renders the marquee within a canvas provider backed by the
-// given store
+// given store.
 const renderLasso = (store: CanvasStore) =>
   render(
     <CanvasProvider store={store}>

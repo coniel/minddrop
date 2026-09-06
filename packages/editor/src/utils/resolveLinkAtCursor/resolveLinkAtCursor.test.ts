@@ -12,7 +12,7 @@ import { Editor } from '../../types';
 import { resolveLinkAtCursor } from './resolveLinkAtCursor';
 
 // Creates an editor holding a paragraph with the given inline element
-// between two runs of text
+// between two runs of text.
 function createEditorWithInline(inline: Element): Editor {
   return createTestEditor([
     Ast.generateElement<ParagraphElement>('paragraph', {

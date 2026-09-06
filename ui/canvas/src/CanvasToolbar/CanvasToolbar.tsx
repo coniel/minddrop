@@ -108,7 +108,7 @@ export const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
   }, [handleSetZoom]);
 
   // Switch the background grid pattern, narrowing the submenu's
-  // stringly typed value back onto the grid union
+  // stringly typed value back onto the grid union.
   const handleGridChange = useCallback(
     (value: string) => {
       if (value === 'none' || value === 'dots' || value === 'lines') {

@@ -3,7 +3,7 @@ import { DesignRoleConfig } from '../../types';
 import { resolveRoleStyle } from './resolveRoleStyle';
 
 // A context-adapting role with a size axis restricted away from
-// list layouts
+// list layouts.
 const role: DesignRoleConfig = {
   id: 'role',
   elementType: 'text',
@@ -64,7 +64,7 @@ describe('resolveRoleStyle', () => {
   it('applies the selected option of each variant axis', () => {
     expect(resolveRoleStyle(role, { size: 'lg' }, 'card')).toMatchObject({
       // The option's context-independent styles apply alongside
-      // its context styles
+      // its context styles.
       italic: true,
       fontSize: 'xl',
     });

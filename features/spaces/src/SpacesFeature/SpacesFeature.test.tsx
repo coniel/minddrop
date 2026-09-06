@@ -15,7 +15,7 @@ describe('<SpacesFeature />', () => {
     setup();
 
     // Load a space into the store and its file into the mock
-    // file system so it can be deleted
+    // file system so it can be deleted.
     Spaces.Store.load([space_1]);
     MockFs.addFiles(SpaceFixtures.getSpaceFiles());
   });

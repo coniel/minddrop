@@ -63,7 +63,7 @@ export interface QueryCollectionFilterNodeCardProps {
 }
 
 // Option value of the any-collection pick, which has no
-// collection ID of its own
+// collection ID of its own.
 const ANY_COLLECTION_VALUE = 'any-collection';
 
 // The membership operators offered by the card
@@ -92,7 +92,7 @@ export const QueryCollectionFilterNodeCard: React.FC<
   const { t } = useTranslation({ keyPrefix: 'queries.collectionPicker' });
 
   // The any-collection option, kept in its own unlabelled group
-  // above the named collections
+  // above the named collections.
   const anyCollectionGroup = useMemo<ComboboxOptionGroup>(
     () => ({
       value: 'any',
@@ -127,7 +127,7 @@ export const QueryCollectionFilterNodeCard: React.FC<
   );
 
   // Skip the collections group while there are none, leaving the
-  // any-collection option on its own
+  // any-collection option on its own.
   const groups = collectionGroup.items.length
     ? [anyCollectionGroup, collectionGroup]
     : [anyCollectionGroup];
@@ -165,7 +165,7 @@ export const QueryCollectionFilterNodeCard: React.FC<
     }
 
     // The any-collection option spans every collection instead
-    // of naming one
+    // of naming one.
     const anyCollection = picked?.value === ANY_COLLECTION_VALUE;
 
     Queries.update(query.id, {

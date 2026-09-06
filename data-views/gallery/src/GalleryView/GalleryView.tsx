@@ -20,7 +20,7 @@ export const GalleryViewComponent: React.FC<
   const [renderCount, setRenderCount] = useState(BATCH_SIZE);
 
   // The minimum width a column may take, which the column layout
-  // fits as many columns as possible into
+  // fits as many columns as possible into.
   const minColumnWidth =
     view.options?.minColumnWidth || defaultGalleryViewOptions.minColumnWidth;
 
@@ -48,7 +48,7 @@ export const GalleryViewComponent: React.FC<
   }, [entries.length]);
 
   // Load more entries when the user scrolls near the bottom
-  // of the scroll area viewport
+  // of the scroll area viewport.
   useEffect(() => {
     if (!hasMore) {
       return;

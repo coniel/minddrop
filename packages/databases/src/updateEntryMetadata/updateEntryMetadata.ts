@@ -27,7 +27,7 @@ export async function updateEntryMetadata(
   const database = getDatabase(entry.database);
 
   // Set the metadata on the stored entry so successive updates
-  // compose from current state
+  // compose from current state.
   DatabaseEntriesStore.update(entryId, { metadata });
 
   // Dispatch metadata updated event

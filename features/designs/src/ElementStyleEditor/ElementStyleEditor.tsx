@@ -49,7 +49,7 @@ export const ElementStyleEditor: React.FC = () => {
   const element = useElement(selectedElementId || '');
 
   // Reset the element's styling outright: replacing the element
-  // is what unsets keys a merge cannot remove
+  // is what unsets keys a merge cannot remove.
   function handleClearStyling() {
     if (!selectedElementId || !element) {
       return;
@@ -74,7 +74,7 @@ export const ElementStyleEditor: React.FC = () => {
     }
 
     // Collapse the sections left open by hand, so the cleared
-    // panel does not linger expanded
+    // panel does not linger expanded.
     setResetSignal((signal) => signal + 1);
   }
 
@@ -94,14 +94,14 @@ export const ElementStyleEditor: React.FC = () => {
   }
 
   // The element's display identity: its role's label and icon when
-  // it plays one, the element type's otherwise
+  // it plays one, the element type's otherwise.
   const nodeLabel = resolveNodeLabel(element);
   // Property elements take their category from their selected
-  // presentation variant
+  // presentation variant.
   const StyleEditor =
     styleCategoryEditors[Designs.getElementStyleCategory(element)];
   // Only element types which format their value have one; property
-  // elements format per their property type
+  // elements format per their property type.
   const FormatEditor =
     elementFormatEditorMap[
       Designs.isPropertyElement(element) ? element.propertyType : element.type

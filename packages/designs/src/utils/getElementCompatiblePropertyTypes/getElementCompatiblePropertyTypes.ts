@@ -18,7 +18,7 @@ export function getElementCompatiblePropertyTypes(
   element: DesignElementStyleSource,
 ): readonly PropertyType[] {
   // Property elements bind the types their property element
-  // config declares
+  // config declares.
   if (isPropertyElement(element)) {
     const config = getPropertyElementConfig(element.propertyType, false);
 

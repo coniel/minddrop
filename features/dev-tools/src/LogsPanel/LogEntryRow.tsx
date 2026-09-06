@@ -39,7 +39,7 @@ export const LogEntryRow: React.FC<LogEntryRowProps> = ({
   const label = getLogLabel(entry);
 
   // The label is the first of several values, so it is not
-  // repeated among the logged values
+  // repeated among the logged values.
   const values = label ? entry.args.slice(1) : entry.args;
   const labelActive =
     quickFilter?.type === 'label' && quickFilter.value === label;

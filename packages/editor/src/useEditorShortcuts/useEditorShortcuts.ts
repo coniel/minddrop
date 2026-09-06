@@ -17,7 +17,7 @@ export function useEditorShortcuts(
   enabled: boolean,
 ): (event: React.KeyboardEvent<HTMLDivElement>) => boolean {
   // Matched by key rather than by code, so that a shortcut means the same
-  // thing on every keyboard layout
+  // thing on every keyboard layout.
   const matchers = useMemo(
     () =>
       EditorShortcuts.map(
@@ -33,7 +33,7 @@ export function useEditorShortcuts(
         ([matches, shortcut]) =>
           // A shortcut which changes the document is inert in a read-only
           // editor, but the keystroke is still that shortcut's, so no other
-          // shortcut takes it
+          // shortcut takes it.
           (enabled || shortcut.readOnly) && matches(event.nativeEvent),
       );
 
@@ -44,7 +44,7 @@ export function useEditorShortcuts(
       const consumed = match[1].run(editor, context);
 
       // A shortcut which declined the keystroke leaves it as it was, so
-      // that whatever else wants it still receives it
+      // that whatever else wants it still receives it.
       if (consumed) {
         event.preventDefault();
       }

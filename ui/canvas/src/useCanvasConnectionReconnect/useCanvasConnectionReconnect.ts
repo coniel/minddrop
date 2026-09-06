@@ -115,7 +115,7 @@ export function useCanvasConnectionReconnect(
   const { onReconnect, resolveTarget } = options;
 
   // The pressed connection, armed until the cursor travels past
-  // the drag threshold
+  // the drag threshold.
   const [pending, setPending] = useState<PendingReconnect | null>(null);
 
   // Whether the armed press has become a drag
@@ -128,7 +128,7 @@ export function useCanvasConnectionReconnect(
   const context = useOptionalCanvasContext();
 
   // Hold the pointer for the drag, keeping the curve's cursor
-  // over whatever content the end is dragged across
+  // over whatever content the end is dragged across.
   useInteractionLock(dragging ? 'grabbing' : null);
 
   // Convert a mouse event's position to canvas coordinates
@@ -170,7 +170,7 @@ export function useCanvasConnectionReconnect(
       didDrag.current = false;
 
       // Arm the press; the drag starts once the cursor travels
-      // past the drag threshold
+      // past the drag threshold.
       setPending({
         connection,
         client: { x: event.clientX, y: event.clientY },
@@ -181,7 +181,7 @@ export function useCanvasConnectionReconnect(
   );
 
   // Start the drag past the threshold, then track the cursor and
-  // hovered target
+  // hovered target.
   const handleMouseMove = useCallback(
     (event: MouseEvent) => {
       if (!context || !pending) {
@@ -216,7 +216,7 @@ export function useCanvasConnectionReconnect(
         }
 
         // Anchor the drag to the fixed end, marking the nearer
-        // end as the one being re-routed
+        // end as the one being re-routed.
         context.store.startConnectionDrag(
           fixed.end.nodeId,
           fixed.end.side,
@@ -238,7 +238,7 @@ export function useCanvasConnectionReconnect(
       }
 
       // Resolve the target nearest the cursor, excluding the
-      // fixed end's node
+      // fixed end's node.
       let target = getConnectionDropTarget(
         context.store.getNodes(),
         point,
@@ -257,7 +257,7 @@ export function useCanvasConnectionReconnect(
   );
 
   // End the drag on mouseup, reporting the re-connection when
-  // dropped on a target
+  // dropped on a target.
   const handleMouseUp = useCallback(() => {
     if (!context) {
       return;

@@ -187,7 +187,7 @@ describe('resolveAncestryPrefixes', () => {
       const nestedItem = generateListItemFrame('item-2');
 
       // The previous block sat in the outer item only, so the block starts
-      // the nested item
+      // the nested item.
       const prefixes = resolveAncestryPrefixes([item, nestedItem], [item]);
 
       expect(prefixes).toEqual({ first: '  - ', continuation: '    ' });

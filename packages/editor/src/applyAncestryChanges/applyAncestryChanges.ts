@@ -21,7 +21,7 @@ export function applyAncestryChanges(
   const changes = resolveAncestryChanges(elements, indexes, resolveAncestry);
 
   // Applied as one change so that a move which spans several blocks is
-  // undone in one step
+  // undone in one step.
   SlateEditor.withoutNormalizing(editor, () => {
     changes.forEach((ancestry, index) => {
       Transforms.setNodes<Element>(editor, { ancestry }, { at: [index] });

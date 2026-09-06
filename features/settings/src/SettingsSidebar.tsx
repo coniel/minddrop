@@ -39,7 +39,7 @@ export const SettingsSidebar: React.FC<SettingsSidebarProps> = ({
   }
 
   // Record the selected settings view on the app view so the
-  // selection survives the view remounting on tab switches
+  // selection survives the view remounting on tab switches.
   function handleSelectView(settingsViewId: string) {
     Events.dispatch(Views.events.Update, {
       id: SettingsViewId,

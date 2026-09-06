@@ -57,7 +57,7 @@ export async function updateDatabaseEntry(
   const database = getDatabase(originalEntry.database);
 
   // Populate the last-modified timestamp property value so it persists to
-  // the entry file
+  // the entry file.
   updatedEntry.properties = setTimestampProperties(
     database.properties,
     updatedEntry.properties,
@@ -66,7 +66,7 @@ export async function updateDatabaseEntry(
   );
 
   // Record the timestamp in the entry's metadata too, so that the app's
-  // own record of it does not drift from the property
+  // own record of it does not drift from the property.
   updatedEntry.metadata = { ...originalEntry.metadata, lastModified: now };
 
   // Update the entry in the store

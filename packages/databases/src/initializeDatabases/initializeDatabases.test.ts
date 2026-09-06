@@ -28,7 +28,7 @@ describe('initializeDatabases', () => {
 
   beforeEach(() => {
     // Load fixture files only, the stores are hydrated by
-    // initializeDatabases itself
+    // initializeDatabases itself.
     setup({ loadDatabases: false, loadDatabaseEntries: false });
 
     // Register a fake backend adapter serving the fixture data

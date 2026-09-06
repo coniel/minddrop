@@ -4,7 +4,7 @@ import { ItemReferenceAdapter } from '../types';
 import { resolveItemReferences } from './resolveItemReferences';
 
 // Claims addresses inside the 'Books' database, marking the
-// 'New book' entry as valid but not yet existing
+// 'New book' entry as valid but not yet existing.
 const entryAdapter: ItemReferenceAdapter = {
   type: 'database-entry',
   serialize: (id) => id,

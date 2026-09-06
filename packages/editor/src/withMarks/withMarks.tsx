@@ -12,7 +12,7 @@ import { Editor, InlineShortcut, MarkConfig, MarkShortcut } from '../types';
 import { withInlineShortcuts } from '../withInlineShortcuts';
 
 // The marks a code span cannot carry, along with the delimiters they would
-// have been written with
+// have been written with.
 const ConflictingCodeMarks = [
   'bold',
   'boldSyntax',
@@ -110,7 +110,7 @@ export function withMarks(
     const [node, path] = entry;
 
     // A code span is literal, so markdown has no way to write another mark
-    // inside one
+    // inside one.
     if (Text.isText(node) && node.code) {
       const conflicting = ConflictingCodeMarks.filter((key) => key in node);
 

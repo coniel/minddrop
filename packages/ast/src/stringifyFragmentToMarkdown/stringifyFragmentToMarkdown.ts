@@ -42,7 +42,7 @@ interface OpenMark {
 export function stringifyFragmentToMarkdown(fragment: Fragment): string {
   let buffer = '';
   // Marks currently open, outermost first, so they can be closed in the
-  // reverse of the order they were opened
+  // reverse of the order they were opened.
   const openMarks: OpenMark[] = [];
 
   fragment.forEach((child) => {
@@ -76,7 +76,7 @@ function stringifyInlineElement(element: Element): string {
   const config = getElementTypeConfig(element.type);
 
   // An element with no config cannot be serialized, so fall back to its text
-  // content rather than dropping it
+  // content rather than dropping it.
   if (!config) {
     return stringifyFragmentToMarkdown(element.children);
   }

@@ -38,7 +38,7 @@ export const PropertyLabelSection: React.FC<StyleEditorProps> = ({
   const element = useElement(elementId);
   const editor = useStyleEditor(elementId);
   // The label styles through a nested object whose presence is
-  // what enables the rendering
+  // what enables the rendering.
   const label = useNestedStyle(editor, 'label');
 
   // Only value-like variants render the chrome
@@ -51,24 +51,24 @@ export const PropertyLabelSection: React.FC<StyleEditorProps> = ({
   }
 
   // The text the previews label their value line with: the bound
-  // property's name, as the chrome itself renders it
+  // property's name, as the chrome itself renders it.
   const config = Designs.getPropertyElementConfig(element.propertyType, false);
   const labelText = element.property ?? (config ? t(config.label) : '');
 
   // Enable the label at its default variant when the section is
-  // opened, so opening alone renders it
+  // opened, so opening alone renders it.
   function handleOpen() {
     label.setValue('variant', 'above');
   }
 
   // The colour toggle shows the label's effective colour: its own
-  // value, else the subtle base look
+  // value, else the subtle base look.
   function getResolvedColour<TValue>(key: string): TValue | undefined {
     return (label.getValue(key) ?? 'subtle') as TValue;
   }
 
   // A variant's sample: the label piece arranged around the value
-  // line as the variant renders it
+  // line as the variant renders it.
   function variantSample(variant: PropertyLabelVariant): React.ReactNode {
     return (
       <PropertyChromeVariantPreview

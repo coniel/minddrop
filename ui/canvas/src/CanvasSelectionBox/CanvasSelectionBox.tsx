@@ -26,7 +26,7 @@ export const CanvasSelectionBox: React.FC<CanvasSelectionBoxProps> = ({
 }) => {
   const { store } = useCanvasContext();
   // Where the drag started: the cursor position, and the bounds
-  // origin the grid snaps against
+  // origin the grid snaps against.
   const dragStart = useRef<DragStart | null>(null);
   const [dragging, setDragging] = useState(false);
   const selectedNodeIds = useCanvasStore((state) =>
@@ -36,7 +36,7 @@ export const CanvasSelectionBox: React.FC<CanvasSelectionBoxProps> = ({
   const zoom = useCanvasStore((state) => state.zoom);
 
   // Hold the pointer for the drag, so moving the group over text
-  // content neither selects it nor swaps the cursor
+  // content neither selects it nor swaps the cursor.
   useInteractionLock(dragging ? 'grabbing' : null);
 
   // The bounds of the selected nodes. Their registered frames
@@ -47,7 +47,7 @@ export const CanvasSelectionBox: React.FC<CanvasSelectionBoxProps> = ({
     : null;
 
   // Start a group drag, anchoring it to the cursor and the
-  // current bounds
+  // current bounds.
   const handleMouseDown = useCallback(
     (event: React.MouseEvent) => {
       // Only the left button drags the group
@@ -56,7 +56,7 @@ export const CanvasSelectionBox: React.FC<CanvasSelectionBoxProps> = ({
       }
 
       // Keep the browser from starting a text selection anchored
-      // at the box
+      // at the box.
       event.preventDefault();
 
       dragStart.current = {
@@ -72,7 +72,7 @@ export const CanvasSelectionBox: React.FC<CanvasSelectionBoxProps> = ({
   );
 
   // Track the drag, publishing the offset for the selected nodes
-  // to follow
+  // to follow.
   useEffect(() => {
     if (!dragging) {
       return;
@@ -86,7 +86,7 @@ export const CanvasSelectionBox: React.FC<CanvasSelectionBoxProps> = ({
       }
 
       // Nodes live in the zoomed canvas coordinate space, so
-      // screen-pixel mouse deltas are scaled down by the zoom
+      // screen-pixel mouse deltas are scaled down by the zoom.
       const scale = store.getZoom();
       const rawX = (event.clientX - start.clientX) / scale;
       const rawY = (event.clientY - start.clientY) / scale;
@@ -116,7 +116,7 @@ export const CanvasSelectionBox: React.FC<CanvasSelectionBoxProps> = ({
       }
 
       // Cleared after reporting, so the consumer's new positions
-      // and the dropped offset land in the same render
+      // and the dropped offset land in the same render.
       store.clearSelectionDrag();
     };
 
@@ -130,7 +130,7 @@ export const CanvasSelectionBox: React.FC<CanvasSelectionBoxProps> = ({
   }, [dragging, store, onNodesFrameChange]);
 
   // A single node keeps its own outline and handles, so the box
-  // only wraps an actual group
+  // only wraps an actual group.
   if (!selectedNodeIds || selectedNodeIds.length < 2 || !bounds) {
     return null;
   }
@@ -145,7 +145,7 @@ export const CanvasSelectionBox: React.FC<CanvasSelectionBoxProps> = ({
         width: bounds.width + SELECTION_BOX_PADDING * 2,
         height: bounds.height + SELECTION_BOX_PADDING * 2,
         // The layer is scaled by the canvas transform, so the
-        // border is unscaled to stay one screen pixel wide
+        // border is unscaled to stay one screen pixel wide.
         borderWidth: 1 / zoom,
       }}
       onMouseDown={handleMouseDown}

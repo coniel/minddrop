@@ -30,7 +30,7 @@ describe('getCompatibleDesignRoles', () => {
 
   it('does not exclude on unset filter axes', () => {
     // A filter without a layout type must not exclude roles
-    // restricted on the layout type axis
+    // restricted on the layout type axis.
     const roles = getCompatibleDesignRoles({ designType: 'database' });
 
     expect(roles).toContain(PageContentRole);
@@ -38,7 +38,7 @@ describe('getCompatibleDesignRoles', () => {
 
   it('excludes roles restricted to a parent role when none is given', () => {
     // No built-in role restricts by parent role, so all page roles
-    // remain when no parent role is set
+    // remain when no parent role is set.
     const roles = getCompatibleDesignRoles({
       designType: 'database',
       layoutType: 'page',

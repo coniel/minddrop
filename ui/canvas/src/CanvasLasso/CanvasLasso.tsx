@@ -26,7 +26,7 @@ export const CanvasLasso: React.FC = () => {
         width: frame.width,
         height: frame.height,
         // The layer is scaled by the canvas transform, so the
-        // border is unscaled to stay one screen pixel wide
+        // border is unscaled to stay one screen pixel wide.
         borderWidth: 1 / zoom,
       }}
     />

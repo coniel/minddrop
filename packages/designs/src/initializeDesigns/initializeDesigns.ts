@@ -36,7 +36,7 @@ export async function initializeDesigns(): Promise<void> {
   const entries = await Fs.readDir(resolveDesignsDirPath());
 
   // Read a design from each entry, discarding entries which are
-  // not valid design bundles
+  // not valid design bundles.
   const designs = (
     await Promise.all(entries.map((entry) => readDesign(entry.path)))
   ).filter((design) => design !== null);

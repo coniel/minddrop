@@ -21,7 +21,7 @@ export const RoleVariantFields: React.FC<StyleEditorProps> = ({
   const studio = useDesignStudio();
   const element = useElement(elementId);
   // The editor edits the active layout, which decides the axes the
-  // role offers
+  // role offers.
   const layoutType = useActiveLayoutType();
 
   // Only role elements carry variants
@@ -40,7 +40,7 @@ export const RoleVariantFields: React.FC<StyleEditorProps> = ({
   const axes = DesignRoles.getVariantAxes(role, layoutType ?? undefined);
 
   // A role with a single fixed look in this context offers nothing
-  // to choose
+  // to choose.
   if (!axes.length) {
     return null;
   }
@@ -66,7 +66,7 @@ export const RoleVariantFields: React.FC<StyleEditorProps> = ({
     <PanelSection label={sectionLabelKey('variants')}>
       {axes.map((axis) => {
         // Options in their declared order, which is the order the
-        // role author intended them to be read in
+        // role author intended them to be read in.
         const options: SelectOption<string>[] = axis.options.map((option) => ({
           value: option.id,
           label: option.label,

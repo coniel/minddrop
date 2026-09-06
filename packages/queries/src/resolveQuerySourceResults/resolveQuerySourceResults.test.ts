@@ -7,7 +7,7 @@ import { Query } from '../types';
 import { resolveQuerySourceResults } from './resolveQuerySourceResults';
 
 // Mock SQL query execution, the query builder is tested in the
-// databases package against a real database
+// databases package against a real database.
 vi.mock('@minddrop/databases', async (importOriginal) => {
   const original = await importOriginal<typeof import('@minddrop/databases')>();
 
@@ -77,7 +77,7 @@ describe('resolveQuerySourceResults', () => {
     QueriesStore.load([middle]);
 
     // The middle query resolves through to the first query's
-    // databases, so it returns entries rather than nothing
+    // databases, so it returns entries rather than nothing.
     await expect(resolveQuerySourceResults(outer)).resolves.toEqual({
       [middle.id]: ['database-entry_1', 'database-entry_2'],
     });
@@ -104,7 +104,7 @@ describe('resolveQuerySourceResults', () => {
     QueriesStore.load([first, second]);
 
     // The cycle closes on the second query, which has no
-    // database source of its own, so it matches nothing
+    // database source of its own, so it matches nothing.
     await expect(resolveQuerySourceResults(first)).resolves.toEqual({
       query_second: [],
     });

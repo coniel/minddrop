@@ -84,7 +84,7 @@ async function runInitialization(): Promise<void> {
   initializeSpacesFeature();
 
   // Register listeners that persist and hydrate app-config
-  // stores to JSON files in the AppData directory
+  // stores to JSON files in the AppData directory.
   registerAppDataStoreListeners();
 
   // Hydrate app UI state from persisted config
@@ -100,7 +100,7 @@ async function runInitialization(): Promise<void> {
   await SpaceViewStateStore.hydrate();
 
   // Register dev tools translations and panels, and hydrate
-  // their UI state
+  // their UI state.
   await initializeDevToolsFeature();
 
   registerBlockSelectionSerializer();
@@ -119,7 +119,7 @@ async function runInitialization(): Promise<void> {
   await Workspaces.initialize();
 
   // Register listeners that persist and hydrate workspace-config
-  // stores to JSON files in the workspace config directory
+  // stores to JSON files in the workspace config directory.
   registerWorkspaceStoreListeners();
 
   // Hydrate layout region sizes (dialogs, panels) from workspace config
@@ -136,11 +136,11 @@ async function runInitialization(): Promise<void> {
   Sql.initialize();
 
   // Subscribe to content package events before content
-  // initialization so no rename goes unrecorded
+  // initialization so no rename goes unrecorded.
   Snapshots.initialize();
 
   // Load global tags and tag groups before entries referencing
-  // them are loaded
+  // them are loaded.
   await Tags.initialize();
 
   const { schemaChanged } = await Databases.initialize();
@@ -160,7 +160,7 @@ async function runInitialization(): Promise<void> {
   await Spaces.initialize();
 
   // Initialize the MiniSearch index and register event
-  // listeners for incremental sync
+  // listeners for incremental sync.
   await Search.initialize({ schemaChanged });
 
   // Initialize global selection keyboard shortcuts
@@ -170,7 +170,7 @@ async function runInitialization(): Promise<void> {
   await initializeTheme();
 
   // Cache the image brightness analyses the file server already
-  // holds, so that images are treated on their first render
+  // holds, so that images are treated on their first render.
   await Fs.preloadImageStats();
 
   // Watch the workspace directories for changes made outside the

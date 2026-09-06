@@ -55,7 +55,7 @@ export async function renameDatabaseEntry<
 
   if (isInEntrySubdir) {
     // Rename the entry's subdirectory, which moves the entry file
-    // and all associated files within it to the new directory
+    // and all associated files within it to the new directory.
     const grandParentDir = Fs.parentDirPath(parentDir);
     const newEntryDir = Fs.concatPath(grandParentDir, finalNewTitle);
 

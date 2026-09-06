@@ -22,7 +22,7 @@ const PARAGRAPH_ELEMENT_TYPE = 'paragraph';
  */
 export function selectAutoFocusTarget(editor: Editor): void {
   // Blank documents place the caret in the title so it can be
-  // typed right away
+  // typed right away.
   if (startsWithTitle(editor) && hasEmptyBody(editor)) {
     Transforms.select(editor, SlateEditor.end(editor, [0]));
 
@@ -34,7 +34,7 @@ export function selectAutoFocusTarget(editor: Editor): void {
   const lastNode = editor.children[lastIndex] as Descendant | undefined;
 
   // Append an empty paragraph when the caret cannot be placed in
-  // the last node
+  // the last node.
   if (!lastNode || isVoidElement(editor, lastNode)) {
     Transforms.insertNodes(
       editor,
@@ -73,7 +73,7 @@ function hasEmptyBody(editor: Editor): boolean {
   const body = editor.children.slice(1);
 
   // The body is empty when every node is a textless non-void
-  // element, since void elements count as content
+  // element, since void elements count as content.
   return body.every(
     (node) =>
       SlateElement.isElement(node) &&

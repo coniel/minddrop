@@ -23,7 +23,7 @@ export const LogsPanel: React.FC = () => {
   );
   const [newestFirst, setNewestFirst] = useState(true);
   // Bumped to collapse every expanded value, which remounts the
-  // entries and so resets them to their default collapsed state
+  // entries and so resets them to their default collapsed state.
   const [collapseCount, setCollapseCount] = useState(0);
   const { t } = useTranslation();
   const logs = useDevToolsLogs();
@@ -47,7 +47,7 @@ export const LogsPanel: React.FC = () => {
   }, []);
 
   // Clicking the label or file an entry was logged with filters by
-  // it, clicking the applied one again removes the filter
+  // it, clicking the applied one again removes the filter.
   const handleQuickFilter = useCallback((filter: DevToolsLogQuickFilter) => {
     setQuickFilter((current) => {
       if (current?.type === filter.type && current.value === filter.value) {

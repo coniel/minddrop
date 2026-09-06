@@ -21,7 +21,7 @@ export async function onDatabaseEntryRenamed(
   // Renames away from a default untitled title are only recorded
   // when a recorded chain ends at the untitled address, continuing
   // the chain of an entry which was temporarily untitled while
-  // keeping first namings of new entries unrecorded
+  // keeping first namings of new entries unrecorded.
   const recordInLedger =
     !isUntitledTitle(original.title) ||
     (await isRenameChainEnd(oldAddress, 'entry'));

@@ -17,7 +17,7 @@ export function getTabIcon(tab: Tab): IconProp {
   }
 
   // Views opened for a specific entity carry its content icon, which
-  // the user can change
+  // the user can change.
   if (tab.main?.icon) {
     return <ContentIcon icon={tab.main.icon} />;
   }

@@ -21,7 +21,7 @@ export function withFrames(editor: Editor): Editor {
     const [, path] = entry;
 
     // Whether a container has been split apart is a property of the document
-    // as a whole rather than of any one block
+    // as a whole rather than of any one block.
     if (!path.length) {
       const repair = resolveSplitFrameRepair(editor.children as Element[]);
 
@@ -57,7 +57,7 @@ export function withFrames(editor: Editor): Editor {
     }
 
     // Return on an empty block steps out of its innermost container rather
-    // than adding another empty one below it
+    // than adding another empty one below it.
     if (Ast.toPlainText([element]) === '') {
       outdentBlocks(editor, [entry[1]]);
 
@@ -73,7 +73,7 @@ export function withFrames(editor: Editor): Editor {
     const entry = getElementAbove(editor);
 
     // Deleting a selection, or deleting from anywhere but the very start of
-    // a block, is an ordinary delete
+    // a block, is an ordinary delete.
     if (!entry || !editor.selection || !Range.isCollapsed(editor.selection)) {
       deleteBackward(unit);
 
@@ -88,7 +88,7 @@ export function withFrames(editor: Editor): Editor {
     );
 
     // Backspace at the start of a contained block steps it out of its
-    // innermost container before it starts deleting content
+    // innermost container before it starts deleting content.
     if (isBlockStart && (element.ancestry || []).length) {
       outdentBlocks(editor, [entry[1]]);
 

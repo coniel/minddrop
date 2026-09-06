@@ -6,7 +6,7 @@ import { ImageStats } from '@minddrop/file-system';
 const BRIGHT_FRACTION_THRESHOLD = 0.06;
 
 // Near white pixel fraction above which an image counts as having a
-// light background
+// light background.
 const LIGHT_BACKGROUND_FRACTION_THRESHOLD = 0.4;
 
 export interface ImageBrightnessClassification {

@@ -9,7 +9,7 @@ import {
 import { locales } from '../locales';
 
 // View instance id of the singleton collections list view, which is
-// labelled and iconed from its registration
+// labelled and iconed from its registration.
 const collectionsViewId = 'collections:collections';
 
 /**
@@ -23,7 +23,7 @@ export function initializeCollectionsFeature(): VoidFunction {
   I18n.registerTranslations(locales);
 
   // Listen for open collections view events, and open the
-  // collections list view when one is received
+  // collections list view when one is received.
   Events.addListener(OpenCollectionsViewEvent, EventListenerId, () => {
     Events.dispatch(Views.events.Open, {
       view: CollectionsViewName,

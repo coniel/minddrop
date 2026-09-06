@@ -75,14 +75,14 @@ export const CanvasNodeSelectionToolbar: React.FC<
   const [shiftHeld, setShiftHeld] = useState(false);
 
   // Track shift so the remove button can show that the press
-  // would delete rather than remove
+  // would delete rather than remove.
   useEffect(() => {
     const handleKey = (event: KeyboardEvent) => {
       setShiftHeld(event.shiftKey);
     };
 
     // Shift released while the window is unfocused never reaches
-    // the keyup listener, which would leave the button stuck
+    // the keyup listener, which would leave the button stuck.
     const handleBlur = () => {
       setShiftHeld(false);
     };

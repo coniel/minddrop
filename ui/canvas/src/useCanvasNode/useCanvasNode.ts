@@ -220,7 +220,7 @@ export function useCanvasNode(
   const [position, setPosition] = useState({ x, y });
   const [size, setSize] = useState({ width, height: height ?? 0 });
   // The in-progress interaction, driving the window mouse
-  // listeners and the interaction lock
+  // listeners and the interaction lock.
   const [interaction, setInteraction] = useState<NodeInteraction | null>(null);
   // Latest position/size for reading inside the mouseup handler
   const positionRef = useRef(position);
@@ -234,11 +234,11 @@ export function useCanvasNode(
   const measuredHeight = useMeasuredHeight(nodeRef);
 
   // Hold the pointer for the interaction, so dragging over text
-  // content neither selects it nor swaps the cursor
+  // content neither selects it nor swaps the cursor.
   useInteractionLock(interaction ? interaction.cursor : null);
 
   // The node's position, carrying the offset of a group drag it
-  // is part of
+  // is part of.
   const offsetPosition = selectionOffset
     ? { x: position.x + selectionOffset.x, y: position.y + selectionOffset.y }
     : position;
@@ -309,7 +309,7 @@ export function useCanvasNode(
       }
 
       // Keep the browser from starting a text selection anchored
-      // at the handle
+      // at the handle.
       event.preventDefault();
 
       didDrag.current = false;
@@ -343,7 +343,7 @@ export function useCanvasNode(
       }
 
       // Presses on content that handles them itself, such as
-      // inputs, buttons, menus and editors, never select the node
+      // inputs, buttons, menus and editors, never select the node.
       if (isInteractiveTarget(event.target)) {
         return;
       }
@@ -372,7 +372,7 @@ export function useCanvasNode(
     (event: React.MouseEvent, edge: CanvasNodeResizeEdge) => {
       event.stopPropagation();
       // Keep the browser from starting a text selection anchored
-      // at the handle
+      // at the handle.
       event.preventDefault();
 
       resizeState.current = {
@@ -394,11 +394,11 @@ export function useCanvasNode(
   const handleMouseMove = useCallback(
     (event: MouseEvent) => {
       // Nodes live in the zoomed canvas coordinate space, so
-      // screen-pixel mouse deltas are scaled down by the zoom
+      // screen-pixel mouse deltas are scaled down by the zoom.
       const scale = context ? context.store.getZoom() : 1;
 
       // Snapping is a canvas instance setting, so standalone
-      // nodes never snap
+      // nodes never snap.
       const snap = context ? context.store.getSnapToGrid() : false;
       const snapObjects = context ? context.store.getSnapToObjects() : false;
 
@@ -424,7 +424,7 @@ export function useCanvasNode(
             objects: snapObjects,
             targets: snapObjects ? getSnapTargets(context, id) : [],
             // The snapping distance is in screen pixels, so it is
-            // unscaled into canvas units
+            // unscaled into canvas units.
             threshold: OBJECT_SNAP_DISTANCE / scale,
           },
         );
@@ -452,7 +452,7 @@ export function useCanvasNode(
           objects: snapObjects,
           targets: snapObjects ? getSnapTargets(context, id) : [],
           // The snapping distance is in screen pixels, so it is
-          // unscaled into canvas units
+          // unscaled into canvas units.
           threshold: OBJECT_SNAP_DISTANCE / scale,
           // Shift key enables mirror resizing from center
           mirror: event.shiftKey,
@@ -473,7 +473,7 @@ export function useCanvasNode(
           : null;
 
         // The frame values the resize lands on, leaving out the
-        // ones the dragged edge does not change
+        // ones the dragged edge does not change.
         const resized = getResizedNodeFrame(
           resizeState.current,
           snapped.x,

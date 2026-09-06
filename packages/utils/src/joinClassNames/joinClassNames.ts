@@ -11,7 +11,7 @@ export function joinClassNames(
   const present = classNames.filter(Boolean);
 
   // Undefined rather than an empty string, so that the class
-  // attribute is left off entirely
+  // attribute is left off entirely.
   if (!present.length) {
     return undefined;
   }

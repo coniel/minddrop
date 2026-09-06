@@ -28,7 +28,7 @@ export function matchItemReference(
   const type = entityIdType(reference);
 
   // Fall back to treating unclaimed typed entity IDs as their own
-  // runtime ID
+  // runtime ID.
   if (!reference.includes('/') && type !== null) {
     return { type, id: reference };
   }

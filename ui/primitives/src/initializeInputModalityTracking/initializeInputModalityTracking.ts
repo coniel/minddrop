@@ -1,7 +1,7 @@
 import { INPUT_MODE_ATTRIBUTE } from '../constants';
 
 // Keys which do not indicate an intent to navigate, and so leave
-// the current input mode untouched when pressed on their own
+// the current input mode untouched when pressed on their own.
 const MODIFIER_KEYS = ['Shift', 'Control', 'Alt', 'Meta'];
 
 /**
@@ -15,7 +15,7 @@ const MODIFIER_KEYS = ['Shift', 'Control', 'Alt', 'Meta'];
 export function initializeInputModalityTracking(): VoidFunction {
   // The last seen pointer position, used to tell real pointer
   // movement from move events fired by content shifting beneath a
-  // stationary pointer
+  // stationary pointer.
   let lastPointerPosition: { x: number; y: number } | null = null;
 
   // Sets the input mode on the document element
@@ -55,7 +55,7 @@ export function initializeInputModalityTracking(): VoidFunction {
   }
 
   // Listen in the capture phase so the mode is up to date before
-  // any handler which stops propagation runs
+  // any handler which stops propagation runs.
   document.addEventListener('keydown', handleKeyDown, true);
   document.addEventListener('pointermove', handlePointerMove, true);
 

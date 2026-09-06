@@ -12,7 +12,7 @@ const fixtures = readdirSync(fixturesDir)
 describe('round trip', () => {
   // Every fixture must survive a parse and serialize byte for byte, since
   // the document on disk is the user's own file rather than something the
-  // app owns
+  // app owns.
   fixtures.forEach((name) => {
     it(`preserves ${name} byte for byte`, () => {
       const source = readFileSync(join(fixturesDir, name), 'utf8');

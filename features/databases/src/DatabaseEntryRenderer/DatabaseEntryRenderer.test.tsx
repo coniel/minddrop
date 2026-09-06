@@ -75,7 +75,7 @@ const mappedEntry = {
 };
 
 // An editor variant formatted-text element with its title bound
-// to the 'Heading' design property
+// to the 'Heading' design property.
 const titleBoundEditorElement = {
   ...element_property_formatted_text_1,
   titleProperty: 'Heading',
@@ -98,7 +98,7 @@ const titleBoundDesign = {
 };
 
 // A database using the title-bound design, mapping the 'Heading'
-// design property to the implicit Title database property
+// design property to the implicit Title database property.
 const titleDatabase = {
   ...objectDatabase,
   id: 'database_title' as const,
@@ -201,7 +201,7 @@ describe('<DatabaseEntryRenderer />', () => {
 
     // Placeholders are a design aid: an unmapped bound element
     // renders empty rather than showing placeholder text as if it
-    // were entry content
+    // were entry content.
     expect(screen.queryByText('Heading placeholder')).toBeNull();
   });
 
@@ -220,7 +220,7 @@ describe('<DatabaseEntryRenderer />', () => {
     );
 
     // The editor's title block resolves Heading -> Title -> the
-    // entry title
+    // entry title.
     screen.getByText('Title Entry');
   });
 

@@ -22,7 +22,7 @@ const INSERT_LABEL = 'Insert block';
 const SELECT_LABEL = 'Select block';
 
 // Moves the pointer over an element and waits out the gutter's
-// activation delay, after which its controls are shown
+// activation delay, after which its controls are shown.
 const hoverBlock = (element: HTMLElement) => {
   fireEvent.pointerMove(element);
 
@@ -166,7 +166,7 @@ describe('RichTextEditor block gutter', () => {
 describe('RichTextEditor block drag and drop', () => {
   beforeEach(() => {
     // Serializes the dragged blocks onto the drag's data, which is
-    // what carries them between editors
+    // what carries them between editors.
     registerBlockSelectionSerializer();
 
     // The gutter's activation delay is driven by a timer
@@ -207,7 +207,7 @@ describe('RichTextEditor block drag and drop', () => {
       effectAllowed: '',
       dropEffect: '',
       // The written data's types, which editors the drag did not
-      // start in use to recognise a block drag
+      // start in use to recognise a block drag.
       get types() {
         return Object.keys(data);
       },
@@ -220,7 +220,7 @@ describe('RichTextEditor block drag and drop', () => {
   };
 
   // Renders two editors and collects the values each emits, used to
-  // drag blocks from the first editor into the second
+  // drag blocks from the first editor into the second.
   const renderTwoEditors = (secondReadOnly = false) => {
     const firstValues: Element[][] = [];
     const secondValues: Element[][] = [];
@@ -268,7 +268,7 @@ describe('RichTextEditor block drag and drop', () => {
     const dataTransfer = createDataTransfer();
 
     // Drag the first paragraph over the heading, which drops it
-    // between the second paragraph and the heading
+    // between the second paragraph and the heading.
     hoverBlock(getByText(paragraphElement1PlainText));
     fireEvent.dragStart(getByLabelText(SELECT_LABEL), { dataTransfer });
     fireEvent.dragOver(getByText(headingElement1PlainText), { dataTransfer });
@@ -302,7 +302,7 @@ describe('RichTextEditor block drag and drop', () => {
 
     // Starting the drag selects the block, which emits a value of
     // its own, so the order is what is checked rather than whether
-    // anything was emitted at all
+    // anything was emitted at all.
     changeValues.forEach((value) => {
       expect(Ast.toPlainText([value[0]])).toBe(paragraphElement1PlainText);
     });
@@ -332,7 +332,7 @@ describe('RichTextEditor block drag and drop', () => {
     const { getByText, baseElement } = renderEditor();
 
     // No block drag was started, so this is an ordinary drag of
-    // editor content
+    // editor content.
     fireEvent.dragOver(getByText(headingElement1PlainText), {
       dataTransfer: createDataTransfer(),
       clientY: 1,
@@ -372,7 +372,7 @@ describe('RichTextEditor block drag and drop', () => {
     const dataTransfer = createDataTransfer();
 
     // Drag the first editor's first paragraph over the second
-    // editor's heading
+    // editor's heading.
     hoverBlock(getByText(paragraphElement1PlainText));
     fireEvent.dragStart(getByLabelText(SELECT_LABEL), { dataTransfer });
     fireEvent.dragOver(getByText(headingElement1PlainText), { dataTransfer });
@@ -507,7 +507,7 @@ describe('RichTextEditor block selection', () => {
     });
 
     // The controls hold the menu's anchor, so they have to outlive
-    // the pointer leaving them
+    // the pointer leaving them.
     fireEvent.pointerMove(baseElement);
 
     expect(queryByLabelText(SELECT_LABEL)).not.toBeNull();
@@ -534,7 +534,7 @@ describe('RichTextEditor block selection', () => {
     expect(isSelected(firstEditorBlock)).toBe(true);
 
     // Clicking the handle opens the actions menu, which holds the
-    // first editor's controls open until it is dismissed
+    // first editor's controls open until it is dismissed.
     await actFlush(() => {
       fireEvent.keyDown(document.body, { key: 'Escape' });
     });
@@ -546,7 +546,7 @@ describe('RichTextEditor block selection', () => {
     });
 
     // The app's selection holds one selection, so selecting in the
-    // second editor deselects the first editor's blocks
+    // second editor deselects the first editor's blocks.
     expect(isSelected(firstEditorBlock)).toBe(false);
     expect(isSelected(secondEditorBlock)).toBe(true);
   });
@@ -571,7 +571,7 @@ describe('RichTextEditor block selection', () => {
   });
 
   // Selects the first block through its handle and dismisses the
-  // actions menu which opens along with it
+  // actions menu which opens along with it.
   const selectFirstBlock = async (
     getByText: (text: string) => HTMLElement,
     getByLabelText: (label: string) => HTMLElement,

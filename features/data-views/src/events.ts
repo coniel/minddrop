@@ -9,7 +9,7 @@ export const DataViewsViewName = 'data-views:view:data-views';
 export const NewDataViewViewName = 'data-views:view:new-data-view';
 
 // View instance id of the singleton new data view view, shared so
-// the view can close itself once the data view is created
+// the view can close itself once the data view is created.
 export const NewDataViewViewId = 'data-views:new-data-view';
 
 export interface OpenDataViewViewEventData extends BaseOpenViewEventData {

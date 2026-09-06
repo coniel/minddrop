@@ -39,7 +39,7 @@ export function entryDisplayPropertyValues(
 
   // Start with the entry's raw property values, backed by its
   // metadata so title/timestamp properties resolve even when the
-  // schema does not declare them
+  // schema does not declare them.
   const values: Record<string, PropertyValue> = {
     ...entryMetadataPropertyValues(entry, database.properties),
     ...entry.properties,

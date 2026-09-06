@@ -229,7 +229,7 @@ export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
   const handleContainerDragOver = useCallback(
     (event: React.DragEvent) => {
       // Ignore drags without an accepted data type, letting them
-      // fall through to ancestor drop targets
+      // fall through to ancestor drop targets.
       if (accepts && !Selection.dragContainsType(event, accepts)) {
         return;
       }
@@ -267,7 +267,7 @@ export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
       }
 
       // Only handle drops directly on the container, not
-      // drops that bubbled up from gap zones
+      // drops that bubbled up from gap zones.
       if (event.defaultPrevented) {
         return;
       }

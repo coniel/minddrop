@@ -28,7 +28,7 @@ export function scrollsNestedContent(
     }
 
     // The element scrolls horizontally under the wheel's
-    // horizontal delta
+    // horizontal delta.
     if (
       event.deltaX !== 0 &&
       (overflowX === 'auto' || overflowX === 'scroll') &&

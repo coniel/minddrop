@@ -56,13 +56,13 @@ function isEmptyElement(editor: Editor, node: Descendant): boolean {
   }
 
   // Void elements have no text of their own, so an empty one is
-  // not somewhere the cursor can type
+  // not somewhere the cursor can type.
   if (editor.isVoid(node)) {
     return false;
   }
 
   // A table is a grid rather than a blank line, so even one with empty
-  // cells is not the trailing element a click below the content expects
+  // cells is not the trailing element a click below the content expects.
   if (isTableElement(node)) {
     return false;
   }

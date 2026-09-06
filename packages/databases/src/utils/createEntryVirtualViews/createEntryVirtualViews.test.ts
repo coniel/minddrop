@@ -73,7 +73,7 @@ describe('createEntryVirtualViews', () => {
   it('returns empty object if database does not exist', () => {
     const result = createEntryVirtualViews(
       // objectEntry1 belongs to objectDatabase, but we reference
-      // an entry whose database ID doesn't exist in the store
+      // an entry whose database ID doesn't exist in the store.
       'nonexistent-entry',
       designWithView,
       propertyMap,
@@ -105,7 +105,7 @@ describe('createEntryVirtualViews', () => {
 
   it('skips collection properties mapped to non-collection elements', () => {
     // Map the collection property to a text element instead of a
-    // collection element
+    // collection element.
     const result = createEntryVirtualViews(
       collectionEntry1.id,
       designWithView,
@@ -147,7 +147,7 @@ describe('createEntryVirtualViews', () => {
     createEntryVirtualViews(collectionEntry1.id, designWithView, propertyMap);
 
     // Verify the view carries the entry as owner and the metadata
-    // key as owner key
+    // key as owner key.
     const view = DataViews.get(
       virtualViewId(collectionEntry1.id, designWithView.id, 'Related'),
       false,
@@ -381,7 +381,7 @@ describe('createEntryVirtualViews', () => {
 
   it('defaults to empty array when collection property has no value', () => {
     // Map the 'References' property to a view element, but use
-    // an entry that has no 'References' value
+    // an entry that has no 'References' value.
     const entryWithoutReferences = { ...collectionEntry1 };
     entryWithoutReferences.properties = {
       ...collectionEntry1.properties,

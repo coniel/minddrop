@@ -83,7 +83,7 @@ describe('goForward', () => {
     const tab = getSet(VIEW_AREA_ID).tabs[0];
 
     // Record state onto the current view, then navigate back so the
-    // forward entry carries it
+    // forward entry carries it.
     setTransientViewState(VIEW_AREA_ID, tab.id, 'main', 'scroll', 40);
     goBack(VIEW_AREA_ID);
 

@@ -65,7 +65,7 @@ export const CollectionDetails: React.FC<CollectionDetailsProps> = ({
   const someItemsSelected = !allItemsSelected && selectedItems.length > 0;
 
   // Resync the name field when a different collection is shown, or
-  // when the name is changed elsewhere
+  // when the name is changed elsewhere.
   useEffect(() => {
     setName(collection.name);
   }, [collection.id, collection.name]);

@@ -220,7 +220,7 @@ const PropertyMappingSection: React.FC<DesignSectionProps> = ({
         );
 
         // Metadata properties are always auto-mapped, so they are
-        // not offered the "none" option
+        // not offered the "none" option.
         if (!Properties.constants.MetadataTypes.has(designProperty.type)) {
           options.unshift({
             value: NONE_VALUE,
@@ -308,7 +308,7 @@ const DefaultLayoutsSection: React.FC<DesignSectionProps> = ({
               const pinnedId = database.defaultLayouts[context];
 
               // Fall back to the first layout of the base type when
-              // there is no valid pin
+              // there is no valid pin.
               const value =
                 layouts.find((layout) => layout.id === pinnedId)?.id ??
                 layouts[0]?.id;
@@ -375,7 +375,7 @@ const EntryColorSection: React.FC<EntryColorSectionProps> = ({ database }) => {
   );
 
   // The meta Color property is always offered, even when the
-  // database has not added it as an actual property
+  // database has not added it as an actual property.
   const options: SelectOption<string>[] = [
     { value: META_COLOR_VALUE, label: 'properties.color.name' },
     ...selectProperties.map((property) => ({

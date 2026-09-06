@@ -50,7 +50,7 @@ export const PropertyChrome: React.FC<PropertyChromeProps> = ({
   const elementCss = useElementCssStyle(element);
 
   // The chrome styles resolve with the variant theme styles
-  // applied; only value-like style shapes carry the chrome keys
+  // applied; only value-like style shapes carry the chrome keys.
   const style = Designs.resolveElementStyle(
     element,
     layoutType ?? undefined,
@@ -59,7 +59,7 @@ export const PropertyChrome: React.FC<PropertyChromeProps> = ({
   const config = Designs.getPropertyElementConfig(element.propertyType, false);
 
   // Nothing enabled, an unconfigured property type, or a variant
-  // outside the value-like categories: render the value alone
+  // outside the value-like categories: render the value alone.
   if (
     (!label && !icon) ||
     !config ||
@@ -69,7 +69,7 @@ export const PropertyChrome: React.FC<PropertyChromeProps> = ({
   }
 
   // Whether real entry data is being rendered, where unbound
-  // chrome has no property to represent
+  // chrome has no property to represent.
   const isEntryRendering = Boolean(entryContext) && !preview;
 
   // The chrome content, null when unresolvable
@@ -104,7 +104,7 @@ export const PropertyChrome: React.FC<PropertyChromeProps> = ({
   );
 
   // The above variants stack over the value; side and spread sit
-  // in the value row
+  // in the value row.
   const labelAbove = labelVariant === 'above';
   const iconAbove = iconVariant === 'above';
   const aboveIcon = iconAbove ? iconNode : null;
@@ -119,7 +119,7 @@ export const PropertyChrome: React.FC<PropertyChromeProps> = ({
       : 'designs-property-chrome-row';
 
   // The wrapper owns the element margins; the value renderer drops
-  // them through the chrome context
+  // them through the chrome context.
   const { marginTop, marginRight, marginBottom, marginLeft } = elementCss;
 
   return (

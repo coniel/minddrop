@@ -28,7 +28,7 @@ export function applyCanvasShortcut(
   }
 
   // Delete removes the selection through the consumer, which
-  // owns whatever the selected IDs stand for
+  // owns whatever the selected IDs stand for.
   if (event.key === 'Delete' || event.key === 'Backspace') {
     const selection = store.getSelection();
 
@@ -37,7 +37,7 @@ export function applyCanvasShortcut(
     }
 
     // Stopped as well as prevented, so an app-level delete
-    // shortcut does not act on the same press
+    // shortcut does not act on the same press.
     event.preventDefault();
     event.stopPropagation();
 
@@ -49,7 +49,7 @@ export function applyCanvasShortcut(
   // Cmd/Ctrl + A selects every node on the canvas
   if (event.key === 'a' && (event.metaKey || event.ctrlKey)) {
     // Leave the shortcut to the app when the canvas does not
-    // support selection
+    // support selection.
     if (!store.getSelectable()) {
       return;
     }

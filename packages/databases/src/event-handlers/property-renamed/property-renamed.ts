@@ -22,7 +22,7 @@ export async function onRenameProperty(
   const update: Partial<Database> = {};
 
   // Remap the design property map so any values pointing at the
-  // renamed property use the new name
+  // renamed property use the new name.
   const remappedDesignPropertyMap = remapPropertyMapValues(
     database.designPropertyMap,
     oldName,

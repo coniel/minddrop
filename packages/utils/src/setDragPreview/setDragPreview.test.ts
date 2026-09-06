@@ -52,7 +52,7 @@ describe('setDragPreview', () => {
     setDragPreview(createDragEvent(), element);
 
     // jsdom rects are zero sized at the origin, so the offsets
-    // equal the event's client coordinates
+    // equal the event's client coordinates.
     expect(dragImage!.offsetX).toBe(10);
     expect(dragImage!.offsetY).toBe(20);
   });

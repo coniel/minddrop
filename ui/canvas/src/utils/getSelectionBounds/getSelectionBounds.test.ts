@@ -26,7 +26,7 @@ describe('getSelectionBounds', () => {
 
   it('skips IDs with no registered frame', () => {
     // A selected node that has since unmounted must not break
-    // the bounds of the ones that remain
+    // the bounds of the ones that remain.
     expect(getSelectionBounds(['node-1', 'unmounted'], nodes)).toEqual(
       nodes['node-1'],
     );

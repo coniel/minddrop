@@ -45,7 +45,7 @@ export const DesignDashboard: React.FC<DesignDashboardProps> = ({
   onClickBack,
 }) => {
   // Virtual designs are owner-embedded rather than standalone, so
-  // they do not appear on the dashboard
+  // they do not appear on the dashboard.
   const designs = Designs.useAll().filter((design) => !design.virtual);
 
   // Create a new design and open it in the editor
@@ -167,7 +167,7 @@ const DesignCardPreview: React.FC<DesignCardPreviewProps> = ({ design }) => {
   );
 
   // Design bounds using the layouts' measured heights, falling
-  // back to estimates until they have been measured
+  // back to estimates until they have been measured.
   const bounds = getDesignBounds(design.layouts, layoutHeights);
 
   // Scale that fits the whole design into the preview area
@@ -199,7 +199,7 @@ const DesignCardPreview: React.FC<DesignCardPreviewProps> = ({ design }) => {
   }, []);
 
   // Measure each layout's rendered height so the fitted scale
-  // reflects the real content rather than an estimate
+  // reflects the real content rather than an estimate.
   useEffect(() => {
     const canvas = canvasRef.current;
 

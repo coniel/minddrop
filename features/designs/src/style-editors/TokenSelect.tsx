@@ -3,7 +3,7 @@ import { TranslationKey } from '@minddrop/i18n';
 import { SelectField, SelectOption } from '@minddrop/ui-primitives';
 
 // Value used by the "default" option, since a select cannot carry
-// undefined as an option value
+// undefined as an option value.
 export const UnsetValue = '__unset__';
 
 export interface TokenSelectProps<TToken extends string> {
@@ -75,7 +75,7 @@ export function TokenSelect<TToken extends string>({
   onChange,
 }: TokenSelectProps<TToken>) {
   // Build the option list once per token scale, leading with the
-  // option which clears the value
+  // option which clears the value.
   const options = useMemo<SelectOption<string>[]>(() => {
     const tokenOptions = tokens.map((token) => ({
       value: token,
@@ -90,7 +90,7 @@ export function TokenSelect<TToken extends string>({
     }
 
     // Describing the clearing option alone would leave one tall row
-    // among plain ones, so it follows the scale
+    // among plain ones, so it follows the scale.
     const describes = tokenOptions.some((option) => option.description);
 
     return [
@@ -107,7 +107,7 @@ export function TokenSelect<TToken extends string>({
   }, [tokens, optionKey, clearOption, defaultToken]);
 
   // Clear the style key when the "default" option or the default
-  // step is chosen, so the key is deleted rather than stored
+  // step is chosen, so the key is deleted rather than stored.
   function handleValueChange(selected: string | number) {
     if (selected === UnsetValue || selected === defaultToken) {
       onChange(undefined);

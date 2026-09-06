@@ -51,7 +51,7 @@ describe('resolveElementStyle', () => {
     };
 
     // The same element resolves to a larger font on a page than on
-    // a card
+    // a card.
     expect(resolveElementStyle(element, 'card')).toMatchObject({
       fontSize: 'md',
     });
@@ -75,7 +75,7 @@ describe('resolveElementStyle', () => {
       ...element_property_text_1,
       variant: 'subtitle',
       // lineHeight collides with the variant's theme styles, italic
-      // does not
+      // does not.
       style: { lineHeight: 'loose', italic: true },
     };
 
@@ -92,7 +92,7 @@ describe('resolveElementStyle', () => {
       ...element_property_text_1,
       variant: 'subtitle',
       // Colour is whitelisted, so the element's choice wins over
-      // the variant's subtle default; line height is not
+      // the variant's subtle default; line height is not.
       style: { color: 'regular', lineHeight: 'loose' },
     };
 

@@ -22,7 +22,7 @@ export function duplicateTab(viewAreaId: string, id: string): void {
   }
 
   // Copy the tab's views and split ratio into a new tab, leaving
-  // its history and transient state behind
+  // its history and transient state behind.
   const duplicate = {
     ...tabs[index],
     id: entityId('tab'),

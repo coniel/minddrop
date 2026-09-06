@@ -30,7 +30,7 @@ export function resolvePropertyElementStyle(
     theme.propertyElements[config.propertyType]?.[variant.id];
 
   // The variant's context-independent styles with its layout
-  // context's overrides applied over them
+  // context's overrides applied over them.
   return {
     ...variantStyles?.style,
     ...(layoutType ? variantStyles?.contextStyles?.[layoutType] : undefined),

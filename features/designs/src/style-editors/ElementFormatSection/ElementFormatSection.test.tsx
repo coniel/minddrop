@@ -42,7 +42,7 @@ const element_url = element_property_url_1;
 const element_date = element_property_date_1;
 
 // A number property element carrying a full format, for checking
-// that editing one field leaves the others alone
+// that editing one field leaves the others alone.
 const element_number: NumberPropertyElement = {
   ...element_property_number_1,
   format: {
@@ -147,7 +147,7 @@ describe('element format editors', () => {
       );
 
       // A relative date describes an interval, so neither the
-      // style preset nor the time apply to it
+      // style preset nor the time apply to it.
       const timeSwitch = container.querySelector('[role="switch"]');
 
       expect(timeSwitch?.getAttribute('aria-disabled')).toBe('true');
@@ -211,7 +211,7 @@ describe('element format editors', () => {
       );
 
       // The edited field is written, and the rest of the format
-      // survives the merge
+      // survives the merge.
       expect(element.format).toEqual({
         decimals: 2,
         thousandsSeparator: 'comma',

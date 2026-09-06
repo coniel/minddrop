@@ -25,18 +25,18 @@ export function resolveElementStyle<TElement extends DesignElementStyleSource>(
   layoutType?: LayoutType,
 ): TElement['style'] {
   // Property elements resolve through their selected variant's
-  // theme styles instead of a role
+  // theme styles instead of a role.
   if (isPropertyElement(element)) {
     const config = getPropertyElementConfig(element.propertyType, false);
 
     // A property type without a config degrades to the element's
-    // own style
+    // own style.
     if (!config) {
       return element.style;
     }
 
     // The variant decides which of the element's own values may
-    // override the theme
+    // override the theme.
     const variant = getPropertyElementVariant(config, element.variant);
 
     // The variant's context-resolved theme styles
@@ -48,7 +48,7 @@ export function resolveElementStyle<TElement extends DesignElementStyleSource>(
 
     // The element's values on whitelisted keys, which apply over
     // the theme's: theme styles are overridable defaults on the
-    // keys the variant offers for editing, locks on the rest
+    // keys the variant offers for editing, locks on the rest.
     const style = element.style as Record<string, unknown>;
     const overrides = variant.editableStyles
       ? Object.fromEntries(

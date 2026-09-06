@@ -79,7 +79,7 @@ const BlockFrameAffordance: React.FC<BlockFrameAffordanceProps> = ({
   const style = { insetInlineStart: resolveIndent(depth) };
 
   // A quote is marked on every one of its lines, so its bar is drawn by
-  // each of its blocks and bridges the gap to the next one
+  // each of its blocks and bridges the gap to the next one.
   if (frame.kind === 'blockquote') {
     return (
       <span
@@ -94,7 +94,7 @@ const BlockFrameAffordance: React.FC<BlockFrameAffordanceProps> = ({
   }
 
   // A container's marker belongs to the block which opens it, so its
-  // continuation blocks indent without repeating it
+  // continuation blocks indent without repeating it.
   if (!isFirstBlock) {
     return null;
   }

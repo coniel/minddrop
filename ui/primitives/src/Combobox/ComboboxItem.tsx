@@ -23,7 +23,7 @@ export const ComboboxItem = React.forwardRef<HTMLDivElement, ComboboxItemProps>(
     // Mouse move events fired while the keyboard owns the
     // navigation come from items shifting under a stationary
     // cursor, not from the user pointing at them, so leave the
-    // highlight where the keyboard put it
+    // highlight where the keyboard put it.
     const handleMouseMove: ComboboxItemMouseMoveHandler = (event) => {
       if (isKeyboardInputMode()) {
         event.preventBaseUIHandler();

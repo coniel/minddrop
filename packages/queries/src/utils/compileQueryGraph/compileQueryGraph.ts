@@ -82,7 +82,7 @@ export function compileQueryGraph(
   const compiled: CompiledQueryGraph = {};
 
   // Process nodes in dependency order so inputs compile before
-  // their consumers
+  // their consumers.
   const ordered = sortTopologically(query);
 
   ordered.forEach((node) => {
@@ -93,7 +93,7 @@ export function compileQueryGraph(
       .filter(Boolean);
 
     // Merge the inputs' scopes, ORing parallel branches into
-    // the same database
+    // the same database.
     const inputScopes = mergeScopes(inputs.map((input) => input.outputScopes));
 
     // Accumulate upstream sorts in flow order, primary first
@@ -125,7 +125,7 @@ function compileNode(
   queryResults: QuerySourceResults,
 ): CompiledQueryNode {
   // Source nodes emit their database's entries, or the results
-  // of the query they draw from
+  // of the query they draw from.
   if (node.type === 'source') {
     return {
       inputScopes,
@@ -170,12 +170,12 @@ function compileNode(
   }
 
   // Collection filter nodes narrow their input to the
-  // collection's members, or to everything but them
+  // collection's members, or to everything but them.
   if (node.type === 'collection-filter') {
     const memberIds = resolveCollectionFilterMembers(node);
 
     // A missing collection passes entries through unchanged, as
-    // an unconfigured filter does
+    // an unconfigured filter does.
     if (!memberIds) {
       return {
         inputScopes,
@@ -304,7 +304,7 @@ function compileSourceReferenceScopes(
   const referenced = getQuery(source.id, false);
 
   // A query which is missing, or whose results have not been
-  // resolved, emits nothing
+  // resolved, emits nothing.
   if (!entryIds || !referenced) {
     return [];
   }
@@ -428,7 +428,7 @@ function mergeScopes(scopeLists: EntryQueryScope[][]): EntryQueryScope[] {
       const existing = filtersByDatabase.get(scope.databaseId);
 
       // An unfiltered branch already matches all of the
-      // database's entries
+      // database's entries.
       if (existing === null) {
         return;
       }

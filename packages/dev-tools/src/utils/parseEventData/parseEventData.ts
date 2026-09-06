@@ -1,5 +1,5 @@
 // Typographic quotes substituted for straight ones by operating
-// system text replacement, which JSON does not accept
+// system text replacement, which JSON does not accept.
 const TypographicQuotes = /[‘’“”]/g;
 
 export interface ParsedEventData {

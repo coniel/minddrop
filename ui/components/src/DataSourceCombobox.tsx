@@ -71,7 +71,7 @@ export const DataSourceCombobox: FC<DataSourceComboboxProps> = ({
   const databases = Databases.useAll();
 
   // Build the grouped options along with a map of option values
-  // to their data source selections
+  // to their data source selections.
   const { groups, selections } = useMemo(() => {
     const optionGroups: ComboboxOptionGroup[] = [];
     const selectionMap = new Map<string, DataSourceSelection>();

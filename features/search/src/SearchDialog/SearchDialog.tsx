@@ -33,7 +33,7 @@ export const SearchDialog: React.FC = () => {
     onSelect: (index) => selectResult(results[index]),
     onEscape: (event) => {
       // Escape clears the input first, closes dialog only
-      // when empty
+      // when empty.
       if (query.trim()) {
         event.preventDefault();
         event.stopPropagation();

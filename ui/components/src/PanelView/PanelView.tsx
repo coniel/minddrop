@@ -156,7 +156,7 @@ export const PanelView: React.FC<PanelViewProps> = ({
   const navigationTrail = Views.useBreadcrumbs();
 
   // Show the nearest crumbs only, keeping long trails within the
-  // header's width
+  // header's width.
   const trail = (breadcrumbs ?? navigationTrail).slice(-MAX_BREADCRUMBS);
 
   // Resolve the display title, treating string titles as i18n keys
@@ -262,7 +262,7 @@ const PanelViewBreadcrumb: React.FC<PanelViewBreadcrumbProps> = ({
   const registered = Views.use(breadcrumb.view);
 
   // The crumb's own content icon, falling back to the view's
-  // registered UI icon
+  // registered UI icon.
   const icon: IconProp | undefined = breadcrumb.icon ? (
     <ContentIcon icon={breadcrumb.icon} />
   ) : (

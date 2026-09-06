@@ -3,7 +3,7 @@ import { ImageStats } from '@minddrop/file-system';
 import { classifyImageBrightness } from './classifyImageBrightness';
 
 // Base stats spread into each case, so that a case states only the
-// measurements it is about
+// measurements it is about.
 const stats: ImageStats = {
   brightFraction: 0,
   nearWhiteFraction: 0,
@@ -98,7 +98,7 @@ describe('classifyImageBrightness', () => {
 
   it('classifies an image as both bright and light background', () => {
     // Classify a white background screenshot, which is above
-    // both thresholds
+    // both thresholds.
     expect(
       classifyImageBrightness({
         ...stats,

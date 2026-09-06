@@ -29,7 +29,7 @@ export async function onUpdateVirtualDesign(
 
   // Strip the load-time derived fields down to the owner-persisted
   // shape. Destructuring the union erases its discrimination, so
-  // restore it
+  // restore it.
   const { virtual, created, lastModified, ...designData } = updated;
   const design = { ...designData, owner: updated.owner } as VirtualDesignData;
 

@@ -29,7 +29,7 @@ export function dispatchEvent<TEvent extends EventName>(
   data?: EventData<TEvent>,
 ): void {
   // Log the event before anything else, so no side effect can
-  // land ahead of its entry
+  // land ahead of its entry.
   const logEntryId = appendEventLogEntry(eventName, data);
 
   // The queued listeners' settlement promises
@@ -88,7 +88,7 @@ function runListener(
         // the event has already done what the event reports and can
         // neither prevent nor recover from what a listener does with
         // it, so the failure is reported and the remaining listeners
-        // run as usual
+        // run as usual.
         console.error(
           `Event listener "${listener.id}" failed handling "${eventName}"`,
           error,

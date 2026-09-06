@@ -35,7 +35,7 @@ const {
 const MEDIA_DIR_PATH = 'workspace/.minddrop/spaces/space_1/media';
 
 // A card layout with nothing in its root, so auto-binding tests
-// start with every design property unbound
+// start with every design property unbound.
 const emptyCardLayout: Layout = {
   ...layout_card_1,
   tree: { ...layout_card_1.tree, children: [] },
@@ -218,7 +218,7 @@ describe('DesignStudioStore', () => {
     ).children;
 
     // Move a root child to the front of the parent it already
-    // lives in
+    // lives in.
     studio.moveElement(element_text_2.id, 'root', 0);
 
     const root = studio.getElements(layout_card_1.id)
@@ -656,7 +656,7 @@ describe('DesignStudioStore', () => {
       );
 
       // Text elements list 'title' ahead of 'text', so the title
-      // property wins over the text properties
+      // property wins over the text properties.
       expect(getAddedElement().property).toBe('Title');
     });
 
@@ -674,7 +674,7 @@ describe('DesignStudioStore', () => {
       );
 
       // Containers accept an image as their background, chosen
-      // deliberately, so the design's image property stays free
+      // deliberately, so the design's image property stays free.
       expect(getAddedElement().property).toBeUndefined();
     });
 
@@ -686,7 +686,7 @@ describe('DesignStudioStore', () => {
       studio.setActiveLayout(emptyCardLayout.id);
 
       // Image elements can only bind to the design's single image
-      // property, which the first element claims
+      // property, which the first element claims.
       studio.addDesignElementFromTemplate(
         propertyElementTemplate('image'),
         'root',
@@ -754,7 +754,7 @@ describe('DesignStudioStore', () => {
 
   describe('moveDesignElement', () => {
     // A card layout whose root holds a container nested two levels
-    // deep, so a container can be dropped onto its own descendant
+    // deep, so a container can be dropped onto its own descendant.
     const nestedLayout: Layout = {
       ...layout_card_1,
       tree: {
@@ -815,7 +815,7 @@ describe('DesignStudioStore', () => {
       initializeWithActiveCardLayout();
 
       // Add an element, which lives in the store's flat element map
-      // until a save persists it into the design's layout tree
+      // until a save persists it into the design's layout tree.
       studio.addDesignElementFromTemplate(
         Designs.elementConfigs.Text.template,
         'root',

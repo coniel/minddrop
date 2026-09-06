@@ -14,7 +14,7 @@ export function useCanvasWheel(): void {
   const handleWheel = useCallback(
     (event: WheelEvent) => {
       // Let scrollable content inside the canvas consume plain
-      // scrolls, zoom gestures still target the canvas
+      // scrolls, zoom gestures still target the canvas.
       if (
         !event.ctrlKey &&
         !event.metaKey &&

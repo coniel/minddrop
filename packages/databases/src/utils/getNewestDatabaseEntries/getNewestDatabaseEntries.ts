@@ -21,7 +21,7 @@ export function getNewestDatabaseEntries(
     : allEntries;
 
   // Sort a copy by creation date, newest first, and cap the
-  // result at the limit
+  // result at the limit.
   return [...entries]
     .sort(
       (entryA, entryB) => entryB.created.getTime() - entryA.created.getTime(),

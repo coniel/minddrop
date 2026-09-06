@@ -38,7 +38,7 @@ export function useFlexDropGapActivation({
   const previousPositionRef = useRef(dropIndicatorPosition);
 
   // Communicate before/after positions to the parent FlexDropContainer
-  // so it can activate the appropriate gap
+  // so it can activate the appropriate gap.
   useEffect(() => {
     if (!flexDropContainer) {
       return;

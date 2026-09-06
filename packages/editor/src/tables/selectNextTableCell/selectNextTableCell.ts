@@ -24,7 +24,7 @@ export function selectNextTableCell(editor: Editor): boolean {
   const next = resolveNextTableCellPath(cellEntry);
 
   // In the last cell there is no cell to move to, so the table grows by a
-  // row, whose first cell takes the cursor
+  // row, whose first cell takes the cursor.
   if (!next) {
     const [tableNode, tablePath] = cellEntry.table;
 

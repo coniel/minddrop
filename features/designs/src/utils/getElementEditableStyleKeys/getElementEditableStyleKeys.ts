@@ -22,7 +22,7 @@ export function getElementEditableStyleKeys(
     );
 
     // A property type without a config restricts nothing, matching
-    // how style resolution degrades to the element's own style
+    // how style resolution degrades to the element's own style.
     if (!config) {
       return null;
     }
@@ -42,7 +42,7 @@ export function getElementEditableStyleKeys(
   const role = DesignRoles.get(element.role, false);
 
   // An unregistered role restricts nothing, matching how style
-  // resolution degrades to the element's own style
+  // resolution degrades to the element's own style.
   if (!role) {
     return null;
   }

@@ -14,7 +14,7 @@ import { registerSearchAdapterRpc } from './registerSearchAdapter';
 import { registerSqlAdapterRpc } from './registerSqlAdapter';
 
 // Names the code the front end is running, so it is clear which
-// changes are loaded after a rebuild or a refresh
+// changes are loaded after a rebuild or a refresh.
 console.log('[init] mainview revision', import.meta.env.VITE_APP_REVISION);
 
 export const rpc = Electroview.defineRPC<WebviewRPC>({
@@ -41,7 +41,7 @@ export const rpc = Electroview.defineRPC<WebviewRPC>({
 const electrobun = new Electrobun.Electroview({ rpc });
 
 // Register the adapters with the typed client directly, as
-// Electroview types its rpc property as optional
+// Electroview types its rpc property as optional.
 registerFileSystemAdapter(rpc);
 registerBackEndUtilsAdapter(rpc);
 registerSqlAdapterRpc(rpc);
@@ -60,7 +60,7 @@ const httpServerPort = await rpc.request.getHttpServerPort({});
 Paths.httpServerHost = `http://localhost:${httpServerPort}`;
 
 // Enable screen capture on the dev channel only, leaving the
-// screenshot picker inert elsewhere
+// screenshot picker inert elsewhere.
 if (electrobun.rpc) {
   const appChannel = await electrobun.rpc.request.getAppChannel({});
 

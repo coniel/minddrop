@@ -33,7 +33,7 @@ export async function updateDatabase(
   data: UpdateDatabaseData,
 ): Promise<Database> {
   // The name is derived from the database directory and must go through
-  // its dedicated rename flow
+  // its dedicated rename flow.
   if ('name' in data) {
     throw new InvalidParameterError(
       'Cannot change name via updateDatabase; use Databases.rename.',
@@ -41,7 +41,7 @@ export async function updateDatabase(
   }
 
   // Property file storage has on-disk side effects and must go through
-  // its dedicated setter
+  // its dedicated setter.
   if ('propertyFileStorage' in data || 'propertyFilesDir' in data) {
     throw new InvalidParameterError(
       'Cannot change propertyFileStorage or propertyFilesDir via updateDatabase; use Databases.setPropertyFileStorage.',
@@ -49,7 +49,7 @@ export async function updateDatabase(
   }
 
   // The entry serializer has on-disk side effects and must go through
-  // its dedicated setter
+  // its dedicated setter.
   if ('entrySerializer' in data) {
     throw new InvalidParameterError(
       'Cannot change entrySerializer via updateDatabase; use Databases.setEntrySerializer.',

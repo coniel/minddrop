@@ -30,7 +30,7 @@ describe('updateDatabaseEntryProperty', () => {
     setupTestSqlDatabase();
 
     // Seed the collection database record so the collection
-    // write-back handler can upsert its entries
+    // write-back handler can upsert its entries.
     sqlUpsertDatabase(
       {
         id: collectionDatabase.id,
@@ -89,7 +89,7 @@ describe('updateDatabaseEntryProperty', () => {
       );
 
       // Both the virtual collection and the entry property
-      // should reflect the change
+      // should reflect the change.
       const collection = Collections.get(
         virtualCollectionId(collectionEntry1.id, 'Related'),
       );
@@ -127,7 +127,7 @@ describe('updateDatabaseEntryProperty', () => {
   describe('timestamp metadata properties', () => {
     it('ignores updates to implicit timestamp properties', async () => {
       // The object database declares no timestamp properties, so
-      // Created and Last modified are implicit
+      // Created and Last modified are implicit.
       await updateDatabaseEntryProperty(
         objectEntry1.id,
         'Created',
@@ -184,7 +184,7 @@ describe('updateDatabaseEntryProperty', () => {
       );
 
       // The color lands in the metadata and mirrors into the
-      // declared property so it persists to the entry file
+      // declared property so it persists to the entry file.
       expect(updated.metadata.color).toBe('red');
       expect(updated.properties.Color).toBe('red');
     });
@@ -234,7 +234,7 @@ describe('updateDatabaseEntryProperty', () => {
     );
 
     // Update with another empty title, conflicting with the
-    // entry's own untitled file
+    // entry's own untitled file.
     await updateDatabaseEntryProperty(untitledEntry!.id, 'Title', '');
 
     // The entry should be renamed to an incremented untitled title

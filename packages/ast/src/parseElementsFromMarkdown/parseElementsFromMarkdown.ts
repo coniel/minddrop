@@ -57,7 +57,7 @@ export function parseElementsFromMarkdown(markdown: string): Element[] {
   collectBlocks(parseMdast(markdown), [], markdown, parsed);
 
   // An empty or whitespace only document still needs a block to edit, and
-  // its whitespace is the only thing to preserve
+  // its whitespace is the only thing to preserve.
   if (!parsed.length) {
     return [
       generateElement<ParagraphElement>('paragraph', {
@@ -95,7 +95,7 @@ function collectBlocks(
     }
 
     // A list is not a frame: its items are, so that adjacent items stay
-    // peers rather than siblings inside a wrapper
+    // peers rather than siblings inside a wrapper.
     if (node.type === 'list') {
       (node.children || []).forEach((item) => {
         const frame = buildListItemFrame(item, node, ancestry, source);
@@ -124,7 +124,7 @@ function collectBlocks(
 
     element.ancestry = ancestry.length ? ancestry : undefined;
     // The block's slice excludes the first line's prefix, which the
-    // ancestry rebuilds, but includes the prefixes of any further lines
+    // ancestry rebuilds, but includes the prefixes of any further lines.
     element.source = sliceNode(node, source);
 
     parsed.push({
@@ -148,7 +148,7 @@ function applySpacing(parsed: ParsedBlock[], source: string): Element[] {
     const next = parsed[index + 1];
 
     // Anything before the first block's prefix is the document's own
-    // leading whitespace
+    // leading whitespace.
     if (index === 0) {
       block.element.spacingBefore = source.slice(0, block.prefixStart);
     }
@@ -228,13 +228,13 @@ function buildListItemFrame(
   };
 
   // Only ordered items carry a number, kept as authored since CommonMark
-  // honours only the list's first
+  // honours only the list's first.
   if (ordered && orderedMarker) {
     frame.number = Number(orderedMarker[1]);
   }
 
   // A checked state is what makes the item a task item, so a plain item
-  // must not carry one at all
+  // must not carry one at all.
   if (item.checked === true || item.checked === false) {
     frame.checked = item.checked;
     frame.checkedSyntax = readCheckedSyntax(slice);

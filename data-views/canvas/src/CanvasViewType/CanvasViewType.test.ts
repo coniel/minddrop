@@ -26,7 +26,7 @@ const connection: CanvasViewConnection = {
 };
 
 // A virtual canvas view loaded directly into the store, so
-// updates skip file persistence
+// updates skip file persistence.
 const canvasView: DataView<object, CanvasViewData> = {
   id: 'data-view_canvas-test',
   virtual: true,
@@ -66,7 +66,7 @@ describe('CanvasViewType', () => {
 
   it('replaces the connection list wholesale on update', async () => {
     // Persist an empty connection list, asserting that removal
-    // persists and the sibling nodes key is untouched
+    // persists and the sibling nodes key is untouched.
     await DataViews.update(canvasView.id, { data: { connections: [] } });
 
     expect(DataViews.get(canvasView.id).data).toEqual({

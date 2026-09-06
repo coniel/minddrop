@@ -11,7 +11,7 @@ import { locales } from '../locales';
 initializeI18n();
 
 // Register the feature's own translations, as the feature
-// initializer does at runtime, so tests exercise real labels
+// initializer does at runtime, so tests exercise real labels.
 I18n.registerTranslations(locales);
 
 export const MockFs = initializeMockFileSystem();

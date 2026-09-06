@@ -42,7 +42,7 @@ describe('getSnappedResizeDeltas', () => {
     );
 
     // The right edge starts at 100 and lands on the grid line
-    // above it, so the distance shrinks by the remainder
+    // above it, so the distance shrinks by the remainder.
     expect(snapped.x).toBe(GRID_SIZE * 5 - 100);
   });
 

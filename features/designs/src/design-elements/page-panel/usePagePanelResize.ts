@@ -79,7 +79,7 @@ export function usePagePanelResize(
   }, [width]);
 
   // Restore the stored width when the layout, side, or default
-  // changes, but never while a resize is in progress
+  // changes, but never while a resize is in progress.
   useEffect(() => {
     if (!resizeState.current) {
       setWidth(readStoredWidth());
@@ -87,7 +87,7 @@ export function usePagePanelResize(
   }, [readStoredWidth]);
 
   // Re-read the stored width when the window crosses a size-slot
-  // boundary, since widths are stored per slot
+  // boundary, since widths are stored per slot.
   useEffect(() => {
     const handleWindowResize = () => {
       if (!resizeState.current) {
@@ -123,7 +123,7 @@ export function usePagePanelResize(
   );
 
   // End the resize on mouse up, persisting the final width for the
-  // current window size slot
+  // current window size slot.
   const handleMouseUp = useCallback(() => {
     if (!resizeState.current) {
       return;
@@ -153,7 +153,7 @@ export function usePagePanelResize(
   }, [handleMouseMove, handleMouseUp]);
 
   // Start a resize on the handle, stopping propagation so the panel
-  // is not selected or dragged by the same press
+  // is not selected or dragged by the same press.
   const handleResizeMouseDown = useCallback((event: React.MouseEvent) => {
     event.stopPropagation();
 

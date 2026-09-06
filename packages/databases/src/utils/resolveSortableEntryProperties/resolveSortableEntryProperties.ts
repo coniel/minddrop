@@ -48,7 +48,7 @@ export function resolveSortableEntryProperties(
   databases: Database[],
 ): SortableEntryProperty[] {
   // Metadata properties are sortable whether or not the databases
-  // declare them as properties of their own
+  // declare them as properties of their own.
   const metadataProperties = Properties.constants.MetadataSchemas.map(
     (schema): SortableEntryProperty => {
       // The databases' own properties of the metadata type
@@ -57,7 +57,7 @@ export function resolveSortableEntryProperties(
       );
 
       // A declared property only names the metadata when every
-      // database declares one under the same name
+      // database declares one under the same name.
       const named = declared.every(
         (property) => property?.name === declared[0]?.name,
       )
@@ -91,7 +91,7 @@ export function resolveSortableEntryProperties(
       }
 
       // Properties missing from any of the databases cannot order
-      // all of the entries
+      // all of the entries.
       return otherDatabases.every((database) =>
         database.properties.some(
           (candidate) =>

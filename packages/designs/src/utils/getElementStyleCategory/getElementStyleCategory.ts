@@ -19,7 +19,7 @@ export function getElementStyleCategory(
   element: DesignElementStyleSource,
 ): StyleCategory {
   // Property elements take their category from the selected
-  // presentation variant
+  // presentation variant.
   if (isPropertyElement(element)) {
     const config = getPropertyElementConfig(element.propertyType, false);
 

@@ -103,7 +103,7 @@ const EventNameTreeItem: React.FC<EventNameTreeItemProps> = ({
   const hasChildren = node.children.length > 0;
 
   // Selecting a node filters by it, selecting the already selected
-  // node expands or collapses its children instead
+  // node expands or collapses its children instead.
   const handleClick = () => {
     if (hasChildren && selectedPath === node.path) {
       setOpen((previous) => !previous);

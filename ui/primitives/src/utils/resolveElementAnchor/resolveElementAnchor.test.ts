@@ -6,7 +6,7 @@ describe('resolveElementAnchor', () => {
     const element = document.createElement('button');
 
     // jsdom reports a zero rect for every element, so the position
-    // is stubbed
+    // is stubbed.
     element.getBoundingClientRect = vi.fn(
       () => ({ x: 30, y: 12, width: 24, height: 24 }) as DOMRect,
     );

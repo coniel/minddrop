@@ -31,7 +31,7 @@ describe('<ElementContentSection />', () => {
     renderSection(openCardLayout());
 
     // "Property" also labels the property select, so several
-    // matches are expected
+    // matches are expected.
     expect(
       screen.getAllByText('designs.content.mode.property').length,
     ).toBeGreaterThan(0);
@@ -133,7 +133,7 @@ describe('<ElementContentSection />', () => {
     const studio = openCardLayout();
 
     // Register a role rendering entry data only and give it to
-    // the text element
+    // the text element.
     DesignRoles.Store.set({
       id: 'bound-only',
       elementType: 'text',
@@ -165,7 +165,7 @@ describe('<ElementContentSection />', () => {
     const studio = openCardLayout();
 
     // Register a role rendering static chrome only and give it to
-    // the text element
+    // the text element.
     DesignRoles.Store.set({
       id: 'static-only',
       elementType: 'text',
@@ -188,7 +188,7 @@ describe('<ElementContentSection />', () => {
     renderSection(studio);
 
     // No mode toggle and no property select, only the content
-    // field itself
+    // field itself.
     expect(screen.queryByText('designs.content.mode.property')).toBeNull();
     expect(screen.queryByText('designs.content.mode.static')).toBeNull();
 
@@ -214,7 +214,7 @@ describe('<ElementContentSection />', () => {
     convertToPropertyElement(studio);
 
     // A stale static flag must not strand the section without
-    // controls, since there is no toggle to leave static mode
+    // controls, since there is no toggle to leave static mode.
     studio.updateDesignElement(element_text_1.id, { static: true });
 
     renderSection(studio);
@@ -233,7 +233,7 @@ describe('<ElementContentSection />', () => {
     await userEvent.click(screen.getByText('Subtitle'));
 
     // What an element does with an empty value is a fact about its
-    // type, not a per-element choice
+    // type, not a per-element choice.
     expect(
       screen.queryByText('designs.content.emptyBehavior.label'),
     ).toBeNull();
@@ -252,7 +252,7 @@ describe('<ElementContentSection />', () => {
     renderSection(studio);
 
     // The property select proves the section itself rendered, so
-    // the missing empty behaviour is a real absence
+    // the missing empty behaviour is a real absence.
     screen.getByRole('combobox');
     expect(
       screen.queryByText('designs.content.emptyBehavior.label'),
@@ -264,7 +264,7 @@ describe('<ElementContentSection />', () => {
     const studio = openCardLayout();
 
     // A property element holds nothing but its binding, so the
-    // section is named after it
+    // section is named after it.
     convertToPropertyElement(studio);
 
     renderSection(studio);
@@ -281,7 +281,7 @@ describe('<ElementContentSection />', () => {
     renderSection(studio);
 
     // The section header already names the select, so the label
-    // appears once rather than above the field too
+    // appears once rather than above the field too.
     expect(screen.getAllByText('designs.property.label')).toHaveLength(1);
   });
 

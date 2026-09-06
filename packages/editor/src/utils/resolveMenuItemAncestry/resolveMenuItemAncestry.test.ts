@@ -17,7 +17,7 @@ const quote1: BlockquoteFrame = { id: 'quote-1', kind: 'blockquote' };
 describe('resolveMenuItemAncestry', () => {
   it('gives up the list item a plain type replaces', () => {
     // A child item turned into plain text keeps its depth but stops being
-    // an item of its own
+    // an item of its own.
     expect(resolveMenuItemAncestry([item1, item2], true)).toEqual([item1]);
   });
 

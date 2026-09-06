@@ -38,7 +38,7 @@ export const DesignStudioRootElement: React.FC<
   const layoutId = useLayoutId();
   const { scheme: previewScheme } = useDesignStudioPreview();
   // The surrounding layout's type, falling back to the type
-  // stamped on the root itself
+  // stamped on the root itself.
   const layoutType = useLayoutType() ?? element.layoutType;
   // Resolve the root's style with its role styles applied
   const style: RootStyle = Designs.resolveElementStyle(element, layoutType);
@@ -75,7 +75,7 @@ export const DesignStudioRootElement: React.FC<
   });
 
   // Resolve the background image from the bound image property's
-  // placeholder, falling back to the static background image
+  // placeholder, falling back to the static background image.
   const backgroundImage = useElementPlaceholderImage(
     element,
     style.backgroundImage,

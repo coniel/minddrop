@@ -115,7 +115,7 @@ async function rebuildSqlFromFilesystem(databases: Database[]): Promise<void> {
   const staged: { database: Database; entries: DatabaseEntry[] }[] = [];
 
   // Entries whose sidecar timestamps need writing, collected during the
-  // read pass and written in one batch at the end
+  // read pass and written in one batch at the end.
   const outdatedSidecars: { database: Database; entry: DatabaseEntry }[] = [];
 
   // Pass 1: read all entries so references can resolve across databases
@@ -138,7 +138,7 @@ async function rebuildSqlFromFilesystem(databases: Database[]): Promise<void> {
     ]);
 
     // Merge metadata into entries before conversion, resolving their
-    // timestamps against the sidecar
+    // timestamps against the sidecar.
     const entriesWithMetadata = rawEntries.map((rawEntry) => {
       const { entry, sidecarOutdated } = mergeEntryMetadata(
         rawEntry,
@@ -147,7 +147,7 @@ async function rebuildSqlFromFilesystem(databases: Database[]): Promise<void> {
       );
 
       // Collect entries whose sidecar has no timestamps yet, or whose
-      // timestamp properties have since been edited outside the app
+      // timestamp properties have since been edited outside the app.
       if (sidecarOutdated) {
         outdatedSidecars.push({ database, entry });
       }
@@ -190,7 +190,7 @@ async function rebuildSqlFromFilesystem(databases: Database[]): Promise<void> {
   }
 
   // Seed the sidecars in one batch at the end, keeping the index build
-  // itself a read pass
+  // itself a read pass.
   await Promise.all(
     outdatedSidecars.map(({ database, entry }) =>
       writeEntryMetadata(database.path, entry.path, entry.metadata),

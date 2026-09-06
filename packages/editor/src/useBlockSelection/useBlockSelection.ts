@@ -15,7 +15,7 @@ import {
 } from '../utils';
 
 // Matched by key rather than by key code, the shortcuts being
-// about the keys' meaning rather than their position
+// about the keys' meaning rather than their position.
 const byKey = { byKey: true } as const;
 const isEscape = isHotkey('escape', byKey);
 const isBackspace = isHotkey('backspace', byKey);
@@ -95,7 +95,7 @@ export function useBlockSelection(
       }
 
       // Blocks are moved and duplicated from a cursor as well as
-      // from a block selection
+      // from a block selection.
       if (isMoveUp(event.nativeEvent) || isMoveDown(event.nativeEvent)) {
         const paths = getTargetBlockPaths(editor);
 
@@ -151,7 +151,7 @@ export function useBlockSelection(
       const up = isArrowUp(event.nativeEvent) || isExtendUp(event.nativeEvent);
 
       // Extending moves the focused end of the selection, while
-      // the arrows on their own move the whole selection
+      // the arrows on their own move the whole selection.
       if (extend) {
         const backward = editor.selection
           ? Range.isBackward(editor.selection)

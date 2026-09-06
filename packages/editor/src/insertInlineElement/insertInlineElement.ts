@@ -25,7 +25,7 @@ export function insertInlineElement<TElement extends Element = Element>(
   const config = getEditorElementConfig(type);
 
   // Element types must have a component in order to be rendered, and an
-  // inline element has nowhere to go without a cursor to put it at
+  // inline element has nowhere to go without a cursor to put it at.
   if (!config || !isInlineElement(type) || !editor.selection) {
     return;
   }
@@ -34,7 +34,7 @@ export function insertInlineElement<TElement extends Element = Element>(
   const selectedText = SlateEditor.string(editor, editor.selection);
 
   // A void element holds no content of its own, so text it is inserted over
-  // is replaced rather than taken in
+  // is replaced rather than taken in.
   const takesContent = !isVoidElement(type) && !!selectedText;
 
   const element = {

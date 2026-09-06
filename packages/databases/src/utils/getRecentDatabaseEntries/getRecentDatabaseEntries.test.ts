@@ -11,7 +11,7 @@ import { DatabaseEntry } from '../../types';
 import { getRecentDatabaseEntries } from './getRecentDatabaseEntries';
 
 // Entries with distinct modification dates, more recent than the
-// fixture entries
+// fixture entries.
 const middleEntry: DatabaseEntry = {
   ...objectEntry1,
   id: 'database-entry_middle',

@@ -93,7 +93,7 @@ export const SelectItem = ({
   const resolvedHint = stringHint ?? (hint ? t(hint) : null);
 
   // Renders the item's text, joined by its hint and description
-  // when it carries them
+  // when it carries them.
   function renderBody() {
     const text = (
       <SelectPrimitive.ItemText className="select-item-text">

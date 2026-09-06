@@ -19,7 +19,7 @@ type GridPosition = ContainerAlign;
 const MainAxisPositions: GridPosition[] = ['start', 'center', 'end'];
 
 // The positions they take across it, ending with the one which
-// fills the container rather than sitting anywhere in it
+// fills the container rather than sitting anywhere in it.
 const CrossAxisPositions: GridPosition[] = [
   'start',
   'center',
@@ -68,11 +68,11 @@ export const AlignmentGrid: React.FC<AlignmentGridProps> = ({ editor }) => {
   const columnPositions = isRow ? MainAxisPositions : CrossAxisPositions;
 
   // The main axis is out of the grid's hands when the children are
-  // spread apart, or when the element's role fixes their spacing
+  // spread apart, or when the element's role fixes their spacing.
   const crossAxisOnly = justify === 'space-between' || !isEditable('justify');
 
   // Children pile up at the start of the main axis while it is
-  // unset, which is the position the grid shows them in
+  // unset, which is the position the grid shows them in.
   const mainAxisPosition = justify ?? 'start';
 
   const handleSelect = useCallback(
@@ -82,11 +82,11 @@ export const AlignmentGrid: React.FC<AlignmentGridProps> = ({ editor }) => {
       isActive: boolean,
     ) => {
       // Pressing the active position clears it, matching how the
-      // other fields are cleared back to inherit
+      // other fields are cleared back to inherit.
       setValue('align', isActive ? undefined : cellAlign);
 
       // The main axis position is only the grid's to set while it
-      // holds both axes
+      // holds both axes.
       if (!crossAxisOnly) {
         setValue('justify', isActive ? undefined : cellJustify);
       }
@@ -107,14 +107,14 @@ export const AlignmentGrid: React.FC<AlignmentGridProps> = ({ editor }) => {
           columnPositions.map((columnPosition) => {
             // A row container aligns its children down the grid and
             // distributes them across it, a column container the
-            // other way round
+            // other way round.
             const cellAlign = isRow ? rowPosition : columnPosition;
             const cellJustify = resolveJustify(
               isRow ? columnPosition : rowPosition,
             );
 
             // Nothing is active until the cross axis is set, so an
-            // inherited alignment shows as no selection
+            // inherited alignment shows as no selection.
             const isActive = crossAxisOnly
               ? align === cellAlign
               : align === cellAlign && mainAxisPosition === cellJustify;

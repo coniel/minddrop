@@ -15,7 +15,7 @@ import { resolveRenamesDirPath } from '../resolveRenamesDirPath';
  */
 export function resolveRenameEventFilePath(event: RenameEvent): string {
   // Strip separator characters from the ISO timestamp, colons are
-  // not valid in file names on all platforms
+  // not valid in file names on all platforms.
   const timestamp = event.timestamp.toISOString().replace(/[-:.]/g, '');
 
   // Slugify the renamed entity's new name to keep the file name

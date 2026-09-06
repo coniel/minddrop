@@ -20,7 +20,7 @@ describe('resolveEventAnchor', () => {
 
   it('returns null for clicks fired by keyboard activation', () => {
     // Activating a control by keyboard fires a click at the
-    // viewport origin
+    // viewport origin.
     expect(
       resolveEventAnchor(new MouseEvent('click', { clientX: 0, clientY: 0 })),
     ).toBeNull();

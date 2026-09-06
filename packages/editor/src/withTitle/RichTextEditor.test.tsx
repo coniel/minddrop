@@ -48,7 +48,7 @@ describe('RichTextEditor title', () => {
   afterEach(cleanup);
 
   // Renders an editor with the title feature enabled and returns
-  // the render result along with collected callback calls
+  // the render result along with collected callback calls.
   const renderTitleEditor = (options: {
     title: string;
     validateTitle?: (title: string) => string | undefined;

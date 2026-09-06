@@ -8,7 +8,7 @@ import { CanvasConnection, CanvasSelection } from '../types';
 import { Canvas, CanvasProps } from './Canvas';
 
 // Two nodes with a horizontal gap between them, joined by a
-// connection running along y = 50 from x = 100 to x = 300
+// connection running along y = 50 from x = 100 to x = 300.
 const connection: CanvasConnection = {
   id: 'connection-1',
   from: { nodeId: 'node-1', side: 'right' },
@@ -16,7 +16,7 @@ const connection: CanvasConnection = {
 };
 
 // Renders a canvas with a connections layer, backed by the given
-// store, and returns its viewport element
+// store, and returns its viewport element.
 const renderCanvas = (store: CanvasStore, props: Partial<CanvasProps> = {}) => {
   const { container } = render(
     <CanvasProvider store={store}>
@@ -27,7 +27,7 @@ const renderCanvas = (store: CanvasStore, props: Partial<CanvasProps> = {}) => {
   );
 
   // The nodes the connection joins, registered directly rather
-  // than by mounting node components
+  // than by mounting node components.
   act(() => {
     store.registerNode('node-1', { x: 0, y: 0, width: 100, height: 100 });
     store.registerNode('node-2', { x: 300, y: 0, width: 100, height: 100 });
@@ -197,7 +197,7 @@ describe('Canvas', () => {
 
       // A selection started on the press carries on painting
       // across the content the marquee is dragged over, so the
-      // press has to suppress its default behaviour
+      // press has to suppress its default behaviour.
       expect(pressBackground(viewport, -10, -10)).toBe(false);
 
       releaseMouse();
@@ -212,7 +212,7 @@ describe('Canvas', () => {
       moveMouse(410, 110);
 
       // Text the marquee sweeps over can neither be selected nor
-      // swap the cursor
+      // swap the cursor.
       expect(document.body.classList.contains('ui-canvas-interacting')).toBe(
         true,
       );

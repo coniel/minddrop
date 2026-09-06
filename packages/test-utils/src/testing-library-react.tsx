@@ -72,7 +72,7 @@ const translateMatcher = (text: Matcher): Matcher =>
   typeof text === 'string' ? translateKey(text) : text;
 
 // The query families whose first argument is a text matcher, and so
-// accept translation keys
+// accept translation keys.
 const TranslatableQueryPattern =
   /^(get|query|find)(All)?By(Text|AltText|LabelText|PlaceholderText)$/;
 

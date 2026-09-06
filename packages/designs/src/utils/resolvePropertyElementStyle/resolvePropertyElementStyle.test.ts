@@ -4,7 +4,7 @@ import { DesignTheme } from '../../types';
 import { resolvePropertyElementStyle } from './resolvePropertyElementStyle';
 
 // A minimal theme styling the short value variant, used to
-// check the theme parameter is honoured
+// check the theme parameter is honoured.
 const customTheme: DesignTheme = {
   propertyElements: {
     text: {
@@ -40,7 +40,7 @@ describe('resolvePropertyElementStyle', () => {
 
   it('applies context styles over the variant styles', () => {
     // The caption's own font size survives the list context, which
-    // only adds truncation
+    // only adds truncation.
     expect(
       resolvePropertyElementStyle(TextPropertyElementConfig, 'caption', 'list'),
     ).toEqual({ fontSize: 'xs', color: 'subtle', truncate: 1 });

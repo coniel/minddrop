@@ -51,7 +51,7 @@ const TextAlignOptions: OptionToggleFieldOption<TextAlign>[] = [
 
 // The sizes offered for hand-picked text. The scale's numbered
 // extremes stay reserved for role styling, keeping the select to
-// a readable handful
+// a readable handful.
 const FontSizeOptions: readonly FontSizeToken[] = [
   'xs',
   'sm',
@@ -62,7 +62,7 @@ const FontSizeOptions: readonly FontSizeToken[] = [
 
 // The capitalisation options, shown as letter-pair samples. The
 // as-is option stands in for an unset value, since a radio group
-// offers no deselection
+// offers no deselection.
 export const TextTransformOptions: OptionToggleFieldOption<
   TextTransform | 'none'
 >[] = [

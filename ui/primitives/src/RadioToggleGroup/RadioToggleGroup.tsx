@@ -76,7 +76,7 @@ export function RadioToggleGroup<Value extends string>({
 
   // A group given a value stays controlled while nothing is
   // selected, so an empty selection cannot leave the toggles
-  // running on their own state
+  // running on their own state.
   const selection = resolveSelection(value);
 
   return (

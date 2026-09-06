@@ -69,7 +69,7 @@ export const DateFormatFields: React.FC<DateFormatFieldsProps> = ({
   const { t } = useTranslation();
   const studio = useDesignStudio();
   // Defaults match formatDesignDate's own defaults, so the panel
-  // shows what the canvas renders
+  // shows what the canvas renders.
   const { mode, dateStyle, showTime } = useElementData(
     elementId,
     (element: FlatDatePropertyElement) => ({
@@ -90,7 +90,7 @@ export const DateFormatFields: React.FC<DateFormatFieldsProps> = ({
   }, []);
 
   // A relative date describes an interval, so neither the style
-  // preset nor the time apply to it
+  // preset nor the time apply to it.
   const isRelative = mode === 'relative';
 
   const handleModeChange = useCallback(

@@ -24,7 +24,7 @@ export function handleSearchDatabaseSync({
     upsertIndexDatabase(database);
 
     // Re-index entry documents so databaseName/databaseIcon
-    // are up to date
+    // are up to date.
     reindexDatabaseEntries(database.id);
   }
 

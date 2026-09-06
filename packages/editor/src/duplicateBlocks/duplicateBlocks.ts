@@ -36,7 +36,7 @@ export function duplicateBlocks(editor: Editor, paths: Path[]): void {
   Transforms.insertNodes(editor, copies, { at: [firstCopyIndex] });
 
   // Carry the selection over to the copies, so that repeating the
-  // action duplicates them rather than the originals
+  // action duplicates them rather than the originals.
   selectBlocks(editor, [firstCopyIndex], [firstCopyIndex + copies.length - 1]);
 }
 

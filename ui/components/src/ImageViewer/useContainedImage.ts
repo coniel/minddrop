@@ -81,12 +81,12 @@ export function useContainedImage(
   const [loadedSize, setLoadedSize] = useState({ width: 0, height: 0 });
 
   // Depended on as primitives so that a caller passing a fresh
-  // object each render does not invalidate every memoized handler
+  // object each render does not invalidate every memoized handler.
   const knownWidth = knownSize?.width ?? 0;
   const knownHeight = knownSize?.height ?? 0;
 
   // Prefer the dimensions measured from the loaded image, falling
-  // back to those known ahead of it
+  // back to those known ahead of it.
   const naturalSize = useMemo(
     () =>
       loadedSize.width

@@ -30,7 +30,7 @@ export function insertWikilink(
   const element = Ast.generateElement<WikilinkElement>('wikilink', {
     reference,
     // Text the link is made from is kept as its label, so linking a phrase
-    // reads as that phrase rather than as what it points at
+    // reads as that phrase rather than as what it points at.
     children: [{ text: label || selectedText || reference }],
   });
 
@@ -41,7 +41,7 @@ export function insertWikilink(
     }
 
     // The empty text after the link is where the cursor lands, which is what
-    // keeps typing alongside the link rather than inside it
+    // keeps typing alongside the link rather than inside it.
     Transforms.insertNodes(editor, [element, { text: '' }], { select: true });
     Transforms.collapse(editor, { edge: 'end' });
   });

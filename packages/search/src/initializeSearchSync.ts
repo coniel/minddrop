@@ -77,7 +77,7 @@ export function initializeSearchSync(): void {
     }
 
     // SQL rename is already done; just re-index MiniSearch
-    // with updated property data
+    // with updated property data.
     queueDatabaseReindex(workspaceId, data.databaseId);
   });
 

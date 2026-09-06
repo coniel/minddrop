@@ -48,7 +48,7 @@ export function getTableCellEntry(
   }
 
   // A cell sits inside a row inside a table, so it is always at least two
-  // levels deep
+  // levels deep.
   if (cell[1].length < 2) {
     return null;
   }
@@ -59,7 +59,7 @@ export function getTableCellEntry(
   const [tableNode] = SlateEditor.node(editor, tablePath);
 
   // The structure around the cell may not be a table while normalization is
-  // still repairing it
+  // still repairing it.
   if (!isTableRowElement(rowNode) || !isTableElement(tableNode)) {
     return null;
   }

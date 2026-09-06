@@ -20,7 +20,7 @@ export function removeQueryNodeConnections(
   );
 
   // Preserve the reference when nothing was removed so callers
-  // can skip persisting
+  // can skip persisting.
   if (remaining.length === connections.length) {
     return connections;
   }

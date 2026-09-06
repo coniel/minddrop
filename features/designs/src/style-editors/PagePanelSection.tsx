@@ -61,7 +61,7 @@ export const PagePanelSection: React.FC<PagePanelSectionProps> = ({ side }) => {
   }
 
   // The open default is stored as an unset key, so switching it
-  // back on removes the key rather than storing a true
+  // back on removes the key rather than storing a true.
   function handleDefaultOpenChange(checked: boolean) {
     if (!panel) {
       return;
@@ -69,7 +69,7 @@ export const PagePanelSection: React.FC<PagePanelSectionProps> = ({ side }) => {
 
     if (checked) {
       // Drop the key by replacing the element, since a merge
-      // cannot unset a field
+      // cannot unset a field.
       const { defaultOpen: _removed, ...openPanel } = panel;
 
       studio.setDesignElement(panel.id, openPanel);

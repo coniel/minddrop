@@ -21,15 +21,15 @@ import './SearchView.css';
 const RECENT_ENTRY_COUNT = 12;
 
 // Key under which the query is persisted in the pane's transient
-// view state
+// view state.
 const QUERY_STATE_KEY = 'search-view-query';
 
 // Frames over which the search field tries to claim focus, covering
-// the close transition of a menu the view was opened from
+// the close transition of a menu the view was opened from.
 const MAX_FOCUS_ATTEMPTS = 40;
 
 // Consecutive frames the search field must keep focus before it is
-// considered settled
+// considered settled.
 const REQUIRED_FOCUS_FRAMES = 10;
 
 /**
@@ -40,7 +40,7 @@ const REQUIRED_FOCUS_FRAMES = 10;
 export const SearchView: React.FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   // Whether the persisted query has been restored, ensuring it is
-  // only applied once
+  // only applied once.
   const restoredRef = useRef(false);
   const { query, results, search, clear } = useSearch();
   const [storedQuery, setStoredQuery] = useTransientState<string>(
@@ -50,7 +50,7 @@ export const SearchView: React.FC = () => {
   const openView = Views.useOpenView();
 
   // The most recently modified entries, listed as an entry point
-  // while there is no query
+  // while there is no query.
   const recentEntries = useMemo(
     () => DatabaseEntries.getRecent(RECENT_ENTRY_COUNT),
     [],
@@ -63,7 +63,7 @@ export const SearchView: React.FC = () => {
   const itemCount = showingResults ? results.length : recentEntries.length;
 
   // Open a database entry in place of the search view, overriding the
-  // database's own open mode so the result never opens elsewhere
+  // database's own open mode so the result never opens elsewhere.
   const openEntry = useCallback(
     (entryId: string) => {
       openView(DatabaseEntries.events.OpenView, {
@@ -173,7 +173,7 @@ export const SearchView: React.FC = () => {
 
         // Stop once the field has kept focus long enough for a trap
         // to have taken it back, as focus is returned asynchronously
-        // and a single frame can observe it before that happens
+        // and a single frame can observe it before that happens.
         if (heldFrames >= REQUIRED_FOCUS_FRAMES) {
           return;
         }
@@ -184,7 +184,7 @@ export const SearchView: React.FC = () => {
       }
 
       // Retry on the next frame, giving up once the budget runs out
-      // so a deliberate click elsewhere is not fought indefinitely
+      // so a deliberate click elsewhere is not fought indefinitely.
       attempts += 1;
 
       if (attempts < MAX_FOCUS_ATTEMPTS) {

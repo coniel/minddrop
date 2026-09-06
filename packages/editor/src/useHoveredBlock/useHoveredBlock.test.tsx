@@ -205,7 +205,7 @@ describe('useHoveredBlock', () => {
     hoverBlock(getByText(paragraphElement1PlainText));
 
     // The container sits around the editor, so its own padding is
-    // not part of any block
+    // not part of any block.
     fireEvent.pointerMove(getByTestId('container'));
 
     expect(getByTestId('readout').textContent).toBe('paragraph');
@@ -266,7 +266,7 @@ describe('useHoveredBlock', () => {
     hoverBlock(getByText(paragraphElement1PlainText));
 
     // Pressing the controls starts a drag of the block they belong
-    // to, which unmounting them would abort
+    // to, which unmounting them would abort.
     fireEvent.pointerDown(getByTestId('controls'));
     fireEvent.pointerMove(getByText(paragraphElement1PlainText), {
       buttons: 1,

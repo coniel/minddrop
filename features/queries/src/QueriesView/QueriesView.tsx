@@ -17,7 +17,7 @@ export const QueriesView: React.FC = () => {
   const queries = Queries.useAll();
 
   // Queries listed in the left column: fuzzy name matches when
-  // searching, all queries otherwise
+  // searching, all queries otherwise.
   const items = useMemo(
     () => (query ? Queries.search(query) : queries).map(toListItem),
     [queries, query],
@@ -33,7 +33,7 @@ export const QueriesView: React.FC = () => {
   );
 
   // Create a new query and show it, clearing the search so the new
-  // query is visible in the list
+  // query is visible in the list.
   async function handleCreateQuery(): Promise<void> {
     const createdQuery = await Queries.create();
 

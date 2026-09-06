@@ -3,7 +3,7 @@ import { MaxLogEntries } from '../constants';
 import { DevToolsLogLevel, DevToolsLogSource } from '../types';
 
 // Log entries are disposable, so a counter is enough to tell
-// them apart within a session
+// them apart within a session.
 let logCount = 0;
 
 /**

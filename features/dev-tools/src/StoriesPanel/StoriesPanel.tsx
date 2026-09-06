@@ -31,13 +31,13 @@ export const StoriesPanel: React.FC = () => {
   );
 
   // Selected from all stories rather than the listed ones, so that
-  // the previewed story stays put while searching
+  // the previewed story stays put while searching.
   const activeStory =
     getStoryById(groups, activeStoryId) ?? groups[0]?.items[0] ?? null;
   const ActiveStory = activeStory?.component;
 
   // Load the story files, which are kept out of the app's start up
-  // path and so are loaded the first time the panel is opened
+  // path and so are loaded the first time the panel is opened.
   useEffect(() => {
     loadStories();
   }, []);

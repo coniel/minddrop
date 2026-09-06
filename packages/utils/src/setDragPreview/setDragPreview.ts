@@ -21,7 +21,7 @@ export function setDragPreview(
   const rect = element.getBoundingClientRect();
 
   // Clone the element, sized explicitly since the clone is detached
-  // from the element's layout context
+  // from the element's layout context.
   const clone = element.cloneNode(true) as Element;
 
   clone.setAttribute(
@@ -30,11 +30,11 @@ export function setDragPreview(
   );
 
   // The clone must be rendered in the document for the browser to
-  // capture it as a drag image
+  // capture it as a drag image.
   document.body.appendChild(clone);
 
   // Keep the cursor at the same position within the preview as it
-  // is within the element
+  // is within the element.
   const offsetX = event.clientX - rect.left;
   const offsetY = event.clientY - rect.top;
 

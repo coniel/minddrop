@@ -96,7 +96,7 @@ export const Tooltip: FC<TooltipProps> = ({
   );
 
   // Only the open tooltip watches for a drag, so this is a single
-  // listener however many tooltips are mounted
+  // listener however many tooltips are mounted.
   useEffect(() => {
     if (!isOpen) {
       return;

@@ -100,7 +100,7 @@ function renameEntryTag(
     }
 
     // Map the old name to the new one, deduping in case the new
-    // name was already present
+    // name was already present.
     const renamed = value.map((name) => (name === oldName ? newName : name));
     properties[propertyName] = [...new Set(renamed)];
     changedProperties.push(propertyName);

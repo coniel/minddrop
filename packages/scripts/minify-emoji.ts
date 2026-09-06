@@ -127,7 +127,7 @@ emojiJson
       subgroups.push(emojiItem.subgroup);
     }
 
-    let emojiName = emojiItem.name;
+    const emojiName = emojiItem.name;
 
     const emoji: Emoji = [
       emojiItem.char,

@@ -18,7 +18,7 @@ import { getBlockSelectionRange, getSelectedBlocks } from '../utils';
 import { useBlockSelection } from './useBlockSelection';
 
 // Creates an editor holding three paragraphs, its blocks carrying the IDs
-// the app's selection identifies them by
+// the app's selection identifies them by.
 const createEditor = () =>
   createTestEditorWithBlockIds([
     paragraphElement1,

@@ -62,7 +62,7 @@ export function insertBlockElement<TElement extends Element = Element>(
   const [block, blockPath] = entry;
 
   // The element takes the place of the block it is inserted at, so it takes
-  // the containers that block sat in
+  // the containers that block sat in.
   const ancestry = resolveMenuItemAncestry(
     block.ancestry || [],
     opensInnermostFrame(editor.children as Element[], blockPath[0]),

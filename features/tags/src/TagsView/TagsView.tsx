@@ -35,7 +35,7 @@ export const TagsView: React.FC = () => {
   const selectedTag = Tags.use(subview?.id ?? '');
 
   // Tags listed in the left column: fuzzy name matches when
-  // searching, all tags otherwise
+  // searching, all tags otherwise.
   const listedTags = useMemo(
     () => (query ? Tags.search(query) : tags),
     [tags, query],
@@ -116,7 +116,7 @@ export const TagsView: React.FC = () => {
 
     // The ungrouped section is only labelled when it has tags to
     // set apart from the groups, and dropped entirely when empty
-    // so the list-level empty state can show
+    // so the list-level empty state can show.
     const ungroupedSections: ListPanelViewSection[] =
       ungroupedItems.length > 0
         ? [
@@ -157,7 +157,7 @@ export const TagsView: React.FC = () => {
   );
 
   // Create a new group with the committed name, ignoring names
-  // already in use
+  // already in use.
   async function handleCreateGroup(name: string) {
     try {
       await TagGroups.create(name);

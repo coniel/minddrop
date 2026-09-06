@@ -19,7 +19,7 @@ describe('getConnectionPathBounds', () => {
     const bounds = getConnectionPathBounds(start, end, 'curved');
 
     // The control points sit 100 below the anchors, but the
-    // curve only reaches 75 down at its midpoint
+    // curve only reaches 75 down at its midpoint.
     expect(bounds.height).toBeCloseTo(75);
     expect(bounds.y).toBe(0);
   });

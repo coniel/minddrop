@@ -23,7 +23,7 @@ describe('<Calendar />', () => {
     render(<Calendar mode="single" defaultMonth={AUGUST} />);
 
     // The trigger shows the short name; the full name only appears
-    // among the dropdown's options once opened
+    // among the dropdown's options once opened.
     expect(screen.getByText('Aug')).toBeInTheDocument();
     expect(screen.queryByText('August')).toBeNull();
   });

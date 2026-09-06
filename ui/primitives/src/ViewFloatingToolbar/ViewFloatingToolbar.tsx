@@ -52,11 +52,11 @@ export const ViewFloatingToolbar: React.FC<ViewFloatingToolbarProps> = ({
   const anchorRef = useRef<HTMLDivElement>(null);
 
   // The menu open state the pinning effect last reacted to, used
-  // to ignore renders in which it did not change
+  // to ignore renders in which it did not change.
   const previousMenuOpenRef = useRef(menuOpen);
 
   // The toolbar's right edge offset from the anchor while a menu
-  // is open, pinning it in place
+  // is open, pinning it in place.
   const [pinnedRightOffset, setPinnedRightOffset] = useState<number | null>(
     null,
   );
@@ -87,11 +87,11 @@ export const ViewFloatingToolbar: React.FC<ViewFloatingToolbarProps> = ({
     }
 
     // The toolbar is centered on the anchor, so its right edge
-    // sits half its width to the right of it
+    // sits half its width to the right of it.
     const centeredOffset = content.offsetWidth / 2;
 
     // Closing without a size change: already centered, unpin
-    // directly as no transition will fire
+    // directly as no transition will fire.
     if (!menuOpen && pinnedRightOffset === centeredOffset) {
       setPinnedRightOffset(null);
 
@@ -102,7 +102,7 @@ export const ViewFloatingToolbar: React.FC<ViewFloatingToolbarProps> = ({
   }, [menuOpen, pinnedRightOffset]);
 
   // Unpin once the toolbar has animated back to the centered
-  // position, at which point clearing the pin causes no movement
+  // position, at which point clearing the pin causes no movement.
   function handleToolbarTransitionEnd(event: React.TransitionEvent) {
     if (
       event.target === event.currentTarget &&

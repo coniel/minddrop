@@ -40,7 +40,7 @@ export function setup(): void {
   setupTestSqlDatabase();
 
   // Seed the data version counter, which `Sql.open` creates in
-  // production but the in-memory test database lacks
+  // production but the in-memory test database lacks.
   Sql.run("INSERT OR IGNORE INTO meta (key, value) VALUES ('version', '0')");
 }
 

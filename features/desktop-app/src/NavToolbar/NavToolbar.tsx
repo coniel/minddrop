@@ -14,7 +14,7 @@ import './NavToolbar.css';
 export const NavToolbar: FC = () => {
   const [width, setWidth] = useState(0);
   // The view-provided back action overriding the tab history
-  // navigation, when one is registered
+  // navigation, when one is registered.
   const [backAction, setBackAction] =
     useState<SetNavToolbarBackActionEventData>(null);
 
@@ -23,7 +23,7 @@ export const NavToolbar: FC = () => {
   const canGoForward = Tabs.useCanGoForward(Views.constants.DefaultAreaId);
 
   // Registered as a layout effect so the width is in place before the
-  // first paint, catching the sidebar's initial width dispatch
+  // first paint, catching the sidebar's initial width dispatch.
   useLayoutEffect(() => {
     Events.addListener(
       Events.events.SetNavToolbarWidth,
@@ -34,7 +34,7 @@ export const NavToolbar: FC = () => {
     );
 
     // Views register a back action of their own, e.g. an editor
-    // backing out to its dashboard
+    // backing out to its dashboard.
     Events.addListener(
       Events.events.SetNavToolbarBackAction,
       'app-nav-toolbar',
@@ -56,7 +56,7 @@ export const NavToolbar: FC = () => {
   }, []);
 
   // Run the overriding back action, or navigate the active tab
-  // back through its history
+  // back through its history.
   const handleClickBack = useCallback(() => {
     if (backAction) {
       Events.dispatch(Events.events.NavToolbarBack);

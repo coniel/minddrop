@@ -24,7 +24,7 @@ export function newTab(viewAreaId: string, options: NewTabOptions = {}): void {
   const tab = createBlankTab();
 
   // Insert it at the requested position, or append it when none
-  // was given
+  // was given.
   const index = options.index ?? tabs.length;
 
   // Add it to the set and make it active

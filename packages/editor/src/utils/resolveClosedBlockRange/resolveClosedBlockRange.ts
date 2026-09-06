@@ -21,7 +21,7 @@ export function resolveClosedBlockRange(
   let { lastIndex } = range;
 
   // A block pulled into the range can itself hold nested blocks, so the
-  // range keeps growing until nothing new is drawn in
+  // range keeps growing until nothing new is drawn in.
   for (let index = range.firstIndex; index <= lastIndex; index += 1) {
     const nested = resolveNestedBlockIndexes(elements, index);
 

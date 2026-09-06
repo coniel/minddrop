@@ -22,11 +22,11 @@ export interface SpaceSide {
 }
 
 // Value used by the option which clears a side, since a select
-// cannot carry undefined as an option value
+// cannot carry undefined as an option value.
 const NoneValue = 'none';
 
 // The options each side select offers: the spacing scale plus the
-// option which clears the side
+// option which clears the side.
 const SpaceOptions: SelectOption<string>[] = [
   { value: NoneValue, label: 'designsStudio.style.space.none' },
   ...SpaceScaleTokens.map((token) => ({
@@ -84,7 +84,7 @@ export const SpaceFields: React.FC<SpaceFieldsProps> = ({
   onChange,
 }) => {
   // Sides start unlinked: spacing is usually tuned per edge, so
-  // linking is the deliberate choice
+  // linking is the deliberate choice.
   const [synced, setSynced] = useState(false);
 
   // The whole block disappears when a role controls every side
@@ -141,7 +141,7 @@ export const SpaceFields: React.FC<SpaceFieldsProps> = ({
   }
 
   // Link or unlink the sides, equalising them on the top side's
-  // value when linking
+  // value when linking.
   function handleToggleSync() {
     if (synced) {
       setSynced(false);

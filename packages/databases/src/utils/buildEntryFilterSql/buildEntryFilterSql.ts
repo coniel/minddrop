@@ -71,7 +71,7 @@ export function buildEntryFilterSql(
   }
 
   // Join the fragments with the group's combinator and
-  // parenthesize to preserve precedence when nested
+  // parenthesize to preserve precedence when nested.
   const joiner = group.combinator === 'and' ? ' AND ' : ' OR ';
 
   return { sql: `(${fragments.join(joiner)})`, params };
@@ -93,13 +93,13 @@ function isFilterGroup(
  */
 function buildFilterSql(filter: EntryFilter): EntryFilterSql {
   // Entry ID filters compare the entries table's ID column
-  // rather than a property value
+  // rather than a property value.
   if (isEntryIdFilter(filter)) {
     return buildEntryIdSql(filter);
   }
 
   // Title/created/last-modified live as columns on the entries
-  // table, compare them directly
+  // table, compare them directly.
   const pseudoColumn = getPseudoPropertyColumn(filter.propertyType);
 
   if (pseudoColumn) {
@@ -146,7 +146,7 @@ function isEntryIdFilter(filter: EntryFilter): filter is EntryIdFilter {
  */
 function buildEntryIdSql(filter: EntryIdFilter): EntryFilterSql {
   // An empty set matches no entries, and its negation matches
-  // all of them
+  // all of them.
   if (filter.entryIds.length === 0) {
     return { sql: filter.operator === 'id-is-one-of' ? '0' : '1', params: [] };
   }
@@ -235,7 +235,7 @@ function buildPseudoPropertySql(
       return { sql: `${column} >= ?`, params: [filter.value] };
 
     // Pseudo-property columns are NOT NULL, existence tests
-    // resolve to constant clauses
+    // resolve to constant clauses.
     case 'is-empty':
       return { sql: `${column} IS NULL`, params: [] };
     case 'is-not-empty':
@@ -265,7 +265,7 @@ function likeComparison(
  */
 function buildExistenceSql(filter: EntryPropertyFilter): EntryFilterSql {
   // Multi-value properties store their values in the
-  // entry_property_values table
+  // entry_property_values table.
   const table = MULTI_VALUE_PROPERTY_TYPES.has(filter.propertyType)
     ? 'entry_property_values'
     : 'entry_properties';
@@ -287,7 +287,7 @@ function buildMultiValueSql(filter: EntryMultiValueFilter): EntryFilterSql {
   const params: SqlParam[] = [filter.property, filter.value];
 
   // Negative membership compiles to NOT EXISTS so entries
-  // without the property match
+  // without the property match.
   if (filter.operator === 'not-has-value') {
     return { sql: `NOT EXISTS (${subquery})`, params };
   }
@@ -310,7 +310,7 @@ function buildScalarTextSql(filter: EntryTextFilter): EntryFilterSql {
       };
 
     // Negative equality compiles to NOT EXISTS so entries
-    // without the property match
+    // without the property match.
     case 'text-not-equals':
       return {
         sql: `NOT EXISTS (${subqueryPrefix} AND value_text = ? COLLATE NOCASE)`,
@@ -323,7 +323,7 @@ function buildScalarTextSql(filter: EntryTextFilter): EntryFilterSql {
       };
 
     // Negative containment compiles to NOT EXISTS so entries
-    // without the property match
+    // without the property match.
     case 'text-not-contains':
       return {
         sql: `NOT EXISTS (${subqueryPrefix} AND value_text LIKE ? ESCAPE '\\')`,
@@ -348,7 +348,7 @@ function buildScalarTextSql(filter: EntryTextFilter): EntryFilterSql {
  */
 function buildScalarNumberSql(filter: EntryNumberFilter): EntryFilterSql {
   // Number properties store REAL values, integer-backed types
-  // (toggle, date, created, last-modified) store integers
+  // (toggle, date, created, last-modified) store integers.
   const column =
     filter.propertyType === 'number' ? 'value_number' : 'value_integer';
 
@@ -356,7 +356,7 @@ function buildScalarNumberSql(filter: EntryNumberFilter): EntryFilterSql {
   const params: SqlParam[] = [filter.property, filter.value];
 
   // Negative equality compiles to NOT EXISTS so entries
-  // without the property match
+  // without the property match.
   if (filter.operator === 'number-not-equals') {
     return {
       sql: `NOT EXISTS (${subqueryPrefix} AND ${column} = ?)`,

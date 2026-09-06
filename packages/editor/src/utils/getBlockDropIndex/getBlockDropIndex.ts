@@ -15,7 +15,7 @@ export function getBlockDropIndex(
   contentStartIndex: number,
 ): number {
   // The half of the block the pointer is over decides which of its
-  // sides the blocks drop on
+  // sides the blocks drop on.
   const after = pointerY > blockBounds.top + blockBounds.height / 2;
   const index = after ? blockIndex + 1 : blockIndex;
 

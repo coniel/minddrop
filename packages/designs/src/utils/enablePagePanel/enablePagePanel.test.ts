@@ -21,7 +21,7 @@ describe('enablePagePanel', () => {
     expect(regions.content?.children).toEqual(root.children);
 
     // The root switches to a panel row with its padding moved to
-    // the content region
+    // the content region.
     expect(panelled.style.direction).toBe('row');
     expect(panelled.style.paddingTop).toBeUndefined();
     expect(regions.content?.style.paddingTop).toBe('4');

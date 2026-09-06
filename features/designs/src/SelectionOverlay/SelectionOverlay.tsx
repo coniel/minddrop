@@ -39,7 +39,7 @@ export const SelectionOverlay: React.FC<SelectionOverlayProps> = ({
   );
   const activeLayoutId = useDesignStudioStore((state) => state.activeLayoutId);
   // Re-render (and re-measure) whenever elements change so the
-  // observers re-attach to replaced DOM nodes
+  // observers re-attach to replaced DOM nodes.
   const elementsByLayout = useDesignStudioStore(
     (state) => state.elementsByLayout,
   );
@@ -48,12 +48,12 @@ export const SelectionOverlay: React.FC<SelectionOverlayProps> = ({
   const rectRef = useRef<OverlayRect | null>(null);
 
   // Measure the target element's position relative to the
-  // transform layer, accounting for the current zoom level
+  // transform layer, accounting for the current zoom level.
   const measure = useCallback(() => {
     const layer = transformLayerRef.current;
 
     // Update the rect only when it actually changed so repeated
-    // measurements don't re-render
+    // measurements don't re-render.
     const applyRect = (nextRect: OverlayRect | null) => {
       if (!rectsEqual(rectRef.current, nextRect)) {
         rectRef.current = nextRect;
@@ -68,7 +68,7 @@ export const SelectionOverlay: React.FC<SelectionOverlayProps> = ({
     }
 
     // Scope the query to the active layout's frame so shared
-    // element IDs (e.g. 'root') don't match other layouts
+    // element IDs (e.g. 'root') don't match other layouts.
     const elementSelector = activeLayoutId
       ? `[data-layout-id="${activeLayoutId}"] [data-element-id="${highlightedElementId}"]`
       : `[data-element-id="${highlightedElementId}"]`;
@@ -98,7 +98,7 @@ export const SelectionOverlay: React.FC<SelectionOverlayProps> = ({
   }, [highlightedElementId, activeLayoutId, transformLayerRef]);
 
   // Measure after every commit affecting the highlight or the
-  // element tree
+  // element tree.
   useEffect(() => {
     measure();
   }, [measure, elementsByLayout]);
@@ -133,7 +133,7 @@ export const SelectionOverlay: React.FC<SelectionOverlayProps> = ({
   }, [studio, canvasContext, highlightedElementId, measure]);
 
   // Observe target and layer sizes, re-attaching when the
-  // highlight or the underlying DOM nodes change
+  // highlight or the underlying DOM nodes change.
   useEffect(() => {
     const layer = transformLayerRef.current;
 

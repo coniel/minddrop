@@ -9,7 +9,7 @@ import {
 } from './contentIconSetRegistry';
 
 // Generates set contents for tests, which use uniquely named sets
-// so they do not interfere with each other via the shared registry
+// so they do not interfere with each other via the shared registry.
 function generateSet(): ContentIconSetContents {
   return {
     icons: {

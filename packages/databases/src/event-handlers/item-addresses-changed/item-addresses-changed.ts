@@ -55,7 +55,7 @@ export async function onItemAddressesChanged(
   });
 
   // Record each change against the entries which reference it, so
-  // that their older records can be followed to the new address
+  // that their older records can be followed to the new address.
   await Promise.all(changes.map(recordReferenceRenames));
 
   // Find entries referencing the changed items
@@ -82,7 +82,7 @@ async function recordReferenceRenames(
   change: ItemAddressesChangedEventData[number],
 ): Promise<void> {
   // Find the entries referencing this item alone, since a rename is
-  // only recorded against entries which hold it
+  // only recorded against entries which hold it.
   const entries = getReferencingEntries([change.id]);
 
   await Promise.all(

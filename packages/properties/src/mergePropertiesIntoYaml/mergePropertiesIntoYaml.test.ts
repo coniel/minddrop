@@ -84,7 +84,7 @@ describe('mergePropertiesIntoYaml', () => {
       );
 
       // Count is declared before Due by the schema, so it takes the slot
-      // ahead of it rather than being appended
+      // ahead of it rather than being appended.
       expect(result.indexOf('Count')).toBeLessThan(result.indexOf('Due'));
     });
   });

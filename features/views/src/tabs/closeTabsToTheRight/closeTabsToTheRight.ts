@@ -33,7 +33,7 @@ export function closeTabsToTheRight(viewAreaId: string, id: string): void {
   }
 
   // The active tab was closed, so activate the tab the remaining
-  // tabs end on
+  // tabs end on.
   writeSet(viewAreaId, { tabs: nextTabs, activeTabId: id });
 
   // Show the newly active tab's content

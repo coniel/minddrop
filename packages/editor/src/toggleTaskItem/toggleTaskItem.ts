@@ -22,6 +22,6 @@ export function toggleTaskItem(editor: SlateEditor, frameId: string): void {
   }
 
   // Toggling drops the authored spelling of the checkbox, which no longer
-  // describes it
+  // describes it.
   setTaskItemState(editor, frameId, !frame.checked);
 }

@@ -6,7 +6,7 @@ import { query_1 } from '../test-utils/queries.fixtures';
 import { runQuery } from './runQuery';
 
 // Mock SQL query execution, the query builder is tested in the
-// databases package against a real database
+// databases package against a real database.
 vi.mock('@minddrop/databases', async (importOriginal) => {
   const original = await importOriginal<typeof import('@minddrop/databases')>();
 

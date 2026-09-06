@@ -116,7 +116,7 @@ describe('handleBackgroundSyncResult', () => {
     });
 
     // The synced record carries a new path under the same title, as
-    // when the database's file layout changed outside the app
+    // when the database's file layout changed outside the app.
     const record = convertEntryToSqlRecord(
       {
         ...relatedEntry1,

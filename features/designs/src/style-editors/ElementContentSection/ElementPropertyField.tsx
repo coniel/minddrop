@@ -56,7 +56,7 @@ export const ElementPropertyField: React.FC<ElementPropertyFieldProps> = ({
     }
 
     // Replace the element outright, since a merge cannot unset
-    // the binding
+    // the binding.
     const { property: _removed, ...unboundElement } = element;
 
     studio.setDesignElement(elementId, unboundElement);

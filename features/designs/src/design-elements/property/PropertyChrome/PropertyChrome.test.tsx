@@ -95,7 +95,7 @@ describe('<PropertyChrome />', () => {
     );
 
     // The spread label sits in the row, which takes the spread
-    // modifier pushing the value to the far side
+    // modifier pushing the value to the far side.
     const row = container.querySelector('.designs-property-chrome-row-spread');
 
     expect(row?.querySelector('.designs-property-chrome-label')).not.toBeNull();

@@ -33,7 +33,7 @@ export function setPropertiesOnMarkdown(
   options: SetPropertiesOnMarkdownOptions = {},
 ): string {
   // The frontmatter currently on disk, which is merged into rather than
-  // regenerated so that unmodelled keys and formatting are not destroyed
+  // regenerated so that unmodelled keys and formatting are not destroyed.
   const existingFrontmatter = options.existingContent
     ? parseFrontmatter(options.existingContent).source
     : null;

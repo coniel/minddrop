@@ -100,7 +100,7 @@ export const BlockGutter: React.FC<BlockGutterProps> = ({
   );
 
   // Holding shift extends the block selection to the block rather
-  // than selecting it on its own
+  // than selecting it on its own.
   const handleSelectClick = useCallback(
     (event: React.MouseEvent) => {
       onSelect(event.shiftKey);

@@ -48,7 +48,7 @@ export async function updateDataView(
   });
 
   // If the ID is changing (virtual data views only), remove the old
-  // entry and set the new one
+  // entry and set the new one.
   if ('id' in data && data.id && data.id !== id) {
     if (!view.virtual) {
       throw new InvalidParameterError(

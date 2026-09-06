@@ -22,7 +22,7 @@ export function sqlGetEntryPropertyValues(
   );
 
   // Get multi-value properties (select, collection) that are
-  // not excluded from the full-text index
+  // not excluded from the full-text index.
   const multiValueRows = Sql.all<{
     property_name: string;
     property_type: string;

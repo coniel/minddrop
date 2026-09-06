@@ -36,10 +36,10 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ view }) => {
   }, []);
 
   // While the settings view is open, the app's nav back button
-  // exits it instead of navigating the tab history
+  // exits it instead of navigating the tab history.
   useEffect(() => {
     // Register the back action on the nav toolbar and listen for
-    // its presses
+    // its presses.
     Events.dispatch(Events.events.SetNavToolbarBackAction, {
       label: 'settings.back',
     });

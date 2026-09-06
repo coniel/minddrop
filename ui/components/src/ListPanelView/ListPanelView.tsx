@@ -262,7 +262,7 @@ export const ListPanelView: React.FC<ListPanelViewProps> = ({
   const setSubview = Views.useSetSubview();
 
   // Every listed item regardless of sectioning, driving the
-  // fallback selection and the empty states
+  // fallback selection and the empty states.
   const allItems = useMemo(
     () =>
       sections ? sections.flatMap((section) => section.items) : (items ?? []),
@@ -270,11 +270,11 @@ export const ListPanelView: React.FC<ListPanelViewProps> = ({
   );
 
   // The item the panel shows, falling back to the first listed item
-  // when it shows none yet
+  // when it shows none yet.
   const shownItem = selectedItem ?? allItems[0];
 
   // The header's actions, plus the action opening the shown item in a
-  // view of its own
+  // view of its own.
   const headerActions = useMemo(
     () => resolveActions(actions, Boolean(shownItem), onExpandItem),
     [actions, shownItem, onExpandItem],

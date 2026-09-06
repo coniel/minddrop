@@ -7,7 +7,7 @@ import { EventListenerId, TagsViewName } from '../events';
 import { locales } from '../locales';
 
 // View instance id of the singleton tags list view, which is
-// labelled and iconed from its registration
+// labelled and iconed from its registration.
 const tagsViewId = 'tags:tags';
 
 /**
@@ -21,7 +21,7 @@ export function initializeTagsFeature(): VoidFunction {
   I18n.registerTranslations(locales);
 
   // Listen for open tags view events, and open the tags list view
-  // when one is received
+  // when one is received.
   Events.addListener(Tags.events.OpenView, EventListenerId, (data) => {
     // Open a blank tab to receive the tags view
     if (data?.openMode === 'new-tab') {

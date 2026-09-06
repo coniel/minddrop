@@ -40,7 +40,7 @@ export const automation_3 = generateAutomationFixture(3);
 export const automations = [automation_1, automation_2, automation_3];
 
 // An automation owned and persisted by another entity rather
-// than by an automation file
+// than by an automation file.
 export const automation_virtual_1: Automation = {
   ...generateAutomationFixture(4),
   virtual: true,
@@ -51,7 +51,7 @@ export const automation_virtual_1: Automation = {
 export const allAutomations = [...automations, automation_virtual_1];
 
 // Spelled out rather than resolved, so that the fixtures pin the paths
-// down instead of agreeing with whatever the path utils produce
+// down instead of agreeing with whatever the path utils produce.
 const automationsDirPath =
   'path/to/workspaces/Workspace 1/.minddrop/automations';
 

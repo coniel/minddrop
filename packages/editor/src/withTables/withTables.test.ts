@@ -434,7 +434,7 @@ describe('withTables', () => {
       const tableElement = editor.children[0] as TableElement;
 
       // The column is gone, and the cursor sits at the end of the header
-      // cell before it
+      // cell before it.
       expect(
         (tableElement.children[0] as TableRowElement).children,
       ).toHaveLength(1);
@@ -460,7 +460,7 @@ describe('withTables', () => {
       const tableElement = editor.children[0] as TableElement;
 
       // The column is gone, and the cursor sits in the header cell which
-      // took its place
+      // took its place.
       expect(Node.string(tableElement)).toBe('ab');
       expect(editor.selection?.anchor.path.slice(0, 3)).toEqual([0, 0, 0]);
     });
@@ -616,7 +616,7 @@ describe('withTables', () => {
       const tableElement = editor.children[0] as TableElement;
 
       // The paragraph becomes a two column starter table with its content
-      // in the first header cell
+      // in the first header cell.
       expect(tableElement.type).toBe('table');
       expect(tableElement.align).toEqual([null, null]);
       expect(tableElement.children).toHaveLength(3);

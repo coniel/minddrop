@@ -85,14 +85,14 @@ describe('readWorkspaceDatabases', () => {
     const copyPath = addCopiedDatabase();
 
     // Read with the database recorded at the copy's path, which the
-    // scan reaches after the config it was copied from
+    // scan reaches after the config it was copied from.
     const result = await readWorkspaceDatabases(
       workspace_1.path,
       new Map([[objectDatabase.id, copyPath]]),
     );
 
     // The config at the recorded path should keep the ID, the scan
-    // order notwithstanding
+    // order notwithstanding.
     expect(databaseAtPath(result, copyPath).id).toBe(objectDatabase.id);
     expect(databaseAtPath(result, objectDatabase.path).id).not.toBe(
       objectDatabase.id,

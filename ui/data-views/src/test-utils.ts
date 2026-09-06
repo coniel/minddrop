@@ -22,7 +22,7 @@ export function setup() {
   setupWorkspaceFixtures(MockFs);
 
   // Load database, entry and data view fixtures into the stores
-  // and mock file system
+  // and mock file system.
   DatabaseFixtures.setup(MockFs);
   setupDataViewFixtures(MockFs);
 }

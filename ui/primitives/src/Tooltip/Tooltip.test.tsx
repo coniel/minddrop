@@ -110,7 +110,7 @@ describe('<Tooltip />', () => {
     await waitFor(() => screen.getAllByText('Tooltip title'));
 
     // A drag suspends pointer events, so the tooltip never hears the
-    // pointer leave and would hang over the page until the drop
+    // pointer leave and would hang over the page until the drop.
     fireEvent.dragStart(document);
 
     await waitFor(() => expect(screen.queryByText('Tooltip title')).toBeNull());

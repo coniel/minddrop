@@ -35,7 +35,7 @@ export function moveBlocksTo(
   const lastIndex = sortedPaths[sortedPaths.length - 1][0];
 
   // Every insertion point within the run of blocks leaves them
-  // where they already are
+  // where they already are.
   if (index >= firstIndex && index <= lastIndex + 1) {
     return;
   }
@@ -72,7 +72,7 @@ export function moveBlocksTo(
     }
 
     // Re-inserted rather than moved one by one, which would shift
-    // the paths of the blocks still to be moved
+    // the paths of the blocks still to be moved.
     Transforms.insertNodes(editor, reparented, { at: [insertIndex] });
 
     selectBlocks(editor, [insertIndex], [insertIndex + blocks.length - 1]);
@@ -97,7 +97,7 @@ function reparentBlocks(
   const aboveAncestry = elements[index - 1]?.ancestry || [];
 
   // A block whose innermost container was opened by the block above it in
-  // its old position is carrying that container rather than opening it
+  // its old position is carrying that container rather than opening it.
   const opensContainer = opensInnermostFrame(elements, paths[0][0]);
   const droppedAncestry = resolveDroppedAncestry(aboveAncestry, opensContainer);
 
@@ -113,7 +113,7 @@ function reparentBlocks(
     const ancestry = element.ancestry || [];
     // Only the containers the run is leaving are replaced, so a block keeps
     // its own containers whether it is nested inside the block leading the
-    // run or sitting alongside it
+    // run or sitting alongside it.
     const nextAncestry = [...droppedAncestry, ...ancestry.slice(contextLength)];
 
     // A block which lands in no container carries no ancestry at all

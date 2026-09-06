@@ -66,7 +66,7 @@ export function createWebviewRPC() {
         searchReindexDatabase: handleSearchReindexDatabase,
       },
       // When the browser sends a message we can handle it
-      // in the main bun process
+      // in the main bun process.
       messages: {
         '*': (messageName: string, payload: unknown) => {
           console.log('global message handler', messageName, payload);

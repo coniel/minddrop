@@ -225,7 +225,7 @@ export function createKeyValueStore<TValues extends StoreValues>(
 
       return new Promise<void>((resolve) => {
         // Store the resolve callback so the persistent hydrate
-        // listener can resolve the promise after loading data
+        // listener can resolve the promise after loading data.
         hydrateResolve = resolve;
 
         // Dispatch a hydrate request for the platform layer

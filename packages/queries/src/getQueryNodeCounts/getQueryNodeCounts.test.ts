@@ -59,7 +59,7 @@ describe('getQueryNodeCounts', () => {
 
   it('sums duplicate inputs from parallel branches separately', async () => {
     // A second filter branch from the source into the results
-    // node, so entries matching both filters arrive twice
+    // node, so entries matching both filters arrive twice.
     QueriesStore.set({
       ...query_1,
       nodes: [...query_1.nodes, { ...filterNode, id: 'query-node_filter-b' }],
@@ -90,7 +90,7 @@ describe('getQueryNodeCounts', () => {
 
   it('caps counts by upstream limits', async () => {
     // The fixture graph with a limit node between the filter
-    // and the results node
+    // and the results node.
     QueriesStore.set({
       ...query_1,
       nodes: [

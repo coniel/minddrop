@@ -3,7 +3,7 @@ import { SelectField, SelectOption } from '@minddrop/ui-primitives';
 import { fieldLabelKey, sizeHintKey, sizeOptionKey } from './styleI18nKeys';
 
 // Value used by the "auto" option, since a select cannot carry
-// undefined as an option value
+// undefined as an option value.
 const UnsetValue = '__unset__';
 
 export interface HeightFieldProps {

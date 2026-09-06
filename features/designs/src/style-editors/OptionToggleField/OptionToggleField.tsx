@@ -78,7 +78,7 @@ export function OptionToggleField<TValue extends string>({
 
   // Glyph options (icons and short samples) carry their whole
   // meaning in the glyph, which needs more room than a word does
-  // to stay legible
+  // to stay legible.
   const hasGlyphs = options.some((option) => option.icon || option.display);
 
   function handleValueChange(selected: string) {

@@ -53,11 +53,11 @@ export const DesignPreviewPane: React.FC<DesignPreviewPaneProps> = ({
   const variant = Theme.useVariant();
 
   // The appearance the theme variant resolves to, following the OS
-  // when set to system
+  // when set to system.
   const appearance = Theme.resolveVariant(variant);
 
   // The colour the scheme trigger previews: no scheme reads as the
-  // default content colour
+  // default content colour.
   const selectedColor = scheme ?? 'default';
 
   // The render wrapper's class, carrying the scheme hue when set

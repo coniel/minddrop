@@ -72,7 +72,7 @@ export function getSnappedNodePosition(
   const gridY = grid ? snapToGrid(position.y) : position.y;
 
   // Aligning to the other nodes needs the node's own frame, which
-  // carries its measured size including auto heights
+  // carries its measured size including auto heights.
   if (!objects || !frame) {
     return { x: gridX, y: gridY, guides: [] };
   }

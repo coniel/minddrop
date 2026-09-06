@@ -26,11 +26,11 @@ export const DesignStudioPreviewToolbar: React.FC = () => {
   const variant = Theme.useVariant();
 
   // The colour the trigger previews: no scheme reads as the
-  // default content colour
+  // default content colour.
   const selectedColor = scheme ?? 'default';
 
   // The appearance the variant resolves to, following the OS when
-  // set to system
+  // set to system.
   const appearance = Theme.resolveVariant(variant);
 
   // Switch the app theme to the opposite appearance

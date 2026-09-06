@@ -62,7 +62,7 @@ export const DevToolsUiState = createKeyValueStore<DevToolsUiState>(
   {
     persistTo: 'app-config',
     // Shared with the event capture, which leaves out the events
-    // persisting this state dispatches
+    // persisting this state dispatches.
     namespace: DevToolsNamespace,
   },
 );

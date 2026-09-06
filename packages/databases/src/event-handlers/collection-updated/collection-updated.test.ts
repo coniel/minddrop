@@ -39,7 +39,7 @@ describe('onUpdateCollection', () => {
     setupTestSqlDatabase();
 
     // Seed each fixture database's SQL record so entry upserts
-    // satisfy the database foreign key
+    // satisfy the database foreign key.
     seedSqlDatabases();
 
     // Add the virtual collection to the store

@@ -43,14 +43,14 @@ export const DevToolsWindow: React.FC<DevToolsWindowProps> = ({
   const height = DevToolsUiState.useValue('windowHeight');
 
   // While dragging, the window follows the transient drag rect so
-  // that the persisted rect is only written once the drag ends
+  // that the persisted rect is only written once the drag ends.
   const rect = useMemo(
     () => dragRect ?? { x, y, width, height },
     [dragRect, x, y, width, height],
   );
 
   // Confine the window to the app window on mount and whenever the
-  // app window is resized, in case it no longer fits
+  // app window is resized, in case it no longer fits.
   useEffect(() => {
     const confineToViewport = () => {
       const confined = clampWindowRect({ x, y, width, height }, getViewport());

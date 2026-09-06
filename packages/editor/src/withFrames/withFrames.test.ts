@@ -21,7 +21,7 @@ const item1: ListItemFrame = {
 const item2: ListItemFrame = { ...item1, id: 'item-2' };
 
 // Creates an editor with the plugin applied, with the cursor at the end of
-// the given block
+// the given block.
 function createEditorWithFrames(content: Element[], index = 0): Editor {
   const editor = withFrames(createTestEditor(content));
 
@@ -42,7 +42,7 @@ describe('withFrames', () => {
       const ancestry = getAncestry(editor, 1) || [];
 
       // The new block is a new item in the same list rather than another
-      // block of the same item
+      // block of the same item.
       expect(ancestry).toHaveLength(1);
       expect(ancestry[0]).toMatchObject({
         kind: 'list-item',

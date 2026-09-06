@@ -35,7 +35,7 @@ export const DesignStudioPreviewProvider: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
   // Start on blue so the coloured treatment is visible out of the
-  // box, since the accent channel otherwise defaults to neutral
+  // box, since the accent channel otherwise defaults to neutral.
   const [scheme, setScheme] = useState<PreviewScheme | null>('blue');
 
   // Keep the context value stable across unrelated re-renders

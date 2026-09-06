@@ -28,7 +28,7 @@ export function resolveRegionFlexStyle(
 
   // The content region fills the remaining space and scrolls
   // independently of the panels, capped, padded and centred as the
-  // root's content column
+  // root's content column.
   if (element.type === 'container' && element.role === 'page-content') {
     return {
       flexGrow: 1,

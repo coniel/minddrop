@@ -61,12 +61,12 @@ describe('onTagRenamed', () => {
     DatabaseEntriesStore.set(taggedEntry);
 
     // Add the database's SQL record so entry upserts satisfy the
-    // foreign key, dropping the statement from the recording
+    // foreign key, dropping the statement from the recording.
     sqlUpsertDatabase(tagsDatabase, { silent: true });
     clearRecordedSqlStatements();
 
     // Create the tags database directory so entry rewrites can
-    // write the entry file
+    // write the entry file.
     MockFs.addFiles([tagsDatabase.path]);
   });
 
@@ -79,7 +79,7 @@ describe('onTagRenamed', () => {
     await onTagRenamed({ original: originalTag, updated: renamedTag });
 
     // The entry's value should carry the new name in place of the
-    // old one
+    // old one.
     const entry = DatabaseEntriesStore.get(taggedEntry.id);
     expect(entry?.properties.Tags).toEqual(['Later', 'Home']);
   });
@@ -161,7 +161,7 @@ describe('onTagRenamed', () => {
 
   it('records nothing against entries which do not hold the tag', async () => {
     // An entry in the same database whose tags do not include the
-    // renamed one
+    // renamed one.
     const untagged = {
       ...taggedEntry,
       id: 'database-entry_untagged-entry' as const,

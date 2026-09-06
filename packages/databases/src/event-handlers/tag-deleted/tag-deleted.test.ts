@@ -59,12 +59,12 @@ describe('onTagDeleted', () => {
     DatabaseEntriesStore.set(taggedEntry);
 
     // Add the database's SQL record so entry upserts satisfy the
-    // foreign key, dropping the statement from the recording
+    // foreign key, dropping the statement from the recording.
     sqlUpsertDatabase(tagsDatabase, { silent: true });
     clearRecordedSqlStatements();
 
     // Create the tags database directory so entry rewrites can
-    // write the entry file
+    // write the entry file.
     MockFs.addFiles([tagsDatabase.path]);
   });
 
@@ -94,7 +94,7 @@ describe('onTagDeleted', () => {
     await onTagDeleted(deletedTag);
 
     // The entry's SQL property values should not contain the
-    // deleted name
+    // deleted name.
     const values = sqlGetEntryPropertyValues(taggedEntry.id).map(
       (property) => property.value,
     );

@@ -44,7 +44,7 @@ describe('withBlockReset', () => {
 
   it('does not reset inline elements when a break is inserted', () => {
     // Create an editor with the plugin applied containing a
-    // heading element with an empty link
+    // heading element with an empty link.
     const editor = withBlockReset(
       createTestEditor([
         {
@@ -133,7 +133,7 @@ describe('withBlockReset', () => {
 
   it('does not reset inline elements when deleting backwards', () => {
     // Create an editor with the plugin applied containing a
-    // heading element with a link
+    // heading element with a link.
     const editor = withBlockReset(
       createTestEditor([
         {

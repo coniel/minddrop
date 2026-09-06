@@ -17,7 +17,7 @@ describe('onTagRenamed', () => {
     });
 
     // The ledger should contain a tag rename event recording the
-    // old and new names and the tag's ID
+    // old and new names and the tag's ID.
     expect(await readRenameEvents()).toEqual([
       expect.objectContaining({
         from: tag_1.name,

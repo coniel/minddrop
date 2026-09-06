@@ -21,7 +21,7 @@ export function getRecentDatabaseEntries(
     : allEntries;
 
   // Sort a copy by modification date, newest first, and cap the
-  // result at the limit
+  // result at the limit.
   return [...entries]
     .sort(
       (entryA, entryB) =>

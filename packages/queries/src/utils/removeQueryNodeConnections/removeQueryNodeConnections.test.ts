@@ -5,7 +5,7 @@ import { removeQueryNodeConnections } from './removeQueryNodeConnections';
 describe('removeQueryNodeConnections', () => {
   it("removes the node's incoming and outgoing connections", () => {
     // The filter node sits mid-flow with one incoming and one
-    // outgoing connection
+    // outgoing connection.
     const connections = removeQueryNodeConnections(
       query_1.connections,
       query_1.nodes[1].id,

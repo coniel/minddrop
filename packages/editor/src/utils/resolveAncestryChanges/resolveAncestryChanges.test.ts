@@ -68,7 +68,7 @@ describe('resolveAncestryChanges', () => {
     const changes = resolveAncestryChanges(elements, [1, 2], nestInPrevious);
 
     // The third block reads the second's resolved ancestry rather than the
-    // one it holds in the document
+    // one it holds in the document.
     expect(changes.get(1)).toEqual([item1, item2]);
     expect(changes.get(2)).toEqual([item1, item3]);
   });
@@ -84,7 +84,7 @@ describe('resolveAncestryChanges', () => {
     const changes = resolveAncestryChanges(elements, [1, 2], nestInPrevious);
 
     // The block already moved as part of the item, so it follows it rather
-    // than resolving a move of its own
+    // than resolving a move of its own.
     expect(changes.get(2)).toEqual([item1, item2]);
   });
 

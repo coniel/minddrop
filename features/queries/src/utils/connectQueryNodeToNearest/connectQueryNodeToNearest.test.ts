@@ -5,7 +5,7 @@ import { connectQueryNodeToNearest } from './connectQueryNodeToNearest';
 const { query_1 } = QueryFixtures;
 
 // The fixture's nodes: source at x 0 (220 wide), filter at
-// x 300 (280 wide), results at x 600
+// x 300 (280 wide), results at x 600.
 const [sourceNode, filterNode, resultsNode] = query_1.nodes;
 
 describe('connectQueryNodeToNearest', () => {

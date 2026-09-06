@@ -354,7 +354,7 @@ function createInternalStore(config: CanvasStoreConfig) {
     setAlignmentGuides: (guides) =>
       set((state) => {
         // Skip updates that leave the guides empty, since this
-        // fires on every frame of a node drag
+        // fires on every frame of a node drag.
         if (!guides.length && !state.alignmentGuides.length) {
           return {};
         }

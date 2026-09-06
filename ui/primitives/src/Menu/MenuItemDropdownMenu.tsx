@@ -23,7 +23,7 @@ export const MenuItemDropdownMenu: React.FC<DropdownMenuRootProps> = (
     }
 
     // Hold the menu item actions visible while the dropdown is
-    // open so it doesn't lose its anchor point
+    // open so it doesn't lose its anchor point.
     if (open) {
       releaseHoldRef.current = menuTarget?.holdActionsVisible() ?? null;
     } else {

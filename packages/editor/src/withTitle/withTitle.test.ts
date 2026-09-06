@@ -336,7 +336,7 @@ describe('withTitle', () => {
 
     it('resets non default blocks at their start instead of moving into the title', () => {
       // Compose the title plugin over the block reset plugin as
-      // in the editor's plugin chain
+      // in the editor's plugin chain.
       const editor = withTitle(
         withBlockReset(createTestEditor([titleElement1, listItemElement1])),
       );

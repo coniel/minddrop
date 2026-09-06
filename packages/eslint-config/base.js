@@ -20,17 +20,8 @@ export const config = [
     },
     rules: {
       'turbo/no-undeclared-env-vars': 'warn',
-      // Switch to 'error' once the existing violations have been
-      // swept with `eslint --fix`. Around 1,600 comments across the
-      // repo predate the convention, and lint runs with
-      // --max-warnings 0, so turning it on before the sweep fails
-      // every package.
-      'minddrop/multiline-comment-period': 'off',
-      // Switch to 'error' once the existing violations have been
-      // swept. Around 75 solo-wrapped directories across the repo
-      // predate the convention; the fixes move files, so the sweep
-      // waits for a moment with no unmerged worktree work.
-      'minddrop/companion-directory': 'off',
+      'minddrop/multiline-comment-period': 'error',
+      'minddrop/companion-directory': 'error',
       '@typescript-eslint/no-unused-vars': [
         'error',
         {
@@ -67,6 +58,6 @@ export const config = [
   },
   eslintPluginPrettierRecommended,
   {
-    ignores: ['dist/**', '*.min.*'],
+    ignores: ['dist/**', 'build/**', '*.min.*'],
   },
 ];

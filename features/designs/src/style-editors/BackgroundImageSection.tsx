@@ -20,14 +20,14 @@ import {
 import { StyleEditor } from './useStyleEditor';
 
 // The style keys the section governs, cleared together when the
-// section is collapsed
+// section is collapsed.
 export const BackgroundImageStyleKeys: string[] = [
   'backgroundImage',
   'backgroundImageFit',
 ];
 
 // Where the background image comes from: a bound image property or
-// a static media file. A collapsed section means no image at all
+// a static media file. A collapsed section means no image at all.
 type BackgroundImageMode = 'property' | 'static';
 
 // How the image fits the container box
@@ -75,7 +75,7 @@ export const BackgroundImageSection: React.FC<BackgroundImageSectionProps> = ({
   const { isEditable, getValue, setValue } = editor;
 
   // Switch the image source, clearing the values of the mode being
-  // left behind
+  // left behind.
   function handleModeChange(value: string) {
     if (!element) {
       return;
@@ -83,7 +83,7 @@ export const BackgroundImageSection: React.FC<BackgroundImageSectionProps> = ({
 
     if (value === 'static') {
       // Drop the property binding by replacing the element, since a
-      // merge cannot unset a field
+      // merge cannot unset a field.
       const { property: _removed, ...unboundElement } = element;
 
       studio.setDesignElement(elementId, { ...unboundElement, static: true });
@@ -96,7 +96,7 @@ export const BackgroundImageSection: React.FC<BackgroundImageSectionProps> = ({
     setValue('backgroundImage', undefined);
 
     // Bind the first compatible property left unbound, so the
-    // switch lands on a working binding when one is available
+    // switch lands on a working binding when one is available.
     studio.autoBindDesignElement(elementId);
   }
 
@@ -104,11 +104,11 @@ export const BackgroundImageSection: React.FC<BackgroundImageSectionProps> = ({
   // which lives on the element rather than in the style keys
   function handleClear() {
     // Read the element fresh, since the section has just unset the
-    // image style keys and the rendered snapshot still holds them
+    // image style keys and the rendered snapshot still holds them.
     const currentElement = studio.getDesignElement(elementId);
 
     // Drop the property binding by replacing the element, since a
-    // merge cannot unset a field
+    // merge cannot unset a field.
     const { property: _removed, ...unboundElement } = currentElement;
 
     studio.setDesignElement(elementId, { ...unboundElement, static: false });
@@ -121,7 +121,7 @@ export const BackgroundImageSection: React.FC<BackgroundImageSectionProps> = ({
   const mode = deriveMode(element, propertyBindingEnabled);
 
   // The image properties the element could be bound to, ignoring
-  // the current static state
+  // the current static state.
   const compatibleProperties = properties.filter((property) =>
     isPropertyCompatibleWithElement(property.type, {
       ...element,
@@ -132,7 +132,7 @@ export const BackgroundImageSection: React.FC<BackgroundImageSectionProps> = ({
   const hasCompatibleProperties = compatibleProperties.length > 0;
 
   // The image source lives on the element rather than in the style
-  // keys, so it keeps the section open on its own
+  // keys, so it keeps the section open on its own.
   const hasImageSource = Boolean(element.static) || Boolean(element.property);
 
   return (

@@ -56,7 +56,7 @@ export function getConnectionMarkerVariants(
   const { connectionDefaults, previewStyle, dropTargetConnectionId } = options;
 
   // Keyed by combination, so a combination shared by several
-  // connections defines a single marker
+  // connections defines a single marker.
   const variants = new Map<string, CanvasConnectionMarkerVariant>();
 
   // The preview curve's combination when no re-connect styling

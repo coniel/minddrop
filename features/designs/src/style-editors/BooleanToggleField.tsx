@@ -30,7 +30,7 @@ export const BooleanToggleField: React.FC<BooleanToggleFieldProps> = ({
   onChange,
 }) => {
   // Clear the key when switching off so styles stay free of
-  // values which emit nothing
+  // values which emit nothing.
   function handleCheckedChange(checked: boolean) {
     onChange(checked ? true : undefined);
   }

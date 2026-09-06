@@ -68,7 +68,7 @@ export function getConnectionPath(
   }
 
   // Axis-aligned segments with sharp corners, trimmed along the
-  // outer segments
+  // outer segments.
   if (shape === 'straight') {
     return pointsToPath(
       trimPoints(getElbowConnectionPoints(from, to), trimStart, trimEnd),
@@ -79,7 +79,7 @@ export function getConnectionPath(
   const [c1, c2] = getConnectionControlPoints(from, to);
 
   // The curve's endpoint tangents run along the side normals, so
-  // trims move the endpoints out along them
+  // trims move the endpoints out along them.
   const fromNormal = getSideNormal(from.side);
   const toNormal = getSideNormal(to.side);
   const start = {

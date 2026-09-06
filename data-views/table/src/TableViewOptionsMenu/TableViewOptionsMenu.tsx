@@ -68,7 +68,7 @@ export const TableViewOptionsMenu: React.FC<
   );
 
   // Get the list of columns that can be toggled, sorted
-  // by the persisted column order
+  // by the persisted column order.
   const sortedColumns = useMemo(() => {
     if (!database) {
       return [];

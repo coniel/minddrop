@@ -78,7 +78,7 @@ export function withInlineShortcuts(
 
   editor.insertText = (insertedText) => {
     // Only trigger on single character input which matches
-    // the final character of a shortcut/end string
+    // the final character of a shortcut/end string.
     if (insertedText.length > 1 || !triggerChars.includes(insertedText)) {
       // If inserted text was not a shortcut trigger, insert
       // the text as normal.

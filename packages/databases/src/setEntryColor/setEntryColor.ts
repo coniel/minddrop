@@ -25,7 +25,7 @@ export async function setEntryColor(
   const database = getDatabase(entry.database);
 
   // Merge the color into the existing metadata, dropping the
-  // field entirely when clearing
+  // field entirely when clearing.
   const { color: removed, ...metadata } = entry.metadata;
 
   await updateEntryMetadata(entryId, {
@@ -34,7 +34,7 @@ export async function setEntryColor(
   });
 
   // When the database declares a color property, mirror the value
-  // into it so it persists to the entry file
+  // into it so it persists to the entry file.
   const colorProperty = database.properties.find(
     (property) => property.type === 'color',
   );

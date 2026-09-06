@@ -21,7 +21,7 @@ export const SpacesView: React.FC = () => {
   const selectedSpace = Spaces.use(subview?.id ?? '');
 
   // Spaces listed in the left column: fuzzy name matches when
-  // searching, all spaces otherwise
+  // searching, all spaces otherwise.
   const items = useMemo(
     () => (query ? Spaces.search(query) : spaces).map(toListItem),
     [spaces, query],

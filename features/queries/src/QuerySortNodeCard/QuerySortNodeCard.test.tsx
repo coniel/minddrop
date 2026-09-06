@@ -22,7 +22,7 @@ const sortNode: QuerySortNode = {
 };
 
 // Returns the fixture query with the sort node in place of the
-// filter node
+// filter node.
 function queryWithSort(data: Partial<QuerySortNode>) {
   const node = { ...sortNode, ...data };
 

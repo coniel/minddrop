@@ -53,7 +53,7 @@ describe('<DesignStudioRootElement />', () => {
 
   it('leaves the height of an empty layout which sets one', () => {
     // An empty card layout with a floor of its own, which is what
-    // keeps it open once it holds content too
+    // keeps it open once it holds content too.
     const boundedLayout: Layout = {
       ...layout_card_1,
       tree: {
@@ -72,7 +72,7 @@ describe('<DesignStudioRootElement />', () => {
     const root = container.querySelector('.designs-studio-root-element');
 
     // The placeholder size does not stand in for a floor the
-    // layout already has
+    // layout already has.
     expect((root as HTMLElement).style.minHeight).toBe('var(--size-lg)');
   });
 

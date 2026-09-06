@@ -4,7 +4,7 @@ import { Query, QueryCollectionFilterNode } from '../../types';
 import { getQueryCollectionReferences } from './getQueryCollectionReferences';
 
 // A query with the given collection filter nodes appended to
-// the fixture query's graph
+// the fixture query's graph.
 function queryWithCollectionFilters(
   filters: Partial<QueryCollectionFilterNode>[],
 ): Query {

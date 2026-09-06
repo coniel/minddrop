@@ -67,14 +67,14 @@ export const ContainerStudioDesignElement: React.FC<
   const root = useElement<FlatRootDesignElement>('root');
 
   // Separate style from rootProps so it can be merged with
-  // container styles rather than clobbering them
+  // container styles rather than clobbering them.
   const { style: rootStyle, ...rootPropsWithoutStyle } = rootProps as {
     style?: CSSProperties;
     [key: string]: unknown;
   };
 
   // Resolve the background image from the bound image property's
-  // placeholder, falling back to the static background image
+  // placeholder, falling back to the static background image.
   const backgroundImage = useElementPlaceholderImage(
     element,
     style.backgroundImage,
@@ -91,12 +91,12 @@ export const ContainerStudioDesignElement: React.FC<
   const elementCssStyle = useElementCssStyle(element);
 
   // The direction this container stacks its children in, which is
-  // what decides the axis a child filling its height fills
+  // what decides the axis a child filling its height fills.
   const childDirection = style.direction ?? 'column';
 
   // Give an empty container a visible size, leaving whichever axis
   // its own style already sizes alone. The placeholder surface
-  // itself comes from the drop hint filling the container
+  // itself comes from the drop hint filling the container.
   const emptyPlaceholderCss: CSSProperties = {
     ...(elementCssStyle.minHeight === undefined &&
       elementCssStyle.height === undefined && {
@@ -120,7 +120,7 @@ export const ContainerStudioDesignElement: React.FC<
   };
 
   // The background image CSS, applied to the container itself, or
-  // to the backdrop wrapper when a backdrop effect is active
+  // to the backdrop wrapper when a backdrop effect is active.
   const backgroundImageCss = imageSrc
     ? createStudioBackgroundImageCss(imageSrc, style.backgroundImageFit)
     : undefined;
@@ -167,7 +167,7 @@ export const ContainerStudioDesignElement: React.FC<
 
   // Backdrop active: the background image goes on an outer wrapper
   // with the blur overlay layered between it and the content, so
-  // the overlay frosts the image but not the children
+  // the overlay frosts the image but not the children.
   if (backdropCss) {
     return (
       <ParentDirectionProvider value={childDirection}>

@@ -1,0 +1,112 @@
+import { describe, expect, it } from 'vitest';
+import { EmojiItem, EmojiSkinTone, MinifiedEmoji } from '../../types';
+import {
+  buildEmojiLabelIndex,
+  getSkinToneVariant,
+  groupByGroup,
+  searchEmoji,
+  unminifyEmoji,
+} from './utils';
+
+const groups = ['group 0', 'group 1', 'group 2'];
+const subgroups = ['subgroup 0', 'subgroup 1', 'subgroup 2', 'subgroup 3'];
+const minifiedEmoji: MinifiedEmoji = ['😾', 'pouting cat', [0, 2]];
+const minifiedEmojiSkinTone: MinifiedEmoji = [
+  '🖖',
+  'vulcan salute',
+  [1, 2],
+  ['🖖🏻', '🖖🏼', '🖖🏽', '🖖🏾', '🖖🏿'],
+];
+
+const emoji: EmojiItem = {
+  char: minifiedEmoji[0],
+  name: minifiedEmoji[1],
+  group: groups[minifiedEmoji[2][0]],
+  labels: [
+    minifiedEmoji[1],
+    groups[minifiedEmoji[2][0]],
+    subgroups[minifiedEmoji[2][1]],
+  ],
+};
+
+const emojiSkinTone: EmojiItem = {
+  char: minifiedEmojiSkinTone[0],
+  name: minifiedEmojiSkinTone[1],
+  group: groups[minifiedEmojiSkinTone[2][0]],
+  labels: [
+    minifiedEmojiSkinTone[1],
+    groups[minifiedEmojiSkinTone[2][0]],
+    subgroups[minifiedEmojiSkinTone[2][1]],
+  ],
+  skinToneVariants: minifiedEmojiSkinTone[3],
+};
+
+const { labels: allLabels, labelToEmoji } = buildEmojiLabelIndex([
+  emoji,
+  emojiSkinTone,
+]);
+
+describe('<EmojiPicker /> utils', () => {
+  describe('unminifyEmoji', () => {
+    it('unminifies a minified emoji', () => {
+      expect(unminifyEmoji(minifiedEmoji, groups, subgroups)).toEqual(emoji);
+      expect(unminifyEmoji(minifiedEmojiSkinTone, groups, subgroups)).toEqual(
+        emojiSkinTone,
+      );
+    });
+  });
+
+  describe('groupByGroup', () => {
+    it('groups the emoji by group', () => {
+      expect(groupByGroup([emoji, emojiSkinTone])).toEqual([
+        ['group 0', [emoji]],
+        ['group 1', [emojiSkinTone]],
+      ]);
+    });
+  });
+
+  describe('getSkinToneVariant', () => {
+    it('returns the specified skin tone variant emoji char', () => {
+      expect(getSkinToneVariant(emojiSkinTone, 3)).toBe(
+        (emojiSkinTone.skinToneVariants as string[])[2],
+      );
+    });
+
+    it('returns emoji char if skin tone map does not contain requested tone', () => {
+      expect(
+        getSkinToneVariant({ ...emojiSkinTone, char: 'A' }, 6 as EmojiSkinTone),
+      ).toBe('A');
+    });
+
+    it('returns emoji char if it does not support skin tones', () => {
+      expect(getSkinToneVariant(emoji, 3)).toBe(emoji.char);
+    });
+  });
+
+  describe('buildEmojiLabelIndex', () => {
+    it('merges all labels into a single array without duplicates', () => {
+      const { labels } = buildEmojiLabelIndex([emoji, emojiSkinTone]);
+
+      expect(labels).toEqual(allLabels);
+    });
+  });
+
+  describe('searchEmoji', () => {
+    it('performs a search', () => {
+      expect(
+        searchEmoji(
+          [emoji, emojiSkinTone],
+          allLabels,
+          labelToEmoji,
+          minifiedEmoji[1],
+        ),
+      ).toEqual([emoji]);
+    });
+
+    it('dedupes results', () => {
+      expect(
+        searchEmoji([emoji, emojiSkinTone], allLabels, labelToEmoji, 'group'),
+      ).toEqual([emoji, emojiSkinTone]);
+    });
+  });
+});

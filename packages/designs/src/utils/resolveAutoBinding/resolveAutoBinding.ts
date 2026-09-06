@@ -24,7 +24,7 @@ export function resolveAutoBinding(
   }
 
   // Properties already bound elsewhere in the layout are skipped, so
-  // no property is ever auto-used twice
+  // no property is ever auto-used twice.
   const boundProperties = new Set(
     Object.values(getLayoutPropertyBindings(layout)),
   );
@@ -32,7 +32,7 @@ export function resolveAutoBinding(
   // Try each compatible type in priority order
   for (const propertyType of compatiblePropertyTypes) {
     // Find the first unbound property of the type in design
-    // property order
+    // property order.
     const property = design.properties.find(
       (schema) =>
         schema.type === propertyType && !boundProperties.has(schema.name),

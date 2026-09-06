@@ -27,7 +27,7 @@ export const CanvasProvider: React.FC<CanvasProviderProps> = ({
   ...config
 }) => {
   // Use the provided store, or create an instance for the
-  // lifetime of the provider
+  // lifetime of the provider.
   const [instance] = useState(() => store || createCanvasStore(config));
   const viewportRef = useRef<HTMLDivElement>(null);
   const transformLayerRef = useRef<HTMLDivElement>(null);

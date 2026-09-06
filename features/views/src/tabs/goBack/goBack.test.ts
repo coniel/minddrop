@@ -152,7 +152,7 @@ describe('goBack', () => {
     recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:b' }));
 
     // Strip the entries' state to mimic history hydrated from older
-    // disk data
+    // disk data.
     const set = getSet(VIEW_AREA_ID);
     const strippedTabs = set.tabs.map((setTab) => ({
       ...setTab,

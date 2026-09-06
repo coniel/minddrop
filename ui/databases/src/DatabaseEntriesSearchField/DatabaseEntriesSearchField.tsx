@@ -80,7 +80,7 @@ export const DatabaseEntriesSearchField: React.FC<
     }
 
     // Matching on the entry IDs rather than on their titles keeps
-    // entries which share a title distinct
+    // entries which share a title distinct.
     return fuzzySearchBy(entryIds, searchQuery, (id) => entryTitles[id] ?? '');
   }, [entryIds, entryTitles, searchQuery]);
 

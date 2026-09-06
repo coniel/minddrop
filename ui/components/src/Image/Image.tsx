@@ -62,7 +62,7 @@ export const Image: React.FC<ImageProps> = ({
   // Held back until the element has been measured, so that a full
   // resolution image is not fetched before the display width is
   // known, and until classified, so that it does not appear
-  // untreated for a frame
+  // untreated for a frame.
   const isReady = (isMeasured || !downscale) && !treatmentPending;
 
   // Assign both the caller's ref and the one measurement reads

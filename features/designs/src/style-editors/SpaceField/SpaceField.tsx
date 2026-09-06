@@ -31,7 +31,7 @@ export const InsetScaleTokens: readonly SpaceToken[] = SpaceScaleTokens.filter(
 );
 
 // No spacing property inherits, so an unset one is simply no
-// space at all, the step below the smallest
+// space at all, the step below the smallest.
 const NoSpacing = {
   label: 'designsStudio.style.space.none',
 } as const;

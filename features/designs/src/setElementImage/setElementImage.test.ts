@@ -72,7 +72,7 @@ describe('setElementImage', () => {
 
   it('sets the content image on static elements bound to a property', async () => {
     // Static elements display their own image, even when a
-    // property binding lingers on the element
+    // property binding lingers on the element.
     studio.updateElement(element_text_1.id, {
       static: true,
       property: 'Cover',

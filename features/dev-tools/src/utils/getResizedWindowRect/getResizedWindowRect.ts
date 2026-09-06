@@ -23,7 +23,7 @@ export function getResizedWindowRect(
   let { x, y, width, height } = rect;
 
   // Dragging the east edge grows the window rightwards, stopping
-  // at the right of the viewport
+  // at the right of the viewport.
   if (edge.includes('e')) {
     width = Math.max(
       MinWindowSize.width,
@@ -32,7 +32,7 @@ export function getResizedWindowRect(
   }
 
   // Dragging the south edge grows the window downwards, stopping
-  // at the bottom of the viewport
+  // at the bottom of the viewport.
   if (edge.includes('s')) {
     height = Math.max(
       MinWindowSize.height,
@@ -41,7 +41,7 @@ export function getResizedWindowRect(
   }
 
   // Dragging the west edge moves the left of the window, keeping
-  // the right edge in place and stopping at the left of the viewport
+  // the right edge in place and stopping at the left of the viewport.
   if (edge.includes('w')) {
     const right = rect.x + rect.width;
 
@@ -50,7 +50,7 @@ export function getResizedWindowRect(
   }
 
   // Dragging the north edge moves the top of the window, keeping
-  // the bottom edge in place and stopping at the top of the viewport
+  // the bottom edge in place and stopping at the top of the viewport.
   if (edge.includes('n')) {
     const bottom = rect.y + rect.height;
 

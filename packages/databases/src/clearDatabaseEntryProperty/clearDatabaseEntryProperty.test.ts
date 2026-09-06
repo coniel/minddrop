@@ -36,7 +36,7 @@ describe('clearDatabaseEntryProperty', () => {
     setupTestSqlDatabase();
 
     // Seed the collection database record so the collection
-    // write-back handler can upsert its entries
+    // write-back handler can upsert its entries.
     sqlUpsertDatabase(
       {
         id: collectionDatabase.id,
@@ -78,7 +78,7 @@ describe('clearDatabaseEntryProperty', () => {
     );
 
     // Both the virtual collection and the entry property
-    // should be emptied
+    // should be emptied.
     const collection = Collections.get(
       virtualCollectionId(collectionEntry1.id, 'Related'),
     );

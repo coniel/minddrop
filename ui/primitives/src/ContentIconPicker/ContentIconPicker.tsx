@@ -111,7 +111,7 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
     }
 
     // Show the set's icons when not searching, using the category
-    // grouping computed when the set loaded
+    // grouping computed when the set loaded.
     if (!deferredQuery) {
       return {
         results: activeSet.icons,

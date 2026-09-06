@@ -130,7 +130,7 @@ const ConfiguredView: React.FC<ConfiguredViewProps> = ({
   const sortedEntries = useSortedDataViewEntries(view, entries ?? NO_ENTRIES);
 
   // Add newly created entry to the collection when
-  // the view's data source is a collection
+  // the view's data source is a collection.
   const handleCreateEntry = useCallback(
     (entry: { id: string }) => {
       if (view.dataSource.type === 'collection') {

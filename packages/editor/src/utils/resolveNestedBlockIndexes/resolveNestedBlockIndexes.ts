@@ -19,7 +19,7 @@ export function resolveNestedBlockIndexes(
   const nested: number[] = [];
 
   // A block which sits in no container has nothing nested inside it: every
-  // block that follows is its sibling
+  // block that follows is its sibling.
   if (!ancestry.length) {
     return nested;
   }

@@ -32,7 +32,7 @@ async function resolveResizedPath(filePath: string, width: string | null) {
   }
 
   // Re-bracket defensively, clients are expected to send bracketed
-  // widths but the param is arbitrary user input
+  // widths but the param is arbitrary user input.
   const bracketedWidth = bracketImageWidth(Number(width));
 
   if (!bracketedWidth) {
@@ -103,7 +103,7 @@ export const httpServer = serve({
 
       case '/image-stats/all': {
         // The whole index, so the client can populate its cache in
-        // one request rather than per image as they render
+        // one request rather than per image as they render.
         return withCors(
           new Response(JSON.stringify(getAllImageStats()), {
             headers: {

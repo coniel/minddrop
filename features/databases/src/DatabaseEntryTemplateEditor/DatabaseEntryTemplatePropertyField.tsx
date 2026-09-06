@@ -66,7 +66,7 @@ export const DatabaseEntryTemplatePropertyField: React.FC<
   DatabaseEntryTemplatePropertyFieldProps
 > = ({ property, value, pickedFilePath, onChange, onPickFile }) => {
   // Incremented on each clear to remount uncontrolled inputs, which
-  // would otherwise keep showing the cleared value
+  // would otherwise keep showing the cleared value.
   const [clearCount, setClearCount] = useState(0);
 
   // Whether the property has a value to clear
@@ -166,7 +166,7 @@ function renderField({
   const emptyPlaceholder = 'databases.entryTemplates.form.emptyValue' as const;
 
   // Formatted text properties use a rich text editor, as their
-  // values are markdown
+  // values are markdown.
   if (property.type === 'formatted-text') {
     return (
       <div className="database-entry-template-property-field-editor">
@@ -287,7 +287,7 @@ function renderField({
           </IconButton>
         ) : (
           // A labelled button, so an empty value is not mistaken
-          // for a selected icon
+          // for a selected icon.
           <Button
             size="md"
             variant="subtle"

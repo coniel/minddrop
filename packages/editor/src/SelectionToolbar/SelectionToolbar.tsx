@@ -46,7 +46,7 @@ export const SelectionToolbar: React.FC<SelectionToolbarProps> = ({
   onLink,
 }) => {
   // Positioned against the selected text rather than against a trigger
-  // element, of which the toolbar has none
+  // element, of which the toolbar has none.
   const positionerAnchor = useMemo(
     () => (anchor ? { getBoundingClientRect: () => anchor.rect } : undefined),
     [anchor],
@@ -64,7 +64,7 @@ export const SelectionToolbar: React.FC<SelectionToolbarProps> = ({
           <PopoverContent
             className="selection-toolbar-popover"
             // Focus stays in the editor so that the selection remains
-            // painted and the marks apply to it
+            // painted and the marks apply to it.
             initialFocus={false}
             finalFocus={false}
             onMouseDown={preventFocusLoss}
@@ -74,7 +74,7 @@ export const SelectionToolbar: React.FC<SelectionToolbarProps> = ({
                 <ToolbarIconButton
                   key={markConfig.key}
                   // Matched to the toolbar's own size, which the buttons
-                  // would otherwise be taller than
+                  // would otherwise be taller than.
                   size="sm"
                   label={markConfig.label}
                   active={activeMarks.includes(markConfig.key)}
@@ -121,7 +121,7 @@ function resolveShortcut(
   }
 
   // Written with a capitalised modifier, which renders as the platform's
-  // own modifier key
+  // own modifier key.
   return hotkey.keys.map((key) => (key === 'mod' ? 'Mod' : key));
 }
 

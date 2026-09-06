@@ -45,7 +45,7 @@ export const PropertyIconSection: React.FC<StyleEditorProps> = ({
     return state.design.properties;
   });
   // The icon styles through a nested object whose presence is
-  // what enables the rendering
+  // what enables the rendering.
   const icon = useNestedStyle(editor, 'icon');
 
   // Only value-like variants render the chrome
@@ -65,13 +65,13 @@ export const PropertyIconSection: React.FC<StyleEditorProps> = ({
   )?.icon;
 
   // Enable the icon at its default variant when the section is
-  // opened, so opening alone renders it
+  // opened, so opening alone renders it.
   function handleOpen() {
     icon.setValue('variant', 'side');
   }
 
   // The colour toggle shows the icon's effective colour: its own
-  // value, else the subtle base look
+  // value, else the subtle base look.
   function getResolvedColour<TValue>(key: string): TValue | undefined {
     return (icon.getValue(key) ?? 'subtle') as TValue;
   }
@@ -86,7 +86,7 @@ export const PropertyIconSection: React.FC<StyleEditorProps> = ({
   }
 
   // A variant's sample: the icon piece arranged around the value
-  // line as the variant renders it
+  // line as the variant renders it.
   function variantSample(variant: PropertyIconVariant): React.ReactNode {
     return (
       <PropertyChromeVariantPreview above={variant === 'above'}>

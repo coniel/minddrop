@@ -172,7 +172,7 @@ export const Canvas: React.FC<CanvasProps> = ({
   const isSpaceHeld = useRef(false);
   const lassoStart = useRef<LassoStart | null>(null);
   // Mirrors the panning ref for the interaction lock, which the
-  // ref alone cannot drive since it does not re-render
+  // ref alone cannot drive since it does not re-render.
   const [panning, setPanning] = useState(false);
   const lassoDrag = useCanvasStore((state) => state.lasso);
 
@@ -205,7 +205,7 @@ export const Canvas: React.FC<CanvasProps> = ({
   useCanvasWheel();
 
   // Keep the measured viewport size in the store for fit and
-  // centering math
+  // centering math.
   useCanvasViewportSize();
 
   // Handle pan-drag starts and background presses
@@ -237,7 +237,7 @@ export const Canvas: React.FC<CanvasProps> = ({
       const target = event.target as HTMLElement;
 
       // Presses on content rendered within the canvas are handled
-      // by the content itself
+      // by the content itself.
       if (
         target !== event.currentTarget &&
         target !== transformLayerRef.current
@@ -303,7 +303,7 @@ export const Canvas: React.FC<CanvasProps> = ({
   const handleMouseMove = useCallback(
     (event: React.MouseEvent<HTMLDivElement>) => {
       // A marquee sweeping past a node's edges is not reaching
-      // for its connection handles
+      // for its connection handles.
       if (store.getLasso()) {
         store.setHoveredConnectionHandle(null);
 
@@ -313,7 +313,7 @@ export const Canvas: React.FC<CanvasProps> = ({
       const point = clientToCanvas(event.clientX, event.clientY);
 
       // The proximity threshold is in screen pixels, so it is
-      // unscaled into canvas units
+      // unscaled into canvas units.
       store.setHoveredConnectionHandle(
         getConnectionHandleTarget(
           store.getNodes(),
@@ -331,7 +331,7 @@ export const Canvas: React.FC<CanvasProps> = ({
   }, [store]);
 
   // Select everything the marquee touches: nodes when it touches
-  // any, and connections only when it touches no node at all
+  // any, and connections only when it touches no node at all.
   const applyLassoSelection = useCallback(
     (frame: CanvasNodeFrame, start: LassoStart) => {
       const nodes = store.getNodes();
@@ -343,7 +343,7 @@ export const Canvas: React.FC<CanvasProps> = ({
 
       // An additive lasso adds to the selection as it was when
       // the drag started, so shrinking the marquee still drops
-      // the nodes it no longer touches
+      // the nodes it no longer touches.
       const selectedNodeIds = start.additive
         ? mergeIds(start.baselineNodeIds, nodeIds)
         : nodeIds;
@@ -394,7 +394,7 @@ export const Canvas: React.FC<CanvasProps> = ({
       }
 
       // The lasso only starts once the press travels past the
-      // threshold, leaving a plain background click a click
+      // threshold, leaving a plain background click a click.
       if (!store.getLasso()) {
         const distance = Math.hypot(
           event.clientX - start.clientX,
@@ -558,7 +558,7 @@ export const Canvas: React.FC<CanvasProps> = ({
       style={
         {
           // Exposed so content can size hairlines and chrome
-          // against the zoom
+          // against the zoom.
           '--ui-canvas-zoom': zoom,
           '--ui-canvas-grid-size': `${gridSize}px`,
           '--ui-canvas-grid-offset-x': `${pan.x}px`,
@@ -668,7 +668,7 @@ function getCanvasCursor(panning: boolean, lassoing: boolean): string | null {
   }
 
   // The lasso leaves the pointer as it is, only stopping content
-  // it sweeps over from swapping the cursor
+  // it sweeps over from swapping the cursor.
   if (lassoing) {
     return 'default';
   }

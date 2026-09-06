@@ -104,7 +104,7 @@ describe('initializeSnapshots', () => {
 
   it('retracts dead untitled chains on entry deletion', async () => {
     // Record a rename ending at the untitled address, as clearing
-    // the entry's title would
+    // the entry's title would.
     await recordRename({
       from: 'Objects/Test Entry',
       to: 'Objects/Untitled',

@@ -44,7 +44,7 @@ export function getObjectSnap(
   threshold: number,
 ): ObjectSnapResult {
   // Each axis snaps independently, so a frame can align to one
-  // node horizontally and another vertically
+  // node horizontally and another vertically.
   const snapped = {
     ...frame,
     x: frame.x + getAxisSnapOffset(frame, targets, threshold, 'x'),
@@ -55,7 +55,7 @@ export function getObjectSnap(
     x: snapped.x,
     y: snapped.y,
     // Guides are collected from the snapped frame, so they cover
-    // every alignment the snapped position lands on
+    // every alignment the snapped position lands on.
     guides: [
       ...getAxisGuides(snapped, targets, 'x'),
       ...getAxisGuides(snapped, targets, 'y'),
@@ -116,7 +116,7 @@ function getAxisGuides(
   const span = getGuideSpan(frame, axis);
 
   // Guides by position, so a line shared by several targets is
-  // drawn once, spanning all of them
+  // drawn once, spanning all of them.
   const guides = new Map<number, CanvasAlignmentGuide>();
 
   targets.forEach((target) => {

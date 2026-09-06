@@ -49,7 +49,7 @@ export async function getQueryNodeCounts(
   const compiled = compileQueryGraph(query, queryResults);
 
   // Count each distinct scope list once: pass-through nodes
-  // share their input's scope list by reference
+  // share their input's scope list by reference.
   const countCache = new Map<EntryQueryScope[], number>();
 
   const countScopes = async (scopes: EntryQueryScope[]): Promise<number> => {

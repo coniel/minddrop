@@ -122,7 +122,7 @@ export const TableViewComponent: React.FC<
       });
 
     // Sort columns by the persisted column order, placing
-    // any columns not in the order list at the end
+    // any columns not in the order list at the end.
     const order = options.columnOrder;
 
     if (order.length === 0) {
@@ -151,7 +151,7 @@ export const TableViewComponent: React.FC<
   }, [database, hiddenColumns, options.columnOrder, options.columns]);
 
   // Stable key derived from column order, used to force
-  // the virtualizer to remount when columns reorder
+  // the virtualizer to remount when columns reorder.
   const columnsKey = useMemo(
     () => columns.map((column) => column.id).join(','),
     [columns],

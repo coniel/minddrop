@@ -137,7 +137,7 @@ describe('parseElementsFromMarkdown', () => {
       expect(elements[1].ancestry).toHaveLength(2);
       expect(elements[1].ancestry![0].id).toBe(elements[0].ancestry![0].id);
       // The parent's prefix supplies the indentation, so the nested item
-      // adds none of its own
+      // adds none of its own.
       expect(itemFrame(elements[1], 1).indent).toBe('');
     });
 
@@ -183,7 +183,7 @@ describe('parseElementsFromMarkdown', () => {
 
   it('keeps a construct it does not model as its own source', () => {
     // Every mdast node type is mapped, so an unsupported element can only
-    // come from a node the parser produces which the model does not cover
+    // come from a node the parser produces which the model does not cover.
     const elements = parseElementsFromMarkdown('# Title\n');
 
     expect(types(elements)).not.toContain('unsupported');

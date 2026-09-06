@@ -37,7 +37,7 @@ export function mergeEntryMetadata(
   const sidecar = metadata ?? {};
 
   // Timestamp properties are the user's own copy of the timestamps and
-  // take precedence over the app's record of them
+  // take precedence over the app's record of them.
   const createdProperty = getTimestampProperty(
     'created',
     schema,
@@ -55,7 +55,7 @@ export function mergeEntryMetadata(
     lastModifiedProperty ?? sidecar.lastModified ?? entry.lastModified;
 
   // The sidecar needs writing when it is missing a timestamp, or when a
-  // timestamp property has since been edited outside the app
+  // timestamp property has since been edited outside the app.
   const sidecarOutdated =
     sidecar.created?.getTime() !== created.getTime() ||
     sidecar.lastModified?.getTime() !== lastModified.getTime();

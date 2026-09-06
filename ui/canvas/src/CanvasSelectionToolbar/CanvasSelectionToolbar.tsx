@@ -38,7 +38,7 @@ export const CanvasSelectionToolbar: React.FC<CanvasSelectionToolbarProps> = ({
   const zoom = useCanvasStore((state) => state.zoom);
   const pan = useCanvasStore((state) => state.pan);
   // Subscribed to so connection bounds recompute when the
-  // connections layer mounts or its connections change
+  // connections layer mounts or its connections change.
   const connectionGeometry = useCanvasStore(
     (state) => state.connectionGeometry,
   );
@@ -66,7 +66,7 @@ export const CanvasSelectionToolbar: React.FC<CanvasSelectionToolbarProps> = ({
   const anchor = canvasToScreen(anchorPoint.point, pan, zoom);
 
   // Point-anchored toolbars tuck in toward the cursor, which
-  // otherwise leaves them looking detached from it
+  // otherwise leaves them looking detached from it.
   const offset =
     anchorPoint.placement === 'point' ? SELECTION_TOOLBAR_POINT_OFFSET : 0;
 
@@ -77,7 +77,7 @@ export const CanvasSelectionToolbar: React.FC<CanvasSelectionToolbarProps> = ({
       }${animated ? ' ui-canvas-selection-toolbar-animated' : ''}`}
       // The toolbar re-mounts when the selection changes, so the
       // entry transition plays for each new selection rather than
-      // sliding between them
+      // sliding between them.
       key={`${selection.type}:${selection.ids.join(',')}`}
       style={{
         left: anchor.x - offset,
@@ -130,7 +130,7 @@ function getAnchorPoint(
   }
 
   // Clear the selection box's padding, so the gap reads the same
-  // for a group as for a single node
+  // for a group as for a single node.
   const padding =
     selection.type === 'nodes' && selection.ids.length > 1
       ? SELECTION_BOX_PADDING
@@ -159,7 +159,7 @@ function getBounds(
   }
 
   // Connection geometry lives in the connections layer, which is
-  // not mounted on every canvas
+  // not mounted on every canvas.
   return connectionGeometry
     ? connectionGeometry.getBounds(selection.ids)
     : null;

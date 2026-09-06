@@ -67,7 +67,7 @@ export function useDesignElementDragDrop({
     });
 
   // Activate the parent FlexDropContainer gap adjacent to the
-  // element's before/after drag position
+  // element's before/after drag position.
   useFlexDropGapActivation({ index, isDraggingOver, dropIndicatorPosition });
 
   // Wrap onDragStart to manually set the drag preview.
@@ -90,7 +90,7 @@ export function useDesignElementDragDrop({
   }
 
   // Non-draggable elements (e.g. page panel regions) keep their
-  // drop target so content can still be dropped inside them
+  // drop target so content can still be dropped inside them.
   if (!draggable) {
     return {
       dragDropProps: { ...droppableProps },

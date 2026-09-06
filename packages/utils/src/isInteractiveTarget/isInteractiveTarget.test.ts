@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { isInteractiveTarget } from './isInteractiveTarget';
 
 // Renders the markup into the document and returns the element
-// matching the selector
+// matching the selector.
 function renderTarget(html: string, selector: string): Element {
   document.body.innerHTML = html;
 

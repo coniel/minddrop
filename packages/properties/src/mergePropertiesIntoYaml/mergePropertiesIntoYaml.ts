@@ -24,7 +24,7 @@ export function mergePropertiesIntoYaml(
 ): string {
   const document = YAML.parseDocument(yaml);
   // Parse the existing YAML back into properties so values are compared in
-  // the same shape, with date strings already revived into Date objects
+  // the same shape, with date strings already revived into Date objects.
   const existingProperties = parsePropertiesFromYaml(schema, yaml);
 
   // Remove schema keys which the properties no longer carry, which is how a
@@ -37,7 +37,7 @@ export function mergePropertiesIntoYaml(
   });
 
   // Write only the values which actually changed, leaving the formatting of
-  // every untouched key exactly as the author wrote it
+  // every untouched key exactly as the author wrote it.
   Object.entries(properties).forEach(([name, value]) => {
     if (isEqualPropertyValue(existingProperties[name], value)) {
       return;
@@ -84,7 +84,7 @@ function orderSchemaKeys(
     );
 
   // Walk the existing slots, leaving non-schema keys where the author put them
-  // and filling every other slot from the schema ordered list
+  // and filling every other slot from the schema ordered list.
   let nextSchemaItem = 0;
 
   contents.items = contents.items.map((item) =>

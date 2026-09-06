@@ -28,7 +28,7 @@ describe('getConnectionDropTarget', () => {
 
   it('measures diagonal distance to corners', () => {
     // 10px right of and 30px above the frame corner, out of reach
-    // despite both axis distances being near it
+    // despite both axis distances being near it.
     expect(
       getConnectionDropTarget(nodes, { x: 390, y: -30 }, 'node-1', 20),
     ).toBeNull();

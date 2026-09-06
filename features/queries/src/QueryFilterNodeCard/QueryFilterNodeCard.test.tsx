@@ -64,7 +64,7 @@ describe('<QueryFilterNodeCard />', () => {
     await user.click(screen.getByRole('option', { name: 'Content' }));
 
     // The node's property, type, operator and value update in
-    // the store
+    // the store.
     await waitFor(() => {
       const query = Queries.get(query_1.id);
       const node = query.nodes.find(

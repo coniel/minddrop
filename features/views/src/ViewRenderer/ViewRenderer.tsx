@@ -47,7 +47,7 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
   const [state, setState] = useState<ViewAreaState>(INITIAL_STATE);
 
   // The active tab, used to remount views and scope their transient
-  // state when switching tabs
+  // state when switching tabs.
   const activeTabId = useActiveTabId(viewAreaId);
 
   // Apply a new state, optionally announcing the change so listeners
@@ -305,7 +305,7 @@ const RegisteredView: FC<RegisteredViewProps> = ({
   const registered = Views.use(descriptor.view);
 
   // Render the view's content through a stable element so that the
-  // trail and subview updates below re-render only the providers
+  // trail and subview updates below re-render only the providers.
   const content = useMemo(() => {
     // Nothing to render when no view is registered for the type
     if (!registered) {

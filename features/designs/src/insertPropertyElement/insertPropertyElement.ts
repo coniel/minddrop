@@ -36,7 +36,7 @@ export function insertPropertyElement(
 
   // Auto-binding needs the layout's existing bindings, taken from
   // the live elements so that properties bound since the last save
-  // are already counted as taken
+  // are already counted as taken.
   const layout = studio.getLiveLayout(resolvedLayoutId ?? undefined);
 
   if (!layout) {
@@ -49,7 +49,7 @@ export function insertPropertyElement(
   }
 
   // Instantiate the property element, auto-bound to a compatible
-  // unbound property
+  // unbound property.
   const element = Designs.createPropertyElement(propertyType, design, layout);
 
   // Flatten the new element for the studio's element map

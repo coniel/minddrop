@@ -18,13 +18,13 @@ export function placeEntryInColumn(
   entryIndex: number,
 ): BoardColumns {
   // The entry's current position in the target column, -1 if
-  // it is not in it
+  // it is not in it.
   const currentIndex = columns[columnIndex]
     ? columns[columnIndex].indexOf(entryId)
     : -1;
 
   // Removing the entry from above the target position shifts the
-  // positions below it up by one
+  // positions below it up by one.
   const targetIndex =
     currentIndex !== -1 && currentIndex < entryIndex
       ? entryIndex - 1

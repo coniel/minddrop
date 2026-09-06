@@ -13,7 +13,7 @@ export const MINISEARCH_OPTIONS: MiniSearchOptions<SearchDocument> = {
     boost: { title: 3, tags: 2, properties: 1.5 },
     // Derate fuzzy (typo) matches so they cannot outrank exact
     // and prefix matches, e.g. a fuzzy title match on "data"
-    // outscoring a prefix title match on "databases"
+    // outscoring a prefix title match on "databases".
     weights: { fuzzy: 0.2, prefix: 0.375 },
     fuzzy: (term: string) => {
       // Exact match only for very short terms

@@ -23,7 +23,7 @@ export function sqlGetEntryTextContent(entryId: string): {
   );
 
   // Get multi-value property values (select options, collection
-  // references) for the full-text index
+  // references) for the full-text index.
   const multiValueRows = Sql.all<{ value_text: string }>(
     'SELECT value_text FROM entry_property_values WHERE entry_id = ?',
     entryId,

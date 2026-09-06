@@ -21,7 +21,7 @@ export function searchDatabaseEntriesByTitle(
     : allEntries;
 
   // Queue up entries per title so that duplicate titles map
-  // back to distinct entries
+  // back to distinct entries.
   const entriesByTitle = new Map<string, DatabaseEntry[]>();
 
   entries.forEach((entry) => {

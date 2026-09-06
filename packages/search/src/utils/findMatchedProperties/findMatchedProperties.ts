@@ -4,7 +4,7 @@ import { extractSnippet } from '../extractSnippet';
 import { highlightAllMatches } from '../highlightAllMatches';
 
 // Property types that contain long-form text and should
-// be returned as snippets rather than full values
+// be returned as snippets rather than full values.
 const LONG_TEXT_TYPES = new Set(['text', 'formatted-text']);
 
 // Maximum value length (in characters) before snippeting kicks in
@@ -27,7 +27,7 @@ export function findMatchedProperties(
   const propertyValues = Databases.sql.getEntryPropertyValues(entryId);
 
   // Group matched values by property name so multi-value
-  // properties (select, collection) show all matching values
+  // properties (select, collection) show all matching values.
   const matchesByName = new Map<string, { type: string; values: string[] }>();
 
   for (const property of propertyValues) {

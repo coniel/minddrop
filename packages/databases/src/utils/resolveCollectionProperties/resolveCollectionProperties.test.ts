@@ -14,7 +14,7 @@ import { databaseEntryAddress } from '../databaseEntryAddress';
 import { resolveCollectionProperties } from './resolveCollectionProperties';
 
 // Address index containing the referenced fixture entries, keyed
-// lowercased as the resolve path expects
+// lowercased as the resolve path expects.
 const entryIdByAddress = new Map([
   [
     databaseEntryAddress(relatedEntry1, collectionDatabase).toLowerCase(),

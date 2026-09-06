@@ -84,7 +84,7 @@ describe('searchFullTextIndex', () => {
 
   it('ranks title matches above property value matches', async () => {
     // Seed an entry whose title matches the query and one which
-    // only matches via a property value
+    // only matches via a property value.
     seedEntries('database-1', [
       { id: 'entry-5', title: 'Databases' },
       {
@@ -119,7 +119,7 @@ describe('searchFullTextIndex', () => {
 
   it('ranks whole-title matches above accumulated field matches', async () => {
     // Seed an entry whose title is the match and one which
-    // matches in its title, content, and property values
+    // matches in its title, content, and property values.
     seedEntries('database-1', [
       { id: 'entry-7', title: 'Spaces' },
       {

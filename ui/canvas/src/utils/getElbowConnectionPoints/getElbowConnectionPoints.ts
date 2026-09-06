@@ -74,7 +74,7 @@ function getPerpendicularPoints(
 
   // Detour: cross over in the middle of the clear space between
   // the exit and the target frame, or around the target's far
-  // side when there is no room between them
+  // side when there is no room between them.
   const anchorCoord = dot(from.point, fromNormal);
   const [targetNear, targetFar] = frameInterval(anchorFrame(to), fromNormal);
   const crossing =

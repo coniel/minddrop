@@ -47,7 +47,7 @@ export const NumberPlaceholderField: React.FC<NumberPlaceholderFieldProps> = ({
   }, [onValueChange, digits]);
 
   // Store the typed number as a string, since placeholders are
-  // stored as text
+  // stored as text.
   const handleChange = useCallback(
     (newValue: number | null) => {
       onValueChange(newValue !== null ? String(newValue) : '');
@@ -56,7 +56,7 @@ export const NumberPlaceholderField: React.FC<NumberPlaceholderFieldProps> = ({
   );
 
   // Grow or shrink the value to the chosen digit count, keeping
-  // the leading digits the user already has
+  // the leading digits the user already has.
   const handleSliderChange = useCallback(
     (step: number | number[]) => {
       const newDigits = Array.isArray(step) ? step[0] : step;

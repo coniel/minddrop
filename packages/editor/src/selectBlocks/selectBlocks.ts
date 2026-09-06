@@ -31,7 +31,7 @@ export function selectBlocks(
   focusPath: Path,
 ): void {
   // Selecting a block selects everything drawn inside it, which the
-  // blocks below it can be
+  // blocks below it can be.
   const { firstIndex, lastIndex } = resolveClosedBlockRange(
     editor.children as Element[],
     {
@@ -78,7 +78,7 @@ function buildBlockSelectionItems(
     const block = editor.children[index];
 
     // Blocks are identified by their block ID, which the block ID
-    // plugin gives every top level block
+    // plugin gives every top level block.
     if (!SlateElement.isElement(block) || !hasBlockId(block)) {
       continue;
     }

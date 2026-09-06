@@ -35,7 +35,7 @@ export const EditorPropertyRenderer: React.FC<EditorPropertyRendererProps> = ({
   element,
 }) => {
   // Result of the one-time layout autofocus claim, null until
-  // claimed on first render
+  // claimed on first render.
   const autoFocusClaimRef = useRef<boolean | null>(null);
 
   const preview = useDesignPreview();
@@ -43,7 +43,7 @@ export const EditorPropertyRenderer: React.FC<EditorPropertyRendererProps> = ({
   const { claimAutoFocus } = useLayoutAutoFocus();
 
   // Claim the layout's editor autofocus on first render, so only
-  // the first editor in the layout tree focuses
+  // the first editor in the layout tree focuses.
   if (autoFocusClaimRef.current === null) {
     autoFocusClaimRef.current = claimAutoFocus();
   }
@@ -64,14 +64,14 @@ export const EditorPropertyRenderer: React.FC<EditorPropertyRendererProps> = ({
   // against
   const layoutType = useLayoutType();
   // Resolve the element's style with its variant theme styles
-  // applied; the editor variant styles through the editor shape
+  // applied; the editor variant styles through the editor shape.
   const style = Designs.resolveElementStyle(
     element,
     layoutType ?? undefined,
   ) as EditorStyle;
 
   // Use the mapped property value if available, falling back to
-  // the resolved placeholder as sample body content in previews
+  // the resolved placeholder as sample body content in previews.
   const boundValue =
     property?.value != null ? String(property.value) : undefined;
   const value = preview ? (boundValue ?? placeholder) : boundValue;
@@ -86,7 +86,7 @@ export const EditorPropertyRenderer: React.FC<EditorPropertyRendererProps> = ({
   const fullStyle = useElementCssStyle(element);
 
   // Split padding from the container style so it is applied
-  // to the inner editor element instead
+  // to the inner editor element instead.
   const {
     paddingTop,
     paddingRight,

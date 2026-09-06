@@ -37,7 +37,7 @@ export async function updateDatabaseEntryProperty(
   const database = getDatabase(entry.database);
 
   // Look up the property schema, including the implicit entry
-  // metadata properties
+  // metadata properties.
   const propertySchema = withImplicitMetadataProperties(
     database.properties,
   ).find((property) => property.name === propertyName);
@@ -55,7 +55,7 @@ export async function updateDatabaseEntryProperty(
   }
 
   // Timestamp metadata is managed by the system, so writes to it
-  // leave the entry unchanged
+  // leave the entry unchanged.
   if (
     propertySchema.type === 'created' ||
     propertySchema.type === 'last-modified'
@@ -71,7 +71,7 @@ export async function updateDatabaseEntryProperty(
   }
 
   // Collection properties are updated through their virtual
-  // collection so both stores stay in sync
+  // collection so both stores stay in sync.
   if (propertySchema.type === 'collection' && Array.isArray(value)) {
     const collectionId = virtualCollectionId(entry.id, propertyName);
 
@@ -104,7 +104,7 @@ async function renameEntryToTitle(
 
   try {
     // Empty titles rename the entry to the localised untitled
-    // title, incrementing on conflict
+    // title, incrementing on conflict.
     if (!trimmedTitle) {
       return await renameDatabaseEntry(
         entryId,
@@ -116,7 +116,7 @@ async function renameEntryToTitle(
     return await renameDatabaseEntry(entryId, trimmedTitle);
   } catch (error) {
     // Validation guards against store conflicts, but a non-entry
-    // file on disk can still conflict with the new path
+    // file on disk can still conflict with the new path.
     if (error instanceof Fs.errors.PathConflict) {
       return getDatabaseEntry(entryId);
     }

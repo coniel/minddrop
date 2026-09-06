@@ -31,13 +31,13 @@ describe('initializeSearchIndex', () => {
     searchIndexes.clear();
 
     // Remove the entry via raw SQL, leaving the version counter
-    // untouched; a rebuild would now produce an empty index
+    // untouched; a rebuild would now produce an empty index.
     Sql.run('DELETE FROM entries WHERE id = ?', 'entry-1');
 
     await initializeSearchIndex(workspaceId);
 
     // The entry is still findable, proving the index came from
-    // disk rather than a rebuild
+    // disk rather than a rebuild.
     expect(searchFullTextIndex(workspaceId, 'dune')).toHaveLength(1);
   });
 

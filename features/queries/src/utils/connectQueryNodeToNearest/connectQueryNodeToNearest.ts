@@ -2,7 +2,7 @@ import { Queries, Query, QueryConnection } from '@minddrop/queries';
 import { QUERY_NODE_WIDTHS } from '../../constants';
 
 // Horizontal slack within which candidates count as part of the
-// same stack as the nearest node
+// same stack as the nearest node.
 const STACK_TOLERANCE = 80;
 
 interface NearestCandidate {
@@ -47,7 +47,7 @@ export function connectQueryNodeToNearest(
   let connections = query.connections;
 
   // Input side: nodes with an output port ending left of the
-  // node's input port
+  // node's input port.
   if (node.type !== 'source') {
     const candidates = query.nodes
       .filter(
@@ -67,7 +67,7 @@ export function connectQueryNodeToNearest(
   }
 
   // Output side: nodes with an input port starting right of the
-  // node's output port
+  // node's output port.
   if (node.type !== 'results') {
     const outputX = node.x + QUERY_NODE_WIDTHS[node.type];
 
@@ -114,7 +114,7 @@ function connectStack(
   let updated = connections;
 
   // Connect every candidate within the stack window, skipping
-  // invalid connections
+  // invalid connections.
   candidates
     .filter((candidate) => candidate.distance <= nearest + STACK_TOLERANCE)
     .forEach((candidate) => {

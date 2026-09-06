@@ -39,7 +39,7 @@ export const IconPropertyRenderer: React.FC<IconPropertyRendererProps> = ({
   const containerCss = Designs.createIconContainerCss(style);
 
   // Split the margins off the icon CSS so they can move to the
-  // container box when one is rendered
+  // container box when one is rendered.
   const { marginTop, marginRight, marginBottom, marginLeft, ...iconCss } =
     cssStyle;
   const marginCss = { marginTop, marginRight, marginBottom, marginLeft };

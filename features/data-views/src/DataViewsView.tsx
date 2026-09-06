@@ -24,7 +24,7 @@ export const DataViewsView: React.FC = () => {
   const selectedDataView = DataViews.use(subview?.id ?? '');
 
   // Data views listed in the left column: fuzzy name matches when
-  // searching, all persisted data views otherwise
+  // searching, all persisted data views otherwise.
   const items = useMemo(() => {
     // List only persisted data views, excluding virtual ones
     const persisted = dataViews.filter((dataView) => !dataView.virtual);

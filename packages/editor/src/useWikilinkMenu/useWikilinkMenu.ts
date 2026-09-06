@@ -55,7 +55,7 @@ export function useWikilinkMenu(
   source?: ReferenceSource,
 ): UseWikilinkMenu {
   // The point at which the trigger was typed, being the point directly
-  // before it
+  // before it.
   const triggerPoint = useRef<Point | null>(null);
   const [armed, setArmed] = useState(false);
   const [anchor, setAnchor] = useState<RangeAnchor | null>(null);
@@ -76,7 +76,7 @@ export function useWikilinkMenu(
   }, [source, query]);
 
   // A query which matches nothing hides the menu without disarming it, so
-  // that it returns when the query is corrected
+  // that it returns when the query is corrected.
   const open = armed && references.length > 0;
 
   // The hint prompts for a query, so it is only shown until one has been
@@ -98,7 +98,7 @@ export function useWikilinkMenu(
     }
 
     // The query is typed at a single cursor position which stays after the
-    // trigger within the same text node
+    // trigger within the same text node.
     if (
       !editor.selection ||
       !Range.isCollapsed(editor.selection) ||
@@ -123,7 +123,7 @@ export function useWikilinkMenu(
     }
 
     // The query is the text between the trigger and the cursor, and changing
-    // it restarts the highlight at the top
+    // it restarts the highlight at the top.
     setQuery(
       SlateEditor.string(editor, {
         anchor: afterTrigger,
@@ -159,7 +159,7 @@ export function useWikilinkMenu(
   );
 
   // Opens the menu when the trigger is completed, which is the second of its
-  // brackets being typed
+  // brackets being typed.
   const handleTriggerKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLDivElement>) => {
       if (event.key !== Trigger[1] || event.metaKey || event.ctrlKey) {
@@ -183,7 +183,7 @@ export function useWikilinkMenu(
       }
 
       // The menu is anchored to the trigger as a whole, so it opens from the
-      // first of its brackets
+      // first of its brackets.
       triggerPoint.current = start;
 
       setQuery('');
@@ -212,7 +212,7 @@ export function useWikilinkMenu(
   const handleKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLDivElement>) => {
       // The trigger is watched for whether or not the menu is open, and the
-      // bracket itself is typed as usual
+      // bracket itself is typed as usual.
       handleTriggerKeyDown(event);
 
       if (!open) {

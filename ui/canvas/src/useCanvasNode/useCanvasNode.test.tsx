@@ -11,7 +11,7 @@ interface TestNodeProps extends UseCanvasNodeOptions {
 }
 
 // Renders a node driven by the hook, exposing its drag handle and
-// a single resize handle as test targets
+// a single resize handle as test targets.
 const TestNode: React.FC<TestNodeProps> = ({
   resizeEdge = 'right',
   ...options
@@ -276,7 +276,7 @@ describe('useCanvasNode', () => {
     const { getByTestId } = renderNode(store);
 
     // Move the right edge from 400 to 410, which snaps back to
-    // the grid line at 408
+    // the grid line at 408.
     fireEvent.mouseDown(getByTestId('resize-handle'), {
       clientX: 0,
       clientY: 0,
@@ -318,7 +318,7 @@ describe('useCanvasNode', () => {
     const { getByTestId } = renderNode(store);
 
     // Drag to x 103, putting the node's center 3 past the other
-    // node's center
+    // node's center.
     fireEvent.mouseDown(getByTestId('drag-handle'), {
       button: 0,
       clientX: 0,
@@ -362,7 +362,7 @@ describe('useCanvasNode', () => {
     moveMouse(40, 20);
 
     // The nodes are the same size, so their left edges, centers
-    // and right edges all line up
+    // and right edges all line up.
     expect(store.getAlignmentGuides()).toEqual([
       { axis: 'x', position: 145, start: 70, end: 600 },
       { axis: 'x', position: 295, start: 70, end: 600 },
@@ -421,7 +421,7 @@ describe('useCanvasNode', () => {
     const { getByTestId } = renderNode(store);
 
     // Move the right edge from 400 to 410, 5 short of the other
-    // node's left edge
+    // node's left edge.
     fireEvent.mouseDown(getByTestId('resize-handle'), {
       clientX: 0,
       clientY: 0,
@@ -580,7 +580,7 @@ describe('useCanvasNode', () => {
       });
 
       // The consumer applies the move through the canvas's
-      // batched callback, which updates the controlled props
+      // batched callback, which updates the controlled props.
       expect(store.getNode('node-1')?.x).toBe(100);
     });
   });

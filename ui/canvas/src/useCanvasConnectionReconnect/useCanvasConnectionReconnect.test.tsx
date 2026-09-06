@@ -26,7 +26,7 @@ const TestHitArea: React.FC<UseCanvasConnectionReconnectOptions> = (
 };
 
 // Renders the hit area within a canvas provider backed by the
-// given store, with both endpoint node frames pre-registered
+// given store, with both endpoint node frames pre-registered.
 const renderHitArea = (
   store: CanvasStore,
   options: Partial<UseCanvasConnectionReconnectOptions> = {},
@@ -87,7 +87,7 @@ describe('useCanvasConnectionReconnect', () => {
     moveMouse(300, 160);
 
     // The drag is anchored to the source end, re-routing the
-    // target end
+    // target end.
     expect(store.getConnectionDrag()).toEqual({
       fromNodeId: 'node-1',
       fromSide: 'right',
@@ -130,7 +130,7 @@ describe('useCanvasConnectionReconnect', () => {
     moveMouse(220, 60);
 
     // The drag is anchored to the target end, re-routing the
-    // source end
+    // source end.
     expect(store.getConnectionDrag()?.fromNodeId).toBe('node-2');
     expect(store.getConnectionDrag()?.fromSide).toBe('left');
     expect(store.getConnectionDrag()?.reconnect).toEqual({
@@ -288,7 +288,7 @@ describe('useCanvasConnectionReconnect', () => {
 
     // A selection started on the press carries on painting
     // across the content the curve is dragged over, so the press
-    // has to suppress its default behaviour
+    // has to suppress its default behaviour.
     const allowed = fireEvent.mouseDown(getByTestId('hit-area'), {
       button: 0,
       clientX: 380,

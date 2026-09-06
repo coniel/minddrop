@@ -35,10 +35,10 @@ export function resolveListItemNumbers(
 ): Map<string, number> {
   const numbers = new Map<string, number>();
   // The run open at each ancestry depth, since a document can have a list
-  // inside a list
+  // inside a list.
   const runs: (OrderedRun | null)[] = [];
   // Items already numbered, so an item's continuation blocks do not advance
-  // its list
+  // its list.
   const numberedItems = new Set<string>();
 
   elements.forEach((element) => {

@@ -62,7 +62,7 @@ export function getResizedNodeFrame(
   const { minWidth, minHeight, mirror, bounds } = options;
 
   // Workspace-bounds clamps only apply to bounded nodes; canvas
-  // nodes resize freely in canvas coordinates
+  // nodes resize freely in canvas coordinates.
   const workspaceWidth = bounds ? bounds.width : Infinity;
   const workspaceHeight = bounds ? bounds.height : Infinity;
   const minPosition = bounds ? 0 : -Infinity;
@@ -76,7 +76,7 @@ export function getResizedNodeFrame(
   const centerY = originY + originHeight / 2;
 
   // Mirror-resize width/height caps that keep the node's leading
-  // edge inside the workspace in bounded mode
+  // edge inside the workspace in bounded mode.
   const maxMirrorWidth = bounds ? centerX * 2 : Infinity;
   const maxMirrorHeight = bounds ? centerY * 2 : Infinity;
 

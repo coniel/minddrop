@@ -35,7 +35,7 @@ export async function updateCollection(
   };
 
   // If the ID is changing (virtual collections only), remove the old
-  // entry and set the new one
+  // entry and set the new one.
   if ('id' in data && data.id && data.id !== collectionId) {
     if (!collection.virtual) {
       throw new InvalidParameterError(

@@ -78,7 +78,7 @@ export function mapBlockElement(node: MdastNode, source: string): Element {
 
     default:
       // Nothing is ever dropped: a construct with no element type is kept
-      // as the source it was written as, and re-emitted untouched
+      // as the source it was written as, and re-emitted untouched.
       return generateElement<UnsupportedElement>('unsupported', {
         value: sliceNode(node, source),
       });
@@ -120,7 +120,7 @@ function readHeadingSyntax(
   source: string,
 ): HeadingElement['syntax'] {
   // A setext heading is underlined rather than prefixed, so its source
-  // spans more than one line
+  // spans more than one line.
   if (!sliceNode(node, source).startsWith('#')) {
     return node.depth === 2 ? '-' : '=';
   }

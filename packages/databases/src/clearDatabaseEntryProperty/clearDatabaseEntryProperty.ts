@@ -41,7 +41,7 @@ export async function clearDatabaseEntryProperty(
   }
 
   // Collection properties are cleared through their virtual
-  // collection so both stores stay in sync
+  // collection so both stores stay in sync.
   if (propertySchema.type === 'collection') {
     const collectionId = virtualCollectionId(entryId, propertyName);
 

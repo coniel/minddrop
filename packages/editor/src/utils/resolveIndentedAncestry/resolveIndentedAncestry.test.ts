@@ -21,7 +21,7 @@ describe('resolveIndentedAncestry', () => {
 
   it('nests an item alongside the items already nested above it', () => {
     // The block above is a nested item, so the item joins it rather than
-    // nesting inside it
+    // nesting inside it.
     expect(resolveIndentedAncestry([item3], [item1, item2])).toEqual([
       item1,
       item3,

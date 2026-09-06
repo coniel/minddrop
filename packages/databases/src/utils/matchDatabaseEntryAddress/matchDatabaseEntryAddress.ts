@@ -42,7 +42,7 @@ export function matchDatabaseEntryAddress(
   }
 
   // The first segment names a database rather than identifying it, so
-  // it is resolved against the database names
+  // it is resolved against the database names.
   const database = getAllDatabases().find(
     (candidate) => candidate.name.toLowerCase() === databaseName.toLowerCase(),
   );

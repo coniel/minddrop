@@ -114,7 +114,7 @@ async function flushChange(
   pendingChanges.delete(path);
 
   // A queued write means the app's state is ahead of disk and
-  // that write is about to land, so the change is not applied
+  // that write is about to land, so the change is not applied.
   if (Fs.hasPendingWrite(path)) {
     return;
   }
@@ -122,7 +122,7 @@ async function flushChange(
   const exists = await Fs.exists(path);
 
   // A path that no longer exists was deleted, whatever the
-  // adapter reported along the way
+  // adapter reported along the way.
   if (!exists) {
     dispatchChange(path, 'deleted');
 
@@ -130,7 +130,7 @@ async function flushChange(
   }
 
   // The app's own writes leave its state already current, so an
-  // event for one would only ask a package to re-read what it holds
+  // event for one would only ask a package to re-read what it holds.
   if (await isSelfWrite(path)) {
     return;
   }

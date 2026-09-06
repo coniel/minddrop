@@ -68,7 +68,7 @@ export const CursorMenu: React.FC<CursorMenuProps> = ({
   const selfScrolling = useRef(false);
 
   // Positioned against the trigger text rather than against a trigger
-  // element, of which the menu has none
+  // element, of which the menu has none.
   const positionerAnchor = useMemo(
     () => (anchor ? { getBoundingClientRect: () => anchor.rect } : undefined),
     [anchor],
@@ -170,7 +170,7 @@ export const CursorMenu: React.FC<CursorMenuProps> = ({
               ref={popupRef}
               className={className}
               // Focus stays in the editor so that the cursor remains visible
-              // and the query can keep being typed
+              // and the query can keep being typed.
               initialFocus={false}
               finalFocus={false}
               onMouseDown={preventFocusLoss}

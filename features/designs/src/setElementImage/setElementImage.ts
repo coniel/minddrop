@@ -42,6 +42,6 @@ export async function setElementImage(
   }
 
   // Set the image as the element's own content image, switching
-  // unbound elements to static mode
+  // unbound elements to static mode.
   studio.updateDesignElement(elementId, { content: fileName, static: true });
 }

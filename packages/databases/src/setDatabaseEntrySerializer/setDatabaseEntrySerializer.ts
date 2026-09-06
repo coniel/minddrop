@@ -146,7 +146,7 @@ export async function setDatabaseEntrySerializer(
   }
 
   // Move the backup directory to the system trash so the original files
-  // remain recoverable
+  // remain recoverable.
   try {
     await Fs.trashDir(backupDir);
   } catch {

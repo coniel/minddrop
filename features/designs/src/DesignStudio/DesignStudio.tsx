@@ -35,12 +35,12 @@ export const DesignStudio: React.FC<DesignStudioViewProps> = ({
   fromDashboard,
 }) => {
   // Store instances scoped to this studio session, so several
-  // editors can be open at once
+  // editors can be open at once.
   const [studio] = useState(createDesignStudioStore);
   const [canvasStore] = useState(createDesignStudioCanvasStore);
 
   // Clear the studio when it unmounts so the next open starts
-  // at the dashboard, persisting any pending edit first
+  // at the dashboard, persisting any pending edit first.
   useEffect(() => {
     return () => {
       void studio.flushSave();
@@ -102,7 +102,7 @@ const DesignStudioSession: React.FC<DesignStudioSessionProps> = ({
     const openedDesign = designId ? Designs.get(designId, false) : null;
 
     // Nothing to restore when the studio is already on the recorded
-    // design, which is the case for opens the studio made itself
+    // design, which is the case for opens the studio made itself.
     if (studio.getDesign()?.id === openedDesign?.id) {
       return;
     }
@@ -118,12 +118,12 @@ const DesignStudioSession: React.FC<DesignStudioSessionProps> = ({
   }, [designId, studio]);
 
   // Title the view after the open design so that its tab is
-  // labelled by it, falling back to the studio's own title
+  // labelled by it, falling back to the studio's own title.
   useEffect(() => {
     const title = design?.name || t(DesignStudioViewTitle);
 
     // Updating the view re-renders it, so the update is skipped
-    // unless the title actually changed
+    // unless the title actually changed.
     if (viewTitle.current === title) {
       return;
     }
@@ -137,7 +137,7 @@ const DesignStudioSession: React.FC<DesignStudioSessionProps> = ({
   }, [design?.name, t]);
 
   // Match the nav toolbar to the left panel, which is only shown
-  // while a design is open
+  // while a design is open.
   useEffect(() => {
     Events.dispatch(Events.events.SetNavToolbarWidth, {
       width: isDesignOpen ? LEFT_PANEL_WIDTH : 0,
@@ -153,7 +153,7 @@ const DesignStudioSession: React.FC<DesignStudioSessionProps> = ({
       }
 
       // Cmd/Ctrl+Z steps through the edit history, with shift
-      // redoing the step it just undid
+      // redoing the step it just undid.
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'z') {
         event.preventDefault();
 
@@ -180,19 +180,19 @@ const DesignStudioSession: React.FC<DesignStudioSessionProps> = ({
   }, [studio]);
 
   // Delete the highlighted element on Delete/Backspace. Deleting a
-  // frame's root deletes the entire layout
+  // frame's root deletes the entire layout.
   useDeleteKey(() => {
     studio.deleteHighlightedElement({ allowRootDelete: true });
   }, highlightedElementId !== null);
 
   const handleClickBack = useCallback(() => {
     // Navigate to an empty view to unmount the design studio
-    // and reopen the sidebar
+    // and reopen the sidebar.
     Events.dispatch(Views.events.Open, { view: Views.constants.DefaultName });
   }, []);
 
   // Open the design, recording it on the view so that it is
-  // restored when the view remounts
+  // restored when the view remounts.
   const handleOpenDesign = useCallback(
     (openedDesign: Design) => {
       studio.initialize(openedDesign);
@@ -202,13 +202,13 @@ const DesignStudioSession: React.FC<DesignStudioSessionProps> = ({
   );
 
   // Return to the origin view when the studio was opened directly
-  // into a design, otherwise close the design to show the dashboard
+  // into a design, otherwise close the design to show the dashboard.
   const handleCloseDesign = useCallback(async () => {
     // Persist any pending edit before leaving the design
     await studio.flushSave();
 
     // Studios opened directly into a design have no dashboard to
-    // return to, so they leave the studio entirely
+    // return to, so they leave the studio entirely.
     if (!fromDashboard) {
       handleClickBack();
 
@@ -220,18 +220,18 @@ const DesignStudioSession: React.FC<DesignStudioSessionProps> = ({
   }, [fromDashboard, handleClickBack, studio]);
 
   // Gate the nav override on presence rather than the design
-  // itself, which changes identity on every edit
+  // itself, which changes identity on every edit.
   const hasOpenDesign = Boolean(design);
 
   // While a design is open, the app's nav back button closes it
-  // instead of navigating the tab history
+  // instead of navigating the tab history.
   useEffect(() => {
     if (!hasOpenDesign) {
       return;
     }
 
     // Register the back action on the nav toolbar and listen for
-    // its presses
+    // its presses.
     Events.dispatch(Events.events.SetNavToolbarBackAction, {
       label: 'designsStudio.backToDesigns',
     });

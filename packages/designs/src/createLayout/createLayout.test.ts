@@ -37,11 +37,11 @@ describe('createLayout', () => {
     const layout = await createLayout(design_books.id, { type: 'page' });
 
     // The root's layout type decides its default background
-    // treatment at CSS generation
+    // treatment at CSS generation.
     expect(layout.tree.layoutType).toBe('page');
 
     // Full-screen roots start with a content gutter, which stays
-    // user-editable like any other style value
+    // user-editable like any other style value.
     expect(layout.tree.style).toEqual({
       ...DefaultContainerStyle,
       contentPadding: '4',

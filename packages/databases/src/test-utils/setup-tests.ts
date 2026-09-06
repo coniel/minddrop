@@ -48,7 +48,7 @@ export function setup(options?: SetupDatabaseFixturesOptions) {
   setupWorkspaceFixtures(MockFs);
 
   // Register the item reference adapters registered at runtime
-  // by initializeDatabases
+  // by initializeDatabases.
   ItemReferences.registerAdapter({
     type: 'database-entry',
     serialize: serializeDatabaseEntryReference,

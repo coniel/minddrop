@@ -130,7 +130,7 @@ export const NewTagPopover: React.FC<NewTagPopoverProps> = ({
       setSubview({ id: tag.id });
     } catch {
       // The name is already in use, show the error and keep the
-      // form open for editing
+      // form open for editing.
       setNameTaken(true);
     }
   }

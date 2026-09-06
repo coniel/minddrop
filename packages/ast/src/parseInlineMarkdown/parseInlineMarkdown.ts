@@ -77,7 +77,7 @@ function mapNode(
   switch (node.type) {
     case 'text':
       // Wikilinks are not a markdown construct, so they arrive as text and
-      // are recovered from it
+      // are recovered from it.
       return parseWikilinks({ ...marks, text: node.value || '' });
 
     case 'strong':
@@ -174,7 +174,7 @@ function mapNode(
 
     default:
       // An unmapped inline node still has to survive, so it is kept as the
-      // text it was written as
+      // text it was written as.
       return [{ ...marks, text: sliceNode(node, source) }];
   }
 }
@@ -234,6 +234,6 @@ function readBreakSyntax(slice: string): string {
   }
 
   // The slice runs to the start of the next line, so the spaces which made
-  // the break are everything before the newline
+  // the break are everything before the newline.
   return slice.slice(0, slice.indexOf('\n'));
 }

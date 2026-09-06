@@ -17,7 +17,7 @@ export function useTransientState<Value>(
   defaultValue: Value,
 ): [Value, (value: Value) => void] {
   // Storage backend, null when no provider is present or
-  // persistence is not opted into
+  // persistence is not opted into.
   const backend = useTransientViewStateContext();
   const context = key === undefined ? null : backend;
 

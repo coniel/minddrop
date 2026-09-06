@@ -27,7 +27,7 @@ export function insertTableRowBelow(editor: Editor): boolean {
   insertTableRow(editor, tablePath, rowIndex + 1);
 
   // Keep the cursor in its column rather than the first cell the
-  // insertion selects
+  // insertion selects.
   Transforms.select(
     editor,
     SlateEditor.start(editor, [...tablePath, rowIndex + 1, columnIndex]),

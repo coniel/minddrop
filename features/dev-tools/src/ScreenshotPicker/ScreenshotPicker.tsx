@@ -13,7 +13,7 @@ const SHORTCUT_CODE = 'Digit4';
 const TARGET_SELECTOR = '.panel-view';
 
 // Time given to the app to paint the hidden overlay and the new
-// theme appearance before capturing
+// theme appearance before capturing.
 const PAINT_DELAY_MS = 330;
 
 // Each element is captured once per appearance
@@ -90,7 +90,7 @@ export const ScreenshotPicker: React.FC = () => {
   }, []);
 
   // Reset the picker's state each time it opens, and drop the caret
-  // out of any focused editor so that it is not captured
+  // out of any focused editor so that it is not captured.
   useEffect(() => {
     if (mode !== 'picking') {
       return;
@@ -173,7 +173,7 @@ export const ScreenshotPicker: React.FC = () => {
     }
 
     // Resolve where the viewport sits on screen from the cursor's
-    // position, which has to happen before the cursor can move
+    // position, which has to happen before the cursor can move.
     originRef.current = await adapter.getViewportScreenOrigin(
       event.clientX,
       event.clientY,

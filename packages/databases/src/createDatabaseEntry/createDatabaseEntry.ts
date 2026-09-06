@@ -77,7 +77,7 @@ export async function createDatabaseEntry<
     created: now,
     lastModified: now,
     // Populate the created/last-modified timestamp property values so they
-    // persist to the entry file
+    // persist to the entry file.
     properties: setTimestampProperties(
       database.properties,
       Properties.defaults(database.properties, properties),
@@ -85,7 +85,7 @@ export async function createDatabaseEntry<
       now,
     ),
     // Persist the timestamps to the entry's sidecar, from where they are
-    // read from then on, since file stat does not survive rewrites
+    // read from then on, since file stat does not survive rewrites.
     metadata: { created: now, lastModified: now },
     ...(duplicatedFrom && { duplicatedFrom }),
   };

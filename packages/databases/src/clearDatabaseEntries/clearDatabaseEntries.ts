@@ -49,7 +49,7 @@ export async function clearDatabaseEntries(databaseId: string): Promise<void> {
   // Trash each entry's files
   for (const entry of entries) {
     // Entry-based storage keeps the entry file and its property files in a
-    // per-entry subdirectory, so trashing the subdirectory removes them all
+    // per-entry subdirectory, so trashing the subdirectory removes them all.
     if (database.propertyFileStorage === 'entry') {
       // Trash the entry's subdirectory
       await Fs.trashDir(Fs.parentDirPath(entry.path));
@@ -58,7 +58,7 @@ export async function clearDatabaseEntries(databaseId: string): Promise<void> {
       await Fs.trashFile(entry.path);
 
       // Root storage keeps property files loose in the database root, so
-      // trash each of the entry's file-property files individually
+      // trash each of the entry's file-property files individually.
       if (database.propertyFileStorage === 'root') {
         for (const propertyFilePath of propertyFilePaths.get(entry.id) ?? []) {
           // Only trash files that exist
@@ -71,7 +71,7 @@ export async function clearDatabaseEntries(databaseId: string): Promise<void> {
   }
 
   // Trash the database's shared property directories as a whole, since every
-  // entry that could own files in them has been cleared
+  // entry that could own files in them has been cleared.
   for (const propertyDirPath of resolveDatabasePropertyDirs(database)) {
     // Only trash directories that exist
     if (await Fs.exists(propertyDirPath)) {

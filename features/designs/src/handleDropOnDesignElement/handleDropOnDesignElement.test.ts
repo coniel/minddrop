@@ -116,7 +116,7 @@ describe('handleDropOnDesignElement', () => {
       } as unknown as DropEventData<DesignStudioDropEventData>;
 
       // The inserted element auto-bound to the design's image
-      // property, so the image becomes that property's placeholder
+      // property, so the image becomes that property's placeholder.
       const { property } = studio.getDesignElement(imageElementId);
 
       expect(property).toBe('Cover');
@@ -129,7 +129,7 @@ describe('handleDropOnDesignElement', () => {
       });
 
       // The image landed in the design's media directory under the
-      // generated file name set as the property's placeholder
+      // generated file name set as the property's placeholder.
       const placeholder = studio.getDesignProperty('Cover')?.placeholder;
       const mediaDirPath = Designs.resolveMediaDirPath(testDesign.id);
 
@@ -138,7 +138,7 @@ describe('handleDropOnDesignElement', () => {
 
     it('leaves an unbound element without an image', async () => {
       // Bind the design's only image property elsewhere, so the new
-      // image element has nothing left to bind to
+      // image element has nothing left to bind to.
       studio.addDesignElementFromTemplate(imageElementTemplate, 'root', 0);
       studio.addDesignElementFromTemplate(imageElementTemplate, 'root', 0);
 
@@ -160,7 +160,7 @@ describe('handleDropOnDesignElement', () => {
       handleDropOnDesignElement(studio, drop);
 
       // Property elements render bound values only, so the drop
-      // leaves the element with nothing of its own
+      // leaves the element with nothing of its own.
       await vi.waitFor(() => {
         expect(MockFs.exists(Designs.resolveMediaDirPath(testDesign.id))).toBe(
           true,
@@ -446,13 +446,13 @@ describe('handleDropOnDesignElement', () => {
       it('sorts an element whose payload predates its last move', () => {
         // The element as it was before being moved out of the
         // container, which is what a second drag of an element
-        // still carries
+        // still carries.
         const staleElement = studio.getDesignElement<FlatChildDesignElement>(
           element_text_3.id,
         );
 
         // Move it up to the front of the root, leaving the payload
-        // pointing at the container it used to live in
+        // pointing at the container it used to live in.
         studio.moveDesignElement(element_text_3.id, 'root', 0);
 
         // Drop it before the root's last child

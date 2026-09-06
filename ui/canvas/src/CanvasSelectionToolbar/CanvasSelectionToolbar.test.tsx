@@ -15,7 +15,7 @@ const renderToolbarContents = (selection: CanvasSelection) => (
 );
 
 // Renders the toolbar alongside two mounted nodes, within a
-// canvas provider backed by the given store
+// canvas provider backed by the given store.
 const renderToolbar = (store: CanvasStore) => {
   const result = render(
     <CanvasProvider store={store}>
@@ -75,7 +75,7 @@ describe('CanvasSelectionToolbar', () => {
     });
 
     // The union runs 0,0 to 400,150, and the gap is measured
-    // from the box's padded edge rather than the nodes
+    // from the box's padded edge rather than the nodes.
     expect(toolbar()?.style.left).toBe('200px');
     expect(toolbar()?.style.top).toBe('-20px');
   });
@@ -138,7 +138,7 @@ describe('CanvasSelectionToolbar', () => {
     });
 
     // Nodes keep the toolbar centered over the selection box
-    // drawn around them
+    // drawn around them.
     expect(toolbar()?.style.left).toBe('50px');
     expect(toolbar()?.style.top).toBe('-12px');
     expect(
@@ -167,7 +167,7 @@ describe('CanvasSelectionToolbar', () => {
     });
 
     // Back to the bounds anchor, rather than the previous
-    // selection's press point
+    // selection's press point.
     expect(toolbar()?.style.left).toBe('200px');
   });
 

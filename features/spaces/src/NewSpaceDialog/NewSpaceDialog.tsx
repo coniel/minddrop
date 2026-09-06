@@ -55,7 +55,7 @@ export const NewSpaceDialog: React.FC<NewSpaceDialogProps> = ({
     setDialogOpen(false);
 
     // Reset the dialog state after a short delay to allow the
-    // close animation to complete
+    // close animation to complete.
     setTimeout(() => {
       setIcon(Spaces.constants.EntityDefaultIcon);
       reset();

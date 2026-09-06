@@ -18,17 +18,17 @@ const views = [
 ];
 
 // A view passed through rather than navigated to, e.g. the search
-// view a blank tab opens on
+// view a blank tab opens on.
 const passedThrough: TabView = {
   view: PassedThroughViewName,
   id: 'search',
   title: 'Search',
 };
 
-// The list view, e.g. a list of spaces
+// The list view, e.g. a list of spaces.
 const root: TabView = { view: RootViewName, id: 'root', title: 'Root' };
 
-// Entities containing other entities, e.g. spaces
+// Entities containing other entities, e.g. spaces.
 const branch: TabView = {
   view: BranchViewName,
   id: 'branch-1',
@@ -40,7 +40,7 @@ const otherBranch: TabView = {
   title: 'Branch 2',
 };
 
-// Entities within a container, e.g. database entries
+// Entities within a container, e.g. database entries.
 const leaf: TabView = { view: LeafViewName, id: 'leaf-1', title: 'Leaf 1' };
 const otherLeaf: TabView = {
   view: LeafViewName,
@@ -216,7 +216,7 @@ describe('resolveBreadcrumbTrail', () => {
 
     it('drops the entity crumb of a subview opened in a view of its own', () => {
       // The branch shows what the root showed within itself, e.g. a
-      // selected view expanded into a view of its own
+      // selected view expanded into a view of its own.
       const expandedBranch: TabView = {
         ...branch,
         title: 'Entity A',

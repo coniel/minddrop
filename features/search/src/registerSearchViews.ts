@@ -12,7 +12,7 @@ export function registerSearchViews(): void {
     title: 'search.open',
     icon: 'search',
     // Blank tabs open on search, which is passed through on the way
-    // to whatever is opened in the tab
+    // to whatever is opened in the tab.
     breadcrumbLevel: 'none',
   });
 }

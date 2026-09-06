@@ -28,7 +28,7 @@ describe('onDatabaseEntryRenamed', () => {
     });
 
     // The ledger should contain an entry rename event recording the
-    // entry's database name and titles
+    // entry's database name and titles.
     expect(await readRenameEvents()).toEqual([
       expect.objectContaining({
         from: 'Objects/Test Entry',
@@ -50,7 +50,7 @@ describe('onDatabaseEntryRenamed', () => {
 
   it('records renames away from an untitled title which continue a chain', async () => {
     // Record a rename ending at the untitled address, as clearing
-    // the entry's title would
+    // the entry's title would.
     await recordRename({
       from: 'Objects/Test Entry',
       to: 'Objects/Untitled',

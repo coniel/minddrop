@@ -46,7 +46,7 @@ export const ImageViewerPropertyRenderer: React.FC<
     Theme.useImageTreatment(imagePath);
 
   // Lets the viewer lay the image out and fill its space before the
-  // full resolution image has arrived
+  // full resolution image has arrived.
   const naturalSize =
     stats?.width && stats.height
       ? { width: stats.width, height: stats.height }

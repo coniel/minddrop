@@ -62,7 +62,7 @@ describe('<SpaceField />', () => {
     fireEvent.click(screen.getByLabelText(LessLabel));
 
     // The sub-unit steps are not offered, so the smallest step
-    // below 4px is the hairline
+    // below 4px is the hairline.
     expect(step().textContent).toContain(
       i18n.t('designsStudio.style.space.px.label'),
     );

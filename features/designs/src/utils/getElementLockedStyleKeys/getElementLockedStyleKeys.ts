@@ -19,7 +19,7 @@ export function getElementLockedStyleKeys(
 ): Set<string> {
   // Property elements lock the theme style keys their variant's
   // editable whitelist does not cover; whitelisted theme keys act
-  // as overridable defaults
+  // as overridable defaults.
   if (Designs.isPropertyElement(element)) {
     const config = Designs.getPropertyElementConfig(
       element.propertyType,
@@ -27,7 +27,7 @@ export function getElementLockedStyleKeys(
     );
 
     // A property type without a config locks nothing, matching how
-    // style resolution degrades to the element's own style
+    // style resolution degrades to the element's own style.
     if (!config) {
       return new Set();
     }
@@ -64,7 +64,7 @@ export function getElementLockedStyleKeys(
   const role = DesignRoles.get(element.role, false);
 
   // An unregistered role locks nothing, matching how style
-  // resolution degrades to the element's own style
+  // resolution degrades to the element's own style.
   if (!role) {
     return new Set();
   }

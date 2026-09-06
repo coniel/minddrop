@@ -11,7 +11,7 @@ export function getLiteralContent(element: Element): string {
   const [child] = element.children;
 
   // Literal elements always hold a single text child, but a normalizer
-  // failure should not take down serialization
+  // failure should not take down serialization.
   if (!child || 'type' in child) {
     return '';
   }

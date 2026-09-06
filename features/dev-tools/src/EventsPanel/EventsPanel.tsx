@@ -35,7 +35,7 @@ export const EventsPanel: React.FC = () => {
   );
 
   // Batched while in dispatch order, then reversed so that the
-  // most recent batch is listed first
+  // most recent batch is listed first.
   const batches = useMemo(() => {
     const filtered = filterEventEntries(events, { path: selectedPath, search });
 
@@ -56,14 +56,14 @@ export const EventsPanel: React.FC = () => {
   }, []);
 
   // Clearing the events empties the name tree, so the selected
-  // path no longer exists
+  // path no longer exists.
   const handleClear = useCallback(() => {
     clearDevToolsEvents();
     setSelectedPath(null);
   }, []);
 
   // Loads an event into the dispatch form so it can be tweaked
-  // before being dispatched again
+  // before being dispatched again.
   const handleEdit = useCallback((entry: DevToolsEventEntry) => {
     setDispatchName(entry.name);
     setDispatchData(

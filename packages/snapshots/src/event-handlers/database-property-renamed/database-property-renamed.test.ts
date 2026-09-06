@@ -38,7 +38,7 @@ describe('onDatabasePropertyRenamed', () => {
     });
 
     // The ledger should contain a property rename event recording
-    // the database name and property names
+    // the database name and property names.
     expect(await readRenameEvents()).toEqual([
       expect.objectContaining({
         from: 'Objects/Content',

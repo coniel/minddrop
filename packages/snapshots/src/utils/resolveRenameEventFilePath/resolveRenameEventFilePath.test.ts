@@ -4,7 +4,7 @@ import { RenameEvent } from '../../types';
 import { resolveRenameEventFilePath } from './resolveRenameEventFilePath';
 
 // Pin the workspace path rather than relying on the mock file
-// system's default
+// system's default.
 Paths.workspace = 'path/to/workspaces/Workspace 1';
 
 const renamesDirPath = 'path/to/workspaces/Workspace 1/.minddrop/renames';

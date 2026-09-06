@@ -50,13 +50,13 @@ export function useNestedStyle(
 
   // Tracks the latest written object so back-to-back writes in a
   // single event (e.g. a section clear unsetting every key) build
-  // on each other rather than on the render's stale value
+  // on each other rather than on the render's stale value.
   const valueRef = useRef(value);
 
   valueRef.current = value;
 
   // The nested style is a single key on the element, so a variant
-  // either controls the whole object or none of it
+  // either controls the whole object or none of it.
   const isEditable = useCallback(
     () => isKeyEditable(key),
     [isKeyEditable, key],
@@ -69,7 +69,7 @@ export function useNestedStyle(
   );
 
   // Write a single key of the nested style, dropping the object
-  // entirely once none of its values remain set
+  // entirely once none of its values remain set.
   const setValue = useCallback(
     (nestedKey: string, nestedValue: unknown) => {
       const next: Record<string, unknown> = { ...valueRef.current };

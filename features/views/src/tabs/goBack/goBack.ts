@@ -31,11 +31,11 @@ export function goBack(viewAreaId: string, steps = 1): void {
   const entry = backHistory[entryIndex];
 
   // The entries navigated past, ordered nearest to the restored entry
-  // last so they are navigated forward through in reverse
+  // last so they are navigated forward through in reverse.
   const skipped = backHistory.slice(entryIndex + 1).reverse();
 
   // Restore the entry's state onto the tab, moving the current state
-  // and the entries navigated past onto the forward history
+  // and the entries navigated past onto the forward history.
   const updatedTab = {
     ...tab,
     main: entry.main,

@@ -23,7 +23,7 @@ export function resolveEntryReference(entry: DatabaseEntry): EditorReference {
     reference:
       isUnique || !database ? entry.title : `${database.name}/${entry.title}`,
     // The link reads as the entry's title either way, the database being
-    // there to name the entry rather than to be read
+    // there to name the entry rather than to be read.
     label: entry.title,
     description: database?.name,
     icon: 'file-text',

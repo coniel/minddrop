@@ -28,7 +28,7 @@ import { recordWrittenContents } from './writeRegistry';
 export type { IncrementedPath } from './incrementalPath';
 
 // Const-asserted so the names keep their literal types, which key
-// the event data registry
+// the event data registry.
 const events = {
   Changed: FileSystemChangedEvent,
 } as const;

@@ -2,7 +2,7 @@ import { MockFileDescriptor } from '@minddrop/file-system';
 import { RenameEvent } from '../types';
 
 // Spelled out rather than resolved, so that the fixtures pin the paths
-// down instead of agreeing with whatever the path utils produce
+// down instead of agreeing with whatever the path utils produce.
 const renamesDirPath = 'path/to/workspaces/Workspace 1/.minddrop/renames';
 
 export const entryRenameEvent: RenameEvent = {
@@ -33,7 +33,7 @@ export const renameEvents = [
 ];
 
 // The fixture events' file names, spelled out for the same reason as
-// the directory path above
+// the directory path above.
 const renameEventFileNames = [
   '20260101T090000000Z-my-book.json',
   '20260102T090000000Z-writer.json',

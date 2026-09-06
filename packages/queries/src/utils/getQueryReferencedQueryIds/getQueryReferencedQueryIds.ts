@@ -40,7 +40,7 @@ function collectQueryIds(query: Query, visited: Set<string>): Set<string> {
       const referenced = getQuery(source.id, false);
 
       // A missing query is still worth listening to, in case it
-      // is created later
+      // is created later.
       if (!referenced) {
         return;
       }

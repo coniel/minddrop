@@ -28,7 +28,7 @@ export function buildEventNameTree(names: string[]): EventNameTreeNode[] {
     let path = '';
 
     // Walk the name's segments, creating the nodes which do not
-    // exist yet and counting the name into each of them
+    // exist yet and counting the name into each of them.
     for (const segment of name.split(':')) {
       path = path ? `${path}:${segment}` : segment;
 

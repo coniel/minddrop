@@ -44,7 +44,7 @@ describe('getElbowConnectionPoints', () => {
 
   it('joins perpendicular anchors with a single corner', () => {
     // Bottom of one card to the left side of a card below right
-    // of it: down, then right
+    // of it: down, then right.
     const points = getElbowConnectionPoints(
       { point: { x: 100, y: 100 }, side: 'bottom' },
       { point: { x: 300, y: 300 }, side: 'left' },
@@ -78,7 +78,7 @@ describe('getElbowConnectionPoints', () => {
   it('crosses perpendicular detours in the gap before the target frame', () => {
     // The target card is tall, placing its left anchor far below
     // its top edge: the crossing happens in the middle of the gap
-    // above the card rather than halfway to the anchor
+    // above the card rather than halfway to the anchor.
     const points = getElbowConnectionPoints(
       { point: { x: 100, y: 100 }, side: 'bottom' },
       {
@@ -99,7 +99,7 @@ describe('getElbowConnectionPoints', () => {
 
   it('routes perpendicular detours around the target when there is no gap', () => {
     // The target card's top sits above the exit anchor, leaving
-    // no space to cross before it: the route passes its far side
+    // no space to cross before it: the route passes its far side.
     const points = getElbowConnectionPoints(
       { point: { x: 100, y: 100 }, side: 'bottom' },
       {
@@ -120,7 +120,7 @@ describe('getElbowConnectionPoints', () => {
 
   it('loops facing anchors around through the gap between frames', () => {
     // The target's left side faces away from the source, with a
-    // clear horizontal channel between the two frames
+    // clear horizontal channel between the two frames.
     const points = getElbowConnectionPoints(
       {
         point: { x: 600, y: 50 },
@@ -169,7 +169,7 @@ describe('getElbowConnectionPoints', () => {
   it('detours same-facing loops that would cross a frame', () => {
     // The loop from the source's right side toward the target's
     // right side would pass through the target card, so the route
-    // goes around the outside instead
+    // goes around the outside instead.
     const points = getElbowConnectionPoints(
       {
         point: { x: 200, y: 50 },

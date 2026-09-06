@@ -23,7 +23,7 @@ export async function resolveRenameChainEnds(
 
   events.forEach((event) => {
     // Database renames rewrite the database prefix of chain end
-    // addresses of other kinds
+    // addresses of other kinds.
     if (event.kind === 'database' && kind !== 'database') {
       [...chainEnds.entries()].forEach(([address, terminalEvent]) => {
         if (address.startsWith(`${event.from}/`)) {

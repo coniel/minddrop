@@ -14,7 +14,7 @@ const STORES_DIR = 'stores';
  */
 export function registerWorkspaceStoreListeners(): VoidFunction {
   // Register persist and hydrate listeners targeting the stores
-  // directory inside the active workspace's config directory
+  // directory inside the active workspace's config directory.
   return registerStoreListeners({
     listenerId: LISTENER_ID,
     persistTo: 'workspace-config',

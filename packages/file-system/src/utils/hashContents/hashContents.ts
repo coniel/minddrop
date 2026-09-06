@@ -15,13 +15,13 @@ export function hashContents(contents: string): string {
   let hash = OffsetBasis;
 
   // FNV-1a: XOR each char code into the hash, then multiply
-  // by the prime, keeping the result a 32-bit unsigned integer
+  // by the prime, keeping the result a 32-bit unsigned integer.
   for (let index = 0; index < contents.length; index += 1) {
     hash ^= contents.charCodeAt(index);
     hash = Math.imul(hash, Prime) >>> 0;
   }
 
   // Prefix with the content length so that contents of differing
-  // lengths can never collide
+  // lengths can never collide.
   return `${contents.length}-${hash.toString(36)}`;
 }

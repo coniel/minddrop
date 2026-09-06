@@ -145,7 +145,7 @@ describe('setDatabaseEntrySerializer', () => {
     await setDatabaseEntrySerializer(rootStorageDatabase.id, 'yaml');
 
     // Addresses name entries by title, so the converted entries keep
-    // theirs and the referencing file needs no rewrite
+    // theirs and the referencing file needs no rewrite.
     expect(MockFs.readTextFile(collectionEntry1.path)).toBe(before);
   });
 
@@ -207,7 +207,7 @@ describe('setDatabaseEntrySerializer', () => {
     );
 
     // No entry upsert statements should have been executed, as the
-    // address change event is never dispatched on failure
+    // address change event is never dispatched on failure.
     const entryUpserts = getRecordedSqlStatements().filter((statement) =>
       statement.sql.includes('INSERT OR REPLACE INTO entries'),
     );
@@ -235,7 +235,7 @@ describe('setDatabaseEntrySerializer', () => {
 });
 
 // Registers a serializer whose serialize call fails after the first
-// entry, leaving a partial conversion to roll back
+// entry, leaving a partial conversion to roll back.
 function registerFailingSerializer(): void {
   let calls = 0;
 

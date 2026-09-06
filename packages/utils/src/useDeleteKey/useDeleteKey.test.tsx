@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { useDeleteKey } from './useDeleteKey';
 
 // Dispatches a keydown for the key on the target, returning the
-// event so its default can be inspected
+// event so its default can be inspected.
 function pressKey(key: string, target: EventTarget = document.body) {
   const event = new KeyboardEvent('keydown', {
     key,

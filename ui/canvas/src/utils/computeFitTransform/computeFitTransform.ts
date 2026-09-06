@@ -74,7 +74,7 @@ export function computeFitTransform(
   const boundsHeight = maxY - minY;
 
   // Largest zoom that fits the bounds plus padding, clamped to
-  // the zoom limits
+  // the zoom limits.
   const zoom = Math.max(
     minZoom,
     Math.min(

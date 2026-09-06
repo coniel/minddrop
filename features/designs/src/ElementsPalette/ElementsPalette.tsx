@@ -45,7 +45,7 @@ export const ElementsPalette: React.FC = () => {
   );
 
   // Data view elements are listed one per registered data view
-  // type, gated on the element being insertable here
+  // type, gated on the element being insertable here.
   const dataViewsInContext = isElementInContext(
     Designs.elementConfigs.DataView.context,
     {
@@ -55,7 +55,7 @@ export const ElementsPalette: React.FC = () => {
   );
 
   // Grouped element types and roles insertable in the current
-  // design and layout
+  // design and layout.
   const elementGroups = resolveElementGroups(designType, layoutType);
 
   return (
@@ -119,7 +119,7 @@ function resolveElementGroups(
   );
 
   // Roles compatible with the current design and layout, minus
-  // the structural ones created by their parent layout
+  // the structural ones created by their parent layout.
   const roles = DesignRoles.getCompatible({
     designType,
     layoutType: layoutType ?? undefined,

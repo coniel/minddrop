@@ -35,7 +35,7 @@ export const CanvasAlignmentGuides: React.FC = () => {
             x2={line.x2}
             y2={line.y2}
             // The layer is scaled by the canvas transform, so the
-            // stroke is unscaled to stay one screen pixel wide
+            // stroke is unscaled to stay one screen pixel wide.
             strokeWidth={1 / zoom}
           />
         );

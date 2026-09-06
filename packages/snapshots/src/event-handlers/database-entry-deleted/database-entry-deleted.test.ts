@@ -23,7 +23,7 @@ describe('onDatabaseEntryDeleted', () => {
 
   it('retracts the rename chain ending at a deleted untitled entry', async () => {
     // Record a rename ending at the untitled address, as clearing
-    // the entry's title would
+    // the entry's title would.
     await recordRename({
       from: 'Objects/Test Entry',
       to: 'Objects/Untitled',

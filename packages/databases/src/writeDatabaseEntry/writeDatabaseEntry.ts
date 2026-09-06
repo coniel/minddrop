@@ -35,7 +35,7 @@ export async function writeDatabaseEntry(id: string): Promise<void> {
   const properties = serializeCollectionProperties(entry.properties, database);
 
   // Read the entry's current content so the serializer can merge into it
-  // rather than regenerating it, preserving anything MindDrop does not model
+  // rather than regenerating it, preserving anything MindDrop does not model.
   const previousContents = (await Fs.exists(entry.path))
     ? await Fs.readTextFile(entry.path)
     : undefined;

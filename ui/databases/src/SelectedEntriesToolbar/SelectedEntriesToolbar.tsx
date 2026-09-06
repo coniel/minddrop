@@ -41,7 +41,7 @@ export const SelectedEntriesToolbar: React.FC<SelectedEntriesToolbarProps> = ({
   const { source } = useDatabaseEntryContext();
 
   // The collection the entries are rendered from, when rendered
-  // from a collection
+  // from a collection.
   const collectionId = source?.type === 'collection' ? source.id : undefined;
 
   // Plural translation key for the selected entry count
@@ -51,7 +51,7 @@ export const SelectedEntriesToolbar: React.FC<SelectedEntriesToolbarProps> = ({
       : 'databases.entries.selection.count_other';
 
   // Remove the selected entries from the collection they are
-  // rendered from
+  // rendered from.
   async function handleRemoveFromCollection() {
     if (!collectionId) {
       return;
@@ -83,7 +83,7 @@ export const SelectedEntriesToolbar: React.FC<SelectedEntriesToolbarProps> = ({
     );
 
     // Drop the deleted entries from the collection they were
-    // rendered from so that it does not reference deleted entries
+    // rendered from so that it does not reference deleted entries.
     if (collectionId) {
       await Collections.removeItems(collectionId, deletedIds);
     }

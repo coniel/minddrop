@@ -48,7 +48,7 @@ describe('<ElementsPalette />', () => {
     renderPalette(studio);
 
     // Every standalone entry the property elements replaced is
-    // gone, so each label appears exactly once
+    // gone, so each label appears exactly once.
     expect(screen.getAllByText('properties.number.name')).toHaveLength(1);
     expect(screen.getAllByText('properties.date.name')).toHaveLength(1);
     expect(screen.getAllByText('properties.image.name')).toHaveLength(1);
@@ -113,7 +113,7 @@ describe('<ElementsPalette />', () => {
 
   it('excludes structural roles created by the studio', () => {
     // The page layout is the context in which the structural
-    // content region role applies
+    // content region role applies.
     const studio = createDesignStudioStore();
 
     studio.initialize(design_books);

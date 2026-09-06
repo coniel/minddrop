@@ -35,7 +35,7 @@ describe('createEditor', () => {
     expect(editor.isVoid(paragraphElement1)).toBeFalsy();
 
     // Inline math holds a literal expression to type into, so it is not
-    // void despite being inline
+    // void despite being inline.
     expect(editor.isVoid(inlineMathElement1)).toBeFalsy();
   });
 });

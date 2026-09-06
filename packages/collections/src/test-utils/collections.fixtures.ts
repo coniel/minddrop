@@ -35,7 +35,7 @@ export const collection_virtual_2 = generateVirtualCollectionFixture(2);
 export const collections_virtual = [collection_virtual_1, collection_virtual_2];
 
 // Spelled out rather than resolved, so that the fixtures pin the paths
-// down instead of agreeing with whatever the path utils produce
+// down instead of agreeing with whatever the path utils produce.
 const collectionsDirPath =
   'path/to/workspaces/Workspace 1/.minddrop/collections';
 

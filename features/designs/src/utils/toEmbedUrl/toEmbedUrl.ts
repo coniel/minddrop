@@ -28,7 +28,7 @@ export function toEmbedUrl(url: string): string {
     return `https://open.spotify.com/embed/${spotifyMatch[1]}/${spotifyMatch[2]}`;
   }
 
-  // Figma: figma.com/file/... or figma.com/design/... → embed
+  // Figma: figma.com/file/... or figma.com/design/... → embed.
   const figmaMatch = url.match(/figma\.com\/(file|design|proto|board)\//);
 
   if (figmaMatch) {

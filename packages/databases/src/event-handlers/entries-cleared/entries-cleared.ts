@@ -35,7 +35,7 @@ export async function onClearEntries(data: DatabaseEntriesClearedEventData) {
   );
 
   // Delete the entries' own virtual collections before membership
-  // cleanup so no update is attempted for the cleared entries
+  // cleanup so no update is attempted for the cleared entries.
   await Promise.all(
     entries.flatMap((entry) =>
       collectionProperties.map((property) => {

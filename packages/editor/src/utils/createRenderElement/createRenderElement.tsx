@@ -58,7 +58,7 @@ const RenderedElement: React.FC<RenderedElementProps> = ({
   const selectedBlockIds = useContext(BlockSelectionContext);
 
   // Only top level blocks carry a block ID, so inline elements
-  // are never marked
+  // are never marked.
   const selected =
     hasBlockId(props.element) && selectedBlockIds.has(props.element.id);
 
@@ -74,12 +74,12 @@ const RenderedElement: React.FC<RenderedElementProps> = ({
   );
 
   // Inline elements sit within a block's content, so they are drawn by the
-  // block's own containers rather than by any of their own
+  // block's own containers rather than by any of their own.
   if (isInlineElement(props.element.type)) {
     return rendered;
   }
 
   // The block is drawn inside the containers it sits in, which render
-  // its indentation and their own markers around it
+  // its indentation and their own markers around it.
   return <BlockFrames element={props.element}>{rendered}</BlockFrames>;
 };

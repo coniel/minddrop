@@ -33,7 +33,7 @@ export function releaseInteractionLock(): void {
   lockCount -= 1;
 
   // Another interaction still holds the lock, so its cursor stays
-  // in place
+  // in place.
   if (lockCount <= 0) {
     document.body.classList.remove(INTERACTION_CLASS);
     document.body.style.removeProperty(CURSOR_PROPERTY);

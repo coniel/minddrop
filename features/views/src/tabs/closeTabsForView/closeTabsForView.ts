@@ -94,7 +94,7 @@ export function closeTabsForView(viewAreaId: string, viewId: string): void {
   }
 
   // The active tab survived, so write the tabs and re-sync its content
-  // in case its split was cleared
+  // in case its split was cleared.
   writeSet(viewAreaId, { tabs: nextTabs });
   dispatchViewArea(viewAreaId, getActiveTab(viewAreaId));
 }

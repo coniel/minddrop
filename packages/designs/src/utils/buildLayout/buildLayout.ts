@@ -40,7 +40,7 @@ export function buildLayout(
   options: BuildLayoutOptions = {},
 ): Layout {
   // Build the layout with an empty root tree. The root carries
-  // the layout type, which decides its default background treatment
+  // the layout type, which decides its default background treatment.
   return {
     id: entityId('layout'),
     type,

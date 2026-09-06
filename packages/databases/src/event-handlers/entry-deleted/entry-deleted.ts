@@ -31,7 +31,7 @@ export async function onDeleteEntry(data: DatabaseEntryDeletedEventData) {
   );
 
   // Delete the entry's own virtual collections before membership
-  // cleanup so no update is attempted for the deleted entry
+  // cleanup so no update is attempted for the deleted entry.
   await Promise.all(
     collectionProperties.map((property) => {
       const collectionId = virtualCollectionId(data.id, property.name);

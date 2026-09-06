@@ -34,7 +34,7 @@ export function createBunSqlAdapter(): SqlAdapter {
 
         transaction(operations: SqlOperation[]): void {
           // Cache prepared statements for repeated SQL strings
-          // within the transaction
+          // within the transaction.
           const statementCache = new Map<
             string,
             ReturnType<typeof database.prepare>

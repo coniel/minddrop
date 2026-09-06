@@ -36,7 +36,7 @@ describe('<DesignStudio />', () => {
     await userEvent.click(screen.getByText(design_books.name));
 
     // The design is recorded on the view so that it survives the
-    // view remounting
+    // view remounting.
     expect(updates).toContainEqual({
       id: DesignStudioViewId,
       props: { designId: design_books.id, fromDashboard: true },

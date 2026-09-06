@@ -18,7 +18,7 @@ export function clampWindowRect(
   viewport: { width: number; height: number },
 ): DevToolsWindowRect {
   // Fit the size to the viewport before positioning, so that an
-  // oversized window is shrunk rather than pushed off screen
+  // oversized window is shrunk rather than pushed off screen.
   const width = Math.max(
     MinWindowSize.width,
     Math.min(rect.width, viewport.width),

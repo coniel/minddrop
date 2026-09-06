@@ -35,7 +35,7 @@ export const StoreContentsView: React.FC<StoreContentsViewProps> = ({
   const contents = readStoreContents(store.type, state);
 
   // Key-value stores hold one record rather than a list, so the
-  // whole record is rendered as a tree
+  // whole record is rendered as a tree.
   if (contents.kind === 'values') {
     return (
       <div className="dev-tools-state-values">

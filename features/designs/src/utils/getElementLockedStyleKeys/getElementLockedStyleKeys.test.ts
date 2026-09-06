@@ -7,7 +7,7 @@ import { getElementLockedStyleKeys } from './getElementLockedStyleKeys';
 const { element_text_1, element_property_text_1 } = DesignFixtures;
 
 // A flat text element as the store holds it, used as the base for
-// the role elements under test
+// the role elements under test.
 const flatTextElement: FlatTextElement = {
   ...element_text_1,
   parent: 'root',

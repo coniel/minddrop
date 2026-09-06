@@ -177,7 +177,7 @@ describe('BlockFrames', () => {
     ]);
 
     // Both blocks are indented, but only the one which opens the item
-    // draws its bullet
+    // draws its bullet.
     expect(container.querySelectorAll('.block-frames')).toHaveLength(2);
     expect(container.querySelectorAll('.block-frame-bullet')).toHaveLength(1);
   });

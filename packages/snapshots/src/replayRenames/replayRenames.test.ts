@@ -12,7 +12,7 @@ const renamesDirPath = 'path/to/workspaces/Workspace 1/.minddrop/renames';
 const beforeAllEvents = new Date('2025-12-01T00:00:00.000Z');
 
 // A chain of tag rename events, exercising the exact-match path
-// for single-segment tag addresses
+// for single-segment tag addresses.
 const tagRenameEvent: RenameEvent = {
   timestamp: new Date('2026-01-04T09:00:00.000Z'),
   from: 'Work',
@@ -52,7 +52,7 @@ describe('replayRenames', () => {
 
   it('follows an address through successive renames', async () => {
     // The entry rename applies first, then the database rename
-    // rewrites the renamed entry's database prefix
+    // rewrites the renamed entry's database prefix.
     expect(await replayRenames('Books/Book', 'entry', beforeAllEvents)).toBe(
       'Library/My Book',
     );
@@ -67,7 +67,7 @@ describe('replayRenames', () => {
 
   it('only matches events of the address kind exactly', async () => {
     // An entry sharing its title with the renamed property is only
-    // affected by the database rename
+    // affected by the database rename.
     expect(await replayRenames('Books/Author', 'entry', beforeAllEvents)).toBe(
       'Library/Author',
     );
@@ -111,7 +111,7 @@ describe('replayRenames', () => {
   it('resolves a reused address to the renamed entity', async () => {
     // A reference from after the rename points at the address's new
     // occupant rather than the renamed entity, so only the later
-    // database rename applies
+    // database rename applies.
     expect(
       await replayRenames('Books/Book', 'entry', entryRenameEvent.timestamp),
     ).toBe('Library/Book');
@@ -134,7 +134,7 @@ describe('replayRenames', () => {
 
   it('does not rewrite tag addresses on database renames', async () => {
     // A tag sharing the renamed database's name is unaffected by
-    // the database rename
+    // the database rename.
     expect(await replayRenames('Books', 'tag', beforeAllEvents)).toBe('Books');
   });
 

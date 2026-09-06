@@ -36,7 +36,7 @@ export function getQueryMismatchedConnectionIds(query: Query): Set<string> {
     }
 
     // Walk upstream from the node, flagging connections
-    // delivering any of the mismatched databases
+    // delivering any of the mismatched databases.
     const visited = new Set<string>();
     const queue = [node.id];
 
@@ -60,7 +60,7 @@ export function getQueryMismatchedConnectionIds(query: Query): Set<string> {
         const carried = getQueryUpstreamDatabases(query, connection.from);
 
         // Connections delivering none of the mismatched
-        // databases are not part of the trail
+        // databases are not part of the trail.
         if (!carried.some((database) => invalidDatabaseIds.has(database.id))) {
           return;
         }

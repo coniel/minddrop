@@ -124,7 +124,7 @@ describe('onDeleteDatabase', () => {
 
   it("removes the database's entries from collections referencing them", async () => {
     // Delete the database containing referenceEntry1, which is
-    // referenced by collectionEntry1's References collection
+    // referenced by collectionEntry1's References collection.
     await onDeleteDatabase(rootStorageDatabase);
 
     const references = Collections.get(

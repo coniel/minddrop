@@ -13,7 +13,7 @@ export function toTabView(descriptor: ViewDescriptor | null): TabView | null {
   }
 
   // Map the descriptor onto a tab view, leaving the icon unset when
-  // the view provides none so it resolves from its registration
+  // the view provides none so it resolves from its registration.
   return {
     view: descriptor.view,
     id: descriptor.id,

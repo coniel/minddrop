@@ -98,11 +98,11 @@ export type OpenConfirmationDialogEventData = {
 };
 
 // The right panel open event's data is a view descriptor, so it is
-// registered by the package which defines that type
+// registered by the package which defines that type.
 declare module './types/EventDataMap.types' {
   interface EventDataMap {
     // The catch all listener name, which listens to every event
-    // rather than being an event of its own
+    // rather than being an event of its own.
     '*': unknown;
     'app:right-panel:close': void;
     'app:confirmation-dialog:open': OpenConfirmationDialogEventData;

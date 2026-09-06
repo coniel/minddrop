@@ -19,7 +19,7 @@ export const CollectionsView: React.FC = () => {
   const selectedCollection = Collections.use(subview?.id ?? '');
 
   // Collections listed in the left column: fuzzy name matches when
-  // searching, all persisted collections otherwise
+  // searching, all persisted collections otherwise.
   const items = useMemo(() => {
     // List only persisted collections, excluding virtual ones
     const persisted = collections.filter((collection) => !collection.virtual);

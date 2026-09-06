@@ -24,7 +24,7 @@ export function closeTab(viewAreaId: string, id: string): void {
   const nextTabs = tabs.filter((tab) => tab.id !== id);
 
   // A background tab was closed, so the active tab is unaffected; just
-  // write the remaining tabs
+  // write the remaining tabs.
   if (activeTabId !== id) {
     writeSet(viewAreaId, { tabs: nextTabs });
 

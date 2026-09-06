@@ -1,0 +1,317 @@
+import type { CSSProperties } from 'react';
+import {
+  AspectRatio,
+  BackgroundEmphasis,
+  BorderBlockStyle,
+  BorderEmphasis,
+  ContainerDirection,
+  HeightStyle,
+  MarginStyle,
+  MaxWidthStyle,
+  PaddingStyle,
+} from '../../styles';
+import {
+  BorderColorToken,
+  BorderWidthToken,
+  SurfaceColorToken,
+  TextColorToken,
+  tokenCssVariable,
+} from '../../tokens';
+
+// The border colour role behind each emphasis step
+const BorderColorRoles: Record<BorderEmphasis, BorderColorToken> = {
+  subtle: 'subtle',
+  regular: 'default',
+  strong: 'strong',
+};
+
+// The surface role behind each background emphasis step
+const SurfaceRoles: Record<BackgroundEmphasis, SurfaceColorToken> = {
+  subtle: 'subtle',
+  regular: 'accent',
+  solid: 'solid-accent',
+};
+
+/**
+ * Emits margin CSS for the set margin sides.
+ */
+export function marginCss(style: MarginStyle): CSSProperties {
+  const css: CSSProperties = {};
+
+  // Emit each set margin side as a space token reference
+  if (style.marginTop) {
+    css.marginTop = tokenCssVariable('space', style.marginTop);
+  }
+
+  if (style.marginRight) {
+    css.marginRight = tokenCssVariable('space', style.marginRight);
+  }
+
+  if (style.marginBottom) {
+    css.marginBottom = tokenCssVariable('space', style.marginBottom);
+  }
+
+  if (style.marginLeft) {
+    css.marginLeft = tokenCssVariable('space', style.marginLeft);
+  }
+
+  return css;
+}
+
+/**
+ * Emits padding CSS for the set padding sides.
+ */
+export function paddingCss(style: PaddingStyle): CSSProperties {
+  const css: CSSProperties = {};
+
+  // Emit each set padding side as a space token reference
+  if (style.paddingTop) {
+    css.paddingTop = tokenCssVariable('space', style.paddingTop);
+  }
+
+  if (style.paddingRight) {
+    css.paddingRight = tokenCssVariable('space', style.paddingRight);
+  }
+
+  if (style.paddingBottom) {
+    css.paddingBottom = tokenCssVariable('space', style.paddingBottom);
+  }
+
+  if (style.paddingLeft) {
+    css.paddingLeft = tokenCssVariable('space', style.paddingLeft);
+  }
+
+  return css;
+}
+
+/**
+ * Emits border CSS. A border is only drawn when `borderStyle` is
+ * set: uniformly thin without per-side widths, or only on the
+ * sides a width is set for. The corner radius is emitted
+ * separately by `radiusCss`, since containers leave rounding to
+ * the rendering context.
+ */
+export function borderCss(style: BorderBlockStyle): CSSProperties {
+  const css: CSSProperties = {};
+
+  // No border style means no border
+  if (!style.borderStyle) {
+    return css;
+  }
+
+  // Resolve the colour shared by every drawn side
+  const color = tokenCssVariable(
+    'borderColor',
+    resolveBorderColorToken(style.borderEmphasis),
+  );
+
+  // Composes a side's border value from its width token
+  const border = (width: BorderWidthToken) =>
+    `${tokenCssVariable('borderWidth', width)} ${style.borderStyle} ${color}`;
+
+  const {
+    borderTopWidth,
+    borderRightWidth,
+    borderBottomWidth,
+    borderLeftWidth,
+  } = style;
+
+  // Without per-side widths the border draws uniformly thin
+  if (
+    !borderTopWidth &&
+    !borderRightWidth &&
+    !borderBottomWidth &&
+    !borderLeftWidth
+  ) {
+    css.border = border('thin');
+
+    return css;
+  }
+
+  // A width on every side at the same step collapses back into the
+  // uniform shorthand.
+  if (
+    borderTopWidth &&
+    borderTopWidth === borderRightWidth &&
+    borderTopWidth === borderBottomWidth &&
+    borderTopWidth === borderLeftWidth
+  ) {
+    css.border = border(borderTopWidth);
+
+    return css;
+  }
+
+  // Draw each side its width is set for
+  if (borderTopWidth) {
+    css.borderTop = border(borderTopWidth);
+  }
+
+  if (borderRightWidth) {
+    css.borderRight = border(borderRightWidth);
+  }
+
+  if (borderBottomWidth) {
+    css.borderBottom = border(borderBottomWidth);
+  }
+
+  if (borderLeftWidth) {
+    css.borderLeft = border(borderLeftWidth);
+  }
+
+  return css;
+}
+
+/**
+ * Emits the corner radius CSS, which applies independently of the
+ * border itself.
+ */
+export function radiusCss(style: BorderBlockStyle): CSSProperties {
+  const css: CSSProperties = {};
+
+  // Emit the corner radius as a radius token reference
+  if (style.borderRadius) {
+    css.borderRadius = tokenCssVariable('radius', style.borderRadius);
+  }
+
+  return css;
+}
+
+/**
+ * Resolves a border emphasis step onto the border colour role
+ * carrying that weight, defaulting to the standard outline.
+ */
+export function resolveBorderColorToken(
+  emphasis?: BorderEmphasis,
+): BorderColorToken {
+  return BorderColorRoles[emphasis ?? 'regular'];
+}
+
+/**
+ * Emits the background CSS of a background emphasis step. A solid
+ * fill flips the text inside it to the contrasting role, so
+ * contrast pairing is never a choice the designer makes. Without a
+ * step nothing is emitted, so the element renders unfilled.
+ */
+export function backgroundCss(style: {
+  background?: BackgroundEmphasis;
+}): CSSProperties {
+  const css: CSSProperties = {};
+
+  // No step set: no background
+  if (!style.background) {
+    return css;
+  }
+
+  // Unknown steps (values from removed vocabulary) degrade to no
+  // background rather than breaking CSS emission.
+  const surface = SurfaceRoles[style.background];
+
+  if (!surface) {
+    return css;
+  }
+
+  // Paint the step's surface
+  css.backgroundColor = tokenCssVariable('surfaceColor', surface);
+
+  // A solid fill needs the contrasting text colour to stay readable
+  if (style.background === 'solid') {
+    css.color = tokenCssVariable('textColor', 'on-solid');
+  }
+
+  return css;
+}
+
+// The text colour role behind each step. The design scale's one
+// quiet step sits at the muted role's weight.
+const TextColorRoles: Record<TextColorToken, string> = {
+  regular: 'regular',
+  subtle: 'muted',
+  solid: 'solid',
+};
+
+/**
+ * Emits text colour CSS. Without a colour step nothing is emitted,
+ * so the text inherits the surrounding text colour.
+ */
+export function textColorCss(style: { color?: TextColorToken }): CSSProperties {
+  const css: CSSProperties = {};
+
+  // No step set: inherit
+  if (!style.color) {
+    return css;
+  }
+
+  // Unknown steps (values from removed vocabulary) degrade to
+  // inheritance rather than breaking CSS emission.
+  const role = TextColorRoles[style.color];
+
+  if (!role) {
+    return css;
+  }
+
+  // Emit the step's role
+  css.color = tokenCssVariable('textColor', role);
+
+  return css;
+}
+
+/**
+ * Emits width CSS. Elements are fluid, so only a measure capping
+ * the width at a readable line length is emitted.
+ */
+export function maxWidthCss(style: MaxWidthStyle): CSSProperties {
+  const css: CSSProperties = {};
+
+  // Emit the maximum width
+  if (style.maxWidth) {
+    css.maxWidth = tokenCssVariable('measure', style.maxWidth);
+  }
+
+  return css;
+}
+
+/**
+ * Emits height CSS: `fill` grows into the remaining space of the
+ * parent, size steps fix the box height.
+ */
+export function heightCss(
+  style: HeightStyle,
+  parentDirection: ContainerDirection = 'column',
+): CSSProperties {
+  const css: CSSProperties = {};
+
+  // A fixed height is the same however the parent stacks
+  if (style.height !== 'fill') {
+    if (style.height) {
+      css.height = tokenCssVariable('size', style.height);
+    }
+
+    return css;
+  }
+
+  // Filling a parent which stacks its children in a row means
+  // standing as tall as the row: growth there would widen the
+  // element rather than heighten it.
+  if (parentDirection === 'row') {
+    css.alignSelf = 'stretch';
+
+    return css;
+  }
+
+  // Share the height with the other filling elements. The zero
+  // basis makes the ratio govern the whole height rather than what
+  // is left over once each has taken its content, and the zero
+  // minimum lets the element shrink below its content.
+  css.flexGrow = style.fillRatio ?? 1;
+  css.flexBasis = 0;
+  css.minHeight = 0;
+
+  return css;
+}
+
+/**
+ * Spaces a ratio out into the CSS value it emits.
+ */
+export function resolveAspectRatio(aspectRatio: AspectRatio): string {
+  return aspectRatio.replace('/', ' / ');
+}

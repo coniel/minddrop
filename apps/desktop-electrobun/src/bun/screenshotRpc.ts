@@ -4,7 +4,7 @@ import { homedir } from 'node:os';
 import { join } from 'node:path';
 
 // Captured screenshots are written outside the repo so that rejected
-// shots don't have to be pruned from version control
+// shots don't have to be pruned from version control.
 const OUTPUT_DIR = join(homedir(), 'Desktop', 'MindDrop Screenshots');
 
 export interface ViewportScreenOriginParams {
@@ -111,7 +111,7 @@ export const screenshotRpcHandlers = {
 
     // `screencapture` reports a failure to create the image both when a
     // region is off screen and when it is denied Screen Recording
-    // permission, which is the far more common cause
+    // permission, which is the far more common cause.
     if (exitCode !== 0) {
       const stderr = await new Response(captureProcess.stderr).text();
 

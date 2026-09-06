@@ -43,7 +43,7 @@ export async function updateAutomation(
   });
 
   // Write the automation config to the file system unless the
-  // automation is virtual, in which case its owner persists it
+  // automation is virtual, in which case its owner persists it.
   if (!automation.virtual) {
     await writeAutomation(automationId);
   }

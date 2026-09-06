@@ -15,7 +15,7 @@ export const defaultCanvasViewData: CanvasViewData = {
 export const DEFAULT_NODE_WIDTH = 300;
 
 // Estimated height of an auto-height entry node, used when
-// laying out nodes whose rendered height is not known
+// laying out nodes whose rendered height is not known.
 export const ESTIMATED_NODE_HEIGHT = 320;
 
 // Gap between auto-placed nodes

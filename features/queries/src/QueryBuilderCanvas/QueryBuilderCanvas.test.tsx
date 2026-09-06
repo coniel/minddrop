@@ -30,7 +30,7 @@ const filter2: QueryFilterNode = {
 };
 
 // The fixture query as a chain: source → filter1 → filter2 →
-// results, with the invalid filter at the second level
+// results, with the invalid filter at the second level.
 const chainedQuery: Query = {
   ...query_1,
   nodes: [sourceNode, filter1, filter2, resultsNode],
@@ -86,7 +86,7 @@ describe('<QueryBuilderCanvas />', () => {
 
     // Both connections leading to the invalid filter are
     // flagged by the mismatch color, the connection out of it
-    // is not
+    // is not.
     const lines = Array.from(
       container.querySelectorAll('.ui-canvas-connection-line'),
     );

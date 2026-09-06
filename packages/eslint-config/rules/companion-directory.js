@@ -30,11 +30,13 @@ export const companionDirectory = {
   create(context) {
     const filename = context.filename;
 
-    // Skip virtual files, barrels and declaration files
+    // Skip virtual files, barrels, declaration files and companions
+    // themselves, which are checked through the file they belong to.
     if (
       !path.isAbsolute(filename) ||
       /^index\.tsx?$/.test(path.basename(filename)) ||
-      filename.endsWith('.d.ts')
+      filename.endsWith('.d.ts') ||
+      /\.(test|stories)\.tsx?$/.test(filename)
     ) {
       return {};
     }
@@ -44,16 +46,14 @@ export const companionDirectory = {
     const dirName = path.basename(dirPath);
 
     /**
-     * Reads the linted file's sibling file names, empty when the
+     * Reads the linted file's sibling entries, empty when the
      * directory cannot be read.
      */
     function readSiblings() {
       try {
         return fs
           .readdirSync(dirPath, { withFileTypes: true })
-          .filter((entry) => entry.isFile())
-          .map((entry) => entry.name)
-          .filter((name) => name !== path.basename(filename));
+          .filter((entry) => entry.name !== path.basename(filename));
       } catch {
         return [];
       }
@@ -71,9 +71,12 @@ export const companionDirectory = {
         const siblings = readSiblings();
 
         // Check if the file is wrapped in its own directory. If so,
-        // something besides the barrel has to justify the wrap.
+        // something besides the barrel has to justify the wrap, be it
+        // a companion file or a sub-component directory.
         if (dirName === base) {
-          const companions = siblings.filter((name) => name !== 'index.ts');
+          const companions = siblings.filter(
+            (entry) => entry.name !== 'index.ts',
+          );
 
           if (companions.length === 0) {
             context.report({ node, messageId: 'soloDirectory' });
@@ -84,7 +87,9 @@ export const companionDirectory = {
 
         // Companions next to an unwrapped file belong in a shared
         // directory named after it
-        if (siblings.some(isCompanion)) {
+        if (
+          siblings.some((entry) => entry.isFile() && isCompanion(entry.name))
+        ) {
           context.report({ node, messageId: 'missingDirectory' });
         }
       },

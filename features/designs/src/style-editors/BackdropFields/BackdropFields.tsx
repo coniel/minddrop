@@ -34,7 +34,7 @@ const backdropBlurKey = createI18nKeyBuilder(
 );
 
 // The blur strengths on offer. No blur is not an option: the
-// collapsed section is what no blur means
+// collapsed section is what no blur means.
 const BlurOptions: OptionToggleFieldOption<BackdropBlur>[] =
   Designs.styles.BackdropBlurs.map((blur) => ({
     value: blur,
@@ -54,7 +54,7 @@ const tintStrengthKey = createI18nKeyBuilder(
 type TintOption = 'none' | BackdropTint;
 
 // The colour washes the blur can be tinted with, opening with the
-// option leaving it uncoloured
+// option leaving it uncoloured.
 const TintOptions: OptionToggleFieldOption<TintOption>[] = [
   {
     value: 'none',
@@ -83,7 +83,7 @@ const BrightnessSteps: readonly number[] = Array.from(
 );
 
 // The directions the fade can run in, shown as the arrow the
-// faded-out end points at
+// faded-out end points at.
 const FadeDirectionOptions: OptionToggleFieldOption<BackdropFadeDirection>[] = [
   {
     value: 'to-top',
@@ -128,7 +128,7 @@ export const BackdropFields: React.FC<BackdropFieldsProps> = ({ editor }) => {
   const fade = getValue<boolean>('backdropFade');
 
   // Choosing none clears the key, and its strength with it, so no
-  // hidden value lingers behind an uncoloured blur
+  // hidden value lingers behind an uncoloured blur.
   function handleTintChange(value: TintOption) {
     setValue('backdropTint', value === 'none' ? undefined : value);
 
@@ -143,13 +143,13 @@ export const BackdropFields: React.FC<BackdropFieldsProps> = ({ editor }) => {
   }
 
   // The unchanged brightness is stored as an unset key, since it
-  // emits no filter
+  // emits no filter.
   function handleBrightnessChange(value: number | undefined) {
     setValue('backdropBrightness', value === 100 ? undefined : value);
   }
 
   // Switching the fade off drops its direction and extent, so no
-  // hidden values linger behind the switch
+  // hidden values linger behind the switch.
   function handleFadeChange(value: true | undefined) {
     setValue('backdropFade', value);
 
@@ -169,7 +169,7 @@ export const BackdropFields: React.FC<BackdropFieldsProps> = ({ editor }) => {
   }
 
   // The defaults are stored as unset keys: a fade starting at the
-  // edge and fully faded out halfway across
+  // edge and fully faded out halfway across.
   function handleFadeRangeChange(value: number | number[]) {
     const [start, extent] = Array.isArray(value) ? value : [0, value];
 

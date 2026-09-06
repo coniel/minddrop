@@ -54,7 +54,7 @@ export const LayoutFrame: React.FC<LayoutFrameProps> = ({
   );
 
   // Standalone mode: render the content statically, filling the
-  // parent element
+  // parent element.
   if (!layoutId) {
     return (
       <div
@@ -147,7 +147,7 @@ const StudioLayoutFrame: React.FC<StudioLayoutFrameProps> = ({
 
   // Select the root element when clicking the drag handle
   // without actually dragging the frame, activating this
-  // frame's layout
+  // frame's layout.
   const handleDragHandleClick = useCallback(() => {
     if (wasDragged()) {
       return;
@@ -162,7 +162,7 @@ const StudioLayoutFrame: React.FC<StudioLayoutFrameProps> = ({
   }, [canvas, layout.id]);
 
   // Pressing a hover zone (resize/drag areas) only clears the
-  // canvas highlight, selection stays on the current element
+  // canvas highlight, selection stays on the current element.
   const handleHoverZoneMouseDown = useCallback(() => {
     studio.clearHighlight();
   }, [studio]);

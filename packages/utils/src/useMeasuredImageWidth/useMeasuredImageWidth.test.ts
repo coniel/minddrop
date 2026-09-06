@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { useMeasuredImageWidth } from './useMeasuredImageWidth';
 
 // Observer callbacks registered during a test, so that resizes can
-// be simulated without a layout engine
+// be simulated without a layout engine.
 let resizeCallbacks: (() => void)[] = [];
 
 class MockResizeObserver {

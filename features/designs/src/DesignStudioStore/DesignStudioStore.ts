@@ -27,11 +27,11 @@ import {
 import { flattenTree, reconstructTree } from '../utils';
 
 // How long editing pauses before the design is persisted, so a
-// burst of edits (dragging a slider, typing) writes once
+// burst of edits (dragging a slider, typing) writes once.
 const SAVE_DEBOUNCE_MS = 500;
 
 // How long repeated edits to the same target keep extending a single
-// undo step rather than starting a new one
+// undo step rather than starting a new one.
 const HISTORY_COALESCE_WINDOW_MS = 800;
 
 // The most undo steps kept before the oldest is dropped
@@ -39,7 +39,7 @@ const UNDO_STACK_LIMIT = 50;
 
 // Makes a type deeply partial one level down: object-valued
 // properties (style, format) become Partial so callers can
-// pass e.g. { format: { decimals: 3 } } without all fields
+// pass e.g. { format: { decimals: 3 } } without all fields.
 type DeepPartialOne<T> = {
   [K in keyof T]?: NonNullable<T[K]> extends object
     ? Partial<NonNullable<T[K]>>
@@ -47,7 +47,7 @@ type DeepPartialOne<T> = {
 };
 
 // Distributes Partial over a union so that properties from any
-// member of the union are accepted, not just common ones
+// member of the union are accepted, not just common ones.
 export type DesignElementUpdates<T> = T extends unknown
   ? DeepPartialOne<Omit<T, 'id' | 'type'>>
   : never;
@@ -74,7 +74,7 @@ export type DesignElementStyleValue<K extends DesignElementStyleKey> =
     : never;
 
 // Stable empty map returned when no layout is active so
-// selectors don't create a new reference on every call
+// selectors don't create a new reference on every call.
 const EMPTY_ELEMENTS: Record<string, FlatDesignElement> = {};
 
 /**
@@ -712,7 +712,7 @@ export function createDesignStudioStore(): DesignStudioStore {
   let saveChain: Promise<void> = Promise.resolve();
 
   // The target of the most recent history step, used to fold
-  // repeated edits to that target into a single step
+  // repeated edits to that target into a single step.
   let lastCoalesceKey: string | null = null;
 
   // When the most recent history step was committed
@@ -787,7 +787,7 @@ export function createDesignStudioStore(): DesignStudioStore {
       }
 
       // Rebuild the tree from the live elements, which hold every
-      // edit made since the last save
+      // edit made since the last save.
       return { ...layout, tree: reconstructTree(elements) };
     },
     getSelectedElementId: () => store.getState().selectedElementId,
@@ -840,7 +840,7 @@ export function createDesignStudioStore(): DesignStudioStore {
     addElement: (element, parentId, index, targetLayoutId) => {
       set((state) => {
         // The new element goes into the specified layout, or the
-        // layout containing the parent element
+        // layout containing the parent element.
         const layoutId = targetLayoutId ?? findElementLayoutId(state, parentId);
 
         if (!layoutId) {
@@ -885,7 +885,7 @@ export function createDesignStudioStore(): DesignStudioStore {
         const element = { ...elements[id] };
 
         // Deep merge so nested objects (style, format) update
-        // per-key rather than being replaced
+        // per-key rather than being replaced.
         Object.assign(
           element,
           deepMerge(element, updates as Partial<FlatDesignElement>),
@@ -935,7 +935,7 @@ export function createDesignStudioStore(): DesignStudioStore {
         const oldParent = { ...elements[element.parent] };
         // Moving within one parent must not copy it twice, or the
         // removal and the insertion land on separate copies and the
-        // last one written wins, duplicating the element
+        // last one written wins, duplicating the element.
         const newParent =
           newParentId === element.parent
             ? oldParent
@@ -958,7 +958,7 @@ export function createDesignStudioStore(): DesignStudioStore {
         oldParent.children.splice(oldParent.children.indexOf(id), 1);
 
         // Insert into the new one, copying its children only when it
-        // is a different element to the one just spliced
+        // is a different element to the one just spliced.
         if (newParent !== oldParent) {
           newParent.children = [...newParent.children];
         }
@@ -1132,7 +1132,7 @@ export function createDesignStudioStore(): DesignStudioStore {
 
     scheduleSave: () => {
       // Restart the window so a burst of edits writes once, when
-      // editing pauses
+      // editing pauses.
       cancelScheduledSave();
 
       saveTimer = setTimeout(() => {
@@ -1169,7 +1169,7 @@ export function createDesignStudioStore(): DesignStudioStore {
 
       // Wrap the layout in a synthetic design so the studio's design
       // based read paths work unchanged. The design type derives from
-      // the layout type so element context filtering matches
+      // the layout type so element context filtering matches.
       const design: Design =
         layout.type === 'space'
           ? { ...baseDesign, type: 'space' }
@@ -1182,7 +1182,7 @@ export function createDesignStudioStore(): DesignStudioStore {
       api.setActiveLayout(layout.id);
 
       // Persist edits through the save handler, storing media in the
-      // owner's media directory rather than the synthetic design's
+      // owner's media directory rather than the synthetic design's.
       set({
         saveHandler: (layouts) => options.onSave(layouts[0]),
         propertyBindingEnabled: options.propertyBinding ?? false,
@@ -1272,7 +1272,7 @@ export function createDesignStudioStore(): DesignStudioStore {
 
       // Apply the new order to the studio snapshot immediately so
       // the sorted list doesn't flash back to the old order while
-      // the update persists
+      // the update persists.
       api.setDesign({ ...design, properties });
 
       const updated = await Designs.update(design.id, { properties });
@@ -1302,7 +1302,7 @@ export function createDesignStudioStore(): DesignStudioStore {
 
     addLayout: async (designId, type, position) => {
       // Snapshot before the layout reaches the design, so undo
-      // restores the design without it
+      // restores the design without it.
       if (api.getDesign()?.id === designId) {
         commitHistory();
       }
@@ -1310,7 +1310,7 @@ export function createDesignStudioStore(): DesignStudioStore {
       const layout = await Layouts.create(designId, { type, position });
 
       // When the design is open in the studio, add the layout's
-      // elements and make it the active layout
+      // elements and make it the active layout.
       if (api.getDesign()?.id === designId) {
         set({
           design: Designs.get(designId),
@@ -1330,7 +1330,7 @@ export function createDesignStudioStore(): DesignStudioStore {
 
     removeLayout: async (layoutId) => {
       // Snapshot while the layout and its elements are still in the
-      // store, so undo can restore both
+      // store, so undo can restore both.
       if (layoutId in api.getElementsByLayout()) {
         commitHistory();
       }
@@ -1427,7 +1427,7 @@ export function createDesignStudioStore(): DesignStudioStore {
       }
 
       // Resolve against the live layout, since a property bound by
-      // an edit made since the last save is still taken
+      // an edit made since the last save is still taken.
       const layout = api.getLiveLayout();
 
       if (!layout) {
@@ -1441,7 +1441,7 @@ export function createDesignStudioStore(): DesignStudioStore {
       );
 
       // The element stays unbound when every compatible property is
-      // already taken
+      // already taken.
       if (property) {
         api.updateDesignElement(id, { property });
       }
@@ -1454,7 +1454,7 @@ export function createDesignStudioStore(): DesignStudioStore {
       }
 
       // Moving a container inside itself would detach it and its
-      // subtree from the layout
+      // subtree from the layout.
       if (newParentId === id || isDescendantOf(newParentId, id)) {
         return;
       }
@@ -1496,7 +1496,7 @@ export function createDesignStudioStore(): DesignStudioStore {
       } else {
         // Bind the element to a compatible property, so an element
         // dropped into a design that has an obvious match for it
-        // arrives ready to render
+        // arrives ready to render.
         bindElementToProperty(
           element,
           Designs.getElementCompatiblePropertyTypes(element),
@@ -1577,7 +1577,7 @@ export function createDesignStudioStore(): DesignStudioStore {
       const style = { ...element.style } as Record<string, unknown>;
 
       // Unset the key when no value is given, since an omitted key
-      // means no CSS is emitted
+      // means no CSS is emitted.
       if (value === undefined) {
         delete style[key];
       } else {
@@ -1632,7 +1632,7 @@ export function createDesignStudioStore(): DesignStudioStore {
     );
 
     // Keep the chain usable after a failed write so later saves
-    // still run, while the caller still sees the failure
+    // still run, while the caller still sees the failure.
     saveChain = write.catch(() => undefined);
 
     return write;
@@ -1648,7 +1648,7 @@ export function createDesignStudioStore(): DesignStudioStore {
     saveHandler: DesignStudioState['saveHandler'],
   ): Promise<void> {
     // Delegate persistence to the save handler when editing a
-    // standalone layout
+    // standalone layout.
     if (saveHandler) {
       await saveHandler(layouts);
 
@@ -1696,7 +1696,7 @@ export function createDesignStudioStore(): DesignStudioStore {
     const now = Date.now();
 
     // The step already taken covers this edit, since it snapshots
-    // the content from before the run of edits began
+    // the content from before the run of edits began.
     if (
       coalesceKey !== undefined &&
       coalesceKey === lastCoalesceKey &&
@@ -1749,7 +1749,7 @@ export function createDesignStudioStore(): DesignStudioStore {
     }
 
     // Restore the layouts onto the open design, leaving the fields
-    // history does not track (name, properties) as they are
+    // history does not track (name, properties) as they are.
     const design = { ...state.design, layouts: snapshot.layouts };
 
     // Keep editing the active layout when it survived the restore
@@ -1937,7 +1937,7 @@ export function createDesignStudioStore(): DesignStudioStore {
     }
 
     // Resolve against the live layout, since a property bound by an
-    // edit made since the last save is still taken
+    // edit made since the last save is still taken.
     const layout = api.getLiveLayout(layoutId);
 
     if (!layout) {

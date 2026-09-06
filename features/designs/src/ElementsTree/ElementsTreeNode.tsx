@@ -77,7 +77,7 @@ export const ElementsTreeNode: React.FC<ElementsTreeNodeProps> = ({
 }) => {
   const { t } = useTranslation();
   // Kept in the view's transient state so collapsed branches stay
-  // collapsed when the studio remounts
+  // collapsed when the studio remounts.
   const [expanded, setExpanded] = useTransientState(
     `tree-node:${elementId}`,
     true,
@@ -86,10 +86,10 @@ export const ElementsTreeNode: React.FC<ElementsTreeNodeProps> = ({
   const layoutId = useLayoutId();
   const element = useElement(elementId);
   // Rows track hover themselves, since a native drag leaves browser
-  // hover state stuck on the rows it passed over
+  // hover state stuck on the rows it passed over.
   const { hoveredProps } = useHoveredItem(`${layoutId}:${elementId}`);
   // The layout root's ID is shared between layouts, so root nodes
-  // are only selected when their layout is the active one
+  // are only selected when their layout is the active one.
   const isSelected = useDesignStudioStore(
     (state) =>
       state.selectedElementId === elementId &&
@@ -99,7 +99,7 @@ export const ElementsTreeNode: React.FC<ElementsTreeNodeProps> = ({
   const children = element ? getChildren(element) : null;
 
   // Regions and the layout root are fixed in place, so they accept
-  // drops without being draggable themselves
+  // drops without being draggable themselves.
   const isFixed = elementId === 'root' || isRegion(element);
 
   // A panelled root arranges its panel regions rather than content:
@@ -116,7 +116,7 @@ export const ElementsTreeNode: React.FC<ElementsTreeNodeProps> = ({
   });
 
   // Drops land inside the node when it holds children, and before
-  // or after it otherwise
+  // or after it otherwise.
   const handleDrop = useCallback(
     (drop: DropEventData) => {
       // Dropping onto a parent node appends to its children
@@ -141,7 +141,7 @@ export const ElementsTreeNode: React.FC<ElementsTreeNodeProps> = ({
       // The bottom edge of an expanded parent reads as the first
       // child position, since its children start right below, so
       // the drop goes inside at the top rather than below the
-      // whole subtree
+      // whole subtree.
       if (drop.position === 'after' && expanded && element && children) {
         handleDropOnGap(studio, drop, elementId, 0, layoutId ?? undefined);
 
@@ -179,13 +179,13 @@ export const ElementsTreeNode: React.FC<ElementsTreeNodeProps> = ({
   const indent = `calc(var(--space-2) + var(--space-1) * ${depth})`;
 
   // Where the node's children start, aligning the child indent
-  // guide and the first-child drop line
+  // guide and the first-child drop line.
   const childIndent = `calc(${indent} + 0.375rem)`;
 
   const dragDropProps = resolveDragDropProps();
 
   // A panelled root offers no drag or drop at all; other fixed
-  // nodes keep their drop target but drop the drag handlers
+  // nodes keep their drop target but drop the drag handlers.
   function resolveDragDropProps(): Record<string, unknown> {
     if (isPanelledRoot) {
       return {};

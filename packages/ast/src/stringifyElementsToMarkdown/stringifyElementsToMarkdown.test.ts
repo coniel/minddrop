@@ -65,7 +65,7 @@ describe('stringifyElementsToMarkdown', () => {
   it('ignores parsed spacing which does not break the line', () => {
     const elements = [
       // Spacing left over from when the block was the last one in the
-      // document, which would run the two blocks together
+      // document, which would run the two blocks together.
       generateElement<ParagraphElement>('paragraph', {
         children: [{ text: 'One' }],
         spacingAfter: '',
@@ -150,7 +150,7 @@ describe('stringifyElementsToMarkdown', () => {
 
       // Markdown has no way to express two adjacent lists sharing a
       // marker, so the items stay tight rather than being split by a
-      // blank line which would turn the list loose
+      // blank line which would turn the list loose.
       expect(stringifyElementsToMarkdown(elements)).toBe('- One\n- Two');
     });
 
@@ -183,7 +183,7 @@ describe('stringifyElementsToMarkdown', () => {
 
   describe('ordered list numbering', () => {
     // Items with no authored number are ones the editor created, which are
-    // the only ones the computed numbering has to fill in
+    // the only ones the computed numbering has to fill in.
     function generateOrderedItem(id: string, marker = '.'): ListItemFrame {
       return generateListItemFrame(id, { ordered: true, marker });
     }
@@ -219,7 +219,7 @@ describe('stringifyElementsToMarkdown', () => {
       ];
 
       // Only the first number changes how a list renders, so rewriting the
-      // rest would edit a file the user did not touch
+      // rest would edit a file the user did not touch.
       expect(stringifyElementsToMarkdown(elements)).toBe('1. One\n1. Two');
     });
 

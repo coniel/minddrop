@@ -82,7 +82,7 @@ export function applyElementSettings<TElement extends DesignElement>(
   );
 
   // Bottom edges of the elements sharing rows with the block, which
-  // hold the band's bottom edge while they reach below the block
+  // hold the band's bottom edge while they reach below the block.
   const bandBottoms = elements
     .filter(
       (element) => element.id !== elementId && rowsOverlap(target, element),

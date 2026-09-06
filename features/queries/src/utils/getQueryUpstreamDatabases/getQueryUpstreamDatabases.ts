@@ -47,7 +47,7 @@ export function getQueryUpstreamDatabases(
         }
 
         // Query sources contribute the databases of the query
-        // they emit the results of
+        // they emit the results of.
         const sourcedQuery = source.id ? Queries.get(source.id, false) : null;
 
         if (!sourcedQuery) {

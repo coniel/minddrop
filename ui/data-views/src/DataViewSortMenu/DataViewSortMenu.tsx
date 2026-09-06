@@ -67,7 +67,7 @@ export const DataViewSortMenu: React.FC<DataViewSortMenuProps> = ({
   const sortProperties = useDataViewSortProperties(view);
 
   // The view's sort options, falling back to the defaults the
-  // sorter applies
+  // sorter applies.
   const sortBy =
     view.options?.sortBy ?? Databases.constants.DefaultEntrySort.by;
   const sortProperty =
@@ -77,7 +77,7 @@ export const DataViewSortMenu: React.FC<DataViewSortMenuProps> = ({
     Databases.constants.DefaultEntrySort.direction;
 
   // The sorted property, missing when the database no longer
-  // declares it
+  // declares it.
   const selectedProperty = sortProperties.find(
     (property) => property.by === sortBy && property.property === sortProperty,
   );

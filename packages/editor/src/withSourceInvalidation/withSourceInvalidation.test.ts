@@ -88,7 +88,7 @@ describe('withSourceInvalidation', () => {
 
     expect((editor.children[0] as Element).spacingAfter).toBeUndefined();
     // The second half is followed by whatever followed the block it was
-    // split from, so it keeps the spacing it inherited
+    // split from, so it keeps the spacing it inherited.
     expect((editor.children[1] as Element).spacingAfter).toBe('\n\n');
   });
 

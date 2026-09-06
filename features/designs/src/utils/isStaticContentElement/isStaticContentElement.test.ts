@@ -22,7 +22,7 @@ describe('isStaticContentElement', () => {
 
   it('is never static for always bound element types', () => {
     // Property elements have no static mode, so a stale flag from
-    // an earlier design must not put one into static mode
+    // an earlier design must not put one into static mode.
     const element = { ...element_property_text_1, static: true };
 
     expect(isStaticContentElement(element)).toBe(false);

@@ -29,7 +29,7 @@ export async function setDatabaseDefaultLayout(
     : null;
 
   // Ensure the layout is a layout of the context's base type in
-  // the database's design
+  // the database's design.
   const layout = design?.layouts.find(
     (designLayout) => designLayout.id === layoutId,
   );

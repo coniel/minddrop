@@ -22,7 +22,7 @@ export async function sqlCountScopedEntries(
   }
 
   // Await the row since RPC backed adapters resolve
-  // asynchronously despite the synchronous signature
+  // asynchronously despite the synchronous signature.
   const rows = await Sql.all<{ count: number }>(
     `SELECT COUNT(*) AS count FROM entries e WHERE ${scopesSql.sql}`,
     ...scopesSql.params,

@@ -48,7 +48,7 @@ export const PagePanelStudioDesignElement: React.FC<
   const widthRef = useRef(width);
 
   // Keep the local width in sync with the element when it changes
-  // externally, but never while a resize is in progress
+  // externally, but never while a resize is in progress.
   useEffect(() => {
     if (!resizeState.current) {
       setWidth(element.width);
@@ -115,7 +115,7 @@ export const PagePanelStudioDesignElement: React.FC<
   }, [handleMouseMove, handleMouseUp]);
 
   // Start a resize on the handle, stopping propagation so the panel
-  // is not selected by the same press
+  // is not selected by the same press.
   const handleResizeMouseDown = useCallback(
     (event: React.MouseEvent) => {
       event.stopPropagation();

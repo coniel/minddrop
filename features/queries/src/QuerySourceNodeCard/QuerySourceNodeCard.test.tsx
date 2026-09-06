@@ -11,7 +11,7 @@ const { objectDatabase, urlDatabase } = DatabaseFixtures;
 const { query_1, query_2 } = QueryFixtures;
 
 // The fixture query's source node, which emits the object
-// database's entries
+// database's entries.
 const sourceNode = query_1.nodes[0] as QuerySourceNode;
 
 // Mock node count execution, which requires a SQL database

@@ -12,10 +12,10 @@ export const PropertyElementTypeConfig: DesignElementConfig<PropertyElement> = {
   icon: 'diamond',
   label: 'design-studio.elements.property',
   // Property elements render typography unless their selected
-  // variant's style category says otherwise
+  // variant's style category says otherwise.
   styleCategory: 'typography',
   // Compatibility comes from the property element config's
-  // bindsPropertyTypes, resolved via getElementCompatiblePropertyTypes
+  // bindsPropertyTypes, resolved via getElementCompatiblePropertyTypes.
   compatiblePropertyTypes: [],
   // Property elements are purely property-based
   supportsStaticContent: false,

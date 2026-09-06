@@ -39,7 +39,7 @@ export function escapeEmptyTableCell(
   }
 
   // A cell with content has real caret positions, which native movement
-  // crosses fine
+  // crosses fine.
   if (SlateNode.string(cellEntry.cell[0]) !== '') {
     return false;
   }
@@ -55,7 +55,7 @@ export function escapeEmptyTableCell(
     }
 
     // From the last cell, step out to the block after the table, adding a
-    // paragraph when the table ends the document
+    // paragraph when the table ends the document.
     exitTableBelow(editor, cellEntry.table[1]);
 
     return true;

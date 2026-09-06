@@ -25,13 +25,13 @@ export const LayoutNameField: React.FC<LayoutNameFieldProps> = ({ layout }) => {
   const [draft, setDraft] = useState(() => resolveDraftName(layout));
 
   // Follow the layout, both when switching layouts and when the
-  // name is changed elsewhere
+  // name is changed elsewhere.
   useEffect(() => {
     setDraft(resolveDraftName(layout));
   }, [layout]);
 
   // Commit the edited name, falling back to the type name when the
-  // field is left blank
+  // field is left blank.
   const handleBlur = useCallback(() => {
     const trimmedName = draft.trim() || resolveDefaultName(layout.type);
 

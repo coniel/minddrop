@@ -18,7 +18,7 @@ const STATS: ImageStats = {
 };
 
 // Requested URLs, used to verify that repeated lookups of the same
-// image result in a single request
+// image result in a single request.
 let requestedUrls: string[] = [];
 
 describe('getImageStats', () => {
@@ -84,7 +84,7 @@ describe('getImageStats', () => {
 
   it('returns null when the image could not be analysed', async () => {
     // Stand in for the file server responding that the image
-    // could not be analysed
+    // could not be analysed.
     vi.stubGlobal('fetch', () =>
       Promise.resolve(new Response('null', { status: 200 })),
     );
@@ -112,7 +112,7 @@ describe('getImageStats', () => {
 
   it('peeks null when there is no path', () => {
     // Peek without a path, which is a resolved state rather than
-    // a pending one
+    // a pending one.
     expect(peekImageStats(null)).toBeNull();
   });
 

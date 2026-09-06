@@ -62,7 +62,7 @@ describe('onRenameDatabase', () => {
     );
 
     // Create the renamed database directory so reference
-    // rewrites can write moved entry files
+    // rewrites can write moved entry files.
     MockFs.addFiles([renamedDatabase.path]);
 
     // Create virtual collections for the collection entry
@@ -202,13 +202,13 @@ describe('onRenameDatabase', () => {
     });
 
     // Entry IDs are unchanged, so a delete event would remove the
-    // re-upserted records
+    // re-upserted records.
     expect(deleteEvents).toEqual([]);
   });
 
   it('updates virtual collection names to the new database name', async () => {
     // Point the Related collection at an in-database member plus an
-    // external reference
+    // external reference.
     await Collections.update(
       virtualCollectionId(collectionEntry1.id, 'Related'),
       { items: [collectionEntry1.id, 'external-entry'] },
@@ -262,11 +262,11 @@ describe('onRenameDatabase', () => {
     };
 
     // Commit the rename to the store, as renameDatabase does before
-    // dispatching, so re-serialized references name the new database
+    // dispatching, so re-serialized references name the new database.
     DatabasesStore.set(renamedRoot);
 
     // Rename the database containing referenceEntry1, which is
-    // referenced by collectionEntry1's References property
+    // referenced by collectionEntry1's References property.
     await onRenameDatabase({
       original: rootStorageDatabase,
       updated: renamedRoot,

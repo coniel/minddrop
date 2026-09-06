@@ -60,7 +60,7 @@ export function resolveBlockFrames(elements: Element[]): BlockFrames {
       ancestry.map((frame, depth) => ({
         frame,
         // A container is opened by the first block whose ancestry holds it
-        // at this depth, and closed by the last
+        // at this depth, and closed by the last.
         isFirstBlock: previousAncestry[depth]?.id !== frame.id,
         isLastBlock: nextAncestry[depth]?.id !== frame.id,
         number: resolveFrameNumber(frame, numbers),

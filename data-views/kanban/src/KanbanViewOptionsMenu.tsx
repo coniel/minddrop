@@ -33,7 +33,7 @@ import {
 import { useKanbanGroupProperty } from './useKanbanGroupProperty';
 
 // Builds the keys of the column settings' labels, which are named
-// after the value they label
+// after the value they label.
 const optionsI18nKey = createI18nKeyBuilder('dataViews.kanban.options.');
 
 const columnWidthItems: DropdownRadioSubmenuItem[] = KANBAN_COLUMN_WIDTHS.map(

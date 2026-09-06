@@ -43,7 +43,7 @@ describe('withBlockSelection', () => {
     const editor = createEditor();
 
     // Runs from part way through the first block to part way
-    // through the second
+    // through the second.
     Transforms.select(editor, {
       anchor: { path: [0, 0], offset: 4 },
       focus: { path: [1, 0], offset: 4 },

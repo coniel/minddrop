@@ -11,7 +11,7 @@ import {
 import './ScaleField.css';
 
 // Value standing in for an unset step, since a select cannot carry
-// undefined as an option value
+// undefined as an option value.
 const EmptyValue = '__empty__';
 
 /**
@@ -126,11 +126,11 @@ export function ScaleField<TStep extends string | number>({
   onChange,
 }: ScaleFieldProps<TStep>) {
   // The first step the field accepts, which the steps below are
-  // shown against rather than left out of the scale
+  // shown against rather than left out of the scale.
   const floor = lowestStep === undefined ? 0 : steps.indexOf(lowestStep);
 
   // The scale as select options, opening with the empty option on
-  // fields which have one
+  // fields which have one.
   const options = useMemo<SelectOption<string | number>[]>(() => {
     const stepOptions = steps.map((step, index) => ({
       value: step,
@@ -171,7 +171,7 @@ export function ScaleField<TStep extends string | number>({
   const isLargest = step === steps.length - 1;
 
   // Renders the step's name and the note beside it, in place of
-  // the select's own value text
+  // the select's own value text.
   function renderStep() {
     if (value === undefined) {
       return (
@@ -196,19 +196,19 @@ export function ScaleField<TStep extends string | number>({
   }
 
   // Stepping below the lowest step empties the field, on fields
-  // which can be left empty
+  // which can be left empty.
   function handleDecrease() {
     onChange(step <= floor ? undefined : steps[step - 1]);
   }
 
   // Stepping up from below the lowest accepted step enters the
-  // scale at it, rather than at the bottom of the whole scale
+  // scale at it, rather than at the bottom of the whole scale.
   function handleIncrease() {
     onChange(steps[Math.max(step + 1, floor)]);
   }
 
   // The empty option clears the value, so the key is deleted
-  // rather than set to a sentinel
+  // rather than set to a sentinel.
   function handleValueChange(selected: string | number) {
     onChange(selected === EmptyValue ? undefined : (selected as TStep));
   }

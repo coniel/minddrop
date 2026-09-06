@@ -23,7 +23,7 @@ export async function onFileSystemChanged(
   const { id, bundlePath } = parsed;
 
   // Only the space file and the bundle directory itself carry
-  // state held in the store
+  // state held in the store.
   if (bundlePath !== '' && bundlePath !== SpaceFileName) {
     return;
   }
@@ -36,7 +36,7 @@ export async function onFileSystemChanged(
   }
 
   // A change to the bundle directory that is not a deletion says
-  // nothing about the space file
+  // nothing about the space file.
   if (bundlePath === '') {
     return;
   }

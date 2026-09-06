@@ -15,7 +15,7 @@ export function parseIcon(iconString?: string): UserIcon | null {
   }
 
   // Stringified icon config is in the format 'type:icon:color', with
-  // an optional icon set segment: 'type:set:icon:color'
+  // an optional icon set segment: 'type:set:icon:color'.
   const segments = iconString.split(':');
   const [type, icon, color] = segments;
 

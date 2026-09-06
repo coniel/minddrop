@@ -2,7 +2,7 @@ import { DevToolsEventsStore } from '../DevToolsEventsStore';
 import { MaxEventEntries } from '../constants';
 
 // Captured events are disposable, so a counter is enough to tell
-// them apart within a session
+// them apart within a session.
 let eventCount = 0;
 
 /**

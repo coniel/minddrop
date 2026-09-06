@@ -24,7 +24,7 @@ export function getSelectionUpdate(
   }
 
   // A selection of the other type is replaced rather than merged
-  // into, so additive only carries over matching selections
+  // into, so additive only carries over matching selections.
   const current = additive ? getSelectedIds(state, type) : [];
   const selectedIds = current.length
     ? Array.from(new Set([...current, ...ids]))
@@ -36,7 +36,7 @@ export function getSelectionUpdate(
   }
 
   // Skip updates that do not change the selection, since the
-  // lasso recomputes it on every frame of a drag
+  // lasso recomputes it on every frame of a drag.
   if (
     state.selection?.type === type &&
     sameIds(state.selection.ids, selectedIds)

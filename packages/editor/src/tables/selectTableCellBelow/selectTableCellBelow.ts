@@ -39,7 +39,7 @@ export function selectTableCellBelow(editor: Editor): boolean {
   }
 
   // From the last row, step out to the block after the table, adding a
-  // paragraph when the table ends the document
+  // paragraph when the table ends the document.
   exitTableBelow(editor, tablePath);
 
   return true;

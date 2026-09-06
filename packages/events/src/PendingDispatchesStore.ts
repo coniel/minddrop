@@ -1,5 +1,5 @@
 // The settlement promises of dispatches whose listeners have not
-// yet settled
+// yet settled.
 const pendingDispatches = new Set<Promise<unknown>>();
 
 /**

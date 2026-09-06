@@ -73,7 +73,7 @@ export const KanbanViewColumn: React.FC<KanbanViewColumnProps> = ({
   ));
 
   // The cards' drop container, which the scrollport wraps when
-  // the column scrolls on its own
+  // the column scrolls on its own.
   const dropContainer = (
     <FlexDropContainer
       id={`kanban-column-${column.value}`}

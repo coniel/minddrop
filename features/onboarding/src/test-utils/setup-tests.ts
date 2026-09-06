@@ -10,7 +10,7 @@ initializeI18n();
 I18n.registerTranslations(locales);
 
 // happy-dom does not implement Element.getAnimations, which the
-// scroll area primitive polls on a timer
+// scroll area primitive polls on a timer.
 if (!Element.prototype.getAnimations) {
   Element.prototype.getAnimations = () => [];
 }

@@ -38,7 +38,7 @@ export function applyOpenView(
     title: data.title,
     icon: data.icon,
     // Opens from outside a view area are navigations to a new
-    // destination rather than steps down the current hierarchy
+    // destination rather than steps down the current hierarchy.
     startsTrail: !data.sourcePane,
   };
 

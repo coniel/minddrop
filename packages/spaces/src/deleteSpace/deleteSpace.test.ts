@@ -67,7 +67,7 @@ describe('deleteSpace', () => {
     await deleteSpace(space_1.id);
 
     // Embedded data views are first-class persisted views, so they
-    // outlive the space until the user is asked what to do with them
+    // outlive the space until the user is asked what to do with them.
     expect(DataViews.Store.get(dataView_gallery_1.id)).not.toBeNull();
     expect(
       MockFs.exists(DataViews.resolveFilePath(dataView_gallery_1.id)),

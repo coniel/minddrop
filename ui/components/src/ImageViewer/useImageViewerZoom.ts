@@ -197,7 +197,7 @@ export function useImageViewerZoom({
   const animationFrameRef = useRef<number>(0);
 
   // Animates zoom and pan from current values to the given targets
-  // over 200ms with ease-out cubic easing
+  // over 200ms with ease-out cubic easing.
   const animateTo = useCallback(
     (targetZoom: number, targetPan: Point) => {
       // Cancel any running animation
@@ -366,7 +366,7 @@ export function useImageViewerZoom({
   );
 
   // Handles wheel events: pinch and mouse wheel zoom toward the
-  // cursor, trackpad scroll pans the image
+  // cursor, trackpad scroll pans the image.
   const handleWheel = useCallback(
     (event: React.WheelEvent) => {
       event.preventDefault();
@@ -398,7 +398,7 @@ export function useImageViewerZoom({
       // Pinch and mouse wheel zoom toward the cursor
       if (isPinch || isZoom) {
         // At min zoom and scrolling to zoom out further - move
-        // pan target toward center, with a lerp chase animation
+        // pan target toward center, with a lerp chase animation.
         if (zoom <= MIN_ZOOM + 0.001 && event.deltaY > 0) {
           const strength = Math.min(Math.abs(event.deltaY) * 0.005, 0.3);
 
@@ -505,7 +505,7 @@ export function useImageViewerZoom({
         }
 
         // If an animation loop is already running, it will pick up
-        // the new target automatically
+        // the new target automatically.
         if (wheelAnimationRef.current) {
           return;
         }

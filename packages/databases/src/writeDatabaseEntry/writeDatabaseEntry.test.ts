@@ -149,7 +149,7 @@ describe('writeDatabaseEntry', () => {
     const contents = MockFs.readTextFile(collectionEntry1.path);
 
     // Member references should be written as durable addresses rather
-    // than entry IDs
+    // than entry IDs.
     expect(contents).toContain(databaseEntryAddress(relatedEntry1));
     expect(contents).toContain(databaseEntryAddress(relatedEntry2));
     expect(contents).not.toContain(relatedEntry1.id);
@@ -198,7 +198,7 @@ describe('writeDatabaseEntry', () => {
 
     it('preserves unmodelled keys after a restart has dropped them from the store', async () => {
       // The SQL index only carries schema properties, so after a restart the
-      // in-memory entry has no knowledge of the user's own frontmatter keys
+      // in-memory entry has no knowledge of the user's own frontmatter keys.
       DatabaseEntriesStore.update(objectEntry1.id, {
         properties: {
           Content: 'Test content',

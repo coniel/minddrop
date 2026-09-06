@@ -46,7 +46,7 @@ export async function createDesign(
 
   // Only database designs carry a property schema, seeded with the
   // entry metadata properties so new designs can bind to them without
-  // the user declaring the properties themselves
+  // the user declaring the properties themselves.
   const design: Design =
     options.type === 'database'
       ? {

@@ -39,7 +39,7 @@ export function resolveEntryColor(
 
   // Fall back to the meta Color property value: the declared color
   // property when the database has one (persisted in the entry
-  // file), the entry metadata otherwise
+  // file), the entry metadata otherwise.
   const colorProperty = database.properties.find(
     (candidate) => candidate.type === 'color',
   );

@@ -23,7 +23,7 @@ export const EditorShortcuts: EditorShortcut[] = [
   {
     // Tab moves blocks between the containers around them, which is the only
     // thing it does in the editor: it never inserts a tab, and never moves
-    // the focus out of the editor
+    // the focus out of the editor.
     hotkey: 'tab',
     run: (editor) => {
       // Inside a table, Tab moves between cells, shadowing the indent
@@ -41,7 +41,7 @@ export const EditorShortcuts: EditorShortcut[] = [
     hotkey: 'shift+tab',
     run: (editor) => {
       // Inside a table, Shift-Tab moves between cells, shadowing the
-      // outdent binding
+      // outdent binding.
       if (selectPreviousTableCell(editor)) {
         return true;
       }
@@ -93,7 +93,7 @@ export const EditorShortcuts: EditorShortcut[] = [
   {
     // At the very end of a table's last cell, the arrow steps out to the
     // block after the table even when one has to be added, which native
-    // movement cannot do
+    // movement cannot do.
     hotkey: 'right',
     readOnly: true,
     run: (editor) =>
@@ -101,16 +101,16 @@ export const EditorShortcuts: EditorShortcut[] = [
   },
   {
     // Follows the link the cursor is within, which is otherwise only
-    // reachable by pressing it
+    // reachable by pressing it.
     hotkey: 'mod+enter',
     // Following a link does not change the document, and a read-only entry
-    // is where it is most wanted
+    // is where it is most wanted.
     readOnly: true,
     run: (editor, { onOpenWikilink }) => {
       const link = resolveLinkAtCursor(editor);
 
       // Without a link at the cursor the keystroke belongs to whatever else
-      // wants it
+      // wants it.
       if (!link) {
         return false;
       }

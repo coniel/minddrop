@@ -49,7 +49,7 @@ export const PaletteItem: React.FC<PaletteItemProps> = ({
   const { t } = useTranslation();
   const { pressedProps } = usePressedState();
   // Items track hover themselves, since a native drag leaves browser
-  // hover state stuck on the item it started from
+  // hover state stuck on the item it started from.
   const { hoveredProps } = useHoveredItem(`palette:${label}`);
   const isBindable = compatiblePropertyTypes.length > 0;
 

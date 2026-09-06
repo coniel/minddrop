@@ -92,7 +92,7 @@ describe('getObjectSnap', () => {
     );
 
     // The frame's left, center and right edges all align with the
-    // target's, which has the same width and position
+    // target's, which has the same width and position.
     expect(result.guides).toHaveLength(3);
     expect(result.guides.map((guide) => guide.position)).toEqual([
       100, 200, 300,

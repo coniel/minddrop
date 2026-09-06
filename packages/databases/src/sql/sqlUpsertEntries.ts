@@ -88,7 +88,7 @@ function buildPropertyInsertOps(
   }
 
   // Multi-value properties (select, collection) go into
-  // the entry_property_values table
+  // the entry_property_values table.
   if (
     MULTI_VALUE_PROPERTY_TYPES.has(property.type) &&
     Array.isArray(property.value)

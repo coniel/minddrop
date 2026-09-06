@@ -6,7 +6,7 @@ import { isUntitledTitle } from './isUntitledTitle';
 initializeI18n();
 
 // Register a French translation for the untitled label to test
-// titles generated under a language other than the current one
+// titles generated under a language other than the current one.
 I18n.registerTranslations({
   'fr-FR': { labels: { untitled: 'Sans titre' } },
 });

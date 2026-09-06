@@ -23,7 +23,7 @@ export interface DataViewElement extends DesignElementBase {
 
 // Omits a palette group: the palette lists one item per registered
 // data view type rather than a single generic item, so the Views
-// group is built from the data view type registry
+// group is built from the data view type registry.
 export const DataViewElementConfig: DesignElementConfig<DataViewElement> = {
   type: 'data-view',
   icon: 'app-window',
@@ -33,7 +33,7 @@ export const DataViewElementConfig: DesignElementConfig<DataViewElement> = {
   supportsStaticContent: true,
   // Data view elements reference a view of their own rather than a
   // bound value, so an empty one renders its creation form instead
-  // of hiding
+  // of hiding.
   emptyBehavior: 'none',
   context: { designTypes: ['space'], layoutTypes: ['space'] },
   template: {
@@ -41,7 +41,7 @@ export const DataViewElementConfig: DesignElementConfig<DataViewElement> = {
     dataViewType: 'gallery',
     // Views fill the height they are given by default, so a view
     // dropped into a space layout takes the space rather than
-    // collapsing to its content
+    // collapsing to its content.
     style: { height: 'fill' },
   },
 };

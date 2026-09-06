@@ -46,7 +46,7 @@ export function handleDropOnGap(
   }
 
   // If a property element was dropped, insert a new element for
-  // its property type
+  // its property type.
   if (propertyElements && propertyElements.length) {
     insertPropertyElement(
       studio,

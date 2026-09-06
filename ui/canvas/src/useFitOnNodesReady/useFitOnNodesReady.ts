@@ -82,7 +82,7 @@ export function useFitOnNodesReady(
     });
 
     // Fall back to the default view if the nodes fail to
-    // register within a few animation frames
+    // register within a few animation frames.
     let attempt = 0;
 
     const fallback = () => {

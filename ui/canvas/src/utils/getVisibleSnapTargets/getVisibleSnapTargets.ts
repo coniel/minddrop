@@ -24,7 +24,7 @@ export function getVisibleSnapTargets(
       }
 
       // Off-screen nodes are not worth aligning to, since their
-      // guides would point off the canvas
+      // guides would point off the canvas.
       return !viewport || framesIntersect(frame, viewport);
     })
     .map(([, frame]) => frame);

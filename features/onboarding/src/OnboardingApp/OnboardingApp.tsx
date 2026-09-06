@@ -30,7 +30,7 @@ export const OnboardingApp: React.FC<OnboardingAppProps> = ({ onComplete }) => {
   const [creatingWorkspace, setCreatingWorkspace] = useState(false);
   const [error, setError] = useState<TranslationKey | null>(null);
   // The onboarding window does not persist app config, so the skin tone
-  // selected in the icon picker lasts only as long as the window
+  // selected in the icon picker lasts only as long as the window.
   const [emojiSkinTone, setEmojiSkinTone] = useState<EmojiSkinTone>(0);
 
   // Initialize the onboarding app on mount
@@ -65,7 +65,7 @@ export const OnboardingApp: React.FC<OnboardingAppProps> = ({ onComplete }) => {
     }
 
     // Only existing workspaces can be opened, as a folder of files is
-    // not usable as content until it has been set up as a workspace
+    // not usable as content until it has been set up as a workspace.
     if (!(await Workspaces.isWorkspace(path))) {
       setError('onboarding.errors.notAWorkspace');
 

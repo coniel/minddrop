@@ -14,7 +14,7 @@ const existingRecord: EntrySyncRecord = {
 describe('matchEntriesToSqlRecords', () => {
   it('resolves fresh records to the existing entry ID on path match', () => {
     // A fresh read of a renamed entry: new path recorded in SQL by the
-    // rename, fresh record minted with a different ID
+    // rename, fresh record minted with a different ID.
     const freshRecord = {
       ...objectEntry1SqlRecord,
       id: 'freshly-minted-id',

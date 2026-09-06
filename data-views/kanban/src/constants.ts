@@ -31,7 +31,7 @@ export const KANBAN_COLUMN_WIDTHS: KanbanColumnWidth[] = [
 ];
 
 // The backgrounds the columns can be drawn on, in the order they
-// are offered
+// are offered.
 export const KANBAN_COLUMN_BACKGROUNDS: KanbanColumnBackground[] = [
   'none',
   'neutral',

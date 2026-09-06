@@ -129,7 +129,7 @@ const TableColumnMenu: React.FC<TableColumnMenuProps> = ({
     <DropdownMenu
       onOpenChangeComplete={handleOpenChangeComplete}
       // The close must not move focus itself, which would race the
-      // hand-over to the editor above
+      // hand-over to the editor above.
       finalFocus={false}
       trigger={
         <IconButton

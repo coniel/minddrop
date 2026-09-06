@@ -57,7 +57,7 @@ describe('onRenameEntry', () => {
     setupTestSqlDatabase();
 
     // Seed each fixture database's SQL record so entry upserts
-    // satisfy the database foreign key
+    // satisfy the database foreign key.
     databases.forEach((database) => {
       sqlUpsertDatabase(
         {

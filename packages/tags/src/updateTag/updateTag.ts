@@ -56,7 +56,7 @@ export async function updateTag(
   }
 
   // Keep the icon and color in sync: an updated icon carries its
-  // color to the tag, an updated color recolors the icon
+  // color to the tag, an updated color recolors the icon.
   if (update.icon && update.color === undefined) {
     const iconColor = Icons.resolveColor(update.icon);
 

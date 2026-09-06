@@ -21,7 +21,7 @@ export const LayoutsPanel: React.FC = () => {
   const layout = useActiveLayout();
 
   // No layout is being edited: offer new layouts and the design's
-  // existing ones
+  // existing ones.
   if (!layout) {
     return (
       <ScrollArea stateKey="layouts-panel-scroll">

@@ -5,7 +5,7 @@ import { CanvasProvider } from '../CanvasProvider';
 import { CanvasToolbar, CanvasToolbarProps } from './CanvasToolbar';
 
 // Renders the toolbar within a canvas provider and opens its
-// settings menu
+// settings menu.
 const renderToolbar = (props: Partial<CanvasToolbarProps> = {}) => {
   const { container } = render(
     <CanvasProvider>

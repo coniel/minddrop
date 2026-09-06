@@ -33,7 +33,7 @@ export function fuzzySearchBy<TItem>(
   );
 
   // Collect the matched items in rank order, skipping items already
-  // matched via a duplicate value
+  // matched via a duplicate value.
   const matched = new Set<TItem>();
 
   matchedValues.forEach((value) => {

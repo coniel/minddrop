@@ -59,7 +59,7 @@ describe('getQueryMismatchedSourceDatabases', () => {
 
   it('returns the sources lacking a sort node property', () => {
     // A sort node on a property missing from the source
-    // database, fed directly by the source
+    // database, fed directly by the source.
     const sortNode: QueryNode = {
       id: 'query-node_sort',
       type: 'sort',
@@ -91,7 +91,7 @@ describe('getQueryMismatchedSourceDatabases', () => {
     Databases.Store.load([urlDatabase]);
 
     // A second source connected into the same filter, whose
-    // database contains the filter's property
+    // database contains the filter's property.
     const urlSource: QueryNode = {
       id: 'query-node_source-url',
       type: 'source',

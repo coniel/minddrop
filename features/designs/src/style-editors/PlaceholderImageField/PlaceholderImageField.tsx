@@ -58,7 +58,7 @@ export const PlaceholderImageField: React.FC<PlaceholderImageFieldProps> = ({
   }
 
   // Copy a file picked from the file system into the media
-  // directory and select it
+  // directory and select it.
   const handleSelectNewImage = useCallback(async () => {
     if (!mediaDirPath) {
       throw new Error('Cannot add media, no media directory is set.');

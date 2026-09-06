@@ -113,7 +113,7 @@ describe('SelectionToolbar', () => {
     fireEvent(button, mouseDown);
 
     // A press which moved the focus would drop the selection the marks
-    // are applied to
+    // are applied to.
     expect(mouseDown.defaultPrevented).toBe(true);
   });
 });

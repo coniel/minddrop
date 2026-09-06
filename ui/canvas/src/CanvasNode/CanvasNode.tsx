@@ -173,7 +173,7 @@ export const CanvasNode: React.FC<CanvasNodeProps> = ({
   });
 
   // The side an in-progress connection drag started from on this
-  // node, keeping its handle visible during the drag
+  // node, keeping its handle visible during the drag.
   const connectionSourceSide = useCanvasStore((state) =>
     connectable === true && state.connectionDrag?.fromNodeId === id
       ? state.connectionDrag.fromSide
@@ -181,13 +181,13 @@ export const CanvasNode: React.FC<CanvasNodeProps> = ({
   );
 
   // Whether any connection drag is in progress, suppressing
-  // proximity handles on other nodes
+  // proximity handles on other nodes.
   const connectionDragActive = useCanvasStore(
     (state) => connectable === true && state.connectionDrag !== null,
   );
 
   // The side of this node whose edge the cursor is near, tracked
-  // by the canvas from viewport cursor movement
+  // by the canvas from viewport cursor movement.
   const hoverSide = useCanvasStore((state) =>
     connectable === true && state.hoveredConnectionHandle?.nodeId === id
       ? state.hoveredConnectionHandle.side
@@ -231,7 +231,7 @@ export const CanvasNode: React.FC<CanvasNodeProps> = ({
 
   // The connection handle to render: the drag's source side while
   // one is in progress, otherwise the cursor-adjacent side, hidden
-  // during other interactions
+  // during other interactions.
   const connectionSide =
     connectionSourceSide ??
     (isDragging || isResizing || connectionDragActive ? null : hoverSide);

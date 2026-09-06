@@ -105,7 +105,7 @@ export const DataViewEntryPicker: React.FC<DataViewEntryPickerProps> = ({
   }
 
   // Keep focus in the search input when pressing the picker's
-  // other elements, so selection clicks never blur the input
+  // other elements, so selection clicks never blur the input.
   function handleMouseDown(event: React.MouseEvent) {
     if (!(event.target instanceof HTMLInputElement)) {
       event.preventDefault();
@@ -128,7 +128,7 @@ export const DataViewEntryPicker: React.FC<DataViewEntryPickerProps> = ({
   }
 
   // Select an entry but keep the picker open with a cleared
-  // search for picking further entries
+  // search for picking further entries.
   function handleSecondarySelect(entryId: string) {
     setQuery('');
     onSecondarySelect(entryId);

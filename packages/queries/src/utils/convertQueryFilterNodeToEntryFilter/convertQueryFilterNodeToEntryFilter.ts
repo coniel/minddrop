@@ -41,13 +41,13 @@ export function convertQueryFilterNodeToEntryFilter(
   }
 
   // Toggle checks compile to integer comparisons, is-false
-  // matches unset toggles via the negative operator
+  // matches unset toggles via the negative operator.
   if (propertyType === 'toggle') {
     return convertToggleFilter(node, propertyType);
   }
 
   // Date-like comparisons expand relative and absolute values
-  // to day ranges
+  // to day ranges.
   if (
     propertyType === 'date' ||
     propertyType === 'created' ||

@@ -118,7 +118,7 @@ export function useScrollStatePersistence(stateKey: string | undefined) {
       };
 
       // Consume the echo of a programmatic restore scroll without
-      // recording it
+      // recording it.
       if (
         lastProgrammaticRef.current &&
         isNearPosition(position, lastProgrammaticRef.current)

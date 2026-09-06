@@ -30,7 +30,7 @@ export function resolveAncestryChanges(
   const changes = new Map<number, Frame[]>();
 
   // Resolved in document order, so that a block reads the block above it as
-  // it stands after that block has moved
+  // it stands after that block has moved.
   [...indexes].sort(compareIndexes).forEach((index) => {
     const element = elements[index];
 
@@ -52,7 +52,7 @@ export function resolveAncestryChanges(
     changes.set(index, nextAncestry);
 
     // Everything nested inside the block follows it, keeping the containers
-    // it opened around its own content
+    // it opened around its own content.
     resolveNestedBlockIndexes(elements, index).forEach((nestedIndex) => {
       const nestedAncestry = elements[nestedIndex].ancestry || [];
 

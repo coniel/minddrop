@@ -25,7 +25,7 @@ export function pushFrame(editor: SlateEditor, path: Path, frame: Frame): void {
   const innermost = ancestry[ancestry.length - 1];
 
   // Two list markers in a row respell the item rather than nesting a list
-  // inside it
+  // inside it.
   if (frame.kind === 'list-item' && innermost?.kind === 'list-item') {
     respellListItem(editor, elements, innermost, frame);
 

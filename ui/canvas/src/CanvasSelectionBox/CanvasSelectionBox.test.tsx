@@ -24,7 +24,7 @@ const defaultNodes: Record<string, CanvasNodeFrame> = {
 };
 
 // Renders the box alongside mounted nodes, within a canvas
-// provider backed by the given store
+// provider backed by the given store.
 const renderBox = (store: CanvasStore, options: RenderOptions = {}) => {
   const { nodes = defaultNodes, onNodesFrameChange } = options;
 
@@ -225,7 +225,7 @@ describe('CanvasSelectionBox', () => {
     });
 
     // The bounds start at x 0, so a 30px move snaps to the 24px
-    // grid line rather than landing at 30
+    // grid line rather than landing at 30.
     fireEvent.mouseDown(box()!, { button: 0, clientX: 0, clientY: 0 });
     moveMouse(30, 30);
 

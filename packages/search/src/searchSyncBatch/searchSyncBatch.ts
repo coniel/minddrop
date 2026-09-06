@@ -52,7 +52,7 @@ export function queueEntryUpserts(
 
   for (const entry of entries) {
     // Drop any buffered delete of the entry, it has since
-    // been re-created
+    // been re-created.
     batch.entryDeletes.delete(entry.id);
 
     // Buffer the entry, replacing any earlier state
@@ -77,7 +77,7 @@ export function queueEntryDeletes(
 
   for (const entryId of entryIds) {
     // Drop any buffered upsert of the entry, it has since
-    // been deleted
+    // been deleted.
     batch.entryUpserts.delete(entryId);
 
     // Buffer the deletion
@@ -113,7 +113,7 @@ export function flushSearchSyncBatch(): void {
   }
 
   // Take the buffered batches, allowing changes dispatched
-  // while flushing to accumulate into fresh ones
+  // while flushing to accumulate into fresh ones.
   const pending = new Map(batches);
 
   batches.clear();

@@ -33,7 +33,7 @@ export const IconStyleEditor: React.FC<StyleEditorProps> = ({ elementId }) => {
   const container = getValue<IconContainerStyle>('container');
 
   // Write a single key of the nested box style, dropping the box
-  // entirely once none of its values remain set
+  // entirely once none of its values remain set.
   function setContainerValue(key: string, value: unknown) {
     const nextContainer = {
       ...container,
@@ -41,7 +41,7 @@ export const IconStyleEditor: React.FC<StyleEditorProps> = ({ elementId }) => {
     } as Record<string, unknown>;
 
     // Remove keys the user cleared so the box does not linger as
-    // an empty object
+    // an empty object.
     if (value === undefined) {
       delete nextContainer[key];
     }
@@ -52,7 +52,7 @@ export const IconStyleEditor: React.FC<StyleEditorProps> = ({ elementId }) => {
   }
 
   // Read a single key of the nested box style, so the box section
-  // tracks its own keys rather than the element's
+  // tracks its own keys rather than the element's.
   function getContainerValue(key: string) {
     return (container as Record<string, unknown> | undefined)?.[key];
   }

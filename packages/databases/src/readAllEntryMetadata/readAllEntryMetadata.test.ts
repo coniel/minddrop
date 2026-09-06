@@ -30,7 +30,7 @@ describe('readAllEntryMetadata', () => {
 
   it('resolves an entry stored in its own subdirectory to the same key', async () => {
     // Entry-based property storage nests the entry in a directory
-    // named after it, which is the same entry
+    // named after it, which is the same entry.
     const nestedEntryPath = `${objectDatabase.path}/Entry/Entry.md`;
 
     await writeEntryMetadata(objectDatabase.path, nestedEntryPath, metadata);

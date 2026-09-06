@@ -54,7 +54,7 @@ export function registerBunFileSystemAdapter(): void {
     convertFileSrc: (filePath) => filePath,
     stat: async (path) => {
       // Revive the stat dates, which the handler serializes to
-      // ISO strings for the RPC boundary
+      // ISO strings for the RPC boundary.
       const stats = await fs.fsStat({ path });
 
       return {

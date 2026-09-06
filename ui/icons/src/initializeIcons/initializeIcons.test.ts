@@ -19,7 +19,7 @@ describe('initializeIcons', () => {
   });
 
   // Transforming the icon data module can exceed the default test
-  // timeout, so allow extra time
+  // timeout, so allow extra time.
   it('loads icon components and metadata', { timeout: 30000 }, async () => {
     initializeIcons();
 

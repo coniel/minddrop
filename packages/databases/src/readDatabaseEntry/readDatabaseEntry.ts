@@ -33,7 +33,7 @@ export async function readDatabaseEntry(
     );
 
     // Use explicit timestamp properties if available, otherwise fall back
-    // to file stat
+    // to file stat.
     let created = getTimestampProperty(
       'created',
       database.properties,
@@ -65,7 +65,7 @@ export async function readDatabaseEntry(
       lastModified,
       // Hashed from the file's text rather than stat'd, so that an
       // external edit is detected even when the database has a
-      // 'last-modified' property, which only the app updates
+      // 'last-modified' property, which only the app updates.
       contentHash: Fs.hashContents(serializedProperties),
       properties,
       metadata: {},

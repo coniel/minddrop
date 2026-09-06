@@ -30,7 +30,7 @@ describe('useListPanelResize', () => {
     const { result } = renderResizeHook();
 
     // Grab the handle at the panel's right edge, so the pointer
-    // position and the width stay in step
+    // position and the width stay in step.
     act(() => result.current.startResize(mouseEvent(InitialWidth)));
     act(() => moveMouseTo(InitialWidth + 50));
 

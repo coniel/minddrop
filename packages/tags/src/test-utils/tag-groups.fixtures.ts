@@ -16,7 +16,7 @@ export const tagGroup_2 = generateTagGroupFixture(2);
 export const tagGroups = [tagGroup_1, tagGroup_2];
 
 // Spelled out rather than resolved, so that the fixtures pin the paths
-// down instead of agreeing with whatever the path utils produce
+// down instead of agreeing with whatever the path utils produce.
 const tagGroupsDirPath = 'path/to/workspaces/Workspace 1/.minddrop/tag-groups';
 
 export function getTagGroupFiles(): (string | MockFileDescriptor)[] {

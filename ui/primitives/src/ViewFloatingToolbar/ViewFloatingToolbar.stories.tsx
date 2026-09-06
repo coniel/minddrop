@@ -18,7 +18,7 @@ import { Story, StoryItem, StoryRow, StorySection } from '../dev/Story';
 import { ViewFloatingToolbar } from './ViewFloatingToolbar';
 
 // Height of the story hosts, tall enough to show the toolbar
-// floating over scrolling content
+// floating over scrolling content.
 const HOST_HEIGHT = 220;
 
 // Default width of the story hosts

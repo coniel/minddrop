@@ -92,7 +92,7 @@ describe('duplicateDatabaseEntry', () => {
     const duplicate = await duplicateDatabaseEntry(commonStorageEntry1.id);
 
     // The file should be copied into the shared directory with an
-    // incremented name
+    // incremented name.
     expect(duplicate.properties.Image).toBe('image 1.png');
     expect(
       MockFs.exists(

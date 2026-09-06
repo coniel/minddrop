@@ -70,7 +70,7 @@ export const CollectionSelectionSubmenu: FC<
   );
 
   // Collections offered as options: top fuzzy matches when
-  // searching, most recently modified otherwise
+  // searching, most recently modified otherwise.
   const listedCollections = useMemo(
     () =>
       query

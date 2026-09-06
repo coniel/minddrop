@@ -18,7 +18,7 @@ import {
 const spaceViewId = (spaceId: string) => `spaces:space:${spaceId}`;
 
 // View instance id of the singleton spaces list view, which is
-// labelled and iconed from its registration
+// labelled and iconed from its registration.
 const spacesViewId = 'spaces:spaces';
 
 /**
@@ -49,7 +49,7 @@ export const SpacesFeature: React.FC = () => {
     });
 
     // Listen for open space view events, and open the space view
-    // when one is received
+    // when one is received.
     Events.addListener(OpenSpaceViewEvent, EventListenerId, (data) => {
       const space = Spaces.get(data.spaceId, false);
 
@@ -59,7 +59,7 @@ export const SpacesFeature: React.FC = () => {
       }
 
       // Open the space view, which has no dialog or panel
-      // presentation and so opens in place for those modes
+      // presentation and so opens in place for those modes.
       Events.dispatch(Views.events.Open, {
         viewAreaId: data.viewAreaId,
         sourcePane: data.sourcePane,
@@ -73,7 +73,7 @@ export const SpacesFeature: React.FC = () => {
     });
 
     // Listen for open spaces view events, and open the spaces
-    // list view when one is received
+    // list view when one is received.
     Events.addListener(OpenSpacesViewEvent, EventListenerId, (data) => {
       // Open a blank tab to receive the spaces view
       if (data?.openMode === 'new-tab') {
@@ -81,7 +81,7 @@ export const SpacesFeature: React.FC = () => {
       }
 
       // Open the spaces list view, which has no dialog or panel
-      // presentation and so opens in place for those modes
+      // presentation and so opens in place for those modes.
       Events.dispatch(Views.events.Open, {
         viewAreaId: data?.viewAreaId,
         sourcePane: data?.sourcePane,
@@ -102,7 +102,7 @@ export const SpacesFeature: React.FC = () => {
     });
 
     // Close the space's open view and drop its view state when
-    // the space is deleted
+    // the space is deleted.
     Events.addListener(Spaces.events.Deleted, EventListenerId, (data) => {
       SpaceViewStateStore.remove(data.id);
 

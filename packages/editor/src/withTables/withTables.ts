@@ -114,7 +114,7 @@ export function withTables(editor: Editor): Editor {
 
     if (rowIndex === tableNode.children.length - 1) {
       // Return on an empty last row steps out of the table rather than
-      // growing it, removing the row it leaves behind
+      // growing it, removing the row it leaves behind.
       if (
         rowIndex > 0 &&
         SlateNode.string(tableNode.children[rowIndex]) === ''
@@ -147,7 +147,7 @@ export function withTables(editor: Editor): Editor {
 
   editor.insertSoftBreak = () => {
     // Shift-Return inserts a row below the current one from anywhere in
-    // the table
+    // the table.
     if (insertTableRowBelow(editor)) {
       return;
     }
@@ -168,7 +168,7 @@ export function withTables(editor: Editor): Editor {
 
     if (cellEntry) {
       // Anywhere but the start of the cell deletes as normal, staying
-      // inside it
+      // inside it.
       if (
         !SlateEditor.isStart(editor, editor.selection.anchor, cellEntry.cell[1])
       ) {
@@ -192,7 +192,7 @@ export function withTables(editor: Editor): Editor {
       }
 
       // Backspace in the header of a column which is empty the whole way
-      // down deletes the column, keeping the table's last one
+      // down deletes the column, keeping the table's last one.
       if (
         rowIndex === 0 &&
         cellEntry.row[0].children.length > 1 &&
@@ -216,7 +216,7 @@ export function withTables(editor: Editor): Editor {
     }
 
     // Backspace at the start of the block after a table steps into its last
-    // cell rather than merging the block into the table
+    // cell rather than merging the block into the table.
     if (stepIntoTableBefore(editor)) {
       return;
     }
@@ -236,7 +236,7 @@ export function withTables(editor: Editor): Editor {
 
     if (cellEntry) {
       // Delete stops at the end of a cell rather than pulling what follows
-      // into it
+      // into it.
       if (
         SlateEditor.isEnd(editor, editor.selection.anchor, cellEntry.cell[1])
       ) {
@@ -249,7 +249,7 @@ export function withTables(editor: Editor): Editor {
     }
 
     // Delete at the end of the block before a table steps into its first
-    // cell rather than pulling the table apart
+    // cell rather than pulling the table apart.
     if (stepIntoTableAfter(editor)) {
       return;
     }
@@ -286,7 +286,7 @@ export function withTables(editor: Editor): Editor {
     const contentStartIndex = getContentStartIndex(editor);
 
     // The editor always holds at least one content block, so removing a
-    // husk which was the last one leaves an empty paragraph behind
+    // husk which was the last one leaves an empty paragraph behind.
     if (editor.children.length <= contentStartIndex) {
       Transforms.insertNodes(editor, Ast.generateElement('paragraph'), {
         at: [contentStartIndex],
@@ -330,7 +330,7 @@ function resolveCoveredTableRefs(editor: Editor): PathRef[] {
   }
 
   // Resolved to leaf points, since a native select-all can leave the
-  // selection's edges on elements, where they compare wrongly
+  // selection's edges on elements, where they compare wrongly.
   const start = SlateEditor.start(editor, selection);
   const end = SlateEditor.end(editor, selection);
   const refs: PathRef[] = [];
@@ -405,7 +405,7 @@ function deleteEmptyColumn(editor: Editor, cellEntry: TableCellEntry): void {
   removeTableColumn(editor, tablePath, columnIndex);
 
   // The first column has no column before it, so its replacement takes
-  // the cursor instead
+  // the cursor instead.
   if (columnIndex === 0) {
     Transforms.select(editor, SlateEditor.start(editor, [...tablePath, 0, 0]));
 
@@ -459,7 +459,7 @@ function stepIntoTableBefore(editor: Editor): boolean {
   }
 
   // A contained block steps out of its containers first, which is the
-  // frame plugin's to handle
+  // frame plugin's to handle.
   if ((element.ancestry || []).length) {
     return false;
   }
@@ -480,7 +480,7 @@ function stepIntoTableBefore(editor: Editor): boolean {
   const lastCellPath = [path[0] - 1, lastRowIndex, lastRow.children.length - 1];
 
   // An empty block dissolves into the step, matching what merging would
-  // have left behind
+  // have left behind.
   if (Ast.toPlainText([element]) === '') {
     Transforms.removeNodes(editor, { at: path });
   }
@@ -523,7 +523,7 @@ function stepIntoTableAfter(editor: Editor): boolean {
   }
 
   // An empty block dissolves into the step, which shifts the table into
-  // its place
+  // its place.
   const dissolve = Ast.toPlainText([element]) === '';
   const tableIndex = dissolve ? path[0] : path[0] + 1;
 
@@ -564,7 +564,7 @@ function normalizeTable(
   }
 
   // A table whose rows have lost every cell has nothing left to be a grid
-  // of, and becomes a paragraph
+  // of, and becomes a paragraph.
   const cellCount = rows.reduce(
     (total, row) => total + row.children.filter(isTableCellElement).length,
     0,
@@ -651,7 +651,7 @@ function normalizeTableRow(
   }
 
   // At the document's top level the row becomes a paragraph, its cells left
-  // for the cell rule to dissolve
+  // for the cell rule to dissolve.
   if (!SlateElement.isElement(parent)) {
     Transforms.setNodes<Element>(editor, { type: 'paragraph' }, { at: path });
 
@@ -695,7 +695,7 @@ function normalizeTableCell(
   }
 
   // A block inside a cell dissolves into its content, since a cell cannot
-  // hold one
+  // hold one.
   const blockIndex = cell.children.findIndex(
     (child) => SlateElement.isElement(child) && isBlockElement(child.type),
   );

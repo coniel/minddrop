@@ -20,7 +20,7 @@ describe('resolveAutoBinding', () => {
 
   it('prioritizes compatible types by their array order', () => {
     // 'Cover' comes after the text properties in the schema, but
-    // the image type is listed first, so it wins
+    // the image type is listed first, so it wins.
     expect(
       resolveAutoBinding(design_books, layout_card_1, ['image', 'text']),
     ).toBe('Cover');

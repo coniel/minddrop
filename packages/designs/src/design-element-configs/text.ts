@@ -16,7 +16,7 @@ export interface TextElement extends DesignElementBase {
 }
 
 // Omits a palette group: text is placed through its purpose roles
-// (heading, label, text value) rather than free-form
+// (heading, label, text value) rather than free-form.
 export const TextElementConfig: DesignElementConfig<TextElement> = {
   type: 'text',
   icon: 'align-left',

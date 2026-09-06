@@ -45,7 +45,7 @@ export const dataViewTypes = [
 ];
 
 // Converts the item list in a referencing view config through the
-// supplied conversion function, dropping unconvertible items
+// supplied conversion function, dropping unconvertible items.
 function convertReferencingItems(
   config: DataViewConfig,
   convert: (value: string) => string | null,

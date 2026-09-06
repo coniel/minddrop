@@ -33,7 +33,7 @@ describe('onTagGroupDeleted', () => {
     DatabasesStore.set(tagsDatabase);
 
     // Create the database directory so config rewrites can write
-    // the config file
+    // the config file.
     MockFs.createDir(tagsDatabase.path, { recursive: true });
   });
 
@@ -43,7 +43,7 @@ describe('onTagGroupDeleted', () => {
     await onTagGroupDeleted(tagGroup_1);
 
     // The property limited to the deleted group should have no
-    // group limit
+    // group limit.
     const database = DatabasesStore.get(tagsDatabase.id);
     const property = database?.properties.find(
       (candidate) => candidate.name === 'Tags',

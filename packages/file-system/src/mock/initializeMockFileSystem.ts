@@ -246,7 +246,7 @@ export function initializeMockFileSystem(
 
   // Skip the I/O queue in tests since the mock adapter is
   // synchronous and the queue's debounce delay would cause
-  // test timeouts
+  // test timeouts.
   registerFileSystemAdapter(MockFs, { skipQueue: true });
 
   return {

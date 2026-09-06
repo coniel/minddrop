@@ -37,7 +37,7 @@ describe('<Combobox />', () => {
     expect(options[1]).toHaveAttribute('data-highlighted');
 
     // Fire the mouse move a scroll under a stationary cursor
-    // produces over another item
+    // produces over another item.
     fireEvent.mouseMove(options[3]);
 
     // The keyboard highlight is left in place

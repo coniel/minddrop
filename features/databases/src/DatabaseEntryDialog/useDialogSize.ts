@@ -76,12 +76,12 @@ export function useDialogSize(
   const [size, setSize] = useState<DialogSize>({ width: 0, height: 0 });
 
   // Keep a ref to the current size so callbacks can read it
-  // without needing size in their dependency arrays
+  // without needing size in their dependency arrays.
   const sizeRef = useRef(size);
   sizeRef.current = size;
 
   // The user's intended size and the viewport at the time it
-  // was set, used to compute display size on window resize
+  // was set, used to compute display size on window resize.
   const baseSizeRef = useRef<BaseSizeSnapshot | null>(null);
 
   // Track the current window size slot to detect crossings
@@ -179,7 +179,7 @@ export function useDialogSize(
       }
 
       // Same slot - apply margin clamping based on the user's
-      // intended size
+      // intended size.
       if (!baseSizeRef.current) {
         return;
       }
@@ -187,7 +187,7 @@ export function useDialogSize(
       const base = baseSizeRef.current;
 
       // Compute the user's margin as a fraction of the viewport
-      // when the base size was set
+      // when the base size was set.
       const baseMarginX = (base.viewportWidth - base.width) / 2;
       const baseMarginFractionX = baseMarginX / base.viewportWidth;
 

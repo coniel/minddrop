@@ -23,7 +23,7 @@ export function resolveEventAnchor(event: Event): Anchor | null {
   }
 
   // A zero-sized rect at the point, so the floating element sits
-  // against the position itself
+  // against the position itself.
   return {
     getBoundingClientRect: () => ({
       x: position.x,
@@ -59,7 +59,7 @@ function resolvePosition(event: Event): Position | null {
   const { clientX, clientY } = event as MouseEvent;
 
   // Activating a control by keyboard fires a click event at the
-  // viewport origin
+  // viewport origin.
   if (clientX === 0 && clientY === 0) {
     return null;
   }

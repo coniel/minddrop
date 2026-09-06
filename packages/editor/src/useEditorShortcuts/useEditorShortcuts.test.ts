@@ -36,7 +36,7 @@ function run(
 }
 
 // The destinations opened through the backend, which opens them outside the
-// app's own window
+// app's own window.
 const opened: string[] = [];
 
 registerBackendUtilsAdapter({

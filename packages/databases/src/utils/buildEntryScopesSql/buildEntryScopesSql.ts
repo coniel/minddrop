@@ -44,7 +44,7 @@ export function buildEntryScopesSql(
     params.push(scope.databaseId);
 
     // Append the filter conditions when the scope's filter tree
-    // contains any filters
+    // contains any filters.
     const filterSql = scope.filter ? buildEntryFilterSql(scope.filter) : null;
 
     if (filterSql) {

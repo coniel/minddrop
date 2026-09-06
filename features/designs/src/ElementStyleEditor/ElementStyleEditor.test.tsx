@@ -71,7 +71,7 @@ describe('<ElementStyleEditor />', () => {
     );
 
     // Container sections are not offered, since text uses another
-    // style category
+    // style category.
     expect(getSection('designsStudio.style.sections.layout')).toBeNull();
   });
 
@@ -94,7 +94,7 @@ describe('<ElementStyleEditor />', () => {
     const studio = openCardLayout();
 
     // Give the text element the heading role, which locks its
-    // weight, line height and colour
+    // weight, line height and colour.
     const element = studio.getDesignElement(
       element_text_1.id,
       layout_card_1.id,
@@ -129,7 +129,7 @@ describe('<ElementStyleEditor />', () => {
     ).toBeNull();
 
     // Keys outside the role's editable styles list render no
-    // field either, even though the role locks no value for them
+    // field either, even though the role locks no value for them.
     expect(
       within(textSection).queryByText(
         'designsStudio.style.fields.letterSpacing',
@@ -151,7 +151,7 @@ describe('<ElementStyleEditor />', () => {
     renderEditor(studio);
 
     // Content is not styling, so it is offered without a section
-    // to open first
+    // to open first.
     screen.getByText('designs.content.label');
     screen.getByText('designs.content.mode.static');
   });
@@ -195,7 +195,7 @@ describe('<ElementStyleEditor />', () => {
     const root = studio.getDesignElement<FlatRootDesignElement>('root');
 
     // The row arrangement survives as panel structure, and the
-    // reset lands on the page's default styling rather than none
+    // reset lands on the page's default styling rather than none.
     expect(root.style).toEqual({ direction: 'row', contentPadding: '4' });
 
     // The panel itself is untouched
@@ -243,13 +243,13 @@ describe('<ElementStyleEditor />', () => {
     const studio = openCardLayout();
 
     // Insert an image property element, whose variants render
-    // pictures rather than text
+    // pictures rather than text.
     insertPropertyElement(studio, 'image', 'root', 0, layout_card_1.id);
 
     renderEditor(studio);
 
     // Each presentation variant is offered with a line explaining
-    // what it renders
+    // what it renders.
     screen.getByText('designs.propertyElements.descriptions.image');
     screen.getByText('designs.propertyElements.descriptions.viewer');
   });
@@ -258,13 +258,13 @@ describe('<ElementStyleEditor />', () => {
     const studio = openCardLayout();
 
     // Insert a select property element, whose default presentation
-    // renders badges
+    // renders badges.
     insertPropertyElement(studio, 'select', 'root', 0, layout_card_1.id);
 
     const { container } = renderEditor(studio);
 
     // Every badge size previews a chip per sample label rather
-    // than the raw comma-separated string
+    // than the raw comma-separated string.
     const rows = Array.from(
       container.querySelectorAll('.designs-badges-element'),
     );
@@ -280,7 +280,7 @@ describe('<ElementStyleEditor />', () => {
     });
 
     // Each size previews its own chip size, so the options read as
-    // the sizes they are
+    // the sizes they are.
     const sizes = rows.map(
       (row) => row.querySelector<HTMLElement>('.designs-badge')?.style.fontSize,
     );
@@ -308,7 +308,7 @@ describe('<ElementStyleEditor />', () => {
     const studio = openCardLayout();
 
     // Insert a select property element, whose default presentation
-    // renders badges
+    // renders badges.
     insertPropertyElement(studio, 'select', 'root', 0, layout_card_1.id);
 
     renderEditor(studio);
@@ -377,7 +377,7 @@ describe('<ElementStyleEditor />', () => {
     ).toBeNull();
 
     // Keys outside the variant's editable styles list render no
-    // field either
+    // field either.
     expect(
       within(textSection).queryByText(
         'designsStudio.style.fields.letterSpacing',
@@ -426,7 +426,7 @@ function getSection(label: TranslationKey): HTMLElement | null {
   const text = i18n.t(label);
 
   // Match against the section labels only, since short labels like
-  // "Text" also appear in fields elsewhere in the panel
+  // "Text" also appear in fields elsewhere in the panel.
   const sectionLabel = Array.from(
     document.querySelectorAll('.designs-style-section-label'),
   ).find((candidate) => candidate.textContent === text);

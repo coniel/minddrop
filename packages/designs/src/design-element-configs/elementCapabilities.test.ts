@@ -40,7 +40,7 @@ describe('element capabilities', () => {
 
   it('makes property elements property bound only', () => {
     // Property elements render a bound property by definition, so
-    // they offer no static mode
+    // they offer no static mode.
     expect(getElementConfig('property').supportsStaticContent).toBe(false);
     expect(getElementConfig('text').supportsStaticContent).toBe(true);
   });
@@ -52,7 +52,7 @@ describe('element capabilities', () => {
 
   it('hides value bound element types when their value is empty', () => {
     // A design never shows an empty slot where a value would have
-    // been, and never a design placeholder in its place
+    // been, and never a design placeholder in its place.
     expect(getElementConfig('text').emptyBehavior).toBe('hide');
     expect(getElementConfig('property').emptyBehavior).toBe('hide');
   });

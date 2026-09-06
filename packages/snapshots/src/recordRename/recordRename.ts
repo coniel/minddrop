@@ -3,7 +3,7 @@ import { RenameEvent, RenameEventKind } from '../types';
 import { resolveRenameEventFilePath, resolveRenamesDirPath } from '../utils';
 
 // The timestamp of the last recorded event, used to keep event
-// timestamps strictly increasing
+// timestamps strictly increasing.
 let lastEventTimestampMs = 0;
 
 export interface RecordRenameOptions {

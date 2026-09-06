@@ -208,7 +208,7 @@ describe('<ElementsTree />', () => {
     );
 
     // Content can only be dropped inside the panel regions, so the
-    // root's children are unchanged
+    // root's children are unchanged.
     expect(
       root.children.every(
         (childId) =>
@@ -241,7 +241,7 @@ describe('<ElementsTree />', () => {
     );
 
     // The dragged container is sorted below the node it was
-    // dropped on
+    // dropped on.
     expect(root.children[1]).toBe(element_container_1.id);
   });
 

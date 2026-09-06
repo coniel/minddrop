@@ -16,11 +16,11 @@ import { ElementPropertyField } from './ElementPropertyField';
 import { StaticContentField } from './StaticContentField';
 
 // Element types binding their image property from the background
-// fields of their style editor instead
+// fields of their style editor instead.
 const BackgroundImageElementTypes = ['container', 'root', 'page-panel'];
 
 // Element types whose static content is a reference set elsewhere
-// rather than editable text
+// rather than editable text.
 const ReferenceContentElementTypes = ['data-view'];
 
 export interface ElementContentSectionProps {
@@ -55,7 +55,7 @@ export const ElementContentSection: React.FC<ElementContentSectionProps> = ({
   );
 
   // Switch the element between bound and static content, clearing
-  // the mode being left behind
+  // the mode being left behind.
   function handleModeChange(value: string) {
     if (!element) {
       return;
@@ -63,7 +63,7 @@ export const ElementContentSection: React.FC<ElementContentSectionProps> = ({
 
     if (value === 'static') {
       // Drop the binding by replacing the element, since a merge
-      // cannot unset a field
+      // cannot unset a field.
       const { property: _removed, ...unboundElement } = element;
 
       studio.setDesignElement(elementId, {
@@ -78,7 +78,7 @@ export const ElementContentSection: React.FC<ElementContentSectionProps> = ({
     studio.updateDesignElement(elementId, { static: false, content: '' });
 
     // Bind the first compatible property left unbound, so the
-    // switch lands on a working binding when one is available
+    // switch lands on a working binding when one is available.
     studio.autoBindDesignElement(elementId);
   }
 
@@ -87,7 +87,7 @@ export const ElementContentSection: React.FC<ElementContentSectionProps> = ({
   }
 
   // Containers bind their background image from the background
-  // fields instead, so they have no content section
+  // fields instead, so they have no content section.
   if (BackgroundImageElementTypes.includes(element.type)) {
     return null;
   }
@@ -113,14 +113,14 @@ export const ElementContentSection: React.FC<ElementContentSectionProps> = ({
 
   // A property element holds nothing but its binding, so its
   // section is named after the binding and the select inside it
-  // goes unlabelled
+  // goes unlabelled.
   const isProperty = Designs.isPropertyElement(element);
   const sectionLabel = isProperty
     ? 'designs.property.label'
     : 'designs.content.label';
 
   // Without property binding, and for static-only roles, there is
-  // only static content to set
+  // only static content to set.
   if (!propertyBindingEnabled || !supportsBinding) {
     if (!supportsContent) {
       return null;
@@ -134,7 +134,7 @@ export const ElementContentSection: React.FC<ElementContentSectionProps> = ({
   }
 
   // The properties this element could bind to, ignoring whether
-  // it is currently static
+  // it is currently static.
   const compatibleProperties = properties.filter((property) =>
     isPropertyCompatibleWithElement(property.type, {
       ...element,

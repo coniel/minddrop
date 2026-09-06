@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { isEditableTarget } from './isEditableTarget';
 
 // Renders the markup into the document and returns the element
-// matching the selector
+// matching the selector.
 function renderTarget(html: string, selector: string): Element {
   document.body.innerHTML = html;
 
@@ -45,7 +45,7 @@ describe('isEditableTarget', () => {
     const target = renderTarget('<div contenteditable="true"></div>', 'div');
 
     // The DOM implementation leaves the editable flag to the
-    // browser, so it is defined for the test
+    // browser, so it is defined for the test.
     Object.defineProperty(target, 'isContentEditable', { value: true });
 
     expect(isEditableTarget(target)).toBe(true);

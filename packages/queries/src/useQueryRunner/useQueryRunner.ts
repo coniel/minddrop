@@ -35,7 +35,7 @@ export function useQueryRunner<TValue>(
   const listenerId = useId();
 
   // The query document, changes re-run the effect so edits
-  // produce a fresh value
+  // produce a fresh value.
   const query = useQuery(queryId);
 
   useEffect(() => {
@@ -50,14 +50,14 @@ export function useQueryRunner<TValue>(
     }
 
     // The databases feeding the query's graph, including those
-    // of the queries it sources
+    // of the queries it sources.
     const sourceDatabaseIds = getQueryDatabases(query);
 
     // The queries the graph draws results from
     const referencedQueryIds = getQueryReferencedQueryIds(query);
 
     // The collections the graph filters by, whose items are
-    // compiled into the query
+    // compiled into the query.
     const collections = getQueryCollectionReferences(query);
 
     // Whether a collection's contents feed the query
@@ -119,7 +119,7 @@ export function useQueryRunner<TValue>(
     });
 
     // Re-run when a referenced collection is created, which
-    // includes virtual collections hydrated on demand
+    // includes virtual collections hydrated on demand.
     Events.addListener(Collections.events.Created, listenerId, (data) => {
       if (referencesCollection(data.id)) {
         rerun();
@@ -134,7 +134,7 @@ export function useQueryRunner<TValue>(
     });
 
     // Re-run once collections load, which replaces the store's
-    // contents wholesale
+    // contents wholesale.
     Events.addListener(Collections.events.Loaded, listenerId, () => {
       if (collections.anyCollection || collections.collectionIds.length > 0) {
         rerun();
@@ -142,7 +142,7 @@ export function useQueryRunner<TValue>(
     });
 
     // Re-run when a query the graph sources is edited, since
-    // its results are compiled into this query
+    // its results are compiled into this query.
     Events.addListener(QueryUpdatedEvent, listenerId, (data) => {
       if (referencedQueryIds.includes(data.updated.id)) {
         rerun();

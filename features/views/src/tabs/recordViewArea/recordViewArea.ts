@@ -42,7 +42,7 @@ export function recordViewArea(
 
     // Whether each pane shows a different view than before, as opposed
     // to a replay of its current state (e.g. a tab restore) or a
-    // metadata/split ratio refresh
+    // metadata/split ratio refresh.
     const mainNavigated = !sameView(tab.main, state.main);
     const splitNavigated = !sameView(tab.split, state.split);
 
@@ -53,7 +53,7 @@ export function recordViewArea(
       !sameSubview(tab.split, state.split);
 
     // Replaying states (e.g. a view selecting a default) are recorded
-    // without becoming history
+    // without becoming history.
     const navigated =
       !state.replace && (mainNavigated || splitNavigated || subviewChanged);
 
@@ -71,7 +71,7 @@ export function recordViewArea(
 
     // Reset the transient state of panes that navigated to a different
     // view (their history snapshot was captured above), keeping the
-    // state of panes that merely replayed or changed subview
+    // state of panes that merely replayed or changed subview.
     const viewState =
       mainNavigated || splitNavigated
         ? {

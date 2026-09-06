@@ -4,7 +4,7 @@ import { parseElementsFromMarkdown } from '../parseElementsFromMarkdown';
 import { Fragment } from '../types';
 
 // The inline mapping reads mdast nodes and their source offsets, so it is
-// exercised through the document parser rather than on its own
+// exercised through the document parser rather than on its own.
 function parseInline(markdown: string): Fragment {
   return parseElementsFromMarkdown(markdown)[0].children;
 }

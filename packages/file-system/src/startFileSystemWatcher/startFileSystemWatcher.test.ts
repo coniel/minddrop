@@ -139,7 +139,7 @@ describe('startFileSystemWatcher', () => {
     await flushDebounce();
 
     // Should dispatch a change, the file no longer holding what
-    // the app wrote
+    // the app wrote.
     expect(changes).toEqual([{ path: QueryPath, kind: 'modified' }]);
   });
 

@@ -19,7 +19,7 @@ const references: EditorReference[] = [
 ];
 
 // A source offering the first two references as recent and matching the
-// third by its label
+// third by its label.
 const source: ReferenceSource = {
   getRecent: () => references.slice(0, 2),
   search: (query) =>

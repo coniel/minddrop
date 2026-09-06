@@ -26,7 +26,7 @@ export function resolveRoleStyle(
   layoutType?: LayoutType,
 ): Partial<DesignElementStyle> {
   // The role's locked styles with the layout context's overrides
-  // applied over them
+  // applied over them.
   let style: Partial<DesignElementStyle> = {
     ...role.lockedStyle,
     ...(layoutType ? role.contextStyles?.[layoutType] : undefined),
@@ -42,7 +42,7 @@ export function resolveRoleStyle(
     }
 
     // The option's context-independent styles with its layout
-    // context's overrides applied over them
+    // context's overrides applied over them.
     style = {
       ...style,
       ...option.style,

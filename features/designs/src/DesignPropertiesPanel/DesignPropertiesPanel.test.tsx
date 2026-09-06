@@ -61,7 +61,7 @@ describe('<DesignPropertiesPanel />', () => {
     renderPanel(studio, [draftProperty]);
 
     // The draft's editor opens by default, so its save action is
-    // available straight away
+    // available straight away.
     await userEvent.click(screen.getByText('actions.save'));
 
     // The property reaches both the studio's design and the store

@@ -37,7 +37,7 @@ describe('createTag', () => {
 
   it('defaults the color to the next color in the rotation', async () => {
     // Three fixture tags exist, so the rotation yields the fourth
-    // non-default content color
+    // non-default content color.
     const tag = await createTag('Work');
 
     expect(tag.color).toBe('pink');

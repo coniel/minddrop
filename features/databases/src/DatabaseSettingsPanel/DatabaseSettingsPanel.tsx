@@ -126,7 +126,7 @@ export const DatabaseSettingsPanel: React.FC<DatabaseSettingsPanelProps> = ({
   }
 
   // Change how the database's property files are stored on disk, relocating
-  // existing files to match the new layout
+  // existing files to match the new layout.
   function handleChangePropertyFileStorage(
     propertyFileStorage: PropertyFileStorage,
   ) {

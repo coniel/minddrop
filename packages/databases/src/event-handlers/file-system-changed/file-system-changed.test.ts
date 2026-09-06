@@ -21,7 +21,7 @@ describe('onFileSystemChanged', () => {
     vi.useFakeTimers();
 
     // Stand in for the platform backend, recording the scans it
-    // is asked for
+    // is asked for.
     backend = createMockBackendAdapter();
   });
 
@@ -73,7 +73,7 @@ describe('onFileSystemChanged', () => {
     const databasePath = `${Paths.workspace}/Copied`;
 
     // A database directory copied in whole, the platform watcher
-    // reporting only the directory itself
+    // reporting only the directory itself.
     MockFs.addFiles([
       { path: resolveDatabaseConfigFilePath(databasePath), textContent: '{}' },
     ]);

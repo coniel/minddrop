@@ -16,7 +16,7 @@ import {
  */
 export function cleanupEvents(): Promise<void> {
   // Clear synchronously when nothing is in flight, so callers
-  // which do not await still start their next test clean
+  // which do not await still start their next test clean.
   if (!hasPendingDispatches()) {
     clear();
 

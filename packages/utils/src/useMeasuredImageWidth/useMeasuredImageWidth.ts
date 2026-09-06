@@ -39,7 +39,7 @@ export function useMeasuredImageWidth(
   const [devicePixelWidth, setDevicePixelWidth] = useState<number>();
 
   // Measured before paint so that the image can be requested at its
-  // display width without a full resolution image being painted first
+  // display width without a full resolution image being painted first.
   useLayoutEffect(() => {
     const element = elementRef.current;
 
@@ -49,7 +49,7 @@ export function useMeasuredImageWidth(
 
     const apply = (measuredDevicePixelWidth: number) => {
       // Keep the largest width applied so far, so that the image is
-      // not refetched each time the element shrinks
+      // not refetched each time the element shrinks.
       if (
         appliedWidthRef.current !== undefined &&
         appliedWidthRef.current >= measuredDevicePixelWidth
@@ -65,7 +65,7 @@ export function useMeasuredImageWidth(
       const measuredWidth = getRenderedWidth(element);
 
       // Elements can measure 0 while laying out, in which case there
-      // is nothing to bracket yet
+      // is nothing to bracket yet.
       if (!measuredWidth) {
         return;
       }
@@ -74,7 +74,7 @@ export function useMeasuredImageWidth(
       const measuredDevicePixelWidth = measuredWidth * window.devicePixelRatio;
 
       // The first measurement applies immediately, as there is no
-      // image loaded yet to hold the element over
+      // image loaded yet to hold the element over.
       if (appliedWidthRef.current === undefined) {
         apply(measuredDevicePixelWidth);
 
@@ -82,7 +82,7 @@ export function useMeasuredImageWidth(
       }
 
       // Later measurements wait for the resize to settle, restarting
-      // the wait on each one
+      // the wait on each one.
       if (settleTimeoutRef.current) {
         clearTimeout(settleTimeoutRef.current);
       }
@@ -115,7 +115,7 @@ export function useMeasuredImageWidth(
   }, [elementRef]);
 
   // Above the resize cap the bracket resolves to undefined, meaning
-  // the original image is used
+  // the original image is used.
   return {
     width:
       devicePixelWidth === undefined

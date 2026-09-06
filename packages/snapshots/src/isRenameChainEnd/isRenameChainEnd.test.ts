@@ -16,7 +16,7 @@ describe('isRenameChainEnd', () => {
 
   it('returns true for a chain end address', async () => {
     // The fixture entry chain ends at the renamed entry's address
-    // with the database rename's prefix rewrite applied
+    // with the database rename's prefix rewrite applied.
     expect(await isRenameChainEnd('Library/My Book', 'entry')).toBe(true);
   });
 

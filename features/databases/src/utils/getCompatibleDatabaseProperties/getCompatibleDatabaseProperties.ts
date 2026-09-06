@@ -6,7 +6,7 @@ import {
 } from '@minddrop/properties';
 
 // Database property types whose values a design property of a
-// given type can render
+// given type can render.
 const compatiblePropertyTypesMap: Record<PropertyType, PropertyType[]> = {
   collection: ['collection'],
   color: ['color'],
@@ -38,7 +38,7 @@ export function getCompatibleDatabaseProperties(
   const compatibleTypes = compatiblePropertyTypesMap[designProperty.type] || [];
 
   // Add the metadata properties the database schema does not
-  // declare itself
+  // declare itself.
   const properties =
     Databases.withImplicitMetadataProperties(databaseProperties);
 

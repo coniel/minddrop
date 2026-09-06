@@ -44,7 +44,7 @@ export const DesignStudioViewport: React.FC<DesignStudioViewportProps> = ({
   const transformLayerRef = useCanvasTransformLayer();
 
   // Clicking the empty canvas deactivates the layout and clears
-  // the selection
+  // the selection.
   const handleBackgroundMouseDown = useCallback(() => {
     studio.setActiveLayout(null);
   }, [studio]);
@@ -57,7 +57,7 @@ export const DesignStudioViewport: React.FC<DesignStudioViewportProps> = ({
   }, []);
 
   // Create a layout of the dropped type, with its frame's top left
-  // corner at the drop point
+  // corner at the drop point.
   const handleDrop = useCallback(
     (event: React.DragEvent, canvasPoint: CanvasPoint) => {
       const design = studio.getDesign();
@@ -69,7 +69,7 @@ export const DesignStudioViewport: React.FC<DesignStudioViewportProps> = ({
       const dragData = readLayoutTypeDragData(event);
 
       // Drops carrying anything else are handled by the elements
-      // they land on, not by the canvas
+      // they land on, not by the canvas.
       if (!dragData) {
         return;
       }

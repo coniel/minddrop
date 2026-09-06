@@ -1,5 +1,5 @@
 // Fields holding an item's identifier, in the order they are
-// looked for
+// looked for.
 const IdentifierFields = ['id', 'key', 'type', 'name', 'path'];
 
 /**

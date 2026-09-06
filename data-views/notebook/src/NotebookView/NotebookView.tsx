@@ -79,7 +79,7 @@ export const NotebookViewComponent: React.FC<
   });
 
   // Auto-select the first entry if nothing is selected or if
-  // the selected entry is no longer in the filtered list
+  // the selected entry is no longer in the filtered list.
   useEffect(() => {
     if (selectedEntryId && filteredEntries.includes(selectedEntryId)) {
       return;

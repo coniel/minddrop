@@ -27,7 +27,7 @@ export function goForward(viewAreaId: string): void {
   const entry = forwardHistory[forwardHistory.length - 1];
 
   // Restore the entry's state onto the tab, moving the current state
-  // onto the back history
+  // onto the back history.
   const updatedTab = {
     ...tab,
     main: entry.main,

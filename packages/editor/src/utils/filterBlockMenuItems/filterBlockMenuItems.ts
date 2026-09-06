@@ -22,7 +22,7 @@ export function filterBlockMenuItems(
   const terms = menuItems.map(resolveSearchTerms);
 
   // Entries are matched back by their search terms, which two entries can
-  // share, so each match takes the next entry those terms belong to
+  // share, so each match takes the next entry those terms belong to.
   const entries = new Map<string, BlockMenuItem[]>();
 
   terms.forEach((term, index) => {

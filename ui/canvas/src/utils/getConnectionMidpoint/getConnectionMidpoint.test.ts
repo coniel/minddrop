@@ -18,7 +18,7 @@ describe('getConnectionMidpoint', () => {
     );
 
     // Both control points extend rightward, pulling the midpoint
-    // right of the straight line between the anchors
+    // right of the straight line between the anchors.
     expect(midpoint.x).toBeGreaterThan(0);
     expect(midpoint.y).toBe(100);
   });

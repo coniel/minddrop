@@ -25,7 +25,7 @@ export function resolveOutdentedAncestry(
     previousAncestry[ancestry.length - 1]?.id !== innermost.id;
 
   // A block which opens its innermost container leaves the container around
-  // it, keeping its own
+  // it, keeping its own.
   if (opensInnermost && ancestry.length > 1) {
     return [...ancestry.slice(0, -2), innermost];
   }

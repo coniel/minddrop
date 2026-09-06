@@ -10,7 +10,7 @@ describe('convertElement', () => {
   describe('with `convert` callback', () => {
     it("uses the new element type's `convert` callback to convert it", () => {
       // Convert a paragraph into a heading, whose convert callback reads
-      // the level from the shortcut which triggered it
+      // the level from the shortcut which triggered it.
       const converted = convertElement(
         paragraphElement1,
         'heading',

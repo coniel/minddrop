@@ -6,7 +6,7 @@ import { Editor } from '../types';
 import { opensInnermostFrame, resolveMenuItemAncestry } from '../utils';
 
 // The data a block keeps when it changes type, being what belongs to the
-// block itself rather than to the type it is leaving
+// block itself rather than to the type it is leaving.
 const CarriedKeys = ['id', 'type', 'ancestry'];
 
 /**
@@ -50,7 +50,7 @@ export function turnBlocksInto(
       const converted = config.convert ? config.convert(block) : { type };
 
       // Resolved before the block changes, since it is read from where the
-      // block sits among the blocks around it
+      // block sits among the blocks around it.
       const ancestry = resolveMenuItemAncestry(
         (block as Element).ancestry || [],
         opensInnermostFrame(editor.children as Element[], path[0]),

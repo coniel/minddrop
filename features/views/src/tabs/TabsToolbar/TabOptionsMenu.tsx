@@ -58,7 +58,7 @@ export const TabOptionsMenu: FC<TabOptionsMenuProps> = ({
   const isSplit = Boolean(tabs[tabIndex]?.split);
 
   // The tabs which can be moved into the split pane: the other tabs
-  // which have a view to move
+  // which have a view to move.
   const splitCandidates = tabs.filter((tab) => tab.id !== tabId && tab.main);
 
   // Open a new blank tab before the tab
@@ -77,7 +77,7 @@ export const TabOptionsMenu: FC<TabOptionsMenuProps> = ({
   }
 
   // Open a search view in the tab's split pane, labelled and iconed
-  // from its registration
+  // from its registration.
   function handleSplitWithSearch() {
     splitTab(viewAreaId, tabId, { view: Views.constants.DefaultName });
   }

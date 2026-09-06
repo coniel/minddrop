@@ -79,7 +79,7 @@ describe('LinkMenu', () => {
     const { findAllByText } = renderMenu({ query: 'https://minddrop.app' });
 
     // While searching, the menu renders its items from its own registry as
-    // well as keeping the source items hidden, so each appears twice
+    // well as keeping the source items hidden, so each appears twice.
     expect(await findAllByText('https://minddrop.app')).not.toHaveLength(0);
     expect(await findAllByText('Link to webpage')).not.toHaveLength(0);
   });
@@ -102,7 +102,7 @@ describe('LinkMenu', () => {
     });
 
     // The listed item is the one the menu renders, the other being the
-    // hidden source it was registered from
+    // hidden source it was registered from.
     const [, listed] = await findAllByText('https://minddrop.app');
 
     fireEvent.click(listed);

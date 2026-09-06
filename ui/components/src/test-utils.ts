@@ -15,7 +15,7 @@ export const MockFs = initializeMockFileSystem();
 
 export function setup() {
   // Load database and entry fixtures into the stores and mock
-  // file system
+  // file system.
   DatabaseFixtures.setup(MockFs);
 
   // Load collection fixtures into the store and mock file system

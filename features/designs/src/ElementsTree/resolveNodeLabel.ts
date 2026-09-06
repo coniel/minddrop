@@ -43,14 +43,14 @@ export function resolveNodeLabel(element: FlatDesignElement): NodeLabel {
   const config = Designs.getElementConfig(element.type);
 
   // Elements playing a role are named after it, falling back to the
-  // element type when the role is not registered
+  // element type when the role is not registered.
   const role = Designs.isRoleElement(element)
     ? DesignRoles.get(element.role, false)
     : null;
 
   // Property elements are named after their property element
   // config, falling back to the element type when the property
-  // type has none
+  // type has none.
   const propertyElementConfig = Designs.isPropertyElement(element)
     ? Designs.getPropertyElementConfig(element.propertyType, false)
     : null;
@@ -61,7 +61,7 @@ export function resolveNodeLabel(element: FlatDesignElement): NodeLabel {
   };
 
   // Data view elements reference a data view by ID, so they
-  // display the view's name instead of their raw content
+  // display the view's name instead of their raw content.
   if (element.type === 'data-view') {
     nodeLabel.staticContent = element.content
       ? DataViews.get(element.content, false)?.name

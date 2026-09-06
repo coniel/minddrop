@@ -6,7 +6,7 @@ import { translateAll } from './translateAll';
 initializeI18n();
 
 // Register a French translation for the untitled label so that the
-// key has more than one distinct translation
+// key has more than one distinct translation.
 registerTranslations({
   'fr-FR': { labels: { untitled: 'Sans titre' } },
 });

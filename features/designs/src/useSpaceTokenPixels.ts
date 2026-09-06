@@ -16,7 +16,7 @@ export function useSpaceTokenPixels(token?: SpaceToken): number {
   const [pixels, setPixels] = useState(0);
 
   // Measure after commit but before paint, so the resolved gap is
-  // applied in the same frame the container renders
+  // applied in the same frame the container renders.
   useLayoutEffect(() => {
     // No token, no gap
     if (!token) {

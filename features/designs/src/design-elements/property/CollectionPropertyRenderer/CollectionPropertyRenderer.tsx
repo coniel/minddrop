@@ -80,7 +80,7 @@ export const CollectionPropertyRenderer: React.FC<
   }
 
   // Render the view, the creation form, or the missing view
-  // notice as appropriate
+  // notice as appropriate.
   return (
     <div className="designs-collection-element" style={cssStyle}>
       <DataViewRenderer

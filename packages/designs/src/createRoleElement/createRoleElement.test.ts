@@ -17,7 +17,7 @@ describe('createRoleElement', () => {
 
   it('creates the element unbound', () => {
     // Role elements render static content, so they never bind a
-    // property on creation
+    // property on creation.
     const element = createRoleElement(PageContentRole.id);
 
     expect(element.property).toBeUndefined();

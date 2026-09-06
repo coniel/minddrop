@@ -51,7 +51,7 @@ export function updateTabsForView(
     changed = true;
 
     // Track when the active tab's views changed so its content can
-    // re-render, ignoring history-only patches
+    // re-render, ignoring history-only patches.
     if (tab.id === activeTabId && (main !== tab.main || split !== tab.split)) {
       activeChanged = true;
     }

@@ -37,7 +37,7 @@ export const DesignStudioLeftPanel: React.FC = () => {
   const studio = useDesignStudio();
   const activeLayout = useActiveLayout();
   // Kept in the view's transient state so the panel opens on the
-  // tab it was left on when the studio remounts
+  // tab it was left on when the studio remounts.
   const [activePanel, setActivePanel] = useTransientState<ActivePanel>(
     'left-panel-tab',
     'layouts',
@@ -68,11 +68,11 @@ export const DesignStudioLeftPanel: React.FC = () => {
   }
 
   // The back button navigates within the panel: it appears while a
-  // layout is open on the layouts tab
+  // layout is open on the layouts tab.
   const showBack = activePanel === 'layouts' && Boolean(activeLayout);
 
   // Stage a new property from the chosen template, persisted only
-  // once its editor is saved
+  // once its editor is saved.
   function handleAddProperty(template: PropertySchemaTemplate) {
     const draftProperty = {
       ...template,

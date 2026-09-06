@@ -118,7 +118,7 @@ describe('insertBlockElement', () => {
       insertBlockElement(editor, 'paragraph');
 
       // Plain text inside the parent item, rather than dropping to the top
-      // of the document
+      // of the document.
       expect(getAncestry(editor, 1)).toEqual([item1]);
     });
 

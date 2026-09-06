@@ -13,7 +13,7 @@ import { resolveDatabaseConfigFilePath } from '../utils';
 export async function writeDatabaseConfig(id: string): Promise<void> {
   // Get the database config
   // Exclude path and name as they are derived from the
-  // directory name and location
+  // directory name and location.
   const { path, name: _name, ...config } = getDatabase(id);
 
   // Ensure the database's hidden .minddrop directory exists

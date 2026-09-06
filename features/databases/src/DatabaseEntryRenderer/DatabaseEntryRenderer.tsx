@@ -104,7 +104,7 @@ const Entry: React.FC<EntryProps> = ({
   const { hoveredProps } = useHoveredItem(hoverId);
 
   // The base layout type the context resolves to, used for styling
-  // and click behaviour
+  // and click behaviour.
   const baseType = Databases.constants.LayoutContextBaseType[layoutContext];
 
   // Whether this entry's layout should autofocus its editor,
@@ -112,7 +112,7 @@ const Entry: React.FC<EntryProps> = ({
   const autoFocusEditor = autoFocusEntryId === entry.id;
 
   // Resolve the layout to render with, falling back to the
-  // database default when no override is specified
+  // database default when no override is specified.
   const layout = useMemo(() => {
     // Look up the explicit layout if a real ID was provided
     if (layoutId && layoutId !== 'default') {
@@ -163,7 +163,7 @@ const Entry: React.FC<EntryProps> = ({
   }, [database, design, layout]);
 
   // Database properties including the implicit entry metadata
-  // properties, so metadata-mapped elements resolve a schema
+  // properties, so metadata-mapped elements resolve a schema.
   const rendererProperties = useMemo(
     () => Databases.withImplicitMetadataProperties(database?.properties || []),
     [database],
@@ -232,7 +232,7 @@ const Entry: React.FC<EntryProps> = ({
   }, [entry.id, onClick, openView]);
 
   // Set the card itself as the drag preview, since the drag starts
-  // from the invisible drag handle
+  // from the invisible drag handle.
   const onDragHandleDragStart = useCallback(
     (event: React.DragEvent<HTMLDivElement>) => {
       draggableProps.onDragStart(event);
@@ -265,15 +265,15 @@ const Entry: React.FC<EntryProps> = ({
   const isClickable = baseType !== 'page';
 
   // Cards are dragged from a bar along their top edge, and only
-  // within contexts which enable dragging
+  // within contexts which enable dragging.
   const showDragHandle = baseType === 'card' && draggable;
 
   // Cards show a hover revealed options menu button, and only
-  // within contexts which enable it
+  // within contexts which enable it.
   const showOptionsMenu = baseType === 'card' && optionsMenu;
 
   // The entry's color, applied as a scheme class so the layout's
-  // schemable roles resolve against it
+  // schemable roles resolve against it.
   const entryColor = DatabaseEntries.resolveColor(database, entry);
 
   const className = [
@@ -286,7 +286,7 @@ const Entry: React.FC<EntryProps> = ({
     .join(' ');
 
   // Minimal title-only fallback when the database has no design
-  // or its design has no layout of the requested type
+  // or its design has no layout of the requested type.
   if (!layout) {
     return (
       <div

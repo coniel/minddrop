@@ -88,14 +88,14 @@ export function useSelectionToolbar(
       editor.toggleMark(mark);
 
       // The marks are read back rather than assumed, since a mark can be
-      // refused, and the toolbar shows what the text now carries
+      // refused, and the toolbar shows what the text now carries.
       setActiveMarks(resolveActiveMarks(editor));
     },
     [editor],
   );
 
   // A selection drawn with the pointer is only settled once the button is
-  // released, so the toolbar waits for it rather than following the drag
+  // released, so the toolbar waits for it rather than following the drag.
   useEffect(() => {
     if (!enabled) {
       return;
@@ -120,7 +120,7 @@ export function useSelectionToolbar(
       selecting.current = false;
 
       // The selection is applied after the press, so it is read on the
-      // frame after it
+      // frame after it.
       requestAnimationFrame(handleChange);
     };
 

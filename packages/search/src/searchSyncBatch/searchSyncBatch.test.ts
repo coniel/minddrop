@@ -226,7 +226,7 @@ describe('searchSyncBatch', () => {
     expect(syncCalls).toHaveLength(1);
 
     // The scheduled flush is cancelled, so nothing is sent
-    // a second time
+    // a second time.
     vi.runAllTimers();
 
     expect(syncCalls).toHaveLength(1);

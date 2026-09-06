@@ -22,7 +22,7 @@ export function initializeQueriesFeature(): VoidFunction {
   I18n.registerTranslations(locales);
 
   // Listen for open queries view events, and open the queries
-  // view when one is received
+  // view when one is received.
   Events.addListener(OpenQueriesViewEvent, EventListenerId, () => {
     Events.dispatch(Views.events.Open, {
       view: QueriesViewName,

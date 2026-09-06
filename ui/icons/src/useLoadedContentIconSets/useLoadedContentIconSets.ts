@@ -12,7 +12,7 @@ import {
 } from './utils';
 
 // Loaded and prepared sets cached by set ID so repeated use has
-// nothing to recompute
+// nothing to recompute.
 const loadedSetsCache = new Map<string, LoadedContentIconSet>();
 
 /**

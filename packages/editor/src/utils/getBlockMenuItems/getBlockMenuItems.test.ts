@@ -54,7 +54,7 @@ describe('container entries', () => {
     );
 
     // A task item is a list item carrying a checked state, which is what
-    // makes it render a checkbox and write back as one
+    // makes it render a checkbox and write back as one.
     expect(task?.frame?.()).toMatchObject({
       kind: 'list-item',
       ordered: false,

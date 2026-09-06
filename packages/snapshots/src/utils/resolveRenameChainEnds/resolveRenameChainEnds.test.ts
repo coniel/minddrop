@@ -9,7 +9,7 @@ const { entryRenameEvent, propertyRenameEvent, getRenameEventFiles } =
 const renamesDirPath = 'path/to/workspaces/Workspace 1/.minddrop/renames';
 
 // An event continuing the fixture entry chain after the fixture
-// database rename
+// database rename.
 const chainContinuationEvent: RenameEvent = {
   timestamp: new Date('2026-01-04T09:00:00.000Z'),
   from: 'Library/My Book',
@@ -31,7 +31,7 @@ describe('resolveRenameChainEnds', () => {
     const chainEnds = await resolveRenameChainEnds('entry');
 
     // The entry chain ends at the renamed entry's address with the
-    // database rename's prefix rewrite applied
+    // database rename's prefix rewrite applied.
     expect(chainEnds).toEqual(new Map([['Library/My Book', entryRenameEvent]]));
   });
 

@@ -57,7 +57,7 @@ describe('onRenameProperty', () => {
     );
 
     // Seed the collection entry's record so the rename has
-    // property rows to update
+    // property rows to update.
     sqlUpsertEntries(collectionDatabase.id, [collectionEntry1SqlRecord], {
       silent: true,
     });
@@ -116,7 +116,7 @@ describe('onRenameProperty', () => {
 
   it('remaps design property map values pointing at the renamed property', async () => {
     // Rename 'Content' to 'Body' with a design property map that
-    // maps a design property onto it
+    // maps a design property onto it.
     const original = {
       ...objectDatabase,
       designPropertyMap: { Heading: 'Content', Cover: 'Icon' },

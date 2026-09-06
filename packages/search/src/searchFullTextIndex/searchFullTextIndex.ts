@@ -40,7 +40,7 @@ export function searchFullTextIndex(
     : undefined;
 
   // Rank title matches by title relevance alone so that
-  // matches in other fields cannot inflate their position
+  // matches in other fields cannot inflate their position.
   const titleResults = miniSearch.search(query, {
     fields: ['title'],
     filter,
@@ -66,7 +66,7 @@ export function searchFullTextIndex(
 
   return results.slice(0, limit).map((result) => {
     // MiniSearch types stored fields as `any`; narrow them to
-    // the stored-fields shape declared in MINISEARCH_OPTIONS
+    // the stored-fields shape declared in MINISEARCH_OPTIONS.
     const stored = result as SearchResult & StoredSearchFields;
     const documentId: string = result.id;
 

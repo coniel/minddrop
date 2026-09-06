@@ -75,7 +75,7 @@ export const DatabasesFeature: React.FC = () => {
     });
 
     // Listen for open database view events, and open the database view
-    // when one is received
+    // when one is received.
     Events.addListener(Databases.events.OpenView, EventListenerId, (data) => {
       const database = Databases.get(data.databaseId);
 
@@ -85,7 +85,7 @@ export const DatabasesFeature: React.FC = () => {
       }
 
       // Open the database view, which has no dialog or panel
-      // presentation and so opens in place for those modes
+      // presentation and so opens in place for those modes.
       Events.dispatch(Views.events.Open, {
         viewAreaId: data.viewAreaId,
         sourcePane: data.sourcePane,
@@ -99,7 +99,7 @@ export const DatabasesFeature: React.FC = () => {
     });
 
     // Listen for database entry open events and open the entry
-    // in the appropriate mode
+    // in the appropriate mode.
     Events.addListener(
       DatabaseEntries.events.OpenView,
       DatabaseEntriesEventListenerId,
@@ -164,7 +164,7 @@ export const DatabasesFeature: React.FC = () => {
     });
 
     // Update the database's open view title when the database
-    // is renamed
+    // is renamed.
     Events.addListener(Databases.events.Renamed, EventListenerId, (data) => {
       Events.dispatch(Views.events.Update, {
         id: resolveDatabaseViewId(data.updated.id),

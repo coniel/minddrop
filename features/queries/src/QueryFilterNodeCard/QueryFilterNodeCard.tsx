@@ -102,7 +102,7 @@ export const QueryFilterNodeCard: React.FC<QueryFilterNodeCardProps> = ({
   }));
 
   // Persist a property change, resetting the operator to the
-  // new property type's first operator and clearing the value
+  // new property type's first operator and clearing the value.
   function handlePropertyChange(propertyName: string): void {
     const property = properties.find(
       (propertyOption) => propertyOption.name === propertyName,
@@ -120,7 +120,7 @@ export const QueryFilterNodeCard: React.FC<QueryFilterNodeCardProps> = ({
   }
 
   // Persist an operator change, clearing the value when the new
-  // operator takes no value
+  // operator takes no value.
   function handleOperatorChange(operator: QueryOperator): void {
     Queries.update(query.id, {
       nodes: Queries.updateNode<QueryFilterNode>(query.nodes, node.id, {

@@ -50,7 +50,7 @@ const WorkspaceCanvas: React.FC<DesignStudioWorkspaceProps> = ({ design }) => {
   const restoredView = useCanvasViewPersistence();
 
   // Fit the design's layouts into view when the workspace opens
-  // without a view to return to
+  // without a view to return to.
   useFitOnNodesReady(
     design.layouts.map((layout) => layout.id),
     !restoredView,

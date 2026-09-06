@@ -64,7 +64,7 @@ describe('indentBlocks', () => {
     indentBlocks(editor, [[1], [2]]);
 
     // Both become children of the item above them rather than the second
-    // nesting inside the first
+    // nesting inside the first.
     expect(getAncestry(editor, 1)).toEqual([item1, item2]);
     expect(getAncestry(editor, 2)).toEqual([item1, item3]);
   });

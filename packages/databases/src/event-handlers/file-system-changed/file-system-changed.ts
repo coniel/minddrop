@@ -55,7 +55,7 @@ async function isDatabaseChange(
   const { path, kind } = change;
 
   // Anything inside a known database directory, including the
-  // directory itself being deleted
+  // directory itself being deleted.
   const inKnownDatabase = getAllDatabases().some(
     (database) =>
       path === database.path || path.startsWith(`${database.path}/`),
@@ -66,7 +66,7 @@ async function isDatabaseChange(
   }
 
   // A config file outside every known database directory marks a
-  // database the app has not seen yet
+  // database the app has not seen yet.
   if (isDatabaseConfigFilePath(path)) {
     return true;
   }

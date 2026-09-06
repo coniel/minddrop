@@ -15,7 +15,7 @@ const MAX_CACHE_BYTES = 500 * 1024 * 1024;
 const CACHE_DIR = `${Utils.paths.appData}/MindDrop/image-cache`;
 
 // Generation promises keyed by cache filename, so concurrent
-// requests for the same variant trigger a single resize
+// requests for the same variant trigger a single resize.
 const inFlight = new Map<string, Promise<string | null>>();
 
 /**
@@ -41,7 +41,7 @@ export async function getResizedImage(
     const stats = await fsp.stat(sourcePath);
 
     // Key the variant on the source path and its modification time so
-    // that editing the source produces a fresh variant
+    // that editing the source produces a fresh variant.
     const cacheKey = Bun.hash(`${sourcePath}:${stats.mtimeMs}`).toString(16);
     const cacheFileName = `${cacheKey}-w${width}${extension}`;
     const cachePath = path.join(CACHE_DIR, cacheFileName);
@@ -114,7 +114,7 @@ export async function pruneImageCache(): Promise<void> {
     }
   } catch {
     // The cache dir may not exist yet, in which case there is
-    // nothing to prune
+    // nothing to prune.
   }
 }
 
@@ -140,7 +140,7 @@ async function generateVariant(
     }
 
     // Multi-frame sources (e.g. animated webp) would be flattened
-    // to their first frame by a plain resize
+    // to their first frame by a plain resize.
     if (metadata.pages && metadata.pages > 1) {
       return null;
     }
@@ -148,7 +148,7 @@ async function generateVariant(
     await fsp.mkdir(CACHE_DIR, { recursive: true });
 
     // Write to a temporary path first so that a crash mid-write
-    // cannot leave a truncated file in the cache
+    // cannot leave a truncated file in the cache.
     const temporaryPath = `${cachePath}.tmp`;
 
     await sharp(sourcePath).resize({ width }).toFile(temporaryPath);

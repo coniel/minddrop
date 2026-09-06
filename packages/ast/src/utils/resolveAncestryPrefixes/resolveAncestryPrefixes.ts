@@ -87,7 +87,7 @@ function resolveFramePrefixes(
   return {
     first: `${indent}${marker} ${resolveTaskBox(frame)}`,
     // Continuation lines align with the item's content rather than its
-    // marker, so the marker is replaced by its own width in spaces
+    // marker, so the marker is replaced by its own width in spaces.
     continuation: `${indent}${' '.repeat(marker.length + 1)}`,
   };
 }

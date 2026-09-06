@@ -19,7 +19,7 @@ export function onUpdateDatabase(data: DatabaseUpdatedEventData): void {
   });
 
   // The serializer sets the entry files' extension, and entry storage
-  // wraps them in per-entry directories, so either changing moves them
+  // wraps them in per-entry directories, so either changing moves them.
   const entriesMoved =
     original.entrySerializer !== updated.entrySerializer ||
     (original.propertyFileStorage === 'entry') !==

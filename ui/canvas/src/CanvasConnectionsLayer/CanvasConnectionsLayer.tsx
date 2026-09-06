@@ -108,7 +108,7 @@ export const CanvasConnectionsLayer: React.FC<CanvasConnectionsLayerProps> = ({
   const canvas = useCanvas();
 
   // The connections the registered hit test runs against, kept in
-  // a ref so it never has to be re-registered
+  // a ref so it never has to be re-registered.
   const connectionsRef = useRef(connections);
 
   // The style defaults, mirrored for the registered geometry
@@ -145,7 +145,7 @@ export const CanvasConnectionsLayer: React.FC<CanvasConnectionsLayerProps> = ({
         connectionsRef.current
           .filter((connection) => {
             // Resolved against the live node registry, so hits
-            // follow nodes while they are dragged
+            // follow nodes while they are dragged.
             const anchors = getConnectionAnchors(connection, store.getNodes());
 
             // Skip connections to nodes not mounted on the canvas
@@ -191,12 +191,12 @@ export const CanvasConnectionsLayer: React.FC<CanvasConnectionsLayerProps> = ({
   }, [store]);
 
   // Marker references are document-global, so the IDs are prefixed
-  // to stay unique across mounted canvases
+  // to stay unique across mounted canvases.
   const markerId = useId().replace(/:/g, '');
 
   // Arrowheads are colored per connection and sized in absolute
   // units per thickness, so a marker is defined for each
-  // color/thickness combination in use
+  // color/thickness combination in use.
   const markerVariants = getConnectionMarkerVariants(connections, {
     connectionDefaults,
     previewStyle,
@@ -207,7 +207,7 @@ export const CanvasConnectionsLayer: React.FC<CanvasConnectionsLayerProps> = ({
   // arrowheads
   function renderConnection(connection: CanvasConnection) {
     // Anchor each end to its side, with the frame for shape
-    // routing around the node
+    // routing around the node.
     const anchors = getConnectionAnchors(connection, nodes);
 
     // Skip connections to nodes not mounted on the canvas
@@ -216,7 +216,7 @@ export const CanvasConnectionsLayer: React.FC<CanvasConnectionsLayerProps> = ({
     }
 
     // Hide connections being re-connected; the preview curve
-    // replaces them for the duration of the drag
+    // replaces them for the duration of the drag.
     if (connectionDrag?.reconnect?.connectionId === connection.id) {
       return null;
     }
@@ -243,7 +243,7 @@ export const CanvasConnectionsLayer: React.FC<CanvasConnectionsLayerProps> = ({
     const path = getConnectionPath(from, to, shape);
 
     // The visible stroke ends behind the arrowheads (which cover
-    // the trimmed span) so it never pokes through their tips
+    // the trimmed span) so it never pokes through their tips.
     const trim = CONNECTION_ARROW_SIZES[thickness] - 1;
     const linePath = getConnectionPath(from, to, shape, {
       trimStart: arrows === 'both' ? trim : 0,
@@ -258,7 +258,7 @@ export const CanvasConnectionsLayer: React.FC<CanvasConnectionsLayerProps> = ({
     const reconnectProps = getConnectionProps(connection);
 
     // Select on click rather than press, so grabbing a curve to
-    // re-drag it does not also select it
+    // re-drag it does not also select it.
     function handleHitAreaClick(event: React.MouseEvent) {
       if (!selectable || wasDragged()) {
         return;
@@ -272,7 +272,7 @@ export const CanvasConnectionsLayer: React.FC<CanvasConnectionsLayerProps> = ({
       }
 
       // Anchor the selection at the press, so UI over it appears
-      // where the curve was clicked rather than over its bounds
+      // where the curve was clicked rather than over its bounds.
       store.setSelectionPoint(
         canvas.clientToCanvas({ x: event.clientX, y: event.clientY }),
       );
@@ -345,7 +345,7 @@ export const CanvasConnectionsLayer: React.FC<CanvasConnectionsLayerProps> = ({
     };
 
     // Snap to the target side's midpoint while a target is
-    // hovered, otherwise follow the cursor
+    // hovered, otherwise follow the cursor.
     const targetFrame = connectionDrag.targetNodeId
       ? nodes[connectionDrag.targetNodeId]
       : null;
@@ -366,7 +366,7 @@ export const CanvasConnectionsLayer: React.FC<CanvasConnectionsLayerProps> = ({
           };
 
     // During a re-connect drag the preview replaces the hidden
-    // connection, so it takes over the connection's styling
+    // connection, so it takes over the connection's styling.
     const reconnecting = connectionDrag.reconnect
       ? connections.find(
           (connection) =>

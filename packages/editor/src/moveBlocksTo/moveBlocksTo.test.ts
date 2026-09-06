@@ -195,7 +195,7 @@ describe('moveBlocksTo', () => {
       moveBlocksTo(editor, [[0], [1], [2]], 4);
 
       // Each item keeps its own container rather than being folded into
-      // the item leading the run
+      // the item leading the run.
       expect(getAncestry(editor, 1)).toEqual([item1]);
       expect(getAncestry(editor, 2)).toEqual([item2]);
       expect(getAncestry(editor, 3)).toEqual([item3]);

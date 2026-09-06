@@ -26,7 +26,7 @@ export function addEventListener<TEvent extends EventName>(
   }
 
   // The store holds listeners of every event, so it cannot type
-  // the callback on the event's data
+  // the callback on the event's data.
   setEventListeners(eventName, [
     ...getEventListeners(eventName),
     { id: listenerId, callback: callback as EventListenerCallback, once },

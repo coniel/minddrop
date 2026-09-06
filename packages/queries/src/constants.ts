@@ -20,7 +20,7 @@ export const DefaultQueryIcon = 'content-icon:list-filter:default';
 export const DEFAULT_SOURCE_NODE_POSITION = { x: 0, y: 120 };
 
 // Where a new query's results node is seeded, leaving a gap
-// after the source node wide enough to drop a filter node into
+// after the source node wide enough to drop a filter node into.
 export const DEFAULT_RESULTS_NODE_POSITION = { x: 640, y: 120 };
 
 // Text comparison operators shared by text-like property types
@@ -100,7 +100,7 @@ export const QUERY_OPERATORS_BY_PROPERTY_TYPE: Record<
     'is-not-empty',
   ],
   // Color values live in entry metadata, which is not SQL
-  // indexed, so color cannot be filtered on yet
+  // indexed, so color cannot be filtered on yet.
   color: [],
   // Collections test membership of the picked entries
   collection: [

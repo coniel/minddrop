@@ -23,7 +23,7 @@ export async function initializeSpaces(): Promise<void> {
   const files = await Fs.readDir(spacesDirPath);
 
   // Read a space from each entry, discarding entries which are not
-  // space bundles
+  // space bundles.
   const spacePromises = await Promise.all(
     files.map((file) => readSpace(file.path)),
   );

@@ -21,7 +21,7 @@ export async function hasWorkspace(): Promise<boolean> {
   }
 
   // Check the workspace directories, ignoring those that have been
-  // deleted or moved since they were added
+  // deleted or moved since they were added.
   const existingPaths = await Promise.all(
     paths.map((path) => Bun.file(`${path}/.minddrop/workspace.json`).exists()),
   );

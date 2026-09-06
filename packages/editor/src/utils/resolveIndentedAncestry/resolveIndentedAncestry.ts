@@ -23,7 +23,7 @@ export function resolveIndentedAncestry(
   }
 
   // A block which opens its innermost container takes that container down a
-  // level with it, nesting it inside whatever the block above it sits in
+  // level with it, nesting it inside whatever the block above it sits in.
   if (innermost && previousAncestry[ancestry.length - 1]?.id !== innermost.id) {
     // The block above is not deep enough to nest inside
     if (previousAncestry.length < ancestry.length) {

@@ -5,11 +5,11 @@ const registry = new Map<string, ContentIconSetDefinition>();
 const registryListeners = new Set<VoidFunction>();
 
 // In-flight and resolved loads keyed by set ID, so each set's
-// loader runs at most once
+// loader runs at most once.
 const loadPromises = new Map<string, Promise<ContentIconSetContents | null>>();
 
 // Loaded set contents handed out as a snapshot, replaced (not
-// mutated) whenever a set finishes loading
+// mutated) whenever a set finishes loading.
 let loadedSets: Record<string, ContentIconSetContents> = {};
 
 /**

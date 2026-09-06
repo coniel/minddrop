@@ -30,7 +30,7 @@ export const UrlFormatFields: React.FC<UrlFormatFieldsProps> = ({
 }) => {
   const studio = useDesignStudio();
   // Every part defaults to visible, matching how formatUrl renders
-  // an element which has not set the flag
+  // an element which has not set the flag.
   const parts = useElementData(
     elementId,
     (element: FlatUrlPropertyElement) => ({
@@ -43,7 +43,7 @@ export const UrlFormatFields: React.FC<UrlFormatFieldsProps> = ({
   );
 
   // The store deep merges nested objects, so writing one part
-  // leaves the rest of the format intact
+  // leaves the rest of the format intact.
   const handleToggle = useCallback(
     (field: keyof UrlFormat, checked: boolean) => {
       studio.updateDesignElement<UrlPropertyElement>(elementId, {

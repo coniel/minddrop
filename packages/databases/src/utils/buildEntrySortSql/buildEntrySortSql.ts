@@ -51,7 +51,7 @@ export function buildEntrySortSql(sort: EntrySort[]): EntrySortSql {
     }
 
     // Title/created/last-modified sort on the entries table
-    // columns directly
+    // columns directly.
     if (entry.propertyType === 'title') {
       terms.push(`e.title COLLATE NOCASE ${direction}`);
 
@@ -71,7 +71,7 @@ export function buildEntrySortSql(sort: EntrySort[]): EntrySortSql {
     }
 
     // Scalar properties join their entry_properties row, one
-    // aliased join per sort entry
+    // aliased join per sort entry.
     const alias = `sort_${joins.length}`;
 
     joins.push(

@@ -39,7 +39,7 @@ describe('initializeInputModalityTracking', () => {
     dispatchKeyDown('a');
 
     // Fires at the position the pointer already occupies, as
-    // happens when content shifts beneath a stationary pointer
+    // happens when content shifts beneath a stationary pointer.
     dispatchPointerMove(10, 10);
 
     expect(getInputMode()).toBe('keyboard');

@@ -8,6 +8,6 @@ import { EventData, EventName, Events } from '@minddrop/events';
  */
 export function dispatchDynamicEvent(name: string, data?: unknown): void {
   // The dev tools dispatch names typed by the user, which the event
-  // registry cannot check
+  // registry cannot check.
   Events.dispatch(name as EventName, data as EventData<EventName>);
 }

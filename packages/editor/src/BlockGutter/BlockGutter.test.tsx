@@ -53,7 +53,7 @@ describe('BlockGutter', () => {
     const { container, baseElement } = renderGutter();
 
     // Portalled out so that ancestors clipping the editor, such as
-    // a card, cannot clip the controls
+    // a card, cannot clip the controls.
     expect(container.firstChild).toBeNull();
     expect(baseElement.querySelector('.editor-block-gutter')).not.toBeNull();
   });
@@ -141,7 +141,7 @@ describe('BlockGutter', () => {
     const { getByLabelText } = renderGutter();
 
     // Preventing the default mouse down action would keep the
-    // handle from ever starting a drag
+    // handle from ever starting a drag.
     const notPrevented = fireEvent.mouseDown(getByLabelText('Select block'));
 
     expect(notPrevented).toBe(true);

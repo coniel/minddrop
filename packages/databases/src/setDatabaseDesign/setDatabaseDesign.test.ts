@@ -49,7 +49,7 @@ describe('setDatabaseDesign', () => {
 
   it('clears defaultLayouts when the design changes', async () => {
     // objectDatabase has defaultLayouts.card pointing to a layout in
-    // its current design; switching designs should clear it
+    // its current design; switching designs should clear it.
     await setDatabaseDesign(objectDatabase.id, design_books.id);
 
     expect(DatabasesStore.get(objectDatabase.id)?.defaultLayouts).toEqual({});

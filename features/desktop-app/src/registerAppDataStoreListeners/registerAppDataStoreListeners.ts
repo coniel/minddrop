@@ -12,7 +12,7 @@ const STORES_DIR = 'stores';
  */
 export function registerAppDataStoreListeners(): VoidFunction {
   // Register persist and hydrate listeners targeting the
-  // AppData stores directory
+  // AppData stores directory.
   return registerStoreListeners({
     listenerId: LISTENER_ID,
     persistTo: 'app-config',

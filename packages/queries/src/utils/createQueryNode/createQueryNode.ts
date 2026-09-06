@@ -28,7 +28,7 @@ export function createQueryNode(
   }
 
   // Collection filter nodes start without a collection, keeping
-  // its members once picked
+  // its members once picked.
   if (type === 'collection-filter') {
     return {
       ...base,

@@ -31,7 +31,7 @@ describe('initializeDatabasesBackend', () => {
     setup();
 
     // Register the in-memory SQL adapter the backend opens its
-    // database through
+    // database through.
     setupTestSqlDatabase();
   });
 
@@ -87,7 +87,7 @@ describe('initializeDatabasesBackend', () => {
     );
 
     // The References member should reference the minted ID from
-    // the other database's batch
+    // the other database's batch.
     expect(propertyValue(collectionRecord, 'References')).toEqual([
       referenceRecord.id,
     ]);
@@ -113,7 +113,7 @@ References: []
     );
 
     // An emptied multi-value property stores no rows, so the
-    // dropped member leaves the property absent from the record
+    // dropped member leaves the property absent from the record.
     expect(propertyValue(collectionRecord, 'Related')).toBeUndefined();
   });
 

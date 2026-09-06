@@ -28,7 +28,7 @@ describe('<FlexDropContainer />', () => {
     // Gap zones are flex items, so the space between the children
     // has to be taken by the gap between them rather than left to
     // the container's distribution, which would spread the edge
-    // gaps too
+    // gaps too.
     expect(growingGaps(container)).toEqual([1]);
   });
 

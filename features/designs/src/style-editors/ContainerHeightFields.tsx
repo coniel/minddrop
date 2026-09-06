@@ -44,7 +44,7 @@ export const HeightStyleKeys: string[] = [
 ];
 
 // The height a container takes when first fixed, which is the same
-// step embeds default to
+// step embeds default to.
 const DefaultFixedHeight: HeightValue = 'md';
 
 const HeightModeOptions: OptionToggleFieldOption<HeightMode>[] = [
@@ -77,16 +77,16 @@ const OrientationOptions: OptionToggleFieldOption<Orientation>[] = [
 ];
 
 // The shape each orientation starts on: the proportions of a book
-// cover and of a photograph, which are the shapes most reached for
+// cover and of a photograph, which are the shapes most reached for.
 const DefaultPortraitRatio: AspectRatio = '2/3';
 const DefaultLandscapeRatio: AspectRatio = '3/2';
 
 // The shares a filling container can take of the space it splits
-// with the other filling containers beside it
+// with the other filling containers beside it.
 const FillRatios: readonly FillRatio[] = [1, 2, 3, 4];
 
 // The empty option of each bound, where an unset value reads as no
-// limit rather than as an inherited one
+// limit rather than as an inherited one.
 const NoMinimum = {
   label: 'designsStudio.style.height.noMinimum.label',
 } as const;
@@ -131,7 +131,7 @@ export const ContainerHeightFields: React.FC<ContainerHeightFieldsProps> = ({
   const { isEditable, getValue, setValue } = editor;
 
   // The modes on offer, which is every one but filling for a
-  // container with nothing to fill
+  // container with nothing to fill.
   const modeOptions = canFill
     ? HeightModeOptions
     : HeightModeOptions.filter((option) => option.value !== 'fill');
@@ -144,11 +144,11 @@ export const ContainerHeightFields: React.FC<ContainerHeightFieldsProps> = ({
 
   // Only a container free to take a height of its own can be sized
   // any way but by its content, so a role which sets one leaves
-  // the bounds alone
+  // the bounds alone.
   const canSize = isEditable('height');
 
   // Switching mode drops the values the other modes own, so no two
-  // of them can contradict each other
+  // of them can contradict each other.
   function handleModeChange(nextMode: HeightMode) {
     // A cap only bounds a container sized by its content
     if (nextMode !== 'auto') {
@@ -179,7 +179,7 @@ export const ContainerHeightFields: React.FC<ContainerHeightFieldsProps> = ({
       setValue('height', undefined);
 
       // Proportions open on the portrait shape, the one cards are
-      // most often given
+      // most often given.
       setValue('aspectRatio', aspectRatio ?? DefaultPortraitRatio);
 
       return;

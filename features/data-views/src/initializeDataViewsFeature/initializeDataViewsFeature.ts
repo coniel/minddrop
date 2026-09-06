@@ -19,7 +19,7 @@ const dataViewViewId = (dataViewId: string) =>
   `data-views:data-view:${dataViewId}`;
 
 // View instance id of the singleton data views list view, which is
-// labelled and iconed from its registration
+// labelled and iconed from its registration.
 const dataViewsViewId = 'data-views:data-views';
 
 // Icon shown in the new data view view's tab
@@ -37,12 +37,12 @@ export function initializeDataViewsFeature(): VoidFunction {
   I18n.registerTranslations(locales);
 
   // Listen for open data view view events, and open the data
-  // view's view when one is received
+  // view's view when one is received.
   Events.addListener(OpenDataViewViewEvent, EventListenerId, (data) => {
     const dataView = DataViews.get(data.dataViewId, false);
 
     // Open the data view's view. The feature has no tab access, so
-    // new-tab opens fall back to in place, as do dialog and panel
+    // new-tab opens fall back to in place, as do dialog and panel.
     Events.dispatch(Views.events.Open, {
       viewAreaId: data.viewAreaId,
       sourcePane: data.sourcePane,
@@ -56,7 +56,7 @@ export function initializeDataViewsFeature(): VoidFunction {
   });
 
   // Listen for open data views view events, and open the data
-  // views list view when one is received
+  // views list view when one is received.
   Events.addListener(OpenDataViewsViewEvent, EventListenerId, (data) => {
     // Open the data views list view. The feature has no tab access,
     // so new-tab opens fall back to in place, as do dialog and panel
@@ -70,10 +70,10 @@ export function initializeDataViewsFeature(): VoidFunction {
   });
 
   // Listen for open new data view view events, and open the view
-  // creation view when one is received
+  // creation view when one is received.
   Events.addListener(OpenNewDataViewViewEvent, EventListenerId, (data) => {
     // Open the view creation view. The feature has no tab access, so
-    // new-tab opens fall back to in place, as do dialog and panel
+    // new-tab opens fall back to in place, as do dialog and panel.
     Events.dispatch(Views.events.Open, {
       viewAreaId: data.viewAreaId,
       sourcePane: data.sourcePane,

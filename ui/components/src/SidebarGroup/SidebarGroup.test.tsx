@@ -84,7 +84,7 @@ describe('<SidebarGroup />', () => {
     expect(groupLabel).not.toHaveClass('menu-label-active');
 
     // Open the popover the way a menu action would, by the
-    // consumer's own state rather than an interaction
+    // consumer's own state rather than an interaction.
     rerender(
       <SidebarGroup
         stringLabel="Group"

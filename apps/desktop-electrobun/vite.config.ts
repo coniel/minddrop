@@ -10,7 +10,7 @@ const viewsDir = resolve(
 );
 
 // Exposed to the front end as import.meta.env.VITE_APP_REVISION, which
-// it logs on start up so that the running code is identifiable
+// it logs on start up so that the running code is identifiable.
 process.env.VITE_APP_REVISION = resolveRevision();
 
 export default defineConfig({
@@ -21,7 +21,7 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       // The main app and onboarding windows are separate pages sharing
-      // a single asset bundle
+      // a single asset bundle.
       input: {
         index: resolve(viewsDir, 'index.html'),
         onboarding: resolve(viewsDir, 'onboarding.html'),

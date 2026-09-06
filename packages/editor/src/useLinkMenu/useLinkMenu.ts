@@ -66,7 +66,7 @@ export function useLinkMenu(
   const [query, setQuery] = useState('');
 
   // The range the link is made from, held because the selection moves into
-  // the menu's own field once it opens
+  // the menu's own field once it opens.
   const [target, setTarget] = useState<Range | null>(null);
 
   const references = useMemo(() => {
@@ -102,7 +102,7 @@ export function useLinkMenu(
   }, [editor]);
 
   // Makes the link over the text the menu was opened for, which the editor's
-  // selection has since left
+  // selection has since left.
   const makeLink = useCallback(
     (make: () => void) => {
       if (target) {

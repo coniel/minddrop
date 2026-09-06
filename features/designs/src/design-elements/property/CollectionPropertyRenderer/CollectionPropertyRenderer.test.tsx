@@ -20,7 +20,7 @@ describe('<CollectionPropertyRenderer />', () => {
     );
 
     // The gallery default resolves its registered view type, so
-    // the placeholder notice is not shown
+    // the placeholder notice is not shown.
     expect(
       container.querySelector('.designs-collection-element'),
     ).not.toBeNull();
@@ -35,7 +35,7 @@ describe('<CollectionPropertyRenderer />', () => {
     );
 
     // Unknown selections resolve to the default variant, whose
-    // registered view type renders as usual
+    // registered view type renders as usual.
     expect(
       container.querySelector('.designs-collection-element'),
     ).not.toBeNull();

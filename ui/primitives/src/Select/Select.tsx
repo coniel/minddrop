@@ -162,7 +162,7 @@ export const Select = <TValue extends string | number = string>({
       items={options.map(({ value, label, stringLabel }) => ({
         value,
         // Translate label keys so the selected value renders the
-        // translated text
+        // translated text.
         label: stringLabel ?? (label ? t(label) : ''),
       }))}
       value={value}

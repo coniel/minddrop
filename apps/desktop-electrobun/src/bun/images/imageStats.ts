@@ -15,11 +15,11 @@ const BRIGHT_LUMINANCE = 0.7;
 const NEAR_WHITE_LUMINANCE = 0.85;
 
 // Kept outside the image cache directory so that pruning resized
-// variants can never delete the analysis index
+// variants can never delete the analysis index.
 const STATS_FILE_PATH = `${Utils.paths.appData}/MindDrop/image-stats.json`;
 
 // Delay before persisting, so that a burst of first time analyses
-// results in a single write
+// results in a single write.
 const SAVE_DEBOUNCE_MS = 1000;
 
 interface StoredImageStats extends ImageStats {
@@ -30,11 +30,11 @@ interface StoredImageStats extends ImageStats {
 }
 
 // Analyses keyed by source image path, held in memory for the
-// lifetime of the process and persisted as a single index file
+// lifetime of the process and persisted as a single index file.
 const analyses = new Map<string, StoredImageStats>();
 
 // Analyses in progress keyed by source path, so concurrent requests
-// for the same image trigger a single analysis
+// for the same image trigger a single analysis.
 const inFlight = new Map<string, Promise<ImageStats | null>>();
 
 let saveTimer: ReturnType<typeof setTimeout> | null = null;
@@ -130,7 +130,7 @@ async function loadAnalyses(): Promise<void> {
 
     // Skip anything not matching the current shape, so that an index
     // written by an older set of measurements is replaced rather than
-    // read back with missing values
+    // read back with missing values.
     Object.entries(parsed).forEach(([sourcePath, value]) => {
       if (isStoredImageStats(value)) {
         analyses.set(sourcePath, value);
@@ -150,7 +150,7 @@ async function discardStaleAnalyses(): Promise<void> {
   const sourcePaths = Array.from(analyses.keys());
 
   // A single stat answers both whether the image still exists and
-  // whether it has changed
+  // whether it has changed.
   const staleness = await Promise.all(
     sourcePaths.map(async (sourcePath) => {
       try {
@@ -196,7 +196,7 @@ async function analyzeAndStore(
   const stats = await analyzeImage(sourcePath);
 
   // Unanalysable images are not recorded, and retrying them on each
-  // request is cheap enough not to warrant it
+  // request is cheap enough not to warrant it.
   if (!stats) {
     return null;
   }
@@ -223,7 +223,7 @@ async function analyzeImage(sourcePath: string): Promise<ImageStats | null> {
     const { data, info } = await sharp(sourcePath)
       .resize(ANALYSIS_SIZE, ANALYSIS_SIZE, { fit: 'fill' })
       // Composite onto white so that transparent images are classified
-      // by their visible content rather than their transparent pixels
+      // by their visible content rather than their transparent pixels.
       .flatten({ background: '#ffffff' })
       .removeAlpha()
       .raw()
@@ -307,7 +307,7 @@ async function readDimensions(
     }
 
     // EXIF orientations of 5 and above rotate the image a quarter
-    // turn, so the stored dimensions are displayed swapped
+    // turn, so the stored dimensions are displayed swapped.
     if (orientation && orientation >= 5) {
       return { width: height, height: width };
     }
@@ -315,7 +315,7 @@ async function readDimensions(
     return { width, height };
   } catch {
     // Dimensions are supplementary, so an unreadable header still
-    // leaves the brightness measurements usable
+    // leaves the brightness measurements usable.
     return {};
   }
 }
@@ -361,7 +361,7 @@ async function saveAnalyses(): Promise<void> {
     await fsp.mkdir(`${Utils.paths.appData}/MindDrop`, { recursive: true });
 
     // Write to a temporary path first so that a crash mid-write
-    // cannot leave a truncated index
+    // cannot leave a truncated index.
     const temporaryPath = `${STATS_FILE_PATH}.tmp`;
 
     await fsp.writeFile(

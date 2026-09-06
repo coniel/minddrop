@@ -21,7 +21,7 @@ export async function writeEntryMetadata(
   const filePath = resolveEntryMetadataFilePath(databasePath, entryPath);
 
   // The metadata directory does not exist until the database's
-  // first sidecar is written
+  // first sidecar is written.
   await Fs.ensureDir(resolveDatabaseMetadataDirPath(databasePath));
 
   await Fs.writeJsonFile(filePath, metadata);

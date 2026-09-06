@@ -33,7 +33,7 @@ export function extractSnippet(text: string, terms: string[]): string {
   }
 
   // Split the full text into words, tracking each word's
-  // start position so we can find which word contains the match
+  // start position so we can find which word contains the match.
   const words: { word: string; start: number }[] = [];
   const wordPattern = /\S+/g;
   let wordMatch: RegExpExecArray | null;

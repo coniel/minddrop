@@ -13,7 +13,7 @@ const FitToNode: React.FC = () => {
 };
 
 // Renders the fitting component within a provider backed by the
-// given store
+// given store.
 const renderFit = (store: CanvasStore) =>
   render(
     <CanvasProvider store={store}>

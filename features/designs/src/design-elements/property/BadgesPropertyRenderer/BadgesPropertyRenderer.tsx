@@ -27,7 +27,7 @@ export const BadgesPropertyRenderer: React.FC<BadgesPropertyRendererProps> = ({
   const placeholder = useElementPlaceholder(element);
 
   // Split the element CSS: margins go on the wrapper, the rest
-  // styles the individual badge items
+  // styles the individual badge items.
   const { marginTop, marginRight, marginBottom, marginLeft, ...baseItemCss } =
     useElementCssStyle(element);
   const wrapperCss = { marginTop, marginRight, marginBottom, marginLeft };

@@ -70,14 +70,14 @@ export const LinkMenu: React.FC<LinkMenuProps> = ({
   const { t } = useTranslation({ keyPrefix: 'editor.linkMenu' });
 
   // Positioned against the text rather than against a trigger element, of
-  // which the menu has none
+  // which the menu has none.
   const positionerAnchor = useMemo(
     () => (anchor ? { getBoundingClientRect: () => anchor.rect } : undefined),
     [anchor],
   );
 
   // A query which is a web address is offered as one, rather than searched
-  // for among the references
+  // for among the references.
   const url = isUrl(query) ? query : null;
 
   return (

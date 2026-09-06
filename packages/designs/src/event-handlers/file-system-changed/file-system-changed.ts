@@ -26,7 +26,7 @@ export async function onFileSystemChanged(
   const { id, bundlePath } = parsed;
 
   // Only the design file and the bundle directory itself carry
-  // state held in the store
+  // state held in the store.
   if (bundlePath !== '' && bundlePath !== DesignFileName) {
     return;
   }
@@ -39,7 +39,7 @@ export async function onFileSystemChanged(
   }
 
   // A change to the bundle directory that is not a deletion says
-  // nothing about the design file
+  // nothing about the design file.
   if (bundlePath === '') {
     return;
   }

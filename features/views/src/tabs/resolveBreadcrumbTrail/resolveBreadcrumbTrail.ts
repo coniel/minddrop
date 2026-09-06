@@ -35,11 +35,11 @@ export function resolveBreadcrumbTrail(
   const ancestors: TabView[] = [];
 
   // The view each candidate ancestor is checked against, walking
-  // backwards from the pane's current view
+  // backwards from the pane's current view.
   let target = current;
 
   // Walk the history from the most recent entry backwards, collecting
-  // ancestors until the hierarchy breaks
+  // ancestors until the hierarchy breaks.
   for (let index = history.length - 1; index >= 0; index -= 1) {
     const candidate = history[index][pane];
 
@@ -67,7 +67,7 @@ export function resolveBreadcrumbTrail(
   }
 
   // Each ancestor contributes a crumb for itself, and one for the
-  // entity it showed, both navigating back to it
+  // entity it showed, both navigating back to it.
   const trail = ancestors.flatMap((ancestor, index) =>
     toCrumbs(
       ancestor,
@@ -101,7 +101,7 @@ function toCrumbs(
 
   // The view showed no entity within itself, or the entity it showed
   // is the view it led to (e.g. a selection opened in a view of its
-  // own), which the trail continues with
+  // own), which the trail continues with.
   if (!tabView.subview || showsSame(tabView.subview, ledTo)) {
     return [viewCrumb];
   }
@@ -148,7 +148,7 @@ function toViewCrumb(tabView: TabView): Breadcrumb {
  */
 function extendsTrail(source: TabView, target: TabView): boolean {
   // Views opened from outside a view area (e.g. the app sidebar) are
-  // navigated to rather than reached through the current view
+  // navigated to rather than reached through the current view.
   if (target.startsTrail) {
     return false;
   }
@@ -156,7 +156,7 @@ function extendsTrail(source: TabView, target: TabView): boolean {
   const targetLevel = breadcrumbLevel(target);
 
   // Views passed through rather than navigated to are neither trailed
-  // nor trailing
+  // nor trailing.
   if (breadcrumbLevel(source) === 'none' || targetLevel === 'none') {
     return false;
   }

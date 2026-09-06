@@ -21,7 +21,7 @@ export async function readDatabaseEntries(
   });
 
   // If the database uses entry-based storage, read the files
-  // from the entry subdirectories
+  // from the entry subdirectories.
   if (hasEntrySubdirs) {
     const entrySubdirectories = files.filter(
       (file) =>

@@ -43,7 +43,7 @@ export function handleDropOnDesignElement(
   }
 
   // If native files were dropped on an image element, handle as
-  // a placeholder image drop
+  // a placeholder image drop.
   if (
     Designs.isPropertyElement(targetElement) &&
     targetElement.propertyType === 'image' &&
@@ -82,7 +82,7 @@ export function handleDropOnDesignElement(
     }
 
     // A property element was dropped, insert a new element for its
-    // property type
+    // property type.
     if (propertyElements && propertyElements.length) {
       return insertPropertyElement(
         studio,
@@ -152,7 +152,7 @@ export function handleDropOnDesignElement(
   }
 
   // A property element was dropped, insert a new element for its
-  // property type
+  // property type.
   if (propertyElements && propertyElements.length) {
     return insertPropertyElement(
       studio,
@@ -206,13 +206,13 @@ export function handleDropOnDesignElement(
     }
 
     // Both elements share the same parent, sort the dropped element
-    // to the target index within the parent's children array
+    // to the target index within the parent's children array.
     const droppedElementIndex = parentElement.children.indexOf(
       droppedElement.id,
     );
 
     // Adjust the target index based on the relative positions
-    // of the dragged and target elements
+    // of the dragged and target elements.
     targetIndex = targetElementIndex;
 
     if (drop.position === 'after' && droppedElementIndex > targetElementIndex) {

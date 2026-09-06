@@ -28,7 +28,7 @@ export const DesignStudioScope: React.FC<DesignStudioScopeProps> = ({
   children,
 }) => {
   // Prefer the store's media directory, which the standalone
-  // layout editor points at its own owner's media
+  // layout editor points at its own owner's media.
   const storeMediaDirPath = useDesignStudioStore((state) => state.mediaDirPath);
 
   const mediaDirPath =

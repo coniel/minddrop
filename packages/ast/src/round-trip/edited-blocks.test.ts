@@ -37,7 +37,7 @@ describe('edited blocks', () => {
     );
 
     // The heading is rebuilt, and everything the user did not touch comes
-    // back exactly as it was written
+    // back exactly as it was written.
     expect(Ast.toMarkdown(edited)).toBe(
       source.replace('# Title', '# Edited title'),
     );
@@ -62,7 +62,7 @@ describe('edited blocks', () => {
     const [heading] = Ast.fromMarkdown(source);
 
     // The underline is rebuilt to match the text rather than kept at its
-    // original length, which is the one thing an edit cannot preserve
+    // original length, which is the one thing an edit cannot preserve.
     expect(Ast.toMarkdown([edit(heading)])).toBe(source);
   });
 

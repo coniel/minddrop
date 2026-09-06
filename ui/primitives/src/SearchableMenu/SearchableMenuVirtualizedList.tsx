@@ -1,5 +1,5 @@
 import React from 'react';
-import { MenuItem } from '../Menu/MenuItem';
+import { MenuItem } from '../Menu';
 import { MenuSearchRegistration } from '../Menu/MenuSearchContext';
 import { VirtualizedList } from '../VirtualizedList';
 import { NavigableListItemProps } from '../hooks/useNavigableList';

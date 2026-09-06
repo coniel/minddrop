@@ -30,7 +30,7 @@ export function stringifyElementsToMarkdown(elements: Element[]): string {
     const config = getElementTypeConfig(element.type);
 
     // Skipping the block would silently destroy the user's content, so an
-    // unknown type is a bug rather than something to swallow
+    // unknown type is a bug rather than something to swallow.
     if (!config) {
       throw new SerializationError(
         `No element type config found for '${element.type}'`,
@@ -59,7 +59,7 @@ export function stringifyElementsToMarkdown(elements: Element[]): string {
   });
 
   // Trailing whitespace is held by the last block, since there is no block
-  // after it to lead
+  // after it to lead.
   return markdown + (elements[elements.length - 1]?.spacingAfter ?? '');
 }
 
@@ -148,7 +148,7 @@ function resolveSeparator(
   );
   const shared = (element.ancestry || []).slice(0, sharedDepth);
   // The blank line belongs to the containers both blocks are inside, so it
-  // carries their continuation prefix
+  // carries their continuation prefix.
   const blankLine = resolveAncestryPrefixes(
     shared,
     shared,
@@ -179,7 +179,7 @@ function isTight(ancestry: Frame[] = [], nextAncestry: Frame[] = []): boolean {
   }
 
   // One block nests inside a container the other is not in, which only
-  // keeps them together when they are already inside a shared container
+  // keeps them together when they are already inside a shared container.
   if (!frame || !nextFrame) {
     const nested = frame || nextFrame;
 
@@ -187,7 +187,7 @@ function isTight(ancestry: Frame[] = [], nextAncestry: Frame[] = []): boolean {
   }
 
   // The blocks are in sibling containers, which are only tight when they are
-  // items of the same list
+  // items of the same list.
   return (
     frame.kind === 'list-item' &&
     nextFrame.kind === 'list-item' &&

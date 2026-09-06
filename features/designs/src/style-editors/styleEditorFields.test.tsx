@@ -106,7 +106,7 @@ describe('style editor fields', () => {
       );
 
       // The key is removed rather than stored as a sentinel, so
-      // no CSS is emitted for it
+      // no CSS is emitted for it.
       expect('fontSize' in readTextElementStyle(studio)).toBe(false);
     });
   });
@@ -143,7 +143,7 @@ describe('style editor fields', () => {
       await userEvent.click(centre);
 
       // The toggle is a radio: a selection is always active, so
-      // pressing the active option changes nothing
+      // pressing the active option changes nothing.
       expect(readTextElementStyle(studio).textAlign).toBe('center');
     });
   });
@@ -155,7 +155,7 @@ describe('style editor fields', () => {
       const { container } = renderAlignmentGrid(studio);
 
       // The top right cell of a column container, whose main axis
-      // runs down the grid and cross axis across it
+      // runs down the grid and cross axis across it.
       await userEvent.click(gridCell(container, 2));
 
       expect(readContainerStyle(studio)).toMatchObject({
@@ -183,13 +183,13 @@ describe('style editor fields', () => {
       const studio = openCardLayout();
 
       // An element aligned on the cross axis alone, as spreading
-      // its children apart and then stopping leaves it
+      // its children apart and then stopping leaves it.
       studio.updateElementStyle(element_container_1.id, 'align', 'end');
 
       const { container } = renderAlignmentGrid(studio);
 
       // Children pile up at the start of the main axis, so that is
-      // where the grid marks them
+      // where the grid marks them.
       expect(gridCell(container, 2).getAttribute('data-active')).toBe('true');
     });
 
@@ -197,7 +197,7 @@ describe('style editor fields', () => {
       const studio = openCardLayout();
 
       // Spread the children apart, which hands the main axis to
-      // the distribution
+      // the distribution.
       studio.updateElementStyle(
         element_container_1.id,
         'justify',
@@ -209,7 +209,7 @@ describe('style editor fields', () => {
       await userEvent.click(gridCell(container, 2));
 
       // The cross axis position is set, leaving the children
-      // spread apart along the main one
+      // spread apart along the main one.
       expect(readContainerStyle(studio)).toMatchObject({
         align: 'end',
         justify: 'space-between',
@@ -222,7 +222,7 @@ describe('style editor fields', () => {
       const { container } = renderAlignmentGrid(studio);
 
       // The stretch lane closes the cross axis of a column
-      // container, at the start of its main axis
+      // container, at the start of its main axis.
       await userEvent.click(gridCell(container, 3));
 
       expect(readContainerStyle(studio)).toMatchObject({
@@ -235,7 +235,7 @@ describe('style editor fields', () => {
       const studio = openCardLayout();
 
       // Lay the container's children out side by side, which runs
-      // its main axis across the grid
+      // its main axis across the grid.
       studio.updateElementStyle(element_container_1.id, 'direction', 'row');
 
       const { container } = renderAlignmentGrid(studio);
@@ -256,7 +256,7 @@ describe('style editor fields', () => {
       renderHeightFields(studio);
 
       // Give the container a floor, which is what keeps an empty
-      // card from collapsing
+      // card from collapsing.
       await userEvent.click(screen.getAllByRole('combobox')[0]);
       await userEvent.click(
         screen.getByText('designsStudio.style.size.md.label'),
@@ -348,7 +348,7 @@ describe('style editor fields', () => {
       );
 
       // The cap entered the scale at the floor rather than at the
-      // bottom of the whole scale
+      // bottom of the whole scale.
       expect(readContainerStyle(studio).maxHeight).toBe('lg');
     });
 
@@ -436,13 +436,13 @@ describe('style editor fields', () => {
       );
 
       // Open the section the size fields live in, which is closed
-      // while the root sets none of them
+      // while the root sets none of them.
       await userEvent.click(
         screen.getByText('designsStudio.style.sections.size'),
       );
 
       // A view gives the layout its width, leaving the root nothing
-      // to fill and no width of its own to take
+      // to fill and no width of its own to take.
       expect(
         screen.queryByText('designsStudio.style.height.mode.fill.label'),
       ).toBeNull();
@@ -474,7 +474,7 @@ describe('style editor fields', () => {
       renderHeightFields(studio);
 
       // A fixed container always has a height, so there is nothing
-      // below the smallest step to reach
+      // below the smallest step to reach.
       expect(
         screen.getByLabelText('designsStudio.style.height.decrease'),
       ).toBeDisabled();
@@ -512,7 +512,7 @@ describe('style editor fields', () => {
       renderVariantFields(studio);
 
       // Choose the large size option off the size axis, which the
-      // heading role lists ahead of its colour axis
+      // heading role lists ahead of its colour axis.
       await userEvent.click(screen.getAllByRole('combobox')[0]);
       await userEvent.click(screen.getByText('designs.roleVariants.lg'));
 
@@ -614,7 +614,7 @@ describe('style editor fields', () => {
       ).toBeNull();
 
       // Choosing the default cover fit clears the key instead of
-      // storing it
+      // storing it.
       await userEvent.click(
         screen.getByText('designsStudio.style.objectFit.cover.label'),
       );
@@ -626,7 +626,7 @@ describe('style editor fields', () => {
       const studio = openCardLayout();
 
       // Start from a container with a fully configured static
-      // background image
+      // background image.
       seedStaticBackgroundImage(studio);
 
       renderBackgroundImageFields(studio);
@@ -637,7 +637,7 @@ describe('style editor fields', () => {
       );
 
       // The element is no longer static and every image style key
-      // is gone
+      // is gone.
       const element = readContainerElement(studio);
 
       expect(element.static).toBe(false);
@@ -653,7 +653,7 @@ describe('style editor fields', () => {
       renderRootEditor(studio);
 
       // Open the background section, which starts collapsed while
-      // the root sets none of its keys
+      // the root sets none of its keys.
       await userEvent.click(
         screen.getByText('designsStudio.style.sections.background'),
       );
@@ -681,7 +681,7 @@ describe('style editor fields', () => {
       );
 
       // The key is removed rather than stored, since an unset
-      // background already renders as the coloured treatment
+      // background already renders as the coloured treatment.
       expect('background' in readRootStyle(studio)).toBe(false);
     });
 
@@ -691,13 +691,13 @@ describe('style editor fields', () => {
       renderRootEditor(studio);
 
       // Open the background section, which starts collapsed while
-      // the root sets none of its keys
+      // the root sets none of its keys.
       await userEvent.click(
         screen.getByText('designsStudio.style.sections.background'),
       );
 
       // Choose the transparent treatment, which opts out of the
-      // coloured default
+      // coloured default.
       await userEvent.click(
         screen.getByText(
           'designsStudio.style.rootBackground.transparent.label',
@@ -750,7 +750,7 @@ describe('style editor fields', () => {
       renderRootEditor(studio);
 
       // Open the background section, collapsed while the root
-      // sets none of its keys
+      // sets none of its keys.
       await userEvent.click(
         screen.getByText('designsStudio.style.sections.background'),
       );
@@ -796,7 +796,7 @@ describe('style editor fields', () => {
       renderRootEditor(studio);
 
       // The permanent content width section replaces the
-      // arrangement fields
+      // arrangement fields.
       screen.getByText('designsStudio.style.sections.contentWidth');
 
       // Opening the left panel section docks a panel to that side
@@ -848,7 +848,7 @@ describe('style editor fields', () => {
       );
 
       // Choosing the coloured treatment stores it, since it is not
-      // the page default
+      // the page default.
       await userEvent.click(
         screen.getByText('designsStudio.style.rootBackground.accent.label'),
       );
@@ -871,7 +871,7 @@ describe('style editor fields', () => {
       renderRootEditor(studio);
 
       // Open the effects section, which starts collapsed while the
-      // root sets none of its keys
+      // root sets none of its keys.
       await userEvent.click(
         screen.getByText('designsStudio.style.sections.backgroundBlur'),
       );
@@ -1219,7 +1219,7 @@ function readRoleVariants(
   const element = readTextElement(studio);
 
   // The role fields sit alongside the element's own, so they are
-  // read through the role element shape
+  // read through the role element shape.
   if (!Designs.isRoleElement(element)) {
     return undefined;
   }

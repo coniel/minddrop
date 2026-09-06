@@ -195,7 +195,7 @@ export const BlockMenu: React.FC<BlockMenuProps> = ({
               ref={popupRef}
               className="block-menu"
               // Focus stays in the editor so that the cursor
-              // remains visible and the query can keep being typed
+              // remains visible and the query can keep being typed.
               initialFocus={false}
               finalFocus={false}
               onMouseDown={handlePopupMouseDown}

@@ -42,11 +42,11 @@ export const Popover: React.FC<PopoverProps> = ({
 
   // Controlled popovers are opened by their consumer rather than
   // by an interaction, so the open state is tracked rather than
-  // read from the change handler
+  // read from the change handler.
   const isOpen = open ?? uncontrolledOpen;
 
   // Hold the target the popover was opened from highlighted while
-  // it is open
+  // it is open.
   React.useEffect(() => {
     if (!isOpen) {
       return;

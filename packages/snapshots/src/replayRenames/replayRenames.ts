@@ -56,7 +56,7 @@ function applyRenameEvent(
   }
 
   // Events only match addresses of their own kind exactly, since an
-  // entry and a property of the same name share the address form
+  // entry and a property of the same name share the address form.
   if (event.kind === kind && address === event.from) {
     return event.to;
   }

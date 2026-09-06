@@ -116,7 +116,7 @@ describe('<CreateWorkspaceForm />', () => {
 
     await waitFor(() => {
       // The workspace was created in the selected location, using the
-      // name and default icon
+      // name and default icon.
       expect(Workspaces.getAll()).toEqual([
         expect.objectContaining({
           name: 'Notes',

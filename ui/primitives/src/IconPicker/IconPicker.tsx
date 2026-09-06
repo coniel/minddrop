@@ -159,7 +159,7 @@ export const IconPicker: React.FC<IconPickerProps> = ({
 
     if (onSelect) {
       // Stringifying qualifies the icon with its set when it is not
-      // from the built-in set
+      // from the built-in set.
       onSelect(
         Icons.stringify({ type: UserIconType.ContentIcon, set, icon, color }),
       );
@@ -271,7 +271,7 @@ export const IconPicker: React.FC<IconPickerProps> = ({
 };
 
 // Prevent clicks inside the picker from bubbling through
-// React's portal event system to parent components
+// React's portal event system to parent components.
 function stopPropagation(event: React.MouseEvent) {
   event.stopPropagation();
 }

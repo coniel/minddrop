@@ -22,7 +22,7 @@ export const tag_3 = generateTagFixture(3, 'green');
 export const tags = [tag_1, tag_2, tag_3];
 
 // Spelled out rather than resolved, so that the fixtures pin the paths
-// down instead of agreeing with whatever the path utils produce
+// down instead of agreeing with whatever the path utils produce.
 const tagsDirPath = 'path/to/workspaces/Workspace 1/.minddrop/tags';
 
 export function getTagFiles(): (string | MockFileDescriptor)[] {

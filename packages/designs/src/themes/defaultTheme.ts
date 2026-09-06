@@ -62,7 +62,7 @@ export const DefaultDesignTheme: DesignTheme = {
     text: {
       // A single-line value (a name, an email): truncated to one
       // line by default, with no line height of its own so it adds
-      // no spacing to whatever it sits in
+      // no spacing to whatever it sits in.
       short: {
         style: { fontSize: 'base', lineHeight: 'none', truncate: 1 },
         contextStyles: {
@@ -103,7 +103,7 @@ export const DefaultDesignTheme: DesignTheme = {
         },
       },
       // A single-line input in the standard field chrome: a quiet
-      // outline, gently rounded, padded to clear the text
+      // outline, gently rounded, padded to clear the text.
       field: {
         style: {
           fontSize: 'base',
@@ -121,7 +121,7 @@ export const DefaultDesignTheme: DesignTheme = {
         },
       },
       // The same field grown to a textarea, at a reading line
-      // height for the multi-line value inside it
+      // height for the multi-line value inside it.
       'multiline-field': {
         style: {
           fontSize: 'base',
@@ -155,7 +155,7 @@ export const DefaultDesignTheme: DesignTheme = {
       },
       // The same document rendered read-only, on the same sizes
       // and line height so switching between the two does not
-      // reflow the layout
+      // reflow the layout.
       display: {
         style: { fontSize: 'base', lineHeight: 'normal' },
         contextStyles: {
@@ -166,7 +166,7 @@ export const DefaultDesignTheme: DesignTheme = {
       },
     },
     // A number reads as a single-line value, sized to the layout
-    // it is placed in
+    // it is placed in.
     number: {
       plain: {
         style: { fontSize: 'base', lineHeight: 'none' },
@@ -176,7 +176,7 @@ export const DefaultDesignTheme: DesignTheme = {
       },
     },
     // A date reads as a single-line value, sized to the layout it
-    // is placed in
+    // is placed in.
     date: {
       plain: {
         style: { fontSize: 'base', lineHeight: 'none' },
@@ -215,7 +215,7 @@ export const DefaultDesignTheme: DesignTheme = {
     },
     url: {
       // The address itself, kept to a single line: a wrapped URL
-      // reads as two
+      // reads as two.
       text: {
         style: { fontSize: 'base', lineHeight: 'none', truncate: 1 },
         contextStyles: {
@@ -237,7 +237,7 @@ export const DefaultDesignTheme: DesignTheme = {
         },
       },
       // An embedded page is placed for reading, so it takes the
-      // space left in whatever it is dropped into
+      // space left in whatever it is dropped into.
       webview: {
         style: { height: 'fill' },
       },
@@ -250,14 +250,14 @@ export const DefaultDesignTheme: DesignTheme = {
         style: { aspectRatio: '4/3', objectFit: 'cover' },
       },
       // The viewer is placed to look at, so it takes the space
-      // left in whatever it is dropped into
+      // left in whatever it is dropped into.
       viewer: {
         style: { height: 'fill' },
       },
     },
     icon: {
       // An icon sized to sit beside interface text, growing to a
-      // feature icon on the pages and spaces an entry opens in
+      // feature icon on the pages and spaces an entry opens in.
       plain: {
         style: { size: 'md' },
         contextStyles: {

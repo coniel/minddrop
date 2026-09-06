@@ -112,7 +112,7 @@ export function useCanvasConnectionDrag(
   const context = useOptionalCanvasContext();
 
   // Hold the pointer for the drag, keeping the handle's cursor
-  // over whatever content the connection is dragged across
+  // over whatever content the connection is dragged across.
   useInteractionLock(dragging ? 'crosshair' : null);
 
   // Start a connection drag when a handle is pressed
@@ -173,7 +173,7 @@ export function useCanvasConnectionDrag(
       );
 
       // Resolve the target nearest the cursor, excluding the
-      // drag's own source node
+      // drag's own source node.
       let target = getConnectionDropTarget(
         context.store.getNodes(),
         point,
@@ -200,7 +200,7 @@ export function useCanvasConnectionDrag(
   );
 
   // End the drag on mouseup, reporting the connection when
-  // dropped on a target
+  // dropped on a target.
   const handleMouseUp = useCallback(() => {
     if (!context) {
       return;
@@ -220,14 +220,14 @@ export function useCanvasConnectionDrag(
     // The drag ended off-target
     if (!drag.targetNodeId || !drag.targetSide) {
       // Releases over a node frame cancel; only releases on the
-      // empty canvas are reported
+      // empty canvas are reported.
       const overNode = Object.values(context.store.getNodes()).some((frame) =>
         pointInFrame(drag.point, frame),
       );
 
       if (!overNode && onConnectRelease) {
         // Hold the preview at the release point for the
-        // consumer's follow-up UI
+        // consumer's follow-up UI.
         if (!holdPreviewOnRelease) {
           context.store.clearConnectionDrag();
         }

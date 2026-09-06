@@ -17,7 +17,7 @@ describe('onDatabaseRenamed', () => {
     });
 
     // The ledger should contain a database rename event recording
-    // the old and new names and the database's ID
+    // the old and new names and the database's ID.
     expect(await readRenameEvents()).toEqual([
       expect.objectContaining({
         from: 'Objects',

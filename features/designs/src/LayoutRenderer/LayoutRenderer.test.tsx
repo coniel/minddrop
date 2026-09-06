@@ -14,7 +14,7 @@ describe('<LayoutRenderer />', () => {
     render(<LayoutRenderer layout={layout_card_1} />);
 
     // The fixture layout contains a static text element whose
-    // content is the layout ID
+    // content is the layout ID.
     screen.getByText(layout_card_1.id);
   });
 

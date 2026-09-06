@@ -59,7 +59,7 @@ export const DesignPropertiesPanel: React.FC<DesignPropertiesPanelProps> = ({
   );
 
   // Index the properties so the sortable list can resolve an ID
-  // back to its schema
+  // back to its schema.
   const propertyMap = useMemo(() => {
     const map = new Map<string, PropertySchema>();
 

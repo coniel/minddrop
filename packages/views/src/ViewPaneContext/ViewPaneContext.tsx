@@ -31,7 +31,7 @@ export const ViewPaneProvider: React.FC<ViewPaneProviderProps> = ({
   children,
 }) => {
   // Memoize the location so consumers do not re-render on every
-  // parent render
+  // parent render.
   const value = useMemo<ViewPaneLocation>(
     () => ({ viewAreaId, pane }),
     [viewAreaId, pane],

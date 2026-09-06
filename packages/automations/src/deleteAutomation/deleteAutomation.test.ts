@@ -33,7 +33,7 @@ describe('deleteAutomation', () => {
 
   it('removes virtual automations from the store without touching the file system', async () => {
     // Add a virtual automation to the store, along with an
-    // automation file sharing its ID which must be left in place
+    // automation file sharing its ID which must be left in place.
     AutomationsStore.set(automation_virtual_1);
     MockFs.addFiles([
       {

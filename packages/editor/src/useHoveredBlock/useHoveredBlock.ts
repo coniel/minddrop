@@ -10,7 +10,7 @@ const FALLBACK_LINE_HEIGHT = 24;
 
 // How long the pointer must stay inside the editor before blocks
 // are exposed, keeping the controls from flashing up while the
-// pointer merely passes over the editor
+// pointer merely passes over the editor.
 export const ACTIVATION_DELAY = 700;
 
 export interface HoveredBlock {
@@ -105,7 +105,7 @@ export function useHoveredBlock(
   const measuredNodeRef = useRef<HTMLElement | null>(null);
 
   // Whether the pointer was pressed on the controls, which means a
-  // drag is being started from them
+  // drag is being started from them.
   const pressedControlsRef = useRef(false);
 
   const clearHoveredBlock = useCallback(() => {
@@ -115,7 +115,7 @@ export function useHoveredBlock(
   }, []);
 
   // Begins counting down to activation, unless already active or
-  // already counting
+  // already counting.
   const startActivation = useCallback(() => {
     // Nothing to do once active or while a countdown is pending
     if (active || activationTimerRef.current !== null) {
@@ -131,7 +131,7 @@ export function useHoveredBlock(
   }, [active]);
 
   // Deactivates and stops any pending countdown, so that the next
-  // visit to the editor waits out the delay again
+  // visit to the editor waits out the delay again.
   const cancelActivation = useCallback(() => {
     // Stop a pending countdown
     if (activationTimerRef.current !== null) {
@@ -230,7 +230,7 @@ export function useHoveredBlock(
         element: block.element,
         path: block.path,
         // Offset past any top padding and border, which sit within
-        // the block's bounds above its first line of text
+        // the block's bounds above its first line of text.
         top: blockRect.top + getContentOffsetTop(blockStyle),
         left: blockRect.left,
         lineHeight: getLineHeight(blockStyle),
@@ -246,7 +246,7 @@ export function useHoveredBlock(
     ],
   );
 
-  // Stop tracking when disabled, e.g. in a read-only editor
+  // Stop tracking when disabled, e.g. in a read-only editor.
   useEffect(() => {
     const container = containerRef.current;
 
@@ -341,7 +341,7 @@ function getContentOffsetTop(style: CSSStyleDeclaration): number {
   const padding = parseFloat(style.paddingTop);
 
   // Computed values may not resolve to pixel lengths outside a
-  // real layout
+  // real layout.
   return (
     (Number.isNaN(border) ? 0 : border) + (Number.isNaN(padding) ? 0 : padding)
   );

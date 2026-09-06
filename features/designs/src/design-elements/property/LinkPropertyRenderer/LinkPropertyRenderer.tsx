@@ -24,7 +24,7 @@ export const LinkPropertyRenderer: React.FC<LinkPropertyRendererProps> = ({
   element,
 }) => {
   // The studio renders the design rather than an entry, where
-  // following a link would take the designer out of their layout
+  // following a link would take the designer out of their layout.
   const preview = useDesignPreview();
   const property = useElementProperty(element.id);
   const placeholder = useElementPlaceholder(element);
@@ -37,7 +37,7 @@ export const LinkPropertyRenderer: React.FC<LinkPropertyRendererProps> = ({
   const displayText = url ? formatUrl(url, element.format) : url;
 
   // The destination opens in the browser rather than in the app's
-  // own window, which the anchor would otherwise navigate
+  // own window, which the anchor would otherwise navigate.
   function handleClick(event: React.MouseEvent<HTMLAnchorElement>) {
     event.preventDefault();
 

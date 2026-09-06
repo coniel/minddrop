@@ -38,7 +38,7 @@ export async function deleteDatabaseEntry(id: string): Promise<void> {
   Events.dispatch(DatabaseEntryDeletedEvent, entry);
 
   // Entry-based storage keeps the entry file and its property files in a
-  // per-entry subdirectory, so trashing the subdirectory removes them all
+  // per-entry subdirectory, so trashing the subdirectory removes them all.
   if (database.propertyFileStorage === 'entry') {
     // Trash the entry's subdirectory
     await Fs.trashDir(Fs.parentDirPath(entry.path));
@@ -56,7 +56,7 @@ export async function deleteDatabaseEntry(id: string): Promise<void> {
   }
 
   // Remove the entry's metadata sidecar, which would otherwise be
-  // orphaned in the metadata directory
+  // orphaned in the metadata directory.
   const metadataFilePath = resolveEntryMetadataFilePath(
     database.path,
     entry.path,

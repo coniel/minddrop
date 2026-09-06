@@ -39,7 +39,7 @@ export const DevTools: React.FC = () => {
   });
 
   // Closed dev tools render nothing, but the shortcuts above
-  // remain active so they can be reopened
+  // remain active so they can be reopened.
   if (!open) {
     return null;
   }

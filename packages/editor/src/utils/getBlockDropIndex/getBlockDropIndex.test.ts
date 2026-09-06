@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { getBlockDropIndex } from './getBlockDropIndex';
 
 // A block occupying the area between 100px and 200px down the
-// viewport, putting its midpoint at 150px
+// viewport, putting its midpoint at 150px.
 const blockBounds = { top: 100, height: 100 };
 
 describe('getBlockDropIndex', () => {

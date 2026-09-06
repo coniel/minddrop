@@ -17,7 +17,7 @@ export function readLayoutTypeDragData(
   );
 
   // Drops carrying anything else are handled by the elements they
-  // land on, not by the canvas
+  // land on, not by the canvas.
   if (!serialized) {
     return null;
   }

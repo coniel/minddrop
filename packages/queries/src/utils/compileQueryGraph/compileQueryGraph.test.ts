@@ -48,7 +48,7 @@ const querySourceNode: QuerySourceNode = {
 };
 
 // Builds a graph running the fixture source through the given
-// collection filter configuration
+// collection filter configuration.
 function collectionFilterQuery(data: Partial<QueryCollectionFilterNode>) {
   return graphQuery(
     [sourceNode, { ...collectionFilter, ...data }, resultsNode],
@@ -210,7 +210,7 @@ describe('compileQueryGraph', () => {
     QueriesStore.load([query_1]);
 
     // The fixture query sources the object database, so its
-    // results are a subset of that database's entries
+    // results are a subset of that database's entries.
     const query = graphQuery(
       [
         {

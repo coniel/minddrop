@@ -5,7 +5,7 @@ import { QueryNodeType } from '@minddrop/queries';
 export const QueryNodeCardDataKey = 'query-node-card';
 
 // Drag data key marking the source toolbar card, which spawns a
-// source picker on drop
+// source picker on drop.
 export const QuerySourceCardDataKey = 'query-source-card';
 
 // The width of each node type's card on the canvas

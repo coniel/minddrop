@@ -151,7 +151,7 @@ describe('setDatabasePropertyFileStorage', () => {
     await setDatabasePropertyFileStorage(rootStorageDatabase.id, 'entry');
 
     // Addresses name entries by title, so wrapping their files in
-    // per-entry directories leaves the addresses untouched
+    // per-entry directories leaves the addresses untouched.
     expect(dispatched).toBe(false);
   });
 

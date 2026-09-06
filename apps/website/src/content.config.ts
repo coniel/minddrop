@@ -6,11 +6,11 @@ import { basename, extname } from 'node:path';
 import { loadEnv } from 'vite';
 
 // Read with an empty mode and prefix, so `.env` and `.env.local` are picked up
-// and every variable is visible, not just the `PUBLIC_` ones
+// and every variable is visible, not just the `PUBLIC_` ones.
 const { MINDDROP_BLOG_DIR } = loadEnv('', process.cwd(), '');
 
 // Posts live in a database directory inside a local workspace, so the site can
-// only build them on a machine which has that workspace
+// only build them on a machine which has that workspace.
 const hasBlogDirectory =
   Boolean(MINDDROP_BLOG_DIR) && existsSync(MINDDROP_BLOG_DIR);
 
@@ -29,7 +29,7 @@ const blog = defineCollection({
   loader: hasBlogDirectory
     ? glob({
         // Entries sit at the top level, `.minddrop` holds database config and
-        // templates rather than posts
+        // templates rather than posts.
         pattern: ['**/*.md', '!**/.minddrop/**'],
         base: MINDDROP_BLOG_DIR,
         generateId: ({ entry }) => slugify(basename(entry, extname(entry))),

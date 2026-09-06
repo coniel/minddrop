@@ -7,7 +7,7 @@ import { Tab, TabHistoryEntry } from './TabSetsStore';
  */
 export function toHistoryEntry(tab: Tab): TabHistoryEntry {
   // Capture the panes, split ratio and transient state, leaving out
-  // the tab's identity
+  // the tab's identity.
   return {
     main: tab.main,
     split: tab.split,

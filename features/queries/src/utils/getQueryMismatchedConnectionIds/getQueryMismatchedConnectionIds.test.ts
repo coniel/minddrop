@@ -74,7 +74,7 @@ describe('getQueryMismatchedConnectionIds', () => {
     const mismatched = getQueryMismatchedConnectionIds(query);
 
     // The trail up to the invalid filter is flagged, the
-    // connection out of it is not
+    // connection out of it is not.
     expect(mismatched).toEqual(
       new Set([
         `${sourceNode.id}--${matchingFilter.id}`,
@@ -85,7 +85,7 @@ describe('getQueryMismatchedConnectionIds', () => {
 
   it('leaves parallel matching branches unflagged', () => {
     // A second source whose database contains the filter's
-    // property, connected into the same filter
+    // property, connected into the same filter.
     const urlSource: QueryNode = {
       id: 'query-node_source-url',
       type: 'source',
@@ -101,7 +101,7 @@ describe('getQueryMismatchedConnectionIds', () => {
     };
 
     // Both branches merge into a filter matching only the URL
-    // database's property
+    // database's property.
     const query = graphQuery(
       [sourceNode, urlSource, urlFilter, resultsNode],
       [
@@ -120,7 +120,7 @@ describe('getQueryMismatchedConnectionIds', () => {
   it('flags only the mismatched branch of a merge before the filter', () => {
     // A second source whose database contains the filter's
     // property, and an unconfigured filter merging both sources
-    // ahead of the URL filter
+    // ahead of the URL filter.
     const urlSource: QueryNode = {
       id: 'query-node_source-url',
       type: 'source',
@@ -143,7 +143,7 @@ describe('getQueryMismatchedConnectionIds', () => {
     };
 
     // Both sources merge into a filter, which feeds the filter
-    // matching only the URL database's property
+    // matching only the URL database's property.
     const query = graphQuery(
       [sourceNode, urlSource, mergeFilter, urlFilter, resultsNode],
       [
@@ -157,7 +157,7 @@ describe('getQueryMismatchedConnectionIds', () => {
     const mismatched = getQueryMismatchedConnectionIds(query);
 
     // The merged connection and the object database branch are
-    // flagged, the URL branch is not
+    // flagged, the URL branch is not.
     expect(mismatched).toEqual(
       new Set([
         `${mergeFilter.id}--${urlFilter.id}`,

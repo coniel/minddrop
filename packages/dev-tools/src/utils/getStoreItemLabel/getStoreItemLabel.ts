@@ -1,7 +1,7 @@
 import { getStoreItemId } from '../getStoreItemId';
 
 // Fields holding an item's display name, in the order they are
-// looked for
+// looked for.
 const LabelFields = ['name', 'title', 'label'];
 
 /**

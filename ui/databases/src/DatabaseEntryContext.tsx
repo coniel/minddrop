@@ -71,7 +71,7 @@ export const DatabaseEntryContextProvider: React.FC<
   const parentContext = useDatabaseEntryContext();
 
   // Override the provided values, inheriting the rest from the
-  // parent context
+  // parent context.
   const value = useMemo(
     () => ({
       draggable: draggable ?? parentContext.draggable,

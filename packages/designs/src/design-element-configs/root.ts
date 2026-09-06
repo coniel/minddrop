@@ -35,7 +35,7 @@ export const RootElementConfig: DesignElementConfig<RootElement> = {
   compatiblePropertyTypes: ['image'],
   supportsStaticContent: false,
   // The layout root holds children rather than a value of its
-  // own, so it is never hidden for being empty
+  // own, so it is never hidden for being empty.
   emptyBehavior: 'none',
   template: {
     type: 'root',

@@ -75,7 +75,7 @@ export function withSourceInvalidation(editor: Editor): Editor {
     });
 
     // Applied after the invalidation above, which is what leaves the block
-    // ending the document without any spacing to hold
+    // ending the document without any spacing to hold.
     if (resequences) {
       applyTrailingSpacing(editor, trailingSpacing);
     }
@@ -117,13 +117,13 @@ function applyTrailingSpacing(
   }
 
   // The block ending the document already carries the right spacing, which
-  // is the case whenever the operation left the last block in place
+  // is the case whenever the operation left the last block in place.
   if (last.spacingAfter === spacing) {
     return;
   }
 
   // A document which ended on a block the editor created has no trailing
-  // whitespace to hand on
+  // whitespace to hand on.
   if (spacing === undefined) {
     Transforms.unsetNodes(editor, 'spacingAfter', { at: [index] });
 
@@ -155,7 +155,7 @@ function resolveTouchedBlockIndexes(
 
   // A block's containers are written as line prefixes, which are
   // composed from its ancestry rather than taken from its source, so
-  // moving a block between containers leaves its source describing it
+  // moving a block between containers leaves its source describing it.
   if (isAncestryChange(operation)) {
     return [];
   }
@@ -201,13 +201,13 @@ function resolveResequencedBlockIndexes(
   const indexes = new Set<number>();
 
   // A split puts a new block directly after the one it split, while the
-  // other half carries the original spacing on to the block after it
+  // other half carries the original spacing on to the block after it.
   if (operation.type === 'split_node') {
     indexes.add(index);
   }
 
   // Adding a block, removing one, or merging one away all change what
-  // follows the block before it
+  // follows the block before it.
   if (
     operation.type === 'insert_node' ||
     operation.type === 'remove_node' ||
@@ -218,7 +218,7 @@ function resolveResequencedBlockIndexes(
 
   // A move reorders both ends, and the moved block is now followed by a
   // different block itself, so the whole neighbourhood of the move is
-  // cleared rather than worked out position by position
+  // cleared rather than worked out position by position.
   if (operation.type === 'move_node' && operation.newPath.length === 1) {
     indexes.add(index - 1);
     indexes.add(index);

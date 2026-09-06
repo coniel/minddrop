@@ -159,7 +159,7 @@ export function withTitle(editor: Editor): Editor {
         contentBlock.type !== 'paragraph';
 
       // Delegate non default blocks so the wrapped block reset
-      // behaviour resets them to a paragraph instead
+      // behaviour resets them to a paragraph instead.
       if (unit === 'character' && isNonDefaultBlock) {
         deleteBackward(unit);
 

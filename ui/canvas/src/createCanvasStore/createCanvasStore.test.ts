@@ -41,7 +41,7 @@ describe('createCanvasStore', () => {
 
       // The canvas point under the focal point before the zoom
       // ((400 - 100) / 1, (300 - 50) / 1) must map back to the
-      // same viewport point after: 400 - 300 * 2 = -200
+      // same viewport point after: 400 - 300 * 2 = -200.
       expect(store.getPan()).toEqual({ x: -200, y: -200 });
     });
   });
@@ -401,7 +401,7 @@ describe('createCanvasStore', () => {
       const selection = store.getSelection();
 
       // An identical update keeps the same state object, avoiding
-      // subscriber churn on every frame of a lasso drag
+      // subscriber churn on every frame of a lasso drag.
       store.selectNodes(['node-2', 'node-1']);
 
       expect(store.getSelection()).toBe(selection);
@@ -727,7 +727,7 @@ describe('createCanvasStore', () => {
       const handle = store.getHoveredConnectionHandle();
 
       // An identical update keeps the same state object, avoiding
-      // subscriber churn on every cursor move
+      // subscriber churn on every cursor move.
       store.setHoveredConnectionHandle({ nodeId: 'node-1', side: 'right' });
 
       expect(store.getHoveredConnectionHandle()).toBe(handle);

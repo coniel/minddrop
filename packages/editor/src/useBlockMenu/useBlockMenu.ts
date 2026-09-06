@@ -154,7 +154,7 @@ export function useBlockMenu(editor: Editor): UseBlockMenu {
     }
 
     // An inline entry goes into the block the cursor is in rather than
-    // becoming a block of its own
+    // becoming a block of its own.
     if (isInlineElement(menuItem.type)) {
       insertInlineElement(editor, menuItem.type, menuItem.data);
 

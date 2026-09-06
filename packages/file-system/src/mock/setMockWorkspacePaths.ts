@@ -1,7 +1,7 @@
 import { Paths } from '@minddrop/utils';
 
 // The path the mock file system's workspace is rooted at, matching the
-// workspace the workspaces fixtures describe
+// workspace the workspaces fixtures describe.
 export const MockWorkspacePath = 'path/to/workspaces/Workspace 1';
 
 /**

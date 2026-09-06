@@ -36,7 +36,7 @@ export function setupDesignFixtures(
   }
 
   // Load the data view types the collection element's variants
-  // derive from
+  // derive from.
   DataViewTypes.Store.load(dataViewTypes);
 }
 

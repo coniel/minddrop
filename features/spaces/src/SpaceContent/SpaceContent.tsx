@@ -16,7 +16,7 @@ export interface SpaceContentProps {
  */
 export const SpaceContent: React.FC<SpaceContentProps> = ({ space }) => {
   // The space's design from the designs store, falling back to the
-  // persisted copy while the store hydrates
+  // persisted copy while the store hydrates.
   const design = Designs.use(space.design.id);
   const layout = design?.layouts[0] ?? space.design.layouts[0];
 
@@ -25,7 +25,7 @@ export const SpaceContent: React.FC<SpaceContentProps> = ({ space }) => {
   }
 
   // Persist an element's content into the space's design, so a
-  // data view created from read mode is kept
+  // data view created from read mode is kept.
   function handleUpdateElementContent(elementId: string, content: string) {
     Designs.update(space.design.id, {
       layouts: [Spaces.setLayoutElementContent(layout, elementId, content)],

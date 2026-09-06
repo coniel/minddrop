@@ -41,7 +41,7 @@ describe('moveEntryMetadataFile', () => {
 
   it('moves the sidecar when the entry moves into its own subdirectory', async () => {
     // Entry-based property storage nests the entry in a directory
-    // named after it
+    // named after it.
     const nestedEntryPath = `${objectDatabase.path}/Renamed/Renamed.md`;
 
     await writeEntryMetadata(objectDatabase.path, oldEntryPath, metadata);

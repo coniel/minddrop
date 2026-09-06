@@ -15,7 +15,7 @@ const item1: ListItemFrame = {
 };
 
 // Creates an editor with the plugin applied, with the cursor in its only
-// block, ready for a shortcut to be typed
+// block, ready for a shortcut to be typed.
 function createEditorWithShortcuts(content: Element[]): Editor {
   const editor = withBlockShortcuts(createTestEditor(content), [
     ...EditorElementConfigs,

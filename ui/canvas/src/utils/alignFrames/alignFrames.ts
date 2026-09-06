@@ -41,7 +41,7 @@ export function alignFrames(
     };
 
     // Frames already on the alignment stay as they are, so the
-    // caller has nothing to write for them
+    // caller has nothing to write for them.
     if (moved.x === frame.x && moved.y === frame.y) {
       return;
     }

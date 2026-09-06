@@ -65,7 +65,7 @@ export const DatabasePropertiesEditor: React.FC<
   }, [databaseConfig]);
 
   // Handle sort by mapping the new order to storage order
-  // and updating the database
+  // and updating the database.
   const handleSort = useCallback(
     (newOrder: string[]) => {
       if (!databaseConfig) {

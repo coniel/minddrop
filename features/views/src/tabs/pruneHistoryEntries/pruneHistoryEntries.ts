@@ -40,7 +40,7 @@ export function pruneHistoryEntries(
     }
 
     // Collapse the entry into the previous one when pruning left them
-    // showing the same views
+    // showing the same views.
     const previousEntry = pruned[pruned.length - 1];
 
     if (previousEntry && sameEntryViews(previousEntry, nextEntry)) {

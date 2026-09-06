@@ -40,7 +40,7 @@ export const markdownEntrySerializer: DatabaseEntrySerializer = {
     }
 
     // Add the non-formatted text properties as frontmatter, merging into the
-    // entry's existing frontmatter so unmodelled keys and formatting survive
+    // entry's existing frontmatter so unmodelled keys and formatting survive.
     return Markdown.setProperties(
       schema,
       nonFormattedTextProperties,

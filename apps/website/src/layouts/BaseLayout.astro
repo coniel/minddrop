@@ -43,7 +43,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 
     <script is:inline>
       // Apply a stored theme choice before the first paint, otherwise the page
-      // renders in the system theme and then flips
+      // renders in the system theme and then flips.
       try {
         const stored = localStorage.getItem('theme');
 
@@ -284,7 +284,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
         const platform = getPlatform();
 
         // An unrecognised or mobile platform keeps the generic label and the
-        // full list of builds, since there is none to single out
+        // full list of builds, since there is none to single out.
         if (!platform) {
           return;
         }
