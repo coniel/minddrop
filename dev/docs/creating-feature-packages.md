@@ -8,7 +8,7 @@ Feature packages live in `features/<name>/`. Below is the standard boilerplate.
 features/<name>/
 ├── package.json
 ├── tsconfig.json
-├── eslint.config.js
+├── eslint.config.mjs
 ├── vitest.config.ts
 └── src/
     └── index.ts
@@ -49,7 +49,7 @@ Add `dependencies` as needed using `"workspace:*"` for internal packages.
 }
 ```
 
-## eslint.config.js
+## eslint.config.mjs
 
 ```js
 import { config } from '@minddrop/eslint-config/react-internal';
