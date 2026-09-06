@@ -7,7 +7,7 @@ export interface TextPropertySchema extends PropertySchemaBase {
 
 export const TextPropertySchema: PropertySchemaTemplate<TextPropertySchema> = {
   type: 'text',
-  icon: 'content-icon:text:default',
+  icon: 'content-icon:text-align-start:default',
   name: 'properties.text.name',
   description: 'properties.text.description',
 };

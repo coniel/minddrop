@@ -5,7 +5,7 @@ export interface IconPropertySchema extends PropertySchemaBase {
 }
 export const IconPropertySchema: PropertySchemaTemplate<IconPropertySchema> = {
   type: 'icon',
-  icon: 'content-icon:smile:default',
+  icon: 'content-icon:face-slightly-smiling:default',
   name: 'properties.icon.name',
   description: 'properties.icon.description',
 };

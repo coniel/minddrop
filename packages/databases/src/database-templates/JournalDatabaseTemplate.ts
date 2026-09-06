@@ -30,7 +30,7 @@ export const JournalDatabaseTemplate: DatabaseTemplateFn = (t) => {
       {
         type: 'select',
         name: t(propertyKey('mood', 'name')),
-        icon: 'content-icon:smile:default',
+        icon: 'content-icon:face-slightly-smiling:default',
         options: [
           { value: t(moodKey('great')), color: 'green' },
           { value: t(moodKey('good')), color: 'blue' },

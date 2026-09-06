@@ -43,7 +43,7 @@ export const WeblinksDatabaseTemplate: DatabaseTemplateFn = (t) => {
       },
       {
         type: 'image',
-        icon: 'content-icon:smile:default',
+        icon: 'content-icon:face-slightly-smiling:default',
         name: t(propertyKey('icon', 'name')),
       },
       {

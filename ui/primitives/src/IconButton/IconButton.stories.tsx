@@ -200,7 +200,7 @@ export const IconButtonStories = () => (
         <StoryItem label="neutral">
           <IconButton color="neutral" stringLabel="home">
             <ContentIcon
-              icon="content-icon:home:default"
+              icon="content-icon:house:default"
               color="current-color"
             />
           </IconButton>
@@ -208,7 +208,7 @@ export const IconButtonStories = () => (
         <StoryItem label="muted">
           <IconButton color="muted" stringLabel="home">
             <ContentIcon
-              icon="content-icon:home:default"
+              icon="content-icon:house:default"
               color="current-color"
             />
           </IconButton>
@@ -216,7 +216,7 @@ export const IconButtonStories = () => (
         <StoryItem label="primary">
           <IconButton color="primary" stringLabel="home">
             <ContentIcon
-              icon="content-icon:home:default"
+              icon="content-icon:house:default"
               color="current-color"
             />
           </IconButton>
@@ -224,7 +224,7 @@ export const IconButtonStories = () => (
         <StoryItem label="danger">
           <IconButton color="danger" stringLabel="home">
             <ContentIcon
-              icon="content-icon:home:default"
+              icon="content-icon:house:default"
               color="current-color"
             />
           </IconButton>
@@ -239,7 +239,7 @@ export const IconButtonStories = () => (
           >
             <IconButton color="contrast" stringLabel="home">
               <ContentIcon
-                icon="content-icon:home:default"
+                icon="content-icon:house:default"
                 color="current-color"
               />
             </IconButton>
@@ -249,7 +249,7 @@ export const IconButtonStories = () => (
           <div style={{ color: 'var(--text-primary)' }}>
             <IconButton color="inherit" stringLabel="home">
               <ContentIcon
-                icon="content-icon:home:default"
+                icon="content-icon:house:default"
                 color="current-color"
               />
             </IconButton>
@@ -265,57 +265,57 @@ export const IconButtonStories = () => (
       <StoryRow>
         <StoryItem label="default">
           <IconButton stringLabel="home">
-            <ContentIcon icon="content-icon:home:default" color="default" />
+            <ContentIcon icon="content-icon:house:default" color="default" />
           </IconButton>
         </StoryItem>
         <StoryItem label="blue">
           <IconButton stringLabel="home">
-            <ContentIcon icon="content-icon:home:blue" color="blue" />
+            <ContentIcon icon="content-icon:house:blue" color="blue" />
           </IconButton>
         </StoryItem>
         <StoryItem label="cyan">
           <IconButton stringLabel="home">
-            <ContentIcon icon="content-icon:home:cyan" color="cyan" />
+            <ContentIcon icon="content-icon:house:cyan" color="cyan" />
           </IconButton>
         </StoryItem>
         <StoryItem label="red">
           <IconButton stringLabel="home">
-            <ContentIcon icon="content-icon:home:red" color="red" />
+            <ContentIcon icon="content-icon:house:red" color="red" />
           </IconButton>
         </StoryItem>
         <StoryItem label="pink">
           <IconButton stringLabel="home">
-            <ContentIcon icon="content-icon:home:pink" color="pink" />
+            <ContentIcon icon="content-icon:house:pink" color="pink" />
           </IconButton>
         </StoryItem>
         <StoryItem label="purple">
           <IconButton stringLabel="home">
-            <ContentIcon icon="content-icon:home:purple" color="purple" />
+            <ContentIcon icon="content-icon:house:purple" color="purple" />
           </IconButton>
         </StoryItem>
         <StoryItem label="green">
           <IconButton stringLabel="home">
-            <ContentIcon icon="content-icon:home:green" color="green" />
+            <ContentIcon icon="content-icon:house:green" color="green" />
           </IconButton>
         </StoryItem>
         <StoryItem label="orange">
           <IconButton stringLabel="home">
-            <ContentIcon icon="content-icon:home:orange" color="orange" />
+            <ContentIcon icon="content-icon:house:orange" color="orange" />
           </IconButton>
         </StoryItem>
         <StoryItem label="yellow">
           <IconButton stringLabel="home">
-            <ContentIcon icon="content-icon:home:yellow" color="yellow" />
+            <ContentIcon icon="content-icon:house:yellow" color="yellow" />
           </IconButton>
         </StoryItem>
         <StoryItem label="brown">
           <IconButton stringLabel="home">
-            <ContentIcon icon="content-icon:home:brown" color="brown" />
+            <ContentIcon icon="content-icon:house:brown" color="brown" />
           </IconButton>
         </StoryItem>
         <StoryItem label="gray">
           <IconButton stringLabel="home">
-            <ContentIcon icon="content-icon:home:gray" color="gray" />
+            <ContentIcon icon="content-icon:house:gray" color="gray" />
           </IconButton>
         </StoryItem>
       </StoryRow>

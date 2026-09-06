@@ -25,7 +25,7 @@ export const VocabularyDatabaseTemplate: DatabaseTemplateFn = (t) => {
       {
         type: 'text',
         name: t(propertyKey('definition', 'name')),
-        icon: 'content-icon:text:default',
+        icon: 'content-icon:text-align-start:default',
       },
       {
         type: 'text',

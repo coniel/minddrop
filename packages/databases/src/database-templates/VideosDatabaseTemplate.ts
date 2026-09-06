@@ -20,7 +20,7 @@ export const VideosDatabaseTemplate: DatabaseTemplateFn = (t) => {
       {
         type: 'file',
         name: t(propertyKey('file', 'name')),
-        icon: 'content-icon:file-video:default',
+        icon: 'content-icon:file-play:default',
       },
       {
         type: 'image',
@@ -30,7 +30,7 @@ export const VideosDatabaseTemplate: DatabaseTemplateFn = (t) => {
       {
         type: 'text',
         name: t(propertyKey('description', 'name')),
-        icon: 'content-icon:text:default',
+        icon: 'content-icon:text-align-start:default',
       },
       {
         type: 'number',

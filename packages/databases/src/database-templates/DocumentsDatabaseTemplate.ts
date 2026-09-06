@@ -30,7 +30,7 @@ export const DocumentsDatabaseTemplate: DatabaseTemplateFn = (t) => {
       {
         type: 'text',
         name: t(propertyKey('description', 'name')),
-        icon: 'content-icon:text:default',
+        icon: 'content-icon:text-align-start:default',
       },
       {
         type: 'select',

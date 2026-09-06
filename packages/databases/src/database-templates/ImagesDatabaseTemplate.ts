@@ -25,7 +25,7 @@ export const ImagesDatabaseTemplate: DatabaseTemplateFn = (t) => {
       {
         type: 'text',
         name: t(propertyKey('caption', 'name')),
-        icon: 'content-icon:text:default',
+        icon: 'content-icon:text-align-start:default',
       },
       {
         type: 'date',
