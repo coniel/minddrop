@@ -12,10 +12,7 @@ import {
 import { Events } from '@minddrop/events';
 import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
 import { initializeI18n } from '@minddrop/i18n';
-import {
-  registerItemReferenceAdapter,
-  unregisterItemReferenceAdapter,
-} from '@minddrop/item-references';
+import { ItemReferences } from '@minddrop/item-references';
 import {
   cleanupWorkspaceFixtures,
   setupWorkspaceFixtures,
@@ -52,12 +49,12 @@ export function setup(options?: SetupDatabaseFixturesOptions) {
 
   // Register the item reference adapters registered at runtime
   // by initializeDatabases
-  registerItemReferenceAdapter({
+  ItemReferences.registerAdapter({
     type: 'database-entry',
     serialize: serializeDatabaseEntryReference,
     match: matchDatabaseEntryReference,
   });
-  registerItemReferenceAdapter({
+  ItemReferences.registerAdapter({
     type: 'database',
     serialize: serializeDatabaseReference,
     match: matchDatabaseReference,
@@ -87,8 +84,8 @@ export async function cleanup() {
   Collections.Store.clear();
 
   // Unregister the item reference adapters
-  unregisterItemReferenceAdapter('database-entry');
-  unregisterItemReferenceAdapter('database');
+  ItemReferences.unregisterAdapter('database-entry');
+  ItemReferences.unregisterAdapter('database');
 
   // Clear the recorded content captures
   clearContentCaptureRegistry();

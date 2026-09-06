@@ -1,6 +1,6 @@
 import { Events } from '@minddrop/events';
-import { ItemAddressesChangedEvent } from '@minddrop/item-references';
 import { Fs } from '@minddrop/file-system';
+import { ItemReferences } from '@minddrop/item-references';
 import { Workspaces } from '@minddrop/workspaces';
 import { DataViewsStore } from '../DataViewsStore';
 import { onFileSystemChanged, onItemAddressesChanged } from '../event-handlers';
@@ -50,7 +50,7 @@ export async function initializeDataViews(): Promise<void> {
   );
 
   // Rewrite view files when referenced item addresses change
-  Events.on(ItemAddressesChangedEvent, 'data-views', (data) =>
+  Events.on(ItemReferences.events.AddressesChanged, 'data-views', (data) =>
     onItemAddressesChanged(data),
   );
 

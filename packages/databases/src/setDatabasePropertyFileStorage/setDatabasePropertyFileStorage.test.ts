@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
-import { ItemAddressesChangedEvent } from '@minddrop/item-references';
+import { ItemReferences } from '@minddrop/item-references';
 import { InvalidParameterError } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabaseUpdatedEvent } from '../events';
@@ -144,7 +144,7 @@ describe('setDatabasePropertyFileStorage', () => {
   it('does not dispatch address changes when crossing the entry boundary', async () => {
     let dispatched = false;
 
-    Events.addListener(ItemAddressesChangedEvent, 'test', () => {
+    Events.addListener(ItemReferences.events.AddressesChanged, 'test', () => {
       dispatched = true;
     });
 

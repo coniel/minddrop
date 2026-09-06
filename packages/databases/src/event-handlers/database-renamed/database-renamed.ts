@@ -1,6 +1,6 @@
 import { Collections } from '@minddrop/collections';
 import { Events } from '@minddrop/events';
-import { ItemAddressesChangedEvent } from '@minddrop/item-references';
+import { ItemReferences } from '@minddrop/item-references';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabaseRenamedEventData } from '../../events';
 import { getAllDatabaseEntries } from '../../getAllDatabaseEntries';
@@ -80,7 +80,7 @@ export async function onRenameDatabase(
   // Dispatch the renamed entries' address changes
   if (renamedEntries.length > 0) {
     Events.dispatch(
-      ItemAddressesChangedEvent,
+      ItemReferences.events.AddressesChanged,
       renamedEntries.map((entry) => ({
         id: entry.id,
         oldReference: databaseEntryAddress(entry, original),

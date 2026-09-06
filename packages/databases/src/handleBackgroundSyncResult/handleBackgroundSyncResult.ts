@@ -1,10 +1,7 @@
 import { DataViews } from '@minddrop/data-views';
 import { Designs } from '@minddrop/designs-next';
 import { Events } from '@minddrop/events';
-import {
-  ItemAddressChange,
-  ItemAddressesChangedEvent,
-} from '@minddrop/item-references';
+import { ItemAddressChange, ItemReferences } from '@minddrop/item-references';
 import { restoreDates } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabaseEntryTemplatesStore } from '../DatabaseEntryTemplatesStore';
@@ -120,7 +117,7 @@ export async function handleBackgroundSyncResult(
 
   // Dispatch the moved entries' address changes
   if (addressChanges.length > 0) {
-    Events.dispatch(ItemAddressesChangedEvent, addressChanges);
+    Events.dispatch(ItemReferences.events.AddressesChanged, addressChanges);
   }
 
   // Dispatch a single event with the full changeset

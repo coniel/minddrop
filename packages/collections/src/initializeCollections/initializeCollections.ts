@@ -1,10 +1,7 @@
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { I18n } from '@minddrop/i18n';
-import {
-  ItemAddressesChangedEvent,
-  resolveItemReferences,
-} from '@minddrop/item-references';
+import { ItemReferences } from '@minddrop/item-references';
 import { restoreDates } from '@minddrop/utils';
 import { CollectionsStore } from '../CollectionsStore';
 import { onItemAddressesChanged } from '../event-handlers';
@@ -46,14 +43,14 @@ export async function initializeCollections(): Promise<void> {
   // references back into item IDs
   const collections = rawCollections.map((collection) => ({
     ...restoreDates<Collection>(collection),
-    items: resolveItemReferences(collection.items),
+    items: ItemReferences.resolve(collection.items),
   }));
 
   // Load the collections into the store
   CollectionsStore.load(collections);
 
   // Rewrite collection files when member item addresses change
-  Events.on(ItemAddressesChangedEvent, 'collections', (data) =>
+  Events.on(ItemReferences.events.AddressesChanged, 'collections', (data) =>
     onItemAddressesChanged(data),
   );
 

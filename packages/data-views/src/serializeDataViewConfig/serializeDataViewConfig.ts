@@ -1,4 +1,4 @@
-import { serializeItemReference } from '@minddrop/item-references';
+import { ItemReferences } from '@minddrop/item-references';
 import { getDataViewType } from '../getDataViewType';
 import { DataViewConfig } from '../types';
 
@@ -23,5 +23,5 @@ export function serializeDataViewConfig(
     return config;
   }
 
-  return viewType.serializeReferences(config, serializeItemReference);
+  return viewType.serializeReferences(config, ItemReferences.serializeOne);
 }

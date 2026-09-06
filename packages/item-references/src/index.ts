@@ -1,10 +1,3 @@
+export type * from './types';
+export type * from './events';
 export * as ItemReferences from './ItemReferences';
-export * from './registerItemReferenceAdapter';
-export * from './unregisterItemReferenceAdapter';
-export * from './matchItemReference';
-export * from './serializeItemReference';
-export * from './serializeItemReferences';
-export * from './resolveItemReference';
-export * from './resolveItemReferences';
-export * from './events';
-export * from './types';

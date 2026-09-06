@@ -1,7 +1,7 @@
 import { Collections } from '@minddrop/collections';
 import { Events } from '@minddrop/events';
 import { History } from '@minddrop/history';
-import { ItemAddressesChangedEvent } from '@minddrop/item-references';
+import { ItemReferences } from '@minddrop/item-references';
 import {
   contentCaptureKey,
   moveContentCapture,
@@ -81,7 +81,7 @@ export async function onRenameEntry(data: DatabaseEntryRenamedEventData) {
   );
 
   // Dispatch the entry's address change
-  Events.dispatch(ItemAddressesChangedEvent, [
+  Events.dispatch(ItemReferences.events.AddressesChanged, [
     {
       id: updated.id,
       oldReference: databaseEntryAddress(original, database),

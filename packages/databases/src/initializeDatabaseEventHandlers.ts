@@ -10,9 +10,8 @@ import {
 } from '@minddrop/designs-next';
 import { Collections } from '@minddrop/collections';
 import { Events } from '@minddrop/events';
-import { ItemAddressesChangedEvent } from '@minddrop/item-references';
-import {
 import { Fs } from '@minddrop/file-system';
+import { ItemReferences } from '@minddrop/item-references';
 import { TagGroups, Tags } from '@minddrop/tags';
 import {
   onAddProperty,
@@ -85,9 +84,9 @@ export function initializeDatabaseEventHandlers() {
     [DatabaseEntriesClearedEvent]: onClearEntries,
     [DatabaseEntryRenamedEvent]: onRenameEntry,
     [DatabaseEntryMetadataUpdatedEvent]: onUpdateEntryMetadata,
-    [ItemAddressesChangedEvent]: onItemAddressesChanged,
     [DataViewUpdatedEvent]: onUpdateVirtualView,
     [Collections.events.Updated]: onUpdateCollection,
+    [ItemReferences.events.AddressesChanged]: onItemAddressesChanged,
     [Tags.events.Renamed]: onTagRenamed,
     [Tags.events.Deleted]: onTagDeleted,
     [TagGroups.events.Deleted]: onTagGroupDeleted,

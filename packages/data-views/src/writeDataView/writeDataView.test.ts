@@ -1,8 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import {
-  registerItemReferenceAdapter,
-  unregisterItemReferenceAdapter,
-} from '@minddrop/item-references';
+import { ItemReferences } from '@minddrop/item-references';
 import { InvalidParameterError } from '@minddrop/utils';
 import { DataViewsStore } from '../DataViewsStore';
 import {
@@ -51,7 +48,7 @@ describe('writeDataView', () => {
 
   it('serializes item references and strips the references index', async () => {
     // Register an adapter converting entry IDs to addresses
-    registerItemReferenceAdapter({
+    ItemReferences.registerAdapter({
       type: 'database-entry',
       serialize: (id) => `address:${id}`,
       match: () => null,
@@ -71,7 +68,7 @@ describe('writeDataView', () => {
     // The references index is not persisted
     expect('references' in written).toBe(false);
 
-    unregisterItemReferenceAdapter('database-entry');
+    ItemReferences.unregisterAdapter('database-entry');
   });
 
   it('throws when writing a virtual view', async () => {

@@ -1,4 +1,4 @@
-import { registerItemReferenceAdapter } from '@minddrop/item-references';
+import { ItemReferences } from '@minddrop/item-references';
 import { restoreDates } from '@minddrop/utils';
 import { Workspaces } from '@minddrop/workspaces';
 import { getDatabaseBackendAdapter } from '../DatabaseBackendAdapter';
@@ -61,14 +61,14 @@ export async function initializeDatabases(): Promise<{
   initializeDatabaseEntries(databases, entries);
 
   // Register the item reference adapter for entry addresses
-  registerItemReferenceAdapter({
+  ItemReferences.registerAdapter({
     type: 'database-entry',
     serialize: serializeDatabaseEntryReference,
     match: matchDatabaseEntryReference,
   });
 
   // Register the item reference adapter for database addresses
-  registerItemReferenceAdapter({
+  ItemReferences.registerAdapter({
     type: 'database',
     serialize: serializeDatabaseReference,
     match: matchDatabaseReference,

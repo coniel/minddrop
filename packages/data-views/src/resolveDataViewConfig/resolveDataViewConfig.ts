@@ -1,4 +1,4 @@
-import { resolveItemReference } from '@minddrop/item-references';
+import { ItemReferences } from '@minddrop/item-references';
 import { getDataViewType } from '../getDataViewType';
 import { DataViewConfig } from '../types';
 
@@ -23,5 +23,5 @@ export function resolveDataViewConfig(
     return config;
   }
 
-  return viewType.resolveReferences(config, resolveItemReference);
+  return viewType.resolveReferences(config, ItemReferences.resolveOne);
 }

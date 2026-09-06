@@ -1,8 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import {
-  registerItemReferenceAdapter,
-  unregisterItemReferenceAdapter,
-} from '@minddrop/item-references';
+import { ItemReferences } from '@minddrop/item-references';
 import {
   cleanup,
   dataViewType_gallery,
@@ -17,7 +14,7 @@ describe('serializeDataViewConfig', () => {
 
     // Register an adapter converting entry IDs to addresses,
     // dropping the 'missing' entry
-    registerItemReferenceAdapter({
+    ItemReferences.registerAdapter({
       type: 'database-entry',
       serialize: (id) =>
         id === 'database-entry_missing' ? null : `address:${id}`,
@@ -27,7 +24,7 @@ describe('serializeDataViewConfig', () => {
 
   afterEach(() => {
     cleanup();
-    unregisterItemReferenceAdapter('database-entry');
+    ItemReferences.unregisterAdapter('database-entry');
   });
 
   it("serializes references through the view type's hook", () => {

@@ -3,8 +3,8 @@ import { DataViews } from '@minddrop/data-views';
 import { DataViewFixtures } from '@minddrop/data-views/test-utils';
 import { Events } from '@minddrop/events';
 import {
-  ItemAddressesChangedEvent,
   ItemAddressesChangedEventData,
+  ItemReferences,
 } from '@minddrop/item-references';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import {
@@ -43,9 +43,13 @@ describe('handleBackgroundSyncResult', () => {
 
     let dispatched: ItemAddressesChangedEventData | undefined;
 
-    Events.addListener(ItemAddressesChangedEvent, 'test', (payload) => {
-      dispatched = payload;
-    });
+    Events.addListener(
+      ItemReferences.events.AddressesChanged,
+      'test',
+      (payload) => {
+        dispatched = payload;
+      },
+    );
 
     // The synced record carries the entry's new title and path
     const record = convertEntryToSqlRecord(renamed, collectionDatabase);
@@ -71,9 +75,13 @@ describe('handleBackgroundSyncResult', () => {
   it('dispatches address changes for entries moved to another database', async () => {
     let dispatched: ItemAddressesChangedEventData | undefined;
 
-    Events.addListener(ItemAddressesChangedEvent, 'test', (payload) => {
-      dispatched = payload;
-    });
+    Events.addListener(
+      ItemReferences.events.AddressesChanged,
+      'test',
+      (payload) => {
+        dispatched = payload;
+      },
+    );
 
     // The synced record places the entry in another database
     const record = convertEntryToSqlRecord(
@@ -103,7 +111,7 @@ describe('handleBackgroundSyncResult', () => {
   it('does not dispatch address changes for entries that moved without being renamed', async () => {
     let dispatched = false;
 
-    Events.addListener(ItemAddressesChangedEvent, 'test', () => {
+    Events.addListener(ItemReferences.events.AddressesChanged, 'test', () => {
       dispatched = true;
     });
 
@@ -128,7 +136,7 @@ describe('handleBackgroundSyncResult', () => {
   it('does not dispatch address changes for unchanged entries', async () => {
     let dispatched = false;
 
-    Events.addListener(ItemAddressesChangedEvent, 'test', () => {
+    Events.addListener(ItemReferences.events.AddressesChanged, 'test', () => {
       dispatched = true;
     });
 

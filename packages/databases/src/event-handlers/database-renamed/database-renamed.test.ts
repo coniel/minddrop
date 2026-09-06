@@ -3,7 +3,7 @@ import { Collections } from '@minddrop/collections';
 import { DataViews } from '@minddrop/data-views';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { Events } from '@minddrop/events';
-import { ItemAddressesChangedEvent } from '@minddrop/item-references';
+import { ItemReferences } from '@minddrop/item-references';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabasesStore } from '../../DatabasesStore';
 import {
@@ -57,7 +57,7 @@ describe('onRenameDatabase', () => {
 
     // Register the reference rewrite listener normally wired by
     // initializeDatabaseEventHandlers
-    Events.on(ItemAddressesChangedEvent, 'test', (data) =>
+    Events.on(ItemReferences.events.AddressesChanged, 'test', (data) =>
       onItemAddressesChanged(data),
     );
 

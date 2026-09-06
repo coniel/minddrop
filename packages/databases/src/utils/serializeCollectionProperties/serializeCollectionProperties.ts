@@ -1,4 +1,4 @@
-import { serializeItemReferences } from '@minddrop/item-references';
+import { ItemReferences } from '@minddrop/item-references';
 import { PropertyMap } from '@minddrop/properties';
 import { Database } from '../../types';
 
@@ -30,7 +30,7 @@ export function serializeCollectionProperties(
       return;
     }
 
-    converted[property.name] = serializeItemReferences(value);
+    converted[property.name] = ItemReferences.serialize(value);
   });
 
   return converted;

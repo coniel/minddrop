@@ -1,3 +1,11 @@
+import { ItemAddressesChangedEvent } from './events';
+
+// Const-asserted so the names keep their literal types, which key
+// the event data registry
+export const events = {
+  AddressesChanged: ItemAddressesChangedEvent,
+} as const;
+
 export { registerItemReferenceAdapter as registerAdapter } from './registerItemReferenceAdapter';
 export { unregisterItemReferenceAdapter as unregisterAdapter } from './unregisterItemReferenceAdapter';
 export { matchItemReference as match } from './matchItemReference';

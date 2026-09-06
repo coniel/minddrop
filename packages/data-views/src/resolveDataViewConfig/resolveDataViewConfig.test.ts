@@ -1,8 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import {
-  registerItemReferenceAdapter,
-  unregisterItemReferenceAdapter,
-} from '@minddrop/item-references';
+import { ItemReferences } from '@minddrop/item-references';
 import {
   cleanup,
   dataViewType_gallery,
@@ -16,7 +13,7 @@ describe('resolveDataViewConfig', () => {
     setup({});
 
     // Register an adapter claiming 'address:' references
-    registerItemReferenceAdapter({
+    ItemReferences.registerAdapter({
       type: 'database-entry',
       serialize: (id) => id,
       match: (reference) =>
@@ -28,7 +25,7 @@ describe('resolveDataViewConfig', () => {
 
   afterEach(() => {
     cleanup();
-    unregisterItemReferenceAdapter('database-entry');
+    ItemReferences.unregisterAdapter('database-entry');
   });
 
   it("resolves references through the view type's hook", () => {

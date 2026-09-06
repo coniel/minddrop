@@ -1,8 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import {
-  registerItemReferenceAdapter,
-  unregisterItemReferenceAdapter,
-} from '@minddrop/item-references';
+import { ItemReferences } from '@minddrop/item-references';
 import {
   MockFs,
   cleanup,
@@ -32,7 +29,7 @@ describe('loadDataView', () => {
 
   it('resolves item references and indexes them', async () => {
     // Register an adapter claiming 'address:' references
-    registerItemReferenceAdapter({
+    ItemReferences.registerAdapter({
       type: 'database-entry',
       serialize: (id) => id,
       match: (reference) =>
@@ -62,6 +59,6 @@ describe('loadDataView', () => {
     expect(view?.data).toEqual({ items: ['database-entry_one'] });
     expect(view?.references).toEqual(['database-entry_one']);
 
-    unregisterItemReferenceAdapter('database-entry');
+    ItemReferences.unregisterAdapter('database-entry');
   });
 });

@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { registerItemReferenceAdapter } from '@minddrop/item-references';
+import { ItemReferences } from '@minddrop/item-references';
 import {
   MockFs,
   cleanup,
@@ -20,7 +20,7 @@ describe('onItemAddressesChanged', () => {
     setup();
 
     // Register an adapter serializing IDs to observable addresses
-    registerItemReferenceAdapter({
+    ItemReferences.registerAdapter({
       type: 'database-entry',
       serialize: (id) => `address:${id}`,
       match: () => null,
