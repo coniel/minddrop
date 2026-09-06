@@ -1,5 +1,5 @@
 import { Databases } from '@minddrop/databases';
-import { Events, OpenConfirmationDialogEvent } from '@minddrop/events';
+import { Events } from '@minddrop/events';
 import { PropertyEditor } from '@minddrop/feature-properties';
 import { TranslationKey, createI18nKeyBuilder } from '@minddrop/i18n';
 import { PropertySchema } from '@minddrop/properties';
@@ -89,7 +89,7 @@ export const DatabasePropertyEditor: React.FC<DatabasePropertyEditorProps> = ({
     return new Promise<boolean>((resolve) => {
       if (updatedProperty.name !== property.name) {
         const i18nRoot = 'properties.actions.rename.confirmation';
-        Events.dispatch(OpenConfirmationDialogEvent, {
+        Events.dispatch(Events.events.OpenConfirmationDialog, {
           title: `${i18nRoot}.title`,
           message: `${i18nRoot}.message`,
           confirmLabel: `${i18nRoot}.confirm`,
@@ -131,7 +131,7 @@ export const DatabasePropertyEditor: React.FC<DatabasePropertyEditorProps> = ({
   function handleDelete(propertyToDelete: PropertySchema) {
     const i18nRoot = 'properties.actions.delete.confirmation';
 
-    Events.dispatch(OpenConfirmationDialogEvent, {
+    Events.dispatch(Events.events.OpenConfirmationDialog, {
       title: `${i18nRoot}.title`,
       message: `${i18nRoot}.message`,
       confirmLabel: `${i18nRoot}.confirm`,

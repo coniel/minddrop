@@ -3,5 +3,3 @@ export * from './EventListener.types';
 export * from './EventLogEntry.types';
 export * from './EventListenerCallback.types';
 export * from './EventListenerCallbackMap.types';
-export * from './EventListenerMap.types';
-export * from './EventsApi.types';

@@ -4,7 +4,7 @@ import {
   Databases,
   StoredDatabaseEntryTemplate,
 } from '@minddrop/databases';
-import { Events, OpenConfirmationDialogEvent } from '@minddrop/events';
+import { Events } from '@minddrop/events';
 import { TranslationKey } from '@minddrop/i18n';
 import { Properties, PropertyMap, PropertyValue } from '@minddrop/properties';
 import {
@@ -270,7 +270,7 @@ export const DatabaseEntryTemplateEditor: React.FC<
       : `${i18nRoot}.message`;
 
     // Confirm the deletion before removing the template
-    Events.dispatch(OpenConfirmationDialogEvent, {
+    Events.dispatch(Events.events.OpenConfirmationDialog, {
       title: `${i18nRoot}.title`,
       message,
       confirmLabel: `${i18nRoot}.confirm`,

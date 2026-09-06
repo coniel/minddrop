@@ -1,53 +1,54 @@
-import { clearEventLog } from '../EventLogsStore';
+import { awaitPendingDispatches } from '../PendingDispatchesStore';
+import { cleanupEvents } from '../cleanupEvents';
 import {
-  awaitPendingDispatches,
-  hasPendingDispatches,
-} from '../PendingDispatchesStore';
-import { addEventListener } from '../addEventListener';
-import { addEventListenerAfter } from '../addEventListenerAfter';
-import { addEventListenerBefore } from '../addEventListenerBefore';
-import { addEventListeners } from '../addEventListeners';
-import { dispatchEvent } from '../dispatchEvent';
-import { hasEventListener } from '../hasEventListener';
-import { prependEventListener } from '../prependEventListener';
-import { removeEventListener } from '../removeEventListener';
-import { EventListenerMap, EventsApi } from '../types';
-import { useEventLogEntries } from '../useEventLogEntries';
+  AppErrorEvent,
+  CloseAppSidebarEvent,
+  CloseRightPanelEvent,
+  NavToolbarBackEvent,
+  OpenAppSidebarEvent,
+  OpenConfirmationDialogEvent,
+  OpenReferenceEvent,
+  OpenRightPanelEvent,
+  SetNavToolbarBackActionEvent,
+  SetNavToolbarWidthEvent,
+  ToggleWindowFillEvent,
+} from '../core-events';
+import { EventListenerNotRegisteredError } from '../errors';
 
-let eventListeners: EventListenerMap = {};
+// Const-asserted so the names keep their literal types, which key
+// the event data registry
+export const events = {
+  OpenRightPanel: OpenRightPanelEvent,
+  CloseRightPanel: CloseRightPanelEvent,
+  OpenConfirmationDialog: OpenConfirmationDialogEvent,
+  OpenAppSidebar: OpenAppSidebarEvent,
+  CloseAppSidebar: CloseAppSidebarEvent,
+  SetNavToolbarWidth: SetNavToolbarWidthEvent,
+  SetNavToolbarBackAction: SetNavToolbarBackActionEvent,
+  NavToolbarBack: NavToolbarBackEvent,
+  ToggleWindowFill: ToggleWindowFillEvent,
+  AppError: AppErrorEvent,
+  OpenReference: OpenReferenceEvent,
+} as const;
 
-export const Events: EventsApi = {
-  listeners: eventListeners,
-  addListener: (...args) => addEventListener(eventListeners, ...args),
-  on: (...args) => addEventListener(eventListeners, ...args),
-  addListeners: (...args) => addEventListeners(eventListeners, ...args),
-  prependListener: (...args) => prependEventListener(eventListeners, ...args),
-  dispatch: (...args) => dispatchEvent(eventListeners, ...args),
-  addListenerBefore: (...args) =>
-    addEventListenerBefore(eventListeners, ...args),
-  addListenerAfter: (...args) => addEventListenerAfter(eventListeners, ...args),
-  removeListener: (...args) => removeEventListener(eventListeners, ...args),
-  hasListener: (...args) => hasEventListener(eventListeners, ...args),
-  useLogs: useEventLogEntries,
-  tests: {
-    awaitAllListeners: awaitPendingDispatches,
-    cleanup: () => {
-      // Clear the listeners and the event log
-      const clear = () => {
-        eventListeners = {};
-        clearEventLog();
-      };
-
-      // Clear synchronously when nothing is in flight, so callers
-      // which do not await still start their next test clean
-      if (!hasPendingDispatches()) {
-        clear();
-
-        return Promise.resolve();
-      }
-
-      // Let the in-flight listeners settle before clearing
-      return awaitPendingDispatches().then(clear);
-    },
-  },
+export const errors = {
+  ListenerNotRegistered: EventListenerNotRegisteredError,
 };
+
+/**
+ * Test-only helpers.
+ */
+export const tests = {
+  awaitAllListeners: awaitPendingDispatches,
+  cleanup: cleanupEvents,
+};
+
+export {
+  addEventListener as addListener,
+  addEventListener as on,
+} from '../addEventListener';
+export { addEventListeners as addListeners } from '../addEventListeners';
+export { dispatchEvent as dispatch } from '../dispatchEvent';
+export { hasEventListener as hasListener } from '../hasEventListener';
+export { removeEventListener as removeListener } from '../removeEventListener';
+export { useEventLogEntries as useLogs } from '../useEventLogEntries';

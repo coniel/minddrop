@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { Events, OpenConfirmationDialogEvent } from '@minddrop/events';
+import { Events } from '@minddrop/events';
 import { TagGroups, Tags } from '@minddrop/tags';
 import { TagFixtures, TagGroupFixtures } from '@minddrop/tags/test-utils';
 import {
@@ -54,9 +54,13 @@ describe('<TagsView />', () => {
     const user = userEvent.setup();
 
     // Confirm the deletion as soon as the confirmation is requested
-    Events.addListener(OpenConfirmationDialogEvent, 'test-confirm', (data) => {
-      data.onConfirm();
-    });
+    Events.addListener(
+      Events.events.OpenConfirmationDialog,
+      'test-confirm',
+      (data) => {
+        data.onConfirm();
+      },
+    );
 
     // Open the tag's context menu and click the delete action
     fireEvent.contextMenu(screen.getByText(tag_1.name));

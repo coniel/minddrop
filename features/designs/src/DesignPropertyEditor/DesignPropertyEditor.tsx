@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Events, OpenConfirmationDialogEvent } from '@minddrop/events';
+import { Events } from '@minddrop/events';
 import { PropertyEditorBase } from '@minddrop/feature-properties';
 import { TranslationKey, createI18nKeyBuilder } from '@minddrop/i18n';
 import { PropertySchema, PropertyType } from '@minddrop/properties';
@@ -148,7 +148,7 @@ export const DesignPropertyEditor: React.FC<DesignPropertyEditorProps> = ({
   function handleDelete(propertyToDelete: PropertySchema) {
     const i18nRoot = 'designs.properties.actions.delete.confirmation';
 
-    Events.dispatch(OpenConfirmationDialogEvent, {
+    Events.dispatch(Events.events.OpenConfirmationDialog, {
       title: `${i18nRoot}.title`,
       message: `${i18nRoot}.message`,
       confirmLabel: `${i18nRoot}.confirm`,

@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DatabaseUpdatedEvent } from '@minddrop/databases';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
-import { Events, OpenConfirmationDialogEvent } from '@minddrop/events';
 import { TextPropertySchema } from '@minddrop/properties';
+import { Events } from '@minddrop/events';
 import {
   emojiIconString,
   fillForm,
@@ -95,10 +95,14 @@ describe('<DatabasePropertyEditor />', () => {
       it('confirms before renaming the property', () =>
         new Promise<void>((done) => {
           // Listen for the confirmation dialog event
-          Events.addListener(OpenConfirmationDialogEvent, 'test', (data) => {
-            // Confirm the rename action
-            data.onConfirm();
-          });
+          Events.addListener(
+            Events.events.OpenConfirmationDialog,
+            'test',
+            (data) => {
+              // Confirm the rename action
+              data.onConfirm();
+            },
+          );
 
           // TODO: Assert the property was renamed once renaming is implemented
           Events.addListener(DatabaseUpdatedEvent, 'test', () => {
@@ -112,7 +116,7 @@ describe('<DatabasePropertyEditor />', () => {
         new Promise<void>((done) => {
           // Listen for the confirmation dialog event
           Events.addListener(
-            OpenConfirmationDialogEvent,
+            Events.events.OpenConfirmationDialog,
             'test',
             async (data) => {
               // Confirm the rename action
@@ -132,11 +136,14 @@ describe('<DatabasePropertyEditor />', () => {
       it('does nothing on cancel', () =>
         new Promise<void>((done) => {
           // Listen for the confirmation dialog event
-          Events.addListener(OpenConfirmationDialogEvent, 'test', (data) => {
-            // Cancel the rename action
-            data.onCancel!();
-            // Form should be still open
-            expect(screen.getByText('actions.save')).toBeVisible();
+          Events.addListener(
+            Events.events.OpenConfirmationDialog,
+            'test',
+            (data) => {
+              // Cancel the rename action
+              data.onCancel!();
+              // Form should be still open
+              expect(screen.getByText('actions.save')).toBeVisible();
 
             done();
           });
@@ -166,10 +173,14 @@ describe('<DatabasePropertyEditor />', () => {
       it('confirms before deleting the property', () =>
         new Promise<void>((done) => {
           // Listen for the confirmation dialog event
-          Events.addListener(OpenConfirmationDialogEvent, 'test', (data) => {
-            // Confirm the delete action
-            data.onConfirm();
-          });
+          Events.addListener(
+            Events.events.OpenConfirmationDialog,
+            'test',
+            (data) => {
+              // Confirm the delete action
+              data.onConfirm();
+            },
+          );
 
           // Listen for database updates and verify the property was deleted
           Events.addListener(DatabaseUpdatedEvent, 'test', (data) => {

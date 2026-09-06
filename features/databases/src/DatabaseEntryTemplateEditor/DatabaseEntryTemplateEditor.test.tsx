@@ -6,7 +6,7 @@ import {
   Databases,
 } from '@minddrop/databases';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
-import { Events, OpenConfirmationDialogEvent } from '@minddrop/events';
+import { Events } from '@minddrop/events';
 import {
   fillForm,
   render,
@@ -182,26 +182,34 @@ describe('<DatabaseEntryTemplateEditor />', () => {
 
       it('mentions stored files when the template has some', () =>
         new Promise<void>((done) => {
-          Events.addListener(OpenConfirmationDialogEvent, 'test', (data) => {
-            // entryTemplate1 has an image value, so a file is stored
-            expect(data.message).toBe(
-              'databases.entryTemplates.actions.delete.confirmation.messageWithFiles',
-            );
-            done();
-          });
+          Events.addListener(
+            Events.events.OpenConfirmationDialog,
+            'test',
+            (data) => {
+              // entryTemplate1 has an image value, so a file is stored
+              expect(data.message).toBe(
+                'databases.entryTemplates.actions.delete.confirmation.messageWithFiles',
+              );
+              done();
+            },
+          );
 
           clickDeleteTemplate();
         }));
 
       it('omits stored files when the template has none', () =>
         new Promise<void>((done) => {
-          Events.addListener(OpenConfirmationDialogEvent, 'test', (data) => {
-            // entryTemplate2 has no property values, so no files
-            expect(data.message).toBe(
-              'databases.entryTemplates.actions.delete.confirmation.message',
-            );
-            done();
-          });
+          Events.addListener(
+            Events.events.OpenConfirmationDialog,
+            'test',
+            (data) => {
+              // entryTemplate2 has no property values, so no files
+              expect(data.message).toBe(
+                'databases.entryTemplates.actions.delete.confirmation.message',
+              );
+              done();
+            },
+          );
 
           clickDeleteTemplate(entryTemplate2);
         }));
@@ -209,10 +217,14 @@ describe('<DatabaseEntryTemplateEditor />', () => {
       it('confirms before deleting the template', () =>
         new Promise<void>((done) => {
           // Listen for the confirmation dialog event
-          Events.addListener(OpenConfirmationDialogEvent, 'test', (data) => {
-            // Confirm the delete action
-            data.onConfirm();
-          });
+          Events.addListener(
+            Events.events.OpenConfirmationDialog,
+            'test',
+            (data) => {
+              // Confirm the delete action
+              data.onConfirm();
+            },
+          );
 
           // Listen for template removals and verify the template
           Events.addListener(

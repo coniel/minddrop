@@ -1,6 +1,7 @@
+import { getEventListeners } from '../EventListenersStore';
 import { appendEventLogEntry, removeEventLogEntry } from '../EventLogsStore';
 import { trackPendingDispatch } from '../PendingDispatchesStore';
-import { EventListener, EventListenerMap } from '../types';
+import { EventData, EventListener, EventName } from '../types';
 
 // How long a listener may run before the dispatch is considered
 // settled for event log purposes. A timed out listener keeps
@@ -20,14 +21,12 @@ const LISTENER_TIMEOUT_MS = 10000;
  * A listener which throws or rejects is reported to the console
  * and does not affect the other listeners or the dispatching code.
  *
- * @param eventListeners - Event listeners map.
  * @param eventName - The name of the event.
  * @param data - The data associated with the event.
  */
-export function dispatchEvent(
-  eventListeners: EventListenerMap,
-  eventName: string,
-  data?: unknown,
+export function dispatchEvent<TEvent extends EventName>(
+  eventName: TEvent,
+  data?: EventData<TEvent>,
 ): void {
   // Log the event before anything else, so no side effect can
   // land ahead of its entry
@@ -37,13 +36,8 @@ export function dispatchEvent(
   const settled: Promise<void>[] = [];
 
   function queueListeners(listenerEventName: string): void {
-    // Skip events with no registered listeners
-    if (!eventListeners[listenerEventName]) {
-      return;
-    }
-
     // Freeze the listener list at dispatch time
-    for (const listener of [...eventListeners[listenerEventName].listeners]) {
+    for (const listener of [...getEventListeners(listenerEventName)]) {
       settled.push(runListener(listener, eventName, data));
     }
   }

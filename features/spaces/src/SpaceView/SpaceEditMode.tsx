@@ -1,11 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Designs } from '@minddrop/designs';
-import {
-  CloseAppSidebarEvent,
-  Events,
-  OpenAppSidebarEvent,
-  SetNavToolbarWidthEvent,
-} from '@minddrop/events';
+import { Events } from '@minddrop/events';
 import {
   DesignStudioProvider,
   DesignStudioScope,
@@ -96,12 +91,14 @@ const SpaceEditSession: React.FC<SpaceEditSessionProps> = ({ space }) => {
 
   // Swap the app sidebar for the edit panels
   useEffect(() => {
-    Events.dispatch(CloseAppSidebarEvent);
-    Events.dispatch(SetNavToolbarWidthEvent, { width: EDIT_PANEL_WIDTH });
+    Events.dispatch(Events.events.CloseAppSidebar);
+    Events.dispatch(Events.events.SetNavToolbarWidth, {
+      width: EDIT_PANEL_WIDTH,
+    });
 
     return () => {
-      Events.dispatch(OpenAppSidebarEvent);
-      Events.dispatch(SetNavToolbarWidthEvent, { width: 0 });
+      Events.dispatch(Events.events.OpenAppSidebar);
+      Events.dispatch(Events.events.SetNavToolbarWidth, { width: 0 });
     };
   }, []);
 

@@ -1,13 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Design, DesignId, Designs } from '@minddrop/designs';
-import {
-  CloseAppSidebarEvent,
-  Events,
-  NavToolbarBackEvent,
-  OpenAppSidebarEvent,
-  SetNavToolbarBackActionEvent,
-  SetNavToolbarWidthEvent,
-} from '@minddrop/events';
+import { Events } from '@minddrop/events';
 import { useTranslation } from '@minddrop/i18n';
 import { CanvasProvider } from '@minddrop/ui-canvas';
 import { isEditableTarget, useDeleteKey } from '@minddrop/utils';
@@ -61,10 +54,10 @@ export const DesignStudio: React.FC<DesignStudioViewProps> = ({
 
   // Close the app sidebar while the design studio is open
   useEffect(() => {
-    Events.dispatch(CloseAppSidebarEvent);
+    Events.dispatch(Events.events.CloseAppSidebar);
 
     return () => {
-      Events.dispatch(OpenAppSidebarEvent);
+      Events.dispatch(Events.events.OpenAppSidebar);
     };
   }, []);
 
@@ -150,7 +143,7 @@ const DesignStudioSession: React.FC<DesignStudioSessionProps> = ({
   // Match the nav toolbar to the left panel, which is only shown
   // while a design is open
   useEffect(() => {
-    Events.dispatch(SetNavToolbarWidthEvent, {
+    Events.dispatch(Events.events.SetNavToolbarWidth, {
       width: isDesignOpen ? LEFT_PANEL_WIDTH : 0,
     });
   }, [isDesignOpen]);
@@ -243,14 +236,18 @@ const DesignStudioSession: React.FC<DesignStudioSessionProps> = ({
 
     // Register the back action on the nav toolbar and listen for
     // its presses
-    Events.dispatch(SetNavToolbarBackActionEvent, {
+    Events.dispatch(Events.events.SetNavToolbarBackAction, {
       label: 'designsStudio.backToDesigns',
     });
-    Events.addListener(NavToolbarBackEvent, 'design-studio', handleCloseDesign);
+    Events.addListener(
+      Events.events.NavToolbarBack,
+      'design-studio',
+      handleCloseDesign,
+    );
 
     return () => {
-      Events.dispatch(SetNavToolbarBackActionEvent, null);
-      Events.removeListener(NavToolbarBackEvent, 'design-studio');
+      Events.dispatch(Events.events.SetNavToolbarBackAction, null);
+      Events.removeListener(Events.events.NavToolbarBack, 'design-studio');
     };
   }, [hasOpenDesign, handleCloseDesign]);
 

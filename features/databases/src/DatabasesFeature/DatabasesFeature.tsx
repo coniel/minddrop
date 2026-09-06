@@ -8,7 +8,7 @@ import {
   DatabaseUpdatedEvent,
   Databases,
 } from '@minddrop/databases';
-import { Events, OpenReferenceEvent } from '@minddrop/events';
+import { Events } from '@minddrop/events';
 import { Tabs } from '@minddrop/feature-views';
 import {
   CloseViewEvent,
@@ -240,7 +240,7 @@ export const DatabasesFeature: React.FC = () => {
     // at large, so those naming no entry belong to something else and are
     // left alone.
     Events.addListener(
-      OpenReferenceEvent,
+      Events.events.OpenReference,
       DatabaseEntriesEventListenerId,
       (data) => {
         const entry = DatabaseEntries.findByReference(data.reference);
@@ -266,12 +266,14 @@ export const DatabasesFeature: React.FC = () => {
         CloseDatabaseEntryDialogEvent,
         DatabaseEntriesEventListenerId,
       );
-      Events.removeListener(OpenReferenceEvent, DatabaseEntriesEventListenerId);
       Events.removeListener(DatabaseUpdatedEvent, EventListenerId);
       Events.removeListener(DatabaseRenamedEvent, EventListenerId);
       Events.removeListener(DatabaseDeletedEvent, EventListenerId);
       Events.removeListener(
         DatabaseDeletedEvent,
+        Events.events.OpenReference,
+        DatabaseEntriesEventListenerId,
+      );
         DatabaseEntriesEventListenerId,
       );
       Events.removeListener(

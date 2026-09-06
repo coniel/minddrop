@@ -1,4 +1,4 @@
-import { AppErrorEvent, Events } from '@minddrop/events';
+import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { Paths } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
@@ -136,7 +136,7 @@ export async function setDatabaseEntrySerializer(
     });
 
     // Notify the UI of the failed conversion
-    Events.dispatch(AppErrorEvent, {
+    Events.dispatch(Events.events.AppError, {
       title: 'databases.settings.entrySerializer.error.title',
       message: 'databases.settings.entrySerializer.error.message',
       error,

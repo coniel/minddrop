@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { Events } from './Events';
+import * as Events from './Events';
 
 // A test event registered in the event data registry below
 const TestRegisteredEvent = 'test:registered';

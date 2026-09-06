@@ -5,7 +5,7 @@ import {
   DefaultDatabaseIcon,
   PropertyFileStorage,
 } from '@minddrop/databases';
-import { Events, OpenConfirmationDialogEvent } from '@minddrop/events';
+import { Events } from '@minddrop/events';
 import {
   TranslationKey,
   createI18nKeyBuilder,
@@ -177,7 +177,7 @@ export const DatabaseSettingsPanel: React.FC<DatabaseSettingsPanelProps> = ({
     );
 
     // Open a confirmation dialog for the destructive delete action
-    Events.dispatch(OpenConfirmationDialogEvent, {
+    Events.dispatch(Events.events.OpenConfirmationDialog, {
       title: i18nKey('title'),
       message: i18nKey('message'),
       confirmLabel: i18nKey('confirm'),
@@ -196,7 +196,7 @@ export const DatabaseSettingsPanel: React.FC<DatabaseSettingsPanelProps> = ({
     );
 
     // Open a confirmation dialog for the destructive clear action
-    Events.dispatch(OpenConfirmationDialogEvent, {
+    Events.dispatch(Events.events.OpenConfirmationDialog, {
       title: i18nKey('title'),
       message: i18nKey('message'),
       confirmLabel: i18nKey('confirm'),

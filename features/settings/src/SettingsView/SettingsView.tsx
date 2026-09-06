@@ -1,12 +1,5 @@
 import { useEffect } from 'react';
-import {
-  CloseAppSidebarEvent,
-  Events,
-  NavToolbarBackEvent,
-  OpenAppSidebarEvent,
-  SetNavToolbarBackActionEvent,
-  SetNavToolbarWidthEvent,
-} from '@minddrop/events';
+import { Events } from '@minddrop/events';
 import { SettingsViews } from '@minddrop/settings';
 import {
   Group,
@@ -34,11 +27,11 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ view }) => {
 
   // Swap the app sidebar for the settings sidebar
   useEffect(() => {
-    Events.dispatch(CloseAppSidebarEvent);
+    Events.dispatch(Events.events.CloseAppSidebar);
 
     return () => {
-      Events.dispatch(OpenAppSidebarEvent);
-      Events.dispatch(SetNavToolbarWidthEvent, { width: 0 });
+      Events.dispatch(Events.events.OpenAppSidebar);
+      Events.dispatch(Events.events.SetNavToolbarWidth, { width: 0 });
     };
   }, []);
 
@@ -47,12 +40,18 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ view }) => {
   useEffect(() => {
     // Register the back action on the nav toolbar and listen for
     // its presses
-    Events.dispatch(SetNavToolbarBackActionEvent, { label: 'settings.back' });
-    Events.addListener(NavToolbarBackEvent, 'settings-view', handleExit);
+    Events.dispatch(Events.events.SetNavToolbarBackAction, {
+      label: 'settings.back',
+    });
+    Events.addListener(
+      Events.events.NavToolbarBack,
+      'settings-view',
+      handleExit,
+    );
 
     return () => {
-      Events.dispatch(SetNavToolbarBackActionEvent, null);
-      Events.removeListener(NavToolbarBackEvent, 'settings-view');
+      Events.dispatch(Events.events.SetNavToolbarBackAction, null);
+      Events.removeListener(Events.events.NavToolbarBack, 'settings-view');
     };
   }, []);
 

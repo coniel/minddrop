@@ -1,4 +1,4 @@
-import { Events, OpenConfirmationDialogEvent } from '@minddrop/events';
+import { Events } from '@minddrop/events';
 import { TagGroup, TagGroups } from '@minddrop/tags';
 import { MenuContents } from '@minddrop/ui-primitives';
 
@@ -55,7 +55,7 @@ export function buildTagGroupMenu(
  * ungrouped, deleting it on confirm.
  */
 function confirmDeleteTagGroup(group: TagGroup) {
-  Events.dispatch(OpenConfirmationDialogEvent, {
+  Events.dispatch(Events.events.OpenConfirmationDialog, {
     title: 'tags.actions.deleteGroup.confirmation.title',
     message: 'tags.actions.deleteGroup.confirmation.message',
     confirmLabel: 'tags.actions.deleteGroup.confirmation.confirm',

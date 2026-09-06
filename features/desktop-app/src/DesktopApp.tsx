@@ -1,15 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import {
-  AppErrorEvent,
   AppErrorEventData,
-  CloseAppSidebarEvent,
-  CloseRightPanelEvent,
   Events,
-  OpenAppSidebarEvent,
-  OpenConfirmationDialogEvent,
   OpenConfirmationDialogEventData,
-  OpenRightPanelEvent,
-  ToggleWindowFillEvent,
 } from '@minddrop/events';
 import { DatabasesFeature } from '@minddrop/feature-databases';
 import { DevTools, ScreenshotPicker } from '@minddrop/feature-dev-tools';
@@ -40,17 +33,17 @@ export const DesktopApp: React.FC = () => {
   const [showSidebar, setShowSidebar] = useState(true);
 
   useEffect(() => {
-    Events.addListener(CloseAppSidebarEvent, 'desktop-app', () => {
+    Events.addListener(Events.events.CloseAppSidebar, 'desktop-app', () => {
       setShowSidebar(false);
     });
 
-    Events.addListener(OpenAppSidebarEvent, 'desktop-app', () => {
+    Events.addListener(Events.events.OpenAppSidebar, 'desktop-app', () => {
       setShowSidebar(true);
     });
 
     return () => {
-      Events.removeListener(CloseAppSidebarEvent, 'desktop-app');
-      Events.removeListener(OpenAppSidebarEvent, 'desktop-app');
+      Events.removeListener(Events.events.CloseAppSidebar, 'desktop-app');
+      Events.removeListener(Events.events.OpenAppSidebar, 'desktop-app');
     };
   }, []);
 
@@ -72,7 +65,7 @@ export const DesktopApp: React.FC = () => {
       return;
     }
 
-    Events.dispatch(ToggleWindowFillEvent);
+    Events.dispatch(Events.events.ToggleWindowFill);
   }, []);
 
   return (
@@ -136,18 +129,18 @@ const RightPanel: React.FC = () => {
 
   useEffect(() => {
     // Show the view sent to the right panel
-    Events.addListener(OpenRightPanelEvent, 'desktop-app', (data) => {
+    Events.addListener(Events.events.OpenRightPanel, 'desktop-app', (data) => {
       setView(data);
     });
 
     // Clear the right panel
-    Events.addListener(CloseRightPanelEvent, 'desktop-app', () => {
+    Events.addListener(Events.events.CloseRightPanel, 'desktop-app', () => {
       setView(null);
     });
 
     return () => {
-      Events.removeListener(OpenRightPanelEvent, 'desktop-app');
-      Events.removeListener(CloseRightPanelEvent, 'desktop-app');
+      Events.removeListener(Events.events.OpenRightPanel, 'desktop-app');
+      Events.removeListener(Events.events.CloseRightPanel, 'desktop-app');
     };
   }, []);
 
@@ -170,13 +163,20 @@ const ConfirmationDialogFeature: React.FC = () => {
     useState<OpenConfirmationDialogEventData | null>(null);
 
   useEffect(() => {
-    Events.addListener(OpenConfirmationDialogEvent, 'desktop-app', (data) => {
-      setDialogProps(data);
-      setOpen(true);
-    });
+    Events.addListener(
+      Events.events.OpenConfirmationDialog,
+      'desktop-app',
+      (data) => {
+        setDialogProps(data);
+        setOpen(true);
+      },
+    );
 
     return () => {
-      Events.removeListener(OpenConfirmationDialogEvent, 'desktop-app');
+      Events.removeListener(
+        Events.events.OpenConfirmationDialog,
+        'desktop-app',
+      );
     };
   }, []);
 
@@ -197,13 +197,13 @@ const ErrorToastFeature: React.FC = () => {
 
   useEffect(() => {
     // Show an error toast for each dispatched app error
-    Events.addListener(AppErrorEvent, 'desktop-app', (data) => {
+    Events.addListener(Events.events.AppError, 'desktop-app', (data) => {
       // Keep error toasts visible until dismissed manually
       manager.add({ type: 'error', timeout: 0, data });
     });
 
     return () => {
-      Events.removeListener(AppErrorEvent, 'desktop-app');
+      Events.removeListener(Events.events.AppError, 'desktop-app');
     };
   }, [manager]);
 

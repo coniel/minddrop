@@ -1,81 +1,66 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { EventListener, EventListenerMap } from '../types';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import {
+  clearEventListeners,
+  getEventListeners,
+  setEventListeners,
+} from '../EventListenersStore';
+import { TestFooEvent } from '../test-utils';
+import { EventListener } from '../types';
 import { addEventListener } from './addEventListener';
 
-describe('addEventListener', () => {
-  let eventsListeners: EventListenerMap = {};
-  const callback = vi.fn();
-  const eventListener: EventListener = {
-    id: 'test-listener',
-    callback,
-    once: false,
-  };
+const callback = vi.fn();
+const eventListener: EventListener = {
+  id: 'test-listener',
+  callback,
+  once: false,
+};
 
-  beforeEach(() => {
-    eventsListeners = {};
+describe('addEventListener', () => {
+  afterEach(() => {
+    clearEventListeners();
   });
 
   it('adds listener for new event', () => {
-    // Add a listener for 'test-event' which is not yet registered
-    addEventListener(eventsListeners, 'test-event', 'test-listener', callback);
+    // Add a listener for an event with no listeners yet
+    addEventListener(TestFooEvent, 'test-listener', callback);
 
-    // Should register 'test-event' with the listener
-    expect(eventsListeners).toEqual({
-      'test-event': { listeners: [eventListener] },
-    });
+    // Should register the event with the listener
+    expect(getEventListeners(TestFooEvent)).toEqual([eventListener]);
   });
 
   it('adds listener for existing event', () => {
-    // Add an existing listener for 'test-event'
+    // Add an existing listener for the event
     const existingListener = { ...eventListener, id: 'foo' };
-    eventsListeners['test-event'] = {
-      listeners: [existingListener],
-    };
+    setEventListeners(TestFooEvent, [existingListener]);
 
-    // Add a new listener for 'test-event'
-    addEventListener(eventsListeners, 'test-event', 'test-listener', callback);
+    // Add a new listener for the event
+    addEventListener(TestFooEvent, 'test-listener', callback);
 
     // Should have both event listeners
-    expect(eventsListeners).toEqual({
-      'test-event': {
-        listeners: [existingListener, eventListener],
-      },
-    });
+    expect(getEventListeners(TestFooEvent)).toEqual([
+      existingListener,
+      eventListener,
+    ]);
   });
 
-  it('sets `once` value', () => {
-    // Add a one time listener for 'test-event'
-    addEventListener(
-      eventsListeners,
-      'test-event',
-      'test-listener',
-      callback,
-      true,
-    );
+  it('does not add duplicate event listeners', () => {
+    // Add an existing 'test-listener' listener for the event
+    setEventListeners(TestFooEvent, [eventListener]);
 
-    // Should set 'once' to true
-    expect(eventsListeners).toEqual({
-      'test-event': {
-        listeners: [{ ...eventListener, once: true }],
-      },
-    });
+    // Attempt to add 'test-listener' again
+    addEventListener(TestFooEvent, 'test-listener', callback);
+
+    // Should not have added the listener a second time
+    expect(getEventListeners(TestFooEvent)).toEqual([eventListener]);
   });
 
-  it('does not add a duplicate event listener', () => {
-    // Add an existing 'foo' listener for 'test-event'
-    const existingListener = { ...eventListener, id: 'foo' };
-    eventsListeners['test-event'] = {
-      listeners: [existingListener],
-    };
+  it('supports `once` listeners', () => {
+    // Add a listener with once set to true
+    addEventListener(TestFooEvent, 'test-listener', callback, true);
 
-    // Attempt to add listener 'foo' again
-    addEventListener(eventsListeners, 'test-event', 'foo', callback);
-
-    // Should not add 'foo' listener again
-    expect(eventsListeners).toEqual({
-      'test-event': {
-        listeners: [existingListener],
-      },
-    });
+    // Should register the listener with once set to true
+    expect(getEventListeners(TestFooEvent)).toEqual([
+      { ...eventListener, once: true },
+    ]);
   });
 });

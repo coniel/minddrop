@@ -1,6 +1,6 @@
 import { useLayoutEffect } from 'react';
 import { DesignsIcon } from '@minddrop/designs';
-import { Events, SetNavToolbarWidthEvent } from '@minddrop/events';
+import { Events } from '@minddrop/events';
 import { CollectionsMenuItem } from '@minddrop/feature-collections';
 import { DataViewsMenuItem } from '@minddrop/feature-data-views';
 import { DatabasesSidebarMenu } from '@minddrop/feature-databases';
@@ -24,7 +24,7 @@ export const AppSidebar: React.FC<SidebarProps> = ({ ...other }) => {
 
   // Keep the nav toolbar sized to match the sidebar
   useLayoutEffect(() => {
-    Events.dispatch(SetNavToolbarWidthEvent, { width: sidebarWidth });
+    Events.dispatch(Events.events.SetNavToolbarWidth, { width: sidebarWidth });
   }, [sidebarWidth]);
 
   function handleOpenSearch() {
@@ -40,7 +40,7 @@ export const AppSidebar: React.FC<SidebarProps> = ({ ...other }) => {
   }
 
   function handleResize(width: number) {
-    Events.dispatch(SetNavToolbarWidthEvent, { width });
+    Events.dispatch(Events.events.SetNavToolbarWidth, { width });
   }
 
   function handleResized(width: number) {

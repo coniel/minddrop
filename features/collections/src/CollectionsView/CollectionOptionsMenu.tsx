@@ -1,6 +1,6 @@
 import React from 'react';
 import { Collection, Collections } from '@minddrop/collections';
-import { Events, OpenConfirmationDialogEvent } from '@minddrop/events';
+import { Events } from '@minddrop/events';
 import {
   DropdownMenuContent,
   DropdownMenuItem,
@@ -26,7 +26,7 @@ export const CollectionOptionsMenu: React.FC<CollectionOptionsMenuProps> = ({
 }) => {
   // Confirm before deleting the collection
   function handleDelete() {
-    Events.dispatch(OpenConfirmationDialogEvent, {
+    Events.dispatch(Events.events.OpenConfirmationDialog, {
       title: 'collections.actions.delete.confirmation.title',
       message: 'collections.actions.delete.confirmation.message',
       confirmLabel: 'collections.actions.delete.confirmation.confirm',

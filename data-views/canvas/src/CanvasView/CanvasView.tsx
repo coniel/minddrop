@@ -8,7 +8,7 @@ import {
   DatabaseId,
   Databases,
 } from '@minddrop/databases';
-import { Events, OpenConfirmationDialogEvent } from '@minddrop/events';
+import { Events } from '@minddrop/events';
 import { DataViewOptionsMenu } from '@minddrop/feature-data-views';
 import {
   DatabaseEntryRenderer,
@@ -388,7 +388,7 @@ const CanvasViewContent: React.FC<
       // singular wording is picked by key.
       const single = nodeIds.length === 1;
 
-      Events.dispatch(OpenConfirmationDialogEvent, {
+      Events.dispatch(Events.events.OpenConfirmationDialog, {
         title: single ? `${i18nRoot}.titleOne` : `${i18nRoot}.title`,
         message: single ? `${i18nRoot}.messageOne` : `${i18nRoot}.message`,
         confirmLabel: `${i18nRoot}.confirm`,

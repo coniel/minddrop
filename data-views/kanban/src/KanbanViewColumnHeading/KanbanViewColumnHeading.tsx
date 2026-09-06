@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Events, OpenConfirmationDialogEvent } from '@minddrop/events';
+import { Events } from '@minddrop/events';
 import { SortableItemRenderProps } from '@minddrop/ui-drag-and-drop';
 import {
   Chip,
@@ -235,7 +235,7 @@ export const KanbanViewColumnHeading: React.FC<
 
   // Confirm the column's deletion before removing its option
   function handleDelete() {
-    Events.dispatch(OpenConfirmationDialogEvent, {
+    Events.dispatch(Events.events.OpenConfirmationDialog, {
       title: 'dataViews.kanban.columns.deleteConfirmation.title',
       message: 'dataViews.kanban.columns.deleteConfirmation.message',
       confirmLabel: 'dataViews.kanban.columns.deleteConfirmation.confirm',

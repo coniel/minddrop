@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import { Ast, Element } from '@minddrop/ast';
 import { EditorProps, RichTextEditor } from '@minddrop/editor';
-import { Events, OpenReferenceEvent } from '@minddrop/events';
+import { Events } from '@minddrop/events';
 import { entryReferenceSource } from '../entryReferenceSource';
 
 /**
@@ -78,5 +78,5 @@ export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
  * @param reference - What the link points at, as it was written.
  */
 function openReference(reference: string): void {
-  Events.dispatch(OpenReferenceEvent, { reference });
+  Events.dispatch(Events.events.OpenReference, { reference });
 }

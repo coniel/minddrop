@@ -1,4 +1,3 @@
-export * from './errors';
-export * from './types';
-export * from './core-events';
-export * from './Events';
+export type * from './types';
+export type * from './core-events';
+export * as Events from './Events';

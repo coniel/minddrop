@@ -1,41 +1,33 @@
-import { describe, expect, it, vi } from 'vitest';
-import { EventListenerMap } from '../types';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { clearEventListeners, setEventListeners } from '../EventListenersStore';
+import { TestFooEvent } from '../test-utils';
 import { hasEventListener } from './hasEventListener';
 
 describe('hasEventListener', () => {
-  it('returns `true` if the listener is registered', () => {
-    // Add a listener 'test-listener' to event 'test-event'
-    const eventListeners: EventListenerMap = {
-      'test-event': {
-        listeners: [{ id: 'test-listener', callback: vi.fn() }],
-      },
-    };
-
-    // Check if event 'test-envent' has a listener 'test-listener'.
-    // Should return true.
-    expect(
-      hasEventListener(eventListeners, 'test-event', 'test-listener'),
-    ).toBe(true);
+  afterEach(() => {
+    clearEventListeners();
   });
 
-  it('returns `false` if the event is not registered', () => {
-    // Check if an unregistered event has a listener
-    // 'test-listener', should return false.
-    expect(hasEventListener({}, 'test-event', 'test-listener')).toBe(false);
+  it('returns `true` if the listener is registered', () => {
+    // Add a listener 'test-listener' to the event
+    setEventListeners(TestFooEvent, [
+      { id: 'test-listener', callback: vi.fn() },
+    ]);
+
+    // Should find the listener
+    expect(hasEventListener(TestFooEvent, 'test-listener')).toBe(true);
+  });
+
+  it('returns `false` if the event has no listeners', () => {
+    // Check an event with no listeners
+    expect(hasEventListener(TestFooEvent, 'test-listener')).toBe(false);
   });
 
   it('returns `false` if the listener is not registered', () => {
-    // Add a listener 'foo' to event 'test-event'
-    const eventListeners: EventListenerMap = {
-      'test-event': {
-        listeners: [{ id: 'foo', callback: vi.fn() }],
-      },
-    };
+    // Add a listener 'foo' to the event
+    setEventListeners(TestFooEvent, [{ id: 'foo', callback: vi.fn() }]);
 
-    // Check if event 'test-envent' has a listener 'test-listener'.
-    // Should return false.
-    expect(
-      hasEventListener(eventListeners, 'test-event', 'test-listener'),
-    ).toBe(false);
+    // Should not find 'test-listener'
+    expect(hasEventListener(TestFooEvent, 'test-listener')).toBe(false);
   });
 });

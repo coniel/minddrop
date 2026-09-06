@@ -1,11 +1,5 @@
 import { FC, useCallback, useLayoutEffect, useState } from 'react';
-import {
-  Events,
-  NavToolbarBackEvent,
-  SetNavToolbarBackActionEvent,
-  SetNavToolbarBackActionEventData,
-  SetNavToolbarWidthEvent,
-} from '@minddrop/events';
+import { Events, SetNavToolbarBackActionEventData } from '@minddrop/events';
 import { Tabs } from '@minddrop/feature-views';
 import { Toolbar, ToolbarIconButton } from '@minddrop/ui-primitives';
 import { DefaultViewAreaId } from '@minddrop/views';
@@ -14,7 +8,7 @@ import './NavToolbar.css';
 /**
  * Standalone top-left toolbar holding the back/forward navigation
  * buttons, aligned with the macOS window controls. Sizes itself to a
- * width dispatched via SetNavToolbarWidthEvent (typically the width of
+ * width dispatched via Events.events.SetNavToolbarWidth (typically the width of
  * the active left panel), collapsing to auto width when the width is 0.
  */
 export const NavToolbar: FC = () => {
@@ -31,14 +25,18 @@ export const NavToolbar: FC = () => {
   // Registered as a layout effect so the width is in place before the
   // first paint, catching the sidebar's initial width dispatch
   useLayoutEffect(() => {
-    Events.addListener(SetNavToolbarWidthEvent, 'app-nav-toolbar', (data) => {
-      setWidth(data.width);
-    });
+    Events.addListener(
+      Events.events.SetNavToolbarWidth,
+      'app-nav-toolbar',
+      (data) => {
+        setWidth(data.width);
+      },
+    );
 
     // Views register a back action of their own, e.g. an editor
     // backing out to its dashboard
     Events.addListener(
-      SetNavToolbarBackActionEvent,
+      Events.events.SetNavToolbarBackAction,
       'app-nav-toolbar',
       (data) => {
         setBackAction(data);
@@ -46,8 +44,14 @@ export const NavToolbar: FC = () => {
     );
 
     return () => {
-      Events.removeListener(SetNavToolbarWidthEvent, 'app-nav-toolbar');
-      Events.removeListener(SetNavToolbarBackActionEvent, 'app-nav-toolbar');
+      Events.removeListener(
+        Events.events.SetNavToolbarWidth,
+        'app-nav-toolbar',
+      );
+      Events.removeListener(
+        Events.events.SetNavToolbarBackAction,
+        'app-nav-toolbar',
+      );
     };
   }, []);
 
@@ -55,7 +59,7 @@ export const NavToolbar: FC = () => {
   // back through its history
   const handleClickBack = useCallback(() => {
     if (backAction) {
-      Events.dispatch(NavToolbarBackEvent);
+      Events.dispatch(Events.events.NavToolbarBack);
 
       return;
     }

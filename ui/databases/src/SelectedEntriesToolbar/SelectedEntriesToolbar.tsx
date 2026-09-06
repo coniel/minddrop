@@ -1,7 +1,7 @@
 import React from 'react';
 import { Collections } from '@minddrop/collections';
 import { DatabaseEntries } from '@minddrop/databases';
-import { Events, OpenConfirmationDialogEvent } from '@minddrop/events';
+import { Events } from '@minddrop/events';
 import { useTranslation } from '@minddrop/i18n';
 import {
   Text,
@@ -64,7 +64,7 @@ export const SelectedEntriesToolbar: React.FC<SelectedEntriesToolbarProps> = ({
 
   // Confirm before deleting the selected entries
   function handleDelete() {
-    Events.dispatch(OpenConfirmationDialogEvent, {
+    Events.dispatch(Events.events.OpenConfirmationDialog, {
       title: 'databases.entries.selection.deleteConfirmation.title',
       message: 'databases.entries.selection.deleteConfirmation.message',
       confirmLabel: 'databases.entries.selection.deleteConfirmation.confirm',

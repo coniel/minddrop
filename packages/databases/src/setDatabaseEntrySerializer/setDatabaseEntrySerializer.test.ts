@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { AppErrorEvent, AppErrorEventData, Events } from '@minddrop/events';
+import { AppErrorEventData, Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { Paths } from '@minddrop/utils';
 import { DatabaseEntrySerializersStore } from '../DatabaseEntrySerializersStore';
@@ -220,7 +220,7 @@ describe('setDatabaseEntrySerializer', () => {
 
     let dispatchedError: AppErrorEventData | undefined;
 
-    Events.addListener(AppErrorEvent, 'test', (payload) => {
+    Events.addListener(Events.events.AppError, 'test', (payload) => {
       dispatchedError = payload;
     });
 

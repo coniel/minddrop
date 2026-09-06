@@ -1,6 +1,6 @@
 import Electrobun, { Electroview } from 'electrobun/view';
 import { Databases } from '@minddrop/databases';
-import { Events, ToggleWindowFillEvent } from '@minddrop/events';
+import { Events } from '@minddrop/events';
 import { Paths } from '@minddrop/utils';
 import { WebviewRPC } from '../types';
 import { registerBackEndUtilsAdapter } from './registerBackEndUtilsAdapter';
@@ -49,7 +49,7 @@ registerDatabasesBackendAdapterRpc(rpc);
 registerSearchAdapterRpc(rpc);
 
 // Toggle the window fill when the top bar is double-clicked
-Events.addListener(ToggleWindowFillEvent, 'desktop-electrobun', () => {
+Events.addListener(Events.events.ToggleWindowFill, 'desktop-electrobun', () => {
   electrobun.rpc?.request.windowToggleFill({});
 });
 

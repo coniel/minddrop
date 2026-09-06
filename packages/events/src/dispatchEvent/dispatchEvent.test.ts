@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { clearEventListeners, setEventListeners } from '../EventListenersStore';
 import { clearEventLog, getEventLogEntries } from '../EventLogsStore';
-import { EventListenerMap } from '../types';
+import { TestBarEvent, TestFooEvent } from '../test-utils';
 import { dispatchEvent } from './dispatchEvent';
 
 const asyncFunction = vi.fn();
@@ -45,8 +46,6 @@ const catchAllListener = {
   callback: vi.fn(),
 };
 
-let eventListeners: EventListenerMap;
-
 const data = { foo: 'bar' };
 
 // Resolves once queued listener microtasks have run
@@ -58,65 +57,62 @@ function flushMicrotasks(): Promise<void> {
 
 describe('dispatchEvent', () => {
   beforeEach(() => {
-    eventListeners = {
-      'test-event': {
-        listeners: [syncListener, asyncListener],
-      },
-    };
+    setEventListeners(TestFooEvent, [syncListener, asyncListener]);
   });
 
   afterEach(() => {
+    clearEventListeners();
     clearEventLog();
     vi.clearAllMocks();
   });
 
   it('calls registered listeners with the data and event name', async () => {
-    dispatchEvent(eventListeners, 'test-event', data);
+    dispatchEvent(TestFooEvent, data);
 
     await flushMicrotasks();
 
-    expect(syncListener.callback).toHaveBeenCalledWith(data, 'test-event');
-    expect(asyncListener.callback).toHaveBeenCalledWith(data, 'test-event');
+    expect(syncListener.callback).toHaveBeenCalledWith(data, TestFooEvent);
+    expect(asyncListener.callback).toHaveBeenCalledWith(data, TestFooEvent);
   });
 
   it('does not run listeners synchronously', () => {
-    dispatchEvent(eventListeners, 'test-event', data);
+    dispatchEvent(TestFooEvent, data);
 
     // The listeners are queued rather than run during the dispatch
     expect(syncListener.callback).not.toHaveBeenCalled();
   });
 
   it('calls catch-all listeners with the dispatched event name', async () => {
-    eventListeners['*'] = { listeners: [catchAllListener] };
+    setEventListeners('*', [catchAllListener]);
 
-    dispatchEvent(eventListeners, 'test-event', data);
+    dispatchEvent(TestFooEvent, data);
 
     await flushMicrotasks();
 
-    expect(catchAllListener.callback).toHaveBeenCalledWith(data, 'test-event');
+    expect(catchAllListener.callback).toHaveBeenCalledWith(data, TestFooEvent);
   });
 
   it('logs the event synchronously', () => {
-    dispatchEvent(eventListeners, 'test-event', data);
+    dispatchEvent(TestFooEvent, data);
 
-    expect(getEventLogEntries('test-event')).toEqual([
-      expect.objectContaining({ name: 'test-event', data }),
+    expect(getEventLogEntries(TestFooEvent)).toEqual([
+      expect.objectContaining({ name: TestFooEvent, data }),
     ]);
   });
 
   it('removes the log entry once the listeners have settled', async () => {
-    dispatchEvent(eventListeners, 'test-event', data);
+    dispatchEvent(TestFooEvent, data);
 
     await vi.waitFor(() => {
-      expect(getEventLogEntries('test-event')).toEqual([]);
+      expect(getEventLogEntries(TestFooEvent)).toEqual([]);
     });
   });
 
   it('removes the log entry when the event has no listeners', async () => {
-    dispatchEvent(eventListeners, 'unheard-event', data);
+    dispatchEvent(TestBarEvent, data);
 
     await vi.waitFor(() => {
-      expect(getEventLogEntries('unheard-event')).toEqual([]);
+      expect(getEventLogEntries(TestBarEvent)).toEqual([]);
     });
   });
 
@@ -124,16 +120,16 @@ describe('dispatchEvent', () => {
     vi.useFakeTimers();
 
     // A listener which never settles
-    eventListeners['test-event'].listeners = [
+    setEventListeners(TestFooEvent, [
       { id: 'hung-listener', callback: () => new Promise(() => {}) },
-    ];
+    ]);
 
-    dispatchEvent(eventListeners, 'test-event', data);
+    dispatchEvent(TestFooEvent, data);
 
     // Run the queued listener and the timeout
     await vi.advanceTimersByTimeAsync(10000);
 
-    expect(getEventLogEntries('test-event')).toEqual([]);
+    expect(getEventLogEntries(TestFooEvent)).toEqual([]);
 
     vi.useRealTimers();
   });
@@ -143,12 +139,12 @@ describe('dispatchEvent', () => {
       // Keep the reported failure out of the test output
       vi.spyOn(console, 'error').mockImplementation(() => undefined);
 
-      eventListeners['test-event'].listeners = [
+      setEventListeners(TestFooEvent, [
         failingListener,
         rejectingListener,
         syncListener,
         asyncListener,
-      ];
+      ]);
     });
 
     afterEach(() => {
@@ -156,11 +152,11 @@ describe('dispatchEvent', () => {
     });
 
     it('does not fail the dispatch', () => {
-      expect(() => dispatchEvent(eventListeners, 'test-event')).not.toThrow();
+      expect(() => dispatchEvent(TestFooEvent)).not.toThrow();
     });
 
     it('calls the remaining listeners', async () => {
-      dispatchEvent(eventListeners, 'test-event');
+      dispatchEvent(TestFooEvent);
 
       await flushMicrotasks();
 
@@ -169,25 +165,25 @@ describe('dispatchEvent', () => {
     });
 
     it('reports listener failures', async () => {
-      dispatchEvent(eventListeners, 'test-event');
+      dispatchEvent(TestFooEvent);
 
       await flushMicrotasks();
 
       expect(console.error).toHaveBeenCalledWith(
-        'Event listener "failing-listener" failed handling "test-event"',
+        `Event listener "failing-listener" failed handling "${TestFooEvent}"`,
         expect.any(Error),
       );
       expect(console.error).toHaveBeenCalledWith(
-        'Event listener "rejecting-listener" failed handling "test-event"',
+        `Event listener "rejecting-listener" failed handling "${TestFooEvent}"`,
         expect.any(Error),
       );
     });
 
     it('removes the log entry once the listeners have settled', async () => {
-      dispatchEvent(eventListeners, 'test-event');
+      dispatchEvent(TestFooEvent);
 
       await vi.waitFor(() => {
-        expect(getEventLogEntries('test-event')).toEqual([]);
+        expect(getEventLogEntries(TestFooEvent)).toEqual([]);
       });
     });
   });

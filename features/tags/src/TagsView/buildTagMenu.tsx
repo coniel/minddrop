@@ -1,5 +1,5 @@
 import { DatabaseEntries } from '@minddrop/databases';
-import { Events, OpenConfirmationDialogEvent } from '@minddrop/events';
+import { Events } from '@minddrop/events';
 import { i18n } from '@minddrop/i18n';
 import { Tag, TagGroup, TagGroups, Tags } from '@minddrop/tags';
 import {
@@ -104,7 +104,7 @@ function confirmDeleteTag(tag: Tag) {
       ? 'tags.actions.delete.confirmation.message_one'
       : 'tags.actions.delete.confirmation.message_other';
 
-  Events.dispatch(OpenConfirmationDialogEvent, {
+  Events.dispatch(Events.events.OpenConfirmationDialog, {
     title: 'tags.actions.delete.confirmation.title',
     message: <>{i18n.t(messageKey, { count })}</>,
     confirmLabel: 'tags.actions.delete.confirmation.confirm',

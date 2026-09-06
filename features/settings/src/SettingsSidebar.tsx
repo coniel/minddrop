@@ -1,5 +1,5 @@
 import { useLayoutEffect } from 'react';
-import { Events, SetNavToolbarWidthEvent } from '@minddrop/events';
+import { Events } from '@minddrop/events';
 import { SettingsViews } from '@minddrop/settings';
 import { Sidebar } from '@minddrop/ui-components';
 import { MenuGroup, MenuItem } from '@minddrop/ui-primitives';
@@ -27,11 +27,11 @@ export const SettingsSidebar: React.FC<SettingsSidebarProps> = ({
 
   // Keep the nav toolbar sized to match the sidebar
   useLayoutEffect(() => {
-    Events.dispatch(SetNavToolbarWidthEvent, { width: sidebarWidth });
+    Events.dispatch(Events.events.SetNavToolbarWidth, { width: sidebarWidth });
   }, [sidebarWidth]);
 
   function handleResize(width: number) {
-    Events.dispatch(SetNavToolbarWidthEvent, { width });
+    Events.dispatch(Events.events.SetNavToolbarWidth, { width });
   }
 
   function handleResized(width: number) {
