@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
+import { Icons } from '@minddrop/ui-icons';
 import { DataViewsStore } from '../DataViewsStore';
 import { DataViewCreatedEvent } from '../events';
 import { cleanup, dataViewType_gallery, mockDate, setup } from '../test-utils';
-import { toContentIcon } from '../utils';
 import { createVirtualDataView } from './createVirtualDataView';
 
 const id = 'virtual-view-1';
@@ -16,7 +16,7 @@ const expectedView = {
   owner,
   name: dataViewType_gallery.type,
   type: dataViewType_gallery.type,
-  icon: toContentIcon(dataViewType_gallery.icon),
+  icon: Icons.fromName(dataViewType_gallery.icon),
   dataSource,
   created: mockDate,
   lastModified: mockDate,

@@ -1,5 +1,6 @@
 import { DataViewType } from '@minddrop/data-views';
 import { Selection } from '@minddrop/selection';
+import { Icons } from '@minddrop/ui-icons';
 import { PaletteItem } from '../PaletteItem';
 import { DesignElementTemplatesDataKey } from '../constants';
 
@@ -25,7 +26,7 @@ export const DataViewTypePaletteItem: React.FC<
 
   return (
     <PaletteItem
-      icon={dataViewType.icon}
+      contentIcon={Icons.fromName(dataViewType.icon)}
       label={dataViewType.name}
       description={dataViewType.description}
       draggableProps={draggableProps}

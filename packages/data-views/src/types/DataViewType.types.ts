@@ -1,5 +1,5 @@
 import { TranslationKey } from '@minddrop/i18n';
-import { UiIconName } from '@minddrop/ui-icons';
+import { ContentIconName } from '@minddrop/ui-icons';
 import { DataView, DataViewConfig } from './DataView.types';
 import { ViewDataSourceType } from './ViewDataSource.types';
 
@@ -24,10 +24,10 @@ export interface DataViewType<
   description: TranslationKey;
 
   /**
-   * The name of the UI icon representing the data view type, also
-   * used as the default icon of data views of this type.
+   * The name of the content icon representing the data view type,
+   * also used as the default icon of data views of this type.
    */
-  icon: UiIconName;
+  icon: ContentIconName;
 
   /**
    * The types of data sources supported by the data view type.

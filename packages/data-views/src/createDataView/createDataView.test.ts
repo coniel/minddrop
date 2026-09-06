@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
+import { Icons } from '@minddrop/ui-icons';
 import { DataViewsStore } from '../DataViewsStore';
 import { DataViewCreatedEvent } from '../events';
 import {
@@ -10,14 +11,14 @@ import {
   setup,
 } from '../test-utils';
 import { DataView } from '../types';
-import { resolveViewFilePath, toContentIcon } from '../utils';
+import { resolveViewFilePath } from '../utils';
 import { createDataView } from './createDataView';
 
 const newView: DataView = {
   id: expect.any(String),
   name: dataViewType_gallery.name,
   type: dataViewType_gallery.type,
-  icon: toContentIcon(dataViewType_gallery.icon),
+  icon: Icons.fromName(dataViewType_gallery.icon),
   created: mockDate,
   lastModified: mockDate,
   dataSource: {

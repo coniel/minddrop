@@ -6,7 +6,7 @@ function generateViewTypeFixture(type: string): DataViewType {
     type,
     name: type as TranslationKey,
     description: `Description for view type ${type}` as TranslationKey,
-    icon: 'layout',
+    icon: 'panels-top-left',
     component: () => null,
     skeletonComponent: () => null,
     defaultOptions: {

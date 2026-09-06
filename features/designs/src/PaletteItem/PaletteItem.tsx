@@ -1,7 +1,13 @@
 import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import { PropertyType } from '@minddrop/properties';
 import { UiIconName } from '@minddrop/ui-icons';
-import { Icon, Text, Tooltip, usePressedState } from '@minddrop/ui-primitives';
+import {
+  ContentIcon,
+  Icon,
+  Text,
+  Tooltip,
+  usePressedState,
+} from '@minddrop/ui-primitives';
 import { propertyTypeLabelMap } from '../constants';
 import { useHoveredItem } from '../useHoveredItem';
 import './PaletteItem.css';
@@ -10,7 +16,14 @@ export interface PaletteItemProps {
   /**
    * The item's icon.
    */
-  icon: UiIconName;
+  icon?: UiIconName;
+
+  /**
+   * The item's stringified content icon, for items representing
+   * content rather than interface actions.
+   * - `content-icon`: '[set-name]:[icon-name]:[color]'
+   */
+  contentIcon?: string;
 
   /**
    * The i18n key of the item's label.
@@ -41,6 +54,7 @@ export interface PaletteItemProps {
  */
 export const PaletteItem: React.FC<PaletteItemProps> = ({
   icon,
+  contentIcon,
   label,
   compatiblePropertyTypes = [],
   description,
@@ -60,7 +74,10 @@ export const PaletteItem: React.FC<PaletteItemProps> = ({
       {...pressedProps}
       {...draggableProps}
     >
-      <Icon name={icon} className="designs-palette-item-icon" />
+      {icon && <Icon name={icon} className="designs-palette-item-icon" />}
+      {contentIcon && (
+        <ContentIcon icon={contentIcon} className="designs-palette-item-icon" />
+      )}
       <Text size="sm" text={label} />
     </div>
   );

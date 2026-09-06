@@ -1,11 +1,11 @@
 import { Events } from '@minddrop/events';
 import { i18n } from '@minddrop/i18n';
+import { Icons } from '@minddrop/ui-icons';
 import { DataViewsStore } from '../DataViewsStore';
 import { DataViewCreatedEvent } from '../events';
 import { extractDataViewReferences } from '../extractDataViewReferences';
 import { getDataViewType } from '../getDataViewType';
 import { CreateVirtualDataViewData, DataView } from '../types';
-import { toContentIcon } from '../utils';
 
 /**
  * Creates a virtual data view that exists only in memory.
@@ -32,7 +32,7 @@ export function createVirtualDataView(
     dataSource: viewData.dataSource,
     type: viewData.type,
     name: viewData.name || i18n.t(viewType.name),
-    icon: toContentIcon(viewType.icon),
+    icon: Icons.fromName(viewType.icon),
     created: new Date(),
     lastModified: new Date(),
   };

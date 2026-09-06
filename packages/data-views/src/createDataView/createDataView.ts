@@ -1,12 +1,12 @@
 import { Events } from '@minddrop/events';
 import { i18n } from '@minddrop/i18n';
+import { Icons } from '@minddrop/ui-icons';
 import { entityId } from '@minddrop/utils';
 import { DataViewsStore } from '../DataViewsStore';
 import { DataViewCreatedEvent } from '../events';
 import { extractDataViewReferences } from '../extractDataViewReferences';
 import { getDataViewType } from '../getDataViewType';
 import { DataView, ViewDataSource } from '../types';
-import { toContentIcon } from '../utils';
 import { writeDataView } from '../writeDataView';
 
 /**
@@ -35,7 +35,7 @@ export async function createDataView(
     dataSource,
     type: type,
     name: name || i18n.t(viewType.name),
-    icon: toContentIcon(viewType.icon),
+    icon: Icons.fromName(viewType.icon),
     created: new Date(),
     lastModified: new Date(),
   };

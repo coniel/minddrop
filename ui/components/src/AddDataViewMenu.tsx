@@ -1,6 +1,6 @@
 import { FC, useMemo } from 'react';
 import { DataViewTypes, ViewDataSourceType } from '@minddrop/data-views';
-import { UiIconName } from '@minddrop/ui-icons';
+import { Icons } from '@minddrop/ui-icons';
 import {
   DropdownMenu,
   DropdownMenuItem,
@@ -63,7 +63,7 @@ export const AddDataViewMenu: FC<AddDataViewMenuProps> = ({
         {supportedViewTypes.map((viewType) => (
           <DropdownMenuItem
             key={viewType.type}
-            icon={viewType.icon as UiIconName}
+            contentIcon={Icons.fromName(viewType.icon)}
             label={viewType.name}
             tooltip={{ title: viewType.description }}
             onSelect={() => onSelectViewType(viewType.type)}

@@ -42,7 +42,6 @@ import {
   useDatabaseViewState,
 } from '../DatabaseViewStateStore';
 import './DatabaseView.css';
-import { UiIconName } from '@minddrop/ui-icons';
 
 export interface DatabaseViewProps {
   /**
@@ -420,13 +419,7 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
                           key={databaseView.id}
                           ref={ref}
                           value={databaseView.id}
-                          startIcon={
-                            databaseView.icon.includes(':') ? (
-                              <ContentIcon icon={databaseView.icon} />
-                            ) : (
-                              (databaseView.icon as UiIconName)
-                            )
-                          }
+                          startIcon={<ContentIcon icon={databaseView.icon} />}
                           className={className}
                           style={style}
                           onClick={(event) =>
