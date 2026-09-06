@@ -42,7 +42,7 @@ export function createWebviewRPC() {
         ...fileSystemRpcHandlers,
         ...backEndUtilsRpcHandlers,
         // HTTP server port
-        getHttpServerPort: () => httpServer.port,
+        getHttpServerPort,
         // Window RPC handlers
         ...windowRpcHandlers,
         // Screenshot RPC handlers
@@ -84,4 +84,16 @@ export function createWebviewRPC() {
   });
 
   return rpc;
+}
+
+/**
+ * Returns the port the HTTP server listens on. Bun types the port as
+ * optional to cover unix socket servers, but this one binds a TCP port.
+ */
+function getHttpServerPort(): number {
+  if (httpServer.port === undefined) {
+    throw new Error('The HTTP server is not listening on a port');
+  }
+
+  return httpServer.port;
 }

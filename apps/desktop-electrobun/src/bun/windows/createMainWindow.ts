@@ -1,4 +1,4 @@
-import { BrowserWindow, Screen, Utils } from 'electrobun/bun';
+import { BrowserWindow, ElectrobunEvent, Screen, Utils } from 'electrobun/bun';
 import { createWebviewRPC } from '../bun-rpc';
 import { setWindowRpcTarget } from '../windowRpc';
 import { resolveViewUrl } from './resolveViewUrl';
@@ -11,6 +11,11 @@ type WindowState = {
   displayId: string;
   isFullScreen: boolean;
 };
+
+// The data Electrobun's move and resize events carry, which its
+// handler signature types as unknown.
+type WindowMoveData = { x: number; y: number };
+type WindowResizeData = WindowMoveData & { width: number; height: number };
 
 const DEFAULT_STATE: WindowState = {
   x: 100,
@@ -74,7 +79,11 @@ export async function createMainWindow(): Promise<BrowserWindow> {
     }, 500);
   }
 
-  mainWindow.on('move', (event: any) => {
+  mainWindow.on('move', (event) => {
+    if (!isWindowEvent<WindowMoveData>(event, ['x', 'y'])) {
+      return;
+    }
+
     state.isFullScreen = mainWindow.isFullScreen();
     state.x = event.data.x;
     state.y = event.data.y;
@@ -84,7 +93,13 @@ export async function createMainWindow(): Promise<BrowserWindow> {
     saveState();
   });
 
-  mainWindow.on('resize', (event: any) => {
+  mainWindow.on('resize', (event) => {
+    if (
+      !isWindowEvent<WindowResizeData>(event, ['x', 'y', 'width', 'height'])
+    ) {
+      return;
+    }
+
     state.isFullScreen = mainWindow.isFullScreen();
     state.width = event.data.width;
     state.height = event.data.height;
@@ -96,6 +111,27 @@ export async function createMainWindow(): Promise<BrowserWindow> {
   });
 
   return mainWindow;
+}
+
+/**
+ * Checks whether a window event carries the given numeric data keys,
+ * narrowing it to the event type built on that data.
+ */
+function isWindowEvent<Data>(
+  event: unknown,
+  keys: (keyof Data)[],
+): event is ElectrobunEvent<Data, unknown> {
+  if (typeof event !== 'object' || event === null || !('data' in event)) {
+    return false;
+  }
+
+  const { data } = event;
+
+  if (typeof data !== 'object' || data === null) {
+    return false;
+  }
+
+  return keys.every((key) => typeof Reflect.get(data, key) === 'number');
 }
 
 /**
