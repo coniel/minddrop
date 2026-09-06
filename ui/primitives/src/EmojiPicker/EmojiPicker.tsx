@@ -12,6 +12,7 @@ import {
   Emoji,
   EmojiItem,
   EmojiSkinTone,
+  Icons,
   useEmojiData,
 } from '@minddrop/ui-icons';
 import { IconButton } from '../IconButton';
@@ -286,6 +287,7 @@ const EmojiButton = memo<{
     <IconButton
       className="emoji-picker-emoji-button"
       stringLabel={emoji.name}
+      tooltip={{ side: 'top', stringTitle: Icons.humanizeName(emoji.name) }}
       onClick={handleSelect}
     >
       <EmojiWithSkinTone emoji={emoji} skinTone={skinTone} />

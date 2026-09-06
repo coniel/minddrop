@@ -341,6 +341,7 @@ const IconSelectButton = memo<{
     <IconButton
       className="content-icon-picker-icon-button"
       stringLabel={icon.name}
+      tooltip={{ side: 'top', stringTitle: Icons.humanizeName(icon.name) }}
       onClick={handleSelect}
     >
       <ContentIcon
