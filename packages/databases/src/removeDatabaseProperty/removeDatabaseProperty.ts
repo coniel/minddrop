@@ -1,8 +1,9 @@
 import { Events } from '@minddrop/events';
-import { DatabasePropertyRemovedEvent } from '../events';
+import { DatabasesStore } from '../DatabasesStore';
+import { DatabasePropertyRemovedEvent, DatabaseUpdatedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
 import { Database } from '../types';
-import { updateDatabase } from '../updateDatabase';
+import { writeDatabaseConfig } from '../writeDatabaseConfig';
 
 /**
  * Removes a property from a database.
@@ -11,6 +12,7 @@ import { updateDatabase } from '../updateDatabase';
  * @param propertyName - The name of the property to remove.
  * @returns The updated database config.
  *
+ * @dispatches 'databases:database:updated' event
  * @dispatches 'databases:property:removed' event
  */
 export async function removeDatabaseProperty(
@@ -24,13 +26,20 @@ export async function removeDatabaseProperty(
   const property = config.properties.find((p) => p.name === propertyName);
 
   // Remove the property from the database's properties
-  const properties = config.properties.filter((p) => p.name !== propertyName);
+  const updated = {
+    ...config,
+    properties: config.properties.filter((p) => p.name !== propertyName),
+    lastModified: new Date(),
+  };
 
-  // Update the database
-  const updatePromise = updateDatabase(databaseId, { properties });
+  // Update the database in the store
+  DatabasesStore.update(databaseId, updated);
 
-  // Get the updated config
-  const updated = getDatabase(databaseId);
+  // Dispatch a database updated event
+  Events.dispatch(DatabaseUpdatedEvent, {
+    original: config,
+    updated,
+  });
 
   // Dispatch the property removed event if the property existed
   if (property) {
@@ -41,7 +50,8 @@ export async function removeDatabaseProperty(
     });
   }
 
-  await updatePromise;
+  // Write the updated config to the file system
+  await writeDatabaseConfig(databaseId);
 
   return updated;
 }

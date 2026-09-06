@@ -1,8 +1,12 @@
 import { Events } from '@minddrop/events';
 import { InvalidParameterError } from '@minddrop/utils';
-import { DatabasePropertyOptionRenamedEvent } from '../events';
+import { DatabasesStore } from '../DatabasesStore';
+import {
+  DatabasePropertyOptionRenamedEvent,
+  DatabaseUpdatedEvent,
+} from '../events';
 import { getDatabase } from '../getDatabase';
-import { updateDatabaseProperty } from '../updateDatabaseProperty';
+import { writeDatabaseConfig } from '../writeDatabaseConfig';
 
 /**
  * Renames an option of a select property. The option value held
@@ -15,6 +19,7 @@ import { updateDatabaseProperty } from '../updateDatabaseProperty';
  *
  * @throws {InvalidParameterError} If the property is not a select property, the old option does not exist, or the new value is empty or already an option.
  *
+ * @dispatches 'databases:database:updated' event
  * @dispatches 'databases:property-option:renamed' event
  */
 export async function renameDatabasePropertyOption(
@@ -55,27 +60,40 @@ export async function renameDatabasePropertyOption(
   }
 
   // Rename the option in the property schema
-  const options = property.options.map((option) =>
-    option.value === oldValue ? { ...option, value: newValue } : option,
-  );
+  const updatedProperty = {
+    ...property,
+    options: property.options.map((option) =>
+      option.value === oldValue ? { ...option, value: newValue } : option,
+    ),
+  };
 
   // Update the property in the database config
-  const updatePromise = updateDatabaseProperty(databaseId, {
-    ...property,
-    options,
-  });
+  const updated = {
+    ...original,
+    properties: original.properties.map((candidate) =>
+      candidate.name === propertyName ? updatedProperty : candidate,
+    ),
+    lastModified: new Date(),
+  };
 
-  // Get the updated config
-  const updated = getDatabase(databaseId);
+  // Update the database in the store
+  DatabasesStore.update(databaseId, updated);
+
+  // Dispatch a database updated event
+  Events.dispatch(DatabaseUpdatedEvent, {
+    original,
+    updated,
+  });
 
   // Dispatch the option renamed event
   Events.dispatch(DatabasePropertyOptionRenamedEvent, {
     original,
     updated,
-    property: { ...property, options },
+    property: updatedProperty,
     oldValue,
     newValue,
   });
 
-  await updatePromise;
+  // Write the updated config to the file system
+  await writeDatabaseConfig(databaseId);
 }

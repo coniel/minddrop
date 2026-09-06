@@ -1,9 +1,10 @@
 import { Events } from '@minddrop/events';
 import { PropertySchema } from '@minddrop/properties';
-import { DatabasePropertyAddedEvent } from '../events';
+import { DatabasesStore } from '../DatabasesStore';
+import { DatabasePropertyAddedEvent, DatabaseUpdatedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
 import { Database } from '../types';
-import { updateDatabase } from '../updateDatabase';
+import { writeDatabaseConfig } from '../writeDatabaseConfig';
 
 /**
  * Adds a property to a database.
@@ -12,6 +13,7 @@ import { updateDatabase } from '../updateDatabase';
  * @param property - The property to add.
  * @returns The updated database config.
  *
+ * @dispatches 'databases:database:updated' event
  * @dispatches 'databases:property:added' event
  */
 export async function addDatabaseProperty(
@@ -22,13 +24,20 @@ export async function addDatabaseProperty(
   const config = getDatabase(id);
 
   // Add the property to the database's properties
-  const properties = [...config.properties, property];
+  const updated = {
+    ...config,
+    properties: [...config.properties, property],
+    lastModified: new Date(),
+  };
 
-  // Update the database
-  const updatePromise = updateDatabase(id, { properties });
+  // Update the database in the store
+  DatabasesStore.update(id, updated);
 
-  // Get the updated config
-  const updated = getDatabase(id);
+  // Dispatch a database updated event
+  Events.dispatch(DatabaseUpdatedEvent, {
+    original: config,
+    updated,
+  });
 
   // Dispatch the property added event
   Events.dispatch(DatabasePropertyAddedEvent, {
@@ -37,7 +46,8 @@ export async function addDatabaseProperty(
     property,
   });
 
-  await updatePromise;
+  // Write the updated config to the file system
+  await writeDatabaseConfig(id);
 
   return updated;
 }
