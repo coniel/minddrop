@@ -11,6 +11,10 @@ export { getReferencingDataViews as getReferencing } from './getReferencingDataV
 export { removeDataViewReferences as removeReferences } from './removeDataViewReferences';
 export { readDataView as read } from './readDataView';
 export { searchDataViews as search } from './utils';
+export { serializeDataView as serialize } from './serializeDataView';
+export { deserializeDataView as deserialize } from './deserializeDataView';
+export { serializeDataViewConfig as serializeConfig } from './serializeDataViewConfig';
+export { resolveDataViewConfig as resolveConfig } from './resolveDataViewConfig';
 export { updateDataView as update } from './updateDataView';
 export { updateDataViewOptions as updateOptions } from './updateDataViewOptions';
 export { updateDataViewData as updateData } from './updateDataViewData';
