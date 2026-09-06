@@ -10,7 +10,7 @@
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck --continue",
     "format": "prettier --write \"**/*.{ts,tsx,md,css,json}\"",
-    "test": "turbo run test",
+    "test": "turbo run test --concurrency=4",
     "test:watch": "turbo run test:watch"
   },
   "devDependencies": {

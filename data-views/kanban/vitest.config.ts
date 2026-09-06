@@ -1,7 +1,3 @@
-import { defineConfig } from 'vitest/config';
+import { config } from '@minddrop/vitest-config/happy-dom';
 
-export default defineConfig({
-  test: {
-    environment: 'happy-dom',
-  },
-});
+export default config;

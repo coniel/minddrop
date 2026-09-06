@@ -1,0 +1,13 @@
+{
+  "name": "@minddrop/vitest-config",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "exports": {
+    "./base": "./base.js",
+    "./happy-dom": "./happy-dom.js"
+  },
+  "devDependencies": {
+    "vitest": "^4.1.11"
+  }
+}

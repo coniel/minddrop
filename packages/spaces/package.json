@@ -17,6 +17,7 @@
     "eslint": "^9.16.0",
     "@minddrop/data-views": "workspace:*",
     "@minddrop/eslint-config": "workspace:*",
+    "@minddrop/vitest-config": "workspace:*",
     "tsconfig": "workspace:*",
     "typescript": "^5.7.2"
   },

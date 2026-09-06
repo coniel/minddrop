@@ -16,6 +16,7 @@
   },
   "devDependencies": {
     "@minddrop/eslint-config": "workspace:*",
+    "@minddrop/vitest-config": "workspace:*",
     "@minddrop/test-utils": "workspace:*",
     "@types/is-hotkey": "^0.1.10",
     "@types/react": "^19.2.14",

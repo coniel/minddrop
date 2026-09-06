@@ -1,8 +1,11 @@
-import { defineConfig } from 'vitest/config';
+import { defineConfig, mergeConfig } from 'vitest/config';
+import { config } from '@minddrop/vitest-config/happy-dom';
 
-export default defineConfig({
-  test: {
-    environment: 'happy-dom',
-    setupFiles: ['./vitest.setup.ts'],
-  },
-});
+export default mergeConfig(
+  config,
+  defineConfig({
+    test: {
+      setupFiles: ['./vitest.setup.ts'],
+    },
+  }),
+);

@@ -19,6 +19,7 @@
   "devDependencies": {
     "eslint": "^9.39.3",
     "@minddrop/eslint-config": "workspace:*",
+    "@minddrop/vitest-config": "workspace:*",
     "@minddrop/events": "workspace:*",
     "@minddrop/file-system": "workspace:*",
     "@minddrop/utils": "workspace:*",

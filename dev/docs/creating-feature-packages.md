@@ -61,14 +61,12 @@ export default config;
 ## vitest.config.ts
 
 ```ts
-import { defineConfig } from 'vitest/config';
+import { config } from '@minddrop/vitest-config/happy-dom';
 
-export default defineConfig({
-  test: {
-    environment: 'happy-dom',
-  },
-});
+export default config;
 ```
+
+Packages which do not render use `@minddrop/vitest-config/base` instead. Extra options are merged in with `mergeConfig` from `vitest/config`.
 
 ## src/index.ts
 

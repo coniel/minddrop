@@ -16,6 +16,7 @@
   },
   "devDependencies": {
     "@minddrop/eslint-config": "workspace:*",
+    "@minddrop/vitest-config": "workspace:*",
     "@minddrop/test-utils": "workspace:*",
     "@types/react": "^19.2.14",
     "eslint": "^9.39.3",

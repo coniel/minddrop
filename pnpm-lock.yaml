@@ -240,6 +240,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../../packages/vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -301,6 +304,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../../packages/vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -335,6 +341,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../../packages/vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -396,6 +405,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../../packages/vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -442,6 +454,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../../packages/vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -488,6 +503,9 @@ importers:
       '@minddrop/ui-icons':
         specifier: workspace:*
         version: link:../../ui/icons
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../../packages/vitest-config
       eslint:
         specifier: ^9.16.0
         version: 9.39.5
@@ -540,6 +558,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../../packages/vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -607,6 +628,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../../packages/vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -704,6 +728,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../../packages/vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -786,6 +813,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../../packages/vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -820,6 +850,9 @@ importers:
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../../packages/test-utils
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../../packages/vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -971,6 +1004,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../../packages/vitest-config
       '@testing-library/react':
         specifier: ^16.1.0
         version: 16.2.0(@testing-library/dom@10.4.0)(@types/react@19.2.14)(react-dom@19.2.4)(react@19.2.4)
@@ -1023,6 +1059,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../../packages/vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -1063,6 +1102,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../../packages/vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -1106,6 +1148,9 @@ importers:
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../../packages/test-utils
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../../packages/vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -1146,6 +1191,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../../packages/vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -1210,6 +1258,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../../packages/vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -1253,6 +1304,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../../packages/vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -1296,6 +1350,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../../packages/vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -1360,6 +1417,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../../packages/vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -1412,6 +1472,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../../packages/vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -1452,6 +1515,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../../packages/vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -1483,6 +1549,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -1517,6 +1586,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -1554,6 +1626,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -1594,6 +1669,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -1670,6 +1748,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../vitest-config
       '@types/node':
         specifier: ^24.0.0
         version: 24.13.3
@@ -1713,6 +1794,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -1747,6 +1831,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../vitest-config
       '@types/react':
         specifier: ^19.2.14
         version: 19.2.14
@@ -1781,6 +1868,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -1842,6 +1932,9 @@ importers:
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../test-utils
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../vitest-config
       '@types/is-hotkey':
         specifier: ^0.1.10
         version: 0.1.10
@@ -1915,6 +2008,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -1940,6 +2036,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -1965,6 +2064,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -1993,6 +2095,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../vitest-config
       '@types/node':
         specifier: ^24.0.0
         version: 24.13.3
@@ -2018,6 +2123,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -2043,6 +2151,9 @@ importers:
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../test-utils
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -2071,6 +2182,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -2120,6 +2234,9 @@ importers:
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../test-utils
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -2169,6 +2286,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -2200,6 +2320,9 @@ importers:
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../test-utils
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../vitest-config
       '@types/react':
         specifier: ^19.2.14
         version: 19.2.14
@@ -2234,6 +2357,9 @@ importers:
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../test-utils
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../vitest-config
       '@types/react':
         specifier: ^19.2.14
         version: 19.2.14
@@ -2268,6 +2394,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -2311,6 +2440,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../vitest-config
       eslint:
         specifier: ^9.16.0
         version: 9.39.5
@@ -2330,6 +2462,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../vitest-config
       '@types/node':
         specifier: ^24.0.0
         version: 24.13.3
@@ -2361,6 +2496,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../vitest-config
       '@types/react':
         specifier: ^19.2.14
         version: 19.2.14
@@ -2401,6 +2539,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -2486,6 +2627,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../vitest-config
       '@types/is-url':
         specifier: ^1.2.30
         version: 1.2.32
@@ -2532,6 +2676,9 @@ importers:
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../test-utils
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../vitest-config
       '@types/react':
         specifier: ^19.2.14
         version: 19.2.14
@@ -2544,6 +2691,12 @@ importers:
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
+
+  packages/vitest-config:
+    devDependencies:
+      vitest:
+        specifier: ^4.1.11
+        version: 4.1.11(vite@7.3.1)
 
   packages/workspaces:
     dependencies:
@@ -2563,6 +2716,9 @@ importers:
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../utils
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -2597,6 +2753,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../../packages/vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -2655,6 +2814,9 @@ importers:
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../../packages/test-utils
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../../packages/vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -2701,6 +2863,9 @@ importers:
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../../packages/test-utils
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../../packages/vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -2750,6 +2915,9 @@ importers:
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../../packages/test-utils
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../../packages/vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -2790,6 +2958,9 @@ importers:
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../../packages/test-utils
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../../packages/vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -2824,6 +2995,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../../packages/vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -2852,6 +3026,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../../packages/vitest-config
       '@types/react':
         specifier: ^19.2.14
         version: 19.2.14
@@ -2898,6 +3075,9 @@ importers:
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../../packages/test-utils
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../../packages/vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -2932,6 +3112,9 @@ importers:
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../../packages/test-utils
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../../packages/vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
@@ -2969,6 +3152,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../../packages/vitest-config
       '@testing-library/react':
         specifier: ^16.1.0
         version: 16.2.0(@testing-library/dom@10.4.0)(@types/react@19.2.14)(react-dom@19.2.4)(react@19.2.4)
