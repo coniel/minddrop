@@ -736,6 +736,91 @@ than native DnD, so the pointer is never taken away. That difference
 is the diagnostic: if a drag surface has these symptoms, check which
 of the two mechanisms it uses first.
 
+### Select keeps raw overflow scrolling instead of ScrollArea
+
+`Select.css`'s `.select-list` scrolls with a plain `overflow-y: auto`
+rather than the `ScrollArea` primitive. This is deliberate: the base-ui
+Select owns the popup's scroll behaviour (the `ScrollUpArrow` and
+`ScrollDownArrow` elements plus keyboard-driven scrolling all operate on
+the `List` element as the scroll container, sized by the primitive's
+`--available-height` variable). Wrapping the list in `ScrollArea` would
+move scrolling to the ScrollArea viewport and break the arrows and
+keyboard scrolling, so the ScrollArea-everywhere convention does not
+apply here.
+
+### Base UI render-prop spreads silently overwrite own handlers
+
+Components passed to a Base UI `render` prop receive Base UI's
+merged props (its internal handlers plus `useButton` wrappers,
+which always include `onClick`/`onMouseDown`/`onPointerDown`).
+Writing `onMouseDown={...} {...other}` therefore drops the
+component's own handler whenever Base UI supplies one of the same
+name — there is no error, the handler just never runs. Spread
+`{...other}` first and define handlers after it, chaining the
+incoming handler before custom behaviour (see
+`ComboboxChipRemove`, whose propagation stops were overwritten
+this way, letting chip-remove mousedowns reach the trigger and
+toggle the popup).
+
+### Registry context values must be split from the data they collect
+
+`SearchableMenu` collects its items through a context: each
+`SearchableMenuItem` calls `register()` from an effect, which appends to
+the menu's `orderedIds` state. That state feeds `getItemNavProps`, which
+is part of the same context value.
+
+Depending on the whole context object in the item's registration effect
+therefore loops forever: registering changes `orderedIds`, which gives
+the context a new identity, which re-runs the effect, which registers
+again. Nothing converges, because unregister/register rebuilds the array
+each pass even though its contents are unchanged. The main thread is
+pinned, so it presents as a freeze rather than a slow render — and in
+tests, vitest's own timeout cannot fire, so the run hangs instead of
+failing.
+
+Depend on the individual `register`/`unregister` callbacks (both stable,
+`useCallback` with no deps) rather than the context object. The same
+applies to any registry-style context: keep the stable registration
+callbacks separate from the derived data, or split them into two
+contexts.
+
+### `ScrollArea` needs a `getAnimations` polyfill in happy-dom tests
+
+The base-ui scroll area polls `Element.getAnimations` on a timer,
+which happy-dom does not implement — tests rendering `ScrollArea`
+throw unhandled `viewport.getAnimations is not a function` errors
+after teardown. Polyfill it in the package's test setup
+(`Element.prototype.getAnimations = () => []`, see
+`features/spaces/src/test-utils/setup-tests.ts`).
+
+### `useForm` field props don't typecheck against `TextField`
+
+`useForm`'s `fieldProps` carry `error?: string` (validators return
+plain message strings), but `TextField`'s `error` prop is typed
+`TranslationKey` — spreading `{...fieldProps.x}` onto a `TextField`
+fails the typecheck (see `CreateDataViewForm`). Existing forms live
+with the error; a real fix means deciding whether form validators
+return translation keys or `TextField` accepts plain strings.
+
+### `TranslatableNode` treats strings as i18n keys
+
+Props typed `TranslatableNode` (Tooltip `title`/`description`, `Text`
+`text`, menu labels, ...) translate string values internally — passing
+pre-translated or dynamic text as a string either fails the type check
+or double-translates. Pass the raw `TranslationKey` when there is one;
+wrap already-built strings in a fragment (`<>{value}</>`) to render
+them as-is.
+
+### `printKeyboardShortcut` has no key separator on non-Mac platforms
+
+`printKeyboardShortcut` (used by `KeyboardShortcut` and Tooltip
+shortcuts) substitutes symbols and joins without a separator on Mac
+(`⇧⏎`), but on other platforms it joins the raw key names as-is, so
+`['Shift', 'Enter']` renders as "ShiftEnter". Multi-key shortcuts
+therefore look broken outside Mac. A real fix means joining with `+`
+(or similar) in the non-Mac branch; until then, avoid multi-key
+shortcuts in always-visible UI text where the mangling is prominent.
+
 ## features/designs
 
 ### The studio store is instance-scoped, and must stay that way
@@ -962,93 +1047,6 @@ tick would each overwrite the last, and only one node would move.
 mouseup with every moved node's frame, so the consumer applies them in
 a single update. A consumer that supports multi-selection must handle
 it; implementing only `onFrameChange` silently drops group moves.
-
-## ui/primitives
-
-### Select keeps raw overflow scrolling instead of ScrollArea
-
-`Select.css`'s `.select-list` scrolls with a plain `overflow-y: auto`
-rather than the `ScrollArea` primitive. This is deliberate: the base-ui
-Select owns the popup's scroll behaviour (the `ScrollUpArrow` and
-`ScrollDownArrow` elements plus keyboard-driven scrolling all operate on
-the `List` element as the scroll container, sized by the primitive's
-`--available-height` variable). Wrapping the list in `ScrollArea` would
-move scrolling to the ScrollArea viewport and break the arrows and
-keyboard scrolling, so the ScrollArea-everywhere convention does not
-apply here.
-
-### Base UI render-prop spreads silently overwrite own handlers
-
-Components passed to a Base UI `render` prop receive Base UI's
-merged props (its internal handlers plus `useButton` wrappers,
-which always include `onClick`/`onMouseDown`/`onPointerDown`).
-Writing `onMouseDown={...} {...other}` therefore drops the
-component's own handler whenever Base UI supplies one of the same
-name — there is no error, the handler just never runs. Spread
-`{...other}` first and define handlers after it, chaining the
-incoming handler before custom behaviour (see
-`ComboboxChipRemove`, whose propagation stops were overwritten
-this way, letting chip-remove mousedowns reach the trigger and
-toggle the popup).
-
-### Registry context values must be split from the data they collect
-
-`SearchableMenu` collects its items through a context: each
-`SearchableMenuItem` calls `register()` from an effect, which appends to
-the menu's `orderedIds` state. That state feeds `getItemNavProps`, which
-is part of the same context value.
-
-Depending on the whole context object in the item's registration effect
-therefore loops forever: registering changes `orderedIds`, which gives
-the context a new identity, which re-runs the effect, which registers
-again. Nothing converges, because unregister/register rebuilds the array
-each pass even though its contents are unchanged. The main thread is
-pinned, so it presents as a freeze rather than a slow render — and in
-tests, vitest's own timeout cannot fire, so the run hangs instead of
-failing.
-
-Depend on the individual `register`/`unregister` callbacks (both stable,
-`useCallback` with no deps) rather than the context object. The same
-applies to any registry-style context: keep the stable registration
-callbacks separate from the derived data, or split them into two
-contexts.
-
-### `ScrollArea` needs a `getAnimations` polyfill in happy-dom tests
-
-The base-ui scroll area polls `Element.getAnimations` on a timer,
-which happy-dom does not implement — tests rendering `ScrollArea`
-throw unhandled `viewport.getAnimations is not a function` errors
-after teardown. Polyfill it in the package's test setup
-(`Element.prototype.getAnimations = () => []`, see
-`features/spaces/src/test-utils/setup-tests.ts`).
-
-### `useForm` field props don't typecheck against `TextField`
-
-`useForm`'s `fieldProps` carry `error?: string` (validators return
-plain message strings), but `TextField`'s `error` prop is typed
-`TranslationKey` — spreading `{...fieldProps.x}` onto a `TextField`
-fails the typecheck (see `CreateDataViewForm`). Existing forms live
-with the error; a real fix means deciding whether form validators
-return translation keys or `TextField` accepts plain strings.
-
-### `TranslatableNode` treats strings as i18n keys
-
-Props typed `TranslatableNode` (Tooltip `title`/`description`, `Text`
-`text`, menu labels, ...) translate string values internally — passing
-pre-translated or dynamic text as a string either fails the type check
-or double-translates. Pass the raw `TranslationKey` when there is one;
-wrap already-built strings in a fragment (`<>{value}</>`) to render
-them as-is.
-
-### `printKeyboardShortcut` has no key separator on non-Mac platforms
-
-`printKeyboardShortcut` (used by `KeyboardShortcut` and Tooltip
-shortcuts) substitutes symbols and joins without a separator on Mac
-(`⇧⏎`), but on other platforms it joins the raw key names as-is, so
-`['Shift', 'Enter']` renders as "ShiftEnter". Multi-key shortcuts
-therefore look broken outside Mac. A real fix means joining with `+`
-(or similar) in the non-Mac branch; until then, avoid multi-key
-shortcuts in always-visible UI text where the mangling is prominent.
 
 ## apps/desktop-electrobun
 
