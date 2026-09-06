@@ -22,10 +22,6 @@ const REPO_ROOT = Bun.spawnSync(['git', 'rev-parse', '--show-toplevel'])
 // worktrees read and write the same manifests
 const DEV_DIR = `${process.env.HOME}/Documents/MindDrop 2/dev`;
 const CHANGES_DIR = `${DEV_DIR}/changes`;
-// Plans live in the workspace as a MindDrop database
-const PLANS_DIR = `${process.env.HOME}/Documents/MindDrop 2/Dev plans`;
-// Plan statuses which are no longer active work
-const ARCHIVED_PLAN_STATUSES = ['Completed', 'Abandoned'];
 
 /**
  * Reads and parses all manifest JSON files from the changes directory.
@@ -193,97 +189,6 @@ function deleteManifest(slug: string): void {
 }
 
 /**
- * Reads all active plan entries from the plans database, omitting
- * completed and abandoned ones.
- */
-function readAllPlans(): { name: string; filename: string }[] {
-  if (!existsSync(PLANS_DIR)) {
-    return [];
-  }
-
-  const entries = readdirSync(PLANS_DIR);
-
-  return entries
-    .filter((entry) => entry.endsWith('.md'))
-    .filter((filename) => {
-      const status = readPlanProperty(filename, 'Status');
-
-      return !ARCHIVED_PLAN_STATUSES.includes(status);
-    })
-    .map((filename) => ({
-      name: extractPlanTitle(filename),
-      filename,
-    }));
-}
-
-/**
- * Returns a plan's display title, falling back to a formatted
- * version of its filename.
- */
-function extractPlanTitle(filename: string): string {
-  const title = readPlanProperty(filename, 'Title');
-
-  if (title) {
-    return title;
-  }
-
-  // Fallback: remove extension, replace dashes with spaces, title-case
-  return filename
-    .replace('.md', '')
-    .split('-')
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
-}
-
-/**
- * Reads a single-line property value from a plan's frontmatter.
- * Returns an empty string when the property is absent.
- */
-function readPlanProperty(filename: string, property: string): string {
-  let content: string;
-
-  try {
-    content = readFileSync(`${PLANS_DIR}/${filename}`, 'utf-8');
-  } catch {
-    return '';
-  }
-
-  // Properties only exist inside a leading frontmatter block
-  if (!content.startsWith('---\n')) {
-    return '';
-  }
-
-  const frontmatterEnd = content.indexOf('\n---\n', 4);
-
-  if (frontmatterEnd === -1) {
-    return '';
-  }
-
-  const frontmatter = content.slice(4, frontmatterEnd);
-  const match = frontmatter.match(new RegExp(`^${property}:[ \\t]*(.+)$`, 'm'));
-
-  if (!match) {
-    return '';
-  }
-
-  // Values may be quoted when they contain YAML control characters
-  return match[1].trim().replace(/^"(.*)"$/, '$1');
-}
-
-/**
- * Reads and returns the content of a plan file.
- */
-function getPlanContent(filename: string): string {
-  const fullPath = `${PLANS_DIR}/${filename}`;
-
-  if (!existsSync(fullPath)) {
-    return '';
-  }
-
-  return readFileSync(fullPath, 'utf-8');
-}
-
-/**
  * Returns the git status for all changed files relative to a base
  * ref, diffed in the given worktree or the main checkout.
  */
@@ -375,14 +280,6 @@ export const rpcHandlers = {
     worktree: string | null;
   }) => {
     return getFileStatuses(baseRef, worktree);
-  },
-
-  getPlans: async () => {
-    return readAllPlans();
-  },
-
-  getPlanContent: async ({ filename }: { filename: string }) => {
-    return getPlanContent(filename);
   },
 
   getReviewComments: async ({ slug }: { slug: string }) => {

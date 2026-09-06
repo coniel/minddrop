@@ -164,22 +164,6 @@ export type DevReviewRPC = {
       };
 
       /**
-       * Returns all plan files from dev/plans/.
-       */
-      getPlans: {
-        params: Record<string, never>;
-        response: { name: string; filename: string }[];
-      };
-
-      /**
-       * Returns the markdown content of a plan file.
-       */
-      getPlanContent: {
-        params: { filename: string };
-        response: string;
-      };
-
-      /**
        * Returns all review comments for a work group.
        */
       getReviewComments: {
@@ -218,11 +202,6 @@ export type DevReviewRPC = {
        * Sent when manifests have changed on disk.
        */
       manifestsChanged: Record<string, never>;
-
-      /**
-       * Sent when plan files have changed on disk.
-       */
-      plansChanged: Record<string, never>;
 
       /**
        * Sent when review comment files have changed on disk.

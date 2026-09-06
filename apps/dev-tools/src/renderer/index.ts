@@ -10,10 +10,6 @@ export const rpc = Electroview.defineRPC<DevReviewRPC>({
         // Dispatch a custom event that React components can listen to
         window.dispatchEvent(new CustomEvent('manifests-changed'));
       },
-      plansChanged: () => {
-        // Dispatch a custom event that React components can listen to
-        window.dispatchEvent(new CustomEvent('plans-changed'));
-      },
       reviewCommentsChanged: () => {
         // Dispatch a custom event that React components can listen to
         window.dispatchEvent(new CustomEvent('review-comments-changed'));

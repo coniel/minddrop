@@ -3,7 +3,7 @@ import type { ManifestWithSlug } from '../types';
 import { FileIcon } from './FileIcon';
 import { FileList } from './FileList';
 import { groupFilesByPackage } from './groupFilesByPackage';
-import type { FileStatus, Plan, SelectedFile } from './types';
+import type { FileStatus, SelectedFile } from './types';
 import './Sidebar.css';
 
 interface SidebarProps {
@@ -26,21 +26,6 @@ interface SidebarProps {
    * Called when a file is selected for viewing.
    */
   onSelectFile: (file: SelectedFile) => void;
-
-  /**
-   * All available plans.
-   */
-  plans: Plan[];
-
-  /**
-   * The filename of the currently selected plan, if any.
-   */
-  selectedPlan: string | null;
-
-  /**
-   * Called when a plan is selected for viewing.
-   */
-  onSelectPlan: (filename: string) => void;
 
   /**
    * Called when a work group is deleted.
@@ -66,9 +51,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
   untrackedFiles,
   selectedFile,
   onSelectFile,
-  plans,
-  selectedPlan,
-  onSelectPlan,
   onDeleteManifest,
   fileStatuses,
   style,
@@ -129,15 +111,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
     });
   };
 
-  // Group plans by manifest slug using prefix matching
-  const plansForManifest = (slug: string): Plan[] => {
-    return plans.filter((plan) => {
-      const planSlug = plan.filename.replace('.md', '');
-
-      return planSlug === slug || planSlug.startsWith(`${slug}-`);
-    });
-  };
-
   // Handle typing in the search field
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
@@ -166,16 +139,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   // Whether the search results replace the regular sidebar content
   const isSearching = searchQuery.trim().length > 0;
-
-  // Plans that don't match any manifest
-  const unmatchedPlans = plans.filter((plan) => {
-    const planSlug = plan.filename.replace('.md', '');
-
-    return !manifests.some(
-      (manifest) =>
-        planSlug === manifest.slug || planSlug.startsWith(`${manifest.slug}-`),
-    );
-  });
 
   return (
     <div className="sidebar" style={style}>
@@ -228,80 +191,46 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
       ) : (
         <div className="sidebar-content">
-          {unmatchedPlans.length > 0 && (
-            <div className="sidebar-plans-section">
-              <div className="sidebar-header sidebar-header-plans">Plans</div>
-
-              {unmatchedPlans.map((plan) => (
-                <button
-                  key={plan.filename}
-                  className={`sidebar-plan-button ${selectedPlan === plan.filename ? 'selected' : ''}`}
-                  onClick={() => onSelectPlan(plan.filename)}
-                >
-                  {plan.name}
-                </button>
-              ))}
-            </div>
-          )}
-
           <div className="sidebar-header sidebar-header-work-groups">
             Work Groups
           </div>
 
-          {manifests.map((manifest) => {
-            const groupPlans = plansForManifest(manifest.slug);
-
-            return (
-              <div key={manifest.slug} className="sidebar-group">
-                <div className="sidebar-group-header-row">
-                  <button
-                    className="sidebar-group-header"
-                    onClick={() => toggleGroup(manifest.slug)}
-                  >
-                    <span className="sidebar-group-chevron">
-                      {expandedGroups.has(manifest.slug) ? '▼' : '▶'}
-                    </span>
-                    <span className="sidebar-group-title">
-                      {manifest.title}
-                    </span>
-                    <span className="sidebar-group-count">
-                      {manifest.files.length}
-                    </span>
-                  </button>
-                  <button
-                    className="sidebar-delete-button"
-                    onClick={() => onDeleteManifest(manifest.slug)}
-                    title="Remove work group"
-                  >
-                    ✕
-                  </button>
-                </div>
-
-                {(isFooterLayout || expandedGroups.has(manifest.slug)) && (
-                  <>
-                    {groupPlans.map((plan) => (
-                      <button
-                        key={plan.filename}
-                        className={`sidebar-plan-button ${selectedPlan === plan.filename ? 'selected' : ''}`}
-                        onClick={() => onSelectPlan(plan.filename)}
-                      >
-                        {plan.name}
-                      </button>
-                    ))}
-
-                    <FileList
-                      files={manifest.files}
-                      selectedPath={selectedFile?.path ?? null}
-                      onSelectFile={(path) =>
-                        handleSelectManifestFile(manifest, path)
-                      }
-                      fileStatuses={fileStatuses}
-                    />
-                  </>
-                )}
+          {manifests.map((manifest) => (
+            <div key={manifest.slug} className="sidebar-group">
+              <div className="sidebar-group-header-row">
+                <button
+                  className="sidebar-group-header"
+                  onClick={() => toggleGroup(manifest.slug)}
+                >
+                  <span className="sidebar-group-chevron">
+                    {expandedGroups.has(manifest.slug) ? '▼' : '▶'}
+                  </span>
+                  <span className="sidebar-group-title">{manifest.title}</span>
+                  <span className="sidebar-group-count">
+                    {manifest.files.length}
+                  </span>
+                </button>
+                <button
+                  className="sidebar-delete-button"
+                  onClick={() => onDeleteManifest(manifest.slug)}
+                  title="Remove work group"
+                >
+                  ✕
+                </button>
               </div>
-            );
-          })}
+
+              {(isFooterLayout || expandedGroups.has(manifest.slug)) && (
+                <FileList
+                  files={manifest.files}
+                  selectedPath={selectedFile?.path ?? null}
+                  onSelectFile={(path) =>
+                    handleSelectManifestFile(manifest, path)
+                  }
+                  fileStatuses={fileStatuses}
+                />
+              )}
+            </div>
+          ))}
 
           {manifests.length === 0 && (
             <div className="sidebar-empty">No work groups found</div>

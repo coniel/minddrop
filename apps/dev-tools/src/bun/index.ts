@@ -20,8 +20,6 @@ const REPO_ROOT = Bun.spawnSync(['git', 'rev-parse', '--show-toplevel'])
 // worktrees read and write the same manifests
 const DEV_DIR = `${process.env.HOME}/Documents/MindDrop 2/dev`;
 const CHANGES_DIR = `${DEV_DIR}/changes`;
-// Plans live in the workspace as a MindDrop database
-const PLANS_DIR = `${process.env.HOME}/Documents/MindDrop 2/Dev plans`;
 const GIT_DIR = `${REPO_ROOT}/.git`;
 
 // Create typed RPC for the webview
@@ -132,18 +130,6 @@ try {
   console.log(`Watching ${GIT_DIR} for git state changes`);
 } catch {
   console.log('.git directory not found, skipping watcher');
-}
-
-// Watch the plans directory for plan file updates
-try {
-  watch(PLANS_DIR, (_eventType, filename) => {
-    if (!filename || filename.endsWith('.md')) {
-      rpc.send.plansChanged({});
-    }
-  });
-  console.log(`Watching ${PLANS_DIR} for plan changes`);
-} catch {
-  console.log('Plans directory not found, skipping watcher');
 }
 
 // Watch the reviews directory for comment file updates, creating it

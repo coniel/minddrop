@@ -5,13 +5,11 @@ import type {
   ReviewComment,
 } from '../types';
 import { DiffViewer } from './DiffViewer';
-import { PlanViewer } from './PlanViewer';
 import { ReviewPanel } from './ReviewPanel';
 import { Sidebar } from './Sidebar';
 import { rpc } from './index';
 import type {
   FileStatus,
-  Plan,
   RevealRequest,
   SelectedFile,
   ViewMode,
@@ -33,9 +31,6 @@ export const App: React.FC = () => {
   const [splitDiff, setSplitDiff] = useState(false);
   const [originalContent, setOriginalContent] = useState('');
   const [currentContent, setCurrentContent] = useState('');
-  const [plans, setPlans] = useState<Plan[]>([]);
-  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
-  const [planContent, setPlanContent] = useState('');
   const [fileStatuses, setFileStatuses] = useState<Record<string, FileStatus>>(
     {},
   );
@@ -102,17 +97,10 @@ export const App: React.FC = () => {
     }
   }, []);
 
-  // Fetch plans
-  const refreshPlans = useCallback(async () => {
-    const planData = await rpc.request.getPlans({});
-    setPlans(planData);
-  }, []);
-
   // Initial load
   useEffect(() => {
     refreshData();
-    refreshPlans();
-  }, [refreshData, refreshPlans]);
+  }, [refreshData]);
 
   // Listen for manifest changes from the backend watcher
   useEffect(() => {
@@ -126,38 +114,6 @@ export const App: React.FC = () => {
       window.removeEventListener('manifests-changed', handler);
     };
   }, [refreshData]);
-
-  // Listen for plan changes from the backend watcher
-  useEffect(() => {
-    const handler = () => {
-      refreshPlans();
-    };
-
-    window.addEventListener('plans-changed', handler);
-
-    return () => {
-      window.removeEventListener('plans-changed', handler);
-    };
-  }, [refreshPlans]);
-
-  // Load plan content when selection changes
-  useEffect(() => {
-    if (!selectedPlan) {
-      setPlanContent('');
-
-      return;
-    }
-
-    const loadPlanContent = async () => {
-      const content = await rpc.request.getPlanContent({
-        filename: selectedPlan,
-      });
-
-      setPlanContent(content);
-    };
-
-    loadPlanContent();
-  }, [selectedPlan]);
 
   // Load file content when selection changes
   useEffect(() => {
@@ -338,7 +294,6 @@ export const App: React.FC = () => {
           baseRef: group.baseRef,
           worktree: group.worktree,
         });
-        setSelectedPlan(null);
       } else {
         // Next/prev group
         const direction = event.key === 'l' ? 1 : -1;
@@ -356,7 +311,6 @@ export const App: React.FC = () => {
           baseRef: nextGroup.baseRef,
           worktree: nextGroup.worktree,
         });
-        setSelectedPlan(null);
       }
     };
 
@@ -367,36 +321,14 @@ export const App: React.FC = () => {
     };
   }, [manifests, untrackedFiles, selectedFile]);
 
-  // Handle selecting a file (clears selected plan, activates its work group)
+  // Handle selecting a file (activates its work group)
   const handleSelectFile = useCallback((file: SelectedFile) => {
     setSelectedFile(file);
-    setSelectedPlan(null);
 
     if (file.manifestSlug) {
       setActiveSlug(file.manifestSlug);
     }
   }, []);
-
-  // Handle selecting a plan (clears selected file, activates its work group)
-  const handleSelectPlan = useCallback(
-    (filename: string) => {
-      setSelectedPlan(filename);
-      setSelectedFile(null);
-
-      // Plans belong to the work group their slug is prefixed with
-      const planSlug = filename.replace('.md', '');
-      const manifest = manifests.find(
-        (candidate) =>
-          planSlug === candidate.slug ||
-          planSlug.startsWith(`${candidate.slug}-`),
-      );
-
-      if (manifest) {
-        setActiveSlug(manifest.slug);
-      }
-    },
-    [manifests],
-  );
 
   // Handle clicking a comment: open its file and scroll to its lines
   const handleSelectComment = useCallback(
@@ -441,7 +373,6 @@ export const App: React.FC = () => {
         baseRef: activeManifest.baseRef,
         worktree: activeManifest.worktree ?? null,
       });
-      setSelectedPlan(null);
     },
     [selectedFile, viewMode, activeManifest],
   );
@@ -620,9 +551,6 @@ export const App: React.FC = () => {
         untrackedFiles={untrackedFiles}
         selectedFile={selectedFile}
         onSelectFile={handleSelectFile}
-        plans={plans}
-        selectedPlan={selectedPlan}
-        onSelectPlan={handleSelectPlan}
         onDeleteManifest={handleDeleteManifest}
         fileStatuses={fileStatuses}
         style={sidebarStyle}
@@ -644,14 +572,6 @@ export const App: React.FC = () => {
             canComment={selectedFile.manifestSlug !== null}
             onCreateComment={handleCreateFileComment}
             onFocusComment={setFocusedCommentId}
-          />
-        ) : selectedPlan ? (
-          <PlanViewer
-            name={
-              plans.find((plan) => plan.filename === selectedPlan)?.name ??
-              selectedPlan
-            }
-            content={planContent}
           />
         ) : (
           <div className="app-empty">Select a file to view changes</div>

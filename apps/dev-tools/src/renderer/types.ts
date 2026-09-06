@@ -24,20 +24,8 @@ export interface RevealRequest {
 }
 
 /**
- * A plan file entry from dev/plans/.
+ * Represents a currently selected file for viewing.
  */
-export interface Plan {
-  /**
-   * Human-readable display name.
-   */
-  name: string;
-
-  /**
-   * The plan's filename on disk.
-   */
-  filename: string;
-}
-
 export interface SelectedFile {
   /**
    * Repo-relative file path.
