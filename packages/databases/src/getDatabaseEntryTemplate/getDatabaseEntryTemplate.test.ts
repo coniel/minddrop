@@ -1,14 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import {
-  DatabaseEntryTemplateNotFoundError,
-  DatabaseNotFoundError,
-} from '../errors';
-import {
-  cleanup,
-  entryTemplate1,
-  entryTemplatesDatabase,
-  setup,
-} from '../test-utils';
+import { DatabaseEntryTemplateNotFoundError } from '../errors';
+import { cleanup, entryTemplate1, setup } from '../test-utils';
 import { getDatabaseEntryTemplate } from './getDatabaseEntryTemplate';
 
 describe('getDatabaseEntryTemplate', () => {
@@ -17,20 +9,16 @@ describe('getDatabaseEntryTemplate', () => {
   afterEach(cleanup);
 
   it('returns the requested template', () => {
-    expect(
-      getDatabaseEntryTemplate(entryTemplatesDatabase.id, entryTemplate1.id),
-    ).toEqual(entryTemplate1);
-  });
-
-  it('throws if the database does not exist', () => {
-    expect(() =>
-      getDatabaseEntryTemplate('missing', entryTemplate1.id),
-    ).toThrow(DatabaseNotFoundError);
+    expect(getDatabaseEntryTemplate(entryTemplate1.id)).toEqual(entryTemplate1);
   });
 
   it('throws if the template does not exist', () => {
-    expect(() =>
-      getDatabaseEntryTemplate(entryTemplatesDatabase.id, 'missing'),
-    ).toThrow(DatabaseEntryTemplateNotFoundError);
+    expect(() => getDatabaseEntryTemplate('missing')).toThrow(
+      DatabaseEntryTemplateNotFoundError,
+    );
+  });
+
+  it('returns null if the template does not exist and throwOnNotFound is false', () => {
+    expect(getDatabaseEntryTemplate('missing', false)).toBeNull();
   });
 });

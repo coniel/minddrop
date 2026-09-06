@@ -1,1 +1,0 @@
-export { writeDatabaseViews } from './writeDatabaseViews';

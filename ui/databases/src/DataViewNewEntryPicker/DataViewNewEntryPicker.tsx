@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import {
   Database,
   DatabaseEntryTemplate,
+  DatabaseEntryTemplates,
   DatabaseId,
   Databases,
 } from '@minddrop/databases';
@@ -65,6 +66,7 @@ export const DataViewNewEntryPicker: React.FC<DataViewNewEntryPickerProps> = ({
 
   // All databases, offered as options when not searching
   const allDatabases = Databases.useAll();
+  const allTemplates = DatabaseEntryTemplates.useAll();
 
   // Databases listed as options, fuzzy matched while searching
   const databases = query ? Databases.search(query) : allDatabases;
@@ -73,7 +75,7 @@ export const DataViewNewEntryPicker: React.FC<DataViewNewEntryPickerProps> = ({
   // matched database are already listed under it, so only templates
   // from other databases are added.
   const matchedTemplates = query
-    ? Databases.searchEntryTemplates(query).filter(
+    ? DatabaseEntryTemplates.search(query).filter(
         (result) =>
           !databases.some((database) => database.id === result.database.id),
       )
@@ -102,7 +104,7 @@ export const DataViewNewEntryPicker: React.FC<DataViewNewEntryPickerProps> = ({
   }
 
   // Keep focus in the search input when pressing the picker's
-  // other elements, so selection clicks never blur the input
+  // other elements, so selection clicks never blur the input.
   function handleMouseDown(event: React.MouseEvent) {
     if (!(event.target instanceof HTMLInputElement)) {
       event.preventDefault();
@@ -125,7 +127,7 @@ export const DataViewNewEntryPicker: React.FC<DataViewNewEntryPickerProps> = ({
   }
 
   // Select an option but keep the picker open for creating
-  // further entries
+  // further entries.
   function handleSecondarySelect(databaseId: DatabaseId, templateId?: string) {
     onSecondarySelect(databaseId, templateId);
 
@@ -161,9 +163,9 @@ export const DataViewNewEntryPicker: React.FC<DataViewNewEntryPickerProps> = ({
     // Templates are only offered among search results
     if (query) {
       items.push(
-        ...(database.entryTemplates ?? []).map((template) =>
-          renderTemplateItem(database, template),
-        ),
+        ...allTemplates
+          .filter((template) => template.database === database.id)
+          .map((template) => renderTemplateItem(database, template)),
       );
     }
 
@@ -171,7 +173,7 @@ export const DataViewNewEntryPicker: React.FC<DataViewNewEntryPickerProps> = ({
   }
 
   // Render a template option, qualified by the database's entry
-  // name to stay distinguishable in the flat results list
+  // name to stay distinguishable in the flat results list.
   function renderTemplateItem(
     database: Database,
     template: DatabaseEntryTemplate,

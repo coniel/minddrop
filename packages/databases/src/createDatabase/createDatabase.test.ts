@@ -32,6 +32,9 @@ const newDatabase: Database = {
   designId: null,
   designPropertyMap: {},
   defaultLayouts: {},
+  views: [],
+  designs: [],
+  entryTemplates: [],
 };
 
 describe('createDatabase', () => {

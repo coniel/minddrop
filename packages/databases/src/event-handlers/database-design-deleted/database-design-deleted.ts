@@ -1,13 +1,14 @@
 import { DesignDeletedEventData } from '@minddrop/designs-next';
 import { isEntityId } from '@minddrop/utils';
-import { DatabasesStore } from '../../DatabasesStore';
-import { updateDatabase } from '../../updateDatabase';
-import { writeDatabaseDesigns } from '../../writeDatabaseDesigns';
+import { getDatabase } from '../../getDatabase';
+import { removeDatabaseDesignFile } from '../../removeDatabaseDesignFile';
+import { UpdateDatabaseData, updateDatabase } from '../../updateDatabase';
 
 /**
  * Called when a design is deleted. If the design was owned by a
- * database, unpins it from the database's default designs and
- * persists the remaining designs to the database config.
+ * database, removes it from the database's design ID list and
+ * default design pins, and deletes its file from the database's
+ * designs directory.
  */
 export async function onDatabaseDesignDeleted(
   data: DesignDeletedEventData,
@@ -16,15 +17,17 @@ export async function onDatabaseDesignDeleted(
     return;
   }
 
-  // Get the database from the store, return early if it no
-  // longer exists (handles deletion race).
-  const database = DatabasesStore.get(data.owner);
+  // Get the owning database
+  const database = getDatabase(data.owner);
 
-  if (!database) {
-    return;
+  const update: UpdateDatabaseData = {};
+
+  // Remove the design from the database's design ID list if present
+  if (database.designs.includes(data.id)) {
+    update.designs = database.designs.filter((id) => id !== data.id);
   }
 
-  // Drop the default design pins pointing at the deleted design
+  // Remove the default design pins pointing at the deleted design
   const pinnedContexts = Object.entries(database.defaultDesigns ?? {}).filter(
     ([, designId]) => designId !== data.id,
   );
@@ -32,11 +35,13 @@ export async function onDatabaseDesignDeleted(
   if (
     pinnedContexts.length !== Object.keys(database.defaultDesigns ?? {}).length
   ) {
-    await updateDatabase(data.owner, {
-      defaultDesigns: Object.fromEntries(pinnedContexts),
-    });
+    update.defaultDesigns = Object.fromEntries(pinnedContexts);
   }
 
-  // Persist the remaining designs
-  await writeDatabaseDesigns(data.owner);
+  if (Object.keys(update).length > 0) {
+    await updateDatabase(data.owner, update);
+  }
+
+  // Delete the design's file
+  await removeDatabaseDesignFile(data);
 }

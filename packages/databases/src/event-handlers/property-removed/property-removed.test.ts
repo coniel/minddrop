@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Collections } from '@minddrop/collections';
-import { DatabasesStore } from '../../DatabasesStore';
+import { getDatabaseEntryTemplate } from '../../getDatabaseEntryTemplate';
+import { getDatabaseEntryTemplates } from '../../getDatabaseEntryTemplates';
 import {
   sqlGetAllEntriesFull,
   sqlGetEntrySyncRecords,
@@ -23,7 +24,7 @@ import {
 } from '../../test-utils';
 import { Database } from '../../types';
 import {
-  entryTemplateFilePath,
+  resolveEntryTemplateFilePath,
   virtualCollectionId,
   virtualCollectionName,
 } from '../../utils';
@@ -176,23 +177,19 @@ describe('onRemoveProperty', () => {
         property,
       });
 
-      const templates = DatabasesStore.get(
-        entryTemplatesDatabase.id,
-      )!.entryTemplates!;
+      const template = getDatabaseEntryTemplate(entryTemplate1.id);
 
       // The removed property's value should be gone
-      expect(templates[0].properties.Notes).toBeUndefined();
+      expect(template.properties.Notes).toBeUndefined();
       // Other values should be untouched
-      expect(templates[0].properties.Image).toBe(
-        entryTemplate1.properties.Image,
-      );
+      expect(template.properties.Image).toBe(entryTemplate1.properties.Image);
     });
 
     it('deletes files stored for a removed file based property', async () => {
       const property = entryTemplatesDatabase.properties.find(
         (p) => p.name === 'Image',
       )!;
-      const storedImagePath = entryTemplateFilePath(
+      const storedImagePath = resolveEntryTemplateFilePath(
         entryTemplatesDatabase.path,
         entryTemplate1.id,
         'template-image.png',
@@ -207,15 +204,13 @@ describe('onRemoveProperty', () => {
       // The stored file should be deleted
       expect(MockFs.exists(storedImagePath)).toBeFalsy();
 
-      const templates = DatabasesStore.get(
-        entryTemplatesDatabase.id,
-      )!.entryTemplates!;
-
       // The removed property's value should be gone
-      expect(templates[0].properties.Image).toBeUndefined();
+      expect(
+        getDatabaseEntryTemplate(entryTemplate1.id).properties.Image,
+      ).toBeUndefined();
     });
 
-    it('leaves the config untouched when no template uses the property', async () => {
+    it('leaves the templates untouched when none use the property', async () => {
       const property = entryTemplatesDatabase.properties.find(
         (p) => p.name === 'Count',
       )!;
@@ -226,12 +221,11 @@ describe('onRemoveProperty', () => {
         property,
       });
 
-      const templates = DatabasesStore.get(
-        entryTemplatesDatabase.id,
-      )!.entryTemplates!;
-
       // The templates should be unchanged
-      expect(templates).toEqual([entryTemplate1, entryTemplate2]);
+      expect(getDatabaseEntryTemplates(entryTemplatesDatabase.id)).toEqual([
+        entryTemplate1,
+        entryTemplate2,
+      ]);
     });
   });
 });

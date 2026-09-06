@@ -1,5 +1,9 @@
 import { useCallback, useMemo } from 'react';
-import { DatabaseEntryTemplate, Databases } from '@minddrop/databases';
+import {
+  DatabaseEntryTemplate,
+  DatabaseEntryTemplates,
+  Databases,
+} from '@minddrop/databases';
 import {
   SortableItemRenderProps,
   SortableList,
@@ -45,35 +49,32 @@ export const DatabaseEntryTemplatesEditor: React.FC<
   DatabaseEntryTemplatesEditorProps
 > = ({ databaseId, draftTemplates, onSaveDraft, onCancelDraft }) => {
   const databaseConfig = Databases.use(databaseId);
+  const templates = DatabaseEntryTemplates.useAll(databaseId);
 
   // Template IDs used as sortable item IDs
   const templateIds = useMemo(
-    () => databaseConfig?.entryTemplates?.map((template) => template.id) ?? [],
-    [databaseConfig?.entryTemplates],
+    () => templates.map((template) => template.id),
+    [templates],
   );
 
   // Build a lookup map for persisted templates by ID
   const templateMap = useMemo(() => {
     const map = new Map<string, DatabaseEntryTemplate>();
 
-    for (const template of databaseConfig?.entryTemplates ?? []) {
+    for (const template of templates) {
       map.set(template.id, template);
     }
 
     return map;
-  }, [databaseConfig?.entryTemplates]);
+  }, [templates]);
 
-  // Handle sort by mapping the new order to storage order
-  // and updating the database
+  // Handle sort by persisting the new order as the config's
+  // template ID list.
   const handleSort = useCallback(
     (newOrder: string[]) => {
-      const reorderedTemplates = newOrder
-        .map((id) => templateMap.get(id))
-        .filter((template): template is DatabaseEntryTemplate => !!template);
-
-      Databases.update(databaseId, { entryTemplates: reorderedTemplates });
+      Databases.update(databaseId, { entryTemplates: newOrder });
     },
-    [databaseId, templateMap],
+    [databaseId],
   );
 
   // Render each sortable template item

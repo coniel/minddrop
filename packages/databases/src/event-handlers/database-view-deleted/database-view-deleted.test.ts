@@ -1,64 +1,78 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DataView, DataViews } from '@minddrop/data-views';
+import { DataView } from '@minddrop/data-views';
 import { DataViewFixtures } from '@minddrop/data-views/test-utils';
 import { DatabasesStore } from '../../DatabasesStore';
-import { cleanup, setup } from '../../test-utils';
+import { getDatabase } from '../../getDatabase';
+import { MockFs, cleanup, setup } from '../../test-utils';
 import { objectDatabase } from '../../test-utils/fixtures';
+import { resolveDatabaseViewFilePath } from '../../utils';
 import { onDatabaseViewDeleted } from './database-view-deleted';
 
-const { dataView_virtual_1, dataView_board_1 } = DataViewFixtures;
+const { dataView_virtual_1 } = DataViewFixtures;
 
 describe('onDatabaseViewDeleted', () => {
   beforeEach(setup);
   afterEach(cleanup);
 
-  it('persists the remaining views to the database config', () => {
-    // Create two virtual views owned by this database
-    const view1: DataView = {
+  it("deletes the view's file from the database's views directory", async () => {
+    // Create a virtual view owned by this database
+    const view: DataView = {
       ...dataView_virtual_1,
       dataSource: { type: 'database', id: objectDatabase.id },
       owner: objectDatabase.id,
     };
 
-    const view2: DataView = {
-      ...dataView_board_1,
-      id: 'view-virtual-board-1',
-      virtual: true,
+    // Add the view's file to the file system
+    MockFs.addFiles([
+      resolveDatabaseViewFilePath(objectDatabase.path, view.id),
+    ]);
+
+    // Call the handler
+    await onDatabaseViewDeleted(view);
+
+    // The view's file should be deleted
+    expect(
+      MockFs.exists(resolveDatabaseViewFilePath(objectDatabase.path, view.id)),
+    ).toBe(false);
+  });
+
+  it("drops the view from the config's view ID list", async () => {
+    // Create a virtual view owned by this database
+    const view: DataView = {
+      ...dataView_virtual_1,
       dataSource: { type: 'database', id: objectDatabase.id },
       owner: objectDatabase.id,
     };
 
-    // Add both views to the store
-    DataViews.Store.set(view1);
-    DataViews.Store.set(view2);
-
-    // Remove view1 from the store (simulates what happens
-    // before the event fires)
-    DataViews.Store.remove(dataView_virtual_1.id);
+    // Record the view in the config's view ID list
+    DatabasesStore.update(objectDatabase.id, {
+      views: [view.id, 'view-other'],
+    });
 
     // Call the handler
-    onDatabaseViewDeleted(view1);
+    await onDatabaseViewDeleted(view);
 
-    // The database should only have view2
-    const database = DatabasesStore.get(objectDatabase.id);
-
-    expect(database!.views).toHaveLength(1);
-    expect(database!.views![0].id).toBe('view-virtual-board-1');
+    expect(getDatabase(objectDatabase.id).views).toEqual(['view-other']);
   });
 
-  it('ignores views not owned by a database', () => {
+  it('ignores views not owned by a database', async () => {
     // Create a virtual view without a database owner
     const view: DataView = {
       ...dataView_virtual_1,
       dataSource: { type: 'collection', id: 'some-collection' },
     };
 
+    // Add a file at the view's would-be path
+    MockFs.addFiles([
+      resolveDatabaseViewFilePath(objectDatabase.path, view.id),
+    ]);
+
     // Call the handler
-    onDatabaseViewDeleted(view);
+    await onDatabaseViewDeleted(view);
 
-    // The database should not have been updated
-    const database = DatabasesStore.get(objectDatabase.id);
-
-    expect(database!.views).toBeUndefined();
+    // The file should be untouched
+    expect(
+      MockFs.exists(resolveDatabaseViewFilePath(objectDatabase.path, view.id)),
+    ).toBe(true);
   });
 });

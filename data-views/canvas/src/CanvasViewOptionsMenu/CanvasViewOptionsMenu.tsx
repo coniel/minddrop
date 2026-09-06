@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { Collections } from '@minddrop/collections';
 import { DataViewTypeSettingsMenuProps } from '@minddrop/data-views';
-import { Databases } from '@minddrop/databases';
+import { DatabaseEntryTemplates, Databases } from '@minddrop/databases';
 import { DatabaseLayoutSelectionMenu } from '@minddrop/ui-databases';
 import {
   DropdownMenuPortal,
@@ -48,7 +48,7 @@ export const CanvasViewOptionsMenu: React.FC<
   );
 
   // Set the card layout override for the database the
-  // selection belongs to
+  // selection belongs to.
   function handleLayoutChange(layoutId: string, databaseId?: string) {
     if (!databaseId) {
       return;
@@ -138,13 +138,12 @@ const ToolbarCardMenu: React.FC<ToolbarCardMenuProps> = ({
   onChange,
 }) => {
   const database = Databases.use(databaseId);
+  const templates = DatabaseEntryTemplates.useAll(databaseId);
 
   // Nothing to render if the database is no longer available
   if (!database) {
     return null;
   }
-
-  const templates = database.entryTemplates ?? [];
 
   // Toggle the card's visibility in the toolbar
   function handleVisibilityChange(visible: boolean) {
@@ -152,7 +151,7 @@ const ToolbarCardMenu: React.FC<ToolbarCardMenuProps> = ({
   }
 
   // Set the template used by the card, clearing it when the
-  // blank entry option is selected
+  // blank entry option is selected.
   function handleTemplateChange(value: string) {
     const { templateId, ...rest } = cardOptions;
 

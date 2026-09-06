@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DatabasesStore } from '../../DatabasesStore';
+import { DatabaseEntryTemplatesStore } from '../../DatabaseEntryTemplatesStore';
 import {
   cleanup,
   entryTemplate1,
@@ -36,8 +36,10 @@ describe('searchDatabaseEntryTemplates', () => {
 
   it('returns templates from every database sharing a name', () => {
     // Give a second database a template with the same name
-    DatabasesStore.update(objectDatabase.id, {
-      entryTemplates: [entryTemplate1],
+    DatabaseEntryTemplatesStore.set({
+      ...entryTemplate1,
+      id: 'database-entry-template_other',
+      database: objectDatabase.id,
     });
 
     const results = searchDatabaseEntryTemplates(entryTemplate1.name);

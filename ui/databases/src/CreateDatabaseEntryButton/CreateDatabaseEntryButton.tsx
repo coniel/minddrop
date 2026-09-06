@@ -4,6 +4,7 @@ import {
   DatabaseEntries,
   DatabaseEntry,
   DatabaseEntryTemplate,
+  DatabaseEntryTemplates,
   Databases,
 } from '@minddrop/databases';
 import {
@@ -49,6 +50,7 @@ export const CreateDatabaseEntryButton: FC<CreateDatabaseEntryButtonProps> = ({
 }) => {
   const [query, setQuery] = useState('');
   const allDatabases = Databases.useAll();
+  const allTemplates = DatabaseEntryTemplates.useAll();
 
   // Database IDs to include, undefined when all are supported
   const databaseIds = useMemo(() => {
@@ -80,7 +82,7 @@ export const CreateDatabaseEntryButton: FC<CreateDatabaseEntryButtonProps> = ({
   // matched database are already listed under it, so only templates
   // from other databases are added.
   const matchedTemplates = query
-    ? Databases.searchEntryTemplates(query, databaseIds).filter(
+    ? DatabaseEntryTemplates.search(query, databaseIds).filter(
         (result) => !listedDatabases.some((db) => db.id === result.database.id),
       )
     : [];
@@ -93,12 +95,12 @@ export const CreateDatabaseEntryButton: FC<CreateDatabaseEntryButtonProps> = ({
   }, []);
 
   // Creates an entry in the given database, optionally from a
-  // template, and forwards it to the callback
+  // template, and forwards it to the callback.
   const handleCreate = useCallback(
     async (databaseId: string, templateId?: string) => {
       // Create from the template when one is selected
       const entry = templateId
-        ? await DatabaseEntries.createFromTemplate(databaseId, templateId)
+        ? await DatabaseEntries.createFromTemplate(templateId)
         : await DatabaseEntries.create(databaseId);
 
       onCreateEntry(entry);
@@ -106,10 +108,15 @@ export const CreateDatabaseEntryButton: FC<CreateDatabaseEntryButtonProps> = ({
     [onCreateEntry],
   );
 
+  // Returns a database's entry templates
+  function templatesOf(databaseId: string) {
+    return allTemplates.filter((template) => template.database === databaseId);
+  }
+
   // Single database mode
   if (database !== false && databases.length <= 1) {
     const singleDatabase = databases[0];
-    const templates = singleDatabase?.entryTemplates ?? [];
+    const templates = singleDatabase ? templatesOf(singleDatabase.id) : [];
 
     // Without templates, render a plain button
     if (!templates.length) {
@@ -124,7 +131,7 @@ export const CreateDatabaseEntryButton: FC<CreateDatabaseEntryButtonProps> = ({
     }
 
     // With templates, render a menu with a blank entry option
-    // followed by the templates
+    // followed by the templates.
     return (
       <DropdownMenu
         trigger={
@@ -156,7 +163,7 @@ export const CreateDatabaseEntryButton: FC<CreateDatabaseEntryButtonProps> = ({
   // templates nest their options in a submenu, with the blank entry
   // option first.
   function renderDatabaseItem(db: Database) {
-    const templates = db.entryTemplates ?? [];
+    const templates = templatesOf(db.id);
 
     // Databases without templates create an entry directly
     if (!templates.length) {
@@ -209,14 +216,14 @@ export const CreateDatabaseEntryButton: FC<CreateDatabaseEntryButtonProps> = ({
         contentIcon={db.icon}
         onSelect={() => handleCreate(db.id)}
       />,
-      ...(db.entryTemplates ?? []).map((template) =>
+      ...templatesOf(db.id).map((template) =>
         renderFlatTemplateItem(db, template),
       ),
     ];
   }
 
   // Render a template's create option as a flat item, qualified by
-  // database name to stay distinguishable in a flat list
+  // database name to stay distinguishable in a flat list.
   function renderFlatTemplateItem(
     db: Database,
     template: DatabaseEntryTemplate,

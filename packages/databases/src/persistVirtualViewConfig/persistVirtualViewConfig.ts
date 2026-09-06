@@ -1,8 +1,4 @@
-import {
-  DataView,
-  DataViewConfig,
-  serializeDataViewConfig,
-} from '@minddrop/data-views';
+import { DataView, DataViewConfig, DataViews } from '@minddrop/data-views';
 import { isEntityId } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabaseEntryMetadata } from '../types';
@@ -45,7 +41,7 @@ export async function persistVirtualViewConfig(view: DataView): Promise<void> {
   }
 
   // Convert the config's item references into durable form
-  const serializedConfig = serializeDataViewConfig(view.type, viewConfig);
+  const serializedConfig = DataViews.serializeConfig(view.type, viewConfig);
 
   const metadata: DatabaseEntryMetadata = {
     ...entry.metadata,

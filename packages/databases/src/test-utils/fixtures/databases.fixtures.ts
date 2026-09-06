@@ -7,7 +7,11 @@ import {
 } from '@minddrop/properties';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { Database, DatabaseEntryTemplate } from '../../types';
-import { databaseConfigFilePath, entryTemplateFilePath } from '../../utils';
+import {
+  databaseConfigFilePath,
+  resolveEntryTemplateConfigFilePath,
+  resolveEntryTemplateFilePath,
+} from '../../utils';
 import { fetchWebpageMetadataAutomation } from './database-automations.fixtures';
 
 const { workspace_1 } = WorkspaceFixtures;
@@ -37,6 +41,9 @@ function generateDatabase(
     designPropertyMap: {},
     colorProperty: null,
     defaultLayouts: { card: layout_card_3.id },
+    views: [],
+    designs: [],
+    entryTemplates: [],
     path: `${parentDir}/${data.name}`,
     ...data,
   };
@@ -227,19 +234,27 @@ export const collectionDatabase = generateDatabase({
 
 export const entryTemplate1: DatabaseEntryTemplate = {
   id: 'database-entry-template_1',
+  database: 'database_entry-templates',
   name: 'Template One',
   defaultTitle: 'Templated entry',
   properties: {
     Notes: 'Prefilled notes',
     [imagePropertyName]: 'template-image.png',
   },
+  created: new Date('2024-01-01T00:00:00.000Z'),
+  lastModified: new Date('2024-01-01T00:00:00.000Z'),
 };
 
 export const entryTemplate2: DatabaseEntryTemplate = {
   id: 'database-entry-template_2',
+  database: 'database_entry-templates',
   name: 'Template Two',
   properties: {},
+  created: new Date('2024-01-01T00:00:00.000Z'),
+  lastModified: new Date('2024-01-01T00:00:00.000Z'),
 };
+
+export const databaseEntryTemplates = [entryTemplate1, entryTemplate2];
 
 export const entryTemplatesDatabase = generateDatabase({
   id: 'database_entry-templates',
@@ -275,7 +290,7 @@ export const entryTemplatesDatabase = generateDatabase({
       name: imagePropertyName,
     },
   ],
-  entryTemplates: [entryTemplate1, entryTemplate2],
+  entryTemplates: [entryTemplate1.id, entryTemplate2.id],
 });
 
 export const databases = [
@@ -293,8 +308,16 @@ export const databases = [
 ];
 
 export const databaseEntryTemplateFiles: (MockFileDescriptor | string)[] = [
+  // Individual template config files (the database ID is not persisted)
+  ...databaseEntryTemplates.map(({ database, ...storedTemplate }) => ({
+    path: resolveEntryTemplateConfigFilePath(
+      entryTemplatesDatabase.path,
+      storedTemplate.id,
+    ),
+    textContent: JSON.stringify(storedTemplate, null, 2),
+  })),
   // The image file stored in entryTemplate1's template directory
-  entryTemplateFilePath(
+  resolveEntryTemplateFilePath(
     entryTemplatesDatabase.path,
     entryTemplate1.id,
     'template-image.png',

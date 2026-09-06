@@ -43,7 +43,7 @@ export async function createDatabase(
   }));
 
   // Generate the database config, applying the user-configured
-  // defaults for new databases
+  // defaults for new databases.
   const databaseConfig: Database = {
     ...getDatabaseDefaults(),
     properties: [],
@@ -51,6 +51,9 @@ export async function createDatabase(
     designPropertyMap: {},
     colorProperty: null,
     defaultLayouts: {},
+    views: [],
+    designs: [],
+    entryTemplates: [],
     ...options,
     id: entityId('database'),
     path: dbPath,

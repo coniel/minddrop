@@ -66,7 +66,7 @@ function resolveIdKeepers(
   const claimants = new Map<string, Database[]>();
 
   // Group the configs by the ID they claim, skipping those with no
-  // usable ID as they are re-minted regardless
+  // usable ID as they are re-minted regardless.
   databases.forEach((database) => {
     if (!database.id || !isEntityId(database.id, 'database')) {
       return;

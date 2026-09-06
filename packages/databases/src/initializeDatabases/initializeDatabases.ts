@@ -9,6 +9,7 @@ import { initializeDatabaseEntries } from '../initializeDatabaseEntries';
 import { initializeDatabaseEventHandlers } from '../initializeDatabaseEventHandlers';
 import { initializeDatabaseTemplates } from '../initializeDatabaseTemplates';
 import { loadDatabaseDesigns } from '../loadDatabaseDesigns';
+import { loadDatabaseEntryTemplates } from '../loadDatabaseEntryTemplates';
 import { loadDatabaseViews } from '../loadDatabaseViews';
 import type { Database } from '../types';
 import {
@@ -45,7 +46,7 @@ export async function initializeDatabases(): Promise<{
   const result = await backend.initializeBackend(workspace.id, workspace.path);
 
   // Restore dates in database configs (dates arrive as
-  // ISO strings over RPC)
+  // ISO strings over RPC).
   const databases = result.databases.map((database) =>
     restoreDates<Database>(database),
   );
@@ -73,13 +74,14 @@ export async function initializeDatabases(): Promise<{
     match: matchDatabaseReference,
   });
 
-  // Load database views into the ViewsStore (before event
-  // handlers so the initial load does not trigger write-back)
-  loadDatabaseViews(databases);
-
-  // Load database designs into the designs store (likewise before
-  // event handlers).
-  loadDatabaseDesigns(databases);
+  // Load database views, designs, and entry templates from the
+  // databases' config directories (before event handlers so the
+  // initial load does not trigger write-back).
+  await Promise.all([
+    loadDatabaseViews(databases),
+    loadDatabaseDesigns(databases),
+    loadDatabaseEntryTemplates(databases),
+  ]);
 
   // Register event handlers
   initializeDatabaseEventHandlers();

@@ -3,9 +3,6 @@ import {
   DatabaseDeletedEvent,
   DatabaseEntriesSqlSyncedEvent,
   DatabaseEntryMetadataUpdatedEvent,
-  DatabaseEntryTemplateAddedEvent,
-  DatabaseEntryTemplateRemovedEvent,
-  DatabaseEntryTemplateUpdatedEvent,
   DatabasePropertyAddedEvent,
   DatabasePropertyOptionRenamedEvent,
   DatabasePropertyRemovedEvent,
@@ -51,9 +48,6 @@ export const events = {
   propertyRemoved: DatabasePropertyRemovedEvent,
   propertyRenamed: DatabasePropertyRenamedEvent,
   propertyOptionRenamed: DatabasePropertyOptionRenamedEvent,
-  entryTemplateAdded: DatabaseEntryTemplateAddedEvent,
-  entryTemplateUpdated: DatabaseEntryTemplateUpdatedEvent,
-  entryTemplateRemoved: DatabaseEntryTemplateRemovedEvent,
   entryMetadataUpdated: DatabaseEntryMetadataUpdatedEvent,
   entriesSqlSynced: DatabaseEntriesSqlSyncedEvent,
   databaseSqlSynced: DatabaseSqlSyncedEvent,
@@ -93,10 +87,6 @@ export { handleBackgroundSyncResult } from './handleBackgroundSyncResult';
 export { DatabasesStore as Store } from './DatabasesStore';
 export { getAllDatabases as getAll } from './getAllDatabases';
 export { addDatabaseProperty as addProperty } from './addDatabaseProperty';
-export { addDatabaseEntryTemplate as addEntryTemplate } from './addDatabaseEntryTemplate';
-export { getDatabaseEntryTemplate as getEntryTemplate } from './getDatabaseEntryTemplate';
-export { removeDatabaseEntryTemplate as removeEntryTemplate } from './removeDatabaseEntryTemplate';
-export { updateDatabaseEntryTemplate as updateEntryTemplate } from './updateDatabaseEntryTemplate';
 export { createDatabase as create } from './createDatabase';
 export { deleteDatabase as delete } from './deleteDatabase';
 export { clearDatabaseEntries as clearEntries } from './clearDatabaseEntries';
@@ -107,7 +97,6 @@ export { removeDatabaseProperty as removeProperty } from './removeDatabaseProper
 export { renameDatabase as rename } from './renameDatabase';
 export { renameDatabasePropertyOption as renamePropertyOption } from './renameDatabasePropertyOption';
 export { searchDatabases as search } from './utils';
-export { searchDatabaseEntryTemplates as searchEntryTemplates } from './utils';
 export { updateDatabase as update } from './updateDatabase';
 export { getDatabaseDefaults as getDefaults } from './getDatabaseDefaults';
 export { setDatabaseDefault as setDefault } from './setDatabaseDefault';

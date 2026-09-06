@@ -1,32 +1,32 @@
+import { DatabaseEntryTemplatesStore } from '../DatabaseEntryTemplatesStore';
 import { DatabaseEntryTemplateNotFoundError } from '../errors';
-import { getDatabase } from '../getDatabase';
 import { DatabaseEntryTemplate } from '../types';
 
 /**
- * Returns a database entry template by ID.
+ * Retrieves a database entry template from the store.
  *
- * @param databaseId - The ID of the database the template belongs to.
  * @param templateId - The ID of the entry template.
- *
+ * @param throwOnNotFound - Whether to throw an error if the template is not found.
  * @returns The entry template.
  *
- * @throws {DatabaseNotFoundError} If the database does not exist.
  * @throws {DatabaseEntryTemplateNotFoundError} If the template does not exist.
  */
 export function getDatabaseEntryTemplate(
-  databaseId: string,
   templateId: string,
-): DatabaseEntryTemplate {
-  // Get the database config
-  const database = getDatabase(databaseId);
+): DatabaseEntryTemplate;
+export function getDatabaseEntryTemplate(
+  templateId: string,
+  throwOnNotFound: false,
+): DatabaseEntryTemplate | null;
+export function getDatabaseEntryTemplate(
+  templateId: string,
+  throwOnNotFound = true,
+): DatabaseEntryTemplate | null {
+  // Get the template from the store
+  const template = DatabaseEntryTemplatesStore.get(templateId);
 
-  // Find the requested template
-  const template = database.entryTemplates?.find(
-    (entryTemplate) => entryTemplate.id === templateId,
-  );
-
-  // Ensure the template exists
-  if (!template) {
+  // Throw an error if it doesn't exist, unless specified not to
+  if (!template && throwOnNotFound) {
     throw new DatabaseEntryTemplateNotFoundError(templateId);
   }
 

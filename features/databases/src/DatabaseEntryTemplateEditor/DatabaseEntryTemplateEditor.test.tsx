@@ -1,5 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { DatabaseUpdatedEvent, Databases } from '@minddrop/databases';
+import {
+  DatabaseEntryTemplateCreatedEvent,
+  DatabaseEntryTemplateDeletedEvent,
+  DatabaseEntryTemplateUpdatedEvent,
+  Databases,
+} from '@minddrop/databases';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { Events, OpenConfirmationDialogEvent } from '@minddrop/events';
 import {
@@ -25,7 +30,7 @@ describe('<DatabaseEntryTemplateEditor />', () => {
 
   describe('formatted text properties', () => {
     // Adds a formatted text property to the fixture database and
-    // opens the template's editor
+    // opens the template's editor.
     async function openEditorWithFormattedText(template = entryTemplate2) {
       const user = userEvent.setup();
 
@@ -134,15 +139,16 @@ describe('<DatabaseEntryTemplateEditor />', () => {
 
     it('updates the template on save', () =>
       new Promise<void>((done) => {
-        // Listen for database updates and verify the template was updated
-        Events.addListener(DatabaseUpdatedEvent, 'test', (data) => {
-          expect(
-            data.updated.entryTemplates?.find(
-              (template) => template.id === entryTemplate1.id,
-            )?.name,
-          ).toBe('Renamed Template');
-          done();
-        });
+        // Listen for template updates and verify the new name
+        Events.addListener(
+          DatabaseEntryTemplateUpdatedEvent,
+          'test',
+          (data) => {
+            expect(data.id).toBe(entryTemplate1.id);
+            expect(data.name).toBe('Renamed Template');
+            done();
+          },
+        );
 
         renameTemplate();
       }));
@@ -208,15 +214,15 @@ describe('<DatabaseEntryTemplateEditor />', () => {
             data.onConfirm();
           });
 
-          // Listen for database updates and verify the template was removed
-          Events.addListener(DatabaseUpdatedEvent, 'test', (data) => {
-            expect(
-              data.updated.entryTemplates?.find(
-                (template) => template.id === entryTemplate1.id,
-              ),
-            ).toBeUndefined();
-            done();
-          });
+          // Listen for template removals and verify the template
+          Events.addListener(
+            DatabaseEntryTemplateDeletedEvent,
+            'test',
+            (data) => {
+              expect(data.id).toBe(entryTemplate1.id);
+              done();
+            },
+          );
 
           clickDeleteTemplate();
         }));
@@ -275,15 +281,16 @@ describe('<DatabaseEntryTemplateEditor />', () => {
 
     it('adds the template on save', () =>
       new Promise<void>((done) => {
-        // Listen for database updates and verify the template was added
-        Events.addListener(DatabaseUpdatedEvent, 'test', (data) => {
-          expect(
-            data.updated.entryTemplates?.find(
-              (template) => template.name === 'New template',
-            ),
-          ).toBeDefined();
-          done();
-        });
+        // Listen for template additions and verify the new template
+        Events.addListener(
+          DatabaseEntryTemplateCreatedEvent,
+          'test',
+          (data) => {
+            expect(data.database).toBe(entryTemplatesDatabase.id);
+            expect(data.name).toBe('New template');
+            done();
+          },
+        );
 
         saveDraftTemplate();
       }));

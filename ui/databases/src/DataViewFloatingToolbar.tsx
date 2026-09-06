@@ -1,5 +1,9 @@
 import React from 'react';
-import { DatabaseId, Databases } from '@minddrop/databases';
+import {
+  DatabaseEntryTemplates,
+  DatabaseId,
+  Databases,
+} from '@minddrop/databases';
 import {
   FloatingToolbarCard,
   ToolbarSeparator,
@@ -115,6 +119,7 @@ const DatabaseCard: React.FC<DatabaseCardProps> = ({
   templateId,
 }) => {
   const database = Databases.use(databaseId);
+  const templates = DatabaseEntryTemplates.useAll(databaseId);
   const { isDragging, draggableProps } = useNewEntryDraggable(databaseId);
 
   // Nothing to render if the database is no longer available
@@ -124,7 +129,7 @@ const DatabaseCard: React.FC<DatabaseCardProps> = ({
 
   // The configured template, ignored if it no longer exists
   const template = templateId
-    ? database.entryTemplates?.find((template) => template.id === templateId)
+    ? templates.find((template) => template.id === templateId)
     : undefined;
 
   // Qualify the tooltip with the configured template's name

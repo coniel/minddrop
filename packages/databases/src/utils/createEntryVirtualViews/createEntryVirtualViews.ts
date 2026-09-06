@@ -1,5 +1,5 @@
 import { Collections } from '@minddrop/collections';
-import { DataViews, resolveDataViewConfig } from '@minddrop/data-views';
+import { DataViews } from '@minddrop/data-views';
 import {
   ContainerElement,
   DesignElement,
@@ -76,7 +76,7 @@ export function createEntryVirtualViews(
     }
 
     // The element's variant is the view type the embedded view
-    // renders as, defaulting to the collection element's default
+    // renders as, defaulting to the collection element's default.
     const viewType =
       element.variant ?? getPropertyElementConfig('collection').defaultVariant;
     const collId = virtualCollectionId(entryId, property.name);
@@ -94,14 +94,14 @@ export function createEntryVirtualViews(
     }
 
     // Create the virtual view if it doesn't exist, applying any
-    // saved view config from entry metadata
+    // saved view config from entry metadata.
     if (!DataViews.get(viewId, false)) {
       const metadataKey = viewMetadataKey(layout.id, property.name);
       const savedConfig = entry.metadata.embeddedViewConfigs?.[metadataKey];
 
       // Resolve the saved config's durable references into item IDs
       const resolvedConfig = savedConfig
-        ? resolveDataViewConfig(viewType, savedConfig)
+        ? DataViews.resolveConfig(viewType, savedConfig)
         : undefined;
 
       DataViews.createVirtual({
@@ -109,7 +109,7 @@ export function createEntryVirtualViews(
         type: viewType,
         dataSource: { type: 'collection', id: collId },
         // The entry owns the view and persists its config in its
-        // metadata under the owner key
+        // metadata under the owner key.
         owner: entry.id,
         ownerKey: metadataKey,
         name: property.name,

@@ -1,6 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { DataViewTypes, DataViews } from '@minddrop/data-views';
-import { DatabaseEntries, Databases } from '@minddrop/databases';
+import {
+  DatabaseEntries,
+  DatabaseEntryTemplates,
+  Databases,
+} from '@minddrop/databases';
 import { DataViewRenderer } from '@minddrop/feature-data-views';
 import { useTranslation } from '@minddrop/i18n';
 import { AddDataViewMenu, PanelView } from '@minddrop/ui-components';
@@ -31,7 +35,7 @@ import {
   Text,
   useTransientState,
 } from '@minddrop/ui-primitives';
-import { uuid } from '@minddrop/utils';
+import { orderByCreated, reconcileIdOrder, uuid } from '@minddrop/utils';
 import { DatabaseConfigurationPanel } from '../DatabaseConfigurationPanel';
 import {
   setDatabaseViewState,
@@ -59,6 +63,7 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
   configurationPanelOpen: configPanelOpenProp,
 }) => {
   const database = Databases.use(databaseId);
+  const entryTemplates = DatabaseEntryTemplates.useAll(databaseId);
   const entryIds = DatabaseEntries.useIds(databaseId);
   const unsortedViews = DataViews.useDataSourceDataViews(
     'database',
@@ -67,38 +72,15 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
   const viewTypes = DataViewTypes.useAll();
   const viewState = useDatabaseViewState(databaseId);
 
-  // Sort views according to the persisted view order
+  // Sort views according to the config's view ID list, placing
+  // views missing from it after the ordered ones by creation date.
   const databaseViews = useMemo(() => {
-    if (!database?.viewOrder) {
+    if (!database?.views) {
       return unsortedViews;
     }
 
-    const orderMap = new Map(
-      database.viewOrder.map((id, index) => [id, index]),
-    );
-
-    return [...unsortedViews].sort((a, b) => {
-      const indexA = orderMap.get(a.id);
-      const indexB = orderMap.get(b.id);
-
-      // New views (not in order map) are sorted by creation date
-      // and placed after ordered views
-      if (indexA === undefined && indexB === undefined) {
-        return new Date(a.created).getTime() - new Date(b.created).getTime();
-      }
-
-      // New views go after ordered views
-      if (indexA === undefined) {
-        return 1;
-      }
-
-      if (indexB === undefined) {
-        return -1;
-      }
-
-      return indexA - indexB;
-    });
-  }, [unsortedViews, database?.viewOrder]);
+    return reconcileIdOrder(database.views, unsortedViews, orderByCreated);
+  }, [unsortedViews, database?.views]);
 
   // Per-tab active view selection, seeded from the last-used view
   const [tabActiveViewId, setTabActiveViewId] = useTransientState<
@@ -115,7 +97,7 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
   const activeViewId = tabActiveViewId ?? databaseViews[0]?.id;
 
   // Config panel open state: prop override takes precedence,
-  // otherwise use persisted state
+  // otherwise use persisted state.
   const configurationPanelOpen =
     configPanelOpenProp ?? viewState.configPanelOpen;
 
@@ -139,7 +121,7 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
   }, [databaseId, configurationPanelOpen]);
 
   // Persist the active view ID and apply the prop override
-  // when the database view first mounts
+  // when the database view first mounts.
   useEffect(() => {
     if (configPanelOpenProp !== undefined) {
       setDatabaseViewState(databaseId, {
@@ -240,7 +222,7 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
       return;
     }
 
-    DatabaseEntries.createFromTemplate(database.id, templateId);
+    DatabaseEntries.createFromTemplate(templateId);
   }
 
   // Open a tab's view options menu when its active tab is clicked
@@ -281,12 +263,10 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
   }
 
   // Render the new entry action, wrapping it in a template
-  // selection menu when the database has entry templates
+  // selection menu when the database has entry templates.
   function renderNewEntryAction() {
-    const templates = database?.entryTemplates ?? [];
-
     // Without templates, a plain action creates a blank entry
-    if (!database || !templates.length) {
+    if (!database || !entryTemplates.length) {
       return {
         icon: 'plus' as const,
         label: 'databases.actions.newEntry' as const,
@@ -295,7 +275,7 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
     }
 
     // With templates, the action opens a menu with a blank entry
-    // option followed by the templates
+    // option followed by the templates.
     return (
       <DropdownMenu
         key="new-entry"
@@ -312,7 +292,7 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
           contentIcon={database.icon}
           onSelect={handleClickNewEntry}
         />
-        {templates.map((template) => (
+        {entryTemplates.map((template) => (
           <DropdownMenuItem
             key={template.id}
             stringLabel={template.name}
@@ -419,7 +399,7 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
                     gap={1}
                     onSort={(newOrder) => {
                       // Persist the sort order to the database
-                      Databases.update(databaseId, { viewOrder: newOrder });
+                      Databases.update(databaseId, { views: newOrder });
                     }}
                     renderItem={(
                       id,

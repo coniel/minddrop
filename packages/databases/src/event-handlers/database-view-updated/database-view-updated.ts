@@ -1,15 +1,17 @@
 import { DataViewUpdatedEventData } from '@minddrop/data-views';
 import { isEntityId } from '@minddrop/utils';
-import { writeDatabaseViews } from '../../writeDatabaseViews';
+import { writeDatabaseView } from '../../writeDatabaseView';
 
 /**
  * Called when a view is updated. If the view is owned by a
- * database, persists the updated views to the database config.
+ * database, writes it to the database's views directory.
  */
-export function onDatabaseViewUpdated(data: DataViewUpdatedEventData): void {
+export async function onDatabaseViewUpdated(
+  data: DataViewUpdatedEventData,
+): Promise<void> {
   const { updated } = data;
 
   if (updated.owner && isEntityId(updated.owner, 'database')) {
-    writeDatabaseViews(updated.owner);
+    await writeDatabaseView(updated);
   }
 }

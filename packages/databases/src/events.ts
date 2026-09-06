@@ -119,47 +119,16 @@ export interface DatabasePropertyOptionRenamedEventData {
 }
 
 // Entry template events
-export const DatabaseEntryTemplateAddedEvent = 'databases:entry-template:added';
+export const DatabaseEntryTemplateCreatedEvent =
+  'databases:entry-template:created';
 export const DatabaseEntryTemplateUpdatedEvent =
   'databases:entry-template:updated';
-export const DatabaseEntryTemplateRemovedEvent =
-  'databases:entry-template:removed';
+export const DatabaseEntryTemplateDeletedEvent =
+  'databases:entry-template:deleted';
 
-export interface DatabaseEntryTemplateAddedEventData {
-  /**
-   * The database the entry template was added to.
-   */
-  database: Database;
-
-  /**
-   * The entry template that was added.
-   */
-  template: DatabaseEntryTemplate;
-}
-
-export interface DatabaseEntryTemplateUpdatedEventData {
-  /**
-   * The database the entry template belongs to.
-   */
-  database: Database;
-
-  /**
-   * The updated entry template.
-   */
-  template: DatabaseEntryTemplate;
-}
-
-export interface DatabaseEntryTemplateRemovedEventData {
-  /**
-   * The database the entry template was removed from.
-   */
-  database: Database;
-
-  /**
-   * The entry template that was removed.
-   */
-  template: DatabaseEntryTemplate;
-}
+export type DatabaseEntryTemplateCreatedEventData = DatabaseEntryTemplate;
+export type DatabaseEntryTemplateUpdatedEventData = DatabaseEntryTemplate;
+export type DatabaseEntryTemplateDeletedEventData = DatabaseEntryTemplate;
 
 // Navigation events
 export const OpenDatabaseViewEvent = 'databases:view:open';
@@ -203,7 +172,7 @@ export interface DatabaseEntryRenamedEventData {
 }
 
 // Entry written event - fired after an entry file is written, and not
-// at all when the write would have changed nothing
+// at all when the write would have changed nothing.
 export const DatabaseEntryWrittenEvent = 'databases:entry:written';
 
 export interface DatabaseEntryWrittenEventData {
@@ -230,7 +199,7 @@ export interface DatabaseEntryWrittenEventData {
 }
 
 // Entry duplicated event - fired after an entry is duplicated, before
-// the duplicate is added to the source collection
+// the duplicate is added to the source collection.
 export const DatabaseEntryDuplicatedEvent = 'databases:entry:duplicated';
 
 export interface DatabaseEntryDuplicatedEventData {
@@ -359,7 +328,7 @@ export interface DatabasePropertySqlSyncedEventData {
 }
 
 // Background sync event - fired after a background sync
-// changeset is applied to frontend stores
+// changeset is applied to frontend stores.
 export const DatabasesBackgroundSyncedEvent = 'databases:sql-background-synced';
 
 export interface DatabasesBackgroundSyncedEventData {
@@ -408,9 +377,9 @@ declare module '@minddrop/events/EventDataMap' {
     'databases:property:removed': DatabasePropertyRemovedEventData;
     'databases:property:renamed': DatabasePropertyRenamedEventData;
     'databases:property-option:renamed': DatabasePropertyOptionRenamedEventData;
-    'databases:entry-template:added': DatabaseEntryTemplateAddedEventData;
+    'databases:entry-template:created': DatabaseEntryTemplateCreatedEventData;
     'databases:entry-template:updated': DatabaseEntryTemplateUpdatedEventData;
-    'databases:entry-template:removed': DatabaseEntryTemplateRemovedEventData;
+    'databases:entry-template:deleted': DatabaseEntryTemplateDeletedEventData;
     'databases:view:open': OpenDatabaseViewEventData;
     'database-entries:entry:open': OpenDatabaseEntryViewEventData;
     'databases:entry:created': DatabaseEntryCreatedEventData;

@@ -7,10 +7,11 @@ import {
 } from '@minddrop/properties';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabasePropertyRemovedEventData } from '../../events';
+import { getDatabaseEntryTemplates } from '../../getDatabaseEntryTemplates';
 import { sqlReindexDatabaseEntries } from '../../sql';
 import { Database } from '../../types';
-import { updateDatabase } from '../../updateDatabase';
-import { entryTemplateFilePath, virtualCollectionId } from '../../utils';
+import { updateDatabaseEntryTemplate } from '../../updateDatabaseEntryTemplate';
+import { resolveEntryTemplateFilePath, virtualCollectionId } from '../../utils';
 
 /**
  * Called when a property is removed from a database. Re-indexes
@@ -62,20 +63,20 @@ async function removePropertyFromEntryTemplates(
   database: Database,
   property: PropertySchema,
 ): Promise<void> {
-  const entryTemplates = database.entryTemplates ?? [];
-
   // Templates holding a value for the removed property
-  const affectedTemplates = entryTemplates.filter(
+  const affectedTemplates = getDatabaseEntryTemplates(database.id).filter(
     (template) => property.name in template.properties,
   );
 
-  // Nothing to clean up, leave the config untouched
+  // Nothing to clean up, leave the templates untouched
   if (!affectedTemplates.length) {
     return;
   }
 
   // File based property values have a file stored alongside the
-  // template, which is no longer referenced by anything
+  // template, which is no longer referenced by anything. Deleted
+  // here as the property is already gone from the schema by the
+  // time the template update runs.
   if (Properties.isFileBased(property)) {
     await Promise.all(
       affectedTemplates.map((template) =>
@@ -89,20 +90,15 @@ async function removePropertyFromEntryTemplates(
   }
 
   // Drop the property's value from the templates holding one
-  const updatedTemplates = entryTemplates.map((template) => {
-    // Leave templates without a value for the property untouched
-    if (!(property.name in template.properties)) {
-      return template;
-    }
+  await Promise.all(
+    affectedTemplates.map((template) => {
+      const properties = { ...template.properties };
 
-    const properties = { ...template.properties };
+      delete properties[property.name];
 
-    delete properties[property.name];
-
-    return { ...template, properties };
-  });
-
-  await updateDatabase(database.id, { entryTemplates: updatedTemplates });
+      return updateDatabaseEntryTemplate(template.id, { properties });
+    }),
+  );
 }
 
 /**
@@ -118,7 +114,7 @@ async function removeEntryTemplateFile(
     return;
   }
 
-  const path = entryTemplateFilePath(databasePath, templateId, fileName);
+  const path = resolveEntryTemplateFilePath(databasePath, templateId, fileName);
 
   // The file may already be gone
   if (!(await Fs.exists(path))) {

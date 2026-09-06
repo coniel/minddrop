@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { Designs } from '@minddrop/designs-next';
 import { DesignFixtures } from '@minddrop/designs-next/test-utils';
-import { DatabasesStore } from '../../DatabasesStore';
-import { cleanup, objectDatabase, setup } from '../../test-utils';
+import { getDatabase } from '../../getDatabase';
+import { MockFs, cleanup, objectDatabase, setup } from '../../test-utils';
+import { resolveDatabaseDesignFilePath } from '../../utils';
 import { onDatabaseDesignCreated } from './database-design-created';
 
 const { ownedCardDesign_1, cardDesign_1 } = DesignFixtures;
@@ -12,24 +12,35 @@ describe('onDatabaseDesignCreated', () => {
 
   afterEach(cleanup);
 
-  it('persists the design to the database config', () => {
+  it("writes the design to the database's designs directory", async () => {
     const design = { ...ownedCardDesign_1, owner: objectDatabase.id };
 
-    // Load the design into the store (simulates what happens
-    // before the event fires).
-    Designs.load([design]);
+    await onDatabaseDesignCreated(design);
 
-    onDatabaseDesignCreated(design);
-
-    const designs = DatabasesStore.get(objectDatabase.id)?.designs;
-
-    expect(designs).toHaveLength(1);
-    expect(designs?.[0].id).toBe(ownedCardDesign_1.id);
+    // The design should be written to its file
+    expect(
+      MockFs.exists(
+        resolveDatabaseDesignFilePath(objectDatabase.path, design.id),
+      ),
+    ).toBe(true);
   });
 
-  it('ignores designs not owned by a database', () => {
-    onDatabaseDesignCreated(cardDesign_1);
+  it("records the design in the config's design ID list", async () => {
+    const design = { ...ownedCardDesign_1, owner: objectDatabase.id };
 
-    expect(DatabasesStore.get(objectDatabase.id)?.designs).toBeUndefined();
+    await onDatabaseDesignCreated(design);
+
+    expect(getDatabase(objectDatabase.id).designs).toEqual([design.id]);
+  });
+
+  it('ignores designs not owned by a database', async () => {
+    await onDatabaseDesignCreated(cardDesign_1);
+
+    // No design file should be written
+    expect(
+      MockFs.exists(
+        resolveDatabaseDesignFilePath(objectDatabase.path, cardDesign_1.id),
+      ),
+    ).toBe(false);
   });
 });

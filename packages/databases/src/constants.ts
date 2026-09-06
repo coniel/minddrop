@@ -5,6 +5,9 @@ import type { EntrySortOptions } from './utils';
 export const DatabaseConfigFileName = 'database.json';
 export const MetadataDirName = 'metadata';
 export const EntryTemplatesDirName = 'templates';
+export const EntryTemplateConfigFileName = 'template.json';
+export const DatabaseViewsDirName = 'views';
+export const DatabaseDesignsDirName = 'designs';
 export const EntryConversionBackupDirName = 'entry-conversion-backup';
 export const PropertyFilesDirNameKey = 'databases.propertyFilesDirName';
 
@@ -46,7 +49,7 @@ export const DefaultEntrySort: Required<EntrySortOptions> = {
 
 // SQL exclusion list of property types excluded from the
 // full-text index, used in WHERE clauses to filter out
-// non-searchable property types
+// non-searchable property types.
 export const EXCLUDED_TYPES_SQL = "'collection'";
 
 // Property types that map to value_text in entry_properties

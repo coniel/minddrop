@@ -1,7 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Collections } from '@minddrop/collections';
 import { CollectionFixtures } from '@minddrop/collections/test-utils';
-import { DatabaseEntries, DatabaseEntry, Databases } from '@minddrop/databases';
+import {
+  DatabaseEntries,
+  DatabaseEntry,
+  DatabaseEntryTemplates,
+} from '@minddrop/databases';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { render, screen, userEvent, waitFor } from '@minddrop/test-utils';
 import { cleanup, setup } from '../test-utils';
@@ -232,9 +236,12 @@ describe('<AddCollectionEntryButton />', () => {
 
   it('matches templates by name while searching', async () => {
     // Give a database a template whose name shares nothing with its
-    // database or entry name, so only a template match can list it
-    Databases.Store.update(objectDatabase.id, {
-      entryTemplates: [{ ...entryTemplate1, name: 'Zephyr' }],
+    // database or entry name, so only a template match can list it.
+    DatabaseEntryTemplates.Store.set({
+      ...entryTemplate1,
+      id: 'database-entry-template_zephyr',
+      database: objectDatabase.id,
+      name: 'Zephyr',
     });
 
     render(
@@ -365,7 +372,7 @@ describe('<AddCollectionEntryButton />', () => {
     await search('Storage');
 
     // All databases with a matching name or entry name have a
-    // create option
+    // create option.
     expect(
       listedOptions(DatabaseFixtures.rootStorageDatabase.entryName),
     ).toHaveLength(1);

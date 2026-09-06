@@ -10,6 +10,7 @@ import { DataViewTypeComponentProps, DataViews } from '@minddrop/data-views';
 import {
   DatabaseEntries,
   DatabaseEntryDuplicatedEvent,
+  DatabaseEntryTemplates,
   DatabaseId,
   Databases,
 } from '@minddrop/databases';
@@ -74,14 +75,14 @@ export const BoardViewComponent: React.FC<
   const scrollRootRef = useRef<HTMLDivElement>(null);
 
   // The active entry picker, spawned by dropping the add existing
-  // entry or new entry card
+  // entry or new entry card.
   const [entryPicker, setEntryPicker] = useState<EntryPickerState | null>(null);
 
   // Whether the view options menu in the toolbar is open
   const [optionsMenuOpen, setOptionsMenuOpen] = useState(false);
 
   // The ID of the just created entry whose card should autofocus
-  // its editor, cleared once the card has mounted
+  // its editor, cleared once the card has mounted.
   const [autoFocusEntryId, setAutoFocusEntryId] = useState<string>();
 
   // The databases the board's entries belong to
@@ -120,7 +121,7 @@ export const BoardViewComponent: React.FC<
   );
 
   // Map each entry to the card layout its database is
-  // overridden to use
+  // overridden to use.
   const entryCardLayouts = useMemo(
     () =>
       DatabaseEntries.resolveLayoutOverrides(
@@ -131,7 +132,7 @@ export const BoardViewComponent: React.FC<
   );
 
   // Derive a toolbar card for each database the board's entries
-  // belong to, excluding those whose card the user has hidden
+  // belong to, excluding those whose card the user has hidden.
   const toolbarDatabaseCards = useMemo(() => {
     const toolbarCards = view.options?.toolbarCards;
 
@@ -197,7 +198,7 @@ export const BoardViewComponent: React.FC<
 
   // Create an entry in the given database, optionally from an
   // entry template, place it on the board, and add it to the
-  // board's collection
+  // board's collection.
   const createEntry = useCallback(
     async (
       databaseId: DatabaseId,
@@ -206,18 +207,18 @@ export const BoardViewComponent: React.FC<
     ) => {
       // Create from the template when one is picked
       const entry = templateId
-        ? await DatabaseEntries.createFromTemplate(databaseId, templateId)
+        ? await DatabaseEntries.createFromTemplate(templateId)
         : await DatabaseEntries.create(databaseId);
 
       // Place the entry before adding it to the collection, otherwise
-      // it is briefly reconciled into the first column
+      // it is briefly reconciled into the first column.
       updateColumns(placeEntry(entry.id));
 
       // Autofocus the new entry's editor once its card mounts
       setAutoFocusEntryId(entry.id);
 
       // Bring the new entry's card into view if the drop position
-      // only partially fit on screen
+      // only partially fit on screen.
       scrollEntryIntoView(entry.id);
 
       await Collections.addItems(view.dataSource.id, [entry.id]);
@@ -231,7 +232,7 @@ export const BoardViewComponent: React.FC<
   }, []);
 
   // Handle dropping an entry, new entry card, or add existing
-  // entry card into a column
+  // entry card into a column.
   const handleColumnDrop = useCallback(
     async (
       data: DropEventData,
@@ -279,7 +280,7 @@ export const BoardViewComponent: React.FC<
       }
 
       // New entry cards create an entry at the drop position,
-      // using the card's configured template when set
+      // using the card's configured template when set.
       const [databaseId] = getDroppedNewEntryDatabaseIds(data);
 
       if (!databaseId) {
@@ -335,7 +336,7 @@ export const BoardViewComponent: React.FC<
       }
 
       // New entry cards create an entry in the new column,
-      // using the card's configured template when set
+      // using the card's configured template when set.
       const [databaseId] = getDroppedNewEntryDatabaseIds(data);
 
       if (!databaseId) {
@@ -366,11 +367,11 @@ export const BoardViewComponent: React.FC<
   );
 
   // Place a picked entry at the picker position and add it to
-  // the board's collection
+  // the board's collection.
   const addPickedEntry = useCallback(
     async (entryId: string, picker: EntryPickerState) => {
       // Place the entry before adding it to the collection, otherwise
-      // it is briefly reconciled into the first column
+      // it is briefly reconciled into the first column.
       updateColumns(
         placeEntryInColumn(
           reconciledColumns,
@@ -400,7 +401,7 @@ export const BoardViewComponent: React.FC<
   );
 
   // Handle picking an entry while keeping the picker open: the
-  // entry lands above the picker, shifting it down a slot
+  // entry lands above the picker, shifting it down a slot.
   const handleEntryPickerSecondarySelect = useCallback(
     async (entryId: string) => {
       if (!entryPicker) {
@@ -418,7 +419,7 @@ export const BoardViewComponent: React.FC<
   );
 
   // Handle picking a database to create a new entry in, replacing
-  // the picker
+  // the picker.
   const handleNewEntryPickerSelect = useCallback(
     async (databaseId: DatabaseId, templateId?: string) => {
       if (!entryPicker) {
@@ -443,7 +444,7 @@ export const BoardViewComponent: React.FC<
   );
 
   // Handle picking a database while keeping the picker open: the
-  // new entry lands above the picker, shifting it down a slot
+  // new entry lands above the picker, shifting it down a slot.
   const handleNewEntryPickerSecondarySelect = useCallback(
     async (databaseId: DatabaseId, templateId?: string) => {
       if (!entryPicker) {
@@ -581,7 +582,7 @@ export const BoardViewComponent: React.FC<
 };
 
 // Resolve the entry template configured for a database's toolbar
-// card, ignoring templates which no longer exist
+// card, ignoring templates which no longer exist.
 function toolbarCardTemplateId(
   options: Partial<BoardViewOptions> | undefined,
   databaseId: DatabaseId,
@@ -593,11 +594,8 @@ function toolbarCardTemplateId(
     return undefined;
   }
 
-  // Check that the template still exists on the database
-  const database = Databases.get(databaseId, false);
-  const exists = database?.entryTemplates?.some(
-    (template) => template.id === templateId,
-  );
+  // Check that the template still exists
+  const exists = Boolean(DatabaseEntryTemplates.get(templateId, false));
 
   return exists ? templateId : undefined;
 }

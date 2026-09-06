@@ -5,6 +5,7 @@ import {
   DatabaseEntries,
   DatabaseEntry,
   DatabaseEntryTemplate,
+  DatabaseEntryTemplates,
   Databases,
 } from '@minddrop/databases';
 import { useTranslation } from '@minddrop/i18n';
@@ -76,6 +77,7 @@ export const AddCollectionEntryButton: FC<AddCollectionEntryButtonProps> = ({
   const [query, setQuery] = useState('');
   const { t } = useTranslation({ keyPrefix: 'collections.entries' });
   const allDatabases = Databases.useAll();
+  const allTemplates = DatabaseEntryTemplates.useAll();
   const collection = Collections.use(collectionId);
 
   // Subscribe to entry changes so the listed options stay fresh
@@ -96,7 +98,7 @@ export const AddCollectionEntryButton: FC<AddCollectionEntryButtonProps> = ({
   const excludedIds = new Set(collection?.items ?? []);
 
   // Databases offered as create options: all supported when not
-  // searching, fuzzy matched otherwise
+  // searching, fuzzy matched otherwise.
   const createDatabases = query
     ? Databases.search(query, databaseIds)
     : supportedDatabases;
@@ -105,7 +107,7 @@ export const AddCollectionEntryButton: FC<AddCollectionEntryButtonProps> = ({
   // matched database are already listed under it, so only templates
   // from other databases are added.
   const matchedTemplates = query
-    ? Databases.searchEntryTemplates(query, databaseIds).filter(
+    ? DatabaseEntryTemplates.search(query, databaseIds).filter(
         (result) =>
           !createDatabases.some(
             (createDatabase) => createDatabase.id === result.database.id,
@@ -136,10 +138,10 @@ export const AddCollectionEntryButton: FC<AddCollectionEntryButtonProps> = ({
   }, []);
 
   // Create a new entry, optionally from a template, and add it to
-  // the collection
+  // the collection.
   async function handleCreate(databaseId: string, templateId?: string) {
     const entry = templateId
-      ? await DatabaseEntries.createFromTemplate(databaseId, templateId)
+      ? await DatabaseEntries.createFromTemplate(templateId)
       : await DatabaseEntries.create(databaseId);
 
     await Collections.addItems(collectionId, [entry.id]);
@@ -154,12 +156,17 @@ export const AddCollectionEntryButton: FC<AddCollectionEntryButtonProps> = ({
     onAddEntry?.(entry);
   }
 
+  // Returns a database's entry templates
+  function templatesOf(databaseId: string) {
+    return allTemplates.filter((template) => template.database === databaseId);
+  }
+
   // Render a database's create options. Databases with entry
   // templates nest their options in a submenu, with the blank entry
   // option first.
   function renderCreateItem(createDatabase: Database) {
     const contentIcon = createDatabase.icon;
-    const templates = createDatabase.entryTemplates ?? [];
+    const templates = templatesOf(createDatabase.id);
 
     // Databases without templates create an entry directly
     if (!templates.length) {
@@ -203,7 +210,7 @@ export const AddCollectionEntryButton: FC<AddCollectionEntryButtonProps> = ({
   }
 
   // Render an existing entry's add option, icon'd by the database
-  // it belongs to
+  // it belongs to.
   function renderEntryItem(entry: DatabaseEntry) {
     const entryDatabase = Databases.get(entry.database);
 
@@ -227,14 +234,14 @@ export const AddCollectionEntryButton: FC<AddCollectionEntryButtonProps> = ({
         contentIcon={createDatabase.icon}
         onSelect={() => handleCreate(createDatabase.id)}
       />,
-      ...(createDatabase.entryTemplates ?? []).map((template) =>
+      ...templatesOf(createDatabase.id).map((template) =>
         renderFlatTemplateItem(createDatabase, template),
       ),
     ];
   }
 
   // Render a template's create option as a flat item, qualified by
-  // entry name to stay distinguishable in a flat list
+  // entry name to stay distinguishable in a flat list.
   function renderFlatTemplateItem(
     createDatabase: Database,
     template: DatabaseEntryTemplate,

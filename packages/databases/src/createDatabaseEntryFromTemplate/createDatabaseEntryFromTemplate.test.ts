@@ -22,50 +22,41 @@ describe('createDatabaseEntryFromTemplate', () => {
 
   afterEach(cleanup);
 
-  it('throws if the database does not exist', async () => {
+  it("throws if the template's database does not exist", async () => {
+    // Remove the template's database from the store
+    DatabasesStore.remove(entryTemplatesDatabase.id);
+
     await expect(
-      createDatabaseEntryFromTemplate('missing', entryTemplate1.id),
+      createDatabaseEntryFromTemplate(entryTemplate1.id),
     ).rejects.toThrow(DatabaseNotFoundError);
   });
 
   it('throws if the template does not exist', async () => {
-    await expect(
-      createDatabaseEntryFromTemplate(entryTemplatesDatabase.id, 'missing'),
-    ).rejects.toThrow(DatabaseEntryTemplateNotFoundError);
+    await expect(createDatabaseEntryFromTemplate('missing')).rejects.toThrow(
+      DatabaseEntryTemplateNotFoundError,
+    );
   });
 
   it("uses the template's default title as the entry title", async () => {
-    const entry = await createDatabaseEntryFromTemplate(
-      entryTemplatesDatabase.id,
-      entryTemplate1.id,
-    );
+    const entry = await createDatabaseEntryFromTemplate(entryTemplate1.id);
 
     expect(entry.title).toBe('Templated entry');
   });
 
   it('falls back to the untitled title when the template has no default title', async () => {
-    const entry = await createDatabaseEntryFromTemplate(
-      entryTemplatesDatabase.id,
-      entryTemplate2.id,
-    );
+    const entry = await createDatabaseEntryFromTemplate(entryTemplate2.id);
 
     expect(entry.title).toBe(i18n.t('labels.untitled'));
   });
 
   it("copies the template's simple property values onto the entry", async () => {
-    const entry = await createDatabaseEntryFromTemplate(
-      entryTemplatesDatabase.id,
-      entryTemplate1.id,
-    );
+    const entry = await createDatabaseEntryFromTemplate(entryTemplate1.id);
 
     expect(entry.properties.Notes).toBe('Prefilled notes');
   });
 
   it('copies file based property files to the entry file location', async () => {
-    const entry = await createDatabaseEntryFromTemplate(
-      entryTemplatesDatabase.id,
-      entryTemplate1.id,
-    );
+    const entry = await createDatabaseEntryFromTemplate(entryTemplate1.id);
 
     // The entry's property value should be the copied file's name
     expect(entry.properties.Image).toBe('template-image.png');
@@ -77,12 +68,8 @@ describe('createDatabaseEntryFromTemplate', () => {
   });
 
   it('increments the copied file name on repeat creations', async () => {
-    await createDatabaseEntryFromTemplate(
-      entryTemplatesDatabase.id,
-      entryTemplate1.id,
-    );
+    await createDatabaseEntryFromTemplate(entryTemplate1.id);
     const secondEntry = await createDatabaseEntryFromTemplate(
-      entryTemplatesDatabase.id,
       entryTemplate1.id,
     );
 
@@ -101,10 +88,7 @@ describe('createDatabaseEntryFromTemplate', () => {
       `${entryTemplatesDatabase.path}/.minddrop/templates/${entryTemplate1.id}/template-image.png`,
     );
 
-    const entry = await createDatabaseEntryFromTemplate(
-      entryTemplatesDatabase.id,
-      entryTemplate1.id,
-    );
+    const entry = await createDatabaseEntryFromTemplate(entryTemplate1.id);
 
     // The entry should be created without the image property value
     expect(entry.properties.Image).toBeUndefined();
@@ -118,40 +102,31 @@ describe('createDatabaseEntryFromTemplate', () => {
       ),
     });
 
-    const entry = await createDatabaseEntryFromTemplate(
-      entryTemplatesDatabase.id,
-      entryTemplate1.id,
-    );
+    const entry = await createDatabaseEntryFromTemplate(entryTemplate1.id);
 
     // The removed property's value should not be set on the entry
     expect(entry.properties.Notes).toBeUndefined();
   });
   it('creates the entry with the given property values', async () => {
-    const entry = await createDatabaseEntryFromTemplate(
-      entryTemplatesDatabase.id,
-      entryTemplate1.id,
-      { Status: 'Todo' },
-    );
+    const entry = await createDatabaseEntryFromTemplate(entryTemplate1.id, {
+      Status: 'Todo',
+    });
 
     expect(entry.properties.Status).toBe('Todo');
   });
 
   it("overrides the template's values with the given ones", async () => {
-    const entry = await createDatabaseEntryFromTemplate(
-      entryTemplatesDatabase.id,
-      entryTemplate1.id,
-      { Notes: 'Overridden notes' },
-    );
+    const entry = await createDatabaseEntryFromTemplate(entryTemplate1.id, {
+      Notes: 'Overridden notes',
+    });
 
     expect(entry.properties.Notes).toBe('Overridden notes');
   });
 
   it("overrides the template's file values without copying the file", async () => {
-    const entry = await createDatabaseEntryFromTemplate(
-      entryTemplatesDatabase.id,
-      entryTemplate1.id,
-      { Image: 'custom.png' },
-    );
+    const entry = await createDatabaseEntryFromTemplate(entryTemplate1.id, {
+      Image: 'custom.png',
+    });
 
     // The given value should win over the template's file copy
     expect(entry.properties.Image).toBe('custom.png');

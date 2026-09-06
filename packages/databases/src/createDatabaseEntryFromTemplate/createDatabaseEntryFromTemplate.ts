@@ -8,7 +8,7 @@ import { getDatabaseEntryTemplate } from '../getDatabaseEntryTemplate';
 import { DatabaseEntry } from '../types';
 import { updateDatabaseEntryProperty } from '../updateDatabaseEntryProperty';
 import {
-  entryTemplateFilePath,
+  resolveEntryTemplateFilePath,
   resolveIncrementalPropertyFilePath,
 } from '../utils';
 
@@ -19,27 +19,25 @@ import {
  * the database's property file storage configuration, with each entry
  * receiving its own unique copy.
  *
- * @param databaseId - The ID of the database to create the entry in.
  * @param templateId - The ID of the entry template to create the entry from.
  * @param properties - Property values the entry is created with, overriding the template's values.
  *
  * @returns The newly created entry.
  *
- * @throws {DatabaseNotFoundError} If the database does not exist.
  * @throws {DatabaseEntryTemplateNotFoundError} If the template does not exist.
+ * @throws {DatabaseNotFoundError} If the template's database does not exist.
  *
  * @dispatches databases:entry:created
  */
 export async function createDatabaseEntryFromTemplate(
-  databaseId: string,
   templateId: string,
   properties: PropertyMap = {},
 ): Promise<DatabaseEntry> {
-  // Get the database config
-  const database = getDatabase(databaseId);
-
   // Get the entry template
-  const template = getDatabaseEntryTemplate(databaseId, templateId);
+  const template = getDatabaseEntryTemplate(templateId);
+
+  // Get the database config
+  const database = getDatabase(template.database);
 
   // Simple property values copied onto the entry as is
   const simpleProperties: PropertyMap = {};
@@ -79,7 +77,7 @@ export async function createDatabaseEntryFromTemplate(
   // by the given ones, using the template's default title if it
   // has one.
   const entry = await createDatabaseEntry(
-    databaseId,
+    template.database,
     template.defaultTitle || undefined,
     { ...simpleProperties, ...properties },
   );
@@ -87,7 +85,7 @@ export async function createDatabaseEntryFromTemplate(
   // Copy each file based property value's file to the entry
   for (const [propertyName, fileName] of Object.entries(fileProperties)) {
     // Path to the template's source file
-    const sourcePath = entryTemplateFilePath(
+    const sourcePath = resolveEntryTemplateFilePath(
       database.path,
       templateId,
       fileName,

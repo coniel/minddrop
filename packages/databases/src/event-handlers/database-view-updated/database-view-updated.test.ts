@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DataView, DataViews } from '@minddrop/data-views';
+import { DataView, StoredDataView } from '@minddrop/data-views';
 import { DataViewFixtures } from '@minddrop/data-views/test-utils';
-import { DatabasesStore } from '../../DatabasesStore';
-import { cleanup, setup } from '../../test-utils';
+import { MockFs, cleanup, setup } from '../../test-utils';
 import { objectDatabase } from '../../test-utils/fixtures';
+import { resolveDatabaseViewFilePath } from '../../utils';
 import { onDatabaseViewUpdated } from './database-view-updated';
 
 const { dataView_virtual_1, dataView_gallery_1 } = DataViewFixtures;
@@ -12,7 +12,7 @@ describe('onDatabaseViewUpdated', () => {
   beforeEach(setup);
   afterEach(cleanup);
 
-  it('persists the updated view to the database config', () => {
+  it("writes the updated view to the database's views directory", async () => {
     // Create a virtual view owned by this database
     const view: DataView = {
       ...dataView_virtual_1,
@@ -20,33 +20,24 @@ describe('onDatabaseViewUpdated', () => {
       owner: objectDatabase.id,
     };
 
-    // Add the view to the store
-    DataViews.Store.set(view);
-
     // Create the updated view
     const updated: DataView = {
       ...view,
       name: 'Updated Table',
-      options: { sortProperty: 'Date' },
     };
 
-    // Update the view in the store
-    DataViews.Store.update(dataView_virtual_1.id, {
-      name: 'Updated Table',
-      options: { sortProperty: 'Date' },
-    });
-
     // Call the handler
-    onDatabaseViewUpdated({ original: view, updated });
+    await onDatabaseViewUpdated({ original: view, updated });
 
-    // The database should have the updated view
-    const database = DatabasesStore.get(objectDatabase.id);
+    // The view file should contain the updated view
+    const storedView = MockFs.readJsonFile<StoredDataView>(
+      resolveDatabaseViewFilePath(objectDatabase.path, view.id),
+    );
 
-    expect(database!.views).toHaveLength(1);
-    expect(database!.views![0].name).toBe('Updated Table');
+    expect(storedView?.name).toBe('Updated Table');
   });
 
-  it('ignores views without an owner', () => {
+  it('ignores views without an owner', async () => {
     // Create a view without an owner
     const view: DataView = {
       ...dataView_gallery_1,
@@ -54,15 +45,15 @@ describe('onDatabaseViewUpdated', () => {
     };
 
     // Call the handler with an unowned view
-    onDatabaseViewUpdated({ original: view, updated: view });
+    await onDatabaseViewUpdated({ original: view, updated: view });
 
-    // The database should not have been updated
-    const database = DatabasesStore.get(objectDatabase.id);
-
-    expect(database!.views).toBeUndefined();
+    // No view file should be written
+    expect(
+      MockFs.exists(resolveDatabaseViewFilePath(objectDatabase.path, view.id)),
+    ).toBe(false);
   });
 
-  it('ignores views not owned by a database', () => {
+  it('ignores views not owned by a database', async () => {
     // Create a virtual view owned by an entry
     const view: DataView = {
       ...dataView_virtual_1,
@@ -71,11 +62,11 @@ describe('onDatabaseViewUpdated', () => {
     };
 
     // Call the handler
-    onDatabaseViewUpdated({ original: view, updated: view });
+    await onDatabaseViewUpdated({ original: view, updated: view });
 
-    // The database should not have been updated
-    const database = DatabasesStore.get(objectDatabase.id);
-
-    expect(database!.views).toBeUndefined();
+    // No view file should be written
+    expect(
+      MockFs.exists(resolveDatabaseViewFilePath(objectDatabase.path, view.id)),
+    ).toBe(false);
   });
 });

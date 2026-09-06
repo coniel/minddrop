@@ -2,16 +2,18 @@ import { Collections } from '@minddrop/collections';
 import { DataViews } from '@minddrop/data-views';
 import { Designs } from '@minddrop/designs-next';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
+import { DatabaseEntryTemplatesStore } from '../../DatabaseEntryTemplatesStore';
 import { DatabaseDeletedEventData } from '../../events';
+import { getDatabaseEntryTemplates } from '../../getDatabaseEntryTemplates';
 import { removeEntriesFromCollections } from '../../removeEntriesFromCollections';
 import { sqlDeleteDatabase } from '../../sql';
 import { virtualCollectionId } from '../../utils';
 
 /**
  * Called when a database is deleted. Removes from SQL, deletes
- * all database views and designs, cleans up virtual collections,
- * and removes the database's entries from collections referencing
- * them.
+ * all database views, designs, and entry templates, cleans up
+ * virtual collections, and removes the database's entries from
+ * collections referencing them.
  */
 export async function onDeleteDatabase(
   data: DatabaseDeletedEventData,
@@ -29,6 +31,13 @@ export async function onDeleteDatabase(
 
   await Promise.all(databaseDesigns.map((design) => Designs.delete(design.id)));
 
+  // Remove the database's entry templates from the store. The
+  // database directory is trashed whole, so there are no template
+  // files or config to clean up.
+  getDatabaseEntryTemplates(data.id).forEach((template) =>
+    DatabaseEntryTemplatesStore.remove(template.id),
+  );
+
   // Find collection properties in the database schema
   const collectionProperties = data.properties.filter(
     (property) => property.type === 'collection',
@@ -40,7 +49,7 @@ export async function onDeleteDatabase(
   );
 
   // Delete the entries' own virtual collections before membership
-  // cleanup so no update is attempted for the deleted entries
+  // cleanup so no update is attempted for the deleted entries.
   await Promise.all(
     collectionProperties.flatMap((property) =>
       entries.map((entry) => {

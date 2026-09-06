@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { MarkdownEditor } from '@minddrop/feature-markdown-editor';
-import { TagsSelectField } from '@minddrop/ui-tags';
 import { Fs } from '@minddrop/file-system';
 import { i18n } from '@minddrop/i18n';
 import {
@@ -24,6 +23,7 @@ import {
   Text,
   TextInput,
 } from '@minddrop/ui-primitives';
+import { TagsSelectField } from '@minddrop/ui-tags';
 
 export interface DatabaseEntryTemplatePropertyFieldProps {
   /**

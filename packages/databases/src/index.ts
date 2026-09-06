@@ -17,6 +17,7 @@ export {
 } from './constants';
 export { DatabaseDefaultsStore } from './DatabaseDefaultsStore';
 export * as Databases from './Databases';
+export * as DatabaseEntryTemplates from './DatabaseEntryTemplates';
 export * as DatabaseAutomations from './DatabaseAutomations';
 export * as DatabaseEntrySerializers from './DatabaseEntrySerializers';
 export * as DatabaseEntries from './DatabaseEntries';

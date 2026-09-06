@@ -1,5 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import { DatabaseEntryTemplate, Databases } from '@minddrop/databases';
+import {
+  DatabaseEntryTemplates,
+  Databases,
+  StoredDatabaseEntryTemplate,
+} from '@minddrop/databases';
 import { Events, OpenConfirmationDialogEvent } from '@minddrop/events';
 import { TranslationKey } from '@minddrop/i18n';
 import { Properties, PropertyMap, PropertyValue } from '@minddrop/properties';
@@ -27,10 +31,10 @@ export interface DatabaseEntryTemplateEditorProps {
   databaseId: string;
 
   /**
-   * The template to edit. Drafts receive a synthesized template
-   * with an empty ID.
+   * The template to edit, without its database ID and timestamps.
+   * Drafts receive a synthesized template with an empty ID.
    */
-  template: DatabaseEntryTemplate;
+  template: Omit<StoredDatabaseEntryTemplate, 'created' | 'lastModified'>;
 
   /**
    * Whether the template is a draft.
@@ -96,7 +100,7 @@ export const DatabaseEntryTemplateEditor: React.FC<
   } = useForm([
     {
       // Not validated on blur: the error message changes the form's
-      // height, moving the footer buttons out from under the cursor
+      // height, moving the footer buttons out from under the cursor.
       required: true,
       name: 'name',
       defaultValue: template.name,
@@ -135,7 +139,7 @@ export const DatabaseEntryTemplateEditor: React.FC<
   }, [open]);
 
   // Wrap drag handle props to track drag interactions and
-  // prevent the click handler from opening the editor
+  // prevent the click handler from opening the editor.
   const resolvedDragHandleProps = dragHandleProps
     ? {
         ...dragHandleProps,
@@ -239,7 +243,7 @@ export const DatabaseEntryTemplateEditor: React.FC<
 
     if (isDraft) {
       // Persist the draft as a new template
-      await Databases.addEntryTemplate(databaseId, data, pickedFiles);
+      await DatabaseEntryTemplates.create(databaseId, data, pickedFiles);
 
       // Remove the draft from the panel's draft list
       if (onSaveDraft) {
@@ -250,12 +254,7 @@ export const DatabaseEntryTemplateEditor: React.FC<
     }
 
     // Persist the updated template
-    await Databases.updateEntryTemplate(
-      databaseId,
-      template.id,
-      data,
-      pickedFiles,
-    );
+    await DatabaseEntryTemplates.update(template.id, data, pickedFiles);
 
     // Clear staged files and close the editor
     setPickedFiles({});
@@ -277,7 +276,7 @@ export const DatabaseEntryTemplateEditor: React.FC<
       confirmLabel: `${i18nRoot}.confirm`,
       danger: true,
       onConfirm: () => {
-        Databases.removeEntryTemplate(databaseId, template.id);
+        DatabaseEntryTemplates.delete(template.id);
       },
     });
   }
@@ -348,7 +347,7 @@ export const DatabaseEntryTemplateEditor: React.FC<
             <DatabaseEntryTemplatePropertyField
               // Keyed on the open state so uncontrolled inputs, such
               // as the rich text editor, are remounted when the
-              // editor reopens rather than keeping cancelled edits
+              // editor reopens rather than keeping cancelled edits.
               key={`${property.name}:${open}`}
               property={property}
               value={values[property.name]}

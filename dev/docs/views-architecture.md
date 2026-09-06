@@ -59,24 +59,28 @@ beyond that is responsible for persisting it, and loads it into the
 `DataViewsStore` at startup as a **virtual** data view ("virtual" =
 persisted by its owner, not by the data-views package):
 
-- **Database browse views** are stored on the database config
-  (`Database.views`, stripped of `dataSource`/`virtual`, plus
-  `Database.viewOrder` for tab ordering). `loadDatabaseViews` rehydrates
-  them (re-deriving `dataSource` from the owning database);
-  `writeDatabaseViews` persists changes back, driven by the
+- **Database browse views** are stored as individual files in the
+  database's `.minddrop/views/` directory (stripped of
+  `dataSource`/`virtual`/`owner`). The config's `Database.views` lists
+  their IDs in display order, normalized against the view files at load
+  time. `loadDatabaseViews` rehydrates them (re-deriving `dataSource`
+  from the owning database); `writeDatabaseView` and
+  `removeDatabaseViewFile` persist changes back, driven by the
   `data-views:data-view:created/updated/deleted` event handlers in
-  `packages/databases`.
+  `packages/databases`, which also maintain the config's ID list.
 - **Entry collection views** are generated per entry for collection
   properties (`virtualViewId(entryId, propertyName, layoutId)`), with
   per-entry saved state under `entry.metadata.views` keyed
   `propertyName:layoutId`.
 
 The same owner-persisted shape applies to **database designs** in
-`designs-next`: `Database.designs` stores them (stripped of `owner`),
-`loadDatabaseDesigns` hydrates them into the designs store with the
-database as `owner`, and `writeDatabaseDesigns` persists them back,
+`designs-next`: they are stored as individual files in the database's
+`.minddrop/designs/` directory (stripped of `owner`), with their IDs
+listed in the config's `Database.designs`. `loadDatabaseDesigns`
+hydrates them into the designs store with the database as `owner`, and
+`writeDatabaseDesign`/`removeDatabaseDesignFile` persist changes back,
 driven by the `designs-next:design:created/updated/deleted` handlers in
-`packages/databases`. Designs without an owner are persisted to their
+`packages/databases`, which also maintain the config's ID list. Designs without an owner are persisted to their
 own design files instead. `Database.defaultDesigns` pins the design per
 layout context (`Databases.getDefaultDesign` resolves pinned → first
 owned design of the context's base type → null).

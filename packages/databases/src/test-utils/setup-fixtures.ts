@@ -1,6 +1,7 @@
 import { MockFileSystem } from '@minddrop/file-system';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabaseEntrySerializersStore } from '../DatabaseEntrySerializersStore';
+import { DatabaseEntryTemplatesStore } from '../DatabaseEntryTemplatesStore';
 import { DatabasesStore } from '../DatabasesStore';
 import { coreEntrySerializers } from '../entry-serializers';
 import {
@@ -8,6 +9,7 @@ import {
   databaseEntryFiles,
   databaseEntryPropertyFiles,
   databaseEntryTemplateFiles,
+  databaseEntryTemplates,
   databaseFiles,
   databases,
 } from './fixtures';
@@ -18,6 +20,7 @@ export interface SetupDatabaseFixturesOptions {
   loadDatabaseEntries?: boolean;
   loadDatabaseEntryFiles?: boolean;
   loadDatabaseEntryPropertyFiles?: boolean;
+  loadDatabaseEntryTemplates?: boolean;
   loadDatabaseEntryTemplateFiles?: boolean;
   loadDatabaseEntrySerializers?: boolean;
 }
@@ -41,6 +44,11 @@ export function setupDatabaseFixtures(
   if (options.loadDatabaseEntries !== false) {
     // Load database entries into the store
     DatabaseEntriesStore.load(databaseEntries);
+  }
+
+  if (options.loadDatabaseEntryTemplates !== false) {
+    // Load database entry templates into the store
+    DatabaseEntryTemplatesStore.load(databaseEntryTemplates);
   }
 
   if (options.loadDatabaseEntrySerializers !== false) {
@@ -73,5 +81,6 @@ export function cleanupDatabaseFixtures() {
   // Clear stores
   DatabasesStore.clear();
   DatabaseEntriesStore.clear();
+  DatabaseEntryTemplatesStore.clear();
   DatabaseEntrySerializersStore.clear();
 }

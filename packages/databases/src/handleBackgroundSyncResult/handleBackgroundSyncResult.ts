@@ -1,4 +1,5 @@
 import { DataViews } from '@minddrop/data-views';
+import { Designs } from '@minddrop/designs-next';
 import { Events } from '@minddrop/events';
 import {
   ItemAddressChange,
@@ -6,9 +7,13 @@ import {
 } from '@minddrop/item-references';
 import { restoreDates } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
+import { DatabaseEntryTemplatesStore } from '../DatabaseEntryTemplatesStore';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabasesBackgroundSyncedEvent } from '../events';
 import { getDatabaseEntry } from '../getDatabaseEntry';
+import { getDatabaseEntryTemplates } from '../getDatabaseEntryTemplates';
+import { loadDatabaseDesigns } from '../loadDatabaseDesigns';
+import { loadDatabaseEntryTemplates } from '../loadDatabaseEntryTemplates';
 import { loadDatabaseViews } from '../loadDatabaseViews';
 import { removeEntriesFromCollections } from '../removeEntriesFromCollections';
 import type { BackgroundSyncChangeset, Database } from '../types';
@@ -35,9 +40,21 @@ export async function handleBackgroundSyncResult(
     upsertedDatabases.push(restored);
   }
 
-  // Load views for newly upserted databases
+  // Load views, designs, and entry templates for newly
+  // upserted databases.
   if (upsertedDatabases.length > 0) {
-    loadDatabaseViews(upsertedDatabases);
+    await Promise.all([
+      loadDatabaseViews(upsertedDatabases),
+      loadDatabaseDesigns(upsertedDatabases),
+      loadDatabaseEntryTemplates(upsertedDatabases),
+    ]);
+  }
+
+  // Remove deleted databases before their views, designs, and
+  // templates, so that the item removals cannot write into the
+  // deleted databases' directories.
+  for (const id of changeset.deletedDatabaseIds) {
+    DatabasesStore.remove(id);
   }
 
   // Delete views belonging to deleted databases
@@ -49,13 +66,25 @@ export async function handleBackgroundSyncResult(
     }
   }
 
-  // Remove deleted databases
+  // Delete designs belonging to deleted databases
   for (const id of changeset.deletedDatabaseIds) {
-    DatabasesStore.remove(id);
+    const databaseDesigns = Designs.getByOwner(id);
+
+    for (const design of databaseDesigns) {
+      Designs.delete(design.id);
+    }
+  }
+
+  // Remove entry templates belonging to deleted databases from
+  // the store.
+  for (const id of changeset.deletedDatabaseIds) {
+    getDatabaseEntryTemplates(id).forEach((template) =>
+      DatabaseEntryTemplatesStore.remove(template.id),
+    );
   }
 
   // Address changes of entries that were renamed or moved between
-  // databases while the app was not running
+  // databases while the app was not running.
   const addressChanges: ItemAddressChange[] = [];
 
   // Upsert new or updated entries. Record IDs are path-matched to
@@ -66,7 +95,7 @@ export async function handleBackgroundSyncResult(
     const existing = getDatabaseEntry(entry.id, false);
 
     // Only a changed title or database changes an entry's address, so
-    // a file that moved without being renamed is not an address change
+    // a file that moved without being renamed is not an address change.
     const addressChanged =
       existing &&
       (existing.title !== entry.title || existing.database !== entry.database);
@@ -108,7 +137,7 @@ export async function handleBackgroundSyncResult(
   });
 
   // Remove deleted entries from collections and view configs
-  // referencing them
+  // referencing them.
   if (changeset.deletedEntryIds.length > 0) {
     await removeEntriesFromCollections(changeset.deletedEntryIds);
     await DataViews.removeReferences(changeset.deletedEntryIds);

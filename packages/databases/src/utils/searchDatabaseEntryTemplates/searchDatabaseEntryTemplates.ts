@@ -1,4 +1,5 @@
 import { fuzzySearch } from '@minddrop/utils';
+import { DatabaseEntryTemplatesStore } from '../../DatabaseEntryTemplatesStore';
 import { DatabasesStore } from '../../DatabasesStore';
 import { Database, DatabaseEntryTemplate } from '../../types';
 
@@ -25,24 +26,30 @@ export function searchDatabaseEntryTemplates(
   query: string,
   databases?: string[],
 ): DatabaseEntryTemplateSearchResult[] {
-  const allDatabases = DatabasesStore.getAllArray();
+  const allTemplates = DatabaseEntryTemplatesStore.getAllArray();
 
-  // Filter databases to the given IDs when provided
-  const searchedDatabases = databases
-    ? allDatabases.filter((database) => databases.includes(database.id))
-    : allDatabases;
+  // Filter templates to the given databases when provided
+  const searchedTemplates = databases
+    ? allTemplates.filter((template) => databases.includes(template.database))
+    : allTemplates;
 
   // Map each template name to its results. A name can be used by
   // templates in several databases so each maps to a list.
   const resultsByName = new Map<string, DatabaseEntryTemplateSearchResult[]>();
 
-  searchedDatabases.forEach((database) => {
-    (database.entryTemplates ?? []).forEach((template) => {
-      const nameResults = resultsByName.get(template.name) ?? [];
+  searchedTemplates.forEach((template) => {
+    // The template's database, dropped from results if it no
+    // longer exists.
+    const database = DatabasesStore.get(template.database);
 
-      nameResults.push({ database, template });
-      resultsByName.set(template.name, nameResults);
-    });
+    if (!database) {
+      return;
+    }
+
+    const nameResults = resultsByName.get(template.name) ?? [];
+
+    nameResults.push({ database, template });
+    resultsByName.set(template.name, nameResults);
   });
 
   // Fuzzy match against the template names

@@ -1,7 +1,11 @@
 import { vi } from 'vitest';
 import { DataViewTypes } from '@minddrop/data-views';
 import { DataViewFixtures } from '@minddrop/data-views/test-utils';
-import { DatabaseTemplates, Databases } from '@minddrop/databases';
+import {
+  DatabaseEntryTemplates,
+  DatabaseTemplates,
+  Databases,
+} from '@minddrop/databases';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { Designs } from '@minddrop/designs';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
@@ -15,6 +19,7 @@ const { dataViewType_table } = DataViewFixtures;
 
 interface SetupOptions {
   loadDatabases?: boolean;
+  loadDatabaseEntryTemplates?: boolean;
   loadDatabaseTemplates?: boolean;
   loadDesigns?: boolean;
 }
@@ -29,6 +34,7 @@ export const MockFs = initializeMockFileSystem([
 export function setup(
   options: SetupOptions = {
     loadDatabases: true,
+    loadDatabaseEntryTemplates: true,
     loadDatabaseTemplates: true,
     loadDesigns: true,
   },
@@ -36,6 +42,11 @@ export function setup(
   if (options.loadDatabases !== false) {
     // Load item type configs into the store
     Databases.Store.load(DatabaseFixtures.databases);
+  }
+
+  if (options.loadDatabaseEntryTemplates !== false) {
+    // Load entry templates into the store
+    DatabaseEntryTemplates.Store.load(DatabaseFixtures.databaseEntryTemplates);
   }
 
   if (options.loadDatabaseTemplates !== false) {
@@ -59,6 +70,7 @@ export function cleanup() {
 
   // Clear stores
   Databases.Store.clear();
+  DatabaseEntryTemplates.Store.clear();
   DatabaseTemplates.Store.clear();
   Designs.Store.clear();
   DataViewTypes.Store.clear();

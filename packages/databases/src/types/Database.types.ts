@@ -1,11 +1,8 @@
-import { DataView } from '@minddrop/data-views';
-import { Design } from '@minddrop/designs-next';
 import { PropertiesSchema, PropertyType } from '@minddrop/properties';
 import { EntityId } from '@minddrop/utils';
 import { ViewOpenMode } from '@minddrop/views';
 import { LayoutContext } from '../layoutContexts';
 import { DatabaseAutomation } from './DatabaseAutomation.types';
-import { DatabaseEntryTemplate } from './DatabaseEntryTemplate.types';
 
 export type PropertyFileStorage = 'root' | 'common' | 'property' | 'entry';
 
@@ -126,10 +123,22 @@ export interface Database {
   entryOpenMode: ViewOpenMode;
 
   /**
-   * An ordered list of view IDs defining the sort order of the
-   * database's views. Only set if views have been manually sorted.
+   * The IDs of the database's views in display order. Normalized
+   * against the view files at load time.
    */
-  viewOrder?: string[];
+  views: string[];
+
+  /**
+   * The IDs of the database's designs in display order. Normalized
+   * against the design files at load time.
+   */
+  designs: string[];
+
+  /**
+   * The IDs of the database's entry templates in display order.
+   * Normalized against the template files at load time.
+   */
+  entryTemplates: string[];
 
   /**
    * Whether to hide the views toolbar in the database view. Intended
@@ -139,31 +148,9 @@ export interface Database {
   hideViewsToolbar?: boolean;
 
   /**
-   * The database's entry templates. Array order defines the order in
-   * which templates appear in entry creation menus.
-   */
-  entryTemplates?: DatabaseEntryTemplate[];
-
-  /**
    * The database's automations if it has any.
    */
   automations?: DatabaseAutomation[];
-
-  /**
-   * The database's views, stored without `dataSource`, `virtual`,
-   * `owner`, and `ownerKey` which are derived at load time, and
-   * without the runtime `references` index.
-   */
-  views?: Omit<
-    DataView,
-    'dataSource' | 'virtual' | 'owner' | 'ownerKey' | 'references'
-  >[];
-
-  /**
-   * The database's designs, stored without `owner` which is derived
-   * at load time.
-   */
-  designs?: Omit<Design, 'owner'>[];
 
   /**
    * A [layout context]: [design ID] map of the design to render

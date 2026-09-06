@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { DatabaseEntries, Databases } from '@minddrop/databases';
+import { DatabaseEntries, DatabaseEntryTemplates } from '@minddrop/databases';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { render, screen, userEvent, waitFor } from '@minddrop/test-utils';
 import { cleanup, setup } from '../test-utils';
@@ -162,7 +162,7 @@ describe('<CreateDatabaseEntryButton />', () => {
       await search(entryTemplatesDatabase.name);
 
       // Template options are listed at the root, qualified by
-      // database name
+      // database name.
       expect(
         listedOptions(
           `${entryTemplatesDatabase.name} · ${entryTemplate1.name}`,
@@ -174,9 +174,12 @@ describe('<CreateDatabaseEntryButton />', () => {
 
     it('matches templates by name', async () => {
       // Give a database a template whose name shares nothing with
-      // its database name, so only a template match can list it
-      Databases.Store.update(objectDatabase.id, {
-        entryTemplates: [{ ...entryTemplate1, name: 'Zephyr' }],
+      // its database name, so only a template match can list it.
+      DatabaseEntryTemplates.Store.set({
+        ...entryTemplate1,
+        id: 'database-entry-template_zephyr',
+        database: objectDatabase.id,
+        name: 'Zephyr',
       });
 
       renderMultiDatabaseButton();
