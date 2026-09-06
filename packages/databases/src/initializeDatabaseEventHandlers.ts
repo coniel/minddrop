@@ -1,7 +1,7 @@
-} from '@minddrop/designs-next';
 import { Collections } from '@minddrop/collections';
 import { DataViews } from '@minddrop/data-views';
 import { Designs } from '@minddrop/designs';
+import { Designs as DesignsNext } from '@minddrop/designs-next';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { ItemReferences } from '@minddrop/item-references';
@@ -93,5 +93,8 @@ export function initializeDatabaseEventHandlers() {
   });
 
   Events.addListeners('databases:database-designs', {
+    [DesignsNext.events.Created]: onDatabaseDesignCreated,
+    [DesignsNext.events.Updated]: onDatabaseDesignUpdated,
+    [DesignsNext.events.Deleted]: onDatabaseDesignDeleted,
   });
 }

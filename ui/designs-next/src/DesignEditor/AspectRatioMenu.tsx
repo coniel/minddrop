@@ -1,8 +1,4 @@
-import {
-  AspectRatioToken,
-  CardAspectRatios,
-  resolveAspectRatioValue,
-} from '@minddrop/designs-next';
+import { AspectRatioToken, Designs } from '@minddrop/designs-next';
 import { useTranslation } from '@minddrop/i18n';
 import {
   DropdownMenuContent,
@@ -37,11 +33,11 @@ const AutoHeight = 'auto';
 const SquareAspectRatio: AspectRatioToken = '1/1';
 
 // The portrait and landscape ratios, grouped in the menu
-const PortraitAspectRatios = CardAspectRatios.filter(
-  (ratio) => resolveAspectRatioValue(ratio) < 1,
+const PortraitAspectRatios = Designs.constants.CardAspectRatios.filter(
+  (ratio) => Designs.resolveAspectRatioValue(ratio) < 1,
 );
-const LandscapeAspectRatios = CardAspectRatios.filter(
-  (ratio) => resolveAspectRatioValue(ratio) > 1,
+const LandscapeAspectRatios = Designs.constants.CardAspectRatios.filter(
+  (ratio) => Designs.resolveAspectRatioValue(ratio) > 1,
 );
 
 /**
@@ -74,7 +70,8 @@ export const AspectRatioMenu: React.FC<AspectRatioMenuProps> = ({
   // Reports the picked ratio, resolving the menu value to a token
   function handleValueChange(picked: string) {
     onAspectRatioChange(
-      CardAspectRatios.find((token) => token === picked) ?? null,
+      Designs.constants.CardAspectRatios.find((token) => token === picked) ??
+        null,
     );
   }
 

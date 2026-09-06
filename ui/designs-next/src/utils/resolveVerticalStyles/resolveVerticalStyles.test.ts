@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { UnitPixelSize, resolveRowLayout } from '@minddrop/designs-next';
+import { Designs } from '@minddrop/designs-next';
 import {
   bodyDesignElement,
   cardDesign_1,
@@ -21,7 +21,7 @@ describe('resolveVerticalStyles', () => {
   });
 
   it('sizes fixed elements from their block span otherwise', () => {
-    const rowLayout = resolveRowLayout(cardDesign_1.elements, 32, {});
+    const rowLayout = Designs.resolveRowLayout(cardDesign_1.elements, 32, {});
     const styles = resolveVerticalStyles(
       coverDesignElement,
       cardDesign_1,
@@ -31,13 +31,13 @@ describe('resolveVerticalStyles', () => {
 
     expect(styles).toEqual({
       top: 0,
-      height: coverDesignElement.rowSpan * UnitPixelSize,
+      height: coverDesignElement.rowSpan * Designs.constants.UnitPixelSize,
       minHeight: undefined,
     });
   });
 
   it('gives natural elements a minimum height instead of a fixed one', () => {
-    const rowLayout = resolveRowLayout(cardDesign_1.elements, 32, {});
+    const rowLayout = Designs.resolveRowLayout(cardDesign_1.elements, 32, {});
     const styles = resolveVerticalStyles(
       bodyDesignElement,
       cardDesign_1,
@@ -46,6 +46,8 @@ describe('resolveVerticalStyles', () => {
     );
 
     expect(styles.height).toBeUndefined();
-    expect(styles.minHeight).toBe(bodyDesignElement.rowSpan * UnitPixelSize);
+    expect(styles.minHeight).toBe(
+      bodyDesignElement.rowSpan * Designs.constants.UnitPixelSize,
+    );
   });
 });

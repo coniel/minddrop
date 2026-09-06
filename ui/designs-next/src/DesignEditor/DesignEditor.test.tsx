@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { Designs, MinDesignRows } from '@minddrop/designs-next';
+import { Designs } from '@minddrop/designs-next';
 import {
   cardDesign_1,
   designElements,
@@ -158,6 +158,8 @@ describe('DesignEditor', () => {
     );
 
     expect(design.aspectRatio).toBeUndefined();
-    expect(design.rows).toBe(Math.max(contentBottom, MinDesignRows));
+    expect(design.rows).toBe(
+      Math.max(contentBottom, Designs.constants.MinRows),
+    );
   });
 });

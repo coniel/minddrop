@@ -1,9 +1,8 @@
 import {
   Design,
   DesignElement,
+  Designs,
   RowLayout,
-  UnitPixelSize,
-  resolveVerticalElementRect,
 } from '@minddrop/designs-next';
 
 /**
@@ -25,7 +24,7 @@ export function resolveVerticalStyles(
 ): React.CSSProperties {
   // Resolve the element against the fixed card height
   if (aspectHeight !== null) {
-    const rect = resolveVerticalElementRect(
+    const rect = Designs.resolveVerticalElementRect(
       element,
       design.elements,
       design.rows,
@@ -39,9 +38,11 @@ export function resolveVerticalStyles(
     top: rowLayout?.tops[element.row],
     // Natural elements size to their content, with their block span
     // as the minimum.
-    height: element.naturalHeight ? undefined : element.rowSpan * UnitPixelSize,
+    height: element.naturalHeight
+      ? undefined
+      : element.rowSpan * Designs.constants.UnitPixelSize,
     minHeight: element.naturalHeight
-      ? element.rowSpan * UnitPixelSize
+      ? element.rowSpan * Designs.constants.UnitPixelSize
       : undefined,
   };
 }

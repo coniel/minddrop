@@ -3,8 +3,6 @@ import {
   AspectRatioToken,
   DesignElement,
   Designs,
-  MinDesignRows,
-  resolveAspectRows,
 } from '@minddrop/designs-next';
 import { DesignEditorPane } from '../DesignEditorPane';
 import { DesignPreviewPane } from '../DesignPreviewPane';
@@ -57,7 +55,7 @@ export const DesignEditor: React.FC<DesignEditorProps> = ({ designId }) => {
 
   // The draft takes over from the design during drags
   const elements = draft?.elements ?? design?.elements ?? NoElements;
-  const rows = draft?.rows ?? design?.rows ?? MinDesignRows;
+  const rows = draft?.rows ?? design?.rows ?? Designs.constants.MinRows;
 
   // Keep the latest draft reachable from the drag end handler
   draftRef.current = draft;
@@ -133,7 +131,7 @@ export const DesignEditor: React.FC<DesignEditorProps> = ({ designId }) => {
 
       Designs.update(designId, {
         aspectRatio: null,
-        rows: Math.max(contentBottom, MinDesignRows),
+        rows: Math.max(contentBottom, Designs.constants.MinRows),
       });
 
       return;
@@ -141,7 +139,7 @@ export const DesignEditor: React.FC<DesignEditorProps> = ({ designId }) => {
 
     Designs.update(designId, {
       aspectRatio,
-      rows: resolveAspectRows(columns, aspectRatio),
+      rows: Designs.resolveAspectRows(columns, aspectRatio),
     });
   }
 

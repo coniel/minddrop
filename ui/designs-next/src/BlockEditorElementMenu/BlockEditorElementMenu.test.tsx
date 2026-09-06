@@ -1,16 +1,16 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import {
   DesignElement,
+  DesignElementConfigs,
   DesignElementSettingGroup,
   DesignElementSettingsMenuProps,
   ElementHeightMode,
   ElementWidthMode,
-  registerDesignElementConfig,
 } from '@minddrop/designs-next';
 import {
   DesignElementConfigsStore,
-  boxElementConfig,
   iconDesignElement,
+  testElementConfig,
 } from '@minddrop/designs-next/test-utils';
 import { fireEvent, render, screen } from '@minddrop/test-utils';
 import { cleanup } from '../test-utils';
@@ -35,7 +35,7 @@ let changedSettings: Record<string, unknown> | null;
  * @param settingGroups - The setting groups to register.
  */
 function registerSettingGroups(settingGroups: DesignElementSettingGroup[]) {
-  registerDesignElementConfig({ ...boxElementConfig, settingGroups });
+  DesignElementConfigs.register({ ...testElementConfig, settingGroups });
 }
 
 interface StubElement extends DesignElement {
@@ -207,8 +207,8 @@ describe('BlockEditorElementMenu', () => {
   });
 
   it('renders the element type settings menu', () => {
-    registerDesignElementConfig<StubElement>({
-      ...boxElementConfig,
+    DesignElementConfigs.register<StubElement>({
+      ...testElementConfig,
       settingsMenu: StubSettingsMenu,
     });
     renderMenu();

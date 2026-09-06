@@ -1,5 +1,5 @@
-import { BoxElementType } from '../constants';
 import { DesignElement } from '../types';
+import { TestElementType } from './element-configs.fixtures';
 
 // Column and row counts of the fixture card
 export const cardColumns = 48;
@@ -8,7 +8,7 @@ export const cardRows = 32;
 // Full-width fluid cover across the design's top
 export const coverDesignElement: DesignElement = {
   id: 'element_cover',
-  type: BoxElementType,
+  type: TestElementType,
   column: 0,
   row: 0,
   columnSpan: 48,
@@ -20,7 +20,7 @@ export const coverDesignElement: DesignElement = {
 // Fluid title layered over the cover
 export const titleDesignElement: DesignElement = {
   id: 'element_title',
-  type: BoxElementType,
+  type: TestElementType,
   column: 2,
   row: 10,
   columnSpan: 28,
@@ -32,7 +32,7 @@ export const titleDesignElement: DesignElement = {
 // Fixed icon layered over the cover, side by side with the title
 export const iconDesignElement: DesignElement = {
   id: 'element_icon',
-  type: BoxElementType,
+  type: TestElementType,
   column: 40,
   row: 8,
   columnSpan: 6,
@@ -44,7 +44,7 @@ export const iconDesignElement: DesignElement = {
 // Natural-height fluid body below the cover
 export const bodyDesignElement: DesignElement = {
   id: 'element_body',
-  type: BoxElementType,
+  type: TestElementType,
   column: 2,
   row: 20,
   columnSpan: 44,

@@ -1,7 +1,8 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { BoxElementType, getDesignElementConfig } from '@minddrop/designs-next';
+import { DesignElementConfigs } from '@minddrop/designs-next';
 import {
   BoxElementConfig,
+  BoxElementType,
   HeadingElementConfig,
   HeadingElementType,
   TextElementConfig,
@@ -16,10 +17,10 @@ describe('initializeDesignsNextFeature', () => {
   it('registers the built-in element configs', () => {
     initializeDesignsNextFeature();
 
-    expect(getDesignElementConfig(BoxElementType)).toBe(BoxElementConfig);
-    expect(getDesignElementConfig(HeadingElementType)).toBe(
+    expect(DesignElementConfigs.get(BoxElementType)).toBe(BoxElementConfig);
+    expect(DesignElementConfigs.get(HeadingElementType)).toBe(
       HeadingElementConfig,
     );
-    expect(getDesignElementConfig(TextElementType)).toBe(TextElementConfig);
+    expect(DesignElementConfigs.get(TextElementType)).toBe(TextElementConfig);
   });
 });

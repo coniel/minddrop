@@ -2,12 +2,12 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DesignElementConfigsStore } from '../DesignElementConfigsStore';
 import { DesignElementConfigNotRegisteredError } from '../errors';
 import { registerDesignElementConfig } from '../registerDesignElementConfig';
-import { boxElementConfig } from '../test-utils';
+import { testElementConfig } from '../test-utils';
 import { getDesignElementConfig } from './getDesignElementConfig';
 
 describe('getDesignElementConfig', () => {
   beforeEach(() => {
-    registerDesignElementConfig(boxElementConfig);
+    registerDesignElementConfig(testElementConfig);
   });
 
   afterEach(() => {
@@ -15,8 +15,8 @@ describe('getDesignElementConfig', () => {
   });
 
   it('returns the requested element type config', () => {
-    expect(getDesignElementConfig(boxElementConfig.type)).toBe(
-      boxElementConfig,
+    expect(getDesignElementConfig(testElementConfig.type)).toBe(
+      testElementConfig,
     );
   });
 

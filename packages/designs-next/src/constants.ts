@@ -21,11 +21,6 @@ export const DesignFileExtension = 'json';
 export const i18nRoot = 'designsNext';
 
 /**
- * The type of the decorative box element.
- */
-export const BoxElementType = 'box';
-
-/**
  * The gap below a growing block, in grid units, at or under which
  * the growth shifts the elements below. Larger gaps absorb the
  * growth instead, shifting only once the gap is consumed.

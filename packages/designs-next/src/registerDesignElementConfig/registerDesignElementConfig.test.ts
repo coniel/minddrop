@@ -3,7 +3,7 @@ import { Events } from '@minddrop/events';
 import { DesignElementConfigsStore } from '../DesignElementConfigsStore';
 import { DesignElementConfigRegisteredEvent } from '../events';
 import { getDesignElementConfig } from '../getDesignElementConfig';
-import { boxElementConfig } from '../test-utils';
+import { testElementConfig } from '../test-utils';
 import { registerDesignElementConfig } from './registerDesignElementConfig';
 
 describe('registerDesignElementConfig', () => {
@@ -12,10 +12,10 @@ describe('registerDesignElementConfig', () => {
   });
 
   it('registers an element type config', () => {
-    registerDesignElementConfig(boxElementConfig);
+    registerDesignElementConfig(testElementConfig);
 
-    expect(getDesignElementConfig(boxElementConfig.type)).toBe(
-      boxElementConfig,
+    expect(getDesignElementConfig(testElementConfig.type)).toBe(
+      testElementConfig,
     );
   });
 
@@ -25,11 +25,11 @@ describe('registerDesignElementConfig', () => {
         DesignElementConfigRegisteredEvent,
         'test',
         (payload) => {
-          expect(payload).toBe(boxElementConfig);
+          expect(payload).toBe(testElementConfig);
           done();
         },
       );
 
-      registerDesignElementConfig(boxElementConfig);
+      registerDesignElementConfig(testElementConfig);
     }));
 });

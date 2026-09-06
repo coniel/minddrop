@@ -1,4 +1,4 @@
-import { DesignNotFoundError, Designs } from '@minddrop/designs-next';
+import { Designs } from '@minddrop/designs-next';
 import { InvalidParameterError } from '@minddrop/utils';
 import { getDatabase } from '../getDatabase';
 import { LayoutContext, layoutContextBaseType } from '../layoutContexts';
@@ -15,7 +15,7 @@ import { updateDatabase } from '../updateDatabase';
  * @returns The updated database.
  *
  * @throws {DatabaseNotFoundError} If the database does not exist.
- * @throws {DesignNotFoundError} If the design is not owned by the database.
+ * @throws {Designs.errors.NotFound} If the design is not owned by the database.
  * @throws {InvalidParameterError} If the design is not of the context's base type.
  */
 export async function setDatabaseDefaultDesign(
@@ -41,7 +41,7 @@ export async function setDatabaseDefaultDesign(
 
   // Ensure the design exists
   if (!design) {
-    throw new DesignNotFoundError(designId);
+    throw new Designs.errors.NotFound(designId);
   }
 
   // Ensure the design is of the context's base type

@@ -1,11 +1,11 @@
 import {
   DesignElement,
+  DesignElementConfigs,
   DesignElementSettingGroup,
   DesignElementSettings,
   DesignElementSettingsMenuProps,
   ElementHeightMode,
   ElementWidthMode,
-  getDesignElementConfig,
 } from '@minddrop/designs-next';
 import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import { UiIconName } from '@minddrop/ui-icons';
@@ -198,7 +198,7 @@ export const BlockEditorElementMenu: React.FC<BlockEditorElementMenuProps> = ({
   const { t } = useTranslation();
 
   // The element type's settings menu and system setting groups
-  const config = getDesignElementConfig(element.type, false);
+  const config = DesignElementConfigs.get(element.type, false);
   const SettingsMenu = config?.settingsMenu;
   const settingGroups = config?.settingGroups;
 

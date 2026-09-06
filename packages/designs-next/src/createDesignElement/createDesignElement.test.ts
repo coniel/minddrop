@@ -3,12 +3,12 @@ import { isEntityId } from '@minddrop/utils';
 import { DesignElementConfigsStore } from '../DesignElementConfigsStore';
 import { DesignElementConfigNotRegisteredError } from '../errors';
 import { registerDesignElementConfig } from '../registerDesignElementConfig';
-import { boxElementConfig } from '../test-utils';
+import { testElementConfig } from '../test-utils';
 import { createDesignElement } from './createDesignElement';
 
 describe('createDesignElement', () => {
   beforeEach(() => {
-    registerDesignElementConfig(boxElementConfig);
+    registerDesignElementConfig(testElementConfig);
   });
 
   afterEach(() => {
@@ -16,15 +16,15 @@ describe('createDesignElement', () => {
   });
 
   it('creates an element from the config defaults', () => {
-    const element = createDesignElement(boxElementConfig.type);
+    const element = createDesignElement(testElementConfig.type);
 
     expect(element).toEqual({
       id: expect.any(String),
-      type: boxElementConfig.type,
+      type: testElementConfig.type,
       column: 0,
       row: 0,
-      columnSpan: boxElementConfig.defaultColumnSpan,
-      rowSpan: boxElementConfig.defaultRowSpan,
+      columnSpan: testElementConfig.defaultColumnSpan,
+      rowSpan: testElementConfig.defaultRowSpan,
       widthMode: 'fluid',
       naturalHeight: false,
     });
@@ -32,7 +32,7 @@ describe('createDesignElement', () => {
   });
 
   it('places the element at the given position', () => {
-    const element = createDesignElement(boxElementConfig.type, {
+    const element = createDesignElement(testElementConfig.type, {
       column: 4,
       row: 6,
     });
@@ -44,7 +44,7 @@ describe('createDesignElement', () => {
   it('applies the config width mode and natural height defaults', () => {
     // A type defaulting to a pinned width and natural height
     registerDesignElementConfig({
-      ...boxElementConfig,
+      ...testElementConfig,
       type: 'custom',
       defaultWidthMode: 'fixed-left',
       defaultNaturalHeight: true,

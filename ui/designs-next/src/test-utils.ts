@@ -1,6 +1,6 @@
 import { vi } from 'vitest';
-import { registerDesignElementConfig } from '@minddrop/designs-next';
-import { boxElementConfig, locales } from '@minddrop/designs-next/test-utils';
+import { DesignElementConfigs } from '@minddrop/designs-next';
+import { locales, testElementConfig } from '@minddrop/designs-next/test-utils';
 import { I18n } from '@minddrop/i18n';
 import { cleanup as cleanupRender } from '@minddrop/test-utils';
 
@@ -10,7 +10,7 @@ import { cleanup as cleanupRender } from '@minddrop/test-utils';
 I18n.registerTranslations(locales);
 
 // Register the box config so fixture elements resolve a renderer
-registerDesignElementConfig(boxElementConfig);
+DesignElementConfigs.register(testElementConfig);
 
 export function cleanup() {
   cleanupRender();

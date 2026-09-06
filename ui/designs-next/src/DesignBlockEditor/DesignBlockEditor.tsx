@@ -2,17 +2,11 @@ import { useEffect, useRef, useState } from 'react';
 import {
   ApplyElementDragOptions,
   DesignElement,
+  DesignElementConfigs,
+  Designs,
   ElementDragMode,
   ElementHeightMode,
   ElementWidthMode,
-  MaxDesignRows,
-  MinDesignRows,
-  applyElementDrag,
-  applyElementSettings,
-  getDesignElementConfig,
-  isElementPinOverridden,
-  isElementVerticalPinOverridden,
-  snapToMultiple,
 } from '@minddrop/designs-next';
 import { CanvasChrome, CanvasChromeOrigin } from '@minddrop/ui-canvas';
 import { useDeleteKey } from '@minddrop/utils';
@@ -273,7 +267,7 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
     }
 
     // The element type's block behaviour constraints
-    const config = getDesignElementConfig(drag.original.type, false);
+    const config = DesignElementConfigs.get(drag.original.type, false);
 
     // Let bottom-edge resizes extend past the layout when it can grow
     const growable = drag.mode.includes('bottom') && Boolean(onRowsChange);
@@ -285,7 +279,7 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
       deltaColumns: (event.clientX - drag.startX) / drag.unitScreenSize,
       deltaRows: (event.clientY - drag.startY) / drag.unitScreenSize,
       columns,
-      rows: growable ? MaxDesignRows : rows,
+      rows: growable ? Designs.constants.MaxRows : rows,
       snap,
       // Floor the resize at the element type's intrinsic minimum
       minRowSpan: config?.resolveMinRowSpan?.(drag.original),
@@ -294,7 +288,7 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
     };
 
     // Apply the drag to the element
-    const dragged = applyElementDrag(drag.original, options);
+    const dragged = Designs.applyElementDrag(drag.original, options);
 
     onElementsChange(
       elements.map((element) =>
@@ -354,10 +348,13 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
 
     // Snap the dragged edge onto the snap grid
     const deltaRows = (event.clientY - drag.startY) / drag.unitScreenSize;
-    const snapped = snapToMultiple(drag.startRows + deltaRows, snap);
+    const snapped = Designs.snapToMultiple(drag.startRows + deltaRows, snap);
 
     onRowsChange(
-      Math.min(Math.max(snapped, contentBottom, MinDesignRows), MaxDesignRows),
+      Math.min(
+        Math.max(snapped, contentBottom, Designs.constants.MinRows),
+        Designs.constants.MaxRows,
+      ),
     );
   }
 
@@ -416,14 +413,14 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
     }
 
     // The element type's height constraints
-    const config = getDesignElementConfig(selectedElement.type, false);
+    const config = DesignElementConfigs.get(selectedElement.type, false);
 
     // The element with the settings applied
     const updated = { ...selectedElement, ...settings };
 
     // Apply the change, resolving the height constraints before and
     // after it so line-based elements keep their line count.
-    const result = applyElementSettings(
+    const result = Designs.applyElementSettings(
       elements,
       selectedElement.id,
       settings,
@@ -442,7 +439,7 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
     // surface minimum. Aspect-locked designs keep their derived row
     // count instead.
     if (result.rows !== rows) {
-      onRowsChange?.(Math.max(result.rows, MinDesignRows));
+      onRowsChange?.(Math.max(result.rows, Designs.constants.MinRows));
     }
   }
 
@@ -509,9 +506,12 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
           <CanvasChrome origin={MenuChromeOrigins[menuPosition.placement]}>
             <BlockEditorElementMenu
               element={selectedElement}
-              pinOverridden={isElementPinOverridden(selectedElement, elements)}
+              pinOverridden={Designs.isElementPinOverridden(
+                selectedElement,
+                elements,
+              )}
               aspectLocked={aspectLocked}
-              verticalPinOverridden={isElementVerticalPinOverridden(
+              verticalPinOverridden={Designs.isElementVerticalPinOverridden(
                 selectedElement,
                 elements,
               )}

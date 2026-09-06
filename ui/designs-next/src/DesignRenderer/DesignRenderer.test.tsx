@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { Design, UnitPixelSize } from '@minddrop/designs-next';
+import { Design, Designs } from '@minddrop/designs-next';
 import {
   bodyDesignElement,
   cardDesign_1,
@@ -89,7 +89,7 @@ describe('DesignRenderer', () => {
 
     expect(renderer.style.width).toBe('480px');
     expect(renderer.style.height).toBe(
-      `${cardDesign_1.rows * UnitPixelSize}px`,
+      `${cardDesign_1.rows * Designs.constants.UnitPixelSize}px`,
     );
   });
 
@@ -105,7 +105,7 @@ describe('DesignRenderer', () => {
     expect(cover.style.width).toBe('480px');
     expect(cover.style.top).toBe('0px');
     expect(cover.style.height).toBe(
-      `${coverDesignElement.rowSpan * UnitPixelSize}px`,
+      `${coverDesignElement.rowSpan * Designs.constants.UnitPixelSize}px`,
     );
   });
 
@@ -137,7 +137,7 @@ describe('DesignRenderer', () => {
     ) as HTMLElement;
 
     expect(body.style.minHeight).toBe(
-      `${bodyDesignElement.rowSpan * UnitPixelSize}px`,
+      `${bodyDesignElement.rowSpan * Designs.constants.UnitPixelSize}px`,
     );
     expect(body.style.height).toBe('');
   });
@@ -215,9 +215,9 @@ describe('DesignRenderer', () => {
     ) as HTMLElement;
 
     // The bar keeps its unit height against the card's bottom edge
-    expect(bar.style.height).toBe(`${6 * UnitPixelSize}px`);
+    expect(bar.style.height).toBe(`${6 * Designs.constants.UnitPixelSize}px`);
     expect(parseFloat(bar.style.top)).toBeCloseTo(
-      320 - (32 - 26) * UnitPixelSize,
+      320 - (32 - 26) * Designs.constants.UnitPixelSize,
     );
   });
 
@@ -252,7 +252,7 @@ describe('DesignRenderer', () => {
     // The body's ten rows stretch from unit height to fit the
     // measured 100px.
     expect(renderer.style.height).toBe(
-      `${(cardDesign_1.rows - bodyDesignElement.rowSpan) * UnitPixelSize + 100}px`,
+      `${(cardDesign_1.rows - bodyDesignElement.rowSpan) * Designs.constants.UnitPixelSize + 100}px`,
     );
   });
 });

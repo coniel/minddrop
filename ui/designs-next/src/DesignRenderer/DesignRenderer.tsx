@@ -1,11 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import {
-  Design,
-  getDesignElementConfig,
-  resolveAspectRatioValue,
-  resolveElementRect,
-  resolveRowLayout,
-} from '@minddrop/designs-next';
+import { Design, DesignElementConfigs, Designs } from '@minddrop/designs-next';
 import { resolveVerticalStyles } from '../utils';
 import './DesignRenderer.css';
 
@@ -47,7 +41,7 @@ export const DesignRenderer: React.FC<DesignRendererProps> = ({
 
   // Aspect-locked designs take their height from the render width
   const aspectRatio = design.aspectRatio
-    ? resolveAspectRatioValue(design.aspectRatio)
+    ? Designs.resolveAspectRatioValue(design.aspectRatio)
     : null;
   const aspectHeight =
     aspectRatio && renderWidth !== null ? renderWidth / aspectRatio : null;
@@ -56,7 +50,7 @@ export const DesignRenderer: React.FC<DesignRendererProps> = ({
   // heights, driving natural-height designs only.
   const rowLayout = design.aspectRatio
     ? null
-    : resolveRowLayout(design.elements, design.rows, naturalHeights);
+    : Designs.resolveRowLayout(design.elements, design.rows, naturalHeights);
 
   // Measure the container's width when no explicit width is given
   useEffect(() => {
@@ -128,7 +122,7 @@ export const DesignRenderer: React.FC<DesignRendererProps> = ({
       {renderWidth !== null &&
         design.elements.map((element) => {
           // Look up the element's renderer, skipping unregistered types
-          const ElementComponent = getDesignElementConfig(
+          const ElementComponent = DesignElementConfigs.get(
             element.type,
             false,
           )?.component;
@@ -138,7 +132,7 @@ export const DesignRenderer: React.FC<DesignRendererProps> = ({
           }
 
           // Resolve the element's pixel rect at the render width
-          const rect = resolveElementRect(
+          const rect = Designs.resolveElementRect(
             element,
             design.elements,
             design.columns,

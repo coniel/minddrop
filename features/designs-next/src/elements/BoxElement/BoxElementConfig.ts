@@ -1,6 +1,8 @@
-import { BoxElementType, DesignElementConfig } from '@minddrop/designs-next';
+import { DesignElementConfig } from '@minddrop/designs-next';
 import { BoxElement } from './BoxElement.types';
 import { BoxElementRenderer } from './BoxElementRenderer';
+
+export const BoxElementType = 'box';
 
 /**
  * Config for the decorative box element, used as a backdrop or

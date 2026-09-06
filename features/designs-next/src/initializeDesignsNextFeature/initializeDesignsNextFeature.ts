@@ -1,4 +1,4 @@
-import { registerDesignElementConfig } from '@minddrop/designs-next';
+import { DesignElementConfigs } from '@minddrop/designs-next';
 import { I18n } from '@minddrop/i18n';
 import {
   BoxElementConfig,
@@ -16,7 +16,7 @@ export function initializeDesignsNextFeature(): void {
   I18n.registerTranslations(locales);
 
   // Register the built-in element configs
-  registerDesignElementConfig(BoxElementConfig);
-  registerDesignElementConfig(HeadingElementConfig);
-  registerDesignElementConfig(TextElementConfig);
+  DesignElementConfigs.register(BoxElementConfig);
+  DesignElementConfigs.register(HeadingElementConfig);
+  DesignElementConfigs.register(TextElementConfig);
 }

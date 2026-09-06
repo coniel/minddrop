@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DesignNotFoundError, Designs } from '@minddrop/designs-next';
+import { Designs } from '@minddrop/designs-next';
 import { DesignFixtures } from '@minddrop/designs-next/test-utils';
 import { InvalidParameterError } from '@minddrop/utils';
 import { DatabasesStore } from '../DatabasesStore';
@@ -24,7 +24,7 @@ describe('setDatabaseDefaultDesign', () => {
   it('throws if the design is not owned by the database', async () => {
     await expect(() =>
       setDatabaseDefaultDesign(objectDatabase.id, 'card', cardDesign_1.id),
-    ).rejects.toThrow(DesignNotFoundError);
+    ).rejects.toThrow(Designs.errors.NotFound);
   });
 
   it('throws if the design is not of the context base type', async () => {

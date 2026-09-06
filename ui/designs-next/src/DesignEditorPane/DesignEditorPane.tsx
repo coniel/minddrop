@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { SnapPresets, UnitPixelSize } from '@minddrop/designs-next';
+import { Designs } from '@minddrop/designs-next';
 import { useTranslation } from '@minddrop/i18n';
 import {
   FloatingToolbar,
@@ -47,8 +47,8 @@ export const DesignEditorPane: React.FC<DesignEditorPaneProps> = ({
   return (
     <DesignCanvasPane
       className="design-editor-pane"
-      layoutWidth={columns * UnitPixelSize}
-      layoutHeight={rows * UnitPixelSize}
+      layoutWidth={columns * Designs.constants.UnitPixelSize}
+      layoutHeight={rows * Designs.constants.UnitPixelSize}
       controls={
         <>
           {controls}
@@ -60,19 +60,19 @@ export const DesignEditorPane: React.FC<DesignEditorPaneProps> = ({
               value={String(snap)}
               onValueChange={handleSnapChange}
             >
-              {SnapPresets.map((units) => (
+              {Designs.constants.SnapPresets.map((units) => (
                 <Toggle
                   key={units}
                   size="sm"
                   value={String(units)}
-                  label={`${units * UnitPixelSize}px`}
+                  label={`${units * Designs.constants.UnitPixelSize}px`}
                   tooltip={{
                     stringTitle: t('designsNext.editor.snapTo', {
-                      size: `${units * UnitPixelSize}px`,
+                      size: `${units * Designs.constants.UnitPixelSize}px`,
                     }),
                   }}
                 >
-                  {units * UnitPixelSize}
+                  {units * Designs.constants.UnitPixelSize}
                 </Toggle>
               ))}
             </RadioToggleGroup>
@@ -85,7 +85,7 @@ export const DesignEditorPane: React.FC<DesignEditorPaneProps> = ({
         columns={columns}
         rows={rows}
         snap={snap}
-        unitSize={UnitPixelSize}
+        unitSize={Designs.constants.UnitPixelSize}
       />
     </DesignCanvasPane>
   );
