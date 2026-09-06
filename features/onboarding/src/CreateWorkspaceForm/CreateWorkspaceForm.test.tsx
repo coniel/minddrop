@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { render, screen, userEvent, waitFor } from '@minddrop/test-utils';
-import { DefaultWorkspaceIcon, Workspaces } from '@minddrop/workspaces';
+import { Workspaces } from '@minddrop/workspaces';
 import { MockFs, cleanup, parentDirPath, setup } from '../test-utils';
 import { CreateWorkspaceForm } from './CreateWorkspaceForm';
 
@@ -120,7 +120,7 @@ describe('<CreateWorkspaceForm />', () => {
       expect(Workspaces.getAll()).toEqual([
         expect.objectContaining({
           name: 'Notes',
-          icon: DefaultWorkspaceIcon,
+          icon: Workspaces.constants.EntityDefaultIcon,
           path: `${parentDirPath}/Notes`,
         }),
       ]);

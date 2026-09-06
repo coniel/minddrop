@@ -13,7 +13,7 @@ import {
   TextField,
 } from '@minddrop/ui-primitives';
 import { useForm } from '@minddrop/utils';
-import { DefaultWorkspaceIcon, Workspaces } from '@minddrop/workspaces';
+import { Workspaces } from '@minddrop/workspaces';
 import './CreateWorkspaceForm.css';
 
 export interface CreateWorkspaceFormProps {
@@ -36,7 +36,7 @@ export const CreateWorkspaceForm: React.FC<CreateWorkspaceFormProps> = ({
   onBack,
   onCreated,
 }) => {
-  const [icon, setIcon] = useState(DefaultWorkspaceIcon);
+  const [icon, setIcon] = useState(Workspaces.constants.EntityDefaultIcon);
   const [parentDirPath, setParentDirPath] = useState('');
   const [error, setError] = useState<TranslationKey | null>(null);
   const { t } = useTranslation();
@@ -97,7 +97,7 @@ export const CreateWorkspaceForm: React.FC<CreateWorkspaceFormProps> = ({
   }
 
   function handleClearIcon() {
-    setIcon(DefaultWorkspaceIcon);
+    setIcon(Workspaces.constants.EntityDefaultIcon);
   }
 
   return (
