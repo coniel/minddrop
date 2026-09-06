@@ -1,6 +1,6 @@
 /* ============================================================
    TOOLTIP
-   Dark tooltip on both light and dark themes.
+   Themed overlay surface, matching popovers and menus.
    ============================================================ */
 
 .tooltip-positioner {
@@ -8,11 +8,9 @@
 }
 
 .tooltip {
-  /* Dark surface regardless of theme */
-  background-color: hsl(220 13% 12%);
-  border: var(--border-width-thin) solid hsl(220 13% 20%);
-  color: hsl(220 10% 92%);
-  box-shadow: var(--shadow-lg);
+  background-color: var(--surface-overlay);
+  border: var(--border-width-thin) solid var(--border-subtle);
+  box-shadow: var(--shadow-overlay);
 
   border-radius: var(--radius-xs);
   padding: var(--space-2) var(--space-3);
@@ -32,7 +30,7 @@
 
   /* Description text */
   .tooltip-description {
-    color: hsl(220 10% 65%);
+    color: var(--text-muted);
     line-height: var(--line-height-snug);
     margin-top: var(--space-1);
   }
@@ -40,6 +38,6 @@
   /* Keyboard shortcut */
   .keyboard-shortcut {
     margin-top: var(--space-1);
-    color: hsl(220 10% 55%);
+    color: var(--text-subtle);
   }
 }

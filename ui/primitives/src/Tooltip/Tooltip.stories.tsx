@@ -12,13 +12,13 @@ export const TooltipStories = () => (
   <Story title="Tooltip">
     {/* --------------------------------------------------------
         BASIC
-        Dark tooltip on both light and dark themes for
-        consistent high contrast. Title is the primary label,
-        typically the name of the action.
+        Themed overlay surface matching popovers and menus.
+        Title is the primary label, typically the name of the
+        action.
     -------------------------------------------------------- */}
     <StorySection
       title="Basic"
-      description="Dark tooltip on both themes. Hover each example to preview."
+      description="Themed overlay surface. Hover each example to preview."
     >
       <StoryRow>
         <StoryItem label="title only">
