@@ -49,9 +49,9 @@ describe('<DataViewView />', () => {
     DataViews.Store.load([queryDataView]);
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     DataViewTypes.unregister(dataViewType_gallery.type);
-    cleanup();
+    await cleanup();
   });
 
   it('renders the query results as the view entries', () => {

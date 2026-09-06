@@ -61,9 +61,9 @@ describe('<QueryCollectionFilterNodeCard />', () => {
     Collections.Store.load([collection_1, collection_2, collection_virtual_1]);
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     Collections.Store.clear();
-    cleanup();
+    await cleanup();
   });
 
   it('persists a collection change', async () => {

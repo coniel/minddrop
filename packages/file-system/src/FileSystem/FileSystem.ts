@@ -1,19 +1,21 @@
 import { YAML, restoreDates } from '@minddrop/utils';
-import * as Api from './FsApi';
-import { addFileExtension } from './addFileExtension';
+import * as Api from '../FsApi';
+import { awaitPendingOperations } from '../PendingOperationsStore';
+import { addFileExtension } from '../addFileExtension';
 import {
   FileNotFoundError,
   InvalidPathError,
   PathConflictError,
-} from './errors';
-import { FileSystemChangedEvent } from './events';
+} from '../errors';
+import { FileSystemChangedEvent } from '../events';
 import {
   IncrementedPath,
   incrementalPath as incrementalPathFn,
   setPathIncrement,
-} from './incrementalPath';
-import { IoQueue } from './ioQueue';
-import { startFileSystemWatcher } from './startFileSystemWatcher';
+} from '../incrementalPath';
+import { IoQueue } from '../ioQueue';
+import { startFileSystemWatcher } from '../startFileSystemWatcher';
+import { trackAdapterOperations } from '../trackAdapterOperations';
 import {
   BaseDirectory,
   FileSystem,
@@ -21,11 +23,11 @@ import {
   FsOptions,
   FsWriteFileOptions,
   OpenFilePickerOptions,
-} from './types';
-import { hashContents } from './utils/hashContents';
-import { recordWrittenContents } from './writeRegistry';
+} from '../types';
+import { hashContents } from '../utils/hashContents';
+import { recordWrittenContents } from '../writeRegistry';
 
-export type { IncrementedPath } from './incrementalPath';
+export type { IncrementedPath } from '../incrementalPath';
 
 // Const-asserted so the names keep their literal types, which key
 // the event data registry.
@@ -39,7 +41,17 @@ const errors = {
   PathConflict: PathConflictError,
 };
 
+/**
+ * Test-only helpers.
+ */
+const tests = {
+  awaitAllOperations: awaitPendingOperations,
+  cleanup: cleanupFileSystem,
+};
+
 let FsAdapter: FileSystemAdapter = {} as FileSystemAdapter;
+// Restores the adapter to its initial state, when it supports that
+let resetAdapter: VoidFunction | null = null;
 const BaseDirPaths: Record<BaseDirectory, string> = {
   [BaseDirectory.AppData]: '',
   [BaseDirectory.AppConfig]: '',
@@ -64,10 +76,12 @@ export const Fs: Omit<FileSystem, 'openFilePicker'> &
     startWatcher: typeof startFileSystemWatcher;
     events: typeof events;
     errors: typeof errors;
+    tests: typeof tests;
   } = {
   ...Api,
   events,
   errors,
+  tests,
   hashContents,
   recordWrittenContents,
   registerAdapter: (...args) => registerFileSystemAdapter(...args),
@@ -125,6 +139,11 @@ interface RegisterAdapterOptions {
    * queue's debounce delay would cause timeouts.
    */
   skipQueue?: boolean;
+  /**
+   * Restores the adapter to its initial state. Invoked by the
+   * test cleanup once pending operations have settled.
+   */
+  reset?: VoidFunction;
 }
 
 /**
@@ -157,8 +176,28 @@ export const registerFileSystemAdapter = (
     };
   }
 
+  // Track every operation so in-flight work can be awaited
+  FsAdapter = trackAdapterOperations(FsAdapter);
+  resetAdapter = options?.reset ?? null;
+
   setBaseDirPaths();
 };
+
+/**
+ * Waits for pending operations to settle, then restores the adapter
+ * to its initial state.
+ *
+ * **Intended for use in tests only!**
+ *
+ * @returns A promise which resolves once the adapter has been reset.
+ */
+async function cleanupFileSystem(): Promise<void> {
+  await awaitPendingOperations();
+
+  if (resetAdapter) {
+    resetAdapter();
+  }
+}
 
 /**
  * Writes a text file, recording its contents so that the resulting

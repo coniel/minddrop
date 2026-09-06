@@ -16,10 +16,10 @@ const { design_books, design_space_virtual } = DesignFixtures;
 describe('<DesignDashboard />', () => {
   beforeEach(setup);
 
-  afterEach(() => {
+  afterEach(async () => {
     // Unmount rendered trees so queries do not match earlier tests
     cleanupRender();
-    cleanup();
+    await cleanup();
   });
 
   it('renders a card for each persisted design', () => {

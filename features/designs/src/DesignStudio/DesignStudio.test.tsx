@@ -21,10 +21,10 @@ const ListenerId = 'design-studio-test';
 describe('<DesignStudio />', () => {
   beforeEach(setup);
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupRender();
     Events.removeListener(Views.events.Update, ListenerId);
-    cleanup();
+    await cleanup();
   });
 
   it('records the opened design on the view', async () => {

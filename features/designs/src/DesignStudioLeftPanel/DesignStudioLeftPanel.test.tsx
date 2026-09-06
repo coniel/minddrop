@@ -24,9 +24,9 @@ const { design_books, design_space_virtual, layout_card_1 } = DesignFixtures;
 describe('<DesignStudioLeftPanel />', () => {
   beforeEach(setup);
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupRender();
-    cleanup();
+    await cleanup();
   });
 
   it('renders the properties tab for database designs', () => {

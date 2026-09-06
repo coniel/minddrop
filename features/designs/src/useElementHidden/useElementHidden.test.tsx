@@ -13,9 +13,9 @@ const { design_books, element_text_1, element_property_text_1 } =
 describe('useElementHidden', () => {
   beforeEach(setup);
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupRender();
-    cleanup();
+    await cleanup();
   });
 
   it('hides a bound element whose property is empty', () => {

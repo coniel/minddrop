@@ -14,8 +14,8 @@ describe('resolveOpenMode', () => {
     DatabaseEntries.Store.load([objectEntry1]);
   });
 
-  afterEach(() => {
-    cleanup();
+  afterEach(async () => {
+    await cleanup();
 
     // Clear the entries loaded for the fallback lookup
     DatabaseEntries.Store.clear();

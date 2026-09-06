@@ -13,9 +13,9 @@ const { design_books, layout_card_1 } = DesignFixtures;
 describe('<ElementsPalette />', () => {
   beforeEach(setup);
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupRender();
-    cleanup();
+    await cleanup();
   });
 
   it('lists the property elements under the properties group', () => {

@@ -20,9 +20,9 @@ const MoreLabel = 'designsStudio.style.space.increase';
 describe('<SpaceField />', () => {
   beforeEach(setup);
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupRender();
-    cleanup();
+    await cleanup();
   });
 
   it('shows the step and the measurement it resolves to', () => {

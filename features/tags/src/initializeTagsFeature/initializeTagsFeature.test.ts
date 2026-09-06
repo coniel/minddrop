@@ -16,9 +16,9 @@ describe('initializeTagsFeature', () => {
     removeEventListeners = initializeTagsFeature();
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     removeEventListeners();
-    cleanup();
+    await cleanup();
   });
 
   it('opens the tags view on open tags view event', () =>

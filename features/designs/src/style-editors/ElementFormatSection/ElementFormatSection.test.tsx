@@ -57,9 +57,9 @@ const element_number: NumberPropertyElement = {
 describe('element format editors', () => {
   beforeEach(setup);
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupRender();
-    cleanup();
+    await cleanup();
   });
 
   describe('registry', () => {

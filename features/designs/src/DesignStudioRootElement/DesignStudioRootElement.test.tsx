@@ -23,9 +23,9 @@ const { design_books, layout_card_1, element_container_1, element_text_1 } =
 describe('<DesignStudioRootElement />', () => {
   beforeEach(setup);
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupRender();
-    cleanup();
+    await cleanup();
   });
 
   it('holds an empty layout open as a drop target', () => {

@@ -1,4 +1,5 @@
 import { vi } from 'vitest';
+import { Fs } from '@minddrop/file-system';
 import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
 
 export const MockFs = initializeMockFileSystem();
@@ -9,8 +10,12 @@ export function setup() {
   vi.setSystemTime(mockDate);
 }
 
-export function cleanup() {
+export async function cleanup(): Promise<void> {
   vi.clearAllMocks();
-  MockFs.reset();
+
+  // Let in-flight file operations settle and reset the mock file
+  // system before clearing the state they may still read.
+  await Fs.tests.cleanup();
+
   vi.useRealTimers();
 }

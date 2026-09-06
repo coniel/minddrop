@@ -30,9 +30,9 @@ const draftProperty: DraftDesignProperty = {
 describe('<DesignPropertiesPanel />', () => {
   beforeEach(setup);
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupRender();
-    cleanup();
+    await cleanup();
   });
 
   it("renders the design's properties", () => {

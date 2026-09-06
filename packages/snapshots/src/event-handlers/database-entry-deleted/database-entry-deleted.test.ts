@@ -16,8 +16,8 @@ describe('onDatabaseEntryDeleted', () => {
     Databases.Store.load([objectDatabase]);
   });
 
-  afterEach(() => {
-    cleanup();
+  afterEach(async () => {
+    await cleanup();
     Databases.Store.clear();
   });
 

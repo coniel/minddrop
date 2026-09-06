@@ -21,9 +21,9 @@ describe('<DataViewDesignElement />', () => {
     DataViews.Store.load([queryDataView]);
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupRender();
-    cleanup();
+    await cleanup();
     DataViews.Store.clear();
   });
 

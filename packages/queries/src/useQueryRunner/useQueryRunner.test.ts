@@ -77,11 +77,11 @@ describe('useQueryRunner', () => {
     runCount = 0;
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     // Unmount rendered hooks so their listeners are removed
     cleanupRender();
 
-    cleanup();
+    await cleanup();
   });
 
   /**

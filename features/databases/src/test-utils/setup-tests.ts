@@ -10,6 +10,7 @@ import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { Designs } from '@minddrop/designs';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { Events } from '@minddrop/events';
+import { Fs } from '@minddrop/file-system';
 import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
 import { initializeI18n } from '@minddrop/i18n';
 import { cleanup as cleanupRender } from '@minddrop/test-utils';
@@ -63,10 +64,15 @@ export function setup(
   DataViewTypes.register(dataViewType_table);
 }
 
-export function cleanup() {
+export async function cleanup(): Promise<void> {
   cleanupRender();
   vi.clearAllMocks();
-  Events.tests.cleanup();
+
+  // Let in-flight file operations settle and reset the mock file
+  // system before clearing the state they may still read.
+  await Fs.tests.cleanup();
+
+  await Events.tests.cleanup();
 
   // Clear stores
   Databases.Store.clear();
@@ -74,6 +80,4 @@ export function cleanup() {
   DatabaseTemplates.Store.clear();
   Designs.Store.clear();
   DataViewTypes.Store.clear();
-  // Reset mock file system
-  MockFs.reset();
 }

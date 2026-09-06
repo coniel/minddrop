@@ -22,9 +22,9 @@ const { design_books, layout_card_1, element_text_1 } = DesignFixtures;
 describe('<ElementContentSection />', () => {
   beforeEach(setup);
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupRender();
-    cleanup();
+    await cleanup();
   });
 
   it('offers both content modes when property binding is enabled', () => {

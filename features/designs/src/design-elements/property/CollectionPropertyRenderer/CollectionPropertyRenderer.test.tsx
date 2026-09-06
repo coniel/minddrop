@@ -9,9 +9,9 @@ const { element_property_collection_1 } = DesignFixtures;
 describe('<CollectionPropertyRenderer />', () => {
   beforeEach(setup);
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupRender();
-    cleanup();
+    await cleanup();
   });
 
   it('renders the selected variant view type skeleton while unmapped', () => {

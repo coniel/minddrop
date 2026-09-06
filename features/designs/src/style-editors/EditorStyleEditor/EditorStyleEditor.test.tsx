@@ -21,9 +21,9 @@ const { design_books, layout_card_1, element_text_1 } = DesignFixtures;
 describe('<EditorStyleEditor />', () => {
   beforeEach(setup);
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupRender();
-    cleanup();
+    await cleanup();
   });
 
   it('binds the design title property when the Title section opens', async () => {

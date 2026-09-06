@@ -73,7 +73,7 @@ describe('initializeTheme', () => {
     removeStoreListeners = registerAppDataStoreListeners();
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     // Remove the store persistence listeners
     removeStoreListeners();
 
@@ -95,7 +95,7 @@ describe('initializeTheme', () => {
     // Clear mock match media event listeners
     matchMediaEventListeners = [];
 
-    cleanup();
+    await cleanup();
   });
 
   it('applies the appearance class from the persisted variant', async () => {

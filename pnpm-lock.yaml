@@ -2926,6 +2926,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@minddrop/file-system':
+        specifier: workspace:*
+        version: link:../../packages/file-system
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../../packages/test-utils

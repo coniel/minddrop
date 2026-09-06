@@ -29,9 +29,9 @@ const {
 describe('<ElementStyleEditor />', () => {
   beforeEach(setup);
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupRender();
-    cleanup();
+    await cleanup();
   });
 
   it('prompts to select an element when nothing is selected', () => {

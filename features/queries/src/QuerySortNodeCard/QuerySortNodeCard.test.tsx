@@ -63,9 +63,9 @@ describe('<QuerySortNodeCard />', () => {
     Databases.Store.load([objectDatabase]);
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     Databases.Store.clear();
-    cleanup();
+    await cleanup();
   });
 
   it('warns when an input does not contain the sort property', () => {

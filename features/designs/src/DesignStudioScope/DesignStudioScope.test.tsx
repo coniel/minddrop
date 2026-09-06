@@ -29,9 +29,9 @@ const design_with_placeholder: DatabaseDesign = {
 describe('<DesignStudioScope />', () => {
   beforeEach(setup);
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupRender();
-    cleanup();
+    await cleanup();
   });
 
   it('resolves placeholders from the open design properties', () => {

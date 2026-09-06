@@ -28,11 +28,11 @@ describe('design studio history', () => {
     studio.setActiveLayout(layout_card_1.id);
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     // Drop any save still scheduled by the test
     vi.clearAllTimers();
     vi.useRealTimers();
-    cleanup();
+    await cleanup();
   });
 
   /**

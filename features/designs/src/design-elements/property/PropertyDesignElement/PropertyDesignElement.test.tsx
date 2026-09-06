@@ -16,9 +16,9 @@ const {
 describe('<PropertyDesignElement />', () => {
   beforeEach(setup);
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupRender();
-    cleanup();
+    await cleanup();
   });
 
   it('renders through the selected variant renderer', () => {

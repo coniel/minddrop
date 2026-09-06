@@ -22,9 +22,9 @@ const { design_books, layout_card_1 } = DesignFixtures;
 describe('<LayoutNameField />', () => {
   beforeEach(setup);
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupRender();
-    cleanup();
+    await cleanup();
   });
 
   it('names the layout, blanking type names behind the placeholder', () => {

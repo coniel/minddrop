@@ -11,9 +11,9 @@ const { element_property_text_1, element_property_url_1 } = DesignFixtures;
 describe('<PropertyChrome />', () => {
   beforeEach(setup);
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupRender();
-    cleanup();
+    await cleanup();
   });
 
   it('renders the value alone without chrome styles', () => {

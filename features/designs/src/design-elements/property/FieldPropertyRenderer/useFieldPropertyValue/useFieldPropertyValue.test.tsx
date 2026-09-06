@@ -30,9 +30,9 @@ describe('useFieldPropertyValue', () => {
     committedValues = {};
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupRender();
-    cleanup();
+    await cleanup();
   });
 
   it('displays the stored property value at rest', () => {

@@ -29,14 +29,14 @@ describe('registerAppDataStoreListeners', () => {
     MockFs.createDir('app-data/stores', { recursive: true });
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     // Remove the listeners registered during the test
     removeListeners();
 
     // Restore the test store to its default values
     store.load({ value: 'default' });
 
-    cleanup();
+    await cleanup();
   });
 
   it('persists app-config store data to the AppData stores directory', async () => {

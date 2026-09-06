@@ -29,9 +29,9 @@ const StateKey = `design-studio:${design_books.id}`;
 describe('useSelectionPersistence', () => {
   beforeEach(setup);
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupRender();
-    cleanup();
+    await cleanup();
   });
 
   it('restores the selection when the studio remounts', () => {

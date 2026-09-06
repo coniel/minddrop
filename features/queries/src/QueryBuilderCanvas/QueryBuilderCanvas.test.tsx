@@ -66,9 +66,9 @@ describe('<QueryBuilderCanvas />', () => {
     Queries.Store.set(chainedQuery);
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     Databases.Store.clear();
-    cleanup();
+    await cleanup();
   });
 
   it('warns on an invalid filter deeper in a chain', () => {

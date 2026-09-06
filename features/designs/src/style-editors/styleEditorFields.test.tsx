@@ -60,9 +60,9 @@ const TextAlignOptions: OptionToggleFieldOption<TextAlign>[] = [
 describe('style editor fields', () => {
   beforeEach(setup);
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupRender();
-    cleanup();
+    await cleanup();
   });
 
   describe('token selects', () => {

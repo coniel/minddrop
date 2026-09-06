@@ -19,9 +19,9 @@ describe('initializeDesignsFeature', () => {
     removeEventListeners = initializeDesignsFeature();
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     removeEventListeners();
-    cleanup();
+    await cleanup();
   });
 
   it('opens the design studio view on open design studio events', () =>

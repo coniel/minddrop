@@ -41,9 +41,9 @@ const boundImageElement = { type: 'image', property: 'Cover' };
 describe('useElementPlaceholder', () => {
   beforeEach(setup);
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupRender();
-    cleanup();
+    await cleanup();
   });
 
   it('resolves a bound property placeholder in the studio', () => {

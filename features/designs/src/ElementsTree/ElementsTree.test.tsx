@@ -36,9 +36,9 @@ const {
 describe('<ElementsTree />', () => {
   beforeEach(setup);
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupRender();
-    cleanup();
+    await cleanup();
   });
 
   it('renders nothing when no layout is being edited', () => {

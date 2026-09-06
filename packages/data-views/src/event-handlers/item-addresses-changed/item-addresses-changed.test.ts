@@ -35,8 +35,8 @@ describe('onItemAddressesChanged', () => {
     DataViewsStore.set(referencingView);
   });
 
-  afterEach(() => {
-    cleanup();
+  afterEach(async () => {
+    await cleanup();
     ItemReferences.unregisterAdapter('database-entry');
   });
 

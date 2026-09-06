@@ -22,8 +22,8 @@ describe('serializeDataViewConfig', () => {
     });
   });
 
-  afterEach(() => {
-    cleanup();
+  afterEach(async () => {
+    await cleanup();
     ItemReferences.unregisterAdapter('database-entry');
   });
 

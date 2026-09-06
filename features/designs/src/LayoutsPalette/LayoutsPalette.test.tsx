@@ -14,9 +14,9 @@ const { design_books, design_space_virtual } = DesignFixtures;
 describe('<LayoutsPalette />', () => {
   beforeEach(setup);
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupRender();
-    cleanup();
+    await cleanup();
   });
 
   it('lists the layout types the design supports', () => {

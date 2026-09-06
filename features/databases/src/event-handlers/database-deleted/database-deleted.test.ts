@@ -21,9 +21,9 @@ describe('onDeleteDatabase', () => {
     DatabaseViewStateStore.set(viewState);
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     DatabaseViewStateStore.clear();
-    cleanup();
+    await cleanup();
   });
 
   it('removes the view state for the deleted database', () => {

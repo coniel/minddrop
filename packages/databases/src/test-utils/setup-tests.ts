@@ -10,6 +10,7 @@ import {
   setupDesignFixtures,
 } from '@minddrop/designs/test-utils';
 import { Events } from '@minddrop/events';
+import { Fs } from '@minddrop/file-system';
 import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
 import { initializeI18n } from '@minddrop/i18n';
 import { ItemReferences } from '@minddrop/item-references';
@@ -65,7 +66,11 @@ export function setup(options?: SetupDatabaseFixturesOptions) {
   vi.setSystemTime(mockDate);
 }
 
-export async function cleanup() {
+export async function cleanup(): Promise<void> {
+  // Let in-flight file operations settle and reset the mock file
+  // system before clearing the state they may still read.
+  await Fs.tests.cleanup();
+
   // Clean up events
   await Events.tests.cleanup();
 
@@ -89,9 +94,6 @@ export async function cleanup() {
 
   // Clear the recorded content captures
   clearContentCaptureRegistry();
-
-  // Reset mock file system
-  MockFs.reset();
 
   // Vi reset
   vi.useRealTimers();

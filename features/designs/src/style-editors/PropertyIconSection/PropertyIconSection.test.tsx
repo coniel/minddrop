@@ -22,9 +22,9 @@ const { design_books, layout_card_1, element_text_1 } = DesignFixtures;
 describe('<PropertyIconSection />', () => {
   beforeEach(setup);
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupRender();
-    cleanup();
+    await cleanup();
   });
 
   it('enables the icon when the section opens', async () => {

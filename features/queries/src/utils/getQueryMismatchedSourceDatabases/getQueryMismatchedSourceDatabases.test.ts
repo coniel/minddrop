@@ -30,9 +30,9 @@ describe('getQueryMismatchedSourceDatabases', () => {
     Databases.Store.load([objectDatabase]);
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     Databases.Store.clear();
-    cleanup();
+    await cleanup();
   });
 
   it('returns the sources lacking the filter property', () => {

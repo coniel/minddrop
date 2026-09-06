@@ -35,9 +35,9 @@ describe('<QueriesView />', () => {
     Databases.Store.load([objectDatabase]);
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     Databases.Store.clear();
-    cleanup();
+    await cleanup();
   });
 
   it('shows the clicked query in the builder canvas', async () => {

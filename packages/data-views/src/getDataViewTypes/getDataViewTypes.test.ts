@@ -11,9 +11,9 @@ describe('getDataViewTypes', () => {
     expect(getDataViewTypes()).toEqual(dataViewTypes);
   });
 
-  it('returns an empty array when no view types are registered', () => {
+  it('returns an empty array when no view types are registered', async () => {
     // Reset the store to remove the fixture view types
-    cleanup();
+    await cleanup();
 
     expect(getDataViewTypes()).toEqual([]);
   });

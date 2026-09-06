@@ -1,5 +1,6 @@
 import { vi } from 'vitest';
 import { Events } from '@minddrop/events';
+import { Fs } from '@minddrop/file-system';
 import {
   MockFs,
   cleanupTagFixtures,
@@ -12,10 +13,14 @@ export function setup() {
   setupTagFixtures(MockFs);
 }
 
-export function cleanup() {
+export async function cleanup(): Promise<void> {
   cleanupRender();
+
+  // Let in-flight file operations settle and reset the mock file
+  // system before clearing the state they may still read.
+  await Fs.tests.cleanup();
+
   cleanupTagFixtures();
-  Events.tests.cleanup();
-  MockFs.reset();
+  await Events.tests.cleanup();
   vi.clearAllMocks();
 }

@@ -25,9 +25,9 @@ describe('initializeDataViewsFeature', () => {
     removeEventListeners = initializeDataViewsFeature();
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     removeEventListeners();
-    cleanup();
+    await cleanup();
   });
 
   it('opens the data view view on open data view view event', () =>

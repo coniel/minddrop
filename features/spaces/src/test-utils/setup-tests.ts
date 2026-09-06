@@ -1,6 +1,7 @@
 import { vi } from 'vitest';
 import { DataViews } from '@minddrop/data-views';
 import { Events } from '@minddrop/events';
+import { Fs } from '@minddrop/file-system';
 import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
 import { initializeI18n } from '@minddrop/i18n';
 import { Spaces } from '@minddrop/spaces';
@@ -18,11 +19,15 @@ export const MockFs = initializeMockFileSystem([]);
 
 export function setup() {}
 
-export function cleanup() {
+export async function cleanup(): Promise<void> {
   cleanupRender();
   vi.clearAllMocks();
-  MockFs.reset();
-  Events.tests.cleanup();
+
+  // Let in-flight file operations settle and reset the mock file
+  // system before clearing the state they may still read.
+  await Fs.tests.cleanup();
+
+  await Events.tests.cleanup();
   Spaces.Store.clear();
   DataViews.Store.clear();
 }

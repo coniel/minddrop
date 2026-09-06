@@ -22,14 +22,14 @@ describe('registerWorkspaceStoreListeners', () => {
   // The cleanup function returned by the registration under test
   let removeListeners: VoidFunction = () => {};
 
-  afterEach(() => {
+  afterEach(async () => {
     // Remove the listeners registered during the test
     removeListeners();
 
     // Restore the test store to its default values
     store.load({ value: 'default' });
 
-    cleanup();
+    await cleanup();
   });
 
   it('persists workspace-config store data to the workspace stores directory', async () => {

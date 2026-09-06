@@ -22,9 +22,9 @@ const FieldLabel = 'field-under-test';
 describe('<StyleSection />', () => {
   beforeEach(setup);
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupRender();
-    cleanup();
+    await cleanup();
   });
 
   it('starts collapsed when none of its keys are set', () => {

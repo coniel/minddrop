@@ -128,8 +128,8 @@ describe('<DatabaseEntryRenderer />', () => {
     DatabaseEntries.Store.load([objectEntry1]);
   });
 
-  afterEach(() => {
-    cleanup();
+  afterEach(async () => {
+    await cleanup();
     DatabaseEntries.Store.clear();
     DatabaseEntrySerializers.Store.clear();
   });

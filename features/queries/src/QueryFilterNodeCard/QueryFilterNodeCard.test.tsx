@@ -49,9 +49,9 @@ describe('<QueryFilterNodeCard />', () => {
     Databases.Store.load([objectDatabase]);
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     Databases.Store.clear();
-    cleanup();
+    await cleanup();
   });
 
   it('persists a property change, resetting the operator and value', async () => {

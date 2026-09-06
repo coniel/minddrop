@@ -37,8 +37,8 @@ describe('<SpaceEditMode />', () => {
     MockFs.addFiles(SpaceFixtures.getSpaceFiles());
   });
 
-  afterEach(() => {
-    cleanup();
+  afterEach(async () => {
+    await cleanup();
     Designs.Store.clear();
     DesignRoles.Store.clear();
     SpaceViewStateStore.clear();

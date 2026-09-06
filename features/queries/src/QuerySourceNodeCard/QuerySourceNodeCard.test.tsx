@@ -44,9 +44,9 @@ describe('<QuerySourceNodeCard />', () => {
     Databases.Store.load([objectDatabase, urlDatabase]);
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     Databases.Store.clear();
-    cleanup();
+    await cleanup();
   });
 
   it('shows the current sources', () => {

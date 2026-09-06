@@ -38,8 +38,8 @@ describe('initializeSnapshots', () => {
     initializeSnapshots();
   });
 
-  afterEach(() => {
-    cleanup();
+  afterEach(async () => {
+    await cleanup();
     Databases.Store.clear();
   });
 

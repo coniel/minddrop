@@ -244,10 +244,24 @@ export function initializeMockFileSystem(
     },
   };
 
+  /**
+   * Restores the file tree, contents and stats to the initially
+   * loaded files.
+   */
+  function reset(): void {
+    const init = initializeMockFsRoot([...baseDirs, ...filesToLoad]);
+    root = init.root;
+    textFileContents = init.textFileContents;
+    binaryFiles = init.binaryFiles;
+    trash = [];
+    fileStats = init.fileStats;
+    watchCallbacks.clear();
+  }
+
   // Skip the I/O queue in tests since the mock adapter is
   // synchronous and the queue's debounce delay would cause
   // test timeouts.
-  registerFileSystemAdapter(MockFs, { skipQueue: true });
+  registerFileSystemAdapter(MockFs, { skipQueue: true, reset });
 
   return {
     MockFs,
@@ -273,15 +287,7 @@ export function initializeMockFileSystem(
     printTree: () => {
       printFileTree(root.children as FsEntry[]);
     },
-    reset: () => {
-      const init = initializeMockFsRoot([...baseDirs, ...filesToLoad]);
-      root = init.root;
-      textFileContents = init.textFileContents;
-      binaryFiles = init.binaryFiles;
-      trash = [];
-      fileStats = init.fileStats;
-      watchCallbacks.clear();
-    },
+    reset,
     clearTrash: () => {
       trash = [];
     },

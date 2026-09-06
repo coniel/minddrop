@@ -20,9 +20,9 @@ describe('getQueryUpstreamDatabases', () => {
     Databases.Store.load([objectDatabase, urlDatabase]);
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     Databases.Store.clear();
-    cleanup();
+    await cleanup();
   });
 
   it('returns the databases of upstream source nodes', () => {

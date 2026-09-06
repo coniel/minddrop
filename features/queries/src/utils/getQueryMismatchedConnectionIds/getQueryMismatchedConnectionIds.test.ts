@@ -55,9 +55,9 @@ describe('getQueryMismatchedConnectionIds', () => {
     Databases.Store.load([objectDatabase, urlDatabase]);
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     Databases.Store.clear();
-    cleanup();
+    await cleanup();
   });
 
   it('flags the entire trail into a chained invalid filter', () => {

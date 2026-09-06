@@ -24,9 +24,9 @@ const { design_books, design_empty, layout_card_1, layout_page_1 } =
 describe('<LayoutsPanel />', () => {
   beforeEach(setup);
 
-  afterEach(() => {
+  afterEach(async () => {
     cleanupRender();
-    cleanup();
+    await cleanup();
   });
 
   describe('with no active layout', () => {

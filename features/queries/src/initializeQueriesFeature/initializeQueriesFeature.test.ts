@@ -15,9 +15,9 @@ describe('initializeQueriesFeature', () => {
     removeEventListeners = initializeQueriesFeature();
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     removeEventListeners();
-    cleanup();
+    await cleanup();
   });
 
   it('opens the queries view on open queries view event', () =>

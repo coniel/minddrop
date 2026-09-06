@@ -15,9 +15,9 @@ describe('initializeCollectionsFeature', () => {
     removeEventListeners = initializeCollectionsFeature();
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     removeEventListeners();
-    cleanup();
+    await cleanup();
   });
 
   it('opens the collections view on open collections view event', () =>

@@ -1,5 +1,6 @@
 import { vi } from 'vitest';
 import { Events } from '@minddrop/events';
+import { Fs } from '@minddrop/file-system';
 import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
 import { initializeI18n } from '@minddrop/i18n';
 import {
@@ -18,10 +19,14 @@ export function setup(options?: SetupDesignFixturesOptions) {
   setupDesignFixtures(MockFs, options);
 }
 
-export function cleanup() {
+export async function cleanup(): Promise<void> {
   vi.clearAllMocks();
   vi.useRealTimers();
-  MockFs.reset();
-  Events.tests.cleanup();
+
+  // Let in-flight file operations settle and reset the mock file
+  // system before clearing the state they may still read.
+  await Fs.tests.cleanup();
+
+  await Events.tests.cleanup();
   cleanupDesignFixtures();
 }

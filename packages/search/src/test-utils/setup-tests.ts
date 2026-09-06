@@ -4,6 +4,7 @@ import {
   cleanupTestSqlDatabase,
   setupTestSqlDatabase,
 } from '@minddrop/databases/test-utils';
+import { Fs } from '@minddrop/file-system';
 import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
 import { Sql } from '@minddrop/sql';
 import { cancelDebouncedPersists } from '../debouncedPersist';
@@ -47,7 +48,11 @@ export function setup(): void {
 /**
  * Resets all state touched by search index tests.
  */
-export function cleanup(): void {
+export async function cleanup(): Promise<void> {
+  // Let in-flight file operations settle and reset the mock file
+  // system before clearing the state they may still read.
+  await Fs.tests.cleanup();
+
   // Cancel persists scheduled during the test
   cancelDebouncedPersists();
 
@@ -56,9 +61,6 @@ export function cleanup(): void {
 
   // Drop all workspace indexes
   searchIndexes.clear();
-
-  // Clear mock file system contents
-  MockFs.reset();
 }
 
 /**
