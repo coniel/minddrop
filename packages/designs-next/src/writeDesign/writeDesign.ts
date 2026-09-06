@@ -1,6 +1,7 @@
 import { Fs } from '@minddrop/file-system';
 import { InvalidParameterError } from '@minddrop/utils';
 import { getDesign } from '../getDesign';
+import { serializeDesign } from '../serializeDesign';
 import { resolveDesignFilePath, resolveDesignsDirPath } from '../utils';
 
 /**
@@ -25,6 +26,9 @@ export async function writeDesign(designId: string): Promise<void> {
   // Ensure the designs directory exists
   await Fs.ensureDir(resolveDesignsDirPath());
 
-  // Write the design to the file system
-  await Fs.writeJsonFile(resolveDesignFilePath(design.id), design);
+  // Write the design to the file system in its stored form
+  await Fs.writeJsonFile(
+    resolveDesignFilePath(design.id),
+    serializeDesign(design),
+  );
 }

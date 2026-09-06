@@ -6,6 +6,7 @@ export { getOwnedDesigns as getByOwner } from './getOwnedDesigns';
 export { initializeDesigns as initialize } from './initializeDesigns';
 export { loadDesigns as load } from './loadDesigns';
 export { readDesign as read } from './readDesign';
+export { serializeDesign as serialize } from './serializeDesign';
 export { updateDesign as update } from './updateDesign';
 export { writeDesign as write } from './writeDesign';
 export {

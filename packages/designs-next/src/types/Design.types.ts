@@ -76,3 +76,9 @@ export interface Design {
    */
   owner?: EntityId;
 }
+
+/**
+ * A design as stored in its design file, without the `owner` field
+ * which owner-persisted designs derive at load time.
+ */
+export type StoredDesign = Omit<Design, 'owner'>;
