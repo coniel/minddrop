@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { CollectionUpdatedEvent, Collections } from '@minddrop/collections';
+import { Collections } from '@minddrop/collections';
 import { Events } from '@minddrop/events';
 import { InvalidParameterError, isUntitledTitle } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
@@ -76,7 +76,7 @@ describe('updateDatabaseEntryProperty', () => {
       );
 
       // Register the collection write-back handler
-      Events.addListener(CollectionUpdatedEvent, 'test', (data) =>
+      Events.addListener(Collections.events.Updated, 'test', (data) =>
         onUpdateCollection(data),
       );
     });

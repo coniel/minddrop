@@ -1,10 +1,5 @@
 import { useMemo, useState } from 'react';
-import {
-  Collection,
-  Collections,
-  CollectionsIcon,
-  DefaultCollectionIcon,
-} from '@minddrop/collections';
+import { Collection, Collections } from '@minddrop/collections';
 import { ListPanelView, ListPanelViewItem } from '@minddrop/ui-components';
 import { IconButton } from '@minddrop/ui-primitives';
 import { Views } from '@minddrop/views';
@@ -55,7 +50,7 @@ export const CollectionsView: React.FC = () => {
   return (
     <ListPanelView
       className="collections-view"
-      icon={CollectionsIcon}
+      icon={Collections.constants.Icon}
       title="collections.labels.collections"
       items={items}
       selectedItem={selectedItem}
@@ -89,6 +84,6 @@ function toListItem(collection: Collection): ListPanelViewItem {
   return {
     id: collection.id,
     label: collection.name,
-    contentIcon: DefaultCollectionIcon,
+    contentIcon: Collections.constants.EntityDefaultIcon,
   };
 }

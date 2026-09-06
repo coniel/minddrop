@@ -1,4 +1,4 @@
-import { CollectionsIcon } from '@minddrop/collections';
+import { Collections } from '@minddrop/collections';
 import { Events } from '@minddrop/events';
 import { Tabs } from '@minddrop/feature-views';
 import { MenuItem } from '@minddrop/ui-primitives';
@@ -19,7 +19,7 @@ export const CollectionsMenuItem: React.FC = () => {
     <MenuItem
       muted
       active={active}
-      icon={CollectionsIcon}
+      icon={Collections.constants.Icon}
       label="collections.labels.collections"
       onClick={handleClick}
     />

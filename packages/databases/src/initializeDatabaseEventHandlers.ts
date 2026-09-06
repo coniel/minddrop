@@ -1,5 +1,3 @@
-import { CollectionUpdatedEvent } from '@minddrop/collections';
-import {
   DataViewCreatedEvent,
   DataViewDeletedEvent,
   DataViewUpdatedEvent,
@@ -10,6 +8,7 @@ import {
   DesignDeletedEvent,
   DesignUpdatedEvent,
 } from '@minddrop/designs-next';
+import { Collections } from '@minddrop/collections';
 import { Events } from '@minddrop/events';
 import { FileSystemChangedEvent } from '@minddrop/file-system';
 import { ItemAddressesChangedEvent } from '@minddrop/item-references';
@@ -86,10 +85,10 @@ export function initializeDatabaseEventHandlers() {
     [DatabaseEntriesClearedEvent]: onClearEntries,
     [DatabaseEntryRenamedEvent]: onRenameEntry,
     [DatabaseEntryMetadataUpdatedEvent]: onUpdateEntryMetadata,
-    [CollectionUpdatedEvent]: onUpdateCollection,
     [ItemAddressesChangedEvent]: onItemAddressesChanged,
     [DataViewUpdatedEvent]: onUpdateVirtualView,
     [FileSystemChangedEvent]: onFileSystemChanged,
+    [Collections.events.Updated]: onUpdateCollection,
     [Tags.events.Renamed]: onTagRenamed,
     [Tags.events.Deleted]: onTagDeleted,
     [TagGroups.events.Deleted]: onTagGroupDeleted,

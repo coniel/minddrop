@@ -1,3 +1,30 @@
+import { CollectionsIcon, DefaultCollectionIcon } from './constants';
+import { CollectionNotFoundError } from './errors';
+import {
+  CollectionCreatedEvent,
+  CollectionDeletedEvent,
+  CollectionUpdatedEvent,
+  CollectionsLoadedEvent,
+} from './events';
+
+// Const-asserted so the names keep their literal types, which key
+// the event data registry
+export const events = {
+  Created: CollectionCreatedEvent,
+  Updated: CollectionUpdatedEvent,
+  Deleted: CollectionDeletedEvent,
+  Loaded: CollectionsLoadedEvent,
+} as const;
+
+export const errors = {
+  NotFound: CollectionNotFoundError,
+};
+
+export const constants = {
+  Icon: CollectionsIcon,
+  EntityDefaultIcon: DefaultCollectionIcon,
+};
+
 export { createCollection as create } from './createCollection';
 export { createVirtualCollection as createVirtual } from './createVirtualCollection';
 export { loadVirtualCollections as loadVirtual } from './loadVirtualCollections';

@@ -1,10 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import {
-  CollectionCreatedEvent,
-  CollectionDeletedEvent,
-  CollectionUpdatedEvent,
-  CollectionsLoadedEvent,
-} from '@minddrop/collections';
+import { Collections } from '@minddrop/collections';
 import { CollectionFixtures } from '@minddrop/collections/test-utils';
 import { Databases } from '@minddrop/databases';
 import { EventData, EventName, Events } from '@minddrop/events';
@@ -216,7 +211,7 @@ describe('useQueryRunner', () => {
     const { result } = await renderRunner(collectionQuery.id);
 
     // Update the referenced collection
-    await dispatch(CollectionUpdatedEvent, {
+    await dispatch(Collections.events.Updated, {
       original: collection_1,
       updated: collection_1,
     });
@@ -225,8 +220,8 @@ describe('useQueryRunner', () => {
     expect(result.current).toEqual(['run-2']);
 
     // Create and delete the referenced collection
-    await dispatch(CollectionCreatedEvent, collection_1);
-    await dispatch(CollectionDeletedEvent, collection_1);
+    await dispatch(Collections.events.Created, collection_1);
+    await dispatch(Collections.events.Deleted, collection_1);
 
     // Should have re-run for each event
     expect(result.current).toEqual(['run-4']);
@@ -237,7 +232,7 @@ describe('useQueryRunner', () => {
     const { result } = await renderRunner(collectionQuery.id);
 
     // Update an unreferenced collection
-    await dispatch(CollectionUpdatedEvent, {
+    await dispatch(Collections.events.Updated, {
       original: collection_2,
       updated: collection_2,
     });
@@ -251,7 +246,7 @@ describe('useQueryRunner', () => {
     const { result } = await renderRunner(collectionQuery.id);
 
     // Load the collections store
-    await dispatch(CollectionsLoadedEvent, [collection_1]);
+    await dispatch(Collections.events.Loaded, [collection_1]);
 
     // Should have re-run the computation
     expect(result.current).toEqual(['run-2']);

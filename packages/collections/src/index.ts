@@ -1,7 +1,4 @@
-export * from './Collections';
-export * as Collections from './Collections';
-export * from './errors';
-export * from './events';
-export * from './constants';
-export * from './types';
+export type * from './types';
+export type * from './events';
 export type { VirtualCollectionData } from './loadVirtualCollections';
+export * as Collections from './Collections';

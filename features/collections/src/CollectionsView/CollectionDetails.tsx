@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Collection,
-  Collections,
-  DefaultCollectionIcon,
-} from '@minddrop/collections';
+import { Collection, Collections } from '@minddrop/collections';
 import { DataView, DataViews } from '@minddrop/data-views';
 import {
   DatabaseEntries,
@@ -164,14 +160,17 @@ export const CollectionDetails: React.FC<CollectionDetailsProps> = ({
             {/* The collection's fields */}
             <Group gap={2} className="collection-details-fields">
               {/* Selection is a no-op until collections have an icon field */}
-              <IconPicker closeOnSelect currentIcon={DefaultCollectionIcon}>
+              <IconPicker
+                closeOnSelect
+                currentIcon={Collections.constants.EntityDefaultIcon}
+              >
                 <IconButton
                   size="lg"
                   variant="subtle"
                   color="neutral"
                   label="collections.details.icon"
                 >
-                  <ContentIcon icon={DefaultCollectionIcon} />
+                  <ContentIcon icon={Collections.constants.EntityDefaultIcon} />
                 </IconButton>
               </IconPicker>
               <TextInput

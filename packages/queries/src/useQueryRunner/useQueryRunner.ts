@@ -1,10 +1,5 @@
 import { useEffect, useId, useState } from 'react';
-import {
-  CollectionCreatedEvent,
-  CollectionDeletedEvent,
-  CollectionUpdatedEvent,
-  CollectionsLoadedEvent,
-} from '@minddrop/collections';
+import { Collections } from '@minddrop/collections';
 import { Databases } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
 import { useQuery } from '../QueriesStore';
@@ -121,7 +116,7 @@ export function useQueryRunner<TValue>(
     );
 
     // Re-run when a referenced collection's items change
-    Events.addListener(CollectionUpdatedEvent, listenerId, (data) => {
+    Events.addListener(Collections.events.Updated, listenerId, (data) => {
       if (referencesCollection(data.updated.id)) {
         rerun();
       }
@@ -129,14 +124,14 @@ export function useQueryRunner<TValue>(
 
     // Re-run when a referenced collection is created, which
     // includes virtual collections hydrated on demand
-    Events.addListener(CollectionCreatedEvent, listenerId, (data) => {
+    Events.addListener(Collections.events.Created, listenerId, (data) => {
       if (referencesCollection(data.id)) {
         rerun();
       }
     });
 
     // Re-run when a referenced collection is deleted
-    Events.addListener(CollectionDeletedEvent, listenerId, (data) => {
+    Events.addListener(Collections.events.Deleted, listenerId, (data) => {
       if (referencesCollection(data.id)) {
         rerun();
       }
@@ -144,7 +139,7 @@ export function useQueryRunner<TValue>(
 
     // Re-run once collections load, which replaces the store's
     // contents wholesale
-    Events.addListener(CollectionsLoadedEvent, listenerId, () => {
+    Events.addListener(Collections.events.Loaded, listenerId, () => {
       if (collections.anyCollection || collections.collectionIds.length > 0) {
         rerun();
       }
@@ -173,10 +168,10 @@ export function useQueryRunner<TValue>(
       Events.removeListener(Databases.events.backgroundSynced, listenerId);
       Events.removeListener(Databases.events.databaseSqlReindexed, listenerId);
       Events.removeListener(Databases.events.propertySqlSynced, listenerId);
-      Events.removeListener(CollectionUpdatedEvent, listenerId);
-      Events.removeListener(CollectionCreatedEvent, listenerId);
-      Events.removeListener(CollectionDeletedEvent, listenerId);
-      Events.removeListener(CollectionsLoadedEvent, listenerId);
+      Events.removeListener(Collections.events.Updated, listenerId);
+      Events.removeListener(Collections.events.Created, listenerId);
+      Events.removeListener(Collections.events.Deleted, listenerId);
+      Events.removeListener(Collections.events.Loaded, listenerId);
       Events.removeListener(QueryUpdatedEvent, listenerId);
       Events.removeListener(QueryDeletedEvent, listenerId);
     };
