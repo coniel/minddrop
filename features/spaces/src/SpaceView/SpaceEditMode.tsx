@@ -21,6 +21,7 @@ import {
 import { Space, resolveSpaceMediaDirPath } from '@minddrop/spaces';
 import { PanelView } from '@minddrop/ui-components';
 import { IconButton, Panel, ScrollArea } from '@minddrop/ui-primitives';
+import { isEditableTarget, useDeleteKey } from '@minddrop/utils';
 import { setSpaceViewState } from '../SpaceViewStateStore';
 import { EDIT_PANEL_WIDTH } from '../constants';
 import './SpaceEditMode.css';
@@ -69,6 +70,9 @@ const SpaceEditSession: React.FC<SpaceEditSessionProps> = ({ space }) => {
   const selectedElementId = useDesignStudioStore(
     (state) => state.selectedElementId,
   );
+  const highlightedElementId = useDesignStudioStore(
+    (state) => state.highlightedElementId,
+  );
   const design = useDesignStudioStore((state) => state.design);
   const layout = useActiveLayout();
 
@@ -101,30 +105,11 @@ const SpaceEditSession: React.FC<SpaceEditSessionProps> = ({ space }) => {
     };
   }, []);
 
-  // Keyboard shortcuts: delete the highlighted element, deselect
-  // or exit edit mode on Escape
+  // Deselect the highlighted element, or exit edit mode on Escape
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       // Don't act while typing in an input
-      const tag = (event.target as HTMLElement).tagName;
-
-      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') {
-        return;
-      }
-
-      // The global selection shortcut prevents the default for
-      // delete keys, so deletion must not respect defaultPrevented
-      if (event.key === 'Delete' || event.key === 'Backspace') {
-        // Nothing highlighted to delete
-        if (!studio.getHighlightedElementId()) {
-          return;
-        }
-
-        event.preventDefault();
-
-        // The space's root layout cannot be deleted
-        studio.deleteHighlightedElement();
-
+      if (isEditableTarget(event.target)) {
         return;
       }
 
@@ -146,6 +131,12 @@ const SpaceEditSession: React.FC<SpaceEditSessionProps> = ({ space }) => {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [space.id, studio]);
+
+  // Delete the highlighted element on Delete/Backspace. The space's
+  // root layout cannot be deleted
+  useDeleteKey(() => {
+    studio.deleteHighlightedElement();
+  }, highlightedElementId !== null);
 
   function handleExitEditMode() {
     setSpaceViewState(space.id, { editing: false });

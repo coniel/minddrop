@@ -10,6 +10,7 @@ import {
 } from '@minddrop/events';
 import { useTranslation } from '@minddrop/i18n';
 import { CanvasProvider } from '@minddrop/ui-canvas';
+import { isEditableTarget, useDeleteKey } from '@minddrop/utils';
 import {
   DefaultViewName,
   OpenViewEvent,
@@ -94,6 +95,9 @@ const DesignStudioSession: React.FC<DesignStudioSessionProps> = ({
   const { t } = useTranslation();
   const studio = useDesignStudio();
   const design = useDesignStudioStore((state) => state.design);
+  const highlightedElementId = useDesignStudioStore(
+    (state) => state.highlightedElementId,
+  );
 
   // Carry the open layout and selected element across remounts,
   // which is what a tab switch does to the studio
@@ -151,14 +155,11 @@ const DesignStudioSession: React.FC<DesignStudioSessionProps> = ({
     });
   }, [isDesignOpen]);
 
-  // Undo and redo on Cmd/Ctrl+Z, delete the highlighted element on
-  // Delete/Backspace, clear the highlight on Escape
+  // Undo and redo on Cmd/Ctrl+Z, clear the highlight on Escape
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       // Don't handle shortcuts when typing in an input
-      const tag = (event.target as HTMLElement).tagName;
-
-      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') {
+      if (isEditableTarget(event.target)) {
         return;
       }
 
@@ -179,22 +180,7 @@ const DesignStudioSession: React.FC<DesignStudioSessionProps> = ({
       // Escape clears the selection overlay
       if (event.key === 'Escape') {
         studio.clearHighlight();
-
-        return;
       }
-
-      if (event.key !== 'Delete' && event.key !== 'Backspace') {
-        return;
-      }
-
-      if (!studio.getHighlightedElementId()) {
-        return;
-      }
-
-      event.preventDefault();
-
-      // Deleting a frame's root deletes the entire layout
-      studio.deleteHighlightedElement({ allowRootDelete: true });
     };
 
     window.addEventListener('keydown', handleKeyDown);
@@ -203,6 +189,12 @@ const DesignStudioSession: React.FC<DesignStudioSessionProps> = ({
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [studio]);
+
+  // Delete the highlighted element on Delete/Backspace. Deleting a
+  // frame's root deletes the entire layout
+  useDeleteKey(() => {
+    studio.deleteHighlightedElement({ allowRootDelete: true });
+  }, highlightedElementId !== null);
 
   const handleClickBack = useCallback(() => {
     // Navigate to an empty view to unmount the design studio
