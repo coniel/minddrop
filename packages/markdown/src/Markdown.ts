@@ -1,3 +1,9 @@
-import * as MarkdownApi from './MarkdownApi';
+import { FrontmatterParseError } from './errors';
 
-export const Markdown = MarkdownApi;
+export const errors = {
+  FrontmatterParse: FrontmatterParseError,
+};
+
+export { getMarkdownContent as getContent } from './getMarkdownContent';
+export { getPropertiesFromMarkdown as getProperties } from './getPropertiesFromMarkdown';
+export { setPropertiesOnMarkdown as setProperties } from './setPropertiesOnMarkdown';
