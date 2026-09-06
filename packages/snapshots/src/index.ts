@@ -1,6 +1,3 @@
-export * from './Snapshots';
-export * as Snapshots from './Snapshots';
+export type * from './types';
 export type { RecordRenameOptions } from './recordRename';
-export * from './constants';
-export * from './types';
-export * from './utils';
+export * as Snapshots from './Snapshots';
