@@ -27,7 +27,6 @@ export interface DropdownSubmenuTriggerItemProps
 
   /**
    * Content icon string displayed before the label.
-   * Supports emoji, asset, and other content icon formats.
    */
   contentIcon?: string;
 

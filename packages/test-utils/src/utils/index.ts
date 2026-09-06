@@ -1,2 +1,2 @@
 export * from './fillForm';
-export * from './pickEmojiIcon';
+export * from './pickContentIcon';

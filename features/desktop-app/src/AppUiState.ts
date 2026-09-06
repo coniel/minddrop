@@ -1,5 +1,10 @@
 import { createKeyValueStore } from '@minddrop/stores';
-import { EmojiSkinTone } from '@minddrop/ui-icons';
+
+/**
+ * Emoji skin tone modifier, 0 being none and 1 to 5 the
+ * light to dark Fitzpatrick tones.
+ */
+export type EmojiSkinTone = 0 | 1 | 2 | 3 | 4 | 5;
 
 export interface AppUiState {
   /**

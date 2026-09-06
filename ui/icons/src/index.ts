@@ -1,6 +1,5 @@
 export * from './IconsProvider';
 export * from './types';
-export * from './emoji';
 export * from './useIcon';
 export * from './constants';
 export * from './contentIconSetRegistry';

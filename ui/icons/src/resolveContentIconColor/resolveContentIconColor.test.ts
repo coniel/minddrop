@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { stringifyIcon } from '../stringifyIcon';
-import { contentIcon, emojiIcon } from '../test-utils';
+import { contentIcon } from '../test-utils';
 import { resolveContentIconColor } from './resolveContentIconColor';
 
 describe('resolveContentIconColor', () => {
@@ -14,11 +14,7 @@ describe('resolveContentIconColor', () => {
     );
   });
 
-  it('returns undefined if the icon is an emoji icon', () => {
-    expect(resolveContentIconColor(emojiIcon)).toBeUndefined();
-  });
-
-  it('returns undefined if the icon is an emoji icon string', () => {
-    expect(resolveContentIconColor(stringifyIcon(emojiIcon))).toBeUndefined();
+  it('returns undefined if the icon string is invalid', () => {
+    expect(resolveContentIconColor('foo')).toBeUndefined();
   });
 });

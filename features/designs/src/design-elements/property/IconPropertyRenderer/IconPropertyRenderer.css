@@ -6,7 +6,7 @@
 }
 
 /* Scale SVG content icons to fill the token-sized icon box */
-.designs-icon-element .content-icon:not(.emoji) {
+.designs-icon-element .content-icon {
   width: 100%;
   height: 100%;
 }

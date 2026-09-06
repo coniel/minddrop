@@ -12,7 +12,7 @@ import userEvent from '@testing-library/user-event';
 import React, { FC, ReactElement } from 'react';
 import { vi } from 'vitest';
 import { TranslationKey, i18n, initializeI18n } from '@minddrop/i18n';
-import { IconsProvider } from '@minddrop/ui-icons';
+import { IconsProvider, initializeIcons } from '@minddrop/ui-icons';
 import '@testing-library/jest-dom/vitest';
 
 class ResizeObserver {
@@ -40,14 +40,10 @@ Object.defineProperty(window, 'matchMedia', {
 });
 
 initializeI18n();
+initializeIcons();
 
 const WithProviders: FC<{ children: React.ReactNode }> = ({ children }) => (
-  <IconsProvider
-    defaultEmojiSkinTone={1}
-    onDefaultEmojiSkinToneChange={() => null}
-  >
-    {children}
-  </IconsProvider>
+  <IconsProvider>{children}</IconsProvider>
 );
 
 /**

@@ -1,26 +1,20 @@
 import { useMemo } from 'react';
 import { ContentColor } from '@minddrop/ui-theme';
 import { BuiltInContentIconSetId } from './constants';
-import { getEmojiIconSkinTone } from './getEmojiIconSkinTone';
 import { parseIcon } from './parseIcon';
 import { resolveContentIconColor } from './resolveContentIconColor';
-import { EmojiSkinTone } from './types';
 import { UserIcon, UserIconType } from './types';
 
 interface IconData {
   // The parsed icon
   icon: UserIcon;
 
-  // The icon color if it is a content icon
+  // The icon color
   color?: ContentColor;
-
-  // The emoji skin tone if it is an emoji icon
-  skinTone?: EmojiSkinTone;
 }
 
 /**
- * Parses an icon string and returns its the icon, as well as its
- * color and skin tone (or undefined if not applicable).
+ * Parses an icon string and returns the icon along with its color.
  *
  * @param iconString - The string representation of the icon.
  * @param defaultIcon - The default icon to use if the icon string is invalid.
@@ -39,7 +33,6 @@ export function useIcon(iconString?: string, defaultIcon?: UserIcon): IconData {
     [iconString, defaultIcon],
   );
   const color = useMemo(() => resolveContentIconColor(icon), [icon]);
-  const skinTone = useMemo(() => getEmojiIconSkinTone(icon), [icon]);
 
-  return { icon, color, skinTone };
+  return { icon, color };
 }

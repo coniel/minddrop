@@ -6,8 +6,7 @@ import './SearchResultItem.css';
 
 export interface SearchResultItemProps {
   /**
-   * The content icon string to display (content-icon, emoji,
-   * or asset format).
+   * The content icon string to display.
    */
   contentIcon?: string;
 

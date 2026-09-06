@@ -8,10 +8,6 @@ import { UserIcon } from '../types';
  * @returns The string representation of the icon.
  */
 export function stringifyIcon(icon: UserIcon): string {
-  if (icon.type === 'emoji') {
-    return `${icon.type}:${icon.icon}:${icon.skinTone}`;
-  }
-
   // Icons from other sets carry the set as an extra segment
   if (icon.set !== BuiltInContentIconSetId) {
     return `${icon.type}:${icon.set}:${icon.icon}:${icon.color}`;

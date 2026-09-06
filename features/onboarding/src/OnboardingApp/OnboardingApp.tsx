@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Fs } from '@minddrop/file-system';
 import { TranslationKey } from '@minddrop/i18n';
-import { EmojiSkinTone, IconsProvider } from '@minddrop/ui-icons';
+import { IconsProvider } from '@minddrop/ui-icons';
 import {
   Button,
   Heading,
@@ -29,9 +29,6 @@ export const OnboardingApp: React.FC<OnboardingAppProps> = ({ onComplete }) => {
   const [initialized, setInitialized] = useState(false);
   const [creatingWorkspace, setCreatingWorkspace] = useState(false);
   const [error, setError] = useState<TranslationKey | null>(null);
-  // The onboarding window does not persist app config, so the skin tone
-  // selected in the icon picker lasts only as long as the window.
-  const [emojiSkinTone, setEmojiSkinTone] = useState<EmojiSkinTone>(0);
 
   // Initialize the onboarding app on mount
   useEffect(() => {
@@ -90,10 +87,7 @@ export const OnboardingApp: React.FC<OnboardingAppProps> = ({ onComplete }) => {
   }
 
   return (
-    <IconsProvider
-      defaultEmojiSkinTone={emojiSkinTone}
-      onDefaultEmojiSkinToneChange={setEmojiSkinTone}
-    >
+    <IconsProvider>
       <div className="onboarding-app">
         {/* Allows the frameless window to be dragged */}
         <div className="onboarding-drag-handle electrobun-webkit-app-region-drag" />

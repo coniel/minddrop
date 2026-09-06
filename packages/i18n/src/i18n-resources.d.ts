@@ -123,20 +123,6 @@ declare module 'i18next' {
           brown: string;
           gray: string;
         };
-        emojiPicker: {
-          label: string;
-          random: string;
-          filter: string;
-          skinTone: {
-            action: string;
-            none: string;
-            dark: string;
-            mediumDark: string;
-            medium: string;
-            mediumLight: string;
-            light: string;
-          };
-        };
         iconPicker: {
           label: string;
           filter: string;

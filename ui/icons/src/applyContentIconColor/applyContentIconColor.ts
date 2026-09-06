@@ -1,11 +1,11 @@
 import { ContentColor } from '@minddrop/ui-theme';
 import { parseIcon } from '../parseIcon';
 import { stringifyIcon } from '../stringifyIcon';
-import { UserIcon, UserIconType } from '../types';
+import { UserIcon } from '../types';
 
 /**
  * Applies the specified color to the content icon.
- * If the icon is not a content icon, returns it unchanged.
+ * Invalid icon strings are returned unchanged.
  *
  * @param icon - The icon to apply the color to.
  * @param color - The color to apply to the icon.
@@ -23,11 +23,9 @@ export function applyContentIconColor(
   icon: UserIcon | string,
   color: ContentColor,
 ): UserIcon | string {
-  const actualIcon =
-    typeof icon === 'string' ? (parseIcon(icon) as UserIcon) : icon;
+  const actualIcon = typeof icon === 'string' ? parseIcon(icon) : icon;
 
-  // Ensure the icon is a content icon
-  if (actualIcon.type !== UserIconType.ContentIcon) {
+  if (!actualIcon) {
     return icon;
   }
 

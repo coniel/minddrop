@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { contentIcon, contentIconString, emojiIcon } from '../test-utils';
+import { contentIcon, contentIconString } from '../test-utils';
 import { applyContentIconColor } from './applyContentIconColor';
 
 describe('applyContentIconColor', () => {
@@ -13,10 +13,10 @@ describe('applyContentIconColor', () => {
     });
   });
 
-  it('returns the icon unchanged if it is not a content icon', () => {
-    const result = applyContentIconColor(emojiIcon, 'red');
+  it('returns invalid icon strings unchanged', () => {
+    const result = applyContentIconColor('foo', 'red');
 
-    expect(result).toBe(emojiIcon);
+    expect(result).toBe('foo');
   });
 
   it('supports stringified icons', () => {

@@ -42,9 +42,11 @@ describe('createSpace', () => {
   });
 
   it('uses the provided icon', async () => {
-    const space = await createSpace({ icon: 'emoji:🎬:default' });
+    const space = await createSpace({
+      icon: 'content-icon:clapperboard:default',
+    });
 
-    expect(space.icon).toBe('emoji:🎬:default');
+    expect(space.icon).toBe('content-icon:clapperboard:default');
   });
 
   it('seeds the design with a single empty space layout', async () => {

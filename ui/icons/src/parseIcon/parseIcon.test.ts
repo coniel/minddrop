@@ -2,12 +2,10 @@ import { describe, expect, it } from 'vitest';
 import {
   contentIcon,
   contentIconString,
-  emojiIcon,
-  emojiIconString,
   setContentIcon,
   setContentIconString,
 } from '../test-utils';
-import { UserIconContentIcon, UserIconEmoji } from '../types';
+import { UserIconContentIcon } from '../types';
 import { parseIcon } from './parseIcon';
 
 describe('parseIcon', () => {
@@ -21,10 +19,6 @@ describe('parseIcon', () => {
     expect(parseIcon(setContentIconString)).toEqual<UserIconContentIcon>(
       setContentIcon,
     );
-  });
-
-  it('parses emoji icons', () => {
-    expect(parseIcon(emojiIconString)).toEqual<UserIconEmoji>(emojiIcon);
   });
 
   it('returns null for missing icon set', () => {

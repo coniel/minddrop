@@ -26,10 +26,3 @@
 .queries-node-mismatch-warning-source-icon {
   flex-shrink: 0;
 }
-
-/* Emoji source icons follow the source name text size */
-.queries-node-mismatch-warning-sources .emoji {
-  font-size: 12px;
-  line-height: 14px;
-  text-align: center;
-}

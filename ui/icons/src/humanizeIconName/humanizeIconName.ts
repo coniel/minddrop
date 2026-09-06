@@ -1,6 +1,6 @@
 /**
- * Formats an icon or emoji name for display by replacing hyphens
- * with spaces and capitalising the first letter.
+ * Formats an icon name for display by replacing hyphens with
+ * spaces and capitalising the first letter.
  *
  * @param name - The icon name, e.g. `circle-chevron-down`.
  * @returns The display name, e.g. `Circle chevron down`.

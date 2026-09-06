@@ -47,7 +47,6 @@ export interface DataView<
    * The data view's stringified content icon, defaulting to its type's
    * icon.
    * - `content-icon`: '[set-name]:[icon-name]:[color]'
-   * - `emoji`: 'emoji:[emoji-character]:[skin-tone]'
    */
   icon: string;
 

@@ -3,10 +3,10 @@ import { i18n } from '@minddrop/i18n';
 import { Properties, PropertySchema } from '@minddrop/properties';
 import {
   cleanup,
-  emojiIconString,
   fillForm,
   fireEvent,
-  pickEmojiIcon,
+  pickContentIcon,
+  pickedContentIconString,
   render,
   screen,
   userEvent,
@@ -162,13 +162,13 @@ describe('<PropertyEditorBase />', () => {
     const user = userEvent.setup();
 
     await fillForm({ name: 'New name' });
-    await pickEmojiIcon('properties.form.icon.label');
+    await pickContentIcon('properties.form.icon.label');
     await user.click(screen.getByText('actions.save'));
 
     expect(onSave).toHaveBeenCalledWith({
       ...textProperty,
       name: 'New name',
-      icon: emojiIconString,
+      icon: pickedContentIconString,
     });
   });
 
@@ -263,7 +263,7 @@ describe('<PropertyEditorBase />', () => {
     const user = userEvent.setup();
 
     await fillForm({ name: 'New name' });
-    await pickEmojiIcon('properties.form.icon.label');
+    await pickContentIcon('properties.form.icon.label');
     await user.click(screen.getByText('actions.cancel'));
 
     // Re-open editor

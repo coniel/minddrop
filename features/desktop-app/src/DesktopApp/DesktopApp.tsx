@@ -9,7 +9,7 @@ import { DevTools, ScreenshotPicker } from '@minddrop/feature-dev-tools';
 import { SearchFeature } from '@minddrop/feature-search';
 import { SpacesFeature } from '@minddrop/feature-spaces';
 import { TabsToolbar, ViewRenderer } from '@minddrop/feature-views';
-import { EmojiSkinTone, IconsProvider } from '@minddrop/ui-icons';
+import { IconsProvider } from '@minddrop/ui-icons';
 import {
   ConfirmationDialog,
   Toast,
@@ -24,12 +24,10 @@ import {
 } from '@minddrop/ui-primitives';
 import { OpenViewEventData, Views } from '@minddrop/views';
 import { AppSidebar } from '../AppSidebar';
-import { AppUiState } from '../AppUiState';
 import { NavToolbar } from '../NavToolbar';
 import './DesktopApp.css';
 
 export const DesktopApp: React.FC = () => {
-  const defaultEmojiSkinTone = AppUiState.useValue('defaultEmojiSkinTone');
   const [showSidebar, setShowSidebar] = useState(true);
 
   useEffect(() => {
@@ -46,13 +44,6 @@ export const DesktopApp: React.FC = () => {
       Events.removeListener(Events.events.OpenAppSidebar, 'desktop-app');
     };
   }, []);
-
-  const handleChangeDefaultEmojiSkinTone = useCallback(
-    (skinTone: EmojiSkinTone) => {
-      AppUiState.set('defaultEmojiSkinTone', skinTone);
-    },
-    [],
-  );
 
   const handleTopbarDoubleClick = useCallback((event: React.MouseEvent) => {
     // Ignore double-clicks on the toolbar controls, only the drag area
@@ -71,10 +62,7 @@ export const DesktopApp: React.FC = () => {
   return (
     <TooltipProvider delay={600} timeout={500}>
       <ToastProvider>
-        <IconsProvider
-          defaultEmojiSkinTone={defaultEmojiSkinTone}
-          onDefaultEmojiSkinToneChange={handleChangeDefaultEmojiSkinTone}
-        >
+        <IconsProvider>
           <div className="app">
             <div
               className="app-topbar electrobun-webkit-app-region-drag"

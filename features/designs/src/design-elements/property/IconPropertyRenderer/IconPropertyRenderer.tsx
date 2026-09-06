@@ -71,18 +71,11 @@ export const IconPropertyRenderer: React.FC<IconPropertyRendererProps> = ({
     );
   }
 
-  // The icon node, sized by the icon size token. The font size
-  // scales emoji icons to match SVG icon sizing.
+  // The icon node, sized by the icon size token
   const iconNode = (
     <div
       className="designs-icon-element"
-      style={{
-        ...(containerCss ? iconCss : cssStyle),
-        ...(style.size && {
-          fontSize: Designs.tokenCssVariable('iconSize', style.size),
-        }),
-        lineHeight: 1,
-      }}
+      style={containerCss ? iconCss : cssStyle}
     >
       <ContentIcon icon={iconValue} />
     </div>

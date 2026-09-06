@@ -48,19 +48,6 @@ export const ContentIcon: React.FC<ContentIconProps> = ({
 }) => {
   const { icon } = useIcon(iconString || '', defaultIcon);
 
-  if (icon.type === 'emoji') {
-    return (
-      <span
-        className={['content-icon', 'emoji', className]
-          .filter(Boolean)
-          .join(' ')}
-        data-testid="content-icon"
-      >
-        {icon.icon}
-      </span>
-    );
-  }
-
   return (
     <IconSetIcon
       className={className}

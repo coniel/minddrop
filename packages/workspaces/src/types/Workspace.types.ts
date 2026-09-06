@@ -21,7 +21,6 @@ export interface Workspace {
   /**
    * The workspace icon. Value depends on the icon type:
    * - `content-icon`: '[set-name]:[icon-name]:[color]'
-   * - `emoji`: 'emoji:[emoji-character]:[skin-tone]'
    * - `image`: 'image:[image-file-name]'
    */
   icon: string;

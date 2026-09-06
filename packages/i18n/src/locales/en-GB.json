@@ -67,20 +67,6 @@
     "brown": "Brown",
     "gray": "Gray"
   },
-  "emojiPicker": {
-    "label": "Emoji",
-    "random": "Random",
-    "filter": "Search emoji...",
-    "skinTone": {
-      "action": "Change skin tone",
-      "none": "None",
-      "dark": "Dark skin tone",
-      "mediumDark": "Medium dark skin tone",
-      "medium": "Medium skin tone",
-      "mediumLight": "Medium light skin tone",
-      "light": "Light skin tone"
-    }
-  },
   "iconPicker": {
     "label": "Icons",
     "filter": "Search icons...",

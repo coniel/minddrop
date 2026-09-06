@@ -7,7 +7,7 @@ describe('humanizeIconName', () => {
   });
 
   it('capitalises names without hyphens', () => {
-    expect(humanizeIconName('grinning face')).toBe('Grinning face');
+    expect(humanizeIconName('cat')).toBe('Cat');
   });
 
   it('returns an empty string as is', () => {

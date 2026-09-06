@@ -4,9 +4,9 @@ import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { Events } from '@minddrop/events';
 import { Properties } from '@minddrop/properties';
 import {
-  emojiIconString,
   fillForm,
-  pickEmojiIcon,
+  pickContentIcon,
+  pickedContentIconName,
   render,
   screen,
   userEvent,
@@ -41,7 +41,7 @@ describe('<DatabasePropertyEditor />', () => {
       await user.click(screen.getByText(property.name));
 
       // Pick a new icon
-      await pickEmojiIcon('properties.form.icon.label');
+      await pickContentIcon('properties.form.icon.label');
 
       // Save the changes
       await user.click(screen.getByText('actions.save'));
@@ -55,7 +55,8 @@ describe('<DatabasePropertyEditor />', () => {
             data.updated.properties.find(
               (candidate) => candidate.name === property.name,
             )?.icon,
-          ).toBe(emojiIconString);
+            // The picked icon keeps the property's existing color
+          ).toMatch(`content-icon:${pickedContentIconName}:`);
           done();
         });
 

@@ -17,7 +17,6 @@ export interface Space {
   /**
    * The space icon. Value depends on the icon type:
    * - `content-icon`: '[set-name]:[icon-name]:[color]'
-   * - `emoji`: 'emoji:[emoji-character]:[skin-tone]'
    */
   icon: string;
 
