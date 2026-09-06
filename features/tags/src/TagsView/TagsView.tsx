@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from '@minddrop/i18n';
-import { Tag, TagGroup, TagGroups, Tags, TagsIcon } from '@minddrop/tags';
+import { Tag, TagGroup, TagGroups, Tags } from '@minddrop/tags';
 import {
   ListPanelView,
   ListPanelViewItem,
@@ -169,7 +169,7 @@ export const TagsView: React.FC = () => {
   return (
     <ListPanelView
       className="tags-view"
-      icon={TagsIcon}
+      icon={Tags.constants.Icon}
       title="tags.labels.tags"
       sections={sections}
       selectedItem={selectedItem}

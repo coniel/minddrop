@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Events } from '@minddrop/events';
 import { TagsPropertySchema } from '@minddrop/properties';
-import { OpenTagsViewEvent } from '@minddrop/tags';
+import { Tags } from '@minddrop/tags';
 import {
   MockFs,
   TagGroupFixtures,
@@ -108,7 +108,7 @@ describe('<TagsPropertyEditor />', () => {
     // Tracks whether the open tags view event was dispatched
     let dispatched = false;
 
-    Events.addListener(OpenTagsViewEvent, 'test', () => {
+    Events.addListener(Tags.events.OpenView, 'test', () => {
       dispatched = true;
     });
 

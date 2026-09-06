@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { TagGroup, TagGroupsIcon } from '@minddrop/tags';
+import { TagGroup, TagGroups } from '@minddrop/tags';
 import {
   DropdownMenuContent,
   DropdownMenuGroup,
@@ -70,7 +70,7 @@ export const NewTagMenu: React.FC<NewTagMenuProps> = ({
                 onSelect={() => handleCreateTag()}
               />
               <DropdownMenuItem
-                icon={TagGroupsIcon}
+                icon={TagGroups.constants.Icon}
                 label="tags.actions.newGroup"
                 onSelect={() => setNamingGroup(true)}
               />
@@ -84,7 +84,7 @@ export const NewTagMenu: React.FC<NewTagMenuProps> = ({
                     {groups.map((group) => (
                       <DropdownMenuItem
                         key={group.id}
-                        icon={TagGroupsIcon}
+                        icon={TagGroups.constants.Icon}
                         stringLabel={group.name}
                         onSelect={() => handleCreateTag(group)}
                       />

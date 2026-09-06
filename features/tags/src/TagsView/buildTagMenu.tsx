@@ -1,7 +1,7 @@
 import { DatabaseEntries } from '@minddrop/databases';
 import { Events, OpenConfirmationDialogEvent } from '@minddrop/events';
 import { i18n } from '@minddrop/i18n';
-import { Tag, TagGroup, TagGroupsIcon, Tags } from '@minddrop/tags';
+import { Tag, TagGroup, TagGroups, Tags } from '@minddrop/tags';
 import {
   Icon,
   MenuContents,
@@ -39,7 +39,7 @@ export function buildTagMenu(
     },
     {
       type: 'menu-item',
-      icon: TagGroupsIcon,
+      icon: TagGroups.constants.Icon,
       label: 'tags.actions.group',
       submenu: buildGroupSubmenu(tag, groups),
     },

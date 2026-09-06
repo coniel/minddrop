@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { DefaultTagIcon, TagGroup, TagGroups, Tags } from '@minddrop/tags';
+import { TagGroup, TagGroups, Tags } from '@minddrop/tags';
 import { Icons } from '@minddrop/ui-icons';
 import {
   Button,
@@ -59,7 +59,7 @@ export const NewTagPopover: React.FC<NewTagPopoverProps> = ({
 }) => {
   const [name, setName] = useState('');
   const [nameTaken, setNameTaken] = useState(false);
-  const [icon, setIcon] = useState(DefaultTagIcon);
+  const [icon, setIcon] = useState(Tags.constants.EntityDefaultIcon);
   const [color, setColor] = useState<ContentColor>('blue');
   const [groupId, setGroupId] = useState<string>(NoGroupValue);
   const setSubview = Views.useSetSubview();
@@ -72,7 +72,7 @@ export const NewTagPopover: React.FC<NewTagPopoverProps> = ({
 
       setName('');
       setNameTaken(false);
-      setIcon(Icons.applyColor(DefaultTagIcon, nextColor));
+      setIcon(Icons.applyColor(Tags.constants.EntityDefaultIcon, nextColor));
       setColor(nextColor);
       setGroupId(defaultGroup?.id ?? NoGroupValue);
     }
@@ -97,7 +97,7 @@ export const NewTagPopover: React.FC<NewTagPopoverProps> = ({
 
   // Restore the default icon in the staged color
   function handleClearIcon() {
-    setIcon(Icons.applyColor(DefaultTagIcon, color));
+    setIcon(Icons.applyColor(Tags.constants.EntityDefaultIcon, color));
   }
 
   // Stage the picked color, recoloring the staged icon
@@ -122,7 +122,7 @@ export const NewTagPopover: React.FC<NewTagPopoverProps> = ({
       const tag = await Tags.create(trimmedName, color, group?.id);
 
       // Persist the staged icon when customized
-      if (icon !== DefaultTagIcon) {
+      if (icon !== Tags.constants.EntityDefaultIcon) {
         await Tags.update(tag.id, { icon });
       }
 

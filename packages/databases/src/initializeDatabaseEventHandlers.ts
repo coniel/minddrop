@@ -14,10 +14,7 @@ import { Events } from '@minddrop/events';
 import { FileSystemChangedEvent } from '@minddrop/file-system';
 import { ItemAddressesChangedEvent } from '@minddrop/item-references';
 import {
-  TagDeletedEvent,
-  TagGroupDeletedEvent,
-  TagRenamedEvent,
-} from '@minddrop/tags';
+import { TagGroups, Tags } from '@minddrop/tags';
 import {
   onAddProperty,
   onClearEntries,
@@ -91,11 +88,11 @@ export function initializeDatabaseEventHandlers() {
     [DatabaseEntryMetadataUpdatedEvent]: onUpdateEntryMetadata,
     [CollectionUpdatedEvent]: onUpdateCollection,
     [ItemAddressesChangedEvent]: onItemAddressesChanged,
-    [TagRenamedEvent]: onTagRenamed,
-    [TagDeletedEvent]: onTagDeleted,
-    [TagGroupDeletedEvent]: onTagGroupDeleted,
     [DataViewUpdatedEvent]: onUpdateVirtualView,
     [FileSystemChangedEvent]: onFileSystemChanged,
+    [Tags.events.Renamed]: onTagRenamed,
+    [Tags.events.Deleted]: onTagDeleted,
+    [TagGroups.events.Deleted]: onTagGroupDeleted,
   });
 
   Events.addListeners('databases:database-views', {

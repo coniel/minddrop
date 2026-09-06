@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
-import { OpenTagsViewEvent } from '@minddrop/tags';
 import { OpenViewEvent } from '@minddrop/views';
+import { Tags } from '@minddrop/tags';
 import { TagsViewName } from '../events';
 import { cleanup, setup } from '../test-utils';
 import { initializeTagsFeature } from './initializeTagsFeature';
@@ -30,6 +30,6 @@ describe('initializeTagsFeature', () => {
         resolve();
       });
 
-      Events.dispatch(OpenTagsViewEvent);
+      Events.dispatch(Tags.events.OpenView);
     }));
 });

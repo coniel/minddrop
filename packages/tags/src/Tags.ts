@@ -1,3 +1,34 @@
+import { DefaultTagIcon, TagsIcon } from './constants';
+import { TagNotFoundError } from './errors';
+import {
+  OpenTagsViewEvent,
+  TagCreatedEvent,
+  TagDeletedEvent,
+  TagRenamedEvent,
+  TagUpdatedEvent,
+  TagsLoadedEvent,
+} from './events';
+
+// Const-asserted so the names keep their literal types, which key
+// the event data registry
+export const events = {
+  Created: TagCreatedEvent,
+  Updated: TagUpdatedEvent,
+  Renamed: TagRenamedEvent,
+  Deleted: TagDeletedEvent,
+  Loaded: TagsLoadedEvent,
+  OpenView: OpenTagsViewEvent,
+} as const;
+
+export const errors = {
+  NotFound: TagNotFoundError,
+};
+
+export const constants = {
+  Icon: TagsIcon,
+  EntityDefaultIcon: DefaultTagIcon,
+};
+
 export { createTag as create } from './createTag';
 export { deleteTag as delete } from './deleteTag';
 export { getTag as get } from './getTag';

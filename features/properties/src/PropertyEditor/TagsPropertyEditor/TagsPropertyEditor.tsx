@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Events } from '@minddrop/events';
 import { PropertySchema, TagsPropertySchema } from '@minddrop/properties';
-import { OpenTagsViewEvent, TagGroups } from '@minddrop/tags';
+import { TagGroups, Tags } from '@minddrop/tags';
 import { Button, Group, SelectField, Stack } from '@minddrop/ui-primitives';
 import {
   PropertyEditorBase,
@@ -55,7 +55,7 @@ export const TagsPropertyEditor: React.FC<TagsPropertyEditorProps> = ({
 
   // Open the tags management view in a new tab
   function handleManageTags() {
-    Events.dispatch(OpenTagsViewEvent, { openMode: 'new-tab' });
+    Events.dispatch(Tags.events.OpenView, { openMode: 'new-tab' });
   }
 
   return (

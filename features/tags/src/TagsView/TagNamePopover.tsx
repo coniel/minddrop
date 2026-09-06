@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { DefaultTagIcon, Tag, Tags } from '@minddrop/tags';
+import { Tag, Tags } from '@minddrop/tags';
 import { Icons } from '@minddrop/ui-icons';
 import {
   ContentIcon,
@@ -70,7 +70,9 @@ export const TagNamePopover: React.FC<TagNamePopoverProps> = ({
 
   // Restore the default icon in the tag's color
   function handleClearIcon() {
-    Tags.update(tag.id, { icon: Icons.applyColor(DefaultTagIcon, tag.color) });
+    Tags.update(tag.id, {
+      icon: Icons.applyColor(Tags.constants.EntityDefaultIcon, tag.color),
+    });
   }
 
   // Clear the duplicate error while editing

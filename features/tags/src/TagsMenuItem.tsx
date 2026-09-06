@@ -1,6 +1,6 @@
 import { Events } from '@minddrop/events';
 import { Tabs } from '@minddrop/feature-views';
-import { OpenTagsViewEvent, TagsIcon } from '@minddrop/tags';
+import { Tags } from '@minddrop/tags';
 import { MenuItem } from '@minddrop/ui-primitives';
 import { TagsViewName } from './events';
 
@@ -12,14 +12,14 @@ export const TagsMenuItem: React.FC = () => {
 
   // Open the tags view
   function handleClick() {
-    Events.dispatch(OpenTagsViewEvent);
+    Events.dispatch(Tags.events.OpenView);
   }
 
   return (
     <MenuItem
       muted
       active={active}
-      icon={TagsIcon}
+      icon={Tags.constants.Icon}
       label="tags.labels.tags"
       onClick={handleClick}
     />

@@ -1,4 +1,4 @@
-import { TagsIcon } from '@minddrop/tags';
+import { Tags } from '@minddrop/tags';
 import { Views } from '@minddrop/views';
 import { TagsView } from './TagsView';
 import { TagsViewName } from './events';
@@ -12,7 +12,7 @@ export function registerTagViews(): void {
     type: TagsViewName,
     component: TagsView,
     title: 'tags.labels.tags',
-    icon: TagsIcon,
+    icon: Tags.constants.Icon,
     breadcrumbLevel: 'root',
   });
 }
