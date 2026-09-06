@@ -50,6 +50,7 @@ export * from './useInputValue';
 export * from './useMeasuredImageWidth';
 export * from './useDeleteKey';
 export * from './useToggle';
+export * from './useModKeyHeld';
 export * from './omitPath';
 export * from './parseDate';
 export { v4 as uuid } from 'uuid';

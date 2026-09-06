@@ -34,6 +34,21 @@
   min-width: 130px;
 }
 
+.view-tab-number {
+  /* Fills the icon slot while the modifier is held. Keeps the tab's
+     font size so the 1em icon box does not shrink with the digit */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: inherit;
+}
+
+.view-tab-number-digit {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-none);
+}
+
 .view-tab-label {
   flex: 1;
   min-width: 0;

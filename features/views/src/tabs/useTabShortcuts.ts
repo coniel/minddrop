@@ -1,9 +1,11 @@
 import { useEffect } from 'react';
+import { activateLastTab } from './activateLastTab';
 import { activateTabByIndex } from './activateTabByIndex';
 import { closeActiveTab } from './closeActiveTab';
 import { goBack } from './goBack';
 import { goForward } from './goForward';
 import { newTab } from './newTab';
+import { MAX_SHORTCUT_TABS } from './tabsConstants';
 
 /**
  * Binds global tab keyboard shortcuts for the given set while enabled:
@@ -59,10 +61,18 @@ export function useTabShortcuts(viewAreaId: string, enabled: boolean): void {
         return;
       }
 
-      // Mod+1-9 activates the Nth tab
       const digit = Number(event.key);
 
-      if (Number.isInteger(digit) && digit >= 1 && digit <= 9) {
+      // Mod+0 activates the last tab
+      if (digit === 0) {
+        event.preventDefault();
+        activateLastTab(viewAreaId);
+
+        return;
+      }
+
+      // Mod+1-9 activates the Nth tab
+      if (Number.isInteger(digit) && digit >= 1 && digit <= MAX_SHORTCUT_TABS) {
         event.preventDefault();
         activateTabByIndex(viewAreaId, digit - 1);
       }

@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { createI18nKeyBuilder, useTranslation } from '@minddrop/i18n';
 import { SortableItemRenderProps } from '@minddrop/ui-drag-and-drop';
-import { Icon, IconRenderer, TabsTab } from '@minddrop/ui-primitives';
+import { Icon, IconRenderer, TabsTab, Tooltip } from '@minddrop/ui-primitives';
 import { Tab as TabData } from '../TabSetsStore';
 import { closeTab } from '../closeTab';
 import { getTabIcon } from '../getTabIcon';
@@ -26,6 +26,17 @@ interface TabProps {
   sortable: SortableItemRenderProps;
 
   /**
+   * The number that activates the tab when pressed with the modifier,
+   * shown in its tooltip.
+   */
+  shortcutNumber?: number;
+
+  /**
+   * Whether to show the shortcut number in place of the icon.
+   */
+  showShortcutNumber?: boolean;
+
+  /**
    * Callback fired when the tab is right clicked, called with the
    * tab's id and the element to anchor the options menu to.
    */
@@ -33,12 +44,15 @@ interface TabProps {
 }
 
 /**
- * A single tab in the tab strip.
+ * A single tab in the tab strip, with a tooltip showing its full
+ * label and activation shortcut.
  */
 export const Tab: FC<TabProps> = ({
   viewAreaId,
   tab,
   sortable,
+  shortcutNumber,
+  showShortcutNumber = false,
   onContextMenu,
 }) => {
   const { t } = useTranslation();
@@ -50,6 +64,21 @@ export const Tab: FC<TabProps> = ({
 
   // The tab's label, combining both pane titles when it is split
   const label = getTabLabel(tab, t(tabsI18nKey('new')), t);
+
+  // The shortcut shown in the tooltip
+  const keyboardShortcut =
+    shortcutNumber !== undefined ? ['Mod', String(shortcutNumber)] : undefined;
+
+  // The shortcut number takes the icon's place while the modifier
+  // is held.
+  const startIcon =
+    showShortcutNumber && shortcutNumber !== undefined ? (
+      <span className="view-tab-number">
+        <span className="view-tab-number-digit">{shortcutNumber}</span>
+      </span>
+    ) : (
+      <IconRenderer icon={icon} />
+    );
 
   // Close the tab, keeping the click from also activating it
   function handleClose(event: React.MouseEvent) {
@@ -77,26 +106,28 @@ export const Tab: FC<TabProps> = ({
   }
 
   return (
-    <TabsTab
-      ref={ref}
-      value={tab.id}
-      className={['view-tab', className].filter(Boolean).join(' ')}
-      style={style}
-      startIcon={<IconRenderer icon={icon} />}
-      onAuxClick={handleAuxClick}
-      onContextMenu={handleContextMenu}
-      {...handleProps}
-    >
-      <span className="view-tab-label">{label}</span>
-      <span
-        className="view-tab-close"
-        role="button"
-        aria-label={t(tabsI18nKey('close'))}
-        onClick={handleClose}
-        onPointerDown={handleClosePointerDown}
+    <Tooltip stringTitle={label} keyboardShortcut={keyboardShortcut}>
+      <TabsTab
+        ref={ref}
+        value={tab.id}
+        className={['view-tab', className].filter(Boolean).join(' ')}
+        style={style}
+        startIcon={startIcon}
+        onAuxClick={handleAuxClick}
+        onContextMenu={handleContextMenu}
+        {...handleProps}
       >
-        <Icon name="x" />
-      </span>
-    </TabsTab>
+        <span className="view-tab-label">{label}</span>
+        <span
+          className="view-tab-close"
+          role="button"
+          aria-label={t(tabsI18nKey('close'))}
+          onClick={handleClose}
+          onPointerDown={handleClosePointerDown}
+        >
+          <Icon name="x" />
+        </span>
+      </TabsTab>
+    </Tooltip>
   );
 };
