@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { LayoutNotFoundError } from '@minddrop/designs';
+import { Layouts } from '@minddrop/designs';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { DatabasesStore } from '../DatabasesStore';
 import { cleanup, objectDatabase, setup } from '../test-utils';
@@ -17,13 +17,13 @@ describe('setDatabaseDefaultLayout', () => {
     // layout_card_1 does not belong to objectDatabase's design
     await expect(() =>
       setDatabaseDefaultLayout(objectDatabase.id, 'card', layout_card_1.id),
-    ).rejects.toThrow(LayoutNotFoundError);
+    ).rejects.toThrow(Layouts.errors.NotFound);
   });
 
   it('throws if the layout is not of the context base type', async () => {
     await expect(() =>
       setDatabaseDefaultLayout(objectDatabase.id, 'list', layout_card_2.id),
-    ).rejects.toThrow(LayoutNotFoundError);
+    ).rejects.toThrow(Layouts.errors.NotFound);
   });
 
   it('throws when pinning a card layout to a page-based context', async () => {
@@ -32,7 +32,7 @@ describe('setDatabaseDefaultLayout', () => {
 
     await expect(() =>
       setDatabaseDefaultLayout(objectDatabase.id, 'dialog', layout_card_1.id),
-    ).rejects.toThrow(LayoutNotFoundError);
+    ).rejects.toThrow(Layouts.errors.NotFound);
   });
 
   it('throws if the database has no design', async () => {
@@ -41,7 +41,7 @@ describe('setDatabaseDefaultLayout', () => {
 
     await expect(() =>
       setDatabaseDefaultLayout(objectDatabase.id, 'card', layout_card_2.id),
-    ).rejects.toThrow(LayoutNotFoundError);
+    ).rejects.toThrow(Layouts.errors.NotFound);
   });
 
   it('pins the layout as the default for the context', async () => {

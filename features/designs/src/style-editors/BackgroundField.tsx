@@ -1,4 +1,4 @@
-import { BackgroundEmphases, BackgroundEmphasis } from '@minddrop/designs';
+import { BackgroundEmphasis, Designs } from '@minddrop/designs';
 import { TranslationKey, createI18nKeyBuilder } from '@minddrop/i18n';
 import {
   OptionToggleField,
@@ -18,7 +18,7 @@ type BackgroundOption = 'none' | BackgroundEmphasis;
  * follows the entry's, so emphasis is the only choice on offer.
  */
 const EmphasisOptions: OptionToggleFieldOption<BackgroundOption>[] =
-  BackgroundEmphases.map((emphasis) => ({
+  Designs.styles.BackgroundEmphases.map((emphasis) => ({
     value: emphasis,
     label: backgroundEmphasisKey(emphasis, 'label'),
     description: backgroundEmphasisKey(emphasis, 'description'),

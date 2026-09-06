@@ -1,11 +1,7 @@
-import { DesignPropertyRenamedEvent } from '@minddrop/designs';
-import {
-  DesignCreatedEvent,
-  DesignDeletedEvent,
-  DesignUpdatedEvent,
 } from '@minddrop/designs-next';
 import { Collections } from '@minddrop/collections';
 import { DataViews } from '@minddrop/data-views';
+import { Designs } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { ItemReferences } from '@minddrop/item-references';
@@ -73,7 +69,7 @@ export function initializeDatabaseEventHandlers() {
     [DatabasePropertyRemovedEvent]: onRemoveProperty,
     [DatabasePropertyRenamedEvent]: onRenameProperty,
     [DatabasePropertyOptionRenamedEvent]: onRenamePropertyOption,
-    [DesignPropertyRenamedEvent]: onRenameDesignProperty,
+    [Designs.events.PropertyRenamed]: onRenameDesignProperty,
     [DatabaseEntryCreatedEvent]: onCreateEntry,
     [DatabaseEntryUpdatedEvent]: onUpdateEntry,
     [DatabaseEntryWrittenEvent]: onEntryWritten,
@@ -97,8 +93,5 @@ export function initializeDatabaseEventHandlers() {
   });
 
   Events.addListeners('databases:database-designs', {
-    [DesignCreatedEvent]: onDatabaseDesignCreated,
-    [DesignUpdatedEvent]: onDatabaseDesignUpdated,
-    [DesignDeletedEvent]: onDatabaseDesignDeleted,
   });
 }

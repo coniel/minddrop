@@ -1,15 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
-  ContainerElementConfig,
   DesignElementTemplate,
   Designs,
   Layout,
   PropertyElement,
-  PropertyElementTypeConfig,
   RoleDesignElement,
   TextElement,
-  TextElementConfig,
-  resolveDesignMediaDirPath,
 } from '@minddrop/designs';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { cleanup, setup } from '../test-utils';
@@ -85,7 +81,7 @@ describe('DesignStudioStore', () => {
     expect(studio.getProperties()).toEqual(designProperties);
     // Media resolves against the design's media directory
     expect(studio.getMediaDirPath()).toBe(
-      resolveDesignMediaDirPath(design_books.id),
+      Designs.resolveMediaDirPath(design_books.id),
     );
   });
 
@@ -180,7 +176,7 @@ describe('DesignStudioStore', () => {
 
     // Add a new element to the active card layout's root
     const newElement: FlatTextElement = {
-      ...TextElementConfig.template,
+      ...Designs.elementConfigs.Text.template,
       id: 'added-element',
       parent: 'root',
     };
@@ -547,7 +543,7 @@ describe('DesignStudioStore', () => {
 
       // Add a text element from its template
       studio.addDesignElementFromTemplate(
-        TextElementConfig.template,
+        Designs.elementConfigs.Text.template,
         'root',
         0,
       );
@@ -654,7 +650,7 @@ describe('DesignStudioStore', () => {
       studio.setActiveLayout(emptyCardLayout.id);
 
       studio.addDesignElementFromTemplate(
-        TextElementConfig.template,
+        Designs.elementConfigs.Text.template,
         'root',
         0,
       );
@@ -672,7 +668,7 @@ describe('DesignStudioStore', () => {
       studio.setActiveLayout(emptyCardLayout.id);
 
       studio.addDesignElementFromTemplate(
-        ContainerElementConfig.template,
+        Designs.elementConfigs.Container.template,
         'root',
         0,
       );
@@ -719,7 +715,7 @@ describe('DesignStudioStore', () => {
       // between. Resolving against the design's persisted tree would
       // miss the first binding and hand both the same property.
       studio.addDesignElementFromTemplate(
-        TextElementConfig.template,
+        Designs.elementConfigs.Text.template,
         'root',
         0,
       );
@@ -727,7 +723,7 @@ describe('DesignStudioStore', () => {
       const firstProperty = getAddedElement().property;
 
       studio.addDesignElementFromTemplate(
-        TextElementConfig.template,
+        Designs.elementConfigs.Text.template,
         'root',
         0,
       );
@@ -745,7 +741,7 @@ describe('DesignStudioStore', () => {
       });
 
       studio.addDesignElementFromTemplate(
-        TextElementConfig.template,
+        Designs.elementConfigs.Text.template,
         'root',
         0,
       );
@@ -821,7 +817,7 @@ describe('DesignStudioStore', () => {
       // Add an element, which lives in the store's flat element map
       // until a save persists it into the design's layout tree
       studio.addDesignElementFromTemplate(
-        TextElementConfig.template,
+        Designs.elementConfigs.Text.template,
         'root',
         0,
       );
@@ -865,5 +861,5 @@ describe('DesignStudioStore', () => {
 function propertyElementTemplate(
   propertyType: PropertyElement['propertyType'],
 ): DesignElementTemplate {
-  return { ...PropertyElementTypeConfig.template, propertyType };
+  return { ...Designs.elementConfigs.Property.template, propertyType };
 }

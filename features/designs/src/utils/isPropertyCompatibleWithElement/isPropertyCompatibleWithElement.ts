@@ -1,7 +1,4 @@
-import {
-  DesignElement,
-  getElementCompatiblePropertyTypes,
-} from '@minddrop/designs';
+import { DesignElement, Designs } from '@minddrop/designs';
 import { PropertyType } from '@minddrop/properties';
 import { FlatDesignElement } from '../../types';
 import { isStaticContentElement } from '../isStaticContentElement';
@@ -27,5 +24,7 @@ export function isPropertyCompatibleWithElement(
   }
 
   // The element must be able to render the property type
-  return getElementCompatiblePropertyTypes(element).includes(propertyType);
+  return Designs.getElementCompatiblePropertyTypes(element).includes(
+    propertyType,
+  );
 }

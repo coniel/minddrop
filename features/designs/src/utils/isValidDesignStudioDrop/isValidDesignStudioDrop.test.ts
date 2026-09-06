@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { TextElementConfig } from '@minddrop/designs';
+import { Designs } from '@minddrop/designs';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { DropEventData } from '@minddrop/selection';
 import {
@@ -27,7 +27,7 @@ function createDrop(data: unknown): DropEventData {
 describe('isValidDesignStudioDrop', () => {
   it('returns true for drops carrying design element templates', () => {
     const drop = createDrop({
-      [DesignElementTemplatesDataKey]: [TextElementConfig.template],
+      [DesignElementTemplatesDataKey]: [Designs.elementConfigs.Text.template],
     });
 
     expect(isValidDesignStudioDrop(drop)).toBe(true);
@@ -41,7 +41,7 @@ describe('isValidDesignStudioDrop', () => {
 
   it('returns true for drops carrying both data keys', () => {
     const drop = createDrop({
-      [DesignElementTemplatesDataKey]: [TextElementConfig.template],
+      [DesignElementTemplatesDataKey]: [Designs.elementConfigs.Text.template],
       [DesignElementsDataKey]: [element_text_1],
     });
 

@@ -1,5 +1,5 @@
 import { useLayoutEffect } from 'react';
-import { DesignsIcon } from '@minddrop/designs';
+import { Designs } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
 import { CollectionsMenuItem } from '@minddrop/feature-collections';
 import { DataViewsMenuItem } from '@minddrop/feature-data-views';
@@ -56,7 +56,7 @@ export const AppSidebar: React.FC<SidebarProps> = ({ ...other }) => {
     >
       <Toolbar>
         <ToolbarIconButton
-          icon={DesignsIcon}
+          icon={Designs.constants.Icon}
           color="muted"
           label="designsStudio.open"
           tooltip={{ title: 'designsStudio.open' }}

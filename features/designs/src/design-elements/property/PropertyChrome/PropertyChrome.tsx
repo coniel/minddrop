@@ -1,12 +1,8 @@
 import {
+  Designs,
   PropertyChromeStyles,
   PropertyElement,
   PropertyElementConfig,
-  createPropertyIconCss,
-  createPropertyLabelCss,
-  getPropertyElementConfig,
-  resolveElementStyle,
-  supportsPropertyChrome,
 } from '@minddrop/designs';
 import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import { ContentIcon, Icon } from '@minddrop/ui-primitives';
@@ -55,16 +51,20 @@ export const PropertyChrome: React.FC<PropertyChromeProps> = ({
 
   // The chrome styles resolve with the variant theme styles
   // applied; only value-like style shapes carry the chrome keys
-  const style = resolveElementStyle(
+  const style = Designs.resolveElementStyle(
     element,
     layoutType ?? undefined,
   ) as PropertyChromeStyles;
   const { label, icon } = style;
-  const config = getPropertyElementConfig(element.propertyType, false);
+  const config = Designs.getPropertyElementConfig(element.propertyType, false);
 
   // Nothing enabled, an unconfigured property type, or a variant
   // outside the value-like categories: render the value alone
-  if ((!label && !icon) || !config || !supportsPropertyChrome(element)) {
+  if (
+    (!label && !icon) ||
+    !config ||
+    !Designs.supportsPropertyChrome(element)
+  ) {
     return <>{children}</>;
   }
 
@@ -89,7 +89,7 @@ export const PropertyChrome: React.FC<PropertyChromeProps> = ({
   const labelNode = label && labelText && (
     <span
       className="designs-property-chrome-label"
-      style={createPropertyLabelCss(label)}
+      style={Designs.createPropertyLabelCss(label)}
     >
       {labelText}
     </span>
@@ -97,7 +97,7 @@ export const PropertyChrome: React.FC<PropertyChromeProps> = ({
   const iconNode = icon && iconGlyph && (
     <span
       className="designs-property-chrome-icon"
-      style={createPropertyIconCss(icon)}
+      style={Designs.createPropertyIconCss(icon)}
     >
       {iconGlyph}
     </span>

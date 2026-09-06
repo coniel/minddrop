@@ -1,4 +1,4 @@
-import { DesignRoles, createRoleElement } from '@minddrop/designs';
+import { DesignRoles } from '@minddrop/designs';
 import { DesignStudioStore } from '../DesignStudioStore';
 import { FlatDesignElement } from '../types';
 import { isStudioRootPanelled } from '../utils';
@@ -44,7 +44,7 @@ export function insertRoleElement(
   }
 
   // Instantiate the role's element type
-  const element = createRoleElement(roleId);
+  const element = DesignRoles.createElement(roleId);
 
   // Flatten the new element for the studio's element map. Newly
   // created container elements are always empty. Static-only

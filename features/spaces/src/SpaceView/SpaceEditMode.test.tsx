@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { BuiltInDesignRoles, DesignRoles, Designs } from '@minddrop/designs';
+import { DesignRoles, Designs } from '@minddrop/designs';
 import {
   DesignStudioStore,
   createDesignStudioStore,
@@ -25,7 +25,7 @@ describe('<SpaceEditMode />', () => {
     studio = createDesignStudioStore();
 
     // Register the built-in design roles used by the palette
-    BuiltInDesignRoles.forEach(DesignRoles.register);
+    DesignRoles.constants.BuiltIn.forEach(DesignRoles.register);
 
     // Load the space and its owned design into the stores, and
     // its file into the mock file system so edits can be written

@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { DesignsIcon } from '@minddrop/designs';
+import { Designs } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
 import { Space, Spaces } from '@minddrop/spaces';
 import { ListPanelView, ListPanelViewItem } from '@minddrop/ui-components';
@@ -72,7 +72,7 @@ export const SpacesView: React.FC = () => {
         selectedSpace
           ? [
               {
-                icon: DesignsIcon,
+                icon: Designs.constants.Icon,
                 label: 'spaces.view.actions.edit',
                 tooltip: { title: 'spaces.view.actions.edit' },
                 onClick: handleEditSpace,

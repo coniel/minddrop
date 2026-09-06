@@ -1,11 +1,5 @@
 import { CSSProperties } from 'react';
-import {
-  IconPropertyElement,
-  IconStyle,
-  createIconContainerCss,
-  resolveElementStyle,
-  tokenCssVariable,
-} from '@minddrop/designs';
+import { Designs, IconPropertyElement, IconStyle } from '@minddrop/designs';
 import { ContentIcon, Icon } from '@minddrop/ui-primitives';
 import { useElementProperty } from '../../../DesignPropertiesProvider';
 import { useLayoutType } from '../../../LayoutTypeContext';
@@ -35,14 +29,14 @@ export const IconPropertyRenderer: React.FC<IconPropertyRendererProps> = ({
   // The surrounding layout's type, which theme styles resolve against
   const layoutType = useLayoutType();
   // Resolve the element's style with its variant theme styles applied
-  const style: IconStyle = resolveElementStyle(
+  const style: IconStyle = Designs.resolveElementStyle(
     element,
     layoutType ?? undefined,
   );
   const cssStyle = useElementCssStyle(element);
 
   // The container box CSS, null when the style has no container
-  const containerCss = createIconContainerCss(style);
+  const containerCss = Designs.createIconContainerCss(style);
 
   // Split the margins off the icon CSS so they can move to the
   // container box when one is rendered
@@ -85,7 +79,7 @@ export const IconPropertyRenderer: React.FC<IconPropertyRendererProps> = ({
       style={{
         ...(containerCss ? iconCss : cssStyle),
         ...(style.size && {
-          fontSize: tokenCssVariable('iconSize', style.size),
+          fontSize: Designs.tokenCssVariable('iconSize', style.size),
         }),
         lineHeight: 1,
       }}

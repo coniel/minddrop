@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DesignNotFoundError } from '@minddrop/designs';
+import { Designs } from '@minddrop/designs';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabaseNotFoundError } from '../errors';
@@ -23,7 +23,7 @@ describe('setDatabaseDesign', () => {
   it('throws if a non-null designId points to a missing design', async () => {
     await expect(() =>
       setDatabaseDesign(objectDatabase.id, 'missing-design'),
-    ).rejects.toThrow(DesignNotFoundError);
+    ).rejects.toThrow(Designs.errors.NotFound);
   });
 
   it('assigns the new designId', async () => {

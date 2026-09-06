@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { generatePropertyPlaceholder } from '@minddrop/designs';
+import { Designs } from '@minddrop/designs';
 import { PropertyTypeSelectionMenu } from '@minddrop/feature-properties';
 import { i18n, useTranslation } from '@minddrop/i18n';
 import { PropertySchemaTemplate } from '@minddrop/properties';
@@ -77,7 +77,7 @@ export const DesignStudioLeftPanel: React.FC = () => {
     const draftProperty = {
       ...template,
       name: i18n.t(template.name),
-      placeholder: generatePropertyPlaceholder(template.type),
+      placeholder: Designs.generatePropertyPlaceholder(template.type),
       id: Date.now(),
     } as DraftDesignProperty;
 

@@ -1,6 +1,6 @@
 import {
+  Designs,
   FontWeightToken,
-  FontWeightTokens,
   SpaceToken,
   TextTransform,
 } from '@minddrop/designs';
@@ -40,7 +40,7 @@ export const BadgeStyleEditor: React.FC<StyleEditorProps> = ({ elementId }) => {
         {isEditable('fontWeight') && (
           <TokenSelect
             label={fieldLabelKey('fontWeight')}
-            tokens={FontWeightTokens}
+            tokens={Designs.tokens.FontWeight}
             value={getValue<FontWeightToken>('fontWeight')}
             optionKey={fontWeightOptionKey}
             defaultToken="regular"

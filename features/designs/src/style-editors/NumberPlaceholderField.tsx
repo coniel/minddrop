@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from 'react';
-import { generateNumberPlaceholder } from '@minddrop/designs';
+import { Designs } from '@minddrop/designs';
 import {
   Group,
   IconButton,
@@ -43,7 +43,7 @@ export const NumberPlaceholderField: React.FC<NumberPlaceholderFieldProps> = ({
       return;
     }
 
-    onValueChange(generateNumberPlaceholder(digits));
+    onValueChange(Designs.generateNumberPlaceholder(digits));
   }, [onValueChange, digits]);
 
   // Store the typed number as a string, since placeholders are
@@ -120,7 +120,7 @@ function resizeNumber(value: string, digits: number): string {
 
   // Nothing to resize from, so generate a fresh number
   if (!value) {
-    return generateNumberPlaceholder(digits);
+    return Designs.generateNumberPlaceholder(digits);
   }
 
   if (digits > currentDigits) {

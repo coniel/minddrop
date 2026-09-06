@@ -1,11 +1,7 @@
 import React from 'react';
 import { Collections } from '@minddrop/collections';
 import { DataView, DataViewTypes, DataViews } from '@minddrop/data-views';
-import {
-  CollectionPropertyElement,
-  getPropertyElementConfig,
-  getPropertyElementVariant,
-} from '@minddrop/designs';
+import { CollectionPropertyElement, Designs } from '@minddrop/designs';
 import { DataViewRenderer } from '@minddrop/feature-data-views';
 import { Icon, Text } from '@minddrop/ui-primitives';
 import { useElementProperty } from '../../../DesignPropertiesProvider';
@@ -32,8 +28,8 @@ export const CollectionPropertyRenderer: React.FC<
   const property = useElementProperty(element.id);
 
   // The selected variant is the view type the view renders as
-  const config = getPropertyElementConfig(element.propertyType);
-  const variant = getPropertyElementVariant(config, element.variant);
+  const config = Designs.getPropertyElementConfig(element.propertyType);
+  const variant = Designs.getPropertyElementVariant(config, element.variant);
 
   // The referenced view ID, from the bound property's value
   const viewId =

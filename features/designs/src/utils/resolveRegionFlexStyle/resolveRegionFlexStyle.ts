@@ -1,5 +1,5 @@
 import { CSSProperties } from 'react';
-import { MeasureToken, SpaceToken, contentColumnCss } from '@minddrop/designs';
+import { Designs, MeasureToken, SpaceToken } from '@minddrop/designs';
 
 /**
  * Returns the flex sizing style for a panelled page root's region
@@ -37,7 +37,7 @@ export function resolveRegionFlexStyle(
       overflowY: 'auto',
       marginLeft: 'auto',
       marginRight: 'auto',
-      ...contentColumnCss(contentMaxWidth, contentPadding),
+      ...Designs.contentColumnCss(contentMaxWidth, contentPadding),
     };
   }
 

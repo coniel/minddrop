@@ -1,4 +1,4 @@
-import { isPropertyElement } from '@minddrop/designs';
+import { Designs } from '@minddrop/designs';
 import { DesignStudioStore } from '../DesignStudioStore';
 
 /**
@@ -37,7 +37,7 @@ export async function setElementImage(
   }
 
   // Property elements have no static content to fall back on
-  if (isPropertyElement(element)) {
+  if (Designs.isPropertyElement(element)) {
     return;
   }
 

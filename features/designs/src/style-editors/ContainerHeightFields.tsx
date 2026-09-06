@@ -1,11 +1,9 @@
 import {
   AspectRatio,
+  Designs,
   FillRatio,
   HeightValue,
-  LandscapeAspectRatios,
-  PortraitAspectRatios,
   SizeToken,
-  SizeTokens,
 } from '@minddrop/designs';
 import { TranslationKey } from '@minddrop/i18n';
 import { Stack } from '@minddrop/ui-primitives';
@@ -219,7 +217,10 @@ export const ContainerHeightFields: React.FC<ContainerHeightFieldsProps> = ({
       return;
     }
 
-    if (SizeTokens.indexOf(maxHeight) < SizeTokens.indexOf(minHeight)) {
+    if (
+      Designs.tokens.Size.indexOf(maxHeight) <
+      Designs.tokens.Size.indexOf(minHeight)
+    ) {
       setValue('maxHeight', minHeight);
     }
   }
@@ -239,7 +240,7 @@ export const ContainerHeightFields: React.FC<ContainerHeightFieldsProps> = ({
       {canSize && mode === 'fixed' && (
         <ScaleField
           label={fieldLabelKey('fixedHeight')}
-          steps={SizeTokens}
+          steps={Designs.tokens.Size}
           value={height === 'fill' ? undefined : height}
           stepLabelKey={sizeLabelKey}
           stepHintKey={sizeHintKey}
@@ -263,8 +264,8 @@ export const ContainerHeightFields: React.FC<ContainerHeightFieldsProps> = ({
               label={fieldLabelKey('aspectRatio')}
               steps={
                 orientation === 'portrait'
-                  ? PortraitAspectRatios
-                  : LandscapeAspectRatios
+                  ? Designs.styles.PortraitAspectRatios
+                  : Designs.styles.LandscapeAspectRatios
               }
               value={aspectRatio}
               stepLabelKey={aspectRatioLabelKey}
@@ -297,7 +298,7 @@ export const ContainerHeightFields: React.FC<ContainerHeightFieldsProps> = ({
           {isEditable('minHeight') && (
             <ScaleField
               label={fieldLabelKey('minHeight')}
-              steps={SizeTokens}
+              steps={Designs.tokens.Size}
               value={getValue<SizeToken>('minHeight')}
               stepLabelKey={sizeLabelKey}
               stepHintKey={sizeHintKey}
@@ -310,7 +311,7 @@ export const ContainerHeightFields: React.FC<ContainerHeightFieldsProps> = ({
           {mode === 'auto' && isEditable('maxHeight') && (
             <ScaleField
               label={fieldLabelKey('maxHeight')}
-              steps={SizeTokens}
+              steps={Designs.tokens.Size}
               value={getValue<SizeToken>('maxHeight')}
               stepLabelKey={sizeLabelKey}
               stepHintKey={sizeHintKey}
@@ -356,7 +357,9 @@ function resolveOrientation(ratio: AspectRatio | undefined): Orientation {
     return 'square';
   }
 
-  return PortraitAspectRatios.includes(ratio) ? 'portrait' : 'landscape';
+  return Designs.styles.PortraitAspectRatios.includes(ratio)
+    ? 'portrait'
+    : 'landscape';
 }
 
 /**

@@ -1,8 +1,4 @@
-import {
-  PropertyElement,
-  getPropertyElementConfig,
-  getPropertyElementVariant,
-} from '@minddrop/designs';
+import { Designs, PropertyElement } from '@minddrop/designs';
 import { PropertyChrome } from './PropertyChrome';
 import { propertyRendererMap } from './propertyRendererMap';
 
@@ -23,7 +19,7 @@ export const PropertyDesignElement: React.FC<PropertyDesignElementProps> = ({
   element,
 }) => {
   // Look up the element's property element config
-  const config = getPropertyElementConfig(element.propertyType, false);
+  const config = Designs.getPropertyElementConfig(element.propertyType, false);
 
   // A property type without a config has nothing to render through
   if (!config) {
@@ -31,7 +27,7 @@ export const PropertyDesignElement: React.FC<PropertyDesignElementProps> = ({
   }
 
   // The selected presentation variant decides the renderer
-  const variant = getPropertyElementVariant(config, element.variant);
+  const variant = Designs.getPropertyElementVariant(config, element.variant);
   const Renderer = propertyRendererMap[variant.renderer];
 
   // Guard against renderer keys without a component

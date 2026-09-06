@@ -1,4 +1,4 @@
-import { DesignElement, getElementConfig } from '@minddrop/designs';
+import { DesignElement, Designs } from '@minddrop/designs';
 import { FlatDesignElement } from '../../types';
 
 /**
@@ -15,7 +15,7 @@ export function isStaticContentElement(
   element: DesignElement | FlatDesignElement,
 ): boolean {
   // Nothing to display statically unless the type allows it
-  if (!getElementConfig(element.type).supportsStaticContent) {
+  if (!Designs.getElementConfig(element.type).supportsStaticContent) {
     return false;
   }
 

@@ -1,10 +1,8 @@
 import { useCallback, useRef } from 'react';
 import {
+  Designs,
   EditorStyle,
   FormattedTextPropertyElement,
-  createEditorTitleCss,
-  elementTitleBindingId,
-  resolveElementStyle,
 } from '@minddrop/designs';
 import { MarkdownEditor } from '@minddrop/feature-markdown-editor';
 import { useDesignPreview } from '../../../DesignElements';
@@ -50,7 +48,9 @@ export const EditorPropertyRenderer: React.FC<EditorPropertyRendererProps> = ({
     autoFocusClaimRef.current = claimAutoFocus();
   }
 
-  const titleProperty = useElementProperty(elementTitleBindingId(element.id));
+  const titleProperty = useElementProperty(
+    Designs.elementTitleBindingId(element.id),
+  );
   // Sample body content shown in studio previews
   const placeholder = useElementPlaceholder(element);
   // Sample title text shown in studio previews
@@ -65,7 +65,7 @@ export const EditorPropertyRenderer: React.FC<EditorPropertyRendererProps> = ({
   const layoutType = useLayoutType();
   // Resolve the element's style with its variant theme styles
   // applied; the editor variant styles through the editor shape
-  const style = resolveElementStyle(
+  const style = Designs.resolveElementStyle(
     element,
     layoutType ?? undefined,
   ) as EditorStyle;
@@ -149,7 +149,7 @@ export const EditorPropertyRenderer: React.FC<EditorPropertyRendererProps> = ({
         title={title}
         titleStyle={
           element.titleProperty
-            ? createEditorTitleCss(style, layoutType ?? undefined)
+            ? Designs.createEditorTitleCss(style, layoutType ?? undefined)
             : undefined
         }
         onTitleChange={preview ? undefined : handleTitleChange}

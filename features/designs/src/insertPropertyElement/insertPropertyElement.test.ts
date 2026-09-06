@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { isPropertyElement } from '@minddrop/designs';
+import { Designs } from '@minddrop/designs';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
 import {
   DesignStudioStore,
@@ -33,8 +33,10 @@ describe('insertPropertyElement', () => {
     const inserted = studio.getDesignElement(insertedId, layout_card_1.id);
 
     // It is a property element persisting its property type
-    expect(isPropertyElement(inserted)).toBe(true);
-    expect(isPropertyElement(inserted) && inserted.propertyType).toBe('text');
+    expect(Designs.isPropertyElement(inserted)).toBe(true);
+    expect(Designs.isPropertyElement(inserted) && inserted.propertyType).toBe(
+      'text',
+    );
   });
 
   it('auto-binds the element to a compatible property', () => {

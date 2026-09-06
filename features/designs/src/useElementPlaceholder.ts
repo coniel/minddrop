@@ -1,4 +1,4 @@
-import { getElementConfig, getPropertyElementConfig } from '@minddrop/designs';
+import { Designs } from '@minddrop/designs';
 import { useTranslation } from '@minddrop/i18n';
 import { PropertySchema, PropertyType } from '@minddrop/properties';
 import { useDesignPreview } from './DesignElements';
@@ -64,10 +64,11 @@ export function useElementPlaceholder(element: PlaceholderElement): string {
   // config, falling back to the element type when the property
   // type has none.
   const propertyElementConfig = element.propertyType
-    ? getPropertyElementConfig(element.propertyType, false)
+    ? Designs.getPropertyElementConfig(element.propertyType, false)
     : null;
   const typeLabel = t(
-    propertyElementConfig?.label ?? getElementConfig(element.type).label,
+    propertyElementConfig?.label ??
+      Designs.getElementConfig(element.type).label,
   );
 
   // Static elements display their own content

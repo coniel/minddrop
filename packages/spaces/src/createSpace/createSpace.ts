@@ -1,4 +1,4 @@
-import { Designs, VirtualDesignData, buildLayout } from '@minddrop/designs';
+import { Designs, Layouts, VirtualDesignData } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
 import { i18n } from '@minddrop/i18n';
 import { entityId } from '@minddrop/utils';
@@ -42,7 +42,7 @@ export async function createSpace(
     type: 'space',
     name,
     owner: spaceId,
-    layouts: [buildLayout('space')],
+    layouts: [Layouts.build('space')],
   };
 
   // Generate the space object

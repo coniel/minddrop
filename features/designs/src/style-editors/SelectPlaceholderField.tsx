@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from 'react';
-import { generateBadgePlaceholder } from '@minddrop/designs';
+import { Designs } from '@minddrop/designs';
 import {
   Group,
   IconButton,
@@ -42,7 +42,7 @@ export const SelectPlaceholderField: React.FC<SelectPlaceholderFieldProps> = ({
       return;
     }
 
-    onValueChange(generateBadgePlaceholder(badgeCount));
+    onValueChange(Designs.generateBadgePlaceholder(badgeCount));
   }, [onValueChange, badgeCount]);
 
   // Keep the slider in step with directly typed labels
@@ -73,7 +73,7 @@ export const SelectPlaceholderField: React.FC<SelectPlaceholderFieldProps> = ({
         return;
       }
 
-      onValueChange(generateBadgePlaceholder(newCount));
+      onValueChange(Designs.generateBadgePlaceholder(newCount));
     },
     [onValueChange],
   );

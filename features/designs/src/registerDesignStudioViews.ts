@@ -1,4 +1,4 @@
-import { DesignsIcon } from '@minddrop/designs';
+import { Designs } from '@minddrop/designs';
 import { Views } from '@minddrop/views';
 import { DesignStudio } from './DesignStudio';
 import { DesignStudioViewName, DesignStudioViewTitle } from './constants';
@@ -12,6 +12,6 @@ export function registerDesignStudioViews(): void {
     type: DesignStudioViewName,
     component: DesignStudio,
     title: DesignStudioViewTitle,
-    icon: DesignsIcon,
+    icon: Designs.constants.Icon,
   });
 }

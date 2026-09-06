@@ -1,10 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import {
-  DesignElementTemplate,
-  PropertyElementTypeConfig,
-  TextElementConfig,
-  resolveDesignMediaDirPath,
-} from '@minddrop/designs';
+import { DesignElementTemplate, Designs } from '@minddrop/designs';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { DropEventData } from '@minddrop/selection';
 import {
@@ -70,7 +65,7 @@ const baseEvent = {
 // An image property element, the drop target of the image file
 // drops
 const imageElementTemplate: DesignElementTemplate = {
-  ...PropertyElementTypeConfig.template,
+  ...Designs.elementConfigs.Property.template,
   propertyType: 'image',
 };
 
@@ -136,7 +131,7 @@ describe('handleDropOnDesignElement', () => {
       // The image landed in the design's media directory under the
       // generated file name set as the property's placeholder
       const placeholder = studio.getDesignProperty('Cover')?.placeholder;
-      const mediaDirPath = resolveDesignMediaDirPath(testDesign.id);
+      const mediaDirPath = Designs.resolveMediaDirPath(testDesign.id);
 
       expect(MockFs.exists(`${mediaDirPath}/${placeholder}`)).toBe(true);
     });
@@ -167,7 +162,7 @@ describe('handleDropOnDesignElement', () => {
       // Property elements render bound values only, so the drop
       // leaves the element with nothing of its own
       await vi.waitFor(() => {
-        expect(MockFs.exists(resolveDesignMediaDirPath(testDesign.id))).toBe(
+        expect(MockFs.exists(Designs.resolveMediaDirPath(testDesign.id))).toBe(
           true,
         );
       });
@@ -224,7 +219,7 @@ describe('handleDropOnDesignElement', () => {
         position: 'after',
         data: {
           [DesignElementTemplatesDataKey]: [
-            TextElementConfig.template as DesignElementTemplate,
+            Designs.elementConfigs.Text.template as DesignElementTemplate,
           ],
         },
       };
@@ -242,7 +237,7 @@ describe('handleDropOnDesignElement', () => {
         targetId: containerElement.id,
         data: {
           [DesignElementTemplatesDataKey]: [
-            TextElementConfig.template as DesignElementTemplate,
+            Designs.elementConfigs.Text.template as DesignElementTemplate,
           ],
         },
       };
@@ -262,7 +257,7 @@ describe('handleDropOnDesignElement', () => {
         targetId: containerElement.id,
         data: {
           [DesignElementTemplatesDataKey]: [
-            TextElementConfig.template as DesignElementTemplate,
+            Designs.elementConfigs.Text.template as DesignElementTemplate,
           ],
         },
       };

@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { resolveElementStyle } from '@minddrop/designs';
+import { Designs } from '@minddrop/designs';
 import {
   useActiveLayoutType,
   useDesignStudio,
@@ -81,7 +81,7 @@ export function useStyleEditor(elementId: string): StyleEditor {
 
   // The effective style, with the role or variant theme styles
   // resolved over the element's own
-  const resolvedStyle = resolveElementStyle(
+  const resolvedStyle = Designs.resolveElementStyle(
     element,
     layoutType ?? undefined,
   ) as Record<string, unknown>;

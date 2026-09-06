@@ -1,14 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
   ContainerStyle,
+  Designs,
   FontSizeToken,
-  FontSizeTokens,
   PagePanelSide,
   RootBackground,
   RootStyle,
   TextAlign,
   TypographyStyle,
-  isRoleElement,
 } from '@minddrop/designs';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { i18n } from '@minddrop/i18n';
@@ -930,7 +929,7 @@ const FontSizeField: React.FC = () => {
   return (
     <TokenSelect
       label={fieldLabelKey('fontSize')}
-      tokens={FontSizeTokens}
+      tokens={Designs.tokens.FontSize}
       value={getValue<FontSizeToken>('fontSize')}
       optionKey={fontSizeOptionKey}
       onChange={(value) => setValue('fontSize', value)}
@@ -1221,7 +1220,7 @@ function readRoleVariants(
 
   // The role fields sit alongside the element's own, so they are
   // read through the role element shape
-  if (!isRoleElement(element)) {
+  if (!Designs.isRoleElement(element)) {
     return undefined;
   }
 

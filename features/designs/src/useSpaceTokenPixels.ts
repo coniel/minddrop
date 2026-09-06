@@ -1,5 +1,5 @@
 import { useLayoutEffect, useState } from 'react';
-import { SpaceToken, tokenCssVariable } from '@minddrop/designs';
+import { Designs, SpaceToken } from '@minddrop/designs';
 
 /**
  * Resolves a space token to its current pixel value by measuring
@@ -30,7 +30,7 @@ export function useSpaceTokenPixels(token?: SpaceToken): number {
 
     probe.style.position = 'absolute';
     probe.style.visibility = 'hidden';
-    probe.style.width = tokenCssVariable('space', token);
+    probe.style.width = Designs.tokenCssVariable('space', token);
 
     document.body.appendChild(probe);
     setPixels(probe.getBoundingClientRect().width);

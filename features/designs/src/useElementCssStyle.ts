@@ -1,8 +1,5 @@
 import { CSSProperties } from 'react';
-import {
-  DesignElementStyleSource,
-  createElementCssStyle,
-} from '@minddrop/designs';
+import { DesignElementStyleSource, Designs } from '@minddrop/designs';
 import { useLayoutType } from './LayoutTypeContext';
 import { useParentDirection } from './ParentDirectionContext';
 import { useInsidePropertyChrome } from './PropertyChromeContext';
@@ -23,7 +20,7 @@ export function useElementCssStyle(
   const layoutType = useLayoutType();
   const insidePropertyChrome = useInsidePropertyChrome();
 
-  const css = createElementCssStyle(
+  const css = Designs.createElementCssStyle(
     element,
     parentDirection,
     layoutType ?? undefined,

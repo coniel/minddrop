@@ -1,4 +1,4 @@
-import { isRoleElement } from '@minddrop/designs';
+import { Designs } from '@minddrop/designs';
 import { DesignStudioStore } from '../../DesignStudioStore';
 import { FlatParentDesignElement } from '../../types';
 
@@ -39,7 +39,7 @@ export function isStudioRootPanelled(
 
     return (
       child.type === 'container' &&
-      isRoleElement(child) &&
+      Designs.isRoleElement(child) &&
       child.role === 'page-content'
     );
   });

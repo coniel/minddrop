@@ -1,4 +1,4 @@
-import { DesignTypeLayoutTypes, LayoutType } from '@minddrop/designs';
+import { Designs, LayoutType } from '@minddrop/designs';
 import { Selection } from '@minddrop/selection';
 import { useDesignStudioStore } from '../DesignStudioStore';
 import { PaletteItem } from '../PaletteItem';
@@ -19,7 +19,9 @@ export const LayoutsPalette: React.FC = () => {
   const designType = useDesignStudioStore((state) => state.design?.type);
 
   // The layout types the design type supports
-  const layoutTypes = designType ? DesignTypeLayoutTypes[designType] : [];
+  const layoutTypes = designType
+    ? Designs.constants.TypeLayoutTypes[designType]
+    : [];
 
   // Design types with no layout types have nothing to offer
   if (layoutTypes.length === 0) {

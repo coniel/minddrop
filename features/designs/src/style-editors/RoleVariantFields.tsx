@@ -1,8 +1,4 @@
-import {
-  DesignRoles,
-  getRoleVariantAxes,
-  isRoleElement,
-} from '@minddrop/designs';
+import { DesignRoles, Designs } from '@minddrop/designs';
 import { SelectField, SelectOption, Text } from '@minddrop/ui-primitives';
 import {
   useActiveLayoutType,
@@ -29,7 +25,7 @@ export const RoleVariantFields: React.FC<StyleEditorProps> = ({
   const layoutType = useActiveLayoutType();
 
   // Only role elements carry variants
-  if (!isRoleElement(element)) {
+  if (!Designs.isRoleElement(element)) {
     return null;
   }
 
@@ -41,7 +37,7 @@ export const RoleVariantFields: React.FC<StyleEditorProps> = ({
   }
 
   // The axes offered in the active layout's context
-  const axes = getRoleVariantAxes(role, layoutType ?? undefined);
+  const axes = DesignRoles.getVariantAxes(role, layoutType ?? undefined);
 
   // A role with a single fixed look in this context offers nothing
   // to choose

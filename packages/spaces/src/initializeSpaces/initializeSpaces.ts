@@ -1,4 +1,4 @@
-import { DesignUpdatedEvent, Designs } from '@minddrop/designs';
+import { Designs } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { SpacesStore } from '../SpacesStore';
@@ -41,7 +41,7 @@ export async function initializeSpaces(): Promise<void> {
   Events.on(Fs.events.Changed, 'spaces', (data) => onFileSystemChanged(data));
 
   // Persist space owned design edits back into their space files
-  Events.on(DesignUpdatedEvent, 'spaces', (data) =>
+  Events.on(Designs.events.Updated, 'spaces', (data) =>
     onUpdateVirtualDesign(data),
   );
 

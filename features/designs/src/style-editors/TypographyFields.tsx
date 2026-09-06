@@ -1,13 +1,10 @@
 import {
+  Designs,
   FontFamilyToken,
-  FontFamilyTokens,
   FontSizeToken,
   FontWeightToken,
-  FontWeightTokens,
   LetterSpacingToken,
-  LetterSpacingTokens,
   LineHeightToken,
-  LineHeightTokens,
   TextAlign,
   TextTransform,
 } from '@minddrop/designs';
@@ -154,7 +151,7 @@ export const TypographyFields: React.FC<TypographyFieldsProps> = ({
           {isEditable('fontFamily') && (
             <TokenSelect
               label={fieldLabelKey('fontFamily')}
-              tokens={FontFamilyTokens}
+              tokens={Designs.tokens.FontFamily}
               value={getValue<FontFamilyToken>('fontFamily')}
               optionKey={fontFamilyOptionKey}
               clearOption={{
@@ -170,7 +167,7 @@ export const TypographyFields: React.FC<TypographyFieldsProps> = ({
                 <FlexItem grow={1}>
                   <TokenSelect
                     label={fieldLabelKey('fontWeight')}
-                    tokens={FontWeightTokens}
+                    tokens={Designs.tokens.FontWeight}
                     value={getValue<FontWeightToken>('fontWeight')}
                     optionKey={fontWeightOptionKey}
                     defaultToken="regular"
@@ -205,7 +202,7 @@ export const TypographyFields: React.FC<TypographyFieldsProps> = ({
       {isEditable('lineHeight') && (
         <TokenSelect
           label={fieldLabelKey('lineHeight')}
-          tokens={LineHeightTokens}
+          tokens={Designs.tokens.LineHeight}
           value={getValue<LineHeightToken>('lineHeight')}
           optionKey={lineHeightOptionKey}
           defaultToken="snug"
@@ -215,7 +212,7 @@ export const TypographyFields: React.FC<TypographyFieldsProps> = ({
       {isEditable('letterSpacing') && (
         <TokenSelect
           label={fieldLabelKey('letterSpacing')}
-          tokens={LetterSpacingTokens}
+          tokens={Designs.tokens.LetterSpacing}
           value={getValue<LetterSpacingToken>('letterSpacing')}
           optionKey={letterSpacingOptionKey}
           defaultToken="normal"

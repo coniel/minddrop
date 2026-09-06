@@ -1,4 +1,4 @@
-import { MediaDirName } from '@minddrop/designs';
+import { Designs } from '@minddrop/designs';
 import { Fs } from '@minddrop/file-system';
 import { resolveSpaceBundleDirPath } from './resolveSpaceBundleDirPath';
 
@@ -12,5 +12,8 @@ import { resolveSpaceBundleDirPath } from './resolveSpaceBundleDirPath';
  * @returns The path to the space media directory.
  */
 export function resolveSpaceMediaDirPath(id: string) {
-  return Fs.concatPath(resolveSpaceBundleDirPath(id), MediaDirName);
+  return Fs.concatPath(
+    resolveSpaceBundleDirPath(id),
+    Designs.constants.MediaDirName,
+  );
 }

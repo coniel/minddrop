@@ -1,12 +1,10 @@
 import { useState } from 'react';
 import {
-  BorderEmphases,
   BorderEmphasis,
   BorderLineStyle,
   BorderWidthToken,
-  BorderWidthTokens,
+  Designs,
   RadiusToken,
-  RadiusTokens,
 } from '@minddrop/designs';
 import { createI18nKeyBuilder, useTranslation } from '@minddrop/i18n';
 import {
@@ -40,7 +38,7 @@ const borderEmphasisKey = createI18nKeyBuilder(
  * follows the entry's, so emphasis is the only choice on offer.
  */
 const BorderEmphasisOptions: OptionToggleFieldOption<BorderEmphasis>[] =
-  BorderEmphases.map((emphasis) => ({
+  Designs.styles.BorderEmphases.map((emphasis) => ({
     value: emphasis,
     label: borderEmphasisKey(emphasis, 'label'),
     description: borderEmphasisKey(emphasis, 'description'),
@@ -119,7 +117,7 @@ const LineStyleIcons: Record<BorderLineStyle, React.ReactNode> = {
 // option which stops the side drawing
 const WidthOptions: SelectOption<string>[] = [
   { value: NoneValue, label: borderWidthKey('none', 'label') },
-  ...BorderWidthTokens.map((token) => ({
+  ...Designs.tokens.BorderWidth.map((token) => ({
     value: token,
     label: borderWidthKey(token, 'label'),
   })),
@@ -369,7 +367,7 @@ export const BorderFields: React.FC<BorderFieldsProps> = ({
       {radius && isEditable('borderRadius') && (
         <TokenSelect
           label={fieldLabelKey('radius')}
-          tokens={RadiusTokens}
+          tokens={Designs.tokens.Radius}
           value={getValue<RadiusToken>('borderRadius')}
           optionKey={radiusOptionKey}
           onChange={(value) => setValue('borderRadius', value)}

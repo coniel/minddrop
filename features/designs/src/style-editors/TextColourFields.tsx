@@ -1,4 +1,4 @@
-import { TextColorToken, TextColorTokens } from '@minddrop/designs';
+import { Designs, TextColorToken } from '@minddrop/designs';
 import { TranslationKey, createI18nKeyBuilder } from '@minddrop/i18n';
 import {
   OptionToggleField,
@@ -15,7 +15,7 @@ const textColourKey = createI18nKeyBuilder('designsStudio.style.textColour.');
  * the steps only decide how strongly it shows.
  */
 const TextColorOptions: OptionToggleFieldOption<TextColorToken>[] =
-  TextColorTokens.map((token) => ({
+  Designs.tokens.TextColor.map((token) => ({
     value: token,
     label: textColourKey(token, 'label'),
     description: textColourKey(token, 'description'),

@@ -1,9 +1,4 @@
-import {
-  DesignRoles,
-  getElementConfig,
-  isPropertyElement,
-  isRoleElement,
-} from '@minddrop/designs';
+import { DesignRoles, Designs } from '@minddrop/designs';
 import { useTranslation } from '@minddrop/i18n';
 import { RadioToggleGroup, Text, Toggle } from '@minddrop/ui-primitives';
 import {
@@ -110,7 +105,7 @@ export const ElementContentSection: React.FC<ElementContentSectionProps> = ({
   // mode, so they show no content mode toggle. A role can restrict
   // the same way when it only makes sense rendering bound data.
   const supportsContent =
-    Boolean(getElementConfig(element.type).supportsStaticContent) &&
+    Boolean(Designs.getElementConfig(element.type).supportsStaticContent) &&
     roleMode !== 'bound';
 
   // Static-only roles never bind a property
@@ -119,7 +114,7 @@ export const ElementContentSection: React.FC<ElementContentSectionProps> = ({
   // A property element holds nothing but its binding, so its
   // section is named after the binding and the select inside it
   // goes unlabelled
-  const isProperty = isPropertyElement(element);
+  const isProperty = Designs.isPropertyElement(element);
   const sectionLabel = isProperty
     ? 'designs.property.label'
     : 'designs.content.label';
@@ -202,7 +197,7 @@ function resolveRoleContentMode(
   element: FlatDesignElement,
 ): 'bound' | 'static' | undefined {
   // Elements without a role restrict nothing
-  if (!isRoleElement(element)) {
+  if (!Designs.isRoleElement(element)) {
     return undefined;
   }
 

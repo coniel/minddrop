@@ -1,4 +1,4 @@
-import { Design, resolveDesignMediaDirPath } from '@minddrop/designs';
+import { Design, Designs } from '@minddrop/designs';
 import { PropertiesSchema } from '@minddrop/properties';
 import { TransientViewStateScope } from '@minddrop/ui-primitives';
 import { DesignPropertySchemasProvider } from '../DesignPropertiesProvider';
@@ -32,7 +32,7 @@ export const DesignStudioScope: React.FC<DesignStudioScopeProps> = ({
   const storeMediaDirPath = useDesignStudioStore((state) => state.mediaDirPath);
 
   const mediaDirPath =
-    storeMediaDirPath ?? resolveDesignMediaDirPath(design.id);
+    storeMediaDirPath ?? Designs.resolveMediaDirPath(design.id);
 
   return (
     <DesignPropertySchemasProvider properties={resolveProperties(design)}>

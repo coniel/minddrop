@@ -3,10 +3,9 @@ import { DataViews } from '@minddrop/data-views';
 import {
   ContainerElement,
   DesignElement,
+  Designs,
   Layout,
   RootElement,
-  getPropertyElementConfig,
-  isPropertyElement,
 } from '@minddrop/designs';
 import { getDatabase } from '../../getDatabase';
 import { getDatabaseEntry } from '../../getDatabaseEntry';
@@ -71,14 +70,15 @@ export function createEntryVirtualViews(
     // Find the element in the layout tree to get its view type
     const element = findElementById(layout.tree, elementId);
 
-    if (!element || !isPropertyElement(element, 'collection')) {
+    if (!element || !Designs.isPropertyElement(element, 'collection')) {
       continue;
     }
 
     // The element's variant is the view type the embedded view
     // renders as, defaulting to the collection element's default.
     const viewType =
-      element.variant ?? getPropertyElementConfig('collection').defaultVariant;
+      element.variant ??
+      Designs.getPropertyElementConfig('collection').defaultVariant;
     const collId = virtualCollectionId(entryId, property.name);
     const collName = virtualCollectionName(
       database.name,

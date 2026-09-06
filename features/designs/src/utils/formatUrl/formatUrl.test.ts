@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { generatePropertyPlaceholder } from '@minddrop/designs';
+import { Designs } from '@minddrop/designs';
 import { formatUrl } from './formatUrl';
 
 describe('formatUrl', () => {
@@ -79,7 +79,7 @@ describe('formatUrl', () => {
   });
 
   it('renders every part of the default URL placeholder', () => {
-    const placeholder = generatePropertyPlaceholder('url') ?? '';
+    const placeholder = Designs.generatePropertyPlaceholder('url') ?? '';
     const shown = formatUrl(placeholder);
 
     // Hiding any single part must visibly change the placeholder,

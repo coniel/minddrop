@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { Designs, TextElementConfig } from '@minddrop/designs';
+import { Designs } from '@minddrop/designs';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { cleanup, setup } from '../test-utils';
 import { FlatContainerDesignElement, FlatTextElement } from '../types';
@@ -125,8 +125,16 @@ describe('design studio history', () => {
 
   it('gives each structural edit its own step', () => {
     // Add two elements and move one of them
-    studio.addDesignElementFromTemplate(TextElementConfig.template, 'root', 0);
-    studio.addDesignElementFromTemplate(TextElementConfig.template, 'root', 1);
+    studio.addDesignElementFromTemplate(
+      Designs.elementConfigs.Text.template,
+      'root',
+      0,
+    );
+    studio.addDesignElementFromTemplate(
+      Designs.elementConfigs.Text.template,
+      'root',
+      1,
+    );
 
     const root = studio.getDesignElement<FlatContainerDesignElement>('root');
 

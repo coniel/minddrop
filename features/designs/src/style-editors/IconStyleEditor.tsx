@@ -1,9 +1,8 @@
 import {
   BackgroundEmphasis,
+  Designs,
   IconContainerStyle,
   IconSizeToken,
-  IconSizeTokens,
-  RadiusTokens,
   SpaceToken,
 } from '@minddrop/designs';
 import { BackgroundField } from './BackgroundField';
@@ -70,7 +69,7 @@ export const IconStyleEditor: React.FC<StyleEditorProps> = ({ elementId }) => {
         {isEditable('size') && (
           <TokenSelect
             label={fieldLabelKey('iconSize')}
-            tokens={IconSizeTokens}
+            tokens={Designs.tokens.IconSize}
             value={getValue<IconSizeToken>('size')}
             optionKey={iconSizeOptionKey}
             onChange={(value) => setValue('size', value)}
@@ -99,7 +98,7 @@ export const IconStyleEditor: React.FC<StyleEditorProps> = ({ elementId }) => {
           />
           <TokenSelect
             label={fieldLabelKey('radius')}
-            tokens={RadiusTokens}
+            tokens={Designs.tokens.Radius}
             value={container?.radius}
             optionKey={radiusOptionKey}
             onChange={(value) => setContainerValue('radius', value)}

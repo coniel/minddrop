@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { TextElementConfig } from '@minddrop/designs';
+import { Designs } from '@minddrop/designs';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { Selection } from '@minddrop/selection';
 import {
@@ -99,7 +99,7 @@ describe('<LayoutsPanel />', () => {
       ) as HTMLElement;
 
       dropOnZone(zone, {
-        [DesignElementTemplatesDataKey]: [TextElementConfig.template],
+        [DesignElementTemplatesDataKey]: [Designs.elementConfigs.Text.template],
       });
 
       const root = studio.getDesignElement<FlatParentDesignElement>(

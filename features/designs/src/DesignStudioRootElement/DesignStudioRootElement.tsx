@@ -1,9 +1,5 @@
 import { CSSProperties, useCallback } from 'react';
-import {
-  RootStyle,
-  createBackdropCss,
-  resolveElementStyle,
-} from '@minddrop/designs';
+import { Designs, RootStyle } from '@minddrop/designs';
 import { Fs } from '@minddrop/file-system';
 import { DropEventData } from '@minddrop/selection';
 import { FlexDropContainer } from '@minddrop/ui-drag-and-drop';
@@ -45,7 +41,7 @@ export const DesignStudioRootElement: React.FC<
   // stamped on the root itself
   const layoutType = useLayoutType() ?? element.layoutType;
   // Resolve the root's style with its role styles applied
-  const style: RootStyle = resolveElementStyle(element, layoutType);
+  const style: RootStyle = Designs.resolveElementStyle(element, layoutType);
   const isEmpty = element.children.length === 0;
   const gapPixels = useSpaceTokenPixels(style.gap);
 
@@ -91,7 +87,7 @@ export const DesignStudioRootElement: React.FC<
   const imageSrc = Fs.useImageSrc(imagePath);
 
   // The backdrop overlay CSS, null when the root has none
-  const backdropCss = createBackdropCss(style);
+  const backdropCss = Designs.createBackdropCss(style);
 
   // Select the root element when clicking the root background,
   // activating the containing layout. Only fires when the click

@@ -1,5 +1,5 @@
 import { CSSProperties } from 'react';
-import { DesignElement, resolveElementStyle } from '@minddrop/designs';
+import { DesignElement, Designs } from '@minddrop/designs';
 import { useLayoutType } from '../LayoutTypeContext';
 import './StudioLeafElement.css';
 
@@ -45,7 +45,7 @@ export const StudioLeafElement: React.FC<StudioLeafElementProps> = ({
 
   // Mirror the leaf's resolved sizing onto the wrapper so fills
   // and full widths behave as they would without it
-  const style = resolveElementStyle(element, layoutType ?? undefined);
+  const style = Designs.resolveElementStyle(element, layoutType ?? undefined);
   const sizingCss: CSSProperties = {
     // A filling leaf grows by its share, from a zero basis so the
     // ratio governs the whole height rather than the leftovers

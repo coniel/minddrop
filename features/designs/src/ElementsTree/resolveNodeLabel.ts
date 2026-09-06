@@ -1,11 +1,5 @@
 import { DataViews } from '@minddrop/data-views';
-import {
-  DesignRoles,
-  getElementConfig,
-  getPropertyElementConfig,
-  isPropertyElement,
-  isRoleElement,
-} from '@minddrop/designs';
+import { DesignRoles, Designs } from '@minddrop/designs';
 import { TranslationKey } from '@minddrop/i18n';
 import { UiIconName } from '@minddrop/ui-icons';
 import { FlatDesignElement } from '../types';
@@ -46,19 +40,19 @@ export interface NodeLabel {
  * @returns The element's tree node label.
  */
 export function resolveNodeLabel(element: FlatDesignElement): NodeLabel {
-  const config = getElementConfig(element.type);
+  const config = Designs.getElementConfig(element.type);
 
   // Elements playing a role are named after it, falling back to the
   // element type when the role is not registered
-  const role = isRoleElement(element)
+  const role = Designs.isRoleElement(element)
     ? DesignRoles.get(element.role, false)
     : null;
 
   // Property elements are named after their property element
   // config, falling back to the element type when the property
   // type has none
-  const propertyElementConfig = isPropertyElement(element)
-    ? getPropertyElementConfig(element.propertyType, false)
+  const propertyElementConfig = Designs.isPropertyElement(element)
+    ? Designs.getPropertyElementConfig(element.propertyType, false)
     : null;
 
   const nodeLabel: NodeLabel = {

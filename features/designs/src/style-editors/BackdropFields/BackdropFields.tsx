@@ -1,11 +1,9 @@
 import {
   BackdropBlur,
-  BackdropBlurs,
   BackdropFadeDirection,
   BackdropTint,
   BackdropTintStrength,
-  BackdropTintStrengths,
-  BackdropTints,
+  Designs,
 } from '@minddrop/designs';
 import { createI18nKeyBuilder, useTranslation } from '@minddrop/i18n';
 import { InputLabel, Slider, Stack } from '@minddrop/ui-primitives';
@@ -37,13 +35,12 @@ const backdropBlurKey = createI18nKeyBuilder(
 
 // The blur strengths on offer. No blur is not an option: the
 // collapsed section is what no blur means
-const BlurOptions: OptionToggleFieldOption<BackdropBlur>[] = BackdropBlurs.map(
-  (blur) => ({
+const BlurOptions: OptionToggleFieldOption<BackdropBlur>[] =
+  Designs.styles.BackdropBlurs.map((blur) => ({
     value: blur,
     label: backdropBlurKey(blur, 'label'),
     description: backdropBlurKey(blur, 'description'),
-  }),
-);
+  }));
 
 const backdropTintKey = createI18nKeyBuilder(
   'designsStudio.style.backdropTint.',
@@ -64,7 +61,7 @@ const TintOptions: OptionToggleFieldOption<TintOption>[] = [
     label: backdropTintKey('none', 'label'),
     description: backdropTintKey('none', 'description'),
   },
-  ...BackdropTints.map((tint) => ({
+  ...Designs.styles.BackdropTints.map((tint) => ({
     value: tint,
     label: backdropTintKey(tint, 'label'),
     description: backdropTintKey(tint, 'description'),
@@ -73,7 +70,7 @@ const TintOptions: OptionToggleFieldOption<TintOption>[] = [
 
 // How strongly the tint colours the blur
 const TintStrengthOptions: OptionToggleFieldOption<BackdropTintStrength>[] =
-  BackdropTintStrengths.map((strength) => ({
+  Designs.styles.BackdropTintStrengths.map((strength) => ({
     value: strength,
     label: tintStrengthKey(strength, 'label'),
     description: tintStrengthKey(strength, 'description'),

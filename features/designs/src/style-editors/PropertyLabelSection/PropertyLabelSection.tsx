@@ -1,10 +1,4 @@
-import {
-  PropertyLabelVariant,
-  createPropertyLabelCss,
-  getPropertyElementConfig,
-  isPropertyElement,
-  supportsPropertyChrome,
-} from '@minddrop/designs';
+import { Designs, PropertyLabelVariant } from '@minddrop/designs';
 import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import { useElement } from '../../DesignStudioStore';
 import { PropertyChromeVariantPreview } from '../PropertyChromeVariantPreview';
@@ -50,15 +44,15 @@ export const PropertyLabelSection: React.FC<StyleEditorProps> = ({
   // Only value-like variants render the chrome
   if (
     !element ||
-    !isPropertyElement(element) ||
-    !supportsPropertyChrome(element)
+    !Designs.isPropertyElement(element) ||
+    !Designs.supportsPropertyChrome(element)
   ) {
     return null;
   }
 
   // The text the previews label their value line with: the bound
   // property's name, as the chrome itself renders it
-  const config = getPropertyElementConfig(element.propertyType, false);
+  const config = Designs.getPropertyElementConfig(element.propertyType, false);
   const labelText = element.property ?? (config ? t(config.label) : '');
 
   // Enable the label at its default variant when the section is
@@ -83,7 +77,7 @@ export const PropertyLabelSection: React.FC<StyleEditorProps> = ({
       >
         <span
           className="designs-property-chrome-label"
-          style={createPropertyLabelCss()}
+          style={Designs.createPropertyLabelCss()}
         >
           {labelText}
         </span>

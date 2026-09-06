@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
+  Designs,
   Layout,
   RoleDesignElement,
   TextElement,
-  TextElementConfig,
 } from '@minddrop/designs';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { Selection } from '@minddrop/selection';
@@ -171,7 +171,7 @@ describe('<ElementsTree />', () => {
     ) as HTMLElement;
 
     dropOnNode(rootNode, {
-      [DesignElementTemplatesDataKey]: [TextElementConfig.template],
+      [DesignElementTemplatesDataKey]: [Designs.elementConfigs.Text.template],
     });
 
     const root = studio.getDesignElement<FlatParentDesignElement>(
@@ -199,7 +199,7 @@ describe('<ElementsTree />', () => {
     ) as HTMLElement;
 
     dropOnNode(rootNode, {
-      [DesignElementTemplatesDataKey]: [TextElementConfig.template],
+      [DesignElementTemplatesDataKey]: [Designs.elementConfigs.Text.template],
     });
 
     const root = studio.getDesignElement<FlatParentDesignElement>(
@@ -267,7 +267,7 @@ describe('<ElementsTree />', () => {
     ) as HTMLElement;
 
     dropOnNode(dropZone, {
-      [DesignElementTemplatesDataKey]: [TextElementConfig.template],
+      [DesignElementTemplatesDataKey]: [Designs.elementConfigs.Text.template],
     });
 
     const root = studio.getDesignElement<FlatParentDesignElement>(

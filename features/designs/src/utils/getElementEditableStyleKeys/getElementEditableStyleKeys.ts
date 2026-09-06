@@ -1,10 +1,4 @@
-import {
-  DesignRoles,
-  getPropertyElementConfig,
-  getPropertyElementVariant,
-  isPropertyElement,
-  isRoleElement,
-} from '@minddrop/designs';
+import { DesignRoles, Designs } from '@minddrop/designs';
 import { FlatDesignElement } from '../../types';
 
 /**
@@ -21,8 +15,11 @@ export function getElementEditableStyleKeys(
   element: FlatDesignElement,
 ): string[] | null {
   // Property elements offer their selected variant's editable keys
-  if (isPropertyElement(element)) {
-    const config = getPropertyElementConfig(element.propertyType, false);
+  if (Designs.isPropertyElement(element)) {
+    const config = Designs.getPropertyElementConfig(
+      element.propertyType,
+      false,
+    );
 
     // A property type without a config restricts nothing, matching
     // how style resolution degrades to the element's own style
@@ -31,12 +28,13 @@ export function getElementEditableStyleKeys(
     }
 
     return (
-      getPropertyElementVariant(config, element.variant).editableStyles ?? null
+      Designs.getPropertyElementVariant(config, element.variant)
+        .editableStyles ?? null
     );
   }
 
   // Elements without a role restrict nothing
-  if (!isRoleElement(element)) {
+  if (!Designs.isRoleElement(element)) {
     return null;
   }
 

@@ -1,13 +1,4 @@
-import {
-  DesignRoles,
-  LayoutType,
-  getPropertyElementConfig,
-  getPropertyElementVariant,
-  isPropertyElement,
-  isRoleElement,
-  resolvePropertyElementStyle,
-  resolveRoleStyle,
-} from '@minddrop/designs';
+import { DesignRoles, Designs, LayoutType } from '@minddrop/designs';
 import { FlatDesignElement } from '../../types';
 
 /**
@@ -29,8 +20,11 @@ export function getElementLockedStyleKeys(
   // Property elements lock the theme style keys their variant's
   // editable whitelist does not cover; whitelisted theme keys act
   // as overridable defaults
-  if (isPropertyElement(element)) {
-    const config = getPropertyElementConfig(element.propertyType, false);
+  if (Designs.isPropertyElement(element)) {
+    const config = Designs.getPropertyElementConfig(
+      element.propertyType,
+      false,
+    );
 
     // A property type without a config locks nothing, matching how
     // style resolution degrades to the element's own style
@@ -39,7 +33,7 @@ export function getElementLockedStyleKeys(
     }
 
     // The whitelist the theme keys are checked against
-    const editableStyles = getPropertyElementVariant(
+    const editableStyles = Designs.getPropertyElementVariant(
       config,
       element.variant,
     ).editableStyles;
@@ -52,13 +46,17 @@ export function getElementLockedStyleKeys(
     // Theme keys outside the whitelist are locked
     return new Set(
       Object.keys(
-        resolvePropertyElementStyle(config, element.variant, layoutType),
+        Designs.resolvePropertyElementStyle(
+          config,
+          element.variant,
+          layoutType,
+        ),
       ).filter((key) => !editableStyles.includes(key)),
     );
   }
 
   // Elements without a role lock nothing
-  if (!isRoleElement(element)) {
+  if (!Designs.isRoleElement(element)) {
     return new Set();
   }
 
@@ -73,6 +71,8 @@ export function getElementLockedStyleKeys(
 
   // Every key the role's context-resolved style applies is locked
   return new Set(
-    Object.keys(resolveRoleStyle(role, element.roleVariants, layoutType)),
+    Object.keys(
+      DesignRoles.resolveStyle(role, element.roleVariants, layoutType),
+    ),
   );
 }

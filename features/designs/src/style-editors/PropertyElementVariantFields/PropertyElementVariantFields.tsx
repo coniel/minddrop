@@ -1,17 +1,11 @@
 import {
   BadgeStyle,
+  Designs,
   FieldStyle,
   LayoutType,
   PropertyElementConfig,
   PropertyElementVariantConfig,
   TypographyStyle,
-  createBadgeCss,
-  createFieldCss,
-  createTypographyCss,
-  getPropertyElementConfig,
-  getPropertyElementVariant,
-  isPropertyElement,
-  resolvePropertyElementStyle,
 } from '@minddrop/designs';
 import { useTranslation } from '@minddrop/i18n';
 import { ContentColors } from '@minddrop/ui-theme';
@@ -43,12 +37,12 @@ export const PropertyElementVariantFields: React.FC<StyleEditorProps> = ({
   const layoutType = useActiveLayoutType();
 
   // Only property elements carry presentation variants
-  if (!isPropertyElement(element)) {
+  if (!Designs.isPropertyElement(element)) {
     return null;
   }
 
   // A property type without a config offers nothing to choose
-  const config = getPropertyElementConfig(element.propertyType, false);
+  const config = Designs.getPropertyElementConfig(element.propertyType, false);
 
   if (!config) {
     return null;
@@ -60,7 +54,7 @@ export const PropertyElementVariantFields: React.FC<StyleEditorProps> = ({
   }
 
   // The presentation variant the element renders as
-  const variant = getPropertyElementVariant(config, element.variant);
+  const variant = Designs.getPropertyElementVariant(config, element.variant);
 
   const propertyElement = element;
 
@@ -140,7 +134,11 @@ export const VariantSample: React.FC<VariantSampleProps> = ({
   }
 
   // The styling the variant renders the sample in
-  const style = resolvePropertyElementStyle(config, variant.id, layoutType);
+  const style = Designs.resolvePropertyElementStyle(
+    config,
+    variant.id,
+    layoutType,
+  );
 
   // The single-line cap applies through a modifier class
   const sampleClassName = truncate
@@ -159,7 +157,7 @@ export const VariantSample: React.FC<VariantSampleProps> = ({
     return (
       <span
         className={sampleClassName}
-        style={createFieldCss(style as FieldStyle)}
+        style={Designs.createFieldCss(style as FieldStyle)}
       >
         {t(variant.sample)}
       </span>
@@ -169,7 +167,7 @@ export const VariantSample: React.FC<VariantSampleProps> = ({
   return (
     <span
       className={sampleClassName}
-      style={createTypographyCss(style as TypographyStyle)}
+      style={Designs.createTypographyCss(style as TypographyStyle)}
     >
       {t(variant.sample)}
     </span>
@@ -203,7 +201,7 @@ const BadgesSample: React.FC<BadgesSampleProps> = ({ labels, style }) => {
     marginBottom: _bottom,
     marginLeft: _left,
     ...chipCss
-  } = createBadgeCss(style);
+  } = Designs.createBadgeCss(style);
 
   // The colours the sample chips cycle through
   const palette = ContentColors.filter((color) => color !== 'default');

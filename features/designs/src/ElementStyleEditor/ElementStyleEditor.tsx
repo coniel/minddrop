@@ -1,10 +1,5 @@
 import { useState } from 'react';
-import {
-  LayoutType,
-  defaultRootStyle,
-  getElementStyleCategory,
-  isPropertyElement,
-} from '@minddrop/designs';
+import { Designs, LayoutType } from '@minddrop/designs';
 import { TranslationKey, createI18nKeyBuilder } from '@minddrop/i18n';
 import { PanelView } from '@minddrop/ui-components';
 import {
@@ -64,7 +59,9 @@ export const ElementStyleEditor: React.FC = () => {
       // A root resets to its layout type's default styling. A
       // panelled root's row arrangement is structure rather than
       // styling, so it survives the reset along with the panels.
-      const defaults = defaultRootStyle(element.layoutType ?? undefined);
+      const defaults = Designs.defaultRootStyle(
+        element.layoutType ?? undefined,
+      );
 
       studio.setDesignElement(selectedElementId, {
         ...element,
@@ -101,12 +98,13 @@ export const ElementStyleEditor: React.FC = () => {
   const nodeLabel = resolveNodeLabel(element);
   // Property elements take their category from their selected
   // presentation variant
-  const StyleEditor = styleCategoryEditors[getElementStyleCategory(element)];
+  const StyleEditor =
+    styleCategoryEditors[Designs.getElementStyleCategory(element)];
   // Only element types which format their value have one; property
   // elements format per their property type
   const FormatEditor =
     elementFormatEditorMap[
-      isPropertyElement(element) ? element.propertyType : element.type
+      Designs.isPropertyElement(element) ? element.propertyType : element.type
     ];
 
   // The reset appears once there is styling to clear

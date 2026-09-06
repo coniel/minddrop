@@ -1,7 +1,7 @@
 import {
   AspectRatio,
-  AspectRatios,
   BackgroundEmphasis,
+  Designs,
   HeightValue,
 } from '@minddrop/designs';
 import { BackgroundField } from './BackgroundField';
@@ -46,7 +46,7 @@ export const EmbedStyleEditor: React.FC<StyleEditorProps> = ({ elementId }) => {
         {isEditable('aspectRatio') && (
           <TokenSelect
             label={fieldLabelKey('aspectRatio')}
-            tokens={AspectRatios}
+            tokens={Designs.styles.AspectRatios}
             value={getValue<AspectRatio>('aspectRatio')}
             optionKey={aspectRatioOptionKey}
             onChange={(value) => setValue('aspectRatio', value)}

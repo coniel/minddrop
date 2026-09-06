@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, it } from 'vitest';
-import { DatabaseDesign, resolveDesignMediaDirPath } from '@minddrop/designs';
+import { DatabaseDesign, Designs } from '@minddrop/designs';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { cleanup as cleanupRender, render, screen } from '@minddrop/test-utils';
 import {
@@ -44,7 +44,7 @@ describe('<DesignStudioScope />', () => {
   it('provides the design media directory', () => {
     renderScope(design_books, <MediaDirConsumer />);
 
-    screen.getByText(resolveDesignMediaDirPath(design_books.id));
+    screen.getByText(Designs.resolveMediaDirPath(design_books.id));
   });
 
   it('provides no properties for designs which have none', () => {

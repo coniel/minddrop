@@ -1,10 +1,4 @@
-import {
-  PropertyIconVariant,
-  createPropertyIconCss,
-  getPropertyElementConfig,
-  isPropertyElement,
-  supportsPropertyChrome,
-} from '@minddrop/designs';
+import { Designs, PropertyIconVariant } from '@minddrop/designs';
 import { TranslationKey } from '@minddrop/i18n';
 import { ContentIcon, Icon } from '@minddrop/ui-primitives';
 import { useDesignStudioStore, useElement } from '../../DesignStudioStore';
@@ -57,15 +51,15 @@ export const PropertyIconSection: React.FC<StyleEditorProps> = ({
   // Only value-like variants render the chrome
   if (
     !element ||
-    !isPropertyElement(element) ||
-    !supportsPropertyChrome(element)
+    !Designs.isPropertyElement(element) ||
+    !Designs.supportsPropertyChrome(element)
   ) {
     return null;
   }
 
   // The glyph the previews render: the bound property's own icon,
   // falling back to the type icon, as the chrome itself does
-  const config = getPropertyElementConfig(element.propertyType, false);
+  const config = Designs.getPropertyElementConfig(element.propertyType, false);
   const propertyIcon = properties.find(
     (property) => property.name === element.property,
   )?.icon;
@@ -98,7 +92,7 @@ export const PropertyIconSection: React.FC<StyleEditorProps> = ({
       <PropertyChromeVariantPreview above={variant === 'above'}>
         <span
           className="designs-property-chrome-icon"
-          style={createPropertyIconCss()}
+          style={Designs.createPropertyIconCss()}
         >
           {iconGlyph()}
         </span>

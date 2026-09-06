@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { isRoleElement } from '@minddrop/designs';
+import { Designs } from '@minddrop/designs';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
 import {
   DesignStudioStore,
@@ -33,7 +33,7 @@ describe('insertRoleElement', () => {
     const inserted = studio.getDesignElement(insertedId, layout_card_1.id);
 
     // It plays the role and uses the role's element type
-    expect(isRoleElement(inserted) && inserted.role).toBe('heading');
+    expect(Designs.isRoleElement(inserted) && inserted.role).toBe('heading');
     expect(inserted.type).toBe('text');
   });
 

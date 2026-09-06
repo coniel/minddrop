@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from 'react';
-import { generateLoremIpsum } from '@minddrop/designs';
+import { Designs } from '@minddrop/designs';
 import {
   Group,
   IconButton,
@@ -54,7 +54,7 @@ export const TextPlaceholderField: React.FC<TextPlaceholderFieldProps> = ({
       return;
     }
 
-    onValueChange(generateLoremIpsum(wordCounts[sliderStep - 1]));
+    onValueChange(Designs.generateLoremIpsum(wordCounts[sliderStep - 1]));
   }, [onValueChange, sliderStep, wordCounts]);
 
   // Regenerate the placeholder whenever the length changes
@@ -76,7 +76,7 @@ export const TextPlaceholderField: React.FC<TextPlaceholderFieldProps> = ({
         return;
       }
 
-      onValueChange(generateLoremIpsum(wordCounts[newStep - 1]));
+      onValueChange(Designs.generateLoremIpsum(wordCounts[newStep - 1]));
     },
     [onValueChange, wordCounts],
   );

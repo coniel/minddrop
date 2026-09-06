@@ -1,8 +1,4 @@
-import {
-  FontFamilyToken,
-  FontFamilyTokens,
-  getPropertyElementConfig,
-} from '@minddrop/designs';
+import { Designs, FontFamilyToken } from '@minddrop/designs';
 import {
   useActiveLayoutType,
   useDesignStudio,
@@ -37,7 +33,7 @@ import { useStyleEditor } from './useStyleEditor';
 
 // The title element config, whose size variants the title bar
 // renders at
-const TitleElementConfig = getPropertyElementConfig('title');
+const TitleElementConfig = Designs.getPropertyElementConfig('title');
 
 /**
  * The keys of the nested title style the section governs.
@@ -166,7 +162,7 @@ export const EditorStyleEditor: React.FC<StyleEditorProps> = ({
         {isEditable('fontFamily') && (
           <TokenSelect
             label={fieldLabelKey('fontFamily')}
-            tokens={FontFamilyTokens}
+            tokens={Designs.tokens.FontFamily}
             value={getValue<FontFamilyToken>('fontFamily')}
             optionKey={fontFamilyOptionKey}
             clearOption={{

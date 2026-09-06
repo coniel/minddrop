@@ -1,9 +1,5 @@
 import { CSSProperties, useCallback } from 'react';
-import {
-  ContainerStyle,
-  createBackdropCss,
-  resolveElementStyle,
-} from '@minddrop/designs';
+import { ContainerStyle, Designs } from '@minddrop/designs';
 import { Fs } from '@minddrop/file-system';
 import { DropEventData } from '@minddrop/selection';
 import { FlexDropContainer } from '@minddrop/ui-drag-and-drop';
@@ -61,7 +57,7 @@ export const ContainerStudioDesignElement: React.FC<
   // The surrounding layout's type, which role styles resolve against
   const layoutType = useLayoutType();
   // Resolve the element's style with its role styles applied
-  const style: ContainerStyle = resolveElementStyle(
+  const style: ContainerStyle = Designs.resolveElementStyle(
     element,
     layoutType ?? undefined,
   );
@@ -90,7 +86,7 @@ export const ContainerStudioDesignElement: React.FC<
   const imageSrc = Fs.useImageSrc(imagePath);
 
   // The backdrop overlay CSS, null when the container has none
-  const backdropCss = createBackdropCss(style);
+  const backdropCss = Designs.createBackdropCss(style);
 
   const elementCssStyle = useElementCssStyle(element);
 

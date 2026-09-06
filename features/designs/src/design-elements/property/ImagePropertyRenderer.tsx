@@ -1,8 +1,4 @@
-import {
-  ImagePropertyElement,
-  ImageStyle,
-  resolveElementStyle,
-} from '@minddrop/designs';
+import { Designs, ImagePropertyElement, ImageStyle } from '@minddrop/designs';
 import { Image } from '@minddrop/ui-components';
 import { Icon } from '@minddrop/ui-primitives';
 import { useElementProperty } from '../../DesignPropertiesProvider';
@@ -35,7 +31,7 @@ export const ImagePropertyRenderer: React.FC<ImagePropertyRendererProps> = ({
   const layoutType = useLayoutType();
   // The element's effective style. The selected variant decides the
   // style shape at render time, which the element type cannot narrow.
-  const style = resolveElementStyle(
+  const style = Designs.resolveElementStyle(
     element,
     layoutType ?? undefined,
   ) as ImageStyle;

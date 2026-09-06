@@ -10,12 +10,6 @@ import {
   Layouts,
   PagePanelSide,
   RootElement,
-  disablePagePanel,
-  enablePagePanel,
-  getElementCompatiblePropertyTypes,
-  getElementConfig,
-  resolveAutoBinding,
-  resolveDesignMediaDirPath,
 } from '@minddrop/designs';
 import {
   PropertiesSchema,
@@ -823,7 +817,7 @@ export function createDesignStudioStore(): DesignStudioStore {
         propertyValues,
         saveHandler: null,
         propertyBindingEnabled: true,
-        mediaDirPath: resolveDesignMediaDirPath(design.id),
+        mediaDirPath: Designs.resolveMediaDirPath(design.id),
         initialized: true,
         undoStack: [],
         redoStack: [],
@@ -1418,7 +1412,7 @@ export function createDesignStudioStore(): DesignStudioStore {
       }
 
       const compatiblePropertyTypes =
-        getElementCompatiblePropertyTypes(element);
+        Designs.getElementCompatiblePropertyTypes(element);
 
       // Elements which render no property have nothing to bind
       if (compatiblePropertyTypes.length === 0) {
@@ -1440,7 +1434,7 @@ export function createDesignStudioStore(): DesignStudioStore {
         return;
       }
 
-      const property = resolveAutoBinding(
+      const property = Designs.resolveAutoBinding(
         design,
         layout,
         compatiblePropertyTypes,
@@ -1492,7 +1486,7 @@ export function createDesignStudioStore(): DesignStudioStore {
         parent: parentId,
       } as FlatDesignElement;
 
-      const config = getElementConfig(element.type);
+      const config = Designs.getElementConfig(element.type);
 
       // Without property binding, content elements start in static
       // mode so they are immediately editable. Element types which
@@ -1505,7 +1499,7 @@ export function createDesignStudioStore(): DesignStudioStore {
         // arrives ready to render
         bindElementToProperty(
           element,
-          getElementCompatiblePropertyTypes(element),
+          Designs.getElementCompatiblePropertyTypes(element),
           layoutId,
         );
       }
@@ -1563,11 +1557,11 @@ export function createDesignStudioStore(): DesignStudioStore {
     },
 
     addPagePanel: (side) => {
-      applyPagePanelTransform((root) => enablePagePanel(root, side));
+      applyPagePanelTransform((root) => Layouts.enablePagePanel(root, side));
     },
 
     removePagePanel: (side) => {
-      applyPagePanelTransform((root) => disablePagePanel(root, side));
+      applyPagePanelTransform((root) => Layouts.disablePagePanel(root, side));
     },
 
     updateElementStyle: (id, key, value) => {
@@ -1950,7 +1944,7 @@ export function createDesignStudioStore(): DesignStudioStore {
       return;
     }
 
-    const property = resolveAutoBinding(
+    const property = Designs.resolveAutoBinding(
       design,
       layout,
       compatiblePropertyTypes,

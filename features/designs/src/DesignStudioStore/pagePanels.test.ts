@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { TextElementConfig } from '@minddrop/designs';
+import { Designs } from '@minddrop/designs';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { cleanup, setup } from '../test-utils';
 import { FlatContainerDesignElement } from '../types';
@@ -79,7 +79,11 @@ describe('page panels', () => {
     const childrenBefore = getRoot().children;
 
     // Attempt to add an element directly to the panelled root
-    studio.addDesignElementFromTemplate(TextElementConfig.template, 'root', 0);
+    studio.addDesignElementFromTemplate(
+      Designs.elementConfigs.Text.template,
+      'root',
+      0,
+    );
 
     // The panel row is unchanged
     expect(getRoot().children).toEqual(childrenBefore);

@@ -1,4 +1,4 @@
-import { createPropertyElement } from '@minddrop/designs';
+import { Designs } from '@minddrop/designs';
 import { PropertyType } from '@minddrop/properties';
 import { DesignStudioStore } from '../DesignStudioStore';
 import { FlatDesignElement } from '../types';
@@ -50,7 +50,7 @@ export function insertPropertyElement(
 
   // Instantiate the property element, auto-bound to a compatible
   // unbound property
-  const element = createPropertyElement(propertyType, design, layout);
+  const element = Designs.createPropertyElement(propertyType, design, layout);
 
   // Flatten the new element for the studio's element map
   const flatElement: FlatDesignElement = { ...element, parent: parentId };

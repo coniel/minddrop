@@ -1,10 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import {
-  Design,
-  Designs,
-  Layout,
-  resolveDesignMediaDirPath,
-} from '@minddrop/designs';
+import { Design, Designs, Layout } from '@minddrop/designs';
 import { useTranslation } from '@minddrop/i18n';
 import {
   Button,
@@ -244,7 +239,7 @@ const DesignCardPreview: React.FC<DesignCardPreviewProps> = ({ design }) => {
       {bounds ? (
         <DesignPreviewProvider value>
           <DesignPropertySchemasProvider properties={properties}>
-            <MediaDirProvider value={resolveDesignMediaDirPath(design.id)}>
+            <MediaDirProvider value={Designs.resolveMediaDirPath(design.id)}>
               <div
                 ref={canvasRef}
                 className="designs-dashboard-card-preview-canvas"

@@ -1,4 +1,4 @@
-import { DefaultContainerStyle, Layout } from '@minddrop/designs';
+import { Designs, Layout } from '@minddrop/designs';
 
 function generateSpaceLayoutFixture(number: number): Layout {
   return {
@@ -9,7 +9,7 @@ function generateSpaceLayoutFixture(number: number): Layout {
       id: 'root',
       type: 'root',
       layoutType: 'space',
-      style: { ...DefaultContainerStyle },
+      style: { ...Designs.styles.DefaultContainerStyle },
       children: [],
     },
     frame: { x: 0, y: 0, width: 800, height: 600 },

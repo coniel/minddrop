@@ -1,4 +1,4 @@
-import { HeightValue, SizeTokens } from '@minddrop/designs';
+import { Designs, HeightValue } from '@minddrop/designs';
 import { SelectField, SelectOption } from '@minddrop/ui-primitives';
 import { fieldLabelKey, sizeHintKey, sizeOptionKey } from './styleI18nKeys';
 
@@ -57,11 +57,13 @@ export const HeightField: React.FC<HeightFieldProps> = ({
  * keyword, then the fixed box sizes.
  */
 function buildHeightOptions(): SelectOption<string>[] {
-  const sizeOptions: SelectOption<string>[] = SizeTokens.map((token) => ({
-    value: token,
-    label: sizeOptionKey(token, 'label'),
-    hint: sizeHintKey(token),
-  }));
+  const sizeOptions: SelectOption<string>[] = Designs.tokens.Size.map(
+    (token) => ({
+      value: token,
+      label: sizeOptionKey(token, 'label'),
+      hint: sizeHintKey(token),
+    }),
+  );
 
   return [
     { value: UnsetValue, label: 'designsStudio.style.height.auto.label' },

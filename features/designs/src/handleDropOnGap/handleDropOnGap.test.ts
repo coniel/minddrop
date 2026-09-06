@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DesignElementTemplate, TextElementConfig } from '@minddrop/designs';
+import { DesignElementTemplate, Designs } from '@minddrop/designs';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { DropEventData } from '@minddrop/selection';
 import {
@@ -103,7 +103,7 @@ describe('handleDropOnGap', () => {
         ...baseEvent,
         data: {
           [DesignElementTemplatesDataKey]: [
-            TextElementConfig.template as DesignElementTemplate,
+            Designs.elementConfigs.Text.template as DesignElementTemplate,
           ],
         },
       };
@@ -118,7 +118,7 @@ describe('handleDropOnGap', () => {
         ...baseEvent,
         data: {
           [DesignElementTemplatesDataKey]: [
-            TextElementConfig.template as DesignElementTemplate,
+            Designs.elementConfigs.Text.template as DesignElementTemplate,
           ],
         },
       };

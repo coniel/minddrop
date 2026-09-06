@@ -1,9 +1,4 @@
-import {
-  DesignElement,
-  getElementConfig,
-  isEditorVariantElement,
-  isEmptyPropertyValue,
-} from '@minddrop/designs';
+import { DesignElement, Designs } from '@minddrop/designs';
 import { useDesignPreview } from './DesignElements';
 import {
   useDesignProperties,
@@ -39,18 +34,18 @@ export function useElementHidden(element: DesignElement): boolean {
   }
 
   // Element types whose empty state is expected always render
-  if (getElementConfig(element.type).emptyBehavior !== 'hide') {
+  if (Designs.getElementConfig(element.type).emptyBehavior !== 'hide') {
     return false;
   }
 
   // Editor variants always render: an empty editor is where
   // writing starts
-  if (isEditorVariantElement(element)) {
+  if (Designs.isEditorVariantElement(element)) {
     return false;
   }
 
   // A present value is always shown
-  if (!isEmptyPropertyValue(property?.value)) {
+  if (!Designs.isEmptyPropertyValue(property?.value)) {
     return false;
   }
 

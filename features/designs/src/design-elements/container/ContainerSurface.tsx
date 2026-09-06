@@ -2,11 +2,10 @@ import { CSSProperties, useRef } from 'react';
 import {
   ContainerElement,
   ContainerStyle,
+  Designs,
   ObjectFit,
   PagePanelElement,
   RootElement,
-  createBackdropCss,
-  resolveElementStyle,
 } from '@minddrop/designs';
 import { Fs } from '@minddrop/file-system';
 import { useMeasuredImageWidth } from '@minddrop/utils';
@@ -67,7 +66,7 @@ export const ContainerSurface: React.FC<ContainerSurfaceProps> = ({
   // Resolve the element's style with its role styles applied. The
   // background is left out of the shape since the root retypes it,
   // and only the shared keys are read here
-  const style: Omit<ContainerStyle, 'background'> = resolveElementStyle(
+  const style: Omit<ContainerStyle, 'background'> = Designs.resolveElementStyle(
     element,
     layoutType ?? undefined,
   );
@@ -93,7 +92,7 @@ export const ContainerSurface: React.FC<ContainerSurfaceProps> = ({
   const paintedImageSrc = isMeasured ? imageSrc : null;
 
   // The backdrop overlay CSS, null when the container has none
-  const backdropCss = createBackdropCss(style);
+  const backdropCss = Designs.createBackdropCss(style);
 
   const containerCssStyle: CSSProperties = {
     ...useElementCssStyle(element),

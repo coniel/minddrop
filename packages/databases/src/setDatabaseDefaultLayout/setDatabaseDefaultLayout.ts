@@ -1,4 +1,4 @@
-import { Designs, LayoutNotFoundError } from '@minddrop/designs';
+import { Designs, Layouts } from '@minddrop/designs';
 import { getDatabase } from '../getDatabase';
 import { LayoutContext, layoutContextBaseType } from '../layoutContexts';
 import { Database } from '../types';
@@ -13,7 +13,7 @@ import { updateDatabase } from '../updateDatabase';
  * @returns The updated database.
  *
  * @throws {DatabaseNotFoundError} If the database does not exist.
- * @throws {LayoutNotFoundError} If the layout is not a layout of the context's base type in the database's design.
+ * @throws {Layouts.errors.NotFound} If the layout is not a layout of the context's base type in the database's design.
  */
 export async function setDatabaseDefaultLayout(
   databaseId: string,
@@ -35,7 +35,7 @@ export async function setDatabaseDefaultLayout(
   );
 
   if (!layout || layout.type !== layoutContextBaseType[context]) {
-    throw new LayoutNotFoundError(layoutId);
+    throw new Layouts.errors.NotFound(layoutId);
   }
 
   // Pin the layout as the default for the context

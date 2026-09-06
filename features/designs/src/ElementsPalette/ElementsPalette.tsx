@@ -1,14 +1,12 @@
 import { DataViewTypes } from '@minddrop/data-views';
 import {
-  DataViewElementConfig,
   DesignElementConfig,
   DesignRoleConfig,
   DesignRoles,
   DesignType,
+  Designs,
   ElementGroup,
   LayoutType,
-  getElementConfigs,
-  getPropertyElementConfigs,
 } from '@minddrop/designs';
 import { TranslationKey } from '@minddrop/i18n';
 import { MenuGroup, MenuLabel } from '@minddrop/ui-primitives';
@@ -42,16 +40,19 @@ export const ElementsPalette: React.FC = () => {
   const dataViewTypes = DataViewTypes.useAll();
 
   // Property elements insertable in the current design and layout
-  const propertyElements = getPropertyElementConfigs().filter((config) =>
-    isElementInContext(config.context, { designType, layoutType }),
+  const propertyElements = Designs.getPropertyElementConfigs().filter(
+    (config) => isElementInContext(config.context, { designType, layoutType }),
   );
 
   // Data view elements are listed one per registered data view
   // type, gated on the element being insertable here
-  const dataViewsInContext = isElementInContext(DataViewElementConfig.context, {
-    designType,
-    layoutType,
-  });
+  const dataViewsInContext = isElementInContext(
+    Designs.elementConfigs.DataView.context,
+    {
+      designType,
+      layoutType,
+    },
+  );
 
   // Grouped element types and roles insertable in the current
   // design and layout
@@ -113,7 +114,7 @@ function resolveElementGroups(
   roles: DesignRoleConfig[];
 }[] {
   // Element types insertable in the current design and layout
-  const configs = getElementConfigs().filter((config) =>
+  const configs = Designs.getElementConfigs().filter((config) =>
     isElementInContext(config.context, { designType, layoutType }),
   );
 
