@@ -10,7 +10,9 @@
     "build:dev": "electrobun build",
     "build:prod": "electrobun build --env=stable",
     "build:canary": "electrobun build --env=canary",
-    "start": "bun run dev"
+    "start": "bun run dev",
+    "lint": "eslint . --max-warnings 0",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@minddrop/databases": "workspace:*",
