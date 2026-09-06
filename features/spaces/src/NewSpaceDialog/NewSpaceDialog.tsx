@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Events } from '@minddrop/events';
-import { DefaultSpaceIcon, Spaces } from '@minddrop/spaces';
+import { Spaces } from '@minddrop/spaces';
 import {
   Button,
   ContentIcon,
@@ -43,7 +43,7 @@ export const NewSpaceDialog: React.FC<NewSpaceDialogProps> = ({
   defaultOpen = false,
 }) => {
   const [dialogOpen, setDialogOpen] = useState(defaultOpen);
-  const [icon, setIcon] = useState(DefaultSpaceIcon);
+  const [icon, setIcon] = useState(Spaces.constants.EntityDefaultIcon);
   const {
     fieldProps,
     validateAllAsync,
@@ -57,7 +57,7 @@ export const NewSpaceDialog: React.FC<NewSpaceDialogProps> = ({
     // Reset the dialog state after a short delay to allow the
     // close animation to complete
     setTimeout(() => {
-      setIcon(DefaultSpaceIcon);
+      setIcon(Spaces.constants.EntityDefaultIcon);
       reset();
     }, 300);
   }, [reset]);
@@ -84,7 +84,7 @@ export const NewSpaceDialog: React.FC<NewSpaceDialogProps> = ({
   }
 
   function handleClearIcon() {
-    setIcon(DefaultSpaceIcon);
+    setIcon(Spaces.constants.EntityDefaultIcon);
   }
 
   async function handleCreate() {
@@ -118,7 +118,7 @@ export const NewSpaceDialog: React.FC<NewSpaceDialogProps> = ({
               {/* The blank space is the only template for now */}
               <MenuItem
                 active
-                contentIcon={DefaultSpaceIcon}
+                contentIcon={Spaces.constants.EntityDefaultIcon}
                 label="spaces.templates.blank.name"
               />
             </MenuGroup>

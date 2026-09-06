@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
-import { DefaultSpaceIcon, Spaces } from '@minddrop/spaces';
+import { Spaces } from '@minddrop/spaces';
 import { render, screen, userEvent, waitFor } from '@minddrop/test-utils';
 import { OpenNewSpaceDialogEvent } from '../events';
 import { cleanup, setup } from '../test-utils';
@@ -61,7 +61,7 @@ describe('<NewSpaceDialog />', () => {
       const space = Spaces.Store.getAllArray()[0];
 
       expect(space.name).toBe('Media');
-      expect(space.icon).toBe(DefaultSpaceIcon);
+      expect(space.icon).toBe(Spaces.constants.EntityDefaultIcon);
     });
   });
 });

@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { DesignsIcon } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
-import { Space, Spaces, SpacesIcon } from '@minddrop/spaces';
+import { Space, Spaces } from '@minddrop/spaces';
 import { ListPanelView, ListPanelViewItem } from '@minddrop/ui-components';
 import { IconButton } from '@minddrop/ui-primitives';
 import { Views } from '@minddrop/views';
@@ -61,7 +61,7 @@ export const SpacesView: React.FC = () => {
 
   return (
     <ListPanelView
-      icon={SpacesIcon}
+      icon={Spaces.constants.Icon}
       title="spaces.labels.spaces"
       items={items}
       selectedItem={selectedItem}

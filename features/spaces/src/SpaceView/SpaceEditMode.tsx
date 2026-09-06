@@ -18,7 +18,7 @@ import {
   useDesignStudio,
   useDesignStudioStore,
 } from '@minddrop/feature-designs';
-import { Space, resolveSpaceMediaDirPath } from '@minddrop/spaces';
+import { Space, Spaces } from '@minddrop/spaces';
 import { PanelView } from '@minddrop/ui-components';
 import { IconButton, Panel, ScrollArea } from '@minddrop/ui-primitives';
 import { isEditableTarget, useDeleteKey } from '@minddrop/utils';
@@ -85,7 +85,7 @@ const SpaceEditSession: React.FC<SpaceEditSessionProps> = ({ space }) => {
       onSave: async (updatedLayout) => {
         await Designs.update(space.design.id, { layouts: [updatedLayout] });
       },
-      mediaDirPath: resolveSpaceMediaDirPath(space.id),
+      mediaDirPath: Spaces.resolveMediaDirPath(space.id),
     });
 
     return () => {

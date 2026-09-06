@@ -1,7 +1,3 @@
-export * from './Spaces';
+export type * from './types';
+export type * from './events';
 export * as Spaces from './Spaces';
-export * from './errors';
-export * from './events';
-export * from './constants';
-export * from './types';
-export * from './utils';

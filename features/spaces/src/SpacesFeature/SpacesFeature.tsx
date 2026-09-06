@@ -1,13 +1,12 @@
 import { useEffect } from 'react';
 import { Events } from '@minddrop/events';
 import { Tabs } from '@minddrop/feature-views';
-import { SpaceDeletedEvent, SpaceUpdatedEvent, Spaces } from '@minddrop/spaces';
-import {
   CloseViewEvent,
   DefaultViewAreaId,
   OpenViewEvent,
   UpdateViewEvent,
 } from '@minddrop/views';
+import { Spaces } from '@minddrop/spaces';
 import { NewSpaceDialog } from '../NewSpaceDialog';
 import { SpaceViewProps } from '../SpaceView';
 import { SpaceViewStateStore } from '../SpaceViewStateStore';
@@ -98,8 +97,8 @@ export const SpacesFeature: React.FC = () => {
 
     // Update the space's open view when the space changes
     // (e.g. renamed or re-iconed)
-    Events.addListener(SpaceUpdatedEvent, EventListenerId, (data) => {
       Events.dispatch(UpdateViewEvent, {
+    Events.addListener(Spaces.events.Updated, EventListenerId, (data) => {
         id: spaceViewId(data.updated.id),
         title: data.updated.name,
         icon: data.updated.icon,
@@ -108,7 +107,7 @@ export const SpacesFeature: React.FC = () => {
 
     // Close the space's open view and drop its view state when
     // the space is deleted
-    Events.addListener(SpaceDeletedEvent, EventListenerId, (data) => {
+    Events.addListener(Spaces.events.Deleted, EventListenerId, (data) => {
       SpaceViewStateStore.remove(data.id);
 
       Events.dispatch(CloseViewEvent, {
@@ -119,8 +118,8 @@ export const SpacesFeature: React.FC = () => {
     return () => {
       Events.removeListener(OpenSpaceViewEvent, EventListenerId);
       Events.removeListener(OpenSpacesViewEvent, EventListenerId);
-      Events.removeListener(SpaceUpdatedEvent, EventListenerId);
-      Events.removeListener(SpaceDeletedEvent, EventListenerId);
+      Events.removeListener(Spaces.events.Updated, EventListenerId);
+      Events.removeListener(Spaces.events.Deleted, EventListenerId);
     };
   }, []);
 
