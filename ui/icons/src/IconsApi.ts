@@ -1,5 +1,6 @@
 export { initializeIcons as initialize } from './initializeIcons';
 export { stringifyIcon as stringify } from './stringifyIcon';
+export { contentIconFromName as fromName } from './contentIconFromName';
 export { parseIcon as parse } from './parseIcon';
 export { resolveContentIconColor as resolveColor } from './resolveContentIconColor';
 export { applyContentIconColor as applyColor } from './applyContentIconColor';
