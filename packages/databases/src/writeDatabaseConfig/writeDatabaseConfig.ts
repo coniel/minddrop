@@ -1,7 +1,7 @@
 import { Fs } from '@minddrop/file-system';
 import { Paths } from '@minddrop/utils';
 import { getDatabase } from '../getDatabase';
-import { databaseConfigFilePath } from '../utils';
+import { resolveDatabaseConfigFilePath } from '../utils';
 
 /**
  * Writes the config of the specified database to the file system.
@@ -24,5 +24,5 @@ export async function writeDatabaseConfig(id: string): Promise<void> {
   }
 
   // Write the config to the file system
-  await Fs.writeJsonFile(databaseConfigFilePath(path), config);
+  await Fs.writeJsonFile(resolveDatabaseConfigFilePath(path), config);
 }

@@ -2,7 +2,7 @@ import { Fs, FsEntry } from '@minddrop/file-system';
 import { Paths, entityId, isEntityId } from '@minddrop/utils';
 import { DatabaseConfigFileName } from '../constants';
 import { Database } from '../types';
-import { databaseConfigFilePath } from '../utils';
+import { resolveDatabaseConfigFilePath } from '../utils';
 
 /**
  * Reads all database configs from a workspace directory by
@@ -153,7 +153,7 @@ async function writeDatabaseConfigFile(database: Database): Promise<void> {
   const { path, name: _name, ...config } = database;
 
   try {
-    await Fs.writeJsonFile(databaseConfigFilePath(path), config);
+    await Fs.writeJsonFile(resolveDatabaseConfigFilePath(path), config);
   } catch {
     // A failed write-back simply re-mints on the next launch
   }

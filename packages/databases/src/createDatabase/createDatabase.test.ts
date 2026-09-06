@@ -9,7 +9,7 @@ import { setDatabaseDefault } from '../setDatabaseDefault';
 import { MockFs, cleanup, parentDir, setup } from '../test-utils';
 import { fetchWebpageMetadataAutomation } from '../test-utils/fixtures/database-automations.fixtures';
 import { Database, DatabaseId } from '../types';
-import { databaseConfigFilePath } from '../utils';
+import { resolveDatabaseConfigFilePath } from '../utils';
 import { CreateDatabaseOptions, createDatabase } from './createDatabase';
 
 const options: Omit<CreateDatabaseOptions, 'automations'> = {
@@ -134,11 +134,13 @@ describe('createDatabase', () => {
   it('creates the database directory', async () => {
     await createDatabase(options);
 
-    expect(MockFs.exists(databaseConfigFilePath(newDatabase.path))).toBe(true);
+    expect(MockFs.exists(resolveDatabaseConfigFilePath(newDatabase.path))).toBe(
+      true,
+    );
   });
 
   it('writes the database config to the file system', async () => {
-    const configFilePath = databaseConfigFilePath(newDatabase.path);
+    const configFilePath = resolveDatabaseConfigFilePath(newDatabase.path);
 
     const { path, name, ...expectedConfig } = await createDatabase(options);
 

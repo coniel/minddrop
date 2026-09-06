@@ -8,7 +8,7 @@ import {
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { Database, DatabaseEntryTemplate } from '../../types';
 import {
-  databaseConfigFilePath,
+  resolveDatabaseConfigFilePath,
   resolveEntryTemplateConfigFilePath,
   resolveEntryTemplateFilePath,
 } from '../../utils';
@@ -328,7 +328,7 @@ export const databaseFiles: (MockFileDescriptor | string)[] = [
   parentDir,
   // Individual database config files (path and name are not persisted)
   ...databases.map(({ path, name, ...config }) => ({
-    path: databaseConfigFilePath(path),
+    path: resolveDatabaseConfigFilePath(path),
     textContent: JSON.stringify(config, null, 2),
   })),
   // Property file directories

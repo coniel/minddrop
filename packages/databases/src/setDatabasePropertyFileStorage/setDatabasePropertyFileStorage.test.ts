@@ -21,7 +21,7 @@ import {
   setup,
 } from '../test-utils';
 import { Database } from '../types';
-import { databaseConfigFilePath } from '../utils';
+import { resolveDatabaseConfigFilePath } from '../utils';
 import { setDatabasePropertyFileStorage } from './setDatabasePropertyFileStorage';
 
 describe('setDatabasePropertyFileStorage', () => {
@@ -299,7 +299,7 @@ describe('setDatabasePropertyFileStorage', () => {
 
     // The persisted config reflects the new mode
     const config = MockFs.readJsonFile<Database>(
-      databaseConfigFilePath(rootStorageDatabase.path),
+      resolveDatabaseConfigFilePath(rootStorageDatabase.path),
     );
     expect(config.propertyFileStorage).toBe('common');
   });

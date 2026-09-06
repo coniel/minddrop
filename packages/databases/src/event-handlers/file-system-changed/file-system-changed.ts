@@ -2,7 +2,10 @@ import { FileSystemChangedEventData, Fs } from '@minddrop/file-system';
 import { Paths } from '@minddrop/utils';
 import { getDatabaseBackendAdapter } from '../../DatabaseBackendAdapter';
 import { getAllDatabases } from '../../getAllDatabases';
-import { databaseConfigFilePath, isDatabaseConfigFilePath } from '../../utils';
+import {
+  isDatabaseConfigFilePath,
+  resolveDatabaseConfigFilePath,
+} from '../../utils';
 
 // How long to wait for changes to stop arriving before scanning.
 // A scan covers the whole workspace, so a burst of changes should
@@ -73,7 +76,7 @@ async function isDatabaseChange(
   // watcher did not report separately. Only worth the check for
   // creations, modifications being far more frequent.
   if (kind === 'created') {
-    return Fs.exists(databaseConfigFilePath(path));
+    return Fs.exists(resolveDatabaseConfigFilePath(path));
   }
 
   return false;

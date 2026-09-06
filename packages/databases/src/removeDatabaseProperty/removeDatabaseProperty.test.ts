@@ -8,7 +8,7 @@ import {
   setup,
 } from '../test-utils';
 import { Database } from '../types';
-import { databaseConfigFilePath } from '../utils';
+import { resolveDatabaseConfigFilePath } from '../utils';
 import { removeDatabaseProperty } from './removeDatabaseProperty';
 
 const propertyNameToRemove = objectDatabase.properties[0].name;
@@ -43,7 +43,7 @@ describe('removeDatabaseProperty', () => {
     await removeDatabaseProperty(objectDatabase.id, propertyNameToRemove);
 
     const result = MockFs.readJsonFile<Database>(
-      databaseConfigFilePath(updatedDatabase.path),
+      resolveDatabaseConfigFilePath(updatedDatabase.path),
     );
 
     expect(result.properties).toEqual(updatedDatabase.properties);

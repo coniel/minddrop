@@ -9,7 +9,7 @@ import {
   objectDatabase,
   setup,
 } from '../../test-utils';
-import { databaseConfigFilePath } from '../../utils';
+import { resolveDatabaseConfigFilePath } from '../../utils';
 import { onFileSystemChanged } from './file-system-changed';
 
 describe('onFileSystemChanged', () => {
@@ -58,7 +58,10 @@ describe('onFileSystemChanged', () => {
 
   it('scans the workspace when a config file appears outside every known database', async () => {
     await onFileSystemChanged(
-      change(databaseConfigFilePath(`${Paths.workspace}/Unknown`), 'created'),
+      change(
+        resolveDatabaseConfigFilePath(`${Paths.workspace}/Unknown`),
+        'created',
+      ),
     );
 
     await flushDebounce();
@@ -72,7 +75,7 @@ describe('onFileSystemChanged', () => {
     // A database directory copied in whole, the platform watcher
     // reporting only the directory itself
     MockFs.addFiles([
-      { path: databaseConfigFilePath(databasePath), textContent: '{}' },
+      { path: resolveDatabaseConfigFilePath(databasePath), textContent: '{}' },
     ]);
 
     await onFileSystemChanged(change(databasePath, 'created'));

@@ -29,7 +29,7 @@ import {
   setupRecordingTestSqlDatabase,
 } from '../test-utils';
 import { Database } from '../types';
-import { databaseConfigFilePath } from '../utils';
+import { resolveDatabaseConfigFilePath } from '../utils';
 import { setDatabaseEntrySerializer } from './setDatabaseEntrySerializer';
 
 describe('setDatabaseEntrySerializer', () => {
@@ -163,7 +163,7 @@ describe('setDatabaseEntrySerializer', () => {
 
     // The persisted config reflects the new serializer
     const config = MockFs.readJsonFile<Database>(
-      databaseConfigFilePath(objectDatabase.path),
+      resolveDatabaseConfigFilePath(objectDatabase.path),
     );
     expect(config.entrySerializer).toBe('json');
   });

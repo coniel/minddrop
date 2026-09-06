@@ -3,11 +3,11 @@ import { DatabasesStore } from '../DatabasesStore';
 import { DatabaseNotFoundError } from '../errors';
 import { getDatabase } from '../getDatabase';
 import { MockFs, cleanup, objectDatabase, setup } from '../test-utils';
-import { databaseConfigFilePath } from '../utils';
+import { resolveDatabaseConfigFilePath } from '../utils';
 import { normalizeDatabaseConfigIds } from './normalizeDatabaseConfigIds';
 
 // Path to the database's config file
-const configPath = databaseConfigFilePath(objectDatabase.path);
+const configPath = resolveDatabaseConfigFilePath(objectDatabase.path);
 
 describe('normalizeDatabaseConfigIds', () => {
   beforeEach(setup);

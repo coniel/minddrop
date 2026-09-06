@@ -11,7 +11,7 @@ import {
   setup,
   urlDatabase,
 } from '../test-utils';
-import { databaseConfigFilePath } from '../utils';
+import { resolveDatabaseConfigFilePath } from '../utils';
 import { renameDatabase } from './renameDatabase';
 
 const newName = 'Renamed Objects';
@@ -33,10 +33,10 @@ describe('renameDatabase', () => {
     await renameDatabase(objectDatabase.id, newName);
 
     // The config file should now live under the new directory
-    expect(MockFs.exists(databaseConfigFilePath(newPath))).toBe(true);
-    expect(MockFs.exists(databaseConfigFilePath(objectDatabase.path))).toBe(
-      false,
-    );
+    expect(MockFs.exists(resolveDatabaseConfigFilePath(newPath))).toBe(true);
+    expect(
+      MockFs.exists(resolveDatabaseConfigFilePath(objectDatabase.path)),
+    ).toBe(false);
   });
 
   it('updates the database in the store in place', async () => {
