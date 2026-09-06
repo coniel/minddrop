@@ -3,7 +3,6 @@ import {
   Query,
   QueryLimitNode,
   QueryNodeCounts,
-  updateQueryNode,
 } from '@minddrop/queries';
 import {
   CanvasConnectionDragTarget,
@@ -68,7 +67,7 @@ export const QueryLimitNodeCard: React.FC<QueryLimitNodeCardProps> = ({
   // Persist a count change, treating cleared inputs as uncapped
   function handleCountChange(count: number | null): void {
     Queries.update(query.id, {
-      nodes: updateQueryNode<QueryLimitNode>(query.nodes, node.id, {
+      nodes: Queries.updateNode<QueryLimitNode>(query.nodes, node.id, {
         count: count && count > 0 ? Math.floor(count) : 0,
       }),
     });

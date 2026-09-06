@@ -1,14 +1,13 @@
 import { useMemo, useRef } from 'react';
 import { DatabaseEntries, Databases } from '@minddrop/databases';
-import { TagsSelectField } from '@minddrop/ui-tags';
 import { createI18nKeyBuilder, useTranslation } from '@minddrop/i18n';
 import { PropertySchema } from '@minddrop/properties';
 import {
+  Queries,
   QueryDateValue,
   QueryFilterValue,
   QueryOperator,
   QueryRelativeDatePreset,
-  VALUE_LESS_QUERY_OPERATORS,
 } from '@minddrop/queries';
 import {
   Combobox,
@@ -20,6 +19,7 @@ import {
   Stack,
   TextInput,
 } from '@minddrop/ui-primitives';
+import { TagsSelectField } from '@minddrop/ui-tags';
 
 export interface QueryNodeValueInputProps {
   /**
@@ -70,7 +70,7 @@ export const QueryNodeValueInput: React.FC<QueryNodeValueInputProps> = ({
   const debounceTimeoutRef = useRef<number>(undefined);
 
   // Value-less operators take no input
-  if (!operator || VALUE_LESS_QUERY_OPERATORS.has(operator)) {
+  if (!operator || Queries.constants.ValueLessOperators.has(operator)) {
     return null;
   }
 

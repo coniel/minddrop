@@ -1,10 +1,5 @@
 import { useMemo, useState } from 'react';
-import {
-  DefaultQueryIcon,
-  Queries,
-  QueriesIcon,
-  Query,
-} from '@minddrop/queries';
+import { Queries, Query } from '@minddrop/queries';
 import { ListPanelView, ListPanelViewItem } from '@minddrop/ui-components';
 import { IconButton } from '@minddrop/ui-primitives';
 import { Views } from '@minddrop/views';
@@ -48,7 +43,7 @@ export const QueriesView: React.FC = () => {
 
   return (
     <ListPanelView
-      icon={QueriesIcon}
+      icon={Queries.constants.Icon}
       title="queries.labels.queries"
       items={items}
       selectedItem={selectedItem}
@@ -82,6 +77,6 @@ function toListItem(query: Query): ListPanelViewItem {
   return {
     id: query.id,
     label: query.name,
-    contentIcon: DefaultQueryIcon,
+    contentIcon: Queries.constants.EntityDefaultIcon,
   };
 }

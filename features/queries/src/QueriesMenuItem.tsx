@@ -1,6 +1,6 @@
 import { Events } from '@minddrop/events';
 import { Tabs } from '@minddrop/feature-views';
-import { QueriesIcon } from '@minddrop/queries';
+import { Queries } from '@minddrop/queries';
 import { MenuItem } from '@minddrop/ui-primitives';
 import { OpenQueriesViewEvent, QueriesViewName } from './events';
 
@@ -19,7 +19,7 @@ export const QueriesMenuItem: React.FC = () => {
     <MenuItem
       muted
       active={active}
-      icon={QueriesIcon}
+      icon={Queries.constants.Icon}
       label="queries.labels.queries"
       onClick={handleClick}
     />

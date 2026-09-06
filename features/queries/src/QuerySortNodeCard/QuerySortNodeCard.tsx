@@ -5,7 +5,6 @@ import {
   Query,
   QueryNodeCounts,
   QuerySortNode,
-  updateQueryNode,
 } from '@minddrop/queries';
 import {
   CanvasConnectionDragTarget,
@@ -99,7 +98,7 @@ export const QuerySortNodeCard: React.FC<QuerySortNodeCardProps> = ({
     );
 
     Queries.update(query.id, {
-      nodes: updateQueryNode<QuerySortNode>(query.nodes, node.id, {
+      nodes: Queries.updateNode<QuerySortNode>(query.nodes, node.id, {
         property: propertyName,
         propertyType: property?.type || '',
       }),
@@ -109,7 +108,7 @@ export const QuerySortNodeCard: React.FC<QuerySortNodeCardProps> = ({
   // Persist a direction change
   function handleDirectionChange(direction: 'ascending' | 'descending'): void {
     Queries.update(query.id, {
-      nodes: updateQueryNode<QuerySortNode>(query.nodes, node.id, {
+      nodes: Queries.updateNode<QuerySortNode>(query.nodes, node.id, {
         direction,
       }),
     });

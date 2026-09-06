@@ -3,11 +3,9 @@ import { Databases } from '@minddrop/databases';
 import { useTranslation } from '@minddrop/i18n';
 import {
   Queries,
-  QueriesIcon,
   QueryNodeCounts,
   QuerySourceNode,
   QuerySourceReference,
-  updateQueryNode,
 } from '@minddrop/queries';
 import {
   CanvasConnectionDragTarget,
@@ -120,7 +118,7 @@ export const QuerySourceNodeCard: React.FC<QuerySourceNodeCardProps> = ({
         return {
           label: sourceQuery.name,
           value,
-          icon: QueriesIcon,
+          icon: Queries.constants.Icon,
         };
       });
 
@@ -151,7 +149,7 @@ export const QuerySourceNodeCard: React.FC<QuerySourceNodeCardProps> = ({
     }
 
     Queries.update(queryId, {
-      nodes: updateQueryNode<QuerySourceNode>(query.nodes, node.id, {
+      nodes: Queries.updateNode<QuerySourceNode>(query.nodes, node.id, {
         sources: picked.flatMap((option) => {
           const source = sources.get(option.value);
 

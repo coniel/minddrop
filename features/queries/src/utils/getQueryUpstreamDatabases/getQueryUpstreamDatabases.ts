@@ -1,5 +1,5 @@
 import { Database, Databases } from '@minddrop/databases';
-import { Queries, Query, getQueryDatabases } from '@minddrop/queries';
+import { Queries, Query } from '@minddrop/queries';
 
 /**
  * Returns the databases emitted by the source nodes upstream of
@@ -54,7 +54,7 @@ export function getQueryUpstreamDatabases(
           return;
         }
 
-        getQueryDatabases(sourcedQuery).forEach((databaseId) => {
+        Queries.getDatabases(sourcedQuery).forEach((databaseId) => {
           if (!databaseIds.includes(databaseId)) {
             databaseIds.push(databaseId);
           }

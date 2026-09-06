@@ -1,16 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Databases } from '@minddrop/databases';
-import {
-  Queries,
-  QueryNode,
-  QueryNodeType,
-  addQueryConnection,
-  createQueryNode,
-  removeQueryConnection,
-  removeQueryNode,
-  removeQueryNodeConnections,
-  updateQueryNode,
-} from '@minddrop/queries';
+import { Queries, QueryNode, QueryNodeType } from '@minddrop/queries';
 import { Selection } from '@minddrop/selection';
 import {
   Canvas,
@@ -200,7 +190,7 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
         Queries.update(queryId, {
           connections: selection.ids.reduce(
             (current, connectionId) =>
-              removeQueryConnection(current, connectionId),
+              Queries.removeConnection(current, connectionId),
             query.connections,
           ),
         });
@@ -214,7 +204,7 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
       const graph = selection.ids.reduce(
         (current, nodeId) => ({
           ...current,
-          ...removeQueryNode(current, nodeId),
+          ...Queries.removeNode(current, nodeId),
         }),
         query,
       );
@@ -238,7 +228,10 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
         return;
       }
 
-      const connections = removeQueryNodeConnections(query.connections, nodeId);
+      const connections = Queries.removeNodeConnections(
+        query.connections,
+        nodeId,
+      );
 
       // Persist only when the node had connections
       if (connections !== query.connections) {
@@ -272,7 +265,7 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
         return;
       }
 
-      const connections = addQueryConnection(
+      const connections = Queries.addConnection(
         query,
         connection.from.nodeId,
         connection.to.nodeId,
@@ -296,7 +289,7 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
 
       // Reject targets the graph rejects a connection into
       if (
-        addQueryConnection(query, from.nodeId, target.nodeId) ===
+        Queries.addConnection(query, from.nodeId, target.nodeId) ===
         query.connections
       ) {
         return null;
@@ -337,10 +330,10 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
 
       // Validate against the graph without the original, which
       // the re-route replaces
-      const removed = removeQueryConnection(query.connections, original.id);
+      const removed = Queries.removeConnection(query.connections, original.id);
 
       if (
-        addQueryConnection({ ...query, connections: removed }, from, to) ===
+        Queries.addConnection({ ...query, connections: removed }, from, to) ===
         removed
       ) {
         return null;
@@ -376,7 +369,7 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
       // Drops on empty canvas remove the connection
       if (!reconnection.target) {
         Queries.update(queryId, {
-          connections: removeQueryConnection(
+          connections: Queries.removeConnection(
             query.connections,
             reconnection.connectionId,
           ),
@@ -402,8 +395,8 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
         reconnection.end === 'to' ? reconnection.target.nodeId : original.to;
 
       // Replace the connection, validating the new route
-      const removed = removeQueryConnection(query.connections, original.id);
-      const connections = addQueryConnection(
+      const removed = Queries.removeConnection(query.connections, original.id);
+      const connections = Queries.addConnection(
         { ...query, connections: removed },
         from,
         to,
@@ -424,7 +417,7 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
         return;
       }
 
-      const node = createQueryNode(type, {
+      const node = Queries.createNode(type, {
         x: Math.round(point.x - QUERY_NODE_WIDTHS[type] / 2),
         y: Math.round(point.y),
       });
@@ -450,7 +443,7 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
         return;
       }
 
-      const node = createQueryNode(type, {
+      const node = Queries.createNode(type, {
         x: Math.round(point.x - QUERY_NODE_WIDTHS[type] / 2),
         y: Math.round(point.y),
       });
@@ -459,14 +452,17 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
 
       // Replace the connection with a pair routing the flow
       // through the new node
-      let connections = removeQueryConnection(query.connections, connection.id);
+      let connections = Queries.removeConnection(
+        query.connections,
+        connection.id,
+      );
 
-      connections = addQueryConnection(
+      connections = Queries.addConnection(
         { ...query, nodes, connections },
         connection.from,
         node.id,
       );
-      connections = addQueryConnection(
+      connections = Queries.addConnection(
         { ...query, nodes, connections },
         node.id,
         connection.to,
@@ -565,7 +561,7 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
       }
 
       // Align the node's input port with the release point
-      const node = createQueryNode(type, {
+      const node = Queries.createNode(type, {
         x: Math.round(nodeTypePicker.point.x),
         y: Math.round(nodeTypePicker.point.y - QUERY_NODE_PORT_Y),
       });
@@ -573,7 +569,7 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
       const nodes = [...query.nodes, node];
 
       // Connect the drag's origin node into the new node
-      const connections = addQueryConnection(
+      const connections = Queries.addConnection(
         { ...query, nodes },
         nodeTypePicker.from.nodeId,
         node.id,
@@ -601,7 +597,7 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
       }
 
       Queries.update(queryId, {
-        nodes: updateQueryNode(query.nodes, nodeId, {
+        nodes: Queries.updateNode(query.nodes, nodeId, {
           x: frame.x,
           y: frame.y,
         }),
@@ -619,7 +615,7 @@ const QueryBuilderCanvasContent: React.FC<QueryBuilderCanvasProps> = ({
 
       const nodes = Object.entries(frames).reduce(
         (current, [nodeId, frame]) =>
-          updateQueryNode(current, nodeId, {
+          Queries.updateNode(current, nodeId, {
             x: frame.x,
             y: frame.y,
           }),

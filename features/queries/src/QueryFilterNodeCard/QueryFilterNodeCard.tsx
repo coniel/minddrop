@@ -2,16 +2,12 @@ import { useMemo } from 'react';
 import { createI18nKeyBuilder } from '@minddrop/i18n';
 import { PropertySchema } from '@minddrop/properties';
 import {
-  MULTISELECT_QUERY_OPERATORS,
-  QUERY_OPERATORS_BY_PROPERTY_TYPE,
   Queries,
   Query,
   QueryFilterNode,
   QueryFilterValue,
   QueryNodeCounts,
   QueryOperator,
-  VALUE_LESS_QUERY_OPERATORS,
-  updateQueryNode,
 } from '@minddrop/queries';
 import {
   CanvasConnectionDragTarget,
@@ -114,7 +110,7 @@ export const QueryFilterNodeCard: React.FC<QueryFilterNodeCardProps> = ({
     const propertyOperators = getPropertyOperators(property);
 
     Queries.update(query.id, {
-      nodes: updateQueryNode<QueryFilterNode>(query.nodes, node.id, {
+      nodes: Queries.updateNode<QueryFilterNode>(query.nodes, node.id, {
         property: propertyName,
         propertyType: property?.type || '',
         operator: propertyOperators[0] || '',
@@ -127,9 +123,9 @@ export const QueryFilterNodeCard: React.FC<QueryFilterNodeCardProps> = ({
   // operator takes no value
   function handleOperatorChange(operator: QueryOperator): void {
     Queries.update(query.id, {
-      nodes: updateQueryNode<QueryFilterNode>(query.nodes, node.id, {
+      nodes: Queries.updateNode<QueryFilterNode>(query.nodes, node.id, {
         operator,
-        value: VALUE_LESS_QUERY_OPERATORS.has(operator)
+        value: Queries.constants.ValueLessOperators.has(operator)
           ? undefined
           : node.value,
       }),
@@ -139,7 +135,9 @@ export const QueryFilterNodeCard: React.FC<QueryFilterNodeCardProps> = ({
   // Persist a value change
   function handleValueChange(value: QueryFilterValue | undefined): void {
     Queries.update(query.id, {
-      nodes: updateQueryNode<QueryFilterNode>(query.nodes, node.id, { value }),
+      nodes: Queries.updateNode<QueryFilterNode>(query.nodes, node.id, {
+        value,
+      }),
     });
   }
 
@@ -204,8 +202,8 @@ function getPropertyOperators(property?: PropertySchema): QueryOperator[] {
 
   // Multiselect select properties use membership operators
   if (property.type === 'select' && property.multiselect) {
-    return MULTISELECT_QUERY_OPERATORS;
+    return Queries.constants.MultiselectOperators;
   }
 
-  return QUERY_OPERATORS_BY_PROPERTY_TYPE[property.type];
+  return Queries.constants.OperatorsByPropertyType[property.type];
 }

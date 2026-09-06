@@ -6,7 +6,6 @@ import {
   Query,
   QueryCollectionFilterNode,
   QueryNodeCounts,
-  updateQueryNode,
 } from '@minddrop/queries';
 import {
   CanvasConnectionDragTarget,
@@ -145,9 +144,13 @@ export const QueryCollectionFilterNodeCard: React.FC<
   // Persist an operator change
   function handleOperatorChange(operator: 'is-in' | 'is-not-in'): void {
     Queries.update(query.id, {
-      nodes: updateQueryNode<QueryCollectionFilterNode>(query.nodes, node.id, {
-        operator,
-      }),
+      nodes: Queries.updateNode<QueryCollectionFilterNode>(
+        query.nodes,
+        node.id,
+        {
+          operator,
+        },
+      ),
     });
   }
 
@@ -166,10 +169,14 @@ export const QueryCollectionFilterNodeCard: React.FC<
     const anyCollection = picked?.value === ANY_COLLECTION_VALUE;
 
     Queries.update(query.id, {
-      nodes: updateQueryNode<QueryCollectionFilterNode>(query.nodes, node.id, {
-        source: anyCollection ? 'any-collection' : 'collection',
-        collection: anyCollection ? '' : picked?.value || '',
-      }),
+      nodes: Queries.updateNode<QueryCollectionFilterNode>(
+        query.nodes,
+        node.id,
+        {
+          source: anyCollection ? 'any-collection' : 'collection',
+          collection: anyCollection ? '' : picked?.value || '',
+        },
+      ),
     });
   }
 

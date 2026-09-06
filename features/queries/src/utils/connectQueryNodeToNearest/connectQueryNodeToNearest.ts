@@ -1,4 +1,4 @@
-import { Query, QueryConnection, addQueryConnection } from '@minddrop/queries';
+import { Queries, Query, QueryConnection } from '@minddrop/queries';
 import { QUERY_NODE_WIDTHS } from '../../constants';
 
 // Horizontal slack within which candidates count as part of the
@@ -120,7 +120,7 @@ function connectStack(
     .forEach((candidate) => {
       const { from, to } = endpoints(candidate.id);
 
-      updated = addQueryConnection(
+      updated = Queries.addConnection(
         { ...query, connections: updated },
         from,
         to,
