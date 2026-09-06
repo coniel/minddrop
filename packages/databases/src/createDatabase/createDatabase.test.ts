@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
-import { PathConflictError } from '@minddrop/file-system';
+import { Fs } from '@minddrop/file-system';
 import { PropertySchema } from '@minddrop/properties';
 import { DatabaseDefaultsStore } from '../DatabaseDefaultsStore';
 import { DatabasesStore } from '../DatabasesStore';
@@ -47,7 +47,9 @@ describe('createDatabase', () => {
     MockFs.createDir(`${parentDir}/${options.name}`);
 
     // Then, try to create an item with the same directory path
-    await expect(createDatabase(options)).rejects.toThrow(PathConflictError);
+    await expect(createDatabase(options)).rejects.toThrow(
+      Fs.errors.PathConflict,
+    );
   });
 
   it('creates a new database with the given options', async () => {

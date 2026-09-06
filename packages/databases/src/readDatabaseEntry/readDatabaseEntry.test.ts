@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { Fs, hashContents } from '@minddrop/file-system';
+import { Fs } from '@minddrop/file-system';
 import { markdownEntrySerializer } from '../entry-serializers';
 import {
   MockFs,
@@ -45,7 +45,7 @@ describe('readDatabaseEntry', () => {
     // The hash should be of the file's contents, so that an external
     // edit is detected whatever the entry's timestamp properties say
     expect(entry?.contentHash).toBe(
-      hashContents(MockFs.readTextFile(objectEntry1.path)),
+      Fs.hashContents(MockFs.readTextFile(objectEntry1.path)),
     );
   });
 

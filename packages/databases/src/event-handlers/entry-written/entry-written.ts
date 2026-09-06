@@ -1,4 +1,4 @@
-import { Fs, hashContents } from '@minddrop/file-system';
+import { Fs } from '@minddrop/file-system';
 import { History } from '@minddrop/history';
 import {
   ContentCapture,
@@ -25,7 +25,7 @@ export async function onEntryWritten(
   }
 
   const key = contentCaptureKey(database.path, entry.title);
-  const contentHash = hashContents(previousContents);
+  const contentHash = Fs.hashContents(previousContents);
 
   // Fall back to the entry's history for a capture made in an earlier
   // session.

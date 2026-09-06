@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { Fs, PathConflictError } from '@minddrop/file-system';
+import { Fs } from '@minddrop/file-system';
 import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import {
   Button,
@@ -195,7 +195,7 @@ async function validateWorkspaceName(
  */
 function resolveCreateWorkspaceError(error: unknown): TranslationKey {
   // A directory with the same name already exists in the location
-  if (error instanceof PathConflictError) {
+  if (error instanceof Fs.errors.PathConflict) {
     return 'onboarding.form.errors.pathConflict';
   }
 

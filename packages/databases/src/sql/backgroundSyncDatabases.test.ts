@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { hashContents } from '@minddrop/file-system';
+import { Fs } from '@minddrop/file-system';
 import { readEntryMetadata } from '../readEntryMetadata';
 import {
   MockFs,
@@ -302,7 +302,7 @@ function indexAtCurrentContents(): void {
   // Reseed the records with the current on-disk content hashes
   seedSqlEntries((record) => ({
     ...record,
-    contentHash: hashContents(MockFs.readTextFile(record.path)),
+    contentHash: Fs.hashContents(MockFs.readTextFile(record.path)),
   }));
 
   // Drop the reseeding statements from the log

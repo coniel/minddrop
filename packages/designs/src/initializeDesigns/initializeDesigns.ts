@@ -1,5 +1,5 @@
 import { Events } from '@minddrop/events';
-import { FileSystemChangedEvent, Fs } from '@minddrop/file-system';
+import { Fs } from '@minddrop/file-system';
 import { DesignsStore } from '../DesignsStore';
 import { onFileSystemChanged } from '../event-handlers';
 import { DesignsLoadedEvent } from '../events';
@@ -21,9 +21,7 @@ export async function initializeDesigns(): Promise<void> {
   // Apply changes made to design bundles outside of the app.
   // Registered before the load so that designs created while the
   // directory does not yet exist are still picked up.
-  Events.on(FileSystemChangedEvent, 'designs', (data) =>
-    onFileSystemChanged(data),
-  );
+  Events.on(Fs.events.Changed, 'designs', (data) => onFileSystemChanged(data));
 
   // Nothing to load if the designs directory does not exist yet.
   // The loaded event still fires so that listeners waiting on it

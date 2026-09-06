@@ -1,5 +1,5 @@
 import { Events } from '@minddrop/events';
-import { FileNotFoundError, Fs } from '@minddrop/file-system';
+import { Fs } from '@minddrop/file-system';
 import { InvalidParameterError } from '@minddrop/utils';
 import { WorkspacesStore } from '../WorkspacesStore';
 import { DefaultWorkspaceIcon } from '../constants';
@@ -18,14 +18,14 @@ import { writeWorkspacesConfig } from '../writeWorkspacesConfig';
  * @param path - The path to the workspace directory.
  * @returns The added workspace.
  *
- * @throws {FileNotFoundError} If the workspace directory does not exist.
+ * @throws {Fs.errors.FileNotFound} If the workspace directory does not exist.
  *
  * @dispatches workspaces:loaded
  */
 export async function addWorkspace(path: string): Promise<Workspace> {
   // Ensure the path exists
   if (!(await Fs.exists(path))) {
-    throw new FileNotFoundError(path);
+    throw new Fs.errors.FileNotFound(path);
   }
 
   // Ensure the path is a directory

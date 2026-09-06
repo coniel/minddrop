@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
-import { PathConflictError } from '@minddrop/file-system';
+import { Fs } from '@minddrop/file-system';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabaseRenamedEvent } from '../events';
 import {
@@ -26,7 +26,7 @@ describe('renameDatabase', () => {
     // urlDatabase already occupies its directory
     await expect(
       renameDatabase(objectDatabase.id, urlDatabase.name),
-    ).rejects.toThrow(PathConflictError);
+    ).rejects.toThrow(Fs.errors.PathConflict);
   });
 
   it('renames the database directory on the file system', async () => {

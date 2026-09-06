@@ -1,5 +1,5 @@
 import { Events } from '@minddrop/events';
-import { Fs, PathConflictError } from '@minddrop/file-system';
+import { Fs } from '@minddrop/file-system';
 import { Paths } from '@minddrop/utils';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabaseRenamedEvent } from '../events';
@@ -16,7 +16,7 @@ import { writeDatabaseConfig } from '../writeDatabaseConfig';
  * @returns The renamed database.
  *
  * @throws {DatabaseNotFoundError} If the database does not exist.
- * @throws {PathConflictError} If a database already exists at the new path.
+ * @throws {Fs.errors.PathConflict} If a database already exists at the new path.
  *
  * @dispatches databases:database:renamed
  */
@@ -32,7 +32,7 @@ export async function renameDatabase(
 
   // Ensure no database already exists at the new path
   if (await Fs.exists(newPath)) {
-    throw new PathConflictError(newPath);
+    throw new Fs.errors.PathConflict(newPath);
   }
 
   // Rename the database directory on the file system

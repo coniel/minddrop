@@ -1,5 +1,5 @@
 import { Collections } from '@minddrop/collections';
-import { PathConflictError } from '@minddrop/file-system';
+import { Fs } from '@minddrop/file-system';
 import { i18n } from '@minddrop/i18n';
 import { PropertyValue } from '@minddrop/properties';
 import { ContentColor } from '@minddrop/ui-theme';
@@ -117,7 +117,7 @@ async function renameEntryToTitle(
   } catch (error) {
     // Validation guards against store conflicts, but a non-entry
     // file on disk can still conflict with the new path
-    if (error instanceof PathConflictError) {
+    if (error instanceof Fs.errors.PathConflict) {
       return getDatabaseEntry(entryId);
     }
 

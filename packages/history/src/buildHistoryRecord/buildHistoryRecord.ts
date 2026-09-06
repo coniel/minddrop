@@ -1,4 +1,4 @@
-import { hashContents } from '@minddrop/file-system';
+import { Fs } from '@minddrop/file-system';
 import { HistoryRecord, RecordHistoryOptions } from '../types';
 import { writeHistoryContent } from '../writeHistoryContent';
 
@@ -26,7 +26,7 @@ export async function buildHistoryRecord(
       ...base,
       kind: 'content',
       file: await writeHistoryContent(options, base.timestamp),
-      contentHash: hashContents(options.contents),
+      contentHash: Fs.hashContents(options.contents),
     };
   }
 

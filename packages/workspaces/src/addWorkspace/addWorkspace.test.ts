@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
-import { FileNotFoundError, Fs } from '@minddrop/file-system';
+import { Fs } from '@minddrop/file-system';
 import { InvalidParameterError, omitPath } from '@minddrop/utils';
 import { WorkspacesStore } from '../WorkspacesStore';
 import { WorkspacesLoadedEvent } from '../events';
@@ -41,7 +41,7 @@ describe('addWorkspace', () => {
 
   it('throws if the workspace does not exist', async () => {
     await expect(() => addWorkspace('missing-workspace')).rejects.toThrow(
-      FileNotFoundError,
+      Fs.errors.FileNotFound,
     );
   });
 

@@ -2,11 +2,18 @@ import { YAML, restoreDates } from '@minddrop/utils';
 import * as Api from './FsApi';
 import { addFileExtension } from './addFileExtension';
 import {
+  FileNotFoundError,
+  InvalidPathError,
+  PathConflictError,
+} from './errors';
+import { FileSystemChangedEvent } from './events';
+import {
   IncrementedPath,
   incrementalPath as incrementalPathFn,
   setPathIncrement,
 } from './incrementalPath';
 import { IoQueue } from './ioQueue';
+import { startFileSystemWatcher } from './startFileSystemWatcher';
 import {
   BaseDirectory,
   FileSystem,
@@ -15,9 +22,22 @@ import {
   FsWriteFileOptions,
   OpenFilePickerOptions,
 } from './types';
+import { hashContents } from './utils/hashContents';
 import { recordWrittenContents } from './writeRegistry';
 
 export type { IncrementedPath } from './incrementalPath';
+
+// Const-asserted so the names keep their literal types, which key
+// the event data registry
+const events = {
+  Changed: FileSystemChangedEvent,
+} as const;
+
+const errors = {
+  FileNotFound: FileNotFoundError,
+  InvalidPath: InvalidPathError,
+  PathConflict: PathConflictError,
+};
 
 let FsAdapter: FileSystemAdapter = {} as FileSystemAdapter;
 const BaseDirPaths: Record<BaseDirectory, string> = {
@@ -38,8 +58,20 @@ export const Fs: Omit<FileSystem, 'openFilePicker'> &
     setPathIncrement: typeof setPathIncrement;
     addFileExtension: typeof addFileExtension;
     hasPendingWrite: typeof hasPendingWrite;
+    hashContents: typeof hashContents;
+    recordWrittenContents: typeof recordWrittenContents;
+    registerAdapter: typeof registerFileSystemAdapter;
+    startWatcher: typeof startFileSystemWatcher;
+    events: typeof events;
+    errors: typeof errors;
   } = {
   ...Api,
+  events,
+  errors,
+  hashContents,
+  recordWrittenContents,
+  registerAdapter: (...args) => registerFileSystemAdapter(...args),
+  startWatcher: (...args) => startFileSystemWatcher(...args),
   incrementalPath,
   ensureDir,
   setPathIncrement,

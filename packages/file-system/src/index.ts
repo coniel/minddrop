@@ -1,8 +1,5 @@
-export * from './types';
-export * from './errors';
-export * from './constants';
-export * from './events';
-export * from './FileSystem';
-export * from './startFileSystemWatcher';
-export * from './utils/hashContents';
-export * from './writeRegistry';
+export type * from './types';
+export type * from './events';
+export type { IncrementedPath } from './FileSystem';
+export { BaseDirectory } from './types';
+export { Fs } from './FileSystem';

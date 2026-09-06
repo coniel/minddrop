@@ -1,5 +1,5 @@
 import { Events } from '@minddrop/events';
-import { Fs, PathConflictError } from '@minddrop/file-system';
+import { Fs } from '@minddrop/file-system';
 import { WorkspacesStore } from '../WorkspacesStore';
 import { WorkspaceCreatedEvent } from '../events';
 import { Workspace } from '../types';
@@ -16,7 +16,7 @@ type CreateWorkspaceOptions = Pick<Workspace, 'name' | 'icon'>;
  * @param options - The workspace creation options.
  * @returns The generated workspace.
  *
- * @throws {PathConflictError} If the workspace directory already exists.
+ * @throws {Fs.errors.PathConflict} If the workspace directory already exists.
  */
 export async function createWorkspace(
   parentDirPath: string,
@@ -27,7 +27,7 @@ export async function createWorkspace(
 
   // Ensure that the path does not already exist
   if (await Fs.exists(path)) {
-    throw new PathConflictError(path);
+    throw new Fs.errors.PathConflict(path);
   }
 
   // Create the workspace config

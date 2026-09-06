@@ -1,5 +1,5 @@
 import { Events } from '@minddrop/events';
-import { Fs, PathConflictError } from '@minddrop/file-system';
+import { Fs } from '@minddrop/file-system';
 import { WorkspacesStore } from '../WorkspacesStore';
 import { WorkspaceUpdatedEvent } from '../events';
 import { getWorkspace } from '../getWorkspace';
@@ -14,7 +14,7 @@ import { writeWorkspacesConfig } from '../writeWorkspacesConfig';
  * @param newName - The new name of the workspace.
  * @returns The updated workspace.
  *
- * @throws {PathConflictError} If the new path is already taken.
+ * @throws {Fs.errors.PathConflict} If the new path is already taken.
  */
 export async function renameWorkspace(
   id: string,
@@ -32,7 +32,7 @@ export async function renameWorkspace(
 
   // Ensure the new path does not already exist
   if (await Fs.exists(newPath)) {
-    throw new PathConflictError(newPath);
+    throw new Fs.errors.PathConflict(newPath);
   }
 
   // Rename the workspace directory

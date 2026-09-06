@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
-import { Fs, PathConflictError } from '@minddrop/file-system';
+import { Fs } from '@minddrop/file-system';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabaseEntryRenamedEvent } from '../events';
 import { MockFs, cleanup, objectEntry1, setup } from '../test-utils';
@@ -14,7 +14,7 @@ describe('renameDatabaseEntry', () => {
   it('throws if the name conflicts with an existing entry', async () => {
     await expect(
       renameDatabaseEntry(objectEntry1.id, objectEntry1.title),
-    ).rejects.toThrow(PathConflictError);
+    ).rejects.toThrow(Fs.errors.PathConflict);
   });
 
   it("renames the entry's primary file", async () => {

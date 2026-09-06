@@ -1,5 +1,5 @@
 import { Events } from '@minddrop/events';
-import { Fs, recordWrittenContents } from '@minddrop/file-system';
+import { Fs } from '@minddrop/file-system';
 import { DatabaseEntryWrittenEvent } from '../events';
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntry } from '../getDatabaseEntry';
@@ -52,7 +52,7 @@ export async function writeDatabaseEntry(id: string): Promise<void> {
   // record it as the app's own contents anyway, or a file the app has
   // just moved is taken for an external change by the watcher.
   if (contents === previousContents) {
-    recordWrittenContents(entry.path, contents);
+    Fs.recordWrittenContents(entry.path, contents);
 
     return;
   }

@@ -23,7 +23,7 @@ import {
 } from '@minddrop/feature-spaces';
 import { initializeTagsFeature } from '@minddrop/feature-tags';
 import { TabSetsStore, initializeViewsFeature } from '@minddrop/feature-views';
-import { Fs, startFileSystemWatcher } from '@minddrop/file-system';
+import { Fs } from '@minddrop/file-system';
 import { I18n, initializeI18n } from '@minddrop/i18n';
 import { Queries } from '@minddrop/queries';
 import { Search } from '@minddrop/search';
@@ -175,7 +175,5 @@ async function runInitialization(): Promise<void> {
 
   // Watch the workspace directories for changes made outside the
   // app. Started last so that it cannot race the initial loads.
-  await startFileSystemWatcher(
-    Workspaces.getAll().map((workspace) => workspace.path),
-  );
+  await Fs.startWatcher(Workspaces.getAll().map((workspace) => workspace.path));
 }

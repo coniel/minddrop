@@ -1,4 +1,4 @@
-import { registerFileSystemAdapter } from '@minddrop/file-system';
+import { Fs } from '@minddrop/file-system';
 import type { FileSystemAdapter } from '@minddrop/file-system';
 import { fileSystemRpcHandlers } from '../fileSystemRpc';
 
@@ -11,7 +11,7 @@ const fs = fileSystemRpcHandlers;
  * (named params).
  */
 export function registerBunFileSystemAdapter(): void {
-  registerFileSystemAdapter({
+  Fs.registerAdapter({
     resolveBaseDirPath: (dir) => fs.fsGetBaseDirPath({ dir }),
     readTextFile: (path, options) =>
       fs.fsReadTextFile({ path, baseDir: options?.baseDir }),

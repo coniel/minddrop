@@ -1,5 +1,5 @@
 import { Events } from '@minddrop/events';
-import { Fs, PathConflictError } from '@minddrop/file-system';
+import { Fs } from '@minddrop/file-system';
 import { titleFromPath } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabaseEntryRenamedEvent } from '../events';
@@ -16,7 +16,7 @@ import { writeDatabaseEntry } from '../writeDatabaseEntry';
  * @param newTitle - The new title for the entry.
  * @returns The renamed entry.
  *
- * @throws {PathConflictError} Thrown if an entry already exists at the new path.
+ * @throws {Fs.errors.PathConflict} Thrown if an entry already exists at the new path.
  */
 export async function renameDatabaseEntry<
   TDatabaseEntry extends DatabaseEntry = DatabaseEntry,
@@ -43,7 +43,7 @@ export async function renameDatabaseEntry<
   // Ensure that there is no conflict at the new path
   if (await Fs.exists(newPath)) {
     if (!incrementTitleIfConflict) {
-      throw new PathConflictError(newPath);
+      throw new Fs.errors.PathConflict(newPath);
     }
 
     // Get an incremental path to avoid the conflict

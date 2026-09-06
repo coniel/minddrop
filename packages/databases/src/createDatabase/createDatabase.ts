@@ -1,5 +1,5 @@
 import { Events } from '@minddrop/events';
-import { Fs, PathConflictError } from '@minddrop/file-system';
+import { Fs } from '@minddrop/file-system';
 import { Paths, entityId } from '@minddrop/utils';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabaseCreatedEvent } from '../events';
@@ -33,7 +33,7 @@ export async function createDatabase(
 
   // Ensure the database directory does not already exist
   if (await Fs.exists(dbPath)) {
-    throw new PathConflictError(dbPath);
+    throw new Fs.errors.PathConflict(dbPath);
   }
 
   // Create automation instances from the provided automation templates

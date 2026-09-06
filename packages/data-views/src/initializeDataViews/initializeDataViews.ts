@@ -1,6 +1,6 @@
 import { Events } from '@minddrop/events';
-import { FileSystemChangedEvent, Fs } from '@minddrop/file-system';
 import { ItemAddressesChangedEvent } from '@minddrop/item-references';
+import { Fs } from '@minddrop/file-system';
 import { Workspaces } from '@minddrop/workspaces';
 import { DataViewsStore } from '../DataViewsStore';
 import { onFileSystemChanged, onItemAddressesChanged } from '../event-handlers';
@@ -45,7 +45,7 @@ export async function initializeDataViews(): Promise<void> {
   DataViewsStore.load(views);
 
   // Apply changes made to data view files outside of the app
-  Events.on(FileSystemChangedEvent, 'data-views', (data) =>
+  Events.on(Fs.events.Changed, 'data-views', (data) =>
     onFileSystemChanged(data),
   );
 

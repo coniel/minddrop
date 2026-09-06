@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
-import { Fs, PathConflictError } from '@minddrop/file-system';
+import { Fs } from '@minddrop/file-system';
 import { omitPath } from '@minddrop/utils';
 import { WorkspacesStore } from '../WorkspacesStore';
 import { WorkspaceUpdatedEvent } from '../events';
@@ -42,7 +42,7 @@ describe('renameWorkspace', () => {
   it('throws if the new path is already taken', async () => {
     await expect(() =>
       renameWorkspace(workspace_1.id, workspace_2.name),
-    ).rejects.toThrow(PathConflictError);
+    ).rejects.toThrow(Fs.errors.PathConflict);
   });
 
   it('renames the workspace directory', async () => {

@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
-import { Fs, PathConflictError } from '@minddrop/file-system';
+import { Fs } from '@minddrop/file-system';
 import { omitPath } from '@minddrop/utils';
 import { WorkspacesStore } from '../WorkspacesStore';
 import { WorkspaceCreatedEvent } from '../events';
@@ -44,7 +44,7 @@ describe('createWorkspace', () => {
         name: workspace_1.name,
         icon: 'content-icon:shapes:blue',
       }),
-    ).rejects.toThrow(PathConflictError);
+    ).rejects.toThrow(Fs.errors.PathConflict);
   });
 
   it('creates the workspace directory', async () => {

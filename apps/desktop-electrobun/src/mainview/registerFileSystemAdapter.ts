@@ -1,4 +1,4 @@
-import { registerFileSystemAdapter as register } from '@minddrop/file-system';
+import { Fs } from '@minddrop/file-system';
 import type { FsWatchEvent } from '@minddrop/file-system';
 import { Paths } from '@minddrop/utils';
 import type { WebviewRpcClient } from '../types';
@@ -18,7 +18,7 @@ export function handleWatchEvent(event: {
 }
 
 export const registerFileSystemAdapter = (rpc: WebviewRpcClient) =>
-  register({
+  Fs.registerAdapter({
     resolveBaseDirPath: (dir) => rpc.request.fsGetBaseDirPath({ dir }),
 
     convertFileSrc: (path) => path,
