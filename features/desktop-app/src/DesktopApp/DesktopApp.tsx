@@ -69,7 +69,7 @@ export const DesktopApp: React.FC = () => {
   }, []);
 
   return (
-    <TooltipProvider delay={1000} timeout={500}>
+    <TooltipProvider delay={600} timeout={500}>
       <ToastProvider>
         <IconsProvider
           defaultEmojiSkinTone={defaultEmojiSkinTone}
