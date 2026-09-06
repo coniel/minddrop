@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DataViews, resolveViewFilePath } from '@minddrop/data-views';
+import { DataViews } from '@minddrop/data-views';
 import { DataViewFixtures } from '@minddrop/data-views/test-utils';
 import { Designs } from '@minddrop/designs';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
@@ -21,7 +21,7 @@ function embedDataViewInSpace(): void {
   // The data view is an ordinary persisted view, not owned by the
   // space
   DataViews.Store.load([dataView_gallery_1]);
-  MockFs.addFiles([resolveViewFilePath(dataView_gallery_1.id)]);
+  MockFs.addFiles([DataViews.resolveFilePath(dataView_gallery_1.id)]);
 
   const layout = space_1.design.layouts[0];
 
@@ -69,9 +69,9 @@ describe('deleteSpace', () => {
     // Embedded data views are first-class persisted views, so they
     // outlive the space until the user is asked what to do with them
     expect(DataViews.Store.get(dataView_gallery_1.id)).not.toBeNull();
-    expect(MockFs.exists(resolveViewFilePath(dataView_gallery_1.id))).toBe(
-      true,
-    );
+    expect(
+      MockFs.exists(DataViews.resolveFilePath(dataView_gallery_1.id)),
+    ).toBe(true);
   });
 
   it('deletes the space bundle directory from the file system', async () => {

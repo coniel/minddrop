@@ -1,7 +1,3 @@
-  DataViewCreatedEvent,
-  DataViewDeletedEvent,
-  DataViewUpdatedEvent,
-} from '@minddrop/data-views';
 import { DesignPropertyRenamedEvent } from '@minddrop/designs';
 import {
   DesignCreatedEvent,
@@ -9,6 +5,7 @@ import {
   DesignUpdatedEvent,
 } from '@minddrop/designs-next';
 import { Collections } from '@minddrop/collections';
+import { DataViews } from '@minddrop/data-views';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { ItemReferences } from '@minddrop/item-references';
@@ -84,19 +81,19 @@ export function initializeDatabaseEventHandlers() {
     [DatabaseEntriesClearedEvent]: onClearEntries,
     [DatabaseEntryRenamedEvent]: onRenameEntry,
     [DatabaseEntryMetadataUpdatedEvent]: onUpdateEntryMetadata,
-    [DataViewUpdatedEvent]: onUpdateVirtualView,
     [Collections.events.Updated]: onUpdateCollection,
     [ItemReferences.events.AddressesChanged]: onItemAddressesChanged,
     [Tags.events.Renamed]: onTagRenamed,
     [Tags.events.Deleted]: onTagDeleted,
     [TagGroups.events.Deleted]: onTagGroupDeleted,
+    [DataViews.events.Updated]: onUpdateVirtualView,
     [Fs.events.Changed]: onFileSystemChanged,
   });
 
   Events.addListeners('databases:database-views', {
-    [DataViewCreatedEvent]: onDatabaseViewCreated,
-    [DataViewUpdatedEvent]: onDatabaseViewUpdated,
-    [DataViewDeletedEvent]: onDatabaseViewDeleted,
+    [DataViews.events.Created]: onDatabaseViewCreated,
+    [DataViews.events.Updated]: onDatabaseViewUpdated,
+    [DataViews.events.Deleted]: onDatabaseViewDeleted,
   });
 
   Events.addListeners('databases:database-designs', {

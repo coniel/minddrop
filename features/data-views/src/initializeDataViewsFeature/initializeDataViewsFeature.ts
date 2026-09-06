@@ -1,8 +1,4 @@
-import {
-  DataViewDeletedEvent,
-  DataViewUpdatedEvent,
-  DataViews,
-} from '@minddrop/data-views';
+import { DataViews } from '@minddrop/data-views';
 import { Events } from '@minddrop/events';
 import { I18n, i18n } from '@minddrop/i18n';
 import { Views } from '@minddrop/views';
@@ -92,7 +88,7 @@ export function initializeDataViewsFeature(): VoidFunction {
 
   // Update the data view's open view when the data view changes
   // (e.g. renamed or re-iconed)
-  Events.addListener(DataViewUpdatedEvent, EventListenerId, (data) => {
+  Events.addListener(DataViews.events.Updated, EventListenerId, (data) => {
     Events.dispatch(Views.events.Update, {
       id: dataViewViewId(data.updated.id),
       title: data.updated.name,
@@ -101,7 +97,7 @@ export function initializeDataViewsFeature(): VoidFunction {
   });
 
   // Close the data view's open view when the data view is deleted
-  Events.addListener(DataViewDeletedEvent, EventListenerId, (data) => {
+  Events.addListener(DataViews.events.Deleted, EventListenerId, (data) => {
     Events.dispatch(Views.events.Close, {
       id: dataViewViewId(data.id),
     });
@@ -111,7 +107,7 @@ export function initializeDataViewsFeature(): VoidFunction {
     Events.removeListener(OpenDataViewViewEvent, EventListenerId);
     Events.removeListener(OpenDataViewsViewEvent, EventListenerId);
     Events.removeListener(OpenNewDataViewViewEvent, EventListenerId);
-    Events.removeListener(DataViewUpdatedEvent, EventListenerId);
-    Events.removeListener(DataViewDeletedEvent, EventListenerId);
+    Events.removeListener(DataViews.events.Updated, EventListenerId);
+    Events.removeListener(DataViews.events.Deleted, EventListenerId);
   };
 }

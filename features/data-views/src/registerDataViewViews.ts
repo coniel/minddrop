@@ -1,4 +1,4 @@
-import { DataViewsIcon } from '@minddrop/data-views';
+import { DataViews } from '@minddrop/data-views';
 import { Views } from '@minddrop/views';
 import { DataViewView } from './DataViewView';
 import { DataViewsView } from './DataViewsView';
@@ -25,7 +25,7 @@ export function registerDataViewViews(): void {
     type: DataViewsViewName,
     component: DataViewsView,
     title: 'dataViews.labels.views',
-    icon: DataViewsIcon,
+    icon: DataViews.constants.Icon,
     breadcrumbLevel: 'root',
   });
 

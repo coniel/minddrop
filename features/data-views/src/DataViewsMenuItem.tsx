@@ -1,4 +1,4 @@
-import { DataViewsIcon } from '@minddrop/data-views';
+import { DataViews } from '@minddrop/data-views';
 import { Events } from '@minddrop/events';
 import { Tabs } from '@minddrop/feature-views';
 import { MenuItem } from '@minddrop/ui-primitives';
@@ -19,7 +19,7 @@ export const DataViewsMenuItem: React.FC = () => {
     <MenuItem
       muted
       active={active}
-      icon={DataViewsIcon}
+      icon={DataViews.constants.Icon}
       label="dataViews.labels.views"
       onClick={handleClick}
     />

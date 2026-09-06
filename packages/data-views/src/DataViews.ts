@@ -1,3 +1,29 @@
+import { DataViewsIcon } from './constants';
+import { DataViewNotFoundError } from './errors';
+import {
+  DataViewCreatedEvent,
+  DataViewDeletedEvent,
+  DataViewUpdatedEvent,
+  DataViewsLoadedEvent,
+} from './events';
+
+// Const-asserted so the names keep their literal types, which key
+// the event data registry
+export const events = {
+  Created: DataViewCreatedEvent,
+  Updated: DataViewUpdatedEvent,
+  Deleted: DataViewDeletedEvent,
+  Loaded: DataViewsLoadedEvent,
+} as const;
+
+export const errors = {
+  NotFound: DataViewNotFoundError,
+};
+
+export const constants = {
+  Icon: DataViewsIcon,
+};
+
 export { initializeDataViews as initialize } from './initializeDataViews';
 export { createDataView as create } from './createDataView';
 export { createVirtualDataView as createVirtual } from './createVirtualDataView';
@@ -10,7 +36,10 @@ export { getOwnedDataViews as getByOwner } from './getOwnedDataViews';
 export { getReferencingDataViews as getReferencing } from './getReferencingDataViews';
 export { removeDataViewReferences as removeReferences } from './removeDataViewReferences';
 export { readDataView as read } from './readDataView';
-export { searchDataViews as search } from './utils';
+export {
+  searchDataViews as search,
+  resolveViewFilePath as resolveFilePath,
+} from './utils';
 export { serializeDataView as serialize } from './serializeDataView';
 export { deserializeDataView as deserialize } from './deserializeDataView';
 export { serializeDataViewConfig as serializeConfig } from './serializeDataViewConfig';

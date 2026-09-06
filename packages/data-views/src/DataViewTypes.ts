@@ -1,3 +1,20 @@
+import { DataViewTypeNotRegisteredError } from './errors';
+import {
+  DataViewTypeRegisteredEvent,
+  DataViewTypeUnregisteredEvent,
+} from './events';
+
+// Const-asserted so the names keep their literal types, which key
+// the event data registry
+export const events = {
+  Registered: DataViewTypeRegisteredEvent,
+  Unregistered: DataViewTypeUnregisteredEvent,
+} as const;
+
+export const errors = {
+  NotRegistered: DataViewTypeNotRegisteredError,
+};
+
 export {
   DataViewTypesStore as Store,
   useDataViewType as use,
