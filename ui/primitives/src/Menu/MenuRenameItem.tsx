@@ -6,6 +6,7 @@ import { IconPicker } from '../IconPicker';
 import { Group } from '../Layout';
 import { TextInput } from '../fields/TextInput';
 import { propsToClass } from '../utils';
+import { useKeepMenuFocus } from './MenuFocusContext';
 
 export interface MenuRenameItemProps {
   /**
@@ -42,6 +43,12 @@ export interface MenuRenameItemProps {
   onClearIcon?: () => void;
 
   /**
+   * Callback fired after the rename is committed with Enter, e.g.
+   * to close the menu.
+   */
+  onSubmit?: () => void;
+
+  /**
    * Placeholder text for the input. Can be an i18n key.
    */
   placeholder?: TranslationKey;
@@ -56,6 +63,9 @@ export interface MenuRenameItemProps {
  * Renders a rename input at the top of a menu, outside
  * keyboard navigation flow. Optionally includes an icon
  * picker button when a content icon is provided.
+ *
+ * Keeps the menu's focus: while rendered, hovering the menu's items
+ * does not move the focus out of the input.
  */
 export const MenuRenameItem: React.FC<MenuRenameItemProps> = ({
   value,
@@ -64,11 +74,14 @@ export const MenuRenameItem: React.FC<MenuRenameItemProps> = ({
   contentIcon,
   onSelectIcon,
   onClearIcon,
+  onSubmit,
   placeholder,
   className,
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [localValue, setLocalValue] = useState(value);
+
+  useKeepMenuFocus();
 
   // Keep local state in sync with controlled value
   const handleValueChange = (newValue: string) => {
@@ -83,11 +96,12 @@ export const MenuRenameItem: React.FC<MenuRenameItemProps> = ({
     }
   };
 
-  // Commit the rename on Enter
+  // Commit the rename on Enter, then submit
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       event.preventDefault();
       onRename(localValue);
+      onSubmit?.();
     }
   };
 

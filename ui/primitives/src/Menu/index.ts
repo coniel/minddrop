@@ -12,3 +12,4 @@ export * from './ColorSelectionMenuItem';
 export * from './MenuRenameItem';
 export * from './SwitchMenuItem';
 export * from './Menu.stories';
+export * from './MenuFocusContext';

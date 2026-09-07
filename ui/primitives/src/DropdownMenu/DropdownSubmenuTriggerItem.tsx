@@ -2,10 +2,15 @@ import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 import React, { FC } from 'react';
 import { IconProp } from '../IconRenderer';
 import { MenuItem } from '../Menu';
+import { useMenuKeepsFocus } from '../Menu/MenuFocusContext';
 import { TranslatableNode } from '../types';
 
 /* --- DropdownSubmenuTriggerItem ---
    The trigger item that opens a nested submenu. */
+
+type SubmenuTriggerMouseEnterHandler = NonNullable<
+  MenuPrimitive.SubmenuTrigger.Props['onMouseEnter']
+>;
 
 export interface DropdownSubmenuTriggerItemProps
   extends Omit<MenuPrimitive.SubmenuTrigger.Props, 'children' | 'label'> {
@@ -40,6 +45,14 @@ export interface DropdownSubmenuTriggerItemProps
    * submenu chevron indicator.
    */
   trailingIcon?: React.ReactNode;
+
+  /**
+   * Whether the pointer entering the item moves the menu's focus onto
+   * it. The hover styling is unaffected. Defaults to false while an
+   * item of the menu keeps the focus (e.g. a rename field), true
+   * otherwise.
+   */
+  focusOnHover?: boolean;
 }
 
 export const DropdownSubmenuTriggerItem: FC<
@@ -51,21 +64,39 @@ export const DropdownSubmenuTriggerItem: FC<
   contentIcon,
   disabled,
   trailingIcon,
+  focusOnHover,
+  onMouseEnter,
   ...other
-}) => (
-  <MenuPrimitive.SubmenuTrigger
-    render={
-      <MenuItem
-        hasSubmenu
-        label={label}
-        stringLabel={stringLabel}
-        icon={icon}
-        contentIcon={contentIcon}
-        disabled={disabled}
-        trailingIcon={trailingIcon}
-      />
+}) => {
+  const keepsFocus = useMenuKeepsFocus();
+  const focusesOnHover = focusOnHover ?? !keepsFocus;
+
+  // Cancel Base UI's own mouse enter handler, which activates the
+  // trigger and focuses it, when focusing on hover is disabled.
+  const handleMouseEnter: SubmenuTriggerMouseEnterHandler = (event) => {
+    onMouseEnter?.(event);
+
+    if (!focusesOnHover) {
+      event.preventBaseUIHandler();
     }
-    disabled={disabled}
-    {...other}
-  />
-);
+  };
+
+  return (
+    <MenuPrimitive.SubmenuTrigger
+      render={
+        <MenuItem
+          hasSubmenu
+          label={label}
+          stringLabel={stringLabel}
+          icon={icon}
+          contentIcon={contentIcon}
+          disabled={disabled}
+          trailingIcon={trailingIcon}
+        />
+      }
+      disabled={disabled}
+      onMouseEnter={handleMouseEnter}
+      {...other}
+    />
+  );
+};
