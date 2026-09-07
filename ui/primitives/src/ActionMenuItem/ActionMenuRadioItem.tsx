@@ -1,6 +1,6 @@
 import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 import React, { FC } from 'react';
-import { MenuItemProps } from '../Menu';
+import { MenuItemProps } from '../Menu/MenuItem';
 import { MenuRadioItem } from '../Menu/MenuRadioItem';
 import { Tooltip, TooltipProps } from '../Tooltip';
 

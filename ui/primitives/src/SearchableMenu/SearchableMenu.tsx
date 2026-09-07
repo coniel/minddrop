@@ -9,7 +9,7 @@ import { TranslationKey, i18n } from '@minddrop/i18n';
 import { fuzzySearch } from '@minddrop/utils';
 import { ActionMenuItemProps } from '../ActionMenuItem';
 import { Icon } from '../Icon';
-import { MenuItem } from '../Menu';
+import { MenuItem } from '../Menu/MenuItem';
 import {
   MenuSearchContextProvider,
   MenuSearchContextValue,

@@ -1,6 +1,6 @@
 import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 import { FC, useEffect, useState } from 'react';
-import { MenuItem, MenuItemProps } from '../Menu';
+import { MenuItem, MenuItemProps } from '../Menu/MenuItem';
 import { Tooltip, TooltipProps } from '../Tooltip';
 
 /* ============================================================

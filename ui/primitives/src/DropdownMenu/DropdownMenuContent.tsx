@@ -1,9 +1,9 @@
 import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 import React, { useMemo } from 'react';
 import { TranslationKey } from '@minddrop/i18n';
-import { ActionMenuItem } from '../ActionMenuItem';
-import { Menu } from '../Menu';
-import { SearchableMenu } from '../SearchableMenu';
+import { ActionMenuItem } from '../ActionMenuItem/ActionMenuItem';
+import { Menu } from '../Menu/Menu';
+import { SearchableMenu } from '../SearchableMenu/SearchableMenu';
 import { MenuContents } from '../types';
 import { generateMenu } from '../utils';
 import { DropdownMenuColorSelectionItem } from './DropdownMenuColorSelectionItem';

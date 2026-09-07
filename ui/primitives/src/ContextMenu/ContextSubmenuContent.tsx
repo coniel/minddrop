@@ -1,6 +1,6 @@
 import { ContextMenu as ContextMenuPrimitive } from '@base-ui/react/context-menu';
 import React from 'react';
-import { Menu } from '../Menu';
+import { Menu } from '../Menu/Menu';
 
 /* --- ContextSubmenuContent ---
    Styled popup panel for nested submenus.

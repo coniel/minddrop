@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useId, useRef } from 'react';
 import { ActionMenuItemProps } from '../ActionMenuItem';
-import { MenuItem } from '../Menu';
+import { MenuItem } from '../Menu/MenuItem';
 import { useMenuSearchContext } from '../Menu/MenuSearchContext';
 
 /* ============================================================

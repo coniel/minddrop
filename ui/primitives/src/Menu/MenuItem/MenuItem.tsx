@@ -1,19 +1,15 @@
 import React, { useMemo, useRef, useState } from 'react';
 import { TranslationKey, i18n } from '@minddrop/i18n';
 import { ContentIcon } from '../../ContentIcon';
-import {
-  ContextMenuContent,
-  ContextMenuPortal,
-  ContextMenuPositioner,
-  ContextMenuRoot,
-  ContextMenuTrigger,
-} from '../../ContextMenu';
-import {
-  DropdownMenuContent,
-  DropdownMenuPortal,
-  DropdownMenuPositioner,
-  DropdownMenuTrigger,
-} from '../../DropdownMenu';
+import { ContextMenuContent } from '../../ContextMenu/ContextMenuContent';
+import { ContextMenuPortal } from '../../ContextMenu/ContextMenuPortal';
+import { ContextMenuPositioner } from '../../ContextMenu/ContextMenuPositioner';
+import { ContextMenuRoot } from '../../ContextMenu/ContextMenuRoot';
+import { ContextMenuTrigger } from '../../ContextMenu/ContextMenuTrigger';
+import { DropdownMenuContent } from '../../DropdownMenu/DropdownMenuContent';
+import { DropdownMenuPortal } from '../../DropdownMenu/DropdownMenuPortal';
+import { DropdownMenuPositioner } from '../../DropdownMenu/DropdownMenuPositioner';
+import { DropdownMenuTrigger } from '../../DropdownMenu/DropdownMenuTrigger';
 import { Icon } from '../../Icon';
 import { IconButton } from '../../IconButton';
 import { IconProp, IconRenderer } from '../../IconRenderer';

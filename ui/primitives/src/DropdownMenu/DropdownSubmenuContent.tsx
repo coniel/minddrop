@@ -1,8 +1,8 @@
 import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 import React from 'react';
 import { TranslationKey } from '@minddrop/i18n';
-import { Menu } from '../Menu';
-import { SearchableMenu } from '../SearchableMenu';
+import { Menu } from '../Menu/Menu';
+import { SearchableMenu } from '../SearchableMenu/SearchableMenu';
 
 /* --- DropdownSubmenuContent ---
    Styled popup panel for nested submenus.

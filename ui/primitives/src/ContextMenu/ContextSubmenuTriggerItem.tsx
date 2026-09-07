@@ -1,8 +1,8 @@
 import { ContextMenu as ContextMenuPrimitive } from '@base-ui/react/context-menu';
 import React, { FC } from 'react';
 import { IconProp } from '../IconRenderer';
-import { MenuItem } from '../Menu';
 import { useMenuKeepsFocus } from '../Menu/MenuFocusContext';
+import { MenuItem } from '../Menu/MenuItem';
 import { TranslatableNode } from '../types';
 
 /* --- ContextSubmenuTriggerItem ---
