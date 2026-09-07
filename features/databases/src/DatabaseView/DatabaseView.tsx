@@ -1,13 +1,19 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { DataViewTypes, DataViews } from '@minddrop/data-views';
 import {
+  Database,
   DatabaseEntries,
   DatabaseEntryTemplates,
   Databases,
 } from '@minddrop/databases';
+import { Designs } from '@minddrop/designs-next';
 import { DataViewRenderer } from '@minddrop/feature-data-views';
 import { useTranslation } from '@minddrop/i18n';
-import { AddDataViewMenu, PanelView } from '@minddrop/ui-components';
+import {
+  AddDataViewMenu,
+  PanelView,
+  PanelViewProps,
+} from '@minddrop/ui-components';
 import { DataViewSortMenu } from '@minddrop/ui-data-views';
 import { SortableList } from '@minddrop/ui-drag-and-drop';
 import {
@@ -36,12 +42,21 @@ import {
   useTransientState,
 } from '@minddrop/ui-primitives';
 import { orderByCreated, reconcileIdOrder, uuid } from '@minddrop/utils';
+import { Views } from '@minddrop/views';
 import { DatabaseConfigurationPanel } from '../DatabaseConfigurationPanel';
+import { DatabaseDesignMode } from '../DatabaseDesignMode';
 import {
   setDatabaseViewState,
   useDatabaseViewState,
 } from '../DatabaseViewStateStore';
 import './DatabaseView.css';
+
+// The subview the database view shows while in design mode, editing
+// the database's designs in place of browsing its entries. Recorded
+// in the tab's history, so it trails the database in the breadcrumbs
+// and stays local to the tab.
+const DesignsSubviewId = 'designs';
+const DesignsSubviewIcon = 'content-icon:pencil-ruler:default';
 
 export interface DatabaseViewProps {
   /**
@@ -70,6 +85,12 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
   );
   const viewTypes = DataViewTypes.useAll();
   const viewState = useDatabaseViewState(databaseId);
+  const subview = Views.useSubview();
+  const setSubview = Views.useSetSubview();
+  const { t } = useTranslation();
+
+  // Design mode is the tab showing the designs subview
+  const designMode = subview?.id === DesignsSubviewId;
 
   // Sort views according to the config's view ID list, placing
   // views missing from it after the ordered ones by creation date.
@@ -119,6 +140,16 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
     });
   }, [databaseId, configurationPanelOpen]);
 
+  // Enter design mode by showing the designs subview, a navigation in
+  // the tab's history. The database's breadcrumb leads back out.
+  const enterDesignMode = useCallback(() => {
+    setSubview({
+      id: DesignsSubviewId,
+      title: t('databases.design.title'),
+      icon: DesignsSubviewIcon,
+    });
+  }, [setSubview, t]);
+
   // Persist the active view ID and apply the prop override
   // when the database view first mounts.
   useEffect(() => {
@@ -161,8 +192,6 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
     () => ({ ...activeViewType?.defaultOptions, ...(view?.options ?? {}) }),
     [activeViewType, view?.options],
   );
-
-  const { t } = useTranslation();
 
   // Determine whether the database is empty
   const isEmpty = entryIds.length === 0;
@@ -371,10 +400,22 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
     <div className="database-view">
       <PanelView
         className="database"
-        stringTitle={database.name}
-        contentIcon={database.icon}
+        {...resolveHeaderProps(database, designMode)}
         actions={[
-          renderNewEntryAction(),
+          // Design mode keeps only the configuration panel toggle
+          ...(designMode
+            ? []
+            : [
+                {
+                  icon: Designs.constants.Icon,
+                  label: 'databases.design.actions.designMode' as const,
+                  tooltip: {
+                    title: 'databases.design.actions.designMode' as const,
+                  },
+                  onClick: enterDesignMode,
+                },
+                renderNewEntryAction(),
+              ]),
           {
             icon: configurationPanelOpen
               ? 'panel-right-close'
@@ -384,9 +425,13 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
           },
         ]}
       >
+        {/* Design mode replaces the views and entries with the
+            database's designs and the design editor */}
+        {designMode && <DatabaseDesignMode databaseId={databaseId} />}
+
         {/* View switcher bar - hidden when the database has no entries or
             the views toolbar is disabled in settings */}
-        {!isEmpty && !database.hideViewsToolbar && (
+        {!designMode && !isEmpty && !database.hideViewsToolbar && (
           <div className="view-switcher">
             {view && (
               <>
@@ -513,7 +558,7 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
         )}
 
         {/* Empty state placeholder */}
-        {isEmpty && (
+        {!designMode && isEmpty && (
           <div className="empty-placeholder">
             <Stack align="center" gap={4}>
               {/* Concentric rings illustration with scattered icons */}
@@ -599,7 +644,7 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
         )}
 
         {/* View content */}
-        {!isEmpty && view && (
+        {!designMode && !isEmpty && view && (
           <DataViewRenderer key={view.id} view={view} entries={entryIds} />
         )}
       </PanelView>
@@ -609,3 +654,23 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
     </div>
   );
 };
+
+/**
+ * Resolves the panel header: the database's name and icon, or the
+ * designs title in design mode, the database itself then trailing
+ * as a breadcrumb of the subview.
+ *
+ * @param database - The database shown.
+ * @param designMode - Whether the view is in design mode.
+ * @returns The header props.
+ */
+function resolveHeaderProps(
+  database: Database,
+  designMode: boolean,
+): Pick<PanelViewProps, 'title' | 'stringTitle' | 'icon' | 'contentIcon'> {
+  if (!designMode) {
+    return { stringTitle: database.name, contentIcon: database.icon };
+  }
+
+  return { title: 'databases.design.title', icon: Designs.constants.Icon };
+}

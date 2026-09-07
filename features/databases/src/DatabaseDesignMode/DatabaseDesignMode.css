@@ -1,0 +1,17 @@
+.database-design-mode {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+
+  .database-design-mode-editor {
+    flex: 1;
+    min-height: 0;
+  }
+
+  .database-design-mode-empty {
+    display: block;
+    padding: var(--space-6);
+    text-align: center;
+  }
+}

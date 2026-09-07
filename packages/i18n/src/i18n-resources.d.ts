@@ -1043,10 +1043,25 @@ declare module 'i18next' {
           };
           design: {
             noDesigns: string;
+            title: string;
+            empty: string;
             selectDesign: string;
             actions: {
               edit: string;
               back: string;
+              designMode: string;
+              add: string;
+              useAsDefault: string;
+              settings: string;
+              duplicate: string;
+              delete: string;
+            };
+            delete: {
+              confirmation: {
+                title: string;
+                message: string;
+                confirm: string;
+              };
             };
             mapping: {
               title: string;

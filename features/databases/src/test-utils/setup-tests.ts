@@ -8,6 +8,7 @@ import {
 } from '@minddrop/databases';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { Designs } from '@minddrop/designs';
+import { Designs as DesignsNext } from '@minddrop/designs-next';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
@@ -79,5 +80,6 @@ export async function cleanup(): Promise<void> {
   DatabaseEntryTemplates.Store.clear();
   DatabaseTemplates.Store.clear();
   Designs.Store.clear();
+  DesignsNext.Store.clear();
   DataViewTypes.Store.clear();
 }

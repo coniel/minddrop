@@ -655,6 +655,9 @@ importers:
       '@minddrop/designs':
         specifier: workspace:*
         version: link:../../packages/designs
+      '@minddrop/designs-next':
+        specifier: workspace:*
+        version: link:../../packages/designs-next
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
@@ -703,6 +706,9 @@ importers:
       '@minddrop/ui-databases':
         specifier: workspace:*
         version: link:../../ui/databases
+      '@minddrop/ui-designs-next':
+        specifier: workspace:*
+        version: link:../../ui/designs-next
       '@minddrop/ui-drag-and-drop':
         specifier: workspace:*
         version: link:../../ui/drag-and-drop

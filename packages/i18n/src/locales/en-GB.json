@@ -987,10 +987,25 @@
     },
     "design": {
       "noDesigns": "No designs yet. Create one in the design studio.",
+      "title": "Designs",
+      "empty": "No designs yet. Add one with the + button.",
       "selectDesign": "Select a design",
       "actions": {
         "edit": "Edit in design studio",
-        "back": "Back to database"
+        "back": "Back to database",
+        "designMode": "Design mode",
+        "add": "New design",
+        "useAsDefault": "Use as default",
+        "settings": "Design settings",
+        "duplicate": "Duplicate",
+        "delete": "Delete"
+      },
+      "delete": {
+        "confirmation": {
+          "title": "Delete design",
+          "message": "Are you sure you want to delete this design? This cannot be undone.",
+          "confirm": "Delete"
+        }
       },
       "mapping": {
         "title": "Property mapping",
