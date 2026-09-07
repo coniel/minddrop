@@ -3124,7 +3124,6 @@ declare module 'i18next' {
         settings: {
           title: string;
           open: string;
-          back: string;
         };
         theme: {
           appearance: {
