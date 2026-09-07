@@ -8,8 +8,11 @@ import { CommentPopover } from './CommentPopover';
 import { darkPlusTheme } from './darkPlusTheme';
 import type { RevealRequest, SelectedFile, ViewMode } from './types';
 import './DiffViewer.css';
+import './monacoEnvironment';
 
-// Register the Dark+ theme and custom TypeScript tokenizer before any editor mounts
+// Register the Dark+ theme and custom TypeScript tokenizer before any
+// editor mounts. The loader resolves with the bundled editor, see
+// monacoEnvironment
 loader.init().then((monaco) => {
   monaco.editor.defineTheme('dark-plus', darkPlusTheme);
   registerTypescriptTokenizer(monaco);
