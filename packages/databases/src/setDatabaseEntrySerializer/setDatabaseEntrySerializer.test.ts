@@ -58,7 +58,7 @@ describe('setDatabaseEntrySerializer', () => {
     clearRecordedSqlStatements();
 
     // Register the SQL sync listener normally wired by
-    // initializeDatabaseEventHandlers
+    // initializeDatabaseEventHandlers.
     Events.on(DatabaseUpdatedEvent, 'test:sql-sync', (data) => {
       onUpdateDatabase(data);
     });

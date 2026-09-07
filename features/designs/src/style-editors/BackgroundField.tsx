@@ -76,7 +76,7 @@ export const BackgroundField: React.FC<BackgroundFieldProps> = ({
   onChange,
 }) => {
   // The none option clears the key, so an unfilled element emits no
-  // background
+  // background.
   function handleChange(option: BackgroundOption) {
     onChange(option === 'none' ? undefined : option);
   }

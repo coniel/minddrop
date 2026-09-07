@@ -18,7 +18,7 @@ export function matchDatabaseReference(
   }
 
   // Resolve the name to a database, case-insensitively as with entry
-  // addresses
+  // addresses.
   const database = getAllDatabases().find(
     ({ name }) => name.toLowerCase() === reference.toLowerCase(),
   );

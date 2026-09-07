@@ -21,7 +21,7 @@ export function useSortedDataViewEntries(
   const databaseEntries = DatabaseEntries.useByIds(entries);
 
   // View types positioning entries themselves have no sortable
-  // order
+  // order.
   const sortable = !!viewType?.sortable;
 
   return useMemo(() => {

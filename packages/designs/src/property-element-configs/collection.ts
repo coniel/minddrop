@@ -18,7 +18,7 @@ export const CollectionPropertyElementConfig: PropertyElementConfig = {
   get variants() {
     // One variant per registered view type able to render a
     // collection, so new view types join the vocabulary on
-    // registration
+    // registration.
     return DataViewTypes.getAll()
       .filter((viewType) =>
         viewType.supportedDataSources.includes('collection'),

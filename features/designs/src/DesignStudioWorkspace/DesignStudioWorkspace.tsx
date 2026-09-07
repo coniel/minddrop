@@ -46,7 +46,7 @@ const WorkspaceCanvas: React.FC<DesignStudioWorkspaceProps> = ({ design }) => {
   const activeLayout = useActiveLayout();
 
   // Return to the view the studio was left on, e.g. after a tab
-  // switch
+  // switch.
   const restoredView = useCanvasViewPersistence();
 
   // Fit the design's layouts into view when the workspace opens

@@ -308,7 +308,7 @@ export const ListPanelView: React.FC<ListPanelViewProps> = ({
 
   // Render a labelled section as a collapsible group carrying its
   // menu and add button, or an unlabelled one as a plain headed
-  // group
+  // group.
   function renderSection(section: ListPanelViewSection) {
     // Unlabelled sections have no label to hang the actions off
     if (!section.stringLabel) {

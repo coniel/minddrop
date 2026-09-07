@@ -228,7 +228,7 @@ export function useBlockDrag(
         Selection.dragContainsType(event, [BLOCK_SELECTION_ITEM_TYPE]);
 
       // Any other drag, such as of selected text, is Slate's to
-      // handle
+      // handle.
       if (!draggedPathsRef.current && !foreignBlockDrag) {
         return false;
       }

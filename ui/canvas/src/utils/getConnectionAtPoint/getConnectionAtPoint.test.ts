@@ -65,7 +65,7 @@ describe('getConnectionAtPoint', () => {
     ).toEqual(offsetConnection);
 
     // On the midpoint path, which the offset path no longer runs
-    // along
+    // along.
     expect(
       getConnectionAtPoint([offsetConnection], nodes, { x: 300, y: 50 }, 12),
     ).toBeNull();

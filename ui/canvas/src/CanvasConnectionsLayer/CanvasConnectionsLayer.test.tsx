@@ -331,7 +331,7 @@ describe('CanvasConnectionsLayer', () => {
     const preview = container.querySelector('.ui-canvas-connection-preview');
 
     // The arrow stays at the connection's target end, the path
-    // start
+    // start.
     expect(preview?.getAttribute('marker-start')).not.toBeNull();
     expect(preview?.getAttribute('marker-end')).toBeNull();
   });
@@ -378,7 +378,7 @@ describe('CanvasConnectionsLayer', () => {
     const preview = container.querySelector('.ui-canvas-connection-preview');
 
     // The preview ends at node-2's left midpoint, behind the
-    // arrowhead
+    // arrowhead.
     expect(preview?.getAttribute('d')).toBe(
       'M 200 50 C 300 50, 300 50, 389 50',
     );

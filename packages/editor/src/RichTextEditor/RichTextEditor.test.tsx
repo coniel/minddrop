@@ -376,7 +376,7 @@ describe('RichTextEditor block drag and drop', () => {
   };
 
   // Stands in for the browser's drag data, which jsdom does not
-  // provide
+  // provide.
   const createDataTransfer = () => {
     const data: Record<string, string> = {};
 

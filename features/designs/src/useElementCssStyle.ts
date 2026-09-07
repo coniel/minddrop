@@ -27,7 +27,7 @@ export function useElementCssStyle(
   );
 
   // Outside a property chrome wrapper the element carries its own
-  // margins
+  // margins.
   if (!insidePropertyChrome) {
     return css;
   }

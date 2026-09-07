@@ -33,7 +33,7 @@ function collectBindings(
   }
 
   // Elements with a title block can have a second, title-suffixed
-  // binding
+  // binding.
   if ('titleProperty' in element && element.titleProperty) {
     bindings[elementTitleBindingId(element.id)] = element.titleProperty;
   }

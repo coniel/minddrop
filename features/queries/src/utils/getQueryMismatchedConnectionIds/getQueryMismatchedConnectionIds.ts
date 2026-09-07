@@ -21,7 +21,7 @@ export function getQueryMismatchedConnectionIds(query: Query): Set<string> {
   const mismatched = new Set<string>();
 
   // Trace each node's mismatched sources back through the
-  // graph
+  // graph.
   query.nodes.forEach((node) => {
     // The databases feeding the node which lack its property
     const invalidDatabaseIds = new Set(

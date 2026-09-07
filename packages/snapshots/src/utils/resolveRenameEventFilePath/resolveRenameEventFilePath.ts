@@ -19,7 +19,7 @@ export function resolveRenameEventFilePath(event: RenameEvent): string {
   const timestamp = event.timestamp.toISOString().replace(/[-:.]/g, '');
 
   // Slugify the renamed entity's new name to keep the file name
-  // legible
+  // legible.
   const slug = slugify(Fs.fileNameFromPath(event.to));
 
   // Fall back to a generic slug when the name has no usable characters

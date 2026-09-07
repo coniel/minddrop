@@ -110,7 +110,7 @@ describe('resolveElementStyle', () => {
     };
 
     // The same element renders compact on a list row but not on a
-    // page
+    // page.
     expect(resolveElementStyle(element, 'list')).toMatchObject({
       fontSize: 'sm',
     });

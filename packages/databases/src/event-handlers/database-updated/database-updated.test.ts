@@ -66,7 +66,7 @@ describe('onUpdateDatabase', () => {
 
   it("syncs the entries' paths when the serializer changed", () => {
     // Repath the entry as the serializer conversion does before
-    // dispatching
+    // dispatching.
     const newPath = `${objectDatabase.path}/${objectEntry1.title}.json`;
 
     DatabaseEntriesStore.update(objectEntry1.id, { path: newPath });

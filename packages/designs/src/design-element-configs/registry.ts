@@ -58,7 +58,7 @@ export function getElementsForPropertyType(
   propertyType: PropertyType,
 ): DesignElementType[] {
   // Collect the type of every config listing the property type as
-  // compatible
+  // compatible.
   return elementConfigs
     .filter((config) => config.compatiblePropertyTypes.includes(propertyType))
     .map((config) => config.type as DesignElementType);

@@ -11,7 +11,7 @@ const { collection_1, collection_2, collection_virtual_1 } = CollectionFixtures;
 const { query_1 } = QueryFixtures;
 
 // A collection filter node referencing the first fixture
-// collection
+// collection.
 const collectionFilterNode: QueryCollectionFilterNode = {
   id: 'query-node_collection-filter',
   type: 'collection-filter',

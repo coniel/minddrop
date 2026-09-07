@@ -16,7 +16,7 @@ export function getViewportFrame(
   size: CanvasViewportSize,
 ): CanvasNodeFrame | null {
   // The viewport has not mounted, so nothing is known to be
-  // visible
+  // visible.
   if (!size.width || !size.height) {
     return null;
   }

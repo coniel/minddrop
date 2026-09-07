@@ -27,7 +27,7 @@ export const EditorShortcuts: EditorShortcut[] = [
     hotkey: 'tab',
     run: (editor) => {
       // Inside a table, Tab moves between cells, shadowing the indent
-      // binding
+      // binding.
       if (selectNextTableCell(editor)) {
         return true;
       }

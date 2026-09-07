@@ -26,7 +26,7 @@ export function insertPropertyElement(
   const design = studio.getDesign();
 
   // Property elements are instantiated against the design being
-  // edited
+  // edited.
   if (!design) {
     return;
   }

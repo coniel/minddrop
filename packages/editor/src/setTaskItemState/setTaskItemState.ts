@@ -61,7 +61,7 @@ function applyState(
   }
 
   // Without a spelling of its own the box is written back in its default
-  // form
+  // form.
   delete updated.checkedSyntax;
 
   return updated;

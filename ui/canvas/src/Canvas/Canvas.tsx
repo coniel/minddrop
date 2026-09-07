@@ -178,7 +178,7 @@ export const Canvas: React.FC<CanvasProps> = ({
 
   // Hold the pointer while the canvas itself is being dragged, so
   // panning and lassoing over text neither select it nor swap the
-  // cursor
+  // cursor.
   useInteractionLock(getCanvasCursor(panning, Boolean(lassoDrag)));
 
   /**

@@ -22,7 +22,7 @@ describe('searchSyncBatch', () => {
     reindexCalls = [];
 
     // Register an adapter which records the calls it
-    // receives
+    // receives.
     registerSearchAdapter({
       searchFullText: async () => [],
       searchInitialize: async () => undefined,

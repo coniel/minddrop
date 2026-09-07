@@ -75,7 +75,7 @@ describe('<SpaceField />', () => {
 
     // The key is cleared rather than pinned to a hairline, which
     // is no space at all rather than spacing inherited from
-    // anywhere
+    // anywhere.
     expect(step().textContent).toContain(
       i18n.t('designsStudio.style.space.none'),
     );

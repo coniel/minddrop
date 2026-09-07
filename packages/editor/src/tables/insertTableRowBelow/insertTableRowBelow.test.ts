@@ -23,7 +23,7 @@ describe('insertTableRowBelow', () => {
     const tableElement = editor.children[0] as TableElement;
 
     // An empty row lands between the two, and the cursor stays in its
-    // column
+    // column.
     expect(tableElement.children).toHaveLength(3);
     expect(Node.string(tableElement.children[1])).toBe('');
     expect(editor.selection?.anchor.path.slice(0, 3)).toEqual([0, 1, 1]);

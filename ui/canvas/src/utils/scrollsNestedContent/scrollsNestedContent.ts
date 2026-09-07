@@ -18,7 +18,7 @@ export function scrollsNestedContent(
     const { overflowX, overflowY } = getComputedStyle(element);
 
     // The element scrolls vertically under the wheel's vertical
-    // delta
+    // delta.
     if (
       event.deltaY !== 0 &&
       (overflowY === 'auto' || overflowY === 'scroll') &&

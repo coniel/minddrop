@@ -92,7 +92,7 @@ export function getSnappedResizeDeltas(
     : delta.y;
 
   // The frame the resize projects to, whose extents the guides
-  // span
+  // span.
   const projected = getResizeGuideFrame(state, gridDeltaX, gridDeltaY, mirror);
 
   // Snap each moving edge to the other nodes' edges and centers

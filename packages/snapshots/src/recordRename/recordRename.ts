@@ -47,7 +47,7 @@ export async function recordRename(
 ): Promise<RenameEvent> {
   // Keep timestamps strictly increasing so that events recorded
   // within the same millisecond replay in the order they were
-  // recorded
+  // recorded.
   const timestampMs = Math.max(Date.now(), lastEventTimestampMs + 1);
   lastEventTimestampMs = timestampMs;
 

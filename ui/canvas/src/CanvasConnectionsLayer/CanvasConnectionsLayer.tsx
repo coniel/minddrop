@@ -104,7 +104,7 @@ export const CanvasConnectionsLayer: React.FC<CanvasConnectionsLayerProps> = ({
   const { store } = useCanvasContext();
 
   // Canvas actions for converting press positions into canvas
-  // coordinates
+  // coordinates.
   const canvas = useCanvas();
 
   // The connections the registered hit test runs against, kept in
@@ -204,7 +204,7 @@ export const CanvasConnectionsLayer: React.FC<CanvasConnectionsLayerProps> = ({
   });
 
   // Render a connection's curve with its halo, hit area and
-  // arrowheads
+  // arrowheads.
   function renderConnection(connection: CanvasConnection) {
     // Anchor each end to its side, with the frame for shape
     // routing around the node.
@@ -251,7 +251,7 @@ export const CanvasConnectionsLayer: React.FC<CanvasConnectionsLayerProps> = ({
     });
 
     // The arrowhead marker matching the curve's color and
-    // thickness
+    // thickness.
     const marker = `url(#${markerId}-arrow-${color}-${thickness})`;
 
     // Re-connect drag arming for this connection's hit area

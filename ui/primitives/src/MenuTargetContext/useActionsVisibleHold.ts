@@ -25,7 +25,7 @@ export function useActionsVisibleHold(): ActionsVisibleHold {
   // Takes a hold on the actions' visibility. Releasing is delayed
   // so a popup closing to hand over to another does not flicker the
   // target, and a hold taken in the meantime keeps it held
-  // throughout
+  // throughout.
   const holdActionsVisible = useCallback(() => {
     setHolds((currentHolds) => currentHolds + 1);
 

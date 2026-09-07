@@ -47,7 +47,7 @@ export function useImageTreatment(path: string | null): ImageTreatment {
 
   return {
     // Undefined on unclassified images, leaving the class attribute
-    // untouched
+    // untouched.
     className: joinClassNames(
       bright && BrightImageClassName,
       lightBackground && LightBackgroundImageClassName,

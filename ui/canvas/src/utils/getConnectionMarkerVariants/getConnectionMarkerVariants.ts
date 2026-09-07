@@ -60,7 +60,7 @@ export function getConnectionMarkerVariants(
   const variants = new Map<string, CanvasConnectionMarkerVariant>();
 
   // The preview curve's combination when no re-connect styling
-  // applies
+  // applies.
   const preview = resolveConnectionStyle([previewStyle, connectionDefaults]);
 
   variants.set(`${preview.color}-${preview.thickness}`, {

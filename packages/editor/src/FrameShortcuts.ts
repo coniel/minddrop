@@ -9,7 +9,7 @@ import { setTaskItemState } from './setTaskItemState';
 import { BlockShortcut } from './types';
 
 // The bullet characters CommonMark accepts, each of which is preserved as
-// authored
+// authored.
 const BulletMarkers = ['-', '*', '+'];
 
 // The bullet given to an item created by a shortcut which types no marker of

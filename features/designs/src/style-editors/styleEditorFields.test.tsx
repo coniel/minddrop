@@ -589,7 +589,7 @@ describe('style editor fields', () => {
       renderBackgroundImageFields(studio);
 
       // Choose the fill fit, whose select leads the backdrop
-      // select
+      // select.
       await userEvent.click(screen.getAllByRole('combobox')[0]);
       await userEvent.click(
         screen.getByText('designsStudio.style.objectFit.fill.label'),

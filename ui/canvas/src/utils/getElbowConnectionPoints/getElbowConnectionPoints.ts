@@ -105,7 +105,7 @@ function getFacingPoints(
   const fromHorizontal = isHorizontalSide(from.side);
 
   // Distance from the source anchor to the target along the exit
-  // direction
+  // direction.
   const forward = dot(subtract(to.point, from.point), fromNormal);
 
   // Too little room to step between the anchors

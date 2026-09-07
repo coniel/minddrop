@@ -160,7 +160,7 @@ export const ElementsTreeNode: React.FC<ElementsTreeNodeProps> = ({
       id: elementId,
       // Fixed nodes are placed by the layout, with nothing to drop
       // before or after them, so they only take drops inside
-      // themselves
+      // themselves.
       axis: isFixed ? 'container' : 'vertical',
       enableInside: !!children,
       isLastChild,

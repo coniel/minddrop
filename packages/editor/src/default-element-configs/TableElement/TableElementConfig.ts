@@ -14,7 +14,7 @@ export const TableElementConfig: EditorBlockElementConfig<TableElement> = {
   component: TableElementComponent,
   // The conversion declares only the column count: normalization builds the
   // grid around the block's content, since a conversion cannot replace its
-  // children
+  // children.
   convert: () =>
     Ast.generateElement<TableElement>('table', { align: [null, null] }),
   shortcuts: ['| '],

@@ -168,7 +168,7 @@ const PropertyMappingSection: React.FC<DesignSectionProps> = ({
   design,
 }) => {
   // The stored mappings, filled in with the auto-mapped metadata
-  // properties
+  // properties.
   const propertyMap = Databases.resolveDesignPropertyMap(
     design.properties,
     database,

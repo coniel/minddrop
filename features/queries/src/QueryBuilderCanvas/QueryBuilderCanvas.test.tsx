@@ -21,7 +21,7 @@ const filter1: QueryFilterNode = {
 };
 
 // A second level filter for a property missing from the source
-// database
+// database.
 const filter2: QueryFilterNode = {
   ...(filterNode as QueryFilterNode),
   id: 'query-node_filter-2',

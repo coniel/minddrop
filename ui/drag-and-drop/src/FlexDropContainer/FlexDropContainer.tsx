@@ -345,7 +345,7 @@ function resolveSpacingGaps(justify: React.CSSProperties['justifyContent']): {
   }
 
   // Spread children keep the edges and share what is left between
-  // themselves
+  // themselves.
   if (justify === 'space-between') {
     return { leading: false, between: true, trailing: false };
   }

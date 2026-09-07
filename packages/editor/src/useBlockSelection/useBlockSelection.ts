@@ -237,7 +237,7 @@ function getAnchorPath(editor: Editor, path: Path): Path {
   const index = editor.selection.anchor.path[0];
 
   // Without a block to extend from, only the given block is
-  // selected
+  // selected.
   if (index < getContentStartIndex(editor)) {
     return path;
   }

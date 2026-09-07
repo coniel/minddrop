@@ -108,7 +108,7 @@ describe('<LayoutsPanel />', () => {
       );
 
       // The dropped element is added after the root's existing
-      // children
+      // children.
       expect(root.children.length).toBe(layout_card_1.tree.children.length + 1);
     });
 

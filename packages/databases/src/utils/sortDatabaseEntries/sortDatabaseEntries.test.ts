@@ -86,7 +86,7 @@ describe('sortDatabaseEntries', () => {
   it('does not sort property values by a metadata type', () => {
     // The entries have no property named 'title', so they all
     // trail as missing rather than being sorted by the title
-    // metadata
+    // metadata.
     expect(
       sortDatabaseEntries(entries, { by: 'property', property: 'title' }),
     ).toEqual([newest, middle, oldest]);

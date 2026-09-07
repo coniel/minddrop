@@ -23,7 +23,7 @@ export function selectPreviousTableCell(editor: Editor): boolean {
   const previous = resolvePreviousTableCellPath(cellEntry);
 
   // The first cell has no cell before it, but the keystroke was still the
-  // table's
+  // table's.
   if (!previous) {
     return true;
   }

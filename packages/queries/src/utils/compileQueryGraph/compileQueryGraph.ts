@@ -315,7 +315,7 @@ function compileSourceReferenceScopes(
   };
 
   // Restrict each of the referenced query's databases to its
-  // results
+  // results.
   return getQueryDatabases(referenced).map((databaseId) => ({
     databaseId,
     filter: { combinator: 'and' as const, filters: [condition] },

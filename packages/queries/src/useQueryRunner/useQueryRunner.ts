@@ -90,7 +90,7 @@ export function useQueryRunner<TValue>(
     );
 
     // Re-run after background syncs, whose changesets can span
-    // databases
+    // databases.
     Events.addListener(Databases.events.BackgroundSynced, listenerId, rerun);
 
     // Re-run when a source database's entries are reindexed

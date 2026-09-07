@@ -63,7 +63,7 @@ describe('<ListPanelView />', () => {
     renderView({ items: [item1, item2] });
 
     // The first item should be announced as a replace, not a
-    // navigation
+    // navigation.
     await waitFor(() => {
       expect(announcements).toContainEqual(
         expect.objectContaining({
@@ -84,7 +84,7 @@ describe('<ListPanelView />', () => {
     });
 
     // The selected item matches the subview, so mounting announces
-    // nothing
+    // nothing.
     renderView(
       { items: [item1, item2], selectedItem: item1 },
       { id: item1.id, title: item1.label },

@@ -63,7 +63,7 @@ const baseEvent = {
 } as unknown as DropEventData<DesignStudioDropEventData>;
 
 // An image property element, the drop target of the image file
-// drops
+// drops.
 const imageElementTemplate: DesignElementTemplate = {
   ...Designs.elementConfigs.Property.template,
   propertyType: 'image',

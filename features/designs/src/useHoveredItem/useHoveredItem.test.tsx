@@ -52,7 +52,7 @@ describe('useHoveredItem', () => {
     fireEvent.pointerEnter(screen.getByTestId('two'));
 
     // The first row's leave lands late, and must not unhover its
-    // successor
+    // successor.
     fireEvent.pointerLeave(screen.getByTestId('one'));
 
     expect(hoveredIds()).toEqual(['two']);

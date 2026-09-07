@@ -80,7 +80,7 @@ export function useWikilinkMenu(
   const open = armed && references.length > 0;
 
   // The hint prompts for a query, so it is only shown until one has been
-  // typed
+  // typed.
   const showHint = armed && query === '';
 
   const disarm = useCallback(() => {

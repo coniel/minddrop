@@ -31,7 +31,7 @@ export async function onFileSystemChanged(
   }
 
   // Restart the debounce, coalescing this change into the pending
-  // scan
+  // scan.
   if (scanTimer) {
     clearTimeout(scanTimer);
   }

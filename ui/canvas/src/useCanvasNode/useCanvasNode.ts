@@ -507,7 +507,7 @@ export function useCanvasNode(
   );
 
   // End drag or resize on mouseup, reporting the frame when it
-  // changed
+  // changed.
   const handleMouseUp = useCallback(() => {
     const wasDragging = Boolean(dragState.current);
 
@@ -517,7 +517,7 @@ export function useCanvasNode(
     setInteraction(null);
 
     // The alignment guides only apply to an in-progress
-    // interaction
+    // interaction.
     if (context) {
       context.store.setAlignmentGuides([]);
     }

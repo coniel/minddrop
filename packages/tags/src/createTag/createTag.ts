@@ -39,7 +39,7 @@ export async function createTag(
   const tagColor = color || resolveNextTagColor();
 
   // Generate the tag object, with the default icon in the tag's
-  // color
+  // color.
   const tag: Tag = {
     id: entityId('tag'),
     created: new Date(),

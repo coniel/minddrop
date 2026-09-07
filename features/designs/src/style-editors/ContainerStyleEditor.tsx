@@ -81,7 +81,7 @@ const ContentWidthOptions: OptionToggleFieldOption<MeasureToken | 'full'>[] = [
 ];
 
 // How children stack inside the container, shown as the arrow they
-// follow
+// follow.
 const DirectionOptions: OptionToggleFieldOption<ContainerDirection>[] = [
   {
     value: 'column',

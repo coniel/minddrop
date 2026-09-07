@@ -61,7 +61,7 @@ export const EditorPropertyRenderer: React.FC<EditorPropertyRendererProps> = ({
   });
 
   // The surrounding layout's type, which theme styles resolve
-  // against
+  // against.
   const layoutType = useLayoutType();
   // Resolve the element's style with its variant theme styles
   // applied; the editor variant styles through the editor shape.

@@ -48,7 +48,7 @@ import './QueryBuilderCanvas.css';
 const SPLICE_HIT_THRESHOLD = 12;
 
 // The shared look of query edges: plain flow lines without
-// arrowheads
+// arrowheads.
 const CONNECTION_DEFAULTS: CanvasConnectionStyleDefaults = {
   arrows: 'none',
   color: 'blue',

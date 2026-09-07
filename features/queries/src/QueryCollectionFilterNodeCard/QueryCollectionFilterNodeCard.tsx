@@ -155,7 +155,7 @@ export const QueryCollectionFilterNodeCard: React.FC<
   }
 
   // Persist a collection change, treating a cleared pick as
-  // unset
+  // unset.
   function handleCollectionChange(
     picked: ComboboxOption | ComboboxOption[] | null,
   ): void {

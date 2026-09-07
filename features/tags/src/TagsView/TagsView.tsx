@@ -44,7 +44,7 @@ export const TagsView: React.FC = () => {
   // The listed tags sectioned by group, ungrouped tags first
   const sections = useMemo(() => {
     // Returns the tag as a list item carrying its menu and rename
-    // popover
+    // popover.
     const toListItem = (tag: Tag): ListPanelViewItem => ({
       id: tag.id,
       label: tag.name,

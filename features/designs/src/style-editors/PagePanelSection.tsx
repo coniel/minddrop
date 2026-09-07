@@ -46,7 +46,7 @@ export const PagePanelSection: React.FC<PagePanelSectionProps> = ({ side }) => {
   }
 
   // Resize the panel, clamped to the same bounds edge-dragging
-  // applies
+  // applies.
   function handleWidthChange(width: number | null) {
     if (!panel || width === null) {
       return;

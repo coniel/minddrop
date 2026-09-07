@@ -25,7 +25,7 @@ export async function setElementImage(
   }
 
   // Bound elements receive the image as their design property's
-  // placeholder
+  // placeholder.
   if (!element.static && element.property) {
     const property = studio.getDesignProperty(element.property);
 

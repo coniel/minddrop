@@ -12,7 +12,7 @@ export const DesignLayoutsList: React.FC = () => {
   const layouts = useDesignStudioStore((state) => state.design?.layouts);
 
   // Designs with no layouts say so rather than rendering an empty
-  // list
+  // list.
   if (!layouts || layouts.length === 0) {
     return (
       <Text

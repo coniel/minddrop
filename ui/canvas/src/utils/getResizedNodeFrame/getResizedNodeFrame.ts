@@ -88,7 +88,7 @@ export function getResizedNodeFrame(
       );
 
       // Mirrored resizes shift the node to keep its center in
-      // place
+      // place.
       if (mirror) {
         return { width, x: centerX - width / 2 };
       }

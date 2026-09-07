@@ -9,7 +9,7 @@ import { fieldLabelKey } from './styleI18nKeys';
 const LineCounts = [1, 2, 3, 4, 5, 10, 15, 20];
 
 // An unset count is no truncation at all, the step below the
-// smallest
+// smallest.
 const NoTruncation = {
   label: 'designsStudio.style.truncate.off.label',
   description: 'designsStudio.style.truncate.off.description',

@@ -80,7 +80,7 @@ export function buildEntrySortSql(sort: EntrySort[]): EntrySortSql {
     params.push(entry.property);
 
     // Entries missing the property sort last regardless of
-    // direction
+    // direction.
     terms.push(`(${alias}.entry_id IS NULL) ASC`);
 
     // Order by the value column matching the property type

@@ -46,7 +46,7 @@ export const QueryNodeOutputList: React.FC<QueryNodeOutputListProps> = ({
   const entryIds = Queries.useNodeResults(queryId, nodeId);
 
   // The listed entry IDs, restricted to title matches while
-  // searching
+  // searching.
   const filteredIds = useMemo(() => {
     // List the full flow when not searching
     if (!searchTerm) {

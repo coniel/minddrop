@@ -89,7 +89,7 @@ const titleBoundLayout = {
 };
 
 // A design declaring the 'Heading' property and the title-bound
-// layout
+// layout.
 const titleBoundDesign = {
   ...design_books,
   id: 'design_title-bound' as const,

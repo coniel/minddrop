@@ -310,7 +310,7 @@ describe('withTables', () => {
       const tableElement = editor.children[0] as TableElement;
 
       // The table gains an empty row, and the cursor wraps to its first
-      // cell
+      // cell.
       expect(tableElement.children).toHaveLength(3);
       expect(editor.selection?.anchor.path.slice(0, 3)).toEqual([0, 2, 0]);
     });
@@ -333,7 +333,7 @@ describe('withTables', () => {
       const tableElement = editor.children[0] as TableElement;
 
       // An empty row lands between the two, and the cursor stays in its
-      // column
+      // column.
       expect(tableElement.children).toHaveLength(3);
       expect(Node.string(tableElement.children[1])).toBe('');
       expect(editor.selection?.anchor.path.slice(0, 3)).toEqual([0, 1, 1]);
@@ -412,7 +412,7 @@ describe('withTables', () => {
       const tableElement = editor.children[0] as TableElement;
 
       // The empty row is gone, and the cursor sits at the end of the row
-      // above
+      // above.
       expect(tableElement.children).toHaveLength(2);
       expect(Node.string(tableElement)).toBe('abcd');
       expect(editor.selection?.anchor.path.slice(0, 3)).toEqual([0, 0, 1]);

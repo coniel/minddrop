@@ -30,7 +30,7 @@ export function reconcileNodes(
   const placedEntries = new Set<string>();
 
   // Filter out entry nodes whose entry no longer exists in the
-  // collection
+  // collection.
   const filtered = nodes.filter((node) => {
     if (node.type !== 'entry') {
       return true;
@@ -83,7 +83,7 @@ export function reconcileNodes(
   });
 
   // Append nodes for the other unplaced entries at deterministic
-  // positions
+  // positions.
   const positions = getUnplacedNodePositions(filtered, gridPlaced.length);
   const unplacedNodes = gridPlaced.map<CanvasViewNode>((entryId, index) => ({
     type: 'entry',

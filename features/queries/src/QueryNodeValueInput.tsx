@@ -205,7 +205,7 @@ const QueryNodeEntryValueInput: React.FC<QueryNodeEntryValueInputProps> = ({
   const selected = options.filter((option) => pickedIds.includes(option.value));
 
   // Persist the picked entries' IDs, treating cleared picks as
-  // unset
+  // unset.
   function handleValueChange(
     picked: ComboboxOption | ComboboxOption[] | null,
   ): void {
@@ -297,7 +297,7 @@ const QueryNodeDateValueInput: React.FC<QueryNodeDateValueInputProps> = ({
 
   // Persist the picked option, defaulting custom to today and
   // day ranges to a week, keeping the count across direction
-  // changes
+  // changes.
   function handleSelect(picked: QueryDateOption): void {
     if (picked === 'custom') {
       onChange({ type: 'absolute', date: new Date() });
@@ -333,7 +333,7 @@ const QueryNodeDateValueInput: React.FC<QueryNodeDateValueInputProps> = ({
   }
 
   // Persist a picked absolute date, treating cleared dates as
-  // unset
+  // unset.
   function handleDateChange(date: Date | null): void {
     onChange(date ? { type: 'absolute', date } : undefined);
   }

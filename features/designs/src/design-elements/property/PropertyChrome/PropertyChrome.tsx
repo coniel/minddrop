@@ -44,7 +44,7 @@ export const PropertyChrome: React.FC<PropertyChromeProps> = ({
   const entryContext = useDesignProperties();
   const property = useElementProperty(element.id);
   // The surrounding layout's type, which theme styles resolve
-  // against
+  // against.
   const layoutType = useLayoutType();
   // The full element CSS, from which the wrapper takes the margins
   const elementCss = useElementCssStyle(element);

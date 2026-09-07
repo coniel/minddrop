@@ -16,7 +16,7 @@ export function toggleTaskItem(editor: SlateEditor, frameId: string): void {
   );
 
   // Only a task item, which is a list item carrying a checked state, can be
-  // toggled
+  // toggled.
   if (frame?.kind !== 'list-item' || frame.checked === undefined) {
     return;
   }

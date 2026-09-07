@@ -24,7 +24,7 @@ describe('backgroundCss', () => {
 
   it('degrades an unknown step to no background', () => {
     // Values left behind by removed vocabulary must not break CSS
-    // emission
+    // emission.
     expect(
       backgroundCss({ background: 'raised' as unknown as 'subtle' }),
     ).toEqual({});

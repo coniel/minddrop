@@ -5,7 +5,7 @@ import { CanvasStore, createCanvasStore } from '../createCanvasStore';
 import { CanvasAlignmentGuides } from './CanvasAlignmentGuides';
 
 // Renders the guides within a canvas provider backed by the given
-// store
+// store.
 const renderGuides = (store: CanvasStore) =>
   render(
     <CanvasProvider store={store}>

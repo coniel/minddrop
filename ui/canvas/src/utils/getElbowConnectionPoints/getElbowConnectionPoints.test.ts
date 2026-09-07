@@ -60,7 +60,7 @@ describe('getElbowConnectionPoints', () => {
   it('detours perpendicular anchors whose corner is invalid', () => {
     // Bottom of one card to the left side of a card below left of
     // it: down, left, down, right, splitting the parallel legs
-    // evenly
+    // evenly.
     const points = getElbowConnectionPoints(
       { point: { x: 100, y: 100 }, side: 'bottom' },
       { point: { x: -200, y: 300 }, side: 'left' },

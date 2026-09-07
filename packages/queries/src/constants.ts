@@ -16,7 +16,7 @@ export const QueriesIcon: UiIconName = 'list-filter';
 export const DefaultQueryIcon = 'lucide:list-filter:default';
 
 // Where a new query's unconfigured source node is seeded on the
-// canvas
+// canvas.
 export const DEFAULT_SOURCE_NODE_POSITION = { x: 0, y: 120 };
 
 // Where a new query's results node is seeded, leaving a gap
@@ -86,7 +86,7 @@ export const QUERY_OPERATORS_BY_PROPERTY_TYPE: Record<
   ],
   date: [...DATE_OPERATORS, 'is-empty', 'is-not-empty'],
   // Created/last-modified always have a value, no existence
-  // operators
+  // operators.
   created: DATE_OPERATORS,
   'last-modified': DATE_OPERATORS,
   toggle: ['is-true', 'is-false'],

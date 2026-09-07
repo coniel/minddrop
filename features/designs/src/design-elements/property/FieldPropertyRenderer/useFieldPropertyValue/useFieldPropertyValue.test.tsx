@@ -79,7 +79,7 @@ describe('useFieldPropertyValue', () => {
     await userEvent.tab();
 
     // Nothing was persisted and the field returned to the stored
-    // value
+    // value.
     expect(committedValues).toEqual({});
     expect(screen.getByRole('textbox')).toHaveValue(StoredValue);
   });

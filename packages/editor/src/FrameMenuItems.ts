@@ -37,7 +37,7 @@ export const FrameMenuItems: BlockMenuItem[] = [
     keywords: 'editor.elements.task-list-item.keywords',
     icon: 'list-todo',
     // A task item is a list item carrying a checked state, which starts
-    // unticked
+    // unticked.
     frame: () => ({
       id: uuid(),
       kind: 'list-item',

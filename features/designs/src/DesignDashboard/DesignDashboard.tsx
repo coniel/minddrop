@@ -174,7 +174,7 @@ const DesignCardPreview: React.FC<DesignCardPreviewProps> = ({ design }) => {
   const scale = getPreviewScale(bounds, containerSize);
 
   // Only database designs carry a property schema for placeholder
-  // resolution
+  // resolution.
   const properties = design.type === 'database' ? design.properties : [];
 
   // Track the preview area size so the design can be fitted to it

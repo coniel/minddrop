@@ -249,7 +249,7 @@ const TableRowMenu: React.FC<TableRowMenuProps> = ({
     }
 
     // Notified last: the close releases the hovered row, unmounting this
-    // menu
+    // menu.
     onOpenChangeComplete(open);
   };
 

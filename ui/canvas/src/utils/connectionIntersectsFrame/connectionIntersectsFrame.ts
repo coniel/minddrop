@@ -26,7 +26,7 @@ export function connectionIntersectsFrame(
   frame: CanvasNodeFrame,
 ): boolean {
   // Cheap reject against the path's bounds before testing every
-  // segment
+  // segment.
   if (!framesIntersect(getConnectionPathBounds(from, to, shape), frame)) {
     return false;
   }

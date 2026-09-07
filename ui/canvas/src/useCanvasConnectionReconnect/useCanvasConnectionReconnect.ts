@@ -282,7 +282,7 @@ export function useCanvasConnectionReconnect(
     }
 
     // Report the drop with a null target when it landed on empty
-    // canvas
+    // canvas.
     if (onReconnect) {
       onReconnect({
         connectionId: drag.reconnect.connectionId,

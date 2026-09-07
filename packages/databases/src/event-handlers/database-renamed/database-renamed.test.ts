@@ -56,7 +56,7 @@ describe('onRenameDatabase', () => {
     setupRecordingTestSqlDatabase();
 
     // Register the reference rewrite listener normally wired by
-    // initializeDatabaseEventHandlers
+    // initializeDatabaseEventHandlers.
     Events.on(ItemReferences.events.AddressesChanged, 'test', (data) =>
       onItemAddressesChanged(data),
     );

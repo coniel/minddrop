@@ -5,7 +5,7 @@ import { useInteractionLock } from './useInteractionLock';
 import { useIsInteracting } from './useIsInteracting';
 
 // Holds the lock with the given cursor for as long as it is
-// rendered
+// rendered.
 const TestLock: React.FC<{ cursor: string | null }> = ({ cursor }) => {
   useInteractionLock(cursor);
 
@@ -13,7 +13,7 @@ const TestLock: React.FC<{ cursor: string | null }> = ({ cursor }) => {
 };
 
 // The cursor the lock is currently forcing, empty when it holds
-// none
+// none.
 const lockedCursor = () =>
   document.body.style.getPropertyValue('--ui-canvas-interaction-cursor');
 

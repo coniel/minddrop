@@ -104,7 +104,7 @@ export function handleDropOnDesignElement(
     }
 
     // An existing design element was dropped, move it into the
-    // container
+    // container.
     if (designElements && designElements.length) {
       const droppedElement = resolveDroppedElement(
         studio,

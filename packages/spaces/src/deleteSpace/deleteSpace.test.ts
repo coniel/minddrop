@@ -19,7 +19,7 @@ const { dataView_gallery_1 } = DataViewFixtures;
  */
 function embedDataViewInSpace(): void {
   // The data view is an ordinary persisted view, not owned by the
-  // space
+  // space.
   DataViews.Store.load([dataView_gallery_1]);
   MockFs.addFiles([DataViews.resolveFilePath(dataView_gallery_1.id)]);
 

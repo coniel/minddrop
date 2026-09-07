@@ -245,7 +245,7 @@ export const DefaultDesignTheme: DesignTheme = {
     image: {
       // A placed picture starts on photograph proportions with a
       // covering fit, the cover-image look most images are placed
-      // for
+      // for.
       image: {
         style: { aspectRatio: '4/3', objectFit: 'cover' },
       },

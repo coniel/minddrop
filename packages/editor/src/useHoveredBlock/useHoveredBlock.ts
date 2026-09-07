@@ -197,7 +197,7 @@ export function useHoveredBlock(
       }
 
       // The pointer is inside the editor, so begin counting down to
-      // activation
+      // activation.
       startActivation();
 
       // Still over the block the controls already point at, which

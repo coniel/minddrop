@@ -75,7 +75,7 @@ export function useNestedStyle(
       const next: Record<string, unknown> = { ...valueRef.current };
 
       // Remove keys the user cleared so the object does not linger
-      // empty
+      // empty.
       if (nestedValue === undefined) {
         delete next[nestedKey];
       } else {

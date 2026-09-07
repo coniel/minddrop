@@ -297,7 +297,7 @@ export function withTables(editor: Editor): Editor {
 
   editor.insertData = (data) => {
     // Pasting into a cell degrades to inline text, since a cell cannot hold
-    // blocks
+    // blocks.
     if (getTableCellEntry(editor)) {
       const text = data.getData('text/plain');
 
@@ -556,7 +556,7 @@ function normalizeTable(
 
   // A table which has no rows is rebuilt as a starter grid around whatever
   // content it holds, which is how a block converted into a table gets its
-  // grid
+  // grid.
   if (!rows.length) {
     buildStarterGrid(editor, table, path);
 
@@ -725,7 +725,7 @@ function buildStarterGrid(
   path: Path,
 ): void {
   // Columns follow the alignment the conversion declared, or the starter
-  // width
+  // width.
   const columns = Math.max((table.align || []).length, StarterColumns);
 
   SlateEditor.withoutNormalizing(editor, () => {
