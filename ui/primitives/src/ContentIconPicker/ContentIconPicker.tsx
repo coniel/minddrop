@@ -225,7 +225,7 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
       <div className="content-icon-picker-options">
         {results.length <= 60 && (
           <ScrollArea className="content-icon-picker-scroll-area">
-            <div className="content-icon-picker-category-group-icons">
+            <div className="content-icon-picker-category-group-icons content-icon-picker-flat-icons">
               {results.map((icon) => (
                 <IconSelectButton
                   key={`${icon.set}:${icon.name}`}

@@ -7,7 +7,7 @@
   overflow: hidden;
 
   .toolbar {
-    padding: 0 0.5rem;
+    padding: 0 var(--space-2);
     align-items: center;
     border-bottom: var(--border-width-thin) solid var(--border-subtle);
 
@@ -20,18 +20,25 @@
     }
 
     &.content-icon-picker-color-toolbar {
-      padding: 0.5rem;
+      padding: var(--space-2);
     }
   }
 
   /* Header virtual row */
   .content-icon-picker-category-group {
-    padding: 0.5rem 0.5rem 0 0.5rem;
+    padding: var(--space-2) var(--space-2) 0 var(--space-2);
   }
 
   /* Icon virtual row, left padding combines the header and icon row insets */
   .content-icon-picker-category-group-icons {
-    padding: 0 0.5rem 0 0.75rem;
+    padding: 0 var(--space-2) 0 var(--space-3);
+  }
+
+  /* Short result lists render without category headers, so the icons
+     take a vertical inset matching their horizontal one */
+  .content-icon-picker-flat-icons {
+    padding-top: var(--space-3);
+    padding-bottom: var(--space-3);
   }
 
   .content-icon-picker-options {
