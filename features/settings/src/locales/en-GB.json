@@ -1,7 +1,6 @@
 {
   "settings": {
     "title": "Settings",
-    "open": "Open settings",
-    "back": "Back to app"
+    "open": "Open settings"
   }
 }

@@ -4,7 +4,6 @@ import { registerDatabaseViews } from '@minddrop/feature-databases';
 import { registerDesignStudioViews } from '@minddrop/feature-designs';
 import { registerQueryViews } from '@minddrop/feature-queries';
 import { registerSearchViews } from '@minddrop/feature-search';
-import { registerSettingsViews } from '@minddrop/feature-settings';
 import { registerSpaceViews } from '@minddrop/feature-spaces';
 import { registerTagViews } from '@minddrop/feature-tags';
 
@@ -19,7 +18,6 @@ export function registerViews(): void {
   registerDatabaseViews();
   registerDesignStudioViews();
   registerSearchViews();
-  registerSettingsViews();
   registerSpaceViews();
   registerTagViews();
 }

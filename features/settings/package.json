@@ -20,11 +20,8 @@
     "@minddrop/events": "workspace:*",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/settings": "workspace:*",
-    "@minddrop/stores": "workspace:*",
     "@minddrop/test-utils": "workspace:*",
-    "@minddrop/ui-components": "workspace:*",
     "@minddrop/ui-icons": "workspace:*",
-    "@minddrop/ui-primitives": "workspace:*",
-    "@minddrop/views": "workspace:*"
+    "@minddrop/ui-primitives": "workspace:*"
   }
 }

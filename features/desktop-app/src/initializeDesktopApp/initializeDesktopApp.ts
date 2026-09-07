@@ -15,10 +15,7 @@ import { initializeDesignsNextFeature } from '@minddrop/feature-designs-next';
 import { initializeDevToolsFeature } from '@minddrop/feature-dev-tools';
 import { initializeQueriesFeature } from '@minddrop/feature-queries';
 import { initializeSearch } from '@minddrop/feature-search';
-import {
-  SettingsUiState,
-  initializeSettingsFeature,
-} from '@minddrop/feature-settings';
+import { initializeSettingsFeature } from '@minddrop/feature-settings';
 import {
   SpaceViewStateStore,
   initializeSpacesFeature,
@@ -91,9 +88,6 @@ async function runInitialization(): Promise<void> {
 
   // Hydrate app UI state from persisted config
   await AppUiState.hydrate();
-
-  // Hydrate the settings view UI state
-  await SettingsUiState.hydrate();
 
   // Hydrate per-database view state
   await DatabaseViewStateStore.hydrate();

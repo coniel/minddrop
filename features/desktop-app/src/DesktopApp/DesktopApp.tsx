@@ -7,6 +7,7 @@ import {
 import { DatabasesFeature } from '@minddrop/feature-databases';
 import { DevTools, ScreenshotPicker } from '@minddrop/feature-dev-tools';
 import { SearchFeature } from '@minddrop/feature-search';
+import { SettingsFeature } from '@minddrop/feature-settings';
 import { SpacesFeature } from '@minddrop/feature-spaces';
 import { TabsToolbar, ViewRenderer } from '@minddrop/feature-views';
 import { IconsProvider } from '@minddrop/ui-icons';
@@ -85,6 +86,7 @@ export const DesktopApp: React.FC = () => {
           <ErrorToastFeature />
           <SpacesFeature />
           <SearchFeature />
+          <SettingsFeature />
           <DevTools />
           <ScreenshotPicker />
         </IconsProvider>

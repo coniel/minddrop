@@ -5,12 +5,11 @@ export const OpenSettingsEvent = 'settings:open';
 export interface OpenSettingsEventData {
   /**
    * The ID of the registered settings view to open. When omitted,
-   * the first registered settings view opens.
+   * the dialog opens on the last selected settings view, falling
+   * back to the first registered one.
    */
   view?: string;
 }
-
-export type SettingsViewProps = OpenSettingsEventData;
 
 declare module '@minddrop/events/EventDataMap' {
   interface EventDataMap {

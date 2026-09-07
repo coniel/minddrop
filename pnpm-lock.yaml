@@ -1343,24 +1343,15 @@ importers:
       '@minddrop/settings':
         specifier: workspace:*
         version: link:../../packages/settings
-      '@minddrop/stores':
-        specifier: workspace:*
-        version: link:../../packages/stores
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../../packages/test-utils
-      '@minddrop/ui-components':
-        specifier: workspace:*
-        version: link:../../ui/components
       '@minddrop/ui-icons':
         specifier: workspace:*
         version: link:../../ui/icons
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives
-      '@minddrop/views':
-        specifier: workspace:*
-        version: link:../../packages/views
     devDependencies:
       '@minddrop/eslint-config':
         specifier: workspace:*
