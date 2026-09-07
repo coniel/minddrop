@@ -244,6 +244,22 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
 
   const handleQueryChange = useCallback((value: string) => setQuery(value), []);
 
+  const handleQueryKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLInputElement>) => {
+      // Escape clears an active search. Stopping the event keeps a
+      // surrounding popover open, which escape on an empty search
+      // closes as usual.
+      if (event.key !== 'Escape' || !query) {
+        return;
+      }
+
+      event.preventDefault();
+      event.stopPropagation();
+      setQuery('');
+    },
+    [query],
+  );
+
   return (
     <div
       className={propsToClass('content-icon-picker', { className })}
@@ -283,8 +299,11 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
         <TextField
           variant="ghost"
           placeholder="iconPicker.filter"
+          value={query}
           unassisted
+          autoFocus
           onValueChange={handleQueryChange}
+          onKeyDown={handleQueryKeyDown}
         />
         <Tooltip title="iconPicker.random">
           <IconButton
