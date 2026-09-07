@@ -1,5 +1,6 @@
 import { Events } from '@minddrop/events';
-import { PropertySchema } from '@minddrop/properties';
+import { Properties, PropertySchema } from '@minddrop/properties';
+import { InvalidParameterError } from '@minddrop/utils';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabasePropertyAddedEvent, DatabaseUpdatedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
@@ -13,6 +14,8 @@ import { writeDatabaseConfig } from '../writeDatabaseConfig';
  * @param property - The property to add.
  * @returns The updated database config.
  *
+ * @throws {InvalidParameterError} If the database already has a property of a singleton type.
+ *
  * @dispatches 'databases:database:updated' event
  * @dispatches 'databases:property:added' event
  */
@@ -22,6 +25,17 @@ export async function addDatabaseProperty(
 ): Promise<Database> {
   // Get the database config
   const config = getDatabase(id);
+
+  // Guard against a second property of a singleton type, such as
+  // the title or content property.
+  if (
+    Properties.schemas[property.type].singleton &&
+    config.properties.some((existing) => existing.type === property.type)
+  ) {
+    throw new InvalidParameterError(
+      `Database '${id}' already has a '${property.type}' property.`,
+    );
+  }
 
   // Add the property to the database's properties
   const updated = {

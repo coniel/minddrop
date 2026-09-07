@@ -3,104 +3,119 @@ import { PropertiesSchema } from '@minddrop/properties';
 import { objectEntry1 } from '../../test-utils';
 import { markdownEntrySerializer } from './markdown-entry-serializer';
 
-const schema1: PropertiesSchema = [
+const contentSchema: PropertiesSchema = [
   {
     type: 'content',
     name: 'Content',
   },
 ];
 
-const entry1 = {
+const contentEntry = {
   ...objectEntry1,
   properties: {
     Content: 'Test content',
   },
 };
-const schema2: PropertiesSchema = [
-  ...schema1,
-  {
-    type: 'content',
-    name: 'Content 2',
-  },
-];
 
-const entry2 = {
-  ...entry1,
-  properties: {
-    ...entry1.properties,
-    'Content 2': 'Test subtitle',
-  },
-};
-
-const schema3: PropertiesSchema = [
-  ...schema1,
+const mixedSchema: PropertiesSchema = [
+  ...contentSchema,
   {
     type: 'text',
     name: 'Title',
   },
 ];
 
-const entry3 = {
-  ...entry1,
+const mixedEntry = {
+  ...contentEntry,
   properties: {
-    ...entry1.properties,
+    ...contentEntry.properties,
     Title: 'Test title',
   },
 };
 
+const frontmatterOnlySchema: PropertiesSchema = [
+  {
+    type: 'text',
+    name: 'Title',
+  },
+];
+
 describe('markdown-entry-serializer', () => {
   describe('serialize', () => {
-    it('serializes single formatted text property as markdown', () => {
+    it('serializes the content property as the markdown body', () => {
       expect(
-        markdownEntrySerializer.serialize(schema1, entry1.properties),
+        markdownEntrySerializer.serialize(
+          contentSchema,
+          contentEntry.properties,
+        ),
       ).toBe('Test content');
     });
 
-    it('serializes multiple formatted text properties as markdown with headings', () => {
+    it('adds the other properties as frontmatter', () => {
       expect(
-        markdownEntrySerializer.serialize(schema2, entry2.properties),
-      ).toBe('## Content\n\nTest content\n\n## Content 2\n\nTest subtitle');
+        markdownEntrySerializer.serialize(mixedSchema, mixedEntry.properties),
+      ).toBe('---\nTitle: Test title\n---\n\nTest content');
     });
 
-    it('adds properties as frontmatter', () => {
+    it('serializes headings in the content as part of the body', () => {
       expect(
-        markdownEntrySerializer.serialize(schema3, entry3.properties),
-      ).toBe('---\nTitle: Test title\n---\n\nTest content');
+        markdownEntrySerializer.serialize(contentSchema, {
+          Content: '## Content\n\nTest content',
+        }),
+      ).toBe('## Content\n\nTest content');
+    });
+
+    it('serializes an empty body when the schema has no content property', () => {
+      expect(
+        markdownEntrySerializer.serialize(frontmatterOnlySchema, {
+          Title: 'Test title',
+        }),
+      ).toBe('---\nTitle: Test title\n---\n\n');
     });
   });
 
   describe('deserialize', () => {
-    it('deserializes single formatted text property from markdown', () => {
+    it('deserializes the markdown body as the content property', () => {
       const serializedEntry = markdownEntrySerializer.serialize(
-        schema1,
-        entry1.properties,
+        contentSchema,
+        contentEntry.properties,
       );
 
       expect(
-        markdownEntrySerializer.deserialize(schema1, serializedEntry),
-      ).toEqual(entry1.properties);
-    });
-
-    it('deserializes multiple formatted text properties from markdown', () => {
-      const serializedEntry = markdownEntrySerializer.serialize(
-        schema2,
-        entry2.properties,
-      );
-
-      expect(
-        markdownEntrySerializer.deserialize(schema2, serializedEntry),
-      ).toEqual(entry2.properties);
+        markdownEntrySerializer.deserialize(contentSchema, serializedEntry),
+      ).toEqual(contentEntry.properties);
     });
 
     it('deserializes frontmatter properties', () => {
       const serializedEntry = markdownEntrySerializer.serialize(
-        schema2,
-        entry2.properties,
+        mixedSchema,
+        mixedEntry.properties,
       );
 
       expect(
-        markdownEntrySerializer.deserialize(schema2, serializedEntry),
-      ).toEqual(entry2.properties);
+        markdownEntrySerializer.deserialize(mixedSchema, serializedEntry),
+      ).toEqual(mixedEntry.properties);
+    });
+
+    it('round trips headings in the content', () => {
+      const properties = { Content: '## Content\n\nTest content' };
+      const serializedEntry = markdownEntrySerializer.serialize(
+        contentSchema,
+        properties,
+      );
+
+      expect(
+        markdownEntrySerializer.deserialize(contentSchema, serializedEntry),
+      ).toEqual(properties);
+    });
+
+    it('omits the content when the schema has no content property', () => {
+      expect(
+        markdownEntrySerializer.deserialize(
+          frontmatterOnlySchema,
+          '---\nTitle: Test title\n---\n\nTest content',
+        ),
+      ).toEqual({ Title: 'Test title' });
     });
   });
 });

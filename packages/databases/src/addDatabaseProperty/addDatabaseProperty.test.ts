@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { PropertySchema } from '@minddrop/properties';
+import { InvalidParameterError } from '@minddrop/utils';
 import { DatabasesStore } from '../DatabasesStore';
 import {
   MockFs,
@@ -48,5 +49,24 @@ describe('addDatabaseProperty', () => {
     );
 
     expect(result.properties).toEqual(updatedDatabase.properties);
+  });
+
+  it('throws when the database already has a property of a singleton type', async () => {
+    // objectDatabase already declares a content property
+    await expect(
+      addDatabaseProperty(objectDatabase.id, {
+        name: 'Second Content',
+        type: 'content',
+      }),
+    ).rejects.toThrowError(InvalidParameterError);
+  });
+
+  it('does not add a duplicate singleton property to the database', async () => {
+    await addDatabaseProperty(objectDatabase.id, {
+      name: 'Second Content',
+      type: 'content',
+    }).catch(() => null);
+
+    expect(DatabasesStore.get(objectDatabase.id)).toEqual(objectDatabase);
   });
 });

@@ -725,10 +725,7 @@ declare module 'i18next' {
                 diet: {
                   name: string;
                 };
-                ingredients: {
-                  name: string;
-                };
-                instructions: {
+                recipe: {
                   name: string;
                 };
               };

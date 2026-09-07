@@ -669,11 +669,8 @@
           "diet": {
             "name": "Diet"
           },
-          "ingredients": {
-            "name": "Ingredients"
-          },
-          "instructions": {
-            "name": "Instructions"
+          "recipe": {
+            "name": "Recipe"
           }
         },
         "options": {

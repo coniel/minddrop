@@ -76,13 +76,8 @@ export const RecipesDatabaseTemplate: DatabaseTemplateFn = (t) => {
       },
       {
         type: 'content',
-        name: t(propertyKey('ingredients', 'name')),
-        icon: 'lucide:list:default',
-      },
-      {
-        type: 'content',
-        name: t(propertyKey('instructions', 'name')),
-        icon: 'lucide:list-ordered:default',
+        name: t(propertyKey('recipe', 'name')),
+        icon: 'lucide:text-quote:default',
       },
     ],
   };
