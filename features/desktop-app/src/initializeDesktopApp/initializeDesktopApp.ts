@@ -21,7 +21,7 @@ import {
   initializeSpacesFeature,
 } from '@minddrop/feature-spaces';
 import { initializeTagsFeature } from '@minddrop/feature-tags';
-import { TabSetsStore, initializeViewsFeature } from '@minddrop/feature-views';
+import { initializeViewsFeature } from '@minddrop/feature-views';
 import { Fs } from '@minddrop/file-system';
 import { I18n, initializeI18n } from '@minddrop/i18n';
 import { Queries } from '@minddrop/queries';
@@ -32,6 +32,7 @@ import { Sql } from '@minddrop/sql';
 import { Tags } from '@minddrop/tags';
 import { Icons } from '@minddrop/ui-icons';
 import { initializeInputModalityTracking } from '@minddrop/ui-primitives';
+import { ViewSessions } from '@minddrop/views';
 import { Workspaces } from '@minddrop/workspaces';
 import { AppUiState } from '../AppUiState';
 import { locales } from '../locales';
@@ -40,6 +41,7 @@ import { registerWorkspaceStoreListeners } from '../registerWorkspaceStoreListen
 import { initializeDataViewTypes } from './initializeDataViewTypes';
 import { initializeSelection } from './initializeSelection';
 import { initializeTheme } from './initializeTheme';
+import { registerSidebars } from './registerSidebars';
 import { registerViews } from './registerViews';
 
 // In development mode, React runs effects twice on first load, so
@@ -102,6 +104,7 @@ async function runInitialization(): Promise<void> {
   registerBlockSelectionSerializer();
   initializeDataViewTypes();
   registerViews();
+  registerSidebars();
   initializeViewsFeature();
   initializeCollectionsFeature();
   initializeDataViewsFeature();
@@ -122,8 +125,8 @@ async function runInitialization(): Promise<void> {
   // Hydrate layout region sizes (dialogs, panels) from workspace config
   await LayoutRegionSizesStore.hydrate();
 
-  // Hydrate open tabs from workspace config
-  await TabSetsStore.hydrate();
+  // Hydrate the open view sessions from workspace config
+  await ViewSessions.Store.hydrate();
 
   // Hydrate the defaults applied to newly created databases
   await Databases.DefaultsStore.hydrate();

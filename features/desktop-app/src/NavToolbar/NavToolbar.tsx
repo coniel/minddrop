@@ -1,8 +1,7 @@
 import { FC, useCallback, useLayoutEffect, useState } from 'react';
 import { Events, SetNavToolbarBackActionEventData } from '@minddrop/events';
-import { Tabs } from '@minddrop/feature-views';
 import { Toolbar, ToolbarIconButton } from '@minddrop/ui-primitives';
-import { Views } from '@minddrop/views';
+import { ViewSessions, Views } from '@minddrop/views';
 import './NavToolbar.css';
 
 /**
@@ -13,14 +12,16 @@ import './NavToolbar.css';
  */
 export const NavToolbar: FC = () => {
   const [width, setWidth] = useState(0);
-  // The view-provided back action overriding the tab history
+  // The view-provided back action overriding the session history
   // navigation, when one is registered.
   const [backAction, setBackAction] =
     useState<SetNavToolbarBackActionEventData>(null);
 
-  // Whether the active tab has history to navigate to
-  const canGoBack = Tabs.useCanGoBack(Views.constants.DefaultAreaId);
-  const canGoForward = Tabs.useCanGoForward(Views.constants.DefaultAreaId);
+  // Whether the active session has history to navigate to
+  const canGoBack = ViewSessions.useCanGoBack(Views.constants.DefaultAreaId);
+  const canGoForward = ViewSessions.useCanGoForward(
+    Views.constants.DefaultAreaId,
+  );
 
   // Registered as a layout effect so the width is in place before the
   // first paint, catching the sidebar's initial width dispatch.
@@ -55,7 +56,7 @@ export const NavToolbar: FC = () => {
     };
   }, []);
 
-  // Run the overriding back action, or navigate the active tab
+  // Run the overriding back action, or navigate the active session
   // back through its history.
   const handleClickBack = useCallback(() => {
     if (backAction) {
@@ -64,12 +65,12 @@ export const NavToolbar: FC = () => {
       return;
     }
 
-    Tabs.goBack(Views.constants.DefaultAreaId);
+    ViewSessions.goBack(Views.constants.DefaultAreaId);
   }, [backAction]);
 
-  // Navigate the active tab forward through its history
+  // Navigate the active session forward through its history
   const handleClickForward = useCallback(() => {
-    Tabs.goForward(Views.constants.DefaultAreaId);
+    ViewSessions.goForward(Views.constants.DefaultAreaId);
   }, []);
 
   return (

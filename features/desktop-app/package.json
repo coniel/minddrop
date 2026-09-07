@@ -61,6 +61,7 @@
     "@minddrop/ui-components": "workspace:*",
     "@minddrop/ui-theme": "workspace:*",
     "@minddrop/ui-primitives": "workspace:*",
+    "@minddrop/ui-views": "workspace:*",
     "@minddrop/utils": "workspace:*",
     "@minddrop/views": "workspace:*",
     "@minddrop/data-view-board": "workspace:*",

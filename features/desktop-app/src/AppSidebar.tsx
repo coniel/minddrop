@@ -1,4 +1,3 @@
-import { useLayoutEffect } from 'react';
 import { Designs } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
 import { CollectionsMenuItem } from '@minddrop/feature-collections';
@@ -10,23 +9,14 @@ import { OpenSearchDialogEvent } from '@minddrop/feature-search';
 import { OpenSettingsEvent, SettingsIcon } from '@minddrop/feature-settings';
 import { SpacesMenuItem } from '@minddrop/feature-spaces';
 import { TagsMenuItem } from '@minddrop/feature-tags';
-import {
-  Sidebar,
-  SidebarGroup,
-  SidebarProps,
-  ThemeVariantPicker,
-} from '@minddrop/ui-components';
+import { SidebarGroup, ThemeVariantPicker } from '@minddrop/ui-components';
 import { Spacer, Toolbar, ToolbarIconButton } from '@minddrop/ui-primitives';
-import { AppUiState } from './AppUiState';
 
-export const AppSidebar: React.FC<SidebarProps> = ({ ...other }) => {
-  const sidebarWidth = AppUiState.useValue('sidebarWidth');
-
-  // Keep the nav toolbar sized to match the sidebar
-  useLayoutEffect(() => {
-    Events.dispatch(Events.events.SetNavToolbarWidth, { width: sidebarWidth });
-  }, [sidebarWidth]);
-
+/**
+ * The app sidebar's content: its toolbars and menu groups, rendered
+ * in the shell's sidebar frame as the default sidebar fill.
+ */
+export const AppSidebar: React.FC = () => {
   function handleOpenSearch() {
     Events.dispatch(OpenSearchDialogEvent);
   }
@@ -39,21 +29,8 @@ export const AppSidebar: React.FC<SidebarProps> = ({ ...other }) => {
     Events.dispatch(OpenSettingsEvent, {});
   }
 
-  function handleResize(width: number) {
-    Events.dispatch(Events.events.SetNavToolbarWidth, { width });
-  }
-
-  function handleResized(width: number) {
-    AppUiState.set('sidebarWidth', width);
-  }
-
   return (
-    <Sidebar
-      width={sidebarWidth}
-      onResize={handleResize}
-      onResized={handleResized}
-      {...other}
-    >
+    <>
       <Toolbar>
         <ToolbarIconButton
           icon={Designs.constants.Icon}
@@ -88,6 +65,6 @@ export const AppSidebar: React.FC<SidebarProps> = ({ ...other }) => {
           onClick={handleOpenSettings}
         />
       </Toolbar>
-    </Sidebar>
+    </>
   );
 };
