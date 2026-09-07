@@ -169,6 +169,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
     });
   };
 
+  // Work groups grouped by the agent worktree they belong to
+  const agentSections = groupManifestsByAgent(manifests);
+
   // Untracked files grouped by checkout, then by package
   const untrackedSections = groupUntrackedChanges(untrackedFiles);
 
@@ -232,40 +235,53 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
       ) : (
         <div className="sidebar-content">
-          {manifests.map((manifest) => (
-            <div key={manifest.slug} className="sidebar-group">
-              <div className="sidebar-group-header-row">
-                <button
-                  className="sidebar-group-header"
-                  onClick={() => toggleGroup(manifest.slug)}
-                >
-                  <span className="sidebar-group-chevron">
-                    {expandedGroups.has(manifest.slug) ? '▼' : '▶'}
-                  </span>
-                  <span className="sidebar-group-title">{manifest.title}</span>
-                  <span className="sidebar-group-count">
-                    {manifest.files.length}
-                  </span>
-                </button>
-                <button
-                  className="sidebar-delete-button"
-                  onClick={() => onDeleteManifest(manifest.slug)}
-                  title="Remove work group"
-                >
-                  ✕
-                </button>
+          {agentSections.map((section) => (
+            <div
+              key={section.worktree ?? 'main'}
+              className="sidebar-agent-section"
+            >
+              <div className="sidebar-agent-label">
+                {section.worktree ?? 'main'}
               </div>
 
-              {(isFooterLayout || expandedGroups.has(manifest.slug)) && (
-                <FileList
-                  files={manifest.files}
-                  selectedPath={selectedFile?.path ?? null}
-                  onSelectFile={(path) =>
-                    handleSelectManifestFile(manifest, path)
-                  }
-                  fileStatuses={fileStatuses}
-                />
-              )}
+              {section.manifests.map((manifest) => (
+                <div key={manifest.slug} className="sidebar-group">
+                  <div className="sidebar-group-header-row">
+                    <button
+                      className="sidebar-group-header"
+                      onClick={() => toggleGroup(manifest.slug)}
+                    >
+                      <span className="sidebar-group-chevron">
+                        {expandedGroups.has(manifest.slug) ? '▼' : '▶'}
+                      </span>
+                      <span className="sidebar-group-title">
+                        {manifest.title}
+                      </span>
+                      <span className="sidebar-group-count">
+                        {manifest.files.length}
+                      </span>
+                    </button>
+                    <button
+                      className="sidebar-delete-button"
+                      onClick={() => onDeleteManifest(manifest.slug)}
+                      title="Remove work group"
+                    >
+                      ✕
+                    </button>
+                  </div>
+
+                  {(isFooterLayout || expandedGroups.has(manifest.slug)) && (
+                    <FileList
+                      files={manifest.files}
+                      selectedPath={selectedFile?.path ?? null}
+                      onSelectFile={(path) =>
+                        handleSelectManifestFile(manifest, path)
+                      }
+                      fileStatuses={fileStatuses}
+                    />
+                  )}
+                </div>
+              ))}
             </div>
           ))}
 
@@ -348,6 +364,59 @@ function isSelectedUntracked(
     selectedFile.path === path &&
     selectedFile.worktree === worktree
   );
+}
+
+/**
+ * The work groups belonging to one agent's checkout.
+ */
+interface AgentSection {
+  /**
+   * The worktree name, or null for the main checkout.
+   */
+  worktree: string | null;
+
+  /**
+   * The checkout's work groups.
+   */
+  manifests: ManifestWithSlug[];
+}
+
+/**
+ * Groups work groups by the checkout they live in, sorted by checkout
+ * name with the main checkout last.
+ */
+function groupManifestsByAgent(manifests: ManifestWithSlug[]): AgentSection[] {
+  const sections: AgentSection[] = [];
+
+  for (const manifest of manifests) {
+    const worktree = manifest.worktree ?? null;
+
+    let section = sections.find((candidate) => candidate.worktree === worktree);
+
+    if (!section) {
+      section = { worktree, manifests: [] };
+      sections.push(section);
+    }
+
+    section.manifests.push(manifest);
+  }
+
+  return sections.sort(compareAgentSections);
+}
+
+/**
+ * Orders agent sections by worktree name, with the main checkout last.
+ */
+function compareAgentSections(a: AgentSection, b: AgentSection): number {
+  if (a.worktree === null) {
+    return 1;
+  }
+
+  if (b.worktree === null) {
+    return -1;
+  }
+
+  return a.worktree.localeCompare(b.worktree);
 }
 
 /**

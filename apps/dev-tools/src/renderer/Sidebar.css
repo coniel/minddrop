@@ -98,6 +98,19 @@
   overflow-y: auto;
 }
 
+.sidebar-agent-section {
+  margin-bottom: 8px;
+}
+
+.sidebar-agent-label {
+  padding: 8px 12px 4px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-text-muted);
+}
+
 .sidebar-group {
   margin-bottom: 2px;
 }
@@ -260,6 +273,14 @@
     overflow-y: auto;
   }
 
+  .sidebar-agent-section {
+    display: contents;
+  }
+
+  .sidebar-agent-label {
+    display: none;
+  }
+
   .sidebar-group {
     flex: 1;
     min-width: 0;
@@ -268,7 +289,7 @@
     overflow-y: auto;
   }
 
-  .sidebar-group:last-child {
+  .sidebar-agent-section:last-child .sidebar-group:last-child {
     border-right: none;
   }
 
