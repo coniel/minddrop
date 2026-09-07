@@ -198,6 +198,84 @@ describe('initializeViewSessionSyncListeners', () => {
     expect(ViewSessions.getAll(VIEW_AREA_ID)[0].backHistory).toHaveLength(1);
   });
 
+  it("sets a slot's state on the active session", async () => {
+    ViewSessions.create(VIEW_AREA_ID);
+
+    await dispatch(Views.events.SetSlot, {
+      viewAreaId: VIEW_AREA_ID,
+      slotId: 'sidebar',
+      fill: 'test:fill',
+      props: { entryId: 'a' },
+    });
+
+    expect(ViewSessions.getAll(VIEW_AREA_ID)[0].slots).toEqual({
+      sidebar: { fill: 'test:fill', props: { entryId: 'a' } },
+    });
+  });
+
+  it("sets a slot's state on the session the event names", async () => {
+    ViewSessions.create(VIEW_AREA_ID);
+
+    const [session] = ViewSessions.getAll(VIEW_AREA_ID);
+
+    // Open a second session, making it the active one
+    ViewSessions.create(VIEW_AREA_ID);
+
+    await dispatch(Views.events.SetSlot, {
+      viewAreaId: VIEW_AREA_ID,
+      sessionId: session.id,
+      slotId: 'sidebar',
+      hidden: true,
+    });
+
+    expect(ViewSessions.get(VIEW_AREA_ID, session.id)?.slots).toEqual({
+      sidebar: { hidden: true },
+    });
+    expect(ViewSessions.getActive(VIEW_AREA_ID)?.slots).toBeUndefined();
+  });
+
+  it('ignores slot events targeting another view area', async () => {
+    ViewSessions.create(VIEW_AREA_ID);
+
+    await dispatch(Views.events.SetSlot, {
+      viewAreaId: OTHER_VIEW_AREA_ID,
+      slotId: 'sidebar',
+      hidden: true,
+    });
+
+    expect(ViewSessions.getAll(VIEW_AREA_ID)[0].slots).toBeUndefined();
+  });
+
+  it('toggles whether a slot is hidden', async () => {
+    ViewSessions.create(VIEW_AREA_ID);
+
+    await dispatch(Views.events.ToggleSlot, {
+      viewAreaId: VIEW_AREA_ID,
+      slotId: 'sidebar',
+    });
+
+    expect(ViewSessions.getAll(VIEW_AREA_ID)[0].slots).toEqual({
+      sidebar: { hidden: true },
+    });
+  });
+
+  it("clears a slot's state", async () => {
+    ViewSessions.create(VIEW_AREA_ID);
+
+    const [session] = ViewSessions.getAll(VIEW_AREA_ID);
+
+    ViewSessions.setSlot(VIEW_AREA_ID, session.id, 'sidebar', {
+      fill: 'test:fill',
+    });
+
+    await dispatch(Views.events.ClearSlot, {
+      viewAreaId: VIEW_AREA_ID,
+      slotId: 'sidebar',
+    });
+
+    expect(ViewSessions.getAll(VIEW_AREA_ID)[0].slots).toEqual({});
+  });
+
   it('stops recording after cleanup', async () => {
     ViewSessions.create(VIEW_AREA_ID);
     cleanup();

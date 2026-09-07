@@ -60,6 +60,53 @@ export function initializeViewSessionSyncListeners(
     ViewSessions.goBack(viewAreaId, data.steps);
   });
 
+  // Set a session's state for a shell slot (e.g. a view swapping the
+  // sidebar's fill, or the shell hiding it)
+  Events.addListener(
+    Views.events.SetSlot,
+    listenerId,
+    ({ viewAreaId: eventViewAreaId, sessionId, slotId, ...state }) => {
+      // Ignore events targeting other view areas
+      if (!matchesViewArea(eventViewAreaId, viewAreaId)) {
+        return;
+      }
+
+      const targetSessionId = resolveSessionId(viewAreaId, sessionId);
+
+      if (targetSessionId) {
+        ViewSessions.setSlot(viewAreaId, targetSessionId, slotId, state);
+      }
+    },
+  );
+
+  // Flip whether a session hides a shell slot (e.g. a panel button)
+  Events.addListener(Views.events.ToggleSlot, listenerId, (data) => {
+    // Ignore events targeting other view areas
+    if (!matchesViewArea(data.viewAreaId, viewAreaId)) {
+      return;
+    }
+
+    const targetSessionId = resolveSessionId(viewAreaId, data.sessionId);
+
+    if (targetSessionId) {
+      ViewSessions.toggleSlot(viewAreaId, targetSessionId, data.slotId);
+    }
+  });
+
+  // Return a shell slot to the shell's fallback
+  Events.addListener(Views.events.ClearSlot, listenerId, (data) => {
+    // Ignore events targeting other view areas
+    if (!matchesViewArea(data.viewAreaId, viewAreaId)) {
+      return;
+    }
+
+    const targetSessionId = resolveSessionId(viewAreaId, data.sessionId);
+
+    if (targetSessionId) {
+      ViewSessions.clearSlot(viewAreaId, targetSessionId, data.slotId);
+    }
+  });
+
   // Restore the active session's content once the view area is ready
   // to receive it (covers the view area mounting after this)
   Events.addListener(Views.events.AreaReady, listenerId, (data) => {
@@ -83,5 +130,22 @@ export function initializeViewSessionSyncListeners(
     Events.removeListener(Views.events.Close, listenerId);
     Events.removeListener(Views.events.AreaReady, listenerId);
     Events.removeListener(Views.events.NavigateBack, listenerId);
+    Events.removeListener(Views.events.SetSlot, listenerId);
+    Events.removeListener(Views.events.ToggleSlot, listenerId);
+    Events.removeListener(Views.events.ClearSlot, listenerId);
   };
+}
+
+/**
+ * Resolves the session a slot event targets: the one it names, or the
+ * view area's active session.
+ *
+ * @param viewAreaId - The id of the view area.
+ * @param sessionId - The session id named by the event, if any.
+ */
+function resolveSessionId(
+  viewAreaId: string,
+  sessionId: string | undefined,
+): string | null {
+  return sessionId ?? ViewSessions.getActive(viewAreaId)?.id ?? null;
 }
