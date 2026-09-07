@@ -87,35 +87,37 @@
   }
 }
 
-/* --- Scrollbar visibility modes --- */
+/* --- Scrollbar visibility modes ---
+   Scoped to the root's own scrollbars, so that a scroll area nested
+   inside another does not inherit the outer mode's rules */
 
 /* hover - only visible when root is hovered */
-.scroll-area-visibility-hover .scroll-area-scrollbar {
+.scroll-area-visibility-hover > .scroll-area-scrollbar {
   opacity: 0;
   transition: opacity 400ms var(--ease-out);
 }
 
-.scroll-area-visibility-hover:hover .scroll-area-scrollbar {
+.scroll-area-visibility-hover:hover > .scroll-area-scrollbar {
   opacity: 1;
   transition: opacity 150ms var(--ease-out);
 }
 
 /* scroll - hidden until scrolling, fades out after ~1.5s idle */
-.scroll-area-visibility-scroll .scroll-area-scrollbar {
+.scroll-area-visibility-scroll > .scroll-area-scrollbar {
   opacity: 0;
   transition: opacity 1000ms var(--ease-out);
   pointer-events: none;
 }
 
-.scroll-area-visibility-scroll.is-scrolling .scroll-area-scrollbar,
-.scroll-area-visibility-scroll .scroll-area-scrollbar:hover {
+.scroll-area-visibility-scroll.is-scrolling > .scroll-area-scrollbar,
+.scroll-area-visibility-scroll > .scroll-area-scrollbar:hover {
   opacity: 1;
   transition: opacity 150ms var(--ease-out);
   pointer-events: auto;
 }
 
 /* always - always visible */
-.scroll-area-visibility-always .scroll-area-scrollbar {
+.scroll-area-visibility-always > .scroll-area-scrollbar {
   opacity: 1;
 }
 
