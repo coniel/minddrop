@@ -16,7 +16,7 @@ export type TextFieldVariant = TextInputVariant;
 export type TextFieldSize = TextInputSize;
 
 export interface TextFieldProps
-  extends Omit<Field.Root.Props, 'onChange'>,
+  extends Omit<Field.Root.Props, 'onChange' | 'onKeyDown'>,
     Pick<
       TextInputProps,
       | 'variant'
@@ -31,9 +31,11 @@ export interface TextFieldProps
       | 'defaultValue'
       | 'placeholder'
       | 'autoComplete'
+      | 'autoFocus'
       | 'unassisted'
       | 'onChange'
       | 'onValueChange'
+      | 'onKeyDown'
     > {
   /*
    * Class name applied to the root element.
@@ -87,6 +89,7 @@ export const TextField = React.forwardRef<HTMLDivElement, TextFieldProps>(
   (
     {
       autoComplete,
+      autoFocus,
       className,
       color,
       defaultValue,
@@ -99,6 +102,7 @@ export const TextField = React.forwardRef<HTMLDivElement, TextFieldProps>(
       stringLabel,
       leading,
       onChange,
+      onKeyDown,
       onValueChange,
       placeholder,
       stringPlaceholder,
@@ -140,8 +144,10 @@ export const TextField = React.forwardRef<HTMLDivElement, TextFieldProps>(
           placeholder={placeholder}
           stringPlaceholder={stringPlaceholder}
           autoComplete={autoComplete}
+          autoFocus={autoFocus}
           unassisted={unassisted}
           onChange={onChange}
+          onKeyDown={onKeyDown}
           onValueChange={onValueChange}
           invalid={!!error || !!stringError}
           disabled={disabled}
