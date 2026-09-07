@@ -13,17 +13,17 @@
 }
 
 /* The cards scroll all the way to the column's bottom edge, so
-   the space under them moves inside the scrollport, where it
-   follows the last card rather than cropping it */
+   the space under them moves inside the scrollport as the scroll
+   area's end padding, where it follows the last card rather than
+   cropping it */
 .kanban-view-columns-scroll .kanban-view-column {
   padding-bottom: 0;
 }
 
+/* Fills the scrollport, where the flex growth sizing the
+   container in the non-scrolling mode does not apply, so that a
+   column's empty space accepts drops too */
 .kanban-view-columns-scroll .kanban-view-column-content {
-  padding-bottom: var(--space-2);
-  /* Fills the scrollport, where the flex growth sizing the
-     container in the non-scrolling mode does not apply, so that
-     a column's empty space accepts drops too */
   min-height: 100%;
 }
 

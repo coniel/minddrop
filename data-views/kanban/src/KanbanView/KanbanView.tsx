@@ -558,6 +558,11 @@ export const KanbanViewComponent: React.FC<
   const columnScroll =
     view.options?.columnScroll ?? defaultKanbanViewOptions.columnScroll;
 
+  // Space kept under the cards when the board scrolls them. With
+  // the columns scrolling on their own the board only scrolls
+  // horizontally, and carries its bottom padding itself.
+  const boardEndPadding = columnScroll ? undefined : 'lg';
+
   // Whether entries can be created in the view. Queries build
   // their results from a filter, so a created entry would not
   // necessarily appear in it.
@@ -584,6 +589,7 @@ export const KanbanViewComponent: React.FC<
       viewportRef={scrollViewportRef}
       className="kanban-view-scroll"
       stateKey="content"
+      endPadding={boardEndPadding}
     >
       <Stack
         gap={0}

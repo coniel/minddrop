@@ -13,9 +13,11 @@
 }
 
 /* No padding on the right, which the columns overflow past when
-   they are wider than the board. The rows carry it instead. */
+   they are wider than the board. The rows carry it instead. No
+   padding at the bottom either, which the scroll area's end
+   padding provides when the board scrolls the cards. */
 .kanban-view {
-  padding: 0 0 var(--space-4) var(--space-4);
+  padding: 0 0 0 var(--space-4);
   min-height: 100%;
   /* Lanes with no surface of their own are held apart by their
      own padding, so they take no gap on top of it */
@@ -65,9 +67,12 @@
 }
 
 /* Columns scrolling on their own are bound to the board's height,
-   leaving the board itself to scroll horizontally only */
+   leaving the board itself to scroll horizontally only. The board
+   holds them off its bottom edge itself, since there is no end of
+   a vertical scroll for the scroll area to pad. */
 .kanban-view-columns-scroll {
   height: 100%;
+  padding-bottom: var(--space-4);
 }
 
 /* A lane's heading and column are sized together, so that the two
