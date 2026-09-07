@@ -1148,3 +1148,16 @@ not runtime user functionality, so it was left platform-specific
 rather than reimplemented portably. If screenshots ever become a user
 feature, this needs a per-platform implementation; until then the
 `process.platform !== 'darwin'` guard is the intended behaviour.
+
+## apps/dev-tools
+
+### RPC handlers must never block the bun event loop
+
+The bun process answers every renderer request on its single event
+loop, and the renderer gives up on a request after ten seconds. A
+handler that calls `Bun.spawnSync` stalls every other request for its
+duration, so a burst of refreshes (one git scan per checkout, several
+refreshes queued by watcher events) used to push the file content
+requests past the timeout and leave the viewer stuck on stale content.
+Git runs through `runGit` in `bun/rpc.ts`, which spawns asynchronously
+and lets independent commands run in parallel. Keep new handlers on it.

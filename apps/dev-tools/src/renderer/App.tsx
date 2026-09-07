@@ -25,6 +25,12 @@ import './App.css';
 export const App: React.FC = () => {
   // A comment's file to reveal once its content has loaded
   const pendingRevealRef = useRef<{ path: string; line: number } | null>(null);
+  // Whether a refresh is running, and whether one was requested while
+  // it ran
+  const refreshStateRef = useRef({ running: false, pending: false });
+  // Incremented per content load so a stale response for a previously
+  // selected file is discarded
+  const contentLoadTokenRef = useRef(0);
   const [manifests, setManifests] = useState<ManifestWithSlug[]>([]);
   const [untrackedFiles, setUntrackedFiles] = useState<UntrackedChange[]>([]);
   const [selectedFile, setSelectedFile] = useState<SelectedFile | null>(null);
@@ -53,7 +59,7 @@ export const App: React.FC = () => {
   ).length;
 
   // Fetch manifests, untracked changes, and file statuses
-  const refreshData = useCallback(async () => {
+  const loadChanges = useCallback(async () => {
     const [manifestData, untracked] = await Promise.all([
       rpc.request.getManifests({}),
       rpc.request.getUntrackedChanges({}),
@@ -63,45 +69,68 @@ export const App: React.FC = () => {
     setUntrackedFiles(untracked);
 
     // Fetch file statuses for each unique baseRef + worktree pair
-    try {
-      const scans = new Map<
-        string,
-        { baseRef: string; worktree: string | null }
-      >();
+    const scans = new Map<
+      string,
+      { baseRef: string; worktree: string | null }
+    >();
 
-      for (const manifest of manifestData) {
-        const worktree = manifest.worktree ?? null;
+    for (const manifest of manifestData) {
+      const worktree = manifest.worktree ?? null;
 
-        scans.set(`${manifest.baseRef}:${worktree}`, {
-          baseRef: manifest.baseRef,
-          worktree,
-        });
-      }
-
-      // Also scan each checkout untracked changes were found in
-      for (const change of untracked) {
-        scans.set(`${change.baseRef}:${change.worktree}`, {
-          baseRef: change.baseRef,
-          worktree: change.worktree,
-        });
-      }
-
-      const statusResults = await Promise.all(
-        [...scans.values()].map((scan) => rpc.request.getFileStatuses(scan)),
-      );
-
-      // Merge all status maps (later results override earlier)
-      const merged: Record<string, FileStatus> = {};
-
-      for (const result of statusResults) {
-        Object.assign(merged, result);
-      }
-
-      setFileStatuses(merged);
-    } catch {
-      // Backend may not support this endpoint yet
+      scans.set(`${manifest.baseRef}:${worktree}`, {
+        baseRef: manifest.baseRef,
+        worktree,
+      });
     }
+
+    // Also scan each checkout untracked changes were found in
+    for (const change of untracked) {
+      scans.set(`${change.baseRef}:${change.worktree}`, {
+        baseRef: change.baseRef,
+        worktree: change.worktree,
+      });
+    }
+
+    const statusResults = await Promise.all(
+      [...scans.values()].map((scan) => rpc.request.getFileStatuses(scan)),
+    );
+
+    // Merge all status maps (later results override earlier)
+    const merged: Record<string, FileStatus> = {};
+
+    for (const result of statusResults) {
+      Object.assign(merged, result);
+    }
+
+    setFileStatuses(merged);
   }, []);
+
+  // Refresh the changes, folding requests made while a refresh runs
+  // into a single trailing refresh so bursts of watcher events do not
+  // pile up git scans
+  const refreshData = useCallback(async () => {
+    const state = refreshStateRef.current;
+
+    state.pending = true;
+
+    if (state.running) {
+      return;
+    }
+
+    state.running = true;
+
+    while (state.pending) {
+      state.pending = false;
+
+      try {
+        await loadChanges();
+      } catch (error) {
+        console.error('Failed to refresh changes', error);
+      }
+    }
+
+    state.running = false;
+  }, [loadChanges]);
 
   // Initial load
   useEffect(() => {
@@ -131,16 +160,31 @@ export const App: React.FC = () => {
     }
 
     const loadContent = async () => {
-      const [original, current] = await Promise.all([
-        rpc.request.getFileContent({
-          ref: selectedFile.baseRef,
-          path: selectedFile.path,
-        }),
-        rpc.request.getCurrentFileContent({
-          path: selectedFile.path,
-          worktree: selectedFile.worktree,
-        }),
-      ]);
+      const token = ++contentLoadTokenRef.current;
+      let original: string;
+      let current: string;
+
+      try {
+        [original, current] = await Promise.all([
+          rpc.request.getFileContent({
+            ref: selectedFile.baseRef,
+            path: selectedFile.path,
+          }),
+          rpc.request.getCurrentFileContent({
+            path: selectedFile.path,
+            worktree: selectedFile.worktree,
+          }),
+        ]);
+      } catch (error) {
+        console.error(`Failed to load ${selectedFile.path}`, error);
+
+        return;
+      }
+
+      // Another file was selected while this one loaded
+      if (token !== contentLoadTokenRef.current) {
+        return;
+      }
 
       setOriginalContent(original);
       setCurrentContent(current);

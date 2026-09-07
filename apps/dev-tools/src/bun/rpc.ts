@@ -78,19 +78,53 @@ function getWorktreeRoot(worktree: string | null | undefined): string {
 }
 
 /**
- * Gets file content at a specific git ref using git show.
+ * Runs a git command without blocking the event loop, so requests
+ * keep being answered while it runs.
+ *
+ * @param args - The git arguments.
+ * @param cwd - The checkout to run in.
+ * @returns The command's stdout, or null when it exits with an error.
  */
-function getFileAtRef(ref: string, path: string): string {
-  const result = Bun.spawnSync(['git', 'show', `${ref}:${path}`], {
-    cwd: REPO_ROOT,
+async function runGit(args: string[], cwd: string): Promise<string | null> {
+  const gitProcess = Bun.spawn(['git', ...args], {
+    cwd,
+    stdout: 'pipe',
+    stderr: 'ignore',
   });
+  // Drain stdout before waiting on exit so a large output cannot
+  // fill the pipe and stall the process
+  const output = await new Response(gitProcess.stdout).text();
+  const exitCode = await gitProcess.exited;
 
-  if (result.exitCode !== 0) {
-    // File didn't exist at that ref
-    return '';
+  if (exitCode !== 0) {
+    return null;
   }
 
-  return result.stdout.toString();
+  return output;
+}
+
+/**
+ * Runs a git command and returns its non-empty output lines, or no
+ * lines when it exits with an error.
+ */
+async function readGitLines(args: string[], cwd: string): Promise<string[]> {
+  const output = await runGit(args, cwd);
+
+  if (output === null) {
+    return [];
+  }
+
+  return output.trim().split('\n').filter(Boolean);
+}
+
+/**
+ * Gets file content at a specific git ref using git show.
+ */
+async function getFileAtRef(ref: string, path: string): Promise<string> {
+  const content = await runGit(['show', `${ref}:${path}`], REPO_ROOT);
+
+  // File didn't exist at that ref
+  return content ?? '';
 }
 
 /**
@@ -107,40 +141,17 @@ function getCurrentFile(path: string, worktree: string | null): string {
 }
 
 /**
- * Runs a git command and adds each output line to the target set.
- */
-function collectGitOutput(
-  command: string[],
-  target: Set<string>,
-  cwd: string,
-): void {
-  const result = Bun.spawnSync(command, { cwd });
-
-  if (result.exitCode === 0) {
-    const lines = result.stdout.toString().trim().split('\n').filter(Boolean);
-
-    for (const line of lines) {
-      target.add(line);
-    }
-  }
-}
-
-/**
  * Lists the names of the agent worktrees registered with git.
  */
-function listWorktreeNames(): string[] {
-  const result = Bun.spawnSync(['git', 'worktree', 'list', '--porcelain'], {
-    cwd: REPO_ROOT,
-  });
-
-  if (result.exitCode !== 0) {
-    return [];
-  }
-
+async function listWorktreeNames(): Promise<string[]> {
+  const lines = await readGitLines(
+    ['worktree', 'list', '--porcelain'],
+    REPO_ROOT,
+  );
   const names: string[] = [];
 
   // Each worktree entry starts with its path line
-  for (const line of result.stdout.toString().split('\n')) {
+  for (const line of lines) {
     if (!line.startsWith(`worktree ${WORKTREES_DIR}/`)) {
       continue;
     }
@@ -156,16 +167,47 @@ function listWorktreeNames(): string[] {
  * the branch's own work counts as changed rather than everything main
  * gained since the branch last synced.
  */
-function getMergeBase(root: string): string | null {
-  const result = Bun.spawnSync(['git', 'merge-base', MAIN_BRANCH, 'HEAD'], {
-    cwd: root,
-  });
+async function getMergeBase(root: string): Promise<string | null> {
+  const output = await runGit(['merge-base', MAIN_BRANCH, 'HEAD'], root);
 
-  if (result.exitCode !== 0) {
+  if (output === null) {
     return null;
   }
 
-  return result.stdout.toString().trim();
+  return output.trim();
+}
+
+/**
+ * A checkout to scan for changes and the ref to diff it against.
+ */
+interface ChangeScan {
+  /**
+   * The checkout's working tree root.
+   */
+  root: string;
+
+  /**
+   * Name of the agent worktree, or null for the main checkout.
+   */
+  worktree: string | null;
+
+  /**
+   * The git ref the checkout is diffed against.
+   */
+  ref: string;
+}
+
+/**
+ * Lists the files changed in a checkout relative to a ref: modified,
+ * staged, committed and not yet tracked by git.
+ */
+async function listChangedFiles(scan: ChangeScan): Promise<string[]> {
+  const [diffed, untracked] = await Promise.all([
+    readGitLines(['diff', '--name-only', scan.ref], scan.root),
+    readGitLines(['ls-files', '--others', '--exclude-standard'], scan.root),
+  ]);
+
+  return [...new Set([...diffed, ...untracked])];
 }
 
 /**
@@ -174,7 +216,7 @@ function getMergeBase(root: string): string | null {
  * diffed against their merge base with main so synced-in commits from
  * other work do not show as changes.
  */
-function getUntrackedChanges(): UntrackedChange[] {
+async function getUntrackedChanges(): Promise<UntrackedChange[]> {
   const manifests = readAllManifests();
 
   // Collect the files already in manifests, keyed by checkout
@@ -187,48 +229,41 @@ function getUntrackedChanges(): UntrackedChange[] {
   }
 
   // Scan the main checkout against HEAD
-  const scans: { root: string; worktree: string | null; ref: string }[] = [
+  const scans: ChangeScan[] = [
     { root: REPO_ROOT, worktree: null, ref: 'HEAD' },
   ];
 
   // Scan every worktree against its merge base with main
-  for (const worktree of listWorktreeNames()) {
-    const root = `${WORKTREES_DIR}/${worktree}`;
-    const mergeBase = getMergeBase(root);
+  const worktrees = await listWorktreeNames();
+  const mergeBases = await Promise.all(
+    worktrees.map((worktree) => getMergeBase(`${WORKTREES_DIR}/${worktree}`)),
+  );
+
+  worktrees.forEach((worktree, index) => {
+    const mergeBase = mergeBases[index];
 
     if (mergeBase) {
-      scans.push({ root, worktree, ref: mergeBase });
+      scans.push({
+        root: `${WORKTREES_DIR}/${worktree}`,
+        worktree,
+        ref: mergeBase,
+      });
     }
-  }
+  });
 
+  const changedFilesPerScan = await Promise.all(scans.map(listChangedFiles));
   const changes: UntrackedChange[] = [];
 
-  for (const scan of scans) {
-    const changedFiles = new Set<string>();
-
-    // Get changes vs the scan ref (modified + staged + committed)
-    collectGitOutput(
-      ['git', 'diff', '--name-only', scan.ref],
-      changedFiles,
-      scan.root,
-    );
-
-    // Get new files not yet tracked by git
-    collectGitOutput(
-      ['git', 'ls-files', '--others', '--exclude-standard'],
-      changedFiles,
-      scan.root,
-    );
-
+  scans.forEach((scan, index) => {
     // Keep the files not covered by a manifest for this checkout
-    for (const path of changedFiles) {
+    for (const path of changedFilesPerScan[index]) {
       if (manifestedFiles.has(`${scan.worktree ?? ''}:${path}`)) {
         continue;
       }
 
       changes.push({ path, worktree: scan.worktree, baseRef: scan.ref });
     }
-  }
+  });
 
   return changes;
 }
@@ -250,51 +285,35 @@ function deleteManifest(slug: string): void {
  * Returns the git status for all changed files relative to a base
  * ref, diffed in the given worktree or the main checkout.
  */
-function getFileStatuses(
+async function getFileStatuses(
   baseRef: string,
   worktree: string | null,
-): Record<string, 'added' | 'modified' | 'deleted'> {
+): Promise<Record<string, 'added' | 'modified' | 'deleted'>> {
   const statuses: Record<string, 'added' | 'modified' | 'deleted'> = {};
   const root = getWorktreeRoot(worktree);
 
-  // Get statuses relative to the base ref
-  const result = Bun.spawnSync(['git', 'diff', '--name-status', baseRef], {
-    cwd: root,
-  });
+  // Get statuses relative to the base ref, and the untracked files
+  // which count as added
+  const [statusLines, untrackedLines] = await Promise.all([
+    readGitLines(['diff', '--name-status', baseRef], root),
+    readGitLines(['ls-files', '--others', '--exclude-standard'], root),
+  ]);
 
-  if (result.exitCode === 0) {
-    const lines = result.stdout.toString().trim().split('\n').filter(Boolean);
+  for (const line of statusLines) {
+    const status = line[0];
+    const path = line.slice(1).trim();
 
-    for (const line of lines) {
-      const status = line[0];
-      const path = line.slice(1).trim();
-
-      if (status === 'A') {
-        statuses[path] = 'added';
-      } else if (status === 'D') {
-        statuses[path] = 'deleted';
-      } else {
-        statuses[path] = 'modified';
-      }
+    if (status === 'A') {
+      statuses[path] = 'added';
+    } else if (status === 'D') {
+      statuses[path] = 'deleted';
+    } else {
+      statuses[path] = 'modified';
     }
   }
 
-  // Also mark untracked files as added
-  const untrackedResult = Bun.spawnSync(
-    ['git', 'ls-files', '--others', '--exclude-standard'],
-    { cwd: root },
-  );
-
-  if (untrackedResult.exitCode === 0) {
-    const lines = untrackedResult.stdout
-      .toString()
-      .trim()
-      .split('\n')
-      .filter(Boolean);
-
-    for (const line of lines) {
-      statuses[line] = 'added';
-    }
+  for (const line of untrackedLines) {
+    statuses[line] = 'added';
   }
 
   return statuses;

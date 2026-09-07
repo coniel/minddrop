@@ -108,11 +108,26 @@ new BrowserWindow({
   },
 });
 
+// Coalesce bursts of watcher events into a single refresh so the
+// frontend does not queue a git scan per event
+let manifestsChangedTimer: ReturnType<typeof setTimeout> | null = null;
+
+function notifyManifestsChanged(): void {
+  if (manifestsChangedTimer) {
+    clearTimeout(manifestsChangedTimer);
+  }
+
+  manifestsChangedTimer = setTimeout(() => {
+    manifestsChangedTimer = null;
+    rpc.send.manifestsChanged({});
+  }, 500);
+}
+
 // Watch the changes directory for manifest updates
 try {
   watch(CHANGES_DIR, (_eventType, filename) => {
     if (!filename || filename.endsWith('.json')) {
-      rpc.send.manifestsChanged({});
+      notifyManifestsChanged();
     }
   });
   console.log(`Watching ${CHANGES_DIR} for manifest changes`);
@@ -124,7 +139,7 @@ try {
 try {
   watch(GIT_DIR, (_eventType, filename) => {
     if (!filename || filename === 'index' || filename === 'HEAD') {
-      rpc.send.manifestsChanged({});
+      notifyManifestsChanged();
     }
   });
   console.log(`Watching ${GIT_DIR} for git state changes`);
@@ -148,7 +163,6 @@ try {
 
 // Watch working tree for file changes (i18n regeneration + manifest refresh)
 let i18nDebounceTimer: ReturnType<typeof setTimeout> | null = null;
-let fileChangeDebounceTimer: ReturnType<typeof setTimeout> | null = null;
 const I18N_SCRIPT = `${REPO_ROOT}/packages/scripts/generate-i18n-types.ts`;
 
 try {
@@ -186,14 +200,7 @@ try {
     }
 
     // Notify the frontend so it can refresh untracked changes
-    if (fileChangeDebounceTimer) {
-      clearTimeout(fileChangeDebounceTimer);
-    }
-
-    fileChangeDebounceTimer = setTimeout(() => {
-      fileChangeDebounceTimer = null;
-      rpc.send.manifestsChanged({});
-    }, 500);
+    notifyManifestsChanged();
   });
   console.log('Watching working tree for file and locale changes');
 } catch {
