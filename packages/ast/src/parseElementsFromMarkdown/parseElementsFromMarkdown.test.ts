@@ -165,6 +165,20 @@ describe('parseElementsFromMarkdown', () => {
       expect(elements[0].children).toEqual([{ text: 'Done' }]);
     });
 
+    it('keeps the checkbox out of a task item opening with inline markup', () => {
+      const elements = parseElementsFromMarkdown(
+        '- [ ] `code` item\n- [x] **bold** item\n',
+      );
+
+      expect(elements[0].source).toBe('`code` item');
+      expect(elements[0].children).toEqual([
+        { text: 'code', code: true, codeSyntax: '`' },
+        { text: ' item' },
+      ]);
+      expect(elements[1].source).toBe('**bold** item');
+      expect(itemFrame(elements[1]).checked).toBe(true);
+    });
+
     it('leaves a plain item without a checked state', () => {
       const elements = parseElementsFromMarkdown('- One\n');
 

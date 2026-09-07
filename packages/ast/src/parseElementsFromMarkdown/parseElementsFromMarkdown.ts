@@ -20,7 +20,7 @@ import {
 
 const OrderedMarkerPattern = /^(\d+)([.)])/;
 const UnorderedMarkerPattern = /^([-*+])/;
-const TaskBoxPattern = /^(?:[-*+]|\d+[.)])[ \t]+\[([ xX])\]/;
+const TaskBoxPattern = /^(?:[-*+]|\d+[.)])[ \t]+\[([ xX])\][ \t]*/;
 
 /**
  * A block along with where its source began and ended, which the spacing
@@ -77,14 +77,17 @@ export function parseElementsFromMarkdown(markdown: string): Element[] {
  * @param ancestry - The containers the nodes sit inside.
  * @param source - The document being parsed.
  * @param parsed - The blocks collected so far, appended to.
+ * @param contentStart - Where the first node's content begins, when its
+ * position includes part of the container's prefix.
  */
 function collectBlocks(
   nodes: MdastNode[],
   ancestry: Frame[],
   source: string,
   parsed: ParsedBlock[],
+  contentStart = 0,
 ): void {
-  nodes.forEach((node) => {
+  nodes.forEach((node, index) => {
     // A quote contributes a frame to everything inside it
     if (node.type === 'blockquote') {
       const frame = buildBlockquoteFrame(node, source);
@@ -105,6 +108,7 @@ function collectBlocks(
           [...ancestry, frame],
           source,
           parsed,
+          resolveTaskContentStart(item, source),
         );
       });
 
@@ -125,7 +129,11 @@ function collectBlocks(
     element.ancestry = ancestry.length ? ancestry : undefined;
     // The block's slice excludes the first line's prefix, which the
     // ancestry rebuilds, but includes the prefixes of any further lines.
-    element.source = sliceNode(node, source);
+    // The first block's position may still include part of the prefix,
+    // which is skipped so that it is not carried twice.
+    const start = Math.max(startOffset(node), index === 0 ? contentStart : 0);
+
+    element.source = source.slice(start, endOffset(node));
 
     parsed.push({
       element,
@@ -241,6 +249,35 @@ function buildListItemFrame(
   }
 
   return frame;
+}
+
+/**
+ * Returns where a task item's content begins, which is past its checkbox.
+ * mdast moves a paragraph's start past the box only when the paragraph
+ * opens with plain text, so a paragraph opening with an inline element
+ * still has the box inside its position.
+ *
+ * @param item - The list item node.
+ * @param source - The document being parsed.
+ * @returns The offset the content begins at, or 0 for a plain item.
+ */
+function resolveTaskContentStart(item: MdastNode, source: string): number {
+  // Only a task item has a box to skip
+  if (item.checked !== true && item.checked !== false) {
+    return 0;
+  }
+
+  // Match the box on the item's source
+  const box = TaskBoxPattern.exec(sliceNode(item, source));
+
+  // Check that a box was found. mdast only marks an item as a task
+  // when one is present, so this is a safeguard.
+  if (!box) {
+    return 0;
+  }
+
+  // Return the offset just past the box
+  return startOffset(item) + box[0].length;
 }
 
 /**
