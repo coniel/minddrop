@@ -59,6 +59,13 @@ export const DataViewsView: React.FC = () => {
     });
   }
 
+  // Open the double clicked data view in a view of its own
+  function handleDoubleClickDataView(item: ListPanelViewItem) {
+    openView(OpenDataViewViewEvent, {
+      dataViewId: item.id,
+    });
+  }
+
   return (
     <ListPanelView
       icon={DataViews.constants.Icon}
@@ -68,6 +75,7 @@ export const DataViewsView: React.FC = () => {
       query={query}
       onQueryChange={setQuery}
       onExpandItem={handleExpandDataView}
+      onDoubleClickItem={handleDoubleClickDataView}
       searchPlaceholder="dataViews.list.searchPlaceholder"
       emptyLabel="dataViews.list.empty"
       noResultsLabel="dataViews.list.noResults"
