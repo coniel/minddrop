@@ -75,10 +75,9 @@
   border: var(--border-width-thin) solid var(--border-subtle);
 }
 
+/* Pages size their layout root against the scroll container
+   directly, so the root fills it as a floor and extends past it
+   with its content */
 .database-entry-page {
-  height: 100%;
-}
-
-.database-entry-page > * {
-  height: 100%;
+  display: contents;
 }

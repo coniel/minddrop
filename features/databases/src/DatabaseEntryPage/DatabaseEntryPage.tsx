@@ -1,5 +1,6 @@
 import { DatabaseEntries, Databases } from '@minddrop/databases';
 import { PanelView } from '@minddrop/ui-components';
+import { ScrollArea } from '@minddrop/ui-primitives';
 import {
   DatabaseEntryRenderer,
   DatabaseEntryRendererProps,
@@ -21,7 +22,15 @@ export const DatabaseEntryPage: React.FC<DatabaseEntryRendererProps> = (
       stringTitle={entry?.title || ''}
       contentIcon={database?.icon}
     >
-      <DatabaseEntryRenderer {...props} />
+      {/* The layout scrolls within the panel, keeping the header
+          in place */}
+      <ScrollArea
+        className="database-entry-page-content"
+        stateKey="content"
+        endPadding="lg"
+      >
+        <DatabaseEntryRenderer {...props} />
+      </ScrollArea>
     </PanelView>
   );
 };

@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { DatabaseEntries, Databases } from '@minddrop/databases';
-import { DropdownMenu, FloatingActionButton } from '@minddrop/ui-primitives';
+import {
+  DropdownMenu,
+  FloatingActionButton,
+  ScrollArea,
+} from '@minddrop/ui-primitives';
 import { DatabaseEntryOptionsMenu } from '../DatabaseEntryOptionsMenu';
 import { DatabaseEntryRenderer } from '../DatabaseEntryRenderer';
 import { CornerHandle } from './CornerHandle';
@@ -176,9 +180,9 @@ export const DatabaseEntryDialog: React.FC<DatabaseEntryDialogProps> = ({
         />
 
         {/* Content wrapper */}
-        <div className="database-entry-dialog-content">
+        <ScrollArea className="database-entry-dialog-content" endPadding="lg">
           <DatabaseEntryRenderer entryId={entryId} layoutContext="dialog" />
-        </div>
+        </ScrollArea>
 
         {/* Previous entry navigation button */}
         <div className="database-entry-dialog-hover-zone database-entry-dialog-hover-zone-left">

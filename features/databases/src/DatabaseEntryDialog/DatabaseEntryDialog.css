@@ -95,12 +95,11 @@
     gap: var(--space-3);
   }
 
-  /* --- Content wrapper --- */
+  /* --- Content scroll area --- */
 
   .database-entry-dialog-content {
     height: 100%;
     border-radius: var(--radius-xl);
-    overflow: hidden;
   }
 
   /* --- Hover zones (invisible areas that trigger handle visibility) --- */
