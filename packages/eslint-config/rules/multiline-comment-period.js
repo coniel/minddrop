@@ -45,7 +45,7 @@ export const multilineCommentPeriod = {
 
     /**
      * Checks whether a comment's text is prose, rather than a
-     * directive, a marker, a bare identifier or commented-out code.
+     * directive, a marker or commented-out code.
      */
     function isProse(text) {
       // An empty comment separates blocks rather than saying anything
@@ -59,12 +59,7 @@ export const multilineCommentPeriod = {
       }
 
       // Commented-out code, which prose would not end on
-      if (CodePattern.test(text)) {
-        return false;
-      }
-
-      // A single word is a label or a path rather than a sentence
-      return /\s/.test(text);
+      return !CodePattern.test(text);
     }
 
     /**
@@ -84,8 +79,10 @@ export const multilineCommentPeriod = {
       // A sentence ending part way through means there are several
       const multiSentence = /[.!?]\s+\S/.test(text);
 
-      // Single sentences on a single line take no full stop
-      if (group.length === 1 && !multiSentence) {
+      // Single sentences on a single line take no full stop, and a
+      // single word on its own is a label or a path rather than a
+      // sentence.
+      if (group.length === 1 && (!multiSentence || !/\s/.test(text))) {
         return;
       }
 
