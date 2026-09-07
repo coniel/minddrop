@@ -141,6 +141,30 @@ describe('<Tooltip />', () => {
     await waitFor(() => expect(screen.queryByText('Tooltip title')).toBeNull());
   });
 
+  it('dismisses on scroll', async () => {
+    const user = userEvent.setup();
+
+    render(
+      <TooltipProvider>
+        <div data-testid="scroll-container">
+          <Tooltip stringTitle="Tooltip title">
+            <button type="button">tooltip</button>
+          </Tooltip>
+        </div>
+      </TooltipProvider>,
+    );
+
+    await user.hover(screen.getByRole('button'));
+
+    await waitFor(() => screen.getAllByText('Tooltip title'));
+
+    // Scrolling moves the trigger away without a pointer leave, so the
+    // tooltip would otherwise drift along with the scrolled content.
+    fireEvent.scroll(screen.getByTestId('scroll-container'));
+
+    await waitFor(() => expect(screen.queryByText('Tooltip title')).toBeNull());
+  });
+
   it('renders the keyboard shortcut', async () => {
     render(
       <TooltipProvider>

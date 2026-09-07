@@ -80,7 +80,9 @@ export const Tooltip: FC<TooltipProps> = ({
   const { t } = useTranslation();
   // A native drag suspends pointer events, so an open tooltip never
   // hears the pointer leave and hangs over the page until the drop.
-  // Tracking open state here allows it to be dismissed.
+  // Scrolling moves the trigger out from under the tooltip without a
+  // pointer leave either. Tracking open state here allows both to
+  // dismiss it.
   const [openState, setOpenState] = useState(defaultOpen ?? false);
 
   const isOpen = open ?? openState;
@@ -95,21 +97,25 @@ export const Tooltip: FC<TooltipProps> = ({
     [onOpenChange],
   );
 
-  // Only the open tooltip watches for a drag, so this is a single
-  // listener however many tooltips are mounted.
+  // Only the open tooltip watches for a drag or scroll, so these are
+  // single listeners however many tooltips are mounted. Scroll events
+  // do not bubble, so the capture phase catches them from any scroll
+  // container.
   useEffect(() => {
     if (!isOpen) {
       return;
     }
 
-    function handleDragStart(): void {
+    function handleDismiss(): void {
       setOpenState(false);
     }
 
-    document.addEventListener('dragstart', handleDragStart, true);
+    document.addEventListener('dragstart', handleDismiss, true);
+    document.addEventListener('scroll', handleDismiss, true);
 
     return () => {
-      document.removeEventListener('dragstart', handleDragStart, true);
+      document.removeEventListener('dragstart', handleDismiss, true);
+      document.removeEventListener('scroll', handleDismiss, true);
     };
   }, [isOpen]);
 
