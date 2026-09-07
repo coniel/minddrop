@@ -1,5 +1,6 @@
 import { CSSProperties, useRef } from 'react';
 import {
+  ContainerDirection,
   ContainerElement,
   ContainerStyle,
   Designs,
@@ -102,7 +103,7 @@ export const ContainerSurface: React.FC<ContainerSurfaceProps> = ({
     // negative z-index overlay sits above the container background
     // but below the in-flow children.
     ...(backdropCss && { position: 'relative' as const, isolation: 'isolate' }),
-    ...(fill && { width: '100%', height: '100%' }),
+    ...(fill && createFillCss(style.direction)),
     ...styleOverrides,
   };
 
@@ -134,6 +135,20 @@ export const ContainerSurface: React.FC<ContainerSurfaceProps> = ({
     </div>
   );
 };
+
+/**
+ * Emits the CSS filling the parent. A column container takes the
+ * parent's height as a floor, extending past it with its content
+ * for the surrounding scroll container to scroll. A row container
+ * is held to the parent, as its regions scroll what they cannot fit.
+ */
+function createFillCss(direction?: ContainerDirection): CSSProperties {
+  if (direction === 'row') {
+    return { width: '100%', height: '100%' };
+  }
+
+  return { width: '100%', minHeight: '100%' };
+}
 
 /**
  * Emits the background image CSS for a container, mapping the fit
