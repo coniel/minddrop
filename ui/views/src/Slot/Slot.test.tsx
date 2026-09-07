@@ -1,11 +1,11 @@
 import { FC } from 'react';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { cleanup, render, screen } from '@minddrop/test-utils';
-import { ViewSessions, Views } from '@minddrop/views';
+import { SessionSlot, ViewSessions, Views } from '@minddrop/views';
 import { Slot } from './Slot';
 
 const VIEW_AREA_ID = 'test-set';
-const ClaimedFillId = 'test:sidebar:claimed';
+const SessionFillId = 'test:sidebar:session';
 const FallbackFillId = 'test:sidebar:fallback';
 
 interface FillProps {
@@ -15,8 +15,8 @@ interface FillProps {
   label?: string;
 }
 
-const ClaimedFill: FC<FillProps> = ({ label = 'none' }) => (
-  <div data-testid="claimed">{label}</div>
+const SessionFill: FC<FillProps> = ({ label = 'none' }) => (
+  <div data-testid="session">{label}</div>
 );
 
 const FallbackFill: FC<FillProps> = ({ label = 'none' }) => (
@@ -26,7 +26,7 @@ const FallbackFill: FC<FillProps> = ({ label = 'none' }) => (
 /**
  * Renders the slot within a pane of the test view area.
  */
-function renderSlot(fallback?: Parameters<typeof Slot>[0]['fallback']) {
+function renderSlot(fallback?: SessionSlot | string) {
   return render(
     <Views.PaneProvider viewAreaId={VIEW_AREA_ID} pane="main">
       <Slot id="sidebar" fallback={fallback} />
@@ -35,27 +35,24 @@ function renderSlot(fallback?: Parameters<typeof Slot>[0]['fallback']) {
 }
 
 /**
- * Creates a session in the test view area, claiming the sidebar slot
- * when a fill id is given.
+ * Creates a session in the test view area, setting the given state
+ * for the sidebar slot.
  */
-function createSession(fillId?: string, props?: Record<string, unknown>) {
+function createSession(state?: SessionSlot) {
   ViewSessions.create(VIEW_AREA_ID);
 
   const session = ViewSessions.getActive(VIEW_AREA_ID)!;
 
-  if (fillId) {
-    ViewSessions.claimSlot(VIEW_AREA_ID, session.id, 'sidebar', {
-      fill: fillId,
-      props,
-    });
+  if (state) {
+    ViewSessions.setSlot(VIEW_AREA_ID, session.id, 'sidebar', state);
   }
 }
 
 describe('Slot', () => {
   beforeEach(() => {
     Views.registerFill('sidebar', {
-      id: ClaimedFillId,
-      component: ClaimedFill,
+      id: SessionFillId,
+      component: SessionFill,
     });
     Views.registerFill('sidebar', {
       id: FallbackFillId,
@@ -69,16 +66,16 @@ describe('Slot', () => {
     ViewSessions.Store.clear();
   });
 
-  it('renders the claimed fill with the claim props', () => {
-    createSession(ClaimedFillId, { label: 'claimed props' });
+  it("renders the session's fill with its props", () => {
+    createSession({ fill: SessionFillId, props: { label: 'session props' } });
 
     renderSlot(FallbackFillId);
 
-    expect(screen.getByTestId('claimed').textContent).toBe('claimed props');
+    expect(screen.getByTestId('session').textContent).toBe('session props');
     expect(screen.queryByTestId('fallback')).toBeNull();
   });
 
-  it('falls back when the session claims nothing', () => {
+  it('falls back when the session names no fill', () => {
     createSession();
 
     renderSlot(FallbackFillId);
@@ -86,12 +83,28 @@ describe('Slot', () => {
     expect(screen.getByTestId('fallback')).toBeDefined();
   });
 
-  it('falls back when the claimed fill is not registered', () => {
-    createSession('test:sidebar:unregistered');
+  it('falls back when the named fill is not registered', () => {
+    createSession({ fill: 'test:sidebar:unregistered' });
 
     renderSlot(FallbackFillId);
 
     expect(screen.getByTestId('fallback')).toBeDefined();
+  });
+
+  it('renders nothing when the session hides the slot', () => {
+    createSession({ fill: SessionFillId, hidden: true });
+
+    const { container } = renderSlot(FallbackFillId);
+
+    expect(container.innerHTML).toBe('');
+  });
+
+  it('renders nothing when the session hides a slot it has no fill for', () => {
+    createSession({ hidden: true });
+
+    const { container } = renderSlot(FallbackFillId);
+
+    expect(container.innerHTML).toBe('');
   });
 
   it('renders the fallback with its props in object form', () => {
@@ -123,17 +136,12 @@ describe('Slot', () => {
 
     const session = ViewSessions.getActive(Views.constants.DefaultAreaId)!;
 
-    ViewSessions.claimSlot(
-      Views.constants.DefaultAreaId,
-      session.id,
-      'sidebar',
-      {
-        fill: ClaimedFillId,
-      },
-    );
+    ViewSessions.setSlot(Views.constants.DefaultAreaId, session.id, 'sidebar', {
+      fill: SessionFillId,
+    });
 
     render(<Slot id="sidebar" fallback={FallbackFillId} />);
 
-    expect(screen.getByTestId('claimed')).toBeDefined();
+    expect(screen.getByTestId('session')).toBeDefined();
   });
 });
