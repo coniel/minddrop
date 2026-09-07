@@ -1,6 +1,12 @@
 {
   "designsNext": {
-    "new": "New design",
+    "copyName": "{{name}} copy",
+    "types": {
+      "card": "Card",
+      "list": "List",
+      "page": "Page",
+      "space": "Space"
+    },
     "widthMode": {
       "fluid": "Fluid width",
       "fixedLeft": "Fixed width, pinned left",

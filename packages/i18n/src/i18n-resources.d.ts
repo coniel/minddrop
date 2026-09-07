@@ -2118,7 +2118,13 @@ declare module 'i18next' {
           };
         };
         designsNext: {
-          new: string;
+          copyName: string;
+          types: {
+            card: string;
+            list: string;
+            page: string;
+            space: string;
+          };
           widthMode: {
             fluid: string;
             fixedLeft: string;

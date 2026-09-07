@@ -1,11 +1,13 @@
 import { Events } from '@minddrop/events';
-import { i18n } from '@minddrop/i18n';
+import { createI18nKeyBuilder, i18n } from '@minddrop/i18n';
 import { EntityId, entityId } from '@minddrop/utils';
 import { DesignsStore } from '../DesignsStore';
 import { DefaultDesignColumns, DefaultDesignRows } from '../constants';
 import { DesignCreatedEvent } from '../events';
 import { Design, DesignType } from '../types';
 import { writeDesign } from '../writeDesign';
+
+const typeKey = createI18nKeyBuilder('designsNext.types.');
 
 export interface CreateDesignOptions {
   /**
@@ -14,7 +16,8 @@ export interface CreateDesignOptions {
   type: DesignType;
 
   /**
-   * The design name. Defaults to a generic localized label.
+   * The design name. Defaults to the localized name of the design
+   * type.
    */
   name?: string;
 
@@ -40,7 +43,7 @@ export async function createDesign(
 ): Promise<Design> {
   const design: Design = {
     id: entityId('design'),
-    name: options.name || i18n.t('designsNext.new'),
+    name: options.name || i18n.t(typeKey(options.type)),
     type: options.type,
     columns: DefaultDesignColumns,
     rows: DefaultDesignRows,

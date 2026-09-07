@@ -29,10 +29,10 @@ describe('createDesign', () => {
     expect(design).toEqual(newDesign);
   });
 
-  it('defaults the name to the localized new design label', async () => {
+  it("defaults the name to the design type's localized name", async () => {
     const design = await createDesign({ type: 'card' });
 
-    expect(design.name).toBe('New design');
+    expect(design.name).toBe('Card');
   });
 
   it('adds the design to the store', async () => {

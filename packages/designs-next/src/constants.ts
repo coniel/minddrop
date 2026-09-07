@@ -1,4 +1,20 @@
-import { AspectRatioToken } from './types';
+import type { UiIconName } from '@minddrop/ui-icons';
+import { AspectRatioToken, DesignType } from './types';
+
+/**
+ * The icon representing designs and design editing.
+ */
+export const DesignsIcon: UiIconName = 'pencil-ruler';
+
+/**
+ * The icon representing each design type.
+ */
+export const DesignTypeIcons: Record<DesignType, UiIconName> = {
+  card: 'layout-grid',
+  list: 'layout-list',
+  page: 'layout',
+  space: 'panels-top-left',
+};
 
 /**
  * Pixel size of a grid unit in the fluid render. Square, so element

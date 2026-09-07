@@ -1,5 +1,7 @@
 import {
   CardAspectRatios,
+  DesignTypeIcons,
+  DesignsIcon,
   MaxDesignRows,
   MinDesignRows,
   SnapPresets,
@@ -27,6 +29,8 @@ export const errors = {
 };
 
 export const constants = {
+  Icon: DesignsIcon,
+  TypeIcons: DesignTypeIcons,
   UnitPixelSize,
   MinRows: MinDesignRows,
   MaxRows: MaxDesignRows,
@@ -38,6 +42,7 @@ export { DesignsStore as Store } from './DesignsStore';
 export { createDesign as create } from './createDesign';
 export { createDesignElement as createElement } from './createDesignElement';
 export { deleteDesign as delete } from './deleteDesign';
+export { duplicateDesign as duplicate } from './duplicateDesign';
 export { getDesign as get } from './getDesign';
 export { getOwnedDesigns as getByOwner } from './getOwnedDesigns';
 export { initializeDesigns as initialize } from './initializeDesigns';
