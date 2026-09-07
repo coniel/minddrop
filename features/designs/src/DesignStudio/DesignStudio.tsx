@@ -38,6 +38,9 @@ export const DesignStudio: React.FC<DesignStudioViewProps> = ({
   // editors can be open at once.
   const [studio] = useState(createDesignStudioStore);
   const [canvasStore] = useState(createDesignStudioCanvasStore);
+  // The session the sidebar is hidden for, rather than whichever is
+  // active when the studio closes.
+  const sessionId = Views.useSession() ?? undefined;
 
   // Clear the studio when it unmounts so the next open starts
   // at the dashboard, persisting any pending edit first.
@@ -48,14 +51,22 @@ export const DesignStudio: React.FC<DesignStudioViewProps> = ({
     };
   }, [studio]);
 
-  // Close the app sidebar while the design studio is open
+  // Hide the app sidebar while the design studio is open
   useEffect(() => {
-    Events.dispatch(Events.events.CloseAppSidebar);
+    Events.dispatch(Views.events.SetSlot, {
+      sessionId,
+      slotId: 'sidebar',
+      hidden: true,
+    });
 
     return () => {
-      Events.dispatch(Events.events.OpenAppSidebar);
+      Events.dispatch(Views.events.SetSlot, {
+        sessionId,
+        slotId: 'sidebar',
+        hidden: false,
+      });
     };
-  }, []);
+  }, [sessionId]);
 
   return (
     <DesignStudioProvider store={studio}>

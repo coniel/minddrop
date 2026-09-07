@@ -17,6 +17,7 @@ import { Space, Spaces } from '@minddrop/spaces';
 import { PanelView } from '@minddrop/ui-components';
 import { IconButton, Panel, ScrollArea } from '@minddrop/ui-primitives';
 import { isEditableTarget, useDeleteKey } from '@minddrop/utils';
+import { Views } from '@minddrop/views';
 import { setSpaceViewState } from '../../SpaceViewStateStore';
 import { EDIT_PANEL_WIDTH } from '../../constants';
 import './SpaceEditMode.css';
@@ -70,6 +71,9 @@ const SpaceEditSession: React.FC<SpaceEditSessionProps> = ({ space }) => {
   );
   const design = useDesignStudioStore((state) => state.design);
   const layout = useActiveLayout();
+  // The session the sidebar is hidden for, rather than whichever is
+  // active when the editor closes.
+  const sessionId = Views.useSession() ?? undefined;
 
   // Initialize the layout editor session for the space's layout,
   // persisting edits through the space's design. The session owns
@@ -91,16 +95,24 @@ const SpaceEditSession: React.FC<SpaceEditSessionProps> = ({ space }) => {
 
   // Swap the app sidebar for the edit panels
   useEffect(() => {
-    Events.dispatch(Events.events.CloseAppSidebar);
+    Events.dispatch(Views.events.SetSlot, {
+      sessionId,
+      slotId: 'sidebar',
+      hidden: true,
+    });
     Events.dispatch(Events.events.SetNavToolbarWidth, {
       width: EDIT_PANEL_WIDTH,
     });
 
     return () => {
-      Events.dispatch(Events.events.OpenAppSidebar);
+      Events.dispatch(Views.events.SetSlot, {
+        sessionId,
+        slotId: 'sidebar',
+        hidden: false,
+      });
       Events.dispatch(Events.events.SetNavToolbarWidth, { width: 0 });
     };
-  }, []);
+  }, [sessionId]);
 
   // Deselect the highlighted element, or exit edit mode on Escape
   useEffect(() => {
