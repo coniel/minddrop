@@ -1161,3 +1161,12 @@ refreshes queued by watcher events) used to push the file content
 requests past the timeout and leave the viewer stuck on stale content.
 Git runs through `runGit` in `bun/rpc.ts`, which spawns asynchronously
 and lets independent commands run in parallel. Keep new handlers on it.
+
+### The diff editor's models outlive the editor on purpose
+
+`@monaco-editor/react` disposes a `DiffEditor`'s text models before
+the editor itself, which Monaco reports as "TextModel got disposed
+before DiffEditorWidget model got reset" on every unmount. `DiffViewer`
+passes `keepCurrentOriginalModel` and `keepCurrentModifiedModel` so the
+wrapper leaves the models alone, then resets and disposes them itself
+once the view unmounts. Dropping those props brings the error back.

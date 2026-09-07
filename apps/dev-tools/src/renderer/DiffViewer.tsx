@@ -66,6 +66,26 @@ interface CommentDraft {
   anchor: SelectionAnchor;
 }
 
+/**
+ * A mounted diff editor and the text models it shows.
+ */
+interface MountedDiffEditor {
+  /**
+   * The diff editor instance.
+   */
+  instance: editor.IStandaloneDiffEditor;
+
+  /**
+   * The original and modified text models.
+   */
+  models: editor.IDiffEditorModel;
+
+  /**
+   * Whether the editor instance has been disposed.
+   */
+  disposed: boolean;
+}
+
 interface DiffViewerProps {
   /**
    * The currently selected file.
@@ -157,6 +177,9 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
   const statusBarRef = useRef<HTMLDivElement>(null);
   const vimModeRef = useRef<ReturnType<typeof initVimMode> | null>(null);
   const monacoRef = useRef<Monaco | null>(null);
+  // The diff editor while its view is mounted, so its models can be
+  // disposed after it
+  const diffEditorRef = useRef<MountedDiffEditor | null>(null);
   // The editor showing current content, which is the one that can be
   // commented on
   const activeEditorRef = useRef<editor.ICodeEditor | null>(null);
@@ -356,6 +379,22 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
   const handleDiffEditorMount = useCallback(
     (diffEditor: editor.IStandaloneDiffEditor, monaco: Monaco) => {
       const modifiedEditor = diffEditor.getModifiedEditor();
+      const models = diffEditor.getModel();
+
+      if (models) {
+        const mounted: MountedDiffEditor = {
+          instance: diffEditor,
+          models,
+          disposed: false,
+        };
+
+        // The diff editor never fires its own dispose event, but it
+        // disposes its inner editors, which do
+        modifiedEditor.onDidDispose(() => {
+          mounted.disposed = true;
+        });
+        diffEditorRef.current = mounted;
+      }
 
       attachVim(modifiedEditor);
       attachActiveEditor(modifiedEditor, monaco);
@@ -373,6 +412,24 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
   useEffect(() => {
     return detachActiveEditor;
   }, [viewMode, detachActiveEditor]);
+
+  // Dispose the diff editor's models once its view has unmounted
+  useEffect(() => {
+    if (viewMode !== 'diff') {
+      return;
+    }
+
+    return () => {
+      const mounted = diffEditorRef.current;
+
+      if (!mounted) {
+        return;
+      }
+
+      diffEditorRef.current = null;
+      disposeDiffEditorModels(mounted);
+    };
+  }, [viewMode]);
 
   // Discard the drafts when the file or view changes
   useEffect(() => {
@@ -595,6 +652,10 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
             language={language}
             theme="dark-plus"
             onMount={handleDiffEditorMount}
+            // The models are disposed after the editor, see
+            // disposeDiffEditorModels
+            keepCurrentOriginalModel
+            keepCurrentModifiedModel
             options={{
               readOnly: true,
               renderSideBySide: splitDiff,
@@ -675,6 +736,24 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
     </div>
   );
 };
+
+/**
+ * Detaches and disposes the models of an unmounted diff editor.
+ * @monaco-editor/react disposes the models while they are still
+ * attached, which Monaco reports as an error, so the editor keeps them
+ * and they are reset here first.
+ *
+ * @param mounted - The unmounted diff editor and its models.
+ */
+function disposeDiffEditorModels(mounted: MountedDiffEditor): void {
+  // A disposed editor has already let go of the models
+  if (!mounted.disposed) {
+    mounted.instance.setModel(null);
+  }
+
+  mounted.models.original.dispose();
+  mounted.models.modified.dispose();
+}
 
 /**
  * Renders a single tab button in the view mode toolbar.
