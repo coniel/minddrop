@@ -8,7 +8,6 @@ import {
   Databases,
 } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
-import { DataViewOptionsMenu } from '@minddrop/feature-data-views';
 import {
   DatabaseEntryRenderer,
   dropContainsAddExistingEntryCard,
@@ -35,6 +34,7 @@ import {
   useCanvasStore,
   useFitOnNodesReady,
 } from '@minddrop/ui-canvas';
+import { DataViewSettingsMenu } from '@minddrop/ui-data-views';
 import {
   DataViewEntryPicker,
   DataViewFloatingToolbar,
@@ -803,7 +803,7 @@ const CanvasViewContent: React.FC<
         position="absolute"
       >
         {/* View settings menu */}
-        <DataViewOptionsMenu view={view} onOpenChange={setOptionsMenuOpen} />
+        <DataViewSettingsMenu view={view} onOpenChange={setOptionsMenuOpen} />
       </DataViewFloatingToolbar>
 
       {/* Zoom controls */}

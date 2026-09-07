@@ -14,7 +14,6 @@ import {
   Databases,
 } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
-import { DataViewOptionsMenu } from '@minddrop/feature-data-views';
 import {
   dropContainsAddExistingEntryCard,
   dropContainsNewEntryPickerCard,
@@ -22,6 +21,7 @@ import {
   getDroppedNewEntryDatabaseIds,
 } from '@minddrop/feature-databases';
 import { DropEventData } from '@minddrop/selection';
+import { DataViewSettingsMenu } from '@minddrop/ui-data-views';
 import {
   DataViewEntryPicker,
   DataViewFloatingToolbar,
@@ -574,7 +574,7 @@ export const BoardViewComponent: React.FC<
         menuOpen={optionsMenuOpen}
       >
         {/* View settings menu */}
-        <DataViewOptionsMenu view={view} onOpenChange={setOptionsMenuOpen} />
+        <DataViewSettingsMenu view={view} onOpenChange={setOptionsMenuOpen} />
       </DataViewFloatingToolbar>
     </ScrollArea>
   );

@@ -1,8 +1,10 @@
 import { DataViews } from '@minddrop/data-views';
 import { PanelView } from '@minddrop/ui-components';
-import { DataViewSortMenu } from '@minddrop/ui-data-views';
+import {
+  DataViewSettingsMenu,
+  DataViewSortMenu,
+} from '@minddrop/ui-data-views';
 import { DataViewContent } from '../DataViewContent';
-import { DataViewOptionsMenu } from '../DataViewOptionsMenu';
 import { DataViewRenderer } from '../DataViewRenderer';
 import './DataViewView.css';
 
@@ -39,7 +41,7 @@ export const DataViewView: React.FC<DataViewViewProps> = ({ dataViewId }) => {
         className="data-view-view-panel"
         actions={[
           <DataViewSortMenu key="sort" view={dataView} />,
-          <DataViewOptionsMenu key="options" view={dataView} />,
+          <DataViewSettingsMenu key="options" view={dataView} />,
         ]}
       >
         <DataViewContent dataView={dataView} />

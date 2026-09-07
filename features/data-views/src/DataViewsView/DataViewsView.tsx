@@ -1,15 +1,15 @@
 import { useMemo, useState } from 'react';
 import { DataView, DataViews } from '@minddrop/data-views';
+import { ListPanelView, ListPanelViewItem } from '@minddrop/ui-components';
 import {
   AddDataViewMenu,
-  ListPanelView,
-  ListPanelViewItem,
-} from '@minddrop/ui-components';
-import { DataViewSortMenu } from '@minddrop/ui-data-views';
+  DataViewSettingsMenu,
+  DataViewSettingsMenuContent,
+  DataViewSortMenu,
+} from '@minddrop/ui-data-views';
 import { Views } from '@minddrop/views';
-import { DataViewContent } from './DataViewContent';
-import { DataViewOptionsMenu } from './DataViewOptionsMenu';
-import { OpenDataViewViewEvent, OpenNewDataViewViewEvent } from './events';
+import { DataViewContent } from '../DataViewContent';
+import { OpenDataViewViewEvent, OpenNewDataViewViewEvent } from '../events';
 
 /**
  * Renders a two column view of the persisted data views: a
@@ -91,7 +91,7 @@ export const DataViewsView: React.FC = () => {
         selectedDataView
           ? [
               <DataViewSortMenu key="sort" view={selectedDataView} />,
-              <DataViewOptionsMenu key="options" view={selectedDataView} />,
+              <DataViewSettingsMenu key="options" view={selectedDataView} />,
             ]
           : []
       }
@@ -102,12 +102,21 @@ export const DataViewsView: React.FC = () => {
 };
 
 /**
- * Returns the data view as a list item.
+ * Returns the data view as a list item carrying the view's settings
+ * menu, minus the type's own settings, which belong with the view
+ * itself.
  */
 function toListItem(dataView: DataView): ListPanelViewItem {
   return {
     id: dataView.id,
     label: dataView.name,
     contentIcon: dataView.icon,
+    menu: [
+      <DataViewSettingsMenuContent
+        key="settings"
+        view={dataView}
+        typeSettings={false}
+      />,
+    ],
   };
 }

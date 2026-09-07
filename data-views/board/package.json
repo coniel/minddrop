@@ -22,6 +22,7 @@
     "@minddrop/events": "workspace:*",
     "@minddrop/feature-data-views": "workspace:*",
     "@minddrop/feature-databases": "workspace:*",
+    "@minddrop/ui-data-views": "workspace:*",
     "@minddrop/ui-databases": "workspace:*",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/selection": "workspace:*",

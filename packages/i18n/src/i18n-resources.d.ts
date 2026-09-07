@@ -1878,6 +1878,14 @@ declare module 'i18next' {
           actions: {
             add: string;
             settings: string;
+            delete: string;
+          };
+          delete: {
+            confirmation: {
+              title: string;
+              message: string;
+              confirm: string;
+            };
           };
           labels: {
             view: string;

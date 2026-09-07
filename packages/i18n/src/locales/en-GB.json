@@ -1732,7 +1732,15 @@
   "dataViews": {
     "actions": {
       "add": "Add view",
-      "settings": "View settings"
+      "settings": "View settings",
+      "delete": "Delete view"
+    },
+    "delete": {
+      "confirmation": {
+        "title": "Delete view",
+        "message": "Are you sure you want to delete this view? This cannot be undone.",
+        "confirm": "Delete"
+      }
     },
     "labels": {
       "view": "View",

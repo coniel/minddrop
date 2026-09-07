@@ -1,5 +1,4 @@
 export * from './AddCollectionEntryButton';
-export * from './AddDataViewMenu';
 export * from './CollectionSelectionSubmenu';
 export * from './DataSourceCombobox';
 export * from './Image';

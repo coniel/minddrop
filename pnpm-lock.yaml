@@ -227,6 +227,9 @@ importers:
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../../packages/test-utils
+      '@minddrop/ui-data-views':
+        specifier: workspace:*
+        version: link:../../ui/data-views
       '@minddrop/ui-databases':
         specifier: workspace:*
         version: link:../../ui/databases
@@ -285,6 +288,9 @@ importers:
       '@minddrop/ui-canvas':
         specifier: workspace:*
         version: link:../../ui/canvas
+      '@minddrop/ui-data-views':
+        specifier: workspace:*
+        version: link:../../ui/data-views
       '@minddrop/ui-databases':
         specifier: workspace:*
         version: link:../../ui/databases
@@ -606,9 +612,6 @@ importers:
       '@minddrop/ui-data-views':
         specifier: workspace:*
         version: link:../../ui/data-views
-      '@minddrop/ui-databases':
-        specifier: workspace:*
-        version: link:../../ui/databases
       '@minddrop/ui-icons':
         specifier: workspace:*
         version: link:../../ui/icons
@@ -2865,6 +2868,12 @@ importers:
       '@minddrop/queries':
         specifier: workspace:*
         version: link:../../packages/queries
+      '@minddrop/ui-drag-and-drop':
+        specifier: workspace:*
+        version: link:../drag-and-drop
+      '@minddrop/ui-icons':
+        specifier: workspace:*
+        version: link:../icons
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../primitives

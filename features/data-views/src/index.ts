@@ -1,5 +1,4 @@
 export * from './events';
-export * from './DataViewOptionsMenu';
 export * from './DataViewRenderer';
 export * from './DataViewView';
 export * from './DataViewsView';

@@ -28,6 +28,8 @@
     "@minddrop/file-system": "workspace:*",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/queries": "workspace:*",
+    "@minddrop/ui-drag-and-drop": "workspace:*",
+    "@minddrop/ui-icons": "workspace:*",
     "@minddrop/ui-primitives": "workspace:*",
     "@minddrop/workspaces": "workspace:*"
   }
