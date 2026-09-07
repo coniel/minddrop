@@ -4,4 +4,6 @@ export { contentIconFromName as fromName } from './contentIconFromName';
 export { parseIcon as parse } from './parseIcon';
 export { resolveContentIconColor as resolveColor } from './resolveContentIconColor';
 export { applyContentIconColor as applyColor } from './applyContentIconColor';
+export { resolveContentIconBackground as resolveBackground } from './resolveContentIconBackground';
+export { applyContentIconBackground as applyBackground } from './applyContentIconBackground';
 export { humanizeIconName as humanizeName } from './humanizeIconName';
