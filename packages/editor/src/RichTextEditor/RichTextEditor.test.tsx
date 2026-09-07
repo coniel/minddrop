@@ -1,3 +1,6 @@
+import React from 'react';
+import { Transforms } from 'slate';
+import { useSlateStatic } from 'slate-react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Ast, Element } from '@minddrop/ast';
 import { SelectionItemSerializers } from '@minddrop/selection';
@@ -5,6 +8,7 @@ import { act, fireEvent, render } from '@minddrop/test-utils';
 import { registerBlockSelectionSerializer } from '../registerBlockSelectionSerializer';
 import {
   actFlush,
+  addTestElementConfig,
   cleanup,
   headingElement1,
   headingElement1PlainText,
@@ -13,9 +17,31 @@ import {
   paragraphElement2,
   paragraphElement2PlainText,
 } from '../test-utils';
-import { BLOCK_SELECTION_ITEM_TYPE } from '../types';
+import { BLOCK_SELECTION_ITEM_TYPE, BlockElementProps, Editor } from '../types';
 import { ACTIVATION_DELAY } from '../useHoveredBlock';
 import { RichTextEditor } from './RichTextEditor';
+
+// Editor instance captured by the probe element component
+let capturedEditor: Editor;
+
+/**
+ * Renders as a plain block while capturing the editor instance
+ * so tests can drive it using Transforms.
+ */
+const EditorProbeComponent: React.FC<BlockElementProps> = ({
+  attributes,
+  children,
+}) => {
+  capturedEditor = useSlateStatic() as Editor;
+
+  return <div {...attributes}>{children}</div>;
+};
+
+// A probe element included in the editor content
+const editorProbeElement = {
+  type: 'editor-probe',
+  children: [{ text: '' }],
+};
 
 // The accessible labels of the block gutter's buttons
 const INSERT_LABEL = 'Insert block';
@@ -160,6 +186,157 @@ describe('RichTextEditor block gutter', () => {
 
     expect(ids.filter(Boolean)).toHaveLength(3);
     expect(new Set(ids).size).toBe(3);
+  });
+});
+
+describe('RichTextEditor value changes', () => {
+  beforeEach(() => {
+    // Register the editor probe element type
+    addTestElementConfig({
+      type: 'editor-probe',
+      component: EditorProbeComponent,
+    });
+
+    // The debounced change callback and the gutter's activation
+    // delay are driven by timers, the debounce also reading the clock.
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'Date'] });
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+
+    cleanup();
+  });
+
+  // Renders an editor and collects the values it emits, returning
+  // a way to change the value passed in.
+  const renderEditor = (initialValue: Element[] = [paragraphElement1]) => {
+    const changeValues: Element[][] = [];
+    const debouncedValues: Element[][] = [];
+
+    const result = render(
+      <RichTextEditor
+        initialValue={initialValue}
+        onChange={(value) => changeValues.push(value)}
+        onChangeDebounced={(value) => debouncedValues.push(value)}
+      />,
+    );
+
+    const setValue = (value: Element[]) => {
+      result.rerender(
+        <RichTextEditor
+          initialValue={value}
+          onChange={(value) => changeValues.push(value)}
+          onChangeDebounced={(value) => debouncedValues.push(value)}
+        />,
+      );
+    };
+
+    return { ...result, changeValues, debouncedValues, setValue };
+  };
+
+  it('replaces the content when the value changes', () => {
+    const { getByText, queryByText, setValue } = renderEditor();
+
+    setValue([paragraphElement2]);
+
+    expect(getByText(paragraphElement2PlainText)).not.toBeNull();
+    expect(queryByText(paragraphElement1PlainText)).toBeNull();
+  });
+
+  it('does not emit a change when only the selection changes', async () => {
+    const { changeValues, debouncedValues } = renderEditor([
+      paragraphElement1,
+      editorProbeElement,
+    ]);
+
+    await actFlush(() => {
+      Transforms.select(capturedEditor, { path: [0, 0], offset: 3 });
+    });
+
+    act(() => {
+      vi.advanceTimersByTime(5000);
+    });
+
+    expect(changeValues).toHaveLength(0);
+    expect(debouncedValues).toHaveLength(0);
+  });
+
+  it('does not emit the replacement as a change', () => {
+    const { changeValues, debouncedValues, setValue } = renderEditor();
+
+    setValue([paragraphElement2]);
+
+    act(() => {
+      vi.advanceTimersByTime(5000);
+    });
+
+    expect(changeValues).toHaveLength(0);
+    expect(debouncedValues).toHaveLength(0);
+  });
+
+  it('leaves the document alone when an equal value arrives', () => {
+    const { getByText, changeValues, setValue } = renderEditor();
+    const block = getByText(paragraphElement1PlainText);
+
+    // The same content parsed afresh, under a different block ID
+    setValue([{ ...paragraphElement1 }]);
+
+    // The block was not re-rendered from a replacement
+    expect(getByText(paragraphElement1PlainText)).toBe(block);
+    expect(changeValues).toHaveLength(0);
+  });
+
+  it('drops a pending save when the value changes', async () => {
+    const {
+      getByText,
+      getByLabelText,
+      changeValues,
+      debouncedValues,
+      setValue,
+    } = renderEditor([paragraphElement1, headingElement1]);
+
+    hoverBlock(getByText(paragraphElement1PlainText));
+
+    // Make an edit, whose save is now pending
+    await actFlush(() => {
+      fireEvent.click(getByLabelText(INSERT_LABEL));
+    });
+
+    expect(changeValues).toHaveLength(1);
+
+    setValue([paragraphElement2]);
+
+    act(() => {
+      vi.advanceTimersByTime(5000);
+    });
+
+    expect(debouncedValues).toHaveLength(0);
+    expect(getByText(paragraphElement2PlainText)).not.toBeNull();
+  });
+
+  it('leaves the document alone when its own saved value comes back', async () => {
+    const { getByText, getByLabelText, debouncedValues, setValue } =
+      renderEditor([paragraphElement1, headingElement1]);
+
+    hoverBlock(getByText(paragraphElement1PlainText));
+
+    await actFlush(() => {
+      fireEvent.click(getByLabelText(INSERT_LABEL));
+    });
+
+    act(() => {
+      vi.advanceTimersByTime(5000);
+    });
+
+    expect(debouncedValues).toHaveLength(1);
+
+    const block = getByText(headingElement1PlainText);
+
+    // The saved value, parsed afresh by the consumer
+    setValue(Ast.fromMarkdown(Ast.toMarkdown(debouncedValues[0])));
+
+    expect(getByText(headingElement1PlainText)).toBe(block);
   });
 });
 

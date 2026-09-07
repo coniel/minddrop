@@ -36,6 +36,10 @@ const editorProbeElement = {
   children: [{ text: '' }],
 };
 
+// The content rendered into the title editor, shared between renders
+// so that a re-render does not read as a changed value.
+const titleEditorValue = [paragraphElement1, editorProbeElement];
+
 describe('RichTextEditor title', () => {
   beforeEach(() => {
     // Register the editor probe element type
@@ -64,7 +68,7 @@ describe('RichTextEditor title', () => {
         validateTitle={options.validateTitle}
         onTitleChange={(newTitle) => committedTitles.push(newTitle)}
         onChange={(value) => changeValues.push(value)}
-        initialValue={[paragraphElement1, editorProbeElement]}
+        initialValue={titleEditorValue}
       />,
     );
 
@@ -241,7 +245,7 @@ describe('RichTextEditor title', () => {
       result.rerender(
         <RichTextEditor
           title="Renamed externally"
-          initialValue={[paragraphElement1, editorProbeElement]}
+          initialValue={titleEditorValue}
         />,
       );
     });
@@ -304,10 +308,7 @@ describe('RichTextEditor title', () => {
     await actFlush(() => {
       // Sync the committed value back in as the title prop
       result.rerender(
-        <RichTextEditor
-          title="Untitled 7"
-          initialValue={[paragraphElement1, editorProbeElement]}
-        />,
+        <RichTextEditor title="Untitled 7" initialValue={titleEditorValue} />,
       );
     });
 

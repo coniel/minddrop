@@ -7,7 +7,7 @@ import {
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { Designs } from '@minddrop/designs';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
-import { render, screen } from '@minddrop/test-utils';
+import { act, render, screen } from '@minddrop/test-utils';
 import { cleanup, setup } from '../test-utils';
 import { DatabaseEntryRenderer } from './DatabaseEntryRenderer';
 
@@ -222,6 +222,53 @@ describe('<DatabaseEntryRenderer />', () => {
     // The editor's title block resolves Heading -> Title -> the
     // entry title.
     screen.getByText('Title Entry');
+  });
+
+  it('shows a bound editor element the property value set in the store', () => {
+    // An editor element bound to the 'Heading' design property
+    const editorElement = {
+      ...element_property_formatted_text_1,
+      property: 'Heading',
+    };
+    const editorLayout = {
+      ...layout_card_1,
+      id: 'layout_editor-card' as const,
+      tree: { ...layout_card_1.tree, children: [editorElement] },
+    };
+    const editorDesign = {
+      ...boundDesign,
+      id: 'design_editor' as const,
+      layouts: [editorLayout],
+    };
+    const database = {
+      ...mappedDatabase({ Heading: 'Body' }),
+      designId: editorDesign.id,
+    };
+
+    Designs.Store.load([editorDesign]);
+    Databases.Store.load([database]);
+    DatabaseEntries.Store.load([mappedEntry]);
+
+    render(
+      <DatabaseEntryRenderer
+        entryId={mappedEntry.id}
+        layoutContext="card"
+        layoutId={editorLayout.id}
+      />,
+    );
+
+    screen.getByText('Mapped Value');
+
+    // The entry changes behind the editor, as on a background sync
+    act(() => {
+      DatabaseEntries.Store.set({
+        ...mappedEntry,
+        properties: { Body: 'External edit' },
+      });
+    });
+
+    screen.getByText('External edit');
+    expect(screen.queryByText('Mapped Value')).toBeNull();
   });
 
   it('tints the entry with its meta color', () => {

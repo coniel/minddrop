@@ -5,7 +5,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { Descendant, Path, Editor as SlateEditor } from 'slate';
+import { Descendant, Operation, Path, Editor as SlateEditor } from 'slate';
 import { HistoryEditor } from 'slate-history';
 import { Editable, ReactEditor, RenderElementProps, Slate } from 'slate-react';
 import { useDebouncedCallback } from 'use-debounce';
@@ -29,6 +29,7 @@ import { clearBlockSelection } from '../clearBlockSelection';
 import { deleteBlocks } from '../deleteBlocks';
 import { duplicateBlocks } from '../duplicateBlocks';
 import { insertTrailingParagraph } from '../insertTrailingParagraph';
+import { resetEditorContent } from '../resetEditorContent';
 import { selectAutoFocusTarget } from '../selectAutoFocusTarget';
 import { turnBlocksInto } from '../turnBlocksInto';
 import { BlockElementProps, ReferenceSource } from '../types';
@@ -198,6 +199,13 @@ export const RichTextEditor: React.FC<EditorProps> = ({
   const [menuBlock, setMenuBlock] = useState<HoveredBlock | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
 
+  // The value the document was last seeded from, so that only a
+  // changed value resets it.
+  const seededValueRef = useRef(initialValue);
+  // The last value handed to the debounced change callback, which
+  // is what a consumer writes and then passes back in.
+  const savedValueRef = useRef<Element[] | null>(null);
+
   // Whether the title feature is enabled, captured on mount since
   // the Slate document is uncontrolled and cannot gain or lose the
   // title node across renders.
@@ -324,7 +332,13 @@ export const RichTextEditor: React.FC<EditorProps> = ({
   );
 
   const handleDebouncedChange = useDebouncedCallback(
-    (value: Element[]) => (onChangeDebounced ? onChangeDebounced(value) : null),
+    (value: Element[]) => {
+      savedValueRef.current = value;
+
+      if (onChangeDebounced) {
+        onChangeDebounced(value);
+      }
+    },
     1000,
     { leading: false, maxWait: 5000 },
   );
@@ -342,6 +356,13 @@ export const RichTextEditor: React.FC<EditorProps> = ({
       // Keep the wikilink menu query in sync with the editor
       handleWikilinkMenuChange();
 
+      // Slate reports selection changes as changes too, and a reset
+      // applies no operations at all. Neither is a change to the
+      // content that consumers hold.
+      if (!editorWithPlugins.operations.some(isContentOperation)) {
+        return;
+      }
+
       // Strip the title node so consumers only receive the content
       const content = hasTitle
         ? (value as Element[]).slice(1)
@@ -356,6 +377,7 @@ export const RichTextEditor: React.FC<EditorProps> = ({
       }
     },
     [
+      editorWithPlugins,
       onChange,
       onChangeDebounced,
       handleDebouncedChange,
@@ -655,6 +677,53 @@ export const RichTextEditor: React.FC<EditorProps> = ({
     }
   }, [autoFocus]);
 
+  // Follow the value when it changes from outside, as when the file
+  // behind it is edited by something other than the editor. The
+  // document is compared as markdown since block IDs differ between
+  // parses. A value which matches the document, or the last saved
+  // value coming back around, is the editor's own and leaves it be.
+  // Unsaved edits are dropped: the value is the source of truth.
+  useEffect(() => {
+    if (initialValue === seededValueRef.current) {
+      return;
+    }
+
+    // Record the value as seeded, whether or not it resets the document
+    seededValueRef.current = initialValue;
+
+    // Serialize the value and the current document, excluding the
+    // title node.
+    const markdown = Ast.toMarkdown(initialValue);
+    const content = hasTitle
+      ? editorWithPlugins.children.slice(1)
+      : editorWithPlugins.children;
+
+    // Check if the value matches the document. If so, there is
+    // nothing to reset.
+    if (markdown === Ast.toMarkdown(content as Element[])) {
+      return;
+    }
+
+    // Check if the value is the last saved one coming back around. If
+    // so, the document has moved on since and is left alone.
+    if (
+      savedValueRef.current &&
+      markdown === Ast.toMarkdown(savedValueRef.current)
+    ) {
+      return;
+    }
+
+    // Cancel the pending save, which holds the document being replaced
+    handleDebouncedChange.cancel();
+
+    // Replace the document with the value
+    resetEditorContent(
+      editorWithPlugins,
+      assignBlockIds(initialValue),
+      hasTitle,
+    );
+  }, [initialValue, hasTitle, editorWithPlugins, handleDebouncedChange]);
+
   // Handle native undo/redo beforeinput events. On macOS with
   // Electrobun, the application menu's undo/redo roles intercept
   // Cmd+Z before it reaches the webview as a keydown. Instead,
@@ -831,3 +900,14 @@ export const RichTextEditor: React.FC<EditorProps> = ({
     </Slate>
   );
 };
+
+/**
+ * Checks whether an operation changes the document rather than the
+ * selection.
+ *
+ * @param operation - The operation.
+ * @returns Whether the operation changes the document.
+ */
+function isContentOperation(operation: Operation): boolean {
+  return operation.type !== 'set_selection';
+}
