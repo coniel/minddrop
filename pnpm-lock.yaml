@@ -1000,6 +1000,9 @@ importers:
       '@minddrop/ui-theme':
         specifier: workspace:*
         version: link:../../ui/theme
+      '@minddrop/ui-views':
+        specifier: workspace:*
+        version: link:../../ui/views
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../../packages/utils
@@ -2672,6 +2675,9 @@ importers:
       '@minddrop/ui-icons':
         specifier: workspace:*
         version: link:../../ui/icons
+      '@minddrop/utils':
+        specifier: workspace:*
+        version: link:../utils
       react:
         specifier: ^19.2.4
         version: 19.2.4
@@ -3170,6 +3176,37 @@ importers:
       rimraf:
         specifier: ~5.0.0
         version: 5.0.10
+      tsconfig:
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  ui/views:
+    dependencies:
+      '@minddrop/views':
+        specifier: workspace:*
+        version: link:../../packages/views
+      react:
+        specifier: ^19.2.4
+        version: 19.2.4
+    devDependencies:
+      '@minddrop/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@minddrop/test-utils':
+        specifier: workspace:*
+        version: link:../../packages/test-utils
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../../packages/vitest-config
+      '@types/react':
+        specifier: ^19.2.14
+        version: 19.2.14
+      eslint:
+        specifier: ^9.39.3
+        version: 9.39.5
       tsconfig:
         specifier: workspace:*
         version: link:../../packages/tsconfig
