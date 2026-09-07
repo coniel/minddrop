@@ -114,6 +114,16 @@ export interface PanelViewProps {
   breadcrumbs?: Breadcrumb[];
 
   /**
+   * Whether the view can show no subview, making its own crumb lead
+   * out of the subview it shows. Views which always show one (e.g. a
+   * list falling back to its first item) set this to false, rendering
+   * the crumb as a plain label.
+   *
+   * @default true
+   */
+  clearableSubview?: boolean;
+
+  /**
    * Content rendered in place of the header's breadcrumbs, icon and
    * title, filling the header's available width.
    */
@@ -146,6 +156,7 @@ export const PanelView: React.FC<PanelViewProps> = ({
   breadcrumbs,
   children,
   className,
+  clearableSubview = true,
   contentIcon,
   header,
   icon,
@@ -193,7 +204,10 @@ export const PanelView: React.FC<PanelViewProps> = ({
                 leading back to its point in the history */}
             {trail.map((breadcrumb, index) => (
               <React.Fragment key={index}>
-                <PanelViewBreadcrumb breadcrumb={breadcrumb} />
+                <PanelViewBreadcrumb
+                  breadcrumb={breadcrumb}
+                  clearableSubview={clearableSubview}
+                />
                 <Icon
                   name="chevron-right"
                   color="muted"
@@ -247,18 +261,27 @@ interface PanelViewBreadcrumbProps {
    * The breadcrumb to render.
    */
   breadcrumb: Breadcrumb;
+
+  /**
+   * Whether the crumb of the view currently shown clears the view's
+   * subview when clicked, rather than rendering as a plain label.
+   */
+  clearableSubview: boolean;
 }
 
 /**
  * Renders a breadcrumb (icon and title) which navigates back to the
- * view it leads to. Crumbs of the view currently shown carry no
- * history position and are rendered as plain labels.
+ * view it leads to. The crumb of the view currently shown carries no
+ * history position and instead clears the subview the view shows,
+ * or is a plain label when the subview cannot be cleared.
  */
 const PanelViewBreadcrumb: React.FC<PanelViewBreadcrumbProps> = ({
   breadcrumb,
+  clearableSubview,
 }) => {
   const { t } = useTranslation();
   const pane = Views.useViewPane();
+  const setSubview = Views.useSetSubview();
   const registered = Views.use(breadcrumb.view);
 
   // The crumb's own content icon, falling back to the view's
@@ -273,16 +296,24 @@ const PanelViewBreadcrumb: React.FC<PanelViewBreadcrumbProps> = ({
   const title =
     breadcrumb.title ?? (registered?.title ? t(registered.title) : undefined);
 
-  // Navigate back to the crumb's point in the history
+  // Navigate back to the crumb's point in the history, or out of the
+  // subview when the crumb is the view already shown.
   function handleClick() {
+    if (!breadcrumb.steps) {
+      setSubview(null);
+
+      return;
+    }
+
     Events.dispatch(Views.events.NavigateBack, {
       steps: breadcrumb.steps,
       viewAreaId: pane?.viewAreaId,
     });
   }
 
-  // The crumb leads to the view already shown
-  if (!breadcrumb.steps) {
+  // The crumb leads to the view already shown, which cannot leave
+  // its subview.
+  if (!breadcrumb.steps && !clearableSubview) {
     return (
       <Group gap={2} className="panel-view-breadcrumb-label">
         <IconRenderer className="panel-view-breadcrumb-icon" icon={icon} />

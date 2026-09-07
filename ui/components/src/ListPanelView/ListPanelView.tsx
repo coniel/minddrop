@@ -351,6 +351,7 @@ export const ListPanelView: React.FC<ListPanelViewProps> = ({
       stringTitle={selectedItem?.label}
       contentIcon={selectedItem?.contentIcon}
       actions={headerActions}
+      clearableSubview={false}
       className={propsToClass('list-panel-view', { className })}
     >
       <Group align="stretch" className="list-panel-view-content">

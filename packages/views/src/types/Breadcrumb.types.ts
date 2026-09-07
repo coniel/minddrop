@@ -23,9 +23,10 @@ export interface Breadcrumb {
   icon?: string;
 
   /**
-   * How many entries back in the tab's history the crumb sits.
-   * Crumbs of the view currently shown carry none, and are rendered
-   * as plain labels.
+   * How many entries back in the tab's history the crumb sits, which
+   * clicking it navigates back to. Absent on the crumb of the view
+   * currently shown (the crumb preceding its subview in the trail),
+   * which clicking clears the subview instead.
    */
   steps?: number;
 }
