@@ -1,4 +1,5 @@
 import {
+  ContentIconBackground,
   ContentIconName,
   UserIcon,
   useContentIconSet,
@@ -54,6 +55,7 @@ export const ContentIcon: React.FC<ContentIconProps> = ({
       set={icon.set}
       name={icon.icon}
       color={color === 'content-icon' ? icon.color : color}
+      background={icon.background}
     />
   );
 };
@@ -64,6 +66,11 @@ interface IconSetIconProps extends React.HTMLProps<SVGSVGElement> {
    * `current-color` will use the color of the surrounding text.
    */
   color?: ContentColor | TextColor | 'current-color';
+
+  /**
+   * The background behind the icon, drawn in the icon's color.
+   */
+  background?: ContentIconBackground;
 
   /**
    * Name of the icon set the icon belongs to.
@@ -81,10 +88,16 @@ const IconSetIcon: React.FC<IconSetIconProps> = ({
   set,
   name,
   color = 'current-color',
+  background,
   ...other
 }) => {
   // Get the icon set, triggering its load on first use
   const setContents = useContentIconSet(set);
+  const classes = `icon-set-icon ${propsToClass('content-icon', {
+    className,
+    color,
+    background: resolveBackgroundClass(background),
+  })}`;
 
   // Render an empty icon frame while the set loads
   if (!setContents) {
@@ -94,7 +107,7 @@ const IconSetIcon: React.FC<IconSetIconProps> = ({
         width="24"
         height="24"
         viewBox="0 0 24 24"
-        className={`icon-set-icon ${propsToClass('content-icon', { className, color })}`}
+        className={classes}
       />
     );
   }
@@ -109,8 +122,23 @@ const IconSetIcon: React.FC<IconSetIconProps> = ({
     <IconComponent
       data-testid="content-icon"
       name={name}
-      className={`icon-set-icon ${propsToClass('content-icon', { className, color })}`}
+      className={classes}
       {...other}
     />
   );
 };
+
+// Maps the background variant to its class name suffix
+function resolveBackgroundClass(
+  background?: ContentIconBackground,
+): string | undefined {
+  if (background === ContentIconBackground.Subtle) {
+    return 'subtle';
+  }
+
+  if (background === ContentIconBackground.Solid) {
+    return 'solid';
+  }
+
+  return undefined;
+}

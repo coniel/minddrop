@@ -8,10 +8,18 @@
   stroke: currentColor;
 }
 
-/* Color */
+/* Color
+   Each color also binds the ramp its background variants draw
+   from, so a background follows the icon's own color. */
 
 .content-icon-color-current-color {
   color: currentColor;
+}
+
+.content-icon-color-default {
+  --content-icon-subtle-background: var(--neutral-400);
+  --content-icon-solid-background: var(--neutral-1200);
+  --content-icon-on-solid: var(--neutral-100);
 }
 
 .content-icon-color-subtle {
@@ -32,44 +40,100 @@
 
 .content-icon-color-primary {
   color: var(--primary-900);
+  --content-icon-subtle-background: var(--primary-400);
+  --content-icon-solid-background: var(--primary-900);
+  --content-icon-on-solid: var(--primary-100);
 }
 
 .content-icon-color-blue {
   color: var(--blue-900);
+  --content-icon-subtle-background: var(--blue-400);
+  --content-icon-solid-background: var(--blue-900);
+  --content-icon-on-solid: var(--blue-100);
 }
 
 .content-icon-color-cyan {
   color: var(--cyan-900);
+  --content-icon-subtle-background: var(--cyan-400);
+  --content-icon-solid-background: var(--cyan-900);
+  --content-icon-on-solid: var(--cyan-100);
 }
 
 .content-icon-color-red {
   color: var(--red-900);
+  --content-icon-subtle-background: var(--red-400);
+  --content-icon-solid-background: var(--red-900);
+  --content-icon-on-solid: var(--red-100);
 }
 
 .content-icon-color-pink {
   color: var(--pink-900);
+  --content-icon-subtle-background: var(--pink-400);
+  --content-icon-solid-background: var(--pink-900);
+  --content-icon-on-solid: var(--pink-100);
 }
 
 .content-icon-color-purple {
   color: var(--purple-900);
+  --content-icon-subtle-background: var(--purple-400);
+  --content-icon-solid-background: var(--purple-900);
+  --content-icon-on-solid: var(--purple-100);
 }
 
 .content-icon-color-green {
   color: var(--green-900);
+  --content-icon-subtle-background: var(--green-400);
+  --content-icon-solid-background: var(--green-900);
+  --content-icon-on-solid: var(--green-100);
 }
 
 .content-icon-color-orange {
   color: var(--orange-900);
+  --content-icon-subtle-background: var(--orange-400);
+  --content-icon-solid-background: var(--orange-900);
+  --content-icon-on-solid: var(--orange-100);
 }
 
 .content-icon-color-yellow {
   color: var(--yellow-900);
+  --content-icon-subtle-background: var(--yellow-400);
+  --content-icon-solid-background: var(--yellow-900);
+  --content-icon-on-solid: var(--yellow-100);
 }
 
 .content-icon-color-brown {
   color: var(--brown-900);
+  --content-icon-subtle-background: var(--brown-400);
+  --content-icon-solid-background: var(--brown-900);
+  --content-icon-on-solid: var(--brown-100);
 }
 
 .content-icon-color-gray {
   color: var(--gray-900);
+  --content-icon-subtle-background: var(--gray-400);
+  --content-icon-solid-background: var(--gray-900);
+  --content-icon-on-solid: var(--gray-100);
+}
+
+/* Background
+   The glyph stays at full size. A transparent border extends the
+   fill past the glyph's edges instead, and a matching negative
+   margin cancels the border's size so layout is unaffected. The
+   border stays inside the element's own box, unlike a spread
+   shadow, so a color change repaints it reliably. Content-box
+   sizing keeps the border from eating into the glyph. */
+
+.content-icon-background-subtle {
+  box-sizing: content-box;
+  background-color: var(--content-icon-subtle-background);
+  border: 2px solid transparent;
+  margin: -2px;
+}
+
+.content-icon-background-solid {
+  box-sizing: content-box;
+  background-color: var(--content-icon-solid-background);
+  border: 1px solid transparent;
+  margin: -1px;
+  color: var(--content-icon-on-solid);
 }
