@@ -1,61 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import { Events } from '@minddrop/events';
-import { OpenViewEventData, Views } from '@minddrop/views';
+import React from 'react';
+import { Slot } from '@minddrop/ui-views';
+import { Views } from '@minddrop/views';
 
 /**
- * The shell's right panel, rendering the view last sent to it until
- * it is closed.
+ * The shell's right panel frame, rendering what the active session
+ * shows beside its view area. Renders no frame at all while the
+ * session shows nothing, so the view area gets the width.
  */
 export const RightPanel: React.FC = () => {
-  const [view, setView] = useState<OpenViewEventData | null>(null);
+  const { resolved } = Views.useSlotState('right-panel');
 
-  useEffect(() => {
-    // Show the view sent to the right panel
-    Events.addListener(Events.events.OpenRightPanel, 'desktop-app', (data) => {
-      setView(data);
-    });
-
-    // Clear the right panel
-    Events.addListener(Events.events.CloseRightPanel, 'desktop-app', () => {
-      setView(null);
-    });
-
-    return () => {
-      Events.removeListener(Events.events.OpenRightPanel, 'desktop-app');
-      Events.removeListener(Events.events.CloseRightPanel, 'desktop-app');
-    };
-  }, []);
-
-  // Render nothing when the right panel is empty
-  if (!view) {
+  // Render no frame while the panel is empty
+  if (!resolved) {
     return null;
   }
 
   return (
     <div className="right-panel">
-      <RegisteredView view={view} />
+      <Slot id="right-panel" />
     </div>
   );
-};
-
-interface RegisteredViewProps {
-  /**
-   * The view to resolve and render, along with its props.
-   */
-  view: OpenViewEventData;
-}
-
-/**
- * Resolves a registered view by id and renders it with its props.
- */
-const RegisteredView: React.FC<RegisteredViewProps> = ({ view }) => {
-  const registered = Views.use(view.view);
-
-  if (!registered) {
-    return null;
-  }
-
-  const ViewComponent = registered.component;
-
-  return <ViewComponent {...view.props} />;
 };

@@ -64,16 +64,16 @@ unmounts during a session switch.
 
 ## UI slots and fills
 
-A **slot** is a named position in the app shell (`sidebar`, later a right
-panel) and a **fill** is a registered component for it. Fills register
-through `Views.registerFill(kind, fill)` into one store keyed by
-`kind:id`; the kinds and their fill shapes are declared on the
+A **slot** is a named position in the app shell (`sidebar` and
+`right-panel`) and a **fill** is a registered component for it. Fills
+register through `Views.registerFill(kind, fill)` into one store keyed
+by `kind:id`; the kinds and their fill shapes are declared on the
 augmentable `SlotFillMap` interface (the `EventDataMap` pattern), so
 `Views.getFill`, `Views.useFill` and `Views.useFills` stay typed while
-the store knows nothing about kinds. `packages/views` declares the
-`sidebar` kind itself, since the app shell defines that slot. The
-registry holds no policy: defaults, fallbacks and the shared sidebar
-width stay in the shell.
+the store knows nothing about kinds. `packages/views` declares both
+kinds itself, since the app shell defines those slots. The registry
+holds no policy: defaults, fallbacks and the shared sidebar width stay
+in the shell.
 
 Slot state is session state: `ViewSession.slots` maps slot ids to
 `SessionSlot` values (`{ fill?, props?, hidden? }`, plain data only,
@@ -110,12 +110,21 @@ surrounding view area names (the main area outside of a pane), falls
 back to the given state or fill id when the session names none or an
 unregistered one, and renders nothing while the slot is hidden.
 
-The desktop app owns the sidebar frame (`Sidebar` at the persisted
-`AppUiState.sidebarWidth`, the resize handlers and the nav toolbar width
-dispatch), renders the slot inside it and renders no frame at all while
-the sidebar is hidden, with `AppSidebar` reduced to content and
-registered as the default `sidebar` fill by `registerSidebars`. Fills
-are content only, so every sidebar shares the one width.
+The desktop app owns both frames, and a frame renders nothing at all
+rather than an empty container: it reads `resolved` (or `hidden`) from
+`Views.useSlotState` and returns null before rendering its container, so
+a hidden sidebar or an empty right panel gives its width back to the
+view area.
+
+The sidebar frame is `Sidebar` at the persisted
+`AppUiState.sidebarWidth`, with the resize handlers and the nav toolbar
+width dispatch, and `AppSidebar` reduced to content and registered as
+the default `sidebar` fill by `registerSidebars`. Fills are content
+only, so every sidebar shares the one width. The right panel frame
+(`RightPanel`) is the fixed-width `.right-panel` container with no
+fallback fill, so it stays absent until a session puts something in it;
+a persisted, resizable width follows the sidebar's pattern when a real
+fill needs one.
 
 ## Data views are independent entities
 
