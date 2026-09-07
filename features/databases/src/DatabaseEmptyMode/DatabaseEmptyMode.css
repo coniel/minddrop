@@ -1,0 +1,100 @@
+/* ============================================================
+   DATABASE EMPTY MODE
+   Placeholder shown while a database has no entries.
+   ============================================================ */
+
+.database-empty-mode {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 150px;
+}
+
+.database-empty-mode-illustration {
+  position: relative;
+  width: 340px;
+  height: 340px;
+}
+
+/* Concentric rings */
+.database-empty-mode-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1.5px solid var(--border-default);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.database-empty-mode-ring-1 {
+  width: 80px;
+  height: 80px;
+  opacity: 0.9;
+}
+
+.database-empty-mode-ring-2 {
+  width: 140px;
+  height: 140px;
+  opacity: 0.7;
+}
+
+.database-empty-mode-ring-3 {
+  width: 200px;
+  height: 200px;
+  opacity: 0.5;
+}
+
+.database-empty-mode-ring-4 {
+  width: 260px;
+  height: 260px;
+  opacity: 0.35;
+}
+
+.database-empty-mode-ring-5 {
+  width: 320px;
+  height: 320px;
+  opacity: 0.2;
+}
+
+/* Central icon - larger and darker */
+.database-empty-mode-center-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--text-regular);
+  border-radius: var(--radius-md);
+  color: var(--text-on-solid);
+
+  .icon {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* Scattered orbit icons */
+.database-empty-mode-orbit-icon {
+  position: absolute;
+  color: var(--text-subtle);
+  background: var(--surface-raised);
+  border-radius: var(--radius-md);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .icon {
+    width: var(--icon-size-sm);
+    height: var(--icon-size-sm);
+  }
+
+  &.database-empty-mode-orbit-icon-outer {
+    opacity: 0.65;
+  }
+}

@@ -1,5 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { DataViewTypes, DataViews } from '@minddrop/data-views';
+import React, { useCallback, useEffect } from 'react';
 import {
   Database,
   DatabaseEntries,
@@ -7,44 +6,18 @@ import {
   Databases,
 } from '@minddrop/databases';
 import { Designs } from '@minddrop/designs-next';
-import { DataViewRenderer } from '@minddrop/feature-data-views';
 import { useTranslation } from '@minddrop/i18n';
+import { PanelView, PanelViewProps } from '@minddrop/ui-components';
 import {
-  AddDataViewMenu,
-  PanelView,
-  PanelViewProps,
-} from '@minddrop/ui-components';
-import { DataViewSortMenu } from '@minddrop/ui-data-views';
-import { SortableList } from '@minddrop/ui-drag-and-drop';
-import {
-  ContentIcon,
-  ContextMenuContent,
-  ContextMenuPortal,
-  ContextMenuPositioner,
-  ContextMenuRoot,
   DropdownMenu,
-  DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuPortal,
-  DropdownMenuPositioner,
-  DropdownMenuRoot,
-  DropdownMenuTrigger,
-  Group,
-  Icon,
   IconButton,
-  MenuRenameItem,
-  MenuSeparator,
-  Stack,
-  Tabs,
-  TabsList,
-  TabsTab,
-  Text,
-  useTransientState,
 } from '@minddrop/ui-primitives';
-import { orderByCreated, reconcileIdOrder, uuid } from '@minddrop/utils';
 import { Views } from '@minddrop/views';
+import { DatabaseBrowseMode } from '../DatabaseBrowseMode';
 import { DatabaseConfigurationPanel } from '../DatabaseConfigurationPanel';
 import { DatabaseDesignMode } from '../DatabaseDesignMode';
+import { DatabaseEmptyMode } from '../DatabaseEmptyMode';
 import {
   setDatabaseViewState,
   useDatabaseViewState,
@@ -72,6 +45,11 @@ export interface DatabaseViewProps {
   configurationPanelOpen?: boolean;
 }
 
+/**
+ * Renders a database in one of three modes: browsing its entries
+ * through its views, the empty placeholder while it has none, or
+ * design mode editing its designs.
+ */
 export const DatabaseView: React.FC<DatabaseViewProps> = ({
   databaseId,
   configurationPanelOpen: configPanelOpenProp,
@@ -79,11 +57,6 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
   const database = Databases.use(databaseId);
   const entryTemplates = DatabaseEntryTemplates.useAll(databaseId);
   const entryIds = DatabaseEntries.useIds(databaseId);
-  const unsortedViews = DataViews.useDataSourceDataViews(
-    'database',
-    databaseId,
-  );
-  const viewTypes = DataViewTypes.useAll();
   const viewState = useDatabaseViewState(databaseId);
   const subview = Views.useSubview();
   const setSubview = Views.useSetSubview();
@@ -92,46 +65,13 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
   // Design mode is the tab showing the designs subview
   const designMode = subview?.id === DesignsSubviewId;
 
-  // Sort views according to the config's view ID list, placing
-  // views missing from it after the ordered ones by creation date.
-  const databaseViews = useMemo(() => {
-    if (!database?.views) {
-      return unsortedViews;
-    }
-
-    return reconcileIdOrder(database.views, unsortedViews, orderByCreated);
-  }, [unsortedViews, database?.views]);
-
-  // Per-tab active view selection, seeded from the last-used view
-  const [tabActiveViewId, setTabActiveViewId] = useTransientState<
-    string | null
-  >('activeViewId', viewState.activeViewId);
-
-  // Track which view's dropdown menu is open and anchor element
-  const [dropdownMenuViewId, setDropdownMenuViewId] = useState<string | null>(
-    null,
-  );
-  const [dropdownAnchor, setDropdownAnchor] = useState<Element | null>(null);
-
-  // Resolve the active view ID, falling back to the first view
-  const activeViewId = tabActiveViewId ?? databaseViews[0]?.id;
+  // Determine whether the database is empty
+  const isEmpty = entryIds.length === 0;
 
   // Config panel open state: prop override takes precedence,
   // otherwise use persisted state.
   const configurationPanelOpen =
     configPanelOpenProp ?? viewState.configPanelOpen;
-
-  // Update the active view ID
-  const setActiveViewId = useCallback(
-    (viewId: string | undefined) => {
-      // Update this tab's selection
-      setTabActiveViewId(viewId ?? null);
-
-      // Track the last-used view as the seed for future tabs
-      setDatabaseViewState(databaseId, { activeViewId: viewId ?? null });
-    },
-    [databaseId, setTabActiveViewId],
-  );
 
   // Toggle the configuration panel
   const toggleConfigurationPanel = useCallback(() => {
@@ -150,8 +90,8 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
     });
   }, [setSubview, t]);
 
-  // Persist the active view ID and apply the prop override
-  // when the database view first mounts.
+  // Apply the configuration panel prop override when the database
+  // view first mounts.
   useEffect(() => {
     if (configPanelOpenProp !== undefined) {
       setDatabaseViewState(databaseId, {
@@ -159,82 +99,6 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
       });
     }
   }, [databaseId, configPanelOpenProp]);
-
-  // Sync activeViewId when views change (e.g. active view deleted)
-  useEffect(() => {
-    // Nothing to sync when there are no views
-    if (databaseViews.length === 0) {
-      return;
-    }
-
-    if (
-      activeViewId &&
-      databaseViews.some((view) => view.id === activeViewId)
-    ) {
-      return;
-    }
-
-    // Fall back to first view if active view no longer exists
-    setActiveViewId(databaseViews[0]?.id);
-  }, [databaseViews, activeViewId, setActiveViewId]);
-
-  // Derive the active view from the tracked ID
-  const view =
-    databaseViews.find((view) => view.id === activeViewId) ??
-    databaseViews[0] ??
-    null;
-
-  // Get the active view's type to check for a settings menu
-  const activeViewType = DataViewTypes.use(view?.type ?? '');
-
-  // Merge view options with the view type's defaults
-  const viewOptions = useMemo(
-    () => ({ ...activeViewType?.defaultOptions, ...(view?.options ?? {}) }),
-    [activeViewType, view?.options],
-  );
-
-  // Determine whether the database is empty
-  const isEmpty = entryIds.length === 0;
-
-  // Callback to update the active view's options
-  const handleUpdateViewOptions = useCallback(
-    (options: object) => {
-      if (view) {
-        DataViews.update(view.id, { options });
-      }
-    },
-    [view],
-  );
-
-  // Rename the active view
-  const handleRenameActiveView = useCallback(
-    (name: string) => {
-      if (view) {
-        DataViews.update(view.id, { name });
-      }
-    },
-    [view],
-  );
-
-  // Change the active view's icon
-  const handleSelectActiveViewIcon = useCallback(
-    (icon: string) => {
-      if (view) {
-        DataViews.update(view.id, { icon });
-      }
-    },
-    [view],
-  );
-
-  // Rename a view by ID
-  const handleRenameView = useCallback((viewId: string, name: string) => {
-    DataViews.update(viewId, { name });
-  }, []);
-
-  // Change a view's icon by ID
-  const handleSelectViewIcon = useCallback((viewId: string, icon: string) => {
-    DataViews.update(viewId, { icon });
-  }, []);
 
   async function handleClickNewEntry() {
     if (!database) {
@@ -251,43 +115,6 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
     }
 
     DatabaseEntries.createFromTemplate(templateId);
-  }
-
-  // Open a tab's view options menu when its active tab is clicked
-  function handleTabClick(
-    event: React.MouseEvent<HTMLElement>,
-    viewId: string,
-    isActive: boolean,
-  ) {
-    // Only the active tab's click opens the menu
-    if (!isActive) {
-      return;
-    }
-
-    // Anchor the menu to the clicked tab
-    setDropdownAnchor(event.currentTarget);
-    setDropdownMenuViewId(viewId);
-  }
-
-  // Open a tab's view options menu on right click
-  function handleTabContextMenu(
-    event: React.MouseEvent<HTMLElement>,
-    viewId: string,
-  ) {
-    // Suppress the native context menu
-    event.preventDefault();
-
-    // Anchor the menu to the tab
-    setDropdownAnchor(event.currentTarget);
-    setDropdownMenuViewId(viewId);
-  }
-
-  function handleViewMenuOpenChange(open: boolean) {
-    // Clear the menu state when the menu closes
-    if (!open) {
-      setDropdownMenuViewId(null);
-      setDropdownAnchor(null);
-    }
   }
 
   // Render the new entry action, wrapping it in a template
@@ -332,64 +159,19 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
     );
   }
 
-  /**
-   * Creates a new virtual view of the specified type and sets it as active.
-   */
-  function handleAddView(type: string) {
-    if (!database) {
-      return;
+  // Renders the panel content for the current mode
+  function renderMode() {
+    // Design mode replaces the views and entries with the database's
+    // designs and the design editor.
+    if (designMode) {
+      return <DatabaseDesignMode databaseId={databaseId} />;
     }
 
-    const newView = DataViews.createVirtual({
-      id: uuid(),
-      type,
-      dataSource: { type: 'database', id: database.id },
-      owner: database.id,
-    });
-
-    setActiveViewId(newView.id);
-  }
-
-  // Render the view options menu content for a given view
-  function renderViewMenuContent(targetViewId: string) {
-    const targetView = databaseViews.find(
-      (databaseView) => databaseView.id === targetViewId,
-    );
-
-    if (!targetView) {
-      return null;
+    if (isEmpty) {
+      return <DatabaseEmptyMode />;
     }
 
-    const targetViewType = viewTypes.find(
-      (viewType) => viewType.type === targetView.type,
-    );
-    const targetViewOptions = {
-      ...targetViewType?.defaultOptions,
-      ...(targetView.options ?? {}),
-    };
-
-    return (
-      <>
-        <MenuRenameItem
-          value={targetView.name}
-          contentIcon={targetView.icon}
-          onValueChange={() => {}}
-          onRename={(name) => handleRenameView(targetViewId, name)}
-          onSelectIcon={(icon) => handleSelectViewIcon(targetViewId, icon)}
-        />
-        {targetViewType?.settingsMenu && (
-          <>
-            <MenuSeparator />
-            {React.createElement(targetViewType.settingsMenu, {
-              view: targetView,
-              options: targetViewOptions,
-              onUpdateOptions: (options: object) =>
-                DataViews.update(targetViewId, { options }),
-            })}
-          </>
-        )}
-      </>
-    );
+    return <DatabaseBrowseMode databaseId={databaseId} />;
   }
 
   if (!database) {
@@ -425,228 +207,7 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
           },
         ]}
       >
-        {/* Design mode replaces the views and entries with the
-            database's designs and the design editor */}
-        {designMode && <DatabaseDesignMode databaseId={databaseId} />}
-
-        {/* View switcher bar - hidden when the database has no entries or
-            the views toolbar is disabled in settings */}
-        {!designMode && !isEmpty && !database.hideViewsToolbar && (
-          <div className="view-switcher">
-            {view && (
-              <>
-                <Tabs value={view.id} onValueChange={setActiveViewId}>
-                  <SortableList
-                    as={TabsList}
-                    items={databaseViews.map((databaseView) => databaseView.id)}
-                    direction="horizontal"
-                    gap={1}
-                    onSort={(newOrder) => {
-                      // Persist the sort order to the database
-                      Databases.update(databaseId, { views: newOrder });
-                    }}
-                    renderItem={(
-                      id,
-                      { ref, handleProps, style, className },
-                    ) => {
-                      const databaseView = databaseViews.find(
-                        (view) => view.id === id,
-                      );
-
-                      if (!databaseView) {
-                        return null;
-                      }
-
-                      const isActive = databaseView.id === activeViewId;
-
-                      return (
-                        <TabsTab
-                          key={databaseView.id}
-                          ref={ref}
-                          value={databaseView.id}
-                          startIcon={<ContentIcon icon={databaseView.icon} />}
-                          className={className}
-                          style={style}
-                          onClick={(event) =>
-                            handleTabClick(event, databaseView.id, isActive)
-                          }
-                          onContextMenu={(event) =>
-                            handleTabContextMenu(event, databaseView.id)
-                          }
-                          {...handleProps}
-                        >
-                          {databaseView.name}
-                        </TabsTab>
-                      );
-                    }}
-                  />
-                </Tabs>
-
-                {/* View options menu - opens when clicking the active tab */}
-                <ContextMenuRoot
-                  open={dropdownMenuViewId !== null}
-                  onOpenChange={handleViewMenuOpenChange}
-                >
-                  <ContextMenuPortal>
-                    <ContextMenuPositioner
-                      anchor={dropdownAnchor}
-                      side="bottom"
-                      align="start"
-                      sideOffset={4}
-                    >
-                      <ContextMenuContent>
-                        {dropdownMenuViewId &&
-                          renderViewMenuContent(dropdownMenuViewId)}
-                      </ContextMenuContent>
-                    </ContextMenuPositioner>
-                  </ContextMenuPortal>
-                </ContextMenuRoot>
-              </>
-            )}
-
-            {/* Add view dropdown */}
-            <AddDataViewMenu
-              size="sm"
-              color="muted"
-              dataSources={['database']}
-              onSelectViewType={handleAddView}
-            />
-
-            {/* Active view actions */}
-            {view && (
-              <Group gap={2} className="view-actions">
-                {/* Entry sort dropdown */}
-                <DataViewSortMenu view={view} size="sm" />
-
-                {/* View settings dropdown */}
-                <DropdownMenuRoot>
-                  <DropdownMenuTrigger>
-                    <IconButton
-                      size="sm"
-                      label="databases.actions.viewSettings"
-                      tooltip={{ title: 'databases.actions.viewSettings' }}
-                      icon="settings-2"
-                    />
-                  </DropdownMenuTrigger>
-                  <DropdownMenuPortal>
-                    <DropdownMenuPositioner side="bottom" align="end">
-                      <DropdownMenuContent>
-                        <MenuRenameItem
-                          value={view.name}
-                          contentIcon={view.icon}
-                          onValueChange={() => {}}
-                          onRename={handleRenameActiveView}
-                          onSelectIcon={handleSelectActiveViewIcon}
-                        />
-                        {activeViewType?.settingsMenu && (
-                          <>
-                            <MenuSeparator />
-                            {React.createElement(activeViewType.settingsMenu, {
-                              view,
-                              options: viewOptions,
-                              onUpdateOptions: handleUpdateViewOptions,
-                            })}
-                          </>
-                        )}
-                      </DropdownMenuContent>
-                    </DropdownMenuPositioner>
-                  </DropdownMenuPortal>
-                </DropdownMenuRoot>
-              </Group>
-            )}
-          </div>
-        )}
-
-        {/* Empty state placeholder */}
-        {!designMode && isEmpty && (
-          <div className="empty-placeholder">
-            <Stack align="center" gap={4}>
-              {/* Concentric rings illustration with scattered icons */}
-              <div className="empty-illustration">
-                <div className="empty-ring empty-ring-1" />
-                <div className="empty-ring empty-ring-2" />
-                <div className="empty-ring empty-ring-3" />
-                <div className="empty-ring empty-ring-4" />
-                <div className="empty-ring empty-ring-5" />
-
-                {/* Central icon */}
-                <div className="empty-center-icon">
-                  <Icon name="file-text" />
-                </div>
-
-                {/* Icons on the second ring */}
-                <div
-                  className="empty-orbit-icon"
-                  style={{ top: '25%', left: '43%' }}
-                >
-                  <Icon name="file" />
-                </div>
-                <div
-                  className="empty-orbit-icon"
-                  style={{ top: '56%', left: '27%' }}
-                >
-                  <Icon name="table" />
-                </div>
-                <div
-                  className="empty-orbit-icon"
-                  style={{ top: '50%', left: '65%' }}
-                >
-                  <Icon name="folder" />
-                </div>
-
-                {/* Icons on the fourth ring */}
-                <div
-                  className="empty-orbit-icon empty-orbit-icon-outer"
-                  style={{ top: '14%', left: '68%' }}
-                >
-                  <Icon name="layout-grid" />
-                </div>
-                <div
-                  className="empty-orbit-icon empty-orbit-icon-outer"
-                  style={{ top: '18%', left: '18%' }}
-                >
-                  <Icon name="image" />
-                </div>
-                <div
-                  className="empty-orbit-icon empty-orbit-icon-outer"
-                  style={{ top: '73%', left: '15%' }}
-                >
-                  <Icon name="text" />
-                </div>
-                <div
-                  className="empty-orbit-icon empty-orbit-icon-outer"
-                  style={{ top: '70%', left: '72%' }}
-                >
-                  <Icon name="link" />
-                </div>
-              </div>
-
-              {/* Text content */}
-              <Text size="lg" weight="semibold" color="muted">
-                {t('databases.empty.title')}
-              </Text>
-              <Text
-                size="sm"
-                color="subtle"
-                style={{ maxWidth: 380, textAlign: 'center' }}
-              >
-                {t('databases.empty.addViaButton')}
-              </Text>
-              <Text
-                size="sm"
-                color="subtle"
-                style={{ maxWidth: 380, textAlign: 'center' }}
-              >
-                {t('databases.empty.dropOrPaste')}
-              </Text>
-            </Stack>
-          </div>
-        )}
-
-        {/* View content */}
-        {!designMode && !isEmpty && view && (
-          <DataViewRenderer key={view.id} view={view} entries={entryIds} />
-        )}
+        {renderMode()}
       </PanelView>
       {configurationPanelOpen && (
         <DatabaseConfigurationPanel databaseId={databaseId} />

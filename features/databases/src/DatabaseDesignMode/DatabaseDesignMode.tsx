@@ -210,7 +210,7 @@ export const DatabaseDesignMode: React.FC<DatabaseDesignModeProps> = ({
 
   return (
     <div className="database-design-mode">
-      <div ref={tabsRef} className="view-switcher">
+      <div ref={tabsRef} className="database-view-switcher">
         {activeDesign && (
           <>
             <Tabs value={activeDesign.id} onValueChange={setActiveDesignId}>
@@ -286,7 +286,7 @@ export const DatabaseDesignMode: React.FC<DatabaseDesignModeProps> = ({
 
         {/* Active design settings dropdown, with the tab menu's content */}
         {activeDesign && (
-          <Group gap={2} className="view-actions">
+          <Group gap={2} className="database-view-switcher-actions">
             <DropdownMenuRoot
               open={settingsOpen}
               onOpenChange={setSettingsOpen}
