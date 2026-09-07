@@ -2,10 +2,8 @@ import { awaitPendingDispatches } from '../PendingDispatchesStore';
 import { cleanupEvents } from '../cleanupEvents';
 import {
   AppErrorEvent,
-  CloseAppSidebarEvent,
   CloseRightPanelEvent,
   NavToolbarBackEvent,
-  OpenAppSidebarEvent,
   OpenConfirmationDialogEvent,
   OpenReferenceEvent,
   OpenRightPanelEvent,
@@ -21,8 +19,6 @@ export const events = {
   OpenRightPanel: OpenRightPanelEvent,
   CloseRightPanel: CloseRightPanelEvent,
   OpenConfirmationDialog: OpenConfirmationDialogEvent,
-  OpenAppSidebar: OpenAppSidebarEvent,
-  CloseAppSidebar: CloseAppSidebarEvent,
   SetNavToolbarWidth: SetNavToolbarWidthEvent,
   SetNavToolbarBackAction: SetNavToolbarBackActionEvent,
   NavToolbarBack: NavToolbarBackEvent,

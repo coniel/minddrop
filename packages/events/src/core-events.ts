@@ -3,8 +3,6 @@ import type { TranslationKey } from '@minddrop/i18n';
 export const OpenRightPanelEvent = 'app:right-panel:open';
 export const CloseRightPanelEvent = 'app:right-panel:close';
 export const OpenConfirmationDialogEvent = 'app:confirmation-dialog:open';
-export const OpenAppSidebarEvent = 'app:sidebar:open';
-export const CloseAppSidebarEvent = 'app:sidebar:close';
 export const SetNavToolbarWidthEvent = 'app:nav-toolbar:set-width';
 export const SetNavToolbarBackActionEvent = 'app:nav-toolbar:set-back-action';
 export const NavToolbarBackEvent = 'app:nav-toolbar:back';
@@ -106,8 +104,6 @@ declare module './types/EventDataMap.types' {
     '*': unknown;
     'app:right-panel:close': void;
     'app:confirmation-dialog:open': OpenConfirmationDialogEventData;
-    'app:sidebar:open': void;
-    'app:sidebar:close': void;
     'app:nav-toolbar:set-width': SetNavToolbarWidthEventData;
     'app:nav-toolbar:set-back-action': SetNavToolbarBackActionEventData;
     'app:nav-toolbar:back': void;
