@@ -195,6 +195,11 @@ export interface MenuItemProps {
    * Click handler.
    */
   onClick?: React.MouseEventHandler<HTMLDivElement>;
+
+  /*
+   * Double click handler.
+   */
+  onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
 }
 
 export const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(
