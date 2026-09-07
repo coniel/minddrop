@@ -214,6 +214,12 @@ export interface ListPanelViewProps {
   onExpandItem?: () => void;
 
   /**
+   * Called with the item when a listed item is double clicked, e.g.
+   * to open it in a view of its own.
+   */
+  onDoubleClickItem?: (item: ListPanelViewItem) => void;
+
+  /**
    * The selected item's content.
    */
   children?: React.ReactNode;
@@ -247,6 +253,7 @@ export const ListPanelView: React.FC<ListPanelViewProps> = ({
   items,
   noResultsLabel,
   noSelectionLabel,
+  onDoubleClickItem,
   onExpandItem,
   onQueryChange,
   query,
@@ -292,6 +299,11 @@ export const ListPanelView: React.FC<ListPanelViewProps> = ({
   // Show the clicked item
   function handleSelectItem(item: ListPanelViewItem) {
     setSubview(toSubview(item));
+  }
+
+  // Hand the double clicked item to the consumer
+  function handleDoubleClickItem(item: ListPanelViewItem) {
+    onDoubleClickItem?.(item);
   }
 
   // Render a labelled section as a collapsible group carrying its
@@ -340,6 +352,7 @@ export const ListPanelView: React.FC<ListPanelViewProps> = ({
         popovers={item.popovers}
         active={item.id === selectedItem?.id}
         onClick={() => handleSelectItem(item)}
+        onDoubleClick={() => handleDoubleClickItem(item)}
       />
     );
   }

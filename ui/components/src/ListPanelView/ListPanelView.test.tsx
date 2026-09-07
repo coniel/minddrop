@@ -102,6 +102,20 @@ describe('<ListPanelView />', () => {
     });
   });
 
+  it('calls onDoubleClickItem with the double clicked item', async () => {
+    const doubleClicked: ListPanelViewItem[] = [];
+    const user = userEvent.setup();
+
+    renderView({
+      items: [item1, item2],
+      onDoubleClickItem: (item) => doubleClicked.push(item),
+    });
+
+    await user.dblClick(screen.getByText('Item 2'));
+
+    expect(doubleClicked).toEqual([item2]);
+  });
+
   it('shows the empty state when there are no items', () => {
     renderView({ items: [] });
 
