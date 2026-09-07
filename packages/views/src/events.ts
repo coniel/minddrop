@@ -278,8 +278,6 @@ export type ClearSlotEventData = {
   slotId: SlotFillKind;
 };
 
-// The right panel renders a view, so its open event carries the view
-// open event data and is registered here alongside it.
 declare module '@minddrop/events/EventDataMap' {
   interface EventDataMap {
     'app:view:open': OpenViewEventData;
@@ -293,6 +291,5 @@ declare module '@minddrop/events/EventDataMap' {
     'app:slot:set': SetSlotEventData;
     'app:slot:toggle': ToggleSlotEventData;
     'app:slot:clear': ClearSlotEventData;
-    'app:right-panel:open': OpenViewEventData;
   }
 }

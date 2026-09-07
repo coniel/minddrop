@@ -2,11 +2,9 @@ import { awaitPendingDispatches } from '../PendingDispatchesStore';
 import { cleanupEvents } from '../cleanupEvents';
 import {
   AppErrorEvent,
-  CloseRightPanelEvent,
   NavToolbarBackEvent,
   OpenConfirmationDialogEvent,
   OpenReferenceEvent,
-  OpenRightPanelEvent,
   SetNavToolbarBackActionEvent,
   SetNavToolbarWidthEvent,
   ToggleWindowFillEvent,
@@ -16,8 +14,6 @@ import { EventListenerNotRegisteredError } from '../errors';
 // Const-asserted so the names keep their literal types, which key
 // the event data registry.
 export const events = {
-  OpenRightPanel: OpenRightPanelEvent,
-  CloseRightPanel: CloseRightPanelEvent,
   OpenConfirmationDialog: OpenConfirmationDialogEvent,
   SetNavToolbarWidth: SetNavToolbarWidthEvent,
   SetNavToolbarBackAction: SetNavToolbarBackActionEvent,

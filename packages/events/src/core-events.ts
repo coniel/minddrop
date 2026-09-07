@@ -1,7 +1,5 @@
 import type { TranslationKey } from '@minddrop/i18n';
 
-export const OpenRightPanelEvent = 'app:right-panel:open';
-export const CloseRightPanelEvent = 'app:right-panel:close';
 export const OpenConfirmationDialogEvent = 'app:confirmation-dialog:open';
 export const SetNavToolbarWidthEvent = 'app:nav-toolbar:set-width';
 export const SetNavToolbarBackActionEvent = 'app:nav-toolbar:set-back-action';
@@ -95,14 +93,11 @@ export type OpenConfirmationDialogEventData = {
   onCancel?: () => void;
 };
 
-// The right panel open event's data is a view descriptor, so it is
-// registered by the package which defines that type.
 declare module './types/EventDataMap.types' {
   interface EventDataMap {
     // The catch all listener name, which listens to every event
     // rather than being an event of its own.
     '*': unknown;
-    'app:right-panel:close': void;
     'app:confirmation-dialog:open': OpenConfirmationDialogEventData;
     'app:nav-toolbar:set-width': SetNavToolbarWidthEventData;
     'app:nav-toolbar:set-back-action': SetNavToolbarBackActionEventData;

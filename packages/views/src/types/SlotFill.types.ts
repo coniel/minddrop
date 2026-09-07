@@ -1,7 +1,7 @@
 export interface SlotFill {
   /**
    * Unique id of the fill within its kind, named by a session's slot
-   * claim to render it.
+   * state to render it.
    */
   id: string;
 
@@ -24,6 +24,12 @@ export interface SlotFillMap {
    * The app sidebar, replaced by a view for as long as it is shown.
    */
   sidebar: SlotFill;
+
+  /**
+   * The panel beside the view area, showing what the session's view
+   * puts next to itself (e.g. an entry's details).
+   */
+  'right-panel': SlotFill;
 }
 
 export type SlotFillKind = keyof SlotFillMap;
