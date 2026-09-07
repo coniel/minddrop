@@ -1,13 +1,13 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { Properties, SelectPropertySchema } from '@minddrop/properties';
 import {
-  cleanup,
   fireEvent,
   render,
   screen,
   userEvent,
   waitFor,
 } from '@minddrop/test-utils';
+import { cleanup } from '../../test-utils';
 import { SelectPropertyEditor } from './SelectPropertyEditor';
 
 const onSave = vi.fn();
@@ -23,10 +23,7 @@ const property: SelectPropertySchema = {
 };
 
 describe('<SelectPropertyEditor />', () => {
-  afterEach(() => {
-    cleanup();
-    vi.clearAllMocks();
-  });
+  afterEach(cleanup);
 
   it('adds an empty option when opened with no options (defaultOpen)', async () => {
     render(

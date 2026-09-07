@@ -1,15 +1,13 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { Properties } from '@minddrop/properties';
-import { cleanup, render, screen, userEvent } from '@minddrop/test-utils';
+import { render, screen, userEvent } from '@minddrop/test-utils';
+import { cleanup } from '../test-utils';
 import { PropertyTypeSelectionMenu } from './PropertyTypeSelectionMenu';
 
 const onSelect = vi.fn();
 
 describe('<PropertyTypeSelectionMenu />', () => {
-  afterEach(() => {
-    cleanup();
-    vi.clearAllMocks();
-  });
+  afterEach(cleanup);
 
   it('opens the menu when triggered', async () => {
     render(

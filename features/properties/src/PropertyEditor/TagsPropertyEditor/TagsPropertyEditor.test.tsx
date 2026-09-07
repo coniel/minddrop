@@ -2,19 +2,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Events } from '@minddrop/events';
 import { Properties, TagsPropertySchema } from '@minddrop/properties';
 import { Tags } from '@minddrop/tags';
-import {
-  MockFs,
-  TagGroupFixtures,
-  cleanupTagFixtures,
-  setupTagFixtures,
-} from '@minddrop/tags/test-utils';
-import {
-  cleanup,
-  render,
-  screen,
-  userEvent,
-  waitFor,
-} from '@minddrop/test-utils';
+import { TagGroupFixtures } from '@minddrop/tags/test-utils';
+import { render, screen, userEvent, waitFor } from '@minddrop/test-utils';
+import { cleanup, setup } from '../../test-utils';
 import { TagsPropertyEditor } from './TagsPropertyEditor';
 
 const { tagGroup_1 } = TagGroupFixtures;
@@ -28,18 +18,9 @@ const property: TagsPropertySchema = {
 };
 
 describe('<TagsPropertyEditor />', () => {
-  beforeEach(() => {
-    // Load tag fixtures into the stores and mock file system
-    setupTagFixtures(MockFs);
-  });
+  beforeEach(setup);
 
-  afterEach(() => {
-    cleanup();
-    cleanupTagFixtures();
-    Events.tests.cleanup();
-    MockFs.reset();
-    vi.clearAllMocks();
-  });
+  afterEach(cleanup);
 
   it('lists the tag groups in the group limit select', async () => {
     render(

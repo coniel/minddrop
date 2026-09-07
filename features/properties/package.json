@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@minddrop/events": "workspace:*",
+    "@minddrop/file-system": "workspace:*",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/tags": "workspace:*",
     "@minddrop/test-utils": "workspace:*",
