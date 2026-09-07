@@ -194,7 +194,11 @@ export const NotebookViewComponent: React.FC<
         {/* Scoped per entry so each one keeps its own scroll position */}
         {selectedEntryId && (
           <TransientViewStateScope segment={selectedEntryId}>
-            <ScrollArea className="notebook-view-page-scroll" stateKey="page">
+            <ScrollArea
+              className="notebook-view-page-scroll"
+              stateKey="page"
+              endPadding="lg"
+            >
               <DatabaseEntryRenderer
                 key={selectedEntryId}
                 entryId={selectedEntryId}
