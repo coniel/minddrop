@@ -1,6 +1,12 @@
-import type { PropertyMap, PropertyValue } from '@minddrop/properties';
+import {
+  Properties,
+  PropertyMap,
+  PropertySchema,
+  PropertyValue,
+} from '@minddrop/properties';
 import { restoreDates } from '@minddrop/utils';
 import type {
+  Database,
   DatabaseEntry,
   DatabaseEntryId,
   DatabaseEntryMetadata,
@@ -11,15 +17,28 @@ import type { SqlEntryRecord } from '../../types';
 /**
  * Converts a SqlEntryRecord back to a DatabaseEntry. Inverse
  * of `convertEntryToSqlRecord`.
+ *
+ * @param record - The SQL entry record.
+ * @param database - The entry's database, whose schema decides the
+ * shape of the restored values.
+ * @returns The database entry.
  */
-export function convertSqlRecordToEntry(record: SqlEntryRecord): DatabaseEntry {
+export function convertSqlRecordToEntry(
+  record: SqlEntryRecord,
+  database: Database,
+): DatabaseEntry {
   // Reconstruct the properties map from the flat property records
   const properties: PropertyMap = {};
 
   for (const property of record.properties) {
+    const schema = database.properties.find(
+      (candidate) => candidate.name === property.name,
+    );
+
     properties[property.name] = restorePropertyValue(
       property.type,
       property.value,
+      schema,
     );
   }
 
@@ -46,13 +65,26 @@ export function convertSqlRecordToEntry(record: SqlEntryRecord): DatabaseEntry {
 function restorePropertyValue(
   type: string,
   value: string | number | boolean | string[] | null,
+  schema?: PropertySchema,
 ): PropertyValue {
   if (value === null) {
     return null;
   }
 
+  // Select values are stored as string arrays whether multiselect
+  // or not, so a single select is unwrapped to its value.
+  if (type === 'select') {
+    const multiselect = schema ? Properties.isMultiselect(schema) : false;
+
+    if (Array.isArray(value) && !multiselect) {
+      return value[0] ?? null;
+    }
+
+    return value;
+  }
+
   // Multi-value types are already string arrays
-  if (type === 'select' || type === 'tags' || type === 'collection') {
+  if (type === 'tags' || type === 'collection') {
     return value;
   }
 

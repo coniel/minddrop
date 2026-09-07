@@ -7,6 +7,7 @@ import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabaseEntryTemplatesStore } from '../DatabaseEntryTemplatesStore';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabasesBackgroundSyncedEvent } from '../events';
+import { getDatabase } from '../getDatabase';
 import { getDatabaseEntry } from '../getDatabaseEntry';
 import { getDatabaseEntryTemplates } from '../getDatabaseEntryTemplates';
 import { loadDatabaseDesigns } from '../loadDatabaseDesigns';
@@ -88,7 +89,10 @@ export async function handleBackgroundSyncResult(
   // existing SQL rows during the sync, so records for entries already
   // in the store replace them under their existing key.
   for (const record of changeset.upsertedEntries) {
-    const entry = convertSqlRecordToEntry(record);
+    const entry = convertSqlRecordToEntry(
+      record,
+      getDatabase(record.databaseId),
+    );
     const existing = getDatabaseEntry(entry.id, false);
 
     // Only a changed title or database changes an entry's address, so

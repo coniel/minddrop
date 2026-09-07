@@ -23,6 +23,7 @@ export { stringifyPropertiesToJson as toJson } from './stringifyPropertiesToJson
 export { generateDefaultProperties as defaults } from './generateDefaultProperties';
 export {
   isFileBasedProperty as isFileBased,
+  isMultiselectProperty as isMultiselect,
   isUrlProperty as isUrl,
   resolveNewOptionColor,
 } from './utils';

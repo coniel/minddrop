@@ -100,6 +100,25 @@ foo: bar
       expect(result).toContain('custom: keep me');
     });
 
+    it('keeps an unchanged single select as a scalar', () => {
+      const selectSchema: PropertiesSchema = [
+        {
+          type: 'select',
+          name: 'status',
+          options: [{ value: 'In progress', color: 'blue' }],
+        },
+      ];
+
+      const result = setPropertiesOnMarkdown(
+        selectSchema,
+        { status: 'In progress' },
+        '# Title',
+        { existingContent: '---\nstatus: In progress\n---\n\n# Title' },
+      );
+
+      expect(result).toEqual('---\nstatus: In progress\n---\n\n# Title');
+    });
+
     it('takes the body from the markdown argument, not the existing content', () => {
       const result = setPropertiesOnMarkdown(
         schema,

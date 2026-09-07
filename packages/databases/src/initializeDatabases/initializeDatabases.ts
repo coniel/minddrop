@@ -4,6 +4,7 @@ import { Workspaces } from '@minddrop/workspaces';
 import { getDatabaseBackendAdapter } from '../DatabaseBackendAdapter';
 import { loadCoreSerializers } from '../DatabaseEntrySerializers';
 import { DatabasesStore } from '../DatabasesStore';
+import { getDatabase } from '../getDatabase';
 import { initializeDatabaseAutomations } from '../initializeDatabaseAutomations';
 import { initializeDatabaseEntries } from '../initializeDatabaseEntries';
 import { initializeDatabaseEventHandlers } from '../initializeDatabaseEventHandlers';
@@ -51,11 +52,13 @@ export async function initializeDatabases(): Promise<{
     restoreDates<Database>(database),
   );
 
-  // Convert SQL entry records to DatabaseEntry objects
-  const entries = result.entries.map(convertSqlRecordToEntry);
-
   // Load database configs into the store
   DatabasesStore.load(databases);
+
+  // Convert SQL entry records to DatabaseEntry objects
+  const entries = result.entries.map((record) =>
+    convertSqlRecordToEntry(record, getDatabase(record.databaseId)),
+  );
 
   // Load entries and hydrate virtual collections
   initializeDatabaseEntries(databases, entries);
