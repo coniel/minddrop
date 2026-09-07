@@ -12,6 +12,15 @@ export interface SubviewDescriptor {
   title?: string;
 
   /**
+   * Label of the view's tab while it shows the subview, when it
+   * differs from the title (e.g. the item selected within the
+   * subview). The breadcrumb trail keeps the title.
+   *
+   * @default title
+   */
+  label?: string;
+
+  /**
    * Display icon of the subview as a serializable icon string, shown
    * in the view's tab and breadcrumb trail.
    */

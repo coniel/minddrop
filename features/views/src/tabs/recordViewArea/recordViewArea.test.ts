@@ -138,6 +138,33 @@ describe('recordViewArea', () => {
     expect(tab.main?.title).toBe('New');
   });
 
+  it('records a replaced subview label without pushing', () => {
+    newTab(VIEW_AREA_ID);
+    recordViewArea(
+      VIEW_AREA_ID,
+      state({
+        view: 'db:view',
+        id: 'db:a',
+        subview: { id: 'designs', title: 'Designs' },
+      }),
+    );
+
+    recordViewArea(VIEW_AREA_ID, {
+      ...state({
+        view: 'db:view',
+        id: 'db:a',
+        subview: { id: 'designs', title: 'Designs', label: 'Card' },
+      }),
+      replace: true,
+    });
+
+    const tab = getSet(VIEW_AREA_ID).tabs[0];
+
+    // Only the search view the tab was opened on was pushed
+    expect(tab.backHistory).toHaveLength(1);
+    expect(tab.main?.subview?.label).toBe('Card');
+  });
+
   it('clears the forward history on navigation', () => {
     newTab(VIEW_AREA_ID);
     recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:a' }));

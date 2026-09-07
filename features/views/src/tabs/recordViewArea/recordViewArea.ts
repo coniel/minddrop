@@ -132,6 +132,7 @@ function sameTabView(
     a?.title === b?.title &&
     a?.icon === b?.icon &&
     a?.subview?.title === b?.subview?.title &&
+    a?.subview?.label === b?.subview?.label &&
     a?.subview?.icon === b?.subview?.icon
   );
 }

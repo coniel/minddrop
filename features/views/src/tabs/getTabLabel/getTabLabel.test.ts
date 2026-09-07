@@ -78,6 +78,27 @@ describe('getTabLabel', () => {
     expect(getTabLabel(tab, BLANK_LABEL, translate)).toBe('Entity title');
   });
 
+  it('labels a pane by its subview title', () => {
+    const tab: Tab = {
+      ...createBlankTab(),
+      main: { ...mainView, subview: { id: 'entity', title: 'Entity' } },
+    };
+
+    expect(getTabLabel(tab, BLANK_LABEL, translate)).toBe('Entity');
+  });
+
+  it('prefers the subview label over its title', () => {
+    const tab: Tab = {
+      ...createBlankTab(),
+      main: {
+        ...mainView,
+        subview: { id: 'entity', title: 'Entity', label: 'Selected item' },
+      },
+    };
+
+    expect(getTabLabel(tab, BLANK_LABEL, translate)).toBe('Selected item');
+  });
+
   it('falls back to the blank label for panes without a title', () => {
     const tab: Tab = {
       ...createBlankTab(),

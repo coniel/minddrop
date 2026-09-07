@@ -34,9 +34,10 @@ export function getTabLabel(
 }
 
 /**
- * Returns the label of a pane's view, which is its own title or the
- * translated title of its registration. Undefined when the pane is
- * empty or its view has neither.
+ * Returns the label of a pane's view: the label or title of the
+ * subview it shows, else its own title, else the translated title of
+ * its registration. Undefined when the pane is empty or its view has
+ * none of these.
  */
 function paneLabel(
   view: TabView | null,
@@ -47,9 +48,12 @@ function paneLabel(
     return undefined;
   }
 
-  // Views showing an entity within themselves are labelled by it
-  if (view.subview?.title) {
-    return view.subview.title;
+  // Views showing an entity within themselves are labelled by it,
+  // or by the label it provides for the tab.
+  const subviewLabel = view.subview?.label ?? view.subview?.title;
+
+  if (subviewLabel) {
+    return subviewLabel;
   }
 
   // Views opened for a specific entity carry its title
