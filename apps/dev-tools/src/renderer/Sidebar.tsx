@@ -232,10 +232,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
       ) : (
         <div className="sidebar-content">
-          <div className="sidebar-header sidebar-header-work-groups">
-            Work Groups
-          </div>
-
           {manifests.map((manifest) => (
             <div key={manifest.slug} className="sidebar-group">
               <div className="sidebar-group-header-row">

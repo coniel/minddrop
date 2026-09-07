@@ -83,8 +83,7 @@
   border-bottom: 1px solid var(--color-border);
 }
 
-.sidebar-header-untracked,
-.sidebar-header-work-groups {
+.sidebar-header-untracked {
   margin-top: 8px;
   border-top: 1px solid var(--color-border);
 }
