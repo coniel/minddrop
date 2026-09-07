@@ -45,7 +45,6 @@
   justify-content: center;
   font-size: 0.8rem;
   line-height: var(--line-height-none);
-  color: var(--text-muted);
 }
 
 .search-result-item-label {
