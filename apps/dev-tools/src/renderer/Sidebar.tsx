@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { ManifestWithSlug, UntrackedChange } from '../types';
 import { FileIcon } from './FileIcon';
 import { FileList } from './FileList';
@@ -56,6 +56,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   fileStatuses,
   style,
 }) => {
+  const searchInputRef = useRef<HTMLInputElement>(null);
   // Detect footer layout (<=1200px)
   const isFooterLayout = useMediaQuery('(max-width: 1200px)');
 
@@ -109,6 +110,26 @@ export const Sidebar: React.FC<SidebarProps> = ({
     });
   };
 
+  // Keyboard shortcut: mod+k to focus the search field
+  useEffect(() => {
+    const handler = (event: KeyboardEvent) => {
+      if (!(event.metaKey || event.ctrlKey) || event.key !== 'k') {
+        return;
+      }
+
+      event.preventDefault();
+      event.stopPropagation();
+      searchInputRef.current?.focus();
+      searchInputRef.current?.select();
+    };
+
+    window.addEventListener('keydown', handler, true);
+
+    return () => {
+      window.removeEventListener('keydown', handler, true);
+    };
+  }, []);
+
   // Handle typing in the search field
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
@@ -116,6 +137,25 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   // Handle clearing the search field
   const handleClearSearch = () => {
+    setSearchQuery('');
+  };
+
+  // Escape clears the search, or leaves the field when already empty
+  const handleSearchKeyDown = (
+    event: React.KeyboardEvent<HTMLInputElement>,
+  ) => {
+    if (event.key !== 'Escape') {
+      return;
+    }
+
+    event.preventDefault();
+
+    if (searchQuery === '') {
+      event.currentTarget.blur();
+
+      return;
+    }
+
     setSearchQuery('');
   };
 
@@ -142,15 +182,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
     <div className="sidebar" style={style}>
       <div className="sidebar-search">
         <input
+          ref={searchInputRef}
           className="sidebar-search-input"
           type="text"
           value={searchQuery}
           placeholder="Search files"
+          title="Search files (mod+k)"
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="off"
           spellCheck={false}
           onChange={handleSearchChange}
+          onKeyDown={handleSearchKeyDown}
         />
 
         {isSearching && (
