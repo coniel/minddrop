@@ -1,4 +1,4 @@
-import { ReactElement, useState } from 'react';
+import { ReactElement, useMemo, useState } from 'react';
 import { ContentIconName, Icons, UserIconType } from '@minddrop/ui-icons';
 import { ContentColor } from '@minddrop/ui-theme';
 import { Button } from '../Button';
@@ -23,7 +23,8 @@ export interface IconPickerProps {
   children?: ReactElement;
 
   /**
-   * The current icon string. Used to set the default color.
+   * The current icon string. Sets the default color and receives
+   * color changes made before an icon is picked.
    */
   currentIcon?: string;
 
@@ -112,6 +113,17 @@ export const IconPicker: React.FC<IconPickerProps> = ({
     set: string;
   } | null>(null);
 
+  // Until an icon is picked, color changes apply to the current icon
+  const currentParsedIcon = useMemo(
+    () => Icons.parse(currentIcon),
+    [currentIcon],
+  );
+  const colorTarget =
+    icon ??
+    (currentParsedIcon
+      ? { name: currentParsedIcon.icon, set: currentParsedIcon.set }
+      : null);
+
   const handleSelectIcon = (
     icon: ContentIconName,
     color: ContentColor,
@@ -138,8 +150,8 @@ export const IconPicker: React.FC<IconPickerProps> = ({
   };
 
   const handleSelectIconColor = (color: ContentColor) => {
-    if (icon) {
-      handleSelectIcon(icon.name, color, icon.set, true);
+    if (colorTarget) {
+      handleSelectIcon(colorTarget.name, color, colorTarget.set, true);
     }
 
     if (onSelectIconColor) {
