@@ -25,6 +25,35 @@
   }
 }
 
+/* --- End padding --- */
+
+/* Whitespace kept after the content along the scroll axis, so it
+   does not sit against the far edge when scrolled to the end */
+.scroll-area-end-padding-sm {
+  --scroll-area-end-padding: var(--space-4);
+}
+
+.scroll-area-end-padding-md {
+  --scroll-area-end-padding: var(--space-6);
+}
+
+.scroll-area-end-padding-lg {
+  --scroll-area-end-padding: var(--space-8);
+}
+
+.scroll-area-end-padding-sm,
+.scroll-area-end-padding-md,
+.scroll-area-end-padding-lg {
+  .scroll-area-viewport {
+    padding-bottom: var(--scroll-area-end-padding);
+  }
+
+  &.scroll-area-horizontal .scroll-area-viewport {
+    padding-bottom: 0;
+    padding-right: var(--scroll-area-end-padding);
+  }
+}
+
 /* --- Scrollbar (track container) --- */
 
 .scroll-area-scrollbar {

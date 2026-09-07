@@ -162,6 +162,64 @@ export const ScrollAreaStories = () => (
     </StorySection>
 
     {/* --------------------------------------------------------
+        END PADDING
+    -------------------------------------------------------- */}
+    <StorySection
+      title="endPadding"
+      description="Whitespace kept after the content along the scroll axis, so it does not sit against the far edge when scrolled to the end. Scroll to the bottom of each."
+    >
+      <StoryRow>
+        <StoryItem label="none">
+          <VerticalScrollArea style={{ height: 240, ...containerStyle }}>
+            <div style={{ padding: 'var(--space-3)' }}>
+              <LoremParagraphs count={6} />
+            </div>
+          </VerticalScrollArea>
+        </StoryItem>
+        <StoryItem label="sm">
+          <VerticalScrollArea
+            endPadding="sm"
+            style={{ height: 240, ...containerStyle }}
+          >
+            <div style={{ padding: 'var(--space-3)' }}>
+              <LoremParagraphs count={6} />
+            </div>
+          </VerticalScrollArea>
+        </StoryItem>
+        <StoryItem label="md">
+          <VerticalScrollArea
+            endPadding="md"
+            style={{ height: 240, ...containerStyle }}
+          >
+            <div style={{ padding: 'var(--space-3)' }}>
+              <LoremParagraphs count={6} />
+            </div>
+          </VerticalScrollArea>
+        </StoryItem>
+        <StoryItem label="lg">
+          <VerticalScrollArea
+            endPadding="lg"
+            style={{ height: 240, ...containerStyle }}
+          >
+            <div style={{ padding: 'var(--space-3)' }}>
+              <LoremParagraphs count={6} />
+            </div>
+          </VerticalScrollArea>
+        </StoryItem>
+      </StoryRow>
+      <StoryRow>
+        <StoryItem label="horizontal lg">
+          <HorizontalScrollArea
+            endPadding="lg"
+            style={{ width: 400, ...containerStyle }}
+          >
+            <WideContent />
+          </HorizontalScrollArea>
+        </StoryItem>
+      </StoryRow>
+    </StorySection>
+
+    {/* --------------------------------------------------------
         HORIZONTAL SCROLL AREA
     -------------------------------------------------------- */}
     <StorySection
