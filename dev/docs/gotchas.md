@@ -936,9 +936,34 @@ errors at the end of the run (8 across the suite as of
 2026-08-10). Mock `Queries.useNodeResults` (alongside the existing
 `useNodeCounts` mock) to silence them when adding builder tests.
 
+## packages/views
+
+### Slot claims can go stale on restored sessions
+
+A session's `slots` map persists with the session, but claims are only
+released by the claiming view unmounting (`useSlot` cleanup). A session
+restored after a crash or force quit keeps whatever claim its view held
+at the time, and if the restored view no longer claims the slot (e.g.
+design mode is not re-entered) the stale claim keeps rendering its fill
+until the view claims or the session navigates. `Slot` tolerates
+claims naming unregistered fills by falling back, but not claims naming
+registered fills the view no longer wants. The palette work group
+verifies this once it adopts the mechanism; a fix would clear `slots`
+on hydrate or on `recordViewArea` navigation.
+
 ## features/views
 
-### Breadcrumb trails are derived from tab history, not composed by openers
+### Views find their session through `Views.useSession`, never the active id
+
+`ViewRenderer` provides each pane's session id through
+`Views.SessionProvider`, and `SessionViewStateProvider` and `useSlot`
+read it from there. The active session id still keys the rendered view
+instances (`viewInstanceKey`) so switching sessions remounts views, but
+nothing session-scoped should read `ViewSessions.useActiveId` to find
+"its" session: during a switch the outgoing view flushes writes while
+the active id already names the incoming session.
+
+### Breadcrumb trails are derived from session history, not composed by openers
 
 A view's trail is the run of previously shown views in its pane's back
 history (`resolveBreadcrumbTrail`), trimmed where the hierarchy breaks:
@@ -956,8 +981,8 @@ What a view shows within itself (the selected data view, space,
 collection, query, and later a space's inner tabs) is announced via
 `Views.useSetSubview()` and read back with `Views.useSubview()`. The
 view area stores it on the pane's descriptor, which makes it part of
-the tab: it survives tab switches and restarts, labels the tab, is
-navigable with back/forward, and contributes a crumb to trails.
+the session: it survives session switches and restarts, labels the
+tab, is navigable with back/forward, and contributes a crumb to trails.
 Selecting is a navigation, so pass `{ replace: true }` for selections
 the view makes on its own behalf (defaults, keeping a title in sync)
 to avoid polluting the history. Unlike a view change, a subview change

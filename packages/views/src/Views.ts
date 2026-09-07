@@ -1,4 +1,8 @@
-import { DefaultViewAreaId, DefaultViewName } from './constants';
+import {
+  DefaultSplitRatio,
+  DefaultViewAreaId,
+  DefaultViewName,
+} from './constants';
 import {
   CloseViewEvent,
   NavigateBackEvent,
@@ -26,6 +30,7 @@ export const events = {
 export const constants = {
   DefaultAreaId: DefaultViewAreaId,
   DefaultName: DefaultViewName,
+  DefaultSplitRatio,
 };
 
 export {
@@ -36,6 +41,13 @@ export {
 export { registerView as register } from './registerView';
 export { getView as get } from './getView';
 export {
+  SlotFillsStore as FillsStore,
+  useSlotFill as useFill,
+  useSlotFills as useFills,
+} from './SlotFillsStore';
+export { registerFill } from './registerFill';
+export { getFill } from './getFill';
+export {
   ViewBreadcrumbsProvider as BreadcrumbsProvider,
   useViewBreadcrumbs as useBreadcrumbs,
 } from './ViewBreadcrumbsContext';
@@ -44,4 +56,8 @@ export {
   useOpenView,
   useViewPane,
 } from './ViewPaneContext';
+export {
+  ViewSessionProvider as SessionProvider,
+  useViewSession as useSession,
+} from './ViewSessionContext';
 export { SubviewProvider, useSubview, useSetSubview } from './SubviewContext';

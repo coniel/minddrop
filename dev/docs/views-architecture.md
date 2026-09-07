@@ -26,9 +26,74 @@ persisted; the registry has no lifecycle beyond registration.
 
 The `features/data-views` package renders them (`DataViewRenderer`,
 `CreateDataViewForm`); `features/views` keeps the code-view side
-(`ViewRenderer`, view areas, tabs). The built-in data view type packages
-live in the top-level `data-views/` workspace directory (board, gallery,
-notebook, table).
+(`ViewRenderer`, view areas, the tab strip). The built-in data view type
+packages live in the top-level `data-views/` workspace directory (board,
+gallery, notebook, table).
+
+## View sessions
+
+A **view session** (`ViewSession` in `@minddrop/views`) is one navigable
+surface with a history: the views shown in its main and split panes, the
+split ratio, the back and forward stacks and the panes' transient UI
+state (scroll positions, selections). A view area holds a
+`ViewSessionSet` (its sessions plus the active session id), persisted
+whole to the workspace config under the `sessions` namespace by
+`ViewSessionsStore` (`Views:Sessions`). Sessions are data, not UI: the
+tab strip in `features/views` is one UI listing a view area's sessions
+and switching between them, and a standalone window will be a view area
+holding a single session with no strip.
+
+The `ViewSessions` namespace exposes the session lifecycle (`create`,
+`close`, `setActive`, `setOrder`, `update`, `split`, `unsplit`,
+`duplicate`), the history (`goBack`, `goForward`), the view area sync
+(`recordViewArea`, `restoreActive`, `updateForView`, `closeForView`),
+the transient view state getters and setters, the slot claims (below),
+the cross-area `getOpenViews` and the hooks (`useAll`, `useActive`,
+`useActiveId`, `useCanGoBack`, `useCanGoForward`, `useBreadcrumbTrail`).
+`Tabs` in `features/views` keeps only the strip's interactions
+(close-others / left / right, split with another tab, shortcuts,
+activate-by-index, `useIsViewActive`), all built on `ViewSessions`.
+
+`ViewRenderer` wraps each rendered view in `Views.SessionProvider`
+alongside `Views.PaneProvider`, and `Views.useSession()` returns the
+session id. Session-scoped state (transient view state through
+`SessionViewStateProvider`, slot claims through `useSlot`) reads the id
+from the provider rather than assuming the view is the active session,
+so a view's writes land on its own session even while it unmounts
+during a session switch.
+
+## UI slots and fills
+
+A **slot** is a named position in the app shell (`sidebar`, later a right
+panel) and a **fill** is a registered component for it. Fills register
+through `Views.registerFill(kind, fill)` into one store keyed by
+`kind:id`; the kinds and their fill shapes are declared on the
+augmentable `SlotFillMap` interface (the `EventDataMap` pattern), so
+`Views.getFill`, `Views.useFill` and `Views.useFills` stay typed while
+the store knows nothing about kinds. `packages/views` declares the
+`sidebar` kind itself, since the app shell defines that slot. The
+registry holds no policy: defaults, fallbacks and the shared sidebar
+width stay in the shell.
+
+Sessions choose their fills: `ViewSession.slots` maps slot ids to
+`SlotClaim` values (`{ fill, props? }`, plain data only, since sessions
+persist as JSON). `ViewSessions.claimSlot` and `releaseSlot` maintain the
+map. Claims are not snapshotted into history entries; they are derived
+from the mounted view, so navigating away unmounts the claimant and
+releases its claim.
+
+The `@minddrop/ui-views` package (`ui/views`, depending on
+`@minddrop/views` only) provides the two ends: `<Slot id="sidebar"
+fallback={...} />` renders the fill claimed by the active session of the
+surrounding view area (the main area outside of a pane), falling back to
+the given claim or fill id when the session claims nothing or an
+unregistered fill, and `useSlot(slotId, fillId, props?)` claims the slot
+for the calling view's session while mounted. The desktop app owns the
+sidebar frame (`Sidebar` at the persisted `AppUiState.sidebarWidth`, the
+resize handlers and the nav toolbar width dispatch) and renders the slot
+inside it, with `AppSidebar` reduced to content and registered as the
+default `sidebar` fill by `registerSidebars`. Fills are content only, so
+every sidebar shares the one width.
 
 ## Data views are independent entities
 

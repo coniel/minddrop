@@ -25,6 +25,7 @@
     "@minddrop/events": "workspace:*",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/stores": "workspace:*",
-    "@minddrop/ui-icons": "workspace:*"
+    "@minddrop/ui-icons": "workspace:*",
+    "@minddrop/utils": "workspace:*"
   }
 }
