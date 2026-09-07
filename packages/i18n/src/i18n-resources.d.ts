@@ -129,6 +129,11 @@ declare module 'i18next' {
           random: string;
           change: string;
           defaultSet: string;
+          background: {
+            none: string;
+            subtle: string;
+            solid: string;
+          };
         };
         labels: {
           untitled: string;

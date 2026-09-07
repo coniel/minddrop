@@ -11,10 +11,11 @@ import {
 import { createI18nKeyBuilder } from '@minddrop/i18n';
 import {
   BuiltInContentIconSetId,
-  ContentIconName,
+  ContentIconBackground,
   Icons,
   LoadedContentIconSet,
   UnminifiedContentIcon,
+  UserIconContentIcon,
   UserIconType,
   groupByCategory,
   useLoadedContentIconSets,
@@ -23,11 +24,16 @@ import { ContentColor } from '@minddrop/ui-theme';
 import { Button } from '../Button';
 import { ContentIcon } from '../ContentIcon';
 import { IconButton } from '../IconButton';
+import { Spacer } from '../Layout';
 import { MenuLabel } from '../Menu';
 import { ScrollArea } from '../ScrollArea';
 import { Toolbar } from '../Toolbar';
 import { Tooltip } from '../Tooltip';
-import { ContentColorValues } from '../constants';
+import {
+  ContentColorValues,
+  ContentIconBackgroundValue,
+  ContentIconBackgroundValues,
+} from '../constants';
 import { propsToClass } from '../utils';
 import './ContentIconPicker.css';
 import { TextField } from '../fields/TextField';
@@ -35,9 +41,10 @@ import { TextField } from '../fields/TextField';
 export interface ContentIconPickerProps
   extends Omit<React.HTMLProps<HTMLDivElement>, 'onSelect'> {
   /**
-   * Calback fired when an icon is selected.
+   * Calback fired when an icon is selected, with the picked color
+   * and background applied.
    */
-  onSelect?(icon: ContentIconName, color: ContentColor, set: string): void;
+  onSelect?(icon: UserIconContentIcon): void;
 
   /**
    * Calback fired when an icon color is selected.
@@ -45,9 +52,25 @@ export interface ContentIconPickerProps
   onSelectColor?(color: ContentColor): void;
 
   /**
+   * Calback fired when an icon background is selected.
+   */
+  onSelectBackground?(background: ContentIconBackground): void;
+
+  /**
    * The default selected color.
    */
   defaultColor?: ContentColor;
+
+  /**
+   * The default selected background.
+   */
+  defaultBackground?: ContentIconBackground;
+
+  /**
+   * The stringified icon the background options are previewed
+   * on. Previews fall back to a generic icon when absent.
+   */
+  currentIcon?: string;
 
   /**
    * Recently used icons shown as the first category.
@@ -58,7 +81,11 @@ export interface ContentIconPickerProps
 // Fixed row heights for the flat virtual grid
 const HEADER_ROW_HEIGHT = 40;
 const ICON_ROW_HEIGHT = 34;
-const ICONS_PER_ROW = 13;
+const ICONS_PER_ROW = 14;
+
+// Icon the background options are previewed on when there is
+// no current icon.
+const PREVIEW_ICON_NAME = 'file';
 
 type VirtualItem =
   | { type: 'header'; label: string }
@@ -83,8 +110,11 @@ function buildVirtualItems(
 export const ContentIconPicker: FC<ContentIconPickerProps> = ({
   onSelect,
   onSelectColor,
+  onSelectBackground,
   recent,
   defaultColor = 'default',
+  defaultBackground = ContentIconBackground.None,
+  currentIcon,
   className,
   ...other
 }) => {
@@ -93,8 +123,24 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
   // previous results immediately while computing new ones at low priority.
   const deferredQuery = useDeferredValue(query);
   const [color, setColor] = useState<ContentColor>(defaultColor);
+  const [background, setBackground] =
+    useState<ContentIconBackground>(defaultBackground);
   const [activeSetId, setActiveSetId] = useState(BuiltInContentIconSetId);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  // The icon the background options are previewed on, in the picked
+  // color so the previews match what a selection would give.
+  const previewIcon = useMemo<UserIconContentIcon>(() => {
+    const parsedIcon = Icons.parse(currentIcon);
+
+    return {
+      type: UserIconType.ContentIcon,
+      set: parsedIcon?.set ?? BuiltInContentIconSetId,
+      icon: parsedIcon?.icon ?? PREVIEW_ICON_NAME,
+      color,
+    };
+  }, [currentIcon, color]);
+
   const iconSets = useLoadedContentIconSets();
 
   // The set whose icons are listed
@@ -149,9 +195,19 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
         return;
       }
 
-      onSelect(value.name, color, value.set);
+      onSelect(
+        Icons.applyBackground(
+          {
+            type: UserIconType.ContentIcon,
+            set: value.set,
+            icon: value.name,
+            color,
+          },
+          background,
+        ),
+      );
     },
-    [onSelect, color],
+    [onSelect, color, background],
   );
 
   const handleClickRandom = useCallback(() => {
@@ -176,6 +232,17 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
       }
     },
     [onSelectColor],
+  );
+
+  const handleSelectBackground = useCallback(
+    (value: ContentIconBackground) => {
+      setBackground(value);
+
+      if (onSelectBackground) {
+        onSelectBackground(value);
+      }
+    },
+    [onSelectBackground],
   );
 
   const handleQueryChange = useCallback((value: string) => setQuery(value), []);
@@ -205,6 +272,15 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
             onClick={handleSelectColor}
           />
         ))}
+        <Spacer />
+        {ContentIconBackgroundValues.map((option) => (
+          <BackgroundSelectButton
+            key={option.value}
+            option={option}
+            previewIcon={previewIcon}
+            onClick={handleSelectBackground}
+          />
+        ))}
       </Toolbar>
       <Toolbar>
         <TextField
@@ -231,6 +307,7 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
                   key={`${icon.set}:${icon.name}`}
                   icon={icon}
                   color={color}
+                  background={background}
                   onSelect={handleSelect}
                 />
               ))}
@@ -290,6 +367,7 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
                         key={`${icon.set}:${icon.name}`}
                         icon={icon}
                         color={color}
+                        background={background}
                         onSelect={handleSelect}
                       />
                     ))}
@@ -333,8 +411,9 @@ const SetSelectButton: React.FC<{
 const IconSelectButton = memo<{
   icon: UnminifiedContentIcon;
   color: ContentColor;
+  background: ContentIconBackground;
   onSelect: (value: UnminifiedContentIcon) => void;
-}>(({ icon, color, onSelect }) => {
+}>(({ icon, color, background, onSelect }) => {
   const handleSelect = useCallback(() => onSelect(icon), [onSelect, icon]);
 
   return (
@@ -345,12 +424,17 @@ const IconSelectButton = memo<{
       onClick={handleSelect}
     >
       <ContentIcon
-        icon={Icons.stringify({
-          type: UserIconType.ContentIcon,
-          set: icon.set,
-          icon: icon.name,
-          color,
-        })}
+        icon={Icons.stringify(
+          Icons.applyBackground(
+            {
+              type: UserIconType.ContentIcon,
+              set: icon.set,
+              icon: icon.name,
+              color,
+            },
+            background,
+          ),
+        )}
         color={color}
       />
     </IconButton>
@@ -385,6 +469,30 @@ const ColorSelectButton: React.FC<{
           height: '16px',
           borderRadius: '50%',
         }}
+      />
+    </IconButton>
+  );
+};
+
+const BackgroundSelectButton: React.FC<{
+  option: ContentIconBackgroundValue;
+  previewIcon: UserIconContentIcon;
+  onClick: (value: ContentIconBackground) => void;
+}> = ({ option, previewIcon, onClick }) => {
+  const handleClick = useCallback(
+    () => onClick(option.value),
+    [onClick, option.value],
+  );
+
+  return (
+    <IconButton
+      label={option.labelKey}
+      className="content-icon-picker-background-button"
+      tooltip={{ side: 'top', title: option.labelKey }}
+      onClick={handleClick}
+    >
+      <ContentIcon
+        icon={Icons.stringify(Icons.applyBackground(previewIcon, option.value))}
       />
     </IconButton>
   );

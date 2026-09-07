@@ -1,5 +1,10 @@
 import { ReactElement, useMemo, useState } from 'react';
-import { ContentIconName, Icons, UserIconType } from '@minddrop/ui-icons';
+import {
+  ContentIconBackground,
+  ContentIconName,
+  Icons,
+  UserIconContentIcon,
+} from '@minddrop/ui-icons';
 import { ContentColor } from '@minddrop/ui-theme';
 import { Button } from '../Button';
 import { ContentIconPicker } from '../ContentIconPicker';
@@ -23,8 +28,9 @@ export interface IconPickerProps {
   children?: ReactElement;
 
   /**
-   * The current icon string. Sets the default color and receives
-   * color changes made before an icon is picked.
+   * The current icon string. Sets the default color and background,
+   * and receives color and background changes made before an icon
+   * is picked.
    */
   currentIcon?: string;
 
@@ -53,12 +59,22 @@ export interface IconPickerProps {
   /**
    * Callback fired when an icon is selected.
    */
-  onSelectIcon?(icon: ContentIconName, color: ContentColor, set: string): void;
+  onSelectIcon?(
+    icon: ContentIconName,
+    color: ContentColor,
+    set: string,
+    background?: ContentIconBackground,
+  ): void;
 
   /**
    * Callback fired when an icon color is selected.
    */
   onSelectIconColor?(color: ContentColor): void;
+
+  /**
+   * Callback fired when an icon background is selected.
+   */
+  onSelectIconBackground?(background: ContentIconBackground): void;
 
   /**
    * Callback fired when an icon is selected.
@@ -98,6 +114,7 @@ export const IconPicker: React.FC<IconPickerProps> = ({
   onSelect,
   onSelectIcon,
   onSelectIconColor,
+  onSelectIconBackground,
   currentIcon,
   open: controlledOpen,
   onOpenChange: controlledOnOpenChange,
@@ -108,40 +125,35 @@ export const IconPicker: React.FC<IconPickerProps> = ({
   // Support both controlled and uncontrolled open state
   const open = controlledOpen ?? uncontrolledOpen;
   const setOpen = controlledOnOpenChange ?? setUncontrolledOpen;
-  const [icon, setIcon] = useState<{
-    name: ContentIconName;
-    set: string;
-  } | null>(null);
+  const [icon, setIcon] = useState<UserIconContentIcon | null>(null);
 
-  // Until an icon is picked, color changes apply to the current icon
+  // Until an icon is picked, color and background changes apply to
+  // the current icon.
   const currentParsedIcon = useMemo(
     () => Icons.parse(currentIcon),
     [currentIcon],
   );
-  const colorTarget =
-    icon ??
-    (currentParsedIcon
-      ? { name: currentParsedIcon.icon, set: currentParsedIcon.set }
-      : null);
+  const target = icon ?? currentParsedIcon;
 
   const handleSelectIcon = (
-    icon: ContentIconName,
-    color: ContentColor,
-    set: string,
+    selectedIcon: UserIconContentIcon,
     preventClose = false,
   ) => {
-    setIcon({ name: icon, set });
+    setIcon(selectedIcon);
 
     if (onSelectIcon) {
-      onSelectIcon(icon, color, set);
+      onSelectIcon(
+        selectedIcon.icon,
+        selectedIcon.color,
+        selectedIcon.set,
+        selectedIcon.background,
+      );
     }
 
     if (onSelect) {
       // Stringifying qualifies the icon with its set when it is not
       // from the built-in set.
-      onSelect(
-        Icons.stringify({ type: UserIconType.ContentIcon, set, icon, color }),
-      );
+      onSelect(Icons.stringify(selectedIcon));
     }
 
     if (closeOnSelect && !preventClose) {
@@ -150,12 +162,22 @@ export const IconPicker: React.FC<IconPickerProps> = ({
   };
 
   const handleSelectIconColor = (color: ContentColor) => {
-    if (colorTarget) {
-      handleSelectIcon(colorTarget.name, color, colorTarget.set, true);
+    if (target) {
+      handleSelectIcon(Icons.applyColor(target, color), true);
     }
 
     if (onSelectIconColor) {
       onSelectIconColor(color);
+    }
+  };
+
+  const handleSelectIconBackground = (background: ContentIconBackground) => {
+    if (target) {
+      handleSelectIcon(Icons.applyBackground(target, background), true);
+    }
+
+    if (onSelectIconBackground) {
+      onSelectIconBackground(background);
     }
   };
 
@@ -184,12 +206,15 @@ export const IconPicker: React.FC<IconPickerProps> = ({
                 />
               </div>
               <ContentIconPicker
+                currentIcon={target ? Icons.stringify(target) : undefined}
                 defaultColor={
                   (currentIcon && Icons.resolveColor(currentIcon)) ||
                   defaultIconColor
                 }
+                defaultBackground={currentParsedIcon?.background}
                 onSelect={handleSelectIcon}
                 onSelectColor={handleSelectIconColor}
+                onSelectBackground={handleSelectIconBackground}
               />
             </div>
           </PopoverContent>

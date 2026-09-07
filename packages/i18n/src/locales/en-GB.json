@@ -72,7 +72,12 @@
     "filter": "Search icons...",
     "random": "Random",
     "change": "Change icon",
-    "defaultSet": "Default"
+    "defaultSet": "Default",
+    "background": {
+      "none": "None",
+      "subtle": "Subtle",
+      "solid": "Solid"
+    }
   },
   "labels": {
     "untitled": "Untitled",

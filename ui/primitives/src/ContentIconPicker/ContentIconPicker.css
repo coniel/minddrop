@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   height: 480px;
-  width: 440px;
+  width: 472px;
   border-radius: var(--radius-lg);
   overflow: hidden;
 
@@ -60,7 +60,8 @@
     height: 32px;
   }
 
-  .content-icon-picker-color-button {
+  .content-icon-picker-color-button,
+  .content-icon-picker-background-button {
     padding: 0;
     width: var(--control-height-md);
     height: var(--control-height-md);
