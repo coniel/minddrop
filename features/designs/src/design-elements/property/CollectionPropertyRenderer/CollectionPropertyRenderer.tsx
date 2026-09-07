@@ -84,7 +84,6 @@ export const CollectionPropertyRenderer: React.FC<
   return (
     <div className="designs-collection-element" style={cssStyle}>
       <DataViewRenderer
-        showHeader
         view={view ?? undefined}
         viewDeleted={Boolean(viewId && !view)}
         createViewType={variant.id}

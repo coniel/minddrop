@@ -24,29 +24,4 @@
       flex: 3;
     }
   }
-
-  .data-view-renderer-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: var(--space-4);
-    flex-shrink: 0;
-
-    .data-view-renderer-title {
-      display: flex;
-      align-items: center;
-      gap: var(--space-2);
-
-      .content-icon {
-        width: var(--icon-size-lg);
-        height: var(--icon-size-lg);
-        flex-shrink: 0;
-      }
-
-      .text {
-        font-size: var(--font-size-2xl);
-        font-weight: var(--font-weight-semibold);
-      }
-    }
-  }
 }

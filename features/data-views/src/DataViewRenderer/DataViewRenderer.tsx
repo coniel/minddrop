@@ -1,16 +1,6 @@
-import React, { useCallback } from 'react';
-import { Collections } from '@minddrop/collections';
+import React from 'react';
 import { DataView, DataViewTypes } from '@minddrop/data-views';
-import { DataViewSortMenu } from '@minddrop/ui-data-views';
-import { CreateDatabaseEntryButton } from '@minddrop/ui-databases';
-import {
-  ContentIcon,
-  Heading,
-  Text,
-  Toolbar,
-  TransientViewStateScope,
-} from '@minddrop/ui-primitives';
-import { DataViewOptionsMenu } from '../DataViewOptionsMenu';
+import { Text, TransientViewStateScope } from '@minddrop/ui-primitives';
 import { useSortedDataViewEntries } from '../useSortedDataViewEntries';
 import { CreateDataViewForm } from './CreateDataViewForm';
 import './DataViewRenderer.css';
@@ -47,19 +37,12 @@ export interface DataViewRendererProps {
    * IDs of the elements to render within the data view.
    */
   entries?: string[];
-
-  /**
-   * Whether to show the header above the view content.
-   * Displays the view's name and icon, along with settings
-   * and new entry buttons.
-   */
-  showHeader?: boolean;
 }
 
 /**
- * Renders a data view with an optional header. Without a view it
- * renders a view creation form, or a missing view notice when the
- * referenced view no longer exists.
+ * Renders a data view. Without a view it renders a view creation
+ * form, or a missing view notice when the referenced view no longer
+ * exists.
  */
 export const DataViewRenderer: React.FC<DataViewRendererProps> = ({
   view,
@@ -67,7 +50,6 @@ export const DataViewRenderer: React.FC<DataViewRendererProps> = ({
   createViewType,
   onCreateView,
   entries,
-  showHeader,
 }) => {
   // The referenced view no longer exists
   if (viewDeleted) {
@@ -94,9 +76,7 @@ export const DataViewRenderer: React.FC<DataViewRendererProps> = ({
     );
   }
 
-  return (
-    <ConfiguredView view={view} entries={entries} showHeader={showHeader} />
-  );
+  return <ConfiguredView view={view} entries={entries} />;
 };
 
 interface ConfiguredViewProps {
@@ -109,36 +89,16 @@ interface ConfiguredViewProps {
    * IDs of the elements to render within the data view.
    */
   entries?: string[];
-
-  /**
-   * Whether to show the header above the view content.
-   */
-  showHeader?: boolean;
 }
 
 /**
- * Renders the data view's type component with an optional header.
+ * Renders the data view's type component.
  */
-const ConfiguredView: React.FC<ConfiguredViewProps> = ({
-  view,
-  entries,
-  showHeader,
-}) => {
+const ConfiguredView: React.FC<ConfiguredViewProps> = ({ view, entries }) => {
   const viewType = DataViewTypes.use(view.type);
 
   // Entries in the order configured by the view's sort options
   const sortedEntries = useSortedDataViewEntries(view, entries ?? NO_ENTRIES);
-
-  // Add newly created entry to the collection when
-  // the view's data source is a collection.
-  const handleCreateEntry = useCallback(
-    (entry: { id: string }) => {
-      if (view.dataSource.type === 'collection') {
-        Collections.addItems(view.dataSource.id, [entry.id]);
-      }
-    },
-    [view.dataSource],
-  );
 
   if (!viewType) {
     return null;
@@ -146,28 +106,6 @@ const ConfiguredView: React.FC<ConfiguredViewProps> = ({
 
   return (
     <div className="data-view-renderer">
-      {/* Header with view icon, name, and action buttons */}
-      {showHeader && (
-        <div className="data-view-renderer-header">
-          <div className="data-view-renderer-title">
-            {view.icon && <ContentIcon icon={view.icon} />}
-            <Heading noMargin>{view.name}</Heading>
-          </div>
-          <Toolbar>
-            <CreateDatabaseEntryButton
-              database={
-                view.dataSource.type === 'database' ? view.dataSource.id : false
-              }
-              onCreateEntry={handleCreateEntry}
-              color="neutral"
-            />
-            <DataViewSortMenu view={view} />
-            <DataViewOptionsMenu view={view} />
-          </Toolbar>
-        </div>
-      )}
-
-      {/* View content */}
       <TransientViewStateScope segment={view.id}>
         <viewType.component view={view} entries={sortedEntries} />
       </TransientViewStateScope>

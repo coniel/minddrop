@@ -49,7 +49,6 @@ export const DataViewDesignElement: React.FC<DataViewDesignElementProps> = ({
   return (
     <div className="designs-data-view-element" style={cssStyle}>
       <DataViewRenderer
-        showHeader
         view={dataView ?? undefined}
         viewDeleted={Boolean(element.content && !dataView)}
         createViewType={element.dataViewType}
