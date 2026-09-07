@@ -18,7 +18,7 @@ describe('resolveNextTagColor', () => {
   it('wraps around when the tag count exceeds the color count', () => {
     // Load enough extra tags to wrap the rotation
     TagsStore.load(
-      rotationColors.map((color, index) => ({
+      rotationColors.map((_, index) => ({
         ...tags[0],
         id: `tag_extra-${index}`,
         name: `Extra ${index}`,

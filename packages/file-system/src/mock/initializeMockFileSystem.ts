@@ -209,7 +209,7 @@ export function initializeMockFileSystem(
       delete textFileContents[fullPath];
       delete binaryFiles[fullPath];
     },
-    downloadFile: async (url, path, options) => {
+    downloadFile: async (_, path, options) => {
       const fullPath = getFullPath(path, options);
 
       if (!mockExists(root, fullPath)) {
@@ -414,7 +414,7 @@ export function initializeMockFileSystem(
       mockRemoveFileEntry(root, getFullPath(path, options)),
     removeDir: (path, options) =>
       mockRemoveFileEntry(root, getFullPath(path, options)),
-    downloadFile: (url, path, options) => {
+    downloadFile: (_, path, options) => {
       const fullPath = getFullPath(path, options);
 
       if (!mockExists(root, fullPath)) {

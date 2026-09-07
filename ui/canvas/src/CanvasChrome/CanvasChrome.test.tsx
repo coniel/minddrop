@@ -1,4 +1,3 @@
-import React from 'react';
 import { afterEach, describe, expect, it } from 'vitest';
 import { cleanup, render } from '@minddrop/test-utils';
 import { CanvasChrome } from './CanvasChrome';

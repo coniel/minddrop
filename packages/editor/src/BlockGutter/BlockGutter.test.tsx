@@ -1,4 +1,4 @@
-import React, { createRef } from 'react';
+import { createRef } from 'react';
 import { afterEach, describe, expect, it } from 'vitest';
 import { fireEvent, render } from '@minddrop/test-utils';
 import { cleanup, paragraphElement1 } from '../test-utils';

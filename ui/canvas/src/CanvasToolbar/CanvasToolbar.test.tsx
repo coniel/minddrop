@@ -1,4 +1,3 @@
-import React from 'react';
 import { afterEach, describe, expect, it } from 'vitest';
 import { cleanup, fireEvent, render } from '@minddrop/test-utils';
 import { CanvasProvider } from '../CanvasProvider';

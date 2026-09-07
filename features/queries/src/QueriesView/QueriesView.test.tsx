@@ -11,7 +11,7 @@ import { cleanup, setup } from '../test-utils';
 import { QueriesView } from './QueriesView';
 
 const { objectDatabase } = DatabaseFixtures;
-const { query_1, query_2, queries } = QueryFixtures;
+const { query_2, queries } = QueryFixtures;
 
 // Mock query execution, which requires a SQL database
 vi.mock('@minddrop/queries', async (importOriginal) => {

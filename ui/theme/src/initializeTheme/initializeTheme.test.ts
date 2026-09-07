@@ -32,10 +32,10 @@ describe('initializeTheme', () => {
       value: vi.fn().mockImplementation(() => ({
         matches: appearance === ThemeDark,
         // Add the callback to the 'matchMediaEventListeners' array
-        addEventListener: (event: string, callback: VoidFunction) =>
+        addEventListener: (_: string, callback: VoidFunction) =>
           matchMediaEventListeners.push(callback),
         // Remove the callback from the 'matchMediaEventListeners' array
-        removeEventListener: (event: string, callback: VoidFunction) => {
+        removeEventListener: (_: string, callback: VoidFunction) => {
           matchMediaEventListeners = matchMediaEventListeners.filter(
             (fn) => fn !== callback,
           );
