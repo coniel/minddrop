@@ -1,0 +1,18 @@
+/* ============================================================
+   DATA VIEW TAB BAR
+   Tabs switching between data views, with the active view's
+   actions trailing.
+   ============================================================ */
+
+.data-view-tab-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  border-bottom: var(--border-width-thin) solid var(--border-subtle);
+  flex-shrink: 0;
+
+  .data-view-tab-bar-actions {
+    margin-left: auto;
+  }
+}

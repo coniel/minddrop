@@ -36,7 +36,7 @@ describe('<DatabaseBrowseMode />', () => {
       <DatabaseBrowseMode databaseId={objectDatabase.id} />,
     );
 
-    expect(container.querySelector('.database-view-switcher')).not.toBeNull();
+    expect(container.querySelector('.data-view-tab-bar')).not.toBeNull();
     screen.getByText(tableView.name);
   });
 
@@ -47,12 +47,12 @@ describe('<DatabaseBrowseMode />', () => {
       <DatabaseBrowseMode databaseId={objectDatabase.id} />,
     );
 
-    expect(container.querySelector('.database-view-switcher')).toBeNull();
+    expect(container.querySelector('.data-view-tab-bar')).toBeNull();
   });
 
   it('renders nothing for a missing database', () => {
     const { container } = render(<DatabaseBrowseMode databaseId="missing" />);
 
-    expect(container.querySelector('.database-view-switcher')).toBeNull();
+    expect(container.querySelector('.data-view-tab-bar')).toBeNull();
   });
 });
