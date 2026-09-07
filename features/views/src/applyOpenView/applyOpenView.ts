@@ -1,5 +1,4 @@
-import { OpenViewEventData, ViewDescriptor } from '@minddrop/views';
-import { DEFAULT_SPLIT_RATIO } from '../tabs/tabsConstants';
+import { OpenViewEventData, ViewDescriptor, Views } from '@minddrop/views';
 
 export interface ViewAreaState {
   /**
@@ -65,6 +64,6 @@ export function applyOpenView(
   return {
     main: descriptor,
     split: null,
-    splitRatio: DEFAULT_SPLIT_RATIO,
+    splitRatio: Views.constants.DefaultSplitRatio,
   };
 }

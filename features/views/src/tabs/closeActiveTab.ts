@@ -1,16 +1,15 @@
-import { closeTab } from './closeTab';
-import { getSet } from './getSet';
+import { ViewSessions } from '@minddrop/views';
 
 /**
- * Closes the active tab in the given set, if there is one.
+ * Closes the active tab in the given view area, if there is one.
  *
  * @param viewAreaId - The id of the view area.
  */
 export function closeActiveTab(viewAreaId: string): void {
-  const { activeTabId } = getSet(viewAreaId);
+  const active = ViewSessions.getActive(viewAreaId);
 
-  // Close the active tab when there is one
-  if (activeTabId) {
-    closeTab(viewAreaId, activeTabId);
+  // Close the active session when there is one
+  if (active) {
+    ViewSessions.close(viewAreaId, active.id);
   }
 }

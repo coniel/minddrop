@@ -24,14 +24,25 @@
   /* Tighter spacing around the close button */
   gap: var(--space-1);
   padding-right: var(--space-1);
-  /* Lighter background for inactive tabs; the primitive's more
-     specific hover/active rules take over for those states */
-  background-color: var(--neutral-200);
+  /* Faint background for inactive tabs, so the active tab stands
+     out; the primitive's more specific hover and active rules take
+     over for those states */
+  background-color: color-mix(
+    in srgb,
+    var(--surface-neutral-subtle) 50%,
+    transparent
+  );
   border-radius: var(--radius-lg);
 }
 
 .view-tab[data-active] {
   min-width: 130px;
+}
+
+/* Fade coloured content icons on inactive tabs so they do not
+   compete with the active tab, restoring them on hover */
+.view-tab:not([data-active]):not(:hover) .content-icon {
+  opacity: 0.6;
 }
 
 .view-tab-number {

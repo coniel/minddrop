@@ -1,14 +1,13 @@
-import { getTabs } from './getTabs';
-import { newTab } from './newTab';
+import { ViewSessions } from '@minddrop/views';
 
 /**
- * Creates a blank tab in the set when it has no tabs.
+ * Creates a blank tab in the view area when it has no tabs.
  *
  * @param viewAreaId - The id of the view area.
  */
 export function ensureTab(viewAreaId: string): void {
-  // Open a blank tab when the set is empty
-  if (getTabs(viewAreaId).length === 0) {
-    newTab(viewAreaId);
+  // Open a blank session when the view area is empty
+  if (ViewSessions.getAll(viewAreaId).length === 0) {
+    ViewSessions.create(viewAreaId);
   }
 }

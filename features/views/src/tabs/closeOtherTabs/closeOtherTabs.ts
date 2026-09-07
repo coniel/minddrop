@@ -1,30 +1,29 @@
-import { dispatchViewArea } from '../dispatchViewArea';
-import { getSet } from '../getSet';
-import { writeSet } from '../writeSet';
+import { ViewSessions } from '@minddrop/views';
 
 /**
- * Closes every tab in the set except the one with the given id,
- * making it active.
+ * Closes every tab in the view area except the one with the given
+ * id, making it active.
  *
  * @param viewAreaId - The id of the view area.
  * @param id - The id of the tab to keep.
  */
 export function closeOtherTabs(viewAreaId: string, id: string): void {
-  const { tabs, activeTabId } = getSet(viewAreaId);
-
-  // Find the tab to keep
-  const tab = tabs.find((currentTab) => currentTab.id === id);
+  const sessions = ViewSessions.getAll(viewAreaId);
 
   // Nothing to do when the tab does not exist
-  if (!tab) {
+  if (!sessions.some((session) => session.id === id)) {
     return;
   }
 
-  // Keep only the given tab, making it active
-  writeSet(viewAreaId, { tabs: [tab], activeTabId: tab.id });
+  // Activate the kept tab first, so closing the others leaves the
+  // active tab in place and its content shown.
+  ViewSessions.setActive(viewAreaId, id);
 
-  // Show the kept tab's content when it was not already active
-  if (activeTabId !== tab.id) {
-    dispatchViewArea(viewAreaId, tab);
-  }
+  // Close the other tabs
+  ViewSessions.close(
+    viewAreaId,
+    sessions
+      .filter((session) => session.id !== id)
+      .map((session) => session.id),
+  );
 }

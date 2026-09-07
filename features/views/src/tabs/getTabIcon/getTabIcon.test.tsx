@@ -1,7 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { ContentIcon } from '@minddrop/ui-primitives';
-import { Views } from '@minddrop/views';
-import { Tab } from '../TabSetsStore';
+import { ViewSession, ViewSessionId, Views } from '@minddrop/views';
 import { DEFAULT_ICON } from '../tabsConstants';
 import { getTabIcon } from './getTabIcon';
 
@@ -9,9 +8,9 @@ const RegisteredViewType = 'test:view:fixed-icon';
 const RegisteredIcon = 'search';
 
 // A tab showing the given view in its main pane
-function tab(main: Tab['main']): Tab {
+function tab(main: ViewSession['main']): ViewSession {
   return {
-    id: 'tab_1' as Tab['id'],
+    id: 'session_1' as ViewSessionId,
     main,
     split: null,
     splitRatio: 50,
@@ -25,7 +24,7 @@ describe('getTabIcon', () => {
 
   it("renders the entity's content icon", () => {
     const icon = getTabIcon(
-      tab({ view: 'test:view', icon: 'lucide:box:default' }),
+      tab({ view: 'test:view', contentIcon: 'lucide:box:default' }),
     );
 
     expect(icon).toEqual(<ContentIcon icon="lucide:box:default" />);

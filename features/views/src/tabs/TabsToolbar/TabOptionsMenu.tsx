@@ -11,19 +11,13 @@ import {
   ContextSubmenuTriggerItem,
   IconRenderer,
 } from '@minddrop/ui-primitives';
-import { Views } from '@minddrop/views';
-import { Tab } from '../TabSetsStore';
+import { ViewSession, ViewSessions, Views } from '@minddrop/views';
 import { closeOtherTabs } from '../closeOtherTabs';
-import { closeTab } from '../closeTab';
 import { closeTabsToTheLeft } from '../closeTabsToTheLeft';
 import { closeTabsToTheRight } from '../closeTabsToTheRight';
-import { duplicateTab } from '../duplicateTab';
 import { getTabIcon } from '../getTabIcon';
 import { getTabLabel } from '../getTabLabel';
-import { newTab } from '../newTab';
-import { splitTab } from '../splitTab';
 import { splitTabWithTab } from '../splitTabWithTab';
-import { unsplitTab } from '../unsplitTab';
 
 interface TabOptionsMenuProps {
   /**
@@ -37,9 +31,9 @@ interface TabOptionsMenuProps {
   tabId: string;
 
   /**
-   * The view area's open tabs.
+   * The view area's sessions, one per tab.
    */
-  tabs: Tab[];
+  sessions: ViewSession[];
 }
 
 /**
@@ -49,47 +43,51 @@ interface TabOptionsMenuProps {
 export const TabOptionsMenu: FC<TabOptionsMenuProps> = ({
   viewAreaId,
   tabId,
-  tabs,
+  sessions,
 }) => {
   // The position of the tab the menu was opened on
-  const tabIndex = tabs.findIndex((tab) => tab.id === tabId);
+  const tabIndex = sessions.findIndex((session) => session.id === tabId);
 
   // Whether the tab already has a split pane
-  const isSplit = Boolean(tabs[tabIndex]?.split);
+  const isSplit = Boolean(sessions[tabIndex]?.split);
 
   // The tabs which can be moved into the split pane: the other tabs
   // which have a view to move.
-  const splitCandidates = tabs.filter((tab) => tab.id !== tabId && tab.main);
+  const splitCandidates = sessions.filter(
+    (session) => session.id !== tabId && session.main,
+  );
 
   // Open a new blank tab before the tab
   function handleNewTabToTheLeft() {
-    newTab(viewAreaId, { index: tabIndex });
+    ViewSessions.create(viewAreaId, { index: tabIndex });
   }
 
   // Open a new blank tab after the tab
   function handleNewTabToTheRight() {
-    newTab(viewAreaId, { index: tabIndex + 1 });
+    ViewSessions.create(viewAreaId, { index: tabIndex + 1 });
   }
 
   // Duplicate the tab
   function handleDuplicate() {
-    duplicateTab(viewAreaId, tabId);
+    ViewSessions.duplicate(viewAreaId, tabId);
   }
 
   // Open a search view in the tab's split pane, labelled and iconed
   // from its registration.
   function handleSplitWithSearch() {
-    splitTab(viewAreaId, tabId, { view: Views.constants.DefaultName });
+    ViewSessions.split(viewAreaId, tabId, {
+      view: Views.constants.DefaultName,
+    });
   }
 
   // Close the tab's split pane
   function handleUnsplit() {
-    unsplitTab(viewAreaId, tabId);
+    ViewSessions.unsplit(viewAreaId, tabId);
   }
 
   // Close the tab
   function handleClose() {
-    closeTab(viewAreaId, tabId);
+    ViewSessions.close(viewAreaId, tabId);
   }
 
   // Close every other tab
@@ -159,12 +157,12 @@ export const TabOptionsMenu: FC<TabOptionsMenuProps> = ({
                 {/* Split with one of the other open tabs */}
                 {splitCandidates.length > 0 && (
                   <ContextMenuGroup label="tabs.split.tabs">
-                    {splitCandidates.map((tab) => (
+                    {splitCandidates.map((session) => (
                       <SplitWithTabItem
-                        key={tab.id}
+                        key={session.id}
                         viewAreaId={viewAreaId}
                         tabId={tabId}
-                        sourceTab={tab}
+                        sourceSession={session}
                       />
                     ))}
                   </ContextMenuGroup>
@@ -184,7 +182,7 @@ export const TabOptionsMenu: FC<TabOptionsMenuProps> = ({
       <ContextMenuItem
         icon="x"
         label="tabs.closeOthers"
-        disabled={tabs.length < 2}
+        disabled={sessions.length < 2}
         onSelect={handleCloseOthers}
       />
 
@@ -200,7 +198,7 @@ export const TabOptionsMenu: FC<TabOptionsMenuProps> = ({
       <ContextMenuItem
         icon="x"
         label="tabs.closeToTheRight"
-        disabled={tabIndex >= tabs.length - 1}
+        disabled={tabIndex >= sessions.length - 1}
         onSelect={handleCloseToTheRight}
       />
     </>
@@ -219,9 +217,9 @@ interface SplitWithTabItemProps {
   tabId: string;
 
   /**
-   * The tab moved into the split pane when selected.
+   * The session of the tab moved into the split pane when selected.
    */
-  sourceTab: Tab;
+  sourceSession: ViewSession;
 }
 
 /**
@@ -231,19 +229,19 @@ interface SplitWithTabItemProps {
 const SplitWithTabItem: FC<SplitWithTabItemProps> = ({
   viewAreaId,
   tabId,
-  sourceTab,
+  sourceSession,
 }) => {
   const { t } = useTranslation();
 
   // Move the tab into the split pane
   function handleSelect() {
-    splitTabWithTab(viewAreaId, tabId, sourceTab.id);
+    splitTabWithTab(viewAreaId, tabId, sourceSession.id);
   }
 
   return (
     <ContextMenuItem
-      icon={<IconRenderer icon={getTabIcon(sourceTab)} />}
-      stringLabel={getTabLabel(sourceTab, t('tabs.new'), t)}
+      icon={<IconRenderer icon={getTabIcon(sourceSession)} />}
+      stringLabel={getTabLabel(sourceSession, t('tabs.new'), t)}
       onSelect={handleSelect}
     />
   );

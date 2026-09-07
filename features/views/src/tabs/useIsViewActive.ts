@@ -1,6 +1,4 @@
-import { Views } from '@minddrop/views';
-import { useActiveTab } from './TabSetsStore';
-import { useBreadcrumbTrail } from './resolveBreadcrumbTrail';
+import { ViewSessions, Views } from '@minddrop/views';
 
 export interface UseIsViewActiveOptions {
   /**
@@ -29,11 +27,11 @@ export function useIsViewActive(
   options: UseIsViewActiveOptions = {},
 ): boolean {
   const { viewId, viewAreaId = Views.constants.DefaultAreaId } = options;
-  const activeTab = useActiveTab(viewAreaId);
-  const breadcrumbTrail = useBreadcrumbTrail(viewAreaId, 'main');
-  const shownView = activeTab?.main;
+  const activeSession = ViewSessions.useActive(viewAreaId);
+  const breadcrumbTrail = ViewSessions.useBreadcrumbTrail(viewAreaId, 'main');
+  const shownView = activeSession?.main;
 
-  // The view is the one shown in the active tab's main pane
+  // The view is the one shown in the active session's main pane
   if (shownView?.view === view && (!viewId || shownView.id === viewId)) {
     return true;
   }

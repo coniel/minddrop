@@ -2,8 +2,7 @@ import { FC } from 'react';
 import { createI18nKeyBuilder, useTranslation } from '@minddrop/i18n';
 import { SortableItemRenderProps } from '@minddrop/ui-drag-and-drop';
 import { Icon, IconRenderer, TabsTab, Tooltip } from '@minddrop/ui-primitives';
-import { Tab as TabData } from '../TabSetsStore';
-import { closeTab } from '../closeTab';
+import { ViewSession, ViewSessions } from '@minddrop/views';
 import { getTabIcon } from '../getTabIcon';
 import { getTabLabel } from '../getTabLabel';
 
@@ -16,9 +15,9 @@ interface TabProps {
   viewAreaId: string;
 
   /**
-   * The tab to render.
+   * The session the tab renders.
    */
-  tab: TabData;
+  session: ViewSession;
 
   /**
    * Sortable render props provided by the sortable list.
@@ -49,7 +48,7 @@ interface TabProps {
  */
 export const Tab: FC<TabProps> = ({
   viewAreaId,
-  tab,
+  session,
   sortable,
   shortcutNumber,
   showShortcutNumber = false,
@@ -60,10 +59,10 @@ export const Tab: FC<TabProps> = ({
   const { ref, handleProps, style, className } = sortable;
 
   // The view's icon, its registered icon, or a default
-  const icon = getTabIcon(tab);
+  const icon = getTabIcon(session);
 
   // The tab's label, combining both pane titles when it is split
-  const label = getTabLabel(tab, t(tabsI18nKey('new')), t);
+  const label = getTabLabel(session, t(tabsI18nKey('new')), t);
 
   // The shortcut shown in the tooltip
   const keyboardShortcut =
@@ -83,21 +82,21 @@ export const Tab: FC<TabProps> = ({
   // Close the tab, keeping the click from also activating it
   function handleClose(event: React.MouseEvent) {
     event.stopPropagation();
-    closeTab(viewAreaId, tab.id);
+    ViewSessions.close(viewAreaId, session.id);
   }
 
   function handleAuxClick(event: React.MouseEvent) {
     // Middle click closes the tab
     if (event.button === 1) {
       event.preventDefault();
-      closeTab(viewAreaId, tab.id);
+      ViewSessions.close(viewAreaId, session.id);
     }
   }
 
   // Open the tab's options menu, anchored to the tab
   function handleContextMenu(event: React.MouseEvent<HTMLElement>) {
     event.preventDefault();
-    onContextMenu(tab.id, event.currentTarget);
+    onContextMenu(session.id, event.currentTarget);
   }
 
   function handleClosePointerDown(event: React.PointerEvent) {
@@ -109,7 +108,7 @@ export const Tab: FC<TabProps> = ({
     <Tooltip stringTitle={label} keyboardShortcut={keyboardShortcut}>
       <TabsTab
         ref={ref}
-        value={tab.id}
+        value={session.id}
         className={['view-tab', className].filter(Boolean).join(' ')}
         style={style}
         startIcon={startIcon}

@@ -1,6 +1,4 @@
-import { dispatchViewArea } from '../dispatchViewArea';
-import { getSet } from '../getSet';
-import { writeSet } from '../writeSet';
+import { ViewSessions } from '@minddrop/views';
 
 /**
  * Closes every tab positioned before the tab with the given id.
@@ -9,33 +7,31 @@ import { writeSet } from '../writeSet';
  * @param id - The id of the tab to close the tabs before.
  */
 export function closeTabsToTheLeft(viewAreaId: string, id: string): void {
-  const { tabs, activeTabId } = getSet(viewAreaId);
+  const sessions = ViewSessions.getAll(viewAreaId);
 
   // Find the tab to close the tabs before
-  const index = tabs.findIndex((tab) => tab.id === id);
+  const index = sessions.findIndex((session) => session.id === id);
 
   // Nothing to do when the tab does not exist
   if (index === -1) {
     return;
   }
 
-  // Drop the tabs positioned before it
-  const nextTabs = tabs.slice(index);
+  // The tabs positioned before it
+  const closed = sessions.slice(0, index);
 
-  // Whether the active tab was among the closed ones
-  const closedActiveTab = !nextTabs.some((tab) => tab.id === activeTabId);
-
-  // The active tab remains open, so just write the remaining tabs
-  if (!closedActiveTab) {
-    writeSet(viewAreaId, { tabs: nextTabs });
-
-    return;
+  // When the active tab is among them, activate the tab the remaining
+  // tabs start on first, so its content is shown.
+  if (
+    closed.some(
+      (session) => session.id === ViewSessions.getActive(viewAreaId)?.id,
+    )
+  ) {
+    ViewSessions.setActive(viewAreaId, id);
   }
 
-  // The active tab was closed, so activate the tab the remaining
-  // tabs start on.
-  writeSet(viewAreaId, { tabs: nextTabs, activeTabId: id });
-
-  // Show the newly active tab's content
-  dispatchViewArea(viewAreaId, tabs[index]);
+  ViewSessions.close(
+    viewAreaId,
+    closed.map((session) => session.id),
+  );
 }

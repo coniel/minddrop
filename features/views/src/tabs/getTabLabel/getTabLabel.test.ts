@@ -1,8 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { TranslationKey } from '@minddrop/i18n';
-import { Views } from '@minddrop/views';
-import { Tab } from '../TabSetsStore';
-import { createBlankTab } from '../createBlankTab';
+import { ViewSession, ViewSessionId, Views } from '@minddrop/views';
 import { getTabLabel } from './getTabLabel';
 
 const BLANK_LABEL = 'New Tab';
@@ -12,13 +10,13 @@ const RegisteredTitle = 'search.open' as TranslationKey;
 
 const mainView = {
   view: 'test:view',
-  icon: 'test-icon',
+  contentIcon: 'test-icon',
   title: 'Main view',
 };
 
 const splitView = {
   view: 'test:view',
-  icon: 'test-icon',
+  contentIcon: 'test-icon',
   title: 'Split view',
 };
 
@@ -33,13 +31,17 @@ describe('getTabLabel', () => {
   });
 
   it('labels a tab by its main view title', () => {
-    const tab: Tab = { ...createBlankTab(), main: mainView };
+    const tab: ViewSession = { ...blankSession(), main: mainView };
 
     expect(getTabLabel(tab, BLANK_LABEL, translate)).toBe('Main view');
   });
 
   it('combines both pane titles when the tab is split', () => {
-    const tab: Tab = { ...createBlankTab(), main: mainView, split: splitView };
+    const tab: ViewSession = {
+      ...blankSession(),
+      main: mainView,
+      split: splitView,
+    };
 
     expect(getTabLabel(tab, BLANK_LABEL, translate)).toBe(
       'Main view | Split view',
@@ -53,8 +55,8 @@ describe('getTabLabel', () => {
       title: RegisteredTitle,
     });
 
-    const tab: Tab = {
-      ...createBlankTab(),
+    const tab: ViewSession = {
+      ...blankSession(),
       main: { view: RegisteredViewType },
     };
 
@@ -70,8 +72,8 @@ describe('getTabLabel', () => {
       title: RegisteredTitle,
     });
 
-    const tab: Tab = {
-      ...createBlankTab(),
+    const tab: ViewSession = {
+      ...blankSession(),
       main: { view: RegisteredViewType, title: 'Entity title' },
     };
 
@@ -79,8 +81,8 @@ describe('getTabLabel', () => {
   });
 
   it('labels a pane by its subview title', () => {
-    const tab: Tab = {
-      ...createBlankTab(),
+    const tab: ViewSession = {
+      ...blankSession(),
       main: { ...mainView, subview: { id: 'entity', title: 'Entity' } },
     };
 
@@ -88,8 +90,8 @@ describe('getTabLabel', () => {
   });
 
   it('prefers the subview label over its title', () => {
-    const tab: Tab = {
-      ...createBlankTab(),
+    const tab: ViewSession = {
+      ...blankSession(),
       main: {
         ...mainView,
         subview: { id: 'entity', title: 'Entity', label: 'Selected item' },
@@ -100,12 +102,24 @@ describe('getTabLabel', () => {
   });
 
   it('falls back to the blank label for panes without a title', () => {
-    const tab: Tab = {
-      ...createBlankTab(),
+    const tab: ViewSession = {
+      ...blankSession(),
       main: null,
-      split: { view: 'test:view', icon: 'test-icon' },
+      split: { view: 'test:view', contentIcon: 'test-icon' },
     };
 
     expect(getTabLabel(tab, BLANK_LABEL, translate)).toBe('New Tab | New Tab');
   });
 });
+
+/**
+ * Returns a blank session to build tabs from.
+ */
+function blankSession(): ViewSession {
+  return {
+    id: 'session_1' as ViewSessionId,
+    main: null,
+    split: null,
+    splitRatio: 50,
+  };
+}

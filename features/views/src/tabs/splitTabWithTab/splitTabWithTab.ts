@@ -1,6 +1,4 @@
-import { dispatchViewArea } from '../dispatchViewArea';
-import { getSet } from '../getSet';
-import { writeSet } from '../writeSet';
+import { ViewSessions } from '@minddrop/views';
 
 /**
  * Moves the main view of the source tab into the split pane of the
@@ -15,32 +13,19 @@ export function splitTabWithTab(
   tabId: string,
   sourceTabId: string,
 ): void {
-  const { tabs } = getSet(viewAreaId);
-
-  // Find the tab to split
-  const tab = tabs.find((currentTab) => currentTab.id === tabId);
-
-  // Find the tab to move into the split pane
-  const sourceTab = tabs.find((currentTab) => currentTab.id === sourceTabId);
+  const target = ViewSessions.get(viewAreaId, tabId);
+  const source = ViewSessions.get(viewAreaId, sourceTabId);
 
   // Nothing to do when either tab does not exist, or the source tab
   // has no view to move.
-  if (!tab || !sourceTab?.main) {
+  if (!target || !source?.main) {
     return;
   }
 
-  // Show the source tab's view in the target tab's split pane
-  const nextTab = { ...tab, split: sourceTab.main };
+  // Show the source tab's view in the target tab's split pane, which
+  // makes the target active.
+  ViewSessions.split(viewAreaId, tabId, source.main);
 
-  // Write the updated tab, dropping the source tab, and make the
-  // split tab active.
-  writeSet(viewAreaId, {
-    tabs: tabs
-      .filter((currentTab) => currentTab.id !== sourceTabId)
-      .map((currentTab) => (currentTab.id === tabId ? nextTab : currentTab)),
-    activeTabId: tabId,
-  });
-
-  // Show the split tab's content
-  dispatchViewArea(viewAreaId, nextTab);
+  // Drop the source tab, now a background tab
+  ViewSessions.close(viewAreaId, sourceTabId);
 }

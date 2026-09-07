@@ -1,40 +1,37 @@
 import { Events } from '@minddrop/events';
-import { Views } from '@minddrop/views';
-import { matchesViewArea } from '../../matchesViewArea';
-import { closeTabsForView } from '../closeTabsForView';
-import { goBack } from '../goBack';
-import { recordViewArea } from '../recordViewArea';
-import { restoreActiveTab } from '../restoreActiveTab';
-import { updateTabsForView } from '../updateTabsForView';
+import { ViewSessions, Views } from '@minddrop/views';
+import { matchesViewArea } from '../matchesViewArea';
 
 /**
- * Keeps the view area's active tab in sync with its rendered views and
- * restores its content once the view area is ready. Returns a cleanup
- * which removes the listeners.
+ * Keeps the view area's active session in sync with its rendered
+ * views and restores its content once the view area is ready. Returns
+ * a cleanup which removes the listeners.
  *
  * @param viewAreaId - The id of the view area to sync.
  */
-export function initializeTabsSyncListeners(viewAreaId: string): VoidFunction {
-  const listenerId = `feature-views:tabs:${viewAreaId}`;
+export function initializeViewSessionSyncListeners(
+  viewAreaId: string,
+): VoidFunction {
+  const listenerId = `feature-views:sessions:${viewAreaId}`;
 
-  // Record view area changes onto the active tab
+  // Record view area changes onto the active session
   Events.addListener(Views.events.AreaChanged, listenerId, (data) => {
     // Ignore changes from other view areas
     if (data.viewAreaId !== viewAreaId) {
       return;
     }
 
-    recordViewArea(viewAreaId, data);
+    ViewSessions.recordViewArea(viewAreaId, data);
   });
 
-  // Update tabs when a view's metadata changes (e.g. a rename)
+  // Update sessions when a view's metadata changes (e.g. a rename)
   Events.addListener(Views.events.Update, listenerId, (data) => {
     // Ignore updates targeting other view areas
     if (!matchesViewArea(data.viewAreaId, viewAreaId)) {
       return;
     }
 
-    updateTabsForView(viewAreaId, data.id, {
+    ViewSessions.updateForView(viewAreaId, data.id, {
       id: data.newId,
       props: data.props,
       title: data.title,
@@ -42,41 +39,42 @@ export function initializeTabsSyncListeners(viewAreaId: string): VoidFunction {
     });
   });
 
-  // Close tabs when their view is closed (e.g. a delete)
+  // Close sessions when their view is closed (e.g. a delete)
   Events.addListener(Views.events.Close, listenerId, (data) => {
     // Ignore closes targeting other view areas
     if (!matchesViewArea(data.viewAreaId, viewAreaId)) {
       return;
     }
 
-    closeTabsForView(viewAreaId, data.id);
+    ViewSessions.closeForView(viewAreaId, data.id);
   });
 
-  // Navigate the active tab back when a view's breadcrumb is clicked
+  // Navigate the active session back when a view's breadcrumb is
+  // clicked.
   Events.addListener(Views.events.NavigateBack, listenerId, (data) => {
     // Ignore navigations targeting other view areas
     if (!matchesViewArea(data.viewAreaId, viewAreaId)) {
       return;
     }
 
-    goBack(viewAreaId, data.steps);
+    ViewSessions.goBack(viewAreaId, data.steps);
   });
 
-  // Restore the active tab's content once the view area is ready to
-  // receive it (covers the view area mounting after this)
+  // Restore the active session's content once the view area is ready
+  // to receive it (covers the view area mounting after this)
   Events.addListener(Views.events.AreaReady, listenerId, (data) => {
     // Ignore ready events from other view areas
     if (data.viewAreaId !== viewAreaId) {
       return;
     }
 
-    restoreActiveTab(viewAreaId);
+    ViewSessions.restoreActive(viewAreaId);
   });
 
   // Fallback for the reverse order, where the view area is already
   // mounted and listening before this runs.
   queueMicrotask(() => {
-    restoreActiveTab(viewAreaId);
+    ViewSessions.restoreActive(viewAreaId);
   });
 
   return () => {

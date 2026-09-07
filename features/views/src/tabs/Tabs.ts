@@ -1,31 +1,9 @@
-export { newTab } from './newTab';
-export { closeTab } from './closeTab';
 export { closeOtherTabs } from './closeOtherTabs';
 export { closeTabsToTheLeft } from './closeTabsToTheLeft';
 export { closeTabsToTheRight } from './closeTabsToTheRight';
-export { duplicateTab } from './duplicateTab';
-export { splitTab } from './splitTab';
 export { splitTabWithTab } from './splitTabWithTab';
-export { unsplitTab } from './unsplitTab';
-export { setActiveTab } from './setActiveTab';
-export { setTabOrder } from './setTabOrder';
-export { updateTabsForView } from './updateTabsForView';
-export { closeTabsForView } from './closeTabsForView';
-export { getOpenTabs } from './getOpenTabs';
-export { recordViewArea } from './recordViewArea';
-export { restoreActiveTab } from './restoreActiveTab';
 export { ensureTab } from './ensureTab';
 export { closeActiveTab } from './closeActiveTab';
 export { activateTabByIndex } from './activateTabByIndex';
-export { goBack } from './goBack';
-export { goForward } from './goForward';
-export { updateTab } from './updateTab';
-export { setTransientViewState } from './setTransientViewState';
-export { getTransientViewState } from './getTransientViewState';
+export { activateLastTab } from './activateLastTab';
 export { useIsViewActive } from './useIsViewActive';
-export {
-  useTabs,
-  useActiveTabId,
-  useCanGoBack,
-  useCanGoForward,
-} from './TabSetsStore';

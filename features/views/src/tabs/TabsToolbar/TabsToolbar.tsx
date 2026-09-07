@@ -10,12 +10,9 @@ import {
   Tabs as TabsRoot,
 } from '@minddrop/ui-primitives';
 import { useModKeyHeld } from '@minddrop/utils';
-import { useActiveTabId, useTabs } from '../TabSetsStore';
+import { ViewSessions } from '@minddrop/views';
+import { initializeViewSessionSyncListeners } from '../../initializeViewSessionSyncListeners';
 import { ensureTab } from '../ensureTab';
-import { initializeTabsSyncListeners } from '../initializeTabsSyncListeners';
-import { newTab } from '../newTab';
-import { setActiveTab } from '../setActiveTab';
-import { setTabOrder } from '../setTabOrder';
 import { MAX_SHORTCUT_TABS, SHORTCUT_NUMBERS_DELAY } from '../tabsConstants';
 import { useTabShortcuts } from '../useTabShortcuts';
 import { Tab } from './Tab';
@@ -36,8 +33,8 @@ interface TabsToolbarProps {
 }
 
 /**
- * Toolbar for a view area. Renders its open tabs and a button to open
- * a new tab.
+ * Toolbar for a view area. Renders a tab for each of its sessions and
+ * a button to open a new tab.
  */
 export const TabsToolbar: FC<TabsToolbarProps> = ({
   viewAreaId,
@@ -45,40 +42,40 @@ export const TabsToolbar: FC<TabsToolbarProps> = ({
 }) => {
   const [menuTabId, setMenuTabId] = useState<string | null>(null);
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
-  const tabs = useTabs(viewAreaId);
-  const activeTabId = useActiveTabId(viewAreaId);
+  const sessions = ViewSessions.useAll(viewAreaId);
+  const activeSessionId = ViewSessions.useActiveId(viewAreaId);
 
-  // Bind keyboard shortcuts when enabled for this set
+  // Bind keyboard shortcuts when enabled for this view area
   useTabShortcuts(viewAreaId, shortcuts);
 
   // Tabs show their shortcut number in place of the icon once the
   // modifier has been held for a moment.
   const showShortcutNumbers = useModKeyHeld(shortcuts, SHORTCUT_NUMBERS_DELAY);
 
-  // Ensure the set always has at least one tab to render
+  // Ensure the view area always has at least one tab to render
   useEffect(() => {
     ensureTab(viewAreaId);
   }, [viewAreaId]);
 
-  // Keep this view area's tabs in sync with its rendered views while
-  // mounted
+  // Keep this view area's sessions in sync with its rendered views
+  // while mounted.
   useEffect(() => {
-    return initializeTabsSyncListeners(viewAreaId);
+    return initializeViewSessionSyncListeners(viewAreaId);
   }, [viewAreaId]);
 
   // Open a new tab
   function handleNewTab() {
-    newTab(viewAreaId);
+    ViewSessions.create(viewAreaId);
   }
 
   // Activate the selected tab
   function handleValueChange(value: string) {
-    setActiveTab(viewAreaId, value);
+    ViewSessions.setActive(viewAreaId, value);
   }
 
   // Persist the new tab order after a drag
   function handleSort(newOrder: string[]) {
-    setTabOrder(viewAreaId, newOrder);
+    ViewSessions.setOrder(viewAreaId, newOrder);
   }
 
   // Open the options menu on the right clicked tab
@@ -99,34 +96,36 @@ export const TabsToolbar: FC<TabsToolbarProps> = ({
     <div className="view-tabs-toolbar electrobun-webkit-app-region-no-drag">
       <TabsRoot
         className="view-tabs"
-        value={activeTabId ?? undefined}
+        value={activeSessionId ?? undefined}
         onValueChange={handleValueChange}
       >
         <SortableList
           as={TabsList}
-          items={tabs.map((tab) => tab.id)}
+          items={sessions.map((session) => session.id)}
           direction="horizontal"
           gap={1}
           onSort={handleSort}
           renderItem={(id, sortable) => {
-            // Resolve the tab for the sortable item
-            const index = tabs.findIndex((currentTab) => currentTab.id === id);
-            const tab = tabs[index];
+            // Resolve the session for the sortable item
+            const index = sessions.findIndex(
+              (currentSession) => currentSession.id === id,
+            );
+            const session = sessions[index];
 
-            // Skip items whose tab no longer exists
-            if (!tab) {
+            // Skip items whose session no longer exists
+            if (!session) {
               return null;
             }
 
             return (
               <Tab
-                key={tab.id}
+                key={session.id}
                 viewAreaId={viewAreaId}
-                tab={tab}
+                session={session}
                 sortable={sortable}
                 shortcutNumber={resolveTabShortcutNumber(
                   index,
-                  tabs.length,
+                  sessions.length,
                   shortcuts,
                 )}
                 showShortcutNumber={showShortcutNumbers}
@@ -169,7 +168,7 @@ export const TabsToolbar: FC<TabsToolbarProps> = ({
                 <TabOptionsMenu
                   viewAreaId={viewAreaId}
                   tabId={menuTabId}
-                  tabs={tabs}
+                  sessions={sessions}
                 />
               )}
             </ContextMenuContent>

@@ -1,33 +1,32 @@
 import { TranslationKey } from '@minddrop/i18n';
-import { Views } from '@minddrop/views';
-import { Tab, TabView } from '../TabSetsStore';
+import { SessionView, ViewSession, Views } from '@minddrop/views';
 
 // Separates the two pane titles of a split tab's label
 const SPLIT_SEPARATOR = ' | ';
 
 /**
  * Returns the label of a tab: its view's title, or both pane titles
- * when the tab is split.
+ * when its session is split.
  *
- * @param tab - The tab to label.
+ * @param session - The session of the tab to label.
  * @param blankLabel - The label used for panes without a title.
  * @param translate - Translates the registered title of views with a fixed label.
  */
 export function getTabLabel(
-  tab: Tab,
+  session: ViewSession,
   blankLabel: string,
   translate: (key: TranslationKey) => string,
 ): string {
   // Label the main pane, falling back to the blank label
-  const mainLabel = paneLabel(tab.main, translate) ?? blankLabel;
+  const mainLabel = paneLabel(session.main, translate) ?? blankLabel;
 
-  // Unsplit tabs are labelled by their main pane alone
-  if (!tab.split) {
+  // Unsplit sessions are labelled by their main pane alone
+  if (!session.split) {
     return mainLabel;
   }
 
   // Label the split pane, falling back to the blank label
-  const splitLabel = paneLabel(tab.split, translate) ?? blankLabel;
+  const splitLabel = paneLabel(session.split, translate) ?? blankLabel;
 
   // Combine both pane labels
   return `${mainLabel}${SPLIT_SEPARATOR}${splitLabel}`;
@@ -40,7 +39,7 @@ export function getTabLabel(
  * none of these.
  */
 function paneLabel(
-  view: TabView | null,
+  view: SessionView | null,
   translate: (key: TranslationKey) => string,
 ): string | undefined {
   // Nothing to label

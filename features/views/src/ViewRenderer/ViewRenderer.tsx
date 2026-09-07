@@ -1,24 +1,11 @@
-import React, {
-  FC,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { Events } from '@minddrop/events';
-import { IconButton } from '@minddrop/ui-primitives';
-import { ViewDescriptor, Views } from '@minddrop/views';
-import { TabViewStateProvider } from '../TabViewStateProvider';
+import { ViewDescriptor, ViewSessions, Views } from '@minddrop/views';
 import { ViewAreaState, applyOpenView } from '../applyOpenView';
 import { applySetSubview } from '../applySetSubview';
 import { matchesViewArea } from '../matchesViewArea';
-import {
-  type ViewAreaPane as ViewAreaPaneId,
-  useActiveTabId,
-} from '../tabs/TabSetsStore';
-import { useBreadcrumbTrail } from '../tabs/resolveBreadcrumbTrail';
-import { DEFAULT_SPLIT_RATIO } from '../tabs/tabsConstants';
+import { SessionPane } from './SessionPane';
+import { ViewAreaPane } from './ViewAreaPane';
 import './ViewRenderer.css';
 
 interface ViewRendererProps {
@@ -32,7 +19,7 @@ interface ViewRendererProps {
 const INITIAL_STATE: ViewAreaState = {
   main: null,
   split: null,
-  splitRatio: DEFAULT_SPLIT_RATIO,
+  splitRatio: Views.constants.DefaultSplitRatio,
 };
 
 /**
@@ -46,12 +33,12 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
   const stateRef = useRef<ViewAreaState>(INITIAL_STATE);
   const [state, setState] = useState<ViewAreaState>(INITIAL_STATE);
 
-  // The active tab, used to remount views and scope their transient
-  // state when switching tabs.
-  const activeTabId = useActiveTabId(viewAreaId);
+  // The active session, used to remount views and scope their transient
+  // state when switching sessions.
+  const activeSessionId = ViewSessions.useActiveId(viewAreaId);
 
   // Apply a new state, optionally announcing the change so listeners
-  // (e.g. tabs) can mirror it. Not announced for transient updates
+  // (e.g. sessions) can mirror it. Not announced for transient updates
   // such as ongoing resize drags.
   const applyState = useCallback(
     (next: ViewAreaState, announce: boolean, replace?: boolean) => {
@@ -94,7 +81,7 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
       applyState(applySetSubview(stateRef.current, data), true, data.replace);
     });
 
-    // Replace the entire state (e.g. when a tab is activated)
+    // Replace the entire state (e.g. when a session is activated)
     Events.addListener(Views.events.SetArea, listenerId, (data) => {
       // Ignore events targeting a different view area
       if (!matchesViewArea(data.viewAreaId, viewAreaId)) {
@@ -109,7 +96,7 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
     });
 
     // Announce that the listeners are ready so the initial content can
-    // be restored (e.g. by the tabs feature)
+    // be restored (e.g. from the active session)
     Events.dispatch(Views.events.AreaReady, { viewAreaId });
 
     return () => {
@@ -176,7 +163,7 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
         document.removeEventListener('mouseup', handleMouseUp);
         document.body.style.userSelect = '';
 
-        // Announce the final ratio so it is recorded on the active tab
+        // Announce the final ratio so it is recorded on the active session
         Events.dispatch(Views.events.AreaChanged, {
           viewAreaId,
           ...stateRef.current,
@@ -208,16 +195,13 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
           onSwap={handleSwap}
           style={{ flex: splitRatio }}
         >
-          <TabViewStateProvider viewAreaId={viewAreaId} pane="main">
-            <Views.PaneProvider viewAreaId={viewAreaId} pane="main">
-              <RegisteredView
-                key={viewInstanceKey(activeTabId, main)}
-                descriptor={main}
-                viewAreaId={viewAreaId}
-                pane="main"
-              />
-            </Views.PaneProvider>
-          </TabViewStateProvider>
+          <SessionPane
+            key={viewInstanceKey(activeSessionId, main)}
+            viewAreaId={viewAreaId}
+            sessionId={activeSessionId}
+            pane="main"
+            descriptor={main}
+          />
         </ViewAreaPane>
         <div
           className="view-area-resize-handle"
@@ -231,16 +215,13 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
           onSwap={handleSwap}
           style={{ flex: 100 - splitRatio }}
         >
-          <TabViewStateProvider viewAreaId={viewAreaId} pane="split">
-            <Views.PaneProvider viewAreaId={viewAreaId} pane="split">
-              <RegisteredView
-                key={viewInstanceKey(activeTabId, split)}
-                descriptor={split}
-                viewAreaId={viewAreaId}
-                pane="split"
-              />
-            </Views.PaneProvider>
-          </TabViewStateProvider>
+          <SessionPane
+            key={viewInstanceKey(activeSessionId, split)}
+            viewAreaId={viewAreaId}
+            sessionId={activeSessionId}
+            pane="split"
+            descriptor={split}
+          />
         </ViewAreaPane>
       </div>
     );
@@ -248,165 +229,26 @@ export const ViewRenderer: FC<ViewRendererProps> = ({ viewAreaId }) => {
 
   return (
     <div className="view-area">
-      <TabViewStateProvider viewAreaId={viewAreaId} pane="main">
-        <Views.PaneProvider viewAreaId={viewAreaId} pane="main">
-          <RegisteredView
-            key={viewInstanceKey(activeTabId, main)}
-            descriptor={main}
-            viewAreaId={viewAreaId}
-            pane="main"
-          />
-        </Views.PaneProvider>
-      </TabViewStateProvider>
+      <SessionPane
+        key={viewInstanceKey(activeSessionId, main)}
+        viewAreaId={viewAreaId}
+        sessionId={activeSessionId}
+        pane="main"
+        descriptor={main}
+      />
     </div>
   );
 };
 
 /*
- * Identity of a pane's rendered view instance. Includes the tab id so
- * switching tabs remounts the view even when both tabs show the same
- * view type, and the descriptor id so in-tab navigation between
- * entities of the same view type remounts as well.
+ * Identity of a pane's rendered view instance. Includes the session id
+ * so switching sessions remounts the view even when both sessions show
+ * the same view type, and the descriptor id so in-session navigation
+ * between entities of the same view type remounts as well.
  */
 function viewInstanceKey(
-  tabId: string | null,
+  sessionId: string | null,
   descriptor: ViewDescriptor,
 ): string {
-  return `${tabId ?? 'no-tab'}:${descriptor.view}:${descriptor.id ?? ''}`;
+  return `${sessionId ?? 'no-session'}:${descriptor.view}:${descriptor.id ?? ''}`;
 }
-
-interface RegisteredViewProps {
-  /**
-   * The view to resolve and render.
-   */
-  descriptor: ViewDescriptor;
-
-  /**
-   * The id of the view area the view is rendered in.
-   */
-  viewAreaId: string;
-
-  /**
-   * The pane the view is rendered in.
-   */
-  pane: ViewAreaPaneId;
-}
-
-/**
- * Resolves a registered view by its type and renders it with its
- * props, providing the views it was reached through as its breadcrumb
- * trail.
- */
-const RegisteredView: FC<RegisteredViewProps> = ({
-  descriptor,
-  pane,
-  viewAreaId,
-}) => {
-  const registered = Views.use(descriptor.view);
-
-  // Render the view's content through a stable element so that the
-  // trail and subview updates below re-render only the providers.
-  const content = useMemo(() => {
-    // Nothing to render when no view is registered for the type
-    if (!registered) {
-      return null;
-    }
-
-    return <registered.component {...descriptor.props} />;
-  }, [registered, descriptor.props]);
-
-  return (
-    <ViewBreadcrumbs viewAreaId={viewAreaId} pane={pane}>
-      <Views.SubviewProvider subview={descriptor.subview ?? null}>
-        {content}
-      </Views.SubviewProvider>
-    </ViewBreadcrumbs>
-  );
-};
-
-interface ViewBreadcrumbsProps {
-  /**
-   * The id of the view area the view is rendered in.
-   */
-  viewAreaId: string;
-
-  /**
-   * The pane the view is rendered in.
-   */
-  pane: ViewAreaPaneId;
-
-  /**
-   * The view content the trail applies to.
-   */
-  children: React.ReactNode;
-}
-
-/**
- * Provides the views a pane's view was reached through as its
- * breadcrumb trail.
- */
-const ViewBreadcrumbs: FC<ViewBreadcrumbsProps> = ({
-  viewAreaId,
-  pane,
-  children,
-}) => {
-  const breadcrumbs = useBreadcrumbTrail(viewAreaId, pane);
-
-  return (
-    <Views.BreadcrumbsProvider breadcrumbs={breadcrumbs}>
-      {children}
-    </Views.BreadcrumbsProvider>
-  );
-};
-
-interface ViewAreaPaneProps {
-  /**
-   * The content to render inside the pane.
-   */
-  children: React.ReactNode;
-
-  /**
-   * Which side of the split this pane is on.
-   */
-  position: 'left' | 'right';
-
-  /**
-   * Called when the pane's close button is clicked.
-   */
-  onClose: () => void;
-
-  /**
-   * Called when the swap button is clicked.
-   */
-  onSwap: () => void;
-
-  /**
-   * Inline styles applied to the pane container, used for dynamic
-   * flex sizing.
-   */
-  style?: React.CSSProperties;
-}
-
-/**
- * Wraps split view content with swap and close buttons.
- */
-const ViewAreaPane: FC<ViewAreaPaneProps> = ({
-  children,
-  position,
-  onClose,
-  onSwap,
-  style,
-}) => (
-  <div className="view-area-pane" style={style}>
-    <div className="view-area-pane-header">
-      <IconButton
-        icon={position === 'left' ? 'arrow-right' : 'arrow-left'}
-        label="actions.swapSplitPosition"
-        onClick={onSwap}
-        size="sm"
-      />
-      <IconButton icon="x" label="actions.close" onClick={onClose} size="sm" />
-    </div>
-    {children}
-  </div>
-);
