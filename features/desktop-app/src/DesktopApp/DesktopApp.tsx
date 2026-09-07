@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback } from 'react';
 import { Events } from '@minddrop/events';
 import { DatabasesFeature } from '@minddrop/feature-databases';
 import { DevTools, ScreenshotPicker } from '@minddrop/feature-dev-tools';
@@ -17,23 +17,6 @@ import { RightPanel } from './RightPanel';
 import './DesktopApp.css';
 
 export const DesktopApp: React.FC = () => {
-  const [showSidebar, setShowSidebar] = useState(true);
-
-  useEffect(() => {
-    Events.addListener(Events.events.CloseAppSidebar, 'desktop-app', () => {
-      setShowSidebar(false);
-    });
-
-    Events.addListener(Events.events.OpenAppSidebar, 'desktop-app', () => {
-      setShowSidebar(true);
-    });
-
-    return () => {
-      Events.removeListener(Events.events.CloseAppSidebar, 'desktop-app');
-      Events.removeListener(Events.events.OpenAppSidebar, 'desktop-app');
-    };
-  }, []);
-
   const handleTopbarDoubleClick = useCallback((event: React.MouseEvent) => {
     // Ignore double-clicks on the toolbar controls, only the drag area
     // toggles the window fill.
@@ -64,7 +47,7 @@ export const DesktopApp: React.FC = () => {
               />
             </div>
             <div className="content-panels">
-              {showSidebar && <AppSidebarFrame />}
+              <AppSidebarFrame />
               <ViewRenderer viewAreaId={Views.constants.DefaultAreaId} />
               <RightPanel />
             </div>
