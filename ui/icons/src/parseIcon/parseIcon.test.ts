@@ -9,43 +9,43 @@ import {
   setContentIcon,
   setContentIconString,
 } from '../test-utils';
-import { UserIconContentIcon } from '../types';
+import { UserIcon } from '../types';
 import { parseIcon } from './parseIcon';
 
 describe('parseIcon', () => {
   it('parses content icons', () => {
-    expect(parseIcon(contentIconString)).toEqual<UserIconContentIcon>(
-      contentIcon,
-    );
+    expect(parseIcon(contentIconString)).toEqual<UserIcon>(contentIcon);
   });
 
-  it('parses content icons with an explicit set', () => {
-    expect(parseIcon(setContentIconString)).toEqual<UserIconContentIcon>(
-      setContentIcon,
-    );
+  it('parses content icons from another set', () => {
+    expect(parseIcon(setContentIconString)).toEqual<UserIcon>(setContentIcon);
   });
 
   it('parses content icons with a background', () => {
-    expect(parseIcon(backgroundContentIconString)).toEqual<UserIconContentIcon>(
+    expect(parseIcon(backgroundContentIconString)).toEqual<UserIcon>(
       backgroundContentIcon,
     );
   });
 
-  it('parses content icons with an explicit set and a background', () => {
-    expect(
-      parseIcon(setBackgroundContentIconString),
-    ).toEqual<UserIconContentIcon>(setBackgroundContentIcon);
+  it('parses content icons from another set with a background', () => {
+    expect(parseIcon(setBackgroundContentIconString)).toEqual<UserIcon>(
+      setBackgroundContentIcon,
+    );
   });
 
   it('leaves the default background out of the parsed icon', () => {
     const result = parseIcon(`${contentIconString}:none`);
 
-    expect(result).toEqual<UserIconContentIcon>(contentIcon);
+    expect(result).toEqual<UserIcon>(contentIcon);
     expect(result).not.toHaveProperty('background');
   });
 
-  it('returns null for missing icon set', () => {
-    expect(parseIcon('my-icons:burger:green')).toBeNull();
+  it('returns null for missing segments', () => {
+    expect(parseIcon('burger:green')).toBeNull();
+  });
+
+  it('returns null for an unknown background', () => {
+    expect(parseIcon(`${contentIconString}:foo`)).toBeNull();
   });
 
   it('returns null for undefined values', () => {

@@ -1,7 +1,7 @@
 import { screen, userEvent, waitFor } from '../testing-library-react';
 
 export const pickedContentIconName = 'squirrel';
-export const pickedContentIconString = 'content-icon:squirrel:default';
+export const pickedContentIconString = 'lucide:squirrel:default';
 
 /**
  * Picks a content icon from an icon picker.

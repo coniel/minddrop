@@ -7,7 +7,7 @@ export interface CreatedPropertySchema extends PropertySchemaBase {
 export const CreatedPropertySchema: PropertySchemaTemplate<CreatedPropertySchema> =
   {
     type: 'created',
-    icon: 'content-icon:clock:default',
+    icon: 'lucide:clock:default',
     name: 'properties.created.name',
     description: 'properties.created.description',
     meta: true,

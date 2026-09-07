@@ -17,7 +17,7 @@ const kanbanView: DataView<KanbanViewOptions, KanbanViewData> = {
   owner: entryTemplatesDatabase.id,
   name: 'Kanban',
   type: 'kanban',
-  icon: 'content-icon:square-kanban:default',
+  icon: 'lucide:square-kanban:default',
   dataSource: { type: 'database', id: entryTemplatesDatabase.id },
   options: { groupBy: 'Status', hiddenOptions: ['Todo'] },
   data: { order: { Todo: ['entry-1'], '': ['entry-2'] } },

@@ -22,7 +22,7 @@ const updatedDatabase = {
   ...objectDatabase,
   name: 'Renamed Objects',
   path: `${parentDir}/Renamed Objects`,
-  icon: 'content-icon:star:red',
+  icon: 'lucide:star:red',
 };
 
 describe('onUpdateDatabase', () => {

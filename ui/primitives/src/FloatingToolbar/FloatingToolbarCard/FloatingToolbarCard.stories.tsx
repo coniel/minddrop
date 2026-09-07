@@ -47,7 +47,7 @@ export const FloatingToolbarCardStories = () => (
           <FloatingToolbarCard icon="plus" />
         </StoryItem>
         <StoryItem label="contentIcon">
-          <FloatingToolbarCard contentIcon="content-icon:book:cyan" />
+          <FloatingToolbarCard contentIcon="lucide:book:cyan" />
         </StoryItem>
         <StoryItem label="children">
           <FloatingToolbarCard>
@@ -69,10 +69,7 @@ export const FloatingToolbarCardStories = () => (
       <StoryRow>
         <StoryItem label="drag a card">
           <FloatingToolbar visible>
-            <DraggableCard
-              contentIcon="content-icon:book:cyan"
-              tooltip="Note"
-            />
+            <DraggableCard contentIcon="lucide:book:cyan" tooltip="Note" />
 
             <ToolbarSeparator />
 

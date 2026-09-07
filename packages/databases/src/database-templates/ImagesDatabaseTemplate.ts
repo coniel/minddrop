@@ -15,32 +15,32 @@ export const ImagesDatabaseTemplate: DatabaseTemplateFn = (t) => {
     name: t(key('name')),
     entryName: t(key('entryName')),
     description: t(key('description')),
-    icon: 'content-icon:image:default',
+    icon: 'lucide:image:default',
     properties: [
       {
         type: 'image',
         name: t(propertyKey('image', 'name')),
-        icon: 'content-icon:image:default',
+        icon: 'lucide:image:default',
       },
       {
         type: 'text',
         name: t(propertyKey('caption', 'name')),
-        icon: 'content-icon:text-align-start:default',
+        icon: 'lucide:text-align-start:default',
       },
       {
         type: 'date',
         name: t(propertyKey('dateTaken', 'name')),
-        icon: 'content-icon:calendar:default',
+        icon: 'lucide:calendar:default',
       },
       {
         type: 'text',
         name: t(propertyKey('location', 'name')),
-        icon: 'content-icon:map-pin:default',
+        icon: 'lucide:map-pin:default',
       },
       {
         type: 'created',
         name: t(propertyKey('created', 'name')),
-        icon: 'content-icon:clock:default',
+        icon: 'lucide:clock:default',
       },
     ],
   };

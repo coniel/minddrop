@@ -35,7 +35,7 @@ export function generatePropertyPlaceholder(
       // them off visibly changes the placeholder
       return 'https://www.example.com/about';
     case 'icon':
-      return 'content-icon:cat:default';
+      return 'lucide:cat:default';
     default:
       return undefined;
   }

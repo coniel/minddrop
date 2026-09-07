@@ -16,7 +16,7 @@ const schema: PropertiesSchema = [
 
 const properties = {
   title: 'Title',
-  icon: 'content-icon:box:orange',
+  icon: 'lucide:box:orange',
 };
 
 const markdown = `---

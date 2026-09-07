@@ -103,7 +103,7 @@ describe('createDatabaseEntry', () => {
 
   it('allows specifying properties', async () => {
     const customProperties = {
-      Icon: 'content-icon:shapes:blue',
+      Icon: 'lucide:shapes:blue',
     };
     const entryWithCustomProperties = await createDatabaseEntry(
       objectDatabase.id,

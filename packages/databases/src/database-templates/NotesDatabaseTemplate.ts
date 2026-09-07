@@ -15,22 +15,22 @@ export const NotesDatabaseTemplate: DatabaseTemplateFn = (t) => {
     name: t(key('name')),
     entryName: t(key('entryName')),
     description: t(key('description')),
-    icon: 'content-icon:pencil:default',
+    icon: 'lucide:pencil:default',
     properties: [
       {
         type: 'formatted-text',
         name: t(propertyKey('content', 'name')),
-        icon: 'content-icon:text-quote:default',
+        icon: 'lucide:text-quote:default',
       },
       {
         type: 'created',
         name: t(propertyKey('created', 'name')),
-        icon: 'content-icon:clock:default',
+        icon: 'lucide:clock:default',
       },
       {
         type: 'last-modified',
         name: t(propertyKey('lastModified', 'name')),
-        icon: 'content-icon:clock:default',
+        icon: 'lucide:clock:default',
       },
     ],
   };

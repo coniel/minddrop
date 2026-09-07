@@ -15,7 +15,7 @@ const schema: PropertiesSchema = [
 
 const properties = {
   title: 'Title',
-  icon: 'content-icon:box:orange',
+  icon: 'lucide:box:orange',
 };
 
 const markdownWithProperties = `---
@@ -84,7 +84,7 @@ foo: bar
         '# Title',
         {
           existingContent:
-            '---\ntitle: Old\nicon: content-icon:box:orange\ncustom: keep me\n---\n\n# Title',
+            '---\ntitle: Old\nicon: lucide:box:orange\ncustom: keep me\n---\n\n# Title',
         },
       );
 

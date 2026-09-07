@@ -25,17 +25,17 @@ export const MoviesDatabaseTemplate: DatabaseTemplateFn = (t) => {
     name: t(key('name')),
     entryName: t(key('entryName')),
     description: t(key('description')),
-    icon: 'content-icon:clapperboard:default',
+    icon: 'lucide:clapperboard:default',
     properties: [
       {
         type: 'text',
         name: t(propertyKey('director', 'name')),
-        icon: 'content-icon:megaphone:default',
+        icon: 'lucide:megaphone:default',
       },
       {
         type: 'select',
         name: t(propertyKey('genre', 'name')),
-        icon: 'content-icon:tag:default',
+        icon: 'lucide:tag:default',
         options: [
           { value: t(genreKey('action')), color: 'red' },
           { value: t(genreKey('comedy')), color: 'yellow' },
@@ -52,7 +52,7 @@ export const MoviesDatabaseTemplate: DatabaseTemplateFn = (t) => {
       {
         type: 'select',
         name: t(propertyKey('status', 'name')),
-        icon: 'content-icon:circle-dot:default',
+        icon: 'lucide:circle-dot:default',
         options: [
           { value: t(statusKey('toWatch')), color: 'default' },
           { value: t(statusKey('watching')), color: 'blue' },
@@ -62,17 +62,17 @@ export const MoviesDatabaseTemplate: DatabaseTemplateFn = (t) => {
       {
         type: 'number',
         name: t(propertyKey('rating', 'name')),
-        icon: 'content-icon:star:default',
+        icon: 'lucide:star:default',
       },
       {
         type: 'date',
         name: t(propertyKey('releaseDate', 'name')),
-        icon: 'content-icon:calendar:default',
+        icon: 'lucide:calendar:default',
       },
       {
         type: 'image',
         name: t(propertyKey('poster', 'name')),
-        icon: 'content-icon:image:default',
+        icon: 'lucide:image:default',
       },
     ],
   };

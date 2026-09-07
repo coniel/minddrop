@@ -25,12 +25,12 @@ export const ProjectsDatabaseTemplate: DatabaseTemplateFn = (t) => {
     name: t(key('name')),
     entryName: t(key('entryName')),
     description: t(key('description')),
-    icon: 'content-icon:folder-kanban:default',
+    icon: 'lucide:folder-kanban:default',
     properties: [
       {
         type: 'select',
         name: t(propertyKey('status', 'name')),
-        icon: 'content-icon:circle-dot:default',
+        icon: 'lucide:circle-dot:default',
         options: [
           { value: t(statusKey('planning')), color: 'default' },
           { value: t(statusKey('active')), color: 'blue' },
@@ -42,7 +42,7 @@ export const ProjectsDatabaseTemplate: DatabaseTemplateFn = (t) => {
       {
         type: 'select',
         name: t(propertyKey('priority', 'name')),
-        icon: 'content-icon:signal:default',
+        icon: 'lucide:signal:default',
         options: [
           { value: t(priorityKey('low')), color: 'gray' },
           { value: t(priorityKey('medium')), color: 'yellow' },
@@ -52,27 +52,27 @@ export const ProjectsDatabaseTemplate: DatabaseTemplateFn = (t) => {
       {
         type: 'date',
         name: t(propertyKey('startDate', 'name')),
-        icon: 'content-icon:calendar:default',
+        icon: 'lucide:calendar:default',
       },
       {
         type: 'date',
         name: t(propertyKey('endDate', 'name')),
-        icon: 'content-icon:calendar:default',
+        icon: 'lucide:calendar:default',
       },
       {
         type: 'formatted-text',
         name: t(propertyKey('description', 'name')),
-        icon: 'content-icon:text-quote:default',
+        icon: 'lucide:text-quote:default',
       },
       {
         type: 'created',
         name: t(propertyKey('created', 'name')),
-        icon: 'content-icon:clock:default',
+        icon: 'lucide:clock:default',
       },
       {
         type: 'last-modified',
         name: t(propertyKey('lastModified', 'name')),
-        icon: 'content-icon:clock:default',
+        icon: 'lucide:clock:default',
       },
     ],
   };

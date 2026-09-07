@@ -20,22 +20,22 @@ export const DocumentsDatabaseTemplate: DatabaseTemplateFn = (t) => {
     name: t(key('name')),
     entryName: t(key('entryName')),
     description: t(key('description')),
-    icon: 'content-icon:file-text:default',
+    icon: 'lucide:file-text:default',
     properties: [
       {
         type: 'file',
         name: t(propertyKey('file', 'name')),
-        icon: 'content-icon:file:default',
+        icon: 'lucide:file:default',
       },
       {
         type: 'text',
         name: t(propertyKey('description', 'name')),
-        icon: 'content-icon:text-align-start:default',
+        icon: 'lucide:text-align-start:default',
       },
       {
         type: 'select',
         name: t(propertyKey('category', 'name')),
-        icon: 'content-icon:tag:default',
+        icon: 'lucide:tag:default',
         options: [
           { value: t(categoryKey('work')), color: 'blue' },
           { value: t(categoryKey('personal')), color: 'green' },
@@ -48,12 +48,12 @@ export const DocumentsDatabaseTemplate: DatabaseTemplateFn = (t) => {
       {
         type: 'created',
         name: t(propertyKey('created', 'name')),
-        icon: 'content-icon:clock:default',
+        icon: 'lucide:clock:default',
       },
       {
         type: 'last-modified',
         name: t(propertyKey('lastModified', 'name')),
-        icon: 'content-icon:clock:default',
+        icon: 'lucide:clock:default',
       },
     ],
   };

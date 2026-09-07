@@ -11,4 +11,4 @@ export const SpacesIcon: UiIconName = 'layout-panel-left';
 /**
  * The default icon assigned to newly created spaces.
  */
-export const DefaultSpaceIcon = 'content-icon:layout-panel-left:default';
+export const DefaultSpaceIcon = 'lucide:layout-panel-left:default';

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { BuiltInContentIconSetId } from '../constants';
+import { DefaultContentIconSetId } from '../constants';
 import {
   getRegisteredContentIconSets,
   loadContentIconSet,
@@ -13,7 +13,7 @@ describe('initializeIcons', () => {
     // The built-in set is listed as registered
     expect(
       getRegisteredContentIconSets().find(
-        (definition) => definition.id === BuiltInContentIconSetId,
+        (definition) => definition.id === DefaultContentIconSetId,
       ),
     ).toBeDefined();
   });
@@ -23,7 +23,7 @@ describe('initializeIcons', () => {
   it('loads icon components and metadata', { timeout: 30000 }, async () => {
     initializeIcons();
 
-    const contents = await loadContentIconSet(BuiltInContentIconSetId);
+    const contents = await loadContentIconSet(DefaultContentIconSetId);
 
     // The set resolves with an icon component per icon
     expect(contents?.icons.cat).toBeDefined();

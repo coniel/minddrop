@@ -16,7 +16,7 @@ const newAutomation = {
   created: mockDate,
   lastModified: mockDate,
   name: 'Automation',
-  icon: 'content-icon:zap:default',
+  icon: 'lucide:zap:default',
   enabled: true,
   nodes: [],
   connections: [],
@@ -38,12 +38,12 @@ describe('createVirtualAutomation', () => {
       id,
       owner,
       name: 'My automation',
-      icon: 'content-icon:workflow:blue',
+      icon: 'lucide:workflow:blue',
       enabled: false,
     });
 
     expect(automation.name).toBe('My automation');
-    expect(automation.icon).toBe('content-icon:workflow:blue');
+    expect(automation.icon).toBe('lucide:workflow:blue');
     expect(automation.enabled).toBe(false);
   });
 

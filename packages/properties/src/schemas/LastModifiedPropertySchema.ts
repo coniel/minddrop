@@ -7,7 +7,7 @@ export interface LastModifiedPropertySchema extends PropertySchemaBase {
 export const LastModifiedPropertySchema: PropertySchemaTemplate<LastModifiedPropertySchema> =
   {
     type: 'last-modified',
-    icon: 'content-icon:clock:default',
+    icon: 'lucide:clock:default',
     name: 'properties.lastModified.name',
     description: 'properties.lastModified.description',
     meta: true,

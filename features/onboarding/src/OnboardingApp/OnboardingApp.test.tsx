@@ -46,7 +46,7 @@ describe('<OnboardingApp />', () => {
         textContent: JSON.stringify({
           id: 'workspace_1',
           name: 'Notes',
-          icon: 'content-icon:shapes:blue',
+          icon: 'lucide:shapes:blue',
         }),
       },
     ]);
@@ -60,7 +60,7 @@ describe('<OnboardingApp />', () => {
       expect(Workspaces.getAll()).toEqual([
         expect.objectContaining({
           name: 'Notes',
-          icon: 'content-icon:shapes:blue',
+          icon: 'lucide:shapes:blue',
           path: workspacePath,
         }),
       ]);

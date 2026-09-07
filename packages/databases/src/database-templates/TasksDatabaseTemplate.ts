@@ -25,12 +25,12 @@ export const TasksDatabaseTemplate: DatabaseTemplateFn = (t) => {
     name: t(key('name')),
     entryName: t(key('entryName')),
     description: t(key('description')),
-    icon: 'content-icon:list-checks:default',
+    icon: 'lucide:list-checks:default',
     properties: [
       {
         type: 'select',
         name: t(propertyKey('status', 'name')),
-        icon: 'content-icon:circle-dot:default',
+        icon: 'lucide:circle-dot:default',
         options: [
           { value: t(statusKey('toDo')), color: 'default' },
           { value: t(statusKey('inProgress')), color: 'blue' },
@@ -40,7 +40,7 @@ export const TasksDatabaseTemplate: DatabaseTemplateFn = (t) => {
       {
         type: 'select',
         name: t(propertyKey('priority', 'name')),
-        icon: 'content-icon:signal:default',
+        icon: 'lucide:signal:default',
         options: [
           { value: t(priorityKey('low')), color: 'gray' },
           { value: t(priorityKey('medium')), color: 'yellow' },
@@ -51,17 +51,17 @@ export const TasksDatabaseTemplate: DatabaseTemplateFn = (t) => {
       {
         type: 'date',
         name: t(propertyKey('dueDate', 'name')),
-        icon: 'content-icon:calendar:default',
+        icon: 'lucide:calendar:default',
       },
       {
         type: 'created',
         name: t(propertyKey('created', 'name')),
-        icon: 'content-icon:clock:default',
+        icon: 'lucide:clock:default',
       },
       {
         type: 'last-modified',
         name: t(propertyKey('lastModified', 'name')),
-        icon: 'content-icon:clock:default',
+        icon: 'lucide:clock:default',
       },
     ],
   };

@@ -20,27 +20,27 @@ export const VocabularyDatabaseTemplate: DatabaseTemplateFn = (t) => {
     name: t(key('name')),
     entryName: t(key('entryName')),
     description: t(key('description')),
-    icon: 'content-icon:book-a:default',
+    icon: 'lucide:book-a:default',
     properties: [
       {
         type: 'text',
         name: t(propertyKey('definition', 'name')),
-        icon: 'content-icon:text-align-start:default',
+        icon: 'lucide:text-align-start:default',
       },
       {
         type: 'text',
         name: t(propertyKey('exampleSentence', 'name')),
-        icon: 'content-icon:quote:default',
+        icon: 'lucide:quote:default',
       },
       {
         type: 'text',
         name: t(propertyKey('language', 'name')),
-        icon: 'content-icon:languages:default',
+        icon: 'lucide:languages:default',
       },
       {
         type: 'select',
         name: t(propertyKey('partOfSpeech', 'name')),
-        icon: 'content-icon:tag:default',
+        icon: 'lucide:tag:default',
         options: [
           { value: t(partOfSpeechKey('noun')), color: 'blue' },
           { value: t(partOfSpeechKey('verb')), color: 'green' },

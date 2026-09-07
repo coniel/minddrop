@@ -1,11 +1,5 @@
 import { ContentColor } from '@minddrop/ui-theme';
-import { BuiltInContentIconSetId } from '../constants';
-import {
-  ContentIconBackground,
-  ContentIconName,
-  UserIcon,
-  UserIconType,
-} from '../types';
+import { ContentIconBackground, ContentIconName, UserIcon } from '../types';
 
 /**
  * Parses a UserIcon from its string representation.
@@ -18,59 +12,37 @@ export function parseIcon(iconString?: string): UserIcon | null {
     return null;
   }
 
-  // Stringified icon config is in the format 'type:icon:color', with
-  // an optional icon set segment: 'type:set:icon:color', and an
-  // optional trailing background segment: 'type:icon:color:background'.
-  const segments = iconString.split(':');
-  const background = parseBackgroundSegment(segments[segments.length - 1]);
+  // Stringified icons are in the format 'set:icon:color', with an
+  // optional trailing background segment: 'set:icon:color:background'.
+  const [set, icon, color, background, ...rest] = iconString.split(':');
 
-  // Dropping the background segment first leaves the set detection
-  // to the segment count alone.
-  if (background !== null) {
-    segments.pop();
+  if (!set || !icon || !color || rest.length) {
+    return null;
   }
 
-  const icon = parseIconSegments(segments);
+  const parsedIcon: UserIcon = {
+    set,
+    icon: icon as ContentIconName,
+    color: color as ContentColor,
+  };
 
-  if (!icon) {
+  if (background === undefined) {
+    return parsedIcon;
+  }
+
+  const parsedBackground = parseBackgroundSegment(background);
+
+  // A trailing segment which is not a background is not an icon
+  if (parsedBackground === null) {
     return null;
   }
 
   // The default background is left out of the parsed icon
-  if (background !== null && background !== ContentIconBackground.None) {
-    icon.background = background;
+  if (parsedBackground !== ContentIconBackground.None) {
+    parsedIcon.background = parsedBackground;
   }
 
-  return icon;
-}
-
-/**
- * Parses the icon segments, without any background segment.
- */
-function parseIconSegments(segments: string[]): UserIcon | null {
-  const [type, icon, color] = segments;
-
-  if (type !== UserIconType.ContentIcon) {
-    return null;
-  }
-
-  // Four segments carry the icon set explicitly
-  if (segments.length === 4) {
-    return {
-      type,
-      set: segments[1],
-      icon: segments[2] as ContentIconName,
-      color: segments[3] as ContentColor,
-    };
-  }
-
-  // Unqualified icons belong to the built-in set
-  return {
-    type,
-    set: BuiltInContentIconSetId,
-    icon: icon as ContentIconName,
-    color: color as ContentColor,
-  };
+  return parsedIcon;
 }
 
 const BackgroundSegments: Record<string, ContentIconBackground> = {

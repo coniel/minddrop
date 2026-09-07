@@ -202,7 +202,7 @@ describe('writeDatabaseEntry', () => {
       DatabaseEntriesStore.update(objectEntry1.id, {
         properties: {
           Content: 'Test content',
-          Icon: 'content-icon:shapes:blue',
+          Icon: 'lucide:shapes:blue',
         },
       });
       MockFs.writeTextFile(

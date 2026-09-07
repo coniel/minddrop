@@ -11,4 +11,4 @@ export const CollectionsIcon: UiIconName = 'library';
 /**
  * The default icon assigned to newly created collections.
  */
-export const DefaultCollectionIcon = 'content-icon:library:default';
+export const DefaultCollectionIcon = 'lucide:library:default';

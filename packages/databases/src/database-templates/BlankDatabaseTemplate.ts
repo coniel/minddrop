@@ -14,22 +14,22 @@ export const BlankDatabaseTemplate: DatabaseTemplateFn = (t) => {
     name: t(key('name')),
     entryName: t(key('entryName')),
     description: t(key('description')),
-    icon: 'content-icon:box:default',
+    icon: 'lucide:box:default',
     properties: [
       {
         type: 'title',
         name: t(propertyKey('title', 'name')),
-        icon: 'content-icon:type:default',
+        icon: 'lucide:type:default',
       },
       {
         type: 'created',
         name: t(propertyKey('created', 'name')),
-        icon: 'content-icon:clock:default',
+        icon: 'lucide:clock:default',
       },
       {
         type: 'last-modified',
         name: t(propertyKey('lastModified', 'name')),
-        icon: 'content-icon:clock:default',
+        icon: 'lucide:clock:default',
       },
     ],
   };

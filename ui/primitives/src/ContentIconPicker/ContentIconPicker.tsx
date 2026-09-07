@@ -10,13 +10,12 @@ import {
 } from 'react';
 import { createI18nKeyBuilder } from '@minddrop/i18n';
 import {
-  BuiltInContentIconSetId,
   ContentIconBackground,
+  DefaultContentIconSetId,
   Icons,
   LoadedContentIconSet,
   UnminifiedContentIcon,
-  UserIconContentIcon,
-  UserIconType,
+  UserIcon,
   groupByCategory,
   useLoadedContentIconSets,
 } from '@minddrop/ui-icons';
@@ -44,7 +43,7 @@ export interface ContentIconPickerProps
    * Calback fired when an icon is selected, with the picked color
    * and background applied.
    */
-  onSelect?(icon: UserIconContentIcon): void;
+  onSelect?(icon: UserIcon): void;
 
   /**
    * Calback fired when an icon color is selected.
@@ -125,17 +124,16 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
   const [color, setColor] = useState<ContentColor>(defaultColor);
   const [background, setBackground] =
     useState<ContentIconBackground>(defaultBackground);
-  const [activeSetId, setActiveSetId] = useState(BuiltInContentIconSetId);
+  const [activeSetId, setActiveSetId] = useState(DefaultContentIconSetId);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // The icon the background options are previewed on, in the picked
   // color so the previews match what a selection would give.
-  const previewIcon = useMemo<UserIconContentIcon>(() => {
+  const previewIcon = useMemo<UserIcon>(() => {
     const parsedIcon = Icons.parse(currentIcon);
 
     return {
-      type: UserIconType.ContentIcon,
-      set: parsedIcon?.set ?? BuiltInContentIconSetId,
+      set: parsedIcon?.set ?? DefaultContentIconSetId,
       icon: parsedIcon?.icon ?? PREVIEW_ICON_NAME,
       color,
     };
@@ -198,7 +196,6 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
       onSelect(
         Icons.applyBackground(
           {
-            type: UserIconType.ContentIcon,
             set: value.set,
             icon: value.name,
             color,
@@ -389,8 +386,8 @@ const SetSelectButton: React.FC<{
 }> = ({ set, active, onClick }) => {
   const handleClick = useCallback(() => onClick(set.id), [onClick, set.id]);
 
-  // The built-in set is labelled with a translated default name
-  if (set.id === BuiltInContentIconSetId) {
+  // The default set is labelled with a translated default name
+  if (set.id === DefaultContentIconSetId) {
     return (
       <Button
         label="iconPicker.defaultSet"
@@ -427,7 +424,6 @@ const IconSelectButton = memo<{
         icon={Icons.stringify(
           Icons.applyBackground(
             {
-              type: UserIconType.ContentIcon,
               set: icon.set,
               icon: icon.name,
               color,
@@ -476,7 +472,7 @@ const ColorSelectButton: React.FC<{
 
 const BackgroundSelectButton: React.FC<{
   option: ContentIconBackgroundValue;
-  previewIcon: UserIconContentIcon;
+  previewIcon: UserIcon;
   onClick: (value: ContentIconBackground) => void;
 }> = ({ option, previewIcon, onClick }) => {
   const handleClick = useCallback(

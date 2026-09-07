@@ -5,7 +5,7 @@ function generateAutomationFixture(number: number): Automation {
   return {
     id: `automation_${number}`,
     name: `Automation ${number}`,
-    icon: 'content-icon:zap:default',
+    icon: 'lucide:zap:default',
     created: new Date('2024-01-01T00:00:00.000Z'),
     lastModified: new Date('2024-01-01T00:00:00.000Z'),
     enabled: true,

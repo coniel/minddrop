@@ -28,7 +28,7 @@ function generateDatabase(
   return {
     properties: [],
     entrySerializer: 'markdown',
-    icon: 'content-icon:shapes:blue',
+    icon: 'lucide:shapes:blue',
     entryOpenMode: 'dialog',
     propertyFileStorage: 'property',
     created: new Date('2024-01-01T00:00:00.000Z'),
@@ -54,7 +54,7 @@ export const objectDatabase = generateDatabase({
       type: 'formatted-text',
       name: 'Content',
       defaultValue: 'Default Content',
-      icon: 'content-icon:shapes:blue',
+      icon: 'lucide:shapes:blue',
     },
     {
       type: 'icon',

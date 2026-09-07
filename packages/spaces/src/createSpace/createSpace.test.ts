@@ -43,10 +43,10 @@ describe('createSpace', () => {
 
   it('uses the provided icon', async () => {
     const space = await createSpace({
-      icon: 'content-icon:clapperboard:default',
+      icon: 'lucide:clapperboard:default',
     });
 
-    expect(space.icon).toBe('content-icon:clapperboard:default');
+    expect(space.icon).toBe('lucide:clapperboard:default');
   });
 
   it('seeds the design with a single empty space layout', async () => {

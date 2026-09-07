@@ -18,43 +18,43 @@ export const WeblinksDatabaseTemplate: DatabaseTemplateFn = (t) => {
     name: t(key('name')),
     entryName: t(key('entryName')),
     description: t(key('description')),
-    icon: 'content-icon:link:default',
+    icon: 'lucide:link:default',
     propertyFileStorage: 'entry',
     properties: [
       {
         type: 'title',
-        icon: 'content-icon:type:default',
+        icon: 'lucide:type:default',
         name: t(propertyKey('title', 'name')),
       },
       {
         type: 'url',
-        icon: 'content-icon:link:default',
+        icon: 'lucide:link:default',
         name: t(propertyKey('url', 'name')),
       },
       {
         type: 'text',
-        icon: 'content-icon:info:default',
+        icon: 'lucide:info:default',
         name: t(propertyKey('description', 'name')),
       },
       {
         type: 'image',
-        icon: 'content-icon:image:default',
+        icon: 'lucide:image:default',
         name: t(propertyKey('image', 'name')),
       },
       {
         type: 'image',
-        icon: 'content-icon:face-slightly-smiling:default',
+        icon: 'lucide:face-slightly-smiling:default',
         name: t(propertyKey('icon', 'name')),
       },
       {
         type: 'created',
         name: t(propertyKey('created', 'name')),
-        icon: 'content-icon:clock:default',
+        icon: 'lucide:clock:default',
       },
       {
         type: 'last-modified',
         name: t(propertyKey('lastModified', 'name')),
-        icon: 'content-icon:clock:default',
+        icon: 'lucide:clock:default',
       },
     ],
     automations: [

@@ -78,8 +78,8 @@ export interface MenuItemProps {
   icon?: IconProp;
 
   /*
-   * Stringified content icon.
-   * - `content-icon`: '[set-name]:[icon-name]:[color]'
+   * Stringified content icon: '[set]:[icon-name]:[color]', with an
+   * optional trailing background segment.
    */
   contentIcon?: string;
 

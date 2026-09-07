@@ -25,10 +25,10 @@ describe('getTabIcon', () => {
 
   it("renders the entity's content icon", () => {
     const icon = getTabIcon(
-      tab({ view: 'test:view', icon: 'content-icon:box:default' }),
+      tab({ view: 'test:view', icon: 'lucide:box:default' }),
     );
 
-    expect(icon).toEqual(<ContentIcon icon="content-icon:box:default" />);
+    expect(icon).toEqual(<ContentIcon icon="lucide:box:default" />);
   });
 
   it('falls back to the registered ui icon', () => {

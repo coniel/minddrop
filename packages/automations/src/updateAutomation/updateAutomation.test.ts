@@ -16,7 +16,7 @@ import { updateAutomation } from './updateAutomation';
 
 const update = {
   name: 'Updated Automation 1',
-  icon: 'content-icon:workflow:blue',
+  icon: 'lucide:workflow:blue',
 };
 const updatedAutomation: Automation = {
   ...automation_1,

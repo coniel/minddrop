@@ -25,17 +25,17 @@ export const ExpensesDatabaseTemplate: DatabaseTemplateFn = (t) => {
     name: t(key('name')),
     entryName: t(key('entryName')),
     description: t(key('description')),
-    icon: 'content-icon:receipt:default',
+    icon: 'lucide:receipt:default',
     properties: [
       {
         type: 'number',
         name: t(propertyKey('amount', 'name')),
-        icon: 'content-icon:coins:default',
+        icon: 'lucide:coins:default',
       },
       {
         type: 'select',
         name: t(propertyKey('category', 'name')),
-        icon: 'content-icon:tag:default',
+        icon: 'lucide:tag:default',
         options: [
           { value: t(categoryKey('food')), color: 'orange' },
           { value: t(categoryKey('transport')), color: 'blue' },
@@ -51,12 +51,12 @@ export const ExpensesDatabaseTemplate: DatabaseTemplateFn = (t) => {
       {
         type: 'date',
         name: t(propertyKey('date', 'name')),
-        icon: 'content-icon:calendar:default',
+        icon: 'lucide:calendar:default',
       },
       {
         type: 'select',
         name: t(propertyKey('paymentMethod', 'name')),
-        icon: 'content-icon:wallet:default',
+        icon: 'lucide:wallet:default',
         options: [
           { value: t(paymentMethodKey('cash')), color: 'green' },
           { value: t(paymentMethodKey('card')), color: 'blue' },

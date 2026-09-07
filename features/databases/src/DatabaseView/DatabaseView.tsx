@@ -56,7 +56,7 @@ import './DatabaseView.css';
 // in the tab's history, so it trails the database in the breadcrumbs
 // and stays local to the tab.
 const DesignsSubviewId = 'designs';
-const DesignsSubviewIcon = 'content-icon:pencil-ruler:default';
+const DesignsSubviewIcon = 'lucide:pencil-ruler:default';
 
 export interface DatabaseViewProps {
   /**

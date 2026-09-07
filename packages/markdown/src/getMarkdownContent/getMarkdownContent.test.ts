@@ -5,7 +5,7 @@ const markdown = `# Document`;
 
 const markdownWithFrontmatter = `---
   title: Document
-  icon: content-icon:box:orange
+  icon: lucide:box:orange
 ---
 
 ${markdown}`;

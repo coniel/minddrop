@@ -371,7 +371,7 @@ export const MenuStories = () => (
           <Menu>
             <MenuRenameItem
               value="My View"
-              contentIcon="content-icon:shapes:circle:blue"
+              contentIcon="shapes:circle:blue"
               onValueChange={() => {}}
               onRename={() => {}}
               onSelectIcon={() => {}}

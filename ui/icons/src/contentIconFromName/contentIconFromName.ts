@@ -1,11 +1,11 @@
 import { ContentColor } from '@minddrop/ui-theme';
-import { BuiltInContentIconSetId } from '../constants';
+import { DefaultContentIconSetId } from '../constants';
 import { stringifyIcon } from '../stringifyIcon';
-import { ContentIconName, UserIconType } from '../types';
+import { ContentIconName } from '../types';
 
 /**
- * Builds the string representation of a built-in content icon
- * from its name.
+ * Builds the string representation of a default set content
+ * icon from its name.
  *
  * @param name - The name of the content icon.
  * @param color - The color of the icon, defaults to the default colour.
@@ -15,10 +15,5 @@ export function contentIconFromName(
   name: ContentIconName,
   color: ContentColor = 'default',
 ): string {
-  return stringifyIcon({
-    type: UserIconType.ContentIcon,
-    set: BuiltInContentIconSetId,
-    icon: name,
-    color,
-  });
+  return stringifyIcon({ set: DefaultContentIconSetId, icon: name, color });
 }

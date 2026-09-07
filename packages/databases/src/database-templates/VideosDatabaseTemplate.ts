@@ -15,32 +15,32 @@ export const VideosDatabaseTemplate: DatabaseTemplateFn = (t) => {
     name: t(key('name')),
     entryName: t(key('entryName')),
     description: t(key('description')),
-    icon: 'content-icon:film:default',
+    icon: 'lucide:film:default',
     properties: [
       {
         type: 'file',
         name: t(propertyKey('file', 'name')),
-        icon: 'content-icon:file-play:default',
+        icon: 'lucide:file-play:default',
       },
       {
         type: 'image',
         name: t(propertyKey('thumbnail', 'name')),
-        icon: 'content-icon:image:default',
+        icon: 'lucide:image:default',
       },
       {
         type: 'text',
         name: t(propertyKey('description', 'name')),
-        icon: 'content-icon:text-align-start:default',
+        icon: 'lucide:text-align-start:default',
       },
       {
         type: 'number',
         name: t(propertyKey('duration', 'name')),
-        icon: 'content-icon:timer:default',
+        icon: 'lucide:timer:default',
       },
       {
         type: 'created',
         name: t(propertyKey('created', 'name')),
-        icon: 'content-icon:clock:default',
+        icon: 'lucide:clock:default',
       },
     ],
   };

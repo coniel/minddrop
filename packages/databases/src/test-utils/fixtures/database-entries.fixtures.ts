@@ -25,7 +25,7 @@ export const objectEntry1: DatabaseEntry = {
   lastModified: new Date('2024-01-01T00:00:00.000Z'),
   properties: {
     Content: 'Test content',
-    Icon: 'content-icon:shapes:blue',
+    Icon: 'lucide:shapes:blue',
   },
   metadata: {},
 };
@@ -47,7 +47,7 @@ export const objectEntry1SqlRecord: SqlEntryRecord = {
   metadata: '{}',
   properties: [
     { name: 'Content', type: 'formatted-text', value: 'Test content' },
-    { name: 'Icon', type: 'icon', value: 'content-icon:shapes:blue' },
+    { name: 'Icon', type: 'icon', value: 'lucide:shapes:blue' },
   ],
 };
 
@@ -64,13 +64,13 @@ export const yamlObjectEntry1: DatabaseEntry = {
   lastModified: new Date('2024-01-01T00:00:00.000Z'),
   properties: {
     Title: 'Test Entry',
-    Icon: 'content-icon:shapes:blue',
+    Icon: 'lucide:shapes:blue',
   },
   metadata: {},
 };
 
 export const yamlObjectEntry1FileContents = `Title: Test Entry
-Icon: content-icon:shapes:blue`;
+Icon: lucide:shapes:blue`;
 
 export const yamlObjectEntry1SqlRecord: SqlEntryRecord = {
   id: yamlObjectEntry1.id,
@@ -83,7 +83,7 @@ export const yamlObjectEntry1SqlRecord: SqlEntryRecord = {
   metadata: '{}',
   properties: [
     { name: 'Title', type: 'text', value: 'Test Entry' },
-    { name: 'Icon', type: 'icon', value: 'content-icon:shapes:blue' },
+    { name: 'Icon', type: 'icon', value: 'lucide:shapes:blue' },
   ],
 };
 

@@ -8,7 +8,7 @@ export interface TogglePropertySchema extends PropertySchemaBase {
 export const TogglePropertySchema: PropertySchemaTemplate<TogglePropertySchema> =
   {
     type: 'toggle',
-    icon: 'content-icon:square-check-big:default',
+    icon: 'lucide:square-check-big:default',
     name: 'properties.toggle.name',
     description: 'properties.toggle.description',
   };

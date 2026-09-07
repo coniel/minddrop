@@ -13,7 +13,7 @@ export const QueriesIcon: UiIconName = 'list-filter';
 /**
  * The default icon assigned to newly created queries.
  */
-export const DefaultQueryIcon = 'content-icon:list-filter:default';
+export const DefaultQueryIcon = 'lucide:list-filter:default';
 
 // Where a new query's unconfigured source node is seeded on the
 // canvas

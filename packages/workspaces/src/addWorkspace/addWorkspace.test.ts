@@ -25,7 +25,7 @@ const newWorkspace = {
   ...generateWorkspaceConfig({
     path: newWorkspacePath,
     name: 'New Workspace',
-    icon: 'content-icon:box:default',
+    icon: 'lucide:box:default',
   }),
   id: expect.any(String),
   created: mockDate,

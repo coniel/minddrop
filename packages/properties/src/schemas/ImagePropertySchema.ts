@@ -6,7 +6,7 @@ export interface ImagePropertySchema extends PropertySchemaBase {
 export const ImagePropertySchema: PropertySchemaTemplate<ImagePropertySchema> =
   {
     type: 'image',
-    icon: 'content-icon:image:default',
+    icon: 'lucide:image:default',
     name: 'properties.image.name',
     description: 'properties.image.description',
   };

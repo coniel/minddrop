@@ -18,7 +18,7 @@ const baseView: DataView = {
   ownerKey: viewMetadataKey(layoutId, propertyName),
   name: propertyName,
   type: dataViewType_table.type,
-  icon: 'content-icon:shapes:blue',
+  icon: 'lucide:shapes:blue',
   dataSource: { type: 'collection', id: 'collection-1' },
   created: new Date(),
   lastModified: new Date(),

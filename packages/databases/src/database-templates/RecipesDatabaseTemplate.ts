@@ -25,32 +25,32 @@ export const RecipesDatabaseTemplate: DatabaseTemplateFn = (t) => {
     name: t(key('name')),
     entryName: t(key('entryName')),
     description: t(key('description')),
-    icon: 'content-icon:chef-hat:default',
+    icon: 'lucide:chef-hat:default',
     properties: [
       {
         type: 'image',
         name: t(propertyKey('image', 'name')),
-        icon: 'content-icon:image:default',
+        icon: 'lucide:image:default',
       },
       {
         type: 'number',
         name: t(propertyKey('prepTime', 'name')),
-        icon: 'content-icon:timer:default',
+        icon: 'lucide:timer:default',
       },
       {
         type: 'number',
         name: t(propertyKey('cookTime', 'name')),
-        icon: 'content-icon:timer:default',
+        icon: 'lucide:timer:default',
       },
       {
         type: 'number',
         name: t(propertyKey('servings', 'name')),
-        icon: 'content-icon:utensils:default',
+        icon: 'lucide:utensils:default',
       },
       {
         type: 'select',
         name: t(propertyKey('cuisine', 'name')),
-        icon: 'content-icon:globe:default',
+        icon: 'lucide:globe:default',
         options: [
           { value: t(cuisineKey('italian')), color: 'green' },
           { value: t(cuisineKey('mexican')), color: 'red' },
@@ -66,7 +66,7 @@ export const RecipesDatabaseTemplate: DatabaseTemplateFn = (t) => {
       {
         type: 'select',
         name: t(propertyKey('diet', 'name')),
-        icon: 'content-icon:leaf:default',
+        icon: 'lucide:leaf:default',
         options: [
           { value: t(dietKey('vegetarian')), color: 'green' },
           { value: t(dietKey('vegan')), color: 'purple' },
@@ -77,12 +77,12 @@ export const RecipesDatabaseTemplate: DatabaseTemplateFn = (t) => {
       {
         type: 'formatted-text',
         name: t(propertyKey('ingredients', 'name')),
-        icon: 'content-icon:list:default',
+        icon: 'lucide:list:default',
       },
       {
         type: 'formatted-text',
         name: t(propertyKey('instructions', 'name')),
-        icon: 'content-icon:list-ordered:default',
+        icon: 'lucide:list-ordered:default',
       },
     ],
   };

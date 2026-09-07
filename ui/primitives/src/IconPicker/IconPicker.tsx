@@ -3,7 +3,7 @@ import {
   ContentIconBackground,
   ContentIconName,
   Icons,
-  UserIconContentIcon,
+  UserIcon,
 } from '@minddrop/ui-icons';
 import { ContentColor } from '@minddrop/ui-theme';
 import { Button } from '../Button';
@@ -125,7 +125,7 @@ export const IconPicker: React.FC<IconPickerProps> = ({
   // Support both controlled and uncontrolled open state
   const open = controlledOpen ?? uncontrolledOpen;
   const setOpen = controlledOnOpenChange ?? setUncontrolledOpen;
-  const [icon, setIcon] = useState<UserIconContentIcon | null>(null);
+  const [icon, setIcon] = useState<UserIcon | null>(null);
 
   // Until an icon is picked, color and background changes apply to
   // the current icon.
@@ -135,10 +135,7 @@ export const IconPicker: React.FC<IconPickerProps> = ({
   );
   const target = icon ?? currentParsedIcon;
 
-  const handleSelectIcon = (
-    selectedIcon: UserIconContentIcon,
-    preventClose = false,
-  ) => {
+  const handleSelectIcon = (selectedIcon: UserIcon, preventClose = false) => {
     setIcon(selectedIcon);
 
     if (onSelectIcon) {
@@ -151,8 +148,6 @@ export const IconPicker: React.FC<IconPickerProps> = ({
     }
 
     if (onSelect) {
-      // Stringifying qualifies the icon with its set when it is not
-      // from the built-in set.
       onSelect(Icons.stringify(selectedIcon));
     }
 

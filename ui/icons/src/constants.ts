@@ -1,5 +1,5 @@
 /**
- * ID of the built-in content icon set, used as the default set
- * for unqualified content icon strings.
+ * ID of the content icon set the picker opens on and fallback
+ * icons are taken from.
  */
-export const BuiltInContentIconSetId = 'lucide';
+export const DefaultContentIconSetId = 'lucide';

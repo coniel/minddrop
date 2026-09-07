@@ -25,17 +25,17 @@ export const BooksDatabaseTemplate: DatabaseTemplateFn = (t) => {
     name: t(key('name')),
     entryName: t(key('entryName')),
     description: t(key('description')),
-    icon: 'content-icon:book-open-text:default',
+    icon: 'lucide:book-open-text:default',
     properties: [
       {
         type: 'text',
         name: t(propertyKey('author', 'name')),
-        icon: 'content-icon:user:default',
+        icon: 'lucide:user:default',
       },
       {
         type: 'select',
         name: t(propertyKey('genre', 'name')),
-        icon: 'content-icon:tag:default',
+        icon: 'lucide:tag:default',
         options: [
           { value: t(genreKey('fiction')), color: 'blue' },
           { value: t(genreKey('nonFiction')), color: 'green' },
@@ -52,7 +52,7 @@ export const BooksDatabaseTemplate: DatabaseTemplateFn = (t) => {
       {
         type: 'select',
         name: t(propertyKey('status', 'name')),
-        icon: 'content-icon:circle-dot:default',
+        icon: 'lucide:circle-dot:default',
         options: [
           { value: t(statusKey('toRead')), color: 'default' },
           { value: t(statusKey('reading')), color: 'blue' },
@@ -63,17 +63,17 @@ export const BooksDatabaseTemplate: DatabaseTemplateFn = (t) => {
       {
         type: 'number',
         name: t(propertyKey('rating', 'name')),
-        icon: 'content-icon:star:default',
+        icon: 'lucide:star:default',
       },
       {
         type: 'date',
         name: t(propertyKey('publicationDate', 'name')),
-        icon: 'content-icon:calendar:default',
+        icon: 'lucide:calendar:default',
       },
       {
         type: 'image',
         name: t(propertyKey('coverImage', 'name')),
-        icon: 'content-icon:image:default',
+        icon: 'lucide:image:default',
       },
     ],
   };

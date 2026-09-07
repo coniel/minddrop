@@ -20,17 +20,17 @@ export const JournalDatabaseTemplate: DatabaseTemplateFn = (t) => {
     name: t(key('name')),
     entryName: t(key('entryName')),
     description: t(key('description')),
-    icon: 'content-icon:book-heart:default',
+    icon: 'lucide:book-heart:default',
     properties: [
       {
         type: 'date',
         name: t(propertyKey('date', 'name')),
-        icon: 'content-icon:calendar:default',
+        icon: 'lucide:calendar:default',
       },
       {
         type: 'select',
         name: t(propertyKey('mood', 'name')),
-        icon: 'content-icon:face-slightly-smiling:default',
+        icon: 'lucide:face-slightly-smiling:default',
         options: [
           { value: t(moodKey('great')), color: 'green' },
           { value: t(moodKey('good')), color: 'blue' },
@@ -41,12 +41,12 @@ export const JournalDatabaseTemplate: DatabaseTemplateFn = (t) => {
       {
         type: 'formatted-text',
         name: t(propertyKey('content', 'name')),
-        icon: 'content-icon:text-quote:default',
+        icon: 'lucide:text-quote:default',
       },
       {
         type: 'created',
         name: t(propertyKey('created', 'name')),
-        icon: 'content-icon:clock:default',
+        icon: 'lucide:clock:default',
       },
     ],
   };

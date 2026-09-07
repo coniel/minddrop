@@ -11,7 +11,7 @@ export interface ColorPropertySchema extends PropertySchemaBase {
 export const ColorPropertySchema: PropertySchemaTemplate<ColorPropertySchema> =
   {
     type: 'color',
-    icon: 'content-icon:palette:default',
+    icon: 'lucide:palette:default',
     name: 'properties.color.name',
     description: 'properties.color.description',
     meta: true,

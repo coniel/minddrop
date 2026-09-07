@@ -8,7 +8,7 @@ export interface NumberPropertySchema extends PropertySchemaBase {
 export const NumberPropertySchema: PropertySchemaTemplate<NumberPropertySchema> =
   {
     type: 'number',
-    icon: 'content-icon:hash:default',
+    icon: 'lucide:hash:default',
     name: 'properties.number.name',
     description: 'properties.number.description',
   };

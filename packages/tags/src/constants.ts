@@ -17,4 +17,4 @@ export const TagGroupsIcon: UiIconName = 'tags';
 /**
  * The default icon assigned to newly created tags.
  */
-export const DefaultTagIcon = 'content-icon:tag:default';
+export const DefaultTagIcon = 'lucide:tag:default';

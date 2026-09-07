@@ -8,7 +8,7 @@ import { Setting, SettingProps } from './Setting';
 
 export interface IconSettingProps extends Omit<SettingProps, 'control'> {
   /**
-   * The current icon string (e.g. 'content-icon:box:default').
+   * The current icon string (e.g. 'lucide:box:default').
    */
   icon: string;
 

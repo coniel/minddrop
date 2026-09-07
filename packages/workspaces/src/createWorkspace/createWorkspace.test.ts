@@ -20,7 +20,7 @@ import { createWorkspace } from './createWorkspace';
 
 const options = {
   name: 'New workspace',
-  icon: 'content-icon:shapes:blue',
+  icon: 'lucide:shapes:blue',
 };
 const path = `${workspacesRootPath}/${options.name}`;
 
@@ -42,7 +42,7 @@ describe('createWorkspace', () => {
     await expect(() =>
       createWorkspace(Fs.parentDirPath(workspace_1.path), {
         name: workspace_1.name,
-        icon: 'content-icon:shapes:blue',
+        icon: 'lucide:shapes:blue',
       }),
     ).rejects.toThrow(Fs.errors.PathConflict);
   });

@@ -15,37 +15,37 @@ export const ContactsDatabaseTemplate: DatabaseTemplateFn = (t) => {
     name: t(key('name')),
     entryName: t(key('entryName')),
     description: t(key('description')),
-    icon: 'content-icon:users:default',
+    icon: 'lucide:users:default',
     properties: [
       {
         type: 'text',
         name: t(propertyKey('email', 'name')),
-        icon: 'content-icon:mail:default',
+        icon: 'lucide:mail:default',
       },
       {
         type: 'text',
         name: t(propertyKey('phone', 'name')),
-        icon: 'content-icon:phone:default',
+        icon: 'lucide:phone:default',
       },
       {
         type: 'text',
         name: t(propertyKey('company', 'name')),
-        icon: 'content-icon:building-2:default',
+        icon: 'lucide:building-2:default',
       },
       {
         type: 'text',
         name: t(propertyKey('role', 'name')),
-        icon: 'content-icon:briefcase:default',
+        icon: 'lucide:briefcase:default',
       },
       {
         type: 'image',
         name: t(propertyKey('photo', 'name')),
-        icon: 'content-icon:image:default',
+        icon: 'lucide:image:default',
       },
       {
         type: 'formatted-text',
         name: t(propertyKey('notes', 'name')),
-        icon: 'content-icon:text-quote:default',
+        icon: 'lucide:text-quote:default',
       },
     ],
   };

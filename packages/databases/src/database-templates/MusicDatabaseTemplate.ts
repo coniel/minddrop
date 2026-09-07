@@ -20,27 +20,27 @@ export const MusicDatabaseTemplate: DatabaseTemplateFn = (t) => {
     name: t(key('name')),
     entryName: t(key('entryName')),
     description: t(key('description')),
-    icon: 'content-icon:music:default',
+    icon: 'lucide:music:default',
     properties: [
       {
         type: 'file',
         name: t(propertyKey('file', 'name')),
-        icon: 'content-icon:music:default',
+        icon: 'lucide:music:default',
       },
       {
         type: 'text',
         name: t(propertyKey('artist', 'name')),
-        icon: 'content-icon:user:default',
+        icon: 'lucide:user:default',
       },
       {
         type: 'text',
         name: t(propertyKey('album', 'name')),
-        icon: 'content-icon:disc:default',
+        icon: 'lucide:disc:default',
       },
       {
         type: 'select',
         name: t(propertyKey('genre', 'name')),
-        icon: 'content-icon:tag:default',
+        icon: 'lucide:tag:default',
         options: [
           { value: t(genreKey('pop')), color: 'pink' },
           { value: t(genreKey('rock')), color: 'red' },
@@ -57,7 +57,7 @@ export const MusicDatabaseTemplate: DatabaseTemplateFn = (t) => {
       {
         type: 'created',
         name: t(propertyKey('created', 'name')),
-        icon: 'content-icon:clock:default',
+        icon: 'lucide:clock:default',
       },
     ],
   };

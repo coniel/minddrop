@@ -23,7 +23,7 @@ const baseView: DataView = {
   ownerKey: viewMetadataKey(layoutId, propertyName),
   name: 'Related',
   type: 'board',
-  icon: 'content-icon:shapes:blue',
+  icon: 'lucide:shapes:blue',
   dataSource: { type: 'collection', id: 'collection-1' },
   created: new Date(),
   lastModified: new Date(),

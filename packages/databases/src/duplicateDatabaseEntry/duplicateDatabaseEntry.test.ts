@@ -67,7 +67,7 @@ describe('duplicateDatabaseEntry', () => {
 
     // The source entry's simple values should be copied as is
     expect(duplicate.properties.Content).toBe('Test content');
-    expect(duplicate.properties.Icon).toBe('content-icon:shapes:blue');
+    expect(duplicate.properties.Icon).toBe('lucide:shapes:blue');
   });
 
   it('sets fresh timestamps on the duplicate', async () => {

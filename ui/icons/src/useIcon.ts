@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 import { ContentColor } from '@minddrop/ui-theme';
-import { BuiltInContentIconSetId } from './constants';
+import { DefaultContentIconSetId } from './constants';
 import { parseIcon } from './parseIcon';
 import { resolveContentIconColor } from './resolveContentIconColor';
-import { UserIcon, UserIconType } from './types';
+import { UserIcon } from './types';
 
 interface IconData {
   // The parsed icon
@@ -25,8 +25,7 @@ export function useIcon(iconString?: string, defaultIcon?: UserIcon): IconData {
     () =>
       (iconString && parseIcon(iconString)) ||
       defaultIcon || {
-        type: UserIconType.ContentIcon,
-        set: BuiltInContentIconSetId,
+        set: DefaultContentIconSetId,
         icon: 'file',
         color: 'default',
       },

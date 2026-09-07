@@ -35,7 +35,7 @@ export const DatabasesIcon: UiIconName = 'database';
 /**
  * The default icon assigned to newly created databases.
  */
-export const DefaultDatabaseIcon = 'content-icon:box:default';
+export const DefaultDatabaseIcon = 'lucide:box:default';
 
 /**
  * The sort applied to entries which are sorted without sort

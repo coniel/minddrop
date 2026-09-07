@@ -21,7 +21,7 @@ const newTag = {
   lastModified: mockDate,
   name: 'Work',
   color: 'purple',
-  icon: 'content-icon:tag:purple',
+  icon: 'lucide:tag:purple',
 };
 
 describe('createTag', () => {

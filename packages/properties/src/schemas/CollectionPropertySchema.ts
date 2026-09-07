@@ -8,7 +8,7 @@ export interface CollectionPropertySchema extends PropertySchemaBase {
 export const CollectionPropertySchema: PropertySchemaTemplate<CollectionPropertySchema> =
   {
     type: 'collection',
-    icon: 'content-icon:layers:default',
+    icon: 'lucide:layers:default',
     name: 'properties.collection.name',
     description: 'properties.collection.description',
   };

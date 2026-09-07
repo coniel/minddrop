@@ -7,7 +7,7 @@ export interface TitlePropertySchema extends PropertySchemaBase {
 export const TitlePropertySchema: PropertySchemaTemplate<TitlePropertySchema> =
   {
     type: 'title',
-    icon: 'content-icon:type:default',
+    icon: 'lucide:type:default',
     name: 'properties.title.name',
     description: 'properties.title.description',
     meta: true,

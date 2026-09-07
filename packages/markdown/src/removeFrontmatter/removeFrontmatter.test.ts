@@ -3,14 +3,14 @@ import { removeFrontmatter } from './removeFrontmatter';
 
 const markdown = `---
   title: Document
-  icon: content-icon:box:orange
+  icon: lucide:box:orange
 ---
 
 # Document`;
 
 const markdownMissingNewline = `---
   title: Document
-  icon: content-icon:box:orange
+  icon: lucide:box:orange
 ---
 # Document`;
 

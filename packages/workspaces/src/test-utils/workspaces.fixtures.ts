@@ -10,7 +10,7 @@ function generateWorkspaceFixture(name: string, number: number): Workspace {
     id: `workspace_${number}`,
     name,
     path: `${workspacesRootPath}/${name}`,
-    icon: 'content-icon:shapes:blue',
+    icon: 'lucide:shapes:blue',
     created: new Date('2024-01-01T00:00:00.000Z'),
     lastModified: new Date('2024-01-01T00:00:00.000Z'),
   };

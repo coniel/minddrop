@@ -17,7 +17,7 @@ export const DesignsIcon: UiIconName = 'pencil-ruler';
 /**
  * The default icon assigned to newly created designs.
  */
-export const DefaultDesignIcon = 'content-icon:pencil-ruler:default';
+export const DefaultDesignIcon = 'lucide:pencil-ruler:default';
 
 /**
  * The layout types each design type may contain. Empty for design

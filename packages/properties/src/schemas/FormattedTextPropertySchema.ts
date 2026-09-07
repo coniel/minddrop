@@ -8,7 +8,7 @@ export interface FormattedTextPropertySchema extends PropertySchemaBase {
 export const FormattedTextPropertySchema: PropertySchemaTemplate<FormattedTextPropertySchema> =
   {
     type: 'formatted-text',
-    icon: 'content-icon:text-quote:default',
+    icon: 'lucide:text-quote:default',
     name: 'properties.textFormatted.name',
     description: 'properties.textFormatted.description',
   };

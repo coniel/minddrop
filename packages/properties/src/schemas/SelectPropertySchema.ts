@@ -16,7 +16,7 @@ export interface SelectPropertySchema extends PropertySchemaBase {
 export const SelectPropertySchema: PropertySchemaTemplate<SelectPropertySchema> =
   {
     type: 'select',
-    icon: 'content-icon:circle-chevron-down:default',
+    icon: 'lucide:circle-chevron-down:default',
     name: 'properties.select.name',
     description: 'properties.select.description',
     options: [],

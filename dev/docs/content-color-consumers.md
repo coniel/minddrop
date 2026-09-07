@@ -8,7 +8,7 @@ WGs 2-5.
 
 **Totals: 137 files. 41 reference the `ContentColor` / `ContentColors` /
 `ContentColorValues` identifiers directly; the remaining ~96 are CSS maps, i18n
-keys, indirect component consumers, and persisted `content-icon:<name>:<color>`
+keys, indirect component consumers, and persisted `lucide:<name>:<color>`
 string data.**
 
 ## The definitions
@@ -46,38 +46,38 @@ through the ui-primitives re-export:
 
 ### ui/primitives (23 files)
 
-| File                                                  | Usage                                                                                                              |
-| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| `src/constants/ContentColor.ts`                       | `ContentColorValues` list driving all pickers/menus                                                                |
-| `src/constants/index.ts`                              | Barrel                                                                                                             |
-| `src/types/index.ts`                                  | Re-exports `ContentColor` type                                                                                     |
-| `src/types/Menu.types.ts`                             | `MenuColorSelectionItemConfig.color: ContentColor` (menu config data)                                              |
-| `src/ColorSelect/ColorSelect.tsx`                     | Renders picker; `value?: ContentColor \| string`; builds class `color-select-swatch-${color}`                      |
-| `src/ColorSelect/ColorSelect.css`                     | Color-to-CSS map: `.color-select-swatch-*` using `var(--X-600/700)`                                                |
-| `src/ColorSelect/ColorSelect.stories.tsx`             | `useState<ContentColor>('blue')`                                                                                   |
-| `src/Menu/ColorSelectionMenuItem.tsx`                 | `color: ContentColor \| 'default'`; builds class `color-swatch-${color}`; label lookup via `ContentColorValues`    |
-| `src/Menu/Menu.css`                                   | Color-to-CSS map: `.color-selection-menu-item .color-swatch-*`                                                     |
-| `src/DropdownMenu/DropdownMenuColorSelectionItem.tsx` | Wraps `ColorSelectionMenuItem`                                                                                     |
-| `src/DropdownMenu/DropdownMenuContent.tsx`            | Registers `ColorSelectionItem` in menu generator                                                                   |
-| `src/DropdownMenu/index.ts`                           | Exports the color selection item                                                                                   |
-| `src/ContextMenu/ContextMenuColorSelectionItem.tsx`   | Wraps `ColorSelectionMenuItem`                                                                                     |
-| `src/ContextMenu/ContextMenuContent.tsx`              | Registers `ColorSelectionItem`                                                                                     |
-| `src/ContextMenu/index.ts`                            | Exports the color selection item                                                                                   |
-| `src/utils/generateMenu/generateMenu.tsx`             | Renders `ColorSelectionItem` from menu config `color`                                                              |
-| `src/Chip/Chip.tsx`                                   | `color?: ContentColor`; `propsToClass` yields `chip-color-<name>`                                                  |
-| `src/Chip/Chip.css`                                   | Color-to-CSS map: `.chip-color-*` (10 rules)                                                                       |
-| `src/ContentIcon/ContentIcon.tsx`                     | `color?: ContentColor \| TextColor \| 'current-color'` via `propsToClass`                                          |
-| `src/ContentIcon/ContentIcon.css`                     | Color-to-CSS map: `.content-icon-color-*` (10 rules)                                                               |
-| `src/ContentIconPicker/ContentIconPicker.tsx`         | Color grid from `ContentColorValues`; builds `content-icon:${name}:${color}` strings; inline `var(--${color}-900)` |
-| `src/IconPicker/IconPicker.tsx`                       | `defaultIconColor?: ContentColor`; emits/parses `content-icon:${icon}:${color}`                                    |
-| `src/index.ts`                                        | Exports ColorSelect                                                                                                |
+| File                                                  | Usage                                                                                                           |
+| ----------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `src/constants/ContentColor.ts`                       | `ContentColorValues` list driving all pickers/menus                                                             |
+| `src/constants/index.ts`                              | Barrel                                                                                                          |
+| `src/types/index.ts`                                  | Re-exports `ContentColor` type                                                                                  |
+| `src/types/Menu.types.ts`                             | `MenuColorSelectionItemConfig.color: ContentColor` (menu config data)                                           |
+| `src/ColorSelect/ColorSelect.tsx`                     | Renders picker; `value?: ContentColor \| string`; builds class `color-select-swatch-${color}`                   |
+| `src/ColorSelect/ColorSelect.css`                     | Color-to-CSS map: `.color-select-swatch-*` using `var(--X-600/700)`                                             |
+| `src/ColorSelect/ColorSelect.stories.tsx`             | `useState<ContentColor>('blue')`                                                                                |
+| `src/Menu/ColorSelectionMenuItem.tsx`                 | `color: ContentColor \| 'default'`; builds class `color-swatch-${color}`; label lookup via `ContentColorValues` |
+| `src/Menu/Menu.css`                                   | Color-to-CSS map: `.color-selection-menu-item .color-swatch-*`                                                  |
+| `src/DropdownMenu/DropdownMenuColorSelectionItem.tsx` | Wraps `ColorSelectionMenuItem`                                                                                  |
+| `src/DropdownMenu/DropdownMenuContent.tsx`            | Registers `ColorSelectionItem` in menu generator                                                                |
+| `src/DropdownMenu/index.ts`                           | Exports the color selection item                                                                                |
+| `src/ContextMenu/ContextMenuColorSelectionItem.tsx`   | Wraps `ColorSelectionMenuItem`                                                                                  |
+| `src/ContextMenu/ContextMenuContent.tsx`              | Registers `ColorSelectionItem`                                                                                  |
+| `src/ContextMenu/index.ts`                            | Exports the color selection item                                                                                |
+| `src/utils/generateMenu/generateMenu.tsx`             | Renders `ColorSelectionItem` from menu config `color`                                                           |
+| `src/Chip/Chip.tsx`                                   | `color?: ContentColor`; `propsToClass` yields `chip-color-<name>`                                               |
+| `src/Chip/Chip.css`                                   | Color-to-CSS map: `.chip-color-*` (10 rules)                                                                    |
+| `src/ContentIcon/ContentIcon.tsx`                     | `color?: ContentColor \| TextColor \| 'current-color'` via `propsToClass`                                       |
+| `src/ContentIcon/ContentIcon.css`                     | Color-to-CSS map: `.content-icon-color-*` (10 rules)                                                            |
+| `src/ContentIconPicker/ContentIconPicker.tsx`         | Color grid from `ContentColorValues`; builds `lucide:${name}:${color}` strings; inline `var(--${color}-900)`    |
+| `src/IconPicker/IconPicker.tsx`                       | `defaultIconColor?: ContentColor`; emits/parses `lucide:${icon}:${color}`                                       |
+| `src/index.ts`                                        | Exports ColorSelect                                                                                             |
 
 ### ui/icons (8 files)
 
 | File                                                      | Usage                                                                                   |
 | --------------------------------------------------------- | --------------------------------------------------------------------------------------- |
-| `src/icons.types.ts`                                      | `UserIconContentIcon.color: ContentColor`, the parsed form of the persisted icon string |
-| `src/parseIcon/parseIcon.ts`                              | Parses `content-icon:name:color`, casts `color as ContentColor`                         |
+| `src/icons.types.ts`                                      | `UserIcon.color: ContentColor`, the parsed form of the persisted icon string |
+| `src/parseIcon/parseIcon.ts`                              | Parses `lucide:name:color`, casts `color as ContentColor`                               |
 | `src/resolveContentIconColor/resolveContentIconColor.ts`  | Returns `icon.split(':')[2] as ContentColor \| undefined`                               |
 | `src/applyContentIconColor/applyContentIconColor.ts`      | Rewrites the color segment of a content-icon string                                     |
 | `src/useIcon/useIcon.ts`                                  | Hook result `color?: ContentColor`                                                      |
@@ -100,15 +100,15 @@ through the ui-primitives re-export:
 
 ### ui/components (1 file)
 
-| File                          | Usage                                                        |
-| ----------------------------- | ------------------------------------------------------------ |
-| `src/Setting/IconSetting.tsx` | Renders `IconPicker`, round-trips `content-icon:*:*` strings |
+| File                          | Usage                                                  |
+| ----------------------------- | ------------------------------------------------------ |
+| `src/Setting/IconSetting.tsx` | Renders `IconPicker`, round-trips `lucide:*:*` strings |
 
 ### ui/databases (1 file)
 
-| File               | Usage                                     |
-| ------------------ | ----------------------------------------- |
-| `src/constants.ts` | Default `content-icon:...:default` string |
+| File               | Usage                               |
+| ------------------ | ----------------------------------- |
+| `src/constants.ts` | Default `lucide:...:default` string |
 
 ### packages/designs (4 files)
 
@@ -117,14 +117,14 @@ through the ui-primitives re-export:
 | `src/createElementCssStyle.ts`       | Primary color-to-CSS mapper: `colorNames = ContentColors`; local `resolveContentColorCss` yields `var(--${color}-${shade})`; text 900, background 100, border 600, editor + title colors |
 | `src/styles/TypographyStyles.ts`     | `color` / `title-color` as `ContentColor \| string`, persisted design style values                                                                                                       |
 | `src/styles/index.ts`                | Style defaults incl. `containerBackgroundColor: 'transparent'`, borderColor, `Pick<TypographyStyles, 'color'...>` composition                                                            |
-| `src/design-element-configs/icon.ts` | Default `content-icon:*` values                                                                                                                                                          |
+| `src/design-element-configs/icon.ts` | Default `lucide:*` values                                                                                                                                                                |
 
 ### packages/properties (15 files)
 
-| File                                                                                                                                                          | Usage                                                                                                             |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| `src/schemas/SelectPropertySchema.ts`                                                                                                                         | `SelectPropertyOption.color: ContentColor`, persisted in property schemas; plus a `content-icon:*:default` string |
-| 13 other `src/schemas/*PropertySchema.ts` files (Collection, Created, Date, File, FormattedText, Icon, Image, LastModified, Number, Text, Title, Toggle, Url) | Each has a `content-icon:name:default` string                                                                     |
+| File                                                                                                                                                          | Usage                                                                                                       |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `src/schemas/SelectPropertySchema.ts`                                                                                                                         | `SelectPropertyOption.color: ContentColor`, persisted in property schemas; plus a `lucide:*:default` string |
+| 13 other `src/schemas/*PropertySchema.ts` files (Collection, Created, Date, File, FormattedText, Icon, Image, LastModified, Number, Text, Title, Toggle, Url) | Each has a `lucide:name:default` string                                                                     |
 
 ### packages/databases (18 files)
 
@@ -133,7 +133,7 @@ Documents, Expenses, Images, Journal, Movies, Music, Notes, Projects, Recipes,
 Tasks, Videos, Vocabulary, Weblinks), plus
 `src/test-utils/fixtures/database-entries.fixtures.ts` and
 `src/test-utils/fixtures/databases.fixtures.ts`. All persisted seed data
-containing `content-icon:<name>:<color>` strings (mostly `:default`; fixtures
+containing `lucide:<name>:<color>` strings (mostly `:default`; fixtures
 use real color names).
 
 ### packages/automations / spaces / workspaces (5 files)
@@ -142,7 +142,7 @@ use real color names).
 `packages/automations/src/test-utils/automations.fixtures.ts`,
 `packages/spaces/src/constants.ts`, `packages/workspaces/src/constants.ts`,
 `packages/workspaces/src/test-utils/workspaces.fixtures.ts`. Default/fixture
-`content-icon:*:*` strings.
+`lucide:*:*` strings.
 
 ### packages/i18n (2 files)
 
@@ -168,7 +168,7 @@ The `*-color-*` CSS hits there are unrelated.
 | `src/style-editors/Border.tsx`                                  | Hosts `BorderColorSelect`                                                                                   |
 | `src/style-editors/Typography.tsx`                              | Hosts `TextColorSelect`                                                                                     |
 | `src/style-editors/ContainerTypography.tsx`                     | Hosts `TextColorSelect`                                                                                     |
-| `src/style-editors/IconContentField.tsx`                        | Parses `content-icon:cat:cyan`, extracts color segment into the element's `color` style                     |
+| `src/style-editors/IconContentField.tsx`                        | Parses `lucide:cat:cyan`, extracts color segment into the element's `color` style                           |
 | `src/design-elements/badges/BadgesDesignElement.tsx`            | Builds a palette from `ContentColors`; maps to `var(--${color}-400)` / `var(--${color}-1100)`               |
 | `src/design-elements/formatted-text/FormatTextStylePopover.tsx` | `ColorSelect` with `(value: ContentColor \| null)` for text color                                           |
 | `src/design-elements/icon/IconElementStyleEditor.tsx`           | Two `ColorSelect`s (icon color + container background), casts to `ContentColor`                             |
@@ -177,7 +177,7 @@ The `*-color-*` CSS hits there are unrelated.
 | `src/design-elements/container/BackgroundColorSelect.tsx`       | `ColorSelect` + `transparent` extra option, writes `backgroundColor` style                                  |
 | `src/design-elements/container/ContainerElementStyleEditor.tsx` | Hosts `BackgroundColorSelect`                                                                               |
 | `src/design-elements/view/ViewElementStyleEditor.tsx`           | Hosts `BackgroundColorSelect`                                                                               |
-| `src/constants.ts`                                              | Default `content-icon:*` string                                                                             |
+| `src/constants.ts`                                              | Default `lucide:*` string                                                                                   |
 
 ### features/properties (4 files)
 
@@ -190,7 +190,7 @@ The `*-color-*` CSS hits there are unrelated.
 
 ### Other features (13 files, indirect)
 
-`content-icon:*` strings or `ContentIcon` / `IconPicker` rendering:
+`lucide:*` strings or `ContentIcon` / `IconPicker` rendering:
 
 - `features/collections/src/CollectionsView/CollectionDetails.tsx`
 - `features/collections/src/initializeCollectionsFeature/initializeCollectionsFeature.ts`
@@ -238,7 +238,7 @@ places where the _schema_ meets color names:
    `TableSelectOption.color?: ContentColor`
 3. `ui/canvas/src/types/CanvasConnection.types.ts` -
    `CanvasConnection.color?: ContentColor` (written by `CanvasConnectionToolbar`)
-4. The `content-icon:<name>:<color>` string encoding (`ui/icons/src/icons.types.ts`),
+4. The `lucide:<name>:<color>` string encoding (`ui/icons/src/icons.types.ts`),
    produced by `IconPicker` / `ContentIconPicker`, parsed by `parseIcon` /
    `resolveContentIconColor`, rewritten by `applyContentIconColor`. Stored
    across all database templates, property schemas, and the

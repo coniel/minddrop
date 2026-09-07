@@ -56,7 +56,7 @@ describe('<DatabasePropertyEditor />', () => {
               (candidate) => candidate.name === property.name,
             )?.icon,
             // The picked icon keeps the property's existing color
-          ).toMatch(`content-icon:${pickedContentIconName}:`);
+          ).toMatch(`lucide:${pickedContentIconName}:`);
           done();
         });
 

@@ -5,7 +5,7 @@ export interface FilePropertySchema extends PropertySchemaBase {
 }
 export const FilePropertySchema: PropertySchemaTemplate<FilePropertySchema> = {
   type: 'file',
-  icon: 'content-icon:file:default',
+  icon: 'lucide:file:default',
   name: 'properties.file.name',
   description: 'properties.file.description',
 };

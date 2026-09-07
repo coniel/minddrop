@@ -1,6 +1,6 @@
 import { HTMLProps } from 'react';
 import { LucideIconSvg } from '../LucideIconSvg';
-import { BuiltInContentIconSetId } from '../constants';
+import { DefaultContentIconSetId } from '../constants';
 import { registerContentIconSet } from '../contentIconSetRegistry';
 import {
   ContentIconSet,
@@ -15,7 +15,7 @@ import {
 export function initializeIcons(): void {
   // Register the built-in set
   registerContentIconSet({
-    id: BuiltInContentIconSetId,
+    id: DefaultContentIconSetId,
     name: 'Lucide',
     load: loadBuiltInContentIconSet,
   });

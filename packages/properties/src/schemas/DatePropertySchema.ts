@@ -9,7 +9,7 @@ export interface DatePropertySchema extends PropertySchemaBase {
 
 export const DatePropertySchema: PropertySchemaTemplate<DatePropertySchema> = {
   type: 'date',
-  icon: 'content-icon:calendar:default',
+  icon: 'lucide:calendar:default',
   name: 'properties.date.name',
   description: 'properties.date.description',
 };

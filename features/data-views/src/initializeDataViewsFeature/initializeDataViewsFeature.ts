@@ -23,7 +23,7 @@ const dataViewViewId = (dataViewId: string) =>
 const dataViewsViewId = 'data-views:data-views';
 
 // Icon shown in the new data view view's tab
-const NEW_DATA_VIEW_VIEW_ICON = 'content-icon:plus:inherit';
+const NEW_DATA_VIEW_VIEW_ICON = 'lucide:plus:inherit';
 
 /**
  * Initializes the data views feature by registering translations

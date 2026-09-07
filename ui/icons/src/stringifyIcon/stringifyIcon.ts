@@ -1,4 +1,3 @@
-import { BuiltInContentIconSetId } from '../constants';
 import { ContentIconBackground, UserIcon } from '../types';
 
 /**
@@ -8,15 +7,7 @@ import { ContentIconBackground, UserIcon } from '../types';
  * @returns The string representation of the icon.
  */
 export function stringifyIcon(icon: UserIcon): string {
-  const background = stringifyBackground(icon);
-
-  // Icons from other sets carry the set as an extra segment
-  if (icon.set !== BuiltInContentIconSetId) {
-    return `${icon.type}:${icon.set}:${icon.icon}:${icon.color}${background}`;
-  }
-
-  // Built-in set icons stay in their unqualified form
-  return `${icon.type}:${icon.icon}:${icon.color}${background}`;
+  return `${icon.set}:${icon.icon}:${icon.color}${stringifyBackground(icon)}`;
 }
 
 /**

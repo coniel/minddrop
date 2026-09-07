@@ -11,7 +11,7 @@ const newAutomation = {
   created: mockDate,
   lastModified: mockDate,
   name: 'Automation',
-  icon: 'content-icon:zap:default',
+  icon: 'lucide:zap:default',
   enabled: true,
   nodes: [],
   connections: [],
@@ -37,10 +37,10 @@ describe('createAutomation', () => {
   it('uses the provided icon', async () => {
     const automation = await createAutomation(
       'My automation',
-      'content-icon:workflow:blue',
+      'lucide:workflow:blue',
     );
 
-    expect(automation.icon).toBe('content-icon:workflow:blue');
+    expect(automation.icon).toBe('lucide:workflow:blue');
   });
 
   it('adds the automation to the store', async () => {
