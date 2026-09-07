@@ -904,6 +904,9 @@ importers:
       '@minddrop/designs':
         specifier: workspace:*
         version: link:../../packages/designs
+      '@minddrop/designs-next':
+        specifier: workspace:*
+        version: link:../../packages/designs-next
       '@minddrop/editor':
         specifier: workspace:*
         version: link:../../packages/editor
@@ -922,6 +925,9 @@ importers:
       '@minddrop/feature-designs':
         specifier: workspace:*
         version: link:../designs
+      '@minddrop/feature-designs-next':
+        specifier: workspace:*
+        version: link:../designs-next
       '@minddrop/feature-dev-tools':
         specifier: workspace:*
         version: link:../dev-tools

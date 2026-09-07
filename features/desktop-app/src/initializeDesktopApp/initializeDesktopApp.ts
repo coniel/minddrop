@@ -2,6 +2,7 @@ import { Collections } from '@minddrop/collections';
 import { DataViews } from '@minddrop/data-views';
 import { Databases } from '@minddrop/databases';
 import { Designs } from '@minddrop/designs';
+import { Designs as DesignsNext } from '@minddrop/designs-next';
 import { registerBlockSelectionSerializer } from '@minddrop/editor';
 import { initializeCollectionsFeature } from '@minddrop/feature-collections';
 import { initializeDataViewsFeature } from '@minddrop/feature-data-views';
@@ -10,6 +11,7 @@ import {
   LayoutRegionSizesStore,
   initializeDesignsFeature,
 } from '@minddrop/feature-designs';
+import { initializeDesignsNextFeature } from '@minddrop/feature-designs-next';
 import { initializeDevToolsFeature } from '@minddrop/feature-dev-tools';
 import { initializeQueriesFeature } from '@minddrop/feature-queries';
 import { initializeSearch } from '@minddrop/feature-search';
@@ -110,6 +112,7 @@ async function runInitialization(): Promise<void> {
   initializeCollectionsFeature();
   initializeDataViewsFeature();
   initializeDesignsFeature();
+  initializeDesignsNextFeature();
   initializeQueriesFeature();
   initializeSettingsFeature();
   initializeTagsFeature();
@@ -132,6 +135,7 @@ async function runInitialization(): Promise<void> {
   await Databases.DefaultsStore.hydrate();
 
   await Designs.initialize();
+  await DesignsNext.initialize();
 
   Sql.initialize();
 
