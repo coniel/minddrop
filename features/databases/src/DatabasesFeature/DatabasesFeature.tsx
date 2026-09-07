@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { DatabaseEntries, Databases } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
-import { Tabs } from '@minddrop/feature-views';
-import { Views } from '@minddrop/views';
+import { ViewSessions, Views } from '@minddrop/views';
 import { DatabaseEntryDialog } from '../DatabaseEntryDialog';
 import { DatabaseEntryRendererProps } from '../DatabaseEntryRenderer';
 import { NewDatabaseDialog } from '../NewDatabaseDialog';
@@ -35,8 +34,8 @@ export const DatabasesFeature: React.FC = () => {
   useEffect(() => {
     // Close restored entry views whose entry no longer exists
     // (e.g. deleted externally or re-indexed while the app was closed)
-    Tabs.getOpenTabs(DatabaseEntryViewName).forEach((tabView) => {
-      const props = tabView.props as DatabaseEntryRendererProps | undefined;
+    ViewSessions.getOpenViews(DatabaseEntryViewName).forEach((sessionView) => {
+      const props = sessionView.props as DatabaseEntryRendererProps | undefined;
 
       // Skip views without an entry ID
       if (!props?.entryId) {
@@ -50,13 +49,13 @@ export const DatabasesFeature: React.FC = () => {
 
       // Close the view
       Events.dispatch(Views.events.Close, {
-        id: tabView.id ?? resolveDatabaseEntryViewId(props.entryId),
+        id: sessionView.id ?? resolveDatabaseEntryViewId(props.entryId),
       });
     });
 
     // Close restored database views whose database no longer exists
-    Tabs.getOpenTabs(DatabaseViewName).forEach((tabView) => {
-      const props = tabView.props as OpenDatabaseViewEventData | undefined;
+    ViewSessions.getOpenViews(DatabaseViewName).forEach((sessionView) => {
+      const props = sessionView.props as OpenDatabaseViewEventData | undefined;
 
       // Skip views without a database ID
       if (!props?.databaseId) {
@@ -70,7 +69,7 @@ export const DatabasesFeature: React.FC = () => {
 
       // Close the view
       Events.dispatch(Views.events.Close, {
-        id: tabView.id ?? resolveDatabaseViewId(props.databaseId),
+        id: sessionView.id ?? resolveDatabaseViewId(props.databaseId),
       });
     });
 
@@ -79,9 +78,9 @@ export const DatabasesFeature: React.FC = () => {
     Events.addListener(Databases.events.OpenView, EventListenerId, (data) => {
       const database = Databases.get(data.databaseId);
 
-      // Open a blank tab to receive the database view
+      // Open a blank session to receive the database view
       if (data.openMode === 'new-tab') {
-        Tabs.newTab(data.viewAreaId ?? Views.constants.DefaultAreaId);
+        ViewSessions.create(data.viewAreaId);
       }
 
       // Open the database view, which has no dialog or panel
@@ -123,9 +122,9 @@ export const DatabasesFeature: React.FC = () => {
         const entry = DatabaseEntries.get(data.entryId);
         const database = Databases.get(entry.database);
 
-        // Open a blank tab to receive the entry view
+        // Open a blank session to receive the entry view
         if (openMode === 'new-tab') {
-          Tabs.newTab(data.viewAreaId ?? Views.constants.DefaultAreaId);
+          ViewSessions.create(data.viewAreaId);
         }
 
         // Open the entry view in place of the current view (or in split view)

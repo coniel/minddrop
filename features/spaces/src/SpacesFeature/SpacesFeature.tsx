@@ -1,8 +1,7 @@
 import { useEffect } from 'react';
 import { Events } from '@minddrop/events';
-import { Tabs } from '@minddrop/feature-views';
 import { Spaces } from '@minddrop/spaces';
-import { Views } from '@minddrop/views';
+import { ViewSessions, Views } from '@minddrop/views';
 import { NewSpaceDialog } from '../NewSpaceDialog';
 import { SpaceViewProps } from '../SpaceView';
 import { SpaceViewStateStore } from '../SpaceViewStateStore';
@@ -14,7 +13,7 @@ import {
   SpacesViewName,
 } from '../events';
 
-// Unique view instance id used to match space views in tabs
+// Unique view instance id used to match space views in sessions
 const spaceViewId = (spaceId: string) => `spaces:space:${spaceId}`;
 
 // View instance id of the singleton spaces list view, which is
@@ -29,8 +28,8 @@ export const SpacesFeature: React.FC = () => {
   useEffect(() => {
     // Close restored space views whose space no longer exists
     // (e.g. deleted externally while the app was closed)
-    Tabs.getOpenTabs(SpaceViewName).forEach((tabView) => {
-      const props = tabView.props as SpaceViewProps | undefined;
+    ViewSessions.getOpenViews(SpaceViewName).forEach((sessionView) => {
+      const props = sessionView.props as SpaceViewProps | undefined;
 
       // Skip views without a space ID
       if (!props?.spaceId) {
@@ -44,7 +43,7 @@ export const SpacesFeature: React.FC = () => {
 
       // Close the view
       Events.dispatch(Views.events.Close, {
-        id: tabView.id ?? spaceViewId(props.spaceId),
+        id: sessionView.id ?? spaceViewId(props.spaceId),
       });
     });
 
@@ -53,9 +52,9 @@ export const SpacesFeature: React.FC = () => {
     Events.addListener(OpenSpaceViewEvent, EventListenerId, (data) => {
       const space = Spaces.get(data.spaceId, false);
 
-      // Open a blank tab to receive the space view
+      // Open a blank session to receive the space view
       if (data.openMode === 'new-tab') {
-        Tabs.newTab(data.viewAreaId ?? Views.constants.DefaultAreaId);
+        ViewSessions.create(data.viewAreaId);
       }
 
       // Open the space view, which has no dialog or panel
@@ -75,9 +74,9 @@ export const SpacesFeature: React.FC = () => {
     // Listen for open spaces view events, and open the spaces
     // list view when one is received.
     Events.addListener(OpenSpacesViewEvent, EventListenerId, (data) => {
-      // Open a blank tab to receive the spaces view
+      // Open a blank session to receive the spaces view
       if (data?.openMode === 'new-tab') {
-        Tabs.newTab(data.viewAreaId ?? Views.constants.DefaultAreaId);
+        ViewSessions.create(data.viewAreaId);
       }
 
       // Open the spaces list view, which has no dialog or panel

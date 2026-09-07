@@ -1,8 +1,7 @@
 import { Events } from '@minddrop/events';
-import { Tabs } from '@minddrop/feature-views';
 import { I18n } from '@minddrop/i18n';
 import { Tags } from '@minddrop/tags';
-import { Views } from '@minddrop/views';
+import { ViewSessions, Views } from '@minddrop/views';
 import { EventListenerId, TagsViewName } from '../events';
 import { locales } from '../locales';
 
@@ -23,9 +22,9 @@ export function initializeTagsFeature(): VoidFunction {
   // Listen for open tags view events, and open the tags list view
   // when one is received.
   Events.addListener(Tags.events.OpenView, EventListenerId, (data) => {
-    // Open a blank tab to receive the tags view
+    // Open a blank session to receive the tags view
     if (data?.openMode === 'new-tab') {
-      Tabs.newTab(Views.constants.DefaultAreaId);
+      ViewSessions.create();
     }
 
     Events.dispatch(Views.events.Open, {
