@@ -29,7 +29,7 @@ describe('resolveEntryPropertyFilePaths', () => {
   });
 
   it('returns an empty array when there are no file-based properties', () => {
-    // The object entry has only formatted-text and icon properties
+    // The object entry has only content and icon properties
     expect(resolveEntryPropertyFilePaths(objectEntry1.id)).toEqual([]);
   });
 });

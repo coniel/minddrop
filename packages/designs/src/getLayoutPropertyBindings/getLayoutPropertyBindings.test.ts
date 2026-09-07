@@ -1,8 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import {
-  FormattedTextPropertyElement,
-  TextElement,
-} from '../design-element-configs';
+import { ContentPropertyElement, TextElement } from '../design-element-configs';
 import { DesignFixtures, cleanup, setup } from '../test-utils';
 import { Layout } from '../types';
 import { elementTitleBindingId } from '../utils';
@@ -43,7 +40,7 @@ describe('getLayoutPropertyBindings', () => {
   });
 
   it('collects editor title bindings under the title binding ID', () => {
-    const editor: FormattedTextPropertyElement = {
+    const editor: ContentPropertyElement = {
       ...element_property_formatted_text_1,
       property: 'Body',
       titleProperty: 'Title',

@@ -1,10 +1,10 @@
 import { PropertySchemaTemplate, PropertyType } from '../types';
 import { CollectionPropertySchema } from './CollectionPropertySchema';
 import { ColorPropertySchema } from './ColorPropertySchema';
+import { ContentPropertySchema } from './ContentPropertySchema';
 import { CreatedPropertySchema } from './CreatedPropertySchema';
 import { DatePropertySchema } from './DatePropertySchema';
 import { FilePropertySchema } from './FilePropertySchema';
-import { FormattedTextPropertySchema } from './FormattedTextPropertySchema';
 import { IconPropertySchema } from './IconPropertySchema';
 import { ImagePropertySchema } from './ImagePropertySchema';
 import { LastModifiedPropertySchema } from './LastModifiedPropertySchema';
@@ -18,10 +18,10 @@ import { UrlPropertySchema } from './UrlPropertySchema';
 
 export * from './CollectionPropertySchema';
 export * from './ColorPropertySchema';
+export * from './ContentPropertySchema';
 export * from './CreatedPropertySchema';
 export * from './DatePropertySchema';
 export * from './FilePropertySchema';
-export * from './FormattedTextPropertySchema';
 export * from './IconPropertySchema';
 export * from './ImagePropertySchema';
 export * from './LastModifiedPropertySchema';
@@ -36,7 +36,7 @@ export * from './UrlPropertySchema';
 export const PropertySchemas = {
   title: TitlePropertySchema,
   text: TextPropertySchema,
-  'formatted-text': FormattedTextPropertySchema,
+  content: ContentPropertySchema,
   number: NumberPropertySchema,
   date: DatePropertySchema,
   toggle: TogglePropertySchema,

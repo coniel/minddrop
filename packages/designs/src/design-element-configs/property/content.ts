@@ -2,12 +2,12 @@ import { EditorStyle, TypographyStyle } from '../../styles';
 import { PropertyElementBase } from './base';
 
 /**
- * A property element rendering a formatted text property. The
+ * A property element rendering a content property. The
  * style shape follows the selected variant: the static display
  * takes typography, the editor the editor style.
  */
-export interface FormattedTextPropertyElement extends PropertyElementBase {
-  propertyType: 'formatted-text';
+export interface ContentPropertyElement extends PropertyElementBase {
+  propertyType: 'content';
 
   /**
    * The element style.

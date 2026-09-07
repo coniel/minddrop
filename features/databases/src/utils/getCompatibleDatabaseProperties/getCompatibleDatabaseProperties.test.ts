@@ -10,17 +10,17 @@ const { objectDatabase } = DatabaseFixtures;
 initializeI18n();
 
 const textDesignProperty: PropertySchema = { type: 'text', name: 'Heading' };
-const formattedTextDesignProperty: PropertySchema = {
-  type: 'formatted-text',
+const contentDesignProperty: PropertySchema = {
+  type: 'content',
   name: 'Body',
 };
 const numberDesignProperty: PropertySchema = { type: 'number', name: 'Count' };
 
 describe('getCompatibleDatabaseProperties', () => {
   it('returns database properties of compatible types', () => {
-    // objectDatabase has a formatted-text 'Content' property
+    // objectDatabase has a content 'Content' property
     const compatible = getCompatibleDatabaseProperties(
-      formattedTextDesignProperty,
+      contentDesignProperty,
       objectDatabase.properties,
     );
 

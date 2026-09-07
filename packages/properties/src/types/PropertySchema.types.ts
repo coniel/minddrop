@@ -1,10 +1,10 @@
 import {
   CollectionPropertySchema,
   ColorPropertySchema,
+  ContentPropertySchema,
   CreatedPropertySchema,
   DatePropertySchema,
   FilePropertySchema,
-  FormattedTextPropertySchema,
   IconPropertySchema,
   ImagePropertySchema,
   LastModifiedPropertySchema,
@@ -20,9 +20,9 @@ import {
 export type PropertySchema =
   | CollectionPropertySchema
   | ColorPropertySchema
+  | ContentPropertySchema
   | CreatedPropertySchema
   | DatePropertySchema
-  | FormattedTextPropertySchema
   | IconPropertySchema
   | ImagePropertySchema
   | LastModifiedPropertySchema

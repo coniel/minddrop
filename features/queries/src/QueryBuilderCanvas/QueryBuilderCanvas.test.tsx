@@ -17,7 +17,7 @@ const [sourceNode, filterNode, resultsNode] = query_1.nodes;
 const filter1: QueryFilterNode = {
   ...(filterNode as QueryFilterNode),
   property: 'Content',
-  propertyType: 'formatted-text',
+  propertyType: 'content',
 };
 
 // A second level filter for a property missing from the source

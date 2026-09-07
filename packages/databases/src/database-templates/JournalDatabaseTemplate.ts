@@ -39,7 +39,7 @@ export const JournalDatabaseTemplate: DatabaseTemplateFn = (t) => {
         ],
       },
       {
-        type: 'formatted-text',
+        type: 'content',
         name: t(propertyKey('content', 'name')),
         icon: 'lucide:text-quote:default',
       },

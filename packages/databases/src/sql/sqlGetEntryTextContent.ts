@@ -11,14 +11,14 @@ export function sqlGetEntryTextContent(entryId: string): {
 } {
   // Get text properties (for the "content" field)
   const textRows = Sql.all<{ value_text: string | null }>(
-    "SELECT value_text FROM entry_properties WHERE entry_id = ? AND property_type IN ('text', 'formatted-text')",
+    "SELECT value_text FROM entry_properties WHERE entry_id = ? AND property_type IN ('text', 'content')",
     entryId,
   );
 
   // Get other scalar property values (for the "properties" field).
   // Excluded property types are not part of the full-text index.
   const propertyRows = Sql.all<{ value_text: string | null }>(
-    `SELECT value_text FROM entry_properties WHERE entry_id = ? AND property_type NOT IN ('text', 'formatted-text', ${EXCLUDED_TYPES_SQL})`,
+    `SELECT value_text FROM entry_properties WHERE entry_id = ? AND property_type NOT IN ('text', 'content', ${EXCLUDED_TYPES_SQL})`,
     entryId,
   );
 

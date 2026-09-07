@@ -45,7 +45,7 @@ export const FetchWebpageMetadataActionConfig: DatabaseAutomationUpdatePropertyA
       {
         name: `${propertySetters}.description.name`,
         description: `${propertySetters}.description.description`,
-        supportedPropertyTypes: ['text', 'formatted-text'],
+        supportedPropertyTypes: ['text', 'content'],
       },
       {
         name: `${propertySetters}.icon.name`,

@@ -131,7 +131,7 @@ describe('resolveSortableEntryProperties', () => {
   });
 
   it('omits properties whose values have no order', () => {
-    // The database's properties are formatted text and an icon
+    // The database's properties are content and an icon
     const properties = resolveSortableEntryProperties([objectDatabase]);
 
     expect(properties.filter((property) => property.by === 'property')).toEqual(

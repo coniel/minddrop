@@ -23,7 +23,7 @@ const alphaEntry: SqlEntryRecord = {
   created: 1000,
   lastModified: 1000,
   properties: [
-    { name: 'Content', type: 'formatted-text', value: 'apple pie' },
+    { name: 'Content', type: 'content', value: 'apple pie' },
     { name: 'Amount', type: 'number', value: 5 },
     { name: 'Due', type: 'date', value: 1000 },
     { name: 'Done', type: 'toggle', value: true },
@@ -40,7 +40,7 @@ const betaEntry: SqlEntryRecord = {
   created: 2000,
   lastModified: 2000,
   properties: [
-    { name: 'Content', type: 'formatted-text', value: 'banana bread' },
+    { name: 'Content', type: 'content', value: 'banana bread' },
     { name: 'Amount', type: 'number', value: 10 },
     { name: 'Due', type: 'date', value: 3000 },
     { name: 'Done', type: 'toggle', value: false },
@@ -68,7 +68,7 @@ const otherDatabaseEntry: SqlEntryRecord = {
   title: 'Delta',
   created: 1000,
   lastModified: 1000,
-  properties: [{ name: 'Content', type: 'formatted-text', value: 'apple pie' }],
+  properties: [{ name: 'Content', type: 'content', value: 'apple pie' }],
 };
 
 const filterGroup = (
@@ -126,7 +126,7 @@ describe('sqlQueryEntries', () => {
       filterGroup([
         {
           property: 'Content',
-          propertyType: 'formatted-text',
+          propertyType: 'content',
           operator: 'text-contains',
           value: 'apple',
         },
@@ -143,7 +143,7 @@ describe('sqlQueryEntries', () => {
       filterGroup([
         {
           property: 'Content',
-          propertyType: 'formatted-text',
+          propertyType: 'content',
           operator: 'text-equals',
           value: 'APPLE PIE',
         },
@@ -261,7 +261,7 @@ describe('sqlQueryEntries', () => {
       filterGroup([
         {
           property: 'Content',
-          propertyType: 'formatted-text',
+          propertyType: 'content',
           operator: 'is-empty',
         },
       ]),
@@ -312,7 +312,7 @@ describe('sqlQueryEntries', () => {
         [
           {
             property: 'Content',
-            propertyType: 'formatted-text',
+            propertyType: 'content',
             operator: 'text-contains',
             value: 'apple',
           },

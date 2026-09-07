@@ -5,6 +5,7 @@ export type PropertyMap = Record<string, PropertyValue>;
 export type PropertyType =
   | 'collection'
   | 'color'
+  | 'content'
   | 'created'
   | 'date'
   | 'icon'
@@ -14,7 +15,6 @@ export type PropertyType =
   | 'select'
   | 'tags'
   | 'text'
-  | 'formatted-text'
   | 'title'
   | 'toggle'
   | 'url'

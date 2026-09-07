@@ -2,7 +2,7 @@ export * from './PropertyDesignElement';
 export * from './propertyRendererMap';
 export * from './TextPropertyRenderer';
 export * from './FieldPropertyRenderer';
-export * from './FormattedTextPropertyRenderer';
+export * from './ContentPropertyRenderer';
 export * from './EditorPropertyRenderer';
 export * from './NumberPropertyRenderer';
 export * from './DatePropertyRenderer';

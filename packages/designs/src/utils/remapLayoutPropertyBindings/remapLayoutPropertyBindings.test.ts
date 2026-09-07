@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
-  FormattedTextPropertyElement,
+  ContentPropertyElement,
   TextElement,
 } from '../../design-element-configs';
 import { DesignFixtures } from '../../test-utils';
@@ -17,7 +17,7 @@ function generateBoundLayout(): Layout {
     id: 'bound-text',
     property: 'Subtitle',
   };
-  const boundEditor: FormattedTextPropertyElement = {
+  const boundEditor: ContentPropertyElement = {
     ...element_property_formatted_text_1,
     id: 'bound-editor',
     property: 'Body',
@@ -40,7 +40,7 @@ describe('remapLayoutPropertyBindings', () => {
 
     const [text, editor] = layout.tree.children as [
       TextElement,
-      FormattedTextPropertyElement,
+      ContentPropertyElement,
     ];
 
     expect(text.property).toBe('Tagline');
@@ -58,7 +58,7 @@ describe('remapLayoutPropertyBindings', () => {
 
     const [text, editor] = layout.tree.children as [
       TextElement,
-      FormattedTextPropertyElement,
+      ContentPropertyElement,
     ];
 
     expect(text.property).toBeUndefined();

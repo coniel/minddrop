@@ -74,7 +74,7 @@ const mappedEntry = {
   properties: { Body: 'Mapped Value' },
 };
 
-// An editor variant formatted-text element with its title bound
+// An editor variant content element with its title bound
 // to the 'Heading' design property.
 const titleBoundEditorElement = {
   ...element_property_formatted_text_1,

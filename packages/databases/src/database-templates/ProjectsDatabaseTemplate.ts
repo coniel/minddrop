@@ -60,7 +60,7 @@ export const ProjectsDatabaseTemplate: DatabaseTemplateFn = (t) => {
         icon: 'lucide:calendar:default',
       },
       {
-        type: 'formatted-text',
+        type: 'content',
         name: t(propertyKey('description', 'name')),
         icon: 'lucide:text-quote:default',
       },

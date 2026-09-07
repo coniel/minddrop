@@ -11,4 +11,5 @@ export const TitlePropertySchema: PropertySchemaTemplate<TitlePropertySchema> =
     name: 'properties.title.name',
     description: 'properties.title.description',
     meta: true,
+    singleton: true,
   };

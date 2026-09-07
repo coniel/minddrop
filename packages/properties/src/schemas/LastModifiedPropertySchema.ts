@@ -11,4 +11,5 @@ export const LastModifiedPropertySchema: PropertySchemaTemplate<LastModifiedProp
     name: 'properties.lastModified.name',
     description: 'properties.lastModified.description',
     meta: true,
+    singleton: true,
   };

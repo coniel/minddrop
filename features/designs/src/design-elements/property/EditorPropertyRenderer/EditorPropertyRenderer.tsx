@@ -1,8 +1,8 @@
 import { useCallback, useRef } from 'react';
 import {
+  ContentPropertyElement,
   Designs,
   EditorStyle,
-  FormattedTextPropertyElement,
 } from '@minddrop/designs';
 import { MarkdownEditor } from '@minddrop/feature-markdown-editor';
 import { useDesignPreview } from '../../../DesignElements';
@@ -15,13 +15,13 @@ import './EditorPropertyRenderer.css';
 
 export interface EditorPropertyRendererProps {
   /**
-   * The formatted text property element to render.
+   * The content property element to render.
    */
-  element: FormattedTextPropertyElement;
+  element: ContentPropertyElement;
 }
 
 /**
- * Editor renderer for a formatted text property element.
+ * Editor renderer for a content property element.
  * Renders a MarkdownEditor with the mapped property value and,
  * when a title property is bound, the mapped title as the
  * editor's title block. In preview mode, the editor renders

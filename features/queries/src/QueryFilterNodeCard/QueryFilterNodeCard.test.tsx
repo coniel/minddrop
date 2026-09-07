@@ -72,7 +72,7 @@ describe('<QueryFilterNodeCard />', () => {
       ) as QueryFilterNode;
 
       expect(node.property).toBe('Content');
-      expect(node.propertyType).toBe('formatted-text');
+      expect(node.propertyType).toBe('content');
       expect(node.operator).toBe('equals');
       expect(node.value).toBeUndefined();
     });
@@ -120,7 +120,7 @@ describe('<QueryFilterNodeCard />', () => {
     // A filter for a property of the source database
     const { query, node } = queryWithFilter({
       property: 'Content',
-      propertyType: 'formatted-text',
+      propertyType: 'content',
     });
 
     render(<QueryFilterNodeCard query={query} node={node} />);

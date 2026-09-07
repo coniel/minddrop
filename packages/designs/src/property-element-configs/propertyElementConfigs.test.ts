@@ -23,7 +23,7 @@ describe('property element configs', () => {
     expect(propertyTypes).toEqual([
       'title',
       'text',
-      'formatted-text',
+      'content',
       'number',
       'date',
       'select',

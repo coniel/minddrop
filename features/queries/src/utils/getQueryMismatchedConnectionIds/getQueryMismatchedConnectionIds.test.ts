@@ -21,7 +21,7 @@ const [sourceNode, filterNode, resultsNode] = query_1.nodes;
 const matchingFilter: QueryFilterNode = {
   ...(filterNode as QueryFilterNode),
   property: 'Content',
-  propertyType: 'formatted-text',
+  propertyType: 'content',
 };
 
 // A filter for a property missing from the object database

@@ -1,17 +1,17 @@
 import { PropertyElementConfig } from '../types';
 
 /**
- * The formatted text property element. Its Editor variant edits
+ * The content property element. Its Editor variant edits
  * the bound document in a rich content editor; its Display variant
  * renders the document read-only for contexts where inline editing
  * is not wanted (e.g. previews). Excluded from list layouts, where
  * a content document has no room to render.
  */
-export const FormattedTextPropertyElementConfig: PropertyElementConfig = {
-  propertyType: 'formatted-text',
-  label: 'properties.textFormatted.name',
+export const ContentPropertyElementConfig: PropertyElementConfig = {
+  propertyType: 'content',
+  label: 'properties.content.name',
   icon: 'text-quote',
-  bindsPropertyTypes: ['formatted-text'],
+  bindsPropertyTypes: ['content'],
   defaultVariant: 'editor',
   context: { designTypes: ['database'], layoutTypes: ['card', 'page'] },
   variants: [
@@ -39,7 +39,7 @@ export const FormattedTextPropertyElementConfig: PropertyElementConfig = {
       id: 'display',
       label: 'designs.propertyElements.variants.display',
       description: 'designs.propertyElements.descriptions.display',
-      renderer: 'formatted-text',
+      renderer: 'content',
       styleCategory: 'typography',
       editableStyles: [
         'color',

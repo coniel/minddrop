@@ -103,7 +103,7 @@ function restorePropertyValue(
     return value;
   }
 
-  // All other types (text, formatted-text, url, icon, file,
+  // All other types (text, content, url, icon, file,
   // image, title): stored as string
   return value;
 }

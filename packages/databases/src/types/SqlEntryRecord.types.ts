@@ -68,7 +68,7 @@ export interface SqlEntryPropertyRecord {
 
   /**
    * The property value. Type depends on the property type:
-   * - text, formatted-text, url, icon, file, image, title: string
+   * - text, content, url, icon, file, image, title: string
    * - number: number
    * - toggle: boolean
    * - date, created, last-modified: number (epoch ms)

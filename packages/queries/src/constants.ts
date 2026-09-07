@@ -68,7 +68,7 @@ export const QUERY_OPERATORS_BY_PROPERTY_TYPE: Record<
     'ends-with',
   ],
   text: TEXT_OPERATORS,
-  'formatted-text': TEXT_OPERATORS,
+  content: TEXT_OPERATORS,
   url: TEXT_OPERATORS,
   // File based properties only support existence tests
   icon: ['is-empty', 'is-not-empty'],

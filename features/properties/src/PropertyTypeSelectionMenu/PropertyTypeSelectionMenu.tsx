@@ -34,15 +34,24 @@ export interface PropertyTypeSelectionMenuProps
 export const PropertyTypeSelectionMenu: React.FC<
   PropertyTypeSelectionMenuProps
 > = ({ children, onSelect, existingProperties = [], ...other }) => {
-  const existingMetaProperties = existingProperties
-    .filter((property) => Properties.schemas[property.type]?.meta)
+  // Singleton types the schema already contains, omitted from the menu
+  const existingSingletonTypes = existingProperties
+    .filter((property) => Properties.schemas[property.type]?.singleton)
     .map((property) => property.type);
-  const basicProperties = Object.values(Properties.schemas).filter(
-    (property) => !property.meta,
+  const availableProperties = Object.values(Properties.schemas).filter(
+    (schema) => !existingSingletonTypes.includes(schema.type),
   );
-  const metaProperties = Object.values(Properties.schemas)
-    .filter((property) => property.meta)
-    .filter((schema) => !existingMetaProperties.includes(schema.type));
+  // The single instance properties every entry can carry, metadata
+  // first and the content document below them.
+  const singletonProperties = [
+    ...availableProperties.filter((property) => property.meta),
+    ...availableProperties.filter(
+      (property) => property.singleton && !property.meta,
+    ),
+  ];
+  const basicProperties = availableProperties.filter(
+    (property) => !property.meta && !property.singleton,
+  );
 
   return (
     <DropdownMenu
@@ -52,9 +61,9 @@ export const PropertyTypeSelectionMenu: React.FC<
       searchable
       {...other}
     >
-      {/** Meta property types **/}
+      {/** Single instance property types **/}
       <MenuGroup>
-        {metaProperties.map((schema) => (
+        {singletonProperties.map((schema) => (
           <DropdownSearchableMenuItem
             key={schema.type}
             label={schema.name}
@@ -65,7 +74,7 @@ export const PropertyTypeSelectionMenu: React.FC<
         ))}
       </MenuGroup>
 
-      {metaProperties.length > 0 && <DropdownMenuSeparator />}
+      {singletonProperties.length > 0 && <DropdownMenuSeparator />}
 
       {/** Basic property types **/}
       <MenuGroup>

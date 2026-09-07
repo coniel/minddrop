@@ -13,7 +13,7 @@ const compatiblePropertyTypesMap: Record<PropertyType, PropertyType[]> = {
   created: ['created'],
   date: ['date', 'created', 'last-modified'],
   file: ['file'],
-  'formatted-text': ['formatted-text'],
+  content: ['content'],
   icon: ['icon'],
   image: ['image'],
   'last-modified': ['last-modified'],

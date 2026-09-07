@@ -111,7 +111,7 @@ To add a new generator:
 
 Pick the style type that fits the element:
 
-- **Text-based** (text, formatted-text, number, date, url): use `TextElementStyle` + `DefaultTextElementStyle`
+- **Text-based** (text, content, number, date, url): use `TextElementStyle` + `DefaultTextElementStyle`
 - **Icon**: use `IconElementStyle` + `DefaultIconElementStyle`
 - **Image**: use `ImageElementStyle` + `DefaultImageElementStyle`
 - **Image viewer**: use `ImageViewerElementStyle` + `DefaultImageViewerElementStyle`

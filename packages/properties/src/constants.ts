@@ -29,7 +29,7 @@ export const METADATA_PROPERTY_TYPES = new Set<PropertyType>(
 
 /**
  * Property types whose values can be ordered. Multi-value, file
- * based and rich text properties have no order to sort on.
+ * based and content properties have no order to sort on.
  */
 export const SORTABLE_PROPERTY_TYPES = new Set<PropertyType>([
   'created',

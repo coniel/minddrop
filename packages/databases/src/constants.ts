@@ -55,7 +55,7 @@ export const EXCLUDED_TYPES_SQL = "'collection'";
 // Property types that map to value_text in entry_properties
 export const TEXT_PROPERTY_TYPES = new Set<PropertyType>([
   'text',
-  'formatted-text',
+  'content',
   'url',
   'icon',
   'file',

@@ -51,7 +51,7 @@ export const objectDatabase = generateDatabase({
   entryName: 'Object',
   properties: [
     {
-      type: 'formatted-text',
+      type: 'content',
       name: 'Content',
       defaultValue: 'Default Content',
       icon: 'lucide:shapes:blue',

@@ -214,8 +214,8 @@ is otherwise still the target. Known gaps:
   built-in view type keeps a `@minddrop/feature-databases` dependency.
   It is blocked on `LayoutRenderer`: its element subtree reaches
   `@minddrop/feature-data-views` (`ViewDesignElement`) and
-  `@minddrop/feature-markdown-editor` (`EditorDesignElement`,
-  `FormattedTextElement`), so `ui/designs` cannot exist before
+  `@minddrop/feature-markdown-editor` (`EditorPropertyRenderer`,
+  `ContentPropertyRenderer`), so `ui/designs` cannot exist before
   `ui/data-views` and `ui/markdown-editor` do.
 - `features/databases`, `features/designs` and `features/spaces` import
   renderers and editor fields from each other

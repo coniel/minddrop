@@ -43,7 +43,7 @@ export const ContactsDatabaseTemplate: DatabaseTemplateFn = (t) => {
         icon: 'lucide:image:default',
       },
       {
-        type: 'formatted-text',
+        type: 'content',
         name: t(propertyKey('notes', 'name')),
         icon: 'lucide:text-quote:default',
       },

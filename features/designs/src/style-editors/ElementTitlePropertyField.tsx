@@ -59,11 +59,11 @@ export const ElementTitlePropertyField: React.FC<
     studio.setDesignElement(elementId, unboundElement);
   }
 
-  // Only formatted text property elements carry a title block
+  // Only content property elements carry a title block
   if (
     !element ||
     element.type !== 'property' ||
-    element.propertyType !== 'formatted-text'
+    element.propertyType !== 'content'
   ) {
     return null;
   }

@@ -31,10 +31,14 @@ export interface PropertySchemaBase {
   /**
    * Indicates that this property is a meta data property, such as a title,
    * created or last-modified timestamp.
-   *
-   * Item types can only contain one property of each meta type.
    */
   meta?: boolean;
+
+  /**
+   * Indicates that a properties schema can contain at most one property of
+   * this type, such as the title or content property.
+   */
+  singleton?: boolean;
 }
 
 /**

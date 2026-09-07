@@ -46,7 +46,7 @@ export const objectEntry1SqlRecord: SqlEntryRecord = {
   contentHash: '',
   metadata: '{}',
   properties: [
-    { name: 'Content', type: 'formatted-text', value: 'Test content' },
+    { name: 'Content', type: 'content', value: 'Test content' },
     { name: 'Icon', type: 'icon', value: 'lucide:shapes:blue' },
   ],
 };

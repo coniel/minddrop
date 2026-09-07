@@ -1,10 +1,10 @@
 import {
   CollectionPropertyElement,
   ContainerElement,
+  ContentPropertyElement,
   DataViewElement,
   DatePropertyElement,
   DesignElement,
-  FormattedTextPropertyElement,
   IconPropertyElement,
   ImagePropertyElement,
   NumberPropertyElement,
@@ -72,10 +72,7 @@ export const element_container_3 = generateContainerElementFixture(3);
 export const element_property_text_1 =
   generatePropertyElementFixture<TextPropertyElement>('text', 1);
 export const element_property_formatted_text_1 =
-  generatePropertyElementFixture<FormattedTextPropertyElement>(
-    'formatted-text',
-    1,
-  );
+  generatePropertyElementFixture<ContentPropertyElement>('content', 1);
 export const element_property_number_1 =
   generatePropertyElementFixture<NumberPropertyElement>('number', 1);
 export const element_property_date_1 =

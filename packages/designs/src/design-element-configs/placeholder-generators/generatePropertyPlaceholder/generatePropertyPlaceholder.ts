@@ -19,7 +19,7 @@ export function generatePropertyPlaceholder(
     case 'text':
     case 'title':
       return generateLoremIpsum(3);
-    case 'formatted-text':
+    case 'content':
       return generateLoremIpsum(20);
     case 'number':
       return generateNumberPlaceholder(3);

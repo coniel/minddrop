@@ -191,9 +191,9 @@
       "name": "Icon",
       "description": "An icon picker for selecting an icon."
     },
-    "textFormatted": {
-      "name": "Formatted text",
-      "description": "Richly formatted text edited using a text editor."
+    "content": {
+      "name": "Content",
+      "description": "The entry's content document, edited using a text editor."
     },
     "created": {
       "name": "Created",
@@ -1685,7 +1685,6 @@
       "icon": "Icon",
       "badges": "Badges",
       "webview": "Web view",
-      "formatted-text": "Formatted text",
       "editor": "Editor",
       "property": "Property",
       "view": "View",

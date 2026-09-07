@@ -124,7 +124,7 @@ through the ui-primitives re-export:
 | File                                                                                                                                                          | Usage                                                                                                       |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
 | `src/schemas/SelectPropertySchema.ts`                                                                                                                         | `SelectPropertyOption.color: ContentColor`, persisted in property schemas; plus a `lucide:*:default` string |
-| 13 other `src/schemas/*PropertySchema.ts` files (Collection, Created, Date, File, FormattedText, Icon, Image, LastModified, Number, Text, Title, Toggle, Url) | Each has a `lucide:name:default` string                                                                     |
+| 13 other `src/schemas/*PropertySchema.ts` files (Collection, Content, Created, Date, File, Icon, Image, LastModified, Number, Text, Title, Toggle, Url) | Each has a `lucide:name:default` string                                                                     |
 
 ### packages/databases (18 files)
 

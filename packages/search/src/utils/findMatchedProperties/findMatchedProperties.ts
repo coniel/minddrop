@@ -5,7 +5,7 @@ import { highlightAllMatches } from '../highlightAllMatches';
 
 // Property types that contain long-form text and should
 // be returned as snippets rather than full values.
-const LONG_TEXT_TYPES = new Set(['text', 'formatted-text']);
+const LONG_TEXT_TYPES = new Set(['text', 'content']);
 
 // Maximum value length (in characters) before snippeting kicks in
 const SNIPPET_THRESHOLD = 80;

@@ -13,8 +13,7 @@ export const markdownEntrySerializer: DatabaseEntrySerializer = {
 
     // Find all formatted text properties
     const formattedTextProperties = Object.entries(properties).filter(
-      ([key]) =>
-        schema.find((prop) => prop.name === key)?.type === 'formatted-text',
+      ([key]) => schema.find((prop) => prop.name === key)?.type === 'content',
     );
     // Get non-formatted text properties
     const nonFormattedTextProperties: PropertyMap = {};
@@ -55,7 +54,7 @@ export const markdownEntrySerializer: DatabaseEntrySerializer = {
 
     // Get formatted text properties from the schema
     const formattedTextProperties = schema
-      .filter((property) => property.type === 'formatted-text')
+      .filter((property) => property.type === 'content')
       .map((property) => property.name);
 
     // If there is only one formatted text property, use the entire markdown content as its value

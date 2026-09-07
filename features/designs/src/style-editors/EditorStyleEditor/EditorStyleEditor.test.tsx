@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { FormattedTextPropertyElement } from '@minddrop/designs';
+import { ContentPropertyElement } from '@minddrop/designs';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
 import {
   cleanup as cleanupRender,
@@ -74,7 +74,7 @@ describe('<EditorStyleEditor />', () => {
 
 /**
  * Opens the books design with its card layout active and the
- * text element replaced by a formatted text property element on
+ * text element replaced by a content property element on
  * its editor variant.
  */
 function openEditorElement() {
@@ -83,7 +83,7 @@ function openEditorElement() {
   studio.initialize(design_books, design_books.properties);
   studio.setActiveLayout(layout_card_1.id);
 
-  // Replace the text element with a formatted text property
+  // Replace the text element with a content property
   // element, keeping its ID so the editor renders the same slot.
   const element = studio.getDesignElement<FlatTextElement>(
     element_text_1.id,
@@ -93,7 +93,7 @@ function openEditorElement() {
   studio.setDesignElement(element_text_1.id, {
     ...element,
     type: 'property',
-    propertyType: 'formatted-text',
+    propertyType: 'content',
     variant: 'editor',
   } as FlatDesignElement);
 
@@ -114,10 +114,9 @@ function renderEditor(studio: DesignStudioStore) {
 /**
  * Reads the converted editor element from the store.
  */
-function readEditorElement(
-  studio: DesignStudioStore,
-): FormattedTextPropertyElement {
-  return studio.getDesignElement<
-    FormattedTextPropertyElement & { parent: string }
-  >(element_text_1.id, layout_card_1.id);
+function readEditorElement(studio: DesignStudioStore): ContentPropertyElement {
+  return studio.getDesignElement<ContentPropertyElement & { parent: string }>(
+    element_text_1.id,
+    layout_card_1.id,
+  );
 }

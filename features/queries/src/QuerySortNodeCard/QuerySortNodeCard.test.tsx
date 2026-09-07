@@ -17,7 +17,7 @@ const sortNode: QuerySortNode = {
   x: 0,
   y: 0,
   property: 'Content',
-  propertyType: 'formatted-text',
+  propertyType: 'content',
   direction: 'ascending',
 };
 
@@ -89,7 +89,7 @@ describe('<QuerySortNodeCard />', () => {
     // A sort on a property of the source database
     const { query, node } = queryWithSort({
       property: 'Content',
-      propertyType: 'formatted-text',
+      propertyType: 'content',
     });
 
     render(<QuerySortNodeCard query={query} node={node} />);

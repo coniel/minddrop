@@ -11,4 +11,5 @@ export const CreatedPropertySchema: PropertySchemaTemplate<CreatedPropertySchema
     name: 'properties.created.name',
     description: 'properties.created.description',
     meta: true,
+    singleton: true,
   };

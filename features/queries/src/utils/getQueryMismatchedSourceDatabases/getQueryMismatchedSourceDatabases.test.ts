@@ -51,7 +51,7 @@ describe('getQueryMismatchedSourceDatabases', () => {
     // A filter for a property of the source database
     const query = queryWithFilter({
       property: 'Content',
-      propertyType: 'formatted-text',
+      propertyType: 'content',
     });
 
     expect(getQueryMismatchedSourceDatabases(query, filterNode.id)).toEqual([]);

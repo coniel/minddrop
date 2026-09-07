@@ -165,9 +165,9 @@ function renderField({
   // Placeholder shown when the property has no template value
   const emptyPlaceholder = 'databases.entryTemplates.form.emptyValue' as const;
 
-  // Formatted text properties use a rich text editor, as their
+  // Content properties use a rich text editor, as their
   // values are markdown.
-  if (property.type === 'formatted-text') {
+  if (property.type === 'content') {
     return (
       <div className="database-entry-template-property-field-editor">
         <MarkdownEditor

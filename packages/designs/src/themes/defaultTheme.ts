@@ -139,7 +139,7 @@ export const DefaultDesignTheme: DesignTheme = {
         },
       },
     },
-    'formatted-text': {
+    content: {
       // The content document opened for writing: compact on cards,
       // larger on the pages and spaces it opens in. The editor
       // fills the width it is given, leaving the reading measure to

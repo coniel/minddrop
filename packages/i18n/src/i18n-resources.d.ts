@@ -247,7 +247,7 @@ declare module 'i18next' {
             name: string;
             description: string;
           };
-          textFormatted: {
+          content: {
             name: string;
             description: string;
           };
@@ -1848,7 +1848,6 @@ declare module 'i18next' {
             icon: string;
             badges: string;
             webview: string;
-            'formatted-text': string;
             editor: string;
             property: string;
             view: string;

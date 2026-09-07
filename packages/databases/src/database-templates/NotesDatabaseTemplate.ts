@@ -18,7 +18,7 @@ export const NotesDatabaseTemplate: DatabaseTemplateFn = (t) => {
     icon: 'lucide:pencil:default',
     properties: [
       {
-        type: 'formatted-text',
+        type: 'content',
         name: t(propertyKey('content', 'name')),
         icon: 'lucide:text-quote:default',
       },

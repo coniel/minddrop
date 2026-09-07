@@ -23,16 +23,16 @@ describe('<DatabaseEntryTemplateEditor />', () => {
 
   afterEach(cleanup);
 
-  describe('formatted text properties', () => {
-    // Adds a formatted text property to the fixture database and
+  describe('content properties', () => {
+    // Adds a content property to the fixture database and
     // opens the template's editor.
-    async function openEditorWithFormattedText(template = entryTemplate2) {
+    async function openEditorWithContent(template = entryTemplate2) {
       const user = userEvent.setup();
 
       Databases.Store.update(entryTemplatesDatabase.id, {
         properties: [
           ...entryTemplatesDatabase.properties,
-          { type: 'formatted-text', name: 'Summary' },
+          { type: 'content', name: 'Summary' },
         ],
       });
 
@@ -50,7 +50,7 @@ describe('<DatabaseEntryTemplateEditor />', () => {
     }
 
     it('are filled in with a rich text editor', async () => {
-      await openEditorWithFormattedText();
+      await openEditorWithContent();
 
       // A rich text editor is rendered rather than a plain input
       await waitFor(() => {
@@ -61,8 +61,8 @@ describe('<DatabaseEntryTemplateEditor />', () => {
     });
 
     it('are emptied by the clear button', async () => {
-      // Open a template with a stored formatted text value
-      const user = await openEditorWithFormattedText({
+      // Open a template with a stored content value
+      const user = await openEditorWithContent({
         ...entryTemplate2,
         properties: { Summary: 'Stored summary' },
       });
@@ -82,7 +82,7 @@ describe('<DatabaseEntryTemplateEditor />', () => {
     });
 
     it('discard their edits when the editor is cancelled', async () => {
-      const user = await openEditorWithFormattedText();
+      const user = await openEditorWithContent();
 
       const editable = await waitFor(() => {
         const node = document.querySelector('[contenteditable="true"]');

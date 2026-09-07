@@ -16,7 +16,7 @@ import { TextPlaceholderField } from './style-editors/TextPlaceholderField';
 const PlaceholderPropertyTypes: PropertyType[] = [
   'text',
   'title',
-  'formatted-text',
+  'content',
   'number',
   'date',
   'select',
@@ -25,9 +25,9 @@ const PlaceholderPropertyTypes: PropertyType[] = [
   'icon',
 ];
 
-// Coarser length steps for formatted text, which runs to whole
+// Coarser length steps for content, which runs to whole
 // paragraphs rather than a line.
-const FormattedTextWordCounts = [
+const ContentWordCounts = [
   5, 10, 20, 30, 50, 75, 100, 150, 200, 250, 300, 400, 500, 600, 700, 800, 900,
   1000,
 ];
@@ -228,12 +228,12 @@ const PlaceholderField: React.FC<PlaceholderFieldProps> = ({
     return <TextPlaceholderField value={value} onValueChange={onValueChange} />;
   }
 
-  if (type === 'formatted-text') {
+  if (type === 'content') {
     return (
       <TextPlaceholderField
         value={value}
         onValueChange={onValueChange}
-        wordCounts={FormattedTextWordCounts}
+        wordCounts={ContentWordCounts}
       />
     );
   }

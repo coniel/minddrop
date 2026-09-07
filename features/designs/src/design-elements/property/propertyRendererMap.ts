@@ -1,13 +1,13 @@
 import { PropertyElement } from '@minddrop/designs';
 import { BadgesPropertyRenderer } from './BadgesPropertyRenderer';
 import { CollectionPropertyRenderer } from './CollectionPropertyRenderer';
+import { ContentPropertyRenderer } from './ContentPropertyRenderer';
 import { DatePropertyRenderer } from './DatePropertyRenderer';
 import { EditorPropertyRenderer } from './EditorPropertyRenderer';
 import {
   MultilineFieldPropertyRenderer,
   TextFieldPropertyRenderer,
 } from './FieldPropertyRenderer';
-import { FormattedTextPropertyRenderer } from './FormattedTextPropertyRenderer';
 import { IconPropertyRenderer } from './IconPropertyRenderer';
 import { ImagePropertyRenderer } from './ImagePropertyRenderer';
 import { ImageViewerPropertyRenderer } from './ImageViewerPropertyRenderer';
@@ -37,7 +37,7 @@ export const propertyRendererMap: Record<string, PropertyRenderer> = {
   text: renderer(TextPropertyRenderer),
   'text-field': renderer(TextFieldPropertyRenderer),
   'multiline-field': renderer(MultilineFieldPropertyRenderer),
-  'formatted-text': renderer(FormattedTextPropertyRenderer),
+  content: renderer(ContentPropertyRenderer),
   editor: renderer(EditorPropertyRenderer),
   number: renderer(NumberPropertyRenderer),
   date: renderer(DatePropertyRenderer),
