@@ -42,6 +42,7 @@ export function goBack(viewAreaId: string, steps = 1): void {
     split: entry.split,
     splitRatio: entry.splitRatio,
     viewState: entry.viewState ?? {},
+    slots: entry.slots ?? {},
     backHistory: backHistory.slice(0, entryIndex),
     forwardHistory: [
       ...(session.forwardHistory ?? []),

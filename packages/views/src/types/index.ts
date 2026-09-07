@@ -10,5 +10,5 @@ export * from './SessionViewState.types';
 export * from './SessionHistoryEntry.types';
 export * from './ViewSession.types';
 export * from './ViewSessionSet.types';
-export * from './SlotClaim.types';
+export * from './SessionSlot.types';
 export * from './SlotFill.types';

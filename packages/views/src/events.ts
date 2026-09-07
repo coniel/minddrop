@@ -1,3 +1,5 @@
+import type { SessionSlot } from './types/SessionSlot.types';
+import type { SlotFillKind } from './types/SlotFill.types';
 import type { SubviewDescriptor } from './types/Subview.types';
 import type {
   DefaultViewProps,
@@ -13,6 +15,9 @@ export const SetSubviewEvent = 'app:view:set-subview';
 export const SetViewAreaEvent = 'app:view-area:set';
 export const ViewAreaChangedEvent = 'app:view-area:changed';
 export const ViewAreaReadyEvent = 'app:view-area:ready';
+export const SetSlotEvent = 'app:slot:set';
+export const ToggleSlotEvent = 'app:slot:toggle';
+export const ClearSlotEvent = 'app:slot:clear';
 
 export type OpenViewEventData<TProps = DefaultViewProps> = {
   /**
@@ -204,6 +209,75 @@ export type ViewAreaReadyEventData = {
   viewAreaId: string;
 };
 
+/**
+ * Payload of the set slot event: the slot to change and the state
+ * merged onto it, leaving out what it does not name.
+ */
+export type SetSlotEventData = SessionSlot & {
+  /**
+   * The id of the target view area. Defaults to the app's primary
+   * view area when omitted.
+   */
+  viewAreaId?: string;
+
+  /**
+   * The id of the session to change the slot for. Defaults to the
+   * view area's active session when omitted.
+   */
+  sessionId?: string;
+
+  /**
+   * The id of the slot to change.
+   */
+  slotId: SlotFillKind;
+};
+
+/**
+ * Payload of the toggle slot event, flipping whether the slot is
+ * hidden.
+ */
+export type ToggleSlotEventData = {
+  /**
+   * The id of the target view area. Defaults to the app's primary
+   * view area when omitted.
+   */
+  viewAreaId?: string;
+
+  /**
+   * The id of the session to toggle the slot for. Defaults to the
+   * view area's active session when omitted.
+   */
+  sessionId?: string;
+
+  /**
+   * The id of the slot to toggle.
+   */
+  slotId: SlotFillKind;
+};
+
+/**
+ * Payload of the clear slot event, returning the slot to the shell's
+ * fallback.
+ */
+export type ClearSlotEventData = {
+  /**
+   * The id of the target view area. Defaults to the app's primary
+   * view area when omitted.
+   */
+  viewAreaId?: string;
+
+  /**
+   * The id of the session to clear the slot for. Defaults to the
+   * view area's active session when omitted.
+   */
+  sessionId?: string;
+
+  /**
+   * The id of the slot to clear.
+   */
+  slotId: SlotFillKind;
+};
+
 // The right panel renders a view, so its open event carries the view
 // open event data and is registered here alongside it.
 declare module '@minddrop/events/EventDataMap' {
@@ -216,6 +290,9 @@ declare module '@minddrop/events/EventDataMap' {
     'app:view-area:set': SetViewAreaEventData;
     'app:view-area:changed': ViewAreaChangedEventData;
     'app:view-area:ready': ViewAreaReadyEventData;
+    'app:slot:set': SetSlotEventData;
+    'app:slot:toggle': ToggleSlotEventData;
+    'app:slot:clear': ClearSlotEventData;
     'app:right-panel:open': OpenViewEventData;
   }
 }

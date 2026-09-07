@@ -47,7 +47,7 @@ The `ViewSessions` namespace exposes the session lifecycle (`create`,
 `close`, `setActive`, `setOrder`, `update`, `split`, `unsplit`,
 `duplicate`), the history (`goBack`, `goForward`), the view area sync
 (`recordViewArea`, `restoreActive`, `updateForView`, `closeForView`),
-the transient view state getters and setters, the slot claims (below),
+the transient view state getters and setters, the slot state (below),
 the cross-area `getOpenViews` and the hooks (`useAll`, `useActive`,
 `useActiveId`, `useCanGoBack`, `useCanGoForward`, `useBreadcrumbTrail`).
 `Tabs` in `features/views` keeps only the strip's interactions
@@ -57,10 +57,10 @@ activate-by-index, `useIsViewActive`), all built on `ViewSessions`.
 `ViewRenderer` wraps each rendered view in `Views.SessionProvider`
 alongside `Views.PaneProvider`, and `Views.useSession()` returns the
 session id. Session-scoped state (transient view state through
-`SessionViewStateProvider`, slot claims through `useSlot`) reads the id
-from the provider rather than assuming the view is the active session,
-so a view's writes land on its own session even while it unmounts
-during a session switch.
+`SessionViewStateProvider`, slot state through `Views.useSlot`) reads
+the id from the provider rather than assuming the view is the active
+session, so a view's writes land on its own session even while it
+unmounts during a session switch.
 
 ## UI slots and fills
 
@@ -75,25 +75,47 @@ the store knows nothing about kinds. `packages/views` declares the
 registry holds no policy: defaults, fallbacks and the shared sidebar
 width stay in the shell.
 
-Sessions choose their fills: `ViewSession.slots` maps slot ids to
-`SlotClaim` values (`{ fill, props? }`, plain data only, since sessions
-persist as JSON). `ViewSessions.claimSlot` and `releaseSlot` maintain the
-map. Claims are not snapshotted into history entries; they are derived
-from the mounted view, so navigating away unmounts the claimant and
-releases its claim.
+Slot state is session state: `ViewSession.slots` maps slot ids to
+`SessionSlot` values (`{ fill?, props?, hidden? }`, plain data only,
+since sessions persist as JSON). A state with no `fill` shows the
+shell's fallback, and `hidden` hides the slot entirely, fallback
+included, while keeping the chosen fill for when it is shown again.
+`ViewSessions.setSlot` (merging), `toggleSlot`, `clearSlot` and
+`initializeSlot` (set only when the slot has no state yet) maintain the
+map. The state is snapshotted into history entries alongside the views
+it belongs to, restored by `goBack` and `goForward`, and reset by
+`recordViewArea` when the main pane navigates to a different view, so a
+view's slots do not follow the next one.
+
+Three events change slot state after mount, handled by the view area
+sync listeners in `features/views`: `Views.events.SetSlot` (merge a
+fill, props or visibility onto the slot), `ToggleSlot` (flip `hidden`)
+and `ClearSlot` (return the slot to its fallback). Each takes an
+optional `viewAreaId` (defaulting to the main area) and `sessionId`
+(defaulting to that area's active session), so shell chrome targets the
+active session while a view targets its own through `Views.useSession()`.
+
+`packages/views` owns the hooks: `Views.useSlot(slotId, state)` sets
+the calling view's default for a slot, applied on mount and only when
+the session has no state for it yet (it never overrides restored state
+and never releases on unmount), and `Views.useSlotState(slotId,
+fallback?)` returns a slot's state on the active session along with
+what it resolves to (`{ fill, props, hidden, resolved }`), for frames
+which must collapse rather than render an empty container.
 
 The `@minddrop/ui-views` package (`ui/views`, depending on
-`@minddrop/views` only) provides the two ends: `<Slot id="sidebar"
-fallback={...} />` renders the fill claimed by the active session of the
-surrounding view area (the main area outside of a pane), falling back to
-the given claim or fill id when the session claims nothing or an
-unregistered fill, and `useSlot(slotId, fillId, props?)` claims the slot
-for the calling view's session while mounted. The desktop app owns the
-sidebar frame (`Sidebar` at the persisted `AppUiState.sidebarWidth`, the
-resize handlers and the nav toolbar width dispatch) and renders the slot
-inside it, with `AppSidebar` reduced to content and registered as the
-default `sidebar` fill by `registerSidebars`. Fills are content only, so
-every sidebar shares the one width.
+`@minddrop/views` only) renders them: `<Slot id="sidebar"
+fallback={...} />` shows the fill the active session of the
+surrounding view area names (the main area outside of a pane), falls
+back to the given state or fill id when the session names none or an
+unregistered one, and renders nothing while the slot is hidden.
+
+The desktop app owns the sidebar frame (`Sidebar` at the persisted
+`AppUiState.sidebarWidth`, the resize handlers and the nav toolbar width
+dispatch), renders the slot inside it and renders no frame at all while
+the sidebar is hidden, with `AppSidebar` reduced to content and
+registered as the default `sidebar` fill by `registerSidebars`. Fills
+are content only, so every sidebar shares the one width.
 
 ## Data views are independent entities
 

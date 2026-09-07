@@ -34,6 +34,7 @@ export function goForward(viewAreaId: string): void {
     split: entry.split,
     splitRatio: entry.splitRatio,
     viewState: entry.viewState ?? {},
+    slots: entry.slots ?? {},
     backHistory: [
       ...(session.backHistory ?? []),
       toHistoryEntry(session),

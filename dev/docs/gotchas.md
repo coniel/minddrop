@@ -921,18 +921,16 @@ errors at the end of the run (8 across the suite as of
 
 ## packages/views
 
-### Slot claims can go stale on restored sessions
+### Restored slot state outlives a view which no longer sets it
 
-A session's `slots` map persists with the session, but claims are only
-released by the claiming view unmounting (`useSlot` cleanup). A session
-restored after a crash or force quit keeps whatever claim its view held
-at the time, and if the restored view no longer claims the slot (e.g.
-design mode is not re-entered) the stale claim keeps rendering its fill
-until the view claims or the session navigates. `Slot` tolerates
-claims naming unregistered fills by falling back, but not claims naming
-registered fills the view no longer wants. The palette work group
-verifies this once it adopts the mechanism; a fix would clear `slots`
-on hydrate or on `recordViewArea` navigation.
+A session's `slots` map persists with the session and is restored with
+it, and `Views.useSlot` only applies its default when the slot has no
+state yet, so restored state always wins. That is what makes a hidden
+sidebar survive a restart, but it also means a session restored after a
+crash keeps state for a slot its view has since stopped using, and
+`Slot` keeps rendering it until the session navigates (which resets
+`slots`). Only a crash plus a code change reaches this; a fix would
+drop states naming unregistered fills on hydrate.
 
 ## features/views
 

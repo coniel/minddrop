@@ -5,6 +5,7 @@ import { createViewSession } from '../createViewSession';
 import { getViewSessionSet } from '../getViewSessionSet';
 import { goBack } from '../goBack';
 import { recordViewArea } from '../recordViewArea';
+import { setSlot } from '../setSlot';
 import { setTransientViewState } from '../setTransientViewState';
 import { goForward } from './goForward';
 
@@ -92,5 +93,24 @@ describe('goForward', () => {
     expect(
       getViewSessionSet(VIEW_AREA_ID).sessions[0].viewState?.main?.scroll,
     ).toBe(40);
+  });
+
+  it('restores the slot state from the history entry', () => {
+    createViewSession(VIEW_AREA_ID);
+    recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:a' }));
+    recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:b' }));
+
+    const session = getViewSessionSet(VIEW_AREA_ID).sessions[0];
+
+    // Fill a slot on the current view, then navigate back so the
+    // forward entry carries it.
+    setSlot(VIEW_AREA_ID, session.id, 'sidebar', { fill: 'test:fill' });
+    goBack(VIEW_AREA_ID);
+
+    goForward(VIEW_AREA_ID);
+
+    expect(getViewSessionSet(VIEW_AREA_ID).sessions[0].slots).toEqual({
+      sidebar: { fill: 'test:fill' },
+    });
   });
 });

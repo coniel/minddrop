@@ -1,8 +1,8 @@
 import { EntityId } from '@minddrop/utils';
 import { SessionHistoryEntry } from './SessionHistoryEntry.types';
+import { SessionSlot } from './SessionSlot.types';
 import { SessionView } from './SessionView.types';
 import { SessionViewState } from './SessionViewState.types';
-import { SlotClaim } from './SlotClaim.types';
 
 export type ViewSessionId = EntityId<'session'>;
 
@@ -55,9 +55,9 @@ export interface ViewSession {
   viewState?: SessionViewState;
 
   /**
-   * The shell slots claimed by the session's mounted views, keyed by
-   * slot id. Claims are not part of the history: navigating away
-   * unmounts the claimant, which releases its claim.
+   * The state of the shell slots the session fills, keyed by slot id:
+   * the fill shown in each and whether it is hidden. Snapshotted into
+   * the history alongside the views it belongs to.
    */
-  slots?: Record<string, SlotClaim>;
+  slots?: Record<string, SessionSlot>;
 }

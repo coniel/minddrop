@@ -4,11 +4,14 @@ import {
   DefaultViewName,
 } from './constants';
 import {
+  ClearSlotEvent,
   CloseViewEvent,
   NavigateBackEvent,
   OpenViewEvent,
+  SetSlotEvent,
   SetSubviewEvent,
   SetViewAreaEvent,
+  ToggleSlotEvent,
   UpdateViewEvent,
   ViewAreaChangedEvent,
   ViewAreaReadyEvent,
@@ -25,6 +28,9 @@ export const events = {
   SetArea: SetViewAreaEvent,
   AreaChanged: ViewAreaChangedEvent,
   AreaReady: ViewAreaReadyEvent,
+  SetSlot: SetSlotEvent,
+  ToggleSlot: ToggleSlotEvent,
+  ClearSlot: ClearSlotEvent,
 } as const;
 
 export const constants = {
@@ -47,6 +53,8 @@ export {
 } from './SlotFillsStore';
 export { registerFill } from './registerFill';
 export { getFill } from './getFill';
+export { useSlot } from './useSlot';
+export { useSlotState } from './useSlotState';
 export {
   ViewBreadcrumbsProvider as BreadcrumbsProvider,
   useViewBreadcrumbs as useBreadcrumbs,

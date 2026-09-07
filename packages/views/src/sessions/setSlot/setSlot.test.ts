@@ -2,11 +2,11 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { ViewSessionsStore } from '../ViewSessionsStore';
 import { createViewSession } from '../createViewSession';
 import { getViewSessionSet } from '../getViewSessionSet';
-import { claimSlot } from './claimSlot';
+import { setSlot } from './setSlot';
 
 const VIEW_AREA_ID = 'test-set';
 
-describe('claimSlot', () => {
+describe('setSlot', () => {
   beforeEach(() => {
     ViewSessionsStore.clear();
   });
@@ -15,12 +15,12 @@ describe('claimSlot', () => {
     ViewSessionsStore.clear();
   });
 
-  it('stores the claim on the session under the slot id', () => {
+  it('stores the state on the session under the slot id', () => {
     createViewSession(VIEW_AREA_ID);
 
     const session = getViewSessionSet(VIEW_AREA_ID).sessions[0];
 
-    claimSlot(VIEW_AREA_ID, session.id, 'sidebar', {
+    setSlot(VIEW_AREA_ID, session.id, 'sidebar', {
       fill: 'test:fill',
       props: { entryId: 'a' },
     });
@@ -30,13 +30,29 @@ describe('claimSlot', () => {
     });
   });
 
-  it('keeps claims on other slots', () => {
+  it('merges the state onto the slot, keeping what it does not name', () => {
     createViewSession(VIEW_AREA_ID);
 
     const session = getViewSessionSet(VIEW_AREA_ID).sessions[0];
 
-    claimSlot(VIEW_AREA_ID, session.id, 'sidebar', { fill: 'test:fill' });
-    claimSlot(VIEW_AREA_ID, session.id, 'right-panel', { fill: 'test:panel' });
+    setSlot(VIEW_AREA_ID, session.id, 'sidebar', {
+      fill: 'test:fill',
+      props: { entryId: 'a' },
+    });
+    setSlot(VIEW_AREA_ID, session.id, 'sidebar', { hidden: true });
+
+    expect(getViewSessionSet(VIEW_AREA_ID).sessions[0].slots).toEqual({
+      sidebar: { fill: 'test:fill', props: { entryId: 'a' }, hidden: true },
+    });
+  });
+
+  it('keeps the state of other slots', () => {
+    createViewSession(VIEW_AREA_ID);
+
+    const session = getViewSessionSet(VIEW_AREA_ID).sessions[0];
+
+    setSlot(VIEW_AREA_ID, session.id, 'sidebar', { fill: 'test:fill' });
+    setSlot(VIEW_AREA_ID, session.id, 'right-panel', { fill: 'test:panel' });
 
     expect(getViewSessionSet(VIEW_AREA_ID).sessions[0].slots).toEqual({
       sidebar: { fill: 'test:fill' },
@@ -44,24 +60,24 @@ describe('claimSlot', () => {
     });
   });
 
-  it('leaves the session untouched when it already holds an equal claim', () => {
+  it('leaves the session untouched when the slot already holds the state', () => {
     createViewSession(VIEW_AREA_ID);
 
     const session = getViewSessionSet(VIEW_AREA_ID).sessions[0];
 
-    claimSlot(VIEW_AREA_ID, session.id, 'sidebar', {
+    setSlot(VIEW_AREA_ID, session.id, 'sidebar', {
       fill: 'test:fill',
       props: { entryId: 'a' },
     });
 
-    const claimed = getViewSessionSet(VIEW_AREA_ID).sessions[0];
+    const filled = getViewSessionSet(VIEW_AREA_ID).sessions[0];
 
-    claimSlot(VIEW_AREA_ID, session.id, 'sidebar', {
+    setSlot(VIEW_AREA_ID, session.id, 'sidebar', {
       fill: 'test:fill',
       props: { entryId: 'a' },
     });
 
-    expect(getViewSessionSet(VIEW_AREA_ID).sessions[0]).toBe(claimed);
+    expect(getViewSessionSet(VIEW_AREA_ID).sessions[0]).toBe(filled);
   });
 
   it('leaves other sessions untouched', () => {
@@ -71,7 +87,7 @@ describe('claimSlot', () => {
     const [firstSession, secondSession] =
       getViewSessionSet(VIEW_AREA_ID).sessions;
 
-    claimSlot(VIEW_AREA_ID, secondSession.id, 'sidebar', { fill: 'test:fill' });
+    setSlot(VIEW_AREA_ID, secondSession.id, 'sidebar', { fill: 'test:fill' });
 
     expect(getViewSessionSet(VIEW_AREA_ID).sessions[0]).toEqual(firstSession);
   });
@@ -81,7 +97,7 @@ describe('claimSlot', () => {
 
     const setBefore = getViewSessionSet(VIEW_AREA_ID);
 
-    claimSlot(VIEW_AREA_ID, 'session_unknown', 'sidebar', {
+    setSlot(VIEW_AREA_ID, 'session_unknown', 'sidebar', {
       fill: 'test:fill',
     });
 

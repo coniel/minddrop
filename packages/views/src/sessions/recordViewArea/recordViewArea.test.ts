@@ -5,6 +5,7 @@ import { ViewSessionsStore } from '../ViewSessionsStore';
 import { createViewSession } from '../createViewSession';
 import { getViewSessionSet } from '../getViewSessionSet';
 import { goBack } from '../goBack';
+import { setSlot } from '../setSlot';
 import { setTransientViewState } from '../setTransientViewState';
 import { updateViewSession } from '../updateViewSession';
 import { recordViewArea } from './recordViewArea';
@@ -278,5 +279,56 @@ describe('recordViewArea', () => {
 
     expect(updatedSession.backHistory?.[1].viewState?.main?.scroll).toBe(120);
     expect(updatedSession.viewState?.main).toEqual({});
+  });
+
+  it('resets the slot state when the main pane navigates', () => {
+    createViewSession(VIEW_AREA_ID);
+    recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:a' }));
+
+    const session = getViewSessionSet(VIEW_AREA_ID).sessions[0];
+
+    setSlot(VIEW_AREA_ID, session.id, 'sidebar', { fill: 'test:fill' });
+
+    recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:b' }));
+
+    const updatedSession = getViewSessionSet(VIEW_AREA_ID).sessions[0];
+
+    expect(updatedSession.slots).toEqual({});
+    expect(updatedSession.backHistory?.[1].slots).toEqual({
+      sidebar: { fill: 'test:fill' },
+    });
+  });
+
+  it('preserves the slot state when only the subview changes', () => {
+    createViewSession(VIEW_AREA_ID);
+    recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:a' }));
+
+    const session = getViewSessionSet(VIEW_AREA_ID).sessions[0];
+
+    setSlot(VIEW_AREA_ID, session.id, 'sidebar', { fill: 'test:fill' });
+
+    recordViewArea(
+      VIEW_AREA_ID,
+      state({ view: 'db:view', id: 'db:a', subview: { id: 'entry:a' } }),
+    );
+
+    expect(getViewSessionSet(VIEW_AREA_ID).sessions[0].slots).toEqual({
+      sidebar: { fill: 'test:fill' },
+    });
+  });
+
+  it('preserves the slot state when opening a split', () => {
+    createViewSession(VIEW_AREA_ID);
+    recordViewArea(VIEW_AREA_ID, state({ view: 'a' }));
+
+    const session = getViewSessionSet(VIEW_AREA_ID).sessions[0];
+
+    setSlot(VIEW_AREA_ID, session.id, 'sidebar', { fill: 'test:fill' });
+
+    recordViewArea(VIEW_AREA_ID, state({ view: 'a' }, { view: 'b' }));
+
+    expect(getViewSessionSet(VIEW_AREA_ID).sessions[0].slots).toEqual({
+      sidebar: { fill: 'test:fill' },
+    });
   });
 });

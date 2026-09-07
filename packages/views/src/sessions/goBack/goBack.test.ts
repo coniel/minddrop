@@ -5,6 +5,7 @@ import { ViewSessionsStore } from '../ViewSessionsStore';
 import { createViewSession } from '../createViewSession';
 import { getViewSessionSet } from '../getViewSessionSet';
 import { recordViewArea } from '../recordViewArea';
+import { setSlot } from '../setSlot';
 import { setTransientViewState } from '../setTransientViewState';
 import { goBack } from './goBack';
 
@@ -145,6 +146,26 @@ describe('goBack', () => {
 
     expect(updatedSession.viewState?.main?.scroll).toBe(120);
     expect(updatedSession.forwardHistory?.[0].viewState?.main?.scroll).toBe(40);
+  });
+
+  it('restores the slot state from the history entry', () => {
+    createViewSession(VIEW_AREA_ID);
+    recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:a' }));
+
+    const session = getViewSessionSet(VIEW_AREA_ID).sessions[0];
+
+    setSlot(VIEW_AREA_ID, session.id, 'sidebar', { hidden: true });
+    recordViewArea(VIEW_AREA_ID, state({ view: 'db:view', id: 'db:b' }));
+    setSlot(VIEW_AREA_ID, session.id, 'sidebar', { fill: 'test:fill' });
+
+    goBack(VIEW_AREA_ID);
+
+    const updatedSession = getViewSessionSet(VIEW_AREA_ID).sessions[0];
+
+    expect(updatedSession.slots).toEqual({ sidebar: { hidden: true } });
+    expect(updatedSession.forwardHistory?.[0].slots).toEqual({
+      sidebar: { fill: 'test:fill' },
+    });
   });
 
   it('defaults to an empty transient state for entries without one', () => {

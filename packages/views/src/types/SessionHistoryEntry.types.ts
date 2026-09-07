@@ -1,3 +1,4 @@
+import { SessionSlot } from './SessionSlot.types';
 import { SessionView } from './SessionView.types';
 import { SessionViewState } from './SessionViewState.types';
 
@@ -27,4 +28,10 @@ export interface SessionHistoryEntry {
    * The panes' transient UI state at the time of the snapshot.
    */
   viewState?: SessionViewState;
+
+  /**
+   * The state of the shell slots the session filled at the time of
+   * the snapshot.
+   */
+  slots?: Record<string, SessionSlot>;
 }

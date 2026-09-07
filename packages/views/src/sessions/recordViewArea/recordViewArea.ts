@@ -85,6 +85,12 @@ export function recordViewArea(
           }
         : session.viewState;
 
+    // Drop the slot state when the main pane navigates to a different
+    // view (its history snapshot was captured above), so the new view
+    // starts from the shell's defaults. A replay or a subview change
+    // keeps it, as does a split pane opening or closing.
+    const slots = mainNavigated ? {} : session.slots;
+
     // Keep the session as it is when the state merely replays what it
     // already shows, so subscribers and the persisted set are left
     // untouched.
@@ -107,6 +113,7 @@ export function recordViewArea(
       backHistory,
       forwardHistory,
       viewState,
+      slots,
     };
   });
 
