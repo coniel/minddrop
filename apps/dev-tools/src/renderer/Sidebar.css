@@ -231,6 +231,40 @@
   background: var(--color-bg-hover);
 }
 
+.sidebar-file-button.reviewed {
+  opacity: 0.45;
+}
+
+/* Work group files indent less, the review check takes up the space */
+.file-list .sidebar-file-button {
+  padding-left: 8px;
+}
+
+.sidebar-file-check {
+  flex-shrink: 0;
+  width: 9px;
+  font-size: 10px;
+  color: #73c991;
+}
+
+.sidebar-file-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar-file-comment-count {
+  flex-shrink: 0;
+  min-width: 15px;
+  margin-left: auto;
+  padding: 0 4px;
+  border-radius: 7px;
+  background: var(--color-bg-hover);
+  color: var(--color-text-muted);
+  font-size: 10px;
+  line-height: 15px;
+  text-align: center;
+}
+
 .sidebar-file-button.selected {
   background: var(--color-bg-selected);
 }

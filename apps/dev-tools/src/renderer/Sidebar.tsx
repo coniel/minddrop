@@ -39,6 +39,17 @@ interface SidebarProps {
   fileStatuses: Record<string, FileStatus>;
 
   /**
+   * The reviewed file paths of each work group, keyed by slug.
+   */
+  reviewedFiles: Record<string, string[]>;
+
+  /**
+   * Number of open comments on each file, keyed by work group slug
+   * and then by file path.
+   */
+  commentCounts: Record<string, Record<string, number>>;
+
+  /**
    * Optional inline styles for resize overrides.
    */
   style?: React.CSSProperties;
@@ -54,6 +65,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onSelectFile,
   onDeleteManifest,
   fileStatuses,
+  reviewedFiles,
+  commentCounts,
   style,
 }) => {
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -278,6 +291,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
                         handleSelectManifestFile(manifest, path)
                       }
                       fileStatuses={fileStatuses}
+                      reviewedPaths={
+                        new Set(reviewedFiles[manifest.slug] ?? [])
+                      }
+                      commentCounts={commentCounts[manifest.slug] ?? {}}
                     />
                   )}
                 </div>

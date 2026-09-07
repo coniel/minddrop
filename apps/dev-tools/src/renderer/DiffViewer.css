@@ -58,6 +58,10 @@
   margin-right: 12px;
 }
 
+.diff-viewer-reviewed-toggle.reviewed {
+  color: #73c991;
+}
+
 .diff-viewer-split-toggle.disabled {
   opacity: 0.4;
 }

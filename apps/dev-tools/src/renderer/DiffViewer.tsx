@@ -154,6 +154,16 @@ interface DiffViewerProps {
    * Called when a comment's gutter marker is clicked.
    */
   onFocusComment: (id: string) => void;
+
+  /**
+   * Whether the file has already been reviewed.
+   */
+  isReviewed: boolean;
+
+  /**
+   * Called when the file's reviewed state is toggled.
+   */
+  onToggleReviewed: () => void;
 }
 
 /**
@@ -175,6 +185,8 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
   canComment,
   onCreateComment,
   onFocusComment,
+  isReviewed,
+  onToggleReviewed,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const statusBarRef = useRef<HTMLDivElement>(null);
@@ -611,6 +623,20 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
         </div>
 
         <div className="diff-viewer-tabs">
+          {canComment && (
+            <button
+              className={`diff-viewer-tab diff-viewer-reviewed-toggle ${isReviewed ? 'reviewed' : ''}`}
+              onClick={onToggleReviewed}
+              title={
+                isReviewed
+                  ? 'Mark as needing review'
+                  : 'Mark as reviewed and open the next file (d)'
+              }
+            >
+              {isReviewed ? '✓ Reviewed' : 'Mark reviewed'}
+            </button>
+          )}
+
           {canComment && (
             <button
               className="diff-viewer-tab diff-viewer-file-comment"

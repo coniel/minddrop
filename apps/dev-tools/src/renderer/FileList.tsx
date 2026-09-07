@@ -23,6 +23,16 @@ interface FileListProps {
    * Git status for each changed file.
    */
   fileStatuses: Record<string, FileStatus>;
+
+  /**
+   * The paths of the files already reviewed.
+   */
+  reviewedPaths: Set<string>;
+
+  /**
+   * Number of open comments on each file.
+   */
+  commentCounts: Record<string, number>;
 }
 
 /**
@@ -33,6 +43,8 @@ export const FileList: React.FC<FileListProps> = ({
   selectedPath,
   onSelectFile,
   fileStatuses,
+  reviewedPaths,
+  commentCounts,
 }) => {
   // Group the files by the package they belong to
   const groups = groupFilesByPackage(files);
@@ -46,12 +58,21 @@ export const FileList: React.FC<FileListProps> = ({
           {group.files.map((file) => (
             <button
               key={file}
-              className={`sidebar-file-button ${selectedPath === file ? 'selected' : ''} ${fileStatuses[file] ? `file-status-${fileStatuses[file]}` : ''}`}
+              className={`sidebar-file-button ${selectedPath === file ? 'selected' : ''} ${reviewedPaths.has(file) ? 'reviewed' : ''} ${fileStatuses[file] ? `file-status-${fileStatuses[file]}` : ''}`}
               onClick={() => onSelectFile(file)}
               title={file}
             >
+              <span className="sidebar-file-check">
+                {reviewedPaths.has(file) ? '✓' : ''}
+              </span>
               <FileIcon filename={file} />
-              {getFileName(file)}
+              <span className="sidebar-file-name">{getFileName(file)}</span>
+
+              {commentCounts[file] > 0 && (
+                <span className="sidebar-file-comment-count">
+                  {commentCounts[file]}
+                </span>
+              )}
             </button>
           ))}
         </div>

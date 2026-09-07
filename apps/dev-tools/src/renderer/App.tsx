@@ -8,6 +8,7 @@ import type {
 import { DiffViewer } from './DiffViewer';
 import { ReviewPanel } from './ReviewPanel';
 import { Sidebar } from './Sidebar';
+import { groupFilesByPackage } from './groupFilesByPackage';
 import { rpc } from './index';
 import type {
   FileStatus,
@@ -15,7 +16,9 @@ import type {
   SelectedFile,
   ViewMode,
 } from './types';
+import { useCommentCounts } from './useCommentCounts';
 import { useReviewComments } from './useReviewComments';
+import { useReviewedFiles } from './useReviewedFiles';
 import './App.css';
 
 /**
@@ -48,10 +51,20 @@ export const App: React.FC = () => {
   const [reveal, setReveal] = useState<RevealRequest | null>(null);
   const { comments, createComment, updateComment, deleteComment } =
     useReviewComments(activeSlug);
+  const { reviewedFiles, setReviewed } = useReviewedFiles();
+  const commentCounts = useCommentCounts();
 
   // The manifest of the work group being reviewed
   const activeManifest =
     manifests.find((manifest) => manifest.slug === activeSlug) ?? null;
+
+  // Whether the open file has already been reviewed
+  const isSelectedFileReviewed =
+    selectedFile !== null &&
+    selectedFile.manifestSlug !== null &&
+    (reviewedFiles[selectedFile.manifestSlug] ?? []).includes(
+      selectedFile.path,
+    );
 
   // Number of comments still to address, shown on the collapsed panel
   const openCommentCount = comments.filter(
@@ -373,6 +386,86 @@ export const App: React.FC = () => {
     }
   }, []);
 
+  // Handle toggling the open file's reviewed state
+  const handleToggleReviewed = useCallback(() => {
+    if (!selectedFile || selectedFile.manifestSlug === null) {
+      return;
+    }
+
+    setReviewed(
+      selectedFile.manifestSlug,
+      selectedFile.path,
+      !isSelectedFileReviewed,
+    );
+  }, [selectedFile, isSelectedFileReviewed, setReviewed]);
+
+  // Mark the open file reviewed and move on to the next file of its
+  // work group still needing review
+  const markReviewedAndAdvance = useCallback(async () => {
+    if (!selectedFile || selectedFile.manifestSlug === null) {
+      return;
+    }
+
+    const slug = selectedFile.manifestSlug;
+    const manifest = manifests.find((candidate) => candidate.slug === slug);
+
+    if (!manifest) {
+      return;
+    }
+
+    await setReviewed(slug, selectedFile.path, true);
+
+    const reviewed = new Set([
+      ...(reviewedFiles[slug] ?? []),
+      selectedFile.path,
+    ]);
+    const next = resolveNextUnreviewedFile(
+      manifest.files,
+      selectedFile.path,
+      reviewed,
+    );
+
+    // Every other file of the work group has been reviewed
+    if (!next) {
+      return;
+    }
+
+    setSelectedFile({
+      path: next,
+      manifestSlug: slug,
+      baseRef: manifest.baseRef,
+      worktree: manifest.worktree ?? null,
+    });
+  }, [selectedFile, manifests, reviewedFiles, setReviewed]);
+
+  // Keyboard shortcut: d to mark the file reviewed and open the next
+  // one needing review
+  useEffect(() => {
+    const handler = (event: KeyboardEvent) => {
+      if (event.key !== 'd' && event.key !== 'D') {
+        return;
+      }
+
+      if (event.metaKey || event.ctrlKey || event.altKey) {
+        return;
+      }
+
+      if (isTypingInTextField()) {
+        return;
+      }
+
+      event.preventDefault();
+      event.stopPropagation();
+      markReviewedAndAdvance();
+    };
+
+    window.addEventListener('keydown', handler, true);
+
+    return () => {
+      window.removeEventListener('keydown', handler, true);
+    };
+  }, [markReviewedAndAdvance]);
+
   // Handle clicking a comment: open its file and scroll to its lines
   const handleSelectComment = useCallback(
     (comment: ReviewComment) => {
@@ -596,6 +689,8 @@ export const App: React.FC = () => {
         onSelectFile={handleSelectFile}
         onDeleteManifest={handleDeleteManifest}
         fileStatuses={fileStatuses}
+        reviewedFiles={reviewedFiles}
+        commentCounts={commentCounts}
         style={sidebarStyle}
       />
       <div className="app-resize-handle" onMouseDown={handleResizeStart} />
@@ -615,6 +710,8 @@ export const App: React.FC = () => {
             canComment={selectedFile.manifestSlug !== null}
             onCreateComment={handleCreateFileComment}
             onFocusComment={setFocusedCommentId}
+            isReviewed={isSelectedFileReviewed}
+            onToggleReviewed={handleToggleReviewed}
           />
         ) : (
           <div className="app-empty">Select a file to view changes</div>
@@ -657,3 +754,52 @@ export const App: React.FC = () => {
     </div>
   );
 };
+
+/**
+ * Returns the work group's next file still needing review, starting
+ * after the given file and wrapping around, or null when every other
+ * file has been reviewed.
+ */
+function resolveNextUnreviewedFile(
+  files: string[],
+  currentPath: string,
+  reviewedPaths: Set<string>,
+): string | null {
+  // Follow the sidebar's display order rather than manifest order
+  const order = groupFilesByPackage(files).flatMap((group) => group.files);
+  const currentIndex = order.indexOf(currentPath);
+
+  for (let offset = 1; offset <= order.length; offset++) {
+    const candidate = order[(currentIndex + offset) % order.length];
+
+    if (!reviewedPaths.has(candidate)) {
+      return candidate;
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Returns whether a field is focused text is being typed into, so
+ * single key shortcuts stay out of the way of typing.
+ */
+function isTypingInTextField(): boolean {
+  const element = document.activeElement;
+
+  if (!element) {
+    return false;
+  }
+
+  // The editors are read-only, so their hidden textarea takes key
+  // presses but never text
+  if (element.classList.contains('inputarea')) {
+    return false;
+  }
+
+  return (
+    element.tagName === 'INPUT' ||
+    element.tagName === 'TEXTAREA' ||
+    element.getAttribute('contenteditable') === 'true'
+  );
+}

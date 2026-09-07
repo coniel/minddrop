@@ -188,6 +188,32 @@ export type DevReviewRPC = {
       };
 
       /**
+       * Returns the reviewed file paths of every work group, keyed by
+       * slug. Files changed since they were reviewed are left out.
+       */
+      getReviewedFiles: {
+        params: Record<string, never>;
+        response: Record<string, string[]>;
+      };
+
+      /**
+       * Records or clears a file's reviewed state in a work group.
+       */
+      setFileReviewed: {
+        params: { slug: string; path: string; reviewed: boolean };
+        response: void;
+      };
+
+      /**
+       * Returns the number of open comments on each file, keyed by
+       * work group slug and then by file path.
+       */
+      getOpenCommentCounts: {
+        params: Record<string, never>;
+        response: Record<string, Record<string, number>>;
+      };
+
+      /**
        * Returns all review comments for a work group.
        */
       getReviewComments: {

@@ -13,6 +13,12 @@ import {
   readReviewComments,
   updateReviewComment,
 } from './reviewComments';
+import {
+  deleteReviewedHash,
+  hashFileContent,
+  readReviewedHashes,
+  updateReviewedHash,
+} from './reviewedFiles';
 
 // Resolve repo root dynamically via git (import.meta.dir points to
 // the build output at runtime, not the source tree)
@@ -320,6 +326,75 @@ async function getFileStatuses(
 }
 
 /**
+ * Gets the reviewed files of every work group, dropping the ones whose
+ * content changed since they were reviewed so they need reviewing again.
+ */
+function getReviewedFiles(): Record<string, string[]> {
+  const reviewed: Record<string, string[]> = {};
+
+  for (const manifest of readAllManifests()) {
+    const hashes = readReviewedHashes(manifest.slug);
+    const worktree = manifest.worktree ?? null;
+
+    reviewed[manifest.slug] = Object.keys(hashes).filter(
+      (path) =>
+        hashFileContent(getCurrentFile(path, worktree)) === hashes[path],
+    );
+  }
+
+  return reviewed;
+}
+
+/**
+ * Records a file as reviewed at its current content, or clears its
+ * reviewed state.
+ */
+function setFileReviewed(slug: string, path: string, reviewed: boolean): void {
+  if (!reviewed) {
+    deleteReviewedHash(slug, path);
+
+    return;
+  }
+
+  const manifest = readAllManifests().find(
+    (candidate) => candidate.slug === slug,
+  );
+
+  // The work group may have been removed since the file was opened
+  if (!manifest) {
+    return;
+  }
+
+  const content = getCurrentFile(path, manifest.worktree ?? null);
+
+  updateReviewedHash(slug, path, hashFileContent(content));
+}
+
+/**
+ * Counts the open comments on each file of every work group.
+ */
+function getOpenCommentCounts(): Record<string, Record<string, number>> {
+  const counts: Record<string, Record<string, number>> = {};
+
+  for (const manifest of readAllManifests()) {
+    const perFile: Record<string, number> = {};
+
+    for (const comment of readReviewComments(manifest.slug)) {
+      // General comments belong to no file
+      if (comment.file === null || comment.status !== 'open') {
+        continue;
+      }
+
+      perFile[comment.file] = (perFile[comment.file] ?? 0) + 1;
+    }
+
+    counts[manifest.slug] = perFile;
+  }
+
+  return counts;
+}
+
+/**
  * All RPC request handlers for the dev review app.
  */
 export const rpcHandlers = {
@@ -357,6 +432,26 @@ export const rpcHandlers = {
     worktree: string | null;
   }) => {
     return getFileStatuses(baseRef, worktree);
+  },
+
+  getReviewedFiles: async () => {
+    return getReviewedFiles();
+  },
+
+  setFileReviewed: async ({
+    slug,
+    path,
+    reviewed,
+  }: {
+    slug: string;
+    path: string;
+    reviewed: boolean;
+  }) => {
+    setFileReviewed(slug, path, reviewed);
+  },
+
+  getOpenCommentCounts: async () => {
+    return getOpenCommentCounts();
   },
 
   getReviewComments: async ({ slug }: { slug: string }) => {
