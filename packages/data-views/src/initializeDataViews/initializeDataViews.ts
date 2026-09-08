@@ -1,7 +1,6 @@
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { ItemReferences } from '@minddrop/item-references';
-import { Workspaces } from '@minddrop/workspaces';
 import { DataViewsStore } from '../DataViewsStore';
 import { onFileSystemChanged, onItemAddressesChanged } from '../event-handlers';
 import { DataViewsLoadedEvent } from '../events';
@@ -14,26 +13,13 @@ import { resolveViewsDirPath } from '../utils/resolveViewsDirPath';
  * @dispatches data-views:loaded
  */
 export async function initializeDataViews(): Promise<void> {
-  // Get all workspaces
-  const workspaces = Workspaces.getAll();
+  // The active workspace's data views directory
+  const viewsDirPath = resolveViewsDirPath();
 
-  // Get data views paths from workspaces
-  const viewFileEntries = (
-    await Promise.all(
-      workspaces.map(async (workspace) => {
-        const viewDirPath = resolveViewsDirPath(workspace.path);
-
-        if (await Fs.exists(viewDirPath)) {
-          return Fs.readDir(viewDirPath);
-        }
-      }),
-    )
-  ).flat();
-
-  // Get the data view file paths, skipping workspaces without a views directory
-  const viewPaths = viewFileEntries
-    .filter((entry) => !!entry)
-    .map((entry) => entry.path);
+  // Read the data view file paths, none until the workspace has views
+  const viewPaths = (await Fs.exists(viewsDirPath))
+    ? (await Fs.readDir(viewsDirPath)).map((entry) => entry.path)
+    : [];
 
   // Read the data views
   const viewPromises = await Promise.all(viewPaths.map(loadDataView));

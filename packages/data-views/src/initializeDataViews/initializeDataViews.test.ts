@@ -1,7 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
+import { Fs } from '@minddrop/file-system';
 import { ItemReferences } from '@minddrop/item-references';
+import { Paths } from '@minddrop/utils';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DataViewsStore } from '../DataViewsStore';
+import { ViewsDirName } from '../constants';
 import { DataViewsLoadedEvent } from '../events';
 import {
   MockFs,
@@ -14,6 +18,8 @@ import {
 import { resolveViewFilePath } from '../utils';
 import { initializeDataViews } from './initializeDataViews';
 
+const { workspace_2 } = WorkspaceFixtures;
+
 // The loaded views including their references index
 const loadedViews = dataViews.map((view) => ({ ...view, references: [] }));
 
@@ -23,6 +29,28 @@ describe('initializeDataViews', () => {
   afterEach(cleanup);
 
   it('loads views into the store', async () => {
+    await initializeDataViews();
+
+    expect(DataViewsStore.getAllArray()).toEqual(loadedViews);
+  });
+
+  it('does not load views from other workspaces', async () => {
+    // Add a view file to a workspace other than the active one
+    MockFs.addFiles([
+      {
+        path: Fs.concatPath(
+          workspace_2.path,
+          Paths.hiddenDirName,
+          ViewsDirName,
+          'data-view_gallery-other.json',
+        ),
+        textContent: JSON.stringify({
+          ...dataView_gallery_1,
+          id: 'data-view_gallery-other',
+        }),
+      },
+    ]);
+
     await initializeDataViews();
 
     expect(DataViewsStore.getAllArray()).toEqual(loadedViews);

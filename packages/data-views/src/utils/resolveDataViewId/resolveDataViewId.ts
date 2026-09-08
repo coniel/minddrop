@@ -1,5 +1,4 @@
 import { Fs } from '@minddrop/file-system';
-import { Workspaces } from '@minddrop/workspaces';
 import { ViewFileExtension } from '../../constants';
 import { resolveViewsDirPath } from '../resolveViewsDirPath';
 
@@ -14,12 +13,8 @@ import { resolveViewsDirPath } from '../resolveViewsDirPath';
 export function resolveDataViewId(path: string): string | null {
   const parentDirPath = Fs.parentDirPath(path);
 
-  // View files sit directly in a workspace's views directory
-  const isViewsDir = Workspaces.getAll().some(
-    (workspace) => resolveViewsDirPath(workspace.path) === parentDirPath,
-  );
-
-  if (!isViewsDir) {
+  // View files sit directly in the active workspace's views directory
+  if (parentDirPath !== resolveViewsDirPath()) {
     return null;
   }
 
