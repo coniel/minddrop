@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DesignElement } from '@minddrop/designs-next';
 import { DesignElementConfigs } from '@minddrop/designs-next';
+import { Designs } from '@minddrop/designs-next';
 import {
   cardColumns,
   cardRows,
@@ -12,7 +13,13 @@ import {
   DesignElementConfigsStore,
   testElementConfig,
 } from '@minddrop/designs-next/test-utils';
-import { fireEvent, render, screen } from '@minddrop/test-utils';
+import { Selection } from '@minddrop/selection';
+import {
+  createDataTransfer,
+  fireEvent,
+  render,
+  screen,
+} from '@minddrop/test-utils';
 import { cleanup } from '../test-utils';
 import { DesignBlockEditor } from './DesignBlockEditor';
 
@@ -69,6 +76,41 @@ function renderEditor(selectedId: string | null = null, resizable = false) {
   );
 
   return container;
+}
+
+/**
+ * Creates the data transfer of a palette drag carrying element types.
+ *
+ * @param types - The element types being dragged.
+ * @returns The data transfer.
+ */
+function createElementTypesTransfer(...types: string[]) {
+  return createDataTransfer({
+    [Selection.toMimeType(Designs.constants.ElementTypesDataKey)]:
+      JSON.stringify(types.map((type) => ({ type }))),
+  });
+}
+
+/**
+ * Drops onto the editor surface at a screen point. Built by hand
+ * since the test environment's drop events carry no coordinates.
+ *
+ * @param container - The render container.
+ * @param clientX - The drop's horizontal screen position.
+ * @param clientY - The drop's vertical screen position.
+ * @param dataTransfer - The dropped data.
+ */
+function dropOnSurface(
+  container: HTMLElement,
+  clientX: number,
+  clientY: number,
+  dataTransfer: DataTransfer,
+) {
+  const event = new Event('drop', { bubbles: true, cancelable: true });
+
+  Object.assign(event, { clientX, clientY, dataTransfer });
+
+  fireEvent(container.querySelector('.design-block-editor')!, event);
 }
 
 describe('DesignBlockEditor', () => {
@@ -269,6 +311,75 @@ describe('DesignBlockEditor', () => {
     fireEvent.click(document.body);
 
     expect(selectedElementId).toBeNull();
+  });
+
+  it('inserts dropped element types at the snapped drop point', () => {
+    const container = renderEditor(null, true);
+
+    dropOnSurface(
+      container,
+      45,
+      27,
+      createElementTypesTransfer(testElementConfig.type),
+    );
+
+    const inserted = changedElements?.[changedElements.length - 1];
+
+    expect(changedElements).toHaveLength(designElements.length + 1);
+    expect(inserted?.type).toBe(testElementConfig.type);
+    // 4.5 and 2.7 units snapped onto the 2 unit grid
+    expect(inserted?.column).toBe(4);
+    expect(inserted?.row).toBe(2);
+    expect(selectedElementId).toBe(inserted?.id);
+  });
+
+  it('grows the surface to fit a dropped element', () => {
+    const container = renderEditor(null, true);
+
+    // Drop just above the surface's bottom edge
+    dropOnSurface(
+      container,
+      0,
+      (cardRows - 2) * 10,
+      createElementTypesTransfer(testElementConfig.type),
+    );
+
+    const inserted = changedElements?.[changedElements.length - 1];
+
+    expect(inserted?.row).toBe(cardRows - 2);
+    expect(changedRows).toBe(cardRows - 2 + testElementConfig.defaultRowSpan);
+  });
+
+  it('keeps dropped elements inside a fixed-height surface', () => {
+    const container = renderEditor();
+
+    dropOnSurface(
+      container,
+      cardColumns * 10,
+      cardRows * 10,
+      createElementTypesTransfer(testElementConfig.type),
+    );
+
+    const inserted = changedElements?.[changedElements.length - 1];
+
+    expect(inserted?.column).toBe(
+      cardColumns - testElementConfig.defaultColumnSpan,
+    );
+    expect(inserted?.row).toBe(cardRows - testElementConfig.defaultRowSpan);
+    expect(changedRows).toBeNull();
+  });
+
+  it('ignores drops of other data', () => {
+    const container = renderEditor();
+
+    dropOnSurface(
+      container,
+      0,
+      0,
+      createDataTransfer({ 'text/plain': 'hello' }),
+    );
+
+    expect(changedElements).toBeNull();
   });
 
   it('changes the height mode through the menu when aspect-locked', () => {

@@ -3,13 +3,15 @@ import {
   ApplyElementDragOptions,
   DesignElement,
   DesignElementConfigs,
+  DesignElementTypeTransferData,
   Designs,
   ElementDragMode,
   ElementHeightMode,
   ElementWidthMode,
 } from '@minddrop/designs-next';
+import { Selection } from '@minddrop/selection';
 import { CanvasChrome, CanvasChromeOrigin } from '@minddrop/ui-canvas';
-import { useDeleteKey } from '@minddrop/utils';
+import { getTransferData, useDeleteKey } from '@minddrop/utils';
 import { BlockEditorElementMenu } from '../BlockEditorElementMenu';
 import {
   MenuPosition,
@@ -154,11 +156,15 @@ const MenuChromeOrigins: Record<MenuPosition['placement'], CanvasChromeOrigin> =
     below: 'top-left',
   };
 
+// The drag data types the surface accepts drops of
+const AcceptedDropTypes = [Designs.constants.ElementTypesDataKey];
+
 /**
  * Renders the block editor surface: the design's unit grid with a
  * draggable block per element. Moving snaps the element's edges onto
  * the snap grid, resizing snaps the drag delta, and grid lines draw
- * at the snap resolution.
+ * at the snap resolution. Element types dropped onto the surface are
+ * inserted at the drop point.
  */
 export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
   elements,
@@ -179,6 +185,7 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
   const surfaceDragRef = useRef<SurfaceDragState | null>(null);
   const [draggedElementId, setDraggedElementId] = useState<string | null>(null);
   const [surfaceDragging, setSurfaceDragging] = useState(false);
+  const [dropping, setDropping] = useState(false);
 
   const selectedElement = elements.find((element) => element.id === selectedId);
 
@@ -369,6 +376,81 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
     onDragEnd?.();
   }
 
+  // Accepts element type drags over the surface, showing the grid
+  function handleDragOver(event: React.DragEvent<HTMLDivElement>) {
+    if (!Selection.dragContainsType(event, AcceptedDropTypes)) {
+      return;
+    }
+
+    event.preventDefault();
+    setDropping(true);
+  }
+
+  function handleDragLeave() {
+    setDropping(false);
+  }
+
+  // Inserts the dropped element types at the drop point, snapped onto
+  // the snap grid and kept inside the design, growing the design when
+  // it can. The last inserted element is selected.
+  function handleDrop(event: React.DragEvent<HTMLDivElement>) {
+    setDropping(false);
+
+    if (!Selection.dragContainsType(event, AcceptedDropTypes)) {
+      return;
+    }
+
+    event.preventDefault();
+
+    const dropped =
+      getTransferData<Record<string, DesignElementTypeTransferData[]>>(event)[
+        Designs.constants.ElementTypesDataKey
+      ] ?? [];
+
+    if (dropped.length === 0) {
+      return;
+    }
+
+    // The drop point in grid units
+    const rect = rootRef.current?.getBoundingClientRect();
+    const unitScreenSize = measureUnitScreenSize();
+    const column = Designs.snapToMultiple(
+      (event.clientX - (rect?.left ?? 0)) / unitScreenSize,
+      snap,
+    );
+    const row = Designs.snapToMultiple(
+      (event.clientY - (rect?.top ?? 0)) / unitScreenSize,
+      snap,
+    );
+
+    // The height the surface can grow to for the dropped elements
+    const maxRows = onRowsChange ? Designs.constants.MaxRows : rows;
+
+    const inserted = dropped.map(({ type }) => {
+      const element = Designs.createElement(type, { column, row });
+
+      // Keep the element inside the design
+      element.column = clamp(element.column, 0, columns - element.columnSpan);
+      element.row = clamp(element.row, 0, maxRows - element.rowSpan);
+
+      return element;
+    });
+
+    onElementsChange([...elements, ...inserted]);
+
+    // Grow the surface to fit the elements
+    const contentBottom = inserted.reduce(
+      (bottom, element) => Math.max(bottom, element.row + element.rowSpan),
+      0,
+    );
+
+    if (contentBottom > rows) {
+      onRowsChange?.(contentBottom);
+    }
+
+    onSelectionChange(inserted[inserted.length - 1].id);
+  }
+
   // Clears the selection when clicking the empty surface, ignoring
   // clicks bubbling up from elements.
   function handleBackgroundClick(event: React.MouseEvent<HTMLDivElement>) {
@@ -455,6 +537,9 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
         backgroundSize: `${snap * unitSize}px ${snap * unitSize}px`,
       }}
       onClick={handleBackgroundClick}
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
     >
       {elements.map((element) => (
         <div
@@ -490,7 +575,7 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
           ))}
         </div>
       ))}
-      {draggedElementId !== null && (
+      {(draggedElementId !== null || dropping) && (
         <div
           className="design-block-editor-grid-overlay"
           style={{
@@ -534,3 +619,15 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
     </div>
   );
 };
+
+/**
+ * Clamps a value into a range.
+ *
+ * @param value - The value to clamp.
+ * @param min - The lower bound.
+ * @param max - The upper bound.
+ * @returns The clamped value.
+ */
+function clamp(value: number, min: number, max: number): number {
+  return Math.max(min, Math.min(value, max));
+}
