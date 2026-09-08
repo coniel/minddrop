@@ -5,6 +5,7 @@ import { WorkspacesStore } from '../WorkspacesStore';
 import { DefaultWorkspaceIcon } from '../constants';
 import { WorkspacesLoadedEvent } from '../events';
 import { readWorkspaceConfig } from '../readWorkspaceConfig';
+import { setActiveWorkspace } from '../setActiveWorkspace';
 import { Workspace } from '../types';
 import { generateWorkspaceConfig } from '../utils';
 import { writeWorkspaceConfig } from '../writeWorkspaceConfig';
@@ -21,6 +22,7 @@ import { writeWorkspacesConfig } from '../writeWorkspacesConfig';
  * @throws {Fs.errors.FileNotFound} If the workspace directory does not exist.
  *
  * @dispatches workspaces:loaded
+ * @dispatches workspaces:active-changed
  */
 export async function addWorkspace(path: string): Promise<Workspace> {
   // Ensure the path exists
@@ -40,6 +42,9 @@ export async function addWorkspace(path: string): Promise<Workspace> {
   );
 
   if (existingWorkspace) {
+    // Switch to the workspace the user picked
+    await setActiveWorkspace(existingWorkspace.id);
+
     return existingWorkspace;
   }
 
@@ -71,6 +76,9 @@ export async function addWorkspace(path: string): Promise<Workspace> {
 
   // Write the workspaces config to add the new workspace path to it
   await writeWorkspacesConfig();
+
+  // Make the added workspace active, once its configs have been written
+  await setActiveWorkspace(workspace.id);
 
   // Return the added workspace
   return workspace;

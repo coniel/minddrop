@@ -1,7 +1,7 @@
 import { BaseDirectory, Fs, MockFileDescriptor } from '@minddrop/file-system';
 import { Paths, omitPath } from '@minddrop/utils';
 import { WorkspacesConfigFileName } from '../constants';
-import { Workspace } from '../types';
+import { Workspace, WorkspacesConfig } from '../types';
 
 export const workspacesRootPath = 'path/to/workspaces';
 
@@ -29,8 +29,9 @@ export const workspaceFiles: MockFileDescriptor[] = workspaces.map(
   }),
 );
 
-export const workspacesConfig = {
+export const workspacesConfig: WorkspacesConfig = {
   paths: [workspace_1.path, workspace_2.path, workspace_3.path],
+  activePath: workspace_1.path,
 };
 
 export const workspaceConfigFile: MockFileDescriptor = {

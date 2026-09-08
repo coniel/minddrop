@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { InvalidParameterError, omitPath } from '@minddrop/utils';
+import { ActiveWorkspaceStore } from '../ActiveWorkspaceStore';
 import { WorkspacesStore } from '../WorkspacesStore';
 import { WorkspacesLoadedEvent } from '../events';
 import {
@@ -101,6 +102,22 @@ describe('addWorkspace', () => {
     const result = await addWorkspace(workspace_1.path);
 
     expect(result).toEqual(workspace_1);
+  });
+
+  it('makes the added workspace active', async () => {
+    MockFs.createDir(newWorkspacePath);
+
+    const result = await addWorkspace(newWorkspacePath);
+
+    expect(ActiveWorkspaceStore.get('id')).toBe(result.id);
+  });
+
+  it('makes an already listed workspace active', async () => {
+    WorkspacesStore.set(workspace_1);
+
+    await addWorkspace(workspace_1.path);
+
+    expect(ActiveWorkspaceStore.get('id')).toBe(workspace_1.id);
   });
 
   it('dispatches a workspaces loaded event', async () =>

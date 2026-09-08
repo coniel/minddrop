@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { omitPath } from '@minddrop/utils';
+import { ActiveWorkspaceStore } from '../ActiveWorkspaceStore';
 import { WorkspacesStore } from '../WorkspacesStore';
 import { WorkspaceCreatedEvent } from '../events';
 import {
@@ -85,6 +86,12 @@ describe('createWorkspace', () => {
     );
 
     expect(config.paths.includes(path)).toBe(true);
+  });
+
+  it('makes the new workspace active', async () => {
+    const result = await createWorkspace(workspacesRootPath, options);
+
+    expect(ActiveWorkspaceStore.get('id')).toBe(result.id);
   });
 
   it('dispatches a workspace created event', async () =>

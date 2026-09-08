@@ -2,6 +2,7 @@ import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { WorkspacesStore } from '../WorkspacesStore';
 import { WorkspaceCreatedEvent } from '../events';
+import { setActiveWorkspace } from '../setActiveWorkspace';
 import { Workspace } from '../types';
 import { generateWorkspaceConfig } from '../utils';
 import { writeWorkspaceConfig } from '../writeWorkspaceConfig';
@@ -17,6 +18,9 @@ type CreateWorkspaceOptions = Pick<Workspace, 'name' | 'icon'>;
  * @returns The generated workspace.
  *
  * @throws {Fs.errors.PathConflict} If the workspace directory already exists.
+ *
+ * @dispatches workspaces:workspace:created
+ * @dispatches workspaces:active-changed
  */
 export async function createWorkspace(
   parentDirPath: string,
@@ -50,6 +54,9 @@ export async function createWorkspace(
 
   // Write the workspaces config to add the new workspace path to it
   await writeWorkspacesConfig();
+
+  // Make the new workspace active, once its configs have been written
+  await setActiveWorkspace(workspace.id);
 
   // Return the new workspace
   return workspace;

@@ -1,6 +1,7 @@
 import { Events } from '@minddrop/events';
 import { BaseDirectory, Fs } from '@minddrop/file-system';
 import { Paths, entityId, isEntityId } from '@minddrop/utils';
+import { ActiveWorkspaceStore } from '../ActiveWorkspaceStore';
 import { WorkspacesStore } from '../WorkspacesStore';
 import { WorkspacesConfigFileName } from '../constants';
 import { WorkspacesLoadedEvent } from '../events';
@@ -8,11 +9,12 @@ import { readWorkspaceConfig } from '../readWorkspaceConfig';
 import { WorkspaceId, WorkspacesConfig } from '../types';
 import { resolveWorkspacesConfigFilePath } from '../utils';
 import { writeWorkspaceConfig } from '../writeWorkspaceConfig';
+import { writeWorkspacesConfig } from '../writeWorkspacesConfig';
 
 /**
  * Initializes workspaces by reading the workspaces config file
- * and loading workspaces from the file system. Sets global
- * workspace paths from the first loaded workspace.
+ * and loading workspaces from the file system. Sets the active
+ * workspace and the global workspace paths from it.
  *
  * @dispatches workspaces:loaded
  */
@@ -63,13 +65,27 @@ export async function initializeWorkspaces(): Promise<void> {
   // Persist normalized IDs back to the workspace configs
   await Promise.all(normalizedIds.map((id) => writeWorkspaceConfig(id)));
 
-  // Set global workspace paths from the first workspace
-  if (workspaces.length > 0) {
-    Paths.workspace = workspaces[0].path;
+  // Resolve the workspace the app last opened into, falling back
+  // to the first loaded one.
+  const activeWorkspace =
+    workspaces.find((workspace) => workspace.path === config.activePath) ||
+    workspaces[0];
+
+  if (activeWorkspace) {
+    // Set the active workspace
+    ActiveWorkspaceStore.set('id', activeWorkspace.id);
+
+    // Set global workspace paths from the active workspace
+    Paths.workspace = activeWorkspace.path;
     Paths.workspaceConfigs = Fs.concatPath(
-      workspaces[0].path,
+      activeWorkspace.path,
       Paths.hiddenDirName,
     );
+
+    // Persist the fallback so the config does not stay stale
+    if (activeWorkspace.path !== config.activePath) {
+      await writeWorkspacesConfig();
+    }
   }
 
   // Dispatch a workspaces loaded event

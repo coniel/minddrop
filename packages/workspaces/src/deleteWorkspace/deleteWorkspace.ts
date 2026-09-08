@@ -8,6 +8,7 @@ import { removeWorkspace } from '../removeWorkspace';
  * @param id - The ID of the workspace to delete.
  *
  * @dispatches workspaces:workspace:deleted
+ * @dispatches workspaces:active-changed
  */
 export async function deleteWorkspace(id: string): Promise<void> {
   // Get the workspace
@@ -17,5 +18,5 @@ export async function deleteWorkspace(id: string): Promise<void> {
   await Fs.removeDir(workspace.path);
 
   // Remove the workspace from the store
-  removeWorkspace(id);
+  await removeWorkspace(id);
 }

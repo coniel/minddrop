@@ -1,5 +1,6 @@
 import { MockFileSystem } from '@minddrop/file-system';
 import { Paths } from '@minddrop/utils';
+import { ActiveWorkspaceStore } from '../ActiveWorkspaceStore';
 import { WorkspacesStore } from '../WorkspacesStore';
 import {
   workspaceConfigFile,
@@ -27,6 +28,9 @@ export function setupWorkspaceFixtures(
   if (options.loadWorkspaces !== false) {
     // Load workspaces into the store
     WorkspacesStore.load(workspaces);
+
+    // Set workspace_1 as the active workspace
+    ActiveWorkspaceStore.set('id', workspace_1.id);
   }
 
   if (options.loadWorkspaceFiles !== false) {
@@ -43,4 +47,5 @@ export function setupWorkspaceFixtures(
 export function cleanupWorkspaceFixtures() {
   // Clear stores
   WorkspacesStore.clear();
+  ActiveWorkspaceStore.reset();
 }
