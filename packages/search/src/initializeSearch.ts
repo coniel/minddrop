@@ -17,15 +17,13 @@ export async function initializeSearch({
 }: {
   schemaChanged: boolean;
 }): Promise<void> {
-  const workspaces = Workspaces.getAll();
+  const workspace = Workspaces.getActive(false);
 
-  if (workspaces.length === 0) {
+  if (!workspace) {
     return;
   }
 
-  // Use the first workspace for now
-  // TODO: Support multiple workspaces
-  const workspaceId = workspaces[0].id;
+  const workspaceId = workspace.id;
 
   // Initialize MiniSearch on the backend
   await getSearchAdapter().searchInitialize({

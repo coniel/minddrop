@@ -131,19 +131,13 @@ export function initializeSearchSync(): void {
   });
 }
 
-// TODO: Use Workspaces.getCurrent() once available
 /**
- * Returns the current workspace ID. Resolved lazily at
+ * Returns the active workspace's ID. Resolved lazily at
  * event time since workspaces may not be loaded when the
  * listeners are first registered.
  */
 function getWorkspaceId(): string | null {
-  const workspaces = Workspaces.getAll();
+  const workspace = Workspaces.getActive(false);
 
-  if (workspaces.length === 0) {
-    return null;
-  }
-
-  // Use the first workspace for now
-  return workspaces[0].id;
+  return workspace ? workspace.id : null;
 }
