@@ -35,10 +35,26 @@
   z-index: 2;
 }
 
+/* Blocks recede beneath a grid drawn over them, whether the grid is
+   held in front or up for a drag. The dragged block keeps its weight,
+   riding above the grid rather than behind it. */
+.design-block-editor-grid-over-blocks
+  .design-block-editor-element:not(.design-block-editor-element-dragging) {
+  opacity: 0.8;
+}
+
+/* Held in front, the grid overlay takes the pointer, so a square a
+   block covers can be hovered and clicked through it */
+.design-block-editor-grid-in-front .design-block-editor-grid-overlay {
+  pointer-events: auto;
+}
+
 /* The grid square the pointer is over, marking the square a click
-   inserts an element on */
+   inserts an element on. Layers above the grid overlay, which the
+   blocks sit beneath. */
 .design-block-editor-hovered-square {
   position: absolute;
+  z-index: 2;
   pointer-events: none;
   background-color: var(--surface-solid-primary);
 }
@@ -47,6 +63,7 @@
    in place while the insert menu is open */
 .design-block-editor-insert-point {
   position: absolute;
+  z-index: 2;
   pointer-events: none;
   background-color: var(--surface-solid-primary-hover);
 }

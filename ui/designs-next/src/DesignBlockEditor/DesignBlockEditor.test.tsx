@@ -19,6 +19,7 @@ import {
   render,
   screen,
   userEvent,
+  waitFor,
 } from '@minddrop/test-utils';
 import { cleanup } from '../test-utils';
 import { DesignBlockEditor } from './DesignBlockEditor';
@@ -129,6 +130,36 @@ function clickSurface(
     offsetX,
     offsetY,
   });
+}
+
+/**
+ * Presses the mod key, bringing the grid in front of the blocks.
+ *
+ * @param container - The render container.
+ */
+async function holdModKey(container: HTMLElement) {
+  fireEvent.keyDown(window, { key: 'Meta', metaKey: true });
+
+  await waitFor(() =>
+    expect(
+      container.querySelector('.design-block-editor-grid-in-front'),
+    ).not.toBeNull(),
+  );
+}
+
+/**
+ * Releases the mod key, putting the grid back behind the blocks.
+ *
+ * @param container - The render container.
+ */
+async function releaseModKey(container: HTMLElement) {
+  fireEvent.keyUp(window, { key: 'Meta' });
+
+  await waitFor(() =>
+    expect(
+      container.querySelector('.design-block-editor-grid-in-front'),
+    ).toBeNull(),
+  );
 }
 
 /**
@@ -299,6 +330,57 @@ describe('DesignBlockEditor', () => {
 
     expect(square.style.left).toBe('0px');
     expect(square.style.top).toBe('0px');
+  });
+
+  it('brings the grid in front of the blocks while the mod key is held', async () => {
+    const container = renderEditor();
+
+    expect(
+      container.querySelector('.design-block-editor-grid-overlay'),
+    ).toBeNull();
+
+    await holdModKey(container);
+
+    expect(
+      container.querySelector('.design-block-editor-grid-overlay'),
+    ).not.toBeNull();
+
+    await releaseModKey(container);
+
+    expect(
+      container.querySelector('.design-block-editor-grid-overlay'),
+    ).toBeNull();
+  });
+
+  it('inserts on a square a block covers while the grid is in front', async () => {
+    const container = renderEditor();
+
+    await holdModKey(container);
+
+    // The cover block spans the design's top, so this square sits
+    // on it and is only reachable through the grid overlay.
+    const overlay = container.querySelector(
+      '.design-block-editor-grid-overlay',
+    ) as HTMLElement;
+
+    fireEvent.pointerMove(overlay, { offsetX: 45, offsetY: 27 });
+
+    const square = container.querySelector(
+      '.design-block-editor-hovered-square',
+    ) as HTMLElement;
+
+    expect(square.style.left).toBe('40px');
+    expect(square.style.top).toBe('20px');
+
+    fireEvent.click(overlay, { offsetX: 45, offsetY: 27 });
+
+    const marker = container.querySelector(
+      '.design-block-editor-insert-point',
+    ) as HTMLElement;
+
+    expect(marker.style.left).toBe('40px');
+    expect(marker.style.top).toBe('20px');
+    screen.getByPlaceholderText('Insert element');
   });
 
   it('leaves the grid square unmarked during element drags', () => {
@@ -533,8 +615,16 @@ describe('DesignBlockEditor', () => {
       container.querySelector('.design-block-editor-grid-overlay'),
     ).toBeNull();
 
-    // The overlay appears for the drag, with the dragged block lifted
+    // The press alone holds the overlay back, so a press which only
+    // selects the block never flashes it.
     fireEvent.pointerDown(title, { clientX: 0, clientY: 0 });
+
+    expect(
+      container.querySelector('.design-block-editor-grid-overlay'),
+    ).toBeNull();
+
+    // Moving the block engages the drag, with the dragged block lifted
+    fireEvent.pointerMove(title, { clientX: 40, clientY: 0 });
 
     expect(
       container.querySelector('.design-block-editor-grid-overlay'),
@@ -549,6 +639,21 @@ describe('DesignBlockEditor', () => {
     expect(
       container.querySelector('.design-block-editor-grid-overlay'),
     ).toBeNull();
+  });
+
+  it('brings the grid up for a press held without moving', async () => {
+    const container = renderEditor();
+    const title = container.querySelector(
+      '[data-element-id="element_title"]',
+    ) as HTMLElement;
+
+    fireEvent.pointerDown(title, { clientX: 0, clientY: 0 });
+
+    await waitFor(() =>
+      expect(
+        container.querySelector('.design-block-editor-grid-overlay'),
+      ).not.toBeNull(),
+    );
   });
 
   it('floors resizes at the element type minimum row span', () => {

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   ApplyElementDragOptions,
   DesignElement,
@@ -8,7 +8,7 @@ import {
   ElementDragMode,
 } from '@minddrop/designs-next';
 import { Selection } from '@minddrop/selection';
-import { getTransferData, useDeleteKey } from '@minddrop/utils';
+import { getTransferData, useDeleteKey, useModKeyHeld } from '@minddrop/utils';
 import { DesignElementInsertMenu } from '../DesignElementInsertMenu';
 import { resolveElementClass } from '../utils';
 import './DesignBlockEditor.css';
@@ -151,6 +151,11 @@ const ResizeHandles: ElementDragMode[] = [
 // The drag data types the surface accepts drops of
 const AcceptedDropTypes = [Designs.constants.ElementTypesDataKey];
 
+// How long a press is held before it counts as a drag and brings
+// the grid over the blocks, in milliseconds. Keeps a press which
+// only selects a block from flashing the grid over the design.
+const DragEngageDelay = 160;
+
 /**
  * Renders the block editor surface: the design's unit grid with a
  * draggable block per element. Moving snaps the element's edges onto
@@ -158,7 +163,9 @@ const AcceptedDropTypes = [Designs.constants.ElementTypesDataKey];
  * at the snap resolution. Element types dropped onto the surface are
  * inserted at the drop point, and clicking an empty grid square
  * offers the element types in a menu, inserting the picked one with
- * its top left corner on that square.
+ * its top left corner on that square. Holding the mod key brings the
+ * grid in front of the blocks, opening the squares they cover to the
+ * same insert.
  */
 export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
   elements,
@@ -175,12 +182,47 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
 }) => {
   const rootRef = useRef<HTMLDivElement>(null);
   const insertMarkerRef = useRef<HTMLDivElement>(null);
+  const gridOverlayRef = useRef<HTMLDivElement>(null);
   const dragRef = useRef<DragState | null>(null);
   const surfaceDragRef = useRef<SurfaceDragState | null>(null);
   const [draggedElementId, setDraggedElementId] = useState<string | null>(null);
+  const [dragEngaged, setDragEngaged] = useState(false);
   const [dropping, setDropping] = useState(false);
   const [insertPoint, setInsertPoint] = useState<GridPoint | null>(null);
   const [hoveredPoint, setHoveredPoint] = useState<GridPoint | null>(null);
+  // Holding the mod key brings the grid in front of the blocks, so
+  // the squares they cover can be inserted on.
+  const gridInFront = useModKeyHeld(true);
+
+  // Whether the grid is drawn over the blocks, which an engaged
+  // drag, an accepted drop and the held mod key each call for.
+  const gridOverBlocks = dragEngaged || dropping || gridInFront;
+
+  // Engage a press as a drag once it has been held, so a press which
+  // only selects a block never brings the grid up. A press which
+  // moves the block engages it on the move instead.
+  useEffect(() => {
+    if (draggedElementId === null) {
+      setDragEngaged(false);
+
+      return;
+    }
+
+    const timeout = window.setTimeout(
+      () => setDragEngaged(true),
+      DragEngageDelay,
+    );
+
+    return () => window.clearTimeout(timeout);
+  }, [draggedElementId]);
+
+  // Drop the hovered square as the grid goes back behind the blocks,
+  // which leaves no pointer event to clear it.
+  useEffect(() => {
+    if (!gridInFront) {
+      setHoveredPoint(null);
+    }
+  }, [gridInFront]);
 
   // Measures the screen pixels per grid unit, which a scaled
   // viewport (e.g. a zoomed canvas) sets apart from the unit size.
@@ -301,6 +343,10 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
     if (!drag) {
       return;
     }
+
+    // A press which moves the block is a drag, without waiting out
+    // the hold which engages a still one.
+    setDragEngaged(true);
 
     // The element type's block behaviour constraints
     const config = DesignElementConfigs.get(drag.original.type, false);
@@ -450,10 +496,20 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
     );
   }
 
+  // Whether an event landed on the grid rather than on a block. The
+  // overlay held in front of the blocks covers the surface exactly,
+  // so a position on it is a position on the surface.
+  function isGridTarget(event: React.SyntheticEvent): boolean {
+    return (
+      event.target === event.currentTarget ||
+      event.target === gridOverlayRef.current
+    );
+  }
+
   // Opens the insert menu on the clicked grid square, clearing the
   // selection as it opens. Ignores clicks bubbling up from elements.
   function handleBackgroundClick(event: React.MouseEvent<HTMLDivElement>) {
-    if (event.target !== event.currentTarget) {
+    if (!isGridTarget(event)) {
       return;
     }
 
@@ -475,11 +531,7 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
   // Tracks the grid square under the pointer, ignoring moves
   // bubbling up from elements and pausing during drags.
   function handleGridPointerMove(event: React.PointerEvent<HTMLDivElement>) {
-    if (
-      event.target !== event.currentTarget ||
-      dragRef.current ||
-      surfaceDragRef.current
-    ) {
+    if (!isGridTarget(event) || dragRef.current || surfaceDragRef.current) {
       setHoveredPoint(null);
 
       return;
@@ -524,7 +576,7 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
     <div
       ref={rootRef}
       role="presentation"
-      className="design-block-editor"
+      className={resolveSurfaceClass(gridOverBlocks, gridInFront)}
       style={{
         width: columns * unitSize,
         height: rows * unitSize,
@@ -603,13 +655,14 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
           />
         </>
       )}
-      {(draggedElementId !== null || dropping) && (
+      {gridOverBlocks && (
         <div
           className="design-block-editor-grid-overlay"
           style={{
             // Draw the overlay grid at the snap resolution
             backgroundSize: `${snap * unitSize}px ${snap * unitSize}px`,
           }}
+          ref={gridOverlayRef}
         />
       )}
       {onRowsChange && (
@@ -623,6 +676,32 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
     </div>
   );
 };
+
+/**
+ * Resolves the editor surface's class names.
+ *
+ * @param gridOverBlocks - Whether the grid overlay is drawn over the blocks.
+ * @param gridInFront - Whether the grid is held in front of the blocks.
+ * @returns The surface's class name string.
+ */
+function resolveSurfaceClass(
+  gridOverBlocks: boolean,
+  gridInFront: boolean,
+): string {
+  const classes = ['design-block-editor'];
+
+  // Recede the blocks beneath the grid
+  if (gridOverBlocks) {
+    classes.push('design-block-editor-grid-over-blocks');
+  }
+
+  // Hand the grid the pointer, opening the covered squares
+  if (gridInFront) {
+    classes.push('design-block-editor-grid-in-front');
+  }
+
+  return classes.join(' ');
+}
 
 /**
  * Resolves the grid square a position within the surface falls on,
