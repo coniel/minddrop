@@ -33,14 +33,11 @@ export async function initializeDatabases(): Promise<{
   // Load core entry serializers
   loadCoreSerializers();
 
-  const workspaces = Workspaces.getAll();
+  const workspace = Workspaces.getActive(false);
 
-  if (workspaces.length === 0) {
+  if (!workspace) {
     return { schemaChanged: false };
   }
-
-  // Use the first workspace
-  const workspace = workspaces[0];
 
   // Load all databases and entries from the backend
   const backend = getDatabaseBackendAdapter();
