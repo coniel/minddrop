@@ -518,6 +518,33 @@ synchronous adapters, so one code path serves both.
 
 ## packages/stores
 
+### Picking a persist target
+
+A persisted store declares one of three targets, and the difference is
+which of two axes the state varies on: the workspace, and the device.
+
+| Target                 | Varies by | Written to                                                 |
+| ---------------------- | --------- | ---------------------------------------------------------- |
+| `app-config`           | device    | `AppData/stores/<namespace>.json`                          |
+| `workspace-config`     | workspace | `<workspace>/.minddrop/stores/<namespace>.json`            |
+| `app-workspace-config` | both      | `AppData/workspaces/<workspaceId>/stores/<namespace>.json` |
+
+`workspace-config` is the only one that travels: it lives inside the
+workspace directory, so it reaches every device the workspace syncs to.
+The other two sit in AppData and stay on the machine that wrote them.
+
+The test to apply is what the user would expect after switching
+workspaces, and after opening the same workspace on a second machine.
+Open tabs and panel sizes should not follow them to the other machine
+but must differ per workspace, so they are `app-workspace-config`. The
+defaults applied to new databases belong to the workspace however it is
+reached, so they are `workspace-config`. The theme is the user's, not
+the workspace's, so it is `app-config`.
+
+The two AppData targets are keyed differently on purpose:
+`app-workspace-config` uses the workspace ID rather than its path, so
+moving or renaming a workspace directory keeps its state.
+
 ### `Events.tests.cleanup()` breaks store hydration for the rest of a test run
 
 `createKeyValueStore`/`createObjectStore`/`createArrayStore` register a

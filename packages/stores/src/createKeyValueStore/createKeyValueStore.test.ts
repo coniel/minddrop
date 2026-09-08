@@ -273,6 +273,51 @@ describe('createKeyValueStore', () => {
     });
   });
 
+  describe('with app-workspace persistence', () => {
+    const store = createKeyValueStore<TestValues>(
+      'Test:KeyValueAppWorkspacePersist',
+      defaults,
+      {
+        persistTo: 'app-workspace-config',
+        namespace: 'test-kv-app-workspace',
+      },
+    );
+
+    beforeEach(() => {
+      // Clear events first so old listeners don't receive
+      // the persist event dispatched by store.reset()
+      Events.tests.cleanup();
+      store.reset();
+    });
+
+    it('dispatches a persist event carrying the target', async () =>
+      new Promise<void>((done) => {
+        Events.addListener(StorePersistEvent, 'test', (payload) => {
+          expect(payload).toEqual({
+            persistTo: 'app-workspace-config',
+            namespace: 'test-kv-app-workspace',
+            data: { ...defaults, theme: 'dark' },
+          });
+          done();
+        });
+
+        store.set('theme', 'dark');
+      }));
+
+    it('dispatches a hydrate request event carrying the target', async () =>
+      new Promise<void>((done) => {
+        Events.addListener(StoreHydrateRequestEvent, 'test', (payload) => {
+          expect(payload).toEqual({
+            persistTo: 'app-workspace-config',
+            namespace: 'test-kv-app-workspace',
+          });
+          done();
+        });
+
+        store.hydrate();
+      }));
+  });
+
   describe('hydrate listener', () => {
     it('loads data when a matching load event is dispatched', async () => {
       // Create a fresh store so its listener is active

@@ -1,3 +1,5 @@
+import { PersistTarget } from './types';
+
 /**
  * Event dispatched when a persistence-aware store is mutated.
  * The platform layer listens for this event and handles
@@ -12,7 +14,7 @@ export type StorePersistEventData = {
   /**
    * Where to persist the data.
    */
-  persistTo: 'app-config' | 'workspace-config';
+  persistTo: PersistTarget;
 
   /**
    * The namespace of the store.
@@ -38,7 +40,7 @@ export type StoreHydrateRequestEventData = {
   /**
    * Where the data is persisted.
    */
-  persistTo: 'app-config' | 'workspace-config';
+  persistTo: PersistTarget;
 
   /**
    * The namespace of the store requesting its data.
