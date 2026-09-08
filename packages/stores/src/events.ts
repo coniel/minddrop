@@ -5,10 +5,10 @@ import { PersistTarget } from './types';
  * The platform layer listens for this event and handles
  * writing the data to the appropriate storage.
  */
-export const StorePersistEvent = 'stores:persist';
+export const StorePersistEvent = 'stores:store:persist';
 
 /**
- * Payload dispatched with the `stores:persist` event.
+ * Payload dispatched with the `stores:store:persist` event.
  */
 export type StorePersistEventData = {
   /**
@@ -31,10 +31,10 @@ export type StorePersistEventData = {
  * Event dispatched when a store requests its persisted
  * data from the platform layer.
  */
-export const StoreHydrateRequestEvent = 'stores:hydrate-request';
+export const StoreHydrateRequestEvent = 'stores:store:hydrate-request';
 
 /**
- * Payload dispatched with the `stores:hydrate-request` event.
+ * Payload dispatched with the `stores:store:hydrate-request` event.
  */
 export type StoreHydrateRequestEventData = {
   /**
@@ -52,10 +52,10 @@ export type StoreHydrateRequestEventData = {
  * Event dispatched by the platform layer to provide a store
  * with its persisted data.
  */
-export const StoreHydrateEvent = 'stores:hydrate';
+export const StoreHydrateEvent = 'stores:store:hydrate';
 
 /**
- * Payload dispatched with the `stores:hydrate` event.
+ * Payload dispatched with the `stores:store:hydrate` event.
  */
 export type StoreHydrateEventData = {
   /**
@@ -70,13 +70,29 @@ export type StoreHydrateEventData = {
 };
 
 /**
+ * Event dispatched by the platform layer once a store's data has
+ * been written to storage.
+ */
+export const StorePersistedEvent = 'stores:store:persisted';
+
+/**
+ * Payload dispatched with the `stores:store:persisted` event.
+ */
+export type StorePersistedEventData = {
+  /**
+   * The namespace of the store whose data was written.
+   */
+  namespace: string;
+};
+
+/**
  * Event dispatched after a store has been hydrated with
  * its persisted data.
  */
-export const StoreHydratedEvent = 'stores:hydrated';
+export const StoreHydratedEvent = 'stores:store:hydrated';
 
 /**
- * Payload dispatched with the `stores:hydrated` event.
+ * Payload dispatched with the `stores:store:hydrated` event.
  */
 export type StoreHydratedEventData = {
   /**
@@ -87,9 +103,10 @@ export type StoreHydratedEventData = {
 
 declare module '@minddrop/events/EventDataMap' {
   interface EventDataMap {
-    'stores:persist': StorePersistEventData;
-    'stores:hydrate-request': StoreHydrateRequestEventData;
-    'stores:hydrate': StoreHydrateEventData;
-    'stores:hydrated': StoreHydratedEventData;
+    'stores:store:persist': StorePersistEventData;
+    'stores:store:persisted': StorePersistedEventData;
+    'stores:store:hydrate-request': StoreHydrateRequestEventData;
+    'stores:store:hydrate': StoreHydrateEventData;
+    'stores:store:hydrated': StoreHydratedEventData;
   }
 }

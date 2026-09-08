@@ -6,6 +6,7 @@ import {
   StoreHydrateRequestEventData,
   StorePersistEvent,
   StorePersistEventData,
+  StorePersistedEvent,
 } from '../events';
 
 export interface RegisterStoreListenersConfig {
@@ -62,6 +63,8 @@ export function registerStoreListeners(
 /**
  * Handles a store persist event by writing the store
  * data to a JSON file in the stores directory.
+ *
+ * @dispatches stores:store:persisted
  */
 async function handlePersist(
   config: RegisterStoreListenersConfig,
@@ -90,6 +93,9 @@ async function handlePersist(
     true,
     fsOptions,
   );
+
+  // Acknowledge the write, resolving any pending persisted() call
+  Events.dispatch(StorePersistedEvent, { namespace: data.namespace });
 }
 
 /**

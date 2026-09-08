@@ -1,11 +1,5 @@
 import { StoreApi, UseBoundStore, create } from 'zustand';
-import { Events } from '@minddrop/events';
-import {
-  StoreHydrateEvent,
-  StoreHydrateRequestEvent,
-  StoreHydratedEvent,
-  StorePersistEvent,
-} from '../events';
+import { createStorePersistence } from '../createStorePersistence';
 import { RegisteredStoreType, registerStore } from '../storeRegistry';
 import { PersistOptions } from '../types';
 
@@ -80,12 +74,22 @@ export interface KeyValueStore<TValues extends StoreValues> {
 
   /**
    * Requests persisted data from the platform layer by dispatching
-   * a `stores:hydrate-request` event, then waits for the platform layer
-   * to respond with a `stores:hydrate` event containing the data.
+   * a `stores:store:hydrate-request` event, then waits for the platform
+   * layer to respond with a `stores:store:hydrate` event containing the
+   * data.
    *
    * Only available when the store is created with `persist` options.
    */
   hydrate(): Promise<void>;
+
+  /**
+   * Resolves once every mutation made so far has been written by the
+   * platform layer, or immediately when no platform layer is listening.
+   *
+   * Await it before an action that would interrupt the write, such as
+   * reloading the window.
+   */
+  persisted(): Promise<void>;
 
   /**
    * Sets a single key-value pair.
@@ -168,49 +172,14 @@ export function createKeyValueStore<TValues extends StoreValues>(
       }),
   }));
 
-  // Resolve callback set by hydrate(), called after data is loaded
-  let hydrateResolve: (() => void) | null = null;
-
-  // Listen for hydrate events matching this store's namespace.
-  // Handles both the initial hydrate() call and subsequent
-  // hydration events (e.g. from file watchers).
-  if (persist) {
-    Events.addListener(
-      StoreHydrateEvent,
-      `stores:${persist.namespace}`,
-      (hydration) => {
-        if (hydration.namespace !== persist!.namespace) {
-          return;
-        }
-
-        // Load the persisted data as partial values
-        store.getState().load(hydration.data as Partial<TValues>);
-
-        // Notify that the store has been hydrated
-        Events.dispatch(StoreHydratedEvent, {
-          namespace: persist!.namespace,
-        });
-
-        // Resolve the hydrate() promise if one is pending
-        if (hydrateResolve) {
-          hydrateResolve();
-          hydrateResolve = null;
-        }
-      },
-    );
-  }
+  // Wire the store up to the platform layer that persists it
+  const persistence = createStorePersistence(persist, (data) =>
+    store.getState().load(data as Partial<TValues>),
+  );
 
   // Dispatches a persist event with the current store data
   function dispatchPersist(): void {
-    if (!persist) {
-      return;
-    }
-
-    Events.dispatch(StorePersistEvent, {
-      persistTo: persist.persistTo,
-      namespace: persist.namespace,
-      data: store.getState().values,
-    });
+    persistence.dispatchPersist(store.getState().values);
   }
 
   // Register the store in the global registry
@@ -230,23 +199,8 @@ export function createKeyValueStore<TValues extends StoreValues>(
       dispatchPersist();
     },
     load: (values) => store.getState().load(values),
-    hydrate: () => {
-      if (!persist) {
-        throw new Error('hydrate() called on a store without persist options');
-      }
-
-      return new Promise<void>((resolve) => {
-        // Store the resolve callback so the persistent hydrate
-        // listener can resolve the promise after loading data.
-        hydrateResolve = resolve;
-
-        // Dispatch a hydrate request for the platform layer
-        Events.dispatch(StoreHydrateRequestEvent, {
-          persistTo: persist.persistTo,
-          namespace: persist.namespace,
-        });
-      });
-    },
+    hydrate: persistence.hydrate,
+    persisted: persistence.persisted,
     useValue: (key) => store(({ values }) => values[key]),
     useAllValues: () => store().values,
     useStore: store,

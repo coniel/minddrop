@@ -7,6 +7,7 @@ export * from './events';
 export * from './createArrayStore';
 export * from './registerStoreListeners';
 export * from './createKeyValueStore';
+export * from './createStorePersistence';
 export * from './createObjectStore';
 export * from './storeRegistry';
 export * from './types';

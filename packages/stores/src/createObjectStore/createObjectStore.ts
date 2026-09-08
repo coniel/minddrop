@@ -1,12 +1,6 @@
 import { StoreApi, UseBoundStore, create } from 'zustand';
 import { shallow } from 'zustand/shallow';
-import { Events } from '@minddrop/events';
-import {
-  StoreHydrateEvent,
-  StoreHydrateRequestEvent,
-  StoreHydratedEvent,
-  StorePersistEvent,
-} from '../events';
+import { createStorePersistence } from '../createStorePersistence';
 import { RegisteredStoreType, registerStore } from '../storeRegistry';
 import { PersistOptions } from '../types';
 
@@ -104,12 +98,22 @@ export interface ObjectItemStore<TItem extends object> {
 
   /**
    * Requests persisted data from the platform layer by dispatching
-   * a `stores:hydrate-request` event, then waits for the platform layer
-   * to respond with a `stores:hydrate` event containing the data.
+   * a `stores:store:hydrate-request` event, then waits for the platform
+   * layer to respond with a `stores:store:hydrate` event containing the
+   * data.
    *
    * Only available when the store is created with `persist` options.
    */
   hydrate(): Promise<void>;
+
+  /**
+   * Resolves once every mutation made so far has been written by the
+   * platform layer, or immediately when no platform layer is listening.
+   *
+   * Await it before an action that would interrupt the write, such as
+   * reloading the window.
+   */
+  persisted(): Promise<void>;
 
   /**
    * Adds or replaces an item in the store.
@@ -229,50 +233,14 @@ export function createObjectStore<TItem extends object>(
     clear: () => set({ items: {} }),
   }));
 
-  // Resolve callback set by hydrate(), called after data is loaded
-  let hydrateResolve: (() => void) | null = null;
-
-  // Listen for hydrate events matching this store's namespace.
-  // Handles both the initial hydrate() call and subsequent
-  // hydration events (e.g. from file watchers).
-  if (persist) {
-    Events.addListener(
-      StoreHydrateEvent,
-      `stores:${persist.namespace}`,
-      (hydration) => {
-        if (hydration.namespace !== persist!.namespace) {
-          return;
-        }
-
-        // Load the persisted data as an array of items
-        const items = Object.values(hydration.data) as TItem[];
-        store.getState().load(items);
-
-        // Notify that the store has been hydrated
-        Events.dispatch(StoreHydratedEvent, {
-          namespace: persist!.namespace,
-        });
-
-        // Resolve the hydrate() promise if one is pending
-        if (hydrateResolve) {
-          hydrateResolve();
-          hydrateResolve = null;
-        }
-      },
-    );
-  }
+  // Wire the store up to the platform layer that persists it
+  const persistence = createStorePersistence(persist, (data) =>
+    store.getState().load(Object.values(data) as TItem[]),
+  );
 
   // Dispatches a persist event with the current store data
   function dispatchPersist(): void {
-    if (!persist) {
-      return;
-    }
-
-    Events.dispatch(StorePersistEvent, {
-      persistTo: persist.persistTo,
-      namespace: persist.namespace,
-      data: store.getState().items,
-    });
+    persistence.dispatchPersist(store.getState().items);
   }
 
   // Create the `get` function which returns one or multiple items
@@ -327,23 +295,8 @@ export function createObjectStore<TItem extends object>(
       dispatchPersist();
     },
     load: (items) => store.getState().load(items),
-    hydrate: () => {
-      if (!persist) {
-        throw new Error('hydrate() called on a store without persist options');
-      }
-
-      return new Promise<void>((resolve) => {
-        // Store the resolve callback so the persistent hydrate
-        // listener can resolve the promise after loading data.
-        hydrateResolve = resolve;
-
-        // Dispatch a hydrate request for the platform layer
-        Events.dispatch(StoreHydrateRequestEvent, {
-          persistTo: persist.persistTo,
-          namespace: persist.namespace,
-        });
-      });
-    },
+    hydrate: persistence.hydrate,
+    persisted: persistence.persisted,
     clear: () => {
       store.getState().clear();
       dispatchPersist();

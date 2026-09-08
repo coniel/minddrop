@@ -43,7 +43,7 @@ describe('startEventCapture', () => {
   });
 
   it('does not capture the events the dev tools dispatch themselves', async () => {
-    Events.dispatch('stores:persist', {
+    Events.dispatch('stores:store:persist', {
       namespace: DevToolsNamespace,
       persistTo: 'app-config',
       data: {},
@@ -53,7 +53,7 @@ describe('startEventCapture', () => {
   });
 
   it('captures the events of other stores', async () => {
-    Events.dispatch('stores:persist', {
+    Events.dispatch('stores:store:persist', {
       namespace: 'app-ui',
       persistTo: 'app-config',
       data: {},
