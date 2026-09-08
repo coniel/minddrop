@@ -20,7 +20,7 @@ export const SpaceViewStateStore = createObjectStore<SpaceViewState>(
   'Spaces:ViewState',
   'spaceId',
   {
-    persistTo: 'app-config',
+    persistTo: 'app-workspace-config',
     namespace: 'space-view-state',
   },
 );

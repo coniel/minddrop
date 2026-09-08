@@ -9,7 +9,7 @@ export const ViewSessionsStore = createObjectStore<ViewSessionSet>(
   'Views:Sessions',
   'id',
   {
-    persistTo: 'workspace-config',
+    persistTo: 'app-workspace-config',
     namespace: 'sessions',
   },
 );

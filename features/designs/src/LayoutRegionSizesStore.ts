@@ -39,7 +39,7 @@ export const LayoutRegionSizesStore = createKeyValueStore<
   'Designs:LayoutRegionSizes',
   {},
   {
-    persistTo: 'workspace-config',
+    persistTo: 'app-workspace-config',
     namespace: 'layout-region-sizes',
   },
 );
