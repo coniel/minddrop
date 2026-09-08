@@ -1,7 +1,10 @@
 import { DesignElementSettingsMenuProps } from '@minddrop/designs-next';
 import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import { UiIconName } from '@minddrop/ui-icons';
-import { RadioToggleGroup, Toggle } from '@minddrop/ui-primitives';
+import {
+  RadioToggleHoverMenu,
+  RadioToggleHoverMenuOption,
+} from '@minddrop/ui-primitives';
 import { HeadingElement, HeadingLevel } from '../HeadingElement.types';
 import { DefaultHeadingLevel } from '../HeadingElementConfig';
 
@@ -50,8 +53,8 @@ const HeadingLevelOptions: HeadingLevelOption[] = [
 ];
 
 /**
- * Renders the heading element's settings menu: radio toggles over
- * the three heading levels.
+ * Renders the heading element's settings menu: the three heading
+ * levels behind a trigger showing the current one.
  */
 export const HeadingSettingsMenu: React.FC<
   DesignElementSettingsMenuProps<HeadingElement>
@@ -60,6 +63,16 @@ export const HeadingSettingsMenu: React.FC<
 
   // The current level as its radio value
   const value = String(element.level ?? DefaultHeadingLevel);
+
+  // The levels as menu options
+  const options: RadioToggleHoverMenuOption[] = HeadingLevelOptions.map(
+    (option) => ({
+      value: option.value,
+      icon: option.icon,
+      label: t(option.label),
+      tooltip: { title: option.label },
+    }),
+  );
 
   // Applies the chosen level
   function handleLevelChange(chosenValue: string) {
@@ -75,16 +88,11 @@ export const HeadingSettingsMenu: React.FC<
   }
 
   return (
-    <RadioToggleGroup value={value} onValueChange={handleLevelChange}>
-      {HeadingLevelOptions.map((option) => (
-        <Toggle
-          key={option.value}
-          value={option.value}
-          icon={option.icon}
-          label={t(option.label)}
-          tooltip={{ side: 'top', title: option.label }}
-        />
-      ))}
-    </RadioToggleGroup>
+    <RadioToggleHoverMenu
+      options={options}
+      value={value}
+      label={t('designsNext.elements.heading.level')}
+      onValueChange={handleLevelChange}
+    />
   );
 };
