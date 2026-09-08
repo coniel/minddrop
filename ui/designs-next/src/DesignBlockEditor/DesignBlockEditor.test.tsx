@@ -5,7 +5,6 @@ import { Designs } from '@minddrop/designs-next';
 import {
   cardColumns,
   cardRows,
-  coverDesignElement,
   designElements,
   titleDesignElement,
 } from '@minddrop/designs-next/test-utils';
@@ -14,12 +13,7 @@ import {
   testElementConfig,
 } from '@minddrop/designs-next/test-utils';
 import { Selection } from '@minddrop/selection';
-import {
-  createDataTransfer,
-  fireEvent,
-  render,
-  screen,
-} from '@minddrop/test-utils';
+import { createDataTransfer, fireEvent, render } from '@minddrop/test-utils';
 import { cleanup } from '../test-utils';
 import { DesignBlockEditor } from './DesignBlockEditor';
 
@@ -289,30 +283,6 @@ describe('DesignBlockEditor', () => {
     expect(resizedTitle?.rowSpan).toBe(titleDesignElement.rowSpan + 2);
   });
 
-  it('shows the element menu for the selected element only', () => {
-    const withoutSelection = renderEditor();
-
-    expect(
-      withoutSelection.querySelector('.design-block-editor-menu'),
-    ).toBeNull();
-
-    cleanup();
-
-    const withSelection = renderEditor(titleDesignElement.id);
-
-    expect(
-      withSelection.querySelector('.design-block-editor-menu'),
-    ).not.toBeNull();
-  });
-
-  it('clears the selection on clicks outside the editor', () => {
-    renderEditor(titleDesignElement.id);
-
-    fireEvent.click(document.body);
-
-    expect(selectedElementId).toBeNull();
-  });
-
   it('inserts dropped element types at the snapped drop point', () => {
     const container = renderEditor(null, true);
 
@@ -382,34 +352,6 @@ describe('DesignBlockEditor', () => {
     expect(changedElements).toBeNull();
   });
 
-  it('changes the height mode through the menu when aspect-locked', () => {
-    const { container } = render(
-      <DesignBlockEditor
-        elements={designElements}
-        columns={cardColumns}
-        rows={cardRows}
-        snap={2}
-        unitSize={10}
-        selectedId={titleDesignElement.id}
-        aspectLocked
-        onElementsChange={(elements) => {
-          changedElements = elements;
-        }}
-        onSelectionChange={() => undefined}
-      />,
-    );
-
-    expect(container.querySelector('.design-block-editor-menu')).not.toBeNull();
-
-    fireEvent.click(screen.getByLabelText('Fixed height, pinned bottom'));
-
-    const changedTitle = changedElements?.find(
-      (element) => element.id === titleDesignElement.id,
-    );
-
-    expect(changedTitle?.heightMode).toBe('fixed-bottom');
-  });
-
   it('shows the grid overlay above other blocks during element drags', () => {
     const container = renderEditor();
     const title = container.querySelector(
@@ -436,59 +378,6 @@ describe('DesignBlockEditor', () => {
     expect(
       container.querySelector('.design-block-editor-grid-overlay'),
     ).toBeNull();
-  });
-
-  it('hides the menu while a drag is in progress', () => {
-    const container = renderEditor(titleDesignElement.id);
-    const title = container.querySelector(
-      '[data-element-id="element_title"]',
-    ) as HTMLElement;
-
-    // The menu hides for the duration of the drag
-    fireEvent.pointerDown(title, { clientX: 0, clientY: 0 });
-
-    expect(container.querySelector('.design-block-editor-menu')).toBeNull();
-
-    // Releasing the pointer brings it back
-    fireEvent.pointerUp(title);
-
-    expect(container.querySelector('.design-block-editor-menu')).not.toBeNull();
-  });
-
-  it('places the menu below blocks near the top edge', () => {
-    // The cover sits at the top edge, the title further down
-    const container = renderEditor(coverDesignElement.id);
-    const menu = container.querySelector(
-      '.design-block-editor-menu',
-    ) as HTMLElement;
-
-    expect(menu.style.top).toBe(
-      `${(coverDesignElement.row + coverDesignElement.rowSpan) * 10 + 4}px`,
-    );
-  });
-
-  it('changes the width mode through the menu', () => {
-    renderEditor(titleDesignElement.id);
-
-    fireEvent.click(screen.getByLabelText('Fixed width, pinned left'));
-
-    const changedTitle = changedElements?.find(
-      (element) => element.id === titleDesignElement.id,
-    );
-
-    expect(changedTitle?.widthMode).toBe('fixed-left');
-  });
-
-  it('toggles natural height through the menu', () => {
-    renderEditor(titleDesignElement.id);
-
-    fireEvent.click(screen.getByLabelText('Natural height'));
-
-    const changedTitle = changedElements?.find(
-      (element) => element.id === titleDesignElement.id,
-    );
-
-    expect(changedTitle?.naturalHeight).toBe(true);
   });
 
   it('floors resizes at the element type minimum row span', () => {

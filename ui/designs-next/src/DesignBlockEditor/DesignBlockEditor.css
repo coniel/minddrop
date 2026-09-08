@@ -57,11 +57,6 @@
   position: absolute;
 }
 
-.design-block-editor-menu {
-  position: absolute;
-  z-index: 1;
-}
-
 .design-block-editor-surface-handle {
   position: absolute;
   left: 0;

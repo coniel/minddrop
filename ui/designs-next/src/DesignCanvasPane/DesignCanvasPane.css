@@ -7,6 +7,17 @@
   overflow: hidden;
 }
 
+/* Toolbars floating at the canvas' left edge, dropped clear of
+   the canvas controls opposite them */
+.design-canvas-pane-side-controls {
+  position: absolute;
+  top: calc(var(--space-8) + var(--space-6));
+  left: var(--space-4);
+  z-index: 1;
+  display: flex;
+  gap: var(--space-2);
+}
+
 /* The layout sits at the canvas origin */
 .design-canvas-pane-layout {
   position: absolute;

@@ -103,6 +103,7 @@ describe('DesignEditor', () => {
     fireEvent.pointerDown(title, { clientX: 0, clientY: 0 });
     fireEvent.pointerUp(title);
 
+    fireEvent.click(screen.getByLabelText('Width'));
     fireEvent.click(screen.getByLabelText('Fixed width, pinned left'));
 
     expect(

@@ -151,7 +151,7 @@ export const DesignEditor: React.FC<DesignEditorProps> = ({ designId }) => {
         rows={rows}
         selectedId={selectedId}
         aspectLocked={Boolean(design.aspectRatio)}
-        controls={
+        layoutControls={
           <AspectRatioMenu
             aspectRatio={design.aspectRatio}
             onAspectRatioChange={handleAspectRatioChange}

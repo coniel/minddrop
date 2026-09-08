@@ -12,6 +12,11 @@ import './DesignCanvasPane.css';
 
 export interface DesignCanvasPaneProps {
   /**
+   * Reference to the pane element.
+   */
+  ref?: React.Ref<HTMLElement>;
+
+  /**
    * Class name applied to the pane.
    */
   className?: string;
@@ -39,6 +44,17 @@ export interface DesignCanvasPaneProps {
   controls?: React.ReactNode;
 
   /**
+   * Callback fired when the canvas background around the layout is
+   * pressed.
+   */
+  onBackgroundPress?: () => void;
+
+  /**
+   * Toolbars floating at the canvas' left edge.
+   */
+  sideControls?: React.ReactNode;
+
+  /**
    * The layout content.
    */
   children: React.ReactNode;
@@ -53,20 +69,27 @@ const LayoutNodeId = 'design';
 
 /**
  * Renders a zoomable canvas pane holding a single layout at the
- * canvas origin, with the canvas zoom controls and the pane's own
- * controls floating at its top right.
+ * canvas origin, with the canvas zoom controls floating at its top
+ * right and the pane's side controls at its left edge.
  */
 export const DesignCanvasPane: React.FC<DesignCanvasPaneProps> = ({
+  ref,
   className,
   layoutWidth,
   layoutHeight,
   fitOnResize = false,
   controls,
+  onBackgroundPress,
+  sideControls,
   children,
 }) => (
   <CanvasProvider minZoom={MinZoom} maxZoom={MaxZoom} selectable={false}>
-    <section className={joinClasses('design-canvas-pane', className)}>
-      <Canvas lasso={false} shortcutScope="focus">
+    <section ref={ref} className={joinClasses('design-canvas-pane', className)}>
+      <Canvas
+        lasso={false}
+        shortcutScope="focus"
+        onBackgroundMouseDown={() => onBackgroundPress?.()}
+      >
         <DesignCanvasLayout
           width={layoutWidth}
           height={layoutHeight}
@@ -78,6 +101,10 @@ export const DesignCanvasPane: React.FC<DesignCanvasPaneProps> = ({
 
       {/* Canvas controls, with the pane's controls to their left */}
       <CanvasToolbar snapping={false}>{controls}</CanvasToolbar>
+
+      {sideControls && (
+        <div className="design-canvas-pane-side-controls">{sideControls}</div>
+      )}
     </section>
   </CanvasProvider>
 );

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   ApplyElementDragOptions,
   DesignElement,
@@ -6,18 +6,10 @@ import {
   DesignElementTypeTransferData,
   Designs,
   ElementDragMode,
-  ElementHeightMode,
-  ElementWidthMode,
 } from '@minddrop/designs-next';
 import { Selection } from '@minddrop/selection';
-import { CanvasChrome, CanvasChromeOrigin } from '@minddrop/ui-canvas';
 import { getTransferData, useDeleteKey } from '@minddrop/utils';
-import { BlockEditorElementMenu } from '../BlockEditorElementMenu';
-import {
-  MenuPosition,
-  resolveElementClass,
-  resolveMenuPosition,
-} from '../utils';
+import { resolveElementClass } from '../utils';
 import './DesignBlockEditor.css';
 
 export interface DesignBlockEditorProps {
@@ -80,12 +72,6 @@ export interface DesignBlockEditorProps {
    * Callback fired when an element or surface drag ends.
    */
   onDragEnd?: () => void;
-
-  /**
-   * Whether the design is aspect-locked, offering element height
-   * modes instead of the natural height toggle.
-   */
-  aspectLocked?: boolean;
 }
 
 interface DragState {
@@ -149,13 +135,6 @@ const ResizeHandles: ElementDragMode[] = [
   'resize-bottom-right',
 ];
 
-// The menu corner that stays on the block for each placement
-const MenuChromeOrigins: Record<MenuPosition['placement'], CanvasChromeOrigin> =
-  {
-    above: 'bottom-left',
-    below: 'top-left',
-  };
-
 // The drag data types the surface accepts drops of
 const AcceptedDropTypes = [Designs.constants.ElementTypesDataKey];
 
@@ -178,24 +157,12 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
   onRowsChange,
   onDragStart,
   onDragEnd,
-  aspectLocked = false,
 }) => {
   const rootRef = useRef<HTMLDivElement>(null);
   const dragRef = useRef<DragState | null>(null);
   const surfaceDragRef = useRef<SurfaceDragState | null>(null);
   const [draggedElementId, setDraggedElementId] = useState<string | null>(null);
-  const [surfaceDragging, setSurfaceDragging] = useState(false);
   const [dropping, setDropping] = useState(false);
-
-  const selectedElement = elements.find((element) => element.id === selectedId);
-
-  // Where the menu sits relative to the selected element
-  const menuPosition = selectedElement
-    ? resolveMenuPosition(selectedElement, unitSize)
-    : null;
-
-  // Any drag in progress hides the element menu
-  const dragging = draggedElementId !== null || surfaceDragging;
 
   // Measures the screen pixels per grid unit, which a scaled
   // viewport (e.g. a zoomed canvas) sets apart from the unit size.
@@ -205,27 +172,6 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
 
     return width ? width / columns : unitSize;
   }
-
-  // Clear the selection on clicks landing anywhere outside the editor
-  useEffect(() => {
-    if (selectedId === null) {
-      return;
-    }
-
-    function handleDocumentClick(event: MouseEvent) {
-      if (
-        rootRef.current &&
-        event.target instanceof Node &&
-        !rootRef.current.contains(event.target)
-      ) {
-        onSelectionChange(null);
-      }
-    }
-
-    document.addEventListener('click', handleDocumentClick);
-
-    return () => document.removeEventListener('click', handleDocumentClick);
-  }, [selectedId, onSelectionChange]);
 
   // Remove the selected element on Delete or Backspace
   useDeleteKey(() => {
@@ -333,7 +279,6 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
       startRows: rows,
       unitScreenSize: measureUnitScreenSize(),
     };
-    setSurfaceDragging(true);
     onDragStart?.();
   }
 
@@ -372,7 +317,6 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
     }
 
     surfaceDragRef.current = null;
-    setSurfaceDragging(false);
     onDragEnd?.();
   }
 
@@ -459,72 +403,6 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
     }
   }
 
-  // Applies a change to the selected element
-  function updateSelectedElement(
-    data: Partial<
-      Pick<DesignElement, 'widthMode' | 'heightMode' | 'naturalHeight'>
-    >,
-  ) {
-    onElementsChange(
-      elements.map((element) =>
-        element.id === selectedId ? { ...element, ...data } : element,
-      ),
-    );
-  }
-
-  // Changes the selected element's width mode
-  function handleWidthModeChange(widthMode: ElementWidthMode) {
-    updateSelectedElement({ widthMode });
-  }
-
-  // Changes the selected element's height mode
-  function handleHeightModeChange(heightMode: ElementHeightMode) {
-    updateSelectedElement({ heightMode });
-  }
-
-  // Toggles whether the selected element grows to its content's height
-  function handleNaturalHeightChange(naturalHeight: boolean) {
-    updateSelectedElement({ naturalHeight });
-  }
-
-  // Applies a settings change to the selected element, making room
-  // below it when the change raises its intrinsic minimum height.
-  function handleSettingsChange(settings: Record<string, unknown>) {
-    if (!selectedElement) {
-      return;
-    }
-
-    // The element type's height constraints
-    const config = DesignElementConfigs.get(selectedElement.type, false);
-
-    // The element with the settings applied
-    const updated = { ...selectedElement, ...settings };
-
-    // Apply the change, resolving the height constraints before and
-    // after it so line-based elements keep their line count.
-    const result = Designs.applyElementSettings(
-      elements,
-      selectedElement.id,
-      settings,
-      {
-        rows,
-        minRowSpan: config?.resolveMinRowSpan?.(updated),
-        rowSpanStep: config?.resolveRowSpanStep?.(updated),
-        previousRowSpanStep: config?.resolveRowSpanStep?.(selectedElement),
-      },
-    );
-
-    // Emit the adjusted layout
-    onElementsChange(result.elements);
-
-    // Follow the shift with the surface height, floored at the
-    // surface minimum. Aspect-locked designs keep their derived row
-    // count instead.
-    if (result.rows !== rows) {
-      onRowsChange?.(Math.max(result.rows, Designs.constants.MinRows));
-    }
-  }
-
   return (
     <div
       ref={rootRef}
@@ -583,30 +461,6 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
             backgroundSize: `${snap * unitSize}px ${snap * unitSize}px`,
           }}
         />
-      )}
-      {selectedElement && menuPosition && !dragging && (
-        <div className="design-block-editor-menu" style={menuPosition.style}>
-          {/* Keeps the menu at its screen size within a zoomed
-              canvas, growing away from the block */}
-          <CanvasChrome origin={MenuChromeOrigins[menuPosition.placement]}>
-            <BlockEditorElementMenu
-              element={selectedElement}
-              pinOverridden={Designs.isElementPinOverridden(
-                selectedElement,
-                elements,
-              )}
-              aspectLocked={aspectLocked}
-              verticalPinOverridden={Designs.isElementVerticalPinOverridden(
-                selectedElement,
-                elements,
-              )}
-              onWidthModeChange={handleWidthModeChange}
-              onHeightModeChange={handleHeightModeChange}
-              onNaturalHeightChange={handleNaturalHeightChange}
-              onSettingsChange={handleSettingsChange}
-            />
-          </CanvasChrome>
-        </div>
       )}
       {onRowsChange && (
         <div

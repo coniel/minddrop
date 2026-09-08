@@ -2150,6 +2150,7 @@ declare module 'i18next' {
             space: string;
           };
           widthMode: {
+            label: string;
             fluid: string;
             fixedLeft: string;
             fixedRight: string;
@@ -2195,6 +2196,7 @@ declare module 'i18next' {
             };
           };
           heightMode: {
+            label: string;
             fluid: string;
             fixedTop: string;
             fixedBottom: string;

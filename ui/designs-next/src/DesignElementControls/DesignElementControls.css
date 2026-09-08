@@ -1,0 +1,12 @@
+/* Pin choices overridden by a fluid neighbour read as inactive
+   while staying interactive */
+.design-element-controls-pin-overridden {
+  opacity: 0.5;
+}
+
+/* The drawn corner glyphs size with the icons they stand among */
+.design-element-corner-radius-glyph {
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
+  flex-shrink: 0;
+}
