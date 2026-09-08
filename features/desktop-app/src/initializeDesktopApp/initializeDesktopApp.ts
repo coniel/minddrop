@@ -37,6 +37,7 @@ import { AppUiState } from '../AppUiState';
 import { locales } from '../locales';
 import { registerAppDataStoreListeners } from '../registerAppDataStoreListeners';
 import { registerWorkspaceStoreListeners } from '../registerWorkspaceStoreListeners';
+import { registerWorkspaceSwitchListener } from '../registerWorkspaceSwitchListener';
 import { initializeDataViewTypes } from './initializeDataViewTypes';
 import { initializeSelection } from './initializeSelection';
 import { initializeTheme } from './initializeTheme';
@@ -111,7 +112,7 @@ async function runInitialization(): Promise<void> {
   initializeTagsFeature();
 
   // Initialize workspaces (sets Paths.workspace and
-  // Paths.workspaceConfigs from the first loaded workspace)
+  // Paths.workspaceConfigs from the active workspace)
   await Workspaces.initialize();
 
   // Register listeners that persist and hydrate workspace-config
@@ -170,7 +171,13 @@ async function runInitialization(): Promise<void> {
   // holds, so that images are treated on their first render.
   await Fs.preloadImageStats();
 
-  // Watch the workspace directories for changes made outside the
-  // app. Started last so that it cannot race the initial loads.
-  await Fs.startWatcher(Workspaces.getAll().map((workspace) => workspace.path));
+  // Watch the active workspace directory for changes made outside
+  // the app. Started last so that it cannot race the initial loads.
+  const activeWorkspace = Workspaces.getActive(false);
+  const stopWatcher = activeWorkspace
+    ? await Fs.startWatcher([activeWorkspace.path])
+    : () => undefined;
+
+  // Reload the app when the user switches to another workspace
+  registerWorkspaceSwitchListener(stopWatcher);
 }

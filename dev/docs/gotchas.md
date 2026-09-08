@@ -426,14 +426,18 @@ looks:
 
 ## packages/file-system
 
-### The workspace watcher only covers workspaces open at startup
+### The workspace watcher only covers the active workspace
 
 `startFileSystemWatcher` is called once at the end of
-`initializeDesktopApp` with the paths of the workspaces loaded at that
-point. A workspace added during the session is not watched until the
-app restarts. Nothing surfaces when this happens: external changes to
-that workspace are simply invisible, exactly as they were before the
-watcher existed.
+`initializeDesktopApp` with the active workspace's path. The other
+listed workspaces are not loaded into the stores, so watching them
+would only cost file handles.
+
+Switching workspace stops that watcher and reloads the window, which
+runs `initializeDesktopApp` again and starts a watcher on the workspace
+switched to. The watcher lives in the Bun process and does not survive
+the reload, so leaving it running would leave an orphan watching a
+workspace the app has moved on from.
 
 ### Self-write detection only covers text writes
 
