@@ -30,10 +30,6 @@
   overflow: hidden;
 }
 
-.right-panel {
-  width: 400px;
-}
-
 .loading-view {
   position: absolute;
   top: 0;

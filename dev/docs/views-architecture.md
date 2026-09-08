@@ -64,8 +64,11 @@ unmounts during a session switch.
 
 ## UI slots and fills
 
-A **slot** is a named position in the app shell (`sidebar` and
-`right-panel`) and a **fill** is a registered component for it. Fills
+A **slot** is a named position in the app shell (`sidebar` today; a
+right panel slot was tried for the database configuration panel and
+dropped 2026-09-08, since a panel owned by one view belongs inside that
+view's pane, where its state is per pane and the split pane gets its
+own) and a **fill** is a registered component for it. Fills
 register through `Views.registerFill(kind, fill)` into one store keyed
 by `kind:id`; the kinds and their fill shapes are declared on the
 augmentable `SlotFillMap` interface (the `EventDataMap` pattern), so
@@ -110,21 +113,16 @@ surrounding view area names (the main area outside of a pane), falls
 back to the given state or fill id when the session names none or an
 unregistered one, and renders nothing while the slot is hidden.
 
-The desktop app owns both frames, and a frame renders nothing at all
+The desktop app owns the frame, and a frame renders nothing at all
 rather than an empty container: it reads `resolved` (or `hidden`) from
 `Views.useSlotState` and returns null before rendering its container, so
-a hidden sidebar or an empty right panel gives its width back to the
-view area.
+a hidden sidebar gives its width back to the view area.
 
 The sidebar frame is `Sidebar` at the persisted
 `AppUiState.sidebarWidth`, with the resize handlers and the nav toolbar
 width dispatch, and `AppSidebar` reduced to content and registered as
 the default `sidebar` fill by `registerSidebars`. Fills are content
-only, so every sidebar shares the one width. The right panel frame
-(`RightPanel`) is the fixed-width `.right-panel` container with no
-fallback fill, so it stays absent until a session puts something in it;
-a persisted, resizable width follows the sidebar's pattern when a real
-fill needs one.
+only, so every sidebar shares the one width.
 
 ## Data views are independent entities
 

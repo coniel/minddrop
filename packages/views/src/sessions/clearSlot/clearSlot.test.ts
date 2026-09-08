@@ -22,12 +22,12 @@ describe('clearSlot', () => {
     const session = getViewSessionSet(VIEW_AREA_ID).sessions[0];
 
     setSlot(VIEW_AREA_ID, session.id, 'sidebar', { fill: 'test:fill' });
-    setSlot(VIEW_AREA_ID, session.id, 'right-panel', { fill: 'test:panel' });
+    setSlot(VIEW_AREA_ID, session.id, 'test:slot', { fill: 'test:panel' });
 
     clearSlot(VIEW_AREA_ID, session.id, 'sidebar');
 
     expect(getViewSessionSet(VIEW_AREA_ID).sessions[0].slots).toEqual({
-      'right-panel': { fill: 'test:panel' },
+      'test:slot': { fill: 'test:panel' },
     });
   });
 

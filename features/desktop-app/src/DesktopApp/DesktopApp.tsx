@@ -13,7 +13,6 @@ import { NavToolbar } from '../NavToolbar';
 import { AppSidebarFrame } from './AppSidebarFrame';
 import { ConfirmationDialogFeature } from './ConfirmationDialogFeature';
 import { ErrorToastFeature } from './ErrorToastFeature';
-import { RightPanel } from './RightPanel';
 import './DesktopApp.css';
 
 export const DesktopApp: React.FC = () => {
@@ -49,7 +48,6 @@ export const DesktopApp: React.FC = () => {
             <div className="content-panels">
               <AppSidebarFrame />
               <ViewRenderer viewAreaId={Views.constants.DefaultAreaId} />
-              <RightPanel />
             </div>
           </div>
           <DatabasesFeature />
