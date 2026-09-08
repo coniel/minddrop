@@ -36,6 +36,7 @@ import { Workspaces } from '@minddrop/workspaces';
 import { AppUiState } from '../AppUiState';
 import { locales } from '../locales';
 import { registerAppDataStoreListeners } from '../registerAppDataStoreListeners';
+import { registerAppWorkspaceStoreListeners } from '../registerAppWorkspaceStoreListeners';
 import { registerWorkspaceStoreListeners } from '../registerWorkspaceStoreListeners';
 import { registerWorkspaceSwitchListener } from '../registerWorkspaceSwitchListener';
 import { initializeDataViewTypes } from './initializeDataViewTypes';
@@ -91,9 +92,6 @@ async function runInitialization(): Promise<void> {
   // Hydrate app UI state from persisted config
   await AppUiState.hydrate();
 
-  // Hydrate per-space view state
-  await SpaceViewStateStore.hydrate();
-
   // Register dev tools translations and panels, and hydrate
   // their UI state.
   await initializeDevToolsFeature();
@@ -119,11 +117,18 @@ async function runInitialization(): Promise<void> {
   // stores to JSON files in the workspace config directory.
   registerWorkspaceStoreListeners();
 
-  // Hydrate layout region sizes (dialogs, panels) from workspace config
+  // Register listeners that persist and hydrate app-workspace-config
+  // stores to JSON files in the active workspace's AppData directory.
+  registerAppWorkspaceStoreListeners();
+
+  // Hydrate layout region sizes (dialogs, panels) for this workspace
   await LayoutRegionSizesStore.hydrate();
 
-  // Hydrate the open view sessions from workspace config
+  // Hydrate the open view sessions for this workspace
   await ViewSessions.Store.hydrate();
+
+  // Hydrate per-space view state for this workspace
+  await SpaceViewStateStore.hydrate();
 
   // Hydrate the defaults applied to newly created databases
   await Databases.DefaultsStore.hydrate();

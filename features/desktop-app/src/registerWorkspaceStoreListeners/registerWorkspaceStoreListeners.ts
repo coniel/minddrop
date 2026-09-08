@@ -10,6 +10,10 @@ const STORES_DIR = 'stores';
  * `workspace-config` level stores to JSON files in the
  * workspace's config directory.
  *
+ * These stores hold state belonging to the workspace itself, which
+ * travels with it to every device it syncs to. State specific to one
+ * workspace on one device goes to `app-workspace-config` instead.
+ *
  * @returns A cleanup function that removes the listeners.
  */
 export function registerWorkspaceStoreListeners(): VoidFunction {

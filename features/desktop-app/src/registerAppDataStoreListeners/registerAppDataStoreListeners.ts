@@ -8,6 +8,9 @@ const STORES_DIR = 'stores';
  * Registers event listeners that persist and hydrate
  * `app-config` level stores to JSON files in AppData.
  *
+ * These stores hold state belonging to the app on this device,
+ * whichever workspace is open.
+ *
  * @returns A cleanup function that removes the listeners.
  */
 export function registerAppDataStoreListeners(): VoidFunction {
