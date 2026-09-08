@@ -30,4 +30,18 @@ describe('hasEventListener', () => {
     // Should not find 'test-listener'
     expect(hasEventListener(TestFooEvent, 'test-listener')).toBe(false);
   });
+
+  describe('without a listener ID', () => {
+    it('returns `true` if the event has any listener', () => {
+      // Add a listener to the event
+      setEventListeners(TestFooEvent, [{ id: 'foo', callback: vi.fn() }]);
+
+      // Should find it whatever its ID
+      expect(hasEventListener(TestFooEvent)).toBe(true);
+    });
+
+    it('returns `false` if the event has no listeners', () => {
+      expect(hasEventListener(TestFooEvent)).toBe(false);
+    });
+  });
 });
