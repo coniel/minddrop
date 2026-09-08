@@ -52,16 +52,15 @@ export function useSearch(): UseSearchResult {
     // The request being issued below
     const requestId = requestRef.current;
 
-    // Get the first workspace ID
-    const workspaces = Workspaces.getAll();
-    const workspaceId = Object.values(workspaces)[0]?.id;
+    // The workspace to search in
+    const workspace = Workspaces.getActive(false);
 
-    if (!workspaceId) {
+    if (!workspace) {
       return;
     }
 
     try {
-      const searchResults = await Search.fullText(workspaceId, value, 20);
+      const searchResults = await Search.fullText(workspace.id, value, 20);
 
       // Discard the results if a newer search was issued while this
       // one was in flight.
