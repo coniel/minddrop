@@ -60,9 +60,17 @@
       "overridden": "A fluid-height element absorbs the extra space, so the pin currently has no effect"
     },
     "elements": {
+      "groups": {
+        "content": "Content",
+        "layout": "Layout"
+      },
       "box": {
         "label": "Box"
       }
+    },
+    "palette": {
+      "search": "Search elements",
+      "empty": "No matching elements"
     }
   }
 }

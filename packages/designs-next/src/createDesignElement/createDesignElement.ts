@@ -4,7 +4,7 @@ import { DesignElement } from '../types';
 
 /**
  * Creates a new design element of the given type from the type's
- * config defaults.
+ * config defaults, including its starter fields.
  *
  * @param type - The design element type to create.
  * @param position - The element's position in grid units, defaults to the top-left corner.
@@ -19,7 +19,9 @@ export function createDesignElement(
   // Get the design element type's config
   const config = getDesignElementConfig(type);
 
+  // The starter fields come first so the base fields always win
   return {
+    ...config.resolveDefaults?.(),
     id: entityId('element'),
     type,
     column: position.column,

@@ -4,3 +4,5 @@ export * from './DesignElementConfig.types';
 export * from './DesignElementProps.types';
 export * from './DesignElementSettings.types';
 export * from './DesignElementSettingsMenu.types';
+export * from './DesignElementGroup.types';
+export * from './DesignElementTypeTransferData.types';

@@ -56,6 +56,21 @@ describe('createDesignElement', () => {
     expect(element.naturalHeight).toBe(true);
   });
 
+  it('applies the config starter fields beneath the base fields', () => {
+    // A type seeding placeholder text, and attempting to override
+    // a base field.
+    registerDesignElementConfig({
+      ...testElementConfig,
+      type: 'custom',
+      resolveDefaults: () => ({ text: 'Placeholder', column: 10 }),
+    });
+
+    const element = createDesignElement('custom');
+
+    expect(element).toHaveProperty('text', 'Placeholder');
+    expect(element.column).toBe(0);
+  });
+
   it('throws if the type is not registered', () => {
     expect(() => createDesignElement('unknown')).toThrow(
       DesignElementConfigNotRegisteredError,

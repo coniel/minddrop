@@ -1,7 +1,10 @@
 import {
   CardAspectRatios,
+  DesignElementGroups,
+  DesignElementTypesDataKey,
   DesignTypeIcons,
   DesignsIcon,
+  ElementsPaletteSidebarId,
   MaxDesignRows,
   MinDesignRows,
   SnapPresets,
@@ -36,6 +39,9 @@ export const constants = {
   MaxRows: MaxDesignRows,
   CardAspectRatios,
   SnapPresets,
+  ElementGroups: DesignElementGroups,
+  ElementTypesDataKey: DesignElementTypesDataKey,
+  ElementsPaletteSidebarId,
 };
 
 export { DesignsStore as Store } from './DesignsStore';

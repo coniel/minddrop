@@ -2202,18 +2202,28 @@ declare module 'i18next' {
             overridden: string;
           };
           elements: {
+            groups: {
+              content: string;
+              layout: string;
+            };
             box: {
               label: string;
             };
             heading: {
               label: string;
+              placeholder: string;
               level1: string;
               level2: string;
               level3: string;
             };
             text: {
               label: string;
+              placeholder: string;
             };
+          };
+          palette: {
+            search: string;
+            empty: string;
           };
         };
         onboarding: {

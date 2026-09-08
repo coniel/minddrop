@@ -2,6 +2,7 @@ import type { ComponentType } from 'react';
 import type { TranslationKey } from '@minddrop/i18n';
 import type { UiIconName } from '@minddrop/ui-icons';
 import { DesignElement, ElementWidthMode } from './DesignElement.types';
+import { DesignElementGroup } from './DesignElementGroup.types';
 import { DesignElementComponent } from './DesignElementProps.types';
 import { DesignElementSettingGroup } from './DesignElementSettings.types';
 import { DesignElementSettingsMenuProps } from './DesignElementSettingsMenu.types';
@@ -27,7 +28,7 @@ export interface DesignElementConfig<
   /**
    * The palette group the element is listed under.
    */
-  group: string;
+  group: DesignElementGroup;
 
   /**
    * The component rendering the element.
@@ -54,6 +55,13 @@ export interface DesignElementConfig<
    * Whether newly inserted elements grow to their content's height.
    */
   defaultNaturalHeight?: boolean;
+
+  /**
+   * Resolves the element-specific fields a newly inserted element
+   * starts with, such as placeholder content. Omitted for elements
+   * with no starter fields.
+   */
+  resolveDefaults?: () => Partial<TElement>;
 
   /**
    * The system setting groups the element's menu shows, in display
