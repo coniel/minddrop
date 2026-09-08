@@ -24,6 +24,7 @@
       "landscape": "Landscape",
       "previewWidth": "Preview at {{width}}",
       "toggleTheme": "Toggle dark mode",
+      "insertElement": "Insert element",
       "widths": {
         "narrow": "Narrow",
         "narrowShort": "S",

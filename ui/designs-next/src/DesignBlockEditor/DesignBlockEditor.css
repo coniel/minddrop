@@ -35,6 +35,22 @@
   z-index: 2;
 }
 
+/* The grid square the pointer is over, marking the square a click
+   inserts an element on */
+.design-block-editor-hovered-square {
+  position: absolute;
+  pointer-events: none;
+  background-color: var(--surface-solid-primary);
+}
+
+/* The grid square an element is being inserted on, holding the mark
+   in place while the insert menu is open */
+.design-block-editor-insert-point {
+  position: absolute;
+  pointer-events: none;
+  background-color: var(--surface-solid-primary-hover);
+}
+
 .design-block-editor-grid-overlay {
   position: absolute;
   inset: 0;

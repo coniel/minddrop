@@ -1,0 +1,5 @@
+/* Wide enough for the element labels to sit beside their icons
+   without the panel resizing as a search narrows the list */
+.designs-next-element-insert-menu {
+  width: 320px;
+}

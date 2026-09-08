@@ -2166,6 +2166,7 @@ declare module 'i18next' {
             landscape: string;
             previewWidth: string;
             toggleTheme: string;
+            insertElement: string;
             widths: {
               narrow: string;
               narrowShort: string;

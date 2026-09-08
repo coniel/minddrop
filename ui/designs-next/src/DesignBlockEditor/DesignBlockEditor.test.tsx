@@ -13,7 +13,13 @@ import {
   testElementConfig,
 } from '@minddrop/designs-next/test-utils';
 import { Selection } from '@minddrop/selection';
-import { createDataTransfer, fireEvent, render } from '@minddrop/test-utils';
+import {
+  createDataTransfer,
+  fireEvent,
+  render,
+  screen,
+  userEvent,
+} from '@minddrop/test-utils';
 import { cleanup } from '../test-utils';
 import { DesignBlockEditor } from './DesignBlockEditor';
 
@@ -107,6 +113,42 @@ function dropOnSurface(
   fireEvent(container.querySelector('.design-block-editor')!, event);
 }
 
+/**
+ * Clicks the editor surface at a position within it.
+ *
+ * @param container - The render container.
+ * @param offsetX - The click's horizontal position within the surface.
+ * @param offsetY - The click's vertical position within the surface.
+ */
+function clickSurface(
+  container: HTMLElement,
+  offsetX: number,
+  offsetY: number,
+) {
+  fireEvent.click(container.querySelector('.design-block-editor')!, {
+    offsetX,
+    offsetY,
+  });
+}
+
+/**
+ * Moves the pointer over the editor surface to a position within it.
+ *
+ * @param container - The render container.
+ * @param offsetX - The pointer's horizontal position within the surface.
+ * @param offsetY - The pointer's vertical position within the surface.
+ */
+function hoverSurface(
+  container: HTMLElement,
+  offsetX: number,
+  offsetY: number,
+) {
+  fireEvent.pointerMove(container.querySelector('.design-block-editor')!, {
+    offsetX,
+    offsetY,
+  });
+}
+
 describe('DesignBlockEditor', () => {
   beforeEach(() => {
     changedElements = null;
@@ -187,9 +229,6 @@ describe('DesignBlockEditor', () => {
 
   it('clears the selection on background clicks only', () => {
     const container = renderEditor(titleDesignElement.id);
-    const surface = container.querySelector(
-      '.design-block-editor',
-    ) as HTMLElement;
     const title = container.querySelector(
       '[data-element-id="element_title"]',
     ) as HTMLElement;
@@ -200,9 +239,140 @@ describe('DesignBlockEditor', () => {
     expect(selectedElementId).toBeUndefined();
 
     // Clicks landing on the surface itself clear it
-    fireEvent.click(surface);
+    clickSurface(container, 0, 0);
 
     expect(selectedElementId).toBeNull();
+  });
+
+  it('marks the grid square under the pointer', () => {
+    const container = renderEditor();
+    const surface = container.querySelector(
+      '.design-block-editor',
+    ) as HTMLElement;
+
+    expect(
+      container.querySelector('.design-block-editor-hovered-square'),
+    ).toBeNull();
+
+    hoverSurface(container, 45, 27);
+
+    const square = container.querySelector(
+      '.design-block-editor-hovered-square',
+    ) as HTMLElement;
+
+    // 4.5 and 2.7 units land in the square at column 4, row 2
+    expect(square.style.left).toBe('40px');
+    expect(square.style.top).toBe('20px');
+    // The square covers one snap step
+    expect(square.style.width).toBe('20px');
+
+    // The far side of the same square stays on it rather than
+    // rounding onto the next one.
+    hoverSurface(container, 59, 39);
+
+    expect(square.style.left).toBe('40px');
+    expect(square.style.top).toBe('20px');
+
+    fireEvent.pointerLeave(surface);
+
+    expect(
+      container.querySelector('.design-block-editor-hovered-square'),
+    ).toBeNull();
+  });
+
+  it('marks the square a grid line closes rather than the one it opens', () => {
+    const container = renderEditor();
+
+    // The line between the squares at 20px and 40px, which reads as
+    // the closing edge of the one before it.
+    hoverSurface(container, 40, 40);
+
+    const square = container.querySelector(
+      '.design-block-editor-hovered-square',
+    ) as HTMLElement;
+
+    expect(square.style.left).toBe('20px');
+    expect(square.style.top).toBe('20px');
+
+    // The surface's own first line stays on its first square
+    hoverSurface(container, 0, 0);
+
+    expect(square.style.left).toBe('0px');
+    expect(square.style.top).toBe('0px');
+  });
+
+  it('leaves the grid square unmarked during element drags', () => {
+    const container = renderEditor();
+    const title = container.querySelector(
+      '[data-element-id="element_title"]',
+    ) as HTMLElement;
+
+    fireEvent.pointerDown(title, { clientX: 0, clientY: 0 });
+    fireEvent.pointerMove(title, { clientX: 40, clientY: 0 });
+
+    expect(
+      container.querySelector('.design-block-editor-hovered-square'),
+    ).toBeNull();
+  });
+
+  it('opens the insert menu on the clicked grid square', () => {
+    const container = renderEditor();
+
+    clickSurface(container, 45, 27);
+
+    const marker = container.querySelector(
+      '.design-block-editor-insert-point',
+    ) as HTMLElement;
+
+    // 4.5 and 2.7 units land in the square at column 4, row 2
+    expect(marker.style.left).toBe('40px');
+    expect(marker.style.top).toBe('20px');
+    screen.getByPlaceholderText('Insert element');
+  });
+
+  it('closes the open insert menu rather than moving it', () => {
+    const container = renderEditor();
+
+    clickSurface(container, 45, 27);
+
+    // A click on another square while the menu is open dismisses it
+    clickSurface(container, 85, 67);
+
+    expect(
+      container.querySelector('.design-block-editor-insert-point'),
+    ).toBeNull();
+    expect(screen.queryByPlaceholderText('Insert element')).toBeNull();
+
+    // Opening it on the other square takes a second click
+    clickSurface(container, 85, 67);
+
+    const marker = container.querySelector(
+      '.design-block-editor-insert-point',
+    ) as HTMLElement;
+
+    expect(marker.style.left).toBe('80px');
+    expect(marker.style.top).toBe('60px');
+  });
+
+  it('inserts the picked element type on the marked grid square', async () => {
+    const container = renderEditor();
+
+    clickSurface(container, 45, 27);
+
+    await userEvent.click(screen.getByText('Box'));
+
+    const inserted = changedElements?.[changedElements.length - 1];
+
+    expect(changedElements).toHaveLength(designElements.length + 1);
+    expect(inserted?.type).toBe(testElementConfig.type);
+    expect(inserted?.column).toBe(4);
+    expect(inserted?.row).toBe(2);
+    expect(selectedElementId).toBe(inserted?.id);
+
+    // The menu closes with the insert, unmarking the square
+    expect(
+      container.querySelector('.design-block-editor-insert-point'),
+    ).toBeNull();
   });
 
   it('moves the dragged element through onElementsChange', () => {
@@ -283,7 +453,7 @@ describe('DesignBlockEditor', () => {
     expect(resizedTitle?.rowSpan).toBe(titleDesignElement.rowSpan + 2);
   });
 
-  it('inserts dropped element types at the snapped drop point', () => {
+  it('inserts dropped element types on the grid square dropped on', () => {
     const container = renderEditor(null, true);
 
     dropOnSurface(
@@ -297,7 +467,7 @@ describe('DesignBlockEditor', () => {
 
     expect(changedElements).toHaveLength(designElements.length + 1);
     expect(inserted?.type).toBe(testElementConfig.type);
-    // 4.5 and 2.7 units snapped onto the 2 unit grid
+    // 4.5 and 2.7 units land in the square at column 4, row 2
     expect(inserted?.column).toBe(4);
     expect(inserted?.row).toBe(2);
     expect(selectedElementId).toBe(inserted?.id);
@@ -306,11 +476,12 @@ describe('DesignBlockEditor', () => {
   it('grows the surface to fit a dropped element', () => {
     const container = renderEditor(null, true);
 
-    // Drop just above the surface's bottom edge
+    // Drop inside the last square above the surface's bottom edge,
+    // clear of the grid line opening it.
     dropOnSurface(
       container,
-      0,
-      (cardRows - 2) * 10,
+      2,
+      (cardRows - 2) * 10 + 2,
       createElementTypesTransfer(testElementConfig.type),
     );
 

@@ -9,6 +9,7 @@ import {
 } from '@minddrop/designs-next';
 import { Selection } from '@minddrop/selection';
 import { getTransferData, useDeleteKey } from '@minddrop/utils';
+import { DesignElementInsertMenu } from '../DesignElementInsertMenu';
 import { resolveElementClass } from '../utils';
 import './DesignBlockEditor.css';
 
@@ -122,6 +123,18 @@ interface SurfaceDragState {
   unitScreenSize: number;
 }
 
+interface GridPoint {
+  /**
+   * The column of the grid square in grid units.
+   */
+  column: number;
+
+  /**
+   * The row of the grid square in grid units.
+   */
+  row: number;
+}
+
 // The resize handles rendered on every block, keyed by drag mode.
 // Corners come last so they sit on top where they overlap edges.
 const ResizeHandles: ElementDragMode[] = [
@@ -143,7 +156,9 @@ const AcceptedDropTypes = [Designs.constants.ElementTypesDataKey];
  * draggable block per element. Moving snaps the element's edges onto
  * the snap grid, resizing snaps the drag delta, and grid lines draw
  * at the snap resolution. Element types dropped onto the surface are
- * inserted at the drop point.
+ * inserted at the drop point, and clicking an empty grid square
+ * offers the element types in a menu, inserting the picked one with
+ * its top left corner on that square.
  */
 export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
   elements,
@@ -159,10 +174,13 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
   onDragEnd,
 }) => {
   const rootRef = useRef<HTMLDivElement>(null);
+  const insertMarkerRef = useRef<HTMLDivElement>(null);
   const dragRef = useRef<DragState | null>(null);
   const surfaceDragRef = useRef<SurfaceDragState | null>(null);
   const [draggedElementId, setDraggedElementId] = useState<string | null>(null);
   const [dropping, setDropping] = useState(false);
+  const [insertPoint, setInsertPoint] = useState<GridPoint | null>(null);
+  const [hoveredPoint, setHoveredPoint] = useState<GridPoint | null>(null);
 
   // Measures the screen pixels per grid unit, which a scaled
   // viewport (e.g. a zoomed canvas) sets apart from the unit size.
@@ -171,6 +189,71 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
     const width = rootRef.current?.getBoundingClientRect().width;
 
     return width ? width / columns : unitSize;
+  }
+
+  // Resolves the grid square a position within the surface lands in,
+  // taking the position in the surface's own coordinate space, the
+  // one the grid lines and blocks are laid out in. Rounds down
+  // rather than to the nearest grid line, so the whole square under
+  // the pointer belongs to it.
+  //
+  // A grid line draws at its square's start but reads as the closing
+  // edge of the square before it, so the position is pulled back by
+  // the line's width, putting a position on a line on the square
+  // above or to the left of the one the line opens.
+  function resolveGridPoint(offsetX: number, offsetY: number): GridPoint {
+    // The line's width in the surface's coordinate space. Lines draw
+    // one screen pixel wide, so a zoomed canvas thins them.
+    const lineWidth = unitSize / measureUnitScreenSize();
+
+    return {
+      column: resolveGridUnits(offsetX - lineWidth, unitSize, snap),
+      row: resolveGridUnits(offsetY - lineWidth, unitSize, snap),
+    };
+  }
+
+  // Converts a screen position into the surface's own coordinate
+  // space, for the events which carry no offset within the surface.
+  function resolveSurfaceOffset(clientX: number, clientY: number) {
+    const rect = rootRef.current?.getBoundingClientRect();
+    const unitScreenSize = measureUnitScreenSize();
+
+    return {
+      offsetX: ((clientX - (rect?.left ?? 0)) / unitScreenSize) * unitSize,
+      offsetY: ((clientY - (rect?.top ?? 0)) / unitScreenSize) * unitSize,
+    };
+  }
+
+  // Inserts elements of the given types with their top left corners
+  // on the given grid square, kept inside the design and growing it
+  // when it can. The last inserted element is selected.
+  function insertElements(types: string[], point: GridPoint) {
+    // The height the surface can grow to for the inserted elements
+    const maxRows = onRowsChange ? Designs.constants.MaxRows : rows;
+
+    const inserted = types.map((type) => {
+      const element = Designs.createElement(type, point);
+
+      // Keep the element inside the design
+      element.column = clamp(element.column, 0, columns - element.columnSpan);
+      element.row = clamp(element.row, 0, maxRows - element.rowSpan);
+
+      return element;
+    });
+
+    onElementsChange([...elements, ...inserted]);
+
+    // Grow the surface to fit the elements
+    const contentBottom = inserted.reduce(
+      (bottom, element) => Math.max(bottom, element.row + element.rowSpan),
+      0,
+    );
+
+    if (contentBottom > rows) {
+      onRowsChange?.(contentBottom);
+    }
+
+    onSelectionChange(inserted[inserted.length - 1].id);
   }
 
   // Remove the selected element on Delete or Backspace
@@ -334,9 +417,7 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
     setDropping(false);
   }
 
-  // Inserts the dropped element types at the drop point, snapped onto
-  // the snap grid and kept inside the design, growing the design when
-  // it can. The last inserted element is selected.
+  // Inserts the dropped element types at the drop point
   function handleDrop(event: React.DragEvent<HTMLDivElement>) {
     setDropping(false);
 
@@ -355,52 +436,88 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
       return;
     }
 
-    // The drop point in grid units
-    const rect = rootRef.current?.getBoundingClientRect();
-    const unitScreenSize = measureUnitScreenSize();
-    const column = Designs.snapToMultiple(
-      (event.clientX - (rect?.left ?? 0)) / unitScreenSize,
-      snap,
-    );
-    const row = Designs.snapToMultiple(
-      (event.clientY - (rect?.top ?? 0)) / unitScreenSize,
-      snap,
+    // Drops land on whichever block is under the pointer, so the
+    // drop point comes from the screen position rather than from an
+    // offset within the surface.
+    const { offsetX, offsetY } = resolveSurfaceOffset(
+      event.clientX,
+      event.clientY,
     );
 
-    // The height the surface can grow to for the dropped elements
-    const maxRows = onRowsChange ? Designs.constants.MaxRows : rows;
-
-    const inserted = dropped.map(({ type }) => {
-      const element = Designs.createElement(type, { column, row });
-
-      // Keep the element inside the design
-      element.column = clamp(element.column, 0, columns - element.columnSpan);
-      element.row = clamp(element.row, 0, maxRows - element.rowSpan);
-
-      return element;
-    });
-
-    onElementsChange([...elements, ...inserted]);
-
-    // Grow the surface to fit the elements
-    const contentBottom = inserted.reduce(
-      (bottom, element) => Math.max(bottom, element.row + element.rowSpan),
-      0,
+    insertElements(
+      dropped.map(({ type }) => type),
+      resolveGridPoint(offsetX, offsetY),
     );
-
-    if (contentBottom > rows) {
-      onRowsChange?.(contentBottom);
-    }
-
-    onSelectionChange(inserted[inserted.length - 1].id);
   }
 
-  // Clears the selection when clicking the empty surface, ignoring
-  // clicks bubbling up from elements.
+  // Opens the insert menu on the clicked grid square, clearing the
+  // selection as it opens. Ignores clicks bubbling up from elements.
   function handleBackgroundClick(event: React.MouseEvent<HTMLDivElement>) {
-    if (event.target === event.currentTarget) {
-      onSelectionChange(null);
+    if (event.target !== event.currentTarget) {
+      return;
     }
+
+    onSelectionChange(null);
+
+    // A click made while the menu is open only dismisses it, so
+    // moving the insert point takes a second click.
+    if (insertPoint) {
+      setInsertPoint(null);
+
+      return;
+    }
+
+    setInsertPoint(
+      resolveGridPoint(event.nativeEvent.offsetX, event.nativeEvent.offsetY),
+    );
+  }
+
+  // Tracks the grid square under the pointer, ignoring moves
+  // bubbling up from elements and pausing during drags.
+  function handleGridPointerMove(event: React.PointerEvent<HTMLDivElement>) {
+    if (
+      event.target !== event.currentTarget ||
+      dragRef.current ||
+      surfaceDragRef.current
+    ) {
+      setHoveredPoint(null);
+
+      return;
+    }
+
+    const point = resolveGridPoint(
+      event.nativeEvent.offsetX,
+      event.nativeEvent.offsetY,
+    );
+
+    // Keep the current point while the pointer stays on its square,
+    // so only crossing into another square re-renders.
+    setHoveredPoint((current) =>
+      current?.column === point.column && current.row === point.row
+        ? current
+        : point,
+    );
+  }
+
+  function handleGridPointerLeave() {
+    setHoveredPoint(null);
+  }
+
+  // Closes the insert menu, dropping the insert point with it
+  function handleInsertMenuOpenChange(open: boolean) {
+    if (!open) {
+      setInsertPoint(null);
+    }
+  }
+
+  // Inserts the picked element type on the marked grid square
+  function handleInsertSelect(type: string) {
+    if (!insertPoint) {
+      return;
+    }
+
+    insertElements([type], insertPoint);
+    setInsertPoint(null);
   }
 
   return (
@@ -415,6 +532,8 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
         backgroundSize: `${snap * unitSize}px ${snap * unitSize}px`,
       }}
       onClick={handleBackgroundClick}
+      onPointerMove={handleGridPointerMove}
+      onPointerLeave={handleGridPointerLeave}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
@@ -453,6 +572,37 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
           ))}
         </div>
       ))}
+      {hoveredPoint && !insertPoint && (
+        <div
+          className="design-block-editor-hovered-square"
+          style={{
+            left: hoveredPoint.column * unitSize,
+            top: hoveredPoint.row * unitSize,
+            width: snap * unitSize,
+            height: snap * unitSize,
+          }}
+        />
+      )}
+      {insertPoint && (
+        <>
+          <div
+            ref={insertMarkerRef}
+            className="design-block-editor-insert-point"
+            style={{
+              left: insertPoint.column * unitSize,
+              top: insertPoint.row * unitSize,
+              width: snap * unitSize,
+              height: snap * unitSize,
+            }}
+          />
+          <DesignElementInsertMenu
+            anchor={insertMarkerRef}
+            open
+            onOpenChange={handleInsertMenuOpenChange}
+            onSelect={handleInsertSelect}
+          />
+        </>
+      )}
       {(draggedElementId !== null || dropping) && (
         <div
           className="design-block-editor-grid-overlay"
@@ -473,6 +623,23 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
     </div>
   );
 };
+
+/**
+ * Resolves the grid square a position within the surface falls on,
+ * floored at the surface's first square.
+ *
+ * @param offset - The position in the surface's coordinate space.
+ * @param unitSize - The rendered pixel size of a grid unit.
+ * @param snap - The snap resolution in grid units.
+ * @returns The square's position in grid units.
+ */
+function resolveGridUnits(
+  offset: number,
+  unitSize: number,
+  snap: number,
+): number {
+  return Math.max(Designs.floorToMultiple(offset / unitSize, snap), 0);
+}
 
 /**
  * Clamps a value into a range.
