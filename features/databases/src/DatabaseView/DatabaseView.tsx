@@ -29,7 +29,6 @@ import './DatabaseView.css';
 // in the tab's history, so it trails the database in the breadcrumbs
 // and stays local to the tab.
 const DesignsSubviewId = 'designs';
-const DesignsSubviewIcon = 'lucide:pencil-ruler:default';
 
 export interface DatabaseViewProps {
   /**
@@ -86,7 +85,7 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
     setSubview({
       id: DesignsSubviewId,
       title: t('databases.design.title'),
-      icon: DesignsSubviewIcon,
+      icon: Designs.constants.Icon,
     });
   }, [setSubview, t]);
 

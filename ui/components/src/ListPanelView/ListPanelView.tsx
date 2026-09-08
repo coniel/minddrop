@@ -460,7 +460,7 @@ function resolveActions(
  * view area.
  */
 function toSubview(item: ListPanelViewItem): SubviewDescriptor {
-  return { id: item.id, title: item.label, icon: item.contentIcon };
+  return { id: item.id, title: item.label, contentIcon: item.contentIcon };
 }
 
 /**
@@ -473,6 +473,6 @@ function sameSubview(
   return (
     subview?.id === item.id &&
     subview.title === item.label &&
-    subview.icon === item.contentIcon
+    subview.contentIcon === item.contentIcon
   );
 }

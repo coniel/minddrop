@@ -149,7 +149,8 @@ function sameSessionView(
     a?.contentIcon === b?.contentIcon &&
     a?.subview?.title === b?.subview?.title &&
     a?.subview?.label === b?.subview?.label &&
-    a?.subview?.icon === b?.subview?.icon
+    a?.subview?.icon === b?.subview?.icon &&
+    a?.subview?.contentIcon === b?.subview?.contentIcon
   );
 }
 

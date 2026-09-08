@@ -1,3 +1,5 @@
+import { UiIconName } from '@minddrop/ui-icons';
+
 export interface Breadcrumb {
   /**
    * The type of the view the crumb leads to, resolving its label and
@@ -18,9 +20,15 @@ export interface Breadcrumb {
   title?: string;
 
   /**
-   * The crumb's own display icon as a serializable icon string.
+   * The crumb's own UI icon.
    */
-  icon?: string;
+  icon?: UiIconName;
+
+  /**
+   * The crumb's own content icon as a serializable icon string. Takes
+   * priority over `icon`.
+   */
+  contentIcon?: string;
 
   /**
    * How many entries back in the tab's history the crumb sits, which

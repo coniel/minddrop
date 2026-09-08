@@ -1,3 +1,5 @@
+import { UiIconName } from '@minddrop/ui-icons';
+
 export interface SubviewDescriptor {
   /**
    * The id of the entity the view currently shows within itself
@@ -21,8 +23,15 @@ export interface SubviewDescriptor {
   label?: string;
 
   /**
-   * Display icon of the subview as a serializable icon string, shown
-   * in the view's tab and breadcrumb trail.
+   * UI icon of the subview, shown in the view's tab and breadcrumb
+   * trail.
    */
-  icon?: string;
+  icon?: UiIconName;
+
+  /**
+   * Content icon of the subview as a serializable icon string, shown
+   * in the view's tab and breadcrumb trail. Takes priority over
+   * `icon`.
+   */
+  contentIcon?: string;
 }

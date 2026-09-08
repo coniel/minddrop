@@ -115,6 +115,7 @@ function toCrumbs(
       viewId: sessionView.id,
       title: sessionView.subview.title,
       icon: sessionView.subview.icon,
+      contentIcon: sessionView.subview.contentIcon,
       steps,
     },
   ];
@@ -130,7 +131,7 @@ function showsSame(
 ): boolean {
   return (
     subview.title === sessionView?.title &&
-    subview.icon === sessionView?.contentIcon
+    subview.contentIcon === sessionView?.contentIcon
   );
 }
 
@@ -143,7 +144,7 @@ function toViewCrumb(sessionView: SessionView): Breadcrumb {
     view: sessionView.view,
     viewId: sessionView.id,
     title: sessionView.title,
-    icon: sessionView.contentIcon,
+    contentIcon: sessionView.contentIcon,
   };
 }
 

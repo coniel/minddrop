@@ -74,7 +74,7 @@ describe('resolveBreadcrumbTrail', () => {
         view: RootViewName,
         viewId: 'root',
         title: 'Root',
-        icon: undefined,
+        contentIcon: undefined,
         steps: 1,
       },
     ]);
@@ -203,7 +203,12 @@ describe('resolveBreadcrumbTrail', () => {
 
       // The view's own crumb is not navigable, being the view shown
       expect(trail).toEqual([
-        { view: RootViewName, viewId: 'root', title: 'Root', icon: undefined },
+        {
+          view: RootViewName,
+          viewId: 'root',
+          title: 'Root',
+          contentIcon: undefined,
+        },
       ]);
     });
 

@@ -284,13 +284,8 @@ const PanelViewBreadcrumb: React.FC<PanelViewBreadcrumbProps> = ({
   const setSubview = Views.useSetSubview();
   const registered = Views.use(breadcrumb.view);
 
-  // The crumb's own content icon, falling back to the view's
-  // registered UI icon.
-  const icon: IconProp | undefined = breadcrumb.icon ? (
-    <ContentIcon icon={breadcrumb.icon} />
-  ) : (
-    registered?.icon
-  );
+  // The crumb's own icon, falling back to the view's registered one
+  const icon = resolveBreadcrumbIcon(breadcrumb, registered?.icon);
 
   // The crumb's own title, falling back to the view's registered one
   const title =
@@ -334,3 +329,23 @@ const PanelViewBreadcrumb: React.FC<PanelViewBreadcrumbProps> = ({
     </Button>
   );
 };
+
+/**
+ * Resolves the icon a crumb renders: the content icon of the entity
+ * it shows, its own icon otherwise, falling back to the view's
+ * registered icon.
+ *
+ * @param breadcrumb - The crumb to icon.
+ * @param registeredIcon - The icon of the view the crumb leads to.
+ * @returns The icon to render, if any.
+ */
+function resolveBreadcrumbIcon(
+  breadcrumb: Breadcrumb,
+  registeredIcon: UiIconName | undefined,
+): IconProp | undefined {
+  if (breadcrumb.contentIcon) {
+    return <ContentIcon icon={breadcrumb.contentIcon} />;
+  }
+
+  return breadcrumb.icon ?? registeredIcon;
+}
