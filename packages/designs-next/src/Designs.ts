@@ -65,6 +65,7 @@ export {
 export {
   applyElementDrag,
   applyElementSettings,
+  floorToMultiple,
   isElementPinOverridden,
   isElementVerticalPinOverridden,
   resolveAspectRatioValue,

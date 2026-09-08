@@ -1,6 +1,7 @@
 export * from './applyElementDrag';
 export * from './applyElementSettings';
 export * from './columnsOverlap';
+export * from './floorToMultiple';
 export * from './isElementPinOverridden';
 export * from './isElementVerticalPinOverridden';
 export * from './remapElementColumns';
