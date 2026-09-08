@@ -59,13 +59,18 @@
   background-color: var(--surface-solid-primary);
 }
 
-/* The grid square an element is being inserted on, holding the mark
-   in place while the insert menu is open */
+/* The area an element is being inserted on, marked out by a drag and
+   held while the insert menu is open. Tinted rather than filled, so
+   a large area does not shout, with an outline carrying its edges at
+   any size. The outline stays one screen pixel wide within a zoomed
+   canvas. */
 .design-block-editor-insert-point {
   position: absolute;
   z-index: 2;
   pointer-events: none;
-  background-color: var(--surface-solid-primary-hover);
+  background-color: var(--surface-primary-active);
+  box-shadow: inset 0 0 0 calc(1px / var(--ui-canvas-zoom, 1))
+    var(--border-primary);
 }
 
 .design-block-editor-grid-overlay {

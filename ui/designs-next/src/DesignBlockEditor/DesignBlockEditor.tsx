@@ -135,6 +135,18 @@ interface GridPoint {
   row: number;
 }
 
+interface GridArea extends GridPoint {
+  /**
+   * The area's width in grid units.
+   */
+  columnSpan: number;
+
+  /**
+   * The area's height in grid units.
+   */
+  rowSpan: number;
+}
+
 // The resize handles rendered on every block, keyed by drag mode.
 // Corners come last so they sit on top where they overlap edges.
 const ResizeHandles: ElementDragMode[] = [
@@ -161,11 +173,14 @@ const DragEngageDelay = 160;
  * draggable block per element. Moving snaps the element's edges onto
  * the snap grid, resizing snaps the drag delta, and grid lines draw
  * at the snap resolution. Element types dropped onto the surface are
- * inserted at the drop point, and clicking an empty grid square
- * offers the element types in a menu, inserting the picked one with
- * its top left corner on that square. Holding the mod key brings the
- * grid in front of the blocks, opening the squares they cover to the
- * same insert.
+ * inserted at the drop point, and marking out an area of the grid
+ * offers the element types in a menu, inserting the picked one on
+ * that area. A press which marks a single square inserts the element
+ * at its type's default size instead. A right click anchors the area
+ * instead of holding a button down, stretching it on pointer moves
+ * alone until a click commits it. Holding the mod key brings the grid
+ * in front of the blocks, opening the squares they cover to the same
+ * insert.
  */
 export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
   elements,
@@ -185,14 +200,23 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
   const gridOverlayRef = useRef<HTMLDivElement>(null);
   const dragRef = useRef<DragState | null>(null);
   const surfaceDragRef = useRef<SurfaceDragState | null>(null);
+  const insertDragRef = useRef<GridPoint | null>(null);
+  const insertPendingRef = useRef(false);
   const [draggedElementId, setDraggedElementId] = useState<string | null>(null);
   const [dragEngaged, setDragEngaged] = useState(false);
   const [dropping, setDropping] = useState(false);
-  const [insertPoint, setInsertPoint] = useState<GridPoint | null>(null);
+  const [insertArea, setInsertArea] = useState<GridArea | null>(null);
+  const [insertAnchor, setInsertAnchor] = useState<GridPoint | null>(null);
+  const [insertMenuOpen, setInsertMenuOpen] = useState(false);
   const [hoveredPoint, setHoveredPoint] = useState<GridPoint | null>(null);
-  // Holding the mod key brings the grid in front of the blocks, so
-  // the squares they cover can be inserted on.
-  const gridInFront = useModKeyHeld(true);
+  const modKeyHeld = useModKeyHeld(true);
+
+  // The grid comes in front of the blocks while the mod key is held,
+  // so the squares they cover can be inserted on, and while an area
+  // is anchored, whose stretching would otherwise stop at the first
+  // block the pointer crossed: a block under the pointer takes the
+  // move, and no button is down to capture the pointer with.
+  const gridInFront = modKeyHeld || insertAnchor !== null;
 
   // Whether the grid is drawn over the blocks, which an engaged
   // drag, an accepted drop and the held mod key each call for.
@@ -223,6 +247,27 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
       setHoveredPoint(null);
     }
   }, [gridInFront]);
+
+  // Drop an anchored area on Escape, the way out of an anchor which
+  // does not insert. Every other way out commits it.
+  useEffect(() => {
+    if (!insertAnchor) {
+      return;
+    }
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key !== 'Escape') {
+        return;
+      }
+
+      setInsertAnchor(null);
+      setInsertArea(null);
+    }
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [insertAnchor]);
 
   // Measures the screen pixels per grid unit, which a scaled
   // viewport (e.g. a zoomed canvas) sets apart from the unit size.
@@ -266,15 +311,44 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
     };
   }
 
-  // Inserts elements of the given types with their top left corners
-  // on the given grid square, kept inside the design and growing it
-  // when it can. The last inserted element is selected.
-  function insertElements(types: string[], point: GridPoint) {
-    // The height the surface can grow to for the inserted elements
+  // The area spanning two grid squares, the corners of a drag, held
+  // inside the design. Dragging past the bottom edge grows into the
+  // rows the surface can grow to.
+  function resolveGridArea(start: GridPoint, end: GridPoint): GridArea {
+    const column = Math.min(start.column, end.column);
+    const row = Math.min(start.row, end.row);
     const maxRows = onRowsChange ? Designs.constants.MaxRows : rows;
 
+    return {
+      column,
+      row,
+      // The squares at both ends are inside the area, so the span
+      // covers one more square than the distance between them.
+      columnSpan: Math.min(
+        Math.abs(end.column - start.column) + snap,
+        columns - column,
+      ),
+      rowSpan: Math.min(Math.abs(end.row - start.row) + snap, maxRows - row),
+    };
+  }
+
+  // Inserts elements of the given types on the given grid area, kept
+  // inside the design and growing it when it can. An area larger than
+  // a single square sizes the elements to it, while one square leaves
+  // them at their type's default size. The last one is selected.
+  function insertElements(types: string[], area: GridArea) {
+    // The height the surface can grow to for the inserted elements
+    const maxRows = onRowsChange ? Designs.constants.MaxRows : rows;
+    const sized = area.columnSpan > snap || area.rowSpan > snap;
+
     const inserted = types.map((type) => {
-      const element = Designs.createElement(type, point);
+      const element = Designs.createElement(type, area);
+
+      // Take the dragged out area's size
+      if (sized) {
+        element.columnSpan = area.columnSpan;
+        element.rowSpan = area.rowSpan;
+      }
 
       // Keep the element inside the design
       element.column = clamp(element.column, 0, columns - element.columnSpan);
@@ -490,9 +564,15 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
       event.clientY,
     );
 
+    const point = resolveGridPoint(offsetX, offsetY);
+
     insertElements(
       dropped.map(({ type }) => type),
-      resolveGridPoint(offsetX, offsetY),
+      {
+        ...point,
+        columnSpan: snap,
+        rowSpan: snap,
+      },
     );
   }
 
@@ -506,30 +586,48 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
     );
   }
 
-  // Opens the insert menu on the clicked grid square, clearing the
-  // selection as it opens. Ignores clicks bubbling up from elements.
-  function handleBackgroundClick(event: React.MouseEvent<HTMLDivElement>) {
-    if (!isGridTarget(event)) {
+  // Begins marking out the area to insert on, clearing the
+  // selection with it. Presses bubbling up from elements are theirs,
+  // and one made while the menu is open only dismisses it, so moving
+  // the area takes a second press.
+  function handleGridPointerDown(event: React.PointerEvent<HTMLDivElement>) {
+    // Only the primary button marks out an area, the secondary one
+    // anchors one instead.
+    if (!isGridTarget(event) || event.button !== 0) {
       return;
     }
 
     onSelectionChange(null);
 
-    // A click made while the menu is open only dismisses it, so
-    // moving the insert point takes a second click.
-    if (insertPoint) {
-      setInsertPoint(null);
+    if (insertMenuOpen) {
+      closeInsertMenu();
 
       return;
     }
 
-    setInsertPoint(
-      resolveGridPoint(event.nativeEvent.offsetX, event.nativeEvent.offsetY),
+    // An anchored area is committed by the press's click rather than
+    // replaced by a fresh drag.
+    if (insertAnchor) {
+      return;
+    }
+
+    // Capture so moves keep arriving while the pointer leaves the
+    // surface, which a drag towards the design's edge does.
+    event.currentTarget.setPointerCapture(event.pointerId);
+
+    const start = resolveGridPoint(
+      event.nativeEvent.offsetX,
+      event.nativeEvent.offsetY,
     );
+
+    insertDragRef.current = start;
+    insertPendingRef.current = false;
+    setInsertArea(resolveGridArea(start, start));
   }
 
-  // Tracks the grid square under the pointer, ignoring moves
-  // bubbling up from elements and pausing during drags.
+  // Tracks the grid square under the pointer, growing the marked
+  // area while one is being dragged out. Moves bubbling up from
+  // elements and those made during a block drag mark nothing.
   function handleGridPointerMove(event: React.PointerEvent<HTMLDivElement>) {
     if (!isGridTarget(event) || dragRef.current || surfaceDragRef.current) {
       setHoveredPoint(null);
@@ -542,6 +640,17 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
       event.nativeEvent.offsetY,
     );
 
+    // Stretch the marked area to the pointer, from the press which
+    // is dragging it out or from the anchor it was dropped on. An
+    // anchor needs no button held.
+    const origin = insertDragRef.current ?? insertAnchor;
+
+    if (origin) {
+      setInsertArea(resolveGridArea(origin, point));
+
+      return;
+    }
+
     // Keep the current point while the pointer stays on its square,
     // so only crossing into another square re-renders.
     setHoveredPoint((current) =>
@@ -551,25 +660,83 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
     );
   }
 
+  // Ends the area drag, leaving the menu to the click which follows
+  function handleGridPointerUp() {
+    if (!insertDragRef.current) {
+      return;
+    }
+
+    insertDragRef.current = null;
+    insertPendingRef.current = true;
+  }
+
+  // Opens the insert menu on the marked area. Waits for the click
+  // rather than opening on the release, since the click which
+  // follows a release would land outside the popover and dismiss it.
+  function handleGridClick() {
+    // A click commits the area an anchor has been stretching
+    if (insertAnchor) {
+      setInsertAnchor(null);
+      setInsertMenuOpen(true);
+
+      return;
+    }
+
+    if (!insertPendingRef.current) {
+      return;
+    }
+
+    insertPendingRef.current = false;
+    setInsertMenuOpen(true);
+  }
+
+  // Anchors the insert area on the right clicked square, so it can
+  // be stretched by moving the pointer alone and committed with a
+  // click, rather than by holding the button down.
+  function handleGridContextMenu(event: React.MouseEvent<HTMLDivElement>) {
+    if (!isGridTarget(event)) {
+      return;
+    }
+
+    event.preventDefault();
+
+    const anchor = resolveGridPoint(
+      event.nativeEvent.offsetX,
+      event.nativeEvent.offsetY,
+    );
+
+    onSelectionChange(null);
+    setInsertMenuOpen(false);
+    setInsertAnchor(anchor);
+    setInsertArea(resolveGridArea(anchor, anchor));
+  }
+
   function handleGridPointerLeave() {
     setHoveredPoint(null);
   }
 
-  // Closes the insert menu, dropping the insert point with it
+  // Closes the insert menu, dropping the marked area with it, so an
+  // area dismissed without a pick leaves nothing behind.
+  function closeInsertMenu() {
+    setInsertMenuOpen(false);
+    setInsertArea(null);
+    setInsertAnchor(null);
+  }
+
   function handleInsertMenuOpenChange(open: boolean) {
     if (!open) {
-      setInsertPoint(null);
+      closeInsertMenu();
     }
   }
 
-  // Inserts the picked element type on the marked grid square
+  // Inserts the picked element type on the marked area
   function handleInsertSelect(type: string) {
-    if (!insertPoint) {
+    if (!insertArea) {
       return;
     }
 
-    insertElements([type], insertPoint);
-    setInsertPoint(null);
+    insertElements([type], insertArea);
+    closeInsertMenu();
   }
 
   return (
@@ -583,9 +750,12 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
         // Draw grid lines at the snap resolution
         backgroundSize: `${snap * unitSize}px ${snap * unitSize}px`,
       }}
-      onClick={handleBackgroundClick}
+      onPointerDown={handleGridPointerDown}
       onPointerMove={handleGridPointerMove}
+      onPointerUp={handleGridPointerUp}
       onPointerLeave={handleGridPointerLeave}
+      onClick={handleGridClick}
+      onContextMenu={handleGridContextMenu}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
@@ -624,7 +794,7 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
           ))}
         </div>
       ))}
-      {hoveredPoint && !insertPoint && (
+      {hoveredPoint && !insertArea && (
         <div
           className="design-block-editor-hovered-square"
           style={{
@@ -635,25 +805,25 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
           }}
         />
       )}
-      {insertPoint && (
-        <>
-          <div
-            ref={insertMarkerRef}
-            className="design-block-editor-insert-point"
-            style={{
-              left: insertPoint.column * unitSize,
-              top: insertPoint.row * unitSize,
-              width: snap * unitSize,
-              height: snap * unitSize,
-            }}
-          />
-          <DesignElementInsertMenu
-            anchor={insertMarkerRef}
-            open
-            onOpenChange={handleInsertMenuOpenChange}
-            onSelect={handleInsertSelect}
-          />
-        </>
+      {insertArea && (
+        <div
+          ref={insertMarkerRef}
+          className="design-block-editor-insert-point"
+          style={{
+            left: insertArea.column * unitSize,
+            top: insertArea.row * unitSize,
+            width: insertArea.columnSpan * unitSize,
+            height: insertArea.rowSpan * unitSize,
+          }}
+        />
+      )}
+      {insertMenuOpen && (
+        <DesignElementInsertMenu
+          anchor={insertMarkerRef}
+          open
+          onOpenChange={handleInsertMenuOpenChange}
+          onSelect={handleInsertSelect}
+        />
       )}
       {gridOverBlocks && (
         <div

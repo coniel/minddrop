@@ -115,21 +115,46 @@ function dropOnSurface(
 }
 
 /**
- * Clicks the editor surface at a position within it.
+ * Presses and releases the editor surface at a position within it,
+ * marking out the single square that position lands on.
  *
  * @param container - The render container.
- * @param offsetX - The click's horizontal position within the surface.
- * @param offsetY - The click's vertical position within the surface.
+ * @param offsetX - The press's horizontal position within the surface.
+ * @param offsetY - The press's vertical position within the surface.
  */
 function clickSurface(
   container: HTMLElement,
   offsetX: number,
   offsetY: number,
 ) {
-  fireEvent.click(container.querySelector('.design-block-editor')!, {
-    offsetX,
-    offsetY,
-  });
+  dragSurface(container, [offsetX, offsetY], [offsetX, offsetY]);
+}
+
+/**
+ * Marks out an area of the editor surface, pressing at one position
+ * within it and releasing at another.
+ *
+ * @param container - The render container.
+ * @param from - The press's position within the surface.
+ * @param to - The release's position within the surface.
+ */
+function dragSurface(
+  container: HTMLElement,
+  [fromX, fromY]: [number, number],
+  [toX, toY]: [number, number],
+) {
+  const surface = container.querySelector('.design-block-editor')!;
+
+  fireEvent.pointerDown(surface, { offsetX: fromX, offsetY: fromY });
+
+  if (fromX !== toX || fromY !== toY) {
+    fireEvent.pointerMove(surface, { offsetX: toX, offsetY: toY });
+  }
+
+  fireEvent.pointerUp(surface, { offsetX: toX, offsetY: toY });
+  // The menu opens on the click the browser fires after the release,
+  // which the test environment does not synthesize.
+  fireEvent.click(surface, { offsetX: toX, offsetY: toY });
 }
 
 /**
@@ -258,18 +283,20 @@ describe('DesignBlockEditor', () => {
     expect(selectedElementId).toBe(titleDesignElement.id);
   });
 
-  it('clears the selection on background clicks only', () => {
+  it('clears the selection on grid presses only', () => {
     const container = renderEditor(titleDesignElement.id);
     const title = container.querySelector(
       '[data-element-id="element_title"]',
     ) as HTMLElement;
 
-    // Clicks bubbling up from an element keep the selection
-    fireEvent.click(title);
+    // A press on an element is the element's, selecting it. Were it
+    // to reach the grid as well, the grid would clear the selection
+    // the element had just made.
+    fireEvent.pointerDown(title, { clientX: 0, clientY: 0 });
 
-    expect(selectedElementId).toBeUndefined();
+    expect(selectedElementId).toBe(titleDesignElement.id);
 
-    // Clicks landing on the surface itself clear it
+    // Presses landing on the surface itself clear it
     clickSurface(container, 0, 0);
 
     expect(selectedElementId).toBeNull();
@@ -372,6 +399,8 @@ describe('DesignBlockEditor', () => {
     expect(square.style.left).toBe('40px');
     expect(square.style.top).toBe('20px');
 
+    fireEvent.pointerDown(overlay, { offsetX: 45, offsetY: 27 });
+    fireEvent.pointerUp(overlay, { offsetX: 45, offsetY: 27 });
     fireEvent.click(overlay, { offsetX: 45, offsetY: 27 });
 
     const marker = container.querySelector(
@@ -410,6 +439,211 @@ describe('DesignBlockEditor', () => {
     expect(marker.style.left).toBe('40px');
     expect(marker.style.top).toBe('20px');
     screen.getByPlaceholderText('Insert element');
+  });
+
+  it('marks out the dragged area and inserts the element on it', async () => {
+    const container = renderEditor();
+
+    dragSurface(container, [45, 27], [125, 87]);
+
+    const marker = container.querySelector(
+      '.design-block-editor-insert-point',
+    ) as HTMLElement;
+
+    // Columns 4 to 12 and rows 2 to 8, both ends inside the area
+    expect(marker.style.left).toBe('40px');
+    expect(marker.style.top).toBe('20px');
+    expect(marker.style.width).toBe('100px');
+    expect(marker.style.height).toBe('80px');
+
+    await userEvent.click(screen.getByText('Box'));
+
+    const inserted = changedElements?.[changedElements.length - 1];
+
+    expect(inserted?.column).toBe(4);
+    expect(inserted?.row).toBe(2);
+    expect(inserted?.columnSpan).toBe(10);
+    expect(inserted?.rowSpan).toBe(8);
+  });
+
+  it('holds the marked area inside the design', () => {
+    const container = renderEditor();
+
+    // Drag out past the design's right and bottom edges
+    dragSurface(container, [45, 27], [cardColumns * 20, cardRows * 20]);
+
+    const marker = container.querySelector(
+      '.design-block-editor-insert-point',
+    ) as HTMLElement;
+
+    expect(marker.style.width).toBe(`${(cardColumns - 4) * 10}px`);
+  });
+
+  it('marks out an area dragged up and to the left', () => {
+    const container = renderEditor();
+
+    dragSurface(container, [125, 87], [45, 27]);
+
+    const marker = container.querySelector(
+      '.design-block-editor-insert-point',
+    ) as HTMLElement;
+
+    expect(marker.style.left).toBe('40px');
+    expect(marker.style.top).toBe('20px');
+    expect(marker.style.width).toBe('100px');
+    expect(marker.style.height).toBe('80px');
+  });
+
+  it('leaves a single marked square at the element type default size', async () => {
+    const container = renderEditor();
+
+    clickSurface(container, 45, 27);
+
+    await userEvent.click(screen.getByText('Box'));
+
+    const inserted = changedElements?.[changedElements.length - 1];
+
+    expect(inserted?.columnSpan).toBe(testElementConfig.defaultColumnSpan);
+    expect(inserted?.rowSpan).toBe(testElementConfig.defaultRowSpan);
+  });
+
+  it('stretches an anchored area on pointer moves alone', async () => {
+    const container = renderEditor();
+    const surface = container.querySelector(
+      '.design-block-editor',
+    ) as HTMLElement;
+
+    // The right click anchors the area on its square
+    fireEvent.contextMenu(surface, { offsetX: 45, offsetY: 27 });
+
+    const marker = container.querySelector(
+      '.design-block-editor-insert-point',
+    ) as HTMLElement;
+
+    expect(marker.style.left).toBe('40px');
+    expect(marker.style.width).toBe('20px');
+
+    // Moving with no button held stretches it
+    hoverSurface(container, 125, 87);
+
+    expect(marker.style.width).toBe('100px');
+    expect(marker.style.height).toBe('80px');
+
+    // The click commits the area, opening the menu on it
+    fireEvent.click(surface, { offsetX: 125, offsetY: 87 });
+
+    screen.getByPlaceholderText('Insert element');
+
+    await userEvent.click(screen.getByText('Box'));
+
+    const inserted = changedElements?.[changedElements.length - 1];
+
+    expect(inserted?.column).toBe(4);
+    expect(inserted?.row).toBe(2);
+    expect(inserted?.columnSpan).toBe(10);
+    expect(inserted?.rowSpan).toBe(8);
+  });
+
+  it('keeps stretching an anchored area across the blocks', () => {
+    const container = renderEditor();
+    const surface = container.querySelector(
+      '.design-block-editor',
+    ) as HTMLElement;
+
+    fireEvent.contextMenu(surface, { offsetX: 45, offsetY: 27 });
+
+    // The anchor brings the grid in front of the blocks. Without it
+    // a block under the pointer would take the move and the area
+    // would stop at its edge, there being no button down to capture
+    // the pointer with.
+    const overlay = container.querySelector(
+      '.design-block-editor-grid-overlay',
+    ) as HTMLElement;
+
+    expect(overlay).not.toBeNull();
+
+    fireEvent.pointerMove(overlay, { offsetX: 125, offsetY: 87 });
+
+    const marker = container.querySelector(
+      '.design-block-editor-insert-point',
+    ) as HTMLElement;
+
+    expect(marker.style.width).toBe('100px');
+    expect(marker.style.height).toBe('80px');
+  });
+
+  it('clears an anchored area on Escape', () => {
+    const container = renderEditor();
+    const surface = container.querySelector(
+      '.design-block-editor',
+    ) as HTMLElement;
+
+    fireEvent.contextMenu(surface, { offsetX: 45, offsetY: 27 });
+
+    expect(
+      container.querySelector('.design-block-editor-insert-point'),
+    ).not.toBeNull();
+
+    fireEvent.keyDown(window, { key: 'Escape' });
+
+    expect(
+      container.querySelector('.design-block-editor-insert-point'),
+    ).toBeNull();
+    expect(screen.queryByPlaceholderText('Insert element')).toBeNull();
+  });
+
+  it('ignores a secondary press for marking out an area', () => {
+    const container = renderEditor();
+    const surface = container.querySelector(
+      '.design-block-editor',
+    ) as HTMLElement;
+
+    // The press which carries a right click marks nothing out of
+    // its own accord.
+    fireEvent.pointerDown(surface, { offsetX: 45, offsetY: 27, button: 2 });
+    hoverSurface(container, 125, 87);
+
+    expect(
+      container.querySelector('.design-block-editor-insert-point'),
+    ).toBeNull();
+  });
+
+  it('keeps the anchored area on the press which commits it', () => {
+    const container = renderEditor();
+    const surface = container.querySelector(
+      '.design-block-editor',
+    ) as HTMLElement;
+
+    fireEvent.contextMenu(surface, { offsetX: 45, offsetY: 27 });
+    hoverSurface(container, 125, 87);
+
+    // The committing click's press must not restart the area on the
+    // square under it.
+    fireEvent.pointerDown(surface, { offsetX: 125, offsetY: 87, button: 0 });
+
+    const marker = container.querySelector(
+      '.design-block-editor-insert-point',
+    ) as HTMLElement;
+
+    expect(marker.style.left).toBe('40px');
+    expect(marker.style.width).toBe('100px');
+  });
+
+  it('clears the marked area when the menu closes without a pick', () => {
+    const container = renderEditor();
+
+    dragSurface(container, [45, 27], [125, 87]);
+
+    expect(
+      container.querySelector('.design-block-editor-insert-point'),
+    ).not.toBeNull();
+
+    fireEvent.keyDown(document.body, { key: 'Escape' });
+
+    expect(
+      container.querySelector('.design-block-editor-insert-point'),
+    ).toBeNull();
+    expect(changedElements).toBeNull();
   });
 
   it('closes the open insert menu rather than moving it', () => {
