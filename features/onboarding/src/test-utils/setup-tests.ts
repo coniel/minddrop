@@ -35,4 +35,5 @@ export async function cleanup(): Promise<void> {
 
   await Events.tests.cleanup();
   Workspaces.Store.clear();
+  Workspaces.ActiveStore.reset();
 }
