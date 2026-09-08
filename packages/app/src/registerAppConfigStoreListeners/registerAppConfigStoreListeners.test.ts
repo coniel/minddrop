@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { createKeyValueStore } from '@minddrop/stores';
 import { MockFs, cleanup } from '../test-utils';
-import { registerAppDataStoreListeners } from './registerAppDataStoreListeners';
+import { registerAppConfigStoreListeners } from './registerAppConfigStoreListeners';
 
 // Test store persisted at the app-config level
 const store = createKeyValueStore<{ value: string }>(
@@ -17,7 +17,7 @@ const flushEvents = () =>
     setTimeout(resolve, 0);
   });
 
-describe('registerAppDataStoreListeners', () => {
+describe('registerAppConfigStoreListeners', () => {
   // The cleanup function returned by the registration under test
   let removeListeners: VoidFunction = () => {};
 
@@ -41,7 +41,7 @@ describe('registerAppDataStoreListeners', () => {
 
   it('persists app-config store data to the AppData stores directory', async () => {
     // Register the store listeners
-    removeListeners = registerAppDataStoreListeners();
+    removeListeners = registerAppConfigStoreListeners();
 
     // Set a value on an app-config level store
     store.set('value', 'updated');
@@ -62,7 +62,7 @@ describe('registerAppDataStoreListeners', () => {
     });
 
     // Register the store listeners
-    removeListeners = registerAppDataStoreListeners();
+    removeListeners = registerAppConfigStoreListeners();
 
     // Hydrate the store
     await store.hydrate();

@@ -3,7 +3,7 @@ import { createKeyValueStore } from '@minddrop/stores';
 import { Workspaces } from '@minddrop/workspaces';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { MockFs, cleanup } from '../test-utils';
-import { registerAppWorkspaceStoreListeners } from './registerAppWorkspaceStoreListeners';
+import { registerAppWorkspaceConfigStoreListeners } from './registerAppWorkspaceConfigStoreListeners';
 
 const { workspace_1, workspace_2 } = WorkspaceFixtures;
 
@@ -28,7 +28,7 @@ const flushEvents = () =>
     setTimeout(resolve, 0);
   });
 
-describe('registerAppWorkspaceStoreListeners', () => {
+describe('registerAppWorkspaceConfigStoreListeners', () => {
   // The cleanup function returned by the registration under test
   let removeListeners: VoidFunction = () => {};
 
@@ -60,7 +60,7 @@ describe('registerAppWorkspaceStoreListeners', () => {
 
   it('persists store data to the active workspace stores directory', async () => {
     // Register the store listeners
-    removeListeners = registerAppWorkspaceStoreListeners();
+    removeListeners = registerAppWorkspaceConfigStoreListeners();
 
     // Set a value on an app-workspace-config level store
     store.set('value', 'updated');
@@ -95,7 +95,7 @@ describe('registerAppWorkspaceStoreListeners', () => {
     );
 
     // Register the store listeners
-    removeListeners = registerAppWorkspaceStoreListeners();
+    removeListeners = registerAppWorkspaceConfigStoreListeners();
 
     // Hydrate the store
     await store.hydrate();

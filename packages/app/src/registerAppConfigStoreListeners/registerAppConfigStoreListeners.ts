@@ -1,7 +1,7 @@
 import { BaseDirectory } from '@minddrop/file-system';
 import { registerStoreListeners } from '@minddrop/stores';
 
-const LISTENER_ID = 'desktop-app:app-data-store';
+const LISTENER_ID = 'app:app-config-store';
 const STORES_DIR = 'stores';
 
 /**
@@ -13,7 +13,7 @@ const STORES_DIR = 'stores';
  *
  * @returns A cleanup function that removes the listeners.
  */
-export function registerAppDataStoreListeners(): VoidFunction {
+export function registerAppConfigStoreListeners(): VoidFunction {
   // Register persist and hydrate listeners targeting the
   // AppData stores directory.
   return registerStoreListeners({

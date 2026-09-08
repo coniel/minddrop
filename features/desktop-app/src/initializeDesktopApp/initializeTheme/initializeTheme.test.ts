@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { App } from '@minddrop/app';
 import { Events } from '@minddrop/events';
 import { ResolvedThemeVariant, Theme } from '@minddrop/ui-theme';
-import { registerAppDataStoreListeners } from '../../registerAppDataStoreListeners';
 import { MockFs, cleanup } from '../../test-utils';
 import { initializeTheme } from './initializeTheme';
 
@@ -70,7 +70,7 @@ describe('initializeTheme', () => {
     // Register the store persistence listeners which answer the
     // theme store's hydrate request, without which initializeTheme
     // never resolves.
-    removeStoreListeners = registerAppDataStoreListeners();
+    removeStoreListeners = App.initializeStorePersistence();
   });
 
   afterEach(async () => {

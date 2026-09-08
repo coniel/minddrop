@@ -70,6 +70,7 @@
     "@minddrop/data-view-kanban": "workspace:*",
     "@minddrop/data-view-notebook": "workspace:*",
     "@minddrop/data-view-table": "workspace:*",
-    "@minddrop/workspaces": "workspace:*"
+    "@minddrop/workspaces": "workspace:*",
+    "@minddrop/app": "workspace:*"
   }
 }

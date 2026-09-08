@@ -1,3 +1,4 @@
+import { App } from '@minddrop/app';
 import { I18n, initializeI18n } from '@minddrop/i18n';
 import { Icons } from '@minddrop/ui-icons';
 import { initializeInputModalityTracking } from '@minddrop/ui-primitives';
@@ -40,6 +41,10 @@ async function runInitialization(): Promise<void> {
 
   // Register the content icon sets, which load on first use
   Icons.initialize();
+
+  // Register the listeners that persist and hydrate stores, so that
+  // state set while creating a workspace reaches disk.
+  App.initializeStorePersistence();
 
   // Load any workspaces still listed in the workspaces config, so that
   // adding a workspace does not drop them from the config file.

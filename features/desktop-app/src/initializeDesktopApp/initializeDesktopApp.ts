@@ -1,3 +1,4 @@
+import { App } from '@minddrop/app';
 import { Collections } from '@minddrop/collections';
 import { DataViews } from '@minddrop/data-views';
 import { Databases } from '@minddrop/databases';
@@ -35,9 +36,6 @@ import { ViewSessions } from '@minddrop/views';
 import { Workspaces } from '@minddrop/workspaces';
 import { AppUiState } from '../AppUiState';
 import { locales } from '../locales';
-import { registerAppDataStoreListeners } from '../registerAppDataStoreListeners';
-import { registerAppWorkspaceStoreListeners } from '../registerAppWorkspaceStoreListeners';
-import { registerWorkspaceStoreListeners } from '../registerWorkspaceStoreListeners';
 import { registerWorkspaceSwitchListener } from '../registerWorkspaceSwitchListener';
 import { initializeDataViewTypes } from './initializeDataViewTypes';
 import { initializeSelection } from './initializeSelection';
@@ -85,9 +83,9 @@ async function runInitialization(): Promise<void> {
   // Register spaces translations
   initializeSpacesFeature();
 
-  // Register listeners that persist and hydrate app-config
-  // stores to JSON files in the AppData directory.
-  registerAppDataStoreListeners();
+  // Register the listeners that persist and hydrate stores, which
+  // every later hydrate() call depends on.
+  App.initializeStorePersistence();
 
   // Hydrate app UI state from persisted config
   await AppUiState.hydrate();
@@ -112,14 +110,6 @@ async function runInitialization(): Promise<void> {
   // Initialize workspaces (sets Paths.workspace and
   // Paths.workspaceConfigs from the active workspace)
   await Workspaces.initialize();
-
-  // Register listeners that persist and hydrate workspace-config
-  // stores to JSON files in the workspace config directory.
-  registerWorkspaceStoreListeners();
-
-  // Register listeners that persist and hydrate app-workspace-config
-  // stores to JSON files in the active workspace's AppData directory.
-  registerAppWorkspaceStoreListeners();
 
   // Hydrate layout region sizes (dialogs, panels) for this workspace
   await LayoutRegionSizesStore.hydrate();

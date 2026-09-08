@@ -2,7 +2,7 @@ import { BaseDirectory, Fs } from '@minddrop/file-system';
 import { registerStoreListeners } from '@minddrop/stores';
 import { Workspaces } from '@minddrop/workspaces';
 
-const LISTENER_ID = 'desktop-app:app-workspace-store';
+const LISTENER_ID = 'app:app-workspace-config-store';
 const WORKSPACES_DIR = 'workspaces';
 const STORES_DIR = 'stores';
 
@@ -16,7 +16,7 @@ const STORES_DIR = 'stores';
  *
  * @returns A cleanup function that removes the listeners.
  */
-export function registerAppWorkspaceStoreListeners(): VoidFunction {
+export function registerAppWorkspaceConfigStoreListeners(): VoidFunction {
   // Register persist and hydrate listeners targeting the stores
   // directory of the active workspace's AppData directory.
   return registerStoreListeners({

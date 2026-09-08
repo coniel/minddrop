@@ -522,6 +522,8 @@ synchronous adapters, so one code path serves both.
 
 A persisted store declares one of three targets, and the difference is
 which of two axes the state varies on: the workspace, and the device.
+`packages/app` registers a listener per target and owns the directories
+below.
 
 | Target                 | Varies by | Written to                                                 |
 | ---------------------- | --------- | ---------------------------------------------------------- |

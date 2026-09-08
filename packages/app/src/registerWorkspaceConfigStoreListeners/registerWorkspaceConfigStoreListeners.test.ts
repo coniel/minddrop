@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { createKeyValueStore } from '@minddrop/stores';
 import { Paths } from '@minddrop/utils';
 import { MockFs, cleanup } from '../test-utils';
-import { registerWorkspaceStoreListeners } from './registerWorkspaceStoreListeners';
+import { registerWorkspaceConfigStoreListeners } from './registerWorkspaceConfigStoreListeners';
 
 // Test store persisted at the workspace-config level
 const store = createKeyValueStore<{ value: string }>(
@@ -18,7 +18,7 @@ const flushEvents = () =>
     setTimeout(resolve, 0);
   });
 
-describe('registerWorkspaceStoreListeners', () => {
+describe('registerWorkspaceConfigStoreListeners', () => {
   // The cleanup function returned by the registration under test
   let removeListeners: VoidFunction = () => {};
 
@@ -34,7 +34,7 @@ describe('registerWorkspaceStoreListeners', () => {
 
   it('persists workspace-config store data to the workspace stores directory', async () => {
     // Register the store listeners
-    removeListeners = registerWorkspaceStoreListeners();
+    removeListeners = registerWorkspaceConfigStoreListeners();
 
     // Set a value on a workspace-config level store
     store.set('value', 'updated');
@@ -59,7 +59,7 @@ describe('registerWorkspaceStoreListeners', () => {
     );
 
     // Register the store listeners
-    removeListeners = registerWorkspaceStoreListeners();
+    removeListeners = registerWorkspaceConfigStoreListeners();
 
     // Hydrate the store
     await store.hydrate();

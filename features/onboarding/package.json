@@ -16,7 +16,8 @@
     "@minddrop/ui-primitives": "workspace:*",
     "@minddrop/utils": "workspace:*",
     "@minddrop/workspaces": "workspace:*",
-    "react": "^19.1.0"
+    "react": "^19.1.0",
+    "@minddrop/app": "workspace:*"
   },
   "devDependencies": {
     "eslint": "^9.39.3",
