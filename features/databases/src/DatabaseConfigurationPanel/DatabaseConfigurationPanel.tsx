@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { Databases } from '@minddrop/databases';
 import { PropertyTypeSelectionMenu } from '@minddrop/feature-properties';
 import { i18n } from '@minddrop/i18n';
@@ -13,6 +13,7 @@ import {
   TabsPanel,
   TabsTab,
   VerticalScrollArea,
+  useTransientState,
 } from '@minddrop/ui-primitives';
 import { DatabaseDesignPanel } from '../DatabaseDesignPanel';
 import {
@@ -24,12 +25,13 @@ import {
   DraftProperty,
 } from '../DatabasePropertiesEditor';
 import { DatabaseSettingsPanel } from '../DatabaseSettingsPanel';
-import {
-  ConfigPanelTab,
-  setDatabaseViewState,
-  useDatabaseViewState,
-} from '../DatabaseViewStateStore';
 import './DatabaseConfigurationPanel.css';
+
+export type ConfigPanelTab =
+  | 'properties'
+  | 'designs'
+  | 'templates'
+  | 'settings';
 
 export interface DatabaseConfigurationPanelProps {
   /**
@@ -45,26 +47,19 @@ export interface DatabaseConfigurationPanelProps {
 export const DatabaseConfigurationPanel: React.FC<
   DatabaseConfigurationPanelProps
 > = ({ databaseId }) => {
-  const viewState = useDatabaseViewState(databaseId);
+  // The active tab, remembered with the view's session
+  const [activeTab, setActiveTab] = useTransientState<ConfigPanelTab>(
+    'configPanelTab',
+    'properties',
+  );
   const [draftProperties, setDraftProperties] = useState<DraftProperty[]>([]);
   const [draftTemplates, setDraftTemplates] = useState<DraftEntryTemplate[]>(
     [],
   );
   const databaseConfig = Databases.use(databaseId);
 
-  // Read the active tab from persisted state
-  const activeTab = viewState.configPanelTab;
-
-  // Settings is a persisted tab value so it survives remounts (e.g. rename)
+  // Settings is a tab value so it survives remounts (e.g. rename)
   const showSettings = activeTab === 'settings';
-
-  // Persist the active tab when it changes
-  const setActiveTab = useCallback(
-    (tab: ConfigPanelTab) => {
-      setDatabaseViewState(databaseId, { configPanelTab: tab });
-    },
-    [databaseId],
-  );
 
   // Add a new draft property from the type selection menu
   function handleAddProperty(propertySchema: PropertySchemaTemplate) {
@@ -114,7 +109,7 @@ export const DatabaseConfigurationPanel: React.FC<
           <IconButton
             size="md"
             label="labels.settings"
-            icon="settings"
+            icon="settings-2"
             color="muted"
             active={showSettings}
             onClick={() => setActiveTab('settings')}

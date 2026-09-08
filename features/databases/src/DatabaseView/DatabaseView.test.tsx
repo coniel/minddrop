@@ -89,6 +89,19 @@ describe('<DatabaseView />', () => {
     screen.getByLabelText('databases.actions.configuration');
   });
 
+  it('toggles the configuration panel', async () => {
+    const user = userEvent.setup();
+    const container = renderView();
+
+    expect(container.querySelector('.database-configuration-panel')).toBeNull();
+
+    await user.click(screen.getByLabelText('databases.actions.configuration'));
+
+    expect(
+      container.querySelector('.database-configuration-panel'),
+    ).not.toBeNull();
+  });
+
   it("leaves design mode from the database's breadcrumb", async () =>
     new Promise<void>((done) => {
       const user = userEvent.setup();

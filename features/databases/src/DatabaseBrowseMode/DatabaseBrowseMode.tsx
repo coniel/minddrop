@@ -5,10 +5,6 @@ import { DataViewRenderer } from '@minddrop/feature-data-views';
 import { DataViewTabBar } from '@minddrop/ui-data-views';
 import { useTransientState } from '@minddrop/ui-primitives';
 import { orderByCreated, reconcileIdOrder, uuid } from '@minddrop/utils';
-import {
-  setDatabaseViewState,
-  useDatabaseViewState,
-} from '../DatabaseViewStateStore';
 
 export interface DatabaseBrowseModeProps {
   /**
@@ -20,7 +16,7 @@ export interface DatabaseBrowseModeProps {
 /**
  * Renders the database's entries through its data views: the view
  * tab bar and the active view's renderer. The active view is
- * remembered per tab, seeded from the last one used.
+ * remembered per session.
  */
 export const DatabaseBrowseMode: React.FC<DatabaseBrowseModeProps> = ({
   databaseId,
@@ -31,7 +27,6 @@ export const DatabaseBrowseMode: React.FC<DatabaseBrowseModeProps> = ({
     'database',
     databaseId,
   );
-  const viewState = useDatabaseViewState(databaseId);
 
   // Sort views according to the config's view ID list, placing
   // views missing from it after the ordered ones by creation date.
@@ -43,10 +38,10 @@ export const DatabaseBrowseMode: React.FC<DatabaseBrowseModeProps> = ({
     return reconcileIdOrder(database.views, unsortedViews, orderByCreated);
   }, [unsortedViews, database?.views]);
 
-  // Per-tab active view selection, seeded from the last-used view
+  // Per-session active view selection
   const [tabActiveViewId, setTabActiveViewId] = useTransientState<
     string | null
-  >('activeViewId', viewState.activeViewId);
+  >('activeViewId', null);
 
   // Resolve the active view ID, falling back to the first view
   const activeViewId = tabActiveViewId ?? databaseViews[0]?.id;
@@ -60,13 +55,9 @@ export const DatabaseBrowseMode: React.FC<DatabaseBrowseModeProps> = ({
   // Update the active view ID
   const setActiveViewId = useCallback(
     (viewId: string | undefined) => {
-      // Update this tab's selection
       setTabActiveViewId(viewId ?? null);
-
-      // Track the last-used view as the seed for future tabs
-      setDatabaseViewState(databaseId, { activeViewId: viewId ?? null });
     },
-    [databaseId, setTabActiveViewId],
+    [setTabActiveViewId],
   );
 
   // Sync activeViewId when views change (e.g. active view deleted)

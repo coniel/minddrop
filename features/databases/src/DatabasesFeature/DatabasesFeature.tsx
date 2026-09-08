@@ -14,10 +14,6 @@ import {
   OpenDatabaseViewEventData,
 } from '../events';
 import {
-  cleanupDatabasesFeatureEventHandlers,
-  initializeDatabasesFeatureEventHandlers,
-} from '../initializeFeatureEventHandlers';
-import {
   resolveDatabaseEntryViewId,
   resolveDatabaseViewId,
   resolveOpenMode,
@@ -237,9 +233,6 @@ export const DatabasesFeature: React.FC = () => {
       },
     );
 
-    // Register feature-level event handlers (view state cleanup)
-    initializeDatabasesFeatureEventHandlers();
-
     return () => {
       Events.removeListener(Databases.events.OpenView, EventListenerId);
       Events.removeListener(
@@ -269,7 +262,6 @@ export const DatabasesFeature: React.FC = () => {
         DatabaseEntries.events.Deleted,
         DatabaseEntriesEventListenerId,
       );
-      cleanupDatabasesFeatureEventHandlers();
     };
   }, []);
 

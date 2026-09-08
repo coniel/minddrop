@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import {
   Database,
   DatabaseEntries,
@@ -12,16 +12,13 @@ import {
   DropdownMenu,
   DropdownMenuItem,
   IconButton,
+  useTransientState,
 } from '@minddrop/ui-primitives';
 import { Views } from '@minddrop/views';
 import { DatabaseBrowseMode } from '../DatabaseBrowseMode';
 import { DatabaseConfigurationPanel } from '../DatabaseConfigurationPanel';
 import { DatabaseDesignMode } from '../DatabaseDesignMode';
 import { DatabaseEmptyMode } from '../DatabaseEmptyMode';
-import {
-  setDatabaseViewState,
-  useDatabaseViewState,
-} from '../DatabaseViewStateStore';
 import './DatabaseView.css';
 
 // The subview the database view shows while in design mode, editing
@@ -37,7 +34,9 @@ export interface DatabaseViewProps {
   databaseId: string;
 
   /**
-   * Whether the properties panel is open by default.
+   * Whether the configuration panel starts open. Ignored when the
+   * view's session has already shown the database, which then keeps
+   * the panel as it was.
    *
    * @default false
    */
@@ -47,19 +46,26 @@ export interface DatabaseViewProps {
 /**
  * Renders a database in one of three modes: browsing its entries
  * through its views, the empty placeholder while it has none, or
- * design mode editing its designs.
+ * design mode editing its designs, with the database's configuration
+ * panel beside it when open.
  */
 export const DatabaseView: React.FC<DatabaseViewProps> = ({
   databaseId,
-  configurationPanelOpen: configPanelOpenProp,
+  configurationPanelOpen: configurationPanelOpenByDefault = false,
 }) => {
   const database = Databases.use(databaseId);
   const entryTemplates = DatabaseEntryTemplates.useAll(databaseId);
   const entryIds = DatabaseEntries.useIds(databaseId);
-  const viewState = useDatabaseViewState(databaseId);
   const subview = Views.useSubview();
   const setSubview = Views.useSetSubview();
   const { t } = useTranslation();
+
+  // Whether the configuration panel is open, remembered with the
+  // view's session.
+  const [configurationPanelOpen, setConfigurationPanelOpen] = useTransientState(
+    'configPanelOpen',
+    configurationPanelOpenByDefault,
+  );
 
   // Design mode is the tab showing the designs subview
   const designMode = subview?.id === DesignsSubviewId;
@@ -67,17 +73,10 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
   // Determine whether the database is empty
   const isEmpty = entryIds.length === 0;
 
-  // Config panel open state: prop override takes precedence,
-  // otherwise use persisted state.
-  const configurationPanelOpen =
-    configPanelOpenProp ?? viewState.configPanelOpen;
-
   // Toggle the configuration panel
   const toggleConfigurationPanel = useCallback(() => {
-    setDatabaseViewState(databaseId, {
-      configPanelOpen: !configurationPanelOpen,
-    });
-  }, [databaseId, configurationPanelOpen]);
+    setConfigurationPanelOpen(!configurationPanelOpen);
+  }, [configurationPanelOpen, setConfigurationPanelOpen]);
 
   // Enter design mode by showing the designs subview, a navigation in
   // the tab's history. The database's breadcrumb leads back out.
@@ -88,16 +87,6 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
       icon: Designs.constants.Icon,
     });
   }, [setSubview, t]);
-
-  // Apply the configuration panel prop override when the database
-  // view first mounts.
-  useEffect(() => {
-    if (configPanelOpenProp !== undefined) {
-      setDatabaseViewState(databaseId, {
-        configPanelOpen: configPanelOpenProp,
-      });
-    }
-  }, [databaseId, configPanelOpenProp]);
 
   async function handleClickNewEntry() {
     if (!database) {

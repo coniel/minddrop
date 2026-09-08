@@ -6,7 +6,6 @@ import { Designs as DesignsNext } from '@minddrop/designs-next';
 import { registerBlockSelectionSerializer } from '@minddrop/editor';
 import { initializeCollectionsFeature } from '@minddrop/feature-collections';
 import { initializeDataViewsFeature } from '@minddrop/feature-data-views';
-import { DatabaseViewStateStore } from '@minddrop/feature-databases';
 import {
   LayoutRegionSizesStore,
   initializeDesignsFeature,
@@ -90,9 +89,6 @@ async function runInitialization(): Promise<void> {
 
   // Hydrate app UI state from persisted config
   await AppUiState.hydrate();
-
-  // Hydrate per-database view state
-  await DatabaseViewStateStore.hydrate();
 
   // Hydrate per-space view state
   await SpaceViewStateStore.hydrate();
