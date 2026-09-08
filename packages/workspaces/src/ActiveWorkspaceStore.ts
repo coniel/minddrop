@@ -9,12 +9,16 @@ export interface ActiveWorkspaceStoreValues {
   id: WorkspaceId | null;
 }
 
-// Not persisted: the workspaces config file holds the active workspace
-// path and is what it is restored from on initialization.
+// Which workspace is open belongs to the app on this device, not to
+// any workspace, so it persists at the app-config level.
 export const ActiveWorkspaceStore =
   createKeyValueStore<ActiveWorkspaceStoreValues>(
     'Workspaces:ActiveWorkspace',
     { id: null },
+    {
+      persistTo: 'app-config',
+      namespace: 'active-workspace',
+    },
   );
 
 /**

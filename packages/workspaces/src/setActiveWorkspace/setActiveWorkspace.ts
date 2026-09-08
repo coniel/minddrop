@@ -2,7 +2,6 @@ import { Events } from '@minddrop/events';
 import { ActiveWorkspaceStore } from '../ActiveWorkspaceStore';
 import { ActiveWorkspaceChangedEvent } from '../events';
 import { getWorkspace } from '../getWorkspace';
-import { writeWorkspacesConfig } from '../writeWorkspacesConfig';
 
 /**
  * Sets the active workspace, the one the app opens into.
@@ -25,12 +24,14 @@ export async function setActiveWorkspace(id: string): Promise<void> {
     return;
   }
 
-  // Set the workspace as active
+  // Set the workspace as active, which persists it
   ActiveWorkspaceStore.set('id', workspace.id);
+
+  // Let the write land before announcing the change: the desktop app
+  // answers it by reloading the window, which would otherwise cut the
+  // write short and reopen the workspace being left.
+  await ActiveWorkspaceStore.persisted();
 
   // Dispatch an active workspace changed event
   Events.dispatch(ActiveWorkspaceChangedEvent, workspace);
-
-  // Write the workspaces config to persist the active workspace path
-  await writeWorkspacesConfig();
 }

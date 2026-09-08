@@ -31,7 +31,6 @@ export const workspaceFiles: MockFileDescriptor[] = workspaces.map(
 
 export const workspacesConfig: WorkspacesConfig = {
   paths: [workspace_1.path, workspace_2.path, workspace_3.path],
-  activePath: workspace_1.path,
 };
 
 export const workspaceConfigFile: MockFileDescriptor = {

@@ -9,7 +9,6 @@ import { readWorkspaceConfig } from '../readWorkspaceConfig';
 import { WorkspaceId, WorkspacesConfig } from '../types';
 import { resolveWorkspacesConfigFilePath } from '../utils';
 import { writeWorkspaceConfig } from '../writeWorkspaceConfig';
-import { writeWorkspacesConfig } from '../writeWorkspacesConfig';
 
 /**
  * Initializes workspaces by reading the workspaces config file
@@ -65,14 +64,17 @@ export async function initializeWorkspaces(): Promise<void> {
   // Persist normalized IDs back to the workspace configs
   await Promise.all(normalizedIds.map((id) => writeWorkspaceConfig(id)));
 
-  // Resolve the workspace the app last opened into, falling back
-  // to the first loaded one.
+  // Resolve the workspace the app last opened into, hydrated into the
+  // store beforehand, falling back to the first loaded one when it is
+  // no longer listed.
+  const lastActiveId = ActiveWorkspaceStore.get('id');
   const activeWorkspace =
-    workspaces.find((workspace) => workspace.path === config.activePath) ||
+    workspaces.find((workspace) => workspace.id === lastActiveId) ||
     workspaces[0];
 
   if (activeWorkspace) {
-    // Set the active workspace
+    // Set the active workspace, which persists a fallback so that it
+    // does not have to be resolved again on the next launch.
     ActiveWorkspaceStore.set('id', activeWorkspace.id);
 
     // Set global workspace paths from the active workspace
@@ -81,11 +83,6 @@ export async function initializeWorkspaces(): Promise<void> {
       activeWorkspace.path,
       Paths.hiddenDirName,
     );
-
-    // Persist the fallback so the config does not stay stale
-    if (activeWorkspace.path !== config.activePath) {
-      await writeWorkspacesConfig();
-    }
   }
 
   // Dispatch a workspaces loaded event

@@ -11,9 +11,7 @@ import {
   workspace_1,
   workspace_2,
   workspaces,
-  workspacesConfig,
 } from '../test-utils';
-import { WorkspacesConfig } from '../types';
 import { resolveWorkspacesConfigFilePath } from '../utils';
 import { initializeWorkspaces } from './initializeWorkspaces';
 
@@ -37,12 +35,9 @@ describe('initializeWorkspaces', () => {
     expect(WorkspacesStore).toHaveItems(workspaces);
   });
 
-  it('sets the workspace from the config active path as active', async () => {
-    // Make workspace_2 the config's active workspace
-    MockFs.writeJsonFile(resolveWorkspacesConfigFilePath(), {
-      ...workspacesConfig,
-      activePath: workspace_2.path,
-    });
+  it('keeps the hydrated workspace active', async () => {
+    // Stand in for the store having been hydrated with workspace_2
+    ActiveWorkspaceStore.set('id', workspace_2.id);
 
     await initializeWorkspaces();
 
@@ -50,11 +45,8 @@ describe('initializeWorkspaces', () => {
   });
 
   it('sets the workspace paths from the active workspace', async () => {
-    // Make workspace_2 the config's active workspace
-    MockFs.writeJsonFile(resolveWorkspacesConfigFilePath(), {
-      ...workspacesConfig,
-      activePath: workspace_2.path,
-    });
+    // Stand in for the store having been hydrated with workspace_2
+    ActiveWorkspaceStore.set('id', workspace_2.id);
 
     await initializeWorkspaces();
 
@@ -64,30 +56,19 @@ describe('initializeWorkspaces', () => {
     );
   });
 
-  it('falls back to the first workspace when the active path is unknown', async () => {
-    // Remove the active path from the config
-    MockFs.writeJsonFile(resolveWorkspacesConfigFilePath(), {
-      paths: workspacesConfig.paths,
-    });
-
+  it('falls back to the first workspace when none is active', async () => {
     await initializeWorkspaces();
 
     expect(ActiveWorkspaceStore).toHaveStoredValue('id', workspace_1.id);
   });
 
-  it('persists the fallback active workspace', async () => {
-    // Remove the active path from the config
-    MockFs.writeJsonFile(resolveWorkspacesConfigFilePath(), {
-      paths: workspacesConfig.paths,
-    });
+  it('falls back to the first workspace when the active one is no longer listed', async () => {
+    // Stand in for a workspace that has since been removed
+    ActiveWorkspaceStore.set('id', 'workspace_missing');
 
     await initializeWorkspaces();
 
-    const config = MockFs.readJsonFile<WorkspacesConfig>(
-      resolveWorkspacesConfigFilePath(),
-    );
-
-    expect(config.activePath).toBe(workspace_1.path);
+    expect(ActiveWorkspaceStore.get('id')).toBe(workspace_1.id);
   });
 
   it('dispatches a workspaces loaded event', async () =>

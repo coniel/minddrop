@@ -90,6 +90,10 @@ async function runInitialization(): Promise<void> {
   // Hydrate app UI state from persisted config
   await AppUiState.hydrate();
 
+  // Hydrate the workspace the app last opened into, which
+  // Workspaces.initialize resolves against.
+  await Workspaces.ActiveStore.hydrate();
+
   // Register dev tools translations and panels, and hydrate
   // their UI state.
   await initializeDevToolsFeature();
