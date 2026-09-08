@@ -1,7 +1,8 @@
 import { DesignElementConfig } from '@minddrop/designs-next';
-import { HeadingElement, HeadingLevel } from './HeadingElement.types';
-import { HeadingElementRenderer } from './HeadingElementRenderer';
-import { HeadingSettingsMenu } from './HeadingSettingsMenu';
+import { i18n } from '@minddrop/i18n';
+import { HeadingElement, HeadingLevel } from '../HeadingElement.types';
+import { HeadingElementRenderer } from '../HeadingElementRenderer';
+import { HeadingSettingsMenu } from '../HeadingSettingsMenu';
 
 export const HeadingElementType = 'heading';
 
@@ -30,11 +31,22 @@ export const HeadingElementConfig: DesignElementConfig<HeadingElement> = {
   component: HeadingElementRenderer,
   defaultColumnSpan: 24,
   defaultRowSpan: HeadingLineHeightUnits[DefaultHeadingLevel],
+  resolveDefaults: resolvePlaceholderText,
   settingGroups: ['text'],
   settingsMenu: HeadingSettingsMenu,
   resolveMinRowSpan: resolveLineHeight,
   resolveRowSpanStep: resolveLineHeight,
 };
+
+/**
+ * Resolves the placeholder text a new heading starts with, so it
+ * renders visibly.
+ *
+ * @returns The starter fields.
+ */
+function resolvePlaceholderText(): Partial<HeadingElement> {
+  return { text: i18n.t('designsNext.elements.heading.placeholder') };
+}
 
 /**
  * Resolves the line height of the element's heading level in grid

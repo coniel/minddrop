@@ -1,6 +1,7 @@
 import { DesignElementConfig } from '@minddrop/designs-next';
-import { TextElement } from './TextElement.types';
-import { TextElementRenderer } from './TextElementRenderer';
+import { i18n } from '@minddrop/i18n';
+import { TextElement } from '../TextElement.types';
+import { TextElementRenderer } from '../TextElementRenderer';
 
 export const TextElementType = 'text';
 
@@ -20,7 +21,18 @@ export const TextElementConfig: DesignElementConfig<TextElement> = {
   defaultColumnSpan: 32,
   defaultRowSpan: TextLineHeightUnits * 2,
   defaultNaturalHeight: true,
+  resolveDefaults: resolvePlaceholderText,
   settingGroups: ['text'],
   resolveMinRowSpan: () => TextLineHeightUnits,
   resolveRowSpanStep: () => TextLineHeightUnits,
 };
+
+/**
+ * Resolves the placeholder text a new text element starts with, so
+ * it renders visibly.
+ *
+ * @returns The starter fields.
+ */
+function resolvePlaceholderText(): Partial<TextElement> {
+  return { text: i18n.t('designsNext.elements.text.placeholder') };
+}
