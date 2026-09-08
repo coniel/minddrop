@@ -1,0 +1,157 @@
+/* ============================================================
+   RADIO TOGGLE HOVER MENU
+   A RadioToggleGroup held behind a toolbar button, revealed on
+   hover as an arm reaching out of the toolbar.
+   ============================================================ */
+
+/* Match the icon size of the options the menu holds */
+.icon-button.radio-toggle-hover-menu-trigger .icon {
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
+}
+
+/* The popup is a plain shell: the options toolbar inside it draws
+   the surface */
+.radio-toggle-hover-menu-popup {
+  position: relative;
+  border: none;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+
+/* An invisible margin around the options, keeping the menu open
+   while the pointer crosses to them or drifts off them. Behind the
+   options so it never swallows their clicks. */
+.radio-toggle-hover-menu-popup::before {
+  content: '';
+  position: absolute;
+  inset: calc(-1 * var(--space-3));
+  z-index: -1;
+}
+
+/* The options continue the host toolbar rather than floating
+   beside it */
+.radio-toggle-hover-menu-options.floating-toolbar {
+  /* How far the junction with the host toolbar curves, along the
+     options' edge and along the toolbar's */
+  --radio-toggle-hover-menu-junction-x: var(--radius-md);
+  --radio-toggle-hover-menu-junction-y: var(--radius-md);
+  /* How far the shadow reaches, cleared on the free sides */
+  --radio-toggle-hover-menu-shadow-reach: calc(-1 * var(--space-8));
+
+  position: relative;
+}
+
+/* The edge facing the toolbar is squared off and left unbordered,
+   so the options' surface covers the toolbar's own edge beneath it
+   and the two read as one shape. Dropping that border rather than
+   painting it in the surface colour also spares the corners a
+   mitre, which would nick the border where the two meet.
+
+   The shadow is clipped away at the same edge, where it would
+   otherwise fall across the toolbar and draw the very edge the
+   shared surface hides; the outward insets leave it whole on the
+   free sides and clear the fillets. */
+.radio-toggle-hover-menu-options-side-right.floating-toolbar {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-left: none;
+  clip-path: inset(
+    var(--radio-toggle-hover-menu-shadow-reach)
+      var(--radio-toggle-hover-menu-shadow-reach)
+      var(--radio-toggle-hover-menu-shadow-reach) 0
+  );
+}
+
+.radio-toggle-hover-menu-options-side-left.floating-toolbar {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-right: none;
+  clip-path: inset(
+    var(--radio-toggle-hover-menu-shadow-reach) 0
+      var(--radio-toggle-hover-menu-shadow-reach)
+      var(--radio-toggle-hover-menu-shadow-reach)
+  );
+}
+
+/* Where the options run flush with an end of the host toolbar, the
+   two share a straight edge, so the toolbar's own corner would
+   notch the shape they make together. The open menu names the
+   corners it runs through. */
+.floating-toolbar[data-hover-menu-squared~='top-right'] {
+  border-top-right-radius: 0;
+}
+
+.floating-toolbar[data-hover-menu-squared~='bottom-right'] {
+  border-bottom-right-radius: 0;
+}
+
+.floating-toolbar[data-hover-menu-squared~='top-left'] {
+  border-top-left-radius: 0;
+}
+
+.floating-toolbar[data-hover-menu-squared~='bottom-left'] {
+  border-bottom-left-radius: 0;
+}
+
+/* Fillets curving the two corners where the options meet the host
+   toolbar, so the surface flows into the arm instead of turning a
+   right angle. Each is a patch of surface sitting just outside a
+   corner, with a quarter ellipse bitten out of its far corner: the
+   arc left behind runs from the toolbar's edge into the options',
+   carrying the border along its outside. */
+.radio-toggle-hover-menu-options.floating-toolbar::before,
+.radio-toggle-hover-menu-options.floating-toolbar::after {
+  content: '';
+  position: absolute;
+  /* Flush with the edge facing the toolbar, which the border
+     missing there puts at the padding box's own */
+  left: 0;
+  width: var(--radio-toggle-hover-menu-junction-x);
+  /* A pixel taller than the curve, covering the straight border
+     the options draw across the corner the fillet rounds */
+  height: calc(
+    var(--radio-toggle-hover-menu-junction-y) + var(--border-width-thin)
+  );
+}
+
+.radio-toggle-hover-menu-options.floating-toolbar::before {
+  bottom: 100%;
+  background: radial-gradient(
+    ellipse var(--radio-toggle-hover-menu-junction-x)
+      var(--radio-toggle-hover-menu-junction-y) at top right,
+    transparent 100%,
+    var(--border-subtle) 100%,
+    var(--border-subtle) calc(100% + var(--border-width-thin)),
+    var(--surface-overlay) calc(100% + var(--border-width-thin))
+  );
+}
+
+.radio-toggle-hover-menu-options.floating-toolbar::after {
+  top: 100%;
+  background: radial-gradient(
+    ellipse var(--radio-toggle-hover-menu-junction-x)
+      var(--radio-toggle-hover-menu-junction-y) at bottom right,
+    transparent 100%,
+    var(--border-subtle) 100%,
+    var(--border-subtle) calc(100% + var(--border-width-thin)),
+    var(--surface-overlay) calc(100% + var(--border-width-thin))
+  );
+}
+
+/* Options opening leftwards carry the same fillets, flipped onto
+   their right edge */
+.radio-toggle-hover-menu-options-side-left.floating-toolbar::before,
+.radio-toggle-hover-menu-options-side-left.floating-toolbar::after {
+  left: auto;
+  right: 0;
+  transform: scaleX(-1);
+}
+
+/* A flush end has no corner between the toolbar and the options,
+   so nothing there to round. Follows the fillets to cancel them. */
+.radio-toggle-hover-menu-options-flush-start.floating-toolbar::before,
+.radio-toggle-hover-menu-options-flush-end.floating-toolbar::after {
+  content: none;
+}

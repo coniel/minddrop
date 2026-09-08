@@ -3,6 +3,7 @@ export * from './Calendar';
 export * from './Chip';
 export * from './ColorSelect';
 export * from './RadioToggleGroup';
+export * from './RadioToggleHoverMenu';
 export * from './Collapsible';
 export * from './Combobox';
 export * from './ConfirmationDialog';
