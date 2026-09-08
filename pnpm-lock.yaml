@@ -852,6 +852,9 @@ importers:
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives
+      '@minddrop/views':
+        specifier: workspace:*
+        version: link:../../packages/views
     devDependencies:
       '@minddrop/eslint-config':
         specifier: workspace:*
