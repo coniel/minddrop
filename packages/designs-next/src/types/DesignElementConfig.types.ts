@@ -44,6 +44,13 @@ export interface DesignElementConfig<
   propertyTypes?: PropertyType[];
 
   /**
+   * The property types the element is meant for, grouped ahead of
+   * the rest when picking the property it maps to. Omitted for
+   * elements which suit every type they accept.
+   */
+  suggestedPropertyTypes?: PropertyType[];
+
+  /**
    * Number of columns a newly inserted element spans.
    */
   defaultColumnSpan: number;
