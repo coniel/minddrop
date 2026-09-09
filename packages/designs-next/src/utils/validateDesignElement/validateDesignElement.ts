@@ -22,9 +22,7 @@ const heightModes: ElementHeightMode[] = [
 ];
 
 /**
- * Validates the shape of a design element read from disk: a typed
- * element ID, an element type, a whole-unit rect within positive
- * spans, a known width mode, and a natural height flag.
+ * Validates the shape of a design element read from disk.
  *
  * @param candidate - The parsed element value.
  * @returns Whether the candidate is a valid design element.
@@ -73,6 +71,14 @@ export function validateDesignElement(
   if (
     element.heightMode !== undefined &&
     !heightModes.includes(element.heightMode)
+  ) {
+    return false;
+  }
+
+  // The mapped property must be a non-empty name when present
+  if (
+    element.property !== undefined &&
+    (typeof element.property !== 'string' || element.property.length === 0)
   ) {
     return false;
   }

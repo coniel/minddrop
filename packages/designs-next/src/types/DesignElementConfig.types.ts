@@ -1,5 +1,6 @@
 import type { ComponentType } from 'react';
 import type { TranslationKey } from '@minddrop/i18n';
+import type { PropertyType } from '@minddrop/properties';
 import type { UiIconName } from '@minddrop/ui-icons';
 import { DesignElement, ElementWidthMode } from './DesignElement.types';
 import { DesignElementGroup } from './DesignElementGroup.types';
@@ -34,6 +35,13 @@ export interface DesignElementConfig<
    * The component rendering the element.
    */
   component: DesignElementComponent<TElement>;
+
+  /**
+   * The property types the element can render the value of, offered
+   * when picking the property it maps to. Omitted for elements which
+   * take no property.
+   */
+  propertyTypes?: PropertyType[];
 
   /**
    * Number of columns a newly inserted element spans.

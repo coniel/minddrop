@@ -46,6 +46,13 @@ export interface DesignElement {
   rowSpan: number;
 
   /**
+   * Name of the owning database's property the element takes its
+   * content from. Referenced by name since properties carry no
+   * stable ID. Absent when the element is unmapped.
+   */
+  property?: string;
+
+  /**
    * How the element's width behaves when the card resizes: fluid
    * elements scale with the card, fixed elements keep their unit
    * width and stay pinned to the given card edge, or hold their place

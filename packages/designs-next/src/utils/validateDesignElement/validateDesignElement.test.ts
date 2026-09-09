@@ -65,4 +65,19 @@ describe('validateDesignElement', () => {
       }),
     ).toBe(false);
   });
+
+  it('accepts a mapped property name', () => {
+    expect(
+      validateDesignElement({ ...coverDesignElement, property: 'Title' }),
+    ).toBe(true);
+  });
+
+  it('rejects an empty or non-string property name', () => {
+    expect(validateDesignElement({ ...coverDesignElement, property: '' })).toBe(
+      false,
+    );
+    expect(validateDesignElement({ ...coverDesignElement, property: 3 })).toBe(
+      false,
+    );
+  });
 });
