@@ -8,6 +8,8 @@ const CompanionSuffixes = ['.test.ts', '.test.tsx', '.stories.tsx', '.css'];
  * Requires a file and its companions (tests, stories, CSS) to be
  * wrapped together in a directory named after the file, and a file
  * without companions to sit unwrapped in its parent directory.
+ * Exempts sidecar components, which sit flat inside the directory of
+ * the component they belong to.
  *
  * @type {import("eslint").Rule.RuleModule}
  */
@@ -66,6 +68,14 @@ export const companionDirectory = {
       return CompanionSuffixes.some((suffix) => name === base + suffix);
     }
 
+    /**
+     * Checks whether a sibling is the file the parent directory is
+     * named after, making the directory that file's wrapper.
+     */
+    function isWrapped(name) {
+      return name === `${dirName}.ts` || name === `${dirName}.tsx`;
+    }
+
     return {
       Program(node) {
         const siblings = readSiblings();
@@ -82,6 +92,13 @@ export const companionDirectory = {
             context.report({ node, messageId: 'soloDirectory' });
           }
 
+          return;
+        }
+
+        // A sidecar component and its companions sit flat inside the
+        // directory of the component they belong to, which is
+        // already their wrapper.
+        if (siblings.some((entry) => entry.isFile() && isWrapped(entry.name))) {
           return;
         }
 
