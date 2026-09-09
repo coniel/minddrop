@@ -8,6 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuSwitchItem,
   IconButton,
+  IconButtonColor,
 } from '@minddrop/ui-primitives';
 import { ImageDimming, Theme, ThemeVariant } from '@minddrop/ui-theme';
 
@@ -20,11 +21,21 @@ const variantIcons: Record<string, UiIconName> = {
   system: 'monitor',
 };
 
+export interface ThemeVariantPickerProps {
+  /**
+   * The colour of the trigger button's icon.
+   * @default 'neutral'
+   */
+  color?: IconButtonColor;
+}
+
 /**
  * Renders a dropdown menu for selecting the theme variant
  * (light, dark, or system) and how images are treated in dark mode.
  */
-export const ThemeVariantPicker: React.FC = () => {
+export const ThemeVariantPicker: React.FC<ThemeVariantPickerProps> = ({
+  color,
+}) => {
   // Get the current variant setting and resolve it
   const variant = Theme.useVariant();
   const resolvedVariant = Theme.resolveVariant(variant);
@@ -41,7 +52,13 @@ export const ThemeVariantPicker: React.FC = () => {
 
   return (
     <DropdownMenu
-      trigger={<IconButton icon={triggerIcon} label="theme.appearance.label" />}
+      trigger={
+        <IconButton
+          icon={triggerIcon}
+          color={color}
+          label="theme.appearance.label"
+        />
+      }
     >
       <DropdownMenuRadioGroup
         value={variant}

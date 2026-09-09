@@ -22,6 +22,7 @@ import {
 } from '@minddrop/feature-spaces';
 import { initializeTagsFeature } from '@minddrop/feature-tags';
 import { initializeViewsFeature } from '@minddrop/feature-views';
+import { initializeWorkspacesFeature } from '@minddrop/feature-workspaces';
 import { Fs } from '@minddrop/file-system';
 import { I18n, initializeI18n } from '@minddrop/i18n';
 import { Queries } from '@minddrop/queries';
@@ -110,6 +111,7 @@ async function runInitialization(): Promise<void> {
   initializeQueriesFeature();
   initializeSettingsFeature();
   initializeTagsFeature();
+  initializeWorkspacesFeature();
 
   // Initialize workspaces (sets Paths.workspace and
   // Paths.workspaceConfigs from the active workspace)

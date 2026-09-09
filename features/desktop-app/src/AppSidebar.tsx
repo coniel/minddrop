@@ -9,6 +9,7 @@ import { OpenSearchDialogEvent } from '@minddrop/feature-search';
 import { OpenSettingsEvent, SettingsIcon } from '@minddrop/feature-settings';
 import { SpacesMenuItem } from '@minddrop/feature-spaces';
 import { TagsMenuItem } from '@minddrop/feature-tags';
+import { WorkspaceSwitcher } from '@minddrop/feature-workspaces';
 import { SidebarGroup, ThemeVariantPicker } from '@minddrop/ui-components';
 import { Spacer, Toolbar, ToolbarIconButton } from '@minddrop/ui-primitives';
 
@@ -32,6 +33,14 @@ export const AppSidebar: React.FC = () => {
   return (
     <>
       <Toolbar>
+        <ThemeVariantPicker color="muted" />
+        <ToolbarIconButton
+          icon={SettingsIcon}
+          color="muted"
+          label="settings.open"
+          tooltip={{ title: 'settings.open' }}
+          onClick={handleOpenSettings}
+        />
         <ToolbarIconButton
           icon={Designs.constants.Icon}
           color="muted"
@@ -56,15 +65,7 @@ export const AppSidebar: React.FC = () => {
         <TagsMenuItem />
       </SidebarGroup>
       <DatabasesSidebarMenu />
-      <Toolbar className="sidebar-bottom-toolbar">
-        <ThemeVariantPicker />
-        <ToolbarIconButton
-          icon={SettingsIcon}
-          label="settings.open"
-          tooltip={{ title: 'settings.open' }}
-          onClick={handleOpenSettings}
-        />
-      </Toolbar>
+      <WorkspaceSwitcher className="sidebar-bottom-toolbar" />
     </>
   );
 };
