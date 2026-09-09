@@ -15,6 +15,7 @@ import {
 } from '../../utils';
 import { writeEntryMetadata } from '../../writeEntryMetadata';
 import { SCHEMA_SQL, SCHEMA_VERSION } from '../schema';
+import { sqlDeleteDatabase } from '../sqlDeleteDatabase';
 import { sqlGetAllDatabases } from '../sqlGetAllDatabases';
 import { sqlGetAllEntriesFull } from '../sqlGetAllEntriesFull';
 import { sqlUpsertDatabase } from '../sqlUpsertDatabase';
@@ -74,16 +75,27 @@ export async function initializeDatabasesBackend(
     version: SCHEMA_VERSION,
   });
 
+  // The databases the index holds, as of the last session
+  const indexedDatabases = sqlGetAllDatabases();
+
   // Read database configs from the workspace, passing the recorded
   // paths so that a copied database directory rather than the
   // original is the one given a fresh ID. Empty on a schema rebuild,
   // leaving the scan order to decide.
   const databases = await readWorkspaceDatabases(
     workspacePath,
-    new Map(
-      sqlGetAllDatabases().map((database) => [database.id, database.path]),
-    ),
+    new Map(indexedDatabases.map((database) => [database.id, database.path])),
   );
+
+  // Drop the databases deleted since the last session, whose entries
+  // would otherwise be served from the index with no database to
+  // resolve them against. Their entry records go with them, through
+  // the foreign key's cascade.
+  const scannedIds = new Set<string>(databases.map((database) => database.id));
+
+  indexedDatabases
+    .filter((database) => !scannedIds.has(database.id))
+    .forEach((database) => sqlDeleteDatabase(database.id, { silent: true }));
 
   // On schema change (new DB or version mismatch), populate
   // SQL from the filesystem. Otherwise trust SQL as the cache
