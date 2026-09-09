@@ -7,7 +7,6 @@ import React, {
 } from 'react';
 import { Databases } from '@minddrop/databases';
 import { DesignType, Designs } from '@minddrop/designs-next';
-import { Events } from '@minddrop/events';
 import { DesignEditor } from '@minddrop/ui-designs-next';
 import { SortableList } from '@minddrop/ui-drag-and-drop';
 import {
@@ -53,7 +52,6 @@ export const DatabaseDesignMode: React.FC<DatabaseDesignModeProps> = ({
   const unsortedDesigns = Designs.useAll(databaseId);
   const subview = Views.useSubview();
   const setSubview = Views.useSetSubview();
-  const sessionId = Views.useSession();
 
   // Sort designs according to the config's design ID list, placing
   // designs missing from it after the ordered ones by creation date.
@@ -71,26 +69,6 @@ export const DatabaseDesignMode: React.FC<DatabaseDesignModeProps> = ({
   const [tabActiveDesignId, setTabActiveDesignId] = useTransientState<
     string | null
   >('activeDesignId', null);
-
-  // Show the elements palette in place of the app sidebar while in
-  // design mode. Set and cleared explicitly rather than through
-  // `Views.useSlot`, since design mode is a subview of the database
-  // view and shares its session: leaving it must give the sidebar
-  // back to the database view.
-  useEffect(() => {
-    Events.dispatch(Views.events.SetSlot, {
-      sessionId: sessionId ?? undefined,
-      slotId: 'sidebar',
-      fill: Designs.constants.ElementsPaletteSidebarId,
-    });
-
-    return () => {
-      Events.dispatch(Views.events.ClearSlot, {
-        sessionId: sessionId ?? undefined,
-        slotId: 'sidebar',
-      });
-    };
-  }, [sessionId]);
 
   // Track which design's menu is open and its anchor element, and
   // the newly added design whose menu opens once its tab renders.

@@ -1,7 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DesignElement } from '@minddrop/designs-next';
 import { DesignElementConfigs } from '@minddrop/designs-next';
-import { Designs } from '@minddrop/designs-next';
 import {
   cardColumns,
   cardRows,
@@ -12,9 +11,7 @@ import {
   DesignElementConfigsStore,
   testElementConfig,
 } from '@minddrop/designs-next/test-utils';
-import { Selection } from '@minddrop/selection';
 import {
-  createDataTransfer,
   fireEvent,
   render,
   screen,
@@ -77,41 +74,6 @@ function renderEditor(selectedId: string | null = null, resizable = false) {
   );
 
   return container;
-}
-
-/**
- * Creates the data transfer of a palette drag carrying element types.
- *
- * @param types - The element types being dragged.
- * @returns The data transfer.
- */
-function createElementTypesTransfer(...types: string[]) {
-  return createDataTransfer({
-    [Selection.toMimeType(Designs.constants.ElementTypesDataKey)]:
-      JSON.stringify(types.map((type) => ({ type }))),
-  });
-}
-
-/**
- * Drops onto the editor surface at a screen point. Built by hand
- * since the test environment's drop events carry no coordinates.
- *
- * @param container - The render container.
- * @param clientX - The drop's horizontal screen position.
- * @param clientY - The drop's vertical screen position.
- * @param dataTransfer - The dropped data.
- */
-function dropOnSurface(
-  container: HTMLElement,
-  clientX: number,
-  clientY: number,
-  dataTransfer: DataTransfer,
-) {
-  const event = new Event('drop', { bubbles: true, cancelable: true });
-
-  Object.assign(event, { clientX, clientY, dataTransfer });
-
-  fireEvent(container.querySelector('.design-block-editor')!, event);
 }
 
 /**
@@ -769,37 +731,14 @@ describe('DesignBlockEditor', () => {
     expect(resizedTitle?.rowSpan).toBe(titleDesignElement.rowSpan + 2);
   });
 
-  it('inserts dropped element types on the grid square dropped on', () => {
+  it('grows the surface to fit an inserted element', async () => {
     const container = renderEditor(null, true);
 
-    dropOnSurface(
-      container,
-      45,
-      27,
-      createElementTypesTransfer(testElementConfig.type),
-    );
+    // Mark the last square above the surface's bottom edge, clear of
+    // the grid line opening it.
+    clickSurface(container, 2, (cardRows - 2) * 10 + 2);
 
-    const inserted = changedElements?.[changedElements.length - 1];
-
-    expect(changedElements).toHaveLength(designElements.length + 1);
-    expect(inserted?.type).toBe(testElementConfig.type);
-    // 4.5 and 2.7 units land in the square at column 4, row 2
-    expect(inserted?.column).toBe(4);
-    expect(inserted?.row).toBe(2);
-    expect(selectedElementId).toBe(inserted?.id);
-  });
-
-  it('grows the surface to fit a dropped element', () => {
-    const container = renderEditor(null, true);
-
-    // Drop inside the last square above the surface's bottom edge,
-    // clear of the grid line opening it.
-    dropOnSurface(
-      container,
-      2,
-      (cardRows - 2) * 10 + 2,
-      createElementTypesTransfer(testElementConfig.type),
-    );
+    await userEvent.click(screen.getByText('Box'));
 
     const inserted = changedElements?.[changedElements.length - 1];
 
@@ -807,15 +746,12 @@ describe('DesignBlockEditor', () => {
     expect(changedRows).toBe(cardRows - 2 + testElementConfig.defaultRowSpan);
   });
 
-  it('keeps dropped elements inside a fixed-height surface', () => {
+  it('keeps an inserted element inside a fixed-height surface', async () => {
     const container = renderEditor();
 
-    dropOnSurface(
-      container,
-      cardColumns * 10,
-      cardRows * 10,
-      createElementTypesTransfer(testElementConfig.type),
-    );
+    clickSurface(container, cardColumns * 10, cardRows * 10);
+
+    await userEvent.click(screen.getByText('Box'));
 
     const inserted = changedElements?.[changedElements.length - 1];
 
@@ -824,19 +760,6 @@ describe('DesignBlockEditor', () => {
     );
     expect(inserted?.row).toBe(cardRows - testElementConfig.defaultRowSpan);
     expect(changedRows).toBeNull();
-  });
-
-  it('ignores drops of other data', () => {
-    const container = renderEditor();
-
-    dropOnSurface(
-      container,
-      0,
-      0,
-      createDataTransfer({ 'text/plain': 'hello' }),
-    );
-
-    expect(changedElements).toBeNull();
   });
 
   it('shows the grid overlay above other blocks during element drags', () => {

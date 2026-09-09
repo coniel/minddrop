@@ -2166,6 +2166,7 @@ declare module 'i18next' {
             previewWidth: string;
             toggleTheme: string;
             insertElement: string;
+            noMatchingElements: string;
             widths: {
               narrow: string;
               narrowShort: string;
@@ -2242,10 +2243,6 @@ declare module 'i18next' {
               label: string;
               placeholder: string;
             };
-          };
-          palette: {
-            search: string;
-            empty: string;
           };
         };
         onboarding: {
@@ -2385,6 +2382,13 @@ declare module 'i18next' {
         desktopApp: {
           labels: {
             library: string;
+          };
+          gridPrototype: {
+            open: string;
+          };
+          blockEditorHarness: {
+            open: string;
+            title: string;
           };
         };
         search: {

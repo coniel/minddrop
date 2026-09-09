@@ -91,15 +91,3 @@ export const SnapPresets = [1, 2, 4];
  * The element palette groups in display order.
  */
 export const DesignElementGroups: DesignElementGroup[] = ['content', 'layout'];
-
-/**
- * The drag data key under which element types are carried when
- * dragged from a palette onto a design.
- */
-export const DesignElementTypesDataKey = 'designs-next-element-types';
-
-/**
- * The id of the sidebar fill showing the elements palette while a
- * design is being edited.
- */
-export const ElementsPaletteSidebarId = 'designs-next:sidebar:elements-palette';

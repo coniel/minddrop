@@ -3,12 +3,10 @@ import {
   ApplyElementDragOptions,
   DesignElement,
   DesignElementConfigs,
-  DesignElementTypeTransferData,
   Designs,
   ElementDragMode,
 } from '@minddrop/designs-next';
-import { Selection } from '@minddrop/selection';
-import { getTransferData, useDeleteKey, useModKeyHeld } from '@minddrop/utils';
+import { useDeleteKey, useModKeyHeld } from '@minddrop/utils';
 import { DesignElementInsertMenu } from '../DesignElementInsertMenu';
 import { resolveElementClass } from '../utils';
 import './DesignBlockEditor.css';
@@ -160,9 +158,6 @@ const ResizeHandles: ElementDragMode[] = [
   'resize-bottom-right',
 ];
 
-// The drag data types the surface accepts drops of
-const AcceptedDropTypes = [Designs.constants.ElementTypesDataKey];
-
 // How long a press is held before it counts as a drag and brings
 // the grid over the blocks, in milliseconds. Keeps a press which
 // only selects a block from flashing the grid over the design.
@@ -172,10 +167,9 @@ const DragEngageDelay = 160;
  * Renders the block editor surface: the design's unit grid with a
  * draggable block per element. Moving snaps the element's edges onto
  * the snap grid, resizing snaps the drag delta, and grid lines draw
- * at the snap resolution. Element types dropped onto the surface are
- * inserted at the drop point, and marking out an area of the grid
- * offers the element types in a menu, inserting the picked one on
- * that area. A press which marks a single square inserts the element
+ * at the snap resolution. Marking out an area of the grid offers the
+ * element types in a menu, inserting the picked one on that area. A
+ * press which marks a single square inserts the element
  * at its type's default size instead. A right click anchors the area
  * instead of holding a button down, stretching it on pointer moves
  * alone until a click commits it. Holding the mod key brings the grid
@@ -204,7 +198,6 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
   const insertPendingRef = useRef(false);
   const [draggedElementId, setDraggedElementId] = useState<string | null>(null);
   const [dragEngaged, setDragEngaged] = useState(false);
-  const [dropping, setDropping] = useState(false);
   const [insertArea, setInsertArea] = useState<GridArea | null>(null);
   const [insertAnchor, setInsertAnchor] = useState<GridPoint | null>(null);
   const [insertMenuOpen, setInsertMenuOpen] = useState(false);
@@ -220,7 +213,7 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
 
   // Whether the grid is drawn over the blocks, which an engaged
   // drag, an accepted drop and the held mod key each call for.
-  const gridOverBlocks = dragEngaged || dropping || gridInFront;
+  const gridOverBlocks = dragEngaged || gridInFront;
 
   // Engage a press as a drag once it has been held, so a press which
   // only selects a block never brings the grid up. A press which
@@ -296,18 +289,6 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
     return {
       column: resolveGridUnits(offsetX - lineWidth, unitSize, snap),
       row: resolveGridUnits(offsetY - lineWidth, unitSize, snap),
-    };
-  }
-
-  // Converts a screen position into the surface's own coordinate
-  // space, for the events which carry no offset within the surface.
-  function resolveSurfaceOffset(clientX: number, clientY: number) {
-    const rect = rootRef.current?.getBoundingClientRect();
-    const unitScreenSize = measureUnitScreenSize();
-
-    return {
-      offsetX: ((clientX - (rect?.left ?? 0)) / unitScreenSize) * unitSize,
-      offsetY: ((clientY - (rect?.top ?? 0)) / unitScreenSize) * unitSize,
     };
   }
 
@@ -523,59 +504,6 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
     onDragEnd?.();
   }
 
-  // Accepts element type drags over the surface, showing the grid
-  function handleDragOver(event: React.DragEvent<HTMLDivElement>) {
-    if (!Selection.dragContainsType(event, AcceptedDropTypes)) {
-      return;
-    }
-
-    event.preventDefault();
-    setDropping(true);
-  }
-
-  function handleDragLeave() {
-    setDropping(false);
-  }
-
-  // Inserts the dropped element types at the drop point
-  function handleDrop(event: React.DragEvent<HTMLDivElement>) {
-    setDropping(false);
-
-    if (!Selection.dragContainsType(event, AcceptedDropTypes)) {
-      return;
-    }
-
-    event.preventDefault();
-
-    const dropped =
-      getTransferData<Record<string, DesignElementTypeTransferData[]>>(event)[
-        Designs.constants.ElementTypesDataKey
-      ] ?? [];
-
-    if (dropped.length === 0) {
-      return;
-    }
-
-    // Drops land on whichever block is under the pointer, so the
-    // drop point comes from the screen position rather than from an
-    // offset within the surface.
-    const { offsetX, offsetY } = resolveSurfaceOffset(
-      event.clientX,
-      event.clientY,
-    );
-
-    const point = resolveGridPoint(offsetX, offsetY);
-
-    insertElements(
-      dropped.map(({ type }) => type),
-      {
-        ...point,
-        columnSpan: snap,
-        rowSpan: snap,
-      },
-    );
-  }
-
   // Whether an event landed on the grid rather than on a block. The
   // overlay held in front of the blocks covers the surface exactly,
   // so a position on it is a position on the surface.
@@ -756,9 +684,6 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
       onPointerLeave={handleGridPointerLeave}
       onClick={handleGridClick}
       onContextMenu={handleGridContextMenu}
-      onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
-      onDrop={handleDrop}
     >
       {elements.map((element) => (
         <div

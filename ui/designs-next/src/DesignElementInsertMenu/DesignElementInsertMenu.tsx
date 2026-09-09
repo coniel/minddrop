@@ -91,7 +91,7 @@ export const DesignElementInsertMenu: React.FC<
             render={
               <SearchableMenu
                 searchPlaceholder="designsNext.editor.insertElement"
-                emptyText={t('designsNext.palette.empty')}
+                emptyText={t('designsNext.editor.noMatchingElements')}
               >
                 {Designs.constants.ElementGroups.map(renderGroup)}
               </SearchableMenu>
