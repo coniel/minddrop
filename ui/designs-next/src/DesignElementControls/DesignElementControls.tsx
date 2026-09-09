@@ -113,10 +113,10 @@ const WidthModeOptions: ElementModeOption<ElementWidthMode>[] = [
     side: 'left',
   },
   {
-    mode: 'fixed-center',
+    mode: 'fixed-proportional',
     icon: 'align-horizontal-space-around',
-    label: 'designsNext.widthMode.centered',
-    description: 'designsNext.widthMode.centeredDescription',
+    label: 'designsNext.widthMode.proportional',
+    description: 'designsNext.widthMode.proportionalDescription',
   },
   {
     mode: 'fixed-right',
@@ -139,10 +139,10 @@ const HeightModeOptions: ElementModeOption<ElementHeightMode>[] = [
     side: 'top',
   },
   {
-    mode: 'fixed-center',
+    mode: 'fixed-proportional',
     icon: 'align-vertical-space-around',
-    label: 'designsNext.heightMode.centered',
-    description: 'designsNext.heightMode.centeredDescription',
+    label: 'designsNext.heightMode.proportional',
+    description: 'designsNext.heightMode.proportionalDescription',
   },
   {
     mode: 'fixed-bottom',

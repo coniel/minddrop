@@ -6,13 +6,13 @@ export type ElementWidthMode =
   | 'fluid'
   | 'fixed-left'
   | 'fixed-right'
-  | 'fixed-center';
+  | 'fixed-proportional';
 
 export type ElementHeightMode =
   | 'fluid'
   | 'fixed-top'
   | 'fixed-bottom'
-  | 'fixed-center';
+  | 'fixed-proportional';
 
 export interface DesignElement {
   /**
@@ -48,8 +48,9 @@ export interface DesignElement {
   /**
    * How the element's width behaves when the card resizes: fluid
    * elements scale with the card, fixed elements keep their unit
-   * width and stay pinned to the given card edge (or centered) while
-   * the gaps on their unpinned sides absorb the extra space.
+   * width and stay pinned to the given card edge, or hold their place
+   * proportionally between both, while the gaps on their unpinned
+   * sides absorb the extra space.
    */
   widthMode: ElementWidthMode;
 
@@ -63,9 +64,9 @@ export interface DesignElement {
   /**
    * How the element's height behaves in an aspect-locked design:
    * fluid elements scale with the card's height, fixed elements keep
-   * their unit height and stay pinned to the given card edge (or
-   * centered). Absent means fluid. Ignored outside aspect-locked
-   * designs.
+   * their unit height and stay pinned to the given card edge, or hold
+   * their place proportionally between both. Absent means fluid.
+   * Ignored outside aspect-locked designs.
    */
   heightMode?: ElementHeightMode;
 }

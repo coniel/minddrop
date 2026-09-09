@@ -63,9 +63,9 @@ describe('resolveScalingRows', () => {
     expect(scaling[26]).toBe(false);
   });
 
-  it('scales both gaps of a centered element as a fallback', () => {
+  it('scales both gaps of a proportional element as a fallback', () => {
     const scaling = resolveScalingRows(
-      [{ ...topElement, row: 13, heightMode: 'fixed-center' }],
+      [{ ...topElement, row: 13, heightMode: 'fixed-proportional' }],
       32,
     );
 

@@ -11,8 +11,8 @@
       "label": "Width",
       "fluid": "Fluid width",
       "fluidDescription": "Absorbs the design's extra width. Gaps in line with this element become fixed width.",
-      "centered": "Centered",
-      "centeredDescription": "Fixed width. Maintains its position relative to the left and right edges."
+      "proportional": "Proportional",
+      "proportionalDescription": "Fixed width. Maintains its position relative to the left and right edges."
     },
     "naturalHeight": "Natural height",
     "editor": {
@@ -57,8 +57,8 @@
       "label": "Height",
       "fluid": "Fluid height",
       "fluidDescription": "Absorbs the design's extra height. Gaps in line with this element become fixed height.",
-      "centered": "Centered",
-      "centeredDescription": "Fixed height. Maintains its position relative to the top and bottom edges."
+      "proportional": "Proportional",
+      "proportionalDescription": "Fixed height. Maintains its position relative to the top and bottom edges."
     },
     "pin": {
       "label": {

@@ -98,21 +98,21 @@ describe('resolveElementRect', () => {
     expect(rect.width).toBe(secondElement.columnSpan * UnitPixelSize);
   });
 
-  it('keeps a symmetrically placed centered element centered', () => {
-    const centeredElement = {
+  it('keeps a symmetrically placed proportional element in place', () => {
+    const proportionalElement = {
       ...iconDesignElement,
-      widthMode: 'fixed-center' as const,
+      widthMode: 'fixed-proportional' as const,
       column: 21,
     };
     const rect = resolveElementRect(
-      centeredElement,
-      [centeredElement],
+      proportionalElement,
+      [proportionalElement],
       cardColumns,
       480,
     );
 
     // Both side gaps absorb the space equally
-    expect(rect.width).toBe(centeredElement.columnSpan * UnitPixelSize);
+    expect(rect.width).toBe(proportionalElement.columnSpan * UnitPixelSize);
     expect(rect.left).toBeCloseTo((480 - rect.width) / 2);
   });
 

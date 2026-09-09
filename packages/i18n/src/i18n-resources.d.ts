@@ -2153,8 +2153,8 @@ declare module 'i18next' {
             label: string;
             fluid: string;
             fluidDescription: string;
-            centered: string;
-            centeredDescription: string;
+            proportional: string;
+            proportionalDescription: string;
           };
           naturalHeight: string;
           editor: {
@@ -2199,8 +2199,8 @@ declare module 'i18next' {
             label: string;
             fluid: string;
             fluidDescription: string;
-            centered: string;
-            centeredDescription: string;
+            proportional: string;
+            proportionalDescription: string;
           };
           pin: {
             label: {

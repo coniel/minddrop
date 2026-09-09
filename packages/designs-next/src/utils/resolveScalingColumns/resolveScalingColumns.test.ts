@@ -56,9 +56,9 @@ describe('resolveScalingColumns', () => {
     expect(scaling[46]).toBe(false);
   });
 
-  it('scales both gaps of a centered element as a fallback', () => {
+  it('scales both gaps of a proportional element as a fallback', () => {
     const scaling = resolveScalingColumns(
-      [{ ...iconDesignElement, widthMode: 'fixed-center', column: 20 }],
+      [{ ...iconDesignElement, widthMode: 'fixed-proportional', column: 20 }],
       48,
     );
 
@@ -108,14 +108,14 @@ describe('resolveScalingColumns', () => {
   });
 
   it('lets the gap absorb between differently pinned elements', () => {
-    // A left-pinned element followed by a centered one
-    const centeredElement: DesignElement = {
+    // A left-pinned element followed by a proportional one
+    const proportionalElement: DesignElement = {
       ...iconDesignElement,
-      widthMode: 'fixed-center',
+      widthMode: 'fixed-proportional',
       column: 20,
     };
     const scaling = resolveScalingColumns(
-      [fixedLeftElement, centeredElement],
+      [fixedLeftElement, proportionalElement],
       48,
     );
 

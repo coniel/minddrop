@@ -59,11 +59,11 @@ export function resolveScalingRows(
       heightMode === 'fixed-top' &&
       resolveHeightMode(resolveElementBelow(element, elements)) === 'fixed-top';
 
-    // Pinned top or centered: the gap below the element absorbs the
+    // Pinned top or proportional: the gap below the element absorbs the
     // space.
     if (
       !chainsTop &&
-      (heightMode === 'fixed-top' || heightMode === 'fixed-center')
+      (heightMode === 'fixed-top' || heightMode === 'fixed-proportional')
     ) {
       for (
         let row = element.row + element.rowSpan;
@@ -82,11 +82,11 @@ export function resolveScalingRows(
       resolveHeightMode(resolveElementAbove(element, elements)) ===
         'fixed-bottom';
 
-    // Pinned bottom or centered: the gap above the element absorbs
+    // Pinned bottom or proportional: the gap above the element absorbs
     // the space.
     if (
       !chainsBottom &&
-      (heightMode === 'fixed-bottom' || heightMode === 'fixed-center')
+      (heightMode === 'fixed-bottom' || heightMode === 'fixed-proportional')
     ) {
       for (let row = element.row - 1; row >= 0 && !occupied[row]; row -= 1) {
         scaling[row] = true;

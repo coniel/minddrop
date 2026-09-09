@@ -55,12 +55,12 @@ export function resolveScalingColumns(
       element.widthMode === 'fixed-left' &&
       resolveNextElement(element, elements)?.widthMode === 'fixed-left';
 
-    // Pinned left or centered: the gap to the element's right absorbs
+    // Pinned left or proportional: the gap to the element's right absorbs
     // the space.
     if (
       !chainsLeft &&
       (element.widthMode === 'fixed-left' ||
-        element.widthMode === 'fixed-center')
+        element.widthMode === 'fixed-proportional')
     ) {
       for (
         let column = element.column + element.columnSpan;
@@ -78,12 +78,12 @@ export function resolveScalingColumns(
       element.widthMode === 'fixed-right' &&
       resolvePreviousElement(element, elements)?.widthMode === 'fixed-right';
 
-    // Pinned right or centered: the gap to the element's left absorbs
+    // Pinned right or proportional: the gap to the element's left absorbs
     // the space.
     if (
       !chainsRight &&
       (element.widthMode === 'fixed-right' ||
-        element.widthMode === 'fixed-center')
+        element.widthMode === 'fixed-proportional')
     ) {
       for (
         let column = element.column - 1;

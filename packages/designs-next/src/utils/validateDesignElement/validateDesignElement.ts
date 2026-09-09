@@ -10,7 +10,7 @@ const widthModes: ElementWidthMode[] = [
   'fluid',
   'fixed-left',
   'fixed-right',
-  'fixed-center',
+  'fixed-proportional',
 ];
 
 // The height modes an element may declare
@@ -18,7 +18,7 @@ const heightModes: ElementHeightMode[] = [
   'fluid',
   'fixed-top',
   'fixed-bottom',
-  'fixed-center',
+  'fixed-proportional',
 ];
 
 /**
