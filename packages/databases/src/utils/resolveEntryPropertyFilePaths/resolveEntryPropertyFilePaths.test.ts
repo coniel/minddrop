@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
   cleanup,
+  databaseDirPath,
   objectEntry1,
   rootStorageDatabase,
   rootStorageEntry1,
@@ -17,7 +18,7 @@ describe('resolveEntryPropertyFilePaths', () => {
   it("returns the paths of the entry's file-based property files", () => {
     // The root storage entry has an Image property with a file value
     expect(resolveEntryPropertyFilePaths(rootStorageEntry1.id)).toEqual([
-      `${rootStorageDatabase.path}/image.png`,
+      `${databaseDirPath(rootStorageDatabase)}/image.png`,
     ]);
   });
 

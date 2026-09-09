@@ -21,7 +21,9 @@ export interface DatabaseEntry<TProperties extends PropertyMap = PropertyMap> {
   database: DatabaseId;
 
   /**
-   * Absolute path to the entry's primary file.
+   * Path to the entry's primary file, relative to its database
+   * directory. Can be resolved to a file system path with
+   * `resolveDatabaseEntryPath`.
    */
   path: string;
 

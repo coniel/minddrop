@@ -1,10 +1,10 @@
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
-import { Paths } from '@minddrop/utils';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabaseRenamedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
 import { Database } from '../types';
+import { resolveDatabasePath } from '../utils';
 import { writeDatabaseConfig } from '../writeDatabaseConfig';
 
 /**
@@ -27,16 +27,18 @@ export async function renameDatabase(
   // Get the current database config
   const database = getDatabase(id);
 
-  // Derive the new directory path from the new name
-  const newPath = Fs.concatPath(Paths.workspace, newName);
+  // Databases live at the workspace root, so the new name is the
+  // database's new workspace relative path.
+  const newPath = newName;
+  const newDirPath = resolveDatabasePath(newPath);
 
   // Ensure no database already exists at the new path
-  if (await Fs.exists(newPath)) {
+  if (await Fs.exists(newDirPath)) {
     throw new Fs.errors.PathConflict(newPath);
   }
 
   // Rename the database directory on the file system
-  await Fs.rename(database.path, newPath);
+  await Fs.rename(resolveDatabasePath(database), newDirPath);
 
   // Build the renamed database with the new name and path
   const renamedDatabase: Database = {

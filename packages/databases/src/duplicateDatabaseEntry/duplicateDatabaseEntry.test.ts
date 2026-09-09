@@ -9,6 +9,8 @@ import {
   cleanup,
   commonStorageDatabase,
   commonStorageEntry1,
+  databaseDirPath,
+  databaseEntryFilePath,
   entryStorageDatabase,
   entryStorageEntry1,
   mockDate,
@@ -19,6 +21,7 @@ import {
   setup,
 } from '../test-utils';
 import { DatabaseEntryMetadata } from '../types';
+import { resolveDatabaseEntryPath } from '../utils';
 import { duplicateDatabaseEntry } from './duplicateDatabaseEntry';
 
 describe('duplicateDatabaseEntry', () => {
@@ -40,7 +43,9 @@ describe('duplicateDatabaseEntry', () => {
     expect(duplicate.id).not.toBe(objectEntry1.id);
     expect(duplicate.title).toBe('Test Entry 1');
     // The duplicate's file should be written next to the source file
-    expect(MockFs.exists(`${objectDatabase.path}/Test Entry 1.md`)).toBe(true);
+    expect(
+      MockFs.exists(`${databaseDirPath(objectDatabase)}/Test Entry 1.md`),
+    ).toBe(true);
     // The duplicate should be in the store
     expect(DatabaseEntriesStore).toHaveItem(duplicate.id);
   });
@@ -51,7 +56,9 @@ describe('duplicateDatabaseEntry', () => {
     // The duplicate records the entry it was made from
     expect(duplicate.duplicatedFrom).toBe(objectEntry1.id);
     // The mark is session state, kept out of the entry file
-    expect(MockFs.readTextFile(duplicate.path)).not.toContain('duplicatedFrom');
+    expect(
+      MockFs.readTextFile(resolveDatabaseEntryPath(duplicate)),
+    ).not.toContain('duplicatedFrom');
   });
 
   it('leaves the source entry intact', async () => {
@@ -59,7 +66,7 @@ describe('duplicateDatabaseEntry', () => {
 
     // The source entry and its file should be untouched
     expect(DatabaseEntriesStore).toHaveItem(objectEntry1.id, objectEntry1);
-    expect(MockFs.exists(objectEntry1.path)).toBe(true);
+    expect(MockFs.exists(databaseEntryFilePath(objectEntry1))).toBe(true);
   });
 
   it('copies simple property values onto the duplicate', async () => {
@@ -83,9 +90,13 @@ describe('duplicateDatabaseEntry', () => {
 
     // The file should be copied with an incremented name
     expect(duplicate.properties.Image).toBe('image 1.png');
-    expect(MockFs.exists(`${rootStorageDatabase.path}/image 1.png`)).toBe(true);
+    expect(
+      MockFs.exists(`${databaseDirPath(rootStorageDatabase)}/image 1.png`),
+    ).toBe(true);
     // The source file should remain in place
-    expect(MockFs.exists(`${rootStorageDatabase.path}/image.png`)).toBe(true);
+    expect(
+      MockFs.exists(`${databaseDirPath(rootStorageDatabase)}/image.png`),
+    ).toBe(true);
   });
 
   it('copies property files into shared property directories', async () => {
@@ -96,7 +107,7 @@ describe('duplicateDatabaseEntry', () => {
     expect(duplicate.properties.Image).toBe('image 1.png');
     expect(
       MockFs.exists(
-        `${commonStorageDatabase.path}/${commonStorageDatabase.propertyFilesDir}/image 1.png`,
+        `${databaseDirPath(commonStorageDatabase)}/${commonStorageDatabase.propertyFilesDir}/image 1.png`,
       ),
     ).toBe(true);
   });
@@ -110,14 +121,14 @@ describe('duplicateDatabaseEntry', () => {
     expect(duplicate.properties.Image).toBe('image.png');
     expect(
       MockFs.exists(
-        `${entryStorageDatabase.path}/Entry Storage Entry 1 1/image.png`,
+        `${databaseDirPath(entryStorageDatabase)}/Entry Storage Entry 1 1/image.png`,
       ),
     ).toBe(true);
   });
 
   it('skips file based properties whose source file is missing', async () => {
     // Remove the source entry's stored image file
-    MockFs.removeFile(`${rootStorageDatabase.path}/image.png`);
+    MockFs.removeFile(`${databaseDirPath(rootStorageDatabase)}/image.png`);
 
     const duplicate = await duplicateDatabaseEntry(rootStorageEntry1.id);
 

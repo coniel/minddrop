@@ -7,6 +7,7 @@ import {
   StoredDatabaseEntryTemplate,
 } from '../types';
 import {
+  resolveDatabasePath,
   resolveEntryTemplateConfigFilePath,
   resolveEntryTemplatesDirPath,
 } from '../utils';
@@ -45,7 +46,8 @@ async function readDatabaseEntryTemplates(
   database: Database,
 ): Promise<DatabaseEntryTemplate[]> {
   // Path to the database's templates directory
-  const dirPath = resolveEntryTemplatesDirPath(database.path);
+  const databasePath = resolveDatabasePath(database);
+  const dirPath = resolveEntryTemplatesDirPath(databasePath);
 
   // The stored templates read from the templates directory, empty
   // for databases without one.
@@ -59,7 +61,7 @@ async function readDatabaseEntryTemplates(
     storedTemplates = (
       await Promise.all(
         templateDirs.map((templateDir) =>
-          readEntryTemplateConfig(database.path, templateDir.path),
+          readEntryTemplateConfig(databasePath, templateDir.path),
         ),
       )
     ).filter((template): template is StoredDatabaseEntryTemplate => !!template);

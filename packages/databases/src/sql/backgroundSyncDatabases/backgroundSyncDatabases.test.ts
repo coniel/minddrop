@@ -8,6 +8,8 @@ import {
   clearRecordedSqlStatements,
   collectionDatabase,
   collectionEntry1,
+  databaseDirPath,
+  databaseEntryFilePath,
   databaseEntrySqlRecords,
   databases,
   getRecordedSqlStatements,
@@ -136,7 +138,7 @@ describe('backgroundSyncDatabases', () => {
 
   it('drops references to entries deleted offline', async () => {
     // Remove a referenced entry's file as if deleted offline
-    MockFs.removeFile(relatedEntry2.path);
+    MockFs.removeFile(databaseEntryFilePath(relatedEntry2));
 
     await backgroundSyncDatabases(parentDir);
 
@@ -161,8 +163,8 @@ describe('backgroundSyncDatabases', () => {
     };
 
     await writeEntryMetadata(
-      collectionDatabase.path,
-      collectionEntry1.path,
+      databaseDirPath(collectionDatabase),
+      databaseEntryFilePath(collectionEntry1),
       metadata,
     );
 
@@ -175,7 +177,7 @@ describe('backgroundSyncDatabases', () => {
   });
 
   it("seeds a changed entry's sidecar with its stat derived timestamps", async () => {
-    MockFs.setFileStats(collectionEntry1.path, {
+    MockFs.setFileStats(databaseEntryFilePath(collectionEntry1), {
       created: statDate,
       lastModified: statDate,
     });
@@ -183,8 +185,8 @@ describe('backgroundSyncDatabases', () => {
     await backgroundSyncDatabases(parentDir);
 
     const metadata = await readEntryMetadata(
-      collectionDatabase.path,
-      collectionEntry1.path,
+      databaseDirPath(collectionDatabase),
+      databaseEntryFilePath(collectionEntry1),
     );
 
     expect(metadata.created).toEqual(statDate);
@@ -192,13 +194,17 @@ describe('backgroundSyncDatabases', () => {
   });
 
   it('keeps a seeded entry timestamps when its file is rewritten', async () => {
-    await writeEntryMetadata(collectionDatabase.path, collectionEntry1.path, {
-      created: sidecarDate,
-      lastModified: sidecarDate,
-    });
+    await writeEntryMetadata(
+      databaseDirPath(collectionDatabase),
+      databaseEntryFilePath(collectionEntry1),
+      {
+        created: sidecarDate,
+        lastModified: sidecarDate,
+      },
+    );
 
     // The rewrite replaced the inode, resetting the file's stat dates
-    MockFs.setFileStats(collectionEntry1.path, {
+    MockFs.setFileStats(databaseEntryFilePath(collectionEntry1), {
       created: statDate,
       lastModified: statDate,
     });
@@ -212,35 +218,46 @@ describe('backgroundSyncDatabases', () => {
   });
 
   it('sweeps a sidecar orphaned by an entry deleted outside the app', async () => {
-    const deletedEntryPath = `${collectionDatabase.path}/Gone.md`;
+    const deletedEntryPath = `${databaseDirPath(collectionDatabase)}/Gone.md`;
 
     // A sidecar left behind by an entry file deleted while the app
     // was closed, so nothing was around to remove it.
-    await writeEntryMetadata(collectionDatabase.path, deletedEntryPath, {
-      embeddedViewConfigs: { 'card:Related': { options: {}, data: {} } },
-    });
-
-    await backgroundSyncDatabases(parentDir);
-
-    expect(
-      MockFs.exists(
-        resolveEntryMetadataFilePath(collectionDatabase.path, deletedEntryPath),
-      ),
-    ).toBe(false);
-  });
-
-  it('keeps the sidecar of an entry which still exists', async () => {
-    await writeEntryMetadata(collectionDatabase.path, collectionEntry1.path, {
-      embeddedViewConfigs: { 'card:Related': { options: {}, data: {} } },
-    });
+    await writeEntryMetadata(
+      databaseDirPath(collectionDatabase),
+      deletedEntryPath,
+      {
+        embeddedViewConfigs: { 'card:Related': { options: {}, data: {} } },
+      },
+    );
 
     await backgroundSyncDatabases(parentDir);
 
     expect(
       MockFs.exists(
         resolveEntryMetadataFilePath(
-          collectionDatabase.path,
-          collectionEntry1.path,
+          databaseDirPath(collectionDatabase),
+          deletedEntryPath,
+        ),
+      ),
+    ).toBe(false);
+  });
+
+  it('keeps the sidecar of an entry which still exists', async () => {
+    await writeEntryMetadata(
+      databaseDirPath(collectionDatabase),
+      databaseEntryFilePath(collectionEntry1),
+      {
+        embeddedViewConfigs: { 'card:Related': { options: {}, data: {} } },
+      },
+    );
+
+    await backgroundSyncDatabases(parentDir);
+
+    expect(
+      MockFs.exists(
+        resolveEntryMetadataFilePath(
+          databaseDirPath(collectionDatabase),
+          databaseEntryFilePath(collectionEntry1),
         ),
       ),
     ).toBe(true);
@@ -260,8 +277,8 @@ describe('backgroundSyncDatabases', () => {
     // Append to the entry's body as an external editor would,
     // leaving its Last Modified property untouched
     MockFs.writeTextFile(
-      timestampEntry1.path,
-      `${MockFs.readTextFile(timestampEntry1.path)}\n\nAdded externally`,
+      databaseEntryFilePath(timestampEntry1),
+      `${MockFs.readTextFile(databaseEntryFilePath(timestampEntry1))}\n\nAdded externally`,
     );
 
     await backgroundSyncDatabases(parentDir);
@@ -273,6 +290,15 @@ describe('backgroundSyncDatabases', () => {
     );
   });
 });
+
+/**
+ * Returns the file system path of the entry a SQL record indexes.
+ */
+function databaseEntryFilePathFor(record: SqlEntryRecord): string {
+  const database = databases.find(({ id }) => id === record.databaseId)!;
+
+  return `${databaseDirPath(database)}/${record.path}`;
+}
 
 /**
  * Reseeds every fixture entry's SQL record via the given transform,
@@ -302,7 +328,9 @@ function indexAtCurrentContents(): void {
   // Reseed the records with the current on-disk content hashes
   seedSqlEntries((record) => ({
     ...record,
-    contentHash: Fs.hashContents(MockFs.readTextFile(record.path)),
+    contentHash: Fs.hashContents(
+      MockFs.readTextFile(databaseEntryFilePathFor(record)),
+    ),
   }));
 
   // Drop the reseeding statements from the log

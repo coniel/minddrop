@@ -11,7 +11,11 @@ import { getDatabaseEntryTemplates } from '../../getDatabaseEntryTemplates';
 import { sqlReindexDatabaseEntries } from '../../sql';
 import { Database } from '../../types';
 import { updateDatabaseEntryTemplate } from '../../updateDatabaseEntryTemplate';
-import { resolveEntryTemplateFilePath, virtualCollectionId } from '../../utils';
+import {
+  resolveDatabasePath,
+  resolveEntryTemplateFilePath,
+  virtualCollectionId,
+} from '../../utils';
 
 /**
  * Called when a property is removed from a database. Re-indexes
@@ -81,7 +85,7 @@ async function removePropertyFromEntryTemplates(
     await Promise.all(
       affectedTemplates.map((template) =>
         removeEntryTemplateFile(
-          database.path,
+          resolveDatabasePath(database),
           template.id,
           template.properties[property.name],
         ),

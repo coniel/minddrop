@@ -3,7 +3,7 @@ import { DataView } from '@minddrop/data-views';
 import { DataViewFixtures } from '@minddrop/data-views/test-utils';
 import { DatabasesStore } from '../../DatabasesStore';
 import { getDatabase } from '../../getDatabase';
-import { MockFs, cleanup, setup } from '../../test-utils';
+import { MockFs, cleanup, databaseDirPath, setup } from '../../test-utils';
 import { objectDatabase } from '../../test-utils/fixtures';
 import { resolveDatabaseViewFilePath } from '../../utils';
 import { onDatabaseViewDeleted } from './database-view-deleted';
@@ -24,7 +24,7 @@ describe('onDatabaseViewDeleted', () => {
 
     // Add the view's file to the file system
     MockFs.addFiles([
-      resolveDatabaseViewFilePath(objectDatabase.path, view.id),
+      resolveDatabaseViewFilePath(databaseDirPath(objectDatabase), view.id),
     ]);
 
     // Call the handler
@@ -32,7 +32,9 @@ describe('onDatabaseViewDeleted', () => {
 
     // The view's file should be deleted
     expect(
-      MockFs.exists(resolveDatabaseViewFilePath(objectDatabase.path, view.id)),
+      MockFs.exists(
+        resolveDatabaseViewFilePath(databaseDirPath(objectDatabase), view.id),
+      ),
     ).toBe(false);
   });
 
@@ -64,7 +66,7 @@ describe('onDatabaseViewDeleted', () => {
 
     // Add a file at the view's would-be path
     MockFs.addFiles([
-      resolveDatabaseViewFilePath(objectDatabase.path, view.id),
+      resolveDatabaseViewFilePath(databaseDirPath(objectDatabase), view.id),
     ]);
 
     // Call the handler
@@ -72,7 +74,9 @@ describe('onDatabaseViewDeleted', () => {
 
     // The file should be untouched
     expect(
-      MockFs.exists(resolveDatabaseViewFilePath(objectDatabase.path, view.id)),
+      MockFs.exists(
+        resolveDatabaseViewFilePath(databaseDirPath(objectDatabase), view.id),
+      ),
     ).toBe(true);
   });
 });

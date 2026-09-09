@@ -5,6 +5,8 @@ import { DatabaseEntryDeletedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntry } from '../getDatabaseEntry';
 import {
+  resolveDatabaseEntryPath,
+  resolveDatabasePath,
   resolveEntryMetadataFilePath,
   resolveEntryPropertyFilePaths,
 } from '../utils';
@@ -25,6 +27,8 @@ export async function deleteDatabaseEntry(id: string): Promise<void> {
 
   // Get the entry's database
   const database = getDatabase(entry.database);
+  const databasePath = resolveDatabasePath(database);
+  const entryPath = resolveDatabaseEntryPath(entry, database);
 
   // Resolve the entry's property file paths. The resolver reads the
   // entry from the store, so we need to collect the paths before
@@ -41,10 +45,10 @@ export async function deleteDatabaseEntry(id: string): Promise<void> {
   // per-entry subdirectory, so trashing the subdirectory removes them all.
   if (database.propertyFileStorage === 'entry') {
     // Trash the entry's subdirectory
-    await Fs.trashDir(Fs.parentDirPath(entry.path));
+    await Fs.trashDir(Fs.parentDirPath(entryPath));
   } else {
     // Trash the entry file
-    await Fs.trashFile(entry.path);
+    await Fs.trashFile(entryPath);
 
     // Trash each of the entry's file-property files
     for (const propertyFilePath of propertyFilePaths) {
@@ -58,8 +62,8 @@ export async function deleteDatabaseEntry(id: string): Promise<void> {
   // Remove the entry's metadata sidecar, which would otherwise be
   // orphaned in the metadata directory.
   const metadataFilePath = resolveEntryMetadataFilePath(
-    database.path,
-    entry.path,
+    databasePath,
+    entryPath,
   );
 
   if (await Fs.exists(metadataFilePath)) {

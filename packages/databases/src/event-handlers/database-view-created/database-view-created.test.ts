@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DataView } from '@minddrop/data-views';
 import { DataViewFixtures } from '@minddrop/data-views/test-utils';
 import { getDatabase } from '../../getDatabase';
-import { MockFs, cleanup, setup } from '../../test-utils';
+import { MockFs, cleanup, databaseDirPath, setup } from '../../test-utils';
 import { objectDatabase } from '../../test-utils/fixtures';
 import { resolveDatabaseViewFilePath } from '../../utils';
 import { onDatabaseViewCreated } from './database-view-created';
@@ -26,7 +26,9 @@ describe('onDatabaseViewCreated', () => {
 
     // The view should be written to its file
     expect(
-      MockFs.exists(resolveDatabaseViewFilePath(objectDatabase.path, view.id)),
+      MockFs.exists(
+        resolveDatabaseViewFilePath(databaseDirPath(objectDatabase), view.id),
+      ),
     ).toBe(true);
   });
 
@@ -56,7 +58,9 @@ describe('onDatabaseViewCreated', () => {
 
     // No view file should be written
     expect(
-      MockFs.exists(resolveDatabaseViewFilePath(objectDatabase.path, view.id)),
+      MockFs.exists(
+        resolveDatabaseViewFilePath(databaseDirPath(objectDatabase), view.id),
+      ),
     ).toBe(false);
   });
 });

@@ -12,10 +12,10 @@ import {
   getRecordedSqlStatements,
   objectDatabase,
   objectEntry1,
-  parentDir,
   setup,
   setupRecordingTestSqlDatabase,
 } from '../../test-utils';
+import { resolveDatabaseEntryPath, resolveDatabasePath } from '../../utils';
 import { onTagDeleted } from './tag-deleted';
 
 const { tag_1 } = TagFixtures;
@@ -25,7 +25,7 @@ const tagsDatabase = {
   ...objectDatabase,
   id: 'database_tags-test' as const,
   name: 'Tagged Objects',
-  path: `${parentDir}/Tagged Objects`,
+  path: 'Tagged Objects',
   properties: [
     ...objectDatabase.properties,
     { type: 'tags' as const, name: 'Tags' },
@@ -38,7 +38,7 @@ const taggedEntry = {
   id: 'database-entry_tagged-entry' as const,
   title: 'Tagged Entry',
   database: tagsDatabase.id,
-  path: `${tagsDatabase.path}/Tagged Entry.md`,
+  path: 'Tagged Entry.md',
   properties: {
     ...objectEntry1.properties,
     Tags: ['Urgent', 'Home'],
@@ -66,7 +66,7 @@ describe('onTagDeleted', () => {
 
     // Create the tags database directory so entry rewrites can
     // write the entry file.
-    MockFs.addFiles([tagsDatabase.path]);
+    MockFs.addFiles([resolveDatabasePath(tagsDatabase)]);
   });
 
   afterEach(async () => {
@@ -86,7 +86,7 @@ describe('onTagDeleted', () => {
     await onTagDeleted(deletedTag);
 
     // The entry file should no longer contain the deleted name
-    const contents = MockFs.readTextFile(taggedEntry.path);
+    const contents = MockFs.readTextFile(resolveDatabaseEntryPath(taggedEntry));
     expect(contents).toContain('Home');
     expect(contents).not.toContain('Urgent');
   });

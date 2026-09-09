@@ -2,7 +2,7 @@ import { Design } from '@minddrop/designs-next';
 import { Fs } from '@minddrop/file-system';
 import { InvalidParameterError } from '@minddrop/utils';
 import { getDatabase } from '../getDatabase';
-import { resolveDatabaseDesignFilePath } from '../utils';
+import { resolveDatabaseDesignFilePath, resolveDatabasePath } from '../utils';
 
 /**
  * Deletes a database-owned design's file from the database's
@@ -25,7 +25,10 @@ export async function removeDatabaseDesignFile(design: Design): Promise<void> {
   const database = getDatabase(design.owner);
 
   // Path to the design's file
-  const filePath = resolveDatabaseDesignFilePath(database.path, design.id);
+  const filePath = resolveDatabaseDesignFilePath(
+    resolveDatabasePath(database),
+    design.id,
+  );
 
   // Delete the design file if it exists
   if (await Fs.exists(filePath)) {

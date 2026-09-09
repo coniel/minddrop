@@ -15,7 +15,8 @@ export interface Database {
   id: DatabaseId;
 
   /**
-   * Path to the database directory on the file system.
+   * Path to the database directory, relative to the workspace root.
+   * Can be resolved to a file system path with `resolveDatabasePath`.
    */
   path: string;
 

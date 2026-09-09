@@ -3,7 +3,7 @@ import { DataViews } from '@minddrop/data-views';
 import { DataViewFixtures } from '@minddrop/data-views/test-utils';
 import { History } from '@minddrop/history';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
-import { sqlGetEntrySyncRecords, sqlUpsertDatabase } from '../../sql';
+import { sqlUpsertDatabase } from '../../sql';
 import {
   MockFs,
   cleanup,
@@ -11,6 +11,8 @@ import {
   clearRecordedSqlStatements,
   collectionDatabase,
   collectionEntry1,
+  databaseDirPath,
+  databaseEntryFilePath,
   getRecordedSqlStatements,
   relatedEntry1,
   relatedEntry2,
@@ -60,30 +62,6 @@ describe('onItemAddressesChanged', () => {
     await cleanup();
   });
 
-  it("upserts the changed entries' SQL records", async () => {
-    // Simulate a rename of an entry
-    DatabaseEntriesStore.update(relatedEntry1.id, {
-      title: renamedRelated.title,
-      path: renamedRelated.path,
-    });
-
-    await onItemAddressesChanged([
-      {
-        id: relatedEntry1.id,
-        oldReference: databaseEntryAddress(relatedEntry1, collectionDatabase),
-        newReference: databaseEntryAddress(renamedRelated, collectionDatabase),
-      },
-    ]);
-
-    // The entry's SQL record should carry the new path
-    expect(sqlGetEntrySyncRecords(collectionDatabase.id)).toContainEqual(
-      expect.objectContaining({
-        id: relatedEntry1.id,
-        path: renamedRelated.path,
-      }),
-    );
-  });
-
   it("rewrites referencing entries' files with current addresses", async () => {
     // Simulate a rename of a referenced entry
     DatabaseEntriesStore.update(relatedEntry1.id, {
@@ -99,7 +77,9 @@ describe('onItemAddressesChanged', () => {
       },
     ]);
 
-    const contents = MockFs.readTextFile(collectionEntry1.path);
+    const contents = MockFs.readTextFile(
+      databaseEntryFilePath(collectionEntry1),
+    );
 
     // The referencing file should contain the new address
     expect(contents).toContain('Collection Database/Renamed Related');
@@ -148,7 +128,7 @@ describe('onItemAddressesChanged', () => {
   });
 
   it('does nothing for unreferenced items', async () => {
-    const before = MockFs.readTextFile(collectionEntry1.path);
+    const before = MockFs.readTextFile(databaseEntryFilePath(collectionEntry1));
 
     await onItemAddressesChanged([
       {
@@ -158,7 +138,9 @@ describe('onItemAddressesChanged', () => {
       },
     ]);
 
-    expect(MockFs.readTextFile(collectionEntry1.path)).toBe(before);
+    expect(MockFs.readTextFile(databaseEntryFilePath(collectionEntry1))).toBe(
+      before,
+    );
 
     // No entry upsert statements should have been executed
     const entryUpserts = getRecordedSqlStatements().filter((statement) =>
@@ -187,7 +169,7 @@ describe('onItemAddressesChanged', () => {
     // older records to the new address.
     expect(
       await History.read({
-        ownerPath: collectionDatabase.path,
+        ownerPath: databaseDirPath(collectionDatabase),
         subjectKey: collectionEntry1.title,
       }),
     ).toContainEqual(
@@ -217,7 +199,7 @@ describe('onItemAddressesChanged', () => {
     // relatedEntry2 is in the same database but references nothing
     expect(
       await History.read({
-        ownerPath: collectionDatabase.path,
+        ownerPath: databaseDirPath(collectionDatabase),
         subjectKey: relatedEntry2.title,
       }),
     ).toEqual([]);

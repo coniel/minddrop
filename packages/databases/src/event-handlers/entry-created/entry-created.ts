@@ -5,6 +5,7 @@ import { getDatabase } from '../../getDatabase';
 import { sqlUpsertEntries } from '../../sql';
 import {
   convertEntryToSqlRecord,
+  resolveDatabasePath,
   virtualCollectionId,
   virtualCollectionName,
 } from '../../utils';
@@ -24,7 +25,7 @@ export async function onCreateEntry(data: DatabaseEntryCreatedEventData) {
 
   // Open the entry's history
   await History.record({
-    ownerPath: database.path,
+    ownerPath: resolveDatabasePath(database),
     subjectKey: data.title,
     kind: 'created',
   });

@@ -17,7 +17,8 @@ export interface SqlEntryRecord {
   databaseId: string;
 
   /**
-   * Absolute path to the entry's primary file.
+   * Path to the entry's primary file, relative to its database
+   * directory.
    */
   path: string;
 

@@ -9,7 +9,7 @@ import { setDatabaseDefault } from '../setDatabaseDefault';
 import { MockFs, cleanup, parentDir, setup } from '../test-utils';
 import { fetchWebpageMetadataAutomation } from '../test-utils/fixtures/database-automations.fixtures';
 import { Database, DatabaseId } from '../types';
-import { resolveDatabaseConfigFilePath } from '../utils';
+import { resolveDatabaseConfigFilePath, resolveDatabasePath } from '../utils';
 import { CreateDatabaseOptions, createDatabase } from './createDatabase';
 
 const options: Omit<CreateDatabaseOptions, 'automations'> = {
@@ -24,7 +24,7 @@ const newDatabase: Database = {
   id: expect.any(String) as unknown as DatabaseId,
   created: expect.any(Date),
   lastModified: expect.any(Date),
-  path: `${parentDir}/${options.name}`,
+  path: options.name,
   entrySerializer: 'markdown',
   propertyFileStorage: 'property',
   entryOpenMode: 'in-place',
@@ -136,13 +136,17 @@ describe('createDatabase', () => {
   it('creates the database directory', async () => {
     await createDatabase(options);
 
-    expect(MockFs.exists(resolveDatabaseConfigFilePath(newDatabase.path))).toBe(
-      true,
-    );
+    expect(
+      MockFs.exists(
+        resolveDatabaseConfigFilePath(resolveDatabasePath(newDatabase)),
+      ),
+    ).toBe(true);
   });
 
   it('writes the database config to the file system', async () => {
-    const configFilePath = resolveDatabaseConfigFilePath(newDatabase.path);
+    const configFilePath = resolveDatabaseConfigFilePath(
+      resolveDatabasePath(newDatabase),
+    );
 
     const { path, name, ...expectedConfig } = await createDatabase(options);
 

@@ -2,7 +2,11 @@ import { Fs, FsEntry } from '@minddrop/file-system';
 import { Paths, entityId, isEntityId } from '@minddrop/utils';
 import { DatabaseConfigFileName } from '../constants';
 import { Database } from '../types';
-import { resolveDatabaseConfigFilePath } from '../utils';
+import {
+  resolveDatabaseConfigFilePath,
+  resolveDatabasePath,
+  serializeDatabase,
+} from '../utils';
 
 /**
  * Reads all database configs from a workspace directory by
@@ -23,7 +27,11 @@ export async function readWorkspaceDatabases(
   const databasePaths = findDatabasePaths(workspaceFiles);
 
   // Read and parse each database config
-  const configs = await Promise.all(databasePaths.map(readDatabaseConfig));
+  const configs = await Promise.all(
+    databasePaths.map((configPath) =>
+      readDatabaseConfig(workspacePath, configPath),
+    ),
+  );
 
   const databases = configs.filter(
     (config): config is Database => config !== null,
@@ -43,7 +51,7 @@ export async function readWorkspaceDatabases(
       const minted = { ...database, id: entityId('database') };
 
       // Persist the minted ID back to the config file
-      await writeDatabaseConfigFile(minted);
+      await writeDatabaseConfigFile(workspacePath, minted);
 
       return minted;
     }),
@@ -120,10 +128,12 @@ function findDatabasePaths(entries: FsEntry[], inHiddenDir = false): string[] {
 /**
  * Reads a single database config from a database.json file path.
  *
- * @param path - The path to the database.json file.
+ * @param workspacePath - The absolute path to the workspace directory.
+ * @param configPath - The path to the database.json file.
  * @returns The database config, or null if reading fails.
  */
 async function readDatabaseConfig(
+  workspacePath: string,
   configPath: string,
 ): Promise<Database | null> {
   try {
@@ -138,7 +148,7 @@ async function readDatabaseConfig(
     return {
       ...config,
       name: dirName,
-      path: databasePath,
+      path: Fs.relativePath(workspacePath, databasePath),
     };
   } catch {
     return null;
@@ -146,14 +156,21 @@ async function readDatabaseConfig(
 }
 
 /**
- * Writes a database config file directly from a database object,
- * excluding derived fields.
+ * Writes a database config file from a database object rather than
+ * through `writeDatabaseConfig`, which reads from the store the scan
+ * has yet to populate.
  */
-async function writeDatabaseConfigFile(database: Database): Promise<void> {
-  const { path, name: _name, ...config } = database;
-
+async function writeDatabaseConfigFile(
+  workspacePath: string,
+  database: Database,
+): Promise<void> {
   try {
-    await Fs.writeJsonFile(resolveDatabaseConfigFilePath(path), config);
+    await Fs.writeJsonFile(
+      resolveDatabaseConfigFilePath(
+        resolveDatabasePath(database, workspacePath),
+      ),
+      serializeDatabase(database),
+    );
   } catch {
     // A failed write-back simply re-mints on the next launch
   }

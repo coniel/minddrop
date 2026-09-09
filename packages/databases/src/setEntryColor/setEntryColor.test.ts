@@ -6,6 +6,8 @@ import { DatabaseEntryNotFoundError } from '../errors';
 import {
   MockFs,
   cleanup,
+  databaseDirPath,
+  databaseEntryFilePath,
   objectDatabase,
   objectEntry1,
   setup,
@@ -15,8 +17,8 @@ import { setEntryColor } from './setEntryColor';
 
 // The sidecar path the entry's metadata is written to
 const sidecarPath = resolveEntryMetadataFilePath(
-  objectDatabase.path,
-  objectEntry1.path,
+  databaseDirPath(objectDatabase),
+  databaseEntryFilePath(objectEntry1),
 );
 
 describe('setEntryColor', () => {

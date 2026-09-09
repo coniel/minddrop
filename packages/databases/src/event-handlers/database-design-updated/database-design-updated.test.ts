@@ -1,7 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { StoredDesign } from '@minddrop/designs-next';
 import { DesignFixtures } from '@minddrop/designs-next/test-utils';
-import { MockFs, cleanup, objectDatabase, setup } from '../../test-utils';
+import {
+  MockFs,
+  cleanup,
+  databaseDirPath,
+  objectDatabase,
+  setup,
+} from '../../test-utils';
 import { resolveDatabaseDesignFilePath } from '../../utils';
 import { onDatabaseDesignUpdated } from './database-design-updated';
 
@@ -20,7 +26,10 @@ describe('onDatabaseDesignUpdated', () => {
 
     // The design file should contain the updated design
     const storedDesign = MockFs.readJsonFile<StoredDesign>(
-      resolveDatabaseDesignFilePath(objectDatabase.path, updated.id),
+      resolveDatabaseDesignFilePath(
+        databaseDirPath(objectDatabase),
+        updated.id,
+      ),
     );
 
     expect(storedDesign?.name).toBe('Renamed');
@@ -35,7 +44,10 @@ describe('onDatabaseDesignUpdated', () => {
     // No design file should be written
     expect(
       MockFs.exists(
-        resolveDatabaseDesignFilePath(objectDatabase.path, cardDesign_1.id),
+        resolveDatabaseDesignFilePath(
+          databaseDirPath(objectDatabase),
+          cardDesign_1.id,
+        ),
       ),
     ).toBe(false);
   });

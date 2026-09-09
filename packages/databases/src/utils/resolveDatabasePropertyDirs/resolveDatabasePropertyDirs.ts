@@ -2,6 +2,7 @@ import { i18n } from '@minddrop/i18n';
 import { Properties } from '@minddrop/properties';
 import { PropertyFilesDirNameKey } from '../../constants';
 import { Database } from '../../types';
+import { resolveDatabasePath } from '../resolveDatabasePath';
 
 /**
  * Returns the paths of the shared directories that hold a database's
@@ -22,13 +23,13 @@ export function resolveDatabasePropertyDirs(database: Database): string[] {
       const dirName =
         database.propertyFilesDir || i18n.t(PropertyFilesDirNameKey);
 
-      return [`${database.path}/${dirName}`];
+      return [`${resolveDatabasePath(database)}/${dirName}`];
     }
     // One directory per file-based property, named after the property
     case 'property':
       return database.properties
         .filter(Properties.isFileBased)
-        .map((property) => `${database.path}/${property.name}`);
+        .map((property) => `${resolveDatabasePath(database)}/${property.name}`);
     // Root and entry storage have no dedicated shared property directories
     default:
       return [];

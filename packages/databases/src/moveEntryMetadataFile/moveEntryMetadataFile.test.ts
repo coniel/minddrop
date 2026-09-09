@@ -1,12 +1,18 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { MockFs, cleanup, objectDatabase, setup } from '../test-utils';
+import {
+  MockFs,
+  cleanup,
+  databaseDirPath,
+  objectDatabase,
+  setup,
+} from '../test-utils';
 import { DatabaseEntryMetadata } from '../types';
 import { resolveEntryMetadataFilePath } from '../utils';
 import { writeEntryMetadata } from '../writeEntryMetadata';
 import { moveEntryMetadataFile } from './moveEntryMetadataFile';
 
-const oldEntryPath = `${objectDatabase.path}/Entry.md`;
-const newEntryPath = `${objectDatabase.path}/Renamed.md`;
+const oldEntryPath = `${databaseDirPath(objectDatabase)}/Entry.md`;
+const newEntryPath = `${databaseDirPath(objectDatabase)}/Renamed.md`;
 
 const metadata: DatabaseEntryMetadata = {
   embeddedViewConfigs: { 'card:Tasks': { options: {}, data: {} } },
@@ -18,23 +24,30 @@ describe('moveEntryMetadataFile', () => {
   afterEach(cleanup);
 
   it('moves the sidecar to the new entry path', async () => {
-    await writeEntryMetadata(objectDatabase.path, oldEntryPath, metadata);
+    await writeEntryMetadata(
+      databaseDirPath(objectDatabase),
+      oldEntryPath,
+      metadata,
+    );
 
     await moveEntryMetadataFile(
-      objectDatabase.path,
+      databaseDirPath(objectDatabase),
       oldEntryPath,
       newEntryPath,
     );
 
     const newPath = resolveEntryMetadataFilePath(
-      objectDatabase.path,
+      databaseDirPath(objectDatabase),
       newEntryPath,
     );
 
     expect(JSON.parse(MockFs.readTextFile(newPath))).toEqual(metadata);
     expect(
       MockFs.exists(
-        resolveEntryMetadataFilePath(objectDatabase.path, oldEntryPath),
+        resolveEntryMetadataFilePath(
+          databaseDirPath(objectDatabase),
+          oldEntryPath,
+        ),
       ),
     ).toBe(false);
   });
@@ -42,12 +55,16 @@ describe('moveEntryMetadataFile', () => {
   it('moves the sidecar when the entry moves into its own subdirectory', async () => {
     // Entry-based property storage nests the entry in a directory
     // named after it.
-    const nestedEntryPath = `${objectDatabase.path}/Renamed/Renamed.md`;
+    const nestedEntryPath = `${databaseDirPath(objectDatabase)}/Renamed/Renamed.md`;
 
-    await writeEntryMetadata(objectDatabase.path, oldEntryPath, metadata);
+    await writeEntryMetadata(
+      databaseDirPath(objectDatabase),
+      oldEntryPath,
+      metadata,
+    );
 
     await moveEntryMetadataFile(
-      objectDatabase.path,
+      databaseDirPath(objectDatabase),
       oldEntryPath,
       nestedEntryPath,
     );
@@ -55,7 +72,10 @@ describe('moveEntryMetadataFile', () => {
     expect(
       JSON.parse(
         MockFs.readTextFile(
-          resolveEntryMetadataFilePath(objectDatabase.path, nestedEntryPath),
+          resolveEntryMetadataFilePath(
+            databaseDirPath(objectDatabase),
+            nestedEntryPath,
+          ),
         ),
       ),
     ).toEqual(metadata);
@@ -64,14 +84,17 @@ describe('moveEntryMetadataFile', () => {
   it('is a no-op when the entry has no sidecar', async () => {
     // Should not throw
     await moveEntryMetadataFile(
-      objectDatabase.path,
+      databaseDirPath(objectDatabase),
       oldEntryPath,
       newEntryPath,
     );
 
     expect(
       MockFs.exists(
-        resolveEntryMetadataFilePath(objectDatabase.path, newEntryPath),
+        resolveEntryMetadataFilePath(
+          databaseDirPath(objectDatabase),
+          newEntryPath,
+        ),
       ),
     ).toBe(false);
   });

@@ -2,8 +2,10 @@ import { Fs } from '@minddrop/file-system';
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntryTemplate } from '../getDatabaseEntryTemplate';
 import {
+  resolveDatabasePath,
   resolveEntryTemplateConfigFilePath,
   resolveEntryTemplateDirPath,
+  serializeDatabaseEntryTemplate,
 } from '../utils';
 
 /**
@@ -25,14 +27,13 @@ export async function writeDatabaseEntryTemplate(
   const database = getDatabase(template.database);
 
   // Ensure the template's directory exists
-  await Fs.ensureDir(resolveEntryTemplateDirPath(database.path, template.id));
+  const databasePath = resolveDatabasePath(database);
 
-  // Exclude the database ID as it is derived from the file's location
-  const { database: _database, ...config } = template;
+  await Fs.ensureDir(resolveEntryTemplateDirPath(databasePath, template.id));
 
   // Write the template config to the file system
   await Fs.writeJsonFile(
-    resolveEntryTemplateConfigFilePath(database.path, template.id),
-    config,
+    resolveEntryTemplateConfigFilePath(databasePath, template.id),
+    serializeDatabaseEntryTemplate(template),
   );
 }

@@ -1,4 +1,5 @@
 export * from './Database.types';
+export * from './StoredDatabase.types';
 export * from './DatabaseAutomation.types';
 export * from './DatabaseAutomationAction.types';
 export * from './DatabaseAutomationActionConfig.types';
@@ -8,7 +9,6 @@ export * from './DatabaseEntryRenderSource.types';
 export * from './DatabaseEntryTemplate.types';
 export * from './DatabaseEntrySerializer.types';
 export * from './DatabaseTemplate.types';
-export * from './DatabasesConfig.types';
 export * from './SerializedDatabaseConfig.types';
 export * from './EntryFilter.types';
 export * from './SqlEntryRecord.types';

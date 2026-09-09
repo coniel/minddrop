@@ -2,7 +2,7 @@ import { DataView } from '@minddrop/data-views';
 import { Fs } from '@minddrop/file-system';
 import { InvalidParameterError } from '@minddrop/utils';
 import { getDatabase } from '../getDatabase';
-import { resolveDatabaseViewFilePath } from '../utils';
+import { resolveDatabasePath, resolveDatabaseViewFilePath } from '../utils';
 
 /**
  * Deletes a database-owned view's file from the database's views
@@ -25,7 +25,10 @@ export async function removeDatabaseViewFile(view: DataView): Promise<void> {
   const database = getDatabase(view.owner);
 
   // Path to the view's file
-  const filePath = resolveDatabaseViewFilePath(database.path, view.id);
+  const filePath = resolveDatabaseViewFilePath(
+    resolveDatabasePath(database),
+    view.id,
+  );
 
   // Delete the view file if it exists
   if (await Fs.exists(filePath)) {

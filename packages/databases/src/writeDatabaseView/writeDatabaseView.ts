@@ -3,6 +3,7 @@ import { Fs } from '@minddrop/file-system';
 import { InvalidParameterError } from '@minddrop/utils';
 import { getDatabase } from '../getDatabase';
 import {
+  resolveDatabasePath,
   resolveDatabaseViewFilePath,
   resolveDatabaseViewsDirPath,
 } from '../utils';
@@ -28,12 +29,14 @@ export async function writeDatabaseView(view: DataView): Promise<void> {
   const database = getDatabase(view.owner);
 
   // Ensure the database's views directory exists
-  await Fs.ensureDir(resolveDatabaseViewsDirPath(database.path));
+  const databasePath = resolveDatabasePath(database);
+
+  await Fs.ensureDir(resolveDatabaseViewsDirPath(databasePath));
 
   // Write the view to the file system in its stored form, without
   // the data source which is derived from the database at load time.
   await Fs.writeJsonFile(
-    resolveDatabaseViewFilePath(database.path, view.id),
+    resolveDatabaseViewFilePath(databasePath, view.id),
     DataViews.serialize(view, { dataSource: false }),
   );
 }

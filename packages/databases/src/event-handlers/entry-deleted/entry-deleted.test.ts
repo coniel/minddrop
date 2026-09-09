@@ -14,6 +14,7 @@ import {
   collectionDatabase,
   collectionEntry1,
   collectionEntry1SqlRecord,
+  databaseDirPath,
   objectDatabase,
   objectEntry1,
   relatedEntry1,
@@ -159,7 +160,7 @@ describe('onDeleteEntry', () => {
 
   it("closes a named entry's history, which outlives it", async () => {
     await History.record({
-      ownerPath: objectDatabase.path,
+      ownerPath: databaseDirPath(objectDatabase),
       subjectKey: objectEntry1.title,
       kind: 'created',
     });
@@ -168,7 +169,7 @@ describe('onDeleteEntry', () => {
 
     expect(
       await History.read({
-        ownerPath: objectDatabase.path,
+        ownerPath: databaseDirPath(objectDatabase),
         subjectKey: objectEntry1.title,
       }),
     ).toEqual([
@@ -181,7 +182,7 @@ describe('onDeleteEntry', () => {
     const untitled = { ...objectEntry1, title: 'Untitled' };
 
     await History.record({
-      ownerPath: objectDatabase.path,
+      ownerPath: databaseDirPath(objectDatabase),
       subjectKey: untitled.title,
       kind: 'created',
     });
@@ -192,7 +193,7 @@ describe('onDeleteEntry', () => {
     // not inherit what was recorded under it.
     expect(
       await History.read({
-        ownerPath: objectDatabase.path,
+        ownerPath: databaseDirPath(objectDatabase),
         subjectKey: untitled.title,
       }),
     ).toEqual([]);

@@ -4,6 +4,7 @@ import {
   cleanup,
   commonStorageDatabase,
   commonStorageEntry1,
+  databaseDirPath,
   entryStorageDatabase,
   entryStorageEntry1,
   propertyStorageDatabase,
@@ -22,7 +23,7 @@ describe('resolveEntryPropertyFilePath', () => {
   it('returns path for root based storage', () => {
     expect(
       resolveEntryPropertyFilePath(rootStorageEntry1.id, 'Image', 'image.png'),
-    ).toBe(`${rootStorageDatabase.path}/image.png`);
+    ).toBe(`${databaseDirPath(rootStorageDatabase)}/image.png`);
   });
 
   it('returns path for common based storage', () => {
@@ -33,7 +34,7 @@ describe('resolveEntryPropertyFilePath', () => {
         'image.png',
       ),
     ).toBe(
-      `${commonStorageDatabase.path}/${commonStorageDatabase.propertyFilesDir}/image.png`,
+      `${databaseDirPath(commonStorageDatabase)}/${commonStorageDatabase.propertyFilesDir}/image.png`,
     );
   });
 
@@ -44,13 +45,15 @@ describe('resolveEntryPropertyFilePath', () => {
         'Image',
         'image.png',
       ),
-    ).toBe(`${propertyStorageDatabase.path}/Image/image.png`);
+    ).toBe(`${databaseDirPath(propertyStorageDatabase)}/Image/image.png`);
   });
 
   it('returns path for entry based storage', () => {
     expect(
       resolveEntryPropertyFilePath(entryStorageEntry1.id, 'Image', 'image.png'),
-    ).toBe(`${entryStorageDatabase.path}/Entry Storage Entry 1/image.png`);
+    ).toBe(
+      `${databaseDirPath(entryStorageDatabase)}/Entry Storage Entry 1/image.png`,
+    );
   });
 
   it('defaults to root based storage if no storage is provided', () => {
@@ -61,6 +64,6 @@ describe('resolveEntryPropertyFilePath', () => {
 
     expect(
       resolveEntryPropertyFilePath(rootStorageEntry1.id, 'Image', 'image.png'),
-    ).toBe(`${rootStorageDatabase.path}/image.png`);
+    ).toBe(`${databaseDirPath(rootStorageDatabase)}/image.png`);
   });
 });

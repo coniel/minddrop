@@ -7,6 +7,8 @@ import { readEntryMetadata } from '../readEntryMetadata';
 import {
   MockFs,
   cleanup,
+  databaseDirPath,
+  databaseEntryFilePath,
   entryStorageDatabase,
   objectDatabase,
   objectEntry1,
@@ -14,13 +16,14 @@ import {
   timestampDatabase,
 } from '../test-utils';
 import { DatabaseEntry } from '../types';
+import { resolveDatabaseEntryPath } from '../utils';
 import { createDatabaseEntry } from './createDatabaseEntry';
 
 const title = i18n.t('labels.untitled');
 const newEntry: DatabaseEntry = {
   ...objectEntry1,
   title: title,
-  path: `${objectDatabase.path}/${title}.md`,
+  path: `${title}.md`,
   properties: {
     Content: 'Default Content',
   },
@@ -37,7 +40,7 @@ describe('createDatabaseEntry', () => {
     vi.useFakeTimers();
     vi.setSystemTime(objectEntry1.created);
 
-    MockFs.removeFile(objectEntry1.path);
+    MockFs.removeFile(databaseEntryFilePath(objectEntry1));
   });
 
   afterEach(cleanup);
@@ -54,17 +57,15 @@ describe('createDatabaseEntry', () => {
     const entry = await createDatabaseEntry(objectDatabase.id);
 
     // Entry file should exist
-    expect(MockFs.exists(entry.path)).toBeTruthy();
+    expect(MockFs.exists(resolveDatabaseEntryPath(entry))).toBeTruthy();
   });
 
   it('writes the entry file to a subdirectory if the database uses entry based storage', async () => {
     const entry = await createDatabaseEntry(entryStorageDatabase.id);
 
     // Main file should be written to entry subdirectory
-    expect(entry.path).toBe(
-      `${entryStorageDatabase.path}/${title}/${title}.md`,
-    );
-    expect(MockFs.exists(entry.path)).toBeTruthy();
+    expect(entry.path).toBe(`${title}/${title}.md`);
+    expect(MockFs.exists(resolveDatabaseEntryPath(entry))).toBeTruthy();
   });
 
   it('increments the entry title if an entry with the same name exists', async () => {
@@ -74,7 +75,7 @@ describe('createDatabaseEntry', () => {
 
     expect(secondEntry.title).toBe(`${title} 1`);
     expect(secondEntry.id).not.toBe(firstEntry.id);
-    expect(secondEntry.path).toBe(`${objectDatabase.path}/${title} 1.md`);
+    expect(secondEntry.path).toBe(`${title} 1.md`);
   });
 
   it('increments the entry title if an entry with the same name exists in an entry storage database', async () => {
@@ -83,9 +84,7 @@ describe('createDatabaseEntry', () => {
     const secondEntry = await createDatabaseEntry(entryStorageDatabase.id);
 
     expect(secondEntry.title).toBe(`${title} 1`);
-    expect(secondEntry.path).toBe(
-      `${entryStorageDatabase.path}/${title} 1/${title} 1.md`,
-    );
+    expect(secondEntry.path).toBe(`${title} 1/${title} 1.md`);
   });
 
   it('allows specifying a custom title', async () => {
@@ -96,9 +95,7 @@ describe('createDatabaseEntry', () => {
     );
 
     expect(entryWithCustomTitle.title).toBe(customTitle);
-    expect(entryWithCustomTitle.path).toBe(
-      `${objectDatabase.path}/${customTitle}.md`,
-    );
+    expect(entryWithCustomTitle.path).toBe(`${customTitle}.md`);
   });
 
   it('allows specifying properties', async () => {
@@ -127,7 +124,10 @@ describe('createDatabaseEntry', () => {
   it('writes the timestamps to the entry metadata sidecar', async () => {
     const entry = await createDatabaseEntry(objectDatabase.id);
 
-    const metadata = await readEntryMetadata(objectDatabase.path, entry.path);
+    const metadata = await readEntryMetadata(
+      databaseDirPath(objectDatabase),
+      entry.path,
+    );
 
     expect(metadata.created).toEqual(objectEntry1.created);
     expect(metadata.lastModified).toEqual(objectEntry1.created);

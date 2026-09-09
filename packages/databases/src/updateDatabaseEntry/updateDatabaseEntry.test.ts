@@ -7,6 +7,8 @@ import { readEntryMetadata } from '../readEntryMetadata';
 import {
   MockFs,
   cleanup,
+  databaseDirPath,
+  databaseEntryFilePath,
   objectDatabase,
   objectEntry1,
   setup,
@@ -59,7 +61,10 @@ describe('updateDatabaseEntry', () => {
   it('writes the last modified date to the entry metadata sidecar', async () => {
     const entry = await updateDatabaseEntry(objectEntry1.id, update);
 
-    const metadata = await readEntryMetadata(objectDatabase.path, entry.path);
+    const metadata = await readEntryMetadata(
+      databaseDirPath(objectDatabase),
+      entry.path,
+    );
 
     expect(metadata.lastModified).toEqual(entry.lastModified);
   });
@@ -74,11 +79,11 @@ describe('updateDatabaseEntry', () => {
 
   it('writes the entry files to the file system', async () => {
     // Delete the exisitng entry file
-    MockFs.removeFile(objectEntry1.path);
+    MockFs.removeFile(databaseEntryFilePath(objectEntry1));
 
     await updateDatabaseEntry(objectEntry1.id, update);
 
-    expect(MockFs.exists(objectEntry1.path)).toBeTruthy();
+    expect(MockFs.exists(databaseEntryFilePath(objectEntry1))).toBeTruthy();
   });
 
   it('does nothing if no valid update data is provided', async () => {

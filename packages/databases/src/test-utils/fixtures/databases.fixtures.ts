@@ -7,6 +7,8 @@ import {
   resolveDatabaseConfigFilePath,
   resolveEntryTemplateConfigFilePath,
   resolveEntryTemplateFilePath,
+  serializeDatabase,
+  serializeDatabaseEntryTemplate,
 } from '../../utils';
 import { fetchWebpageMetadataAutomation } from './database-automations.fixtures';
 
@@ -40,9 +42,18 @@ function generateDatabase(
     views: [],
     designs: [],
     entryTemplates: [],
-    path: `${parentDir}/${data.name}`,
+    // Workspace relative, as stored on the database
+    path: data.name,
     ...data,
   };
+}
+
+/**
+ * Returns the file system path of a fixture database's directory, for
+ * building the mock file system's paths.
+ */
+export function databaseDirPath(database: Database): string {
+  return `${parentDir}/${database.path}`;
 }
 
 export const objectDatabase = generateDatabase({
@@ -305,16 +316,20 @@ export const databases = [
 
 export const databaseEntryTemplateFiles: (MockFileDescriptor | string)[] = [
   // Individual template config files (the database ID is not persisted)
-  ...databaseEntryTemplates.map(({ database, ...storedTemplate }) => ({
+  ...databaseEntryTemplates.map((template) => ({
     path: resolveEntryTemplateConfigFilePath(
-      entryTemplatesDatabase.path,
-      storedTemplate.id,
+      databaseDirPath(entryTemplatesDatabase),
+      template.id,
     ),
-    textContent: JSON.stringify(storedTemplate, null, 2),
+    textContent: JSON.stringify(
+      serializeDatabaseEntryTemplate(template),
+      null,
+      2,
+    ),
   })),
   // The image file stored in entryTemplate1's template directory
   resolveEntryTemplateFilePath(
-    entryTemplatesDatabase.path,
+    databaseDirPath(entryTemplatesDatabase),
     entryTemplate1.id,
     'template-image.png',
   ),
@@ -322,15 +337,15 @@ export const databaseEntryTemplateFiles: (MockFileDescriptor | string)[] = [
 
 export const databaseFiles: (MockFileDescriptor | string)[] = [
   parentDir,
-  // Individual database config files (path and name are not persisted)
-  ...databases.map(({ path, name, ...config }) => ({
-    path: resolveDatabaseConfigFilePath(path),
-    textContent: JSON.stringify(config, null, 2),
+  // Individual database config files
+  ...databases.map((database) => ({
+    path: resolveDatabaseConfigFilePath(databaseDirPath(database)),
+    textContent: JSON.stringify(serializeDatabase(database), null, 2),
   })),
   // Property file directories
   Fs.concatPath(
-    commonStorageDatabase.path,
+    databaseDirPath(commonStorageDatabase),
     commonStorageDatabase.propertyFilesDir!,
   ),
-  Fs.concatPath(propertyStorageDatabase.path, imagePropertyName),
+  Fs.concatPath(databaseDirPath(propertyStorageDatabase), imagePropertyName),
 ];

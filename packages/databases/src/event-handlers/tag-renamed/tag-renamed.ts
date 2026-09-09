@@ -5,7 +5,7 @@ import { getAllDatabaseEntries } from '../../getAllDatabaseEntries';
 import { getAllDatabases } from '../../getAllDatabases';
 import { sqlUpsertEntries } from '../../sql';
 import { DatabaseEntry, SqlEntryRecord } from '../../types';
-import { convertEntryToSqlRecord } from '../../utils';
+import { convertEntryToSqlRecord, resolveDatabasePath } from '../../utils';
 import { writeDatabaseEntry } from '../../writeDatabaseEntry';
 
 /**
@@ -55,7 +55,7 @@ export async function onTagRenamed(data: TagRenamedEventData): Promise<void> {
       await Promise.all(
         rewritten.properties.map((property) =>
           History.record({
-            ownerPath: database.path,
+            ownerPath: resolveDatabasePath(database),
             subjectKey: entry.title,
             kind: 'rename',
             target: 'value-label',

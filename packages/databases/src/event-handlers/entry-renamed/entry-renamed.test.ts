@@ -13,6 +13,8 @@ import {
   cleanupTestSqlDatabase,
   collectionDatabase,
   collectionEntry1,
+  databaseDirPath,
+  databaseEntryFilePath,
   databases,
   objectDatabase,
   objectEntry1,
@@ -36,16 +38,16 @@ const { layout_card_2 } = DesignFixtures;
 const renamedEntry = {
   ...collectionEntry1,
   title: 'Renamed Entry',
-  path: `${collectionDatabase.path}/Renamed Entry.md`,
+  path: 'Renamed Entry.md',
 };
 
 // The entry's metadata sidecar before and after the rename
 const oldSidecarPath = resolveEntryMetadataFilePath(
-  collectionDatabase.path,
-  collectionEntry1.path,
+  databaseDirPath(collectionDatabase),
+  databaseEntryFilePath(collectionEntry1),
 );
 const newSidecarPath = resolveEntryMetadataFilePath(
-  collectionDatabase.path,
+  databaseDirPath(collectionDatabase),
   renamedEntry.path,
 );
 
@@ -100,6 +102,21 @@ describe('onRenameEntry', () => {
   afterEach(async () => {
     cleanupTestSqlDatabase();
     await cleanup();
+  });
+
+  it("refreshes the entry's SQL record", async () => {
+    await onRenameEntry({
+      original: collectionEntry1,
+      updated: renamedEntry,
+    });
+
+    // The record carries the new title
+    expect(sqlGetAllEntriesFull()).toContainEqual(
+      expect.objectContaining({
+        id: collectionEntry1.id,
+        title: renamedEntry.title,
+      }),
+    );
   });
 
   it('does nothing if the database has no collection properties', async () => {
@@ -260,9 +277,9 @@ describe('onRenameEntry', () => {
     // The rewrite lands as an unawaited event side effect, so
     // poll for the referencing file to contain the new address.
     await vi.waitFor(() => {
-      expect(MockFs.readTextFile(collectionEntry1.path)).toContain(
-        'Collection Database/Renamed Related',
-      );
+      expect(
+        MockFs.readTextFile(databaseEntryFilePath(collectionEntry1)),
+      ).toContain('Collection Database/Renamed Related');
     });
   });
 
@@ -284,7 +301,7 @@ describe('onRenameEntry', () => {
   it("records the rename and moves the entry's history", async () => {
     // Record something against the entry under its old title
     await History.record({
-      ownerPath: objectDatabase.path,
+      ownerPath: databaseDirPath(objectDatabase),
       subjectKey: objectEntry1.title,
       kind: 'created',
     });
@@ -298,7 +315,7 @@ describe('onRenameEntry', () => {
     // with the rename recorded in it.
     expect(
       await History.read({
-        ownerPath: objectDatabase.path,
+        ownerPath: databaseDirPath(objectDatabase),
         subjectKey: 'Renamed',
       }),
     ).toEqual([

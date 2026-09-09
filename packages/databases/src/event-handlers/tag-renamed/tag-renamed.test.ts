@@ -13,10 +13,10 @@ import {
   getRecordedSqlStatements,
   objectDatabase,
   objectEntry1,
-  parentDir,
   setup,
   setupRecordingTestSqlDatabase,
 } from '../../test-utils';
+import { resolveDatabaseEntryPath, resolveDatabasePath } from '../../utils';
 import { onTagRenamed } from './tag-renamed';
 
 const { tag_1 } = TagFixtures;
@@ -26,7 +26,7 @@ const tagsDatabase = {
   ...objectDatabase,
   id: 'database_tags-test' as const,
   name: 'Tagged Objects',
-  path: `${parentDir}/Tagged Objects`,
+  path: 'Tagged Objects',
   properties: [
     ...objectDatabase.properties,
     { type: 'tags' as const, name: 'Tags' },
@@ -39,7 +39,7 @@ const taggedEntry = {
   id: 'database-entry_tagged-entry' as const,
   title: 'Tagged Entry',
   database: tagsDatabase.id,
-  path: `${tagsDatabase.path}/Tagged Entry.md`,
+  path: 'Tagged Entry.md',
   properties: {
     ...objectEntry1.properties,
     Tags: ['Urgent', 'Home'],
@@ -68,7 +68,7 @@ describe('onTagRenamed', () => {
 
     // Create the tags database directory so entry rewrites can
     // write the entry file.
-    MockFs.addFiles([tagsDatabase.path]);
+    MockFs.addFiles([resolveDatabasePath(tagsDatabase)]);
   });
 
   afterEach(async () => {
@@ -102,7 +102,7 @@ describe('onTagRenamed', () => {
     await onTagRenamed({ original: originalTag, updated: renamedTag });
 
     // The entry file should contain the new name and not the old
-    const contents = MockFs.readTextFile(taggedEntry.path);
+    const contents = MockFs.readTextFile(resolveDatabaseEntryPath(taggedEntry));
     expect(contents).toContain('Later');
     expect(contents).not.toContain('Urgent');
   });
@@ -145,7 +145,7 @@ describe('onTagRenamed', () => {
     await onTagRenamed({ original: originalTag, updated: renamedTag });
 
     const records = await History.read({
-      ownerPath: tagsDatabase.path,
+      ownerPath: resolveDatabasePath(tagsDatabase),
       subjectKey: taggedEntry.title,
     });
 
@@ -177,7 +177,7 @@ describe('onTagRenamed', () => {
 
     expect(
       await History.read({
-        ownerPath: tagsDatabase.path,
+        ownerPath: resolveDatabasePath(tagsDatabase),
         subjectKey: untagged.title,
       }),
     ).toEqual([]);

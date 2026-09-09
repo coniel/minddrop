@@ -67,3 +67,7 @@ export * from './buildEntrySortSql';
 export * from './searchDatabases';
 export * from './searchDatabaseEntryTemplates';
 export * from './sortDatabaseEntryTemplates';
+export * from './resolveDatabasePath';
+export * from './resolveDatabaseEntryPath';
+export * from './serializeDatabase';
+export * from './serializeDatabaseEntryTemplate';

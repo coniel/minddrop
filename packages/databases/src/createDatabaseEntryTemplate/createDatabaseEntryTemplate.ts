@@ -7,7 +7,7 @@ import { DatabaseEntryTemplateCreatedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
 import { DatabaseEntryTemplate, DatabaseEntryTemplateData } from '../types';
 import { updateDatabase } from '../updateDatabase';
-import { pruneEmptyPropertyValues } from '../utils';
+import { pruneEmptyPropertyValues, resolveDatabasePath } from '../utils';
 import { writeDatabaseEntryTemplate } from '../writeDatabaseEntryTemplate';
 
 /**
@@ -61,7 +61,7 @@ export async function createDatabaseEntryTemplate(
 
   // Store provided files in the template's directory
   const storedFileNames = await copyEntryTemplateFiles(
-    database.path,
+    resolveDatabasePath(database),
     id,
     files,
   );

@@ -3,6 +3,8 @@ import { DatabaseEntry, SqlEntryRecord } from '../../types';
 import {
   collectionDatabase,
   commonStorageDatabase,
+  databaseDirPath,
+  databases,
   entryStorageDatabase,
   objectDatabase,
   propertyStorageDatabase,
@@ -20,7 +22,7 @@ export const objectEntry1: DatabaseEntry = {
   id: 'database-entry_object-entry-1',
   title: 'Test Entry',
   database: objectDatabase.id,
-  path: `${objectDatabase.path}/Test Entry.md`,
+  path: 'Test Entry.md',
   created: new Date('2024-01-01T00:00:00.000Z'),
   lastModified: new Date('2024-01-01T00:00:00.000Z'),
   properties: {
@@ -59,7 +61,7 @@ export const yamlObjectEntry1: DatabaseEntry = {
   id: 'database-entry_yaml-object-entry-1',
   title: 'Test Entry',
   database: yamlObjectDatabase.id,
-  path: `${yamlObjectDatabase.path}/Test Entry.yaml`,
+  path: 'Test Entry.yaml',
   created: new Date('2024-01-01T00:00:00.000Z'),
   lastModified: new Date('2024-01-01T00:00:00.000Z'),
   properties: {
@@ -95,7 +97,7 @@ export const urlEntry1: DatabaseEntry = {
   id: 'database-entry_url-entry-1',
   title: 'Test Entry',
   database: urlDatabase.id,
-  path: `${urlDatabase.path}/Test Entry.md`,
+  path: 'Test Entry.md',
   created: new Date('2024-01-01T00:00:00.000Z'),
   lastModified: new Date('2024-01-01T00:00:00.000Z'),
   properties: {
@@ -138,7 +140,7 @@ export const rootStorageEntry1: DatabaseEntry = {
   id: 'database-entry_root-storage-entry-1',
   title: 'Root Storage Entry 1',
   database: rootStorageDatabase.id,
-  path: `${rootStorageDatabase.path}/Root Storage Entry 1.md`,
+  path: 'Root Storage Entry 1.md',
   created: new Date('2024-01-01T00:00:00.000Z'),
   lastModified: new Date('2024-01-01T00:00:00.000Z'),
   properties: {
@@ -167,7 +169,7 @@ export const referenceEntry1: DatabaseEntry = {
   id: 'database-entry_reference-entry-1',
   title: 'Reference Entry 1',
   database: rootStorageDatabase.id,
-  path: `${rootStorageDatabase.path}/Reference Entry 1.md`,
+  path: 'Reference Entry 1.md',
   created: new Date('2024-01-01T00:00:00.000Z'),
   lastModified: new Date('2024-01-01T00:00:00.000Z'),
   properties: {
@@ -196,7 +198,7 @@ export const rootStorageEntry_empty_value: DatabaseEntry = {
   id: 'database-entry_root-storage-entry-empty-value',
   title: 'Root Storage Entry Empty Value',
   database: rootStorageDatabase.id,
-  path: `${rootStorageDatabase.path}/Root Storage Entry Empty Value.md`,
+  path: 'Root Storage Entry Empty Value.md',
   created: new Date('2024-01-01T00:00:00.000Z'),
   lastModified: new Date('2024-01-01T00:00:00.000Z'),
   properties: {},
@@ -226,7 +228,7 @@ export const commonStorageEntry1: DatabaseEntry = {
   id: 'database-entry_common-storage-entry-1',
   title: 'Common Storage Entry 1',
   database: commonStorageDatabase.id,
-  path: `${commonStorageDatabase.path}/Common Storage Entry 1.md`,
+  path: 'Common Storage Entry 1.md',
   created: new Date('2024-01-01T00:00:00.000Z'),
   lastModified: new Date('2024-01-01T00:00:00.000Z'),
   properties: {
@@ -259,7 +261,7 @@ export const propertyStorageEntry1: DatabaseEntry = {
   id: 'database-entry_property-storage-entry-1',
   title: 'Property Storage Entry 1',
   database: propertyStorageDatabase.id,
-  path: `${propertyStorageDatabase.path}/Property Storage Entry 1.md`,
+  path: 'Property Storage Entry 1.md',
   created: new Date('2024-01-01T00:00:00.000Z'),
   lastModified: new Date('2024-01-01T00:00:00.000Z'),
   properties: {
@@ -292,7 +294,7 @@ export const entryStorageEntry1: DatabaseEntry = {
   id: 'database-entry_entry-storage-entry-1',
   title: 'Entry Storage Entry 1',
   database: entryStorageDatabase.id,
-  path: `${entryStorageDatabase.path}/Entry Storage Entry 1/Entry Storage Entry 1.md`,
+  path: 'Entry Storage Entry 1/Entry Storage Entry 1.md',
   created: new Date('2024-01-01T00:00:00.000Z'),
   lastModified: new Date('2024-01-01T00:00:00.000Z'),
   properties: {
@@ -325,7 +327,7 @@ export const timestampEntry1: DatabaseEntry = {
   id: 'database-entry_timestamp-entry-1',
   title: 'Timestamp Entry',
   database: timestampDatabase.id,
-  path: `${timestampDatabase.path}/Timestamp Entry.md`,
+  path: 'Timestamp Entry.md',
   created: new Date('2025-06-15T10:00:00.000Z'),
   lastModified: new Date('2025-06-20T14:00:00.000Z'),
   properties: {
@@ -363,7 +365,7 @@ export const relatedEntry1: DatabaseEntry = {
   id: 'database-entry_related-entry-1',
   title: 'Related Entry 1',
   database: collectionDatabase.id,
-  path: `${collectionDatabase.path}/Related Entry 1.md`,
+  path: 'Related Entry 1.md',
   created: new Date('2024-01-01T00:00:00.000Z'),
   lastModified: new Date('2024-01-01T00:00:00.000Z'),
   properties: {
@@ -400,7 +402,7 @@ export const relatedEntry2: DatabaseEntry = {
   id: 'database-entry_related-entry-2',
   title: 'Related Entry 2',
   database: collectionDatabase.id,
-  path: `${collectionDatabase.path}/Related Entry 2.md`,
+  path: 'Related Entry 2.md',
   created: new Date('2024-01-01T00:00:00.000Z'),
   lastModified: new Date('2024-01-01T00:00:00.000Z'),
   properties: {
@@ -437,7 +439,7 @@ export const collectionEntry1: DatabaseEntry = {
   id: 'database-entry_collection-entry-1',
   title: 'Collection Entry 1',
   database: collectionDatabase.id,
-  path: `${collectionDatabase.path}/Collection Entry 1.md`,
+  path: 'Collection Entry 1.md',
   created: new Date('2024-01-01T00:00:00.000Z'),
   lastModified: new Date('2024-01-01T00:00:00.000Z'),
   properties: {
@@ -513,68 +515,78 @@ export const databaseEntrySqlRecords: SqlEntryRecord[] = [
   timestampEntry1SqlRecord,
 ];
 
+/**
+ * Returns the file system path of a fixture entry's primary file, for
+ * the mock file system and the assertions made against it.
+ */
+export function databaseEntryFilePath(entry: DatabaseEntry): string {
+  const database = databases.find(({ id }) => id === entry.database);
+
+  return `${databaseDirPath(database!)}/${entry.path}`;
+}
+
 export const databaseEntryFiles: (MockFileDescriptor | string)[] = [
   {
-    path: objectEntry1.path,
+    path: databaseEntryFilePath(objectEntry1),
     textContent: objectEntry1FileContents,
   },
   {
-    path: urlEntry1.path,
+    path: databaseEntryFilePath(urlEntry1),
     textContent: urlEntry1FileContents,
   },
   {
-    path: yamlObjectEntry1.path,
+    path: databaseEntryFilePath(yamlObjectEntry1),
     textContent: yamlObjectEntry1FileContents,
   },
   {
-    path: rootStorageEntry1.path,
+    path: databaseEntryFilePath(rootStorageEntry1),
     textContent: rootStorageEntry1FileContents,
   },
   {
-    path: referenceEntry1.path,
+    path: databaseEntryFilePath(referenceEntry1),
     textContent: referenceEntry1FileContents,
   },
   {
-    path: rootStorageEntry_empty_value.path,
+    path: databaseEntryFilePath(rootStorageEntry_empty_value),
     textContent: rootStorageEntry_empty_valueFileContents,
   },
   {
-    path: commonStorageEntry1.path,
+    path: databaseEntryFilePath(commonStorageEntry1),
     textContent: commonStorageEntry1FileContents,
   },
   {
-    path: propertyStorageEntry1.path,
+    path: databaseEntryFilePath(propertyStorageEntry1),
     textContent: propertyStorageEntry1FileContents,
   },
   {
-    path: entryStorageEntry1.path,
+    path: databaseEntryFilePath(entryStorageEntry1),
     textContent: entryStorageEntry1FileContents,
   },
   {
-    path: relatedEntry1.path,
+    path: databaseEntryFilePath(relatedEntry1),
     textContent: relatedEntry1FileContents,
   },
   {
-    path: relatedEntry2.path,
+    path: databaseEntryFilePath(relatedEntry2),
     textContent: relatedEntry2FileContents,
   },
   {
-    path: collectionEntry1.path,
+    path: databaseEntryFilePath(collectionEntry1),
     textContent: collectionEntry1FileContents,
   },
   {
-    path: timestampEntry1.path,
+    path: databaseEntryFilePath(timestampEntry1),
     textContent: timestampEntry1FileContents,
   },
 ];
 
 export const databaseEntryPropertyFiles: (MockFileDescriptor | string)[] = [
   // Root storage
-  `${rootStorageDatabase.path}/image.png`,
+  `${databaseDirPath(rootStorageDatabase)}/image.png`,
   // Common storage
-  `${commonStorageDatabase.path}/${commonStorageDatabase.propertyFilesDir}/image.png`,
+  `${databaseDirPath(commonStorageDatabase)}/${commonStorageDatabase.propertyFilesDir}/image.png`,
   // Property storage
-  `${propertyStorageDatabase.path}/Image/image.png`,
+  `${databaseDirPath(propertyStorageDatabase)}/Image/image.png`,
   // Entry storage
-  `${entryStorageDatabase.path}/${entryStorageEntry1.title}/image.png`,
+  `${databaseDirPath(entryStorageDatabase)}/${entryStorageEntry1.title}/image.png`,
 ];

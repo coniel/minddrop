@@ -1,7 +1,11 @@
 import { Fs } from '@minddrop/file-system';
 import { Paths } from '@minddrop/utils';
 import { getDatabase } from '../getDatabase';
-import { resolveDatabaseConfigFilePath } from '../utils';
+import {
+  resolveDatabaseConfigFilePath,
+  resolveDatabasePath,
+  serializeDatabase,
+} from '../utils';
 
 /**
  * Writes the config of the specified database to the file system.
@@ -12,17 +16,19 @@ import { resolveDatabaseConfigFilePath } from '../utils';
  */
 export async function writeDatabaseConfig(id: string): Promise<void> {
   // Get the database config
-  // Exclude path and name as they are derived from the
-  // directory name and location.
-  const { path, name: _name, ...config } = getDatabase(id);
+  const database = getDatabase(id);
+  const databasePath = resolveDatabasePath(database);
 
   // Ensure the database's hidden .minddrop directory exists
-  const hiddenDirPath = Fs.concatPath(path, Paths.hiddenDirName);
+  const hiddenDirPath = Fs.concatPath(databasePath, Paths.hiddenDirName);
 
   if (!(await Fs.exists(hiddenDirPath))) {
     await Fs.createDir(hiddenDirPath);
   }
 
   // Write the config to the file system
-  await Fs.writeJsonFile(resolveDatabaseConfigFilePath(path), config);
+  await Fs.writeJsonFile(
+    resolveDatabaseConfigFilePath(databasePath),
+    serializeDatabase(database),
+  );
 }

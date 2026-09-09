@@ -2,12 +2,20 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabaseNotFoundError } from '../errors';
 import { getDatabase } from '../getDatabase';
-import { MockFs, cleanup, objectDatabase, setup } from '../test-utils';
+import {
+  MockFs,
+  cleanup,
+  databaseDirPath,
+  objectDatabase,
+  setup,
+} from '../test-utils';
 import { resolveDatabaseConfigFilePath } from '../utils';
 import { normalizeDatabaseConfigIds } from './normalizeDatabaseConfigIds';
 
 // Path to the database's config file
-const configPath = resolveDatabaseConfigFilePath(objectDatabase.path);
+const configPath = resolveDatabaseConfigFilePath(
+  databaseDirPath(objectDatabase),
+);
 
 describe('normalizeDatabaseConfigIds', () => {
   beforeEach(setup);

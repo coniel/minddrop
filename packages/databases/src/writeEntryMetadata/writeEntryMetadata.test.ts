@@ -2,6 +2,8 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
   MockFs,
   cleanup,
+  databaseDirPath,
+  databaseEntryFilePath,
   objectDatabase,
   objectEntry1,
   setup,
@@ -15,8 +17,8 @@ import { writeEntryMetadata } from './writeEntryMetadata';
 
 // The path of the entry's metadata sidecar
 const sidecarPath = resolveEntryMetadataFilePath(
-  objectDatabase.path,
-  objectEntry1.path,
+  databaseDirPath(objectDatabase),
+  databaseEntryFilePath(objectEntry1),
 );
 
 // The metadata to write
@@ -33,8 +35,8 @@ describe('writeEntryMetadata', () => {
 
   it('writes the metadata to the sidecar', async () => {
     await writeEntryMetadata(
-      objectDatabase.path,
-      objectEntry1.path,
+      databaseDirPath(objectDatabase),
+      databaseEntryFilePath(objectEntry1),
       entryMetadata,
     );
 
@@ -43,13 +45,15 @@ describe('writeEntryMetadata', () => {
 
   it('creates the metadata directory if it does not exist', async () => {
     await writeEntryMetadata(
-      objectDatabase.path,
-      objectEntry1.path,
+      databaseDirPath(objectDatabase),
+      databaseEntryFilePath(objectEntry1),
       entryMetadata,
     );
 
     expect(
-      MockFs.exists(resolveDatabaseMetadataDirPath(objectDatabase.path)),
+      MockFs.exists(
+        resolveDatabaseMetadataDirPath(databaseDirPath(objectDatabase)),
+      ),
     ).toBe(true);
   });
 
@@ -65,8 +69,8 @@ describe('writeEntryMetadata', () => {
     ]);
 
     await writeEntryMetadata(
-      objectDatabase.path,
-      objectEntry1.path,
+      databaseDirPath(objectDatabase),
+      databaseEntryFilePath(objectEntry1),
       entryMetadata,
     );
 

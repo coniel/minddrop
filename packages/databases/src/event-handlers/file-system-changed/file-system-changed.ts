@@ -5,6 +5,7 @@ import { getAllDatabases } from '../../getAllDatabases';
 import {
   isDatabaseConfigFilePath,
   resolveDatabaseConfigFilePath,
+  resolveDatabasePath,
 } from '../../utils';
 
 // How long to wait for changes to stop arriving before scanning.
@@ -56,10 +57,11 @@ async function isDatabaseChange(
 
   // Anything inside a known database directory, including the
   // directory itself being deleted.
-  const inKnownDatabase = getAllDatabases().some(
-    (database) =>
-      path === database.path || path.startsWith(`${database.path}/`),
-  );
+  const inKnownDatabase = getAllDatabases().some((database) => {
+    const databasePath = resolveDatabasePath(database);
+
+    return path === databasePath || path.startsWith(`${databasePath}/`);
+  });
 
   if (inKnownDatabase) {
     return true;

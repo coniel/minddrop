@@ -9,6 +9,8 @@ import {
   cleanup,
   commonStorageDatabase,
   commonStorageEntry1,
+  databaseDirPath,
+  databaseEntryFilePath,
   entryStorageEntry1,
   objectEntry1,
   rootStorageDatabase,
@@ -37,15 +39,17 @@ describe('deleteDatabaseEntry', () => {
     await deleteDatabaseEntry(objectEntry1.id);
 
     // The entry file should now be in the trash
-    expect(MockFs.existsInTrash(objectEntry1.path)).toBe(true);
-    expect(MockFs.exists(objectEntry1.path)).toBe(false);
+    expect(MockFs.existsInTrash(databaseEntryFilePath(objectEntry1))).toBe(
+      true,
+    );
+    expect(MockFs.exists(databaseEntryFilePath(objectEntry1))).toBe(false);
   });
 
   it('trashes loose property files for root storage', async () => {
     await deleteDatabaseEntry(rootStorageEntry1.id);
 
     // The entry's file-property file should now be in the trash
-    const propertyFilePath = `${rootStorageDatabase.path}/image.png`;
+    const propertyFilePath = `${databaseDirPath(rootStorageDatabase)}/image.png`;
     expect(MockFs.existsInTrash(propertyFilePath)).toBe(true);
   });
 
@@ -53,7 +57,7 @@ describe('deleteDatabaseEntry', () => {
     await deleteDatabaseEntry(commonStorageEntry1.id);
 
     // The entry's file-property file should now be in the trash
-    const propertyFilePath = `${commonStorageDatabase.path}/${commonStorageDatabase.propertyFilesDir}/image.png`;
+    const propertyFilePath = `${databaseDirPath(commonStorageDatabase)}/${commonStorageDatabase.propertyFilesDir}/image.png`;
     expect(MockFs.existsInTrash(propertyFilePath)).toBe(true);
   });
 
@@ -61,7 +65,9 @@ describe('deleteDatabaseEntry', () => {
     await deleteDatabaseEntry(entryStorageEntry1.id);
 
     // The entry's subdirectory should now be in the trash
-    const entryDirPath = Fs.parentDirPath(entryStorageEntry1.path);
+    const entryDirPath = Fs.parentDirPath(
+      databaseEntryFilePath(entryStorageEntry1),
+    );
     expect(MockFs.existsInTrash(entryDirPath)).toBe(true);
   });
 
@@ -92,14 +98,18 @@ describe('deleteDatabaseEntry', () => {
 
   it("deletes the entry's metadata sidecar", async () => {
     const sidecarPath = resolveEntryMetadataFilePath(
-      objectDatabase.path,
-      objectEntry1.path,
+      databaseDirPath(objectDatabase),
+      databaseEntryFilePath(objectEntry1),
     );
 
     // Give the entry a sidecar
-    await writeEntryMetadata(objectDatabase.path, objectEntry1.path, {
-      embeddedViewConfigs: { 'card:Tasks': { options: {}, data: {} } },
-    });
+    await writeEntryMetadata(
+      databaseDirPath(objectDatabase),
+      databaseEntryFilePath(objectEntry1),
+      {
+        embeddedViewConfigs: { 'card:Tasks': { options: {}, data: {} } },
+      },
+    );
 
     await deleteDatabaseEntry(objectEntry1.id);
 

@@ -10,6 +10,8 @@ import { getDatabase } from '../getDatabase';
 import { Database, PropertyFileStorage } from '../types';
 import { updateDatabaseEntryProperty } from '../updateDatabaseEntryProperty';
 import {
+  resolveDatabaseEntryPath,
+  resolveDatabasePath,
   resolveDatabasePropertyDirs,
   resolveEntryFilePath,
   resolveEntryPropertyFilePath,
@@ -65,11 +67,13 @@ export async function setDatabasePropertyFileStorage(
 
   const entries = getAllDatabaseEntries(id);
   const fileProperties = database.properties.filter(Properties.isFileBased);
+  const databasePath = resolveDatabasePath(database);
 
   // Phase 1: capture the current on-disk state before mutating anything.
   // Each entry's file extension.
   const entryMoves = entries.map((entry) => ({
     entry,
+    entryPath: resolveDatabaseEntryPath(entry, database),
     fileExtension: Fs.getFileExtension(entry.path),
   }));
 
@@ -106,9 +110,9 @@ export async function setDatabasePropertyFileStorage(
 
   // Phase 2: wrap or unwrap entry files when crossing the entry boundary.
   if (wasEntry !== willEntry) {
-    for (const { entry, fileExtension } of entryMoves) {
+    for (const { entry, entryPath, fileExtension } of entryMoves) {
       const newEntryPath = resolveEntryFilePath(
-        database.path,
+        databasePath,
         storage,
         entry.title,
         fileExtension,
@@ -121,12 +125,14 @@ export async function setDatabasePropertyFileStorage(
       }
 
       // Move the entry file to its new location
-      if (await Fs.exists(entry.path)) {
-        await Fs.rename(entry.path, newEntryPath);
+      if (await Fs.exists(entryPath)) {
+        await Fs.rename(entryPath, newEntryPath);
       }
 
       // Update the entry's stored path before any later re-serialization
-      DatabaseEntriesStore.update(entry.id, { path: newEntryPath });
+      DatabaseEntriesStore.update(entry.id, {
+        path: Fs.relativePath(databasePath, newEntryPath),
+      });
     }
   }
 
@@ -138,7 +144,7 @@ export async function setDatabasePropertyFileStorage(
     }
 
     const destination = resolvePropertyFilePath({
-      databasePath: database.path,
+      databasePath,
       mode: storage,
       propertyFilesDirName: newDirName,
       entryTitle: move.entryTitle,
@@ -172,7 +178,7 @@ export async function setDatabasePropertyFileStorage(
   // Phase 4: remove directories the old layout no longer needs.
   if (wasEntry && !willEntry) {
     for (const { entry } of entryMoves) {
-      const wrapperDir = Fs.concatPath(database.path, entry.title);
+      const wrapperDir = Fs.concatPath(databasePath, entry.title);
 
       // Trash the wrapper directory and any leftover scaffolding
       if (await Fs.exists(wrapperDir)) {

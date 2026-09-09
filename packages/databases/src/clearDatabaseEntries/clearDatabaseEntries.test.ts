@@ -9,6 +9,8 @@ import {
   MockFs,
   cleanup,
   commonStorageDatabase,
+  databaseDirPath,
+  databaseEntryFilePath,
   entryStorageDatabase,
   entryStorageEntry1,
   objectDatabase,
@@ -37,15 +39,17 @@ describe('clearDatabaseEntries', () => {
     await clearDatabaseEntries(objectDatabase.id);
 
     // The entry file should now be in the trash
-    expect(MockFs.existsInTrash(objectEntry1.path)).toBe(true);
-    expect(MockFs.exists(objectEntry1.path)).toBe(false);
+    expect(MockFs.existsInTrash(databaseEntryFilePath(objectEntry1))).toBe(
+      true,
+    );
+    expect(MockFs.exists(databaseEntryFilePath(objectEntry1))).toBe(false);
   });
 
   it('trashes the shared property directory for common storage', async () => {
     await clearDatabaseEntries(commonStorageDatabase.id);
 
     // The common property directory should now be in the trash
-    const propertyDirPath = `${commonStorageDatabase.path}/${commonStorageDatabase.propertyFilesDir}`;
+    const propertyDirPath = `${databaseDirPath(commonStorageDatabase)}/${commonStorageDatabase.propertyFilesDir}`;
     expect(MockFs.existsInTrash(propertyDirPath)).toBe(true);
   });
 
@@ -53,7 +57,7 @@ describe('clearDatabaseEntries', () => {
     await clearDatabaseEntries(propertyStorageDatabase.id);
 
     // The file-based property's directory should now be in the trash
-    const propertyDirPath = `${propertyStorageDatabase.path}/Image`;
+    const propertyDirPath = `${databaseDirPath(propertyStorageDatabase)}/Image`;
     expect(MockFs.existsInTrash(propertyDirPath)).toBe(true);
   });
 
@@ -61,7 +65,7 @@ describe('clearDatabaseEntries', () => {
     await clearDatabaseEntries(rootStorageDatabase.id);
 
     // The entry's file-property file should now be in the trash
-    const propertyFilePath = `${rootStorageDatabase.path}/image.png`;
+    const propertyFilePath = `${databaseDirPath(rootStorageDatabase)}/image.png`;
     expect(MockFs.existsInTrash(propertyFilePath)).toBe(true);
   });
 
@@ -69,7 +73,9 @@ describe('clearDatabaseEntries', () => {
     await clearDatabaseEntries(entryStorageDatabase.id);
 
     // The entry's subdirectory should now be in the trash
-    const entryDirPath = Fs.parentDirPath(entryStorageEntry1.path);
+    const entryDirPath = Fs.parentDirPath(
+      databaseEntryFilePath(entryStorageEntry1),
+    );
     expect(MockFs.existsInTrash(entryDirPath)).toBe(true);
   });
 

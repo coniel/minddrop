@@ -4,6 +4,7 @@ import { InvalidParameterError } from '@minddrop/utils';
 import { PropertyFilesDirNameKey } from '../constants';
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntry } from '../getDatabaseEntry';
+import { resolveDatabaseEntryPath, resolveDatabasePath } from '../utils';
 
 /**
  * Ensures that the directory into which an entry property's file
@@ -23,11 +24,12 @@ export async function ensurePropertyFileDirExists(
   const entry = getDatabaseEntry(entryId);
   // Get the database
   const database = getDatabase(entry.database);
+  const databasePath = resolveDatabasePath(database);
 
   // If the database uses property based storage, ensure the property
   // subdirectory exists.
   if (database.propertyFileStorage === 'property') {
-    const propertyDirPath = Fs.concatPath(database.path, propertyName);
+    const propertyDirPath = Fs.concatPath(databasePath, propertyName);
 
     if (!(await Fs.exists(propertyDirPath))) {
       await Fs.createDir(propertyDirPath);
@@ -39,7 +41,7 @@ export async function ensurePropertyFileDirExists(
   if (database.propertyFileStorage === 'common') {
     const commonDirName =
       database.propertyFilesDir || i18n.t(PropertyFilesDirNameKey);
-    const commonDirPath = Fs.concatPath(database.path, commonDirName);
+    const commonDirPath = Fs.concatPath(databasePath, commonDirName);
 
     if (!(await Fs.exists(commonDirPath))) {
       await Fs.createDir(commonDirPath);
@@ -49,9 +51,11 @@ export async function ensurePropertyFileDirExists(
   // If the databases uses entry based storage, ensure the entry
   // subdirectory exists.
   if (database.propertyFileStorage === 'entry') {
-    if (!(await Fs.exists(Fs.parentDirPath(entry.path)))) {
+    const entryPath = resolveDatabaseEntryPath(entry, database);
+
+    if (!(await Fs.exists(Fs.parentDirPath(entryPath)))) {
       throw new InvalidParameterError(
-        `Entry directory does not exist: ${entry.path}`,
+        `Entry directory does not exist: ${entryPath}`,
       );
     }
   }

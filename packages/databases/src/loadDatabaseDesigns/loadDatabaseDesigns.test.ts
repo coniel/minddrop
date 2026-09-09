@@ -2,9 +2,15 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Designs } from '@minddrop/designs-next';
 import { DesignFixtures } from '@minddrop/designs-next/test-utils';
 import { DatabasesStore } from '../DatabasesStore';
-import { MockFs, cleanup, objectDatabase, setup } from '../test-utils';
+import {
+  MockFs,
+  cleanup,
+  databaseDirPath,
+  objectDatabase,
+  setup,
+} from '../test-utils';
 import type { Database } from '../types';
-import { resolveDatabaseDesignFilePath } from '../utils';
+import { resolveDatabaseDesignFilePath, resolveDatabasePath } from '../utils';
 import { loadDatabaseDesigns } from './loadDatabaseDesigns';
 
 const { ownedCardDesign_1, ownedListDesign_1 } = DesignFixtures;
@@ -23,7 +29,7 @@ describe('loadDatabaseDesigns', () => {
     MockFs.addFiles([
       {
         path: resolveDatabaseDesignFilePath(
-          objectDatabase.path,
+          databaseDirPath(objectDatabase),
           storedCardDesign.id,
         ),
         textContent: JSON.stringify(storedCardDesign),
@@ -63,14 +69,14 @@ describe('loadDatabaseDesigns', () => {
     MockFs.addFiles([
       {
         path: resolveDatabaseDesignFilePath(
-          database1.path,
+          resolveDatabasePath(database1),
           storedCardDesign.id,
         ),
         textContent: JSON.stringify(storedCardDesign),
       },
       {
         path: resolveDatabaseDesignFilePath(
-          database2.path,
+          resolveDatabasePath(database2),
           storedListDesign.id,
         ),
         textContent: JSON.stringify(storedListDesign),

@@ -1,10 +1,12 @@
 // Increment this when the schema or indexing logic changes.
 // On startup, if the stored schema version does not match,
 // the SQL database is dropped and rebuilt from scratch.
-export const SCHEMA_VERSION = 11;
+export const SCHEMA_VERSION = 12;
 
 // SQL schema for creating tables
 export const SCHEMA_SQL = `
+  -- Paths are workspace relative, so moving the workspace does not
+  -- invalidate the index.
   CREATE TABLE IF NOT EXISTS databases (
     id   TEXT PRIMARY KEY,
     name TEXT NOT NULL,
@@ -15,12 +17,15 @@ export const SCHEMA_SQL = `
   CREATE TABLE IF NOT EXISTS entries (
     id            TEXT PRIMARY KEY,
     database_id   TEXT NOT NULL,
-    path          TEXT NOT NULL UNIQUE,
+    path          TEXT NOT NULL,
     title         TEXT NOT NULL,
     created       INTEGER NOT NULL,
     last_modified INTEGER NOT NULL,
     content_hash  TEXT NOT NULL DEFAULT '',
     metadata      TEXT NOT NULL DEFAULT '{}',
+    -- Entry paths are relative to their database, so they are only
+    -- unique within one.
+    UNIQUE (database_id, path),
     FOREIGN KEY (database_id) REFERENCES databases(id) ON DELETE CASCADE
   );
 

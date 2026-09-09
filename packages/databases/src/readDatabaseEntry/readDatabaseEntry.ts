@@ -1,7 +1,7 @@
 import { Fs } from '@minddrop/file-system';
 import { entityId, titleFromPath } from '@minddrop/utils';
 import { Database, DatabaseEntry, DatabaseEntrySerializer } from '../types';
-import { getTimestampProperty } from '../utils';
+import { getTimestampProperty, resolveDatabaseEntryPath } from '../utils';
 
 /**
  * Reads a database entry from the file system.
@@ -11,7 +11,7 @@ import { getTimestampProperty } from '../utils';
  * sidecar. Callers with sidecar access resolve them with
  * `mergeEntryMetadata`.
  *
- * @param path - The entry path.
+ * @param path - The entry file's path, relative to its database.
  * @param database - The database the entry belongs to.
  * @param entrySerializer - The entry serializer used to deserialize the entry.
  *
@@ -22,9 +22,12 @@ export async function readDatabaseEntry(
   database: Database,
   entrySerializer: DatabaseEntrySerializer,
 ): Promise<DatabaseEntry | null> {
+  // Path to the entry's main file
+  const filePath = resolveDatabaseEntryPath(path, database);
+
   try {
     // Read the entry's user properties
-    const serializedProperties = await Fs.readTextFile(path);
+    const serializedProperties = await Fs.readTextFile(filePath);
 
     // Deserialize the entry's properties
     const properties = entrySerializer.deserialize(
@@ -47,7 +50,7 @@ export async function readDatabaseEntry(
 
     // Only stat the file if either timestamp is missing
     if (!created || !lastModified) {
-      const stats = await Fs.stat(path);
+      const stats = await Fs.stat(filePath);
 
       created = created ?? stats.created;
       lastModified = lastModified ?? stats.lastModified;

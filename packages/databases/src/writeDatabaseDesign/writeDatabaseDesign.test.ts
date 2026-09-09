@@ -2,7 +2,13 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Design, StoredDesign } from '@minddrop/designs-next';
 import { DesignFixtures } from '@minddrop/designs-next/test-utils';
 import { DatabaseNotFoundError } from '../errors';
-import { MockFs, cleanup, objectDatabase, setup } from '../test-utils';
+import {
+  MockFs,
+  cleanup,
+  databaseDirPath,
+  objectDatabase,
+  setup,
+} from '../test-utils';
 import { resolveDatabaseDesignFilePath } from '../utils';
 import { writeDatabaseDesign } from './writeDatabaseDesign';
 
@@ -13,7 +19,7 @@ const design: Design = { ...ownedCardDesign_1, owner: objectDatabase.id };
 
 // Path to the design's file
 const designFilePath = resolveDatabaseDesignFilePath(
-  objectDatabase.path,
+  databaseDirPath(objectDatabase),
   design.id,
 );
 

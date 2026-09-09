@@ -6,6 +6,8 @@ import {
   cleanup,
   commonStorageDatabase,
   commonStorageEntry1,
+  databaseDirPath,
+  databaseEntryFilePath,
   entryStorageDatabase,
   entryStorageEntry1,
   imagePropertyName,
@@ -29,7 +31,9 @@ describe('writePropertyFile', () => {
       await writePropertyFile(rootStorageEntry1.id, imagePropertyName, file);
 
       expect(
-        MockFs.exists(Fs.concatPath(rootStorageDatabase.path, file.name)),
+        MockFs.exists(
+          Fs.concatPath(databaseDirPath(rootStorageDatabase), file.name),
+        ),
       ).toBe(true);
     });
   });
@@ -41,7 +45,7 @@ describe('writePropertyFile', () => {
       expect(
         MockFs.exists(
           Fs.concatPath(
-            commonStorageDatabase.path,
+            databaseDirPath(commonStorageDatabase),
             commonStorageDatabase.propertyFilesDir!,
             file.name,
           ),
@@ -53,7 +57,7 @@ describe('writePropertyFile', () => {
       // Remove the common directory
       MockFs.removeDir(
         Fs.concatPath(
-          commonStorageDatabase.path,
+          databaseDirPath(commonStorageDatabase),
           commonStorageDatabase.propertyFilesDir!,
         ),
       );
@@ -63,7 +67,7 @@ describe('writePropertyFile', () => {
       expect(
         MockFs.exists(
           Fs.concatPath(
-            commonStorageDatabase.path,
+            databaseDirPath(commonStorageDatabase),
             commonStorageDatabase.propertyFilesDir!,
           ),
         ),
@@ -82,7 +86,7 @@ describe('writePropertyFile', () => {
       expect(
         MockFs.exists(
           Fs.concatPath(
-            propertyStorageDatabase.path,
+            databaseDirPath(propertyStorageDatabase),
             imagePropertyName,
             file.name,
           ),
@@ -93,7 +97,10 @@ describe('writePropertyFile', () => {
     it('creates the property directory if it does not exist', async () => {
       // Remove the property directory
       MockFs.removeDir(
-        Fs.concatPath(propertyStorageDatabase.path, imagePropertyName),
+        Fs.concatPath(
+          databaseDirPath(propertyStorageDatabase),
+          imagePropertyName,
+        ),
       );
 
       await writePropertyFile(
@@ -104,7 +111,10 @@ describe('writePropertyFile', () => {
 
       expect(
         MockFs.exists(
-          Fs.concatPath(propertyStorageDatabase.path, imagePropertyName),
+          Fs.concatPath(
+            databaseDirPath(propertyStorageDatabase),
+            imagePropertyName,
+          ),
         ),
       ).toBe(true);
     });
@@ -117,7 +127,7 @@ describe('writePropertyFile', () => {
       expect(
         MockFs.exists(
           Fs.concatPath(
-            entryStorageDatabase.path,
+            databaseDirPath(entryStorageDatabase),
             entryStorageEntry1.title,
             file.name,
           ),
@@ -127,7 +137,9 @@ describe('writePropertyFile', () => {
 
     it('throws if the entry directory does not exist', async () => {
       // Remove the entry directory
-      MockFs.removeDir(Fs.parentDirPath(entryStorageEntry1.path));
+      MockFs.removeDir(
+        Fs.parentDirPath(databaseEntryFilePath(entryStorageEntry1)),
+      );
 
       await expect(async () =>
         writePropertyFile(entryStorageEntry1.id, imagePropertyName, file),
@@ -137,7 +149,9 @@ describe('writePropertyFile', () => {
 
   it('handles file name conflicts', async () => {
     // Add a file with the same name as the target file
-    MockFs.addFiles([Fs.concatPath(rootStorageDatabase.path, file.name)]);
+    MockFs.addFiles([
+      Fs.concatPath(databaseDirPath(rootStorageDatabase), file.name),
+    ]);
 
     const path = await writePropertyFile(
       rootStorageEntry1.id,
@@ -147,7 +161,7 @@ describe('writePropertyFile', () => {
 
     expect(path).toBe(
       Fs.concatPath(
-        rootStorageDatabase.path,
+        databaseDirPath(rootStorageDatabase),
         Fs.setPathIncrement(file.name, 1),
       ),
     );

@@ -3,6 +3,7 @@ import { DatabaseEntryTemplateNotFoundError } from '../errors';
 import {
   MockFs,
   cleanup,
+  databaseDirPath,
   entryTemplate1,
   entryTemplatesDatabase,
   setup,
@@ -10,18 +11,19 @@ import {
 import {
   resolveEntryTemplateConfigFilePath,
   resolveEntryTemplateDirPath,
+  serializeDatabaseEntryTemplate,
 } from '../utils';
 import { writeDatabaseEntryTemplate } from './writeDatabaseEntryTemplate';
 
 // Path to entryTemplate1's config file
 const configPath = resolveEntryTemplateConfigFilePath(
-  entryTemplatesDatabase.path,
+  databaseDirPath(entryTemplatesDatabase),
   entryTemplate1.id,
 );
 
 // The template as stored in its config file (the database ID is
 // not persisted).
-const { database: _database, ...storedTemplate } = entryTemplate1;
+const storedTemplate = serializeDatabaseEntryTemplate(entryTemplate1);
 
 describe('writeDatabaseEntryTemplate', () => {
   beforeEach(setup);
@@ -47,7 +49,7 @@ describe('writeDatabaseEntryTemplate', () => {
     // Remove the template's directory
     MockFs.removeDir(
       resolveEntryTemplateDirPath(
-        entryTemplatesDatabase.path,
+        databaseDirPath(entryTemplatesDatabase),
         entryTemplate1.id,
       ),
     );

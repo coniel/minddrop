@@ -7,6 +7,7 @@ import { getDatabaseEntryTemplate } from '../getDatabaseEntryTemplate';
 import {
   MockFs,
   cleanup,
+  databaseDirPath,
   entryTemplate1,
   entryTemplatesDatabase,
   mockDate,
@@ -22,7 +23,7 @@ import { updateDatabaseEntryTemplate } from './updateDatabaseEntryTemplate';
 const sourceImagePath = `${parentDir}/source-image.png`;
 // Path to entryTemplate1's stored image file
 const storedImagePath = resolveEntryTemplateFilePath(
-  entryTemplatesDatabase.path,
+  databaseDirPath(entryTemplatesDatabase),
   entryTemplate1.id,
   'template-image.png',
 );
@@ -89,7 +90,7 @@ describe('updateDatabaseEntryTemplate', () => {
     expect(
       MockFs.readJsonFile(
         resolveEntryTemplateConfigFilePath(
-          entryTemplatesDatabase.path,
+          databaseDirPath(entryTemplatesDatabase),
           entryTemplate1.id,
         ),
       ),
@@ -136,7 +137,7 @@ describe('updateDatabaseEntryTemplate', () => {
     expect(
       MockFs.exists(
         resolveEntryTemplateFilePath(
-          entryTemplatesDatabase.path,
+          databaseDirPath(entryTemplatesDatabase),
           entryTemplate1.id,
           'source-image.png',
         ),

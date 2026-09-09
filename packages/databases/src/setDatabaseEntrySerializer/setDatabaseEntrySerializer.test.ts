@@ -18,6 +18,8 @@ import {
   clearRecordedSqlStatements,
   collectionDatabase,
   collectionEntry1,
+  databaseDirPath,
+  databaseEntryFilePath,
   getRecordedSqlStatements,
   objectDatabase,
   objectEntry1,
@@ -77,7 +79,7 @@ describe('setDatabaseEntrySerializer', () => {
 
     // The serializer is unchanged and the entry file stays in place
     expect(result.entrySerializer).toBe('markdown');
-    expect(await Fs.exists(objectEntry1.path)).toBe(true);
+    expect(await Fs.exists(databaseEntryFilePath(objectEntry1))).toBe(true);
   });
 
   it('throws when the serializer is not registered', async () => {
@@ -86,19 +88,20 @@ describe('setDatabaseEntrySerializer', () => {
     ).rejects.toThrow(DatabaseEntrySerializerNotRegisteredError);
 
     // The entry file is left untouched
-    expect(await Fs.exists(objectEntry1.path)).toBe(true);
+    expect(await Fs.exists(databaseEntryFilePath(objectEntry1))).toBe(true);
   });
 
   it('converts entry files to the new format', async () => {
     await setDatabaseEntrySerializer(objectDatabase.id, 'json');
 
     const newPath = `${Fs.removeExtension(objectEntry1.path)}.json`;
+    const newFilePath = `${Fs.removeExtension(databaseEntryFilePath(objectEntry1))}.json`;
 
     // The old entry file is removed
-    expect(await Fs.exists(objectEntry1.path)).toBe(false);
+    expect(await Fs.exists(databaseEntryFilePath(objectEntry1))).toBe(false);
 
     // The new entry file contains the JSON serialized properties
-    expect(MockFs.readTextFile(newPath)).toBe(
+    expect(MockFs.readTextFile(newFilePath)).toBe(
       jsonEntrySerializer.serialize(
         objectDatabase.properties,
         objectEntry1.properties,
@@ -130,7 +133,7 @@ describe('setDatabaseEntrySerializer', () => {
   it('serializes collection properties as durable addresses', async () => {
     await setDatabaseEntrySerializer(collectionDatabase.id, 'yaml');
 
-    const newPath = `${Fs.removeExtension(collectionEntry1.path)}.yaml`;
+    const newPath = `${Fs.removeExtension(databaseEntryFilePath(collectionEntry1))}.yaml`;
 
     // Collection members are written as durable addresses
     expect(MockFs.readTextFile(newPath)).toContain(
@@ -139,14 +142,16 @@ describe('setDatabaseEntrySerializer', () => {
   });
 
   it('leaves references to the converted entries untouched', async () => {
-    const before = MockFs.readTextFile(collectionEntry1.path);
+    const before = MockFs.readTextFile(databaseEntryFilePath(collectionEntry1));
 
     // Convert the database containing the referenced entry
     await setDatabaseEntrySerializer(rootStorageDatabase.id, 'yaml');
 
     // Addresses name entries by title, so the converted entries keep
     // theirs and the referencing file needs no rewrite.
-    expect(MockFs.readTextFile(collectionEntry1.path)).toBe(before);
+    expect(MockFs.readTextFile(databaseEntryFilePath(collectionEntry1))).toBe(
+      before,
+    );
   });
 
   it('dispatches an update event and persists the config', async () => {
@@ -163,7 +168,7 @@ describe('setDatabaseEntrySerializer', () => {
 
     // The persisted config reflects the new serializer
     const config = MockFs.readJsonFile<Database>(
-      resolveDatabaseConfigFilePath(objectDatabase.path),
+      resolveDatabaseConfigFilePath(databaseDirPath(objectDatabase)),
     );
     expect(config.entrySerializer).toBe('json');
   });
@@ -177,14 +182,16 @@ describe('setDatabaseEntrySerializer', () => {
     );
 
     // The original entry files are restored with their original content
-    expect(MockFs.readTextFile(rootStorageEntry1.path)).toBe(
+    expect(MockFs.readTextFile(databaseEntryFilePath(rootStorageEntry1))).toBe(
       rootStorageEntry1FileContents,
     );
-    expect(await Fs.exists(referenceEntry1.path)).toBe(true);
+    expect(await Fs.exists(databaseEntryFilePath(referenceEntry1))).toBe(true);
 
     // The partially written new format files are removed
     expect(
-      await Fs.exists(`${Fs.removeExtension(rootStorageEntry1.path)}.fail`),
+      await Fs.exists(
+        `${Fs.removeExtension(databaseEntryFilePath(rootStorageEntry1))}.fail`,
+      ),
     ).toBe(false);
 
     // The entries' stored paths are unchanged
@@ -194,7 +201,7 @@ describe('setDatabaseEntrySerializer', () => {
 
     // The backup directory is removed
     const backupDir = Fs.concatPath(
-      rootStorageDatabase.path,
+      databaseDirPath(rootStorageDatabase),
       Paths.hiddenDirName,
       `${rootStorageDatabase.name} ${EntryConversionBackupDirName}`,
     );

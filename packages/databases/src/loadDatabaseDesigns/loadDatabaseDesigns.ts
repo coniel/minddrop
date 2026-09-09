@@ -2,7 +2,7 @@ import { Design, Designs } from '@minddrop/designs-next';
 import { Fs } from '@minddrop/file-system';
 import { normalizeDatabaseConfigIds } from '../normalizeDatabaseConfigIds';
 import type { Database } from '../types';
-import { resolveDatabaseDesignsDirPath } from '../utils';
+import { resolveDatabaseDesignsDirPath, resolveDatabasePath } from '../utils';
 
 /**
  * Loads database designs from the databases' design directories
@@ -36,7 +36,7 @@ export async function loadDatabaseDesigns(
  */
 async function readDatabaseDesigns(database: Database): Promise<Design[]> {
   // Path to the database's designs directory
-  const dirPath = resolveDatabaseDesignsDirPath(database.path);
+  const dirPath = resolveDatabaseDesignsDirPath(resolveDatabasePath(database));
 
   // The stored designs read from the designs directory, empty for
   // databases without one.

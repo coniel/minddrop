@@ -10,7 +10,11 @@ import { getDatabase } from '../getDatabase';
 import { getDatabaseEntry } from '../getDatabaseEntry';
 import { getDatabaseEntrySerializer } from '../getDatabaseEntrySerializer';
 import { Database, DatabaseEntry } from '../types';
-import { serializeCollectionProperties } from '../utils';
+import {
+  resolveDatabaseEntryPath,
+  resolveDatabasePath,
+  serializeCollectionProperties,
+} from '../utils';
 import { writeDatabaseConfig } from '../writeDatabaseConfig';
 
 /**
@@ -50,10 +54,12 @@ export async function setDatabaseEntrySerializer(
   // Get the database's entries for conversion
   const entries = getAllDatabaseEntries(id);
 
+  const databasePath = resolveDatabasePath(database);
+
   // Directory the original entry files are kept in during the conversion,
   // prefixed with the database name to identify it in the system trash
   const backupDir = Fs.concatPath(
-    database.path,
+    databasePath,
     Paths.hiddenDirName,
     `${database.name} ${EntryConversionBackupDirName}`,
   );
@@ -75,18 +81,20 @@ export async function setDatabaseEntrySerializer(
     // new extension before writing anything, so each entry is written
     // to its converted path.
     for (const entry of entries) {
+      const entryPath = resolveDatabaseEntryPath(entry, database);
+
       // The entry file path with the new serializer's extension
       const newPath = `${Fs.removeExtension(entry.path)}.${serializer.fileExtension}`;
 
       // Move the original file into the backup directory
-      if (await Fs.exists(entry.path)) {
+      if (await Fs.exists(entryPath)) {
         const backupPath = Fs.concatPath(
           backupDir,
-          Fs.fileNameFromPath(entry.path),
+          Fs.fileNameFromPath(entryPath),
         );
 
-        await Fs.rename(entry.path, backupPath);
-        backedUpFiles.push({ originalPath: entry.path, backupPath });
+        await Fs.rename(entryPath, backupPath);
+        backedUpFiles.push({ originalPath: entryPath, backupPath });
       }
 
       // Update the entry's stored path
@@ -111,8 +119,10 @@ export async function setDatabaseEntrySerializer(
       );
 
       // Write the converted entry file
-      await Fs.writeTextFile(updatedEntry.path, serializedEntry);
-      writtenFiles.push(updatedEntry.path);
+      const updatedEntryPath = resolveDatabaseEntryPath(updatedEntry, database);
+
+      await Fs.writeTextFile(updatedEntryPath, serializedEntry);
+      writtenFiles.push(updatedEntryPath);
     }
 
     // Commit the config change

@@ -9,6 +9,7 @@ import { sqlUpsertDatabase } from '../sql';
 import {
   cleanup,
   cleanupTestSqlDatabase,
+  databaseDirPath,
   objectDatabase,
   objectEntry1,
   setup,
@@ -17,7 +18,7 @@ import {
 import { initializeDatabaseEventHandlers } from './initializeDatabaseEventHandlers';
 
 const subject = {
-  ownerPath: objectDatabase.path,
+  ownerPath: databaseDirPath(objectDatabase),
   subjectKey: objectEntry1.title,
 };
 

@@ -13,6 +13,7 @@ import {
 } from '../types';
 import {
   pruneEmptyPropertyValues,
+  resolveDatabasePath,
   resolveEntryTemplateFilePath,
 } from '../utils';
 import { writeDatabaseEntryTemplate } from '../writeDatabaseEntryTemplate';
@@ -98,7 +99,7 @@ export async function updateDatabaseEntryTemplate(
     if (cleared || replaced) {
       // Path to the previously stored file
       const oldFilePath = resolveEntryTemplateFilePath(
-        database.path,
+        resolveDatabasePath(database),
         templateId,
         oldFileName,
       );
@@ -112,7 +113,7 @@ export async function updateDatabaseEntryTemplate(
 
   // Store provided files in the template's directory
   const storedFileNames = await copyEntryTemplateFiles(
-    database.path,
+    resolveDatabasePath(database),
     templateId,
     files,
   );

@@ -4,6 +4,7 @@ import { DatabaseEntryNotFoundError } from '../errors';
 import {
   MockFs,
   cleanup,
+  databaseDirPath,
   imagePropertyName,
   rootStorageDatabase,
   rootStorageEntry1,
@@ -30,7 +31,9 @@ describe('downloadPropertyFile', () => {
     await downloadPropertyFile(rootStorageEntry1.id, imagePropertyName, url);
 
     expect(
-      MockFs.exists(Fs.concatPath(rootStorageDatabase.path, fileName)),
+      MockFs.exists(
+        Fs.concatPath(databaseDirPath(rootStorageDatabase), fileName),
+      ),
     ).toBe(true);
   });
 
@@ -46,13 +49,18 @@ describe('downloadPropertyFile', () => {
 
   it('increments the file name if the file already exists', async () => {
     // Add a file which collides with the downloaded file's name
-    MockFs.addFiles([Fs.concatPath(rootStorageDatabase.path, fileName)]);
+    MockFs.addFiles([
+      Fs.concatPath(databaseDirPath(rootStorageDatabase), fileName),
+    ]);
 
     await downloadPropertyFile(rootStorageEntry1.id, imagePropertyName, url);
 
     expect(
       MockFs.exists(
-        Fs.concatPath(rootStorageDatabase.path, 'example.com_image 1.png'),
+        Fs.concatPath(
+          databaseDirPath(rootStorageDatabase),
+          'example.com_image 1.png',
+        ),
       ),
     ).toBe(true);
   });

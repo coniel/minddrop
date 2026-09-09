@@ -9,30 +9,37 @@ import {
 import { DatabaseEntryRenamedEventData } from '../../events';
 import { getDatabase } from '../../getDatabase';
 import { moveEntryMetadataFile } from '../../moveEntryMetadataFile';
+import { sqlUpsertEntries } from '../../sql';
 import {
+  convertEntryToSqlRecord,
   databaseEntryAddress,
+  resolveDatabasePath,
   virtualCollectionId,
   virtualCollectionName,
 } from '../../utils';
 
 /**
  * Called when a database entry is renamed. Updates title-derived
- * state: the metadata sidecar, the entry's history, and virtual
- * collection names.
+ * state: the SQL record, the metadata sidecar, the entry's history,
+ * and virtual collection names.
  */
 export async function onRenameEntry(data: DatabaseEntryRenamedEventData) {
   const { original, updated } = data;
 
   // Get the database to access its properties schema
   const database = getDatabase(updated.database);
+  const databasePath = resolveDatabasePath(database);
+
+  // Refresh the SQL record, which holds the entry's title
+  sqlUpsertEntries(database.id, [convertEntryToSqlRecord(updated, database)]);
 
   // Move the sidecar to follow the entry to its new path
-  await moveEntryMetadataFile(database.path, original.path, updated.path);
+  await moveEntryMetadataFile(databasePath, original.path, updated.path);
 
   // Record the rename before moving the history, so it lands in the
   // log the move carries across.
   await History.record({
-    ownerPath: database.path,
+    ownerPath: databasePath,
     subjectKey: original.title,
     kind: 'rename',
     target: 'self',
@@ -42,15 +49,15 @@ export async function onRenameEntry(data: DatabaseEntryRenamedEventData) {
 
   // Move the history to follow the entry to its new title
   await History.move({
-    ownerPath: database.path,
+    ownerPath: databasePath,
     fromKey: original.title,
     toKey: updated.title,
   });
 
   // Move the entry's recorded capture along with it
   moveContentCapture(
-    contentCaptureKey(database.path, original.title),
-    contentCaptureKey(database.path, updated.title),
+    contentCaptureKey(databasePath, original.title),
+    contentCaptureKey(databasePath, updated.title),
   );
 
   // Find all collection properties in the schema

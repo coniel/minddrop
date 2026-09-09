@@ -8,6 +8,7 @@ import {
 import {
   cleanup,
   cleanupTestSqlDatabase,
+  databaseDirPath,
   objectDatabase,
   objectEntry1,
   objectEntry1SqlRecord,
@@ -89,7 +90,7 @@ describe('onUpdateEntry', () => {
     await onUpdateEntry({ original: objectEntry1, updated: updatedEntry });
 
     const records = await History.read({
-      ownerPath: objectDatabase.path,
+      ownerPath: databaseDirPath(objectDatabase),
       subjectKey: objectEntry1.title,
     });
 
@@ -112,7 +113,7 @@ describe('onUpdateEntry', () => {
 
     expect(
       await History.read({
-        ownerPath: objectDatabase.path,
+        ownerPath: databaseDirPath(objectDatabase),
         subjectKey: objectEntry1.title,
       }),
     ).toEqual([]);

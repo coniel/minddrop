@@ -19,6 +19,7 @@ import {
   mergeEntryMetadata,
   resolveCollectionProperties,
   resolveDatabaseMetadataDirPath,
+  resolveDatabasePath,
 } from '../../utils';
 import { writeEntryMetadata } from '../../writeEntryMetadata';
 import { sqlDeleteDatabase } from '../sqlDeleteDatabase';
@@ -131,26 +132,10 @@ export async function backgroundSyncDatabases(
     // diff, for the changed entries only.
     const rawEntries = await readDatabaseEntries(database);
 
-    // The database's SQL record holds its path as of the last sync
-    const sqlDatabase = sqlDatabases.find(
-      (record) => record.id === database.id,
-    );
-
-    // Get existing sync records from SQL, rebasing their paths onto
-    // the database's current path so entries keep their identities
-    // when the database directory was renamed while the app was closed.
-    const existingRecords = sqlGetEntrySyncRecords(database.id).map(
-      (record) => {
-        if (!sqlDatabase || !record.path.startsWith(`${sqlDatabase.path}/`)) {
-          return record;
-        }
-
-        return {
-          ...record,
-          path: database.path + record.path.slice(sqlDatabase.path.length),
-        };
-      },
-    );
+    // Get existing sync records from SQL. Their paths are addressed
+    // from the database, so a database directory renamed while the app
+    // was closed still matches and its entries keep their identities.
+    const existingRecords = sqlGetEntrySyncRecords(database.id);
 
     // Match fresh entries to existing entries by path so they
     // take over the existing IDs (disk reads mint fresh ones)
@@ -212,7 +197,7 @@ export async function backgroundSyncDatabases(
         mergeEntryMetadata(
           entry,
           database.properties,
-          await readEntryMetadata(database.path, entry.path),
+          await readEntryMetadata(resolveDatabasePath(database), entry.path),
         ),
       ),
     );
@@ -259,7 +244,11 @@ export async function backgroundSyncDatabases(
   // a read pass.
   await Promise.all(
     outdatedSidecars.map(({ database, entry }) =>
-      writeEntryMetadata(database.path, entry.path, entry.metadata),
+      writeEntryMetadata(
+        resolveDatabasePath(database),
+        entry.path,
+        entry.metadata,
+      ),
     ),
   );
 
@@ -303,8 +292,10 @@ async function sweepOrphanedMetadata(
   database: Database,
   entryPaths: string[],
 ): Promise<void> {
+  const databasePath = resolveDatabasePath(database);
+
   // Listed rather than read, since only the keys are needed
-  const metadataKeys = await listEntryMetadataKeys(database.path);
+  const metadataKeys = await listEntryMetadataKeys(databasePath);
 
   // Sidecars are keyed by the entry's database-relative path
   const entryKeys = new Set(entryPaths.map((path) => entryMetadataKey(path)));
@@ -314,7 +305,7 @@ async function sweepOrphanedMetadata(
   await Promise.all(
     orphanedKeys.map((key) =>
       Fs.removeFile(
-        `${resolveDatabaseMetadataDirPath(database.path)}/${key}.json`,
+        `${resolveDatabaseMetadataDirPath(databasePath)}/${key}.json`,
       ),
     ),
   );

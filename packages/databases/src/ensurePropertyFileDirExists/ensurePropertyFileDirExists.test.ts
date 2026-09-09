@@ -9,6 +9,7 @@ import {
   cleanup,
   commonStorageDatabase,
   commonStorageEntry1,
+  databaseDirPath,
   entryStorageDatabase,
   entryStorageEntry1,
   propertyStorageDatabase,
@@ -28,20 +29,22 @@ describe('ensurePropertyFileDirExists', () => {
     // Use a property whose directory does not exist yet
     await ensurePropertyFileDirExists(propertyStorageEntry1.id, 'Attachment');
 
-    expect(MockFs.exists(`${propertyStorageDatabase.path}/Attachment`)).toBe(
-      true,
-    );
+    expect(
+      MockFs.exists(`${databaseDirPath(propertyStorageDatabase)}/Attachment`),
+    ).toBe(true);
   });
 
   it('keeps an existing property directory for property based storage', async () => {
     // The Image property directory exists in the fixtures
     await ensurePropertyFileDirExists(propertyStorageEntry1.id, 'Image');
 
-    expect(MockFs.exists(`${propertyStorageDatabase.path}/Image`)).toBe(true);
+    expect(
+      MockFs.exists(`${databaseDirPath(propertyStorageDatabase)}/Image`),
+    ).toBe(true);
   });
 
   it('creates the common directory for common based storage', async () => {
-    const commonDirPath = `${commonStorageDatabase.path}/${commonStorageDatabase.propertyFilesDir}`;
+    const commonDirPath = `${databaseDirPath(commonStorageDatabase)}/${commonStorageDatabase.propertyFilesDir}`;
 
     // Remove the common directory created by the fixtures
     MockFs.removeDir(commonDirPath);
@@ -62,7 +65,7 @@ describe('ensurePropertyFileDirExists', () => {
     // The default localized directory name should be used
     expect(
       MockFs.exists(
-        `${commonStorageDatabase.path}/${i18n.t(PropertyFilesDirNameKey)}`,
+        `${databaseDirPath(commonStorageDatabase)}/${i18n.t(PropertyFilesDirNameKey)}`,
       ),
     ).toBe(true);
   });
@@ -89,6 +92,8 @@ describe('ensurePropertyFileDirExists', () => {
     await ensurePropertyFileDirExists(rootStorageEntry1.id, 'Image');
 
     // Root storage keeps property files loose in the database root
-    expect(MockFs.exists(`${rootStorageDatabase.path}/Image`)).toBe(false);
+    expect(MockFs.exists(`${databaseDirPath(rootStorageDatabase)}/Image`)).toBe(
+      false,
+    );
   });
 });

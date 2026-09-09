@@ -11,6 +11,7 @@ import {
   entryMetadataKey,
   mergeEntryMetadata,
   resolveCollectionProperties,
+  resolveDatabasePath,
 } from '../../utils';
 import { writeEntryMetadata } from '../../writeEntryMetadata';
 import { SCHEMA_SQL, SCHEMA_VERSION } from '../schema';
@@ -134,7 +135,7 @@ async function rebuildSqlFromFilesystem(databases: Database[]): Promise<void> {
     // Read entries and metadata from disk in parallel
     const [rawEntries, metadataMap] = await Promise.all([
       readDatabaseEntries(database),
-      readAllEntryMetadata(database.path),
+      readAllEntryMetadata(resolveDatabasePath(database)),
     ]);
 
     // Merge metadata into entries before conversion, resolving their
@@ -193,7 +194,11 @@ async function rebuildSqlFromFilesystem(databases: Database[]): Promise<void> {
   // itself a read pass.
   await Promise.all(
     outdatedSidecars.map(({ database, entry }) =>
-      writeEntryMetadata(database.path, entry.path, entry.metadata),
+      writeEntryMetadata(
+        resolveDatabasePath(database),
+        entry.path,
+        entry.metadata,
+      ),
     ),
   );
 }

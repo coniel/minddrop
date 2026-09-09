@@ -6,6 +6,7 @@ import {
   MockFs,
   cleanup,
   createMockBackendAdapter,
+  databaseDirPath,
   objectDatabase,
   setup,
 } from '../../test-utils';
@@ -31,7 +32,9 @@ describe('onFileSystemChanged', () => {
   });
 
   it('scans the workspace after a change inside a database', async () => {
-    await onFileSystemChanged(change(`${objectDatabase.path}/Dune.md`));
+    await onFileSystemChanged(
+      change(`${databaseDirPath(objectDatabase)}/Dune.md`),
+    );
 
     await flushDebounce();
 
@@ -39,7 +42,9 @@ describe('onFileSystemChanged', () => {
   });
 
   it('scans the workspace when a database directory is deleted', async () => {
-    await onFileSystemChanged(change(objectDatabase.path, 'deleted'));
+    await onFileSystemChanged(
+      change(databaseDirPath(objectDatabase), 'deleted'),
+    );
 
     await flushDebounce();
 
@@ -47,9 +52,15 @@ describe('onFileSystemChanged', () => {
   });
 
   it('coalesces a burst of changes into a single scan', async () => {
-    await onFileSystemChanged(change(`${objectDatabase.path}/Dune.md`));
-    await onFileSystemChanged(change(`${objectDatabase.path}/Emma.md`));
-    await onFileSystemChanged(change(`${objectDatabase.path}/Ubik.md`));
+    await onFileSystemChanged(
+      change(`${databaseDirPath(objectDatabase)}/Dune.md`),
+    );
+    await onFileSystemChanged(
+      change(`${databaseDirPath(objectDatabase)}/Emma.md`),
+    );
+    await onFileSystemChanged(
+      change(`${databaseDirPath(objectDatabase)}/Ubik.md`),
+    );
 
     await flushDebounce();
 

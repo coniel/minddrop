@@ -10,7 +10,7 @@ import { DatabaseEntryDeletedEventData } from '../../events';
 import { getDatabase } from '../../getDatabase';
 import { removeEntriesFromCollections } from '../../removeEntriesFromCollections';
 import { sqlDeleteEntries } from '../../sql';
-import { virtualCollectionId } from '../../utils';
+import { resolveDatabasePath, virtualCollectionId } from '../../utils';
 
 /**
  * Called when a database entry is deleted. Removes from SQL,
@@ -24,6 +24,7 @@ export async function onDeleteEntry(data: DatabaseEntryDeletedEventData) {
 
   // Get the database to access its properties schema
   const database = getDatabase(data.database);
+  const databasePath = resolveDatabasePath(database);
 
   // Find all collection properties in the schema
   const collectionProperties = database.properties.filter(
@@ -53,14 +54,14 @@ export async function onDeleteEntry(data: DatabaseEntryDeletedEventData) {
 
   // Drop the entry's recorded capture, so an entry taking its title
   // next is not measured against it.
-  clearContentCapture(contentCaptureKey(database.path, data.title));
+  clearContentCapture(contentCaptureKey(databasePath, data.title));
 
   // Check whether the entry was still untitled. Deleting it frees a
   // title the app hands out, so the next new entry would inherit its
   // history.
   if (isUntitledTitle(data.title)) {
     await History.delete({
-      ownerPath: database.path,
+      ownerPath: databasePath,
       subjectKey: data.title,
     });
 
@@ -70,7 +71,7 @@ export async function onDeleteEntry(data: DatabaseEntryDeletedEventData) {
   // Close the history of a named entry. It outlives the entry, so the
   // entry can be restored from it.
   await History.record({
-    ownerPath: database.path,
+    ownerPath: databasePath,
     subjectKey: data.title,
     kind: 'deleted',
   });

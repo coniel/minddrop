@@ -1,5 +1,6 @@
 import { getDatabase } from '../../getDatabase';
 import { getDatabaseEntry } from '../../getDatabaseEntry';
+import { resolveDatabasePath } from '../resolveDatabasePath';
 import { resolvePropertyFilePath } from '../resolvePropertyFilePath';
 import { resolvePropertyFilesDirName } from '../resolvePropertyFilesDirName';
 
@@ -24,7 +25,7 @@ export function resolveEntryPropertyFilePath(
 
   // Resolve the path against the database's current storage mode
   return resolvePropertyFilePath({
-    databasePath: database.path,
+    databasePath: resolveDatabasePath(database),
     mode: database.propertyFileStorage,
     propertyFilesDirName: resolvePropertyFilesDirName(
       database.propertyFilesDir,

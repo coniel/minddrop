@@ -6,6 +6,8 @@ import {
   cleanupTestSqlDatabase,
   collectionDatabase,
   collectionEntry1,
+  databaseDirPath,
+  databaseEntryFilePath,
   databases,
   parentDir,
   referenceEntry1,
@@ -96,7 +98,7 @@ describe('initializeDatabasesBackend', () => {
   it('drops unresolvable reference values', async () => {
     // Write old-format member values into the entry file
     MockFs.writeTextFile(
-      collectionEntry1.path,
+      databaseEntryFilePath(collectionEntry1),
       `---
 Title: Collection Entry 1
 Related:
@@ -118,7 +120,7 @@ References: []
   });
 
   it('seeds an entry sidecar with its stat derived timestamps', async () => {
-    MockFs.setFileStats(collectionEntry1.path, {
+    MockFs.setFileStats(databaseEntryFilePath(collectionEntry1), {
       created: statDate,
       lastModified: statDate,
     });
@@ -126,8 +128,8 @@ References: []
     await initializeDatabasesBackend('workspace-1', parentDir);
 
     const metadata = await readEntryMetadata(
-      collectionDatabase.path,
-      collectionEntry1.path,
+      databaseDirPath(collectionDatabase),
+      databaseEntryFilePath(collectionEntry1),
     );
 
     expect(metadata.created).toEqual(statDate);
@@ -135,13 +137,17 @@ References: []
   });
 
   it('uses a seeded sidecar rather than re-seeding from stat', async () => {
-    await writeEntryMetadata(collectionDatabase.path, collectionEntry1.path, {
-      created: sidecarDate,
-      lastModified: sidecarDate,
-    });
+    await writeEntryMetadata(
+      databaseDirPath(collectionDatabase),
+      databaseEntryFilePath(collectionEntry1),
+      {
+        created: sidecarDate,
+        lastModified: sidecarDate,
+      },
+    );
 
     // Stat reports a rewritten file, as an atomic write leaves behind
-    MockFs.setFileStats(collectionEntry1.path, {
+    MockFs.setFileStats(databaseEntryFilePath(collectionEntry1), {
       created: statDate,
       lastModified: statDate,
     });
@@ -159,8 +165,8 @@ References: []
 
     // And the sidecar is left as it was
     const metadata = await readEntryMetadata(
-      collectionDatabase.path,
-      collectionEntry1.path,
+      databaseDirPath(collectionDatabase),
+      databaseEntryFilePath(collectionEntry1),
     );
 
     expect(metadata.created).toEqual(sidecarDate);

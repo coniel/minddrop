@@ -6,6 +6,7 @@ import { getDatabaseEntryTemplate } from '../getDatabaseEntryTemplate';
 import {
   MockFs,
   cleanup,
+  databaseDirPath,
   entryTemplate1,
   entryTemplate2,
   entryTemplatesDatabase,
@@ -42,7 +43,7 @@ describe('deleteDatabaseEntryTemplate', () => {
     expect(
       MockFs.exists(
         resolveEntryTemplateDirPath(
-          entryTemplatesDatabase.path,
+          databaseDirPath(entryTemplatesDatabase),
           entryTemplate1.id,
         ),
       ),

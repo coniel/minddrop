@@ -15,6 +15,7 @@ import {
   MockFs,
   cleanup,
   collectionEntry1,
+  databaseEntryFilePath,
   entryStorageEntry1,
   objectDatabase,
   objectEntry1,
@@ -76,7 +77,10 @@ describe('writeDatabaseEntry', () => {
       data = eventData;
     });
 
-    MockFs.writeTextFile(objectEntry1.path, 'The contents the write replaced');
+    MockFs.writeTextFile(
+      databaseEntryFilePath(objectEntry1),
+      'The contents the write replaced',
+    );
 
     await writeDatabaseEntry(objectEntry1.id);
 
@@ -84,7 +88,7 @@ describe('writeDatabaseEntry', () => {
       entry: objectEntry1,
       database: objectDatabase,
       previousContents: 'The contents the write replaced',
-      contents: MockFs.readTextFile(objectEntry1.path),
+      contents: MockFs.readTextFile(databaseEntryFilePath(objectEntry1)),
     });
   });
 
@@ -95,7 +99,7 @@ describe('writeDatabaseEntry', () => {
       data = eventData;
     });
 
-    MockFs.removeFile(objectEntry1.path);
+    MockFs.removeFile(databaseEntryFilePath(objectEntry1));
 
     await writeDatabaseEntry(objectEntry1.id);
 
@@ -108,7 +112,7 @@ describe('writeDatabaseEntry', () => {
     // Write once so the file holds what a second write would produce
     await writeDatabaseEntry(objectEntry1.id);
 
-    const contents = MockFs.readTextFile(objectEntry1.path);
+    const contents = MockFs.readTextFile(databaseEntryFilePath(objectEntry1));
 
     Events.addListener(DatabaseEntryWrittenEvent, 'test', () => {
       dispatched = true;
@@ -117,11 +121,13 @@ describe('writeDatabaseEntry', () => {
     await writeDatabaseEntry(objectEntry1.id);
 
     expect(dispatched).toBe(false);
-    expect(MockFs.readTextFile(objectEntry1.path)).toBe(contents);
+    expect(MockFs.readTextFile(databaseEntryFilePath(objectEntry1))).toBe(
+      contents,
+    );
   });
 
   it('ensures the entry subdirectory exists if the database uses entry based storage', async () => {
-    const path = entryStorageEntry1.path;
+    const path = databaseEntryFilePath(entryStorageEntry1);
     const parentDir = path.substring(0, path.lastIndexOf('/'));
 
     // Remove the entry subdirectory before writing to ensure it doesn't exist
@@ -134,11 +140,13 @@ describe('writeDatabaseEntry', () => {
 
   it('writes the user properties to the entry file', async () => {
     // Remove the file before writing to ensure it doesn't exist
-    MockFs.removeFile(yamlObjectEntry1.path);
+    MockFs.removeFile(databaseEntryFilePath(yamlObjectEntry1));
 
     await writeDatabaseEntry(yamlObjectEntry1.id);
 
-    const properties = await MockFs.readYamlFile(yamlObjectEntry1.path);
+    const properties = await MockFs.readYamlFile(
+      databaseEntryFilePath(yamlObjectEntry1),
+    );
 
     expect(properties).toEqual(yamlObjectEntry1.properties);
   });
@@ -146,7 +154,9 @@ describe('writeDatabaseEntry', () => {
   it('writes collection property members as addresses', async () => {
     await writeDatabaseEntry(collectionEntry1.id);
 
-    const contents = MockFs.readTextFile(collectionEntry1.path);
+    const contents = MockFs.readTextFile(
+      databaseEntryFilePath(collectionEntry1),
+    );
 
     // Member references should be written as durable addresses rather
     // than entry IDs.
@@ -160,37 +170,39 @@ describe('writeDatabaseEntry', () => {
       // An entry whose file carries a key the database does not model,
       // as though the user had added it in another editor
       MockFs.writeTextFile(
-        objectEntry1.path,
+        databaseEntryFilePath(objectEntry1),
         `---\nIcon: ${objectEntry1.properties.Icon}\ncustom: keep me\n---\n\nTest content`,
       );
 
       await writeDatabaseEntry(objectEntry1.id);
 
-      expect(MockFs.readTextFile(objectEntry1.path)).toContain(
-        'custom: keep me',
-      );
+      expect(
+        MockFs.readTextFile(databaseEntryFilePath(objectEntry1)),
+      ).toContain('custom: keep me');
     });
 
     it('preserves comments', async () => {
       MockFs.writeTextFile(
-        objectEntry1.path,
+        databaseEntryFilePath(objectEntry1),
         `---\n# a comment\nIcon: ${objectEntry1.properties.Icon}\n---\n\nTest content`,
       );
 
       await writeDatabaseEntry(objectEntry1.id);
 
-      expect(MockFs.readTextFile(objectEntry1.path)).toContain('# a comment');
+      expect(
+        MockFs.readTextFile(databaseEntryFilePath(objectEntry1)),
+      ).toContain('# a comment');
     });
 
     it('preserves the formatting of untouched keys', async () => {
       MockFs.writeTextFile(
-        objectEntry1.path,
+        databaseEntryFilePath(objectEntry1),
         `---\nIcon: "${objectEntry1.properties.Icon}"\nnotes: |\n  first\n  second\n---\n\nTest content`,
       );
 
       await writeDatabaseEntry(objectEntry1.id);
 
-      const contents = MockFs.readTextFile(objectEntry1.path);
+      const contents = MockFs.readTextFile(databaseEntryFilePath(objectEntry1));
 
       expect(contents).toContain(`Icon: "${objectEntry1.properties.Icon}"`);
       expect(contents).toContain('notes: |');
@@ -206,15 +218,15 @@ describe('writeDatabaseEntry', () => {
         },
       });
       MockFs.writeTextFile(
-        objectEntry1.path,
+        databaseEntryFilePath(objectEntry1),
         `---\nIcon: ${objectEntry1.properties.Icon}\ncustom: keep me\n---\n\nTest content`,
       );
 
       await writeDatabaseEntry(objectEntry1.id);
 
-      expect(MockFs.readTextFile(objectEntry1.path)).toContain(
-        'custom: keep me',
-      );
+      expect(
+        MockFs.readTextFile(databaseEntryFilePath(objectEntry1)),
+      ).toContain('custom: keep me');
     });
   });
 
@@ -229,7 +241,9 @@ describe('writeDatabaseEntry', () => {
 
     await writeDatabaseEntry(collectionEntry1.id);
 
-    const contents = MockFs.readTextFile(collectionEntry1.path);
+    const contents = MockFs.readTextFile(
+      databaseEntryFilePath(collectionEntry1),
+    );
 
     expect(contents).not.toContain('database-entry_missing');
   });

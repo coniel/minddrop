@@ -7,6 +7,7 @@ import { getDatabaseEntryTemplate } from '../getDatabaseEntryTemplate';
 import {
   MockFs,
   cleanup,
+  databaseDirPath,
   entryTemplatesDatabase,
   mockDate,
   parentDir,
@@ -65,7 +66,7 @@ describe('createDatabaseEntryTemplate', () => {
     expect(
       MockFs.readJsonFile(
         resolveEntryTemplateConfigFilePath(
-          entryTemplatesDatabase.path,
+          databaseDirPath(entryTemplatesDatabase),
           template.id,
         ),
       ),
@@ -134,7 +135,7 @@ describe('createDatabaseEntryTemplate', () => {
     expect(
       MockFs.exists(
         resolveEntryTemplateFilePath(
-          entryTemplatesDatabase.path,
+          databaseDirPath(entryTemplatesDatabase),
           template.id,
           'source-image.png',
         ),

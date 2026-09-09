@@ -3,10 +3,10 @@ import { DataViews } from '@minddrop/data-views';
 import { DataViewFixtures } from '@minddrop/data-views/test-utils';
 import { DatabasesStore } from '../DatabasesStore';
 import { getDatabase } from '../getDatabase';
-import { MockFs, cleanup, setup } from '../test-utils';
+import { MockFs, cleanup, databaseDirPath, setup } from '../test-utils';
 import { objectDatabase } from '../test-utils/fixtures';
 import type { Database } from '../types';
-import { resolveDatabaseViewFilePath } from '../utils';
+import { resolveDatabasePath, resolveDatabaseViewFilePath } from '../utils';
 import { loadDatabaseViews } from './loadDatabaseViews';
 
 const { dataView_virtual_1, dataView_board_1 } = DataViewFixtures;
@@ -32,7 +32,10 @@ describe('loadDatabaseViews', () => {
     // Add a stored view file to the database's views directory
     MockFs.addFiles([
       {
-        path: resolveDatabaseViewFilePath(objectDatabase.path, storedView1.id),
+        path: resolveDatabaseViewFilePath(
+          databaseDirPath(objectDatabase),
+          storedView1.id,
+        ),
         textContent: JSON.stringify(storedView1),
       },
     ]);
@@ -60,7 +63,10 @@ describe('loadDatabaseViews', () => {
     // Add a stored view file to the database's views directory
     MockFs.addFiles([
       {
-        path: resolveDatabaseViewFilePath(objectDatabase.path, storedView1.id),
+        path: resolveDatabaseViewFilePath(
+          databaseDirPath(objectDatabase),
+          storedView1.id,
+        ),
         textContent: JSON.stringify(storedView1),
       },
     ]);
@@ -98,11 +104,17 @@ describe('loadDatabaseViews', () => {
     // Add a stored view file to each database's views directory
     MockFs.addFiles([
       {
-        path: resolveDatabaseViewFilePath(database1.path, storedView1.id),
+        path: resolveDatabaseViewFilePath(
+          resolveDatabasePath(database1),
+          storedView1.id,
+        ),
         textContent: JSON.stringify(storedView1),
       },
       {
-        path: resolveDatabaseViewFilePath(database2.path, storedView2.id),
+        path: resolveDatabaseViewFilePath(
+          resolveDatabasePath(database2),
+          storedView2.id,
+        ),
         textContent: JSON.stringify(storedView2),
       },
     ]);

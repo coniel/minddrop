@@ -6,6 +6,7 @@ import { DatabaseRenamedEvent } from '../events';
 import {
   MockFs,
   cleanup,
+  databaseDirPath,
   objectDatabase,
   parentDir,
   setup,
@@ -15,7 +16,8 @@ import { resolveDatabaseConfigFilePath } from '../utils';
 import { renameDatabase } from './renameDatabase';
 
 const newName = 'Renamed Objects';
-const newPath = `${parentDir}/${newName}`;
+const newPath = newName;
+const newDirPath = `${parentDir}/${newName}`;
 
 describe('renameDatabase', () => {
   beforeEach(setup);
@@ -33,9 +35,11 @@ describe('renameDatabase', () => {
     await renameDatabase(objectDatabase.id, newName);
 
     // The config file should now live under the new directory
-    expect(MockFs.exists(resolveDatabaseConfigFilePath(newPath))).toBe(true);
+    expect(MockFs.exists(resolveDatabaseConfigFilePath(newDirPath))).toBe(true);
     expect(
-      MockFs.exists(resolveDatabaseConfigFilePath(objectDatabase.path)),
+      MockFs.exists(
+        resolveDatabaseConfigFilePath(databaseDirPath(objectDatabase)),
+      ),
     ).toBe(false);
   });
 

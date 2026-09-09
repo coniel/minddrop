@@ -2,7 +2,11 @@ import { History } from '@minddrop/history';
 import { DatabaseEntryUpdatedEventData } from '../../events';
 import { getDatabase } from '../../getDatabase';
 import { sqlUpsertEntries } from '../../sql';
-import { convertEntryToSqlRecord, resolvePropertyChanges } from '../../utils';
+import {
+  convertEntryToSqlRecord,
+  resolveDatabasePath,
+  resolvePropertyChanges,
+} from '../../utils';
 
 /**
  * Called when a database entry is updated. Syncs the updated
@@ -34,7 +38,7 @@ export async function onUpdateEntry(
 
   // Record the properties changed by this update as one change
   await History.record({
-    ownerPath: database.path,
+    ownerPath: resolveDatabasePath(database),
     subjectKey: updated.title,
     kind: 'property',
     changes,

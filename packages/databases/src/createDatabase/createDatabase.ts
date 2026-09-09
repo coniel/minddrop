@@ -1,10 +1,11 @@
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
-import { Paths, entityId } from '@minddrop/utils';
+import { entityId } from '@minddrop/utils';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabaseCreatedEvent } from '../events';
 import { getDatabaseDefaults } from '../getDatabaseDefaults';
 import { Database, DatabaseAutomationTemplate } from '../types';
+import { resolveDatabasePath } from '../utils';
 import { writeDatabaseConfig } from '../writeDatabaseConfig';
 
 export type CreateDatabaseOptions = Partial<
@@ -28,8 +29,9 @@ export type CreateDatabaseOptions = Partial<
 export async function createDatabase(
   options: CreateDatabaseOptions,
 ): Promise<Database> {
-  // The path to the database directory
-  const dbPath = Fs.concatPath(Paths.workspace, options.name);
+  // The path to the database directory. Databases live at the
+  // workspace root, so the name is the workspace relative path.
+  const dbPath = resolveDatabasePath(options.name);
 
   // Ensure the database directory does not already exist
   if (await Fs.exists(dbPath)) {
@@ -56,7 +58,9 @@ export async function createDatabase(
     entryTemplates: [],
     ...options,
     id: entityId('database'),
-    path: dbPath,
+    // Databases live at the workspace root, so the directory name is
+    // the database's workspace relative path.
+    path: options.name,
     created: new Date(),
     lastModified: new Date(),
     automations,

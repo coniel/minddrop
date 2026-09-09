@@ -5,7 +5,7 @@ import { DatabaseEntryTemplateDeletedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntryTemplate } from '../getDatabaseEntryTemplate';
 import { updateDatabase } from '../updateDatabase';
-import { resolveEntryTemplateDirPath } from '../utils';
+import { resolveDatabasePath, resolveEntryTemplateDirPath } from '../utils';
 
 /**
  * Deletes an entry template along with the template's directory.
@@ -37,7 +37,10 @@ export async function deleteDatabaseEntryTemplate(
   const database = getDatabase(template.database);
 
   // Path to the template's directory
-  const templateDir = resolveEntryTemplateDirPath(database.path, templateId);
+  const templateDir = resolveEntryTemplateDirPath(
+    resolveDatabasePath(database),
+    templateId,
+  );
 
   // Delete the template's directory if it exists
   if (await Fs.exists(templateDir)) {

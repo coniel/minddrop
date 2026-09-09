@@ -11,6 +11,7 @@ import {
   MockFs,
   cleanup,
   commonStorageDatabase,
+  databaseDirPath,
   entryStorageDatabase,
   entryStorageEntry1,
   propertyStorageDatabase,
@@ -37,19 +38,23 @@ describe('setDatabasePropertyFileStorage', () => {
 
     // The mode is unchanged and the property file stays in place
     expect(result.propertyFileStorage).toBe('root');
-    expect(await Fs.exists(`${rootStorageDatabase.path}/image.png`)).toBe(true);
+    expect(
+      await Fs.exists(`${databaseDirPath(rootStorageDatabase)}/image.png`),
+    ).toBe(true);
   });
 
   it('moves property files from root to common storage', async () => {
     await setDatabasePropertyFileStorage(rootStorageDatabase.id, 'common');
 
     // The file moves into the common directory
-    expect(await Fs.exists(`${rootStorageDatabase.path}/image.png`)).toBe(
-      false,
-    );
-    expect(await Fs.exists(`${rootStorageDatabase.path}/Media/image.png`)).toBe(
-      true,
-    );
+    expect(
+      await Fs.exists(`${databaseDirPath(rootStorageDatabase)}/image.png`),
+    ).toBe(false);
+    expect(
+      await Fs.exists(
+        `${databaseDirPath(rootStorageDatabase)}/Media/image.png`,
+      ),
+    ).toBe(true);
     // The entry file itself is untouched
     expect(getDatabaseEntry(rootStorageEntry1.id).path).toBe(
       rootStorageEntry1.path,
@@ -63,39 +68,47 @@ describe('setDatabasePropertyFileStorage', () => {
     await setDatabasePropertyFileStorage(commonStorageDatabase.id, 'root');
 
     expect(
-      await Fs.exists(`${commonStorageDatabase.path}/Media/image.png`),
+      await Fs.exists(
+        `${databaseDirPath(commonStorageDatabase)}/Media/image.png`,
+      ),
     ).toBe(false);
-    expect(await Fs.exists(`${commonStorageDatabase.path}/image.png`)).toBe(
-      true,
-    );
+    expect(
+      await Fs.exists(`${databaseDirPath(commonStorageDatabase)}/image.png`),
+    ).toBe(true);
     // The now-empty common directory is removed
-    expect(await Fs.exists(`${commonStorageDatabase.path}/Media`)).toBe(false);
+    expect(
+      await Fs.exists(`${databaseDirPath(commonStorageDatabase)}/Media`),
+    ).toBe(false);
   });
 
   it('moves property files from root to per-property directories', async () => {
     await setDatabasePropertyFileStorage(rootStorageDatabase.id, 'property');
 
-    expect(await Fs.exists(`${rootStorageDatabase.path}/image.png`)).toBe(
-      false,
-    );
-    expect(await Fs.exists(`${rootStorageDatabase.path}/Image/image.png`)).toBe(
-      true,
-    );
+    expect(
+      await Fs.exists(`${databaseDirPath(rootStorageDatabase)}/image.png`),
+    ).toBe(false);
+    expect(
+      await Fs.exists(
+        `${databaseDirPath(rootStorageDatabase)}/Image/image.png`,
+      ),
+    ).toBe(true);
   });
 
   it('moves property files from per-property directories to root', async () => {
     await setDatabasePropertyFileStorage(propertyStorageDatabase.id, 'root');
 
     expect(
-      await Fs.exists(`${propertyStorageDatabase.path}/Image/image.png`),
+      await Fs.exists(
+        `${databaseDirPath(propertyStorageDatabase)}/Image/image.png`,
+      ),
     ).toBe(false);
-    expect(await Fs.exists(`${propertyStorageDatabase.path}/image.png`)).toBe(
-      true,
-    );
+    expect(
+      await Fs.exists(`${databaseDirPath(propertyStorageDatabase)}/image.png`),
+    ).toBe(true);
     // The now-empty property directory is removed
-    expect(await Fs.exists(`${propertyStorageDatabase.path}/Image`)).toBe(
-      false,
-    );
+    expect(
+      await Fs.exists(`${databaseDirPath(propertyStorageDatabase)}/Image`),
+    ).toBe(false);
   });
 
   it('renames the common directory, moving its contents', async () => {
@@ -106,12 +119,18 @@ describe('setDatabasePropertyFileStorage', () => {
     );
 
     expect(
-      await Fs.exists(`${commonStorageDatabase.path}/Media/image.png`),
+      await Fs.exists(
+        `${databaseDirPath(commonStorageDatabase)}/Media/image.png`,
+      ),
     ).toBe(false);
     expect(
-      await Fs.exists(`${commonStorageDatabase.path}/Photos/image.png`),
+      await Fs.exists(
+        `${databaseDirPath(commonStorageDatabase)}/Photos/image.png`,
+      ),
     ).toBe(true);
-    expect(await Fs.exists(`${commonStorageDatabase.path}/Media`)).toBe(false);
+    expect(
+      await Fs.exists(`${databaseDirPath(commonStorageDatabase)}/Media`),
+    ).toBe(false);
     expect(getDatabase(commonStorageDatabase.id).propertyFilesDir).toBe(
       'Photos',
     );
@@ -120,7 +139,7 @@ describe('setDatabasePropertyFileStorage', () => {
   it('wraps entries in directories when switching to entry storage', async () => {
     await setDatabasePropertyFileStorage(rootStorageDatabase.id, 'entry');
 
-    const path = rootStorageDatabase.path;
+    const path = databaseDirPath(rootStorageDatabase);
     const entryTitle = rootStorageEntry1.title;
 
     // The entry file is wrapped in a per-entry directory
@@ -128,7 +147,7 @@ describe('setDatabasePropertyFileStorage', () => {
       true,
     );
     expect(getDatabaseEntry(rootStorageEntry1.id).path).toBe(
-      `${path}/${entryTitle}/${entryTitle}.md`,
+      `${entryTitle}/${entryTitle}.md`,
     );
     // The property file moves into the entry directory
     expect(await Fs.exists(`${path}/${entryTitle}/image.png`)).toBe(true);
@@ -158,13 +177,13 @@ describe('setDatabasePropertyFileStorage', () => {
   it('unwraps entries when switching away from entry storage', async () => {
     await setDatabasePropertyFileStorage(entryStorageDatabase.id, 'root');
 
-    const path = entryStorageDatabase.path;
+    const path = databaseDirPath(entryStorageDatabase);
     const entryTitle = entryStorageEntry1.title;
 
     // The entry file is unwrapped back into the database root
     expect(await Fs.exists(`${path}/${entryTitle}.md`)).toBe(true);
     expect(getDatabaseEntry(entryStorageEntry1.id).path).toBe(
-      `${path}/${entryTitle}.md`,
+      `${entryTitle}.md`,
     );
     // The property file moves to the database root
     expect(await Fs.exists(`${path}/image.png`)).toBe(true);
@@ -183,12 +202,12 @@ describe('setDatabasePropertyFileStorage', () => {
     DatabaseEntriesStore.load([secondEntry]);
     MockFs.addFiles([
       secondEntry.path,
-      `${entryStorageDatabase.path}/Entry Storage Entry 2/image.png`,
+      `${databaseDirPath(entryStorageDatabase)}/Entry Storage Entry 2/image.png`,
     ]);
 
     await setDatabasePropertyFileStorage(entryStorageDatabase.id, 'root');
 
-    const path = entryStorageDatabase.path;
+    const path = databaseDirPath(entryStorageDatabase);
 
     // Both files land in the root, the second incremented to avoid a collision
     expect(await Fs.exists(`${path}/image.png`)).toBe(true);
@@ -208,11 +227,13 @@ describe('setDatabasePropertyFileStorage', () => {
     DatabaseEntriesStore.update(propertyStorageEntry1.id, {
       properties: { Image: 'image.png', File: 'image.png' },
     });
-    MockFs.addFiles([`${propertyStorageDatabase.path}/File/image.png`]);
+    MockFs.addFiles([
+      `${databaseDirPath(propertyStorageDatabase)}/File/image.png`,
+    ]);
 
     await setDatabasePropertyFileStorage(propertyStorageDatabase.id, 'common');
 
-    const path = propertyStorageDatabase.path;
+    const path = databaseDirPath(propertyStorageDatabase);
 
     // Both files collapse into the common directory, the second incremented
     expect(await Fs.exists(`${path}/Media/image.png`)).toBe(true);
@@ -231,18 +252,20 @@ describe('setDatabasePropertyFileStorage', () => {
     DatabaseEntriesStore.update(propertyStorageEntry1.id, {
       properties: { File: `${entryTitle}.md` },
     });
-    MockFs.addFiles([`${propertyStorageDatabase.path}/File/${entryTitle}.md`]);
+    MockFs.addFiles([
+      `${databaseDirPath(propertyStorageDatabase)}/File/${entryTitle}.md`,
+    ]);
 
     await setDatabasePropertyFileStorage(propertyStorageDatabase.id, 'entry');
 
-    const path = propertyStorageDatabase.path;
+    const path = databaseDirPath(propertyStorageDatabase);
 
     // The entry file wins its name inside the wrapper directory
     expect(await Fs.exists(`${path}/${entryTitle}/${entryTitle}.md`)).toBe(
       true,
     );
     expect(getDatabaseEntry(propertyStorageEntry1.id).path).toBe(
-      `${path}/${entryTitle}/${entryTitle}.md`,
+      `${entryTitle}/${entryTitle}.md`,
     );
 
     // The colliding property file is incremented rather than overwriting it
@@ -265,7 +288,9 @@ describe('setDatabasePropertyFileStorage', () => {
 
     // The file system is left untouched
     expect(
-      await Fs.exists(`${commonStorageDatabase.path}/Media/image.png`),
+      await Fs.exists(
+        `${databaseDirPath(commonStorageDatabase)}/Media/image.png`,
+      ),
     ).toBe(true);
   });
 
@@ -280,9 +305,11 @@ describe('setDatabasePropertyFileStorage', () => {
     ).resolves.toBeDefined();
 
     // No phantom destination file is created
-    expect(await Fs.exists(`${rootStorageDatabase.path}/Image/ghost.png`)).toBe(
-      false,
-    );
+    expect(
+      await Fs.exists(
+        `${databaseDirPath(rootStorageDatabase)}/Image/ghost.png`,
+      ),
+    ).toBe(false);
   });
 
   it('dispatches an update event and persists the config', async () => {
@@ -299,7 +326,7 @@ describe('setDatabasePropertyFileStorage', () => {
 
     // The persisted config reflects the new mode
     const config = MockFs.readJsonFile<Database>(
-      resolveDatabaseConfigFilePath(rootStorageDatabase.path),
+      resolveDatabaseConfigFilePath(databaseDirPath(rootStorageDatabase)),
     );
     expect(config.propertyFileStorage).toBe('common');
   });

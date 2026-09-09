@@ -2,7 +2,13 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DataView, StoredDataView } from '@minddrop/data-views';
 import { DataViewFixtures } from '@minddrop/data-views/test-utils';
 import { DatabaseNotFoundError } from '../errors';
-import { MockFs, cleanup, objectDatabase, setup } from '../test-utils';
+import {
+  MockFs,
+  cleanup,
+  databaseDirPath,
+  objectDatabase,
+  setup,
+} from '../test-utils';
 import { resolveDatabaseViewFilePath } from '../utils';
 import { writeDatabaseView } from './writeDatabaseView';
 
@@ -16,7 +22,10 @@ const view: DataView = {
 };
 
 // Path to the view's file
-const viewFilePath = resolveDatabaseViewFilePath(objectDatabase.path, view.id);
+const viewFilePath = resolveDatabaseViewFilePath(
+  databaseDirPath(objectDatabase),
+  view.id,
+);
 
 describe('writeDatabaseView', () => {
   beforeEach(setup);

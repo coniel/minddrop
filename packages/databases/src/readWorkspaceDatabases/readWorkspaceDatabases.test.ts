@@ -49,8 +49,8 @@ describe('readWorkspaceDatabases', () => {
   });
 
   it('mints and persists an ID for configs without one', async () => {
-    const databasePath = `${workspace_1.path}/No ID Database`;
-    const configPath = `${databasePath}/${Paths.hiddenDirName}/${DatabaseConfigFileName}`;
+    const databasePath = 'No ID Database';
+    const configPath = configPathFor(databasePath);
 
     // Add a database config without an ID
     MockFs.addFiles([
@@ -122,7 +122,7 @@ describe('readWorkspaceDatabases', () => {
     // as when both were copied in
     const result = await readWorkspaceDatabases(
       workspace_1.path,
-      new Map([[objectDatabase.id, `${workspace_1.path}/Moved Away`]]),
+      new Map([[objectDatabase.id, 'Moved Away']]),
     );
 
     // The first config found should keep the ID
@@ -139,7 +139,7 @@ describe('readWorkspaceDatabases', () => {
  * @returns The path of the copied database directory.
  */
 function addCopiedDatabase(): string {
-  const databasePath = `${workspace_1.path}/Copied Database`;
+  const databasePath = 'Copied Database';
 
   MockFs.addFiles([
     {
@@ -155,10 +155,11 @@ function addCopiedDatabase(): string {
 }
 
 /**
- * Returns the path of a database directory's config file.
+ * Returns the path of a database's config file, resolved from the
+ * database's workspace relative path.
  */
 function configPathFor(databasePath: string): string {
-  return `${databasePath}/${Paths.hiddenDirName}/${DatabaseConfigFileName}`;
+  return `${workspace_1.path}/${databasePath}/${Paths.hiddenDirName}/${DatabaseConfigFileName}`;
 }
 
 /**

@@ -1,10 +1,18 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { MockFs, cleanup, objectDatabase, setup } from '../test-utils';
+import {
+  MockFs,
+  cleanup,
+  databaseDirPath,
+  objectDatabase,
+  setup,
+} from '../test-utils';
 import { resolveDatabaseMetadataDirPath } from '../utils';
 import { listEntryMetadataKeys } from './listEntryMetadataKeys';
 
 // The database's metadata directory
-const metadataDirPath = resolveDatabaseMetadataDirPath(objectDatabase.path);
+const metadataDirPath = resolveDatabaseMetadataDirPath(
+  databaseDirPath(objectDatabase),
+);
 
 describe('listEntryMetadataKeys', () => {
   beforeEach(setup);
@@ -12,7 +20,7 @@ describe('listEntryMetadataKeys', () => {
   afterEach(cleanup);
 
   it('returns an empty array when the metadata directory does not exist', async () => {
-    const keys = await listEntryMetadataKeys(objectDatabase.path);
+    const keys = await listEntryMetadataKeys(databaseDirPath(objectDatabase));
 
     expect(keys).toEqual([]);
   });
@@ -24,7 +32,7 @@ describe('listEntryMetadataKeys', () => {
       { path: `${metadataDirPath}/Entry Two.json`, textContent: '{}' },
     ]);
 
-    const keys = await listEntryMetadataKeys(objectDatabase.path);
+    const keys = await listEntryMetadataKeys(databaseDirPath(objectDatabase));
 
     expect(keys.sort()).toEqual(['Entry One', 'Entry Two']);
   });
@@ -36,7 +44,7 @@ describe('listEntryMetadataKeys', () => {
       { path: `${metadataDirPath}/notes.txt`, textContent: 'notes' },
     ]);
 
-    const keys = await listEntryMetadataKeys(objectDatabase.path);
+    const keys = await listEntryMetadataKeys(databaseDirPath(objectDatabase));
 
     expect(keys).toEqual(['Entry One']);
   });

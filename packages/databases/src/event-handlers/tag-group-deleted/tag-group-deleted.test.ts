@@ -2,13 +2,8 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { storeItem } from '@minddrop/stores/test-utils';
 import { TagGroupFixtures } from '@minddrop/tags/test-utils';
 import { DatabasesStore } from '../../DatabasesStore';
-import {
-  MockFs,
-  cleanup,
-  objectDatabase,
-  parentDir,
-  setup,
-} from '../../test-utils';
+import { MockFs, cleanup, objectDatabase, setup } from '../../test-utils';
+import { resolveDatabasePath } from '../../utils';
 import { onTagGroupDeleted } from './tag-group-deleted';
 
 const { tagGroup_1, tagGroup_2 } = TagGroupFixtures;
@@ -18,7 +13,7 @@ const tagsDatabase = {
   ...objectDatabase,
   id: 'database_tag-group-test' as const,
   name: 'Tagged Objects',
-  path: `${parentDir}/Tagged Objects`,
+  path: 'Tagged Objects',
   properties: [
     ...objectDatabase.properties,
     { type: 'tags' as const, name: 'Tags', group: tagGroup_1.id },
@@ -35,7 +30,7 @@ describe('onTagGroupDeleted', () => {
 
     // Create the database directory so config rewrites can write
     // the config file.
-    MockFs.createDir(tagsDatabase.path, { recursive: true });
+    MockFs.createDir(resolveDatabasePath(tagsDatabase), { recursive: true });
   });
 
   afterEach(cleanup);

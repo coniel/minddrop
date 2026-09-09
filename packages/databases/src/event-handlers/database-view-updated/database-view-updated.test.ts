@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DataView, StoredDataView } from '@minddrop/data-views';
 import { DataViewFixtures } from '@minddrop/data-views/test-utils';
-import { MockFs, cleanup, setup } from '../../test-utils';
+import { MockFs, cleanup, databaseDirPath, setup } from '../../test-utils';
 import { objectDatabase } from '../../test-utils/fixtures';
 import { resolveDatabaseViewFilePath } from '../../utils';
 import { onDatabaseViewUpdated } from './database-view-updated';
@@ -31,7 +31,7 @@ describe('onDatabaseViewUpdated', () => {
 
     // The view file should contain the updated view
     const storedView = MockFs.readJsonFile<StoredDataView>(
-      resolveDatabaseViewFilePath(objectDatabase.path, view.id),
+      resolveDatabaseViewFilePath(databaseDirPath(objectDatabase), view.id),
     );
 
     expect(storedView?.name).toBe('Updated Table');
@@ -49,7 +49,9 @@ describe('onDatabaseViewUpdated', () => {
 
     // No view file should be written
     expect(
-      MockFs.exists(resolveDatabaseViewFilePath(objectDatabase.path, view.id)),
+      MockFs.exists(
+        resolveDatabaseViewFilePath(databaseDirPath(objectDatabase), view.id),
+      ),
     ).toBe(false);
   });
 
@@ -66,7 +68,9 @@ describe('onDatabaseViewUpdated', () => {
 
     // No view file should be written
     expect(
-      MockFs.exists(resolveDatabaseViewFilePath(objectDatabase.path, view.id)),
+      MockFs.exists(
+        resolveDatabaseViewFilePath(databaseDirPath(objectDatabase), view.id),
+      ),
     ).toBe(false);
   });
 });

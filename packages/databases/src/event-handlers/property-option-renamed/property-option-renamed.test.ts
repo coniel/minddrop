@@ -10,6 +10,7 @@ import {
   objectEntry1,
   setup,
 } from '../../test-utils';
+import { resolveDatabasePath } from '../../utils';
 import { onRenamePropertyOption } from './property-option-renamed';
 
 // The renamed single-select property, holding the new value
@@ -48,7 +49,7 @@ const selectEntry = {
   id: 'database-entry_select-entry' as const,
   title: 'Select Entry',
   database: selectDatabase.id,
-  path: `${selectDatabase.path}/Select Entry.md`,
+  path: 'Select Entry.md',
   properties: {
     ...objectEntry1.properties,
     Status: 'Todo',
@@ -62,7 +63,7 @@ const otherEntry = {
   id: 'database-entry_select-other-entry' as const,
   title: 'Other Entry',
   database: selectDatabase.id,
-  path: `${selectDatabase.path}/Other Entry.md`,
+  path: 'Other Entry.md',
   properties: {
     ...objectEntry1.properties,
     Status: 'Done',
@@ -80,7 +81,7 @@ describe('onRenamePropertyOption', () => {
 
     // Create the database directory so entry rewrites can write
     // the entry files.
-    MockFs.addFiles([selectDatabase.path]);
+    MockFs.addFiles([resolveDatabasePath(selectDatabase)]);
   });
 
   afterEach(cleanup);

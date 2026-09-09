@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
   MockFs,
   cleanup,
+  databaseDirPath,
   entryTemplate2,
   entryTemplatesDatabase,
   parentDir,
@@ -24,7 +25,7 @@ describe('copyEntryTemplateFiles', () => {
 
   it("copies the files into the template's directory", async () => {
     await copyEntryTemplateFiles(
-      entryTemplatesDatabase.path,
+      databaseDirPath(entryTemplatesDatabase),
       entryTemplate2.id,
       { Image: sourceImagePath },
     );
@@ -32,7 +33,7 @@ describe('copyEntryTemplateFiles', () => {
     expect(
       MockFs.exists(
         resolveEntryTemplateFilePath(
-          entryTemplatesDatabase.path,
+          databaseDirPath(entryTemplatesDatabase),
           entryTemplate2.id,
           'source-image.png',
         ),
@@ -42,7 +43,7 @@ describe('copyEntryTemplateFiles', () => {
 
   it('returns the stored file names keyed by property name', async () => {
     const storedFileNames = await copyEntryTemplateFiles(
-      entryTemplatesDatabase.path,
+      databaseDirPath(entryTemplatesDatabase),
       entryTemplate2.id,
       { Image: sourceImagePath },
     );
@@ -54,14 +55,14 @@ describe('copyEntryTemplateFiles', () => {
     // Add a stored file with the source file's name
     MockFs.addFiles([
       resolveEntryTemplateFilePath(
-        entryTemplatesDatabase.path,
+        databaseDirPath(entryTemplatesDatabase),
         entryTemplate2.id,
         'source-image.png',
       ),
     ]);
 
     const storedFileNames = await copyEntryTemplateFiles(
-      entryTemplatesDatabase.path,
+      databaseDirPath(entryTemplatesDatabase),
       entryTemplate2.id,
       { Image: sourceImagePath },
     );
@@ -71,7 +72,7 @@ describe('copyEntryTemplateFiles', () => {
     expect(
       MockFs.exists(
         resolveEntryTemplateFilePath(
-          entryTemplatesDatabase.path,
+          databaseDirPath(entryTemplatesDatabase),
           entryTemplate2.id,
           'source-image 1.png',
         ),
@@ -82,7 +83,7 @@ describe('copyEntryTemplateFiles', () => {
   it('does nothing without files', async () => {
     expect(
       await copyEntryTemplateFiles(
-        entryTemplatesDatabase.path,
+        databaseDirPath(entryTemplatesDatabase),
         entryTemplate2.id,
         {},
       ),

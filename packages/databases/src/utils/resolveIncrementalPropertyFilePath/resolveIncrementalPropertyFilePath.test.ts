@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
   cleanup,
+  databaseDirPath,
   propertyStorageDatabase,
   propertyStorageEntry1,
   setup,
@@ -20,7 +21,9 @@ describe('resolveIncrementalPropertyFilePath', () => {
       'photo.png',
     );
 
-    expect(result.path).toBe(`${propertyStorageDatabase.path}/Image/photo.png`);
+    expect(result.path).toBe(
+      `${databaseDirPath(propertyStorageDatabase)}/Image/photo.png`,
+    );
     expect(result.increment).toBeUndefined();
   });
 
@@ -33,7 +36,7 @@ describe('resolveIncrementalPropertyFilePath', () => {
     );
 
     expect(result.path).toBe(
-      `${propertyStorageDatabase.path}/Image/image 1.png`,
+      `${databaseDirPath(propertyStorageDatabase)}/Image/image 1.png`,
     );
     expect(result.increment).toBe(1);
   });

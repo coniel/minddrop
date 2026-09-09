@@ -3,7 +3,13 @@ import { Events } from '@minddrop/events';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabaseNotFoundError } from '../errors';
 import { DatabaseDeletedEvent } from '../events';
-import { MockFs, cleanup, objectDatabase, setup } from '../test-utils';
+import {
+  MockFs,
+  cleanup,
+  databaseDirPath,
+  objectDatabase,
+  setup,
+} from '../test-utils';
 import { deleteDatabase } from './deleteDatabase';
 
 describe('deleteDatabase', () => {
@@ -22,8 +28,8 @@ describe('deleteDatabase', () => {
     await deleteDatabase(objectDatabase.id);
 
     // The database directory should now be in the trash
-    expect(MockFs.existsInTrash(objectDatabase.path)).toBe(true);
-    expect(MockFs.exists(objectDatabase.path)).toBe(false);
+    expect(MockFs.existsInTrash(databaseDirPath(objectDatabase))).toBe(true);
+    expect(MockFs.exists(databaseDirPath(objectDatabase))).toBe(false);
   });
 
   it('removes the database from the store', async () => {

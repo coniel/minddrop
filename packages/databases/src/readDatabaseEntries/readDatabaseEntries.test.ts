@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
   MockFs,
   cleanup,
+  databaseDirPath,
   databaseEntries,
   entryStorageDatabase,
   entryStorageEntry1,
@@ -9,6 +10,7 @@ import {
   objectEntry1,
   setup,
 } from '../test-utils';
+import { resolveDatabaseEntryPath } from '../utils';
 import { readDatabaseEntries } from './readDatabaseEntries';
 
 describe('readDatabaseEntries', () => {
@@ -46,7 +48,7 @@ describe('readDatabaseEntries', () => {
 
   it('filters out non-matching file extensions', async () => {
     // Add a YAML file into the markdown-serialized database directory
-    MockFs.addFiles([`${objectDatabase.path}/Stray Entry.yaml`]);
+    MockFs.addFiles([`${databaseDirPath(objectDatabase)}/Stray Entry.yaml`]);
 
     // Read entries from the markdown database
     const entries = await readDatabaseEntries(objectDatabase);
@@ -63,7 +65,7 @@ describe('readDatabaseEntries', () => {
     );
 
     for (const entry of objectEntries) {
-      MockFs.removeFile(entry.path);
+      MockFs.removeFile(resolveDatabaseEntryPath(entry));
     }
 
     // Read entries from the now-empty database

@@ -8,6 +8,7 @@ import { getDatabaseEntryTemplate } from '../getDatabaseEntryTemplate';
 import { DatabaseEntry } from '../types';
 import { updateDatabaseEntryProperty } from '../updateDatabaseEntryProperty';
 import {
+  resolveDatabasePath,
   resolveEntryTemplateFilePath,
   resolveIncrementalPropertyFilePath,
 } from '../utils';
@@ -86,7 +87,7 @@ export async function createDatabaseEntryFromTemplate(
   for (const [propertyName, fileName] of Object.entries(fileProperties)) {
     // Path to the template's source file
     const sourcePath = resolveEntryTemplateFilePath(
-      database.path,
+      resolveDatabasePath(database),
       templateId,
       fileName,
     );

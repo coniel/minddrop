@@ -5,7 +5,7 @@ import { DatabaseEntryUpdatedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntry } from '../getDatabaseEntry';
 import { DatabaseEntry } from '../types';
-import { setTimestampProperties } from '../utils';
+import { resolveDatabasePath, setTimestampProperties } from '../utils';
 import { writeDatabaseEntry } from '../writeDatabaseEntry';
 import { writeEntryMetadata } from '../writeEntryMetadata';
 
@@ -83,7 +83,7 @@ export async function updateDatabaseEntry(
 
   // Write the entry's metadata sidecar
   await writeEntryMetadata(
-    database.path,
+    resolveDatabasePath(database),
     updatedEntry.path,
     updatedEntry.metadata,
   );

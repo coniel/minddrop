@@ -8,7 +8,7 @@ import { DatabaseEntryCreatedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntrySerializer } from '../getDatabaseEntrySerializer';
 import { DatabaseEntry, DatabaseEntryId } from '../types';
-import { setTimestampProperties } from '../utils';
+import { resolveDatabasePath, setTimestampProperties } from '../utils';
 import { writeDatabaseEntry } from '../writeDatabaseEntry';
 import { writeEntryMetadata } from '../writeEntryMetadata';
 
@@ -40,7 +40,7 @@ export async function createDatabaseEntry<
   // Get the database
   const database = getDatabase(databaseId);
   // Path to which to write the entry
-  const parentDirPath = database.path;
+  const parentDirPath = resolveDatabasePath(database);
 
   // Get the file extension for the entry file
   const serializer = getDatabaseEntrySerializer(database.entrySerializer);
@@ -73,7 +73,7 @@ export async function createDatabaseEntry<
     id: entityId('database-entry'),
     database: database.id,
     title: titleFromPath(path),
-    path,
+    path: Fs.relativePath(parentDirPath, path),
     created: now,
     lastModified: now,
     // Populate the created/last-modified timestamp property values so they
@@ -100,7 +100,7 @@ export async function createDatabaseEntry<
   await writeDatabaseEntry(entry.id);
 
   // Write the entry's metadata sidecar
-  await writeEntryMetadata(database.path, entry.path, entry.metadata);
+  await writeEntryMetadata(parentDirPath, path, entry.metadata);
 
   return entry;
 }

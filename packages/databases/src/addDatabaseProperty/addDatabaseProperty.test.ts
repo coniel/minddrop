@@ -10,7 +10,7 @@ import {
   setup,
 } from '../test-utils';
 import { Database } from '../types';
-import { resolveDatabaseConfigFilePath } from '../utils';
+import { resolveDatabaseConfigFilePath, resolveDatabasePath } from '../utils';
 import { addDatabaseProperty } from './addDatabaseProperty';
 
 const newProperty: PropertySchema = {
@@ -45,7 +45,7 @@ describe('addDatabaseProperty', () => {
     await addDatabaseProperty(objectDatabase.id, newProperty);
 
     const result = MockFs.readJsonFile<Database>(
-      resolveDatabaseConfigFilePath(updatedDatabase.path),
+      resolveDatabaseConfigFilePath(resolveDatabasePath(updatedDatabase)),
     );
 
     expect(result.properties).toEqual(updatedDatabase.properties);

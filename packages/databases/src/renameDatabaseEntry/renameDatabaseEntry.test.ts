@@ -3,7 +3,13 @@ import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabaseEntryRenamedEvent } from '../events';
-import { MockFs, cleanup, objectEntry1, setup } from '../test-utils';
+import {
+  MockFs,
+  cleanup,
+  databaseEntryFilePath,
+  objectEntry1,
+  setup,
+} from '../test-utils';
 import { renameDatabaseEntry } from './renameDatabaseEntry';
 
 describe('renameDatabaseEntry', () => {
@@ -20,18 +26,22 @@ describe('renameDatabaseEntry', () => {
   it("renames the entry's primary file", async () => {
     await renameDatabaseEntry(objectEntry1.id, 'Renamed DatabaseEntry');
 
-    const newPath = `${Fs.parentDirPath(objectEntry1.path)}/Renamed DatabaseEntry.md`;
+    const newPath = 'Renamed DatabaseEntry.md';
+    const newFilePath = `${Fs.parentDirPath(databaseEntryFilePath(objectEntry1))}/${newPath}`;
 
-    expect(MockFs.exists(newPath)).toBe(true);
-    expect(MockFs.exists(objectEntry1.path)).toBe(false);
+    expect(MockFs.exists(newFilePath)).toBe(true);
+    expect(MockFs.exists(databaseEntryFilePath(objectEntry1))).toBe(false);
   });
 
   it('increments the title if a conflict exists and incrementTitleIfConflict is true', async () => {
     const newName = 'Renamed DatabaseEntry';
-    const newPath = `${Fs.parentDirPath(objectEntry1.path)}/${newName} 1.md`;
+    const newPath = `${newName} 1.md`;
+    const newFilePath = `${Fs.parentDirPath(databaseEntryFilePath(objectEntry1))}/${newPath}`;
 
     // Add a conflicting file
-    MockFs.addFiles([`${Fs.parentDirPath(objectEntry1.path)}/${newName}.md`]);
+    MockFs.addFiles([
+      `${Fs.parentDirPath(databaseEntryFilePath(objectEntry1))}/${newName}.md`,
+    ]);
 
     const renamedDatabaseEntry = await renameDatabaseEntry(
       objectEntry1.id,
@@ -41,8 +51,8 @@ describe('renameDatabaseEntry', () => {
 
     expect(renamedDatabaseEntry.title).toBe(`${newName} 1`);
     expect(renamedDatabaseEntry.path).toBe(newPath);
-    expect(MockFs.exists(newPath)).toBe(true);
-    expect(MockFs.exists(objectEntry1.path)).toBe(false);
+    expect(MockFs.exists(newFilePath)).toBe(true);
+    expect(MockFs.exists(databaseEntryFilePath(objectEntry1))).toBe(false);
   });
 
   it('updates the entry title, path, and last modified date, keeping its ID', async () => {
@@ -53,9 +63,7 @@ describe('renameDatabaseEntry', () => {
 
     expect(renamedDatabaseEntry.id).toBe(objectEntry1.id);
     expect(renamedDatabaseEntry.title).toBe('Renamed DatabaseEntry');
-    expect(renamedDatabaseEntry.path).toBe(
-      `${Fs.parentDirPath(objectEntry1.path)}/Renamed DatabaseEntry.md`,
-    );
+    expect(renamedDatabaseEntry.path).toBe('Renamed DatabaseEntry.md');
     expect(renamedDatabaseEntry.lastModified.getTime()).toBeGreaterThan(
       objectEntry1.lastModified.getTime(),
     );
@@ -94,9 +102,10 @@ describe('renameDatabaseEntry', () => {
   it('writes the updated entry file', async () => {
     await renameDatabaseEntry(objectEntry1.id, 'Renamed DatabaseEntry');
 
-    const newPath = `${Fs.parentDirPath(objectEntry1.path)}/Renamed DatabaseEntry.md`;
+    const newPath = 'Renamed DatabaseEntry.md';
+    const newFilePath = `${Fs.parentDirPath(databaseEntryFilePath(objectEntry1))}/${newPath}`;
 
-    expect(MockFs.exists(newPath)).toBe(true);
+    expect(MockFs.exists(newFilePath)).toBe(true);
   });
 
   it('dispatches an entry rename event', async () =>
@@ -108,7 +117,7 @@ describe('renameDatabaseEntry', () => {
           updated: {
             ...objectEntry1,
             title: 'Renamed DatabaseEntry',
-            path: `${Fs.parentDirPath(objectEntry1.path)}/Renamed DatabaseEntry.md`,
+            path: 'Renamed DatabaseEntry.md',
             lastModified: expect.any(Date),
           },
         });

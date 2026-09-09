@@ -2,6 +2,8 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
   MockFs,
   cleanup,
+  databaseDirPath,
+  databaseEntryFilePath,
   objectDatabase,
   objectEntry1,
   setup,
@@ -11,8 +13,8 @@ import { readEntryMetadata } from './readEntryMetadata';
 
 // The path of the entry's metadata sidecar
 const sidecarPath = resolveEntryMetadataFilePath(
-  objectDatabase.path,
-  objectEntry1.path,
+  databaseDirPath(objectDatabase),
+  databaseEntryFilePath(objectEntry1),
 );
 
 // The date stored in the sidecar as an ISO string
@@ -25,8 +27,8 @@ describe('readEntryMetadata', () => {
 
   it('returns an empty object when the entry has no sidecar', async () => {
     const metadata = await readEntryMetadata(
-      objectDatabase.path,
-      objectEntry1.path,
+      databaseDirPath(objectDatabase),
+      databaseEntryFilePath(objectEntry1),
     );
 
     expect(metadata).toEqual({});
@@ -44,8 +46,8 @@ describe('readEntryMetadata', () => {
     ]);
 
     const metadata = await readEntryMetadata(
-      objectDatabase.path,
-      objectEntry1.path,
+      databaseDirPath(objectDatabase),
+      databaseEntryFilePath(objectEntry1),
     );
 
     expect(metadata).toEqual({
@@ -63,8 +65,8 @@ describe('readEntryMetadata', () => {
     ]);
 
     const metadata = await readEntryMetadata(
-      objectDatabase.path,
-      objectEntry1.path,
+      databaseDirPath(objectDatabase),
+      databaseEntryFilePath(objectEntry1),
     );
 
     expect(metadata.created).toEqual(createdDate);
@@ -75,8 +77,8 @@ describe('readEntryMetadata', () => {
     MockFs.addFiles([{ path: sidecarPath, textContent: 'not json' }]);
 
     const metadata = await readEntryMetadata(
-      objectDatabase.path,
-      objectEntry1.path,
+      databaseDirPath(objectDatabase),
+      databaseEntryFilePath(objectEntry1),
     );
 
     expect(metadata).toEqual({});

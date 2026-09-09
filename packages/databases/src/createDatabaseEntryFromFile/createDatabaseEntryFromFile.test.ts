@@ -6,6 +6,7 @@ import { DatabasesStore } from '../DatabasesStore';
 import {
   MockFs,
   cleanup,
+  databaseDirPath,
   genericFilePropertyName,
   imagePropertyName,
   invalidImagePropertyFile,
@@ -56,7 +57,7 @@ describe('createDatabaseEntryFromFile', () => {
     expect(
       MockFs.exists(
         Fs.concatPath(
-          rootStorageDatabase.path,
+          databaseDirPath(rootStorageDatabase),
           entry.properties[imagePropertyName] as string,
         ),
       ),

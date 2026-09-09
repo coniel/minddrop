@@ -8,6 +8,7 @@ import {
 import {
   MockFs,
   cleanup,
+  databaseDirPath,
   entryTemplate1,
   entryTemplate2,
   entryTemplatesDatabase,
@@ -63,7 +64,9 @@ describe('createDatabaseEntryFromTemplate', () => {
     // The file should be copied to the property file location dictated
     // by the database's property based storage mode.
     expect(
-      MockFs.exists(`${entryTemplatesDatabase.path}/Image/template-image.png`),
+      MockFs.exists(
+        `${databaseDirPath(entryTemplatesDatabase)}/Image/template-image.png`,
+      ),
     ).toBeTruthy();
   });
 
@@ -77,7 +80,7 @@ describe('createDatabaseEntryFromTemplate', () => {
     expect(secondEntry.properties.Image).toBe('template-image 1.png');
     expect(
       MockFs.exists(
-        `${entryTemplatesDatabase.path}/Image/template-image 1.png`,
+        `${databaseDirPath(entryTemplatesDatabase)}/Image/template-image 1.png`,
       ),
     ).toBeTruthy();
   });
@@ -85,7 +88,7 @@ describe('createDatabaseEntryFromTemplate', () => {
   it('skips file based properties whose source file is missing', async () => {
     // Remove the template's stored image file
     MockFs.removeFile(
-      `${entryTemplatesDatabase.path}/.minddrop/templates/${entryTemplate1.id}/template-image.png`,
+      `${databaseDirPath(entryTemplatesDatabase)}/.minddrop/templates/${entryTemplate1.id}/template-image.png`,
     );
 
     const entry = await createDatabaseEntryFromTemplate(entryTemplate1.id);
@@ -131,7 +134,9 @@ describe('createDatabaseEntryFromTemplate', () => {
     // The given value should win over the template's file copy
     expect(entry.properties.Image).toBe('custom.png');
     expect(
-      MockFs.exists(`${entryTemplatesDatabase.path}/Image/template-image.png`),
+      MockFs.exists(
+        `${databaseDirPath(entryTemplatesDatabase)}/Image/template-image.png`,
+      ),
     ).toBeFalsy();
   });
 });

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   commonStorageDatabase,
+  databaseDirPath,
   entryStorageDatabase,
   objectDatabase,
   propertyStorageDatabase,
@@ -12,15 +13,15 @@ describe('resolveDatabasePropertyDirs', () => {
   it('returns the shared directory for common storage', () => {
     // Common storage keeps all property files in one configured directory
     expect(resolveDatabasePropertyDirs(commonStorageDatabase)).toEqual([
-      `${commonStorageDatabase.path}/${commonStorageDatabase.propertyFilesDir}`,
+      `${databaseDirPath(commonStorageDatabase)}/${commonStorageDatabase.propertyFilesDir}`,
     ]);
   });
 
   it('returns a directory per file-based property for property storage', () => {
     // Property storage keeps each file-based property's files in its own dir
     expect(resolveDatabasePropertyDirs(propertyStorageDatabase)).toEqual([
-      `${propertyStorageDatabase.path}/Image`,
-      `${propertyStorageDatabase.path}/File`,
+      `${databaseDirPath(propertyStorageDatabase)}/Image`,
+      `${databaseDirPath(propertyStorageDatabase)}/File`,
     ]);
   });
 

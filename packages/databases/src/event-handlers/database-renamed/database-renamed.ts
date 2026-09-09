@@ -1,7 +1,6 @@
 import { Collections } from '@minddrop/collections';
 import { Events } from '@minddrop/events';
 import { ItemReferences } from '@minddrop/item-references';
-import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabaseRenamedEventData } from '../../events';
 import { getAllDatabaseEntries } from '../../getAllDatabaseEntries';
 import { sqlUpsertDatabase } from '../../sql';
@@ -12,31 +11,20 @@ import {
 } from '../../utils';
 
 /**
- * Called when a database is renamed. Updates path-derived state:
- * entry paths, SQL records, and virtual collection names.
+ * Called when a database is renamed. Updates name-derived state: the
+ * SQL record and virtual collection names.
  *
- * The on-disk metadata file needs no changes: its keys are database-
- * relative (see `entryMetadataKey`), so they are unaffected by the
- * database path change.
+ * Neither the entries nor their metadata files need changes: entry
+ * paths are addressed from their database and metadata keys from the
+ * entry file name, so neither moves with the database.
  */
 export async function onRenameDatabase(
   data: DatabaseRenamedEventData,
 ): Promise<void> {
   const { original, updated } = data;
 
-  // Read the database's entries
+  // Read the database's entries, whose addresses the rename changes
   const entries = getAllDatabaseEntries(updated.id);
-
-  // Build the updated entries, swapping the database path prefix
-  const renamedEntries = entries.map((entry) => ({
-    ...entry,
-    path: `${updated.path}${entry.path.slice(original.path.length)}`,
-  }));
-
-  // Update each entry in place in the store
-  renamedEntries.forEach((entry) => {
-    DatabaseEntriesStore.update(entry.id, { path: entry.path });
-  });
 
   // Update the SQL record with the new name and path
   sqlUpsertDatabase({
@@ -53,7 +41,7 @@ export async function onRenameDatabase(
 
   // Update virtual collection names, which embed the database name
   await Promise.all(
-    renamedEntries.map((entry) =>
+    entries.map((entry) =>
       Promise.all(
         collectionProperties.map(async (property) => {
           const collectionId = virtualCollectionId(entry.id, property.name);
@@ -78,10 +66,10 @@ export async function onRenameDatabase(
   );
 
   // Dispatch the renamed entries' address changes
-  if (renamedEntries.length > 0) {
+  if (entries.length > 0) {
     Events.dispatch(
       ItemReferences.events.AddressesChanged,
-      renamedEntries.map((entry) => ({
+      entries.map((entry) => ({
         id: entry.id,
         oldReference: databaseEntryAddress(entry, original),
         newReference: databaseEntryAddress(entry, updated),

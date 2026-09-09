@@ -5,6 +5,8 @@ import { DatabaseEntryNotFoundError } from '../errors';
 import {
   MockFs,
   cleanup,
+  databaseDirPath,
+  databaseEntryFilePath,
   objectDatabase,
   objectEntry1,
   setup,
@@ -17,12 +19,12 @@ import { updateEntryMetadata } from './updateEntryMetadata';
 
 // The sidecar paths the entries' metadata is written to
 const objectSidecarPath = resolveEntryMetadataFilePath(
-  objectDatabase.path,
-  objectEntry1.path,
+  databaseDirPath(objectDatabase),
+  databaseEntryFilePath(objectEntry1),
 );
 const urlSidecarPath = resolveEntryMetadataFilePath(
-  urlDatabase.path,
-  urlEntry1.path,
+  databaseDirPath(urlDatabase),
+  databaseEntryFilePath(urlEntry1),
 );
 
 const entryMetadata: DatabaseEntryMetadata = {

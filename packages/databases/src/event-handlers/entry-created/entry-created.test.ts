@@ -8,6 +8,7 @@ import {
   collectionDatabase,
   collectionEntry1,
   collectionEntry1SqlRecord,
+  databaseDirPath,
   objectDatabase,
   objectEntry1,
   objectEntry1SqlRecord,
@@ -141,7 +142,7 @@ describe('onCreateEntry', () => {
 
     expect(
       await History.read({
-        ownerPath: objectDatabase.path,
+        ownerPath: databaseDirPath(objectDatabase),
         subjectKey: objectEntry1.title,
       }),
     ).toEqual([expect.objectContaining({ kind: 'created' })]);

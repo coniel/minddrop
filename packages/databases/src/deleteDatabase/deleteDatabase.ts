@@ -3,6 +3,7 @@ import { Fs } from '@minddrop/file-system';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabaseDeletedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
+import { resolveDatabasePath } from '../utils';
 
 /**
  * Deletes a database by moving its directory to the system trash.
@@ -24,5 +25,5 @@ export async function deleteDatabase(id: string): Promise<void> {
   Events.dispatch(DatabaseDeletedEvent, database);
 
   // Move the database directory to the system trash
-  await Fs.trashDir(database.path);
+  await Fs.trashDir(resolveDatabasePath(database));
 }

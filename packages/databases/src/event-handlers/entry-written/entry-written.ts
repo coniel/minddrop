@@ -7,7 +7,11 @@ import {
   recordContentCapture,
 } from '../../contentCaptureRegistry';
 import { DatabaseEntryWrittenEventData } from '../../events';
-import { resolveContentCaptureGap } from '../../utils';
+import {
+  resolveContentCaptureGap,
+  resolveDatabaseEntryPath,
+  resolveDatabasePath,
+} from '../../utils';
 
 /**
  * Called when an entry's file is written. Captures the content the
@@ -24,13 +28,14 @@ export async function onEntryWritten(
     return;
   }
 
-  const key = contentCaptureKey(database.path, entry.title);
+  const databasePath = resolveDatabasePath(database);
+  const key = contentCaptureKey(databasePath, entry.title);
   const contentHash = Fs.hashContents(previousContents);
 
   // Fall back to the entry's history for a capture made in an earlier
   // session.
   const lastCapture =
-    getContentCapture(key) ?? (await readLastCapture(database.path, entry));
+    getContentCapture(key) ?? (await readLastCapture(databasePath, entry));
 
   // Check whether the content has already been captured, which makes
   // capturing idempotent.
@@ -50,11 +55,11 @@ export async function onEntryWritten(
 
   // Record the content the write replaced
   await History.record({
-    ownerPath: database.path,
+    ownerPath: databasePath,
     subjectKey: entry.title,
     kind: 'content',
     contents: previousContents,
-    extension: Fs.getFileExtension(entry.path),
+    extension: Fs.getFileExtension(resolveDatabaseEntryPath(entry, database)),
   });
 
   recordContentCapture(key, { capturedAt, contentHash });

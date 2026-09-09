@@ -13,6 +13,7 @@ import {
   cleanupTestSqlDatabase,
   collectionDatabase,
   collectionEntry1,
+  databaseDirPath,
   entryTemplate1,
   entryTemplate2,
   entryTemplatesDatabase,
@@ -190,7 +191,7 @@ describe('onRemoveProperty', () => {
         (p) => p.name === 'Image',
       )!;
       const storedImagePath = resolveEntryTemplateFilePath(
-        entryTemplatesDatabase.path,
+        databaseDirPath(entryTemplatesDatabase),
         entryTemplate1.id,
         'template-image.png',
       );

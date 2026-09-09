@@ -4,7 +4,13 @@ import { DesignFixtures } from '@minddrop/designs-next/test-utils';
 import { storeItem } from '@minddrop/stores/test-utils';
 import { DatabasesStore } from '../../DatabasesStore';
 import { getDatabase } from '../../getDatabase';
-import { MockFs, cleanup, objectDatabase, setup } from '../../test-utils';
+import {
+  MockFs,
+  cleanup,
+  databaseDirPath,
+  objectDatabase,
+  setup,
+} from '../../test-utils';
 import { resolveDatabaseDesignFilePath } from '../../utils';
 import { onDatabaseDesignDeleted } from './database-design-deleted';
 
@@ -24,8 +30,14 @@ describe('onDatabaseDesignDeleted', () => {
 
     // Add both designs' files to the file system
     MockFs.addFiles([
-      resolveDatabaseDesignFilePath(objectDatabase.path, cardDesign.id),
-      resolveDatabaseDesignFilePath(objectDatabase.path, listDesign.id),
+      resolveDatabaseDesignFilePath(
+        databaseDirPath(objectDatabase),
+        cardDesign.id,
+      ),
+      resolveDatabaseDesignFilePath(
+        databaseDirPath(objectDatabase),
+        listDesign.id,
+      ),
     ]);
   });
 
@@ -37,12 +49,18 @@ describe('onDatabaseDesignDeleted', () => {
     // The deleted design's file should be gone, the other untouched
     expect(
       MockFs.exists(
-        resolveDatabaseDesignFilePath(objectDatabase.path, cardDesign.id),
+        resolveDatabaseDesignFilePath(
+          databaseDirPath(objectDatabase),
+          cardDesign.id,
+        ),
       ),
     ).toBe(false);
     expect(
       MockFs.exists(
-        resolveDatabaseDesignFilePath(objectDatabase.path, listDesign.id),
+        resolveDatabaseDesignFilePath(
+          databaseDirPath(objectDatabase),
+          listDesign.id,
+        ),
       ),
     ).toBe(true);
   });
@@ -80,7 +98,10 @@ describe('onDatabaseDesignDeleted', () => {
     // No design file should be touched
     expect(
       MockFs.exists(
-        resolveDatabaseDesignFilePath(objectDatabase.path, cardDesign.id),
+        resolveDatabaseDesignFilePath(
+          databaseDirPath(objectDatabase),
+          cardDesign.id,
+        ),
       ),
     ).toBe(true);
   });

@@ -2,6 +2,7 @@ import { Fs } from '@minddrop/file-system';
 import { getDatabaseEntrySerializer } from '../getDatabaseEntrySerializer';
 import { readDatabaseEntry } from '../readDatabaseEntry';
 import { Database, DatabaseEntry } from '../types';
+import { resolveDatabasePath } from '../utils';
 
 /**
  * Reads all entry files from a database directory and returns
@@ -14,9 +15,10 @@ export async function readDatabaseEntries(
   database: Database,
 ): Promise<DatabaseEntry[]> {
   const hasEntrySubdirs = database.propertyFileStorage === 'entry';
+  const databasePath = resolveDatabasePath(database);
 
   // Read the database's entry files
-  let files = await Fs.readDir(database.path, {
+  let files = await Fs.readDir(databasePath, {
     recursive: hasEntrySubdirs,
   });
 
@@ -44,9 +46,16 @@ export async function readDatabaseEntries(
     file.path.endsWith(`.${serializer.fileExtension}`),
   );
 
-  // Read and deserialize the database entries
+  // Read and deserialize the database entries, which are addressed
+  // from their database.
   const entries = await Promise.all(
-    files.map((file) => readDatabaseEntry(file.path, database, serializer)),
+    files.map((file) =>
+      readDatabaseEntry(
+        Fs.relativePath(databasePath, file.path),
+        database,
+        serializer,
+      ),
+    ),
   );
 
   return entries.filter((entry): entry is DatabaseEntry => entry !== null);

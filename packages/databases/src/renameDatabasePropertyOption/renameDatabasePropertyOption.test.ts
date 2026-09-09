@@ -5,6 +5,7 @@ import { InvalidParameterError } from '@minddrop/utils';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabasePropertyOptionRenamedEvent } from '../events';
 import { MockFs, cleanup, objectDatabase, setup } from '../test-utils';
+import { resolveDatabasePath } from '../utils';
 import { renameDatabasePropertyOption } from './renameDatabasePropertyOption';
 
 // A database holding a select property
@@ -34,7 +35,7 @@ describe('renameDatabasePropertyOption', () => {
     DatabasesStore.set(selectDatabase);
 
     // Create the database directory so the config write succeeds
-    MockFs.addFiles([selectDatabase.path]);
+    MockFs.addFiles([resolveDatabasePath(selectDatabase)]);
   });
 
   afterEach(cleanup);

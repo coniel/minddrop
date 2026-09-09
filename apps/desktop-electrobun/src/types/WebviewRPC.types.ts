@@ -235,6 +235,7 @@ export type WebviewRPC = {
         params: {
           workspaceId: string;
           action: 'upsert' | 'delete';
+          // The database's path is workspace relative
           database: { id: string; name: string; path: string; icon: string };
         };
         response: void;

@@ -1,7 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DesignFixtures } from '@minddrop/designs-next/test-utils';
 import { getDatabase } from '../../getDatabase';
-import { MockFs, cleanup, objectDatabase, setup } from '../../test-utils';
+import {
+  MockFs,
+  cleanup,
+  databaseDirPath,
+  objectDatabase,
+  setup,
+} from '../../test-utils';
 import { resolveDatabaseDesignFilePath } from '../../utils';
 import { onDatabaseDesignCreated } from './database-design-created';
 
@@ -20,7 +26,10 @@ describe('onDatabaseDesignCreated', () => {
     // The design should be written to its file
     expect(
       MockFs.exists(
-        resolveDatabaseDesignFilePath(objectDatabase.path, design.id),
+        resolveDatabaseDesignFilePath(
+          databaseDirPath(objectDatabase),
+          design.id,
+        ),
       ),
     ).toBe(true);
   });
@@ -39,7 +48,10 @@ describe('onDatabaseDesignCreated', () => {
     // No design file should be written
     expect(
       MockFs.exists(
-        resolveDatabaseDesignFilePath(objectDatabase.path, cardDesign_1.id),
+        resolveDatabaseDesignFilePath(
+          databaseDirPath(objectDatabase),
+          cardDesign_1.id,
+        ),
       ),
     ).toBe(false);
   });

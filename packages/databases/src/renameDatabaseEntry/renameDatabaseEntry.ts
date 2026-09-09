@@ -6,6 +6,7 @@ import { DatabaseEntryRenamedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntry } from '../getDatabaseEntry';
 import { DatabaseEntry } from '../types';
+import { resolveDatabaseEntryPath, resolveDatabasePath } from '../utils';
 import { writeDatabaseEntry } from '../writeDatabaseEntry';
 
 /**
@@ -27,14 +28,16 @@ export async function renameDatabaseEntry<
 ): Promise<TDatabaseEntry> {
   let finalNewTitle = newTitle;
   const entry = getDatabaseEntry<TDatabaseEntry>(id);
-  const parentDir = Fs.parentDirPath(entry.path);
-  const fileExtension = Fs.getFileExtension(entry.path);
+  const database = getDatabase(entry.database);
+  const databasePath = resolveDatabasePath(database);
+  const entryPath = resolveDatabaseEntryPath(entry, database);
+  const parentDir = Fs.parentDirPath(entryPath);
+  const fileExtension = Fs.getFileExtension(entryPath);
   const entryFileNameWithoutExt = Fs.removeExtension(
-    Fs.fileNameFromPath(entry.path),
+    Fs.fileNameFromPath(entryPath),
   );
 
   // Check if the entry is stored in its own subdirectory
-  const database = getDatabase(entry.database);
   const isInEntrySubdir = database.propertyFileStorage === 'entry';
 
   const newFileName = `${newTitle}.${fileExtension}`;
@@ -74,20 +77,23 @@ export async function renameDatabaseEntry<
     await Fs.rename(currentEntryPath, newPath);
   } else {
     // Rename the primary entry file
-    await Fs.rename(entry.path, newPath);
+    await Fs.rename(entryPath, newPath);
   }
+
+  // The entry's new path, as addressed from its database
+  const newRelativePath = Fs.relativePath(databasePath, newPath);
 
   // Update the entry's path, title, and last modified date
   const renamedDatabaseEntry: TDatabaseEntry = {
     ...entry,
-    path: newPath,
+    path: newRelativePath,
     title: finalNewTitle,
     lastModified: new Date(),
   };
 
   // Update the entry in place under its existing store key
   DatabaseEntriesStore.update(id, {
-    path: newPath,
+    path: newRelativePath,
     title: finalNewTitle,
     lastModified: renamedDatabaseEntry.lastModified,
   });

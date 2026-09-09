@@ -8,6 +8,7 @@ import {
 import {
   cleanup,
   cleanupTestSqlDatabase,
+  databaseDirPath,
   objectDatabase,
   objectEntry1,
   parentDir,
@@ -67,7 +68,7 @@ describe('onUpdateDatabase', () => {
   it("syncs the entries' paths when the serializer changed", () => {
     // Repath the entry as the serializer conversion does before
     // dispatching.
-    const newPath = `${objectDatabase.path}/${objectEntry1.title}.json`;
+    const newPath = `${databaseDirPath(objectDatabase)}/${objectEntry1.title}.json`;
 
     DatabaseEntriesStore.update(objectEntry1.id, { path: newPath });
 
@@ -84,7 +85,7 @@ describe('onUpdateDatabase', () => {
 
   it("syncs the entries' paths when crossing the entry storage boundary", () => {
     // Repath the entry as the storage change does before dispatching
-    const newPath = `${objectDatabase.path}/${objectEntry1.title}/${objectEntry1.title}.md`;
+    const newPath = `${databaseDirPath(objectDatabase)}/${objectEntry1.title}/${objectEntry1.title}.md`;
 
     DatabaseEntriesStore.update(objectEntry1.id, { path: newPath });
 

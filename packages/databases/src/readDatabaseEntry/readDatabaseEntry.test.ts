@@ -4,6 +4,7 @@ import { markdownEntrySerializer } from '../entry-serializers';
 import {
   MockFs,
   cleanup,
+  databaseEntryFilePath,
   objectDatabase,
   objectEntry1,
   setup,
@@ -45,13 +46,13 @@ describe('readDatabaseEntry', () => {
     // The hash should be of the file's contents, so that an external
     // edit is detected whatever the entry's timestamp properties say.
     expect(entry?.contentHash).toBe(
-      Fs.hashContents(MockFs.readTextFile(objectEntry1.path)),
+      Fs.hashContents(MockFs.readTextFile(databaseEntryFilePath(objectEntry1))),
     );
   });
 
   it('uses timestamp properties when available instead of file stat', async () => {
     // Set file stats to different values than the property values
-    MockFs.setFileStats(timestampEntry1.path, {
+    MockFs.setFileStats(databaseEntryFilePath(timestampEntry1), {
       created: statCreatedDate,
       lastModified: statLastModifiedDate,
     });
@@ -69,7 +70,7 @@ describe('readDatabaseEntry', () => {
 
   it('falls back to file stat when timestamp properties are not in the schema', async () => {
     // Set file stats
-    MockFs.setFileStats(objectEntry1.path, {
+    MockFs.setFileStats(databaseEntryFilePath(objectEntry1), {
       created: statCreatedDate,
       lastModified: statLastModifiedDate,
     });
@@ -96,7 +97,7 @@ describe('readDatabaseEntry', () => {
     };
 
     // Set file stats
-    MockFs.setFileStats(timestampEntry1.path, {
+    MockFs.setFileStats(databaseEntryFilePath(timestampEntry1), {
       created: statCreatedDate,
       lastModified: statLastModifiedDate,
     });
@@ -121,10 +122,13 @@ Last Modified: not-a-date
 ---`;
 
     MockFs.setFiles([
-      { path: timestampEntry1.path, textContent: invalidTimestampFile },
+      {
+        path: databaseEntryFilePath(timestampEntry1),
+        textContent: invalidTimestampFile,
+      },
     ]);
 
-    MockFs.setFileStats(timestampEntry1.path, {
+    MockFs.setFileStats(databaseEntryFilePath(timestampEntry1), {
       created: statCreatedDate,
       lastModified: statLastModifiedDate,
     });

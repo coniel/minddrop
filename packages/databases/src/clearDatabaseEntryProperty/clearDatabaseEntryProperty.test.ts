@@ -11,6 +11,7 @@ import {
   cleanupTestSqlDatabase,
   collectionDatabase,
   collectionEntry1,
+  databaseEntryFilePath,
   mockDate,
   objectEntry1,
   setup,
@@ -125,7 +126,7 @@ describe('clearDatabaseEntryProperty', () => {
   it('writes the updated entry to the file system', async () => {
     await clearDatabaseEntryProperty(objectEntry1.id, propertyName);
 
-    const result = MockFs.readTextFile(objectEntry1.path);
+    const result = MockFs.readTextFile(databaseEntryFilePath(objectEntry1));
 
     expect(result).not.toContain(propertyName);
   });

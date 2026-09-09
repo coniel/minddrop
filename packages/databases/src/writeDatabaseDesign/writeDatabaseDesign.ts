@@ -5,6 +5,7 @@ import { getDatabase } from '../getDatabase';
 import {
   resolveDatabaseDesignFilePath,
   resolveDatabaseDesignsDirPath,
+  resolveDatabasePath,
 } from '../utils';
 
 /**
@@ -28,11 +29,13 @@ export async function writeDatabaseDesign(design: Design): Promise<void> {
   const database = getDatabase(design.owner);
 
   // Ensure the database's designs directory exists
-  await Fs.ensureDir(resolveDatabaseDesignsDirPath(database.path));
+  const databasePath = resolveDatabasePath(database);
+
+  await Fs.ensureDir(resolveDatabaseDesignsDirPath(databasePath));
 
   // Write the design to the file system in its stored form
   await Fs.writeJsonFile(
-    resolveDatabaseDesignFilePath(database.path, design.id),
+    resolveDatabaseDesignFilePath(databasePath, design.id),
     Designs.serialize(design),
   );
 }

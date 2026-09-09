@@ -6,7 +6,7 @@ import {
 import { Fs } from '@minddrop/file-system';
 import { normalizeDatabaseConfigIds } from '../normalizeDatabaseConfigIds';
 import type { Database } from '../types';
-import { resolveDatabaseViewsDirPath } from '../utils';
+import { resolveDatabasePath, resolveDatabaseViewsDirPath } from '../utils';
 
 /**
  * Loads database views from the databases' view directories into
@@ -38,7 +38,7 @@ async function readDatabaseViews(
   database: Database,
 ): Promise<VirtualDataViewData[]> {
   // Path to the database's views directory
-  const dirPath = resolveDatabaseViewsDirPath(database.path);
+  const dirPath = resolveDatabaseViewsDirPath(resolveDatabasePath(database));
 
   // The stored views read from the views directory, empty for
   // databases without one.

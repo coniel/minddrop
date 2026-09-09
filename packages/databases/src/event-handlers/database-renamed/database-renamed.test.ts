@@ -19,6 +19,7 @@ import {
   cleanupRecordingTestSqlDatabase,
   collectionDatabase,
   collectionEntry1,
+  databaseEntryFilePath,
   getRecordedSqlStatements,
   noPropertiesDatabase,
   objectDatabase,
@@ -28,6 +29,7 @@ import {
   setupRecordingTestSqlDatabase,
 } from '../../test-utils';
 import {
+  resolveDatabasePath,
   viewMetadataKey,
   virtualCollectionId,
   virtualCollectionName,
@@ -42,11 +44,8 @@ const { layout_card_2, layout_card_3 } = DesignFixtures;
 const renamedDatabase = {
   ...collectionDatabase,
   name: 'Renamed Database',
-  path: `${parentDir}/Renamed Database`,
+  path: 'Renamed Database',
 };
-
-// The expected new path for collectionEntry1 after the rename
-const renamedEntryPath = `${parentDir}/Renamed Database/Collection Entry 1.md`;
 
 describe('onRenameDatabase', () => {
   beforeEach(() => {
@@ -63,7 +62,7 @@ describe('onRenameDatabase', () => {
 
     // Create the renamed database directory so reference
     // rewrites can write moved entry files.
-    MockFs.addFiles([renamedDatabase.path]);
+    MockFs.addFiles([resolveDatabasePath(renamedDatabase)]);
 
     // Create virtual collections for the collection entry
     Collections.createVirtual(
@@ -129,22 +128,20 @@ describe('onRenameDatabase', () => {
     );
   });
 
-  it('updates entries in place with the new path and database', async () => {
+  it('leaves the entries untouched', async () => {
     await onRenameDatabase({
       original: collectionDatabase,
       updated: renamedDatabase,
     });
 
-    // The entry should carry the swapped path and database
-    const renamed = DatabaseEntriesStore.get(collectionEntry1.id);
-    expect(renamed).toMatchObject({
-      id: collectionEntry1.id,
-      path: renamedEntryPath,
-      database: renamedDatabase.id,
-    });
+    // Entry paths are addressed from their database, so a database
+    // rename does not move them.
+    expect(DatabaseEntriesStore.get(collectionEntry1.id)).toEqual(
+      collectionEntry1,
+    );
   });
 
-  it('upserts the database and entries in SQL', async () => {
+  it('upserts the database in SQL', async () => {
     await onRenameDatabase({
       original: collectionDatabase,
       updated: renamedDatabase,
@@ -157,14 +154,17 @@ describe('onRenameDatabase', () => {
       path: renamedDatabase.path,
       icon: renamedDatabase.icon,
     });
+  });
 
-    // Entry records re-upserted under the new database ID
-    expect(sqlGetEntrySyncRecords(renamedDatabase.id)).toContainEqual(
-      expect.objectContaining({
-        id: collectionEntry1.id,
-        path: renamedEntryPath,
-      }),
-    );
+  it("leaves the entries' SQL records alone", async () => {
+    await onRenameDatabase({
+      original: collectionDatabase,
+      updated: renamedDatabase,
+    });
+
+    // Nothing an entry's record holds moves with its database, so the
+    // rename writes no entry records.
+    expect(sqlGetEntrySyncRecords(renamedDatabase.id)).toEqual([]);
   });
 
   it('does not dispatch a database delete sync event', async () => {
@@ -275,9 +275,9 @@ describe('onRenameDatabase', () => {
     // The rewrite lands as an unawaited event side effect, so
     // poll for the referencing file to contain the new address.
     await vi.waitFor(() => {
-      expect(MockFs.readTextFile(collectionEntry1.path)).toContain(
-        'Renamed Root/Reference Entry 1',
-      );
+      expect(
+        MockFs.readTextFile(databaseEntryFilePath(collectionEntry1)),
+      ).toContain('Renamed Root/Reference Entry 1');
     });
   });
 

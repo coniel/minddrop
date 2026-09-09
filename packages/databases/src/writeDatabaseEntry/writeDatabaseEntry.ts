@@ -4,7 +4,10 @@ import { DatabaseEntryWrittenEvent } from '../events';
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntry } from '../getDatabaseEntry';
 import { getDatabaseEntrySerializer } from '../getDatabaseEntrySerializer';
-import { serializeCollectionProperties } from '../utils';
+import {
+  resolveDatabaseEntryPath,
+  serializeCollectionProperties,
+} from '../utils';
 
 /**
  * Writes an entry to the file system.
@@ -22,12 +25,14 @@ export async function writeDatabaseEntry(id: string): Promise<void> {
   const entry = getDatabaseEntry(id);
   // Get the parent database
   const database = getDatabase(entry.database);
+  // Path to the entry's primary file
+  const entryPath = resolveDatabaseEntryPath(entry, database);
 
   // If the database uses entry based storage, ensure the entry
   // subdirectory exists.
   if (database.propertyFileStorage === 'entry') {
-    if (!(await Fs.exists(Fs.parentDirPath(entry.path)))) {
-      await Fs.createDir(Fs.parentDirPath(entry.path));
+    if (!(await Fs.exists(Fs.parentDirPath(entryPath)))) {
+      await Fs.createDir(Fs.parentDirPath(entryPath));
     }
   }
 
@@ -36,8 +41,8 @@ export async function writeDatabaseEntry(id: string): Promise<void> {
 
   // Read the entry's current content so the serializer can merge into it
   // rather than regenerating it, preserving anything MindDrop does not model.
-  const previousContents = (await Fs.exists(entry.path))
-    ? await Fs.readTextFile(entry.path)
+  const previousContents = (await Fs.exists(entryPath))
+    ? await Fs.readTextFile(entryPath)
     : undefined;
 
   // Serialize the entry's properties
@@ -52,13 +57,13 @@ export async function writeDatabaseEntry(id: string): Promise<void> {
   // record it as the app's own contents anyway, or a file the app has
   // just moved is taken for an external change by the watcher.
   if (contents === previousContents) {
-    Fs.recordWrittenContents(entry.path, contents);
+    Fs.recordWrittenContents(entryPath, contents);
 
     return;
   }
 
   // Write the entry file
-  await Fs.writeTextFile(entry.path, contents);
+  await Fs.writeTextFile(entryPath, contents);
 
   Events.dispatch(DatabaseEntryWrittenEvent, {
     entry,
