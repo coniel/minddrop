@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Design, DesignElementConfigs, Designs } from '@minddrop/designs-next';
+import { PropertiesSchema, PropertyMap } from '@minddrop/properties';
+import { DesignPropertiesProvider } from '../DesignPropertiesProvider';
 import { resolveVerticalStyles } from '../utils';
 import './DesignRenderer.css';
 
@@ -16,6 +18,18 @@ export interface DesignRendererProps {
    * and tracks the container's width.
    */
   width?: number;
+
+  /**
+   * The property schemas of the database owning the design. Needed
+   * alongside the values, which are read against their schema.
+   */
+  properties?: PropertiesSchema;
+
+  /**
+   * The property values the design's mapped elements render, keyed
+   * by property name.
+   */
+  values?: PropertyMap;
 }
 
 /**
@@ -27,6 +41,8 @@ export interface DesignRendererProps {
 export const DesignRenderer: React.FC<DesignRendererProps> = ({
   design,
   width,
+  properties,
+  values,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const measuredNodesRef = useRef(new Map<string, HTMLDivElement>());
@@ -113,57 +129,59 @@ export const DesignRenderer: React.FC<DesignRendererProps> = ({
   }
 
   return (
-    <div
-      ref={containerRef}
-      className="design-renderer"
-      style={{ width, height: aspectHeight ?? rowLayout?.totalHeight }}
-    >
-      {/* Array order doubles as paint order, later elements layer on top */}
-      {renderWidth !== null &&
-        design.elements.map((element) => {
-          // Look up the element's renderer, skipping unregistered types
-          const ElementComponent = DesignElementConfigs.get(
-            element.type,
-            false,
-          )?.component;
+    <DesignPropertiesProvider properties={properties} values={values}>
+      <div
+        ref={containerRef}
+        className="design-renderer"
+        style={{ width, height: aspectHeight ?? rowLayout?.totalHeight }}
+      >
+        {/* Array order doubles as paint order, later elements layer on top */}
+        {renderWidth !== null &&
+          design.elements.map((element) => {
+            // Look up the element's renderer, skipping unregistered types
+            const ElementComponent = DesignElementConfigs.get(
+              element.type,
+              false,
+            )?.component;
 
-          if (!ElementComponent) {
-            return null;
-          }
+            if (!ElementComponent) {
+              return null;
+            }
 
-          // Resolve the element's pixel rect at the render width
-          const rect = Designs.resolveElementRect(
-            element,
-            design.elements,
-            design.columns,
-            renderWidth,
-          );
+            // Resolve the element's pixel rect at the render width
+            const rect = Designs.resolveElementRect(
+              element,
+              design.elements,
+              design.columns,
+              renderWidth,
+            );
 
-          return (
-            <div
-              key={element.id}
-              ref={
-                element.naturalHeight && aspectHeight === null
-                  ? (node) => setMeasuredNode(element.id, node)
-                  : undefined
-              }
-              data-element-id={element.id}
-              className="design-renderer-element"
-              style={{
-                left: rect.left,
-                width: rect.width,
-                ...resolveVerticalStyles(
-                  element,
-                  design,
-                  aspectHeight,
-                  rowLayout,
-                ),
-              }}
-            >
-              <ElementComponent element={element} />
-            </div>
-          );
-        })}
-    </div>
+            return (
+              <div
+                key={element.id}
+                ref={
+                  element.naturalHeight && aspectHeight === null
+                    ? (node) => setMeasuredNode(element.id, node)
+                    : undefined
+                }
+                data-element-id={element.id}
+                className="design-renderer-element"
+                style={{
+                  left: rect.left,
+                  width: rect.width,
+                  ...resolveVerticalStyles(
+                    element,
+                    design,
+                    aspectHeight,
+                    rowLayout,
+                  ),
+                }}
+              >
+                <ElementComponent element={element} />
+              </div>
+            );
+          })}
+      </div>
+    </DesignPropertiesProvider>
   );
 };

@@ -24,6 +24,7 @@
   "dependencies": {
     "@minddrop/designs-next": "workspace:*",
     "@minddrop/i18n": "workspace:*",
+    "@minddrop/properties": "workspace:*",
     "@minddrop/ui-canvas": "workspace:*",
     "@minddrop/ui-icons": "workspace:*",
     "@minddrop/ui-primitives": "workspace:*",

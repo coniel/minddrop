@@ -4,5 +4,7 @@ export * from './DesignEditorPane';
 export * from './DesignElementControls';
 export * from './DesignElementInsertMenu';
 export * from './DesignPreviewPane';
+export * from './DesignPropertiesProvider';
 export * from './DesignRenderer';
+export * from './useElementValue';
 export * from './utils/resolveTextSettingsClass';

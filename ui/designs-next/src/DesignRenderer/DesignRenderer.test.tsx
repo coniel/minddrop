@@ -1,14 +1,42 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { Design, Designs } from '@minddrop/designs-next';
+import {
+  Design,
+  DesignElementComponent,
+  DesignElementConfig,
+  DesignElementConfigs,
+  Designs,
+} from '@minddrop/designs-next';
 import {
   bodyDesignElement,
   cardDesign_1,
   coverDesignElement,
   iconDesignElement,
 } from '@minddrop/designs-next/test-utils';
+import { PropertiesSchema } from '@minddrop/properties';
 import { act, render } from '@minddrop/test-utils';
 import { cleanup } from '../test-utils';
+import { useElementValue } from '../useElementValue';
 import { DesignRenderer } from './DesignRenderer';
+
+// An element type rendering the value of the property it maps to,
+// standing in for the real content elements.
+const ValueElementType = 'value';
+
+const ValueElement: DesignElementComponent = ({ element }) => (
+  <div>{useElementValue(element)}</div>
+);
+
+const valueElementConfig: DesignElementConfig = {
+  type: ValueElementType,
+  label: 'designsNext.elements.text.label',
+  icon: 'text',
+  group: 'content',
+  component: ValueElement,
+  defaultColumnSpan: 12,
+  defaultRowSpan: 4,
+};
+
+const titleProperties: PropertiesSchema = [{ type: 'title', name: 'Title' }];
 
 // The created mock observers, in construction order
 let observers: MockResizeObserver[] = [];
@@ -69,6 +97,28 @@ describe('DesignRenderer', () => {
   afterEach(() => {
     cleanup();
     vi.unstubAllGlobals();
+  });
+
+  it('renders a mapped element from the property values', () => {
+    DesignElementConfigs.register(valueElementConfig);
+
+    const design: Design = {
+      ...cardDesign_1,
+      elements: [
+        { ...coverDesignElement, type: ValueElementType, property: 'Title' },
+      ],
+    };
+
+    const { container } = render(
+      <DesignRenderer
+        design={design}
+        width={480}
+        properties={titleProperties}
+        values={{ Title: 'The entry title' }}
+      />,
+    );
+
+    expect(container.textContent).toBe('The entry title');
   });
 
   it('renders a wrapper per element', () => {
