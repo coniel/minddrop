@@ -87,7 +87,7 @@ Fixture modules are exported twice from a package's `test-utils` barrel — flat
 // GOOD
 await createDesign({ type: 'card', name: 'My design' });
 
-expect(DesignsStore.get(design.id)).toEqual(newDesign);
+expect(DesignsStore).toHaveItem(design.id, newDesign);
 
 // BAD
 expect(writeDesignSpy).toHaveBeenCalledWith(design);
@@ -96,6 +96,48 @@ expect(writeDesignSpy).toHaveBeenCalledWith(design);
 `Foo.Store` is exported for exactly this: tests read and seed stores directly, while app and feature code always goes through the API functions.
 
 The mock file system is asserted the same way, through `MockFs.exists(path)` and its readers rather than through spies on `Fs`.
+
+### Store matchers
+
+Assert against the store itself, not against the result of reading it. `@minddrop/stores/test-utils` adds matchers that take the store as the received value, so a failure can say which store was read and what it actually held:
+
+```ts
+expect(DesignsStore).toHaveItem(design.id, newDesign); // holds this item
+expect(DesignsStore).toHaveItem(design.id); // holds some item under the id
+expect(DesignsStore).not.toHaveItem(deleted.id); // holds no such item
+expect(DesignsStore).toHaveItems([design1, design2]); // holds exactly these, any order
+expect(DesignsStore).toHaveItemCount(0);
+expect(DevToolsEventsStore).toHaveItemOrder([event1.id, event2.id]); // array stores
+expect(ThemeStore).toHaveStoredValue('variant', ThemeDark); // key-value stores
+```
+
+`toHaveItems` takes either the items or their identifiers, and ignores order — `getAllArray()` order is an accident of insertion for object and key-value stores, and pinning it makes tests fail for the wrong reason. Where order _is_ the behaviour, an array store has `toHaveItemOrder`.
+
+The matchers distinguish a missing item from a mismatched one, which is the failure the old `expect(Store.get(id)).toEqual(x)` shape could not report:
+
+```
+Designs:Designs has no item "design_9". It holds: design_1, design_2.
+```
+
+The key-value matcher is `toHaveStoredValue`, not `toHaveValue`: jest-dom already owns `toHaveValue` for form elements.
+
+To assert on an item's fields rather than the whole item, reach for `storeItem` instead of dodging the getter's nullable return with `?.` or `!`. It throws the same "has no item" message, so a missing item reports itself rather than surfacing as `expected undefined to be 'red'`:
+
+```ts
+// GOOD
+const entry = storeItem(DatabaseEntriesStore, objectEntry1.id);
+
+expect(entry.metadata.color).toBe('red');
+expect(entry.properties.Color).toBe('red');
+
+// BAD
+const entry = DatabaseEntriesStore.get(objectEntry1.id);
+
+expect(entry?.metadata.color).toBe('red');
+expect(entry?.properties.Color).toBe('red');
+```
+
+The matchers register as an import side effect. A package's `src/test-utils/setup-tests.ts` imports `@minddrop/stores/test-utils`, which reaches every test importing that package's test-utils; a test that does not import them carries the side-effect import itself. This is also what makes the matcher types visible to `tsc --noEmit`, which a `setupFiles` entry would not be.
 
 Events are asserted by listening for the real dispatch:
 
