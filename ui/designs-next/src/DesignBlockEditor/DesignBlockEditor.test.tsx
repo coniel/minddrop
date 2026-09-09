@@ -456,6 +456,42 @@ describe('DesignBlockEditor', () => {
     expect(marker.style.height).toBe('80px');
   });
 
+  it('reads out the marked area size in snap units', () => {
+    const container = renderEditor();
+
+    // Ten by eight grid units, five by four squares at the snap
+    dragSurface(container, [45, 27], [125, 87]);
+
+    expect(
+      container.querySelector('.design-block-editor-size-label')?.textContent,
+    ).toBe('5 × 4');
+  });
+
+  it('scales the size readout down to fit a small area', () => {
+    const container = renderEditor();
+
+    dragSurface(container, [45, 27], [65, 27]);
+
+    const readout = container.querySelector(
+      '.design-block-editor-size-label',
+    ) as HTMLElement;
+
+    expect(readout.textContent).toBe('2 × 1');
+    expect(
+      readout.style.getPropertyValue('--design-block-editor-size-label-fit'),
+    ).toBe('10px');
+  });
+
+  it('leaves a single marked square without a size readout', () => {
+    const container = renderEditor();
+
+    clickSurface(container, 45, 27);
+
+    expect(
+      container.querySelector('.design-block-editor-size-label'),
+    ).toBeNull();
+  });
+
   it('leaves a single marked square at the element type default size', async () => {
     const container = renderEditor();
 
@@ -711,6 +747,41 @@ describe('DesignBlockEditor', () => {
 
     expect(resizedTitle?.columnSpan).toBe(titleDesignElement.columnSpan + 2);
     expect(resizedTitle?.column).toBe(titleDesignElement.column);
+  });
+
+  it('reads out the block size while it is resized', () => {
+    const container = renderEditor();
+    const rightHandle = container.querySelector(
+      '[data-element-id="element_title"] .design-block-editor-handle-resize-right',
+    ) as HTMLElement;
+
+    fireEvent.pointerDown(rightHandle, { clientX: 0, clientY: 0 });
+
+    expect(
+      container.querySelector(
+        '[data-element-id="element_title"] .design-block-editor-size-label',
+      )?.textContent,
+    ).toBe('14 × 2');
+
+    fireEvent.pointerUp(rightHandle, { clientX: 0, clientY: 0 });
+
+    expect(
+      container.querySelector('.design-block-editor-size-label'),
+    ).toBeNull();
+  });
+
+  it('leaves a moved block without a size readout', () => {
+    const container = renderEditor();
+    const title = container.querySelector(
+      '[data-element-id="element_title"]',
+    ) as HTMLElement;
+
+    fireEvent.pointerDown(title, { clientX: 0, clientY: 0 });
+    fireEvent.pointerMove(title, { clientX: 20, clientY: 0 });
+
+    expect(
+      container.querySelector('.design-block-editor-size-label'),
+    ).toBeNull();
   });
 
   it('resizes both axes through a corner handle', () => {

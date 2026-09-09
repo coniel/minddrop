@@ -9,6 +9,7 @@ import {
 import { useDeleteKey, useModKeyHeld } from '@minddrop/utils';
 import { DesignElementInsertMenu } from '../DesignElementInsertMenu';
 import { resolveElementClass } from '../utils';
+import { SizeLabel } from './SizeLabel';
 import './DesignBlockEditor.css';
 
 export interface DesignBlockEditorProps {
@@ -168,9 +169,11 @@ const DragEngageDelay = 160;
  * draggable block per element. Moving snaps the element's edges onto
  * the snap grid, resizing snaps the drag delta, and grid lines draw
  * at the snap resolution. Marking out an area of the grid offers the
- * element types in a menu, inserting the picked one on that area. A
- * press which marks a single square inserts the element
- * at its type's default size instead. A right click anchors the area
+ * element types in a menu, inserting the picked one on that area.
+ * An area spanning more than a single square reads out its size in
+ * snap units, as does a block being resized. A press which marks a
+ * single square inserts the element at its type's default size
+ * instead. A right click anchors the area
  * instead of holding a button down, stretching it on pointer moves
  * alone until a click commits it. Holding the mod key brings the grid
  * in front of the blocks, opening the squares they cover to the same
@@ -197,6 +200,7 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
   const insertDragRef = useRef<GridPoint | null>(null);
   const insertPendingRef = useRef(false);
   const [draggedElementId, setDraggedElementId] = useState<string | null>(null);
+  const [resizedElementId, setResizedElementId] = useState<string | null>(null);
   const [dragEngaged, setDragEngaged] = useState(false);
   const [insertArea, setInsertArea] = useState<GridArea | null>(null);
   const [insertAnchor, setInsertAnchor] = useState<GridPoint | null>(null);
@@ -214,6 +218,13 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
   // Whether the grid is drawn over the blocks, which an engaged
   // drag, an accepted drop and the held mod key each call for.
   const gridOverBlocks = dragEngaged || gridInFront;
+
+  // Whether the marked area's size is read out on it. A single
+  // square is left unread: the insert leaves the element at its
+  // type's default size rather than taking the marked size.
+  const readOutInsertSize =
+    insertArea !== null &&
+    (insertArea.columnSpan > snap || insertArea.rowSpan > snap);
 
   // Engage a press as a drag once it has been held, so a press which
   // only selects a block never brings the grid up. A press which
@@ -387,6 +398,12 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
     // Track the dragged element so the grid overlay can layer the
     // other blocks beneath the grid while positioning.
     setDraggedElementId(elementId);
+
+    // Read the block's size out on it while it is being resized
+    if (mode !== 'move') {
+      setResizedElementId(elementId);
+    }
+
     onSelectionChange(elementId);
     onDragStart?.();
   }
@@ -448,6 +465,7 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
 
     dragRef.current = null;
     setDraggedElementId(null);
+    setResizedElementId(null);
     onDragEnd?.();
   }
 
@@ -717,6 +735,15 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
               onPointerUp={handlePointerUp}
             />
           ))}
+
+          {element.id === resizedElementId && (
+            <SizeLabel
+              columnSpan={element.columnSpan}
+              rowSpan={element.rowSpan}
+              snap={snap}
+              unitSize={unitSize}
+            />
+          )}
         </div>
       ))}
       {hoveredPoint && !insertArea && (
@@ -740,7 +767,16 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
             width: insertArea.columnSpan * unitSize,
             height: insertArea.rowSpan * unitSize,
           }}
-        />
+        >
+          {readOutInsertSize && (
+            <SizeLabel
+              columnSpan={insertArea.columnSpan}
+              rowSpan={insertArea.rowSpan}
+              snap={snap}
+              unitSize={unitSize}
+            />
+          )}
+        </div>
       )}
       {insertMenuOpen && (
         <DesignElementInsertMenu

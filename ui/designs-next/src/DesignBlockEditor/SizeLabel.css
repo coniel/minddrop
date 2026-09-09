@@ -1,0 +1,20 @@
+/* A marked area's or resized block's size in snap units, centered
+   on it. The type holds one screen size through the canvas zoom,
+   dividing by the zoom to undo it, and scales down from there in a
+   box too small to hold it at that size. */
+.design-block-editor-size-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  color: var(--text-subtle);
+  font-size: min(
+    var(--design-block-editor-size-label-fit),
+    calc(12px / var(--ui-canvas-zoom, 1))
+  );
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  white-space: nowrap;
+}
