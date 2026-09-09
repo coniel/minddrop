@@ -1,10 +1,8 @@
-import type {
-  SqlAdapter,
-  SqlConnection,
-  SqlOperation,
-  SqlParam,
-} from '@minddrop/sql';
-import { createTestSqlAdapter } from './createTestSqlAdapter';
+import type { SqlConnection, SqlOperation, SqlParam } from '@minddrop/sql';
+import {
+  type TestSqlAdapter,
+  createTestSqlAdapter,
+} from './createTestSqlAdapter';
 
 export interface RecordedSqlStatement {
   /**
@@ -46,7 +44,7 @@ export function clearRecordedSqlStatements(): void {
  *
  * @returns The recording adapter.
  */
-export function createRecordingSqlAdapter(): SqlAdapter {
+export function createRecordingSqlAdapter(): TestSqlAdapter {
   // Execute against the regular in-memory test adapter
   const adapter = createTestSqlAdapter();
 
@@ -97,6 +95,10 @@ export function createRecordingSqlAdapter(): SqlAdapter {
           connection.close();
         },
       };
+    },
+
+    dispose(): void {
+      adapter.dispose();
     },
   };
 }

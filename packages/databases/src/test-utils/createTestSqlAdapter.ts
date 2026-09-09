@@ -6,16 +6,35 @@ import type {
   SqlParam,
 } from '@minddrop/sql';
 
+export interface TestSqlAdapter extends SqlAdapter {
+  /**
+   * Closes every database opened through the adapter,
+   * discarding their contents.
+   */
+  dispose(): void;
+}
+
 /**
- * Creates a SqlAdapter backed by an in-memory node:sqlite
- * database for use in tests. Register it with
+ * Creates a SqlAdapter backed by in-memory node:sqlite
+ * databases for use in tests. Register it with
  * `Sql.registerAdapter` and call `Sql.initialize()` to open
  * the in-memory connection.
+ *
+ * A database is kept for the path it was opened with and
+ * handed back when that path is opened again, so an index
+ * outlives the session which wrote it and the behaviours
+ * which only happen on a second launch can be tested.
+ *
+ * @returns The test adapter.
  */
-export function createTestSqlAdapter(): SqlAdapter {
+export function createTestSqlAdapter(): TestSqlAdapter {
+  // The databases opened through the adapter, keyed by path,
+  // standing in for the files a real adapter leaves on disk
+  const databases = new Map<string, DatabaseSync>();
+
   return {
-    open(): SqlConnection {
-      const database = new DatabaseSync(':memory:');
+    open(path: string): SqlConnection {
+      const database = openDatabase(databases, path);
 
       return {
         exec(sql: string): void {
@@ -54,11 +73,41 @@ export function createTestSqlAdapter(): SqlAdapter {
         },
 
         close(): void {
-          database.close();
+          // Leave the database open so that reopening its path
+          // hands back the same data, as reopening a database
+          // file does. `Sql.open` closes the connection before
+          // reopening the same path, which a closed in-memory
+          // database could not survive.
         },
       };
     },
+
+    dispose(): void {
+      databases.forEach((database) => database.close());
+      databases.clear();
+    },
   };
+}
+
+/**
+ * Returns the database opened for the given path, opening a
+ * new one if the path has not been opened before.
+ */
+function openDatabase(
+  databases: Map<string, DatabaseSync>,
+  path: string,
+): DatabaseSync {
+  const existing = databases.get(path);
+
+  if (existing) {
+    return existing;
+  }
+
+  const database = new DatabaseSync(':memory:');
+
+  databases.set(path, database);
+
+  return database;
 }
 
 /**

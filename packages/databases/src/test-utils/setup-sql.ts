@@ -4,15 +4,25 @@ import {
   clearRecordedSqlStatements,
   createRecordingSqlAdapter,
 } from './createRecordingSqlAdapter';
-import { createTestSqlAdapter } from './createTestSqlAdapter';
+import {
+  type TestSqlAdapter,
+  createTestSqlAdapter,
+} from './createTestSqlAdapter';
+
+// The adapter backing the current test's databases
+let adapter: TestSqlAdapter | null = null;
 
 /**
  * Opens an in-memory SQL database containing the databases
  * schema, allowing code which reads from SQL to run in tests.
+ *
+ * The databases are kept for as long as the test runs, so
+ * reopening one models a restart rather than a fresh install.
  */
 export function setupTestSqlDatabase(): void {
   // Back the connection with an in-memory database
-  Sql.registerAdapter(createTestSqlAdapter());
+  adapter = createTestSqlAdapter();
+  Sql.registerAdapter(adapter);
   Sql.initialize();
 
   // Create the tables SQL reads and writes go through
@@ -25,6 +35,7 @@ export function setupTestSqlDatabase(): void {
  */
 export function cleanupTestSqlDatabase(): void {
   Sql.close();
+  disposeAdapter();
 }
 
 /**
@@ -34,7 +45,8 @@ export function cleanupTestSqlDatabase(): void {
  */
 export function setupRecordingTestSqlDatabase(): void {
   // Back the connection with a recording in-memory database
-  Sql.registerAdapter(createRecordingSqlAdapter());
+  adapter = createRecordingSqlAdapter();
+  Sql.registerAdapter(adapter);
   Sql.initialize();
 
   // Create the tables SQL reads and writes go through
@@ -50,5 +62,15 @@ export function setupRecordingTestSqlDatabase(): void {
  */
 export function cleanupRecordingTestSqlDatabase(): void {
   Sql.close();
+  disposeAdapter();
   clearRecordedSqlStatements();
+}
+
+/**
+ * Discards the databases opened through the current test's
+ * adapter, which outlive the connections opened onto them.
+ */
+function disposeAdapter(): void {
+  adapter?.dispose();
+  adapter = null;
 }

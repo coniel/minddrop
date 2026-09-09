@@ -60,6 +60,36 @@ describe('initializeDatabasesBackend', () => {
     expect(result.entries.length).toBeGreaterThan(0);
   });
 
+  it('drops databases deleted since the last session from the index', async () => {
+    // Index the workspace, as a first launch does
+    await initializeDatabasesBackend('workspace-1', parentDir);
+
+    expect(indexedRecords(collectionDatabase.id).length).toBeGreaterThan(0);
+
+    // Delete the database directory while the app is closed
+    MockFs.removeDir(databaseDirPath(collectionDatabase));
+
+    // Launch again onto the index the first launch left behind
+    const result = await initializeDatabasesBackend('workspace-1', parentDir);
+
+    // The index is served as is rather than rebuilt from the
+    // file system, which would have dropped the database anyway.
+    expect(result.schemaChanged).toBe(false);
+
+    // The deleted database is gone from the index
+    expect(sqlGetAllDatabases().map((record) => record.id)).not.toContain(
+      collectionDatabase.id,
+    );
+
+    // As are its entries, which have no database to resolve against
+    expect(indexedRecords(collectionDatabase.id)).toEqual([]);
+    expect(
+      result.entries.filter(
+        (record) => record.databaseId === collectionDatabase.id,
+      ),
+    ).toEqual([]);
+  });
+
   it('resolves collection property addresses to the minted entry IDs', async () => {
     await initializeDatabasesBackend('workspace-1', parentDir);
 
