@@ -23,6 +23,7 @@ import {
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabaseEntrySerializersStore } from '../DatabaseEntrySerializersStore';
 import { DatabasesStore } from '../DatabasesStore';
+import { clearEntryFocusRequest } from '../EntryFocusRequestStore';
 import { clearContentCaptureRegistry } from '../contentCaptureRegistry';
 import {
   matchDatabaseEntryReference,
@@ -96,6 +97,9 @@ export async function cleanup(): Promise<void> {
 
   // Clear the recorded content captures
   clearContentCaptureRegistry();
+
+  // Clear any pending entry focus request
+  clearEntryFocusRequest();
 
   // Vi reset
   vi.useRealTimers();

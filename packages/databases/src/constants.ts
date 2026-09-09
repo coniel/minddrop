@@ -89,3 +89,11 @@ export const INTEGER_PROPERTY_TYPES = new Set<PropertyType>([
   'created',
   'last-modified',
 ]);
+
+/**
+ * How long a focus request stays pending. Renderers which mount
+ * within the window bring their entry forward; the request expires
+ * after it, so that a card remounted later (by a drag, a layout
+ * switch) does not take focus long after the entry was created.
+ */
+export const EntryFocusRequestTimeoutMs = 500;

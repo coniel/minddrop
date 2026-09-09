@@ -14,3 +14,4 @@ export * from './EntryFilter.types';
 export * from './SqlEntryRecord.types';
 export * from './EntrySyncRecord.types';
 export * from './BackgroundSyncChangeset.types';
+export * from './EntryFocusRequest.types';

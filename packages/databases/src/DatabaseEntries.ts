@@ -54,6 +54,8 @@ export {
   useDatabaseEntriesByIds as useByIds,
   useDatabaseEntryIds as useIds,
 } from './DatabaseEntriesStore';
+export { requestEntryFocus as requestFocus } from './requestEntryFocus';
+export { useEntryFocusRequest as useFocusRequest } from './EntryFocusRequestStore';
 export { resolveEntryPropertyFilePath as propertyFilePath } from './utils';
 export { isEntryTitleTaken as isTitleTaken } from './utils';
 export { isGloballyUniqueEntryTitle as isGloballyUniqueTitle } from './utils';

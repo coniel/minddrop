@@ -72,3 +72,4 @@ export * from './resolveDatabasePath';
 export * from './resolveDatabaseEntryPath';
 export * from './serializeDatabase';
 export * from './serializeDatabaseEntryTemplate';
+export * from './matchesEntryFocusRequest';
