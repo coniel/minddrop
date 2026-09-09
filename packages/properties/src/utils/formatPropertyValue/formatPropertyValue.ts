@@ -1,22 +1,7 @@
 import { Fs } from '@minddrop/file-system';
+import { TEXTUAL_PROPERTY_TYPES } from '../../constants';
 import { PropertySchema, PropertyType, PropertyValue } from '../../types';
 import { formatPropertyDate } from '../formatPropertyDate';
-
-// The property types whose values have a text form. The rest hold
-// content a string cannot carry (an icon, a colour, a collection),
-// and are shown by their own dedicated UI instead.
-const TextualTypes: PropertyType[] = [
-  'title',
-  'text',
-  'url',
-  'number',
-  'select',
-  'date',
-  'created',
-  'last-modified',
-  'image',
-  'file',
-];
 
 // The property types whose values name a file, shown as the file's
 // name whether the value carries a path or the name alone.
@@ -38,7 +23,7 @@ export function formatPropertyValue(
   value: PropertyValue,
   schema: PropertySchema,
 ): string | null {
-  if (!TextualTypes.includes(schema.type)) {
+  if (!TEXTUAL_PROPERTY_TYPES.includes(schema.type)) {
     return null;
   }
 

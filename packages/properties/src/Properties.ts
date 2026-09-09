@@ -4,12 +4,14 @@ import {
   METADATA_PROPERTY_TYPES,
   MetadataPropertySchemas,
   SORTABLE_PROPERTY_TYPES,
+  TEXTUAL_PROPERTY_TYPES,
 } from './constants';
 
 export const constants = {
   MetadataSchemas: MetadataPropertySchemas,
   MetadataTypes: METADATA_PROPERTY_TYPES,
   SortableTypes: SORTABLE_PROPERTY_TYPES,
+  TextualTypes: TEXTUAL_PROPERTY_TYPES,
   SupportedFileExtensions: FilePropertySupportedFileExtensions,
   FileExtensionToType: FileExtensionToPropertyType,
 };

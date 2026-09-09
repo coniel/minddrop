@@ -44,6 +44,25 @@ export const SORTABLE_PROPERTY_TYPES = new Set<PropertyType>([
 ]);
 
 /**
+ * Property types whose values have a text form, listed so that
+ * anything rendering a value as text can declare what it accepts.
+ * The rest hold content a string cannot carry, such as an icon, a
+ * colour or a collection.
+ */
+export const TEXTUAL_PROPERTY_TYPES: PropertyType[] = [
+  'created',
+  'date',
+  'file',
+  'image',
+  'last-modified',
+  'number',
+  'select',
+  'text',
+  'title',
+  'url',
+];
+
+/**
  * A [property type]: [file extensions] map of which file extensions
  * are supported by a given property type.
  */
