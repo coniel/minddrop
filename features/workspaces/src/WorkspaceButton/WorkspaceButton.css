@@ -1,0 +1,9 @@
+/* Only the active workspace's icon is shown at full strength */
+.workspace-button-inactive {
+  opacity: 0.5;
+  transition: var(--transition-opacity);
+
+  &:hover {
+    opacity: 1;
+  }
+}

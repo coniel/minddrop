@@ -1,0 +1,31 @@
+{
+  "workspaces": {
+    "switcher": {
+      "actions": {
+        "add": "Add a workspace",
+        "create": "New workspace…",
+        "open": "Open workspace folder…"
+      }
+    },
+    "actions": {
+      "remove": {
+        "label": "Remove from MindDrop",
+        "description": "Keeps the folder on your computer",
+        "confirmation": {
+          "title": "Remove workspace",
+          "message": "MindDrop will stop showing this workspace. Its folder stays on your computer and can be opened again later.",
+          "confirm": "Remove"
+        }
+      },
+      "delete": {
+        "label": "Delete workspace",
+        "description": "Deletes the folder and its contents",
+        "confirmation": {
+          "title": "Delete workspace",
+          "message": "This workspace's folder and everything in it will be deleted from your computer.",
+          "confirm": "Delete"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "@minddrop/feature-workspaces",
+  "version": "0.0.0",
+  "main": "src/index",
+  "types": "src/index",
+  "scripts": {
+    "lint": "eslint .  --max-warnings 0",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@minddrop/events": "workspace:*",
+    "@minddrop/i18n": "workspace:*",
+    "@minddrop/ui-primitives": "workspace:*",
+    "@minddrop/ui-workspaces": "workspace:*",
+    "@minddrop/workspaces": "workspace:*",
+    "react": "^19.1.0"
+  },
+  "devDependencies": {
+    "@minddrop/eslint-config": "workspace:*",
+    "@minddrop/file-system": "workspace:*",
+    "@minddrop/test-utils": "workspace:*",
+    "@minddrop/vitest-config": "workspace:*",
+    "eslint": "^9.39.3",
+    "tsconfig": "workspace:*",
+    "typescript": "^5.9.3"
+  }
+}

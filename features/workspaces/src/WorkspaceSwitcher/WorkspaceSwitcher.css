@@ -1,0 +1,19 @@
+.workspace-switcher {
+  /* The sides balance each other, so the workspaces sit centered
+     in the bar regardless of how many actions follow them. */
+  .workspace-switcher-side {
+    flex: 1;
+    display: flex;
+    align-items: center;
+  }
+
+  .workspace-switcher-workspaces {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+  }
+
+  .workspace-switcher-actions {
+    justify-content: end;
+  }
+}

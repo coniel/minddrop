@@ -2254,34 +2254,6 @@ declare module 'i18next' {
               open: string;
             };
           };
-          form: {
-            title: string;
-            name: {
-              label: string;
-              placeholder: string;
-              default: string;
-            };
-            icon: {
-              label: string;
-            };
-            location: {
-              label: string;
-              description: string;
-              action: string;
-            };
-            actions: {
-              back: string;
-              create: string;
-            };
-            errors: {
-              locationMissing: string;
-              pathConflict: string;
-            };
-          };
-          errors: {
-            notAWorkspace: string;
-            unknown: string;
-          };
         };
         tabs: {
           new: string;
@@ -2389,6 +2361,62 @@ declare module 'i18next' {
           placeholder: string;
           recent: string;
           noResults: string;
+        };
+        workspaces: {
+          switcher: {
+            actions: {
+              add: string;
+              create: string;
+              open: string;
+            };
+          };
+          actions: {
+            remove: {
+              label: string;
+              description: string;
+              confirmation: {
+                title: string;
+                message: string;
+                confirm: string;
+              };
+            };
+            delete: {
+              label: string;
+              description: string;
+              confirmation: {
+                title: string;
+                message: string;
+                confirm: string;
+              };
+            };
+          };
+          form: {
+            title: string;
+            name: {
+              label: string;
+              placeholder: string;
+              default: string;
+            };
+            icon: {
+              label: string;
+            };
+            location: {
+              label: string;
+              description: string;
+              action: string;
+            };
+            actions: {
+              create: string;
+            };
+            errors: {
+              locationMissing: string;
+              pathConflict: string;
+            };
+          };
+          errors: {
+            notAWorkspace: string;
+            unknown: string;
+          };
         };
         spaces: {
           labels: {
