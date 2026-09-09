@@ -29,11 +29,7 @@ export async function ensurePropertyFileDirExists(
   // If the database uses property based storage, ensure the property
   // subdirectory exists.
   if (database.propertyFileStorage === 'property') {
-    const propertyDirPath = Fs.concatPath(databasePath, propertyName);
-
-    if (!(await Fs.exists(propertyDirPath))) {
-      await Fs.createDir(propertyDirPath);
-    }
+    await Fs.ensureDir(Fs.concatPath(databasePath, propertyName));
   }
 
   // If the databases uses common storage, ensure the common subdirectory
@@ -41,11 +37,7 @@ export async function ensurePropertyFileDirExists(
   if (database.propertyFileStorage === 'common') {
     const commonDirName =
       database.propertyFilesDir || i18n.t(PropertyFilesDirNameKey);
-    const commonDirPath = Fs.concatPath(databasePath, commonDirName);
-
-    if (!(await Fs.exists(commonDirPath))) {
-      await Fs.createDir(commonDirPath);
-    }
+    await Fs.ensureDir(Fs.concatPath(databasePath, commonDirName));
   }
 
   // If the databases uses entry based storage, ensure the entry

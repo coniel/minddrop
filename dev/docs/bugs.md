@@ -84,26 +84,6 @@ trigger; then remove this entry.
 
 ## packages/databases
 
-### Concurrent file entry creation races on the storage directory
-
-Dropping multiple files into a database creates one entry per file, but on a
-fresh database whose property storage directory does not exist yet, only the
-first file is written; the rest fail with `EEXIST: file already exists`.
-
-Cause: `writePropertyFile`
-(`packages/databases/src/writePropertyFile/writePropertyFile.ts`) ensures the
-storage directory exists with a check-then-create guard
-(`if (!(await Fs.exists(dir))) { await Fs.createDir(dir); }`, for both
-`property` and `common` modes). A multi-file drop creates the entries (and
-writes their files) concurrently, so several writes observe the directory
-missing and all call `createDir`; every call after the first throws `EEXIST`.
-It is a classic check-then-create race in the directory creation.
-
-Fix direction: make the directory creation idempotent / race-safe, e.g.
-create the storage directory once before the parallel writes, make
-`createDir` ignore an already-existing directory, or catch and swallow
-`EEXIST`. No data is lost, but the losing writes fail outright.
-
 ### A database renamed while the app is closed strands references to its entries
 
 Renaming a database directory outside the app leaves every persisted

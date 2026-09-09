@@ -73,9 +73,7 @@ export async function setDatabaseEntrySerializer(
 
   try {
     // Ensure the backup directory exists
-    if (!(await Fs.exists(backupDir))) {
-      await Fs.createDir(backupDir, { recursive: true });
-    }
+    await Fs.ensureDir(backupDir);
 
     // Phase 1: back up the original files and repath all entries to the
     // new extension before writing anything, so each entry is written

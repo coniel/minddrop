@@ -45,4 +45,25 @@ describe('writeConfig', () => {
       ),
     ).toBe(true);
   });
+
+  it('creates the hidden directory when concurrent writes race for it', async () => {
+    // Remove the database's hidden .minddrop directory
+    MockFs.removeDir(
+      Fs.parentDirPath(
+        resolveDatabaseConfigFilePath(databaseDirPath(objectDatabase)),
+      ),
+    );
+
+    // Both writes see the directory missing and create it
+    await Promise.all([
+      writeDatabaseConfig(objectDatabase.id),
+      writeDatabaseConfig(objectDatabase.id),
+    ]);
+
+    expect(
+      MockFs.exists(
+        resolveDatabaseConfigFilePath(databaseDirPath(objectDatabase)),
+      ),
+    ).toBe(true);
+  });
 });

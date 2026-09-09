@@ -31,9 +31,7 @@ export async function writeDatabaseEntry(id: string): Promise<void> {
   // If the database uses entry based storage, ensure the entry
   // subdirectory exists.
   if (database.propertyFileStorage === 'entry') {
-    if (!(await Fs.exists(Fs.parentDirPath(entryPath)))) {
-      await Fs.createDir(Fs.parentDirPath(entryPath));
-    }
+    await Fs.ensureDir(Fs.parentDirPath(entryPath));
   }
 
   // Convert collection property members to durable addresses

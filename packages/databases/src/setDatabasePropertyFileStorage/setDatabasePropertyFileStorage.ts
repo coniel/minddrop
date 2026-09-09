@@ -120,9 +120,7 @@ export async function setDatabasePropertyFileStorage(
       const newEntryDir = Fs.parentDirPath(newEntryPath);
 
       // Ensure the destination directory (the wrapper when entering entry mode)
-      if (!(await Fs.exists(newEntryDir))) {
-        await Fs.createDir(newEntryDir);
-      }
+      await Fs.ensureDir(newEntryDir);
 
       // Move the entry file to its new location
       if (await Fs.exists(entryPath)) {
@@ -154,9 +152,7 @@ export async function setDatabasePropertyFileStorage(
     const destinationDir = Fs.parentDirPath(destination);
 
     // Ensure the destination directory exists before resolving conflicts
-    if (!(await Fs.exists(destinationDir))) {
-      await Fs.createDir(destinationDir);
-    }
+    await Fs.ensureDir(destinationDir);
 
     // Increment the name if it collides with an already-placed file
     const { path: finalPath, name: finalName } =

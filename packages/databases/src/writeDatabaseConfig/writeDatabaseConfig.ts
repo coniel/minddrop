@@ -20,11 +20,7 @@ export async function writeDatabaseConfig(id: string): Promise<void> {
   const databasePath = resolveDatabasePath(database);
 
   // Ensure the database's hidden .minddrop directory exists
-  const hiddenDirPath = Fs.concatPath(databasePath, Paths.hiddenDirName);
-
-  if (!(await Fs.exists(hiddenDirPath))) {
-    await Fs.createDir(hiddenDirPath);
-  }
+  await Fs.ensureDir(Fs.concatPath(databasePath, Paths.hiddenDirName));
 
   // Write the config to the file system
   await Fs.writeJsonFile(

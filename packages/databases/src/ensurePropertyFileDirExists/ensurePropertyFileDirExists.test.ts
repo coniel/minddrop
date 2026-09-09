@@ -34,6 +34,19 @@ describe('ensurePropertyFileDirExists', () => {
     ).toBe(true);
   });
 
+  it('creates the property directory when concurrent calls race for it', async () => {
+    // Concurrent property file writes (e.g. a multi-file drop) all see
+    // the directory missing and create it.
+    await Promise.all([
+      ensurePropertyFileDirExists(propertyStorageEntry1.id, 'Attachment'),
+      ensurePropertyFileDirExists(propertyStorageEntry1.id, 'Attachment'),
+    ]);
+
+    expect(
+      MockFs.exists(`${databaseDirPath(propertyStorageDatabase)}/Attachment`),
+    ).toBe(true);
+  });
+
   it('keeps an existing property directory for property based storage', async () => {
     // The Image property directory exists in the fixtures
     await ensurePropertyFileDirExists(propertyStorageEntry1.id, 'Image');

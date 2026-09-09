@@ -46,8 +46,9 @@ export async function createWorkspace(
   // Dispatch a workspace created event
   Events.dispatch(WorkspaceCreatedEvent, workspace);
 
-  // Create the workspace directory
-  await Fs.createDir(path);
+  // Create the workspace directory. Handlers of the created event write
+  // into the directory, so it may already exist.
+  await Fs.ensureDir(path);
 
   // Write the workspace config
   await writeWorkspaceConfig(workspace.id);

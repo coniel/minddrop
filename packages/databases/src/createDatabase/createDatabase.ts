@@ -77,8 +77,9 @@ export async function createDatabase(
   // Dispatch database created event
   Events.dispatch(DatabaseCreatedEvent, databaseConfig);
 
-  // Create the database directory at the specified path
-  await Fs.createDir(dbPath);
+  // Create the database directory at the specified path. Handlers of the
+  // created event write into the directory, so it may already exist.
+  await Fs.ensureDir(dbPath);
 
   // Write the database config to the file system
   await writeDatabaseConfig(databaseConfig.id);
