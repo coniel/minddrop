@@ -2383,13 +2383,6 @@ declare module 'i18next' {
           labels: {
             library: string;
           };
-          gridPrototype: {
-            open: string;
-          };
-          blockEditorHarness: {
-            open: string;
-            title: string;
-          };
         };
         search: {
           open: string;
