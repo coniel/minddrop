@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { ItemReferences } from '@minddrop/item-references';
+import { storeItem } from '@minddrop/stores/test-utils';
 import { InvalidParameterError } from '@minddrop/utils';
 import { CollectionsStore } from '../CollectionsStore';
 import { CollectionNotFoundError } from '../errors';
@@ -67,7 +68,7 @@ describe('writeCollection', () => {
       collection_1.items.map((id) => `ref:${id}`),
     );
     // The store should keep the raw item IDs
-    expect(CollectionsStore.get(collection_1.id)?.items).toEqual(
+    expect(storeItem(CollectionsStore, collection_1.id).items).toEqual(
       collection_1.items,
     );
   });

@@ -30,7 +30,7 @@ describe('deleteDatabase', () => {
     await deleteDatabase(objectDatabase.id);
 
     // The store should no longer contain the database
-    expect(DatabasesStore.get(objectDatabase.id)).toBeNull();
+    expect(DatabasesStore).not.toHaveItem(objectDatabase.id);
   });
 
   it('dispatches a database deleted event', async () =>

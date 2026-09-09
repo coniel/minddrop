@@ -1,3 +1,5 @@
+// Registers the store assertion matchers
+import '@minddrop/stores/test-utils';
 import { afterEach, describe, expect, it } from 'vitest';
 import { SettingsViewsStore } from '../SettingsViewsStore';
 import { SettingsView } from '../types';
@@ -20,6 +22,6 @@ describe('registerSettingsView', () => {
   it('adds the view to the settings views store', () => {
     registerSettingsView(view);
 
-    expect(SettingsViewsStore.get(view.id)).toEqual(view);
+    expect(SettingsViewsStore).toHaveItem(view.id, view);
   });
 });

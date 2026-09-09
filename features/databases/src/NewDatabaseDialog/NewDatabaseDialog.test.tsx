@@ -103,7 +103,7 @@ describe('<NewDatabaseDialog />', () => {
       screen.getByText('formErrors.required');
     });
 
-    expect(Databases.Store.getAllArray()).toHaveLength(before);
+    expect(Databases.Store).toHaveItemCount(before);
   });
 
   it('does not create a database with a conflicting name', async () => {
@@ -118,6 +118,6 @@ describe('<NewDatabaseDialog />', () => {
       screen.getByText('databases.form.errors.nameConflict');
     });
 
-    expect(Databases.Store.getAllArray()).toHaveLength(before);
+    expect(Databases.Store).toHaveItemCount(before);
   });
 });

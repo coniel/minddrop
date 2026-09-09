@@ -70,7 +70,7 @@ describe('<QueriesView />', () => {
 
     // The new query is added to the store
     await waitFor(() => {
-      expect(Queries.Store.getAllArray().length).toBe(queries.length + 1);
+      expect(Queries.Store).toHaveItemCount(queries.length + 1);
     });
 
     // The new query's builder renders its name input

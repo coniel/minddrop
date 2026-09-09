@@ -1,3 +1,5 @@
+// Registers the store assertion matchers
+import '@minddrop/stores/test-utils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Events } from '@minddrop/events';
 import { InvalidParameterError } from '@minddrop/utils';
@@ -36,7 +38,7 @@ describe('setThemeVariant', () => {
     setThemeVariant(ThemeDark);
 
     // Should set the variant in the theme store
-    expect(ThemeStore.get('variant')).toBe(ThemeDark);
+    expect(ThemeStore).toHaveStoredValue('variant', ThemeDark);
   });
 
   it('dispatches a `theme:variant:changed` event', () =>

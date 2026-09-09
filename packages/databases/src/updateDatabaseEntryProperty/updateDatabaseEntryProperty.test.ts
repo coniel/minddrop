@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Collections } from '@minddrop/collections';
 import { Events } from '@minddrop/events';
+import { storeItem } from '@minddrop/stores/test-utils';
 import { InvalidParameterError, isUntitledTitle } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabasesStore } from '../DatabasesStore';
@@ -55,9 +56,9 @@ describe('updateDatabaseEntryProperty', () => {
     );
 
     // The property value should be written to the entry
-    const entry = DatabaseEntriesStore.get(objectEntry1.id);
+    const entry = storeItem(DatabaseEntriesStore, objectEntry1.id);
 
-    expect(entry?.properties.Content).toBe('Updated content');
+    expect(entry.properties.Content).toBe('Updated content');
   });
 
   it('throws when the property does not exist', async () => {
@@ -139,12 +140,12 @@ describe('updateDatabaseEntryProperty', () => {
         new Date('2030-01-01T00:00:00.000Z'),
       );
 
-      const entry = DatabaseEntriesStore.get(objectEntry1.id);
+      const entry = storeItem(DatabaseEntriesStore, objectEntry1.id);
 
       // The metadata should be untouched and no property written
-      expect(entry?.properties).toEqual(objectEntry1.properties);
-      expect(entry?.created).toEqual(objectEntry1.created);
-      expect(entry?.lastModified).toEqual(objectEntry1.lastModified);
+      expect(entry.properties).toEqual(objectEntry1.properties);
+      expect(entry.created).toEqual(objectEntry1.created);
+      expect(entry.lastModified).toEqual(objectEntry1.lastModified);
     });
 
     it('ignores updates to declared timestamp properties', async () => {
@@ -159,9 +160,9 @@ describe('updateDatabaseEntryProperty', () => {
         new Date('2030-01-01T00:00:00.000Z'),
       );
 
-      const entry = DatabaseEntriesStore.get(timestampEntry1.id);
+      const entry = storeItem(DatabaseEntriesStore, timestampEntry1.id);
 
-      expect(entry?.properties).toEqual(timestampEntry1.properties);
+      expect(entry.properties).toEqual(timestampEntry1.properties);
     });
   });
 
@@ -193,9 +194,9 @@ describe('updateDatabaseEntryProperty', () => {
       await updateDatabaseEntryProperty(objectEntry1.id, 'Color', 'red');
       await updateDatabaseEntryProperty(objectEntry1.id, 'Color', null);
 
-      const entry = DatabaseEntriesStore.get(objectEntry1.id);
+      const entry = storeItem(DatabaseEntriesStore, objectEntry1.id);
 
-      expect(entry?.metadata.color).toBeUndefined();
+      expect(entry.metadata.color).toBeUndefined();
     });
   });
 
@@ -207,11 +208,11 @@ describe('updateDatabaseEntryProperty', () => {
     );
 
     // The renamed entry should be in the store under its unchanged ID
-    const renamed = DatabaseEntriesStore.get(objectEntry1.id);
+    const renamed = storeItem(DatabaseEntriesStore, objectEntry1.id);
 
-    expect(renamed?.title).toBe('Renamed Entry');
+    expect(renamed.title).toBe('Renamed Entry');
     // The entry properties should be untouched
-    expect(renamed?.properties).toEqual(objectEntry1.properties);
+    expect(renamed.properties).toEqual(objectEntry1.properties);
   });
 
   it('renames the entry to an untitled title on empty title updates', async () => {

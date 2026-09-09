@@ -24,7 +24,7 @@ describe('initializeSpaces', () => {
   it('loads spaces from the spaces directory into the store', async () => {
     await initializeSpaces();
 
-    expect(SpacesStore.getAllArray()).toEqual(spaces);
+    expect(SpacesStore).toHaveItems(spaces);
   });
 
   it('hydrates the spaces owned designs into the designs store', async () => {
@@ -32,7 +32,8 @@ describe('initializeSpaces', () => {
 
     // Each space's design should be loaded as a virtual design
     spaces.forEach((space) => {
-      expect(Designs.Store.get(space.design.id)).toEqual(
+      expect(Designs.Store).toHaveItem(
+        space.design.id,
         expect.objectContaining({
           id: space.design.id,
           virtual: true,
@@ -53,7 +54,7 @@ describe('initializeSpaces', () => {
 
     await initializeSpaces();
 
-    expect(SpacesStore.getAllArray()).toEqual(spaces);
+    expect(SpacesStore).toHaveItems(spaces);
   });
 
   it('dispatches a spaces loaded event', async () =>

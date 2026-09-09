@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { storeItem } from '@minddrop/stores/test-utils';
 import { TagGroupFixtures } from '@minddrop/tags/test-utils';
 import { DatabasesStore } from '../../DatabasesStore';
 import {
@@ -44,8 +45,8 @@ describe('onTagGroupDeleted', () => {
 
     // The property limited to the deleted group should have no
     // group limit.
-    const database = DatabasesStore.get(tagsDatabase.id);
-    const property = database?.properties.find(
+    const database = storeItem(DatabasesStore, tagsDatabase.id);
+    const property = database.properties.find(
       (candidate) => candidate.name === 'Tags',
     );
     expect(property).toEqual({ type: 'tags', name: 'Tags' });
@@ -55,8 +56,8 @@ describe('onTagGroupDeleted', () => {
     await onTagGroupDeleted(tagGroup_1);
 
     // The property limited to another group should keep its limit
-    const database = DatabasesStore.get(tagsDatabase.id);
-    const property = database?.properties.find(
+    const database = storeItem(DatabasesStore, tagsDatabase.id);
+    const property = database.properties.find(
       (candidate) => candidate.name === 'Other Tags',
     );
     expect(property).toEqual({
@@ -71,6 +72,6 @@ describe('onTagGroupDeleted', () => {
     await onTagGroupDeleted({ ...tagGroup_1, id: 'tag-group_unused' });
 
     // The database should be unchanged
-    expect(DatabasesStore.get(tagsDatabase.id)).toEqual(tagsDatabase);
+    expect(DatabasesStore).toHaveItem(tagsDatabase.id, tagsDatabase);
   });
 });

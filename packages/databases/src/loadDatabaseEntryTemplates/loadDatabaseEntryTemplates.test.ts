@@ -51,6 +51,6 @@ describe('loadDatabaseEntryTemplates', () => {
   it('does nothing for databases without a templates directory', async () => {
     await loadDatabaseEntryTemplates([objectDatabase]);
 
-    expect(DatabaseEntryTemplatesStore.getAllArray()).toHaveLength(0);
+    expect(DatabaseEntryTemplatesStore).toHaveItemCount(0);
   });
 });

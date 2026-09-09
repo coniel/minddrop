@@ -14,7 +14,7 @@ describe('deleteTag', () => {
   it('deletes the tag from the store', async () => {
     await deleteTag(tag_1.id);
 
-    expect(TagsStore.get(tag_1.id)).toBeNull();
+    expect(TagsStore).not.toHaveItem(tag_1.id);
   });
 
   it('deletes the tag config from the file system', async () => {

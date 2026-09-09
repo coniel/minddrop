@@ -19,7 +19,7 @@ describe('onFileSystemChanged', () => {
 
     await onFileSystemChanged(change(queryPath, 'modified'));
 
-    expect(QueriesStore.get(query_1.id)).toEqual(modified);
+    expect(QueriesStore).toHaveItem(query_1.id, modified);
   });
 
   it('adds an externally created query to the store', async () => {
@@ -34,13 +34,13 @@ describe('onFileSystemChanged', () => {
       change(resolveQueryFilePath(created.id), 'created'),
     );
 
-    expect(QueriesStore.get(created.id)).toEqual(created);
+    expect(QueriesStore).toHaveItem(created.id, created);
   });
 
   it('removes an externally deleted query from the store', async () => {
     await onFileSystemChanged(change(queryPath, 'deleted'));
 
-    expect(QueriesStore.get(query_1.id)).toBeNull();
+    expect(QueriesStore).not.toHaveItem(query_1.id);
   });
 
   it('ignores files which are not queries', async () => {
@@ -48,7 +48,7 @@ describe('onFileSystemChanged', () => {
 
     await onFileSystemChanged(change(otherPath, 'deleted'));
 
-    expect(QueriesStore.getAllArray().length).toBe(3);
+    expect(QueriesStore).toHaveItemCount(3);
   });
 
   it('ignores files outside the queries directory', async () => {
@@ -56,7 +56,7 @@ describe('onFileSystemChanged', () => {
       change(`workspace/${query_1.id}.json`, 'deleted'),
     );
 
-    expect(QueriesStore.get(query_1.id)).not.toBeNull();
+    expect(QueriesStore).toHaveItem(query_1.id);
   });
 
   it('ignores changes to files which are not valid queries', async () => {
@@ -65,7 +65,7 @@ describe('onFileSystemChanged', () => {
 
     await onFileSystemChanged(change(queryPath, 'modified'));
 
-    expect(QueriesStore.get(query_1.id)).toEqual(query_1);
+    expect(QueriesStore).toHaveItem(query_1.id, query_1);
   });
 });
 

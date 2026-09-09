@@ -13,7 +13,8 @@ describe('registerDataViewType', () => {
   it('adds the view type to the store', () => {
     registerDataViewType(dataViewType_gallery);
 
-    expect(DataViewTypesStore.get(dataViewType_gallery.type)).toEqual(
+    expect(DataViewTypesStore).toHaveItem(
+      dataViewType_gallery.type,
       dataViewType_gallery,
     );
   });

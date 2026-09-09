@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
+import { storeItem } from '@minddrop/stores/test-utils';
 import { TagGroupsStore } from '../TagGroupsStore';
 import { TagsStore } from '../TagsStore';
 import { TagGroupDeletedEvent } from '../events';
@@ -23,7 +24,7 @@ describe('deleteTagGroup', () => {
   it('removes the group from the store', async () => {
     await deleteTagGroup(tagGroup_1.id);
 
-    expect(TagGroupsStore.get(tagGroup_1.id)).toBeNull();
+    expect(TagGroupsStore).not.toHaveItem(tagGroup_1.id);
   });
 
   it('deletes the group file from the file system', async () => {
@@ -40,8 +41,8 @@ describe('deleteTagGroup', () => {
     await deleteTagGroup(tagGroup_1.id);
 
     // The member tags should no longer carry the group
-    expect(TagsStore.get(tag_1.id)?.group).toBeUndefined();
-    expect(TagsStore.get(tag_2.id)?.group).toBeUndefined();
+    expect(storeItem(TagsStore, tag_1.id).group).toBeUndefined();
+    expect(storeItem(TagsStore, tag_2.id).group).toBeUndefined();
   });
 
   it('dispatches the tag group deleted event', async () =>

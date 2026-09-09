@@ -23,7 +23,7 @@ describe('removeWorkspace', () => {
   it('removes the workspace from the store', async () => {
     await removeWorkspace(workspace_1.id);
 
-    expect(WorkspacesStore.get(workspace_1.id)).toBeNull();
+    expect(WorkspacesStore).not.toHaveItem(workspace_1.id);
   });
 
   it('writes the workspaces config', async () => {
@@ -39,7 +39,7 @@ describe('removeWorkspace', () => {
   it('makes the first remaining workspace active when the active one is removed', async () => {
     await removeWorkspace(workspace_1.id);
 
-    expect(ActiveWorkspaceStore.get('id')).toBe(workspace_2.id);
+    expect(ActiveWorkspaceStore).toHaveStoredValue('id', workspace_2.id);
   });
 
   it('clears the active workspace when the last one is removed', async () => {
@@ -53,7 +53,7 @@ describe('removeWorkspace', () => {
   it('keeps the active workspace when another one is removed', async () => {
     await removeWorkspace(workspace_2.id);
 
-    expect(ActiveWorkspaceStore.get('id')).toBe(workspace_1.id);
+    expect(ActiveWorkspaceStore).toHaveStoredValue('id', workspace_1.id);
   });
 
   it('dispatches a workspaces deleted event', async () =>

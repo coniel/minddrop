@@ -1,3 +1,5 @@
+// Registers the store assertion matchers
+import '@minddrop/stores/test-utils';
 import {
   afterEach,
   beforeAll,
@@ -82,7 +84,7 @@ describe('initializeTheme', () => {
     await initializeTheme();
 
     // Should keep the variant from the local persistent store
-    expect(ThemeStore.get('variant')).toBe(ThemeDark);
+    expect(ThemeStore).toHaveStoredValue('variant', ThemeDark);
   });
 
   describe('initial theme variant', () => {
@@ -180,7 +182,7 @@ describe('initializeTheme', () => {
       await flushEvents();
 
       // Should set the new variant in the local persistent store
-      expect(ThemeStore.get('variant')).toBe(ThemeDark);
+      expect(ThemeStore).toHaveStoredValue('variant', ThemeDark);
     });
 
     it('listens for OS dark mode changes if variant is `system`', async () => {

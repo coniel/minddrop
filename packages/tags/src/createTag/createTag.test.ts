@@ -62,7 +62,7 @@ describe('createTag', () => {
   it('adds the tag to the store', async () => {
     const tag = await createTag('Work', 'purple');
 
-    expect(TagsStore.get(tag.id)).toEqual(newTag);
+    expect(TagsStore).toHaveItem(tag.id, newTag);
   });
 
   it('writes the tag config to the file system', async () => {

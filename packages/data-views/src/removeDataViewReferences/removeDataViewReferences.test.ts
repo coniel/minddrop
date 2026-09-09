@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { storeItem } from '@minddrop/stores/test-utils';
 import { DataViewsStore } from '../DataViewsStore';
 import {
   MockFs,
@@ -32,11 +33,11 @@ describe('removeDataViewReferences', () => {
   it('removes the items from referencing views', async () => {
     await removeDataViewReferences(['database-entry_one']);
 
-    const view = DataViewsStore.get(referencingView.id);
+    const view = storeItem(DataViewsStore, referencingView.id);
 
     // The view's config and references index drop the removed item
-    expect(view?.data).toEqual({ items: ['database-entry_two'] });
-    expect(view?.references).toEqual(['database-entry_two']);
+    expect(view.data).toEqual({ items: ['database-entry_two'] });
+    expect(view.references).toEqual(['database-entry_two']);
 
     // The cleaned config is persisted
     const written = MockFs.readJsonFile<DataView>(

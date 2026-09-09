@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
+import { storeItem } from '@minddrop/stores/test-utils';
 import { DesignsStore } from '../DesignsStore';
 import { DefaultDesignColumns, DefaultDesignRows } from '../constants';
 import { DesignCreatedEvent } from '../events';
@@ -38,7 +39,7 @@ describe('createDesign', () => {
   it('adds the design to the store', async () => {
     const design = await createDesign({ type: 'card', name: 'My design' });
 
-    expect(DesignsStore.get(design.id)).toEqual(newDesign);
+    expect(DesignsStore).toHaveItem(design.id, newDesign);
   });
 
   it('writes the design to the file system', async () => {
@@ -52,7 +53,7 @@ describe('createDesign', () => {
   it('records the owner on owned designs', async () => {
     const design = await createDesign({ type: 'card', owner: 'database_1' });
 
-    expect(DesignsStore.get(design.id)?.owner).toBe('database_1');
+    expect(storeItem(DesignsStore, design.id).owner).toBe('database_1');
   });
 
   it('does not write owned designs to the file system', async () => {

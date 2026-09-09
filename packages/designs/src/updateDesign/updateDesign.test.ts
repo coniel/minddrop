@@ -23,7 +23,7 @@ describe('updateDesign', () => {
 
     expect(updated.name).toBe('Novels');
     expect(updated.lastModified).toEqual(mockDate);
-    expect(DesignsStore.get(design_books.id)).toEqual(updated);
+    expect(DesignsStore).toHaveItem(design_books.id, updated);
   });
 
   it('writes bundle-backed designs to the file system', async () => {

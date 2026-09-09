@@ -68,7 +68,8 @@ describe('renameDatabaseEntry', () => {
     );
 
     // The entry should be updated under its existing key
-    expect(DatabaseEntriesStore.get(objectEntry1.id)).toEqual(
+    expect(DatabaseEntriesStore).toHaveItem(
+      objectEntry1.id,
       renamedDatabaseEntry,
     );
   });

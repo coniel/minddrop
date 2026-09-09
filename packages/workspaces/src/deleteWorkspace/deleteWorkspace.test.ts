@@ -21,7 +21,7 @@ describe('deleteWorkspace', () => {
   it('removes the workspace from the store', async () => {
     await deleteWorkspace(workspace_1.id);
 
-    expect(WorkspacesStore.get(workspace_1.id)).toBeNull();
+    expect(WorkspacesStore).not.toHaveItem(workspace_1.id);
   });
 
   it('writes the workspaces config', async () => {

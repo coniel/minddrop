@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { storeItem } from '@minddrop/stores/test-utils';
 import { TagFixtures } from '@minddrop/tags/test-utils';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabasesStore } from '../../DatabasesStore';
@@ -77,8 +78,8 @@ describe('onTagDeleted', () => {
     await onTagDeleted(deletedTag);
 
     // The entry's value should no longer contain the deleted name
-    const entry = DatabaseEntriesStore.get(taggedEntry.id);
-    expect(entry?.properties.Tags).toEqual(['Home']);
+    const entry = storeItem(DatabaseEntriesStore, taggedEntry.id);
+    expect(entry.properties.Tags).toEqual(['Home']);
   });
 
   it('writes the rewritten entry to the file system', async () => {
@@ -107,8 +108,8 @@ describe('onTagDeleted', () => {
     await onTagDeleted({ ...tag_1, name: 'Unused' });
 
     // The entry should be unchanged
-    const entry = DatabaseEntriesStore.get(taggedEntry.id);
-    expect(entry?.properties.Tags).toEqual(['Urgent', 'Home']);
+    const entry = storeItem(DatabaseEntriesStore, taggedEntry.id);
+    expect(entry.properties.Tags).toEqual(['Urgent', 'Home']);
 
     // No SQL statements should have been executed
     expect(getRecordedSqlStatements()).toEqual([]);
@@ -118,7 +119,7 @@ describe('onTagDeleted', () => {
     await onTagDeleted(deletedTag);
 
     // The tagless database's entry should be unchanged
-    const entry = DatabaseEntriesStore.get(objectEntry1.id);
+    const entry = storeItem(DatabaseEntriesStore, objectEntry1.id);
     expect(entry).toEqual(objectEntry1);
   });
 });

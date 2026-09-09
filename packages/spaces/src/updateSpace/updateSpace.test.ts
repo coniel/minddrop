@@ -24,7 +24,7 @@ describe('updateSpace', () => {
   it('updates the space in the store', async () => {
     await updateSpace(space_1.id, update);
 
-    expect(SpacesStore.get(space_1.id)).toEqual(updatedSpace);
+    expect(SpacesStore).toHaveItem(space_1.id, updatedSpace);
   });
 
   it('writes the space config to the file system', async () => {

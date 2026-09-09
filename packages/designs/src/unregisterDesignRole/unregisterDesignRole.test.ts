@@ -14,7 +14,7 @@ describe('unregisterDesignRole', () => {
   it('removes the role from the registry', () => {
     unregisterDesignRole(HeadingRole.id);
 
-    expect(DesignRolesStore.get(HeadingRole.id)).toBeNull();
+    expect(DesignRolesStore).not.toHaveItem(HeadingRole.id);
   });
 
   it('dispatches a role unregistered event', async () =>

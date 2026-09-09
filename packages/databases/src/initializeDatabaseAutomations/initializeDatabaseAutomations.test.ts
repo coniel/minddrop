@@ -103,7 +103,7 @@ describe('initializeDatabaseAutomations', () => {
   it('loads core automation action configs into the store', () => {
     initializeDatabaseAutomations();
 
-    expect(DatabaseAutomationActionConfigsStore.getAllArray()).toEqual(
+    expect(DatabaseAutomationActionConfigsStore).toHaveItems(
       coreDatabaseAutomationActionConfigs,
     );
   });

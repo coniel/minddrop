@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Layouts } from '@minddrop/designs';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
+import { storeItem } from '@minddrop/stores/test-utils';
 import { DatabasesStore } from '../DatabasesStore';
 import { cleanup, objectDatabase, setup } from '../test-utils';
 import { setDatabaseDefaultLayout } from './setDatabaseDefaultLayout';
@@ -47,9 +48,9 @@ describe('setDatabaseDefaultLayout', () => {
   it('pins the layout as the default for the context', async () => {
     await setDatabaseDefaultLayout(objectDatabase.id, 'card', layout_card_2.id);
 
-    expect(DatabasesStore.get(objectDatabase.id)?.defaultLayouts.card).toBe(
-      layout_card_2.id,
-    );
+    expect(
+      storeItem(DatabasesStore, objectDatabase.id).defaultLayouts.card,
+    ).toBe(layout_card_2.id);
   });
 
   it('pins a page layout for a page-based context', async () => {
@@ -61,9 +62,9 @@ describe('setDatabaseDefaultLayout', () => {
       layout_page_1.id,
     );
 
-    expect(DatabasesStore.get(objectDatabase.id)?.defaultLayouts.dialog).toBe(
-      layout_page_1.id,
-    );
+    expect(
+      storeItem(DatabasesStore, objectDatabase.id).defaultLayouts.dialog,
+    ).toBe(layout_page_1.id);
   });
 
   it('returns the updated database', async () => {

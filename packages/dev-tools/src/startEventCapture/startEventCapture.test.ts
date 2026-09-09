@@ -62,7 +62,7 @@ describe('startEventCapture', () => {
     // The capture listener runs queued rather than during the
     // dispatch.
     await vi.waitFor(() => {
-      expect(DevToolsEventsStore.getAll().length).toBe(1);
+      expect(DevToolsEventsStore).toHaveItemCount(1);
     });
   });
 

@@ -52,13 +52,13 @@ describe('deleteSpace', () => {
   it('deletes the space from the store', async () => {
     await deleteSpace(space_1.id);
 
-    expect(SpacesStore.get(space_1.id)).toBeNull();
+    expect(SpacesStore).not.toHaveItem(space_1.id);
   });
 
   it('removes the space owned design from the designs store', async () => {
     await deleteSpace(space_1.id);
 
-    expect(Designs.Store.get(space_1.design.id)).toBeNull();
+    expect(Designs.Store).not.toHaveItem(space_1.design.id);
   });
 
   it('leaves the data views embedded in the space layouts in place', async () => {
@@ -68,7 +68,7 @@ describe('deleteSpace', () => {
 
     // Embedded data views are first-class persisted views, so they
     // outlive the space until the user is asked what to do with them.
-    expect(DataViews.Store.get(dataView_gallery_1.id)).not.toBeNull();
+    expect(DataViews.Store).toHaveItem(dataView_gallery_1.id);
     expect(
       MockFs.exists(DataViews.resolveFilePath(dataView_gallery_1.id)),
     ).toBe(true);

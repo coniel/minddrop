@@ -44,7 +44,7 @@ describe('createDatabaseEntryFromFile', () => {
     );
 
     expect(entry.title).toBe(Fs.removeExtension(validImagePropertyFile.name));
-    expect(DatabaseEntriesStore.get(entry.id)).toBeDefined();
+    expect(DatabaseEntriesStore).toHaveItem(entry.id);
   });
 
   it('writes the file and updates the property value', async () => {

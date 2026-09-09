@@ -76,7 +76,7 @@ describe('loadDatabaseViews', () => {
     await loadDatabaseViews([objectDatabase]);
 
     // Store should remain empty
-    expect(DataViews.Store.getAllArray()).toHaveLength(0);
+    expect(DataViews.Store).toHaveItemCount(0);
   });
 
   it('loads views from multiple databases', async () => {

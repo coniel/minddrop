@@ -24,7 +24,7 @@ describe('onFileSystemChanged', () => {
 
     await onFileSystemChanged(change(spaceFilePath, 'modified'));
 
-    expect(SpacesStore.get(space_1.id)).toEqual(modified);
+    expect(SpacesStore).toHaveItem(space_1.id, modified);
   });
 
   it('adds an externally created space to the store', async () => {
@@ -40,19 +40,19 @@ describe('onFileSystemChanged', () => {
       change(resolveSpaceFilePath(created.id), 'created'),
     );
 
-    expect(SpacesStore.get(created.id)).toEqual(created);
+    expect(SpacesStore).toHaveItem(created.id, created);
   });
 
   it('removes a space whose space file was deleted', async () => {
     await onFileSystemChanged(change(spaceFilePath, 'deleted'));
 
-    expect(SpacesStore.get(space_1.id)).toBeNull();
+    expect(SpacesStore).not.toHaveItem(space_1.id);
   });
 
   it('removes a space whose bundle directory was deleted', async () => {
     await onFileSystemChanged(change(bundleDirPath, 'deleted'));
 
-    expect(SpacesStore.get(space_1.id)).toBeNull();
+    expect(SpacesStore).not.toHaveItem(space_1.id);
   });
 
   it('ignores changes to a space bundle media files', async () => {
@@ -60,13 +60,13 @@ describe('onFileSystemChanged', () => {
       change(`${bundleDirPath}/media/image.png`, 'deleted'),
     );
 
-    expect(SpacesStore.get(space_1.id)).not.toBeNull();
+    expect(SpacesStore).toHaveItem(space_1.id);
   });
 
   it('ignores files outside the spaces directory', async () => {
     await onFileSystemChanged(change(`workspace/${space_1.id}`, 'deleted'));
 
-    expect(SpacesStore.get(space_1.id)).not.toBeNull();
+    expect(SpacesStore).toHaveItem(space_1.id);
   });
 
   it('ignores changes to files which are not valid spaces', async () => {
@@ -75,13 +75,13 @@ describe('onFileSystemChanged', () => {
 
     await onFileSystemChanged(change(spaceFilePath, 'modified'));
 
-    expect(SpacesStore.get(space_1.id)).toEqual(space_1);
+    expect(SpacesStore).toHaveItem(space_1.id, space_1);
   });
 
   it('ignores non deletion changes to the spaces directory itself', async () => {
     await onFileSystemChanged(change(`${resolveSpacesDirPath()}/`, 'modified'));
 
-    expect(SpacesStore.getAllArray().length).toBe(3);
+    expect(SpacesStore).toHaveItemCount(3);
   });
 });
 

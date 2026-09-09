@@ -50,7 +50,7 @@ describe('createVirtualAutomation', () => {
   it('adds the automation to the store', () => {
     createVirtualAutomation({ id, owner });
 
-    expect(AutomationsStore.get(id)).toEqual(newAutomation);
+    expect(AutomationsStore).toHaveItem(id, newAutomation);
   });
 
   it('does not write the automation to the file system', () => {

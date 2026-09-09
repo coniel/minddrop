@@ -55,7 +55,7 @@ describe('renameWorkspace', () => {
   it('updates the workspace in the store', async () => {
     await renameWorkspace(workspace_1.id, newName);
 
-    expect(WorkspacesStore.get(workspace_1.id)).toEqual(updatedWorkspace);
+    expect(WorkspacesStore).toHaveItem(workspace_1.id, updatedWorkspace);
   });
 
   it('writes the updated workspace to the file system', async () => {

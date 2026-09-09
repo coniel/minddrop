@@ -15,8 +15,8 @@ describe('loadDesigns', () => {
   it('loads owned and unowned designs into the store', () => {
     loadDesigns(designs);
 
-    expect(DesignsStore.get(cardDesign_1.id)).toEqual(cardDesign_1);
-    expect(DesignsStore.get(ownedCardDesign_1.id)).toEqual(ownedCardDesign_1);
+    expect(DesignsStore).toHaveItem(cardDesign_1.id, cardDesign_1);
+    expect(DesignsStore).toHaveItem(ownedCardDesign_1.id, ownedCardDesign_1);
   });
 
   it('dispatches the designs loaded event', () =>

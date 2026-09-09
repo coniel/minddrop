@@ -69,14 +69,14 @@ describe('deleteDatabaseEntry', () => {
     await deleteDatabaseEntry(objectEntry1.id);
 
     // The store should no longer contain the entry
-    expect(DatabaseEntriesStore.get(objectEntry1.id)).toBeNull();
+    expect(DatabaseEntriesStore).not.toHaveItem(objectEntry1.id);
   });
 
   it('leaves other entries intact', async () => {
     await deleteDatabaseEntry(objectEntry1.id);
 
     // Other entries should remain in the store
-    expect(DatabaseEntriesStore.get(urlEntry1.id)).not.toBeNull();
+    expect(DatabaseEntriesStore).toHaveItem(urlEntry1.id);
   });
 
   it('dispatches an entry deleted event', async () =>

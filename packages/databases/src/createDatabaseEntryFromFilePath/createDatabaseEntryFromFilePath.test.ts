@@ -44,7 +44,7 @@ describe('createDatabaseEntryFromFilePath', () => {
     );
 
     expect(entry.title).toBe(titleFromPath(validFilePath));
-    expect(DatabaseEntriesStore.get(entry.id)).toBeDefined();
+    expect(DatabaseEntriesStore).toHaveItem(entry.id);
   });
 
   it('copies the file to the property file path', async () => {

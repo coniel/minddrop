@@ -31,7 +31,7 @@ describe('createVirtualCollection', () => {
   it('adds the collection to the store', () => {
     createVirtualCollection(id, name, items);
 
-    expect(CollectionsStore.get(id)).toEqual(expectedCollection);
+    expect(CollectionsStore).toHaveItem(id, expectedCollection);
   });
 
   it('defaults items to an empty array', () => {

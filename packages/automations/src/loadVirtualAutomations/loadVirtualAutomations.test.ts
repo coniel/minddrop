@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
+import { storeItem } from '@minddrop/stores/test-utils';
 import { AutomationsStore } from '../AutomationsStore';
 import { AutomationsLoadedEvent } from '../events';
 import { automation_virtual_1, cleanup, setup } from '../test-utils';
@@ -27,19 +28,21 @@ describe('loadVirtualAutomations', () => {
   it('loads the automations into the store', () => {
     loadVirtualAutomations(data);
 
-    expect(AutomationsStore.get(automation_virtual_1.id)).not.toBeNull();
+    expect(AutomationsStore).toHaveItem(automation_virtual_1.id);
   });
 
   it('marks the loaded automations as virtual', () => {
     loadVirtualAutomations(data);
 
-    expect(AutomationsStore.get(automation_virtual_1.id)?.virtual).toBe(true);
+    expect(storeItem(AutomationsStore, automation_virtual_1.id).virtual).toBe(
+      true,
+    );
   });
 
   it('preserves the owner', () => {
     loadVirtualAutomations(data);
 
-    expect(AutomationsStore.get(automation_virtual_1.id)?.owner).toBe(
+    expect(storeItem(AutomationsStore, automation_virtual_1.id).owner).toBe(
       automation_virtual_1.owner,
     );
   });

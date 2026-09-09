@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
+import { storeItem } from '@minddrop/stores/test-utils';
 import { DataViewsStore } from '../DataViewsStore';
 import { DataViewsLoadedEvent } from '../events';
 import { cleanup, mockDate, setup } from '../test-utils';
@@ -32,8 +33,8 @@ describe('loadVirtualDataViews', () => {
   it('loads virtual views into the store', () => {
     loadVirtualDataViews(data);
 
-    const view1 = DataViewsStore.get('virtual-1');
-    const view2 = DataViewsStore.get('virtual-2');
+    const view1 = storeItem(DataViewsStore, 'virtual-1');
+    const view2 = storeItem(DataViewsStore, 'virtual-2');
 
     expect(view1).not.toBeNull();
     expect(view2).not.toBeNull();
@@ -42,20 +43,20 @@ describe('loadVirtualDataViews', () => {
   it('marks loaded views as virtual', () => {
     loadVirtualDataViews(data);
 
-    const view = DataViewsStore.get('virtual-1');
+    const view = storeItem(DataViewsStore, 'virtual-1');
 
-    expect(view?.virtual).toBe(true);
+    expect(view.virtual).toBe(true);
   });
 
   it('sets properties from the provided data', () => {
     loadVirtualDataViews(data);
 
-    const view = DataViewsStore.get('virtual-1');
+    const view = storeItem(DataViewsStore, 'virtual-1');
 
-    expect(view?.name).toBe('View 1');
-    expect(view?.type).toBe('gallery');
-    expect(view?.icon).toBe('layout');
-    expect(view?.dataSource).toEqual({
+    expect(view.name).toBe('View 1');
+    expect(view.type).toBe('gallery');
+    expect(view.icon).toBe('layout');
+    expect(view.dataSource).toEqual({
       type: 'database',
       id: 'database-1',
     });
@@ -64,19 +65,19 @@ describe('loadVirtualDataViews', () => {
   it('carries owner and owner key onto the loaded views', () => {
     loadVirtualDataViews(data);
 
-    const view = DataViewsStore.get('virtual-1');
+    const view = storeItem(DataViewsStore, 'virtual-1');
 
-    expect(view?.owner).toBe('database_owner-1');
-    expect(view?.ownerKey).toBe('layout_1:Related');
+    expect(view.owner).toBe('database_owner-1');
+    expect(view.ownerKey).toBe('layout_1:Related');
   });
 
   it('sets created and lastModified dates', () => {
     loadVirtualDataViews(data);
 
-    const view = DataViewsStore.get('virtual-1');
+    const view = storeItem(DataViewsStore, 'virtual-1');
 
-    expect(view?.created).toEqual(mockDate);
-    expect(view?.lastModified).toEqual(mockDate);
+    expect(view.created).toEqual(mockDate);
+    expect(view.lastModified).toEqual(mockDate);
   });
 
   it('dispatches a views loaded event', () =>

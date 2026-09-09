@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
+import { storeItem } from '@minddrop/stores/test-utils';
 import { AutomationsStore } from '../AutomationsStore';
 import { AutomationUpdatedEvent } from '../events';
 import {
@@ -32,7 +33,7 @@ describe('updateAutomation', () => {
   it('updates the automation in the store', async () => {
     await updateAutomation(automation_1.id, update);
 
-    expect(AutomationsStore.get(automation_1.id)).toEqual(updatedAutomation);
+    expect(AutomationsStore).toHaveItem(automation_1.id, updatedAutomation);
   });
 
   it('writes the automation config to the file system', async () => {
@@ -49,7 +50,7 @@ describe('updateAutomation', () => {
 
     await updateAutomation(automation_virtual_1.id, update);
 
-    expect(AutomationsStore.get(automation_virtual_1.id)?.name).toBe(
+    expect(storeItem(AutomationsStore, automation_virtual_1.id).name).toBe(
       update.name,
     );
     expect(

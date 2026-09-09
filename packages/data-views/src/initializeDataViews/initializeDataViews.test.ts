@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { ItemReferences } from '@minddrop/item-references';
+import { storeItem } from '@minddrop/stores/test-utils';
 import { Paths } from '@minddrop/utils';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DataViewsStore } from '../DataViewsStore';
@@ -31,7 +32,7 @@ describe('initializeDataViews', () => {
   it('loads views into the store', async () => {
     await initializeDataViews();
 
-    expect(DataViewsStore.getAllArray()).toEqual(loadedViews);
+    expect(DataViewsStore).toHaveItems(loadedViews);
   });
 
   it('does not load views from other workspaces', async () => {
@@ -53,7 +54,7 @@ describe('initializeDataViews', () => {
 
     await initializeDataViews();
 
-    expect(DataViewsStore.getAllArray()).toEqual(loadedViews);
+    expect(DataViewsStore).toHaveItems(loadedViews);
   });
 
   it('dispatches a views loaded event', async () =>
@@ -94,11 +95,11 @@ describe('initializeDataViews', () => {
 
     await initializeDataViews();
 
-    const loaded = DataViewsStore.get(referencingView.id);
+    const loaded = storeItem(DataViewsStore, referencingView.id);
 
     // The loaded data holds resolved item IDs, indexed as references
-    expect(loaded?.data).toEqual({ items: ['database-entry_one'] });
-    expect(loaded?.references).toEqual(['database-entry_one']);
+    expect(loaded.data).toEqual({ items: ['database-entry_one'] });
+    expect(loaded.references).toEqual(['database-entry_one']);
 
     ItemReferences.unregisterAdapter('database-entry');
   });

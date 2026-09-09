@@ -32,7 +32,7 @@ describe('addCollectionItems', () => {
   it('updates the collection in the store', async () => {
     const result = await addCollectionItems(collection_1.id, newItemIds);
 
-    expect(CollectionsStore.get(collection_1.id)).toEqual(result);
+    expect(CollectionsStore).toHaveItem(collection_1.id, result);
   });
 
   it('updates lastModified', async () => {

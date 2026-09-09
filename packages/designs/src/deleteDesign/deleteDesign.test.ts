@@ -15,7 +15,7 @@ describe('deleteDesign', () => {
   it('removes the design from the store', async () => {
     await deleteDesign(design_books.id);
 
-    expect(DesignsStore.get(design_books.id)).toBeNull();
+    expect(DesignsStore).not.toHaveItem(design_books.id);
   });
 
   it('deletes the design bundle directory', async () => {
@@ -32,7 +32,7 @@ describe('deleteDesign', () => {
 
     await deleteDesign(design_space_virtual.id);
 
-    expect(DesignsStore.get(design_space_virtual.id)).toBeNull();
+    expect(DesignsStore).not.toHaveItem(design_space_virtual.id);
   });
 
   it('dispatches a design deleted event', async () =>

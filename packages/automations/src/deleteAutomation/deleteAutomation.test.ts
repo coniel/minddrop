@@ -20,7 +20,7 @@ describe('deleteAutomation', () => {
   it('deletes the automation from the store', async () => {
     await deleteAutomation(automation_1.id);
 
-    expect(AutomationsStore.get(automation_1.id)).toBeNull();
+    expect(AutomationsStore).not.toHaveItem(automation_1.id);
   });
 
   it('deletes the automation config from the file system', async () => {
@@ -44,7 +44,7 @@ describe('deleteAutomation', () => {
 
     await deleteAutomation(automation_virtual_1.id);
 
-    expect(AutomationsStore.get(automation_virtual_1.id)).toBeNull();
+    expect(AutomationsStore).not.toHaveItem(automation_virtual_1.id);
     expect(
       MockFs.exists(resolveAutomationFilePath(automation_virtual_1.id)),
     ).toBe(true);

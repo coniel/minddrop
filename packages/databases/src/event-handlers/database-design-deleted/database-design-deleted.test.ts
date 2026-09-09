@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Designs } from '@minddrop/designs-next';
 import { DesignFixtures } from '@minddrop/designs-next/test-utils';
+import { storeItem } from '@minddrop/stores/test-utils';
 import { DatabasesStore } from '../../DatabasesStore';
 import { getDatabase } from '../../getDatabase';
 import { MockFs, cleanup, objectDatabase, setup } from '../../test-utils';
@@ -66,9 +67,11 @@ describe('onDatabaseDesignDeleted', () => {
 
     await onDatabaseDesignDeleted(cardDesign);
 
-    expect(DatabasesStore.get(objectDatabase.id)?.defaultDesigns).toEqual({
-      list: listDesign.id,
-    });
+    expect(storeItem(DatabasesStore, objectDatabase.id).defaultDesigns).toEqual(
+      {
+        list: listDesign.id,
+      },
+    );
   });
 
   it('ignores designs not owned by a database', async () => {

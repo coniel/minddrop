@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { SelectPropertySchema } from '@minddrop/properties';
+import { storeItem } from '@minddrop/stores/test-utils';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabasesStore } from '../../DatabasesStore';
 import {
@@ -93,12 +94,12 @@ describe('onRenamePropertyOption', () => {
       newValue: 'Doing',
     });
 
-    expect(DatabaseEntriesStore.get(selectEntry.id)?.properties.Status).toBe(
-      'Doing',
-    );
-    expect(DatabaseEntriesStore.get(otherEntry.id)?.properties.Status).toBe(
-      'Done',
-    );
+    expect(
+      storeItem(DatabaseEntriesStore, selectEntry.id).properties.Status,
+    ).toBe('Doing');
+    expect(
+      storeItem(DatabaseEntriesStore, otherEntry.id).properties.Status,
+    ).toBe('Done');
   });
 
   it('rewrites multiselect values keeping the other options', async () => {
@@ -110,8 +111,8 @@ describe('onRenamePropertyOption', () => {
       newValue: 'House',
     });
 
-    expect(DatabaseEntriesStore.get(selectEntry.id)?.properties.Labels).toEqual(
-      ['House', 'Work'],
-    );
+    expect(
+      storeItem(DatabaseEntriesStore, selectEntry.id).properties.Labels,
+    ).toEqual(['House', 'Work']);
   });
 });

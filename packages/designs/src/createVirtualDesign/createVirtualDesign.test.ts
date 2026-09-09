@@ -18,7 +18,7 @@ describe('createVirtualDesign', () => {
       ownerKey: 'layout',
     });
 
-    expect(DesignsStore.get(design.id)).toEqual(design);
+    expect(DesignsStore).toHaveItem(design.id, design);
     expect(design.virtual).toBe(true);
     expect(design.owner).toBe('space_owner-1');
     expect(design.ownerKey).toBe('layout');

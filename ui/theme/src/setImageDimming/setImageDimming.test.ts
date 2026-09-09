@@ -1,3 +1,5 @@
+// Registers the store assertion matchers
+import '@minddrop/stores/test-utils';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { InvalidParameterError } from '@minddrop/utils';
@@ -26,7 +28,7 @@ describe('setImageDimming', () => {
     setImageDimming(ImageDimmingLevel1);
 
     // Should set the value in the theme store
-    expect(ThemeStore.get('imageDimming')).toBe(ImageDimmingLevel1);
+    expect(ThemeStore).toHaveStoredValue('imageDimming', ImageDimmingLevel1);
   });
 
   it('dispatches a `theme:image-dimming:changed` event', () =>

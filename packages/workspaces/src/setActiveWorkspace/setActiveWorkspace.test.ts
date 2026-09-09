@@ -39,7 +39,7 @@ describe('setActiveWorkspace', () => {
   it('sets the workspace as active', async () => {
     await setActiveWorkspace(workspace_2.id);
 
-    expect(ActiveWorkspaceStore.get('id')).toBe(workspace_2.id);
+    expect(ActiveWorkspaceStore).toHaveStoredValue('id', workspace_2.id);
   });
 
   it('writes the active path to the workspaces config', async () => {

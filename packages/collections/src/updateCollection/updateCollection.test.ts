@@ -31,7 +31,7 @@ describe('updateCollection', () => {
   it('updates the collection in the store', async () => {
     await updateCollection(collection_1.id, update);
 
-    expect(CollectionsStore.get(collection_1.id)).toEqual(updatedCollection);
+    expect(CollectionsStore).toHaveItem(collection_1.id, updatedCollection);
   });
 
   it('writes the collection config to the file system', async () => {
@@ -65,7 +65,7 @@ describe('updateCollection', () => {
     });
 
     // Old ID should no longer exist
-    expect(CollectionsStore.get(collection_virtual_1.id)).toBeNull();
+    expect(CollectionsStore).not.toHaveItem(collection_virtual_1.id);
 
     // New ID should exist with updated data
     const updated = CollectionsStore.get(newId)!;

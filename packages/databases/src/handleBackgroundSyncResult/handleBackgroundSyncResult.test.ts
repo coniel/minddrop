@@ -6,6 +6,7 @@ import {
   ItemAddressesChangedEventData,
   ItemReferences,
 } from '@minddrop/item-references';
+import { storeItem } from '@minddrop/stores/test-utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import {
   cleanup,
@@ -60,7 +61,9 @@ describe('handleBackgroundSyncResult', () => {
     });
 
     // The store holds the new path
-    expect(DatabaseEntriesStore.get(relatedEntry1.id)?.path).toBe(renamed.path);
+    expect(storeItem(DatabaseEntriesStore, relatedEntry1.id).path).toBe(
+      renamed.path,
+    );
 
     // The dispatch carries the old and new addresses
     expect(dispatched).toEqual([

@@ -37,7 +37,7 @@ describe('onUpdateVirtualDesign', () => {
     });
 
     // The space should remain unchanged
-    expect(SpacesStore.get(space_1.id)).toEqual(space_1);
+    expect(SpacesStore).toHaveItem(space_1.id, space_1);
   });
 
   it('does nothing for designs not owned by a space', async () => {
@@ -52,7 +52,7 @@ describe('onUpdateVirtualDesign', () => {
     });
 
     // The space should remain unchanged
-    expect(SpacesStore.get(space_1.id)).toEqual(space_1);
+    expect(SpacesStore).toHaveItem(space_1.id, space_1);
   });
 
   it('does nothing if the owning space does not exist', async () => {

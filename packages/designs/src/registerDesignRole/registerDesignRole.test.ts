@@ -13,7 +13,7 @@ describe('registerDesignRole', () => {
   it('adds the role to the registry', () => {
     registerDesignRole(HeadingRole);
 
-    expect(DesignRolesStore.get(HeadingRole.id)).toEqual(HeadingRole);
+    expect(DesignRolesStore).toHaveItem(HeadingRole.id, HeadingRole);
   });
 
   it('dispatches a role registered event', async () =>

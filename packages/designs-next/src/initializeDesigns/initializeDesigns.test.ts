@@ -14,7 +14,7 @@ describe('initializeDesigns', () => {
   it('loads design files into the store', async () => {
     await initializeDesigns();
 
-    expect(DesignsStore.getAllArray()).toEqual(designs);
+    expect(DesignsStore).toHaveItems(designs);
   });
 
   it('ignores files without the design file extension', async () => {
@@ -28,7 +28,7 @@ describe('initializeDesigns', () => {
 
     await initializeDesigns();
 
-    expect(DesignsStore.getAllArray()).toEqual(designs);
+    expect(DesignsStore).toHaveItems(designs);
   });
 
   it('discards entries which are not valid design files', async () => {
@@ -42,7 +42,7 @@ describe('initializeDesigns', () => {
 
     await initializeDesigns();
 
-    expect(DesignsStore.getAllArray()).toEqual(designs);
+    expect(DesignsStore).toHaveItems(designs);
   });
 
   it('dispatches the designs loaded event', async () =>

@@ -23,7 +23,7 @@ describe('loadTagGroups', () => {
   it('loads tag groups from the tag groups directory into the store', async () => {
     await loadTagGroups();
 
-    expect(TagGroupsStore.getAllArray()).toEqual(tagGroups);
+    expect(TagGroupsStore).toHaveItems(tagGroups);
   });
 
   it('filters out null groups', async () => {
@@ -35,7 +35,7 @@ describe('loadTagGroups', () => {
 
     await loadTagGroups();
 
-    expect(TagGroupsStore.getAllArray()).toEqual(tagGroups);
+    expect(TagGroupsStore).toHaveItems(tagGroups);
   });
 
   it('dispatches a tag groups loaded event', async () =>

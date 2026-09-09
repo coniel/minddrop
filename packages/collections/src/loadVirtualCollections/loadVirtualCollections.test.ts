@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
+import { storeItem } from '@minddrop/stores/test-utils';
 import { CollectionsStore } from '../CollectionsStore';
 import { CollectionsLoadedEvent } from '../events';
 import { cleanup, mockDate, setup } from '../test-utils';
@@ -17,8 +18,8 @@ describe('loadVirtualCollections', () => {
   it('loads virtual collections into the store', () => {
     loadVirtualCollections(data);
 
-    const collection1 = CollectionsStore.get('virtual-1');
-    const collection2 = CollectionsStore.get('virtual-2');
+    const collection1 = storeItem(CollectionsStore, 'virtual-1');
+    const collection2 = storeItem(CollectionsStore, 'virtual-2');
 
     expect(collection1).not.toBeNull();
     expect(collection2).not.toBeNull();
@@ -27,27 +28,27 @@ describe('loadVirtualCollections', () => {
   it('marks loaded collections as virtual', () => {
     loadVirtualCollections(data);
 
-    const collection = CollectionsStore.get('virtual-1');
+    const collection = storeItem(CollectionsStore, 'virtual-1');
 
-    expect(collection?.virtual).toBe(true);
+    expect(collection.virtual).toBe(true);
   });
 
   it('sets names and items from the provided data', () => {
     loadVirtualCollections(data);
 
-    const collection = CollectionsStore.get('virtual-1');
+    const collection = storeItem(CollectionsStore, 'virtual-1');
 
-    expect(collection?.name).toBe('Collection 1');
-    expect(collection?.items).toEqual(['item-1']);
+    expect(collection.name).toBe('Collection 1');
+    expect(collection.items).toEqual(['item-1']);
   });
 
   it('sets created and lastModified dates', () => {
     loadVirtualCollections(data);
 
-    const collection = CollectionsStore.get('virtual-1');
+    const collection = storeItem(CollectionsStore, 'virtual-1');
 
-    expect(collection?.created).toEqual(mockDate);
-    expect(collection?.lastModified).toEqual(mockDate);
+    expect(collection.created).toEqual(mockDate);
+    expect(collection.lastModified).toEqual(mockDate);
   });
 
   it('dispatches a collections loaded event', () =>

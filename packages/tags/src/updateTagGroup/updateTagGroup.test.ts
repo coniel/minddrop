@@ -32,7 +32,7 @@ describe('updateTagGroup', () => {
   it('updates the group in the store', async () => {
     await updateTagGroup(tagGroup_1.id, update);
 
-    expect(TagGroupsStore.get(tagGroup_1.id)).toEqual(updatedGroup);
+    expect(TagGroupsStore).toHaveItem(tagGroup_1.id, updatedGroup);
   });
 
   it('writes the group config to the file system', async () => {

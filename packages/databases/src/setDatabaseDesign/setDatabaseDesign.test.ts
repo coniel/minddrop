@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Designs } from '@minddrop/designs';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
+import { storeItem } from '@minddrop/stores/test-utils';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabaseNotFoundError } from '../errors';
 import { cleanup, objectDatabase, setup } from '../test-utils';
@@ -29,7 +30,7 @@ describe('setDatabaseDesign', () => {
   it('assigns the new designId', async () => {
     await setDatabaseDesign(objectDatabase.id, design_books.id);
 
-    expect(DatabasesStore.get(objectDatabase.id)?.designId).toBe(
+    expect(storeItem(DatabasesStore, objectDatabase.id).designId).toBe(
       design_books.id,
     );
   });
@@ -42,9 +43,9 @@ describe('setDatabaseDesign', () => {
 
     await setDatabaseDesign(objectDatabase.id, design_books.id);
 
-    expect(DatabasesStore.get(objectDatabase.id)?.designPropertyMap).toEqual(
-      {},
-    );
+    expect(
+      storeItem(DatabasesStore, objectDatabase.id).designPropertyMap,
+    ).toEqual({});
   });
 
   it('clears defaultLayouts when the design changes', async () => {
@@ -52,7 +53,9 @@ describe('setDatabaseDesign', () => {
     // its current design; switching designs should clear it.
     await setDatabaseDesign(objectDatabase.id, design_books.id);
 
-    expect(DatabasesStore.get(objectDatabase.id)?.defaultLayouts).toEqual({});
+    expect(storeItem(DatabasesStore, objectDatabase.id).defaultLayouts).toEqual(
+      {},
+    );
   });
 
   it('clears defaultLayouts and the map when unassigning the design', async () => {
@@ -62,11 +65,11 @@ describe('setDatabaseDesign', () => {
 
     await setDatabaseDesign(objectDatabase.id, null);
 
-    const updated = DatabasesStore.get(objectDatabase.id);
+    const updated = storeItem(DatabasesStore, objectDatabase.id);
 
-    expect(updated?.designId).toBeNull();
-    expect(updated?.designPropertyMap).toEqual({});
-    expect(updated?.defaultLayouts).toEqual({});
+    expect(updated.designId).toBeNull();
+    expect(updated.designPropertyMap).toEqual({});
+    expect(updated.defaultLayouts).toEqual({});
   });
 
   it('is a no-op when the designId is unchanged', async () => {
@@ -78,7 +81,9 @@ describe('setDatabaseDesign', () => {
     await setDatabaseDesign(objectDatabase.id, design_cards.id);
 
     // Property map untouched because no actual change happened
-    expect(DatabasesStore.get(objectDatabase.id)?.designPropertyMap).toEqual({
+    expect(
+      storeItem(DatabasesStore, objectDatabase.id).designPropertyMap,
+    ).toEqual({
       Title: 'Heading',
     });
   });

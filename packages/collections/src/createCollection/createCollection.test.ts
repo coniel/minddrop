@@ -28,7 +28,7 @@ describe('createCollection', () => {
   it('adds the collection to the store', async () => {
     const collection = await createCollection();
 
-    expect(CollectionsStore.get(collection.id)).toEqual(newCollection);
+    expect(CollectionsStore).toHaveItem(collection.id, newCollection);
   });
 
   it('writes the collection config to the file system', async () => {

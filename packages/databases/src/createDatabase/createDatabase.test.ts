@@ -130,7 +130,7 @@ describe('createDatabase', () => {
   it('adds the config to the databases store', async () => {
     const database = await createDatabase(options);
 
-    expect(DatabasesStore.get(database.id)).toEqual(database);
+    expect(DatabasesStore).toHaveItem(database.id, database);
   });
 
   it('creates the database directory', async () => {

@@ -48,7 +48,7 @@ describe('duplicateDesign', () => {
   it('adds the copy to the store', async () => {
     const design = await duplicateDesign(cardDesign_1.id);
 
-    expect(DesignsStore.get(design.id)).toEqual(design);
+    expect(DesignsStore).toHaveItem(design.id, design);
   });
 
   it('writes the copy to the file system', async () => {

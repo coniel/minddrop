@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Designs } from '@minddrop/designs-next';
 import { DesignFixtures } from '@minddrop/designs-next/test-utils';
+import { storeItem } from '@minddrop/stores/test-utils';
 import { InvalidParameterError } from '@minddrop/utils';
 import { DatabasesStore } from '../DatabasesStore';
 import { cleanup, objectDatabase, setup } from '../test-utils';
@@ -36,9 +37,11 @@ describe('setDatabaseDefaultDesign', () => {
   it('pins the design as the default for the context', async () => {
     await setDatabaseDefaultDesign(objectDatabase.id, 'card', cardDesign.id);
 
-    expect(DatabasesStore.get(objectDatabase.id)?.defaultDesigns).toEqual({
-      card: cardDesign.id,
-    });
+    expect(storeItem(DatabasesStore, objectDatabase.id).defaultDesigns).toEqual(
+      {
+        card: cardDesign.id,
+      },
+    );
   });
 
   it('keeps the other contexts pinned', async () => {
@@ -48,10 +51,12 @@ describe('setDatabaseDefaultDesign', () => {
 
     await setDatabaseDefaultDesign(objectDatabase.id, 'card', cardDesign.id);
 
-    expect(DatabasesStore.get(objectDatabase.id)?.defaultDesigns).toEqual({
-      list: listDesign.id,
-      card: cardDesign.id,
-    });
+    expect(storeItem(DatabasesStore, objectDatabase.id).defaultDesigns).toEqual(
+      {
+        list: listDesign.id,
+        card: cardDesign.id,
+      },
+    );
   });
 
   it('unpins the context when given null', async () => {
@@ -61,9 +66,11 @@ describe('setDatabaseDefaultDesign', () => {
 
     await setDatabaseDefaultDesign(objectDatabase.id, 'card', null);
 
-    expect(DatabasesStore.get(objectDatabase.id)?.defaultDesigns).toEqual({
-      list: listDesign.id,
-    });
+    expect(storeItem(DatabasesStore, objectDatabase.id).defaultDesigns).toEqual(
+      {
+        list: listDesign.id,
+      },
+    );
   });
 
   it('returns the updated database', async () => {

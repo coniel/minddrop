@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
+import { storeItem } from '@minddrop/stores/test-utils';
 import { Icons } from '@minddrop/ui-icons';
 import { DataViewsStore } from '../DataViewsStore';
 import { DataViewCreatedEvent } from '../events';
@@ -48,7 +49,7 @@ describe('createVirtualDataView', () => {
       owner,
     });
 
-    expect(DataViewsStore.get(id)).toEqual(expectedView);
+    expect(DataViewsStore).toHaveItem(id, expectedView);
   });
 
   it('uses the provided name', () => {
@@ -88,7 +89,7 @@ describe('createVirtualDataView', () => {
     });
 
     expect(result.ownerKey).toBe('layout_1:Related');
-    expect(DataViewsStore.get(id)?.ownerKey).toBe('layout_1:Related');
+    expect(storeItem(DataViewsStore, id).ownerKey).toBe('layout_1:Related');
   });
 
   it('sets provided data on the view', () => {

@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { ItemReferences } from '@minddrop/item-references';
+import { storeItem } from '@minddrop/stores/test-utils';
 import { CollectionsStore } from '../CollectionsStore';
 import { CollectionsLoadedEvent } from '../events';
 import { MockFs, cleanup, collections, setup } from '../test-utils';
@@ -26,7 +27,7 @@ describe('initializeCollections', () => {
   it('loads collections from the collections directory into the store', async () => {
     await initializeCollections();
 
-    expect(CollectionsStore.getAllArray()).toEqual(collections);
+    expect(CollectionsStore).toHaveItems(collections);
   });
 
   it('filters out null collections', async () => {
@@ -38,7 +39,7 @@ describe('initializeCollections', () => {
 
     await initializeCollections();
 
-    expect(CollectionsStore.getAllArray()).toEqual(collections);
+    expect(CollectionsStore).toHaveItems(collections);
   });
 
   it('dispatches a collections loaded event', async () =>
@@ -62,11 +63,9 @@ describe('initializeCollections', () => {
     await initializeCollections();
 
     const [firstCollection] = collections;
-    const loaded = CollectionsStore.get(firstCollection.id);
+    const loaded = storeItem(CollectionsStore, firstCollection.id);
 
     // The loaded items should be resolved item IDs
-    expect(loaded?.items).toEqual(
-      firstCollection.items.map((id) => `id:${id}`),
-    );
+    expect(loaded.items).toEqual(firstCollection.items.map((id) => `id:${id}`));
   });
 });

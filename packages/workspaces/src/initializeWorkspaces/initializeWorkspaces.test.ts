@@ -34,7 +34,7 @@ describe('initializeWorkspaces', () => {
   it('loads workspaces into the store', async () => {
     await initializeWorkspaces();
 
-    expect(WorkspacesStore.getAllArray()).toEqual(workspaces);
+    expect(WorkspacesStore).toHaveItems(workspaces);
   });
 
   it('sets the workspace from the config active path as active', async () => {
@@ -46,7 +46,7 @@ describe('initializeWorkspaces', () => {
 
     await initializeWorkspaces();
 
-    expect(ActiveWorkspaceStore.get('id')).toBe(workspace_2.id);
+    expect(ActiveWorkspaceStore).toHaveStoredValue('id', workspace_2.id);
   });
 
   it('sets the workspace paths from the active workspace', async () => {
@@ -72,7 +72,7 @@ describe('initializeWorkspaces', () => {
 
     await initializeWorkspaces();
 
-    expect(ActiveWorkspaceStore.get('id')).toBe(workspace_1.id);
+    expect(ActiveWorkspaceStore).toHaveStoredValue('id', workspace_1.id);
   });
 
   it('persists the fallback active workspace', async () => {

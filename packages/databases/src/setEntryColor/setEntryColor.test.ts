@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { storeItem } from '@minddrop/stores/test-utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabaseEntryNotFoundError } from '../errors';
@@ -26,9 +27,9 @@ describe('setEntryColor', () => {
   it('sets the color on the stored entry metadata', async () => {
     await setEntryColor(objectEntry1.id, 'red');
 
-    expect(DatabaseEntriesStore.get(objectEntry1.id)?.metadata.color).toBe(
-      'red',
-    );
+    expect(
+      storeItem(DatabaseEntriesStore, objectEntry1.id).metadata.color,
+    ).toBe('red');
   });
 
   it('persists the color to the metadata sidecar', async () => {
@@ -49,7 +50,7 @@ describe('setEntryColor', () => {
 
     await setEntryColor(objectEntry1.id, 'green');
 
-    expect(DatabaseEntriesStore.get(objectEntry1.id)?.metadata).toEqual({
+    expect(storeItem(DatabaseEntriesStore, objectEntry1.id).metadata).toEqual({
       embeddedViewConfigs: { 'card:Tasks': { options: {}, data: {} } },
       color: 'green',
     });
@@ -59,7 +60,9 @@ describe('setEntryColor', () => {
     await setEntryColor(objectEntry1.id, 'red');
     await setEntryColor(objectEntry1.id, null);
 
-    expect(DatabaseEntriesStore.get(objectEntry1.id)?.metadata).toEqual({});
+    expect(storeItem(DatabaseEntriesStore, objectEntry1.id).metadata).toEqual(
+      {},
+    );
   });
 
   describe('with a declared color property', () => {
@@ -76,21 +79,21 @@ describe('setEntryColor', () => {
     it('mirrors the color into the property value', async () => {
       await setEntryColor(objectEntry1.id, 'red');
 
-      const entry = DatabaseEntriesStore.get(objectEntry1.id);
+      const entry = storeItem(DatabaseEntriesStore, objectEntry1.id);
 
       // Both the metadata and the file backed property hold the color
-      expect(entry?.metadata.color).toBe('red');
-      expect(entry?.properties.Color).toBe('red');
+      expect(entry.metadata.color).toBe('red');
+      expect(entry.properties.Color).toBe('red');
     });
 
     it('clears the property value along with the color', async () => {
       await setEntryColor(objectEntry1.id, 'red');
       await setEntryColor(objectEntry1.id, null);
 
-      const entry = DatabaseEntriesStore.get(objectEntry1.id);
+      const entry = storeItem(DatabaseEntriesStore, objectEntry1.id);
 
-      expect(entry?.metadata.color).toBeUndefined();
-      expect(entry?.properties.Color).toBeNull();
+      expect(entry.metadata.color).toBeUndefined();
+      expect(entry.properties.Color).toBeNull();
     });
   });
 

@@ -56,7 +56,7 @@ describe('createDataView', () => {
       newView.name,
     );
 
-    expect(DataViewsStore.get(result.id)).toEqual(newView);
+    expect(DataViewsStore).toHaveItem(result.id, newView);
   });
 
   it('writes the view to the file system', async () => {

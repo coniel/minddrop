@@ -119,7 +119,7 @@ describe('clearDatabaseEntryProperty', () => {
   it('updates the entry in the store', async () => {
     await clearDatabaseEntryProperty(objectEntry1.id, propertyName);
 
-    expect(DatabaseEntriesStore.get(objectEntry1.id)).toEqual(clearedEntry);
+    expect(DatabaseEntriesStore).toHaveItem(objectEntry1.id, clearedEntry);
   });
 
   it('writes the updated entry to the file system', async () => {

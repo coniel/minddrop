@@ -38,7 +38,7 @@ describe('addDatabaseProperty', () => {
   it('updates the database', async () => {
     await addDatabaseProperty(objectDatabase.id, newProperty);
 
-    expect(DatabasesStore.get(objectDatabase.id)).toEqual(updatedDatabase);
+    expect(DatabasesStore).toHaveItem(objectDatabase.id, updatedDatabase);
   });
 
   it('writes the updated config to the file system', async () => {
@@ -67,6 +67,6 @@ describe('addDatabaseProperty', () => {
       type: 'content',
     }).catch(() => null);
 
-    expect(DatabasesStore.get(objectDatabase.id)).toEqual(objectDatabase);
+    expect(DatabasesStore).toHaveItem(objectDatabase.id, objectDatabase);
   });
 });

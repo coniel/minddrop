@@ -38,7 +38,7 @@ describe('updateDatabase', () => {
   it('updates the database config in the store', async () => {
     await updateDatabase(objectDatabase.id, update);
 
-    expect(DatabasesStore.get(objectDatabase.id)).toEqual(updatedConfig);
+    expect(DatabasesStore).toHaveItem(objectDatabase.id, updatedConfig);
   });
 
   it('writes the updated config to the file system', async () => {

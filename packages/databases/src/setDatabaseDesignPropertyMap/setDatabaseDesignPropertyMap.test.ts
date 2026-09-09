@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { storeItem } from '@minddrop/stores/test-utils';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabaseNotFoundError } from '../errors';
 import { cleanup, objectDatabase, setup } from '../test-utils';
@@ -26,9 +27,9 @@ describe('setDatabaseDesignPropertyMap', () => {
 
     await setDatabaseDesignPropertyMap(objectDatabase.id, map);
 
-    expect(DatabasesStore.get(objectDatabase.id)?.designPropertyMap).toEqual(
-      map,
-    );
+    expect(
+      storeItem(DatabasesStore, objectDatabase.id).designPropertyMap,
+    ).toEqual(map);
   });
 
   it('returns the updated database', async () => {

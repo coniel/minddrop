@@ -12,8 +12,6 @@ describe('registerDevToolsPanel', () => {
   it('adds the panel to the store', () => {
     registerDevToolsPanel(logsPanelConfig);
 
-    expect(DevToolsPanelsStore.get(logsPanelConfig.id)).toEqual(
-      logsPanelConfig,
-    );
+    expect(DevToolsPanelsStore).toHaveItem(logsPanelConfig.id, logsPanelConfig);
   });
 });

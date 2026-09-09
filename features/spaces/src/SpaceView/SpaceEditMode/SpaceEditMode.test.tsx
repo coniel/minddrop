@@ -7,6 +7,7 @@ import {
 } from '@minddrop/feature-designs';
 import { Spaces } from '@minddrop/spaces';
 import { SpaceFixtures } from '@minddrop/spaces/test-utils';
+import { storeItem } from '@minddrop/stores/test-utils';
 import { render, screen, userEvent, waitFor } from '@minddrop/test-utils';
 import {
   SpaceViewStateStore,
@@ -95,7 +96,7 @@ describe('<SpaceEditMode />', () => {
     await user.keyboard('{Escape}');
 
     // Edit mode was exited
-    expect(SpaceViewStateStore.get(space_1.id)?.editing).toBe(false);
+    expect(storeItem(SpaceViewStateStore, space_1.id).editing).toBe(false);
   });
 
   it('exits edit mode via the back button', async () => {
@@ -109,7 +110,7 @@ describe('<SpaceEditMode />', () => {
     await user.click(screen.getByLabelText('spaces.view.actions.exitEditMode'));
 
     // Edit mode was exited
-    expect(SpaceViewStateStore.get(space_1.id)?.editing).toBe(false);
+    expect(storeItem(SpaceViewStateStore, space_1.id).editing).toBe(false);
   });
 
   it('clears the editor session on unmount', () => {

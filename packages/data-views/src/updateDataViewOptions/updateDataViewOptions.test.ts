@@ -21,7 +21,7 @@ describe('updateDataViewOptions', () => {
   it('updates the view options in the store', async () => {
     await updateDataViewOptions(dataView_gallery_1.id, options);
 
-    expect(DataViewsStore.get(dataView_gallery_1.id)).toEqual(updatedView);
+    expect(DataViewsStore).toHaveItem(dataView_gallery_1.id, updatedView);
   });
 
   it('returns the updated view', async () => {

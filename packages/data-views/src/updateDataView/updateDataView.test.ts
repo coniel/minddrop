@@ -36,7 +36,7 @@ describe('updateDataView', () => {
   it('updates the view in the store', async () => {
     await updateDataView(dataView_gallery_1.id, update);
 
-    expect(DataViewsStore.get(dataView_gallery_1.id)).toEqual(updatedView);
+    expect(DataViewsStore).toHaveItem(dataView_gallery_1.id, updatedView);
   });
 
   it('writes the view to the file system', async () => {
@@ -83,10 +83,10 @@ describe('updateDataView', () => {
     });
 
     // Old ID should be removed
-    expect(DataViewsStore.get(dataView_virtual_1.id)).toBeNull();
+    expect(DataViewsStore).not.toHaveItem(dataView_virtual_1.id);
 
     // New ID should exist
-    expect(DataViewsStore.get('new-virtual-id')).not.toBeNull();
+    expect(DataViewsStore).toHaveItem('new-virtual-id');
     expect(result.id).toBe('new-virtual-id');
   });
 

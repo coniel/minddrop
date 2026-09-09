@@ -24,7 +24,7 @@ describe('onFileSystemChanged', () => {
 
     await onFileSystemChanged(change(viewPath, 'modified'));
 
-    expect(DataViewsStore.get(dataView_gallery_1.id)).toEqual({
+    expect(DataViewsStore).toHaveItem(dataView_gallery_1.id, {
       ...modified,
       references: [],
     });
@@ -37,7 +37,7 @@ describe('onFileSystemChanged', () => {
 
     await onFileSystemChanged(change(resolveViewPath(created.id), 'created'));
 
-    expect(DataViewsStore.get(created.id)).toEqual({
+    expect(DataViewsStore).toHaveItem(created.id, {
       ...created,
       references: [],
     });
@@ -46,7 +46,7 @@ describe('onFileSystemChanged', () => {
   it('removes an externally deleted view from the store', async () => {
     await onFileSystemChanged(change(viewPath, 'deleted'));
 
-    expect(DataViewsStore.get(dataView_gallery_1.id)).toBeNull();
+    expect(DataViewsStore).not.toHaveItem(dataView_gallery_1.id);
   });
 
   it('ignores files which are not views', async () => {
@@ -54,7 +54,7 @@ describe('onFileSystemChanged', () => {
       change(`${dataViewsRootPath}/notes.md`, 'deleted'),
     );
 
-    expect(DataViewsStore.get(dataView_gallery_1.id)).not.toBeNull();
+    expect(DataViewsStore).toHaveItem(dataView_gallery_1.id);
   });
 
   it('ignores files outside the views directory', async () => {
@@ -62,7 +62,7 @@ describe('onFileSystemChanged', () => {
       change(`workspace/${dataView_gallery_1.id}.json`, 'deleted'),
     );
 
-    expect(DataViewsStore.get(dataView_gallery_1.id)).not.toBeNull();
+    expect(DataViewsStore).toHaveItem(dataView_gallery_1.id);
   });
 
   it('ignores changes to files which are not valid views', async () => {
@@ -71,7 +71,8 @@ describe('onFileSystemChanged', () => {
 
     await onFileSystemChanged(change(viewPath, 'modified'));
 
-    expect(DataViewsStore.get(dataView_gallery_1.id)).toEqual(
+    expect(DataViewsStore).toHaveItem(
+      dataView_gallery_1.id,
       dataView_gallery_1,
     );
   });

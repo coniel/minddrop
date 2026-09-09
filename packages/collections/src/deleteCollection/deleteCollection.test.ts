@@ -14,7 +14,7 @@ describe('deleteCollection', () => {
   it('deletes the collection from the store', async () => {
     await deleteCollection(collection_1.id);
 
-    expect(CollectionsStore.get(collection_1.id)).toBeNull();
+    expect(CollectionsStore).not.toHaveItem(collection_1.id);
   });
 
   it('deletes the collection config from the file system', async () => {

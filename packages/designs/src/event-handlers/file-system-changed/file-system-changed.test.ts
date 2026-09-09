@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { FileSystemChange } from '@minddrop/file-system';
+import { storeItem } from '@minddrop/stores/test-utils';
 import { DesignsStore } from '../../DesignsStore';
 import { DesignFixtures, MockFs, cleanup, setup } from '../../test-utils';
 import { resolveDesignBundleDirPath, resolveDesignFilePath } from '../../utils';
@@ -22,7 +23,9 @@ describe('onFileSystemChanged', () => {
 
     await onFileSystemChanged(change(designFilePath, 'modified'));
 
-    expect(DesignsStore.get(design_books.id)?.name).toBe('Renamed design');
+    expect(storeItem(DesignsStore, design_books.id).name).toBe(
+      'Renamed design',
+    );
   });
 
   it('adds an externally created design to the store', async () => {
@@ -38,19 +41,19 @@ describe('onFileSystemChanged', () => {
       change(resolveDesignFilePath(created.id), 'created'),
     );
 
-    expect(DesignsStore.get(created.id)).not.toBeNull();
+    expect(DesignsStore).toHaveItem(created.id);
   });
 
   it('removes a design whose design file was deleted', async () => {
     await onFileSystemChanged(change(designFilePath, 'deleted'));
 
-    expect(DesignsStore.get(design_books.id)).toBeNull();
+    expect(DesignsStore).not.toHaveItem(design_books.id);
   });
 
   it('removes a design whose bundle directory was deleted', async () => {
     await onFileSystemChanged(change(bundleDirPath, 'deleted'));
 
-    expect(DesignsStore.get(design_books.id)).toBeNull();
+    expect(DesignsStore).not.toHaveItem(design_books.id);
   });
 
   it('ignores changes to a design bundle media files', async () => {
@@ -58,7 +61,7 @@ describe('onFileSystemChanged', () => {
       change(`${bundleDirPath}/media/image.png`, 'deleted'),
     );
 
-    expect(DesignsStore.get(design_books.id)).not.toBeNull();
+    expect(DesignsStore).toHaveItem(design_books.id);
   });
 
   it('ignores files outside the designs directory', async () => {
@@ -66,7 +69,7 @@ describe('onFileSystemChanged', () => {
       change(`workspace/${design_books.id}`, 'deleted'),
     );
 
-    expect(DesignsStore.get(design_books.id)).not.toBeNull();
+    expect(DesignsStore).toHaveItem(design_books.id);
   });
 
   it('ignores changes to files which are not valid designs', async () => {
@@ -75,7 +78,9 @@ describe('onFileSystemChanged', () => {
 
     await onFileSystemChanged(change(designFilePath, 'modified'));
 
-    expect(DesignsStore.get(design_books.id)?.name).toBe(design_books.name);
+    expect(storeItem(DesignsStore, design_books.id).name).toBe(
+      design_books.name,
+    );
   });
 });
 

@@ -43,7 +43,7 @@ describe('createQuery', () => {
   it('adds the query to the store', async () => {
     const query = await createQuery();
 
-    expect(QueriesStore.get(query.id)).toEqual(newQuery);
+    expect(QueriesStore).toHaveItem(query.id, newQuery);
   });
 
   it('writes the query config to the file system', async () => {

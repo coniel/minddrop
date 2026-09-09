@@ -12,12 +12,12 @@ describe('initializeTags', () => {
   it('loads tags into the store', async () => {
     await initializeTags();
 
-    expect(TagsStore.getAllArray()).toEqual(tags);
+    expect(TagsStore).toHaveItems(tags);
   });
 
   it('loads tag groups into the store', async () => {
     await initializeTags();
 
-    expect(TagGroupsStore.getAllArray()).toEqual(tagGroups);
+    expect(TagGroupsStore).toHaveItems(tagGroups);
   });
 });

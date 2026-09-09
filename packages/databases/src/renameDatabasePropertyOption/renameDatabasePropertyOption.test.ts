@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
+import { storeItem } from '@minddrop/stores/test-utils';
 import { InvalidParameterError } from '@minddrop/utils';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabasePropertyOptionRenamedEvent } from '../events';
@@ -78,9 +79,10 @@ describe('renameDatabasePropertyOption', () => {
       'Doing',
     );
 
-    const property = DatabasesStore.get(selectDatabase.id)?.properties.find(
-      (candidate) => candidate.name === 'Status',
-    );
+    const property = storeItem(
+      DatabasesStore,
+      selectDatabase.id,
+    ).properties.find((candidate) => candidate.name === 'Status');
 
     expect(property).toMatchObject({
       options: [

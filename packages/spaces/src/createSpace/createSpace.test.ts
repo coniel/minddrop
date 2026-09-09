@@ -61,7 +61,8 @@ describe('createSpace', () => {
   it('registers the design as a virtual design owned by the space', async () => {
     const space = await createSpace();
 
-    expect(Designs.Store.get(space.design.id)).toEqual(
+    expect(Designs.Store).toHaveItem(
+      space.design.id,
       expect.objectContaining({
         type: 'space',
         virtual: true,
@@ -73,7 +74,7 @@ describe('createSpace', () => {
   it('adds the space to the store', async () => {
     const space = await createSpace();
 
-    expect(SpacesStore.get(space.id)).toEqual(newSpace);
+    expect(SpacesStore).toHaveItem(space.id, newSpace);
   });
 
   it('writes the space config to the file system', async () => {

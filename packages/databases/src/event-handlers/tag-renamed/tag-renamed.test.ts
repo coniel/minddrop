@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { History } from '@minddrop/history';
+import { storeItem } from '@minddrop/stores/test-utils';
 import { TagFixtures } from '@minddrop/tags/test-utils';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabasesStore } from '../../DatabasesStore';
@@ -80,8 +81,8 @@ describe('onTagRenamed', () => {
 
     // The entry's value should carry the new name in place of the
     // old one.
-    const entry = DatabaseEntriesStore.get(taggedEntry.id);
-    expect(entry?.properties.Tags).toEqual(['Later', 'Home']);
+    const entry = storeItem(DatabaseEntriesStore, taggedEntry.id);
+    expect(entry.properties.Tags).toEqual(['Later', 'Home']);
   });
 
   it('dedupes when the new name is already present', async () => {
@@ -93,8 +94,8 @@ describe('onTagRenamed', () => {
     await onTagRenamed({ original: originalTag, updated: renamedTag });
 
     // The mapped name should collapse into the existing one
-    const entry = DatabaseEntriesStore.get(taggedEntry.id);
-    expect(entry?.properties.Tags).toEqual(['Later']);
+    const entry = storeItem(DatabaseEntriesStore, taggedEntry.id);
+    expect(entry.properties.Tags).toEqual(['Later']);
   });
 
   it('writes the rewritten entry to the file system', async () => {
@@ -125,8 +126,8 @@ describe('onTagRenamed', () => {
     });
 
     // The entry should be unchanged
-    const entry = DatabaseEntriesStore.get(taggedEntry.id);
-    expect(entry?.properties.Tags).toEqual(['Urgent', 'Home']);
+    const entry = storeItem(DatabaseEntriesStore, taggedEntry.id);
+    expect(entry.properties.Tags).toEqual(['Urgent', 'Home']);
 
     // No SQL statements should have been executed
     expect(getRecordedSqlStatements()).toEqual([]);
@@ -136,7 +137,7 @@ describe('onTagRenamed', () => {
     await onTagRenamed({ original: originalTag, updated: renamedTag });
 
     // The tagless database's entry should be unchanged
-    const entry = DatabaseEntriesStore.get(objectEntry1.id);
+    const entry = storeItem(DatabaseEntriesStore, objectEntry1.id);
     expect(entry).toEqual(objectEntry1);
   });
 

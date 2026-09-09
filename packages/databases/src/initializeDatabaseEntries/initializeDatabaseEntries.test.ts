@@ -21,7 +21,7 @@ describe('initializeDatabaseEntries', () => {
     initializeDatabaseEntries(databases, databaseEntries);
 
     // Should load all entries into the store
-    expect(DatabaseEntriesStore.getAllArray()).toEqual(databaseEntries);
+    expect(DatabaseEntriesStore).toHaveItems(databaseEntries);
   });
 
   it('hydrates virtual collections from entries with collection properties', () => {

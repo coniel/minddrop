@@ -61,13 +61,13 @@ describe('addWorkspace', () => {
 
     await addWorkspace(workspace_1.path);
 
-    expect(WorkspacesStore.getAllArray()).toEqual([workspace_1]);
+    expect(WorkspacesStore).toHaveItems([workspace_1]);
   });
 
   it('adds the workspace to the store if it is an existing workspace', async () => {
     await addWorkspace(workspace_1.path);
 
-    expect(WorkspacesStore.get(workspace_1.id)).toEqual(workspace_1);
+    expect(WorkspacesStore).toHaveItem(workspace_1.id, workspace_1);
   });
 
   it('initializes the workspace if it is a new workspace', async () => {
@@ -83,7 +83,7 @@ describe('addWorkspace', () => {
     // Should write the workspace config
     expect(config).toMatchObject(omitPath(newWorkspace));
     // Should add the workspace to the store
-    expect(WorkspacesStore.get(config.id)).toEqual(newWorkspace);
+    expect(WorkspacesStore).toHaveItem(config.id, newWorkspace);
   });
 
   it('writes the workspaces config', async () => {
@@ -109,7 +109,7 @@ describe('addWorkspace', () => {
 
     const result = await addWorkspace(newWorkspacePath);
 
-    expect(ActiveWorkspaceStore.get('id')).toBe(result.id);
+    expect(ActiveWorkspaceStore).toHaveStoredValue('id', result.id);
   });
 
   it('makes an already listed workspace active', async () => {
@@ -117,7 +117,7 @@ describe('addWorkspace', () => {
 
     await addWorkspace(workspace_1.path);
 
-    expect(ActiveWorkspaceStore.get('id')).toBe(workspace_1.id);
+    expect(ActiveWorkspaceStore).toHaveStoredValue('id', workspace_1.id);
   });
 
   it('dispatches a workspaces loaded event', async () =>

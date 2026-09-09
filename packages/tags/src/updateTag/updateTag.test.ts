@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
+import { storeItem } from '@minddrop/stores/test-utils';
 import { InvalidParameterError } from '@minddrop/utils';
 import { TagsStore } from '../TagsStore';
 import { TagGroupNotFoundError } from '../errors';
@@ -34,7 +35,7 @@ describe('updateTag', () => {
   it('updates the tag in the store', async () => {
     await updateTag(tag_1.id, update);
 
-    expect(TagsStore.get(tag_1.id)).toEqual(updatedTag);
+    expect(TagsStore).toHaveItem(tag_1.id, updatedTag);
   });
 
   it('writes the tag config to the file system', async () => {
@@ -110,7 +111,7 @@ describe('updateTag', () => {
   it('assigns the tag to the given group', async () => {
     const tag = await updateTag(tag_1.id, { group: tagGroup_1.id });
 
-    expect(TagsStore.get(tag_1.id)?.group).toBe(tagGroup_1.id);
+    expect(storeItem(TagsStore, tag_1.id).group).toBe(tagGroup_1.id);
     expect(tag.group).toBe(tagGroup_1.id);
   });
 
@@ -127,27 +128,27 @@ describe('updateTag', () => {
     await updateTag(tag_1.id, { group: null });
 
     // The tag should no longer carry the group
-    expect(TagsStore.get(tag_1.id)?.group).toBeUndefined();
+    expect(storeItem(TagsStore, tag_1.id).group).toBeUndefined();
   });
 
   it('updates the tag icon', async () => {
     await updateTag(tag_1.id, { icon: 'lucide:star:yellow' });
 
-    expect(TagsStore.get(tag_1.id)?.icon).toBe('lucide:star:yellow');
+    expect(storeItem(TagsStore, tag_1.id).icon).toBe('lucide:star:yellow');
   });
 
   it('syncs the tag color to an updated icon', async () => {
     await updateTag(tag_1.id, { icon: 'lucide:star:yellow' });
 
     // The tag should take the icon's color
-    expect(TagsStore.get(tag_1.id)?.color).toBe('yellow');
+    expect(storeItem(TagsStore, tag_1.id).color).toBe('yellow');
   });
 
   it('recolors the icon on color updates', async () => {
     await updateTag(tag_1.id, { color: 'yellow' });
 
     // The icon should take the tag's new color
-    expect(TagsStore.get(tag_1.id)?.icon).toBe('lucide:tag:yellow');
+    expect(storeItem(TagsStore, tag_1.id).icon).toBe('lucide:tag:yellow');
   });
 
   it('leaves the group untouched when not given', async () => {
@@ -158,6 +159,6 @@ describe('updateTag', () => {
     await updateTag(tag_1.id, { color: 'yellow' });
 
     // The tag should still carry the group
-    expect(TagsStore.get(tag_1.id)?.group).toBe(tagGroup_1.id);
+    expect(storeItem(TagsStore, tag_1.id).group).toBe(tagGroup_1.id);
   });
 });

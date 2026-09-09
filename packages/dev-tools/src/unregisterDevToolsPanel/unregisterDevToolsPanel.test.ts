@@ -17,13 +17,14 @@ describe('unregisterDevToolsPanel', () => {
   it('removes the panel from the store', () => {
     unregisterDevToolsPanel(logsPanelConfig.id);
 
-    expect(DevToolsPanelsStore.get(logsPanelConfig.id)).toBeNull();
+    expect(DevToolsPanelsStore).not.toHaveItem(logsPanelConfig.id);
   });
 
   it('leaves other panels registered', () => {
     unregisterDevToolsPanel(logsPanelConfig.id);
 
-    expect(DevToolsPanelsStore.get(eventsPanelConfig.id)).toEqual(
+    expect(DevToolsPanelsStore).toHaveItem(
+      eventsPanelConfig.id,
       eventsPanelConfig,
     );
   });

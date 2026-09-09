@@ -43,7 +43,7 @@ describe('<NewSpaceDialog />', () => {
     await user.click(screen.getByText('spaces.form.actions.create'));
 
     // No space was created
-    expect(Spaces.Store.getAllArray()).toEqual([]);
+    expect(Spaces.Store).toHaveItems([]);
   });
 
   it('creates the space on submit', async () => {

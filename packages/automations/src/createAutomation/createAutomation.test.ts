@@ -46,7 +46,7 @@ describe('createAutomation', () => {
   it('adds the automation to the store', async () => {
     const automation = await createAutomation();
 
-    expect(AutomationsStore.get(automation.id)).toEqual(newAutomation);
+    expect(AutomationsStore).toHaveItem(automation.id, newAutomation);
   });
 
   it('writes the automation config to the file system', async () => {

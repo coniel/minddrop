@@ -17,14 +17,14 @@ describe('initializeDesigns', () => {
   it('registers the built-in design roles', async () => {
     await initializeDesigns();
 
-    expect(DesignRolesStore.getAllArray()).toEqual(BuiltInDesignRoles);
+    expect(DesignRolesStore).toHaveItems(BuiltInDesignRoles);
   });
 
   it('loads designs from the file system into the store', async () => {
     await initializeDesigns();
 
-    expect(DesignsStore.get(design_books.id)).toEqual(design_books);
-    expect(DesignsStore.get(design_empty.id)).toEqual(design_empty);
+    expect(DesignsStore).toHaveItem(design_books.id, design_books);
+    expect(DesignsStore).toHaveItem(design_empty.id, design_empty);
   });
 
   it('skips entries which are not valid design bundles', async () => {
@@ -37,7 +37,7 @@ describe('initializeDesigns', () => {
 
     await initializeDesigns();
 
-    expect(DesignsStore.get('design_invalid')).toBeNull();
+    expect(DesignsStore).not.toHaveItem('design_invalid');
   });
 
   it('dispatches a designs loaded event', async () =>

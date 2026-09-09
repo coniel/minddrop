@@ -78,14 +78,14 @@ describe('clearDatabaseEntries', () => {
 
     // The store should no longer contain any of the database's entries
     expect(getAllDatabaseEntries(objectDatabase.id)).toHaveLength(0);
-    expect(DatabaseEntriesStore.get(objectEntry1.id)).toBeNull();
+    expect(DatabaseEntriesStore).not.toHaveItem(objectEntry1.id);
   });
 
   it("leaves other databases' entries intact", async () => {
     await clearDatabaseEntries(objectDatabase.id);
 
     // Entries belonging to other databases should remain
-    expect(DatabaseEntriesStore.get(urlEntry1.id)).not.toBeNull();
+    expect(DatabaseEntriesStore).toHaveItem(urlEntry1.id);
     expect(getAllDatabaseEntries(urlDatabase.id).length).toBeGreaterThan(0);
   });
 

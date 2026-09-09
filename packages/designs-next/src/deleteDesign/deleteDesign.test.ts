@@ -21,7 +21,7 @@ describe('deleteDesign', () => {
   it('removes the design from the store', async () => {
     await deleteDesign(cardDesign_1.id);
 
-    expect(DesignsStore.get(cardDesign_1.id)).toBeNull();
+    expect(DesignsStore).not.toHaveItem(cardDesign_1.id);
   });
 
   it('removes the design file', async () => {
@@ -33,7 +33,7 @@ describe('deleteDesign', () => {
   it('removes owned designs from the store', async () => {
     await deleteDesign(ownedCardDesign_1.id);
 
-    expect(DesignsStore.get(ownedCardDesign_1.id)).toBeNull();
+    expect(DesignsStore).not.toHaveItem(ownedCardDesign_1.id);
   });
 
   it('throws if the design does not exist', async () => {

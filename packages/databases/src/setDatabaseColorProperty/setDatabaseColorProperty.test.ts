@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { storeItem } from '@minddrop/stores/test-utils';
 import { InvalidParameterError } from '@minddrop/utils';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabaseNotFoundError } from '../errors';
@@ -31,17 +32,17 @@ describe('setDatabaseColorProperty', () => {
   it('assigns the color property', async () => {
     await setDatabaseColorProperty(entryTemplatesDatabase.id, 'Status');
 
-    expect(DatabasesStore.get(entryTemplatesDatabase.id)?.colorProperty).toBe(
-      'Status',
-    );
+    expect(
+      storeItem(DatabasesStore, entryTemplatesDatabase.id).colorProperty,
+    ).toBe('Status');
   });
 
   it('clears the color property when set to null', async () => {
     await setDatabaseColorProperty(entryTemplatesDatabase.id, 'Status');
     await setDatabaseColorProperty(entryTemplatesDatabase.id, null);
 
-    expect(DatabasesStore.get(entryTemplatesDatabase.id)?.colorProperty).toBe(
-      null,
-    );
+    expect(
+      storeItem(DatabasesStore, entryTemplatesDatabase.id).colorProperty,
+    ).toBe(null);
   });
 });

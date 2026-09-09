@@ -1,3 +1,5 @@
+// Registers the store assertion matchers
+import '@minddrop/stores/test-utils';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { ThemeStore } from '../ThemeStore';
@@ -15,7 +17,7 @@ describe('setInvertLightImages', () => {
     setInvertLightImages(true);
 
     // Should set the value in the theme store
-    expect(ThemeStore.get('invertLightImages')).toBe(true);
+    expect(ThemeStore).toHaveStoredValue('invertLightImages', true);
   });
 
   it('dispatches a `theme:invert-light-images:changed` event', () =>

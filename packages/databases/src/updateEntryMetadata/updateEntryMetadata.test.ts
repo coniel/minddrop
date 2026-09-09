@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { storeItem } from '@minddrop/stores/test-utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabaseEntryNotFoundError } from '../errors';
 import {
@@ -42,7 +43,7 @@ describe('updateEntryMetadata', () => {
     await updateEntryMetadata(objectEntry1.id, entryMetadata);
 
     // The store entry should reflect the updated metadata
-    expect(DatabaseEntriesStore.get(objectEntry1.id)?.metadata).toEqual(
+    expect(storeItem(DatabaseEntriesStore, objectEntry1.id).metadata).toEqual(
       entryMetadata,
     );
   });

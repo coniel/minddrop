@@ -14,7 +14,7 @@ describe('deleteQuery', () => {
   it('deletes the query from the store', async () => {
     await deleteQuery(query_1.id);
 
-    expect(QueriesStore.get(query_1.id)).toBeNull();
+    expect(QueriesStore).not.toHaveItem(query_1.id);
   });
 
   it('deletes the query config from the file system', async () => {

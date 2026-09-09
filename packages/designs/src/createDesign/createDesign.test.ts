@@ -22,7 +22,7 @@ describe('createDesign', () => {
   it('adds the design to the store', async () => {
     const result = await createDesign({ type: 'database', name: 'Books' });
 
-    expect(DesignsStore.get(result.id)).toEqual(result);
+    expect(DesignsStore).toHaveItem(result.id, result);
   });
 
   it('writes the design to the file system', async () => {

@@ -20,7 +20,7 @@ describe('deleteDataView', () => {
   it('removes the view from the store', async () => {
     await deleteDataView(dataView_gallery_1.id);
 
-    expect(DataViewsStore.get(dataView_gallery_1.id)).toBeNull();
+    expect(DataViewsStore).not.toHaveItem(dataView_gallery_1.id);
   });
 
   it('deletes the view file', async () => {
@@ -38,7 +38,7 @@ describe('deleteDataView', () => {
     await deleteDataView(dataView_virtual_1.id);
 
     // Should not throw or attempt file deletion
-    expect(DataViewsStore.get(dataView_virtual_1.id)).toBeNull();
+    expect(DataViewsStore).not.toHaveItem(dataView_virtual_1.id);
   });
 
   it('dispatches a view deleted event', async () =>

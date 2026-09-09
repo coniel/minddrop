@@ -24,7 +24,7 @@ describe('updateQuery', () => {
   it('updates the query in the store', async () => {
     await updateQuery(query_1.id, update);
 
-    expect(QueriesStore.get(query_1.id)).toEqual(updatedQuery);
+    expect(QueriesStore).toHaveItem(query_1.id, updatedQuery);
   });
 
   it('writes the query config to the file system', async () => {

@@ -42,7 +42,7 @@ describe('duplicateDatabaseEntry', () => {
     // The duplicate's file should be written next to the source file
     expect(MockFs.exists(`${objectDatabase.path}/Test Entry 1.md`)).toBe(true);
     // The duplicate should be in the store
-    expect(DatabaseEntriesStore.get(duplicate.id)).not.toBeNull();
+    expect(DatabaseEntriesStore).toHaveItem(duplicate.id);
   });
 
   it('marks the duplicate with its origin', async () => {
@@ -58,7 +58,7 @@ describe('duplicateDatabaseEntry', () => {
     await duplicateDatabaseEntry(objectEntry1.id);
 
     // The source entry and its file should be untouched
-    expect(DatabaseEntriesStore.get(objectEntry1.id)).toEqual(objectEntry1);
+    expect(DatabaseEntriesStore).toHaveItem(objectEntry1.id, objectEntry1);
     expect(MockFs.exists(objectEntry1.path)).toBe(true);
   });
 

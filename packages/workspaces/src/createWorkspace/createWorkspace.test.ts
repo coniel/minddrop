@@ -91,7 +91,7 @@ describe('createWorkspace', () => {
   it('makes the new workspace active', async () => {
     const result = await createWorkspace(workspacesRootPath, options);
 
-    expect(ActiveWorkspaceStore.get('id')).toBe(result.id);
+    expect(ActiveWorkspaceStore).toHaveStoredValue('id', result.id);
   });
 
   it('dispatches a workspace created event', async () =>

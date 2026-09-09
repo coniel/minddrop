@@ -23,7 +23,7 @@ describe('loadTags', () => {
   it('loads tags from the tags directory into the store', async () => {
     await loadTags();
 
-    expect(TagsStore.getAllArray()).toEqual(tags);
+    expect(TagsStore).toHaveItems(tags);
   });
 
   it('filters out null tags', async () => {
@@ -32,7 +32,7 @@ describe('loadTags', () => {
 
     await loadTags();
 
-    expect(TagsStore.getAllArray()).toEqual(tags);
+    expect(TagsStore).toHaveItems(tags);
   });
 
   it('dispatches a tags loaded event', async () =>

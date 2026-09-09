@@ -14,7 +14,7 @@ describe('loadVirtualDesigns', () => {
   it('loads the designs into the store with the virtual flag set', () => {
     const [design] = loadVirtualDesigns([design_space_virtual_data]);
 
-    expect(DesignsStore.get(design.id)).toEqual(design);
+    expect(DesignsStore).toHaveItem(design.id, design);
     expect(design.virtual).toBe(true);
     expect(design.created).toBeInstanceOf(Date);
   });

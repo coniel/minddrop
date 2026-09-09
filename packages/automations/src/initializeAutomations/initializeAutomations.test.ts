@@ -29,8 +29,8 @@ describe('initializeAutomations', () => {
   it('loads the automations into the store', async () => {
     await initializeAutomations();
 
-    expect(AutomationsStore.getAllArray().length).toBe(automations.length);
-    expect(AutomationsStore.get(automation_1.id)).toEqual(automation_1);
+    expect(AutomationsStore).toHaveItemCount(automations.length);
+    expect(AutomationsStore).toHaveItem(automation_1.id, automation_1);
   });
 
   it('dispatches the automations loaded event', async () =>

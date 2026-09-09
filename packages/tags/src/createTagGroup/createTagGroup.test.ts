@@ -46,7 +46,7 @@ describe('createTagGroup', () => {
   it('adds the group to the store', async () => {
     const group = await createTagGroup('Topics');
 
-    expect(TagGroupsStore.get(group.id)).toEqual(newGroup);
+    expect(TagGroupsStore).toHaveItem(group.id, newGroup);
   });
 
   it('writes the group config to the file system', async () => {

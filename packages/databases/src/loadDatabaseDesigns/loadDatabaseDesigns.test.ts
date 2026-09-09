@@ -41,7 +41,7 @@ describe('loadDatabaseDesigns', () => {
   it('does nothing when databases have no designs', async () => {
     await loadDatabaseDesigns([objectDatabase]);
 
-    expect(Designs.Store.getAllArray()).toHaveLength(0);
+    expect(Designs.Store).toHaveItemCount(0);
   });
 
   it('loads designs from multiple databases', async () => {
