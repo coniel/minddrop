@@ -8,10 +8,20 @@ import { InvalidParameterError } from '@minddrop/utils';
  * @param path - The path to strip the directory from.
  * @returns The path relative to the directory.
  *
- * @throws {InvalidParameterError} If the path is not inside the directory.
+ * @throws {InvalidParameterError} If the directory is empty, or the path is not inside it.
  */
 export function relativePath(dirPath: string, path: string): string {
   const dir = trimTrailingSlash(dirPath);
+
+  // Every absolute path starts with the separator, so an empty
+  // directory would pass the check below and strip nothing but the
+  // leading slash, turning an absolute path into a plausible looking
+  // relative one. Reject it rather than invent a path.
+  if (!dir) {
+    throw new InvalidParameterError(
+      `Cannot resolve '${path}' against an empty directory`,
+    );
+  }
 
   // The directory addresses itself as an empty path
   if (path === dir) {

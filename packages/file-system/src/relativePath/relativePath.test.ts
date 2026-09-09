@@ -31,6 +31,15 @@ describe('relativePath', () => {
     ).toThrow(InvalidParameterError);
   });
 
+  it('throws on an empty directory rather than stripping the leading slash', () => {
+    expect(() => relativePath('', '/Users/test/Notes')).toThrow(
+      InvalidParameterError,
+    );
+    expect(() => relativePath('/', '/Users/test/Notes')).toThrow(
+      InvalidParameterError,
+    );
+  });
+
   it('throws on a partial segment match', () => {
     expect(() =>
       relativePath('path/to/workspace', 'path/to/workspace-2/Notes'),
