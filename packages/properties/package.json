@@ -17,9 +17,10 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "@minddrop/file-system": "workspace:*",
     "@minddrop/i18n": "workspace:*",
-    "@minddrop/ui-theme": "workspace:*",
     "@minddrop/ui-icons": "workspace:*",
+    "@minddrop/ui-theme": "workspace:*",
     "@minddrop/utils": "workspace:*"
   }
 }

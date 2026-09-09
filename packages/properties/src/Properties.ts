@@ -22,6 +22,7 @@ export { parsePropertiesFromJson as fromJson } from './parsePropertiesFromJson';
 export { stringifyPropertiesToJson as toJson } from './stringifyPropertiesToJson';
 export { generateDefaultProperties as defaults } from './generateDefaultProperties';
 export {
+  formatPropertyValue as formatValue,
   isFileBasedProperty as isFileBased,
   isMultiselectProperty as isMultiselect,
   isUrlProperty as isUrl,
