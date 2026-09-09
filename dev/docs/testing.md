@@ -1,0 +1,135 @@
+# Testing
+
+How tests are written in this codebase. The governing rule is that a test only counts once it has been seen to fail for the right reason. A test that has only ever been green is an untested test, and this codebase has shipped bugs behind several of them.
+
+The reference suites are `packages/designs-next` (core: pure utils, API functions, store and events) and `ui/designs-next` (UI: rendering and interaction).
+
+## The rule
+
+**Never keep a test you have not watched fail.** Passing against correct code proves only that the test does not falsely fail. It says nothing about whether the test can fail at all, which is the property you actually want.
+
+There are two ways to get that evidence, and either is fine:
+
+- **Write the test first** and watch it go red before the code exists.
+- **Mutate the mechanism** after the fact: break the thing the test claims to cover, confirm that test fails, restore.
+
+Both are cheap. A scripted mutation sweep over nine mechanisms in one component takes about a minute.
+
+### Red is weaker than wrong
+
+The red step proves a test fails when the behaviour is **absent**. It does not prove the test fails when the behaviour is **wrong**. Those come apart whenever the test's model of the world is itself mistaken, and that is exactly where the expensive bugs live.
+
+A worked example from `DesignBlockEditor`. Six tests asserted that the element insert menu was open after the user's gesture. All six were green. The feature was broken in the browser: the menu opened on `pointerup`, and the `click` a browser fires immediately after dismissed it again. The tests never saw it because `fireEvent.pointerUp` does not synthesize the trailing `click`. Written test-first, they would have gone red (no implementation), then green (implementation on `pointerup`), and the bug would have shipped anyway. The flaw was in the event sequence the test modelled, not in the order the test was written.
+
+So: prefer test-first where it fits, but treat "does this test model what the browser actually does?" as a separate question that the red step does not answer.
+
+## When to write tests first
+
+**Core packages: yes, by default.** Pure utils, API functions, store mutations, validation. The behaviour is specifiable before it exists, the test environment has no gap with reality, and every core API function needs tests regardless. Writing `floorToMultiple`'s tests first pins the floor-versus-round semantics before the implementation can quietly pick one.
+
+**Interaction and visual work: no.** Where the specification emerges from looking at the thing — how bright a marker is, how long a press waits before it counts as a drag, which grid square a pointer belongs to — tests written up front are churn, and they anchor the implementation to the first guess. Build it, settle it, then mutation-verify the tests you keep.
+
+## What the environment cannot see
+
+`vitest` runs against jsdom, which is not a browser. It does not lay anything out and it does not implement pointer semantics. Three gaps have each produced a bug here:
+
+- **Derived events do not fire.** `fireEvent` dispatches exactly the event named. A browser derives `click` from a press-release pair, and `mouseover`/`mouseout` pairs from movement; jsdom derives nothing. A gesture test must fire the whole sequence by hand, including the trailing `click`. `userEvent` synthesizes more of it and is the better default for multi-event gestures.
+- **`getBoundingClientRect` returns zeroes.** Anything reading measured geometry silently takes its fallback path. Tests that need a real measurement stub the method on the element (see `divides pointer deltas by the measured display scale`).
+- **Third-party pointer behaviour is absent.** Base UI's popover dismissal, focus management and hover interactions do not run. A menu that closes itself in the browser stays open in jsdom.
+
+When behaviour cannot be expressed in this environment, **leave it to end-to-end tests in a proper framework rather than writing a unit test that only looks like coverage**. A green test that cannot fail is worse than no test: it stops anyone looking.
+
+Where a unit test pins the _contract_ a fix relies on but cannot reproduce the browser behaviour that caused the bug, say so in the test name or a comment, so its green is not read as more than it is.
+
+## Test rot
+
+A test can be correct when written and vacuous later. In `DesignBlockEditor`, `fireEvent.click(title)` asserting that a click on a block leaves the selection alone was real while selection ran on `click`; when selection moved to `pointerdown` the assertion triggered no code path at all and passed regardless of what the guard did.
+
+Neither test-first nor a one-time mutation check catches this. **When you change the mechanism a behaviour runs on, re-verify the tests that cover it** — the ones that keep passing without modification are the suspects.
+
+## Structure
+
+Tests sit beside the code they cover, in the same directory: `createDesign/createDesign.test.ts`, `DesignBlockEditor/DesignBlockEditor.test.tsx`. A file with a test is a file with a companion, so it lives in its own directory behind a barrel `index.ts`.
+
+Each package owns a `src/test-utils/` directory exporting `setup` and `cleanup` plus its fixtures, and re-exports them from `<package>/test-utils`. `setup` loads fixtures into the store and installs fake timers; `cleanup` clears stores, settles the mock file system and restores timers.
+
+```ts
+describe('createDesign', () => {
+  beforeEach(setup);
+
+  afterEach(cleanup);
+});
+```
+
+UI packages add their own `src/test-utils.ts` on top, registering translations and any element configs the rendered components resolve.
+
+## Fixtures
+
+**Never build mock objects by hand.** Spread from a fixture instead, so a change to the entity shape reaches every test.
+
+**Destructure from the main fixture object**, never import a fixture file directly:
+
+```ts
+// GOOD
+const { objectEntry1 } = DatabaseFixtures;
+
+// BAD
+import { objectEntry1 } from '../test-utils/database-entries.fixtures';
+```
+
+Fixture modules are exported twice from a package's `test-utils` barrel — flat, and namespaced as `DesignFixtures`, `ElementConfigFixtures` — and the namespaced form is the one to use.
+
+## Assert outcomes, not calls
+
+**Avoid spies.** Check the store, the file system or the rendered output for the change the code was supposed to make. A spy asserts that a function was called, which is an implementation detail that survives the behaviour being wrong.
+
+```ts
+// GOOD
+await createDesign({ type: 'card', name: 'My design' });
+
+expect(DesignsStore.get(design.id)).toEqual(newDesign);
+
+// BAD
+expect(writeDesignSpy).toHaveBeenCalledWith(design);
+```
+
+`Foo.Store` is exported for exactly this: tests read and seed stores directly, while app and feature code always goes through the API functions.
+
+The mock file system is asserted the same way, through `MockFs.exists(path)` and its readers rather than through spies on `Fs`.
+
+Events are asserted by listening for the real dispatch:
+
+```ts
+it('dispatches the design created event', async () =>
+  new Promise<void>((done) => {
+    Events.addListener(DesignCreatedEvent, 'test-design-created', (payload) => {
+      expect(payload).toEqual(newDesign);
+      done();
+    });
+
+    createDesign({ type: 'card', name: 'My design' });
+  }));
+```
+
+## Naming
+
+A test name states the behaviour, in the same voice as a JSDoc summary: `inserts the picked element type on the marked grid square`, `holds the marked area inside the design`, `leaves Backspace to editable controls`. Not `it('works')`, and not the name of the function under test.
+
+Prefer a name that would read as a bug report if it failed. `marks the square a grid line closes rather than the one it opens` says what broke; `handles grid lines` does not.
+
+## Coverage expectations
+
+- **Core package API functions and utils: full coverage.** Pure functions and store mutations are cheap to test and are the layer everything else trusts.
+- **UI components: the behaviour, not the markup.** Rendering assertions are worth having where the rendered result _is_ the behaviour (a block's position, a marked area's size), but assertions that merely restate the JSX are noise.
+- **Interaction: cover what the environment can genuinely express**, mutation-verify it, and hand the rest to e2e.
+
+## Running
+
+Per package, from the package directory:
+
+```
+npx vitest run                    # the whole suite
+npx vitest run src/DesignBlockEditor   # one directory
+```
+
+At the end of a round of work, run the affected packages' suites together with prettier, eslint and `tsc --noEmit`.
