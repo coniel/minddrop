@@ -2,11 +2,16 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Events } from '@minddrop/events';
 import { FileSystemChangedEventData, Fs } from '@minddrop/file-system';
 import { Workspaces } from '@minddrop/workspaces';
-import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
+import {
+  WorkspaceFixtures,
+  cleanupWorkspaceFixtures,
+  setupWorkspaceFixtures,
+} from '@minddrop/workspaces/test-utils';
 import { MockFs, cleanup } from '../test-utils';
 import { registerWorkspaceSwitchListener } from './registerWorkspaceSwitchListener';
 
-const { workspace_2 } = WorkspaceFixtures;
+// workspace_1 is the active workspace the fixtures set up
+const { workspace_1, workspace_2, workspacesRootPath } = WorkspaceFixtures;
 const notePath = `${workspace_2.path}/note.md`;
 
 // Changes dispatched by the file system watcher
@@ -31,6 +36,7 @@ describe('registerWorkspaceSwitchListener', () => {
       },
     });
 
+    setupWorkspaceFixtures(MockFs);
     MockFs.addFiles([notePath]);
 
     // Collect the changes dispatched by the file system watcher
@@ -47,6 +53,8 @@ describe('registerWorkspaceSwitchListener', () => {
     vi.unstubAllGlobals();
     vi.useRealTimers();
 
+    cleanupWorkspaceFixtures();
+
     await cleanup();
   });
 
@@ -58,6 +66,45 @@ describe('registerWorkspaceSwitchListener', () => {
     await flushEvents();
 
     expect(reloads).toBe(1);
+  });
+
+  it("reloads the app when the active workspace's directory moves", async () => {
+    removeListener = registerWorkspaceSwitchListener(() => undefined);
+
+    Events.dispatch(Workspaces.events.Updated, {
+      original: workspace_1,
+      updated: { ...workspace_1, path: `${workspacesRootPath}/Renamed` },
+    });
+
+    await flushEvents();
+
+    expect(reloads).toBe(1);
+  });
+
+  it('does not reload when a workspace is updated in place', async () => {
+    removeListener = registerWorkspaceSwitchListener(() => undefined);
+
+    Events.dispatch(Workspaces.events.Updated, {
+      original: workspace_1,
+      updated: { ...workspace_1, icon: 'lucide:box:red' },
+    });
+
+    await flushEvents();
+
+    expect(reloads).toBe(0);
+  });
+
+  it('does not reload when an inactive workspace is renamed', async () => {
+    removeListener = registerWorkspaceSwitchListener(() => undefined);
+
+    Events.dispatch(Workspaces.events.Updated, {
+      original: workspace_2,
+      updated: { ...workspace_2, path: `${workspacesRootPath}/Renamed` },
+    });
+
+    await flushEvents();
+
+    expect(reloads).toBe(0);
   });
 
   it('stops the file system watcher', async () => {

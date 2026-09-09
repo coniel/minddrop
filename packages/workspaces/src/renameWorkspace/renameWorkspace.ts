@@ -51,17 +51,19 @@ export async function renameWorkspace(
   // Get the updated workspace
   const updatedWorkspace = getWorkspace(id);
 
-  // Dispatch a workspace updated event
-  Events.dispatch(WorkspaceUpdatedEvent, {
-    original: workspace,
-    updated: updatedWorkspace,
-  });
-
   // Write the updated workspace config to the file system
   await writeWorkspaceConfig(id);
 
   // Write the workspaces config to update the workspace path in it
   await writeWorkspacesConfig();
+
+  // Let the writes land before announcing the rename: the directory
+  // has moved, so the desktop app answers it by reloading the window,
+  // which would otherwise cut the writes short.
+  Events.dispatch(WorkspaceUpdatedEvent, {
+    original: workspace,
+    updated: updatedWorkspace,
+  });
 
   // Return the updated workspace
   return updatedWorkspace;
