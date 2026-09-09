@@ -2,6 +2,7 @@ export * from './Canvas';
 export * from './CanvasAlignmentGuides';
 export * from './CanvasChrome';
 export * from './CanvasConnectionsLayer';
+export * from './CanvasGridBackdrop';
 export * from './CanvasLasso';
 export * from './CanvasNode';
 export * from './CanvasContext';

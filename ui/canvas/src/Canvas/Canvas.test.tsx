@@ -495,4 +495,60 @@ describe('Canvas', () => {
       expect(viewport.style.getPropertyValue('--ui-canvas-zoom')).toBe('2');
     });
   });
+
+  describe('grid', () => {
+    it('renders the dot pattern inside the transform layer', () => {
+      const store = createCanvasStore({ initialGrid: 'dots' });
+
+      const { container } = renderCanvas(store);
+
+      expect(
+        container.querySelector(
+          '.ui-canvas-transform-layer > .ui-canvas-grid-backdrop-dots',
+        ),
+      ).not.toBeNull();
+    });
+
+    it('renders the line pattern inside the transform layer', () => {
+      const store = createCanvasStore({ initialGrid: 'lines' });
+
+      const { container } = renderCanvas(store);
+
+      expect(
+        container.querySelector(
+          '.ui-canvas-transform-layer > .ui-canvas-grid-backdrop-lines',
+        ),
+      ).not.toBeNull();
+    });
+
+    it('renders no pattern when the grid is none', () => {
+      const store = createCanvasStore({ initialGrid: 'none' });
+
+      const { container } = renderCanvas(store);
+
+      expect(container.querySelector('.ui-canvas-grid-backdrop')).toBeNull();
+    });
+
+    it('fades the pattern out at low zoom', () => {
+      const store = createCanvasStore();
+
+      const { container } = renderCanvas(store);
+
+      const backdrop = container.querySelector<HTMLElement>(
+        '.ui-canvas-grid-backdrop',
+      )!;
+
+      expect(backdrop.style.getPropertyValue('--ui-canvas-grid-opacity')).toBe(
+        '1',
+      );
+
+      act(() => {
+        store.setZoom(0.3);
+      });
+
+      expect(backdrop.style.getPropertyValue('--ui-canvas-grid-opacity')).toBe(
+        '0',
+      );
+    });
+  });
 });

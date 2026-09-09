@@ -1,0 +1,43 @@
+.ui-canvas-grid-backdrop {
+  position: absolute;
+  /* The grid is bounded rather than endless, spanning 2000 tiles
+     out from the origin in each direction. The zoom fade hides it
+     below 40%, where the widest viewport still sees only a couple
+     of thousand tiles, so its edges stay well out of view. */
+  top: calc(var(--ui-canvas-grid-size) * -2000);
+  left: calc(var(--ui-canvas-grid-size) * -2000);
+  width: calc(var(--ui-canvas-grid-size) * 4000);
+  height: calc(var(--ui-canvas-grid-size) * 4000);
+  background-size: var(--ui-canvas-grid-size) var(--ui-canvas-grid-size);
+  /* The fade already follows the zoom continuously, so it runs
+     without a transition. Animating one would stall the zoom every
+     time it crossed the fade band, compositing a grid this large
+     over and over for the duration of each step. */
+  opacity: var(--ui-canvas-grid-opacity);
+  pointer-events: none;
+}
+
+.ui-canvas-grid-backdrop-dots {
+  background-image: radial-gradient(
+    circle,
+    var(--border-default) 1px,
+    transparent 1px
+  );
+}
+
+/* Full lines cover far more ground than dots, so they use the
+   subtle border colour at half strength to stay quiet. The strength
+   is halved in the colour rather than the opacity, which would
+   leave the grid composited at every zoom level instead of only
+   within the fade band. */
+.ui-canvas-grid-backdrop-lines {
+  --ui-canvas-grid-line: color-mix(
+    in srgb,
+    var(--border-subtle) 50%,
+    transparent
+  );
+
+  background-image:
+    linear-gradient(to right, var(--ui-canvas-grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--ui-canvas-grid-line) 1px, transparent 1px);
+}

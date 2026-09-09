@@ -3,15 +3,12 @@ import { TranslationKey } from '@minddrop/i18n';
 import { isEditableTarget } from '@minddrop/utils';
 import { CanvasAlignmentGuides } from '../CanvasAlignmentGuides';
 import { useCanvasContext } from '../CanvasContext';
+import { CanvasGridBackdrop } from '../CanvasGridBackdrop';
 import { CanvasLasso } from '../CanvasLasso';
 import { CanvasNameField } from '../CanvasNameField';
 import { CanvasSelectionBox } from '../CanvasSelectionBox';
 import { CanvasSelectionToolbar } from '../CanvasSelectionToolbar';
-import {
-  CONNECTION_PROXIMITY,
-  GRID_SIZE,
-  LASSO_DRAG_THRESHOLD,
-} from '../constants';
+import { CONNECTION_PROXIMITY, LASSO_DRAG_THRESHOLD } from '../constants';
 import { CanvasNodeFrame, CanvasPoint, CanvasSelection } from '../types';
 import { useCanvasStore } from '../useCanvasStore';
 import { useInteractionLock } from '../useInteractionLock';
@@ -166,7 +163,6 @@ export const Canvas: React.FC<CanvasProps> = ({
   const { store, viewportRef, transformLayerRef } = useCanvasContext();
   const zoom = useCanvasStore((state) => state.zoom);
   const pan = useCanvasStore((state) => state.pan);
-  const grid = useCanvasStore((state) => state.grid);
   const isPanning = useRef(false);
   const panStart = useRef({ x: 0, y: 0, panX: 0, panY: 0 });
   const isSpaceHeld = useRef(false);
@@ -541,29 +537,17 @@ export const Canvas: React.FC<CanvasProps> = ({
     [onDrop, clientToCanvas],
   );
 
-  // Scale the dot grid background with zoom
-  const gridSize = GRID_SIZE * zoom;
-
-  // Fade out the dot grid between 40% and 30% zoom
-  const gridOpacity = Math.min(1, Math.max(0, (zoom - 0.3) / 0.1));
-
   const focusScoped = shortcutScope === 'focus';
 
   return (
     <div
       ref={viewportRef}
-      className={`ui-canvas-viewport${
-        grid === 'none' ? '' : ` ui-canvas-viewport-${grid}`
-      }${className ? ` ${className}` : ''}`}
+      className={`ui-canvas-viewport${className ? ` ${className}` : ''}`}
       style={
         {
           // Exposed so content can size hairlines and chrome
           // against the zoom.
           '--ui-canvas-zoom': zoom,
-          '--ui-canvas-grid-size': `${gridSize}px`,
-          '--ui-canvas-grid-offset-x': `${pan.x}px`,
-          '--ui-canvas-grid-offset-y': `${pan.y}px`,
-          '--ui-canvas-grid-opacity': gridOpacity,
         } as React.CSSProperties
       }
       tabIndex={focusScoped ? -1 : undefined}
@@ -584,6 +568,9 @@ export const Canvas: React.FC<CanvasProps> = ({
           transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
         }}
       >
+        {/* Background grid pattern, behind the canvas content */}
+        <CanvasGridBackdrop />
+
         {children}
 
         {/* Snapping alignment guides */}
