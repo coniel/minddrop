@@ -13,19 +13,26 @@ import {
   TextField,
 } from '@minddrop/ui-primitives';
 import { useForm } from '@minddrop/utils';
-import { Workspaces } from '@minddrop/workspaces';
+import { Workspace, Workspaces } from '@minddrop/workspaces';
 import './CreateWorkspaceForm.css';
 
 export interface CreateWorkspaceFormProps {
   /**
-   * Callback fired when the back button is clicked.
+   * The label of the cancel button.
+   * @default 'actions.cancel'
    */
-  onBack: () => void;
+  cancelLabel?: TranslationKey;
 
   /**
-   * Callback fired once the workspace has been created.
+   * Callback fired when the cancel button is clicked.
    */
-  onCreated: () => void;
+  onCancel: () => void;
+
+  /**
+   * Callback fired with the created workspace once it has
+   * been created.
+   */
+  onCreated: (workspace: Workspace) => void;
 }
 
 /**
@@ -33,7 +40,8 @@ export interface CreateWorkspaceFormProps {
  * name and icon fields.
  */
 export const CreateWorkspaceForm: React.FC<CreateWorkspaceFormProps> = ({
-  onBack,
+  cancelLabel = 'actions.cancel',
+  onCancel,
   onCreated,
 }) => {
   const [icon, setIcon] = useState(Workspaces.constants.EntityDefaultIcon);
@@ -44,7 +52,7 @@ export const CreateWorkspaceForm: React.FC<CreateWorkspaceFormProps> = ({
     {
       name: 'name',
       required: true,
-      defaultValue: t('onboarding.form.name.default'),
+      defaultValue: t('workspaces.form.name.default'),
       validateAsync: (value) => validateWorkspaceName(parentDirPath, value),
     },
   ]);
@@ -70,7 +78,7 @@ export const CreateWorkspaceForm: React.FC<CreateWorkspaceFormProps> = ({
 
     // A location is required
     if (!parentDirPath) {
-      setError('onboarding.form.errors.locationMissing');
+      setError('workspaces.form.errors.locationMissing');
 
       return;
     }
@@ -80,16 +88,21 @@ export const CreateWorkspaceForm: React.FC<CreateWorkspaceFormProps> = ({
       return;
     }
 
+    let workspace: Workspace;
+
     try {
       // Create the workspace
-      await Workspaces.create(parentDirPath, { name: values.name, icon });
+      workspace = await Workspaces.create(parentDirPath, {
+        name: values.name,
+        icon,
+      });
     } catch (thrownError) {
       setError(resolveCreateWorkspaceError(thrownError));
 
       return;
     }
 
-    onCreated();
+    onCreated(workspace);
   }, [parentDirPath, validateAllAsync, values.name, icon, onCreated]);
 
   function handleSelectIcon(selectedIcon: string) {
@@ -101,8 +114,8 @@ export const CreateWorkspaceForm: React.FC<CreateWorkspaceFormProps> = ({
   }
 
   return (
-    <Stack className="onboarding-create-workspace-form" gap={5}>
-      <Heading as="h1" size="xl" text="onboarding.form.title" />
+    <Stack className="create-workspace-form" gap={5}>
+      <Heading as="h1" size="xl" text="workspaces.form.title" />
       <Group gap={2} align="end">
         <IconPicker
           closeOnSelect
@@ -111,7 +124,7 @@ export const CreateWorkspaceForm: React.FC<CreateWorkspaceFormProps> = ({
           onClear={handleClearIcon}
         >
           <IconButton
-            label="onboarding.form.icon.label"
+            label="workspaces.form.icon.label"
             size="lg"
             variant="filled"
             color="neutral"
@@ -122,8 +135,8 @@ export const CreateWorkspaceForm: React.FC<CreateWorkspaceFormProps> = ({
         <TextField
           autoFocus
           variant="filled"
-          label="onboarding.form.name.label"
-          placeholder="onboarding.form.name.placeholder"
+          label="workspaces.form.name.label"
+          placeholder="workspaces.form.name.placeholder"
           {...fieldProps.name}
         />
       </Group>
@@ -132,18 +145,18 @@ export const CreateWorkspaceForm: React.FC<CreateWorkspaceFormProps> = ({
           <Text
             size="sm"
             weight="medium"
-            text="onboarding.form.location.label"
+            text="workspaces.form.location.label"
           />
           <Text
             size="sm"
             color="muted"
-            text="onboarding.form.location.description"
+            text="workspaces.form.location.description"
           />
         </Stack>
         {/* Only rendered once a location has been selected */}
         {parentDirPath && (
           <Text
-            className="onboarding-selected-location"
+            className="create-workspace-form-location"
             color="muted"
             stringText={workspacePath}
           />
@@ -151,18 +164,18 @@ export const CreateWorkspaceForm: React.FC<CreateWorkspaceFormProps> = ({
         <Button
           variant="filled"
           startIcon="folder"
-          label="onboarding.form.location.action"
+          label="workspaces.form.location.action"
           onClick={selectParentDir}
         />
       </Stack>
       {/* Only rendered when creating the workspace failed */}
       {error && <Text color="danger" text={error} />}
       <Group gap={3} justify="between">
-        <Button label="onboarding.form.actions.back" onClick={onBack} />
+        <Button label={cancelLabel} onClick={onCancel} />
         <Button
           variant="solid"
           color="primary"
-          label="onboarding.form.actions.create"
+          label="workspaces.form.actions.create"
           onClick={createWorkspace}
         />
       </Group>
@@ -185,7 +198,7 @@ async function validateWorkspaceName(
   const workspacePath = Fs.concatPath(parentDirPath, value);
 
   if (await Fs.exists(workspacePath)) {
-    return 'onboarding.form.errors.pathConflict';
+    return 'workspaces.form.errors.pathConflict';
   }
 }
 
@@ -196,8 +209,8 @@ async function validateWorkspaceName(
 function resolveCreateWorkspaceError(error: unknown): TranslationKey {
   // A directory with the same name already exists in the location
   if (error instanceof Fs.errors.PathConflict) {
-    return 'onboarding.form.errors.pathConflict';
+    return 'workspaces.form.errors.pathConflict';
   }
 
-  return 'onboarding.errors.unknown';
+  return 'workspaces.errors.unknown';
 }

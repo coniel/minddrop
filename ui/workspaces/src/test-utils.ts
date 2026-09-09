@@ -2,14 +2,12 @@ import { vi } from 'vitest';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
-import { I18n, initializeI18n } from '@minddrop/i18n';
+import { initializeI18n } from '@minddrop/i18n';
 import { cleanup as cleanupRender } from '@minddrop/test-utils';
-import { initializeWorkspacesUi } from '@minddrop/ui-workspaces';
 import { Workspaces } from '@minddrop/workspaces';
-import { locales } from '../locales';
+import { initializeWorkspacesUi } from './initializeWorkspacesUi';
 
 initializeI18n();
-I18n.registerTranslations(locales);
 initializeWorkspacesUi();
 
 // happy-dom does not implement Element.getAnimations, which the

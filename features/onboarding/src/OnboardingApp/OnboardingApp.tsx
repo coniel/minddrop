@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Fs } from '@minddrop/file-system';
 import { TranslationKey } from '@minddrop/i18n';
 import { IconsProvider } from '@minddrop/ui-icons';
 import {
@@ -9,8 +8,10 @@ import {
   Stack,
   Text,
 } from '@minddrop/ui-primitives';
-import { Workspaces } from '@minddrop/workspaces';
-import { CreateWorkspaceForm } from '../CreateWorkspaceForm';
+import {
+  CreateWorkspaceForm,
+  useOpenWorkspaceFolder,
+} from '@minddrop/ui-workspaces';
 import { initializeOnboardingApp } from '../initializeOnboardingApp';
 import './OnboardingApp.css';
 
@@ -29,6 +30,7 @@ export const OnboardingApp: React.FC<OnboardingAppProps> = ({ onComplete }) => {
   const [initialized, setInitialized] = useState(false);
   const [creatingWorkspace, setCreatingWorkspace] = useState(false);
   const [error, setError] = useState<TranslationKey | null>(null);
+  const openWorkspaceFolder = useOpenWorkspaceFolder({ onError: setError });
 
   // Initialize the onboarding app on mount
   useEffect(() => {
@@ -50,36 +52,19 @@ export const OnboardingApp: React.FC<OnboardingAppProps> = ({ onComplete }) => {
     setCreatingWorkspace(false);
   }, []);
 
-  const openWorkspaceFolder = useCallback(async () => {
+  const addWorkspaceFolder = useCallback(async () => {
     setError(null);
 
-    // Ask the user to select a workspace folder
-    const path = await Fs.openFilePicker({ directory: true });
+    const workspace = await openWorkspaceFolder();
 
-    // Do nothing if the picker was cancelled
-    if (typeof path !== 'string') {
-      return;
-    }
-
-    // Only existing workspaces can be opened, as a folder of files is
-    // not usable as content until it has been set up as a workspace.
-    if (!(await Workspaces.isWorkspace(path))) {
-      setError('onboarding.errors.notAWorkspace');
-
-      return;
-    }
-
-    try {
-      // Add the workspace
-      await Workspaces.add(path);
-    } catch {
-      setError('onboarding.errors.unknown');
-
+    // Stay on the welcome screen if the picker was cancelled or the
+    // selected folder could not be opened.
+    if (!workspace) {
       return;
     }
 
     onComplete();
-  }, [onComplete]);
+  }, [openWorkspaceFolder, onComplete]);
 
   // Render nothing until initialization has completed
   if (!initialized) {
@@ -94,7 +79,8 @@ export const OnboardingApp: React.FC<OnboardingAppProps> = ({ onComplete }) => {
         <Stack className="onboarding-content" gap={5} align="center">
           {creatingWorkspace ? (
             <CreateWorkspaceForm
-              onBack={stopCreatingWorkspace}
+              cancelLabel="actions.back"
+              onCancel={stopCreatingWorkspace}
               onCreated={onComplete}
             />
           ) : (
@@ -123,7 +109,7 @@ export const OnboardingApp: React.FC<OnboardingAppProps> = ({ onComplete }) => {
                   size="lg"
                   startIcon="folder-open"
                   label="onboarding.welcome.actions.open"
-                  onClick={openWorkspaceFolder}
+                  onClick={addWorkspaceFolder}
                 />
               </Stack>
               {/* Only rendered when adding a folder failed */}

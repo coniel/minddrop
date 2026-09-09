@@ -10,11 +10,10 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@minddrop/file-system": "workspace:*",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/ui-icons": "workspace:*",
     "@minddrop/ui-primitives": "workspace:*",
-    "@minddrop/utils": "workspace:*",
+    "@minddrop/ui-workspaces": "workspace:*",
     "@minddrop/workspaces": "workspace:*",
     "react": "^19.1.0",
     "@minddrop/app": "workspace:*"
@@ -24,6 +23,7 @@
     "@minddrop/eslint-config": "workspace:*",
     "@minddrop/vitest-config": "workspace:*",
     "@minddrop/events": "workspace:*",
+    "@minddrop/file-system": "workspace:*",
     "@minddrop/test-utils": "workspace:*",
     "tsconfig": "workspace:*",
     "typescript": "^5.9.3"

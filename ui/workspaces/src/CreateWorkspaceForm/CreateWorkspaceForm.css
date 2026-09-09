@@ -1,4 +1,4 @@
-.onboarding-create-workspace-form {
+.create-workspace-form {
   width: 100%;
   max-width: var(--measure-narrow);
 
@@ -6,7 +6,7 @@
     flex: 1;
   }
 
-  .onboarding-selected-location {
+  .create-workspace-form-location {
     word-break: break-all;
   }
 }

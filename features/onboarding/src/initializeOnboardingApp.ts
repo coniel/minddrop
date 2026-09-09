@@ -2,6 +2,7 @@ import { App } from '@minddrop/app';
 import { I18n, initializeI18n } from '@minddrop/i18n';
 import { Icons } from '@minddrop/ui-icons';
 import { initializeInputModalityTracking } from '@minddrop/ui-primitives';
+import { initializeWorkspacesUi } from '@minddrop/ui-workspaces';
 import { Workspaces } from '@minddrop/workspaces';
 import { locales } from './locales';
 
@@ -35,6 +36,10 @@ export function initializeOnboardingApp(): Promise<void> {
 async function runInitialization(): Promise<void> {
   // Register onboarding translations
   I18n.registerTranslations(locales);
+
+  // Register the workspaces UI translations, used by the
+  // workspace creation form.
+  initializeWorkspacesUi();
 
   // Track whether the user is navigating by keyboard or pointer
   initializeInputModalityTracking();

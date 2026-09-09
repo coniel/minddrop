@@ -1,11 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { render, screen, userEvent, waitFor } from '@minddrop/test-utils';
-import { Workspaces } from '@minddrop/workspaces';
+import { Workspace, Workspaces } from '@minddrop/workspaces';
 import { MockFs, cleanup, parentDirPath, setup } from '../test-utils';
 import { CreateWorkspaceForm } from './CreateWorkspaceForm';
 
-function renderForm(onCreated = () => {}) {
-  render(<CreateWorkspaceForm onBack={() => {}} onCreated={onCreated} />);
+function renderForm(onCreated: (workspace: Workspace) => void = () => {}) {
+  render(<CreateWorkspaceForm onCancel={() => {}} onCreated={onCreated} />);
 
   return userEvent.setup();
 }
@@ -102,9 +102,9 @@ describe('<CreateWorkspaceForm />', () => {
   });
 
   it('creates the workspace on submit', async () => {
-    let created = false;
-    const user = renderForm(() => {
-      created = true;
+    let createdWorkspace: Workspace | null = null;
+    const user = renderForm((workspace) => {
+      createdWorkspace = workspace;
     });
 
     // Fill in the form
@@ -129,7 +129,21 @@ describe('<CreateWorkspaceForm />', () => {
     // The workspace directory was created
     expect(MockFs.exists(`${parentDirPath}/Notes`)).toBe(true);
 
-    // The creation was reported to the parent
-    expect(created).toBe(true);
+    // The created workspace was reported to the parent
+    expect(createdWorkspace).toEqual(
+      expect.objectContaining({ name: 'Notes' }),
+    );
+  });
+
+  it('renders the given cancel label', () => {
+    render(
+      <CreateWorkspaceForm
+        cancelLabel="actions.back"
+        onCancel={() => {}}
+        onCreated={() => {}}
+      />,
+    );
+
+    screen.getByText('Back');
   });
 });
