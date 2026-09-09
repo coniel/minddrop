@@ -1,5 +1,6 @@
 import { DesignElementConfig } from '@minddrop/designs-next';
 import { i18n } from '@minddrop/i18n';
+import { Properties } from '@minddrop/properties';
 import { HeadingElement, HeadingLevel } from '../HeadingElement.types';
 import { HeadingElementRenderer } from '../HeadingElementRenderer';
 import { HeadingSettingsMenu } from '../HeadingSettingsMenu';
@@ -28,6 +29,8 @@ export const HeadingElementConfig: DesignElementConfig<HeadingElement> = {
   label: 'designsNext.elements.heading.label',
   icon: 'heading',
   group: 'content',
+  propertyTypes: Properties.constants.TextualTypes,
+  suggestedPropertyTypes: ['title', 'text'],
   component: HeadingElementRenderer,
   defaultColumnSpan: 24,
   defaultRowSpan: HeadingLineHeightUnits[DefaultHeadingLevel],

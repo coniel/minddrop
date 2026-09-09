@@ -1,5 +1,8 @@
 import { DesignElementProps } from '@minddrop/designs-next';
-import { resolveTextSettingsClass } from '@minddrop/ui-designs-next';
+import {
+  resolveTextSettingsClass,
+  useElementValue,
+} from '@minddrop/ui-designs-next';
 import { joinClasses } from '@minddrop/ui-primitives';
 import { HeadingElement } from '../HeadingElement.types';
 import {
@@ -10,12 +13,16 @@ import './HeadingElementRenderer.css';
 
 /**
  * Renders the heading element as prominent text clamped to the
- * number of lines its block height holds. Natural-height headings
- * grow with their content instead of clamping.
+ * number of lines its block height holds. Mapped elements render
+ * their property's value, unmapped ones their own text.
+ * Natural-height headings grow with their content instead of
+ * clamping.
  */
 export const HeadingElementRenderer: React.FC<
   DesignElementProps<HeadingElement>
 > = ({ element }) => {
+  const propertyValue = useElementValue(element);
+
   // The element's heading level
   const level = element.level ?? DefaultHeadingLevel;
 
@@ -37,7 +44,7 @@ export const HeadingElementRenderer: React.FC<
       className={className}
       style={element.naturalHeight ? undefined : { WebkitLineClamp: lines }}
     >
-      {element.text}
+      {element.property ? propertyValue : element.text}
     </div>
   );
 };

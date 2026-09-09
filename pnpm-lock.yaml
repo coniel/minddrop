@@ -843,6 +843,9 @@ importers:
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
+      '@minddrop/properties':
+        specifier: workspace:*
+        version: link:../../packages/properties
       '@minddrop/ui-designs-next':
         specifier: workspace:*
         version: link:../../ui/designs-next

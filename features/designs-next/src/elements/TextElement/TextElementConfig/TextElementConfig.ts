@@ -1,5 +1,6 @@
 import { DesignElementConfig } from '@minddrop/designs-next';
 import { i18n } from '@minddrop/i18n';
+import { Properties } from '@minddrop/properties';
 import { TextElement } from '../TextElement.types';
 import { TextElementRenderer } from '../TextElementRenderer';
 
@@ -17,6 +18,8 @@ export const TextElementConfig: DesignElementConfig<TextElement> = {
   label: 'designsNext.elements.text.label',
   icon: 'text',
   group: 'content',
+  propertyTypes: Properties.constants.TextualTypes,
+  suggestedPropertyTypes: ['text', 'title', 'select', 'url'],
   component: TextElementRenderer,
   defaultColumnSpan: 32,
   defaultRowSpan: TextLineHeightUnits * 2,

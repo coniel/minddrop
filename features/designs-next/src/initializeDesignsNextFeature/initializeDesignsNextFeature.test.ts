@@ -23,4 +23,16 @@ describe('initializeDesignsNextFeature', () => {
     );
     expect(DesignElementConfigs.get(TextElementType)).toBe(TextElementConfig);
   });
+
+  it('suggests only property types the element accepts', () => {
+    initializeDesignsNextFeature();
+
+    // A suggested type the element does not accept would be offered
+    // by the picker and then filtered out of it.
+    DesignElementConfigs.getAll().forEach((config) => {
+      config.suggestedPropertyTypes?.forEach((type) => {
+        expect(config.propertyTypes).toContain(type);
+      });
+    });
+  });
 });

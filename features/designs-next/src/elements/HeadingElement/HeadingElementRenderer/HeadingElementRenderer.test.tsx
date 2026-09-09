@@ -1,6 +1,8 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { coverDesignElement } from '@minddrop/designs-next/test-utils';
+import { PropertiesSchema } from '@minddrop/properties';
 import { render, screen } from '@minddrop/test-utils';
+import { DesignPropertiesProvider } from '@minddrop/ui-designs-next';
 import { cleanup } from '../../../test-utils';
 import { HeadingElement } from '../HeadingElement.types';
 import { HeadingElementConfig } from '../HeadingElementConfig';
@@ -13,6 +15,8 @@ const headingElement: HeadingElement = {
   text: 'Project overview',
 };
 
+const properties: PropertiesSchema = [{ type: 'title', name: 'Title' }];
+
 describe('HeadingElementRenderer', () => {
   afterEach(cleanup);
 
@@ -20,6 +24,21 @@ describe('HeadingElementRenderer', () => {
     render(<HeadingElementRenderer element={headingElement} />);
 
     expect(screen.getByText('Project overview')).toBeInTheDocument();
+  });
+
+  it("renders the mapped property's value in place of the text", () => {
+    render(
+      <DesignPropertiesProvider
+        properties={properties}
+        values={{ Title: 'The entry title' }}
+      >
+        <HeadingElementRenderer
+          element={{ ...headingElement, property: 'Title' }}
+        />
+      </DesignPropertiesProvider>,
+    );
+
+    expect(screen.getByText('The entry title')).toBeInTheDocument();
   });
 
   it('applies the default level class without a level setting', () => {
