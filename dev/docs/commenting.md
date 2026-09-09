@@ -194,6 +194,44 @@ const appendsInFlight = new Map<string, Promise<unknown>>();
   text-bearing element renderers" narrates its consumers with the
   "shared by" clause — the function just resolves the classes. Who
   uses it is what call sites are for.
+- **Rendering behaviour, outside the code doing the rendering.** It is
+  at home in a component's JSDoc, in its internals and in the utils it
+  calls, describing what that code itself renders. Everywhere else it is
+  out: a data type, a core API function or a store update never explains
+  what some renderer will do with the value it carries. Rendering code
+  is no exception where the behaviour is not its own — a component
+  describes what it renders, not what its children or its callers do.
+
+  In **types it is never allowed**, with two exceptions: the type is
+  itself about rendering (a component's props), or the property's whole
+  job is to drive rendering — a flag controlling render behaviour, an
+  i18n key, a design or styling value. The test is whether the field
+  would still mean what the comment says if nothing rendered it.
+
+  ```ts
+  // BAD, a data field narrating what renderers do with it
+  /**
+   * Name of the property the element takes its content from. Absent
+   * elements render their own static content, as do mapped elements
+   * whose property no longer exists.
+   */
+  property?: string;
+
+  // GOOD
+  /**
+   * Name of the property the element takes its content from. Absent
+   * when the element is unmapped.
+   */
+  property?: string;
+
+  // ALSO GOOD, the flag's only job is to drive rendering
+  /**
+   * Whether the element grows to its content's height, stretching the
+   * rows it spans and pushing rows below it down.
+   */
+  naturalHeight: boolean;
+  ```
+
 - **The system around the function.** A function documents its own
   contract, never the role its operation plays in a larger design, the
   meaning other code assigns to its output, or a lifecycle other code
@@ -220,6 +258,14 @@ const appendsInFlight = new Map<string, Promise<unknown>>();
   sentence describes the dispatcher and the renderers, so it belongs
   on the code that owns that behaviour — the dispatcher's JSDoc for
   the lifecycle, the plan for the design.
+
+**Every entry above is the same rule in a different costume: a comment
+carries only what the code under it does.** Knowledge from outside that
+scope — how other code is implemented, what happens next in a flow it
+takes part in, an example of a thing the reader can go and look at — is
+out, however true and however helpful it seems. It is written where the
+code cannot enforce it, so it goes stale silently, and it buries the one
+thing the reader came for.
 
 Design reasoning belongs in the plan, not in the type or the function.
 
