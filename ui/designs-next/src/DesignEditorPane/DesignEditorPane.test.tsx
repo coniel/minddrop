@@ -173,7 +173,7 @@ describe('<DesignEditorPane />', () => {
     renderPane({ selectedId: titleDesignElement.id });
 
     fireEvent.click(screen.getByLabelText('Width'));
-    fireEvent.click(screen.getByLabelText('Fixed width, pinned left'));
+    fireEvent.click(screen.getByLabelText('designsNext.pin.label.left'));
 
     expect(changedTitle()?.widthMode).toBe('fixed-left');
   });
@@ -193,7 +193,7 @@ describe('<DesignEditorPane />', () => {
     });
 
     fireEvent.click(screen.getByLabelText('Height'));
-    fireEvent.click(screen.getByLabelText('Fixed height, pinned bottom'));
+    fireEvent.click(screen.getByLabelText('designsNext.pin.label.bottom'));
 
     expect(changedTitle()?.heightMode).toBe('fixed-bottom');
   });

@@ -2152,10 +2152,9 @@ declare module 'i18next' {
           widthMode: {
             label: string;
             fluid: string;
-            fixedLeft: string;
-            fixedRight: string;
-            fixedCenter: string;
-            overridden: string;
+            fluidDescription: string;
+            centered: string;
+            centeredDescription: string;
           };
           naturalHeight: string;
           editor: {
@@ -2199,10 +2198,29 @@ declare module 'i18next' {
           heightMode: {
             label: string;
             fluid: string;
-            fixedTop: string;
-            fixedBottom: string;
-            fixedCenter: string;
-            overridden: string;
+            fluidDescription: string;
+            centered: string;
+            centeredDescription: string;
+          };
+          pin: {
+            label: {
+              left: string;
+              right: string;
+              top: string;
+              bottom: string;
+            };
+            edge: {
+              left: string;
+              right: string;
+              top: string;
+              bottom: string;
+            };
+            element: {
+              left: string;
+              right: string;
+              top: string;
+              bottom: string;
+            };
           };
           elements: {
             groups: {

@@ -14,15 +14,14 @@ import {
   iconDesignElement,
   testElementConfig,
 } from '@minddrop/designs-next/test-utils';
-import { fireEvent, render, screen } from '@minddrop/test-utils';
+import { fireEvent, render, screen, userEvent } from '@minddrop/test-utils';
 import { cleanup } from '../test-utils';
 import { DesignElementControls } from './DesignElementControls';
 
 // The elements passed to the most recent onElementsChange call
 let changedElements: DesignElement[] | null;
 
-// A bottom-pinned body below the fluid-height cover, whose vertical
-// pin the cover overrides.
+// A bottom-pinned body, which the cover stands above
 const pinnedBody: DesignElement = {
   ...bodyDesignElement,
   heightMode: 'fixed-bottom',
@@ -64,7 +63,7 @@ interface RenderControlsOptions {
 
   /**
    * The design's elements, which the element's context comes from.
-   * Defaults to the element on its own, so nothing overrides it.
+   * Defaults to the element on its own, so nothing neighbours it.
    */
   elements?: DesignElement[];
 
@@ -81,6 +80,15 @@ interface RenderControlsOptions {
  */
 function openMenu(label: string) {
   fireEvent.click(screen.getByLabelText(label));
+}
+
+/**
+ * Rests on one of a menu's options, opening its tooltip.
+ *
+ * @param label - The option's label.
+ */
+async function hoverOption(label: string) {
+  await userEvent.hover(screen.getByLabelText(label));
 }
 
 /**
@@ -151,26 +159,24 @@ describe('DesignElementControls', () => {
   it('holds the width modes behind a menu, with the current mode pressed', () => {
     renderControls();
 
-    expect(screen.queryByLabelText('Fluid width')).toBeNull();
+    expect(screen.queryByLabelText('designsNext.widthMode.fluid')).toBeNull();
 
-    openMenu('Width');
+    openMenu('designsNext.widthMode.label');
 
     // The icon fixture is pinned right
-    expect(screen.getByLabelText('Fluid width')).toHaveAttribute(
-      'aria-pressed',
-      'false',
-    );
-    expect(screen.getByLabelText('Fixed width, pinned right')).toHaveAttribute(
-      'aria-pressed',
-      'true',
-    );
+    expect(
+      screen.getByLabelText('designsNext.widthMode.fluid'),
+    ).toHaveAttribute('aria-pressed', 'false');
+    expect(
+      screen.getByLabelText('designsNext.pin.label.right'),
+    ).toHaveAttribute('aria-pressed', 'true');
   });
 
   it('reports the chosen width mode', () => {
     renderControls();
-    openMenu('Width');
+    openMenu('designsNext.widthMode.label');
 
-    fireEvent.click(screen.getByLabelText('Fixed width, pinned left'));
+    fireEvent.click(screen.getByLabelText('designsNext.pin.label.left'));
 
     expect(changedElement(iconDesignElement.id)?.widthMode).toBe('fixed-left');
   });
@@ -187,24 +193,21 @@ describe('DesignElementControls', () => {
     expect(changedElement(iconDesignElement.id)?.naturalHeight).toBe(true);
   });
 
-  it('mutes the pin choices while overridden', () => {
-    // The fixture layout sits the fixed icon beside the fluid title
+  it('names the neighbour a width pin holds the element against', async () => {
+    // The fixture layout sits the icon to the title's right
     renderControls({ elements: designElements });
-    openMenu('Width');
+    openMenu('designsNext.widthMode.label');
+    await hoverOption('designsNext.pin.label.left');
 
-    // The three pin toggles mute, the fluid toggle does not
-    expect(
-      document.querySelectorAll('.design-element-controls-pin-overridden'),
-    ).toHaveLength(3);
+    await screen.findByText('designsNext.pin.element.left');
   });
 
-  it('does not mute the pin choices without an override', () => {
+  it('names the design edge when nothing stands on that side', async () => {
     renderControls();
-    openMenu('Width');
+    openMenu('designsNext.widthMode.label');
+    await hoverOption('designsNext.pin.label.left');
 
-    expect(
-      document.querySelectorAll('.design-element-controls-pin-overridden'),
-    ).toHaveLength(0);
+    await screen.findByText('designsNext.pin.edge.left');
   });
 
   it('offers height modes instead of natural height when aspect-locked', () => {
@@ -212,37 +215,34 @@ describe('DesignElementControls', () => {
 
     expect(screen.queryByLabelText('Natural height')).toBeNull();
 
-    openMenu('Height');
+    openMenu('designsNext.heightMode.label');
 
     // The element has no height mode, meaning fluid
-    expect(screen.getByLabelText('Fluid height')).toHaveAttribute(
-      'aria-pressed',
-      'true',
-    );
+    expect(
+      screen.getByLabelText('designsNext.heightMode.fluid'),
+    ).toHaveAttribute('aria-pressed', 'true');
   });
 
   it('reports the chosen height mode', () => {
     renderControls({ aspectLocked: true });
-    openMenu('Height');
+    openMenu('designsNext.heightMode.label');
 
-    fireEvent.click(screen.getByLabelText('Fixed height, pinned top'));
+    fireEvent.click(screen.getByLabelText('designsNext.pin.label.top'));
 
     expect(changedElement(iconDesignElement.id)?.heightMode).toBe('fixed-top');
   });
 
-  it('mutes the vertical pin choices while overridden', () => {
-    // The fluid-height cover above the pinned body overrides it
+  it('names the neighbour a height pin holds the element against', async () => {
+    // The cover stands above the body
     renderControls({
       element: pinnedBody,
       elements: [coverDesignElement, pinnedBody],
       aspectLocked: true,
     });
-    openMenu('Height');
+    openMenu('designsNext.heightMode.label');
+    await hoverOption('designsNext.pin.label.top');
 
-    // The three vertical pin toggles mute
-    expect(
-      document.querySelectorAll('.design-element-controls-pin-overridden'),
-    ).toHaveLength(3);
+    await screen.findByText('designsNext.pin.element.top');
   });
 
   it('shows no setting groups for types without them', () => {

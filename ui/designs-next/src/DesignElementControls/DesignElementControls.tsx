@@ -6,9 +6,14 @@ import {
   DesignElementSettingsMenuProps,
   Designs,
   ElementHeightMode,
+  ElementSide,
   ElementWidthMode,
 } from '@minddrop/designs-next';
-import { TranslationKey, useTranslation } from '@minddrop/i18n';
+import {
+  TranslationKey,
+  createI18nKeyBuilder,
+  useTranslation,
+} from '@minddrop/i18n';
 import { UiIconName } from '@minddrop/ui-icons';
 import {
   FloatingToolbar,
@@ -72,15 +77,27 @@ interface ElementModeOption<Mode extends string> {
   icon: UiIconName;
 
   /**
-   * i18n key of the mode's label.
+   * i18n key of the mode's label, for the modes which pin to no
+   * side and so read the same whatever surrounds the element.
    */
-  label: TranslationKey;
+  label?: TranslationKey;
 
   /**
-   * Whether the mode is a pin choice, muted while overridden.
+   * i18n key of the supporting text under the label, for the modes
+   * whose effect the label alone does not carry.
    */
-  pin: boolean;
+  description?: TranslationKey;
+
+  /**
+   * The side the mode pins to, whose label names the design edge or
+   * the neighbouring element the pin holds the element against.
+   */
+  side?: ElementSide;
 }
+
+const pinLabelKey = createI18nKeyBuilder('designsNext.pin.label.');
+const edgePinKey = createI18nKeyBuilder('designsNext.pin.edge.');
+const elementPinKey = createI18nKeyBuilder('designsNext.pin.element.');
 
 // The width mode options in display order
 const WidthModeOptions: ElementModeOption<ElementWidthMode>[] = [
@@ -88,25 +105,23 @@ const WidthModeOptions: ElementModeOption<ElementWidthMode>[] = [
     mode: 'fluid',
     icon: 'unfold-horizontal',
     label: 'designsNext.widthMode.fluid',
-    pin: false,
+    description: 'designsNext.widthMode.fluidDescription',
   },
   {
     mode: 'fixed-left',
     icon: 'arrow-left-to-line',
-    label: 'designsNext.widthMode.fixedLeft',
-    pin: true,
+    side: 'left',
   },
   {
     mode: 'fixed-center',
     icon: 'align-horizontal-space-around',
-    label: 'designsNext.widthMode.fixedCenter',
-    pin: true,
+    label: 'designsNext.widthMode.centered',
+    description: 'designsNext.widthMode.centeredDescription',
   },
   {
     mode: 'fixed-right',
     icon: 'arrow-right-to-line',
-    label: 'designsNext.widthMode.fixedRight',
-    pin: true,
+    side: 'right',
   },
 ];
 
@@ -116,25 +131,23 @@ const HeightModeOptions: ElementModeOption<ElementHeightMode>[] = [
     mode: 'fluid',
     icon: 'unfold-vertical',
     label: 'designsNext.heightMode.fluid',
-    pin: false,
+    description: 'designsNext.heightMode.fluidDescription',
   },
   {
     mode: 'fixed-top',
     icon: 'arrow-up-to-line',
-    label: 'designsNext.heightMode.fixedTop',
-    pin: true,
+    side: 'top',
   },
   {
     mode: 'fixed-center',
     icon: 'align-vertical-space-around',
-    label: 'designsNext.heightMode.fixedCenter',
-    pin: true,
+    label: 'designsNext.heightMode.centered',
+    description: 'designsNext.heightMode.centeredDescription',
   },
   {
     mode: 'fixed-bottom',
     icon: 'arrow-down-to-line',
-    label: 'designsNext.heightMode.fixedBottom',
-    pin: true,
+    side: 'bottom',
   },
 ];
 
@@ -187,9 +200,10 @@ interface SelectedElementControlsProps
  * Renders the controls themselves: the width mode menu alongside
  * either the natural height toggle or, in aspect-locked designs,
  * the height mode menu, followed by the element type's own settings
- * menu and its system setting groups. Pin choices mute while a
- * fluid context neighbour overrides them, staying interactive since
- * the stored choice matters again once the neighbour changes.
+ * menu and its system setting groups. Each pin choice is labelled by
+ * the side it pins to, and says what it holds the element against:
+ * the closest neighbour on that side, or the design's edge where the
+ * element is the one closest to it.
  */
 const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
   element,
@@ -205,14 +219,6 @@ const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
   const config = DesignElementConfigs.get(element.type, false);
   const SettingsMenu = config?.settingsMenu;
   const settingGroups = config?.settingGroups;
-
-  // Whether a fluid context neighbour currently overrides the
-  // element's pin choices.
-  const pinOverridden = Designs.isElementPinOverridden(element, elements);
-  const verticalPinOverridden = Designs.isElementVerticalPinOverridden(
-    element,
-    elements,
-  );
 
   // Applies a change to the element
   function updateElement(
@@ -273,48 +279,62 @@ const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
     }
   }
 
-  // Builds an axis' menu options, muting the pin choices while a
-  // fluid neighbour overrides them. They stay interactive, since
-  // the stored choice matters again once the neighbour changes.
+  // A pin option is labelled by the side it pins to, the rest by
+  // their own label.
+  function resolveModeLabel<Mode extends string>(
+    option: ElementModeOption<Mode>,
+  ): TranslationKey {
+    if (!option.side) {
+      return option.label!;
+    }
+
+    return pinLabelKey(option.side);
+  }
+
+  // The supporting text naming what a pin holds the element against:
+  // the closest neighbour on its side, or the design's edge when the
+  // element is the one closest to it.
+  function resolveModeDescription<Mode extends string>(
+    option: ElementModeOption<Mode>,
+  ): TranslationKey | undefined {
+    if (!option.side) {
+      return option.description;
+    }
+
+    if (Designs.hasNeighbourOnSide(element, elements, option.side)) {
+      return elementPinKey(option.side);
+    }
+
+    return edgePinKey(option.side);
+  }
+
+  // Builds an axis' menu options
   function resolveModeOptions<Mode extends string>(
     modeOptions: ElementModeOption<Mode>[],
-    overridden: boolean,
-    overriddenNote: TranslationKey,
   ): RadioToggleHoverMenuOption<Mode>[] {
-    return modeOptions.map((option) => ({
-      value: option.mode,
-      icon: option.icon,
-      label: t(option.label),
-      className:
-        option.pin && overridden
-          ? 'design-element-controls-pin-overridden'
-          : undefined,
-      tooltip: {
-        title: option.label,
-        description: option.pin && overridden ? overriddenNote : undefined,
-      },
-    }));
+    return modeOptions.map((option) => {
+      const label = resolveModeLabel(option);
+
+      return {
+        value: option.mode,
+        icon: option.icon,
+        label: t(label),
+        tooltip: { title: label, description: resolveModeDescription(option) },
+      };
+    });
   }
 
   return (
     <>
       <RadioToggleHoverMenu<ElementWidthMode>
-        options={resolveModeOptions(
-          WidthModeOptions,
-          pinOverridden,
-          'designsNext.widthMode.overridden',
-        )}
+        options={resolveModeOptions(WidthModeOptions)}
         value={element.widthMode}
         label={t('designsNext.widthMode.label')}
         onValueChange={handleWidthModeChange}
       />
       {aspectLocked ? (
         <RadioToggleHoverMenu<ElementHeightMode>
-          options={resolveModeOptions(
-            HeightModeOptions,
-            verticalPinOverridden,
-            'designsNext.heightMode.overridden',
-          )}
+          options={resolveModeOptions(HeightModeOptions)}
           value={element.heightMode ?? 'fluid'}
           label={t('designsNext.heightMode.label')}
           onValueChange={handleHeightModeChange}

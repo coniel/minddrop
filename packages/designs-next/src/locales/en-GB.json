@@ -10,10 +10,9 @@
     "widthMode": {
       "label": "Width",
       "fluid": "Fluid width",
-      "fixedLeft": "Fixed width, pinned left",
-      "fixedRight": "Fixed width, pinned right",
-      "fixedCenter": "Fixed width, centered",
-      "overridden": "A fluid element absorbs the extra space, so the pin currently has no effect"
+      "fluidDescription": "Absorbs the design's extra width. Gaps in line with this element become fixed width.",
+      "centered": "Centered",
+      "centeredDescription": "Fixed width. Maintains its position relative to the left and right edges."
     },
     "naturalHeight": "Natural height",
     "editor": {
@@ -57,10 +56,29 @@
     "heightMode": {
       "label": "Height",
       "fluid": "Fluid height",
-      "fixedTop": "Fixed height, pinned top",
-      "fixedBottom": "Fixed height, pinned bottom",
-      "fixedCenter": "Fixed height, centered",
-      "overridden": "A fluid-height element absorbs the extra space, so the pin currently has no effect"
+      "fluidDescription": "Absorbs the design's extra height. Gaps in line with this element become fixed height.",
+      "centered": "Centered",
+      "centeredDescription": "Fixed height. Maintains its position relative to the top and bottom edges."
+    },
+    "pin": {
+      "label": {
+        "left": "Pin left",
+        "right": "Pin right",
+        "top": "Pin top",
+        "bottom": "Pin bottom"
+      },
+      "edge": {
+        "left": "Fixed width. Pin to the left edge.",
+        "right": "Fixed width. Pin to the right edge.",
+        "top": "Fixed height. Pin to the top edge.",
+        "bottom": "Fixed height. Pin to the bottom edge."
+      },
+      "element": {
+        "left": "Fixed width. Pin to the closest neighbour on the left.",
+        "right": "Fixed width. Pin to the closest neighbour on the right.",
+        "top": "Fixed height. Pin to the closest neighbour above.",
+        "bottom": "Fixed height. Pin to the closest neighbour below."
+      }
     },
     "elements": {
       "groups": {

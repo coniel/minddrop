@@ -104,7 +104,7 @@ describe('DesignEditor', () => {
     fireEvent.pointerUp(title);
 
     fireEvent.click(screen.getByLabelText('Width'));
-    fireEvent.click(screen.getByLabelText('Fixed width, pinned left'));
+    fireEvent.click(screen.getByLabelText('designsNext.pin.label.left'));
 
     expect(
       storedElements().find((element) => element.id === titleDesignElement.id)
