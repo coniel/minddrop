@@ -1,3 +1,5 @@
+// Registers the store assertion matchers
+import '@minddrop/stores/test-utils';
 import { Events } from '@minddrop/events';
 import { initializeI18n } from '@minddrop/i18n';
 import { DevToolsEventsStore } from '../DevToolsEventsStore';

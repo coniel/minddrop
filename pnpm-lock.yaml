@@ -1282,6 +1282,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@minddrop/stores':
+        specifier: workspace:*
+        version: link:../../packages/stores
       '@minddrop/vitest-config':
         specifier: workspace:*
         version: link:../../packages/vitest-config

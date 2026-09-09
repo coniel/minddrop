@@ -1,3 +1,5 @@
+// Registers the store assertion matchers
+import '@minddrop/stores/test-utils';
 import { vi } from 'vitest';
 import { DataViews } from '@minddrop/data-views';
 import { Events } from '@minddrop/events';

@@ -1,3 +1,5 @@
+// Registers the store assertion matchers
+import '@minddrop/stores/test-utils';
 import { vi } from 'vitest';
 import { Collections } from '@minddrop/collections';
 import {

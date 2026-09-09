@@ -7,7 +7,7 @@ import {
   StoreHydratedEvent,
   StorePersistEvent,
 } from '../events';
-import { registerStore } from '../storeRegistry';
+import { RegisteredStoreType, registerStore } from '../storeRegistry';
 import { PersistOptions } from '../types';
 
 export interface ObjectStoreInternalApi<TItem extends object> {
@@ -43,6 +43,21 @@ export interface ObjectStoreInternalApi<TItem extends object> {
 }
 
 export interface ObjectItemStore<TItem extends object> {
+  /**
+   * The namespaced name of the store (e.g. "Databases:Entries").
+   */
+  name: string;
+
+  /**
+   * The type of store.
+   */
+  type: RegisteredStoreType;
+
+  /**
+   * The key used as the identifier for the items.
+   */
+  identifierKey: keyof TItem;
+
   /**
    * The internal Zustand store.
    */
@@ -292,6 +307,9 @@ export function createObjectStore<TItem extends object>(
   registerStore(name, 'object', store as UseBoundStore<StoreApi<unknown>>);
 
   return {
+    name,
+    type: 'object',
+    identifierKey,
     get,
     getAll: () => store.getState().items,
     getArray,

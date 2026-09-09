@@ -6,7 +6,7 @@ import {
   StoreHydratedEvent,
   StorePersistEvent,
 } from '../events';
-import { registerStore } from '../storeRegistry';
+import { RegisteredStoreType, registerStore } from '../storeRegistry';
 import { PersistOptions } from '../types';
 
 /**
@@ -43,6 +43,16 @@ export interface KeyValueStoreInternalApi<TValues extends StoreValues> {
 }
 
 export interface KeyValueStore<TValues extends StoreValues> {
+  /**
+   * The namespaced name of the store (e.g. "Databases:Defaults").
+   */
+  name: string;
+
+  /**
+   * The type of store.
+   */
+  type: RegisteredStoreType;
+
   /**
    * The internal Zustand store.
    */
@@ -207,6 +217,8 @@ export function createKeyValueStore<TValues extends StoreValues>(
   registerStore(name, 'key-value', store as UseBoundStore<StoreApi<unknown>>);
 
   return {
+    name,
+    type: 'key-value',
     get: (key) => store.getState().values[key],
     getAll: () => store.getState().values,
     set: (key, value) => {

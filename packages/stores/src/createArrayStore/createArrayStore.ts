@@ -6,7 +6,7 @@ import {
   StoreHydratedEvent,
   StorePersistEvent,
 } from '../events';
-import { registerStore } from '../storeRegistry';
+import { RegisteredStoreType, registerStore } from '../storeRegistry';
 import { PersistOptions } from '../types';
 
 export interface ArrayStoreInternalApi<TItem extends object> {
@@ -48,6 +48,21 @@ export interface ArrayStoreInternalApi<TItem extends object> {
 }
 
 export interface ArrayItemStore<TItem extends object> {
+  /**
+   * The namespaced name of the store (e.g. "DevTools:Events").
+   */
+  name: string;
+
+  /**
+   * The type of store.
+   */
+  type: RegisteredStoreType;
+
+  /**
+   * The key used as the identifier for the items.
+   */
+  identifierKey: keyof TItem;
+
   /**
    * The internal Zustand store.
    */
@@ -288,6 +303,9 @@ export function createArrayStore<TItem extends object>(
   registerStore(name, 'array', store as UseBoundStore<StoreApi<unknown>>);
 
   return {
+    name,
+    type: 'array',
+    identifierKey,
     get,
     getAll: () => store.getState().items,
     add: (item) => {
