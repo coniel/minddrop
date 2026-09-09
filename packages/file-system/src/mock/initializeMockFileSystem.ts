@@ -183,6 +183,12 @@ export function initializeMockFileSystem(
           currentPath = `${currentPath}/`;
         });
       } else {
+        // A non-recursive create fails on an existing path, matching
+        // the OS behaviour which makes check-then-create races throw.
+        if (mockExists(root, fullPath)) {
+          throw new Error(`EEXIST: file already exists, mkdir '${fullPath}'`);
+        }
+
         mockAddFileEntry(root, {
           path: fullPath,
           children: [],
