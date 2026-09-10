@@ -9,6 +9,7 @@ export * from './setup-sql';
 export * from './createMockBackendAdapter';
 export * from './createRecordingSqlAdapter';
 export * from './fixtures';
+export { clearEntryFocusRequest } from '../EntryFocusRequestStore';
 
 export const DatabaseFixtures = {
   ...Fixtures,

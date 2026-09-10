@@ -7,6 +7,7 @@ import { DataViewSortMenu } from '@minddrop/ui-data-views';
 import {
   CreateDatabaseEntryButton,
   DatabaseEntriesSearchField,
+  DatabaseEntryContextProvider,
 } from '@minddrop/ui-databases';
 import {
   ScrollArea,
@@ -106,12 +107,16 @@ export const NotebookViewComponent: React.FC<
     [setSelectedEntryId],
   );
 
-  // Select the newly created or added entry
+  // Select the newly created or added entry, and ask its renderers
+  // to bring it forward: the list row scrolls itself into view and
+  // the page panel focuses its editor.
   const handleEntryAdded = useCallback(
     (entry: { id: string }) => {
       setSelectedEntryId(entry.id);
+
+      DatabaseEntries.requestFocus(entry.id, { viewId: view.id });
     },
-    [setSelectedEntryId],
+    [view.id, setSelectedEntryId],
   );
 
   // Renders a list row for an entry
@@ -133,83 +138,87 @@ export const NotebookViewComponent: React.FC<
   );
 
   return (
-    <div className="notebook-view" data-dragging={isDragging || undefined}>
-      {/* List panel */}
-      <div className="notebook-view-list-panel" style={{ width }}>
-        {/* Search bar and create button */}
-        <div className="notebook-view-toolbar">
-          <DatabaseEntriesSearchField
-            entryIds={entries}
-            onFilteredEntriesChange={setFilteredEntries}
-            stateKey="search"
-            size="md"
-            variant="ghost"
+    /* Scoped to the view so that focus requests made here are
+       honoured by both panels' renderers */
+    <DatabaseEntryContextProvider viewId={view.id}>
+      <div className="notebook-view" data-dragging={isDragging || undefined}>
+        {/* List panel */}
+        <div className="notebook-view-list-panel" style={{ width }}>
+          {/* Search bar and create button */}
+          <div className="notebook-view-toolbar">
+            <DatabaseEntriesSearchField
+              entryIds={entries}
+              onFilteredEntriesChange={setFilteredEntries}
+              stateKey="search"
+              size="md"
+              variant="ghost"
+            />
+
+            {/* Entry sort dropdown */}
+            <DataViewSortMenu view={view} size="md" variant="ghost" />
+
+            {/* Collection sources also support adding existing entries */}
+            {view.dataSource.type === 'collection' ? (
+              <AddCollectionEntryButton
+                collectionId={view.dataSource.id}
+                database={false}
+                onCreateEntry={handleEntryAdded}
+                onAddEntry={handleEntryAdded}
+                size="md"
+                variant="ghost"
+              />
+            ) : (
+              <CreateDatabaseEntryButton
+                database={createDatabaseIds}
+                onCreateEntry={handleEntryAdded}
+                size="md"
+                variant="ghost"
+              />
+            )}
+          </div>
+
+          {/* Rows are user designed layouts of varying height, so
+            they are measured rather than fixed */}
+          <VirtualizedList
+            items={filteredEntries}
+            itemHeight={LIST_ITEM_HEIGHT_ESTIMATE}
+            itemKey={getListItemKey}
+            measure
+            renderItem={renderListItem}
+            scrollToIndex={selectedEntryIndex}
+            visibility="hover"
+            stateKey="list"
+            className="notebook-view-list-scroll"
           />
-
-          {/* Entry sort dropdown */}
-          <DataViewSortMenu view={view} size="md" variant="ghost" />
-
-          {/* Collection sources also support adding existing entries */}
-          {view.dataSource.type === 'collection' ? (
-            <AddCollectionEntryButton
-              collectionId={view.dataSource.id}
-              database={false}
-              onCreateEntry={handleEntryAdded}
-              onAddEntry={handleEntryAdded}
-              size="md"
-              variant="ghost"
-            />
-          ) : (
-            <CreateDatabaseEntryButton
-              database={createDatabaseIds}
-              onCreateEntry={handleEntryAdded}
-              size="md"
-              variant="ghost"
-            />
-          )}
         </div>
 
-        {/* Rows are user designed layouts of varying height, so
-            they are measured rather than fixed */}
-        <VirtualizedList
-          items={filteredEntries}
-          itemHeight={LIST_ITEM_HEIGHT_ESTIMATE}
-          itemKey={getListItemKey}
-          measure
-          renderItem={renderListItem}
-          scrollToIndex={selectedEntryIndex}
-          visibility="hover"
-          stateKey="list"
-          className="notebook-view-list-scroll"
-        />
-      </div>
+        {/* Resize handle */}
+        <div className="notebook-view-resize-handle" onMouseDown={startResize}>
+          <div className="notebook-view-resize-indicator" />
+        </div>
 
-      {/* Resize handle */}
-      <div className="notebook-view-resize-handle" onMouseDown={startResize}>
-        <div className="notebook-view-resize-indicator" />
+        {/* Page panel */}
+        <div className="notebook-view-page-panel">
+          {/* Scoped per entry so each one keeps its own scroll position */}
+          {selectedEntryId && (
+            <TransientViewStateScope segment={selectedEntryId}>
+              <ScrollArea
+                className="notebook-view-page-scroll"
+                stateKey="page"
+                endPadding="lg"
+              >
+                <DatabaseEntryRenderer
+                  key={selectedEntryId}
+                  entryId={selectedEntryId}
+                  layoutContext="page"
+                  layoutId={entryLayoutOverrides[selectedEntryId]?.pageLayoutId}
+                />
+              </ScrollArea>
+            </TransientViewStateScope>
+          )}
+        </div>
       </div>
-
-      {/* Page panel */}
-      <div className="notebook-view-page-panel">
-        {/* Scoped per entry so each one keeps its own scroll position */}
-        {selectedEntryId && (
-          <TransientViewStateScope segment={selectedEntryId}>
-            <ScrollArea
-              className="notebook-view-page-scroll"
-              stateKey="page"
-              endPadding="lg"
-            >
-              <DatabaseEntryRenderer
-                key={selectedEntryId}
-                entryId={selectedEntryId}
-                layoutContext="page"
-                layoutId={entryLayoutOverrides[selectedEntryId]?.pageLayoutId}
-              />
-            </ScrollArea>
-          </TransientViewStateScope>
-        )}
-      </div>
-    </div>
+    </DatabaseEntryContextProvider>
   );
 };
 

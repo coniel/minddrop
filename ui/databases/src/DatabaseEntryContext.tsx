@@ -25,16 +25,10 @@ export interface DatabaseEntryContextValue {
   source?: DatabaseEntryRenderSource;
 
   /**
-   * The ID of an entry whose layout should autofocus its editor
-   * when the entry mounts, typically the just created entry.
+   * The ID of the view the entries render in, matched against
+   * focus requests scoped to a single view.
    */
-  autoFocusEntryId?: string;
-
-  /**
-   * Callback fired when the autofocus entry mounts, consuming
-   * the autofocus so remounts do not steal focus later.
-   */
-  onEntryAutoFocused?: () => void;
+  viewId?: string;
 }
 
 export const DatabaseEntryContext = createContext<DatabaseEntryContextValue>({
@@ -60,14 +54,7 @@ export interface DatabaseEntryContextProviderProps
  */
 export const DatabaseEntryContextProvider: React.FC<
   DatabaseEntryContextProviderProps
-> = ({
-  children,
-  draggable,
-  optionsMenu,
-  source,
-  autoFocusEntryId,
-  onEntryAutoFocused,
-}) => {
+> = ({ children, draggable, optionsMenu, source, viewId }) => {
   const parentContext = useDatabaseEntryContext();
 
   // Override the provided values, inheriting the rest from the
@@ -77,18 +64,9 @@ export const DatabaseEntryContextProvider: React.FC<
       draggable: draggable ?? parentContext.draggable,
       optionsMenu: optionsMenu ?? parentContext.optionsMenu,
       source: source ?? parentContext.source,
-      autoFocusEntryId: autoFocusEntryId ?? parentContext.autoFocusEntryId,
-      onEntryAutoFocused:
-        onEntryAutoFocused ?? parentContext.onEntryAutoFocused,
+      viewId: viewId ?? parentContext.viewId,
     }),
-    [
-      parentContext,
-      draggable,
-      optionsMenu,
-      source,
-      autoFocusEntryId,
-      onEntryAutoFocused,
-    ],
+    [parentContext, draggable, optionsMenu, source, viewId],
   );
 
   return (

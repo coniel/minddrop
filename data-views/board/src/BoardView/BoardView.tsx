@@ -80,10 +80,6 @@ export const BoardViewComponent: React.FC<
   // Whether the view options menu in the toolbar is open
   const [optionsMenuOpen, setOptionsMenuOpen] = useState(false);
 
-  // The ID of the just created entry whose card should autofocus
-  // its editor, cleared once the card has mounted.
-  const [autoFocusEntryId, setAutoFocusEntryId] = useState<string>();
-
   // The databases the board's entries belong to
   const entryDatabases = Databases.useFromEntries(entries);
 
@@ -185,16 +181,6 @@ export const BoardViewComponent: React.FC<
     };
   }, [view.id, view.dataSource.id, reconciledColumns, updateColumns]);
 
-  // Scroll an entry's card into view once it has been rendered
-  const scrollEntryIntoView = useCallback((entryId: string) => {
-    // Deferred to the frame after the layout update
-    requestAnimationFrame(() => {
-      scrollRootRef.current
-        ?.querySelector(`[data-entry-id="${entryId}"]`)
-        ?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-    });
-  }, []);
-
   // Create an entry in the given database, optionally from an
   // entry template, place it on the board, and add it to the
   // board's collection.
@@ -213,22 +199,15 @@ export const BoardViewComponent: React.FC<
       // it is briefly reconciled into the first column.
       updateColumns(placeEntry(entry.id));
 
-      // Autofocus the new entry's editor once its card mounts
-      setAutoFocusEntryId(entry.id);
-
-      // Bring the new entry's card into view if the drop position
-      // only partially fit on screen.
-      scrollEntryIntoView(entry.id);
+      // Bring the new entry's card into view, which the drop
+      // position may only have partially fit on screen, and focus
+      // its editor once the card mounts.
+      DatabaseEntries.requestFocus(entry.id, { viewId: view.id });
 
       await Collections.addItems(view.dataSource.id, [entry.id]);
     },
-    [view.dataSource.id, updateColumns, scrollEntryIntoView],
+    [view.id, view.dataSource.id, updateColumns],
   );
-
-  // Clear the autofocus once the new entry's card has mounted
-  const handleEntryAutoFocused = useCallback(() => {
-    setAutoFocusEntryId(undefined);
-  }, []);
 
   // Handle dropping an entry, new entry card, or add existing
   // entry card into a column.
@@ -535,8 +514,7 @@ export const BoardViewComponent: React.FC<
         draggable
         optionsMenu
         source={view.dataSource}
-        autoFocusEntryId={autoFocusEntryId}
-        onEntryAutoFocused={handleEntryAutoFocused}
+        viewId={view.id}
       >
         <FlexDropContainer
           id={`board-${view.id}`}

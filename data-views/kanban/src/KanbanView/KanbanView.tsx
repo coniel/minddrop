@@ -52,10 +52,6 @@ export const KanbanViewComponent: React.FC<
   const scrollRootRef = useRef<HTMLDivElement>(null);
   const scrollViewportRef = useRef<HTMLDivElement>(null);
 
-  // The ID of the just created entry whose card should autofocus
-  // its editor, cleared once the card has mounted.
-  const [autoFocusEntryId, setAutoFocusEntryId] = useState<string>();
-
   // The value of the column the pointer is over, whose heading
   // shows its actions.
   const [hoveredColumnValue, setHoveredColumnValue] = useState<string | null>(
@@ -414,16 +410,6 @@ export const KanbanViewComponent: React.FC<
     [databaseId, order, updateOrder],
   );
 
-  // Scroll an entry's card into view once it has been rendered
-  const scrollEntryIntoView = useCallback((entryId: string) => {
-    // Scroll on the frame after the layout update
-    requestAnimationFrame(() => {
-      scrollRootRef.current
-        ?.querySelector(`[data-entry-id="${entryId}"]`)
-        ?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-    });
-  }, []);
-
   // Create an entry at the top of a column via its heading's new
   // entry button, giving it the column's group property value.
   const handleCreateColumnEntry = useCallback(
@@ -451,12 +437,10 @@ export const KanbanViewComponent: React.FC<
       // Position the entry at the top of the column
       updateOrder(placeEntryInColumn(order, entry.id, columnValue, 0));
 
-      // Autofocus the new entry's editor once its card mounts
-      setAutoFocusEntryId(entry.id);
-
-      // Bring the new entry's card into view if the column's top
-      // sits off screen.
-      scrollEntryIntoView(entry.id);
+      // Bring the new entry's card into view, in case the column's
+      // top sits off screen, and focus its editor once the card
+      // mounts.
+      DatabaseEntries.requestFocus(entry.id, { viewId: view.id });
 
       // Check if the source is a collection. Collections list
       // their entries explicitly, unlike databases and queries.
@@ -469,16 +453,11 @@ export const KanbanViewComponent: React.FC<
       databaseId,
       order,
       updateOrder,
-      scrollEntryIntoView,
+      view.id,
       view.dataSource.type,
       view.dataSource.id,
     ],
   );
-
-  // Clear the autofocus once the new entry's card has mounted
-  const handleEntryAutoFocused = useCallback(() => {
-    setAutoFocusEntryId(undefined);
-  }, []);
 
   // Handle dropping an entry into a column
   const handleColumnDrop = useCallback(
@@ -613,8 +592,7 @@ export const KanbanViewComponent: React.FC<
           draggable
           optionsMenu
           source={view.dataSource}
-          autoFocusEntryId={autoFocusEntryId}
-          onEntryAutoFocused={handleEntryAutoFocused}
+          viewId={view.id}
         >
           <Group gap={4} align="stretch" className="kanban-view-columns">
             {visibleColumns.map((column) => (

@@ -8,7 +8,10 @@ import {
   DatabaseTemplates,
   Databases,
 } from '@minddrop/databases';
-import { DatabaseFixtures } from '@minddrop/databases/test-utils';
+import {
+  DatabaseFixtures,
+  clearEntryFocusRequest,
+} from '@minddrop/databases/test-utils';
 import { Designs } from '@minddrop/designs';
 import { Designs as DesignsNext } from '@minddrop/designs-next';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
@@ -76,6 +79,10 @@ export async function cleanup(): Promise<void> {
   await Fs.tests.cleanup();
 
   await Events.tests.cleanup();
+
+  // Clear any pending focus request, which would otherwise still
+  // be pending in the next test.
+  clearEntryFocusRequest();
 
   // Clear stores
   Databases.Store.clear();

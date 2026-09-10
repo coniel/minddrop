@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useId, useMemo } from 'react';
+import React, { useCallback, useEffect, useId, useMemo, useRef } from 'react';
 import {
   DatabaseEntries,
   DatabaseEntry,
@@ -78,18 +78,14 @@ const Entry: React.FC<EntryProps> = ({
   layoutContext,
   onClick,
 }) => {
+  const rootRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
   const database = Databases.use(entry.database);
   const resolvedDesign = Designs.use(database?.designId || '');
   // Only database designs apply to entries
   const design = resolvedDesign?.type === 'database' ? resolvedDesign : null;
-  const {
-    draggable,
-    optionsMenu,
-    source,
-    autoFocusEntryId,
-    onEntryAutoFocused,
-  } = useDatabaseEntryContext();
+  const { draggable, optionsMenu, source, viewId } = useDatabaseEntryContext();
+  const focusRequested = DatabaseEntries.useFocusRequest(entry.id, viewId);
   const openView = Views.useOpenView();
   const { draggableProps, isDragging } = Selection.useDraggable({
     id: entry.id,
@@ -106,10 +102,6 @@ const Entry: React.FC<EntryProps> = ({
   // The base layout type the context resolves to, used for styling
   // and click behaviour.
   const baseType = Databases.constants.LayoutContextBaseType[layoutContext];
-
-  // Whether this entry's layout should autofocus its editor,
-  // set when the entry was just created from the containing view
-  const autoFocusEditor = autoFocusEntryId === entry.id;
 
   // Resolve the layout to render with, falling back to the
   // database default when no override is specified.
@@ -181,14 +173,20 @@ const Entry: React.FC<EntryProps> = ({
     [entry.id, entry.properties, layout, propertyMap],
   );
 
-  // Consume the autofocus once the entry has mounted, so cards
-  // remounting later (e.g. on column drags or layout switches)
-  // do not steal focus
+  // Bring the entry into view when it has been asked to come
+  // forward, on the frame after mounting so that the containing
+  // view has laid the entry out.
   useEffect(() => {
-    if (autoFocusEditor) {
-      onEntryAutoFocused?.();
+    if (!focusRequested) {
+      return;
     }
-  }, [autoFocusEditor, onEntryAutoFocused]);
+
+    const frame = requestAnimationFrame(() => {
+      rootRef.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    });
+
+    return () => cancelAnimationFrame(frame);
+  }, [focusRequested]);
 
   const onUpdatePropertyValue = useCallback(
     (name: string, value: PropertyValue) => {
@@ -290,6 +288,7 @@ const Entry: React.FC<EntryProps> = ({
   if (!layout) {
     return (
       <div
+        ref={rootRef}
         className={`${className} database-entry-fallback`}
         data-entry-id={entry.id}
         role={isClickable ? 'button' : undefined}
@@ -319,6 +318,7 @@ const Entry: React.FC<EntryProps> = ({
 
   return (
     <div
+      ref={rootRef}
       className={className}
       data-entry-id={entry.id}
       role={isClickable ? 'button' : undefined}
@@ -345,7 +345,7 @@ const Entry: React.FC<EntryProps> = ({
         <LayoutRenderer
           layout={layout}
           context={layoutContext}
-          autoFocusEditor={autoFocusEditor}
+          autoFocusEditor={focusRequested}
           designProperties={design?.properties}
           mediaDirPath={design ? Designs.resolveMediaDirPath(design.id) : null}
           propertyMap={propertyMap}
