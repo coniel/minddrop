@@ -4,6 +4,7 @@ import { useTranslation } from '@minddrop/i18n';
 import { KeyboardShortcut } from '../KeyboardShortcut';
 import { Text } from '../Text';
 import { TranslatableNode } from '../types';
+import { getLastInputModality } from './lastInputModality';
 import './Tooltip.css';
 
 type TooltipBaseProps = Pick<
@@ -80,9 +81,11 @@ export const Tooltip: FC<TooltipProps> = ({
   const { t } = useTranslation();
   // A native drag suspends pointer events, so an open tooltip never
   // hears the pointer leave and hangs over the page until the drop.
-  // Scrolling moves the trigger out from under the tooltip without a
-  // pointer leave either. Tracking open state here allows both to
-  // dismiss it.
+  // A menu or popover opened from the trigger does the same, and
+  // reveals the tooltip again when it closes. Scrolling moves the
+  // trigger out from under the tooltip without a pointer leave
+  // either. Tracking open state here allows all three to dismiss
+  // it.
   const [openState, setOpenState] = useState(defaultOpen ?? false);
 
   const isOpen = open ?? openState;
@@ -91,6 +94,19 @@ export const Tooltip: FC<TooltipProps> = ({
     TooltipPrimitive.Root.Props['onOpenChange']
   > = useCallback(
     (nextOpen, eventDetails) => {
+      // A popup closing hands focus back to the trigger which opened
+      // it, and a focused trigger opens its tooltip. Following the
+      // last input modality tells that focus from one a person moved
+      // themselves: a tab onto the trigger still shows the tooltip,
+      // a mouse-driven return to it does not.
+      if (
+        nextOpen &&
+        eventDetails.reason === 'trigger-focus' &&
+        getLastInputModality() === 'pointer'
+      ) {
+        return;
+      }
+
       setOpenState(nextOpen);
       onOpenChange?.(nextOpen, eventDetails);
     },
@@ -112,10 +128,12 @@ export const Tooltip: FC<TooltipProps> = ({
 
     document.addEventListener('dragstart', handleDismiss, true);
     document.addEventListener('scroll', handleDismiss, true);
+    document.addEventListener('pointerdown', handleDismiss, true);
 
     return () => {
       document.removeEventListener('dragstart', handleDismiss, true);
       document.removeEventListener('scroll', handleDismiss, true);
+      document.removeEventListener('pointerdown', handleDismiss, true);
     };
   }, [isOpen]);
 

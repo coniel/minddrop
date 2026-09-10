@@ -165,6 +165,49 @@ describe('<Tooltip />', () => {
     await waitFor(() => expect(screen.queryByText('Tooltip title')).toBeNull());
   });
 
+  it('dismisses on a press', async () => {
+    const user = userEvent.setup();
+
+    render(
+      <TooltipProvider>
+        <Tooltip stringTitle="Tooltip title">
+          <button type="button">tooltip</button>
+        </Tooltip>
+      </TooltipProvider>,
+    );
+
+    await user.hover(screen.getByRole('button'));
+
+    await waitFor(() => screen.getAllByText('Tooltip title'));
+
+    // A menu opened by the press suspends pointer events over the
+    // trigger, so the tooltip never hears the pointer leave and
+    // reappears when the menu closes.
+    fireEvent.pointerDown(document);
+
+    await waitFor(() => expect(screen.queryByText('Tooltip title')).toBeNull());
+  });
+
+  it('stays closed when focus is handed back to the trigger', async () => {
+    const user = userEvent.setup();
+
+    render(
+      <TooltipProvider>
+        <Tooltip stringTitle="Tooltip title">
+          <button type="button">tooltip</button>
+        </Tooltip>
+      </TooltipProvider>,
+    );
+
+    // A popup closing focuses the trigger which opened it, with the
+    // pointer long gone from it.
+    screen.getByRole('button').focus();
+
+    await user.hover(document.body);
+
+    expect(screen.queryByText('Tooltip title')).toBeNull();
+  });
+
   it('renders the keyboard shortcut', async () => {
     render(
       <TooltipProvider>
