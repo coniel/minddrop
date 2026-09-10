@@ -9,5 +9,7 @@ export * from './registerStoreListeners';
 export * from './createKeyValueStore';
 export * from './createStorePersistence';
 export * from './createObjectStore';
+export * from './createRegistry';
 export * from './storeRegistry';
+export * from './errors';
 export * from './types';
