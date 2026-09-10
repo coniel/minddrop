@@ -3,11 +3,7 @@
     "elements": {
       "heading": {
         "label": "Heading",
-        "placeholder": "Heading",
-        "level": "Heading level",
-        "level1": "Heading 1",
-        "level2": "Heading 2",
-        "level3": "Heading 3"
+        "placeholder": "Heading"
       },
       "text": {
         "label": "Text",

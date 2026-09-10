@@ -1,25 +1,24 @@
+/* The block's box, which the text sits inside without stretching
+   to it. */
 .design-heading-element {
   flex: 1;
+  min-width: 0;
+}
+
+/* A line of letters takes the block's height, from the top of the
+   tallest to the bottom of the lowest. Its size, line height, lift
+   onto the block's top edge and the room its accents and descenders
+   need are all sized to the block, so they are set on the element. */
+.design-heading-element-text {
+  display: block;
   font-weight: 600;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
   overflow-wrap: break-word;
 }
 
-/* Typography per level on the 4px grid, matching
-   HeadingLineHeightUnits */
-.design-heading-element-level-1 {
-  font-size: 24px;
-  line-height: 32px;
-}
-
-.design-heading-element-level-2 {
-  font-size: 18px;
-  line-height: 24px;
-}
-
-.design-heading-element-level-3 {
-  font-size: 15px;
-  line-height: 20px;
+/* Fixed-height headings hold the single line their block sizes,
+   ending it in an ellipsis where it outgrows the block. */
+.design-heading-element-single-line {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

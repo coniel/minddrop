@@ -2,28 +2,21 @@ import { DesignElementConfig } from '@minddrop/designs-next';
 import { i18n } from '@minddrop/i18n';
 import { Properties } from '@minddrop/properties';
 import { TextContentControls } from '@minddrop/ui-designs-next';
-import { HeadingElement, HeadingLevel } from '../HeadingElement.types';
+import { HeadingElement } from '../HeadingElement.types';
 import { HeadingElementRenderer } from '../HeadingElementRenderer';
-import { HeadingSettingsControls } from '../HeadingSettingsControls';
 
 export const HeadingElementType = 'heading';
 
-/**
- * The heading level applied when an element has no level setting.
- */
-export const DefaultHeadingLevel: HeadingLevel = 2;
+// The height of a new heading in grid units
+const DefaultHeadingRowSpan = 6;
 
-// Line height per heading level in grid units, matching the CSS
-export const HeadingLineHeightUnits: Record<HeadingLevel, number> = {
-  1: 8,
-  2: 6,
-  3: 5,
-};
+// The smallest heading height in grid units, below which the text
+// is too small to read.
+const MinHeadingRowSpan = 3;
 
 /**
- * Config for the heading element: prominent text whose block height
- * acts as a max-lines setting, with the level setting choosing its
- * typography.
+ * Config for the heading element: prominent text sized by its
+ * block, whose height holds a line of it.
  */
 export const HeadingElementConfig: DesignElementConfig<HeadingElement> = {
   type: HeadingElementType,
@@ -35,12 +28,10 @@ export const HeadingElementConfig: DesignElementConfig<HeadingElement> = {
   suggestedPropertyTypes: ['title', 'text'],
   component: HeadingElementRenderer,
   defaultColumnSpan: 24,
-  defaultRowSpan: HeadingLineHeightUnits[DefaultHeadingLevel],
+  defaultRowSpan: DefaultHeadingRowSpan,
   resolveDefaults: resolvePlaceholderText,
   settingGroups: ['text'],
-  settingsControls: HeadingSettingsControls,
-  resolveMinRowSpan: resolveLineHeight,
-  resolveRowSpanStep: resolveLineHeight,
+  resolveMinRowSpan: () => MinHeadingRowSpan,
 };
 
 /**
@@ -51,15 +42,4 @@ export const HeadingElementConfig: DesignElementConfig<HeadingElement> = {
  */
 function resolvePlaceholderText(): Partial<HeadingElement> {
   return { content: i18n.t('designsNext.elements.heading.placeholder') };
-}
-
-/**
- * Resolves the line height of the element's heading level in grid
- * units.
- *
- * @param element - The heading element.
- * @returns The line height in grid units.
- */
-function resolveLineHeight(element: HeadingElement): number {
-  return HeadingLineHeightUnits[element.level ?? DefaultHeadingLevel];
 }

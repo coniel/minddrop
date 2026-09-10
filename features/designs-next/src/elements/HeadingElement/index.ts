@@ -1,4 +1,4 @@
 export * from './HeadingElement.types';
 export * from './HeadingElementConfig';
 export * from './HeadingElementRenderer';
-export * from './HeadingSettingsControls';
+export * from './resolveHeadingTextStyle';

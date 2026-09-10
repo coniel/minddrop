@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest';
+import { Designs } from '@minddrop/designs-next';
 import { coverDesignElement } from '@minddrop/designs-next/test-utils';
 import { PropertiesSchema } from '@minddrop/properties';
 import { render, screen } from '@minddrop/test-utils';
@@ -41,21 +42,52 @@ describe('HeadingElementRenderer', () => {
     expect(screen.getByText('The entry title')).toBeInTheDocument();
   });
 
-  it('applies the default level class without a level setting', () => {
-    render(<HeadingElementRenderer element={headingElement} />);
+  it('scales the font with the block height', () => {
+    const { rerender } = render(
+      <HeadingElementRenderer element={{ ...headingElement, rowSpan: 4 }} />,
+    );
+
+    // The font size of a four unit tall heading
+    const small = parseFloat(
+      screen.getByText('Project overview').style.fontSize,
+    );
+
+    rerender(
+      <HeadingElementRenderer element={{ ...headingElement, rowSpan: 8 }} />,
+    );
+
+    // The font size of a heading twice as tall
+    const large = parseFloat(
+      screen.getByText('Project overview').style.fontSize,
+    );
+
+    // The letters fill the block without the room the font keeps
+    // above them, so the font is larger than the block's height.
+    expect(small).toBeGreaterThan(4 * Designs.constants.UnitPixelSize);
+    expect(large).toBeCloseTo(small * 2, 3);
+  });
+
+  it('holds a single line at a fixed height', () => {
+    render(
+      <HeadingElementRenderer
+        element={{ ...headingElement, naturalHeight: false }}
+      />,
+    );
 
     expect(screen.getByText('Project overview')).toHaveClass(
-      'design-heading-element-level-2',
+      'design-heading-element-single-line',
     );
   });
 
-  it('applies the level class of the level setting', () => {
+  it('wraps at a natural height', () => {
     render(
-      <HeadingElementRenderer element={{ ...headingElement, level: 1 }} />,
+      <HeadingElementRenderer
+        element={{ ...headingElement, naturalHeight: true }}
+      />,
     );
 
-    expect(screen.getByText('Project overview')).toHaveClass(
-      'design-heading-element-level-1',
+    expect(screen.getByText('Project overview')).not.toHaveClass(
+      'design-heading-element-single-line',
     );
   });
 
