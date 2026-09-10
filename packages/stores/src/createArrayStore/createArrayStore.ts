@@ -242,10 +242,13 @@ export function createArrayStore<TItem extends object>(
     clear: () => set({ items: [] }),
   }));
 
-  // Wire the store up to the platform layer that persists it
-  const persistence = createStorePersistence(persist, (data) =>
-    store.getState().load(data as TItem[]),
-  );
+  // Wire the store up to the platform layer that persists it.
+  // Hydrated data replaces the items rather than being appended to
+  // them, so hydrating a second time does not duplicate them. Data
+  // which is not an array means nothing has been persisted yet.
+  const persistence = createStorePersistence(persist, (data) => {
+    store.setState({ items: Array.isArray(data) ? (data as TItem[]) : [] });
+  });
 
   // Dispatches a persist event with the current store data
   function dispatchPersist(): void {

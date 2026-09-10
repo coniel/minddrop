@@ -326,6 +326,31 @@ describe('createArrayStore', () => {
           StoreHydratedEvent,
         );
       });
+
+      it('resolves when nothing has been persisted', async () => {
+        // Create a fresh store so its load listener is active
+        const freshStore = createArrayStore<TestItem>(
+          'Test:ArrayPersist',
+          'id',
+          {
+            persistTo: 'workspace-config',
+            namespace: 'hydrate-empty-test',
+          },
+        );
+
+        // Respond with the empty object the platform layer sends
+        // when the store has no persisted file.
+        Events.addListener(StoreHydrateRequestEvent, 'test', () => {
+          Events.dispatch(StoreHydrateEvent, {
+            namespace: 'hydrate-empty-test',
+            data: {},
+          });
+        });
+
+        await freshStore.hydrate();
+
+        expect(freshStore.getAll()).toEqual([]);
+      });
     });
   });
 
@@ -364,6 +389,30 @@ describe('createArrayStore', () => {
       });
 
       expect(freshStore.getAll()).toEqual([]);
+    });
+
+    it('replaces the items when loaded a second time', async () => {
+      // Create a fresh store so its listener is active
+      const freshStore = createArrayStore<TestItem>('Test:ArrayPersist', 'id', {
+        persistTo: 'workspace-config',
+        namespace: 'load-test-4',
+      });
+
+      // Dispatch two load events, as a file watcher does when the
+      // store's file changes on disk.
+      Events.dispatch(StoreHydrateEvent, {
+        namespace: 'load-test-4',
+        data: [item1, item2],
+      });
+      Events.dispatch(StoreHydrateEvent, {
+        namespace: 'load-test-4',
+        data: [item1, item3],
+      });
+
+      // Should hold the second load's items only
+      await vi.waitFor(() => {
+        expect(freshStore.getAll()).toEqual([item1, item3]);
+      });
     });
   });
 });
