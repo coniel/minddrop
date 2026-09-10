@@ -1,5 +1,16 @@
-export {
-  SettingsViewsStore as Store,
-  useSettingsViews as useAll,
-} from './SettingsViewsStore';
-export { registerSettingsView as register } from './registerSettingsView';
+import { NotRegisteredError } from '@minddrop/stores';
+import { SettingsViewsRegistry } from './SettingsViewsRegistry';
+
+export const errors = {
+  NotRegistered: NotRegisteredError,
+};
+
+export const {
+  store: Store,
+  register,
+  unregister,
+  get,
+  getAll,
+  use,
+  useAll,
+} = SettingsViewsRegistry;
