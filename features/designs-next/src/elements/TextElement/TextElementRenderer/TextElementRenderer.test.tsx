@@ -58,15 +58,20 @@ describe('TextElementRenderer', () => {
   });
 
   it('applies the text settings modifier classes', () => {
+    render(<TextElementRenderer element={{ ...textElement, italic: true }} />);
+
+    expect(screen.getByText('A longer piece of body text.')).toHaveClass(
+      'design-element-text-italic',
+    );
+  });
+
+  it('sets the text in the weight it is given', () => {
     render(
-      <TextElementRenderer
-        element={{ ...textElement, bold: true, italic: true }}
-      />,
+      <TextElementRenderer element={{ ...textElement, fontWeight: 300 }} />,
     );
 
-    const text = screen.getByText('A longer piece of body text.');
-
-    expect(text).toHaveClass('design-element-text-bold');
-    expect(text).toHaveClass('design-element-text-italic');
+    expect(screen.getByText('A longer piece of body text.')).toHaveStyle({
+      fontWeight: '300',
+    });
   });
 });

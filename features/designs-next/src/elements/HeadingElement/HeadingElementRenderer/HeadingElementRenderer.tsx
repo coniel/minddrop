@@ -52,12 +52,17 @@ export const HeadingElementRenderer: React.FC<
     resolveTextSettingsClass(element),
   );
 
+  // The text fitted to its block, set in the weight it is given.
+  // The band is measured at the base weight either way, so setting
+  // a weight does not resize the text.
+  const style: React.CSSProperties = {
+    ...resolveHeadingTextStyle(blockHeight, band),
+    fontWeight: element.fontWeight,
+  };
+
   return (
     <div className="design-heading-element">
-      <span
-        className={textClassName}
-        style={resolveHeadingTextStyle(blockHeight, band)}
-      >
+      <span className={textClassName} style={style}>
         {propertyValue ?? element.content}
       </span>
     </div>

@@ -28,11 +28,15 @@ export const TextElementRenderer: React.FC<DesignElementProps<TextElement>> = ({
     resolveTextSettingsClass(element),
   );
 
+  // The weight the text is set in, with the line clamp of a fixed
+  // height block.
+  const style: React.CSSProperties = {
+    fontWeight: element.fontWeight,
+    ...(element.naturalHeight ? undefined : { WebkitLineClamp: lines }),
+  };
+
   return (
-    <div
-      className={className}
-      style={element.naturalHeight ? undefined : { WebkitLineClamp: lines }}
-    >
+    <div className={className} style={style}>
       {propertyValue ?? element.content}
     </div>
   );

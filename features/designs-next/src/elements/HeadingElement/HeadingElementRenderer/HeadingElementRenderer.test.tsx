@@ -93,11 +93,23 @@ describe('HeadingElementRenderer', () => {
 
   it('applies the text settings modifier classes', () => {
     render(
-      <HeadingElementRenderer element={{ ...headingElement, bold: true }} />,
+      <HeadingElementRenderer element={{ ...headingElement, italic: true }} />,
     );
 
     expect(screen.getByText('Project overview')).toHaveClass(
-      'design-element-text-bold',
+      'design-element-text-italic',
     );
+  });
+
+  it('sets the text in the weight it is given', () => {
+    render(
+      <HeadingElementRenderer
+        element={{ ...headingElement, fontWeight: 800 }}
+      />,
+    );
+
+    expect(screen.getByText('Project overview')).toHaveStyle({
+      fontWeight: '800',
+    });
   });
 });
