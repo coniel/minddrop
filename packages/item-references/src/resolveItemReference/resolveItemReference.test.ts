@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { itemReferenceAdapters } from '../itemReferenceAdapters';
+import { ItemReferenceAdaptersRegistry } from '../ItemReferenceAdaptersRegistry';
 import { ItemReferenceAdapter } from '../types';
 import { resolveItemReference } from './resolveItemReference';
 
@@ -22,11 +22,11 @@ const entryAdapter: ItemReferenceAdapter = {
 
 describe('resolveItemReference', () => {
   beforeEach(() => {
-    itemReferenceAdapters.set(entryAdapter.type, entryAdapter);
+    ItemReferenceAdaptersRegistry.register(entryAdapter);
   });
 
   afterEach(() => {
-    itemReferenceAdapters.clear();
+    ItemReferenceAdaptersRegistry.clear();
   });
 
   it('resolves the reference into its runtime ID', () => {

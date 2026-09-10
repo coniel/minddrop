@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { itemReferenceAdapters } from '../itemReferenceAdapters';
+import { ItemReferenceAdaptersRegistry } from '../ItemReferenceAdaptersRegistry';
 import { ItemReferenceAdapter } from '../types';
 import { serializeItemReferences } from './serializeItemReferences';
 
@@ -12,11 +12,11 @@ const entryAdapter: ItemReferenceAdapter = {
 
 describe('serializeItemReferences', () => {
   beforeEach(() => {
-    itemReferenceAdapters.set(entryAdapter.type, entryAdapter);
+    ItemReferenceAdaptersRegistry.register(entryAdapter);
   });
 
   afterEach(() => {
-    itemReferenceAdapters.clear();
+    ItemReferenceAdaptersRegistry.clear();
   });
 
   it('serializes IDs preserving input order across mixed types', () => {

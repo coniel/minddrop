@@ -1,5 +1,5 @@
 import { entityIdType } from '@minddrop/utils';
-import { itemReferenceAdapters } from '../itemReferenceAdapters';
+import { ItemReferenceAdaptersRegistry } from '../ItemReferenceAdaptersRegistry';
 import { ItemReferenceMatch } from '../types';
 
 /**
@@ -16,7 +16,7 @@ export function matchItemReference(
   reference: string,
 ): ItemReferenceMatch | null {
   // Offer the reference to each adapter in registration order
-  for (const adapter of itemReferenceAdapters.values()) {
+  for (const adapter of ItemReferenceAdaptersRegistry.getAll()) {
     const match = adapter.match(reference);
 
     if (match) {

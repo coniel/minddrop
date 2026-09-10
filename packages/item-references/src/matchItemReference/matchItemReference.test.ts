@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { itemReferenceAdapters } from '../itemReferenceAdapters';
+import { ItemReferenceAdaptersRegistry } from '../ItemReferenceAdaptersRegistry';
 import { ItemReferenceAdapter } from '../types';
 import { matchItemReference } from './matchItemReference';
 
@@ -30,12 +30,12 @@ const databaseAdapter: ItemReferenceAdapter = {
 
 describe('matchItemReference', () => {
   beforeEach(() => {
-    itemReferenceAdapters.set(entryAdapter.type, entryAdapter);
-    itemReferenceAdapters.set(databaseAdapter.type, databaseAdapter);
+    ItemReferenceAdaptersRegistry.register(entryAdapter);
+    ItemReferenceAdaptersRegistry.register(databaseAdapter);
   });
 
   afterEach(() => {
-    itemReferenceAdapters.clear();
+    ItemReferenceAdaptersRegistry.clear();
   });
 
   it('matches references through the claiming adapter', () => {
@@ -54,7 +54,7 @@ describe('matchItemReference', () => {
 
   it('matches via the first claiming adapter in registration order', () => {
     // A second adapter that would also claim 'Books' addresses
-    itemReferenceAdapters.set('widget', {
+    ItemReferenceAdaptersRegistry.register({
       type: 'widget',
       serialize: (id) => id,
       match: (reference) =>

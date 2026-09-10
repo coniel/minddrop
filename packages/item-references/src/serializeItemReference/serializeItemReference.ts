@@ -1,5 +1,5 @@
 import { entityIdType } from '@minddrop/utils';
-import { itemReferenceAdapters } from '../itemReferenceAdapters';
+import { ItemReferenceAdaptersRegistry } from '../ItemReferenceAdaptersRegistry';
 
 /**
  * Serializes a runtime item ID into a durable item reference using
@@ -12,7 +12,8 @@ import { itemReferenceAdapters } from '../itemReferenceAdapters';
 export function serializeItemReference(id: string): string | null {
   // Look up the adapter for the ID's type prefix
   const type = entityIdType(id);
-  const adapter = type !== null ? itemReferenceAdapters.get(type) : undefined;
+  const adapter =
+    type !== null ? ItemReferenceAdaptersRegistry.get(type, false) : null;
 
   // Pass IDs without a registered adapter through unchanged
   if (!adapter) {

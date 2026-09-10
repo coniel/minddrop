@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { itemReferenceAdapters } from '../itemReferenceAdapters';
+import { ItemReferenceAdaptersRegistry } from '../ItemReferenceAdaptersRegistry';
 import { ItemReferenceAdapter } from '../types';
 import { resolveItemReferences } from './resolveItemReferences';
 
@@ -30,12 +30,12 @@ const databaseAdapter: ItemReferenceAdapter = {
 
 describe('resolveItemReferences', () => {
   beforeEach(() => {
-    itemReferenceAdapters.set(entryAdapter.type, entryAdapter);
-    itemReferenceAdapters.set(databaseAdapter.type, databaseAdapter);
+    ItemReferenceAdaptersRegistry.register(entryAdapter);
+    ItemReferenceAdaptersRegistry.register(databaseAdapter);
   });
 
   afterEach(() => {
-    itemReferenceAdapters.clear();
+    ItemReferenceAdaptersRegistry.clear();
   });
 
   it('resolves references preserving input order across adapters', () => {

@@ -1,3 +1,4 @@
+import { ItemReferenceAdaptersRegistry } from './ItemReferenceAdaptersRegistry';
 import { ItemAddressesChangedEvent } from './events';
 
 // Const-asserted so the names keep their literal types, which key
@@ -6,8 +7,12 @@ export const events = {
   AddressesChanged: ItemAddressesChangedEvent,
 } as const;
 
-export { registerItemReferenceAdapter as registerAdapter } from './registerItemReferenceAdapter';
-export { unregisterItemReferenceAdapter as unregisterAdapter } from './unregisterItemReferenceAdapter';
+export const {
+  store: AdaptersStore,
+  register: registerAdapter,
+  unregister: unregisterAdapter,
+} = ItemReferenceAdaptersRegistry;
+
 export { matchItemReference as match } from './matchItemReference';
 export { serializeItemReference as serializeOne } from './serializeItemReference';
 export { serializeItemReferences as serialize } from './serializeItemReferences';

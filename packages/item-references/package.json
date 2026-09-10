@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@minddrop/events": "workspace:*",
+    "@minddrop/stores": "workspace:*",
     "@minddrop/utils": "workspace:*"
   }
 }

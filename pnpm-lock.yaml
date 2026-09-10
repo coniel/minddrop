@@ -2281,6 +2281,9 @@ importers:
       '@minddrop/events':
         specifier: workspace:*
         version: link:../events
+      '@minddrop/stores':
+        specifier: workspace:*
+        version: link:../stores
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../utils
