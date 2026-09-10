@@ -22,7 +22,12 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "@minddrop/data-views": "workspace:*",
+    "@minddrop/databases": "workspace:*",
+    "@minddrop/entity-groups": "workspace:*",
     "@minddrop/file-system": "workspace:*",
+    "@minddrop/item-references": "workspace:*",
+    "@minddrop/spaces": "workspace:*",
     "@minddrop/stores": "workspace:*",
     "@minddrop/utils": "workspace:*",
     "@minddrop/workspaces": "workspace:*"
