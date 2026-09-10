@@ -52,6 +52,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  /* Descender room inside the clipped box */
+  line-height: var(--line-height-snug);
 }
 
 .search-result-item-secondary {
@@ -75,6 +77,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  /* Descender room inside the clipped box */
+  line-height: var(--line-height-snug);
 }
 
 .search-result-item-property-name {

@@ -273,7 +273,7 @@
      itself rather than a box around one. */
   &:has(.menu-item-text) .menu-item-icon {
     margin-top: calc(
-      (var(--font-size-sm) * var(--line-height-none) - 1rem) / 2
+      (var(--font-size-sm) * var(--line-height-snug) - 1rem) / 2
     );
   }
 
@@ -284,6 +284,9 @@
     white-space: nowrap;
     color: var(--text-muted);
     font-size: var(--font-size-xs);
+    /* Taller than the item's line height, which clips descenders
+       against the overflow used for the ellipsis */
+    line-height: var(--line-height-snug);
   }
 
   .menu-item-label {
@@ -294,6 +297,9 @@
     white-space: nowrap;
     color: inherit;
     font-weight: inherit;
+    /* Taller than the item's line height, which clips descenders
+       against the overflow used for the ellipsis */
+    line-height: var(--line-height-snug);
   }
 
   /* --- Icon --- */

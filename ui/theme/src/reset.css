@@ -108,7 +108,10 @@ body,
 }
 
 body {
-  line-height: var(--line-height-none);
+  /* Leaves room for descenders, which a line height of 1 crops in any
+     element that clips its overflow. Controls that need the tighter
+     line pin it themselves. */
+  line-height: var(--line-height-snug);
 }
 ol,
 ul {

@@ -10,6 +10,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  /* Descender room inside the clipped box */
+  line-height: var(--line-height-snug);
 }
 
 /* Placeholder styling when empty */

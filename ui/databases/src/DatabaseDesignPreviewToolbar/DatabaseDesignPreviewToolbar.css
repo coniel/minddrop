@@ -5,6 +5,8 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   max-width: 160px;
+  /* Descender room inside the clipped box */
+  line-height: var(--line-height-snug);
 }
 
 /* The preview's colour takes the place of the trigger's icon,

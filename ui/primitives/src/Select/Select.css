@@ -62,6 +62,8 @@
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
+  /* Descender room inside the clipped box */
+  line-height: var(--line-height-snug);
 }
 
 .select-value[data-placeholder] {

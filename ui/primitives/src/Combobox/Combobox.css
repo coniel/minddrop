@@ -180,6 +180,8 @@
 .combobox-chip-label {
   overflow: hidden;
   text-overflow: ellipsis;
+  /* Descender room inside the clipped box */
+  line-height: var(--line-height-snug);
 }
 
 .combobox-chip:has(.combobox-chip-icon) {

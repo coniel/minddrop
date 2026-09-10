@@ -47,6 +47,10 @@ barrel then copies nothing from it, and every consumer of
 their parent's barrel (`'../Menu'`) rather than reaching into a
 component's directory.
 
+### A truncated label inside a tight control clips its descenders
+
+A line height of 1 makes a line box exactly `font-size` tall, with no room below the baseline, so any element that also clips its overflow — a label truncated with `overflow: hidden; text-overflow: ellipsis` — crops the tails of g, y, p, q and j. The reset gives `body` `--line-height-snug`, so this only bites inside a control that pins the tighter line for its own vertical centring: `.menu-item`, `.button`, `.select`, `.text-input`, `.chip`, `.tabs-tab`, `.toggle`, `.combobox-chip` and friends. A truncated label inside one of those needs its own `line-height`. The clip happens at the padding box edge, so an element with vertical padding is safe, and anything rendered through `Text` is already snug.
+
 ## packages/events
 
 ### EventDataMap augmentations must target `@minddrop/events/EventDataMap`

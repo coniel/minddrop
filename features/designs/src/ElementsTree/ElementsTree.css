@@ -182,7 +182,8 @@
 
 .designs-elements-tree-node-property {
   font-size: var(--font-size-2xs);
-  line-height: var(--line-height-none);
+  /* Descender room inside the clipped box */
+  line-height: var(--line-height-snug);
   color: var(--text-primary-muted);
   background-color: var(--surface-primary-subtle);
   border-radius: var(--radius-sm);
@@ -196,7 +197,8 @@
 
 .designs-elements-tree-node-static {
   font-size: var(--font-size-2xs);
-  line-height: var(--line-height-none);
+  /* Descender room inside the clipped box */
+  line-height: var(--line-height-snug);
   color: var(--text-subtle);
   white-space: nowrap;
   overflow: hidden;
