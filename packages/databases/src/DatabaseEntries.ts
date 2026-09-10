@@ -62,6 +62,7 @@ export { validateDatabaseEntryTitle as validateTitle } from './validateDatabaseE
 export { readDatabaseEntries as readFiles } from './readDatabaseEntries';
 export { createEntryVirtualViews as createVirtualViews } from './utils';
 export { entryDisplayPropertyValues as displayPropertyValues } from './utils';
+export { entryPropertyValues as propertyValues } from './utils';
 export { getAllDatabaseEntries as getAll } from './getAllDatabaseEntries';
 export { getTaggedDatabaseEntries as getTagged } from './getTaggedDatabaseEntries';
 export { getNewestDatabaseEntries as getNewest } from './utils';

@@ -38,6 +38,7 @@ export * from './isEntryTitleTaken';
 export * from './isGloballyUniqueEntryTitle';
 export * from './withImplicitMetadataProperties';
 export * from './entryMetadataPropertyValues';
+export * from './entryPropertyValues';
 export * from './resolveEntryColor';
 export * from './resolveDesignPropertyMap';
 export * from './parseViewMetadataKey';
