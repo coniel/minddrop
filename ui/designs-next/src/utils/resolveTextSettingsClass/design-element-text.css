@@ -3,3 +3,17 @@
 .design-renderer-element .design-element-text-italic {
   font-style: italic;
 }
+
+/* The alignments other than the left edge, which the elements are
+   already set in */
+.design-renderer-element .design-element-text-align-center {
+  text-align: center;
+}
+
+.design-renderer-element .design-element-text-align-right {
+  text-align: right;
+}
+
+.design-renderer-element .design-element-text-align-justify {
+  text-align: justify;
+}

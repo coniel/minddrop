@@ -12,4 +12,16 @@ describe('resolveTextSettingsClass', () => {
       resolveTextSettingsClass({ ...titleDesignElement, italic: true }),
     ).toBe('design-element-text-italic');
   });
+
+  it('resolves the alignment modifier', () => {
+    expect(
+      resolveTextSettingsClass({ ...titleDesignElement, textAlign: 'center' }),
+    ).toBe('design-element-text-align-center');
+  });
+
+  it('leaves left aligned text unmodified', () => {
+    expect(
+      resolveTextSettingsClass({ ...titleDesignElement, textAlign: 'left' }),
+    ).toBe('');
+  });
 });

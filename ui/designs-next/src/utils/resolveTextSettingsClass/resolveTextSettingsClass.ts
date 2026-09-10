@@ -18,5 +18,10 @@ export function resolveTextSettingsClass(
     classes.push('design-element-text-italic');
   }
 
+  // Text lined up on an edge other than the left one
+  if (element.textAlign && element.textAlign !== 'left') {
+    classes.push(`design-element-text-align-${element.textAlign}`);
+  }
+
   return classes.join(' ');
 }
