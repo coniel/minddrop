@@ -922,6 +922,9 @@ importers:
       '@minddrop/editor':
         specifier: workspace:*
         version: link:../../packages/editor
+      '@minddrop/entity-groups':
+        specifier: workspace:*
+        version: link:../../packages/entity-groups
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
@@ -1606,9 +1609,24 @@ importers:
 
   packages/app:
     dependencies:
+      '@minddrop/data-views':
+        specifier: workspace:*
+        version: link:../data-views
+      '@minddrop/databases':
+        specifier: workspace:*
+        version: link:../databases
+      '@minddrop/entity-groups':
+        specifier: workspace:*
+        version: link:../entity-groups
       '@minddrop/file-system':
         specifier: workspace:*
         version: link:../file-system
+      '@minddrop/item-references':
+        specifier: workspace:*
+        version: link:../item-references
+      '@minddrop/spaces':
+        specifier: workspace:*
+        version: link:../spaces
       '@minddrop/stores':
         specifier: workspace:*
         version: link:../stores
@@ -2054,6 +2072,40 @@ importers:
       '@types/react':
         specifier: ^19.2.14
         version: 19.2.14
+      eslint:
+        specifier: ^9.39.3
+        version: 9.39.5
+      tsconfig:
+        specifier: workspace:*
+        version: link:../tsconfig
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  packages/entity-groups:
+    dependencies:
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../events
+      '@minddrop/file-system':
+        specifier: workspace:*
+        version: link:../file-system
+      '@minddrop/item-references':
+        specifier: workspace:*
+        version: link:../item-references
+      '@minddrop/stores':
+        specifier: workspace:*
+        version: link:../stores
+      '@minddrop/utils':
+        specifier: workspace:*
+        version: link:../utils
+    devDependencies:
+      '@minddrop/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../vitest-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.5
