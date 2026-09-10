@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDevToolsPanels } from '@minddrop/dev-tools';
+import { DevToolsPanelsRegistry } from '@minddrop/dev-tools';
 import { DevToolsPanelConfig } from '@minddrop/dev-tools';
 import { IconButton } from '@minddrop/ui-primitives';
 import { openDevTools } from '../openDevTools';
@@ -10,7 +10,7 @@ import './DevToolsTabs.css';
  * Renders a tab for each registered dev tools panel.
  */
 export const DevToolsTabs: React.FC = () => {
-  const panels = useDevToolsPanels();
+  const panels = DevToolsPanelsRegistry.useAll();
   const activePanel = useActiveDevToolsPanel();
 
   return (

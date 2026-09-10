@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useDevToolsPanels } from '@minddrop/dev-tools';
+import { DevToolsPanelsRegistry } from '@minddrop/dev-tools';
 import { DevToolsUiState } from './DevToolsUiState';
 import { closeDevTools } from './closeDevTools';
 import { ReservedShortcutKeys, ToggleDevToolsShortcutKey } from './constants';
@@ -40,7 +40,7 @@ export function useDevToolsShortcuts({
   onToggleHelp,
   onCloseHelp,
 }: UseDevToolsShortcutsOptions): void {
-  const panels = useDevToolsPanels();
+  const panels = DevToolsPanelsRegistry.useAll();
   const activePanel = useActiveDevToolsPanel();
   const open = DevToolsUiState.useValue('open');
   const windowed = DevToolsUiState.useValue('windowed');

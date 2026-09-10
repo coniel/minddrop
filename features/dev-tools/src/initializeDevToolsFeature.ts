@@ -1,5 +1,5 @@
 import {
-  registerDevToolsPanel,
+  DevToolsPanelsRegistry,
   registerStoryLoader,
 } from '@minddrop/dev-tools';
 import { startConsoleLogCapture } from '@minddrop/dev-tools';
@@ -23,7 +23,7 @@ export async function initializeDevToolsFeature(): Promise<void> {
   I18n.registerTranslations(locales);
 
   // Register the console output panel
-  registerDevToolsPanel({
+  DevToolsPanelsRegistry.register({
     id: 'logs',
     label: 'devTools.panels.logs',
     icon: 'terminal',
@@ -32,7 +32,7 @@ export async function initializeDevToolsFeature(): Promise<void> {
   });
 
   // Register the dispatched events panel
-  registerDevToolsPanel({
+  DevToolsPanelsRegistry.register({
     id: 'events',
     label: 'devTools.panels.events',
     icon: 'zap',
@@ -41,7 +41,7 @@ export async function initializeDevToolsFeature(): Promise<void> {
   });
 
   // Register the store contents panel
-  registerDevToolsPanel({
+  DevToolsPanelsRegistry.register({
     id: 'state',
     label: 'devTools.panels.state',
     icon: 'database',
@@ -57,7 +57,7 @@ export async function initializeDevToolsFeature(): Promise<void> {
   registerStoryLoader(() => import('@minddrop/ui-primitives/stories'));
 
   // Register the UI component stories panel
-  registerDevToolsPanel({
+  DevToolsPanelsRegistry.register({
     id: 'stories',
     label: 'devTools.panels.stories',
     icon: 'shapes',
@@ -66,7 +66,7 @@ export async function initializeDevToolsFeature(): Promise<void> {
   });
 
   // Register the design token comparison panel
-  registerDevToolsPanel({
+  DevToolsPanelsRegistry.register({
     id: 'tokens',
     label: 'devTools.panels.tokens',
     icon: 'palette',

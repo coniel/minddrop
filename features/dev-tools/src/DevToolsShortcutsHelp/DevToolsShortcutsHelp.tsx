@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDevToolsPanels } from '@minddrop/dev-tools';
+import { DevToolsPanelsRegistry } from '@minddrop/dev-tools';
 import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import { Group, KeyboardShortcut, Stack, Text } from '@minddrop/ui-primitives';
 import { ToggleDevToolsShortcutKey } from '../constants';
@@ -32,7 +32,7 @@ export const DevToolsShortcutsHelp: React.FC<DevToolsShortcutsHelpProps> = ({
   onClose,
 }) => {
   const { t } = useTranslation();
-  const panels = useDevToolsPanels();
+  const panels = DevToolsPanelsRegistry.useAll();
 
   // Only panels which registered a shortcut key are listed
   const panelShortcuts = panels.filter((panel) => panel.shortcut);

@@ -1,4 +1,4 @@
-import { useDevToolsPanels } from '@minddrop/dev-tools';
+import { DevToolsPanelsRegistry } from '@minddrop/dev-tools';
 import { DevToolsPanelConfig } from '@minddrop/dev-tools';
 import { DevToolsUiState } from './DevToolsUiState';
 
@@ -10,7 +10,7 @@ import { DevToolsUiState } from './DevToolsUiState';
  * @returns The active panel, or null when no panels are registered.
  */
 export function useActiveDevToolsPanel(): DevToolsPanelConfig | null {
-  const panels = useDevToolsPanels();
+  const panels = DevToolsPanelsRegistry.useAll();
   const activePanelId = DevToolsUiState.useValue('activePanelId');
 
   return (
