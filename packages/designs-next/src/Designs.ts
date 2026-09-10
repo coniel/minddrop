@@ -3,6 +3,7 @@ import {
   DesignElementGroups,
   DesignTypeIcons,
   DesignsIcon,
+  FontWeights,
   MaxDesignRows,
   MinDesignRows,
   SnapPresets,
@@ -38,6 +39,7 @@ export const constants = {
   CardAspectRatios,
   SnapPresets,
   ElementGroups: DesignElementGroups,
+  FontWeights,
 };
 
 export { DesignsStore as Store } from './DesignsStore';

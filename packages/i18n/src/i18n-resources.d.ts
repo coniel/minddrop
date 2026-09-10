@@ -2189,7 +2189,19 @@ declare module 'i18next' {
             };
           };
           settings: {
-            bold: string;
+            fontWeight: {
+              label: string;
+              default: string;
+              thin: string;
+              extraLight: string;
+              light: string;
+              regular: string;
+              medium: string;
+              semibold: string;
+              bold: string;
+              extraBold: string;
+              black: string;
+            };
             italic: string;
             background: {
               label: string;

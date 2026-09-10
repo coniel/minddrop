@@ -1,5 +1,10 @@
 import type { UiIconName } from '@minddrop/ui-icons';
-import { AspectRatioToken, DesignElementGroup, DesignType } from './types';
+import {
+  AspectRatioToken,
+  DesignElementGroup,
+  DesignType,
+  FontWeight,
+} from './types';
 
 /**
  * The icon representing designs and design editing.
@@ -91,3 +96,11 @@ export const SnapPresets = [1, 2, 4];
  * The element palette groups in display order.
  */
 export const DesignElementGroups: DesignElementGroup[] = ['content', 'layout'];
+
+/**
+ * The weights text elements can be set in, from the lightest to
+ * the heaviest.
+ */
+export const FontWeights: FontWeight[] = [
+  100, 200, 300, 400, 500, 600, 700, 800, 900,
+];

@@ -13,18 +13,18 @@ describe('applyElementSettings', () => {
     const { elements } = applyElementSettings(
       designElements,
       titleDesignElement.id,
-      { bold: true },
+      { fontWeight: 700 },
       { rows: cardRows },
     );
 
-    expect(elements[1]).toEqual({ ...titleDesignElement, bold: true });
+    expect(elements[1]).toEqual({ ...titleDesignElement, fontWeight: 700 });
   });
 
   it('returns the input unchanged for an unknown element', () => {
     const result = applyElementSettings(
       designElements,
       'element_missing',
-      { bold: true },
+      { fontWeight: 700 },
       { rows: cardRows },
     );
 

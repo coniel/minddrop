@@ -10,11 +10,19 @@ export type ElementBackground = 'subtle' | 'accent' | 'solid-accent';
 
 export type ElementCornerRadius = 'none' | 'sm' | 'md' | 'lg' | 'full';
 
+/**
+ * A weight on the type scale, from the lightest to the heaviest.
+ * Fonts without a matching face are drawn at the nearest one they
+ * have.
+ */
+export type FontWeight = 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900;
+
 export interface TextSettings {
   /**
-   * Whether the text renders bold.
+   * The weight the text renders at. Absent means the weight the
+   * element's type renders at by default.
    */
-  bold?: boolean;
+  fontWeight?: FontWeight;
 
   /**
    * Whether the text renders italic.

@@ -40,7 +40,19 @@
       }
     },
     "settings": {
-      "bold": "Bold",
+      "fontWeight": {
+        "label": "Font weight",
+        "default": "Default",
+        "thin": "Thin",
+        "extraLight": "Extra light",
+        "light": "Light",
+        "regular": "Regular",
+        "medium": "Medium",
+        "semibold": "Semibold",
+        "bold": "Bold",
+        "extraBold": "Extra bold",
+        "black": "Black"
+      },
       "italic": "Italic",
       "background": {
         "label": "Background",
