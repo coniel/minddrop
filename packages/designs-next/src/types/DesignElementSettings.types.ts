@@ -2,7 +2,7 @@
  * A semantic setting group an element's menu can show. Groups are
  * provided by the system; an element's config lists the ones its
  * menu renders. Element-specific settings live on the element type
- * itself, configured through its own settings menu component.
+ * itself, configured through its own settings controls.
  */
 export type DesignElementSettingGroup = 'text' | 'background';
 

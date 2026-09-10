@@ -1,4 +1,4 @@
-import { DesignElementSettingsMenuProps } from '@minddrop/designs-next';
+import { DesignElementSettingsControlsProps } from '@minddrop/designs-next';
 import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import { UiIconName } from '@minddrop/ui-icons';
 import {
@@ -53,11 +53,11 @@ const HeadingLevelOptions: HeadingLevelOption[] = [
 ];
 
 /**
- * Renders the heading element's settings menu: the three heading
+ * Renders the heading element's settings controls: the three heading
  * levels behind a trigger showing the current one.
  */
-export const HeadingSettingsMenu: React.FC<
-  DesignElementSettingsMenuProps<HeadingElement>
+export const HeadingSettingsControls: React.FC<
+  DesignElementSettingsControlsProps<HeadingElement>
 > = ({ element, onSettingsChange }) => {
   const { t } = useTranslation();
 

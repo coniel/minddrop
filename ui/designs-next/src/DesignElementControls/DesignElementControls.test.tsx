@@ -3,7 +3,7 @@ import {
   DesignElement,
   DesignElementConfigs,
   DesignElementSettingGroup,
-  DesignElementSettingsMenuProps,
+  DesignElementSettingsControlsProps,
 } from '@minddrop/designs-next';
 import {
   DesignElementConfigsStore,
@@ -16,7 +16,7 @@ import {
 } from '@minddrop/designs-next/test-utils';
 import { PropertiesSchema } from '@minddrop/properties';
 import { fireEvent, render, screen, userEvent } from '@minddrop/test-utils';
-import { TextContentMenu } from '../TextContentMenu';
+import { TextContentControls } from '../TextContentControls';
 import { cleanup } from '../test-utils';
 import { DesignElementControls } from './DesignElementControls';
 
@@ -46,9 +46,9 @@ interface StubElement extends DesignElement {
   framed?: boolean;
 }
 
-// Stand-in element settings menu writing an element-specific setting
-const StubSettingsMenu: React.FC<
-  DesignElementSettingsMenuProps<StubElement>
+// Stand-in element settings controls writing an element-specific setting
+const StubSettingsControls: React.FC<
+  DesignElementSettingsControlsProps<StubElement>
 > = ({ onSettingsChange }) => (
   <button
     type="button"
@@ -185,7 +185,7 @@ describe('DesignElementControls', () => {
   it("opens an element's static content in its content input", async () => {
     DesignElementConfigs.register({
       ...testElementConfig,
-      contentMenu: TextContentMenu,
+      contentControls: TextContentControls,
     });
 
     const element: DesignElement = { ...iconDesignElement, content: 'Body' };
@@ -320,10 +320,10 @@ describe('DesignElementControls', () => {
     });
   });
 
-  it('renders the element type settings menu', () => {
+  it('renders the element type settings controls', () => {
     DesignElementConfigs.register<StubElement>({
       ...testElementConfig,
-      settingsMenu: StubSettingsMenu,
+      settingsControls: StubSettingsControls,
     });
     renderControls();
 

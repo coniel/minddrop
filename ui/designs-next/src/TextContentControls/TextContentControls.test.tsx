@@ -4,7 +4,7 @@ import { bodyDesignElement } from '@minddrop/designs-next/test-utils';
 import { render, screen, userEvent } from '@minddrop/test-utils';
 import { FloatingToolbar } from '@minddrop/ui-primitives';
 import { cleanup } from '../test-utils';
-import { TextContentMenu } from './TextContentMenu';
+import { TextContentControls } from './TextContentControls';
 
 // The content passed to the most recent change callback
 let changedContent: string | undefined | null;
@@ -22,7 +22,7 @@ async function openInput() {
 
   render(
     <FloatingToolbar visible>
-      <TextContentMenu
+      <TextContentControls
         element={element}
         onContentChange={(content) => {
           changedContent = content;
@@ -34,7 +34,7 @@ async function openInput() {
   await userEvent.click(screen.getByLabelText('designsNext.content.label'));
 }
 
-describe('TextContentMenu', () => {
+describe('TextContentControls', () => {
   afterEach(cleanup);
 
   it("opens the element's text in a multiline input", async () => {

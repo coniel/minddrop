@@ -1,4 +1,4 @@
-import { DesignElementContentMenuProps } from '@minddrop/designs-next';
+import { DesignElementContentControlsProps } from '@minddrop/designs-next';
 import {
   Button,
   Popover,
@@ -11,7 +11,7 @@ import {
   ToolbarIconButton,
 } from '@minddrop/ui-primitives';
 import { BlockControlOffset } from '../constants';
-import './TextContentMenu.css';
+import './TextContentControls.css';
 
 // Lines of text the input opens at
 const InputRows = 4;
@@ -20,16 +20,15 @@ const InputRows = 4;
  * Renders the content control of elements holding static text: a
  * toolbar button opening the text in a popover, edited as it is
  * typed. Element configs whose element holds plain text take it as
- * their content menu.
+ * their content controls.
  *
  * Modal so the click which dismisses the popover is caught by it,
  * rather than landing on the canvas and clearing the selection the
  * text belongs to.
  */
-export const TextContentMenu: React.FC<DesignElementContentMenuProps> = ({
-  element,
-  onContentChange,
-}) => (
+export const TextContentControls: React.FC<
+  DesignElementContentControlsProps
+> = ({ element, onContentChange }) => (
   <Popover modal>
     <PopoverTrigger>
       <ToolbarIconButton
@@ -50,7 +49,7 @@ export const TextContentMenu: React.FC<DesignElementContentMenuProps> = ({
         align="start"
         sideOffset={BlockControlOffset}
       >
-        <PopoverContent className="design-text-content-menu">
+        <PopoverContent className="design-text-content-controls">
           <TextInput
             multiline
             autoGrow
@@ -62,7 +61,7 @@ export const TextContentMenu: React.FC<DesignElementContentMenuProps> = ({
             placeholder="designsNext.content.textPlaceholder"
             onValueChange={onContentChange}
           />
-          <div className="design-text-content-menu-actions">
+          <div className="design-text-content-controls-actions">
             {element.content && (
               <PopoverClose
                 onClick={() => onContentChange(undefined)}

@@ -1,6 +1,6 @@
 /* The static text popover, wide enough to read a line of the
    element's content at a time */
-.design-text-content-menu {
+.design-text-content-controls {
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
@@ -9,7 +9,7 @@
   padding-bottom: var(--space-1);
 }
 
-.design-text-content-menu-actions {
+.design-text-content-controls-actions {
   display: flex;
   justify-content: flex-end;
   align-items: center;

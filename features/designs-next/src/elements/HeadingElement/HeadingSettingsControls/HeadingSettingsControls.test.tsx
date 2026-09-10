@@ -4,7 +4,7 @@ import { fireEvent, render, screen } from '@minddrop/test-utils';
 import { cleanup } from '../../../test-utils';
 import { HeadingElement } from '../HeadingElement.types';
 import { HeadingElementType } from '../HeadingElementConfig';
-import { HeadingSettingsMenu } from './HeadingSettingsMenu';
+import { HeadingSettingsControls } from './HeadingSettingsControls';
 
 // A heading element without a level setting
 const headingElement: HeadingElement = {
@@ -16,7 +16,7 @@ const headingElement: HeadingElement = {
 let changedSettings: Partial<HeadingElement> | null;
 
 /**
- * Renders the settings menu for the given element with a recording
+ * Renders the settings controls for the given element with a recording
  * callback.
  *
  * @param element - The heading element the menu configures.
@@ -25,7 +25,7 @@ function renderMenu(element: HeadingElement = headingElement) {
   changedSettings = null;
 
   render(
-    <HeadingSettingsMenu
+    <HeadingSettingsControls
       element={element}
       onSettingsChange={(settings) => {
         changedSettings = settings;
@@ -41,7 +41,7 @@ function openMenu() {
   fireEvent.click(screen.getByLabelText('Heading level'));
 }
 
-describe('HeadingSettingsMenu', () => {
+describe('HeadingSettingsControls', () => {
   afterEach(cleanup);
 
   it('holds the levels behind the menu trigger', () => {

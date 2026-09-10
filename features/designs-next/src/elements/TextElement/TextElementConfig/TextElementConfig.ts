@@ -1,7 +1,7 @@
 import { DesignElementConfig } from '@minddrop/designs-next';
 import { i18n } from '@minddrop/i18n';
 import { Properties } from '@minddrop/properties';
-import { TextContentMenu } from '@minddrop/ui-designs-next';
+import { TextContentControls } from '@minddrop/ui-designs-next';
 import { TextElement } from '../TextElement.types';
 import { TextElementRenderer } from '../TextElementRenderer';
 
@@ -19,7 +19,7 @@ export const TextElementConfig: DesignElementConfig<TextElement> = {
   label: 'designsNext.elements.text.label',
   icon: 'text',
   group: 'content',
-  contentMenu: TextContentMenu,
+  contentControls: TextContentControls,
   propertyTypes: Properties.constants.TextualTypes,
   suggestedPropertyTypes: ['text', 'title', 'select', 'url'],
   component: TextElementRenderer,

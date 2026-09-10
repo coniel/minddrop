@@ -1,7 +1,7 @@
 import {
   DesignElement,
   DesignElementSettings,
-  DesignElementSettingsMenuProps,
+  DesignElementSettingsControlsProps,
   ElementBackground,
   ElementCornerRadius,
 } from '@minddrop/designs-next';
@@ -48,7 +48,7 @@ const BackgroundOptions: BackgroundOption[] = [
  * background surfaces, with its corner radius menu beside it.
  */
 export const BackgroundSettingsGroup: React.FC<
-  DesignElementSettingsMenuProps<DesignElement & DesignElementSettings>
+  DesignElementSettingsControlsProps<DesignElement & DesignElementSettings>
 > = ({ element, onSettingsChange }) => {
   // Current values falling back to the element defaults
   const background = element.background ?? 'subtle';

@@ -7,6 +7,6 @@ export * from './DesignPreviewPane';
 export * from './DesignPropertiesProvider';
 export * from './DesignPropertyPicker';
 export * from './DesignRenderer';
-export * from './TextContentMenu';
+export * from './TextContentControls';
 export * from './useElementValue';
 export * from './utils/resolveTextSettingsClass';

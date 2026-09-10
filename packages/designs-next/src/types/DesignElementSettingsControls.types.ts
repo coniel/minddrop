@@ -1,6 +1,6 @@
 import { DesignElement } from './DesignElement.types';
 
-export interface DesignElementSettingsMenuProps<
+export interface DesignElementSettingsControlsProps<
   TElement extends DesignElement = DesignElement,
 > {
   /**

@@ -3,7 +3,7 @@ import {
   DesignElementConfigs,
   DesignElementSettingGroup,
   DesignElementSettings,
-  DesignElementSettingsMenuProps,
+  DesignElementSettingsControlsProps,
   Designs,
   ElementHeightMode,
   ElementSide,
@@ -164,7 +164,7 @@ const HeightModeOptions: ElementModeOption<ElementHeightMode>[] = [
 const SettingGroupComponents: Record<
   DesignElementSettingGroup,
   React.FC<
-    DesignElementSettingsMenuProps<DesignElement & DesignElementSettings>
+    DesignElementSettingsControlsProps<DesignElement & DesignElementSettings>
   >
 > = {
   text: TextSettingsGroup,
@@ -209,10 +209,10 @@ interface SelectedElementControlsProps
  * Renders the controls themselves: the width mode menu alongside
  * either the natural height toggle or, in aspect-locked designs,
  * the height mode menu, followed by the element type's own settings
- * menu and its system setting groups. Each pin choice is labelled by
- * the side it pins to, and says what it holds the element against:
- * the closest neighbour on that side, or the design's edge where the
- * element is the one closest to it.
+ * controls and its system setting groups. Each pin choice is
+ * labelled by the side it pins to, and says what it holds the
+ * element against: the closest neighbour on that side, or the
+ * design's edge where the element is the one closest to it.
  */
 const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
   element,
@@ -225,14 +225,14 @@ const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
 }) => {
   const { t } = useTranslation();
 
-  // The element type's settings menu and system setting groups
+  // The element type's settings controls and system setting groups
   const config = DesignElementConfigs.get(element.type, false);
-  const SettingsMenu = config?.settingsMenu;
+  const SettingsControls = config?.settingsControls;
   const settingGroups = config?.settingGroups;
 
   // The element's content controls: the property it takes its
-  // content from, and the menu filling its static content.
-  const ContentMenu = config?.contentMenu;
+  // content from, and the control filling its static content.
+  const ContentControls = config?.contentControls;
   const propertyTypes = properties ? config?.propertyTypes : undefined;
 
   // Applies a change to the element
@@ -380,7 +380,7 @@ const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
           }}
         />
       )}
-      {(propertyTypes || ContentMenu) && <ToolbarSeparator />}
+      {(propertyTypes || ContentControls) && <ToolbarSeparator />}
       {propertyTypes && properties && (
         <DesignPropertyPicker
           properties={properties}
@@ -390,14 +390,17 @@ const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
           onValueChange={handlePropertyChange}
         />
       )}
-      {ContentMenu && (
-        <ContentMenu element={element} onContentChange={handleContentChange} />
+      {ContentControls && (
+        <ContentControls
+          element={element}
+          onContentChange={handleContentChange}
+        />
       )}
-      {(SettingsMenu || (settingGroups && settingGroups.length > 0)) && (
+      {(SettingsControls || (settingGroups && settingGroups.length > 0)) && (
         <ToolbarSeparator />
       )}
-      {SettingsMenu && (
-        <SettingsMenu
+      {SettingsControls && (
+        <SettingsControls
           element={element}
           onSettingsChange={handleSettingsChange}
         />

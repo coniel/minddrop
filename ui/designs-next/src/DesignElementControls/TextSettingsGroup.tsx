@@ -1,7 +1,7 @@
 import {
   DesignElement,
   DesignElementSettings,
-  DesignElementSettingsMenuProps,
+  DesignElementSettingsControlsProps,
 } from '@minddrop/designs-next';
 import { useTranslation } from '@minddrop/i18n';
 import { Toggle } from '@minddrop/ui-primitives';
@@ -11,7 +11,7 @@ import { BlockControlOffset } from '../constants';
  * Renders the text setting group: bold and italic toggles.
  */
 export const TextSettingsGroup: React.FC<
-  DesignElementSettingsMenuProps<DesignElement & DesignElementSettings>
+  DesignElementSettingsControlsProps<DesignElement & DesignElementSettings>
 > = ({ element, onSettingsChange }) => {
   const { t } = useTranslation();
 

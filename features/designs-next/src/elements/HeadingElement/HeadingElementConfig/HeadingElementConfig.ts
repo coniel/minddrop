@@ -1,10 +1,10 @@
 import { DesignElementConfig } from '@minddrop/designs-next';
 import { i18n } from '@minddrop/i18n';
 import { Properties } from '@minddrop/properties';
-import { TextContentMenu } from '@minddrop/ui-designs-next';
+import { TextContentControls } from '@minddrop/ui-designs-next';
 import { HeadingElement, HeadingLevel } from '../HeadingElement.types';
 import { HeadingElementRenderer } from '../HeadingElementRenderer';
-import { HeadingSettingsMenu } from '../HeadingSettingsMenu';
+import { HeadingSettingsControls } from '../HeadingSettingsControls';
 
 export const HeadingElementType = 'heading';
 
@@ -30,7 +30,7 @@ export const HeadingElementConfig: DesignElementConfig<HeadingElement> = {
   label: 'designsNext.elements.heading.label',
   icon: 'heading',
   group: 'content',
-  contentMenu: TextContentMenu,
+  contentControls: TextContentControls,
   propertyTypes: Properties.constants.TextualTypes,
   suggestedPropertyTypes: ['title', 'text'],
   component: HeadingElementRenderer,
@@ -38,7 +38,7 @@ export const HeadingElementConfig: DesignElementConfig<HeadingElement> = {
   defaultRowSpan: HeadingLineHeightUnits[DefaultHeadingLevel],
   resolveDefaults: resolvePlaceholderText,
   settingGroups: ['text'],
-  settingsMenu: HeadingSettingsMenu,
+  settingsControls: HeadingSettingsControls,
   resolveMinRowSpan: resolveLineHeight,
   resolveRowSpanStep: resolveLineHeight,
 };

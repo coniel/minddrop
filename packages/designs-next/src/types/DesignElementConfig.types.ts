@@ -3,11 +3,11 @@ import type { TranslationKey } from '@minddrop/i18n';
 import type { PropertyType } from '@minddrop/properties';
 import type { UiIconName } from '@minddrop/ui-icons';
 import { DesignElement, ElementWidthMode } from './DesignElement.types';
-import { DesignElementContentMenuProps } from './DesignElementContentMenu.types';
+import { DesignElementContentControlsProps } from './DesignElementContentControls.types';
 import { DesignElementGroup } from './DesignElementGroup.types';
 import { DesignElementComponent } from './DesignElementProps.types';
 import { DesignElementSettingGroup } from './DesignElementSettings.types';
-import { DesignElementSettingsMenuProps } from './DesignElementSettingsMenu.types';
+import { DesignElementSettingsControlsProps } from './DesignElementSettingsControls.types';
 
 export interface DesignElementConfig<
   TElement extends DesignElement = DesignElement,
@@ -52,11 +52,11 @@ export interface DesignElementConfig<
   suggestedPropertyTypes?: PropertyType[];
 
   /**
-   * Menu component for filling the element's static content,
-   * rendered in the block controls' content section. Omitted for
-   * elements holding no static content.
+   * Controls for filling the element's static content, rendered in
+   * the block controls' content section. Omitted for elements
+   * holding no static content.
    */
-  contentMenu?: ComponentType<DesignElementContentMenuProps<TElement>>;
+  contentControls?: ComponentType<DesignElementContentControlsProps<TElement>>;
 
   /**
    * Number of columns a newly inserted element spans.
@@ -87,17 +87,20 @@ export interface DesignElementConfig<
   resolveDefaults?: () => Partial<TElement>;
 
   /**
-   * The system setting groups the element's menu shows, in display
-   * order. Omitted for elements without system settings.
+   * The system setting groups the block controls show for the
+   * element, in display order. Omitted for elements without system
+   * settings.
    */
   settingGroups?: DesignElementSettingGroup[];
 
   /**
-   * Menu component for the element's own settings, rendered in its
-   * menu ahead of the system setting groups. Omitted for elements
-   * without element-specific settings.
+   * Controls for the element's own settings, rendered in the block
+   * controls' settings section ahead of the system setting groups.
+   * Omitted for elements without element-specific settings.
    */
-  settingsMenu?: ComponentType<DesignElementSettingsMenuProps<TElement>>;
+  settingsControls?: ComponentType<
+    DesignElementSettingsControlsProps<TElement>
+  >;
 
   /**
    * Resolves the element's minimum height in grid units, acting as
