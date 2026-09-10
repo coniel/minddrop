@@ -9,4 +9,6 @@ export * from './DesignPropertyPicker';
 export * from './DesignRenderer';
 export * from './TextContentControls';
 export * from './useElementValue';
+export * from './utils/resolveFontLetterBand';
 export * from './utils/resolveTextSettingsClass';
+export * from './utils/resolveThemeFontStack';
