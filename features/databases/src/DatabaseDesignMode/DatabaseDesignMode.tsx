@@ -5,8 +5,9 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { Databases } from '@minddrop/databases';
+import { DatabaseEntries, Databases } from '@minddrop/databases';
 import { DesignType, Designs } from '@minddrop/designs-next';
+import { DatabaseDesignPreviewToolbar } from '@minddrop/ui-databases';
 import { DesignEditor } from '@minddrop/ui-designs-next';
 import { SortableList } from '@minddrop/ui-drag-and-drop';
 import {
@@ -27,6 +28,7 @@ import {
   Text,
   useTransientState,
 } from '@minddrop/ui-primitives';
+import { ContentColor } from '@minddrop/ui-theme';
 import { orderByCreated, reconcileIdOrder } from '@minddrop/utils';
 import { Views } from '@minddrop/views';
 import { AddDesignMenu } from './AddDesignMenu';
@@ -50,6 +52,7 @@ export const DatabaseDesignMode: React.FC<DatabaseDesignModeProps> = ({
 }) => {
   const database = Databases.use(databaseId);
   const unsortedDesigns = Designs.useAll(databaseId);
+  const entries = DatabaseEntries.useAll(databaseId);
   const subview = Views.useSubview();
   const setSubview = Views.useSetSubview();
 
@@ -81,6 +84,47 @@ export const DatabaseDesignMode: React.FC<DatabaseDesignModeProps> = ({
 
   // Whether the active design's settings dropdown is open
   const [settingsOpen, setSettingsOpen] = useState(false);
+
+  // The entry the preview renders
+  const [previewEntryId, setPreviewEntryId] = useState<string | null>(null);
+
+  // The colour the preview renders with, null while it follows
+  // the previewed entry's own colour.
+  const [previewColor, setPreviewColor] = useState<ContentColor | null>(null);
+
+  // The properties the design's elements can map to, including the
+  // entry metadata the schema does not declare itself.
+  const properties = useMemo(
+    () => Databases.withImplicitMetadataProperties(database?.properties ?? []),
+    [database?.properties],
+  );
+
+  // The database's newest entry, which the preview renders until
+  // an entry is picked.
+  const newestEntry = useMemo(
+    () => DatabaseEntries.sort(entries)[0],
+    [entries],
+  );
+
+  // Resolve the previewed entry
+  const previewEntry =
+    entries.find((entry) => entry.id === previewEntryId) ?? newestEntry;
+
+  // The previewed entry's own colour, which the preview renders
+  // with until a colour is picked.
+  const entryColor =
+    database && previewEntry
+      ? DatabaseEntries.resolveColor(database, previewEntry)
+      : null;
+
+  // The property values the preview renders
+  const values = useMemo(
+    () =>
+      previewEntry
+        ? DatabaseEntries.propertyValues(previewEntry, properties)
+        : undefined,
+    [previewEntry, properties],
+  );
 
   // Resolve the active design, falling back to the first design
   const activeDesignId = tabActiveDesignId ?? designs[0]?.id;
@@ -322,7 +366,19 @@ export const DatabaseDesignMode: React.FC<DatabaseDesignModeProps> = ({
           <DesignEditor
             key={activeDesign.id}
             designId={activeDesign.id}
-            properties={database?.properties}
+            properties={properties}
+            values={values}
+            scheme={previewColor ?? entryColor}
+            previewControls={
+              <DatabaseDesignPreviewToolbar
+                databaseId={databaseId}
+                entryId={previewEntry?.id}
+                color={previewColor}
+                entryColor={entryColor}
+                onEntryChange={setPreviewEntryId}
+                onColorChange={setPreviewColor}
+              />
+            }
           />
         ) : (
           <Text
