@@ -1048,6 +1048,13 @@ declare module 'i18next' {
             title: string;
             empty: string;
             selectDesign: string;
+            preview: {
+              color: {
+                label: string;
+                description: string;
+                matchEntry: string;
+              };
+            };
             actions: {
               edit: string;
               back: string;

@@ -992,6 +992,13 @@
       "title": "Designs",
       "empty": "No designs yet. Add one with the + button.",
       "selectDesign": "Select a design",
+      "preview": {
+        "color": {
+          "label": "Entry colour",
+          "description": "The colour of the entry the preview renders. Follows the entry's own colour until one is picked.",
+          "matchEntry": "Match entry"
+        }
+      },
       "actions": {
         "edit": "Edit in design studio",
         "back": "Back to database",

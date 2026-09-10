@@ -3082,6 +3082,9 @@ importers:
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../primitives
+      '@minddrop/ui-theme':
+        specifier: workspace:*
+        version: link:../theme
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../../packages/utils

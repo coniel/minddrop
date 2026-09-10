@@ -1,0 +1,15 @@
+/* The previewed entry's title, kept from stretching the toolbar
+   however long it is */
+.database-design-preview-toolbar-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 160px;
+}
+
+/* The preview's colour takes the place of the trigger's icon,
+   sized to match the glyph icons beside it */
+.database-design-preview-toolbar-color-trigger .color-swatch {
+  width: 0.875rem;
+  height: 0.875rem;
+}

@@ -1,6 +1,7 @@
 export * from './constants';
 export * from './DatabaseEntryContext';
 export * from './CreateDatabaseEntryButton';
+export * from './DatabaseDesignPreviewToolbar';
 export * from './DatabaseEntriesSearchField';
 export * from './DatabaseLayoutSelectionMenu';
 export * from './DataViewEntryPicker';
