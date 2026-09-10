@@ -1,20 +1,19 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
-import { DesignElementConfigsStore } from '../DesignElementConfigsStore';
+import { DesignElementConfigsRegistry } from '../DesignElementConfigsRegistry';
 import { DesignElementConfigRegisteredEvent } from '../events';
-import { getDesignElementConfig } from '../getDesignElementConfig';
 import { testElementConfig } from '../test-utils';
 import { registerDesignElementConfig } from './registerDesignElementConfig';
 
 describe('registerDesignElementConfig', () => {
   afterEach(() => {
-    DesignElementConfigsStore.clear();
+    DesignElementConfigsRegistry.clear();
   });
 
   it('registers an element type config', () => {
     registerDesignElementConfig(testElementConfig);
 
-    expect(getDesignElementConfig(testElementConfig.type)).toBe(
+    expect(DesignElementConfigsRegistry.get(testElementConfig.type)).toBe(
       testElementConfig,
     );
   });

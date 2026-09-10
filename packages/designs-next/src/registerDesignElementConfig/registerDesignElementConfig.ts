@@ -1,6 +1,4 @@
-import { Events } from '@minddrop/events';
-import { DesignElementConfigsStore } from '../DesignElementConfigsStore';
-import { DesignElementConfigRegisteredEvent } from '../events';
+import { DesignElementConfigsRegistry } from '../DesignElementConfigsRegistry';
 import { DesignElement, DesignElementConfig } from '../types';
 
 /**
@@ -16,9 +14,6 @@ export function registerDesignElementConfig<TElement extends DesignElement>(
   // Erase the config's element type for storage and dispatch
   const erasedConfig = config as unknown as DesignElementConfig;
 
-  // Add the config to the store
-  DesignElementConfigsStore.set(erasedConfig);
-
-  // Dispatch the design element config registered event
-  Events.dispatch(DesignElementConfigRegisteredEvent, erasedConfig);
+  // Register the config
+  DesignElementConfigsRegistry.register(erasedConfig);
 }

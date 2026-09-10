@@ -8,7 +8,7 @@ import {
   titleDesignElement,
 } from '@minddrop/designs-next/test-utils';
 import {
-  DesignElementConfigsStore,
+  DesignElementConfigsRegistry,
   testElementConfig,
 } from '@minddrop/designs-next/test-utils';
 import {
@@ -906,7 +906,7 @@ describe('DesignBlockEditor', () => {
 
     expect(resizedIcon?.rowSpan).toBe(4);
 
-    DesignElementConfigsStore.remove(testElementConfig.type);
+    DesignElementConfigsRegistry.unregister(testElementConfig.type);
   });
 
   it('grows the layout with a bottom-edge resize past the layout bottom', () => {

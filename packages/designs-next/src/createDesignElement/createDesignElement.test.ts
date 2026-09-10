@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { NotRegisteredError } from '@minddrop/stores';
 import { isEntityId } from '@minddrop/utils';
-import { DesignElementConfigsStore } from '../DesignElementConfigsStore';
-import { DesignElementConfigNotRegisteredError } from '../errors';
+import { DesignElementConfigsRegistry } from '../DesignElementConfigsRegistry';
 import { registerDesignElementConfig } from '../registerDesignElementConfig';
 import { testElementConfig } from '../test-utils';
 import { createDesignElement } from './createDesignElement';
@@ -12,7 +12,7 @@ describe('createDesignElement', () => {
   });
 
   afterEach(() => {
-    DesignElementConfigsStore.clear();
+    DesignElementConfigsRegistry.clear();
   });
 
   it('creates an element from the config defaults', () => {
@@ -72,8 +72,6 @@ describe('createDesignElement', () => {
   });
 
   it('throws if the type is not registered', () => {
-    expect(() => createDesignElement('unknown')).toThrow(
-      DesignElementConfigNotRegisteredError,
-    );
+    expect(() => createDesignElement('unknown')).toThrow(NotRegisteredError);
   });
 });

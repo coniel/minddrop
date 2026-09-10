@@ -1,5 +1,5 @@
 import { entityId } from '@minddrop/utils';
-import { getDesignElementConfig } from '../getDesignElementConfig';
+import { DesignElementConfigsRegistry } from '../DesignElementConfigsRegistry';
 import { DesignElement } from '../types';
 
 /**
@@ -10,14 +10,14 @@ import { DesignElement } from '../types';
  * @param position - The element's position in grid units, defaults to the top-left corner.
  * @returns The new element.
  *
- * @throws {DesignElementConfigNotRegisteredError} If the type is not registered.
+ * @throws {NotRegisteredError} If the type is not registered.
  */
 export function createDesignElement(
   type: string,
   position: { column: number; row: number } = { column: 0, row: 0 },
 ): DesignElement {
   // Get the design element type's config
-  const config = getDesignElementConfig(type);
+  const config = DesignElementConfigsRegistry.get(type);
 
   // The starter fields come first so the base fields always win
   return {

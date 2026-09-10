@@ -6,7 +6,7 @@ import {
   DesignElementSettingsControlsProps,
 } from '@minddrop/designs-next';
 import {
-  DesignElementConfigsStore,
+  DesignElementConfigsRegistry,
   bodyDesignElement,
   cardRows,
   coverDesignElement,
@@ -139,7 +139,7 @@ function renderControls(options: RenderControlsOptions = {}) {
 describe('DesignElementControls', () => {
   afterEach(() => {
     cleanup();
-    DesignElementConfigsStore.clear();
+    DesignElementConfigsRegistry.clear();
   });
 
   it('renders nothing while nothing is selected', () => {
