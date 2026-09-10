@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Events } from '@minddrop/events';
-import { registerSelectionItemSerializer } from '../SelectionItemSerializersStore';
+import { SelectionItemSerializersRegistry } from '../SelectionItemSerializersRegistry';
 import { SelectionStore } from '../SelectionStore';
 import { SelectionDeletedEvent } from '../events';
 import {
@@ -20,12 +20,12 @@ describe('deleteSelection', () => {
     setup({ loadSelection: false, loadSelectionItemSerializers: false });
 
     // Register a serializer with a delete function
-    registerSelectionItemSerializer({
+    SelectionItemSerializersRegistry.register({
       ...selectionItemSerializer_A,
       delete: onDelete,
     });
     // Register a serializer without a delete function
-    registerSelectionItemSerializer({
+    SelectionItemSerializersRegistry.register({
       ...selectionItemSerializer_B,
       delete: undefined,
     });

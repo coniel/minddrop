@@ -1,4 +1,4 @@
-import { SelectionItemSerializersStore } from '../../SelectionItemSerializersStore';
+import { SelectionItemSerializersRegistry } from '../../SelectionItemSerializersRegistry';
 import { getSelection } from '../../getSelection';
 import { SelectionItem } from '../../types';
 import { toMimeType } from '../toMimeType';
@@ -38,7 +38,7 @@ export function serializeSelection(): Record<string, string> {
   // Serialize the selection items by type
   Object.entries(selectionItemsByType).forEach(([type, items]) => {
     // Get the serializer for the type
-    const serializer = SelectionItemSerializersStore.get(type);
+    const serializer = SelectionItemSerializersRegistry.get(type, false);
 
     // Serialize items to their MindDrop JSON representation
     data[toMimeType(type)] =

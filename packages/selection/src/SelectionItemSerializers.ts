@@ -1,5 +1,11 @@
-export {
-  registerSelectionItemSerializer as register,
-  unregisterSelectionItemSerializer as unregister,
-  getSelectionItemSerializer as get,
-} from './SelectionItemSerializersStore';
+import { SelectionItemSerializersRegistry } from './SelectionItemSerializersRegistry';
+
+export const {
+  store: Store,
+  register,
+  unregister,
+  get,
+  getAll,
+  use,
+  useAll,
+} = SelectionItemSerializersRegistry;

@@ -1,9 +1,6 @@
 import { vi } from 'vitest';
 import { Events } from '@minddrop/events';
-import {
-  SelectionItemSerializersStore,
-  registerSelectionItemSerializer,
-} from '../SelectionItemSerializersStore';
+import { SelectionItemSerializersRegistry } from '../SelectionItemSerializersRegistry';
 import { SelectionStore } from '../SelectionStore';
 import {
   selection,
@@ -34,7 +31,7 @@ export function setup(
   if (options.loadSelectionItemSerializers !== false) {
     // Load selection item serializers into the store
     [selectionItemSerializer_A, selectionItemSerializer_B].forEach(
-      registerSelectionItemSerializer,
+      SelectionItemSerializersRegistry.register,
     );
   }
 
@@ -47,7 +44,7 @@ export function setup(
 export function cleanup() {
   // Clear the state
   SelectionStore.getState().clear();
-  SelectionItemSerializersStore.clear();
+  SelectionItemSerializersRegistry.clear();
   // Clear event listeners
   Events.tests.cleanup();
   // Clear mocks

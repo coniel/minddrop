@@ -27,13 +27,7 @@ const createEditor = () =>
  * @returns The serializer.
  */
 function getSerializer() {
-  const serializer = SelectionItemSerializers.get(BLOCK_SELECTION_ITEM_TYPE);
-
-  if (!serializer) {
-    throw new Error('The block selection serializer is not registered');
-  }
-
-  return serializer;
+  return SelectionItemSerializers.get(BLOCK_SELECTION_ITEM_TYPE);
 }
 
 describe('registerBlockSelectionSerializer', () => {

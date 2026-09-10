@@ -1,5 +1,5 @@
 import { Events } from '@minddrop/events';
-import { SelectionItemSerializersStore } from '../SelectionItemSerializersStore';
+import { SelectionItemSerializersRegistry } from '../SelectionItemSerializersRegistry';
 import { clearSelection } from '../clearSelection';
 import { SelectionDeletedEvent } from '../events';
 import { getSelection } from '../getSelection';
@@ -25,7 +25,7 @@ export function deleteSelection(): void {
   // Check each item type and delete the items if the serializer has
   // a delete function.
   grouped.forEach(([type, items]) => {
-    const serializer = SelectionItemSerializersStore.get(type);
+    const serializer = SelectionItemSerializersRegistry.get(type, false);
 
     if (serializer?.delete) {
       serializer.delete(items);

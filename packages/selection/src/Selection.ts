@@ -1,4 +1,4 @@
-import { SelectionItemTypeNotRegisteredError } from './errors';
+import { NotRegisteredError } from '@minddrop/stores';
 import {
   SelectionClearedEvent,
   SelectionCopiedEvent,
@@ -22,7 +22,7 @@ export const events = {
 } as const;
 
 export const errors = {
-  ItemTypeNotRegistered: SelectionItemTypeNotRegisteredError,
+  NotRegistered: NotRegisteredError,
 };
 
 export { deleteSelection as delete } from './deleteSelection';
