@@ -30,7 +30,7 @@ export function getTabIcon(session: ViewSession): IconProp {
   }
 
   // Views with a fixed icon provide it at registration
-  const registered = session.main ? Views.get(session.main.view) : null;
+  const registered = session.main ? Views.get(session.main.view, false) : null;
 
   return registered?.icon ?? DEFAULT_ICON;
 }

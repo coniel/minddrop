@@ -1,4 +1,4 @@
-import { getView } from '../../getView';
+import { ViewsRegistry } from '../../ViewsRegistry';
 import {
   Breadcrumb,
   BreadcrumbLevel,
@@ -186,5 +186,5 @@ function extendsTrail(source: SessionView, target: SessionView): boolean {
  * for views which do not declare one.
  */
 function breadcrumbLevel(sessionView: SessionView): BreadcrumbLevel {
-  return getView(sessionView.view)?.breadcrumbLevel ?? 'root';
+  return ViewsRegistry.get(sessionView.view, false)?.breadcrumbLevel ?? 'root';
 }

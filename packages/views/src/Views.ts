@@ -1,3 +1,4 @@
+import { ViewsRegistry } from './ViewsRegistry';
 import {
   DefaultSplitRatio,
   DefaultViewAreaId,
@@ -39,13 +40,16 @@ export const constants = {
   DefaultSplitRatio,
 };
 
-export {
-  ViewsStore as Store,
-  useView as use,
-  useViews as useAll,
-} from './ViewsStore';
-export { registerView as register } from './registerView';
-export { getView as get } from './getView';
+export const {
+  store: Store,
+  register,
+  unregister,
+  get,
+  getAll,
+  use,
+  useAll,
+} = ViewsRegistry;
+
 export {
   SlotFillsStore as FillsStore,
   useSlotFill as useFill,

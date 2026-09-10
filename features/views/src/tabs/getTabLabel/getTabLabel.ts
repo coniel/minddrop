@@ -61,7 +61,7 @@ function paneLabel(
   }
 
   // Views with a fixed label provide it at registration
-  const registered = Views.get(view.view);
+  const registered = Views.get(view.view, false);
 
   return registered?.title ? translate(registered.title) : undefined;
 }
