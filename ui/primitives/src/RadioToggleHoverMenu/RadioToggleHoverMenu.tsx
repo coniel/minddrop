@@ -1,4 +1,11 @@
-import { useCallback, useEffect, useId, useRef, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import { UiIconName } from '@minddrop/ui-icons';
 import { FloatingToolbar } from '../FloatingToolbar';
 import { Icon } from '../Icon';
@@ -98,6 +105,12 @@ export interface RadioToggleHoverMenuProps<Value extends string = string> {
   side?: MenuSide;
 
   /**
+   * The number of options a row holds, wrapping the rest onto
+   * further rows. Omitted, the options run along a single row.
+   */
+  columns?: number;
+
+  /**
    * Prevents interaction.
    */
   disabled?: boolean;
@@ -137,29 +150,37 @@ const HostPadding: Record<ToggleSize, number> = {
 const HostSquaredCornersAttribute = 'data-hover-menu-squared';
 
 /**
+ * The attribute marking the controls an open menu's rows run
+ * alongside, which step back while it is open.
+ */
+const HostDimmedControlAttribute = 'data-hover-menu-dimmed';
+
+/**
+ * The width of a floating toolbar's border, matching the thin
+ * border token. The options are placed against their own border
+ * box, so their first row clears it as well as the padding.
+ */
+const HostBorderWidth = 1;
+
+/**
  * The side of the host toolbar the options reach out of.
  */
 export type MenuSide = 'left' | 'right';
 
 /**
- * Which of the host toolbar's ends the trigger sits at, if either.
+ * The trigger's place among the host toolbar's controls.
  */
-type HostEdge = 'start' | 'end' | 'both';
+interface HostPlacement {
+  /**
+   * The trigger's place in the toolbar, from its start.
+   */
+  index: number;
 
-// The toolbar corners each end runs flush with, by the side the
-// options open towards.
-const FlushCorners: Record<MenuSide, Record<HostEdge, string>> = {
-  right: {
-    start: 'top-right',
-    end: 'bottom-right',
-    both: 'top-right bottom-right',
-  },
-  left: {
-    start: 'top-left',
-    end: 'bottom-left',
-    both: 'top-left bottom-left',
-  },
-};
+  /**
+   * The number of controls the toolbar holds.
+   */
+  count: number;
+}
 
 /**
  * Renders a set of radio toggles as a hover menu: a trigger showing
@@ -182,13 +203,16 @@ export function RadioToggleHoverMenu<Value extends string>({
   variant = 'subtle',
   size = 'md',
   side = 'right',
+  columns,
   disabled,
   className,
 }: RadioToggleHoverMenuProps<Value>) {
   const triggerRef = useRef<HTMLButtonElement>(null);
   const closeTimeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
   const [open, setOpen] = useState(false);
-  const [hostEdge, setHostEdge] = useState<HostEdge | null>(null);
+  const [hostPlacement, setHostPlacement] = useState<HostPlacement | null>(
+    null,
+  );
   const menuId = useId();
 
   // The selected option, whose icon the trigger shows. An
@@ -196,35 +220,91 @@ export function RadioToggleHoverMenu<Value extends string>({
   const selectedOption =
     options.find((option) => option.value === value) ?? options[0];
 
-  // The options run flush with the toolbar's end where the trigger
-  // sits at one, since both are inset by the same padding: there is
-  // no corner to round there, and the toolbar's own corner falls
-  // inside the shape the two make.
-  const flushStart = hostEdge === 'start' || hostEdge === 'both';
-  const flushEnd = hostEdge === 'end' || hostEdge === 'both';
+  // The rows the options open into
+  const rowCount = columns ? Math.ceil(options.length / columns) : 1;
 
-  // Track which of the toolbar's ends the open menu reaches, and
-  // tell the toolbar, which squares that corner for as long as the
-  // options run through it.
-  useEffect(() => {
+  // Rows hang off the trigger's own row, rising above it instead at
+  // the toolbar's end, where there is no row below to hang from.
+  const bottomAnchored =
+    rowCount > 1 &&
+    hostPlacement !== null &&
+    hostPlacement.index === hostPlacement.count - 1;
+
+  // The toolbar row the options start on, which is the trigger's
+  // own unless they rise above it.
+  const firstRow = hostPlacement
+    ? hostPlacement.index - (bottomAnchored ? rowCount - 1 : 0)
+    : 0;
+
+  // The options run flush with the toolbar's ends their rows reach,
+  // since both are inset by the same padding: there is no corner to
+  // round there, and the toolbar's own corner falls inside the shape
+  // the two make.
+  const flushStart = hostPlacement !== null && firstRow <= 0;
+  const flushEnd =
+    hostPlacement !== null &&
+    firstRow + rowCount - 1 >= hostPlacement.count - 1;
+
+  // Place the trigger among the toolbar's controls before the menu
+  // is painted, its place deciding which way the rows hang.
+  useLayoutEffect(() => {
     const trigger = triggerRef.current;
     const host = trigger?.parentElement;
 
     if (!open || !trigger || !host) {
-      setHostEdge(null);
+      setHostPlacement(null);
 
       return;
     }
 
-    const edge = resolveHostEdge(trigger, host);
+    setHostPlacement(resolveHostPlacement(trigger, host));
+  }, [open]);
 
-    setHostEdge(edge);
+  // Step the controls the rows run alongside back, so the arm
+  // reads as standing in their place. The trigger keeps its weight,
+  // the menu being its own.
+  useEffect(() => {
+    const trigger = triggerRef.current;
+    const host = trigger?.parentElement;
 
-    if (!edge) {
+    if (!open || !host || rowCount === 1) {
       return;
     }
 
-    const corners = FlushCorners[side][edge];
+    // The controls the rows other than the trigger's own reach
+    const covered = resolveHostControls(host).filter(
+      (control, index) =>
+        control !== trigger && index >= firstRow && index < firstRow + rowCount,
+    );
+
+    covered.forEach((control) => {
+      control.setAttribute(HostDimmedControlAttribute, '');
+    });
+
+    return () => {
+      covered.forEach((control) => {
+        control.removeAttribute(HostDimmedControlAttribute);
+      });
+    };
+  }, [open, rowCount, firstRow]);
+
+  // Tell the toolbar which of its corners the options run through,
+  // which it squares for as long as they do.
+  useEffect(() => {
+    const host = triggerRef.current?.parentElement;
+
+    // The corners the options run through, named for the side they
+    // open towards.
+    const corners = [
+      flushStart ? `top-${side}` : undefined,
+      flushEnd ? `bottom-${side}` : undefined,
+    ]
+      .filter(Boolean)
+      .join(' ');
+
+    if (!open || !host || !corners) {
+      return;
+    }
 
     host.setAttribute(HostSquaredCornersAttribute, corners);
 
@@ -234,7 +314,7 @@ export function RadioToggleHoverMenu<Value extends string>({
         host.removeAttribute(HostSquaredCornersAttribute);
       }
     };
-  }, [open, side]);
+  }, [open, flushStart, flushEnd, side]);
 
   // Holds the menu open while the pointer is on it
   const handlePointerEnter = useCallback(() => {
@@ -288,7 +368,14 @@ export function RadioToggleHoverMenu<Value extends string>({
       <PopoverPortal>
         <PopoverPositioner
           side={side}
-          align="center"
+          align={resolveAlign(rowCount, bottomAnchored)}
+          // Clears the options' own border and padding, so the row
+          // they hang from lines up with the trigger rather than
+          // the popup's edge. The offset runs along the alignment,
+          // so the same value carries the rows either way.
+          alignOffset={
+            rowCount > 1 ? -(HostPadding[size] + HostBorderWidth) : undefined
+          }
           sideOffset={HostPadding[size]}
         >
           {/* The popup is a shell around the options toolbar,
@@ -317,8 +404,19 @@ export function RadioToggleHoverMenu<Value extends string>({
                 size={size}
                 value={value}
                 onValueChange={onValueChange}
+                className={columns ? 'radio-toggle-hover-menu-rows' : undefined}
+                // Laid out inline so the column count wins over the
+                // group's own row layout.
+                style={
+                  columns
+                    ? {
+                        display: 'grid',
+                        gridTemplateColumns: `repeat(${columns}, auto)`,
+                      }
+                    : undefined
+                }
               >
-                {options.map((option) => (
+                {options.map((option, index) => (
                   <Toggle
                     key={option.value}
                     value={option.value}
@@ -327,11 +425,11 @@ export function RadioToggleHoverMenu<Value extends string>({
                     tooltip={
                       option.tooltip && {
                         ...option.tooltip,
-                        // Below the option and running away from
-                        // the toolbar, the one direction with
-                        // neither its neighbours nor the toolbar
-                        // they came out of in the way.
-                        side: 'bottom',
+                        // Clear of the option's neighbours and of
+                        // the toolbar they came out of: below the
+                        // option, or above it for a row with
+                        // another row beneath it.
+                        side: isTopRow(index, columns) ? 'top' : 'bottom',
                         align: side === 'right' ? 'start' : 'end',
                         sideOffset: OptionTooltipOffset,
                       }
@@ -353,6 +451,19 @@ export function RadioToggleHoverMenu<Value extends string>({
 RadioToggleHoverMenu.displayName = 'RadioToggleHoverMenu';
 
 /**
+ * Says whether an option sits in the top row of a menu holding
+ * more than one, its tooltip opening upward to clear the row below.
+ *
+ * @param index - The option's place in the menu.
+ * @param columns - The number of options a row holds, when the menu
+ *   wraps into rows.
+ * @returns Whether the option sits in the top row.
+ */
+function isTopRow(index: number, columns: number | undefined): boolean {
+  return columns !== undefined && index < columns;
+}
+
+/**
  * Renders what an option shows: its icon, or the content it draws
  * for itself where no icon stands for its value.
  *
@@ -366,31 +477,53 @@ function renderOptionContent(
 }
 
 /**
- * Resolves which of a toolbar's ends a control sits at, ignoring
+ * Resolves which way the rows of options hang off the trigger: a
+ * single row sits across from it, several hang below it, and at the
+ * toolbar's end they rise above it instead.
+ *
+ * @param rowCount - The rows the options open into.
+ * @param bottomAnchored - Whether the trigger takes the bottom row.
+ * @returns The alignment the options take against the trigger.
+ */
+function resolveAlign(
+  rowCount: number,
+  bottomAnchored: boolean,
+): 'center' | 'start' | 'end' {
+  if (rowCount === 1) {
+    return 'center';
+  }
+
+  return bottomAnchored ? 'end' : 'start';
+}
+
+/**
+ * Resolves a control's place among a toolbar's controls, ignoring
  * the focus guards rendered around an open popover trigger.
  *
  * @param control - The control to place.
  * @param host - The toolbar holding it.
- * @returns The end it sits at, or null for a control between them.
+ * @returns The control's place, or null where the toolbar does not
+ *   hold it.
  */
-function resolveHostEdge(
+function resolveHostPlacement(
   control: HTMLElement,
   host: HTMLElement,
-): HostEdge | null {
-  const controls = Array.from(host.children).filter(
+): HostPlacement | null {
+  const controls = resolveHostControls(host);
+  const index = controls.indexOf(control);
+
+  return index === -1 ? null : { index, count: controls.length };
+}
+
+/**
+ * Resolves a toolbar's controls, ignoring the focus guards
+ * rendered around an open popover trigger.
+ *
+ * @param host - The toolbar to read.
+ * @returns The toolbar's controls, in order.
+ */
+function resolveHostControls(host: HTMLElement): Element[] {
+  return Array.from(host.children).filter(
     (child) => !child.hasAttribute(BaseUiFocusGuardAttribute),
   );
-
-  const atStart = controls[0] === control;
-  const atEnd = controls[controls.length - 1] === control;
-
-  if (atStart && atEnd) {
-    return 'both';
-  }
-
-  if (atStart) {
-    return 'start';
-  }
-
-  return atEnd ? 'end' : null;
 }

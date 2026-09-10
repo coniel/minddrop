@@ -215,6 +215,127 @@ describe('RadioToggleHoverMenu', () => {
     ).not.toContain('flush');
   });
 
+  it('lays the options out in the columns it is given', () => {
+    render(
+      <RadioToggleHoverMenu
+        columns={2}
+        options={options}
+        value="center"
+        label="Alignment"
+        onValueChange={() => undefined}
+      />,
+    );
+
+    openMenu();
+
+    expect(document.querySelector('.radio-toggle-group')).toHaveStyle({
+      display: 'grid',
+      gridTemplateColumns: 'repeat(2, auto)',
+    });
+  });
+
+  it('runs the options along a row without columns', () => {
+    renderMenu();
+    openMenu();
+
+    expect(document.querySelector('.radio-toggle-group')).not.toHaveStyle({
+      display: 'grid',
+    });
+  });
+
+  it('runs flush with the end its rows reach past the trigger', () => {
+    const { container } = render(
+      <Toolbar>
+        <button type="button">Before</button>
+        <RadioToggleHoverMenu
+          columns={2}
+          options={options}
+          value="center"
+          label="Alignment"
+          onValueChange={() => undefined}
+        />
+        <button type="button">After</button>
+      </Toolbar>,
+    );
+
+    openMenu();
+
+    // Second to last of the toolbar's controls, so the menu's
+    // second row runs alongside the last one, down to its end.
+    expect(container.querySelector('.toolbar')).toHaveAttribute(
+      'data-hover-menu-squared',
+      'bottom-right',
+    );
+    expect(
+      document.querySelector('.radio-toggle-hover-menu-options'),
+    ).toHaveClass('radio-toggle-hover-menu-options-flush-end');
+    expect(
+      document.querySelector('.radio-toggle-hover-menu-options'),
+    ).not.toHaveClass('radio-toggle-hover-menu-options-flush-start');
+  });
+
+  it("rises above the trigger at the toolbar's end", () => {
+    const { container } = render(
+      <Toolbar>
+        <button type="button">Before</button>
+        <RadioToggleHoverMenu
+          columns={2}
+          options={options}
+          value="center"
+          label="Alignment"
+          onValueChange={() => undefined}
+        />
+      </Toolbar>,
+    );
+
+    openMenu();
+
+    // Last of the toolbar's controls, so the rows rise from it:
+    // the trigger takes the bottom row and the first runs alongside
+    // the control above, reaching both of the toolbar's ends.
+    expect(container.querySelector('.toolbar')).toHaveAttribute(
+      'data-hover-menu-squared',
+      'top-right bottom-right',
+    );
+  });
+
+  it('steps back the controls its rows run alongside', () => {
+    render(
+      <Toolbar>
+        <button type="button">Before</button>
+        <RadioToggleHoverMenu
+          columns={2}
+          options={options}
+          value="center"
+          label="Alignment"
+          onValueChange={() => undefined}
+        />
+        <button type="button">After</button>
+      </Toolbar>,
+    );
+
+    openMenu();
+
+    // The second row runs alongside the control below the trigger
+    expect(screen.getByText('After')).toHaveAttribute('data-hover-menu-dimmed');
+
+    // The trigger keeps its weight, as does the control the rows
+    // never reach.
+    expect(screen.getByLabelText('Alignment')).not.toHaveAttribute(
+      'data-hover-menu-dimmed',
+    );
+    expect(screen.getByText('Before')).not.toHaveAttribute(
+      'data-hover-menu-dimmed',
+    );
+
+    // Closing the menu hands them back
+    openMenu();
+
+    expect(screen.getByText('After')).not.toHaveAttribute(
+      'data-hover-menu-dimmed',
+    );
+  });
+
   it('releases the toolbar end when it closes', () => {
     const { container } = render(
       <Toolbar>

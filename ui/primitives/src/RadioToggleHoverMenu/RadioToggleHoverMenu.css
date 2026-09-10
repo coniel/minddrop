@@ -155,3 +155,25 @@
 .radio-toggle-hover-menu-options-flush-end.floating-toolbar::after {
   content: none;
 }
+
+/* Rows of options stand apart like the toolbar's own controls, so
+   each row runs alongside the control it reaches out from. Their
+   columns keep the group's hairline gaps. */
+.radio-toggle-group.radio-toggle-hover-menu-rows {
+  row-gap: var(--space-1);
+}
+
+.radio-toggle-group-size-sm.radio-toggle-hover-menu-rows {
+  row-gap: calc(var(--space-1) / 2);
+}
+
+.radio-toggle-group-size-lg.radio-toggle-hover-menu-rows {
+  row-gap: var(--space-2);
+}
+
+/* The controls an open menu's rows run alongside step back while
+   it is open, the arm standing in their place. */
+[data-hover-menu-dimmed] {
+  opacity: var(--opacity-disabled);
+  transition: var(--transition-opacity);
+}

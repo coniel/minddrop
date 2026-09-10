@@ -39,6 +39,12 @@ export interface RadioToggleGroupProps<Value extends string = string> {
   className?: string;
 
   /*
+   * Styles applied to the root element, for layouts sized by the
+   * consumer, e.g. a group laid out in a set number of columns.
+   */
+  style?: React.CSSProperties;
+
+  /*
    * Toggle children.
    */
   children: React.ReactNode;
@@ -57,6 +63,7 @@ export function RadioToggleGroup<Value extends string>({
   size = 'md',
   disabled,
   className,
+  style,
   children,
 }: RadioToggleGroupProps<Value>) {
   // Base UI ToggleGroup uses Value[]. We unwrap to/from single
@@ -87,6 +94,7 @@ export function RadioToggleGroup<Value extends string>({
       onValueChange={handleValueChange}
       disabled={disabled}
       className={propsToClass('radio-toggle-group', { size, className })}
+      style={style}
     >
       {children}
     </ToggleGroupPrimitive>
