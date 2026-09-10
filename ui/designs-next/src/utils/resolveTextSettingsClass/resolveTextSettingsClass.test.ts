@@ -7,25 +7,9 @@ describe('resolveTextSettingsClass', () => {
     expect(resolveTextSettingsClass(titleDesignElement)).toBe('');
   });
 
-  it('resolves the bold modifier', () => {
-    expect(
-      resolveTextSettingsClass({ ...titleDesignElement, bold: true }),
-    ).toBe('design-element-text-bold');
-  });
-
   it('resolves the italic modifier', () => {
     expect(
       resolveTextSettingsClass({ ...titleDesignElement, italic: true }),
     ).toBe('design-element-text-italic');
-  });
-
-  it('combines active modifiers', () => {
-    expect(
-      resolveTextSettingsClass({
-        ...titleDesignElement,
-        bold: true,
-        italic: true,
-      }),
-    ).toBe('design-element-text-bold design-element-text-italic');
   });
 });

@@ -13,11 +13,6 @@ export function resolveTextSettingsClass(
 ): string {
   const classes: string[] = [];
 
-  // Bold text
-  if (element.bold) {
-    classes.push('design-element-text-bold');
-  }
-
   // Italic text
   if (element.italic) {
     classes.push('design-element-text-italic');

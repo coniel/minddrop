@@ -1,0 +1,22 @@
+/* The A and its number stacked inside a toolbar toggle, tight
+   enough that the two read as one mark. */
+.design-font-weight-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1;
+}
+
+.design-font-weight-option-letter {
+  font-size: var(--font-size-base);
+  line-height: 1;
+}
+
+/* Below the smallest type token, the number being a marking on the
+   letter rather than text to read. */
+.design-font-weight-option-value {
+  font-size: 8px;
+  line-height: 1;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}

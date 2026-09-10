@@ -302,16 +302,19 @@ describe('DesignElementControls', () => {
   it('shows no setting groups for types without them', () => {
     renderControls();
 
-    expect(screen.queryByLabelText('Bold')).toBeNull();
+    expect(screen.queryByLabelText('Font weight')).toBeNull();
   });
 
-  it('renders the text setting group with toggles firing changes', () => {
+  it('renders the text setting group with its controls firing changes', () => {
     registerSettingGroups(['text']);
     renderControls();
 
-    fireEvent.click(screen.getByLabelText('Bold'));
+    openMenu('Font weight');
+    fireEvent.click(screen.getByLabelText('Medium'));
 
-    expect(changedElement(iconDesignElement.id)).toMatchObject({ bold: true });
+    expect(changedElement(iconDesignElement.id)).toMatchObject({
+      fontWeight: 500,
+    });
 
     fireEvent.click(screen.getByLabelText('Italic'));
 
