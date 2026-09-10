@@ -43,11 +43,11 @@ describe('initializeDataViews', () => {
           workspace_2.path,
           Paths.hiddenDirName,
           ViewsDirName,
-          'data-view_gallery-other.json',
+          'data-view_gallery_other.json',
         ),
         textContent: JSON.stringify({
           ...dataView_gallery_1,
-          id: 'data-view_gallery-other',
+          id: 'data-view_gallery_other',
         }),
       },
     ]);

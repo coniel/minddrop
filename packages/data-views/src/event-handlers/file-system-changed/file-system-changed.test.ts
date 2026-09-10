@@ -32,7 +32,7 @@ describe('onFileSystemChanged', () => {
 
   it('adds an externally created view to the store', async () => {
     // Create a view file outside of the app
-    const created = { ...dataView_gallery_1, id: 'data-view_gallery-9' };
+    const created = { ...dataView_gallery_1, id: 'data-view_gallery_9' };
     MockFs.writeTextFile(resolveViewPath(created.id), JSON.stringify(created));
 
     await onFileSystemChanged(change(resolveViewPath(created.id), 'created'));

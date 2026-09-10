@@ -18,7 +18,7 @@ function generateViewFixture(
   number: number,
 ): DataView {
   return {
-    id: `data-view_${type}-${number}`,
+    id: `data-view_${type}_${number}`,
     name: `${type} ${number}`,
     type,
     icon: 'lucide:panels-top-left:default',
@@ -85,7 +85,7 @@ function generateVirtualViewFixture(
 ): DataView {
   return {
     ...generateViewFixture(type, dataSource, number),
-    id: `data-view_virtual-${type}-${number}`,
+    id: `data-view_virtual_${number}`,
     name: `virtual ${type} ${number}`,
     virtual: true,
   };
