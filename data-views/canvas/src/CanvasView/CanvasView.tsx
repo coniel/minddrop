@@ -552,9 +552,14 @@ const CanvasViewContent: React.FC<
       // it is briefly reconciled into the auto-placed grid.
       updateNodes(placeEntryNode(reconciledNodes, entry.id, point));
 
+      // Focus the new entry's editor once its node mounts. The node
+      // is placed where the user asked for it, so it needs no
+      // revealing.
+      DatabaseEntries.requestFocus(entry.id, { viewId: view.id });
+
       await Collections.addItems(view.dataSource.id, [entry.id]);
     },
-    [view.dataSource.id, reconciledNodes, updateNodes],
+    [view.id, view.dataSource.id, reconciledNodes, updateNodes],
   );
 
   // Allow dragging accepted data types over the canvas
@@ -763,7 +768,11 @@ const CanvasViewContent: React.FC<
           onConnectionReconnect={handleConnectionReconnect}
         />
 
-        <DatabaseEntryContextProvider optionsMenu source={view.dataSource}>
+        <DatabaseEntryContextProvider
+          optionsMenu
+          source={view.dataSource}
+          viewId={view.id}
+        >
           {reconciledNodes.map((node) => (
             <CanvasNode
               key={node.id}
