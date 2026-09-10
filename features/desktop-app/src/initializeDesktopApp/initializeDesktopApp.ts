@@ -1,10 +1,11 @@
-import { App } from '@minddrop/app';
+import { App, SidebarGroups } from '@minddrop/app';
 import { Collections } from '@minddrop/collections';
 import { DataViews } from '@minddrop/data-views';
 import { Databases } from '@minddrop/databases';
 import { Designs } from '@minddrop/designs';
 import { Designs as DesignsNext } from '@minddrop/designs-next';
 import { registerBlockSelectionSerializer } from '@minddrop/editor';
+import { EntityGroups } from '@minddrop/entity-groups';
 import { initializeCollectionsFeature } from '@minddrop/feature-collections';
 import { initializeDataViewsFeature } from '@minddrop/feature-data-views';
 import {
@@ -113,6 +114,10 @@ async function runInitialization(): Promise<void> {
   initializeTagsFeature();
   initializeWorkspacesFeature();
 
+  // Register the sidebar's entity group type, before the entity
+  // groups are loaded below.
+  SidebarGroups.initialize();
+
   // Initialize workspaces (sets Paths.workspace and
   // Paths.workspaceConfigs from the active workspace)
   await Workspaces.initialize();
@@ -157,6 +162,11 @@ async function runInitialization(): Promise<void> {
 
   // Load persisted spaces
   await Spaces.initialize();
+
+  // Load the entity groups of every registered type. Requires the
+  // item reference adapters registered by Databases.initialize to
+  // resolve their members.
+  await EntityGroups.initialize();
 
   // Initialize the MiniSearch index and register event
   // listeners for incremental sync.
