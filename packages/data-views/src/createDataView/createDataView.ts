@@ -2,11 +2,11 @@ import { Events } from '@minddrop/events';
 import { i18n } from '@minddrop/i18n';
 import { Icons } from '@minddrop/ui-icons';
 import { entityId } from '@minddrop/utils';
+import { DataViewTypesRegistry } from '../DataViewTypesRegistry';
 import { DataViewsStore } from '../DataViewsStore';
 import { DataViewEntityType } from '../constants';
 import { DataViewCreatedEvent } from '../events';
 import { extractDataViewReferences } from '../extractDataViewReferences';
-import { getDataViewType } from '../getDataViewType';
 import { DataView, ViewDataSource } from '../types';
 import { writeDataView } from '../writeDataView';
 
@@ -18,7 +18,7 @@ import { writeDataView } from '../writeDataView';
  * @param name - The name of the data view, defaults to the data view type name.
  * @returns The created data view.
  *
- * @throws {DataViewTypeNotRegisteredError} If the data view type is not registered.
+ * @throws {NotRegisteredError} If the data view type is not registered.
  *
  * @dispatches data-views:data-view:created
  */
@@ -28,7 +28,7 @@ export async function createDataView(
   name?: string,
 ): Promise<DataView> {
   // Get the data view type
-  const viewType = getDataViewType(type);
+  const viewType = DataViewTypesRegistry.get(type);
 
   // Create the data view with the data view type's default icon
   const view: DataView = {

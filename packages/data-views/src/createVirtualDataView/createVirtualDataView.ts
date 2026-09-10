@@ -1,10 +1,10 @@
 import { Events } from '@minddrop/events';
 import { i18n } from '@minddrop/i18n';
 import { Icons } from '@minddrop/ui-icons';
+import { DataViewTypesRegistry } from '../DataViewTypesRegistry';
 import { DataViewsStore } from '../DataViewsStore';
 import { DataViewCreatedEvent } from '../events';
 import { extractDataViewReferences } from '../extractDataViewReferences';
-import { getDataViewType } from '../getDataViewType';
 import { CreateVirtualDataViewData, DataView } from '../types';
 
 /**
@@ -14,7 +14,7 @@ import { CreateVirtualDataViewData, DataView } from '../types';
  * @param viewData - The data view data. Requires id, type, and dataSource. Name defaults to the data view type name. Options are merged over the data view type's default options.
  * @returns The created virtual data view.
  *
- * @throws {DataViewTypeNotRegisteredError} If the data view type is not registered.
+ * @throws {NotRegisteredError} If the data view type is not registered.
  *
  * @dispatches data-views:data-view:created
  */
@@ -22,7 +22,7 @@ export function createVirtualDataView(
   viewData: CreateVirtualDataViewData,
 ): DataView {
   // Get the data view type
-  const viewType = getDataViewType(viewData.type);
+  const viewType = DataViewTypesRegistry.get(viewData.type);
 
   // Generate the virtual data view object
   const view: DataView = {

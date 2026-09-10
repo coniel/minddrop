@@ -1,5 +1,5 @@
 import { MockFileSystem } from '@minddrop/file-system';
-import { DataViewTypesStore } from '../DataViewTypesStore';
+import { DataViewTypesRegistry } from '../DataViewTypesRegistry';
 import { DataViewsStore } from '../DataViewsStore';
 import {
   dataViewFiles,
@@ -26,8 +26,8 @@ export function setupDataViewFixtures(
   MockFs.createDir(dataViewsRootPath, { recursive: true });
 
   if (options.loadViewTypes !== false) {
-    // Load data view types into the store
-    DataViewTypesStore.load(dataViewTypes);
+    // Load data view types into the registry
+    DataViewTypesRegistry.store.load(dataViewTypes);
   }
 
   if (options.loadViews !== false) {
@@ -44,5 +44,5 @@ export function setupDataViewFixtures(
 export function cleanupDataViewFixtures() {
   // Clear stores
   DataViewsStore.clear();
-  DataViewTypesStore.clear();
+  DataViewTypesRegistry.clear();
 }

@@ -1,5 +1,5 @@
 import { ItemReferences } from '@minddrop/item-references';
-import { getDataViewType } from '../getDataViewType';
+import { DataViewTypesRegistry } from '../DataViewTypesRegistry';
 import { DataViewConfig } from '../types';
 
 /**
@@ -16,7 +16,7 @@ export function resolveDataViewConfig(
   config: DataViewConfig,
 ): DataViewConfig {
   // Look up the view type without throwing for unregistered types
-  const viewType = getDataViewType(type, false);
+  const viewType = DataViewTypesRegistry.get(type, false);
 
   // Pass configs without a resolution hook through unchanged
   if (!viewType?.resolveReferences) {

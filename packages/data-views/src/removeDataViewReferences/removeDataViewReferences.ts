@@ -1,4 +1,4 @@
-import { getDataViewType } from '../getDataViewType';
+import { DataViewTypesRegistry } from '../DataViewTypesRegistry';
 import { getReferencingDataViews } from '../getReferencingDataViews';
 import { updateDataView } from '../updateDataView';
 
@@ -20,7 +20,7 @@ export async function removeDataViewReferences(
 
   await Promise.all(
     affectedViews.map((view) => {
-      const viewType = getDataViewType(view.type, false);
+      const viewType = DataViewTypesRegistry.get(view.type, false);
 
       // Views without a serialization hook cannot be rewritten
       if (!viewType?.serializeReferences) {

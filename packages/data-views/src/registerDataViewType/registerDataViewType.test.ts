@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
-import { DataViewTypesStore } from '../DataViewTypesStore';
+import { DataViewTypesRegistry } from '../DataViewTypesRegistry';
 import { DataViewTypeRegisteredEvent } from '../events';
 import { cleanup, dataViewType_gallery, setup } from '../test-utils';
 import { registerDataViewType } from './registerDataViewType';
@@ -10,10 +10,10 @@ describe('registerDataViewType', () => {
 
   afterEach(cleanup);
 
-  it('adds the view type to the store', () => {
+  it('registers the view type', () => {
     registerDataViewType(dataViewType_gallery);
 
-    expect(DataViewTypesStore).toHaveItem(
+    expect(DataViewTypesRegistry.store).toHaveItem(
       dataViewType_gallery.type,
       dataViewType_gallery,
     );

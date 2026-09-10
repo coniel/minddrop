@@ -1,4 +1,4 @@
-import { getDataViewType } from '../getDataViewType';
+import { DataViewTypesRegistry } from '../DataViewTypesRegistry';
 import { DataViewConfig } from '../types';
 
 /**
@@ -15,7 +15,7 @@ export function extractDataViewReferences(
   config: DataViewConfig,
 ): string[] {
   // Look up the view type without throwing for unregistered types
-  const viewType = getDataViewType(type, false);
+  const viewType = DataViewTypesRegistry.get(type, false);
 
   // View types without a serialization hook reference nothing
   if (!viewType?.serializeReferences) {

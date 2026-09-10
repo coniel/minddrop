@@ -1,10 +1,8 @@
-import { Events } from '@minddrop/events';
-import { DataViewTypesStore } from '../DataViewTypesStore';
-import { DataViewTypeRegisteredEvent } from '../events';
+import { DataViewTypesRegistry } from '../DataViewTypesRegistry';
 import { DataViewType } from '../types';
 
 /**
- * Registers a data view type, adding it to the store.
+ * Registers a data view type.
  *
  * @param viewType - The data view type to register.
  *
@@ -17,9 +15,6 @@ export function registerDataViewType<
   // Erase the view type's generics for storage and dispatch
   const erasedViewType = viewType as unknown as DataViewType;
 
-  // Add the data view type to the store
-  DataViewTypesStore.set(erasedViewType);
-
-  // Dispatch the data view type registered event
-  Events.dispatch(DataViewTypeRegisteredEvent, erasedViewType);
+  // Register the data view type
+  DataViewTypesRegistry.register(erasedViewType);
 }

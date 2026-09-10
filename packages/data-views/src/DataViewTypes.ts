@@ -1,4 +1,5 @@
-import { DataViewTypeNotRegisteredError } from './errors';
+import { NotRegisteredError } from '@minddrop/stores';
+import { DataViewTypesRegistry } from './DataViewTypesRegistry';
 import {
   DataViewTypeRegisteredEvent,
   DataViewTypeUnregisteredEvent,
@@ -12,15 +13,16 @@ export const events = {
 } as const;
 
 export const errors = {
-  NotRegistered: DataViewTypeNotRegisteredError,
+  NotRegistered: NotRegisteredError,
 };
 
-export {
-  DataViewTypesStore as Store,
-  useDataViewType as use,
-  useDataViewTypes as useAll,
-} from './DataViewTypesStore';
+export const {
+  store: Store,
+  unregister,
+  get,
+  getAll,
+  use,
+  useAll,
+} = DataViewTypesRegistry;
+
 export { registerDataViewType as register } from './registerDataViewType';
-export { unregisterDataViewType as unregister } from './unregisterDataViewType';
-export { getDataViewType as get } from './getDataViewType';
-export { getDataViewTypes as getAll } from './getDataViewTypes';
