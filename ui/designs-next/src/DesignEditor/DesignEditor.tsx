@@ -4,7 +4,8 @@ import {
   DesignElement,
   Designs,
 } from '@minddrop/designs-next';
-import { PropertiesSchema } from '@minddrop/properties';
+import { PropertiesSchema, PropertyMap } from '@minddrop/properties';
+import { ContentColor } from '@minddrop/ui-theme';
 import { DesignEditorPane } from '../DesignEditorPane';
 import { DesignPreviewPane } from '../DesignPreviewPane';
 import { DesignRenderer } from '../DesignRenderer';
@@ -26,6 +27,26 @@ export interface DesignEditorProps {
    * the content of elements which take one.
    */
   properties?: PropertiesSchema;
+
+  /**
+   * The property values the preview renders, keyed by property
+   * name. Elements mapped to a property without a value here fall
+   * back to their own content.
+   */
+  values?: PropertyMap;
+
+  /**
+   * The scheme hue the preview renders with. Left to the owner,
+   * which knows whether what it renders carries a colour at all.
+   */
+  scheme?: ContentColor | null;
+
+  /**
+   * Toolbars rendered at the left end of the preview's controls,
+   * for the owner's own preview options such as the entry it
+   * renders and the colour it renders with.
+   */
+  previewControls?: React.ReactNode;
 }
 
 interface Draft {
@@ -55,6 +76,9 @@ const NoElements: DesignElement[] = [];
 export const DesignEditor: React.FC<DesignEditorProps> = ({
   designId,
   properties,
+  values,
+  scheme,
+  previewControls,
 }) => {
   const draggingRef = useRef(false);
   const draftRef = useRef<Draft | null>(null);
@@ -177,6 +201,8 @@ export const DesignEditor: React.FC<DesignEditorProps> = ({
 
       <DesignPreviewPane
         width={previewWidth}
+        scheme={scheme}
+        leadingControls={previewControls}
         controls={
           <PreviewWidthToggles
             width={previewWidth}
@@ -184,7 +210,12 @@ export const DesignEditor: React.FC<DesignEditorProps> = ({
           />
         }
       >
-        <DesignRenderer design={renderedDesign} width={previewWidth} />
+        <DesignRenderer
+          design={renderedDesign}
+          width={previewWidth}
+          properties={properties}
+          values={values}
+        />
       </DesignPreviewPane>
     </div>
   );

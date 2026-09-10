@@ -2171,7 +2171,10 @@ declare module 'i18next' {
             portrait: string;
             landscape: string;
             previewWidth: string;
-            toggleTheme: string;
+            theme: {
+              light: string;
+              dark: string;
+            };
             insertElement: string;
             noMatchingElements: string;
             widths: {

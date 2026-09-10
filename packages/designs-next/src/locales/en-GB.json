@@ -22,7 +22,10 @@
       "portrait": "Portrait",
       "landscape": "Landscape",
       "previewWidth": "Preview at {{width}}",
-      "toggleTheme": "Toggle dark mode",
+      "theme": {
+        "light": "Light",
+        "dark": "Dark"
+      },
       "insertElement": "Insert element",
       "noMatchingElements": "No matching elements",
       "widths": {
