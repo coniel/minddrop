@@ -2244,6 +2244,20 @@ declare module 'i18next' {
               placeholder: string;
             };
           };
+          property: {
+            label: string;
+            none: string;
+            search: string;
+            noMatching: string;
+            suggested: string;
+            other: string;
+            description: string;
+          };
+          content: {
+            label: string;
+            description: string;
+            textPlaceholder: string;
+          };
         };
         onboarding: {
           welcome: {

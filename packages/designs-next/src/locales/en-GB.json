@@ -89,6 +89,20 @@
       "box": {
         "label": "Box"
       }
+    },
+    "property": {
+      "label": "Property",
+      "none": "No property",
+      "search": "Search properties",
+      "noMatching": "No matching properties",
+      "suggested": "Suggested",
+      "other": "Other",
+      "description": "Fills the element with the value of a property."
+    },
+    "content": {
+      "label": "Static content",
+      "description": "Shown when the element has no property, or its property has no value.",
+      "textPlaceholder": "Static text"
     }
   }
 }

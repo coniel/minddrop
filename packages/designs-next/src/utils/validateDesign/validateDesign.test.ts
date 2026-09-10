@@ -26,7 +26,7 @@ describe('validateDesign', () => {
   });
 
   it('rejects an unknown design type', () => {
-    expect(validateDesign({ ...cardDesign_1, type: 'database' })).toBe(false);
+    expect(validateDesign({ ...cardDesign_1, type: 'invalid' })).toBe(false);
   });
 
   it('rejects invalid unit dimensions', () => {
@@ -46,7 +46,7 @@ describe('validateDesign', () => {
   });
 
   it('accepts an entity ID owner and rejects other owners', () => {
-    expect(validateDesign({ ...cardDesign_1, owner: 'database_1' })).toBe(true);
+    expect(validateDesign({ ...cardDesign_1, owner: 'owner_1' })).toBe(true);
     expect(validateDesign({ ...cardDesign_1, owner: 1 })).toBe(false);
   });
 

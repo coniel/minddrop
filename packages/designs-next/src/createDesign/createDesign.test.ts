@@ -51,13 +51,13 @@ describe('createDesign', () => {
   });
 
   it('records the owner on owned designs', async () => {
-    const design = await createDesign({ type: 'card', owner: 'database_1' });
+    const design = await createDesign({ type: 'card', owner: 'owner_1' });
 
-    expect(storeItem(DesignsStore, design.id).owner).toBe('database_1');
+    expect(storeItem(DesignsStore, design.id).owner).toBe('owner_1');
   });
 
   it('does not write owned designs to the file system', async () => {
-    const design = await createDesign({ type: 'card', owner: 'database_1' });
+    const design = await createDesign({ type: 'card', owner: 'owner_1' });
 
     expect(MockFs.exists(resolveDesignFilePath(design.id))).toBe(false);
   });

@@ -3,6 +3,7 @@ import type { TranslationKey } from '@minddrop/i18n';
 import type { PropertyType } from '@minddrop/properties';
 import type { UiIconName } from '@minddrop/ui-icons';
 import { DesignElement, ElementWidthMode } from './DesignElement.types';
+import { DesignElementContentMenuProps } from './DesignElementContentMenu.types';
 import { DesignElementGroup } from './DesignElementGroup.types';
 import { DesignElementComponent } from './DesignElementProps.types';
 import { DesignElementSettingGroup } from './DesignElementSettings.types';
@@ -49,6 +50,13 @@ export interface DesignElementConfig<
    * elements which suit every type they accept.
    */
   suggestedPropertyTypes?: PropertyType[];
+
+  /**
+   * Menu component for filling the element's static content,
+   * rendered in the block controls' content section. Omitted for
+   * elements holding no static content.
+   */
+  contentMenu?: ComponentType<DesignElementContentMenuProps<TElement>>;
 
   /**
    * Number of columns a newly inserted element spans.

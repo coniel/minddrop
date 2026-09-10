@@ -46,9 +46,17 @@ export interface DesignElement {
   rowSpan: number;
 
   /**
-   * Name of the owning database's property the element takes its
-   * content from. Referenced by name since properties carry no
-   * stable ID. Absent when the element is unmapped.
+   * The element's own content, serialized as text the way a
+   * property's value is in an entry file. Its element type decides
+   * what the text holds and reads it back; absent when the element
+   * has none.
+   */
+  content?: string;
+
+  /**
+   * Name of the property the element takes its content from.
+   * Referenced by name since properties carry no stable ID. Absent
+   * when the element is unmapped.
    */
   property?: string;
 

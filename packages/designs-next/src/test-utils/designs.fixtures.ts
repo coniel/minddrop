@@ -33,7 +33,7 @@ export const ownedCardDesign_1: Design = {
   elements: [],
   created: new Date('2024-01-01T00:00:00.000Z'),
   lastModified: new Date('2024-01-01T00:00:00.000Z'),
-  owner: 'database_1',
+  owner: 'owner_1',
 };
 
 export const ownedListDesign_1: Design = {
@@ -45,7 +45,7 @@ export const ownedListDesign_1: Design = {
   elements: [],
   created: new Date('2024-01-01T00:00:00.000Z'),
   lastModified: new Date('2024-01-01T00:00:00.000Z'),
-  owner: 'database_1',
+  owner: 'owner_1',
 };
 
 // The unowned designs, each written to its own design file

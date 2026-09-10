@@ -13,13 +13,13 @@ describe('getOwnedDesigns', () => {
   afterEach(cleanup);
 
   it("returns the owner's designs", () => {
-    expect(getOwnedDesigns('database_1')).toEqual([
+    expect(getOwnedDesigns('owner_1')).toEqual([
       ownedCardDesign_1,
       ownedListDesign_1,
     ]);
   });
 
   it('returns an empty array when the owner has no designs', () => {
-    expect(getOwnedDesigns('database_missing')).toEqual([]);
+    expect(getOwnedDesigns('owner_missing')).toEqual([]);
   });
 });

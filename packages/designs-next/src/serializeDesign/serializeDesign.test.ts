@@ -6,7 +6,7 @@ describe('serializeDesign', () => {
   it('strips the owner', () => {
     const storedDesign = serializeDesign({
       ...ownedCardDesign_1,
-      owner: 'database_1',
+      owner: 'owner_1',
     });
 
     expect(storedDesign).not.toHaveProperty('owner');

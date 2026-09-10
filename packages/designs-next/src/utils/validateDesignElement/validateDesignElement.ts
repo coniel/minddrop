@@ -83,6 +83,11 @@ export function validateDesignElement(
     return false;
   }
 
+  // The content must be text when present, whatever it serializes
+  if (element.content !== undefined && typeof element.content !== 'string') {
+    return false;
+  }
+
   return true;
 }
 
