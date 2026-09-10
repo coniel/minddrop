@@ -3,6 +3,7 @@ import React from 'react';
 import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import { IconButton } from '../../IconButton';
 import { TextColor, TextSize, TextWeight } from '../../Text';
+import { useAutoGrow } from '../../hooks';
 import { propsToClass } from '../../utils';
 import './TextInput.css';
 
@@ -80,6 +81,33 @@ export interface TextInputProps {
    * Disables the input.
    */
   disabled?: boolean;
+
+  /*
+   * Renders a textarea in place of the single-line input, for
+   * values which run to several lines.
+   */
+  multiline?: boolean;
+
+  /*
+   * Lines of text the multiline input is tall. Acts as its minimum
+   * height where it grows with its content. Ignored by single-line
+   * inputs.
+   * @default 3
+   */
+  rows?: number;
+
+  /*
+   * Grows the multiline input with its content instead of scrolling
+   * it, up to `maxRows`. Ignored by single-line inputs.
+   */
+  autoGrow?: boolean;
+
+  /*
+   * Lines of text a growing input stops growing at, scrolling from
+   * there. Ignored unless `autoGrow` is set.
+   * @default 12
+   */
+  maxRows?: number;
 
   /*
    * Input type.
@@ -172,6 +200,9 @@ export interface TextInputProps {
   onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
 }
 
+// Lines of text a multiline input is tall by default
+const DefaultMultilineRows = 3;
+
 export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
   (
     {
@@ -179,6 +210,7 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
       autoComplete,
       autoCorrect,
       autoFocus,
+      autoGrow,
       className,
       clearable,
       color,
@@ -186,6 +218,8 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
       disabled,
       invalid,
       leading,
+      maxRows,
+      multiline,
       name,
       onBlur,
       onChange,
@@ -194,6 +228,7 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
       onKeyDown,
       onValueChange,
       placeholder,
+      rows = DefaultMultilineRows,
       stringPlaceholder,
       size = 'lg',
       spellCheck,
@@ -215,6 +250,13 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
     );
 
     const currentValue = value !== undefined ? value : internalValue;
+
+    // Follow the content's height as it is typed
+    useAutoGrow(inputRef, {
+      enabled: Boolean(multiline && autoGrow),
+      maxRows,
+      value: String(currentValue),
+    });
     const hasValue = clearable && !disabled && String(currentValue).length > 0;
 
     const handleValueChange = (newValue: string) => {
@@ -249,6 +291,8 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
           weight,
           color: textSize ? color : undefined,
           invalid,
+          multiline,
+          autoGrow,
           className,
         })}
       >
@@ -256,8 +300,9 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
         <Input
           ref={inputRef}
           className="text-input-input"
+          render={multiline ? <textarea rows={rows} /> : undefined}
           name={name}
-          type={type}
+          type={multiline ? undefined : type}
           value={value}
           defaultValue={defaultValue}
           placeholder={stringPlaceholder ?? (placeholder && t(placeholder))}

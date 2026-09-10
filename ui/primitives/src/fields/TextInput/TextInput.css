@@ -287,3 +287,40 @@
     outline-color: var(--border-danger-hover);
   }
 }
+
+/* --- Multiline --- */
+
+/* A textarea takes its height from its rows rather than the fixed
+   control height, and its text wraps onto lines of its own. The
+   padding moves onto the textarea, which scrolls: content is
+   clipped at the scroll container's padding edge, so padding held
+   on the wrapper would cut the text off short of the field's own
+   edge. */
+.text-input-multiline {
+  height: auto;
+  align-items: stretch;
+  padding: 0;
+
+  .text-input-input {
+    padding: var(--space-2) var(--space-3);
+    resize: vertical;
+    line-height: var(--line-height-normal);
+  }
+}
+
+.text-input-size-sm.text-input-multiline .text-input-input {
+  padding: var(--space-1) var(--space-2);
+}
+
+.text-input-size-lg.text-input-multiline .text-input-input,
+.text-input-multiline:not(.text-input-size-sm):not(.text-input-size-md)
+  .text-input-input {
+  padding: var(--space-3) var(--space-4);
+}
+
+/* A growing input's height is set as its content changes, so it is
+   neither dragged nor scrolled until it stops growing */
+.text-input-auto-grow .text-input-input {
+  resize: none;
+  overflow-y: auto;
+}
