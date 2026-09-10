@@ -1,6 +1,6 @@
 import { Fs, FsEntry } from '@minddrop/file-system';
 import { Paths, entityId, isEntityId } from '@minddrop/utils';
-import { DatabaseConfigFileName } from '../constants';
+import { DatabaseConfigFileName, DatabaseEntityType } from '../constants';
 import { Database } from '../types';
 import {
   resolveDatabaseConfigFilePath,
@@ -48,7 +48,7 @@ export async function readWorkspaceDatabases(
       }
 
       // Mint a fresh ID for missing, untyped, or duplicated IDs
-      const minted = { ...database, id: entityId('database') };
+      const minted = { ...database, id: entityId(DatabaseEntityType) };
 
       // Persist the minted ID back to the config file
       await writeDatabaseConfigFile(workspacePath, minted);

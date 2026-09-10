@@ -2,6 +2,18 @@ import type { PropertyType } from '@minddrop/properties';
 import type { UiIconName } from '@minddrop/ui-icons';
 import type { EntrySortOptions } from './utils';
 
+/**
+ * The entity type name of a database, used as the type prefix of
+ * its ID.
+ */
+export const DatabaseEntityType = 'database';
+
+/**
+ * The entity type name of a database entry, used as the type prefix
+ * of its ID.
+ */
+export const DatabaseEntryEntityType = 'database-entry';
+
 export const DatabaseConfigFileName = 'database.json';
 export const MetadataDirName = 'metadata';
 export const EntryTemplatesDirName = 'templates';

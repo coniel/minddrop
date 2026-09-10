@@ -10,7 +10,7 @@ import { sqlUpsertDatabase } from '../../sql';
 export function onCreateDatabase(data: DatabaseCreatedEventData) {
   // Create a virtual view for the database
   DataViews.createVirtual({
-    id: entityId('data-view'),
+    id: entityId(DataViews.constants.EntityType),
     type: 'table',
     dataSource: { type: 'database', id: data.id },
     owner: data.id,

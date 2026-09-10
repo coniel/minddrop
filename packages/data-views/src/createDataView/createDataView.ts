@@ -3,6 +3,7 @@ import { i18n } from '@minddrop/i18n';
 import { Icons } from '@minddrop/ui-icons';
 import { entityId } from '@minddrop/utils';
 import { DataViewsStore } from '../DataViewsStore';
+import { DataViewEntityType } from '../constants';
 import { DataViewCreatedEvent } from '../events';
 import { extractDataViewReferences } from '../extractDataViewReferences';
 import { getDataViewType } from '../getDataViewType';
@@ -31,7 +32,7 @@ export async function createDataView(
 
   // Create the data view with the data view type's default icon
   const view: DataView = {
-    id: entityId('data-view'),
+    id: entityId(DataViewEntityType),
     dataSource,
     type: type,
     name: name || i18n.t(viewType.name),

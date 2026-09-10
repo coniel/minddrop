@@ -1,5 +1,6 @@
 import { Fs } from '@minddrop/file-system';
 import { entityId, titleFromPath } from '@minddrop/utils';
+import { DatabaseEntryEntityType } from '../constants';
 import { Database, DatabaseEntry, DatabaseEntrySerializer } from '../types';
 import { getTimestampProperty, resolveDatabaseEntryPath } from '../utils';
 
@@ -60,7 +61,7 @@ export async function readDatabaseEntry(
     // sync re-resolves the ID to the existing one when the path matches
     // an already indexed entry.
     const entry: DatabaseEntry = {
-      id: entityId('database-entry'),
+      id: entityId(DatabaseEntryEntityType),
       database: database.id,
       path,
       title: titleFromPath(path),

@@ -2,6 +2,7 @@ import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { entityId } from '@minddrop/utils';
 import { DatabasesStore } from '../DatabasesStore';
+import { DatabaseEntityType } from '../constants';
 import { DatabaseCreatedEvent } from '../events';
 import { getDatabaseDefaults } from '../getDatabaseDefaults';
 import { Database, DatabaseAutomationTemplate } from '../types';
@@ -57,7 +58,7 @@ export async function createDatabase(
     designs: [],
     entryTemplates: [],
     ...options,
-    id: entityId('database'),
+    id: entityId(DatabaseEntityType),
     // Databases live at the workspace root, so the directory name is
     // the database's workspace relative path.
     path: options.name,

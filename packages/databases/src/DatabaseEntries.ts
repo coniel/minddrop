@@ -1,3 +1,4 @@
+import { DatabaseEntryEntityType } from './constants';
 import { DatabaseEntryNotFoundError } from './errors';
 import {
   DatabaseEntriesClearedEvent,
@@ -22,6 +23,10 @@ export const events = {
   Cleared: DatabaseEntriesClearedEvent,
   OpenView: OpenDatabaseEntryViewEvent,
 } as const;
+
+export const constants = {
+  EntityType: DatabaseEntryEntityType,
+};
 
 export const errors = {
   NotFound: DatabaseEntryNotFoundError,

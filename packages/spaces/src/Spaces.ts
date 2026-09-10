@@ -1,4 +1,4 @@
-import { DefaultSpaceIcon, SpacesIcon } from './constants';
+import { DefaultSpaceIcon, SpaceEntityType, SpacesIcon } from './constants';
 import { SpaceNotFoundError } from './errors';
 import {
   SpaceCreatedEvent,
@@ -21,6 +21,7 @@ export const errors = {
 };
 
 export const constants = {
+  EntityType: SpaceEntityType,
   Icon: SpacesIcon,
   EntityDefaultIcon: DefaultSpaceIcon,
 };

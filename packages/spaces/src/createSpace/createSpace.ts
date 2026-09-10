@@ -3,7 +3,7 @@ import { Events } from '@minddrop/events';
 import { i18n } from '@minddrop/i18n';
 import { entityId } from '@minddrop/utils';
 import { SpacesStore } from '../SpacesStore';
-import { DefaultSpaceIcon } from '../constants';
+import { DefaultSpaceIcon, SpaceEntityType } from '../constants';
 import { SpaceCreatedEvent } from '../events';
 import { Space } from '../types';
 import { writeSpace } from '../writeSpace';
@@ -33,7 +33,7 @@ export interface CreateSpaceOptions {
 export async function createSpace(
   options: CreateSpaceOptions = {},
 ): Promise<Space> {
-  const spaceId = entityId('space');
+  const spaceId = entityId(SpaceEntityType);
   const name = options.name || i18n.t('labels.untitled');
 
   // Seed the space's design with a single empty space layout

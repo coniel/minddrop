@@ -1,5 +1,11 @@
 import type { UiIconName } from '@minddrop/ui-icons';
 
+/**
+ * The entity type name of a space, used as the type prefix of its
+ * ID.
+ */
+export const SpaceEntityType = 'space';
+
 export const SpacesDirName = 'spaces';
 export const SpaceFileName = 'space.json';
 

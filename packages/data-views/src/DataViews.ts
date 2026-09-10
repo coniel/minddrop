@@ -1,4 +1,4 @@
-import { DataViewsIcon } from './constants';
+import { DataViewEntityType, DataViewsIcon } from './constants';
 import { DataViewNotFoundError } from './errors';
 import {
   DataViewCreatedEvent,
@@ -21,6 +21,7 @@ export const errors = {
 };
 
 export const constants = {
+  EntityType: DataViewEntityType,
   Icon: DataViewsIcon,
 };
 

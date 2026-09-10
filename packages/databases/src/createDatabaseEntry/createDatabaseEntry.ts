@@ -4,6 +4,7 @@ import { i18n } from '@minddrop/i18n';
 import { Properties, PropertyMap } from '@minddrop/properties';
 import { entityId, titleFromPath } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
+import { DatabaseEntryEntityType } from '../constants';
 import { DatabaseEntryCreatedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntrySerializer } from '../getDatabaseEntrySerializer';
@@ -70,7 +71,7 @@ export async function createDatabaseEntry<
 
   // Create the new entry
   const entry: DatabaseEntry<TProperties> = {
-    id: entityId('database-entry'),
+    id: entityId(DatabaseEntryEntityType),
     database: database.id,
     title: titleFromPath(path),
     path: Fs.relativePath(parentDirPath, path),

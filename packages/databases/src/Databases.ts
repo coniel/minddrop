@@ -1,4 +1,5 @@
 import {
+  DatabaseEntityType,
   DatabasesIcon,
   DefaultDatabaseIcon,
   DefaultEntrySort,
@@ -74,6 +75,7 @@ export const errors = {
 };
 
 export const constants = {
+  EntityType: DatabaseEntityType,
   Icon: DatabasesIcon,
   EntityDefaultIcon: DefaultDatabaseIcon,
   DefaultEntrySort,
