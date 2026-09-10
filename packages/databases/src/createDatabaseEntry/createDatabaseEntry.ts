@@ -4,10 +4,10 @@ import { i18n } from '@minddrop/i18n';
 import { Properties, PropertyMap } from '@minddrop/properties';
 import { entityId, titleFromPath } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
+import { DatabaseEntrySerializersRegistry } from '../DatabaseEntrySerializersRegistry';
 import { DatabaseEntryEntityType } from '../constants';
 import { DatabaseEntryCreatedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
-import { getDatabaseEntrySerializer } from '../getDatabaseEntrySerializer';
 import { DatabaseEntry, DatabaseEntryId } from '../types';
 import { resolveDatabasePath, setTimestampProperties } from '../utils';
 import { writeDatabaseEntry } from '../writeDatabaseEntry';
@@ -24,7 +24,7 @@ import { writeEntryMetadata } from '../writeEntryMetadata';
  * @returns The newly created entry.
  *
  * @throws {DatabaseNotFoundError} If the database does not exist.
- * @throws {DatabaseEntrySerializerNotRegisteredError} If the entry serializer is not registered.
+ * @throws {NotRegisteredError} If the entry serializer is not registered.
  *
  * @dispatches databases:entry:created
  */
@@ -44,7 +44,9 @@ export async function createDatabaseEntry<
   const parentDirPath = resolveDatabasePath(database);
 
   // Get the file extension for the entry file
-  const serializer = getDatabaseEntrySerializer(database.entrySerializer);
+  const serializer = DatabaseEntrySerializersRegistry.get(
+    database.entrySerializer,
+  );
   fileExtension = serializer.fileExtension;
 
   // Path to the entry's primary file

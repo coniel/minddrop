@@ -1,5 +1,5 @@
 import { Fs } from '@minddrop/file-system';
-import { getDatabaseEntrySerializer } from '../getDatabaseEntrySerializer';
+import { DatabaseEntrySerializersRegistry } from '../DatabaseEntrySerializersRegistry';
 import { readDatabaseEntry } from '../readDatabaseEntry';
 import { Database, DatabaseEntry } from '../types';
 import { resolveDatabasePath } from '../utils';
@@ -39,7 +39,9 @@ export async function readDatabaseEntries(
   }
 
   // Get the database's entry serializer
-  const serializer = getDatabaseEntrySerializer(database.entrySerializer);
+  const serializer = DatabaseEntrySerializersRegistry.get(
+    database.entrySerializer,
+  );
 
   // Only include the serializer's expected file type
   files = files.filter((file) =>

@@ -21,7 +21,7 @@ import {
   setupWorkspaceFixtures,
 } from '@minddrop/workspaces/test-utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
-import { DatabaseEntrySerializersStore } from '../DatabaseEntrySerializersStore';
+import { DatabaseEntrySerializersRegistry } from '../DatabaseEntrySerializersRegistry';
 import { DatabasesStore } from '../DatabasesStore';
 import { clearEntryFocusRequest } from '../EntryFocusRequestStore';
 import { clearContentCaptureRegistry } from '../contentCaptureRegistry';
@@ -88,7 +88,7 @@ export async function cleanup(): Promise<void> {
   // Clear stores
   DatabasesStore.clear();
   DatabaseEntriesStore.clear();
-  DatabaseEntrySerializersStore.clear();
+  DatabaseEntrySerializersRegistry.clear();
   Collections.Store.clear();
 
   // Unregister the item reference adapters

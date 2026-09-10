@@ -1,22 +1,24 @@
-import { DatabaseEntrySerializersStore } from './DatabaseEntrySerializersStore';
+import { NotRegisteredError } from '@minddrop/stores';
+import { DatabaseEntrySerializersRegistry } from './DatabaseEntrySerializersRegistry';
 import { coreEntrySerializers } from './entry-serializers';
-import { DatabaseEntrySerializerNotRegisteredError } from './errors';
 
 export const errors = {
-  NotRegistered: DatabaseEntrySerializerNotRegisteredError,
+  NotRegistered: NotRegisteredError,
 };
 
-export {
-  DatabaseEntrySerializersStore as Store,
-  useDatabaseEntrySerializer as use,
-  useDatabaseEntrySerializerSerializers as useAll,
-} from './DatabaseEntrySerializersStore';
+export const {
+  store: Store,
+  get,
+  getAll,
+  use,
+  useAll,
+} = DatabaseEntrySerializersRegistry;
 
 /**
  * Loads the core entry serializers (json, yaml, markdown) into
- * the serializers store. Called during initialization or from
+ * the serializers registry. Called during initialization or from
  * the Bun process for search indexing.
  */
 export function loadCoreSerializers(): void {
-  DatabaseEntrySerializersStore.load(coreEntrySerializers);
+  DatabaseEntrySerializersRegistry.store.load(coreEntrySerializers);
 }

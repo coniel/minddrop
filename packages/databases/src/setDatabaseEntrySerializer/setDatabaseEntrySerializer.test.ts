@@ -1,11 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { AppErrorEventData, Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
+import { NotRegisteredError } from '@minddrop/stores';
 import { Paths } from '@minddrop/utils';
-import { DatabaseEntrySerializersStore } from '../DatabaseEntrySerializersStore';
+import { DatabaseEntrySerializersRegistry } from '../DatabaseEntrySerializersRegistry';
 import { EntryConversionBackupDirName } from '../constants';
 import { jsonEntrySerializer } from '../entry-serializers';
-import { DatabaseEntrySerializerNotRegisteredError } from '../errors';
 import { onUpdateDatabase } from '../event-handlers';
 import { DatabaseUpdatedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
@@ -85,7 +85,7 @@ describe('setDatabaseEntrySerializer', () => {
   it('throws when the serializer is not registered', async () => {
     await expect(
       setDatabaseEntrySerializer(objectDatabase.id, 'missing'),
-    ).rejects.toThrow(DatabaseEntrySerializerNotRegisteredError);
+    ).rejects.toThrow(NotRegisteredError);
 
     // The entry file is left untouched
     expect(await Fs.exists(databaseEntryFilePath(objectEntry1))).toBe(true);
@@ -246,7 +246,7 @@ describe('setDatabaseEntrySerializer', () => {
 function registerFailingSerializer(): void {
   let calls = 0;
 
-  DatabaseEntrySerializersStore.load([
+  DatabaseEntrySerializersRegistry.store.load([
     {
       id: 'failing',
       name: 'test',

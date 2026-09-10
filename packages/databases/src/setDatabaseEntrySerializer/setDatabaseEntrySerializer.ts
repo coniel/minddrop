@@ -2,13 +2,13 @@ import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { Paths } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
+import { DatabaseEntrySerializersRegistry } from '../DatabaseEntrySerializersRegistry';
 import { DatabasesStore } from '../DatabasesStore';
 import { EntryConversionBackupDirName } from '../constants';
 import { DatabaseUpdatedEvent } from '../events';
 import { getAllDatabaseEntries } from '../getAllDatabaseEntries';
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntry } from '../getDatabaseEntry';
-import { getDatabaseEntrySerializer } from '../getDatabaseEntrySerializer';
 import { Database, DatabaseEntry } from '../types';
 import {
   resolveDatabaseEntryPath,
@@ -31,7 +31,7 @@ import { writeDatabaseConfig } from '../writeDatabaseConfig';
  * @returns The updated database config.
  *
  * @throws {DatabaseNotFoundError} If the database does not exist.
- * @throws {DatabaseEntrySerializerNotRegisteredError} If the serializer is not registered.
+ * @throws {NotRegisteredError} If the serializer is not registered.
  *
  * @dispatches databases:database:updated
  * @dispatches app:error
@@ -49,7 +49,7 @@ export async function setDatabaseEntrySerializer(
   }
 
   // Ensure the new serializer is registered before touching any files
-  const serializer = getDatabaseEntrySerializer(serializerId);
+  const serializer = DatabaseEntrySerializersRegistry.get(serializerId);
 
   // Get the database's entries for conversion
   const entries = getAllDatabaseEntries(id);

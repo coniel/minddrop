@@ -1,12 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
+import { NotRegisteredError } from '@minddrop/stores';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabasesStore } from '../DatabasesStore';
-import {
-  DatabaseEntryNotFoundError,
-  DatabaseEntrySerializerNotRegisteredError,
-  DatabaseNotFoundError,
-} from '../errors';
+import { DatabaseEntryNotFoundError, DatabaseNotFoundError } from '../errors';
 import {
   DatabaseEntryWrittenEvent,
   DatabaseEntryWrittenEventData,
@@ -66,7 +63,7 @@ describe('writeDatabaseEntry', () => {
     });
 
     await expect(writeDatabaseEntry(objectEntry1.id)).rejects.toThrow(
-      DatabaseEntrySerializerNotRegisteredError,
+      NotRegisteredError,
     );
   });
 

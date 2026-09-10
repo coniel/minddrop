@@ -1,9 +1,9 @@
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
+import { DatabaseEntrySerializersRegistry } from '../DatabaseEntrySerializersRegistry';
 import { DatabaseEntryWrittenEvent } from '../events';
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntry } from '../getDatabaseEntry';
-import { getDatabaseEntrySerializer } from '../getDatabaseEntrySerializer';
 import {
   resolveDatabaseEntryPath,
   serializeCollectionProperties,
@@ -16,7 +16,7 @@ import {
  *
  * @throws {DatabaseEntryNotFoundError} If the entry does not exist.
  * @throws {DatabaseNotFoundError} If the entry database does not exist.
- * @throws {DatabaseEntrySerializerNotRegisteredError} If the entry serializer is not registered.
+ * @throws {NotRegisteredError} If the entry serializer is not registered.
  *
  * @dispatches databases:entry:written
  */
@@ -44,7 +44,9 @@ export async function writeDatabaseEntry(id: string): Promise<void> {
     : undefined;
 
   // Serialize the entry's properties
-  const serializer = getDatabaseEntrySerializer(database.entrySerializer);
+  const serializer = DatabaseEntrySerializersRegistry.get(
+    database.entrySerializer,
+  );
   const contents = serializer.serialize(
     database.properties,
     properties,
