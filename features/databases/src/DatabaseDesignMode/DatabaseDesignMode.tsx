@@ -319,7 +319,11 @@ export const DatabaseDesignMode: React.FC<DatabaseDesignModeProps> = ({
       {/* The editor on the active design */}
       <div className="database-design-mode-editor">
         {activeDesign ? (
-          <DesignEditor key={activeDesign.id} designId={activeDesign.id} />
+          <DesignEditor
+            key={activeDesign.id}
+            designId={activeDesign.id}
+            properties={database?.properties}
+          />
         ) : (
           <Text
             className="database-design-mode-empty"
