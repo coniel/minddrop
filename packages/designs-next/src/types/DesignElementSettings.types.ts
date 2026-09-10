@@ -17,12 +17,22 @@ export type ElementCornerRadius = 'none' | 'sm' | 'md' | 'lg' | 'full';
  */
 export type FontWeight = 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900;
 
+/**
+ * The edge text lines up on, its centre, or both edges at once.
+ */
+export type TextAlign = 'left' | 'center' | 'right' | 'justify';
+
 export interface TextSettings {
   /**
    * The weight the text renders at. Absent means the weight the
    * element's type renders at by default.
    */
   fontWeight?: FontWeight;
+
+  /**
+   * The edge the text lines up on. Absent means the left edge.
+   */
+  textAlign?: TextAlign;
 
   /**
    * Whether the text renders italic.

@@ -2203,6 +2203,13 @@ declare module 'i18next' {
               black: string;
             };
             italic: string;
+            textAlign: {
+              label: string;
+              left: string;
+              center: string;
+              right: string;
+              justify: string;
+            };
             background: {
               label: string;
               subtle: string;

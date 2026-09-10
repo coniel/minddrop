@@ -54,6 +54,13 @@
         "black": "Black"
       },
       "italic": "Italic",
+      "textAlign": {
+        "label": "Text align",
+        "left": "Left",
+        "center": "Centre",
+        "right": "Right",
+        "justify": "Justify"
+      },
       "background": {
         "label": "Background",
         "subtle": "Subtle",
