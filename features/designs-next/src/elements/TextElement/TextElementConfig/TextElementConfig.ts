@@ -1,6 +1,7 @@
 import { DesignElementConfig } from '@minddrop/designs-next';
 import { i18n } from '@minddrop/i18n';
 import { Properties } from '@minddrop/properties';
+import { TextContentMenu } from '@minddrop/ui-designs-next';
 import { TextElement } from '../TextElement.types';
 import { TextElementRenderer } from '../TextElementRenderer';
 
@@ -18,6 +19,7 @@ export const TextElementConfig: DesignElementConfig<TextElement> = {
   label: 'designsNext.elements.text.label',
   icon: 'text',
   group: 'content',
+  contentMenu: TextContentMenu,
   propertyTypes: Properties.constants.TextualTypes,
   suggestedPropertyTypes: ['text', 'title', 'select', 'url'],
   component: TextElementRenderer,
@@ -37,5 +39,5 @@ export const TextElementConfig: DesignElementConfig<TextElement> = {
  * @returns The starter fields.
  */
 function resolvePlaceholderText(): Partial<TextElement> {
-  return { text: i18n.t('designsNext.elements.text.placeholder') };
+  return { content: i18n.t('designsNext.elements.text.placeholder') };
 }

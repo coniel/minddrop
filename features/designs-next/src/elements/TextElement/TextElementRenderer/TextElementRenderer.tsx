@@ -9,10 +9,10 @@ import { TextLineHeightUnits } from '../TextElementConfig';
 import './TextElementRenderer.css';
 
 /**
- * Renders the text element as wrapping body text. Mapped elements
- * render their property's value, unmapped ones their own text.
- * Fixed-height text clamps to the number of lines its block height
- * holds, natural height text grows with its content.
+ * Renders the text element as wrapping body text, taking it from
+ * the property the element maps to and falling back to its own
+ * content. Fixed-height text clamps to the number of lines its block
+ * height holds, natural height text grows with its content.
  */
 export const TextElementRenderer: React.FC<DesignElementProps<TextElement>> = ({
   element,
@@ -33,7 +33,7 @@ export const TextElementRenderer: React.FC<DesignElementProps<TextElement>> = ({
       className={className}
       style={element.naturalHeight ? undefined : { WebkitLineClamp: lines }}
     >
-      {element.property ? propertyValue : element.text}
+      {propertyValue ?? element.content}
     </div>
   );
 };

@@ -8,11 +8,11 @@ import { HeadingElement } from '../HeadingElement.types';
 import { HeadingElementConfig } from '../HeadingElementConfig';
 import { HeadingElementRenderer } from './HeadingElementRenderer';
 
-// A heading element with static text content
+// A heading element with its own text content
 const headingElement: HeadingElement = {
   ...coverDesignElement,
   type: HeadingElementConfig.type,
-  text: 'Project overview',
+  content: 'Project overview',
 };
 
 const properties: PropertiesSchema = [{ type: 'title', name: 'Title' }];

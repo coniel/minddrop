@@ -16,6 +16,6 @@ describe('TextElementConfig', () => {
   it('seeds new text elements with the placeholder text', () => {
     const element = Designs.createElement(TextElementType);
 
-    expect(element).toHaveProperty('text', 'Text');
+    expect(element).toHaveProperty('content', 'Text');
   });
 });

@@ -1,6 +1,7 @@
 import { DesignElementConfig } from '@minddrop/designs-next';
 import { i18n } from '@minddrop/i18n';
 import { Properties } from '@minddrop/properties';
+import { TextContentMenu } from '@minddrop/ui-designs-next';
 import { HeadingElement, HeadingLevel } from '../HeadingElement.types';
 import { HeadingElementRenderer } from '../HeadingElementRenderer';
 import { HeadingSettingsMenu } from '../HeadingSettingsMenu';
@@ -29,6 +30,7 @@ export const HeadingElementConfig: DesignElementConfig<HeadingElement> = {
   label: 'designsNext.elements.heading.label',
   icon: 'heading',
   group: 'content',
+  contentMenu: TextContentMenu,
   propertyTypes: Properties.constants.TextualTypes,
   suggestedPropertyTypes: ['title', 'text'],
   component: HeadingElementRenderer,
@@ -48,7 +50,7 @@ export const HeadingElementConfig: DesignElementConfig<HeadingElement> = {
  * @returns The starter fields.
  */
 function resolvePlaceholderText(): Partial<HeadingElement> {
-  return { text: i18n.t('designsNext.elements.heading.placeholder') };
+  return { content: i18n.t('designsNext.elements.heading.placeholder') };
 }
 
 /**

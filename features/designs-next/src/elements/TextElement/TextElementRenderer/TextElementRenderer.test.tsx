@@ -8,11 +8,11 @@ import { TextElement } from '../TextElement.types';
 import { TextElementConfig } from '../TextElementConfig';
 import { TextElementRenderer } from './TextElementRenderer';
 
-// A text element with static text content
+// A text element with its own text content
 const textElement: TextElement = {
   ...bodyDesignElement,
   type: TextElementConfig.type,
-  text: 'A longer piece of body text.',
+  content: 'A longer piece of body text.',
 };
 
 const properties: PropertiesSchema = [{ type: 'text', name: 'Summary' }];
@@ -43,7 +43,7 @@ describe('TextElementRenderer', () => {
     expect(screen.getByText('The entry summary.')).toBeInTheDocument();
   });
 
-  it('renders nothing when the mapped property has no value', () => {
+  it('falls back to the static text when the property has no value', () => {
     render(
       <DesignPropertiesProvider properties={properties} values={{}}>
         <TextElementRenderer
@@ -52,10 +52,9 @@ describe('TextElementRenderer', () => {
       </DesignPropertiesProvider>,
     );
 
-    // A mapped element never falls back to its static text.
     expect(
-      screen.queryByText('A longer piece of body text.'),
-    ).not.toBeInTheDocument();
+      screen.getByText('A longer piece of body text.'),
+    ).toBeInTheDocument();
   });
 
   it('applies the text settings modifier classes', () => {

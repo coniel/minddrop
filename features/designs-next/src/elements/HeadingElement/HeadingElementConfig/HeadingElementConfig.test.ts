@@ -19,6 +19,6 @@ describe('HeadingElementConfig', () => {
   it('seeds new headings with the placeholder text', () => {
     const element = Designs.createElement(HeadingElementType);
 
-    expect(element).toHaveProperty('text', 'Heading');
+    expect(element).toHaveProperty('content', 'Heading');
   });
 });

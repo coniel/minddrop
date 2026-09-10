@@ -8,10 +8,4 @@ export interface HeadingElement extends DesignElement, TextSettings {
    * means the default level.
    */
   level?: HeadingLevel;
-
-  /**
-   * The heading's static text content, rendered when no property is
-   * selected to fill the element.
-   */
-  text?: string;
 }

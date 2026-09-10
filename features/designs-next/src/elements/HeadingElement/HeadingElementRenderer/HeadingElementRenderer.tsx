@@ -12,9 +12,9 @@ import {
 import './HeadingElementRenderer.css';
 
 /**
- * Renders the heading element as prominent text clamped to the
- * number of lines its block height holds. Mapped elements render
- * their property's value, unmapped ones their own text.
+ * Renders the heading element as prominent text, taking it from the
+ * property the element maps to and falling back to its own content,
+ * clamped to the number of lines its block height holds.
  * Natural-height headings grow with their content instead of
  * clamping.
  */
@@ -44,7 +44,7 @@ export const HeadingElementRenderer: React.FC<
       className={className}
       style={element.naturalHeight ? undefined : { WebkitLineClamp: lines }}
     >
-      {element.property ? propertyValue : element.text}
+      {propertyValue ?? element.content}
     </div>
   );
 };
