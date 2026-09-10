@@ -6,6 +6,7 @@ import {
   Designs,
   ElementDragMode,
 } from '@minddrop/designs-next';
+import { usePopupDismissPress } from '@minddrop/ui-primitives';
 import { useDeleteKey, useModKeyHeld } from '@minddrop/utils';
 import { DesignElementInsertMenu } from '../DesignElementInsertMenu';
 import { resolveElementClass } from '../utils';
@@ -207,6 +208,7 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
   const [insertMenuOpen, setInsertMenuOpen] = useState(false);
   const [hoveredPoint, setHoveredPoint] = useState<GridPoint | null>(null);
   const modKeyHeld = useModKeyHeld(true);
+  const wasDismissingPopup = usePopupDismissPress();
 
   // The grid comes in front of the blocks while the mod key is held,
   // so the squares they cover can be inserted on, and while an area
@@ -540,6 +542,12 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
     // Only the primary button marks out an area, the secondary one
     // anchors one instead.
     if (!isGridTarget(event) || event.button !== 0) {
+      return;
+    }
+
+    // A press which closed a menu or popover has done its job,
+    // leaving the selection and marking no area.
+    if (wasDismissingPopup()) {
       return;
     }
 

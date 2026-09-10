@@ -14,7 +14,9 @@ import {
   iconDesignElement,
   testElementConfig,
 } from '@minddrop/designs-next/test-utils';
+import { PropertiesSchema } from '@minddrop/properties';
 import { fireEvent, render, screen, userEvent } from '@minddrop/test-utils';
+import { TextContentMenu } from '../TextContentMenu';
 import { cleanup } from '../test-utils';
 import { DesignElementControls } from './DesignElementControls';
 
@@ -71,6 +73,11 @@ interface RenderControlsOptions {
    * Whether the design is aspect-locked.
    */
   aspectLocked?: boolean;
+
+  /**
+   * The properties the design's elements can map to.
+   */
+  properties?: PropertiesSchema;
 }
 
 /**
@@ -118,6 +125,7 @@ function renderControls(options: RenderControlsOptions = {}) {
       elements={options.elements ?? [element]}
       selectedId={element.id}
       rows={cardRows}
+      properties={options.properties}
       aspectLocked={options.aspectLocked ?? false}
       onElementsChange={(elements) => {
         changedElements = elements;
@@ -154,6 +162,52 @@ describe('DesignElementControls', () => {
       'aria-orientation',
       'vertical',
     );
+  });
+
+  it('offers the properties to elements which take one', async () => {
+    DesignElementConfigs.register({
+      ...testElementConfig,
+      propertyTypes: ['title'],
+    });
+
+    renderControls({
+      properties: [
+        { type: 'title', name: 'Title', icon: 'lucide:type:default' },
+      ],
+    });
+
+    await userEvent.click(screen.getByLabelText('designsNext.property.label'));
+    await userEvent.click(screen.getByText('Title'));
+
+    expect(changedElement(iconDesignElement.id)?.property).toBe('Title');
+  });
+
+  it("opens an element's static content in its content input", async () => {
+    DesignElementConfigs.register({
+      ...testElementConfig,
+      contentMenu: TextContentMenu,
+    });
+
+    const element: DesignElement = { ...iconDesignElement, content: 'Body' };
+
+    renderControls({ element });
+
+    await userEvent.click(screen.getByLabelText('designsNext.content.label'));
+    await userEvent.type(screen.getByRole('textbox'), '!');
+
+    expect(changedElement(element.id)?.content).toBe('Body!');
+  });
+
+  it('leaves out the property picker for elements which take none', () => {
+    renderControls({
+      properties: [
+        { type: 'title', name: 'Title', icon: 'lucide:type:default' },
+      ],
+    });
+
+    expect(
+      screen.queryByLabelText('designsNext.property.label'),
+    ).not.toBeInTheDocument();
   });
 
   it('holds the width modes behind a menu, with the current mode pressed', () => {

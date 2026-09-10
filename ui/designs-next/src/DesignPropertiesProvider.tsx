@@ -4,7 +4,7 @@ import { DesignPropertiesContext } from './DesignPropertiesContext';
 
 export interface DesignPropertiesProviderProps {
   /**
-   * The property schemas of the database owning the design.
+   * The schemas of the properties the design's elements map to.
    */
   properties?: PropertiesSchema;
 

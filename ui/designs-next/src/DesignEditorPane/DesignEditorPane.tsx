@@ -1,11 +1,13 @@
 import { useCallback, useRef, useState } from 'react';
 import { Designs } from '@minddrop/designs-next';
 import { useTranslation } from '@minddrop/i18n';
+import { PropertiesSchema } from '@minddrop/properties';
 import {
   FloatingToolbar,
   RadioToggleGroup,
   Toggle,
   useOutsideClick,
+  usePopupDismissPress,
 } from '@minddrop/ui-primitives';
 import {
   DesignBlockEditor,
@@ -28,6 +30,12 @@ export interface DesignEditorPaneProps
    * modes instead of the natural height toggle.
    */
   aspectLocked?: boolean;
+
+  /**
+   * The properties the design's elements can map to, offered as
+   * the content of elements which take one.
+   */
+  properties?: PropertiesSchema;
 }
 
 // The snap resolution the editor opens with, in grid units
@@ -42,6 +50,7 @@ const DefaultSnap = 2;
 export const DesignEditorPane: React.FC<DesignEditorPaneProps> = ({
   layoutControls,
   aspectLocked = false,
+  properties,
   elements,
   columns,
   rows,
@@ -53,15 +62,21 @@ export const DesignEditorPane: React.FC<DesignEditorPaneProps> = ({
 }) => {
   const paneRef = useRef<HTMLElement>(null);
   const [snap, setSnap] = useState(DefaultSnap);
+  const wasDismissingPopup = usePopupDismissPress();
   const { t } = useTranslation();
 
   // Clears the selection, both on canvas background presses and on
   // clicks landing outside the pane, which the block toolbar
   // floating over the canvas is part of.
-  const handleDeselect = useCallback(
-    () => onSelectionChange(null),
-    [onSelectionChange],
-  );
+  const handleDeselect = useCallback(() => {
+    // A press which closed a menu or popover has done its job. It
+    // leaves the element it was configuring selected.
+    if (wasDismissingPopup()) {
+      return;
+    }
+
+    onSelectionChange(null);
+  }, [onSelectionChange, wasDismissingPopup]);
 
   useOutsideClick(paneRef, handleDeselect, selectedId !== null);
 
@@ -82,6 +97,7 @@ export const DesignEditorPane: React.FC<DesignEditorPaneProps> = ({
           elements={elements}
           selectedId={selectedId}
           rows={rows}
+          properties={properties}
           aspectLocked={aspectLocked}
           onElementsChange={onElementsChange}
           onRowsChange={onRowsChange}

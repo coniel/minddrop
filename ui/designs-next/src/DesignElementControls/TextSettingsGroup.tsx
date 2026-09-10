@@ -5,7 +5,7 @@ import {
 } from '@minddrop/designs-next';
 import { useTranslation } from '@minddrop/i18n';
 import { Toggle } from '@minddrop/ui-primitives';
-import { BlockControlTooltipOffset } from './constants';
+import { BlockControlOffset } from '../constants';
 
 /**
  * Renders the text setting group: bold and italic toggles.
@@ -24,7 +24,7 @@ export const TextSettingsGroup: React.FC<
         onPressedChange={(pressed) => onSettingsChange({ bold: pressed })}
         tooltip={{
           side: 'right',
-          sideOffset: BlockControlTooltipOffset,
+          sideOffset: BlockControlOffset,
           title: 'designsNext.settings.bold',
         }}
       />
@@ -35,7 +35,7 @@ export const TextSettingsGroup: React.FC<
         onPressedChange={(pressed) => onSettingsChange({ italic: pressed })}
         tooltip={{
           side: 'right',
-          sideOffset: BlockControlTooltipOffset,
+          sideOffset: BlockControlOffset,
           title: 'designsNext.settings.italic',
         }}
       />

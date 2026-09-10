@@ -5,6 +5,8 @@ export * from './DesignElementControls';
 export * from './DesignElementInsertMenu';
 export * from './DesignPreviewPane';
 export * from './DesignPropertiesProvider';
+export * from './DesignPropertyPicker';
 export * from './DesignRenderer';
+export * from './TextContentMenu';
 export * from './useElementValue';
 export * from './utils/resolveTextSettingsClass';

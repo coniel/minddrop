@@ -20,8 +20,9 @@ export interface DesignRendererProps {
   width?: number;
 
   /**
-   * The property schemas of the database owning the design. Needed
-   * alongside the values, which are read against their schema.
+   * The schemas of the properties the design's elements map to.
+   * Needed alongside the values, which are read against their
+   * schema.
    */
   properties?: PropertiesSchema;
 

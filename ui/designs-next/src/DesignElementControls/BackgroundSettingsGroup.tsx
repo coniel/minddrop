@@ -18,8 +18,8 @@ import {
   DropdownMenuTrigger,
   ToolbarIconButton,
 } from '@minddrop/ui-primitives';
+import { BlockControlOffset } from '../constants';
 import { CornerRadiusMenu } from './CornerRadiusMenu';
-import { BlockControlTooltipOffset } from './constants';
 
 interface BackgroundOption {
   /**
@@ -79,7 +79,7 @@ export const BackgroundSettingsGroup: React.FC<
             label="designsNext.settings.background.label"
             tooltip={{
               side: 'right',
-              sideOffset: BlockControlTooltipOffset,
+              sideOffset: BlockControlOffset,
               title: 'designsNext.settings.background.label',
             }}
             variant="subtle"
@@ -87,7 +87,11 @@ export const BackgroundSettingsGroup: React.FC<
           />
         </DropdownMenuTrigger>
         <DropdownMenuPortal>
-          <DropdownMenuPositioner side="bottom" align="start">
+          <DropdownMenuPositioner
+            side="bottom"
+            align="start"
+            sideOffset={BlockControlOffset}
+          >
             <DropdownMenuContent minWidth={160}>
               <DropdownMenuGroup>
                 <DropdownMenuLabel label="designsNext.settings.background.label" />

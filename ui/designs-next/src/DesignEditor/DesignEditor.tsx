@@ -4,6 +4,7 @@ import {
   DesignElement,
   Designs,
 } from '@minddrop/designs-next';
+import { PropertiesSchema } from '@minddrop/properties';
 import { DesignEditorPane } from '../DesignEditorPane';
 import { DesignPreviewPane } from '../DesignPreviewPane';
 import { DesignRenderer } from '../DesignRenderer';
@@ -19,6 +20,12 @@ export interface DesignEditorProps {
    * The ID of the design to edit.
    */
   designId: string;
+
+  /**
+   * The properties the design's elements can map to, offered as
+   * the content of elements which take one.
+   */
+  properties?: PropertiesSchema;
 }
 
 interface Draft {
@@ -45,7 +52,10 @@ const NoElements: DesignElement[] = [];
  * controls. Drags edit a draft which commits to the design when
  * released; every other change commits immediately.
  */
-export const DesignEditor: React.FC<DesignEditorProps> = ({ designId }) => {
+export const DesignEditor: React.FC<DesignEditorProps> = ({
+  designId,
+  properties,
+}) => {
   const draggingRef = useRef(false);
   const draftRef = useRef<Draft | null>(null);
   const [draft, setDraft] = useState<Draft | null>(null);
@@ -146,6 +156,7 @@ export const DesignEditor: React.FC<DesignEditorProps> = ({ designId }) => {
   return (
     <div className="design-editor">
       <DesignEditorPane
+        properties={properties}
         elements={elements}
         columns={columns}
         rows={rows}

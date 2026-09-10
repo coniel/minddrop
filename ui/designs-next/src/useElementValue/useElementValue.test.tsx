@@ -56,7 +56,7 @@ describe('useElementValue', () => {
     expect(screen.getByTestId('value').textContent).toBe('none');
   });
 
-  it('resolves nothing for a property the database no longer has', () => {
+  it('resolves nothing for a property which is no longer provided', () => {
     renderProbe('Removed');
 
     expect(screen.getByTestId('value').textContent).toBe('none');

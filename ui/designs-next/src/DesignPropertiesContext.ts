@@ -3,7 +3,7 @@ import { PropertiesSchema, PropertyMap } from '@minddrop/properties';
 
 export interface DesignPropertiesContextValue {
   /**
-   * The property schemas of the database owning the design.
+   * The schemas of the properties the design's elements map to.
    */
   properties: PropertiesSchema;
 

@@ -14,6 +14,7 @@ import {
   createI18nKeyBuilder,
   useTranslation,
 } from '@minddrop/i18n';
+import { PropertiesSchema } from '@minddrop/properties';
 import { UiIconName } from '@minddrop/ui-icons';
 import {
   FloatingToolbar,
@@ -22,9 +23,10 @@ import {
   Toggle,
   ToolbarSeparator,
 } from '@minddrop/ui-primitives';
+import { DesignPropertyPicker } from '../DesignPropertyPicker';
+import { BlockControlOffset } from '../constants';
 import { BackgroundSettingsGroup } from './BackgroundSettingsGroup';
 import { TextSettingsGroup } from './TextSettingsGroup';
-import { BlockControlTooltipOffset } from './constants';
 import './DesignElementControls.css';
 
 export interface DesignElementControlsProps {
@@ -44,6 +46,13 @@ export interface DesignElementControlsProps {
    * The design's height in grid units.
    */
   rows: number;
+
+  /**
+   * The properties the design's elements can map to, offered as
+   * the content of elements which take one. Omitted where the
+   * design's owner has none.
+   */
+  properties?: PropertiesSchema;
 
   /**
    * Whether the design is aspect-locked, offering height modes
@@ -209,6 +218,7 @@ const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
   element,
   elements,
   rows,
+  properties,
   aspectLocked = false,
   onElementsChange,
   onRowsChange,
@@ -220,10 +230,18 @@ const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
   const SettingsMenu = config?.settingsMenu;
   const settingGroups = config?.settingGroups;
 
+  // The element's content controls: the property it takes its
+  // content from, and the menu filling its static content.
+  const ContentMenu = config?.contentMenu;
+  const propertyTypes = properties ? config?.propertyTypes : undefined;
+
   // Applies a change to the element
   function updateElement(
     data: Partial<
-      Pick<DesignElement, 'widthMode' | 'heightMode' | 'naturalHeight'>
+      Pick<
+        DesignElement,
+        'widthMode' | 'heightMode' | 'naturalHeight' | 'property'
+      >
     >,
   ) {
     onElementsChange(
@@ -231,6 +249,16 @@ const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
         current.id === element.id ? { ...current, ...data } : current,
       ),
     );
+  }
+
+  // Changes the property the element takes its content from
+  function handlePropertyChange(property: string | undefined) {
+    updateElement({ property });
+  }
+
+  // Changes the element's own content, which its type serialized
+  function handleContentChange(content: string | undefined) {
+    handleSettingsChange({ content });
   }
 
   // Changes the element's width mode
@@ -347,10 +375,23 @@ const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
           onPressedChange={handleNaturalHeightChange}
           tooltip={{
             side: 'right',
-            sideOffset: BlockControlTooltipOffset,
+            sideOffset: BlockControlOffset,
             title: 'designsNext.naturalHeight',
           }}
         />
+      )}
+      {(propertyTypes || ContentMenu) && <ToolbarSeparator />}
+      {propertyTypes && properties && (
+        <DesignPropertyPicker
+          properties={properties}
+          value={element.property}
+          types={propertyTypes}
+          suggestedTypes={config?.suggestedPropertyTypes}
+          onValueChange={handlePropertyChange}
+        />
+      )}
+      {ContentMenu && (
+        <ContentMenu element={element} onContentChange={handleContentChange} />
       )}
       {(SettingsMenu || (settingGroups && settingGroups.length > 0)) && (
         <ToolbarSeparator />
