@@ -592,6 +592,14 @@ below.
 workspace directory, so it reaches every device the workspace syncs to.
 The other two sit in AppData and stay on the machine that wrote them.
 
+`AppData/workspaces/<workspaceId>/` is the workspace's data directory,
+resolved by `Workspaces.resolveDataDirPath`, and it holds every
+per-workspace, per-device artifact, not only the stores: the SQL index
+(`data.db`) and the search index (`search-index.json`) sit next to
+`stores/`. All of it is derived or losable state that rebuilds from the
+workspace files, which is what separates it from `AppConfig` (see
+"`workspaces.json` is a hand-written config file").
+
 The test to apply is what the user would expect after switching
 workspaces, and after opening the same workspace on a second machine.
 Open tabs and panel sizes should not follow them to the other machine
