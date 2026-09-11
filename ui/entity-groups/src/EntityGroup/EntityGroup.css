@@ -1,0 +1,12 @@
+.entity-group {
+  position: relative;
+  border-radius: var(--radius-md);
+
+  &.entity-group-dragging {
+    opacity: 0.5;
+  }
+
+  &.entity-group-dragging-over {
+    background-color: var(--surface-accent);
+  }
+}

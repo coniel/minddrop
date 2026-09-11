@@ -1,0 +1,7 @@
+.entity-group-item {
+  position: relative;
+
+  &.entity-group-item-dragging {
+    opacity: 0.5;
+  }
+}

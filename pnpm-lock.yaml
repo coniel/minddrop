@@ -2966,6 +2966,9 @@ importers:
       '@minddrop/queries':
         specifier: workspace:*
         version: link:../../packages/queries
+      '@minddrop/selection':
+        specifier: workspace:*
+        version: link:../../packages/selection
       '@minddrop/ui-databases':
         specifier: workspace:*
         version: link:../databases
@@ -3184,6 +3187,52 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@minddrop/vitest-config':
+        specifier: workspace:*
+        version: link:../../packages/vitest-config
+      eslint:
+        specifier: ^9.39.3
+        version: 9.39.5
+      tsconfig:
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  ui/entity-groups:
+    dependencies:
+      '@minddrop/entity-groups':
+        specifier: workspace:*
+        version: link:../../packages/entity-groups
+      '@minddrop/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
+      '@minddrop/selection':
+        specifier: workspace:*
+        version: link:../../packages/selection
+      '@minddrop/ui-components':
+        specifier: workspace:*
+        version: link:../components
+      '@minddrop/ui-drag-and-drop':
+        specifier: workspace:*
+        version: link:../drag-and-drop
+      '@minddrop/ui-primitives':
+        specifier: workspace:*
+        version: link:../primitives
+      '@minddrop/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
+    devDependencies:
+      '@minddrop/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@minddrop/file-system':
+        specifier: workspace:*
+        version: link:../../packages/file-system
+      '@minddrop/test-utils':
+        specifier: workspace:*
+        version: link:../../packages/test-utils
       '@minddrop/vitest-config':
         specifier: workspace:*
         version: link:../../packages/vitest-config

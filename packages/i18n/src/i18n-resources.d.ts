@@ -3237,6 +3237,18 @@ declare module 'i18next' {
             label: string;
           };
         };
+        entityGroups: {
+          labels: {
+            newGroup: string;
+          };
+          actions: {
+            rename: string;
+            delete: string;
+          };
+          name: {
+            placeholder: string;
+          };
+        };
       };
     };
   }

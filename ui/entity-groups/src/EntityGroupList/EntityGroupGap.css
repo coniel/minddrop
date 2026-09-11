@@ -1,0 +1,4 @@
+.entity-group-gap {
+  position: relative;
+  height: var(--space-2);
+}

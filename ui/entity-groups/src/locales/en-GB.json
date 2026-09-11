@@ -1,0 +1,14 @@
+{
+  "entityGroups": {
+    "labels": {
+      "newGroup": "New group"
+    },
+    "actions": {
+      "rename": "Rename group",
+      "delete": "Delete group"
+    },
+    "name": {
+      "placeholder": "Group name"
+    }
+  }
+}

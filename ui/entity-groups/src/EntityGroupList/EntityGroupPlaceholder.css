@@ -1,0 +1,8 @@
+.entity-group-placeholder {
+  border-radius: var(--radius-md);
+  background-color: var(--surface-accent);
+}
+
+.entity-group-placeholder-item {
+  pointer-events: none;
+}
