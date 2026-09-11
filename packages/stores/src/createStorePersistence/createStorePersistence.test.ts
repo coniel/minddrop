@@ -1,7 +1,12 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { Events } from '@minddrop/events';
 import { createKeyValueStore } from '../createKeyValueStore';
-import { StorePersistEvent, StorePersistedEvent } from '../events';
+import {
+  StoreHydrateEvent,
+  StoreHydrateRequestEvent,
+  StorePersistEvent,
+  StorePersistedEvent,
+} from '../events';
 
 type TestValues = { value: string };
 
@@ -30,7 +35,7 @@ describe('store persistence acknowledgement', () => {
     const store = createKeyValueStore<TestValues>(
       'Test:PersistedAck',
       defaults,
-      { persistTo: 'app-config', namespace: 'ack-resolves' },
+      { persist: { target: 'app-config', namespace: 'ack-resolves' } },
     );
 
     const written = registerPlatformLayer();
@@ -46,7 +51,7 @@ describe('store persistence acknowledgement', () => {
     const store = createKeyValueStore<TestValues>(
       'Test:PersistedAckMultiple',
       defaults,
-      { persistTo: 'app-config', namespace: 'ack-multiple' },
+      { persist: { target: 'app-config', namespace: 'ack-multiple' } },
     );
 
     const written = registerPlatformLayer();
@@ -64,7 +69,7 @@ describe('store persistence acknowledgement', () => {
     const store = createKeyValueStore<TestValues>(
       'Test:PersistedNoPlatform',
       defaults,
-      { persistTo: 'app-config', namespace: 'ack-no-platform' },
+      { persist: { target: 'app-config', namespace: 'ack-no-platform' } },
     );
 
     // No platform layer is registered, so nothing will ever
@@ -79,7 +84,7 @@ describe('store persistence acknowledgement', () => {
     const store = createKeyValueStore<TestValues>(
       'Test:PersistedNoWrites',
       defaults,
-      { persistTo: 'app-config', namespace: 'ack-no-writes' },
+      { persist: { target: 'app-config', namespace: 'ack-no-writes' } },
     );
 
     registerPlatformLayer();
@@ -91,7 +96,7 @@ describe('store persistence acknowledgement', () => {
     const store = createKeyValueStore<TestValues>(
       'Test:PersistedOtherNamespace',
       defaults,
-      { persistTo: 'app-config', namespace: 'ack-mine' },
+      { persist: { target: 'app-config', namespace: 'ack-mine' } },
     );
 
     // A platform layer which acknowledges the wrong store
@@ -108,5 +113,64 @@ describe('store persistence acknowledgement', () => {
     await new Promise((resolve) => setTimeout(resolve, 0));
 
     expect(resolved).not.toHaveBeenCalled();
+  });
+});
+
+describe('store hydration per workspace', () => {
+  afterEach(() => {
+    Events.removeListener(StoreHydrateRequestEvent, 'test-platform');
+  });
+
+  it('resolves each pending hydration with its own workspace', async () => {
+    const store = createKeyValueStore<TestValues>(
+      'Test:HydratePerWorkspace',
+      defaults,
+      {
+        scope: 'workspace',
+        persist: {
+          target: 'app-workspace-config',
+          namespace: 'hydrate-per-workspace',
+        },
+      },
+    );
+
+    // Stand in for a platform layer answering requests out of order,
+    // collecting the answers to send afterwards
+    const answers: (() => void)[] = [];
+
+    Events.addListener(StoreHydrateRequestEvent, 'test-platform', (request) => {
+      answers.push(() =>
+        Events.dispatch(StoreHydrateEvent, {
+          namespace: request.namespace,
+          workspaceId: request.workspaceId,
+          data: { value: request.workspaceId },
+        }),
+      );
+    });
+
+    const resolved: string[] = [];
+    const first = store
+      .in('workspace-1')
+      .hydrate()
+      .then(() => resolved.push('workspace-1'));
+    const second = store
+      .in('workspace-2')
+      .hydrate()
+      .then(() => resolved.push('workspace-2'));
+
+    await vi.waitFor(() => expect(answers).toHaveLength(2));
+
+    // Answer the second request first
+    answers[1]();
+    await second;
+
+    expect(resolved).toEqual(['workspace-2']);
+
+    answers[0]();
+    await first;
+
+    expect(resolved).toEqual(['workspace-2', 'workspace-1']);
+    expect(store.in('workspace-1').get('value')).toBe('workspace-1');
+    expect(store.in('workspace-2').get('value')).toBe('workspace-2');
   });
 });

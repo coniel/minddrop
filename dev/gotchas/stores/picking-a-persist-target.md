@@ -24,4 +24,6 @@ The test to apply is what the user would expect after switching workspaces, and 
 
 The two AppData targets are keyed differently on purpose: `app-workspace-config` uses the workspace ID rather than its path, so moving or renaming a workspace directory keeps its state.
 
+Which workspace's directory a write or hydration goes to depends on the store: a store scoped by workspace (`scope: 'workspace'`, see "Workspace scoped stores read the active workspace") carries the workspace ID of the record on its persist and hydrate events, and the listeners resolve the directory from it. An unscoped store carries none, and the listeners fall back to the active workspace.
+
 Writes are fire and forget: a mutation dispatches `stores:store:persist` and returns. When something must not happen until the write has landed — reloading the window, quitting — await the store's `persisted()`, which resolves once the platform layer has acknowledged every write dispatched so far. It resolves immediately when no platform layer is listening, so it cannot hang a test suite that never registers one.

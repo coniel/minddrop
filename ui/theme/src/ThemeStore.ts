@@ -27,8 +27,5 @@ export const ThemeStore = createKeyValueStore<ThemeStoreValues>(
     imageDimming: ImageDimmingOff,
     invertLightImages: false,
   },
-  {
-    persistTo: 'app-config',
-    namespace: 'theme',
-  },
+  { persist: { target: 'app-config', namespace: 'theme' } },
 );

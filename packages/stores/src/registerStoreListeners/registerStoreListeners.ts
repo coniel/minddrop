@@ -18,14 +18,16 @@ export interface RegisterStoreListenersConfig {
   /**
    * The persist level of the stores handled by the listeners.
    */
-  persistTo: StorePersistEventData['persistTo'];
+  target: StorePersistEventData['target'];
 
   /**
    * Returns the directory in which store files are written.
    * Called on every event so the path tracks runtime changes,
    * such as the active workspace.
+   *
+   * @param workspaceId - The workspace whose record the event is for, when the store is scoped by workspace.
    */
-  resolveStoresDir: () => string;
+  resolveStoresDir: (workspaceId?: string) => string;
 
   /**
    * The base directory against which the stores directory
@@ -71,12 +73,12 @@ async function handlePersist(
   data: StorePersistEventData,
 ): Promise<void> {
   // Only handle stores persisted at the configured level
-  if (data.persistTo !== config.persistTo) {
+  if (data.target !== config.target) {
     return;
   }
 
   // Resolve the stores directory
-  const storesDir = config.resolveStoresDir();
+  const storesDir = config.resolveStoresDir(data.workspaceId);
 
   // File system options targeting the configured base directory
   const fsOptions = { baseDir: config.baseDir };
@@ -107,13 +109,13 @@ async function handleHydrateRequest(
   data: StoreHydrateRequestEventData,
 ): Promise<void> {
   // Only handle stores persisted at the configured level
-  if (data.persistTo !== config.persistTo) {
+  if (data.target !== config.target) {
     return;
   }
 
   // Resolve the store file path
   const filePath = Fs.concatPath(
-    config.resolveStoresDir(),
+    config.resolveStoresDir(data.workspaceId),
     `${data.namespace}.json`,
   );
 
@@ -125,6 +127,7 @@ async function handleHydrateRequest(
     // Dispatch hydrate event with empty data
     Events.dispatch(StoreHydrateEvent, {
       namespace: data.namespace,
+      workspaceId: data.workspaceId,
       data: {},
     });
 
@@ -143,6 +146,7 @@ async function handleHydrateRequest(
   // Dispatch hydrate event with the loaded data
   Events.dispatch(StoreHydrateEvent, {
     namespace: data.namespace,
+    workspaceId: data.workspaceId,
     data: storeData,
   });
 }

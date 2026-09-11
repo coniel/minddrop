@@ -20,7 +20,7 @@ export interface PersistOptions {
   /**
    * Where to persist the store data.
    */
-  persistTo: PersistTarget;
+  target: PersistTarget;
 
   /**
    * A namespace for the persisted data, typically

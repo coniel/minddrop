@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { StoreApi, UseBoundStore, create } from 'zustand';
 import {
+  dropWorkspaceRecords,
   registerStore,
   storeRegistry,
   subscribeToStoreRegistry,
@@ -67,5 +68,28 @@ describe('subscribeToStoreRegistry', () => {
 
     expect(firstCalls).toBe(2);
     expect(secondCalls).toBe(2);
+  });
+});
+
+describe('dropWorkspaceRecords', () => {
+  it('drops the workspace from every store scoped by workspace', () => {
+    const dropped: string[] = [];
+
+    registerStore('Test:Store', 'array', useStore, (workspaceId) => {
+      dropped.push(`store:${workspaceId}`);
+    });
+    registerStore('Test:Other', 'object', useStore, (workspaceId) => {
+      dropped.push(`other:${workspaceId}`);
+    });
+
+    dropWorkspaceRecords('workspace-1');
+
+    expect(dropped).toEqual(['store:workspace-1', 'other:workspace-1']);
+  });
+
+  it('skips stores which are not scoped by workspace', () => {
+    registerStore('Test:Store', 'array', useStore);
+
+    expect(() => dropWorkspaceRecords('workspace-1')).not.toThrow();
   });
 });

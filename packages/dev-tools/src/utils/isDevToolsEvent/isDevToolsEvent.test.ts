@@ -7,7 +7,7 @@ describe('isDevToolsEvent', () => {
     expect(
       isDevToolsEvent({
         namespace: DevToolsNamespace,
-        persistTo: 'app-config',
+        target: 'app-config',
       }),
     ).toBe(true);
   });

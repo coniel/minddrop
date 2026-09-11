@@ -1,67 +1,23 @@
 import { StoreApi, UseBoundStore, create } from 'zustand';
 import { createStorePersistence } from '../createStorePersistence';
+import { createStoreRecords } from '../createStoreRecords';
 import { RegisteredStoreType, registerStore } from '../storeRegistry';
-import { PersistOptions } from '../types';
+import { StoreOptions, WorkspaceScopedStoreOptions } from '../types';
 
 export interface ArrayStoreInternalApi<TItem extends object> {
   /**
-   * The items.
+   * The items. On a store scoped by workspace, the active
+   * workspace's items.
    */
   items: TItem[];
-
-  /**
-   * Load items into the store.
-   */
-  load(items: TItem[]): void;
-
-  /**
-   * Add an item to the store.
-   */
-  add(item: TItem): void;
-
-  /**
-   * Updates an item in the store.
-   */
-  update(id: string, data: Partial<TItem>): void;
-
-  /**
-   * Remove an item from the store.
-   */
-  remove(id: string): void;
-
-  /**
-   * Reorders items in the store by placing them in the given ID order.
-   * Items not in the provided IDs remain in their original positions.
-   */
-  reorder(ids: string[]): void;
-
-  /**
-   * Clear all items.
-   */
-  clear(): void;
 }
 
-export interface ArrayItemStore<TItem extends object> {
-  /**
-   * The namespaced name of the store (e.g. "DevTools:Events").
-   */
-  name: string;
-
-  /**
-   * The type of store.
-   */
-  type: RegisteredStoreType;
-
-  /**
-   * The key used as the identifier for the items.
-   */
-  identifierKey: keyof TItem;
-
-  /**
-   * The internal Zustand store.
-   */
-  useStore: UseBoundStore<StoreApi<ArrayStoreInternalApi<TItem>>>;
-
+/**
+ * The functions reading and writing one record of an array store:
+ * the active workspace's on the store itself, another workspace's
+ * through `in(workspaceId)`.
+ */
+export interface ArrayItemStoreScope<TItem extends object> {
   /**
    * Retrieves an item by its identifier.
    *
@@ -100,15 +56,6 @@ export interface ArrayItemStore<TItem extends object> {
   hydrate(): Promise<void>;
 
   /**
-   * Resolves once every mutation made so far has been written by the
-   * platform layer, or immediately when no platform layer is listening.
-   *
-   * Await it before an action that would interrupt the write, such as
-   * reloading the window.
-   */
-  persisted(): Promise<void>;
-
-  /**
    * Adds an item to the store.
    *
    * @param item - The item to add.
@@ -142,6 +89,38 @@ export interface ArrayItemStore<TItem extends object> {
    * Clears all items from the store.
    */
   clear(): void;
+}
+
+export interface ArrayItemStore<TItem extends object>
+  extends ArrayItemStoreScope<TItem> {
+  /**
+   * The namespaced name of the store (e.g. "DevTools:Events").
+   */
+  name: string;
+
+  /**
+   * The type of store.
+   */
+  type: RegisteredStoreType;
+
+  /**
+   * The key used as the identifier for the items.
+   */
+  identifierKey: keyof TItem;
+
+  /**
+   * The internal Zustand store.
+   */
+  useStore: UseBoundStore<StoreApi<ArrayStoreInternalApi<TItem>>>;
+
+  /**
+   * Resolves once every mutation made so far has been written by the
+   * platform layer, or immediately when no platform layer is listening.
+   *
+   * Await it before an action that would interrupt the write, such as
+   * reloading the window.
+   */
+  persisted(): Promise<void>;
 
   /**
    * A hook which returns an item by its identifier.
@@ -156,6 +135,17 @@ export interface ArrayItemStore<TItem extends object> {
   useAllItems(): TItem[];
 }
 
+export interface WorkspaceScopedArrayItemStore<TItem extends object>
+  extends ArrayItemStore<TItem> {
+  /**
+   * Addresses the record of a given workspace rather than the active
+   * one's.
+   *
+   * @param workspaceId - The workspace whose record to address.
+   */
+  in(workspaceId: string): ArrayItemStoreScope<TItem>;
+}
+
 /**
  * Creates an array store, providing a CRUD interface for an array of items.
  *
@@ -163,149 +153,167 @@ export interface ArrayItemStore<TItem extends object> {
  * dispatch a `stores:persist` event so the platform layer can
  * handle writing the data to storage.
  *
+ * When scoped by workspace, the store keeps a record per workspace
+ * and reads and writes the active workspace's unless addressed
+ * through `in(workspaceId)`.
+ *
  * @param name - The namespaced name for the store registry (e.g. "Databases:Entries").
  * @param identifierKey - The key to use as the identifier for the items.
- * @param persist - Optional persistence configuration.
+ * @param options - The store's persistence and scope.
  * @returns The array store.
  */
 export function createArrayStore<TItem extends object>(
   name: string,
   identifierKey: keyof TItem,
-  persist?: PersistOptions,
-): ArrayItemStore<TItem> {
-  const store = create<ArrayStoreInternalApi<TItem>>()((set) => ({
+  options: WorkspaceScopedStoreOptions,
+): WorkspaceScopedArrayItemStore<TItem>;
+export function createArrayStore<TItem extends object>(
+  name: string,
+  identifierKey: keyof TItem,
+  options?: StoreOptions,
+): ArrayItemStore<TItem>;
+export function createArrayStore<TItem extends object>(
+  name: string,
+  identifierKey: keyof TItem,
+  options: StoreOptions = {},
+): WorkspaceScopedArrayItemStore<TItem> {
+  const store = create<ArrayStoreInternalApi<TItem>>()(() => ({
     items: [],
-
-    load: (items) => set((state) => ({ items: [...state.items, ...items] })),
-
-    add: (item) =>
-      set((state) => ({
-        items: [...state.items, item],
-      })),
-
-    update: (id, data) =>
-      set((state) => {
-        const index = state.items.findIndex(
-          (item) => item[identifierKey] === id,
-        );
-        const items = [...state.items];
-
-        if (index === -1) {
-          return {};
-        }
-
-        items[index] = { ...items[index], ...data };
-
-        return { items };
-      }),
-
-    remove: (id) =>
-      set((state) => ({
-        items: state.items.filter((item) => id !== item[identifierKey]),
-      })),
-
-    reorder: (ids) =>
-      set((state) => {
-        // Build an index map from ID to desired position
-        const orderMap = new Map(ids.map((id, index) => [id, index]));
-
-        // Separate items into those being reordered and those staying put
-        const reordered: TItem[] = new Array(ids.length);
-        const rest: TItem[] = [];
-
-        for (const item of state.items) {
-          const position = orderMap.get(item[identifierKey] as string);
-
-          if (position !== undefined) {
-            reordered[position] = item;
-          } else {
-            rest.push(item);
-          }
-        }
-
-        // Find the index of the first reordered item in the original array
-        // to know where to splice the reordered block back in.
-        const firstReorderedIndex = state.items.findIndex((item) =>
-          orderMap.has(item[identifierKey] as string),
-        );
-
-        // Rebuild the array: items before the block, reordered block, items after
-        const result = [
-          ...rest.slice(0, firstReorderedIndex),
-          ...reordered,
-          ...rest.slice(firstReorderedIndex),
-        ];
-
-        return { items: result };
-      }),
-
-    clear: () => set({ items: [] }),
   }));
+
+  // The records backing the store, mirrored into its state
+  const records = createStoreRecords<TItem[]>(
+    options.scope,
+    () => [],
+    (items) => store.setState({ items }),
+  );
 
   // Wire the store up to the platform layer that persists it.
   // Hydrated data replaces the items rather than being appended to
   // them, so hydrating a second time does not duplicate them. Data
   // which is not an array means nothing has been persisted yet.
-  const persistence = createStorePersistence(persist, (data) => {
-    store.setState({ items: Array.isArray(data) ? (data as TItem[]) : [] });
-  });
+  const persistence = createStorePersistence(
+    options.persist,
+    (data, workspaceId) =>
+      records.set(Array.isArray(data) ? (data as TItem[]) : [], workspaceId),
+  );
 
-  // Dispatches a persist event with the current store data
-  function dispatchPersist(): void {
-    persistence.dispatchPersist(store.getState().items);
-  }
+  // Creates the functions reading and writing a workspace's record,
+  // the active workspace's when none is given
+  function createScope(workspaceId?: string): ArrayItemStoreScope<TItem> {
+    const read = () => records.get(workspaceId);
 
-  // Create the `get` function which returns one or multiple items
-  // based on whether the `id` argument is a string or an array.
-  function get(itemId: string): TItem | null;
-  function get(itemIds: string[]): TItem[];
-  function get(itemId: string | string[]): TItem | TItem[] | null {
-    const { items } = store.getState();
-
-    if (Array.isArray(itemId)) {
-      return items.filter((item) =>
-        itemId.includes(item[identifierKey] as string),
+    // Replaces the record and persists it
+    function write(items: TItem[]): void {
+      records.set(items, workspaceId);
+      persistence.dispatchPersist(
+        items,
+        records.resolveWorkspaceId(workspaceId),
       );
     }
 
-    return items.find((item) => item[identifierKey] === itemId) || null;
+    // Create the `get` function which returns one or multiple items
+    // based on whether the `id` argument is a string or an array.
+    function get(itemId: string): TItem | null;
+    function get(itemIds: string[]): TItem[];
+    function get(itemId: string | string[]): TItem | TItem[] | null {
+      const items = read();
+
+      if (Array.isArray(itemId)) {
+        return items.filter((item) =>
+          itemId.includes(item[identifierKey] as string),
+        );
+      }
+
+      return items.find((item) => item[identifierKey] === itemId) || null;
+    }
+
+    return {
+      get,
+      getAll: read,
+      load: (items) => records.set([...read(), ...items], workspaceId),
+      hydrate: () =>
+        persistence.hydrate(records.resolveWorkspaceId(workspaceId)),
+      add: (item) => write([...read(), item]),
+      update: (id, data) => {
+        const items = [...read()];
+        const index = items.findIndex((item) => item[identifierKey] === id);
+
+        // Do nothing if the item doesn't exist
+        if (index === -1) {
+          return;
+        }
+
+        items[index] = { ...items[index], ...data };
+
+        write(items);
+      },
+      remove: (id) =>
+        write(read().filter((item) => id !== item[identifierKey])),
+      reorder: (ids) => write(reorderItems(read(), ids, identifierKey)),
+      clear: () => write([]),
+    };
   }
 
   // Register the store in the global registry
-  registerStore(name, 'array', store as UseBoundStore<StoreApi<unknown>>);
+  registerStore(
+    name,
+    'array',
+    store as UseBoundStore<StoreApi<unknown>>,
+    options.scope === 'workspace' ? records.drop : undefined,
+  );
 
   return {
+    ...createScope(),
     name,
     type: 'array',
     identifierKey,
-    get,
-    getAll: () => store.getState().items,
-    add: (item) => {
-      store.getState().add(item);
-      dispatchPersist();
-    },
-    update: (id, data) => {
-      store.getState().update(id, data);
-      dispatchPersist();
-    },
-    remove: (id) => {
-      store.getState().remove(id);
-      dispatchPersist();
-    },
-    reorder: (ids) => {
-      store.getState().reorder(ids);
-      dispatchPersist();
-    },
-    load: (items) => store.getState().load(items),
-    hydrate: persistence.hydrate,
     persisted: persistence.persisted,
-    clear: () => {
-      store.getState().clear();
-      dispatchPersist();
-    },
+    in: createScope,
     useItem: (id) =>
       store().items.find((item) => item[identifierKey] === id) || null,
     useAllItems: () => store().items,
     useStore: store,
   };
+}
+
+/**
+ * Returns the items with those matching the given IDs placed in the
+ * given order, as a block starting where the first of them was. Items
+ * not in the IDs keep their positions relative to one another.
+ */
+function reorderItems<TItem extends object>(
+  items: TItem[],
+  ids: string[],
+  identifierKey: keyof TItem,
+): TItem[] {
+  // Build an index map from ID to desired position
+  const orderMap = new Map(ids.map((id, index) => [id, index]));
+
+  // Separate items into those being reordered and those staying put
+  const reordered: TItem[] = new Array(ids.length);
+  const rest: TItem[] = [];
+
+  for (const item of items) {
+    const position = orderMap.get(item[identifierKey] as string);
+
+    if (position !== undefined) {
+      reordered[position] = item;
+    } else {
+      rest.push(item);
+    }
+  }
+
+  // Find the index of the first reordered item in the original array
+  // to know where to splice the reordered block back in.
+  const firstReorderedIndex = items.findIndex((item) =>
+    orderMap.has(item[identifierKey] as string),
+  );
+
+  // Rebuild the array: items before the block, reordered block, items after
+  return [
+    ...rest.slice(0, firstReorderedIndex),
+    ...reordered,
+    ...rest.slice(firstReorderedIndex),
+  ];
 }

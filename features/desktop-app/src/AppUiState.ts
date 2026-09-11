@@ -32,8 +32,5 @@ const defaultState: AppUiState = {
 export const AppUiState = createKeyValueStore<AppUiState>(
   'App:UiState',
   defaultState,
-  {
-    persistTo: 'app-config',
-    namespace: 'app-ui',
-  },
+  { persist: { target: 'app-config', namespace: 'app-ui' } },
 );

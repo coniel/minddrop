@@ -23,6 +23,12 @@ export interface RegisteredStore {
    * The internal Zustand store.
    */
   useStore: UseBoundStore<StoreApi<unknown>>;
+
+  /**
+   * Drops a workspace's record from the store. Only present on
+   * stores scoped by workspace.
+   */
+  dropWorkspace?: (workspaceId: string) => void;
 }
 
 /**
@@ -39,16 +45,29 @@ const registryListeners = new Set<VoidFunction>();
  * @param name - The namespaced name (e.g. "Databases:Entries").
  * @param type - The store type.
  * @param useStore - The internal Zustand store.
+ * @param dropWorkspace - Drops a workspace's record from the store, for stores scoped by workspace.
  */
 export function registerStore(
   name: string,
   type: RegisteredStoreType,
   useStore: UseBoundStore<StoreApi<unknown>>,
+  dropWorkspace?: (workspaceId: string) => void,
 ): void {
-  storeRegistry[name] = { name, type, useStore };
+  storeRegistry[name] = { name, type, useStore, dropWorkspace };
 
   // Notify listeners of the new store
   registryListeners.forEach((listener) => listener());
+}
+
+/**
+ * Drops a workspace's record from every store scoped by workspace.
+ *
+ * @param workspaceId - The workspace whose records to drop.
+ */
+export function dropWorkspaceRecords(workspaceId: string): void {
+  Object.values(storeRegistry).forEach((store) => {
+    store.dropWorkspace?.(workspaceId);
+  });
 }
 
 /**

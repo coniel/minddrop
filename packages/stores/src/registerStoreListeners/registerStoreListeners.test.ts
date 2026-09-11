@@ -10,20 +10,25 @@ const MockFs = initializeMockFileSystem();
 const appLevelStore = createKeyValueStore<{ value: string }>(
   'Test:StoreListenersAppLevel',
   { value: 'default' },
-  { persistTo: 'app-config', namespace: 'test-app-level' },
+  { persist: { target: 'app-config', namespace: 'test-app-level' } },
 );
 
 // Test store persisted at the workspace-config level
 const workspaceLevelStore = createKeyValueStore<{ value: string }>(
   'Test:StoreListenersWorkspaceLevel',
   { value: 'default' },
-  { persistTo: 'workspace-config', namespace: 'test-workspace-level' },
+  {
+    persist: {
+      target: 'workspace-config',
+      namespace: 'test-workspace-level',
+    },
+  },
 );
 
 // Listener config matching the app-config level test store
 const config = {
   listenerId: 'test:store-listeners',
-  persistTo: 'app-config' as const,
+  target: 'app-config' as const,
   resolveStoresDir: () => 'stores',
 };
 
@@ -125,5 +130,61 @@ describe('registerStoreListeners', () => {
 
     // Should not write a store file
     expect(MockFs.exists('stores/test-app-level.json')).toBe(false);
+  });
+});
+
+describe('registerStoreListeners with workspace scoped stores', () => {
+  // Test store scoped by workspace, persisted at the app-config level
+  // so that the listener config above handles it.
+  const scopedStore = createKeyValueStore<{ value: string }>(
+    'Test:StoreListenersScoped',
+    { value: 'default' },
+    {
+      scope: 'workspace',
+      persist: { target: 'app-config', namespace: 'test-scoped' },
+    },
+  );
+
+  // Listener config writing each workspace to its own directory
+  const scopedConfig = {
+    ...config,
+    resolveStoresDir: (workspaceId?: string) => `stores/${workspaceId}`,
+  };
+
+  // The cleanup function returned by the registration under test
+  let removeListeners: VoidFunction = () => {};
+
+  afterEach(() => {
+    removeListeners();
+    scopedStore.in('workspace-1').load({ value: 'default' });
+    scopedStore.in('workspace-2').load({ value: 'default' });
+    MockFs.reset();
+  });
+
+  it('persists to the directory of the workspace written to', async () => {
+    removeListeners = registerStoreListeners(scopedConfig);
+
+    scopedStore.in('workspace-2').set('value', 'updated');
+
+    await flushEvents();
+
+    expect(MockFs.readJsonFile('stores/workspace-2/test-scoped.json')).toEqual({
+      value: 'updated',
+    });
+    expect(MockFs.exists('stores/workspace-1/test-scoped.json')).toBe(false);
+  });
+
+  it('hydrates from the directory of the workspace requested', async () => {
+    MockFs.createDir('stores/workspace-2', { recursive: true });
+    MockFs.writeJsonFile('stores/workspace-2/test-scoped.json', {
+      value: 'persisted',
+    });
+
+    removeListeners = registerStoreListeners(scopedConfig);
+
+    await scopedStore.in('workspace-2').hydrate();
+
+    expect(scopedStore.in('workspace-1').get('value')).toBe('default');
+    expect(scopedStore.in('workspace-2').get('value')).toBe('persisted');
   });
 });
