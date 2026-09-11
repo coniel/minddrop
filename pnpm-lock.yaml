@@ -1566,6 +1566,9 @@ importers:
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
+      '@minddrop/ui-drag-and-drop':
+        specifier: workspace:*
+        version: link:../../ui/drag-and-drop
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives

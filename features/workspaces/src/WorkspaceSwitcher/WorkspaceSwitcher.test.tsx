@@ -17,7 +17,8 @@ import {
 } from '../test-utils';
 import { WorkspaceSwitcher } from './WorkspaceSwitcher';
 
-const { workspace_1, workspace_2, workspacesRootPath } = WorkspaceFixtures;
+const { workspace_1, workspace_2, workspace_3, workspacesRootPath } =
+  WorkspaceFixtures;
 
 // The confirm callbacks of the requested confirmation dialogs
 let confirmations: VoidFunction[] = [];
@@ -82,7 +83,11 @@ describe('<WorkspaceSwitcher />', () => {
 
   afterEach(cleanup);
 
-  it('lists the workspaces sorted by name', () => {
+  it('lists the workspaces in their stored order', () => {
+    // Store the workspaces out of name order
+    Workspaces.Store.clear();
+    Workspaces.Store.load([workspace_3, workspace_1, workspace_2]);
+
     render(<WorkspaceSwitcher />);
 
     const buttons = screen.getAllByRole('button');
@@ -90,7 +95,7 @@ describe('<WorkspaceSwitcher />', () => {
     // The workspaces are listed before the add workspace action
     expect(
       buttons.slice(0, 3).map((button) => button.getAttribute('aria-label')),
-    ).toEqual(['Workspace 1', 'Workspace 2', 'Workspace 3']);
+    ).toEqual(['Workspace 3', 'Workspace 1', 'Workspace 2']);
   });
 
   it('marks the active workspace', () => {

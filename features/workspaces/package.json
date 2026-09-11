@@ -12,6 +12,7 @@
   "dependencies": {
     "@minddrop/events": "workspace:*",
     "@minddrop/i18n": "workspace:*",
+    "@minddrop/ui-drag-and-drop": "workspace:*",
     "@minddrop/ui-primitives": "workspace:*",
     "@minddrop/ui-workspaces": "workspace:*",
     "@minddrop/workspaces": "workspace:*",

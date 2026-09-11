@@ -8,9 +8,7 @@
   }
 
   .workspace-switcher-workspaces {
-    display: flex;
     align-items: center;
-    gap: var(--space-1);
   }
 
   .workspace-switcher-actions {

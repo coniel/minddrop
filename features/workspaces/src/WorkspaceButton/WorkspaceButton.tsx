@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { SortableItemRenderProps } from '@minddrop/ui-drag-and-drop';
 import {
   ContentIcon,
   ContextMenuContent,
@@ -27,6 +28,11 @@ export interface WorkspaceButtonProps {
    * Whether the workspace can be removed.
    */
   removable: boolean;
+
+  /**
+   * The render props of the sortable list item the button is.
+   */
+  sortable: SortableItemRenderProps;
 }
 
 /**
@@ -42,6 +48,7 @@ export const WorkspaceButton: React.FC<WorkspaceButtonProps> = ({
   workspace,
   active,
   removable,
+  sortable,
 }) => {
   const [anchor, setAnchor] = useState<HTMLElement | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -71,12 +78,18 @@ export const WorkspaceButton: React.FC<WorkspaceButtonProps> = ({
   return (
     <ContextMenuRoot open={menuOpen} onOpenChange={setMenuOpen}>
       <ToolbarIconButton
+        ref={sortable.ref}
         aria-current={active}
-        className={propsToClass('workspace-button', { inactive: !active })}
+        className={propsToClass('workspace-button', {
+          inactive: !active,
+          className: sortable.className,
+        })}
+        style={sortable.style}
         stringLabel={workspace.name}
         tooltip={{ stringTitle: workspace.name }}
         onClick={handleClick}
         onContextMenu={handleContextMenu}
+        {...sortable.handleProps}
       >
         <ContentIcon icon={workspace.icon} />
       </ToolbarIconButton>
