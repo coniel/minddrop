@@ -42,6 +42,7 @@ export * from './restoreDates';
 export * from './throttle';
 export * from './titleFromPath';
 export * from './titleFromUrl';
+export * from './toArray';
 export * from './toKebabCase';
 export * from './types';
 export * from './useCreateCallback';
