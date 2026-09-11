@@ -54,6 +54,14 @@
         "black": "Black"
       },
       "italic": "Italic",
+      "textColor": {
+        "label": "Text colour"
+      },
+      "color": {
+        "hue": "Colour",
+        "shade": "Shade",
+        "shadeLevel": "Shade {{level}}"
+      },
       "textAlign": {
         "label": "Text align",
         "left": "Left",

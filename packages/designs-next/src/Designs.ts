@@ -1,5 +1,6 @@
 import {
   CardAspectRatios,
+  DefaultTextColor,
   DesignElementGroups,
   DesignTypeIcons,
   DesignsIcon,
@@ -40,6 +41,7 @@ export const constants = {
   SnapPresets,
   ElementGroups: DesignElementGroups,
   FontWeights,
+  DefaultTextColor,
 };
 
 export { DesignsStore as Store } from './DesignsStore';

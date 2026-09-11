@@ -3,6 +3,7 @@ import {
   AspectRatioToken,
   DesignElementGroup,
   DesignType,
+  ElementColor,
   FontWeight,
 } from './types';
 
@@ -104,3 +105,12 @@ export const DesignElementGroups: DesignElementGroup[] = ['content', 'layout'];
 export const FontWeights: FontWeight[] = [
   100, 200, 300, 400, 500, 600, 700, 800, 900,
 ];
+
+/**
+ * The colour text elements are drawn in until one is picked: the
+ * design's own scheme at the step body text is set in.
+ */
+export const DefaultTextColor: ElementColor = {
+  color: 'default',
+  level: 1200,
+};

@@ -1,3 +1,5 @@
+import { ColorLevel, ContentColor } from '@minddrop/ui-theme';
+
 /**
  * A semantic setting group an element's menu can show. Groups are
  * provided by the system; an element's config lists the ones its
@@ -22,6 +24,23 @@ export type FontWeight = 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900;
  */
 export type TextAlign = 'left' | 'center' | 'right' | 'justify';
 
+/**
+ * A colour an element is drawn in. A content colour, and the step
+ * of its ramp. The default colour follows the scheme the design
+ * renders in.
+ */
+export interface ElementColor {
+  /**
+   * The colour's hue.
+   */
+  color: ContentColor;
+
+  /**
+   * The step of the hue's ramp.
+   */
+  level: ColorLevel;
+}
+
 export interface TextSettings {
   /**
    * The weight the text renders at. Absent means the weight the
@@ -33,6 +52,12 @@ export interface TextSettings {
    * The edge the text lines up on. Absent means the left edge.
    */
   textAlign?: TextAlign;
+
+  /**
+   * The colour the text is drawn in. Absent means the colour the
+   * element's type draws it in.
+   */
+  textColor?: ElementColor;
 
   /**
    * Whether the text renders italic.

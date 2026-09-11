@@ -2203,6 +2203,14 @@ declare module 'i18next' {
               black: string;
             };
             italic: string;
+            textColor: {
+              label: string;
+            };
+            color: {
+              hue: string;
+              shade: string;
+              shadeLevel: string;
+            };
             textAlign: {
               label: string;
               left: string;

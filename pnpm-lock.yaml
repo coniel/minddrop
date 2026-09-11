@@ -1952,6 +1952,9 @@ importers:
       '@minddrop/ui-icons':
         specifier: workspace:*
         version: link:../../ui/icons
+      '@minddrop/ui-theme':
+        specifier: workspace:*
+        version: link:../../ui/theme
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../utils
