@@ -1,4 +1,8 @@
 import { Events } from '@minddrop/events';
+import {
+  dropWorkspaceRecords,
+  setActiveWorkspaceScope,
+} from '@minddrop/stores';
 import { ActiveWorkspaceStore } from '../ActiveWorkspaceStore';
 import { WorkspacesStore } from '../WorkspacesStore';
 import { ActiveWorkspaceChangedEvent, WorkspaceDeletedEvent } from '../events';
@@ -6,9 +10,9 @@ import { getWorkspace } from '../getWorkspace';
 import { writeWorkspacesConfig } from '../writeWorkspacesConfig';
 
 /**
- * Removes a workspace from the store without deleting the directory.
- * Removing the active workspace makes the first remaining workspace
- * active.
+ * Removes a workspace from the store without deleting the directory,
+ * dropping its records from every workspace scoped store. Removing
+ * the active workspace makes the first remaining workspace active.
  *
  * @param id - The ID of the workspace to remove.
  *
@@ -34,11 +38,17 @@ export async function removeWorkspace(id: string): Promise<void> {
 
     ActiveWorkspaceStore.set('id', replacement ? replacement.id : null);
 
+    // Point workspace scoped stores at the replacement
+    setActiveWorkspaceScope(replacement ? replacement.id : null);
+
     // Dispatch an active workspace changed event
     if (replacement) {
       Events.dispatch(ActiveWorkspaceChangedEvent, replacement);
     }
   }
+
+  // Drop the workspace's records from every workspace scoped store
+  dropWorkspaceRecords(workspace.id);
 
   // Write the workspaces config to remove the workspace path from it
   await writeWorkspacesConfig();

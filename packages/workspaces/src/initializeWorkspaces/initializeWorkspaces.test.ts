@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
+import { getActiveWorkspaceScope } from '@minddrop/stores';
 import { Paths } from '@minddrop/utils';
 import { ActiveWorkspaceStore } from '../ActiveWorkspaceStore';
 import { WorkspacesStore } from '../WorkspacesStore';
@@ -54,6 +55,15 @@ describe('initializeWorkspaces', () => {
     expect(Paths.workspaceConfigs).toBe(
       `${workspace_2.path}/${Paths.hiddenDirName}`,
     );
+  });
+
+  it('points workspace scoped stores at the active workspace', async () => {
+    // Stand in for the store having been hydrated with workspace_2
+    ActiveWorkspaceStore.set('id', workspace_2.id);
+
+    await initializeWorkspaces();
+
+    expect(getActiveWorkspaceScope()).toBe(workspace_2.id);
   });
 
   it('falls back to the first workspace when none is active', async () => {

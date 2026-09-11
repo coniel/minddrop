@@ -12,7 +12,7 @@ tags: [workspaces, config, persistence, bun]
 
 # `workspaces.json` is a hand-written config file, not a persisted store
 
-Almost all app-level state persists through `createKeyValueStore`'s `persistTo: 'app-config'` option, which writes it to `AppData/stores/<namespace>.json`. The workspaces config deliberately does not: `writeWorkspacesConfig` writes `AppConfig/workspaces.json` itself, and `initializeWorkspaces` reads it back directly.
+Almost all app-level state persists through `createKeyValueStore`'s `target: 'app-config'` option, which writes it to `AppData/stores/<namespace>.json`. The workspaces config deliberately does not: `writeWorkspacesConfig` writes `AppConfig/workspaces.json` itself, and `initializeWorkspaces` reads it back directly.
 
 The reason is what the store layer's state means. Everything persisted through it is treated as losable — theme, sidebar widths, panel sizes, open tabs — and nothing guards it. The workspace list is the one piece of app-level state that is not: lose it and the user re-adds every workspace by hand, even though the directories are all still on disk. Keeping it out of the stores directory is what makes that status explicit. The file's location is the signal.
 

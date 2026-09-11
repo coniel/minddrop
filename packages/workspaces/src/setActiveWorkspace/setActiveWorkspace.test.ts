@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
+import { getActiveWorkspaceScope } from '@minddrop/stores';
 import { ActiveWorkspaceStore } from '../ActiveWorkspaceStore';
 import { WorkspaceNotFoundError } from '../errors';
 import { ActiveWorkspaceChangedEvent } from '../events';
@@ -32,6 +33,12 @@ describe('setActiveWorkspace', () => {
     await setActiveWorkspace(workspace_2.id);
 
     expect(ActiveWorkspaceStore).toHaveStoredValue('id', workspace_2.id);
+  });
+
+  it('points workspace scoped stores at the workspace', async () => {
+    await setActiveWorkspace(workspace_2.id);
+
+    expect(getActiveWorkspaceScope()).toBe(workspace_2.id);
   });
 
   it('dispatches an active workspace changed event', async () => {
