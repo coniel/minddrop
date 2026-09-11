@@ -12,17 +12,27 @@ const { workspace_1 } = WorkspaceFixtures;
 const appConfigStore = createKeyValueStore<{ value: string }>(
   'Test:AppConfigPersistence',
   { value: 'default' },
-  { persistTo: 'app-config', namespace: 'test-app-config' },
+  { persist: { target: 'app-config', namespace: 'test-app-config' } },
 );
 const workspaceConfigStore = createKeyValueStore<{ value: string }>(
   'Test:WorkspaceConfigPersistence',
   { value: 'default' },
-  { persistTo: 'workspace-config', namespace: 'test-workspace-config' },
+  {
+    persist: {
+      target: 'workspace-config',
+      namespace: 'test-workspace-config',
+    },
+  },
 );
 const appWorkspaceConfigStore = createKeyValueStore<{ value: string }>(
   'Test:AppWorkspaceConfigPersistence',
   { value: 'default' },
-  { persistTo: 'app-workspace-config', namespace: 'test-app-workspace-config' },
+  {
+    persist: {
+      target: 'app-workspace-config',
+      namespace: 'test-app-workspace-config',
+    },
+  },
 );
 
 // Where each target's listener writes

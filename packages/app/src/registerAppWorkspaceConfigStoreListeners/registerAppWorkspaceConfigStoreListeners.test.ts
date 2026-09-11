@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { createKeyValueStore } from '@minddrop/stores';
+import { createKeyValueStore, setActiveWorkspaceScope } from '@minddrop/stores';
 import { Workspaces } from '@minddrop/workspaces';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { MockFs, cleanup } from '../test-utils';
@@ -12,8 +12,23 @@ const store = createKeyValueStore<{ value: string }>(
   'Test:AppWorkspaceStoreListeners',
   { value: 'default' },
   {
-    persistTo: 'app-workspace-config',
-    namespace: 'test-app-workspace-data',
+    persist: {
+      target: 'app-workspace-config',
+      namespace: 'test-app-workspace-data',
+    },
+  },
+);
+
+// Test store scoped by workspace, persisted at the same level
+const scopedStore = createKeyValueStore<{ value: string }>(
+  'Test:AppWorkspaceStoreListenersScoped',
+  { value: 'default' },
+  {
+    scope: 'workspace',
+    persist: {
+      target: 'app-workspace-config',
+      namespace: 'test-app-workspace-scoped',
+    },
   },
 );
 
@@ -36,17 +51,21 @@ describe('registerAppWorkspaceConfigStoreListeners', () => {
     // Load the workspaces and make one of them active
     Workspaces.Store.load([workspace_1, workspace_2]);
     Workspaces.ActiveStore.set('id', workspace_1.id);
+    setActiveWorkspaceScope(workspace_1.id);
   });
 
   afterEach(async () => {
     // Remove the listeners registered during the test
     removeListeners();
 
-    // Restore the test store to its default values
+    // Restore the test stores to their default values
     store.load({ value: 'default' });
+    scopedStore.in(workspace_1.id).load({ value: 'default' });
+    scopedStore.in(workspace_2.id).load({ value: 'default' });
 
     Workspaces.Store.clear();
     Workspaces.ActiveStore.reset();
+    setActiveWorkspaceScope(null);
 
     await cleanup();
   });
@@ -76,6 +95,31 @@ describe('registerAppWorkspaceConfigStoreListeners', () => {
     ).toBe(false);
   });
 
+  it('persists scoped store data to the stores directory of the workspace written to', async () => {
+    // Register the store listeners
+    removeListeners = registerAppWorkspaceConfigStoreListeners();
+
+    // Set a value on another workspace's record
+    scopedStore.in(workspace_2.id).set('value', 'updated');
+
+    // Wait for async event dispatch
+    await flushEvents();
+
+    // Should write the store data under that workspace's ID
+    expect(
+      MockFs.readJsonFile(
+        `${storesDir(workspace_2.id)}/test-app-workspace-scoped.json`,
+      ),
+    ).toEqual({ value: 'updated' });
+
+    // Should not write it under the active workspace's ID
+    expect(
+      MockFs.exists(
+        `${storesDir(workspace_1.id)}/test-app-workspace-scoped.json`,
+      ),
+    ).toBe(false);
+  });
+
   it('hydrates stores from the active workspace stores directory', async () => {
     // Write persisted store data to each workspace's stores directory.
     // The mock file system does not create parent directories when
@@ -99,5 +143,31 @@ describe('registerAppWorkspaceConfigStoreListeners', () => {
 
     // Should load the active workspace's data into the store
     expect(store.get('value')).toBe('workspace 1 data');
+  });
+
+  it('hydrates scoped stores from the stores directory of the workspace requested', async () => {
+    // Write persisted store data to each workspace's stores directory
+    MockFs.createDir(storesDir(workspace_1.id), { recursive: true });
+    MockFs.createDir(storesDir(workspace_2.id), { recursive: true });
+    MockFs.writeJsonFile(
+      `${storesDir(workspace_1.id)}/test-app-workspace-scoped.json`,
+      { value: 'workspace 1 data' },
+    );
+    MockFs.writeJsonFile(
+      `${storesDir(workspace_2.id)}/test-app-workspace-scoped.json`,
+      { value: 'workspace 2 data' },
+    );
+
+    // Register the store listeners
+    removeListeners = registerAppWorkspaceConfigStoreListeners();
+
+    // Hydrate another workspace's record
+    await scopedStore.in(workspace_2.id).hydrate();
+
+    // Should load that workspace's data into its record only
+    expect(scopedStore.in(workspace_2.id).get('value')).toBe(
+      'workspace 2 data',
+    );
+    expect(scopedStore.get('value')).toBe('default');
   });
 });
