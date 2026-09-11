@@ -46,10 +46,9 @@ export interface DesignElement {
   rowSpan: number;
 
   /**
-   * The element's own content, serialized as text the way a
-   * property's value is in an entry file. Its element type decides
-   * what the text holds and reads it back; absent when the element
-   * has none.
+   * The element's own content, serialized as text. Its element type
+   * decides what the text holds and reads it back. Absent when the
+   * element has none.
    */
   content?: string;
 
