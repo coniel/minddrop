@@ -7,6 +7,7 @@ import {
   WorkspaceDeletedEvent,
   WorkspaceUpdatedEvent,
   WorkspacesLoadedEvent,
+  WorkspacesReorderedEvent,
 } from './events';
 
 // Const-asserted so the names keep their literal types, which key
@@ -16,6 +17,7 @@ export const events = {
   Updated: WorkspaceUpdatedEvent,
   Deleted: WorkspaceDeletedEvent,
   Loaded: WorkspacesLoadedEvent,
+  Reordered: WorkspacesReorderedEvent,
   ActiveChanged: ActiveWorkspaceChangedEvent,
 } as const;
 
@@ -33,6 +35,7 @@ export { deleteWorkspace as delete } from './deleteWorkspace';
 export { getActiveWorkspace as getActive } from './getActiveWorkspace';
 export { getWorkspace as get } from './getWorkspace';
 export { removeWorkspace as remove } from './removeWorkspace';
+export { reorderWorkspaces as reorder } from './reorderWorkspaces';
 export { readWorkspaceConfig as readConfig } from './readWorkspaceConfig';
 export { renameWorkspace as rename } from './renameWorkspace';
 export { setActiveWorkspace as setActive } from './setActiveWorkspace';
