@@ -22,6 +22,12 @@ export interface ToggleProps {
   children?: React.ReactNode;
 
   /*
+   * Sizes a toggle drawing its own content as an icon toggle,
+   * square rather than padded around its content.
+   */
+  square?: boolean;
+
+  /*
    * Accessible label for the toggle button.
    */
   label: string;
@@ -85,6 +91,7 @@ export const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(
     {
       icon,
       children,
+      square,
       label,
       variant = 'subtle',
       size = 'md',
@@ -99,7 +106,9 @@ export const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(
     },
     ref,
   ) => {
-    const isText = !icon;
+    // Content drawn in place of an icon is text unless it is
+    // sized as an icon.
+    const isText = !icon && !square;
     const content = icon ? (
       <Icon name={icon} />
     ) : (
