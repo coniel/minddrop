@@ -1,6 +1,7 @@
-import { PropertyValue } from '@minddrop/properties';
+import { Properties, PropertyValue } from '@minddrop/properties';
 import { DefaultEntrySort } from '../../constants';
 import { DatabaseEntry } from '../../types';
+import { resolveEntryMetadataValue } from '../resolveEntryMetadataValue';
 
 export interface EntrySortOptions {
   /**
@@ -107,28 +108,16 @@ function resolveSortValue(
     return entry.properties[property] ?? null;
   }
 
-  return resolveMetadataValue(entry, property);
-}
+  // Metadata sorts name the metadata type rather than a property
+  const metadataType = Properties.constants.MetadataSchemas.find(
+    (schema) => schema.type === property,
+  )?.type;
 
-/**
- * Returns the entry metadata value of the given metadata property
- * type, defaulting to the entry's created date.
- */
-function resolveMetadataValue(
-  entry: DatabaseEntry,
-  type: string,
-): PropertyValue {
-  // The entry title, which is derived from its file name
-  if (type === 'title') {
-    return entry.title;
+  if (!metadataType) {
+    return null;
   }
 
-  // The last time the entry was modified in the app
-  if (type === 'last-modified') {
-    return entry.lastModified;
-  }
-
-  return entry.created;
+  return resolveEntryMetadataValue(entry, metadataType) ?? null;
 }
 
 /**

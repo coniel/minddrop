@@ -1,6 +1,6 @@
 import { PropertiesSchema, PropertyMap } from '@minddrop/properties';
 import { DatabaseEntry } from '../../types';
-import { entryMetadataPropertyValues } from '../entryMetadataPropertyValues';
+import { resolveEntryMetadataPropertyValues } from '../resolveEntryMetadataPropertyValues';
 
 /**
  * Returns an entry's property values keyed by property name,
@@ -16,7 +16,7 @@ export function entryPropertyValues(
   properties: PropertiesSchema,
 ): PropertyMap {
   return {
-    ...entryMetadataPropertyValues(entry, properties),
+    ...resolveEntryMetadataPropertyValues(entry, properties),
     ...entry.properties,
   };
 }

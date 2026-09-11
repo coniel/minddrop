@@ -1,16 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import { initializeI18n } from '@minddrop/i18n';
 import { DatabaseFixtures } from '../../test-utils';
-import { entryMetadataPropertyValues } from './entryMetadataPropertyValues';
+import { resolveEntryMetadataPropertyValues } from './resolveEntryMetadataPropertyValues';
 
 // Initialize translations used for the implicit property names
 initializeI18n();
 
 const { objectDatabase, objectEntry1, timestampDatabase } = DatabaseFixtures;
 
-describe('entryMetadataPropertyValues', () => {
+describe('resolveEntryMetadataPropertyValues', () => {
   it('keys metadata values by the implicit property names', () => {
-    const values = entryMetadataPropertyValues(
+    const values = resolveEntryMetadataPropertyValues(
       objectEntry1,
       objectDatabase.properties,
     );
@@ -23,7 +23,7 @@ describe('entryMetadataPropertyValues', () => {
   });
 
   it('keys metadata values by declared property names', () => {
-    const values = entryMetadataPropertyValues(
+    const values = resolveEntryMetadataPropertyValues(
       objectEntry1,
       timestampDatabase.properties,
     );
@@ -36,7 +36,7 @@ describe('entryMetadataPropertyValues', () => {
   });
 
   it('resolves declared color properties from the entry metadata', () => {
-    const values = entryMetadataPropertyValues(
+    const values = resolveEntryMetadataPropertyValues(
       { ...objectEntry1, metadata: { color: 'red' } },
       [...objectDatabase.properties, { type: 'color', name: 'Color' }],
     );
@@ -45,7 +45,7 @@ describe('entryMetadataPropertyValues', () => {
   });
 
   it('resolves null for entries without a color', () => {
-    const values = entryMetadataPropertyValues(objectEntry1, [
+    const values = resolveEntryMetadataPropertyValues(objectEntry1, [
       ...objectDatabase.properties,
       { type: 'color', name: 'Color' },
     ]);
