@@ -1,6 +1,9 @@
-import { PropertyType } from '@minddrop/properties';
+import {
+  PropertyFilterOperator,
+  PropertyFilterValue,
+  PropertyType,
+} from '@minddrop/properties';
 import { EntityId } from '@minddrop/utils';
-import { QueryOperator } from './QueryOperator.types';
 
 export type QueryId = EntityId<'query'>;
 
@@ -119,13 +122,13 @@ export interface QueryFilterNode extends QueryNodeBase {
    * The comparison operator. An empty string until the user
    * picks an operator.
    */
-  operator: QueryOperator | '';
+  operator: PropertyFilterOperator | '';
 
   /**
    * The comparison value. Undefined until set, and unused by
    * value-less operators.
    */
-  value?: QueryFilterValue;
+  value?: PropertyFilterValue;
 }
 
 /**
@@ -229,25 +232,3 @@ export interface QueryConnection {
    */
   to: string;
 }
-
-export type QueryFilterValue = string | number | string[] | QueryDateValue;
-
-export type QueryDateValue =
-  | { type: 'absolute'; date: Date }
-  | { type: 'relative'; preset: QueryRelativeDatePreset }
-  | {
-      type: 'relative-range';
-      days: number;
-      direction: QueryRelativeRangeDirection;
-    };
-
-export type QueryRelativeRangeDirection = 'past' | 'next';
-
-export type QueryRelativeDatePreset =
-  | 'today'
-  | 'yesterday'
-  | 'tomorrow'
-  | 'one-week-ago'
-  | 'one-week-from-now'
-  | 'one-month-ago'
-  | 'one-month-from-now';

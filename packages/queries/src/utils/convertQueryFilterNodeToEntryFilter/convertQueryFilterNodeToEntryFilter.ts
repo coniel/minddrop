@@ -1,8 +1,6 @@
 import { EntryFilter, EntryFilterGroup } from '@minddrop/databases';
-import { PropertyType } from '@minddrop/properties';
-import { QueryDateValue, QueryFilterNode, QueryFilterValue } from '../../types';
-import { isCompleteQueryFilterNode } from '../isCompleteQueryFilterNode';
-import { resolveQueryDateRange } from '../resolveQueryDateRange';
+import { PropertyFilters, PropertyType } from '@minddrop/properties';
+import { QueryFilterNode } from '../../types';
 
 /**
  * Converts a filter node's comparison into a SQL entry filter,
@@ -20,7 +18,7 @@ export function convertQueryFilterNodeToEntryFilter(
   node: QueryFilterNode,
 ): EntryFilter | EntryFilterGroup | null {
   // Skip nodes that are not fully configured
-  if (!isCompleteQueryFilterNode(node)) {
+  if (!PropertyFilters.isComplete(node)) {
     return null;
   }
 
@@ -110,11 +108,11 @@ function convertDateFilter(
   propertyType: PropertyType,
 ): EntryFilter | EntryFilterGroup | null {
   // The value must be a date value object
-  if (!isQueryDateValue(node.value)) {
+  if (!PropertyFilters.isDateValue(node.value)) {
     return null;
   }
 
-  const { start, end } = resolveQueryDateRange(node.value);
+  const { start, end } = PropertyFilters.resolveDateRange(node.value);
   const base = { property: node.property, propertyType };
 
   switch (node.operator) {
@@ -304,13 +302,4 @@ function convertTextFilter(
     default:
       return null;
   }
-}
-
-/**
- * Checks whether a filter value is a date value object.
- */
-function isQueryDateValue(
-  value: QueryFilterValue | undefined,
-): value is QueryDateValue {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
 }

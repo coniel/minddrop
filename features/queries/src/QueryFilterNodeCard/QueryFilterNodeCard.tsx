@@ -1,13 +1,15 @@
 import { useMemo } from 'react';
 import { createI18nKeyBuilder } from '@minddrop/i18n';
-import { PropertySchema } from '@minddrop/properties';
+import {
+  PropertyFilterOperator,
+  PropertyFilterValue,
+  PropertyFilters,
+} from '@minddrop/properties';
 import {
   Queries,
   Query,
   QueryFilterNode,
-  QueryFilterValue,
   QueryNodeCounts,
-  QueryOperator,
 } from '@minddrop/queries';
 import {
   CanvasConnectionDragTarget,
@@ -61,7 +63,7 @@ export interface QueryFilterNodeCardProps {
 }
 
 // Builds operator label translation keys
-const operatorI18nKey = createI18nKeyBuilder('queries.operators.');
+const operatorI18nKey = createI18nKeyBuilder('properties.filters.operators.');
 
 /**
  * Renders a filter node with property, operator and value
@@ -94,7 +96,9 @@ export const QueryFilterNodeCard: React.FC<QueryFilterNodeCardProps> = ({
   }));
 
   // Operators available for the selected property's type
-  const operators = getPropertyOperators(propertySchema);
+  const operators = propertySchema
+    ? PropertyFilters.resolveOperators(propertySchema)
+    : [];
 
   const operatorOptions = operators.map((operator) => ({
     label: operatorI18nKey(operator),
@@ -107,7 +111,9 @@ export const QueryFilterNodeCard: React.FC<QueryFilterNodeCardProps> = ({
     const property = properties.find(
       (propertyOption) => propertyOption.name === propertyName,
     );
-    const propertyOperators = getPropertyOperators(property);
+    const propertyOperators = property
+      ? PropertyFilters.resolveOperators(property)
+      : [];
 
     Queries.update(query.id, {
       nodes: Queries.updateNode<QueryFilterNode>(query.nodes, node.id, {
@@ -121,11 +127,11 @@ export const QueryFilterNodeCard: React.FC<QueryFilterNodeCardProps> = ({
 
   // Persist an operator change, clearing the value when the new
   // operator takes no value.
-  function handleOperatorChange(operator: QueryOperator): void {
+  function handleOperatorChange(operator: PropertyFilterOperator): void {
     Queries.update(query.id, {
       nodes: Queries.updateNode<QueryFilterNode>(query.nodes, node.id, {
         operator,
-        value: Queries.constants.ValueLessOperators.has(operator)
+        value: PropertyFilters.constants.ValueLessOperators.has(operator)
           ? undefined
           : node.value,
       }),
@@ -133,7 +139,7 @@ export const QueryFilterNodeCard: React.FC<QueryFilterNodeCardProps> = ({
   }
 
   // Persist a value change
-  function handleValueChange(value: QueryFilterValue | undefined): void {
+  function handleValueChange(value: PropertyFilterValue | undefined): void {
     Queries.update(query.id, {
       nodes: Queries.updateNode<QueryFilterNode>(query.nodes, node.id, {
         value,
@@ -168,7 +174,7 @@ export const QueryFilterNodeCard: React.FC<QueryFilterNodeCardProps> = ({
 
         {/* Operator picker for the selected property */}
         {propertySchema && (
-          <Select<QueryOperator>
+          <Select<PropertyFilterOperator>
             placeholder="queries.editor.selectOperator"
             options={operatorOptions}
             value={node.operator || undefined}
@@ -190,20 +196,3 @@ export const QueryFilterNodeCard: React.FC<QueryFilterNodeCardProps> = ({
     </QueryNodeShell>
   );
 };
-
-/**
- * Returns the operators available for a property, using the
- * multiselect operator set for multiselect select properties.
- */
-function getPropertyOperators(property?: PropertySchema): QueryOperator[] {
-  if (!property) {
-    return [];
-  }
-
-  // Multiselect select properties use membership operators
-  if (property.type === 'select' && property.multiselect) {
-    return Queries.constants.MultiselectOperators;
-  }
-
-  return Queries.constants.OperatorsByPropertyType[property.type];
-}

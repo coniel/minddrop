@@ -9,6 +9,7 @@ import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
 import { I18n, initializeI18n } from '@minddrop/i18n';
+import { Properties } from '@minddrop/properties';
 import {
   cleanupQueryFixtures,
   setupQueryFixtures,
@@ -18,8 +19,10 @@ import { locales } from '../locales';
 
 initializeI18n();
 
-// Register the feature's translations so labels resolve
+// Register the feature's translations so labels resolve, and
+// the property filter translations the operator labels use.
 I18n.registerTranslations(locales);
+Properties.initialize();
 
 export const MockFs = initializeMockFileSystem();
 

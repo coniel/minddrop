@@ -1,14 +1,13 @@
 import { useMemo, useRef } from 'react';
 import { DatabaseEntries, Databases } from '@minddrop/databases';
 import { createI18nKeyBuilder, useTranslation } from '@minddrop/i18n';
-import { PropertySchema } from '@minddrop/properties';
 import {
-  Queries,
-  QueryDateValue,
-  QueryFilterValue,
-  QueryOperator,
-  QueryRelativeDatePreset,
-} from '@minddrop/queries';
+  PropertyFilterOperator,
+  PropertyFilterRelativeDatePreset,
+  PropertyFilterValue,
+  PropertyFilters,
+  PropertySchema,
+} from '@minddrop/properties';
 import {
   Combobox,
   ComboboxOption,
@@ -30,24 +29,24 @@ export interface QueryNodeValueInputProps {
   /**
    * The filter's comparison operator.
    */
-  operator: QueryOperator | '';
+  operator: PropertyFilterOperator | '';
 
   /**
    * The filter's current comparison value.
    */
-  value?: QueryFilterValue;
+  value?: PropertyFilterValue;
 
   /**
    * Callback fired with the new value.
    */
-  onChange(value: QueryFilterValue | undefined): void;
+  onChange(value: PropertyFilterValue | undefined): void;
 }
 
 // Builds date preset label translation keys
-const dateI18nKey = createI18nKeyBuilder('queries.dates.');
+const dateI18nKey = createI18nKeyBuilder('properties.filters.dates.');
 
 // The selectable relative date presets, in display order
-const RELATIVE_DATE_PRESETS: QueryRelativeDatePreset[] = [
+const RELATIVE_DATE_PRESETS: PropertyFilterRelativeDatePreset[] = [
   'today',
   'yesterday',
   'tomorrow',
@@ -70,12 +69,14 @@ export const QueryNodeValueInput: React.FC<QueryNodeValueInputProps> = ({
   const debounceTimeoutRef = useRef<number>(undefined);
 
   // Value-less operators take no input
-  if (!operator || Queries.constants.ValueLessOperators.has(operator)) {
+  if (!operator || PropertyFilters.constants.ValueLessOperators.has(operator)) {
     return null;
   }
 
   // Persists a typed value after a short pause in typing
-  function handleDebouncedChange(newValue: QueryFilterValue | undefined): void {
+  function handleDebouncedChange(
+    newValue: PropertyFilterValue | undefined,
+  ): void {
     window.clearTimeout(debounceTimeoutRef.current);
 
     debounceTimeoutRef.current = window.setTimeout(() => {
@@ -162,12 +163,12 @@ interface QueryNodeEntryValueInputProps {
   /**
    * The filter's current comparison value.
    */
-  value?: QueryFilterValue;
+  value?: PropertyFilterValue;
 
   /**
    * Callback fired with the new value.
    */
-  onChange(value: QueryFilterValue | undefined): void;
+  onChange(value: PropertyFilterValue | undefined): void;
 }
 
 /**
@@ -235,18 +236,18 @@ interface QueryNodeDateValueInputProps {
   /**
    * The filter's current comparison value.
    */
-  value?: QueryFilterValue;
+  value?: PropertyFilterValue;
 
   /**
    * Callback fired with the new value.
    */
-  onChange(value: QueryFilterValue | undefined): void;
+  onChange(value: PropertyFilterValue | undefined): void;
 }
 
 // The selectable date options: relative presets, day ranges
 // around the current day, and a custom absolute date.
 type QueryDateOption =
-  | QueryRelativeDatePreset
+  | PropertyFilterRelativeDatePreset
   | 'last-days'
   | 'next-days'
   | 'custom';
@@ -264,7 +265,7 @@ const QueryNodeDateValueInput: React.FC<QueryNodeDateValueInputProps> = ({
   const daysTimeoutRef = useRef<number>(undefined);
 
   // The current date value, if set
-  const dateValue = isQueryDateValue(value) ? value : undefined;
+  const dateValue = PropertyFilters.isDateValue(value) ? value : undefined;
 
   // The selected picker option
   let selected: QueryDateOption | undefined;
@@ -367,12 +368,3 @@ const QueryNodeDateValueInput: React.FC<QueryNodeDateValueInputProps> = ({
     </Stack>
   );
 };
-
-/**
- * Checks whether a filter value is a date value object.
- */
-function isQueryDateValue(
-  value: QueryFilterValue | undefined,
-): value is QueryDateValue {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}

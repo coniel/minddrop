@@ -1,10 +1,4 @@
-import {
-  DefaultQueryIcon,
-  MULTISELECT_QUERY_OPERATORS,
-  QUERY_OPERATORS_BY_PROPERTY_TYPE,
-  QueriesIcon,
-  VALUE_LESS_QUERY_OPERATORS,
-} from './constants';
+import { DefaultQueryIcon, QueriesIcon } from './constants';
 import { QueryNotFoundError } from './errors';
 import {
   QueriesLoadedEvent,
@@ -29,9 +23,6 @@ export const errors = {
 export const constants = {
   Icon: QueriesIcon,
   EntityDefaultIcon: DefaultQueryIcon,
-  MultiselectOperators: MULTISELECT_QUERY_OPERATORS,
-  OperatorsByPropertyType: QUERY_OPERATORS_BY_PROPERTY_TYPE,
-  ValueLessOperators: VALUE_LESS_QUERY_OPERATORS,
 };
 
 export { createQuery as create } from './createQuery';
