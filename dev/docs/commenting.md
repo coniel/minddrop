@@ -179,7 +179,21 @@ const appendsInFlight = new Map<string, Promise<unknown>>();
   content follows from the sentence before it, or from the design the
   reader already has.
 - **Implementation details in JSDoc**, unless a caller needs them to use
-  the function correctly.
+  the function correctly. JSDoc states the contract: what goes in, what
+  comes out, and any behaviour that changes the result from the caller's
+  side. How the function gets there is invisible to the caller and goes
+  stale when the internals change. "Keeps the entries matching every
+  filter. Metadata properties are read by their type rather than by
+  name, since implicit metadata properties carry translated names" is
+  one sentence of contract followed by one of internals; the caller
+  passes filters and gets entries, and how metadata is looked up makes
+  no difference to them. The same goes for per-case semantics: "text
+  compares case insensitively, dates compare by local day, an unset
+  toggle counts as off" is the start of a list that has no natural end.
+  With a hundred cases nobody would list a hundred, so list none; a
+  caller who needs one case reads the function. "Checks whether a
+  property value matches a filter" is the whole JSDoc. If a detail
+  matters to a maintainer, it is a step comment inside the function.
 - **Examples**, unless the term itself is ambiguous. "A value a property
   holds, such as a tag or a select option" earns its example because
   "value" alone is ambiguous.
@@ -284,6 +298,14 @@ Design reasoning belongs in the plan, not in the type or the function.
 
 Write comments the way you would say them out loud. If a sentence would
 sound strange spoken, rewrite it.
+
+**Explicit over expressive.** A comment gets a point across as
+efficiently as possible; it is not trying to sound good. Pick the
+plainest verb with one meaning: "Returns entries matching every filter",
+not "Keeps the entries matching every filter", which could mean the
+function holds on to them. No metaphor, no personification ("the filters
+say nothing about them"), no flourish. If a clause is there for style
+rather than information, cut it.
 
 **One idea per sentence.** Bullet points, not prose. A comment is read
 at a glance, by someone on their way to something else. Clauses hung off
