@@ -17,6 +17,7 @@ export const constants = {
 };
 
 export { PropertySchemas as schemas } from './schemas';
+export { initializeProperties as initialize } from './initializeProperties';
 export { parsePropertiesFromYaml as fromYaml } from './parsePropertiesFromYaml';
 export { stringifyPropertiesToYaml as toYaml } from './stringifyPropertiesToYaml';
 export { mergePropertiesIntoYaml as mergeYaml } from './mergePropertiesIntoYaml';
