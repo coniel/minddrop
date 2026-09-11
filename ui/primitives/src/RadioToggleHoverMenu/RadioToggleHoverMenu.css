@@ -75,26 +75,6 @@
   );
 }
 
-/* Where the options run flush with an end of the host toolbar, the
-   two share a straight edge, so the toolbar's own corner would
-   notch the shape they make together. The open menu names the
-   corners it runs through. */
-.floating-toolbar[data-hover-menu-squared~='top-right'] {
-  border-top-right-radius: 0;
-}
-
-.floating-toolbar[data-hover-menu-squared~='bottom-right'] {
-  border-bottom-right-radius: 0;
-}
-
-.floating-toolbar[data-hover-menu-squared~='top-left'] {
-  border-top-left-radius: 0;
-}
-
-.floating-toolbar[data-hover-menu-squared~='bottom-left'] {
-  border-bottom-left-radius: 0;
-}
-
 /* Fillets curving the two corners where the options meet the host
    toolbar, so the surface flows into the arm instead of turning a
    right angle. Each is a patch of surface sitting just outside a

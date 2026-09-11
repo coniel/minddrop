@@ -85,3 +85,27 @@
 .floating-toolbar-card-dragging {
   opacity: 0.5;
 }
+
+/* ------------------------------------------------------------
+   HOVER MENUS AND PANELS
+   Where a menu or panel reaching out of the toolbar runs flush
+   with one of its ends, the two share a straight edge, so the
+   toolbar's own corner would notch the shape they make together.
+   The open menu names the corners it runs through.
+   ------------------------------------------------------------ */
+
+.floating-toolbar[data-hover-menu-squared~='top-right'] {
+  border-top-right-radius: 0;
+}
+
+.floating-toolbar[data-hover-menu-squared~='bottom-right'] {
+  border-bottom-right-radius: 0;
+}
+
+.floating-toolbar[data-hover-menu-squared~='top-left'] {
+  border-top-left-radius: 0;
+}
+
+.floating-toolbar[data-hover-menu-squared~='bottom-left'] {
+  border-bottom-left-radius: 0;
+}

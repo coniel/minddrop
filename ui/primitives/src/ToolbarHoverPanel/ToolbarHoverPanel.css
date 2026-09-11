@@ -1,0 +1,174 @@
+/* ============================================================
+   TOOLBAR HOVER PANEL
+   A panel held behind a toolbar button. Opens on hover, reaching
+   out of the toolbar and past its end.
+   ============================================================ */
+
+/* A plain shell. The panel inside it draws the surface. */
+.toolbar-hover-panel-popup {
+  /* How far each junction curves. X along the toolbar's edge, Y
+     along the panel's. */
+  --toolbar-hover-panel-junction-x: var(--radius-md);
+  --toolbar-hover-panel-junction-y: var(--radius-md);
+  /* How far the shadow reaches. Cleared on the free sides. */
+  --toolbar-hover-panel-shadow-reach: calc(-1 * var(--space-8));
+
+  position: relative;
+  border: none;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+
+/* An invisible margin around the panel. Holds it open while the
+   pointer crosses to it or drifts off it. Sits behind the panel, so
+   it never swallows clicks. */
+.toolbar-hover-panel-popup::before {
+  content: '';
+  position: absolute;
+  inset: calc(-1 * var(--space-3));
+  z-index: -1;
+}
+
+/* The panel continues the host toolbar rather than floating beside
+   it */
+.toolbar-hover-panel.floating-toolbar {
+  position: relative;
+  /* The content lays itself out. It is not a row of controls. */
+  display: block;
+}
+
+/* The panel keeps the border on the edge facing the toolbar. That
+   edge stands alone below the toolbar's end. The seam covers the
+   stretch the two share.
+
+   The corner where the edge meets the toolbar belongs to the
+   junction, so it is squared off. The one at the panel's far end is
+   the panel's own, so it keeps its rounding.
+
+   The shadow is clipped at that edge, where it would otherwise fall
+   across the toolbar. It stops a border's width outside, leaving
+   the fillets their own. The outward insets keep it whole on the
+   free sides. */
+.toolbar-hover-panel-side-right.floating-toolbar {
+  border-top-left-radius: 0;
+  clip-path: inset(
+    var(--toolbar-hover-panel-shadow-reach)
+      var(--toolbar-hover-panel-shadow-reach)
+      var(--toolbar-hover-panel-shadow-reach)
+      calc(-1 * var(--border-width-thin))
+  );
+}
+
+.toolbar-hover-panel-side-left.floating-toolbar {
+  border-top-right-radius: 0;
+  clip-path: inset(
+    var(--toolbar-hover-panel-shadow-reach) calc(-1 * var(--border-width-thin))
+      var(--toolbar-hover-panel-shadow-reach)
+      var(--toolbar-hover-panel-shadow-reach)
+  );
+}
+
+/* The fillet at the trigger. It curves the toolbar's edge into the
+   panel's top.
+
+   A patch of surface sits just above the panel, with a quarter
+   ellipse bitten out of its far corner. The arc left behind runs
+   from one edge into the other. It carries the border along its
+   outside. */
+.toolbar-hover-panel.floating-toolbar::before {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  /* On the border box's own edge. The panel's border puts that a
+     border's width outside the padding box. */
+  left: calc(-1 * var(--border-width-thin));
+  width: var(--toolbar-hover-panel-junction-x);
+  /* A pixel taller than the curve. It covers the straight border
+     the panel draws across the rounded corner. */
+  height: calc(
+    var(--toolbar-hover-panel-junction-y) + var(--border-width-thin)
+  );
+  background: radial-gradient(
+    ellipse var(--toolbar-hover-panel-junction-x)
+      var(--toolbar-hover-panel-junction-y) at top right,
+    transparent 100%,
+    var(--border-subtle) 100%,
+    var(--border-subtle) calc(100% + var(--border-width-thin)),
+    var(--surface-overlay) calc(100% + var(--border-width-thin))
+  );
+}
+
+/* A panel on the first control starts where the toolbar does.
+   No corner there to round. */
+.toolbar-hover-panel-flush-start.floating-toolbar::before {
+  content: none;
+}
+
+/* Panels opening leftwards carry the fillet on their right edge */
+.toolbar-hover-panel-side-left.floating-toolbar::before {
+  left: auto;
+  right: calc(-1 * var(--border-width-thin));
+  transform: scaleX(-1);
+}
+
+/* The edge the panel and the toolbar meet along, painted over in
+   the surface they share. It hides the two borders, which share a
+   column, and the panel's shadow, which reaches a border's width
+   past its own edge.
+
+   As long as the stretch of toolbar the panel covers. The fillet
+   carries the surface on from there. */
+.toolbar-hover-panel-seam {
+  position: absolute;
+  top: 0;
+  /* Over the column the two borders share, and the one inside the
+     toolbar the panel's shadow reaches into. */
+  left: calc(-1 * var(--border-width-thin));
+  width: calc(2 * var(--border-width-thin));
+  height: var(--toolbar-hover-panel-junction);
+  background: var(--surface-overlay);
+}
+
+.toolbar-hover-panel-side-left ~ .toolbar-hover-panel-seam {
+  left: auto;
+  right: calc(-1 * var(--border-width-thin));
+}
+
+/* The fillet at the toolbar's end. The same patch as the one at
+   the trigger, turned to sit outside the corner the two make there.
+   Both live outside the panel, whose shadow is clipped at that
+   edge. */
+.toolbar-hover-panel-fillet {
+  position: absolute;
+  /* A border above the toolbar's end, and a border into the panel.
+     Covers the straight borders the two draw across the rounded
+     corner. */
+  top: calc(var(--toolbar-hover-panel-junction) - var(--border-width-thin));
+  right: calc(100% - var(--border-width-thin));
+  width: calc(var(--toolbar-hover-panel-junction-x) + var(--border-width-thin));
+  height: calc(
+    var(--toolbar-hover-panel-junction-y) + var(--border-width-thin)
+  );
+  background: radial-gradient(
+    ellipse var(--toolbar-hover-panel-junction-x)
+      var(--toolbar-hover-panel-junction-y) at bottom left,
+    transparent 100%,
+    var(--border-subtle) 100%,
+    var(--border-subtle) calc(100% + var(--border-width-thin)),
+    var(--surface-overlay) calc(100% + var(--border-width-thin))
+  );
+}
+
+.toolbar-hover-panel-side-left ~ .toolbar-hover-panel-fillet {
+  right: auto;
+  left: calc(100% - var(--border-width-thin));
+  background: radial-gradient(
+    ellipse var(--toolbar-hover-panel-junction-x)
+      var(--toolbar-hover-panel-junction-y) at bottom right,
+    transparent 100%,
+    var(--border-subtle) 100%,
+    var(--border-subtle) calc(100% + var(--border-width-thin)),
+    var(--surface-overlay) calc(100% + var(--border-width-thin))
+  );
+}
