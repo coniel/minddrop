@@ -40,7 +40,10 @@ export { readWorkspaceConfig as readConfig } from './readWorkspaceConfig';
 export { renameWorkspace as rename } from './renameWorkspace';
 export { setActiveWorkspace as setActive } from './setActiveWorkspace';
 export { initializeWorkspaces as initialize } from './initializeWorkspaces';
-export { isWorkspaceDirectory as isWorkspace } from './utils';
+export {
+  isWorkspaceDirectory as isWorkspace,
+  resolveWorkspaceDataDirPath as resolveDataDirPath,
+} from './utils';
 export { updateWorkspace as update } from './updateWorkspace';
 export { useActiveWorkspace as useActive } from './ActiveWorkspaceStore';
 export {
