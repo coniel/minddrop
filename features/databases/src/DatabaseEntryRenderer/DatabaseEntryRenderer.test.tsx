@@ -7,7 +7,8 @@ import {
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { Designs } from '@minddrop/designs';
 import { DesignFixtures } from '@minddrop/designs/test-utils';
-import { act, render, screen } from '@minddrop/test-utils';
+import { act, fireEvent, render, screen, waitFor } from '@minddrop/test-utils';
+import { DatabaseEntryContextProvider } from '@minddrop/ui-databases';
 import { cleanup, setup } from '../test-utils';
 import { DatabaseEntryRenderer } from './DatabaseEntryRenderer';
 
@@ -357,5 +358,27 @@ describe('<DatabaseEntryRenderer />', () => {
     // Falls back to a title-only fallback container showing the entry title
     expect(container.querySelector('.database-entry-fallback')).not.toBeNull();
     screen.getByText('No Design Entry');
+  });
+
+  it('opens the entry options menu on right click when enabled', async () => {
+    const { container } = render(
+      <DatabaseEntryContextProvider contextMenu>
+        <DatabaseEntryRenderer entryId={objectEntry1.id} layoutContext="card" />
+      </DatabaseEntryContextProvider>,
+    );
+
+    fireEvent.contextMenu(container.querySelector('.database-entry')!);
+
+    await waitFor(() => screen.getByText('actions.duplicate'));
+  });
+
+  it('does not open a menu on right click unless enabled', () => {
+    const { container } = render(
+      <DatabaseEntryRenderer entryId={objectEntry1.id} layoutContext="card" />,
+    );
+
+    fireEvent.contextMenu(container.querySelector('.database-entry')!);
+
+    expect(screen.queryByText('actions.duplicate')).toBeNull();
   });
 });

@@ -17,6 +17,11 @@ import {
 } from '@minddrop/ui-databases';
 import { useHoveredItem } from '@minddrop/ui-drag-and-drop';
 import {
+  ContextMenuContent,
+  ContextMenuPortal,
+  ContextMenuPositioner,
+  ContextMenuRoot,
+  ContextMenuTrigger,
   DropdownMenu,
   IconButton,
   Text,
@@ -84,7 +89,8 @@ const Entry: React.FC<EntryProps> = ({
   const resolvedDesign = Designs.use(database?.designId || '');
   // Only database designs apply to entries
   const design = resolvedDesign?.type === 'database' ? resolvedDesign : null;
-  const { draggable, optionsMenu, source, viewId } = useDatabaseEntryContext();
+  const { draggable, optionsMenu, contextMenu, source, viewId } =
+    useDatabaseEntryContext();
   const focusRequested = DatabaseEntries.useFocusRequest(entry.id, viewId);
   const openView = Views.useOpenView();
   const { draggableProps, isDragging } = Selection.useDraggable({
@@ -279,44 +285,33 @@ const Entry: React.FC<EntryProps> = ({
     `database-entry-${baseType}`,
     entryColor ? `scheme-${entryColor}` : '',
     showDragHandle && isDragging ? 'database-entry-dragging' : '',
+    layout ? '' : 'database-entry-fallback',
   ]
     .filter(Boolean)
     .join(' ');
 
   // Minimal title-only fallback when the database has no design
   // or its design has no layout of the requested type.
-  if (!layout) {
-    return (
-      <div
-        ref={rootRef}
-        className={`${className} database-entry-fallback`}
-        data-entry-id={entry.id}
-        role={isClickable ? 'button' : undefined}
-        tabIndex={isClickable ? 0 : undefined}
-        onClick={isClickable ? onOpenEntry : undefined}
-        onKeyDown={isClickable ? onKeyDown : undefined}
-        {...hoveredProps}
-      >
-        {/* Invisible drag bar along the top edge of the card */}
-        {showDragHandle && (
-          <div
-            className="database-entry-drag-handle"
-            {...draggableProps}
-            onDragStart={onDragHandleDragStart}
-          />
-        )}
+  const content = layout ? (
+    <TransientViewStateScope segment={entry.id}>
+      <LayoutRenderer
+        layout={layout}
+        context={layoutContext}
+        autoFocusEditor={focusRequested}
+        designProperties={design?.properties}
+        mediaDirPath={design ? Designs.resolveMediaDirPath(design.id) : null}
+        propertyMap={propertyMap}
+        propertyValues={propertyValues}
+        properties={rendererProperties}
+        onUpdatePropertyValue={onUpdatePropertyValue}
+        onValidatePropertyValue={onValidatePropertyValue}
+      />
+    </TransientViewStateScope>
+  ) : (
+    <Text truncate>{entry.title}</Text>
+  );
 
-        {/* Hover revealed options menu button */}
-        {showOptionsMenu && (
-          <EntryOptionsMenuButton entryId={entry.id} source={source} />
-        )}
-
-        <Text truncate>{entry.title}</Text>
-      </div>
-    );
-  }
-
-  return (
+  const root = (
     <div
       ref={rootRef}
       className={className}
@@ -341,21 +336,61 @@ const Entry: React.FC<EntryProps> = ({
         <EntryOptionsMenuButton entryId={entry.id} source={source} />
       )}
 
-      <TransientViewStateScope segment={entry.id}>
-        <LayoutRenderer
-          layout={layout}
-          context={layoutContext}
-          autoFocusEditor={focusRequested}
-          designProperties={design?.properties}
-          mediaDirPath={design ? Designs.resolveMediaDirPath(design.id) : null}
-          propertyMap={propertyMap}
-          propertyValues={propertyValues}
-          properties={rendererProperties}
-          onUpdatePropertyValue={onUpdatePropertyValue}
-          onValidatePropertyValue={onValidatePropertyValue}
-        />
-      </TransientViewStateScope>
+      {content}
     </div>
+  );
+
+  // Only within contexts which enable it does right clicking the
+  // entry open its options menu.
+  if (!contextMenu) {
+    return root;
+  }
+
+  return (
+    <EntryContextMenu entryId={entry.id} source={source}>
+      {root}
+    </EntryContextMenu>
+  );
+};
+
+interface EntryContextMenuProps extends EntryOptionsMenuButtonProps {
+  /**
+   * The entry root element, made the right click target.
+   */
+  children: React.ReactElement;
+}
+
+/**
+ * Opens the entry options menu when the entry is right clicked.
+ * The menu is merged onto the entry root rather than wrapping it,
+ * keeping the entry's place in the layout.
+ */
+const EntryContextMenu: React.FC<EntryContextMenuProps> = ({
+  entryId,
+  source,
+  children,
+}) => {
+  // Keep menu interactions from activating the entry itself. The
+  // menu popup is portaled but its events bubble through the React
+  // tree, so item clicks would otherwise open the entry.
+  const stopPropagation = useCallback((event: React.SyntheticEvent) => {
+    event.stopPropagation();
+  }, []);
+
+  return (
+    <ContextMenuRoot>
+      <ContextMenuTrigger render={children} />
+      <ContextMenuPortal>
+        <ContextMenuPositioner>
+          <ContextMenuContent
+            onClick={stopPropagation}
+            onKeyDown={stopPropagation}
+          >
+            <DatabaseEntryOptionsMenu entryId={entryId} source={source} />
+          </ContextMenuContent>
+        </ContextMenuPositioner>
+      </ContextMenuPortal>
+    </ContextMenuRoot>
   );
 };
 

@@ -140,57 +140,59 @@ export const NotebookViewComponent: React.FC<
   return (
     /* Scoped to the view so that focus requests made here are
        honoured by both panels' renderers */
-    <DatabaseEntryContextProvider viewId={view.id}>
+    <DatabaseEntryContextProvider source={view.dataSource} viewId={view.id}>
       <div className="notebook-view" data-dragging={isDragging || undefined}>
-        {/* List panel */}
-        <div className="notebook-view-list-panel" style={{ width }}>
-          {/* Search bar and create button */}
-          <div className="notebook-view-toolbar">
-            <DatabaseEntriesSearchField
-              entryIds={entries}
-              onFilteredEntriesChange={setFilteredEntries}
-              stateKey="search"
-              size="md"
-              variant="ghost"
-            />
-
-            {/* Entry sort dropdown */}
-            <DataViewSortMenu view={view} size="md" variant="ghost" />
-
-            {/* Collection sources also support adding existing entries */}
-            {view.dataSource.type === 'collection' ? (
-              <AddCollectionEntryButton
-                collectionId={view.dataSource.id}
-                database={false}
-                onCreateEntry={handleEntryAdded}
-                onAddEntry={handleEntryAdded}
+        {/* List panel, where rows open their options on right click */}
+        <DatabaseEntryContextProvider contextMenu>
+          <div className="notebook-view-list-panel" style={{ width }}>
+            {/* Search bar and create button */}
+            <div className="notebook-view-toolbar">
+              <DatabaseEntriesSearchField
+                entryIds={entries}
+                onFilteredEntriesChange={setFilteredEntries}
+                stateKey="search"
                 size="md"
                 variant="ghost"
               />
-            ) : (
-              <CreateDatabaseEntryButton
-                database={createDatabaseIds}
-                onCreateEntry={handleEntryAdded}
-                size="md"
-                variant="ghost"
-              />
-            )}
-          </div>
 
-          {/* Rows are user designed layouts of varying height, so
+              {/* Entry sort dropdown */}
+              <DataViewSortMenu view={view} size="md" variant="ghost" />
+
+              {/* Collection sources also support adding existing entries */}
+              {view.dataSource.type === 'collection' ? (
+                <AddCollectionEntryButton
+                  collectionId={view.dataSource.id}
+                  database={false}
+                  onCreateEntry={handleEntryAdded}
+                  onAddEntry={handleEntryAdded}
+                  size="md"
+                  variant="ghost"
+                />
+              ) : (
+                <CreateDatabaseEntryButton
+                  database={createDatabaseIds}
+                  onCreateEntry={handleEntryAdded}
+                  size="md"
+                  variant="ghost"
+                />
+              )}
+            </div>
+
+            {/* Rows are user designed layouts of varying height, so
             they are measured rather than fixed */}
-          <VirtualizedList
-            items={filteredEntries}
-            itemHeight={LIST_ITEM_HEIGHT_ESTIMATE}
-            itemKey={getListItemKey}
-            measure
-            renderItem={renderListItem}
-            scrollToIndex={selectedEntryIndex}
-            visibility="hover"
-            stateKey="list"
-            className="notebook-view-list-scroll"
-          />
-        </div>
+            <VirtualizedList
+              items={filteredEntries}
+              itemHeight={LIST_ITEM_HEIGHT_ESTIMATE}
+              itemKey={getListItemKey}
+              measure
+              renderItem={renderListItem}
+              scrollToIndex={selectedEntryIndex}
+              visibility="hover"
+              stateKey="list"
+              className="notebook-view-list-scroll"
+            />
+          </div>
+        </DatabaseEntryContextProvider>
 
         {/* Resize handle */}
         <div className="notebook-view-resize-handle" onMouseDown={startResize}>

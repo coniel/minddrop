@@ -20,6 +20,11 @@ export interface DatabaseEntryContextValue {
   optionsMenu: boolean;
 
   /**
+   * Whether the entries open an options menu on right click.
+   */
+  contextMenu: boolean;
+
+  /**
    * The source the entries are rendered from.
    */
   source?: DatabaseEntryRenderSource;
@@ -34,6 +39,7 @@ export interface DatabaseEntryContextValue {
 export const DatabaseEntryContext = createContext<DatabaseEntryContextValue>({
   draggable: false,
   optionsMenu: false,
+  contextMenu: false,
 });
 
 export const useDatabaseEntryContext = () => useContext(DatabaseEntryContext);
@@ -54,7 +60,7 @@ export interface DatabaseEntryContextProviderProps
  */
 export const DatabaseEntryContextProvider: React.FC<
   DatabaseEntryContextProviderProps
-> = ({ children, draggable, optionsMenu, source, viewId }) => {
+> = ({ children, draggable, optionsMenu, contextMenu, source, viewId }) => {
   const parentContext = useDatabaseEntryContext();
 
   // Override the provided values, inheriting the rest from the
@@ -63,10 +69,11 @@ export const DatabaseEntryContextProvider: React.FC<
     () => ({
       draggable: draggable ?? parentContext.draggable,
       optionsMenu: optionsMenu ?? parentContext.optionsMenu,
+      contextMenu: contextMenu ?? parentContext.contextMenu,
       source: source ?? parentContext.source,
       viewId: viewId ?? parentContext.viewId,
     }),
-    [parentContext, draggable, optionsMenu, source, viewId],
+    [parentContext, draggable, optionsMenu, contextMenu, source, viewId],
   );
 
   return (
