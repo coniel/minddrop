@@ -8,9 +8,6 @@ let connection: SqlConnection | null = null;
 // Re-export registerAdapter for the public API
 export { registerSqlAdapter as registerAdapter };
 
-// Re-export resolveConfigPath for the public API
-export { resolveSqlConfigDirPath as resolveConfigPath } from '../sqlConfig';
-
 /**
  * Opens or creates a SQL database at the given path.
  * Handles schema versioning: if the stored schema version
