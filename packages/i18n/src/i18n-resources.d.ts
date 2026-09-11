@@ -111,7 +111,6 @@ declare module 'i18next' {
         color: {
           default: string;
           inherit: string;
-          transparent: string;
           blue: string;
           cyan: string;
           red: string;

@@ -1,0 +1,47 @@
+/* The colour itself, filled edge to edge. Held round against the
+   flex layouts it sits in. */
+.content-color-swatch {
+  box-sizing: border-box;
+  flex: none;
+  aspect-ratio: 1;
+  border-radius: var(--radius-full);
+}
+
+/* --- Sizes --- */
+
+.content-color-swatch-size-xs {
+  width: var(--icon-size-2xs);
+}
+
+.content-color-swatch-size-sm {
+  width: var(--icon-size-xs);
+}
+
+.content-color-swatch-size-md {
+  width: var(--icon-size-sm);
+}
+
+/* --- Unset --- */
+
+/* No colour at all rather than a pale one. Struck corner to
+   corner, and ringed where the others are filled.
+
+   The line is a gradient, so it stays a hairline at every size. Its
+   band is measured across the gradient's axis, which runs at a
+   right angle to the line.
+
+   The faint fill keeps the swatch from reading a size larger than
+   the filled ones beside it, which a ring this dark around an empty
+   middle would. */
+.content-color-swatch-unset {
+  border: var(--border-width-thin) solid var(--text-placeholder);
+  background:
+    linear-gradient(
+      to bottom right,
+      transparent calc(50% - 0.5px),
+      var(--text-placeholder) calc(50% - 0.5px),
+      var(--text-placeholder) calc(50% + 0.5px),
+      transparent calc(50% + 0.5px)
+    ),
+    var(--surface-subtle);
+}

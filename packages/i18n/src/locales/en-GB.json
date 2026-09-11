@@ -55,7 +55,6 @@
   "color": {
     "default": "Default",
     "inherit": "Inherit colour",
-    "transparent": "Transparent",
     "blue": "Blue",
     "cyan": "Cyan",
     "red": "Red",

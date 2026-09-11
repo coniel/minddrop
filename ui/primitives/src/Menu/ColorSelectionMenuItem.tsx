@@ -1,6 +1,7 @@
 import { Menu } from '@base-ui/react/menu';
 import React from 'react';
 import { ContentColor } from '@minddrop/ui-theme';
+import { ContentColorSwatch } from '../ContentColorSwatch';
 import { Icon } from '../Icon';
 import { ContentColorValues } from '../constants';
 import { propsToClass } from '../utils';
@@ -43,7 +44,7 @@ export const ColorSelectionMenuItem = React.forwardRef<
       aria-checked={checked === undefined ? undefined : checked}
       {...other}
       label={labelKey}
-      icon={<div className={`color-swatch color-swatch-${color}`} />}
+      icon={<ContentColorSwatch color={color} unset={color === 'default'} />}
       trailingIcon={checked ? <Icon name="check" /> : undefined}
     />
   );

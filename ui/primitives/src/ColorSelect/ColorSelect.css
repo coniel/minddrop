@@ -1,7 +1,8 @@
 /* ============================================================
    COLOR SELECT
    Select component for picking a content color.
-   Reuses Select's trigger/popup/item classes; adds swatch styles.
+   Reuses Select's trigger/popup/item classes, and the content
+   colour swatch primitive for the colours themselves.
    ============================================================ */
 
 /* --- Trigger content layout --- */
@@ -12,83 +13,8 @@
   gap: var(--space-2);
 }
 
-/* --- Swatch (shared between trigger and items) --- */
-
-.color-select-swatch {
-  width: 0.75rem;
-  height: 0.75rem;
-  border-radius: var(--radius-full);
-  border: var(--border-width-thin) solid transparent;
-  flex-shrink: 0;
-}
-
 /* --- Popup min width --- */
 
 .color-select-popup.select-popup {
   min-width: 160px;
-}
-
-/* --- Swatch colors --- */
-
-.color-select-swatch-default {
-  border-color: var(--border-default);
-}
-
-.color-select-swatch-transparent {
-  background: repeating-conic-gradient(
-      var(--surface-accent) 0% 25%,
-      transparent 0% 50%
-    )
-    0 0 / 6px 6px;
-  border-color: var(--border-default);
-}
-
-.color-select-swatch-blue {
-  background-color: var(--blue-600);
-  border-color: var(--blue-700);
-}
-
-.color-select-swatch-cyan {
-  background-color: var(--cyan-600);
-  border-color: var(--cyan-700);
-}
-
-.color-select-swatch-red {
-  background-color: var(--red-600);
-  border-color: var(--red-700);
-}
-
-.color-select-swatch-pink {
-  background-color: var(--pink-600);
-  border-color: var(--pink-700);
-}
-
-.color-select-swatch-purple {
-  background-color: var(--purple-600);
-  border-color: var(--purple-700);
-}
-
-.color-select-swatch-green {
-  background-color: var(--green-600);
-  border-color: var(--green-700);
-}
-
-.color-select-swatch-orange {
-  background-color: var(--orange-600);
-  border-color: var(--orange-700);
-}
-
-.color-select-swatch-yellow {
-  background-color: var(--yellow-600);
-  border-color: var(--yellow-700);
-}
-
-.color-select-swatch-brown {
-  background-color: var(--brown-600);
-  border-color: var(--brown-700);
-}
-
-.color-select-swatch-gray {
-  background-color: var(--gray-600);
-  border-color: var(--gray-700);
 }

@@ -21,6 +21,7 @@ import {
 } from '@minddrop/ui-icons';
 import { ContentColor } from '@minddrop/ui-theme';
 import { Button } from '../Button';
+import { ContentColorSwatch } from '../ContentColorSwatch';
 import { ContentIcon } from '../ContentIcon';
 import { IconButton } from '../IconButton';
 import { Spacer } from '../Layout';
@@ -472,19 +473,7 @@ const ColorSelectButton: React.FC<{
       className="content-icon-picker-color-button"
       onClick={handleSelect}
     >
-      <div
-        style={{
-          backgroundColor:
-            color === 'default' ? 'transparent' : `var(--${color}-900)`,
-          boxShadow:
-            color === 'default'
-              ? 'inset 0 0 0 1.5px var(--border-default)'
-              : 'none',
-          width: '16px',
-          height: '16px',
-          borderRadius: '50%',
-        }}
-      />
+      <ContentColorSwatch color={color} unset={color === 'default'} />
     </IconButton>
   );
 };

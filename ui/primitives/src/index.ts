@@ -4,6 +4,7 @@ export * from './Chip';
 export * from './ColorSelect';
 export * from './RadioToggleGroup';
 export * from './RadioToggleHoverMenu';
+export * from './ContentColorSwatch';
 export * from './ToolbarHoverPanel';
 export * from './Collapsible';
 export * from './Combobox';

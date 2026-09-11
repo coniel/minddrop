@@ -1,6 +1,6 @@
-import { useMemo } from 'react';
 import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import { ContentColor } from '@minddrop/ui-theme';
+import { ContentColorSwatch } from '../ContentColorSwatch';
 import { Stack } from '../Layout/Stack';
 import {
   SelectIcon,
@@ -16,23 +16,6 @@ import { TextColor } from '../Text';
 import { ContentColorValues } from '../constants';
 import { InputLabel } from '../fields/InputLabel';
 import './ColorSelect.css';
-
-export interface ColorSelectOption {
-  /*
-   * The option value.
-   */
-  value: string;
-
-  /*
-   * The display label. Can be an i18n key.
-   */
-  label: TranslationKey;
-
-  /*
-   * CSS class applied to the swatch element.
-   */
-  swatchClass?: string;
-}
 
 export interface ColorSelectProps {
   /*
@@ -55,7 +38,7 @@ export interface ColorSelectProps {
   /*
    * The controlled value of the select.
    */
-  value?: ContentColor | string;
+  value?: ContentColor;
 
   /*
    * Callback fired when the selected value changes.
@@ -66,11 +49,6 @@ export interface ColorSelectProps {
    * Color of the displayed value text. Uses Text color tokens.
    */
   valueColor?: TextColor;
-
-  /**
-   * Extra options rendered before the standard content colors.
-   */
-  extraOptions?: ColorSelectOption[];
 
   /**
    * Optional i18n label key displayed above the select.
@@ -85,41 +63,25 @@ export const ColorSelect = ({
   value,
   valueColor,
   onValueChange,
-  extraOptions = [],
   label,
 }: ColorSelectProps) => {
   const { t } = useTranslation();
 
-  // Build the combined list of extra options + content color options
-  const allOptions = useMemo(() => {
-    const extras = extraOptions.map((option) => ({
-      value: option.value,
-      labelKey: option.label,
-      swatchClass: option.swatchClass,
-    }));
+  // The colour shown on the trigger, named beside its swatch
+  const selectedColor = ContentColorValues.find(
+    (color) => color.value === value,
+  );
 
-    const colors = ContentColorValues.map((color) => ({
-      value: color.value,
-      labelKey: color.labelKey,
-      swatchClass: `color-select-swatch-${color.value}`,
-    }));
-
-    return [...extras, ...colors];
-  }, [extraOptions]);
-
-  // Find the currently selected option for rendering the trigger value
-  const selectedOption = allOptions.find((option) => option.value === value);
-
-  // Build items array for Base UI virtual scrolling
-  const items = allOptions.map((option) => ({
-    value: option.value,
-    label: t(option.labelKey),
+  // The colours as items, which Base UI scrolls virtually
+  const items = ContentColorValues.map((color) => ({
+    value: color.value,
+    label: t(color.labelKey),
   }));
 
   const select = (
     <SelectRoot<ContentColor>
-      items={items as { value: ContentColor; label: string }[]}
-      value={value as ContentColor}
+      items={items}
+      value={value}
       onValueChange={onValueChange}
     >
       <SelectTrigger
@@ -131,20 +93,24 @@ export const ColorSelect = ({
           className="color-select-trigger-content"
           color={valueColor}
         >
-          <span
-            className={`color-select-swatch ${selectedOption?.swatchClass || `color-select-swatch-${value || 'default'}`}`}
+          <ContentColorSwatch
+            color={value ?? 'default'}
+            size="xs"
+            unset={(value ?? 'default') === 'default'}
           />
-          {selectedOption ? t(selectedOption.labelKey) : ''}
+          {selectedColor ? t(selectedColor.labelKey) : ''}
         </SelectValue>
         <SelectIcon />
       </SelectTrigger>
       <SelectPopup className="color-select-popup">
-        {allOptions.map((option) => (
-          <SelectItem key={option.value} value={option.value} hideIndicator>
-            <span
-              className={`color-select-swatch ${option.swatchClass || ''}`}
+        {ContentColorValues.map((color) => (
+          <SelectItem key={color.value} value={color.value} hideIndicator>
+            <ContentColorSwatch
+              color={color.value}
+              size="xs"
+              unset={color.value === 'default'}
             />
-            {t(option.labelKey)}
+            {t(color.labelKey)}
           </SelectItem>
         ))}
       </SelectPopup>
