@@ -9,12 +9,26 @@ import { EntityGroup } from '../types';
 import { validateEntityGroupItem } from '../utils';
 import { writeEntityGroups } from '../writeEntityGroups';
 
+export interface CreateEntityGroupOptions {
+  /**
+   * The IDs of the items to list in the group.
+   */
+  items?: string[];
+
+  /**
+   * The position to list the group at, listing it above the type's
+   * existing groups when omitted.
+   */
+  index?: number;
+}
+
 /**
- * Creates a new group, listing it above the type's existing ones.
+ * Creates a new group, listing it at the given position among the
+ * type's existing ones.
  *
  * @param type - The group type to create the group in.
  * @param name - The name of the group.
- * @param items - The IDs of the items to list in the group.
+ * @param options - Options for the created group.
  * @returns The created group.
  *
  * @throws {NotRegisteredError} If the group type is not registered.
@@ -25,8 +39,9 @@ import { writeEntityGroups } from '../writeEntityGroups';
 export async function createEntityGroup(
   type: string,
   name: string,
-  items: string[] = [],
+  options: CreateEntityGroupOptions = {},
 ): Promise<EntityGroup> {
+  const { items = [], index = 0 } = options;
   const config = EntityGroupTypesRegistry.get(type);
 
   // Check that the items are of types the group can hold
@@ -40,8 +55,10 @@ export async function createEntityGroup(
     items: [...new Set(items)],
   };
 
-  // Add the group to the store, listing it first
-  setEntityGroups(type, [group, ...getAllEntityGroups(type)]);
+  // Add the group to the store at the given position
+  const groups = [...getAllEntityGroups(type)];
+  groups.splice(index, 0, group);
+  setEntityGroups(type, groups);
 
   // Dispatch the group created event
   Events.dispatch(EntityGroupCreatedEvent, group);

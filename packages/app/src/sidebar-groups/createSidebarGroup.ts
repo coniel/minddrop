@@ -1,11 +1,16 @@
-import { EntityGroup, EntityGroups } from '@minddrop/entity-groups';
+import {
+  CreateEntityGroupOptions,
+  EntityGroup,
+  EntityGroups,
+} from '@minddrop/entity-groups';
 import { SidebarGroupsType } from './constants';
 
 /**
- * Creates a new sidebar group, listing it above the existing ones.
+ * Creates a new sidebar group, listing it at the given position
+ * among the existing ones.
  *
  * @param name - The name of the group.
- * @param items - The IDs of the items to list in the group.
+ * @param options - Options for the created group.
  * @returns The created group.
  *
  * @throws {UnsupportedEntityGroupItemError} If an item is not of a type a sidebar group can hold.
@@ -14,7 +19,7 @@ import { SidebarGroupsType } from './constants';
  */
 export function createSidebarGroup(
   name: string,
-  items?: string[],
+  options?: CreateEntityGroupOptions,
 ): Promise<EntityGroup> {
-  return EntityGroups.create(SidebarGroupsType, name, items);
+  return EntityGroups.create(SidebarGroupsType, name, options);
 }

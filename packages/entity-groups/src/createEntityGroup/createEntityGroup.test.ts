@@ -40,20 +40,17 @@ describe('createEntityGroup', () => {
   });
 
   it('creates the group with the given items', async () => {
-    const group = await createEntityGroup(type, 'My group', [
-      addressedItem_1,
-      plainItem_1,
-    ]);
+    const group = await createEntityGroup(type, 'My group', {
+      items: [addressedItem_1, plainItem_1],
+    });
 
     expect(group.items).toEqual([addressedItem_1, plainItem_1]);
   });
 
   it('lists each given item once', async () => {
-    const group = await createEntityGroup(type, 'My group', [
-      addressedItem_1,
-      plainItem_1,
-      addressedItem_1,
-    ]);
+    const group = await createEntityGroup(type, 'My group', {
+      items: [addressedItem_1, plainItem_1, addressedItem_1],
+    });
 
     expect(group.items).toEqual([addressedItem_1, plainItem_1]);
   });
@@ -67,6 +64,17 @@ describe('createEntityGroup', () => {
     ]);
   });
 
+  it('lists the group at the given index', async () => {
+    const group = await createEntityGroup(type, 'My group', { index: 2 });
+
+    expect(getAllEntityGroups(type).map(({ id }) => id)).toEqual([
+      exclusiveGroups[0].id,
+      exclusiveGroups[1].id,
+      group.id,
+      exclusiveGroups[2].id,
+    ]);
+  });
+
   it('writes the groups to the file system', async () => {
     const group = await createEntityGroup(type, 'My group');
 
@@ -75,13 +83,13 @@ describe('createEntityGroup', () => {
 
   it('throws for an item of a type the group cannot hold', async () => {
     await expect(
-      createEntityGroup(type, 'My group', [unsupportedItem_1]),
+      createEntityGroup(type, 'My group', { items: [unsupportedItem_1] }),
     ).rejects.toThrow(UnsupportedEntityGroupItemError);
   });
 
   it('creates no group when an item is of an unsupported type', async () => {
     await expect(
-      createEntityGroup(type, 'My group', [unsupportedItem_1]),
+      createEntityGroup(type, 'My group', { items: [unsupportedItem_1] }),
     ).rejects.toThrow(UnsupportedEntityGroupItemError);
 
     expect(getAllEntityGroups(type)).toEqual(exclusiveGroups);

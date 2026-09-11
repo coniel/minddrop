@@ -11,6 +11,7 @@ import { EntityGroup, EntityGroupId, EntityGroupTypeConfig } from '../types';
 export const addressedItem_1 = 'addressed-item_1';
 export const addressedItem_2 = 'addressed-item_2';
 export const plainItem_1 = 'plain-item_1';
+export const plainItem_2 = 'plain-item_2';
 export const unsupportedItem_1 = 'unsupported-item_1';
 
 /**
