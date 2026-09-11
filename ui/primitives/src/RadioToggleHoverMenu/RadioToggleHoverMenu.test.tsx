@@ -217,13 +217,15 @@ describe('RadioToggleHoverMenu', () => {
 
   it('lays the options out in the columns it is given', () => {
     render(
-      <RadioToggleHoverMenu
-        columns={2}
-        options={options}
-        value="center"
-        label="Alignment"
-        onValueChange={() => undefined}
-      />,
+      <Toolbar>
+        <RadioToggleHoverMenu
+          columns={2}
+          options={options}
+          value="center"
+          label="Alignment"
+          onValueChange={() => undefined}
+        />
+      </Toolbar>,
     );
 
     openMenu();
@@ -371,14 +373,16 @@ describe('RadioToggleHoverMenu', () => {
  */
 function renderMenu() {
   render(
-    <RadioToggleHoverMenu
-      options={options}
-      value="center"
-      label="Alignment"
-      onValueChange={(value) => {
-        changedValue = value;
-      }}
-    />,
+    <Toolbar>
+      <RadioToggleHoverMenu
+        options={options}
+        value="center"
+        label="Alignment"
+        onValueChange={(value) => {
+          changedValue = value;
+        }}
+      />
+    </Toolbar>,
   );
 }
 

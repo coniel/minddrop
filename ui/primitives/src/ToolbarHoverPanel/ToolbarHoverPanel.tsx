@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import { FloatingToolbar } from '../FloatingToolbar';
-import { IconButton, IconButtonVariant } from '../IconButton';
+import { IconButtonVariant } from '../IconButton';
 import {
   Popover,
   PopoverContent,
@@ -9,6 +9,7 @@ import {
   PopoverTrigger,
 } from '../Popover';
 import { ToggleSize } from '../Toggle';
+import { ToolbarIconButton } from '../Toolbar';
 import {
   BaseUiFocusGuardAttribute,
   ToolbarHoverSquaredCornersAttribute,
@@ -167,7 +168,7 @@ export const ToolbarHoverPanel: React.FC<ToolbarHoverPanelProps> = ({
       {/* The panel follows the pointer onto the trigger with no
           rest delay, and leaves with it */}
       <PopoverTrigger openOnHover delay={0} closeDelay={0}>
-        <IconButton
+        <ToolbarIconButton
           ref={triggerRef}
           stringLabel={label}
           variant={variant}
@@ -178,7 +179,7 @@ export const ToolbarHoverPanel: React.FC<ToolbarHoverPanelProps> = ({
           {...hoverProps}
         >
           {trigger}
-        </IconButton>
+        </ToolbarIconButton>
       </PopoverTrigger>
       <PopoverPortal>
         <PopoverPositioner

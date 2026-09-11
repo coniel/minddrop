@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { UiIconName } from '@minddrop/ui-icons';
 import { FloatingToolbar } from '../FloatingToolbar';
 import { Icon } from '../Icon';
-import { IconButton, IconButtonVariant } from '../IconButton';
+import { IconButtonVariant } from '../IconButton';
 import {
   Popover,
   PopoverContent,
@@ -12,6 +12,7 @@ import {
 } from '../Popover';
 import { RadioToggleGroup } from '../RadioToggleGroup';
 import { Toggle, ToggleSize } from '../Toggle';
+import { ToolbarIconButton } from '../Toolbar';
 import { TooltipProps } from '../Tooltip';
 import {
   BaseUiFocusGuardAttribute,
@@ -297,7 +298,7 @@ export function RadioToggleHoverMenu<Value extends string>({
       {/* The options follow the pointer onto the trigger with no
           rest delay, and leave with it */}
       <PopoverTrigger ref={triggerRef} openOnHover delay={0} closeDelay={0}>
-        <IconButton
+        <ToolbarIconButton
           stringLabel={label}
           variant={variant}
           size={size}
@@ -307,7 +308,7 @@ export function RadioToggleHoverMenu<Value extends string>({
           {...hoverProps}
         >
           {selectedOption && renderOptionContent(selectedOption)}
-        </IconButton>
+        </ToolbarIconButton>
       </PopoverTrigger>
       <PopoverPortal>
         <PopoverPositioner
