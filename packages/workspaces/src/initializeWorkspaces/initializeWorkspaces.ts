@@ -1,5 +1,6 @@
 import { Events } from '@minddrop/events';
 import { BaseDirectory, Fs } from '@minddrop/file-system';
+import { setActiveWorkspaceScope } from '@minddrop/stores';
 import { Paths, entityId, isEntityId } from '@minddrop/utils';
 import { ActiveWorkspaceStore } from '../ActiveWorkspaceStore';
 import { WorkspacesStore } from '../WorkspacesStore';
@@ -76,6 +77,9 @@ export async function initializeWorkspaces(): Promise<void> {
     // Set the active workspace, which persists a fallback so that it
     // does not have to be resolved again on the next launch.
     ActiveWorkspaceStore.set('id', activeWorkspace.id);
+
+    // Point workspace scoped stores at the active workspace
+    setActiveWorkspaceScope(activeWorkspace.id);
 
     // Set global workspace paths from the active workspace
     Paths.workspace = activeWorkspace.path;

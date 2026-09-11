@@ -15,10 +15,7 @@ export const ActiveWorkspaceStore =
   createKeyValueStore<ActiveWorkspaceStoreValues>(
     'Workspaces:ActiveWorkspace',
     { id: null },
-    {
-      persistTo: 'app-config',
-      namespace: 'active-workspace',
-    },
+    { persist: { target: 'app-config', namespace: 'active-workspace' } },
   );
 
 /**

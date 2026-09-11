@@ -7,7 +7,7 @@ import { registerAppConfigStoreListeners } from './registerAppConfigStoreListene
 const store = createKeyValueStore<{ value: string }>(
   'Test:AppDataStoreListeners',
   { value: 'default' },
-  { persistTo: 'app-config', namespace: 'test-app-data' },
+  { persist: { target: 'app-config', namespace: 'test-app-data' } },
 );
 
 // Events.dispatch awaits each listener, so listeners run on the

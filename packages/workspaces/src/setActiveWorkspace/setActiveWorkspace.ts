@@ -1,10 +1,12 @@
 import { Events } from '@minddrop/events';
+import { setActiveWorkspaceScope } from '@minddrop/stores';
 import { ActiveWorkspaceStore } from '../ActiveWorkspaceStore';
 import { ActiveWorkspaceChangedEvent } from '../events';
 import { getWorkspace } from '../getWorkspace';
 
 /**
- * Sets the active workspace, the one the app opens into.
+ * Sets the active workspace, the one the app opens into and the one
+ * workspace scoped stores read and write.
  *
  * Does not update `Paths`, which describe the running session and are
  * derived anew when workspaces are next initialized.
@@ -26,6 +28,9 @@ export async function setActiveWorkspace(id: string): Promise<void> {
 
   // Set the workspace as active, which persists it
   ActiveWorkspaceStore.set('id', workspace.id);
+
+  // Point workspace scoped stores at the workspace
+  setActiveWorkspaceScope(workspace.id);
 
   // Let the write land before announcing the change: the desktop app
   // answers it by reloading the window, which would otherwise cut the

@@ -1,14 +1,15 @@
 import { Fs } from '@minddrop/file-system';
 import { registerStoreListeners } from '@minddrop/stores';
-import { Paths } from '@minddrop/utils';
+import { Workspaces } from '@minddrop/workspaces';
 
 const LISTENER_ID = 'app:workspace-config-store';
 const STORES_DIR = 'stores';
 
 /**
  * Registers event listeners that persist and hydrate
- * `workspace-config` level stores to JSON files in the
- * workspace's config directory.
+ * `workspace-config` level stores to JSON files in the config
+ * directory of the workspace the event is for: the one a workspace
+ * scoped store carries, else the active workspace.
  *
  * These stores hold state belonging to the workspace itself, which
  * travels with it to every device it syncs to. State specific to one
@@ -18,10 +19,16 @@ const STORES_DIR = 'stores';
  */
 export function registerWorkspaceConfigStoreListeners(): VoidFunction {
   // Register persist and hydrate listeners targeting the stores
-  // directory inside the active workspace's config directory.
+  // directory inside the workspace's config directory.
   return registerStoreListeners({
     listenerId: LISTENER_ID,
-    persistTo: 'workspace-config',
-    resolveStoresDir: () => Fs.concatPath(Paths.workspaceConfigs, STORES_DIR),
+    target: 'workspace-config',
+    resolveStoresDir: (workspaceId) =>
+      Fs.concatPath(
+        Workspaces.resolveConfigDirPath(
+          workspaceId ?? Workspaces.getActive().id,
+        ),
+        STORES_DIR,
+      ),
   });
 }

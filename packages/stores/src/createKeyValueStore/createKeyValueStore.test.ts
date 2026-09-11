@@ -1,4 +1,5 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { act, renderHook } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Events } from '@minddrop/events';
 import {
   StoreHydrateEvent,
@@ -6,6 +7,8 @@ import {
   StoreHydratedEvent,
   StorePersistEvent,
 } from '../events';
+import { dropWorkspaceRecords } from '../storeRegistry';
+import { setActiveWorkspaceScope } from '../workspaceScope';
 import { createKeyValueStore } from './createKeyValueStore';
 
 type TestValues = {
@@ -129,10 +132,7 @@ describe('createKeyValueStore', () => {
     const store = createKeyValueStore<TestValues>(
       'Test:KeyValuePersist',
       defaults,
-      {
-        persistTo: 'app-config',
-        namespace: 'test-kv',
-      },
+      { persist: { target: 'app-config', namespace: 'test-kv' } },
     );
 
     beforeEach(() => {
@@ -146,7 +146,7 @@ describe('createKeyValueStore', () => {
       new Promise<void>((done) => {
         Events.addListener(StorePersistEvent, 'test', (payload) => {
           expect(payload).toEqual({
-            persistTo: 'app-config',
+            target: 'app-config',
             namespace: 'test-kv',
             data: { ...defaults, theme: 'dark' },
           });
@@ -162,7 +162,7 @@ describe('createKeyValueStore', () => {
 
         Events.addListener(StorePersistEvent, 'test', (payload) => {
           expect(payload).toEqual({
-            persistTo: 'app-config',
+            target: 'app-config',
             namespace: 'test-kv',
             data: defaults,
           });
@@ -178,7 +178,7 @@ describe('createKeyValueStore', () => {
 
         Events.addListener(StorePersistEvent, 'test', (payload) => {
           expect(payload).toEqual({
-            persistTo: 'app-config',
+            target: 'app-config',
             namespace: 'test-kv',
             data: defaults,
           });
@@ -205,7 +205,7 @@ describe('createKeyValueStore', () => {
         new Promise<void>((done) => {
           Events.addListener(StoreHydrateRequestEvent, 'test', (payload) => {
             expect(payload).toEqual({
-              persistTo: 'app-config',
+              target: 'app-config',
               namespace: 'test-kv',
             });
             done();
@@ -220,8 +220,10 @@ describe('createKeyValueStore', () => {
           'Test:KeyValuePersist',
           defaults,
           {
-            persistTo: 'app-config',
-            namespace: 'hydrate-resolve-test',
+            persist: {
+              target: 'app-config',
+              namespace: 'hydrate-resolve-test',
+            },
           },
         );
 
@@ -247,8 +249,10 @@ describe('createKeyValueStore', () => {
           'Test:KeyValuePersist',
           defaults,
           {
-            persistTo: 'app-config',
-            namespace: 'hydrated-event-test',
+            persist: {
+              target: 'app-config',
+              namespace: 'hydrated-event-test',
+            },
           },
         );
 
@@ -278,8 +282,10 @@ describe('createKeyValueStore', () => {
       'Test:KeyValueAppWorkspacePersist',
       defaults,
       {
-        persistTo: 'app-workspace-config',
-        namespace: 'test-kv-app-workspace',
+        persist: {
+          target: 'app-workspace-config',
+          namespace: 'test-kv-app-workspace',
+        },
       },
     );
 
@@ -294,7 +300,7 @@ describe('createKeyValueStore', () => {
       new Promise<void>((done) => {
         Events.addListener(StorePersistEvent, 'test', (payload) => {
           expect(payload).toEqual({
-            persistTo: 'app-workspace-config',
+            target: 'app-workspace-config',
             namespace: 'test-kv-app-workspace',
             data: { ...defaults, theme: 'dark' },
           });
@@ -308,7 +314,7 @@ describe('createKeyValueStore', () => {
       new Promise<void>((done) => {
         Events.addListener(StoreHydrateRequestEvent, 'test', (payload) => {
           expect(payload).toEqual({
-            persistTo: 'app-workspace-config',
+            target: 'app-workspace-config',
             namespace: 'test-kv-app-workspace',
           });
           done();
@@ -324,10 +330,7 @@ describe('createKeyValueStore', () => {
       const freshStore = createKeyValueStore<TestValues>(
         'Test:KeyValuePersist',
         defaults,
-        {
-          persistTo: 'app-config',
-          namespace: 'kv-load-test',
-        },
+        { persist: { target: 'app-config', namespace: 'kv-load-test' } },
       );
 
       // Dispatch a load event with data for this store
@@ -352,10 +355,7 @@ describe('createKeyValueStore', () => {
       const freshStore = createKeyValueStore<TestValues>(
         'Test:KeyValuePersist',
         defaults,
-        {
-          persistTo: 'app-config',
-          namespace: 'kv-load-test-2',
-        },
+        { persist: { target: 'app-config', namespace: 'kv-load-test-2' } },
       );
 
       // Dispatch a load event for a different namespace
@@ -365,6 +365,170 @@ describe('createKeyValueStore', () => {
       });
 
       expect(freshStore.get('theme')).toBe('light');
+    });
+  });
+});
+
+describe('createKeyValueStore scoped by workspace', () => {
+  const store = createKeyValueStore<TestValues>(
+    'Test:KeyValueScoped',
+    defaults,
+    {
+      scope: 'workspace',
+    },
+  );
+
+  beforeEach(() => {
+    setActiveWorkspaceScope('workspace-1');
+    store.reset();
+    store.in('workspace-2').reset();
+  });
+
+  afterEach(() => {
+    setActiveWorkspaceScope(null);
+    Events.removeListener(StorePersistEvent, 'test');
+    Events.removeListener(StoreHydrateRequestEvent, 'test');
+  });
+
+  it('reads and writes the active workspace', () => {
+    store.set('theme', 'dark');
+    setActiveWorkspaceScope('workspace-2');
+    store.set('theme', 'blue');
+
+    expect(store.get('theme')).toBe('blue');
+    expect(store.in('workspace-1').get('theme')).toBe('dark');
+  });
+
+  it('starts every workspace from the defaults', () => {
+    store.set('theme', 'dark');
+
+    expect(store.in('workspace-2').getAll()).toEqual(defaults);
+  });
+
+  it('reads and writes the addressed workspace', () => {
+    store.in('workspace-2').set('theme', 'dark');
+
+    expect(store.get('theme')).toBe('light');
+    expect(store.in('workspace-2').get('theme')).toBe('dark');
+  });
+
+  it('loads into the addressed workspace', () => {
+    store.in('workspace-2').load({ theme: 'dark', fontSize: 16 });
+
+    expect(store.getAll()).toEqual(defaults);
+    expect(store.in('workspace-2').getAll()).toEqual({
+      ...defaults,
+      theme: 'dark',
+      fontSize: 16,
+    });
+  });
+
+  it('resets the addressed workspace only', () => {
+    store.set('theme', 'dark');
+    store.in('workspace-2').set('theme', 'dark');
+    store.in('workspace-2').reset();
+
+    expect(store.get('theme')).toBe('dark');
+    expect(store.in('workspace-2').get('theme')).toBe('light');
+  });
+
+  it('keeps a default record while no workspace is active', () => {
+    setActiveWorkspaceScope(null);
+    store.set('theme', 'dark');
+    setActiveWorkspaceScope('workspace-1');
+
+    expect(store.get('theme')).toBe('light');
+
+    setActiveWorkspaceScope(null);
+
+    expect(store.get('theme')).toBe('dark');
+
+    store.reset();
+  });
+
+  it('re-selects the hooks when the active workspace changes', () => {
+    store.set('theme', 'dark');
+    store.in('workspace-2').set('theme', 'blue');
+
+    const { result } = renderHook(() => store.useValue('theme'));
+
+    expect(result.current).toBe('dark');
+
+    act(() => setActiveWorkspaceScope('workspace-2'));
+
+    expect(result.current).toBe('blue');
+  });
+
+  it('re-renders the hooks on writes to the active workspace only', () => {
+    const { result } = renderHook(() => store.useAllValues());
+
+    act(() => store.in('workspace-2').set('theme', 'dark'));
+
+    expect(result.current.theme).toBe('light');
+
+    act(() => store.set('theme', 'dark'));
+
+    expect(result.current.theme).toBe('dark');
+  });
+
+  it('drops a workspace record through the registry', () => {
+    store.in('workspace-2').set('theme', 'dark');
+
+    dropWorkspaceRecords('workspace-2');
+
+    expect(store.in('workspace-2').getAll()).toEqual(defaults);
+  });
+
+  describe('with persistence', () => {
+    const persist = {
+      target: 'app-workspace-config' as const,
+      namespace: 'scoped-kv',
+    };
+
+    it('persists with the workspace the write was made to', async () =>
+      new Promise<void>((done) => {
+        const persisted = createKeyValueStore<TestValues>(
+          'Test:KeyValueScopedPersist',
+          defaults,
+          { scope: 'workspace', persist },
+        );
+
+        Events.addListener(StorePersistEvent, 'test', (payload) => {
+          expect(payload).toEqual({
+            ...persist,
+            workspaceId: 'workspace-2',
+            data: { ...defaults, theme: 'dark' },
+          });
+          done();
+        });
+
+        persisted.in('workspace-2').set('theme', 'dark');
+      }));
+
+    it('hydrates the addressed workspace', async () => {
+      // A namespace of its own, so that the store's hydrate listener
+      // is not shadowed by the store created above.
+      const namespace = 'scoped-kv-hydrate';
+      const persisted = createKeyValueStore<TestValues>(
+        'Test:KeyValueScopedPersist',
+        defaults,
+        { scope: 'workspace', persist: { ...persist, namespace } },
+      );
+
+      // Stand in for the platform layer holding data for
+      // workspace-2 only.
+      Events.addListener(StoreHydrateRequestEvent, 'test', (request) => {
+        Events.dispatch(StoreHydrateEvent, {
+          namespace,
+          workspaceId: request.workspaceId,
+          data: request.workspaceId === 'workspace-2' ? { theme: 'dark' } : {},
+        });
+      });
+
+      await persisted.in('workspace-2').hydrate();
+
+      expect(persisted.get('theme')).toBe('light');
+      expect(persisted.in('workspace-2').get('theme')).toBe('dark');
     });
   });
 });

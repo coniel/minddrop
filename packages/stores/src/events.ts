@@ -14,12 +14,18 @@ export type StorePersistEventData = {
   /**
    * Where to persist the data.
    */
-  persistTo: PersistTarget;
+  target: PersistTarget;
 
   /**
    * The namespace of the store.
    */
   namespace: string;
+
+  /**
+   * The workspace whose record the data is. Absent for stores which
+   * are not scoped by workspace, and while no workspace is active.
+   */
+  workspaceId?: string;
 
   /**
    * The current store data to persist.
@@ -40,12 +46,18 @@ export type StoreHydrateRequestEventData = {
   /**
    * Where the data is persisted.
    */
-  persistTo: PersistTarget;
+  target: PersistTarget;
 
   /**
    * The namespace of the store requesting its data.
    */
   namespace: string;
+
+  /**
+   * The workspace whose record is requested. Absent for stores which
+   * are not scoped by workspace, and while no workspace is active.
+   */
+  workspaceId?: string;
 };
 
 /**
@@ -62,6 +74,12 @@ export type StoreHydrateEventData = {
    * The namespace of the store being hydrated.
    */
   namespace: string;
+
+  /**
+   * The workspace whose record the data is, as carried by the
+   * request being answered.
+   */
+  workspaceId?: string;
 
   /**
    * The persisted data to load into the store.

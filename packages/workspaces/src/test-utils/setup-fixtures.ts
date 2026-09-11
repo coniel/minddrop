@@ -1,4 +1,8 @@
 import { MockFileSystem } from '@minddrop/file-system';
+import {
+  dropWorkspaceRecords,
+  setActiveWorkspaceScope,
+} from '@minddrop/stores';
 import { Paths } from '@minddrop/utils';
 import { ActiveWorkspaceStore } from '../ActiveWorkspaceStore';
 import { WorkspacesStore } from '../WorkspacesStore';
@@ -31,6 +35,7 @@ export function setupWorkspaceFixtures(
 
     // Set workspace_1 as the active workspace
     ActiveWorkspaceStore.set('id', workspace_1.id);
+    setActiveWorkspaceScope(workspace_1.id);
   }
 
   if (options.loadWorkspaceFiles !== false) {
@@ -45,7 +50,13 @@ export function setupWorkspaceFixtures(
 }
 
 export function cleanupWorkspaceFixtures() {
+  // Drop whatever the tests put into the fixture workspaces' records,
+  // which a store's own clear() leaves in place for every workspace
+  // but the active one.
+  workspaces.forEach((workspace) => dropWorkspaceRecords(workspace.id));
+
   // Clear stores
   WorkspacesStore.clear();
   ActiveWorkspaceStore.reset();
+  setActiveWorkspaceScope(null);
 }

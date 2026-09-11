@@ -1,4 +1,5 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { act, renderHook } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Events } from '@minddrop/events';
 import {
   StoreHydrateEvent,
@@ -6,6 +7,8 @@ import {
   StoreHydratedEvent,
   StorePersistEvent,
 } from '../events';
+import { dropWorkspaceRecords } from '../storeRegistry';
+import { setActiveWorkspaceScope } from '../workspaceScope';
 import { createObjectStore } from './createObjectStore';
 
 interface TestItem {
@@ -216,8 +219,7 @@ describe('createObjectStore', () => {
 
   describe('with persistence', () => {
     const store = createObjectStore<TestItem>('Test:ObjectPersist', 'id', {
-      persistTo: 'app-config',
-      namespace: 'test-package',
+      persist: { target: 'app-config', namespace: 'test-package' },
     });
 
     beforeEach(() => {
@@ -231,7 +233,7 @@ describe('createObjectStore', () => {
       new Promise<void>((done) => {
         Events.addListener(StorePersistEvent, 'test', (payload) => {
           expect(payload).toEqual({
-            persistTo: 'app-config',
+            target: 'app-config',
             namespace: 'test-package',
             data: { 'item-1': item1 },
           });
@@ -247,7 +249,7 @@ describe('createObjectStore', () => {
 
         Events.addListener(StorePersistEvent, 'test', (payload) => {
           expect(payload).toEqual({
-            persistTo: 'app-config',
+            target: 'app-config',
             namespace: 'test-package',
             data: { 'item-1': { ...item1, name: 'Updated' } },
           });
@@ -264,7 +266,7 @@ describe('createObjectStore', () => {
 
         Events.addListener(StorePersistEvent, 'test', (payload) => {
           expect(payload).toEqual({
-            persistTo: 'app-config',
+            target: 'app-config',
             namespace: 'test-package',
             data: { 'item-2': item2 },
           });
@@ -280,7 +282,7 @@ describe('createObjectStore', () => {
 
         Events.addListener(StorePersistEvent, 'test', (payload) => {
           expect(payload).toEqual({
-            persistTo: 'app-config',
+            target: 'app-config',
             namespace: 'test-package',
             data: {},
           });
@@ -307,7 +309,7 @@ describe('createObjectStore', () => {
         new Promise<void>((done) => {
           Events.addListener(StoreHydrateRequestEvent, 'test', (payload) => {
             expect(payload).toEqual({
-              persistTo: 'app-config',
+              target: 'app-config',
               namespace: 'test-package',
             });
             done();
@@ -322,8 +324,10 @@ describe('createObjectStore', () => {
           'Test:ObjectPersist',
           'id',
           {
-            persistTo: 'app-config',
-            namespace: 'hydrate-resolve-test',
+            persist: {
+              target: 'app-config',
+              namespace: 'hydrate-resolve-test',
+            },
           },
         );
 
@@ -349,8 +353,10 @@ describe('createObjectStore', () => {
           'Test:ObjectPersist',
           'id',
           {
-            persistTo: 'app-config',
-            namespace: 'hydrated-event-test',
+            persist: {
+              target: 'app-config',
+              namespace: 'hydrated-event-test',
+            },
           },
         );
 
@@ -381,10 +387,7 @@ describe('createObjectStore', () => {
       const freshStore = createObjectStore<TestItem>(
         'Test:ObjectPersist',
         'id',
-        {
-          persistTo: 'app-config',
-          namespace: 'load-test',
-        },
+        { persist: { target: 'app-config', namespace: 'load-test' } },
       );
 
       // Dispatch a load event with data for this store
@@ -408,10 +411,7 @@ describe('createObjectStore', () => {
       const freshStore = createObjectStore<TestItem>(
         'Test:ObjectPersist',
         'id',
-        {
-          persistTo: 'app-config',
-          namespace: 'load-test-2',
-        },
+        { persist: { target: 'app-config', namespace: 'load-test-2' } },
       );
 
       // Dispatch a load event for a different namespace
@@ -421,6 +421,208 @@ describe('createObjectStore', () => {
       });
 
       expect(freshStore.getAll()).toEqual({});
+    });
+  });
+});
+
+describe('createObjectStore scoped by workspace', () => {
+  const store = createObjectStore<TestItem>('Test:ObjectScoped', 'id', {
+    scope: 'workspace',
+  });
+
+  beforeEach(() => {
+    setActiveWorkspaceScope('workspace-1');
+    store.clear();
+    store.in('workspace-2').clear();
+  });
+
+  afterEach(() => {
+    setActiveWorkspaceScope(null);
+    Events.removeListener(StorePersistEvent, 'test');
+    Events.removeListener(StoreHydrateRequestEvent, 'test');
+  });
+
+  it('reads and writes the active workspace', () => {
+    store.set(item1);
+    setActiveWorkspaceScope('workspace-2');
+    store.set(item2);
+
+    expect(store.getAll()).toEqual({ 'item-2': item2 });
+    expect(store.in('workspace-1').getAll()).toEqual({ 'item-1': item1 });
+  });
+
+  it('reads and writes the addressed workspace', () => {
+    store.in('workspace-2').set(item2);
+
+    expect(store.get('item-2')).toBeNull();
+    expect(store.in('workspace-2').get('item-2')).toEqual(item2);
+    expect(store.in('workspace-2').get(['item-2'])).toEqual({
+      'item-2': item2,
+    });
+    expect(store.in('workspace-2').getArray(['item-2'])).toEqual([item2]);
+    expect(store.in('workspace-2').getAllArray()).toEqual([item2]);
+  });
+
+  it('loads into the addressed workspace', () => {
+    store.in('workspace-2').load([item2, item3]);
+
+    expect(store.getAll()).toEqual({});
+    expect(store.in('workspace-2').getAll()).toEqual({
+      'item-2': item2,
+      'item-3': item3,
+    });
+  });
+
+  it('updates in the addressed workspace', () => {
+    store.set(item1);
+    store.in('workspace-2').set(item1);
+    store.in('workspace-2').update('item-1', { name: 'Updated' });
+
+    expect(store.get('item-1')).toEqual(item1);
+    expect(store.in('workspace-2').get('item-1')).toEqual({
+      ...item1,
+      name: 'Updated',
+    });
+  });
+
+  it('removes from the addressed workspace', () => {
+    store.set(item1);
+    store.in('workspace-2').set(item1);
+    store.in('workspace-2').remove('item-1');
+
+    expect(store.get('item-1')).toEqual(item1);
+    expect(store.in('workspace-2').get('item-1')).toBeNull();
+  });
+
+  it('clears the addressed workspace only', () => {
+    store.set(item1);
+    store.in('workspace-2').set(item2);
+    store.in('workspace-2').clear();
+
+    expect(store.getAll()).toEqual({ 'item-1': item1 });
+    expect(store.in('workspace-2').getAll()).toEqual({});
+  });
+
+  it('keeps a default record while no workspace is active', () => {
+    setActiveWorkspaceScope(null);
+    store.set(item1);
+    setActiveWorkspaceScope('workspace-1');
+
+    expect(store.get('item-1')).toBeNull();
+
+    setActiveWorkspaceScope(null);
+
+    expect(store.get('item-1')).toEqual(item1);
+
+    store.clear();
+  });
+
+  it('re-selects the hooks when the active workspace changes', () => {
+    store.set(item1);
+    store.in('workspace-2').set(item2);
+
+    const { result } = renderHook(() => store.useAllItemsArray());
+
+    expect(result.current).toEqual([item1]);
+
+    act(() => setActiveWorkspaceScope('workspace-2'));
+
+    expect(result.current).toEqual([item2]);
+  });
+
+  it('re-renders the hooks on writes to the active workspace only', () => {
+    const { result } = renderHook(() => store.useItem('item-2'));
+
+    act(() => store.in('workspace-2').set(item2));
+
+    expect(result.current).toBeNull();
+
+    act(() => store.set(item2));
+
+    expect(result.current).toEqual(item2);
+  });
+
+  it('drops a workspace record through the registry', () => {
+    store.in('workspace-2').set(item2);
+
+    dropWorkspaceRecords('workspace-2');
+
+    expect(store.in('workspace-2').getAll()).toEqual({});
+  });
+
+  describe('with persistence', () => {
+    const persist = {
+      target: 'app-workspace-config' as const,
+      namespace: 'scoped-object',
+    };
+
+    it('persists with the workspace the write was made to', async () =>
+      new Promise<void>((done) => {
+        const persisted = createObjectStore<TestItem>(
+          'Test:ObjectScopedPersist',
+          'id',
+          { scope: 'workspace', persist },
+        );
+
+        Events.addListener(StorePersistEvent, 'test', (payload) => {
+          expect(payload).toEqual({
+            ...persist,
+            workspaceId: 'workspace-2',
+            data: { 'item-2': item2 },
+          });
+          done();
+        });
+
+        persisted.in('workspace-2').set(item2);
+      }));
+
+    it('persists with the active workspace by default', async () =>
+      new Promise<void>((done) => {
+        const persisted = createObjectStore<TestItem>(
+          'Test:ObjectScopedPersist',
+          'id',
+          { scope: 'workspace', persist },
+        );
+
+        Events.addListener(StorePersistEvent, 'test', (payload) => {
+          expect(payload).toEqual({
+            ...persist,
+            workspaceId: 'workspace-1',
+            data: { 'item-1': item1 },
+          });
+          done();
+        });
+
+        persisted.set(item1);
+      }));
+
+    it('hydrates the addressed workspace', async () => {
+      // A namespace of its own, so that the store's hydrate listener
+      // is not shadowed by the stores created above.
+      const namespace = 'scoped-object-hydrate';
+      const persisted = createObjectStore<TestItem>(
+        'Test:ObjectScopedPersist',
+        'id',
+        { scope: 'workspace', persist: { ...persist, namespace } },
+      );
+
+      // Stand in for the platform layer holding data for
+      // workspace-2 only.
+      Events.addListener(StoreHydrateRequestEvent, 'test', (request) => {
+        Events.dispatch(StoreHydrateEvent, {
+          namespace,
+          workspaceId: request.workspaceId,
+          data:
+            request.workspaceId === 'workspace-2' ? { 'item-2': item2 } : {},
+        });
+      });
+
+      await persisted.in('workspace-2').hydrate();
+
+      expect(persisted.getAll()).toEqual({});
+      expect(persisted.in('workspace-2').getAll()).toEqual({
+        'item-2': item2,
+      });
     });
   });
 });

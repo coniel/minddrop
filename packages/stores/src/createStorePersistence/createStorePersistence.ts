@@ -18,14 +18,17 @@ export interface StorePersistence {
    * Dispatches a persist event carrying the store's current data.
    *
    * @param data - The data to persist.
+   * @param workspaceId - The workspace whose record the data is, for stores scoped by workspace.
    */
-  dispatchPersist(data: PersistedStoreData): void;
+  dispatchPersist(data: PersistedStoreData, workspaceId?: string): void;
 
   /**
    * Requests the store's persisted data from the platform layer,
    * resolving once it has been loaded.
+   *
+   * @param workspaceId - The workspace whose record to hydrate, for stores scoped by workspace.
    */
-  hydrate(): Promise<void>;
+  hydrate(workspaceId?: string): Promise<void>;
 
   /**
    * Resolves once every dispatched write has been acknowledged by the
@@ -40,15 +43,16 @@ export interface StorePersistence {
  * of writes.
  *
  * @param persist - The store's persistence configuration, absent for a store that does not persist.
- * @param load - Loads hydrated data into the store.
+ * @param load - Loads hydrated data into the store, into the given workspace's record when the hydration carries one.
  * @returns The store's persistence functions.
  */
 export function createStorePersistence(
   persist: PersistOptions | undefined,
-  load: (data: PersistedStoreData) => void,
+  load: (data: PersistedStoreData, workspaceId?: string) => void,
 ): StorePersistence {
-  // Resolve callback set by hydrate(), called after data is loaded
-  let hydrateResolve: (() => void) | null = null;
+  // Resolve callbacks set by hydrate(), keyed by the workspace being
+  // hydrated and called after its data is loaded.
+  const hydrateResolves = new Map<string, () => void>();
 
   // Dispatched writes not yet acknowledged by the platform layer
   let pendingWrites = 0;
@@ -69,17 +73,21 @@ export function createStorePersistence(
         }
 
         // Load the persisted data
-        load(hydration.data);
+        load(hydration.data, hydration.workspaceId);
 
         // Notify that the store has been hydrated
         Events.dispatch(StoreHydratedEvent, {
           namespace: persist.namespace,
         });
 
-        // Resolve the hydrate() promise if one is pending
-        if (hydrateResolve) {
-          hydrateResolve();
-          hydrateResolve = null;
+        // Resolve the hydrate() promise if one is pending for the
+        // hydrated workspace.
+        const key = hydrationKey(hydration.workspaceId);
+        const resolve = hydrateResolves.get(key);
+
+        if (resolve) {
+          hydrateResolves.delete(key);
+          resolve();
         }
       },
     );
@@ -104,7 +112,7 @@ export function createStorePersistence(
   }
 
   return {
-    dispatchPersist: (data) => {
+    dispatchPersist: (data, workspaceId) => {
       if (!persist) {
         return;
       }
@@ -117,13 +125,14 @@ export function createStorePersistence(
       }
 
       Events.dispatch(StorePersistEvent, {
-        persistTo: persist.persistTo,
+        target: persist.target,
         namespace: persist.namespace,
+        workspaceId,
         data,
       });
     },
 
-    hydrate: () => {
+    hydrate: (workspaceId) => {
       if (!persist) {
         throw new Error('hydrate() called on a store without persist options');
       }
@@ -131,12 +140,13 @@ export function createStorePersistence(
       return new Promise<void>((resolve) => {
         // Store the resolve callback so the persistent hydrate
         // listener can resolve the promise after loading data.
-        hydrateResolve = resolve;
+        hydrateResolves.set(hydrationKey(workspaceId), resolve);
 
         // Dispatch a hydrate request for the platform layer
         Events.dispatch(StoreHydrateRequestEvent, {
-          persistTo: persist.persistTo,
+          target: persist.target,
           namespace: persist.namespace,
+          workspaceId,
         });
       });
     },
@@ -151,4 +161,12 @@ export function createStorePersistence(
       });
     },
   };
+}
+
+/**
+ * Returns the key under which a workspace's pending hydration is
+ * tracked, a hydration of an unscoped store having no workspace.
+ */
+function hydrationKey(workspaceId: string | undefined): string {
+  return workspaceId ?? '';
 }

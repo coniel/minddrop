@@ -1,62 +1,24 @@
 import { StoreApi, UseBoundStore, create } from 'zustand';
 import { shallow } from 'zustand/shallow';
 import { createStorePersistence } from '../createStorePersistence';
+import { createStoreRecords } from '../createStoreRecords';
 import { RegisteredStoreType, registerStore } from '../storeRegistry';
-import { PersistOptions } from '../types';
+import { StoreOptions, WorkspaceScopedStoreOptions } from '../types';
 
 export interface ObjectStoreInternalApi<TItem extends object> {
   /**
-   * The items keyed by identifier.
+   * The items keyed by identifier. On a store scoped by workspace,
+   * the active workspace's items.
    */
   items: Record<string, TItem>;
-
-  /**
-   * Load items into the store, merging with existing items.
-   */
-  load(items: TItem[]): void;
-
-  /**
-   * Add or replace an item in the store.
-   */
-  set(item: TItem): void;
-
-  /**
-   * Updates an item in the store by merging partial data.
-   */
-  update(id: string, data: Partial<TItem>): void;
-
-  /**
-   * Remove an item from the store.
-   */
-  remove(id: string): void;
-
-  /**
-   * Clear all items.
-   */
-  clear(): void;
 }
 
-export interface ObjectItemStore<TItem extends object> {
-  /**
-   * The namespaced name of the store (e.g. "Databases:Entries").
-   */
-  name: string;
-
-  /**
-   * The type of store.
-   */
-  type: RegisteredStoreType;
-
-  /**
-   * The key used as the identifier for the items.
-   */
-  identifierKey: keyof TItem;
-
-  /**
-   * The internal Zustand store.
-   */
-  useStore: UseBoundStore<StoreApi<ObjectStoreInternalApi<TItem>>>;
-
+/**
+ * The functions reading and writing one record of an object store:
+ * the active workspace's on the store itself, another workspace's
+ * through `in(workspaceId)`.
+ */
+export interface ObjectItemStoreScope<TItem extends object> {
   /**
    * Retrieves an item by its identifier.
    *
@@ -107,15 +69,6 @@ export interface ObjectItemStore<TItem extends object> {
   hydrate(): Promise<void>;
 
   /**
-   * Resolves once every mutation made so far has been written by the
-   * platform layer, or immediately when no platform layer is listening.
-   *
-   * Await it before an action that would interrupt the write, such as
-   * reloading the window.
-   */
-  persisted(): Promise<void>;
-
-  /**
    * Adds or replaces an item in the store.
    *
    * @param item - The item to set.
@@ -141,6 +94,38 @@ export interface ObjectItemStore<TItem extends object> {
    * Clears all items from the store.
    */
   clear(): void;
+}
+
+export interface ObjectItemStore<TItem extends object>
+  extends ObjectItemStoreScope<TItem> {
+  /**
+   * The namespaced name of the store (e.g. "Databases:Entries").
+   */
+  name: string;
+
+  /**
+   * The type of store.
+   */
+  type: RegisteredStoreType;
+
+  /**
+   * The key used as the identifier for the items.
+   */
+  identifierKey: keyof TItem;
+
+  /**
+   * The internal Zustand store.
+   */
+  useStore: UseBoundStore<StoreApi<ObjectStoreInternalApi<TItem>>>;
+
+  /**
+   * Resolves once every mutation made so far has been written by the
+   * platform layer, or immediately when no platform layer is listening.
+   *
+   * Await it before an action that would interrupt the write, such as
+   * reloading the window.
+   */
+  persisted(): Promise<void>;
 
   /**
    * A hook which returns an item by its identifier.
@@ -167,6 +152,17 @@ export interface ObjectItemStore<TItem extends object> {
   useAllItemsArray(): TItem[];
 }
 
+export interface WorkspaceScopedObjectItemStore<TItem extends object>
+  extends ObjectItemStore<TItem> {
+  /**
+   * Addresses the record of a given workspace rather than the active
+   * one's.
+   *
+   * @param workspaceId - The workspace whose record to address.
+   */
+  in(workspaceId: string): ObjectItemStoreScope<TItem>;
+}
+
 /**
  * Creates an object store, providing a CRUD interface for items
  * stored in a record keyed by an identifier.
@@ -175,144 +171,171 @@ export interface ObjectItemStore<TItem extends object> {
  * dispatch a `stores:persist` event so the platform layer can
  * handle writing the data to storage.
  *
+ * When scoped by workspace, the store keeps a record per workspace
+ * and reads and writes the active workspace's unless addressed
+ * through `in(workspaceId)`.
+ *
  * @param name - The namespaced name for the store registry (e.g. "Databases:Databases").
  * @param identifierKey - The key to use as the identifier for the items.
- * @param persist - Optional persistence configuration.
+ * @param options - The store's persistence and scope.
  * @returns The object store.
  */
 export function createObjectStore<TItem extends object>(
   name: string,
   identifierKey: keyof TItem,
-  persist?: PersistOptions,
-): ObjectItemStore<TItem> {
-  const store = create<ObjectStoreInternalApi<TItem>>()((set) => ({
+  options: WorkspaceScopedStoreOptions,
+): WorkspaceScopedObjectItemStore<TItem>;
+export function createObjectStore<TItem extends object>(
+  name: string,
+  identifierKey: keyof TItem,
+  options?: StoreOptions,
+): ObjectItemStore<TItem>;
+export function createObjectStore<TItem extends object>(
+  name: string,
+  identifierKey: keyof TItem,
+  options: StoreOptions = {},
+): WorkspaceScopedObjectItemStore<TItem> {
+  const store = create<ObjectStoreInternalApi<TItem>>()(() => ({
     items: {},
-
-    load: (items) =>
-      set((state) => ({
-        // Merge loaded items into the store
-        items: {
-          ...state.items,
-          ...items.reduce(
-            (map, item) => ({
-              ...map,
-              [item[identifierKey] as string]: item,
-            }),
-            {},
-          ),
-        },
-      })),
-
-    set: (item) =>
-      set((state) => ({
-        // Add or replace the item
-        items: { ...state.items, [item[identifierKey] as string]: item },
-      })),
-
-    update: (id, data) =>
-      set((state) => {
-        // Do nothing if the item doesn't exist
-        if (!state.items[id]) {
-          return {};
-        }
-
-        return {
-          items: { ...state.items, [id]: { ...state.items[id], ...data } },
-        };
-      }),
-
-    remove: (id) =>
-      set((state) => {
-        // Clone items and delete the target
-        const items = { ...state.items };
-        delete items[id];
-
-        return { items };
-      }),
-
-    clear: () => set({ items: {} }),
   }));
 
-  // Wire the store up to the platform layer that persists it
-  const persistence = createStorePersistence(persist, (data) =>
-    store.getState().load(Object.values(data) as TItem[]),
+  // The records backing the store, mirrored into its state
+  const records = createStoreRecords<Record<string, TItem>>(
+    options.scope,
+    () => ({}),
+    (items) => store.setState({ items }),
   );
 
-  // Dispatches a persist event with the current store data
-  function dispatchPersist(): void {
-    persistence.dispatchPersist(store.getState().items);
-  }
+  // Wire the store up to the platform layer that persists it
+  const persistence = createStorePersistence(
+    options.persist,
+    (data, workspaceId) =>
+      createScope(workspaceId).load(Object.values(data) as TItem[]),
+  );
 
-  // Create the `get` function which returns one or multiple items
-  // based on whether the `id` argument is a string or an array.
-  function get(id: string): TItem | null;
-  function get(ids: string[]): Record<string, TItem>;
-  function get(id: string | string[]): TItem | Record<string, TItem> | null {
-    const { items } = store.getState();
+  // Creates the functions reading and writing a workspace's record,
+  // the active workspace's when none is given
+  function createScope(workspaceId?: string): ObjectItemStoreScope<TItem> {
+    const read = () => records.get(workspaceId);
 
-    if (Array.isArray(id)) {
-      return id.reduce(
-        (map, key) => (items[key] ? { ...map, [key]: items[key] } : map),
-        {},
+    // Replaces the record and persists it
+    function write(items: Record<string, TItem>): void {
+      records.set(items, workspaceId);
+      persistence.dispatchPersist(
+        items,
+        records.resolveWorkspaceId(workspaceId),
       );
     }
 
-    return items[id] || null;
-  }
+    // Create the `get` function which returns one or multiple items
+    // based on whether the `id` argument is a string or an array.
+    function get(id: string): TItem | null;
+    function get(ids: string[]): Record<string, TItem>;
+    function get(id: string | string[]): TItem | Record<string, TItem> | null {
+      const items = read();
 
-  // Create the `getArray` function which returns items
-  // matching the given IDs as an array.
-  function getArray(ids: string[]): TItem[] {
-    const { items } = store.getState();
+      if (Array.isArray(id)) {
+        return pickItems(items, id);
+      }
 
-    return ids.reduce<TItem[]>(
-      (list, key) => (items[key] ? [...list, items[key]] : list),
-      [],
-    );
+      return items[id] || null;
+    }
+
+    return {
+      get,
+      getAll: read,
+      getArray: (ids) => pickItemsArray(read(), ids),
+      getAllArray: () => Object.values(read()),
+      load: (items) =>
+        records.set(mergeItems(read(), items, identifierKey), workspaceId),
+      hydrate: () =>
+        persistence.hydrate(records.resolveWorkspaceId(workspaceId)),
+      set: (item) =>
+        write({ ...read(), [item[identifierKey] as string]: item }),
+      update: (id, data) => {
+        const items = read();
+
+        // Do nothing if the item doesn't exist
+        if (!items[id]) {
+          return;
+        }
+
+        write({ ...items, [id]: { ...items[id], ...data } });
+      },
+      remove: (id) => {
+        // Clone items and delete the target
+        const items = { ...read() };
+        delete items[id];
+
+        write(items);
+      },
+      clear: () => write({}),
+    };
   }
 
   // Register the store in the global registry
-  registerStore(name, 'object', store as UseBoundStore<StoreApi<unknown>>);
+  registerStore(
+    name,
+    'object',
+    store as UseBoundStore<StoreApi<unknown>>,
+    options.scope === 'workspace' ? records.drop : undefined,
+  );
 
   return {
+    ...createScope(),
     name,
     type: 'object',
     identifierKey,
-    get,
-    getAll: () => store.getState().items,
-    getArray,
-    getAllArray: () => Object.values(store.getState().items),
-    set: (item) => {
-      store.getState().set(item);
-      dispatchPersist();
-    },
-    update: (id, data) => {
-      store.getState().update(id, data);
-      dispatchPersist();
-    },
-    remove: (id) => {
-      store.getState().remove(id);
-      dispatchPersist();
-    },
-    load: (items) => store.getState().load(items),
-    hydrate: persistence.hydrate,
     persisted: persistence.persisted,
-    clear: () => {
-      store.getState().clear();
-      dispatchPersist();
-    },
+    in: createScope,
     useItem: (id) => store(({ items }) => items[id] || null),
     useAllItems: () => store().items,
     useItemsArray: (ids) =>
-      store(
-        ({ items }) =>
-          ids.reduce<TItem[]>(
-            (list, key) => (items[key] ? [...list, items[key]] : list),
-            [],
-          ),
-        shallow,
-      ),
+      store(({ items }) => pickItemsArray(items, ids), shallow),
     useAllItemsArray: () => Object.values(store().items),
     useStore: store,
   };
+}
+
+/**
+ * Returns the items matching the given identifiers as a record,
+ * omitting identifiers with no item.
+ */
+function pickItems<TItem extends object>(
+  items: Record<string, TItem>,
+  ids: string[],
+): Record<string, TItem> {
+  return ids.reduce(
+    (map, key) => (items[key] ? { ...map, [key]: items[key] } : map),
+    {},
+  );
+}
+
+/**
+ * Returns the items matching the given identifiers as an array in
+ * the order given, omitting identifiers with no item.
+ */
+function pickItemsArray<TItem extends object>(
+  items: Record<string, TItem>,
+  ids: string[],
+): TItem[] {
+  return ids.reduce<TItem[]>(
+    (list, key) => (items[key] ? [...list, items[key]] : list),
+    [],
+  );
+}
+
+/**
+ * Returns the items with the loaded items merged in, loaded items
+ * replacing existing ones with the same identifier.
+ */
+function mergeItems<TItem extends object>(
+  items: Record<string, TItem>,
+  loaded: TItem[],
+  identifierKey: keyof TItem,
+): Record<string, TItem> {
+  return loaded.reduce(
+    (map, item) => ({ ...map, [item[identifierKey] as string]: item }),
+    items,
+  );
 }
