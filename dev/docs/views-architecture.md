@@ -221,9 +221,10 @@ layout of the type in the database's design → null).
   entry `metadata.viewLayoutOverrides`).
 - The database view load/write path is currently broken by the data views
   object-store conversion (`getAll` returning a map) — pre-existing, see
-  `dev/docs/bugs.md`.
+  the "Stale DataViews.Store.getAll() usage in views tests" issue.
 - "Virtual" does double duty for database browse views and entry
   collection views, which have quite different lifecycles; a clearer term
   for "owner-persisted" may be worth adopting.
 - Deliberately retained view-era names (`.view` extension, `views/` data
-  dir, `ViewDataSource` types) are listed in `dev/docs/gotchas.md`.
+  dir, `ViewDataSource` types) are listed in the data-views gotchas
+  (`bun dev/scripts/gotchas.ts --package data-views`).
