@@ -11,7 +11,9 @@ import './tokens/schemes.css';
 import './tokens/app.css';
 import './base.css';
 
+export * from './ColorLevels';
 export * from './ContentColors';
+export * from './utils/resolveColorLevel';
 export * from './types';
 export type * from './useImageTreatment';
 export type * from './events';
