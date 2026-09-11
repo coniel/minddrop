@@ -970,6 +970,9 @@ importers:
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
+      '@minddrop/properties':
+        specifier: workspace:*
+        version: link:../../packages/properties
       '@minddrop/queries':
         specifier: workspace:*
         version: link:../../packages/queries
