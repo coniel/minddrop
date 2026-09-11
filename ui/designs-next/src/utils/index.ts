@@ -1,5 +1,6 @@
 export * from './formatSnapUnits';
 export * from './resolveElementClass';
+export * from './resolveElementColor';
 export * from './resolveFontLetterBand';
 export * from './resolveSizeLabelFontSize';
 export * from './resolveTextSettingsClass';

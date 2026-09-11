@@ -1,0 +1,5 @@
+/* The picker holds a stack rather than a row of controls, so it
+   sets its own padding inside the panel. */
+.design-element-color-control-panel {
+  padding: var(--space-2);
+}
