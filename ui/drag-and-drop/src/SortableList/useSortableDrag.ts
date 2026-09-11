@@ -14,6 +14,7 @@ export interface SortableItemRenderProps {
    */
   handleProps: {
     onPointerDown: (event: React.PointerEvent) => void;
+    onClickCapture: (event: React.MouseEvent) => void;
   };
 
   /**
@@ -77,6 +78,11 @@ interface DragState {
    * The pointer ID used for capture.
    */
   pointerId: number;
+
+  /**
+   * Whether the pointer has moved since the drag started.
+   */
+  moved: boolean;
 }
 
 interface UseSortableDragOptions {
@@ -125,6 +131,10 @@ export function useSortableDrag({
 
   // Current dragged delta (axis-only, clamped to container)
   const dragDeltaRef = useRef(0);
+
+  // Whether the click following a pointer release is a drag's end
+  // rather than a press, and should be swallowed.
+  const suppressClickRef = useRef(false);
 
   // React state for overIndex (triggers re-render for displaced items)
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
@@ -225,9 +235,11 @@ export function useSortableDrag({
         gapPx,
         captureElement,
         pointerId: event.pointerId,
+        moved: false,
       };
 
       dragDeltaRef.current = 0;
+      suppressClickRef.current = false;
 
       // Trigger React state to show dragging/shifting classes
       setActiveIndex(index);
@@ -252,6 +264,12 @@ export function useSortableDrag({
       // Compute raw delta along the drag axis
       const currentPointer = getPointerPosition(event);
       let delta = currentPointer - state.startPointer;
+
+      // Remember that the pointer moved, even if it later returns to
+      // where it started.
+      if (delta !== 0) {
+        state.moved = true;
+      }
 
       // Clamp delta so the dragged item stays within the container
       const draggedDomRect = state.itemRects[state.activeIndex];
@@ -332,6 +350,10 @@ export function useSortableDrag({
     if (element) {
       element.style.transform = '';
     }
+
+    // A release after the pointer moved ends a drag, not a press, so
+    // the click the browser fires for it must not reach the item.
+    suppressClickRef.current = state.moved;
 
     // If order changed, notify the consumer
     if (state.activeIndex !== state.overIndex) {
@@ -453,6 +475,15 @@ export function useSortableDrag({
       handleProps: {
         onPointerDown: (event: React.PointerEvent) => {
           handlePointerDown(index, event);
+        },
+        onClickCapture: (event: React.MouseEvent) => {
+          if (!suppressClickRef.current) {
+            return;
+          }
+
+          suppressClickRef.current = false;
+          event.preventDefault();
+          event.stopPropagation();
         },
       },
       isDragging,
