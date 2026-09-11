@@ -1,5 +1,6 @@
 import { createI18nKeyBuilder } from '@minddrop/i18n';
 import {
+  ContentColorSwatch,
   DropdownMenuColorSelectionItem,
   DropdownMenuContent,
   DropdownMenuPortal,
@@ -59,7 +60,11 @@ export const DesignStudioPreviewToolbar: React.FC = () => {
             className="designs-studio-preview-scheme-trigger"
             label={colorLabelKey(selectedColor)}
             startIcon={
-              <div className={`color-swatch color-swatch-${selectedColor}`} />
+              <ContentColorSwatch
+                color={selectedColor}
+                size="xs"
+                unset={selectedColor === 'default'}
+              />
             }
             endIcon="chevron-down"
           />

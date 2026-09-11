@@ -8,10 +8,3 @@
   /* Descender room inside the clipped box */
   line-height: var(--line-height-snug);
 }
-
-/* The preview's colour takes the place of the trigger's icon,
-   sized to match the glyph icons beside it */
-.database-design-preview-toolbar-color-trigger .color-swatch {
-  width: 0.875rem;
-  height: 0.875rem;
-}

@@ -1,6 +1,6 @@
-import { getConnectionColor } from '@minddrop/ui-canvas';
 import { UiIconName } from '@minddrop/ui-icons';
 import {
+  ContentColorSwatch,
   DropdownMenuColorSelectionItem,
   DropdownMenuContent,
   DropdownMenuPortal,
@@ -278,11 +278,10 @@ export const CanvasConnectionToolbar: React.FC<
             className="canvas-view-connection-toolbar-color-button"
           >
             {/* Swatch showing the current color */}
-            <span
-              className="canvas-view-connection-toolbar-swatch"
-              style={{
-                backgroundColor: getConnectionColor(color),
-              }}
+            <ContentColorSwatch
+              color={color}
+              size="sm"
+              unset={color === 'default'}
             />
           </ToolbarButton>
         </DropdownMenuTrigger>

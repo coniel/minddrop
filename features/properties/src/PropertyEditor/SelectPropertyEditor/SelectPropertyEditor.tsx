@@ -8,6 +8,7 @@ import {
 } from '@minddrop/properties';
 import {
   Button,
+  ContentColorSwatch,
   ContentColorValues,
   DropdownMenu,
   DropdownMenuColorSelectionItem,
@@ -229,8 +230,9 @@ export const SelectPropertyEditor: React.FC<SelectPropertyEditorProps> = ({
                       className="properties-select-option-color-button"
                       type="button"
                     >
-                      <span
-                        className={`properties-select-option-color-swatch properties-select-option-color-swatch-${option.color}`}
+                      <ContentColorSwatch
+                        color={option.color ?? 'default'}
+                        unset={(option.color ?? 'default') === 'default'}
                       />
                     </button>
                   }

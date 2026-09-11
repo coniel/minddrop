@@ -118,17 +118,13 @@ describe('<DatabaseDesignPreviewToolbar />', () => {
   it('shows the picked colour on the trigger', () => {
     renderToolbar({ color: 'red', entryColor: 'blue' });
 
-    expect(
-      screen.getByLabelText('Entry colour').querySelector('.color-swatch-red'),
-    ).not.toBeNull();
+    expect(resolveTriggerSwatchColor()).toBe('var(--red-900)');
   });
 
   it("falls back to the entry's colour on the trigger", () => {
     renderToolbar({ entryColor: 'blue' });
 
-    expect(
-      screen.getByLabelText('Entry colour').querySelector('.color-swatch-blue'),
-    ).not.toBeNull();
+    expect(resolveTriggerSwatchColor()).toBe('var(--blue-900)');
   });
 
   it('keeps the colour picker alone for a database without entries', () => {
@@ -144,3 +140,18 @@ describe('<DatabaseDesignPreviewToolbar />', () => {
     expect(screen.getAllByRole('button')).toHaveLength(1);
   });
 });
+
+/**
+ * Resolves the colour the trigger's swatch is filled in. jsdom
+ * keeps the custom property in the style attribute but cannot
+ * resolve it, so the swatch is read from there.
+ *
+ * @returns The swatch's fill.
+ */
+function resolveTriggerSwatchColor(): string | undefined {
+  const swatch = screen
+    .getByLabelText('Entry colour')
+    .querySelector('.content-color-swatch');
+
+  return swatch instanceof HTMLElement ? swatch.style.background : undefined;
+}

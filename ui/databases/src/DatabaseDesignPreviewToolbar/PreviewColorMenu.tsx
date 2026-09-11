@@ -1,4 +1,5 @@
 import {
+  ContentColorSwatch,
   DropdownMenu,
   DropdownMenuColorSelectionItem,
   DropdownMenuItem,
@@ -63,7 +64,11 @@ export const PreviewColorMenu: React.FC<PreviewColorMenuProps> = ({
           }}
         >
           {/* The preview's colour stands in for an icon */}
-          <div className={`color-swatch color-swatch-${shownColor}`} />
+          <ContentColorSwatch
+            color={shownColor}
+            size="sm"
+            unset={shownColor === 'default'}
+          />
         </ToolbarIconButton>
       }
     >
@@ -72,8 +77,9 @@ export const PreviewColorMenu: React.FC<PreviewColorMenuProps> = ({
       <DropdownMenuItem
         label="databases.design.preview.color.matchEntry"
         icon={
-          <div
-            className={`color-swatch color-swatch-${entryColor ?? 'default'}`}
+          <ContentColorSwatch
+            color={entryColor ?? 'default'}
+            unset={(entryColor ?? 'default') === 'default'}
           />
         }
         trailingIcon={color ? undefined : <Icon name="check" />}

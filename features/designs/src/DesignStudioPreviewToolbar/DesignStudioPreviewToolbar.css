@@ -11,13 +11,6 @@
   gap: var(--space-2);
 }
 
-/* Match the colour select's trigger swatch size */
-.designs-studio-preview-scheme-trigger .color-swatch {
-  width: 0.75rem;
-  height: 0.75rem;
-  flex-shrink: 0;
-}
-
 /* Push the dropdown indicator to the trigger's end */
 .designs-studio-preview-scheme-trigger .icon:last-child {
   margin-left: auto;

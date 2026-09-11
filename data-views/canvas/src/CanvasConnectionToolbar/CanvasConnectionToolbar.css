@@ -11,12 +11,4 @@
     width: 1.5rem;
     padding: 0;
   }
-
-  /* Swatch showing the current connection color */
-  .canvas-view-connection-toolbar-swatch {
-    display: block;
-    width: 14px;
-    height: 14px;
-    border-radius: var(--radius-full);
-  }
 }

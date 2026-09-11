@@ -3,7 +3,7 @@ import { Events } from '@minddrop/events';
 import { SortableItemRenderProps } from '@minddrop/ui-drag-and-drop';
 import {
   Chip,
-  ColorSwatch,
+  ContentColorSwatch,
   ContentColorValues,
   DropdownMenu,
   DropdownMenuColorSelectionItem,
@@ -294,7 +294,11 @@ export const KanbanViewColumnHeading: React.FC<
                             color="neutral"
                             label="dataViews.kanban.columns.color"
                           >
-                            <ColorSwatch color={column.color} />
+                            <ContentColorSwatch
+                              color={column.color ?? 'default'}
+                              size="xs"
+                              unset={(column.color ?? 'default') === 'default'}
+                            />
                           </IconButton>
                         }
                       >
