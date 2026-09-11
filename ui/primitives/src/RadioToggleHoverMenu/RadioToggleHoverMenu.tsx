@@ -1,11 +1,4 @@
-import {
-  useCallback,
-  useEffect,
-  useId,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { UiIconName } from '@minddrop/ui-icons';
 import { FloatingToolbar } from '../FloatingToolbar';
 import { Icon } from '../Icon';
@@ -20,7 +13,13 @@ import {
 import { RadioToggleGroup } from '../RadioToggleGroup';
 import { Toggle, ToggleSize } from '../Toggle';
 import { TooltipProps } from '../Tooltip';
-import { BaseUiFocusGuardAttribute } from '../constants';
+import {
+  BaseUiFocusGuardAttribute,
+  ToolbarHoverDimmedControlAttribute,
+  ToolbarHoverSquaredCornersAttribute,
+} from '../constants';
+import { useHoverMenu } from '../hooks';
+import { ToolbarHoverSide } from '../types';
 import { joinClasses } from '../utils';
 import './RadioToggleHoverMenu.css';
 
@@ -102,7 +101,7 @@ export interface RadioToggleHoverMenuProps<Value extends string = string> {
    * set for a toolbar against the viewport's right edge.
    * @default 'right'
    */
-  side?: MenuSide;
+  side?: ToolbarHoverSide;
 
   /**
    * The number of options a row holds, wrapping the rest onto
@@ -120,10 +119,6 @@ export interface RadioToggleHoverMenuProps<Value extends string = string> {
    */
   className?: string;
 }
-
-// How long after the pointer leaves the menu it closes, giving a
-// pointer that grazes past it a moment to come back.
-const CloseDelay = 80;
 
 /**
  * How far an option's tooltip stands off it, a little further than
@@ -144,28 +139,11 @@ const HostPadding: Record<ToggleSize, number> = {
 };
 
 /**
- * The corners of the host toolbar the open menu squares off, set on
- * it so it can drop the rounding the options run through.
- */
-const HostSquaredCornersAttribute = 'data-hover-menu-squared';
-
-/**
- * The attribute marking the controls an open menu's rows run
- * alongside, which step back while it is open.
- */
-const HostDimmedControlAttribute = 'data-hover-menu-dimmed';
-
-/**
  * The width of a floating toolbar's border, matching the thin
  * border token. The options are placed against their own border
  * box, so their first row clears it as well as the padding.
  */
 const HostBorderWidth = 1;
-
-/**
- * The side of the host toolbar the options reach out of.
- */
-export type MenuSide = 'left' | 'right';
 
 /**
  * The trigger's place among the host toolbar's controls.
@@ -208,12 +186,10 @@ export function RadioToggleHoverMenu<Value extends string>({
   className,
 }: RadioToggleHoverMenuProps<Value>) {
   const triggerRef = useRef<HTMLButtonElement>(null);
-  const closeTimeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
-  const [open, setOpen] = useState(false);
   const [hostPlacement, setHostPlacement] = useState<HostPlacement | null>(
     null,
   );
-  const menuId = useId();
+  const { open, setOpen, hoverProps } = useHoverMenu();
 
   // The selected option, whose icon the trigger shows. An
   // unmatched value leaves the trigger on the first option's icon.
@@ -278,12 +254,12 @@ export function RadioToggleHoverMenu<Value extends string>({
     );
 
     covered.forEach((control) => {
-      control.setAttribute(HostDimmedControlAttribute, '');
+      control.setAttribute(ToolbarHoverDimmedControlAttribute, '');
     });
 
     return () => {
       covered.forEach((control) => {
-        control.removeAttribute(HostDimmedControlAttribute);
+        control.removeAttribute(ToolbarHoverDimmedControlAttribute);
       });
     };
   }, [open, rowCount, firstRow]);
@@ -306,45 +282,15 @@ export function RadioToggleHoverMenu<Value extends string>({
       return;
     }
 
-    host.setAttribute(HostSquaredCornersAttribute, corners);
+    host.setAttribute(ToolbarHoverSquaredCornersAttribute, corners);
 
     return () => {
       // Leave corners another menu has since claimed alone
-      if (host.getAttribute(HostSquaredCornersAttribute) === corners) {
-        host.removeAttribute(HostSquaredCornersAttribute);
+      if (host.getAttribute(ToolbarHoverSquaredCornersAttribute) === corners) {
+        host.removeAttribute(ToolbarHoverSquaredCornersAttribute);
       }
     };
   }, [open, flushStart, flushEnd, side]);
-
-  // Holds the menu open while the pointer is on it
-  const handlePointerEnter = useCallback(() => {
-    clearTimeout(closeTimeoutRef.current);
-  }, []);
-
-  // Closes the menu once the pointer leaves it for somewhere that
-  // is neither the trigger nor the options, the two being marked as
-  // one menu so that crossing between them keeps it open.
-  //
-  // Closing is ours rather than the popover's because the popover
-  // stops closing on hover for good once something inside it has
-  // been pressed, which for this menu is every time an option is
-  // chosen.
-  const handlePointerLeave = useCallback(
-    (event: React.PointerEvent) => {
-      const enteredElement = event.relatedTarget;
-
-      if (
-        enteredElement instanceof Element &&
-        enteredElement.closest(`[data-hover-menu="${menuId}"]`)
-      ) {
-        return;
-      }
-
-      clearTimeout(closeTimeoutRef.current);
-      closeTimeoutRef.current = setTimeout(() => setOpen(false), CloseDelay);
-    },
-    [menuId],
-  );
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -358,9 +304,7 @@ export function RadioToggleHoverMenu<Value extends string>({
           active={open}
           disabled={disabled}
           className={joinClasses('radio-toggle-hover-menu-trigger', className)}
-          data-hover-menu={menuId}
-          onPointerEnter={handlePointerEnter}
-          onPointerLeave={handlePointerLeave}
+          {...hoverProps}
         >
           {selectedOption && renderOptionContent(selectedOption)}
         </IconButton>
@@ -382,9 +326,7 @@ export function RadioToggleHoverMenu<Value extends string>({
               carrying the hover buffer */}
           <PopoverContent
             className="radio-toggle-hover-menu-popup"
-            data-hover-menu={menuId}
-            onPointerEnter={handlePointerEnter}
-            onPointerLeave={handlePointerLeave}
+            {...hoverProps}
           >
             <FloatingToolbar
               size={size}

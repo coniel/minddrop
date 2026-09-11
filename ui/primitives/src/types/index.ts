@@ -3,3 +3,4 @@ export * from './Anchor.types';
 export * from './i18n.types';
 export * from './Menu.types';
 export * from './StyleProps.types';
+export * from './ToolbarHover.types';
