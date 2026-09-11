@@ -3,8 +3,13 @@
    Themed overlay surface, matching popovers and menus.
    ============================================================ */
 
+/* A tooltip labels what is under the pointer, so it never takes
+   the pointer itself. Hovering one would read as leaving the thing
+   it names. That closes a hover menu the pointer is still on, and
+   swallows clicks the tooltip covers. */
 .tooltip-positioner {
   z-index: var(--level-tooltip);
+  pointer-events: none;
 }
 
 .tooltip {
