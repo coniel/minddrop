@@ -6,6 +6,14 @@ import {
   userEvent,
   waitFor,
 } from '@minddrop/test-utils';
+import {
+  DropdownMenu,
+  DropdownMenuPortal,
+  DropdownMenuPositioner,
+  DropdownSubmenu,
+  DropdownSubmenuContent,
+  DropdownSubmenuTriggerItem,
+} from '../DropdownMenu';
 import { SearchableMenu } from './SearchableMenu';
 import { SearchableMenuItem } from './SearchableMenuItem';
 
@@ -55,6 +63,32 @@ describe('SearchableMenu', () => {
     await waitFor(() => {
       expect(listedItems('First apple')).toHaveLength(1);
       expect(listedItems('Second apple')).toHaveLength(1);
+    });
+  });
+
+  it('closes the whole menu when a submenu item is selected', async () => {
+    render(
+      <DropdownMenu trigger={<button>Open</button>}>
+        <DropdownSubmenu>
+          <DropdownSubmenuTriggerItem stringLabel="Fruit" />
+          <DropdownMenuPortal>
+            <DropdownMenuPositioner>
+              <DropdownSubmenuContent searchable>
+                <SearchableMenuItem stringLabel="Apple" onSelect={vi.fn()} />
+              </DropdownSubmenuContent>
+            </DropdownMenuPositioner>
+          </DropdownMenuPortal>
+        </DropdownSubmenu>
+      </DropdownMenu>,
+    );
+
+    await userEvent.click(screen.getByText('Open'));
+    await userEvent.click(await screen.findByText('Fruit'));
+    await userEvent.click(await screen.findByText('Apple'));
+
+    // The root menu closes along with the submenu
+    await waitFor(() => {
+      expect(screen.queryByText('Fruit')).toBeNull();
     });
   });
 });

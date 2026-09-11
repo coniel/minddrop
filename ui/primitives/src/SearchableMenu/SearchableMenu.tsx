@@ -15,6 +15,7 @@ import {
   MenuSearchContextValue,
   MenuSearchRegistration,
 } from '../Menu/MenuSearchContext';
+import { usePopupClose } from '../PopupCloseContext';
 import { VerticalScrollArea } from '../ScrollArea';
 import { TextInput, TextInputVariant } from '../fields/TextInput';
 import { useNavigableList } from '../hooks';
@@ -286,12 +287,21 @@ export const SearchableMenu = React.forwardRef<
       setOrderedIds((previous) => previous.filter((item) => item !== id));
     }, []);
 
-    // Close the menu by dispatching an Escape key event
+    const closePopup = usePopupClose();
+
+    // Close the popup the searchable menu is part of. Outside a
+    // popup host, an Escape key event closes the nearest popup.
     const closeMenu = useCallback(() => {
+      if (closePopup) {
+        closePopup();
+
+        return;
+      }
+
       menuRef.current?.dispatchEvent(
         new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }),
       );
-    }, []);
+    }, [closePopup]);
 
     // Handle item activation
     function handleSelectItem(index: number, shiftKey?: boolean) {

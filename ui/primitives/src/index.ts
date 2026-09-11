@@ -33,6 +33,7 @@ export * from './SearchableMenu';
 export * from './hooks';
 export * from './Panel';
 export * from './Popover';
+export * from './PopupCloseContext';
 export * from './ScrollArea';
 export * from './Select';
 export * from './Slider';
