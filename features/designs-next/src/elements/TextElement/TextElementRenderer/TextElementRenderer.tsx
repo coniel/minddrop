@@ -1,5 +1,6 @@
 import { DesignElementProps } from '@minddrop/designs-next';
 import {
+  resolveElementColor,
   resolveTextSettingsClass,
   useElementValue,
 } from '@minddrop/ui-designs-next';
@@ -28,10 +29,11 @@ export const TextElementRenderer: React.FC<DesignElementProps<TextElement>> = ({
     resolveTextSettingsClass(element),
   );
 
-  // The weight the text is set in, with the line clamp of a fixed
-  // height block.
+  // The weight and colour the text is set in, with the line clamp
+  // of a fixed height block.
   const style: React.CSSProperties = {
     fontWeight: element.fontWeight,
+    color: resolveElementColor(element.textColor),
     ...(element.naturalHeight ? undefined : { WebkitLineClamp: lines }),
   };
 

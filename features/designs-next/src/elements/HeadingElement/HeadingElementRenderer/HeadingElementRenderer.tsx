@@ -1,5 +1,6 @@
 import { DesignElementProps, Designs } from '@minddrop/designs-next';
 import {
+  resolveElementColor,
   resolveFontLetterBand,
   resolveTextSettingsClass,
   resolveThemeFontStack,
@@ -52,12 +53,13 @@ export const HeadingElementRenderer: React.FC<
     resolveTextSettingsClass(element),
   );
 
-  // The text fitted to its block, set in the weight it is given.
-  // The band is measured at the base weight either way, so setting
-  // a weight does not resize the text.
+  // The text fitted to its block, set in the weight and colour it
+  // is given. The band is measured at the base weight either way,
+  // so setting a weight does not resize the text.
   const style: React.CSSProperties = {
     ...resolveHeadingTextStyle(blockHeight, band),
     fontWeight: element.fontWeight,
+    color: resolveElementColor(element.textColor),
   };
 
   return (
