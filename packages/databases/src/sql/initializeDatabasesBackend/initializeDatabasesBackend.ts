@@ -1,6 +1,9 @@
+import { Fs } from '@minddrop/file-system';
 import { Sql } from '@minddrop/sql';
 import { Paths } from '@minddrop/utils';
+import { Workspaces } from '@minddrop/workspaces';
 import { loadCoreSerializers } from '../../DatabaseEntrySerializers';
+import { SqlDatabaseFileName } from '../../constants';
 import { readAllEntryMetadata } from '../../readAllEntryMetadata';
 import { readDatabaseEntries } from '../../readDatabaseEntries';
 import { readWorkspaceDatabases } from '../../readWorkspaceDatabases';
@@ -54,7 +57,7 @@ export interface InitializeBackendResult {
  * On first run or schema change, performs a full filesystem
  * scan to populate SQL before returning.
  *
- * @param workspaceId - The workspace ID (used for SQL database path).
+ * @param workspaceId - The ID of the workspace whose data directory holds the SQL database.
  * @param workspacePath - The absolute path to the workspace root.
  */
 export async function initializeDatabasesBackend(
@@ -69,7 +72,10 @@ export async function initializeDatabasesBackend(
 
   // Open or create the SQL database. Opened before the workspace
   // scan so that the scan can consult the recorded database paths.
-  const dbPath = `${Sql.resolveConfigPath()}/${workspaceId}/data.db`;
+  const dbPath = Fs.concatPath(
+    Workspaces.resolveDataDirPath(workspaceId),
+    SqlDatabaseFileName,
+  );
   const { schemaChanged } = await Sql.open(dbPath, {
     schema: SCHEMA_SQL,
     version: SCHEMA_VERSION,

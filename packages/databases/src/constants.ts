@@ -97,3 +97,8 @@ export const INTEGER_PROPERTY_TYPES = new Set<PropertyType>([
  * switch) does not take focus long after the entry was created.
  */
 export const EntryFocusRequestTimeoutMs = 500;
+
+/**
+ * The name of the SQL index file inside a workspace's data directory.
+ */
+export const SqlDatabaseFileName = 'data.db';
