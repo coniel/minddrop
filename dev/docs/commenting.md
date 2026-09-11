@@ -466,7 +466,14 @@ and helpers the function calls: `deleteDatabaseEntry` documents
 throws it. `@dispatches` takes the event name alone.
 
 Components get a brief JSDoc describing what they render, and their prop
-interfaces are fully commented per property.
+interfaces are fully commented per property. Brief means the gist, one
+sentence: what the component is, not an inventory of what it contains
+or does. "Renders an item listed in a sidebar group as the menu item its
+entity type calls for, carrying the menu which takes it out of its
+group or puts it in another" is a one-sentence JSDoc followed by two
+clauses of detail; "Renders a sidebar group item as its entity type's
+menu item" is the whole thing. The props, the markup and the handlers
+say the rest.
 
 ## Placement
 

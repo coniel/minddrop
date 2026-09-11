@@ -130,7 +130,7 @@ A component extracted this way is the one exception to the one component per fil
 Order within a component file:
 
 1. The props interface, with JSDoc on every prop.
-2. The component, with its JSDoc.
+2. The component, with a one-sentence JSDoc giving the gist of what it renders, never an inventory of its parts or behaviours (see `dev/docs/commenting.md`).
 3. The component's own helpers, below it, unexported.
 
 Hook order inside the component: `useRef`, `useState`, `useMemo`, custom hooks, derived values and plain declarations, `useEffect`, then callbacks and handlers.
