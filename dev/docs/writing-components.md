@@ -26,6 +26,8 @@ src/DesignBlockEditor/
 
 Do not wrap a solo file in a directory on the expectation of companions later. Wrap it when the second file appears.
 
+The one exception to the rule is the companion component described under [Render functions](#render-functions).
+
 ## Sidecar components
 
 A component that exists only to be part of one other component — it will never be rendered on its own, and never by a second component elsewhere — is a **sidecar**: its own file, flat inside the parent component's directory, not exported from the package.
@@ -100,6 +102,28 @@ Do not reach into another feature package's `utils/`. If two packages want the s
 A component's event handlers are part of the component either way. They close over its props and state, so they stay inside it, declared below the hooks per the ordering convention. The question above only applies to functions that map arguments to a result.
 
 Trivial inline expressions need neither a util nor a name — `` `${count} items` `` in JSX is not a formatter.
+
+## Render functions
+
+A prop that renders something (`renderItem`, `renderCell`) never gets an inline function literal in JSX:
+
+```tsx
+// Not this
+<SortableList
+  renderItem={(id, sortable) => {
+    const workspace = workspaces.find((workspace) => workspace.id === id);
+    ...
+    return <WorkspaceButton workspace={workspace} sortable={sortable} />;
+  }}
+/>
+```
+
+Where it goes instead depends on how many instances of the surrounding component are on screen.
+
+- **A single instance** (a sidebar, a toolbar, a switcher): declare the render function in the component body, below the hooks with the handlers, and pass it by reference. It closes over the component's state like a handler does, and the one instance recreating it per render costs nothing.
+- **Many instances** (a card, a row, a cell): extract the rendered piece into a standalone component so the lookup and the closure are not rebuilt per instance per render. Give it its own props and let it read what it needs from the stores itself.
+
+A component extracted this way is the one exception to the one component per file rule. If it purely adds behaviour, props or a data lookup on top of a single existing component — a `SortableWorkspaceButton` that takes an ID and the sortable props, resolves the workspace and renders `WorkspaceButton` — it is a **companion**: it lives in the same file as the component that renders it, below that component and unexported from the package. Anything with markup or a stylesheet of its own is a sidecar or a component in its own right, and follows the rules above.
 
 ## Inside the file
 
