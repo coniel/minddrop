@@ -100,12 +100,18 @@ export const SpacesView: React.FC = () => {
 };
 
 /**
- * Returns the space as a list item.
+ * Returns the space as a list item, dragged as a selection item
+ * carrying the space.
  */
 function toListItem(space: Space): ListPanelViewItem {
   return {
     id: space.id,
     label: space.name,
     contentIcon: space.icon,
+    selectionItem: {
+      id: space.id,
+      type: Spaces.constants.EntityType,
+      data: space,
+    },
   };
 }

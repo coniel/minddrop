@@ -104,13 +104,19 @@ export const DataViewsView: React.FC = () => {
 /**
  * Returns the data view as a list item carrying the view's settings
  * menu, minus the type's own settings, which belong with the view
- * itself.
+ * itself. The item is dragged as a selection item carrying the
+ * view.
  */
 function toListItem(dataView: DataView): ListPanelViewItem {
   return {
     id: dataView.id,
     label: dataView.name,
     contentIcon: dataView.icon,
+    selectionItem: {
+      id: dataView.id,
+      type: DataViews.constants.EntityType,
+      data: dataView,
+    },
     menu: [
       <DataViewSettingsMenuContent
         key="settings"

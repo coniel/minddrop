@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import { TranslationKey } from '@minddrop/i18n';
+import { SelectionItem } from '@minddrop/selection';
 import {
   Group,
   Icon,
@@ -18,6 +19,7 @@ import {
 import { SubviewDescriptor, Views } from '@minddrop/views';
 import { PanelView, PanelViewAction } from '../PanelView';
 import { SidebarGroup, SidebarGroupAddPopoverContext } from '../SidebarGroup';
+import { DraggableListItem } from './DraggableListItem';
 import './ListPanelView.css';
 
 /**
@@ -60,6 +62,12 @@ export interface ListPanelViewItem {
    * given context.
    */
   popovers?: (context: ListPanelViewPopoverContext) => React.ReactNode;
+
+  /**
+   * The selection item the row is dragged as. Rows without one
+   * cannot be dragged.
+   */
+  selectionItem?: SelectionItem;
 }
 
 export interface ListPanelViewSection {
@@ -338,11 +346,11 @@ export const ListPanelView: React.FC<ListPanelViewProps> = ({
     );
   }
 
-  // Render an item as a selectable list row carrying its menu
+  // Render an item as a selectable list row carrying its menu,
+  // draggable when the item says what it is dragged as
   function renderItem(item: ListPanelViewItem) {
-    return (
+    const row = (
       <MenuItem
-        key={item.id}
         muted
         size="comfortable"
         contentIcon={item.contentIcon}
@@ -354,6 +362,16 @@ export const ListPanelView: React.FC<ListPanelViewProps> = ({
         onClick={() => handleSelectItem(item)}
         onDoubleClick={() => handleDoubleClickItem(item)}
       />
+    );
+
+    if (!item.selectionItem) {
+      return <React.Fragment key={item.id}>{row}</React.Fragment>;
+    }
+
+    return (
+      <DraggableListItem key={item.id} selectionItem={item.selectionItem}>
+        {row}
+      </DraggableListItem>
     );
   }
 

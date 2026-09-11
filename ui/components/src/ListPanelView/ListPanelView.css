@@ -44,4 +44,8 @@
   .list-panel-view-empty {
     padding: var(--space-2);
   }
+
+  .list-panel-view-item-drag-dragging {
+    opacity: 0.5;
+  }
 }
