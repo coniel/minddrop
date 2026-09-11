@@ -17,7 +17,7 @@ const store = createKeyValueStore<{ value: string }>(
   },
 );
 
-// The AppData stores directory of a workspace
+// The stores directory inside a workspace's data directory
 const storesDir = (workspaceId: string) =>
   `app-data/workspaces/${workspaceId}/stores`;
 
@@ -36,13 +36,6 @@ describe('registerAppWorkspaceConfigStoreListeners', () => {
     // Load the workspaces and make one of them active
     Workspaces.Store.load([workspace_1, workspace_2]);
     Workspaces.ActiveStore.set('id', workspace_1.id);
-
-    // Create the workspaces' AppData stores directories. The mock
-    // file system resolves recursive directory creation against the
-    // root, ignoring the base directory, so the listeners cannot
-    // create them themselves in tests.
-    MockFs.createDir(storesDir(workspace_1.id), { recursive: true });
-    MockFs.createDir(storesDir(workspace_2.id), { recursive: true });
   });
 
   afterEach(async () => {
@@ -84,7 +77,11 @@ describe('registerAppWorkspaceConfigStoreListeners', () => {
   });
 
   it('hydrates stores from the active workspace stores directory', async () => {
-    // Write persisted store data to each workspace's stores directory
+    // Write persisted store data to each workspace's stores directory.
+    // The mock file system does not create parent directories when
+    // writing a file, so create them first.
+    MockFs.createDir(storesDir(workspace_1.id), { recursive: true });
+    MockFs.createDir(storesDir(workspace_2.id), { recursive: true });
     MockFs.writeJsonFile(
       `${storesDir(workspace_1.id)}/test-app-workspace-data.json`,
       { value: 'workspace 1 data' },
