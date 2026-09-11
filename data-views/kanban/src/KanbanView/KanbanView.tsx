@@ -5,7 +5,6 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { Collections } from '@minddrop/collections';
 import { DataViewTypeComponentProps, DataViews } from '@minddrop/data-views';
 import { DatabaseEntries, Databases } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
@@ -93,13 +92,6 @@ export const KanbanViewComponent: React.FC<
   // Scroll the board while a dragged card hovers near its edges
   useDragEdgeScroll(scrollViewportRef);
 
-  // Filter out entries from databases which do not declare the
-  // group property, as they have no column to sit in.
-  const groupedEntries = useMemo(
-    () => databaseEntries.filter((entry) => entry.database === databaseId),
-    [databaseEntries, databaseId],
-  );
-
   // Resolve the saved order from view data, falling back to
   // defaults.
   const order = useMemo(
@@ -114,28 +106,28 @@ export const KanbanViewComponent: React.FC<
   const duplicateOriginals = useMemo(() => {
     const originals: Record<string, string> = {};
 
-    groupedEntries.forEach((entry) => {
+    databaseEntries.forEach((entry) => {
       if (entry.duplicatedFrom) {
         originals[entry.id] = entry.duplicatedFrom;
       }
     });
 
     return originals;
-  }, [groupedEntries]);
+  }, [databaseEntries]);
 
   // Generate the columns and place the entries in them
   const columns = useMemo(
     () =>
       property
         ? resolveKanbanColumns(
-            groupedEntries,
+            databaseEntries,
             property,
             order,
             valueAliases,
             duplicateOriginals,
           )
         : [],
-    [groupedEntries, property, order, valueAliases, duplicateOriginals],
+    [databaseEntries, property, order, valueAliases, duplicateOriginals],
   );
 
   // The columns visible on the board, dropping hidden ones and,
@@ -441,22 +433,8 @@ export const KanbanViewComponent: React.FC<
       // top sits off screen, and focus its editor once the card
       // mounts.
       DatabaseEntries.requestFocus(entry.id, { viewId: view.id });
-
-      // Check if the source is a collection. Collections list
-      // their entries explicitly, unlike databases and queries.
-      if (view.dataSource.type === 'collection') {
-        await Collections.addItems(view.dataSource.id, [entry.id]);
-      }
     },
-    [
-      property,
-      databaseId,
-      order,
-      updateOrder,
-      view.id,
-      view.dataSource.type,
-      view.dataSource.id,
-    ],
+    [property, databaseId, order, updateOrder, view.id],
   );
 
   // Handle dropping an entry into a column
@@ -512,7 +490,7 @@ export const KanbanViewComponent: React.FC<
         sortable={sortable}
         draggable={canManageColumns && value !== NO_VALUE_COLUMN}
         canManage={canManageColumns}
-        canCreateEntry={canManageColumns && canCreateEntries}
+        canCreateEntry={canManageColumns}
         actionsVisible={hoveredColumnValue === value}
         existingValues={property?.options.map((option) => option.value)}
         autoOpenRename={pendingRenameValue === value}
@@ -541,11 +519,6 @@ export const KanbanViewComponent: React.FC<
   // the columns scrolling on their own the board only scrolls
   // horizontally, and carries its bottom padding itself.
   const boardEndPadding = columnScroll ? undefined : 'lg';
-
-  // Whether entries can be created in the view. Queries build
-  // their results from a filter, so a created entry would not
-  // necessarily appear in it.
-  const canCreateEntries = view.dataSource.type !== 'query';
 
   // Check that a select property is available. Without one there
   // are no columns to generate.

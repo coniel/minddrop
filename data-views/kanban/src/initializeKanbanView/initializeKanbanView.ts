@@ -43,9 +43,6 @@ export function initializeKanbanView(): VoidFunction {
 
 /**
  * Retrieves the kanban views grouped by a database's property.
- * Only views sourced directly from the database are matched, as
- * collection and query sources cannot be resolved to a database
- * without loading their entries.
  *
  * @param databaseId - The ID of the database the property belongs to.
  * @param propertyName - The name of the group property.
@@ -59,7 +56,6 @@ function getGroupedViews(
     'kanban',
   ).filter(
     (view) =>
-      view.dataSource.type === 'database' &&
       view.dataSource.id === databaseId &&
       view.options?.groupBy === propertyName,
   );

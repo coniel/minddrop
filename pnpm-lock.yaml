@@ -362,9 +362,6 @@ importers:
 
   data-views/kanban:
     dependencies:
-      '@minddrop/collections':
-        specifier: workspace:*
-        version: link:../../packages/collections
       '@minddrop/data-views':
         specifier: workspace:*
         version: link:../../packages/data-views
@@ -392,9 +389,6 @@ importers:
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../../packages/test-utils
-      '@minddrop/ui-data-views':
-        specifier: workspace:*
-        version: link:../../ui/data-views
       '@minddrop/ui-databases':
         specifier: workspace:*
         version: link:../../ui/databases

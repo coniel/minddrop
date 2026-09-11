@@ -17,7 +17,6 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "@minddrop/collections": "workspace:*",
     "@minddrop/data-views": "workspace:*",
     "@minddrop/databases": "workspace:*",
     "@minddrop/events": "workspace:*",
@@ -27,7 +26,6 @@
     "@minddrop/selection": "workspace:*",
     "@minddrop/stores": "workspace:*",
     "@minddrop/test-utils": "workspace:*",
-    "@minddrop/ui-data-views": "workspace:*",
     "@minddrop/ui-databases": "workspace:*",
     "@minddrop/ui-drag-and-drop": "workspace:*",
     "@minddrop/ui-primitives": "workspace:*",

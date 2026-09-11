@@ -6,19 +6,17 @@ import { resolveGroupProperties } from './resolveGroupProperties';
 const { entryTemplatesDatabase, objectDatabase } = DatabaseFixtures;
 
 describe('resolveGroupProperties', () => {
-  it('lists the first database select properties', () => {
-    expect(resolveGroupProperties([entryTemplatesDatabase])).toEqual([
+  it('lists the database select properties', () => {
+    expect(resolveGroupProperties(entryTemplatesDatabase)).toEqual([
       statusProperty,
     ]);
   });
 
-  it('ignores the databases beyond the first', () => {
-    expect(
-      resolveGroupProperties([objectDatabase, entryTemplatesDatabase]),
-    ).toEqual([]);
+  it('lists nothing when the database has no select properties', () => {
+    expect(resolveGroupProperties(objectDatabase)).toEqual([]);
   });
 
-  it('lists nothing when there are no databases', () => {
-    expect(resolveGroupProperties([])).toEqual([]);
+  it('lists nothing while the database has not loaded', () => {
+    expect(resolveGroupProperties(null)).toEqual([]);
   });
 });

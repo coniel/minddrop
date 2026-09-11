@@ -2,7 +2,6 @@ import { useMemo } from 'react';
 import { DataView } from '@minddrop/data-views';
 import { DatabaseId, Databases } from '@minddrop/databases';
 import { SelectPropertySchema } from '@minddrop/properties';
-import { useDataViewEntries } from '@minddrop/ui-data-views';
 import { KanbanViewOptions } from './types';
 import { resolveGroupProperties } from './utils';
 
@@ -14,13 +13,13 @@ export interface KanbanGroupProperty {
 
   /**
    * The select property the columns are generated from, null when
-   * the entries have none.
+   * the database has none.
    */
   property: SelectPropertySchema | null;
 
   /**
    * The ID of the database the group property belongs to, absent
-   * while no database has resolved.
+   * while the database has not loaded.
    */
   databaseId?: DatabaseId;
 }
@@ -36,29 +35,12 @@ export interface KanbanGroupProperty {
 export function useKanbanGroupProperty(
   view: DataView<KanbanViewOptions>,
 ): KanbanGroupProperty {
-  // The databases the view's entries belong to
-  const entryIds = useDataViewEntries(view);
-  const entryDatabases = Databases.useFromEntries(entryIds);
-
   // The source database, which lists its properties even when it
   // has no entries.
-  const sourceDatabase = Databases.use(
-    view.dataSource.type === 'database' ? view.dataSource.id : '',
-  );
-
-  // Resolve the databases the properties come from. Collection
-  // and query sources take them from the databases their entries
-  // belong to.
-  const databases = useMemo(
-    () => (sourceDatabase ? [sourceDatabase] : entryDatabases),
-    [sourceDatabase, entryDatabases],
-  );
+  const database = Databases.use(view.dataSource.id);
 
   // The select properties available to group by
-  const available = useMemo(
-    () => resolveGroupProperties(databases),
-    [databases],
-  );
+  const available = useMemo(() => resolveGroupProperties(database), [database]);
 
   // The configured property, falling back to the first available
   // one when unset or no longer present.
@@ -73,6 +55,6 @@ export function useKanbanGroupProperty(
   return {
     available,
     property,
-    databaseId: databases[0]?.id,
+    databaseId: database?.id,
   };
 }
