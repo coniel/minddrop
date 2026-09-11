@@ -55,9 +55,14 @@ export const Toolbar: FC<ToolbarProps> = ({
 /*
  * An IconButton wired into the toolbar's keyboard navigation.
  */
-export const ToolbarIconButton: FC<IconButtonProps> = (props) => (
-  <IconButton {...props} as={ToolbarPrimitives.Button} />
-);
+export const ToolbarIconButton = React.forwardRef<
+  HTMLButtonElement,
+  IconButtonProps
+>((props, ref) => (
+  <IconButton {...props} ref={ref} as={ToolbarPrimitives.Button} />
+));
+
+ToolbarIconButton.displayName = 'ToolbarIconButton';
 
 /*
  * A Button wired into the toolbar's keyboard navigation.
