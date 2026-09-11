@@ -194,6 +194,17 @@ const appendsInFlight = new Map<string, Promise<unknown>>();
   text-bearing element renderers" narrates its consumers with the
   "shared by" clause — the function just resolves the classes. Who
   uses it is what call sites are for.
+- **Another package's concepts, where this package does not depend on
+  that package.** Absolute, and examples are not an exception. A
+  package's comments are written in its own vocabulary and that of its
+  dependencies, and in nothing else. A theme util does not mention
+  entries, a primitive does not mention design elements, and neither
+  mentions them "for example". If the term is not in reach of an
+  import, it is not in reach of a comment: say it in this package's own
+  terms, or drop the sentence. Being true is not the test. The reader
+  of a package has no reason to know what a package it never depends on
+  calls things, and the sentence goes stale the moment that package
+  renames them.
 - **Rendering behaviour, outside the code doing the rendering.** It is
   at home in a component's JSDoc, in its internals and in the utils it
   calls, describing what that code itself renders. Everywhere else it is
@@ -272,8 +283,25 @@ Design reasoning belongs in the plan, not in the type or the function.
 ## Phrasing
 
 Write comments the way you would say them out loud. If a sentence would
-sound strange spoken, rewrite it. Prefer two plain sentences over one
-with clauses hung off it.
+sound strange spoken, rewrite it.
+
+**One idea per sentence.** Bullet points, not prose. A comment is read
+at a glance, by someone on their way to something else. Clauses hung off
+a noun phrase (`which ...`, `leaving ...`, `so that ...`) make the reader
+hold the whole sentence before any of it resolves. Split them into
+separate statements. Short sentences in a row read faster than one long
+one, even where a word repeats, and a fragment is fine when it is the
+shortest true statement.
+
+Avoid:
+
+> The ramp the default colour draws from, which a scheme rebinds to its
+> own hue, leaving it neutral outside one.
+
+Prefer:
+
+> The ramp the default colour draws from. Schemes rebind this to their
+> own hue. Neutral outside a scheme.
 
 This applies to JSDoc as much as to step comments, and a JSDoc
 description states only the function's main effect — it does not walk
