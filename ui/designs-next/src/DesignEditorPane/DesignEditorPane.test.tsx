@@ -178,10 +178,11 @@ describe('<DesignEditorPane />', () => {
     expect(changedTitle()?.widthMode).toBe('fixed-left');
   });
 
-  it('toggles natural height through the toolbar', () => {
+  it('changes the content fit through the toolbar', () => {
     renderPane({ selectedId: titleDesignElement.id });
 
-    fireEvent.click(screen.getByLabelText('Natural height'));
+    fireEvent.click(screen.getByLabelText('designsNext.contentFit.label'));
+    fireEvent.click(screen.getByLabelText('designsNext.contentFit.grow'));
 
     expect(changedTitle()?.contentFit).toBe('grow');
   });

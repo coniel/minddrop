@@ -243,23 +243,36 @@ describe('DesignElementControls', () => {
     expect(changedElement(iconDesignElement.id)?.widthMode).toBe('fixed-left');
   });
 
-  it('reflects and toggles natural height', () => {
+  it('holds the content fits behind a menu, with the current fit pressed', () => {
     renderControls();
 
-    const toggle = screen.getByLabelText('Natural height');
+    expect(screen.queryByLabelText('designsNext.contentFit.grow')).toBeNull();
 
-    expect(toggle).toHaveAttribute('aria-pressed', 'false');
+    openMenu('designsNext.contentFit.label');
 
-    fireEvent.click(toggle);
-
-    expect(changedElement(iconDesignElement.id)?.contentFit).toBe('grow');
+    // The icon fixture declares no fit, so it holds its height
+    expect(
+      screen.getByLabelText('designsNext.contentFit.fixed'),
+    ).toHaveAttribute('aria-pressed', 'true');
+    expect(
+      screen.getByLabelText('designsNext.contentFit.grow'),
+    ).toHaveAttribute('aria-pressed', 'false');
   });
 
-  it('drops natural height for a square element', () => {
+  it('reports the chosen content fit', () => {
+    renderControls();
+    openMenu('designsNext.contentFit.label');
+
+    fireEvent.click(screen.getByLabelText('designsNext.contentFit.shrink'));
+
+    expect(changedElement(iconDesignElement.id)?.contentFit).toBe('shrink');
+  });
+
+  it('drops the content fit for a square element', () => {
     registerSquare();
     renderControls();
 
-    expect(screen.queryByLabelText('Natural height')).toBeNull();
+    expect(screen.queryByLabelText('designsNext.contentFit.label')).toBeNull();
   });
 
   it('drops the fluid modes for a square element', async () => {
@@ -293,10 +306,10 @@ describe('DesignElementControls', () => {
     await screen.findByText('designsNext.pin.edge.left');
   });
 
-  it('offers height modes instead of natural height when aspect-locked', () => {
+  it('offers height modes instead of the content fit when aspect-locked', () => {
     renderControls({ aspectLocked: true });
 
-    expect(screen.queryByLabelText('Natural height')).toBeNull();
+    expect(screen.queryByLabelText('designsNext.contentFit.label')).toBeNull();
 
     openMenu('designsNext.heightMode.label');
 

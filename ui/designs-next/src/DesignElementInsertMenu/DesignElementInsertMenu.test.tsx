@@ -5,11 +5,11 @@ import { render, screen, userEvent } from '@minddrop/test-utils';
 import { cleanup } from '../test-utils';
 import { DesignElementInsertMenu } from './DesignElementInsertMenu';
 
-// A content element, labelled "Natural height" by an existing key
+// A content element, labelled "Content fit" by an existing key
 const contentElementConfig = {
   ...testElementConfig,
   type: 'content-test',
-  label: 'designsNext.naturalHeight' as const,
+  label: 'designsNext.contentFit.label' as const,
   group: 'content' as const,
 };
 
@@ -60,7 +60,7 @@ describe('DesignElementInsertMenu', () => {
     renderMenu();
 
     expect(renderedGroupLabels()).toEqual(['Content', 'Layout']);
-    screen.getByText('Natural height');
+    screen.getByText('Content fit');
     screen.getByText('Box');
   });
 
@@ -75,9 +75,9 @@ describe('DesignElementInsertMenu', () => {
   it('replaces the groups with the matching elements while searching', async () => {
     renderMenu();
 
-    await userEvent.type(screen.getByPlaceholderText('Insert element'), 'nat');
+    await userEvent.type(screen.getByPlaceholderText('Insert element'), 'fit');
 
-    expect(searchResultsText()).toContain('Natural height');
+    expect(searchResultsText()).toContain('Content fit');
     expect(searchResultsText()).not.toContain('Box');
   });
 

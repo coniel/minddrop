@@ -5,6 +5,7 @@ import {
   DesignElementSettings,
   DesignElementSettingsControlsProps,
   Designs,
+  ElementContentFit,
   ElementHeightMode,
   ElementSide,
   ElementWidthMode,
@@ -18,13 +19,12 @@ import { PropertiesSchema } from '@minddrop/properties';
 import { UiIconName } from '@minddrop/ui-icons';
 import {
   FloatingToolbar,
+  Icon,
   RadioToggleHoverMenu,
   RadioToggleHoverMenuOption,
-  Toggle,
   ToolbarSeparator,
 } from '@minddrop/ui-primitives';
 import { DesignPropertyPicker } from '../DesignPropertyPicker';
-import { BlockControlOffset } from '../constants';
 import { BackgroundSettingsGroup } from './BackgroundSettingsGroup';
 import { TextSettingsGroup } from './TextSettingsGroup';
 import './DesignElementControls.css';
@@ -56,7 +56,7 @@ export interface DesignElementControlsProps {
 
   /**
    * Whether the design is aspect-locked, offering height modes
-   * instead of the natural height toggle.
+   * instead of the content fit.
    */
   aspectLocked?: boolean;
 
@@ -84,6 +84,12 @@ interface ElementModeOption<Mode extends string> {
    * The icon representing the mode.
    */
   icon: UiIconName;
+
+  /**
+   * Degrees the icon is turned clockwise, for modes whose icon reads
+   * along the wrong axis as drawn.
+   */
+  rotation?: number;
 
   /**
    * i18n key of the mode's label, for the modes which pin to no
@@ -160,6 +166,35 @@ const HeightModeOptions: ElementModeOption<ElementHeightMode>[] = [
   },
 ];
 
+// The content fit options in display order
+const ContentFitOptions: ElementModeOption<ElementContentFit>[] = [
+  {
+    mode: 'fixed',
+    icon: 'ruler-dimension-line',
+    rotation: -90,
+    label: 'designsNext.contentFit.fixed',
+    description: 'designsNext.contentFit.fixedDescription',
+  },
+  {
+    mode: 'grow',
+    icon: 'chevrons-up-down',
+    label: 'designsNext.contentFit.grow',
+    description: 'designsNext.contentFit.growDescription',
+  },
+  {
+    mode: 'shrink',
+    icon: 'chevrons-down-up',
+    label: 'designsNext.contentFit.shrink',
+    description: 'designsNext.contentFit.shrinkDescription',
+  },
+  {
+    mode: 'natural',
+    icon: 'separator-horizontal',
+    label: 'designsNext.contentFit.natural',
+    description: 'designsNext.contentFit.naturalDescription',
+  },
+];
+
 // The system setting group components keyed by group name
 const SettingGroupComponents: Record<
   DesignElementSettingGroup,
@@ -225,7 +260,7 @@ const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
   const settingGroups = config?.settingGroups;
 
   // A square element keeps its unit size on both axes, so it takes
-  // a pin on each and grows to its content on neither.
+  // a pin on each and fits its content on neither.
   const square = config?.square ?? false;
 
   // The element's content controls: the property it takes its
@@ -269,9 +304,9 @@ const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
     updateElement({ heightMode });
   }
 
-  // Toggles whether the element grows to its content's height
-  function handleNaturalHeightChange(naturalHeight: boolean) {
-    updateElement({ contentFit: naturalHeight ? 'grow' : 'fixed' });
+  // Changes how the element's height fits its content
+  function handleContentFitChange(contentFit: ElementContentFit) {
+    updateElement({ contentFit });
   }
 
   // Applies a settings change to the element, making room below it
@@ -355,7 +390,7 @@ const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
 
       return {
         value: option.mode,
-        icon: option.icon,
+        ...resolveModeIcon(option),
         label: t(label),
         tooltip: { title: label, description: resolveModeDescription(option) },
       };
@@ -383,16 +418,11 @@ const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
         />
       )}
       {!aspectLocked && !square && (
-        <Toggle
-          icon="unfold-vertical"
-          label={t('designsNext.naturalHeight')}
-          pressed={element.contentFit === 'grow'}
-          onPressedChange={handleNaturalHeightChange}
-          tooltip={{
-            side: 'right',
-            sideOffset: BlockControlOffset,
-            title: 'designsNext.naturalHeight',
-          }}
+        <RadioToggleHoverMenu<ElementContentFit>
+          options={resolveModeOptions(ContentFitOptions)}
+          value={element.contentFit ?? 'fixed'}
+          label={t('designsNext.contentFit.label')}
+          onValueChange={handleContentFitChange}
         />
       )}
       {(propertyTypes || ContentControls) && <ToolbarSeparator />}
@@ -434,3 +464,22 @@ const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
     </>
   );
 };
+
+/**
+ * Resolves what a mode option shows: its icon by name, or drawn
+ * turned by the mode's rotation.
+ *
+ * @param option - The mode option.
+ * @returns The menu option's icon or content.
+ */
+function resolveModeIcon<Mode extends string>(
+  option: ElementModeOption<Mode>,
+): Pick<RadioToggleHoverMenuOption<Mode>, 'icon' | 'content'> {
+  if (option.rotation === undefined) {
+    return { icon: option.icon };
+  }
+
+  return {
+    content: <Icon name={option.icon} rotation={option.rotation} />,
+  };
+}

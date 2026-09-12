@@ -14,7 +14,17 @@
       "proportional": "Proportional",
       "proportionalDescription": "Fixed width. Maintains its position relative to the left and right edges."
     },
-    "naturalHeight": "Natural height",
+    "contentFit": {
+      "label": "Content fit",
+      "fixed": "Fixed height",
+      "fixedDescription": "Holds the block's height. Content is clipped to it.",
+      "grow": "Grow",
+      "growDescription": "Grows to fit its content. The block's height is the minimum.",
+      "shrink": "Shrink",
+      "shrinkDescription": "Shrinks to fit its content. The block's height is the maximum.",
+      "natural": "Natural",
+      "naturalDescription": "Grows or shrinks to fit its content."
+    },
     "editor": {
       "snapTo": "Snap to {{size}} grid",
       "autoHeight": "Auto height",

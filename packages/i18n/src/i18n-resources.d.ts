@@ -2164,7 +2164,17 @@ declare module 'i18next' {
             proportional: string;
             proportionalDescription: string;
           };
-          naturalHeight: string;
+          contentFit: {
+            label: string;
+            fixed: string;
+            fixedDescription: string;
+            grow: string;
+            growDescription: string;
+            shrink: string;
+            shrinkDescription: string;
+            natural: string;
+            naturalDescription: string;
+          };
           editor: {
             snapTo: string;
             autoHeight: string;
