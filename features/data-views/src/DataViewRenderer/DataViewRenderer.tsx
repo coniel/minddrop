@@ -1,6 +1,7 @@
 import React from 'react';
 import { DataView, DataViewTypes } from '@minddrop/data-views';
 import { Text, TransientViewStateScope } from '@minddrop/ui-primitives';
+import { useFilteredDataViewEntries } from '../useFilteredDataViewEntries';
 import { useSortedDataViewEntries } from '../useSortedDataViewEntries';
 import { CreateDataViewForm } from './CreateDataViewForm';
 import './DataViewRenderer.css';
@@ -97,8 +98,13 @@ interface ConfiguredViewProps {
 const ConfiguredView: React.FC<ConfiguredViewProps> = ({ view, entries }) => {
   const viewType = DataViewTypes.use(view.type);
 
-  // Entries in the order configured by the view's sort options
-  const sortedEntries = useSortedDataViewEntries(view, entries ?? NO_ENTRIES);
+  // Entries matching the view's filters, in the order configured
+  // by its sort options.
+  const filteredEntries = useFilteredDataViewEntries(
+    view,
+    entries ?? NO_ENTRIES,
+  );
+  const sortedEntries = useSortedDataViewEntries(view, filteredEntries);
 
   if (!viewType) {
     return null;
