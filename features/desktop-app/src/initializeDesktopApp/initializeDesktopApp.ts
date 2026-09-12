@@ -31,7 +31,6 @@ import { Queries } from '@minddrop/queries';
 import { Search } from '@minddrop/search';
 import { Snapshots } from '@minddrop/snapshots';
 import { Spaces } from '@minddrop/spaces';
-import { Sql } from '@minddrop/sql';
 import { Tags } from '@minddrop/tags';
 import { Icons } from '@minddrop/ui-icons';
 import { initializeInputModalityTracking } from '@minddrop/ui-primitives';
@@ -43,6 +42,7 @@ import { registerWorkspaceSwitchListener } from '../registerWorkspaceSwitchListe
 import { initializeDataViewTypes } from './initializeDataViewTypes';
 import { initializeSelection } from './initializeSelection';
 import { initializeTheme } from './initializeTheme';
+import { loadWorkspace } from './loadWorkspace';
 import { registerSidebars } from './registerSidebars';
 import { registerViews } from './registerViews';
 
@@ -68,7 +68,8 @@ export function initializeDesktopApp(): Promise<void> {
 }
 
 /**
- * Runs the one-time desktop app initialization.
+ * Runs the one-time desktop app initialization, then loads the
+ * active workspace.
  */
 async function runInitialization(): Promise<void> {
   // Track whether the user is navigating by keyboard or pointer
@@ -117,8 +118,25 @@ async function runInitialization(): Promise<void> {
   initializeWorkspacesFeature();
 
   // Register the sidebar's entity group type, before the entity
-  // groups are loaded below.
+  // groups' listeners are registered below.
   SidebarGroups.initialize();
+
+  // Register the content packages' registries, translations and
+  // listeners, which every workspace load relies on.
+  Designs.initialize();
+  DesignsNext.initialize();
+  Tags.initialize();
+  Databases.initialize();
+  DataViews.initialize();
+  Collections.initialize();
+  Queries.initialize();
+  Spaces.initialize();
+  EntityGroups.initialize();
+  Search.initialize();
+
+  // Subscribe to content package events before any workspace loads
+  // so no rename goes unrecorded.
+  Snapshots.initialize();
 
   // Initialize workspaces, resolving the active one
   await Workspaces.initialize();
@@ -137,47 +155,10 @@ async function runInitialization(): Promise<void> {
   // Hydrate the defaults applied to newly created databases
   await Databases.DefaultsStore.hydrate();
 
-  await Designs.initialize();
-  await DesignsNext.initialize();
-
-  // Connect to the active workspace's SQL database, which the
-  // databases backend opens.
+  // Load the active workspace's content
   if (activeWorkspace) {
-    Sql.connect(activeWorkspace.id);
+    await loadWorkspace(activeWorkspace);
   }
-
-  // Subscribe to content package events before content
-  // initialization so no rename goes unrecorded.
-  Snapshots.initialize();
-
-  // Load global tags and tag groups before entries referencing
-  // them are loaded.
-  await Tags.initialize();
-
-  const { schemaChanged } = await Databases.initialize();
-
-  // Load persisted data views. Requires entries and the item
-  // reference adapters, both initialized by Databases.initialize.
-  await DataViews.initialize();
-
-  // Load persisted collections. Requires entries and the item
-  // reference adapters, both initialized by Databases.initialize.
-  await Collections.initialize();
-
-  // Load persisted queries
-  await Queries.initialize();
-
-  // Load persisted spaces
-  await Spaces.initialize();
-
-  // Load the entity groups of every registered type. Requires the
-  // item reference adapters registered by Databases.initialize to
-  // resolve their members.
-  await EntityGroups.initialize();
-
-  // Initialize the MiniSearch index and register event
-  // listeners for incremental sync.
-  await Search.initialize({ schemaChanged });
 
   // Initialize global selection keyboard shortcuts
   initializeSelection();
@@ -192,7 +173,9 @@ async function runInitialization(): Promise<void> {
   // Watch the active workspace directory for changes made outside
   // the app. Started last so that it cannot race the initial loads.
   const stopWatcher = activeWorkspace
-    ? await Fs.startWatcher([activeWorkspace.path])
+    ? await Fs.startWatcher([
+        { workspaceId: activeWorkspace.id, path: activeWorkspace.path },
+      ])
     : () => undefined;
 
   // Reload the app when the user switches to another workspace

@@ -5,6 +5,7 @@ import { DatabaseEntry } from './types';
 export const DatabaseEntriesStore = createObjectStore<DatabaseEntry>(
   'Databases:Entries',
   'id',
+  { scope: 'workspace' },
 );
 
 /**

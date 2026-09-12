@@ -3,6 +3,11 @@ import type { SqlEntryRecord } from './SqlEntryRecord.types';
 
 export interface BackgroundSyncChangeset {
   /**
+   * The ID of the workspace that was synced.
+   */
+  workspaceId: string;
+
+  /**
    * Whether any changes were detected.
    */
   hasChanges: boolean;

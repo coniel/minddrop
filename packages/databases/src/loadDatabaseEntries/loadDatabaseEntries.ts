@@ -4,15 +4,20 @@ import type { Database, DatabaseEntry } from '../types';
 import { virtualCollectionId, virtualCollectionName } from '../utils';
 
 /**
- * Loads database entries into the store and hydrates
- * virtual collections from collection properties.
+ * Loads database entries into a workspace's store record and
+ * hydrates virtual collections from collection properties.
+ *
+ * @param databases - The databases the entries belong to.
+ * @param entries - The entries to load.
+ * @param workspaceId - The ID of the workspace the entries belong to.
  */
-export function initializeDatabaseEntries(
+export function loadDatabaseEntries(
   databases: Database[],
   entries: DatabaseEntry[],
+  workspaceId: string,
 ): void {
-  // Load entries into the store
-  DatabaseEntriesStore.load(entries);
+  // Load entries into the workspace's store record
+  DatabaseEntriesStore.in(workspaceId).load(entries);
 
   // Hydrate virtual collections from entries with collection properties
   const virtualCollectionData: VirtualCollectionData[] = [];
@@ -49,6 +54,6 @@ export function initializeDatabaseEntries(
 
   // Load virtual collections
   if (virtualCollectionData.length > 0) {
-    Collections.loadVirtual(virtualCollectionData);
+    Collections.loadVirtual(virtualCollectionData, workspaceId);
   }
 }

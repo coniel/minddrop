@@ -8,6 +8,7 @@ import {
   cleanup as cleanupRender,
   renderHook,
 } from '@minddrop/test-utils';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { QueriesStore } from '../QueriesStore';
 import { QueryDeletedEvent, QueryUpdatedEvent } from '../events';
 import { QueryFixtures, cleanup, setup } from '../test-utils';
@@ -55,6 +56,8 @@ const referencingQuery: Query = {
 
 // Stable empty value for the runs
 const EMPTY_VALUE: string[] = [];
+
+const { workspace_1 } = WorkspaceFixtures;
 
 describe('useQueryRunner', () => {
   // Number of times the test runner has been called
@@ -167,6 +170,7 @@ describe('useQueryRunner', () => {
 
     // Apply a background sync changeset
     await dispatch(Databases.events.BackgroundSynced, {
+      workspaceId: workspace_1.id,
       upsertedDatabases: [],
       deletedDatabaseIds: [],
       upsertedEntries: [],

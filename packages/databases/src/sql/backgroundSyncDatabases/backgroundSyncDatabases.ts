@@ -273,6 +273,7 @@ export async function backgroundSyncDatabases(
   // If nothing changed, return empty changeset
   if (!hasChanges) {
     return {
+      workspaceId,
       hasChanges: false,
       upsertedDatabases: [],
       deletedDatabaseIds: [],
@@ -288,6 +289,7 @@ export async function backgroundSyncDatabases(
   );
 
   return {
+    workspaceId,
     hasChanges: true,
     upsertedDatabases,
     deletedDatabaseIds,

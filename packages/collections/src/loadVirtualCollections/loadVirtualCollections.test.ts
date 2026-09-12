@@ -1,10 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { storeItem } from '@minddrop/stores/test-utils';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { CollectionsStore } from '../CollectionsStore';
 import { CollectionsLoadedEvent } from '../events';
 import { cleanup, mockDate, setup } from '../test-utils';
 import { loadVirtualCollections } from './loadVirtualCollections';
+
+const { workspace_1, workspace_2 } = WorkspaceFixtures;
 
 const data = [
   { id: 'virtual-1', name: 'Collection 1', items: ['item-1'] },
@@ -16,7 +19,7 @@ describe('loadVirtualCollections', () => {
   afterEach(cleanup);
 
   it('loads virtual collections into the store', () => {
-    loadVirtualCollections(data);
+    loadVirtualCollections(data, workspace_1.id);
 
     const collection1 = storeItem(CollectionsStore, 'virtual-1');
     const collection2 = storeItem(CollectionsStore, 'virtual-2');
@@ -25,8 +28,17 @@ describe('loadVirtualCollections', () => {
     expect(collection2).not.toBeNull();
   });
 
+  it("loads the collections into the workspace's store record", () => {
+    loadVirtualCollections(data, workspace_2.id);
+
+    // Should load into the second workspace's record, not the
+    // active workspace's.
+    expect(CollectionsStore.in(workspace_2.id).get('virtual-1')).not.toBeNull();
+    expect(CollectionsStore).not.toHaveItem('virtual-1');
+  });
+
   it('marks loaded collections as virtual', () => {
-    loadVirtualCollections(data);
+    loadVirtualCollections(data, workspace_1.id);
 
     const collection = storeItem(CollectionsStore, 'virtual-1');
 
@@ -34,7 +46,7 @@ describe('loadVirtualCollections', () => {
   });
 
   it('sets names and items from the provided data', () => {
-    loadVirtualCollections(data);
+    loadVirtualCollections(data, workspace_1.id);
 
     const collection = storeItem(CollectionsStore, 'virtual-1');
 
@@ -43,7 +55,7 @@ describe('loadVirtualCollections', () => {
   });
 
   it('sets created and lastModified dates', () => {
-    loadVirtualCollections(data);
+    loadVirtualCollections(data, workspace_1.id);
 
     const collection = storeItem(CollectionsStore, 'virtual-1');
 
@@ -59,6 +71,6 @@ describe('loadVirtualCollections', () => {
         done();
       });
 
-      loadVirtualCollections(data);
+      loadVirtualCollections(data, workspace_1.id);
     }));
 });

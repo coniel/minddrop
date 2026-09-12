@@ -7,6 +7,7 @@ import {
   ItemReferences,
 } from '@minddrop/item-references';
 import { storeItem } from '@minddrop/stores/test-utils';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import {
   cleanup,
@@ -20,9 +21,11 @@ import { convertEntryToSqlRecord, databaseEntryAddress } from '../utils';
 import { handleBackgroundSyncResult } from './handleBackgroundSyncResult';
 
 const { dataViewType_referencing } = DataViewFixtures;
+const { workspace_1 } = WorkspaceFixtures;
 
 // A changeset without any changes, spread into per-test variants
 const emptyChangeset: BackgroundSyncChangeset = {
+  workspaceId: workspace_1.id,
   hasChanges: true,
   upsertedDatabases: [],
   deletedDatabaseIds: [],

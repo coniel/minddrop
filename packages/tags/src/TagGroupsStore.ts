@@ -4,6 +4,7 @@ import { TagGroup } from './types';
 export const TagGroupsStore = createObjectStore<TagGroup>(
   'Tags:TagGroups',
   'id',
+  { scope: 'workspace' },
 );
 
 /**

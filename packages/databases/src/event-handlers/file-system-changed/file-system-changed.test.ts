@@ -14,7 +14,7 @@ import {
 import { resolveDatabaseConfigFilePath } from '../../utils';
 import { onFileSystemChanged } from './file-system-changed';
 
-const { workspace_1 } = WorkspaceFixtures;
+const { workspace_1, workspace_2 } = WorkspaceFixtures;
 
 describe('onFileSystemChanged', () => {
   // The registered mock backend's recorded call state
@@ -72,6 +72,44 @@ describe('onFileSystemChanged', () => {
     await flushDebounce();
 
     expect(backend.backgroundSyncCalls.length).toBe(1);
+  });
+
+  it("scans the change's workspace", async () => {
+    // A config file appearing in the second workspace
+    await onFileSystemChanged(
+      change(
+        resolveDatabaseConfigFilePath(`${workspace_2.path}/Books`),
+        'created',
+        workspace_2.id,
+      ),
+    );
+
+    await flushDebounce();
+
+    expect(backend.backgroundSyncCalls).toEqual([
+      { workspaceId: workspace_2.id, workspacePath: workspace_2.path },
+    ]);
+  });
+
+  it('debounces scans per workspace', async () => {
+    await onFileSystemChanged(
+      change(`${databaseDirPath(objectDatabase)}/Dune.md`),
+    );
+    await onFileSystemChanged(
+      change(
+        resolveDatabaseConfigFilePath(`${workspace_2.path}/Books`),
+        'created',
+        workspace_2.id,
+      ),
+    );
+
+    await flushDebounce();
+
+    // Should scan each workspace once
+    expect(backend.backgroundSyncCalls).toEqual([
+      { workspaceId: workspace_1.id, workspacePath: workspace_1.path },
+      { workspaceId: workspace_2.id, workspacePath: workspace_2.path },
+    ]);
   });
 
   it('scans the workspace when a config file appears outside every known database', async () => {
@@ -140,8 +178,9 @@ describe('onFileSystemChanged', () => {
 function change(
   path: string,
   kind: FileSystemChange['kind'] = 'modified',
+  workspaceId: string = workspace_1.id,
 ): FileSystemChange {
-  return { path, kind };
+  return { workspaceId, path, kind };
 }
 
 /**

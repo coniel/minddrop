@@ -1,6 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { FileSystemChange } from '@minddrop/file-system';
+import { FileSystemChange, Fs } from '@minddrop/file-system';
+import { Paths } from '@minddrop/utils';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DataViewsStore } from '../../DataViewsStore';
+import { ViewsDirName } from '../../constants';
 import {
   MockFs,
   cleanup,
@@ -9,6 +12,8 @@ import {
   setup,
 } from '../../test-utils';
 import { onFileSystemChanged } from './file-system-changed';
+
+const { workspace_1, workspace_2 } = WorkspaceFixtures;
 
 const viewPath = resolveViewPath(dataView_gallery_1.id);
 
@@ -47,6 +52,26 @@ describe('onFileSystemChanged', () => {
     await onFileSystemChanged(change(viewPath, 'deleted'));
 
     expect(DataViewsStore).not.toHaveItem(dataView_gallery_1.id);
+  });
+
+  it("applies the change to the change's workspace", async () => {
+    // Create a view file in the second workspace outside of the app
+    const otherPath = Fs.concatPath(
+      workspace_2.path,
+      Paths.hiddenDirName,
+      ViewsDirName,
+      `${dataView_gallery_1.id}.json`,
+    );
+    MockFs.addFiles([
+      { path: otherPath, textContent: JSON.stringify(dataView_gallery_1) },
+    ]);
+
+    await onFileSystemChanged(change(otherPath, 'created', workspace_2.id));
+
+    // Should add the view to the second workspace's record only
+    expect(
+      DataViewsStore.in(workspace_2.id).get(dataView_gallery_1.id),
+    ).toEqual({ ...dataView_gallery_1, references: [] });
   });
 
   it('ignores files which are not views', async () => {
@@ -91,6 +116,7 @@ function resolveViewPath(id: string): string {
 function change(
   path: string,
   kind: FileSystemChange['kind'],
+  workspaceId: string = workspace_1.id,
 ): FileSystemChange {
-  return { path, kind };
+  return { workspaceId, path, kind };
 }

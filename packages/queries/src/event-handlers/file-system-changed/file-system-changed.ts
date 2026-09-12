@@ -1,27 +1,32 @@
 import { FileSystemChangedEventData } from '@minddrop/file-system';
+import { Workspaces } from '@minddrop/workspaces';
 import { QueriesStore } from '../../QueriesStore';
 import { readQuery } from '../../readQuery';
 import { resolveQueryId } from '../../utils';
 
 /**
- * Applies a change made to a query file outside of the app,
- * ignoring changes to any other file.
+ * Applies a change made to a query file outside of the app to the
+ * store record of the workspace the change is in, ignoring changes
+ * to any other file.
  *
  * @param change - The file system change.
  */
 export async function onFileSystemChanged(
   change: FileSystemChangedEventData,
 ): Promise<void> {
-  const id = resolveQueryId(change.path);
+  const workspace = Workspaces.get(change.workspaceId);
+  const id = resolveQueryId(change.path, workspace.path);
 
   // Not a query file
   if (!id) {
     return;
   }
 
+  const store = QueriesStore.in(workspace.id);
+
   // Remove queries whose file is gone
   if (change.kind === 'deleted') {
-    QueriesStore.remove(id);
+    store.remove(id);
 
     return;
   }
@@ -34,5 +39,5 @@ export async function onFileSystemChanged(
   }
 
   // Update the store with the query as it is on disk
-  QueriesStore.set(query);
+  store.set(query);
 }

@@ -9,6 +9,7 @@ import { Spaces } from '@minddrop/spaces';
 import { SpaceFixtures } from '@minddrop/spaces/test-utils';
 import { storeItem } from '@minddrop/stores/test-utils';
 import { render, screen, userEvent, waitFor } from '@minddrop/test-utils';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import {
   SpaceViewStateStore,
   setSpaceViewState,
@@ -17,6 +18,7 @@ import { MockFs, cleanup, setup } from '../../test-utils';
 import { SpaceEditMode } from './SpaceEditMode';
 
 const { space_1 } = SpaceFixtures;
+const { workspace_1 } = WorkspaceFixtures;
 
 describe('<SpaceEditMode />', () => {
   let studio: DesignStudioStore;
@@ -34,7 +36,7 @@ describe('<SpaceEditMode />', () => {
     // Load the space and its owned design into the stores, and
     // its file into the mock file system so edits can be written.
     Spaces.Store.load([space_1]);
-    Designs.loadVirtual([space_1.design]);
+    Designs.loadVirtual([space_1.design], workspace_1.id);
     MockFs.addFiles(SpaceFixtures.getSpaceFiles());
   });
 

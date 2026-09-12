@@ -1,10 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { storeItem } from '@minddrop/stores/test-utils';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DataViewsStore } from '../DataViewsStore';
 import { DataViewsLoadedEvent } from '../events';
 import { cleanup, mockDate, setup } from '../test-utils';
 import { loadVirtualDataViews } from './loadVirtualDataViews';
+
+const { workspace_1, workspace_2 } = WorkspaceFixtures;
 
 const data = [
   {
@@ -31,7 +34,7 @@ describe('loadVirtualDataViews', () => {
   afterEach(cleanup);
 
   it('loads virtual views into the store', () => {
-    loadVirtualDataViews(data);
+    loadVirtualDataViews(data, workspace_1.id);
 
     const view1 = storeItem(DataViewsStore, 'virtual-1');
     const view2 = storeItem(DataViewsStore, 'virtual-2');
@@ -40,8 +43,17 @@ describe('loadVirtualDataViews', () => {
     expect(view2).not.toBeNull();
   });
 
+  it("loads the views into the workspace's store record", () => {
+    loadVirtualDataViews(data, workspace_2.id);
+
+    // Should load into the second workspace's record, not the
+    // active workspace's.
+    expect(DataViewsStore.in(workspace_2.id).get('virtual-1')).not.toBeNull();
+    expect(DataViewsStore).not.toHaveItem('virtual-1');
+  });
+
   it('marks loaded views as virtual', () => {
-    loadVirtualDataViews(data);
+    loadVirtualDataViews(data, workspace_1.id);
 
     const view = storeItem(DataViewsStore, 'virtual-1');
 
@@ -49,7 +61,7 @@ describe('loadVirtualDataViews', () => {
   });
 
   it('sets properties from the provided data', () => {
-    loadVirtualDataViews(data);
+    loadVirtualDataViews(data, workspace_1.id);
 
     const view = storeItem(DataViewsStore, 'virtual-1');
 
@@ -63,7 +75,7 @@ describe('loadVirtualDataViews', () => {
   });
 
   it('carries owner and owner key onto the loaded views', () => {
-    loadVirtualDataViews(data);
+    loadVirtualDataViews(data, workspace_1.id);
 
     const view = storeItem(DataViewsStore, 'virtual-1');
 
@@ -72,7 +84,7 @@ describe('loadVirtualDataViews', () => {
   });
 
   it('sets created and lastModified dates', () => {
-    loadVirtualDataViews(data);
+    loadVirtualDataViews(data, workspace_1.id);
 
     const view = storeItem(DataViewsStore, 'virtual-1');
 
@@ -88,6 +100,6 @@ describe('loadVirtualDataViews', () => {
         done();
       });
 
-      loadVirtualDataViews(data);
+      loadVirtualDataViews(data, workspace_1.id);
     }));
 });

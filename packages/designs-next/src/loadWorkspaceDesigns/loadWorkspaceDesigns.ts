@@ -1,32 +1,34 @@
 import { Fs } from '@minddrop/file-system';
-import { I18n } from '@minddrop/i18n';
+import { Workspace } from '@minddrop/workspaces';
 import { DesignFileExtension } from '../constants';
 import { loadDesigns } from '../loadDesigns';
-import { locales } from '../locales';
 import { readDesign } from '../readDesign';
 import { resolveDesignsDirPath } from '../utils';
 
 /**
- * Initializes designs: registers the package's translations, then
- * reads design files from the file system into the store.
+ * Loads a workspace's designs by reading the design files in its
+ * designs directory into the workspace's store record.
+ *
+ * @param workspace - The workspace whose designs to load.
  *
  * @dispatches designs-next:loaded
  */
-export async function initializeDesigns(): Promise<void> {
-  // Register the package's translations
-  I18n.registerTranslations(locales);
+export async function loadWorkspaceDesigns(
+  workspace: Workspace,
+): Promise<void> {
+  const designsDirPath = resolveDesignsDirPath(workspace.path);
 
   // Nothing to read if the designs directory does not exist yet.
   // The loaded event still fires so that listeners waiting on it
   // are not left hanging in a workspace with no designs.
-  if (!(await Fs.exists(resolveDesignsDirPath()))) {
-    loadDesigns([]);
+  if (!(await Fs.exists(designsDirPath))) {
+    loadDesigns([], workspace.id);
 
     return;
   }
 
   // Read the entries in the designs directory
-  const entries = await Fs.readDir(resolveDesignsDirPath());
+  const entries = await Fs.readDir(designsDirPath);
 
   // Filter for design files
   const designFiles = entries.filter(
@@ -39,6 +41,6 @@ export async function initializeDesigns(): Promise<void> {
     await Promise.all(designFiles.map((entry) => readDesign(entry.path)))
   ).filter((design) => design !== null);
 
-  // Load the designs into the store
-  loadDesigns(designs);
+  // Load the designs into the workspace's store record
+  loadDesigns(designs, workspace.id);
 }

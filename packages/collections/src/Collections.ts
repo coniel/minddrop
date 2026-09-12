@@ -43,3 +43,4 @@ export { addCollectionItems as addItems } from './addCollectionItems';
 export { searchCollections as search } from './utils';
 export { removeCollectionItems as removeItems } from './removeCollectionItems';
 export { initializeCollections as initialize } from './initializeCollections';
+export { loadWorkspaceCollections as loadWorkspace } from './loadWorkspaceCollections';

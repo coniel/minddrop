@@ -1,7 +1,9 @@
 import { createObjectStore } from '@minddrop/stores';
 import { Design, DesignType, Layout } from './types';
 
-export const DesignsStore = createObjectStore<Design>('Designs:Designs', 'id');
+export const DesignsStore = createObjectStore<Design>('Designs:Designs', 'id', {
+  scope: 'workspace',
+});
 
 /**
  * Retrieves a design by its ID.

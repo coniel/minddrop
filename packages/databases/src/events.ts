@@ -333,6 +333,11 @@ export const DatabasesBackgroundSyncedEvent = 'databases:sql-background-synced';
 
 export interface DatabasesBackgroundSyncedEventData {
   /**
+   * The ID of the workspace that was synced.
+   */
+  workspaceId: string;
+
+  /**
    * Database configs that were added or changed on disk
    * since the last sync.
    */

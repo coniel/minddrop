@@ -13,6 +13,7 @@ import {
   waitFor,
 } from '@minddrop/test-utils';
 import { Views } from '@minddrop/views';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { cleanup, setup } from '../test-utils';
 import { DatabaseDesignMode } from './DatabaseDesignMode';
 
@@ -49,12 +50,14 @@ function getTabs(container: HTMLElement) {
   return Array.from(container.querySelectorAll('.tabs-tab'));
 }
 
+const { workspace_1 } = WorkspaceFixtures;
+
 describe('<DatabaseDesignMode />', () => {
   beforeEach(() => {
     setup();
 
     Databases.Store.set(database);
-    Designs.load([cardDesign, listDesign]);
+    Designs.load([cardDesign, listDesign], workspace_1.id);
   });
 
   afterEach(cleanup);

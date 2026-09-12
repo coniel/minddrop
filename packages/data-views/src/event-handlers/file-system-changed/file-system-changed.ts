@@ -1,27 +1,32 @@
 import { FileSystemChangedEventData } from '@minddrop/file-system';
+import { Workspaces } from '@minddrop/workspaces';
 import { DataViewsStore } from '../../DataViewsStore';
 import { loadDataView } from '../../loadDataView';
 import { resolveDataViewId } from '../../utils/resolveDataViewId';
 
 /**
- * Applies a change made to a data view file outside of the app,
- * ignoring changes to any other file.
+ * Applies a change made to a data view file outside of the app to
+ * the store record of the workspace the change is in, ignoring
+ * changes to any other file.
  *
  * @param change - The file system change.
  */
 export async function onFileSystemChanged(
   change: FileSystemChangedEventData,
 ): Promise<void> {
-  const id = resolveDataViewId(change.path);
+  const workspace = Workspaces.get(change.workspaceId);
+  const id = resolveDataViewId(change.path, workspace.path);
 
   // Not a data view file
   if (!id) {
     return;
   }
 
+  const store = DataViewsStore.in(workspace.id);
+
   // Remove data views whose file is gone
   if (change.kind === 'deleted') {
-    DataViewsStore.remove(id);
+    store.remove(id);
 
     return;
   }
@@ -34,5 +39,5 @@ export async function onFileSystemChanged(
   }
 
   // Update the store with the data view as it is on disk
-  DataViewsStore.set(view);
+  store.set(view);
 }

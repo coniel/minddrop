@@ -26,6 +26,7 @@ export const constants = {
 };
 
 export { initializeDataViews as initialize } from './initializeDataViews';
+export { loadWorkspaceDataViews as loadWorkspace } from './loadWorkspaceDataViews';
 export { createDataView as create } from './createDataView';
 export { createVirtualDataView as createVirtual } from './createVirtualDataView';
 export { loadVirtualDataViews as loadVirtual } from './loadVirtualDataViews';

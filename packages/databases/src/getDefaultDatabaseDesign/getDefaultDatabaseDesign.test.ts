@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Design, Designs } from '@minddrop/designs-next';
 import { DesignFixtures } from '@minddrop/designs-next/test-utils';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DatabasesStore } from '../DatabasesStore';
 import { cleanup, objectDatabase, setup } from '../test-utils';
 import { getDefaultDatabaseDesign } from './getDefaultDatabaseDesign';
@@ -17,11 +18,16 @@ const secondCardDesign: Design = {
 const listDesign = { ...ownedListDesign_1, owner: objectDatabase.id };
 const pageDesign = { ...pageDesign_1, owner: objectDatabase.id };
 
+const { workspace_1 } = WorkspaceFixtures;
+
 describe('getDefaultDatabaseDesign', () => {
   beforeEach(() => {
     setup();
 
-    Designs.load([cardDesign, secondCardDesign, listDesign, pageDesign]);
+    Designs.load(
+      [cardDesign, secondCardDesign, listDesign, pageDesign],
+      workspace_1.id,
+    );
   });
 
   afterEach(cleanup);

@@ -7,6 +7,7 @@ export const DatabaseEntryTemplatesStore =
   createObjectStore<DatabaseEntryTemplate>(
     'Databases:DatabaseEntryTemplates',
     'id',
+    { scope: 'workspace' },
   );
 
 /**

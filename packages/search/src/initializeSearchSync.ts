@@ -81,13 +81,10 @@ export function initializeSearchSync(): void {
     queueDatabaseReindex(workspaceId, data.databaseId);
   });
 
-  // Handle background sync changeset
+  // Handle background sync changeset, which names the workspace it
+  // scanned.
   Events.on(Databases.events.BackgroundSynced, 'search:sync', (data) => {
-    const workspaceId = getWorkspaceId();
-
-    if (!workspaceId) {
-      return;
-    }
+    const { workspaceId } = data;
 
     // Sync upserted databases
     for (const database of data.upsertedDatabases) {

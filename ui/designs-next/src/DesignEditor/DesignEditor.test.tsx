@@ -6,6 +6,7 @@ import {
   titleDesignElement,
 } from '@minddrop/designs-next/test-utils';
 import { fireEvent, render, screen } from '@minddrop/test-utils';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { cleanup } from '../test-utils';
 import { DesignEditor } from './DesignEditor';
 
@@ -29,9 +30,11 @@ function storedElements() {
   return Designs.get(cardDesign_1.id).elements;
 }
 
+const { workspace_1 } = WorkspaceFixtures;
+
 describe('DesignEditor', () => {
   beforeEach(() => {
-    Designs.load([cardDesign_1]);
+    Designs.load([cardDesign_1], workspace_1.id);
 
     // Pointer capture is not implemented in the test environment
     if (!Element.prototype.setPointerCapture) {

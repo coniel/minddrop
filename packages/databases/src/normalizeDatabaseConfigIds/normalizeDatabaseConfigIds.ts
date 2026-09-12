@@ -1,6 +1,6 @@
 import { orderByCreated, reconcileIdOrder } from '@minddrop/utils';
 import { DatabasesStore } from '../DatabasesStore';
-import { getDatabase } from '../getDatabase';
+import { DatabaseNotFoundError } from '../errors';
 
 /**
  * Normalizes one of the database config's ordered ID lists against
@@ -17,6 +17,7 @@ import { getDatabase } from '../getDatabase';
  * @param databaseId - The ID of the database whose config to normalize.
  * @param key - The config list to normalize.
  * @param items - The items found on disk.
+ * @param workspaceId - The ID of the workspace the database belongs to.
  *
  * @throws {DatabaseNotFoundError} If the database does not exist.
  */
@@ -24,9 +25,16 @@ export function normalizeDatabaseConfigIds(
   databaseId: string,
   key: 'views' | 'designs' | 'entryTemplates',
   items: { id: string; created: Date }[],
+  workspaceId: string,
 ): void {
-  // Get the database
-  const database = getDatabase(databaseId);
+  const store = DatabasesStore.in(workspaceId);
+
+  // Get the database from the workspace's store record
+  const database = store.get(databaseId);
+
+  if (!database) {
+    throw new DatabaseNotFoundError(databaseId);
+  }
 
   // Reconcile the config's list against the items found on disk
   const normalized = reconcileIdOrder(database[key], items, orderByCreated).map(
@@ -41,6 +49,6 @@ export function normalizeDatabaseConfigIds(
     return;
   }
 
-  // Update the database in the store
-  DatabasesStore.update(databaseId, { [key]: normalized });
+  // Update the database in the workspace's store record
+  store.update(databaseId, { [key]: normalized });
 }

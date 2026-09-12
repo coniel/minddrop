@@ -4,6 +4,7 @@ import { Collection } from './types';
 export const CollectionsStore = createObjectStore<Collection>(
   'Collections:Collections',
   'id',
+  { scope: 'workspace' },
 );
 
 /**

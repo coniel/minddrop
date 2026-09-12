@@ -1,47 +1,30 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Events } from '@minddrop/events';
+import { Fs } from '@minddrop/file-system';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { QueriesStore } from '../QueriesStore';
-import { QueriesLoadedEvent } from '../events';
-import { MockFs, cleanup, queries, setup } from '../test-utils';
-import { resolveQueriesDirPath, resolveQueryFilePath } from '../utils';
+import { cleanup, query_1, setup } from '../test-utils';
+import { resolveQueryFilePath } from '../utils';
 import { initializeQueries } from './initializeQueries';
 
+const { workspace_1 } = WorkspaceFixtures;
+
 describe('initializeQueries', () => {
-  beforeEach(() => setup({ loadQueries: false }));
+  beforeEach(setup);
 
   afterEach(cleanup);
 
-  it('creates the queries directory if it does not exist', async () => {
-    // Remove the queries directory
-    MockFs.removeFile(resolveQueriesDirPath());
+  it('applies query file changes made outside of the app', async () => {
+    initializeQueries();
 
-    await initializeQueries();
+    Events.dispatch(Fs.events.Changed, {
+      workspaceId: workspace_1.id,
+      path: resolveQueryFilePath(query_1.id),
+      kind: 'deleted',
+    });
 
-    expect(MockFs.exists(resolveQueriesDirPath())).toBe(true);
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(QueriesStore).not.toHaveItem(query_1.id);
   });
-
-  it('loads queries from the queries directory into the store', async () => {
-    await initializeQueries();
-
-    expect(QueriesStore).toHaveItems(queries);
-  });
-
-  it('filters out null queries', async () => {
-    // Create an invalid query file
-    MockFs.writeTextFile(resolveQueryFilePath('invalid-query'), 'invalid json');
-
-    await initializeQueries();
-
-    expect(QueriesStore).toHaveItems(queries);
-  });
-
-  it('dispatches a queries loaded event', async () =>
-    new Promise<void>((done) => {
-      Events.addListener(QueriesLoadedEvent, 'test', (payload) => {
-        expect(payload).toEqual(queries);
-        done();
-      });
-
-      initializeQueries();
-    }));
 });

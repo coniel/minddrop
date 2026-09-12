@@ -1,69 +1,30 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { Designs } from '@minddrop/designs';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Events } from '@minddrop/events';
+import { Fs } from '@minddrop/file-system';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { SpacesStore } from '../SpacesStore';
-import { SpacesLoadedEvent } from '../events';
-import { MockFs, cleanup, setup, spaces } from '../test-utils';
-import { resolveSpaceFilePath, resolveSpacesDirPath } from '../utils';
+import { cleanup, setup, space_1 } from '../test-utils';
+import { resolveSpaceFilePath } from '../utils';
 import { initializeSpaces } from './initializeSpaces';
 
+const { workspace_1 } = WorkspaceFixtures;
+
 describe('initializeSpaces', () => {
-  beforeEach(() => setup({ loadSpaces: false }));
+  beforeEach(() => setup());
 
   afterEach(cleanup);
 
-  it('creates the spaces directory if it does not exist', async () => {
-    // Remove the spaces directory
-    MockFs.removeFile(resolveSpacesDirPath());
+  it('applies space bundle changes made outside of the app', async () => {
+    initializeSpaces();
 
-    await initializeSpaces();
-
-    expect(MockFs.exists(resolveSpacesDirPath())).toBe(true);
-  });
-
-  it('loads spaces from the spaces directory into the store', async () => {
-    await initializeSpaces();
-
-    expect(SpacesStore).toHaveItems(spaces);
-  });
-
-  it('hydrates the spaces owned designs into the designs store', async () => {
-    await initializeSpaces();
-
-    // Each space's design should be loaded as a virtual design
-    spaces.forEach((space) => {
-      expect(Designs.Store).toHaveItem(
-        space.design.id,
-        expect.objectContaining({
-          id: space.design.id,
-          virtual: true,
-          owner: space.id,
-        }),
-      );
+    Events.dispatch(Fs.events.Changed, {
+      workspaceId: workspace_1.id,
+      path: resolveSpaceFilePath(space_1.id),
+      kind: 'deleted',
     });
+
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(SpacesStore).not.toHaveItem(space_1.id);
   });
-
-  it('filters out null spaces', async () => {
-    // Create an invalid space file
-    MockFs.addFiles([
-      {
-        path: resolveSpaceFilePath('invalid-space'),
-        textContent: 'invalid json',
-      },
-    ]);
-
-    await initializeSpaces();
-
-    expect(SpacesStore).toHaveItems(spaces);
-  });
-
-  it('dispatches a spaces loaded event', async () =>
-    new Promise<void>((done) => {
-      Events.addListener(SpacesLoadedEvent, 'test', (payload) => {
-        expect(payload).toEqual(spaces);
-        done();
-      });
-
-      initializeSpaces();
-    }));
 });

@@ -9,12 +9,20 @@ import { Fs } from '@minddrop/file-system';
 import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
 import { initializeI18n } from '@minddrop/i18n';
 import { cleanup as cleanupRender } from '@minddrop/test-utils';
+import {
+  cleanupWorkspaceFixtures,
+  setupWorkspaceFixtures,
+} from '@minddrop/workspaces/test-utils';
 
 initializeI18n();
 
 export const MockFs = initializeMockFileSystem();
 
 export function setup() {
+  // Set up the workspace fixtures first, so that the workspace
+  // scoped stores load into the active workspace's record.
+  setupWorkspaceFixtures(MockFs);
+
   // Load database and entry fixtures into the stores and mock
   // file system.
   DatabaseFixtures.setup(MockFs);
@@ -34,4 +42,5 @@ export async function cleanup(): Promise<void> {
   cleanupCollectionFixtures();
   await Events.tests.cleanup();
   vi.clearAllMocks();
+  cleanupWorkspaceFixtures();
 }

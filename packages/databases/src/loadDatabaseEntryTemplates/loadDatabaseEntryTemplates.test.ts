@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DatabaseEntryTemplatesStore } from '../DatabaseEntryTemplatesStore';
 import { DatabasesStore } from '../DatabasesStore';
 import { getDatabase } from '../getDatabase';
@@ -13,6 +14,8 @@ import {
 } from '../test-utils';
 import { loadDatabaseEntryTemplates } from './loadDatabaseEntryTemplates';
 
+const { workspace_1 } = WorkspaceFixtures;
+
 describe('loadDatabaseEntryTemplates', () => {
   beforeEach(() => {
     // Add the template config files to the mock file system but
@@ -23,7 +26,7 @@ describe('loadDatabaseEntryTemplates', () => {
   afterEach(cleanup);
 
   it('loads templates from disk with the database ID attached', async () => {
-    await loadDatabaseEntryTemplates([entryTemplatesDatabase]);
+    await loadDatabaseEntryTemplates([entryTemplatesDatabase], workspace_1);
 
     expect(getDatabaseEntryTemplate(entryTemplate1.id, false)).toEqual(
       entryTemplate1,
@@ -39,7 +42,7 @@ describe('loadDatabaseEntryTemplates', () => {
       entryTemplates: ['stale', entryTemplate2.id],
     });
 
-    await loadDatabaseEntryTemplates([entryTemplatesDatabase]);
+    await loadDatabaseEntryTemplates([entryTemplatesDatabase], workspace_1);
 
     // The stale ID should be dropped and the missing template appended
     expect(getDatabase(entryTemplatesDatabase.id).entryTemplates).toEqual([
@@ -49,7 +52,7 @@ describe('loadDatabaseEntryTemplates', () => {
   });
 
   it('does nothing for databases without a templates directory', async () => {
-    await loadDatabaseEntryTemplates([objectDatabase]);
+    await loadDatabaseEntryTemplates([objectDatabase], workspace_1);
 
     expect(DatabaseEntryTemplatesStore).toHaveItemCount(0);
   });

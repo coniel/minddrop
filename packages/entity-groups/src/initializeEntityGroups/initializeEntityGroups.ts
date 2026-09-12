@@ -1,45 +1,17 @@
 import { Events } from '@minddrop/events';
 import { ItemReferences } from '@minddrop/item-references';
 import { EntityGroupTypesRegistry } from '../EntityGroupTypesRegistry';
-import { EntityGroupsStore } from '../EntityGroupsStore';
 import { onItemAddressesChanged, onItemDeleted } from '../event-handlers';
-import { EntityGroupsLoadedEvent } from '../events';
-import { readEntityGroups } from '../readEntityGroups';
-import { normalizeEntityGroups } from '../utils';
 
 const EventListenerId = 'entity-groups';
 
 /**
- * Initializes the groups of every registered type, loading the
- * stored groups and registering the event handlers which keep them
- * in step with the items they hold.
- *
- * @dispatches entity-groups:loaded
+ * Initializes entity groups by registering the event handlers which
+ * keep the groups of every registered type in step with the items
+ * they hold.
  */
-export async function initializeEntityGroups(): Promise<void> {
+export function initializeEntityGroups(): void {
   const configs = [...EntityGroupTypesRegistry.getAll()];
-
-  // Load each registered type's groups
-  const sets = await Promise.all(
-    configs.map(async (config) => {
-      const storedGroups = await readEntityGroups(config.id);
-
-      // Resolve the groups' durable item references back into item
-      // IDs, and restore the groups the app provides.
-      const groups = normalizeEntityGroups(
-        storedGroups.map((group) => ({
-          ...group,
-          type: config.id,
-          items: ItemReferences.resolve(group.items),
-        })),
-        config,
-      );
-
-      return { type: config.id, groups };
-    }),
-  );
-
-  EntityGroupsStore.load(sets);
 
   // Drop a deleted item from the groups of the type it belongs to
   configs.forEach((config) => {
@@ -55,12 +27,6 @@ export async function initializeEntityGroups(): Promise<void> {
     ItemReferences.events.AddressesChanged,
     EventListenerId,
     onItemAddressesChanged,
-  );
-
-  // Dispatch the loaded event with every type's groups
-  Events.dispatch(
-    EntityGroupsLoadedEvent,
-    sets.flatMap((set) => set.groups),
   );
 }
 

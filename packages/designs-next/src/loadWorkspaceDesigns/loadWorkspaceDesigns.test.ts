@@ -1,20 +1,42 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DesignsStore } from '../DesignsStore';
 import { DesignsLoadedEvent } from '../events';
 import { MockFs, cleanup, designs, setup } from '../test-utils';
 import { resolveDesignsDirPath } from '../utils';
-import { initializeDesigns } from './initializeDesigns';
+import { loadWorkspaceDesigns } from './loadWorkspaceDesigns';
 
-describe('initializeDesigns', () => {
+const { workspace_1, workspace_2 } = WorkspaceFixtures;
+
+describe('loadWorkspaceDesigns', () => {
   beforeEach(() => setup({ loadDesigns: false }));
 
   afterEach(cleanup);
 
   it('loads design files into the store', async () => {
-    await initializeDesigns();
+    await loadWorkspaceDesigns(workspace_1);
 
     expect(DesignsStore).toHaveItems(designs);
+  });
+
+  it("loads designs into the workspace's store record", async () => {
+    // Give the second workspace a design of its own
+    MockFs.addFiles([
+      {
+        path: `${resolveDesignsDirPath(workspace_2.path)}/${designs[0].id}.json`,
+        textContent: JSON.stringify(designs[0]),
+      },
+    ]);
+
+    await loadWorkspaceDesigns(workspace_2);
+
+    // Should load into the second workspace's record, not the
+    // active workspace's.
+    expect(DesignsStore.in(workspace_2.id).get(designs[0].id)).toEqual(
+      designs[0],
+    );
+    expect(DesignsStore).not.toHaveItem(designs[0].id);
   });
 
   it('ignores files without the design file extension', async () => {
@@ -26,7 +48,7 @@ describe('initializeDesigns', () => {
       },
     ]);
 
-    await initializeDesigns();
+    await loadWorkspaceDesigns(workspace_1);
 
     expect(DesignsStore).toHaveItems(designs);
   });
@@ -40,7 +62,7 @@ describe('initializeDesigns', () => {
       },
     ]);
 
-    await initializeDesigns();
+    await loadWorkspaceDesigns(workspace_1);
 
     expect(DesignsStore).toHaveItems(designs);
   });
@@ -56,7 +78,7 @@ describe('initializeDesigns', () => {
         },
       );
 
-      initializeDesigns();
+      loadWorkspaceDesigns(workspace_1);
     }));
 
   it('dispatches an empty loaded event if the directory does not exist', async () =>
@@ -73,6 +95,6 @@ describe('initializeDesigns', () => {
         },
       );
 
-      initializeDesigns();
+      loadWorkspaceDesigns(workspace_1);
     }));
 });

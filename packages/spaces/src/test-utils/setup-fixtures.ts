@@ -27,7 +27,10 @@ export function setupSpaceFixtures(
     SpacesStore.load(spaces);
 
     // Hydrate the spaces' owned designs into the designs store
-    Designs.loadVirtual(spaces.map((space) => space.design));
+    Designs.loadVirtual(
+      spaces.map((space) => space.design),
+      workspace_1.id,
+    );
   }
 
   if (options.loadSpaceFiles !== false) {

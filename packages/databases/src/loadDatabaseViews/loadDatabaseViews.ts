@@ -4,27 +4,37 @@ import {
   VirtualDataViewData,
 } from '@minddrop/data-views';
 import { Fs } from '@minddrop/file-system';
+import { Workspace } from '@minddrop/workspaces';
 import { normalizeDatabaseConfigIds } from '../normalizeDatabaseConfigIds';
 import type { Database } from '../types';
 import { resolveDatabasePath, resolveDatabaseViewsDirPath } from '../utils';
 
 /**
  * Loads database views from the databases' view directories into
- * the ViewsStore as virtual views, normalizing each database
- * config's view ID list against the view files found.
+ * the workspace's data views store record as virtual views,
+ * normalizing each database config's view ID list against the
+ * view files found.
  *
  * @param databases - The databases whose views to load.
+ * @param workspace - The workspace the databases belong to.
  */
-export async function loadDatabaseViews(databases: Database[]): Promise<void> {
+export async function loadDatabaseViews(
+  databases: Database[],
+  workspace: Workspace,
+): Promise<void> {
   // Read each database's stored views from disk
-  const viewData = (await Promise.all(databases.map(readDatabaseViews))).flat();
+  const viewData = (
+    await Promise.all(
+      databases.map((database) => readDatabaseViews(database, workspace)),
+    )
+  ).flat();
 
   if (viewData.length === 0) {
     return;
   }
 
   // Load the views as virtual views
-  DataViews.loadVirtual(viewData);
+  DataViews.loadVirtual(viewData, workspace.id);
 }
 
 /**
@@ -32,13 +42,17 @@ export async function loadDatabaseViews(databases: Database[]): Promise<void> {
  * normalizes the config's view ID list against them.
  *
  * @param database - The database whose views to read.
+ * @param workspace - The workspace the database belongs to.
  * @returns The database's views as virtual data view data.
  */
 async function readDatabaseViews(
   database: Database,
+  workspace: Workspace,
 ): Promise<VirtualDataViewData[]> {
   // Path to the database's views directory
-  const dirPath = resolveDatabaseViewsDirPath(resolveDatabasePath(database));
+  const dirPath = resolveDatabaseViewsDirPath(
+    resolveDatabasePath(database, workspace.path),
+  );
 
   // The stored views read from the views directory, empty for
   // databases without one.
@@ -59,7 +73,7 @@ async function readDatabaseViews(
   }
 
   // Normalize the config's view ID list against the views found
-  normalizeDatabaseConfigIds(database.id, 'views', storedViews);
+  normalizeDatabaseConfigIds(database.id, 'views', storedViews, workspace.id);
 
   return storedViews.map((storedView) => ({
     ...storedView,

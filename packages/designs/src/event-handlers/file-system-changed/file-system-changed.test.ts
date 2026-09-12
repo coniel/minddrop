@@ -7,7 +7,7 @@ import { DesignFixtures, MockFs, cleanup, setup } from '../../test-utils';
 import { resolveDesignBundleDirPath, resolveDesignFilePath } from '../../utils';
 import { onFileSystemChanged } from './file-system-changed';
 
-const { workspace_1 } = WorkspaceFixtures;
+const { workspace_1, workspace_2 } = WorkspaceFixtures;
 
 const { design_books } = DesignFixtures;
 
@@ -78,6 +78,24 @@ describe('onFileSystemChanged', () => {
     expect(DesignsStore).toHaveItem(design_books.id);
   });
 
+  it("applies the change to the change's workspace", async () => {
+    // Create a design bundle in the second workspace outside of the app
+    const otherFilePath = resolveDesignFilePath(
+      design_books.id,
+      workspace_2.path,
+    );
+    MockFs.addFiles([
+      { path: otherFilePath, textContent: JSON.stringify(design_books) },
+    ]);
+
+    await onFileSystemChanged(change(otherFilePath, 'created', workspace_2.id));
+
+    // Should add the design to the second workspace's record only
+    expect(DesignsStore.in(workspace_2.id).get(design_books.id)).toEqual(
+      design_books,
+    );
+  });
+
   it('ignores changes to files which are not valid designs', async () => {
     // Make the design file invalid outside of the app
     MockFs.writeTextFile(designFilePath, 'not json');
@@ -96,6 +114,7 @@ describe('onFileSystemChanged', () => {
 function change(
   path: string,
   kind: FileSystemChange['kind'],
+  workspaceId: string = workspace_1.id,
 ): FileSystemChange {
-  return { path, kind };
+  return { workspaceId, path, kind };
 }

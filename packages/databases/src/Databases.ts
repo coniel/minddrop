@@ -126,6 +126,7 @@ export { clearDatabaseEntries as clearEntries } from './clearDatabaseEntries';
 export { getDatabase as get } from './getDatabase';
 export { getDatabasesFromEntries as getFromEntries } from './getDatabasesFromEntries';
 export { initializeDatabases as initialize } from './initializeDatabases';
+export { loadWorkspaceDatabases as loadWorkspace } from './loadWorkspaceDatabases';
 export { removeDatabaseProperty as removeProperty } from './removeDatabaseProperty';
 export { renameDatabase as rename } from './renameDatabase';
 export { renameDatabasePropertyOption as renamePropertyOption } from './renameDatabasePropertyOption';

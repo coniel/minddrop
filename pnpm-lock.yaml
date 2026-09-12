@@ -3048,6 +3048,9 @@ importers:
       '@minddrop/vitest-config':
         specifier: workspace:*
         version: link:../../packages/vitest-config
+      '@minddrop/workspaces':
+        specifier: workspace:*
+        version: link:../../packages/workspaces
       eslint:
         specifier: ^9.39.3
         version: 9.39.5

@@ -48,4 +48,5 @@ export {
   resolveNextTagColor as resolveNextColor,
 } from './utils';
 export { loadTags as load } from './loadTags';
+export { loadWorkspaceTags as loadWorkspace } from './loadWorkspaceTags';
 export { initializeTags as initialize } from './initializeTags';

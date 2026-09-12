@@ -3,6 +3,7 @@ import { Designs } from '@minddrop/designs-next';
 import { DesignFixtures } from '@minddrop/designs-next/test-utils';
 import { storeItem } from '@minddrop/stores/test-utils';
 import { InvalidParameterError } from '@minddrop/utils';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DatabasesStore } from '../DatabasesStore';
 import { cleanup, objectDatabase, setup } from '../test-utils';
 import { setDatabaseDefaultDesign } from './setDatabaseDefaultDesign';
@@ -12,11 +13,13 @@ const { ownedCardDesign_1, ownedListDesign_1, cardDesign_1 } = DesignFixtures;
 const cardDesign = { ...ownedCardDesign_1, owner: objectDatabase.id };
 const listDesign = { ...ownedListDesign_1, owner: objectDatabase.id };
 
+const { workspace_1 } = WorkspaceFixtures;
+
 describe('setDatabaseDefaultDesign', () => {
   beforeEach(() => {
     setup();
 
-    Designs.load([cardDesign, listDesign]);
+    Designs.load([cardDesign, listDesign], workspace_1.id);
     Designs.Store.set(cardDesign_1);
   });
 

@@ -1,65 +1,45 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Events } from '@minddrop/events';
+import { Fs } from '@minddrop/file-system';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DesignRolesStore } from '../DesignRolesStore';
 import { DesignsStore } from '../DesignsStore';
-import { DesignsLoadedEvent } from '../events';
 import { BuiltInDesignRoles } from '../roles';
-import { DesignFixtures, MockFs, cleanup, setup } from '../test-utils';
-import { resolveDesignFilePath, resolveDesignsDirPath } from '../utils';
+import { DesignFixtures, cleanup, setup } from '../test-utils';
+import { resolveDesignFilePath } from '../utils';
 import { initializeDesigns } from './initializeDesigns';
 
-const { design_books, design_empty } = DesignFixtures;
+const { workspace_1 } = WorkspaceFixtures;
+const { design_books } = DesignFixtures;
 
 describe('initializeDesigns', () => {
-  beforeEach(() => setup({ loadDesigns: false, loadRoles: false }));
+  beforeEach(() => setup({ loadRoles: false }));
   afterEach(cleanup);
 
-  it('registers the built-in design roles', async () => {
-    await initializeDesigns();
+  it('registers the built-in design roles', () => {
+    initializeDesigns();
 
     expect(DesignRolesStore).toHaveItems(BuiltInDesignRoles);
   });
 
-  it('loads designs from the file system into the store', async () => {
-    await initializeDesigns();
+  it('applies design bundle changes made outside of the app', async () => {
+    initializeDesigns();
 
-    expect(DesignsStore).toHaveItem(design_books.id, design_books);
-    expect(DesignsStore).toHaveItem(design_empty.id, design_empty);
+    Events.dispatch(Fs.events.Changed, {
+      workspaceId: workspace_1.id,
+      path: resolveDesignFilePath(design_books.id),
+      kind: 'deleted',
+    });
+
+    await flushEvents();
+
+    expect(DesignsStore).not.toHaveItem(design_books.id);
   });
-
-  it('skips entries which are not valid design bundles', async () => {
-    MockFs.addFiles([
-      {
-        path: resolveDesignFilePath('design_invalid'),
-        textContent: 'invalid json',
-      },
-    ]);
-
-    await initializeDesigns();
-
-    expect(DesignsStore).not.toHaveItem('design_invalid');
-  });
-
-  it('dispatches a designs loaded event', async () =>
-    new Promise<void>((done) => {
-      Events.addListener(DesignsLoadedEvent, 'test', (payload) => {
-        expect(payload.length).toBeGreaterThan(0);
-        done();
-      });
-
-      initializeDesigns();
-    }));
-
-  it('dispatches a designs loaded event when there are no designs', async () =>
-    new Promise<void>((done) => {
-      // Remove the designs directory, as in a fresh workspace
-      MockFs.removeDir(resolveDesignsDirPath());
-
-      Events.addListener(DesignsLoadedEvent, 'test', (payload) => {
-        expect(payload).toEqual([]);
-        done();
-      });
-
-      initializeDesigns();
-    }));
 });
+
+/**
+ * Lets the queued event listeners run.
+ */
+async function flushEvents(): Promise<void> {
+  await vi.advanceTimersByTimeAsync(0);
+}

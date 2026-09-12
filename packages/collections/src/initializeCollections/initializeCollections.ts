@@ -1,59 +1,20 @@
 import { Events } from '@minddrop/events';
-import { Fs } from '@minddrop/file-system';
 import { I18n } from '@minddrop/i18n';
 import { ItemReferences } from '@minddrop/item-references';
-import { restoreDates } from '@minddrop/utils';
-import { CollectionsStore } from '../CollectionsStore';
 import { onItemAddressesChanged } from '../event-handlers';
-import { CollectionsLoadedEvent } from '../events';
 import { locales } from '../locales';
-import { readCollection } from '../readCollection';
-import { Collection } from '../types';
-import { resolveCollectionsDirPath } from '../utils';
 
 /**
- * Initializes collections by loading collection configs from the collections
- * directory.
- *
- * If the collections directory does not exist, it will be created.
+ * Initializes collections: registers the package's translations and
+ * the listeners which keep loaded workspaces' collection files in
+ * step with the items they hold.
  */
-export async function initializeCollections(): Promise<void> {
+export function initializeCollections(): void {
   // Register collection translations
   I18n.registerTranslations(locales);
-
-  const collectionsDirPath = resolveCollectionsDirPath();
-
-  // Ensure that the collections directory exists
-  await Fs.ensureDir(collectionsDirPath);
-
-  // Load collections from the active workspace's collections directory
-  const files = await Fs.readDir(collectionsDirPath);
-
-  // Read the collection files
-  const collectionPromises = await Promise.all(
-    files.map((file) => readCollection(file.path)),
-  );
-
-  // Filter out null collections
-  const rawCollections = collectionPromises.filter(
-    (collection) => collection !== null,
-  );
-
-  // Restore serialized dates and resolve durable item
-  // references back into item IDs.
-  const collections = rawCollections.map((collection) => ({
-    ...restoreDates<Collection>(collection),
-    items: ItemReferences.resolve(collection.items),
-  }));
-
-  // Load the collections into the store
-  CollectionsStore.load(collections);
 
   // Rewrite collection files when member item addresses change
   Events.on(ItemReferences.events.AddressesChanged, 'collections', (data) =>
     onItemAddressesChanged(data),
   );
-
-  // Dispatch a collections loaded event
-  Events.dispatch(CollectionsLoadedEvent, collections);
 }

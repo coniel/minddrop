@@ -1,7 +1,9 @@
 import { createObjectStore } from '@minddrop/stores';
 import { Query } from './types';
 
-export const QueriesStore = createObjectStore<Query>('Queries:Queries', 'id');
+export const QueriesStore = createObjectStore<Query>('Queries:Queries', 'id', {
+  scope: 'workspace',
+});
 
 /**
  * Retrieves a Query by ID or null if it doesn't exist.

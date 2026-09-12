@@ -96,6 +96,7 @@ export { createVirtualDesign as createVirtual } from './createVirtualDesign';
 export { deleteDesign as delete } from './deleteDesign';
 export { getDesign as get } from './getDesign';
 export { initializeDesigns as initialize } from './initializeDesigns';
+export { loadWorkspaceDesigns as loadWorkspace } from './loadWorkspaceDesigns';
 export { loadVirtualDesigns as loadVirtual } from './loadVirtualDesigns';
 export { readDesign as read } from './readDesign';
 export { removeDesignProperty as removeProperty } from './removeDesignProperty';

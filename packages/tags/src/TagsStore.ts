@@ -2,7 +2,9 @@ import { useMemo } from 'react';
 import { createObjectStore } from '@minddrop/stores';
 import { Tag } from './types';
 
-export const TagsStore = createObjectStore<Tag>('Tags:Tags', 'id');
+export const TagsStore = createObjectStore<Tag>('Tags:Tags', 'id', {
+  scope: 'workspace',
+});
 
 /**
  * Retrieves a Tag by ID or null if it doesn't exist.

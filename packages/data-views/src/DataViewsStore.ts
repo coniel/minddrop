@@ -4,6 +4,7 @@ import { DataView, ViewDataSource } from './types';
 export const DataViewsStore = createObjectStore<DataView>(
   'Views:DataViews',
   'id',
+  { scope: 'workspace' },
 );
 
 /**

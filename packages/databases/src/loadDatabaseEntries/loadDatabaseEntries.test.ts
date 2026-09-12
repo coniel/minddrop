@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Collections } from '@minddrop/collections';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import {
   cleanup,
@@ -10,22 +11,40 @@ import {
   setup,
 } from '../test-utils';
 import { virtualCollectionId, virtualCollectionName } from '../utils';
-import { initializeDatabaseEntries } from './initializeDatabaseEntries';
+import { loadDatabaseEntries } from './loadDatabaseEntries';
 
-describe('initializeDatabaseEntries', () => {
+const { workspace_1, workspace_2 } = WorkspaceFixtures;
+
+describe('loadDatabaseEntries', () => {
   beforeEach(() => setup({ loadDatabaseEntries: false }));
 
   afterEach(cleanup);
 
   it('loads database entries into the store', () => {
-    initializeDatabaseEntries(databases, databaseEntries);
+    loadDatabaseEntries(databases, databaseEntries, workspace_1.id);
 
     // Should load all entries into the store
     expect(DatabaseEntriesStore).toHaveItems(databaseEntries);
   });
 
+  it("loads the entries into the workspace's store record", () => {
+    loadDatabaseEntries(databases, databaseEntries, workspace_2.id);
+
+    // Should load into the second workspace's records, not the
+    // active workspace's.
+    expect(
+      DatabaseEntriesStore.in(workspace_2.id).get(collectionEntry1.id),
+    ).toEqual(collectionEntry1);
+    expect(DatabaseEntriesStore).not.toHaveItem(collectionEntry1.id);
+    expect(
+      Collections.Store.in(workspace_2.id).get(
+        virtualCollectionId(collectionEntry1.id, 'Related'),
+      ),
+    ).not.toBeNull();
+  });
+
   it('hydrates virtual collections from entries with collection properties', () => {
-    initializeDatabaseEntries(databases, databaseEntries);
+    loadDatabaseEntries(databases, databaseEntries, workspace_1.id);
 
     // Should create virtual collections for each collection property
     const relatedCollection = Collections.Store.get(
@@ -69,7 +88,7 @@ describe('initializeDatabaseEntries', () => {
   });
 
   it('does not create virtual collections for databases without collection properties', () => {
-    initializeDatabaseEntries(databases, databaseEntries);
+    loadDatabaseEntries(databases, databaseEntries, workspace_1.id);
 
     // Should not create virtual collections for non-collection entries
     const allCollections = Collections.Store.getAllArray();

@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DataViews } from '@minddrop/data-views';
 import { DataViewFixtures } from '@minddrop/data-views/test-utils';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DatabasesStore } from '../DatabasesStore';
 import { getDatabase } from '../getDatabase';
 import { MockFs, cleanup, databaseDirPath, setup } from '../test-utils';
@@ -19,6 +20,8 @@ const {
   ...storedView1
 } = dataView_virtual_1;
 const { dataSource: _dataSource2, ...storedView2 } = dataView_board_1;
+
+const { workspace_1 } = WorkspaceFixtures;
 
 describe('loadDatabaseViews', () => {
   beforeEach(() => {
@@ -41,7 +44,7 @@ describe('loadDatabaseViews', () => {
     ]);
 
     // Load the database views
-    await loadDatabaseViews([objectDatabase]);
+    await loadDatabaseViews([objectDatabase], workspace_1);
 
     // Should have loaded the view with dataSource and virtual
     const views = DataViews.Store.getAllArray();
@@ -71,7 +74,7 @@ describe('loadDatabaseViews', () => {
       },
     ]);
 
-    await loadDatabaseViews([objectDatabase]);
+    await loadDatabaseViews([objectDatabase], workspace_1);
 
     // The stale ID should be dropped and the found view appended
     expect(getDatabase(objectDatabase.id).views).toEqual([storedView1.id]);
@@ -79,7 +82,7 @@ describe('loadDatabaseViews', () => {
 
   it('does nothing when databases have no views', async () => {
     // Load databases without stored view files
-    await loadDatabaseViews([objectDatabase]);
+    await loadDatabaseViews([objectDatabase], workspace_1);
 
     // Store should remain empty
     expect(DataViews.Store).toHaveItemCount(0);
@@ -120,7 +123,7 @@ describe('loadDatabaseViews', () => {
     ]);
 
     // Load views from multiple databases
-    await loadDatabaseViews([database1, database2]);
+    await loadDatabaseViews([database1, database2], workspace_1);
 
     const views = DataViews.Store.getAllArray();
 

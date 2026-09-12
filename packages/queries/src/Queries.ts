@@ -37,6 +37,7 @@ export {
 } from './QueriesStore';
 export { updateQuery as update } from './updateQuery';
 export { initializeQueries as initialize } from './initializeQueries';
+export { loadWorkspaceQueries as loadWorkspace } from './loadWorkspaceQueries';
 export { runQuery as run } from './runQuery';
 export { runQueryNode as runNode } from './runQueryNode';
 export {

@@ -8,11 +8,15 @@ import { Design, VirtualDesignData } from '../types';
  * owning entities to hydrate their designs at startup.
  *
  * @param data - The virtual designs to load.
+ * @param workspaceId - The ID of the workspace the designs belong to.
  * @returns The loaded virtual designs.
  *
  * @dispatches 'designs:loaded'
  */
-export function loadVirtualDesigns(data: VirtualDesignData[]): Design[] {
+export function loadVirtualDesigns(
+  data: VirtualDesignData[],
+  workspaceId: string,
+): Design[] {
   // Derive the virtual flag and dates at load time. Spreading a
   // discriminated union erases the discrimination, so restore it.
   const designs = data.map(
@@ -25,8 +29,8 @@ export function loadVirtualDesigns(data: VirtualDesignData[]): Design[] {
       }) as Design,
   );
 
-  // Load the designs into the store
-  DesignsStore.load(designs);
+  // Load the designs into the workspace's store record
+  DesignsStore.in(workspaceId).load(designs);
 
   // Dispatch a designs loaded event
   Events.dispatch(DesignsLoadedEvent, designs);

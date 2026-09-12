@@ -10,8 +10,12 @@ import { DataView, VirtualDataViewData } from '../types';
  * from existing data.
  *
  * @param data - The virtual data view data to load.
+ * @param workspaceId - The ID of the workspace the data views belong to.
  */
-export function loadVirtualDataViews(data: VirtualDataViewData[]): void {
+export function loadVirtualDataViews(
+  data: VirtualDataViewData[],
+  workspaceId: string,
+): void {
   // Generate virtual data view objects from the data
   const views: DataView[] = data.map((item) => ({
     ...item,
@@ -25,8 +29,8 @@ export function loadVirtualDataViews(data: VirtualDataViewData[]): void {
     }),
   }));
 
-  // Load data views into the store
-  DataViewsStore.load(views);
+  // Load the data views into the workspace's store record
+  DataViewsStore.in(workspaceId).load(views);
 
   // Dispatch a data views loaded event
   Events.dispatch(DataViewsLoadedEvent, views);

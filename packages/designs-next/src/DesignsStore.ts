@@ -4,6 +4,7 @@ import { Design, DesignType } from './types';
 export const DesignsStore = createObjectStore<Design>(
   'DesignsNext:Designs',
   'id',
+  { scope: 'workspace' },
 );
 
 /**

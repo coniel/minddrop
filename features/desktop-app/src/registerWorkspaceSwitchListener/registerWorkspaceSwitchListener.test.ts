@@ -109,7 +109,9 @@ describe('registerWorkspaceSwitchListener', () => {
 
   it('stops the file system watcher', async () => {
     // Watch the workspace the app is about to leave
-    const stopWatcher = await Fs.startWatcher([workspace_2.path]);
+    const stopWatcher = await Fs.startWatcher([
+      { workspaceId: workspace_2.id, path: workspace_2.path },
+    ]);
 
     removeListener = registerWorkspaceSwitchListener(stopWatcher);
 

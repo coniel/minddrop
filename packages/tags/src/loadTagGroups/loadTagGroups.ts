@@ -1,6 +1,7 @@
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { restoreDates } from '@minddrop/utils';
+import { Workspace } from '@minddrop/workspaces';
 import { TagGroupsStore } from '../TagGroupsStore';
 import { TagGroupsLoadedEvent } from '../events';
 import { readTagGroup } from '../readTagGroup';
@@ -8,15 +9,17 @@ import { TagGroup } from '../types';
 import { resolveTagGroupsDirPath } from '../utils';
 
 /**
- * Loads tag groups from the active workspace's tag groups directory into the
- * store.
+ * Loads a workspace's tag groups from its tag groups directory into
+ * the workspace's store record.
  *
  * If the tag groups directory does not exist, it will be created.
  *
+ * @param workspace - The workspace whose tag groups to load.
+ *
  * @dispatches tags:groups:loaded
  */
-export async function loadTagGroups(): Promise<void> {
-  const tagGroupsDirPath = resolveTagGroupsDirPath();
+export async function loadTagGroups(workspace: Workspace): Promise<void> {
+  const tagGroupsDirPath = resolveTagGroupsDirPath(workspace.path);
 
   // Ensure that the tag groups directory exists
   await Fs.ensureDir(tagGroupsDirPath);
@@ -35,8 +38,8 @@ export async function loadTagGroups(): Promise<void> {
   // Restore serialized dates
   const groups = rawGroups.map((group) => restoreDates<TagGroup>(group));
 
-  // Load the groups into the store
-  TagGroupsStore.load(groups);
+  // Load the groups into the workspace's store record
+  TagGroupsStore.in(workspace.id).load(groups);
 
   // Dispatch a tag groups loaded event
   Events.dispatch(TagGroupsLoadedEvent, groups);

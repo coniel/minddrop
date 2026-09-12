@@ -38,6 +38,7 @@ export const constants = {
 export const getConfig = EntityGroupTypesRegistry.get;
 
 export { initializeEntityGroups as initialize } from './initializeEntityGroups';
+export { loadWorkspaceEntityGroups as loadWorkspace } from './loadWorkspaceEntityGroups';
 export { registerEntityGroupType as registerType } from './registerEntityGroupType';
 export { unregisterEntityGroupType as unregisterType } from './unregisterEntityGroupType';
 export { createEntityGroup as create } from './createEntityGroup';

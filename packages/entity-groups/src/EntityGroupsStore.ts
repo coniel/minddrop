@@ -8,6 +8,7 @@ import { EntityGroup, EntityGroupSet } from './types';
 export const EntityGroupsStore = createObjectStore<EntityGroupSet>(
   'EntityGroups:Groups',
   'type',
+  { scope: 'workspace' },
 );
 
 /**

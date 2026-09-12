@@ -7,6 +7,7 @@ import { FileSystemChange } from '../types';
 import { clearWriteRegistry } from '../writeRegistry';
 import { startFileSystemWatcher } from './startFileSystemWatcher';
 
+const WorkspaceId = 'workspace-1';
 const WorkspacePath = 'workspace';
 const QueryPath = 'workspace/.minddrop/queries/query_1.json';
 const QueryContents = '{ "id": "query_1" }';
@@ -36,7 +37,9 @@ describe('startFileSystemWatcher', () => {
       changes.push(data);
     });
 
-    stopWatcher = await startFileSystemWatcher([WorkspacePath]);
+    stopWatcher = await startFileSystemWatcher([
+      { workspaceId: WorkspaceId, path: WorkspacePath },
+    ]);
   });
 
   afterEach(() => {
@@ -54,7 +57,9 @@ describe('startFileSystemWatcher', () => {
     await flushDebounce();
 
     // Should dispatch a modified change
-    expect(changes).toEqual([{ path: QueryPath, kind: 'modified' }]);
+    expect(changes).toEqual([
+      { workspaceId: WorkspaceId, path: QueryPath, kind: 'modified' },
+    ]);
   });
 
   it('dispatches a created change for a new file', async () => {
@@ -67,7 +72,9 @@ describe('startFileSystemWatcher', () => {
     await flushDebounce();
 
     // Should dispatch a created change
-    expect(changes).toEqual([{ path: newPath, kind: 'created' }]);
+    expect(changes).toEqual([
+      { workspaceId: WorkspaceId, path: newPath, kind: 'created' },
+    ]);
   });
 
   it('dispatches a deleted change for a removed file', async () => {
@@ -78,7 +85,9 @@ describe('startFileSystemWatcher', () => {
     await flushDebounce();
 
     // Should dispatch a deleted change
-    expect(changes).toEqual([{ path: QueryPath, kind: 'deleted' }]);
+    expect(changes).toEqual([
+      { workspaceId: WorkspaceId, path: QueryPath, kind: 'deleted' },
+    ]);
   });
 
   it('dispatches a deleted change when the adapter reports a modification of a missing file', async () => {
@@ -89,7 +98,9 @@ describe('startFileSystemWatcher', () => {
     await flushDebounce();
 
     // Should dispatch a deleted change, based on the path being gone
-    expect(changes).toEqual([{ path: QueryPath, kind: 'deleted' }]);
+    expect(changes).toEqual([
+      { workspaceId: WorkspaceId, path: QueryPath, kind: 'deleted' },
+    ]);
   });
 
   it('coalesces a burst of events for the same path into one change', async () => {
@@ -140,7 +151,9 @@ describe('startFileSystemWatcher', () => {
 
     // Should dispatch a change, the file no longer holding what
     // the app wrote.
-    expect(changes).toEqual([{ path: QueryPath, kind: 'modified' }]);
+    expect(changes).toEqual([
+      { workspaceId: WorkspaceId, path: QueryPath, kind: 'modified' },
+    ]);
   });
 
   it('ignores OS metadata and editor temp files', async () => {
@@ -154,6 +167,36 @@ describe('startFileSystemWatcher', () => {
 
     // Should dispatch nothing
     expect(changes).toEqual([]);
+  });
+
+  it('tags each change with the workspace whose root it is under', async () => {
+    const otherWorkspaceId = 'workspace-2';
+    const otherWorkspacePath = 'other-workspace';
+    const otherQueryPath = 'other-workspace/.minddrop/queries/query_1.json';
+
+    // Watch a second workspace alongside the first
+    stopWatcher();
+    MockFileSystem.addFiles([
+      { path: otherQueryPath, textContent: QueryContents },
+    ]);
+    stopWatcher = await startFileSystemWatcher([
+      { workspaceId: WorkspaceId, path: WorkspacePath },
+      { workspaceId: otherWorkspaceId, path: otherWorkspacePath },
+    ]);
+
+    MockFileSystem.dispatchWatchEvent('modify', [QueryPath, otherQueryPath]);
+
+    await flushDebounce();
+
+    // Should tag each change with its own workspace
+    expect(changes).toEqual([
+      { workspaceId: WorkspaceId, path: QueryPath, kind: 'modified' },
+      {
+        workspaceId: otherWorkspaceId,
+        path: otherQueryPath,
+        kind: 'modified',
+      },
+    ]);
   });
 
   it('stops dispatching changes once stopped', async () => {

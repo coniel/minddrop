@@ -1,7 +1,7 @@
 import { FileSystemChangedEventData, Fs } from '@minddrop/file-system';
-import { Workspaces } from '@minddrop/workspaces';
+import { Workspace, Workspaces } from '@minddrop/workspaces';
 import { getDatabaseBackendAdapter } from '../../DatabaseBackendAdapter';
-import { getAllDatabases } from '../../getAllDatabases';
+import { DatabasesStore } from '../../DatabasesStore';
 import {
   isDatabaseConfigFilePath,
   resolveDatabaseConfigFilePath,
@@ -13,37 +13,43 @@ import {
 // only cost one.
 const DebounceMs = 500;
 
-// The pending scan's timer, shared by every change
-let scanTimer: ReturnType<typeof setTimeout> | null = null;
+// The pending scans' timers, keyed by workspace ID, shared by every
+// change in the workspace.
+const scanTimers = new Map<string, ReturnType<typeof setTimeout>>();
 
 /**
- * Schedules a background sync when a database file changes outside
- * of the app, so that entry identity and the SQL index stay in one
- * place. The resulting changeset is applied by
- * `handleBackgroundSyncResult`.
+ * Schedules a background sync of the workspace a database file
+ * changed in outside of the app, so that entry identity and the
+ * SQL index stay in one place. The resulting changeset is applied
+ * by `handleBackgroundSyncResult`.
  *
  * @param change - The file system change.
  */
 export async function onFileSystemChanged(
   change: FileSystemChangedEventData,
 ): Promise<void> {
-  if (!(await isDatabaseChange(change))) {
+  const workspace = Workspaces.get(change.workspaceId);
+
+  if (!(await isDatabaseChange(change, workspace))) {
     return;
   }
 
-  // Restart the debounce, coalescing this change into the pending
-  // scan.
+  // Restart the workspace's debounce, coalescing this change into
+  // its pending scan.
+  const scanTimer = scanTimers.get(workspace.id);
+
   if (scanTimer) {
     clearTimeout(scanTimer);
   }
 
-  scanTimer = setTimeout(() => {
-    scanTimer = null;
+  scanTimers.set(
+    workspace.id,
+    setTimeout(() => {
+      scanTimers.delete(workspace.id);
 
-    const workspace = Workspaces.getActive();
-
-    getDatabaseBackendAdapter().backgroundSync(workspace.id, workspace.path);
-  }, DebounceMs);
+      getDatabaseBackendAdapter().backgroundSync(workspace.id, workspace.path);
+    }, DebounceMs),
+  );
 }
 
 /**
@@ -54,15 +60,18 @@ export async function onFileSystemChanged(
  */
 async function isDatabaseChange(
   change: FileSystemChangedEventData,
+  workspace: Workspace,
 ): Promise<boolean> {
   const { path, kind } = change;
   // Anything inside a known database directory, including the
   // directory itself being deleted.
-  const inKnownDatabase = getAllDatabases().some((database) => {
-    const databasePath = resolveDatabasePath(database);
+  const inKnownDatabase = DatabasesStore.in(workspace.id)
+    .getAllArray()
+    .some((database) => {
+      const databasePath = resolveDatabasePath(database, workspace.path);
 
-    return path === databasePath || path.startsWith(`${databasePath}/`);
-  });
+      return path === databasePath || path.startsWith(`${databasePath}/`);
+    });
 
   if (inKnownDatabase) {
     return true;

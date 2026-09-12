@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Designs } from '@minddrop/designs-next';
 import { DesignFixtures } from '@minddrop/designs-next/test-utils';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DatabasesStore } from '../DatabasesStore';
 import {
   MockFs,
@@ -19,6 +20,8 @@ const { ownedCardDesign_1, ownedListDesign_1 } = DesignFixtures;
 const { owner: _cardOwner, ...storedCardDesign } = ownedCardDesign_1;
 const { owner: _listOwner, ...storedListDesign } = ownedListDesign_1;
 
+const { workspace_1 } = WorkspaceFixtures;
+
 describe('loadDatabaseDesigns', () => {
   beforeEach(setup);
 
@@ -36,7 +39,7 @@ describe('loadDatabaseDesigns', () => {
       },
     ]);
 
-    await loadDatabaseDesigns([objectDatabase]);
+    await loadDatabaseDesigns([objectDatabase], workspace_1);
 
     expect(Designs.get(ownedCardDesign_1.id)).toEqual({
       ...storedCardDesign,
@@ -45,7 +48,7 @@ describe('loadDatabaseDesigns', () => {
   });
 
   it('does nothing when databases have no designs', async () => {
-    await loadDatabaseDesigns([objectDatabase]);
+    await loadDatabaseDesigns([objectDatabase], workspace_1);
 
     expect(Designs.Store).toHaveItemCount(0);
   });
@@ -83,7 +86,7 @@ describe('loadDatabaseDesigns', () => {
       },
     ]);
 
-    await loadDatabaseDesigns([database1, database2]);
+    await loadDatabaseDesigns([database1, database2], workspace_1);
 
     expect(Designs.getByOwner('database_1')).toHaveLength(1);
     expect(Designs.getByOwner('database_2')).toHaveLength(1);

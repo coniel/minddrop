@@ -44,12 +44,14 @@ export const MockFs = initializeMockFileSystem();
 export const mockDate = new Date('2026-01-01T00:00:00.000Z');
 
 export function setup(options?: SetupDatabaseFixturesOptions) {
+  // Set up the workspace fixtures first, so that the workspace
+  // scoped stores load into the active workspace's record.
+  setupWorkspaceFixtures(MockFs);
   // Setup database fixtures
   setupDatabaseFixtures(MockFs, options);
   // Setup external fixtures
   setupDataViewFixtures(MockFs);
   setupDesignFixtures(MockFs);
-  setupWorkspaceFixtures(MockFs);
 
   // Register the item reference adapters registered at runtime
   // by initializeDatabases.

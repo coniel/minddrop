@@ -1,7 +1,9 @@
 import { createObjectStore } from '@minddrop/stores';
 import { Space } from './types';
 
-export const SpacesStore = createObjectStore<Space>('Spaces:Spaces', 'id');
+export const SpacesStore = createObjectStore<Space>('Spaces:Spaces', 'id', {
+  scope: 'workspace',
+});
 
 /**
  * Retrieves a Space by ID or null if it doesn't exist.

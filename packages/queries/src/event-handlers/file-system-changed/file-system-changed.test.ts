@@ -6,7 +6,7 @@ import { MockFs, cleanup, query_1, setup } from '../../test-utils';
 import { resolveQueriesDirPath, resolveQueryFilePath } from '../../utils';
 import { onFileSystemChanged } from './file-system-changed';
 
-const { workspace_1 } = WorkspaceFixtures;
+const { workspace_1, workspace_2 } = WorkspaceFixtures;
 
 const queryPath = resolveQueryFilePath(query_1.id, workspace_1.path);
 
@@ -46,6 +46,19 @@ describe('onFileSystemChanged', () => {
     expect(QueriesStore).not.toHaveItem(query_1.id);
   });
 
+  it("applies the change to the change's workspace", async () => {
+    // Create a query file in the second workspace outside of the app
+    const otherPath = resolveQueryFilePath(query_1.id, workspace_2.path);
+    MockFs.addFiles([
+      { path: otherPath, textContent: JSON.stringify(query_1) },
+    ]);
+
+    await onFileSystemChanged(change(otherPath, 'created', workspace_2.id));
+
+    // Should add the query to the second workspace's record only
+    expect(QueriesStore.in(workspace_2.id).get(query_1.id)).toEqual(query_1);
+  });
+
   it('ignores files which are not queries', async () => {
     const otherPath = `${resolveQueriesDirPath()}/notes.md`;
 
@@ -78,6 +91,7 @@ describe('onFileSystemChanged', () => {
 function change(
   path: string,
   kind: FileSystemChange['kind'],
+  workspaceId: string = workspace_1.id,
 ): FileSystemChange {
-  return { path, kind };
+  return { workspaceId, path, kind };
 }

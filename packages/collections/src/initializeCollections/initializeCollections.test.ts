@@ -1,71 +1,48 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Events } from '@minddrop/events';
 import { ItemReferences } from '@minddrop/item-references';
-import { storeItem } from '@minddrop/stores/test-utils';
-import { CollectionsStore } from '../CollectionsStore';
-import { CollectionsLoadedEvent } from '../events';
-import { MockFs, cleanup, collections, setup } from '../test-utils';
-import { resolveCollectionFilePath, resolveCollectionsDirPath } from '../utils';
+import { MockFs, cleanup, collection_1, setup } from '../test-utils';
+import { Collection } from '../types';
+import { resolveCollectionFilePath } from '../utils';
 import { initializeCollections } from './initializeCollections';
 
+// The changed member's ID, present in collection_1
+const changedId = collection_1.items[0];
+
 describe('initializeCollections', () => {
-  beforeEach(() =>
-    setup({ loadCollections: false, loadVirtualCollections: false }),
-  );
+  beforeEach(() => {
+    setup();
+
+    // Register an adapter serializing IDs to observable addresses
+    ItemReferences.registerAdapter({
+      type: 'database-entry',
+      serialize: (id) => `address:${id}`,
+      match: () => null,
+    });
+  });
 
   afterEach(cleanup);
 
-  it('creates the collections directory if it does not exist', async () => {
-    // Remove the collections directory
-    MockFs.removeFile(resolveCollectionsDirPath());
+  it('rewrites collection files when member item addresses change', async () => {
+    initializeCollections();
 
-    await initializeCollections();
+    Events.dispatch(ItemReferences.events.AddressesChanged, [
+      {
+        id: changedId,
+        oldReference: `old:${changedId}`,
+        newReference: `address:${changedId}`,
+      },
+    ]);
 
-    expect(MockFs.exists(resolveCollectionsDirPath())).toBe(true);
-  });
+    await vi.advanceTimersByTimeAsync(0);
 
-  it('loads collections from the collections directory into the store', async () => {
-    await initializeCollections();
-
-    expect(CollectionsStore).toHaveItems(collections);
-  });
-
-  it('filters out null collections', async () => {
-    // Create an invalid collection file
-    MockFs.writeTextFile(
-      resolveCollectionFilePath('invalid-collection'),
-      'invalid json',
+    const written = MockFs.readJsonFile<Collection>(
+      resolveCollectionFilePath(collection_1.id),
     );
 
-    await initializeCollections();
-
-    expect(CollectionsStore).toHaveItems(collections);
-  });
-
-  it('dispatches a collections loaded event', async () =>
-    new Promise<void>((done) => {
-      Events.addListener(CollectionsLoadedEvent, 'test', (payload) => {
-        expect(payload).toEqual(collections);
-        done();
-      });
-
-      initializeCollections();
-    }));
-
-  it('resolves item references through the registered adapter', async () => {
-    // Register an adapter that prefixes resolved IDs
-    ItemReferences.registerAdapter({
-      type: 'database-entry',
-      serialize: (id) => id,
-      match: (reference) => ({ type: 'database-entry', id: `id:${reference}` }),
-    });
-
-    await initializeCollections();
-
-    const [firstCollection] = collections;
-    const loaded = storeItem(CollectionsStore, firstCollection.id);
-
-    // The loaded items should be resolved item IDs
-    expect(loaded.items).toEqual(firstCollection.items.map((id) => `id:${id}`));
+    // The rewritten file holds freshly serialized member references
+    expect(written.items).toEqual(
+      collection_1.items.map((id) => `address:${id}`),
+    );
   });
 });

@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Collections } from '@minddrop/collections';
 import { Designs } from '@minddrop/designs-next';
 import { DesignFixtures } from '@minddrop/designs-next/test-utils';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import {
   sqlGetAllDatabases,
   sqlGetEntrySyncRecords,
@@ -23,6 +24,8 @@ import { virtualCollectionId, virtualCollectionName } from '../../utils';
 import { onDeleteDatabase } from './database-deleted';
 
 const { ownedCardDesign_1 } = DesignFixtures;
+
+const { workspace_1 } = WorkspaceFixtures;
 
 describe('onDeleteDatabase', () => {
   beforeEach(() => {
@@ -88,7 +91,10 @@ describe('onDeleteDatabase', () => {
 
   it("deletes the database's designs", async () => {
     // Load a design owned by the database
-    Designs.load([{ ...ownedCardDesign_1, owner: objectDatabase.id }]);
+    Designs.load(
+      [{ ...ownedCardDesign_1, owner: objectDatabase.id }],
+      workspace_1.id,
+    );
 
     await onDeleteDatabase(objectDatabase);
 

@@ -1,7 +1,11 @@
 import { Events } from '@minddrop/events';
 import { Fs } from '../FileSystem';
 import { FileSystemChangedEvent } from '../events';
-import { FileSystemChangeKind, FsWatchEventKind } from '../types';
+import {
+  FileSystemChangeKind,
+  FileSystemWatchRoot,
+  FsWatchEventKind,
+} from '../types';
 import { hasWrittenContents, matchesWrittenContents } from '../writeRegistry';
 
 // How long to wait for a path to stop changing before dispatching
@@ -16,6 +20,11 @@ const IgnoredFileSuffixes = ['.tmp', '~'];
 
 interface PendingChange {
   /**
+   * The ID of the workspace the path belongs to.
+   */
+  workspaceId: string;
+
+  /**
    * The adapter event kinds seen for the path so far.
    */
   kinds: Set<FsWatchEventKind>;
@@ -27,31 +36,39 @@ interface PendingChange {
 }
 
 /**
- * Watches the given directories recursively, dispatching a file
- * system changed event for each path changed outside of the app.
+ * Watches the given workspace directories recursively, dispatching a
+ * file system changed event for each path changed outside of the
+ * app, tagged with the workspace whose directory the path is under.
  * Events are debounced and coalesced per path.
  *
- * @param paths - The directory paths to watch.
+ * @param roots - The workspace directories to watch.
  * @returns A function that stops the watcher.
  *
  * @dispatches file-system:changed
  */
 export async function startFileSystemWatcher(
-  paths: string[],
+  roots: FileSystemWatchRoot[],
 ): Promise<VoidFunction> {
   // Changes awaiting the end of their debounce window, keyed by path
   const pendingChanges = new Map<string, PendingChange>();
 
-  // Watch the paths, funnelling every event through the debounce
+  // Watch the roots, funnelling every event through the debounce
   const watcherId = await Fs.watch(
-    paths,
+    roots.map((root) => root.path),
     (event) => {
       event.paths.forEach((path) => {
         if (isIgnoredPath(path)) {
           return;
         }
 
-        queueChange(pendingChanges, path, event.kind);
+        const workspaceId = resolveWorkspaceId(roots, path);
+
+        // Paths outside every root belong to no workspace
+        if (!workspaceId) {
+          return;
+        }
+
+        queueChange(pendingChanges, workspaceId, path, event.kind);
       });
     },
     { recursive: true },
@@ -72,6 +89,7 @@ export async function startFileSystemWatcher(
  */
 function queueChange(
   pendingChanges: Map<string, PendingChange>,
+  workspaceId: string,
   path: string,
   kind: FsWatchEventKind,
 ): void {
@@ -92,6 +110,7 @@ function queueChange(
 
   // Otherwise start a new pending change for the path
   pendingChanges.set(path, {
+    workspaceId,
     kinds: new Set([kind]),
     timer: setTimeout(() => flushChange(pendingChanges, path), DebounceMs),
   });
@@ -124,7 +143,7 @@ async function flushChange(
   // A path that no longer exists was deleted, whatever the
   // adapter reported along the way.
   if (!exists) {
-    dispatchChange(path, 'deleted');
+    dispatchChange(pending.workspaceId, path, 'deleted');
 
     return;
   }
@@ -139,7 +158,7 @@ async function flushChange(
     ? 'created'
     : 'modified';
 
-  dispatchChange(path, kind);
+  dispatchChange(pending.workspaceId, path, kind);
 }
 
 /**
@@ -167,11 +186,32 @@ async function isSelfWrite(path: string): Promise<boolean> {
 /**
  * Dispatches a file system changed event.
  */
-function dispatchChange(path: string, kind: FileSystemChangeKind): void {
+function dispatchChange(
+  workspaceId: string,
+  path: string,
+  kind: FileSystemChangeKind,
+): void {
   Events.dispatch(FileSystemChangedEvent, {
+    workspaceId,
     path,
     kind,
   });
+}
+
+/**
+ * Returns the ID of the workspace whose root the path is under, or
+ * null when it is under none.
+ */
+function resolveWorkspaceId(
+  roots: FileSystemWatchRoot[],
+  path: string,
+): string | null {
+  const root = roots.find(
+    (candidate) =>
+      path === candidate.path || path.startsWith(`${candidate.path}/`),
+  );
+
+  return root ? root.workspaceId : null;
 }
 
 /**

@@ -4,6 +4,7 @@ import { Database } from './types';
 export const DatabasesStore = createObjectStore<Database>(
   'Databases:Databases',
   'id',
+  { scope: 'workspace' },
 );
 
 /**

@@ -3,13 +3,12 @@ import { Designs } from '@minddrop/designs-next';
 import { Events } from '@minddrop/events';
 import { ItemAddressChange, ItemReferences } from '@minddrop/item-references';
 import { restoreDates } from '@minddrop/utils';
+import { Workspaces } from '@minddrop/workspaces';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabaseEntryTemplatesStore } from '../DatabaseEntryTemplatesStore';
 import { DatabasesStore } from '../DatabasesStore';
+import { DatabaseNotFoundError } from '../errors';
 import { DatabasesBackgroundSyncedEvent } from '../events';
-import { getDatabase } from '../getDatabase';
-import { getDatabaseEntry } from '../getDatabaseEntry';
-import { getDatabaseEntryTemplates } from '../getDatabaseEntryTemplates';
 import { loadDatabaseDesigns } from '../loadDatabaseDesigns';
 import { loadDatabaseEntryTemplates } from '../loadDatabaseEntryTemplates';
 import { loadDatabaseViews } from '../loadDatabaseViews';
@@ -18,9 +17,9 @@ import type { BackgroundSyncChangeset, Database } from '../types';
 import { convertSqlRecordToEntry, databaseEntryAddress } from '../utils';
 
 /**
- * Applies a background sync changeset to frontend stores
- * and dispatches a background synced event so that listeners
- * (e.g. search) can update accordingly.
+ * Applies a background sync changeset to the synced workspace's
+ * store records and dispatches a background synced event so that
+ * listeners (e.g. search) can update accordingly.
  *
  * Called when the backend sends a changeset message after
  * scanning the filesystem for changes.
@@ -28,13 +27,18 @@ import { convertSqlRecordToEntry, databaseEntryAddress } from '../utils';
 export async function handleBackgroundSyncResult(
   changeset: BackgroundSyncChangeset,
 ): Promise<void> {
+  const workspace = Workspaces.get(changeset.workspaceId);
+  const databasesStore = DatabasesStore.in(workspace.id);
+  const entriesStore = DatabaseEntriesStore.in(workspace.id);
+  const templatesStore = DatabaseEntryTemplatesStore.in(workspace.id);
+
   // Upsert new or updated databases
   const upsertedDatabases: Database[] = [];
 
   for (const database of changeset.upsertedDatabases) {
     const restored = restoreDates<Database>(database);
 
-    DatabasesStore.set(restored);
+    databasesStore.set(restored);
     upsertedDatabases.push(restored);
   }
 
@@ -42,9 +46,9 @@ export async function handleBackgroundSyncResult(
   // upserted databases.
   if (upsertedDatabases.length > 0) {
     await Promise.all([
-      loadDatabaseViews(upsertedDatabases),
-      loadDatabaseDesigns(upsertedDatabases),
-      loadDatabaseEntryTemplates(upsertedDatabases),
+      loadDatabaseViews(upsertedDatabases, workspace),
+      loadDatabaseDesigns(upsertedDatabases, workspace),
+      loadDatabaseEntryTemplates(upsertedDatabases, workspace),
     ]);
   }
 
@@ -52,7 +56,7 @@ export async function handleBackgroundSyncResult(
   // templates, so that the item removals cannot write into the
   // deleted databases' directories.
   for (const id of changeset.deletedDatabaseIds) {
-    DatabasesStore.remove(id);
+    databasesStore.remove(id);
   }
 
   // Delete views belonging to deleted databases
@@ -76,9 +80,10 @@ export async function handleBackgroundSyncResult(
   // Remove entry templates belonging to deleted databases from
   // the store.
   for (const id of changeset.deletedDatabaseIds) {
-    getDatabaseEntryTemplates(id).forEach((template) =>
-      DatabaseEntryTemplatesStore.remove(template.id),
-    );
+    templatesStore
+      .getAllArray()
+      .filter((template) => template.database === id)
+      .forEach((template) => templatesStore.remove(template.id));
   }
 
   // Address changes of entries that were renamed or moved between
@@ -89,11 +94,14 @@ export async function handleBackgroundSyncResult(
   // existing SQL rows during the sync, so records for entries already
   // in the store replace them under their existing key.
   for (const record of changeset.upsertedEntries) {
-    const entry = convertSqlRecordToEntry(
-      record,
-      getDatabase(record.databaseId),
-    );
-    const existing = getDatabaseEntry(entry.id, false);
+    const database = databasesStore.get(record.databaseId);
+
+    if (!database) {
+      throw new DatabaseNotFoundError(record.databaseId);
+    }
+
+    const entry = convertSqlRecordToEntry(record, database);
+    const existing = entriesStore.get(entry.id);
 
     // Only a changed title or database changes an entry's address, so
     // a file that moved without being renamed is not an address change.
@@ -111,12 +119,12 @@ export async function handleBackgroundSyncResult(
       }
     }
 
-    DatabaseEntriesStore.set(entry);
+    entriesStore.set(entry);
   }
 
   // Remove deleted entries
   for (const id of changeset.deletedEntryIds) {
-    DatabaseEntriesStore.remove(id);
+    entriesStore.remove(id);
   }
 
   // Dispatch the moved entries' address changes
@@ -126,6 +134,7 @@ export async function handleBackgroundSyncResult(
 
   // Dispatch a single event with the full changeset
   Events.dispatch(DatabasesBackgroundSyncedEvent, {
+    workspaceId: workspace.id,
     upsertedDatabases: changeset.upsertedDatabases.map((database) => ({
       id: database.id,
       name: database.name,
