@@ -223,7 +223,7 @@ describe('DesignRenderer', () => {
     const design: Design = {
       ...cardDesign_1,
       aspectRatio: '3/2',
-      elements: [{ ...coverDesignElement, rowSpan: 32 }],
+      elements: [{ ...coverDesignElement, rowSpan: 32, heightMode: 'fluid' }],
     };
     const { container } = render(
       <DesignRenderer design={design} width={480} />,

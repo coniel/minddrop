@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { Designs } from '@minddrop/designs-next';
+import { DesignElement, Designs } from '@minddrop/designs-next';
 import {
   bodyDesignElement,
   cardDesign_1,
@@ -10,9 +10,14 @@ import { resolveVerticalStyles } from './resolveVerticalStyles';
 describe('resolveVerticalStyles', () => {
   it('resolves against the card height when aspect-locked', () => {
     // A full-height fluid cover in a locked card
+    const cover: DesignElement = {
+      ...coverDesignElement,
+      rowSpan: 32,
+      heightMode: 'fluid',
+    };
     const styles = resolveVerticalStyles(
-      { ...coverDesignElement, rowSpan: 32 },
-      { ...cardDesign_1, elements: [{ ...coverDesignElement, rowSpan: 32 }] },
+      cover,
+      { ...cardDesign_1, elements: [cover] },
       256,
       null,
     );

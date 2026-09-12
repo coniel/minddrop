@@ -206,13 +206,7 @@ interface SelectedElementControlsProps
 }
 
 /**
- * Renders the controls themselves: the width mode menu alongside
- * either the natural height toggle or, in aspect-locked designs,
- * the height mode menu, followed by the element type's own settings
- * controls and its system setting groups. Each pin choice is
- * labelled by the side it pins to, and says what it holds the
- * element against: the closest neighbour on that side, or the
- * design's edge where the element is the one closest to it.
+ * Renders the selected block's sizing, content and settings controls.
  */
 const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
   element,
@@ -229,6 +223,10 @@ const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
   const config = DesignElementConfigs.get(element.type, false);
   const SettingsControls = config?.settingsControls;
   const settingGroups = config?.settingGroups;
+
+  // A square element keeps its unit size on both axes, so it takes
+  // a pin on each and grows to its content on neither.
+  const square = config?.square ?? false;
 
   // The element's content controls: the property it takes its
   // content from, and the control filling its static content.
@@ -337,6 +335,18 @@ const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
   }
 
   // Builds an axis' menu options
+  // Drops the fluid mode for a square element, which would stretch
+  // out of square on whichever axis scales with the render width.
+  function resolveAvailableModeOptions<Mode extends string>(
+    modeOptions: ElementModeOption<Mode>[],
+  ): ElementModeOption<Mode>[] {
+    if (!square) {
+      return modeOptions;
+    }
+
+    return modeOptions.filter((option) => option.mode !== 'fluid');
+  }
+
   function resolveModeOptions<Mode extends string>(
     modeOptions: ElementModeOption<Mode>[],
   ): RadioToggleHoverMenuOption<Mode>[] {
@@ -355,19 +365,24 @@ const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
   return (
     <>
       <RadioToggleHoverMenu<ElementWidthMode>
-        options={resolveModeOptions(WidthModeOptions)}
+        options={resolveModeOptions(
+          resolveAvailableModeOptions(WidthModeOptions),
+        )}
         value={element.widthMode}
         label={t('designsNext.widthMode.label')}
         onValueChange={handleWidthModeChange}
       />
-      {aspectLocked ? (
+      {aspectLocked && (
         <RadioToggleHoverMenu<ElementHeightMode>
-          options={resolveModeOptions(HeightModeOptions)}
-          value={element.heightMode ?? 'fluid'}
+          options={resolveModeOptions(
+            resolveAvailableModeOptions(HeightModeOptions),
+          )}
+          value={element.heightMode ?? 'fixed-top'}
           label={t('designsNext.heightMode.label')}
           onValueChange={handleHeightModeChange}
         />
-      ) : (
+      )}
+      {!aspectLocked && !square && (
         <Toggle
           icon="unfold-vertical"
           label={t('designsNext.naturalHeight')}

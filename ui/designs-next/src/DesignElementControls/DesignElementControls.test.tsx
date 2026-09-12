@@ -39,6 +39,14 @@ function registerSettingGroups(settingGroups: DesignElementSettingGroup[]) {
   DesignElementConfigs.register({ ...testElementConfig, settingGroups });
 }
 
+/**
+ * Registers the box element type as square, so the fixture element's
+ * menu shows a square block's constraints.
+ */
+function registerSquare() {
+  DesignElementConfigs.register({ ...testElementConfig, square: true });
+}
+
 interface StubElement extends DesignElement {
   /**
    * A stub element-specific setting.
@@ -247,6 +255,27 @@ describe('DesignElementControls', () => {
     expect(changedElement(iconDesignElement.id)?.naturalHeight).toBe(true);
   });
 
+  it('drops natural height for a square element', () => {
+    registerSquare();
+    renderControls();
+
+    expect(screen.queryByLabelText('Natural height')).toBeNull();
+  });
+
+  it('drops the fluid modes for a square element', async () => {
+    registerSquare();
+    renderControls({ aspectLocked: true });
+
+    openMenu('designsNext.widthMode.label');
+
+    expect(screen.queryByLabelText('designsNext.widthMode.fluid')).toBeNull();
+    await hoverOption('designsNext.pin.label.left');
+
+    openMenu('designsNext.heightMode.label');
+
+    expect(screen.queryByLabelText('designsNext.heightMode.fluid')).toBeNull();
+  });
+
   it('names the neighbour a width pin holds the element against', async () => {
     // The fixture layout sits the icon to the title's right
     renderControls({ elements: designElements });
@@ -271,19 +300,23 @@ describe('DesignElementControls', () => {
 
     openMenu('designsNext.heightMode.label');
 
-    // The element has no height mode, meaning fluid
-    expect(
-      screen.getByLabelText('designsNext.heightMode.fluid'),
-    ).toHaveAttribute('aria-pressed', 'true');
+    // The element has no height mode, meaning fixed to the top edge
+    expect(screen.getByLabelText('designsNext.pin.label.top')).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
   });
 
   it('reports the chosen height mode', () => {
     renderControls({ aspectLocked: true });
     openMenu('designsNext.heightMode.label');
 
-    fireEvent.click(screen.getByLabelText('designsNext.pin.label.top'));
+    // The element defaults to the top pin, so a change means another
+    fireEvent.click(screen.getByLabelText('designsNext.pin.label.bottom'));
 
-    expect(changedElement(iconDesignElement.id)?.heightMode).toBe('fixed-top');
+    expect(changedElement(iconDesignElement.id)?.heightMode).toBe(
+      'fixed-bottom',
+    );
   });
 
   it('names the neighbour a height pin holds the element against', async () => {

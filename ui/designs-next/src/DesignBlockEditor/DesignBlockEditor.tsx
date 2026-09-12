@@ -7,7 +7,7 @@ import {
   ElementDragMode,
 } from '@minddrop/designs-next';
 import { usePopupDismissPress } from '@minddrop/ui-primitives';
-import { useDeleteKey, useModKeyHeld } from '@minddrop/utils';
+import { clamp, useDeleteKey, useModKeyHeld } from '@minddrop/utils';
 import { DesignElementInsertMenu } from '../DesignElementInsertMenu';
 import { resolveElementClass } from '../utils';
 import { SizeLabel } from './SizeLabel';
@@ -337,16 +337,29 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
 
     const inserted = types.map((type) => {
       const element = Designs.createElement(type, area);
+      const square = DesignElementConfigs.get(type, false)?.square;
 
-      // Take the dragged out area's size
+      // Take the dragged out area's size, shrinking it to its
+      // smaller side for a square element.
       if (sized) {
-        element.columnSpan = area.columnSpan;
-        element.rowSpan = area.rowSpan;
+        const span = Math.min(area.columnSpan, area.rowSpan);
+
+        element.columnSpan = square ? span : area.columnSpan;
+        element.rowSpan = square ? span : area.rowSpan;
       }
 
-      // Keep the element inside the design
-      element.column = clamp(element.column, 0, columns - element.columnSpan);
-      element.row = clamp(element.row, 0, maxRows - element.rowSpan);
+      // Keep the element inside the design, holding it against the
+      // top left corner when it outgrows the design entirely.
+      element.column = clamp(
+        element.column,
+        0,
+        Math.max(columns - element.columnSpan, 0),
+      );
+      element.row = clamp(
+        element.row,
+        0,
+        Math.max(maxRows - element.rowSpan, 0),
+      );
 
       return element;
     });
@@ -441,6 +454,8 @@ export const DesignBlockEditor: React.FC<DesignBlockEditorProps> = ({
       minRowSpan: config?.resolveMinRowSpan?.(drag.original),
       // Step vertical resizes by the element type's line height
       rowSpanStep: config?.resolveRowSpanStep?.(drag.original),
+      // Keep a square element square through the resize
+      square: config?.square,
     };
 
     // Apply the drag to the element
@@ -857,16 +872,4 @@ function resolveGridUnits(
   snap: number,
 ): number {
   return Math.max(Designs.floorToMultiple(offset / unitSize, snap), 0);
-}
-
-/**
- * Clamps a value into a range.
- *
- * @param value - The value to clamp.
- * @param min - The lower bound.
- * @param max - The upper bound.
- * @returns The clamped value.
- */
-function clamp(value: number, min: number, max: number): number {
-  return Math.max(min, Math.min(value, max));
 }
