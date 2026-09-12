@@ -42,6 +42,13 @@ export interface DataViewType<
   sortable?: boolean;
 
   /**
+   * Whether the view type's entries can be narrowed by the view's
+   * filters. View types showing every entry regardless are not
+   * filterable.
+   */
+  filterable?: boolean;
+
+  /**
    * The component used to render the data view.
    */
   component: React.ElementType<

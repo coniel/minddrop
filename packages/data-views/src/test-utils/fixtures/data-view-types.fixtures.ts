@@ -16,10 +16,11 @@ function generateViewTypeFixture(type: string): DataViewType {
   };
 }
 
-// Table renders its entries in a sortable order
+// Table renders its entries in a sortable, filterable order
 export const dataViewType_table: DataViewType = {
   ...generateViewTypeFixture('table'),
   sortable: true,
+  filterable: true,
 };
 
 export const dataViewType_gallery = generateViewTypeFixture('gallery');

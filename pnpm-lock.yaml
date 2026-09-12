@@ -594,6 +594,9 @@ importers:
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
+      '@minddrop/properties':
+        specifier: workspace:*
+        version: link:../../packages/properties
       '@minddrop/queries':
         specifier: workspace:*
         version: link:../../packages/queries
@@ -1781,6 +1784,9 @@ importers:
       '@minddrop/item-references':
         specifier: workspace:*
         version: link:../item-references
+      '@minddrop/properties':
+        specifier: workspace:*
+        version: link:../properties
       '@minddrop/stores':
         specifier: workspace:*
         version: link:../stores
