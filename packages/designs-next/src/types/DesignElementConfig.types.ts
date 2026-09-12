@@ -75,6 +75,12 @@ export interface DesignElementConfig<
   defaultWidthMode?: ElementWidthMode;
 
   /**
+   * Whether the element's block is locked to a square, keeping its
+   * column and row spans equal.
+   */
+  square?: boolean;
+
+  /**
    * Whether newly inserted elements grow to their content's height.
    */
   defaultNaturalHeight?: boolean;

@@ -91,10 +91,14 @@ describe('resolveScalingRows', () => {
     expect(scaling[31]).toBe(true);
   });
 
-  it('treats elements without a height mode as fluid', () => {
+  it('treats elements without a height mode as pinned to the top', () => {
     const scaling = resolveScalingRows([coverDesignElement], 32);
 
-    expect(scaling[0]).toBe(true);
-    expect(scaling[15]).toBe(true);
+    // The element's own rows keep their height, and the gap below it
+    // absorbs the extra space.
+    expect(scaling[0]).toBe(false);
+    expect(scaling[15]).toBe(false);
+    expect(scaling[16]).toBe(true);
+    expect(scaling[31]).toBe(true);
   });
 });

@@ -98,7 +98,8 @@ export function resolveScalingRows(
 }
 
 /**
- * Resolves an element's height mode, defaulting to fluid.
+ * Resolves an element's height mode, defaulting to fixed against the
+ * top edge.
  *
  * @param element - The element, or null when there is none.
  * @returns The element's height mode, or null without an element.
@@ -110,7 +111,7 @@ function resolveHeightMode(
     return null;
   }
 
-  return element.heightMode ?? 'fluid';
+  return element.heightMode ?? 'fixed-top';
 }
 
 /**

@@ -1,3 +1,4 @@
+import { clamp } from '@minddrop/utils';
 import { DesignElement } from '../../types';
 import { resolveContextElements } from '../resolveContextElements';
 import { resolveScaledWidths } from '../resolveScaledWidths';
@@ -70,16 +71,4 @@ export function remapElementColumns<TElement extends DesignElement>(
       columnSpan: Math.min(columnSpan, newColumns),
     };
   });
-}
-
-/**
- * Clamps a value between a minimum and maximum.
- *
- * @param value - The value to clamp.
- * @param min - The lower bound.
- * @param max - The upper bound.
- * @returns The clamped value.
- */
-function clamp(value: number, min: number, max: number): number {
-  return Math.min(Math.max(value, min), max);
 }

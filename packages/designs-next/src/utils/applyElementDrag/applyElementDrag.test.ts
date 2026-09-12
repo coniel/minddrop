@@ -212,6 +212,111 @@ describe('applyElementDrag', () => {
     expect(resized.rowSpan).toBe(18);
   });
 
+  describe('square elements', () => {
+    // The icon fixture given room to grow on both axes
+    const squareElement = { ...iconDesignElement, column: 10, row: 10 };
+    const squareOptions = { ...baseOptions, square: true };
+
+    it('follows the dragged side, keeping both spans equal', () => {
+      const widened = applyElementDrag(squareElement, {
+        ...squareOptions,
+        mode: 'resize-right',
+        deltaColumns: 4,
+      });
+
+      expect(widened.columnSpan).toBe(10);
+      expect(widened.rowSpan).toBe(10);
+
+      const heightened = applyElementDrag(squareElement, {
+        ...squareOptions,
+        mode: 'resize-bottom',
+        deltaRows: 4,
+      });
+
+      expect(heightened.columnSpan).toBe(10);
+      expect(heightened.rowSpan).toBe(10);
+    });
+
+    it('keeps the edges the drag leaves alone in place', () => {
+      const resized = applyElementDrag(squareElement, {
+        ...squareOptions,
+        mode: 'resize-top-left',
+        deltaColumns: -4,
+        deltaRows: -2,
+      });
+
+      // The furthest dragged axis sets both spans, so the shallower
+      // one is pulled past its own delta.
+      expect(resized.columnSpan).toBe(10);
+      expect(resized.rowSpan).toBe(10);
+
+      // The right and bottom edges stay where they were
+      expect(resized.column + resized.columnSpan).toBe(16);
+      expect(resized.row + resized.rowSpan).toBe(16);
+    });
+
+    it('follows the axis a corner is dragged furthest along', () => {
+      const resized = applyElementDrag(squareElement, {
+        ...squareOptions,
+        mode: 'resize-bottom-right',
+        deltaColumns: 2,
+        deltaRows: 8,
+      });
+
+      expect(resized.columnSpan).toBe(14);
+      expect(resized.rowSpan).toBe(14);
+    });
+
+    it('floors both axes at the minimum row span', () => {
+      const resized = applyElementDrag(squareElement, {
+        ...squareOptions,
+        mode: 'resize-right',
+        deltaColumns: -100,
+        minRowSpan: 5,
+      });
+
+      expect(resized.columnSpan).toBe(5);
+      expect(resized.rowSpan).toBe(5);
+    });
+
+    it('grows only as far as the tighter axis allows', () => {
+      // Eight rows short of the design's bottom edge
+      const resized = applyElementDrag(
+        { ...squareElement, row: cardRows - 8 },
+        { ...squareOptions, mode: 'resize-right', deltaColumns: 100 },
+      );
+
+      expect(resized.columnSpan).toBe(8);
+      expect(resized.rowSpan).toBe(8);
+    });
+
+    it('ignores the row span step', () => {
+      const resized = applyElementDrag(squareElement, {
+        ...squareOptions,
+        mode: 'resize-bottom',
+        deltaRows: 4,
+        rowSpanStep: 5,
+      });
+
+      // Stepped, the delta would snap to 5 and the span to 11
+      expect(resized.rowSpan).toBe(10);
+    });
+
+    it('moves without resizing', () => {
+      const moved = applyElementDrag(squareElement, {
+        ...squareOptions,
+        mode: 'move',
+        deltaColumns: 4,
+        deltaRows: 4,
+      });
+
+      expect(moved.columnSpan).toBe(squareElement.columnSpan);
+      expect(moved.rowSpan).toBe(squareElement.rowSpan);
+      expect(moved.column).toBe(14);
+      expect(moved.row).toBe(14);
+    });
+  });
+
   it('preserves extra element fields', () => {
     const moved = applyElementDrag(
       { ...titleDesignElement, label: 'Title' },

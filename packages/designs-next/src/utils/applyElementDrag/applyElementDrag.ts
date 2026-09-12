@@ -1,3 +1,4 @@
+import { clamp } from '@minddrop/utils';
 import { DesignElement } from '../../types';
 import { snapToMultiple } from '../snapToMultiple';
 
@@ -52,9 +53,16 @@ export interface ApplyElementDragOptions {
   /**
    * The element's vertical resize step in grid units. When given,
    * vertical resize deltas snap to it instead of the snap
-   * resolution, keeping the span on whole steps.
+   * resolution, keeping the span on whole steps. Ignored for square
+   * elements, whose height follows their width.
    */
   rowSpanStep?: number;
+
+  /**
+   * Whether the element's block is locked to a square, keeping both
+   * spans equal through the resize.
+   */
+  square?: boolean;
 }
 
 /**
@@ -80,6 +88,7 @@ export function applyElementDrag<TElement extends DesignElement>(
     snap,
     minRowSpan = 1,
     rowSpanStep,
+    square,
   } = options;
 
   // Snap the element's edges onto the snap grid, keeping it inside
@@ -103,7 +112,14 @@ export function applyElementDrag<TElement extends DesignElement>(
   // Snap the drag delta so the untouched edges stay put. Vertical
   // deltas snap to the row span step when the element has one.
   const snappedColumns = snapToMultiple(deltaColumns, snap);
-  const snappedRows = snapToMultiple(deltaRows, rowSpanStep ?? snap);
+  const snappedRows = snapToMultiple(
+    deltaRows,
+    square ? snap : (rowSpanStep ?? snap),
+  );
+
+  if (square) {
+    return resizeSquare(element, options, snappedColumns, snappedRows);
+  }
 
   let resized = { ...element };
 
@@ -164,6 +180,69 @@ export function applyElementDrag<TElement extends DesignElement>(
 }
 
 /**
+ * Resizes a square element, keeping both spans equal. The dragged
+ * side's axis leads and the other follows it, while a corner's
+ * leader is the axis dragged furthest. The edges the drag leaves
+ * alone stay put, and the square grows only as far as the nearer of
+ * the two axes allows.
+ *
+ * @param element - The element as it was at drag start.
+ * @param options - The drag interaction and grid context.
+ * @param snappedColumns - The snapped horizontal delta in grid units.
+ * @param snappedRows - The snapped vertical delta in grid units.
+ * @returns The element with the resize applied.
+ */
+function resizeSquare<TElement extends DesignElement>(
+  element: TElement,
+  options: ApplyElementDragOptions,
+  snappedColumns: number,
+  snappedRows: number,
+): TElement {
+  const { mode, columns, rows, minRowSpan = 1 } = options;
+
+  // The edges a resize on each axis holds in place
+  const rightEdge = element.column + element.columnSpan;
+  const bottomEdge = element.row + element.rowSpan;
+
+  const draggingLeft = mode.includes('left');
+  const draggingTop = mode.includes('top');
+  const draggingHorizontally = draggingLeft || mode.includes('right');
+  const draggingVertically = draggingTop || mode.includes('bottom');
+
+  // The span each dragged axis would take on its own
+  const columnSpan = draggingLeft
+    ? element.columnSpan - snappedColumns
+    : element.columnSpan + snappedColumns;
+  const rowSpan = draggingTop
+    ? element.rowSpan - snappedRows
+    : element.rowSpan + snappedRows;
+
+  // The axis the square follows: the dragged side's, or on a corner
+  // the axis dragged furthest.
+  const followsColumns =
+    draggingHorizontally &&
+    (!draggingVertically || Math.abs(snappedColumns) >= Math.abs(snappedRows));
+
+  // The square grows into the room its tighter axis has left
+  const span = clamp(
+    followsColumns ? columnSpan : rowSpan,
+    minRowSpan,
+    Math.min(
+      draggingLeft ? rightEdge : columns - element.column,
+      draggingTop ? bottomEdge : rows - element.row,
+    ),
+  );
+
+  return {
+    ...element,
+    column: draggingLeft ? rightEdge - span : element.column,
+    row: draggingTop ? bottomEdge - span : element.row,
+    columnSpan: span,
+    rowSpan: span,
+  };
+}
+
+/**
  * Clamps a row span to its bounds, flooring it back onto whole steps
  * when a bound truncates a stepped span.
  *
@@ -189,16 +268,4 @@ function clampRowSpan(
 
   // Floor the span back onto a whole step, keeping the minimum
   return Math.max(Math.floor(clamped / step) * step, min);
-}
-
-/**
- * Clamps a value between a minimum and maximum.
- *
- * @param value - The value to clamp.
- * @param min - The lower bound.
- * @param max - The upper bound.
- * @returns The clamped value.
- */
-function clamp(value: number, min: number, max: number): number {
-  return Math.min(Math.max(value, min), max);
 }
