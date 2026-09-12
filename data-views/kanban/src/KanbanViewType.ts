@@ -12,6 +12,7 @@ export const KanbanViewType: DataViewType<KanbanViewOptions, KanbanViewData> = {
   description: 'dataViews.kanban.description',
   icon: 'square-kanban',
   supportedDataSources: ['database'],
+  filterable: true,
   defaultOptions: defaultKanbanViewOptions,
   defaultData: defaultKanbanViewData,
   component: KanbanViewComponent,

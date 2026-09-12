@@ -12,6 +12,7 @@ export const TableViewType: DataViewType<TableViewOptions> = {
   icon: 'table',
   supportedDataSources: ['database', 'query', 'collection'],
   sortable: true,
+  filterable: true,
   defaultOptions: defaultTableViewOptions,
   component: TableViewComponent,
   skeletonComponent: TableViewSkeleton,
