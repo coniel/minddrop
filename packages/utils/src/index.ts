@@ -3,6 +3,7 @@ import { isMap, parse, parseDocument, stringify } from 'yaml';
 export * from './Paths';
 export * from './back-end-utils';
 export * from './bracketImageWidth';
+export * from './clamp';
 export * from './constants';
 export * from './createContext';
 export * from './deepMerge';
