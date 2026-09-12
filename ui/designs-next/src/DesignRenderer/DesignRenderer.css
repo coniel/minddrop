@@ -6,7 +6,7 @@
 .design-renderer-element {
   position: absolute;
   /* Stretch element components to the wrapper's height, including
-     the min-height of natural elements, which a percentage height
+     the min-height of growing elements, which a percentage height
      cannot resolve against. */
   display: flex;
 }

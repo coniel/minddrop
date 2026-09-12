@@ -14,7 +14,6 @@ export const coverDesignElement: DesignElement = {
   columnSpan: 48,
   rowSpan: 16,
   widthMode: 'fluid',
-  naturalHeight: false,
 };
 
 // Fluid title layered over the cover
@@ -26,7 +25,6 @@ export const titleDesignElement: DesignElement = {
   columnSpan: 28,
   rowSpan: 4,
   widthMode: 'fluid',
-  naturalHeight: false,
 };
 
 // Fixed icon layered over the cover, side by side with the title
@@ -38,10 +36,9 @@ export const iconDesignElement: DesignElement = {
   columnSpan: 6,
   rowSpan: 6,
   widthMode: 'fixed-right',
-  naturalHeight: false,
 };
 
-// Natural-height fluid body below the cover
+// Growing fluid body below the cover
 export const bodyDesignElement: DesignElement = {
   id: 'element_body',
   type: TestElementType,
@@ -50,7 +47,7 @@ export const bodyDesignElement: DesignElement = {
   columnSpan: 44,
   rowSpan: 10,
   widthMode: 'fluid',
-  naturalHeight: true,
+  contentFit: 'grow',
 };
 
 export const designElements = [

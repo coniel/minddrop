@@ -7,6 +7,10 @@ import {
 } from '@minddrop/designs-next/test-utils';
 import { resolveVerticalStyles } from './resolveVerticalStyles';
 
+// The body's block height in pixels
+const bodyBlockHeight =
+  bodyDesignElement.rowSpan * Designs.constants.UnitPixelSize;
+
 describe('resolveVerticalStyles', () => {
   it('resolves against the card height when aspect-locked', () => {
     // A full-height fluid cover in a locked card
@@ -25,7 +29,19 @@ describe('resolveVerticalStyles', () => {
     expect(styles).toEqual({ top: 0, height: 256 });
   });
 
-  it('sizes fixed elements from their block span otherwise', () => {
+  it('positions elements at their row top otherwise', () => {
+    const rowLayout = Designs.resolveRowLayout(cardDesign_1.elements, 32, {});
+    const styles = resolveVerticalStyles(
+      bodyDesignElement,
+      cardDesign_1,
+      null,
+      rowLayout,
+    );
+
+    expect(styles.top).toBe(rowLayout.tops[bodyDesignElement.row]);
+  });
+
+  it('sizes fixed elements from their block span', () => {
     const rowLayout = Designs.resolveRowLayout(cardDesign_1.elements, 32, {});
     const styles = resolveVerticalStyles(
       coverDesignElement,
@@ -37,11 +53,10 @@ describe('resolveVerticalStyles', () => {
     expect(styles).toEqual({
       top: 0,
       height: coverDesignElement.rowSpan * Designs.constants.UnitPixelSize,
-      minHeight: undefined,
     });
   });
 
-  it('gives natural elements a minimum height instead of a fixed one', () => {
+  it('gives growing elements their block span as a minimum height', () => {
     const rowLayout = Designs.resolveRowLayout(cardDesign_1.elements, 32, {});
     const styles = resolveVerticalStyles(
       bodyDesignElement,
@@ -51,8 +66,35 @@ describe('resolveVerticalStyles', () => {
     );
 
     expect(styles.height).toBeUndefined();
-    expect(styles.minHeight).toBe(
-      bodyDesignElement.rowSpan * Designs.constants.UnitPixelSize,
+    expect(styles.minHeight).toBe(bodyBlockHeight);
+    expect(styles.maxHeight).toBeUndefined();
+  });
+
+  it('gives shrinking elements their block span as a maximum height', () => {
+    const rowLayout = Designs.resolveRowLayout(cardDesign_1.elements, 32, {});
+    const styles = resolveVerticalStyles(
+      { ...bodyDesignElement, contentFit: 'shrink' },
+      cardDesign_1,
+      null,
+      rowLayout,
     );
+
+    expect(styles.height).toBeUndefined();
+    expect(styles.minHeight).toBeUndefined();
+    expect(styles.maxHeight).toBe(bodyBlockHeight);
+  });
+
+  it('leaves natural elements height to their content', () => {
+    const rowLayout = Designs.resolveRowLayout(cardDesign_1.elements, 32, {});
+    const styles = resolveVerticalStyles(
+      { ...bodyDesignElement, contentFit: 'natural' },
+      cardDesign_1,
+      null,
+      rowLayout,
+    );
+
+    expect(styles.height).toBeUndefined();
+    expect(styles.minHeight).toBeUndefined();
+    expect(styles.maxHeight).toBeUndefined();
   });
 });

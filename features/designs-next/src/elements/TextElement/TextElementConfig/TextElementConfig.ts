@@ -25,7 +25,7 @@ export const TextElementConfig: DesignElementConfig<TextElement> = {
   component: TextElementRenderer,
   defaultColumnSpan: 32,
   defaultRowSpan: TextLineHeightUnits * 2,
-  defaultNaturalHeight: true,
+  defaultContentFit: 'grow',
   resolveDefaults: resolvePlaceholderText,
   settingGroups: ['text'],
   resolveMinRowSpan: () => TextLineHeightUnits,

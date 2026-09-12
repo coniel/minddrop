@@ -12,8 +12,9 @@ import './TextElementRenderer.css';
 /**
  * Renders the text element as wrapping body text, taking it from
  * the property the element maps to and falling back to its own
- * content. Fixed-height text clamps to the number of lines its block
- * height holds, natural height text grows with its content.
+ * content. Text which may not grow past its block clamps to the
+ * number of lines the block holds, text which may grows with its
+ * content.
  */
 export const TextElementRenderer: React.FC<DesignElementProps<TextElement>> = ({
   element,
@@ -23,6 +24,10 @@ export const TextElementRenderer: React.FC<DesignElementProps<TextElement>> = ({
   // The number of lines the block height holds
   const lines = Math.max(1, Math.round(element.rowSpan / TextLineHeightUnits));
 
+  // Whether the text may grow past its block
+  const contentFit = element.contentFit ?? 'fixed';
+  const grows = contentFit === 'grow' || contentFit === 'natural';
+
   // The text settings modifier classes
   const className = joinClasses(
     'design-text-element',
@@ -30,11 +35,11 @@ export const TextElementRenderer: React.FC<DesignElementProps<TextElement>> = ({
   );
 
   // The weight and colour the text is set in, with the line clamp
-  // of a fixed height block.
+  // of a block it may not grow past.
   const style: React.CSSProperties = {
     fontWeight: element.fontWeight,
     color: resolveElementColor(element.textColor),
-    ...(element.naturalHeight ? undefined : { WebkitLineClamp: lines }),
+    ...(grows ? undefined : { WebkitLineClamp: lines }),
   };
 
   return (

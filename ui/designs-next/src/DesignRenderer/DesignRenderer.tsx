@@ -36,8 +36,8 @@ export interface DesignRendererProps {
 /**
  * Renders a design fluidly: each element's pixel rect is resolved
  * against the design's unit grid and rendered absolutely positioned,
- * with natural-height elements stretching the rows they span to fit
- * their content.
+ * with content-fitted elements stretching or shrinking the rows they
+ * span to fit their content.
  */
 export const DesignRenderer: React.FC<DesignRendererProps> = ({
   design,
@@ -48,9 +48,9 @@ export const DesignRenderer: React.FC<DesignRendererProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const measuredNodesRef = useRef(new Map<string, HTMLDivElement>());
   const [measuredWidth, setMeasuredWidth] = useState<number | null>(null);
-  const [naturalHeights, setNaturalHeights] = useState<Record<string, number>>(
-    {},
-  );
+  const [measuredHeights, setMeasuredHeights] = useState<
+    Record<string, number>
+  >({});
 
   // Use the explicit width when given, the measured container width
   // otherwise.
@@ -63,11 +63,11 @@ export const DesignRenderer: React.FC<DesignRendererProps> = ({
   const aspectHeight =
     aspectRatio && renderWidth !== null ? renderWidth / aspectRatio : null;
 
-  // Row pixel offsets with rows stretched to fit natural element
-  // heights, driving natural-height designs only.
+  // Row pixel offsets with rows fitted to the measured element
+  // heights, driving row-laid-out designs only.
   const rowLayout = design.aspectRatio
     ? null
-    : Designs.resolveRowLayout(design.elements, design.rows, naturalHeights);
+    : Designs.resolveRowLayout(design.elements, design.rows, measuredHeights);
 
   // Measure the container's width when no explicit width is given
   useEffect(() => {
@@ -90,16 +90,19 @@ export const DesignRenderer: React.FC<DesignRendererProps> = ({
     return () => observer.disconnect();
   }, [width]);
 
-  // Track natural element heights so their rows can grow to fit
+  // Track fitted element heights so their rows can follow their
   // content. Re-runs when the width arrives, since elements only
   // render once it is known.
   useEffect(() => {
     const observer = new ResizeObserver((entries) => {
-      setNaturalHeights((current) => {
+      setMeasuredHeights((current) => {
         const next = { ...current };
         let changed = false;
 
-        // Record each observed element's measured pixel height
+        // Record each observed element's rendered pixel height. A
+        // shrinking element's wrapper is capped at its block height,
+        // so the capped height is already the height it takes, and
+        // content growing behind the cap changes nothing.
         entries.forEach((entry) => {
           const target = entry.target as HTMLElement;
           const elementId = target.dataset.elementId;
@@ -114,13 +117,13 @@ export const DesignRenderer: React.FC<DesignRendererProps> = ({
       });
     });
 
-    // Observe every rendered natural-height element
+    // Observe every rendered fitted element
     measuredNodesRef.current.forEach((node) => observer.observe(node));
 
     return () => observer.disconnect();
   }, [design.elements, renderWidth]);
 
-  // Registers a natural element's node for height measurement
+  // Registers a fitted element's node for height measurement
   function setMeasuredNode(elementId: string, node: HTMLDivElement | null) {
     if (node) {
       measuredNodesRef.current.set(elementId, node);
@@ -157,11 +160,18 @@ export const DesignRenderer: React.FC<DesignRendererProps> = ({
               renderWidth,
             );
 
+            // Whether the element's height follows its content, which
+            // is measured outside aspect-locked designs.
+            const fitted =
+              element.contentFit !== undefined &&
+              element.contentFit !== 'fixed' &&
+              aspectHeight === null;
+
             return (
               <div
                 key={element.id}
                 ref={
-                  element.naturalHeight && aspectHeight === null
+                  fitted
                     ? (node) => setMeasuredNode(element.id, node)
                     : undefined
                 }

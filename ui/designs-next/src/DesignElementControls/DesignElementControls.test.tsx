@@ -252,7 +252,7 @@ describe('DesignElementControls', () => {
 
     fireEvent.click(toggle);
 
-    expect(changedElement(iconDesignElement.id)?.naturalHeight).toBe(true);
+    expect(changedElement(iconDesignElement.id)?.contentFit).toBe('grow');
   });
 
   it('drops natural height for a square element', () => {

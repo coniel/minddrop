@@ -57,13 +57,19 @@ describe('validateDesignElement', () => {
     ).toBe(false);
   });
 
-  it('rejects a missing natural height flag', () => {
+  it('accepts a known content fit and rejects an unknown one', () => {
     expect(
-      validateDesignElement({
-        ...coverDesignElement,
-        naturalHeight: undefined,
-      }),
+      validateDesignElement({ ...coverDesignElement, contentFit: 'shrink' }),
+    ).toBe(true);
+    expect(
+      validateDesignElement({ ...coverDesignElement, contentFit: 'stretch' }),
     ).toBe(false);
+  });
+
+  it('accepts an absent content fit', () => {
+    expect(
+      validateDesignElement({ ...coverDesignElement, contentFit: undefined }),
+    ).toBe(true);
   });
 
   it('accepts a mapped property name', () => {

@@ -183,7 +183,7 @@ describe('<DesignEditorPane />', () => {
 
     fireEvent.click(screen.getByLabelText('Natural height'));
 
-    expect(changedTitle()?.naturalHeight).toBe(true);
+    expect(changedTitle()?.contentFit).toBe('grow');
   });
 
   it('changes the height mode through the toolbar when aspect-locked', () => {

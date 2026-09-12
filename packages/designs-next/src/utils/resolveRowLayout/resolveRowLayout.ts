@@ -14,53 +14,78 @@ export interface RowLayout {
 }
 
 /**
- * Resolves each row's pixel offset, stretching the rows spanned by
- * natural-height elements to fit their measured content so rows below
- * are pushed down. Rows only stretch, never shrink.
+ * Resolves each row's pixel offset, stretching or shrinking the rows
+ * spanned by content-fitted elements to fit their measured content
+ * so rows below move with them. A row spanned by several elements
+ * takes the tallest height among them, and a row no element spans
+ * keeps its unit height.
  *
  * @param elements - The card's elements.
  * @param rows - The card's row count.
- * @param naturalHeights - Measured pixel heights per natural element ID.
+ * @param measuredHeights - Measured pixel heights per fitted element ID.
  * @returns The row layout.
  */
 export function resolveRowLayout(
   elements: DesignElement[],
   rows: number,
-  naturalHeights: Record<string, number>,
+  measuredHeights: Record<string, number>,
 ): RowLayout {
-  // Start every row at its unit height
-  const heights = new Array<number>(rows).fill(UnitPixelSize);
+  // The tallest height an element spanning each row needs, unset
+  // for rows no element spans.
+  const demands = new Array<number | undefined>(rows).fill(undefined);
 
-  // Stretch each natural element's rows evenly to fit its measured
-  // height.
   elements.forEach((element) => {
-    // Look up the element's measured content height
-    const measured = naturalHeights[element.id];
-
-    // Skip elements without a natural height or a measurement
-    if (!element.naturalHeight || !measured) {
-      return;
-    }
-
-    // Spread the measured height evenly across the element's rows,
-    // only ever growing them.
-    const perRow = measured / element.rowSpan;
+    // The height the element needs from each of its rows
+    const perRow = resolveRowHeight(element, measuredHeights[element.id]);
 
     for (
       let row = element.row;
       row < Math.min(element.row + element.rowSpan, rows);
       row += 1
     ) {
-      heights[row] = Math.max(heights[row], perRow);
+      demands[row] = Math.max(demands[row] ?? 0, perRow);
     }
   });
 
   // Row tops are the cumulative heights of the rows above
   const tops: number[] = [0];
 
-  heights.forEach((height, index) => {
-    tops.push(tops[index] + height);
+  demands.forEach((demand, index) => {
+    tops.push(tops[index] + (demand ?? UnitPixelSize));
   });
 
   return { tops, totalHeight: tops[rows] };
+}
+
+/**
+ * Resolves the height an element needs from each row it spans: its
+ * measured content spread evenly across its rows, bounded by its
+ * content fit.
+ *
+ * @param element - The element.
+ * @param measured - The element's measured content height, if any.
+ * @returns The height per row in pixels.
+ */
+function resolveRowHeight(
+  element: DesignElement,
+  measured: number | undefined,
+): number {
+  const contentFit = element.contentFit ?? 'fixed';
+
+  // Fixed and unmeasured elements hold their unit height
+  if (contentFit === 'fixed' || measured === undefined) {
+    return UnitPixelSize;
+  }
+
+  const perRow = measured / element.rowSpan;
+
+  if (contentFit === 'grow') {
+    return Math.max(UnitPixelSize, perRow);
+  }
+
+  if (contentFit === 'shrink') {
+    return Math.min(UnitPixelSize, perRow);
+  }
+
+  return perRow;
 }

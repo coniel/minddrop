@@ -14,6 +14,13 @@ export type ElementHeightMode =
   | 'fixed-bottom'
   | 'fixed-proportional';
 
+/**
+ * How an element's height fits its content: fixed holds the block's
+ * height, grow takes it as a minimum, shrink as a maximum, and
+ * natural follows the content either way.
+ */
+export type ElementContentFit = 'fixed' | 'grow' | 'shrink' | 'natural';
+
 export interface DesignElement {
   /**
    * A unique identifier for the element.
@@ -69,11 +76,11 @@ export interface DesignElement {
   widthMode: ElementWidthMode;
 
   /**
-   * Whether the element grows to its content's height, stretching the
-   * rows it spans and pushing rows below it down. Ignored in
-   * aspect-locked designs.
+   * How the element's height fits its content, stretching or
+   * shrinking the rows it spans so rows below move with it. Absent
+   * means fixed. Ignored in aspect-locked designs.
    */
-  naturalHeight: boolean;
+  contentFit?: ElementContentFit;
 
   /**
    * How the element's height behaves in an aspect-locked design:

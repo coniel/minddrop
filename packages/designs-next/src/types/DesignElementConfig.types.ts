@@ -2,7 +2,11 @@ import type { ComponentType } from 'react';
 import type { TranslationKey } from '@minddrop/i18n';
 import type { PropertyType } from '@minddrop/properties';
 import type { UiIconName } from '@minddrop/ui-icons';
-import { DesignElement, ElementWidthMode } from './DesignElement.types';
+import {
+  DesignElement,
+  ElementContentFit,
+  ElementWidthMode,
+} from './DesignElement.types';
 import { DesignElementContentControlsProps } from './DesignElementContentControls.types';
 import { DesignElementGroup } from './DesignElementGroup.types';
 import { DesignElementComponent } from './DesignElementProps.types';
@@ -81,9 +85,10 @@ export interface DesignElementConfig<
   square?: boolean;
 
   /**
-   * Whether newly inserted elements grow to their content's height.
+   * The content fit assigned to newly inserted elements. Defaults to
+   * fixed.
    */
-  defaultNaturalHeight?: boolean;
+  defaultContentFit?: ElementContentFit;
 
   /**
    * Resolves the element-specific fields a newly inserted element

@@ -29,6 +29,6 @@ export function createDesignElement(
     columnSpan: config.defaultColumnSpan,
     rowSpan: config.defaultRowSpan,
     widthMode: config.defaultWidthMode ?? 'fluid',
-    naturalHeight: config.defaultNaturalHeight ?? false,
+    contentFit: config.defaultContentFit ?? 'fixed',
   };
 }

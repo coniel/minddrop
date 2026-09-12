@@ -1,6 +1,7 @@
 import { isEntityId } from '@minddrop/utils';
 import {
   DesignElement,
+  ElementContentFit,
   ElementHeightMode,
   ElementWidthMode,
 } from '../../types';
@@ -20,6 +21,9 @@ const heightModes: ElementHeightMode[] = [
   'fixed-bottom',
   'fixed-proportional',
 ];
+
+// The content fits an element may declare
+const contentFits: ElementContentFit[] = ['fixed', 'grow', 'shrink', 'natural'];
 
 /**
  * Validates the shape of a design element read from disk.
@@ -62,8 +66,11 @@ export function validateDesignElement(
     return false;
   }
 
-  // The natural height flag must be a boolean
-  if (typeof element.naturalHeight !== 'boolean') {
+  // The content fit must be known when present
+  if (
+    element.contentFit !== undefined &&
+    !contentFits.includes(element.contentFit)
+  ) {
     return false;
   }
 

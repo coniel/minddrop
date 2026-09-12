@@ -7,8 +7,8 @@ import {
 
 /**
  * Resolves an element wrapper's vertical styles: engine-resolved in
- * aspect-locked designs, row-layout based with natural growth
- * otherwise.
+ * aspect-locked designs, row-layout based with the element's content
+ * fit bounding its height otherwise.
  *
  * @param element - The element to resolve styles for.
  * @param design - The design being rendered.
@@ -36,13 +36,33 @@ export function resolveVerticalStyles(
 
   return {
     top: rowLayout?.tops[element.row],
-    // Natural elements size to their content, with their block span
-    // as the minimum.
-    height: element.naturalHeight
-      ? undefined
-      : element.rowSpan * Designs.constants.UnitPixelSize,
-    minHeight: element.naturalHeight
-      ? element.rowSpan * Designs.constants.UnitPixelSize
-      : undefined,
+    ...resolveContentFitStyles(element),
   };
+}
+
+/**
+ * Resolves the bounds an element's content fit sets on its wrapper's
+ * height: fixed holds the block height, grow takes it as a minimum,
+ * shrink as a maximum, and natural leaves the height to the content.
+ *
+ * @param element - The element to resolve bounds for.
+ * @returns The wrapper's height bounds.
+ */
+function resolveContentFitStyles(element: DesignElement): React.CSSProperties {
+  const contentFit = element.contentFit ?? 'fixed';
+  const blockHeight = element.rowSpan * Designs.constants.UnitPixelSize;
+
+  if (contentFit === 'grow') {
+    return { minHeight: blockHeight };
+  }
+
+  if (contentFit === 'shrink') {
+    return { maxHeight: blockHeight };
+  }
+
+  if (contentFit === 'natural') {
+    return {};
+  }
+
+  return { height: blockHeight };
 }

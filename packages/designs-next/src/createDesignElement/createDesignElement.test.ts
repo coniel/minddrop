@@ -26,7 +26,7 @@ describe('createDesignElement', () => {
       columnSpan: testElementConfig.defaultColumnSpan,
       rowSpan: testElementConfig.defaultRowSpan,
       widthMode: 'fluid',
-      naturalHeight: false,
+      contentFit: 'fixed',
     });
     expect(isEntityId(element.id, 'element')).toBe(true);
   });
@@ -41,19 +41,19 @@ describe('createDesignElement', () => {
     expect(element.row).toBe(6);
   });
 
-  it('applies the config width mode and natural height defaults', () => {
-    // A type defaulting to a pinned width and natural height
+  it('applies the config width mode and content fit defaults', () => {
+    // A type defaulting to a pinned width and a growing height
     registerDesignElementConfig({
       ...testElementConfig,
       type: 'custom',
       defaultWidthMode: 'fixed-left',
-      defaultNaturalHeight: true,
+      defaultContentFit: 'grow',
     });
 
     const element = createDesignElement('custom');
 
     expect(element.widthMode).toBe('fixed-left');
-    expect(element.naturalHeight).toBe(true);
+    expect(element.contentFit).toBe('grow');
   });
 
   it('applies the config starter fields beneath the base fields', () => {

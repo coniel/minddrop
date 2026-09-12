@@ -178,7 +178,7 @@ describe('DesignRenderer', () => {
     expect(cover.style.width).toBe('480px');
   });
 
-  it('gives natural elements a minimum height instead of a fixed one', () => {
+  it('gives growing elements a minimum height instead of a fixed one', () => {
     const { container } = render(
       <DesignRenderer design={cardDesign_1} width={480} />,
     );
@@ -271,8 +271,8 @@ describe('DesignRenderer', () => {
     );
   });
 
-  it('ignores natural height in aspect-locked designs', () => {
-    // The natural body element inside a locked design
+  it('ignores the content fit in aspect-locked designs', () => {
+    // The growing body element inside a locked design
     const design: Design = { ...cardDesign_1, aspectRatio: '3/2' };
     const { container } = render(
       <DesignRenderer design={design} width={480} />,
@@ -286,7 +286,7 @@ describe('DesignRenderer', () => {
     expect(body.style.height).not.toBe('');
   });
 
-  it('stretches rows to fit measured natural heights', () => {
+  it('stretches rows to fit a growing element measured height', () => {
     const { container } = render(
       <DesignRenderer design={cardDesign_1} width={480} />,
     );
@@ -294,7 +294,7 @@ describe('DesignRenderer', () => {
       '[data-element-id="element_body"]',
     ) as HTMLElement;
 
-    // Report a measured content height for the natural body element
+    // Report a measured content height for the growing body element
     reportMeasuredSize(body, 'offsetHeight', 100);
 
     const renderer = container.querySelector('.design-renderer') as HTMLElement;
@@ -303,6 +303,47 @@ describe('DesignRenderer', () => {
     // measured 100px.
     expect(renderer.style.height).toBe(
       `${(cardDesign_1.rows - bodyDesignElement.rowSpan) * Designs.constants.UnitPixelSize + 100}px`,
+    );
+  });
+
+  it('shrinks rows to fit a shrinking element measured height', () => {
+    // The body shrinking to its content instead of growing
+    const design: Design = {
+      ...cardDesign_1,
+      elements: [
+        coverDesignElement,
+        { ...bodyDesignElement, contentFit: 'shrink' },
+      ],
+    };
+    const { container } = render(
+      <DesignRenderer design={design} width={480} />,
+    );
+    const body = container.querySelector(
+      '[data-element-id="element_body"]',
+    ) as HTMLElement;
+
+    // Report a measured content height below the body's block height
+    reportMeasuredSize(body, 'offsetHeight', 20);
+
+    const renderer = container.querySelector('.design-renderer') as HTMLElement;
+
+    // The body's ten rows shrink from unit height to fit the measured
+    // 20px.
+    expect(renderer.style.height).toBe(
+      `${(cardDesign_1.rows - bodyDesignElement.rowSpan) * Designs.constants.UnitPixelSize + 20}px`,
+    );
+  });
+
+  it('does not measure fixed elements', () => {
+    const { container } = render(
+      <DesignRenderer design={cardDesign_1} width={480} />,
+    );
+    const cover = container.querySelector(
+      '[data-element-id="element_cover"]',
+    ) as HTMLElement;
+
+    expect(observers.some((observer) => observer.targets.includes(cover))).toBe(
+      false,
     );
   });
 });

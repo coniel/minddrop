@@ -67,10 +67,10 @@ describe('HeadingElementRenderer', () => {
     expect(large).toBeCloseTo(small * 2, 3);
   });
 
-  it('holds a single line at a fixed height', () => {
+  it('holds a single line when it may not grow', () => {
     render(
       <HeadingElementRenderer
-        element={{ ...headingElement, naturalHeight: false }}
+        element={{ ...headingElement, contentFit: 'shrink' }}
       />,
     );
 
@@ -79,10 +79,10 @@ describe('HeadingElementRenderer', () => {
     );
   });
 
-  it('wraps at a natural height', () => {
+  it('wraps when it may grow', () => {
     render(
       <HeadingElementRenderer
-        element={{ ...headingElement, naturalHeight: true }}
+        element={{ ...headingElement, contentFit: 'grow' }}
       />,
     );
 

@@ -238,7 +238,7 @@ const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
     data: Partial<
       Pick<
         DesignElement,
-        'widthMode' | 'heightMode' | 'naturalHeight' | 'property'
+        'widthMode' | 'heightMode' | 'contentFit' | 'property'
       >
     >,
   ) {
@@ -271,7 +271,7 @@ const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
 
   // Toggles whether the element grows to its content's height
   function handleNaturalHeightChange(naturalHeight: boolean) {
-    updateElement({ naturalHeight });
+    updateElement({ contentFit: naturalHeight ? 'grow' : 'fixed' });
   }
 
   // Applies a settings change to the element, making room below it
@@ -386,7 +386,7 @@ const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
         <Toggle
           icon="unfold-vertical"
           label={t('designsNext.naturalHeight')}
-          pressed={element.naturalHeight}
+          pressed={element.contentFit === 'grow'}
           onPressedChange={handleNaturalHeightChange}
           tooltip={{
             side: 'right',
