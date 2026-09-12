@@ -1,13 +1,17 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { Sql } from '@minddrop/sql';
 import {
+  cleanupWorkspaceFixtures,
+  setupWorkspaceFixtures,
+} from '@minddrop/workspaces/test-utils';
+import {
+  MockFs,
+  cleanupTestSqlDatabase,
   objectDatabase,
   objectEntry1SqlRecord,
+  setupTestSqlDatabase,
   urlDatabase,
 } from '../../test-utils';
-import { createTestSqlAdapter } from '../../test-utils/createTestSqlAdapter';
 import { EntryFilterGroup, SqlEntryRecord } from '../../types';
-import { SCHEMA_SQL } from '../schema';
 import { sqlCountScopedEntries } from '../sqlCountScopedEntries';
 import { sqlUpsertDatabase } from '../sqlUpsertDatabase';
 import { sqlUpsertEntries } from '../sqlUpsertEntries';
@@ -62,10 +66,14 @@ const tagFilter: EntryFilterGroup = {
 
 describe('sqlQueryScopedEntries', () => {
   beforeAll(() => {
+    // Load the workspace the SQL helpers target by default
+    setupWorkspaceFixtures(MockFs, {
+      loadWorkspaceFiles: false,
+      loadWorkspacesConfig: false,
+    });
+
     // Open an in-memory database and create the schema
-    Sql.registerAdapter(createTestSqlAdapter());
-    Sql.initialize();
-    Sql.exec(SCHEMA_SQL);
+    setupTestSqlDatabase();
 
     // Seed the database rows required by the entries foreign key
     sqlUpsertDatabase(
@@ -95,7 +103,8 @@ describe('sqlQueryScopedEntries', () => {
   });
 
   afterAll(() => {
-    Sql.close();
+    cleanupTestSqlDatabase();
+    cleanupWorkspaceFixtures();
   });
 
   it('returns no entries when no scopes are given', async () => {

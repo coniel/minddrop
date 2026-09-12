@@ -1,5 +1,6 @@
 import { Events } from '@minddrop/events';
 import { Sql } from '@minddrop/sql';
+import { Workspaces } from '@minddrop/workspaces';
 import { DatabaseSqlSyncedEvent } from '../../events';
 
 /**
@@ -8,6 +9,8 @@ import { DatabaseSqlSyncedEvent } from '../../events';
  *
  * Updates the existing row in place rather than replacing it,
  * which would cascade delete the database's entries.
+ *
+ * @param workspaceId - The ID of the workspace whose database to target. Defaults to the active workspace.
  */
 export function sqlUpsertDatabase(
   databaseData: {
@@ -17,8 +20,10 @@ export function sqlUpsertDatabase(
     icon: string;
   },
   options?: { silent?: boolean },
+  workspaceId?: string,
 ): void {
   Sql.run(
+    workspaceId ?? Workspaces.getActive().id,
     `INSERT INTO databases (id, name, path, icon) VALUES (?, ?, ?, ?)
      ON CONFLICT(id) DO UPDATE SET name = excluded.name, path = excluded.path, icon = excluded.icon`,
     databaseData.id,

@@ -3,10 +3,16 @@ import { Sql } from '@minddrop/sql';
 import { rebuildSearchIndex } from '../rebuildSearchIndex';
 import { searchFullTextIndex } from '../searchFullTextIndex';
 import { searchIndexes } from '../searchIndexStore';
-import { cleanup, seedDatabase, seedEntries, setup } from '../test-utils';
+import {
+  cleanup,
+  seedDatabase,
+  seedEntries,
+  setup,
+  testWorkspaceId,
+} from '../test-utils';
 import { initializeSearchIndex } from './initializeSearchIndex';
 
-const workspaceId = 'workspace-1';
+const workspaceId = testWorkspaceId;
 
 describe('initializeSearchIndex', () => {
   beforeEach(() => {
@@ -32,7 +38,7 @@ describe('initializeSearchIndex', () => {
 
     // Remove the entry via raw SQL, leaving the version counter
     // untouched; a rebuild would now produce an empty index.
-    Sql.run('DELETE FROM entries WHERE id = ?', 'entry-1');
+    Sql.run(workspaceId, 'DELETE FROM entries WHERE id = ?', 'entry-1');
 
     await initializeSearchIndex(workspaceId);
 

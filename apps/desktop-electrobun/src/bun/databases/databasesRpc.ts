@@ -34,9 +34,13 @@ export async function handleDatabasesInitialize(params: {
  * message to the webview when done.
  */
 export async function handleDatabasesBackgroundSync(params: {
+  workspaceId: string;
   workspacePath: string;
 }): Promise<void> {
-  const changeset = await Databases.backgroundSync(params.workspacePath);
+  const changeset = await Databases.backgroundSync(
+    params.workspaceId,
+    params.workspacePath,
+  );
 
   // Only send if there were changes
   if (changeset.hasChanges && syncChangesetSender) {

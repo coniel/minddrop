@@ -28,7 +28,7 @@ export function createTestSqlAdapter(
   const databases = new Map<string, DatabaseSync>();
 
   return {
-    open(path: string): SqlConnection {
+    open(_workspaceId: string, path: string): SqlConnection {
       // Without path tracking, back each connection with a fresh database
       if (!mockFileSystem || !path) {
         return wrapDatabase(new DatabaseSync(':memory:'), true);

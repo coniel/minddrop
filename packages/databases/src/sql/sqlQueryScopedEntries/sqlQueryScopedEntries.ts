@@ -1,4 +1,5 @@
 import { Sql, SqlParam } from '@minddrop/sql';
+import { Workspaces } from '@minddrop/workspaces';
 import { EntryQueryScope, EntrySort } from '../../types';
 import { buildEntryScopesSql, buildEntrySortSql } from '../../utils';
 
@@ -20,6 +21,7 @@ export interface SqlQueryScopedEntriesOptions {
  * @param scopes - The database scopes to match entries against.
  * @param sort - The sort instructions to order results by.
  * @param options - Query options.
+ * @param workspaceId - The ID of the workspace whose database to target. Defaults to the active workspace.
  *
  * @returns The matching entry IDs in sorted order.
  */
@@ -27,6 +29,7 @@ export async function sqlQueryScopedEntries(
   scopes: EntryQueryScope[],
   sort: EntrySort[],
   options?: SqlQueryScopedEntriesOptions,
+  workspaceId?: string,
 ): Promise<string[]> {
   // No scopes match no entries
   const scopesSql = buildEntryScopesSql(scopes);
@@ -54,7 +57,11 @@ export async function sqlQueryScopedEntries(
 
   // Await the rows since RPC backed adapters resolve
   // asynchronously despite the synchronous signature.
-  const rows = await Sql.all<{ id: string }>(sql, ...params);
+  const rows = await Sql.all<{ id: string }>(
+    workspaceId ?? Workspaces.getActive().id,
+    sql,
+    ...params,
+  );
 
   return rows.map((row) => row.id);
 }

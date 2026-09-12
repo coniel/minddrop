@@ -1,10 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { rebuildSearchIndex } from '../rebuildSearchIndex';
 import { searchFullTextIndex } from '../searchFullTextIndex';
-import { cleanup, seedDatabase, setup } from '../test-utils';
+import { cleanup, seedDatabase, setup, testWorkspaceId } from '../test-utils';
 import { removeIndexDatabase } from './removeIndexDatabase';
 
-const workspaceId = 'workspace-1';
+const workspaceId = testWorkspaceId;
 
 describe('removeIndexDatabase', () => {
   beforeEach(async () => {
@@ -19,12 +19,14 @@ describe('removeIndexDatabase', () => {
   afterEach(cleanup);
 
   it('removes the database document from the index', () => {
-    removeIndexDatabase('database-1');
+    removeIndexDatabase(workspaceId, 'database-1');
 
     expect(searchFullTextIndex(workspaceId, 'books')).toEqual([]);
   });
 
   it('ignores unknown database IDs', () => {
-    expect(() => removeIndexDatabase('unknown-database')).not.toThrow();
+    expect(() =>
+      removeIndexDatabase(workspaceId, 'unknown-database'),
+    ).not.toThrow();
   });
 });

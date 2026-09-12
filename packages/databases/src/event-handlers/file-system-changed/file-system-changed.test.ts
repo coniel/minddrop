@@ -41,7 +41,9 @@ describe('onFileSystemChanged', () => {
 
     await flushDebounce();
 
-    expect(backend.backgroundSyncCalls).toEqual([workspace_1.path]);
+    expect(backend.backgroundSyncCalls).toEqual([
+      { workspaceId: workspace_1.id, workspacePath: workspace_1.path },
+    ]);
   });
 
   it('scans the workspace when a database directory is deleted', async () => {
@@ -51,7 +53,9 @@ describe('onFileSystemChanged', () => {
 
     await flushDebounce();
 
-    expect(backend.backgroundSyncCalls).toEqual([workspace_1.path]);
+    expect(backend.backgroundSyncCalls).toEqual([
+      { workspaceId: workspace_1.id, workspacePath: workspace_1.path },
+    ]);
   });
 
   it('coalesces a burst of changes into a single scan', async () => {
@@ -80,7 +84,9 @@ describe('onFileSystemChanged', () => {
 
     await flushDebounce();
 
-    expect(backend.backgroundSyncCalls).toEqual([workspace_1.path]);
+    expect(backend.backgroundSyncCalls).toEqual([
+      { workspaceId: workspace_1.id, workspacePath: workspace_1.path },
+    ]);
   });
 
   it('scans the workspace when a directory holding a config file is created', async () => {
@@ -96,7 +102,9 @@ describe('onFileSystemChanged', () => {
 
     await flushDebounce();
 
-    expect(backend.backgroundSyncCalls).toEqual([workspace_1.path]);
+    expect(backend.backgroundSyncCalls).toEqual([
+      { workspaceId: workspace_1.id, workspacePath: workspace_1.path },
+    ]);
   });
 
   it('ignores changes to app state in the workspace hidden directory', async () => {

@@ -14,33 +14,37 @@ import type { WebviewRpcClient } from '../types';
 export function registerSqlAdapterRpc(rpc: WebviewRpcClient): void {
   const adapter: SqlAdapter = {
     // The Bun process opens the database itself, so the path is unused
-    open(): SqlConnection {
+    open(workspaceId: string): SqlConnection {
       return {
         exec(sql: string): void {
-          rpc.request.sqlExec({ sql });
+          rpc.request.sqlExec({ workspaceId, sql });
         },
 
         run(sql: string, ...params: SqlParam[]): void {
-          rpc.request.sqlRun({ sql, params });
+          rpc.request.sqlRun({ workspaceId, sql, params });
         },
 
         get(sql: string, ...params: SqlParam[]): unknown {
-          return rpc.request.sqlGet({ sql, params });
+          return rpc.request.sqlGet({ workspaceId, sql, params });
         },
 
         all(sql: string, ...params: SqlParam[]): unknown[] {
           // Resolves asynchronously despite the synchronous signature.
           // Renderer-side readers await the result, which is a no-op
           // under the truly synchronous adapters.
-          return rpc.request.sqlAll({ sql, params }) as unknown as unknown[];
+          return rpc.request.sqlAll({
+            workspaceId,
+            sql,
+            params,
+          }) as unknown as unknown[];
         },
 
         transaction(operations: SqlOperation[]): void {
-          rpc.request.sqlTransaction({ operations });
+          rpc.request.sqlTransaction({ workspaceId, operations });
         },
 
         close(): void {
-          rpc.request.sqlClose({});
+          rpc.request.sqlClose({ workspaceId });
         },
       };
     },

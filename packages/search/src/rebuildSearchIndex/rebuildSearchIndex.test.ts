@@ -7,11 +7,12 @@ import {
   seedDatabase,
   seedEntries,
   setup,
+  testWorkspaceId,
 } from '../test-utils';
 import { resolveIndexPath } from '../utils';
 import { rebuildSearchIndex } from './rebuildSearchIndex';
 
-const workspaceId = 'workspace-1';
+const workspaceId = testWorkspaceId;
 
 describe('rebuildSearchIndex', () => {
   beforeEach(() => {
@@ -74,7 +75,12 @@ describe('rebuildSearchIndex', () => {
     await rebuildSearchIndex(workspaceId);
 
     // Remove the entry from SQL and rebuild
-    Databases.sql.deleteEntries('database-1', ['entry-1'], { silent: true });
+    Databases.sql.deleteEntries(
+      'database-1',
+      ['entry-1'],
+      { silent: true },
+      workspaceId,
+    );
     await rebuildSearchIndex(workspaceId);
 
     // The rebuilt index reflects the fresh SQL state

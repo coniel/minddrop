@@ -12,7 +12,9 @@ import type {
  */
 export function createBunSqlAdapter(): SqlAdapter {
   return {
-    open(path: string): SqlConnection {
+    // The workspace ID keys the connection registry, so the path
+    // alone opens the file.
+    open(_workspaceId: string, path: string): SqlConnection {
       const database = new Database(path);
 
       return {

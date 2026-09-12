@@ -18,7 +18,7 @@ export async function persistIndex(workspaceId: string): Promise<void> {
   }
 
   // Serialize the index along with the SQL version
-  const version = Databases.sql.getVersion();
+  const version = Databases.sql.getVersion(workspaceId);
   const data = JSON.stringify({
     version,
     index: miniSearch.toJSON(),

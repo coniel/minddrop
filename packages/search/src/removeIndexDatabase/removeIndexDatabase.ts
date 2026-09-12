@@ -1,21 +1,23 @@
 import { debouncedPersist } from '../debouncedPersist';
 import { discardIndexDocument } from '../discardIndexDocument';
-import { getFirstWorkspaceIndex } from '../getFirstWorkspaceIndex';
+import { searchIndexes } from '../searchIndexStore';
 
 /**
  * Removes a database document from the MiniSearch index.
  *
+ * @param workspaceId - The workspace whose index to update.
  * @param databaseId - The ID of the database to remove.
  */
-export function removeIndexDatabase(databaseId: string): void {
+export function removeIndexDatabase(
+  workspaceId: string,
+  databaseId: string,
+): void {
   // Nothing to remove without an initialized index
-  const workspaceIndex = getFirstWorkspaceIndex();
+  const miniSearch = searchIndexes.get(workspaceId);
 
-  if (!workspaceIndex) {
+  if (!miniSearch) {
     return;
   }
-
-  const { workspaceId, miniSearch } = workspaceIndex;
 
   // Remove the database document
   discardIndexDocument(miniSearch, `db:${databaseId}`);

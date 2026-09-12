@@ -1,25 +1,27 @@
 import { debouncedPersist } from '../debouncedPersist';
 import { discardIndexDocument } from '../discardIndexDocument';
-import { getFirstWorkspaceIndex } from '../getFirstWorkspaceIndex';
+import { searchIndexes } from '../searchIndexStore';
 
 /**
  * Updates or adds a database document in the MiniSearch index.
  *
+ * @param workspaceId - The workspace whose index to update.
  * @param database - The database to add or update in the index.
  */
-export function upsertIndexDatabase(database: {
-  id: string;
-  name: string;
-  icon?: string;
-}): void {
+export function upsertIndexDatabase(
+  workspaceId: string,
+  database: {
+    id: string;
+    name: string;
+    icon?: string;
+  },
+): void {
   // Nothing to update without an initialized index
-  const workspaceIndex = getFirstWorkspaceIndex();
+  const miniSearch = searchIndexes.get(workspaceId);
 
-  if (!workspaceIndex) {
+  if (!miniSearch) {
     return;
   }
-
-  const { workspaceId, miniSearch } = workspaceIndex;
 
   // Remove existing document if present
   const documentId = `db:${database.id}`;

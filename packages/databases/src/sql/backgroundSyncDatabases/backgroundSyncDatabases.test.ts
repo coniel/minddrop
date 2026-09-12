@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Fs } from '@minddrop/file-system';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { readEntryMetadata } from '../../readEntryMetadata';
 import {
   MockFs,
@@ -30,6 +31,8 @@ import { sqlGetEntrySyncRecords } from '../sqlGetEntrySyncRecords';
 import { sqlUpsertDatabase } from '../sqlUpsertDatabase';
 import { sqlUpsertEntries } from '../sqlUpsertEntries';
 import { backgroundSyncDatabases } from './backgroundSyncDatabases';
+
+const { workspace_1 } = WorkspaceFixtures;
 
 // A file's stat dates, as reset by a rewrite of the entry file
 const statDate = new Date('2026-02-02T00:00:00.000Z');
@@ -74,7 +77,7 @@ describe('backgroundSyncDatabases', () => {
   });
 
   it('resolves references to the existing entry IDs', async () => {
-    await backgroundSyncDatabases(parentDir);
+    await backgroundSyncDatabases(workspace_1.id, parentDir);
 
     const collectionRecord = recordByPath(
       sqlGetAllEntriesFull(),
@@ -123,7 +126,7 @@ describe('backgroundSyncDatabases', () => {
     // Drop the reseeding statements from the log
     clearRecordedSqlStatements();
 
-    await backgroundSyncDatabases(parentDir);
+    await backgroundSyncDatabases(workspace_1.id, parentDir);
 
     // Entries at the renamed paths should keep their existing IDs
     const collectionRecord = recordByPath(
@@ -140,7 +143,7 @@ describe('backgroundSyncDatabases', () => {
     // Remove a referenced entry's file as if deleted offline
     MockFs.removeFile(databaseEntryFilePath(relatedEntry2));
 
-    await backgroundSyncDatabases(parentDir);
+    await backgroundSyncDatabases(workspace_1.id, parentDir);
 
     const collectionRecord = recordByPath(
       sqlGetAllEntriesFull(),
@@ -168,7 +171,7 @@ describe('backgroundSyncDatabases', () => {
       metadata,
     );
 
-    await backgroundSyncDatabases(parentDir);
+    await backgroundSyncDatabases(workspace_1.id, parentDir);
 
     // Metadata is read for changed entries only, after the diff
     const record = recordByPath(sqlGetAllEntriesFull(), collectionEntry1.path);
@@ -182,7 +185,7 @@ describe('backgroundSyncDatabases', () => {
       lastModified: statDate,
     });
 
-    await backgroundSyncDatabases(parentDir);
+    await backgroundSyncDatabases(workspace_1.id, parentDir);
 
     const metadata = await readEntryMetadata(
       databaseDirPath(collectionDatabase),
@@ -209,7 +212,7 @@ describe('backgroundSyncDatabases', () => {
       lastModified: statDate,
     });
 
-    await backgroundSyncDatabases(parentDir);
+    await backgroundSyncDatabases(workspace_1.id, parentDir);
 
     const record = recordByPath(sqlGetAllEntriesFull(), collectionEntry1.path);
 
@@ -230,7 +233,7 @@ describe('backgroundSyncDatabases', () => {
       },
     );
 
-    await backgroundSyncDatabases(parentDir);
+    await backgroundSyncDatabases(workspace_1.id, parentDir);
 
     expect(
       MockFs.exists(
@@ -251,7 +254,7 @@ describe('backgroundSyncDatabases', () => {
       },
     );
 
-    await backgroundSyncDatabases(parentDir);
+    await backgroundSyncDatabases(workspace_1.id, parentDir);
 
     expect(
       MockFs.exists(
@@ -266,7 +269,7 @@ describe('backgroundSyncDatabases', () => {
   it('does not upsert entries whose contents are unchanged', async () => {
     indexAtCurrentContents();
 
-    await backgroundSyncDatabases(parentDir);
+    await backgroundSyncDatabases(workspace_1.id, parentDir);
 
     expect(upsertedEntryPaths(timestampDatabase.id)).toEqual([]);
   });
@@ -281,7 +284,7 @@ describe('backgroundSyncDatabases', () => {
       `${MockFs.readTextFile(databaseEntryFilePath(timestampEntry1))}\n\nAdded externally`,
     );
 
-    await backgroundSyncDatabases(parentDir);
+    await backgroundSyncDatabases(workspace_1.id, parentDir);
 
     // The edit should be detected from the contents rather than the
     // property, which only the app updates.

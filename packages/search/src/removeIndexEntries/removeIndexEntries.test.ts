@@ -1,10 +1,16 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { rebuildSearchIndex } from '../rebuildSearchIndex';
 import { searchFullTextIndex } from '../searchFullTextIndex';
-import { cleanup, seedDatabase, seedEntries, setup } from '../test-utils';
+import {
+  cleanup,
+  seedDatabase,
+  seedEntries,
+  setup,
+  testWorkspaceId,
+} from '../test-utils';
 import { removeIndexEntries } from './removeIndexEntries';
 
-const workspaceId = 'workspace-1';
+const workspaceId = testWorkspaceId;
 
 describe('removeIndexEntries', () => {
   beforeEach(async () => {
@@ -23,13 +29,13 @@ describe('removeIndexEntries', () => {
   afterEach(cleanup);
 
   it('removes the entries from the index', () => {
-    removeIndexEntries(['entry-1', 'entry-2']);
+    removeIndexEntries(workspaceId, ['entry-1', 'entry-2']);
 
     expect(searchFullTextIndex(workspaceId, 'dune')).toEqual([]);
   });
 
   it('leaves other entries indexed', () => {
-    removeIndexEntries(['entry-1']);
+    removeIndexEntries(workspaceId, ['entry-1']);
 
     const results = searchFullTextIndex(workspaceId, 'dune');
 
@@ -38,6 +44,8 @@ describe('removeIndexEntries', () => {
   });
 
   it('ignores unknown entry IDs', () => {
-    expect(() => removeIndexEntries(['unknown-entry'])).not.toThrow();
+    expect(() =>
+      removeIndexEntries(workspaceId, ['unknown-entry']),
+    ).not.toThrow();
   });
 });

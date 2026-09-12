@@ -49,8 +49,8 @@ export function createRecordingSqlAdapter(): TestSqlAdapter {
   const adapter = createTestSqlAdapter();
 
   return {
-    open(path: string): SqlConnection {
-      const connection = adapter.open(path);
+    open(workspaceId: string, path: string): SqlConnection {
+      const connection = adapter.open(workspaceId, path);
 
       return {
         exec(sql: string): void {

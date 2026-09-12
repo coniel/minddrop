@@ -1,8 +1,15 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { Sql } from '@minddrop/sql';
-import { objectDatabase, objectEntry1SqlRecord } from '../../test-utils';
-import { createTestSqlAdapter } from '../../test-utils/createTestSqlAdapter';
-import { SCHEMA_SQL } from '../schema';
+import {
+  cleanupWorkspaceFixtures,
+  setupWorkspaceFixtures,
+} from '@minddrop/workspaces/test-utils';
+import {
+  MockFs,
+  cleanupTestSqlDatabase,
+  objectDatabase,
+  objectEntry1SqlRecord,
+  setupTestSqlDatabase,
+} from '../../test-utils';
 import { sqlGetAllDatabases } from '../sqlGetAllDatabases';
 import { sqlGetEntrySyncRecords } from '../sqlGetEntrySyncRecords';
 import { sqlUpsertEntries } from '../sqlUpsertEntries';
@@ -10,10 +17,14 @@ import { sqlUpsertDatabase } from './sqlUpsertDatabase';
 
 describe('sqlUpsertDatabase', () => {
   beforeEach(() => {
+    // Load the workspace the SQL helpers target by default
+    setupWorkspaceFixtures(MockFs, {
+      loadWorkspaceFiles: false,
+      loadWorkspacesConfig: false,
+    });
+
     // Open an in-memory database and create the schema
-    Sql.registerAdapter(createTestSqlAdapter());
-    Sql.initialize();
-    Sql.exec(SCHEMA_SQL);
+    setupTestSqlDatabase();
 
     // Seed the database and one of its entries
     sqlUpsertDatabase(
@@ -31,7 +42,8 @@ describe('sqlUpsertDatabase', () => {
   });
 
   afterEach(() => {
-    Sql.close();
+    cleanupTestSqlDatabase();
+    cleanupWorkspaceFixtures();
   });
 
   it('inserts the database record', () => {

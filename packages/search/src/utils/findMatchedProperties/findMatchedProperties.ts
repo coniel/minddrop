@@ -16,15 +16,20 @@ const SNIPPET_THRESHOLD = 80;
  * most one match per property name. For long text properties,
  * returns a snippet with highlight markers around the match.
  *
+ * @param workspaceId - The workspace the entry belongs to.
  * @param entryId - The ID of the entry whose properties to check.
  * @param queryTerms - The lowercased query terms to match against.
  * @returns The matched properties with highlighted values.
  */
 export function findMatchedProperties(
+  workspaceId: string,
   entryId: string,
   queryTerms: string[],
 ): FullTextMatchedProperty[] {
-  const propertyValues = Databases.sql.getEntryPropertyValues(entryId);
+  const propertyValues = Databases.sql.getEntryPropertyValues(
+    entryId,
+    workspaceId,
+  );
 
   // Group matched values by property name so multi-value
   // properties (select, collection) show all matching values.

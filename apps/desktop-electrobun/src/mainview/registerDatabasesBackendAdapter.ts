@@ -12,7 +12,7 @@ export function registerDatabasesBackendAdapterRpc(
   Databases.registerBackendAdapter({
     initializeBackend: (workspaceId, workspacePath) =>
       rpc.request.databasesInitialize({ workspaceId, workspacePath }),
-    backgroundSync: (workspacePath) =>
-      rpc.request.databasesBackgroundSync({ workspacePath }),
+    backgroundSync: (workspaceId, workspacePath) =>
+      rpc.request.databasesBackgroundSync({ workspaceId, workspacePath }),
   });
 }

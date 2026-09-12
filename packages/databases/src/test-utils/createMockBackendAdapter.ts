@@ -10,10 +10,10 @@ export interface MockBackendAdapter {
   initializeBackendCalls: { workspaceId: string; workspacePath: string }[];
 
   /**
-   * The workspace paths passed to `backgroundSync`, in call
-   * order.
+   * The workspace IDs and paths passed to `backgroundSync`, in
+   * call order.
    */
-  backgroundSyncCalls: string[];
+  backgroundSyncCalls: { workspaceId: string; workspacePath: string }[];
 }
 
 /**
@@ -51,9 +51,9 @@ export function createMockBackendAdapter(
       return initializeBackendResult;
     },
 
-    async backgroundSync(workspacePath) {
+    async backgroundSync(workspaceId, workspacePath) {
       // Record the call for assertions
-      recordedCalls.backgroundSyncCalls.push(workspacePath);
+      recordedCalls.backgroundSyncCalls.push({ workspaceId, workspacePath });
     },
   });
 

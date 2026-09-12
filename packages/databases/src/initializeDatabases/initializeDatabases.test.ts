@@ -93,7 +93,9 @@ describe('initializeDatabases', () => {
     const result = await initializeDatabases();
 
     expect(result).toEqual({ schemaChanged: false });
-    expect(backend.backgroundSyncCalls).toEqual([workspace_1.path]);
+    expect(backend.backgroundSyncCalls).toEqual([
+      { workspaceId: workspace_1.id, workspacePath: workspace_1.path },
+    ]);
   });
 
   it('skips the background sync when the schema changed', async () => {

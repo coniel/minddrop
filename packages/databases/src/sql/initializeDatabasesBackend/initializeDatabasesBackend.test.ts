@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { readEntryMetadata } from '../../readEntryMetadata';
 import {
   MockFs,
@@ -23,6 +24,8 @@ import { sqlGetAllDatabases } from '../sqlGetAllDatabases';
 import { sqlGetAllEntriesFull } from '../sqlGetAllEntriesFull';
 import { initializeDatabasesBackend } from './initializeDatabasesBackend';
 
+const { workspace_1 } = WorkspaceFixtures;
+
 // A file's stat dates, as reset by a rewrite of the entry file
 const statDate = new Date('2026-02-02T00:00:00.000Z');
 // The entry's real creation date, as held by its sidecar
@@ -43,7 +46,7 @@ describe('initializeDatabasesBackend', () => {
   });
 
   it('populates SQL with the workspace databases and entries', async () => {
-    const result = await initializeDatabasesBackend('workspace-1', parentDir);
+    const result = await initializeDatabasesBackend(workspace_1.id, parentDir);
 
     // A fresh in-memory database always triggers a rebuild
     expect(result.schemaChanged).toBe(true);
@@ -62,7 +65,7 @@ describe('initializeDatabasesBackend', () => {
 
   it('drops databases deleted since the last session from the index', async () => {
     // Index the workspace, as a first launch does
-    await initializeDatabasesBackend('workspace-1', parentDir);
+    await initializeDatabasesBackend(workspace_1.id, parentDir);
 
     expect(indexedRecords(collectionDatabase.id).length).toBeGreaterThan(0);
 
@@ -70,7 +73,7 @@ describe('initializeDatabasesBackend', () => {
     MockFs.removeDir(databaseDirPath(collectionDatabase));
 
     // Launch again onto the index the first launch left behind
-    const result = await initializeDatabasesBackend('workspace-1', parentDir);
+    const result = await initializeDatabasesBackend(workspace_1.id, parentDir);
 
     // The index is served as is rather than rebuilt from the
     // file system, which would have dropped the database anyway.
@@ -91,7 +94,7 @@ describe('initializeDatabasesBackend', () => {
   });
 
   it('resolves collection property addresses to the minted entry IDs', async () => {
-    await initializeDatabasesBackend('workspace-1', parentDir);
+    await initializeDatabasesBackend(workspace_1.id, parentDir);
 
     // Look up the indexed records by path
     const records = indexedRecords(collectionDatabase.id);
@@ -107,7 +110,7 @@ describe('initializeDatabasesBackend', () => {
   });
 
   it('resolves references across databases', async () => {
-    await initializeDatabasesBackend('workspace-1', parentDir);
+    await initializeDatabasesBackend(workspace_1.id, parentDir);
 
     const collectionRecord = recordByPath(
       indexedRecords(collectionDatabase.id),
@@ -137,7 +140,7 @@ References: []
 ---`,
     );
 
-    await initializeDatabasesBackend('workspace-1', parentDir);
+    await initializeDatabasesBackend(workspace_1.id, parentDir);
 
     const collectionRecord = recordByPath(
       indexedRecords(collectionDatabase.id),
@@ -155,7 +158,7 @@ References: []
       lastModified: statDate,
     });
 
-    await initializeDatabasesBackend('workspace-1', parentDir);
+    await initializeDatabasesBackend(workspace_1.id, parentDir);
 
     const metadata = await readEntryMetadata(
       databaseDirPath(collectionDatabase),
@@ -182,7 +185,7 @@ References: []
       lastModified: statDate,
     });
 
-    await initializeDatabasesBackend('workspace-1', parentDir);
+    await initializeDatabasesBackend(workspace_1.id, parentDir);
 
     // The indexed entry keeps the sidecar's timestamps
     const record = recordByPath(

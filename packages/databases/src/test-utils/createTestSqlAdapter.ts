@@ -17,13 +17,15 @@ export interface TestSqlAdapter extends SqlAdapter {
 /**
  * Creates a SqlAdapter backed by in-memory node:sqlite
  * databases for use in tests. Register it with
- * `Sql.registerAdapter` and call `Sql.initialize()` to open
- * the in-memory connection.
+ * `Sql.registerAdapter` and call `Sql.connect` to open a
+ * workspace's in-memory connection.
  *
  * A database is kept for the path it was opened with and
  * handed back when that path is opened again, so an index
  * outlives the session which wrote it and the behaviours
  * which only happen on a second launch can be tested.
+ * Connections opened without a path are keyed by workspace
+ * instead, so each connected workspace gets its own database.
  *
  * @returns The test adapter.
  */
@@ -33,8 +35,8 @@ export function createTestSqlAdapter(): TestSqlAdapter {
   const databases = new Map<string, DatabaseSync>();
 
   return {
-    open(path: string): SqlConnection {
-      const database = openDatabase(databases, path);
+    open(workspaceId: string, path: string): SqlConnection {
+      const database = openDatabase(databases, path || workspaceId);
 
       return {
         exec(sql: string): void {
@@ -90,14 +92,14 @@ export function createTestSqlAdapter(): TestSqlAdapter {
 }
 
 /**
- * Returns the database opened for the given path, opening a
- * new one if the path has not been opened before.
+ * Returns the database opened under the given key, opening a
+ * new one if the key has not been opened before.
  */
 function openDatabase(
   databases: Map<string, DatabaseSync>,
-  path: string,
+  key: string,
 ): DatabaseSync {
-  const existing = databases.get(path);
+  const existing = databases.get(key);
 
   if (existing) {
     return existing;
@@ -105,7 +107,7 @@ function openDatabase(
 
   const database = new DatabaseSync(':memory:');
 
-  databases.set(path, database);
+  databases.set(key, database);
 
   return database;
 }

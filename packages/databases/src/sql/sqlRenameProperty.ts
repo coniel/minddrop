@@ -1,5 +1,6 @@
 import { Events } from '@minddrop/events';
 import { Sql } from '@minddrop/sql';
+import { Workspaces } from '@minddrop/workspaces';
 import { DatabasePropertySqlSyncedEvent } from '../events';
 
 /**
@@ -7,13 +8,16 @@ import { DatabasePropertySqlSyncedEvent } from '../events';
  * Updates both the entry_properties and entry_property_values
  * tables in a single transaction, then dispatches a
  * DatabasePropertySqlSyncedEvent.
+ *
+ * @param workspaceId - The ID of the workspace whose database to target. Defaults to the active workspace.
  */
 export function sqlRenameProperty(
   databaseId: string,
   oldName: string,
   newName: string,
+  workspaceId?: string,
 ): void {
-  Sql.transaction([
+  Sql.transaction(workspaceId ?? Workspaces.getActive().id, [
     // Rename in the scalar properties table
     {
       sql: `UPDATE entry_properties SET property_name = ?

@@ -63,7 +63,9 @@ export interface SqlConnection {
  */
 export interface SqlAdapter {
   /**
-   * Opens (or creates) a SQL database at the given path.
+   * Opens (or creates) a workspace's SQL database at the given path.
+   * The path is empty when the database is opened elsewhere, such as
+   * by a back end the adapter forwards to.
    */
-  open(path: string): SqlConnection;
+  open(workspaceId: string, path: string): SqlConnection;
 }

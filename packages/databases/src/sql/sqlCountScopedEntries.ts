@@ -1,4 +1,5 @@
 import { Sql } from '@minddrop/sql';
+import { Workspaces } from '@minddrop/workspaces';
 import { EntryQueryScope } from '../types';
 import { buildEntryScopesSql } from '../utils';
 
@@ -8,11 +9,13 @@ import { buildEntryScopesSql } from '../utils';
  * Async because renderer SQL adapters resolve reads over RPC.
  *
  * @param scopes - The database scopes to match entries against.
+ * @param workspaceId - The ID of the workspace whose database to target. Defaults to the active workspace.
  *
  * @returns The number of matching entries.
  */
 export async function sqlCountScopedEntries(
   scopes: EntryQueryScope[],
+  workspaceId?: string,
 ): Promise<number> {
   // No scopes match no entries
   const scopesSql = buildEntryScopesSql(scopes);
@@ -24,6 +27,7 @@ export async function sqlCountScopedEntries(
   // Await the row since RPC backed adapters resolve
   // asynchronously despite the synchronous signature.
   const rows = await Sql.all<{ count: number }>(
+    workspaceId ?? Workspaces.getActive().id,
     `SELECT COUNT(*) AS count FROM entries e WHERE ${scopesSql.sql}`,
     ...scopesSql.params,
   );

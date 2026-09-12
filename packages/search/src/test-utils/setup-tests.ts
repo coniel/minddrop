@@ -7,11 +7,20 @@ import {
 import { Fs } from '@minddrop/file-system';
 import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
 import { Sql } from '@minddrop/sql';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { cancelDebouncedPersists } from '../debouncedPersist';
 import { searchIndexes } from '../searchIndexStore';
 
+const { workspace_1 } = WorkspaceFixtures;
+
 // Mock file system backing index persistence in tests
 export const MockFs = initializeMockFileSystem();
+
+/**
+ * The ID of the workspace whose SQL database the tests seed
+ * and index.
+ */
+export const testWorkspaceId = workspace_1.id;
 
 /**
  * A minimal entry description for seeding the in-memory SQL
@@ -35,14 +44,18 @@ export interface TestEntrySeed {
 }
 
 /**
- * Opens the in-memory SQL database the search index reads from.
+ * Opens the in-memory SQL database the search index reads from,
+ * for the `testWorkspaceId` workspace.
  */
 export function setup(): void {
-  setupTestSqlDatabase();
+  setupTestSqlDatabase(testWorkspaceId);
 
   // Seed the data version counter, which `Sql.open` creates in
   // production but the in-memory test database lacks.
-  Sql.run("INSERT OR IGNORE INTO meta (key, value) VALUES ('version', '0')");
+  Sql.run(
+    testWorkspaceId,
+    "INSERT OR IGNORE INTO meta (key, value) VALUES ('version', '0')",
+  );
 }
 
 /**
@@ -82,6 +95,7 @@ export function seedDatabase(database: {
       icon: database.icon ?? '',
     },
     { silent: true },
+    testWorkspaceId,
   );
 }
 
@@ -110,5 +124,6 @@ export function seedEntries(
       properties: entry.properties ?? [],
     })),
     { silent: true },
+    testWorkspaceId,
   );
 }

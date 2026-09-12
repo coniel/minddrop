@@ -1,6 +1,7 @@
 import { Events } from '@minddrop/events';
 import { Sql } from '@minddrop/sql';
 import type { SqlOperation } from '@minddrop/sql';
+import { Workspaces } from '@minddrop/workspaces';
 import {
   INTEGER_PROPERTY_TYPES,
   MULTI_VALUE_PROPERTY_TYPES,
@@ -13,11 +14,14 @@ import type { SqlEntryPropertyRecord, SqlEntryRecord } from '../types';
  * Upserts one or more entries into the SQL database.
  * Uses a transaction for bulk operations and dispatches
  * a DatabaseEntriesSqlSyncedEvent.
+ *
+ * @param workspaceId - The ID of the workspace whose database to target. Defaults to the active workspace.
  */
 export function sqlUpsertEntries(
   databaseId: string,
   entries: SqlEntryRecord[],
   options?: { silent?: boolean },
+  workspaceId?: string,
 ): void {
   const operations: SqlOperation[] = [];
 
@@ -61,7 +65,7 @@ export function sqlUpsertEntries(
     params: [],
   });
 
-  Sql.transaction(operations);
+  Sql.transaction(workspaceId ?? Workspaces.getActive().id, operations);
 
   // Dispatch SQL synced event unless silenced
   if (!options?.silent) {

@@ -164,31 +164,36 @@ export type WebviewRPC = {
       };
       // SQL RPC
       sqlOpen: {
-        params: { path: string; schema: string; version: number };
+        params: {
+          workspaceId: string;
+          path: string;
+          schema: string;
+          version: number;
+        };
         response: { schemaChanged: boolean };
       };
       sqlExec: {
-        params: { sql: string };
+        params: { workspaceId: string; sql: string };
         response: void;
       };
       sqlRun: {
-        params: { sql: string; params: SqlParam[] };
+        params: { workspaceId: string; sql: string; params: SqlParam[] };
         response: void;
       };
       sqlGet: {
-        params: { sql: string; params: SqlParam[] };
+        params: { workspaceId: string; sql: string; params: SqlParam[] };
         response: unknown;
       };
       sqlAll: {
-        params: { sql: string; params: SqlParam[] };
+        params: { workspaceId: string; sql: string; params: SqlParam[] };
         response: unknown[];
       };
       sqlTransaction: {
-        params: { operations: SqlOperation[] };
+        params: { workspaceId: string; operations: SqlOperation[] };
         response: void;
       };
       sqlClose: {
-        params: Record<string, never>;
+        params: { workspaceId: string };
         response: void;
       };
       // Databases RPC
@@ -201,6 +206,7 @@ export type WebviewRPC = {
       };
       databasesBackgroundSync: {
         params: {
+          workspaceId: string;
           workspacePath: string;
         };
         response: void;

@@ -19,6 +19,7 @@ export interface SqlQueryEntriesOptions {
  * @param filter - The filter group to match entries against, or null to match all entries.
  * @param sort - The sort instructions to order results by.
  * @param options - Query options.
+ * @param workspaceId - The ID of the workspace whose database to target. Defaults to the active workspace.
  *
  * @returns The matching entry IDs in sorted order.
  */
@@ -27,7 +28,13 @@ export async function sqlQueryEntries(
   filter: EntryFilterGroup | null,
   sort: EntrySort[],
   options?: SqlQueryEntriesOptions,
+  workspaceId?: string,
 ): Promise<string[]> {
   // A single-database query is a scoped query with one scope
-  return sqlQueryScopedEntries([{ databaseId, filter }], sort, options);
+  return sqlQueryScopedEntries(
+    [{ databaseId, filter }],
+    sort,
+    options,
+    workspaceId,
+  );
 }

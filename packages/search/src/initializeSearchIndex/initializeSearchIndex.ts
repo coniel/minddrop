@@ -17,7 +17,7 @@ import { resolveIndexPath } from '../utils';
 export async function initializeSearchIndex(
   workspaceId: string,
 ): Promise<void> {
-  const currentVersion = Databases.sql.getVersion();
+  const currentVersion = Databases.sql.getVersion(workspaceId);
   const indexPath = resolveIndexPath(workspaceId);
 
   // Try loading persisted index

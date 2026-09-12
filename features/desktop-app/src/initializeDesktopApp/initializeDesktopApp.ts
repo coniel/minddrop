@@ -123,6 +123,8 @@ async function runInitialization(): Promise<void> {
   // Initialize workspaces, resolving the active one
   await Workspaces.initialize();
 
+  const activeWorkspace = Workspaces.getActive(false);
+
   // Hydrate layout region sizes (dialogs, panels) for this workspace
   await LayoutRegionSizesStore.hydrate();
 
@@ -138,7 +140,11 @@ async function runInitialization(): Promise<void> {
   await Designs.initialize();
   await DesignsNext.initialize();
 
-  Sql.initialize();
+  // Connect to the active workspace's SQL database, which the
+  // databases backend opens.
+  if (activeWorkspace) {
+    Sql.connect(activeWorkspace.id);
+  }
 
   // Subscribe to content package events before content
   // initialization so no rename goes unrecorded.
@@ -185,7 +191,6 @@ async function runInitialization(): Promise<void> {
 
   // Watch the active workspace directory for changes made outside
   // the app. Started last so that it cannot race the initial loads.
-  const activeWorkspace = Workspaces.getActive(false);
   const stopWatcher = activeWorkspace
     ? await Fs.startWatcher([activeWorkspace.path])
     : () => undefined;

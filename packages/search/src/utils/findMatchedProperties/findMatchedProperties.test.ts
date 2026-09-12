@@ -1,6 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { MATCH_HIGHLIGHT_END, MATCH_HIGHLIGHT_START } from '../../constants';
-import { cleanup, seedDatabase, seedEntries, setup } from '../../test-utils';
+import {
+  cleanup,
+  seedDatabase,
+  seedEntries,
+  setup,
+  testWorkspaceId,
+} from '../../test-utils';
 import { findMatchedProperties } from './findMatchedProperties';
 
 // A text value long enough (over 80 characters) to trigger snippeting
@@ -34,11 +40,15 @@ describe('findMatchedProperties', () => {
   afterEach(cleanup);
 
   it('returns an empty list when no property matches', () => {
-    expect(findMatchedProperties('entry-1', ['zebra'])).toEqual([]);
+    expect(
+      findMatchedProperties(testWorkspaceId, 'entry-1', ['zebra']),
+    ).toEqual([]);
   });
 
   it('returns short matching values highlighted in full', () => {
-    expect(findMatchedProperties('entry-1', ['herbert'])).toEqual([
+    expect(
+      findMatchedProperties(testWorkspaceId, 'entry-1', ['herbert']),
+    ).toEqual([
       {
         name: 'Link',
         type: 'url',
@@ -48,17 +58,21 @@ describe('findMatchedProperties', () => {
   });
 
   it('groups multi-value matches under one property, comma-joined', () => {
-    expect(findMatchedProperties('entry-1', ['epic'])).toEqual([
-      {
-        name: 'Tags',
-        type: 'select',
-        value: `${marked('epic')} tales, ${marked('epic')} saga`,
-      },
-    ]);
+    expect(findMatchedProperties(testWorkspaceId, 'entry-1', ['epic'])).toEqual(
+      [
+        {
+          name: 'Tags',
+          type: 'select',
+          value: `${marked('epic')} tales, ${marked('epic')} saga`,
+        },
+      ],
+    );
   });
 
   it('returns a snippet for long text values', () => {
-    expect(findMatchedProperties('entry-1', ['spice'])).toEqual([
+    expect(
+      findMatchedProperties(testWorkspaceId, 'entry-1', ['spice']),
+    ).toEqual([
       {
         name: 'Review',
         type: 'text',

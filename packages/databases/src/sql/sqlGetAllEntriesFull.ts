@@ -1,5 +1,6 @@
 import type { PropertyType } from '@minddrop/properties';
 import { Sql } from '@minddrop/sql';
+import { Workspaces } from '@minddrop/workspaces';
 import type { SqlEntryPropertyRecord, SqlEntryRecord } from '../types';
 
 /**
@@ -7,8 +8,12 @@ import type { SqlEntryPropertyRecord, SqlEntryRecord } from '../types';
  * and metadata. Uses three bulk queries (entries, scalar properties,
  * multi-value properties) regardless of entry count, then groups
  * properties by entry ID.
+ *
+ * @param workspaceId - The ID of the workspace whose database to target. Defaults to the active workspace.
  */
-export function sqlGetAllEntriesFull(): SqlEntryRecord[] {
+export function sqlGetAllEntriesFull(workspaceId?: string): SqlEntryRecord[] {
+  const targetWorkspaceId = workspaceId ?? Workspaces.getActive().id;
+
   // Query all entry rows
   const entryRows = Sql.all<{
     id: string;
@@ -20,6 +25,7 @@ export function sqlGetAllEntriesFull(): SqlEntryRecord[] {
     content_hash: string;
     metadata: string;
   }>(
+    targetWorkspaceId,
     'SELECT id, database_id, path, title, created, last_modified, content_hash, metadata FROM entries',
   );
 
@@ -32,6 +38,7 @@ export function sqlGetAllEntriesFull(): SqlEntryRecord[] {
     value_number: number | null;
     value_integer: number | null;
   }>(
+    targetWorkspaceId,
     'SELECT entry_id, property_name, property_type, value_text, value_number, value_integer FROM entry_properties',
   );
 
@@ -42,6 +49,7 @@ export function sqlGetAllEntriesFull(): SqlEntryRecord[] {
     property_type: PropertyType;
     value_text: string;
   }>(
+    targetWorkspaceId,
     'SELECT entry_id, property_name, property_type, value_text FROM entry_property_values',
   );
 

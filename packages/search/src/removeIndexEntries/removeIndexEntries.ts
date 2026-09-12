@@ -1,21 +1,23 @@
 import { debouncedPersist } from '../debouncedPersist';
 import { discardIndexDocument } from '../discardIndexDocument';
-import { getFirstWorkspaceIndex } from '../getFirstWorkspaceIndex';
+import { searchIndexes } from '../searchIndexStore';
 
 /**
  * Removes entries from the MiniSearch index.
  *
+ * @param workspaceId - The workspace whose index to update.
  * @param entryIds - The IDs of the entries to remove.
  */
-export function removeIndexEntries(entryIds: string[]): void {
+export function removeIndexEntries(
+  workspaceId: string,
+  entryIds: string[],
+): void {
   // Nothing to remove without an initialized index
-  const workspaceIndex = getFirstWorkspaceIndex();
+  const miniSearch = searchIndexes.get(workspaceId);
 
-  if (!workspaceIndex) {
+  if (!miniSearch) {
     return;
   }
-
-  const { workspaceId, miniSearch } = workspaceIndex;
 
   // Remove each entry document
   for (const id of entryIds) {

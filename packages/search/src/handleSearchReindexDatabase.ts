@@ -6,13 +6,15 @@ import { reindexDatabaseEntries } from './reindexDatabaseEntries';
  * changes (add/remove/rename). SQL sync is handled by
  * sql-databases.
  *
+ * @param workspaceId - The workspace whose index to update.
  * @param databaseId - The ID of the database whose entries to re-index.
  */
 export function handleSearchReindexDatabase({
+  workspaceId,
   databaseId,
 }: {
   workspaceId: string;
   databaseId: string;
 }): void {
-  reindexDatabaseEntries(databaseId);
+  reindexDatabaseEntries(workspaceId, databaseId);
 }

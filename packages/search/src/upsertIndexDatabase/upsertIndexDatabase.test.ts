@@ -1,10 +1,16 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { rebuildSearchIndex } from '../rebuildSearchIndex';
 import { searchFullTextIndex } from '../searchFullTextIndex';
-import { cleanup, seedDatabase, seedEntries, setup } from '../test-utils';
+import {
+  cleanup,
+  seedDatabase,
+  seedEntries,
+  setup,
+  testWorkspaceId,
+} from '../test-utils';
 import { upsertIndexDatabase } from './upsertIndexDatabase';
 
-const workspaceId = 'workspace-1';
+const workspaceId = testWorkspaceId;
 
 describe('upsertIndexDatabase', () => {
   beforeEach(async () => {
@@ -20,7 +26,11 @@ describe('upsertIndexDatabase', () => {
   afterEach(cleanup);
 
   it('adds a new database document to the index', () => {
-    upsertIndexDatabase({ id: 'database-2', name: 'Films', icon: 'film' });
+    upsertIndexDatabase(workspaceId, {
+      id: 'database-2',
+      name: 'Films',
+      icon: 'film',
+    });
 
     const results = searchFullTextIndex(workspaceId, 'films');
 
@@ -30,7 +40,7 @@ describe('upsertIndexDatabase', () => {
   });
 
   it('replaces an existing database document', () => {
-    upsertIndexDatabase({ id: 'database-1', name: 'Novels' });
+    upsertIndexDatabase(workspaceId, { id: 'database-1', name: 'Novels' });
 
     // The database is findable under its new name only
     expect(searchFullTextIndex(workspaceId, 'novels')).toHaveLength(1);

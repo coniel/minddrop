@@ -40,7 +40,9 @@ export async function onFileSystemChanged(
   scanTimer = setTimeout(() => {
     scanTimer = null;
 
-    getDatabaseBackendAdapter().backgroundSync(Workspaces.getActive().path);
+    const workspace = Workspaces.getActive();
+
+    getDatabaseBackendAdapter().backgroundSync(workspace.id, workspace.path);
   }, DebounceMs);
 }
 

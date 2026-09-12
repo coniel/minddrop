@@ -1,10 +1,16 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { rebuildSearchIndex } from '../rebuildSearchIndex';
 import { searchFullTextIndex } from '../searchFullTextIndex';
-import { cleanup, seedDatabase, seedEntries, setup } from '../test-utils';
+import {
+  cleanup,
+  seedDatabase,
+  seedEntries,
+  setup,
+  testWorkspaceId,
+} from '../test-utils';
 import { reindexDatabaseEntries } from './reindexDatabaseEntries';
 
-const workspaceId = 'workspace-1';
+const workspaceId = testWorkspaceId;
 
 describe('reindexDatabaseEntries', () => {
   beforeEach(async () => {
@@ -24,7 +30,7 @@ describe('reindexDatabaseEntries', () => {
   it('re-indexes entry documents with fresh SQL data', () => {
     // Rename the entry in SQL, then re-index its database
     seedEntries('database-1', [{ id: 'entry-1', title: 'Children of Dune' }]);
-    reindexDatabaseEntries('database-1');
+    reindexDatabaseEntries(workspaceId, 'database-1');
 
     const results = searchFullTextIndex(workspaceId, 'children');
 
@@ -35,7 +41,7 @@ describe('reindexDatabaseEntries', () => {
   it('refreshes the stored database metadata on entry documents', () => {
     // Rename the database in SQL, then re-index it
     seedDatabase({ id: 'database-1', name: 'Novels' });
-    reindexDatabaseEntries('database-1');
+    reindexDatabaseEntries(workspaceId, 'database-1');
 
     const results = searchFullTextIndex(workspaceId, 'dune');
 
@@ -43,7 +49,7 @@ describe('reindexDatabaseEntries', () => {
   });
 
   it('leaves entries of other databases untouched', () => {
-    reindexDatabaseEntries('database-1');
+    reindexDatabaseEntries(workspaceId, 'database-1');
 
     expect(searchFullTextIndex(workspaceId, 'alien')).toHaveLength(1);
   });

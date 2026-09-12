@@ -78,7 +78,11 @@ export function searchFullTextIndex(
     let matchedProperties: FullTextMatchedProperty[] = [];
 
     if (stored.type === 'entry') {
-      matchedProperties = findMatchedProperties(documentId, queryTerms);
+      matchedProperties = findMatchedProperties(
+        workspaceId,
+        documentId,
+        queryTerms,
+      );
     }
 
     // Add highlight markers to entry titles

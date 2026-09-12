@@ -56,7 +56,7 @@ export interface InitializeBackendResult {
  * On first run or schema change, performs a full filesystem
  * scan to populate SQL before returning.
  *
- * @param workspaceId - The ID of the workspace whose data directory holds the SQL database.
+ * @param workspaceId - The ID of the workspace whose databases to initialize.
  * @param workspacePath - The absolute path to the workspace root.
  */
 export async function initializeDatabasesBackend(
@@ -72,13 +72,13 @@ export async function initializeDatabasesBackend(
     Workspaces.resolveDataDirPath(workspaceId),
     SqlDatabaseFileName,
   );
-  const { schemaChanged } = await Sql.open(dbPath, {
+  const { schemaChanged } = await Sql.open(workspaceId, dbPath, {
     schema: SCHEMA_SQL,
     version: SCHEMA_VERSION,
   });
 
   // The databases the index holds, as of the last session
-  const indexedDatabases = sqlGetAllDatabases();
+  const indexedDatabases = sqlGetAllDatabases(workspaceId);
 
   // Read database configs from the workspace, passing the recorded
   // paths so that a copied database directory rather than the
@@ -97,17 +97,19 @@ export async function initializeDatabasesBackend(
 
   indexedDatabases
     .filter((database) => !scannedIds.has(database.id))
-    .forEach((database) => sqlDeleteDatabase(database.id, { silent: true }));
+    .forEach((database) =>
+      sqlDeleteDatabase(database.id, { silent: true }, workspaceId),
+    );
 
   // On schema change (new DB or version mismatch), populate
   // SQL from the filesystem. Otherwise trust SQL as the cache
   // and let background sync handle any drift.
   if (schemaChanged) {
-    await rebuildSqlFromFilesystem(databases, workspacePath);
+    await rebuildSqlFromFilesystem(workspaceId, databases, workspacePath);
   }
 
   // Query all entries with full property data and metadata
-  const entries = sqlGetAllEntriesFull();
+  const entries = sqlGetAllEntriesFull(workspaceId);
 
   return {
     databases,
@@ -122,6 +124,7 @@ export async function initializeDatabasesBackend(
  * after a schema version change.
  */
 async function rebuildSqlFromFilesystem(
+  workspaceId: string,
   databases: Database[],
   workspacePath: string,
 ): Promise<void> {
@@ -147,6 +150,7 @@ async function rebuildSqlFromFilesystem(
         icon: database.icon,
       },
       { silent: true },
+      workspaceId,
     );
 
     // Read entries and metadata from disk in parallel
@@ -203,7 +207,7 @@ async function rebuildSqlFromFilesystem(
     );
 
     if (sqlRecords.length > 0) {
-      sqlUpsertEntries(database.id, sqlRecords, { silent: true });
+      sqlUpsertEntries(database.id, sqlRecords, { silent: true }, workspaceId);
     }
   }
 

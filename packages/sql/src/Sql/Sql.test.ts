@@ -6,6 +6,9 @@ import * as Sql from './Sql';
 // Mock file system backing database file tracking in tests
 const MockFs = initializeMockFileSystem();
 
+// Workspace the test database belongs to
+const WORKSPACE_ID = 'workspace-1';
+
 // Path of the test database file
 const DATABASE_PATH = 'AppData/test.sql';
 
@@ -31,8 +34,8 @@ describe('Sql', () => {
   });
 
   afterEach(() => {
-    // Close the connection opened during the test
-    Sql.close();
+    // Close the connections opened during the test
+    Sql.closeAll();
   });
 
   describe('open', () => {
@@ -45,7 +48,7 @@ describe('Sql', () => {
 
       // Should have created the schema tables
       insertItem('item-1', 'Item 1');
-      expect(Sql.all('SELECT * FROM items')).toHaveLength(1);
+      expect(Sql.all(WORKSPACE_ID, 'SELECT * FROM items')).toHaveLength(1);
     });
 
     it('stores the schema version and data version counter', async () => {
@@ -54,11 +57,16 @@ describe('Sql', () => {
 
       // Should store the provided schema version
       expect(
-        Sql.get("SELECT value FROM meta WHERE key = 'schema_version'"),
+        Sql.get(
+          WORKSPACE_ID,
+          "SELECT value FROM meta WHERE key = 'schema_version'",
+        ),
       ).toEqual({ value: '3' });
 
       // Should initialize the data version counter
-      expect(Sql.get("SELECT value FROM meta WHERE key = 'version'")).toEqual({
+      expect(
+        Sql.get(WORKSPACE_ID, "SELECT value FROM meta WHERE key = 'version'"),
+      ).toEqual({
         value: '0',
       });
     });
@@ -75,7 +83,7 @@ describe('Sql', () => {
       expect(result.schemaChanged).toBe(false);
 
       // Should have preserved the existing data
-      expect(Sql.get<ItemRow>('SELECT * FROM items')).toEqual({
+      expect(Sql.get<ItemRow>(WORKSPACE_ID, 'SELECT * FROM items')).toEqual({
         id: 'item-1',
         label: 'Item 1',
       });
@@ -93,12 +101,30 @@ describe('Sql', () => {
       expect(result.schemaChanged).toBe(true);
 
       // Should have dropped the old data
-      expect(Sql.all('SELECT * FROM items')).toHaveLength(0);
+      expect(Sql.all(WORKSPACE_ID, 'SELECT * FROM items')).toHaveLength(0);
 
       // Should store the new schema version
       expect(
-        Sql.get("SELECT value FROM meta WHERE key = 'schema_version'"),
+        Sql.get(
+          WORKSPACE_ID,
+          "SELECT value FROM meta WHERE key = 'schema_version'",
+        ),
       ).toEqual({ value: '2' });
+    });
+
+    it('keeps a separate database per workspace', async () => {
+      // Open a database for each of two workspaces
+      await openDatabase();
+      await Sql.open('workspace-2', 'AppData/other.sql', {
+        schema: SCHEMA,
+        version: 1,
+      });
+
+      // Add a row to the first workspace's database
+      insertItem('item-1', 'Item 1');
+
+      // The second workspace's database should not have the row
+      expect(Sql.all('workspace-2', 'SELECT * FROM items')).toHaveLength(0);
     });
 
     it('removes the WAL and SHM files when rebuilding', async () => {
@@ -129,7 +155,7 @@ describe('Sql', () => {
       insertItem('item-1', 'Item 1');
 
       // The row should be queryable
-      expect(Sql.get<ItemRow>('SELECT * FROM items')).toEqual({
+      expect(Sql.get<ItemRow>(WORKSPACE_ID, 'SELECT * FROM items')).toEqual({
         id: 'item-1',
         label: 'Item 1',
       });
@@ -141,7 +167,9 @@ describe('Sql', () => {
       insertItem('item-2', 'Item 2');
 
       // Should return only the first match
-      expect(Sql.get<ItemRow>('SELECT * FROM items ORDER BY id')).toEqual({
+      expect(
+        Sql.get<ItemRow>(WORKSPACE_ID, 'SELECT * FROM items ORDER BY id'),
+      ).toEqual({
         id: 'item-1',
         label: 'Item 1',
       });
@@ -149,7 +177,7 @@ describe('Sql', () => {
 
     it('get returns null when no rows match', () => {
       // Query an empty table
-      expect(Sql.get('SELECT * FROM items')).toBeNull();
+      expect(Sql.get(WORKSPACE_ID, 'SELECT * FROM items')).toBeNull();
     });
 
     it('all returns every matching row', () => {
@@ -158,7 +186,9 @@ describe('Sql', () => {
       insertItem('item-2', 'Item 2');
 
       // Should return both rows
-      expect(Sql.all<ItemRow>('SELECT * FROM items ORDER BY id')).toEqual([
+      expect(
+        Sql.all<ItemRow>(WORKSPACE_ID, 'SELECT * FROM items ORDER BY id'),
+      ).toEqual([
         { id: 'item-1', label: 'Item 1' },
         { id: 'item-2', label: 'Item 2' },
       ]);
@@ -166,16 +196,16 @@ describe('Sql', () => {
 
     it('exec executes raw SQL', () => {
       // Create a table using raw SQL
-      Sql.exec('CREATE TABLE extra (id TEXT PRIMARY KEY)');
+      Sql.exec(WORKSPACE_ID, 'CREATE TABLE extra (id TEXT PRIMARY KEY)');
 
       // The table should be usable
-      Sql.run('INSERT INTO extra (id) VALUES (?)', 'extra-1');
-      expect(Sql.all('SELECT * FROM extra')).toHaveLength(1);
+      Sql.run(WORKSPACE_ID, 'INSERT INTO extra (id) VALUES (?)', 'extra-1');
+      expect(Sql.all(WORKSPACE_ID, 'SELECT * FROM extra')).toHaveLength(1);
     });
 
     it('transaction applies all operations', () => {
       // Run two inserts in a transaction
-      Sql.transaction([
+      Sql.transaction(WORKSPACE_ID, [
         {
           sql: 'INSERT INTO items (id, label) VALUES (?, ?)',
           params: ['item-1', 'Item 1'],
@@ -187,7 +217,7 @@ describe('Sql', () => {
       ]);
 
       // Both rows should be present
-      expect(Sql.all('SELECT * FROM items')).toHaveLength(2);
+      expect(Sql.all(WORKSPACE_ID, 'SELECT * FROM items')).toHaveLength(2);
     });
 
     it('transaction rolls back all operations on error', () => {
@@ -196,7 +226,7 @@ describe('Sql', () => {
 
       // Run a transaction whose second operation fails
       expect(() =>
-        Sql.transaction([
+        Sql.transaction(WORKSPACE_ID, [
           {
             sql: 'INSERT INTO items (id, label) VALUES (?, ?)',
             params: ['item-1', 'Item 1'],
@@ -209,43 +239,75 @@ describe('Sql', () => {
       ).toThrow();
 
       // The first operation should have been rolled back
-      expect(Sql.all('SELECT * FROM items')).toHaveLength(1);
+      expect(Sql.all(WORKSPACE_ID, 'SELECT * FROM items')).toHaveLength(1);
     });
 
-    it('throws when no database has been opened', () => {
-      // Close the active connection
-      Sql.close();
+    it('throws when the workspace has no open database', () => {
+      // Close the workspace's connection
+      Sql.close(WORKSPACE_ID);
 
       // Queries should throw without a connection
-      expect(() => Sql.get('SELECT * FROM items')).toThrow();
+      expect(() => Sql.get(WORKSPACE_ID, 'SELECT * FROM items')).toThrow();
     });
   });
 
-  describe('initialize', () => {
+  describe('connect', () => {
     it('opens a connection via the registered adapter', () => {
-      // Initialize the connection
-      Sql.initialize();
+      // Connect the workspace
+      Sql.connect(WORKSPACE_ID);
 
       // The connection should be usable
-      Sql.exec('CREATE TABLE extra (id TEXT PRIMARY KEY)');
-      Sql.run('INSERT INTO extra (id) VALUES (?)', 'extra-1');
-      expect(Sql.all('SELECT * FROM extra')).toHaveLength(1);
+      Sql.exec(WORKSPACE_ID, 'CREATE TABLE extra (id TEXT PRIMARY KEY)');
+      Sql.run(WORKSPACE_ID, 'INSERT INTO extra (id) VALUES (?)', 'extra-1');
+      expect(Sql.all(WORKSPACE_ID, 'SELECT * FROM extra')).toHaveLength(1);
     });
   });
 
   describe('close', () => {
-    it('closes the active connection', async () => {
+    it('closes the workspace connection', async () => {
       // Open a database and close it
       await openDatabase();
-      Sql.close();
+      Sql.close(WORKSPACE_ID);
 
       // Queries should throw once closed
-      expect(() => Sql.all('SELECT * FROM items')).toThrow();
+      expect(() => Sql.all(WORKSPACE_ID, 'SELECT * FROM items')).toThrow();
     });
 
-    it('does nothing when no connection is open', () => {
+    it('does nothing when the workspace has no connection', () => {
       // Close without an open connection
-      expect(() => Sql.close()).not.toThrow();
+      expect(() => Sql.close(WORKSPACE_ID)).not.toThrow();
+    });
+
+    it('leaves other workspace connections open', async () => {
+      // Open databases for two workspaces
+      await openDatabase();
+      await Sql.open('workspace-2', 'AppData/other.sql', {
+        schema: SCHEMA,
+        version: 1,
+      });
+
+      // Close one of them
+      Sql.close(WORKSPACE_ID);
+
+      // The other should still be usable
+      expect(Sql.all('workspace-2', 'SELECT * FROM items')).toHaveLength(0);
+    });
+  });
+
+  describe('closeAll', () => {
+    it('closes every open connection', async () => {
+      // Open databases for two workspaces
+      await openDatabase();
+      await Sql.open('workspace-2', 'AppData/other.sql', {
+        schema: SCHEMA,
+        version: 1,
+      });
+
+      Sql.closeAll();
+
+      // Queries should throw for both once closed
+      expect(() => Sql.all(WORKSPACE_ID, 'SELECT * FROM items')).toThrow();
+      expect(() => Sql.all('workspace-2', 'SELECT * FROM items')).toThrow();
     });
   });
 });
@@ -257,7 +319,7 @@ describe('Sql', () => {
  * @returns Whether the schema changed.
  */
 function openDatabase(version = 1): Promise<{ schemaChanged: boolean }> {
-  return Sql.open(DATABASE_PATH, { schema: SCHEMA, version });
+  return Sql.open(WORKSPACE_ID, DATABASE_PATH, { schema: SCHEMA, version });
 }
 
 /**
@@ -267,5 +329,10 @@ function openDatabase(version = 1): Promise<{ schemaChanged: boolean }> {
  * @param label - The item label.
  */
 function insertItem(id: string, label: string): void {
-  Sql.run('INSERT INTO items (id, label) VALUES (?, ?)', id, label);
+  Sql.run(
+    WORKSPACE_ID,
+    'INSERT INTO items (id, label) VALUES (?, ?)',
+    id,
+    label,
+  );
 }

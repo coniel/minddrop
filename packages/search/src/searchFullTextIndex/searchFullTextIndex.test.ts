@@ -1,10 +1,16 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { MATCH_HIGHLIGHT_END, MATCH_HIGHLIGHT_START } from '../constants';
 import { rebuildSearchIndex } from '../rebuildSearchIndex';
-import { cleanup, seedDatabase, seedEntries, setup } from '../test-utils';
+import {
+  cleanup,
+  seedDatabase,
+  seedEntries,
+  setup,
+  testWorkspaceId,
+} from '../test-utils';
 import { searchFullTextIndex } from './searchFullTextIndex';
 
-const workspaceId = 'workspace-1';
+const workspaceId = testWorkspaceId;
 
 // Wraps text in the highlight markers for expected values
 function marked(text: string): string {

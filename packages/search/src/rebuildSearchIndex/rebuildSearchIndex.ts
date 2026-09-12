@@ -14,18 +14,18 @@ import { buildEntryDocument } from '../utils';
  */
 export async function rebuildSearchIndex(workspaceId: string): Promise<void> {
   const miniSearch = new MiniSearch<SearchDocument>(MINISEARCH_OPTIONS);
-  const entries = Databases.sql.getAllEntries();
+  const entries = Databases.sql.getAllEntries(workspaceId);
 
   // Build entry documents from SQL data
   const entryDocuments = entries.map((entry) =>
-    buildEntryDocument(entry, {
-      name: Databases.sql.getDatabaseName(entry.databaseId) ?? '',
-      icon: Databases.sql.getDatabaseIcon(entry.databaseId),
+    buildEntryDocument(workspaceId, entry, {
+      name: Databases.sql.getDatabaseName(entry.databaseId, workspaceId) ?? '',
+      icon: Databases.sql.getDatabaseIcon(entry.databaseId, workspaceId),
     }),
   );
 
   // Build database documents
-  const databases = Databases.sql.getAllDatabases();
+  const databases = Databases.sql.getAllDatabases(workspaceId);
   const databaseDocuments: SearchDocument[] = databases.map((database) => ({
     id: `db:${database.id}`,
     type: 'database' as const,

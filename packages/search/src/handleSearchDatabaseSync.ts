@@ -9,10 +9,12 @@ import { upsertIndexDatabase } from './upsertIndexDatabase';
  * databaseName/databaseIcon stay current. SQL sync is
  * handled by sql-databases.
  *
+ * @param workspaceId - The workspace whose index to update.
  * @param action - Whether the database was upserted or deleted.
  * @param database - The database's metadata.
  */
 export function handleSearchDatabaseSync({
+  workspaceId,
   action,
   database,
 }: {
@@ -21,14 +23,14 @@ export function handleSearchDatabaseSync({
   database: { id: string; name: string; path: string; icon: string };
 }): void {
   if (action === 'upsert') {
-    upsertIndexDatabase(database);
+    upsertIndexDatabase(workspaceId, database);
 
     // Re-index entry documents so databaseName/databaseIcon
     // are up to date.
-    reindexDatabaseEntries(database.id);
+    reindexDatabaseEntries(workspaceId, database.id);
   }
 
   if (action === 'delete') {
-    removeIndexDatabase(database.id);
+    removeIndexDatabase(workspaceId, database.id);
   }
 }

@@ -16,7 +16,7 @@ export interface DatabaseBackendAdapter {
    * changes that occurred while the app was not running.
    * Results are delivered via a message callback.
    */
-  backgroundSync(workspacePath: string): Promise<void>;
+  backgroundSync(workspaceId: string, workspacePath: string): Promise<void>;
 }
 
 let adapter: DatabaseBackendAdapter | null = null;

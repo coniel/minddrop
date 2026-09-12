@@ -38,16 +38,18 @@ import { sqlUpsertEntries } from '../sqlUpsertEntries';
  * Called as a fire-and-forget background task after the app
  * has finished initializing from SQL.
  *
+ * @param workspaceId - The ID of the workspace to sync.
  * @param workspacePath - The absolute path to the workspace root.
  */
 export async function backgroundSyncDatabases(
+  workspaceId: string,
   workspacePath: string,
 ): Promise<BackgroundSyncChangeset> {
   // Ensure serializers are loaded
   loadCoreSerializers();
 
   // Get existing databases from SQL
-  const sqlDatabases = sqlGetAllDatabases();
+  const sqlDatabases = sqlGetAllDatabases(workspaceId);
   const sqlDatabaseIds = new Set(sqlDatabases.map((database) => database.id));
 
   // Read current database configs from the filesystem, passing the
@@ -84,6 +86,7 @@ export async function backgroundSyncDatabases(
           icon: database.icon,
         },
         { silent: true },
+        workspaceId,
       );
 
       upsertedDatabases.push(database);
@@ -105,10 +108,12 @@ export async function backgroundSyncDatabases(
   // Collect entry IDs before CASCADE delete removes them,
   // then delete the databases from SQL
   for (const id of deletedDatabaseIds) {
-    const entryIds = sqlGetEntrySyncRecords(id).map((record) => record.id);
+    const entryIds = sqlGetEntrySyncRecords(id, workspaceId).map(
+      (record) => record.id,
+    );
 
     allDeletedEntryIds.push(...entryIds);
-    sqlDeleteDatabase(id, { silent: true });
+    sqlDeleteDatabase(id, { silent: true }, workspaceId);
   }
 
   // Workspace-wide address index used to resolve entry references,
@@ -133,7 +138,7 @@ export async function backgroundSyncDatabases(
     // Get existing sync records from SQL. Their paths are addressed
     // from the database, so a database directory renamed while the app
     // was closed still matches and its entries keep their identities.
-    const existingRecords = sqlGetEntrySyncRecords(database.id);
+    const existingRecords = sqlGetEntrySyncRecords(database.id, workspaceId);
 
     // Match fresh entries to existing entries by path so they
     // take over the existing IDs (disk reads mint fresh ones)
@@ -210,7 +215,12 @@ export async function backgroundSyncDatabases(
 
     // Upsert changed entries to SQL
     if (changedRecords.length > 0) {
-      sqlUpsertEntries(database.id, changedRecords, { silent: true });
+      sqlUpsertEntries(
+        database.id,
+        changedRecords,
+        { silent: true },
+        workspaceId,
+      );
     }
 
     // Collect the entries whose sidecar has no timestamps yet, or whose
@@ -223,7 +233,7 @@ export async function backgroundSyncDatabases(
 
     // Delete removed entries from SQL
     if (deletedIds.length > 0) {
-      sqlDeleteEntries(database.id, deletedIds, { silent: true });
+      sqlDeleteEntries(database.id, deletedIds, { silent: true }, workspaceId);
     }
 
     // Sweep sidecars belonging to entries deleted outside the app,
@@ -272,7 +282,7 @@ export async function backgroundSyncDatabases(
   }
 
   // Query updated entries from SQL with full property data
-  const allEntries = sqlGetAllEntriesFull();
+  const allEntries = sqlGetAllEntriesFull(workspaceId);
   const upsertedEntries = allEntries.filter((entry) =>
     allUpsertedEntryIds.has(entry.id),
   );

@@ -8,11 +8,12 @@ import {
   seedDatabase,
   seedEntries,
   setup,
+  testWorkspaceId,
 } from '../test-utils';
 import { resolveIndexPath } from '../utils';
 import { upsertIndexEntries } from './upsertIndexEntries';
 
-const workspaceId = 'workspace-1';
+const workspaceId = testWorkspaceId;
 
 describe('upsertIndexEntries', () => {
   beforeEach(async () => {
@@ -32,7 +33,7 @@ describe('upsertIndexEntries', () => {
     searchIndexes.clear();
 
     expect(() =>
-      upsertIndexEntries([
+      upsertIndexEntries(workspaceId, [
         { id: 'entry-2', title: 'New', databaseId: 'database-1' },
       ]),
     ).not.toThrow();
@@ -41,7 +42,7 @@ describe('upsertIndexEntries', () => {
   it('adds new entries to the index', () => {
     // Seed the new entry into SQL, then index it
     seedEntries('database-1', [{ id: 'entry-2', title: 'The Hobbit' }]);
-    upsertIndexEntries([
+    upsertIndexEntries(workspaceId, [
       { id: 'entry-2', title: 'The Hobbit', databaseId: 'database-1' },
     ]);
 
@@ -51,7 +52,7 @@ describe('upsertIndexEntries', () => {
   it('replaces existing entry documents with fresh data', () => {
     // Rename the entry in SQL, then re-index it
     seedEntries('database-1', [{ id: 'entry-1', title: 'Children of Dune' }]);
-    upsertIndexEntries([
+    upsertIndexEntries(workspaceId, [
       { id: 'entry-1', title: 'Children of Dune', databaseId: 'database-1' },
     ]);
 
@@ -68,7 +69,7 @@ describe('upsertIndexEntries', () => {
     MockFs.reset();
 
     seedEntries('database-1', [{ id: 'entry-2', title: 'The Hobbit' }]);
-    upsertIndexEntries([
+    upsertIndexEntries(workspaceId, [
       { id: 'entry-2', title: 'The Hobbit', databaseId: 'database-1' },
     ]);
 

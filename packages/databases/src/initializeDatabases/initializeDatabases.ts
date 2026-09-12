@@ -95,7 +95,7 @@ export async function initializeDatabases(): Promise<{
   // Skip if schema changed (full rebuild already scanned
   // the filesystem).
   if (!result.schemaChanged) {
-    backend.backgroundSync(workspace.path);
+    backend.backgroundSync(workspace.id, workspace.path);
   }
 
   return { schemaChanged: result.schemaChanged };

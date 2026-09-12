@@ -5,17 +5,20 @@ import type { SearchDocument } from '../types';
  * Builds the search document for an entry from its SQL text
  * content and the owning database's metadata.
  *
+ * @param workspaceId - The workspace the entry belongs to.
  * @param entry - The entry to build the document for.
  * @param database - The owning database's name and icon.
  * @returns The entry's search document.
  */
 export function buildEntryDocument(
+  workspaceId: string,
   entry: { id: string; title: string; databaseId: string },
   database: { name: string; icon: string },
 ): SearchDocument {
   // Pull the entry's searchable text from SQL
   const { textValues, propertyValues } = Databases.sql.getEntryTextContent(
     entry.id,
+    workspaceId,
   );
 
   return {

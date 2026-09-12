@@ -7,11 +7,12 @@ import {
   seedDatabase,
   seedEntries,
   setup,
+  testWorkspaceId,
 } from '../test-utils';
 import { resolveIndexPath } from '../utils';
 import { persistIndex } from './persistIndex';
 
-const workspaceId = 'workspace-1';
+const workspaceId = testWorkspaceId;
 
 describe('persistIndex', () => {
   beforeEach(async () => {
@@ -48,7 +49,7 @@ describe('persistIndex', () => {
     const raw = MockFs.readTextFile(resolveIndexPath(workspaceId));
     const persisted = JSON.parse(raw) as { version: number; index: object };
 
-    expect(persisted.version).toBe(Databases.sql.getVersion());
+    expect(persisted.version).toBe(Databases.sql.getVersion(workspaceId));
     expect(persisted.index).toBeDefined();
   });
 });
