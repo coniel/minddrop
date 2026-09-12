@@ -5,6 +5,10 @@ import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
 import { I18n, initializeI18n } from '@minddrop/i18n';
+import {
+  cleanupWorkspaceFixtures,
+  setupWorkspaceFixtures,
+} from '@minddrop/workspaces/test-utils';
 import { DesignsStore } from '../DesignsStore';
 import { locales } from '../locales';
 import { designs, getDesignFiles, ownedDesigns } from './designs.fixtures';
@@ -23,6 +27,8 @@ export interface SetupOptions {
 }
 
 export function setup(options: SetupOptions = {}) {
+  setupWorkspaceFixtures(MockFs);
+
   // Load the design fixtures into the store
   if (options.loadDesigns !== false) {
     DesignsStore.load([...designs, ...ownedDesigns]);
@@ -42,4 +48,5 @@ export async function cleanup(): Promise<void> {
   DesignsStore.clear();
   await Events.tests.cleanup();
   vi.useRealTimers();
+  cleanupWorkspaceFixtures();
 }

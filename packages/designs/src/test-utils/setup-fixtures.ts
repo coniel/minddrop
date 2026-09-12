@@ -1,11 +1,14 @@
 import { DataViewTypes } from '@minddrop/data-views';
 import { dataViewTypes } from '@minddrop/data-views/test-utils';
 import { MockFileSystem } from '@minddrop/file-system';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DesignRolesStore } from '../DesignRolesStore';
 import { DesignsStore } from '../DesignsStore';
 import { BuiltInDesignRoles } from '../roles';
 import { resolveDesignsDirPath } from '../utils';
 import { designs, getDesignFiles } from './fixtures';
+
+const { workspace_1 } = WorkspaceFixtures;
 
 export interface SetupDesignFixturesOptions {
   loadDesigns?: boolean;
@@ -18,7 +21,9 @@ export function setupDesignFixtures(
   options: SetupDesignFixturesOptions = {},
 ) {
   // Create the designs directory
-  MockFs.createDir(resolveDesignsDirPath(), { recursive: true });
+  MockFs.createDir(resolveDesignsDirPath(workspace_1.path), {
+    recursive: true,
+  });
 
   if (options.loadDesigns !== false) {
     // Load designs into the store

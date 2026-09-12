@@ -15,6 +15,10 @@ import {
   setupQueryFixtures,
 } from '@minddrop/queries/test-utils';
 import { cleanup as cleanupRender } from '@minddrop/test-utils';
+import {
+  cleanupWorkspaceFixtures,
+  setupWorkspaceFixtures,
+} from '@minddrop/workspaces/test-utils';
 import { locales } from '../locales';
 
 initializeI18n();
@@ -27,6 +31,8 @@ Properties.initialize();
 export const MockFs = initializeMockFileSystem();
 
 export function setup() {
+  setupWorkspaceFixtures(MockFs);
+
   // Open the in-memory SQL database queries run against
   setupTestSqlDatabase();
 
@@ -45,4 +51,5 @@ export async function cleanup(): Promise<void> {
   cleanupQueryFixtures();
   await Events.tests.cleanup();
   vi.clearAllMocks();
+  cleanupWorkspaceFixtures();
 }

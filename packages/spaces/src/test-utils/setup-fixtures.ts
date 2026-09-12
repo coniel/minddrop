@@ -1,8 +1,11 @@
 import { Designs } from '@minddrop/designs';
 import { MockFileSystem } from '@minddrop/file-system';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { SpacesStore } from '../SpacesStore';
 import { resolveSpacesDirPath } from '../utils';
 import { getSpaceFiles, spaces } from './spaces.fixtures';
+
+const { workspace_1 } = WorkspaceFixtures;
 
 export interface SetupSpaceFixturesOptions {
   loadSpaces?: boolean;
@@ -17,7 +20,7 @@ export function setupSpaceFixtures(
   },
 ) {
   // Create the spaces directory
-  MockFs.createDir(resolveSpacesDirPath(), { recursive: true });
+  MockFs.createDir(resolveSpacesDirPath(workspace_1.path), { recursive: true });
 
   if (options.loadSpaces !== false) {
     // Load spaces into the store

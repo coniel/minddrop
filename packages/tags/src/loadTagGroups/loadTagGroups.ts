@@ -8,7 +8,8 @@ import { TagGroup } from '../types';
 import { resolveTagGroupsDirPath } from '../utils';
 
 /**
- * Loads tag groups from the tag groups directory into the store.
+ * Loads tag groups from the active workspace's tag groups directory into the
+ * store.
  *
  * If the tag groups directory does not exist, it will be created.
  *

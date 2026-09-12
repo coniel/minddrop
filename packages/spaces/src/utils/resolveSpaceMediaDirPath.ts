@@ -9,11 +9,12 @@ import { resolveSpaceBundleDirPath } from './resolveSpaceBundleDirPath';
  * references media files the same way a design's layouts do.
  *
  * @param id - The ID of the space.
+ * @param workspacePath - The workspace path. Defaults to the active workspace.
  * @returns The path to the space media directory.
  */
-export function resolveSpaceMediaDirPath(id: string) {
+export function resolveSpaceMediaDirPath(id: string, workspacePath?: string) {
   return Fs.concatPath(
-    resolveSpaceBundleDirPath(id),
+    resolveSpaceBundleDirPath(id, workspacePath),
     Designs.constants.MediaDirName,
   );
 }

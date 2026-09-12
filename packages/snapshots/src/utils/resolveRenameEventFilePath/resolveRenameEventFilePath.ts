@@ -11,9 +11,13 @@ import { resolveRenamesDirPath } from '../resolveRenamesDirPath';
  * renamed entity's new name.
  *
  * @param event - The rename event.
+ * @param workspacePath - The workspace path. Defaults to the active workspace.
  * @returns The absolute event file path.
  */
-export function resolveRenameEventFilePath(event: RenameEvent): string {
+export function resolveRenameEventFilePath(
+  event: RenameEvent,
+  workspacePath?: string,
+): string {
   // Strip separator characters from the ISO timestamp, colons are
   // not valid in file names on all platforms.
   const timestamp = event.timestamp.toISOString().replace(/[-:.]/g, '');
@@ -26,7 +30,7 @@ export function resolveRenameEventFilePath(event: RenameEvent): string {
   const fileName = `${timestamp}-${slug || 'rename'}`;
 
   return Fs.concatPath(
-    resolveRenamesDirPath(),
+    resolveRenamesDirPath(workspacePath),
     `${fileName}.${RenameEventFileExtension}`,
   );
 }

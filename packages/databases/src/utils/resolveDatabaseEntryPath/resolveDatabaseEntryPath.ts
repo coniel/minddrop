@@ -10,6 +10,7 @@ import { resolveDatabasePath } from '../resolveDatabasePath';
  *
  * @param entry - The entry to resolve the path of.
  * @param database - The database the entry belongs to. Looked up from the entry when omitted.
+ * @param workspacePath - The workspace path. Defaults to the active workspace.
  * @returns The path to the entry's primary file.
  *
  * @throws {DatabaseNotFoundError} If the entry's database does not exist.
@@ -17,6 +18,7 @@ import { resolveDatabasePath } from '../resolveDatabasePath';
 export function resolveDatabaseEntryPath(
   entry: DatabaseEntry,
   database?: Database,
+  workspacePath?: string,
 ): string;
 
 /**
@@ -24,16 +26,19 @@ export function resolveDatabaseEntryPath(
  *
  * @param path - The entry path, relative to its database.
  * @param database - The database the path is relative to.
+ * @param workspacePath - The workspace path. Defaults to the active workspace.
  * @returns The path to the entry's primary file.
  */
 export function resolveDatabaseEntryPath(
   path: string,
   database: Database,
+  workspacePath?: string,
 ): string;
 
 export function resolveDatabaseEntryPath(
   entry: DatabaseEntry | string,
   database?: Database,
+  workspacePath?: string,
 ): string {
   if (typeof entry === 'string') {
     // A bare path names no database to fall back to, which the
@@ -44,11 +49,11 @@ export function resolveDatabaseEntryPath(
       );
     }
 
-    return Fs.concatPath(resolveDatabasePath(database), entry);
+    return Fs.concatPath(resolveDatabasePath(database, workspacePath), entry);
   }
 
   return Fs.concatPath(
-    resolveDatabasePath(database ?? getDatabase(entry.database)),
+    resolveDatabasePath(database ?? getDatabase(entry.database), workspacePath),
     entry.path,
   );
 }

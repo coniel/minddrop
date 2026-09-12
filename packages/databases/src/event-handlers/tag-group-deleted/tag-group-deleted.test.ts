@@ -30,7 +30,9 @@ describe('onTagGroupDeleted', () => {
 
     // Create the database directory so config rewrites can write
     // the config file.
-    MockFs.createDir(resolveDatabasePath(tagsDatabase), { recursive: true });
+    MockFs.createDir(resolveDatabasePath(tagsDatabase), {
+      recursive: true,
+    });
   });
 
   afterEach(cleanup);

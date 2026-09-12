@@ -10,13 +10,15 @@ import { readRenameEvents } from '../readRenameEvents';
  * prefix of chain end addresses without terminating the chains.
  *
  * @param kind - The kind of entity to compute chain ends for.
+ * @param workspacePath - The workspace path. Defaults to the active workspace.
  * @returns The chain end addresses mapped to their terminal events.
  */
 export async function resolveRenameChainEnds(
   kind: RenameEventKind,
+  workspacePath?: string,
 ): Promise<Map<string, RenameEvent>> {
   // Read the recorded rename events, sorted chronologically
-  const events = await readRenameEvents();
+  const events = await readRenameEvents(workspacePath);
 
   // The chain end addresses mapped to their terminal events
   const chainEnds = new Map<string, RenameEvent>();

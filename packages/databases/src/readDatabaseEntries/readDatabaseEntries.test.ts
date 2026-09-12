@@ -65,7 +65,7 @@ describe('readDatabaseEntries', () => {
     );
 
     for (const entry of objectEntries) {
-      MockFs.removeFile(resolveDatabaseEntryPath(entry));
+      MockFs.removeFile(resolveDatabaseEntryPath(entry, objectDatabase));
     }
 
     // Read entries from the now-empty database

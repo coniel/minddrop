@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DatabaseNotFoundError } from '../../errors';
 import {
   cleanup,
@@ -8,6 +9,8 @@ import {
   setup,
 } from '../../test-utils';
 import { resolveDatabaseEntryPath } from './resolveDatabaseEntryPath';
+
+const { workspace_2 } = WorkspaceFixtures;
 
 describe('resolveDatabaseEntryPath', () => {
   beforeEach(setup);
@@ -30,6 +33,12 @@ describe('resolveDatabaseEntryPath', () => {
     expect(resolveDatabaseEntryPath(objectEntry1.path, objectDatabase)).toBe(
       databaseEntryFilePath(objectEntry1),
     );
+  });
+
+  it('resolves against the given workspace', () => {
+    expect(
+      resolveDatabaseEntryPath(objectEntry1, objectDatabase, workspace_2.path),
+    ).toBe(`${workspace_2.path}/${objectDatabase.path}/${objectEntry1.path}`);
   });
 
   it("throws if the entry's database does not exist", () => {

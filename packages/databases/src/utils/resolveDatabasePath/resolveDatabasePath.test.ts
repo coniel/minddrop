@@ -1,6 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { cleanup, objectDatabase, parentDir, setup } from '../../test-utils';
 import { resolveDatabasePath } from './resolveDatabasePath';
+
+const { workspace_2 } = WorkspaceFixtures;
 
 describe('resolveDatabasePath', () => {
   beforeEach(setup);
@@ -20,8 +23,8 @@ describe('resolveDatabasePath', () => {
   });
 
   it('resolves against the given workspace', () => {
-    expect(resolveDatabasePath(objectDatabase, 'path/to/other')).toBe(
-      `path/to/other/${objectDatabase.path}`,
+    expect(resolveDatabasePath(objectDatabase, workspace_2.path)).toBe(
+      `${workspace_2.path}/${objectDatabase.path}`,
     );
   });
 });

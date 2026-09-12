@@ -37,7 +37,7 @@ const appWorkspaceConfigStore = createKeyValueStore<{ value: string }>(
 
 // Where each target's listener writes
 const appConfigDir = 'app-data/stores';
-const workspaceConfigDir = `${Paths.workspaceConfigs}/stores`;
+const workspaceConfigDir = `${workspace_1.path}/${Paths.hiddenDirName}/stores`;
 const appWorkspaceConfigDir = `app-data/workspaces/${workspace_1.id}/stores`;
 
 // Events.dispatch awaits each listener, so listeners run on the

@@ -15,8 +15,9 @@
   },
   "devDependencies": {
     "@minddrop/eslint-config": "workspace:*",
-    "@minddrop/vitest-config": "workspace:*",
     "@minddrop/test-utils": "workspace:*",
+    "@minddrop/vitest-config": "workspace:*",
+    "@minddrop/workspaces": "workspace:*",
     "eslint": "^9.39.3",
     "tsconfig": "workspace:*",
     "typescript": "^5.9.3"

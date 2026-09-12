@@ -26,7 +26,8 @@ import {
   Text,
   TextField,
 } from '@minddrop/ui-primitives';
-import { Paths, useForm } from '@minddrop/utils';
+import { useForm } from '@minddrop/utils';
+import { Workspaces } from '@minddrop/workspaces';
 import { EventListenerId, OpenNewDatabaseDialogEvent } from '../events';
 import './NewDatabaseDialog.css';
 
@@ -281,7 +282,7 @@ async function validateDatabaseName(
     return 'databases.form.errors.nameConflict';
   }
 
-  const newDirPath = Fs.concatPath(Paths.workspace, value);
+  const newDirPath = Fs.concatPath(Workspaces.getActive().path, value);
 
   // Ensure no directory with the same name exists in the workspace
   if (await Fs.exists(newDirPath)) {

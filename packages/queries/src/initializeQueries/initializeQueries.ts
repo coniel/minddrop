@@ -7,7 +7,8 @@ import { readQuery } from '../readQuery';
 import { resolveQueriesDirPath } from '../utils';
 
 /**
- * Initializes queries by loading query configs from the queries directory.
+ * Initializes queries by loading query configs from the active workspace's
+ * queries directory.
  *
  * If the queries directory does not exist, it will be created.
  */

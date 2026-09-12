@@ -8,9 +8,13 @@ import { resolveEntryPropertyFilePath } from '../resolveEntryPropertyFilePath';
  * properties. Properties without a file value are skipped.
  *
  * @param entryId - The ID of the entry.
+ * @param workspacePath - The workspace path. Defaults to the active workspace.
  * @returns The entry's property file paths.
  */
-export function resolveEntryPropertyFilePaths(entryId: string): string[] {
+export function resolveEntryPropertyFilePaths(
+  entryId: string,
+  workspacePath?: string,
+): string[] {
   // Get the entry
   const entry = getDatabaseEntry(entryId);
   // Get the entry's database
@@ -27,6 +31,13 @@ export function resolveEntryPropertyFilePaths(entryId: string): string[] {
         return [];
       }
 
-      return [resolveEntryPropertyFilePath(entryId, property.name, value)];
+      return [
+        resolveEntryPropertyFilePath(
+          entryId,
+          property.name,
+          value,
+          workspacePath,
+        ),
+      ];
     });
 }

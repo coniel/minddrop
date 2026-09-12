@@ -20,7 +20,13 @@ import { Fs } from '@minddrop/file-system';
 import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
 import { initializeI18n } from '@minddrop/i18n';
 import { cleanup as cleanupRender } from '@minddrop/test-utils';
-import { Paths } from '@minddrop/utils';
+import {
+  WorkspaceFixtures,
+  cleanupWorkspaceFixtures,
+  setupWorkspaceFixtures,
+} from '@minddrop/workspaces/test-utils';
+
+const { workspace_1 } = WorkspaceFixtures;
 
 const { dataViewType_table } = DataViewFixtures;
 
@@ -34,7 +40,7 @@ interface SetupOptions {
 initializeI18n();
 
 export const MockFs = initializeMockFileSystem([
-  Paths.workspace,
+  workspace_1.path,
   ...DatabaseFixtures.databaseFiles,
 ]);
 
@@ -46,6 +52,8 @@ export function setup(
     loadDesigns: true,
   },
 ) {
+  setupWorkspaceFixtures(MockFs);
+
   if (options.loadDatabases !== false) {
     // Load item type configs into the store
     Databases.Store.load(DatabaseFixtures.databases);
@@ -91,4 +99,5 @@ export async function cleanup(): Promise<void> {
   Designs.Store.clear();
   DesignsNext.Store.clear();
   DataViewTypes.Store.clear();
+  cleanupWorkspaceFixtures();
 }

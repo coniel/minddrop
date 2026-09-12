@@ -8,7 +8,7 @@ import { Tag } from '../types';
 import { resolveTagsDirPath } from '../utils';
 
 /**
- * Loads tags from the tags directory into the store.
+ * Loads tags from the active workspace's tags directory into the store.
  *
  * If the tags directory does not exist, it will be created.
  *

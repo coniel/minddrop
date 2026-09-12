@@ -57,7 +57,7 @@ describe('duplicateDatabaseEntry', () => {
     expect(duplicate.duplicatedFrom).toBe(objectEntry1.id);
     // The mark is session state, kept out of the entry file
     expect(
-      MockFs.readTextFile(resolveDatabaseEntryPath(duplicate)),
+      MockFs.readTextFile(resolveDatabaseEntryPath(duplicate, objectDatabase)),
     ).not.toContain('duplicatedFrom');
   });
 

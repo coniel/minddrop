@@ -5,6 +5,10 @@ import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
 import { initializeI18n } from '@minddrop/i18n';
+import {
+  cleanupWorkspaceFixtures,
+  setupWorkspaceFixtures,
+} from '@minddrop/workspaces/test-utils';
 import { getQueryFiles } from './queries.fixtures';
 import {
   SetupQueryFixturesOptions,
@@ -18,6 +22,7 @@ export const MockFs = initializeMockFileSystem([...getQueryFiles()]);
 export const mockDate = new Date('2026-01-01T00:00:00.000Z');
 
 export function setup(options: SetupQueryFixturesOptions) {
+  setupWorkspaceFixtures(MockFs);
   setupQueryFixtures(MockFs, options);
   vi.useFakeTimers();
   vi.setSystemTime(mockDate);
@@ -33,4 +38,5 @@ export async function cleanup(): Promise<void> {
   await Events.tests.cleanup();
   vi.useRealTimers();
   cleanupQueryFixtures();
+  cleanupWorkspaceFixtures();
 }

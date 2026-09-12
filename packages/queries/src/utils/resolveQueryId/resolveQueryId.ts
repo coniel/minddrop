@@ -7,11 +7,15 @@ import { resolveQueriesDirPath } from '../resolveQueriesDirPath';
  * the path is not a query file. Query files are named by their ID.
  *
  * @param path - The path to resolve.
+ * @param workspacePath - The workspace path. Defaults to the active workspace.
  * @returns The query ID or null if the path is not a query file.
  */
-export function resolveQueryId(path: string): string | null {
+export function resolveQueryId(
+  path: string,
+  workspacePath?: string,
+): string | null {
   // Query files sit directly in the queries directory
-  if (Fs.parentDirPath(path) !== resolveQueriesDirPath()) {
+  if (Fs.parentDirPath(path) !== resolveQueriesDirPath(workspacePath)) {
     return null;
   }
 

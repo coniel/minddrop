@@ -5,6 +5,10 @@ import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
 import { I18n, initializeI18n } from '@minddrop/i18n';
+import {
+  cleanupWorkspaceFixtures,
+  setupWorkspaceFixtures,
+} from '@minddrop/workspaces/test-utils';
 import { locales } from '../locales';
 import { getCollectionFiles } from './collections.fixtures';
 import {
@@ -20,6 +24,7 @@ export const MockFs = initializeMockFileSystem([...getCollectionFiles()]);
 export const mockDate = new Date('2026-01-01T00:00:00.000Z');
 
 export function setup(options: SetupCollectionFixturesOptions = {}) {
+  setupWorkspaceFixtures(MockFs);
   setupCollectionFixtures(MockFs, options);
   vi.useFakeTimers();
   vi.setSystemTime(mockDate);
@@ -35,4 +40,5 @@ export async function cleanup(): Promise<void> {
   await Events.tests.cleanup();
   vi.useRealTimers();
   cleanupCollectionFixtures();
+  cleanupWorkspaceFixtures();
 }

@@ -3,7 +3,6 @@ import {
   dropWorkspaceRecords,
   setActiveWorkspaceScope,
 } from '@minddrop/stores';
-import { Paths } from '@minddrop/utils';
 import { ActiveWorkspaceStore } from '../ActiveWorkspaceStore';
 import { WorkspacesStore } from '../WorkspacesStore';
 import {
@@ -26,9 +25,6 @@ export function setupWorkspaceFixtures(
     loadWorkspaceFiles: true,
   },
 ) {
-  // Set workspace_1 as the current workspace
-  Paths.workspace = workspace_1.path;
-
   if (options.loadWorkspaces !== false) {
     // Load workspaces into the store
     WorkspacesStore.load(workspaces);

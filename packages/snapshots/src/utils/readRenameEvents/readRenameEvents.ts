@@ -4,12 +4,15 @@ import { RenameEvent } from '../../types';
 import { resolveRenamesDirPath } from '../resolveRenamesDirPath';
 
 /**
- * Reads all rename events from the workspace's rename ledger.
+ * Reads all rename events from a workspace's rename ledger.
  *
+ * @param workspacePath - The workspace path. Defaults to the active workspace.
  * @returns The recorded rename events, sorted chronologically.
  */
-export async function readRenameEvents(): Promise<RenameEvent[]> {
-  const renamesDirPath = resolveRenamesDirPath();
+export async function readRenameEvents(
+  workspacePath?: string,
+): Promise<RenameEvent[]> {
+  const renamesDirPath = resolveRenamesDirPath(workspacePath);
 
   // No events have been recorded yet
   if (!(await Fs.exists(renamesDirPath))) {

@@ -1,8 +1,11 @@
 import { Fs } from '@minddrop/file-system';
 import { ItemReferenceAdapter } from '@minddrop/item-references';
 import { Paths } from '@minddrop/utils';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { EntityGroupsDirName } from '../constants';
 import { EntityGroup, EntityGroupId, EntityGroupTypeConfig } from '../types';
+
+const { workspace_1 } = WorkspaceFixtures;
 
 // Item types invented for the tests, since the package is generic
 // and owns no entity type of its own. `addressed-item` has a
@@ -148,7 +151,8 @@ export const entityGroupSets = [
  */
 export function groupsFilePath(type: string): string {
   return Fs.concatPath(
-    Paths.workspaceConfigs,
+    workspace_1.path,
+    Paths.hiddenDirName,
     EntityGroupsDirName,
     `${type}.json`,
   );

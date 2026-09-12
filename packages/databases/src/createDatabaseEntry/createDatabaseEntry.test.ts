@@ -57,7 +57,9 @@ describe('createDatabaseEntry', () => {
     const entry = await createDatabaseEntry(objectDatabase.id);
 
     // Entry file should exist
-    expect(MockFs.exists(resolveDatabaseEntryPath(entry))).toBeTruthy();
+    expect(
+      MockFs.exists(resolveDatabaseEntryPath(entry, objectDatabase)),
+    ).toBeTruthy();
   });
 
   it('writes the entry file to a subdirectory if the database uses entry based storage', async () => {
@@ -65,7 +67,9 @@ describe('createDatabaseEntry', () => {
 
     // Main file should be written to entry subdirectory
     expect(entry.path).toBe(`${title}/${title}.md`);
-    expect(MockFs.exists(resolveDatabaseEntryPath(entry))).toBeTruthy();
+    expect(
+      MockFs.exists(resolveDatabaseEntryPath(entry, entryStorageDatabase)),
+    ).toBeTruthy();
   });
 
   it('increments the entry title if an entry with the same name exists', async () => {

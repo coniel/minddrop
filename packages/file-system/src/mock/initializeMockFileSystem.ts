@@ -22,7 +22,6 @@ import { mockExists } from './mockExists';
 import { mockGetFileEntry } from './mockGetFileEntry';
 import { mockRemoveFileEntry } from './mockRemoveFileEntry';
 import { printFileTree } from './printFileTree';
-import { setMockWorkspacePaths } from './setMockWorkspacePaths';
 
 const baseDirs = [
   BaseDirectory.AppData,
@@ -33,9 +32,6 @@ const baseDirs = [
 export function initializeMockFileSystem(
   filesToLoad: (MockFileDescriptor | string)[] = [],
 ): MockFileSystem {
-  // Point the workspace paths at the mock workspace
-  setMockWorkspacePaths();
-
   const init = initializeMockFsRoot([...baseDirs, ...filesToLoad]);
 
   // The mock file system root

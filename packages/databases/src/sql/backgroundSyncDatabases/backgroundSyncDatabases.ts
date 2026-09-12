@@ -1,5 +1,4 @@
 import { Fs } from '@minddrop/file-system';
-import { Paths } from '@minddrop/utils';
 import { loadCoreSerializers } from '../../DatabaseEntrySerializers';
 import { listEntryMetadataKeys } from '../../listEntryMetadataKeys';
 import { readDatabaseEntries } from '../../readDatabaseEntries';
@@ -44,9 +43,8 @@ import { sqlUpsertEntries } from '../sqlUpsertEntries';
 export async function backgroundSyncDatabases(
   workspacePath: string,
 ): Promise<BackgroundSyncChangeset> {
-  // Ensure serializers and workspace path are set
+  // Ensure serializers are loaded
   loadCoreSerializers();
-  Paths.workspace = workspacePath;
 
   // Get existing databases from SQL
   const sqlDatabases = sqlGetAllDatabases();
@@ -130,7 +128,7 @@ export async function backgroundSyncDatabases(
   for (const database of fileSystemDatabases) {
     // Read the entries from disk. Their metadata is read after the
     // diff, for the changed entries only.
-    const rawEntries = await readDatabaseEntries(database);
+    const rawEntries = await readDatabaseEntries(database, workspacePath);
 
     // Get existing sync records from SQL. Their paths are addressed
     // from the database, so a database directory renamed while the app
@@ -197,7 +195,10 @@ export async function backgroundSyncDatabases(
         mergeEntryMetadata(
           entry,
           database.properties,
-          await readEntryMetadata(resolveDatabasePath(database), entry.path),
+          await readEntryMetadata(
+            resolveDatabasePath(database, workspacePath),
+            entry.path,
+          ),
         ),
       ),
     );
@@ -230,6 +231,7 @@ export async function backgroundSyncDatabases(
     await sweepOrphanedMetadata(
       database,
       entries.map((entry) => entry.path),
+      workspacePath,
     );
 
     // Track changed entry IDs
@@ -245,7 +247,7 @@ export async function backgroundSyncDatabases(
   await Promise.all(
     outdatedSidecars.map(({ database, entry }) =>
       writeEntryMetadata(
-        resolveDatabasePath(database),
+        resolveDatabasePath(database, workspacePath),
         entry.path,
         entry.metadata,
       ),
@@ -291,8 +293,9 @@ export async function backgroundSyncDatabases(
 async function sweepOrphanedMetadata(
   database: Database,
   entryPaths: string[],
+  workspacePath: string,
 ): Promise<void> {
-  const databasePath = resolveDatabasePath(database);
+  const databasePath = resolveDatabasePath(database, workspacePath);
 
   // Listed rather than read, since only the keys are needed
   const metadataKeys = await listEntryMetadataKeys(databasePath);

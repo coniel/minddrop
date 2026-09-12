@@ -1,7 +1,10 @@
 import { MockFileSystem } from '@minddrop/file-system';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { AutomationsStore } from '../AutomationsStore';
 import { resolveAutomationsDirPath } from '../utils';
 import { automations, getAutomationFiles } from './automations.fixtures';
+
+const { workspace_1 } = WorkspaceFixtures;
 
 export interface SetupAutomationFixturesOptions {
   loadAutomations?: boolean;
@@ -16,7 +19,9 @@ export function setupAutomationFixtures(
   },
 ) {
   // Create the automations directory
-  MockFs.createDir(resolveAutomationsDirPath(), { recursive: true });
+  MockFs.createDir(resolveAutomationsDirPath(workspace_1.path), {
+    recursive: true,
+  });
 
   if (options.loadAutomations !== false) {
     // Load automations into the store

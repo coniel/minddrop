@@ -7,6 +7,10 @@ import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
 import { I18n, initializeI18n } from '@minddrop/i18n';
+import {
+  cleanupWorkspaceFixtures,
+  setupWorkspaceFixtures,
+} from '@minddrop/workspaces/test-utils';
 import { locales } from '../locales';
 
 initializeI18n();
@@ -18,6 +22,8 @@ I18n.registerTranslations(locales);
 export const MockFs = initializeMockFileSystem();
 
 export function setup() {
+  setupWorkspaceFixtures(MockFs);
+
   // Load design fixtures into the stores and mock file system
   setupDesignFixtures(MockFs);
 }
@@ -30,4 +36,5 @@ export async function cleanup(): Promise<void> {
   cleanupDesignFixtures();
   await Events.tests.cleanup();
   vi.clearAllMocks();
+  cleanupWorkspaceFixtures();
 }

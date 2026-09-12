@@ -9,14 +9,21 @@ import { resolveEntryPropertyFilePath } from '../resolveEntryPropertyFilePath';
  * @param entryId - The ID of the entry.
  * @param propertyName - The name of the property.
  * @param fileName - The name of the file, i.e. the value of the property.
+ * @param workspacePath - The workspace path. Defaults to the active workspace.
  * @returns The path to the property file.
  */
 export async function resolveIncrementalPropertyFilePath(
   entryId: string,
   propertyName: string,
   fileName: string,
+  workspacePath?: string,
 ): Promise<IncrementedPath> {
   return Fs.incrementalPath(
-    resolveEntryPropertyFilePath(entryId, propertyName, fileName),
+    resolveEntryPropertyFilePath(
+      entryId,
+      propertyName,
+      fileName,
+      workspacePath,
+    ),
   );
 }

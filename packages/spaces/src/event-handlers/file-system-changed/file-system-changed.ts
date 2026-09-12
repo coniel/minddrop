@@ -5,8 +5,8 @@ import { readSpace } from '../../readSpace';
 import { parseSpaceBundlePath, resolveSpaceBundleDirPath } from '../../utils';
 
 /**
- * Applies a change made to a space bundle outside of the app,
- * ignoring changes to any other file.
+ * Applies a change made to a space bundle in the active workspace
+ * outside of the app, ignoring changes to any other file.
  *
  * @param change - The file system change.
  */

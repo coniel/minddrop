@@ -1,9 +1,12 @@
 import { MockFileSystem } from '@minddrop/file-system';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { TagGroupsStore } from '../TagGroupsStore';
 import { TagsStore } from '../TagsStore';
 import { resolveTagGroupsDirPath, resolveTagsDirPath } from '../utils';
 import { getTagGroupFiles, tagGroups } from './tag-groups.fixtures';
 import { getTagFiles, tags } from './tags.fixtures';
+
+const { workspace_1 } = WorkspaceFixtures;
 
 export interface SetupTagFixturesOptions {
   loadTags?: boolean;
@@ -22,8 +25,10 @@ export function setupTagFixtures(
   },
 ) {
   // Create the tags and tag groups directories
-  MockFs.createDir(resolveTagsDirPath(), { recursive: true });
-  MockFs.createDir(resolveTagGroupsDirPath(), { recursive: true });
+  MockFs.createDir(resolveTagsDirPath(workspace_1.path), { recursive: true });
+  MockFs.createDir(resolveTagGroupsDirPath(workspace_1.path), {
+    recursive: true,
+  });
 
   if (options.loadTags !== false) {
     // Load tags into the store

@@ -9,13 +9,15 @@ import { resolveDatabasePath } from '../utils';
  * the deserialized DatabaseEntry objects.
  *
  * @param database - The database to read entries from.
+ * @param workspacePath - The workspace path. Defaults to the active workspace.
  * @returns The database entries, with null entries filtered out.
  */
 export async function readDatabaseEntries(
   database: Database,
+  workspacePath?: string,
 ): Promise<DatabaseEntry[]> {
   const hasEntrySubdirs = database.propertyFileStorage === 'entry';
-  const databasePath = resolveDatabasePath(database);
+  const databasePath = resolveDatabasePath(database, workspacePath);
 
   // Read the database's entry files
   let files = await Fs.readDir(databasePath, {
@@ -56,6 +58,7 @@ export async function readDatabaseEntries(
         Fs.relativePath(databasePath, file.path),
         database,
         serializer,
+        workspacePath,
       ),
     ),
   );

@@ -29,5 +29,8 @@ export async function writeCollection(id: string): Promise<void> {
   const items = ItemReferences.serialize(collection.items);
 
   // Write the collection config
-  Fs.writeJsonFile(resolveCollectionFilePath(id), { ...collection, items });
+  Fs.writeJsonFile(resolveCollectionFilePath(id), {
+    ...collection,
+    items,
+  });
 }

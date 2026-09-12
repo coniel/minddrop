@@ -14,22 +14,29 @@ import { resolveDatabasePath } from '../resolveDatabasePath';
  * return an empty array.
  *
  * @param database - The database whose property directories to resolve.
+ * @param workspacePath - The workspace path. Defaults to the active workspace.
  * @returns The property directory paths.
  */
-export function resolveDatabasePropertyDirs(database: Database): string[] {
+export function resolveDatabasePropertyDirs(
+  database: Database,
+  workspacePath?: string,
+): string[] {
   switch (database.propertyFileStorage) {
     // A single shared directory holds all property files
     case 'common': {
       const dirName =
         database.propertyFilesDir || i18n.t(PropertyFilesDirNameKey);
 
-      return [`${resolveDatabasePath(database)}/${dirName}`];
+      return [`${resolveDatabasePath(database, workspacePath)}/${dirName}`];
     }
     // One directory per file-based property, named after the property
     case 'property':
       return database.properties
         .filter(Properties.isFileBased)
-        .map((property) => `${resolveDatabasePath(database)}/${property.name}`);
+        .map(
+          (property) =>
+            `${resolveDatabasePath(database, workspacePath)}/${property.name}`,
+        );
     // Root and entry storage have no dedicated shared property directories
     default:
       return [];

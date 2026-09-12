@@ -102,7 +102,9 @@ describe('onTagRenamed', () => {
     await onTagRenamed({ original: originalTag, updated: renamedTag });
 
     // The entry file should contain the new name and not the old
-    const contents = MockFs.readTextFile(resolveDatabaseEntryPath(taggedEntry));
+    const contents = MockFs.readTextFile(
+      resolveDatabaseEntryPath(taggedEntry, tagsDatabase),
+    );
     expect(contents).toContain('Later');
     expect(contents).not.toContain('Urgent');
   });

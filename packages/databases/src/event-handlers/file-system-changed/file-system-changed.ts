@@ -1,5 +1,5 @@
 import { FileSystemChangedEventData, Fs } from '@minddrop/file-system';
-import { Paths } from '@minddrop/utils';
+import { Workspaces } from '@minddrop/workspaces';
 import { getDatabaseBackendAdapter } from '../../DatabaseBackendAdapter';
 import { getAllDatabases } from '../../getAllDatabases';
 import {
@@ -40,7 +40,7 @@ export async function onFileSystemChanged(
   scanTimer = setTimeout(() => {
     scanTimer = null;
 
-    getDatabaseBackendAdapter().backgroundSync(Paths.workspace);
+    getDatabaseBackendAdapter().backgroundSync(Workspaces.getActive().path);
   }, DebounceMs);
 }
 
@@ -54,7 +54,6 @@ async function isDatabaseChange(
   change: FileSystemChangedEventData,
 ): Promise<boolean> {
   const { path, kind } = change;
-
   // Anything inside a known database directory, including the
   // directory itself being deleted.
   const inKnownDatabase = getAllDatabases().some((database) => {

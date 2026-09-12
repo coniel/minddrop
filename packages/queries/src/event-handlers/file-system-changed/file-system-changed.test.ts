@@ -1,11 +1,14 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { FileSystemChange } from '@minddrop/file-system';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { QueriesStore } from '../../QueriesStore';
 import { MockFs, cleanup, query_1, setup } from '../../test-utils';
 import { resolveQueriesDirPath, resolveQueryFilePath } from '../../utils';
 import { onFileSystemChanged } from './file-system-changed';
 
-const queryPath = resolveQueryFilePath(query_1.id);
+const { workspace_1 } = WorkspaceFixtures;
+
+const queryPath = resolveQueryFilePath(query_1.id, workspace_1.path);
 
 describe('onFileSystemChanged', () => {
   beforeEach(setup);

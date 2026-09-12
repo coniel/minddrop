@@ -8,13 +8,17 @@ import { resolveViewsDirPath } from '../resolveViewsDirPath';
  * ID.
  *
  * @param path - The path to resolve.
+ * @param workspacePath - The workspace path. Defaults to the active workspace.
  * @returns The data view ID or null if the path is not a view file.
  */
-export function resolveDataViewId(path: string): string | null {
+export function resolveDataViewId(
+  path: string,
+  workspacePath?: string,
+): string | null {
   const parentDirPath = Fs.parentDirPath(path);
 
-  // View files sit directly in the active workspace's views directory
-  if (parentDirPath !== resolveViewsDirPath()) {
+  // View files sit directly in the workspace's views directory
+  if (parentDirPath !== resolveViewsDirPath(workspacePath)) {
     return null;
   }
 

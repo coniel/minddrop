@@ -8,6 +8,10 @@ import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
 import { initializeI18n } from '@minddrop/i18n';
 import { Spaces } from '@minddrop/spaces';
 import { cleanup as cleanupRender } from '@minddrop/test-utils';
+import {
+  cleanupWorkspaceFixtures,
+  setupWorkspaceFixtures,
+} from '@minddrop/workspaces/test-utils';
 
 initializeI18n();
 
@@ -19,7 +23,9 @@ if (!Element.prototype.getAnimations) {
 
 export const MockFs = initializeMockFileSystem([]);
 
-export function setup() {}
+export function setup() {
+  setupWorkspaceFixtures(MockFs);
+}
 
 export async function cleanup(): Promise<void> {
   cleanupRender();
@@ -32,4 +38,5 @@ export async function cleanup(): Promise<void> {
   await Events.tests.cleanup();
   Spaces.Store.clear();
   DataViews.Store.clear();
+  cleanupWorkspaceFixtures();
 }

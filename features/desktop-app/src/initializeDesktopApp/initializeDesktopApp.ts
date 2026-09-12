@@ -120,8 +120,7 @@ async function runInitialization(): Promise<void> {
   // groups are loaded below.
   SidebarGroups.initialize();
 
-  // Initialize workspaces (sets Paths.workspace and
-  // Paths.workspaceConfigs from the active workspace)
+  // Initialize workspaces, resolving the active one
   await Workspaces.initialize();
 
   // Hydrate layout region sizes (dialogs, panels) for this workspace

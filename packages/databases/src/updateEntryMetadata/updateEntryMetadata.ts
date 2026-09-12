@@ -41,7 +41,7 @@ export async function updateEntryMetadata(
   // Write the entry's metadata sidecar
   await writeEntryMetadata(
     resolveDatabasePath(database),
-    resolveDatabaseEntryPath(entry),
+    resolveDatabaseEntryPath(entry, database),
     metadata,
   );
 }

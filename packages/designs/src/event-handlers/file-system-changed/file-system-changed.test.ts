@@ -1,15 +1,21 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { FileSystemChange } from '@minddrop/file-system';
 import { storeItem } from '@minddrop/stores/test-utils';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DesignsStore } from '../../DesignsStore';
 import { DesignFixtures, MockFs, cleanup, setup } from '../../test-utils';
 import { resolveDesignBundleDirPath, resolveDesignFilePath } from '../../utils';
 import { onFileSystemChanged } from './file-system-changed';
 
+const { workspace_1 } = WorkspaceFixtures;
+
 const { design_books } = DesignFixtures;
 
-const designFilePath = resolveDesignFilePath(design_books.id);
-const bundleDirPath = resolveDesignBundleDirPath(design_books.id);
+const designFilePath = resolveDesignFilePath(design_books.id, workspace_1.path);
+const bundleDirPath = resolveDesignBundleDirPath(
+  design_books.id,
+  workspace_1.path,
+);
 
 describe('onFileSystemChanged', () => {
   beforeEach(() => setup());

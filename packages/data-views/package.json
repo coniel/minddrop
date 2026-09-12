@@ -23,12 +23,12 @@
   "dependencies": {
     "@minddrop/events": "workspace:*",
     "@minddrop/file-system": "workspace:*",
-    "@minddrop/stores": "workspace:*",
-    "@minddrop/utils": "workspace:*",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/item-references": "workspace:*",
     "@minddrop/properties": "workspace:*",
-    "@minddrop/workspaces": "workspace:*",
-    "@minddrop/ui-icons": "workspace:*"
+    "@minddrop/stores": "workspace:*",
+    "@minddrop/ui-icons": "workspace:*",
+    "@minddrop/utils": "workspace:*",
+    "@minddrop/workspaces": "workspace:*"
   }
 }

@@ -5,18 +5,24 @@ import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
 import { ItemReferences } from '@minddrop/item-references';
-import { Paths } from '@minddrop/utils';
+import {
+  WorkspaceFixtures,
+  cleanupWorkspaceFixtures,
+  setupWorkspaceFixtures,
+} from '@minddrop/workspaces/test-utils';
 import { EntityGroupTypesRegistry } from '../EntityGroupTypesRegistry';
 import { EntityGroupsStore } from '../EntityGroupsStore';
-import { EntityGroupsDirName } from '../constants';
 import { registerEntityGroupType } from '../registerEntityGroupType';
 import { EntityGroup } from '../types';
+import { resolveEntityGroupsDirPath } from '../utils';
 import {
   entityGroupSets,
   groupTypeConfigs,
   groupsFilePath,
   itemReferenceAdapter,
 } from './entity-groups.fixtures';
+
+const { workspace_1 } = WorkspaceFixtures;
 
 export const MockFs = initializeMockFileSystem();
 
@@ -46,8 +52,10 @@ export function readWrittenEntityGroup(
 }
 
 export function setup(): void {
+  setupWorkspaceFixtures(MockFs);
+
   // Create the directory the groups files are written into
-  MockFs.createDir(Fs.concatPath(Paths.workspaceConfigs, EntityGroupsDirName), {
+  MockFs.createDir(resolveEntityGroupsDirPath(workspace_1.path), {
     recursive: true,
   });
 
@@ -76,4 +84,5 @@ export async function cleanup(): Promise<void> {
   ItemReferences.unregisterAdapter(itemReferenceAdapter.type);
 
   await Events.tests.cleanup();
+  cleanupWorkspaceFixtures();
 }

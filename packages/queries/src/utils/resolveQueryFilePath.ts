@@ -6,11 +6,12 @@ import { resolveQueriesDirPath } from './resolveQueriesDirPath';
  * Returns the path to a query file.
  *
  * @param id - The ID of the query.
+ * @param workspacePath - The workspace path. Defaults to the active workspace.
  * @returns The path to the query file.
  */
-export function resolveQueryFilePath(id: string) {
+export function resolveQueryFilePath(id: string, workspacePath?: string) {
   return Fs.concatPath(
-    resolveQueriesDirPath(),
+    resolveQueriesDirPath(workspacePath),
     Fs.addFileExtension(id, QueryFileExtension),
   );
 }

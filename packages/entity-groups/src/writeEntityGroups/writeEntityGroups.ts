@@ -1,9 +1,10 @@
 import { Fs } from '@minddrop/file-system';
 import { ItemReferences } from '@minddrop/item-references';
-import { Paths } from '@minddrop/utils';
-import { EntityGroupsDirName } from '../constants';
 import { getAllEntityGroups } from '../getAllEntityGroups';
-import { resolveEntityGroupsFilePath } from '../utils';
+import {
+  resolveEntityGroupsDirPath,
+  resolveEntityGroupsFilePath,
+} from '../utils';
 
 /**
  * Writes a group type's groups to the file system.
@@ -12,9 +13,7 @@ import { resolveEntityGroupsFilePath } from '../utils';
  */
 export async function writeEntityGroups(type: string): Promise<void> {
   // Ensure the groups directory exists
-  await Fs.ensureDir(
-    Fs.concatPath(Paths.workspaceConfigs, EntityGroupsDirName),
-  );
+  await Fs.ensureDir(resolveEntityGroupsDirPath());
 
   // Convert the groups' item IDs into durable references
   const groups = getAllEntityGroups(type).map((group) => ({

@@ -6,6 +6,10 @@ import { Fs } from '@minddrop/file-system';
 import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
 import { initializeI18n } from '@minddrop/i18n';
 import {
+  cleanupWorkspaceFixtures,
+  setupWorkspaceFixtures,
+} from '@minddrop/workspaces/test-utils';
+import {
   SetupSpaceFixturesOptions,
   cleanupSpaceFixtures,
   setupSpaceFixtures,
@@ -18,6 +22,7 @@ export const MockFs = initializeMockFileSystem([...getSpaceFiles()]);
 export const mockDate = new Date('2026-01-01T00:00:00.000Z');
 
 export function setup(options: SetupSpaceFixturesOptions = {}) {
+  setupWorkspaceFixtures(MockFs);
   setupSpaceFixtures(MockFs, options);
   vi.useFakeTimers();
   vi.setSystemTime(mockDate);
@@ -33,4 +38,5 @@ export async function cleanup(): Promise<void> {
   await Events.tests.cleanup();
   vi.useRealTimers();
   cleanupSpaceFixtures();
+  cleanupWorkspaceFixtures();
 }

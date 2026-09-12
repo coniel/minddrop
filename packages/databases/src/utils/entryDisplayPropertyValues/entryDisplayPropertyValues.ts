@@ -18,12 +18,14 @@ import { resolveEntryPropertyFilePath } from '../resolveEntryPropertyFilePath';
  * @param entryId - The database entry ID.
  * @param layout - The layout being used to render the entry.
  * @param propertyMap - Map of element IDs to property names.
+ * @param workspacePath - The workspace path. Defaults to the active workspace.
  * @returns A map of property names to display-ready values.
  */
 export function entryDisplayPropertyValues(
   entryId: string,
   layout: Layout,
   propertyMap: Record<string, string>,
+  workspacePath?: string,
 ): Record<string, PropertyValue> {
   const entry = getDatabaseEntry(entryId, false);
 
@@ -58,6 +60,7 @@ export function entryDisplayPropertyValues(
         entryId,
         property.name,
         value,
+        workspacePath,
       );
     }
 

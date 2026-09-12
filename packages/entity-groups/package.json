@@ -26,6 +26,7 @@
     "@minddrop/file-system": "workspace:*",
     "@minddrop/item-references": "workspace:*",
     "@minddrop/stores": "workspace:*",
-    "@minddrop/utils": "workspace:*"
+    "@minddrop/utils": "workspace:*",
+    "@minddrop/workspaces": "workspace:*"
   }
 }

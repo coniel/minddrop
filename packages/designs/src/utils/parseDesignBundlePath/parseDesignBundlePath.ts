@@ -19,12 +19,14 @@ export interface ParsedDesignBundlePath {
  * bundle directories are named by their design's ID.
  *
  * @param path - The path to parse.
+ * @param workspacePath - The workspace path. Defaults to the active workspace.
  * @returns The parsed path or null if it is not inside a design bundle.
  */
 export function parseDesignBundlePath(
   path: string,
+  workspacePath?: string,
 ): ParsedDesignBundlePath | null {
-  const designsDirPath = `${resolveDesignsDirPath()}/`;
+  const designsDirPath = `${resolveDesignsDirPath(workspacePath)}/`;
 
   if (!path.startsWith(designsDirPath)) {
     return null;

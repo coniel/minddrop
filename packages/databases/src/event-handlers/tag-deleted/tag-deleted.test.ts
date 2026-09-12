@@ -86,7 +86,9 @@ describe('onTagDeleted', () => {
     await onTagDeleted(deletedTag);
 
     // The entry file should no longer contain the deleted name
-    const contents = MockFs.readTextFile(resolveDatabaseEntryPath(taggedEntry));
+    const contents = MockFs.readTextFile(
+      resolveDatabaseEntryPath(taggedEntry, tagsDatabase),
+    );
     expect(contents).toContain('Home');
     expect(contents).not.toContain('Urgent');
   });

@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { FileSystemChange } from '@minddrop/file-system';
 import { Paths } from '@minddrop/utils';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import {
   MockBackendAdapter,
   MockFs,
@@ -12,6 +13,8 @@ import {
 } from '../../test-utils';
 import { resolveDatabaseConfigFilePath } from '../../utils';
 import { onFileSystemChanged } from './file-system-changed';
+
+const { workspace_1 } = WorkspaceFixtures;
 
 describe('onFileSystemChanged', () => {
   // The registered mock backend's recorded call state
@@ -38,7 +41,7 @@ describe('onFileSystemChanged', () => {
 
     await flushDebounce();
 
-    expect(backend.backgroundSyncCalls).toEqual([Paths.workspace]);
+    expect(backend.backgroundSyncCalls).toEqual([workspace_1.path]);
   });
 
   it('scans the workspace when a database directory is deleted', async () => {
@@ -48,7 +51,7 @@ describe('onFileSystemChanged', () => {
 
     await flushDebounce();
 
-    expect(backend.backgroundSyncCalls).toEqual([Paths.workspace]);
+    expect(backend.backgroundSyncCalls).toEqual([workspace_1.path]);
   });
 
   it('coalesces a burst of changes into a single scan', async () => {
@@ -70,18 +73,18 @@ describe('onFileSystemChanged', () => {
   it('scans the workspace when a config file appears outside every known database', async () => {
     await onFileSystemChanged(
       change(
-        resolveDatabaseConfigFilePath(`${Paths.workspace}/Unknown`),
+        resolveDatabaseConfigFilePath(`${workspace_1.path}/Unknown`),
         'created',
       ),
     );
 
     await flushDebounce();
 
-    expect(backend.backgroundSyncCalls).toEqual([Paths.workspace]);
+    expect(backend.backgroundSyncCalls).toEqual([workspace_1.path]);
   });
 
   it('scans the workspace when a directory holding a config file is created', async () => {
-    const databasePath = `${Paths.workspace}/Copied`;
+    const databasePath = `${workspace_1.path}/Copied`;
 
     // A database directory copied in whole, the platform watcher
     // reporting only the directory itself.
@@ -93,12 +96,12 @@ describe('onFileSystemChanged', () => {
 
     await flushDebounce();
 
-    expect(backend.backgroundSyncCalls).toEqual([Paths.workspace]);
+    expect(backend.backgroundSyncCalls).toEqual([workspace_1.path]);
   });
 
   it('ignores changes to app state in the workspace hidden directory', async () => {
     await onFileSystemChanged(
-      change(`${Paths.workspace}/${Paths.hiddenDirName}/views/view.json`),
+      change(`${workspace_1.path}/${Paths.hiddenDirName}/views/view.json`),
     );
 
     await flushDebounce();
@@ -107,7 +110,7 @@ describe('onFileSystemChanged', () => {
   });
 
   it('ignores changes to directories the user keeps for their own purposes', async () => {
-    await onFileSystemChanged(change(`${Paths.workspace}/Scratch/notes.txt`));
+    await onFileSystemChanged(change(`${workspace_1.path}/Scratch/notes.txt`));
 
     await flushDebounce();
 
@@ -115,7 +118,7 @@ describe('onFileSystemChanged', () => {
   });
 
   it('ignores a created directory which holds no config file', async () => {
-    await onFileSystemChanged(change(`${Paths.workspace}/Scratch`, 'created'));
+    await onFileSystemChanged(change(`${workspace_1.path}/Scratch`, 'created'));
 
     await flushDebounce();
 

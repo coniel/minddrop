@@ -26,7 +26,7 @@ export async function initializeCollections(): Promise<void> {
   // Ensure that the collections directory exists
   await Fs.ensureDir(collectionsDirPath);
 
-  // Load collections from the collections directory
+  // Load collections from the active workspace's collections directory
   const files = await Fs.readDir(collectionsDirPath);
 
   // Read the collection files

@@ -19,12 +19,14 @@ export interface ParsedSpaceBundlePath {
  * directories are named by their space's ID.
  *
  * @param path - The path to parse.
+ * @param workspacePath - The workspace path. Defaults to the active workspace.
  * @returns The parsed path or null if it is not inside a space bundle.
  */
 export function parseSpaceBundlePath(
   path: string,
+  workspacePath?: string,
 ): ParsedSpaceBundlePath | null {
-  const spacesDirPath = `${resolveSpacesDirPath()}/`;
+  const spacesDirPath = `${resolveSpacesDirPath(workspacePath)}/`;
 
   if (!path.startsWith(spacesDirPath)) {
     return null;

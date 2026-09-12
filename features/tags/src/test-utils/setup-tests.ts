@@ -8,12 +8,18 @@ import {
   setupTagFixtures,
 } from '@minddrop/tags/test-utils';
 import { cleanup as cleanupRender } from '@minddrop/test-utils';
+import {
+  cleanupWorkspaceFixtures,
+  setupWorkspaceFixtures,
+} from '@minddrop/workspaces/test-utils';
 
 initializeI18n();
 
 export const MockFs = initializeMockFileSystem();
 
 export function setup() {
+  setupWorkspaceFixtures(MockFs);
+
   // Load tag fixtures into the stores and mock file system
   setupTagFixtures(MockFs);
 }
@@ -28,4 +34,5 @@ export async function cleanup(): Promise<void> {
   cleanupTagFixtures();
   await Events.tests.cleanup();
   vi.clearAllMocks();
+  cleanupWorkspaceFixtures();
 }

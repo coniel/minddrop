@@ -10,12 +10,14 @@ import { resolvePropertyFilesDirName } from '../resolvePropertyFilesDirName';
  * @param entryId - The ID of the entry.
  * @param propertyName - The name of the property.
  * @param fileName - The name of the file, i.e. the value of the property.
+ * @param workspacePath - The workspace path. Defaults to the active workspace.
  * @returns The path to the property file.
  */
 export function resolveEntryPropertyFilePath(
   entryId: string,
   propertyName: string,
   fileName: string,
+  workspacePath?: string,
 ): string {
   // Get the entry
   const entry = getDatabaseEntry(entryId);
@@ -25,7 +27,7 @@ export function resolveEntryPropertyFilePath(
 
   // Resolve the path against the database's current storage mode
   return resolvePropertyFilePath({
-    databasePath: resolveDatabasePath(database),
+    databasePath: resolveDatabasePath(database, workspacePath),
     mode: database.propertyFileStorage,
     propertyFilesDirName: resolvePropertyFilesDirName(
       database.propertyFilesDir,

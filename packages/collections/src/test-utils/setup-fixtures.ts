@@ -1,5 +1,6 @@
 import { MockFileSystem } from '@minddrop/file-system';
 import { ItemReferences } from '@minddrop/item-references';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { CollectionsStore } from '../CollectionsStore';
 import { resolveCollectionsDirPath } from '../utils';
 import {
@@ -7,6 +8,8 @@ import {
   collections_virtual,
   getCollectionFiles,
 } from './collections.fixtures';
+
+const { workspace_1 } = WorkspaceFixtures;
 
 export interface SetupCollectionFixturesOptions {
   loadCollections?: boolean;
@@ -23,7 +26,9 @@ export function setupCollectionFixtures(
   },
 ) {
   // Create the collections directory
-  MockFs.createDir(resolveCollectionsDirPath(), { recursive: true });
+  MockFs.createDir(resolveCollectionsDirPath(workspace_1.path), {
+    recursive: true,
+  });
 
   if (options.loadCollections !== false) {
     // Load collections into the store

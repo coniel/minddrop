@@ -8,8 +8,8 @@ import { readSpace } from '../readSpace';
 import { resolveSpacesDirPath } from '../utils';
 
 /**
- * Initializes spaces by loading space configs from the spaces
- * directory.
+ * Initializes spaces by loading space configs from the active
+ * workspace's spaces directory.
  *
  * If the spaces directory does not exist, it will be created.
  */

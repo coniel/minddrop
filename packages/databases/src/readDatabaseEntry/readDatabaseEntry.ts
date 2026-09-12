@@ -15,6 +15,7 @@ import { getTimestampProperty, resolveDatabaseEntryPath } from '../utils';
  * @param path - The entry file's path, relative to its database.
  * @param database - The database the entry belongs to.
  * @param entrySerializer - The entry serializer used to deserialize the entry.
+ * @param workspacePath - The workspace path. Defaults to the active workspace.
  *
  * @returns The entry object.
  */
@@ -22,9 +23,10 @@ export async function readDatabaseEntry(
   path: string,
   database: Database,
   entrySerializer: DatabaseEntrySerializer,
+  workspacePath?: string,
 ): Promise<DatabaseEntry | null> {
   // Path to the entry's main file
-  const filePath = resolveDatabaseEntryPath(path, database);
+  const filePath = resolveDatabaseEntryPath(path, database, workspacePath);
 
   try {
     // Read the entry's user properties

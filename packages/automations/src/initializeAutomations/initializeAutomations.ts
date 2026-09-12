@@ -17,7 +17,7 @@ export async function initializeAutomations(): Promise<void> {
   // Ensure that the automations directory exists
   await Fs.ensureDir(automationsDirPath);
 
-  // Load automations from the automations directory
+  // Load automations from the active workspace's automations directory
   const files = await Fs.readDir(automationsDirPath);
 
   // Read the automation files

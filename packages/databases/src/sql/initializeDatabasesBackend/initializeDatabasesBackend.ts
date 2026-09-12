@@ -1,6 +1,5 @@
 import { Fs } from '@minddrop/file-system';
 import { Sql } from '@minddrop/sql';
-import { Paths } from '@minddrop/utils';
 import { Workspaces } from '@minddrop/workspaces';
 import { loadCoreSerializers } from '../../DatabaseEntrySerializers';
 import { SqlDatabaseFileName } from '../../constants';
@@ -67,9 +66,6 @@ export async function initializeDatabasesBackend(
   // Load core entry serializers for reading entry files
   loadCoreSerializers();
 
-  // Set the workspace path for path resolution
-  Paths.workspace = workspacePath;
-
   // Open or create the SQL database. Opened before the workspace
   // scan so that the scan can consult the recorded database paths.
   const dbPath = Fs.concatPath(
@@ -107,7 +103,7 @@ export async function initializeDatabasesBackend(
   // SQL from the filesystem. Otherwise trust SQL as the cache
   // and let background sync handle any drift.
   if (schemaChanged) {
-    await rebuildSqlFromFilesystem(databases);
+    await rebuildSqlFromFilesystem(databases, workspacePath);
   }
 
   // Query all entries with full property data and metadata
@@ -125,7 +121,10 @@ export async function initializeDatabasesBackend(
  * and populates SQL from scratch. Used on first run or
  * after a schema version change.
  */
-async function rebuildSqlFromFilesystem(databases: Database[]): Promise<void> {
+async function rebuildSqlFromFilesystem(
+  databases: Database[],
+  workspacePath: string,
+): Promise<void> {
   // Workspace-wide address index used to resolve entry references,
   // keyed lowercased to match addresses case-insensitively
   const entryIdByAddress = new Map<string, string>();
@@ -152,8 +151,8 @@ async function rebuildSqlFromFilesystem(databases: Database[]): Promise<void> {
 
     // Read entries and metadata from disk in parallel
     const [rawEntries, metadataMap] = await Promise.all([
-      readDatabaseEntries(database),
-      readAllEntryMetadata(resolveDatabasePath(database)),
+      readDatabaseEntries(database, workspacePath),
+      readAllEntryMetadata(resolveDatabasePath(database, workspacePath)),
     ]);
 
     // Merge metadata into entries before conversion, resolving their
@@ -213,7 +212,7 @@ async function rebuildSqlFromFilesystem(databases: Database[]): Promise<void> {
   await Promise.all(
     outdatedSidecars.map(({ database, entry }) =>
       writeEntryMetadata(
-        resolveDatabasePath(database),
+        resolveDatabasePath(database, workspacePath),
         entry.path,
         entry.metadata,
       ),
