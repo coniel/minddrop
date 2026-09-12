@@ -97,6 +97,8 @@ declare module 'i18next' {
           close: string;
           search: string;
           pickDate: string;
+          pickIcon: string;
+          pickColor: string;
           swapSplitPosition: string;
           expand: string;
         };

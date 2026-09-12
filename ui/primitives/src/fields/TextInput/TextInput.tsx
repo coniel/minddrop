@@ -198,6 +198,11 @@ export interface TextInputProps {
    * Key down event handler.
    */
   onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
+
+  /*
+   * Callback fired with the field's value when Enter is pressed.
+   */
+  onCommit?: (value: string) => void;
 }
 
 // Lines of text a multiline input is tall by default
@@ -225,6 +230,7 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
       onChange,
       onClear,
       onFocus,
+      onCommit,
       onKeyDown,
       onValueChange,
       placeholder,
@@ -265,6 +271,23 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
       }
 
       onValueChange?.(newValue);
+    };
+
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+      onKeyDown?.(event);
+
+      if (!onCommit || event.key !== 'Enter') {
+        return;
+      }
+
+      // Committing tends to close what the field is in, and the
+      // browser fires the key's default activation against whatever
+      // the focus lands on afterwards, pressing the control the
+      // field was opened from. Taking the default away leaves the
+      // key to the field.
+      event.preventDefault();
+
+      onCommit(String(currentValue));
     };
 
     const handleClear = (event: React.MouseEvent) => {
@@ -314,7 +337,7 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
           onBlur={onBlur}
           onChange={onChange}
           onFocus={onFocus}
-          onKeyDown={onKeyDown}
+          onKeyDown={handleKeyDown}
           onValueChange={handleValueChange}
           disabled={disabled}
         />

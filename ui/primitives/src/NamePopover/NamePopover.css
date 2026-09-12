@@ -1,0 +1,18 @@
+/* Portaled outside the thing being named, so styled at the top
+   level. Sized to fit the name field comfortably, and inset evenly
+   so the check button sits the same distance from every edge. */
+.name-popover {
+  width: 16rem;
+  padding: var(--space-1);
+}
+
+.name-popover-field {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Indented to line up with the name in the field above it, and
+   spaced from the popover's edge by its padding */
+.name-popover-error {
+  padding: 0 var(--space-1);
+}

@@ -8,10 +8,13 @@ import {
   SidebarGroup,
   SidebarGroupPopoverContext,
 } from '@minddrop/ui-components';
-import { MenuContents, propsToClass } from '@minddrop/ui-primitives';
+import {
+  MenuContents,
+  NamePopover,
+  propsToClass,
+} from '@minddrop/ui-primitives';
 import { EntityGroupItem } from '../EntityGroupItem';
 import { useEntityGroupList } from '../EntityGroupListContext';
-import { EntityGroupNamePopover } from '../EntityGroupNamePopover';
 import { applyEntityGroupDrop } from '../applyEntityGroupDrop';
 import { EntityGroupsDataKey } from '../constants';
 import { useDraggedEntityGroupItems } from '../useDraggedEntityGroupItems';
@@ -107,10 +110,11 @@ export const EntityGroup: React.FC<EntityGroupProps> = ({ group }) => {
   // Anchor the rename popover where the menu which opened it was
   function renderPopovers({ anchor }: SidebarGroupPopoverContext) {
     return (
-      <EntityGroupNamePopover
+      <NamePopover
         open={renaming}
         anchor={anchor}
-        defaultName={group.name}
+        defaultValue={group.name}
+        placeholder="entityGroups.name.placeholder"
         onOpenChange={setRenaming}
         onSubmit={handleRename}
       />

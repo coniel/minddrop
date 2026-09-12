@@ -5,6 +5,8 @@ import { propsToClass } from '../utils';
 import './Popover.css';
 
 export type PopoverProps = PopoverPrimitive.Root.Props;
+export type PopoverRootChangeEventDetails =
+  PopoverPrimitive.Root.ChangeEventDetails;
 export type PopoverTriggerProps = PopoverPrimitive.Trigger.Props;
 export type PopoverPositionerProps = PopoverPrimitive.Positioner.Props;
 export type PopoverCloseProps = PopoverPrimitive.Close.Props;

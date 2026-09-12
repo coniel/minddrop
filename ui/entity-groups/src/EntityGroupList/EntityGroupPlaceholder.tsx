@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { SidebarGroup } from '@minddrop/ui-components';
+import { NamePopover } from '@minddrop/ui-primitives';
 import { useEntityGroupList } from '../EntityGroupListContext';
-import { EntityGroupNamePopover } from '../EntityGroupNamePopover';
 import './EntityGroupPlaceholder.css';
 
 export interface EntityGroupPlaceholderProps {
@@ -52,9 +52,10 @@ export const EntityGroupPlaceholder: React.FC<EntityGroupPlaceholderProps> = ({
         ))}
       </SidebarGroup>
 
-      <EntityGroupNamePopover
+      <NamePopover
         open
         anchor={anchorRef}
+        placeholder="entityGroups.name.placeholder"
         onOpenChange={handleOpenChange}
         onSubmit={onSubmit}
       />

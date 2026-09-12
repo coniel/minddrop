@@ -41,6 +41,8 @@
     "close": "Close",
     "search": "Search...",
     "pickDate": "Pick a date...",
+    "pickIcon": "Pick an icon",
+    "pickColor": "Pick a colour",
     "swapSplitPosition": "Swap split position",
     "expand": "Expand"
   },
