@@ -122,6 +122,29 @@ await Fs.ensureDir(contentDirPath);
 await Fs.ensureDir(contentDirPath);
 ```
 
+The same applies to a comment above a listener registration. The
+fact that motivates the listener is not what the listener does:
+
+```ts
+// BAD, states the fact, not what the code does about it
+// Renaming a workspace moves its directory out from under its
+// watcher.
+Events.addListener(Workspaces.events.Updated, LISTENER_ID, (update) => {
+  if (update.original.path !== update.updated.path) {
+    watch(update.updated);
+  }
+});
+
+// GOOD, names the action and folds the fact into the condition
+// Restart the watcher on the new path when a workspace's directory
+// moves, as a rename does.
+Events.addListener(Workspaces.events.Updated, LISTENER_ID, (update) => {
+  if (update.original.path !== update.updated.path) {
+    watch(update.updated);
+  }
+});
+```
+
 Naming the action usually conveys the context anyway. "Filter for log
 files" already tells the reader the directory holds other things.
 
