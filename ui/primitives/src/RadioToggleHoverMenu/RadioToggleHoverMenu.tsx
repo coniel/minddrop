@@ -45,6 +45,12 @@ export interface RadioToggleHoverMenuOption<Value extends string = string> {
   content?: React.ReactNode;
 
   /**
+   * Sizes an option drawing its own `content` as an icon option,
+   * square rather than padded around its content.
+   */
+  square?: boolean;
+
+  /**
    * Accessible label of the option.
    */
   label: string;
@@ -364,6 +370,7 @@ export function RadioToggleHoverMenu<Value extends string>({
                     key={option.value}
                     value={option.value}
                     icon={option.icon}
+                    square={option.square}
                     label={option.label}
                     tooltip={
                       option.tooltip && {

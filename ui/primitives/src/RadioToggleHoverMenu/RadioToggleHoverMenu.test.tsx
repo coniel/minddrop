@@ -338,6 +338,32 @@ describe('RadioToggleHoverMenu', () => {
     );
   });
 
+  it('sizes a square option as an icon rather than as text', () => {
+    render(
+      <Toolbar>
+        <RadioToggleHoverMenu
+          options={[
+            { value: 'glyph', content: <span>G</span>, label: 'Glyph' },
+            {
+              value: 'mark',
+              content: <span>M</span>,
+              square: true,
+              label: 'Mark',
+            },
+          ]}
+          value="glyph"
+          label="Marks"
+          onValueChange={() => undefined}
+        />
+      </Toolbar>,
+    );
+
+    fireEvent.click(screen.getByLabelText('Marks'));
+
+    expect(screen.getByLabelText('Glyph')).toHaveClass('toggle-text');
+    expect(screen.getByLabelText('Mark')).not.toHaveClass('toggle-text');
+  });
+
   it('releases the toolbar end when it closes', () => {
     const { container } = render(
       <Toolbar>
