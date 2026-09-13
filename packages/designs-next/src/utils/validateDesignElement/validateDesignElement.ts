@@ -1,29 +1,10 @@
 import { isEntityId } from '@minddrop/utils';
 import {
-  DesignElement,
-  ElementContentFit,
-  ElementHeightMode,
-  ElementWidthMode,
-} from '../../types';
-
-// The width modes an element may declare
-const widthModes: ElementWidthMode[] = [
-  'fluid',
-  'fixed-left',
-  'fixed-right',
-  'fixed-proportional',
-];
-
-// The height modes an element may declare
-const heightModes: ElementHeightMode[] = [
-  'fluid',
-  'fixed-top',
-  'fixed-bottom',
-  'fixed-proportional',
-];
-
-// The content fits an element may declare
-const contentFits: ElementContentFit[] = ['fixed', 'grow', 'shrink', 'natural'];
+  ElementContentFits,
+  ElementHeightModes,
+  ElementWidthModes,
+} from '../../constants';
+import { DesignElement, ElementWidthMode } from '../../types';
 
 /**
  * Validates the shape of a design element read from disk.
@@ -62,14 +43,14 @@ export function validateDesignElement(
   }
 
   // The width mode must be known
-  if (!widthModes.includes(element.widthMode as ElementWidthMode)) {
+  if (!ElementWidthModes.includes(element.widthMode as ElementWidthMode)) {
     return false;
   }
 
   // The content fit must be known when present
   if (
     element.contentFit !== undefined &&
-    !contentFits.includes(element.contentFit)
+    !ElementContentFits.includes(element.contentFit)
   ) {
     return false;
   }
@@ -77,7 +58,7 @@ export function validateDesignElement(
   // The height mode must be known when present
   if (
     element.heightMode !== undefined &&
-    !heightModes.includes(element.heightMode)
+    !ElementHeightModes.includes(element.heightMode)
   ) {
     return false;
   }

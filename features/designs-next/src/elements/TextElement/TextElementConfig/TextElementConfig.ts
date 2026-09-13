@@ -2,6 +2,7 @@ import { DesignElementConfig, Designs } from '@minddrop/designs-next';
 import { i18n } from '@minddrop/i18n';
 import { Properties } from '@minddrop/properties';
 import { TextContentControls } from '@minddrop/ui-designs-next';
+import { resolveElementLineRowSpan } from '../../../utils';
 import { TextElement } from '../TextElement.types';
 import { TextElementRenderer } from '../TextElementRenderer';
 
@@ -30,7 +31,7 @@ export const TextElementConfig: DesignElementConfig<TextElement> = {
   defaultContentFit: 'grow',
   resolveDefaults: resolvePlaceholderText,
   settingGroups: ['text'],
-  resolveMinRowSpan: resolveLineRowSpan,
+  resolveMinRowSpan: resolveElementLineRowSpan,
 };
 
 /**
@@ -41,17 +42,4 @@ export const TextElementConfig: DesignElementConfig<TextElement> = {
  */
 function resolvePlaceholderText(): Partial<TextElement> {
   return { content: i18n.t('designsNext.elements.text.placeholder') };
-}
-
-/**
- * Resolves the rows one line of the element's text needs at its
- * size, the block's floor.
- *
- * @param element - The text element.
- * @returns The row span in grid units.
- */
-function resolveLineRowSpan(element: TextElement): number {
-  return Designs.resolveTextLineRowSpan(
-    element.fontSize ?? Designs.constants.DefaultFontSize,
-  );
 }

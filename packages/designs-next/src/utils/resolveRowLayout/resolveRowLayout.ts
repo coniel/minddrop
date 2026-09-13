@@ -79,13 +79,18 @@ function resolveRowHeight(
 
   const perRow = measured / element.rowSpan;
 
+  // Growing elements take their content height when it exceeds
+  // their unit height, never less.
   if (contentFit === 'grow') {
     return Math.max(UnitPixelSize, perRow);
   }
 
+  // Shrinking elements take their content height when it falls
+  // short of their unit height, never more.
   if (contentFit === 'shrink') {
     return Math.min(UnitPixelSize, perRow);
   }
 
+  // Natural elements take their content height either way
   return perRow;
 }

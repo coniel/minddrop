@@ -4,6 +4,9 @@ import {
   DesignElementGroup,
   DesignType,
   ElementColor,
+  ElementContentFit,
+  ElementHeightMode,
+  ElementWidthMode,
   FontWeight,
 } from './types';
 
@@ -97,6 +100,36 @@ export const SnapPresets = [1, 2, 4];
  * The element palette groups in display order.
  */
 export const DesignElementGroups: DesignElementGroup[] = ['content', 'layout'];
+
+/**
+ * The width modes an element may declare.
+ */
+export const ElementWidthModes: ElementWidthMode[] = [
+  'fluid',
+  'fixed-left',
+  'fixed-right',
+  'fixed-proportional',
+];
+
+/**
+ * The height modes an element may declare.
+ */
+export const ElementHeightModes: ElementHeightMode[] = [
+  'fluid',
+  'fixed-top',
+  'fixed-bottom',
+  'fixed-proportional',
+];
+
+/**
+ * The content fits an element may declare.
+ */
+export const ElementContentFits: ElementContentFit[] = [
+  'fixed',
+  'grow',
+  'shrink',
+  'natural',
+];
 
 /**
  * The weights text elements can be set in, from the lightest to

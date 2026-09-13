@@ -21,4 +21,19 @@ describe('HeadingElementConfig', () => {
 
     expect(element).toHaveProperty('content', 'Heading');
   });
+
+  it('seeds new headings with a prominent size and weight', () => {
+    const element = Designs.createElement(HeadingElementType);
+
+    expect(element).toHaveProperty('fontSize', 24);
+    expect(element).toHaveProperty('fontWeight', 600);
+  });
+
+  it('starts new headings at one line of their text', () => {
+    const element = Designs.createElement(HeadingElementType);
+
+    // 24px text needs nine units a line
+    expect(element.rowSpan).toBe(9);
+    expect(HeadingElementConfig.resolveMinRowSpan?.(element)).toBe(9);
+  });
 });

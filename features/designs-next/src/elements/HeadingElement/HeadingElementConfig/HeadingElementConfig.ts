@@ -1,22 +1,24 @@
-import { DesignElementConfig } from '@minddrop/designs-next';
+import {
+  DesignElementConfig,
+  Designs,
+  FontWeight,
+} from '@minddrop/designs-next';
 import { i18n } from '@minddrop/i18n';
 import { Properties } from '@minddrop/properties';
 import { TextContentControls } from '@minddrop/ui-designs-next';
+import { resolveElementLineRowSpan } from '../../../utils';
+import { TextElementRenderer } from '../../TextElement';
 import { HeadingElement } from '../HeadingElement.types';
-import { HeadingElementRenderer } from '../HeadingElementRenderer';
 
 export const HeadingElementType = 'heading';
 
-// The height of a new heading in grid units
-const DefaultHeadingRowSpan = 6;
-
-// The smallest heading height in grid units, below which the text
-// is too small to read.
-const MinHeadingRowSpan = 3;
+// The size and weight a new heading is set in
+const DefaultHeadingFontSize = 24;
+const DefaultHeadingFontWeight: FontWeight = 600;
 
 /**
- * Config for the heading element: prominent text sized by its
- * block, whose height holds a line of it.
+ * Config for the heading element: a text element seeded with a
+ * prominent size and weight, holding a line of it.
  */
 export const HeadingElementConfig: DesignElementConfig<HeadingElement> = {
   type: HeadingElementType,
@@ -26,20 +28,25 @@ export const HeadingElementConfig: DesignElementConfig<HeadingElement> = {
   contentControls: TextContentControls,
   propertyTypes: Properties.constants.TextualTypes,
   suggestedPropertyTypes: ['title', 'text'],
-  component: HeadingElementRenderer,
-  defaultColumnSpan: 24,
-  defaultRowSpan: DefaultHeadingRowSpan,
-  resolveDefaults: resolvePlaceholderText,
+  component: TextElementRenderer,
+  defaultColumnSpan: 48,
+  defaultRowSpan: Designs.resolveTextLineRowSpan(DefaultHeadingFontSize),
+  resolveDefaults: resolveHeadingDefaults,
   settingGroups: ['text'],
-  resolveMinRowSpan: () => MinHeadingRowSpan,
+  resolveMinRowSpan: resolveElementLineRowSpan,
 };
 
 /**
- * Resolves the placeholder text a new heading starts with, so it
- * renders visibly.
+ * Resolves the fields a new heading starts with: placeholder text so
+ * it renders visibly, and the size and weight setting it apart from
+ * body text.
  *
  * @returns The starter fields.
  */
-function resolvePlaceholderText(): Partial<HeadingElement> {
-  return { content: i18n.t('designsNext.elements.heading.placeholder') };
+function resolveHeadingDefaults(): Partial<HeadingElement> {
+  return {
+    content: i18n.t('designsNext.elements.heading.placeholder'),
+    fontSize: DefaultHeadingFontSize,
+    fontWeight: DefaultHeadingFontWeight,
+  };
 }
