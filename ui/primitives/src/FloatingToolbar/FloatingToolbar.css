@@ -109,3 +109,12 @@
 .floating-toolbar[data-hover-menu-squared~='bottom-left'] {
   border-bottom-left-radius: 0;
 }
+
+/* The controls an open menu or panel runs alongside step back
+   while it is open, the menu standing in their place. Further back
+   than a disabled control, so they read as set aside rather than
+   unavailable. */
+.floating-toolbar [data-hover-menu-dimmed] {
+  opacity: 0.25;
+  transition: var(--transition-opacity);
+}

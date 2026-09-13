@@ -150,10 +150,3 @@
 .radio-toggle-group-size-lg.radio-toggle-hover-menu-rows {
   row-gap: var(--space-2);
 }
-
-/* The controls an open menu's rows run alongside step back while
-   it is open, the arm standing in their place. */
-[data-hover-menu-dimmed] {
-  opacity: var(--opacity-disabled);
-  transition: var(--transition-opacity);
-}

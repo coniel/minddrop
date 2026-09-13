@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { FloatingToolbar } from '../FloatingToolbar';
 import { IconButtonVariant } from '../IconButton';
 import {
@@ -12,6 +12,7 @@ import { ToggleSize } from '../Toggle';
 import { ToolbarIconButton } from '../Toolbar';
 import {
   BaseUiFocusGuardAttribute,
+  ToolbarHoverDimmedControlAttribute,
   ToolbarHoverSquaredCornersAttribute,
 } from '../constants';
 import { useHoverMenu } from '../hooks';
@@ -93,6 +94,13 @@ interface PanelJunction {
    * trigger being its first control.
    */
   flushStart: boolean;
+
+  /**
+   * Whether the panel reaches past the toolbar's end. Otherwise it
+   * stands alongside the toolbar, its bottom edge curving back into
+   * the toolbar's.
+   */
+  reachesEnd: boolean;
 }
 
 /**
@@ -102,8 +110,8 @@ interface PanelJunction {
  * along is covered over.
  *
  * Meant for content too tall for an arm of controls. A panel
- * reaches from the trigger past the toolbar's end, rather than
- * alongside it.
+ * reaches from the trigger past the toolbar's end, or stands
+ * alongside the toolbar when its content ends first.
  *
  * The trigger carries no tooltip of its own. Resting on it is what
  * opens the panel.
@@ -119,11 +127,18 @@ export const ToolbarHoverPanel: React.FC<ToolbarHoverPanelProps> = ({
   className,
 }) => {
   const triggerRef = useRef<HTMLButtonElement>(null);
+  // The panel's node, held in state since it mounts in a portal
+  // after the trigger opens it and is measured once it has.
+  const [panel, setPanel] = useState<HTMLDivElement | null>(null);
   const [junction, setJunction] = useState<PanelJunction | null>(null);
   const { open, setOpen, hoverProps } = useHoverMenu();
 
-  // Measure the toolbar before the panel is painted. Its padding
-  // places the panel, its end sizes the junction.
+  // Until measured, the panel is taken to reach the toolbar's end
+  const reachesEnd = junction?.reachesEnd ?? true;
+
+  // Measure the toolbar and the panel before the panel is painted.
+  // The toolbar's padding places the panel, and its end against the
+  // panel's own sizes the junction.
   useLayoutEffect(() => {
     const control = triggerRef.current;
     const host = control?.parentElement;
@@ -134,22 +149,22 @@ export const ToolbarHoverPanel: React.FC<ToolbarHoverPanelProps> = ({
       return;
     }
 
-    setJunction(resolvePanelJunction(control, host));
-  }, [open]);
+    setJunction(resolvePanelJunction(control, host, panel));
+  }, [open, panel]);
 
-  // Square the corners the panel's surface covers. Always the
-  // toolbar's end, and its start for a panel on the first
-  // control.
+  // Square the corners the panel's surface covers: the toolbar's
+  // end when the panel reaches past it, and its start for a panel
+  // on the first control.
   useLayoutEffect(() => {
     const host = triggerRef.current?.parentElement;
     const corners = [
       junction?.flushStart ? `top-${side}` : undefined,
-      `bottom-${side}`,
+      reachesEnd ? `bottom-${side}` : undefined,
     ]
       .filter(Boolean)
       .join(' ');
 
-    if (!open || !host) {
+    if (!open || !host || !corners) {
       return;
     }
 
@@ -161,7 +176,31 @@ export const ToolbarHoverPanel: React.FC<ToolbarHoverPanelProps> = ({
         host.removeAttribute(ToolbarHoverSquaredCornersAttribute);
       }
     };
-  }, [open, junction, side]);
+  }, [open, junction, reachesEnd, side]);
+
+  // Step the controls the panel runs alongside back, so the panel
+  // reads as standing in their place. The trigger keeps its weight,
+  // the panel being its own.
+  useEffect(() => {
+    const control = triggerRef.current;
+    const host = control?.parentElement;
+
+    if (!open || !control || !host || !junction) {
+      return;
+    }
+
+    const covered = resolveCoveredControls(control, host, junction);
+
+    covered.forEach((other) => {
+      other.setAttribute(ToolbarHoverDimmedControlAttribute, '');
+    });
+
+    return () => {
+      covered.forEach((other) => {
+        other.removeAttribute(ToolbarHoverDimmedControlAttribute);
+      });
+    };
+  }, [open, junction]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -207,6 +246,7 @@ export const ToolbarHoverPanel: React.FC<ToolbarHoverPanelProps> = ({
             {...hoverProps}
           >
             <FloatingToolbar
+              ref={setPanel}
               size={size}
               visible
               className={joinClasses(
@@ -215,6 +255,7 @@ export const ToolbarHoverPanel: React.FC<ToolbarHoverPanelProps> = ({
                 junction?.flushStart
                   ? 'toolbar-hover-panel-flush-start'
                   : undefined,
+                reachesEnd ? undefined : 'toolbar-hover-panel-alongside',
               )}
             >
               {children}
@@ -240,28 +281,72 @@ export const ToolbarHoverPanel: React.FC<ToolbarHoverPanelProps> = ({
  *
  * @param control - The panel's trigger.
  * @param host - The toolbar holding the trigger.
+ * @param panel - The panel, or null before it has rendered.
  * @returns The junction's placement and length.
  */
 function resolvePanelJunction(
   control: HTMLElement,
   host: HTMLElement,
+  panel: HTMLElement | null,
 ): PanelJunction {
   const hostStyle = getComputedStyle(host);
   const padding = parseFloat(hostStyle.paddingTop) || 0;
   const border = parseFloat(hostStyle.borderTopWidth) || 0;
   const inset = padding + border;
 
+  // The stretch of the toolbar's edge from the panel's top edge,
+  // which stands the inset above the trigger, to the toolbar's end.
+  const toEnd =
+    host.getBoundingClientRect().bottom -
+    control.getBoundingClientRect().top +
+    inset;
+
+  // A panel yet to render is taken to reach the toolbar's end. The
+  // height is read as laid out: the popup animates in scaled, and a
+  // rect would report the scaled height.
+  const panelHeight = panel?.offsetHeight ?? toEnd;
+  const reachesEnd = panelHeight >= toEnd;
+
   return {
     inset,
     sideOffset: padding,
-    // The panel's top edge stands the inset above the trigger. It
-    // covers that much more of the toolbar's edge.
-    length:
-      host.getBoundingClientRect().bottom -
-      control.getBoundingClientRect().top +
-      inset,
+    // The panel covers the toolbar's edge as far as it reaches
+    length: reachesEnd ? toEnd : panelHeight,
     flushStart: resolveHostControls(host).indexOf(control) === 0,
+    reachesEnd,
   };
+}
+
+/**
+ * Resolves the toolbar controls an open panel runs alongside: those
+ * other than the trigger standing within the stretch of the
+ * toolbar's edge the panel covers.
+ *
+ * @param control - The panel's trigger.
+ * @param host - The toolbar holding the trigger.
+ * @param junction - The panel's junction with the toolbar.
+ * @returns The covered controls.
+ */
+function resolveCoveredControls(
+  control: HTMLElement,
+  host: HTMLElement,
+  junction: PanelJunction,
+): Element[] {
+  // From the trigger's own top edge, not the panel's: the panel
+  // stands the inset above the trigger only to line up with the
+  // toolbar, and the inset can reach into the control above.
+  const top = control.getBoundingClientRect().top;
+  const bottom = top - junction.inset + junction.length;
+
+  return resolveHostControls(host).filter((other) => {
+    if (other === control) {
+      return false;
+    }
+
+    const rect = other.getBoundingClientRect();
+
+    return rect.top < bottom && rect.bottom > top;
+  });
 }
 
 /**

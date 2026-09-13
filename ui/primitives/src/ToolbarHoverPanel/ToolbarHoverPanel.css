@@ -172,3 +172,65 @@
     var(--surface-overlay) calc(100% + var(--border-width-thin))
   );
 }
+
+/* A panel ending before the toolbar does stands alongside it. The
+   corner it makes with the toolbar there is squared, and a fillet
+   below it, the trigger's turned over, curves its bottom edge back
+   into the toolbar's. The fillet at the toolbar's end has no corner
+   to sit at. */
+.toolbar-hover-panel-alongside.toolbar-hover-panel-side-right.floating-toolbar {
+  border-bottom-left-radius: 0;
+}
+
+.toolbar-hover-panel-alongside.toolbar-hover-panel-side-left.floating-toolbar {
+  border-bottom-right-radius: 0;
+}
+
+/* With the toolbar's edge running on below the panel, the shadow
+   may not spill past the panel's edge at all: the seam covers the
+   spill along the panel, but below it the spill would draw a line
+   down the toolbar's border. */
+.toolbar-hover-panel-alongside.toolbar-hover-panel-side-right.floating-toolbar {
+  clip-path: inset(
+    var(--toolbar-hover-panel-shadow-reach)
+      var(--toolbar-hover-panel-shadow-reach)
+      var(--toolbar-hover-panel-shadow-reach) 0
+  );
+}
+
+.toolbar-hover-panel-alongside.toolbar-hover-panel-side-left.floating-toolbar {
+  clip-path: inset(
+    var(--toolbar-hover-panel-shadow-reach) 0
+      var(--toolbar-hover-panel-shadow-reach)
+      var(--toolbar-hover-panel-shadow-reach)
+  );
+}
+
+.toolbar-hover-panel-alongside.floating-toolbar::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: calc(-1 * var(--border-width-thin));
+  width: var(--toolbar-hover-panel-junction-x);
+  height: calc(
+    var(--toolbar-hover-panel-junction-y) + var(--border-width-thin)
+  );
+  background: radial-gradient(
+    ellipse var(--toolbar-hover-panel-junction-x)
+      var(--toolbar-hover-panel-junction-y) at bottom right,
+    transparent 100%,
+    var(--border-subtle) 100%,
+    var(--border-subtle) calc(100% + var(--border-width-thin)),
+    var(--surface-overlay) calc(100% + var(--border-width-thin))
+  );
+}
+
+.toolbar-hover-panel-alongside.toolbar-hover-panel-side-left.floating-toolbar::after {
+  left: auto;
+  right: calc(-1 * var(--border-width-thin));
+  transform: scaleX(-1);
+}
+
+.toolbar-hover-panel-alongside ~ .toolbar-hover-panel-fillet {
+  display: none;
+}
