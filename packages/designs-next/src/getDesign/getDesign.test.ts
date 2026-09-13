@@ -1,7 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DesignNotFoundError } from '../errors';
 import { cardDesign_1, cleanup, setup } from '../test-utils';
 import { getDesign } from './getDesign';
+
+const { workspace_2 } = WorkspaceFixtures;
 
 describe('getDesign', () => {
   beforeEach(setup);
@@ -18,5 +21,9 @@ describe('getDesign', () => {
 
   it('returns null if the design does not exist and throwOnNotFound is false', () => {
     expect(getDesign('design_missing', false)).toBeNull();
+  });
+
+  it('retrieves the design from the given workspace', () => {
+    expect(getDesign(cardDesign_1.id, false, workspace_2.id)).toBeNull();
   });
 });

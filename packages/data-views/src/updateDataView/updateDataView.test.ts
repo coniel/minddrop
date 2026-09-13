@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { InvalidParameterError } from '@minddrop/utils';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DataViewsStore } from '../DataViewsStore';
 import { DataViewUpdatedEvent } from '../events';
 import {
@@ -28,6 +29,8 @@ const updatedView: DataView = {
 // The updated view as written to disk, without the references index
 const { references: _references, ...writtenView } = updatedView;
 
+const { workspace_2 } = WorkspaceFixtures;
+
 describe('updateDataView', () => {
   beforeEach(setup);
 
@@ -37,6 +40,28 @@ describe('updateDataView', () => {
     await updateDataView(dataView_gallery_1.id, update);
 
     expect(DataViewsStore).toHaveItem(dataView_gallery_1.id, updatedView);
+  });
+
+  it('updates the view in the given workspace', async () => {
+    // A view held by the second workspace only
+    DataViewsStore.in(workspace_2.id).set(dataView_gallery_1);
+
+    await updateDataView(dataView_gallery_1.id, update, true, workspace_2.id);
+
+    // Should update the second workspace's record and write into its
+    // views directory, leaving the active workspace's view as it was.
+    expect(
+      DataViewsStore.in(workspace_2.id).get(dataView_gallery_1.id),
+    ).toEqual(updatedView);
+    expect(
+      MockFs.readJsonFile(
+        resolveViewFilePath(dataView_gallery_1.id, workspace_2.path),
+      ),
+    ).toEqual(writtenView);
+    expect(DataViewsStore).toHaveItem(
+      dataView_gallery_1.id,
+      dataView_gallery_1,
+    );
   });
 
   it('writes the view to the file system', async () => {

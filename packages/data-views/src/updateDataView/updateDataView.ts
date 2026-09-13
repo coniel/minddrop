@@ -20,6 +20,7 @@ import { writeDataView } from '../writeDataView';
  * @param id - The ID of the data view to update.
  * @param data - The data to update the data view with.
  * @param deepMerge - Whether to deep merge the update data with the existing data view data.
+ * @param workspaceId - The workspace the data view belongs to. Omit for the active workspace.
  * @returns The updated data view.
  *
  * @throws {DataViewNotFoundError} If the data view with the specified ID does not exist.
@@ -31,9 +32,12 @@ export async function updateDataView(
   id: string,
   data: UpdateDataViewData | UpdateVirtualDataViewData,
   deepMerge = true,
+  workspaceId?: string,
 ): Promise<DataView> {
+  const store = DataViewsStore.in(workspaceId);
+
   // Get the data view
-  const view = getDataView(id);
+  const view = getDataView(id, true, workspaceId);
 
   // Update the data view
   const update = { ...data, lastModified: new Date() };
@@ -56,15 +60,15 @@ export async function updateDataView(
       );
     }
 
-    DataViewsStore.remove(id);
-    DataViewsStore.set(updatedView);
+    store.remove(id);
+    store.set(updatedView);
   } else {
     // Update the data view in the store
-    DataViewsStore.update(id, updatedView);
+    store.update(id, updatedView);
   }
 
   // Get the updated data view from the store
-  const finalView = getDataView(updatedView.id);
+  const finalView = getDataView(updatedView.id, true, workspaceId);
 
   // Dispatch a data view updated event
   Events.dispatch(DataViewUpdatedEvent, {
@@ -74,7 +78,7 @@ export async function updateDataView(
 
   // Write the data view to the file system if not virtual
   if (!view.virtual) {
-    await writeDataView(id);
+    await writeDataView(id, workspaceId);
   }
 
   // Return the updated data view

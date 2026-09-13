@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { ItemReferences } from '@minddrop/item-references';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import {
   cleanup,
   dataViewType_gallery,
@@ -8,18 +9,36 @@ import {
 } from '../test-utils';
 import { serializeDataViewConfig } from './serializeDataViewConfig';
 
+const { workspace_2 } = WorkspaceFixtures;
+
 describe('serializeDataViewConfig', () => {
   beforeEach(() => {
     setup({});
 
-    // Register an adapter converting entry IDs to addresses,
-    // dropping the 'missing' entry
+    // Register an adapter converting entry IDs to addresses, dropping
+    // the 'missing' entry and naming the workspace serialized in when
+    // one is given.
     ItemReferences.registerAdapter({
       type: 'database-entry',
-      serialize: (id) =>
-        id === 'database-entry_missing' ? null : `address:${id}`,
+      serialize: (id, workspaceId) => {
+        if (id === 'database-entry_missing') {
+          return null;
+        }
+
+        return workspaceId ? `${workspaceId}:${id}` : `address:${id}`;
+      },
       match: () => null,
     });
+  });
+
+  it('serializes references in the given workspace', () => {
+    expect(
+      serializeDataViewConfig(
+        dataViewType_referencing.type,
+        { data: { items: ['database-entry_one'] } },
+        workspace_2.id,
+      ),
+    ).toEqual({ data: { items: [`${workspace_2.id}:database-entry_one`] } });
   });
 
   afterEach(async () => {

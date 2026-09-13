@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { storeItem } from '@minddrop/stores/test-utils';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DataViewsStore } from '../DataViewsStore';
 import {
   MockFs,
@@ -20,6 +21,8 @@ const referencingView: DataView = {
   data: { items: ['database-entry_one', 'database-entry_two'] },
   references: ['database-entry_one', 'database-entry_two'],
 };
+
+const { workspace_2 } = WorkspaceFixtures;
 
 describe('removeDataViewReferences', () => {
   beforeEach(() => {
@@ -51,5 +54,21 @@ describe('removeDataViewReferences', () => {
 
     // The unaffected view is not written to disk
     expect(MockFs.exists(resolveViewFilePath(referencingView.id))).toBe(false);
+  });
+
+  it('removes the items from the views of the given workspace', async () => {
+    // The referencing view held by the second workspace as well
+    DataViewsStore.in(workspace_2.id).set(referencingView);
+
+    await removeDataViewReferences(['database-entry_one'], workspace_2.id);
+
+    // Should rewrite the second workspace's view, leaving the active
+    // workspace's as it was.
+    expect(
+      DataViewsStore.in(workspace_2.id).get(referencingView.id)?.data,
+    ).toEqual({ items: ['database-entry_two'] });
+    expect(storeItem(DataViewsStore, referencingView.id).data).toEqual({
+      items: ['database-entry_one', 'database-entry_two'],
+    });
   });
 });

@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
+import { ItemReferences } from '@minddrop/item-references';
 import { Paths } from '@minddrop/utils';
 import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { EntityGroupTypesRegistry } from '../EntityGroupTypesRegistry';
@@ -88,6 +89,34 @@ describe('loadWorkspaceEntityGroups', () => {
     expect(getEntityGroup(type, entityGroup_exclusive_1.id).items).toEqual([
       addressedItem_1,
     ]);
+  });
+
+  it('resolves stored references in the loaded workspace', async () => {
+    // Register an adapter claiming 'scoped:' references, prefixing
+    // resolved IDs with the workspace they were resolved in.
+    ItemReferences.registerAdapter({
+      type: 'scoped-item',
+      serialize: (id) => id,
+      match: (reference, workspaceId) => {
+        if (!reference.startsWith('scoped:')) {
+          return null;
+        }
+
+        return { type: 'scoped-item', id: `${workspaceId}:${reference}` };
+      },
+    });
+
+    MockFs.writeJsonFile(groupsFilePath(type), [
+      { ...entityGroup_exclusive_1, items: ['scoped:one'] },
+    ]);
+
+    await loadWorkspaceEntityGroups(workspace_1);
+
+    expect(getEntityGroup(type, entityGroup_exclusive_1.id).items).toEqual([
+      `${workspace_1.id}:scoped:one`,
+    ]);
+
+    ItemReferences.unregisterAdapter('scoped-item');
   });
 
   it('drops stored references which no longer resolve', async () => {

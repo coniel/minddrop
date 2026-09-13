@@ -1,7 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { CollectionsStore } from '../CollectionsStore';
 import { collection_1, collection_virtual_1 } from '../test-utils';
 import { getAllCollections } from './getAllCollections';
+
+const { workspace_2 } = WorkspaceFixtures;
 
 describe('getAllCollections', () => {
   beforeEach(() => {
@@ -20,5 +23,9 @@ describe('getAllCollections', () => {
     CollectionsStore.clear();
 
     expect(getAllCollections()).toEqual([]);
+  });
+
+  it('retrieves the collections of the given workspace', () => {
+    expect(getAllCollections(workspace_2.id)).toEqual([]);
   });
 });

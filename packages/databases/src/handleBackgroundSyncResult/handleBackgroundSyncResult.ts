@@ -61,19 +61,23 @@ export async function handleBackgroundSyncResult(
 
   // Delete views belonging to deleted databases
   for (const id of changeset.deletedDatabaseIds) {
-    const databaseViews = DataViews.getByDataSource('database', id);
+    const databaseViews = DataViews.getByDataSource(
+      'database',
+      id,
+      workspace.id,
+    );
 
     for (const view of databaseViews) {
-      DataViews.delete(view.id);
+      DataViews.delete(view.id, workspace.id);
     }
   }
 
   // Delete designs belonging to deleted databases
   for (const id of changeset.deletedDatabaseIds) {
-    const databaseDesigns = Designs.getByOwner(id);
+    const databaseDesigns = Designs.getByOwner(id, workspace.id);
 
     for (const design of databaseDesigns) {
-      Designs.delete(design.id);
+      Designs.delete(design.id, workspace.id);
     }
   }
 
@@ -149,7 +153,7 @@ export async function handleBackgroundSyncResult(
   // Remove deleted entries from collections and view configs
   // referencing them.
   if (changeset.deletedEntryIds.length > 0) {
-    await removeEntriesFromCollections(changeset.deletedEntryIds);
-    await DataViews.removeReferences(changeset.deletedEntryIds);
+    await removeEntriesFromCollections(changeset.deletedEntryIds, workspace.id);
+    await DataViews.removeReferences(changeset.deletedEntryIds, workspace.id);
   }
 }

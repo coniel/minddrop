@@ -67,7 +67,7 @@ async function readDatabaseViews(
       await Promise.all(
         viewFiles
           .filter((file) => file.path.endsWith('.json'))
-          .map(readStoredView),
+          .map((file) => readStoredView(file, workspace.id)),
       )
     ).filter((storedView): storedView is StoredDataView => !!storedView);
   }
@@ -87,16 +87,18 @@ async function readDatabaseViews(
  * Reads a single stored view from a view file.
  *
  * @param file - The view file's directory entry.
+ * @param workspaceId - The workspace the view belongs to.
  * @returns The deserialized stored view, or null if reading fails.
  */
-async function readStoredView(file: {
-  path: string;
-}): Promise<StoredDataView | null> {
+async function readStoredView(
+  file: { path: string },
+  workspaceId: string,
+): Promise<StoredDataView | null> {
   try {
     const storedView = await Fs.readJsonFile<StoredDataView>(file.path);
 
     // Restore the view's dates and resolve its config references
-    return DataViews.deserialize(storedView);
+    return DataViews.deserialize(storedView, workspaceId);
   } catch {
     return null;
   }

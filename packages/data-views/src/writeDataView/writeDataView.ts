@@ -1,5 +1,6 @@
 import { Fs } from '@minddrop/file-system';
 import { InvalidParameterError } from '@minddrop/utils';
+import { Workspaces } from '@minddrop/workspaces';
 import { getDataView } from '../getDataView';
 import { serializeDataView } from '../serializeDataView';
 import { resolveViewFilePath, resolveViewsDirPath } from '../utils';
@@ -9,12 +10,16 @@ import { resolveViewFilePath, resolveViewsDirPath } from '../utils';
  * Creates the data views directory if it does not exist.
  *
  * @param id - The ID of the data view to write.
+ * @param workspaceId - The workspace the data view belongs to. Omit for the active workspace.
  *
  * @throws InvalidParameterError if the data view is virtual.
  */
-export async function writeDataView(id: string): Promise<void> {
+export async function writeDataView(
+  id: string,
+  workspaceId?: string,
+): Promise<void> {
   // Get the data view
-  const view = getDataView(id);
+  const view = getDataView(id, true, workspaceId);
 
   // Virtual data views cannot be written to the file system
   if (view.virtual) {
@@ -23,9 +28,14 @@ export async function writeDataView(id: string): Promise<void> {
     );
   }
 
+  const workspacePath = Workspaces.resolvePath(workspaceId);
+
   // Ensure that the data views directory exists
-  await Fs.ensureDir(resolveViewsDirPath());
+  await Fs.ensureDir(resolveViewsDirPath(workspacePath));
 
   // Write the data view to the file system in its stored form
-  await Fs.writeJsonFile(resolveViewFilePath(id), serializeDataView(view));
+  await Fs.writeJsonFile(
+    resolveViewFilePath(id, workspacePath),
+    serializeDataView(view, { workspaceId }),
+  );
 }

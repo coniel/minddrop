@@ -2,12 +2,15 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { ItemReferences } from '@minddrop/item-references';
 import { storeItem } from '@minddrop/stores/test-utils';
 import { InvalidParameterError } from '@minddrop/utils';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { CollectionsStore } from '../CollectionsStore';
 import { CollectionNotFoundError } from '../errors';
 import { MockFs, cleanup, collection_1, setup } from '../test-utils';
 import { Collection } from '../types';
 import { resolveCollectionFilePath, resolveCollectionsDirPath } from '../utils';
 import { writeCollection } from './writeCollection';
+
+const { workspace_2 } = WorkspaceFixtures;
 
 describe('writeCollection', () => {
   beforeEach(() => setup({ loadCollectionFiles: false }));
@@ -36,6 +39,19 @@ describe('writeCollection', () => {
     await writeCollection(collection_1.id);
 
     expect(MockFs.exists(resolveCollectionsDirPath())).toBe(true);
+  });
+
+  it("writes the collection into the given workspace's collections directory", async () => {
+    // A collection held by the second workspace only
+    CollectionsStore.in(workspace_2.id).set(collection_1);
+
+    await writeCollection(collection_1.id, workspace_2.id);
+
+    expect(
+      MockFs.readJsonFile(
+        resolveCollectionFilePath(collection_1.id, workspace_2.path),
+      ),
+    ).toEqual(collection_1);
   });
 
   it('writes the collection config to the file system', async () => {

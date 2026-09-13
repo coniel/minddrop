@@ -25,7 +25,9 @@ export async function loadWorkspaceDataViews(
     : [];
 
   // Read the data views
-  const viewPromises = await Promise.all(viewPaths.map(loadDataView));
+  const viewPromises = await Promise.all(
+    viewPaths.map((path) => loadDataView(path, workspace.id)),
+  );
 
   // Filter out null data views
   const views = viewPromises.filter((view) => view !== null);

@@ -44,7 +44,9 @@ export async function loadWorkspaceCollections(
   // references back into item IDs.
   const collections = rawCollections.map((collection) => ({
     ...restoreDates<Collection>(collection),
-    items: ItemReferences.resolve(collection.items),
+    items: ItemReferences.resolve(collection.items, {
+      workspaceId: workspace.id,
+    }),
   }));
 
   // Load the collections into the workspace's store record

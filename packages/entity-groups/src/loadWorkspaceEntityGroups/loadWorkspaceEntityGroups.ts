@@ -31,7 +31,9 @@ export async function loadWorkspaceEntityGroups(
         storedGroups.map((group) => ({
           ...group,
           type: config.id,
-          items: ItemReferences.resolve(group.items),
+          items: ItemReferences.resolve(group.items, {
+            workspaceId: workspace.id,
+          }),
         })),
         config,
       );

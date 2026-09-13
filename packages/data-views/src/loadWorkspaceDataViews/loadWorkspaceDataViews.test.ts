@@ -79,15 +79,22 @@ describe('loadWorkspaceDataViews', () => {
       loadWorkspaceDataViews(workspace_1);
     }));
 
-  it('resolves item references and indexes them', async () => {
-    // Register an adapter claiming 'address:' references
+  it('resolves item references in the loaded workspace and indexes them', async () => {
+    // Register an adapter claiming 'address:' references, prefixing
+    // resolved IDs with the workspace they were resolved in.
     ItemReferences.registerAdapter({
       type: 'database-entry',
       serialize: (id) => id,
-      match: (reference) =>
-        reference.startsWith('address:')
-          ? { type: 'database-entry', id: reference.slice('address:'.length) }
-          : null,
+      match: (reference, workspaceId) => {
+        if (!reference.startsWith('address:')) {
+          return null;
+        }
+
+        return {
+          type: 'database-entry',
+          id: `${workspaceId}:${reference.slice('address:'.length)}`,
+        };
+      },
     });
 
     // A view file holding a durable reference in its data
@@ -110,8 +117,9 @@ describe('loadWorkspaceDataViews', () => {
     const loaded = storeItem(DataViewsStore, referencingView.id);
 
     // The loaded data holds resolved item IDs, indexed as references
-    expect(loaded.data).toEqual({ items: ['database-entry_one'] });
-    expect(loaded.references).toEqual(['database-entry_one']);
+    const resolvedId = `${workspace_1.id}:database-entry_one`;
+    expect(loaded.data).toEqual({ items: [resolvedId] });
+    expect(loaded.references).toEqual([resolvedId]);
 
     ItemReferences.unregisterAdapter('database-entry');
   });

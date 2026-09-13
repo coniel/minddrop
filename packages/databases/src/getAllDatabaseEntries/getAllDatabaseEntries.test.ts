@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import {
   cleanup,
   collectionDatabase,
@@ -8,6 +9,8 @@ import {
   setup,
 } from '../test-utils';
 import { getAllDatabaseEntries } from './getAllDatabaseEntries';
+
+const { workspace_2 } = WorkspaceFixtures;
 
 describe('getAllDatabaseEntries', () => {
   beforeEach(setup);
@@ -38,5 +41,9 @@ describe('getAllDatabaseEntries', () => {
 
   it('returns an empty array for a database with no entries', () => {
     expect(getAllDatabaseEntries('database_missing')).toEqual([]);
+  });
+
+  it('returns the entries of the given workspace', () => {
+    expect(getAllDatabaseEntries(undefined, workspace_2.id)).toEqual([]);
   });
 });

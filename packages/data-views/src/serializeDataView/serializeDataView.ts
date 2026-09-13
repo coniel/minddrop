@@ -8,6 +8,12 @@ export interface SerializeDataViewOptions {
    * @default true
    */
   dataSource?: boolean;
+
+  /**
+   * The workspace the view's referenced items belong to. Omit for the
+   * active workspace.
+   */
+  workspaceId?: string;
 }
 
 /**
@@ -36,10 +42,11 @@ export function serializeDataView(
   // Convert the config's item references into durable form
   const storedView: StoredDataView = {
     ...rest,
-    ...serializeDataViewConfig(view.type, {
-      options: view.options,
-      data: view.data,
-    }),
+    ...serializeDataViewConfig(
+      view.type,
+      { options: view.options, data: view.data },
+      options.workspaceId,
+    ),
   };
 
   // Include the data source unless dropped

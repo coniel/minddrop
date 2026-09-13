@@ -31,7 +31,7 @@ export async function onFileSystemChanged(
     return;
   }
 
-  const view = await loadDataView(change.path);
+  const view = await loadDataView(change.path, workspace.id);
 
   // The file is missing or is not a valid data view
   if (!view) {

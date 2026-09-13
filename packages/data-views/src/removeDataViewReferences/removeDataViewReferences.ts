@@ -8,15 +8,17 @@ import { updateDataView } from '../updateDataView';
  * type's serialization hook.
  *
  * @param itemIds - The removed item IDs.
+ * @param workspaceId - The workspace the data views belong to. Omit for the active workspace.
  */
 export async function removeDataViewReferences(
   itemIds: string[],
+  workspaceId?: string,
 ): Promise<void> {
   // Index the removed IDs for lookup
   const removedIds = new Set(itemIds);
 
   // Find views referencing the removed items
-  const affectedViews = getReferencingDataViews(itemIds);
+  const affectedViews = getReferencingDataViews(itemIds, workspaceId);
 
   await Promise.all(
     affectedViews.map((view) => {
@@ -34,7 +36,7 @@ export async function removeDataViewReferences(
       );
 
       // Persist the cleaned config
-      return updateDataView(view.id, config, false);
+      return updateDataView(view.id, config, false, workspaceId);
     }),
   );
 }

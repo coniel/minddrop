@@ -3,7 +3,9 @@ import { Database } from './types';
 
 /**
  * Returns all databases as an array.
+ *
+ * @param workspaceId - The workspace whose databases to return. Omit for the active workspace.
  */
-export function getAllDatabases(): Database[] {
-  return DatabasesStore.getAllArray();
+export function getAllDatabases(workspaceId?: string): Database[] {
+  return DatabasesStore.in(workspaceId).getAllArray();
 }

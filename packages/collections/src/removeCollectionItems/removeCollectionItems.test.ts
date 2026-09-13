@@ -1,10 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { CollectionsStore } from '../CollectionsStore';
 import { CollectionUpdatedEvent } from '../events';
 import { MockFs, cleanup, collection_1, mockDate, setup } from '../test-utils';
 import { resolveCollectionFilePath } from '../utils';
 import { removeCollectionItems } from './removeCollectionItems';
+
+const { workspace_2 } = WorkspaceFixtures;
 
 describe('removeCollectionItems', () => {
   beforeEach(setup);
@@ -26,6 +29,24 @@ describe('removeCollectionItems', () => {
     ]);
 
     expect(result.items).toEqual(collection_1.items);
+  });
+
+  it('removes the items from the collection of the given workspace', async () => {
+    // The collection held by the second workspace as well
+    CollectionsStore.in(workspace_2.id).set(collection_1);
+
+    await removeCollectionItems(
+      collection_1.id,
+      [collection_1.items[0]],
+      workspace_2.id,
+    );
+
+    // Should update the second workspace's collection, leaving the
+    // active workspace's as it was.
+    expect(
+      CollectionsStore.in(workspace_2.id).get(collection_1.id)?.items,
+    ).toEqual([collection_1.items[1]]);
+    expect(CollectionsStore).toHaveItem(collection_1.id, collection_1);
   });
 
   it('updates the collection in the store', async () => {

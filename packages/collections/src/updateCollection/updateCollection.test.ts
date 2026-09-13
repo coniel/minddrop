@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { CollectionsStore } from '../CollectionsStore';
 import { CollectionUpdatedEvent } from '../events';
 import {
@@ -23,6 +24,8 @@ const updatedCollection: Collection = {
   lastModified: mockDate,
 };
 
+const { workspace_2 } = WorkspaceFixtures;
+
 describe('updateCollection', () => {
   beforeEach(setup);
 
@@ -32,6 +35,25 @@ describe('updateCollection', () => {
     await updateCollection(collection_1.id, update);
 
     expect(CollectionsStore).toHaveItem(collection_1.id, updatedCollection);
+  });
+
+  it('updates the collection in the given workspace', async () => {
+    // A collection held by the second workspace only
+    CollectionsStore.in(workspace_2.id).set(collection_1);
+
+    await updateCollection(collection_1.id, update, workspace_2.id);
+
+    // Should update the second workspace's record and write into its
+    // collections directory, leaving the active workspace's as it was.
+    expect(CollectionsStore.in(workspace_2.id).get(collection_1.id)).toEqual(
+      updatedCollection,
+    );
+    expect(
+      MockFs.readJsonFile(
+        resolveCollectionFilePath(collection_1.id, workspace_2.path),
+      ),
+    ).toEqual(updatedCollection);
+    expect(CollectionsStore).toHaveItem(collection_1.id, collection_1);
   });
 
   it('writes the collection config to the file system', async () => {

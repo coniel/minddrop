@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { ItemReferences } from '@minddrop/item-references';
 import { InvalidParameterError } from '@minddrop/utils';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DataViewsStore } from '../DataViewsStore';
 import {
   MockFs,
@@ -23,6 +24,8 @@ const referencingView: DataView = {
   data: { items: ['database-entry_one'] },
   references: ['database-entry_one'],
 };
+
+const { workspace_2 } = WorkspaceFixtures;
 
 describe('writeDataView', () => {
   beforeEach(() => setup({ loadViewFiles: false }));
@@ -78,5 +81,18 @@ describe('writeDataView', () => {
     await expect(writeDataView(dataView_virtual_1.id)).rejects.toThrow(
       InvalidParameterError,
     );
+  });
+
+  it("writes the view into the given workspace's views directory", async () => {
+    // A view held by the second workspace only
+    DataViewsStore.in(workspace_2.id).set(dataView_gallery_1);
+
+    await writeDataView(dataView_gallery_1.id, workspace_2.id);
+
+    expect(
+      MockFs.readJsonFile(
+        resolveViewFilePath(dataView_gallery_1.id, workspace_2.path),
+      ),
+    ).toEqual(dataView_gallery_1);
   });
 });

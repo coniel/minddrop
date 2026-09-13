@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { ItemReferences } from '@minddrop/item-references';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import {
   cleanup,
   dataViewType_gallery,
@@ -8,18 +9,29 @@ import {
 } from '../test-utils';
 import { resolveDataViewConfig } from './resolveDataViewConfig';
 
+const { workspace_2 } = WorkspaceFixtures;
+
 describe('resolveDataViewConfig', () => {
   beforeEach(() => {
     setup({});
 
-    // Register an adapter claiming 'address:' references
+    // Register an adapter claiming 'address:' references, naming the
+    // workspace matched in when one is given.
     ItemReferences.registerAdapter({
       type: 'database-entry',
       serialize: (id) => id,
-      match: (reference) =>
-        reference.startsWith('address:')
-          ? { type: 'database-entry', id: reference.slice('address:'.length) }
-          : null,
+      match: (reference, workspaceId) => {
+        if (!reference.startsWith('address:')) {
+          return null;
+        }
+
+        const id = reference.slice('address:'.length);
+
+        return {
+          type: 'database-entry',
+          id: workspaceId ? `${workspaceId}:${id}` : id,
+        };
+      },
     });
   });
 
@@ -34,6 +46,16 @@ describe('resolveDataViewConfig', () => {
         data: { items: ['address:database-entry_one'] },
       }),
     ).toEqual({ data: { items: ['database-entry_one'] } });
+  });
+
+  it('resolves references in the given workspace', () => {
+    expect(
+      resolveDataViewConfig(
+        dataViewType_referencing.type,
+        { data: { items: ['address:database-entry_one'] } },
+        workspace_2.id,
+      ),
+    ).toEqual({ data: { items: [`${workspace_2.id}:database-entry_one`] } });
   });
 
   it('drops references that cannot be resolved', () => {

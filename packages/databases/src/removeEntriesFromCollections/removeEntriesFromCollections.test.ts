@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Collections } from '@minddrop/collections';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import {
   cleanup,
   collectionDatabase,
@@ -13,6 +14,8 @@ import { removeEntriesFromCollections } from './removeEntriesFromCollections';
 
 // The virtual collection owned by collectionEntry1's Related property
 const relatedCollectionId = virtualCollectionId(collectionEntry1.id, 'Related');
+
+const { workspace_2 } = WorkspaceFixtures;
 
 describe('removeEntriesFromCollections', () => {
   beforeEach(() => {
@@ -54,5 +57,21 @@ describe('removeEntriesFromCollections', () => {
     await removeEntriesFromCollections(['unreferenced-entry']);
 
     expect(Collections.get(relatedCollectionId)).toEqual(before);
+  });
+
+  it("removes the entries from the given workspace's collections", async () => {
+    const collection = Collections.get(relatedCollectionId);
+
+    // The collection held by the second workspace as well
+    Collections.Store.in(workspace_2.id).set(collection);
+
+    await removeEntriesFromCollections([relatedEntry1.id], workspace_2.id);
+
+    // Should update the second workspace's collection, leaving the
+    // active workspace's as it was.
+    expect(
+      Collections.get(relatedCollectionId, true, workspace_2.id).items,
+    ).toEqual([relatedEntry2.id]);
+    expect(Collections.get(relatedCollectionId)).toEqual(collection);
   });
 });

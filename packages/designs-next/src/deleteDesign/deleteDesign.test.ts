@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DesignsStore } from '../DesignsStore';
 import { DesignNotFoundError } from '../errors';
 import { DesignDeletedEvent } from '../events';
@@ -12,6 +13,8 @@ import {
 } from '../test-utils';
 import { resolveDesignFilePath } from '../utils';
 import { deleteDesign } from './deleteDesign';
+
+const { workspace_2 } = WorkspaceFixtures;
 
 describe('deleteDesign', () => {
   beforeEach(setup);
@@ -34,6 +37,25 @@ describe('deleteDesign', () => {
     await deleteDesign(ownedCardDesign_1.id);
 
     expect(DesignsStore).not.toHaveItem(ownedCardDesign_1.id);
+  });
+
+  it('deletes the design from the given workspace', async () => {
+    const otherPath = resolveDesignFilePath(cardDesign_1.id, workspace_2.path);
+
+    // A design held by the second workspace only
+    DesignsStore.in(workspace_2.id).set(cardDesign_1);
+    MockFs.addFiles([
+      { path: otherPath, textContent: JSON.stringify(cardDesign_1) },
+    ]);
+
+    await deleteDesign(cardDesign_1.id, workspace_2.id);
+
+    // Should remove the second workspace's design and file, leaving
+    // the active workspace's as they were.
+    expect(DesignsStore.in(workspace_2.id).get(cardDesign_1.id)).toBeNull();
+    expect(MockFs.exists(otherPath)).toBe(false);
+    expect(DesignsStore).toHaveItem(cardDesign_1.id);
+    expect(MockFs.exists(resolveDesignFilePath(cardDesign_1.id))).toBe(true);
   });
 
   it('throws if the design does not exist', async () => {

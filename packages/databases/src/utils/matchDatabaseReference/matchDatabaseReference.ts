@@ -7,10 +7,12 @@ import { getAllDatabases } from '../../getAllDatabases';
  * match, since any bare name could otherwise claim the address.
  *
  * @param reference - The durable reference to match.
+ * @param workspaceId - The workspace to match the reference in. Omit for the active workspace.
  * @returns The match, or null if the reference is not a database address.
  */
 export function matchDatabaseReference(
   reference: string,
+  workspaceId?: string,
 ): ItemReferenceMatch | null {
   // Database addresses are bare names
   if (reference.includes('/')) {
@@ -19,7 +21,7 @@ export function matchDatabaseReference(
 
   // Resolve the name to a database, case-insensitively as with entry
   // addresses.
-  const database = getAllDatabases().find(
+  const database = getAllDatabases(workspaceId).find(
     ({ name }) => name.toLowerCase() === reference.toLowerCase(),
   );
 

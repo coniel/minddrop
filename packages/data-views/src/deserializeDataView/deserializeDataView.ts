@@ -7,10 +7,12 @@ import { StoredDataView } from '../types';
  * resolves the config's durable references into item IDs.
  *
  * @param storedView - The stored data view to deserialize.
+ * @param workspaceId - The workspace to resolve the references in. Omit for the active workspace.
  * @returns The deserialized data view.
  */
 export function deserializeDataView(
   storedView: StoredDataView,
+  workspaceId?: string,
 ): StoredDataView {
   // Restore the view's date fields (dates are stored as ISO strings)
   const view = restoreDates<StoredDataView>(storedView);
@@ -18,9 +20,10 @@ export function deserializeDataView(
   // Resolve the stored config's durable references into item IDs
   return {
     ...view,
-    ...resolveDataViewConfig(view.type, {
-      options: view.options,
-      data: view.data,
-    }),
+    ...resolveDataViewConfig(
+      view.type,
+      { options: view.options, data: view.data },
+      workspaceId,
+    ),
   };
 }

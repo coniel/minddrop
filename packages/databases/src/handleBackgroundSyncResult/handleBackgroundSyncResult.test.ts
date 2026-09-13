@@ -21,7 +21,7 @@ import { convertEntryToSqlRecord, databaseEntryAddress } from '../utils';
 import { handleBackgroundSyncResult } from './handleBackgroundSyncResult';
 
 const { dataViewType_referencing } = DataViewFixtures;
-const { workspace_1 } = WorkspaceFixtures;
+const { workspace_1, workspace_2 } = WorkspaceFixtures;
 
 // A changeset without any changes, spread into per-test variants
 const emptyChangeset: BackgroundSyncChangeset = {
@@ -177,5 +177,34 @@ describe('handleBackgroundSyncResult', () => {
     expect(DataViews.get('data-view_referencing-1', false)?.data).toEqual({
       items: [],
     });
+  });
+
+  it("applies the cascades to the changeset's workspace", async () => {
+    // A view referencing the deleted entry, held by the second
+    // workspace only.
+    DataViews.Store.in(workspace_2.id).set({
+      id: 'data-view_referencing-1',
+      type: dataViewType_referencing.type,
+      dataSource: { type: 'collection', id: 'collection-1' },
+      owner: relatedEntry1.id,
+      name: 'Referencing',
+      icon: 'lucide:list:blue',
+      data: { items: [relatedEntry1.id] },
+      references: [relatedEntry1.id],
+      virtual: true,
+      created: new Date(),
+      lastModified: new Date(),
+    });
+
+    await handleBackgroundSyncResult({
+      ...emptyChangeset,
+      workspaceId: workspace_2.id,
+      deletedEntryIds: [relatedEntry1.id],
+    });
+
+    // The second workspace's view drops the deleted entry
+    expect(
+      DataViews.get('data-view_referencing-1', false, workspace_2.id)?.data,
+    ).toEqual({ items: [] });
   });
 });

@@ -8,12 +8,14 @@ import { matchDatabaseEntryAddress } from '../matchDatabaseEntryAddress';
  * yet has a null ID.
  *
  * @param reference - The durable reference to match.
+ * @param workspaceId - The workspace to match the reference in. Omit for the active workspace.
  * @returns The match, or null if the reference is not an entry address.
  */
 export function matchDatabaseEntryReference(
   reference: string,
+  workspaceId?: string,
 ): ItemReferenceMatch | null {
-  const match = matchDatabaseEntryAddress(reference);
+  const match = matchDatabaseEntryAddress(reference, workspaceId);
 
   // References which name no database are not entry addresses
   if (!match) {

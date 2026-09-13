@@ -1,7 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DatabaseNotFoundError } from '../errors';
 import { cleanup, objectDatabase, setup } from '../test-utils';
 import { getDatabase } from './getDatabase';
+
+const { workspace_2 } = WorkspaceFixtures;
 
 describe('get', () => {
   beforeEach(setup);
@@ -22,5 +25,9 @@ describe('get', () => {
     expect(() => getDatabase('missing', false)).not.toThrow(
       DatabaseNotFoundError,
     );
+  });
+
+  it('retrieves the database from the given workspace', () => {
+    expect(getDatabase(objectDatabase.id, false, workspace_2.id)).toBeNull();
   });
 });

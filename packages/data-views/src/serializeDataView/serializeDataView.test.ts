@@ -1,5 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { cleanup, dataView_virtual_1, setup } from '../test-utils';
+import { ItemReferences } from '@minddrop/item-references';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
+import {
+  cleanup,
+  dataViewType_referencing,
+  dataView_virtual_1,
+  setup,
+} from '../test-utils';
 import { DataView } from '../types';
 import { serializeDataView } from './serializeDataView';
 
@@ -10,6 +17,8 @@ const view: DataView = {
   ownerKey: 'key',
   references: ['database-entry_1'],
 };
+
+const { workspace_2 } = WorkspaceFixtures;
 
 describe('serializeDataView', () => {
   beforeEach(() => {
@@ -36,5 +45,27 @@ describe('serializeDataView', () => {
     expect(serializeDataView(view, { dataSource: false })).not.toHaveProperty(
       'dataSource',
     );
+  });
+
+  it('serializes the config references in the given workspace', () => {
+    // Register an adapter naming the workspace serialized in
+    ItemReferences.registerAdapter({
+      type: 'database-entry',
+      serialize: (id, workspaceId) => `${workspaceId}:${id}`,
+      match: () => null,
+    });
+
+    // A view referencing an entry via the referencing view type's data
+    const referencingView: DataView = {
+      ...view,
+      type: dataViewType_referencing.type,
+      data: { items: ['database-entry_one'] },
+    };
+
+    expect(
+      serializeDataView(referencingView, { workspaceId: workspace_2.id }).data,
+    ).toEqual({ items: [`${workspace_2.id}:database-entry_one`] });
+
+    ItemReferences.unregisterAdapter('database-entry');
   });
 });

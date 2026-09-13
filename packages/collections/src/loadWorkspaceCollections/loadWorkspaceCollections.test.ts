@@ -76,12 +76,16 @@ describe('loadWorkspaceCollections', () => {
       loadWorkspaceCollections(workspace_1);
     }));
 
-  it('resolves item references through the registered adapter', async () => {
-    // Register an adapter that prefixes resolved IDs
+  it('resolves item references in the loaded workspace', async () => {
+    // Register an adapter that prefixes resolved IDs with the
+    // workspace they were resolved in.
     ItemReferences.registerAdapter({
       type: 'database-entry',
       serialize: (id) => id,
-      match: (reference) => ({ type: 'database-entry', id: `id:${reference}` }),
+      match: (reference, workspaceId) => ({
+        type: 'database-entry',
+        id: `${workspaceId}:${reference}`,
+      }),
     });
 
     await loadWorkspaceCollections(workspace_1);
@@ -90,6 +94,8 @@ describe('loadWorkspaceCollections', () => {
     const loaded = storeItem(CollectionsStore, firstCollection.id);
 
     // The loaded items should be resolved item IDs
-    expect(loaded.items).toEqual(firstCollection.items.map((id) => `id:${id}`));
+    expect(loaded.items).toEqual(
+      firstCollection.items.map((id) => `${workspace_1.id}:${id}`),
+    );
   });
 });

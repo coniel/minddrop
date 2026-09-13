@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DataViewsStore } from '../DataViewsStore';
 import {
   cleanup,
@@ -7,6 +8,8 @@ import {
   setup,
 } from '../test-utils';
 import { getReferencingDataViews } from './getReferencingDataViews';
+
+const { workspace_2 } = WorkspaceFixtures;
 
 describe('getReferencingDataViews', () => {
   beforeEach(() => {
@@ -37,5 +40,11 @@ describe('getReferencingDataViews', () => {
 
   it('does not retrieve views without matching references', () => {
     expect(getReferencingDataViews(['database-entry_other'])).toEqual([]);
+  });
+
+  it('retrieves the views of the given workspace', () => {
+    expect(
+      getReferencingDataViews(['database-entry_two'], workspace_2.id),
+    ).toEqual([]);
   });
 });

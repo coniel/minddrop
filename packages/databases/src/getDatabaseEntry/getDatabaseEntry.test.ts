@@ -1,7 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DatabaseEntryNotFoundError } from '../errors';
 import { cleanup, objectEntry1, setup } from '../test-utils';
 import { getDatabaseEntry } from './getDatabaseEntry';
+
+const { workspace_2 } = WorkspaceFixtures;
 
 describe('getDatabaseEntry', () => {
   beforeEach(setup);
@@ -24,5 +27,9 @@ describe('getDatabaseEntry', () => {
     const entry = getDatabaseEntry('non-existent-entry', false);
 
     expect(entry).toBeNull();
+  });
+
+  it('retrieves the entry from the given workspace', () => {
+    expect(getDatabaseEntry(objectEntry1.id, false, workspace_2.id)).toBeNull();
   });
 });

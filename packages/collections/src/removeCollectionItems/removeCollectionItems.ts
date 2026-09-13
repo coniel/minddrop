@@ -8,6 +8,7 @@ import { updateCollection } from '../updateCollection';
  *
  * @param collectionId - The ID of the collection to remove items from.
  * @param itemIds - The item IDs to remove.
+ * @param workspaceId - The workspace the collection belongs to. Omit for the active workspace.
  * @returns The updated collection.
  *
  * @dispatches 'collections:collection:updated' event
@@ -15,13 +16,14 @@ import { updateCollection } from '../updateCollection';
 export async function removeCollectionItems(
   collectionId: string,
   itemIds: string[],
+  workspaceId?: string,
 ): Promise<Collection> {
   // Get the collection
-  const collection = getCollection(collectionId);
+  const collection = getCollection(collectionId, true, workspaceId);
 
   // Filter out the items to remove
   const filteredItems = collection.items.filter((id) => !itemIds.includes(id));
 
   // Update the collection with the filtered items
-  return updateCollection(collectionId, { items: filteredItems });
+  return updateCollection(collectionId, { items: filteredItems }, workspaceId);
 }

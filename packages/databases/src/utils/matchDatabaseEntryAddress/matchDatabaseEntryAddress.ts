@@ -22,10 +22,12 @@ export interface DatabaseEntryAddressMatch {
  * system.
  *
  * @param address - The address to match.
+ * @param workspaceId - The workspace to match the address in. Omit for the active workspace.
  * @returns The matched database and entry, or null if the address names no database.
  */
 export function matchDatabaseEntryAddress(
   address: string,
+  workspaceId?: string,
 ): DatabaseEntryAddressMatch | null {
   const segments = address.split('/');
 
@@ -43,7 +45,7 @@ export function matchDatabaseEntryAddress(
 
   // The first segment names a database rather than identifying it, so
   // it is resolved against the database names.
-  const database = getAllDatabases().find(
+  const database = getAllDatabases(workspaceId).find(
     (candidate) => candidate.name.toLowerCase() === databaseName.toLowerCase(),
   );
 
@@ -53,7 +55,7 @@ export function matchDatabaseEntryAddress(
   }
 
   // Find the database's entry under the title, if there is one
-  const entry = getAllDatabaseEntries(database.id).find(
+  const entry = getAllDatabaseEntries(database.id, workspaceId).find(
     (candidate) => candidate.title.toLowerCase() === title.toLowerCase(),
   );
 

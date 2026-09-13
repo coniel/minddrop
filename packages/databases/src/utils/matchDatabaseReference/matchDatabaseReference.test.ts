@@ -1,6 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { cleanup, objectDatabase, setup } from '../../test-utils';
 import { matchDatabaseReference } from './matchDatabaseReference';
+
+const { workspace_2 } = WorkspaceFixtures;
 
 describe('matchDatabaseReference', () => {
   beforeEach(setup);
@@ -27,5 +30,11 @@ describe('matchDatabaseReference', () => {
 
   it('does not match addresses containing a path separator', () => {
     expect(matchDatabaseReference('Unknown/Entry')).toBeNull();
+  });
+
+  it('matches against the given workspace', () => {
+    expect(
+      matchDatabaseReference(objectDatabase.name, workspace_2.id),
+    ).toBeNull();
   });
 });

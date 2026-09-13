@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DataViewsStore } from '../DataViewsStore';
 import { DataViewDeletedEvent } from '../events';
 import {
@@ -11,6 +12,8 @@ import {
 } from '../test-utils';
 import { resolveViewFilePath } from '../utils';
 import { deleteDataView } from './deleteDataView';
+
+const { workspace_2 } = WorkspaceFixtures;
 
 describe('deleteDataView', () => {
   beforeEach(setup);
@@ -28,6 +31,32 @@ describe('deleteDataView', () => {
 
     expect(MockFs.exists(resolveViewFilePath(dataView_gallery_1.id))).toBe(
       false,
+    );
+  });
+
+  it('deletes the view from the given workspace', async () => {
+    const otherPath = resolveViewFilePath(
+      dataView_gallery_1.id,
+      workspace_2.path,
+    );
+
+    // A view held by the second workspace only
+    DataViewsStore.in(workspace_2.id).set(dataView_gallery_1);
+    MockFs.addFiles([
+      { path: otherPath, textContent: JSON.stringify(dataView_gallery_1) },
+    ]);
+
+    await deleteDataView(dataView_gallery_1.id, workspace_2.id);
+
+    // Should remove the second workspace's view and file, leaving the
+    // active workspace's as they were.
+    expect(
+      DataViewsStore.in(workspace_2.id).get(dataView_gallery_1.id),
+    ).toBeNull();
+    expect(MockFs.exists(otherPath)).toBe(false);
+    expect(DataViewsStore).toHaveItem(dataView_gallery_1.id);
+    expect(MockFs.exists(resolveViewFilePath(dataView_gallery_1.id))).toBe(
+      true,
     );
   });
 

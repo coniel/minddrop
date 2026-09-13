@@ -1,6 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { cleanup, objectDatabase, objectEntry1, setup } from '../../test-utils';
 import { matchDatabaseEntryReference } from './matchDatabaseEntryReference';
+
+const { workspace_2 } = WorkspaceFixtures;
 
 describe('matchDatabaseEntryReference', () => {
   beforeEach(setup);
@@ -47,5 +50,14 @@ describe('matchDatabaseEntryReference', () => {
 
   it('does not match addresses with an empty segment', () => {
     expect(matchDatabaseEntryReference(`${objectDatabase.name}/`)).toBeNull();
+  });
+
+  it('matches against the given workspace', () => {
+    expect(
+      matchDatabaseEntryReference(
+        `${objectDatabase.name}/${objectEntry1.title}`,
+        workspace_2.id,
+      ),
+    ).toBeNull();
   });
 });

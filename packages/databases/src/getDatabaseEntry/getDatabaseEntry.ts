@@ -7,21 +7,30 @@ import { DatabaseEntry } from '../types';
  *
  * @param id - The ID of the entry to retrieve.
  * @param throwOnNotFound - Whether to throw when the entry does not exist. Defaults to true.
+ * @param workspaceId - The workspace the entry belongs to. Omit for the active workspace.
  * @returns The retrieved entry, or null when not found and not throwing.
  *
  * @throws {DatabaseEntryNotFoundError} If the entry does not exist and throwing is enabled.
  */
 export function getDatabaseEntry<
   TDatabaseEntry extends DatabaseEntry = DatabaseEntry,
->(id: string, throwOnNotFound?: true): TDatabaseEntry;
+>(id: string, throwOnNotFound?: true, workspaceId?: string): TDatabaseEntry;
 export function getDatabaseEntry<
   TDatabaseEntry extends DatabaseEntry = DatabaseEntry,
->(id: string, throwOnNotFound: false): TDatabaseEntry | null;
+>(
+  id: string,
+  throwOnNotFound: false,
+  workspaceId?: string,
+): TDatabaseEntry | null;
 export function getDatabaseEntry<
   TDatabaseEntry extends DatabaseEntry = DatabaseEntry,
->(id: string, throwOnNotFound = true): TDatabaseEntry | null {
-  // Get the entry
-  const entry = DatabaseEntriesStore.get(id);
+>(
+  id: string,
+  throwOnNotFound = true,
+  workspaceId?: string,
+): TDatabaseEntry | null {
+  // Get the entry from the workspace's store record
+  const entry = DatabaseEntriesStore.in(workspaceId).get(id);
 
   // Handle the entry not existing
   if (!entry) {

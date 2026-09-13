@@ -16,6 +16,7 @@ import { writeCollection } from '../writeCollection';
  *
  * @param collectionId - The ID of the collection to update.
  * @param data - The collection data.
+ * @param workspaceId - The workspace the collection belongs to. Omit for the active workspace.
  * @returns The updated collection.
  *
  * @dispatches 'collections:collection:updated' event
@@ -23,9 +24,12 @@ import { writeCollection } from '../writeCollection';
 export async function updateCollection(
   collectionId: string,
   data: UpdateCollectionData | UpdateVirtualCollectionData,
+  workspaceId?: string,
 ): Promise<Collection> {
+  const store = CollectionsStore.in(workspaceId);
+
   // Get the collection
-  const collection = getCollection(collectionId);
+  const collection = getCollection(collectionId, true, workspaceId);
 
   // Update the collection
   const updatedCollection: Collection = {
@@ -43,11 +47,11 @@ export async function updateCollection(
       );
     }
 
-    CollectionsStore.remove(collectionId);
-    CollectionsStore.set(updatedCollection);
+    store.remove(collectionId);
+    store.set(updatedCollection);
   } else {
     // Update the collection in the store
-    CollectionsStore.update(collectionId, {
+    store.update(collectionId, {
       ...data,
       lastModified: new Date(),
     });
@@ -61,7 +65,7 @@ export async function updateCollection(
 
   // Write the collection config to the file system if not virtual
   if (!collection.virtual) {
-    await writeCollection(collectionId);
+    await writeCollection(collectionId, workspaceId);
   }
 
   return updatedCollection;

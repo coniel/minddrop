@@ -9,11 +9,13 @@ import { DataViewConfig } from '../types';
  *
  * @param type - The view's type.
  * @param config - The view config to resolve.
+ * @param workspaceId - The workspace to resolve the references in. Omit for the active workspace.
  * @returns The resolved config.
  */
 export function resolveDataViewConfig(
   type: string,
   config: DataViewConfig,
+  workspaceId?: string,
 ): DataViewConfig {
   // Look up the view type without throwing for unregistered types
   const viewType = DataViewTypesRegistry.get(type, false);
@@ -23,5 +25,7 @@ export function resolveDataViewConfig(
     return config;
   }
 
-  return viewType.resolveReferences(config, ItemReferences.resolveOne);
+  return viewType.resolveReferences(config, (reference) =>
+    ItemReferences.resolveOne(reference, workspaceId),
+  );
 }
