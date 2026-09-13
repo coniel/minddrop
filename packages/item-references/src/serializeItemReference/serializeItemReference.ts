@@ -7,9 +7,13 @@ import { ItemReferenceAdaptersRegistry } from '../ItemReferenceAdaptersRegistry'
  * pass through unchanged, acting as their own durable reference.
  *
  * @param id - The runtime item ID to serialize.
+ * @param workspaceId - The workspace the item belongs to. Omit for the active workspace.
  * @returns The durable reference, or null if the adapter cannot serialize the ID.
  */
-export function serializeItemReference(id: string): string | null {
+export function serializeItemReference(
+  id: string,
+  workspaceId?: string,
+): string | null {
   // Look up the adapter for the ID's type prefix
   const type = entityIdType(id);
   const adapter =
@@ -20,5 +24,5 @@ export function serializeItemReference(id: string): string | null {
     return id;
   }
 
-  return adapter.serialize(id);
+  return adapter.serialize(id, workspaceId);
 }

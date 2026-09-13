@@ -8,14 +8,17 @@ import { resolveItemReferences } from './resolveItemReferences';
 const entryAdapter: ItemReferenceAdapter = {
   type: 'database-entry',
   serialize: (id) => id,
-  match: (reference) => {
+  match: (reference, workspaceId) => {
     if (!reference.startsWith('Books/')) {
       return null;
     }
 
+    // Name the workspace matched in when one is given
+    const prefix = workspaceId ? `${workspaceId}:entry` : 'entry';
+
     return {
       type: 'database-entry',
-      id: reference === 'Books/New book' ? null : `entry:${reference}`,
+      id: reference === 'Books/New book' ? null : `${prefix}:${reference}`,
     };
   },
 };
@@ -52,6 +55,12 @@ describe('resolveItemReferences', () => {
       'entry:Books/One',
       'entry:Books/Two',
     ]);
+  });
+
+  it('resolves the references in the given workspace', () => {
+    expect(
+      resolveItemReferences(['Books/One'], { workspaceId: 'workspace-2' }),
+    ).toEqual(['workspace-2:entry:Books/One']);
   });
 
   it('drops references nothing recognizes', () => {

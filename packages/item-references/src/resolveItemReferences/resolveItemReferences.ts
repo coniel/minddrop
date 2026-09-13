@@ -7,6 +7,12 @@ export interface ResolveItemReferencesOptions {
    * When false, such references are dropped.
    */
   keepMissing?: boolean;
+
+  /**
+   * The workspace to resolve the references in. Omit for the active
+   * workspace.
+   */
+  workspaceId?: string;
 }
 
 /**
@@ -24,7 +30,7 @@ export function resolveItemReferences(
 ): string[] {
   return references.flatMap((reference) => {
     // Match the reference against the registered adapters
-    const match = matchItemReference(reference);
+    const match = matchItemReference(reference, options.workspaceId);
 
     // Drop references nothing recognizes
     if (!match) {

@@ -10,14 +10,16 @@ import { ItemReferenceMatch } from '../types';
  * recognizes the reference.
  *
  * @param reference - The durable item reference to match.
+ * @param workspaceId - The workspace to match the reference in. Omit for the active workspace.
  * @returns The match, or null if nothing recognizes the reference.
  */
 export function matchItemReference(
   reference: string,
+  workspaceId?: string,
 ): ItemReferenceMatch | null {
   // Offer the reference to each adapter in registration order
   for (const adapter of ItemReferenceAdaptersRegistry.getAll()) {
-    const match = adapter.match(reference);
+    const match = adapter.match(reference, workspaceId);
 
     if (match) {
       return match;

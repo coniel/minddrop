@@ -16,14 +16,20 @@ export interface ItemReferenceAdapter {
   /**
    * Converts a runtime item ID into a durable reference, or null
    * when the item cannot be resolved.
+   *
+   * @param id - The runtime item ID to serialize.
+   * @param workspaceId - The workspace the item belongs to. Omit for the active workspace.
    */
-  serialize(id: string): string | null;
+  serialize(id: string, workspaceId?: string): string | null;
 
   /**
    * Matches a durable reference against the adapter's address
    * format. Returns null when the reference does not belong to the
    * adapter, leaving it to later-registered adapters. A match with
    * a null ID marks a valid address whose item does not exist yet.
+   *
+   * @param reference - The durable reference to match.
+   * @param workspaceId - The workspace to match the reference in. Omit for the active workspace.
    */
-  match(reference: string): ItemReferenceMatch | null;
+  match(reference: string, workspaceId?: string): ItemReferenceMatch | null;
 }
