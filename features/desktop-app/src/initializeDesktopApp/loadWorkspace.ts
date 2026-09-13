@@ -4,20 +4,37 @@ import { Databases } from '@minddrop/databases';
 import { Designs } from '@minddrop/designs';
 import { Designs as DesignsNext } from '@minddrop/designs-next';
 import { EntityGroups } from '@minddrop/entity-groups';
+import { LayoutRegionSizesStore } from '@minddrop/feature-designs';
+import { SpaceViewStateStore } from '@minddrop/feature-spaces';
 import { Queries } from '@minddrop/queries';
 import { Search } from '@minddrop/search';
 import { Spaces } from '@minddrop/spaces';
 import { Sql } from '@minddrop/sql';
 import { Tags } from '@minddrop/tags';
+import { ViewSessions } from '@minddrop/views';
 import { Workspace } from '@minddrop/workspaces';
 
 /**
- * Loads a workspace's content into the content packages' store
- * records, connecting to its SQL database and search index.
+ * Loads a workspace: hydrates its per-workspace app state, loads its
+ * content into the content packages' store records and connects to
+ * its SQL database and search index.
  *
  * @param workspace - The workspace to load.
  */
 export async function loadWorkspace(workspace: Workspace): Promise<void> {
+  // Hydrate layout region sizes (dialogs, panels) for the workspace
+  await LayoutRegionSizesStore.in(workspace.id).hydrate();
+
+  // Hydrate the workspace's open view sessions
+  await ViewSessions.Store.in(workspace.id).hydrate();
+
+  // Hydrate the workspace's per-space view state
+  await SpaceViewStateStore.in(workspace.id).hydrate();
+
+  // Hydrate the defaults applied to databases newly created in the
+  // workspace.
+  await Databases.DefaultsStore.in(workspace.id).hydrate();
+
   await Designs.loadWorkspace(workspace);
   await DesignsNext.loadWorkspace(workspace);
 

@@ -8,19 +8,13 @@ import { registerBlockSelectionSerializer } from '@minddrop/editor';
 import { EntityGroups } from '@minddrop/entity-groups';
 import { initializeCollectionsFeature } from '@minddrop/feature-collections';
 import { initializeDataViewsFeature } from '@minddrop/feature-data-views';
-import {
-  LayoutRegionSizesStore,
-  initializeDesignsFeature,
-} from '@minddrop/feature-designs';
+import { initializeDesignsFeature } from '@minddrop/feature-designs';
 import { initializeDesignsNextFeature } from '@minddrop/feature-designs-next';
 import { initializeDevToolsFeature } from '@minddrop/feature-dev-tools';
 import { initializeQueriesFeature } from '@minddrop/feature-queries';
 import { initializeSearch } from '@minddrop/feature-search';
 import { initializeSettingsFeature } from '@minddrop/feature-settings';
-import {
-  SpaceViewStateStore,
-  initializeSpacesFeature,
-} from '@minddrop/feature-spaces';
+import { initializeSpacesFeature } from '@minddrop/feature-spaces';
 import { initializeTagsFeature } from '@minddrop/feature-tags';
 import { initializeViewsFeature } from '@minddrop/feature-views';
 import { initializeWorkspacesFeature } from '@minddrop/feature-workspaces';
@@ -34,11 +28,10 @@ import { Spaces } from '@minddrop/spaces';
 import { Tags } from '@minddrop/tags';
 import { Icons } from '@minddrop/ui-icons';
 import { initializeInputModalityTracking } from '@minddrop/ui-primitives';
-import { ViewSessions } from '@minddrop/views';
 import { Workspaces } from '@minddrop/workspaces';
 import { AppUiState } from '../AppUiState';
+import { initializeWorkspaceWatchers } from '../initializeWorkspaceWatchers';
 import { locales } from '../locales';
-import { registerWorkspaceSwitchListener } from '../registerWorkspaceSwitchListener';
 import { initializeDataViewTypes } from './initializeDataViewTypes';
 import { initializeSelection } from './initializeSelection';
 import { initializeTheme } from './initializeTheme';
@@ -138,26 +131,18 @@ async function runInitialization(): Promise<void> {
   // so no rename goes unrecorded.
   Snapshots.initialize();
 
+  // Register the workspace loader, which runs for a workspace the
+  // first time it is switched to.
+  Workspaces.registerLoader({ id: 'desktop-app', load: loadWorkspace });
+
   // Initialize workspaces, resolving the active one
   await Workspaces.initialize();
 
   const activeWorkspace = Workspaces.getActive(false);
 
-  // Hydrate layout region sizes (dialogs, panels) for this workspace
-  await LayoutRegionSizesStore.hydrate();
-
-  // Hydrate the open view sessions for this workspace
-  await ViewSessions.Store.hydrate();
-
-  // Hydrate per-space view state for this workspace
-  await SpaceViewStateStore.hydrate();
-
-  // Hydrate the defaults applied to newly created databases
-  await Databases.DefaultsStore.hydrate();
-
-  // Load the active workspace's content
+  // Load the active workspace
   if (activeWorkspace) {
-    await loadWorkspace(activeWorkspace);
+    await Workspaces.load(activeWorkspace.id);
   }
 
   // Initialize global selection keyboard shortcuts
@@ -170,14 +155,7 @@ async function runInitialization(): Promise<void> {
   // holds, so that images are treated on their first render.
   await Fs.preloadImageStats();
 
-  // Watch the active workspace directory for changes made outside
-  // the app. Started last so that it cannot race the initial loads.
-  const stopWatcher = activeWorkspace
-    ? await Fs.startWatcher([
-        { workspaceId: activeWorkspace.id, path: activeWorkspace.path },
-      ])
-    : () => undefined;
-
-  // Reload the app when the user switches to another workspace
-  registerWorkspaceSwitchListener(stopWatcher);
+  // Watch the loaded workspaces' directories for changes made outside
+  // the app. Started last so that it cannot race the initial load.
+  initializeWorkspaceWatchers();
 }
