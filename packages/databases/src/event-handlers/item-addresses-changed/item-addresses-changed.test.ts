@@ -2,7 +2,9 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DataViews } from '@minddrop/data-views';
 import { DataViewFixtures } from '@minddrop/data-views/test-utils';
 import { History } from '@minddrop/history';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
+import { DatabasesStore } from '../../DatabasesStore';
 import { sqlUpsertDatabase } from '../../sql';
 import {
   MockFs,
@@ -21,6 +23,7 @@ import {
 } from '../../test-utils';
 import {
   databaseEntryAddress,
+  resolveDatabaseEntryPath,
   viewMetadataKey,
   virtualViewId,
 } from '../../utils';
@@ -34,6 +37,8 @@ const renamedRelated = {
   title: 'Renamed Related',
   path: `${collectionDatabase.path}/Renamed Related.md`,
 };
+
+const { workspace_1, workspace_2 } = WorkspaceFixtures;
 
 describe('onItemAddressesChanged', () => {
   beforeEach(() => {
@@ -69,13 +74,19 @@ describe('onItemAddressesChanged', () => {
       path: renamedRelated.path,
     });
 
-    await onItemAddressesChanged([
-      {
-        id: relatedEntry1.id,
-        oldReference: databaseEntryAddress(relatedEntry1, collectionDatabase),
-        newReference: databaseEntryAddress(renamedRelated, collectionDatabase),
-      },
-    ]);
+    await onItemAddressesChanged({
+      workspaceId: workspace_1.id,
+      changes: [
+        {
+          id: relatedEntry1.id,
+          oldReference: databaseEntryAddress(relatedEntry1, collectionDatabase),
+          newReference: databaseEntryAddress(
+            renamedRelated,
+            collectionDatabase,
+          ),
+        },
+      ],
+    });
 
     const contents = MockFs.readTextFile(
       databaseEntryFilePath(collectionEntry1),
@@ -104,13 +115,19 @@ describe('onItemAddressesChanged', () => {
       path: renamedRelated.path,
     });
 
-    await onItemAddressesChanged([
-      {
-        id: relatedEntry1.id,
-        oldReference: databaseEntryAddress(relatedEntry1, collectionDatabase),
-        newReference: databaseEntryAddress(renamedRelated, collectionDatabase),
-      },
-    ]);
+    await onItemAddressesChanged({
+      workspaceId: workspace_1.id,
+      changes: [
+        {
+          id: relatedEntry1.id,
+          oldReference: databaseEntryAddress(relatedEntry1, collectionDatabase),
+          newReference: databaseEntryAddress(
+            renamedRelated,
+            collectionDatabase,
+          ),
+        },
+      ],
+    });
 
     const entry = DatabaseEntriesStore.get(collectionEntry1.id)!;
 
@@ -127,16 +144,59 @@ describe('onItemAddressesChanged', () => {
     });
   });
 
+  it("rewrites the referencing entries of the changes' workspace", async () => {
+    // The database and its entries held by the second workspace as
+    // well, with the referenced entry already renamed there.
+    DatabasesStore.in(workspace_2.id).set(collectionDatabase);
+    DatabaseEntriesStore.in(workspace_2.id).load([
+      collectionEntry1,
+      renamedRelated,
+      relatedEntry2,
+    ]);
+
+    await onItemAddressesChanged({
+      workspaceId: workspace_2.id,
+      changes: [
+        {
+          id: relatedEntry1.id,
+          oldReference: databaseEntryAddress(relatedEntry1, collectionDatabase),
+          newReference: databaseEntryAddress(
+            renamedRelated,
+            collectionDatabase,
+          ),
+        },
+      ],
+    });
+
+    // The referencing file under the second workspace holds the new
+    // address, the active workspace's file is untouched.
+    expect(
+      MockFs.readTextFile(
+        resolveDatabaseEntryPath(
+          collectionEntry1,
+          collectionDatabase,
+          workspace_2.path,
+        ),
+      ),
+    ).toContain('Collection Database/Renamed Related');
+    expect(
+      MockFs.readTextFile(databaseEntryFilePath(collectionEntry1)),
+    ).not.toContain('Collection Database/Renamed Related');
+  });
+
   it('does nothing for unreferenced items', async () => {
     const before = MockFs.readTextFile(databaseEntryFilePath(collectionEntry1));
 
-    await onItemAddressesChanged([
-      {
-        id: 'database-entry_unreferenced',
-        oldReference: 'old',
-        newReference: 'new',
-      },
-    ]);
+    await onItemAddressesChanged({
+      workspaceId: workspace_1.id,
+      changes: [
+        {
+          id: 'database-entry_unreferenced',
+          oldReference: 'old',
+          newReference: 'new',
+        },
+      ],
+    });
 
     expect(MockFs.readTextFile(databaseEntryFilePath(collectionEntry1))).toBe(
       before,
@@ -157,13 +217,19 @@ describe('onItemAddressesChanged', () => {
       path: renamedRelated.path,
     });
 
-    await onItemAddressesChanged([
-      {
-        id: relatedEntry1.id,
-        oldReference: databaseEntryAddress(relatedEntry1, collectionDatabase),
-        newReference: databaseEntryAddress(renamedRelated, collectionDatabase),
-      },
-    ]);
+    await onItemAddressesChanged({
+      workspaceId: workspace_1.id,
+      changes: [
+        {
+          id: relatedEntry1.id,
+          oldReference: databaseEntryAddress(relatedEntry1, collectionDatabase),
+          newReference: databaseEntryAddress(
+            renamedRelated,
+            collectionDatabase,
+          ),
+        },
+      ],
+    });
 
     // The referencing entry's history should be able to follow its
     // older records to the new address.
@@ -188,13 +254,19 @@ describe('onItemAddressesChanged', () => {
       path: renamedRelated.path,
     });
 
-    await onItemAddressesChanged([
-      {
-        id: relatedEntry1.id,
-        oldReference: databaseEntryAddress(relatedEntry1, collectionDatabase),
-        newReference: databaseEntryAddress(renamedRelated, collectionDatabase),
-      },
-    ]);
+    await onItemAddressesChanged({
+      workspaceId: workspace_1.id,
+      changes: [
+        {
+          id: relatedEntry1.id,
+          oldReference: databaseEntryAddress(relatedEntry1, collectionDatabase),
+          newReference: databaseEntryAddress(
+            renamedRelated,
+            collectionDatabase,
+          ),
+        },
+      ],
+    });
 
     // relatedEntry2 is in the same database but references nothing
     expect(

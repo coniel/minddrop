@@ -9,11 +9,13 @@ import { Database } from '../../types';
  *
  * @param properties - The entry properties to convert.
  * @param database - The entry's database.
+ * @param workspaceId - The workspace the referenced items belong to. Omit for the active workspace.
  * @returns A new properties object with converted collection values.
  */
 export function serializeCollectionProperties(
   properties: PropertyMap,
   database: Database,
+  workspaceId?: string,
 ): PropertyMap {
   const converted: PropertyMap = { ...properties };
 
@@ -30,7 +32,7 @@ export function serializeCollectionProperties(
       return;
     }
 
-    converted[property.name] = ItemReferences.serialize(value);
+    converted[property.name] = ItemReferences.serialize(value, workspaceId);
   });
 
   return converted;

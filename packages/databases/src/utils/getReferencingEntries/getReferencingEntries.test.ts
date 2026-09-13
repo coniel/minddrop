@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import {
   cleanup,
@@ -9,6 +10,8 @@ import {
   setup,
 } from '../../test-utils';
 import { getReferencingEntries } from './getReferencingEntries';
+
+const { workspace_2 } = WorkspaceFixtures;
 
 describe('getReferencingEntries', () => {
   beforeEach(setup);
@@ -47,5 +50,11 @@ describe('getReferencingEntries', () => {
 
   it('returns nothing for unreferenced entries', () => {
     expect(getReferencingEntries([objectEntry1.id])).toEqual([]);
+  });
+
+  it('searches the given workspace', () => {
+    expect(getReferencingEntries([relatedEntry1.id], workspace_2.id)).toEqual(
+      [],
+    );
   });
 });

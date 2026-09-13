@@ -133,7 +133,10 @@ export async function handleBackgroundSyncResult(
 
   // Dispatch the moved entries' address changes
   if (addressChanges.length > 0) {
-    Events.dispatch(ItemReferences.events.AddressesChanged, addressChanges);
+    Events.dispatch(ItemReferences.events.AddressesChanged, {
+      workspaceId: workspace.id,
+      changes: addressChanges,
+    });
   }
 
   // Dispatch a single event with the full changeset

@@ -2,6 +2,7 @@ import { Collections } from '@minddrop/collections';
 import { Events } from '@minddrop/events';
 import { History } from '@minddrop/history';
 import { ItemReferences } from '@minddrop/item-references';
+import { Workspaces } from '@minddrop/workspaces';
 import {
   contentCaptureKey,
   moveContentCapture,
@@ -88,11 +89,14 @@ export async function onRenameEntry(data: DatabaseEntryRenamedEventData) {
   );
 
   // Dispatch the entry's address change
-  Events.dispatch(ItemReferences.events.AddressesChanged, [
-    {
-      id: updated.id,
-      oldReference: databaseEntryAddress(original, database),
-      newReference: databaseEntryAddress(updated, database),
-    },
-  ]);
+  Events.dispatch(ItemReferences.events.AddressesChanged, {
+    workspaceId: Workspaces.getActive().id,
+    changes: [
+      {
+        id: updated.id,
+        oldReference: databaseEntryAddress(original, database),
+        newReference: databaseEntryAddress(updated, database),
+      },
+    ],
+  });
 }

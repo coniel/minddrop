@@ -69,13 +69,16 @@ describe('handleBackgroundSyncResult', () => {
     );
 
     // The dispatch carries the old and new addresses
-    expect(dispatched).toEqual([
-      {
-        id: relatedEntry1.id,
-        oldReference: databaseEntryAddress(relatedEntry1, collectionDatabase),
-        newReference: databaseEntryAddress(renamed, collectionDatabase),
-      },
-    ]);
+    expect(dispatched).toEqual({
+      workspaceId: workspace_1.id,
+      changes: [
+        {
+          id: relatedEntry1.id,
+          oldReference: databaseEntryAddress(relatedEntry1, collectionDatabase),
+          newReference: databaseEntryAddress(renamed, collectionDatabase),
+        },
+      ],
+    });
   });
 
   it('dispatches address changes for entries moved to another database', async () => {
@@ -105,13 +108,16 @@ describe('handleBackgroundSyncResult', () => {
     });
 
     // The dispatch names the entry under either database
-    expect(dispatched).toEqual([
-      {
-        id: relatedEntry1.id,
-        oldReference: databaseEntryAddress(relatedEntry1, collectionDatabase),
-        newReference: databaseEntryAddress(relatedEntry1, objectDatabase),
-      },
-    ]);
+    expect(dispatched).toEqual({
+      workspaceId: workspace_1.id,
+      changes: [
+        {
+          id: relatedEntry1.id,
+          oldReference: databaseEntryAddress(relatedEntry1, collectionDatabase),
+          newReference: databaseEntryAddress(relatedEntry1, objectDatabase),
+        },
+      ],
+    });
   });
 
   it('does not dispatch address changes for entries that moved without being renamed', async () => {

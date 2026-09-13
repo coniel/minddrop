@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Events } from '@minddrop/events';
 import { ItemReferences } from '@minddrop/item-references';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { MockFs, cleanup, collection_1, setup } from '../test-utils';
 import { Collection } from '../types';
 import { resolveCollectionFilePath } from '../utils';
@@ -8,6 +9,8 @@ import { initializeCollections } from './initializeCollections';
 
 // The changed member's ID, present in collection_1
 const changedId = collection_1.items[0];
+
+const { workspace_1 } = WorkspaceFixtures;
 
 describe('initializeCollections', () => {
   beforeEach(() => {
@@ -26,13 +29,16 @@ describe('initializeCollections', () => {
   it('rewrites collection files when member item addresses change', async () => {
     initializeCollections();
 
-    Events.dispatch(ItemReferences.events.AddressesChanged, [
-      {
-        id: changedId,
-        oldReference: `old:${changedId}`,
-        newReference: `address:${changedId}`,
-      },
-    ]);
+    Events.dispatch(ItemReferences.events.AddressesChanged, {
+      workspaceId: workspace_1.id,
+      changes: [
+        {
+          id: changedId,
+          oldReference: `old:${changedId}`,
+          newReference: `address:${changedId}`,
+        },
+      ],
+    });
 
     await vi.advanceTimersByTimeAsync(0);
 

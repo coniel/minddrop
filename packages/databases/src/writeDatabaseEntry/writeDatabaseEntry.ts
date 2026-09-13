@@ -1,5 +1,6 @@
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
+import { Workspaces } from '@minddrop/workspaces';
 import { DatabaseEntrySerializersRegistry } from '../DatabaseEntrySerializersRegistry';
 import { DatabaseEntryWrittenEvent } from '../events';
 import { getDatabase } from '../getDatabase';
@@ -13,6 +14,7 @@ import {
  * Writes an entry to the file system.
  *
  * @param id - The ID of the entry to write.
+ * @param workspaceId - The workspace the entry belongs to. Omit for the active workspace.
  *
  * @throws {DatabaseEntryNotFoundError} If the entry does not exist.
  * @throws {DatabaseNotFoundError} If the entry database does not exist.
@@ -20,13 +22,22 @@ import {
  *
  * @dispatches databases:entry:written
  */
-export async function writeDatabaseEntry(id: string): Promise<void> {
+export async function writeDatabaseEntry(
+  id: string,
+  workspaceId?: string,
+): Promise<void> {
   // Get the entry
-  const entry = getDatabaseEntry(id);
+  const entry = getDatabaseEntry(id, true, workspaceId);
+
   // Get the parent database
-  const database = getDatabase(entry.database);
+  const database = getDatabase(entry.database, true, workspaceId);
+
   // Path to the entry's primary file
-  const entryPath = resolveDatabaseEntryPath(entry, database);
+  const entryPath = resolveDatabaseEntryPath(
+    entry,
+    database,
+    Workspaces.resolvePath(workspaceId),
+  );
 
   // If the database uses entry based storage, ensure the entry
   // subdirectory exists.
@@ -35,7 +46,11 @@ export async function writeDatabaseEntry(id: string): Promise<void> {
   }
 
   // Convert collection property members to durable addresses
-  const properties = serializeCollectionProperties(entry.properties, database);
+  const properties = serializeCollectionProperties(
+    entry.properties,
+    database,
+    workspaceId,
+  );
 
   // Read the entry's current content so the serializer can merge into it
   // rather than regenerating it, preserving anything MindDrop does not model.

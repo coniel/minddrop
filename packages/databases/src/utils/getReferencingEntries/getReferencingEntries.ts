@@ -8,33 +8,40 @@ import { DatabaseEntry } from '../../types';
  * once, including self-references.
  *
  * @param entryIds - The referenced entry IDs.
+ * @param workspaceId - The workspace whose entries to search. Omit for the active workspace.
  * @returns The referencing entries.
  */
-export function getReferencingEntries(entryIds: string[]): DatabaseEntry[] {
+export function getReferencingEntries(
+  entryIds: string[],
+  workspaceId?: string,
+): DatabaseEntry[] {
   const referencedIds = new Set(entryIds);
+  const databasesStore = DatabasesStore.in(workspaceId);
 
-  return DatabaseEntriesStore.getAllArray().filter((entry) => {
-    // Look up the entry's database schema
-    const database = DatabasesStore.get(entry.database);
+  return DatabaseEntriesStore.in(workspaceId)
+    .getAllArray()
+    .filter((entry) => {
+      // Look up the entry's database schema
+      const database = databasesStore.get(entry.database);
 
-    if (!database) {
-      return false;
-    }
-
-    // Check the entry's collection property values for references
-    return database.properties.some((property) => {
-      if (property.type !== 'collection') {
+      if (!database) {
         return false;
       }
 
-      const value = entry.properties[property.name];
+      // Check the entry's collection property values for references
+      return database.properties.some((property) => {
+        if (property.type !== 'collection') {
+          return false;
+        }
 
-      // Skip missing or non-array values
-      if (!Array.isArray(value)) {
-        return false;
-      }
+        const value = entry.properties[property.name];
 
-      return value.some((memberId) => referencedIds.has(memberId));
+        // Skip missing or non-array values
+        if (!Array.isArray(value)) {
+          return false;
+        }
+
+        return value.some((memberId) => referencedIds.has(memberId));
+      });
     });
-  });
 }

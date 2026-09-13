@@ -1,6 +1,7 @@
 import { Collections } from '@minddrop/collections';
 import { Events } from '@minddrop/events';
 import { ItemReferences } from '@minddrop/item-references';
+import { Workspaces } from '@minddrop/workspaces';
 import { DatabaseRenamedEventData } from '../../events';
 import { getAllDatabaseEntries } from '../../getAllDatabaseEntries';
 import { sqlUpsertDatabase } from '../../sql';
@@ -67,13 +68,13 @@ export async function onRenameDatabase(
 
   // Dispatch the renamed entries' address changes
   if (entries.length > 0) {
-    Events.dispatch(
-      ItemReferences.events.AddressesChanged,
-      entries.map((entry) => ({
+    Events.dispatch(ItemReferences.events.AddressesChanged, {
+      workspaceId: Workspaces.getActive().id,
+      changes: entries.map((entry) => ({
         id: entry.id,
         oldReference: databaseEntryAddress(entry, original),
         newReference: databaseEntryAddress(entry, updated),
       })),
-    );
+    });
   }
 }

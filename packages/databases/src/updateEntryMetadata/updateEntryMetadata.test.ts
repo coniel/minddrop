@@ -1,6 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { storeItem } from '@minddrop/stores/test-utils';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
+import { DatabasesStore } from '../DatabasesStore';
 import { DatabaseEntryNotFoundError } from '../errors';
 import {
   MockFs,
@@ -14,7 +16,11 @@ import {
   urlEntry1,
 } from '../test-utils';
 import { DatabaseEntryMetadata } from '../types';
-import { resolveEntryMetadataFilePath } from '../utils';
+import {
+  resolveDatabaseEntryPath,
+  resolveDatabasePath,
+  resolveEntryMetadataFilePath,
+} from '../utils';
 import { updateEntryMetadata } from './updateEntryMetadata';
 
 // The sidecar paths the entries' metadata is written to
@@ -35,6 +41,8 @@ const entryMetadata: DatabaseEntryMetadata = {
     },
   },
 };
+
+const { workspace_2 } = WorkspaceFixtures;
 
 describe('updateEntryMetadata', () => {
   beforeEach(setup);
@@ -111,5 +119,37 @@ describe('updateEntryMetadata', () => {
     await expect(
       updateEntryMetadata('missing-entry', entryMetadata),
     ).rejects.toThrowError(DatabaseEntryNotFoundError);
+  });
+
+  it("updates the given workspace's entry and writes its sidecar", async () => {
+    // The entry and its database held by the second workspace as well
+    DatabasesStore.in(workspace_2.id).set(objectDatabase);
+    DatabaseEntriesStore.in(workspace_2.id).set(objectEntry1);
+
+    await updateEntryMetadata(objectEntry1.id, entryMetadata, workspace_2.id);
+
+    // The second workspace's entry and sidecar hold the metadata, the
+    // active workspace's are untouched.
+    expect(
+      DatabaseEntriesStore.in(workspace_2.id).get(objectEntry1.id)?.metadata,
+    ).toEqual(entryMetadata);
+    expect(
+      JSON.parse(
+        MockFs.readTextFile(
+          resolveEntryMetadataFilePath(
+            resolveDatabasePath(objectDatabase, workspace_2.path),
+            resolveDatabaseEntryPath(
+              objectEntry1,
+              objectDatabase,
+              workspace_2.path,
+            ),
+          ),
+        ),
+      ),
+    ).toEqual(entryMetadata);
+    expect(storeItem(DatabaseEntriesStore, objectEntry1.id).metadata).toEqual(
+      {},
+    );
+    expect(MockFs.exists(objectSidecarPath)).toBe(false);
   });
 });

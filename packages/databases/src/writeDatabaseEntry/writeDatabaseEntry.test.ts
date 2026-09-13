@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { NotRegisteredError } from '@minddrop/stores';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabaseEntryNotFoundError, DatabaseNotFoundError } from '../errors';
@@ -11,6 +12,7 @@ import {
 import {
   MockFs,
   cleanup,
+  collectionDatabase,
   collectionEntry1,
   databaseEntryFilePath,
   entryStorageEntry1,
@@ -21,8 +23,14 @@ import {
   setup,
   yamlObjectEntry1,
 } from '../test-utils';
-import { databaseEntryAddress } from '../utils';
+import {
+  databaseEntryAddress,
+  resolveDatabaseEntryPath,
+  resolveDatabasePath,
+} from '../utils';
 import { writeDatabaseEntry } from './writeDatabaseEntry';
+
+const { workspace_2 } = WorkspaceFixtures;
 
 describe('writeDatabaseEntry', () => {
   beforeEach(setup);
@@ -243,5 +251,37 @@ describe('writeDatabaseEntry', () => {
     );
 
     expect(contents).not.toContain('database-entry_missing');
+  });
+
+  it("writes the entry into the given workspace's database directory", async () => {
+    // The database and its entries held by the second workspace as well
+    DatabasesStore.in(workspace_2.id).set(collectionDatabase);
+    DatabaseEntriesStore.in(workspace_2.id).load([
+      collectionEntry1,
+      relatedEntry1,
+      relatedEntry2,
+    ]);
+    MockFs.createDir(
+      resolveDatabasePath(collectionDatabase, workspace_2.path),
+      {
+        recursive: true,
+      },
+    );
+
+    await writeDatabaseEntry(collectionEntry1.id, workspace_2.id);
+
+    const contents = MockFs.readTextFile(
+      resolveDatabaseEntryPath(
+        collectionEntry1,
+        collectionDatabase,
+        workspace_2.path,
+      ),
+    );
+
+    // The file is written under the second workspace, with its
+    // references serialized from that workspace's entries.
+    expect(contents).toContain(
+      databaseEntryAddress(relatedEntry1, collectionDatabase),
+    );
   });
 });

@@ -1,4 +1,5 @@
 import { Events } from '@minddrop/events';
+import { Workspaces } from '@minddrop/workspaces';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabaseEntryMetadataUpdatedEvent } from '../events';
 import { getDatabase } from '../getDatabase';
@@ -13,6 +14,7 @@ import { writeEntryMetadata } from '../writeEntryMetadata';
  *
  * @param entryId - The ID of the entry to update.
  * @param metadata - The new metadata for the entry.
+ * @param workspaceId - The workspace the entry belongs to. Omit for the active workspace.
  *
  * @throws {DatabaseEntryNotFoundError} If the entry does not exist.
  * @throws {DatabaseNotFoundError} If the entry database does not exist.
@@ -22,14 +24,15 @@ import { writeEntryMetadata } from '../writeEntryMetadata';
 export async function updateEntryMetadata(
   entryId: string,
   metadata: DatabaseEntryMetadata,
+  workspaceId?: string,
 ): Promise<void> {
   // Look up the entry and its database to find the database path
-  const entry = getDatabaseEntry(entryId);
-  const database = getDatabase(entry.database);
+  const entry = getDatabaseEntry(entryId, true, workspaceId);
+  const database = getDatabase(entry.database, true, workspaceId);
 
   // Set the metadata on the stored entry so successive updates
   // compose from current state.
-  DatabaseEntriesStore.update(entryId, { metadata });
+  DatabaseEntriesStore.in(workspaceId).update(entryId, { metadata });
 
   // Dispatch metadata updated event
   Events.dispatch(DatabaseEntryMetadataUpdatedEvent, {
@@ -38,10 +41,12 @@ export async function updateEntryMetadata(
     metadata,
   });
 
+  const workspacePath = Workspaces.resolvePath(workspaceId);
+
   // Write the entry's metadata sidecar
   await writeEntryMetadata(
-    resolveDatabasePath(database),
-    resolveDatabaseEntryPath(entry, database),
+    resolveDatabasePath(database, workspacePath),
+    resolveDatabaseEntryPath(entry, database, workspacePath),
     metadata,
   );
 }

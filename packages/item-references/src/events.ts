@@ -24,7 +24,17 @@ export interface ItemAddressChange {
   newReference: string;
 }
 
-export type ItemAddressesChangedEventData = ItemAddressChange[];
+export interface ItemAddressesChangedEventData {
+  /**
+   * The ID of the workspace the changed items belong to.
+   */
+  workspaceId: string;
+
+  /**
+   * The address changes.
+   */
+  changes: ItemAddressChange[];
+}
 
 declare module '@minddrop/events/EventDataMap' {
   interface EventDataMap {

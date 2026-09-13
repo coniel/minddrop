@@ -9,8 +9,12 @@ import { updateEntryMetadata } from '../updateEntryMetadata';
  * entry's metadata, converting item references into durable form.
  *
  * @param view - The virtual view whose config to persist.
+ * @param workspaceId - The workspace the view belongs to. Omit for the active workspace.
  */
-export async function persistVirtualViewConfig(view: DataView): Promise<void> {
+export async function persistVirtualViewConfig(
+  view: DataView,
+  workspaceId?: string,
+): Promise<void> {
   // Skip views not owned by a database entry
   if (!view.owner || !isEntityId(view.owner, 'database-entry')) {
     return;
@@ -22,7 +26,7 @@ export async function persistVirtualViewConfig(view: DataView): Promise<void> {
   }
 
   // Look up the entry the view is embedded in
-  const entry = DatabaseEntriesStore.get(view.owner);
+  const entry = DatabaseEntriesStore.in(workspaceId).get(view.owner);
 
   // Skip views whose entry no longer exists
   if (!entry) {
@@ -41,7 +45,11 @@ export async function persistVirtualViewConfig(view: DataView): Promise<void> {
   }
 
   // Convert the config's item references into durable form
-  const serializedConfig = DataViews.serializeConfig(view.type, viewConfig);
+  const serializedConfig = DataViews.serializeConfig(
+    view.type,
+    viewConfig,
+    workspaceId,
+  );
 
   const metadata: DatabaseEntryMetadata = {
     ...entry.metadata,
@@ -52,5 +60,5 @@ export async function persistVirtualViewConfig(view: DataView): Promise<void> {
   };
 
   // Persist the metadata to the entry's metadata sidecar
-  await updateEntryMetadata(view.owner, metadata);
+  await updateEntryMetadata(view.owner, metadata, workspaceId);
 }

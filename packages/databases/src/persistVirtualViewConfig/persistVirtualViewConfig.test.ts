@@ -1,8 +1,16 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DataView } from '@minddrop/data-views';
 import { DataViewFixtures } from '@minddrop/data-views/test-utils';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
-import { cleanup, collectionEntry1, objectEntry1, setup } from '../test-utils';
+import { DatabasesStore } from '../DatabasesStore';
+import {
+  cleanup,
+  collectionEntry1,
+  objectDatabase,
+  objectEntry1,
+  setup,
+} from '../test-utils';
 import { viewMetadataKey, virtualViewId } from '../utils';
 import { persistVirtualViewConfig } from './persistVirtualViewConfig';
 
@@ -23,6 +31,8 @@ const baseView: DataView = {
   created: new Date(),
   lastModified: new Date(),
 };
+
+const { workspace_2 } = WorkspaceFixtures;
 
 describe('persistVirtualViewConfig', () => {
   beforeEach(setup);
@@ -45,6 +55,25 @@ describe('persistVirtualViewConfig', () => {
         viewMetadataKey(layoutId, propertyName)
       ],
     ).toEqual({ options: { sortProperty: 'Name' }, data: { columns: [] } });
+  });
+
+  it("persists the config into the given workspace's entry", async () => {
+    // The entry and its database held by the second workspace as well
+    DatabasesStore.in(workspace_2.id).set(objectDatabase);
+    DatabaseEntriesStore.in(workspace_2.id).set(objectEntry1);
+
+    await persistVirtualViewConfig(
+      { ...baseView, data: { columns: [] } },
+      workspace_2.id,
+    );
+
+    // The second workspace's entry holds the config, the active
+    // workspace's is untouched.
+    expect(
+      DatabaseEntriesStore.in(workspace_2.id).get(objectEntry1.id)?.metadata
+        .embeddedViewConfigs?.[viewMetadataKey(layoutId, propertyName)],
+    ).toEqual({ data: { columns: [] } });
+    expect(DatabaseEntriesStore.get(objectEntry1.id)?.metadata).toEqual({});
   });
 
   it('skips views without an owner', async () => {

@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { WorkspaceFixtures } from '@minddrop/workspaces/test-utils';
 import {
   cleanup,
   collectionDatabase,
@@ -10,6 +11,8 @@ import {
 } from '../../test-utils';
 import { databaseEntryAddress } from '../databaseEntryAddress';
 import { serializeCollectionProperties } from './serializeCollectionProperties';
+
+const { workspace_2 } = WorkspaceFixtures;
 
 describe('serializeCollectionProperties', () => {
   beforeEach(setup);
@@ -59,5 +62,16 @@ describe('serializeCollectionProperties', () => {
       relatedEntry1.id,
       relatedEntry2.id,
     ]);
+  });
+
+  it('serializes the references in the given workspace', () => {
+    const serialized = serializeCollectionProperties(
+      collectionEntry1.properties,
+      collectionDatabase,
+      workspace_2.id,
+    );
+
+    // The second workspace holds none of the referenced entries
+    expect(serialized.Related).toEqual([]);
   });
 });
