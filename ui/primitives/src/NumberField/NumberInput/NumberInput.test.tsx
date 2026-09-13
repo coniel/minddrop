@@ -7,7 +7,7 @@ import {
   screen,
   userEvent,
 } from '@minddrop/test-utils';
-import { NumberInput } from './NumberInput';
+import { NumberInput, NumberInputStepper } from './NumberInput';
 
 describe('<NumberInput />', () => {
   afterEach(cleanup);
@@ -173,6 +173,7 @@ function decrementButton(): HTMLElement {
 }
 
 interface ControlledInputProps {
+  stepper?: NumberInputStepper;
   defaultValue?: number | null;
   min?: number;
   max?: number;
@@ -186,6 +187,7 @@ interface ControlledInputProps {
  * Renders a controlled number input exposing its value as text.
  */
 const ControlledInput: React.FC<ControlledInputProps> = ({
+  stepper,
   defaultValue = null,
   min,
   max,
@@ -199,6 +201,7 @@ const ControlledInput: React.FC<ControlledInputProps> = ({
   return (
     <>
       <NumberInput
+        stepper={stepper}
         value={inputValue}
         onValueChange={setInputValue}
         min={min}
@@ -212,3 +215,36 @@ const ControlledInput: React.FC<ControlledInputProps> = ({
     </>
   );
 };
+
+describe('<NumberInput stepper="ends" />', () => {
+  afterEach(cleanup);
+
+  it('stands the step buttons at either end of the input', () => {
+    render(<NumberInput stepper="ends" defaultValue={5} />);
+
+    // The decrement precedes the input and the increment follows it
+    expect(
+      decrementButton().compareDocumentPosition(input()) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    expect(
+      input().compareDocumentPosition(incrementButton()) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    expect(document.querySelector('.number-input-stepper')).toBeNull();
+  });
+
+  it('steps from the end buttons', async () => {
+    const user = userEvent.setup();
+
+    render(<ControlledInput stepper="ends" defaultValue={5} />);
+
+    await user.click(incrementButton());
+
+    expect(value()).toHaveTextContent('6');
+
+    await user.click(decrementButton());
+
+    expect(value()).toHaveTextContent('5');
+  });
+});

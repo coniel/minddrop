@@ -18,6 +18,7 @@ export interface NumberFieldProps
     NumberInputProps,
     | 'variant'
     | 'size'
+    | 'stepper'
     | 'value'
     | 'defaultValue'
     | 'onValueChange'
@@ -55,6 +56,7 @@ export const NumberField = React.forwardRef<HTMLDivElement, NumberFieldProps>(
       className,
       variant,
       size,
+      stepper,
       label,
       stringLabel,
       value,
@@ -89,6 +91,7 @@ export const NumberField = React.forwardRef<HTMLDivElement, NumberFieldProps>(
         <NumberInput
           variant={variant}
           size={size}
+          stepper={stepper}
           value={value}
           defaultValue={defaultValue}
           onValueChange={onValueChange}

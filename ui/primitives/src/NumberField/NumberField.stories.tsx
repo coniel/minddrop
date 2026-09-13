@@ -72,6 +72,54 @@ export const NumberFieldStories = () => {
       </StorySection>
 
       {/* --------------------------------------------------------
+          STEPPER
+          The step buttons sit in a hover spinner by default, or
+          stand at either end of the input, always shown.
+      -------------------------------------------------------- */}
+      <StorySection
+        title="Stepper"
+        description="stepper='ends' stands minus and plus at either end of a centred value, always shown, in place of the hover spinner. Suits a value read as more or less of something."
+      >
+        <StoryRow>
+          <StoryItem label="spin (default)">
+            <div style={{ width: 160 }}>
+              <NumberField defaultValue={14} min={6} max={200} />
+            </div>
+          </StoryItem>
+          <StoryItem label="ends">
+            <div style={{ width: 160 }}>
+              <NumberField stepper="ends" defaultValue={14} min={6} max={200} />
+            </div>
+          </StoryItem>
+          <StoryItem label="ends, subtle sm">
+            <div style={{ width: 120 }}>
+              <NumberField
+                stepper="ends"
+                variant="subtle"
+                size="sm"
+                defaultValue={14}
+                min={6}
+                max={200}
+              />
+            </div>
+          </StoryItem>
+          <StoryItem label="ends, at min (6)">
+            <div style={{ width: 120 }}>
+              <NumberField
+                stepper="ends"
+                variant="subtle"
+                size="sm"
+                value={6}
+                min={6}
+                max={200}
+                onValueChange={() => {}}
+              />
+            </div>
+          </StoryItem>
+        </StoryRow>
+      </StorySection>
+
+      {/* --------------------------------------------------------
           LABEL
       -------------------------------------------------------- */}
       <StorySection

@@ -217,6 +217,64 @@
   }
 }
 
+/* --- Ends layout: minus and plus at either end, always shown --- */
+
+/* The buttons take the ends, so the size classes' leading padding
+   goes and the value sits centred between them */
+.number-input-stepper-ends.text-input {
+  padding: 0;
+
+  .number-input-input {
+    text-align: center;
+  }
+
+  .number-input-increment,
+  .number-input-decrement {
+    flex: none;
+    height: 100%;
+  }
+}
+
+/* Each button is a square of the control's height */
+.number-input-stepper-ends.text-input-size-sm {
+  .number-input-increment,
+  .number-input-decrement {
+    width: var(--control-height-sm);
+
+    .icon {
+      width: var(--icon-size-2xs);
+      height: var(--icon-size-2xs);
+    }
+  }
+}
+
+.number-input-stepper-ends.text-input-size-md {
+  .number-input-increment,
+  .number-input-decrement {
+    width: var(--control-height-md);
+
+    .icon {
+      width: var(--icon-size-sm);
+      height: var(--icon-size-sm);
+    }
+  }
+}
+
+.number-input-stepper-ends.text-input-size-lg,
+.number-input-stepper-ends.text-input:not(.text-input-size-sm):not(
+    .text-input-size-md
+  ) {
+  .number-input-increment,
+  .number-input-decrement {
+    width: var(--control-height-lg);
+
+    .icon {
+      width: var(--icon-size-sm);
+      height: var(--icon-size-sm);
+    }
+  }
+}
+
 /* --- Bump animations --- */
 
 /* Triggered by adding/removing .is-bumping class.
