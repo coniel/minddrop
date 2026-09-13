@@ -463,6 +463,13 @@ describe('createObjectStore scoped by workspace', () => {
     expect(store.in('workspace-2').getAllArray()).toEqual([item2]);
   });
 
+  it('addresses the active workspace when none is given', () => {
+    store.in(undefined).set(item1);
+
+    expect(store.getAll()).toEqual({ 'item-1': item1 });
+    expect(store.in(undefined).get('item-1')).toEqual(item1);
+  });
+
   it('loads into the addressed workspace', () => {
     store.in('workspace-2').load([item2, item3]);
 

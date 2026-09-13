@@ -138,12 +138,13 @@ export interface ArrayItemStore<TItem extends object>
 export interface WorkspaceScopedArrayItemStore<TItem extends object>
   extends ArrayItemStore<TItem> {
   /**
-   * Addresses the record of a given workspace rather than the active
-   * one's.
+   * Addresses the record of a given workspace, the active one's when
+   * none is given, so that a call made for an optional workspace can
+   * address its store either way.
    *
-   * @param workspaceId - The workspace whose record to address.
+   * @param workspaceId - The workspace whose record to address. Omit for the active workspace.
    */
-  in(workspaceId: string): ArrayItemStoreScope<TItem>;
+  in(workspaceId?: string): ArrayItemStoreScope<TItem>;
 }
 
 /**

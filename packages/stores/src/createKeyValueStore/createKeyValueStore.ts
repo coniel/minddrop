@@ -117,12 +117,13 @@ export interface KeyValueStore<TValues extends StoreValues>
 export interface WorkspaceScopedKeyValueStore<TValues extends StoreValues>
   extends KeyValueStore<TValues> {
   /**
-   * Addresses the record of a given workspace rather than the active
-   * one's.
+   * Addresses the record of a given workspace, the active one's when
+   * none is given, so that a call made for an optional workspace can
+   * address its store either way.
    *
-   * @param workspaceId - The workspace whose record to address.
+   * @param workspaceId - The workspace whose record to address. Omit for the active workspace.
    */
-  in(workspaceId: string): KeyValueStoreScope<TValues>;
+  in(workspaceId?: string): KeyValueStoreScope<TValues>;
 }
 
 /**
