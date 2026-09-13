@@ -1,4 +1,4 @@
-import { DesignElementConfig } from '@minddrop/designs-next';
+import { DesignElementConfig, Designs } from '@minddrop/designs-next';
 import { i18n } from '@minddrop/i18n';
 import { Properties } from '@minddrop/properties';
 import { TextContentControls } from '@minddrop/ui-designs-next';
@@ -7,8 +7,8 @@ import { TextElementRenderer } from '../TextElementRenderer';
 
 export const TextElementType = 'text';
 
-// The text line height in grid units, matching its CSS
-export const TextLineHeightUnits = 5;
+// The lines of text at the default size a new text element holds
+const DefaultLines = 2;
 
 /**
  * Config for the text element: wrapping body text growing to its
@@ -24,12 +24,13 @@ export const TextElementConfig: DesignElementConfig<TextElement> = {
   suggestedPropertyTypes: ['text', 'title', 'select', 'url'],
   component: TextElementRenderer,
   defaultColumnSpan: 32,
-  defaultRowSpan: TextLineHeightUnits * 2,
+  defaultRowSpan:
+    Designs.resolveTextLineRowSpan(Designs.constants.DefaultFontSize) *
+    DefaultLines,
   defaultContentFit: 'grow',
   resolveDefaults: resolvePlaceholderText,
   settingGroups: ['text'],
-  resolveMinRowSpan: () => TextLineHeightUnits,
-  resolveRowSpanStep: () => TextLineHeightUnits,
+  resolveMinRowSpan: resolveLineRowSpan,
 };
 
 /**
@@ -40,4 +41,17 @@ export const TextElementConfig: DesignElementConfig<TextElement> = {
  */
 function resolvePlaceholderText(): Partial<TextElement> {
   return { content: i18n.t('designsNext.elements.text.placeholder') };
+}
+
+/**
+ * Resolves the rows one line of the element's text needs at its
+ * size, the block's floor.
+ *
+ * @param element - The text element.
+ * @returns The row span in grid units.
+ */
+function resolveLineRowSpan(element: TextElement): number {
+  return Designs.resolveTextLineRowSpan(
+    element.fontSize ?? Designs.constants.DefaultFontSize,
+  );
 }

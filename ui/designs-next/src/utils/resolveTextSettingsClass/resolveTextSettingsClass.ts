@@ -23,5 +23,10 @@ export function resolveTextSettingsClass(
     classes.push(`design-element-text-align-${element.textAlign}`);
   }
 
+  // Text sitting against an edge other than the top one
+  if (element.verticalAlign && element.verticalAlign !== 'top') {
+    classes.push(`design-element-text-vertical-align-${element.verticalAlign}`);
+  }
+
   return classes.join(' ');
 }

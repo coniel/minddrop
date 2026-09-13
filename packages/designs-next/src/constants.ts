@@ -107,6 +107,30 @@ export const FontWeights: FontWeight[] = [
 ];
 
 /**
+ * The conventional text sizes in pixels, offered as a ladder ahead
+ * of an arbitrary size.
+ */
+export const FontSizes: number[] = [
+  10, 11, 12, 14, 16, 18, 20, 24, 28, 32, 40, 48,
+];
+
+/**
+ * The size text is set at until one is picked, in pixels.
+ */
+export const DefaultFontSize = 14;
+
+/**
+ * The smallest and largest sizes text can be set at, in pixels.
+ */
+export const MinFontSize = 6;
+export const MaxFontSize = 200;
+
+/**
+ * The height of a line of text as a multiple of its font size.
+ */
+export const TextLineHeight = 1.4;
+
+/**
  * The colour text elements are drawn in until one is picked: the
  * design's own scheme at the step body text is set in.
  */

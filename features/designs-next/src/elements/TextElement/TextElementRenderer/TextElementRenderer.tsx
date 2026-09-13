@@ -1,4 +1,4 @@
-import { DesignElementProps } from '@minddrop/designs-next';
+import { DesignElementProps, Designs } from '@minddrop/designs-next';
 import {
   resolveElementColor,
   resolveTextSettingsClass,
@@ -6,27 +6,18 @@ import {
 } from '@minddrop/ui-designs-next';
 import { joinClasses } from '@minddrop/ui-primitives';
 import { TextElement } from '../TextElement.types';
-import { TextLineHeightUnits } from '../TextElementConfig';
 import './TextElementRenderer.css';
 
 /**
- * Renders the text element as wrapping body text, taking it from
- * the property the element maps to and falling back to its own
- * content. Text which may not grow past its block clamps to the
- * number of lines the block holds, text which may grows with its
- * content.
+ * Renders the text element as wrapping body text at its own size,
+ * taking it from the property the element maps to and falling back
+ * to its own content. Text past the block's height is clipped
+ * wherever its content fit holds the block to that height.
  */
 export const TextElementRenderer: React.FC<DesignElementProps<TextElement>> = ({
   element,
 }) => {
   const propertyValue = useElementValue(element);
-
-  // The number of lines the block height holds
-  const lines = Math.max(1, Math.round(element.rowSpan / TextLineHeightUnits));
-
-  // Whether the text may grow past its block
-  const contentFit = element.contentFit ?? 'fixed';
-  const grows = contentFit === 'grow' || contentFit === 'natural';
 
   // The text settings modifier classes
   const className = joinClasses(
@@ -34,12 +25,12 @@ export const TextElementRenderer: React.FC<DesignElementProps<TextElement>> = ({
     resolveTextSettingsClass(element),
   );
 
-  // The weight and colour the text is set in, with the line clamp
-  // of a block it may not grow past.
+  // The size, weight and colour the text is set in
   const style: React.CSSProperties = {
+    fontSize: element.fontSize ?? Designs.constants.DefaultFontSize,
+    lineHeight: Designs.constants.TextLineHeight,
     fontWeight: element.fontWeight,
     color: resolveElementColor(element.textColor),
-    ...(grows ? undefined : { WebkitLineClamp: lines }),
   };
 
   return (

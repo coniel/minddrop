@@ -13,6 +13,7 @@ export * from './resolveElementRect';
 export * from './resolveOccupiedColumns';
 export * from './resolveOccupiedRows';
 export * from './resolveRowLayout';
+export * from './resolveTextLineRowSpan';
 export * from './resolveScalingRows';
 export * from './resolveVerticalContextElements';
 export * from './resolveVerticalElementRect';

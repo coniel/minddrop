@@ -63,6 +63,16 @@
         "extraBold": "Extra bold",
         "black": "Black"
       },
+      "fontSize": {
+        "label": "Font size",
+        "custom": "Custom size"
+      },
+      "verticalAlign": {
+        "label": "Vertical align",
+        "top": "Top",
+        "middle": "Middle",
+        "bottom": "Bottom"
+      },
       "italic": "Italic",
       "textColor": {
         "label": "Text colour"

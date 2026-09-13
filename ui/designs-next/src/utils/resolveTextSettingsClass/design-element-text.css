@@ -17,3 +17,14 @@
 .design-renderer-element .design-element-text-align-justify {
   text-align: justify;
 }
+
+/* The vertical alignments other than the top edge, which the
+   elements already sit against. They take effect on elements laid
+   out as a column. */
+.design-renderer-element .design-element-text-vertical-align-middle {
+  justify-content: center;
+}
+
+.design-renderer-element .design-element-text-vertical-align-bottom {
+  justify-content: flex-end;
+}

@@ -1,10 +1,11 @@
+/* The block's box, laid out as a column so the text can sit
+   against either edge or in its middle. Text past the box is
+   clipped, which is what a fit holding the block's height means. */
 .design-text-element {
   flex: 1;
-  /* Line height on the 4px grid, matching TextLineHeightUnits */
-  font-size: 14px;
-  line-height: 20px;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
   overflow-wrap: break-word;
 }

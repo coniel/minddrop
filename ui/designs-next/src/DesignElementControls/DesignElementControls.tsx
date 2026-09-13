@@ -474,12 +474,13 @@ const SelectedElementControls: React.FC<SelectedElementControlsProps> = ({
  */
 function resolveModeIcon<Mode extends string>(
   option: ElementModeOption<Mode>,
-): Pick<RadioToggleHoverMenuOption<Mode>, 'icon' | 'content'> {
+): Pick<RadioToggleHoverMenuOption<Mode>, 'icon' | 'content' | 'square'> {
   if (option.rotation === undefined) {
     return { icon: option.icon };
   }
 
   return {
     content: <Icon name={option.icon} rotation={option.rotation} />,
+    square: true,
   };
 }

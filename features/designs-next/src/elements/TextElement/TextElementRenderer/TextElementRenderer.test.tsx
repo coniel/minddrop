@@ -65,6 +65,34 @@ describe('TextElementRenderer', () => {
     );
   });
 
+  it('sets the text at its size', () => {
+    render(<TextElementRenderer element={{ ...textElement, fontSize: 18 }} />);
+
+    expect(screen.getByText('A longer piece of body text.')).toHaveStyle({
+      fontSize: '18px',
+    });
+  });
+
+  it('sets the text at the default size without one', () => {
+    render(<TextElementRenderer element={textElement} />);
+
+    expect(screen.getByText('A longer piece of body text.')).toHaveStyle({
+      fontSize: '14px',
+    });
+  });
+
+  it('sits the text against the edge it is aligned to', () => {
+    render(
+      <TextElementRenderer
+        element={{ ...textElement, verticalAlign: 'bottom' }}
+      />,
+    );
+
+    expect(screen.getByText('A longer piece of body text.')).toHaveClass(
+      'design-element-text-vertical-align-bottom',
+    );
+  });
+
   it('sets the text in the weight it is given', () => {
     render(
       <TextElementRenderer element={{ ...textElement, fontWeight: 300 }} />,

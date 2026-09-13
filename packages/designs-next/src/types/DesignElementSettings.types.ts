@@ -25,6 +25,11 @@ export type FontWeight = 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900;
 export type TextAlign = 'left' | 'center' | 'right' | 'justify';
 
 /**
+ * The edge of its block text sits against, or its middle.
+ */
+export type VerticalAlign = 'top' | 'middle' | 'bottom';
+
+/**
  * A colour an element is drawn in. A content colour, and the step
  * of its ramp. The default colour follows the scheme the design
  * renders in.
@@ -43,6 +48,12 @@ export interface ElementColor {
 
 export interface TextSettings {
   /**
+   * The size the text is set at, in pixels. Absent means the size
+   * the element's type renders at by default.
+   */
+  fontSize?: number;
+
+  /**
    * The weight the text renders at. Absent means the weight the
    * element's type renders at by default.
    */
@@ -52,6 +63,12 @@ export interface TextSettings {
    * The edge the text lines up on. Absent means the left edge.
    */
   textAlign?: TextAlign;
+
+  /**
+   * The edge of its block the text sits against. Absent means the
+   * top edge.
+   */
+  verticalAlign?: VerticalAlign;
 
   /**
    * The colour the text is drawn in. Absent means the colour the

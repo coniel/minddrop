@@ -1,0 +1,13 @@
+/* The size on the trigger, a figure marking the control rather
+   than text to read. */
+.design-font-size-control-value {
+  font-size: var(--font-size-xs);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The picker holds a stack rather than a row of controls, so it
+   sets its own padding inside the panel. */
+.design-font-size-control-panel {
+  padding: var(--space-2);
+}

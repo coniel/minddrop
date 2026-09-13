@@ -1,13 +1,18 @@
 import {
   CardAspectRatios,
+  DefaultFontSize,
   DefaultTextColor,
   DesignElementGroups,
   DesignTypeIcons,
   DesignsIcon,
+  FontSizes,
   FontWeights,
   MaxDesignRows,
+  MaxFontSize,
   MinDesignRows,
+  MinFontSize,
   SnapPresets,
+  TextLineHeight,
   UnitPixelSize,
 } from './constants';
 import { DesignNotFoundError } from './errors';
@@ -41,6 +46,11 @@ export const constants = {
   SnapPresets,
   ElementGroups: DesignElementGroups,
   FontWeights,
+  FontSizes,
+  DefaultFontSize,
+  MinFontSize,
+  MaxFontSize,
+  TextLineHeight,
   DefaultTextColor,
 };
 
@@ -72,6 +82,7 @@ export {
   resolveAspectRows,
   resolveElementRect,
   resolveRowLayout,
+  resolveTextLineRowSpan,
   resolveVerticalElementRect,
   snapToMultiple,
 } from './utils';

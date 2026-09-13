@@ -24,4 +24,19 @@ describe('resolveTextSettingsClass', () => {
       resolveTextSettingsClass({ ...titleDesignElement, textAlign: 'left' }),
     ).toBe('');
   });
+
+  it('resolves the vertical alignment modifier', () => {
+    expect(
+      resolveTextSettingsClass({
+        ...titleDesignElement,
+        verticalAlign: 'middle',
+      }),
+    ).toBe('design-element-text-vertical-align-middle');
+  });
+
+  it('leaves top aligned text unmodified', () => {
+    expect(
+      resolveTextSettingsClass({ ...titleDesignElement, verticalAlign: 'top' }),
+    ).toBe('');
+  });
 });

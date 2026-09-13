@@ -2213,6 +2213,16 @@ declare module 'i18next' {
               extraBold: string;
               black: string;
             };
+            fontSize: {
+              label: string;
+              custom: string;
+            };
+            verticalAlign: {
+              label: string;
+              top: string;
+              middle: string;
+              bottom: string;
+            };
             italic: string;
             textColor: {
               label: string;
