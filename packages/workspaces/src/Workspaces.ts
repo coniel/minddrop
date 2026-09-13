@@ -44,6 +44,7 @@ export {
   isWorkspaceDirectory as isWorkspace,
   resolveWorkspaceConfigDirPath as resolveConfigDirPath,
   resolveWorkspaceDataDirPath as resolveDataDirPath,
+  resolveWorkspacePath as resolvePath,
 } from './utils';
 export { updateWorkspace as update } from './updateWorkspace';
 export { useActiveWorkspace as useActive } from './ActiveWorkspaceStore';

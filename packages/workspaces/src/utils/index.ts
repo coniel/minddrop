@@ -4,3 +4,4 @@ export * from './resolveWorkspaceConfigDirPath';
 export * from './resolveWorkspaceConfigFilePath';
 export * from './resolveWorkspaceDataDirPath';
 export * from './resolveWorkspacesConfigFilePath';
+export * from './resolveWorkspacePath';
