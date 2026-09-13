@@ -4,6 +4,8 @@ import {
   setActiveWorkspaceScope,
 } from '@minddrop/stores';
 import { ActiveWorkspaceStore } from '../ActiveWorkspaceStore';
+import { LoadedWorkspacesStore } from '../LoadedWorkspacesStore';
+import { WorkspaceLoadersRegistry } from '../WorkspaceLoadersRegistry';
 import { WorkspacesStore } from '../WorkspacesStore';
 import {
   workspaceConfigFile,
@@ -54,5 +56,7 @@ export function cleanupWorkspaceFixtures() {
   // Clear stores
   WorkspacesStore.clear();
   ActiveWorkspaceStore.reset();
+  LoadedWorkspacesStore.reset();
+  WorkspaceLoadersRegistry.clear();
   setActiveWorkspaceScope(null);
 }

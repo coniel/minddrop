@@ -6,6 +6,7 @@ export const WorkspaceDeletedEvent = 'workspaces:workspace:deleted';
 export const WorkspacesLoadedEvent = 'workspaces:loaded';
 export const WorkspacesReorderedEvent = 'workspaces:reordered';
 export const ActiveWorkspaceChangedEvent = 'workspaces:active-changed';
+export const WorkspaceLoadedEvent = 'workspaces:workspace:loaded';
 
 export type WorkspaceCreatedEventData = Workspace;
 export type WorkspaceDeletedEventData = Workspace;
@@ -16,6 +17,7 @@ export type WorkspaceUpdatedEventData = {
 export type WorkspacesLoadedEventData = Workspace[];
 export type WorkspacesReorderedEventData = Workspace[];
 export type ActiveWorkspaceChangedEventData = Workspace;
+export type WorkspaceLoadedEventData = Workspace;
 
 declare module '@minddrop/events/EventDataMap' {
   interface EventDataMap {
@@ -25,5 +27,6 @@ declare module '@minddrop/events/EventDataMap' {
     'workspaces:loaded': WorkspacesLoadedEventData;
     'workspaces:reordered': WorkspacesReorderedEventData;
     'workspaces:active-changed': ActiveWorkspaceChangedEventData;
+    'workspaces:workspace:loaded': WorkspaceLoadedEventData;
   }
 }

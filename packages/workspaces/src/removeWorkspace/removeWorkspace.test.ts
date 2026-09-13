@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { createObjectStore, getActiveWorkspaceScope } from '@minddrop/stores';
 import { ActiveWorkspaceStore } from '../ActiveWorkspaceStore';
+import { LoadedWorkspacesStore } from '../LoadedWorkspacesStore';
 import { WorkspacesStore } from '../WorkspacesStore';
 import { WorkspaceDeletedEvent } from '../events';
 import {
@@ -76,6 +77,14 @@ describe('removeWorkspace', () => {
     await removeWorkspace(workspace_1.id);
 
     expect(getActiveWorkspaceScope()).toBeNull();
+  });
+
+  it('marks the workspace as no longer loaded', async () => {
+    LoadedWorkspacesStore.set('ids', [workspace_1.id, workspace_2.id]);
+
+    await removeWorkspace(workspace_2.id);
+
+    expect(LoadedWorkspacesStore.get('ids')).toEqual([workspace_1.id]);
   });
 
   it('drops the workspace records from workspace scoped stores', async () => {

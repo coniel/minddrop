@@ -4,9 +4,11 @@ import {
   setActiveWorkspaceScope,
 } from '@minddrop/stores';
 import { ActiveWorkspaceStore } from '../ActiveWorkspaceStore';
+import { LoadedWorkspacesStore } from '../LoadedWorkspacesStore';
 import { WorkspacesStore } from '../WorkspacesStore';
-import { ActiveWorkspaceChangedEvent, WorkspaceDeletedEvent } from '../events';
+import { WorkspaceDeletedEvent } from '../events';
 import { getWorkspace } from '../getWorkspace';
+import { setActiveWorkspace } from '../setActiveWorkspace';
 import { writeWorkspacesConfig } from '../writeWorkspacesConfig';
 
 /**
@@ -16,15 +18,30 @@ import { writeWorkspacesConfig } from '../writeWorkspacesConfig';
  *
  * @param id - The ID of the workspace to remove.
  *
- * @dispatches workspaces:workspace:deleted
  * @dispatches workspaces:active-changed
+ * @dispatches workspaces:workspace:deleted
  */
 export async function removeWorkspace(id: string): Promise<void> {
   // Get the workspace
   const workspace = getWorkspace(id);
 
-  // Whether the workspace being removed is the active one
-  const wasActive = ActiveWorkspaceStore.get('id') === workspace.id;
+  // Switch away from the workspace before removing it, so that the
+  // active workspace never points at a removed one.
+  if (ActiveWorkspaceStore.get('id') === workspace.id) {
+    // Fall back to the first remaining workspace, if there is one
+    const replacement = WorkspacesStore.getAllArray().find(
+      (candidate) => candidate.id !== workspace.id,
+    );
+
+    if (replacement) {
+      await setActiveWorkspace(replacement.id);
+    } else {
+      ActiveWorkspaceStore.set('id', null);
+
+      // Point workspace scoped stores at no workspace
+      setActiveWorkspaceScope(null);
+    }
+  }
 
   // Remove the workspace from the store
   WorkspacesStore.remove(id);
@@ -32,20 +49,13 @@ export async function removeWorkspace(id: string): Promise<void> {
   // Dispatch a workspace deleted event
   Events.dispatch(WorkspaceDeletedEvent, workspace);
 
-  if (wasActive) {
-    // Fall back to the first remaining workspace, if there is one
-    const replacement = WorkspacesStore.getAllArray()[0];
-
-    ActiveWorkspaceStore.set('id', replacement ? replacement.id : null);
-
-    // Point workspace scoped stores at the replacement
-    setActiveWorkspaceScope(replacement ? replacement.id : null);
-
-    // Dispatch an active workspace changed event
-    if (replacement) {
-      Events.dispatch(ActiveWorkspaceChangedEvent, replacement);
-    }
-  }
+  // Mark the workspace as no longer loaded
+  LoadedWorkspacesStore.set(
+    'ids',
+    LoadedWorkspacesStore.get('ids').filter(
+      (loadedId) => loadedId !== workspace.id,
+    ),
+  );
 
   // Drop the workspace's records from every workspace scoped store
   dropWorkspaceRecords(workspace.id);
