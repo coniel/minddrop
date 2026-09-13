@@ -24,6 +24,7 @@ export const SpaceViewStateStore = createObjectStore<SpaceViewState>(
       target: 'app-workspace-config',
       namespace: 'space-view-state',
     },
+    scope: 'workspace',
   },
 );
 

@@ -13,6 +13,7 @@ export const DatabaseDefaultsStore = createKeyValueStore<DatabaseDefaults>(
   defaultValues,
   {
     persist: { target: 'workspace-config', namespace: 'database-defaults' },
+    scope: 'workspace',
   },
 );
 

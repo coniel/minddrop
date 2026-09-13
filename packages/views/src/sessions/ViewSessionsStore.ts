@@ -8,7 +8,10 @@ import { ViewSession, ViewSessionSet } from '../types';
 export const ViewSessionsStore = createObjectStore<ViewSessionSet>(
   'Views:Sessions',
   'id',
-  { persist: { target: 'app-workspace-config', namespace: 'sessions' } },
+  {
+    persist: { target: 'app-workspace-config', namespace: 'sessions' },
+    scope: 'workspace',
+  },
 );
 
 /**

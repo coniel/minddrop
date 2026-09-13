@@ -43,5 +43,6 @@ export const LayoutRegionSizesStore = createKeyValueStore<
       target: 'app-workspace-config',
       namespace: 'layout-region-sizes',
     },
+    scope: 'workspace',
   },
 );
