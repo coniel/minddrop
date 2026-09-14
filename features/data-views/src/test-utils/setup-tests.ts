@@ -3,9 +3,11 @@ import {
   cleanupDataViewFixtures,
   setupDataViewFixtures,
 } from '@minddrop/data-views/test-utils';
+import { registerDatabaseEntryFilterAdapter } from '@minddrop/databases/test-utils';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
+import { Filters } from '@minddrop/filters';
 import { initializeI18n } from '@minddrop/i18n';
 import {
   cleanupWorkspaceFixtures,
@@ -22,6 +24,9 @@ export function setup() {
 
   // Load data view fixtures into the store and mock file system
   setupDataViewFixtures(MockFs);
+
+  // Register the entry filter adapter, as Databases.initialize does
+  registerDatabaseEntryFilterAdapter();
 }
 
 export async function cleanup(): Promise<void> {
@@ -31,6 +36,7 @@ export async function cleanup(): Promise<void> {
 
   cleanupDataViewFixtures();
   cleanupWorkspaceFixtures();
+  Filters.unregisterAdapter('database-entry');
   await Events.tests.cleanup();
   vi.clearAllMocks();
 }

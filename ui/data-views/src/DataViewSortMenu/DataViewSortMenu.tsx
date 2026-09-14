@@ -129,7 +129,7 @@ export const DataViewSortMenu: React.FC<DataViewSortMenuProps> = ({
         />
       </DropdownMenuTrigger>
       <DropdownMenuPortal>
-        <DropdownMenuPositioner side="bottom" align="end">
+        <DropdownMenuPositioner side="bottom" align="start">
           <DropdownMenuContent>
             {/** Sorted property */}
             <MenuGroup>

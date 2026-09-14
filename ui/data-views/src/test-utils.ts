@@ -7,7 +7,9 @@ import { DatabaseFixtures } from '@minddrop/databases/test-utils';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
+import { Filters } from '@minddrop/filters';
 import { initializeI18n } from '@minddrop/i18n';
+import { Properties } from '@minddrop/properties';
 import { cleanup as cleanupRender } from '@minddrop/test-utils';
 import {
   cleanupWorkspaceFixtures,
@@ -15,6 +17,10 @@ import {
 } from '@minddrop/workspaces/test-utils';
 
 initializeI18n();
+
+// Register the property and filter translations the labels use
+Properties.initialize();
+Filters.initialize();
 
 export const MockFs = initializeMockFileSystem();
 

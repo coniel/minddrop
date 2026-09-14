@@ -3,6 +3,7 @@ import { DataView, DataViews } from '@minddrop/data-views';
 import { ListPanelView, ListPanelViewItem } from '@minddrop/ui-components';
 import {
   AddDataViewMenu,
+  DataViewFilterMenu,
   DataViewSettingsMenu,
   DataViewSettingsMenuContent,
   DataViewSortMenu,
@@ -90,6 +91,7 @@ export const DataViewsView: React.FC = () => {
       actions={
         selectedDataView
           ? [
+              <DataViewFilterMenu key="filter" view={selectedDataView} />,
               <DataViewSortMenu key="sort" view={selectedDataView} />,
               <DataViewSettingsMenu key="options" view={selectedDataView} />,
             ]

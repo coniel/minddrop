@@ -3,7 +3,7 @@ import { DataView } from '@minddrop/data-views';
 import { DataViewFixtures } from '@minddrop/data-views/test-utils';
 import { DatabaseEntries, DatabaseEntry } from '@minddrop/databases';
 import { DatabaseFixtures } from '@minddrop/databases/test-utils';
-import { PropertyFilter } from '@minddrop/properties';
+import { PropertyFilter } from '@minddrop/filters';
 import {
   act,
   cleanup as cleanupRender,

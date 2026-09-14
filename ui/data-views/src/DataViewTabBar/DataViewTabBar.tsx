@@ -13,6 +13,7 @@ import {
   TabsTab,
 } from '@minddrop/ui-primitives';
 import { AddDataViewMenu } from '../AddDataViewMenu';
+import { DataViewFilterMenu } from '../DataViewFilterMenu';
 import {
   DataViewSettingsMenu,
   DataViewSettingsMenuContent,
@@ -180,6 +181,7 @@ export const DataViewTabBar: React.FC<DataViewTabBarProps> = ({
 
       {activeView && (
         <Group gap={2} className="data-view-tab-bar-actions">
+          <DataViewFilterMenu view={activeView} size="sm" />
           <DataViewSortMenu view={activeView} size="sm" />
           <DataViewSettingsMenu view={activeView} size="sm" />
         </Group>

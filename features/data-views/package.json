@@ -23,6 +23,7 @@
     "@minddrop/events": "workspace:*",
     "@minddrop/feature-views": "workspace:*",
     "@minddrop/file-system": "workspace:*",
+    "@minddrop/filters": "workspace:*",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/properties": "workspace:*",
     "@minddrop/queries": "workspace:*",
