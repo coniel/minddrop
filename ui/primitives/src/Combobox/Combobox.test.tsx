@@ -36,9 +36,8 @@ describe('<Combobox />', () => {
 
     expect(options[1]).toHaveAttribute('data-highlighted');
 
-    // Fire the mouse move a scroll under a stationary cursor
-    // produces over another item.
-    fireEvent.mouseMove(options[3]);
+    // Move the mouse over another item
+    fireEvent.mouseMove(options[3], { movementX: 5, movementY: 5 });
 
     // The keyboard highlight is left in place
     expect(options[1]).toHaveAttribute('data-highlighted');
@@ -57,7 +56,7 @@ describe('<Combobox />', () => {
     // Point at the fourth item
     fireEvent.pointerMove(document, { clientX: 10, clientY: 10 });
     fireEvent.pointerMove(document, { clientX: 20, clientY: 20 });
-    fireEvent.mouseMove(options[3]);
+    fireEvent.mouseMove(options[3], { movementX: 5, movementY: 5 });
 
     expect(options[3]).toHaveAttribute('data-highlighted');
   });
