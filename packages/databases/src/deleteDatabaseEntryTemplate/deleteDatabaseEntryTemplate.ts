@@ -42,9 +42,9 @@ export async function deleteDatabaseEntryTemplate(
     templateId,
   );
 
-  // Delete the template's directory if it exists
+  // Delete the template's directory and its files if it exists
   if (await Fs.exists(templateDir)) {
-    await Fs.removeDir(templateDir);
+    await Fs.removeDir(templateDir, { recursive: true });
   }
 
   // Remove the template from the database's template ID list if
