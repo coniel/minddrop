@@ -71,6 +71,11 @@
   --text-primary: var(--primary-1200);
   --text-primary-muted: var(--primary-1100);
 
+  /* Standalone icons in the brand color, more saturated than the
+     solid fills so a lone icon still reads as the brand */
+  --icon-primary: hsl(226 90% 57%);
+  --icon-primary-hover: hsl(226 85% 52%);
+
   /* Errors and destructive actions */
   --text-danger: var(--danger-1100);
   --text-danger-muted: var(--danger-1000);
