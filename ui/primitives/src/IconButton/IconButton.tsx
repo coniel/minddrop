@@ -72,6 +72,12 @@ interface IconButtonBaseProps
   danger?: IconButtonDanger;
 
   /*
+   * Highlights the button to signal that what it controls is in
+   * effect. Unlike `active`, the button itself is not pressed.
+   */
+  highlighted?: boolean;
+
+  /*
    * Tooltip configuration. When provided, wraps the button
    * in a Tooltip with the given props.
    */
@@ -118,6 +124,7 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
       active,
       danger,
       disabled,
+      highlighted,
       tooltip,
       ...other
     },
@@ -143,6 +150,7 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
           active,
           danger,
           disabled,
+          highlighted,
           className,
         })}
         {...other}

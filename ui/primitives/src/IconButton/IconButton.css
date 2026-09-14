@@ -2,7 +2,7 @@
    ICON BUTTON
    Square button containing a single icon.
    Variants: ghost (default) | subtle | outline | filled
-   Colors:   neutral (default) | muted | contrast
+   Colors:   neutral (default) | muted | contrast | primary | danger | inherit
    Sizes:    sm | md (default) | lg
    ============================================================ */
 
@@ -78,7 +78,17 @@
   color: var(--text-on-solid);
 }
 .icon-button-color-primary {
-  color: var(--text-primary);
+  color: var(--icon-primary);
+}
+
+/* ------------------------------------------------------------
+   HIGHLIGHTED
+   Signals that what the button controls is in effect. Shares the
+   primary colour rules so the effect is defined in one place.
+   ------------------------------------------------------------ */
+
+.icon-button-highlighted {
+  color: var(--icon-primary);
 }
 .icon-button-color-danger {
   color: var(--text-danger);
@@ -107,6 +117,20 @@
   &.icon-button-color-inherit:hover,
   &.icon-button-color-inherit:active {
     color: inherit;
+  }
+
+  &.icon-button-color-primary,
+  &.icon-button-highlighted {
+    &:hover {
+      background-color: var(--surface-primary-hover);
+      color: var(--icon-primary-hover);
+    }
+
+    &:active,
+    &.icon-button-active {
+      background-color: var(--surface-primary-active);
+      color: var(--icon-primary-hover);
+    }
   }
 
   &.icon-button-color-danger,
@@ -154,6 +178,20 @@
     background-color: var(--surface-accent-active);
     color: var(--text-regular);
   }
+
+  &.icon-button-color-primary,
+  &.icon-button-highlighted {
+    &:hover {
+      background-color: var(--surface-primary-hover);
+      color: var(--icon-primary-hover);
+    }
+
+    &:active,
+    &.icon-button-active {
+      background-color: var(--surface-primary-active);
+      color: var(--icon-primary-hover);
+    }
+  }
 }
 
 /* ------------------------------------------------------------
@@ -172,6 +210,20 @@
 
   &:active {
     background-color: var(--surface-accent-hover);
+  }
+
+  &.icon-button-color-primary,
+  &.icon-button-highlighted {
+    &:hover {
+      background-color: var(--surface-primary-hover);
+      color: var(--icon-primary-hover);
+    }
+
+    &:active,
+    &.icon-button-active {
+      background-color: var(--surface-primary-active);
+      color: var(--icon-primary-hover);
+    }
   }
 }
 
@@ -195,5 +247,19 @@
   &.icon-button-active {
     background-color: var(--surface-accent-hover);
     box-shadow: none;
+  }
+
+  &.icon-button-color-primary,
+  &.icon-button-highlighted {
+    &:hover {
+      background-color: var(--surface-primary-hover);
+      color: var(--icon-primary-hover);
+    }
+
+    &:active,
+    &.icon-button-active {
+      background-color: var(--surface-primary-active);
+      color: var(--icon-primary-hover);
+    }
   }
 }
