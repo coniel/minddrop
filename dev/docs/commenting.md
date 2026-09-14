@@ -196,6 +196,19 @@ const appendsInFlight = new Map<string, Promise<unknown>>();
 
 ## What not to comment
 
+### The package boundary
+
+A comment is written in the vocabulary of its package and its
+dependencies, and describes only what its package does. The test is
+the import graph: **if the package cannot import a thing, its comments
+cannot describe it.** A core package with no dependency on anything
+that renders has no comment about rendering, whatever the field is for;
+a package that nothing in the UI depends on has no comment about the UI.
+Several entries in the list below are instances of this one test, each
+with its own carve-out, and the carve-outs never reach across the
+boundary: an exception granted to a kind of property is still bounded
+by what its package can import.
+
 - **Normal behaviour.** Document deviations, not what the code obviously
   does or what any reader would expect. "The ID never changes" is noise.
 - **Anything derivable from what you just said.** Drop a sentence whose
@@ -256,6 +269,15 @@ const appendsInFlight = new Map<string, Promise<unknown>>();
   i18n key, a design or styling value. The test is whether the field
   would still mean what the comment says if nothing rendered it.
 
+  The second exception is bounded by the package, not the property. A
+  flag in a package which depends on nothing that renders is documented
+  as what it declares, never as what a renderer does with it, even when
+  driving a renderer is its only purpose. An entity group type's
+  `ungrouped` flag says "the items in none of the type's groups count
+  as a group of their own", not "are listed above the groups": the
+  listing belongs to the UI package, and the core package cannot import
+  it, so it cannot describe it.
+
   ```ts
   // BAD, a data field narrating what renderers do with it
   /**
@@ -308,7 +330,8 @@ const appendsInFlight = new Map<string, Promise<unknown>>();
   the lifecycle, the plan for the design.
 
 **Every entry above is the same rule in a different costume: a comment
-carries only what the code under it does.** Knowledge from outside that
+carries only what the code under it does, in the vocabulary of its
+package and its dependencies.** Knowledge from outside that
 scope — how other code is implemented, what happens next in a flow it
 takes part in, an example of a thing the reader can go and look at — is
 out, however true and however helpful it seems. It is written where the
@@ -492,6 +515,39 @@ every error a caller can get back, including ones raised by the getters
 and helpers the function calls: `deleteDatabaseEntry` documents
 `DatabaseEntryNotFoundError` even though `getDatabaseEntry` is what
 throws it. `@dispatches` takes the event name alone.
+
+**The description is the gist, not an inventory.** A function which does
+several things says what it does in one sentence; the things it does are
+step comments in its body. An initializer which registers translations
+and a group type is "Initializes the tags package.", not "Initializes
+the tags package: registers its translations and the tag groups entity
+group type." The list is right today and wrong the day a third
+registration lands, and a function initializing a hundred things would
+not list a hundred. A caller who needs the detail reads the function.
+
+**Calling requirements stand on their own line.** A constraint on when
+or how the function may be called, such as an ordering against another
+call, goes in its own paragraph after the description, separated by a
+blank line, phrased as an explicit "Must": "Must be called before the
+entity groups are loaded." It does not carry a reason. The caller has
+to satisfy the requirement whatever the reason, and the reason belongs
+to the code which imposes it.
+
+```ts
+// BAD, an inventory, with the requirement tacked on and explained
+/**
+ * Initializes the tags package: registers its translations and the
+ * tag groups entity group type. Called before the entity groups are
+ * loaded, which is what reads the tag groups off the file system.
+ */
+
+// GOOD
+/**
+ * Initializes the tags package.
+ *
+ * Must be called before the entity groups are loaded.
+ */
+```
 
 Components get a brief JSDoc describing what they render, and their prop
 interfaces are fully commented per property. Brief means the gist, one
