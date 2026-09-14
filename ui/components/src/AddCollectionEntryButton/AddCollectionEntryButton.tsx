@@ -209,16 +209,13 @@ export const AddCollectionEntryButton: FC<AddCollectionEntryButtonProps> = ({
     );
   }
 
-  // Render an existing entry's add option, icon'd by the database
-  // it belongs to.
+  // Render an existing entry's add option
   function renderEntryItem(entry: DatabaseEntry) {
-    const entryDatabase = Databases.get(entry.database);
-
     return (
       <DropdownSearchableMenuItem
         key={entry.id}
         stringLabel={entry.title}
-        contentIcon={entryDatabase.icon}
+        contentIcon={DatabaseEntries.resolveIcon(entry)}
         onSelect={() => handleAdd(entry)}
       />
     );

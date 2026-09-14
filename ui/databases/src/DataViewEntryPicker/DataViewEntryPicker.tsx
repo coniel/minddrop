@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { DatabaseEntries, DatabaseEntry, Databases } from '@minddrop/databases';
+import { DatabaseEntries, DatabaseEntry } from '@minddrop/databases';
 import { useTranslation } from '@minddrop/i18n';
 import {
   Group,
@@ -148,15 +148,13 @@ export const DataViewEntryPicker: React.FC<DataViewEntryPickerProps> = ({
     });
   }
 
-  // Render an entry option, icon'd by the database it belongs to
+  // Render an entry option
   function renderEntryItem(entry: DatabaseEntry) {
-    const entryDatabase = Databases.get(entry.database);
-
     return (
       <SearchableMenuItem
         key={entry.id}
         stringLabel={entry.title}
-        contentIcon={entryDatabase.icon}
+        contentIcon={DatabaseEntries.resolveIcon(entry)}
         onSelect={() => onSelect(entry.id)}
         secondaryOnSelect={() => handleSecondarySelect(entry.id)}
       />
