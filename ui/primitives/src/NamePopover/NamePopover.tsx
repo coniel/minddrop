@@ -1,12 +1,7 @@
 import { useEffect, useState } from 'react';
 import { TranslationKey } from '@minddrop/i18n';
 import { ContentColor } from '@minddrop/ui-theme';
-import { ContentColorSwatch } from '../ContentColorSwatch';
-import { ContentIcon } from '../ContentIcon';
-import { DropdownMenu, DropdownMenuColorSelectionItem } from '../DropdownMenu';
-import { IconButton } from '../IconButton';
-import { IconPicker } from '../IconPicker';
-import { Group, Stack } from '../Layout';
+import { NameForm } from '../NameForm';
 import {
   Popover,
   PopoverContent,
@@ -15,9 +10,6 @@ import {
   PopoverPositionerProps,
   PopoverRootChangeEventDetails,
 } from '../Popover';
-import { Text } from '../Text';
-import { ContentColorValues } from '../constants';
-import { TextInput } from '../fields/TextInput';
 import './NamePopover.css';
 
 export interface NamePopoverProps {
@@ -113,13 +105,8 @@ export interface NamePopoverProps {
 }
 
 /**
- * Renders an anchored popover naming something: a name field
- * committed with Enter or the check button beside it, and
- * optionally an icon or a colour picked alongside it.
- *
- * A picked icon or colour is a decision of its own and applies as
- * it is picked. A name is not one until it is finished, so it waits
- * to be committed, and a blank one commits nothing.
+ * Renders an anchored popover naming something, closing once the
+ * name is committed.
  */
 export const NamePopover: React.FC<NamePopoverProps> = ({
   open,
@@ -134,9 +121,9 @@ export const NamePopover: React.FC<NamePopoverProps> = ({
   onColorChange,
   commitOnClose = false,
   error,
-  iconLabel = 'actions.pickIcon',
-  colorLabel = 'actions.pickColor',
-  submitLabel = 'actions.save',
+  iconLabel,
+  colorLabel,
+  submitLabel,
   className,
 }) => {
   const [name, setName] = useState(defaultValue);
@@ -148,15 +135,9 @@ export const NamePopover: React.FC<NamePopoverProps> = ({
     }
   }, [open, defaultValue]);
 
-  // Say the naming is done, which the key and the check button
-  // both do. Blank names commit nothing, leaving whatever the
-  // thing is called and the popover open to try again.
-  function handleCommit() {
-    if (!name.trim()) {
-      return;
-    }
-
-    commitName();
+  // Committing the name is the end of the naming
+  function handleSubmit(submittedName: string) {
+    onSubmit(submittedName);
     onOpenChange(false);
   }
 
@@ -191,87 +172,20 @@ export const NamePopover: React.FC<NamePopoverProps> = ({
       <PopoverPortal>
         <PopoverPositioner side="bottom" align="start" anchor={anchor}>
           <PopoverContent className={`name-popover ${className ?? ''}`.trim()}>
-            <Stack gap={1}>
-              <Group gap={1}>
-                {onIconChange && (
-                  <IconPicker
-                    closeOnSelect
-                    currentIcon={icon}
-                    onSelect={onIconChange}
-                    onClear={() => onIconChange(null)}
-                  >
-                    <IconButton
-                      size="md"
-                      variant="ghost"
-                      color="neutral"
-                      label={iconLabel}
-                    >
-                      <ContentIcon icon={icon} />
-                    </IconButton>
-                  </IconPicker>
-                )}
-
-                {onColorChange && (
-                  <DropdownMenu
-                    trigger={
-                      <IconButton
-                        size="md"
-                        variant="ghost"
-                        color="neutral"
-                        label={colorLabel}
-                      >
-                        <ContentColorSwatch
-                          color={color ?? 'default'}
-                          unset={(color ?? 'default') === 'default'}
-                        />
-                      </IconButton>
-                    }
-                  >
-                    {ContentColorValues.map((option) => (
-                      <DropdownMenuColorSelectionItem
-                        key={option.value}
-                        color={option.value}
-                        checked={option.value === (color ?? 'default')}
-                        onClick={() => onColorChange(option.value)}
-                      />
-                    ))}
-                  </DropdownMenu>
-                )}
-
-                <TextInput
-                  autoFocus
-                  unassisted
-                  size="md"
-                  variant="ghost"
-                  className="name-popover-field"
-                  placeholder={placeholder}
-                  value={name}
-                  onValueChange={setName}
-                  onCommit={handleCommit}
-                />
-
-                <IconButton
-                  icon="check"
-                  size="md"
-                  variant="ghost"
-                  color="neutral"
-                  label={submitLabel}
-                  onClick={handleCommit}
-                />
-              </Group>
-
-              {/* What makes the name unacceptable is the consumer's
-                  to say */}
-              {error && (
-                <Text
-                  block
-                  size="sm"
-                  color="danger"
-                  className="name-popover-error"
-                  text={error}
-                />
-              )}
-            </Stack>
+            <NameForm
+              value={name}
+              onValueChange={setName}
+              placeholder={placeholder}
+              onSubmit={handleSubmit}
+              icon={icon}
+              onIconChange={onIconChange}
+              color={color}
+              onColorChange={onColorChange}
+              error={error}
+              iconLabel={iconLabel}
+              colorLabel={colorLabel}
+              submitLabel={submitLabel}
+            />
           </PopoverContent>
         </PopoverPositioner>
       </PopoverPortal>

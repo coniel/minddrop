@@ -4,7 +4,7 @@ import { useTranslation } from '@minddrop/i18n';
 import { KeyboardShortcut } from '../KeyboardShortcut';
 import { Text } from '../Text';
 import { TranslatableNode } from '../types';
-import { getLastInputModality } from './lastInputModality';
+import { lastInputMovedFocus } from './lastInputModality';
 import './Tooltip.css';
 
 type TooltipBaseProps = Pick<
@@ -96,13 +96,14 @@ export const Tooltip: FC<TooltipProps> = ({
     (nextOpen, eventDetails) => {
       // A popup closing hands focus back to the trigger which opened
       // it, and a focused trigger opens its tooltip. Following the
-      // last input modality tells that focus from one a person moved
+      // user's last input tells that focus from one they moved
       // themselves: a tab onto the trigger still shows the tooltip,
-      // a mouse-driven return to it does not.
+      // while a return to it after a press, or after the Enter which
+      // committed a popup's field, does not.
       if (
         nextOpen &&
         eventDetails.reason === 'trigger-focus' &&
-        getLastInputModality() === 'pointer'
+        !lastInputMovedFocus()
       ) {
         return;
       }

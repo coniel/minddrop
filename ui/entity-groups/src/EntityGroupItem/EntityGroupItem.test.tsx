@@ -8,6 +8,7 @@ import {
   render,
   screen,
 } from '@minddrop/test-utils';
+import { resetHoveredItem } from '@minddrop/ui-drag-and-drop';
 import { EntityGroupList } from '../EntityGroupList';
 import { cleanup, dragDataTransfer, setup } from '../test-utils';
 
@@ -31,6 +32,9 @@ let dataTransfer = dragDataTransfer();
 describe('EntityGroupItem', () => {
   beforeEach(() => {
     setup();
+
+    // The hovered item is held outside React, for the app's lifetime
+    resetHoveredItem();
 
     // A fresh transfer per test, since a drag carries its own
     dataTransfer = dragDataTransfer();
@@ -148,5 +152,37 @@ describe('EntityGroupItem', () => {
       addressedItem_1,
       addressedItem_2,
     ]);
+  });
+
+  describe('hover', () => {
+    it('hovers the item the pointer is over', () => {
+      init();
+
+      fireEvent.pointerOver(getItem(plainItem_1));
+
+      expect(getItem(plainItem_1)).toHaveAttribute('data-hovered', 'true');
+    });
+
+    it('hovers one item at a time', () => {
+      init();
+
+      fireEvent.pointerOver(getItem(plainItem_1));
+      fireEvent.pointerOver(getItem(addressedItem_1));
+
+      expect(getItem(plainItem_1)).toHaveAttribute('data-hovered', 'false');
+    });
+
+    // The list reorders around a drop, and the browser announces
+    // whatever lands under the stationary pointer as newly entered.
+    it('hovers nothing until the pointer moves after a drag', () => {
+      init();
+
+      fireEvent.dragStart(screen.getByTestId(addressedItem_1), {
+        dataTransfer,
+      });
+      fireEvent.pointerOver(getItem(plainItem_1));
+
+      expect(getItem(plainItem_1)).toHaveAttribute('data-hovered', 'false');
+    });
   });
 });

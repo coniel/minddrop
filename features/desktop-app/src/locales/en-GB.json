@@ -2,6 +2,22 @@
   "desktopApp": {
     "labels": {
       "library": "Library"
+    },
+    "sidebar": {
+      "create": {
+        "label": "Create",
+        "searchPlaceholder": "Create...",
+        "entryTemplate": "{{name}} · {{template}}"
+      }
+    },
+    "sidebarGroups": {
+      "actions": {
+        "addItem": "Add to group"
+      },
+      "picker": {
+        "searchPlaceholder": "Search...",
+        "empty": "Nothing to add"
+      }
     }
   }
 }

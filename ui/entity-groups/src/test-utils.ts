@@ -1,4 +1,5 @@
 import { vi } from 'vitest';
+import { EntityGroups } from '@minddrop/entity-groups';
 import {
   cleanup as cleanupEntityGroups,
   setup as setupEntityGroups,
@@ -46,6 +47,10 @@ export async function cleanup(): Promise<void> {
   // Clear the drag a test left behind
   Selection.clear();
   Selection.Store.getState().setIsDragging(false);
+
+  // Expand the groups a test collapsed, the store being kept for the
+  // app's lifetime rather than the test's.
+  EntityGroups.CollapsedStore.reset();
 
   await cleanupEntityGroups();
 

@@ -12,9 +12,7 @@ import {
   SpaceViewName,
   SpacesViewName,
 } from '../events';
-
-// Unique view instance id used to match space views in sessions
-const spaceViewId = (spaceId: string) => `spaces:space:${spaceId}`;
+import { resolveSpaceViewId } from '../utils';
 
 // View instance id of the singleton spaces list view, which is
 // labelled and iconed from its registration.
@@ -43,7 +41,7 @@ export const SpacesFeature: React.FC = () => {
 
       // Close the view
       Events.dispatch(Views.events.Close, {
-        id: sessionView.id ?? spaceViewId(props.spaceId),
+        id: sessionView.id ?? resolveSpaceViewId(props.spaceId),
       });
     });
 
@@ -63,7 +61,7 @@ export const SpacesFeature: React.FC = () => {
         viewAreaId: data.viewAreaId,
         sourcePane: data.sourcePane,
         view: SpaceViewName,
-        id: spaceViewId(data.spaceId),
+        id: resolveSpaceViewId(data.spaceId),
         props: { spaceId: data.spaceId },
         split: data.openMode === 'split',
         title: space?.name,
@@ -94,7 +92,7 @@ export const SpacesFeature: React.FC = () => {
     // (e.g. renamed or re-iconed)
     Events.addListener(Spaces.events.Updated, EventListenerId, (data) => {
       Events.dispatch(Views.events.Update, {
-        id: spaceViewId(data.updated.id),
+        id: resolveSpaceViewId(data.updated.id),
         title: data.updated.name,
         icon: data.updated.icon,
       });
@@ -106,7 +104,7 @@ export const SpacesFeature: React.FC = () => {
       SpaceViewStateStore.remove(data.id);
 
       Events.dispatch(Views.events.Close, {
-        id: spaceViewId(data.id),
+        id: resolveSpaceViewId(data.id),
       });
     });
 

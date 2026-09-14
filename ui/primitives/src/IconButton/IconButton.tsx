@@ -15,7 +15,7 @@ export type IconButtonColor =
   | 'danger'
   | 'inherit';
 export type IconButtonDanger = 'on-hover' | 'always';
-export type IconButtonSize = 'sm' | 'md' | 'lg';
+export type IconButtonSize = 'xs' | 'sm' | 'md' | 'lg';
 
 interface IconButtonBaseProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {

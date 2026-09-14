@@ -38,9 +38,13 @@
    ------------------------------------------------------------ */
 
 .menu-group {
+  /* Published for a drop indicator drawn between the items, which
+     centres itself in the space between them */
+  --drop-indicator-gap: var(--space-px);
+
   display: flex;
   flex-direction: column;
-  row-gap: 1px;
+  row-gap: var(--drop-indicator-gap);
 
   /* --- Padding --- */
 
@@ -95,6 +99,12 @@
   border-radius: var(--radius-md);
   transition: background-color var(--duration-fast) var(--ease-out);
 
+  /* Marked as the target of a drag, without its actions shown */
+  &.menu-label-highlighted {
+    background-color: var(--surface-accent);
+    transition: none;
+  }
+
   /* Button variant, interactive label */
 
   &[role='button'] {
@@ -116,7 +126,7 @@
   /* Inset the actions by the label's vertical padding, so the
      buttons sit equally spaced from its edges */
   &:has(.menu-label-actions) {
-    padding-right: var(--space-0-5);
+    padding-right: var(--space-1);
   }
 
   .menu-label-actions {
@@ -179,9 +189,16 @@
   /* --- Hover ---
      Gated on the input mode so that a stationary cursor resting on
      an item does not compete with the keyboard-driven highlight.
-     Applies by default, while the input mode is still unknown. */
+     Applies by default, while the input mode is still unknown.
 
-  :root:not([data-input-mode='keyboard']) &:hover {
+     A row which tracks hover itself says so with a `data-hovered`
+     attribute, and the browser's own hover is ignored within it. A
+     draggable row must: a native drag freezes `:hover` where it
+     began, and the frozen state outlives the drag on whichever row
+     the list's DOM nodes are reused for. */
+
+  :root:not([data-input-mode='keyboard']) &:hover:not([data-hovered] *),
+  :root:not([data-input-mode='keyboard']) [data-hovered='true'] & {
     background-color: var(--surface-accent);
   }
 
@@ -204,7 +221,11 @@
     }
   }
 
-  :root:not([data-input-mode='keyboard']) &.menu-item-active:hover {
+  :root:not([data-input-mode='keyboard'])
+    &.menu-item-active:hover:not([data-hovered] *),
+  :root:not([data-input-mode='keyboard'])
+    [data-hovered='true']
+    &.menu-item-active {
     background-color: var(--surface-accent-hover);
   }
 
@@ -221,7 +242,11 @@
     }
   }
 
-  :root:not([data-input-mode='keyboard']) &.menu-item-muted:hover {
+  :root:not([data-input-mode='keyboard'])
+    &.menu-item-muted:hover:not([data-hovered] *),
+  :root:not([data-input-mode='keyboard'])
+    [data-hovered='true']
+    &.menu-item-muted {
     color: var(--text-regular);
   }
 
@@ -235,7 +260,11 @@
     }
   }
 
-  :root:not([data-input-mode='keyboard']) &.menu-item-danger:hover {
+  :root:not([data-input-mode='keyboard'])
+    &.menu-item-danger:hover:not([data-hovered] *),
+  :root:not([data-input-mode='keyboard'])
+    [data-hovered='true']
+    &.menu-item-danger {
     color: var(--text-danger);
     background-color: var(--surface-danger-hover);
   }
@@ -353,7 +382,8 @@
     }
   }
 
-  &:hover .menu-item-actions,
+  &:hover:not([data-hovered] *) .menu-item-actions,
+  [data-hovered='true'] & .menu-item-actions,
   &[data-highlighted] .menu-item-actions,
   &.menu-item-force-actions-visible .menu-item-actions {
     opacity: 1;
@@ -364,11 +394,11 @@
   /* Inset the actions by the item's vertical padding, so the
      buttons sit equally spaced from its edges */
   &:has(.menu-item-actions) {
-    padding-right: var(--space-1);
+    padding-right: var(--space-1-5);
   }
 
   &.menu-item-size-compact:has(.menu-item-actions) {
-    padding-right: var(--space-0-5);
+    padding-right: var(--space-1);
   }
 }
 

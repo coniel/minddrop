@@ -1,6 +1,5 @@
 import React, { useRef } from 'react';
-import { SidebarGroup } from '@minddrop/ui-components';
-import { NamePopover } from '@minddrop/ui-primitives';
+import { MenuGroup, MenuLabel, NamePopover } from '@minddrop/ui-primitives';
 import { useEntityGroupList } from '../EntityGroupListContext';
 import './EntityGroupPlaceholder.css';
 
@@ -25,14 +24,14 @@ export interface EntityGroupPlaceholderProps {
  * Renders the group taking shape where items were dropped between
  * two groups, holding them while it waits for its name. It is not a
  * group until the name is confirmed, so it takes no drops and
- * cannot be dragged or rearranged.
+ * cannot be collapsed, dragged or rearranged.
  */
 export const EntityGroupPlaceholder: React.FC<EntityGroupPlaceholderProps> = ({
   itemIds,
   onSubmit,
   onCancel,
 }) => {
-  const anchorRef = useRef<HTMLDivElement>(null);
+  const labelRef = useRef<HTMLDivElement>(null);
   const { renderItem } = useEntityGroupList();
 
   // Closing the popover without a name leaves nothing behind
@@ -43,18 +42,29 @@ export const EntityGroupPlaceholder: React.FC<EntityGroupPlaceholderProps> = ({
   }
 
   return (
-    <div ref={anchorRef} className="entity-group-placeholder">
-      <SidebarGroup label="entityGroups.labels.newGroup">
-        {itemIds.map((itemId) => (
-          <div key={itemId} className="entity-group-placeholder-item">
-            {renderItem(itemId)}
-          </div>
-        ))}
-      </SidebarGroup>
+    <div className="entity-group-placeholder">
+      <MenuGroup>
+        {/* The header is what is being named, so it is the one part
+            shown as the target */}
+        <MenuLabel
+          ref={labelRef}
+          highlighted
+          label="entityGroups.labels.newGroup"
+        />
+        <MenuGroup>
+          {itemIds.map((itemId) => (
+            <div key={itemId} className="entity-group-placeholder-item">
+              {renderItem(itemId)}
+            </div>
+          ))}
+        </MenuGroup>
+      </MenuGroup>
 
+      {/* Anchored to the header it names rather than the whole
+          placeholder, so it opens beneath the header */}
       <NamePopover
         open
-        anchor={anchorRef}
+        anchor={labelRef}
         placeholder="entityGroups.name.placeholder"
         onOpenChange={handleOpenChange}
         onSubmit={onSubmit}

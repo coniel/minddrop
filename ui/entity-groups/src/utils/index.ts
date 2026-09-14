@@ -3,3 +3,5 @@ export * from './resolveDropIndex';
 export * from './resolveDropOrder';
 export * from './resolveEntityGroupDragSource';
 export * from './resolveEntityGroupDrop';
+export * from './resolveEntityGroupDropTypes';
+export * from './resolveEntityGroupSourceTypeKey';

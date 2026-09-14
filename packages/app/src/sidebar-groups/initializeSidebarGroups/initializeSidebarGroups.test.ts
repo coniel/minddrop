@@ -1,8 +1,11 @@
 import { afterEach, describe, expect, it } from 'vitest';
+import { Collections } from '@minddrop/collections';
 import { DataViews } from '@minddrop/data-views';
 import { DatabaseEntries, Databases } from '@minddrop/databases';
 import { EntityGroups } from '@minddrop/entity-groups';
+import { Queries } from '@minddrop/queries';
 import { Spaces } from '@minddrop/spaces';
+import { Tags } from '@minddrop/tags';
 import { cleanup } from '../../test-utils';
 import {
   DatabasesSidebarGroupId,
@@ -26,7 +29,7 @@ describe('initializeSidebarGroups', () => {
     );
   });
 
-  it('lets a sidebar group hold databases, entries, data views and spaces', () => {
+  it('lets a sidebar group hold every entity type the sidebar lists', () => {
     initializeSidebarGroups();
 
     expect(EntityGroups.getConfig(SidebarGroupsType).itemTypes).toEqual([
@@ -34,6 +37,9 @@ describe('initializeSidebarGroups', () => {
       DatabaseEntries.constants.EntityType,
       DataViews.constants.EntityType,
       Spaces.constants.EntityType,
+      Collections.constants.EntityType,
+      Queries.constants.EntityType,
+      Tags.constants.EntityType,
     ]);
   });
 
@@ -41,6 +47,14 @@ describe('initializeSidebarGroups', () => {
     initializeSidebarGroups();
 
     expect(EntityGroups.getConfig(SidebarGroupsType).multiMembership).toBe(
+      true,
+    );
+  });
+
+  it('takes items dragged in from anywhere in the app', () => {
+    initializeSidebarGroups();
+
+    expect(EntityGroups.getConfig(SidebarGroupsType).acceptsExternalItems).toBe(
       true,
     );
   });
@@ -64,6 +78,9 @@ describe('initializeSidebarGroups', () => {
         DatabaseEntries.events.Deleted,
         DataViews.events.Deleted,
         Spaces.events.Deleted,
+        Collections.events.Deleted,
+        Queries.events.Deleted,
+        Tags.events.Deleted,
       ],
     );
   });

@@ -57,8 +57,13 @@ export { moveEntityGroupItem as moveItem } from './moveEntityGroupItem';
 export { removeEntityGroupItem as removeItem } from './removeEntityGroupItem';
 export { reorderEntityGroupItems as reorderItems } from './reorderEntityGroupItems';
 export { useEntityGroupsForItem as useForItem } from './useEntityGroupsForItem';
+export { setEntityGroupCollapsed as setCollapsed } from './setEntityGroupCollapsed';
 export {
   EntityGroupsStore as Store,
   useEntityGroup as use,
   useEntityGroups as useAll,
 } from './EntityGroupsStore';
+export {
+  EntityGroupCollapsedStore as CollapsedStore,
+  useEntityGroupCollapsed as useCollapsed,
+} from './EntityGroupCollapsedStore';

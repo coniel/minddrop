@@ -13,10 +13,7 @@ import {
   OpenNewDataViewViewEvent,
 } from '../events';
 import { locales } from '../locales';
-
-// Unique view instance id used to match data view views in tabs
-const dataViewViewId = (dataViewId: string) =>
-  `data-views:data-view:${dataViewId}`;
+import { resolveDataViewViewId } from '../utils';
 
 // View instance id of the singleton data views list view, which is
 // labelled and iconed from its registration.
@@ -47,7 +44,7 @@ export function initializeDataViewsFeature(): VoidFunction {
       viewAreaId: data.viewAreaId,
       sourcePane: data.sourcePane,
       view: DataViewViewName,
-      id: dataViewViewId(data.dataViewId),
+      id: resolveDataViewViewId(data.dataViewId),
       props: { dataViewId: data.dataViewId },
       split: data.openMode === 'split',
       title: dataView?.name,
@@ -90,7 +87,7 @@ export function initializeDataViewsFeature(): VoidFunction {
   // (e.g. renamed or re-iconed)
   Events.addListener(DataViews.events.Updated, EventListenerId, (data) => {
     Events.dispatch(Views.events.Update, {
-      id: dataViewViewId(data.updated.id),
+      id: resolveDataViewViewId(data.updated.id),
       title: data.updated.name,
       icon: data.updated.icon,
     });
@@ -99,7 +96,7 @@ export function initializeDataViewsFeature(): VoidFunction {
   // Close the data view's open view when the data view is deleted
   Events.addListener(DataViews.events.Deleted, EventListenerId, (data) => {
     Events.dispatch(Views.events.Close, {
-      id: dataViewViewId(data.id),
+      id: resolveDataViewViewId(data.id),
     });
   });
 

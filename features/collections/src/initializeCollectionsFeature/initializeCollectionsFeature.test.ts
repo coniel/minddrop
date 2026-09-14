@@ -31,4 +31,16 @@ describe('initializeCollectionsFeature', () => {
 
       Events.dispatch(OpenCollectionsViewEvent);
     }));
+
+  it('opens the collections view showing the given collection', () =>
+    new Promise<void>((resolve) => {
+      Events.addListener(Views.events.Open, 'test-open-collection', (data) => {
+        expect(data.subview).toEqual({ id: 'collection_1' });
+        resolve();
+      });
+
+      Events.dispatch(OpenCollectionsViewEvent, {
+        collectionId: 'collection_1',
+      });
+    }));
 });

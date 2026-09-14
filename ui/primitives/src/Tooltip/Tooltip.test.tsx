@@ -208,6 +208,48 @@ describe('<Tooltip />', () => {
     expect(screen.queryByText('Tooltip title')).toBeNull();
   });
 
+  it('stays closed when focus is handed back after a key press', async () => {
+    const user = userEvent.setup();
+
+    render(
+      <TooltipProvider>
+        <Tooltip stringTitle="Tooltip title">
+          <button type="button">tooltip</button>
+        </Tooltip>
+      </TooltipProvider>,
+    );
+
+    // A popup's field committed with Enter closes it, handing the
+    // focus back to the control it was opened from.
+    pressKey('Enter');
+
+    screen.getByRole('button').focus();
+
+    await user.hover(document.body);
+
+    expect(screen.queryByText('Tooltip title')).toBeNull();
+  });
+
+  it('opens when focus is moved onto the trigger by a tab', async () => {
+    const user = userEvent.setup();
+
+    render(
+      <TooltipProvider>
+        <Tooltip stringTitle="Tooltip title">
+          <button type="button">tooltip</button>
+        </Tooltip>
+      </TooltipProvider>,
+    );
+
+    pressKey('Tab');
+
+    screen.getByRole('button').focus();
+
+    await user.hover(document.body);
+
+    await waitFor(() => screen.getAllByText('Tooltip title'));
+  });
+
   it('renders the keyboard shortcut', async () => {
     render(
       <TooltipProvider>
@@ -220,3 +262,17 @@ describe('<Tooltip />', () => {
     screen.getAllByText('Shift');
   });
 });
+
+/**
+ * Presses a key as the person would, which the input tracking only
+ * follows when the event is the browser's own.
+ *
+ * @param key - The key pressed.
+ */
+function pressKey(key: string): void {
+  const event = new KeyboardEvent('keydown', { key, bubbles: true });
+
+  Object.defineProperty(event, 'isTrusted', { value: true });
+
+  document.dispatchEvent(event);
+}

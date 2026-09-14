@@ -1,5 +1,6 @@
 export * from './Menu';
 export * from './MenuSearchContext';
+export * from './MenuSearchScope';
 export * from './MenuGroup';
 export * from './MenuLabel';
 export * from './MenuSeparator';
@@ -14,3 +15,4 @@ export * from './MenuRenameItem';
 export * from './SwitchMenuItem';
 export * from './Menu.stories';
 export * from './MenuFocusContext';
+export * from './MenuItemHoverContext';

@@ -45,7 +45,7 @@ belongs in `ui/[domain]`, regardless of how much logic it contains.
 Applied to `features/databases`, the split is:
 
 - `DatabasesFeature`, `registerDatabaseViews`, the event handlers, the
-  entry dialog, `DatabasesSidebarMenu`, `DatabaseView` — installs
+  entry dialog, `DatabaseView` — installs
   itself, stays a feature.
 - `DatabaseEntryRenderer`, the entry drag hooks, the drop utils, the
   floating toolbar — prop-driven, belongs in `ui/databases`.

@@ -1,0 +1,15 @@
+.name-form-field {
+  flex: 1;
+  min-width: 0;
+
+  /* Inset the name from the form's edge and from the controls
+     beside it, which the ghost field does not do for itself */
+  .text-input-input {
+    padding: 0 var(--space-1);
+  }
+}
+
+/* Indented to line up with the name in the field above it */
+.name-form-error {
+  padding: 0 var(--space-1);
+}

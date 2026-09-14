@@ -47,6 +47,13 @@ export interface MenuLabelProps extends React.HTMLProps<HTMLDivElement> {
    * @default false
    */
   active?: boolean;
+
+  /*
+   * Highlights the label without showing its actions, marking it as
+   * the target of a drag.
+   * @default false
+   */
+  highlighted?: boolean;
 }
 
 export const MenuLabel = forwardRef<HTMLDivElement, MenuLabelProps>(
@@ -58,6 +65,7 @@ export const MenuLabel = forwardRef<HTMLDivElement, MenuLabelProps>(
       button,
       children,
       className,
+      highlighted,
       label,
       stringLabel,
       ...other
@@ -89,6 +97,7 @@ export const MenuLabel = forwardRef<HTMLDivElement, MenuLabelProps>(
         className={propsToClass('menu-label', {
           actionsAlwaysVisible,
           active,
+          highlighted,
           className,
         })}
         role={button ? 'button' : undefined}

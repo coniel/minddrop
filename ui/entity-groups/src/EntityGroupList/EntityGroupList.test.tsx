@@ -2,20 +2,26 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { EntityGroups } from '@minddrop/entity-groups';
 import { EntityGroupFixtures } from '@minddrop/entity-groups/test-utils';
 import { Selection } from '@minddrop/selection';
-import { act, fireEvent, render, screen, waitFor } from '@minddrop/test-utils';
+import {
+  act,
+  createEvent,
+  fireEvent,
+  render,
+  screen,
+  userEvent,
+  waitFor,
+} from '@minddrop/test-utils';
 import { cleanup, dragDataTransfer, setup } from '../test-utils';
 import { EntityGroupList } from './EntityGroupList';
 
 const {
   addressedItem_1,
   addressedItem_2,
-  entityGroup_multi_1,
-  groupTypeConfig_multi,
-  entityGroup_exclusive_1,
   entityGroup_exclusive_2,
-  entityGroup_exclusive_empty,
+  entityGroup_multi_1,
   exclusiveGroups,
   groupTypeConfig_exclusive,
+  groupTypeConfig_multi,
   plainItem_1,
 } = EntityGroupFixtures;
 
@@ -42,12 +48,7 @@ describe('EntityGroupList', () => {
     );
   }
 
-  // Returns the element of the group with the given name
-  function getGroup(name: string): HTMLElement {
-    return screen.getByText(name).closest('.entity-group') as HTMLElement;
-  }
-
-  // Returns the space above the group at the given position
+  // Returns the gap above the group at the given position
   function getGap(container: HTMLElement, index: number): HTMLElement {
     return container.querySelectorAll('.entity-group-gap')[
       index
@@ -66,22 +67,8 @@ describe('EntityGroupList', () => {
 
   // Covers the routing from a drop to the model call it stands for.
   // The gesture in between the drag start and the drop is not one
-  // the environment can express, and is left to end-to-end tests.
-  it('moves a group dropped between two others to that position', () => {
-    const { container } = init();
-
-    fireEvent.dragStart(getGroup(entityGroup_exclusive_1.name), {
-      dataTransfer,
-    });
-    fireEvent.drop(getGap(container, 2), { dataTransfer });
-
-    expect(EntityGroups.getAll(type).map((group) => group.id)).toEqual([
-      entityGroup_exclusive_2.id,
-      entityGroup_exclusive_1.id,
-      entityGroup_exclusive_empty.id,
-    ]);
-  });
-
+  // the environment can express, and is left to end-to-end tests,
+  // as is the pointer drag which reorders the groups themselves.
   it('stands up a group where items are dropped between two others', () => {
     const { container } = init();
 
@@ -89,10 +76,24 @@ describe('EntityGroupList', () => {
     fireEvent.drop(getGap(container, 1), { dataTransfer });
 
     // The group takes shape holding the dropped item, waiting for
-    // its name.
+    // its name, with its header marked as what is being named.
     expect(screen.getByText('New group')).toBeInTheDocument();
+    expect(screen.getByText('New group').closest('.menu-label')).toHaveClass(
+      'menu-label-highlighted',
+    );
     expect(screen.getByPlaceholderText('Group name')).toBeInTheDocument();
     expect(EntityGroups.getAll(type)).toHaveLength(exclusiveGroups.length);
+  });
+
+  it('says what a drop in the gap does while items are dragged over it', async () => {
+    const { container } = init();
+
+    fireEvent.dragStart(screen.getByTestId(addressedItem_2), { dataTransfer });
+    fireEvent.dragOver(getGap(container, 1), { dataTransfer });
+
+    expect(
+      await screen.findByText('Drop here to create a new group.'),
+    ).toBeInTheDocument();
   });
 
   it('creates the named group at the position, holding the items', async () => {
@@ -187,5 +188,133 @@ describe('EntityGroupList', () => {
     expect(EntityGroups.get(multiType, entityGroup_multi_1.id).items).toEqual(
       entityGroup_multi_1.items,
     );
+  });
+
+  it('names a new group where a gap is right clicked, making it there', async () => {
+    const { container } = init();
+
+    fireEvent.contextMenu(getGap(container, 1));
+
+    // The name is asked for in a menu, without a group taking shape
+    expect(container.querySelector('.entity-group-placeholder')).toBeNull();
+    expect(screen.getByRole('menu')).toBeInTheDocument();
+
+    const nameField = screen.getByPlaceholderText('New group');
+
+    fireEvent.change(nameField, { target: { value: 'My group' } });
+    fireEvent.keyDown(nameField, { key: 'Enter' });
+
+    await waitFor(() => {
+      expect(EntityGroups.getAll(type)[1].name).toBe('My group');
+    });
+
+    expect(EntityGroups.getAll(type)[1].items).toEqual([]);
+  });
+
+  it('takes typing in the naming field', async () => {
+    const { container } = init();
+
+    fireEvent.contextMenu(getGap(container, 1));
+
+    const nameField = screen.getByPlaceholderText('New group');
+
+    await userEvent.type(nameField, 'My group');
+
+    expect(nameField).toHaveValue('My group');
+  });
+
+  it('leaves right clicks in the naming popover to the popover', () => {
+    const { container } = init();
+
+    fireEvent.dragStart(screen.getByTestId(addressedItem_2), { dataTransfer });
+    fireEvent.drop(getGap(container, 1), { dataTransfer });
+
+    fireEvent.contextMenu(screen.getByPlaceholderText('Group name'));
+
+    // No second naming opens over the one already under way
+    expect(screen.getAllByPlaceholderText('Group name')).toHaveLength(1);
+  });
+
+  // The heights are applied by CSS, which the environment does not
+  // apply, so the tests pin the classes the stylesheet keys off.
+  describe('spacing', () => {
+    it('keeps the expanded spacing below an expanded group', () => {
+      const { container } = init();
+
+      expect(getGap(container, 1)).not.toHaveClass('entity-group-gap-compact');
+    });
+
+    it('gives up the spacing between two collapsed groups', () => {
+      EntityGroups.setCollapsed(type, exclusiveGroups[0].id, true);
+      EntityGroups.setCollapsed(type, exclusiveGroups[1].id, true);
+
+      const { container } = init();
+
+      expect(getGap(container, 1)).toHaveClass('entity-group-gap-compact');
+    });
+
+    it('keeps the spacing below a collapsed group when the one below it is expanded', () => {
+      EntityGroups.setCollapsed(type, exclusiveGroups[0].id, true);
+
+      const { container } = init();
+
+      expect(getGap(container, 1)).not.toHaveClass('entity-group-gap-compact');
+    });
+
+    it('keeps the spacing above a collapsed group when the one above it is expanded', () => {
+      EntityGroups.setCollapsed(type, exclusiveGroups[1].id, true);
+
+      const { container } = init();
+
+      expect(getGap(container, 1)).not.toHaveClass('entity-group-gap-compact');
+    });
+
+    it('keeps the expanded spacing above the first group', () => {
+      EntityGroups.setCollapsed(type, exclusiveGroups[0].id, true);
+
+      const { container } = init();
+
+      expect(getGap(container, 0)).not.toHaveClass('entity-group-gap-compact');
+    });
+
+    it('gives up the spacing below a collapsed last group', () => {
+      const lastGroup = exclusiveGroups[exclusiveGroups.length - 1];
+
+      EntityGroups.setCollapsed(type, lastGroup.id, true);
+
+      const { container } = init();
+
+      expect(getGap(container, exclusiveGroups.length)).toHaveClass(
+        'entity-group-gap-compact',
+      );
+    });
+
+    it('fills the rest of the list below the last group', () => {
+      const { container } = init();
+
+      expect(getGap(container, exclusiveGroups.length)).toHaveClass(
+        'entity-group-gap-fill',
+      );
+    });
+  });
+
+  it('takes the naming key away from the control it was opened from', () => {
+    const { container } = init();
+
+    fireEvent.dragStart(screen.getByTestId(addressedItem_2), { dataTransfer });
+    fireEvent.drop(getGap(container, 1), { dataTransfer });
+
+    const nameField = screen.getByPlaceholderText('Group name');
+
+    fireEvent.change(nameField, { target: { value: 'My group' } });
+
+    // Committing closes the field, and the browser would fire the
+    // key's default activation at whatever the focus returns to,
+    // pressing the control the naming was started from
+    const event = createEvent.keyDown(nameField, { key: 'Enter' });
+
+    fireEvent(nameField, event);
+
+    expect(event.defaultPrevented).toBe(true);
   });
 });

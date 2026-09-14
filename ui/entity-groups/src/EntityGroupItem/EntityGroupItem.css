@@ -1,6 +1,15 @@
 .entity-group-item {
   position: relative;
 
+  /* Reaches into the space the list keeps below it, so that a drag
+     crossing from one item to the next is always over one of them.
+     Left uncovered, the drop indicator blinks out in between. */
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 100% 0 calc(-1 * var(--drop-indicator-gap, 0px));
+  }
+
   &.entity-group-item-dragging {
     opacity: 0.5;
   }

@@ -68,13 +68,15 @@ export const groupTypeConfig_exclusive: EntityGroupTypeConfig = {
 };
 
 /**
- * A type whose items can belong to several groups, and which the app
- * provides a group of its own.
+ * A type whose items can belong to several groups, which takes items
+ * dragged in from anywhere, and which the app provides a group of
+ * its own.
  */
 export const groupTypeConfig_multi: EntityGroupTypeConfig = {
   id: 'multi',
   itemTypes: ['addressed-item', 'plain-item'],
   multiMembership: true,
+  acceptsExternalItems: true,
   protectedGroups: [protectedGroup_1],
 };
 

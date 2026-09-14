@@ -74,16 +74,16 @@ through the ui-primitives re-export:
 
 ### ui/icons (8 files)
 
-| File                                                      | Usage                                                                                   |
-| --------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| File                                                      | Usage                                                                        |
+| --------------------------------------------------------- | ---------------------------------------------------------------------------- |
 | `src/icons.types.ts`                                      | `UserIcon.color: ContentColor`, the parsed form of the persisted icon string |
-| `src/parseIcon/parseIcon.ts`                              | Parses `lucide:name:color`, casts `color as ContentColor`                               |
-| `src/resolveContentIconColor/resolveContentIconColor.ts`  | Returns `icon.split(':')[2] as ContentColor \| undefined`                               |
-| `src/applyContentIconColor/applyContentIconColor.ts`      | Rewrites the color segment of a content-icon string                                     |
-| `src/useIcon/useIcon.ts`                                  | Hook result `color?: ContentColor`                                                      |
-| `src/IconsApi.ts`                                         | Public API aliases `resolveColor` / `applyColor`                                        |
-| `src/applyContentIconColor/applyContentIconColor.test.ts` | Color-literal fixtures                                                                  |
-| `src/test-utils/icons.data.ts`                            | Content-icon fixtures with color names                                                  |
+| `src/parseIcon/parseIcon.ts`                              | Parses `lucide:name:color`, casts `color as ContentColor`                    |
+| `src/resolveContentIconColor/resolveContentIconColor.ts`  | Returns `icon.split(':')[2] as ContentColor \| undefined`                    |
+| `src/applyContentIconColor/applyContentIconColor.ts`      | Rewrites the color segment of a content-icon string                          |
+| `src/useIcon/useIcon.ts`                                  | Hook result `color?: ContentColor`                                           |
+| `src/IconsApi.ts`                                         | Public API aliases `resolveColor` / `applyColor`                             |
+| `src/applyContentIconColor/applyContentIconColor.test.ts` | Color-literal fixtures                                                       |
+| `src/test-utils/icons.data.ts`                            | Content-icon fixtures with color names                                       |
 
 ### ui/canvas (13 files: 7 source, 6 test)
 
@@ -121,9 +121,9 @@ through the ui-primitives re-export:
 
 ### packages/properties (15 files)
 
-| File                                                                                                                                                          | Usage                                                                                                       |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `src/schemas/SelectPropertySchema.ts`                                                                                                                         | `SelectPropertyOption.color: ContentColor`, persisted in property schemas; plus a `lucide:*:default` string |
+| File                                                                                                                                                    | Usage                                                                                                       |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `src/schemas/SelectPropertySchema.ts`                                                                                                                   | `SelectPropertyOption.color: ContentColor`, persisted in property schemas; plus a `lucide:*:default` string |
 | 13 other `src/schemas/*PropertySchema.ts` files (Collection, Content, Created, Date, File, Icon, Image, LastModified, Number, Text, Title, Toggle, Url) | Each has a `lucide:name:default` string                                                                     |
 
 ### packages/databases (18 files)
@@ -197,7 +197,6 @@ The `*-color-*` CSS hits there are unrelated.
 - `features/data-views/src/initializeDataViewsFeature/initializeDataViewsFeature.ts`
 - `features/data-views/src/DataViewRenderer/DataViewRenderer.tsx`
 - `features/databases/src/DatabaseSettingsPanel/DatabaseSettingsPanel.tsx`
-- `features/databases/src/DatabasesSidebarMenu/DatabasesSidebarMenu.tsx`
 - `features/databases/src/NewDatabaseDialog/NewDatabaseDialog.tsx`
 - `features/databases/src/DatabaseEntryTemplateEditor/DatabaseEntryTemplatePropertyField.tsx`
 - `features/queries/src/constants.ts`

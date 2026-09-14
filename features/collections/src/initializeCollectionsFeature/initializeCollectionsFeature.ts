@@ -24,10 +24,11 @@ export function initializeCollectionsFeature(): VoidFunction {
 
   // Listen for open collections view events, and open the
   // collections list view when one is received.
-  Events.addListener(OpenCollectionsViewEvent, EventListenerId, () => {
+  Events.addListener(OpenCollectionsViewEvent, EventListenerId, (data) => {
     Events.dispatch(Views.events.Open, {
       view: CollectionsViewName,
       id: collectionsViewId,
+      subview: data?.collectionId ? { id: data.collectionId } : undefined,
     });
   });
 

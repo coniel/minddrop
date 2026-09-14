@@ -3,6 +3,7 @@ export * from './DataViewRenderer';
 export * from './DataViewView';
 export * from './DataViewsView';
 export * from './NewDataViewView';
+export * from './DataViewMenuItem';
 export * from './DataViewsMenuItem';
 export * from './registerDataViewViews';
 export * from './useSortedDataViewEntries';

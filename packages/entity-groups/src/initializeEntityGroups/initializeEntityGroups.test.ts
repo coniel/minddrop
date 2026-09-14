@@ -1,7 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { ItemReferences } from '@minddrop/item-references';
+import {
+  EntityGroupCollapsedStore,
+  entityGroupCollapsedKey,
+} from '../EntityGroupCollapsedStore';
+import { deleteEntityGroup } from '../deleteEntityGroup';
 import { getEntityGroup } from '../getEntityGroup';
+import { setEntityGroupCollapsed } from '../setEntityGroupCollapsed';
 import { EntityGroupFixtures, cleanup, setup } from '../test-utils';
 import { initializeEntityGroups } from './initializeEntityGroups';
 
@@ -54,5 +60,20 @@ describe('initializeEntityGroups', () => {
         'entity-groups',
       ),
     ).toBe(true);
+  });
+
+  it('forgets a deleted group was collapsed', async () => {
+    initializeEntityGroups();
+
+    setEntityGroupCollapsed(type, entityGroup_exclusive_1.id, true);
+
+    await deleteEntityGroup(type, entityGroup_exclusive_1.id);
+    await Events.tests.awaitAllListeners();
+
+    expect(
+      EntityGroupCollapsedStore.get(
+        entityGroupCollapsedKey(type, entityGroup_exclusive_1.id),
+      ),
+    ).toBeUndefined();
   });
 });

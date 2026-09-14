@@ -330,7 +330,9 @@
       }
     },
     "labels": {
-      "databases": "Databases"
+      "database": "Database",
+      "databases": "Databases",
+      "entries": "Entries"
     },
     "form": {
       "labels": {
@@ -1910,6 +1912,11 @@
       "direction": "Order",
       "ascending": "Ascending",
       "descending": "Descending"
+    }
+  },
+  "spaces": {
+    "labels": {
+      "space": "Space"
     }
   }
 }

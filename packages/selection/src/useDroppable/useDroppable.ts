@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState } from 'react';
 import { getTransferData } from '@minddrop/utils';
-import { DropEventData, DropIndicatorPosition, DropPosition } from './types';
-import { dragContainsType } from './utils';
+import { DropEventData, DropIndicatorPosition, DropPosition } from '../types';
+import { dragContainsType } from '../utils';
 
 type Axis = 'horizontal' | 'vertical' | 'container';
 
@@ -79,6 +79,15 @@ interface UseDroppableOptions {
    * When omitted, all drags are accepted without being claimed.
    */
   accepts?: string[];
+
+  /**
+   * Whether an accepted drag is claimed, keeping ancestor drop
+   * targets from reacting to it. Only applicable if `accepts` is
+   * given.
+   *
+   * @default true
+   */
+  claim?: boolean;
 }
 
 interface UseDroppableReturn {
@@ -112,6 +121,12 @@ interface UseDroppableReturn {
   onDragLeave: (e: React.DragEvent) => void;
 
   /**
+   * Callback fired as a drop anywhere within the droppable element
+   * begins, before whichever drop target takes it handles it.
+   */
+  onDropCapture: (e: React.DragEvent) => void;
+
+  /**
    * The position of the drop indicator, relative to the droppable element.
    */
   dropIndicatorPosition: DropIndicatorPosition;
@@ -131,6 +146,7 @@ interface UseDroppableReturn {
     onDrop: (e: React.DragEvent) => void;
     onDragEnter: (e: React.DragEvent) => void;
     onDragLeave: (e: React.DragEvent) => void;
+    onDropCapture: (e: React.DragEvent) => void;
   };
 }
 
@@ -145,6 +161,7 @@ export function useDroppable(options: UseDroppableOptions): UseDroppableReturn {
     edgeThreshold = 0.25,
     isLastChild = false,
     accepts,
+    claim = true,
   } = options;
 
   const ref = useRef<HTMLDivElement>(null);
@@ -205,7 +222,7 @@ export function useDroppable(options: UseDroppableOptions): UseDroppableReturn {
       e.preventDefault();
 
       // Claim the drag so ancestor drop targets do not react to it
-      if (accepts) {
+      if (accepts && claim) {
         e.stopPropagation();
       }
 
@@ -238,7 +255,7 @@ export function useDroppable(options: UseDroppableOptions): UseDroppableReturn {
         });
       }
     },
-    [getDropPosition, index, isLastChild, accepts],
+    [getDropPosition, index, isLastChild, accepts, claim],
   );
 
   const handleDrop = useCallback(
@@ -300,18 +317,31 @@ export function useDroppable(options: UseDroppableOptions): UseDroppableReturn {
     }
   }, []);
 
+  // A drop taken by a nested drop target stops propagating before
+  // it reaches this element's own drop handler, which would leave
+  // the element reporting itself dragged over. Capturing the drop on
+  // its way down clears that whatever takes it.
+  const handleDropCapture = useCallback(() => {
+    setDragState({
+      isDraggingOver: false,
+      dropIndicatorPosition: null,
+    });
+  }, []);
+
   return {
     ref,
     onDragOver: handleDragOver,
     onDrop: handleDrop,
     onDragEnter: handleDragEnter,
     onDragLeave: handleDragLeave,
+    onDropCapture: handleDropCapture,
     droppableProps: {
       ref,
       onDragOver: handleDragOver,
       onDrop: handleDrop,
       onDragEnter: handleDragEnter,
       onDragLeave: handleDragLeave,
+      onDropCapture: handleDropCapture,
     },
     dropIndicatorPosition: dragState.dropIndicatorPosition,
     isDraggingOver: dragState.isDraggingOver,

@@ -69,6 +69,7 @@
     "@minddrop/test-utils": "workspace:*",
     "@minddrop/ui-components": "workspace:*",
     "@minddrop/ui-drag-and-drop": "workspace:*",
+    "@minddrop/ui-entity-groups": "workspace:*",
     "@minddrop/ui-icons": "workspace:*",
     "@minddrop/ui-primitives": "workspace:*",
     "@minddrop/ui-theme": "workspace:*",

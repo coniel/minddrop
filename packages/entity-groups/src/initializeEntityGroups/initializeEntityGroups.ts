@@ -1,7 +1,12 @@
 import { Events } from '@minddrop/events';
 import { ItemReferences } from '@minddrop/item-references';
 import { EntityGroupTypesRegistry } from '../EntityGroupTypesRegistry';
-import { onItemAddressesChanged, onItemDeleted } from '../event-handlers';
+import {
+  onGroupDeleted,
+  onItemAddressesChanged,
+  onItemDeleted,
+} from '../event-handlers';
+import { EntityGroupDeletedEvent } from '../events';
 
 const EventListenerId = 'entity-groups';
 
@@ -28,6 +33,9 @@ export function initializeEntityGroups(): void {
     EventListenerId,
     onItemAddressesChanged,
   );
+
+  // Forget a deleted group's collapsed state
+  Events.addListener(EntityGroupDeletedEvent, EventListenerId, onGroupDeleted);
 }
 
 /**

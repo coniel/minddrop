@@ -7,6 +7,7 @@ import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { initializeMockFileSystem } from '@minddrop/file-system/test-utils';
 import { initializeI18n } from '@minddrop/i18n';
+import { cleanup as cleanupRender } from '@minddrop/test-utils';
 
 initializeI18n();
 
@@ -18,6 +19,8 @@ export function setup() {
 }
 
 export async function cleanup(): Promise<void> {
+  cleanupRender();
+
   // Let in-flight file operations settle and reset the mock file
   // system before clearing the state they may still read.
   await Fs.tests.cleanup();

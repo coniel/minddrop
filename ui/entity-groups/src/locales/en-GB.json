@@ -1,11 +1,21 @@
 {
   "entityGroups": {
     "labels": {
-      "newGroup": "New group"
+      "group": "Group",
+      "newGroup": "New group",
+      "empty": "Empty"
     },
     "actions": {
       "rename": "Rename group",
       "delete": "Delete group"
+    },
+    "item": {
+      "remove": "Remove from group",
+      "move": "Move to group",
+      "add": "Add to group"
+    },
+    "gap": {
+      "drop": "Drop here to create a new group."
     },
     "name": {
       "placeholder": "Group name"

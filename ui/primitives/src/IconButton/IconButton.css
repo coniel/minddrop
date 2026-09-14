@@ -3,7 +3,7 @@
    Square button containing a single icon.
    Variants: ghost (default) | subtle | outline | filled
    Colors:   neutral (default) | muted | contrast | primary | danger | inherit
-   Sizes:    sm | md (default) | lg
+   Sizes:    xs | sm | md (default) | lg
    ============================================================ */
 
 .icon-button {
@@ -45,6 +45,17 @@
 /* ------------------------------------------------------------
    SIZES
    ------------------------------------------------------------ */
+
+.icon-button-size-xs {
+  width: var(--control-height-xs);
+  height: var(--control-height-xs);
+
+  .icon,
+  .content-icon {
+    width: var(--icon-size-sm);
+    height: var(--icon-size-sm);
+  }
+}
 
 .icon-button-size-sm {
   width: var(--control-height-sm);

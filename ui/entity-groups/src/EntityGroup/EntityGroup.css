@@ -2,11 +2,17 @@
   position: relative;
   border-radius: var(--radius-md);
 
-  &.entity-group-dragging {
-    opacity: 0.5;
+  /* Hairline gap between the label and the group's items */
+  .menu-label {
+    margin-bottom: var(--space-px);
   }
 
-  &.entity-group-dragging-over {
-    background-color: var(--surface-accent);
+  /* Indented to line up with the group's items */
+  .entity-group-empty {
+    padding: var(--space-1) var(--space-2);
+  }
+
+  &.entity-group-dragging {
+    opacity: 0.5;
   }
 }

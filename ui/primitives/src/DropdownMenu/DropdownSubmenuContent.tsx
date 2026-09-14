@@ -2,7 +2,9 @@ import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 import React from 'react';
 import { TranslationKey } from '@minddrop/i18n';
 import { Menu } from '../Menu/Menu';
+import { MenuSearchScope } from '../Menu/MenuSearchScope';
 import { SearchableMenu } from '../SearchableMenu/SearchableMenu';
+import { useDropdownSubmenu } from './DropdownSubmenu';
 
 /* --- DropdownSubmenuContent ---
    Styled popup panel for nested submenus.
@@ -72,31 +74,48 @@ export const DropdownSubmenuContent = React.forwardRef<
       ...other
     },
     ref,
-  ) => (
-    <MenuPrimitive.Popup
-      ref={ref}
-      render={
-        searchable ? (
-          <SearchableMenu
-            style={{ minWidth }}
-            className={className}
-            searchPlaceholder={searchPlaceholder}
-            stringSearchPlaceholder={stringSearchPlaceholder}
-            searchTerm={searchTerm}
-            onSearchTermChange={onSearchTermChange}
-            emptyText={emptyText}
-          >
-            {children}
-          </SearchableMenu>
-        ) : (
-          <Menu style={{ minWidth }} className={className}>
-            {children}
-          </Menu>
-        )
-      }
-      {...other}
-    />
-  ),
+  ) => {
+    const submenu = useDropdownSubmenu();
+
+    // Leaving the submenu when the menu around it navigates away
+    function handleClose() {
+      submenu?.setOpen(false);
+    }
+
+    return (
+      <MenuPrimitive.Popup
+        ref={ref}
+        render={
+          searchable ? (
+            <SearchableMenu
+              style={{ minWidth }}
+              className={className}
+              searchPlaceholder={searchPlaceholder}
+              stringSearchPlaceholder={stringSearchPlaceholder}
+              searchTerm={searchTerm}
+              onSearchTermChange={onSearchTermChange}
+              emptyText={emptyText}
+            >
+              {children}
+            </SearchableMenu>
+          ) : (
+            /* A searchable menu hands its keyboard navigation to
+               the submenu's items while it is open. A submenu with
+               a search field of its own navigates them itself. */
+            <Menu style={{ minWidth }} className={className}>
+              <MenuSearchScope
+                close={handleClose}
+                itemId={submenu?.triggerIdRef.current}
+              >
+                {children}
+              </MenuSearchScope>
+            </Menu>
+          )
+        }
+        {...other}
+      />
+    );
+  },
 );
 
 DropdownSubmenuContent.displayName = 'DropdownSubmenuContent';

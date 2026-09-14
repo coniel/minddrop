@@ -6,31 +6,33 @@ import { fuzzySearch } from '../fuzzySearch';
  *
  * @param items - The items to search through.
  * @param query - The search query.
- * @param getValue - Returns the value of an item to match against.
+ * @param getValue - Returns the value, or values, of an item to match against.
  * @returns The matched items ranked by match quality.
  */
 export function fuzzySearchBy<TItem>(
   items: TItem[],
   query: string,
-  getValue: (item: TItem) => string,
+  getValue: (item: TItem) => string | string[],
 ): TItem[] {
   // Map each value to its items. A value can belong to multiple items
   // so each maps to a list.
   const itemsByValue = new Map<string, TItem[]>();
+  const values: string[] = [];
 
   items.forEach((item) => {
-    const value = getValue(item);
-    const valueItems = itemsByValue.get(value) ?? [];
+    const itemValues = getValue(item);
 
-    valueItems.push(item);
-    itemsByValue.set(value, valueItems);
+    (Array.isArray(itemValues) ? itemValues : [itemValues]).forEach((value) => {
+      const valueItems = itemsByValue.get(value) ?? [];
+
+      valueItems.push(item);
+      itemsByValue.set(value, valueItems);
+      values.push(value);
+    });
   });
 
   // Fuzzy match against the values
-  const matchedValues = fuzzySearch(
-    items.map((item) => getValue(item)),
-    query,
-  );
+  const matchedValues = fuzzySearch(values, query);
 
   // Collect the matched items in rank order, skipping items already
   // matched via a duplicate value.

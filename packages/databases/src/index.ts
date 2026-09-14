@@ -3,6 +3,7 @@ export type * from './events';
 export type * from './layoutContexts';
 export type { InitializeBackendResult } from './sql';
 export type { SortableEntryProperty } from './utils/resolveSortableEntryProperties';
+export type { DatabaseEntryTemplateSearchResult } from './utils/searchDatabaseEntryTemplates';
 export * as Databases from './Databases';
 export * as DatabaseEntryTemplates from './DatabaseEntryTemplates';
 export * as DatabaseAutomations from './DatabaseAutomations';

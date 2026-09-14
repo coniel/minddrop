@@ -27,6 +27,7 @@ import { Search } from '@minddrop/search';
 import { Snapshots } from '@minddrop/snapshots';
 import { Spaces } from '@minddrop/spaces';
 import { Tags } from '@minddrop/tags';
+import { initializeEntityGroupsUi } from '@minddrop/ui-entity-groups';
 import { Icons } from '@minddrop/ui-icons';
 import { initializeInputModalityTracking } from '@minddrop/ui-primitives';
 import { Workspaces } from '@minddrop/workspaces';
@@ -112,6 +113,7 @@ async function runInitialization(): Promise<void> {
   initializeSettingsFeature();
   initializeTagsFeature();
   initializeWorkspacesFeature();
+  initializeEntityGroupsUi();
 
   // Register the sidebar's entity group type, before the entity
   // groups' listeners are registered below.

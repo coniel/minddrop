@@ -1,7 +1,10 @@
+import { Collections } from '@minddrop/collections';
 import { DataViews } from '@minddrop/data-views';
 import { DatabaseEntries, Databases } from '@minddrop/databases';
 import { EntityGroups } from '@minddrop/entity-groups';
+import { Queries } from '@minddrop/queries';
 import { Spaces } from '@minddrop/spaces';
+import { Tags } from '@minddrop/tags';
 
 /**
  * The entity group type the sidebar's groups belong to.
@@ -17,6 +20,9 @@ export const SidebarGroupItemTypes = [
   DatabaseEntries.constants.EntityType,
   DataViews.constants.EntityType,
   Spaces.constants.EntityType,
+  Collections.constants.EntityType,
+  Queries.constants.EntityType,
+  Tags.constants.EntityType,
 ];
 
 /**

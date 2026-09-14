@@ -73,6 +73,12 @@ export type OpenViewEventData<TProps = DefaultViewProps> = {
    * in its tab.
    */
   icon?: string;
+
+  /**
+   * The entity the view opens showing within itself (e.g. the
+   * selected tag in the tags list).
+   */
+  subview?: SubviewDescriptor;
 };
 
 export type SetSubviewEventData = {

@@ -35,6 +35,9 @@ export async function loadWorkspace(workspace: Workspace): Promise<void> {
   // workspace.
   await Databases.DefaultsStore.in(workspace.id).hydrate();
 
+  // Hydrate which of the workspace's groups are collapsed
+  await EntityGroups.CollapsedStore.in(workspace.id).hydrate();
+
   await Designs.loadWorkspace(workspace);
   await DesignsNext.loadWorkspace(workspace);
 

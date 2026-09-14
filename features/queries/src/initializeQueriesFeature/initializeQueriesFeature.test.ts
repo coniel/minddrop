@@ -31,4 +31,14 @@ describe('initializeQueriesFeature', () => {
 
       Events.dispatch(OpenQueriesViewEvent);
     }));
+
+  it('opens the queries view showing the given query', () =>
+    new Promise<void>((resolve) => {
+      Events.addListener(Views.events.Open, 'test-open-query', (data) => {
+        expect(data.subview).toEqual({ id: 'query_1' });
+        resolve();
+      });
+
+      Events.dispatch(OpenQueriesViewEvent, { queryId: 'query_1' });
+    }));
 });

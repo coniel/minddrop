@@ -7,6 +7,12 @@ interface DropIndicatorProps {
   axis: 'horizontal' | 'vertical';
   className?: string;
   show?: boolean;
+
+  /**
+   * The space between the list's items, in pixels, which the
+   * indicator centres itself in. Taken from the list's own
+   * `--drop-indicator-gap` when omitted.
+   */
   gap?: number;
   position?: DropIndicatorPosition;
 }
@@ -14,7 +20,7 @@ interface DropIndicatorProps {
 export const DropIndicator: React.FC<DropIndicatorProps> = ({
   axis,
   className,
-  gap = 0,
+  gap,
   show = false,
   position: positionProp,
 }) => {
@@ -33,10 +39,13 @@ export const DropIndicator: React.FC<DropIndicatorProps> = ({
         position,
         className,
       })}
-      style={{
-        // @ts-expect-error - Gap is a CSS custom property
-        '--gap': `${gap}px`,
-      }}
+      style={
+        gap === undefined
+          ? undefined
+          : ({
+              '--drop-indicator-gap': `${gap}px`,
+            } as React.CSSProperties)
+      }
     >
       <div
         className={propsToClass('drop-indicator-circle', {

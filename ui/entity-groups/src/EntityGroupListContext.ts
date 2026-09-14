@@ -1,7 +1,7 @@
 import React, { createContext, useContext } from 'react';
-import { EntityGroupTypeConfig } from '@minddrop/entity-groups';
+import { EntityGroup, EntityGroupTypeConfig } from '@minddrop/entity-groups';
 import { TranslationKey } from '@minddrop/i18n';
-import { ProtectedEntityGroupComponent } from './types';
+import { EntityGroupAddAction, ProtectedEntityGroupComponent } from './types';
 
 export interface EntityGroupListContextValue {
   /**
@@ -27,9 +27,17 @@ export interface EntityGroupListContextValue {
   protectedGroupComponents?: Record<string, ProtectedEntityGroupComponent>;
 
   /**
-   * Empty state shown in a group listing no items.
+   * Returns the label a group is shown under, for groups whose name
+   * is the app's rather than the user's, or null for groups which
+   * are shown under their stored name.
    */
-  emptyLabel?: TranslationKey;
+  resolveLabel?: (group: EntityGroup) => TranslationKey | null;
+
+  /**
+   * Returns the add control shown in a group's label row, or null
+   * for groups which take no adding.
+   */
+  resolveAddAction?: (group: EntityGroup) => EntityGroupAddAction | null;
 }
 
 const EntityGroupListContext = createContext<EntityGroupListContextValue>({

@@ -6,6 +6,8 @@ paths:
   - 'ui/primitives/src/hooks/usePressedState/**'
   - 'ui/drag-and-drop/src/useHoveredItem/**'
   - 'features/designs/src/useHoveredItem/**'
+  - 'ui/primitives/src/Menu/Menu.css'
+  - 'ui/entity-groups/src/EntityGroupItem/**'
   - 'packages/selection/src/useDraggable/**'
 tags: [drag-and-drop, css, hover, pressed-state]
 ---
@@ -22,7 +24,11 @@ Neither is fixable in CSS, because both are real browser state. A gating attribu
 Track both in JS instead, where the state cannot accumulate:
 
 - `usePressedState` (ui-primitives) watches for the release on the document, since the element never sees it once a drag begins, and treats `drop`/`dragend` as releases. Style on `[data-pressed='true']`.
-- `useHoveredItem` (features/designs) holds a single hovered ID, so one row taking hover is what releases the last, and a late `pointerleave` cannot unhover its successor. Style on `[data-hovered='true']`.
+- `useHoveredItem` (ui-drag-and-drop) holds a single hovered ID, so one row taking hover is what releases the last, and a late `pointerleave` cannot unhover its successor. Style on `[data-hovered='true']`.
+
+A draggable often wraps content it does not own — `EntityGroupItem` around whatever the consumer renders, whose `.menu-item` is what the hover sticks to — so the hook cannot be applied to the styled element itself. `.menu-item` takes the state from an ancestor instead: its hover rules ignore `:hover` inside anything carrying `data-hovered` (`:hover:not([data-hovered] *)`) and take `[data-hovered='true'] &` in its place, so a row need only spread `hoveredProps` on its wrapper to move the whole subtree onto tracked hover. Any list of draggable menu items wants the same.
+
+The symptom is worth recognising, because it does not look like stale hover: the row which lights up is one the pointer never touched, often in another group. A drop reorders the list, React reuses the DOM nodes for whatever now occupies their positions, and the frozen `:hover` rides along on the node rather than the item.
 
 `useHoveredItem` also withholds hover from `dragstart` until the pointer moves under its own steam. A drop reflows the panel beneath a stationary pointer, and the browser announces whatever slid underneath as newly entered, which would otherwise light up a row the user never pointed at. Movement is measured against the last known position, since settling content fires moves at the position the pointer already occupies.
 

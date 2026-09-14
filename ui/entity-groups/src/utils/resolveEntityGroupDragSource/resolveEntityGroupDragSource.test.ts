@@ -5,7 +5,11 @@ import { EntityGroupSourceDataKey } from '../../constants';
 import { cleanup, dragDataTransfer, setup } from '../../test-utils';
 import { resolveEntityGroupDragSource } from './resolveEntityGroupDragSource';
 
-const { entityGroup_exclusive_1 } = EntityGroupFixtures;
+const {
+  entityGroup_exclusive_1,
+  groupTypeConfig_exclusive,
+  groupTypeConfig_multi,
+} = EntityGroupFixtures;
 
 describe('resolveEntityGroupDragSource', () => {
   beforeEach(setup);
@@ -22,22 +26,42 @@ describe('resolveEntityGroupDragSource', () => {
     return event;
   }
 
-  it('returns the group the drag was started in', () => {
+  // Returns a drop event for a drag started in the group
+  function dropFromGroup(): DragEvent {
     const dataTransfer = dragDataTransfer();
 
     dataTransfer.setData(
       Selection.toMimeType(EntityGroupSourceDataKey),
-      JSON.stringify(entityGroup_exclusive_1.id),
+      JSON.stringify({
+        type: groupTypeConfig_exclusive.id,
+        groupId: entityGroup_exclusive_1.id,
+      }),
     );
 
-    expect(resolveEntityGroupDragSource(dropEvent(dataTransfer))).toBe(
-      entityGroup_exclusive_1.id,
-    );
+    return dropEvent(dataTransfer);
+  }
+
+  it('returns the group the drag was started in', () => {
+    expect(
+      resolveEntityGroupDragSource(
+        dropFromGroup(),
+        groupTypeConfig_exclusive.id,
+      ),
+    ).toBe(entityGroup_exclusive_1.id);
+  });
+
+  it('returns null for a drag started in a group of another type', () => {
+    expect(
+      resolveEntityGroupDragSource(dropFromGroup(), groupTypeConfig_multi.id),
+    ).toBe(null);
   });
 
   it('returns null for a drag which carries no group', () => {
-    expect(resolveEntityGroupDragSource(dropEvent(dragDataTransfer()))).toBe(
-      null,
-    );
+    expect(
+      resolveEntityGroupDragSource(
+        dropEvent(dragDataTransfer()),
+        groupTypeConfig_exclusive.id,
+      ),
+    ).toBe(null);
   });
 });

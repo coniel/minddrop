@@ -13,6 +13,7 @@
      Shared heights for buttons, inputs, selects, tabs, toggles.
      ------------------------------------------------------------ */
 
+  --control-height-xs: 1.25rem; /* 20px */
   --control-height-sm: 1.5rem; /* 24px */
   --control-height-md: 1.75rem; /* 28px */
   --control-height-lg: 2.25rem; /* 36px */

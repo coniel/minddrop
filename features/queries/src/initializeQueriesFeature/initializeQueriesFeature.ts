@@ -23,10 +23,11 @@ export function initializeQueriesFeature(): VoidFunction {
 
   // Listen for open queries view events, and open the queries
   // view when one is received.
-  Events.addListener(OpenQueriesViewEvent, EventListenerId, () => {
+  Events.addListener(OpenQueriesViewEvent, EventListenerId, (data) => {
     Events.dispatch(Views.events.Open, {
       view: QueriesViewName,
       id: queriesViewId,
+      subview: data?.queryId ? { id: data.queryId } : undefined,
     });
   });
 

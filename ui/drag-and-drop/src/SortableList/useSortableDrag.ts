@@ -3,6 +3,10 @@ import { ItemRect, calculateOverIndex, reorderArray } from './sortable-utils';
 
 export type SortableDirection = 'vertical' | 'horizontal';
 
+// How far the pointer has to travel, in pixels, for the press to
+// count as a drag rather than a click.
+const DRAG_THRESHOLD = 4;
+
 export interface SortableItemRenderProps {
   /**
    * Ref to attach to the item's root element.
@@ -365,6 +369,13 @@ export function useSortableDrag({
       onSortRef.current(newOrder);
     }
 
+    // Swallow the click the browser fires after a press which
+    // turned out to be a drag, so that a handle which is also a
+    // control does not act on it.
+    if (Math.abs(dragDeltaRef.current) > DRAG_THRESHOLD) {
+      swallowNextClick();
+    }
+
     // Reset all drag state
     dragStateRef.current = null;
     dragDeltaRef.current = 0;
@@ -493,4 +504,23 @@ export function useSortableDrag({
   });
 
   return renderPropsMap;
+}
+
+/**
+ * Swallows the click the browser fires after a drag, so that a drag
+ * handle which is also a control (a collapsible label, a button)
+ * does not act on the press which dragged it. Dropped again on the
+ * next task, in case no click follows the drag at all.
+ */
+function swallowNextClick(): void {
+  function swallow(event: MouseEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  window.addEventListener('click', swallow, { capture: true, once: true });
+
+  window.setTimeout(() => {
+    window.removeEventListener('click', swallow, { capture: true });
+  });
 }

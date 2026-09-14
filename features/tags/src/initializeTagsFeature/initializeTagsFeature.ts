@@ -30,6 +30,7 @@ export function initializeTagsFeature(): VoidFunction {
     Events.dispatch(Views.events.Open, {
       view: TagsViewName,
       id: tagsViewId,
+      subview: data?.tagId ? { id: data.tagId } : undefined,
     });
   });
 

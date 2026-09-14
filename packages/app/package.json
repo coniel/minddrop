@@ -5,7 +5,8 @@
   "type": "module",
   "types": "src/index",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./test-utils": "./src/test-utils/index.ts"
   },
   "scripts": {
     "lint": "eslint .  --max-warnings 0",
@@ -22,13 +23,16 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "@minddrop/collections": "workspace:*",
     "@minddrop/data-views": "workspace:*",
     "@minddrop/databases": "workspace:*",
     "@minddrop/entity-groups": "workspace:*",
     "@minddrop/file-system": "workspace:*",
     "@minddrop/item-references": "workspace:*",
+    "@minddrop/queries": "workspace:*",
     "@minddrop/spaces": "workspace:*",
     "@minddrop/stores": "workspace:*",
+    "@minddrop/tags": "workspace:*",
     "@minddrop/utils": "workspace:*",
     "@minddrop/workspaces": "workspace:*"
   }

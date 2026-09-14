@@ -23,6 +23,7 @@ export * from './Icon';
 export * from './initializeInputModalityTracking';
 export * from './IconButton';
 export * from './IconPicker';
+export * from './NameForm';
 export * from './NamePopover';
 export * from './IconRenderer';
 export * from './KeyboardShortcut';

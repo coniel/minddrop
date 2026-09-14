@@ -36,6 +36,16 @@ export interface EntityGroupTypeConfig {
   multiMembership?: boolean;
 
   /**
+   * Whether the type's groups take items dragged in from outside
+   * them: out of another type's groups, or from no group at all.
+   * When false, only items dragged out of the type's own groups can
+   * be dropped into them.
+   *
+   * @default false
+   */
+  acceptsExternalItems?: boolean;
+
+  /**
    * The groups the app provides, in the order they are appended to
    * a stored list which is missing them. They are ordered among the
    * user's own groups but cannot otherwise be edited.

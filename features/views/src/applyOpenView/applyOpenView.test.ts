@@ -36,6 +36,15 @@ describe('applyOpenView', () => {
     expect(state.main?.startsTrail).toBe(true);
   });
 
+  it('carries the subview onto the opened pane', () => {
+    const state = applyOpenView(
+      unsplitState,
+      open({ subview: { id: 'subview-entity' } }),
+    );
+
+    expect(state.main?.subview).toEqual({ id: 'subview-entity' });
+  });
+
   it('continues the breadcrumb trail when opened from a pane', () => {
     const state = applyOpenView(splitState, open({ sourcePane: 'main' }));
 

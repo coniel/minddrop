@@ -25,4 +25,20 @@ describe('fuzzySearchBy', () => {
   it('returns an empty array when nothing matches', () => {
     expect(fuzzySearchBy(items, 'xyzq', (item) => item.name)).toEqual([]);
   });
+
+  it('matches an item on any of several values', () => {
+    const fruit = { id: 'fruit', name: 'Apple', variety: 'Bramley' };
+
+    expect(
+      fuzzySearchBy([fruit], 'Bramley', (item) => [item.name, item.variety]),
+    ).toEqual([fruit]);
+  });
+
+  it('returns an item matched on several of its values once', () => {
+    const fruit = { id: 'fruit', name: 'Apple', variety: 'Apples' };
+
+    expect(
+      fuzzySearchBy([fruit], 'Apple', (item) => [item.name, item.variety]),
+    ).toEqual([fruit]);
+  });
 });

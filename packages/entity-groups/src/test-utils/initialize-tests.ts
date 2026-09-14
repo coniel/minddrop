@@ -10,6 +10,7 @@ import {
   cleanupWorkspaceFixtures,
   setupWorkspaceFixtures,
 } from '@minddrop/workspaces/test-utils';
+import { EntityGroupCollapsedStore } from '../EntityGroupCollapsedStore';
 import { EntityGroupTypesRegistry } from '../EntityGroupTypesRegistry';
 import { EntityGroupsStore } from '../EntityGroupsStore';
 import { registerEntityGroupType } from '../registerEntityGroupType';
@@ -79,6 +80,10 @@ export async function cleanup(): Promise<void> {
 
   EntityGroupsStore.clear();
   EntityGroupTypesRegistry.clear();
+
+  // Expand the groups a test collapsed, the store being kept for the
+  // app's lifetime rather than the test's.
+  EntityGroupCollapsedStore.reset();
 
   // Unregister the addressed item reference adapter
   ItemReferences.unregisterAdapter(itemReferenceAdapter.type);

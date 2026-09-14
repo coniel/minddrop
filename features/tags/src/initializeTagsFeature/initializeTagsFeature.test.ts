@@ -32,4 +32,14 @@ describe('initializeTagsFeature', () => {
 
       Events.dispatch(Tags.events.OpenView);
     }));
+
+  it('opens the tags view showing the given tag', () =>
+    new Promise<void>((resolve) => {
+      Events.addListener(Views.events.Open, 'test-open-tag', (data) => {
+        expect(data.subview).toEqual({ id: 'tag_1' });
+        resolve();
+      });
+
+      Events.dispatch(Tags.events.OpenView, { tagId: 'tag_1' });
+    }));
 });

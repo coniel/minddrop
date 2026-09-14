@@ -5,14 +5,3 @@
   width: 16rem;
   padding: var(--space-1);
 }
-
-.name-popover-field {
-  flex: 1;
-  min-width: 0;
-}
-
-/* Indented to line up with the name in the field above it, and
-   spaced from the popover's edge by its padding */
-.name-popover-error {
-  padding: 0 var(--space-1);
-}

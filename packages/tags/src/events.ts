@@ -16,6 +16,11 @@ export type OpenTagsViewEventData = {
    * Where to open the tags view. Defaults to in-place.
    */
   openMode?: 'in-place' | 'new-tab';
+
+  /**
+   * The ID of the tag the view opens showing.
+   */
+  tagId?: string;
 };
 
 export type TagCreatedEventData = Tag;

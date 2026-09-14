@@ -1,0 +1,9 @@
+.sidebar-group-item-picker {
+  /* The searchable menu inside is a menu panel of its own, with its
+     own surface and padding, so the popover holding it carries
+     neither: one border and one background between them. */
+  background: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}

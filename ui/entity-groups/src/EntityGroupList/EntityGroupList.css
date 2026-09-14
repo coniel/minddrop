@@ -1,0 +1,7 @@
+/* Fills the room it is given, so that the gap below the last group
+   can take up whatever the groups leave */
+.entity-group-list {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}

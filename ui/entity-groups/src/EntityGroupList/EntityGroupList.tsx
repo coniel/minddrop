@@ -1,14 +1,25 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { EntityGroups } from '@minddrop/entity-groups';
+import {
+  EntityGroup as EntityGroupType,
+  EntityGroups,
+} from '@minddrop/entity-groups';
 import { TranslationKey } from '@minddrop/i18n';
-import { Stack } from '@minddrop/ui-primitives';
+import {
+  SortableItemRenderProps,
+  SortableList,
+} from '@minddrop/ui-drag-and-drop';
+import { propsToClass } from '@minddrop/ui-primitives';
 import { EntityGroup } from '../EntityGroup';
 import { EntityGroupListProvider } from '../EntityGroupListContext';
 import { applyEntityGroupDrop } from '../applyEntityGroupDrop';
-import { EntityGroupDropAction, ProtectedEntityGroupComponent } from '../types';
-import { resolveDropOrder } from '../utils';
+import {
+  EntityGroupAddAction,
+  EntityGroupDropAction,
+  ProtectedEntityGroupComponent,
+} from '../types';
 import { EntityGroupGap } from './EntityGroupGap';
 import { EntityGroupPlaceholder } from './EntityGroupPlaceholder';
+import './EntityGroupList.css';
 
 export interface EntityGroupListProps {
   /**
@@ -29,9 +40,28 @@ export interface EntityGroupListProps {
   protectedGroupComponents?: Record<string, ProtectedEntityGroupComponent>;
 
   /**
-   * Empty state shown in a group listing no items.
+   * Returns the label a group is shown under, for groups whose name
+   * is the app's rather than the user's, or null for groups which
+   * are shown under their stored name.
    */
-  emptyLabel?: TranslationKey;
+  resolveLabel?: (group: EntityGroupType) => TranslationKey | null;
+
+  /**
+   * Returns the add control shown in a group's label row, or null
+   * for groups which take no adding.
+   */
+  resolveAddAction?: (group: EntityGroupType) => EntityGroupAddAction | null;
+
+  /**
+   * Whether a new group is being named at the top of the list. It is
+   * created once it has a name, and nothing is stored until then.
+   */
+  namingNewGroup?: boolean;
+
+  /**
+   * Called when the new group is named or the naming is abandoned.
+   */
+  onNamingNewGroupChange?: (naming: boolean) => void;
 
   /**
    * Class name applied to the list element.
@@ -52,7 +82,7 @@ interface PlaceholderGroup {
 
   /**
    * The ID of the group the items came from, null when they were
-   * dragged in from outside the list.
+   * dragged in from outside the type's groups.
    */
   sourceGroupId: string | null;
 }
@@ -62,18 +92,30 @@ interface PlaceholderGroup {
  * rearranged by dragging groups and their items around.
  *
  * Dropping items in the space between two groups stands up a group
- * there, which holds them once it has been named.
+ * there, which holds them once it has been named. Right clicking the
+ * space names a new group there.
  */
 export const EntityGroupList: React.FC<EntityGroupListProps> = ({
   type,
   renderItem,
   protectedGroupComponents,
-  emptyLabel,
+  resolveLabel,
+  resolveAddAction,
+  namingNewGroup = false,
+  onNamingNewGroupChange,
   className,
 }) => {
-  const [placeholder, setPlaceholder] = useState<PlaceholderGroup | null>(null);
+  const [standingPlaceholder, setStandingPlaceholder] =
+    useState<PlaceholderGroup | null>(null);
   const groups = EntityGroups.useAll(type);
   const config = EntityGroups.getConfig(type);
+
+  // The group taking shape: the one stood up in a gap, or an empty
+  // one at the top of the list when the consumer asks for a new
+  // group.
+  const placeholder =
+    standingPlaceholder ??
+    (namingNewGroup ? { index: 0, itemIds: [], sourceGroupId: null } : null);
 
   const context = useMemo(
     () => ({
@@ -81,33 +123,42 @@ export const EntityGroupList: React.FC<EntityGroupListProps> = ({
       config,
       renderItem,
       protectedGroupComponents,
-      emptyLabel,
+      resolveLabel,
+      resolveAddAction,
     }),
-    [type, config, renderItem, protectedGroupComponents, emptyLabel],
+    [
+      type,
+      config,
+      renderItem,
+      protectedGroupComponents,
+      resolveLabel,
+      resolveAddAction,
+    ],
   );
 
-  // Move the dropped group to the position it was dropped at
-  const handleDropGroup = useCallback(
-    (groupId: string, index: number) => {
-      EntityGroups.reorder(
-        type,
-        resolveDropOrder(
-          groups.map((group) => group.id),
-          [groupId],
-          index,
-        ),
-      );
+  // List the groups in the order they were dragged into
+  const handleSortGroups = useCallback(
+    (groupIds: string[]) => {
+      EntityGroups.reorder(type, groupIds);
     },
-    [type, groups],
+    [type],
   );
 
   // Stand up a group at the position the items were dropped at,
   // which holds them once it has been named.
   const handleDropItems = useCallback(
     (itemIds: string[], index: number, sourceGroupId: string | null) => {
-      setPlaceholder({ index, itemIds, sourceGroupId });
+      setStandingPlaceholder({ index, itemIds, sourceGroupId });
     },
     [],
+  );
+
+  // Make the named group, empty, at the position
+  const handleCreateNamedGroup = useCallback(
+    (index: number, name: string) => {
+      EntityGroups.create(type, name, { index });
+    },
+    [type],
   );
 
   // Create the group the items were dropped into and fill it
@@ -120,7 +171,7 @@ export const EntityGroupList: React.FC<EntityGroupListProps> = ({
 
     // Drop the placeholder, which the created group takes the place
     // of.
-    setPlaceholder(null);
+    clearPlaceholder();
 
     // Create the group at the position it was stood up at. It is
     // created empty so that the model applies its own rules to each
@@ -138,19 +189,57 @@ export const EntityGroupList: React.FC<EntityGroupListProps> = ({
   // Abandoning the naming leaves nothing behind, since none of it
   // was stored.
   function handleCancelGroup() {
-    setPlaceholder(null);
+    clearPlaceholder();
   }
 
-  // Render the gap above the group at the position, and the
-  // placeholder group when it is being stood up there.
-  function renderGap(index: number) {
+  // Take down the placeholder, whichever way it was stood up
+  function clearPlaceholder() {
+    setStandingPlaceholder(null);
+    onNamingNewGroupChange?.(false);
+  }
+
+  // Render a group, dragged by its label to a new position in the
+  // list, and the gap below it. The last group's gap is the one
+  // filling the rest of the list, rendered outside the sortable
+  // items so that it does not stretch the group's own.
+  function renderGroup(groupId: string, sortable: SortableItemRenderProps) {
+    const index = groups.findIndex(({ id }) => id === groupId);
+    const group = groups[index];
+
+    if (!group) {
+      return null;
+    }
+
     return (
-      <React.Fragment key={`gap-${index}`}>
-        <EntityGroupGap
-          index={index}
-          onDropGroup={handleDropGroup}
-          onDropItems={handleDropItems}
-        />
+      <div
+        ref={sortable.ref}
+        style={sortable.style}
+        className={sortable.className}
+      >
+        <EntityGroup group={group} dragHandleProps={sortable.handleProps} />
+        {index < groups.length - 1 &&
+          renderGap(index + 1, group.id, groups[index + 1].id)}
+      </div>
+    );
+  }
+
+  // Render the gap above the group at the position, holding the
+  // placeholder group when it is being stood up there.
+  function renderGap(
+    index: number,
+    aboveGroupId?: string,
+    belowGroupId?: string,
+    fill?: boolean,
+  ) {
+    return (
+      <EntityGroupGap
+        index={index}
+        aboveGroupId={aboveGroupId}
+        belowGroupId={belowGroupId}
+        fill={fill}
+        onDropItems={handleDropItems}
+        onCreateGroup={handleCreateNamedGroup}
+      >
         {placeholder?.index === index && (
           <EntityGroupPlaceholder
             itemIds={placeholder.itemIds}
@@ -158,29 +247,37 @@ export const EntityGroupList: React.FC<EntityGroupListProps> = ({
             onCancel={handleCancelGroup}
           />
         )}
-      </React.Fragment>
+      </EntityGroupGap>
     );
   }
 
+  const lastGroup = groups[groups.length - 1];
+
   return (
     <EntityGroupListProvider value={context}>
-      <Stack gap={0} className={className}>
-        {groups.map((group, index) => (
-          <React.Fragment key={group.id}>
-            {renderGap(index)}
-            <EntityGroup group={group} />
-          </React.Fragment>
-        ))}
-        {renderGap(groups.length)}
-      </Stack>
+      <div className={propsToClass('entity-group-list', { className })}>
+        {/* The gap above the first group */}
+        {renderGap(0, undefined, groups[0]?.id)}
+
+        <SortableList
+          direction="vertical"
+          gap={0}
+          items={groups.map((group) => group.id)}
+          renderItem={renderGroup}
+          onSort={handleSortGroups}
+        />
+
+        {/* The gap below the last group, taking up the rest */}
+        {renderGap(groups.length, lastGroup?.id, undefined, true)}
+      </div>
     </EntityGroupListProvider>
   );
 };
 
 /**
  * Returns the actions filling a newly created group with the items
- * dropped into it: a move for items dragged out of another group,
- * an add for items dragged in from outside the list.
+ * dropped into it: a move for items dragged out of another of the
+ * type's groups, an add for items dragged in from outside them.
  */
 function resolveNewGroupActions(
   groupId: string,

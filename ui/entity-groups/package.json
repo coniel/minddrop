@@ -25,7 +25,6 @@
     "@minddrop/entity-groups": "workspace:*",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/selection": "workspace:*",
-    "@minddrop/ui-components": "workspace:*",
     "@minddrop/ui-drag-and-drop": "workspace:*",
     "@minddrop/ui-primitives": "workspace:*",
     "@minddrop/utils": "workspace:*"

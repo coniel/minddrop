@@ -24,14 +24,22 @@
       transform: translateY(50%);
     }
 
+    /* Centred in the space between the items, so that the drop
+       before an item and the drop after the one above it are drawn
+       in the same place. The list publishes how far apart it sets
+       its items; without that they are taken to be touching. */
     &.drop-indicator-position-after {
       bottom: 0;
-      transform: translateY(calc(var(--gap) / 2 + var(--circle-size) / 2));
+      transform: translateY(
+        calc(var(--drop-indicator-gap, 0px) / 2 + var(--circle-size) / 2)
+      );
     }
 
     &.drop-indicator-position-before {
       top: 0;
-      transform: translateY(calc((var(--gap) / -2 - var(--circle-size) / 2)));
+      transform: translateY(
+        calc(var(--drop-indicator-gap, 0px) / -2 - var(--circle-size) / 2)
+      );
     }
   }
 

@@ -31,6 +31,7 @@ import {
   resolveEventAnchor,
 } from '../../utils';
 import { MenuItemDropdownMenu } from '../MenuItemDropdownMenu';
+import { useNotifyMenuItemHover } from '../MenuItemHoverContext';
 
 export interface MenuItemPopoverContext {
   /*
@@ -244,6 +245,7 @@ export const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(
       menu,
       menuLabel = 'actions.options',
       muted,
+      onMouseMove,
       popovers,
       role = checkbox ? 'menuitemcheckbox' : 'menuitem',
       size,
@@ -259,6 +261,7 @@ export const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(
     const contextMenuHoldRef = useRef<VoidFunction | null>(null);
     const [menuAnchor, setMenuAnchor] = useState<Anchor | null>(null);
     const { actionsVisible, menuTarget } = useActionsVisibleHold();
+    const notifyHover = useNotifyMenuItemHover();
 
     // The item is highlighted with its actions shown while any
     // hold is active.
@@ -331,6 +334,17 @@ export const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(
       contextMenuHoldRef.current = null;
     }
 
+    // Report the hover to the menu, which closes a submenu opened
+    // from one of its other items. Items opening a submenu report
+    // their hovers to Base UI themselves.
+    function handleMouseMove(event: React.MouseEvent<HTMLDivElement>) {
+      onMouseMove?.(event);
+
+      if (!hasSubmenu) {
+        notifyHover();
+      }
+    }
+
     // Anchor the dropdown's popovers at the options button it was
     // opened from, frozen in place because the button hides again
     // as soon as the item loses hover.
@@ -354,6 +368,7 @@ export const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(
           className,
         })}
         aria-disabled={disabled}
+        onMouseMove={handleMouseMove}
         aria-checked={checkbox ? !!checked : undefined}
         {...other}
       >
@@ -413,9 +428,9 @@ export const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(
                   <IconButton
                     ref={optionsButtonRef}
                     icon="ellipsis"
-                    size="sm"
+                    size="xs"
                     variant="ghost"
-                    color="neutral"
+                    color="muted"
                     label={menuLabel}
                   />
                 </DropdownMenuTrigger>
