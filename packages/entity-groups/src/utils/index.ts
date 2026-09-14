@@ -6,3 +6,4 @@ export * from './resolveEntityGroupsForItem';
 export * from './resolveEntityGroupsDirPath';
 export * from './resolveEntityGroupsFilePath';
 export * from './validateEntityGroupItem';
+export * from './validateEntityGroupName';

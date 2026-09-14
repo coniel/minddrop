@@ -1,6 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
-import { EntityGroupNotFoundError, ProtectedEntityGroupError } from '../errors';
+import {
+  DuplicateEntityGroupNameError,
+  EntityGroupNotFoundError,
+  ProtectedEntityGroupError,
+} from '../errors';
 import { EntityGroupUpdatedEvent } from '../events';
 import { getEntityGroup } from '../getEntityGroup';
 import {
@@ -13,6 +17,7 @@ import { updateEntityGroup } from './updateEntityGroup';
 
 const {
   entityGroup_exclusive_1,
+  entityGroup_exclusive_2,
   entityGroup_protected,
   groupTypeConfig_exclusive,
   groupTypeConfig_multi,
@@ -34,6 +39,36 @@ describe('updateEntityGroup', () => {
     expect(getEntityGroup(type, entityGroup_exclusive_1.id).name).toBe(
       'Renamed',
     );
+  });
+
+  it('marks the group modified', async () => {
+    const group = await updateEntityGroup(type, entityGroup_exclusive_1.id, {
+      name: 'Renamed',
+    });
+
+    expect(group.lastModified.getTime()).toBeGreaterThan(
+      entityGroup_exclusive_1.lastModified.getTime(),
+    );
+  });
+
+  it('throws for a name another group of the type has', async () => {
+    await expect(
+      updateEntityGroup(type, entityGroup_exclusive_1.id, {
+        name: entityGroup_exclusive_2.name.toUpperCase(),
+      }),
+    ).rejects.toThrow(DuplicateEntityGroupNameError);
+
+    expect(getEntityGroup(type, entityGroup_exclusive_1.id).name).toBe(
+      entityGroup_exclusive_1.name,
+    );
+  });
+
+  it('lets a group keep its own name', async () => {
+    const group = await updateEntityGroup(type, entityGroup_exclusive_1.id, {
+      name: entityGroup_exclusive_1.name,
+    });
+
+    expect(group.name).toBe(entityGroup_exclusive_1.name);
   });
 
   it('leaves the group items alone', async () => {
@@ -76,10 +111,8 @@ describe('updateEntityGroup', () => {
   it('dispatches the group updated event', async () =>
     new Promise<void>((done) => {
       Events.addListener(EntityGroupUpdatedEvent, 'test', (payload) => {
-        expect(payload).toEqual({
-          original: entityGroup_exclusive_1,
-          updated: { ...entityGroup_exclusive_1, name: 'Renamed' },
-        });
+        expect(payload.original).toEqual(entityGroup_exclusive_1);
+        expect(payload.updated.name).toBe('Renamed');
         done();
       });
 

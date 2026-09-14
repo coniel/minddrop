@@ -136,10 +136,8 @@ describe('addEntityGroupItem', () => {
   it('dispatches the group updated event', async () =>
     new Promise<void>((done) => {
       Events.addListener(EntityGroupUpdatedEvent, 'test', (payload) => {
-        expect(payload).toEqual({
-          original: entityGroup_exclusive_empty,
-          updated: { ...entityGroup_exclusive_empty, items: [plainItem_1] },
-        });
+        expect(payload.original).toEqual(entityGroup_exclusive_empty);
+        expect(payload.updated.items).toEqual([plainItem_1]);
         done();
       });
 

@@ -46,6 +46,16 @@ export interface EntityGroupTypeConfig {
   acceptsExternalItems?: boolean;
 
   /**
+   * Whether the items in none of the type's groups count as a group
+   * of their own, identified by `UngroupedEntityGroupId`. That group
+   * is virtual: never stored, and not one that can be edited,
+   * deleted or moved.
+   *
+   * @default false
+   */
+  ungrouped?: boolean;
+
+  /**
    * The groups the app provides, in the order they are appended to
    * a stored list which is missing them. They are ordered among the
    * user's own groups but cannot otherwise be edited.

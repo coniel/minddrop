@@ -18,7 +18,30 @@ describe('normalizeEntityGroups', () => {
       groupTypeConfig_multi,
     );
 
-    expect(groups).toEqual([entityGroup_multi_1, entityGroup_protected]);
+    expect(groups[0]).toEqual(entityGroup_multi_1);
+    expect(groups[1]).toMatchObject({
+      id: entityGroup_protected.id,
+      name: entityGroup_protected.name,
+      type: entityGroup_protected.type,
+      items: [],
+    });
+  });
+
+  it('dates an appended app provided group from now', () => {
+    const before = Date.now();
+    const groups = normalizeEntityGroups([], groupTypeConfig_multi);
+
+    expect(groups[0].created.getTime()).toBeGreaterThanOrEqual(before);
+    expect(groups[0].lastModified).toEqual(groups[0].created);
+  });
+
+  it('keeps the dates of a stored app provided group', () => {
+    const groups = normalizeEntityGroups(
+      [{ ...entityGroup_protected, name: 'Renamed' }],
+      groupTypeConfig_multi,
+    );
+
+    expect(groups[0].created).toEqual(entityGroup_protected.created);
   });
 
   it('keeps a stored app provided group in its position', () => {

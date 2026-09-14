@@ -53,6 +53,9 @@ declare module '@minddrop/events/EventDataMap' {
   }
 }
 
+// The date every fixture group was created and last changed
+const fixtureDate = new Date('2026-01-01T00:00:00.000Z');
+
 export const protectedGroup_1 = {
   id: 'entity-group_protected' as EntityGroupId,
   name: 'Protected group',
@@ -90,6 +93,8 @@ export const entityGroup_exclusive_1: EntityGroup = {
   type: groupTypeConfig_exclusive.id,
   name: 'Exclusive group 1',
   items: [addressedItem_1, plainItem_1],
+  created: fixtureDate,
+  lastModified: fixtureDate,
 };
 
 export const entityGroup_exclusive_2: EntityGroup = {
@@ -97,6 +102,8 @@ export const entityGroup_exclusive_2: EntityGroup = {
   type: groupTypeConfig_exclusive.id,
   name: 'Exclusive group 2',
   items: [addressedItem_2],
+  created: fixtureDate,
+  lastModified: fixtureDate,
 };
 
 export const entityGroup_exclusive_empty: EntityGroup = {
@@ -104,6 +111,8 @@ export const entityGroup_exclusive_empty: EntityGroup = {
   type: groupTypeConfig_exclusive.id,
   name: 'Empty exclusive group',
   items: [],
+  created: fixtureDate,
+  lastModified: fixtureDate,
 };
 
 // Lists addressedItem_1 alongside entityGroup_multi_2, so that an
@@ -113,6 +122,8 @@ export const entityGroup_multi_1: EntityGroup = {
   type: groupTypeConfig_multi.id,
   name: 'Multi group 1',
   items: [addressedItem_1, plainItem_1],
+  created: fixtureDate,
+  lastModified: fixtureDate,
 };
 
 export const entityGroup_multi_2: EntityGroup = {
@@ -120,12 +131,16 @@ export const entityGroup_multi_2: EntityGroup = {
   type: groupTypeConfig_multi.id,
   name: 'Multi group 2',
   items: [addressedItem_1],
+  created: fixtureDate,
+  lastModified: fixtureDate,
 };
 
 export const entityGroup_protected: EntityGroup = {
   ...protectedGroup_1,
   type: groupTypeConfig_multi.id,
   items: [],
+  created: fixtureDate,
+  lastModified: fixtureDate,
 };
 
 export const exclusiveGroups = [

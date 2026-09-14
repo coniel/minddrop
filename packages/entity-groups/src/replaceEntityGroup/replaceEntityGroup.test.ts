@@ -48,6 +48,17 @@ describe('replaceEntityGroup', () => {
     );
   });
 
+  it('marks the group modified', () => {
+    const group = replaceEntityGroup(type, entityGroup_exclusive_1.id, {
+      items: [addressedItem_2],
+    });
+
+    expect(group.lastModified.getTime()).toBeGreaterThan(
+      entityGroup_exclusive_1.lastModified.getTime(),
+    );
+    expect(group.created).toEqual(entityGroup_exclusive_1.created);
+  });
+
   it('replaces the group in place', () => {
     replaceEntityGroup(type, entityGroup_exclusive_1.id, { name: 'Renamed' });
 
@@ -101,10 +112,8 @@ describe('replaceEntityGroup', () => {
   it('dispatches the group updated event', async () =>
     new Promise<void>((done) => {
       Events.addListener(EntityGroupUpdatedEvent, 'test', (payload) => {
-        expect(payload).toEqual({
-          original: entityGroup_exclusive_1,
-          updated: { ...entityGroup_exclusive_1, name: 'Renamed' },
-        });
+        expect(payload.original).toEqual(entityGroup_exclusive_1);
+        expect(payload.updated.name).toBe('Renamed');
         done();
       });
 

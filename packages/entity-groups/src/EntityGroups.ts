@@ -1,7 +1,8 @@
 import { NotRegisteredError } from '@minddrop/stores';
 import { EntityGroupTypesRegistry } from './EntityGroupTypesRegistry';
-import { EntityGroupEntityType } from './constants';
+import { EntityGroupEntityType, UngroupedEntityGroupId } from './constants';
 import {
+  DuplicateEntityGroupNameError,
   EntityGroupNotFoundError,
   ProtectedEntityGroupError,
   UnsupportedEntityGroupItemError,
@@ -29,10 +30,12 @@ export const errors = {
   Protected: ProtectedEntityGroupError,
   NotRegistered: NotRegisteredError,
   UnsupportedItem: UnsupportedEntityGroupItemError,
+  DuplicateName: DuplicateEntityGroupNameError,
 };
 
 export const constants = {
   EntityType: EntityGroupEntityType,
+  UngroupedId: UngroupedEntityGroupId,
 };
 
 export const getConfig = EntityGroupTypesRegistry.get;
@@ -40,6 +43,7 @@ export const getConfig = EntityGroupTypesRegistry.get;
 export { initializeEntityGroups as initialize } from './initializeEntityGroups';
 export { loadWorkspaceEntityGroups as loadWorkspace } from './loadWorkspaceEntityGroups';
 export { registerEntityGroupType as registerType } from './registerEntityGroupType';
+export { createEntityGroupsFacade as createFacade } from './createEntityGroupsFacade';
 export { unregisterEntityGroupType as unregisterType } from './unregisterEntityGroupType';
 export { createEntityGroup as create } from './createEntityGroup';
 export { getEntityGroup as get } from './getEntityGroup';

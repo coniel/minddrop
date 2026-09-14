@@ -11,6 +11,9 @@ import {
   SidebarGroupsType,
 } from '../sidebar-groups';
 
+// The date every fixture group was created and last changed
+const fixtureDate = new Date('2026-01-01T00:00:00.000Z');
+
 // The groups the app provides. Their stored names deliberately
 // differ from the labels the app shows them under, which is what
 // the user sees translated.
@@ -19,6 +22,8 @@ export const sidebarGroup_library: EntityGroup = {
   type: SidebarGroupsType,
   name: 'Stored library name',
   items: [],
+  created: fixtureDate,
+  lastModified: fixtureDate,
 };
 
 export const sidebarGroup_databases: EntityGroup = {
@@ -26,6 +31,8 @@ export const sidebarGroup_databases: EntityGroup = {
   type: SidebarGroupsType,
   name: 'Stored databases name',
   items: [],
+  created: fixtureDate,
+  lastModified: fixtureDate,
 };
 
 export const protectedSidebarGroups = [
@@ -50,6 +57,8 @@ export const sidebarGroup_1: EntityGroup = {
     QueryFixtures.query_1.id,
     TagFixtures.tag_1.id,
   ],
+  created: fixtureDate,
+  lastModified: fixtureDate,
 };
 
 /**
@@ -61,6 +70,8 @@ export const sidebarGroup_2: EntityGroup = {
   type: SidebarGroupsType,
   name: 'My other group',
   items: [],
+  created: fixtureDate,
+  lastModified: fixtureDate,
 };
 
 export const sidebarGroups = [

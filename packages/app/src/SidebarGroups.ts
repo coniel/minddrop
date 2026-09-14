@@ -1,3 +1,4 @@
+import { EntityGroups } from '@minddrop/entity-groups';
 import {
   DatabasesSidebarGroupId,
   LibrarySidebarGroupId,
@@ -12,21 +13,30 @@ export const constants = {
   DatabasesId: DatabasesSidebarGroupId,
 };
 
-export {
-  initializeSidebarGroups as initialize,
-  createSidebarGroup as create,
-  getSidebarGroup as get,
-  getAllSidebarGroups as getAll,
-  getSidebarGroupsForItem as getForItem,
-  isProtectedSidebarGroup as isProtected,
-  updateSidebarGroup as update,
-  deleteSidebarGroup as delete,
-  reorderSidebarGroups as reorder,
-  addSidebarGroupItem as addItem,
-  moveSidebarGroupItem as moveItem,
-  removeSidebarGroupItem as removeItem,
-  reorderSidebarGroupItems as reorderItems,
-  useSidebarGroup as use,
-  useSidebarGroups as useAll,
-  useSidebarGroupsForItem as useForItem,
-} from './sidebar-groups';
+// The entity groups API bound to the sidebar groups type
+const facade = EntityGroups.createFacade(SidebarGroupsType);
+
+export const {
+  create,
+  get,
+  getAll,
+  getForItem,
+  isProtected,
+  update,
+  reorder,
+  addItem,
+  moveItem,
+  removeItem,
+  reorderItems,
+  use,
+  useAll,
+  useForItem,
+} = facade;
+
+// A reserved word cannot be destructured into a binding of its own
+// name, so the deletion is exported by renaming.
+const { delete: deleteSidebarGroup } = facade;
+
+export { deleteSidebarGroup as delete };
+
+export { initializeSidebarGroups as initialize } from './sidebar-groups';

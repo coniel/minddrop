@@ -27,7 +27,11 @@ export function replaceEntityGroup(
   const group = getEntityGroup(type, id);
 
   // Generate the updated group object
-  const updatedGroup: EntityGroup = { ...group, ...data };
+  const updatedGroup: EntityGroup = {
+    ...group,
+    ...data,
+    lastModified: new Date(),
+  };
 
   // Replace the group among its type's groups
   setEntityGroups(

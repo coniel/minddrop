@@ -1,7 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { NotRegisteredError } from '@minddrop/stores';
-import { UnsupportedEntityGroupItemError } from '../errors';
+import { InvalidParameterError } from '@minddrop/utils';
+import {
+  DuplicateEntityGroupNameError,
+  UnsupportedEntityGroupItemError,
+} from '../errors';
 import { EntityGroupCreatedEvent } from '../events';
 import { getAllEntityGroups } from '../getAllEntityGroups';
 import {
@@ -16,6 +20,7 @@ const {
   addressedItem_1,
   plainItem_1,
   unsupportedItem_1,
+  entityGroup_exclusive_1,
   exclusiveGroups,
   groupTypeConfig_exclusive,
 } = EntityGroupFixtures;
@@ -31,6 +36,34 @@ describe('createEntityGroup', () => {
     const group = await createEntityGroup(type, 'My group');
 
     expect(getAllEntityGroups(type)).toContainEqual(group);
+  });
+
+  it('dates the group from now', async () => {
+    const before = Date.now();
+    const group = await createEntityGroup(type, 'My group');
+
+    expect(group.created.getTime()).toBeGreaterThanOrEqual(before);
+    expect(group.lastModified).toEqual(group.created);
+  });
+
+  it('trims the name', async () => {
+    const group = await createEntityGroup(type, '  My group  ');
+
+    expect(group.name).toBe('My group');
+  });
+
+  it('throws for an empty name', async () => {
+    await expect(createEntityGroup(type, '  ')).rejects.toThrow(
+      InvalidParameterError,
+    );
+  });
+
+  it('throws for a name another group of the type has', async () => {
+    await expect(
+      createEntityGroup(type, entityGroup_exclusive_1.name.toUpperCase()),
+    ).rejects.toThrow(DuplicateEntityGroupNameError);
+
+    expect(getAllEntityGroups(type)).toEqual(exclusiveGroups);
   });
 
   it('creates the group with no items', async () => {

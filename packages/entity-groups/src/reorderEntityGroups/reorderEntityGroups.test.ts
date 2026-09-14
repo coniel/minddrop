@@ -16,6 +16,7 @@ const {
   entityGroup_exclusive_empty,
   entityGroup_multi_1,
   entityGroup_protected,
+  exclusiveGroups,
   groupTypeConfig_exclusive,
   groupTypeConfig_multi,
 } = EntityGroupFixtures;
@@ -37,6 +38,15 @@ describe('reorderEntityGroups', () => {
     await reorderEntityGroups(type, reversedIds);
 
     expect(getAllEntityGroups(type).map(({ id }) => id)).toEqual(reversedIds);
+  });
+
+  it('leaves the groups unmodified', async () => {
+    // The groups themselves are unchanged, only their order is
+    await reorderEntityGroups(type, reversedIds);
+
+    expect(
+      getAllEntityGroups(type).map(({ lastModified }) => lastModified),
+    ).toEqual(exclusiveGroups.map(({ lastModified }) => lastModified));
   });
 
   it('appends groups missing from the order', async () => {

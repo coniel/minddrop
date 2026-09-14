@@ -49,10 +49,9 @@ describe('loadWorkspaceEntityGroups', () => {
     await loadWorkspaceEntityGroups(workspace_1);
 
     expect(getAllEntityGroups(type)).toEqual([entityGroup_exclusive_1]);
-    expect(getAllEntityGroups(groupTypeConfig_multi.id)).toEqual([
-      entityGroup_multi_1,
-      entityGroup_protected,
-    ]);
+    expect(
+      getAllEntityGroups(groupTypeConfig_multi.id).map(({ id }) => id),
+    ).toEqual([entityGroup_multi_1.id, entityGroup_protected.id]);
   });
 
   it("loads the groups into the workspace's store record", async () => {
@@ -132,8 +131,8 @@ describe('loadWorkspaceEntityGroups', () => {
   it('adds a type of app provided groups when none have been stored', async () => {
     await loadWorkspaceEntityGroups(workspace_1);
 
-    expect(getAllEntityGroups(groupTypeConfig_multi.id)).toEqual([
-      entityGroup_protected,
+    expect(getAllEntityGroups(groupTypeConfig_multi.id)).toMatchObject([
+      { id: entityGroup_protected.id, name: entityGroup_protected.name },
     ]);
   });
 
@@ -160,9 +159,9 @@ describe('loadWorkspaceEntityGroups', () => {
       MockFs.writeJsonFile(groupsFilePath(type), [entityGroup_exclusive_1]);
 
       Events.addListener(EntityGroupsLoadedEvent, 'test', (payload) => {
-        expect(payload).toEqual([
-          entityGroup_exclusive_1,
-          entityGroup_protected,
+        expect(payload.map(({ id }) => id)).toEqual([
+          entityGroup_exclusive_1.id,
+          entityGroup_protected.id,
         ]);
         done();
       });

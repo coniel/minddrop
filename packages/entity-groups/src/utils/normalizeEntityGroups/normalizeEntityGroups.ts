@@ -22,17 +22,21 @@ export function normalizeEntityGroups(
     const protectedGroup = protectedGroups.find(({ id }) => id === group.id);
 
     return protectedGroup
-      ? { ...protectedGroup, type: config.id, items: [] }
+      ? { ...group, ...protectedGroup, type: config.id, items: [] }
       : group;
   });
 
-  // Append the protected groups the stored list is missing
+  // Append the protected groups the stored list is missing, dated
+  // from now since this is when they come to exist.
+  const now = new Date();
   const missing = protectedGroups
     .filter(({ id }) => !normalized.some((group) => group.id === id))
     .map((protectedGroup) => ({
       ...protectedGroup,
       type: config.id,
       items: [],
+      created: now,
+      lastModified: now,
     }));
 
   return [...normalized, ...missing];

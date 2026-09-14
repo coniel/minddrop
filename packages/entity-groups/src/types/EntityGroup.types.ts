@@ -24,6 +24,16 @@ export interface EntityGroup {
    * unaware of the groups listing it.
    */
   items: string[];
+
+  /**
+   * The date the group was created.
+   */
+  created: Date;
+
+  /**
+   * The date the group was last modified.
+   */
+  lastModified: Date;
 }
 
 export type UpdateEntityGroupData = Partial<Pick<EntityGroup, 'name'>>;
