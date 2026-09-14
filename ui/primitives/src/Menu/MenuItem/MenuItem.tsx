@@ -18,6 +18,7 @@ import {
   MenuTargetContext,
   useActionsVisibleHold,
 } from '../../MenuTargetContext';
+import { Checkbox } from '../../fields/Checkbox';
 import {
   Anchor,
   MenuContents,
@@ -71,6 +72,29 @@ export interface MenuItemProps {
    * Takes priority over `description`.
    */
   stringDescription?: string;
+
+  /*
+   * Muted text rendered after the label as part of it. Strings are
+   * treated as i18n keys and translated.
+   */
+  detail?: TranslatableNode;
+
+  /*
+   * Plain string detail rendered as-is without i18n translation.
+   * Takes priority over `detail`.
+   */
+  stringDetail?: string;
+
+  /*
+   * Renders a checkbox before the icon, reflecting `checked`. The
+   * whole item toggles it through `onClick`.
+   */
+  checkbox?: boolean;
+
+  /*
+   * Whether the item's checkbox is checked.
+   */
+  checked?: boolean;
 
   /*
    * Icon for the item.
@@ -203,11 +227,14 @@ export const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(
     {
       actions,
       active,
+      checkbox,
+      checked,
       children,
       className,
       contentIcon,
       danger,
       description,
+      detail,
       disabled,
       forceActionsVisible: forceActionsVisibleProp,
       hasSubmenu,
@@ -218,9 +245,10 @@ export const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(
       menuLabel = 'actions.options',
       muted,
       popovers,
-      role = 'menuitem',
+      role = checkbox ? 'menuitemcheckbox' : 'menuitem',
       size,
       stringDescription,
+      stringDetail,
       stringLabel,
       trailingIcon,
       ...other
@@ -271,6 +299,19 @@ export const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(
       return description;
     }, [stringDescription, description]);
 
+    // Resolve the inline detail from the available sources
+    const resolvedDetail = useMemo(() => {
+      if (stringDetail) {
+        return stringDetail;
+      }
+
+      if (typeof detail === 'string') {
+        return i18n.t(detail);
+      }
+
+      return detail;
+    }, [stringDetail, detail]);
+
     // Record where the context menu was opened, so the popovers it
     // leads to open at the same point.
     function handleContextMenuOpenChange(
@@ -313,19 +354,38 @@ export const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(
           className,
         })}
         aria-disabled={disabled}
+        aria-checked={checkbox ? !!checked : undefined}
         {...other}
       >
+        {checkbox && (
+          <Checkbox
+            className="menu-item-checkbox"
+            checked={!!checked}
+            readOnly
+            tabIndex={-1}
+          />
+        )}
         {icon && <IconRenderer className="menu-item-icon" icon={icon} />}
         {contentIcon && (
           <ContentIcon className="menu-item-icon" icon={contentIcon} />
         )}
         {resolvedDescription ? (
           <span className="menu-item-text">
-            <span className="menu-item-label">{resolvedLabel}</span>
+            <span className="menu-item-label">
+              {resolvedLabel}
+              {resolvedDetail && (
+                <span className="menu-item-detail"> {resolvedDetail}</span>
+              )}
+            </span>
             <span className="menu-item-description">{resolvedDescription}</span>
           </span>
         ) : (
-          <span className="menu-item-label">{resolvedLabel}</span>
+          <span className="menu-item-label">
+            {resolvedLabel}
+            {resolvedDetail && (
+              <span className="menu-item-detail"> {resolvedDetail}</span>
+            )}
+          </span>
         )}
         {trailingIcon}
         {keyboardShortcut && (

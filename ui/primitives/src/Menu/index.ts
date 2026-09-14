@@ -7,6 +7,7 @@ export * from './MenuItem';
 export * from './MenuItemDropdownMenu';
 export * from './MenuRadioGroup';
 export * from './MenuCheckItem';
+export * from './ChipMenuItem';
 export * from './MenuRadioItem';
 export * from './ColorSelectionMenuItem';
 export * from './MenuRenameItem';

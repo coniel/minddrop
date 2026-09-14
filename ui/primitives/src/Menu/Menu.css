@@ -277,6 +277,11 @@
     );
   }
 
+  /* Part of the label's text, so the two truncate as one */
+  .menu-item-detail {
+    color: var(--text-muted);
+  }
+
   .menu-item-description {
     display: block;
     overflow: hidden;
@@ -303,6 +308,12 @@
   }
 
   /* --- Icon --- */
+
+  /* The item is the toggle, so the checkbox only shows the state */
+  .menu-item-checkbox {
+    flex-shrink: 0;
+    pointer-events: none;
+  }
 
   .menu-item-icon {
     flex-shrink: 0;

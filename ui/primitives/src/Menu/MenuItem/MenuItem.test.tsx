@@ -19,6 +19,15 @@ const menu: MenuContents = [
 describe('<MenuItem />', () => {
   afterEach(cleanup);
 
+  it('renders a checkbox reflecting the checked state', () => {
+    render(<MenuItem stringLabel="Item" checkbox checked />);
+
+    expect(screen.getByRole('menuitemcheckbox')).toHaveAttribute(
+      'aria-checked',
+      'true',
+    );
+  });
+
   it('renders no options button without a menu', () => {
     render(<MenuItem stringLabel="Item" />);
 

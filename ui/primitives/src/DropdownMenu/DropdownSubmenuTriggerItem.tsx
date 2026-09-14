@@ -26,6 +26,18 @@ export interface DropdownSubmenuTriggerItemProps
   stringLabel?: string;
 
   /**
+   * Muted text rendered after the label as part of it. Strings are
+   * treated as i18n keys and translated.
+   */
+  detail?: TranslatableNode;
+
+  /**
+   * Plain string detail rendered as-is without i18n translation.
+   * Takes priority over `detail`.
+   */
+  stringDetail?: string;
+
+  /**
    * Icon for the item.
    */
   icon?: IconProp;
@@ -60,6 +72,8 @@ export const DropdownSubmenuTriggerItem: FC<
 > = ({
   label,
   stringLabel,
+  detail,
+  stringDetail,
   icon,
   contentIcon,
   disabled,
@@ -88,6 +102,8 @@ export const DropdownSubmenuTriggerItem: FC<
           hasSubmenu
           label={label}
           stringLabel={stringLabel}
+          detail={detail}
+          stringDetail={stringDetail}
           icon={icon}
           contentIcon={contentIcon}
           disabled={disabled}
